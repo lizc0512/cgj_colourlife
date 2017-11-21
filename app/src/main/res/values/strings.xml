@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">彩管家4.0</string>
+    <string name="text_password">0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
+    <string name="soft_update_no">已经是最新版本</string>
+    <string name="soft_update_title">软件更新</string>
+    <string name="scan_text1">将二维码放入扫描框内, </string>
+    <string name="scan_text2">即可自动扫码</string>
+    <string name="app_organization">服务集团</string>
+    <!-- 开门服务器地址 -->
+    <string-array name="open_door_service_list">
+        <item>http://120.24.217.97/api/v1/</item>
+        <item>http://121.40.83.205/api/v1/</item>
+    </string-array>
+</resources>

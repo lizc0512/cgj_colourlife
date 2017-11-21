@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#E6E6E7"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/btnBack"
+            android:background="@drawable/search_input_bg"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingLeft="5dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="fitXY"
+                android:src="@drawable/contact_search" />
+
+            <EditText
+                android:id="@+id/edit_search"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/transparent"
+                android:hint="搜索"
+                android:imeOptions="actionSearch"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:singleLine="true"
+                android:text=""
+                android:textColor="@color/form_edit"
+                android:textColorHint="@color/form_text"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btnBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@color/transparent"
+            android:paddingLeft="5dp"
+            android:text="搜索"
+            android:textColor="@color/form_edit"
+            android:textSize="16sp" />
+    </RelativeLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <ListView
+                    android:id="@+id/listview_homelist"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:cacheColorHint="@color/transparent"
+                    android:divider="@color/base_color"
+                    android:dividerHeight="0.5dp"
+                    android:listSelector="@color/transparent"
+                    android:visibility="gone" />
+
+                <View
+                    android:id="@+id/division"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/margin_10"
+                    android:background="@color/base_color"
+                    android:visibility="gone"/>
+
+                <ListView
+                    android:id="@+id/listview_contact"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:cacheColorHint="@color/transparent"
+                    android:divider="@color/base_color"
+                    android:dividerHeight="0.5dp"
+                    android:listSelector="@color/transparent"
+                    android:visibility="gone" />
+                <View
+                    android:id="@+id/division_manage"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/margin_10"
+                    android:background="@color/base_color"
+                    android:visibility="gone"/>
+
+                <ListView
+                    android:id="@+id/listview_manage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:cacheColorHint="@color/transparent"
+                    android:divider="@color/base_color"
+                    android:dividerHeight="0.5dp"
+                    android:listSelector="@color/transparent"
+                    android:visibility="gone" />
+            </LinearLayout>
+        </ScrollView>
+
+    </FrameLayout>
+
+</LinearLayout>

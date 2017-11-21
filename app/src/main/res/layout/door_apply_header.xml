@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/base_color"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    tools:context="com.tg.coloursteward.DoorApplyActivity" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/base_color"
+        android:orientation="vertical" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:paddingBottom="18dp"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:paddingTop="18dp" >
+
+            <ImageView
+                android:id="@+id/img_apply"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:src="@drawable/door_apply" />
+
+            <TextView
+                style="@style/black_16"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/img_apply"
+                android:padding="10dp"
+                android:text="门禁申请"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/divider" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:padding="15dp" >
+
+            <TextView
+                android:id="@+id/txt_tel"
+                style="@style/black_16"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="电话号码"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/edit_mobile"
+                style="@style/black_16"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/txt_tel"
+                android:background="@color/white"
+                android:hint="请输入申请人电话号码"
+                android:inputType="phone"
+                android:maxLength="11"
+                android:paddingLeft="10dp"
+                android:paddingRight="5dp"
+                android:textColorHint="@color/gray" />
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/divider" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:padding="15dp" >
+
+            <TextView
+                android:id="@+id/txt_memo"
+                style="@style/black_16"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="填写备注"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/edit_memo"
+                style="@style/black_16"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/txt_memo"
+                android:background="@color/white"
+                android:hint="请填写备注信息"
+                android:paddingLeft="10dp"
+                android:paddingRight="5dp"
+                android:textColorHint="@color/gray" />
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/btn_commit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/btn_shape_gray"
+            android:text="确定"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+
+        <TextView
+            style="@style/black_16"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:padding="10dp"
+            android:text="我的申请" />
+    </LinearLayout>
+
+</RelativeLayout>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000"
+     >
+     <com.tg.coloursteward.view.gallery.PicGallery
+	       android:id="@+id/gallery"
+	       android:background="#000000"
+	       android:layout_width="match_parent"
+	       android:layout_height="match_parent"
+	       android:spacing="5dp" />
+     <FrameLayout
+	     android:layout_height="wrap_content"
+	     android:layout_width="match_parent"
+	    >
+	     <ImageView 
+         	android:onClick="onBack"
+	        android:paddingRight="30dp"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:background="@drawable/back_white"
+	        android:layout_gravity="left|center_vertical"
+	        />
+	     <TextView 
+	         android:id="@+id/tv_pic_num"
+	         android:layout_width="wrap_content"
+	         android:layout_height="wrap_content"
+	         android:textSize="18sp"
+	         android:textColor="@color/white"
+	         android:text="1/2"
+	         android:layout_gravity="center"/>
+	    <ImageView 
+	        android:id="@+id/img_delete"
+	        android:background="@drawable/delete"
+	        android:layout_gravity="right|center_vertical"
+	        android:paddingLeft="30dp"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"/>
+	</FrameLayout>
+</FrameLayout>

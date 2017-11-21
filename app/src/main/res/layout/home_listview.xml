@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingLeft="10dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingRight="18dp"
+        >
+
+        <RelativeLayout
+            android:layout_marginTop="@dimen/margin_10"
+            android:id="@+id/rl_head"
+            android:layout_width="@dimen/margin_50"
+            android:layout_height="@dimen/margin_50"
+            android:layout_centerVertical="true">
+
+            <ImageView
+                android:id="@+id/iv_headimg"
+                android:layout_width="@dimen/margin_45"
+                android:layout_height="@dimen/margin_45"
+                android:layout_centerVertical="true"
+                android:src="@drawable/moren" />
+
+             <TextView
+                 android:id="@+id/tv_notread"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:layout_alignParentRight="true"
+                 android:background="@drawable/unread_count_bg"
+                 android:gravity="center"
+                 android:textColor="@color/white"
+                 android:textSize="8sp" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/rl_head"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="2dp"
+            android:layout_toRightOf="@id/rl_head"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="title"
+            android:textColor="@color/text_4"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/tv_title"
+            android:layout_marginRight="5dp"
+            android:layout_toRightOf="@id/tv_title"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="name"
+            android:textColor="@color/home_name"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/tv_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:text=" "
+            android:textColor="@color/text_1"
+            android:textSize="14sp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_title"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_toRightOf="@id/rl_head"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_marginRight="10dp"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text="内容。。。。"
+                android:textColor="@color/text_3"
+                android:textSize="14sp" />
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_below="@id/rl_head"
+            android:layout_toRightOf="@id/rl_head"
+            android:background="@color/line_color" />
+    </RelativeLayout>
+
+</LinearLayout>

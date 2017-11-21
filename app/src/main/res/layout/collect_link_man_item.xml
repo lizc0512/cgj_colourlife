@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
+
+    <com.tg.coloursteward.view.RoundImageView
+        android:id="@+id/riv_head"
+        android:layout_width="@dimen/margin_40"
+        android:layout_height="@dimen/margin_40"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="20dp"
+        android:paddingBottom="@dimen/margin_10"
+        android:paddingTop="@dimen/margin_10" />
+
+    <RelativeLayout
+        android:id="@+id/rl_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="15dp"
+        android:layout_toRightOf="@id/riv_head"
+        android:paddingBottom="@dimen/margin_10"
+        android:paddingRight="20dp"
+        android:paddingTop="@dimen/margin_10" >
+
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="姓名"
+            android:textColor="@color/text_4"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tv_company"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_name"
+            android:layout_marginTop="5dp"
+            android:text="东港中心（主任）"
+            android:textColor="@color/text_3"
+            android:textSize="16sp" />
+    </RelativeLayout>
+
+    <!--
+         <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/yindao" />
+    -->
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/rl_content"
+        android:layout_marginLeft="16dp"
+        android:layout_toRightOf="@id/riv_head"
+        android:background="@color/base_color" />
+
+</RelativeLayout>

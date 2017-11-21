@@ -1,0 +1,491 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!--<LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/base_color"
+        android:orientation="horizontal" >
+
+        <LinearLayout
+            android:id="@+id/ll_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_10"
+            android:background="@drawable/search_input_bg"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:paddingBottom="@dimen/margin_5"
+            android:paddingTop="@dimen/margin_5" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/contact_search" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="搜索"
+                android:textColor="@color/form_text"
+                android:textSize="16sp"
+                android:textStyle="normal" />
+        </LinearLayout>
+    </LinearLayout>-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/beijing"
+        android:orientation="vertical"
+        android:scaleType="fitStart">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+
+            <com.tg.coloursteward.view.ManageMentLinearlayout
+                android:id="@+id/ll_area"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@color/transparent"
+                android:clickable="true"
+                android:orientation="vertical"
+               android:layout_gravity="center"
+                android:layout_marginBottom="@dimen/margin_5">
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_20">
+
+                    <TextView
+                        android:id="@+id/tv_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="上线面积"
+                        android:textColor="@color/white"
+                        android:textSize="15sp" />
+
+                    <FrameLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/tv_text"
+                        android:layout_gravity="center_horizontal">
+
+                        <com.tg.coloursteward.view.RotateProgress
+                            android:id="@+id/progressBar_area"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_marginLeft="@dimen/margin_15"
+                            android:layout_marginTop="10dp"
+                            android:visibility="gone" />
+
+                        <RelativeLayout
+                            android:id="@+id/rl_area"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                android:id="@+id/text1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:text="总计（万㎡）"
+                                android:textColor="@color/home_btn"
+                                android:textSize="10sp" />
+
+                            <TextView
+                                android:id="@+id/tv_area"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@id/text1"
+                                android:layout_marginTop="5dp"
+                                android:text="112313213"
+                                android:textColor="@color/home_details"
+                                android:textSize="17sp" />
+                        </RelativeLayout>
+                    </FrameLayout>
+                </RelativeLayout>
+            </com.tg.coloursteward.view.ManageMentLinearlayout>
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/home_line" />
+
+            <com.tg.coloursteward.view.ManageMentLinearlayout
+                android:id="@+id/ll_stock"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@color/transparent"
+                android:clickable="true"
+                android:orientation="vertical"
+                android:layout_gravity="center"
+                android:layout_marginBottom="@dimen/margin_5">
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_20">
+
+                    <TextView
+                        android:id="@id/tv_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="集团股票"
+                        android:textColor="@color/white"
+                        android:textSize="15sp" />
+
+                    <FrameLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/tv_text"
+                        android:layout_gravity="center_horizontal">
+
+                        <com.tg.coloursteward.view.RotateProgress
+                            android:id="@+id/progressBar_stock"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_marginLeft="@dimen/margin_15"
+                            android:layout_marginTop="10dp"
+                            android:visibility="gone" />
+
+                        <RelativeLayout
+                            android:id="@+id/rl_stock"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                android:id="@+id/text2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:text="今日股价"
+                                android:textColor="@color/home_btn"
+                                android:textSize="10sp" />
+
+                            <TextView
+                                android:id="@+id/tv_stock"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@id/text2"
+                                android:layout_marginTop="5dp"
+                                android:text="4.48"
+                                android:textColor="@color/home_details"
+                                android:textSize="17sp" />
+                        </RelativeLayout>
+                    </FrameLayout>
+                </RelativeLayout>
+            </com.tg.coloursteward.view.ManageMentLinearlayout>
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/home_line" />
+
+            <com.tg.coloursteward.view.ManageMentLinearlayout
+                android:id="@+id/ll_ticket"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@color/transparent"
+                android:clickable="true"
+                android:orientation="vertical"
+                android:layout_gravity="center"
+                android:layout_marginBottom="@dimen/margin_5">
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_20">
+
+                    <TextView
+                        android:id="@id/tv_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="我的饭票"
+                        android:textColor="@color/white"
+                        android:textSize="15sp" />
+
+                    <FrameLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/tv_text"
+                        android:layout_gravity="center_horizontal">
+
+                        <com.tg.coloursteward.view.RotateProgress
+                            android:id="@+id/progressBar_ticket"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_marginLeft="@dimen/margin_15"
+                            android:layout_marginTop="10dp"
+                            android:visibility="gone" />
+
+                        <RelativeLayout
+                            android:id="@+id/rl_ticket"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                android:id="@+id/text3"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:text="当前余额"
+                                android:textColor="@color/home_btn"
+                                android:textSize="10sp" />
+
+                            <TextView
+                                android:id="@+id/tv_ticket"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@id/text3"
+                                android:layout_marginTop="5dp"
+                                android:text="2260"
+                                android:textColor="@color/home_details"
+                                android:textSize="17sp" />
+                        </RelativeLayout>
+                    </FrameLayout>
+                </RelativeLayout>
+            </com.tg.coloursteward.view.ManageMentLinearlayout>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/home_line" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.tg.coloursteward.view.ManageMentLinearlayout
+                android:id="@+id/ll_community"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@color/transparent"
+                android:clickable="true"
+                android:orientation="vertical"
+                android:layout_gravity="center">
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_20">
+
+                    <TextView
+                        android:id="@id/tv_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="上线小区"
+                        android:textColor="@color/white"
+                        android:textSize="15sp" />
+
+                    <FrameLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/tv_text"
+                        android:layout_gravity="center_horizontal">
+
+                        <com.tg.coloursteward.view.RotateProgress
+                            android:id="@+id/progressBar_community"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_marginLeft="@dimen/margin_15"
+                            android:layout_marginTop="10dp"
+                            android:visibility="gone" />
+
+                        <RelativeLayout
+                            android:id="@+id/rl_community"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                android:id="@+id/text4"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:text="小区数量"
+                                android:textColor="@color/home_btn"
+                                android:textSize="10sp" />
+
+                            <TextView
+                                android:id="@+id/tv_community"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@id/text4"
+                                android:layout_marginTop="5dp"
+                                android:text="2,260"
+                                android:textColor="@color/home_details"
+                                android:textSize="17sp" />
+                        </RelativeLayout>
+                    </FrameLayout>
+                </RelativeLayout>
+            </com.tg.coloursteward.view.ManageMentLinearlayout>
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="@dimen/margin_3"
+                android:background="@color/home_line" />
+
+            <com.tg.coloursteward.view.ManageMentLinearlayout
+                android:id="@+id/ll_performance"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@color/transparent"
+                android:clickable="true"
+                android:orientation="vertical"
+                android:layout_gravity="center">
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_20">
+
+                    <TextView
+                        android:id="@id/tv_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="绩效评分"
+                        android:textColor="@color/white"
+                        android:textSize="15sp" />
+
+                    <FrameLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/tv_text"
+                        android:layout_gravity="center_horizontal">
+
+                        <com.tg.coloursteward.view.RotateProgress
+                            android:id="@+id/progressBar_performance"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_marginLeft="@dimen/margin_15"
+                            android:layout_marginTop="10dp"
+                            android:visibility="gone" />
+
+                        <RelativeLayout
+                            android:id="@+id/rl_performance"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                android:id="@+id/text5"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:text="我的评分"
+                                android:textColor="@color/home_btn"
+                                android:textSize="10sp" />
+
+                            <TextView
+                                android:id="@+id/tv_performance"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@id/text5"
+                                android:layout_marginTop="5dp"
+                                android:text="4.48"
+                                android:textColor="@color/home_details"
+                                android:textSize="17sp" />
+                        </RelativeLayout>
+                    </FrameLayout>
+                </RelativeLayout>
+            </com.tg.coloursteward.view.ManageMentLinearlayout>
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="@dimen/margin_3"
+                android:background="@color/home_line" />
+
+            <com.tg.coloursteward.view.ManageMentLinearlayout
+                android:id="@+id/ll_account"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@color/transparent"
+                android:clickable="true"
+                android:orientation="vertical"
+                android:layout_gravity="center">
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_20">
+
+                    <TextView
+                        android:id="@id/tv_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="即时分成"
+                        android:textColor="@color/white"
+                        android:textSize="15sp" />
+
+                    <FrameLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/tv_text"
+                        android:layout_gravity="center_horizontal">
+
+                        <com.tg.coloursteward.view.RotateProgress
+                            android:id="@+id/progressBar_account"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_marginLeft="@dimen/margin_15"
+                            android:layout_marginTop="10dp"
+                            android:visibility="gone" />
+
+                        <RelativeLayout
+                            android:id="@+id/rl_account"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                android:id="@+id/text6"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:text="分成金额"
+                                android:textColor="@color/home_btn"
+                                android:textSize="10sp" />
+
+                            <TextView
+                                android:id="@+id/tv_account"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@id/text6"
+                                android:layout_marginTop="5dp"
+                                android:text="0"
+                                android:textColor="@color/home_details"
+                                android:textSize="17sp" />
+                        </RelativeLayout>
+                    </FrameLayout>
+                </RelativeLayout>
+            </com.tg.coloursteward.view.ManageMentLinearlayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="8dp"
+        android:background="@color/base_color" />
+
+</LinearLayout>

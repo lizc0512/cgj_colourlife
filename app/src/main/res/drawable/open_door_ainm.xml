@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list xmlns:android="http://schemas.android.com/apk/res/android" 
+    android:oneshot = "false">
+    <item  android:drawable = "@drawable/kl_01" android:duration = "500"/>
+    <item  android:drawable = "@drawable/kl_02" android:duration = "500"/>
+    <item  android:drawable = "@drawable/kl_03" android:duration = "500"/>
+    <item  android:drawable = "@drawable/kl_04" android:duration = "500"/>
+    <item  android:drawable = "@drawable/kl_05" android:duration = "500"/>
+    <item  android:drawable = "@drawable/kl_06" android:duration = "500"/>
+    <item  android:drawable = "@drawable/kl_07" android:duration = "500"/>
+    <item  android:drawable = "@drawable/kl_08" android:duration = "500"/>
+    <item  android:drawable = "@drawable/kl_09" android:duration = "500"/>
+    <item  android:drawable = "@drawable/kl_10" android:duration = "500"/>
+    <item  android:drawable = "@drawable/kl_11" android:duration = "500"/>
+    <item  android:drawable = "@drawable/kl_12" android:duration = "500"/>
+  
+   
+
+</animation-list>
+

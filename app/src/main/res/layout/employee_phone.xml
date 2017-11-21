@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/rl_enterprise_cornet"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:padding="15dp" >
+
+        <TextView
+            android:id="@+id/tv_phone"
+            android:textSize="16sp"
+            android:textColor="@color/text_4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="号码" />
+
+        <TextView
+            android:textSize="14sp"
+            android:textColor="@color/text_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_phone"
+            android:layout_marginTop="5dp"
+            android:text="手机号码" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/dianhua" />
+    </RelativeLayout>
+
+</LinearLayout>

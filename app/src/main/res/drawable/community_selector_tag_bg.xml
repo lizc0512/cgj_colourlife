@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:drawable="@color/community_selector_tag_unsel" android:state_selected="false"></item>
+    <item android:drawable="@color/home_tab_txt_sel_color" android:state_selected="true"></item>
+
+</selector>

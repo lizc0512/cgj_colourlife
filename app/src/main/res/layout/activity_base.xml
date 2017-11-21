@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.tg.coloursteward.view.MyLinearLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/base_color"
+    android:orientation="vertical"
+    >
+    <com.tg.coloursteward.view.ActivityHeaderView
+	    xmlns:myapp="http://schemas.android.com/apk/res/com.tg.coloursteward"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        myapp:titleTextSize="@dimen/text_size_18"
+        android:background="@drawable/main_bg"
+        myapp:titleText=" "
+        android:id="@+id/title" />
+    <FrameLayout 
+        android:id="@+id/base_content_layout"
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp">
+        <LinearLayout 
+            android:id="@+id/refresh_layout"
+            android:orientation="vertical"
+            android:onClick="onReload"
+            android:clickable="true"
+            android:gravity="center"
+            android:visibility="gone"
+            android:background="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <com.tg.coloursteward.view.GifImageView
+                android:id="@+id/gifView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                />
+            <TextView 
+                android:id="@+id/base_loadding_text"
+                android:text="点击重新加载"
+                android:layout_marginTop="8dp"
+                style="@style/light_gray_14"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+	    <!-- <LinearLayout
+	        android:id="@+id/content"
+	        android:background="@color/layout_bg_color"
+		    android:layout_width="match_parent"
+		    android:layout_height="match_parent"
+		    android:orientation="vertical"
+		     /> -->
+    </FrameLayout>
+</com.tg.coloursteward.view.MyLinearLayout>

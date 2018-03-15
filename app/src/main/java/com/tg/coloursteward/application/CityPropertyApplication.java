@@ -24,7 +24,7 @@ import com.tg.coloursteward.log.Logger;
 import com.tg.coloursteward.net.ResponseData;
 import com.tg.coloursteward.util.Tools;
 import com.tencent.smtt.sdk.QbSdk;
-import com.youmai.hxsdk.HuxinSdkManager;
+//import com.youmai.hxsdk.HuxinSdkManager;
 
 public class CityPropertyApplication extends Application{
 	private List<Activity> mList = new LinkedList<Activity>();
@@ -33,7 +33,7 @@ public class CityPropertyApplication extends Application{
 	public void onCreate() {
 		// TODO Auto-generated method stub
 		super.onCreate();
-		HuxinSdkManager.instance().init(this);
+		//HuxinSdkManager.instance().init(this);
 		instance = this;
 		JPushInterface.setDebugMode(true); 	// 设置开启日志,发布时请关闭日志
        	JPushInterface.init(this);     		// 初始化 JPush

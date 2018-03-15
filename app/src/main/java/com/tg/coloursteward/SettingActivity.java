@@ -24,7 +24,7 @@ import com.tg.coloursteward.view.MessageArrowView;
 import com.tg.coloursteward.view.MessageArrowView.ItemClickListener;
 import com.tg.coloursteward.view.dialog.DialogFactory;
 import com.tg.coloursteward.view.dialog.ToastFactory;
-import com.youmai.hxsdk.HuxinSdkManager;
+//import com.youmai.hxsdk.HuxinSdkManager;
 
 import android.*;
 import android.app.Activity;
@@ -198,7 +198,7 @@ public class SettingActivity extends BaseActivity implements ItemClickListener {
 					}
 				}, null, "是否确定清空首页消息列表？", null, null);
 			}else if(position == 3){
-				HuxinSdkManager.instance().setCallSetting();
+				//HuxinSdkManager.instance().setCallSetting();
 			}
 		}
 	}

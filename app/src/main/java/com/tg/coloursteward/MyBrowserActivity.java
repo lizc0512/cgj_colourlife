@@ -18,7 +18,7 @@ import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
-import com.githang.statusbar.StatusBarCompat;
+//import com.githang.statusbar.StatusBarCompat;
 import com.tencent.smtt.sdk.CookieManager;
 import com.tencent.smtt.sdk.CookieSyncManager;
 import com.tg.coloursteward.constant.Contants;
@@ -113,7 +113,7 @@ public class MyBrowserActivity extends Activity implements OnClickListener, AMap
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_browser);
-		StatusBarCompat.setStatusBarColor(this, getResources().getColor(R.color.home_fill), false);
+		//StatusBarCompat.setStatusBarColor(this, getResources().getColor(R.color.home_fill), false);
 		 forepriority = true;
 		registScanResultReceiver();
 		registGetDeviceIDReceiver();

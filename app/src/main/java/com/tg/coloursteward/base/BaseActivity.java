@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import cn.jpush.android.api.JPushInterface;
 
-import com.githang.statusbar.StatusBarCompat;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.application.CityPropertyApplication;
 import com.tg.coloursteward.inter.ResultCallBack;
@@ -117,7 +116,7 @@ public abstract class BaseActivity extends Activity implements ResponseListener 
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		setContentView(R.layout.activity_base);
 		CityPropertyApplication.addActivity(this);
-		StatusBarCompat.setStatusBarColor(this, getResources().getColor(R.color.home_fill), false);
+		//StatusBarCompat.setStatusBarColor(this, getResources().getColor(R.color.home_fill), false);
 		headView = (ActivityHeaderView) findViewById(R.id.title);
 		refreshLayout = (LinearLayout) findViewById(R.id.refresh_layout);
 		gifView = (GifImageView) findViewById(R.id.gifView);

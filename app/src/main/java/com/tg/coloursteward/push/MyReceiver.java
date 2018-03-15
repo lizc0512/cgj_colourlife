@@ -78,10 +78,10 @@ public class MyReceiver extends BroadcastReceiver {
            /* if (!isApplicationBroughtToBackground(aContext)) {
                 try {
                     JSONObject extraJson = new JSONObject(extras);
-                    Intent intent2 = new Intent(aContext, MainActivity.class);
+                    Intent intent2 = new Intent(aContext, MainActivity1.class);
                     if (StringUtils.isNotEmpty(extras)) {
                         if (null != extraJson && extraJson.length() > 0) {
-                            intent2.putExtra(MainActivity.KEY_EXTRAS, extras);
+                            intent2.putExtra(MainActivity1.KEY_EXTRAS, extras);
                         }
                     }
                     intent2.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP );

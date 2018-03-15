@@ -20,7 +20,6 @@ import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.amap.api.maps2d.LocationSource;
-import com.githang.statusbar.StatusBarCompat;
 import com.tg.coloursteward.application.CityPropertyApplication;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.fragment.FragmentCentre;
@@ -54,7 +53,7 @@ import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.util.Utils;
 import com.tg.coloursteward.view.dialog.DialogFactory;
 import com.tg.coloursteward.view.dialog.ToastFactory;
-import com.youmai.hxsdk.HuxinSdkManager;
+//import com.youmai.hxsdk.HuxinSdkManager;
 
 import android.Manifest;
 import android.net.Uri;
@@ -192,7 +191,7 @@ public class MainActivity extends FragmentActivity implements ResponseListener, 
 		/**
 		 * 开启服务
 		 */
-		//startService(new Intent(MainActivity.this, MessageService.class));
+		//startService(new Intent(MainActivity1.this, MessageService.class));
 		/**
 		 * 设置极光推送别名与标签
 		 */
@@ -211,7 +210,7 @@ public class MainActivity extends FragmentActivity implements ResponseListener, 
 		msgHand = new MessageHandler(this);
 		msgHand.setResponseListener(this);
 		setContentView(R.layout.activity_main);
-		StatusBarCompat.setStatusBarColor(this, getResources().getColor(R.color.home_fill), false);
+		//StatusBarCompat.setStatusBarColor(this, getResources().getColor(R.color.home_fill), false);
 		Tools.setMainStatus(MainActivity.this,true);
 		huxinInit();
 		windowPermission();
@@ -496,7 +495,7 @@ public class MainActivity extends FragmentActivity implements ResponseListener, 
 		showFragment(tabTexts[0]);
 	}
 	private void huxinInit() {
-        HuxinSdkManager.instance().setCgjOpenDoorActivty(DoorActivity.class);
+        //HuxinSdkManager.instance().setCgjOpenDoorActivty(DoorActivity.class);
 	}
 	/**
 	 * 更新应用消息轮播图
@@ -681,7 +680,7 @@ public class MainActivity extends FragmentActivity implements ResponseListener, 
 					}
 				}
 			}else{
-				//ToastFactory.showToast(MainActivity.this,message);
+				//ToastFactory.showToast(MainActivity1.this,message);
 			}
 		}else if(msg.arg1 == HttpTools.GET_UPDATE_PUSH){//更新首页推送消息
 			if(code == 0){
@@ -857,8 +856,8 @@ public class MainActivity extends FragmentActivity implements ResponseListener, 
 			} else {
 				iv_home_unreadnum.setVisibility(View.VISIBLE);
 			}
-            HuxinSdkManager.instance().setCGJNoticeData(MainActivity.this, UnreadNum + "");
-            HuxinSdkManager.instance().setCgjNoticeActivty(MainActivity.class);
+            //HuxinSdkManager.instance().setCGJNoticeData(MainActivity1.this, UnreadNum + "");
+            //HuxinSdkManager.instance().setCgjNoticeActivty(MainActivity1.class);
 		}
 	}
     @Override

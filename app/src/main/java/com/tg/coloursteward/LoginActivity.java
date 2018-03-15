@@ -22,7 +22,7 @@ import com.tg.coloursteward.util.NetWorkUtils;
 import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.dialog.ToastFactory;
-import com.youmai.hxsdk.HuxinSdkManager;
+//import com.youmai.hxsdk.HuxinSdkManager;
 
 import android.net.Uri;
 import android.os.Build;
@@ -289,8 +289,8 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
                         String accountUuid = content.getString("accountUuid");
                         if (isAllowHuxin) {
                             if (StringUtils.isNotEmpty(mobile)) {
-                                HuxinSdkManager.instance().setPhoneNumber(mobile, null);
-                                HuxinSdkManager.instance().setCgjUserId(newPhone);
+                                //HuxinSdkManager.instance().setPhoneNumber(mobile, null);
+                                //HuxinSdkManager.instance().setCgjUserId(newPhone);
                             }
                         }
                         getUserInfo(accountUuid);

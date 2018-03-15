@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.3"
+    buildToolsVersion "26.0.2"
     useLibrary 'org.apache.http.legacy'
     defaultConfig {
         applicationId "com.tg.coloursteward"
@@ -34,7 +34,7 @@ android {
             signingConfig signingConfigs.release
         }
     }
-    lintOptions{
+    lintOptions {
         checkReleaseBuilds false
         abortOnError false
     }
@@ -52,19 +52,15 @@ android {
     }
     //指定打包后应用名称
     applicationVariants.all { variant ->
-        variant.outputs.each { output ->
-            def outputFile = output.outputFile
-            def fileName
-            if (outputFile != null && outputFile.name.endsWith('.apk')) {
-                if (variant.buildType.name.equals('release')) {
-                    fileName = "彩管家4.0_${defaultConfig.versionName}.apk"
-                } else if (variant.buildType.name.equals('debug')) {
-                    fileName = "彩管家4.0_${defaultConfig.versionName}_${defaultConfig.versionCode}_debug.apk"
-                }
-                output.outputFile = new File(outputFile.parent, fileName)
+        variant.outputs.all {
+            if (variant.buildType.name == "release") {
+                outputFileName = "彩管家4.0_${defaultConfig.versionName}.apk"
+            } else {
+                outputFileName = "彩管家4.0_${defaultConfig.versionName}_${defaultConfig.versionCode}_debug.apk"
             }
         }
     }
+
     dexOptions {
         javaMaxHeapSize "4g"
     }

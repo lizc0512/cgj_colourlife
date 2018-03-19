@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <ViewStub
+        android:id="@+id/im_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout="@layout/im_card_toolbar" />
+
+    <LinearLayout
+        android:id="@+id/img_content_lay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/hx_card_center_bg"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/sender_date"
+            style="@style/im_card_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/hx_fragment_im_data" />
+
+        <LinearLayout style="@style/im_content_card_style">
+
+            <include layout="@layout/hx_item_im_select_lay" />
+
+            <LinearLayout
+                style="@style/im_content_card_msg_style"
+                android:gravity="right">
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:id="@+id/imgRemind"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:visibility="gone" />
+
+                <include
+                    layout="@layout/hx_im_send_status_lay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <RelativeLayout
+                    android:id="@+id/item_btn"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/card_head_to_content_margin"
+                    android:layout_marginRight="@dimen/card_head_to_content_margin"
+                    android:layout_weight="5"
+                    android:background="@drawable/hx_im_card_right_bg"
+                    android:clickable="true"
+                    android:minWidth="120dp"
+                    android:orientation="vertical"
+                    android:paddingBottom="12dp"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="14dp"
+                    android:paddingTop="10dp">
+
+
+                    <ImageView
+                        android:id="@+id/item_card_head_img"
+                        android:layout_width="38dp"
+                        android:layout_height="38dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="6dp"
+                        android:layout_marginTop="8dp"
+                        android:src="@drawable/hx_call_after_user_normal" />
+
+                    <TextView
+                        android:id="@+id/item_card_nickname_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignTop="@id/sender_head_img"
+                        android:layout_marginLeft="4dp"
+                        android:layout_marginRight="8dp"
+                        android:layout_marginTop="2dp"
+                        android:layout_toLeftOf="@id/item_card_head_img"
+                        android:duplicateParentState="true"
+                        android:ellipsize="end"
+                        android:includeFontPadding="false"
+                        android:singleLine="true"
+                        android:text="昵称"
+                        android:textColor="@color/hx_color_white"
+                        android:textSize="@dimen/card_font_size_small" />
+
+                    <TextView
+                        android:id="@+id/item_card_job_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignLeft="@id/item_card_nickname_text"
+                        android:layout_below="@+id/item_card_nickname_text"
+                        android:layout_marginRight="8dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_toLeftOf="@id/item_card_head_img"
+                        android:duplicateParentState="true"
+                        android:ellipsize="end"
+                        android:hint="@string/hx_card_no_write_job"
+                        android:includeFontPadding="false"
+                        android:singleLine="true"
+                        android:textColor="#EEEEEE"
+                        android:textColorHint="#EEEEEE"
+                        android:textSize="@dimen/card_font_size_msmall" />
+
+                    <TextView
+                        android:id="@+id/item_card_company_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignLeft="@id/item_card_nickname_text"
+                        android:layout_below="@+id/item_card_job_text"
+                        android:layout_marginRight="8dp"
+                        android:layout_marginTop="12dp"
+                        android:layout_toLeftOf="@id/item_card_head_img"
+                        android:duplicateParentState="true"
+                        android:ellipsize="end"
+                        android:hint="@string/hx_card_no_write_company"
+                        android:includeFontPadding="false"
+                        android:singleLine="true"
+                        android:textColor="#EEEEEE"
+                        android:textColorHint="#EEEEEE"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/item_card_phone_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignLeft="@id/item_card_nickname_text"
+                        android:layout_below="@+id/item_card_company_text"
+                        android:layout_marginTop="4dp"
+                        android:drawableLeft="@drawable/hx_user_card_phone_icon"
+                        android:duplicateParentState="true"
+                        android:includeFontPadding="false"
+                        android:text="15512345678"
+                        android:textColor="#EEEEEE"
+                        android:textColorHint="#EEEEEE"
+                        android:textSize="@dimen/card_font_size_msmall" />
+
+                    <TextView
+                        android:id="@+id/item_card_email_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignLeft="@id/item_card_nickname_text"
+                        android:layout_below="@+id/item_card_phone_text"
+                        android:layout_marginTop="4dp"
+                        android:drawableLeft="@drawable/hx_user_card_email_icon2"
+                        android:ellipsize="end"
+                        android:hint="邮箱"
+                        android:includeFontPadding="false"
+                        android:singleLine="true"
+                        android:textColor="#EEEEEE"
+                        android:textColorHint="#EEEEEE"
+                        android:textSize="@dimen/card_font_size_msmall" />
+
+
+                    <TextView
+                        android:id="@+id/item_card_address_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignLeft="@id/item_card_nickname_text"
+                        android:layout_below="@+id/item_card_email_text"
+                        android:layout_marginTop="4dp"
+                        android:drawableLeft="@drawable/hx_user_card_location_icon"
+                        android:ellipsize="end"
+                        android:hint="地址"
+                        android:includeFontPadding="false"
+                        android:singleLine="true"
+                        android:textColor="#EEEEEE"
+                        android:textColorHint="#EEEEEE"
+                        android:textSize="@dimen/card_font_size_msmall" />
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/sender_iv"
+                android:layout_width="@dimen/card_head"
+                android:layout_height="@dimen/card_head"
+                android:src="@drawable/hx_im_user_header" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

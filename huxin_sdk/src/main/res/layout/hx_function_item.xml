@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="75dp"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent">
+
+    <TextView
+        android:id="@+id/tv_item_call_tip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/hx_hook_callback_bg"
+        android:gravity="center"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:text="回电给Ta"
+        android:textColor="@color/hxs_color_white"
+        android:textSize="12sp"
+        android:visibility="invisible" />
+
+    <FrameLayout
+        android:id="@+id/fl_img"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_item_call_tip"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="3dp">
+
+        <ImageView
+            android:id="@+id/iv_item_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:src="@drawable/hx_call_after_recall" />
+
+        <com.youmai.hxsdk.view.CountImageView
+            android:id="@+id/iv_item_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:src="@drawable/hx_call_after_message"
+            android:visibility="gone" />
+
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/tv_item_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/fl_img"
+        android:layout_centerHorizontal="true"
+        android:text="@string/hx_sdk_hook_layout_13"
+        android:textColor="@color/hxs_color_white"
+        android:textSize="12sp" />
+
+</RelativeLayout>

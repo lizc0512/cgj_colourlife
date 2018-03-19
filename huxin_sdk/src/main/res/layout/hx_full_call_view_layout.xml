@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="234dp"
+    android:layout_alignParentBottom="true"
+    android:layout_marginBottom="10dp">
+
+    <ImageView
+        android:id="@+id/iv_full_finger"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/hx_icon_full_finger"
+        android:visibility="gone" />
+
+    <RelativeLayout
+        android:id="@+id/rl_full_function_parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="55dp">
+
+        <!--<FrameLayout-->
+            <!--android:id="@+id/fl_full_function_bg"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="80dp"-->
+            <!--android:layout_alignTop="@+id/hsv_full_function_parent"-->
+            <!--android:layout_marginLeft="12dp"-->
+            <!--android:layout_marginRight="12dp"-->
+            <!--android:background="@drawable/hx_circle_corner_black_bg"-->
+            <!--android:visibility="gone" />-->
+
+        <include
+            android:id="@+id/hsv_full_function_parent"
+            layout="@layout/hx_activity_call_function"/>
+
+    </RelativeLayout>
+
+    <FrameLayout
+        android:id="@+id/fl_full_dial_parent"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="20dp" />
+
+    <LinearLayout
+        android:id="@+id/rl_full_refuse_reply"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="44dp"
+        android:background="@drawable/hx_full_refuse_reply_bg"
+        android:orientation="vertical"
+        android:paddingBottom="12dp"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:id="@+id/ll_full_reply_item1"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginLeft="28dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:background="@drawable/hx_full_reply_item" />
+
+            <TextView
+                android:id="@+id/tv_full_reply_item1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="12dp"
+                android:gravity="center_vertical"
+                android:text="@string/hx_full_reply_later"
+                android:textColor="#333333"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_full_reply_item2"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginLeft="28dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:background="@drawable/hx_full_reply_item" />
+
+            <TextView
+                android:id="@+id/tv_full_reply_item2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="12dp"
+                android:gravity="center_vertical"
+                android:text="@string/hx_full_reply_road"
+                android:textColor="#333333"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_full_reply_item3"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginLeft="28dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:background="@drawable/hx_full_reply_item" />
+
+            <TextView
+                android:id="@+id/tv_full_reply_item3"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="12dp"
+                android:gravity="center_vertical"
+                android:text="@string/hx_full_reply_now"
+                android:textColor="#333333"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

@@ -1,0 +1,5524 @@
+package com.youmai.hxsdk;
+
+import android.Manifest;
+import android.app.Activity;
+import android.content.ComponentName;
+import android.content.ContentResolver;
+import android.content.ContentValues;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.location.Location;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.net.Uri;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.IBinder;
+import android.os.Looper;
+import android.os.Message;
+import android.provider.ContactsContract;
+import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
+import android.util.Log;
+import android.view.ContextThemeWrapper;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.PopupMenu;
+import android.widget.Toast;
+
+import com.google.protobuf.GeneratedMessage;
+import com.google.protobuf.InvalidProtocolBufferException;
+import com.qiniu.android.common.AutoZone;
+import com.qiniu.android.http.ResponseInfo;
+import com.qiniu.android.storage.Configuration;
+import com.qiniu.android.storage.UpCompletionHandler;
+import com.qiniu.android.storage.UpProgressHandler;
+import com.qiniu.android.storage.UploadManager;
+import com.qiniu.android.storage.UploadOptions;
+import com.youmai.hxsdk.adapter.IMListAdapter;
+import com.youmai.hxsdk.config.AppConfig;
+import com.youmai.hxsdk.config.Constant;
+import com.youmai.hxsdk.config.FileConfig;
+import com.youmai.hxsdk.db.bean.CacheMsgBean;
+import com.youmai.hxsdk.db.bean.ChatMsg;
+import com.youmai.hxsdk.db.bean.ShowData;
+import com.youmai.hxsdk.db.bean.StatsData;
+import com.youmai.hxsdk.db.bean.UIData;
+import com.youmai.hxsdk.db.dao.CacheMsgBeanDao;
+import com.youmai.hxsdk.db.dao.ChatMsgDao;
+import com.youmai.hxsdk.db.dao.ShowDataDao;
+import com.youmai.hxsdk.db.dao.UIDataDao;
+import com.youmai.hxsdk.db.helper.BackGroundJob;
+import com.youmai.hxsdk.db.manager.GreenDBIMManager;
+import com.youmai.hxsdk.db.manager.GreenDbManager;
+import com.youmai.hxsdk.entity.EmoItem;
+import com.youmai.hxsdk.entity.EmoList;
+import com.youmai.hxsdk.entity.CallInfo;
+import com.youmai.hxsdk.entity.FileToken;
+import com.youmai.hxsdk.entity.FloatViewConfig;
+import com.youmai.hxsdk.entity.IpConfig;
+import com.youmai.hxsdk.entity.LoginResult;
+import com.youmai.hxsdk.entity.RespBaseBean;
+import com.youmai.hxsdk.entity.SoundModel;
+import com.youmai.hxsdk.entity.UploadFile;
+import com.youmai.hxsdk.entity.UserShow;
+import com.youmai.hxsdk.http.HttpConnector;
+import com.youmai.hxsdk.http.IGetListener;
+import com.youmai.hxsdk.http.IPostListener;
+import com.youmai.hxsdk.http.ssl.NetConfig;
+import com.youmai.hxsdk.im.IMHelper;
+import com.youmai.hxsdk.im.IMMsgManager;
+import com.youmai.hxsdk.im.cache.CacheMsgFile;
+import com.youmai.hxsdk.im.cache.CacheMsgHelper;
+import com.youmai.hxsdk.im.cache.CacheMsgImage;
+import com.youmai.hxsdk.im.cache.CacheMsgJoke;
+import com.youmai.hxsdk.im.cache.CacheMsgVideo;
+import com.youmai.hxsdk.interfaces.IFileSendListener;
+import com.youmai.hxsdk.interfaces.IShowDataListener;
+import com.youmai.hxsdk.interfaces.OnFileListener;
+import com.youmai.hxsdk.interfaces.bean.FileBean;
+import com.youmai.hxsdk.proto.YouMaiBasic;
+import com.youmai.hxsdk.proto.YouMaiBizCard;
+import com.youmai.hxsdk.proto.YouMaiBizCard.BizCard;
+import com.youmai.hxsdk.proto.YouMaiBizCard.BizCard_Get_ByPhone;
+import com.youmai.hxsdk.proto.YouMaiBizCard.BizCard_Insert;
+import com.youmai.hxsdk.proto.YouMaiBizCard.BizCard_Update;
+import com.youmai.hxsdk.proto.YouMaiChat;
+import com.youmai.hxsdk.proto.YouMaiChat.IMChat_Personal;
+import com.youmai.hxsdk.proto.YouMaiLocation;
+import com.youmai.hxsdk.proto.YouMaiLocation.LocationShare;
+import com.youmai.hxsdk.proto.YouMaiUser;
+import com.youmai.hxsdk.push.MorePushManager;
+import com.youmai.hxsdk.push.http.HttpPushManager;
+import com.youmai.hxsdk.service.HuxinService;
+import com.youmai.hxsdk.socket.IMContentUtil;
+import com.youmai.hxsdk.socket.NotifyListener;
+import com.youmai.hxsdk.socket.PduBase;
+import com.youmai.hxsdk.socket.ReceiveListener;
+import com.youmai.hxsdk.sp.SPDataUtil;
+import com.youmai.hxsdk.utils.AppUtils;
+import com.youmai.hxsdk.utils.CommonUtils;
+import com.youmai.hxsdk.utils.DeviceUtils;
+import com.youmai.hxsdk.utils.FileUtils;
+import com.youmai.hxsdk.utils.GsonUtil;
+import com.youmai.hxsdk.utils.LanguageUtil;
+import com.youmai.hxsdk.utils.ListUtils;
+import com.youmai.hxsdk.utils.LogFile;
+import com.youmai.hxsdk.utils.LogUtils;
+import com.youmai.hxsdk.utils.PhoneImsi;
+import com.youmai.hxsdk.utils.PhoneNumTypes;
+import com.youmai.hxsdk.utils.SignUtils;
+import com.youmai.hxsdk.utils.SoundsUtils;
+import com.youmai.hxsdk.utils.StringUtils;
+import com.youmai.hxsdk.utils.TimeUtils;
+import com.youmai.hxsdk.view.chat.utils.EmotionInit;
+import com.youmai.thirdbiz.ThirdBizHelper;
+import com.youmai.thirdbiz.colorful.CgjUser;
+import com.youmai.thirdbiz.colorful.CzyUser;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.net.InetSocketAddress;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * Created by colin on 2016/7/15.
+ * sdk 接口类
+ */
+public class HuxinSdkManager {
+    private static final String TAG = HuxinSdkManager.class.getSimpleName();
+
+    private static final int HANDLER_THREAD_INIT_CONFIG_START = 1;
+    private static final int HANDLER_THREAD_AUTO_LOGIN = 2;
+    private static HuxinSdkManager instance;
+
+
+    private enum BIND_STATUS {
+        IDLE, BINDING, BINDED
+    }
+
+    private HuxinService.HuxinServiceBinder huxinService = null;
+    private BIND_STATUS binded = BIND_STATUS.IDLE;
+
+    private Context mContext;
+
+    private List<InitListener> mInitListenerList;
+    private UploadManager uploadManager;
+
+    private ProcessHandler mProcessHandler;
+
+    private StackAct mStackAct;
+    private UserInfo mUserInfo;
+    private Map<String, String> mContactName;
+
+    private List<EmoItem> emoList;
+
+    private boolean isSound;
+    private boolean isVibrate;
+    private String commonParam;
+
+    private boolean isRepresentReresh; //当前代言ID
+
+    /* CPU 类型  */
+    public static final String CPU_GAOTONG = "qualcomm";
+    public static final String CPU_MTK = "mtk";
+    public static final String CPU_HUAWEI = "huawei";
+
+
+    /* 通话背景音，放这里是由于让第三方应用可接入*/
+    private AudioManager mAudioManager;
+    private boolean mHxCallBgSoundState = false;
+    private MediaPlayer mMediaPlayer;
+    private int mMediaPlayerPreVolume;
+    private PopupMenu mSelectPopupMenu = null;
+    private CallBgSoundLister mCallBgSoundLister;
+    /* bgsound end */
+
+    /**
+     * SDK初始化结果监听器
+     */
+    public interface InitListener {
+        void success();
+
+        void fail();
+    }
+
+
+    /**
+     * 登录结果监听器
+     */
+    public interface LoginListener {
+        void success(String msg);
+
+        void fail(String msg);
+    }
+
+    Configuration qiNiuConfig = new Configuration.Builder()
+            .connectTimeout(10)           // 链接超时。默认10秒
+            .useHttps(true)               // 是否使用https上传域名
+            .responseTimeout(30)          // 服务器响应超时。默认30秒
+            .zone(AutoZone.autoZone)        // 设置区域，指定不同区域的上传域名、备用域名、备用IP。
+            .build();
+
+    /**
+     * 私有构造函数
+     */
+    private HuxinSdkManager() {
+        uploadManager = new UploadManager(qiNiuConfig);
+        mStackAct = StackAct.instance();
+        mUserInfo = new UserInfo();
+        mInitListenerList = new ArrayList<>();
+        mContactName = new HashMap<>();
+    }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
+
+    /**
+     * 获取呼信sdk单例索引
+     *
+     * @return
+     */
+    public static HuxinSdkManager instance() {
+        if (instance == null) {
+            instance = new HuxinSdkManager();
+        }
+        return instance;
+    }
+
+
+    /**
+     * 呼信sdk初始化
+     *
+     * @param context
+     */
+    public void init(Context context) {
+        this.init(context, null);
+    }
+
+    public StackAct getStackAct() {
+        return mStackAct;
+    }
+
+    /**
+     * 呼信sdk初始化
+     *
+     * @param context
+     */
+    public void init(final Context context, InitListener listener) {
+        mContext = context.getApplicationContext();
+        IMMsgManager.getInstance().init(mContext);
+
+        if (listener != null) {
+            mInitListenerList.add(listener);
+        }
+
+        if (binded == BIND_STATUS.IDLE) {
+            binded = BIND_STATUS.BINDING;
+            initHandler();
+
+            // Initialize the Mobile Ads SDK.
+            // MobileAds.initialize(context, AppConfig.ADMOB_APP_ID);
+
+            autoLogin();
+
+            mProcessHandler.sendEmptyMessage(HANDLER_THREAD_INIT_CONFIG_START);
+
+        } else if (binded == BIND_STATUS.BINDING) {
+
+            //do nothing
+
+        } else if (binded == BIND_STATUS.BINDED) {
+            for (InitListener item : mInitListenerList) {
+                item.success();
+            }
+            mInitListenerList.clear();
+        }
+    }
+
+
+    private void initWork(Context context) {
+        if (AppConfig.LAUNCH_MODE == 0) {
+            Toast.makeText(mContext, mContext.getString(R.string.hx_toast_01), Toast.LENGTH_SHORT).show();
+        } else if (AppConfig.LAUNCH_MODE == 1) {
+            Toast.makeText(mContext, mContext.getString(R.string.hx_toast_02), Toast.LENGTH_SHORT).show();
+        }
+
+        isVibrate = AppUtils.getBooleanSharedPreferences(context, "hx_notify_vibrate", true);
+        isSound = AppUtils.getBooleanSharedPreferences(context, "hx_notify_sound", true);
+
+        EmotionInit.init(context.getApplicationContext());     //表情初始化
+        //initEmo();
+
+        //appkey校验
+        if (!checkAppKey(context)) {
+            for (InitListener item : mInitListenerList) {
+                item.fail();
+            }
+            mInitListenerList.clear();
+            return;
+        }
+
+        //多个SDK后台运行
+        if (AppUtils.isMultiService(context, HuxinService.class.getName())) {
+            if (AppConfig.LAUNCH_MODE != 2) { //for test
+                Toast.makeText(mContext, mContext.getString(R.string.hx_toast_03), Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        Intent intent = new Intent(context.getApplicationContext(), HuxinService.class);
+        context.getApplicationContext().bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
+
+        // 添加https证书
+        NetConfig.init(context);
+
+        Log.v(TAG, "HuxinSdkManager in init");
+
+    }
+
+
+    /**
+     * 呼信sdk销毁
+     *
+     * @param
+     */
+    public void destroy() {
+        if (mContext != null && binded == BIND_STATUS.BINDED) {
+            binded = BIND_STATUS.IDLE;
+            mContext.getApplicationContext().unbindService(serviceConnection);
+        }
+
+    }
+
+    /**
+     * 获取刷新设置
+     *
+     * @return
+     */
+    public boolean isRepresentReresh() {
+        return isRepresentReresh;
+    }
+
+    public void setRepresentReresh(boolean isReresh) {
+        isRepresentReresh = isReresh;
+    }
+
+    public void setSession(String session) {
+        mUserInfo.setSession(session);
+        AppUtils.setStringSharedPreferences(mContext, "MySessionId_sdk", session);
+    }
+
+    public String getSession() {
+        String session = mUserInfo.getSession();
+        if (StringUtils.isEmpty(session) && mContext != null) {
+            session = AppUtils.getStringSharedPreferences(mContext, "MySessionId_sdk", "");
+            if (!StringUtils.isEmpty(session)) {
+                mUserInfo.setSession(session);
+            }
+        }
+        return session;
+    }
+
+
+    public void setUserId(int userId) {
+        mUserInfo.setUserId(userId);
+        AppUtils.setIntSharedPreferences(mContext, "uid_sdk", userId);
+
+    }
+
+    public int getUserId() {
+        int userId = mUserInfo.getUserId();
+        if (userId == 0 && mContext != null) {
+            userId = AppUtils.getIntSharedPreferences(mContext, "uid_sdk", 0);
+            if (userId != 0) {
+                mUserInfo.setUserId(userId);
+            }
+        }
+        return userId;
+    }
+
+
+    public void setPhoneNum(String phoneNum) {
+        if (AppUtils.isMobileNum(phoneNum) || phoneNum.equals("4000")) {
+            mUserInfo.setPhoneNum(phoneNum);
+            AppUtils.setStringSharedPreferences(mContext, "myPhone_sdk", phoneNum);
+        }
+
+    }
+
+
+    public String getPhoneNum() {
+        String phoneNum = mUserInfo.getPhoneNum();
+        if (StringUtils.isEmpty(phoneNum) && mContext != null) {
+            phoneNum = AppUtils.getStringSharedPreferences(mContext, "myPhone_sdk", "");
+            if (!StringUtils.isEmpty(phoneNum)) {
+                mUserInfo.setPhoneNum(phoneNum);
+            }
+        }
+        return phoneNum;
+    }
+
+
+    /**
+     * 获取通话中弹屏开关
+     * true 打开
+     * false 关闭
+     *
+     * @return
+     */
+    public boolean isCallFloatView() {
+        return mUserInfo.isCallFloatView();
+    }
+
+    /**
+     * 设置通话中弹屏开关
+     * true 打开
+     * false 关闭
+     *
+     * @return
+     */
+    public void setCallFloatView(boolean callFloatView) {
+        mUserInfo.setCallFloatView(callFloatView);
+    }
+
+
+    /**
+     * 获取通话后弹屏开关
+     * true 打开
+     * false 关闭
+     *
+     * @return
+     */
+    public boolean isCallEndSrceen() {
+        return mUserInfo.isCallEndSrceen();
+    }
+
+    /**
+     * 设置通话后弹屏开关
+     * true 打开
+     * false 关闭
+     *
+     * @return
+     */
+    public void setCallEndSrceen(boolean callEndSrceen) {
+        mUserInfo.setCallEndSrceen(callEndSrceen);
+    }
+
+
+    public void clearUserData() {
+        close();
+        mUserInfo.clearUserData(mContext);
+        AppUtils.setIntSharedPreferences(mContext, "uid_sdk", 0);
+        AppUtils.setStringSharedPreferences(mContext, "MySessionId_sdk", "");
+        AppUtils.setStringSharedPreferences(mContext, "myPhone_sdk", "");
+
+        MorePushManager.unregister(mContext);//反注册送服务
+        SPDataUtil.setUserInfoJson(mContext, "");// FIXME: 2017/3/20
+        IMMsgManager.getInstance().clearShortcutBadger();
+    }
+
+
+    /**
+     * 判断SDK是否登录
+     *
+     * @return
+     */
+    public boolean isLogin() {
+        boolean res = false;
+        if (!TextUtils.isEmpty(getPhoneNum())
+                && !TextUtils.isEmpty(getSession())
+                && getUserId() != 0) {
+            res = true;
+        }
+        return res;
+    }
+
+    public String getCommonParam() {
+        if (commonParam == null) {
+            commonParam = AppUtils.getStringSharedPreferences(mContext, "common_param", "");
+        }
+        return commonParam;
+    }
+
+    public void setCommonParam(String commonParam) {
+        this.commonParam = commonParam;
+    }
+
+    /**
+     * 判断SDK是否登录(for能信安)
+     *
+     * @return
+     */
+    public boolean isNengXinAnLogin() {
+        boolean res = false;
+        if (mContext != null) {
+
+            String session = getSession();
+            if (!StringUtils.isEmpty(session)) {
+                res = true;
+            }
+        }
+        return res;
+    }
+
+
+    /**
+     * 判断SDK服务是否已经绑定成功
+     *
+     * @return
+     */
+    public boolean isBinded() {
+        boolean res = false;
+        if (mContext != null && binded == BIND_STATUS.BINDED) {
+            res = true;
+        }
+        return res;
+    }
+
+
+    /**
+     * 判断tcp是否连接成功
+     *
+     * @return
+     */
+    public boolean isConnect() {
+        boolean res = false;
+        if (mContext != null && binded == BIND_STATUS.BINDED) {
+            res = huxinService.isConnect();
+        }
+        return res;
+    }
+
+
+    /**
+     * tcp 重新连接
+     */
+    public void imReconnect() {
+        if (mContext != null && binded == BIND_STATUS.BINDED) {
+            huxinService.reConnect();
+        }
+    }
+
+
+    /**
+     * 关闭tcp连接
+     *
+     * @return
+     */
+    public void close() {
+        if (mContext != null && binded == BIND_STATUS.BINDED) {
+            huxinService.close();
+        }
+    }
+
+
+    /**
+     * 显示SDK登录页面
+     *
+     * @return
+     */
+    public boolean showSdkLogin() {
+        if (!isLogin() && isBinded()) {
+            Intent intent = new Intent(mContext, LoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            mContext.startActivity(intent);
+            return true;
+        }
+        return false;
+    }
+
+
+    /**
+     * 从通讯录获取名称
+     *
+     * @param phone
+     * @return
+     */
+    public String getContactName(String phone) {
+        if (phone.equals("4000")) {
+            return mContext.getString(R.string.hx_sdk_feadback_service_name);
+        }
+        String nickName = mContactName.get(phone);
+        if (StringUtils.isEmpty(nickName)) {
+            ContentResolver resolver = mContext.getContentResolver();
+            Cursor cursor = null;
+            try {
+                cursor = resolver.query(Uri.withAppendedPath(
+                        ContactsContract.PhoneLookup.CONTENT_FILTER_URI, phone), new String[]{
+                        ContactsContract.PhoneLookup._ID,
+                        ContactsContract.PhoneLookup.NUMBER,
+                        ContactsContract.PhoneLookup.DISPLAY_NAME,
+                        ContactsContract.PhoneLookup.TYPE,
+                        ContactsContract.PhoneLookup.LABEL}, null, null, null);
+                if (cursor != null) {
+                    if (cursor.moveToFirst()) {
+                        nickName = cursor.getString(2);
+                    }
+                    LogUtils.e(Constant.SDK_UI_TAG, "phone = " + phone + "nickName = " + nickName);
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                nickName = "";
+            } finally {
+                if (cursor != null)
+                    cursor.close();
+            }
+
+            if (!StringUtils.isEmpty(nickName)) {
+                mContactName.put(phone, nickName);
+            }
+        }
+
+        if (StringUtils.isEmpty(nickName)) {
+            nickName = phone;
+        }
+        return nickName;
+    }
+
+
+    public boolean isContactName(String phone) {
+        boolean ret = false;
+        String name = getContactName(phone);
+        if (!name.equals(phone) || phone.equals("4000")) {
+            ret = true;
+        }
+        return ret;
+    }
+
+
+    /**
+     * 是否本地联系人
+     *
+     * @param phone
+     * @return
+     */
+    public boolean isContact(String phone) {
+
+        String nickName = "";
+        Cursor cursor = null;
+        try {
+            ContentResolver resolver = mContext.getContentResolver();
+            cursor = resolver.query(Uri.withAppendedPath(
+                    ContactsContract.PhoneLookup.CONTENT_FILTER_URI, phone), new String[]{
+                    ContactsContract.PhoneLookup._ID,
+                    ContactsContract.PhoneLookup.NUMBER,
+                    ContactsContract.PhoneLookup.DISPLAY_NAME,
+                    ContactsContract.PhoneLookup.TYPE,
+                    ContactsContract.PhoneLookup.LABEL}, null, null, null);
+            if (cursor != null) {
+                if (cursor.moveToFirst()) {
+                    nickName = cursor.getString(2);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            nickName = "";
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+            if (!StringUtils.isEmpty(nickName)) {
+                mContactName.put(phone, nickName);
+            }
+        }
+
+
+        return StringUtils.isEmpty(nickName);
+    }
+
+
+    /**
+     * 获取弹屏配置
+     * MODEL_TYPE_Q = 0; //Q版
+     * MODEL_TYPE_FULL = 1; //全屏板
+     * MODEL_TYPE_HALF = 2; //半屏板
+     *
+     * @return
+     */
+    public int getFloatType() {
+        int type = HuxinService.MODEL_TYPE_FULL;
+        if (mContext != null && binded == BIND_STATUS.BINDED) {
+            type = huxinService.getFloatType();
+        }
+        return type;
+
+    }
+
+    /**
+     * 设置弹屏配置
+     * MODEL_TYPE_Q = 0; //Q版
+     * MODEL_TYPE_FULL = 1; //全屏板
+     * MODEL_TYPE_HALF = 2; //半屏板
+     * MODEL_TYPE_CLOSE= 3; //关闭弹屏
+     *
+     * @param type
+     */
+    public void setFloatType(int type) {
+        if (mContext != null && binded == BIND_STATUS.BINDED) {
+            huxinService.setFloatType(type);
+        }
+    }
+
+
+    public void waitBindingProto(final GeneratedMessage msg, final ReceiveListener callback) {
+        init(mContext, new InitListener() {
+            @Override
+            public void success() {
+                huxinService.sendProto(msg, callback);
+            }
+
+
+            @Override
+            public void fail() {
+                String log = "bind server fail!";
+                LogFile.inStance().toFile(log);
+            }
+        });
+    }
+
+    public void waitBindingProto(final GeneratedMessage msg, final int commandId, final ReceiveListener callback) {
+        init(mContext, new InitListener() {
+            @Override
+            public void success() {
+                huxinService.sendProto(msg, commandId, callback);
+            }
+
+
+            @Override
+            public void fail() {
+                String log = "bind server fail!";
+                LogFile.inStance().toFile(log);
+            }
+        });
+    }
+
+
+    public void waitBindingNotify(final NotifyListener listener) {
+        init(mContext, new InitListener() {
+            @Override
+            public void success() {
+                huxinService.setNotifyListener(listener);
+            }
+
+            @Override
+            public void fail() {
+                String log = "bind server fail!";
+                LogFile.inStance().toFile(log);
+            }
+        });
+    }
+
+    /**
+     * 发送socket协议
+     *
+     * @param msg      消息体
+     * @param callback 回调
+     */
+    public void sendProto(final GeneratedMessage msg, final ReceiveListener callback) {
+        if (mContext != null) {
+            if (binded == BIND_STATUS.BINDED) {
+                huxinService.sendProto(msg, callback);
+            } else {
+                waitBindingProto(msg, callback);
+            }
+        } else {
+            throw new IllegalStateException("huxin sdk no init");
+        }
+
+    }
+
+    /**
+     * 发送socket协议
+     *
+     * @param msg       消息体
+     * @param commandId 命令码
+     * @param callback  回调
+     */
+    public void sendProto(final GeneratedMessage msg, final int commandId, final ReceiveListener callback) {
+        if (mContext != null) {
+            if (binded == BIND_STATUS.BINDED) {
+                huxinService.sendProto(msg, commandId, callback);
+            } else {
+                waitBindingProto(msg, commandId, callback);
+            }
+        } else {
+            throw new IllegalStateException("huxin sdk no init");
+        }
+
+    }
+
+
+    public void setNotifyListener(NotifyListener listener) {
+        if (mContext != null) {
+            if (binded == BIND_STATUS.BINDED) {
+                huxinService.setNotifyListener(listener);
+            } else {
+                waitBindingNotify(listener);
+            }
+        } else {
+            throw new IllegalStateException("huxin sdk no init");
+        }
+
+    }
+
+    public void clearNotifyListener(NotifyListener listener) {
+        if (mContext != null && binded == BIND_STATUS.BINDED) {
+            huxinService.clearNotifyListener(listener);
+        }
+    }
+
+
+    public void loginOut() {
+        if (mContext != null && binded == BIND_STATUS.BINDED) {
+            clearUserData();
+        }
+    }
+
+    /**
+     * 请求短信验证码
+     * 国际版需要mcc
+     *
+     * @param phoneNum
+     */
+    public void reqSmsCode(String phoneNum, String mcc, IPostListener callback) {
+        String url = AppConfig.SMS_CODE;
+        ContentValues parms = new ContentValues();
+        String imei = DeviceUtils.getIMEI(mContext);
+        parms.put("msisdn", phoneNum);
+        parms.put("termid", imei);
+        parms.put("sign", AppConfig.appSign(phoneNum, imei));
+        parms.put("mcc", mcc);
+        if (!LanguageUtil.isCN(mContext)) {
+            //国际版
+            parms.put("lang", "en");
+        }
+        parms.put("v", AppConfig.V);
+        parms.put("ps", getCommonParam());
+
+        HttpConnector.httpPost(url, parms, callback);
+    }
+
+
+    /**
+     * 用户手机号登录
+     * 国际版需要mcc
+     *
+     * @param phone      手机号
+     * @param mcc        区号标识
+     * @param validation 验证码
+     * @param listener
+     */
+    public void login(final String phone, String mcc, String validation, final LoginListener listener) {
+        String url = AppConfig.HTTP_LOGIN;
+        String cid1 = getDeviceId();
+        String imei = DeviceUtils.getIMEI(mContext);
+        String phonetype = DeviceUtils.getPhoneType();
+        int osVer = DeviceUtils.getOsVer();
+        int versionCode = AppUtils.getVerCode(mContext);
+
+        String channel;
+        if (mContext.getPackageName().equals("com.youmai.huxin")) {
+            channel = AppUtils.getChannelInfo(mContext); //SDK使用渠道号字段
+        } else {
+            channel = AppUtils.getAppKey(mContext); //SDK使用appkey字段
+        }
+
+        ContentValues params = new ContentValues();
+        params.put("msisdn", phone);
+        params.put("pwd", validation);
+        params.put("issms", "1");// 如果issms=1，则验证码登录且pwd=短信验证码，不传issms，就是普通的密码登录
+        params.put("cid1", cid1); //保存
+        params.put("termid", imei); //动态
+        params.put("phonetype", phonetype);
+        params.put("android_version", osVer);
+        params.put("app_version", versionCode);
+        params.put("channel", channel);// 发行的渠道
+
+        params.put("mcc", mcc);
+        params.put("v", AppConfig.V);
+        params.put("ps", getCommonParam());
+
+        if (!LanguageUtil.isCN(mContext)) {
+            params.put("lang", "en");
+        }
+
+        String channelUrl = "msisdn=" + phone
+                + "&pwd=" + validation
+                + "&cid1=" + cid1
+                + "&termid=" + imei
+                + "&android_version=" + osVer  //android.os.Build.VERSION.SDK_INT
+                + "&phonetype=" + phonetype;  /*android.os.Build.BRAND + " " + android.os.Build.MODEL*/
+        channelUrl = AppUtils.md5("00000" + channelUrl + "999999").toLowerCase();
+        params.put("sign", channelUrl);// 发行的渠道
+
+
+        HttpConnector.httpPost(url, params, new IPostListener() {
+            @Override
+            public void httpReqResult(String response) {
+                LoginResult resp = GsonUtil.parse(response, LoginResult.class);
+
+                LogUtils.e(Constant.SDK_UI_TAG, "response = " + response);
+
+                if (resp == null) {
+                    if (listener != null) {
+                        listener.fail("http login response error");
+                    }
+                    Log.e(TAG, "http response:" + response);
+                    Toast.makeText(mContext, mContext.getString(R.string.hx_toast_68), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (resp.isSucess()) {
+                    String session = resp.getD().getSid();
+                    try {
+                        String uidStr = resp.getD().getUid();
+                        int userId = Integer.parseInt(uidStr);
+
+                        socketLogin(userId, phone, session, listener);
+
+                    } catch (NumberFormatException e) {
+                        e.printStackTrace();
+                    } finally {
+                        HuxinSdkManager.instance().setPhoneNum(phone);
+                        GreenDBIMManager.instance(mContext).setDaoSession(null);
+                        GreenDBIMManager.instance(mContext).dropTables();
+                    }
+                } else {
+                    Toast.makeText(mContext, resp.getM(), Toast.LENGTH_SHORT).show();
+                    if (listener != null && resp.getM() != null) {
+                        listener.fail(resp.getM());
+                    }
+                }
+            }
+
+        });
+
+    }
+
+
+    /**
+     * 用户手机号登录
+     *
+     * @param phone
+     * @param listener
+     */
+    public void setPhoneNumber(final String phone, final LoginListener listener) {
+        if (!AppUtils.isMobileNum(phone) && !phone.equals("4000")) {
+            if (listener != null) {
+                listener.fail("phoneNum is error");
+            }
+            return;
+        }
+
+        String url = AppConfig.HTTP_LOGIN;
+        String cid1 = getDeviceId();
+        String imei = DeviceUtils.getIMEI(mContext);
+        String phonetype = DeviceUtils.getPhoneType();
+        int osVer = DeviceUtils.getOsVer();
+        int versionCode = AppUtils.getVerCode(mContext);
+
+        String channel;
+        if (mContext.getPackageName().equals("com.youmai.huxin")) {
+            channel = AppUtils.getChannelInfo(mContext); //SDK使用渠道号字段
+        } else {
+            channel = AppUtils.getAppKey(mContext); //SDK使用appkey字段
+        }
+
+
+        String validation = AppUtils.md5(phone).substring(8, 12);
+
+        ContentValues params = new ContentValues();
+        params.put("msisdn", phone);
+        params.put("pwd", validation);
+        //  params.put("issms", "2");// 如果issms=1，则验证码登录且pwd=短信验证码，不传issms，就是普通的密码登录
+        params.put("issms", "3");// 海外登录去除号码验证，只保留数字验证参数issms=3
+        params.put("cid1", cid1); //保存
+        params.put("termid", imei); //动态
+        params.put("phonetype", phonetype);
+        params.put("android_version", osVer);
+        params.put("app_version", versionCode);
+        params.put("channel", channel);// 发行的渠道
+
+        params.put("mcc", PhoneImsi.getMCC(mContext));
+        if (!LanguageUtil.isCN(mContext)) {
+            params.put("lang", "en");
+        }
+        params.put("v", AppConfig.V);
+        params.put("ps", getCommonParam());
+
+        String channelUrl = "msisdn=" + phone
+                + "&pwd=" + validation
+                + "&cid1=" + cid1
+                + "&termid=" + imei
+                + "&android_version=" + osVer  //android.os.Build.VERSION.SDK_INT
+                + "&phonetype=" + phonetype;  /*android.os.Build.BRAND + " " + android.os.Build.MODEL*/
+        channelUrl = AppUtils.md5("00000" + channelUrl + "999999");
+        params.put("sign", channelUrl);// 发行的渠道
+
+
+        HttpConnector.httpPost(url, params, new IPostListener() {
+            @Override
+            public void httpReqResult(String response) {
+                LoginResult resp = GsonUtil.parse(response,
+                        LoginResult.class);
+
+                if (resp == null && listener != null) {
+                    listener.fail("http login response error");
+                    Log.e(TAG, "http response:" + response);
+                    return;
+                }
+
+                if (resp != null) {
+                    if (resp.isSucess()) {
+                        String session = resp.getD().getSid();
+                        try {
+                            String uidStr = resp.getD().getUid();
+                            int userId = Integer.parseInt(uidStr);
+
+                            socketLogin(userId, phone, session, listener);
+                        } catch (NumberFormatException e) {
+                            e.printStackTrace();
+                        } finally {
+                            HuxinSdkManager.instance().setPhoneNum(phone);
+                            GreenDBIMManager.instance(mContext).setDaoSession(null);
+                        }
+                    } else if (resp.getM() != null) {
+                        Toast.makeText(mContext, resp.getM(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+            }
+        });
+
+    }
+
+
+    /**
+     * req socket ip and port
+     * tcp login
+     */
+    public void socketLogin(final int userId, final String phone, final String session,
+                            final LoginListener listener) {
+        String url = AppConfig.getTcpHost(mContext, userId);
+
+        HttpConnector.httpGet(url, new IGetListener() {
+            @Override
+            public void httpReqResult(String response) {
+                IpConfig resp = GsonUtil.parse(response, IpConfig.class);
+                if (resp != null) {
+                    String ip = resp.getIp();
+                    int port = resp.getPort();
+
+                    AppUtils.setStringSharedPreferences(mContext, "IP", ip);
+                    AppUtils.setIntSharedPreferences(mContext, "PORT", port);
+
+                    InetSocketAddress isa = new InetSocketAddress(ip, port);
+                    connectTcp(userId, phone, session, isa);
+
+                    if (listener != null) {
+                        listener.success("tcp login success");
+                    }
+                } else {
+                    if (listener != null) {
+                        listener.fail("tcp login fail");
+                    }
+                }
+            }
+        });
+    }
+
+
+    /**
+     * java 获取上传文件token
+     *
+     * @param
+     */
+    public void getUploadFileToken(IPostListener callback) {
+
+        String url = AppConfig.GET_UPLOAD_FILE_TOKEN;
+
+        String imei = DeviceUtils.getIMEI(mContext);
+        String phoneNum = HuxinSdkManager.instance().getPhoneNum();
+        int uid = HuxinSdkManager.instance().getUserId();
+        String sid = HuxinSdkManager.instance().getSession();
+
+        ContentValues params = new ContentValues();
+        params.put("msisdn", phoneNum);
+        params.put("uid", uid);// 海外登录去除号码验证，只保留数字验证参数issms=3
+        params.put("sid", sid); //保存
+        params.put("termid", imei); //动态
+        params.put("sign", AppConfig.appSign(phoneNum, imei));// 发行的渠道
+        params.put("v", AppConfig.V);
+        params.put("ps", getCommonParam());
+
+        HttpConnector.httpPost(url, params, callback);
+    }
+
+    /**
+     * 上传用户头像
+     *
+     * @param uri
+     * @param completionHandler
+     * @param progressHandler
+     */
+    public void sendHeadImage(Uri uri, final UpCompletionHandler completionHandler,
+                              final UpProgressHandler progressHandler) {
+        String path = AppUtils.getPath(mContext, uri);
+        sendHeadImage(path, completionHandler, progressHandler);
+    }
+
+
+    /**
+     * 上传用户头像
+     *
+     * @param path
+     * @param completionHandler
+     * @param progressHandler
+     */
+
+    public void sendHeadImage(final String path, final UpCompletionHandler completionHandler,
+                              final UpProgressHandler progressHandler) {
+        IPostListener callback = new IPostListener() {
+            @Override
+            public void httpReqResult(String response) {
+                FileToken resp = GsonUtil.parse(response, FileToken.class);
+                if (resp.isSucess()) {
+                    String fidKey = resp.getD().getFid();
+                    String token = resp.getD().getUpToken();
+                    String phone = getPhoneNum();
+
+                    Map<String, String> params = new HashMap<>();
+                    params.put("x:msisdn", phone);
+                    params.put("x:type", "3");
+
+                    params.put("mcc", PhoneImsi.getMCC(mContext));
+                    if (!LanguageUtil.isCN(mContext)) {
+                        params.put("lang", "en");
+                    }
+
+                    UploadOptions options = new UploadOptions(params, null, false, progressHandler, null);
+
+                    uploadManager.put(path, fidKey, token, completionHandler, options);
+
+                }
+            }
+        };
+        getUploadFileToken(callback);
+    }
+
+
+    /**
+     * @param body     建议或举报内容
+     * @param callback HTTP回调
+     */
+
+    public void sendFeedback(String body, IPostListener callback) {
+        String url = AppConfig.UP_SUGGESSINS;
+        String srcPhone = getPhoneNum();
+
+        ContentValues urlParms = new ContentValues();
+        urlParms.put("type", "0"); //0为建议，1为投诉
+        urlParms.put("contact", srcPhone);
+        urlParms.put("cont", body);
+        urlParms.put("name", "user"); //建议人的称呼
+
+        urlParms.put("mcc", PhoneImsi.getMCC(mContext));
+        if (!LanguageUtil.isCN(mContext)) {
+            urlParms.put("lang", "en");
+        }
+
+        urlParms.put("v", AppConfig.V);
+        urlParms.put("ps", getCommonParam());
+
+        HttpConnector.httpPost(url, urlParms, callback);
+    }
+
+
+    /**
+     * 检查服务器版本更新
+     */
+    public void checkUpdate(IPostListener listener) {
+
+        String url = AppConfig.APP_UPDATE_CONFIG;
+
+        ContentValues params = new ContentValues();
+        params.put("versionCode", AppUtils.getVerCode(mContext));
+        params.put("channel", AppUtils.getChannelInfo(mContext));
+        params.put("name", "huxin");
+        params.put("os", "1");
+
+        params.put("mcc", PhoneImsi.getMCC(mContext));
+        if (!LanguageUtil.isCN(mContext)) {
+            params.put("lang", "en");
+        }
+
+        params.put("v", AppConfig.V);
+        params.put("ps", getCommonParam());
+
+        HttpConnector.httpPost(url, params, listener);
+    }
+
+    /**
+     * 获取用户号码归属地
+     */
+    public void userLocale(String phoneNum, String j, String w, IPostListener listener) {
+        if (TextUtils.isEmpty(phoneNum)) {
+            return;
+        }
+
+        String url = AppConfig.LOCALE_NUMBER + phoneNum;
+
+        ContentValues params = new ContentValues();
+        if (!StringUtils.isEmpty(j) && !StringUtils.isEmpty(w)) {
+            params.put("j", j);
+            params.put("w", w);
+        }
+        params.put("v", AppConfig.V);
+        params.put("ps", getCommonParam());
+
+        HttpConnector.httpPost(url, params, listener);
+    }
+
+
+    /**
+     * 存储呼信用户个人信息 -- 需要用户登录
+     *
+     * @param phoneNum    需要存储的个人信息号码
+     * @param bizType     业务类型: 0:个人名片
+     * @param jsonContent 个人信息(JSON格式)
+     * @param listener
+     */
+    public void userInfoSave(String phoneNum, int bizType, String jsonContent, IPostListener listener) {
+        String url = AppConfig.USER_INFO_SAVE;
+        if (TextUtils.isEmpty(phoneNum)) {
+            return;
+        }
+
+        String imei = DeviceUtils.getIMEI(mContext);
+
+        ContentValues params = new ContentValues();
+        params.put("msisdn", phoneNum);
+        params.put("termid", imei);
+
+        params.put("sign", AppConfig.appSign(phoneNum, imei));
+
+        params.put("bizType", bizType);
+        params.put("content", jsonContent);
+        params.put("mcc", PhoneImsi.getMCC(mContext));
+        params.put("v", AppConfig.V);
+        params.put("ps", getCommonParam());
+
+        HttpConnector.httpPost(url, params, listener);
+    }
+
+    /**
+     * 获取呼信用户个人信息 -- 需要用户登录
+     *
+     * @param phoneNum
+     * @param bizType
+     * @param listener
+     */
+    public void userInfoGet(String phoneNum, int bizType, IPostListener listener) {
+        String url = AppConfig.USER_INFO_GET;
+
+        if (TextUtils.isEmpty(phoneNum)) {
+            return;
+        }
+
+        String imei = DeviceUtils.getIMEI(mContext);
+        ContentValues params = new ContentValues();
+        params.put("msisdn", phoneNum);
+        params.put("termid", imei);
+
+        params.put("sign", AppConfig.appSign(phoneNum, imei));
+        params.put("bizType", bizType);
+        params.put("mcc", PhoneImsi.getMCC(mContext));
+        params.put("v", AppConfig.V);
+        params.put("ps", getCommonParam());
+
+        HttpConnector.httpPost(url, params, listener);
+    }
+
+    /**
+     * 获取用户个人信息 -- 不需要用户登录
+     *
+     * @param phoneNum 需要存储的个人信息号码
+     * @param listener
+     */
+    public void userInfo(String phoneNum, IPostListener listener) {
+        String url = AppConfig.USER_INFO_NOT_LOGIN_GET + phoneNum;
+
+        if (TextUtils.isEmpty(phoneNum)) {
+            return;
+        }
+
+        ContentValues params = new ContentValues();
+        params.put("mcc", PhoneImsi.getMCC(mContext));
+        params.put("v", AppConfig.V);
+        params.put("ps", getCommonParam());
+
+        HttpConnector.httpPost(url, params, listener);
+    }
+
+
+    /**
+     * 通话后屏获取用展示的信息列表
+     *
+     * @param listener
+     */
+    public void strategyList(IPostListener listener) {
+        ContentValues params = new ContentValues();
+        params.put("channel", AppUtils.getChannelInfo(mContext)); //渠道号
+        params.put("packageName", mContext.getPackageName());  //包名
+        params.put("v", AppConfig.V);
+        params.put("ps", getCommonParam());
+        String phoneNum = getPhoneNum();
+        if (!StringUtils.isEmpty(phoneNum)) {
+            params.put("msisdn", phoneNum);
+        }
+
+        HttpConnector.httpPost(AppConfig.HOOK_STRATEGY_LIST, params, listener);
+    }
+
+
+    public void allHxShowInfo(String content, IPostListener listener) {
+        String url = AppConfig.ALL_SHOW_INFO;
+        ContentValues params = new ContentValues();
+        params.put("content", content);
+        params.put("v", AppConfig.V);
+        params.put("ps", getCommonParam());
+        HttpConnector.httpPost(url, params, listener);
+    }
+
+
+    /**
+     * 获取所有呼信用户信息 ：HuXin 的头像 & 性别 & 用户类型 and so on
+     *
+     * @param content
+     * @param listener
+     */
+    public void allHxUserInfo(String content, IPostListener listener) {
+        String url = AppConfig.ALL_USER_INFO;
+        ContentValues params = new ContentValues();
+        params.put("content", content);
+        params.put("v", AppConfig.V);
+        params.put("ps", getCommonParam());
+        HttpConnector.httpPost(url, params, listener);
+    }
+
+    /**
+     * 呼信注册用户信息获取,有微信绑定信息
+     */
+    public void weChatInfo(IPostListener listener) {
+        String url = AppConfig.WECHAT_INFO + "/" + HuxinSdkManager.instance().getPhoneNum();
+        ContentValues params = new ContentValues();
+        params.put("v", AppConfig.V);
+        params.put("ps", getCommonParam());
+        HttpConnector.httpPost(url, params, listener);
+    }
+
+
+    /**
+     * 获取卡券详情
+     *
+     * @param id
+     * @param code
+     * @param request
+     */
+    public void reqCoupons(int id, String code, IGetListener request) {
+        String url = AppConfig.COUPON_DETAIL_DATA + id;
+
+        ContentValues param = new ContentValues();
+        param.put("code", code);
+
+        param.put("mcc", PhoneImsi.getMCC(mContext));
+        if (!LanguageUtil.isCN(mContext)) {
+            param.put("lang", "en");
+        }
+        param.put("v", AppConfig.V);
+        param.put("ps", getCommonParam());
+        HttpConnector.httpGet(url, param, request);
+    }
+
+
+    /**
+     * 请求已经清楚的卡券数据
+     *
+     * @param request
+     */
+    public void reqRemoveCoupons(IGetListener request) {
+        String url = AppConfig.COUPON_REMOVE_DATA;
+
+        ContentValues param = new ContentValues();
+
+        String phoneNum = getPhoneNum();
+        String imei = DeviceUtils.getIMEI(mContext);
+
+        param.put("msisdn", phoneNum);
+        param.put("termid", imei);
+        param.put("sign", AppConfig.appSign(phoneNum, imei));
+
+        param.put("mcc", PhoneImsi.getMCC(mContext));
+        if (!LanguageUtil.isCN(mContext)) {
+            param.put("lang", "en");
+        }
+        param.put("v", AppConfig.V);
+        param.put("ps", getCommonParam());
+        HttpConnector.httpGet(url, param, request);
+    }
+
+
+    /**
+     * 请求失效的卡券数据
+     *
+     * @param index   分页数
+     * @param request
+     */
+    public void reqDisableCoupons(int index, IGetListener request) {
+        String url = AppConfig.DISCOUPON_DATA;
+        ContentValues param = new ContentValues();
+        param.put("msisdn", getPhoneNum());
+        param.put("page", index);
+
+        param.put("mcc", PhoneImsi.getMCC(mContext));
+        if (!LanguageUtil.isCN(mContext)) {
+            param.put("lang", "en");
+        }
+        param.put("v", AppConfig.V);
+        param.put("ps", getCommonParam());
+        HttpConnector.httpGet(url, param, request);
+    }
+
+
+    /**
+     * 请求兑换结果
+     *
+     * @param id
+     * @param code
+     * @param request
+     */
+    public void reqExchange(int id, String code, IGetListener request) {
+        String url = AppConfig.COUPON_EXCHANGE_DATA + id;
+
+        String phoneNum = getPhoneNum();
+        String imei = DeviceUtils.getIMEI(mContext);
+
+        ContentValues param = new ContentValues();
+        param.put("msisdn", phoneNum);
+        param.put("termid", imei);
+        param.put("sign", AppConfig.appSign(phoneNum, imei));
+
+        param.put("code", code);
+        param.put("mcc", PhoneImsi.getMCC(mContext));
+        if (!LanguageUtil.isCN(mContext)) {
+            param.put("lang", "en");
+        }
+        param.put("v", AppConfig.V);
+        param.put("ps", getCommonParam());
+        HttpConnector.httpGet(url, param, request);
+    }
+
+
+    /**
+     * 加入代言
+     *
+     * @param id
+     * @param request
+     */
+    public void reqJoinRepresent(String id, IGetListener request) {
+        String url = AppConfig.REPRESENT_JOIN + "/" + id;
+
+        String phoneNum = getPhoneNum();
+        String imei = DeviceUtils.getIMEI(mContext);
+
+        ContentValues param = new ContentValues();
+        param.put("msisdn", phoneNum);
+        param.put("termid", imei);
+
+        param.put("sign", AppConfig.appSign(phoneNum, imei));
+
+
+        param.put("mcc", PhoneImsi.getMCC(mContext));
+        if (!LanguageUtil.isCN(mContext)) {
+            param.put("lang", "en");
+        }
+        param.put("v", AppConfig.V);
+        param.put("ps", getCommonParam());
+        HttpConnector.httpGet(url, param, request);
+    }
+
+    /**
+     * 取消代言
+     *
+     * @param id
+     * @param request
+     */
+    public void reqCancelRepresent(String id, IGetListener request) {
+        String url = AppConfig.REPRESENT_CANCEL + "/" + id;
+
+        String phoneNum = getPhoneNum();
+        String imei = DeviceUtils.getIMEI(mContext);
+
+        ContentValues param = new ContentValues();
+        param.put("msisdn", phoneNum);
+        param.put("termid", imei);
+
+        param.put("sign", AppConfig.appSign(phoneNum, imei));
+
+
+        param.put("mcc", PhoneImsi.getMCC(mContext));
+        if (!LanguageUtil.isCN(mContext)) {
+            param.put("lang", "en");
+        }
+        param.put("v", AppConfig.V);
+        param.put("ps", getCommonParam());
+        HttpConnector.httpGet(url, param, request);
+    }
+
+
+    /**
+     * 请求代言详情
+     *
+     * @param id
+     * @param request
+     */
+    public void reqDetailById(String id, String msisdn, IGetListener request) {
+        String url = AppConfig.REPRESENT_DATA + "/" + id;
+        ContentValues param = new ContentValues();
+        if (!LanguageUtil.isCN(mContext)) {
+            param.put("lang", "en");
+        }
+        param.put("msisdn", msisdn);
+        param.put("v", AppConfig.V);
+        param.put("ps", getCommonParam());
+        HttpConnector.httpGet(url, param, request);
+    }
+
+
+    /**
+     * 请求代言列表
+     *
+     * @param index
+     * @param request
+     */
+    public void reqDetailList(int index, IGetListener request) {
+        String url = AppConfig.REPRESENT_DATA;
+        ContentValues param = new ContentValues();
+        param.put("msisdn", getPhoneNum());
+        param.put("page", index);
+        param.put("v", AppConfig.V);
+        param.put("ps", getCommonParam());
+        HttpConnector.httpGet(url, param, request);
+    }
+
+    /**
+     * 请求代言历史
+     *
+     * @param page
+     * @param request
+     */
+    public void repHistoryList(int page, IGetListener request) {
+        String url = AppConfig.REPRESENT_HISTORY;
+        String msisdn = HuxinSdkManager.instance().getPhoneNum();
+
+        ContentValues params = new ContentValues();
+        params.put("msisdn", msisdn);
+        params.put("page", page);
+        params.put("rows", 10);
+        if (!LanguageUtil.isCN(mContext)) {
+            params.put("lang", "en");
+        }
+        params.put("v", AppConfig.V);
+        params.put("ps", getCommonParam());
+        HttpConnector.httpGet(url, params, request);
+    }
+
+    /**
+     * 获取代言奖励
+     *
+     * @param id
+     * @param request
+     */
+    public void repGetAward(String id, IPostListener request) {
+        String url = AppConfig.REPRESENT_GET_AWARD + "/" + id;
+        String msisdn = HuxinSdkManager.instance().getPhoneNum();
+
+        ContentValues params = new ContentValues();
+        params.put("msisdn", msisdn);
+        params.put("sid", HuxinSdkManager.instance.getSession());
+        String imei = DeviceUtils.getIMEI(mContext);
+        params.put("termid", imei);
+        params.put("sign", AppConfig.appSign(msisdn, imei));
+        params.put("v", AppConfig.V);
+        params.put("ps", getCommonParam());
+
+        HttpConnector.httpPost(url, params, request);
+    }
+
+    /**
+     * 代红包雨奖励
+     *
+     * @param request
+     */
+    public void repRedPacketAward(IPostListener request) {
+        String url = AppConfig.REPRESENT_RED_PACKET_AWARD;
+        String msisdn = HuxinSdkManager.instance().getPhoneNum();
+        String imei = DeviceUtils.getIMEI(mContext);
+
+        ContentValues params = new ContentValues();
+        params.put("msisdn", msisdn);
+        params.put("termid", imei);
+        params.put("sign", AppConfig.appSign(msisdn, imei));
+        params.put("v", AppConfig.V);
+        params.put("ps", getCommonParam());
+
+        HttpConnector.httpPost(url, params, request);
+    }
+
+    /**
+     * 获取当前代言信息
+     *
+     * @param request
+     */
+    public void repCurrentInfo(IPostListener request) {
+        String url = AppConfig.REPRESENT_CURRENT_INFO;
+
+        ContentValues params = new ContentValues();
+        params.put("msisdn", HuxinSdkManager.instance().getPhoneNum());
+        params.put("v", AppConfig.V);
+        params.put("ps", getCommonParam());
+
+        HttpConnector.httpPost(url, params, request);
+    }
+
+    /**
+     * 获取服务器配置
+     *
+     * @param appCfg
+     * @param showCfg
+     * @param contCfg
+     * @param statsCfg
+     * @param request
+     */
+    public void reqSdkConfig(String brand, String model, String sysVersion,
+                             int androidVersion, String appAuthCfgVersion, String appCfg, String showCfg,
+                             String contCfg, String statsCfg, IGetListener request) {
+
+        String url = AppConfig.HNXIN_CONFIG;
+        ContentValues params = new ContentValues();
+
+        params.put("brand", brand);
+        params.put("model", model);
+        params.put("sysVersion", sysVersion);
+        params.put("androidVersion", androidVersion);
+
+        params.put("channel", AppUtils.getChannelInfo(mContext));
+        params.put("appAuthCfgVersion", appAuthCfgVersion);
+        params.put("appCfgVersion", appCfg);
+        params.put("showCfgVersion", showCfg);
+        params.put("contCfgVersion", contCfg);
+        params.put("statsCfgVersion", statsCfg);
+        params.put("v", AppConfig.V);
+        params.put("ps", getCommonParam());
+
+        HttpConnector.httpGet(url, params, request);
+    }
+
+
+    /**
+     * 批量发送所有统计点
+     *
+     * @param url
+     * @param postStr
+     * @param listener
+     */
+    public void postAllEvent(String url, String postStr, IPostListener listener) {
+        ContentValues param = new ContentValues();
+        param.put("jsonArray", postStr);
+        param.put("mcc", PhoneImsi.getMCC(mContext));
+        param.put("v", AppConfig.V);
+        param.put("ps", getCommonParam());
+        HttpConnector.httpPost(url, param, listener);
+    }
+
+
+    /**
+     * 立即上传统计信息
+     *
+     * @param postStr
+     * @param listener
+     */
+    public void postEvent(String postStr, IPostListener listener) {
+        String url = AppConfig.STATS_INSTALL_URL;
+        HttpConnector.httpPost(url, postStr, listener);
+    }
+
+
+    /**
+     * 获取弹屏配置开关
+     *
+     * @param context
+     * @param listener
+     */
+    public void reqFloatViewConfig(Context context, IPostListener listener) {
+        String url = AppConfig.FLOAT_VIEW_CONFIG;
+        FloatViewConfig config = new FloatViewConfig(context);
+        ContentValues param = config.getParams();
+        HttpConnector.httpPost(url, param, listener);
+    }
+
+
+    /**
+     * 向目标设备推送消息
+     *
+     * @param targetPhone
+     * @param message
+     * @param type
+     * @param listener
+     */
+    public void pushMsg(String phoneNum, String targetPhone, String message, int type, IPostListener listener) {
+
+        String url = AppConfig.PUSH_MSG;
+        ContentValues params = new ContentValues();
+
+        String imei = DeviceUtils.getIMEI(mContext);
+
+        params.put("msisdn", phoneNum);
+        params.put("termid", imei);//设备id,也就是IMEI
+        params.put("sign", AppConfig.appSign(phoneNum, imei));//签名
+        params.put("targetPhone", targetPhone);
+        params.put("message", message);
+        params.put("type", type);
+        params.put("v", AppConfig.V);
+        params.put("ps", getCommonParam());
+
+        HttpConnector.httpPost(url, params, listener);
+    }
+
+
+    /**
+     * 注册推送
+     *
+     * @param token
+     * @param brand
+     * @param listener
+     */
+    public void pushRegister(String token, String brand, IPostListener listener) {
+        String url = AppConfig.PUSH_REGISTER;
+        String phoneNum = getPhoneNum();
+        String imei = DeviceUtils.getIMEI(mContext);
+
+        ContentValues params = new ContentValues();
+        params.put("msisdn", phoneNum);
+        params.put("termid", imei);//设备id,也就是IMEI
+
+        params.put("sign", AppConfig.appSign(phoneNum, imei));//签名
+        params.put("token", token);
+        params.put("brand", brand);
+        params.put("packageName", AppUtils.getAppPackageName(mContext)); //包名
+        params.put("v", AppConfig.V);
+        params.put("ps", getCommonParam());
+
+        HttpConnector.httpPost(url, params, listener);
+    }
+
+
+    /**
+     * 加入附属商家号码
+     *
+     * @param pblPhone
+     * @param listener
+     */
+    public void reqJoinMerchant(String pblPhone, IPostListener listener) {
+        String url = AppConfig.JOIN_MERCHANT;
+        String phoneNum = HuxinSdkManager.instance().getPhoneNum();
+        String imei = DeviceUtils.getIMEI(mContext);
+
+        ContentValues params = new ContentValues();
+        params.put("msisdn", phoneNum);
+        params.put("termid", imei);
+        params.put("sign", AppConfig.appSign(phoneNum, imei));
+        params.put("pblPhone", pblPhone);
+        params.put("v", AppConfig.V);
+        params.put("ps", getCommonParam());
+
+        HttpConnector.httpPost(url, params, listener);
+    }
+
+
+    /**
+     * 用户秀数据
+     *
+     * @param version
+     * @param listener
+     */
+    public void showData(String version, IGetListener listener) {
+        String phoneNum = getPhoneNum();
+        if (StringUtils.isEmpty(phoneNum)) {
+            return;
+        }
+
+        String url = AppConfig.getShowUrl(phoneNum, version);
+
+        ContentValues parms = new ContentValues();
+
+        parms.put("lang", LanguageUtil.getLang(mContext));
+        parms.put("channel", AppUtils.getChannelInfo(mContext));
+        parms.put("v", AppConfig.V);
+        parms.put("ps", getCommonParam());
+
+        HttpConnector.httpGet(url, parms, listener);
+    }
+
+
+    /**
+     * 退出商家号
+     *
+     * @param listener
+     */
+    public void exitMerchant(IPostListener listener) {
+        String phoneNum = HuxinSdkManager.instance().getPhoneNum();
+        String url = AppConfig.EXIT_MERCHANT + phoneNum;
+        String imei = DeviceUtils.getIMEI(mContext);
+
+        ContentValues params = new ContentValues();
+        params.put("msisdn", phoneNum);
+        params.put("termid", imei);
+        params.put("sign", AppConfig.appSign(phoneNum, imei));
+        params.put("v", AppConfig.V);
+        params.put("ps", getCommonParam());
+        HttpConnector.httpPost(url, params, listener);
+    }
+
+
+    /**
+     * 附属商家详情
+     *
+     * @param listener
+     */
+    public void merchantInfo(IGetListener listener) {
+        String phoneNum = HuxinSdkManager.instance().getPhoneNum();
+        String url = AppConfig.MERCHANT_DETAIL + phoneNum;
+
+        HttpConnector.httpGet(url, listener);
+    }
+
+
+    public void showTemplet(int index, IGetListener listener) {
+        String url = AppConfig.SHOW_TEMPLET;
+        ContentValues param = new ContentValues();
+        param.put("page", index);
+        param.put("v", AppConfig.V);
+        param.put("ps", getCommonParam());
+        HttpConnector.httpGet(url, param, listener);
+    }
+
+    /**
+     * 设置模板秀
+     *
+     * @param id
+     * @param fid
+     * @param fileType
+     * @param listener
+     */
+    public void setShowModel(int id, String fid, int fileType, IGetListener listener) {
+        String url = AppConfig.SETTING_SHOW;
+        final String phoneNum = getPhoneNum();
+        final String imei = DeviceUtils.getIMEI(mContext);
+
+        ContentValues header = new ContentValues();
+        header.put("id", id);
+        header.put("fid", fid);
+
+        header.put("msisdn", phoneNum);
+        header.put("termid", imei);
+
+        header.put("sign", AppConfig.appSign(phoneNum, imei));
+        header.put("fileType", fileType);
+
+        header.put("mcc", PhoneImsi.getMCC(mContext));
+        header.put("v", AppConfig.V);
+        header.put("ps", getCommonParam());
+
+        if (!LanguageUtil.isCN(mContext)) {
+            header.put("lang", "en");
+        }
+        HttpConnector.httpGet(url, header, listener);
+    }
+
+    /**
+     * 设置图片秀
+     *
+     * @param fid
+     * @param listener
+     */
+    public void setShowPic(String fid, IGetListener listener) {
+        String url = AppConfig.SETTING_SHOW;
+        final String phoneNum = getPhoneNum();
+        final String imei = DeviceUtils.getIMEI(mContext);
+
+        ContentValues header = new ContentValues();
+        header.put("fid", fid);
+
+        header.put("msisdn", phoneNum);
+        header.put("termid", imei);
+
+        header.put("sign", AppConfig.appSign(phoneNum, imei));
+        header.put("fileType", 0);
+
+        header.put("mcc", PhoneImsi.getMCC(mContext));
+        header.put("v", AppConfig.V);
+        header.put("ps", getCommonParam());
+
+        if (!LanguageUtil.isCN(mContext)) {
+            header.put("lang", "en");
+        }
+        HttpConnector.httpGet(url, header, listener);
+    }
+
+
+    /**
+     * 设置视频秀
+     *
+     * @param fid
+     * @param pFid
+     * @param vTime
+     * @param listener
+     */
+    public void setShowVideo(String fid, int pFid, String vTime, IGetListener listener) {
+        String url = AppConfig.SETTING_SHOW;
+        final String phoneNum = getPhoneNum();
+        final String imei = DeviceUtils.getIMEI(mContext);
+
+        ContentValues header = new ContentValues();
+
+        header.put("msisdn", phoneNum);
+        header.put("termid", imei);
+        header.put("sign", AppConfig.appSign(phoneNum, imei));
+
+        header.put("fid", fid);
+        header.put("fileType", 1);
+        header.put("pfid", pFid);
+        header.put("vtime", vTime);
+
+        header.put("mcc", PhoneImsi.getMCC(mContext));
+        header.put("v", AppConfig.V);
+        header.put("ps", getCommonParam());
+
+        if (!LanguageUtil.isCN(mContext)) {
+            header.put("lang", "en");
+        }
+        HttpConnector.httpGet(url, header, listener);
+    }
+
+    /**
+     * 取消秀
+     *
+     * @param listener
+     */
+    public void cancelShow(IGetListener listener) {
+        String url = AppConfig.CANCEL_SHOW;
+
+        int uid = HuxinSdkManager.instance().getUserId();
+        String phoneNum = HuxinSdkManager.instance.getPhoneNum();
+        String sid = HuxinSdkManager.instance().getSession();
+        String imei = DeviceUtils.getIMEI(mContext);
+
+        ContentValues params = new ContentValues();
+        params.put("uid", uid);
+        params.put("msisdn", phoneNum);
+        params.put("sid", sid);
+        params.put("termid", imei);
+        params.put("sign", AppConfig.appSign(phoneNum, imei));
+        params.put("v", AppConfig.V);
+        params.put("ps", getCommonParam());
+
+        if (!LanguageUtil.isCN(mContext)) {
+            params.put("lang", "en");
+        }
+        HttpConnector.httpGet(url, params, listener);
+    }
+
+
+    /**
+     * 获取卡券列表
+     *
+     * @param index
+     * @param listener
+     */
+    public void reqCouponsList(int index, IGetListener listener) {
+        String url = AppConfig.COUPON_DATA;
+        String phoneNum = getPhoneNum();
+
+        ContentValues param = new ContentValues();
+        param.put("msisdn", phoneNum);
+        param.put("page", index);
+        param.put("rows", 10);
+        param.put("v", AppConfig.V);
+        param.put("ps", getCommonParam());
+
+        HttpConnector.httpGet(url, param, listener);
+    }
+
+
+    /**
+     * 向服务器请求用户&商家秀
+     *
+     * @param phone
+     * @param version
+     */
+    public void reqShowData(final String phone, String version, final boolean isUpdate,
+                            final IShowDataListener listener) {
+        if (StringUtils.isEmpty(phone)) {
+            return;
+        }
+        String url = AppConfig.getShowUrl(phone, version);
+
+        Location location = AppUtils.getLastKnownLocation(mContext);
+        ContentValues parms = new ContentValues();
+
+        parms.put("lang", LanguageUtil.getLang(mContext));
+        parms.put("channel", AppUtils.getChannelInfo(mContext));
+        parms.put("v", AppConfig.V);
+        parms.put("ps", getCommonParam());
+
+        if (location != null) {
+            //获取经度信息
+            double longitude = location.getLongitude();
+            //获取维度信息
+            double latitude = location.getLatitude();
+            String srcPhone = getPhoneNum();
+            parms.put("j", longitude);  //经度
+            parms.put("w", latitude);  //维度
+            parms.put("phone", srcPhone);
+        }
+
+        HttpConnector.httpGet(url, parms, new IGetListener() {
+            @Override
+            public void httpReqResult(String response) {
+                UserShow userShow = GsonUtil.parse(response, UserShow.class);
+                if (userShow != null && userShow.isSucess()) {
+                    UserShow.DBean.ShowBean showBean = userShow.getD().getShow();
+                    List<UserShow.DBean.SectionsBean> list = userShow.getD().getSections();
+
+                    String mPhone = userShow.getD().getMsisdn();
+                    String ver = userShow.getD().getVersion();
+
+                    ShowData showData = new ShowData(showBean);
+                    ShowDataDao showDataDao = GreenDbManager.instance(mContext).getShowDataDao();
+                    List<ShowData> showDataList = showDataDao.queryBuilder().where(ShowDataDao.Properties.Msisdn.eq(phone)).list();
+                    if (!ListUtils.isEmpty(showDataList)) {
+                        showData.setId(showDataList.get(0).getId());
+                    }
+                    showData.setVersion(ver);
+                    showData.setMphone(mPhone);
+                    showData.setMsisdn(phone);
+                    showDataDao.insertOrReplace(showData);
+
+                    UIDataDao uiDataDao = GreenDbManager.instance(mContext).getUIDataDao();
+                    List<UIData> uiDataList = uiDataDao.queryBuilder().where(UIDataDao.Properties.Msisdn.eq(phone)).list();
+                    uiDataDao.deleteInTx(uiDataList);
+
+                    for (UserShow.DBean.SectionsBean item : list) {
+                        UIData uiData = new UIData(item);
+                        uiData.setMsisdn(phone);
+                        uiData.setMphone(mPhone);
+                        uiDataDao.insert(uiData);
+                    }
+
+                    if (listener != null) {
+                        listener.loadShowSuccess(showData);
+                        listener.loadUISuccess(list);
+                    }
+
+                    // show -> type：4 （广告 ：挂短）
+                    if (!StringUtils.isEmpty(showBean.getType()) && showBean.getType().equals("4")) {
+                        toHookMsg(phone);
+                    }
+
+                } else if (userShow != null && userShow.isFail()) { // -1
+                    //返回的是用户未设置秀，就把对应对方的电话缓存数据从数据库表中删除
+                    LogUtils.e(Constant.SDK_UI_TAG, "m = " + userShow.getM());
+                    ShowDataDao showDataDao = GreenDbManager.instance(mContext).getShowDataDao();
+                    List<ShowData> showDataList = showDataDao.queryBuilder().list();
+                    if (!ListUtils.isEmpty(showDataList)) {
+                        showDataDao.deleteInTx(showDataList);
+                    }
+
+                    UIDataDao uiDataDao = GreenDbManager.instance(mContext).getUIDataDao();
+                    List<UIData> uiDataList = uiDataDao.queryBuilder().where(UIDataDao.Properties.Msisdn.eq(phone)).list();
+                    uiDataDao.deleteInTx(uiDataList);
+
+                    toHookMsg(phone);
+                }
+            }
+        });
+    }
+
+    /**
+     * 挂机短信
+     *
+     * @param detPhone
+     */
+    private void toHookMsg(String detPhone) {
+        String io = "-1";
+        if (CallInfo.IsMOCalling()) {  //设置主叫状态
+            io = "0";
+        } else if (CallInfo.IsMTCalling()) { //设置被叫状态
+            io = "1";
+        }
+
+        String phoneNum = getPhoneNum();
+        String imei = DeviceUtils.getIMEI(mContext);
+        ContentValues params = new ContentValues();
+
+        params.put("msisdn", phoneNum);
+        params.put("otherPhone", detPhone);
+        params.put("io", io);
+        params.put("termid", imei);
+        params.put("sign", AppConfig.appSign(phoneNum, imei));
+
+        params.put("mcc", PhoneImsi.getMCC(mContext));
+        if (!LanguageUtil.isCN(mContext)) {
+            params.put("lang", "en");
+        }
+        params.put("v", AppConfig.V);
+        params.put("ps", getCommonParam());
+
+        HttpConnector.httpGet(AppConfig.HANGUP_SMS, params, new IGetListener() {
+            @Override
+            public void httpReqResult(String response) {
+                LogUtils.e(Constant.SDK_DATA_TAG, "挂机短信信息： " + response);
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    if (jsonObject.optString("s").equals("1")) {
+                        LogUtils.e(Constant.SDK_DATA_TAG, "调用挂机短信接口成功");
+                    }
+                } catch (JSONException e) {
+                    //临时加的，找问题原因
+                    //Toast.makeText(mContext, "验证异常！"+response, Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    /**
+     * 触发告警
+     */
+    public void touchAlarm(String dstPhone, Location location) {
+        String url = AppConfig.ALARM_TOUCH;
+
+        LogUtils.d("", "触发告警：已获取定位：[" + location.getLongitude() + "," + location.getLatitude() + "]");
+
+        String phoneNum = getPhoneNum();
+        String imei = DeviceUtils.getIMEI(mContext);
+        ContentValues params = new ContentValues();
+
+        params.put("msisdn", phoneNum);
+        params.put("termid", imei);
+        params.put("sign", AppConfig.appSign(phoneNum, imei));
+        params.put("phone", dstPhone);
+        params.put("j", location.getLongitude());
+        params.put("w", location.getLatitude());
+        params.put("v", AppConfig.V);
+        params.put("ps", getCommonParam());
+
+        HttpConnector.httpPost(url, params, new IPostListener() {
+            @Override
+            public void httpReqResult(String response) {
+                LogUtils.d(Constant.SDK_DATA_TAG, "告警信息：" + response);
+            }
+        });
+    }
+
+    /**
+     * 向数据库获取用户&商家秀数据
+     *
+     * @param phone
+     * @return
+     */
+    public ShowData getShowData(String phone, IShowDataListener listener) {
+        phone = phone.replace(" ", ""); //TODO: 解决小米note手机不同方式打电话时号码有空格
+        ShowDataDao showDataDao = GreenDbManager.instance(mContext).getShowDataDao();
+        List<ShowData> showDataList = showDataDao.queryRaw("where msisdn = ?", phone);
+
+        if (ListUtils.isEmpty(showDataList)) {
+            reqShowData(phone, "0", false, listener);
+            return null;
+        } else {
+            ShowData showData = showDataList.get(0);
+            String version = showData.getVersion();
+            reqShowData(phone, version, true, listener);
+            return showData;
+        }
+
+    }
+
+
+    /**
+     * 向数据库获取用户&商家秀数据
+     *
+     * @param phone
+     * @return
+     */
+    public ShowData getShowDataFromDb(String phone) {
+        phone = phone.replace(" ", "");
+        ShowDataDao showDataDao = GreenDbManager.instance(mContext).getShowDataDao();
+        List<ShowData> showDataList = showDataDao.queryRaw("where msisdn = ?", phone);
+
+        if (ListUtils.isEmpty(showDataList)) {
+            return null;
+        } else {
+            return showDataList.get(0);
+        }
+
+    }
+
+
+    /**
+     * 向数据库获取秀的UI数据
+     *
+     * @param phone
+     * @return
+     */
+    public List<UIData> getUIData(String phone) {
+        UIDataDao uiDataDao = GreenDbManager.instance(mContext).getUIDataDao();
+        List<UIData> uiDataList = uiDataDao.queryBuilder().where(UIDataDao.Properties.Msisdn.eq(phone)).list();
+        return uiDataList;
+    }
+
+
+    /**
+     * 用户tcp协议登录
+     *
+     * @param userId
+     * @param phone
+     * @param session
+     */
+
+    public void tcpLogin(int userId, String phone, String session) {
+        String imei = DeviceUtils.getIMEI(mContext);
+        YouMaiUser.User_Login.Builder login = YouMaiUser.User_Login.newBuilder();
+        login.setUserId(userId);
+        login.setPhone(phone);
+        login.setSessionId(session);
+        login.setDeviceId(imei);
+        login.setDeviceType(YouMaiBasic.Device_Type.DeviceType_Android);
+
+        YouMaiUser.User_Login user_Login = login.build();
+
+        ReceiveListener callback = new ReceiveListener() {
+            @Override
+            public void OnRec(PduBase pduBase) {
+                try {
+                    YouMaiUser.User_Login_Ack ack = YouMaiUser.User_Login_Ack.parseFrom(pduBase.body);
+                    if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_OK) {
+                        Toast.makeText(mContext, mContext.getString(R.string.hx_toast_08), Toast.LENGTH_SHORT).show();
+                        huxinService.setLogin(true);
+                    }
+                } catch (InvalidProtocolBufferException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        sendProto(user_Login, callback);
+    }
+
+    /**
+     * 用户tcp协议登录
+     *
+     * @param userId
+     * @param phone
+     * @param session
+     * @param callback
+     */
+
+    public void tcpLogin(int userId, String phone, String session, ReceiveListener callback) {
+        String imei = DeviceUtils.getIMEI(mContext);
+        YouMaiUser.User_Login.Builder login = YouMaiUser.User_Login.newBuilder();
+        login.setUserId(userId);
+        login.setPhone(phone);
+        login.setSessionId(session);
+        login.setDeviceId(imei);
+        login.setDeviceType(YouMaiBasic.Device_Type.DeviceType_Android);
+
+        YouMaiUser.User_Login user_Login = login.build();
+
+        sendProto(user_Login, callback);
+    }
+
+
+    /**
+     * 用户tcp协议重登录，仅仅用于测试
+     *
+     * @param userId
+     * @param phone
+     * @param session
+     * @param isa
+     */
+    public void connectTcp(int userId, String phone, String session, InetSocketAddress isa) {
+        if (mContext != null && binded == BIND_STATUS.BINDED) {
+            huxinService.connectTcp(userId, phone, session, isa);
+        }
+    }
+
+    /**
+     * 添加统计事件到数据，定时发送
+     * 事件统计使用work线程执行
+     *
+     * @param id
+     */
+    public void addEvent(int id) {
+        if (mContext != null && binded == BIND_STATUS.BINDED) {
+            huxinService.addEvent(id);
+        }
+    }
+
+    /**
+     * 添加统计事件到数据，定时发送
+     * 事件统计使用work线程执行
+     *
+     * @param data
+     */
+    public void addEvent(StatsData data) {
+        if (mContext != null && binded == BIND_STATUS.BINDED) {
+            huxinService.addEvent(data);
+        }
+    }
+
+
+    /**
+     * 调用有盟统计
+     *
+     * @param context
+     * @param eventId
+     */
+    public void onUmengEvent(Context context, String eventId) {
+        Class cls = null;
+        try {
+            cls = Class.forName("com.youmai.huxincommon.UmengMobclickAgent");
+            Method staticMethod = cls.getDeclaredMethod("onEvent", Context.class, String.class);
+            staticMethod.invoke(cls, context, eventId);
+        } catch (ClassNotFoundException e1) {
+            e1.printStackTrace();
+        } catch (NoSuchMethodException e1) {
+            e1.printStackTrace();
+        } catch (IllegalAccessException e1) {
+            e1.printStackTrace();
+        } catch (InvocationTargetException e1) {
+            e1.printStackTrace();
+        }
+
+    }
+
+    /**
+     * 调用有盟统计
+     *
+     * @param context
+     * @param eventId
+     * @param m
+     * @param du
+     */
+    public void onUmengEventValue(Context context, String eventId, Map<String, String> m, int du) {
+        Class cls = null;
+        try {
+            cls = Class.forName("com.youmai.huxincommon.UmengMobclickAgent");
+            Method staticMethod = cls.getDeclaredMethod("onEventValue", Context.class, String.class, Map.class, int.class);
+            staticMethod.invoke(cls, context, eventId, m, du);
+        } catch (ClassNotFoundException e1) {
+            e1.printStackTrace();
+        } catch (NoSuchMethodException e1) {
+            e1.printStackTrace();
+        } catch (IllegalAccessException e1) {
+            e1.printStackTrace();
+        } catch (InvocationTargetException e1) {
+            e1.printStackTrace();
+        }
+
+    }
+
+    /**
+     * tcp 获取用户信息
+     *
+     * @param userId
+     * @param srcPhone
+     * @param desPhone
+     * @param listener
+     */
+    public void getCardInfo(int userId, String srcPhone, String desPhone, ReceiveListener listener) {
+        BizCard_Get_ByPhone.Builder builder = BizCard_Get_ByPhone.newBuilder();
+        builder.setPhone(srcPhone);
+        builder.setUserId(userId);
+        builder.addTargetPhones(desPhone);
+
+        YouMaiBizCard.BizCard_Get_ByPhone bizCard = builder.build();
+
+        sendProto(bizCard, listener);
+
+    }
+
+    /**
+     * tcp 新建用户信息，用于首次创建
+     *
+     * @param userId
+     * @param phone
+     * @param cardBulider
+     * @param callback
+     */
+    public void insertCardInfo(int userId, String phone,
+                               BizCard.Builder cardBulider,
+                               ReceiveListener callback) {
+
+        BizCard_Insert.Builder builder = BizCard_Insert.newBuilder();
+        builder.setUserId(userId);
+        cardBulider.setPhone(phone);
+        cardBulider.setUserId(userId);
+
+        YouMaiBizCard.BizCard card = cardBulider.build();
+        builder.setBizcard(card);
+
+        YouMaiBizCard.BizCard_Insert bizCard = builder.build();
+        sendProto(bizCard, callback);
+    }
+
+
+    /**
+     * tcp更新用户信息
+     *
+     * @param userId
+     * @param phone
+     * @param cardBulider
+     * @param callback
+     */
+    public void updateCardInfo(int userId, String phone,
+                               BizCard.Builder cardBulider, ReceiveListener callback) {
+
+        BizCard_Update.Builder builder = BizCard_Update.newBuilder();
+        builder.setUserId(userId);
+
+        cardBulider.setPhone(phone);
+        cardBulider.setUserId(userId);
+
+        YouMaiBizCard.BizCard card = cardBulider.build();
+        builder.setBizcard(card);
+
+        YouMaiBizCard.BizCard_Update bizCard = builder.build();
+
+        sendProto(bizCard, callback);
+    }
+
+
+    /**
+     * 发送文字
+     *
+     * @param userId
+     * @param desPhone
+     * @param content
+     */
+    public boolean sendText(int userId, String desPhone, String content, ReceiveListener callback) {
+        if (showSdkLogin()) {
+            return false;
+        }
+        String srcPhone = getPhoneNum();
+        String tarPhone = PhoneNumTypes.changePhone(desPhone, mContext);
+
+        IMChat_Personal.Builder builder = IMChat_Personal.newBuilder();
+        builder.setSrcUsrId(userId);
+        builder.setSrcPhone(srcPhone);
+        builder.setTargetPhone(tarPhone);
+
+        IMContentUtil imContentUtil = new IMContentUtil();
+
+        final int type = IMContentUtil.getContentType(0, YouMaiChat.IM_CONTENT_TYPE.IM_CONTENT_TYPE_TEXT_VALUE);
+        builder.setContentType(type);
+        imContentUtil.appendText(content);
+        builder.setBody(imContentUtil.serializeToString());
+        YouMaiChat.IMChat_Personal imData = builder.build();
+        sendProto(imData, callback);
+
+        callback.setTarPhone(tarPhone);
+        callback.setContent(content);
+        return true;
+    }
+
+
+    public boolean sendMsgReply(long msgId) {
+        int userId = getUserId();
+        YouMaiChat.IMChat_Personal_recv_Ack.Builder builder = YouMaiChat.IMChat_Personal_recv_Ack.newBuilder();
+        builder.setUserId(userId);
+        builder.setMsgId(msgId);
+        YouMaiChat.IMChat_Personal_recv_Ack reply = builder.build();
+        sendProto(reply, YouMaiBasic.COMMANDID.IMCHAT_PERSONAL_ACK_VALUE, null);
+        return true;
+    }
+
+
+    /**
+     * 发送备注
+     */
+    public boolean sendRemark(int userId, String desPhone, String content, ReceiveListener callback) {
+        if (showSdkLogin()) {
+            return false;
+        }
+        String srcPhone = getPhoneNum();
+        String tarPhone = PhoneNumTypes.changePhone(desPhone, mContext);
+
+        IMChat_Personal.Builder builder = IMChat_Personal.newBuilder();
+        builder.setSrcUsrId(userId);
+        builder.setSrcPhone(srcPhone);
+        builder.setTargetPhone(tarPhone);
+
+        IMContentUtil imContentUtil = new IMContentUtil();
+
+        final int type = IMContentUtil.getContentType(0, YouMaiChat.IM_CONTENT_TYPE.IM_CONTENT_TYPE_REMARK_VALUE);
+        builder.setContentType(type);
+        imContentUtil.appendText(content);
+        builder.setBody(imContentUtil.serializeToString());
+        YouMaiChat.IMChat_Personal imData = builder.build();
+        sendProto(imData, callback);
+
+        callback.setTarPhone(tarPhone);
+        callback.setContent(content);
+        return true;
+    }
+
+    /**
+     * 发送名片
+     *
+     * @param userId   用户标识
+     * @param desPhone 对方号码
+     * @param content  名片内容，string类型
+     */
+    public boolean sendBizcardText(int userId, String desPhone, String content, ReceiveListener callback) {
+        if (showSdkLogin()) {
+            return false;
+        }
+        String srcPhone = getPhoneNum();
+        String tarPhone = PhoneNumTypes.changePhone(desPhone, mContext);
+
+        IMChat_Personal.Builder builder = IMChat_Personal.newBuilder();
+        builder.setSrcUsrId(userId);
+        builder.setSrcPhone(srcPhone);
+        builder.setTargetPhone(tarPhone);
+
+        IMContentUtil imContentUtil = new IMContentUtil();
+
+        int type = IMContentUtil.getContentType(0, YouMaiChat.IM_CONTENT_TYPE.IM_CONTENT_TYPE_BIZCARD_VALUE);
+        builder.setContentType(type);
+        imContentUtil.appendText(content);
+        builder.setBody(imContentUtil.serializeToString());
+        YouMaiChat.IMChat_Personal imData = builder.build();
+        sendProto(imData, callback);
+
+        callback.setTarPhone(tarPhone);
+        callback.setContent(content);
+        return true;
+    }
+
+
+    /**
+     * 发送位置
+     *
+     * @param userId
+     * @param desPhone
+     * @param longitude
+     * @param latitude
+     * @param scale
+     * @param label
+     * @param callback
+     */
+    public boolean sendLocation(int userId, String desPhone, double longitude, double latitude,
+                                int scale, String label, ReceiveListener callback) {
+        if (StringUtils.isEmpty(desPhone)) {
+            return false;
+        }
+        if (showSdkLogin()) {
+            return false;
+        }
+
+        String srcPhone = getPhoneNum();
+        String tarPhone = PhoneNumTypes.changePhone(desPhone, mContext);
+
+        IMChat_Personal.Builder builder = IMChat_Personal.newBuilder();
+        builder.setSrcUsrId(userId);
+        builder.setSrcPhone(srcPhone);
+        builder.setTargetPhone(tarPhone);
+
+        IMContentUtil imContentUtil = new IMContentUtil();
+        int type = IMContentUtil.getContentType(0, YouMaiChat.IM_CONTENT_TYPE.IM_CONTENT_TYPE_LOCATION_VALUE);
+        builder.setContentType(type);
+
+        imContentUtil.appendLongitude(longitude + "");
+        imContentUtil.appendLaitude(latitude + "");
+        imContentUtil.appendScale(scale + "");
+        imContentUtil.appendLabel(label);
+
+        builder.setBody(imContentUtil.serializeToString());
+        YouMaiChat.IMChat_Personal imData = builder.build();
+
+        sendProto(imData, callback);
+
+        callback.setTarPhone(tarPhone);
+        callback.setContent(longitude + "," + latitude);
+        return true;
+    }
+
+    /**
+     * 开始共享位置
+     *
+     * @param userId
+     * @param desPhone
+     * @param longitude
+     * @param latitude
+     * @param callback
+     */
+    public void beginLocation(int userId, String desPhone, String longitude, String latitude, ReceiveListener callback) {
+
+        if (StringUtils.isEmpty(desPhone)) {
+            return;
+        }
+        if (showSdkLogin()) {
+            return;
+        }
+        String srcPhone = getPhoneNum();
+        String tarPhone = PhoneNumTypes.changePhone(desPhone, mContext);
+
+        IMChat_Personal.Builder builder = IMChat_Personal.newBuilder();
+        builder.setSrcUsrId(userId);
+        builder.setSrcPhone(srcPhone);
+        builder.setTargetPhone(tarPhone);
+
+        IMContentUtil imContentUtil = new IMContentUtil();
+
+        int command_id = IMContentUtil.getContentType(0, YouMaiChat.IM_CONTENT_TYPE.IM_CONTENT_TYPE_LOCATION_INVITE_VALUE);
+        builder.setContentType(command_id);
+
+        imContentUtil.appendLongitude(longitude);
+        imContentUtil.appendLaitude(latitude);
+
+        builder.setBody(imContentUtil.serializeToString());
+        YouMaiChat.IMChat_Personal imData = builder.build();
+
+        sendProto(imData, callback);
+    }
+
+    /**
+     * 应答共享位置 ：接收或拒绝
+     *
+     * @param userId
+     * @param location
+     * @param desPhone
+     * @param answerOrReject
+     * @param callback
+     */
+    public void answerLocation(int userId, String desPhone, String location, boolean answerOrReject, ReceiveListener callback) {
+        if (StringUtils.isEmpty(desPhone)) {
+            return;
+        }
+        if (showSdkLogin()) {
+            return;
+        }
+        String srcPhone = getPhoneNum();
+        String tarPhone = PhoneNumTypes.changePhone(desPhone, mContext);
+
+        IMChat_Personal.Builder builder = IMChat_Personal.newBuilder();
+        builder.setSrcUsrId(userId);
+        builder.setSrcPhone(srcPhone);
+        builder.setTargetPhone(tarPhone);
+
+        IMContentUtil imContentUtil = new IMContentUtil();
+
+        int command_id = IMContentUtil.getContentType(0, YouMaiChat.IM_CONTENT_TYPE.IM_CONTENT_TYPE_LOCATION_ANSWER_VALUE);
+        builder.setContentType(command_id);
+
+        imContentUtil.appendLocAnswer(location);
+        imContentUtil.appendLocAnswerOrReject(answerOrReject ? "1" : "0");
+
+        builder.setBody(imContentUtil.serializeToString());
+        YouMaiChat.IMChat_Personal imData = builder.build();
+
+        sendProto(imData, callback);
+    }
+
+    /**
+     * 结束共享位置 ：结束
+     *
+     * @param userId
+     * @param desPhone
+     * @param callback
+     */
+    public void endLocation(int userId, String desPhone, ReceiveListener callback) {
+        if (StringUtils.isEmpty(desPhone)) {
+            return;
+        }
+        if (showSdkLogin()) {
+            return;
+        }
+        String srcPhone = getPhoneNum();
+        String tarPhone = PhoneNumTypes.changePhone(desPhone, mContext);
+
+        IMChat_Personal.Builder builder = IMChat_Personal.newBuilder();
+        builder.setSrcUsrId(userId);
+        builder.setSrcPhone(srcPhone);
+        builder.setTargetPhone(tarPhone);
+
+        IMContentUtil imContentUtil = new IMContentUtil();
+
+        int command_id = IMContentUtil.getContentType(0, YouMaiChat.IM_CONTENT_TYPE.IM_CONTENT_TYPE_LOCATION_QUIT_VALUE);
+        builder.setContentType(command_id);
+
+        builder.setBody(imContentUtil.serializeToString());
+        YouMaiChat.IMChat_Personal imData = builder.build();
+
+        sendProto(imData, callback);
+    }
+
+    /**
+     * 轮询定时共享位置
+     *
+     * @param userId
+     * @param desPhone
+     * @param longitude
+     * @param latitude
+     * @param bearing
+     */
+    public void continueLocation(int userId, String desPhone, String longitude,
+                                 String latitude, String bearing) {
+        if (StringUtils.isEmpty(desPhone)) {
+            return;
+        }
+        if (showSdkLogin()) {
+            return;
+        }
+
+        YouMaiLocation.LocationShare.Builder shareBuilder = LocationShare.newBuilder();
+        shareBuilder.setLongitude(longitude);
+        shareBuilder.setLatitude(latitude);
+        shareBuilder.setAngle(bearing);
+        //shareBuilder.setTaskId(msgId);
+        shareBuilder.setUserId(userId);
+        shareBuilder.setPhone(desPhone);
+        LocationShare share = shareBuilder.build();
+
+        sendProto(share, null);
+    }
+
+    /**
+     * 发送图片
+     *
+     * @param path
+     * @param listener
+     * @return
+     */
+    public void postFile(String path, String type, OnFileListener listener) {
+        postFile(new File(path), type, listener);
+    }
+
+    /**
+     * 发送图片
+     *
+     * @param file
+     * @param listener
+     * @return
+     */
+    public void postFile(final File file, final String type, final OnFileListener listener) {
+
+        final UpProgressHandler progressHandler = new UpProgressHandler() {
+            @Override
+            public void progress(String key, double percent) {
+                LogUtils.e(Constant.SDK_UI_TAG, "manager percent = " + percent);
+                if (null != listener) {
+                    listener.onProgress(percent);
+                }
+            }
+        };
+
+        IPostListener callback = new IPostListener() {
+            @Override
+            public void httpReqResult(String response) {
+                FileToken resp = GsonUtil.parse(response, FileToken.class);
+                if (resp == null) {
+                    return;
+                }
+                if (resp.isSucess()) {
+                    String fidKey = resp.getD().getFid();
+                    String token = resp.getD().getUpToken();
+                    UpCompletionHandler completionHandler = new UpCompletionHandler() {
+                        @Override
+                        public void complete(String key, ResponseInfo info, JSONObject response) {
+                            if (response == null) {
+                                if (null != listener) {
+                                    listener.onFail(mContext.getString(R.string.hx_toast_07));
+                                }
+                                return;
+                            }
+                            UploadFile resp = GsonUtil.parse(response.toString(), UploadFile.class);
+                            if (resp != null && resp.isSucess()) {
+                                String fileId = resp.getD().getFileid();
+                                listener.onSuccess(fileId);
+                            } else {
+                                if (null != listener) {
+                                    listener.onFail(resp.getM());
+                                }
+                            }
+
+                        }
+                    };
+
+                    Map<String, String> params = new HashMap<>();
+                    params.put("x:type", type);
+                    params.put("x:msisdn", getPhoneNum());
+                    UploadOptions options = new UploadOptions(params, null, false, progressHandler, null);
+
+                    uploadManager.put(file, fidKey, token, completionHandler, options);
+
+                } else {
+                    String log = resp.getM();
+                    if (null != listener) {
+                        listener.onFail(log);
+                    }
+                }
+            }
+        };
+        getUploadFileToken(callback);
+    }
+
+
+    /**
+     * 发送图片
+     *
+     * @param file
+     */
+    public void postShow(final File file, final UpCompletionHandler completionHandler,
+                         final UpProgressHandler progressHandler) {
+        IPostListener callback = new IPostListener() {
+            @Override
+            public void httpReqResult(String response) {
+
+                FileToken resp = GsonUtil.parse(response, FileToken.class);
+                if (resp == null) {
+                    LogUtils.w("error", mContext.getString(R.string.hx_toast_04));
+                    return;
+                }
+                if (resp.isSucess()) {
+                    String fidKey = resp.getD().getFid();
+                    String token = resp.getD().getUpToken();
+                    Map<String, String> params = new HashMap<>();
+                    params.put("x:type", "1");
+                    params.put("x:msisdn", getPhoneNum());
+                    UploadOptions options = new UploadOptions(params, null, false, progressHandler, null);
+                    uploadManager.put(file, fidKey, token, completionHandler, options);
+                } else {
+                    Toast.makeText(mContext, resp.getM(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        };
+        getUploadFileToken(callback);
+
+    }
+
+    /**
+     * 发送音频.
+     *
+     * @param userId
+     * @param desPhone
+     * @param file
+     * @param secondTimes
+     * @return
+     */
+    public boolean postAudio(final int userId, final String desPhone,
+                             final File file, final String secondTimes,
+                             final UpProgressHandler progressHandler,
+                             final IFileSendListener listener) {
+
+        final FileBean fileBean = new FileBean()
+                .setUserId(userId)
+                .setDstPhone(desPhone)
+                .setFile(file)
+                .setAudioDuration(secondTimes);
+        IPostListener callback = new IPostListener() {
+            @Override
+            public void httpReqResult(String response) {
+                FileToken resp = GsonUtil.parse(response, FileToken.class);
+                if (resp == null) {
+                    if (null != listener) {
+                        listener.onImFail(ChatMsg.MsgType.AUDIO.ordinal(), fileBean);
+                    }
+                    return;
+                }
+                if (resp.isSucess()) {
+                    String fidKey = resp.getD().getFid();
+                    String token = resp.getD().getUpToken();
+                    UpCompletionHandler completionHandler = new UpCompletionHandler() {
+                        @Override
+                        public void complete(String key, ResponseInfo info, JSONObject response) {
+                            if (response == null) {
+                                if (null != listener) {
+                                    listener.onImFail(ChatMsg.MsgType.AUDIO.ordinal(), fileBean);
+                                }
+                                return;
+                            }
+                            UploadFile resp = GsonUtil.parse(response.toString(), UploadFile.class);
+                            if (resp == null) {
+                                if (null != listener) {
+                                    listener.onImFail(ChatMsg.MsgType.AUDIO.ordinal(), fileBean);
+                                }
+                                return;
+                            }
+                            if (resp.isSucess()) {
+                                final String fileId = resp.getD().getFileid();
+                                ReceiveListener receiveListener = new ReceiveListener() {
+                                    @Override
+                                    public void OnRec(PduBase pduBase) {
+                                        try {
+                                            YouMaiChat.IMChat_Personal_Ack ack = YouMaiChat.IMChat_Personal_Ack.parseFrom(pduBase.body);
+                                            long msgId = ack.getMsgId();
+
+                                            if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_OK) {
+                                                if (ack.getIsTargetOnline()) {
+                                                    Toast.makeText(mContext, mContext.getString(R.string.hx_toast_29), Toast.LENGTH_SHORT).show();
+                                                } else {
+                                                    HttpPushManager.pushMsgForAudio(userId, desPhone,
+                                                            fileId, secondTimes,
+                                                            new HttpPushManager.PushListener() {
+                                                                @Override
+                                                                public void success(String msg) {
+                                                                    LogUtils.w(TAG, msg);
+                                                                    Toast.makeText(mContext, mContext.getString(R.string.hx_toast_29), Toast.LENGTH_SHORT).show();
+                                                                }
+
+                                                                @Override
+                                                                public void fail(String msg) {
+
+                                                                }
+                                                            });
+
+                                                }
+                                                if (null != listener) {
+                                                    listener.onImSuccess(ChatMsg.MsgType.AUDIO.ordinal(), fileBean);
+                                                }
+
+                                            } else if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_NOT_HUXIN_USER) {
+                                                //Todo: 非呼信用户
+                                                if (null != listener) {
+                                                    listener.onImNotUser(ChatMsg.MsgType.AUDIO.ordinal(), msgId);
+                                                }
+                                            } else {
+                                                showNotHuxinUser(desPhone, SendSmsActivity.SEND_AUDIO, msgId);
+                                                listener.onImFail(ChatMsg.MsgType.AUDIO.ordinal(), fileBean);
+                                            }
+                                        } catch (InvalidProtocolBufferException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                };
+                                sendAudio(userId, desPhone, fileId, secondTimes, "", "0", receiveListener);
+
+                            } else {
+                                Toast.makeText(mContext, resp.getM(), Toast.LENGTH_SHORT).show();
+                            }
+
+                        }
+                    };
+                    Map<String, String> params = new HashMap<>();
+                    params.put("x:type", "2");
+                    params.put("x:msisdn", getPhoneNum());
+                    UploadOptions options = new UploadOptions(params, null, false, progressHandler, null);
+
+                    uploadManager.put(file, fidKey, token, completionHandler, options);
+
+                } else {
+                    String log = resp.getM();
+                    Toast.makeText(mContext, log, Toast.LENGTH_SHORT).show();
+                    LogFile.inStance().toFile(log);
+                }
+            }
+        };
+        getUploadFileToken(callback);
+
+        return true;
+    }
+
+    /**
+     * 发送文件.
+     *
+     * @param userId
+     * @param desPhone
+     * @param path
+     * @param fileName
+     * @param fileSize
+     * @param isSaveDB 是否保存到本地数据库，IMConnectFragment的适配器会在 {@link IMListAdapter#addAndRefreshUI}已有保存操作
+     * @return
+     */
+    public boolean postBigFile(final int userId, final String desPhone, final String path,
+                               final String fileName, final String fileSize,
+                               final UpProgressHandler progressHandler,
+                               final boolean isSaveDB,
+                               final IFileSendListener listener) {
+        return postBigFile(userId, desPhone, new File(path),
+                fileName, fileSize, progressHandler,
+                isSaveDB, listener);
+    }
+
+    /**
+     * 发送文件.
+     *
+     * @param userId
+     * @param desPhone
+     * @param file
+     * @param fileName
+     * @param fileSize
+     * @param isSaveDB 是否保存到本地数据库，IMConnectFragment的适配器会在 {@link IMListAdapter#addAndRefreshUI}已有保存操作
+     * @return
+     */
+    public boolean postBigFile(final int userId, final String desPhone, final File file,
+                               final String fileName, final String fileSize,
+                               final UpProgressHandler progressHandler,
+                               final boolean isSaveDB,
+                               final IFileSendListener listener) {
+        //todo_k: 文件
+        final CacheMsgFile cacheMsgFile = new CacheMsgFile()
+                .setFilePath(file.getAbsolutePath())
+                .setFileSize(file.length())
+                .setFileName(file.getName())
+                .setFileRes(IMHelper.getFileImgRes(file.getName(), false));
+        final CacheMsgBean cacheMsgBean = new CacheMsgBean()
+                .setMsgTime(System.currentTimeMillis())
+                .setSend_flag(-1)
+                .setSenderPhone(getPhoneNum())
+                .setSenderUserId(userId)
+                .setReceiverPhone(desPhone)
+                .setMsgType(CacheMsgBean.MSG_TYPE_FILE)
+                .setJsonBodyObj(cacheMsgFile)
+                .setRightUI(true);
+        if (isSaveDB) {
+            //add to db
+            CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
+            IMMsgManager.getInstance().addCacheMsgBean(cacheMsgBean);
+        }
+
+        final FileBean fileBean = new FileBean()
+                .setUserId(userId)
+                .setDstPhone(desPhone)
+                .setFile(file)
+                .setFileName(file.getName())
+                .setFileLength(fileSize)
+                .setFileRes(IMHelper.getFileImgRes(file.getName(), true));
+
+        if (null != listener) {
+            if (CommonUtils.isNetworkAvailable(mContext)) {
+                listener.onProgress(ChatMsg.MsgType.BIG_FILE.ordinal(), 0.05, "file");
+            } else {
+                listener.onImFail(ChatMsg.MsgType.BIG_FILE.ordinal(), fileBean);
+            }
+        }
+        IPostListener callback = new IPostListener() {
+            @Override
+            public void httpReqResult(String response) {
+                FileToken resp = GsonUtil.parse(response, FileToken.class);
+                if (resp == null) {
+                    if (null != listener) {
+                        listener.onImFail(ChatMsg.MsgType.BIG_FILE.ordinal(), fileBean);
+                    }
+                    if (isSaveDB) {
+                        //add to db
+                        cacheMsgBean.setSend_flag(4);
+                        CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
+                    }
+                    return;
+                }
+                if (resp.isSucess()) {
+                    String fidKey = resp.getD().getFid();
+                    String token = resp.getD().getUpToken();
+                    UpCompletionHandler completionHandler = new UpCompletionHandler() {
+                        @Override
+                        public void complete(String key, ResponseInfo info, JSONObject response) {
+                            if (response == null) {
+                                if (null != listener) {
+                                    listener.onImFail(ChatMsg.MsgType.BIG_FILE.ordinal(), fileBean);
+                                }
+                                if (isSaveDB) {
+                                    //add to db
+                                    cacheMsgBean.setSend_flag(4);
+                                    CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
+                                }
+                                Toast.makeText(mContext, mContext.getString(R.string.hx_toast_06), Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                            UploadFile resp = GsonUtil.parse(response.toString(), UploadFile.class);
+                            if (resp == null) {
+                                return;
+                            }
+                            if (resp.isSucess()) {
+                                final String fileId = resp.getD().getFileid();
+                                ReceiveListener receiveListener = new ReceiveListener() {
+                                    @Override
+                                    public void OnRec(PduBase pduBase) {
+                                        final CacheMsgBean newMsgBean;
+                                        if (desPhone.equals(HuxinSdkManager.instance().getPhoneNum())) {
+                                            CacheMsgBean newBean = HuxinSdkManager.instance().getCacheMsgFromDBById(cacheMsgBean.getId());
+                                            if (newBean != null) {
+                                                newMsgBean = newBean;
+                                            } else {
+                                                newMsgBean = cacheMsgBean;
+                                            }
+                                        } else {
+                                            newMsgBean = cacheMsgBean;
+                                        }
+                                        try {
+                                            YouMaiChat.IMChat_Personal_Ack ack = YouMaiChat.IMChat_Personal_Ack.parseFrom(pduBase.body);
+                                            long msgId = ack.getMsgId();
+                                            newMsgBean.setMsgId(msgId);
+
+                                            if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_OK) {
+                                                if (ack.getIsTargetOnline()) {
+                                                    newMsgBean.setSend_flag(0);
+                                                    //add to db
+                                                    CacheMsgHelper.instance(mContext).insertOrUpdate(newMsgBean);
+                                                    //Toast.makeText(mContext, mContext.getString(R.string.hx_toast_21), Toast.LENGTH_SHORT).show();
+
+                                                } else {
+                                                    HttpPushManager.pushMsgForBigFile(userId, desPhone,
+                                                            fileId, fileName, fileSize,
+                                                            new HttpPushManager.PushListener() {
+                                                                @Override
+                                                                public void success(String msg) {
+                                                                    LogUtils.w(TAG, msg);
+                                                                    newMsgBean.setSend_flag(0);
+                                                                    //add to db
+                                                                    CacheMsgHelper.instance(mContext).insertOrUpdate(newMsgBean);
+                                                                    //Toast.makeText(mContext, mContext.getString(R.string.hx_toast_21), Toast.LENGTH_SHORT).show();
+                                                                }
+
+                                                                @Override
+                                                                public void fail(String msg) {
+
+                                                                }
+                                                            });
+
+                                                }
+
+                                                if (null != listener) {
+                                                    listener.onImSuccess(ChatMsg.MsgType.BIG_FILE.ordinal(), fileBean);
+                                                }
+
+                                            } else if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_NOT_HUXIN_USER) {
+                                                newMsgBean.setSend_flag(0);
+                                                CacheMsgHelper.instance(mContext).insertOrUpdate(newMsgBean);
+                                                showNotHuxinUser(desPhone, SendSmsActivity.SEND_FILE, msgId);
+                                                if (null != listener) {
+                                                    listener.onImNotUser(ChatMsg.MsgType.BIG_FILE.ordinal(), msgId);
+                                                }
+                                            } else {
+                                                if (null != listener) {
+                                                    listener.onImFail(ChatMsg.MsgType.BIG_FILE.ordinal(), fileBean);
+                                                }
+                                            }
+                                        } catch (InvalidProtocolBufferException e) {
+                                            e.printStackTrace();
+                                        }
+
+                                    }
+                                };
+                                sendBigFile(userId, desPhone, fileId, fileName, fileSize, receiveListener);
+
+                            } else {
+                                Toast.makeText(mContext, resp.getM(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    };
+
+                    Map<String, String> params = new HashMap<>();
+                    params.put("x:type", "2");
+                    params.put("x:msisdn", getPhoneNum());
+                    UploadOptions options = new UploadOptions(params, null, false, progressHandler, null);
+
+                    uploadManager.put(file, fidKey, token, completionHandler, options);
+
+                } else {
+                    String log = resp.getM();
+                    Toast.makeText(mContext, log, Toast.LENGTH_SHORT).show();
+                    LogFile.inStance().toFile(log);
+
+                    if (null != listener) {
+                        listener.onImFail(ChatMsg.MsgType.BIG_FILE.ordinal(), fileBean);
+                    }
+                    if (isSaveDB) {
+                        //add to db
+                        cacheMsgBean.setSend_flag(4);
+                        CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
+                    }
+                }
+            }
+        };
+        getUploadFileToken(callback);
+
+        return true;
+    }
+
+    /**
+     * 发送图片
+     *
+     * @param userId
+     * @param desPhone
+     * @param file         (压缩后图片文件,发送完删除)
+     * @param originalPath 地图片的原始路径(原图)
+     * @param isSaveDB     是否保存到数据库
+     * @param listener
+     * @return
+     */
+    public void postPicture(final int userId,
+                            final String desPhone,
+                            final File file,
+                            final String originalPath,
+                            final boolean isSaveDB,
+                            final IFileSendListener listener) {
+
+        postPicture(userId, desPhone, file, originalPath, isSaveDB, false, listener);
+    }
+
+    public void postPicture(final int userId,
+                            final String desPhone,
+                            final File file,
+                            final String originalPath,
+                            final boolean isSaveDB,
+                            final boolean isOriginal,
+                            final IFileSendListener listener) {
+
+        final FileBean fileBean = new FileBean().setUserId(userId)
+                .setFileMsgType(ChatMsg.MsgType.PICTURE.ordinal())
+                .setDstPhone(desPhone)
+                .setFile(file)
+                .setOriginPath(originalPath);
+        if (null != listener) {
+            if (CommonUtils.isNetworkAvailable(mContext)) {
+                listener.onProgress(ChatMsg.MsgType.PICTURE.ordinal(), 0.01, originalPath);
+            } else {
+                listener.onImFail(ChatMsg.MsgType.PICTURE.ordinal(), fileBean);
+            }
+        }
+        //todo_k: 图片
+        final CacheMsgBean cacheMsgBean = new CacheMsgBean();
+        if (isSaveDB) {
+            cacheMsgBean.setMsgTime(System.currentTimeMillis())
+                    .setSend_flag(-1)
+                    .setSenderPhone(getPhoneNum())
+                    .setSenderUserId(userId)
+                    .setReceiverPhone(desPhone)
+                    .setMsgType(CacheMsgBean.MSG_TYPE_IMG)
+                    .setJsonBodyObj(new CacheMsgImage().setFilePath(originalPath))
+                    .setRightUI(true);
+
+            IMMsgManager.getInstance().addCacheMsgBean(cacheMsgBean);
+            //add to db
+            CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
+        }
+        final UpProgressHandler progressHandler = new UpProgressHandler() {
+            @Override
+            public void progress(String key, double percent) {
+                LogUtils.e(Constant.SDK_UI_TAG, "manager percent = " + percent);
+                if (null != listener) {
+                    listener.onProgress(ChatMsg.MsgType.PICTURE.ordinal(), percent, originalPath);
+                }
+            }
+        };
+
+        IPostListener callback = new IPostListener() {
+            @Override
+            public void httpReqResult(String response) {
+                FileToken resp = GsonUtil.parse(response, FileToken.class);
+                if (resp == null) {
+                    if (null != listener) {
+                        listener.onImFail(ChatMsg.MsgType.PICTURE.ordinal(), fileBean);
+                    }
+                    if (isSaveDB) {
+                        //add to db
+                        cacheMsgBean.setSend_flag(4);
+                        CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
+                    }
+                    return;
+                }
+                if (resp.isSucess()) {
+                    String fidKey = resp.getD().getFid();
+                    String token = resp.getD().getUpToken();
+                    UpCompletionHandler completionHandler = new UpCompletionHandler() {
+                        @Override
+                        public void complete(String key, ResponseInfo info, JSONObject response) {
+                            if (response == null) {
+                                Looper.prepare();
+                                if (null != listener) {
+                                    listener.onImFail(ChatMsg.MsgType.PICTURE.ordinal(), fileBean);
+                                }
+                                Toast.makeText(mContext, mContext.getString(R.string.hx_toast_07), Toast.LENGTH_SHORT).show();
+                                Looper.loop();
+                                if (isSaveDB) {
+                                    //add to db
+                                    cacheMsgBean.setSend_flag(4);
+                                    CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
+                                }
+                                return;
+                            }
+                            UploadFile resp = GsonUtil.parse(response.toString(), UploadFile.class);
+
+                            if (resp.isSucess()) {
+                                final String fileId = resp.getD().getFileid();
+                                CacheMsgImage cacheMsgImage = (CacheMsgImage) cacheMsgBean.getJsonBodyObj();
+                                if (cacheMsgImage == null) {
+                                    cacheMsgImage = new CacheMsgImage();
+                                }
+                                cacheMsgImage.setFid(fileId);
+                                cacheMsgBean.setJsonBodyObj(cacheMsgImage);
+                                fileBean.setFileId(fileId);
+                                ReceiveListener receiveListener = new ReceiveListener() {
+                                    @Override
+                                    public void OnRec(PduBase pduBase) {
+                                        //发自己处理
+                                        CacheMsgBean newMsgBean = null;
+                                        if (desPhone.equals(HuxinSdkManager.instance().getPhoneNum())) {
+                                            // FIXME: 2017/4/10 消息屏发送主键 ID为 null
+                                            if (cacheMsgBean.getId() != null) {
+                                                newMsgBean = HuxinSdkManager.instance().getCacheMsgFromDBById(cacheMsgBean.getId());
+                                            }
+                                        } else {
+                                            newMsgBean = cacheMsgBean;
+                                        }
+                                        try {
+                                            YouMaiChat.IMChat_Personal_Ack ack = YouMaiChat.IMChat_Personal_Ack.parseFrom(pduBase.body);
+                                            long msgId = ack.getMsgId();
+                                            newMsgBean.setMsgId(msgId);
+
+                                            if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_OK) {
+                                                if (ack.getIsTargetOnline()) {
+                                                    /*String log = mContext.getString(R.string.hx_phiz_item_send_pic_success);
+                                                    Toast.makeText(mContext, log, Toast.LENGTH_SHORT).show();*/
+                                                    if (isSaveDB) {
+                                                        //add to db
+                                                        newMsgBean.setSend_flag(0);
+                                                        CacheMsgHelper.instance(mContext).insertOrUpdate(newMsgBean);
+                                                    }
+                                                } else {
+                                                    final CacheMsgBean finalNewMsgBean = newMsgBean;
+                                                    HttpPushManager.pushMsgForPicture(userId, desPhone, fileId,
+                                                            new HttpPushManager.PushListener() {
+                                                                @Override
+                                                                public void success(String msg) {
+                                                                    LogUtils.w(TAG, msg);
+                                                                    /*String log = mContext.getString(R.string.hx_phiz_item_send_pic_success);
+                                                                    Toast.makeText(mContext, log, Toast.LENGTH_SHORT).show();*/
+                                                                    if (isSaveDB) {
+                                                                        //add to db
+                                                                        finalNewMsgBean.setSend_flag(0);
+                                                                        CacheMsgHelper.instance(mContext).insertOrUpdate(finalNewMsgBean);
+                                                                    }
+                                                                }
+
+                                                                @Override
+                                                                public void fail(String msg) {
+
+                                                                }
+                                                            });
+                                                }
+
+                                                if (null != listener) {
+                                                    listener.onImSuccess(ChatMsg.MsgType.PICTURE.ordinal(), fileBean);
+                                                }
+
+                                            } else if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_NOT_HUXIN_USER) {
+                                                if (isSaveDB) {
+                                                    showNotHuxinUser2(desPhone, SendSmsActivity.SEND_PICTURE, msgId, newMsgBean);
+                                                }
+                                                if (null != listener) {
+                                                    listener.onImNotUser(ChatMsg.MsgType.PICTURE.ordinal(), msgId);
+                                                }
+                                            } else {
+                                                String log = "ErrerNo:" + ack.getErrerNo();
+                                                Toast.makeText(mContext, log, Toast.LENGTH_SHORT).show();
+                                                LogFile.inStance().toFile(log);
+                                                if (null != listener) {
+                                                    listener.onImFail(ChatMsg.MsgType.PICTURE.ordinal(), fileBean);
+                                                }
+
+                                                if (isSaveDB) {
+                                                    newMsgBean.setSend_flag(-1);
+                                                }
+                                            }
+                                            //删除已发送的本地图片
+                                            /*if (file.exists() && file.getAbsolutePath().contains(FileConfig.getPicDownLoadPath())) {
+                                                file.delete();
+                                            }*/
+                                        } catch (InvalidProtocolBufferException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onError(int errCode) {
+                                        super.onError(errCode);
+                                        if (null != listener) {
+                                            listener.onImFail(ChatMsg.MsgType.PICTURE.ordinal(), fileBean);
+                                        }
+                                        if (isSaveDB) {
+                                            cacheMsgBean.setSend_flag(4);
+                                            CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
+                                        }
+                                    }
+                                };
+
+                                sendPicture(userId, desPhone, fileId, isOriginal ? "original" : "thumbnail", receiveListener);
+
+                            } else {
+                                Toast.makeText(mContext, resp.getM(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    };
+
+                    Map<String, String> params = new HashMap<>();
+                    params.put("x:type", "2");
+                    params.put("x:msisdn", getPhoneNum());
+                    UploadOptions options = new UploadOptions(params, null, false, progressHandler, null);
+
+                    uploadManager.put(file, fidKey, token, completionHandler, options);
+
+                } else {
+                    if (null != listener) {
+                        listener.onImFail(ChatMsg.MsgType.PICTURE.ordinal(), fileBean);
+                    }
+                    if (isSaveDB) {
+                        //add to db
+                        cacheMsgBean.setSend_flag(4);
+                        CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
+                    }
+
+                    String log = resp.getM();
+                    Toast.makeText(mContext, log, Toast.LENGTH_SHORT).show();
+                    LogFile.inStance().toFile(log);
+                }
+            }
+        };
+        getUploadFileToken(callback);
+    }
+
+
+    /**
+     * 发送视频
+     *
+     * @param userId
+     * @param desPhone
+     * @param file     (压缩后图片文件,发送完删除)
+     * @param filePath 地图片的原始路径(原图)
+     * @param isSaveDB 是否保存到数据库
+     * @param listener
+     * @return
+     */
+    public void postVideo(final int userId,
+                          final String desPhone,
+                          final File file,
+                          final String filePath,
+                          final String framePath,
+                          final long seconds,
+                          final boolean isSaveDB,
+                          final IFileSendListener listener) {
+
+        final FileBean fileBean = new FileBean().setUserId(userId)
+                .setFileMsgType(ChatMsg.MsgType.VIDEO.ordinal())
+                .setDstPhone(desPhone)
+                .setFile(file)
+                .setLocalFramePath(framePath)
+                .setLocalVideoPath(filePath)
+                .setVideoTime(seconds);
+
+        if (null != listener) {
+            if (CommonUtils.isNetworkAvailable(mContext)) {
+                listener.onProgress(ChatMsg.MsgType.VIDEO.ordinal(), 0.01, filePath);
+            } else {
+                listener.onImFail(ChatMsg.MsgType.VIDEO.ordinal(), fileBean);
+            }
+        }
+        String videoName = file.getName();
+        long size = FileUtils.getFileSize(filePath);
+        String videoSize = com.youmai.smallvideorecord.utils.StringUtils.generateFileSize(size);
+        //todo_k: 视频
+        final CacheMsgBean cacheMsgBean = new CacheMsgBean();
+        cacheMsgBean.setMsgTime(System.currentTimeMillis())
+                .setSend_flag(-1)
+                .setSenderPhone(getPhoneNum())
+                .setSenderUserId(userId)
+                .setReceiverPhone(desPhone)
+                .setMsgType(CacheMsgBean.MSG_TYPE_VIDEO)
+                .setJsonBodyObj(new CacheMsgVideo().setVideoPath(filePath).setFramePath(framePath).setName(videoName).setSize(videoSize).setTime(seconds))
+                .setRightUI(true);
+        if (isSaveDB) {
+            IMMsgManager.getInstance().addCacheMsgBean(cacheMsgBean);
+            //add to db
+            CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
+        }
+        uploadQiVideoFrame(cacheMsgBean, fileBean, isSaveDB, listener);
+    }
+
+    /**
+     * 先上传视频帧图片,以获取图片ID
+     */
+    public void uploadQiVideoFrame(final CacheMsgBean cacheMsgBean, final FileBean fileBean, final boolean isSaveDB, final IFileSendListener listener) {
+        final UpProgressHandler progressHandler = new UpProgressHandler() {
+            @Override
+            public void progress(String key, double percent) {
+                LogUtils.e(Constant.SDK_UI_TAG, "manager percent = " + percent);
+                if (null != listener && percent < 0.5f) {
+                    listener.onProgress(ChatMsg.MsgType.VIDEO.ordinal(), percent, fileBean.getLocalFramePath());
+                }
+            }
+        };
+        IPostListener callback = new IPostListener() {
+            @Override
+            public void httpReqResult(String response) {
+                FileToken resp = GsonUtil.parse(response, FileToken.class);
+                if (resp == null) {
+                    if (null != listener) {
+                        listener.onImFail(ChatMsg.MsgType.VIDEO.ordinal(), fileBean);
+                    }
+                    if (isSaveDB) {
+                        //add to db
+                        cacheMsgBean.setSend_flag(4);
+                        CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
+                    }
+                    return;
+                }
+                if (resp.isSucess()) {
+                    String fidKey = resp.getD().getFid();
+                    String token = resp.getD().getUpToken();
+                    UpCompletionHandler completionHandler = new UpCompletionHandler() {
+                        @Override
+                        public void complete(String key, ResponseInfo info, JSONObject response) {
+                            if (response == null) {
+                                if (null != listener) {
+                                    listener.onImFail(ChatMsg.MsgType.VIDEO.ordinal(), fileBean);
+                                }
+                                if (isSaveDB) {
+                                    //add to db
+                                    cacheMsgBean.setSend_flag(4);
+                                    CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
+                                }
+                                return;
+                            }
+                            UploadFile resp = GsonUtil.parse(response.toString(), UploadFile.class);
+
+                            if (resp != null && resp.isSucess()) {
+                                final String fileId = resp.getD().getFileid();
+                                CacheMsgVideo cacheMsgVideo = (CacheMsgVideo) cacheMsgBean.getJsonBodyObj();
+                                if (cacheMsgVideo == null) {
+                                    cacheMsgVideo = new CacheMsgVideo();
+                                }
+                                cacheMsgVideo.setFrameId(fileId);
+                                cacheMsgBean.setJsonBodyObj(cacheMsgVideo);
+                                fileBean.setVideoPFidUrl(fileId);
+                                uploadQiVideo(cacheMsgBean, fileBean, isSaveDB, listener);//继续上传视频
+                            } else {
+                                Toast.makeText(mContext, resp.getM(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    };
+                    String framePath = ((CacheMsgVideo) cacheMsgBean.getJsonBodyObj()).getFramePath();
+                    Map<String, String> params = new HashMap<>();
+                    params.put("x:type", "2");
+                    params.put("x:msisdn", getPhoneNum());
+                    UploadOptions options = new UploadOptions(params, null, false, progressHandler, null);
+                    uploadManager.put(new File(framePath), fidKey, token, completionHandler, options);
+                } else {
+                    if (null != listener) {
+                        listener.onImFail(ChatMsg.MsgType.VIDEO.ordinal(), fileBean);
+                    }
+                    if (isSaveDB) {
+                        //add to db
+                        cacheMsgBean.setSend_flag(4);
+                        CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
+                    }
+
+                    String log = resp.getM();
+                    Toast.makeText(mContext, log, Toast.LENGTH_SHORT).show();
+                    LogFile.inStance().toFile(log);
+                }
+            }
+        };
+        getUploadFileToken(callback);
+    }
+
+    /**
+     * 上传视频，以获取视频ID
+     */
+    public void uploadQiVideo(final CacheMsgBean cacheMsgBean, final FileBean fileBean, final boolean isSaveDB, final IFileSendListener listener) {
+        final UpProgressHandler progressHandler = new UpProgressHandler() {
+            @Override
+            public void progress(String key, double percent) {
+                LogUtils.e(Constant.SDK_UI_TAG, "manager percent = " + percent);
+                if (null != listener && percent >= 0.5f) {
+                    listener.onProgress(ChatMsg.MsgType.VIDEO.ordinal(), percent, fileBean.getLocalVideoPath());
+                }
+            }
+        };
+        IPostListener callback = new IPostListener() {
+            @Override
+            public void httpReqResult(String response) {
+                FileToken resp = GsonUtil.parse(response, FileToken.class);
+                if (resp == null) {
+                    if (null != listener) {
+                        listener.onImFail(ChatMsg.MsgType.VIDEO.ordinal(), fileBean);
+                    }
+                    if (isSaveDB) {
+                        //add to db
+                        cacheMsgBean.setSend_flag(4);
+                        CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
+                    }
+                    return;
+                }
+                if (resp.isSucess()) {
+                    String fidKey = resp.getD().getFid();
+                    String token = resp.getD().getUpToken();
+                    UpCompletionHandler completionHandler = new UpCompletionHandler() {
+                        @Override
+                        public void complete(String key, ResponseInfo info, JSONObject response) {
+                            if (response == null) {
+                                if (null != listener) {
+                                    listener.onImFail(ChatMsg.MsgType.VIDEO.ordinal(), fileBean);
+                                }
+                                if (isSaveDB) {
+                                    //add to db
+                                    cacheMsgBean.setSend_flag(4);
+                                    CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
+                                }
+                                Toast.makeText(mContext, mContext.getString(R.string.hx_toast_74), Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                            UploadFile resp = GsonUtil.parse(response.toString(), UploadFile.class);
+
+                            if (resp != null && resp.isSucess()) {
+                                final String fileId = resp.getD().getFileid();
+                                CacheMsgVideo cacheMsgVideo = (CacheMsgVideo) cacheMsgBean.getJsonBodyObj();
+                                if (cacheMsgVideo == null) {
+                                    cacheMsgVideo = new CacheMsgVideo();
+                                }
+                                cacheMsgVideo.setVideoId(fileId);
+                                cacheMsgBean.setJsonBodyObj(cacheMsgVideo);
+                                fileBean.setVideoFidUrl(fileId);
+                                sendImVideo(isSaveDB, cacheMsgBean, fileBean, listener);//发送消息给对方
+
+                            } else {
+                                Toast.makeText(mContext, resp.getM(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    };
+                    String videoPath = ((CacheMsgVideo) cacheMsgBean.getJsonBodyObj()).getVideoPath();
+                    Map<String, String> params = new HashMap<>();
+                    params.put("x:type", "2");
+                    params.put("x:msisdn", getPhoneNum());
+                    UploadOptions options = new UploadOptions(params, null, false, progressHandler, null);
+                    uploadManager.put(new File(videoPath), fidKey, token, completionHandler, options);
+
+                } else {
+                    if (null != listener) {
+                        listener.onImFail(ChatMsg.MsgType.VIDEO.ordinal(), fileBean);
+                    }
+                    if (isSaveDB) {
+                        //add to db
+                        cacheMsgBean.setSend_flag(4);
+                        CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
+                    }
+
+                    String log = resp.getM();
+                    Toast.makeText(mContext, log, Toast.LENGTH_SHORT).show();
+                    LogFile.inStance().toFile(log);
+                }
+            }
+        };
+        getUploadFileToken(callback);
+    }
+
+    /**
+     * 发送视频消息
+     */
+    public void sendImVideo(final boolean isSaveDB, final CacheMsgBean cacheMsgBean, final FileBean fileBean, final IFileSendListener listener) {
+        CacheMsgVideo cacheMsgVideo = (CacheMsgVideo) cacheMsgBean.getJsonBodyObj();
+        final String fileId = cacheMsgVideo.getVideoId();
+        String frameId = cacheMsgVideo.getFrameId();
+        String name = cacheMsgVideo.getName();
+        String size = cacheMsgVideo.getSize();
+        long time = cacheMsgVideo.getTime();
+        fileBean.setFileId(fileId);
+        fileBean.setPictrueId(frameId);
+        fileBean.setVideoTime(time);
+
+        final String desPhone = cacheMsgBean.getReceiverPhone();
+        ReceiveListener receiveListener = new ReceiveListener() {
+            @Override
+            public void OnRec(PduBase pduBase) {
+                //发自己处理
+                CacheMsgBean newMsgBean = null;
+                if (cacheMsgBean.getReceiverPhone().equals(HuxinSdkManager.instance().getPhoneNum())) {
+                    // FIXME: 2017/4/10 消息屏发送主键 ID为 null
+                    if (cacheMsgBean.getId() != null) {
+                        newMsgBean = HuxinSdkManager.instance().getCacheMsgFromDBById(cacheMsgBean.getId());
+                    }
+                } else {
+                    newMsgBean = cacheMsgBean;
+                }
+                try {
+                    YouMaiChat.IMChat_Personal_Ack ack = YouMaiChat.IMChat_Personal_Ack.parseFrom(pduBase.body);
+                    long msgId = ack.getMsgId();
+                    newMsgBean.setMsgId(msgId);
+
+                    if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_OK) {
+                        if (ack.getIsTargetOnline()) {
+                            /*String log = mContext.getString(R.string.hx_phiz_item_send_video_success);
+                            Toast.makeText(mContext, log, Toast.LENGTH_SHORT).show();*/
+                            if (isSaveDB) {
+                                //add to db
+                                newMsgBean.setSend_flag(0);
+                                CacheMsgHelper.instance(mContext).insertOrUpdate(newMsgBean);
+                            }
+                        } else {
+                            final CacheMsgBean finalNewMsgBean = newMsgBean;
+                            CacheMsgVideo cacheMsgVideo = (CacheMsgVideo) cacheMsgBean.getJsonBodyObj();
+                            String videoId = cacheMsgVideo.getVideoId();
+                            HttpPushManager.pushMsgForPicture(cacheMsgBean.getSenderUserId(), cacheMsgBean.getReceiverPhone(), videoId,
+                                    new HttpPushManager.PushListener() {
+                                        @Override
+                                        public void success(String msg) {
+                                            LogUtils.w(TAG, msg);
+                                            /*String log = mContext.getString(R.string.hx_phiz_item_send_video_success);
+                                            Toast.makeText(mContext, log, Toast.LENGTH_SHORT).show();*/
+                                            if (isSaveDB) {
+                                                //add to db
+                                                finalNewMsgBean.setSend_flag(0);
+                                                CacheMsgHelper.instance(mContext).insertOrUpdate(finalNewMsgBean);
+                                            }
+                                        }
+
+                                        @Override
+                                        public void fail(String msg) {
+
+                                        }
+                                    });
+                        }
+
+                        if (null != listener) {
+                            listener.onImSuccess(ChatMsg.MsgType.VIDEO.ordinal(), fileBean);
+                        }
+
+                    } else if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_NOT_HUXIN_USER) {
+                        if (isSaveDB) {
+                            showNotHuxinUser2(cacheMsgBean.getReceiverPhone(), SendSmsActivity.SEND_VIDEO, msgId, newMsgBean);
+                        }
+                        if (null != listener) {
+                            listener.onImNotUser(ChatMsg.MsgType.VIDEO.ordinal(), msgId);
+                        }
+                    } else {
+                        String log = "ErrorNo:" + ack.getErrerNo();
+                        Toast.makeText(mContext, log, Toast.LENGTH_SHORT).show();
+                        LogFile.inStance().toFile(log);
+                        if (null != listener) {
+                            listener.onImFail(ChatMsg.MsgType.VIDEO.ordinal(), fileBean);
+                        }
+
+                        if (isSaveDB) {
+                            newMsgBean.setSend_flag(-1);
+                        }
+                    }
+                } catch (InvalidProtocolBufferException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onError(int errCode) {
+                super.onError(errCode);
+                if (null != listener) {
+                    listener.onImFail(ChatMsg.MsgType.VIDEO.ordinal(), fileBean);
+                }
+                if (isSaveDB) {
+                    cacheMsgBean.setSend_flag(4);
+                    CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
+                }
+            }
+        };
+
+        sendVideo(cacheMsgBean.getSenderUserId(), desPhone, fileId, frameId, name, size, time + "", receiveListener);
+    }
+
+    /**
+     * 发送段子
+     *
+     * @param con
+     * @param dstPhone
+     * @param listener
+     */
+    public void sendJokesText(final String con, final String dstPhone, final IFileSendListener listener) {
+
+        final int userId = HuxinSdkManager.instance().getUserId();
+
+        final FileBean fileBean = new FileBean()
+                .setUserId(userId)
+                .setDstPhone(dstPhone)
+                .setTextContent(con);
+
+        final String content = CacheMsgJoke.JOKES + con;
+
+        final CacheMsgBean cacheMsgBean = new CacheMsgBean()
+                .setMsgTime(System.currentTimeMillis())
+                .setSend_flag(-1)
+                .setSenderPhone(HuxinSdkManager.instance().getPhoneNum())
+                .setSenderUserId(userId)
+                .setReceiverPhone(dstPhone)
+                .setMsgType(CacheMsgBean.MSG_TYPE_JOKE)
+                .setJsonBodyObj(new CacheMsgJoke().setMsgJoke(content))
+                .setRightUI(true);
+
+        if (null != listener) {
+            if (!CommonUtils.isNetworkAvailable(mContext)) {
+                listener.onImFail(ChatMsg.MsgType.JOKE_TEXT.ordinal(), fileBean);
+            }
+        }
+
+        //add to db
+        CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
+        IMMsgManager.getInstance().addCacheMsgBean(cacheMsgBean);
+
+        ReceiveListener callback = new ReceiveListener() {
+            @Override
+            public void OnRec(PduBase pduBase) {
+                final CacheMsgBean newMsgBean;
+                if (dstPhone.equals(HuxinSdkManager.instance().getPhoneNum())) {
+                    newMsgBean = HuxinSdkManager.instance().getCacheMsgFromDBById(cacheMsgBean.getId());
+                } else {
+                    newMsgBean = cacheMsgBean;
+                }
+                try {
+                    YouMaiChat.IMChat_Personal_Ack ack = YouMaiChat.IMChat_Personal_Ack.parseFrom(pduBase.body);
+                    long msgId = ack.getMsgId();
+                    newMsgBean.setMsgId(msgId);
+
+                    if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_OK) {
+                        if (ack.getIsTargetOnline()) {
+                            newMsgBean.setSend_flag(0);
+                            CacheMsgHelper.instance(mContext).insertOrUpdate(newMsgBean);
+
+                            if (null != listener) {
+                                listener.onImSuccess(ChatMsg.MsgType.JOKE_TEXT.ordinal(), fileBean);
+                            }
+                        } else {
+                            // TODO: 2017/1/5 推送消息    发送文本 ok
+                            HttpPushManager.pushMsgForText(mContext, userId, dstPhone, content, new HttpPushManager.PushListener() {
+                                @Override
+                                public void success(String msg) {
+                                    newMsgBean.setSend_flag(0);
+                                    CacheMsgHelper.instance(mContext).insertOrUpdate(newMsgBean);
+
+                                    if (null != listener) {
+                                        listener.onImSuccess(ChatMsg.MsgType.JOKE_TEXT.ordinal(), fileBean);
+                                    }
+                                }
+
+                                @Override
+                                public void fail(String msg) {
+                                    newMsgBean.setSend_flag(0);
+                                    LogUtils.e(TAG, "推送消息异常:" + msg);
+                                }
+                            });
+                        }
+                    } else if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_NOT_HUXIN_USER) {
+                        showNotHuxinUser(cacheMsgBean.getReceiverPhone(), SendSmsActivity.SEND_JOKES, msgId, con);
+                    } else if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_ERR_SESSIONID) {
+                        ProtocolCallBack sCallBack = RespBaseBean.getsCallBack();
+                        if (sCallBack != null) {
+                            sCallBack.sessionExpire();
+                        }
+                    } else {
+                        LogFile.inStance().toFile("ErrerNo:" + ack.getErrerNo());
+                        if (null != listener) {
+                            listener.onImFail(ChatMsg.MsgType.JOKE_TEXT.ordinal(), fileBean);
+                        }
+                    }
+                } catch (InvalidProtocolBufferException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        boolean res = HuxinSdkManager.instance().sendText(userId, dstPhone, content, callback);
+    }
+
+    /**
+     * tcp发送图片
+     *
+     * @param userId
+     * @param desPhone
+     * @param fileId
+     * @param quality
+     * @param callback
+     */
+    public void sendPicture(int userId, String desPhone, String fileId, String quality, ReceiveListener callback) {
+        String srcPhone = getPhoneNum();
+        String tarPhone = PhoneNumTypes.changePhone(desPhone, mContext);
+
+        IMChat_Personal.Builder builder = IMChat_Personal.newBuilder();
+        builder.setSrcUsrId(userId);
+        builder.setSrcPhone(srcPhone);
+        builder.setTargetPhone(tarPhone);
+
+        IMContentUtil imContentUtil = new IMContentUtil();
+
+        int type = IMContentUtil.getContentType(0, YouMaiChat.IM_CONTENT_TYPE.IM_CONTENT_TYPE_IMAGE_VALUE);
+        builder.setContentType(type);
+        imContentUtil.appendPictureId(fileId);
+        imContentUtil.appendDescribe(quality); // 是否原图
+
+        builder.setBody(imContentUtil.serializeToString());
+
+        YouMaiChat.IMChat_Personal imData = builder.build();
+
+        callback.setTarPhone(tarPhone);
+        callback.setContent(fileId);
+        sendProto(imData, callback);
+    }
+
+
+    /**
+     * tcp 发送音频
+     *
+     * @param userId
+     * @param desPhone
+     * @param fileId
+     * @param callback
+     */
+    public boolean sendAudio(int userId, String desPhone, String fileId, String secondsTime, String sourcePhone, String forwardCount, ReceiveListener callback) {
+        if (showSdkLogin()) {
+            return false;
+        }
+
+        String srcPhone = getPhoneNum();
+        String tarPhone = PhoneNumTypes.changePhone(desPhone, mContext);
+
+        IMChat_Personal.Builder builder = IMChat_Personal.newBuilder();
+        builder.setSrcUsrId(userId);
+        builder.setSrcPhone(srcPhone);
+        builder.setTargetPhone(tarPhone);
+
+        IMContentUtil imContentUtil = new IMContentUtil();
+
+        int type = IMContentUtil.getContentType(0, YouMaiChat.IM_CONTENT_TYPE.IM_CONTENT_TYPE_AUDIO_VALUE);
+        builder.setContentType(type);
+        imContentUtil.appendAudioId(fileId);
+        imContentUtil.appendBarTime(secondsTime);
+        imContentUtil.appendSourcePhone(sourcePhone);
+        imContentUtil.appendForwardCount(forwardCount);
+
+        builder.setBody(imContentUtil.serializeToString());
+
+        YouMaiChat.IMChat_Personal imData = builder.build();
+
+        sendProto(imData, callback);
+
+        callback.setTarPhone(tarPhone);
+        callback.setContent(fileId);
+        return true;
+    }
+
+
+    /**
+     * tcp发送视频
+     *
+     * @param userId
+     * @param desPhone
+     * @param fileId
+     * @param callback
+     */
+    public boolean sendVideo(int userId, String desPhone, String fileId, String frameId, String name, String size, String time, ReceiveListener callback) {
+        if (showSdkLogin()) {
+            return false;
+        }
+        IMContentUtil imContentUtil = new IMContentUtil();
+        int type = IMContentUtil.getContentType(0, YouMaiChat.IM_CONTENT_TYPE.IM_CONTENT_TYPE_VIDEO_VALUE);
+        imContentUtil.addVideo(fileId, frameId, name, size, time);//body的内容
+
+        String srcPhone = getPhoneNum();
+        String tarPhone = PhoneNumTypes.changePhone(desPhone, mContext);
+
+        IMChat_Personal.Builder builder = IMChat_Personal.newBuilder();
+        builder.setSrcUsrId(userId);
+        builder.setSrcPhone(srcPhone);
+        builder.setTargetPhone(tarPhone);
+
+        builder.setContentType(type);
+
+        builder.setBody(imContentUtil.serializeToString());
+
+        YouMaiChat.IMChat_Personal imData = builder.build();
+
+        sendProto(imData, callback);
+
+        callback.setTarPhone(tarPhone);
+        callback.setContent(fileId);
+        return true;
+    }
+
+    /**
+     * tcp发送视频
+     *
+     * @param userId
+     * @param desPhone
+     * @param fileId
+     * @param callback
+     */
+    public boolean sendBigFile(int userId, String desPhone, String fileId,
+                               String fileName, String fileSize, ReceiveListener callback) {
+        if (showSdkLogin()) {
+            return false;
+        }
+        String srcPhone = getPhoneNum();
+        String tarPhone = PhoneNumTypes.changePhone(desPhone, mContext);
+
+        IMChat_Personal.Builder builder = IMChat_Personal.newBuilder();
+        builder.setSrcUsrId(userId);
+        builder.setSrcPhone(srcPhone);
+        builder.setTargetPhone(tarPhone);
+
+        IMContentUtil imContentUtil = new IMContentUtil();
+
+        int type = IMContentUtil.getContentType(0, YouMaiChat.IM_CONTENT_TYPE.IM_CONTENT_TYPE_FILE_VALUE);
+        builder.setContentType(type);
+        imContentUtil.appendBigFileId(fileId, fileName, fileSize);
+
+        builder.setBody(imContentUtil.serializeBigFileToString());
+
+        YouMaiChat.IMChat_Personal imData = builder.build();
+
+        sendProto(imData, callback);
+
+        callback.setTarPhone(tarPhone);
+        callback.setContent(fileId);
+        return true;
+    }
+
+
+    /**
+     * tcp发送url
+     *
+     * @param userId
+     * @param desPhone
+     * @param url
+     * @param title
+     * @param description
+     * @param callback
+     */
+    public boolean sendUrl(int userId, String desPhone, String url, String title,
+                           String description, ReceiveListener callback) {
+        if (showSdkLogin()) {
+            return false;
+        }
+        String srcPhone = getPhoneNum();
+        String tarPhone = PhoneNumTypes.changePhone(desPhone, mContext);
+
+        IMChat_Personal.Builder builder = IMChat_Personal.newBuilder();
+        builder.setSrcUsrId(userId);
+        builder.setSrcPhone(srcPhone);
+        builder.setTargetPhone(tarPhone);
+
+        IMContentUtil imContentUtil = new IMContentUtil();
+
+        int type = IMContentUtil.getContentType(0, YouMaiChat.IM_CONTENT_TYPE.IM_CONTENT_TYPE_URL_VALUE);
+        builder.setContentType(type);
+        imContentUtil.appendUrl(url);
+        imContentUtil.appendTitle(title);
+        imContentUtil.appendDescribe(description);
+        builder.setBody(imContentUtil.serializeToString());
+        YouMaiChat.IMChat_Personal imData = builder.build();
+
+        sendProto(imData, callback);
+
+        callback.setTarPhone(tarPhone);
+        callback.setContent(url);
+        return true;
+    }
+
+    /*
+    * lee add for bg sound
+    * */
+    private void updateSelectPopupMenu(final Context ctx, View anchorView) {
+        final ArrayList<SoundModel> soundModelsList = SoundsUtils.getSoundData(ctx);
+        mSelectPopupMenu = new PopupMenu(new ContextThemeWrapper(ctx, R.style.bgSoundPopupMenuTheme), anchorView);
+        Menu menu = mSelectPopupMenu.getMenu();
+        for (int i = 0; i < soundModelsList.size(); i++) {
+            SoundModel sm = soundModelsList.get(i);
+            MenuItem menuItem = menu.add(0, i, Menu.NONE, sm.getName());
+        }
+        mSelectPopupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                int id = item.getItemId();
+                if (id < soundModelsList.size()) {
+                    handleOpenCallBackgroundSound(ctx, soundModelsList.get(id).getUrl());
+                }
+                return false;
+            }
+        });
+        mSelectPopupMenu.dismiss();
+        mSelectPopupMenu.show();
+    }
+
+    private void handleOpenCallBackgroundSound(Context ctx, int rawId) {
+        String uriStr = "android.resource://" + ctx.getPackageName() + "/" + rawId;
+        Uri uri = Uri.parse(uriStr);
+        handleOpenCallBackgroundSound(ctx, uri);
+    }
+
+    private void handleOpenCallBackgroundSound(Context ctx, String path) {
+        final Uri uri = Uri.parse(path);
+        handleOpenCallBackgroundSound(ctx, uri);
+    }
+
+    private void handleOpenCallBackgroundSound(Context ctx, Uri soundUri) {
+        String cpuType = getCPU();
+        String AUDIO_PARAMETER_KEY_BGSOUND_ON = "Set_BGS_UL_Mute=0";
+
+        if (cpuType.equals(CPU_MTK)) {
+            AUDIO_PARAMETER_KEY_BGSOUND_ON = "Set_BGS_UL_Mute=0";
+        } else {
+            return;
+        }
+
+        if (mAudioManager == null) {
+            mAudioManager = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
+        }
+
+        try {
+            if (mMediaPlayer == null) {
+                mMediaPlayer = new MediaPlayer();
+                mMediaPlayer.setDataSource(ctx, soundUri);
+                mMediaPlayer.setLooping(true);
+                mMediaPlayer.prepare();
+            }
+
+            if (mHxCallBgSoundState == false) {
+                mAudioManager.setParameters(AUDIO_PARAMETER_KEY_BGSOUND_ON);
+                mMediaPlayerPreVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+                int maxVolume = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+                //int minVolume = mAudioManager.getStreamMinVolume(AudioManager.STREAM_MUSIC);
+                int midVolume = maxVolume - 3;
+                mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, midVolume, 0);
+                mMediaPlayer.start();
+
+                if (mCallBgSoundLister != null) {
+                    mCallBgSoundLister.doSomething();
+                }
+                mHxCallBgSoundState = true;
+            }
+        } catch (IOException e) {
+            android.util.Log.e("BgSound", "IOException");
+        } catch (IllegalArgumentException e) {
+            android.util.Log.e("BgSound", "IllegalArgumentException");
+        } catch (IllegalStateException e) {
+            android.util.Log.e("BgSound", "IllegalStateException");
+        } finally {
+            android.util.Log.e("BgSound", "no exception");
+        }
+    }
+
+    public void handleCloseCallBackgroundSound() {
+        String cpuType = getCPU();
+        String AUDIO_PARAMETER_KEY_BGSOUND_OFF = "Set_BGS_UL_Mute=0";
+        if (cpuType.equals(CPU_MTK)) {
+            AUDIO_PARAMETER_KEY_BGSOUND_OFF = "Set_BGS_UL_Mute=1";
+        } else {
+            return;
+        }
+        if (mHxCallBgSoundState && mAudioManager != null && mMediaPlayer != null) {
+            if (mCallBgSoundLister != null) {
+                mCallBgSoundLister.quit();
+            }
+
+            mAudioManager.setParameters(AUDIO_PARAMETER_KEY_BGSOUND_OFF);
+            mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, mMediaPlayerPreVolume, 0);
+            mMediaPlayer.stop();
+            mMediaPlayer.release();
+            mMediaPlayer = null;
+            mHxCallBgSoundState = false;
+        }
+    }
+
+    public void handleCallBackgroundSound(Context ctx, View anchor, CallBgSoundLister lister) {
+        mCallBgSoundLister = lister;
+        if (mHxCallBgSoundState) {
+            if (mSelectPopupMenu != null)
+                mSelectPopupMenu.dismiss();
+            handleCloseCallBackgroundSound();
+        } else {
+            updateSelectPopupMenu(ctx, anchor);
+        }
+    }
+
+    public interface CallBgSoundLister {
+        void doSomething();
+
+        void quit();
+    }
+
+    /*
+    * 获取CPU类型
+    * */
+    public String getCPU() {
+        String hardware = android.os.Build.HARDWARE;
+        int result = hardware.indexOf("mt");
+        if (result >= 0) {
+            return CPU_MTK;
+        }
+        result = hardware.indexOf("qcom");
+        if (result >= 0) {
+            return CPU_GAOTONG;
+        }
+
+        result = hardware.indexOf("hi");
+        if (result >= 0) {
+            return CPU_HUAWEI;
+        }
+
+        try {
+            FileReader fileReader = new FileReader("/proc/cpuinfo");
+            BufferedReader br = new BufferedReader(fileReader);
+            String line;
+            while ((line = br.readLine()) != null) {
+                String lineLowerCase = line.toLowerCase();
+                if (lineLowerCase.indexOf("qualcomm") >= 0) {
+                    return CPU_GAOTONG;
+                }
+            }
+            fileReader.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        return "";
+    }
+
+    /**
+     * 获取发送给desPhone的所有消息缓存
+     * 输入用户号码，返回缓存的用户聊天信息
+     *
+     * @param desPhone
+     * @return
+     */
+    public List<ChatMsg> getChatMsgFromCache(String desPhone) {
+        //读数据库数据
+        ChatMsgDao chatMsg = GreenDbManager.instance(mContext).getChatMsgDao();
+        List<ChatMsg> list = chatMsg.queryRaw("where targetPhone = ?", desPhone);
+        return list;
+    }
+
+    /**
+     * 获取消息总数.
+     *
+     * @param desPhone
+     * @return
+     */
+    public int getChatMsgCountFromCache(String desPhone) {
+        return CacheMsgHelper.instance(mContext).queryRaw("where targetPhone = ?", new String[]{desPhone}).size();
+    }
+
+    /**
+     * 获取消息
+     *
+     * @param desPhone
+     * @return
+     */
+    public List<ChatMsg> getChatMsgFromcacheDesc(String desPhone) {
+        ChatMsgDao chatMsgDao = GreenDbManager.instance(mContext).getChatMsgDao();
+        List<ChatMsg> list = chatMsgDao.queryBuilder().where(
+                ChatMsgDao.Properties.TargetPhone.eq(desPhone))
+                .orderDesc(ChatMsgDao.Properties.MsgTime).list();
+        return list;
+    }
+
+    /**
+     * 获取消息总数.
+
+     * @param desPhone
+     * @return
+     */
+    public int getCacheMsgCountFromDB(String desPhone) {
+        return CacheMsgHelper.instance(mContext).queryRaw("where receiver_phone=? and is_right_ui=?",
+                new String[]{desPhone, "1"}).size();
+    }
+
+    /**
+     * 获取消息
+     * receiver_phone=? and is_right_ui=?
+     *
+     * @param desPhone
+     * @return
+     */
+    public List<CacheMsgBean> getCacheMsgFromDBDesc(String desPhone) {
+        CacheMsgBeanDao cacheMsgBeanDao = GreenDBIMManager.instance(mContext).getCacheMsgDao();
+        List<CacheMsgBean> list = cacheMsgBeanDao.queryBuilder().where(
+                CacheMsgBeanDao.Properties.ReceiverPhone.eq(desPhone),
+                CacheMsgBeanDao.Properties.IsRightUI.eq("1"))
+                .orderDesc(CacheMsgBeanDao.Properties.MsgTime).list();
+        return list;
+    }
+
+    /**
+     * 获取分页消息
+     *
+     * @param desPhone
+     * @return
+     */
+    public List<CacheMsgBean> getCacheMsgFromDBDesc(String desPhone, int startIndex, int pageSize) {
+       /*CacheMsgBeanDao cacheMsgBeanDao = new CacheMsgBeanDao(mContext);
+        cacheMsgBeanDao.startReadableDatabase();
+        List<CacheMsgBean> list = cacheMsgBeanDao.queryList(null, "receiver_phone=? and is_right_ui=?", new String[]{desPhone, "1"}, null, null, "msg_time DESC", startIndex + "," + pageSize);
+        cacheMsgBeanDao.closeDatabase();
+        return list;*/
+
+        CacheMsgBeanDao cacheMsgBeanDao = GreenDBIMManager.instance(mContext).getCacheMsgDao();
+        List<CacheMsgBean> list = cacheMsgBeanDao.queryBuilder().where(
+                CacheMsgBeanDao.Properties.ReceiverPhone.eq(desPhone),
+                CacheMsgBeanDao.Properties.IsRightUI.eq("1"))
+                .orderDesc(CacheMsgBeanDao.Properties.MsgTime)
+                .offset(startIndex).limit(pageSize).list();
+        return list;
+    }
+
+    /**
+     * 获取消息
+     *
+     * @param id
+     * @return
+     */
+
+    public CacheMsgBean getCacheMsgFromDBById(long id) {
+        CacheMsgBeanDao cacheMsgBeanDao = GreenDBIMManager.instance(mContext).getCacheMsgDao();
+        CacheMsgBean msgBean = cacheMsgBeanDao.queryBuilder().where(CacheMsgBeanDao.Properties.Id.eq(id)).unique();
+        return msgBean;
+    }
+
+    /**
+     * 播放声音
+     *
+     * @param res
+     */
+    public void playSound(int res) {
+        if (mContext != null && binded == BIND_STATUS.BINDED) {
+            huxinService.playSound(res);
+        }
+    }
+
+
+    /**
+     * 注册摇一摇监听器
+     *
+     * @param listener
+     */
+    public void registerSharkListener(HuxinService.SharkListener listener) {
+        if (mContext != null && binded == BIND_STATUS.BINDED) {
+            huxinService.registerSharkListener(listener);
+        }
+    }
+
+    /**
+     * 注销摇一摇监听器
+     */
+    public void unregisterSharkListener() {
+        if (mContext != null && binded == BIND_STATUS.BINDED) {
+            huxinService.unregisterSharkListener();
+        }
+    }
+
+
+    private void saveDeviceId() {
+        String imei = DeviceUtils.getIMEI(mContext);
+        String path = FileConfig.getInfoPaths() + "/device.info";
+
+        File file = new File(path);
+        if (!file.exists()) {
+            FileUtils.writeFile(path, imei);
+        }
+    }
+
+
+    public String getDeviceId() {
+        String res = "";
+        String path = FileConfig.getInfoPaths() + "/device.info";
+        String saveId = FileUtils.readFile(path);
+        if (!StringUtils.isEmpty(saveId)) {
+            res = saveId;
+        }
+
+        res = res.replace("\n", "");
+        return res;
+    }
+
+
+    public boolean checkAppKey(Context context) {
+        boolean res = false;
+        String value = AppUtils.getMetaData(context, "com.youmai.huxin.apikey");
+        if (value.equals(SignUtils.genSignature(context))) {
+            res = true;
+        }
+
+        res = true;  //固定返回true
+        return res;
+    }
+
+
+    public void showNotHuxinUser(String desPhone, int type, long msgId) {
+
+        Intent intent = new Intent(mContext, SendSmsActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra("desPhone", desPhone);
+        intent.putExtra("msgId", msgId);
+        intent.putExtra("type", type);
+        mContext.startActivity(intent);
+    }
+
+    public void showNotHuxinUser2(String desPhone, int type, long msgId, CacheMsgBean cacheMsgBean) {
+
+        Intent intent = new Intent(mContext, SendSmsActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra("desPhone", desPhone);
+        intent.putExtra("msgId", msgId);
+        intent.putExtra("type", type);
+        intent.putExtra("bean", cacheMsgBean);
+        mContext.startActivity(intent);
+    }
+
+    /**
+     * 短信发文本
+     */
+    public void showNotHuxinUser(String desPhone, int type, long msgId, String text) {
+
+        Intent intent = new Intent(mContext, SendSmsActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra("desPhone", desPhone);
+        intent.putExtra("msgId", msgId);
+        intent.putExtra("type", type);
+        intent.putExtra("text", text);
+        mContext.startActivity(intent);
+    }
+
+    /**
+     * bind service callback
+     */
+    private ServiceConnection serviceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            if (service instanceof HuxinService.HuxinServiceBinder) {
+                huxinService = (HuxinService.HuxinServiceBinder) service;
+                binded = BIND_STATUS.BINDED;
+                for (InitListener item : mInitListenerList) {
+                    item.success();
+                }
+                mInitListenerList.clear();
+                saveDeviceId();
+                Log.v(TAG, "Service Connected...");
+            }
+        }
+
+        // 连接服务失败后，该方法被调用
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            huxinService = null;
+            binded = BIND_STATUS.IDLE;
+            for (InitListener item : mInitListenerList) {
+                item.fail();
+            }
+            mInitListenerList.clear();
+            Log.e(TAG, "Service Failed...");
+        }
+    };
+
+    private void autoLogin() {
+        if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.READ_PHONE_STATE)
+                == PackageManager.PERMISSION_GRANTED) {
+            mProcessHandler.sendEmptyMessage(HANDLER_THREAD_AUTO_LOGIN);
+        }
+    }
+
+
+    /**
+     * 设置个人秀
+     *
+     * @return
+     */
+    public boolean setUserShow() {
+        if (isLogin() && isBinded()) {
+            Intent intent = new Intent(mContext, ShowMainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            mContext.startActivity(intent);
+            return true;
+        }
+        return false;
+    }
+
+
+
+    /**
+     * 设置通知栏声音是否打开
+     *
+     * @param open
+     */
+    public void setNotifySound(Context context, boolean open) {
+        isSound = open;
+        AppUtils.setBooleanSharedPreferences(context, "hx_notify_sound", open);
+    }
+
+
+    public boolean isNotifySound(Context context) {
+        return isSound;
+    }
+
+
+    /**
+     * 设置通知栏震动是否打开
+     *
+     * @param open
+     */
+    public void setNotifyVibrate(Context context, boolean open) {
+        isVibrate = open;
+        AppUtils.setBooleanSharedPreferences(context, "hx_notify_vibrate", open);
+    }
+
+
+    public boolean isNotifyVibrate(Context context) {
+        return isVibrate;
+    }
+
+
+    /**
+     * 线程初始化
+     */
+    private void initHandler() {
+        if (mProcessHandler == null) {
+            HandlerThread handlerThread = new HandlerThread(
+                    "handler looper Thread");
+            handlerThread.start();
+            mProcessHandler = new ProcessHandler(handlerThread.getLooper());
+        }
+    }
+
+    /**
+     * 子线程handler,looper
+     *
+     * @author Administrator
+     */
+    private class ProcessHandler extends Handler {
+
+        public ProcessHandler(Looper looper) {
+            super(looper);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case HANDLER_THREAD_INIT_CONFIG_START:
+                    initWork(mContext);
+                    break;
+                case HANDLER_THREAD_AUTO_LOGIN:
+                    /*String phoneSim = AppUtils.getPhoneNumber(mContext);  // "+8618688159700"
+                    String phoneCache = getPhoneNum();
+
+                    String phone;
+                    if (!StringUtils.isEmpty(phoneSim)) {
+                        phone = phoneSim;
+                    } else {
+                        phone = phoneCache;
+                    }*/
+
+                    String phone = getPhoneNum();
+
+                    if (!StringUtils.isEmpty(phone)) {
+                        if (phone.startsWith("+86")) {
+                            phone = phone.substring(3);
+                        }
+                        if (AppUtils.isMobileNum(phone) || phone.equals("4000")/*&& !getPhoneNum().equals(phone)*/) {
+                            String key = phone + "autoLogin" + TimeUtils.getDate(System.currentTimeMillis());
+
+                            boolean isLogin = AppUtils.getBooleanSharedPreferences(mContext, key, true);
+                            if (isLogin) {
+                                AppUtils.setBooleanSharedPreferences(mContext, key, false);
+                                setPhoneNumber(phone, new LoginListener() {
+                                    @Override
+                                    public void success(String msg) {
+                                        BackGroundJob.instance().reqFloatViewConfig(mContext, true);//请求开关弹屏配置
+                                        HuxinSdkManager.instance().initEmo();
+                                    }
+
+                                    @Override
+                                    public void fail(String msg) {
+
+                                    }
+                                });
+                            } else {
+                                BackGroundJob.instance().reqFloatViewConfig(mContext, true);//请求开关弹屏配置
+                                HuxinSdkManager.instance().initEmo();
+                            }
+                        }
+                    }
+
+                    break;
+                default:
+                    break;
+            }
+
+        }
+
+    }
+
+    //todo_k: cgj start
+
+    /**
+     * 彩管家userid设置
+     *
+     * @param colourLifeUserId
+     */
+    public void setCgjUserId(String colourLifeUserId) {
+        ThirdBizHelper.writeThirdBizAccount(CgjUser.PACKAGE_NAME, colourLifeUserId);
+    }
+
+    /**
+     * 获取彩管家userid.
+     *
+     * @return
+     */
+    public String getCgjUserId() {
+        return ThirdBizHelper.readThirdBizAccount(CgjUser.PACKAGE_NAME);
+    }
+
+    /**
+     * 设置彩管家开门activity.
+     *
+     * @param activtyClass
+     */
+    public void setCgjOpenDoorActivty(Class activtyClass) {
+        ThirdBizHelper.writeThirdBizActivity(CgjUser.PACKAGE_NAME, activtyClass.getName());
+    }
+
+
+    /**
+     * 彩之云userid设置
+     *
+     * @param colourLifeUserId
+     */
+    public void setCzyUserId(String colourLifeUserId) {
+        ThirdBizHelper.writeThirdBizAccount(CzyUser.PACKAGE_NAME, colourLifeUserId);
+    }
+
+    /**
+     * 获取彩之云userid.
+     *
+     * @return
+     */
+    public String getCzyUserId() {
+        return ThirdBizHelper.readThirdBizAccount(CzyUser.PACKAGE_NAME);
+    }
+
+    /**
+     * 设置彩之云开门activity.
+     *
+     * @param activtyClass
+     */
+    public void setCzyOpenDoorActivty(Class activtyClass) {
+        ThirdBizHelper.writeThirdBizActivity(CzyUser.PACKAGE_NAME, activtyClass.getName());
+    }
+
+
+    /**
+     * 使用广播现实弹屏
+     */
+    public void showFloatView(Activity activity) {
+        int floatInt = activity.getIntent().getIntExtra("extra_float", 0);
+        if (floatInt == 1) {
+            Intent intent = new Intent();
+            intent.setAction("huxin.intent.action.SHOW_FLOAT_VIEW");
+            mContext.sendBroadcast(intent);
+        }
+    }
+
+    /**
+     * 使用广播移除弹屏
+     */
+    public void hideFloatView() {
+        Intent intent = new Intent();
+        intent.setAction("huxin.intent.action.HIDE_FLOAT_VIEW");
+        mContext.sendBroadcast(intent);
+    }
+    //todo_k: cgj end
+
+
+    /**
+     * 获取钱包账号信息
+     * <p>
+     * 默认获取呼币方式
+     */
+    public void purseInfoGet(int extraCont, IPostListener listener) {
+        purseInfoGet(extraCont, "4", listener);
+    }
+
+    /**
+     * 获取钱包账号信息
+     *
+     * @param extraCont 附加内容，二进制表示，右起第一位依次表示：代言累计收益；任务累计收益；邀请累计收益；返利累计收益；一级返利; 二级返利;。(默认为0，无附加内容)
+     * @param payWay    支付方式(默认为4呼币).0:余额;1:支付宝;2:微信;3:银行卡;4:呼币;5:线下充值。
+     * @param listener
+     */
+    public void purseInfoGet(int extraCont, String payWay, IPostListener listener) {
+        String url = AppConfig.PURSE_INFO_URL;
+        int uid = HuxinSdkManager.instance().getUserId();
+        String msisdn = HuxinSdkManager.instance().getPhoneNum();
+        String sid = HuxinSdkManager.instance().getSession();
+        String termid = DeviceUtils.getIMEI(mContext);
+        String sign = AppConfig.appSign(msisdn, termid);
+
+        ContentValues params = new ContentValues();
+        params.put("uid", uid);
+        params.put("msisdn", msisdn);
+        params.put("extraCont", extraCont);
+        params.put("payWay", payWay);
+        params.put("sid", sid);
+        params.put("termid", termid);
+        params.put("sign", sign);
+        params.put("v", AppConfig.V);
+        params.put("ps", getCommonParam());
+
+        HttpConnector.httpPost(url, params, listener);
+    }
+
+
+    /**
+     * 获取账户清单
+     */
+    public void purseDelails(int bizType, int page, IPostListener listener) {
+        purseDelails(0, bizType, "4", -1, page, listener);
+    }
+
+    /**
+     * 获取账户清单
+     */
+    public void purseDelails(int bizType, String payWay, int page, IPostListener listener) {
+        purseDelails(0, bizType, payWay, -1, page, listener);
+    }
+
+    /**
+     * 获取账户清单
+     *
+     * @param capitalFlow 资金流向。0、所有；1、支出；2、收入； 默认为0
+     * @param bizType     业务类型.0:所有;1:挂机短信;2:充值提现转账;3:积分墙;4:代言;5:app下载;6:邀请;7:被邀请;8:一级返利;9:二级返利 ;10:voip电话 ; 11:签到;12:抽奖;13:voip电话账户（套餐） 默认为0
+     * @param payWay      支付方式(默认为4呼币).0:余额;1:支付宝;2:微信;3:银行卡;4:呼币;5:线下充值;12:支付宝或微信
+     * @param isRecharge  是否是充值。0：否； 1：是
+     * @param page        分页
+     */
+    public void purseDelails(int capitalFlow, int bizType, String payWay, int isRecharge, int page, IPostListener listener) {
+        String url = AppConfig.PURSE_DETAILS;
+        int uid = HuxinSdkManager.instance().getUserId();
+        String msisdn = HuxinSdkManager.instance().getPhoneNum();
+        String sid = HuxinSdkManager.instance().getSession();
+        String termid = DeviceUtils.getIMEI(mContext);
+        String sign = AppConfig.appSign(msisdn, termid);
+        int rows = 10;
+        ContentValues params = new ContentValues();
+        params.put("uid", uid);
+        params.put("msisdn", msisdn);
+        params.put("capitalFlow", capitalFlow);
+        params.put("bizType", bizType);
+        params.put("payWay", payWay);
+        if (isRecharge != -1) {
+            params.put("isRecharge", isRecharge);//这个默认值不知道，需要的时候再加
+        }
+        params.put("sid", sid);
+        params.put("termid", termid);
+        params.put("sign", sign);
+        params.put("page", page);
+        params.put("rows", rows);
+        params.put("v", AppConfig.V);
+        params.put("ps", getCommonParam());
+
+        HttpConnector.httpPost(url, params, listener);
+    }
+
+    /**
+     * 获取账户清单
+     *
+     * @param listener
+     */
+    public void purseDelailsTest(int bizType, int index, IGetListener listener) {
+        String url = "https://test2.jweb.huxin.biz/jhuxin-openapi/qy/pay/bills?v=4&rows=1&sid=2703896db6d98568b9ea4256480ca53d&sign=eb1c159a1dfec71e269b514b68c9b830&uid=16622400&msisdn=18476541062&payWay=0&bizType=" + bizType + "&page=" + index + "&termid=862862037539699&";
+        HttpConnector.httpGet(url, listener);
+    }
+
+    /**
+     * 获取积分墙信息
+     *
+     * @param listener
+     */
+    public void httpRequestOfferWallInfo(IPostListener listener) {
+        String url = AppConfig.AD_OFFER_WALL;
+
+        String channel = AppUtils.getChannelInfo(mContext);
+        String packageName = mContext.getPackageName();
+
+        ContentValues params = new ContentValues();
+        params.put("channel", channel);
+        params.put("packageName", packageName);
+        params.put("v", AppConfig.V);
+        params.put("ps", getCommonParam());
+
+        HttpConnector.httpPost(url, params, listener);
+    }
+
+
+    /**
+     * 请求有麦积分墙列表
+     *
+     * @param phoneNum
+     * @param listener
+     */
+    public void reqOfferList(String phoneNum, IGetListener listener) {
+        String url = AppConfig.AD_OFFER_LIST;
+
+        ContentValues params = new ContentValues();
+        String imei = DeviceUtils.getIMEI(mContext);
+        String channel = AppUtils.getChannelInfo(mContext);
+        String packageName = mContext.getPackageName();
+
+        params.put("msisdn", phoneNum);
+        params.put("channel", channel);
+        params.put("packageName", packageName);
+        params.put("type", 4);  //0:未配置；1:有米；2:多盟；3:万普；4:有麦；5:百度
+        params.put("termid", imei);
+        params.put("sign", AppConfig.appSign(phoneNum, imei));
+        params.put("v", AppConfig.V);
+        params.put("ps", getCommonParam());
+
+        HttpConnector.httpGet(url, params, listener);
+
+    }
+
+
+    /**
+     * 请求有麦积分墙详情
+     *
+     * @param phoneNum
+     * @param listener
+     */
+    public void reqAdOfferInfo(String phoneNum, String adId, IGetListener listener) {
+        String url = AppConfig.AD_OFFER_INFO;
+
+        ContentValues params = new ContentValues();
+        String imei = DeviceUtils.getIMEI(mContext);
+        String channel = AppUtils.getChannelInfo(mContext);
+        String packageName = mContext.getPackageName();
+
+        params.put("msisdn", phoneNum);
+        params.put("adId", adId);
+        params.put("termid", imei);
+        params.put("sign", AppConfig.appSign(phoneNum, imei));
+        params.put("v", AppConfig.V);
+        params.put("ps", getCommonParam());
+
+        HttpConnector.httpGet(url, params, listener);
+
+    }
+
+
+    /**
+     * 上报积分墙应该安装信息
+     */
+    public void appInsert(int type, String packageName, IPostListener listener) {
+        String url = AppConfig.AD_OFFER_APP_INSERT;
+
+        ContentValues params = new ContentValues();
+
+        String phoneNum = getPhoneNum();
+        String imei = DeviceUtils.getIMEI(mContext);
+
+        params.put("msisdn", phoneNum);
+        params.put("termid", imei);
+        params.put("type", type);
+        params.put("appPackage", packageName);
+        params.put("sign", AppConfig.appSign(phoneNum, imei));
+        params.put("v", AppConfig.V);
+        params.put("ps", getCommonParam());
+
+        HttpConnector.httpPost(url, params, listener);
+
+    }
+
+    /**
+     * 邀请码
+     *
+     * @param inviteCode
+     * @param listener
+     */
+    public void inviteCode(String inviteCode, IGetListener listener) {
+        String url = AppConfig.INVITE_ACCEPT_CODE;
+
+        ContentValues params = new ContentValues();
+        String imei = DeviceUtils.getIMEI(mContext);
+        String phoneNum = HuxinSdkManager.instance.getPhoneNum();
+
+        params.put("msisdn", phoneNum);
+        params.put("inviteCode", inviteCode);
+        params.put("termid", imei);
+        params.put("sign", AppConfig.appSign(phoneNum, imei));
+        params.put("v", AppConfig.V);
+        params.put("ps", getCommonParam());
+
+        HttpConnector.httpGet(url, params, listener);
+    }
+
+    /**
+     * 获取自己的邀请码！
+     *
+     * @param listener
+     */
+    public void GetInviteCode(IGetListener listener) {
+        String url = AppConfig.INVITE_GET_CODE;
+
+        ContentValues params = new ContentValues();
+        String imei = DeviceUtils.getIMEI(mContext);
+        String phoneNum = HuxinSdkManager.instance.getPhoneNum();
+        params.put("msisdn", phoneNum);
+        params.put("termid", imei);
+        params.put("sign", AppConfig.appSign(phoneNum, imei));
+        params.put("v", AppConfig.V);
+        params.put("ps", getCommonParam());
+
+        HttpConnector.httpGet(url, params, listener);
+    }
+
+    /**
+     * 是否可以被邀请
+     *
+     * @param listener
+     */
+    public void isBeInvitable(IGetListener listener) {
+        String url = AppConfig.IS_BE_INVITABLE;
+
+        ContentValues params = new ContentValues();
+        String imei = DeviceUtils.getIMEI(mContext);
+        String phoneNum = HuxinSdkManager.instance.getPhoneNum();
+
+        params.put("msisdn", phoneNum);
+        params.put("termid", imei);
+        params.put("sign", AppConfig.appSign(phoneNum, imei));
+        params.put("v", AppConfig.V);
+        params.put("ps", getCommonParam());
+
+        HttpConnector.httpGet(url, params, listener);
+    }
+
+    /**
+     * 获取voip配置
+     *
+     * @param listener
+     */
+    public void getVoipConfig(IGetListener listener, String version) {
+        String url = AppConfig.VOIP_CONFIG;
+
+        ContentValues params = new ContentValues();
+        params.put("version", version);
+        params.put("ps", getCommonParam());
+
+        HttpConnector.httpGet(url, params, listener);
+    }
+
+
+    private ContentValues getHttpCommonParam() {
+        int uid = HuxinSdkManager.instance().getUserId();
+        String phoneNum = HuxinSdkManager.instance.getPhoneNum();
+        String sid = HuxinSdkManager.instance().getSession();
+        String imei = DeviceUtils.getIMEI(mContext);
+
+        ContentValues params = new ContentValues();
+        params.put("uid", uid);
+        params.put("msisdn", phoneNum);
+        params.put("sid", sid);
+        params.put("termid", imei);
+        params.put("sign", AppConfig.appSign(phoneNum, imei));
+        params.put("v", AppConfig.V);
+        params.put("ps", getCommonParam());
+
+        return params;
+    }
+
+    /**
+     * 已过时
+     * 触发回拨电话
+     *
+     * @param calledPhone
+     * @param listener
+     */
+    public void onVoipCallback(String calledPhone, IPostListener listener) {
+        String url = AppConfig.VOIP_ON_CALLBACK;
+
+        ContentValues params = getHttpCommonParam();
+
+        HttpConnector.httpPost(url, params, listener);
+    }
+
+
+    /**
+     * 触发回拨电话
+     *
+     * @param calledPhone
+     * @param listener
+     */
+    public void onVoipCallback2(String calledPhone, IPostListener listener) {
+        String url = AppConfig.VOIP_ON_CALLBACK2;
+
+        ContentValues params = getHttpCommonParam();
+        if (TextUtils.isEmpty((String) params.get("msisdn"))) {
+            return;
+        }
+
+        params.put("calledPhone", calledPhone);
+
+        HttpConnector.httpPost(url, params, listener);
+    }
+
+
+    /**
+     * 已过时 20170928
+     * 上报无回拨电话
+     *
+     * @param callId
+     * @param listener
+     */
+    public void onVoipReportNoCallback(String callId, IPostListener listener) {
+        String url = AppConfig.VOIP_REPORT_NO_CALLBACK;
+
+        ContentValues params = getHttpCommonParam();
+        params.put("callIds", callId);
+
+        HttpConnector.httpPost(url, params, listener);
+    }
+
+    /**
+     * 上报回拨电话
+     * callId 	是 	4 	string 	通话的id。
+     * callee 	是 	4 	string 	被叫号码
+     * duration 是 	4 	int 	通话时长(单位秒)
+     * type 	是 	4 	int 	上报类型。0：无回拨;200:成功;201:使用普通电话;
+     * respDuration 	否 	4 	int 	响应时长。(调用回拨接口成功到第一声响铃的时长，单位秒）
+     *
+     * @param callId
+     * @param callNumber
+     * @param duration
+     * @param type
+     * @param respDuration
+     * @param listener
+     */
+    public void onVoipReportCallback(String callId, String callNumber, int duration, int type,
+                                     int respDuration, String backNumber, IPostListener listener) {
+        String url = AppConfig.VOIP_REPORT_CALLBACK;
+
+        ContentValues params = getHttpCommonParam();
+        if (callId != null) {
+            params.put("callId", callId);
+        }
+        params.put("callee", callNumber);
+        params.put("duration", duration);
+        params.put("type", type);
+        if (type == 200 || type == 202) {
+            params.put("respDuration", respDuration);
+            params.put("backNumber", backNumber);
+        }
+        HttpConnector.httpPost(url, params, listener);
+    }
+
+    /**
+     * 抽奖转盘数据
+     *
+     * @param listener
+     */
+    public void luckyPanData(IPostListener listener) {
+        String url = AppConfig.LUCKY_PAN_DATA;
+        ContentValues params = new ContentValues();
+        params.put("v", AppConfig.V);
+        params.put("ps", getCommonParam());
+        HttpConnector.httpPost(url, params, listener);
+    }
+
+    /**
+     * 抽奖
+     *
+     * @param listener
+     */
+    public void lotteryDraw(IPostListener listener) {
+        String url = AppConfig.LOTTERY_DRAW;
+
+        int uid = HuxinSdkManager.instance().getUserId();
+        String phoneNum = HuxinSdkManager.instance.getPhoneNum();
+        String sid = HuxinSdkManager.instance().getSession();
+        String imei = DeviceUtils.getIMEI(mContext);
+
+        ContentValues params = new ContentValues();
+        params.put("uid", uid);
+        params.put("msisdn", phoneNum);
+        params.put("sid", sid);
+        params.put("termid", imei);
+        params.put("sign", AppConfig.appSign(phoneNum, imei));
+        params.put("v", AppConfig.V);
+        params.put("ps", getCommonParam());
+
+        HttpConnector.httpPost(url, params, listener);
+    }
+
+    /**
+     * 兑换抽奖项
+     *
+     * @param listener
+     */
+    public void lotteryExchange(String itemId, IPostListener listener) {
+        String url = AppConfig.LOTTERY_EXCHANGE;
+
+        int uid = HuxinSdkManager.instance().getUserId();
+        String phoneNum = HuxinSdkManager.instance.getPhoneNum();
+        String sid = HuxinSdkManager.instance().getSession();
+        String imei = DeviceUtils.getIMEI(mContext);
+
+        ContentValues params = new ContentValues();
+        params.put("uid", uid);
+        params.put("msisdn", phoneNum);
+        params.put("sid", sid);
+        params.put("termid", imei);
+        params.put("sign", AppConfig.appSign(phoneNum, imei));
+        params.put("itemId", itemId);
+        params.put("v", AppConfig.V);
+        params.put("ps", getCommonParam());
+
+        HttpConnector.httpPost(url, params, listener);
+    }
+
+    /**
+     * 获取签到状态
+     *
+     * @param listener
+     */
+    public void signInStatus(IPostListener listener) {
+        String url = AppConfig.SIGN_IN_STATUS;
+
+        int uid = HuxinSdkManager.instance().getUserId();
+        String phoneNum = HuxinSdkManager.instance.getPhoneNum();
+        String sid = HuxinSdkManager.instance().getSession();
+        String imei = DeviceUtils.getIMEI(mContext);
+
+        ContentValues params = new ContentValues();
+        params.put("uid", uid);
+        params.put("msisdn", phoneNum);
+        params.put("sid", sid);
+        params.put("termid", imei);
+        params.put("sign", AppConfig.appSign(phoneNum, imei));
+        params.put("v", AppConfig.V);
+        params.put("ps", getCommonParam());
+
+        HttpConnector.httpPost(url, params, listener);
+    }
+
+    /**
+     * 签到
+     *
+     * @param listener
+     */
+    public void signIn(IPostListener listener) {
+        String url = AppConfig.SIGN_IN;
+
+        int uid = HuxinSdkManager.instance().getUserId();
+        String phoneNum = HuxinSdkManager.instance.getPhoneNum();
+        String sid = HuxinSdkManager.instance().getSession();
+        String imei = DeviceUtils.getIMEI(mContext);
+
+        ContentValues params = new ContentValues();
+        params.put("uid", uid);
+        params.put("msisdn", phoneNum);
+        params.put("sid", sid);
+        params.put("termid", imei);
+        params.put("sign", AppConfig.appSign(phoneNum, imei));
+        params.put("v", AppConfig.V);
+        params.put("ps", getCommonParam());
+
+        HttpConnector.httpPost(url, params, listener);
+    }
+
+    /**
+     * 收藏
+     *
+     * @param listener
+     * @ msgContent 消息内容 anyway
+     * @ msgId        发送成功后的IM消息Id
+     * @ sendPhone    发送者电话
+     * @ receivePhone 接收者电话
+     * @ msgType      消息类型 ： 枚举类型
+     * @ msgTime      收藏时消息时间
+     * @ fids         所有文件fid 用','隔离 eg: 'fid,pfid'
+     * @ longitude    经度
+     * @ latitude     纬度
+     */
+    public void collectSave(CacheMsgBean cacheMsgBean, IPostListener listener) {
+        String url = AppConfig.COLLECT_SINGLE_SAVE;
+
+        String msgId = cacheMsgBean.getMsgId() == null ? "" : cacheMsgBean.getMsgId() + "";
+        String sendPhone = cacheMsgBean.getSenderPhone();
+        String receivePhone = cacheMsgBean.getReceiverPhone();
+        int msgType = cacheMsgBean.getMsgType();
+        long msgTime = System.currentTimeMillis();
+
+        String msgContent = cacheMsgBean.getJsonBodyObj().toJson();
+
+        String fids = "";
+
+        try {
+            JSONObject jsonObject = new JSONObject(msgContent);
+            String fid;
+            String pfid;
+
+            if (cacheMsgBean.getMsgType() == CacheMsgBean.MSG_TYPE_VIDEO) {
+                fid = jsonObject.optString("videoId");
+                pfid = jsonObject.optString("frameId");
+            } else {
+                fid = jsonObject.optString("fid");
+                pfid = jsonObject.optString("pfid");
+            }
+
+            if (!TextUtils.isEmpty(fid)) {
+                fids += fid;
+            }
+
+            if (!TextUtils.isEmpty(pfid)) {
+                fids = fids + "," + pfid;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        int uid = HuxinSdkManager.instance().getUserId();
+        String phoneNum = HuxinSdkManager.instance.getPhoneNum();
+        String sid = HuxinSdkManager.instance().getSession();
+        String imei = DeviceUtils.getIMEI(mContext);
+
+        ContentValues params = new ContentValues();
+        params.put("uid", uid);
+        params.put("msisdn", phoneNum);
+        params.put("sid", sid);
+        params.put("termid", imei);
+        params.put("sign", AppConfig.appSign(phoneNum, imei));
+        params.put("v", AppConfig.V);
+        params.put("ps", getCommonParam());
+
+        params.put("msgId", msgId);
+        params.put("sendPhone", sendPhone);
+        params.put("receivePhone", receivePhone);
+        params.put("msgType", msgType);
+        params.put("msgTime", msgTime);
+        params.put("msgContent", msgContent);
+        params.put("fids", fids);
+
+        HttpConnector.httpPost(url, params, listener);
+    }
+
+    /**
+     * 提醒保存
+     *
+     * @param cacheMsgBean
+     * @param msgIcon
+     * @param remark
+     * @param remindTime
+     * @param listener
+     */
+    public void remindSave(CacheMsgBean cacheMsgBean, int msgIcon, String remark, long remindTime,
+                           String quickPhone, IPostListener listener) {
+
+        String url = AppConfig.REMIND_SAVE;
+
+        String msgId = cacheMsgBean.getMsgId() == null ? "" : cacheMsgBean.getMsgId() + "";
+        String sendPhone = cacheMsgBean.getSenderPhone();
+        String receivePhone = cacheMsgBean.getReceiverPhone();
+        int msgType = cacheMsgBean.getMsgType();
+        long msgTime = System.currentTimeMillis();
+
+        String msgContent = cacheMsgBean.getJsonBodyObj().toJson();
+
+        String fids = "";
+
+        try {
+            JSONObject jsonObject = new JSONObject(msgContent);
+            String fid;
+            String pfid;
+
+            if (cacheMsgBean.getMsgType() == CacheMsgBean.MSG_TYPE_VIDEO) {
+                fid = jsonObject.optString("videoId");
+                pfid = jsonObject.optString("frameId");
+            } else {
+                fid = jsonObject.optString("fid");
+                pfid = jsonObject.optString("pfid");
+            }
+
+            if (!TextUtils.isEmpty(fid)) {
+                fids += fid;
+            }
+
+            if (!TextUtils.isEmpty(pfid)) {
+                fids = fids + "," + pfid;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        int uid = HuxinSdkManager.instance().getUserId();
+        String phoneNum = HuxinSdkManager.instance.getPhoneNum();
+        String sid = HuxinSdkManager.instance().getSession();
+        String imei = DeviceUtils.getIMEI(mContext);
+
+        ContentValues params = new ContentValues();
+        params.put("uid", uid);
+        params.put("msisdn", phoneNum);
+        params.put("sid", sid);
+        params.put("termid", imei);
+        params.put("sign", AppConfig.appSign(phoneNum, imei));
+        params.put("v", AppConfig.V);
+        params.put("ps", getCommonParam());
+
+        params.put("msgId", msgId);
+        params.put("sendPhone", sendPhone);
+        params.put("receivePhone", receivePhone);
+        params.put("msgType", msgType);
+        params.put("msgTime", msgTime);
+        params.put("msgContent", msgContent);
+        params.put("fids", fids);
+
+        params.put("remindTime", remindTime);
+        params.put("msgIcon", msgIcon);
+        params.put("remark", remark);
+        params.put("quickPhone", quickPhone);
+
+        HttpConnector.httpPost(url, params, listener);
+    }
+
+
+    public void remindDel(long msgId, long remindTime, IPostListener listener) {
+
+        String url = AppConfig.REMIND_DEL;
+
+        int uid = HuxinSdkManager.instance().getUserId();
+        String phoneNum = HuxinSdkManager.instance.getPhoneNum();
+        String sid = HuxinSdkManager.instance().getSession();
+        String imei = DeviceUtils.getIMEI(mContext);
+
+        ContentValues params = new ContentValues();
+        params.put("uid", uid);
+        params.put("msisdn", phoneNum);
+        params.put("sid", sid);
+        params.put("termid", imei);
+        params.put("sign", AppConfig.appSign(phoneNum, imei));
+        params.put("v", AppConfig.V);
+        params.put("ps", getCommonParam());
+
+        params.put("msgId", msgId);
+        params.put("remindTime", remindTime);
+
+        HttpConnector.httpPost(url, params, listener);
+    }
+
+
+    //语音转文字
+    public void voiceToText(String fid, IPostListener listener) {
+        String url = AppConfig.VOICE_TO_TEXT;
+
+        int uid = HuxinSdkManager.instance().getUserId();
+        String phoneNum = HuxinSdkManager.instance.getPhoneNum();
+        String sid = HuxinSdkManager.instance().getSession();
+        String imei = DeviceUtils.getIMEI(mContext);
+
+        ContentValues params = new ContentValues();
+        params.put("uid", uid);
+        params.put("msisdn", phoneNum);
+        params.put("sid", sid);
+        params.put("termid", imei);
+        params.put("sign", AppConfig.appSign(phoneNum, imei));
+        params.put("v", AppConfig.V);
+        params.put("ps", getCommonParam());
+        params.put("fid", fid);
+
+        HttpConnector.httpPost(url, params, listener);
+    }
+
+    /**
+     * 文字转语音
+     *
+     * @param text
+     * @param rdn      0:自动，不确定按照值的读法合成; 1:按照值的读法合成; 2:按照串的读法合成; 3(默认):自动，不确定时按照串读法合成
+     * @param listener
+     */
+    public void textToVoice(String text, String rdn, IPostListener listener) {
+        String url = AppConfig.TEXT_TO_VOICE;
+
+        int uid = HuxinSdkManager.instance().getUserId();
+        String phoneNum = HuxinSdkManager.instance.getPhoneNum();
+        String sid = HuxinSdkManager.instance().getSession();
+        String imei = DeviceUtils.getIMEI(mContext);
+
+        ContentValues params = new ContentValues();
+        params.put("uid", uid);
+        params.put("msisdn", phoneNum);
+        params.put("sid", sid);
+        params.put("termid", imei);
+        params.put("sign", AppConfig.appSign(phoneNum, imei));
+        params.put("v", AppConfig.V);
+        params.put("ps", getCommonParam());
+        params.put("text", text);
+        if (rdn != null) {
+            params.put("rdn", rdn);
+        }
+
+        HttpConnector.httpPost(url, params, listener);
+    }
+
+    /**
+     * 文字转语音  自动，不确定时按照串读法合成
+     *
+     * @param text
+     * @param listener
+     */
+    public void textToVoice(String text, IPostListener listener) {
+        textToVoice(text, null, listener);
+    }
+
+
+
+
+    public void initEmo() {
+        String phoneNum = HuxinSdkManager.instance().getPhoneNum();
+
+        HuxinSdkManager.instance().userInfoGet(phoneNum, 1, new IPostListener() {
+            @Override
+            public void httpReqResult(String response) {
+                EmoList baseBean = GsonUtil.parse(response, EmoList.class);
+                if (baseBean != null && baseBean.isSuccess()) {
+                    emoList = baseBean.getD();
+                    if (!ListUtils.isEmpty(emoList)) {
+                        Collections.sort(emoList);
+                        AppUtils.setStringSharedPreferences(mContext, "emo_self", response);
+                    }
+                }
+
+            }
+        });
+    }
+
+
+    public List<EmoItem> getEmoList() {
+        if (emoList == null) {
+            String saveStr = AppUtils.getStringSharedPreferences(mContext, "emo_self", "");
+
+            EmoList baseBean = GsonUtil.parse(saveStr, EmoList.class);
+            if (baseBean != null && baseBean.isSuccess()) {
+                emoList = baseBean.getD();
+                if (!ListUtils.isEmpty(emoList)) {
+                    Collections.sort(emoList);
+                }
+            }
+
+            if (emoList == null) {
+                emoList = new ArrayList<>();
+            }
+
+        }
+        return emoList;
+    }
+
+    public void setEmoList(List<EmoItem> emoList) {
+        this.emoList = emoList;
+    }
+
+
+    private UmengListener mUmengListener;
+
+    public static final String TCP_SEND_PDU = "tcp_send_pdu";  //tcp主动发送协议
+    public static final String TCP_SEND_PDU_ACK = "tcp_send_pdu_ack";   //tcp主动放发送协议收到ack回复
+
+
+    public static final String TCP_SEND_IM_MSG = "tcp_send_im_msg";   //tcp发送IM消息
+    public static final String TCP_REC_IM_ACK = "tcp_rec_im_ack";   //tcp收到IM消息
+
+    public interface UmengListener {
+        void onEvent(String eventId);
+    }
+
+
+    public void setUmengListener(UmengListener listener) {
+        mUmengListener = listener;
+    }
+
+
+    public void onEvent(String eventId) {
+        if (mUmengListener != null) {
+            mUmengListener.onEvent(eventId);
+        }
+    }
+
+}

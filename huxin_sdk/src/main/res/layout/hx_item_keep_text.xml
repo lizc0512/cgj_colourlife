@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/hx_item_keep_selector"
+    android:gravity="center_vertical"
+    android:orientation="vertical">
+
+    <include layout="@layout/hx_keep_title" />
+
+    <TextView
+        android:id="@+id/tv_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:ellipsize="end"
+        android:gravity="left"
+        android:maxLines="3"
+        android:text="hello world."
+        android:textColor="@color/hxs_color_black4"
+        android:textSize="15sp" />
+</LinearLayout>
+
+
+
+

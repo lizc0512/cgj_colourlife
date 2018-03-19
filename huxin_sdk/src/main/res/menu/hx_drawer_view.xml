@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_login"
+            android:icon="@drawable/hx_icon_setup"
+            android:title="@string/hx_login" />
+        <item
+            android:id="@+id/nav_edit_card"
+            android:icon="@drawable/hx_icon_setup"
+            android:title="@string/hx_edit_card" />
+        <item
+            android:id="@+id/nav_update_card"
+            android:icon="@drawable/hx_icon_setup"
+            android:title="@string/hx_update_card" />
+        <item
+            android:id="@+id/nav_get_card"
+            android:icon="@drawable/hx_icon_setup"
+            android:title="@string/hx_get_card" />
+        <item
+            android:id="@+id/nav_chat"
+            android:icon="@drawable/hx_icon_setup"
+            android:title="@string/hx_chat" />
+
+        <item
+            android:id="@+id/nav_float"
+            android:icon="@drawable/hx_icon_setup"
+            android:title="@string/hx_float_view" />
+        <item
+            android:id="@+id/nav_location"
+            android:icon="@drawable/hx_icon_setup"
+            android:title="@string/hx_my_location" />
+        <item
+            android:id="@+id/nav_gif"
+            android:icon="@drawable/hx_icon_setup"
+            android:title="@string/hx_gif" />
+        <item
+            android:id="@+id/nav_shake"
+            android:icon="@drawable/hx_icon_setup"
+            android:title="@string/hx_shake" />
+        <item
+            android:id="@+id/nav_feed"
+            android:icon="@drawable/hx_icon_setup"
+            android:title="@string/hx_feedbace" />
+        <item
+            android:id="@+id/nav_set_show"
+            android:icon="@drawable/hx_icon_setup"
+            android:title="@string/hx_set_show" />
+        <item
+            android:id="@+id/nav_user_show"
+            android:icon="@drawable/hx_icon_setup"
+            android:title="@string/hx_user_show" />
+
+        <item
+            android:id="@+id/nav_my_discount_coupon"
+            android:icon="@drawable/hx_icon_setup"
+            android:title="@string/hx_my_discount_conpou" />
+        <item
+            android:id="@+id/nav_set_represent"
+            android:icon="@drawable/hx_icon_setup"
+            android:title="@string/hx_set_represent" />
+        <item
+            android:id="@+id/nav_set_merchant"
+            android:icon="@drawable/hx_icon_setup"
+            android:title="@string/hx_set_merchant" />
+
+        <item
+            android:id="@+id/nav_permission_cfg"
+            android:icon="@drawable/hx_icon_setup"
+            android:title="@string/hx_permission_cfg" />
+
+        <item
+            android:id="@+id/nav_im"
+            android:icon="@drawable/hx_icon_setup"
+            android:title="@string/hx_im" />
+        <item
+            android:id="@+id/nav_log"
+            android:icon="@drawable/hx_icon_setup"
+            android:title="@string/hx_log" />
+
+        <item
+            android:id="@+id/nav_sms"
+            android:icon="@drawable/hx_icon_setup"
+            android:title="@string/hx_sms" />
+
+        <item
+            android:id="@+id/nav_access"
+            android:icon="@drawable/hx_icon_setup"
+            android:title="@string/hx_access" />
+    </group>
+</menu>

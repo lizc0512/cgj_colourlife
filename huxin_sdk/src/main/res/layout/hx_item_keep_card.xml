@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/hx_item_keep_selector"
+    android:gravity="center_vertical"
+    android:orientation="vertical">
+
+    <include layout="@layout/hx_keep_title" />
+
+    <RelativeLayout
+        android:id="@+id/item_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/hx_keep_card_bg"
+        android:orientation="vertical"
+        android:padding="5dp">
+
+
+        <ImageView
+            android:id="@+id/item_card_head_img"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="6dp"
+            android:layout_marginTop="8dp"
+            android:src="@drawable/hx_call_after_user_normal" />
+
+        <TextView
+            android:id="@+id/item_card_nickname_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/sender_head_img"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="2dp"
+            android:layout_toLeftOf="@id/item_card_head_img"
+            android:duplicateParentState="true"
+            android:includeFontPadding="false"
+            android:text="昵称"
+            android:textColor="@color/hx_color_white"
+            android:textSize="@dimen/card_font_size_small" />
+
+        <TextView
+            android:id="@+id/item_card_job_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/item_card_nickname_text"
+            android:layout_below="@+id/item_card_nickname_text"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_toLeftOf="@id/item_card_head_img"
+            android:duplicateParentState="true"
+            android:hint="@string/hx_card_no_write_job"
+            android:includeFontPadding="false"
+            android:textColor="#EEEEEE"
+            android:textColorHint="#EEEEEE"
+            android:textSize="@dimen/card_font_size_msmall" />
+
+        <TextView
+            android:id="@+id/item_card_company_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/item_card_nickname_text"
+            android:layout_below="@+id/item_card_job_text"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="6dp"
+            android:layout_toLeftOf="@id/item_card_head_img"
+            android:duplicateParentState="true"
+            android:hint="@string/hx_card_no_write_company"
+            android:includeFontPadding="false"
+            android:textColor="#EEEEEE"
+            android:textColorHint="#EEEEEE"
+            android:textSize="@dimen/card_font_size_msmall" />
+
+        <TextView
+            android:id="@+id/item_card_phone_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/item_card_nickname_text"
+            android:layout_below="@+id/item_card_company_text"
+            android:layout_marginTop="16dp"
+            android:drawableLeft="@drawable/hx_user_card_phone_icon"
+            android:duplicateParentState="true"
+            android:includeFontPadding="false"
+            android:text="15512345678"
+            android:textColor="@color/hx_color_white"
+            android:textSize="@dimen/card_font_size_msmall" />
+
+
+        <TextView
+            android:id="@+id/item_card_address_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/item_card_nickname_text"
+            android:layout_below="@+id/item_card_phone_text"
+            android:layout_marginTop="4dp"
+            android:drawableLeft="@drawable/hx_user_card_location_icon"
+            android:includeFontPadding="false"
+            android:text="广东 深圳"
+            android:textColor="@color/hx_color_white"
+            android:textSize="@dimen/card_font_size_msmall" />
+    </RelativeLayout>
+
+
+</LinearLayout>

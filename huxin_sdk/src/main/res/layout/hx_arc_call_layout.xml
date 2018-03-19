@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center">
+
+    <RelativeLayout
+        android:id="@+id/rl_arc"
+        android:layout_width="290dp"
+        android:layout_height="360dp"
+        android:background="@drawable/hx_shape_corner_gray_bg"
+        android:visibility="gone">
+
+        <!-- 显示秀、图片、地图等等 -->
+        <FrameLayout
+            android:id="@+id/fl_arc_call_bg"
+            android:layout_width="280dp"
+            android:layout_height="350dp"
+            android:layout_centerInParent="true"
+            android:layout_margin="8dp"
+            android:background="@drawable/hx_show_default_full">
+
+            <com.youmai.hxsdk.photoview.PhotoView
+                android:id="@+id/pv_arc_photo_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:clickable="true"
+                android:scaleType="centerCrop"
+                android:visibility="gone" />
+
+            <!--<com.youmai.hxsdk.view.full.FullVideoView-->
+            <!--android:id="@+id/vv_arc_video"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_gravity="center_horizontal"-->
+            <!--android:visibility="gone" />-->
+
+            <com.youmai.hxsdk.recyclerview.CallPageRecycleView
+                android:id="@+id/rv_arc_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/tv_link"
+                android:layout_width="match_parent"
+                android:layout_height="46dp"
+                android:layout_gravity="bottom"
+                android:background="#FFFFFF"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:maxLines="1"
+                android:padding="15dp"
+                android:text="@string/hx_arc_call_layout_01"
+                android:textColor="#333333"
+                android:textSize="14sp"
+                android:visibility="gone" />
+
+        </FrameLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_arc_close"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/hx_shape_corner_gray_bg">
+
+            <ImageView
+                android:id="@+id/iv_arc_close"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_centerInParent="true"
+                android:background="@drawable/hx_icon_close_show_selector" />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>

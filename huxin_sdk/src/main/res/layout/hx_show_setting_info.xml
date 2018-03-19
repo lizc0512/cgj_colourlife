@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/show_result_padding_width">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/hx_phone_bg"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:gravity="center"
+            android:textSize="24sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:textSize="20sp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginTop="20dp">
+
+            <ImageView
+                android:id="@+id/img_show"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_centerHorizontal="true"
+                android:scaleType="fitXY"
+                android:src="@drawable/hx_half_pic_moren" />
+
+            <com.youmai.hxsdk.view.full.FullVideoView
+                android:id="@+id/vv_video_show"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_centerHorizontal="true"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/img_show"
+                android:layout_alignParentBottom="true"
+                android:background="@drawable/hx_pic_bp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <!-- <View
+                     android:layout_width="0dp"
+                     android:layout_height="1dp"
+                     android:layout_weight="1" />
+
+                 <TextView
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:textColor="#ffffff"
+                     android:drawableTop="@drawable/hx_btn_half_location"
+                     android:text="@string/hx_send_loc" />
+
+                 <View
+                     android:layout_width="0dp"
+                     android:layout_height="1dp"
+                     android:layout_weight="1" />
+
+                 <TextView
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:textColor="#ffffff"
+                     android:drawableTop="@drawable/hx_btn_half_picture"
+                     android:text="@string/hx_send_pic" />
+
+                 <View
+                     android:layout_width="0dp"
+                     android:layout_height="1dp"
+                     android:layout_weight="1" />
+
+                 <TextView
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:textColor="#ffffff"
+                     android:drawableTop="@drawable/hx_btn_half_emo"
+                     android:text="@string/hx_send_emo" />
+
+                 <View
+                     android:layout_width="0dp"
+                     android:layout_height="1dp"
+                     android:layout_weight="1" />
+
+                 <TextView
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:textColor="#ffffff"
+                     android:drawableTop="@drawable/hx_icon_half_shark"
+                     android:text="@string/hx_shark_joke" />
+
+                 <View
+                     android:layout_width="0dp"
+                     android:layout_height="1dp"
+                     android:layout_weight="1" />-->
+            </LinearLayout>
+        </RelativeLayout>
+    </LinearLayout>
+
+</RelativeLayout>
+
+

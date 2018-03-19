@@ -1,0 +1,679 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.youmai.hxsdk">
+
+    <!-- Normal Permissions start -->
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_CONFIGURATION" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <!-- Normal Permissions end -->
+
+
+    <!-- Dangous Permissions start -->
+    <!-- STORAGE -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <!--SMS-->
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.READ_SMS" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+
+    <!--PHONE-->
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
+    <uses-permission android:name="android.permission.READ_CALL_LOG" />
+    <uses-permission android:name="android.permission.WRITE_CALL_LOG" />
+    <!-- MICROPHONE -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <!--LOCATION-->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <!--CONTACTS-->
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.WRITE_CONTACTS" />
+    <!--CAMERA-->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <!-- Dangous Permissions end-->
+
+    <uses-permission android:name="android.permission.FLASHLIGHT" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+
+
+    <!--这里com.xiaomi.mipushdemo改成app的包名-->
+    <permission
+        android:name="${applicationId}.permission.MIPUSH_RECEIVE"
+        android:protectionLevel="signature" />
+    <!--这里com.xiaomi.mipushdemo改成app的包名-->
+    <uses-permission android:name="${applicationId}.permission.MIPUSH_RECEIVE" />
+
+
+    <!--flyme-->
+    <!-- 兼容flyme5.0以下版本，魅族内部集成pushSDK必填，不然无法收到消息-->
+    <uses-permission android:name="com.meizu.flyme.push.permission.RECEIVE" />
+
+    <permission
+        android:name="${applicationId}.push.permission.MESSAGE"
+        android:protectionLevel="signature" />
+
+    <uses-permission android:name="${applicationId}.push.permission.MESSAGE" />
+    <!--  兼容flyme3.0配置权限-->
+    <uses-permission android:name="com.meizu.c2dm.permission.RECEIVE" />
+
+    <permission
+        android:name="${applicationId}.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+
+    <uses-permission android:name="${applicationId}.permission.C2D_MESSAGE" />
+
+    <!--huawei-->
+    <!-- Push需要的权限 -->
+    <!-- 可选，使用Push标签上报需要的权限,不上报标签就不需要 -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+
+
+    <application>
+
+        <!-- *************************************** -->
+        <!-- 接入合作方APP 需要修改的API KEY值 begin -->
+        <!-- *************************************** -->
+        <!-- 呼信渠道号 -->
+        <!--
+            <meta-data
+            android:name="HUXIN_CHANNEL"
+            android:value="@string/huxin_channel" />
+        -->
+
+        <!-- 呼信SDK APPKEY-->
+        <meta-data
+            android:name="com.youmai.huxin.apikey"
+            android:value="@string/huxin_apikey" />
+
+        <!-- 高德地图 APPKEY-->
+        <meta-data
+            android:name="com.amap.api.v2.apikey"
+            android:value="@string/amap_apikey" />
+
+        <!--魅族手机推送-->
+        <meta-data
+            android:name="Flyme_AppID"
+            android:value="@string/flyme_appid" />
+        <meta-data
+            android:name="Flyme_AppKey"
+            android:value="@string/flyme_appkey" />
+
+        <!--小米手机推送-->
+        <meta-data
+            android:name="Mi_AppID"
+            android:value="@string/mi_appid" />
+        <meta-data
+            android:name="Mi_AppKey"
+            android:value="@string/mi_appkey" />
+
+        <!--华为手机推送-->
+        <meta-data
+            android:name="com.huawei.hms.client.appid"
+            android:value="@string/huawei_appid" />
+
+
+        <!-- 升级provider, 向安装器提供"content://<package.name>.hsf.update.provider/update/hms/HwMobileService.apk" -->
+        <provider
+            android:name="com.huawei.hms.update.provider.UpdateProvider"
+            android:authorities="${applicationId}.hms.update.provider"
+            android:exported="false"
+            android:grantUriPermissions="true" />
+
+        <!-- google map APPKEY-->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_map_apikey" />
+
+        <!-- *************************************-->
+        <!-- 接入合作方APP 需要修改的API KEY值 end-->
+        <!-- *************************************-->
+
+
+        <activity
+            android:name="com.youmai.hxsdk.MessageActivity"
+            android:launchMode="singleInstance"
+            android:screenOrientation="portrait"
+            android:theme="@style/HxMsgTheme" />
+
+        <activity
+            android:name="com.youmai.hxsdk.LoginActivity"
+            android:launchMode="singleInstance"
+            android:screenOrientation="portrait"
+            android:theme="@style/HxMsgTheme" />
+
+        <activity
+            android:name="com.youmai.hxsdk.LoginPromptActivity"
+            android:launchMode="singleInstance"
+            android:screenOrientation="portrait"
+            android:theme="@style/HxMsgTheme" />
+
+        <activity
+            android:name="com.youmai.hxsdk.WrapSendFileActivity"
+            android:launchMode="singleInstance"
+            android:theme="@style/HxMsgTheme" />
+
+        <activity
+            android:name="com.youmai.hxsdk.SendSmsActivity"
+            android:launchMode="singleInstance"
+            android:screenOrientation="portrait"
+            android:theme="@style/HxMsgTheme" />
+
+        <activity
+            android:name="com.youmai.hxsdk.PhizGifActivity"
+            android:launchMode="singleInstance"
+            android:screenOrientation="portrait"
+            android:theme="@style/HxMsgTheme" />
+
+        <activity
+            android:name="com.youmai.hxsdk.SettingShowActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name="com.youmai.hxsdk.ShowMainActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".activity.ShowPreviewActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/HxSdkNewTheme" />
+
+        <activity
+            android:name="com.youmai.hxsdk.map.LocationActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/HxSdkTheme" />
+
+        <activity
+            android:name="com.youmai.hxsdk.PhotoPickerActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/HxSdkTheme" />
+
+        <!--剪裁页面-->
+        <activity
+            android:name="com.youmai.hxsdk.crop.CropImageActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/HxWindowAnimTheme" />
+
+        <activity
+            android:name="com.youmai.hxsdk.AcceptCallActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:excludeFromRecents="true"
+            android:launchMode="singleTop"
+            android:taskAffinity=""
+            android:theme="@style/HxInvisible" />
+
+        <activity
+            android:name="com.youmai.hxsdk.activity.ShowResultActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/HxMsgTheme" />
+
+        <activity
+            android:name="com.youmai.hxsdk.activity.WebViewActivity"
+            android:launchMode="singleInstance"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name="com.youmai.hxsdk.activity.CropImageActivity"
+            android:launchMode="singleInstance"
+            android:screenOrientation="portrait"
+            android:theme="@style/HxMsgTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="img" />
+            </intent-filter>
+        </activity>
+
+        <!--查看接受到的图片-->
+        <activity
+            android:name="com.youmai.hxsdk.activity.PictureIndicatorActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name="com.youmai.hxsdk.module.picker.PreviewImageActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name="com.youmai.hxsdk.module.picker.PreviewVideoActivity"
+            android:screenOrientation="portrait" />
+
+
+        <activity
+            android:name="com.youmai.hxsdk.activity.CropMapActivity"
+            android:launchMode="singleInstance"
+            android:screenOrientation="portrait"
+            android:theme="@style/HxMsgTheme" />
+
+        <activity
+            android:name="com.youmai.hxsdk.activity.CropVideoActivity"
+            android:launchMode="singleInstance"
+            android:screenOrientation="portrait"
+            android:theme="@style/HxMsgTheme" />
+
+        <!--视频录制-->
+        <activity
+            android:name="com.youmai.hxsdk.module.movierecord.MovieRecodeActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"
+            android:theme="@style/HxMsgTheme" />
+
+        <!--挂机策略-->
+        <activity
+            android:name="com.youmai.hxsdk.activity.HookStrategyActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"
+            android:theme="@style/HxThemeHook"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+
+        <!--IM消息-->
+        <activity
+            android:name="com.youmai.hxsdk.activity.IMConnectionActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/HxSdkNewTheme"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+
+        <activity
+            android:name="com.youmai.hxsdk.push.ui.PushMsgTypeActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name="com.youmai.hxsdk.push.ui.PushMsgContentActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name="com.youmai.hxsdk.push.ui.PushMsgDetailActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name="com.youmai.hxsdk.push.ui.RemindMsgContentActivity"
+            android:screenOrientation="portrait" />
+
+        <!--IM文件预览、下载打开-->
+        <activity
+            android:name="com.youmai.hxsdk.IMFilePreviewActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name="com.youmai.hxsdk.WrapIMFilePreviewActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait" />
+
+        <!--通话中查看消息记录-->
+        <activity
+            android:name="com.youmai.hxsdk.module.callmsg.MsgActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/HxSdkTheme" />
+
+        <activity
+            android:name="com.youmai.hxsdk.module.picker.PhotoPreviewActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name="com.youmai.hxsdk.module.picker.PhotoDirectoryActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name="com.youmai.hxsdk.keep.KeepActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name="com.youmai.hxsdk.keep.KeepMapActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name="com.youmai.hxsdk.keep.KeepVoiceActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name="com.youmai.hxsdk.keep.KeepTextActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name="com.youmai.hxsdk.keep.KeepFileActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name="com.youmai.hxsdk.emo.EmoEditActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name="com.youmai.hxsdk.emo.EmoPreviewActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name="com.youmai.hxsdk.emo.EmoChoiceActivity"
+            android:screenOrientation="portrait" />
+
+
+        <receiver
+            android:name="com.youmai.hxsdk.receiver.HuxinReceiver"
+            android:exported="true">
+            <intent-filter>
+                <category android:name="android.intent.category.HOME" />
+
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="android.intent.action.PHONE_STATE" />
+                <action android:name="android.intent.action.NEW_OUTGOING_CALL" />
+                <action android:name="huxin.intent.action.START_SERVER" />
+
+                <action android:name="huxin.intent.action.SHOW_FLOAT_VIEW" />
+                <action android:name="huxin.intent.action.HIDE_FLOAT_VIEW" />
+
+                <action android:name="huxin.intent.action.PUSH_MSG" />
+
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name="com.youmai.hxsdk.receiver.OfferReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_ADDED" />
+                <!--<action android:name="android.intent.action.PACKAGE_REPLACED" />-->
+                <!--<action android:name="android.intent.action.PACKAGE_REMOVED" />-->
+
+                <data android:scheme="package" />
+            </intent-filter>
+        </receiver>
+
+
+        <!-- 定位需要的服务 -->
+        <service android:name="com.amap.api.location.APSService" />
+
+        <service android:name=".service.ForegroundEnablingService" />
+
+        <service
+            android:name="com.youmai.hxsdk.service.HuxinService"
+            android:enabled="true"
+            android:exported="false"
+            android:persistent="true">
+            <intent-filter>
+                <action android:name="com.youmai.huxin.service.BOOT_SERVICE" />
+                <action android:name="com.youmai.huxin.service.NEW_OUTGOING_CALL" />
+                <action android:name="com.youmai.huxin.service.SHOW_FLOAT_VIEW" />
+                <action android:name="com.youmai.huxin.service.HIDE_FLOAT_VIEW" />
+                <action android:name="com.youmai.huxin.service.IM_LOGIN_OUT" />
+            </intent-filter>
+        </service>
+
+        <service
+            android:name="com.youmai.hxsdk.service.PermissionAccessibility"
+            android:enabled="true"
+            android:exported="true"
+            android:label="@string/desc"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/accessibility" />
+        </service>
+
+        <service
+            android:name=".service.HuxinStartJobService"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+        <service
+            android:name=".service.DownloadService"
+            android:permission="1000" />
+        <service
+            android:name=".service.SendMsgService"
+            android:permission="1000" />
+
+        <!-- ***************************************-->
+        <!-- 华为 魅族 小米 推送 begin-->
+        <!-- ***************************************-->
+
+        <!--xiao-push start-->
+        <service
+            android:name="com.xiaomi.push.service.XMPushService"
+            android:enabled="true"
+            android:process=":pushservice" />
+        <service
+            android:name="com.xiaomi.push.service.XMJobService"
+            android:enabled="true"
+            android:exported="false"
+            android:permission="android.permission.BIND_JOB_SERVICE"
+            android:process=":pushservice" />
+        <!--注：此service必须在3.0.1版本以后（包括3.0.1版本）加入-->
+        <service
+            android:name="com.xiaomi.mipush.sdk.PushMessageHandler"
+            android:enabled="true"
+            android:exported="true" />
+        <service
+            android:name="com.xiaomi.mipush.sdk.MessageHandleService"
+            android:enabled="true" />
+        <!--注：此service必须在2.2.5版本以后（包括2.2.5版本）加入-->
+        <receiver
+            android:name="com.xiaomi.push.service.receivers.NetworkStatusReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name="com.xiaomi.push.service.receivers.PingReceiver"
+            android:exported="false"
+            android:process=":pushservice">
+            <intent-filter>
+                <action android:name="com.xiaomi.push.PING_TIMER" />
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name="com.youmai.hxsdk.push.receiver.XiaomiMsgReceiver"
+            android:exported="true">
+            <!--这里com.xiaomi.mipushdemo.DemoMessageRreceiver改成app中定义的完整类名-->
+            <intent-filter>
+                <action android:name="com.xiaomi.mipush.RECEIVE_MESSAGE" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.xiaomi.mipush.MESSAGE_ARRIVED" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.xiaomi.mipush.ERROR" />
+            </intent-filter>
+        </receiver>
+        <!--xiao-push end-->
+
+        <!--flyme-push start-->
+        <!-- push应用定义消息receiver声明 -->
+        <receiver android:name="com.youmai.hxsdk.push.receiver.FlymeMsgReceiver">
+            <intent-filter>
+                <!-- 接收push消息 -->
+                <action android:name="com.meizu.flyme.push.intent.MESSAGE" />
+                <!-- 接收register消息 -->
+                <action android:name="com.meizu.flyme.push.intent.REGISTER.FEEDBACK" />
+                <!-- 接收unregister消息-->
+                <action android:name="com.meizu.flyme.push.intent.UNREGISTER.FEEDBACK" />
+                <!-- 兼容低版本Flyme3推送服务配置 -->
+                <action android:name="com.meizu.c2dm.intent.REGISTRATION" />
+                <action android:name="com.meizu.c2dm.intent.RECEIVE" />
+
+                <category android:name="${applicationId}" />
+            </intent-filter>
+        </receiver>
+        <!--flyme-push end-->
+
+
+        <!--Huawei-push start-->
+        <!--华为push需要,不需要改包名-->
+        <activity android:name="com.youmai.hxsdk.push.manage.activity.HuaweiCommonApiActivity" />
+
+
+        <!-- 第三方相关 :接收Push消息（注册、Push消息、Push连接状态）广播 -->
+        <receiver android:name="com.youmai.hxsdk.push.receiver.HuaweiMsgReceiver">
+            <intent-filter>
+
+                <!-- 必须,用于接收token -->
+                <action android:name="com.huawei.android.push.intent.REGISTRATION" />
+                <!-- 必须，用于接收消息 -->
+                <action android:name="com.huawei.android.push.intent.RECEIVE" />
+                <!-- 可选，用于点击通知栏或通知栏上的按钮后触发onEvent回调 -->
+                <action android:name="com.huawei.android.push.intent.CLICK" />
+                <!-- 可选，查看push通道是否连接，不查看则不需要 -->
+                <action android:name="com.huawei.intent.action.PUSH_STATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="CS_cloud_ablitity"
+                android:value="@string/hwpush_ability_value" />
+        </receiver>
+        <receiver android:name="com.huawei.hms.support.api.push.PushEventReceiver">
+            <intent-filter>
+
+                <!-- 接收通道发来的通知栏消息，兼容老版本Push -->
+                <action android:name="com.huawei.intent.action.PUSH" />
+            </intent-filter>
+        </receiver>
+
+        <!--todo_k: cgj start-->
+        <activity
+            android:name="com.youmai.thirdbiz.colorful.ui.ColorAddOwnerActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" />
+
+        <activity
+            android:name="com.youmai.thirdbiz.colorful.ui.FeedBackActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" />
+
+        <activity
+            android:name="com.youmai.thirdbiz.colorful.ui.SelectCommunityActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" />
+
+        <activity
+            android:name="com.youmai.thirdbiz.crashhelper.CheckAppAct"
+            android:launchMode="singleTop"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+        <activity
+            android:name="com.youmai.hxsdk.picker.FilePickerActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:noHistory="true" />
+
+        <activity
+            android:name="com.youmai.hxsdk.picker.MediaDetailsActivity"
+            android:configChanges="orientation|keyboardHidden" />
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="${applicationId}.filepicker.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
+
+
+        <!--todo_k: cgj end-->
+
+        <activity
+            android:name="com.tencent.tauth.AuthActivity"
+            android:launchMode="singleTask"
+            android:noHistory="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="tencent1105106672" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.tencent.connect.common.AssistActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="behind"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+        <!--file manager start-->
+        <activity
+            android:name=".module.filemanager.activity.FileManagerActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"
+            android:theme="@style/HxSdkTheme" />
+
+        <activity
+            android:name=".module.filemanager.activity.FileClassifyActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/HxSdkNewTheme" />
+
+        <activity
+            android:name=".module.filemanager.activity.FileDownloadActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/HxSdkTheme" />
+
+        <activity
+            android:name=".module.filemanager.activity.FileDLClassifyActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/HxSdkNewTheme" />
+        <!--file manager end-->
+
+        <activity
+            android:name=".module.photo.activity.PhotoActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/HxSdkTheme" />
+
+        <activity
+            android:name=".module.photo.activity.PhotoPreViewActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/HxSdkTheme" />
+
+        <activity
+            android:name=".activity.CameraActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/HxSdkTheme" />
+
+        <!--视频播放-->
+        <activity
+            android:name=".module.videoplayer.VideoPlayerActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/HxSdkTheme" />
+
+        <activity
+            android:name=".activity.HookCameraActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/HxSdkTheme" />
+
+        <!--设置提醒-->
+        <activity
+            android:name="com.youmai.hxsdk.module.remind.SetRemindActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/HxSdkTheme" />
+
+    </application>
+
+</manifest>

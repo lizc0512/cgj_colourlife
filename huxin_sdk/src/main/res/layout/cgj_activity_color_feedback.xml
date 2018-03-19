@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FbFbFb"
+    android:orientation="vertical">
+
+    <!--titlebar-->
+    <RelativeLayout
+        android:id="@+id/re_title_feedback"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/hx_color_black">
+
+        <!--android:drawableLeft="@drawable/hx_btn_back_selector"-->
+        <TextView
+            android:id="@+id/tv_back"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="8dp"
+            android:gravity="center_vertical"
+            android:text="返回"
+            android:textColor="@color/hx_color_white"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLines="1"
+            android:paddingBottom="8dp"
+            android:paddingTop="8dp"
+            android:text="反馈"
+            android:textColor="@color/hx_color_white"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/tv_title_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:clickable="true"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLines="1"
+            android:paddingBottom="8dp"
+            android:paddingTop="8dp"
+            android:textColor="#333333"
+            android:textSize="16sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_alignParentBottom="true"
+            android:background="#e6e6e6" />
+
+    </RelativeLayout>
+
+    <EditText
+        android:id="@+id/et_bianji"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/hx_border_white_gray_radius_shape"
+        android:gravity="top"
+        android:hint="请留下您的宝贵意见..."
+        android:lines="10"
+        android:maxLength="300"
+        android:maxLines="1"
+        android:padding="8dp"
+        android:paddingLeft="5dp"
+        android:paddingTop="5dp"
+        android:textColor="#333333"
+        android:textColorHint="#b2b2b2"
+        android:textSize="15sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#e6e6e6" />
+
+    <!--编辑文本对话框-->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="7dp">
+
+
+        <TextView
+            android:id="@+id/tv_curren"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="50dp"
+            android:text="0"
+            android:textColor="@color/hxs_color_gray1"
+            android:textSize="15sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="45dp"
+            android:text="/"
+            android:textColor="@color/hxs_color_gray1"
+            android:textSize="15sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
+            android:text="100"
+            android:textColor="@color/hxs_color_gray1"
+            android:textSize="15sp" />
+
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/btn_commit"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/cgj_border_bule_radius_shape"
+        android:enabled="false"
+        android:text="提交"
+        android:textColor="#FFFFFF"
+        android:textSize="15dp" />
+
+</LinearLayout>
+

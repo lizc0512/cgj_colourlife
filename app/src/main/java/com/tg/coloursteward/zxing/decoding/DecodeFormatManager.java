@@ -41,7 +41,6 @@ final class DecodeFormatManager {
     PRODUCT_FORMATS.add(BarcodeFormat.UPC_E);
     PRODUCT_FORMATS.add(BarcodeFormat.EAN_13); 
     PRODUCT_FORMATS.add(BarcodeFormat.EAN_8);
-    PRODUCT_FORMATS.add(BarcodeFormat.RSS14);
     ONE_D_FORMATS = new Vector<BarcodeFormat>(PRODUCT_FORMATS.size() + 4);
     ONE_D_FORMATS.addAll(PRODUCT_FORMATS);
     ONE_D_FORMATS.add(BarcodeFormat.CODE_39);
@@ -54,7 +53,6 @@ final class DecodeFormatManager {
     DATA_MATRIX_FORMATS.add(BarcodeFormat.DATA_MATRIX);
     OTHER_FORMATS = new Vector<BarcodeFormat>(4);
     OTHER_FORMATS.add(BarcodeFormat.CODABAR);
-    OTHER_FORMATS.add(BarcodeFormat.PDF417);
     OTHER_FORMATS.add(BarcodeFormat.RSS_EXPANDED);
     OTHER_FORMATS.add(BarcodeFormat.UPC_EAN_EXTENSION);
   }

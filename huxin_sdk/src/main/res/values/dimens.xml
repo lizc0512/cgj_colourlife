@@ -1,0 +1,135 @@
+<resources>
+
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="navigation_head_height">155dp</dimen>
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+
+    <!-- 弹屏的布局尺寸 -->
+    <dimen name="dial_parent_bg_height">328dp</dimen>
+    <dimen name="mark_bg_height">263dp</dimen>
+    <dimen name="margin_right">12dp</dimen>
+    <dimen name="margin_top">13.3dp</dimen>
+    <dimen name="margin_bottom01">13.3dp</dimen>
+    <dimen name="margin_bottom02">16dp</dimen>
+    <dimen name="hx_hook_strategy_margin_top">82dp</dimen>
+
+    <!--字体大小-->
+    <dimen name="text_size_13.3sp">13.3sp</dimen>
+
+    <item name="menuFromDegrees" format="float" type="dimen">180.0</item>
+    <item name="menuToDegrees" format="float" type="dimen">360.0</item>
+    <dimen name="menuChildSize">30dp</dimen>
+
+    <dimen name="item_space">5dp</dimen>
+
+    <!-- 验证对话框 -->
+    <dimen name="hx_login_width">280dp</dimen>
+    <dimen name="hx_login_close">10dp</dimen>
+    <dimen name="hx_login_clean">10dp</dimen>
+    <dimen name="hx_login_title">16dp</dimen>
+    <dimen name="hx_login_valid_width">100dp</dimen>
+    <dimen name="hx_login_mg_margin">24dp</dimen>
+    <dimen name="hx_login_btn_margin">14dp</dimen>
+
+    <!--show-->
+    <dimen name="show_result_padding_width">38dp</dimen>
+    <dimen name="hx_show_round">5dp</dimen>
+    <dimen name="hx_show_item_spacing">1dp</dimen>
+    <dimen name="hx_show_item_width">190dp</dimen>
+    <dimen name="hx_show_item_height">132dp</dimen>
+    <dimen name="hx_setting_show_height">390dp</dimen>
+    <dimen name="hx_setting_show_height_virtual_key">365dp</dimen>
+    <dimen name="hx_show_item_bottom">20dp</dimen>
+    <dimen name="hx_show_item_margin_01">15dp</dimen>
+    <dimen name="hx_full_emo_height">310dp</dimen>
+    <dimen name="hx_full_pop_emo_height">460dp</dimen>
+    <dimen name="hx_full_emo_margin_left">43dp</dimen>
+    <dimen name="hx_full_emo_margin_top">110dp</dimen>
+
+
+    <!--我的卡券-->
+    <dimen name="hx_my_conpon">400dp</dimen>
+    <dimen name="hx_my_item_spacing">1dp</dimen>
+    <dimen name="hx_font_text">13sp</dimen>
+    <dimen name="hx_padding_left">13dp</dimen>
+
+
+    <!--代言-->
+    <dimen name="hx_rep_round">0dp</dimen>
+    <dimen name="hx_rep_item_width">336dp</dimen>
+    <dimen name="hx_rep_item_height">220dp</dimen>
+    <dimen name="hx_rep_item_parent">296dp</dimen>
+
+    <!-- crop -->
+    <dimen name="crop__bar_height">56dp</dimen>
+
+    <!-- 关于呼信 -->
+    <dimen name="qrcode_width">100dp</dimen>
+    <dimen name="qrcode_height">100dp</dimen>
+
+    <!--tip-->
+    <dimen name="font_size_medium">18sp</dimen>
+    <dimen name="font_size_small">15sp</dimen>
+
+    <!--Red Packet-->
+    <dimen name="hx_red_packet_margin_01">90dp</dimen>
+    <dimen name="hx_red_packet_margin_02">14dp</dimen>
+    <dimen name="hx_red_packet_margin_03">38dp</dimen>
+    <dimen name="hx_red_packet_margin_04">42dp</dimen>
+    <dimen name="hx_red_packet_margin_05">58dp</dimen>
+
+    <!--im card-->
+    <dimen name="card_radius">8dp</dimen>
+    <dimen name="card_radius_zero">0dp</dimen>
+    <dimen name="card_font_size_small">15sp</dimen>
+    <dimen name="card_font_size_msmall">12sp</dimen>
+    <dimen name="card_font_size_small_spacing">3dp</dimen>
+    <dimen name="card_lay_msg_margin">6dp</dimen>
+    <dimen name="card_lay_time_marginTop">18dp</dimen>
+    <dimen name="card_head">40dp</dimen>
+    <dimen name="card_head_to_content_margin">8dp</dimen>
+
+
+    <!--emotion-->
+    <dimen name="indicator_margin">4dp</dimen>
+    <dimen name="horizontalspit_view_height">0.2dp</dimen>
+    <dimen name="verticalspit_view_width">0.6dp</dimen>
+    <dimen name="bar_height">42dp</dimen>
+    <dimen name="swap_line_height">1px</dimen>
+    <dimen name="swap_padding">10dp</dimen>
+
+    <dimen name="title_back_padding">10dp</dimen>
+
+    <!-- 积分墙 -->
+    <dimen name="app_picture_padding">3dp</dimen>
+    <dimen name="hx_app_icon_width">64dp</dimen>
+    <dimen name="hx_app_icon_height">64dp</dimen>
+
+    <!--钱包-->
+    <dimen name="hx_purse_item_height">45dp</dimen>
+    <dimen name="hx_purse_nonrecurring_item_height">64dp</dimen>
+    <!--push notify-->
+    <dimen name="hx_notify_height_01">300dp</dimen>
+
+    <!--IMConnectFragment-->
+    <dimen name="hx_im_pop_ment_width">150dp</dimen>
+
+    <!--lucky pan-->
+    <dimen name="hx_lucky_pan_height">360dp</dimen>
+
+    <!-- 我要推广 -->
+    <dimen name="qr_code_width">165dp</dimen>
+    <dimen name="qr_code_height">165dp</dimen>
+
+    <!--日期&城市联动器-->
+    <dimen name="hx_pickerview_topbar_height">44dp</dimen> <!-- 顶部按钮栏高度 -->
+    <dimen name="hx_pickerview_topbar_padding">20dp</dimen> <!-- 顶部按钮padding -->
+    <dimen name="hx_pickerview_topbar_btn_textsize">17sp</dimen> <!-- 顶部按钮文字大小 -->
+    <dimen name="hx_pickerview_topbar_title_textsize">18sp</dimen>
+    <dimen name="hx_pickerview_textsize">20sp</dimen> <!-- 选项文字大小 -->
+
+    <!--位置共享-->
+    <dimen name="hx_location_share_header">40dp</dimen>
+
+</resources>

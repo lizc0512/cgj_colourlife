@@ -1,0 +1,41 @@
+<resources>
+
+    <!-- 弹屏后的布局尺寸 -->
+    <dimen name="hx_hook_strategy_margin_top">112dp</dimen>
+
+    <!--show-->
+    <dimen name="show_result_padding_width">40dp</dimen>
+    <dimen name="hx_show_item_spacing">1.2dp</dimen>
+    <dimen name="hx_show_item_width">190dp</dimen>
+    <dimen name="hx_show_item_height">132dp</dimen>
+    <dimen name="hx_setting_show_height">480dp</dimen>
+    <dimen name="hx_setting_show_height_virtual_key">450dp</dimen>
+    <dimen name="hx_show_item_bottom">25dp</dimen>
+    <dimen name="hx_show_item_margin_01">18dp</dimen>
+    <dimen name="hx_full_emo_height">330dp</dimen>
+    <dimen name="hx_full_pop_emo_height">480dp</dimen>
+    <dimen name="hx_full_emo_margin_left">60dp</dimen>
+    <dimen name="hx_full_emo_margin_top">150dp</dimen>
+
+    <dimen name="hx_rep_item_height">230dp</dimen>
+    <dimen name="hx_rep_item_parent">306dp</dimen>
+    
+    <!--Red Packet-->
+    <dimen name="hx_red_packet_margin_01">112dp</dimen>
+    <dimen name="hx_red_packet_margin_02">14dp</dimen>
+    <dimen name="hx_red_packet_margin_03">38dp</dimen>
+    <dimen name="hx_red_packet_margin_04">54dp</dimen>
+    <dimen name="hx_red_packet_margin_05">88dp</dimen>
+
+    <dimen name="hx_lucky_pan_height">412dp</dimen>
+
+    <dimen name="hx_app_icon_width">64dp</dimen>
+    <dimen name="hx_app_icon_height">64dp</dimen>
+
+    <!--push notify-->
+    <dimen name="hx_notify_height_01">342dp</dimen>
+
+    <!--位置共享-->
+    <dimen name="hx_location_share_header">42dp</dimen>
+
+</resources>

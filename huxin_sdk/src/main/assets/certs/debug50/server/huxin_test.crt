@@ -1,0 +1,72 @@
+Certificate:
+    Data:
+        Version: 3 (0x2)
+        Serial Number: 1 (0x1)
+    Signature Algorithm: sha256WithRSAEncryption
+        Issuer: C=cn, ST=guangdong, L=shenzhen, O=huxin, OU=Develop Dept, CN=*.huxin.biz
+        Validity
+            Not Before: May 12 03:38:57 2017 GMT
+            Not After : Apr 18 03:38:57 2117 GMT
+        Subject: C=cn, ST=guangdong, O=huxin, OU=Develop Dept, CN=*.huxin.biz
+        Subject Public Key Info:
+            Public Key Algorithm: rsaEncryption
+                Public-Key: (2048 bit)
+                Modulus:
+                    00:b9:e3:6b:fd:6b:bb:74:d4:13:19:db:b1:2b:1c:
+                    f4:e2:40:8c:ab:bc:c5:0a:a6:c3:84:85:b5:be:b3:
+                    a0:56:a0:97:e7:58:dd:69:1c:92:41:3d:9a:65:e7:
+                    03:e2:19:4d:86:bc:2b:11:45:7d:6d:0c:0a:0b:1b:
+                    4d:2e:df:1b:1b:50:54:5a:77:ea:3c:bb:c0:aa:4f:
+                    e2:89:4d:3e:88:a9:7d:24:5e:48:5f:62:7f:b9:f4:
+                    41:f7:a7:e2:62:85:ac:4a:5b:18:4a:16:cf:fb:af:
+                    1c:9b:05:ae:e5:12:a6:5d:55:fa:9f:fd:54:b2:4b:
+                    61:fa:c6:82:21:b8:5a:b2:5b:9c:10:93:b8:e4:e4:
+                    ae:27:6c:15:9d:15:11:8b:2f:69:2a:1f:c7:29:13:
+                    b9:7c:a9:90:43:7f:73:76:cb:c7:e0:80:dc:e8:8e:
+                    1a:ff:ee:36:3c:e9:fc:a9:ed:68:2a:a8:d5:73:51:
+                    0a:41:20:ee:76:21:8d:2b:80:da:f2:c7:f1:4a:83:
+                    af:1a:93:36:43:e0:a6:46:97:b3:7d:8a:4d:c1:aa:
+                    48:94:81:ed:8f:a4:5e:3c:bb:47:53:c5:d8:90:9c:
+                    df:ad:26:a4:e4:93:d9:d5:0f:4a:cd:2d:e9:97:36:
+                    e9:2c:2a:a7:81:b3:4e:88:dc:37:9b:0c:01:2c:af:
+                    4e:91
+                Exponent: 65537 (0x10001)
+        X509v3 extensions:
+            X509v3 Basic Constraints: 
+                CA:FALSE
+            Netscape Comment: 
+                OpenSSL Generated Certificate
+            X509v3 Subject Key Identifier: 
+                71:F6:6B:36:83:40:36:75:05:41:BE:A7:79:D2:F8:3C:71:99:BA:7F
+            X509v3 Authority Key Identifier: 
+                keyid:92:9A:B4:D6:1A:D2:9C:DC:28:5E:99:F8:91:AC:CC:F2:B9:27:79:5E
+
+    Signature Algorithm: sha256WithRSAEncryption
+         44:bf:bb:37:9d:b4:cb:b5:6b:34:cb:79:33:d3:c0:16:92:42:
+         85:a0:99:bf:46:92:3f:60:cd:11:b4:4e:15:54:b7:47:d2:3a:
+         57:87:54:88:02:e9:80:43:4f:6a:72:c8:52:2b:f0:05:13:92:
+         60:fc:b7:d5:eb:84:c1:f8:51:60:1c:c4:86:92:3f:ee:cc:6b:
+         92:b2:10:d1:52:5c:f1:7c:52:22:ce:9c:31:c0:bb:65:27:55:
+         80:fd:34:1c:6d:13:25:3d:8b:7c:72:f2:12:64:5a:28:c8:14:
+         cc:15:6e:28:80:70:4d:7c:22:f7:74:00:c2:5a:76:10:b6:e7:
+         da:0d
+-----BEGIN CERTIFICATE-----
+MIIDRjCCAq+gAwIBAgIBATANBgkqhkiG9w0BAQsFADBxMQswCQYDVQQGEwJjbjES
+MBAGA1UECAwJZ3Vhbmdkb25nMREwDwYDVQQHDAhzaGVuemhlbjEOMAwGA1UECgwF
+aHV4aW4xFTATBgNVBAsMDERldmVsb3AgRGVwdDEUMBIGA1UEAwwLKi5odXhpbi5i
+aXowIBcNMTcwNTEyMDMzODU3WhgPMjExNzA0MTgwMzM4NTdaMF4xCzAJBgNVBAYT
+AmNuMRIwEAYDVQQIDAlndWFuZ2RvbmcxDjAMBgNVBAoMBWh1eGluMRUwEwYDVQQL
+DAxEZXZlbG9wIERlcHQxFDASBgNVBAMMCyouaHV4aW4uYml6MIIBIjANBgkqhkiG
+9w0BAQEFAAOCAQ8AMIIBCgKCAQEAueNr/Wu7dNQTGduxKxz04kCMq7zFCqbDhIW1
+vrOgVqCX51jdaRySQT2aZecD4hlNhrwrEUV9bQwKCxtNLt8bG1BUWnfqPLvAqk/i
+iU0+iKl9JF5IX2J/ufRB96fiYoWsSlsYShbP+68cmwWu5RKmXVX6n/1Uskth+saC
+IbhaslucEJO45OSuJ2wVnRURiy9pKh/HKRO5fKmQQ39zdsvH4IDc6I4a/+42POn8
+qe1oKqjVc1EKQSDudiGNK4Da8sfxSoOvGpM2Q+CmRpezfYpNwapIlIHtj6RePLtH
+U8XYkJzfrSak5JPZ1Q9KzS3plzbpLCqngbNOiNw3mwwBLK9OkQIDAQABo3sweTAJ
+BgNVHRMEAjAAMCwGCWCGSAGG+EIBDQQfFh1PcGVuU1NMIEdlbmVyYXRlZCBDZXJ0
+aWZpY2F0ZTAdBgNVHQ4EFgQUcfZrNoNANnUFQb6nedL4PHGZun8wHwYDVR0jBBgw
+FoAUkpq01hrSnNwoXpn4kazM8rkneV4wDQYJKoZIhvcNAQELBQADgYEARL+7N520
+y7VrNMt5M9PAFpJChaCZv0aSP2DNEbROFVS3R9I6V4dUiALpgENPanLIUivwBROS
+YPy31euEwfhRYBzEhpI/7sxrkrIQ0VJc8XxSIs6cMcC7ZSdVgP00HG0TJT2LfHLy
+EmRaKMgUzBVuKIBwTXwi93QAwlp2ELbn2g0=
+-----END CERTIFICATE-----

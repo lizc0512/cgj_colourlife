@@ -1,0 +1,671 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--xml中的string-->
+
+    <!--hx_sdk_filepreview-->
+    <string name="hx_sdk_back">返回</string>
+    <string name="hx_sdk_file_name">文件名称</string>
+    <string name="hx_sdk_downloading">正在下载&#8230;&#8230;&#8230;(</string>
+    <string name="hx_sdk_downloading2">正在下载&#8230;&#8230;&#8230;(%1$s/%2$s)</string>
+    <string name="hx_sdk_downloading_continue">继续下载</string>
+    <string name="hx_sdk_open_other_app">用其他应用打开</string>
+
+    <!--activity_media_dispay-->
+    <string name="hx_sdk_media_dispay_pic">图片</string>
+    <string name="hx_sdk_media_dispay_frequency">音频</string>
+    <string name="hx_sdk_media_dispay_video">视频</string>
+    <string name="hx_sdk_media_dispay_file">文档</string>
+    <string name="hx_sdk_media_take_photo">拍摄照片</string>
+    <string name="hx_sdk_media_all_photos">所有图片</string>
+    <string name="hx_sdk_media_ten">10张</string>
+
+    <!-- string -->
+    <string name="hxs_mr_tip_1">↑上滑取消</string>
+    <string name="hxs_mr_tip_2">松开取消</string>
+    <string name="hxs_mr_change_camera_error">该手机设备不支持切换摄像头</string>
+
+    <!--fragment_audio-->
+    <string name="hx_sdk_fragment_audio">音频资源</string>
+    <string name="hx_sdk_fragment_file">文件资源</string>
+    <string name="hx_sdk_fragment_video">视频资源</string>
+
+    <!--hx_activity_hook_layout &#160; -->
+    <string name="hx_sdk_hook_layout_01">通话结束</string>
+    <string name="hx_sdk_hook_layout_02">消息</string>
+    <string name="hx_sdk_hook_layout_03">发消息</string>
+    <string name="hx_sdk_hook_layout_04">我的通话秀</string>
+    <string name="hx_sdk_hook_layout_05">去设置</string>
+    <string name="hx_sdk_hook_layout_06">Apple pay</string>
+    <string name="hx_sdk_hook_layout_07">推广</string>
+    <string name="hx_sdk_hook_layout_08">查看详情</string>
+    <string name="hx_full_hook_view_voice">语音</string>
+    <string name="hx_full_hook_view_pic">图片</string>
+    <string name="hx_full_hook_view_location">位置</string>
+    <string name="hx_full_hook_view_file">文件</string>
+    <string name="hx_full_hook_view_remark">备注</string>
+    <string name="hx_full_hook_view_camera">拍照</string>
+    <string name="hx_full_hook_view_im_count">0</string>
+    <string name="hx_sdk_hook_layout_add">添加</string>
+    <string name="hx_sdk_hook_layout_11">重拨</string>
+    <string name="hx_sdk_hook_layout_12">拨号</string>
+    <string name="hx_sdk_hook_layout_13">留言</string>
+    <string name="hx_sdk_hook_layout_14">递名片</string>
+    <string name="hx_sdk_hook_layout_15">更多沟通方式，请点击进入。</string>
+    <string name="hx_sdk_hook_layout_16">对方发来消息，请点击查看。</string>
+    <string name="hx_sdk_hook_layout_17">%1$s  %2$s  %3$s  %4$s</string>
+    <string name="hx_sdk_hook_layout_18">回拨</string>
+    <string name="hx_sdk_hook_layout_19">活动详情 >></string>
+    <string name="hx_sdk_hook_layout_20">呼信商家秀欢迎来到呼信的世界</string>
+    <string name="hx_sdk_hook_layout_21">未接</string>
+    <string name="hx_sdk_hook_layout_22">响铃</string>
+    <string name="hx_sdk_hook_layout_23">通话</string>
+    <string name="hx_sdk_hook_layout_24">头条新闻</string>
+    <string name="hx_sdk_hook_layout_25">代言已完成，快去领钱吧~</string>
+    <string name="hx_sdk_hook_layout_26">请在活动结束前尽快领取</string>
+    <string name="hx_sdk_hook_layout_27">你有一个红包未领取</string>
+    <string name="hx_sdk_hook_layout_28">现金代言红包提醒</string>
+
+    <!--hx_activity_location-->
+    <string name="hx_sdk_location_cancle">取消</string>
+    <string name="hx_sdk_location_send">发送</string>
+
+    <!--hx_activity_picture-->
+    <string name="hx_sdk_picture_cancel">取消</string>
+    <string name="hx_sdk_picture_send">发送</string>
+
+    <!--hx_activity_myselfcouponsdetail-->
+    <string name="hx_sdk_myself_coupons_detail_business_name">商家名称</string>
+    <string name="hx_sdk_myself_coupons_detail_vaild">有效期限</string>
+    <string name="hx_sdk_myself_coupons_detail_exchange_code">兑换码</string>
+    <string name="hx_sdk_myself_coupons_detail_use_conditions">使用条件</string>
+    <string name="hx_sdk_myself_coupons_detail_current_state">当前状态</string>
+    <string name="hx_sdk_myself_coupons_detail_overtime">已过期</string>
+
+    <!--hx_activity_perm_huawei_dial-->
+    <string name="hx_sdk_perm_huawei_dial_01">第一步 在应用滑动列表找到</string>
+    <string name="hx_sdk_perm_huawei_dial_02">&quot;呼信&quot;</string>
+    <string name="hx_sdk_perm_huawei_dial_03">呼信</string>
+    <string name="hx_sdk_perm_huawei_dial_04">16项权限</string>
+    <string name="hx_sdk_perm_huawei_dial_05">第二步 点击进入详情, 设置</string>
+    <string name="hx_sdk_perm_huawei_dial_06">拨打电话为允许</string>
+    <string name="hx_sdk_perm_huawei_dial_07">读取联系人为允许</string>
+
+    <!--hx_activity_perm_huawei_protect-->
+    <string name="hx_sdk_perm_huawei_protect_01">滑动列表找到</string>
+    <string name="hx_sdk_perm_huawei_protect_02">已保护</string>
+    <string name="hx_sdk_perm_huawei_protect_03">开启开关</string>
+
+    <!--hx_activity_perm_huawei_window-->
+    <string name="hx_sdk_perm_huawei_window_01">滑动列表找到</string>
+    <string name="hx_sdk_perm_huawei_window_02">已允许</string>
+
+    <!--hx_activity_perm_meizu_dial-->
+    <string name="hx_activity_perm_meizu_dial_01">打开</string>
+    <string name="hx_activity_perm_meizu_dial_02">&quot;拨打电话&quot;</string>
+    <string name="hx_activity_perm_meizu_dial_03">选项, 选择</string>
+    <string name="hx_activity_perm_meizu_dial_04">&quot;允许&quot;</string>
+    <string name="hx_activity_perm_meizu_dial_05">&quot;读取联系人信息&quot;</string>
+
+    <!--hx_activity_perm_meizu_note_dial-->
+    <string name="hx_activity_perm_meizu_note_dial_01">打开</string>
+
+    <!--hx_activity_perm_meizu_note_protect-->
+    <string name="hx_activity_perm_meizu_note_protect_01">滑动列表找到</string>
+    <string name="hx_activity_perm_meizu_note_protect_02">&quot;呼信&quot;</string>
+
+    <!--hx_activity_perm_meizu_note_window-->
+    <string name="hx_activity_perm_meizu_note_window_01">开启</string>
+    <string name="hx_activity_perm_meizu_note_window_02">&quot;悬浮窗&quot;</string>
+    <string name="hx_activity_perm_meizu_note_window_03">开关</string>
+    <string name="hx_activity_perm_meizu_note_protect_04">第一步 点击右上角的</string>
+    <string name="hx_activity_perm_meizu_note_protect_05">&quot;设置&quot;</string>
+    <string name="hx_activity_perm_meizu_note_protect_06">第二步 进入</string>
+    <string name="hx_activity_perm_meizu_note_protect_07">&quot;内存加速白名单&quot;</string>
+    <string name="hx_activity_perm_meizu_note_protect_08">第三步 将</string>
+    <string name="hx_activity_perm_meizu_note_protect_09">加入白名单</string>
+
+    <!--hx_activity_perm_oppo2_dial-->
+    <string name="hx_activity_perm_oppo2_dial_01">第一步 在权限管理列表中找到&quot;电话&quot;选项, 点击进入</string>
+    <string name="hx_activity_perm_oppo2_dial_02">第二步 找到</string>
+    <string name="hx_activity_perm_oppo2_dial_03">, 设置为&quot;允许使用&quot;</string>
+    <string name="hx_activity_perm_oppo2_dial_04">滑动列表找到</string>
+    <string name="hx_activity_perm_oppo2_dial_05">点击&quot;锁定&quot;图标</string>
+    <string name="hx_activity_perm_oppo2_dial_06">第一步 在权限管理列表中找到&quot;悬浮窗管理&quot;选项, 点击进入</string>
+    <string name="hx_activity_perm_oppo2_dial_07">, 开启开关</string>
+    <string name="hx_activity_perm_oppo2_dial_08">第一步 在权限管理列表中找到&quot;读取联系人信息&quot;选项, 点击进入</string>
+    <string name="hx_activity_perm_oppo3_dial_01">第一步 在应用列表中找到</string>
+    <string name="hx_activity_perm_oppo3_dial_02">, 点击进去</string>
+    <string name="hx_activity_perm_oppo3_dial_03">第二步 点击电话选项, 选择&quot;允许&quot;</string>
+    <string name="hx_activity_perm_oppo3_dial_04">开启开关</string>
+    <string name="hx_activity_perm_oppo3_dial_05">第二步 点击读取联系人选项, 选择&quot;允许&quot;</string>
+
+    <!--hx_activity_perm_vivo_dial-->
+    <string name="hx_activity_perm_vivo_dial_01">第一步 点击</string>
+    <string name="hx_activity_perm_vivo_dial_02">&quot;软件管理&quot;</string>
+    <string name="hx_activity_perm_vivo_dial_03">第二步 点击</string>
+    <string name="hx_activity_perm_vivo_dial_04">&quot;软件权限管理&quot;</string>
+    <string name="hx_activity_perm_vivo_dial_05">&quot;拨打电话&quot;</string>
+    <string name="hx_activity_perm_vivo_dial_06">点击</string>
+    <string name="hx_activity_perm_vivo_dial_07">第三步 找到</string>
+    <string name="hx_activity_perm_vivo_dial_08">&quot;呼信&quot;</string>
+    <string name="hx_activity_perm_vivo_dial_09">, 将拨打电话设置为</string>
+    <string name="hx_activity_perm_vivo_dial_10">&quot;允许&quot;</string>
+    <string name="hx_activity_perm_vivo_dial_11">&quot;访问联系人&quot;</string>
+    <string name="hx_activity_perm_vivo_dial_12">, 将访问联系人设置为</string>
+
+    <string name="hx_activity_perm_vivo_protect_01">滑动列表找到</string>
+    <string name="hx_activity_perm_vivo_protect_02">&quot;软件管理&quot;</string>
+    <string name="hx_activity_perm_vivo_protect_03">找到</string>
+
+
+    <!--hx_activity_perm_xiaomi_dial-->
+    <string name="hx_activity_perm_xiaomi_dial_01">开启开关</string>
+
+    <!--hx_arc_call_layout-->
+    <string name="hx_arc_call_layout_01">点击查看最新活动</string>
+
+    <string name="hx_arc_menu_01">戳我查看来电秀</string>
+    <string name="hx_call_msg_image_layout">活动详情</string>
+
+    <!--hx_dialog_im_voice-->
+    <string name="hx_dialog_im_voice_01">滑到这里取消</string>
+    <string name="hx_dialog_im_voice_02">松开取消录音</string>
+
+    <!--hx_dialog_mediastore-->
+    <string name="hx_dialog_sendtofriend">发送给朋友</string>
+    <string name="hx_dialog_mediastore">保存到手机</string>
+    <string name="hx_dialog_mediastore_cancle">取消</string>
+
+    <!--hx_exc_result-->
+    <string name="hx_exc_result_01">优惠券名称  </string>
+    <string name="hx_exc_result_02">当前状态</string>
+    <string name="hx_exc_result_03">使用时间</string>
+    <string name="hx_exc_result_04">确定</string>
+
+    <!--hx_frag_media_file-->
+    <string name="hx_frag_media_file_01">选择文件</string>
+
+    <!--hx_fragment_chat-->
+    <string name="hx_fragment_chat_text">文字</string>
+    <string name="hx_fragment_chat_location">位置</string>
+    <string name="hx_fragment_chat_pic">图片</string>
+    <string name="hx_fragment_chat_emoji">表情</string>
+    <string name="hx_fragment_chat_card">名片</string>
+
+    <!--hx_fragment_edit_card-->
+    <string name="hx_fragment_edit_card_fid">头像fid</string>
+    <string name="hx_fragment_edit_card_pic">上传图片</string>
+    <string name="hx_fragment_edit_card_name">名片照</string>
+    <string name="hx_fragment_edit_card_name_pic">上传名片照</string>
+    <string name="hx_fragment_edit_card_nickname">昵称</string>
+    <string name="hx_fragment_edit_card_sex">性别</string>
+    <string name="hx_fragment_edit_card_sex_man">男</string>
+    <string name="hx_fragment_edit_card_sex_woman">女</string>
+    <string name="hx_fragment_edit_card_area">地区</string>
+    <string name="hx_fragment_edit_card_sign">签名</string>
+    <string name="hx_fragment_edit_card_email">邮箱</string>
+    <string name="hx_fragment_edit_card_position">职位</string>
+    <string name="hx_fragment_edit_card_special_plane">座机</string>
+    <string name="hx_fragment_edit_card_adress">地址</string>
+    <string name="hx_fragment_edit_card_company_web">公司网站</string>
+    <string name="hx_fragment_edit_card_company_name">公司名称</string>
+
+    <!--hx_fragment_feedback-->
+    <string name="hx_fragment_feed_back">意见反馈：</string>
+    <string name="hx_fragment_tips_name">建议人称呼：</string>
+    <string name="hx_fragment_tips_content">建议內容：</string>
+    <string name="hx_fragment_tips">建议</string>
+    <string name="hx_fragment_report">举报</string>
+    <string name="hx_fragment_commit">提交</string>
+
+    <!--hx_fragment_float-->
+    <string name="hx_fragment_float_Q">Q版</string>
+    <string name="hx_fragment_float_fullview">全屏版</string>
+    <string name="hx_fragment_float_halfview">半屏版</string>
+    <string name="hx_fragment_close_float">关闭弹屏</string>
+
+    <!--hx_fragment_get_card-->
+    <string name="hx_fragment_get_card_image">头像</string>
+    <string name="hx_fragment_get_card_pic">名片照:</string>
+
+    <!--hx_fragment_im_left_txt_item-->
+    <string name="hx_fragment_im_left_txt_item">这个是聊天的测试, 我们在测试一下哈哈哈, 这段文字就是测试的语句.</string>
+
+    <!--hx_fragment_im_main-->
+    <string name="hx_fragment_im_main">发送</string>
+    <string name="hx_fragment_im_voice">按住说话</string>
+
+    <!--hx_fragment_location-->
+    <string name="hx_fragment_location_send_phone_number">发送手机号</string>
+
+    <!--hx_fragment_login-->
+    <string name="hx_fragment_login_01">内容为空，使用默认地址</string>
+    <string name="hx_fragment_login_phone_number">手机号</string>
+    <string name="hx_fragment_login_phone_valid">验证码</string>
+    <string name="hx_fragment_login_phone_get_valid">获取验证码</string>
+    <string name="hx_fragment_login_02">输入登录IP,不输入使用默认IP</string>
+    <string name="hx_fragment_login_03">输入登录port,不输入使用默认port</string>
+
+    <!--hx_fragment_permission-->
+    <string name="hx_fragment_permission_01">为了正常使用呼信智能通话功能，\n请开启下列权限:</string>
+    <string name="hx_fragment_permission_02">开启&quot;拨打电话&quot;权限</string>
+    <string name="hx_fragment_permission_03">打开手机【设置】，找到APP的【电话】或【拨打电话】权限，设置为【允许】。</string>
+    <string name="hx_fragment_permission_04">开启&quot;悬浮窗&quot;权限</string>
+    <string name="hx_fragment_permission_05">打开手机【设置】，找到APP的【权限管理】，将【悬浮窗】权限设置为【开启】状态。</string>
+    <string name="hx_fragment_permission_06">开启&quot;受保护的应用&quot;权限</string>
+    <string name="hx_fragment_permission_07">打开手机【设置】，在【受保护的应用】列表中，将APP加入【受保护应用】列表。如【设置】中没有【受保护应用】管理，可在系统自带的权限管理软件中查找。</string>
+    <string name="hx_fragment_permission_08">开启&quot;读取联系人&quot;权限</string>
+    <string name="hx_fragment_permission_09">打开手机【设置】，找到APP的【权限管理】，将【联系人】权限设置为【允许】。</string>
+
+    <!--hx_fragment_permission_main-->
+    <string name="hx_fragment_permission_main_01">为了正常使用呼信智能通话功能, 请开启下列权限:</string>
+    <string name="hx_fragment_permission_main_02">开启电话权限</string>
+    <string name="hx_fragment_permission_main_03">开启&quot;悬浮窗&quot;权限</string>
+    <string name="hx_fragment_permission_main_04">开启&quot;受保护的应用&quot;权限</string>
+
+    <!--hx_fragment_shake-->
+    <string name="hx_fragment_shake_01">摇一摇</string>
+    <string name="hx_fragment_shake_02">播放声音</string>
+    <!--hx_fragment_sms-->
+    <string name="hx_fragment_sms_01">短信发送至</string>
+    <string name="hx_fragment_sms_02">发送</string>
+
+    <!--hx_fragment_update_card-->
+    <string name="hx_fragment_update_card_fid">头像fid</string>
+    <string name="hx_fragment_update_card_send_pic">上传图片</string>
+    <string name="hx_fragment_update_card_image">名片照</string>
+    <string name="hx_fragment_update_card_send_image">上传名片照</string>
+    <string name="hx_fragment_update_card_nickname">昵称</string>
+    <string name="hx_fragment_update_card_sex">性别</string>
+    <string name="hx_fragment_update_card_man">男</string>
+    <string name="hx_fragment_update_card_woman">女</string>
+    <string name="hx_fragment_update_card_location">地区</string>
+    <string name="hx_fragment_update_card_sign">签名</string>
+    <string name="hx_fragment_update_card_email">邮箱</string>
+    <string name="hx_fragment_update_card_position">职位</string>
+    <string name="hx_fragment_update_card_phone">座机</string>
+    <string name="hx_fragment_update_card_address">地址</string>
+    <string name="hx_fragment_update_card_company_net">公司网站</string>
+    <string name="hx_fragment_update_card_company_name">公司名称</string>
+
+    <!--hx_full_hook_merchant_view-->
+    <string name="hx_full_hook_merchant_view">查看商家信息</string>
+
+    <!--hx_full_hook_person_view-->
+    <string name="hx_full_hook_person_view_01">您还可以给TA发送消息</string>
+    <string name="hx_full_hook_person_view_voice">语音</string>
+    <string name="hx_full_hook_person_view_pic">图片</string>
+    <string name="hx_full_hook_person_view_location">位置</string>
+    <string name="hx_full_hook_person_view_file">文件</string>
+    <string name="hx_full_hook_person_view_more">更多</string>
+
+    <!--hx_full_phone_call_layout-->
+    <string name="hx_full_phone_call_layout_hide">收起</string>
+    <string name="hx_full_phone_call_layout_send_location">Location</string>
+    <string name="hx_full_phone_call_layout_send_pic">Image</string>
+    <string name="hx_full_phone_call_layout_send_emoji">Sticker</string>
+
+    <!--hx_item_disable_listview-->
+    <string name="hx_item_disable_listview_01">星巴克</string>
+    <string name="hx_item_disable_listview_02">8.8折优惠</string>
+    <string name="hx_item_disable_listview_03">2016年7月8日</string>
+    <string name="hx_item_disable_listview_04">已使用</string>
+    <string name="hx_item_disable_listview_05">点击返回地图界面</string>
+
+    <!--hx_permission_dialog-->
+    <string name="hx_permission_dialog_01">首次使用此APP需要开启以下权限</string>
+    <string name="hx_permission_dialog_02">开启“拨打电话”权限</string>
+    <string name="hx_permission_dialog_03">开启“悬浮窗”权限</string>
+    <string name="hx_permission_dialog_04">开启“受保护的应用”权限</string>
+    <string name="hx_permission_dialog_05">不再提醒</string>
+
+    <!--hx_person_show-->
+
+    <string name="hx_person_show_take_photo">拍照</string>
+    <string name="hx_person_show_video">拍短视频</string>
+    <string name="hx_person_show_pic">选择图片或视频</string>
+    <string name="hx_person_show_cancle">取消</string>
+
+    <!--hx_phiz_item-->
+    <string name="hx_phiz_item">名称</string>
+    <string name="hx_phiz_item_remind">提示</string>
+    <string name="hx_phiz_item_send">已发送</string>
+    <string name="hx_phiz_item_setting_success">设置成功</string>
+    <string name="hx_phiz_item_send_pic_success">发送图片成功</string>
+    <string name="hx_phiz_item_send_video_success">发送视频成功</string>
+
+    <!--hx_show_full_setting_info-->
+    <string name="hx_show_full_setting_info_hide">收起</string>
+    <string name="hx_show_full_setting_info_send_location">位置</string>
+    <string name="hx_show_full_setting_info_send_pic">图片</string>
+    <string name="hx_show_full_setting_info_send_emoji">表情</string>
+    <string name="hx_show_full_setting_info_send_file">文件</string>
+    <string name="hx_show_full_setting_info_send_camera">拍照</string>
+    <string name="hx_show_full_setting_info_shake">段子</string>
+    <string name="hx_show_full_setting_info_whiteBoard">画板</string>
+    <string name="hx_show_full_setting_info_detail">详情</string>
+    <string name="hx_show_full_setting_calling_address">广东深圳 00:10</string>
+
+    <!--hxm_merchant-->
+    <string name="hxm_merchant">&#160;&#160;输入格式：075526606921</string>
+    <string name="hxm_merchant_01">跳转到商家附属号码秀</string>
+    <string name="hxm_merchant_02">代言，卡券，商家秀，通话秀</string>
+    <string name="hxm_invitation_code">邀请码</string>
+
+    <!--hxm_represent_item-->
+    <string name="hxm_represent_item_01">南山海上星巴克开业酬宾大优惠</string>
+    <string name="hxm_represent_item_02">名字：星巴克</string>
+    <string name="hxm_represent_item_03">【公益代言】</string>
+
+    <!--hx_fragment_im_*-->
+    <string name="hx_fragment_im_data">2016.10.01 16:24</string>
+
+    <!--hx_push_fail_view-->
+    <string name="hx_push_fail_view">发送失败！</string>
+
+    <!--hx_full_user_info-->
+    <string name="hx_call_user_dialing">拨号中&#8230;</string>
+    <string name="hx_call_user_ring">来电&#8230;</string>
+
+    <!--MsgFragment-->
+    <string name="hx_fragment_msg_title">通话消息&#8230;</string>
+
+    <!--HxClearProgressDialog-->
+    <string name="hxm_app_loading">加载中,请稍后&#8230;&#8230;</string>
+
+    <!--represent-->
+    <string name="hxm_reqresent_detail_01">预览代言效果</string>
+    <string name="hxm_reqresent_detail_sz">深圳</string>
+    <string name="hxm_reqresent_detail_03">查看详情</string>
+    <string name="hxm_reqresent_detail_04">代言奖励</string>
+    <string name="hxm_reqresent_detail_05">已有</string>
+    <string name="hxm_reqresent_detail_06">人加入代言"</string>
+    <string name="hxm_reqresent_detail_07">加入代言"</string>
+
+    <!--代言详情-->
+    <string name="hx_represent_public">公益代言</string>
+    <string name="hx_represent_business">商业代言</string>
+    <string name="hx_represent_sponsor">主办方:&#160;</string>
+    <string name="hx_representing">代言中</string>
+    <string name="hx_representing_02">代言中, 剩余</string>
+    <string name="hx_represent_finish">天完成</string>
+    <string name="hx_represent_add">加入代言</string>
+    <string name="hx_represent_full">代言满</string>
+    <string name="hx_represent_reward">天即可获得优惠券奖励</string>
+    <string name="hx_represent_cancel">取消</string>
+    <string name="hx_represent_crash">现金代言</string>
+    <string name="hx_represent_date">天</string>
+    <string name="hx_represent_guide_01">1、点击“加入代言”，即可参与</string>
+    <string name="hx_represent_guide_02">的代言活动。\n\n</string>
+    <string name="hx_represent_guide_03">2、通话过程中，将会向对方展示代言内容。\n\n</string>
+    <string name="hx_represent_guide_04">3、代言期间，通话结束后，将会落下10次红包雨，更有随机红包等待你领取。\n\n</string>
+    <string name="hx_represent_guide_05">4、代言红包奖励，会存入我的钱包-临时收益中。\n\n</string>
+    <string name="hx_represent_guide_06">5、代言完成后，领取到的奖励将从临时收益自动转入我的钱包。\n\n</string>
+    <string name="hx_represent_guide_07">6、中途取消或更换代言，临时收益将会清空。</string>
+    <string name="hx_represent_get_award">领取奖励</string>
+    <string name="hx_represent_after_award">天后领奖</string>
+    <string name="hx_represent_already_received">已领取</string>
+    <string name="hx_represent_out_date">已过期</string>
+    <string name="hx_represent_remaining_places">剩余名额：</string>
+    <string name="hx_represent_expiration_date">截止日期：</string>
+    <string name="hx_represent_after_award_02">后领奖</string>
+    <string name="hx_represent_dialog_tip_01">上一个代言任务已完成，加入代言后还未领取的代言奖励将自动转入呼币余额，可在钱包中查看哦~</string>
+    <string name="hx_represent_dialog_tip_02">加入代言后，代言周期内通话时会将代言内容展示给对方，并领取代言收益哦~</string>
+    <string name="hx_represent_dialog_tip_03">上一个代言任务还未完成，加入新的代言原有代言将会被替换，代言临时收益也会自动清零！</string>
+    <string name="hx_represent_dialog_tip_04">上一个代言任务已完成，加入代言后还未领取的代言奖励将自动转入呼币余额，可在钱包中查看哦~</string>
+    <string name="hx_represent_get_fail">领取失败</string>
+
+    <!--现金代言item-->
+    <string name="hxm_rep_crash_detail_01">点击预览</string>
+    <string name="hxm_rep_crash_detail_02">可提现</string>
+    <string name="hxm_rep_crash_detail_03">截止日期</string>
+    <string name="hxm_rep_crash_detail_04">代言天数</string>
+    <string name="hxm_rep_crash_detail_05">剩余名额</string>
+    <string name="hxm_rep_crash_detail_06">代言类型</string>
+    <string name="hxm_rep_crash_detail_07">活动简介</string>
+    <string name="hxm_rep_crash_detail_08">代言步骤</string>
+    <string name="hxm_rep_crash_detail_09">取消代言</string>
+    <string name="hxm_rep_crash_detail_10">再坚持</string>
+    <string name="hxm_rep_crash_detail_11">天，就能获得</string>
+    <string name="hxm_rep_crash_detail_12">呼币。取消代言，临时收益将被清空，是否确定取消当前代言？</string>
+    <string name="hxm_rep_crash_detail_13">是否确定取消当前代言？</string>
+    <string name="hxm_rep_crash_detail_14">呼币。替换代言，临时收益将被重新计算，是否确定加入当前代言？</string>
+    <string name="hxm_rep_crash_detail_15">取消代言成功</string>
+
+    <!--RepresentAdapter-->
+    <string name="hx_represent_square_01">代言</string>
+    <string name="hx_represent_square_02">天</string>
+    <string name="hx_represent_square_03">剩余</string>
+    <string name="hx_represent_square_04">取消代言</string>
+    <string name="hx_represent_square_05">加入代言</string>
+    <string name="hx_represent_square_06">已完成</string>
+    <string name="hx_represent_square_07">领取奖励</string>
+    <string name="hx_represent_square_08">已过期</string>
+    <string name="hx_represent_square_09">再坚持</string>
+    <string name="hx_represent_square_10">天，就能获得</string>
+    <string name="hx_represent_square_11">呼币。替换代言，临时收益将被重新计算，是否确定加入当前代言？</string>
+    <string name="hx_represent_square_12">是否确定加入当前代言？</string>
+    <string name="hx_represent_square_13">呼币。取消代言，临时收益将被清空，是否确定取消当前代言？</string>
+    <string name="hx_represent_square_14">恭喜，代言成功</string>
+    <string name="hx_represent_square_15">取消代言成功</string>
+
+    <!--RepHistoryActivity && RepHistoryAdapter-->
+    <string name="hxm_rep_history_title">历史代言</string>
+    <string name="hx_rep_history_01">代言</string>
+    <string name="hx_rep_history_02">天</string>
+    <string name="hx_rep_history_03">剩余</string>
+    <string name="hx_rep_history_04">取消代言</string>
+    <string name="hx_rep_history_05">加入代言</string>
+    <string name="hx_rep_history_06">已完成</string>
+    <string name="hx_rep_history_07">领取奖励</string>
+    <string name="hx_rep_history_08">已过期</string>
+    <string name="hx_rep_history_09">再坚持</string>
+    <string name="hx_rep_history_10">天，就能获得</string>
+    <string name="hx_rep_history_11">呼币。取消代言，临时收益将被清空，是否确定取消当前代言？</string>
+    <string name="hx_rep_history_12">是否确定取消当前代言？</string>
+    <string name="hx_rep_history_13">人参与</string>
+    <string name="hx_rep_history_14">恭喜，代言成功</string>
+    <string name="hx_rep_history_15">取消代言成功</string>
+    <string name="hx_rep_history_16">[代言]</string>
+    <string name="hx_rep_history_17">活动已结束</string>
+
+    <!--RedPacketActivity-->
+    <string name="hx_red_packet_share_success">分享成功</string>
+    <string name="hx_red_packet_share_refuse">用户拒绝分享</string>
+    <string name="hx_red_packet_share_cancel">取消分享</string>
+    <string name="hx_red_packet_share_error">分享错误</string>
+
+    <!--hx_red_packet-->
+    <string name="hx_red_packet_title">红包任务</string>
+    <string name="hx_red_packet_01">恭喜你获得代言红包</string>
+    <string name="hx_red_packet_02">呼币</string>
+    <string name="hx_red_packet_03">奖励已存入代言临时收益</string>
+    <string name="hx_red_packet_04">分享喜悦ヽ(✿◡‿◡)ノ</string>
+
+    <!--hx_activity_share-->
+    <string name="hx_share_weixin_friend">微信好友</string>
+    <string name="hx_share_weixin_friends">朋友圈</string>
+    <string name="hx_share_title">现金代言等你来赚</string>
+    <string name="hx_share_description">点击下载呼信APP,在代言广场领取现金代言，即可获取现金收益，轻轻松松赚大钱</string>
+
+    <!--hxm_rep_red_rain-->
+    <string name="hxm_red_rain_01">恭喜你获得代言奖励</string>
+    <string name="hxm_red_rain_02">呼币</string>
+    <string name="hxm_red_rain_03">已存入临时钱包</string>
+
+    <!--hxm_rep_award-->
+    <string name="hxm_rep_award_01">恭喜你</string>
+    <string name="hxm_rep_award_02">本次代言所获得的&#160;</string>
+    <string name="hxm_rep_award_03">&#160;呼币奖励，已成功转入呼币账户。现加入其他代言可赚取更多奖励哦~</string>
+    <string name="hxm_rep_award_04">我知道了</string>
+
+    <!--hxm_rep_award_finish-->
+    <string name="hxm_rep_award_finish_tip">你的代言完成了哦，赶紧领取奖励吧~</string>
+
+    <!--hx_activity_invitation_code && InvitationCodeActivity-->
+    <string name="hx_invite_code_title">邀请码</string>
+    <string name="hx_invite_code_01">邀请码认证成功后，您与邀请者都会获得呼币奖励！</string>
+    <string name="hx_invite_code_02">请输入邀请人手机号</string>
+    <string name="hx_invite_code_03">验证失败</string>
+    <string name="hx_invite_code_04">立即领取奖励</string>
+
+    <!--InvitationPopWindow-->
+    <string name="hx_invite_pop_01">领取成功</string>
+    <string name="hx_invite_pop_02">恭喜你，已验证成功，双方都获得&#160;</string>
+    <string name="hx_invite_pop_03">立即邀请好友</string>
+    <string name="hx_invite_pop_04">下次再说</string>
+    <string name="hx_invite_pop_05">呼币，你的奖励已自动转入钱包，可在我的钱包中查看哦~</string>
+
+    <!--list null tip-->
+    <string name="hxm_viewstub_norecord">去赚优惠券</string>
+    <string name="hxm_viewstub_norecord_back">返回</string>
+    <string name="hxm_viewstub_norecord_take_photo">按住拍</string>
+
+    <!--VoiceManager-->
+    <string name="hx_voice_manager_tip">语音权限已关闭,请打开！</string>
+
+    <!--MovieRecorderView-->
+    <string name="hx_camera_record_tip">摄像头权限已关闭,请打开！</string>
+
+    <!--CallFullView-->
+    <string name="hx_call_full_view_sending">正在发送&#8230;&#8230;</string>
+    <string name="hx_call_full_view_send_success">发送成功</string>
+    <string name="hx_call_full_view_send_fail">网络不给力哦，手动重试吧</string>
+    <string name="hx_call_full_view_receiving">消息接收&#8230;&#8230;</string>
+    <string name="hx_call_full_view_file_receiving">文件接收&#8230;&#8230;</string>
+    <string name="hx_call_full_view_picture_receiving">图片接收&#8230;&#8230;</string>
+    <string name="hx_call_full_view_location_receiving">地图接收&#8230;&#8230;</string>
+    <string name="hx_call_full_view_video_receiving">视频接收&#8230;&#8230;</string>
+    <string name="hx_call_full_view_receive_success">点击查看</string>
+    <string name="hx_call_full_view_receive_fail">网络不给力哦，接收失败了</string>
+    <string name="hx_call_full_view_receive_file_see">点击查看</string>
+    <string name="hx_call_full_view_receive_file_download">点击下载</string>
+
+    <!--wheel 三级联动-->
+    <string name="hx_wheel_year">年</string>
+    <string name="hx_wheel_month">月</string>
+    <string name="hx_wheel_day">日</string>
+    <string name="hx_wheel_sure">确定</string>
+    <string name="hx_wheel_cancel">取消</string>
+    <string name="hx_wheel_male">男</string>
+    <string name="hx_wheel_female">女</string>
+
+    <string name="hx_notify_one">提示音1</string>
+    <string name="hx_notify_two">提示音2</string>
+    <string name="hx_notify_three">提示音3</string>
+    <string name="hx_notify_system">系统通知音</string>
+
+    <!--file manager-->
+    <string name="hx_file_manager_weixin">微信</string>
+    <string name="hx_file_manager_qq">QQ</string>
+    <string name="hx_file_manager_download_content">下载内容</string>
+    <string name="hx_file_manager_txt">文档</string>
+    <string name="hx_file_manager_video">视频</string>
+    <string name="hx_file_manager_music">音乐</string>
+    <string name="hx_file_manager_download">下载</string>
+    <string name="hx_file_manager_app">应用</string>
+    <string name="hx_file_manager_zip">压缩包</string>
+    <string name="hx_file_manager_count">个文件</string>
+    <string name="hx_file_manager_select_01">选择文件&#160;>&#160;</string>
+    <string name="hx_file_manager_select_02">下载&#160;>&#160;</string>
+    <string name="hx_file_manager_select_03">选择文件</string>
+    <string name="hx_file_manager_no_file">暂无文件</string>
+    <string name="hx_file_manager_zero_count">0个文件</string>
+    <string name="hx_file_manager_loading">加载中...</string>
+
+    <!--日期&城市联动器-->
+    <string name="hx_pickerview_cancel">取消</string>
+    <string name="hx_pickerview_submit">确定</string>
+    <string name="hx_pickerview_year">年</string>
+    <string name="hx_pickerview_month">月</string>
+    <string name="hx_pickerview_day">日</string>
+    <string name="hx_pickerview_hours">时</string>
+    <string name="hx_pickerview_minutes">分</string>
+    <string name="hx_pickerview_seconds">秒</string>
+
+    <!--toast-->
+    <string name="hx_toast_01">正在使用开发（42）服务器</string>
+    <string name="hx_toast_02">正在使用开发（50）服务器</string>
+    <string name="hx_toast_03">多个SDK在后台运行!</string>
+    <string name="hx_toast_04">获取FileToken失败</string>
+    <string name="hx_toast_05">上传音频失败</string>
+    <string name="hx_toast_06">上传文件失败</string>
+    <string name="hx_toast_07"> 上传图片失败</string>
+    <string name="hx_toast_08"> socket登录成功</string>
+    <string name="hx_toast_09"> 您输入的手机号码格式不正确</string>
+    <string name="hx_toast_10"> 当前网络异常</string>
+    <string name="hx_toast_11"> 您输入的手机号码格式不正确</string>
+    <string name="hx_toast_12"> 请输入手机号验证码</string>
+    <string name="hx_toast_13"> 图片资源</string>
+    <string name="hx_toast_14"> 语音资源</string>
+    <string name="hx_toast_15"> 视频资源</string>
+    <string name="hx_toast_16"> 文件资源</string>
+    <string name="hx_toast_17"> 图片还没加载完成哦</string>
+    <string name="hx_toast_18"> 未选择发送图片</string>
+    <string name="hx_toast_19"> 没找到摄像头</string>
+    <string name="hx_toast_20"> 该文件无法打开</string>
+    <string name="hx_toast_21"> 发送文件成功</string>
+    <string name="hx_toast_22"> 文件不存在!!!</string>
+    <string name="hx_toast_23"> 请安装文件管理器</string>
+    <string name="hx_toast_24"> 获取数据失败！</string>
+    <string name="hx_toast_25">节假日该券不可用</string>
+    <string name="hx_toast_26">已达到照片选择上限</string>
+    <string name="hx_toast_27">请先设置以上权限</string>
+    <string name="hx_toast_28">手机号码非法</string>
+    <string name="hx_toast_29">发送语音成功</string>
+    <string name="hx_toast_30">发送位置成功</string>
+    <string name="hx_toast_31">发送消息成功</string>
+    <string name="hx_toast_32">发送链接成功</string>
+    <string name="hx_toast_33">发送视频成功</string>
+    <string name="hx_toast_34">获取数据失败！</string>
+    <string name="hx_toast_35">名片信息保存成功</string>
+    <string name="hx_toast_36">http 登录失败</string>
+    <string name="hx_toast_37">http 登录成功</string>
+    <string name="hx_toast_38">电话号码格式错误</string>
+    <string name="hx_toast_39">不正确的IP或端口，使用默认登录</string>
+    <string name="hx_toast_40">获取验证码失败</string>
+    <string name="hx_toast_41">图片还没加载完成哦</string>
+    <string name="hx_toast_42">未选择发送图片</string>
+    <string name="hx_toast_43">当前网络不稳定,获取数据失败</string>
+    <string name="hx_toast_44">当前网络不稳定</string>
+    <string name="hx_toast_45">您输入的手机号码格式不正确</string>
+    <string name="hx_toast_46">邮箱格式不正确</string>
+    <string name="hx_toast_47">座机格式不正确</string>
+    <string name="hx_toast_48">名片信息更新成功</string>
+    <string name="hx_toast_49">名片照更新成功</string>
+    <string name="hx_toast_50">网络异常，请检查网络</string>
+    <string name="hx_toast_51">录音时间过短</string>
+    <string name="hx_toast_52">输入非法电话号码，请检查</string>
+    <string name="hx_toast_53">该号码不是商家用户</string>
+    <string name="hx_toast_54">加入商家秀失败了！</string>
+    <string name="hx_toast_55">视频录制时间太短</string>
+    <string name="hx_toast_56">发送表情成功</string>
+    <string name="hx_toast_57">网络已断开，请检查！</string>
+    <string name="hx_toast_58">socket登录失败：</string>
+    <string name="hx_toast_59">视频播放失败了</string>
+    <string name="hx_toast_60">调用高德导航时出错！</string>
+    <string name="hx_toast_61">调用百度导航时出错！</string>
+    <string name="hx_toast_62">请检查是否安装了百度或高德地图！</string>
+    <string name="hx_toast_63">结束发送统计</string>
+    <string name="hx_toast_64">每</string>
+    <string name="hx_toast_65">秒后发送统计</string>
+    <string name="hx_toast_66">短信已发送</string>
+    <string name="hx_toast_67">非WIFI状态发送文件!!!</string>
+    <string name="hx_toast_68">登录失败</string>！
+    <string name="hx_toast_69">重发失败！</string>
+    <string name="hx_toast_70">发送失败！</string>
+    <string name="hx_toast_71">发送表情中&#8230;&#8230;</string>
+    <string name="hx_toast_72">对方非呼信用户</string>
+    <string name="hx_toast_73">下载失败</string>
+    <string name="hx_toast_74">上传视频失败</string>
+
+
+    <string name="contact_name">姓名：</string>
+    <string name="contacts_phone">手机：</string>
+    <string name="contact_email">邮箱：</string>
+    <string name="contact_birthday">生日：</string>
+    <string name="contact_qq">qq：</string>
+    <string name="contact_web">网站：</string>
+    <string name="swap_card_failure">请先在“我的”页面完善个人信息</string>
+
+</resources>

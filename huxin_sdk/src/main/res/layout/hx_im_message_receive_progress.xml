@@ -1,0 +1,190 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:huxin="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="2.6dp">
+
+    <!--文件-->
+    <LinearLayout
+        android:id="@+id/rl_rec_file_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/iv_rec_file"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:padding="2.6dp"
+            android:src="@drawable/hx_full_file_others" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_margin="8dp"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <!--android:ellipsize="middle"-->
+            <!--android:lines="1"-->
+            <TextView
+                android:id="@+id/iv_rec_file_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|left"
+                android:maxWidth="200dp"
+                android:text="Tea1mWork.doc"
+                android:textColor="@color/hx_color_black1"
+                android:textSize="17sp" />
+
+            <TextView
+                android:id="@+id/iv_rec_file_size"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginTop="5dp"
+                android:gravity="right|bottom"
+                android:text="13.5KB"
+                android:textColor="@color/hx_color_black1"
+                android:textSize="13sp" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!--地图文本信息-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/iv_rec_pic"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="3.3dp" />
+
+        <LinearLayout
+            android:id="@+id/ll_rec_location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/tv_rec_location1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="3dp"
+                android:layout_marginRight="3dp"
+                android:layout_marginTop="3dp"
+                android:background="@color/hxs_color_white"
+                android:ellipsize="middle"
+                android:gravity="center_vertical"
+                android:singleLine="true"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:paddingTop="5dp"
+                android:textColor="@color/hxs_color_black1"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/tv_rec_location2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="3dp"
+                android:layout_marginRight="3dp"
+                android:background="@color/hxs_color_white"
+                android:ellipsize="middle"
+                android:gravity="center_vertical"
+                android:singleLine="true"
+                android:paddingBottom="5dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:textColor="@color/hxs_color_gray9"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <!--短视频-->
+    <RelativeLayout
+        android:id="@+id/fl_rec_video_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/iv_rec_video"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="3.3dp" />
+
+        <ImageView
+            android:id="@+id/iv_rec_video_play_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/ic_play_icon"
+            android:visibility="gone" />
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="3dp"
+        android:background="@drawable/hx_full_shade" />
+
+    <LinearLayout
+        android:id="@+id/ll_rec_progress_parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.youmai.hxsdk.view.progressbar.RoundProgressBarWithProgress
+                android:id="@+id/circle_rec_progress_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:indeterminate="false"
+                android:padding="5dp"
+                android:progress="35"
+                huxin:progress_radius="25dp"
+                huxin:progress_reach_color="@color/hx_transparent"
+                huxin:progress_text_color="@color/hx_color_white"
+                huxin:progress_unreach_color="@color/hx_transparent" />
+
+            <ImageView
+                android:id="@+id/iv_rec_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp" />
+
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/tv_progress_rec"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:textSize="15sp" />
+    </LinearLayout>
+
+    <pl.droidsonroids.gif.GifImageView
+        android:id="@+id/gf_rec_emo"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="5dp"
+        android:visibility="gone" />
+
+</RelativeLayout>

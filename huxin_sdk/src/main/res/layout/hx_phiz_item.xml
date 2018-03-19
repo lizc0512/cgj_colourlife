@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent">
+
+    <pl.droidsonroids.gif.GifImageView
+        android:id="@+id/emo_img_gif"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_centerHorizontal="true"
+        android:background="@android:color/transparent"
+        android:paddingLeft="3dp"
+        android:paddingRight="3dp"
+        android:src="@drawable/hx_hi" />
+
+    <TextView
+        android:id="@+id/tv_emo_gif_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/emo_img_gif"
+        android:layout_centerHorizontal="true"
+        android:text="@string/hx_phiz_item"
+        android:textColor="@color/hxs_color_gray1"
+        android:textSize="12sp" />
+
+</RelativeLayout>

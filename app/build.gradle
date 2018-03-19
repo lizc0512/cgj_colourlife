@@ -76,6 +76,7 @@ android {
 
 dependencies {
     implementation fileTree(include: '*.jar', dir: 'libs')
+    implementation project(':huxin_sdk')
 
     implementation 'com.loopj.android:android-async-http:1.4.6'
     implementation 'com.github.ittianyu:BottomNavigationViewEx:1.2.4'

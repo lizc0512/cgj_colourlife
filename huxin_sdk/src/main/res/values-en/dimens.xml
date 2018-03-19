@@ -1,0 +1,4 @@
+<resources>
+    <!--IMConnectFragment-->
+    <dimen name="hx_im_pop_ment_width">220dp</dimen>
+</resources>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--wheelView-->
+    <!-- 顶部按钮栏高度 -->
+    <dimen name="pickerview_topbar_height">44dp</dimen>
+
+    <!-- 顶部按钮paddingLeft -->
+    <dimen name="pickerview_topbar_paddingleft">10dp</dimen>
+
+    <!-- 顶部按钮paddingRight -->
+    <dimen name="pickerview_topbar_paddingright">30dp</dimen>
+
+    <!-- 顶部按钮paddingLeft -->
+    <dimen name="pickerview_cancel_topbar_paddingleft">30dp</dimen>
+
+    <!-- 顶部按钮paddingRight -->
+    <dimen name="pickerview_cancel_topbar_paddingright">10dp</dimen>
+
+    <!-- 顶部按钮文字大小 -->
+    <dimen name="pickerview_topbar_btn_textsize">18sp</dimen>
+    <dimen name="pickerview_topbar_title_textsize">21sp</dimen>
+
+    <!-- 选项文字大小 需要配合 bools.xml 的 pickerview_customTextSize 为 true 才有效果-->
+    <dimen name="pickerview_textsize">19sp</dimen>
+
+
+    <!--wheelview-->
+    <color name="pickerview_timebtn_nor">#057dff</color>
+    <color name="pickerview_timebtn_pre">#c2daf5</color>
+    <color name="pickerview_bg_topbar">#f5f5f5</color>
+    <color name="pickerview_topbar_title">#000000</color>
+    <color name="pickerview_wheelview_textcolor_out">#a8a8a8</color>
+    <color name="pickerview_wheelview_textcolor_center">#2a2a2a</color>
+    <color name="pickerview_wheelview_textcolor_divider">#d5d5d5</color>
+
+    <!--覆盖颜色-->
+    <color name="bgColor_overlay">#60000000</color>
+
+    <!--wheelview-->
+    <string name="pickerview_cancel" translatable="false">取消</string>
+    <string name="pickerview_submit" translatable="false">完成</string>
+    <string name="pickerview_year" translatable="false">年</string>
+    <string name="pickerview_month" translatable="false">月</string>
+    <string name="pickerview_day" translatable="false">日</string>
+    <string name="pickerview_hours" translatable="false">时</string>
+    <string name="pickerview_minutes" translatable="false">分</string>
+    <string name="pickerview_seconds" translatable="false">秒</string>
+
+    <string name="hx_not_internet_connection" translatable="false">网络未连接.....</string>
+
+
+    <!-- 此值为true pickerview_textsize才会有效果-->
+    <bool name="pickerview_customTextSize">true</bool>
+
+
+    <declare-styleable name="pickerview">
+        <attr name="pickerview_gravity">
+            <enum name="center" value="17" />
+            <enum name="left" value="3" />
+            <enum name="right" value="5" />
+        </attr>
+        <attr name="pickerview_textSize" format="dimension" />
+        <attr name="pickerview_textColorOut" format="color" />
+        <attr name="pickerview_textColorCenter" format="color" />
+        <attr name="pickerview_dividerColor" format="color" />
+    </declare-styleable>
+
+    <string name="cgj_crash_title">出现错误了,是否回滚到稳定版的彩管家?</string>
+    <string name="cgj_btn_sure">确定</string>
+
+    <style name="up_dialog" parent="@android:style/Theme.Dialog">
+        <!--<item name="android:windowNoTitle">true</item>-->
+        <item name="android:windowIsFloating">true</item>
+    </style>
+</resources>

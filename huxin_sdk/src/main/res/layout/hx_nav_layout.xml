@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tab_bar_purse"
+    android:layout_width="match_parent"
+    android:layout_height="48dp"
+    android:background="@color/hx_main_color">
+
+    <TextView
+        android:id="@+id/tv_back"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:drawableLeft="@drawable/hx_btn_back_selector"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/title_back_padding"
+        android:paddingRight="@dimen/title_back_padding"
+        android:textColor="#333333"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:ellipsize="marquee"
+        android:gravity="center"
+        android:paddingBottom="8dp"
+        android:paddingTop="8dp"
+        android:singleLine="true"
+        android:textColor="@color/hx_color_white"
+        android:textSize="18sp" />
+
+    <View
+        android:id="@+id/tv_line"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/swap_line_height"
+        android:layout_alignParentBottom="true"
+        android:background="@color/swap_line_color" />
+</RelativeLayout>
+

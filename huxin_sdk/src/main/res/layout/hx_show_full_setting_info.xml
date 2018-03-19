@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:huxin="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/show_result_padding_width"
+    android:paddingRight="@dimen/show_result_padding_width">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:background="@drawable/hx_show_preview_up_bg" />
+
+    <RelativeLayout
+        android:id="@+id/rl_show_parent"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/hx_setting_show_height">
+
+        <FrameLayout
+            android:id="@+id/fl_show_parent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:transitionName="ishow">
+
+            <ImageView
+                android:id="@+id/img_show"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/hx_show_item_margin_01"
+                android:layout_marginRight="@dimen/hx_show_item_margin_01"
+                android:scaleType="centerCrop"
+                android:src="@drawable/hx_show_default_full" />
+
+            <com.youmai.hxsdk.view.full.FullVideoView
+                android:id="@+id/vv_video_show"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_marginLeft="@dimen/hx_show_item_margin_01"
+                android:layout_marginRight="@dimen/hx_show_item_margin_01"
+                android:visibility="gone" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/hx_icon_full_phone_bg"
+                android:paddingLeft="@dimen/hx_show_item_margin_01"
+                android:paddingRight="@dimen/hx_show_item_margin_01">
+
+                <!--个人信息-->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@+id/rl_show_jump_msg"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="18dp"
+                    android:orientation="horizontal">
+
+                    <FrameLayout
+                        android:id="@+id/fl_show_header_bg"
+                        android:layout_width="42dp"
+                        android:layout_height="42dp"
+                        android:layout_gravity="center_vertical">
+
+                        <ImageView
+                            android:id="@+id/iv_show_header_bg"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/hx_icon_full_header_male_bg" />
+
+                        <ImageView
+                            android:id="@+id/iv_show_header"
+                            android:layout_width="38dp"
+                            android:layout_height="38dp"
+                            android:layout_gravity="center"
+                            android:background="@drawable/hx_show_preview_header_bg" />
+
+                    </FrameLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:gravity="center_vertical"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tv_show_nickname"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Emma"
+                            android:textColor="@color/hx_color_white"
+                            android:textSize="17sp" />
+
+                        <TextView
+                            android:id="@+id/tv_show_locale"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="广东深圳 00:10"
+                            android:textColor="@color/hx_color_white"
+                            android:textSize="13sp" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <!--消息logo-->
+                <RelativeLayout
+                    android:id="@+id/rl_show_jump_msg"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="12dp"
+                    android:layout_marginTop="30dp"
+                    android:background="@drawable/hx_icon_full_message_bg"
+                    android:padding="10dp"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/tv_show_msg_tip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/hx_icon_full_message"
+                        android:gravity="center"
+                        android:textColor="@color/hx_color_white" />
+
+                </RelativeLayout>
+
+                <!--整个功能-->
+                <LinearLayout
+                    android:id="@+id/ll_show_function"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="15dp"
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <LinearLayout
+                            android:id="@+id/ll_parent"
+                            android:layout_width="match_parent"
+                            android:layout_height="68dp"
+                            android:layout_margin="8dp"
+                            android:background="@drawable/hx_circle_corner_trans_bg"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:paddingLeft="5dp"
+                            android:paddingRight="5dp"
+                            android:paddingTop="5dp">
+
+                            <TextView
+                                android:id="@+id/tv_half_send_location"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_margin="5dp"
+                                android:layout_weight="1"
+                                android:drawableTop="@drawable/hx_show_preview_location"
+                                android:gravity="center"
+                                android:text="@string/hx_show_full_setting_info_send_location"
+                                android:textColor="@color/hx_color_white"
+                                android:textSize="10sp" />
+
+                            <TextView
+                                android:id="@+id/tv_half_send_pic"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_margin="5dp"
+                                android:layout_weight="1"
+                                android:drawableTop="@drawable/hx_show_preview_pic"
+                                android:gravity="center"
+                                android:text="@string/hx_show_full_setting_info_send_pic"
+                                android:textColor="@color/hx_color_white"
+                                android:textSize="10sp" />
+
+                            <TextView
+                                android:id="@+id/tv_half_send_emo"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_margin="5dp"
+                                android:layout_weight="1"
+                                android:drawableTop="@drawable/hx_show_preview_camera"
+                                android:gravity="center"
+                                android:text="拍照"
+                                android:textColor="@color/hx_color_white"
+                                android:textSize="10sp" />
+
+                            <TextView
+                                android:id="@+id/tv_half_send_jokes"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_margin="5dp"
+                                android:layout_weight="1"
+                                android:drawableTop="@drawable/hx_show_preview_emo"
+                                android:gravity="center"
+                                android:text="表情"
+                                android:textColor="@color/hx_color_white"
+                                android:textSize="10sp" />
+
+                        </LinearLayout>
+
+                        <!--左箭头-->
+                        <ImageView
+                            android:id="@+id/iv_features_left"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="3dp"
+                            android:background="@drawable/hx_icon_full_features_left"
+                            android:visibility="gone" />
+
+                    </RelativeLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="15dp"
+                        android:layout_marginTop="5dp"
+                        android:gravity="center_horizontal"
+                        android:orientation="horizontal"
+                        android:paddingLeft="25dp"
+                        android:paddingRight="25dp">
+
+                        <ImageView
+                            android:id="@+id/iv_refuse_up"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginLeft="5dp"
+                            android:src="@drawable/hx_show_preview_keypad" />
+
+                        <ImageView
+                            android:layout_width="0dp"
+                            android:layout_height="35dp"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_weight="1"
+                            android:paddingLeft="20dp"
+                            android:paddingRight="20dp"
+                            android:src="@drawable/hx_show_preview_hook" />
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginRight="5dp"
+                            android:src="@drawable/hx_show_preview_voice" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+            <!--收起按钮-->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left|bottom"
+                android:layout_marginLeft="30dp"
+                android:background="@drawable/hx_show_preview_up" />
+
+        </FrameLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_parent_progress"
+            android:layout_width="150dp"
+            android:layout_height="130dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/hx_circle_corner_trans_three_bg"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <com.youmai.hxsdk.view.progressbar.RoundProgressBarWithArrows
+                android:id="@+id/rpb_progress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:progress="5"
+                huxin:progress_radius="25dp"
+                huxin:progress_reach_color="@color/hxs_color_white"
+                huxin:progress_text_color="@color/hx_color_white"
+                huxin:progress_unreach_color="@color/hxs_color_trans_four" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="正在上传..."
+                    android:textColor="@color/hxs_color_white"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/tv_progress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="5%"
+                    android:textColor="@color/hxs_color_white"
+                    android:textSize="15sp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:background="@drawable/hx_show_preview_down_bg" />
+
+</LinearLayout>

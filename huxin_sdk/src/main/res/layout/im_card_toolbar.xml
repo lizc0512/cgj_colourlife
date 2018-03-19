@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingTop="8dp">
+
+    <TextView
+        android:id="@+id/card_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/hx_im_head_time_bg"
+        android:paddingBottom="4dp"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
+        android:paddingTop="4dp"
+        android:text="@string/hx_fragment_im_data"
+        android:textColor="@color/hxs_color_white"
+        android:textSize="16sp"
+        android:visibility="gone" />
+
+    <RelativeLayout
+        android:id="@+id/im_toolbar_card_lay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/hx_im_card_head_no_note_bg"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:paddingBottom="4dp"
+        android:paddingTop="4dp"
+        android:visibility="visible">
+
+        <TextView
+            android:id="@+id/im_toolbar_card_name_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/im_card_theme_default_name"
+            android:textColor="@color/hxs_color_green2"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/card_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/im_toolbar_card_name_text"
+            android:layout_marginLeft="12dp"
+            android:gravity="left"
+            android:layout_marginRight="12dp"
+            android:layout_marginTop="2dp"
+            android:text="2016-02-07"
+            android:textColor="@color/card_head_no_note_font"
+            android:textSize="10sp" />
+
+        <ImageView
+            android:id="@+id/im_toolbar_card_arrows_img"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="12dp"
+            android:padding="4dp"
+            android:src="@drawable/hx_im_card_theme_up_icon"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+</LinearLayout>

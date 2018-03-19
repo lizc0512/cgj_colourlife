@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/tv_color_finish"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="5dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="5dp"
+        android:text="完成"
+        android:textColor="#27A2F0" />
+
+    <LinearLayout
+        android:id="@+id/optionspicker"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_color_finish"
+        android:background="@android:color/white"
+        android:orientation="horizontal">
+
+        <com.youmai.thirdbiz.colorful.view.wheelview.pickerview.lib.WheelView
+            android:id="@+id/wheelview_province"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <com.youmai.thirdbiz.colorful.view.wheelview.pickerview.lib.WheelView
+            android:id="@+id/wheelview_city"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <com.youmai.thirdbiz.colorful.view.wheelview.pickerview.lib.WheelView
+            android:id="@+id/wheelview_district"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+
+</RelativeLayout>

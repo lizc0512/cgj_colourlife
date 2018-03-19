@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.youmai.hxsdk.view.chat.InputMessageLay xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/keyboard_lay"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/im_bg">
+
+    <RelativeLayout
+        android:id="@+id/rl"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/im_bg">
+
+        <!-- 显示秀、图片、地图等等 -->
+        <FrameLayout
+            android:id="@+id/fl_call_bg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/iv_im_show_bg"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop" />
+
+        </FrameLayout>
+
+        <!--标题栏-->
+        <LinearLayout
+            android:id="@+id/titlebar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:orientation="vertical">
+
+            <include layout="@layout/hx_activity_header_title" />
+
+            <TextView
+                android:id="@+id/tv_share_location"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="#9ACF67"
+                android:drawableRight="@drawable/hx_purse_triangle2_icon"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="你正在共享位置"
+                android:textColor="@color/hxs_color_white"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/titlebar" />
+
+        <FrameLayout
+            android:id="@+id/frag_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/color_transparent" />
+
+    </RelativeLayout>
+
+</com.youmai.hxsdk.view.chat.InputMessageLay>

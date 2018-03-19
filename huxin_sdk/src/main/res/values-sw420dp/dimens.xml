@@ -1,0 +1,13 @@
+<resources>
+
+    <!--show-->
+    <dimen name="show_result_padding_width">40dp</dimen>
+    <dimen name="hx_show_item_spacing">1.5dp</dimen>
+    <dimen name="hx_show_item_width">200dp</dimen>
+    <dimen name="hx_show_item_height">139dp</dimen>
+    <dimen name="hx_setting_show_height">480dp</dimen>
+    <dimen name="hx_setting_show_height_virtual_key">450dp</dimen>
+    <dimen name="hx_show_item_bottom">25dp</dimen>
+    <dimen name="hx_show_item_margin_01">18dp</dimen>
+
+</resources>

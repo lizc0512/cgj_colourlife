@@ -1,0 +1,1088 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="hx_app_name">huxin_sdk</string>
+    <string name="hx_action_settings">Settings</string>
+
+
+    <string name="hx_guide">guide fragment</string>
+    <string name="hx_index">index fragment</string>
+
+
+    <string name="hx_login">登录</string>
+    <string name="hx_edit_card">创建名片</string>
+    <string name="hx_receive_card">收名片</string>
+    <string name="hx_update_card">更新名片</string>
+    <string name="hx_get_card">获取名片</string>
+    <string name="hx_chat">发送消息</string>
+    <string name="hx_float_view">浮屏UI</string>
+    <string name="hx_my_location">我的位置</string>
+    <string name="hx_gif">GIF动画</string>
+    <string name="hx_shake">摇一摇</string>
+    <string name="hx_feedbace">意见反馈</string>
+    <string name="hx_set_show">设置秀</string>
+    <string name="hx_user_show">通话秀</string>
+    <string name="hx_set_represent">代言</string>
+    <string name="hx_set_merchant">商家秀</string>
+    <string name="hx_log">查看日志</string>
+    <string name="hx_sms">发送短信</string>
+    <string name="hx_send_file">发送文件</string>
+    <string name="hx_access">辅助功能</string>
+
+    <string name="hx_move">移动</string>
+
+    <!-- 通用字段 -->
+    <string name="hx_confirm">确认</string>
+    <string name="hx_cancel">取消</string>
+    <string name="hx_phone_number">手机号</string>
+    <string name="hx_back">返回</string>
+    <string name="hx_send_test_msg">发送测试消息</string>
+    <string name="hx_phone_illegitmacy">手机号码非法</string>
+
+
+    <!-- 登录对话框 -->
+    <string name="hx_login_title">手机验证</string>
+    <string name="hx_login_req_valid">获取验证码</string>
+    <string name="hx_login_phone_hint">输入手机号码</string>
+    <string name="hx_login_valid_hint">输入验证码</string>
+    <string name="hx_login_valid">验证码</string>
+    <string name="hx_login_loading">登录中</string>
+    <string name="hx_login_valid_second">%1ds</string>
+
+
+    <string name="hx_not_login">未登录</string>
+    <string name="hx_login_out">退出登录</string>
+    <string name="hx_login_out_msg">您确定退出登录吗?</string>
+    <string name="hx_login_out_sucess">确定退出登录成功</string>
+
+    <string name="hx_prompt">短信发送提示</string>
+    <string name="hx_not_user_info">对方不是呼信用户，将使用短信发送内容。</string>
+    <string name="hx_send_text_suffix">【呼信】</string>
+    <string name="hx_send_text">我用【呼信】给你发了文字：</string>
+    <string name="hx_send_picture">我用【呼信】给你发了一张图片，点击链接查看:</string>
+    <string name="hx_send_location">我用【呼信】给你发了我的位置，点击链接查看:</string>
+    <string name="hx_send_audio">我用【呼信】给你发了一段语音，点击链接查看:</string>
+    <string name="hx_send_big_file">我用【呼信】给你发了一个文件，点击链接查看:</string>
+    <string name="hx_send_contacts_card">我用【呼信】给你发了名片：</string>
+    <string name="hx_send_video">我用【呼信】给你发了一个视频，点击链接查看:</string>
+    <string name="hx_send_text_jokes">我用【呼信】给你发了一个段子：</string>
+
+    <string name="hx_hint_phone">发送目标手机号</string>
+    <string name="hx_hint_msg">消息内容</string>
+
+
+    <!-- 设置用户秀 -->
+    <string name="hx_cur_show_title">当前通话秀</string>
+    <string name="hx_setting_show">设置通话秀</string>
+    <string name="hx_show_title">选择素材</string>
+    <string name="hx_camera_title">自定义</string>
+    <string name="hx_call_name">Emma</string>
+    <string name="hx_call_text">我知道了</string>
+    <string name="hx_call_info">186XXXX8888 | 广东 深圳</string>
+    <string name="hx_apply_show_fail">通话秀设置失败</string>
+
+    <!--我的卡券-->
+    <string name="hx_my_discount_conpou">我的卡券</string>
+    <string name="hx_my_disable">已失效</string>
+    <string name="hx_clean_out">清空</string>
+    <string name="hx_conpou_detail">券详情</string>
+    <string name="hx_conpou_exc_result">兑换结果</string>
+    <string name="hx_conpou_exc_success">兑换成功</string>
+    <string name="hx_conpou_exc_fail">兑换失败</string>
+    <string name="hx_conpou_exc_get_data_fail">网络异常，请检查网络！</string>
+
+    <!--filepreview-->
+    <string name="hx_filepreview_back">返回</string>
+    <string name="hx_filepreview_zero">0k</string>
+    <string name="hx_filepreview_slant">/</string>
+    <string name="hx_filepreview_right">)</string>
+
+    <!--卡券详情-->
+    <string name="hx_conpou_details_holiday"> ( 周末、法定节假日不通用 )</string>
+    <string name="hx_conpou_details_overtime">已过期</string>
+    <string name="hx_conpou_details_used">已使用</string>
+    <string name="hx_conpou_details_exchanging">立即兑换</string>
+    <string name="hx_conpou_details_exchanged">已兑换</string>
+    <string name="hx_conpou_detail_cancle">取消</string>
+    <string name="hx_conpou_detail_validity">有效期：</string>
+
+    <!--IMAdapter-->
+    <string name="from">来自:</string>
+    <string name="hx_imadapter_data">是否删除这条消息?</string>
+    <string name="hx_imadapter_sure">确定</string>
+    <string name="hx_imadapter_cancle">取消</string>
+    <string name="hx_imadapter_close">关闭</string>
+    <string name="hx_imadapter_call">拨号</string>
+    <string name="hx_imadapter_talk">按住说话</string>
+    <string name="hx_imadapter_choose_send_file">选择发送的文件</string>
+    <string name="hx_imadapter_send_pic_success">Send successfully</string>
+    <string name="hx_imadapter_send_location_success">发送位置成功</string>
+    <string name="hx_imadapter_send_file_success">Send successfully</string>
+    <string name="hx_imadapter_send_message_success">Send successfully</string>
+    <string name="hx_imadapter_send_voice_success">Send successfully</string>
+    <string name="hx_imadapter_file">文件不能大于50MB!!!</string>
+    <string name="hx_imadapter_wifi_break">网络已断开，请检查！</string>
+    <string name="hx_imadapter_not_wifi">非wifi情况下会产生更多的流量,请确认是否继续?</string>
+    <string name="hx_imadapter_remind">提示</string>
+    <string name="hx_imadapter_continue">继续</string>
+    <string name="hx_imadapter_file_noexist">File does not exist!</string>
+    <string name="hx_imadapter_fm_uninstall">Please install File Manager</string>
+    <string name="hx_video_record_too_short">The video is too short.Once again.</string>
+
+    <!--chatfragment-->
+    <string name="hx_chat_fragment_choose_pic">选择图片</string>
+    <string name="hx_chat_fragment_receive">收:</string>
+    <string name="hx_chat_fragment_send">发:</string>
+    <string name="hx_chat_fragment_lable">广东省深圳市南山区高新南四道中国科技开发院孵化基地</string>
+
+    <!--GetCardFragment-->
+    <string name="hx_get_card_fragment_nickname">昵称：</string>
+    <string name="hx_get_card_fragment_sex">性别：</string>
+    <string name="hx_get_card_fragment_area">地区：</string>
+    <string name="hx_get_card_fragment_sign">签名：</string>
+    <string name="hx_get_card_fragment_email">邮箱：</string>
+    <string name="hx_get_card_fragment_position">职位：</string>
+    <string name="hx_get_card_fragment_special_plane">座机：</string>
+    <string name="hx_get_card_fragment_special_plane_error">座机格式不正确</string>
+    <string name="hx_get_card_fragment_adress">地址：</string>
+    <string name="hx_get_card_fragment_url">网址：</string>
+    <string name="hx_get_card_fragment_company_name">公司名称：</string>
+    <string name="hx_get_card_fragment_feedback_content">反馈内容</string>
+    <string name="hx_get_card_fragment_email_error">邮箱格式不正确</string>
+    <string name="hx_get_card_fragment_update_pic_success">名片照更新成功</string>
+
+    <string name="hx_callfullview_send_emoji_success">Send successfully</string>
+
+    <!--挂机策略-->
+    <string name="hx_hook_strategy_msg_text">【文字】</string>
+    <string name="hx_hook_strategy_msg_emoji">【表情】</string>
+    <string name="hx_hook_strategy_msg_pic">【图片】</string>
+    <string name="hx_hook_strategy_msg_map">【地图】</string>
+    <string name="hx_hook_strategy_msg_voice">【语音】</string>
+    <string name="hx_hook_strategy_msg_tv">【视频】</string>
+    <string name="hx_hook_strategy_msg_file">【文件】</string>
+    <string name="hx_hook_strategy_msg_bizcard">【名片】</string>
+    <string name="hx_hook_strategy_share_location">【位置共享】</string>
+    <string name="hx_hook_strategy_msg">您有1条未读消息</string>
+    <string name="hx_hook_strategy_hour">小时</string>
+    <string name="hx_hook_strategy_minute">分</string>
+    <string name="hx_hook_strategy_second">秒</string>
+    <string name="hx_hook_strategy_log_pic_success">发送图片成功</string>
+    <string name="hx_hook_strategy_log_location_success">发送位置成功</string>
+    <string name="hx_hook_strategy_log_voice_success">发送语音成功</string>
+    <string name="hx_hook_strategy_log_message_success">发送消息成功</string>
+    <string name="hx_hook_strategy_log_infomation">商务住宅|道路附属设施|地名地址信息|公共设施|生活服务|餐饮服务|购物服务</string>
+
+    <!--pictureFragment-->
+    <string name="hx_picture_fragment_all">所有图片</string>
+    <string name="hx_picture_fragment_unit">%1$d张</string>
+    <string name="hx_picture_fragment_sure">确定</string>
+
+    <!--send sms-->
+    <string name="send_sms_content">发送短信功能需要您开启短信权限</string>
+
+    <!--phone permission-->
+    <string name="phone_permission_content">发送短信功能需要您开启短信权限</string>
+
+    <!--sdcard permission-->
+    <string name="sdcard_permission_content">呼信需要您开启sdcard访问权限</string>
+
+    <!--permission-->
+    <string name="permission_title">权限提示</string>
+    <string name="permission_content">您需要开启权限</string>
+    <string name="confirm">设置</string>
+    <string name="cancel">取消</string>
+
+
+    <!--商家秀-->
+    <string name="hx_merchant_tip1">加入商家秀后，通话时向对方展示商家秀。</string>
+    <string name="hx_merchant_tip2">  输入格式：075526606921</string>
+    <string name="hx_merchant_tip3">输入商家号码</string>
+    <string name="hx_merchant_tip4">加入商家秀</string>
+    <string name="hx_merchant_exit">退出商家秀</string>
+    <string name="hx_merchant_show">商家秀</string>
+    <string name="hx_merchant_sdk_show">SDK商家秀</string>
+
+    <string name="hx_personal_show">通话秀</string>
+    <string name="tv_tbmine_my_job">产品设计</string>
+
+    <string name="hx_phone_time">0:00PM</string>
+    <string name="hx_send_loc">发位置</string>
+    <string name="hx_send_pic">发图片</string>
+    <string name="hx_send_emo">发表情</string>
+    <string name="hx_shark_joke">摇段子</string>
+    <string name="hx_show_setup">立即应用</string>
+    <string name="hx_show_used">应用中</string>
+    <string name="hx_upload_image">正在上传中...</string>
+    <string name="hx_upload_loading">加载中...</string>
+    <string name="hx_upload_file">正在发送文件,退出将自动取消发送</string>
+
+
+    <!-- 下拉刷新的文本 -->
+    <string name="hx_pull_to_refresh_header_text">下拉可以刷新&#8230;</string>
+    <string name="hx_pull_to_refresh_header_hint_ready">松开即可刷新&#8230;</string>
+    <!--上拉加载更多的文本-->
+    <string name="hx_pull_to_refresh_bottom_hint_normal">上拉可以刷新</string>
+    <string name="hx_pull_to_refresh_bottom_hint_onclick">点击加载更多</string>
+    <string name="hx_pull_to_refresh_bottom_no_more_msg">已经到底啦</string>
+
+    <string name="hx_pull_to_refresh_update_time">最后更新时间:</string>
+    <string name="hx_pull_to_refresh_load_more_text">努力加载中&#8230;</string>
+
+
+    <string name="hx_dialog1_set_show_tips">通话秀出百变的你\n设置一张图片试试呗！</string>
+    <string name="hx_dialog1_set_show">设置通话秀</string>
+    <string name="hx_dialog2_set_show_tips">通话秀设置好啦，\n拨打电话看看效果吧！</string>
+    <string name="hx_dialog2_call_myself">打给自己</string>
+    <string name="hx_dialog2_skip">跳过</string>
+
+    <!-- 代言提示语 -->
+    <string name="hx_tip_text">加入代言后，系统将取消您设置的通话秀，对方通话弹窗上将显示本条代言内容。</string><!--加入代言后，系统将会取消您设置的通话秀-->
+    <string name="hx_tip_setting_show_text">设置通话秀后，系统将取消您的代言，您将会失去代言收益。</string>
+    <string name="hx_tip_setting_show_text02">设置通话秀后，系统将取消您的商家秀。</string>
+    <string name="hx_tip_setting_show_text03">上一个代言任务还未完成，加入新的代言原有代言将会被替换，代言临时收益也会自动清零！</string>
+    <string name="hx_tip_coupon_text">兑换优惠券</string>
+    <string name="hx_tip_represent_show_text">设置通话秀后，系统将会停止您的代言。</string>
+    <string name="hx_tip_represent_show_merchant">设置通话秀后，系统将会停止您的商家秀。</string>
+    <string name="hx_tip_merchant_show_rep">设置商家秀后，系统将会停止您的代言。</string>
+    <string name="hx_tip_merchant_show_use">设置商家秀后，系统将会停止您的通话秀。</string>
+    <string name="hx_tip_merchant_text">退出当前商家秀？</string>
+    <string name="hx_tip_represent_text">代言</string>
+
+    <!--crop-->
+    <string name="hx_crop__saving">正在保存照片…</string>
+    <string name="hx_crop__wait">请等待…</string>
+    <string name="hx_crop__pick_error">无效的图片</string>
+
+    <string name="hx_crop__done">完成</string>
+    <string name="hx_crop__cancel">取消</string>
+
+    <!-- 当RecyclerView没有查询到任何记录提示 -->
+    <string name="recycler_norecord">没有任何券哦~</string>
+
+    <string name="hx_permission_cfg">权限设置</string>
+
+    <string name="hx_im">即时聊天</string>
+
+    <string name="hx_picture_save">图片已保存！</string>
+    <string name="hx_save_success">图片已保存到： </string>
+    <string name="hx_network_exception_check">网络异常，请检查网络</string>
+
+    <string name="hx_mcc_select">请选择国家</string>
+
+    <string name="tips_title">收到一张名片请求</string>
+    <string name="tips_cancel">取消</string>
+    <string name="tips_import">同意</string>
+    <string name="tips_import2">导入通讯录</string>
+    <string name="tips_content">名片内容</string>
+    <string name="tips_ask">是否同意请求交换?</string>
+    <string name="tips_close">关闭</string>
+
+    <string name="desc">呼信助手</string>
+    <string name="accessibility_info">请打开呼信助手！</string>
+    <string name="permission_start">一键开启</string>
+    <string name="hx_im_more">更多</string>
+
+    <string name="expand">展开</string>
+    <string name="collapse">收起</string>
+
+    <!-- 彩生活-->
+    <string name="open_door">开门</string>
+    <string name="add_owner">设为业主</string>
+
+    <!--im tool-->
+    <string name="bar_more_type">more</string>
+    <string name="bar_more_close_type">close</string>
+    <string name="bar_emotion_type">emotion</string>
+    <string name="bar_emotion_keyboard_type">keyboard</string>
+    <string name="bar_voice_open_type">voice_open</string>
+    <string name="bar_voice_close_type">voice_close</string>
+    <string name="audio_garbage_indicate">&#160;&#160;&#160;&#160;&#160;<![CDATA[< <]]></string>
+
+    <string-array name="emo_item_names">
+        <item>干杯</item>
+        <item>鼓掌</item>
+        <item>送花</item>
+        <item>赞</item>
+        <item>打招呼</item>
+        <item>再见</item>
+        <item>我来了</item>
+        <item>抠鼻</item>
+        <item>么么哒</item>
+        <item>大笑</item>
+    </string-array>
+
+    <string-array name="apps_func">
+        <item>图片</item>
+        <item>照片</item>
+    </string-array>
+    <string-array name="apps_func_icon">
+        <item>icon_photo</item>
+        <item>icon_camera</item>
+    </string-array>
+
+    <string name="hx_full_reply_later">稍后再回复你。</string>
+    <string name="hx_full_reply_road">我已经在路上了。</string>
+    <string name="hx_full_reply_now">马上就到！</string>
+
+
+    <string name="doc">文档</string>
+    <string name="audio">音频</string>
+    <string name="video">视频</string>
+    <string name="zip">压缩包</string>
+    <string name="apk">安装包</string>
+
+    <string name="all_images">所有图片</string>
+    <string name="done">完成</string>
+
+    <string name="permission_camera_rationale">需要相机权限才能显示相机预览。</string>
+    <string name="permission_contacts_rationale">需要联系人权限才能显示对联系人数据库的访问权限。</string>
+    <string name="permission_camera_denied">相机权限被拒绝。请考虑授予它，以访问相机！</string>
+    <string name="permission_camera_never_askagain">相机权限被拒绝，从不再询问。</string>
+    <string name="no_files_found">找不到文件</string>
+    <string name="attachments_title_text" formatted="false">附件 (%d/%d)</string>
+    <string name="select_photo_text">选择照片</string>
+    <string name="select_doc_text">选择文档</string>
+    <string name="no_camera_exists">没有相机的应用程序！</string>
+    <string name="pdf_title">PDF</string>
+    <string name="ppt_title">PPT</string>
+    <string name="word_title">DOC</string>
+    <string name="excel_title">XLS</string>
+    <string name="txt_title">TXT</string>
+    <string name="videos">Videos</string>
+    <string name="images">Images</string>
+    <string name="all_photos">All Photos</string>
+    <string name="all_videos">All Videos</string>
+    <string name="all_files">All Files</string>
+
+    <string name="relogin_title">下线通知</string>
+    <string name="relogin_msg_start">您的账号</string>
+    <string name="relogin_msg">可能于其它地方登录，建议您重新登录账号</string>
+    <string name="relogin_confirm">重新登录</string>
+    <string name="relogin_cancel">退出</string>
+
+    <!--新版app增加-->
+    <string name="sound_name_one">机场</string>
+    <string name="sound_name_two">扇巴掌</string>
+    <string name="sound_name_three">闹区</string>
+    <string name="card_swap_success">名片发送成功，可点击名片，查看名片信息</string>
+    <string name="zhan_wu">暂无</string>
+    <string name="im_swap_card">交换名片</string>
+    <string name="contact_share_card">分享名片</string>
+    <string name="contact_job">职位：</string>
+    <string name="contact_company">公司：</string>
+    <string name="call_message_1">来电  通话</string>
+    <string name="call_message_2">去电未接</string>
+    <string name="call_message_3">去电  通话</string>
+    <string name="call_message_4">未接电话</string>
+    <string name="call_message_5">挂断电话</string>
+
+    <!-- 摇段子 -->
+    <string-array name="hx_jokes" formatted="false">
+        <item>我要瘦成一道闪电，照亮所有的胖子！</item>
+        <item>整天瞎逼忙，就是不挣钱！</item>
+        <item>世界是我们的，也是孩子们的，但最终，是那帮孙子们的！</item>
+        <item>别跟我比懒，我懒得跟你比！</item>
+        <item>在哪里跌倒，就在哪里躺下！</item>
+        <item>别把我对你的忍耐，当做你不要脸的资本！</item>
+        <item>你咋不上天，和太阳肩并肩，你咋不下水，和王八嘴对嘴？</item>
+        <item>别惹我，我是一个脱离了高级趣味的人！</item>
+        <item>我媳妇儿告诉我，解释就是掩饰、掩饰就是不老实、不老实就等着挨收拾！</item>
+        <item>生病的时候，最烂的语言是“多喝水”，最好的语言是“快开门”！</item>
+        <item>得罪我只有两个选择，选择滑盖的棺材或者翻盖的！</item>
+        <item>我吸烟的理由很简单：我爷爷吸烟 , 我爸爸也吸烟 , 轮到我，不能断了香火！</item>
+        <item>请不要在我心上划下一刀就走，等痊愈了我一刀捅死你！</item>
+        <item>所有的吃货都是善良的，因为时刻都在想着吃，哪有时间去算计别人！</item>
+        <item>如果你有鸭梨（压力），请把它放冰箱里，因为它会变成冻梨（动力）。</item>
+        <item>如果你没跟我结婚，我会在你的婚礼上送你一张过去的CD,让新娘看看那时我们的爱情！</item>
+        <item>“你若暴饮，我便暴食。”这是我听过的胖子情侣间最忠贞的爱情宣言。</item>
+        <item>单身了三十多年，不如你信上帝吧，好歹也算有主啦！</item>
+        <item>你若安好，那还得了！</item>
+        <item>“等到四十几岁，我未娶，你未嫁，我们就在一起。”能说出这种话的人得长得多丑啊！</item>
+        <item>有四种男人深受女孩子们的欢迎，他们分别是：高富帅、矮富帅、高富丑、矮富丑。</item>
+        <item>和女友相处后，女友胸围明显增加，她家人看我的眼神越来越让我觉得坐立不安………</item>
+        <item>变胖都是静静地、悄悄地，你以为一切照常，然而当你找出往年的裤子，一切都是那么猝不及防！</item>
+        <item>腾不出时间来睡觉的人，迟早会腾出时间生病；腾不出时间来恋爱的人，迟早会腾出时间相亲。</item>
+        <item>当你的情敌掉进水里，他不会游泳，而会游泳的你刚好路过，这时你最佳的选择是马上脱裤子，在他附近游来游去。</item>
+        <item>为什么穿山甲一直在挖地?在找穿山乙．．．．．．</item>
+        <item>我姓黄，又是在秋天出生的。你们就叫我吴彦祖好了！</item>
+        <item>我欲扬帆起航没有方向，只能乘风破浪当个流氓。</item>
+        <item>在你没遇到自己喜欢的男生之前，你都是以为自己喜欢女生。</item>
+        <item>路见不平一声吼，吼完之后咱就走！</item>
+        <item>真羡慕有才华有故事的人，我活了这么久，一个“帅”字竟然贯穿了我的一生！</item>
+        <item>每次别人向我问路的时候我都是乱指的：我就是让他们记住这个教训，不要随便相信大街上长得好看的人！</item>
+        <item>下雨天了怎么办，我好想你，不敢打电话给你，怕你被雷劈！</item>
+        <item>你骂我，是因为你不了解我，那些了解我的人，都想打我！</item>
+        <item>攒了一年的头皮屑，只因你说想看一场雪！</item>
+        <item>说好一起到白头，你却偷偷焗了油！</item>
+        <item>说好一起走下去，你却半道打了的！</item>
+        <item>今天一个朋友对我说他只有6个月可活了，我想安慰到：“六个月，很快就过去了，坚强点！”</item>
+        <item>看软妹子吃西瓜，解渴，看女汉子吃西瓜，解恨！</item>
+        <item>今天天气真好，看那朵云，像不像我上个月借你那两百块钱？</item>
+        <item>头可断，发型不可乱。以前不懂什么原因，直到今天，看见楼下理发师被顾客暴揍后我才明白。</item>
+        <item>单身大学汪一枚，看着别的班的男男女女，再看看我们班的男男男男，我特么都怀疑人生了，当初选这个专业图啥？</item>
+        <item>小学运动会，跑了最后一名却捡了10块钱，回家给我妈说跑了第一奖金10块钱。我妈不信带我去找班主任，班主任不但说我跑了最后一名，还说10块钱是她掉的…….</item>
+        <item>人生在世几十年，何必太在意身材，吃的开心就好！吃过之后去买衣服，瞬间觉得人生在世几十年，何不美美走一遭！</item>
+        <item>经济学家说，资金流动才会增值。后来我发现了，是我的资金在流动，别人的资金在增值。</item>
+        <item>台风来了你一定要抱紧你老婆，万一刮到别人家别人还得顶着风给你送回来，多累！</item>
+        <item>别问我你的脸油不油，反光，我看不清！</item>
+        <item>以前把生米煮成熟饭后那女的就是你的人了，现在你就算是把生米炸成爆米花都不管用了。</item>
+        <item>原来，很多时候，女孩子发脾气，和你闹，只是想要你哄而已，她不会离开你的，那些从来不和你生气的，就不用哄了，她心里根本没有你，哪天走了也会悄无声息的！</item>
+        <item>待你长发及腰，我定咔嚓一剪刀！</item>
+        <item>他说我任何为人称道的美丽，都有PS的痕迹。</item>
+        <item>谁娶了多愁善感的你——谁TM倒霉到底？</item>
+        <item>虽然我们不能一起出生，但是，这并不代表我不可以和你一起祸害苍生！</item>
+        <item>和你的相遇如梦一般，因此我每晚睡觉都吓得必须要开灯。</item>
+        <item>长的好看是老天爷赏饭吃，长得胖是老天爷赏肉吃。</item>
+        <item>你走我不留你，你来，来就来，还带什么东西！</item>
+        <item>只要努力去干，就没有什么事情是你搞不砸的！</item>
+        <item>我能抗拒一切，除了诱惑。</item>
+        <item>想想挺丢人的，世界上除了男人最多是就是女人，我居然找不到一个来做我媳妇！</item>
+        <item>上外地上大学之前老爸找我谈心，告诫我一定不要谈恋爱。如今我毕业十年还没谈过恋爱。我只想说，老爸，当初你想太多了。</item>
+        <item>经常听说：“你就算是化成灰，我都认得出来！”可现在的人一化妆，我就认不出来了。</item>
+        <item>我爱玩游戏，时常会冷落女朋友，她毅然提出了分手。每每想起我总是后悔不已，我要奉劝大家一句，不要轻易找女朋友，真的很影响玩游戏的心情。</item>
+        <item>方便面桶上有一层有害物质，吃多了易得癌症。我有个同学考研，连续吃两个月方便面，后来得了癌症死了，所以建议大家以后不要考研！</item>
+        <item>丑小鸭生来就很丑，谁都不喜欢它，它从小被其它鸭子欺负，但丑小鸭没有畏惧，它顽强拼搏，努力学习。最终，人们发现，它虽然不好看，但还挺好吃的....</item>
+        <item>老板，这款衣服特别好，我穿上简直帅炸了！我跟你形容怎么个帅炸法，我女朋友都觉得配不上我，刚刚和我分了手！</item>
+        <item>昨天我在网吧LOL，突然想到我女朋友还在楼下等我，我顿时一惊，打了自己一耳光，玩游戏的时候分什么心！</item>
+        <item>同学去世界五百强应聘工作惨遭淘汰，离开时突然发现地上有纸屑，于是就捡了起来，这一幕恰好被CEO看到，第二天他得到了录用通知书，成了企业的清洁工，月薪近2500。</item>
+        <item>一两个人说我不帅的时候，我不以为意，逗我玩而已，后来几乎所有人都说我不帅，我才真正意识到事态的严重，这社会骗子真是越来越多了！</item>
+        <item>看了一段很感人很煽情的视频，大概有125分钟，我眼泪在眼睛里打转，最终没掉出来。看完视频才发现忘了开WIFI，眼泪当时就忍不住哗哗的流了下来。</item>
+        <item>和前任分手的时候，白天倒还好，可一到晚上就再也抑制不了内心的感情，一个人蒙在被子里偷偷地笑了起来。</item>
+        <item>朋友去算命，那人说他今年命犯桃花，会被一个忽然出现的女人伤得很深。昨天他在拐角处被一大妈骑电动车撞了，现在还在医院里躺着。</item>
+        <item>你走吧，我觉得你应该找一个能逗你笑的人，不像我,整天把你帅哭！</item>
+        <item>雨下得好大啊,不知道前任有没有带伞,带了得话就真的白下了。</item>
+        <item>有一次急性肠胃炎去医院，痛的死去活来，我爸来看我，一脸焦急的跟我说，这医院怎么连一个wifi都连不上。</item>
+        <item>刚才我爸怒气冲冲的推开我的卧室门，看着我愣一分钟，然后跑出去问我妈：“老婆，咱儿子叫什么来着？”</item>
+        <item>觉得自己身边的人好幸福，总是能转身扭头就能看到我，我要看看自己还得掏手机找镜子什么的，好累！</item>
+        <item>若果别人说你很阳光不要高兴的太早，他可能是在告诉你TM太刺眼啦！</item>
+        <item>今天给女神表白，结果她想请我吃东西，但我想了想还是拒绝了，毕竟不能叫我去吃屎我就去吃屎！</item>
+        <item>晚上躺在床上睡不着，只好数羊……一只羊、两只羊、三只羊、四只羊、喜羊羊、小肥羊、肥牛、牛百叶、金针菇、藕片、百威……妈的，不睡了，穿衣服下楼，吃火锅……</item>
+        <item>小王喜欢步行上下班。他抽了一个周末，把上下班沿途所有餐馆、商场的WIFI都连上，以后再也不担心手机流量的问题了。机智的他，就这样被车撞进了医院。</item>
+        <item>昨天看到一句话，说每个人的朋友圈都有一个二货！我想了一下好像谁都不太二！然后看见后面一句：如果你觉得没有，说明你就是那个二货！我瞬间顿悟！</item>
+        <item>谈恋爱的条件首先是要聊得来，再来是不能完全认同对方，这两点，就是我单身九年的秘诀。</item>
+        <item>有没有人和我一样，想看看几点了，拿出手机，一个快得无比风骚的动作解了锁！顺势又放回兜里，才想起来我忘了看时间！又掏出来看一次……</item>
+        <item>我跟我弟吵了一架并打了他一顿。最近他天天看《名侦探柯南》，已经看到四百多集了，看我的眼神也越来越不对。想问一下，我现在向他道歉还来得及吗？</item>
+        <item>谁说的用热水可以疏通马桶，劳资绝对不打死他！今天我家的马桶堵了，一盆开水倒下去，一屋子那个酸爽！我爸回来还问我半天，问我是不是在煮屎吃！</item>
+        <item>如果你男朋友用你们的合影当头像，就嫁了吧！说明他真的很爱你，但如果你女朋友用你们合影，别想太多了，她只是觉得这张照片里的自己比较好看！</item>
+        <item>听说切洋葱会流泪，于是我闭上眼睛切，当我切到手指的时候，我真的流泪了！</item>
+        <item>每次看到穷游日志的感受都是：那么穷就别出去浪了。</item>
+        <item>长得好看的才能叫作吃货，长得不好看的只能叫饭桶。</item>
+        <item>只要你每天坚持自习，认真刻苦，态度端正，忍受孤独，最终的胜利肯定是属于那些考场上发挥好的人。</item>
+        <item>生活会让你苦上一阵子，等你适应以后，再让你苦上一辈子。</item>
+        <item>上帝为你关上了一扇门，然后就去洗洗睡了。</item>
+        <item>如果你对目前的工作不太满意，觉得事业发展遇到了一个瓶颈，那么就去进修一个更高的学历吧，毕业以后你就会明白，之前的失败跟学历似乎没什么关系。</item>
+        <item>2012年我加了一个单身交流群，我们商量好的，谁结婚就自动退群。4年后的今天，我成了群主。</item>
+        <item>我听到过最残忍最虐心最感动的话大概是“姑姑你真好，等我有钱了，带你去整容！”</item>
+        <item>有个美国姑娘叫Emma,被派到中国东北工作。上班第三天就因为精神崩溃提出辞职，因为她说她时时刻刻都觉得有人在叫她．．．．．．</item>
+        <item>怎么别的女的留披肩发都各种淑女、各种娇媚，我媳妇偶尔不扎头发看着跟谢逊似的，远远望去会有一种“屠龙在手，天下我有”的霸气．．．．．．</item>
+        <item>横店影视城：一年打死鬼子一亿多人，鬼子尸体连起来可绕地球三圈。</item>
+        <item>人这一生会长大三次：一是明白自己不是世界中心的时候；二是明白有些事需要努力才能办到的时候；三是明白明明知道有些事办不到，却还是要为之努力的时候。</item>
+        <item>你单身不是因为你长得丑，而是因为你长得丑还嫌弃别人长得丑。</item>
+        <item>叛逆和叛变有着本质的区别，叛逆就是瞒着爸妈去开房，叛变就是瞒着男友去开房。</item>
+        <item>小时候我在想是上清华还是北大，现在想想我当时真TM想多了。</item>
+        <item>想送你回家，东南西北都顺路记住，不是给谁一瓶雪花，谁TM都能陪你勇闯天涯！</item>
+        <item>别惹我，不要以为只有你有病，我也有！</item>
+        <item>为什么我练出了八块腹肌还是找不到男朋友？</item>
+        <item>今天，捡到一个苹果手机，没多久收到一条短信说手机有定位功能叫我把手机还给他不然叫我坐牢，吓得我赶紧把手机丢湖里去了。</item>
+        <item>昨晚加班的时候，老婆发来一张自拍照，当时就想回她“你真漂亮”，没想到回了个“我在嫖娼”，5分钟后，老婆就带着警察来了。</item>
+        <item>小的时候立志要成为世界首富，初中的时候想成为中国首富吧，高中的时候想还是成为四川首富，现在TMD还是先把房子的首付凑够再说！</item>
+        <item>要跟我共度一生的那个男人，你再不出现，过几年只能用二手的了．．．．．．</item>
+        <item>直到自己做了家长之后，才发现一个小时候未曾解开的谜团：大人为什么不挑食，因为他们买菜只买自己爱吃的．．．．．．</item>
+        <item>灾难来临时，没有太阳的后裔，也没有来自星星的你，只有龙的传人！</item>
+        <item>晚上照镜子，看着自己洁白如玉的身体。感慨道：“多好的白菜啊，猪都瞎了吗？”</item>
+        <item>据专家分析越是寒冷的天，越能让人变年轻。有实例报道七十旬老大爷出门，冻得跟孙子似得。</item>
+        <item>在这个大热天里，我想对穿裙子的妹子说一句：“不穿安全裤是对这个夏天最起码的尊重，知道不!”</item>
+        <item>别喊我妈，我没你这样的妈。</item>
+        <item>你离开以后，我心里就下雪了，你TM的却和别的女人隔三岔五打场雪仗．．．．．．</item>
+        <item>在酒吧喝酒，但凡说自己醉了，或者一言不发晕在沙发上的其实都没醉。两三个人都拉不住，非要去吧台买单的肯定醉了．．．．．．</item>
+        <item>今天终于拿到驾照了，但是一想到现在街上开车的有很多和我一个水平，我就不敢上街。</item>
+        <item>小时候感觉舅舅姨夫们好博学，晚饭时候滔滔不绝，博古通今，满嘴全是国家大事。长大后才知道原来这种行为叫喝多了吹牛逼。</item>
+        <item>打一个喷嚏是有人骂你，打两个喷嚏是有人想你，不过看你这面相，如果你连续打两个喷嚏，应该是两个人同时骂你。</item>
+        <item>既然青春不常在，何不泡个高富帅？</item>
+        <item>天涯何处无芳草，绝症富婆哪里找？</item>
+        <item>我养了一只鱼，死了。想为它举办个特殊的葬礼，于是我准备把它火葬，谁知道这货越烤越香，于是我就买了一瓶啤酒．．．．．．</item>
+        <item>你给我一个微笑，我也还你一个，不是善意的回应，只是想告诉你：老子笑起来比你好看！</item>
+        <item>考拉一生99%的时间都用于吃和睡，还有1%的时候用于找对象。它们就漫无目的的晃荡着找，如果实在找不到，就放弃了，回去继续睡。</item>
+        <item>今天晚上我看湖南卫视跨年演唱会的时候，到了一群韩国歌星，他们一唱，我们全村的狗马上叫了起来。</item>
+        <item>如果有一天，我屏蔽了你的动态，不是因为我讨厌你，也不是因为我不关心你，实在是你卖的东西我买不起！</item>
+        <item>看了《爸爸去哪了》我只想对孩子们说：“留下你们妈妈一个人在家真的放心吗？”</item>
+        <item>有一老头，每天看着我傻笑，我以为他是傻子，后来我才知道，他以为我是傻子。</item>
+        <item>山水有相逢，我未来的媳妇儿现在在谁手里，给劳资小心点用！</item>
+        <item>想起那年高考，我满脸泪水啊！差一分，就差一分，我就考上清华！那年清华分数线是691，我考了69．．．．．．</item>
+        <item>火葬场工作的王老汉，为了增加收入，到处宣传运钞车的散弹枪里没有子弹。</item>
+        <item>问：中国的足球为什么老是这么差。答：因为体育课被其他老师占了。</item>
+        <item>老干妈里没干妈，我认了；鱼香肉丝没有鱼，我认了；老婆饼里没老婆，我认了．．．．．．．你胸罩里面没有胸，那我觉得我们应该好好聊一聊我们之间的关系了！</item>
+        <item>有木有发现：自打进了三伏天，全国都没有发生碰瓷的！</item>
+        <item>长的好看点的妹子撒个娇就能搞定的事，我都得靠威胁。</item>
+        <item>不要问我为什么这么黑，我只是不想白走这一趟。</item>
+        <item>从“狗日的”到“日了狗了”，说明人类都有一颗反攻的心。</item>
+        <item>有对象的才是跨年，没对象的那是熬夜。</item>
+        <item>别人都在晒幸福、晒车、晒房、晒吃、晒喝、晒玩、晒钱。我呢，我晒什么？我晒得乌漆麻黑。</item>
+        <item>自从傻逼这个词出现后，傻瓜，笨蛋，呆子这些词就被提拔进了情话行列。</item>
+        <item>有次查寝大妈发现我没起床，于是通报批评，我说你通报就通报吧，可你在楼下写我在床上硬不起来是怎么个意思？</item>
+        <item>一寸光阴一寸金，三寸光阴一个鑫。</item>
+        <item>七夕别晒巧克力鲜花礼物了，有本事把女朋友发出来晒一晒，看看有没有重样的。</item>
+        <item>好想关心你，可你老是不生病。好想为你哭一次,可是你怎么还不死。</item>
+        <item>专家说，在狗的眼里，人类的一切动作都是慢动作。神回复：怪不得老板总嫌我干活慢。</item>
+        <item>比起穷这个弱点来，丑简直不值一提。</item>
+        <item>不知道别人，反正我身边的瘦子之所以瘦，根本不是因为运动和饮食控制，只是因为简单的吃不胖。</item>
+        <item>感谢社交网络，就算没有可以倾诉的对象，也依然可以自言自语地发状态。</item>
+        <item>友谊的小船说翻就翻，爱情的巨轮说沉就沉，青春的小鸟说飞就飞，好好的爷们说弯就弯。</item>
+        <item>秒回就是真爱吗？是他一直在玩手机却压根没想过要找你。</item>
+        <item>我特别希望做个真人秀把俩台湾腔和俩东北人关一块俩月，你们说最后是谁带跑谁......</item>
+        <item>为什么打群架的时候，普遍会脱掉上衣？如果集体脱裤子，总感觉气氛怪怪的。</item>
+        <item>你会给自己写什么墓志铭？没什么事我就先挂了。</item>
+        <item>如何逼死强迫症？逼死强迫症还不简。</item>
+        <item>老板开公司就是为了利益吗？难不成是为了江山社稷。</item>
+        <item>“暖男为什么会变成渣男？”“没烧过媒吗？”</item>
+        <item>我有病，很严重：间歇性踌躇满志，持续性混吃等死。</item>
+        <item>感谢双11，让我坚强起来，承受住了四重暴击：单身就算了，还没有钱买，想买却下架了，买完还得吃土…</item>
+        <item>我们总认为大脑是人体最聪明的器官，但是你想想，这个判断是大脑自己做出的。</item>
+        <item>当斧头来到树林里的时候，好多树都说，至少它的把手是我们自己人。</item>
+        <item>说真的，每次遇到那种不是很好使的感应水龙头，都感觉自己像个要饭的。</item>
+        <item>我欲乘风归去，又恐风托我不起……</item>
+        <item>一般来说男人说女人丑，其实就是长的还可以，说漂亮，是真的漂亮，因为丑的，他们不跟那些人说话。</item>
+        <item>哪些生产避孕套的厂家你们别老顾着出超薄啊，出点超厚也是有市场的，价钱贵点也无所谓啊，毕竟尊严对一个男人来说更重要！</item>
+        <item>“你对一个人最高级别的信任是什么。”“跟他出门不带一分钱。”</item>
+        <item>有话好好说，别掀我被窝！</item>
+        <item>你身上有她的香水味，还好没我用的贵。</item>
+        <item>你真的觉得有钱人跟你想象的一样快乐吗？你错了，有钱人并没有和你想象的一样快乐，他们的快乐你根本就想象不到。</item>
+        <item>目前最恐怖的事就是：食量无上限，成绩却无下限；社交不成功，懒虫还盼巅峰。人丑还颜控，友少偏爱宅；单身总矫情，没钱还任性。</item>
+        <item>有些爱情，就像这秋天，本以为是金灿灿的，果实累累的，可仔细一琢磨啊，原来是黄了。</item>
+        <item>相亲说明：不合适就是穷，没感觉就是丑。一见钟情就是好看，深思熟虑就是有钱。</item>
+        <item>以前有个成语叫自欺欺人，说得稍微有点现代感的话就叫美图秀秀。</item>
+        <item>男人哭了，说明他真的在乎了；女人哭了，她自己也不知道为啥。</item>
+        <item>有话好好说，不要发自拍。</item>
+        <item>人无远虑，必是有钱。</item>
+        <item>昨天看到一句话：别再说自己是单身狗了，你这个年纪狗都死了。</item>
+        <item>“为什么大妈们跳广场舞的时候生龙活虎，但一上公交车就站都站不住？”“因为所有大招都有冷却时间。”</item>
+        <item>我捡到了一张高考准考证，千辛万苦找到失主并还给了她，毕竟从照片看来，她不高考，也就没什么出路。</item>
+        <item>有一些人的出现，就是来给我们开眼的。所以，人一定要禁得起假话，受得住敷衍，忍得住欺骗，忘得了承诺，放得下一切，别和傻逼讲道理，别跟人渣瞎逼逼。</item>
+        <item>你若安好，便是晴天。你若一直安好，便是干旱。</item>
+        <item>有一种在意，叫“你见到的永远都是洗了头的我”。</item>
+        <item>如果“吃”和“买”都不能让我愉悦起来，那问题就很严重了。</item>
+        <item>“发射用英语怎么说？”“biu。”</item>
+        <item>不一定心狠手辣才能害人，智商够低就可以。</item>
+        <item>听说马上可以刷脸支付了，不知道深圳哪家整容医院好，我想整成马云的样子，不知道行不行。</item>
+        <item>人们从历史中学到的唯一教训就是: 人们从不吸取历史教训！</item>
+        <item>百万富翁所有财产一夜之间被偷光，经过立案侦查，警方断定该男子属于自然醒。</item>
+        <item>人类的拖延症有多严重？至今还有那么多猴子没有进化。</item>
+        <item>给自己一点信心，不要别人一提到胖你就对号入座，因为你可能坐不下呀。</item>
+        <item>相信我，喜欢一个人就大胆去表白，说不好对方一时糊涂，答应了呢。</item>
+        <item>我已经掌握藏私房钱的64种方法，接下来，只差钱了。</item>
+        <item>每次ATM取钱，取100块，取款机点钱的声音跟要给我好几万似的。</item>
+        <item>作为一个大学生，竟然还不想开学，都什么素质？难道校园里就没有一个你喜欢的人吗？</item>
+        <item>不要脸这事，如果干的好，叫心理素质过硬。</item>
+        <item>我老想不明白为什么奥特曼打小怪兽总是到最后要死要活了才放大招？神回复：你斗地主先丢个炸？</item>
+        <item>有些人为了能出名，奋斗了终生，然而最终他葬礼上的人数，还是取决于当天天气如何。</item>
+        <item>我到现在都没有一个特别有钱的朋友，你们能不能都争点气？</item>
+        <item>干嘛老说别人为什么放弃治疗或者不要放弃治疗什么的，说得好像有得救一样。</item>
+        <item>要是你帐户里的钱不到10万，那不叫存款，只能叫余额。</item>
+        <item>问：比“穷得只剩钱了”更丧心病狂的炫耀是什么？答：“瘦得只剩胸了。”</item>
+        <item>哪有什么“选择困难症”，还不是因为穷。</item>
+        <item>抄作业不怀疑对方做得对错，是抄作业的基本道德。</item>
+        <item>我是一个很有原则的人。我的原则是，好吃的在哪里，我就在哪里！</item>
+        <item>如果，你愿意做我的小火车永远不出轨，那我就愿意做你的小美人鱼永远不劈腿。</item>
+        <item>从小我妈就教育我，废旧电池不要乱扔。尼玛我都22了，还没有人告诉我到底该扔到哪儿！</item>
+        <item>女人的心情，三分天注定，七分靠shopping。</item>
+        <item>被门夹过的核桃还能补脑吗？</item>
+        <item>问：7＋3在什么情况下等于8？答：在国庆遇到中秋的情况下！</item>
+        <item>东北只有两种季节一种是冬季，另一种就是大约在冬季。</item>
+        <item>突然想起来，我当初学习网购的初衷竟然是为了省钱。</item>
+        <item>数学课时的我，连自己不懂的是什么都不知道。</item>
+        <item>“你为什么长这么矮？”“因为我恐高。”</item>
+        <item>与律师谈恋爱是什么感受？神回复：别离婚，不然，你连内裤都分不到。</item>
+        <item>你什么时候想见我一定要提前通知我，我需要时间编理由告诉你我没空。</item>
+        <item>知道为什么长得丑的有优先发言权吗？因为人们常说：“丑话说在前面。”</item>
+        <item>我把服务员叫过来问：“这是什么？”服务员说：“这是至尊汉堡啊。”我怒道：“这么小它还有自尊？”</item>
+        <item>“说，你除了吃还会什么？”“还会饿。”</item>
+        <item>“就算女人如衣服,姐也是你穿不起的牌子。”“就算再贵的牌子,试穿也是不要钱的！”</item>
+        <item>经过多年临床分析，女人在床上说的最多的一句话，就是：你压我头发了。</item>
+        <item>你若安好，便是晴天，按这天气看来，你应该是挂了。</item>
+        <item>减肥没有那么容易，每块肉有它的脾气。</item>
+        <item>我空有一身泡妞的本事，可惜自己是个妞。</item>
+        <item>如果你认为吃是我人生的全部，那就错了，还有睡！</item>
+        <item>每当打扫卫生时，学校会说“学校是你家”；可当你一迟到，学校会说“你当学校是你家呢”。</item>
+        <item>世界上最遥远的距离不是生与死，而是马上考试了，别人在复习，自己却在预习。</item>
+        <item>别觉得你被世界抛弃了，世界根本就没空搭理你。</item>
+        <item>思想可以肮脏，生活必须健康。因为只有强壮的体魄才能支撑起一个龌龊的灵魂。</item>
+        <item>有些事不是努力就可以的，五十块的人民币设计得再好看，也没有一百块招人喜欢。</item>
+        <item>把傻逼换成傻瓜，一切都暧昧起来。</item>
+        <item>温馨提示：近来天气雷阵雨频繁，请各位情侣尽量少发誓，等风头过了再说。</item>
+        <item>问：当初父母为了阻止你早恋，都用了什么丧尽天良的办法？答：给了我这张脸。</item>
+        <item>朋友买了块户外手表，质量很赞，从悬崖落下去都没坏，就是人死了。</item>
+        <item>机会是给有准备的人的，但有准备的人太多了，机会决定摇号。</item>
+        <item>女人只分两种：勤快点的逛街，懒一点的逛淘宝。</item>
+        <item>一白遮百丑，一胖毁所有。我知道我已经很丑了，但是为什么还会要失去所有。</item>
+        <item>如果彼此都愿为对方妥协，世上就没有合不合适这一说。</item>
+        <item>圆规为什么可以画圆？因为脚在走，心不变。你为什么不能圆梦？因为心不定，脚不动。</item>
+        <item>有些人明明就是情商低，却非说自己是心直口快。</item>
+        <item>I do not mean to hurt you. It is only business. 神翻译：我不是存心伤害你，只是逼着你死。</item>
+        <item>因为失望过太多次，遇事干脆直接往最坏的地方想：他不回我电话，不一定就是不爱我了，说不定是死了。</item>
+        <item>女孩子如果对自己长相不满意，可以考虑将男朋友弄瞎。</item>
+        <item>一个来自宅女的呐喊——“不要叫我宅女，请叫我居里夫人！”</item>
+        <item>哥守了21年的处男之身，终于在前天的晚上.......变成22年了。</item>
+        <item>为什么要读书？举个例子,当你看到夕阳余晖,你的脑海浮现的是：“落霞与孤鹜齐飞，秋水共长天一色。”而不是：“卧槽，真好看，卧槽，好多鸟，真他妈太好看了！”</item>
+        <item>我来到这世界上，就从没打算活着回去过。</item>
+        <item>贱人永远都是贱人，就算经济危机了，你也贵不了。</item>
+        <item>平时骂你就算了，非要等我打你，才知道我文武双全。</item>
+        <item>面子是别人给的，脸是自己丢的。</item>
+        <item>她可传统了，二十四岁还没谈过男朋友。传统的姑娘在十六岁都当娘了好吗。</item>
+        <item>我这人不太懂音乐，所以时而不靠谱，时而不着调。</item>
+        <item>曾想成为一个问题少年，不料却循规蹈矩地活了这么多年。</item>
+        <item>没有谁瞧不起你，因为别人根本就没有瞧你，大家都很忙的。</item>
+        <item>我终究没能飙得过那辆宝马，只能眼看着它在夕阳中绝尘而去，不是我的引擎不好，而是我的车链子掉了。</item>
+        <item>去了医院才知道，人比号容易挂。</item>
+        <item>不是我们总赖床，只是实在心疼这点住宿费啊，要不都浪费了。</item>
+        <item>我是天使，回不去天堂是因为体重的原因。</item>
+        <item>我是胖人，不是粗人。</item>
+        <item>没人牵手，我就揣兜。</item>
+        <item>“你临死的遗言是什么？” “能不能换个医生试试,我总感觉我能活。”</item>
+        <item>下雨了，别人在等人送伞，我在等雨停。</item>
+        <item>依稀记得当年中国队进世界杯，学校放假看球，结果看了两场就正常上课了。</item>
+        <item>如果蚊子听懂人话，你最想跟它说什么？“吸我血可以，但是不要整天在我耳边逼逼。”</item>
+        <item>优秀的人，不是不合群，而是他们合群的人里面没有你。</item>
+        <item>学生时代，暗恋一个人是怎样一种体验？连作业本叠在一起都觉得幸福！</item>
+        <item>历史老师：你为什么交白卷？ 学生：我怕篡改历史。</item>
+        <item>世界是属于80后的，也是属于90后的，但最终是属于脸皮厚的。</item>
+        <item>问：“为什么有钱有权的都移民了”答：“贫贱不能移！”</item>
+        <item>就剩下二百块钱了，我躺床上想了一天，这二百块钱怎么才能坚持花到发工资，现在好了，不用想了！我特么把钱丢了！</item>
+        <item>千万不要挑战我的底线，不然我又得修改我的底线了。</item>
+        <item>老板问我“我不发工资你还来上班吗？” 我回“我不来上班你还发我工资吗？”</item>
+        <item>“你和你女票真甜蜜，上街都是手牵手。”“我怕手一松，她就会去买东西。”</item>
+        <item>据说迪拜乞丐月入47万，谁愿意跟我一起，我带着你，你带着碗，我负责哭，你负责喊，我们在迪拜盆满钵满。</item>
+        <item>你相信男女之间存在纯洁的友谊吗？别傻了，现在男人和男人之间都没纯洁的友谊了！</item>
+        <item>我原来也是靠脸吃饭的，直到后来差点饿死了，我就打消了这个念头。</item>
+        <item>有钱的帅的，是男神，有钱的不帅的，是老公，没钱但是帅的，是蓝颜，你嘛，对不起，你只是个好人。</item>
+        <item>“可以做朋友吗？”是一段故事的开始，“还可以做朋友吗？”是一段故事的结束，这就是人生！</item>
+        <item>近年来，我获得了不少的成功，主要分为三类：下载成功、登陆成功、支付成功，也明白了自己最大的不足：余额不足。</item>
+        <item>小学生：放学给爷等着！初高生：给爹记住了！大学生：吓死宝宝了！</item>
+        <item>如果我丢了你会找我么？——当然找啦,谁家一百来斤肉丢了不找！</item>
+        <item>为什么爱笑的人运气都不会太差？因为运气太差的根本笑不出来！</item>
+        <item>有些爱人你忘记了，可输入法还记得。</item>
+        <item>治理雾霾的步骤：发现问题，解决问题，发现解决不了问题。</item>
+        <item>今天有人说我丑，我当场就哭了，心疼他年纪轻轻就瞎了。</item>
+        <item>有位非常漂亮的女同事，有天起晚了没有时间化妆便急忙冲到公司。结果那天她被记旷工了。</item>
+        <item>你病，或者不病倒，老板就在那里，不悲不喜； 你休，或者不休假，工作就在那里，不来不去； 你拼，或者不拼命，工资就在那里，不增不减； 你辞，或者不辞职，地球还是会转，不歇不停。</item>
+        <item>才知道，朋友就像人民币，有真、也有假，可惜我不是验钞机。</item>
+        <item>感谢10086，只有10086会立刻回复我信息，只有10086给我打完电话之后还会意犹未尽的给我发消息，除了10086，还有TM谁在乎我？</item>
+        <item>还是奥巴马牛，出门总带着克林顿的老婆。</item>
+        <item>我们总是有做不完的工作，吐不完的怨气，减不完的肥，草不完的大爷，骂不完的SB，坑不完的爹，这就是生活。</item>
+        <item>我在玩手机，一想到下星期的期末考，我不由自主的扇了自己一耳光，玩个手机都TM不专心。</item>
+        <item>天赋决定人的上限，努力决定人的下限。</item>
+        <item>懒居然可以战胜饥饿，但还是输给了尿急！</item>
+        <item>我怎么敢倒下，我身后空无一人。</item>
+        <item>你能无底线的原谅谁，谁就能无底线的伤害你。</item>
+        <item>在聚会里对朋友说“你最近变瘦了”和“你是不是成功了”，问你为什么的是直的，神色有变不敢回应的是弯的。</item>
+        <item>好多人姓王，有的是王八蛋的王，有的是王子的王。</item>
+        <item>第一次听小苹果的时候，这尼玛是儿歌三百首吧，第二次听，啥破玩意！第三次，这种东西也能火起来？第四次，你是我的小呀小苹果......</item>
+        <item>知道为什么自古红颜多薄命吗？因为根本没人注意丑逼活了多久。</item>
+        <item>现在的年轻人，一有点事就吵吵吵，为什么不能坐下来心平气和的互相砍两刀呢？</item>
+    </string-array>
+
+    <string name="im_card_name_cancel">取消</string>
+    <string name="im_card_name_save">保存</string>
+    <string name="im_notification_content">条新消息</string>
+    <string name="im_card_first_item_tip">这已是该主题第一个沟通卡</string>
+    <string name="im_card_last_item_tip">这已是该主题最后一个沟通卡</string>
+    <string name="im_card_first_item_tip2">请先给该沟通卡命名，才能跳阅到上一个同主题的沟通卡</string>
+    <string name="im_card_last_item_tip2">请先给该沟通卡命名，才能跳阅到下一个同主题的沟通卡</string>
+    <string name="im_card_tail_remark_hint">输入文字...</string>
+    <string name="im_card_theme_default_name">未命名沟通</string>
+    <string name="im_card_remark_btn">备注</string>
+    <string name="im_theme_title">沟通主题</string>
+    <string name="im_them_empty_text">暂无沟通主题</string>
+    <string name="im_them_empty_tip_text">命名沟通卡即可创建主题</string>
+    <string name="im_card_dialog_edit_title">编辑聊天（卡片）主题</string>
+    <string name="im_card_dialog_edit_hint_text">仅对自己可见,不会发送给对方</string>
+    <string name="im_card_no_remark">暂无备注</string>
+    <string name="hx_str_im_invalid_phone_number">手机号不正确</string>
+    <string name="hx_voice_tip_normal">按住 说话</string>
+    <string name="hx_voice_tip_press_out">松开取消发送</string>
+    <string name="hx_voice_tip_press">松开即发送，滑出圈外即取消</string>
+    <string name="hx_voice_tip_less_second">录音不到一秒</string>
+    <string name="hx_voice_tip_error">录音有误</string>
+    <string name="hx_voice_tip_error2">请打开录音权限</string>
+    <string name="hx_voice_tip_cancel">取消录音</string>
+    <string name="hx_str_full_call_background_sound">背景音</string>
+    <string name="im_card_calender_invalid">无可用的日历提醒</string>
+    <string name="im_card_alarm_invalid">无可用的闹钟提醒</string>
+    <string name="voice_time_tip">%1$ds</string>
+    <string name="im_want_user_install_huxin_app">请安装呼信！</string>
+    <string name="im_process_contact_title_tail">的名片</string>
+    <string name="im_bizcard_title">保存名片提示</string>
+    <string name="im_bizcard_msg">接收到%1$s的名片,是否保存TA的名片?</string>
+    <string name="im_bizcard_msg2">%1$s发起交换名片的请求,是否同意交换名片</string>
+    <string name="hx_custom_dialog_save">保存</string>
+    <string name="hx_custom_dialog_save_and_exit">保存并退出</string>
+    <string name="hx_custom_dialog_view">查看</string>
+    <string name="hx_send_card">我用【呼信】给你发送了一张名片：</string>
+    <string name="hx_custom_dialog_switch_title">交换名片提示</string>
+    <string name="hx_custom_dialog_switch">交换</string>
+    <string name="hx_custom_dialog_cancel">取消</string>
+    <string name="hx_hook_edit_them_tip">输入主题</string>
+    <string name="hx_hook_edit_them_first_tip">刚才聊的事,要不要记一下</string>
+    <string name="hx_hook_remark_tip">给本次通话做个小笔记</string>
+    <string name="label_ok">同意</string>
+    <string name="label_cancel">取消</string>
+    <string name="permission_title_rationale">申请权限</string>
+    <string name="permission_read_audio_rationale">是否开启录音权限</string>
+    <string name="hx_hook_save_remark_tip">已保存到“沟通”页</string>
+    <string name="hx_hook_theme_text_more_tip">主题只能输入这么多字啦</string>
+    <string name="hx_hook_ring_status">响铃</string>
+    <string name="hx_hook_call_status">通话</string>
+    <string name="hx_im_card_cope_tip">已复制</string>
+    <string name="hx_im_pop_contact_information">查看联系人</string>
+    <string name="hx_im_pop_theme">沟通主题</string>
+    <string name="hx_im_chat_more_photo">相册</string>
+    <string name="hx_im_chat_more_camera">拍摄</string>
+    <string name="hx_im_chat_more_location">位置</string>
+    <string name="hx_im_chat_more_file">文件</string>
+    <string name="hx_im_chat_more_bizcard">分享名片</string>
+    <string name="hx_im_card_tail_save">保存</string>
+    <string name="hx_im_card_tail_cancel">取消</string>
+    <string name="hx_personal_show_guide_skip">跳过</string>
+    <string name="hx_after_call_missed_call_prefix">未接来电</string>
+    <string name="hx_im_text_copy">复制</string>
+    <string name="hx_im_text_delete">删除</string>
+    <string name="hx_im_text_forward">转发</string>
+    <string name="hx_im_text_collect">收藏</string>
+    <string name="hx_im_text_remind">提醒</string>
+    <string name="hx_im_card_subject_start_time">开始时间：</string>
+
+    <string name="hx_im_send_img_count" formatted="false">发送(%d/%d)</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hx_send_card_text">发送</string>
+    <string name="hx_save_card_text">保存</string>
+    <string name="hx_edit_card_text">编辑</string>
+    <string name="hx_swap_greeting_hind">打个招呼吧,让对方想起你(例如：我是某某某介绍的)</string>
+    <string name="hx_swap_scene_text">相识场景</string>
+    <string name="hx_swap_around_text">相识周边：</string>
+    <string name="hx_swap_camera_text">拍照</string>
+    <string name="hx_swap_photo_text">相册</string>
+    <string name="hx_swap_location_title">相识地点：</string>
+    <string name="hx_swap_time_title">相识时间：</string>
+    <string name="swap_card_details_title">名片详情</string>
+    <array name="user_info">
+        <item>姓名：</item>
+        <item>职位：</item>
+        <item>公司：</item>
+        <item>手机：</item>
+        <item>邮箱：</item>
+        <item>生日：</item>
+        <!--<item>地址：</item>-->
+    </array>
+    <array name="user_info_check">
+        <item>手机：</item>
+        <item>邮箱：</item>
+        <item>生日：</item>
+        <!--<item>地址：</item>-->
+    </array>
+    <string name="hx_swap_greet">我是某某某介绍的</string>
+    <string name="hx_swap_card_check">查看名片</string>
+    <string name="hx_swap_card_detail">名片详情</string>
+    <string name="show_more_user_info">更多资料</string>
+    <string name="hide_more_user_info">收起更多</string>
+    <string name="card_location_unknown">未知</string>
+    <string name="hx_card_more_title">回个名片给ta吧，让彼此更加了解。</string>
+    <string name="hx_card_more_has_message"><![CDATA[查看详情>>]]></string>
+    <string name="hx_im_card_remark_to_theme_tip">保存成功。请继续命名沟通主题，以便追溯备忘记录</string>
+    <string name="select_map_text">选择</string>
+    <string name="save_card_fail">图片上传失败，保存失败</string>
+    <string name="hx_im_card_sheet_new_remark">新建备注</string>
+    <string name="hx_im_card_sheet_update_remark">修改备注</string>
+    <string name="hx_im_card_sheet_tip">提醒</string>
+    <string name="hx_im_card_sheet_schedule">日程</string>
+    <string name="hx_im_card_tail_no_remark">暂无备注内容</string>
+    <string name="hx_im_card_tail_remark">备注内容</string>
+    <string name="hx_im_card_tail_theme_hint">主题</string>
+    <string name="hx_im_card_preview_theme_default">未命名主题</string>
+    <string name="swap_reply_card_title">回名片</string>
+    <string name="hx_im_remark_dialog_tip">%1$s 邀请你对 %2$s 沟通卡进行快捷备注</string>
+    <string name="hx_im_remark_preview_dialog_tip">来自 %1$s 的快捷备注请求已进行了%2$s</string>
+    <string name="hx_im_remark_preview_dialog_tip2">当前沟通卡备注信息已发送给对方进行快捷备注</string>
+    <string name="hx_im_remark_preview_dialog_tip3">当前沟通卡备注信息将发送给对方进行快捷备注</string>
+    <string name="im_card_handler_remake_fail">合并成功</string>
+    <string name="hx_im_msg_remark_tip">备注请求</string>
+    <string name="hx_im_msg_remark_tip2">已备注</string>
+    <string name="hx_im_msg_remark_tip3">合并成功</string>
+    <string name="hx_im_msg_remark_tip4">替换成功</string>
+    <string name="hx_im_msg_remark_tip5">陌生人</string>
+    <string name="hx_im_msg_remark_merge">合并</string>
+    <string name="hx_im_msg_remark_replace">替换</string>
+    <string name="hx_im_msg_remark_tip6">你还未备注哦，赶紧备注试试吧~</string>
+    <string name="hx_im_card_sheet_send_remark">发送备注</string>
+    <string name="hx_im_remark_ignore">忽略</string>
+    <string name="hx_send_remake">我用【呼信】给你发送了备注请求：</string>
+    <string name="hx_send_not_huxin_user_tip">我在使用通话中也能发消息的呼信，邀请你成为我的呼信好友，快来试试吧。http://down.ihuxin.net/app</string>
+    <string name="hx_im_pop_contact_add">新建联系人</string>
+    <string name="im_card_not_to_save">你有沟通卡还未保存哦!</string>
+    <string name="im_quit_edit_remark_tip">沟通卡在备注中，是否退出并保存备注？</string>
+    <string name="hx_im_card_tools_tip">点这里可以对本次沟通进行备注和发送备注哦~</string>
+    <string name="hx_im_card_remark_update_tip">修改备注点这里~</string>
+    <string name="hx_im_card_theme_index">%1$d/%2$d</string>
+    <string name="hx_im_msg_sms_tip">当前无网络或网络不稳定，是否使用短信方式发送</string>
+    <string name="hx_im_msg_sms_title">提醒</string>
+    <string name="hx_im_msg_sms_send">短信发送</string>
+    <string name="hx_purse_title">我的钱包</string>
+    <string name="hx_toolbar_preview">预览</string>
+    <string name="hx_purse_withdrawal_title">提现</string>
+    <string name="hx_purse_authorize_weixin_title">微信提现</string>
+    <string name="hx_purse_authorize_zhifubao_title">支付宝提现</string>
+    <string name="hx_purse_weixin_hind">授权并提现您的微信钱包</string>
+    <string name="hx_purse_zhifubao_hind">授权并提现到您的支付宝余额</string>
+    <string name="hx_purse_authorize_zhifubao_btn">支付宝授权</string>
+    <string name="hx_purse_authorize_weixin_btn">微信授权</string>
+    <string name="hx_purse_weixin_name">微信账号昵称</string>
+    <string name="hx_purse_zhifubao_name">支付宝账号昵称</string>
+    <string name="purse_delails_title">收支明细</string>
+    <string name="hx_loading_text">正在加载...</string>
+    <string name="hx_submiting_text">正在提交...</string>
+    <string name="hx_hubi_text">" 呼币"</string>
+    <string name="hx_balance_text">当前余额（呼币）</string>
+    <string name="hx_purse_withdrawal_btn">提现</string>
+    <string name="hx_purse_more_btn1">代言活动</string>
+    <string name="hx_purse_more_btn2">更多收入</string>
+    <string name="hx_purse_more_btn3">收支明细</string>
+    <string name="hx_purse_more_btn4">常见问题</string>
+    <string name="hx_purse_authorize_success">授权成功</string>
+    <string name="hx_purse_authorize_next">即将自动跳转到下一步</string>
+    <string name="hx_purse_authorize_next_btn">下一步</string>
+    <string name="hx_purse_yuan">元</string>
+    <string name="hx_purse_withdrawal_username">账户名称</string>
+    <string name="hx_purse_withdrawal_userinfo">收款人信息</string>
+    <string name="hx_purse_withdrawal_money">提现金额</string>
+    <string name="hx_purse_withdrawal_validation_code">输入动态密码</string>
+    <string name="hx_purse_code_hind">输入密码</string>
+    <string name="hx_withdrawal_btn">确认提现</string>
+    <string name="hx_purse_withdrawal_balance">账户余额</string>
+    <string name="hx_hubi_bili">1000呼币=1元</string>
+    <string name="hx_purse_withdrawal_hind">请选择提现金额</string>
+    <string name="hx_purse_withdrawal_text">消耗%1$d呼币</string>
+    <string name="hx_purse_get_pwd">获取动态密码</string>
+    <string name="hx_purse_transfer_into_account_mode">到账方式</string>
+    <string name="hx_loaded">加载完成</string>
+    <string name="hx_loading">加载中</string>
+    <string name="hx_load_end">已到最后一条</string>
+    <string name="hx_zhifubao">支付宝</string>
+    <string name="hx_weixin">微信</string>
+    <string name="hx_purse_dialog_title">免费提现</string>
+    <string name="hx_purse_dialog_message">呼信推广期间将为你垫付%s收取的手续费</string>
+    <string name="hx_network_data_error">数据返回错误</string>
+    <string name="hx_purse_withdral_succed">提现申请已提交,预计2分钟内到账，请耐心等待。</string>
+    <string name="hx_purse_authorize_weixin_tip">请先安装微信客户端</string>
+    <string name="hx_purse_authorize_zhifubao_tip">请先安装支付宝客户端</string>
+    <string name="hx_purse_authorize_zhifubao_tip1">您的支付宝尚未实名认证，认证后即可正常提现到支付宝，或者微信关注\"呼信服务号\"进行微信提现操作</string>
+    <string name="hx_purse_authorize_zhifubao_tip2">支付宝实名认证</string>
+    <string name="hx_purse_authorize_failure">授权失败</string>
+    <string name="hx_purse_authorize_tip1">请重新授权</string>
+    <string name="hx_purse_authorize_tip2">返回授权</string>
+    <string name="hx_purse_authorize_weixin_tip_title">关注呼信服务号</string>
+    <string name="hx_purse_authorize_weixin_tip_msg">微信搜索关注\"呼信服务号\"后继续，即可正常使用提现功能</string>
+    <string name="hx_purse_authorize_weixin_openweixin">前往微信</string>
+    <string name="hx_purse_withdraw_tip1">余额不足</string>
+    <string name="hx_purse_withdraw_tip2">最低提现额度为1元</string>
+    <string name="hx_purse_withdraw_getcode_count">今日还可获取%d次动态密码</string>
+    <string name="hx_purse_withdraw_getcode_tip">今日获取动态密码次数达到上限，0点后会重置次数</string>
+    <string name="hx_temporary_balance_text">完成代言任务后自动转入余额</string>
+    <string name="hx_purse_detail_empty_title">暂无记录</string>
+    <string name="hx_purse_detail_empty_title2">暂无收益</string>
+    <string name="hx_purse_detail_empty_msg">想要赚更多钱去赚钱任务逛逛吧~</string>
+    <string name="hx_purse_blance_rmb">折算金额（元）</string>
+    <string name="hx_withdraw_money">提现金额（元）</string>
+    <string name="purse_withdrawal_money_hint">1元起提现</string>
+    <string name="hx_withdraw_all">全部提现</string>
+    <string name="purse_withdrawal_to">提现到</string>
+    <string name="hx_purse_withdraw_btn_text">立即提现</string>
+    <string name="hx_share_invite_code_title">我的邀请码</string>
+    <string name="hx_share_invite_weixin_friend">朋友圈</string>
+    <string name="hx_share_invite_qq">QQ</string>
+    <string name="hx_share_invite_qzone">QQ空间</string>
+    <string name="hx_share_invite_weixin">微信</string>
+    <string name="hx_share_invite_sms">短信</string>
+    <string name="hx_share_invite_qr_code">面对面</string>
+    <string name="hx_share_invite_download_url">http://h5.ihuxin.net/tg/%1$s/%2$s</string>
+    <string name="hx_share_invite_sms_content">【每月仅需24.9】不限通话时长，高品质电话任意打，快来加入吧>>猛戳 </string>
+    <string name="hx_share_invite_share_title">上网用wifi，通话用呼信</string>
+    <string name="hx_share_invite_qq_share_content">赚呼币输入好友手机号码，双方即可获取现金奖励</string>
+    <string name="hx_share_invite_share_content">无限时长全国任意打，每月仅需24.9元哟~</string>
+    <string name="hx_share_invite_icon">http://file.ihuxin.net/logo20170623.jpg</string>
+    <string name="hx_share_invite_weixin_share_content">在‘赚呼币’输入好友手机号，双方即可获取邀请奖励，立即下载呼信APP，轻轻松松领钱花～～～</string>
+    <string name="hx_share_rule_title">活动规则</string>
+    <string name="hx_share_rule_content" formatted="false">
+        【邀请奖励】\n\n
+        \u3000\u3000邀请好友注册呼信APP，成功验证邀请码后，双方均可获得200呼币邀请奖励。邀请码为邀请人的登录账号（手机号码）。\n\n
+【返利奖励】\n\n
+         \u3000\u3000用户填写你的邀请码（手机号码），即为你的下级用户，在呼信APP做任务领取到的奖励，你可获得其收益20%的返利奖励；用户填写你下级的邀请码，即为你的下下级用户，在呼信APP做任务领取到的奖励，你还可获得其收益10%的返利奖励。\n
+ \u3000\u3000注：邀请奖励和返利奖励全部由本公司承担，不会扣除下级和下下级用户的任务奖励，奖励将会在两小时内发放到钱包，可进入收益页面，查看最新收益明细。\n\n
+【邀请方式】\n\n
+       \u3000\u3000可通过发短信、面对面扫二维码、分享给微信和QQ好友、分享到朋友圈和朋友圈等多种方式邀请好友注册呼信APP，邀请码为用户的登录账号（手机号码），验证成功，双方均可获取200呼币的奖励。\n\n
+【注意事项】\n\n
+\u3000\u30001、用户注册后只有一次填写邀请码，领取的机会，相同的手机号码视为同一用户。\n
+\u3000\u30002、如有发现恶意作弊行为，将视情节严重的程度，或处于不予发放奖励、冻结账户等惩罚。\n
+\u3000\u30003、如有任何疑问，欢迎咨询呼信客服。\n\n\
+【联系方式】\n\n
+QQ：2063748016（呼信客服）\n
+微信：huxinkefu（呼信客服～依依）\n
+座机：0755-26606921（广东深圳）</string>
+    <string name="hx_purse_withdrawal_count">可提现%1$s元</string>
+    <string name="hx_purse_ratio">(%1$d呼币=1元)</string>
+    <string name="hx_purse_call_count">或可通话%1$s分钟</string>
+    <string name="hx_purse_call_count1">可通话%1$s分钟</string>
+    <string name="hx_purse_call_ratio">(%1$d呼币/分钟)</string>
+    <string name="hx_purse_total">累计总收益</string>
+    <string name="hx_purse_hubi">呼币</string>
+    <string name="hx_purse_money">马上赚钱</string>
+    <string name="hx_purse_earning_temp_text">代言临时收益(呼币)</string>
+    <string name="hx_purse_earning_text">代言累计收益</string>
+    <string name="hx_purse_earning_text2">下载累计收益</string>
+    <string name="hx_purse_earning_text3">邀请累计收益</string>
+    <string name="hx_purse_earning_text4">推广收益</string>
+    <string name="hx_purse_tip">温馨提示</string>
+    <string name="hx_purse_tip_msg">程序猿正在拼命赶工，敬请期待！( ˘•ω•˘ )ง</string>
+    <string name="hx_purse_details_text">收支细明</string>
+    <string name="hx_purse_details_no">暂无收益</string>
+    <string name="hx_purse_details_total">推广累计总收益(元)</string>
+    <string name="hx_purse_details_total2">下级推广收益(元)</string>
+    <string name="hx_purse_details_total3">下下级推广收益(元)</string>
+    <string name="hx_purse_details_people">人</string>
+    <string name="hx_purse_details_count">邀请累计人数</string>
+    <string name="hx_purse_author_loading">正在获取授权信息</string>
+    <string name="hx_purse_alipay_author_tip">支付宝未授权</string>
+    <string name="hx_purse_weixin_author_tip">微信未授权</string>
+    <string name="hx_weixin_login">微信登录</string>
+    <string name="hx_has_to_follow_tip">关注之后才能领到推广收益哦~</string>
+    <string name="hx_purse_follow_go_weiwin">前往微信</string>
+    <string name="hx_purse_follow_already">已关注</string>
+    <string name="hx_purse_follow_step">前往微信,搜索\"呼信服务号\"</string>
+    <string name="hx_purse_follow_step2">点击【更多】后,选择\"呼信服务号\"并关注</string>
+    <string name="hx_purse_follow_step3">回到呼信,点击【已关注】完成绑定</string>
+    <string name="hx_purse_no_select">请选择提现方式</string>
+    <string name="hx_purse_huxin_weixin">呼信服务号</string>
+    <string name="hx_purse_copy_success">成功复制</string>
+
+    <string name="hx_rep_share_text1">我已获得</string>
+    <string name="hx_rep_share_text2">呼币</string>
+    <string name="hx_rep_share_text3">快来和我一起为商家代言，赚取呼币吧！</string>
+
+    <string name="hx_invite_share_text1">填写我的邀请码</string>
+    <string name="hx_invite_share_text2">立即获得</string>
+    <string name="hx_invite_share_text3">呼币</string>
+    <string name="hx_invite_share_text4">长按图片识别图中二维码，下载呼信APP，领取邀请奖励</string>
+
+    <string name="hx_voice_tip_normal2">松开 取消</string>
+    <string name="hx_voice_tip_normal3">松开 结束</string>
+    <string name="hx_recording_tip">手指上滑，取消发送</string>
+    <string name="hx_recording_tip2">松开手指，取消发送</string>
+    <string name="hx_recording_tip3">手指上滑，取消发送</string>
+    <string name="hx_recording_tip4">说话时间超长</string>
+    <string name="hx_recording_tip5">说话时间太短</string>
+    <string name="hx_voip_calling">正在呼叫…</string>
+    <string name="hx_voip_remain_minutes">剩余免费时长：%1$d分钟</string>
+    <string name="hx_voip_normal">普通电话</string>
+    <string name="hx_voip_back_to_wait">返回等待</string>
+    <string name="hx_voip_callbalk_tips">（您可能会接到一个未知来电，请放心接听）</string>
+    <string name="hx_voip_hubi_not_enough">呼币已不够</string>
+    <string name="hx_voip_change_to_normal">你的呼币已不够本次通话，将转为拨打普通电话</string>
+    <string name="hx_voip_text">我知道了</string>
+    <string name="hx_purse_call_time">%1$d分钟</string>
+    <string name="hx_voip_call_center_name">呼信专线</string>
+    <string name="hx_voip_call_center_name_fengsheng">风声专线</string>
+    <string name="hx_voip_call_center_name_old">呼信电话转接中心</string>
+    <string name="hx_voip_timeout_tip">呼叫已超时，请稍后重试！</string>
+    <string name="hx_voip_callback_failed">线路繁忙，请稍候再试！</string>
+    <string name="hx_voip_getconfig_failed">获取配置失败！</string>
+    <string name="hx_voip_free_call">免费电话</string>
+    <string name="hx_voip_normal_call">普通电话</string>
+    <string name="hx_bind_wechat">绑定微信</string>
+    <string name="hx_bind_wechat_already">已绑定%1$s</string>
+    <string name="hx_bind_wechat_tips1">邀请好友成功充值后，自动以微信红包\n奖励方式发送给您，不要取消关注哦~</string>
+    <string name="hx_bind_wechat_yet">已绑定</string>
+    <string name="hx_bind_wechat_tips2">绑定微信并关注呼信服务号，用于接收微信红包</string>
+    <string name="hx_bind_wechat_now">立即绑定</string>
+    <string name="hx_bind_wechat_not_install">请安装微信客户端</string>
+    <string name="hx_purse_not_bind_wechat">接收微信红包</string>
+    <string name="hx_purse_bind_wechat_yet">已绑定</string>
+    <string name="hx_purse_my_extend">我的推广</string>
+    <string name="hx_purse_extend_income">推广收益</string>
+    <string name="hx_wechat_follow_phone">已绑定%1$s</string>
+    <string name="hx_wechat_follow_tip">邀请好友成功充值后，自动以微信红包奖励方式发送给你\n不要取消关注哦~</string>
+    <string name="hx_share_qrcode_tips1">快来和我一起使用呼信打电话吧~</string>
+    <string name="hx_share_qrcode_tips2">扫码下载呼信APP，打电话更划算</string>
+    <string name="hx_toextend_guide_title">推广攻略</string>
+    <string name="hx_toextend_guide_url">http://h5.ihuxin.net/operate/strategy</string>
+    <string name="hx_share_invite_recharge_tips1">好友充值成功 送你</string>
+    <string name="hx_share_invite_recharge_tips2">微信红包</string>
+    <string name="hx_share_invite_recharge_tips3">好友的好友充值 再送</string>
+    <string name="hx_share_invite_recharge_tips4">红包</string>
+    <string name="hx_sdk_feedback_name">帮助与反馈</string>
+    <string name="hx_sdk_feadback_service_name">呼信小助手</string>
+    <string name="hx_voip_dial_frequently_tip">正在选择最优路线，请30秒后再试！</string>
+    <string name="hx_voip_number_error_tip">暂不支持此类号码拨打，将使用系统拨号！</string>
+    <string name="hx_voip_no_charge_tip">您尚未充值，点击确认后将自动转为普通电话拨打!</string>
+    <string name="hx_voip_relogin_tip">你的帐号可能在其它设备上登录过，点击继续拨打将自动登录！</string>
+    <string name="hx_voip_callbalk_tips2">已经为您回拨，请准备接听</string>
+    <string name="hx_card_info_nothing">未填写</string>
+    <string name="hx_female">女</string>
+    <string name="hx_male">男</string>
+    <string name="hx_card_no_write_job">职务名称</string>
+    <string name="hx_card_no_write_company">公司名称</string>
+    <string name="hx_card_edit_content">编辑名片</string>
+    <string name="hx_card_sendto">发送名片</string>
+    <string name="hx_card_hello">您好，这是我的名片</string>
+    <string name="hx_dialog_send_person">发送给 %1$s</string>
+    <string name="hx_success_forward">已发送</string>
+    <string name="hx_error_forward">转发失败</string>
+    <string name="hx_swap_card_tip">打声招呼更有礼貌哦</string>
+    <string name="hx_bind_wechat_title">绑定提示</string>
+    <string name="hx_bind_wechat_content">你还未绑定微信，将无法接收红包奖励，快来绑定吧，以免错失收益~</string>
+    <string name="hx_bind_wechat_sharefirst">先分享</string>
+    <string name="hx_bind_wechat_bindfirst">去绑定</string>
+    <string name="hx_send">发送</string>
+    <string name="hx_card_swap_send_tip">向%1$s递名片</string>
+    <string name="hx_custom_dialog_exit">不保存退出</string>
+    <string name="hx_photo_picker_all_images">所有图片</string>
+    <string name="hx_photo_picker_cancel">取消</string>
+    <string name="hx_photo_picker_preview">预览</string>
+    <string name="hx_photo_picker_original">原图</string>
+    <string name="hx_photo_picker_send">发送</string>
+    <string name="hx_im_check_original_img">查看原图</string>
+    <string name="hx_permissions_call_tip">请授予电话权限</string>
+    <array name="exchange_money">
+        <item>5</item>
+        <item>10</item>
+        <item>50</item>
+        <item>100</item>
+        <item>150</item>
+        <item>200</item>
+    </array>
+
+
+    <!-- 收藏 -->
+    <string name="collect_del_success">已删除</string>
+    <string name="collect_del_fail">删除失败</string>
+    <string name="collect_voice_second">%02d\"</string>
+    <string name="hx_im_turn_text_tip">转文字失败</string>
+    <string name="hx_im_turn_text_fail_default_tip">[转换失败，请大声点哦]</string>
+
+    <!-- 驾驶模式-->
+    <string name="hx_driving_mode_title">驾驶模式</string>
+    <string name="hx_meeting_mode_off">关闭驾驶模式</string>
+    <string name="hx_meeting_mode_on">开启驾驶模式</string>
+    <string name="hx_driving_mode_tip">开启后自动朗读和播放语音</string>
+    <string name="hx_driving_mode_dialog_tip">开启后将自动朗读和播放新收到的文字及语音消息，可下拉通知栏快捷关闭驾驶模式。</string>
+    
+    <!-- 会议模式-->
+    <string name="hx_im_pop_meeting_mode">会议模式</string>
+    <string name="hx_im_pop_close_meeting_mode">关闭会议模式</string>
+    <string name="hx_im_pop_open_meeting_mode">开启会议模式</string>
+    <string name="hx_im_pop_meeting_mode_tip">开启后新收到的语音消息将在静音状态下自动转为文字，可在右上角菜单中关闭会议模式!</string>
+    
+    <string name="hx_im_set_mode_known">知道了</string>
+    <string name="hx_im_set_mode_never_tip">不再提示</string>
+    <string name="hx_im_driving_start_tip">进入驾驶模式</string>
+    <string name="hx_im_driving_exit_tip">退出驾驶模式</string>
+</resources>

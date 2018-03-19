@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:huxin="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/hx_show_default_full">
+
+
+    <!-- 显示秀、图片、地图等等 -->
+    <FrameLayout
+        android:id="@+id/fl_call_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.youmai.hxsdk.recyclerview.CallPageRecycleView
+            android:id="@+id/rv_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone" />
+
+        <FrameLayout
+            android:id="@+id/fl_im_progress"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="30dp"
+            android:layout_marginLeft="60dp"
+            android:layout_marginRight="60dp"
+            android:background="@drawable/hx_circle_corner_white_bg"
+            android:visibility="gone" />
+
+        <FrameLayout
+            android:id="@+id/fl_im_receive_progress"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="30dp"
+            android:layout_marginLeft="60dp"
+            android:layout_marginRight="60dp"
+            android:background="@drawable/hx_circle_corner_white_bg"
+            android:visibility="gone" />
+
+        <include layout="@layout/hx_jokes_send_view"
+            android:id="@+id/ll_jokes_send_parent"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="130dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="50dp"
+            android:layout_marginLeft="50dp"
+            android:visibility="gone"/>
+
+        <include layout="@layout/hx_jokes_receive_view"
+            android:id="@+id/ll_jokes_receive_parent"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="130dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="50dp"
+            android:layout_marginLeft="50dp"
+            android:visibility="gone"/>
+
+    </FrameLayout>
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/hx_icon_full_jianbian_bg" />
+
+    <!--展示用户头像、用户名、通话状态与时间-->
+    <FrameLayout
+        android:id="@+id/fl_full_user_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="13dp"
+        android:layout_marginTop="40dp">
+
+    </FrameLayout>
+    <FrameLayout
+        android:id="@+id/third_ly"
+        android:layout_width="wrap_content"
+        android:layout_below="@id/fl_full_user_info"
+        android:layout_marginLeft="13dp"
+        android:layout_marginTop="20dp"
+        android:layout_height="wrap_content">
+
+    </FrameLayout>
+
+    <!--收起按钮-->
+    <RelativeLayout
+        android:id="@+id/rl_full_up_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:paddingLeft="12dp"
+        android:paddingRight="5dp"
+        android:paddingTop="5dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/hx_icon_full_up_hover"
+            android:textColor="@color/hx_color_white" />
+
+    </RelativeLayout>
+
+    <!--IM消息logo-->
+    <RelativeLayout
+        android:id="@+id/rl_full_jump_msg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="12dp"
+        android:layout_marginTop="43dp"
+        android:background="@drawable/hx_icon_full_message_bg"
+        android:padding="10dp"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/tv_full_msg_tip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/hx_icon_full_message"
+            android:gravity="center"
+            android:textColor="@color/hx_color_white" />
+
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/full_msg_tip"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="18dp"
+        android:layout_marginTop="43dp"
+        android:background="@drawable/hx_im_voice_unread"
+        android:visibility="invisible" />
+    
+    <include
+        android:id="@+id/full_function_parent"
+        layout="@layout/hx_full_call_view_layout" />
+
+    <include layout="@layout/hx_full_im_picture" />
+
+    <com.youmai.hxsdk.view.progressbar.RoundProgressBarWithBgProgress
+        android:id="@+id/full_progress_round_bar"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_centerInParent="true"
+        android:indeterminate="false"
+        android:progress="15"
+        huxin:progress_reach_height="2dp"
+        huxin:progress_unreach_height="2dp"
+        huxin:progress_radius="25dp"
+        huxin:progress_reach_color="@color/hxs_color_white"
+        huxin:progress_text_color="@color/hx_color_white"
+        huxin:progress_unreach_color="@color/hxs_color_white_two"
+        android:visibility="gone"/>
+
+</RelativeLayout>

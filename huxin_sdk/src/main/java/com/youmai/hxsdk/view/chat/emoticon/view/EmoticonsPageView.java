@@ -89,22 +89,6 @@ public class EmoticonsPageView extends ViewPager implements IView {
                     addBean.setTag("/hx_emo_add1");
                     list.add(addBean);
                 }
-
-                List<EmoItem> emoList = HuxinSdkManager.instance().getEmoList();
-                if (!ListUtils.isEmpty(emoList)) {
-                    for (EmoItem item : emoList) {
-                        EmoticonBean emoticonBean = new EmoticonBean();
-                        emoticonBean.setEventType(EmoticonBean.FACE_TYPE_SELF_SETTING);
-                        emoticonBean.setIconUri(AppConfig.DOWNLOAD_IMAGE + item.getFid());
-                        emoticonBean.setMsgUri("");
-                        emoticonBean.setName("");
-                        emoticonBean.setTag("/" + item.getFid());
-                        list.add(emoticonBean);
-                    }
-
-                    bean.setEmoticonList(list);
-                }
-
             }
 
             ArrayList<EmoticonBean> emoticonList = bean.getEmoticonList();

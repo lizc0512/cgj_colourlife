@@ -3,8 +3,6 @@ package com.youmai.hxsdk.db.bean;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.youmai.hxsdk.config.AppConfig;
-
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Generated;
@@ -118,10 +116,7 @@ public class HxUsers implements Parcelable {
     }
 
     public String getIconUrl() {
-        if (!iconUrl.contains("imageView2")) {
-            iconUrl = AppConfig.getVHeaderUrl(iconUrl, AppConfig.IMG_HEADER_W, AppConfig.IMG_HEADER_H);
-        }
-        return iconUrl;
+        return "";
     }
 
     public void setIconUrl(String iconUrl) {

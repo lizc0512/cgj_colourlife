@@ -35,10 +35,8 @@ import com.youmai.hxsdk.photopicker.widgets.PpTabbarView;
 import com.youmai.hxsdk.service.HuxinService;
 import com.youmai.hxsdk.utils.AppUtils;
 import com.youmai.hxsdk.utils.CompressImage;
-import com.youmai.hxsdk.utils.FloatLogoUtil;
 import com.youmai.hxsdk.utils.LogUtils;
 import com.youmai.hxsdk.utils.ToastUtil;
-import com.youmai.hxsdk.view.full.FloatViewUtil;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -393,7 +391,6 @@ public class PhotoPickerActivity extends SdkBaseActivity implements PhotoAdapter
                 startActivityForResult(cameraIntent, REQUEST_CAMERA);
 
                 setFloatView(false);
-                hideFloat();//隐藏所有视图
             } else {
                 Toast.makeText(getApplicationContext(), mContext.getString(R.string.hx_toast_19), Toast.LENGTH_SHORT).show();
             }
@@ -446,14 +443,6 @@ public class PhotoPickerActivity extends SdkBaseActivity implements PhotoAdapter
                 if (mTmpFile != null && mTmpFile.exists()) {
                     mTmpFile.delete();
                 }
-            }
-
-            boolean isUserByIM = getIntent().getBooleanExtra("is_user_by_im", false);
-            if (!isUserByIM) {
-                //start by 2016.10.13 fixme not hide floatView
-                FloatLogoUtil.instance().hideFloat();
-                FloatViewUtil.instance().showFloatView(this);
-                //end by 2016.10.13 fixme not hide floatView
             }
             if (isUserCamera) {
                 //只用相机的情况
@@ -529,22 +518,4 @@ public class PhotoPickerActivity extends SdkBaseActivity implements PhotoAdapter
         return folderMap;
     }
 
-    private void hideFloat() {
-        switch (HuxinSdkManager.instance().getFloatType()) {
-            case HuxinService.MODEL_TYPE_FULL: {
-                FloatViewUtil.instance().hideFloatView();
-                FloatLogoUtil.instance().showFloat(mContext, HuxinService.MODEL_TYPE_FULL, true);
-                break;
-            }
-            case HuxinService.MODEL_TYPE_Q: {
-                FloatViewUtil.instance().hideFloatView();
-                break;
-            }
-            case HuxinService.MODEL_TYPE_HALF: {
-                FloatViewUtil.instance().hideFloatView();
-                FloatLogoUtil.instance().showFloat(mContext, HuxinService.MODEL_TYPE_HALF, true);
-                break;
-            }
-        }
-    }
 }

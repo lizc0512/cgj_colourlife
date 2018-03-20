@@ -635,49 +635,6 @@ public class IMMsgManager {
         if (isReadMan) {
             String who = HuxinSdkManager.instance().getContactName(mCurrReadPhone) + "发来消息";
 
-            HuxinSdkManager.instance().textToVoice(who, new IPostListener() {
-                @Override
-                public void httpReqResult(String response) {
-                    XFTextToVoiceEntity data = GsonUtil.parse(response, XFTextToVoiceEntity.class);
-                    if (data != null) {
-                        String s = data.getS();
-                        if (TextUtils.equals(s, "1")) {
-                            //转语音成功
-                            String fid = data.getD().getFid();
-                            final String voiceUrl = AppConfig.getDownloadHost() + fid;//七牛路径
-                            IMMsgManager.getInstance().downloadAudio(mContext, null, voiceUrl, new DownloadVoiceListener() {
-                                @Override
-                                public void success(String path) {
-                                    stopTextVoice();
-                                    //播放声音
-                                    new AsyncTask<Void, Void, Void>() {
-
-                                        @Override
-                                        protected Void doInBackground(Void... voids) {
-                                            DrivingModeMediaManager.playSound(voiceUrl, new MediaPlayer.OnCompletionListener() {
-                                                @Override
-                                                public void onCompletion(MediaPlayer mp) {
-                                                    processDMMsg(cacheMsgBean);
-                                                }
-                                            });
-                                            return null;
-                                        }
-                                    }.execute();
-                                }
-
-                                @Override
-                                public void error(final String msg) {
-                                    processDMMsg(cacheMsgBean);
-                                }
-                            });
-                        } else {
-                            processDMMsg(cacheMsgBean);
-                        }
-                    } else {
-                        processDMMsg(cacheMsgBean);
-                    }
-                }
-            });
         }
     }
 
@@ -743,36 +700,6 @@ public class IMMsgManager {
         }
         if (TextUtils.isEmpty(voiceId)) {
             //cacheMsgBean.setSend_flag(-1);
-            HuxinSdkManager.instance().textToVoice(text, new IPostListener() {
-                @Override
-                public void httpReqResult(String response) {
-                    //cacheMsgBean.setSend_flag(0);
-                    XFTextToVoiceEntity data = GsonUtil.parse(response, XFTextToVoiceEntity.class);
-                    if (data != null) {
-                        String s = data.getS();
-                        if (TextUtils.equals(s, "1")) {
-                            //转语音成功
-                            String fid = data.getD().getFid();
-                            if (cacheMsgBean.getJsonBodyObj() instanceof CacheMsgJoke) {
-                                CacheMsgJoke jokeBodyMsg = (CacheMsgJoke) cacheMsgBean.getJsonBodyObj();
-                                jokeBodyMsg.setVoiceId(fid);
-                                cacheMsgBean.setJsonBodyObj(jokeBodyMsg);
-                            } else {
-                                CacheMsgTxt textBodyMsg = (CacheMsgTxt) cacheMsgBean.getJsonBodyObj();
-                                textBodyMsg.setVoiceId(fid);
-                                cacheMsgBean.setJsonBodyObj(textBodyMsg);
-                            }
-                            CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
-                            final String voiceUrl = AppConfig.getDownloadHost() + fid;//七牛路径
-                            readTxt(cacheMsgBean, voiceUrl);
-                        } else {
-                            nextProcessDrivingModeMsg();
-                        }
-                    } else {
-                        nextProcessDrivingModeMsg();
-                    }
-                }
-            });
         } else {
             //已经缓存服务端的文件路径
             String voiceUrl = AppConfig.getDownloadHost() + voiceId;//服务端七牛路径

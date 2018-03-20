@@ -11,8 +11,6 @@ import android.support.v7.app.AppCompatActivity;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.entity.CallInfo;
 import com.youmai.hxsdk.service.HuxinService;
-import com.youmai.hxsdk.utils.FloatLogoUtil;
-import com.youmai.hxsdk.view.full.FloatViewUtil;
 
 /**
  * 作者：create by YW
@@ -110,10 +108,6 @@ public abstract class SdkPhotoActivity extends AppCompatActivity {
                 if (reason != null && reason.equals(SYSTEM_DIALOG_REASON_HOME_KEY)) {
                     if (CallInfo.IsCalling()) {
                         // 处理自己的逻辑
-                        FloatViewUtil.instance().hideFloatView();
-                        FloatLogoUtil.instance().hideFloat();
-                        FloatLogoUtil.instance().showFloat(context.getApplicationContext(), HuxinService.MODEL_TYPE_FULL, false);
-
                         HuxinSdkManager.instance().getStackAct().finishAllActivity();
                     }
                 }

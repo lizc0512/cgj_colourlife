@@ -30,10 +30,8 @@ import com.youmai.hxsdk.module.photo.bean.PhotoFolder;
 import com.youmai.hxsdk.service.HuxinService;
 import com.youmai.hxsdk.utils.AppUtils;
 import com.youmai.hxsdk.utils.CompressImage;
-import com.youmai.hxsdk.utils.FloatLogoUtil;
 import com.youmai.hxsdk.utils.LogUtils;
 import com.youmai.hxsdk.utils.ToastUtil;
-import com.youmai.hxsdk.view.full.FloatViewUtil;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -113,18 +111,11 @@ public class PhotoActivity extends SdkPhotoActivity implements PhotoAdapter.Phot
     @Override
     protected void onResume() {
         super.onResume();
-
-        if (isFloatView) {
-            FloatViewUtil.instance().hideFloatView();
-        }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        if (isFloatView && CallInfo.IsCalling() && isPreview) {
-            FloatViewUtil.instance().showFloatViewDelay(mContext);
-        }
     }
 
     @Override
@@ -322,7 +313,6 @@ public class PhotoActivity extends SdkPhotoActivity implements PhotoAdapter.Phot
                 startActivityForResult(cameraIntent, REQUEST_CAMERA);
 
                 isFloatView = false;
-                hideFloat();//隐藏所有视图
             } else {
                 Toast.makeText(getApplicationContext(), mContext.getString(R.string.hx_toast_19), Toast.LENGTH_SHORT).show();
             }
@@ -451,22 +441,4 @@ public class PhotoActivity extends SdkPhotoActivity implements PhotoAdapter.Phot
         return folderMap;
     }
 
-    private void hideFloat() {
-        switch (HuxinSdkManager.instance().getFloatType()) {
-            case HuxinService.MODEL_TYPE_FULL: {
-                FloatViewUtil.instance().hideFloatView();
-                FloatLogoUtil.instance().showFloat(mContext, HuxinService.MODEL_TYPE_FULL, true);
-                break;
-            }
-            case HuxinService.MODEL_TYPE_Q: {
-                FloatViewUtil.instance().hideFloatView();
-                break;
-            }
-            case HuxinService.MODEL_TYPE_HALF: {
-                FloatViewUtil.instance().hideFloatView();
-                FloatLogoUtil.instance().showFloat(mContext, HuxinService.MODEL_TYPE_HALF, true);
-                break;
-            }
-        }
-    }
 }

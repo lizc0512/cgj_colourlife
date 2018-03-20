@@ -30,7 +30,6 @@ import com.youmai.hxsdk.db.manager.GreenDbManager;
 import com.youmai.hxsdk.entity.RespBaseBean;
 import com.youmai.hxsdk.im.IMMsgManager;
 import com.youmai.hxsdk.interfaces.OnChatMsg;
-import com.youmai.hxsdk.popup.full.FullEmoPopWindow;
 import com.youmai.hxsdk.proto.YouMaiBasic;
 import com.youmai.hxsdk.proto.YouMaiChat;
 import com.youmai.hxsdk.proto.YouMaiChat.IMChat_Personal;
@@ -220,11 +219,6 @@ public class ChatFragment extends BaseFragment implements View.OnClickListener {
             startActivityForResult(Intent.createChooser(intent, getString(R.string.hx_chat_fragment_choose_pic)), SELECT_IMAGE);
 
         } else if (id == R.id.btn_gif) {
-            FullEmoPopWindow popWindow = new FullEmoPopWindow(mAct, phoneNum,
-                    DisplayUtil.dip2px(mAct, 210),
-                    DisplayUtil.dip2px(mAct, 320));
-
-            popWindow.showAtLocation(et_phone, Gravity.CENTER, 0, 0);
         } else if (id == R.id.btn_bizcard) {
             sendCard();
         }

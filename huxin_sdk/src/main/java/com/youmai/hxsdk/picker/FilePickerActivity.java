@@ -21,7 +21,6 @@ import com.youmai.hxsdk.picker.fragments.MediaFolderPickerFragment;
 import com.youmai.hxsdk.picker.fragments.MediaDetailPickerFragment;
 import com.youmai.hxsdk.picker.fragments.MediaPickerFragment;
 import com.youmai.hxsdk.picker.utils.FragmentUtil;
-import com.youmai.hxsdk.view.full.FloatViewUtil;
 
 public class FilePickerActivity extends AppCompatActivity implements
         MediaDetailPickerFragment.PhotoPickerFragmentListener,
@@ -57,9 +56,6 @@ public class FilePickerActivity extends AppCompatActivity implements
     @Override
     protected void onStop() {
         super.onStop();
-
-        if (CallInfo.IsCalling())
-            FloatViewUtil.instance().showFloatView(this);
     }
 
     private void initView() {

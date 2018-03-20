@@ -119,6 +119,6 @@ public class QiniuUtils {
             }
 
         };
-        HuxinSdkManager.instance().getUploadFileToken(callback);
+        //HuxinSdkManager.instance().getUploadFileToken(callback);
     }
 }

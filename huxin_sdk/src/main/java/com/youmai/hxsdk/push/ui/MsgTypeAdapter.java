@@ -117,20 +117,6 @@ public class MsgTypeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     pushMsgDao.insertOrReplaceInTx(pushMsgList);
                 } else if (msgType == 100) {
 
-                    Intent intent = new Intent(mContext, RemindMsgContentActivity.class);
-                    intent.putExtra("type", item.getMsgType());
-
-                    if (mContext instanceof PushMsgTypeActivity) {
-                        PushMsgTypeActivity act = (PushMsgTypeActivity) mContext;
-                        act.startActivityForResult(intent, PushMsgTypeActivity.DEL_REMIND);
-                    }
-
-                    badge.hide(false);
-
-                    for (RemindMsg item : remindMsgList) {
-                        item.setIsRead(true);
-                    }
-                    remindMsgDao.insertOrReplaceInTx(remindMsgList);
                 }
 
 

@@ -3,31 +3,13 @@ package com.youmai.hxsdk.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-
-import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.db.bean.ChatMsg;
-import com.youmai.hxsdk.chat.ContentText;
-import com.youmai.hxsdk.config.Constant;
 import com.youmai.hxsdk.entity.CallInfo;
-import com.youmai.hxsdk.entity.EmoInfo;
 import com.youmai.hxsdk.interfaces.OnChatMsg;
 import com.youmai.hxsdk.utils.AppUtils;
-import com.youmai.hxsdk.utils.StringUtils;
-import com.youmai.hxsdk.view.full.FloatViewUtil;
-
-import java.util.List;
 
 /**
  * 作者：create by YW
@@ -80,24 +62,18 @@ public class SdkBaseActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         //IMMsgManager.getInstance().registerChatMsg(onChatMsg);
-        FloatViewUtil.instance().hideFloatViewDelay();
     }
 
 
     @Override
     public void onResume() {
         super.onResume();
-        FloatViewUtil.instance().registerHome(mContext);
     }
 
 
     @Override
     public void onPause() {
         super.onPause();
-        if (isFloatView && CallInfo.IsCalling()) {
-            FloatViewUtil.instance().showFloatViewDelay(mContext);
-        }
-        FloatViewUtil.instance().unRegisterHome(mContext);
     }
 
 

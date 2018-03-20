@@ -19,7 +19,6 @@ import com.youmai.hxsdk.chat.ContentLocation;
 import com.youmai.hxsdk.config.AppConfig;
 import com.youmai.hxsdk.config.Constant;
 import com.youmai.hxsdk.utils.LogUtils;
-import com.youmai.hxsdk.view.full.MapViewUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -171,11 +170,6 @@ public class ChatRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     Double.parseDouble(mLocation.getLatitudeStr()));
 
             LogUtils.e(Constant.SDK_UI_TAG, "location = " + location);
-
-            MapView mMapView = ((MapViewHolder) viewHolder).fm_msg_map;
-            final MapViewUtil mMapViewUtil = new MapViewUtil(mContext, mMapView);
-            mMapViewUtil.onCreate(null);
-            mMapViewUtil.setLocation(location);//标志物
         }
 
 

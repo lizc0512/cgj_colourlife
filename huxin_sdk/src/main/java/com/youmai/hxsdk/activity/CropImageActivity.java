@@ -18,7 +18,6 @@ import com.bumptech.glide.request.transition.Transition;
 import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
 import com.youmai.hxsdk.dialog.HxMediaStoreDialog;
-import com.youmai.hxsdk.keep.KeepAdapter;
 import com.youmai.hxsdk.utils.AppUtils;
 import com.youmai.hxsdk.utils.StringUtils;
 import com.youmai.hxsdk.utils.ToastUtil;
@@ -47,8 +46,6 @@ public class CropImageActivity extends SdkBaseActivity {
         } else {
             imgUrl = getIntent().getStringExtra("isImageUrl");
         }
-
-        cacheMsgBean = getIntent().getParcelableExtra(KeepAdapter.CACHE_MSG_BEAN);
 
         img = (ImageView) findViewById(R.id.iv_img_url);
         ImageView iv_save = (ImageView) findViewById(R.id.iv_save);

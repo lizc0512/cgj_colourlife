@@ -12,20 +12,6 @@
         android:orientation="vertical" >
 
         <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:paddingBottom="@dimen/margin_12"
-            android:paddingTop="@dimen/margin_12" >
-
-            <TextView
-                style="@style/white_18"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="我的" />
-        </RelativeLayout>
-
-        <RelativeLayout
             android:id="@+id/rl_userinfo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

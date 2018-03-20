@@ -11,6 +11,8 @@ import android.widget.TextView;
 
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 import com.tg.coloursteward.R;
+import com.tg.coloursteward.fragment.FragmentManagement;
+import com.tg.coloursteward.fragment.FragmentMine;
 
 
 /**
@@ -127,10 +129,10 @@ public class MainActivity1 extends AppCompatActivity {
                     ft = SignCountFragment.newInstance("title2");
                     break;
                 case 2:
-                    ft = SignCountFragment.newInstance("title3");
+                    ft = new FragmentManagement();
                     break;
                 case 3:
-                    ft = SignCountFragment.newInstance("title4");
+                    ft = new FragmentMine();
                     break;
                 default:
                     break;

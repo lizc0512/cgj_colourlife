@@ -48,15 +48,6 @@ public class HuxinReceiver extends BroadcastReceiver {
             in.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startService(in);//启动服务
 
-        } else if (action.equals(Intent.ACTION_NEW_OUTGOING_CALL)) {
-            String phoneNumber = intent.getStringExtra(Intent.EXTRA_PHONE_NUMBER);
-            if (!StringUtils.isEmpty(phoneNumber)) {
-                Intent in = new Intent(context, HuxinService.class);
-                in.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                in.putExtra("phoneNumber", phoneNumber);
-                in.setAction(HuxinService.NEW_OUTGOING_CALL);
-                context.startService(in);//启动服务
-            }
         } else if (action.equals(ACTION_START_SERVICE)
                 || action.equals(Intent.ACTION_BOOT_COMPLETED)
                 || action.equals(ConnectivityManager.CONNECTIVITY_ACTION)) {
@@ -66,16 +57,6 @@ public class HuxinReceiver extends BroadcastReceiver {
             in.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             in.setAction(HuxinService.BOOT_SERVICE);
             context.startService(in);//启动服务
-        } else if (action.equals(SHOW_FLOAT_VIEW)) {
-            Intent in = new Intent(context, HuxinService.class);
-            in.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            in.setAction(HuxinService.SHOW_FLOAT_VIEW);
-            context.startService(in);
-        } else if (action.equals(HIDE_FLOAT_VIEW)) {
-            Intent in = new Intent(context, HuxinService.class);
-            in.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            in.setAction(HuxinService.HIDE_FLOAT_VIEW);
-            context.startService(in);
         } else if (action.equals(Telephony.Sms.Intents.SMS_RECEIVED_ACTION)) {
             Bundle bundle = intent.getExtras();
 

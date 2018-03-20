@@ -42,10 +42,8 @@ import com.youmai.hxsdk.config.Constant;
 import com.youmai.hxsdk.config.FileConfig;
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
 import com.youmai.hxsdk.db.bean.ChatMsg;
-import com.youmai.hxsdk.db.bean.UIData;
 import com.youmai.hxsdk.db.dao.CacheMsgBeanDao;
 import com.youmai.hxsdk.db.dao.ChatMsgDao;
-import com.youmai.hxsdk.db.dao.UIDataDao;
 import com.youmai.hxsdk.db.manager.GreenDBIMManager;
 import com.youmai.hxsdk.db.manager.GreenDbManager;
 import com.youmai.hxsdk.entity.EmoItem;
@@ -54,7 +52,6 @@ import com.youmai.hxsdk.entity.RespBaseBean;
 import com.youmai.hxsdk.entity.SoundModel;
 import com.youmai.hxsdk.entity.UploadFile;
 import com.youmai.hxsdk.http.IPostListener;
-import com.youmai.hxsdk.http.ssl.NetConfig;
 import com.youmai.hxsdk.im.IMHelper;
 import com.youmai.hxsdk.im.IMMsgManager;
 import com.youmai.hxsdk.im.cache.CacheMsgFile;
@@ -93,7 +90,6 @@ import com.youmai.hxsdk.utils.LogFile;
 import com.youmai.hxsdk.utils.LogUtils;
 import com.youmai.hxsdk.utils.PhoneNumTypes;
 import com.youmai.hxsdk.utils.SignUtils;
-import com.youmai.hxsdk.utils.SoundsUtils;
 import com.youmai.hxsdk.utils.StringUtils;
 import com.youmai.hxsdk.view.chat.utils.EmotionInit;
 
@@ -141,28 +137,7 @@ public class HuxinSdkManager {
     private UserInfo mUserInfo;
     private Map<String, String> mContactName;
 
-    private List<EmoItem> emoList;
-
-    private boolean isSound;
-    private boolean isVibrate;
     private String commonParam;
-
-    private boolean isRepresentReresh; //当前代言ID
-
-    /* CPU 类型  */
-    public static final String CPU_GAOTONG = "qualcomm";
-    public static final String CPU_MTK = "mtk";
-    public static final String CPU_HUAWEI = "huawei";
-
-
-    /* 通话背景音，放这里是由于让第三方应用可接入*/
-    private AudioManager mAudioManager;
-    private boolean mHxCallBgSoundState = false;
-    private MediaPlayer mMediaPlayer;
-    private int mMediaPlayerPreVolume;
-    private PopupMenu mSelectPopupMenu = null;
-    private CallBgSoundLister mCallBgSoundLister;
-    /* bgsound end */
 
     /**
      * SDK初始化结果监听器
@@ -276,9 +251,6 @@ public class HuxinSdkManager {
             Toast.makeText(mContext, mContext.getString(R.string.hx_toast_02), Toast.LENGTH_SHORT).show();
         }
 
-        isVibrate = AppUtils.getBooleanSharedPreferences(context, "hx_notify_vibrate", true);
-        isSound = AppUtils.getBooleanSharedPreferences(context, "hx_notify_sound", true);
-
         EmotionInit.init(context.getApplicationContext());     //表情初始化
         //initEmo();
 
@@ -301,9 +273,6 @@ public class HuxinSdkManager {
         Intent intent = new Intent(context.getApplicationContext(), HuxinService.class);
         context.getApplicationContext().bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
 
-        // 添加https证书
-        NetConfig.init(context);
-
         Log.v(TAG, "HuxinSdkManager in init");
 
     }
@@ -320,19 +289,6 @@ public class HuxinSdkManager {
             mContext.getApplicationContext().unbindService(serviceConnection);
         }
 
-    }
-
-    /**
-     * 获取刷新设置
-     *
-     * @return
-     */
-    public boolean isRepresentReresh() {
-        return isRepresentReresh;
-    }
-
-    public void setRepresentReresh(boolean isReresh) {
-        isRepresentReresh = isReresh;
     }
 
     public void setSession(String session) {
@@ -544,7 +500,6 @@ public class HuxinSdkManager {
     }
 
 
-
     /**
      * 从通讯录获取名称
      *
@@ -643,9 +598,6 @@ public class HuxinSdkManager {
 
         return StringUtils.isEmpty(nickName);
     }
-
-
-
 
 
     public void waitBindingProto(final GeneratedMessage msg, final ReceiveListener callback) {
@@ -764,18 +716,6 @@ public class HuxinSdkManager {
 
 
 
-    /**
-     * 向数据库获取秀的UI数据
-     *
-     * @param phone
-     * @return
-     */
-    public List<UIData> getUIData(String phone) {
-        UIDataDao uiDataDao = GreenDbManager.instance(mContext).getUIDataDao();
-        List<UIData> uiDataList = uiDataDao.queryBuilder().where(UIDataDao.Properties.Msisdn.eq(phone)).list();
-        return uiDataList;
-    }
-
 
     /**
      * 用户tcp协议登录
@@ -850,7 +790,6 @@ public class HuxinSdkManager {
             huxinService.connectTcp(userId, phone, session, isa);
         }
     }
-
 
 
     /**
@@ -2565,164 +2504,6 @@ public class HuxinSdkManager {
         return true;
     }
 
-    /*
-    * lee add for bg sound
-    * */
-    private void updateSelectPopupMenu(final Context ctx, View anchorView) {
-        final ArrayList<SoundModel> soundModelsList = SoundsUtils.getSoundData(ctx);
-        mSelectPopupMenu = new PopupMenu(new ContextThemeWrapper(ctx, R.style.bgSoundPopupMenuTheme), anchorView);
-        Menu menu = mSelectPopupMenu.getMenu();
-        for (int i = 0; i < soundModelsList.size(); i++) {
-            SoundModel sm = soundModelsList.get(i);
-            MenuItem menuItem = menu.add(0, i, Menu.NONE, sm.getName());
-        }
-        mSelectPopupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                int id = item.getItemId();
-                if (id < soundModelsList.size()) {
-                    handleOpenCallBackgroundSound(ctx, soundModelsList.get(id).getUrl());
-                }
-                return false;
-            }
-        });
-        mSelectPopupMenu.dismiss();
-        mSelectPopupMenu.show();
-    }
-
-    private void handleOpenCallBackgroundSound(Context ctx, int rawId) {
-        String uriStr = "android.resource://" + ctx.getPackageName() + "/" + rawId;
-        Uri uri = Uri.parse(uriStr);
-        handleOpenCallBackgroundSound(ctx, uri);
-    }
-
-    private void handleOpenCallBackgroundSound(Context ctx, String path) {
-        final Uri uri = Uri.parse(path);
-        handleOpenCallBackgroundSound(ctx, uri);
-    }
-
-    private void handleOpenCallBackgroundSound(Context ctx, Uri soundUri) {
-        String cpuType = getCPU();
-        String AUDIO_PARAMETER_KEY_BGSOUND_ON = "Set_BGS_UL_Mute=0";
-
-        if (cpuType.equals(CPU_MTK)) {
-            AUDIO_PARAMETER_KEY_BGSOUND_ON = "Set_BGS_UL_Mute=0";
-        } else {
-            return;
-        }
-
-        if (mAudioManager == null) {
-            mAudioManager = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
-        }
-
-        try {
-            if (mMediaPlayer == null) {
-                mMediaPlayer = new MediaPlayer();
-                mMediaPlayer.setDataSource(ctx, soundUri);
-                mMediaPlayer.setLooping(true);
-                mMediaPlayer.prepare();
-            }
-
-            if (mHxCallBgSoundState == false) {
-                mAudioManager.setParameters(AUDIO_PARAMETER_KEY_BGSOUND_ON);
-                mMediaPlayerPreVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-                int maxVolume = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-                //int minVolume = mAudioManager.getStreamMinVolume(AudioManager.STREAM_MUSIC);
-                int midVolume = maxVolume - 3;
-                mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, midVolume, 0);
-                mMediaPlayer.start();
-
-                if (mCallBgSoundLister != null) {
-                    mCallBgSoundLister.doSomething();
-                }
-                mHxCallBgSoundState = true;
-            }
-        } catch (IOException e) {
-            android.util.Log.e("BgSound", "IOException");
-        } catch (IllegalArgumentException e) {
-            android.util.Log.e("BgSound", "IllegalArgumentException");
-        } catch (IllegalStateException e) {
-            android.util.Log.e("BgSound", "IllegalStateException");
-        } finally {
-            android.util.Log.e("BgSound", "no exception");
-        }
-    }
-
-    public void handleCloseCallBackgroundSound() {
-        String cpuType = getCPU();
-        String AUDIO_PARAMETER_KEY_BGSOUND_OFF = "Set_BGS_UL_Mute=0";
-        if (cpuType.equals(CPU_MTK)) {
-            AUDIO_PARAMETER_KEY_BGSOUND_OFF = "Set_BGS_UL_Mute=1";
-        } else {
-            return;
-        }
-        if (mHxCallBgSoundState && mAudioManager != null && mMediaPlayer != null) {
-            if (mCallBgSoundLister != null) {
-                mCallBgSoundLister.quit();
-            }
-
-            mAudioManager.setParameters(AUDIO_PARAMETER_KEY_BGSOUND_OFF);
-            mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, mMediaPlayerPreVolume, 0);
-            mMediaPlayer.stop();
-            mMediaPlayer.release();
-            mMediaPlayer = null;
-            mHxCallBgSoundState = false;
-        }
-    }
-
-    public void handleCallBackgroundSound(Context ctx, View anchor, CallBgSoundLister lister) {
-        mCallBgSoundLister = lister;
-        if (mHxCallBgSoundState) {
-            if (mSelectPopupMenu != null)
-                mSelectPopupMenu.dismiss();
-            handleCloseCallBackgroundSound();
-        } else {
-            updateSelectPopupMenu(ctx, anchor);
-        }
-    }
-
-    public interface CallBgSoundLister {
-        void doSomething();
-
-        void quit();
-    }
-
-    /*
-    * 获取CPU类型
-    * */
-    public String getCPU() {
-        String hardware = android.os.Build.HARDWARE;
-        int result = hardware.indexOf("mt");
-        if (result >= 0) {
-            return CPU_MTK;
-        }
-        result = hardware.indexOf("qcom");
-        if (result >= 0) {
-            return CPU_GAOTONG;
-        }
-
-        result = hardware.indexOf("hi");
-        if (result >= 0) {
-            return CPU_HUAWEI;
-        }
-
-        try {
-            FileReader fileReader = new FileReader("/proc/cpuinfo");
-            BufferedReader br = new BufferedReader(fileReader);
-            String line;
-            while ((line = br.readLine()) != null) {
-                String lineLowerCase = line.toLowerCase();
-                if (lineLowerCase.indexOf("qualcomm") >= 0) {
-                    return CPU_GAOTONG;
-                }
-            }
-            fileReader.close();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-        return "";
-    }
-
     /**
      * 获取发送给desPhone的所有消息缓存
      * 输入用户号码，返回缓存的用户聊天信息
@@ -2763,7 +2544,7 @@ public class HuxinSdkManager {
 
     /**
      * 获取消息总数.
-
+     *
      * @param desPhone
      * @return
      */
@@ -2822,7 +2603,6 @@ public class HuxinSdkManager {
         CacheMsgBean msgBean = cacheMsgBeanDao.queryBuilder().where(CacheMsgBeanDao.Properties.Id.eq(id)).unique();
         return msgBean;
     }
-
 
 
     private void saveDeviceId() {
@@ -2936,55 +2716,6 @@ public class HuxinSdkManager {
 
 
     /**
-     * 设置个人秀
-     *
-     * @return
-     */
-    public boolean setUserShow() {
-        if (isLogin() && isBinded()) {
-            Intent intent = new Intent(mContext, ShowMainActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            mContext.startActivity(intent);
-            return true;
-        }
-        return false;
-    }
-
-
-
-    /**
-     * 设置通知栏声音是否打开
-     *
-     * @param open
-     */
-    public void setNotifySound(Context context, boolean open) {
-        isSound = open;
-        AppUtils.setBooleanSharedPreferences(context, "hx_notify_sound", open);
-    }
-
-
-    public boolean isNotifySound(Context context) {
-        return isSound;
-    }
-
-
-    /**
-     * 设置通知栏震动是否打开
-     *
-     * @param open
-     */
-    public void setNotifyVibrate(Context context, boolean open) {
-        isVibrate = open;
-        AppUtils.setBooleanSharedPreferences(context, "hx_notify_vibrate", open);
-    }
-
-
-    public boolean isNotifyVibrate(Context context) {
-        return isVibrate;
-    }
-
-
-    /**
      * 线程初始化
      */
     private void initHandler() {
@@ -3043,7 +2774,6 @@ public class HuxinSdkManager {
         }
 
     }
-
 
 
 }

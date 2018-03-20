@@ -30,7 +30,6 @@ import com.youmai.hxsdk.im.cache.CacheMsgRemark;
 import com.youmai.hxsdk.im.cache.CacheMsgTxt;
 import com.youmai.hxsdk.im.cache.CacheMsgVideo;
 import com.youmai.hxsdk.im.cache.CacheMsgVoice;
-import com.youmai.hxsdk.im.cache.ContactsDetailsBean;
 import com.youmai.hxsdk.im.cache.JsonFormate;
 import com.youmai.hxsdk.proto.YouMaiBasic;
 import com.youmai.hxsdk.proto.YouMaiChat;
@@ -207,8 +206,6 @@ public class SendMsgService extends Service {
             } else if (jsonBody instanceof CacheMsgFile) {//文件
                 sendFile(msg);
                 sendingMsg.put(msg.getMsg().getId().intValue(), msg);
-            } else if (jsonBody instanceof ContactsDetailsBean) {//名片
-                sendCard(msg);
             } else if (jsonBody instanceof CacheMsgRemark) {//备注
                 sendRemark(msg);
             } else if (jsonBody instanceof CacheMsgVideo) {//视频
@@ -451,46 +448,6 @@ public class SendMsgService extends Service {
         };
 
         HuxinSdkManager.instance().sendLocation(userId, targetPhone, longitude, latitude, 16, address, callback);
-    }
-
-    //发送名片
-    private void sendCard(final SendMsg msgBean) {
-        final int userId = HuxinSdkManager.instance().getUserId();
-        final String targetPhone = msgBean.getMsg().getReceiverPhone();
-
-        final ContactsDetailsBean msgBody = (ContactsDetailsBean) msgBean.getMsg().getJsonBodyObj();
-        ReceiveListener callback = new ReceiveListener() {
-            @Override
-            public void OnRec(PduBase pduBase) {
-                try {
-                    YouMaiChat.IMChat_Personal_Ack ack = YouMaiChat.IMChat_Personal_Ack.parseFrom(pduBase.body);
-                    long msgId = ack.getMsgId();
-                    msgBean.getMsg().setMsgId(msgId);
-
-                    if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_OK) {
-                        updateUI(msgBean, CacheMsgBean.MSG_SEND_FLAG_SUCCESS);
-                        //TODO 发送名片后随后发送一段文本
-//                        if (!TextUtils.isEmpty(msg)) {
-//                            sendTxt(msg, -1, true);
-//                        }
-                    } else if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_NOT_HUXIN_USER) {
-                        updateUI(msgBean, CacheMsgBean.MSG_SEND_FLAG_FAIL, NOT_HUXIN_USER);
-                    } else {
-                        updateUI(msgBean, CacheMsgBean.MSG_SEND_FLAG_FAIL);
-                    }
-                } catch (InvalidProtocolBufferException e) {
-                    updateUI(msgBean, CacheMsgBean.MSG_SEND_FLAG_FAIL);
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onError(int errCode) {
-                updateUI(msgBean, CacheMsgBean.MSG_SEND_FLAG_FAIL);
-            }
-        };
-
-        HuxinSdkManager.instance().sendBizcardText(userId, targetPhone, msgBody.toJson(), callback);
     }
 
     //发送语音(先上传文件，再发送消息)

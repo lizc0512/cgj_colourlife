@@ -4,53 +4,28 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.media.MediaPlayer;
-import android.media.RingtoneManager;
-import android.net.Uri;
-import android.os.AsyncTask;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
-import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.View;
-import android.widget.TextView;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.ProtocolCallBack;
 import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.activity.IMConnectionActivity;
-import com.youmai.hxsdk.activity.SdkBaseActivity;
-import com.youmai.hxsdk.activity.WebViewActivity;
 import com.youmai.hxsdk.chat.BeginLocation;
 import com.youmai.hxsdk.chat.ContentVideo;
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
-import com.youmai.hxsdk.db.bean.ChatMsg;
 import com.youmai.hxsdk.chat.ContentLocation;
 import com.youmai.hxsdk.chat.ContentText;
 import com.youmai.hxsdk.config.AppConfig;
 import com.youmai.hxsdk.config.FileConfig;
-import com.youmai.hxsdk.db.bean.PushMsg;
-import com.youmai.hxsdk.db.bean.RemindMsg;
-import com.youmai.hxsdk.db.dao.PushMsgDao;
-import com.youmai.hxsdk.db.dao.RemindMsgDao;
-import com.youmai.hxsdk.db.manager.GreenDBIMManager;
-import com.youmai.hxsdk.dialog.HxGuideDialog;
-import com.youmai.hxsdk.dialog.HxNotifySoundDialog;
+import com.youmai.hxsdk.db.bean.ChatMsg;
 import com.youmai.hxsdk.entity.CallInfo;
-import com.youmai.hxsdk.entity.EmoInfo;
-import com.youmai.hxsdk.entity.GuideType;
 import com.youmai.hxsdk.entity.NotifyItem;
 import com.youmai.hxsdk.entity.RespBaseBean;
-import com.youmai.hxsdk.entity.XFTextToVoiceEntity;
-import com.youmai.hxsdk.http.DownLoadingListener;
-import com.youmai.hxsdk.http.FileAsyncTaskDownload;
-import com.youmai.hxsdk.http.IPostListener;
 import com.youmai.hxsdk.im.cache.CacheMsgEmotion;
 import com.youmai.hxsdk.im.cache.CacheMsgFile;
 import com.youmai.hxsdk.im.cache.CacheMsgHelper;
@@ -62,51 +37,32 @@ import com.youmai.hxsdk.im.cache.CacheMsgRemark;
 import com.youmai.hxsdk.im.cache.CacheMsgTxt;
 import com.youmai.hxsdk.im.cache.CacheMsgVideo;
 import com.youmai.hxsdk.im.cache.CacheMsgVoice;
-import com.youmai.hxsdk.im.cache.ContactsDetailsBean;
-import com.youmai.hxsdk.im.cache.JsonFormate;
-import com.youmai.hxsdk.im.voice.MsgUnRead;
-import com.youmai.hxsdk.im.voice.manager.DrivingModeMediaManager;
-import com.youmai.hxsdk.interfaces.OnChatMsg;
 import com.youmai.hxsdk.module.map.AnswerOrReject;
 import com.youmai.hxsdk.module.map.IAnswerOrRejectListener;
 import com.youmai.hxsdk.module.map.IReceiveStartListener;
-import com.youmai.hxsdk.module.remind.HxRemindDialog;
-import com.youmai.hxsdk.module.remind.RemindItem;
 import com.youmai.hxsdk.proto.YouMaiBasic;
 import com.youmai.hxsdk.proto.YouMaiBulletin;
 import com.youmai.hxsdk.proto.YouMaiChat;
 import com.youmai.hxsdk.proto.YouMaiUser;
-import com.youmai.hxsdk.push.ui.HxNotifyImageDialog;
-import com.youmai.hxsdk.push.ui.HxNotifyTextDialog;
-import com.youmai.hxsdk.push.ui.PushMsgDetailActivity;
-import com.youmai.hxsdk.receiver.HuxinReceiver;
 import com.youmai.hxsdk.socket.NotifyListener;
 import com.youmai.hxsdk.socket.IMContentType;
-import com.youmai.hxsdk.sp.SPDataUtil;
-import com.youmai.hxsdk.utils.AbDateUtil;
 import com.youmai.hxsdk.utils.AppUtils;
 import com.youmai.hxsdk.utils.BadgeUtil;
 import com.youmai.hxsdk.utils.CommonUtils;
 import com.youmai.hxsdk.utils.FileUtils;
-import com.youmai.hxsdk.utils.GsonUtil;
-import com.youmai.hxsdk.utils.ListUtils;
 import com.youmai.hxsdk.utils.LogFile;
-import com.youmai.hxsdk.utils.TimeUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import me.leolin.shortcutbadger.ShortcutBadger;
-import q.rorbin.badgeview.Badge;
 
 /**
  * Author:  Kevin Feng
@@ -123,8 +79,6 @@ public class IMMsgManager {
     private List<CacheMsgBean> cacheMsgBeanList;
 
     private List<IMMsgCallback> imMsgCallbackList;
-
-    private List<OnChatMsg> mOnChatMsgList;
 
     private List<CacheMsgBean> mLShareList; // 位置共享
 
@@ -155,7 +109,6 @@ public class IMMsgManager {
 
     private IMMsgManager() {
         cacheMsgBeanList = new ArrayList<>();
-        mOnChatMsgList = new ArrayList<>();
         imMsgCallbackList = new ArrayList<>();
         pushMsgNotifyIdList = new ArrayList<>();
         mLShareList = new ArrayList<>();
@@ -170,7 +123,6 @@ public class IMMsgManager {
 
     public void init(Context context) {
         mContext = context;
-        mDrivingModeHandler = new DrivingModeHandler(this);
         getAllBadgeCount();
     }
 
@@ -208,11 +160,6 @@ public class IMMsgManager {
 
     public void clearCacheMsgBean() {
         cacheMsgBeanList.clear();
-    }
-
-    public void setOnChatMsg(OnChatMsg callback) {
-        if (!mOnChatMsgList.contains(callback))
-            mOnChatMsgList.add(callback);
     }
 
     //todo_k: 12-6
@@ -419,55 +366,12 @@ public class IMMsgManager {
 
 
     public void parseBulletin(String content) {
-        try {
+        /*try {
             JSONObject object = new JSONObject(content);
-            if (object.optLong("msgId") != 0 && object.optLong("remindTime") != 0) {
-                RemindMsg remindMsg = new RemindMsg(object);
-                RemindMsgDao remindMsgDao = GreenDBIMManager.instance(mContext).getRemindMsgDao();
-
-                boolean isWrite = true;
-                List<RemindMsg> remindMsgList = remindMsgDao.queryBuilder().list();
-                if (!ListUtils.isEmpty(remindMsgList)) {
-                    for (RemindMsg item : remindMsgList) {
-                        if (item.getRemindId() == remindMsg.getRemindId()) {
-                            isWrite = false;
-                            //Toast.makeText(mContext, "收到提醒 已经针对此消息设置过提醒了", Toast.LENGTH_SHORT).show();
-                            Log.e(TAG, "收到提醒 已经针对此消息设置过提醒了");
-                            break;
-                        }
-                    }
-                }
-
-                if (isWrite) {
-                    remindMsgDao.insertOrReplace(remindMsg);
-                    notifyMsg(remindMsg);
-                }
-            } else if (object.optInt("msg_id") != 0) {
-                PushMsg pushMsg = new PushMsg(object);
-                PushMsgDao pushMsgDao = GreenDBIMManager.instance(mContext).getPushMsgDao();
-                pushMsgDao.insertOrReplace(pushMsg);
-                notifyMsg(pushMsg);
-            } else if (object.optInt("guide_id") != 0) {
-                JSONArray array = object.optJSONArray("fids");
-                List<GuideType> list = new ArrayList<>();
-                if (array != null && array.length() > 0) {
-                    for (int i = 0; i < array.length(); i++) {
-
-                        GuideType dBean = new GuideType();
-                        JSONObject json = array.optJSONObject(i);
-                        dBean.setFid(json.optString("fid"));
-                        dBean.setTitle(json.optString("title"));
-
-                        list.add(dBean);
-                    }
-                }
-                HxGuideDialog dialog = new HxGuideDialog(mContext, list);
-                dialog.show();
-            }
 
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());
-        }
+        }*/
     }
 
 
@@ -489,311 +393,8 @@ public class IMMsgManager {
         return onDeviceKickedNotify;
     }
 
-    public void registerChatMsg(OnChatMsg onChatMsg) {
-        if (!mOnChatMsgList.contains(onChatMsg)) {
-            mOnChatMsgList.add(onChatMsg);
-        }
-    }
-
-
-    public void unregisterChatMsg(OnChatMsg onChatMsg) {
-        if (mOnChatMsgList.contains(onChatMsg)) {
-            mOnChatMsgList.remove(onChatMsg);
-        }
-    }
-
-
-    private void handlerIMMsgCallback(CacheMsgBean cacheMsgBean) {
-        if (imMsgCallbackList != null) {
-            for (IMMsgCallback cb : imMsgCallbackList) {
-                cb.onCallback(cacheMsgBean);
-            }
-        }
-
-        boolean isDrivingMode = AppUtils.getBooleanSharedPreferences(mContext, "huxin_driving_mode", false);
-        if (isDrivingMode) {
-            if (cacheMsgBean.getMsgType() == CacheMsgBean.MSG_TYPE_TXT || cacheMsgBean.getMsgType() == CacheMsgBean.MSG_TYPE_VOICE) {
-                if (!TextUtils.isEmpty(mCurrPhone)) {
-                    if (mCurrPhone.equals(cacheMsgBean.getSenderPhone())) {
-                        mDrivingModeMsgBeanList.add(cacheMsgBean);
-                    }
-                } else {
-                    mDrivingModeMsgBeanList.add(cacheMsgBean);
-                }
-                mDrivingModeHandler.removeMessages(DM_MSG_READ_MSG_PROCESS);
-                mDrivingModeHandler.sendEmptyMessage(DM_MSG_READ_MSG_PROCESS);
-            }
-        }
-    }
-
-    private static final int DM_MSG_READ_MSG_START = 100;
-    private static final int DM_MSG_READ_MSG_PROCESS = 101;
-    private boolean isDMProcessing = false;
-    private CacheMsgBean mCurrDMMsgBean;
-    private String mCurrPhone;
-    private String mCurrReadPhone;
-    private DrivingModeHandler mDrivingModeHandler;
-
-    private static class DrivingModeHandler extends Handler {
-        private final WeakReference<IMMsgManager> mTarget;
-
-        DrivingModeHandler(IMMsgManager target) {
-            mTarget = new WeakReference<>(target);
-        }
-
-        @Override
-        public void handleMessage(Message msg) {
-            IMMsgManager manager = mTarget.get();
-            switch (msg.what) {
-                case DM_MSG_READ_MSG_PROCESS:
-                    if (TextUtils.isEmpty(HuxinSdkManager.instance().getPhoneNum())) {
-                        Intent intent = new Intent("com.youmai.huxin.drivingmode.close");
-                        manager.mContext.sendBroadcast(intent);
-                        manager.stopDrivingMode();
-                        return;
-                    }
-
-                    TelephonyManager tm = (TelephonyManager) manager.mContext.getSystemService(Context.TELEPHONY_SERVICE);
-                    switch (tm.getCallState()) {
-                        case TelephonyManager.CALL_STATE_RINGING:
-                        case TelephonyManager.CALL_STATE_OFFHOOK:
-                            manager.stopDrivingMode();
-                            return;
-                    }
-                    if (DrivingModeMediaManager.isPlaying()) {
-                        manager.mDrivingModeHandler.removeMessages(DM_MSG_READ_MSG_PROCESS);
-                        manager.mDrivingModeHandler.sendEmptyMessageDelayed(DM_MSG_READ_MSG_PROCESS, 1000);
-                    } else {
-                        if (manager.mDrivingModeMsgBeanList.size() > 0 && !manager.isDMProcessing) {
-                            manager.isDMProcessing = true;
-                            manager.mCurrDMMsgBean = manager.mDrivingModeMsgBeanList.get(0);
-                            manager.mDrivingModeMsgBeanList.remove(manager.mCurrDMMsgBean);
-                            manager.processDMWhoMsg(manager.mCurrDMMsgBean);
-                        }
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
-
-    /**
-     * 退出驾驶模式
-     */
-    public void stopDrivingMode() {
-        DrivingModeMediaManager.release();
-        mDrivingModeHandler.removeMessages(DM_MSG_READ_MSG_PROCESS);
-        mDrivingModeMsgBeanList.clear();
-        isDMProcessing = false;
-        mCurrDMMsgBean = null;
-    }
-
-    /**
-     * 恢复播放
-     */
-    public void resumeProcessDrivingModeMsg() {
-        if (isDMProcessing) {
-            processDMWhoMsg(mCurrDMMsgBean);
-        } else {
-            mDrivingModeHandler.removeMessages(DM_MSG_READ_MSG_PROCESS);
-            mDrivingModeHandler.sendEmptyMessage(DM_MSG_READ_MSG_PROCESS);
-        }
-    }
-
-    /**
-     * 暂停
-     */
-    public void pauseProcessDrivingModeMsg() {
-        stopTextVoice();
-    }
-
-    private void nextProcessDrivingModeMsg() {
-        isDMProcessing = false;
-        mDrivingModeHandler.removeMessages(DM_MSG_READ_MSG_PROCESS);
-        mDrivingModeHandler.sendEmptyMessage(DM_MSG_READ_MSG_PROCESS);
-    }
-
-    /**
-     * 处理消息，先处理谁发来的消息
-     *
-     * @param cacheMsgBean
-     */
-    private void processDMWhoMsg(final CacheMsgBean cacheMsgBean) {
-        boolean isReadMan = false;
-        if (TextUtils.isEmpty(mCurrReadPhone)) {
-            mCurrReadPhone = cacheMsgBean.getSenderPhone();
-            isReadMan = true;
-        } else if (!mCurrReadPhone.equals(cacheMsgBean.getSenderPhone())) {
-            mCurrReadPhone = cacheMsgBean.getSenderPhone();
-            isReadMan = true;
-        } else {
-            processDMMsg(cacheMsgBean);
-            return;
-        }
-
-        if (isReadMan) {
-            String who = HuxinSdkManager.instance().getContactName(mCurrReadPhone) + "发来消息";
-
-        }
-    }
-
-    /**
-     * 处理消息
-     *
-     * @param cacheMsgBean
-     */
-    private void processDMMsg(CacheMsgBean cacheMsgBean) {
-        if (cacheMsgBean.getMsgType() == CacheMsgBean.MSG_TYPE_TXT) {
-            readTextMsg(cacheMsgBean);
-        } else if (cacheMsgBean.getMsgType() == CacheMsgBean.MSG_TYPE_VOICE) {
-            readVoiceMsg(cacheMsgBean);
-        }
-    }
-
-
-    /**
-     * 设置当前聊天对象,以插队的方式
-     *
-     * @param number
-     */
-    public void setDrivingModePhone(String number) {
-        if (TextUtils.isEmpty(number)) {
-            mDrivingModeMsgBeanList.addAll(mDrivingModeMixMsgBeanList);
-            nextProcessDrivingModeMsg();
-        } else {
-            mDrivingModeMixMsgBeanList.clear();
-            mDrivingModeMixMsgBeanList.addAll(mDrivingModeMsgBeanList);
-            mDrivingModeMsgBeanList.clear();
-        }
-        mCurrPhone = number;
-    }
-
-    /**
-     * 播放语音消息
-     * 请求服务器文本转语音
-     *
-     * @param cacheMsgBean
-     */
-    private void readVoiceMsg(final CacheMsgBean cacheMsgBean) {
-        final CacheMsgVoice cacheMsgVoice = (CacheMsgVoice) cacheMsgBean.getJsonBodyObj();
-        playTextVoice(cacheMsgBean, cacheMsgVoice.getVoicePath());
-    }
-
-    /**
-     * 读文本消息
-     * 请求服务器文本转语音
-     *
-     * @param cacheMsgBean
-     */
-    private void readTextMsg(final CacheMsgBean cacheMsgBean) {
-        final String text;
-        String voiceId = "";
-        if (cacheMsgBean.getJsonBodyObj() instanceof CacheMsgJoke) {
-            CacheMsgJoke jokeBodyMsg = (CacheMsgJoke) cacheMsgBean.getJsonBodyObj();
-            voiceId = jokeBodyMsg.getVoiceId();
-            text = jokeBodyMsg.getMsgJoke().replace(CacheMsgJoke.JOKES, "");
-        } else {
-            CacheMsgTxt textBodyMsg = (CacheMsgTxt) cacheMsgBean.getJsonBodyObj();
-            voiceId = textBodyMsg.getVoiceId();
-            text = textBodyMsg.getMsgTxt();
-        }
-        if (TextUtils.isEmpty(voiceId)) {
-            //cacheMsgBean.setSend_flag(-1);
-        } else {
-            //已经缓存服务端的文件路径
-            String voiceUrl = AppConfig.getDownloadHost() + voiceId;//服务端七牛路径
-            readTxt(cacheMsgBean, voiceUrl);
-        }
-    }
-
-    /**
-     * 文本语音下载
-     *
-     * @param cacheMsgBean
-     * @param voiceUrl
-     */
-    private void readTxt(final CacheMsgBean cacheMsgBean, final String voiceUrl) {
-        JsonFormate jsonBodyObj = cacheMsgBean.getJsonBodyObj();
-        String voicePath;
-        boolean isJoke = false;
-        CacheMsgTxt bodyMsgTxt = null;
-        CacheMsgJoke bodyMsgJoke = null;
-        if (jsonBodyObj instanceof CacheMsgJoke) {
-            bodyMsgJoke = (CacheMsgJoke) jsonBodyObj;
-            voicePath = bodyMsgJoke.getVoicePath();
-            isJoke = true;
-        } else {
-            bodyMsgTxt = (CacheMsgTxt) cacheMsgBean.getJsonBodyObj();
-            voicePath = bodyMsgTxt.getVoicePath();
-        }
-        if (TextUtils.isEmpty(voicePath)) {
-            //下载音频文件
-            final boolean finalIsJoke = isJoke;
-            final CacheMsgTxt finalBodyMsgTxt = bodyMsgTxt;
-            final CacheMsgJoke finalBodyMsgJoke = bodyMsgJoke;
-            IMMsgManager.getInstance().downloadAudio(mContext, cacheMsgBean, voiceUrl, new DownloadVoiceListener() {
-                @Override
-                public void success(String path) {
-                    if (finalIsJoke) {
-                        finalBodyMsgJoke.setVoicePath(path);
-                        cacheMsgBean.setJsonBodyObj(finalBodyMsgJoke);
-                    } else {
-                        finalBodyMsgTxt.setVoicePath(path);
-                        cacheMsgBean.setJsonBodyObj(finalBodyMsgTxt);
-                    }
-                    CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
-                    playTextVoice(cacheMsgBean, path);
-                }
-
-                @Override
-                public void error(final String msg) {
-                    nextProcessDrivingModeMsg();
-                }
-            });
-        } else {
-            playTextVoice(cacheMsgBean, voicePath);
-        }
-    }
-
-    /**
-     * 文本语音播放
-     *
-     * @param cacheMsgBean
-     * @param voiceUrl     本地语音路径
-     */
-    private void playTextVoice(final CacheMsgBean cacheMsgBean, final String voiceUrl) {
-        stopTextVoice();
-        //播放声音
-        new AsyncTask<Void, Void, Void>() {
-
-            @Override
-            protected Void doInBackground(Void... voids) {
-                DrivingModeMediaManager.playSound(voiceUrl, new MediaPlayer.OnCompletionListener() {
-                    @Override
-                    public void onCompletion(MediaPlayer mp) {
-                        nextProcessDrivingModeMsg();
-                    }
-                });
-                return null;
-            }
-        }.execute();
-    }
-
-    //停止语音
-    public void stopTextVoice() {
-        if (DrivingModeMediaManager.isPlaying()) {
-            DrivingModeMediaManager.release();
-        }
-    }
 
     public void notifyMsg(ChatMsg msg, boolean isFormPush) {
-        if (!ListUtils.isEmpty(mOnChatMsgList)) {
-            for (OnChatMsg item : mOnChatMsgList) {
-                item.onCallback(msg);
-            }
-        }
-
         String srcPhone = msg.getSrcPhone();
         String newMsgTip = mContext.getString(R.string.hx_hook_strategy_msg);
         if (msg.getMsgType() == ChatMsg.MsgType.TEXT) {  //文字
@@ -846,15 +447,7 @@ public class IMMsgManager {
             String content = text.getContent();
 
             //todo_k: 12-6 文字 表情
-            if (new EmoInfo(mContext).isEmotion(content)) {  //表情
-                int resImg = new EmoInfo(mContext).getEmoRes(content);
-                cacheMsgBean.setMsgType(CacheMsgBean.MSG_TYPE_EMOTION)
-                        .setJsonBodyObj(new CacheMsgEmotion().setEmotion(content, resImg));
-                msg.setMsgType(ChatMsg.MsgType.EMO_TEXT);
-            } else if (content.startsWith(CacheMsgJoke.JOKES)) { //段子
-                cacheMsgBean.setMsgType(CacheMsgBean.MSG_TYPE_JOKE)
-                        .setJsonBodyObj(new CacheMsgJoke().setMsgJoke(content));
-            } else if (content.startsWith("/")) { //自定义表情
+            if (content.startsWith("/")) { //自定义表情
                 cacheMsgBean.setMsgType(CacheMsgBean.MSG_TYPE_EMOTION)
                         .setJsonBodyObj(new CacheMsgEmotion().setEmotion(content, -1));
                 msg.setMsgType(ChatMsg.MsgType.EMO_TEXT);
@@ -867,8 +460,6 @@ public class IMMsgManager {
             CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
 
             cacheMsgBeanList.add(cacheMsgBean);
-            handlerIMMsgCallback(cacheMsgBean);
-
         } else if (msg.getMsgType() == ChatMsg.MsgType.PICTURE) { //图片
             String fid = msg.getMsgContent().getPicture().getPicUrl();
             String describe = msg.getMsgContent().getPicture().getDescribe();
@@ -885,8 +476,6 @@ public class IMMsgManager {
             CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
 
             cacheMsgBeanList.add(cacheMsgBean);
-            handlerIMMsgCallback(cacheMsgBean);
-
         } else if (msg.getMsgType() == ChatMsg.MsgType.LOCATION) { //定位
 
             ContentLocation mLocation = msg.getMsgContent().getLocation();
@@ -915,8 +504,6 @@ public class IMMsgManager {
             //add to db
             CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
             cacheMsgBeanList.add(cacheMsgBean);
-            handlerIMMsgCallback(cacheMsgBean);
-
         } else if (msg.getMsgType() == ChatMsg.MsgType.LOCATION_INVITE
                 || msg.getMsgType() == ChatMsg.MsgType.LOCATION_ANSWER
                 || msg.getMsgType() == ChatMsg.MsgType.LOCATION_QUIT) { //定位
@@ -935,8 +522,6 @@ public class IMMsgManager {
 
                 CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
                 cacheMsgBeanList.add(cacheMsgBean);
-                handlerIMMsgCallback(cacheMsgBean);
-
                 if (mReceiveListener != null) {
                     mReceiveListener.onStartLShare(cacheMsgBean);
                 }
@@ -983,8 +568,6 @@ public class IMMsgManager {
                             .setFid(fid)
                             .setSourcePhone(sourcePhone)
                             .setForwardCount(forwardCount));
-            downloadAudio(mContext, cacheMsgBean, url);
-
         } else if (msg.getMsgType() == ChatMsg.MsgType.BIG_FILE) { //文件
 
             String jsonBody = msg.getJsonBoby();
@@ -1009,29 +592,10 @@ public class IMMsgManager {
                     //add to db
                     CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
                     cacheMsgBeanList.add(cacheMsgBean);
-
-                    handlerIMMsgCallback(cacheMsgBean);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        } else if (msg.getMsgType() == ChatMsg.MsgType.BIZCARD) {
-            ContentText text = msg.getMsgContent().getText();
-            final String cardStr = text.getContent();//获取vCard字符串内容
-
-            //final BizCardModel cardModel = VcardUtils.readVcard(cardStr);//解析vCard
-            //BizCardModel cardModel = GsonUtil.parse(cardStr, BizCardModel.class);//解析vCard
-
-            ContactsDetailsBean contactsBean = new ContactsDetailsBean().fromJson(cardStr);
-            // GsonUtil.parse(cardStr, ContactsDetailsBean.class);
-
-            cacheMsgBean.setMsgType(CacheMsgBean.MSG_TYPE_BIZCARD).setJsonBodyObj(contactsBean);
-
-            //add to db
-            CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
-            cacheMsgBeanList.add(cacheMsgBean);
-
-            handlerIMMsgCallback(cacheMsgBean);
         } else if (msg.getMsgType() == ChatMsg.MsgType.REMARK) {
             ContentText text = msg.getMsgContent().getText();
             String cardStr = text.getContent();
@@ -1041,7 +605,6 @@ public class IMMsgManager {
             CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
             cacheMsgBeanList.add(cacheMsgBean);
 
-            handlerIMMsgCallback(cacheMsgBean);
         } else if (msg.getMsgType() == ChatMsg.MsgType.VIDEO) {//视频
             ContentVideo contentVideo = msg.getMsgContent().getVideo();//获取解析jsonBoby的内容
             long time;
@@ -1060,54 +623,7 @@ public class IMMsgManager {
             CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
             cacheMsgBeanList.add(cacheMsgBean);
 
-            handlerIMMsgCallback(cacheMsgBean);
         }
-    }
-
-    private void downloadAudio(final Context context, final CacheMsgBean cacheMsgBean, final String audioUrl) {
-        downloadAudio(context, cacheMsgBean, audioUrl, null);
-    }
-
-    public void downloadAudio(final Context context, final CacheMsgBean cacheMsgBean, final String audioUrl, final DownloadVoiceListener downloadVoiceListener) {
-        DownLoadingListener listener = new DownLoadingListener() {
-            @Override
-            public void onProgress(int cur, int total) {
-
-            }
-
-            @Override
-            public void downloadFail(String err) {
-                if (downloadVoiceListener != null) {
-                    downloadVoiceListener.error(err);
-                }
-            }
-
-            @Override
-            public void downloadSuccess(String path) {
-                if (cacheMsgBean != null) {
-                    if (cacheMsgBean.getJsonBodyObj() instanceof CacheMsgVoice) {
-                        //TODO 朗读不需要
-                        cacheMsgBeanList.add(cacheMsgBean);
-                        CacheMsgVoice cacheMsgVoice = (CacheMsgVoice) cacheMsgBean.getJsonBodyObj();
-                        cacheMsgVoice.setVoicePath(path);
-                        cacheMsgBean.setJsonBodyObj(cacheMsgVoice);
-                        //add to db
-                        CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
-                        handlerIMMsgCallback(cacheMsgBean);
-                    }
-                }
-                if (downloadVoiceListener != null) {
-                    downloadVoiceListener.success(path);
-                }
-            }
-        };
-        FileAsyncTaskDownload fileDownload = new FileAsyncTaskDownload(listener);
-        String fileName = AppUtils.md5(audioUrl);
-        String path = FileConfig.getAudioDownLoadPath();
-        fileDownload.setDownloadpath(path);
-        fileDownload.setDownLoadFileName(fileName);
-
-        fileDownload.execute(audioUrl);
     }
 
     /**
@@ -1153,38 +669,7 @@ public class IMMsgManager {
                         //.setColor(Color.GREEN)
                         .setAutoCancel(true);
 
-
-        if (HuxinSdkManager.instance().isNotifySound(context)
-                && isSound()) {
-            Uri uri;
-            int notify = AppUtils.getIntSharedPreferences(mContext, HxNotifySoundDialog.NOTIFY_SOUND, 3);
-            switch (HxNotifySoundDialog.Notify_Sound.values()[notify]) {
-                case ONE:
-                    uri = Uri.parse("android.resource://" + context.getPackageName() + "/" + R.raw.notify_one);
-                    break;
-                case TWO:
-                    uri = Uri.parse("android.resource://" + context.getPackageName() + "/" + R.raw.notify_two);
-                    break;
-                case THREE:
-                    uri = Uri.parse("android.resource://" + context.getPackageName() + "/" + R.raw.notify_three);
-                    break;
-                case SYSTEM:
-                    uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-                    break;
-                default:
-                    uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-                    break;
-            }
-
-            builder.setSound(uri);
-
-            //builder.setDefaults(Notification.DEFAULT_SOUND);
-        }
-
-
-        if (HuxinSdkManager.instance().isNotifyVibrate(context)) {
-            builder.setVibrate(new long[]{200, 200, 200, 200});
-        }
+        builder.setDefaults(Notification.DEFAULT_SOUND);
 
         // Creates an explicit intent for an Activity in your app
         Intent resultIntent = new Intent(context, IMConnectionActivity.class);
@@ -1420,162 +905,6 @@ public class IMMsgManager {
     }
 
 
-    private void notifyMsg(PushMsg pushMsg) {
-        String title = pushMsg.getTitle();
-        String content = pushMsg.getText();
-        if (title == null || content == null) {
-            return;
-        }
-
-
-        int act_type = pushMsg.getAct_type();
-        if (act_type > 6) {
-            return;
-        }
-
-        int msg_type = pushMsg.getMsg_type();
-        if (msg_type > 3) {
-            return;
-        }
-
-        int notifyID = pushMsg.getMsg_id();
-        //0 打开APP , 1 打开app activity ,2 浏览器打开url ,3 APP webview打开 url ,4 打开APP dialog图片展示 ,5 打开APP dialog文字展示，6 详情展示
-        int open_type = pushMsg.getOpen_type();
-
-        NotificationCompat.Builder builder =
-                new NotificationCompat.Builder(mContext)
-                        .setSmallIcon(getNotificationIcon())
-                        .setContentTitle(title)
-                        .setContentText(content)
-                        .setTicker(content)
-                        .setDefaults(Notification.DEFAULT_ALL)
-                        .setAutoCancel(true);
-
-        Intent resultIntent = new Intent();
-        if (open_type == 0) { //0 打开APP
-            //resultIntent.setClassName(mContext, "com.youmai.huxin.app.activity.MainAct");
-            //resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-            resultIntent = mContext.getPackageManager().getLaunchIntentForPackage(mContext.getPackageName());
-            if (resultIntent == null) {
-                Log.e(TAG, "handleMessage(): cannot find app: " + mContext.getPackageName());
-            } else {
-                resultIntent.setPackage(mContext.getPackageName());
-                resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            }
-
-        } else if (open_type == 1) { //1 打开app activity
-            if (!TextUtils.isEmpty(pushMsg.getActivity())) {
-                resultIntent.setClassName(mContext, pushMsg.getActivity());
-                //详情展示
-                if (pushMsg.getActivity().equals("com.youmai.hxsdk.push.ui.PushMsgDetailActivity")) {
-                    resultIntent.putExtra(PushMsgDetailActivity.TYPE, pushMsg.getMsg_type());
-                    resultIntent.putExtra(PushMsgDetailActivity.TITLE, title);
-                    resultIntent.putExtra(PushMsgDetailActivity.CONTENT, content);
-                    resultIntent.putExtra(PushMsgDetailActivity.TIME, pushMsg.getPublish_date());
-                    resultIntent.putExtra(SdkBaseActivity.FROM_PUSH, true);
-                }
-                resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            }
-        } else if (open_type == 2) {  //2 浏览器打开url
-            if (!TextUtils.isEmpty(pushMsg.getUrl())) {
-                resultIntent.setAction("android.intent.action.VIEW");
-                resultIntent.setData(Uri.parse(pushMsg.getUrl()));
-                resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            }
-        } else if (open_type == 3) { //3 APP webview打开 url
-            if (!TextUtils.isEmpty(pushMsg.getUrl())) {
-                resultIntent.putExtra(WebViewActivity.INTENT_TITLE, title);
-                resultIntent.putExtra(WebViewActivity.INTENT_URL, pushMsg.getUrl());
-                resultIntent.putExtra(SdkBaseActivity.FROM_PUSH, true);
-                resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                resultIntent.setClass(mContext, WebViewActivity.class);
-            }
-        } /*else if (open_type == 4) {   //4 详情展示
-            resultIntent.putExtra(PushMsgDetailActivity.TYPE, pushMsg.getMsg_type());
-            resultIntent.putExtra(PushMsgDetailActivity.TITLE, title);
-            resultIntent.putExtra(PushMsgDetailActivity.CONTENT, content);
-            resultIntent.putExtra(PushMsgDetailActivity.TIME, pushMsg.getPublish_date());
-            resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            resultIntent.setClass(mContext, PushMsgDetailActivity.class);
-        } */ else {
-            return;
-        }
-
-
-        Intent clickIntent = new Intent(mContext, HuxinReceiver.class);
-        clickIntent.setAction(HuxinReceiver.ACTION_PUSH_MSG);
-        clickIntent.putExtra("realIntent", resultIntent);
-        clickIntent.putExtra("push_msg", pushMsg);
-
-        PendingIntent resultPendingIntent = PendingIntent.getBroadcast(mContext, notifyID, clickIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        builder.setContentIntent(resultPendingIntent);
-
-        NotificationManager notificationManager =
-                (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
-        // mId allows you to update the notification later on.
-        notificationManager.notify(notifyID, builder.build());
-
-        pushMsgNotifyIdList.add(notifyID);
-    }
-
-
-    private void notifyMsg(RemindMsg remindMsg) {
-        String title = remindMsg.getTitle();
-        String content = remindMsg.getRemark();
-
-        String targetPhone = remindMsg.getOtherPhone();
-
-        if (title == null || content == null) {
-            return;
-        }
-
-        int notifyID = remindMsg.getRemindId();
-
-
-        NotificationCompat.Builder builder =
-                new NotificationCompat.Builder(mContext)
-                        .setSmallIcon(getNotificationIcon())
-                        .setContentTitle(title)
-                        .setContentText(content)
-                        .setTicker(content)
-                        .setDefaults(Notification.DEFAULT_ALL)
-                        .setAutoCancel(true);
-
-
-        Intent resultIntent = new Intent(mContext, IMConnectionActivity.class);
-
-        resultIntent.putExtra(IMConnectionActivity.DST_PHONE, targetPhone);
-        if (targetPhone.equals("4000")) {
-            resultIntent.putExtra(IMConnectionActivity.DST_NAME, mContext.getString(R.string.hx_sdk_feedback_name));
-            resultIntent.putExtra(IMConnectionActivity.IS_IM_TYPE, false);
-        } else {
-            resultIntent.putExtra(IMConnectionActivity.DST_NAME, HuxinSdkManager.instance().getContactName(targetPhone));
-        }
-
-        resultIntent.putExtra(IMConnectionActivity.MSG_ID, remindMsg.getMsgId().longValue());
-        resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-
-        Intent clickIntent = new Intent(mContext, HuxinReceiver.class);
-        clickIntent.setAction(HuxinReceiver.ACTION_REMIND_MSG);
-        clickIntent.putExtra("realIntent", resultIntent);
-        clickIntent.putExtra("remind_msg", remindMsg);
-
-        PendingIntent resultPendingIntent = PendingIntent.getBroadcast(mContext, notifyID, clickIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        builder.setContentIntent(resultPendingIntent);
-
-        NotificationManager notificationManager =
-                (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
-        // mId allows you to update the notification later on.
-        notificationManager.notify(notifyID, builder.build());
-
-        pushMsgNotifyIdList.add(notifyID);
-    }
-
-
     private int getNotificationIcon() {
         boolean useWhiteIcon = (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP);
         return useWhiteIcon ? R.drawable.img_msg : R.drawable.hx_ic_launcher;
@@ -1618,294 +947,5 @@ public class IMMsgManager {
         return res;
     }
 
-
-    public void pushMsg(Context context) {
-        new PushMsgAsyncTask(context).execute();
-        new RemindMsgAsyncTask(context).execute();
-    }
-
-    public void showMsgCount(Context context, Badge badgePush, TextView badgeRemind) {
-        MsgCountAsyncTask task = new MsgCountAsyncTask(context);
-        task.setBadgePush(badgePush);
-        task.setBadgeRemind(badgeRemind);
-        task.execute();
-    }
-
-
-    private class PushMsgAsyncTask extends AsyncTask<Void, Void, PushMsg> {
-        private Context context;
-
-        public PushMsgAsyncTask(Context context) {
-            this.context = context;
-        }
-
-        @Override
-        protected PushMsg doInBackground(Void... params) {
-            PushMsgDao pushMsgDao = GreenDBIMManager.instance(context).getPushMsgDao();
-            List<Integer> list = IMMsgManager.getInstance().getPushMsgNotifyIdList();
-
-            List<PushMsg> pushMsgList = null;
-            if (!ListUtils.isEmpty(list)) {
-                pushMsgList = pushMsgDao.queryBuilder()
-                        .where(PushMsgDao.Properties.Is_click.eq(false), PushMsgDao.Properties.Is_popup.eq(true))
-                        .orderAsc(PushMsgDao.Properties.Msg_type)
-                        .list();
-            }
-
-            PushMsg selPushMsg = null;
-
-            if (pushMsgList != null && pushMsgList.size() > 0) {
-                for (int i = 0; i < pushMsgList.size(); i++) {
-                    PushMsg item = pushMsgList.get(i);
-                    if (selPushMsg == null) {
-                        selPushMsg = item;
-                    } else {
-                        if (item.getMsg_type() == selPushMsg.getMsg_type()) {
-                            if (item.getRec_time() > selPushMsg.getRec_time()) {
-                                selPushMsg = item;
-                            }
-                        }
-                    }
-                }
-            }
-
-            if (selPushMsg != null) {
-                selPushMsg.setIs_click(true);
-                pushMsgDao.insertOrReplace(selPushMsg);
-            }
-
-            return selPushMsg;
-        }
-
-        @Override
-        protected void onPostExecute(final PushMsg pushMsg) {
-            if (pushMsg == null) {
-                return;
-            }
-            if (!TextUtils.isEmpty(pushMsg.getV_img())) { //4 打开APP dialog图片展示
-                HxNotifyImageDialog dialog = new HxNotifyImageDialog(context);
-                dialog.show();
-
-                dialog.setImage(pushMsg.getV_img());
-                dialog.setGoTaskClickListener(new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        pushOnClick(context, pushMsg);
-                    }
-                });
-            } else if (!TextUtils.isEmpty(pushMsg.getText())) {
-                HxNotifyTextDialog dialog = new HxNotifyTextDialog(context);
-                dialog.show();
-
-                dialog.setType(pushMsg.getMsg_type());
-                dialog.setContent(pushMsg.getText());
-                dialog.setBtnName(pushMsg.getBtn_name());
-
-                dialog.setGoTaskClickListener(new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        pushOnClick(context, pushMsg);
-                    }
-                });
-            }
-            IMMsgManager.getInstance().cancelPushMsg();
-        }
-
-    }
-
-    public class RemindMsgAsyncTask extends AsyncTask<Void, Void, RemindMsg> {
-        private Context context;
-
-        public RemindMsgAsyncTask(Context context) {
-            this.context = context;
-        }
-
-        @Override
-        protected RemindMsg doInBackground(Void... params) {
-            RemindMsgDao remindMsgDao = GreenDBIMManager.instance(context).getRemindMsgDao();
-            List<Integer> list = IMMsgManager.getInstance().getPushMsgNotifyIdList();
-
-            List<RemindMsg> remindMsgList = null;
-            if (!ListUtils.isEmpty(list)) {
-                remindMsgList = remindMsgDao.queryBuilder()
-                        .where(RemindMsgDao.Properties.IsRead.eq(false))
-                        .orderAsc(RemindMsgDao.Properties.RecTime)
-                        .list();
-            }
-
-            RemindMsg selRemindMsg = null;
-
-            if (remindMsgList != null && remindMsgList.size() > 0) {
-                selRemindMsg = remindMsgList.get(0);
-            }
-
-            if (selRemindMsg != null) {
-                selRemindMsg.setIsRead(true);
-                remindMsgDao.insertOrReplace(selRemindMsg);
-            }
-
-            return selRemindMsg;
-        }
-
-        @Override
-        protected void onPostExecute(final RemindMsg remindBean) {
-            if (remindBean == null) {
-                return;
-            }
-
-            HxRemindDialog dialog = new HxRemindDialog(context);
-            dialog.show();
-            dialog.setMessage(remindBean.getRemark())
-                    .setMsgIcon(RemindItem.ITEM_DRAWABLES[remindBean.getMsgIcon()])
-                    .setRemindFrom(remindBean.getOtherName())
-                    .setRemindTime(AbDateUtil.getStringByFormat(remindBean.getCreateTime(), AbDateUtil.dateFormatYMDHM))
-                    .setRemindQuickDial(remindBean.getQuickPhone())
-                    .setSureClickListener(new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Intent intent = new Intent(mContext, IMConnectionActivity.class);
-                            intent.putExtra(IMConnectionActivity.DST_PHONE, remindBean.getOtherPhone());
-                            intent.putExtra(IMConnectionActivity.DST_NAME, remindBean.getOtherName());
-                            intent.putExtra(IMConnectionActivity.IS_SHOW_AUDIO, false);
-                            intent.putExtra(IMConnectionActivity.MSG_ID, remindBean.getMsgId().longValue());
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            mContext.startActivity(intent);
-                        }
-                    })
-                    .setQuickDialListener(new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Intent intent = new Intent();
-                            int voipTime = SPDataUtil.getVoipDialogTimestamp(mContext);
-                            String combo = SPDataUtil.getComboEnd(mContext);
-                            if (TextUtils.isEmpty(combo) && voipTime != 0 && (TimeUtils.getNightTimestamp() - voipTime < 86400)) {
-                                // 调系统拨号
-                                intent.setAction(Intent.ACTION_CALL);
-                                intent.setData(Uri.parse("tel:" + remindBean.getQuickPhone()));
-                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                mContext.startActivity(intent);
-                            }
-                        }
-                    });
-
-            IMMsgManager.getInstance().cancelPushMsg();
-        }
-
-    }
-
-    private class MsgCountAsyncTask extends AsyncTask<Void, Void, MsgUnRead> {
-        private Context context;
-        private Badge badgePush;
-        private TextView tvRemind;
-
-        public MsgCountAsyncTask(Context context) {
-            this.context = context;
-        }
-
-        public void setBadgePush(Badge badgePush) {
-            this.badgePush = badgePush;
-        }
-
-        public void setBadgeRemind(TextView tvRemind) {
-            this.tvRemind = tvRemind;
-        }
-
-        @Override
-        protected MsgUnRead doInBackground(Void... params) {
-            MsgUnRead res = new MsgUnRead();
-            PushMsgDao pushMsgDao = GreenDBIMManager.instance(context).getPushMsgDao();
-            List<PushMsg> pushMsgList = pushMsgDao.queryBuilder()
-                    .where(PushMsgDao.Properties.Is_click.eq(false))
-                    .list();
-            if (pushMsgList != null) {
-                res.setPushMsg(pushMsgList.size());
-            }
-
-            RemindMsgDao remindMsgDao = GreenDBIMManager.instance(context).getRemindMsgDao();
-            List<RemindMsg> remindMsgList = remindMsgDao.queryBuilder()
-                    .where(RemindMsgDao.Properties.IsRead.eq(false))
-                    .orderAsc(RemindMsgDao.Properties.RecTime)
-                    .list();
-
-            if (remindMsgList != null) {
-                res.setRemindMsg(remindMsgList.size());
-            }
-
-            //res.setRemindMsg(5);//test
-            return res;
-        }
-
-        @Override
-        protected void onPostExecute(MsgUnRead msgUnRead) {
-
-            if (msgUnRead.getPushMsg() > 0 /*|| msgUnRead.getRemindMsg() > 0*/) {
-                badgePush.setBadgeNumber(-1);
-            } else {
-                badgePush.hide(false);
-            }
-
-            if (tvRemind.getVisibility() == View.INVISIBLE && msgUnRead.getRemindMsg() > 0) {
-                String text = String.format(Locale.CHINESE, "%d条提醒通知", msgUnRead.getRemindMsg());
-                tvRemind.setVisibility(View.VISIBLE);
-                tvRemind.setText(text);
-            } else {
-                tvRemind.setVisibility(View.INVISIBLE);
-            }
-        }
-
-    }
-
-    private void pushOnClick(Context context, PushMsg pushMsg) {
-        int msg_type = pushMsg.getMsg_type();
-        int open_type = pushMsg.getOpen_type();
-        String title = pushMsg.getTitle();
-        String content = pushMsg.getText();
-
-        Intent resultIntent = new Intent();
-        if (msg_type == 0) {
-            if (!TextUtils.isEmpty(title.trim()) && !TextUtils.isEmpty(content.trim())) {
-                resultIntent.putExtra(PushMsgDetailActivity.TYPE, pushMsg.getMsg_type());
-                resultIntent.putExtra(PushMsgDetailActivity.TITLE, title);
-                resultIntent.putExtra(PushMsgDetailActivity.CONTENT, content);
-                resultIntent.putExtra(PushMsgDetailActivity.TIME, pushMsg.getPublish_date());
-                resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                resultIntent.setClass(context, PushMsgDetailActivity.class);
-                context.startActivity(resultIntent);
-            }
-        } else {
-            if (open_type == 0) { //0 打开APP
-                //do nothing
-            } else if (open_type == 1) { //1 打开app activity
-                if (!TextUtils.isEmpty(pushMsg.getActivity())) {
-                    resultIntent.setClassName(mContext, pushMsg.getActivity());
-                    resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    context.startActivity(resultIntent);
-                }
-            } else if (open_type == 2) {  //2 浏览器打开url
-                if (!TextUtils.isEmpty(pushMsg.getUrl())) {
-                    resultIntent.setAction("android.intent.action.VIEW");
-                    resultIntent.setData(Uri.parse(pushMsg.getUrl()));
-                    resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    context.startActivity(resultIntent);
-                }
-            } else if (open_type == 3) { //3 APP webview打开 url
-                if (!TextUtils.isEmpty(pushMsg.getUrl())) {
-                    resultIntent.putExtra(WebViewActivity.INTENT_TITLE, title);
-                    resultIntent.putExtra(WebViewActivity.INTENT_URL, pushMsg.getUrl());
-                    resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    resultIntent.setClass(mContext, WebViewActivity.class);
-                    context.startActivity(resultIntent);
-                }
-            } else {
-                return;
-            }
-        }
-    }
-
-    public interface DownloadVoiceListener {
-        void success(String path);
-
-        void error(String msg);
-    }
 
 }

@@ -2,26 +2,8 @@ package com.youmai.hxsdk.db.helper;
 
 import android.content.Context;
 
-import com.youmai.hxsdk.db.dao.AppAuthCfgDao;
-import com.youmai.hxsdk.db.dao.AppCfgDao;
-import com.youmai.hxsdk.db.dao.BusinessCardDataDao;
-import com.youmai.hxsdk.db.dao.BusinessCardInfoDao;
 import com.youmai.hxsdk.db.dao.CacheMsgBeanDao;
-import com.youmai.hxsdk.db.dao.CardDao;
-import com.youmai.hxsdk.db.dao.ChatMsgDao;
-import com.youmai.hxsdk.db.dao.ContCfgDao;
 import com.youmai.hxsdk.db.dao.DaoMaster;
-import com.youmai.hxsdk.db.dao.HxUsersDao;
-import com.youmai.hxsdk.db.dao.ImCardModelDao;
-import com.youmai.hxsdk.db.dao.OwnerDataDao;
-import com.youmai.hxsdk.db.dao.PhoneCardsDao;
-import com.youmai.hxsdk.db.dao.PushMsgDao;
-import com.youmai.hxsdk.db.dao.RemindMsgDao;
-import com.youmai.hxsdk.db.dao.ShowCfgDao;
-import com.youmai.hxsdk.db.dao.ShowDataDao;
-import com.youmai.hxsdk.db.dao.StatsCfgDao;
-import com.youmai.hxsdk.db.dao.StatsDataDao;
-import com.youmai.hxsdk.db.dao.UIDataDao;
 import com.youmai.hxsdk.db.manager.GreenDbManager;
 
 import org.greenrobot.greendao.database.Database;
@@ -56,16 +38,7 @@ public class HMROpenHelper extends DaoMaster.DevOpenHelper {
     @Override
     public void onUpgrade(Database db, int oldVersion, int newVersion) {
         //操作数据库的更新
-        if (dBName.equals(GreenDbManager.DBNAME)) {
-            MigrationHelper.migrate(db, AppAuthCfgDao.class, AppCfgDao.class,
-                    ContCfgDao.class, ChatMsgDao.class, HxUsersDao.class, PhoneCardsDao.class,
-                    ShowCfgDao.class, ShowDataDao.class, StatsCfgDao.class, StatsDataDao.class,
-                    UIDataDao.class, OwnerDataDao.class, CacheMsgBeanDao.class, CardDao.class,
-                    ImCardModelDao.class, BusinessCardDataDao.class, PushMsgDao.class, RemindMsgDao.class);
-        } else {
-            MigrationHelper.migrate(db, CacheMsgBeanDao.class, CardDao.class,
-                    ImCardModelDao.class, PushMsgDao.class, RemindMsgDao.class, BusinessCardDataDao.class, BusinessCardInfoDao.class);
-        }
+        MigrationHelper.migrate(db, CacheMsgBeanDao.class);
     }
 
 }

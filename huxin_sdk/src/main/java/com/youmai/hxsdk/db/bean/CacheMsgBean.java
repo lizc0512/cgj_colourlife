@@ -15,7 +15,6 @@ import com.youmai.hxsdk.im.cache.CacheMsgShow;
 import com.youmai.hxsdk.im.cache.CacheMsgTxt;
 import com.youmai.hxsdk.im.cache.CacheMsgVideo;
 import com.youmai.hxsdk.im.cache.CacheMsgVoice;
-import com.youmai.hxsdk.im.cache.ContactsDetailsBean;
 import com.youmai.hxsdk.im.cache.JsonFormate;
 import com.youmai.hxsdk.utils.LogUtils;
 
@@ -252,9 +251,6 @@ public class CacheMsgBean implements Parcelable, Cloneable {
                 break;
             case MSG_TYPE_CALL:
                 jsonBodyObj = new CacheMsgCall().fromJson(contentJsonBody);
-                break;
-            case MSG_TYPE_BIZCARD:
-                jsonBodyObj = new ContactsDetailsBean().fromJson(contentJsonBody);
                 break;
             case MSG_TYPE_REMARK:
                 jsonBodyObj = new CacheMsgRemark().fromJson(contentJsonBody);

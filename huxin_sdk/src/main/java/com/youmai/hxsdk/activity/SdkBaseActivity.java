@@ -6,9 +6,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
-import com.youmai.hxsdk.db.bean.ChatMsg;
+
 import com.youmai.hxsdk.entity.CallInfo;
-import com.youmai.hxsdk.interfaces.OnChatMsg;
 import com.youmai.hxsdk.utils.AppUtils;
 
 /**
@@ -31,14 +30,6 @@ public class SdkBaseActivity extends AppCompatActivity {
     public View popAttachView;
 
     protected boolean isHookEmo = false;//如果是挂机界面置为true,不接收表情
-
-
-    private OnChatMsg onChatMsg = new OnChatMsg() {
-        @Override
-        public void onCallback(ChatMsg msg) {
-            
-        }
-    };
 
 
     @Override

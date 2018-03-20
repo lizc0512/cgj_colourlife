@@ -50,10 +50,11 @@ public class HuxinService extends Service {
     private static final String TAG = HuxinService.class.getSimpleName();
 
     public static final String BOOT_SERVICE = "com.youmai.huxin.service.BOOT_SERVICE"; //启动服务
-    public static final String NEW_OUTGOING_CALL = "com.youmai.huxin.service.NEW_OUTGOING_CALL";  //call
-    public static final String SHOW_FLOAT_VIEW = "com.youmai.huxin.service.SHOW_FLOAT_VIEW";  //show
-    public static final String HIDE_FLOAT_VIEW = "com.youmai.huxin.service.HIDE_FLOAT_VIEW";  //hide
     public static final String IM_LOGIN_OUT = "com.youmai.huxin.service.IM_LOGIN_OUT";  //im login out
+
+    //private static final int HX_ALL_CONFIG = 0;
+    //private static final int HX_ALL_SHOW = 1;
+    //private static final int HX_ALL_CONT = 2;
 
     static HuxinService instance;
 
@@ -65,10 +66,6 @@ public class HuxinService extends Service {
      */
     private TcpClient mClient;
 
-
-    private static final int HX_ALL_CONFIG = 0;
-    private static final int HX_ALL_SHOW = 1;
-    private static final int HX_ALL_CONT = 2;
 
     private ServiceHandler mServiceHandler;
 
@@ -92,16 +89,12 @@ public class HuxinService extends Service {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
-                case HX_ALL_CONFIG:
-                    //BackGroundJob.instance().reqConfig(mContext);
+                /*case HX_ALL_CONFIG:
                     break;
                 case HX_ALL_SHOW:
-                    //HxShowHelper.instance().updateAllShow(mContext);
-                    //HxShowHelper.instance().loadUserShowList(mContext);
                     break;
                 case HX_ALL_CONT:
-                    //HxUsersHelper.instance().updateAllUser(mContext);
-                    break;
+                    break;*/
             }
         }
     }
@@ -129,7 +122,7 @@ public class HuxinService extends Service {
          * @param callback  回调
          */
         public void sendProto(GeneratedMessage msg, int commandId, ReceiveListener callback) {
-            mClient.sendProto(msg, (short) commandId, callback);
+            mClient.sendProto(msg, commandId, callback);
         }
 
         public void setNotifyListener(NotifyListener listener) {
@@ -226,7 +219,6 @@ public class HuxinService extends Service {
             if (intent.getAction() == null) {
                 return;
             }
-
             if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
                 // DO WHATEVER YOU NEED TO DO HERE
             } else if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {

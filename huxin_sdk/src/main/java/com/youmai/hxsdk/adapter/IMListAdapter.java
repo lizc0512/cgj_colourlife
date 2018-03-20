@@ -49,14 +49,12 @@ import com.youmai.hxsdk.activity.IMConnectionActivity;
 import com.youmai.hxsdk.activity.PictureIndicatorActivity;
 import com.youmai.hxsdk.config.AppConfig;
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
-import com.youmai.hxsdk.db.bean.HxUsers;
 import com.youmai.hxsdk.dialog.HxCardDialog;
 import com.youmai.hxsdk.dialog.HxRemarkMergeDialog;
 import com.youmai.hxsdk.entity.RespBaseBean;
 import com.youmai.hxsdk.http.IPostListener;
 import com.youmai.hxsdk.im.IMHelper;
 import com.youmai.hxsdk.im.IMMsgManager;
-import com.youmai.hxsdk.im.ImCardUtil;
 import com.youmai.hxsdk.im.cache.CacheMsgCall;
 import com.youmai.hxsdk.im.cache.CacheMsgEmotion;
 import com.youmai.hxsdk.im.cache.CacheMsgFile;
@@ -69,7 +67,6 @@ import com.youmai.hxsdk.im.cache.CacheMsgRemark;
 import com.youmai.hxsdk.im.cache.CacheMsgTxt;
 import com.youmai.hxsdk.im.cache.CacheMsgVideo;
 import com.youmai.hxsdk.im.cache.CacheMsgVoice;
-import com.youmai.hxsdk.im.cache.ContactsDetailsBean;
 import com.youmai.hxsdk.im.cache.JsonFormate;
 import com.youmai.hxsdk.im.voice.manager.MediaManager;
 import com.youmai.hxsdk.module.map.AbstractStartOrQuit;
@@ -79,12 +76,10 @@ import com.youmai.hxsdk.module.map.AnswerOrReject;
 import com.youmai.hxsdk.module.remind.SetRemindActivity;
 import com.youmai.hxsdk.module.videoplayer.VideoPlayerActivity;
 import com.youmai.hxsdk.module.videoplayer.bean.VideoDetailInfo;
-import com.youmai.hxsdk.push.ui.HxRemindCancelDialog;
 import com.youmai.hxsdk.service.DownloadService;
 import com.youmai.hxsdk.service.SendMsgService;
 import com.youmai.hxsdk.service.download.bean.FileQueue;
 import com.youmai.hxsdk.utils.GsonUtil;
-import com.youmai.hxsdk.utils.IntentQueryUtil;
 import com.youmai.hxsdk.utils.QiniuUrl;
 import com.youmai.hxsdk.utils.TextMergeUtils;
 import com.youmai.hxsdk.utils.TimeUtils;
@@ -232,7 +227,6 @@ public class IMListAdapter extends RecyclerView.Adapter {
         //srsm add
         mImBeanList.addAll(IMMsgManager.getInstance().genCacheMsgBeanList(mContext, mDstPhone, true));
         defaultVoice(mImBeanList);
-        loadCardFlag(mImBeanList);
 
         mRecyclerView.getItemAnimator().setChangeDuration(0);
         mRecyclerView.getItemAnimator().setAddDuration(0);
@@ -445,7 +439,6 @@ public class IMListAdapter extends RecyclerView.Adapter {
         } else if (holder instanceof ShowViewHolder) { //秀
             //onBindCall((ShowViewHolder) holder, position);
         } else if (holder instanceof BIZCardViewHolder) { //卡片
-            onBindBIZCARD((BIZCardViewHolder) holder, position);
         } else if (holder instanceof RemarkViewHolder) {//备注
             onBindRemark((RemarkViewHolder) holder, position);
         } else if (holder instanceof VideoViewHolder) {//视频
@@ -455,73 +448,7 @@ public class IMListAdapter extends RecyclerView.Adapter {
         }
     }
 
-    /**
-     * 前八位保存卡片头尾信息，后八位保存消息类型
-     */
-    private int convertItemViewType(CacheMsgBean cacheMsgBean, int type) {
-        int cardType = -1;
-        int cardFlag = cacheMsgBean.getCardTag();
-        if (cardFlag == ImCardUtil.MSG_CARD_TAG_HEAD) {
-            cardType = type | CARD_HEAD_FLAG;
-        } else if (cardFlag == ImCardUtil.MSG_CARD_TAG_TAIL) {
-            cardType = type | CARD_TAIL_FLAG;
-        } else if (cardFlag == ImCardUtil.MSG_CARD_TAG_HEAD_TAIL) {
-            cardType = type | CARD_HEAD_TAIL_FLAG;
-        } else {
-            cardType = type;
-        }
-        return cardType;
-    }
 
-
-    /**
-     * 从数据库取沟通卡的标识
-     *
-     * @param phone
-     * @param id
-     * @return
-     */
-    private int getCardFlag(String phone, long id) {
-        int cardFlag = ImCardUtil.getImCardFlag(mContext, phone, id);
-        return cardFlag;
-    }
-
-    /**
-     * 从数据库加载沟通卡的标识，将标识初始化进 CacheMsgBean（相当于内存）
-     * 避免一直查库，影响性能
-     *
-     * @param currList
-     */
-
-    private void loadCardFlag(List<CacheMsgBean> currList) {
-        //理论上第一个就是头，分页时应另做处理
-        if (currList == null || currList.size() == 0) {
-            return;
-        }
-        long[] headTailId = new long[2];
-        int flag = 1;
-        for (CacheMsgBean bean : currList) {
-            if (flag == 1) {
-                headTailId = ImCardUtil.getHeadTailId(mContext, bean.getId());
-                if (headTailId[0] == -1 || headTailId[1] == -1) {
-                    bean.setCardTag(ImCardUtil.MSG_CARD_TAG_MIDDLE);
-                    continue;
-                }
-                flag = 0;
-            }
-            if (bean.getId() == headTailId[0] && bean.getId() == headTailId[1]) {
-                bean.setCardTag(ImCardUtil.MSG_CARD_TAG_HEAD_TAIL);
-                flag = 1;
-            } else if (bean.getId() == headTailId[0]) {
-                bean.setCardTag(ImCardUtil.MSG_CARD_TAG_HEAD);
-            } else if (bean.getId() == headTailId[1]) {
-                bean.setCardTag(ImCardUtil.MSG_CARD_TAG_TAIL);
-                flag = 1;
-            } else {
-                bean.setCardTag(ImCardUtil.MSG_CARD_TAG_MIDDLE);
-            }
-        }
-    }
 
     @Override
     public int getItemViewType(int position) {
@@ -566,9 +493,7 @@ public class IMListAdapter extends RecyclerView.Adapter {
                 oriType = cacheMsgBean.isRightUI() ? L_SHARE_RIGHT : L_SHARE_LEFT;
                 break;
         }
-
-        int reqType = convertItemViewType(cacheMsgBean, oriType);
-        return reqType;
+        return oriType;
     }
 
     /**
@@ -844,14 +769,6 @@ public class IMListAdapter extends RecyclerView.Adapter {
                     Utils.getFontSize(txtViewHolder.senderTV.getTextSize()));
             txtViewHolder.senderTV.setText(msgSpan);
             if (theme == null) {
-                if (isImTypeUI()) {
-                    txtViewHolder.senderTV.setCanShow(true);
-                    txtViewHolder.senderTV.setDeleteShow(true);
-                } else {
-                    txtViewHolder.senderTV.setCanShow(true);
-                    txtViewHolder.senderTV.setDeleteShow(false);
-                }
-
                 txtViewHolder.senderTV.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -898,7 +815,7 @@ public class IMListAdapter extends RecyclerView.Adapter {
 
                     @Override
                     public void read() {
-                        readTextMsg(cacheMsgBean, position);
+
                     }
 
                     @Override
@@ -933,217 +850,6 @@ public class IMListAdapter extends RecyclerView.Adapter {
 
 
     /**
-     * 读文本消息,包括段子
-     * 请求服务器文本转语音
-     *
-     * @param cacheMsgBean
-     * @param position
-     */
-    private void readTextMsg(final CacheMsgBean cacheMsgBean, final int position) {
-        final String text;
-        String voiceId = "";
-        if (cacheMsgBean.getJsonBodyObj() instanceof CacheMsgJoke) {
-            CacheMsgJoke jokeBodyMsg = (CacheMsgJoke) cacheMsgBean.getJsonBodyObj();
-            voiceId = jokeBodyMsg.getVoiceId();
-            text = jokeBodyMsg.getMsgJoke().replace(CacheMsgJoke.JOKES, "");
-        } else {
-            CacheMsgTxt textBodyMsg = (CacheMsgTxt) cacheMsgBean.getJsonBodyObj();
-            voiceId = textBodyMsg.getVoiceId();
-            text = textBodyMsg.getMsgTxt();
-        }
-
-        if (TextUtils.isEmpty(voiceId)) {
-            cacheMsgBean.setSend_flag(-1);
-            mImBeanList.set(position, cacheMsgBean);
-            notifyItemChanged(position);
-        } else {
-            //已经缓存服务端的文件路径
-            String voiceUrl = AppConfig.getDownloadHost() + voiceId;//服务端七牛路径
-            readTxt(cacheMsgBean, voiceUrl, position);
-        }
-    }
-
-    /**
-     * 文本语音下载
-     *
-     * @param cacheMsgBean
-     * @param voiceUrl
-     * @param position
-     */
-    private void readTxt(final CacheMsgBean cacheMsgBean, final String voiceUrl, final int position) {
-
-        JsonFormate jsonBodyObj = cacheMsgBean.getJsonBodyObj();
-        String voicePath;
-        boolean isJoke = false;
-        CacheMsgTxt bodyMsgTxt = null;
-        CacheMsgJoke bodyMsgJoke = null;
-        if (jsonBodyObj instanceof CacheMsgJoke) {
-            bodyMsgJoke = (CacheMsgJoke) jsonBodyObj;
-            voicePath = bodyMsgJoke.getVoicePath();
-            isJoke = true;
-        } else {
-            bodyMsgTxt = (CacheMsgTxt) cacheMsgBean.getJsonBodyObj();
-            voicePath = bodyMsgTxt.getVoicePath();
-        }
-        if (TextUtils.isEmpty(voicePath)) {
-            //下载音频文件
-            final boolean finalIsJoke = isJoke;
-            final CacheMsgTxt finalBodyMsgTxt = bodyMsgTxt;
-            final CacheMsgJoke finalBodyMsgJoke = bodyMsgJoke;
-            IMMsgManager.getInstance().downloadAudio(mContext, cacheMsgBean, voiceUrl, new IMMsgManager.DownloadVoiceListener() {
-                @Override
-                public void success(String path) {
-                    if (finalIsJoke) {
-                        finalBodyMsgJoke.setVoicePath(path);
-                        cacheMsgBean.setJsonBodyObj(finalBodyMsgJoke);
-                    } else {
-                        finalBodyMsgTxt.setVoicePath(path);
-                        cacheMsgBean.setJsonBodyObj(finalBodyMsgTxt);
-                    }
-                    mImBeanList.set(position, cacheMsgBean);
-                    CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
-                    playTextVoice(cacheMsgBean, path, position);
-                }
-
-                @Override
-                public void error(final String msg) {
-                    mIMConnectActivity.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(mContext, "获取转语音文件失败", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
-            });
-        } else {
-            playTextVoice(cacheMsgBean, voicePath, position);
-        }
-    }
-
-    /**
-     * 文本语音播放
-     *
-     * @param cacheMsgBean
-     * @param voiceUrl     本地语音路径
-     * @param position
-     */
-    private void playTextVoice(final CacheMsgBean cacheMsgBean, final String voiceUrl, final int position) {
-        stopTextVoice();
-        //播放声音
-        mPlayVoicePosition = position;
-        cacheMsgBean.setSend_flag(5);
-        mImBeanList.set(position, cacheMsgBean);
-        notifyItemChanged(position);
-        new AsyncTask<Void, Void, Void>() {
-
-            @Override
-            protected Void doInBackground(Void... voids) {
-                MediaManager.playSound(voiceUrl, new MediaPlayer.OnCompletionListener() {
-                    @Override
-                    public void onCompletion(MediaPlayer mp) {
-                        cacheMsgBean.setSend_flag(0);
-                        CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
-                        mImBeanList.set(position, cacheMsgBean);
-                        notifyItemChanged(position);
-                    }
-                });
-                return null;
-            }
-        }.execute();
-    }
-
-    private void voiceToText(final CacheMsgBean cacheMsgBean, final int position) {
-        //转文字
-        CacheMsgVoice cacheMsgVoice = (CacheMsgVoice) cacheMsgBean.getJsonBodyObj();
-        if (!cacheMsgVoice.isHasLoad()) {
-            cacheMsgVoice.setHasLoad(true);
-            cacheMsgBean.setJsonBodyObj(cacheMsgVoice);
-            CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
-            mImBeanList.set(position, cacheMsgBean);
-            notifyItemChanged(position);
-        }
-        String voiceStr = cacheMsgVoice.getVoiceText();
-        if (TextUtils.isEmpty(voiceStr)) {
-            String fid = cacheMsgVoice.getFid();
-            if (TextUtils.isEmpty(fid)) {
-                Toast.makeText(mContext, R.string.hx_im_turn_text_tip, Toast.LENGTH_SHORT).show();
-                return;
-            }
-            cacheMsgBean.setSend_flag(-1);
-            mImBeanList.set(position, cacheMsgBean);
-            notifyItemChanged(position);
-        } else {
-            CacheMsgBean cacheMsgBean2 = mImBeanList.get(position);
-            cacheMsgVoice.setShowText(true);
-            cacheMsgBean2.setJsonBodyObj(cacheMsgVoice);
-            mImBeanList.set(position, cacheMsgBean2);
-            notifyItemChanged(position);
-            if (listener != null) {
-                listener.smoothScroll(position, 0, false);
-            }
-        }
-    }
-
-
-    /**
-     * 名片
-     */
-    private void onBindBIZCARD(BIZCardViewHolder bizCardViewHolder, final int position) {
-        final CacheMsgBean cacheMsgBean = mImBeanList.get(position);
-
-        final ContactsDetailsBean cacheMsgTxt = (ContactsDetailsBean) cacheMsgBean.getJsonBodyObj();
-        showSendStart(bizCardViewHolder, cacheMsgBean.getSend_flag(), cacheMsgBean, position);
-
-        String nameStr = cacheMsgTxt.getName();
-        String jobStr = cacheMsgTxt.getJob();
-        String companyStr = cacheMsgTxt.getCompany();
-        String emailStr;
-        String addressStr;
-        if (cacheMsgTxt.getEmail() != null && cacheMsgTxt.getEmail().size() > 0) {
-            emailStr = cacheMsgTxt.getEmail().get(0).getEmail();
-        } else {
-            emailStr = "";
-        }
-
-        if (cacheMsgTxt.getAddress() != null && cacheMsgTxt.getAddress().size() > 0) {
-            addressStr = cacheMsgTxt.getAddress().get(0).getAddress();
-        } else {
-            addressStr = "";
-        }
-        String phoneStr;
-        if (cacheMsgTxt.getPhone() != null && cacheMsgTxt.getPhone().size() > 0) {
-            phoneStr = cacheMsgTxt.getPhone().get(0).getPhone();
-        } else {
-            phoneStr = "";
-        }
-        if (TextUtils.isEmpty(jobStr)) {
-            jobStr = mContext.getString(R.string.hx_card_no_write_job);
-        }
-        if (TextUtils.isEmpty(companyStr)) {
-            companyStr = mContext.getString(R.string.hx_card_no_write_company);
-        }
-        //名字为空用号码代替
-        if (TextUtils.isEmpty(nameStr)) {
-            nameStr = phoneStr;
-        }
-        bizCardViewHolder.nickNameText.setText(nameStr);
-        bizCardViewHolder.jobText.setText(jobStr);
-        bizCardViewHolder.companyText.setText(companyStr);
-        bizCardViewHolder.emailText.setText(emailStr);
-        bizCardViewHolder.addressText.setText(addressStr);
-        bizCardViewHolder.phoneText.setText(phoneStr);
-
-        Glide.with(mContext)
-                .load(cacheMsgTxt.getIconUrl())
-                .apply(new RequestOptions()
-                        .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-                        .circleCrop()
-                        .placeholder(R.drawable.hx_voip_header_normal))
-                .into(bizCardViewHolder.headImg);
-
-    }
-
-    /**
      * 备注
      */
     private void onBindRemark(RemarkViewHolder remarkViewHolder, final int position) {
@@ -1163,148 +869,6 @@ public class IMListAdapter extends RecyclerView.Adapter {
                 remarkViewHolder.typeText.setText(R.string.hx_im_msg_remark_tip2);
             }
         }
-
-        remarkViewHolder.lay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                CacheMsgRemark cacheMsgRemark = (CacheMsgRemark) mImBeanList.get(position).getJsonBodyObj();
-
-                if (cacheMsgBean.isRightUI()) {
-                    remarkPreviewDialog(cacheMsgRemark);
-                } else {
-                    if (cacheMsgRemark.getType() == CacheMsgRemark.TYPE_UPDATE) {
-                        remarkMergeDialog(cacheMsgBean, position);
-                    } else {
-                        remarkPreviewDialog(cacheMsgRemark);
-                    }
-                }
-            }
-        });
-    }
-
-    //只需查看，处理后的备注消息提示窗
-    private void remarkPreviewDialog(CacheMsgRemark cacheMsgRemark) {
-
-        String themeStr = cacheMsgRemark.getTheme();
-        String remarkStr = cacheMsgRemark.getRemark();
-        int type = cacheMsgRemark.getType();
-        String tipStr;
-        String name = mDstName == null ? mContext.getString(R.string.hx_im_msg_remark_tip5) : mDstName;
-        if (type == CacheMsgRemark.TYPE_MERGE) {
-            tipStr = String.format(mContext.getString(R.string.hx_im_remark_preview_dialog_tip), name, mContext.getString(R.string.hx_im_msg_remark_merge));
-        } else if (type == CacheMsgRemark.TYPE_REPLACE) {
-            tipStr = String.format(mContext.getString(R.string.hx_im_remark_preview_dialog_tip), name, mContext.getString(R.string.hx_im_msg_remark_replace));
-        } else {
-            tipStr = mContext.getString(R.string.hx_im_remark_preview_dialog_tip2);
-        }
-    }
-
-    //有合并或替换的提示窗
-    private void remarkMergeDialog(final CacheMsgBean cacheMsgBean, final int position) {
-        final CacheMsgRemark cacheMsgRemark = (CacheMsgRemark) cacheMsgBean.getJsonBodyObj();
-        final long timestamp = cacheMsgRemark.getTimestamp();
-
-        String name = mDstName == null ? mContext.getString(R.string.hx_im_msg_remark_tip5) : mDstName;//对方昵称
-        String replaceTitle = cacheMsgRemark.getTheme();
-        String replaceContent = TextMergeUtils.replaceRemark(mContext, cacheMsgRemark.getRemark(), name);
-
-        String time = TimeUtils.getFormateDate5(timestamp);
-        String tipStr = String.format(mContext.getString(R.string.hx_im_remark_dialog_tip), name, time);
-
-        String[] targetCardInfo = ImCardUtil.getCardByTime(mContext, mDstPhone, timestamp);
-        if (targetCardInfo == null || (targetCardInfo[0] == null && targetCardInfo[1] == null)) {
-            //只显示替换备注
-        } else {
-            String localTheme = targetCardInfo[0];
-            String localRemark = targetCardInfo[1];
-            String mergeTitle = TextMergeUtils.mergeTheme(cacheMsgRemark.getTheme(), localTheme);
-            String mergeContent = TextMergeUtils.mergeRemark(mContext, cacheMsgRemark.getRemark(), localRemark, name);
-
-            HxRemarkMergeDialog.Builder remarkDialog = new HxRemarkMergeDialog.Builder(mContext)
-                    .setTip(tipStr)
-                    .setMergeTitle(mergeTitle).setMergeContent(mergeContent)
-                    .setReplaceTitle(replaceTitle).setReplaceContent(replaceContent)
-                    .setOnListener(new HxRemarkMergeDialog.OnClickListener() {
-                        @Override
-                        public void onMergeClick(DialogInterface dialog, String mergeTheme, String mergeRemark) {
-                            dialog.dismiss();
-                            //合并处理
-                            saveRemark(cacheMsgBean, timestamp, mergeTheme, mergeRemark, CacheMsgRemark.TYPE_MERGE, position);
-                        }
-
-                        @Override
-                        public void onReplaceClick(DialogInterface dialog, String replaceTheme, String replaceRemark) {
-                            dialog.dismiss();
-                            //替换处理
-                            saveRemark(cacheMsgBean, timestamp, replaceTheme, replaceRemark, CacheMsgRemark.TYPE_REPLACE, position);
-                        }
-
-                        @Override
-                        public void onMoreInfoClick(int type, String theme, String remark) {
-                        }
-                    });
-            remarkDialog.create().show();
-        }
-    }
-
-    //保存备注
-    private void saveRemark(CacheMsgBean cacheMsgBean, long timestamp, String replaceTitle, String replaceContent, int type, int position) {
-        CacheMsgRemark cacheMsgRemark = (CacheMsgRemark) cacheMsgBean.getJsonBodyObj();
-        long targetCard[] = ImCardUtil.setCardByTime(mContext, mDstPhone, timestamp, replaceTitle, replaceContent);
-        if (targetCard[1] != -1) {
-            if (type == CacheMsgRemark.TYPE_MERGE) {
-                ToastUtil.showSaveToast(mContext, mContext.getString(R.string.hx_im_msg_remark_tip3));
-            } else {
-                ToastUtil.showSaveToast(mContext, mContext.getString(R.string.hx_im_msg_remark_tip4));
-            }
-            cacheMsgRemark.setType(type);
-            cacheMsgBean.setJsonBodyObj(cacheMsgRemark);
-            CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
-            notifyItemChanged(position);//刷新接收备注卡消息
-
-            //刷新被修改的沟通卡，从后往前找，因为一般修改的是最近的
-            for (int i = mImBeanList.size() - 1; i >= 0; i--) {
-                if (mImBeanList.get(i).getId() == targetCard[1]) {
-                    notifyItemChanged(i);
-                    if (listener != null) {
-                        listener.smoothScroll(i, 200, false);
-                    }
-                    break;
-                }
-            }
-        } else {
-            ToastUtil.showSaveToast(mContext, mContext.getString(R.string.im_card_handler_remake_fail));
-        }
-    }
-
-    private void onHandlerViewContact(CacheMsgBean cacheMsgBean, ContactsDetailsBean cacheMsgTxt) {
-        Intent intent = new Intent();
-        intent.setAction("com.youmai.huxin.CotactDetails");
-        if (cacheMsgBean.isRightUI()) {
-            intent.putExtra("contactID", -2);
-        } else {
-            //接收
-            intent.putExtra("contactID", -1);
-            intent.putExtra("currMsgBeanId", cacheMsgBean.getId());
-        }
-        intent.putExtra("bean", cacheMsgTxt);
-
-        if (!IntentQueryUtil.isExist(mContext, intent)) {
-            Toast.makeText(mContext, R.string.im_want_user_install_huxin_app, Toast.LENGTH_SHORT).show();
-        } else {
-            mContext.startActivity(intent);
-        }
-    }
-
-    private void onHandlerInsertContact(CacheMsgBean cacheMsgBean, ContactsDetailsBean cacheMsgTxt) {
-        if (TextUtils.isEmpty(cacheMsgTxt.getName())) {
-            cacheMsgTxt.setName(cacheMsgTxt.getPhone().get(0).getPhone());
-        }
-        //保存联系人的操作
-        Intent intent1 = new Intent();
-        intent1.setAction("com.youmai.huxin.IM_SAVE_CONTACTS");
-        intent1.putExtra("extra_contact_bean", cacheMsgTxt);
-        mContext.sendBroadcast(intent1);
     }
 
     /**
@@ -1500,7 +1064,6 @@ public class IMListAdapter extends RecyclerView.Adapter {
             @Override
             public void onQuit(CacheMsgBean cacheMsgBean) {
                 mImBeanList.set(position, cacheMsgBean);
-                processPreviousMsg(cacheMsgBean);
                 notifyDataSetChanged();
                 focusBottom(true);
 
@@ -2045,8 +1608,6 @@ public class IMListAdapter extends RecyclerView.Adapter {
         }
     }
 
-    private HxUsers mOwnUser = null;
-    private HxUsers mOtherUser = null;
     private Bitmap mTargetBitmap = null;
     private Bitmap mSelfBitmap = null;
 
@@ -2069,9 +1630,6 @@ public class IMListAdapter extends RecyclerView.Adapter {
                     });
         } else {
             String urlOther = "";// = AppConfig.DOWNLOAD_IMAGE + targetPhone;
-            if (null != mOtherUser && null != mOtherUser.getIconUrl()) {
-                urlOther = mOtherUser.getIconUrl();
-            }
             if (!urlOther.isEmpty()) {
                 Glide.with(mContext)
                         .asBitmap()
@@ -2114,19 +1672,6 @@ public class IMListAdapter extends RecyclerView.Adapter {
             onBindTail(baseViewHolder, position);
         }
         if (!(baseViewHolder instanceof ShowViewHolder)) {
-
-            //设置背景
-            if (isImTypeUI()) {
-                if (baseViewHolder.contentLay != null) {
-                    baseViewHolder.contentLay.setBackgroundResource(R.drawable.hx_card_center_bg);
-                }
-            } else {
-                if (baseViewHolder.contentLay != null) {
-                    baseViewHolder.contentLay.setBackgroundColor(ContextCompat.getColor(mContext, R.color.color_transparent));
-                }
-
-            }
-
             //头像
             if (mImBeanList.get(position).isRightUI()) {
                 if (mSelfBitmap != null) {
@@ -2168,7 +1713,7 @@ public class IMListAdapter extends RecyclerView.Adapter {
 
             //删除消息
             //TxTViewHolder类型另外处理，TextView添加autoLink属性后会拦截ViewGroup的事件分发,删除消息的提示窗放到CopeTextView里处理
-            if (theme == null && !(baseViewHolder instanceof TxtViewHolder) && isImTypeUI()) {
+            if (theme == null && !(baseViewHolder instanceof TxtViewHolder)) {
                 baseViewHolder.itemBtn.setOnTouchListener(new View.OnTouchListener() {
                     @Override
                     public boolean onTouch(View v, MotionEvent event) {
@@ -2274,7 +1819,7 @@ public class IMListAdapter extends RecyclerView.Adapter {
 
                                 @Override
                                 public void turnText() {
-                                    voiceToText(cacheMsgBean, position);
+
                                 }
 
                                 @Override
@@ -2328,38 +1873,6 @@ public class IMListAdapter extends RecyclerView.Adapter {
                     baseViewHolder.imgRemind.setImageResource(R.drawable.hx_ic_reminded);
                 }
 
-                baseViewHolder.imgRemind.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (isRemind) {
-                            final CacheMsgBean bean = mImBeanList.get(position);
-
-                            HxRemindCancelDialog dialog = new HxRemindCancelDialog(mContext);
-                            dialog.show();
-
-                            dialog.setImageType(bean.getRemindType());
-                            dialog.setContent(bean.getRemind());
-
-
-                            String info = String.format("来自 %s 聊天提醒", mDstPhone);
-                            dialog.setRemindType(info);
-
-                            String time = TimeUtils.getTime(remindTime, TimeUtils.MINUTE_FORMAT_DATE);
-                            String format = String.format("于 %s 提醒", time);
-
-                            dialog.setRemindTime(format);
-
-                            dialog.setConfirmClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    long msgId = bean.getMsgId();
-                                }
-                            });
-
-                        }
-                    }
-                });
-
             } else {
                 if (baseViewHolder.imgRemind != null)
                     baseViewHolder.imgRemind.setVisibility(View.GONE);
@@ -2411,42 +1924,6 @@ public class IMListAdapter extends RecyclerView.Adapter {
             listener.deleteMsgCallback(type);
         }
 
-        int refreshStartPos = position;
-        //头+尾 或中间，直接删除
-        if (cacheMsgBean.getCardTag() == ImCardUtil.MSG_CARD_TAG_HEAD_TAIL
-                || cacheMsgBean.getCardTag() == ImCardUtil.MSG_CARD_TAG_MIDDLE) {
-            CacheMsgHelper.instance(mContext).deleteOneMsg(cacheMsgBean.getId());
-        } else if (cacheMsgBean.getCardTag() == ImCardUtil.MSG_CARD_TAG_HEAD) {
-            //头，往下走
-            if (position + 1 <= (mImBeanList.size() - 1)) {
-                CacheMsgBean nextCacheMsgBean = mImBeanList.get(position + 1);
-                //更新本地
-                if (nextCacheMsgBean.getCardTag() == ImCardUtil.MSG_CARD_TAG_TAIL) {
-                    nextCacheMsgBean.setCardTag(ImCardUtil.MSG_CARD_TAG_HEAD_TAIL);
-                } else {
-                    nextCacheMsgBean.setCardTag(ImCardUtil.MSG_CARD_TAG_HEAD);
-                }
-                //更新数据库
-                CacheMsgHelper.instance(mContext).deleteOneMsg(cacheMsgBean.getId(),
-                        ImCardUtil.MSG_CARD_TAG_HEAD, nextCacheMsgBean.getId());
-            }
-        } else if (cacheMsgBean.getCardTag() == ImCardUtil.MSG_CARD_TAG_TAIL) {
-            //尾，往上走
-            if (position - 1 >= 0) {
-                CacheMsgBean previousCacheMsgBean = mImBeanList.get(position - 1);
-                //更新本地
-                if (previousCacheMsgBean.getCardTag() == ImCardUtil.MSG_CARD_TAG_HEAD) {
-                    previousCacheMsgBean.setCardTag(ImCardUtil.MSG_CARD_TAG_HEAD_TAIL);
-                } else {
-                    previousCacheMsgBean.setCardTag(ImCardUtil.MSG_CARD_TAG_TAIL);
-                }
-                //更新数据库
-                CacheMsgHelper.instance(mContext).deleteOneMsg(cacheMsgBean.getId(),
-                        ImCardUtil.MSG_CARD_TAG_TAIL, previousCacheMsgBean.getId());
-
-                refreshStartPos = position - 1;
-            }
-        }
         //删除本地
         mImBeanList.remove(cacheMsgBean);
         IMMsgManager.getInstance().removeCacheMsgBean(cacheMsgBean);
@@ -2593,56 +2070,6 @@ public class IMListAdapter extends RecyclerView.Adapter {
         return mEditingRemarkPos != REMARK_UNEDIT_STATE;
     }
 
-    public void saveRemark() {
-        String theme = (mCurrThemeEdit == null) ? "" : mCurrThemeEdit;
-        String remark = (mCurrRemarkEdit == null) ? "" : mCurrRemarkEdit;
-        if (mEditingRemarkPos != REMARK_UNEDIT_STATE) {
-            ImCardUtil.setThemeRemark(mContext, mImBeanList.get(mEditingRemarkPos).getId(), theme, remark);
-        }
-    }
-
-    //主题跳转操作
-    private void upOrDownTip(boolean isUp, int position) {
-        String cardName = ImCardUtil.getTheme(mContext, mImBeanList.get(position).getId());
-
-        int index = position;
-
-        if (TextUtils.isEmpty(cardName)) {
-            toastUpOrDown(mContext.getString(isUp ? R.string.im_card_first_item_tip2 : R.string.im_card_last_item_tip2));
-            return;
-        }
-
-        if (isUp) {
-            for (int i = position - 1; i >= 0; i--) {
-                int cardTag = mImBeanList.get(i).getCardTag();
-                if (cardTag == ImCardUtil.MSG_CARD_TAG_TAIL || cardTag == ImCardUtil.MSG_CARD_TAG_HEAD_TAIL) {
-                    if (cardName.equals(ImCardUtil.getTheme(mContext, mImBeanList.get(i).getId()))) {
-                        index = i;
-                        break;
-                    }
-                }
-            }
-        } else {
-            for (int i = position + 1; i < mImBeanList.size(); i++) {
-                int cardTag = mImBeanList.get(i).getCardTag();
-                if (cardTag == ImCardUtil.MSG_CARD_TAG_TAIL || cardTag == ImCardUtil.MSG_CARD_TAG_HEAD_TAIL) {
-                    if (cardName.equals(ImCardUtil.getTheme(mContext, mImBeanList.get(i).getId()))) {
-                        index = i;
-                        break;
-                    }
-                }
-            }
-        }
-
-        if (index != position) {
-            if (listener != null) {
-                listener.smoothScroll(index, 0, false);
-                mThemeIndex = index;
-            }
-        } else {
-            toastUpOrDown(mContext.getString(isUp ? R.string.im_card_first_item_tip : R.string.im_card_last_item_tip));
-        }
-    }
 
     class BaseViewHolder extends RecyclerView.ViewHolder {
         int mItemViewType;
@@ -2809,13 +2236,10 @@ public class IMListAdapter extends RecyclerView.Adapter {
 
                 if (lastListBean.size() > 0) {
                     //重新处理最后一条的沟通卡状态
-                    loadCardFlag(lastListBean);
                     mImBeanList.set(getItemCount() - 1, lastListBean.get(0));
                 }
                 notifyItemChanged(getItemCount() - 1);
             }
-            //处理未读消息的沟通卡状态
-            loadCardFlag(unReadList);
             mImBeanList.addAll(unReadList);
             focusBottom(false);
         }
@@ -2827,7 +2251,6 @@ public class IMListAdapter extends RecyclerView.Adapter {
         //add to db
         CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
         IMMsgManager.getInstance().addCacheMsgBean(cacheMsgBean);
-        processPreviousMsg(cacheMsgBean);
         mImBeanList.add(cacheMsgBean);
         if (getItemCount() > 1) {
             notifyItemRangeChanged(getItemCount() - 2, 2);//需要更新上一条
@@ -2849,11 +2272,6 @@ public class IMListAdapter extends RecyclerView.Adapter {
         //closeMenuDialog();//关闭菜单视图
         cacheMsgBean.setIs_read(CacheMsgBean.MSG_READ_STATUS);
         addAndRefreshUI(cacheMsgBean);
-
-        //自动声音转文本模式打开
-        if (isV2T && cacheMsgBean.getMsgType() == CacheMsgBean.MSG_TYPE_VOICE) {
-            voiceToText(cacheMsgBean, getItemCount() - 1);
-        }
     }
 
     //刷新单个item
@@ -2879,7 +2297,6 @@ public class IMListAdapter extends RecyclerView.Adapter {
 
     //获取item的位置
     public int getPos(CacheMsgBean cacheMsgBean) {
-        processPreviousMsg(cacheMsgBean);
         long mid = cacheMsgBean.getId();
         int index = -1;
         if (mImBeanList.size() > 0) {
@@ -2914,35 +2331,6 @@ public class IMListAdapter extends RecyclerView.Adapter {
                 }
             }
         }
-    }
-
-    public void refreshItemUI(int pos, ContactsDetailsBean contactsDetailsBean) {
-        if (pos > (mImBeanList.size() - 1) || pos < 0) {
-            return;
-        }
-        CacheMsgBean cacheMsgBean = mImBeanList.get(pos);
-        cacheMsgBean.setSend_flag(-1);
-        cacheMsgBean.setJsonBodyObj(contactsDetailsBean);
-        CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
-
-        notifyItemChanged(pos);
-    }
-
-    private void processPreviousMsg(CacheMsgBean cacheMsgBean) {
-        int cardTag = getCardFlag(mDstPhone, cacheMsgBean.getId());
-        if (cardTag == ImCardUtil.MSG_CARD_TAG_TAIL) {
-            CacheMsgBean lastMsgBean = mImBeanList.get(getItemCount() - 1);
-            if (lastMsgBean.getCardTag() == ImCardUtil.MSG_CARD_TAG_HEAD_TAIL) {
-                lastMsgBean.setCardTag(ImCardUtil.MSG_CARD_TAG_HEAD);
-            } else {
-                lastMsgBean.setCardTag(ImCardUtil.MSG_CARD_TAG_MIDDLE);
-            }
-            if (mEditingRemarkPos == getItemCount() - 1) {
-                mEditingRemarkPos = getItemCount();
-            }
-        }
-
-        cacheMsgBean.setCardTag(cardTag);
     }
 
 
@@ -3012,61 +2400,7 @@ public class IMListAdapter extends RecyclerView.Adapter {
         }
     }
 
-    /**
-     * 展开卡片内容
-     *
-     * @param position 首位置
-     * @param isShow   是否显示 tru:显示 false:隐藏
-     */
 
-    private void openCardMsg(int position, boolean isShow) {
-        int flag = 0;
-        if (isShow) {
-            flag = 1;
-        }
-        int headTag = mImBeanList.get(position).getCardTag();
-        showIndexList.set(position, flag);
-        int count = 1;
-        if (headTag == ImCardUtil.MSG_CARD_TAG_HEAD) {
-            //头
-            for (int i = position + 1; i < mImBeanList.size(); i++) {
-                count++;
-                showIndexList.set(i, flag);
-                if (mImBeanList.get(i).getCardTag() == ImCardUtil.MSG_CARD_TAG_TAIL) {
-                    break;
-                }
-
-            }
-        }
-        notifyItemRangeChanged(position, count);
-    }
-
-    /**
-     * 是否沟通界面
-     *
-     * @return true:沟通界面
-     * false:问题反馈界面
-     */
-    private boolean isImTypeUI() {
-        return isIMType;
-    }
-
-    Toast tipToast;
-
-    private void toastUpOrDown(String str) {
-        if (tipToast == null) {
-            tipToast = Toast.makeText(mContext, str, Toast.LENGTH_LONG);
-        } else {
-            tipToast.setText(str);
-        }
-        tipToast.show();
-    }
-
-    public void toastHidden() {
-        if (tipToast != null) {
-            tipToast.cancel();
-        }
-    }
 
     public interface OnListener {
         /**
@@ -3124,35 +2458,6 @@ public class IMListAdapter extends RecyclerView.Adapter {
 
         @Override
         public void afterTextChanged(Editable s) {
-            String[] strSave = ImCardUtil.getThemeRemark(this.mContext, mHeadId);
-            if (strSave != null) {
-                String saveThemeStr = strSave[0];
-                String saveRemarkStr = strSave[1];
-                if (mType == TYPE_THEME) {
-                    saveThemeStr = strSave[0];
-                    saveRemarkStr = strSave[1];
-                } else {
-                    saveThemeStr = strSave[1];
-                    saveRemarkStr = strSave[0];
-                }
-                String editStr = s.toString();
-                String otherStr = mEditText.getText().toString().trim();
-
-                if (mType == TYPE_THEME) {
-                    mCurrThemeEdit = editStr;
-                } else {
-                    mCurrRemarkEdit = editStr;
-                }
-
-                if (((editStr.equals(saveThemeStr) || (editStr.equals("") && saveThemeStr == null))
-                        && (otherStr.equals(saveRemarkStr) || ((otherStr.equals("") && saveRemarkStr == null))))) {
-                    mSaveButton.setEnabled(false);
-                    mSaveButton.setTextColor(ContextCompat.getColor(mContext, R.color.card_edit_save_font));
-                } else {
-                    mSaveButton.setEnabled(true);
-                    mSaveButton.setTextColor(ContextCompat.getColor(mContext, R.color.hxs_color_green3));
-                }
-            }
         }
     }
 

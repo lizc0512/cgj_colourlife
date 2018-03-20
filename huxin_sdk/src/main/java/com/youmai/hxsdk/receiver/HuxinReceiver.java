@@ -11,10 +11,6 @@ import android.telephony.SmsMessage;
 import android.telephony.TelephonyManager;
 
 import com.youmai.hxsdk.HuxinSdkManager;
-import com.youmai.hxsdk.db.bean.PushMsg;
-import com.youmai.hxsdk.db.bean.RemindMsg;
-import com.youmai.hxsdk.db.dao.PushMsgDao;
-import com.youmai.hxsdk.db.dao.RemindMsgDao;
 import com.youmai.hxsdk.db.manager.GreenDBIMManager;
 import com.youmai.hxsdk.http.IPostListener;
 import com.youmai.hxsdk.service.HuxinService;
@@ -101,43 +97,6 @@ public class HuxinReceiver extends BroadcastReceiver {
                 }
             };
 
-        } else if (intent.getAction().equals(ACTION_PUSH_MSG)) {
-
-            /*Intent resultIntent = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
-            if (resultIntent == null) {
-                Log.e(TAG, "handleMessage(): cannot find app: " + context.getPackageName());
-            } else {
-                resultIntent.setPackage(context.getPackageName());
-                resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            }
-            context.startActivity(resultIntent);*/
-
-
-            PushMsg pushMsg = intent.getParcelableExtra("push_msg");
-            if (pushMsg != null) {
-                pushMsg.setIs_click(true);
-            }
-            PushMsgDao pushMsgDao = GreenDBIMManager.instance(context).getPushMsgDao();
-            pushMsgDao.update(pushMsg);
-
-
-            Intent realIntent = intent.getParcelableExtra("realIntent");
-            if (realIntent != null) {
-                context.startActivity(realIntent);
-            }
-        } else if (intent.getAction().equals(ACTION_REMIND_MSG)) {
-            RemindMsg remindMsg = intent.getParcelableExtra("remind_msg");
-            if (remindMsg != null) {
-                remindMsg.setIsRead(true);
-            }
-            RemindMsgDao remindMsgDao = GreenDBIMManager.instance(context).getRemindMsgDao();
-            remindMsgDao.update(remindMsg);
-
-            Intent realIntent = intent.getParcelableExtra("realIntent");
-            if (realIntent != null) {
-                context.startActivity(realIntent);
-            }
         }
     }
 

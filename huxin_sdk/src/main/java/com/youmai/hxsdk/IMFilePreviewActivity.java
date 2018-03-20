@@ -12,8 +12,8 @@ import android.widget.Toast;
 
 import com.youmai.hxsdk.activity.SdkBaseActivity;
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
-import com.youmai.hxsdk.db.bean.ChatMsg;
 import com.youmai.hxsdk.config.FileConfig;
+import com.youmai.hxsdk.db.bean.ChatMsg;
 import com.youmai.hxsdk.http.DownLoadingListener;
 import com.youmai.hxsdk.http.FileAsyncTaskDownload;
 import com.youmai.hxsdk.im.IMHelper;

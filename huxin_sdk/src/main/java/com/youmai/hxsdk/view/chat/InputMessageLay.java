@@ -9,8 +9,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -25,10 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.youmai.hxsdk.R;
-import com.youmai.hxsdk.adapter.IMEmotionAdapter;
 import com.youmai.hxsdk.dialog.HxRecordDialog;
-import com.youmai.hxsdk.entity.EmoInfo;
-import com.youmai.hxsdk.im.IMMsgManager;
 import com.youmai.hxsdk.utils.AnimatorUtils;
 import com.youmai.hxsdk.utils.LogUtils;
 import com.youmai.hxsdk.view.chat.emoticon.EmoticonLayout;
@@ -588,12 +583,6 @@ public class InputMessageLay extends AutoHeightLayout implements View.OnClickLis
                         msgEdit.onKeyDown(KeyEvent.KEYCODE_DEL, event);
                         return;
                     } else if (bean.getEventType() == EmoticonBean.FACE_TYPE_USERDEF) {
-                        if (mKeyBoardBarViewListener != null) {
-                            String tag = bean.getTag();
-                            EmoInfo emoInfo = new EmoInfo(mContext);
-                            mKeyBoardBarViewListener.onKeyBoardEmotion(tag, emoInfo.getEmoRes(tag));
-//                            mKeyBoardBarViewListener.onUserDefEmoticonClicked(bean.getTag(), bean.getIconUri()); //暂不处理
-                        }
                         return;
                     } else if (bean.getEventType() == EmoticonBean.FACE_TYPE_SELF_ADD) {
                         if (mKeyBoardBarViewListener != null) {
@@ -601,11 +590,6 @@ public class InputMessageLay extends AutoHeightLayout implements View.OnClickLis
                         }
                         return;
                     } else if (bean.getEventType() == EmoticonBean.FACE_TYPE_SELF_SETTING) {
-                        if (mKeyBoardBarViewListener != null) {
-                            String tag = bean.getTag();
-                            EmoInfo emoInfo = new EmoInfo(mContext);
-                            mKeyBoardBarViewListener.onKeyBoardEmotion(tag, emoInfo.getEmoRes(tag));
-                        }
                         return;
                     }
 
@@ -818,9 +802,6 @@ public class InputMessageLay extends AutoHeightLayout implements View.OnClickLis
                 mKeyBoardBarViewListener.onKeyBoardVoice(audioPath, (int) (t / 1000));
             }
         }
-
-        //恢复驾驶模式播放
-        IMMsgManager.getInstance().resumeProcessDrivingModeMsg();
     }
 
     private boolean isRecording = true;

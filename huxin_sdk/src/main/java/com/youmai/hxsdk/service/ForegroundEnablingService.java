@@ -43,17 +43,4 @@ public class ForegroundEnablingService extends Service {
         return null;
     }
 
-
-    /*private void test() {
-        Notification notification = new NotificationCompat.Builder(this)
-                .setPriority(Notification.PRIORITY_MIN)
-                //.setContentTitle("Title")
-                //.setTicker("Title")
-                //.setContentText("App running")
-                //.setSmallIcon(R.drawable.picture)
-                .build();
-        startForeground(101, notification);
-    }*/
-
-
 }

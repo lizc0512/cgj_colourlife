@@ -5,7 +5,6 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 
-import com.youmai.hxsdk.http.ssl.HttpSSLManager;
 import com.youmai.hxsdk.utils.StreamUtils;
 import com.youmai.hxsdk.utils.StringUtils;
 
@@ -397,19 +396,6 @@ public class HttpConnector {
 
             connection = (HttpURLConnection) url.openConnection();
 
-            if (connection instanceof HttpsURLConnection) {
-                SSLSocketFactory sslSocketFactory = HttpSSLManager.getSocketFactory();
-                if (sslSocketFactory != null) {
-                    ((HttpsURLConnection) connection).setSSLSocketFactory(sslSocketFactory);
-                    ((HttpsURLConnection) connection).setHostnameVerifier(new HostnameVerifier() {
-                        @Override
-                        public boolean verify(String hostname, SSLSession session) {
-                            return true;
-                        }
-                    });
-                }
-            }
-
             if (headers != null && headers.size() > 0) {
                 for (Map.Entry<String, Object> entry : headers.valueSet()) {
                     String key = entry.getKey(); // name
@@ -449,19 +435,6 @@ public class HttpConnector {
         try {
             URL url = new URL(path);
             connection = (HttpURLConnection) url.openConnection();
-
-            if (connection instanceof HttpsURLConnection) {
-                SSLSocketFactory sslSocketFactory = HttpSSLManager.getSocketFactory();
-                if (sslSocketFactory != null) {
-                    ((HttpsURLConnection) connection).setSSLSocketFactory(sslSocketFactory);
-                    ((HttpsURLConnection) connection).setHostnameVerifier(new HostnameVerifier() {
-                        @Override
-                        public boolean verify(String hostname, SSLSession session) {
-                            return true;
-                        }
-                    });
-                }
-            }
 
             connection.setConnectTimeout(30000); // 链接超时
             connection.setReadTimeout(20000); // 读取超时
@@ -534,19 +507,6 @@ public class HttpConnector {
 
             URL url = new URL(path);
             connection = (HttpURLConnection) url.openConnection();
-
-            if (connection instanceof HttpsURLConnection) {
-                SSLSocketFactory sslSocketFactory = HttpSSLManager.getSocketFactory();
-                if (sslSocketFactory != null) {
-                    ((HttpsURLConnection) connection).setSSLSocketFactory(sslSocketFactory);
-                    ((HttpsURLConnection) connection).setHostnameVerifier(new HostnameVerifier() {
-                        @Override
-                        public boolean verify(String hostname, SSLSession session) {
-                            return true;
-                        }
-                    });
-                }
-            }
 
             connection.setConnectTimeout(30000); // 链接超时
             connection.setReadTimeout(20000); // 读取超时

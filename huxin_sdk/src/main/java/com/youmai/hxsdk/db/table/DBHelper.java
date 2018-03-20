@@ -2,7 +2,6 @@ package com.youmai.hxsdk.db.table;
 
 import android.content.Context;
 
-import com.youmai.hxsdk.db.bean.ImCardModel;
 import com.youmai.hxsdk.HuxinSdkManager;
 
 public class DBHelper extends AbDBHelper {

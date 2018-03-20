@@ -168,7 +168,7 @@ public class TcpClient extends PduUtil implements Runnable {
      * @param msg      消息体
      * @param callback 回调
      */
-    public synchronized void sendProto(GeneratedMessage msg, short commandId, ReceiveListener callback) {
+    public synchronized void sendProto(GeneratedMessage msg, int commandId, ReceiveListener callback) {
         PduBase pduBase = new PduBase();
         int seq_num = getSeqNum();
 

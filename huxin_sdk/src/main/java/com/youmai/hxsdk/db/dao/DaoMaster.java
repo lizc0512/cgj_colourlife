@@ -21,48 +21,14 @@ public class DaoMaster extends AbstractDaoMaster {
 
     /** Creates underlying database table using DAOs. */
     public static void createAllTables(Database db, boolean ifNotExists) {
-        AppAuthCfgDao.createTable(db, ifNotExists);
-        AppCfgDao.createTable(db, ifNotExists);
-        BusinessCardDataDao.createTable(db, ifNotExists);
-        BusinessCardInfoDao.createTable(db, ifNotExists);
         CacheMsgBeanDao.createTable(db, ifNotExists);
-        CardDao.createTable(db, ifNotExists);
         ChatMsgDao.createTable(db, ifNotExists);
-        ContCfgDao.createTable(db, ifNotExists);
-        HxUsersDao.createTable(db, ifNotExists);
-        ImCardModelDao.createTable(db, ifNotExists);
-        OwnerDataDao.createTable(db, ifNotExists);
-        PhoneCardsDao.createTable(db, ifNotExists);
-        PushMsgDao.createTable(db, ifNotExists);
-        RemindMsgDao.createTable(db, ifNotExists);
-        ShowCfgDao.createTable(db, ifNotExists);
-        ShowDataDao.createTable(db, ifNotExists);
-        StatsCfgDao.createTable(db, ifNotExists);
-        StatsDataDao.createTable(db, ifNotExists);
-        UIDataDao.createTable(db, ifNotExists);
     }
 
     /** Drops underlying database table using DAOs. */
     public static void dropAllTables(Database db, boolean ifExists) {
-        AppAuthCfgDao.dropTable(db, ifExists);
-        AppCfgDao.dropTable(db, ifExists);
-        BusinessCardDataDao.dropTable(db, ifExists);
-        BusinessCardInfoDao.dropTable(db, ifExists);
         CacheMsgBeanDao.dropTable(db, ifExists);
-        CardDao.dropTable(db, ifExists);
         ChatMsgDao.dropTable(db, ifExists);
-        ContCfgDao.dropTable(db, ifExists);
-        HxUsersDao.dropTable(db, ifExists);
-        ImCardModelDao.dropTable(db, ifExists);
-        OwnerDataDao.dropTable(db, ifExists);
-        PhoneCardsDao.dropTable(db, ifExists);
-        PushMsgDao.dropTable(db, ifExists);
-        RemindMsgDao.dropTable(db, ifExists);
-        ShowCfgDao.dropTable(db, ifExists);
-        ShowDataDao.dropTable(db, ifExists);
-        StatsCfgDao.dropTable(db, ifExists);
-        StatsDataDao.dropTable(db, ifExists);
-        UIDataDao.dropTable(db, ifExists);
     }
 
     /**
@@ -81,25 +47,8 @@ public class DaoMaster extends AbstractDaoMaster {
 
     public DaoMaster(Database db) {
         super(db, SCHEMA_VERSION);
-        registerDaoClass(AppAuthCfgDao.class);
-        registerDaoClass(AppCfgDao.class);
-        registerDaoClass(BusinessCardDataDao.class);
-        registerDaoClass(BusinessCardInfoDao.class);
         registerDaoClass(CacheMsgBeanDao.class);
-        registerDaoClass(CardDao.class);
         registerDaoClass(ChatMsgDao.class);
-        registerDaoClass(ContCfgDao.class);
-        registerDaoClass(HxUsersDao.class);
-        registerDaoClass(ImCardModelDao.class);
-        registerDaoClass(OwnerDataDao.class);
-        registerDaoClass(PhoneCardsDao.class);
-        registerDaoClass(PushMsgDao.class);
-        registerDaoClass(RemindMsgDao.class);
-        registerDaoClass(ShowCfgDao.class);
-        registerDaoClass(ShowDataDao.class);
-        registerDaoClass(StatsCfgDao.class);
-        registerDaoClass(StatsDataDao.class);
-        registerDaoClass(UIDataDao.class);
     }
 
     public DaoSession newSession() {

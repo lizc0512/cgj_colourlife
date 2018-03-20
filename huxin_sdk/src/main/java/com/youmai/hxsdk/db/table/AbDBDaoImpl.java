@@ -22,8 +22,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.youmai.hxsdk.db.bean.ShowData;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -874,7 +872,7 @@ public class AbDBDaoImpl<T> extends AbBasicDBDao implements AbDBDao<T> {
     /**
      * 返回更新的行数.
      *
-     * @param column      查询的参数字段名
+     * @param column 查询的参数字段名
      * @return the number of rows affected
      */
     @Override
@@ -928,15 +926,8 @@ public class AbDBDaoImpl<T> extends AbBasicDBDao implements AbDBDao<T> {
             Log.d(TAG, "[update]: update " + this.tableName + " set " + sql
                     + " where " + where.replace("?", String.valueOf(id)));
 
-            if (entity instanceof ShowData) {
-                where = "msisdn=?";
-                String msisdn = cv.get("msisdn").toString();
-                String[] whereValue = {msisdn};
-                rows = db.update(this.tableName, cv, where, whereValue);
-            } else {
-                String[] whereValue = {Integer.toString(id)};
-                rows = db.update(this.tableName, cv, where, whereValue);
-            }
+            String[] whereValue = {Integer.toString(id)};
+            rows = db.update(this.tableName, cv, where, whereValue);
 
         } catch (Exception e) {
             Log.d(TAG, "[update] DB Exception.");

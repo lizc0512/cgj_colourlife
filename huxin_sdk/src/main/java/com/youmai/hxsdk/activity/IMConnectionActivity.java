@@ -50,7 +50,6 @@ import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.adapter.IMListAdapter;
 import com.youmai.hxsdk.config.FileConfig;
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
-import com.youmai.hxsdk.db.bean.ChatMsg;
 import com.youmai.hxsdk.dialog.HxDialog;
 import com.youmai.hxsdk.entity.CallInfo;
 import com.youmai.hxsdk.im.IMHelper;
@@ -66,10 +65,8 @@ import com.youmai.hxsdk.im.cache.CacheMsgRemark;
 import com.youmai.hxsdk.im.cache.CacheMsgTxt;
 import com.youmai.hxsdk.im.cache.CacheMsgVideo;
 import com.youmai.hxsdk.im.cache.CacheMsgVoice;
-import com.youmai.hxsdk.im.cache.ContactsDetailsBean;
 import com.youmai.hxsdk.im.voice.manager.DrivingModeMediaManager;
 import com.youmai.hxsdk.im.voice.manager.MediaManager;
-import com.youmai.hxsdk.interfaces.OnChatMsg;
 import com.youmai.hxsdk.map.LocationActivity;
 import com.youmai.hxsdk.module.filemanager.PickerManager;
 import com.youmai.hxsdk.module.filemanager.activity.FileManagerActivity;
@@ -98,7 +95,6 @@ import com.youmai.hxsdk.utils.CompressImage;
 import com.youmai.hxsdk.utils.CompressVideo;
 import com.youmai.hxsdk.utils.DisplayUtil;
 import com.youmai.hxsdk.utils.LogUtils;
-import com.youmai.hxsdk.utils.SmsManager;
 import com.youmai.hxsdk.utils.StringUtils;
 import com.youmai.hxsdk.utils.TimeUtils;
 import com.youmai.hxsdk.utils.ToastUtil;
@@ -106,9 +102,6 @@ import com.youmai.hxsdk.utils.VideoUtils;
 import com.youmai.hxsdk.view.LinearLayoutManagerWithSmoothScroller;
 import com.youmai.hxsdk.view.chat.InputMessageLay;
 import com.youmai.smallvideorecord.model.OnlyCompressOverBean;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -245,13 +238,6 @@ public class IMConnectionActivity extends SdkBaseActivity implements
     private int fromTo;
     private boolean isOriginal = false;
 
-    private OnChatMsg onChatMsg = new OnChatMsg() {
-        @Override
-        public void onCallback(ChatMsg msg) {
-            // 目前按监听器的机制，只用于控制通知栏
-        }
-    };
-
     private static final int MSG_GET_CONTACT_ID = 1000;
 
     private NormalHandler mHandler;
@@ -306,46 +292,6 @@ public class IMConnectionActivity extends SdkBaseActivity implements
 
         mScrollPosition = fromIntent.getLongExtra(EXTRA_SCROLL_POSITION, 0);
 
-        mUpdateContactNameReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-
-                String action = intent.getStringExtra("action");
-                if ("insert".equals(action)) {
-                    ContactsDetailsBean contactsDetailsBean = intent.getParcelableExtra("bean");
-                    if (contactsDetailsBean != null) {
-                        for (ContactsDetailsBean.Phone phone : contactsDetailsBean.getPhone()) {
-                            if (targetPhone.equals(phone.getPhone())) {
-                                contactName = intent.getStringExtra("contactName");
-                                contactID = intent.getIntExtra("contactID", contactID);
-                                if (contactName != null && !TextUtils.isEmpty(contactName)) {
-                                    if (tvTitle != null) {
-                                        tvTitle.setText(contactName);
-                                    }
-                                }
-                                break;
-                            }
-                        }
-                    }
-                } else if ("delete".equals(action)) {
-                    int delectId = intent.getIntExtra("contactID", 0);
-                    if (contactID == delectId) {
-                        contactID = 0;
-                        if (tvTitle != null) {
-                            tvTitle.setText(targetPhone);
-                        }
-                    }
-                } else {
-                    contactName = intent.getStringExtra("contactName");
-                    if (contactName != null && !TextUtils.isEmpty(contactName)) {
-                        if (tvTitle != null) {
-                            tvTitle.setText(contactName);
-                        }
-                    }
-                }
-
-            }
-        };
         IntentFilter homeFilter = new IntentFilter("com.youmai.hxsdk.updatecontact");
         registerReceiver(mUpdateContactNameReceiver, homeFilter);
 
@@ -412,8 +358,6 @@ public class IMConnectionActivity extends SdkBaseActivity implements
         isMeetingMode = com.youmai.hxsdk.utils.AppUtils.getBooleanSharedPreferences(mContext, "huxin_meeting_mode", false);
         keyboardLay.showDrivingLay(isDrivingMode);
 
-        IMMsgManager.getInstance().setDrivingModePhone(targetPhone);
-
         //srsm add start
         imListAdapter.resume(contactID == 0);
         IMMsgManager.getInstance().setImMsgCallback(this);
@@ -478,7 +422,6 @@ public class IMConnectionActivity extends SdkBaseActivity implements
         if (CallInfo.IsCalling()) {
             finish();
         }
-        imListAdapter.toastHidden();
         imListAdapter.stopTextVoice();
     }
 
@@ -486,8 +429,6 @@ public class IMConnectionActivity extends SdkBaseActivity implements
     public void onStart() {
         super.onStart();
         isCancelled = false;
-        // 目前按监听器的机制，只用于控制通知栏
-        IMMsgManager.getInstance().registerChatMsg(onChatMsg);
     }
 
     @TargetApi(23)
@@ -588,7 +529,6 @@ public class IMConnectionActivity extends SdkBaseActivity implements
         MediaManager.release();
         imListAdapter.onStop();
         isCancelled = true;
-        IMMsgManager.getInstance().unregisterChatMsg(onChatMsg);
     }
 
     @Override
@@ -621,8 +561,6 @@ public class IMConnectionActivity extends SdkBaseActivity implements
 
         PhotoPickerManager.getInstance().clearMap();
 
-        IMMsgManager.getInstance().setDrivingModePhone("");
-        //IMMsgManager.getInstance().stopDrivingMode();
     }
 
 
@@ -988,8 +926,6 @@ public class IMConnectionActivity extends SdkBaseActivity implements
                     Intent intent = new Intent("com.youmai.huxin.drivingmode.close");
                     intent.putExtra("type", "close_driving_ui");
                     sendBroadcast(intent);
-                    IMMsgManager.getInstance().stopDrivingMode();
-
                 }
                 popupWindow.dismiss();
             }
@@ -1152,21 +1088,6 @@ public class IMConnectionActivity extends SdkBaseActivity implements
         sendMsg(cacheMsgBean);
     }
 
-    /**
-     * 发送分享名片
-     */
-    public void sendCard(final ContactsDetailsBean cardModel) {
-
-        if (cardModel != null) {
-            CacheMsgBean cacheMsgBean = getBaseMsg();
-            cacheMsgBean.setMsgType(CacheMsgBean.MSG_TYPE_BIZCARD).setJsonBodyObj(cardModel);
-
-            imListAdapter.addAndRefreshUI(cacheMsgBean);
-            sendMsg(cacheMsgBean);
-        } else {
-            ToastUtil.showToast(this, getString(R.string.swap_card_failure));
-        }
-    }
 
     /**
      * 发送备注.
@@ -1286,15 +1207,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
         } else if (requestCode == FilePickerConst.REQUEST_CODE_DOC && resultCode == Activity.RESULT_OK) {
             //交换名片编辑名片返回 发送(用不到)
         } else if (requestCode == SWAP_CARD_EQUEST && resultCode == Activity.RESULT_OK) {
-            ContactsDetailsBean contactsDetailsBean = data.getParcelableExtra("ContactsDetailsBean");
-            LogUtils.e("ContactsDetailsBean", contactsDetailsBean.toString());
-            sendCard(contactsDetailsBean);
         } else if (requestCode == SAVE_CARD_EQUEST && resultCode == Activity.RESULT_OK) {
-            //刷新界面
-            ContactsDetailsBean contactsDetailsBean = data.getParcelableExtra("ContactsDetailsBean");
-            int beanPos = data.getIntExtra("MsgBeanPosition", -1);
-            imListAdapter.refreshItemUI(beanPos, contactsDetailsBean);
-            //TODO 去掉名片交换提示窗 2017-10-27
 
         } else if (requestCode == SWAP_CARD_EQUEST && resultCode == Activity.RESULT_CANCELED) {
             if (fromTo == FROM_HOOK_STRATE) {
@@ -1320,10 +1233,6 @@ public class IMConnectionActivity extends SdkBaseActivity implements
                 Toast.makeText(this, "相机有误，请返回重试!", Toast.LENGTH_SHORT).show();
             }
         } else if (requestCode == REQUEST_CODE_CARD) {
-            if (resultCode == 200) {
-                ContactsDetailsBean bean = data.getParcelableExtra("data");
-                showDialog(bean);
-            }
         } else if (requestCode == REQUEST_REMIND_CODE) {
             if (resultCode == SetRemindActivity.RESULT_REMIND_CODE) {
                 long msgId = data.getLongExtra("msg_id", 0);
@@ -1360,20 +1269,6 @@ public class IMConnectionActivity extends SdkBaseActivity implements
         }
     }
 
-
-    /**
-     * 发送名片的弹窗
-     *
-     * @param data 名片的数据
-     */
-    void showDialog(final ContactsDetailsBean data) {
-
-    }
-
-    //获取号码归属地
-    void getPhoneAddress(String phone) {
-
-    }
 
     //返回事件
     void closeTip() {
@@ -1479,11 +1374,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
                 if (!isPauseOut && TextUtils.equals(sendMsg.getFrom(), SendMsgService.FROM_IM)) {
                     String type = intent.hasExtra("type") ? intent.getStringExtra("type") : null;
                     if (TextUtils.equals(type, SendMsgService.NOT_NETWORK)) {
-                        //无网络状态下
-                        sendSms2(cacheMsgBean, imListAdapter.getPos(cacheMsgBean));
                     } else if (TextUtils.equals(type, SendMsgService.NOT_HUXIN_USER)) {
-                        //非呼信用户
-                        sendSms(cacheMsgBean, imListAdapter.getPos(cacheMsgBean));
                     } else if (TextUtils.equals(type, SendMsgService.NOT_TCP_CONNECT)) {
                         //tcp尚未连接
                         showTcpTipDialog();
@@ -1493,44 +1384,6 @@ public class IMConnectionActivity extends SdkBaseActivity implements
                 //退出
                 keyboardLay.showDrivingLay(false);
             }
-        }
-    }
-
-    //发送短信(发送失败状态)
-    private void sendSms(CacheMsgBean cacheMsgBean, int position) {
-        int msgType = cacheMsgBean.getMsgType();
-        if (msgType == CacheMsgBean.MSG_TYPE_TXT
-                || msgType == CacheMsgBean.MSG_TYPE_MAP
-                || msgType == CacheMsgBean.MSG_TYPE_IMG
-                || msgType == CacheMsgBean.MSG_TYPE_VOICE
-                || msgType == CacheMsgBean.MSG_TYPE_VIDEO
-                || msgType == CacheMsgBean.MSG_TYPE_FILE
-                || msgType == CacheMsgBean.MSG_TYPE_BIZCARD) {
-            SmsManager smsManager = new SmsManager(IMConnectionActivity.this, new SmsManager.Listener() {
-                @Override
-                public void sendNotify(int position) {
-                    imListAdapter.notifyItemChanged(position);
-                }
-            });
-            smsManager.showNotHuxinUserDialog(cacheMsgBean, position);
-        } else {
-            Toast.makeText(mContext, "对方非呼信用户", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    //无网络发送短信(发送失败状态)
-    private void sendSms2(CacheMsgBean cacheMsgBean, int position) {
-        int msgType = cacheMsgBean.getMsgType();
-        if (msgType == CacheMsgBean.MSG_TYPE_TXT) {
-            SmsManager smsManager = new SmsManager(IMConnectionActivity.this, new SmsManager.Listener() {
-                @Override
-                public void sendNotify(int position) {
-                    imListAdapter.notifyItemChanged(position);
-                }
-            });
-            smsManager.showNotNetHuxinUserDialog(cacheMsgBean, position);
-        } else {
-            Toast.makeText(mContext, "无网络状态下", Toast.LENGTH_SHORT).show();
         }
     }
 

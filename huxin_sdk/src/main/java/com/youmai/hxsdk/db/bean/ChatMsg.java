@@ -4,7 +4,6 @@ package com.youmai.hxsdk.db.bean;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.chat.MsgContent;
 import com.youmai.hxsdk.proto.YouMaiChat;
 import com.youmai.hxsdk.proto.YouMaiChat.IMChat_Personal;
@@ -86,9 +85,6 @@ public class ChatMsg implements Parcelable {
     @Transient
     private boolean isOwner;  //false对方发送的消息 ,true自己发送的消息
 
-    @Transient
-    private ShowData newShowData;  //用户show数据
-
 
     /************************************************************/
     /************************以上为类成员************************/
@@ -99,41 +95,6 @@ public class ChatMsg implements Parcelable {
         msgTime = System.currentTimeMillis();
     }
 
-    /**
-     * Http协议构造
-     *
-     * @param data
-     */
-    public ChatMsg(ShowData data) {
-        newShowData = data;
-
-        // add by kevin
-        isShow = true;
-        fid = data.getFid();
-        type = data.getType();
-        detailurl = data.getDetailurl();
-        mphone = data.getMphone();
-        srcPhone = data.getMsisdn();
-        name = data.getName();
-        msgTime = System.currentTimeMillis();
-        targetPhone = HuxinSdkManager.instance().getPhoneNum();
-
-        //end
-        try {
-            if (data.getFile_type().equals("0")) {
-                msgType = MsgType.SHOW_PICTURE;
-                file_type = "0";
-            } else if (data.getFile_type().equals("1")) {
-                msgType = MsgType.SHOW_VIDEO;
-                file_type = "1";
-                pfid = data.getPfid();
-            }
-        } catch (NullPointerException e) {
-            msgType = MsgType.SHOW_PICTURE;
-            file_type = "0";
-        }
-
-    }
 
     /**
      * 聊天IM界面构造
@@ -211,7 +172,6 @@ public class ChatMsg implements Parcelable {
         file_type = in.readString();
         msgContent = in.readParcelable(MsgContent.class.getClassLoader());
         isOwner = in.readByte() != 0;
-        newShowData = in.readParcelable(ShowData.class.getClassLoader());
     }
 
     @Override
@@ -239,7 +199,6 @@ public class ChatMsg implements Parcelable {
         dest.writeString(file_type);
         dest.writeParcelable(msgContent, flags);
         dest.writeByte((byte) (isOwner ? 1 : 0));
-        dest.writeParcelable(newShowData, flags);
     }
 
     @Override
@@ -482,17 +441,6 @@ public class ChatMsg implements Parcelable {
         if (msgType == null) {
             if (contentType != 0) {
                 msgType = parseMsgType(contentType);
-            } else if (newShowData != null) {
-                try {
-                    if (newShowData.getFile_type().equals("0")) {
-                        msgType = MsgType.SHOW_PICTURE;
-                    } else if (newShowData.getFile_type().equals("1")) {
-                        msgType = MsgType.SHOW_VIDEO;
-                    }
-                } catch (NullPointerException e) {
-                    msgType = MsgType.SHOW_PICTURE;
-                }
-
             }
         }
 
@@ -516,10 +464,6 @@ public class ChatMsg implements Parcelable {
         return msgContent;
     }
 
-    public ShowData getNewShowData() {
-        return newShowData;
-    }
-    //end set get method
 
     @Generated(hash = 1784406075)
     public ChatMsg(Long id, long msgTime, long msgId, String srcName, String srcPhone, int srcUserType, int srcUsrId,
@@ -582,7 +526,6 @@ public class ChatMsg implements Parcelable {
                 ", msgContent=" + msgContent +
                 ", msgType=" + msgType +
                 ", isOwner=" + isOwner +
-                ", newShowData=" + newShowData +
                 '}';
     }
 

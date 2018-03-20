@@ -5,10 +5,8 @@ import android.text.TextUtils;
 
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
-import com.youmai.hxsdk.db.bean.ShowData;
 import com.youmai.hxsdk.db.dao.CacheMsgBeanDao;
 import com.youmai.hxsdk.db.manager.GreenDBIMManager;
-import com.youmai.hxsdk.im.ImCardUtil;
 
 import org.greenrobot.greendao.query.DeleteQuery;
 import org.greenrobot.greendao.query.Query;
@@ -109,42 +107,6 @@ public class CacheMsgHelper {
             cacheMsgBean.setId(null); // FIXME: 2017/4/14 新增消息主键置空再插入表 ID从1自增
             long id = cacheMsgBeanDao.insert(cacheMsgBean);
             cacheMsgBean.setId(id);
-
-            // 创建沟通卡逻辑
-            ImCardUtil.insertCard(context, who, id, cacheMsgBean.getMsgTime(), newestTime, newCard);
-        }
-    }
-
-    /**
-     * 获取CacheBean.
-     *
-     * @param dstPhone
-     * @param showData
-     * @return
-     */
-    public void saveShowData2DBCacheMsgBean(String dstPhone, ShowData showData) {
-        if (null != showData) {
-            CacheMsgBean cacheMsgBean = new CacheMsgBean()
-                    .setReceiverPhone(HuxinSdkManager.instance().getPhoneNum())
-                    .setSenderPhone(dstPhone)
-                    .setReceiverUserId(HuxinSdkManager.instance().getUserId())
-                    .setMsgTime(System.currentTimeMillis())
-                    .setMsgType(CacheMsgBean.MSG_TYPE_SHOW)
-                    .setRightUI(false).setJsonBodyObj(new CacheMsgShow()
-                            .setFid(showData.getFid())
-                            .setFile_type(showData.getFile_type())
-                            .setMphone(showData.getMphone())
-                            .setName(showData.getName())
-                            .setMsisdn(showData.getMsisdn())
-                            .setPfid(showData.getPfid())
-                            .setTitle(showData.getTitle())
-                            .setType(showData.getType())
-                            .setDetailurl(showData.getDetailurl())
-                            .setVtime(showData.getVtime())
-                            .setVersion(showData.getVersion())
-                    );
-
-            insertOrUpdate(cacheMsgBean);
         }
     }
 
@@ -232,9 +194,6 @@ public class CacheMsgHelper {
                 .orderAsc(CacheMsgBeanDao.Properties.Id).buildDelete();
 
         dq.executeDeleteWithoutDetachingEntities();
-
-        // 必须同时删除沟通卡相关
-        ImCardUtil.deleteCard(mContext, dstPhone);
     }
 
     /**
@@ -250,9 +209,6 @@ public class CacheMsgHelper {
                 .buildDelete();
 
         dq.executeDeleteWithoutDetachingEntities();
-
-        // 必须同时删除沟通卡相关
-        ImCardUtil.deleteCard(mContext, id);
     }
 
     /**
@@ -271,12 +227,6 @@ public class CacheMsgHelper {
 
         dq.executeDeleteWithoutDetachingEntities();
 
-        // 必须同时删除沟通卡相关
-        if (deleteCardFlag == ImCardUtil.MSG_CARD_TAG_HEAD) {
-            ImCardUtil.updateCardHeadId(mContext, deleteId, replaceId);
-        } else if (deleteCardFlag == ImCardUtil.MSG_CARD_TAG_TAIL) {
-            ImCardUtil.updateCardTailId(mContext, deleteId, replaceId);
-        }
     }
 
     /**
@@ -446,8 +396,6 @@ public class CacheMsgHelper {
      */
     public void deleteAll() {
         GreenDBIMManager.instance(mContext).getCacheMsgDao().deleteAll();
-        //清空消息记录的时候  要清除关联表
-        GreenDBIMManager.instance(mContext).getImCardModelDao().deleteAll();
     }
 
 }

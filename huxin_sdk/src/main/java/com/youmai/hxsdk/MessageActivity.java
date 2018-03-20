@@ -12,12 +12,11 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.youmai.hxsdk.adapter.MessageAdapter;
-import com.youmai.hxsdk.db.bean.ChatMsg;
 import com.youmai.hxsdk.chat.ContentText;
 import com.youmai.hxsdk.config.AppConfig;
+import com.youmai.hxsdk.db.bean.ChatMsg;
 import com.youmai.hxsdk.db.dao.ChatMsgDao;
 import com.youmai.hxsdk.db.manager.GreenDbManager;
-import com.youmai.hxsdk.entity.EmoInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,23 +69,6 @@ public class MessageActivity extends Activity {
     private void init(ChatMsg msg) {
         switch (msg.getMsgType()) {
             case TEXT:
-            case EMO_TEXT: {
-                rel_content.setVisibility(View.GONE);
-                img_gif.setVisibility(View.VISIBLE);
-
-                ContentText test = msg.getMsgContent().getText();
-                String con = test.getContent();
-
-                List<EmoInfo.EmoItem> dataList = new EmoInfo(this).getEmoList();
-                for (EmoInfo.EmoItem item : dataList) {
-                    if (item.getEmoStr().equals(con)) {
-                        img_gif.setImageResource(item.getEmoRes());
-                        break;
-                    }
-                }
-
-                mListViews.add(img_gif);
-            }
             break;
             case PICTURE: {
                 rel_content.setVisibility(View.VISIBLE);

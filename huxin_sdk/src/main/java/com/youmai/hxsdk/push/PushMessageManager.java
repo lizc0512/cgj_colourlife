@@ -6,11 +6,10 @@ import android.os.Looper;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
+import com.youmai.hxsdk.db.bean.ChatMsg;
 import com.youmai.hxsdk.im.IMMsgManager;
 import com.youmai.hxsdk.push.utils.PushJsonUtils;
-import com.youmai.hxsdk.db.bean.ChatMsg;
 import com.youmai.hxsdk.config.AppConfig;
-import com.youmai.hxsdk.entity.EmoInfo;
 import com.youmai.hxsdk.interfaces.IFileReceiveListener;
 import com.youmai.hxsdk.interfaces.bean.FileBean;
 import com.youmai.hxsdk.interfaces.impl.FileReceiveListenerImpl;
@@ -73,7 +72,6 @@ public class PushMessageManager {
                             String msgType = PushJsonUtils.getValue(message, String.valueOf(IMContentType.CONTEXT_TEXT_TYPE));//消息类型
                             switch (isType(msgType)) {
                                 case 1:
-                                    emotionType(context, message);//文本表情
                                     break;
                                 case 2:
                                     pictureType(message);//图片
@@ -98,7 +96,6 @@ public class PushMessageManager {
                             Log.w("push", "msgType2:" + msgType2);
                             switch (isType(msgType2)) {
                                 case 1:
-                                    emotionType(context, message);//文本表情
                                     break;
                                 case 2:
                                     pictureType(message);//图片
@@ -141,44 +138,6 @@ public class PushMessageManager {
             iType = 0;
         }
         return iType;
-    }
-
-    /**
-     * 弹出表情
-     */
-    private static void emotionType(Context context, String message) {
-
-        String phone = PushJsonUtils.getValue(message, String.valueOf(IMContentType.CONTENT_PHONE));//对方手机号
-        String content = PushJsonUtils.getValue(message, String.valueOf(IMContentType.CONTENT_TEXT));//内容
-        String msgid = PushJsonUtils.getValue(message, String.valueOf(IMContentType.CONTEXT_MSGID));//用户id
-
-        int userId = getID(msgid);
-        if (userId != 0) {
-            List<EmoInfo.EmoItem> dataList = new EmoInfo(context).getEmoList();
-            for (EmoInfo.EmoItem emoItem : dataList) {
-
-                if (emoItem.getEmoStr().equals(content)) {
-                    final IFileReceiveListener listener = FileReceiveListenerImpl.getReceiveListener();
-                    final FileBean fileBean = new FileBean().setUserId(userId)
-                            .setFileMsgType(ChatMsg.MsgType.TEXT.ordinal())
-                            .setDstPhone(phone)
-                            .setTextContent(content);
-                    // Log.w("push", "listener:" + listener);
-                    if (null != listener) {
-                        //要在主线程调用
-                        Handler mainHandler = new Handler(Looper.getMainLooper());
-                        mainHandler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                Log.w(TAG, "开始弹出表情\tthread:" + Thread.currentThread().getName());
-                                listener.onImSuccess(ChatMsg.MsgType.TEXT.ordinal(), fileBean);
-                            }
-                        });
-                    }
-                    break;
-                }
-            }
-        }
     }
 
     /**

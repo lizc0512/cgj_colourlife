@@ -13,7 +13,6 @@ import com.bumptech.glide.request.RequestOptions;
 import com.tg.coloursteward.DoorActivity;
 import com.tg.coloursteward.PublicAccountActivity;
 import com.tg.coloursteward.R;
-import com.tg.coloursteward.adapter.AdvPagerAdapter;
 import com.tg.coloursteward.adapter.ManagementAdapter;
 import com.tg.coloursteward.MyBrowserActivity;
 import com.tg.coloursteward.constant.Contants;
@@ -27,7 +26,6 @@ import com.tg.coloursteward.net.MessageHandler;
 import com.tg.coloursteward.net.RequestConfig;
 import com.tg.coloursteward.net.RequestParams;
 import com.tg.coloursteward.net.ResponseData;
-import com.tg.coloursteward.serice.HomeService;
 import com.tg.coloursteward.util.AuthTimeUtils;
 import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.Tools;
@@ -55,6 +53,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,7 +71,6 @@ public class FragmentManagement extends Fragment {
     private Activity mActivity;
     private View mView;
     private Intent intent;
-    private HomeService homeService;
     private MyGridView mGridView1, mGridView2;
     private ManagementAdapter adapter1, adapter2;
     private ManageMentLinearlayout magLinearLayoutMail;
@@ -83,10 +81,7 @@ public class FragmentManagement extends Fragment {
     private String mail, examineNum;
     private ArrayList<GridViewInfo> gridlist1 = new ArrayList<GridViewInfo>();
     private ArrayList<GridViewInfo> gridlist2 = new ArrayList<GridViewInfo>();
-    private String advListStr, commonjsonStr, elsejsonStr;
-    private ArrayList<AdvInfo> listAdv = new ArrayList<AdvInfo>();
-    private AdvPagerAdapter adapter;
-    //private AdvertisementPager viewPager;
+    private String commonjsonStr, elsejsonStr;
 
     private Banner banner;
 
@@ -144,23 +139,9 @@ public class FragmentManagement extends Fragment {
         tvExamineNum = (TextView) mView.findViewById(R.id.tv_examineNum);
         mGridView1 = (MyGridView) mView.findViewById(R.id.gridview1);
         mGridView2 = (MyGridView) mView.findViewById(R.id.gridview2);
-        //viewPager = (AdvertisementPager) mView.findViewById(R.id.adverPager);
-        //int height = getResources().getDisplayMetrics().widthPixels / 3;
-        //ViewGroup.LayoutParams lp = viewPager.getLayoutParams();
-        //lp.height = height;
-        //viewPager.setLayoutParams(lp);
-        //AdvInfo info;
-        //info = new AdvInfo();
-        //info.advResId = R.color.default_bg;
-        //listAdv.add(info);
-        //adapter = new AdvPagerAdapter(listAdv, mActivity, true);
-        //viewPager.setAdapter(adapter);
-        outLocalData();
-
         banner = (Banner) mView.findViewById(R.id.banner);
 
-        //本地图片数据（资源文件）
-
+        outLocalData();
         getAdInfo();
 
         magLinearLayoutLeave.setOnClickListener(singleListener);// 请假
@@ -720,6 +701,11 @@ public class FragmentManagement extends Fragment {
                             @Override
                             public void OnBannerClick(int position) {
                                 String url = urls.get(position);
+                                if (!TextUtils.isEmpty(url)) {
+                                    Intent intent = new Intent(mActivity, MyBrowserActivity.class);
+                                    intent.putExtra(MyBrowserActivity.KEY_URL, url);
+                                    mActivity.startActivity(intent);
+                                }
                             }
                         };
 

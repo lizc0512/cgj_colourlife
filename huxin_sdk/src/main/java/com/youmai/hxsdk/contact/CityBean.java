@@ -1,18 +1,27 @@
 package com.youmai.hxsdk.contact;
 
-
-import com.youmai.hxsdk.contact.IndexBar.bean.BaseIndexPinyinBean;
+import com.youmai.hxsdk.contact.letter.bean.BaseIndexPinyinBean;
 
 /**
- * Created by zhangxutong .
- * Date: 16/08/28
+ * 作者：create by YW
+ * 日期：2018.03.20 14:23
+ * 描述：
  */
-
 public class CityBean extends BaseIndexPinyinBean {
+
+    private String Province;
 
     private String city;//城市名字
 
     public CityBean() {
+    }
+
+    public String getProvince() {
+        return Province;
+    }
+
+    public void setProvince(String province) {
+        Province = province;
     }
 
     public CityBean(String city) {

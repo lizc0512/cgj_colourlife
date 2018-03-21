@@ -13,10 +13,10 @@ import com.youmai.hxsdk.R;
 import java.util.List;
 
 /**
- * Created by zhangxutong .
- * Date: 16/08/28
+ * 作者：create by YW
+ * 日期：2018.03.20 14:23
+ * 描述：
  */
-
 public class CityAdapter extends RecyclerView.Adapter<CityAdapter.ViewHolder> {
     private Context mContext;
     private List<CityBean> mDatas;
@@ -30,7 +30,7 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.ViewHolder> {
 
     @Override
     public CityAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ViewHolder(mInflater.inflate(R.layout.item_city, parent, false));
+        return new ViewHolder(mInflater.inflate(R.layout.letter_item_city, parent, false));
     }
 
     @Override
@@ -55,7 +55,7 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.ViewHolder> {
 
         public ViewHolder(View itemView) {
             super(itemView);
-            tvCity = (TextView) itemView.findViewById(R.id.tvCity);
+            tvCity = itemView.findViewById(R.id.tvCity);
         }
     }
 }

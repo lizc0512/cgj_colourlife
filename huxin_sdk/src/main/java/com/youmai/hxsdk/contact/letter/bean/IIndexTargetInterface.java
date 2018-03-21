@@ -1,4 +1,4 @@
-package com.youmai.hxsdk.contact.IndexBar.bean;
+package com.youmai.hxsdk.contact.letter.bean;
 
 /**
  * 介绍：某个需要被处理的字段的接口

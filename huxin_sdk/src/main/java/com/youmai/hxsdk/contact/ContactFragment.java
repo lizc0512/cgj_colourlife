@@ -1,6 +1,9 @@
 package com.youmai.hxsdk.contact;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,9 +13,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.youmai.hxsdk.R;
-import com.youmai.hxsdk.contact.IndexBar.widget.IndexBar;
-import com.youmai.hxsdk.contact.decoration.DividerItemDecoration;
-import com.youmai.hxsdk.contact.decoration.TitleItemDecoration;
+import com.youmai.hxsdk.contact.letter.widget.LetterBar;
+import com.youmai.hxsdk.contact.letter.decoration.DividerItemDecoration;
+import com.youmai.hxsdk.contact.letter.decoration.TitleItemDecoration;
+import com.youmai.hxsdk.contact.letter.widget.LetterBar;
+import com.youmai.hxsdk.contact.letter.widget.LetterBarBuilder;
+import com.youmai.hxsdk.contact.letter.decoration.DividerItemDecoration;
+import com.youmai.hxsdk.contact.letter.decoration.TitleItemDecoration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,55 +39,61 @@ public class ContactFragment extends Fragment {
     /**
      * 右侧边栏导航区域
      */
-    private IndexBar mIndexBar;
+    private LetterBar mLetterBar;
 
     /**
      * 显示指示器DialogText
      */
     private TextView mTvSideBarHint;
 
+    private Context mContext;
+
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mContext = getContext();
     }
 
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.letter_fragment, container, false);
+        return view;
+    }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_contact, container, false);
-    }
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        initView(view);
-    }
+        mRv = view.findViewById(R.id.rv);
+        mRv.setLayoutManager(mManager = new LinearLayoutManager(mContext));
 
-
-    private void initView(View view) {
-
-
-        mRv = (RecyclerView) view.findViewById(R.id.rv);
-        mRv.setLayoutManager(mManager = new LinearLayoutManager(getContext()));
-        //initDatas();
         initDatas(getResources().getStringArray(R.array.provinces));
         //mDatas = new ArrayList<>();//测试为空或者null的情况 已经通过 2016 09 08
 
-        mRv.setAdapter(mAdapter = new CityAdapter(getContext(), mDatas));
-        mRv.addItemDecoration(mDecoration = new TitleItemDecoration(getContext(), mDatas));
+        mRv.setAdapter(mAdapter = new CityAdapter(mContext, mDatas));
+        mRv.addItemDecoration(mDecoration = new TitleItemDecoration(mContext, mDatas));
         //如果add两个，那么按照先后顺序，依次渲染。
         //mRv.addItemDecoration(new TitleItemDecoration2(this,mDatas));
-        mRv.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL_LIST));
-
+        mRv.addItemDecoration(new DividerItemDecoration(mContext, DividerItemDecoration.VERTICAL_LIST));
 
         //使用indexBar
-        mTvSideBarHint = (TextView) view.findViewById(R.id.tvSideBarHint);//HintTextView
-        mIndexBar = (IndexBar) view.findViewById(R.id.indexBar);//IndexBar
-        mIndexBar.setmPressedShowTextView(mTvSideBarHint)//设置HintTextView
-                .setNeedRealIndex(true)//设置需要真实的索引
-                .setmLayoutManager(mManager)//设置RecyclerView的LayoutManager
-                .setmSourceDatas(mDatas);//设置数据源
+        mTvSideBarHint = view.findViewById(R.id.tvSideBarHint);//HintTextView
+        mLetterBar = view.findViewById(R.id.indexBar);//IndexBar
 
+        LetterBarBuilder.Builder builder = new LetterBarBuilder.Builder().build()
+                .setPressedShowTextView(mTvSideBarHint)
+                .setNeedRealIndex(true)
+                .setLayoutManager(mManager)
+                .setSourceData(mDatas);
+        mLetterBar.setIndexParam(builder);
+
+        view.findViewById(R.id.update).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateDatas(null);
+            }
+        });
     }
 
     /**
@@ -104,106 +117,11 @@ public class ContactFragment extends Fragment {
      * @param view
      */
     public void updateDatas(View view) {
-        for (int i = 0; i < 99; i++) {
+        for (int i = 0; i < 999; i++) {
             mDatas.add(new CityBean("东京"));
-            mDatas.add(new CityBean("大阪"));
+            mDatas.add(new CityBean("泰山"));
         }
         mAdapter.notifyDataSetChanged();
-        mIndexBar.setmSourceDatas(mDatas);
+        mLetterBar.setSourceData(mDatas);
     }
-
-
-/*
-    *//**
-     * 组织数据源
-     *
-     * @param data
-     * @return
-     *//*
-    private void initDatas(String[] data) {
-        mDatas = new ArrayList<>();
-        mSideBarDatas = new ArrayList<>();//导航栏数据源
-
-        for (int i = 0; i < data.length; i++) {
-            CityBean cityBean = new CityBean();
-            cityBean.setCity(data[i]);//设置城市名称
-
-            StringBuilder pySb = new StringBuilder();
-            //取出首个char得到它的拼音
-            for (int i1 = 0; i1 < data[i].length(); i1++) {
-                //如果c为汉字，则返回大写拼音；如果c不是汉字，则返回String.valueOf(c)
-                pySb.append(Pinyin.toPinyin(data[i].charAt(i1)));
-            }
-            cityBean.setPyCity(pySb.toString());//设置城市名拼音
-
-            //以下代码设置城市拼音首字母
-            String sortString = pySb.toString().substring(0, 1);
-            if (sortString.matches("[A-Z]")) {//如果是A-Z字母开头
-                cityBean.setTag(sortString);
-                if (!mSideBarDatas.contains(sortString)) {
-                    mSideBarDatas.add(sortString);
-                }
-            } else {
-                cityBean.setTag("#");
-                if (!mSideBarDatas.contains("#")) {
-                    mSideBarDatas.add("#");
-                }
-            }
-            mDatas.add(cityBean);
-        }
-        sortData();
-    }
-
-    *//**
-     * 对数据源排序
-     *//*
-    private void sortData() {
-        //对右侧栏进行排序 将 # 丢在最后
-        Collections.sort(mSideBarDatas, new Comparator<String>() {
-            @Override
-            public int compare(String lhs, String rhs) {
-                if (lhs.equals("#")) {
-                    return 1;
-                } else if (rhs.equals("#")) {
-                    return -1;
-                } else {
-                    return lhs.compareTo(rhs);
-                }
-            }
-        });
-        mSideBar.setIndexText(mSideBarDatas);
-
-        //对数据源进行排序
-        Collections.sort(mDatas, new Comparator<CityBean>() {
-            @Override
-            public int compare(CityBean lhs, CityBean rhs) {
-                if (lhs.getTag().equals("#")) {
-                    return 1;
-                } else if (rhs.getTag().equals("#")) {
-                    return -1;
-                } else {
-                    return lhs.getPyCity().compareTo(rhs.getPyCity());
-                }
-            }
-        });
-    }
-
-
-    *//**
-     * 根据传入的pos返回tag
-     *
-     * @param tag
-     * @return
-     *//*
-    private int getPosByTag(String tag) {
-        if (TextUtils.isEmpty(tag)) {
-            return -1;
-        }
-        for (int i = 0; i < mDatas.size(); i++) {
-            if (tag.equals(mDatas.get(i).getTag())) {
-                return i;
-            }
-        }
-        return -1;
-    }*/
 }

@@ -22,7 +22,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="right|center_vertical"
             app:indexBarPressBackground="@color/letter_partTranslucent"
-            android:paddingBottom="3dp"
+            android:paddingTop="5dp"
             app:indexBarTextSize="13sp" />
 
         <TextView

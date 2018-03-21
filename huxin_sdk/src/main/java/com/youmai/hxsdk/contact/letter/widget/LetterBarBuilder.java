@@ -21,7 +21,7 @@ import java.util.List;
  */
 public class LetterBarBuilder {
 
-    public static String[] INDEX_STRING = {"A", "B", "C", "D", "E", "F", "G", "H", "I",
+    public static String[] INDEX_STRING = {"↑", "A", "B", "C", "D", "E", "F", "G", "H", "I",
             "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V",
             "W", "X", "Y", "Z", "#"};//#在最后面（默认的数据源）
 
@@ -119,6 +119,8 @@ public class LetterBarBuilder {
             String tagString = pySb.toString().substring(0, 1);
             if (tagString.matches("[A-Z]")) {//如果是A-Z字母开头
                 indexPinyinBean.setBaseIndexTag(tagString);
+            } else if (tagString.equals("↑")) {
+                indexPinyinBean.setBaseIndexTag("↑");
             } else {//特殊字母这里统一用#处理
                 indexPinyinBean.setBaseIndexTag("#");
             }
@@ -147,6 +149,11 @@ public class LetterBarBuilder {
                 } else if (rhs.equals("#")) {
                     return -1;
                 } else {
+                    if (lhs.equals("↑")) {
+                        return -1;
+                    } else if (rhs.equals("↑")) {
+                        return 1;
+                    }
                     return lhs.compareTo(rhs);
                 }
             }
@@ -161,6 +168,11 @@ public class LetterBarBuilder {
                 } else if (rhs.getBaseIndexTag().equals("#")) {
                     return -1;
                 } else {
+                    if (lhs.getBaseIndexTag().equals("↑")) {
+                        return -1;
+                    } else if (rhs.getBaseIndexTag().equals("↑")) {
+                        return 1;
+                    }
                     return lhs.getBaseIndexPinyin().compareTo(rhs.getBaseIndexPinyin());
                 }
             }

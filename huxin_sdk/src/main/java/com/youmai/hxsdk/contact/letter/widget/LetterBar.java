@@ -149,6 +149,10 @@ public class LetterBar extends View {
             mPaint.getTextBounds(index, 0, index.length(), indexBounds);//测量计算文字所在矩形，可以得到宽高
             Paint.FontMetrics fontMetrics = mPaint.getFontMetrics();//获得画笔的FontMetrics，用来计算baseLine。因为drawText的y坐标，代表的是绘制的文字的baseLine的位置
             int baseline = (int) ((mGapHeight - fontMetrics.bottom - fontMetrics.top) / 2);//计算出在每格index区域，竖直居中的baseLine值
+            if (index.equals("↑")) {
+                canvas.drawText(index, mWidth / 2 - indexBounds.width(), t + mGapHeight * i + baseline, mPaint);
+                continue;
+            }
             canvas.drawText(index, mWidth / 2 - indexBounds.width() / 2, t + mGapHeight * i + baseline, mPaint);//调用drawText，居中显示绘制index
         }
     }

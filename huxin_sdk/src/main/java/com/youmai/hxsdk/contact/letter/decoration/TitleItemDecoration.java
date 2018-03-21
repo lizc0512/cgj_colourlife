@@ -88,8 +88,10 @@ public class TitleItemDecoration extends RecyclerView.ItemDecoration {
             //我记得Rv的item position在重置时可能为-1.保险点判断一下吧
             if (position > -1) {
                 if (position == 0) {//等于0肯定要有title的
+                    if (mDatas.get(position).getBaseIndexTag().equals("↑")) {
+                        continue;
+                    }
                     drawTitleArea(c, left, right, child, params, position);
-
                 } else {//其他的通过判断
                     if (null != mDatas.get(position).getBaseIndexTag() && !mDatas.get(position).getBaseIndexTag().equals(mDatas.get(position - 1).getBaseIndexTag())) {
                         //不为空 且跟前一个tag不一样了，说明是新的分类，也要title
@@ -132,6 +134,10 @@ public class TitleItemDecoration extends RecyclerView.ItemDecoration {
         }
 
         String tag = mDatas.get(pos).getBaseIndexTag();
+        //特殊处理
+        if (tag.equals("↑")) {
+            return;
+        }
         //View child = parent.getChildAt(pos);
         View child = parent.findViewHolderForLayoutPosition(pos).itemView;//出现一个奇怪的bug，有时候child为空，所以将 child = parent.getChildAt(i)。-》 parent.findViewHolderForLayoutPosition(pos).itemView
 
@@ -233,6 +239,9 @@ public class TitleItemDecoration extends RecyclerView.ItemDecoration {
         //我记得Rv的item position在重置时可能为-1.保险点判断一下吧
         if (position > -1) {
             if (position == 0) {//等于0肯定要有title的
+                if (mDatas.get(position).getBaseIndexTag().equals("↑")) {
+                    return;
+                }
                 outRect.set(0, mTitleHeight, 0, 0);
             } else {//其他的通过判断
                 if (null != mDatas.get(position).getBaseIndexTag() && !mDatas.get(position).getBaseIndexTag().equals(mDatas.get(position - 1).getBaseIndexTag())) {

@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,6 +19,7 @@ import java.util.List;
  * 描述：
  */
 public class CityAdapter extends RecyclerView.Adapter<CityAdapter.ViewHolder> {
+
     private Context mContext;
     private List<CityBean> mDatas;
     private LayoutInflater mInflater;
@@ -55,7 +57,7 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.ViewHolder> {
 
         public ViewHolder(View itemView) {
             super(itemView);
-            tvCity = itemView.findViewById(R.id.tvCity);
+            tvCity = (TextView) itemView.findViewById(R.id.tvCity);
         }
     }
 }

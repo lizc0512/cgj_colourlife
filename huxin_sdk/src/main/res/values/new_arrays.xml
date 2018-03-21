@@ -7,6 +7,16 @@
         <item>#c</item>
         <item>d</item>
 
+        <item>.a</item>
+        <item>;b</item>
+        <item>#c</item>
+        <item>d</item>
+
+        <item>..a</item>
+        <item>.;b</item>
+        <item>.#c</item>
+        <item>.d</item>
+
         <item>广东</item>
         <item>北京</item>
         <item>福建</item>

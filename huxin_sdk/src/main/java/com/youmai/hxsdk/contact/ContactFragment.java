@@ -107,6 +107,11 @@ public class ContactFragment extends Fragment {
             cityBean.setCity(data[i]);//设置城市名称
             mDatas.add(cityBean);
         }
+        for (int i = 0; i < 4; i++) {
+            CityBean cityBean = new CityBean();
+            cityBean.setCity("↑");
+            mDatas.add(cityBean);
+        }
     }
 
     /**

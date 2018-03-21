@@ -11,8 +11,7 @@ import android.widget.TextView;
 
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 import com.tg.coloursteward.R;
-import com.tg.coloursteward.fragment.FragmentManagement;
-import com.tg.coloursteward.fragment.FragmentMine;
+import com.youmai.hxsdk.contact.ContactFragment;
 
 
 /**
@@ -20,11 +19,6 @@ import com.tg.coloursteward.fragment.FragmentMine;
  */
 
 public class MainActivity1 extends AppCompatActivity {
-
-    private ImageView img_left;
-    private TextView tv_title;
-    private ImageView img_right1;
-    private ImageView img_right2;
 
     private ViewPager mViewPager;
     private BottomNavigationViewEx navigation;
@@ -63,12 +57,6 @@ public class MainActivity1 extends AppCompatActivity {
 
 
     private void initView() {
-        img_left = (ImageView) findViewById(R.id.img_left);
-        tv_title = (TextView) findViewById(R.id.tv_title);
-
-        img_right1 = (ImageView) findViewById(R.id.img_right1);
-        img_right2 = (ImageView) findViewById(R.id.img_right2);
-
 
         mViewPager = (ViewPager) findViewById(R.id.view_pager);
         navigation = (BottomNavigationViewEx) findViewById(R.id.navigation);
@@ -87,7 +75,7 @@ public class MainActivity1 extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
-                tv_title.setText(navigation.getMenu().getItem(position).getTitle());
+
             }
 
             @Override
@@ -104,7 +92,6 @@ public class MainActivity1 extends AppCompatActivity {
         //mTabLayout.setupWithViewPager(mViewPager);
 
         mViewPager.setCurrentItem(0);
-        tv_title.setText(navigation.getMenu().getItem(0).getTitle());
     }
 
 
@@ -126,13 +113,13 @@ public class MainActivity1 extends AppCompatActivity {
                     ft = SignCountFragment.newInstance("title1");
                     break;
                 case 1:
-                    ft = SignCountFragment.newInstance("title2");
+                    ft = new ContactFragment();
                     break;
                 case 2:
-                    ft = new FragmentManagement();
+                    ft = SignCountFragment.newInstance("title3");
                     break;
                 case 3:
-                    ft = new FragmentMine();
+                    ft = SignCountFragment.newInstance("title4");
                     break;
                 default:
                     break;
@@ -146,7 +133,6 @@ public class MainActivity1 extends AppCompatActivity {
         public int getCount() {
             return mCount;
         }
-
 
     }
 

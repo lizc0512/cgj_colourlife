@@ -1,4 +1,4 @@
-package com.youmai.hxsdk.contact.IndexBar.bean;
+package com.youmai.hxsdk.contact.letter.bean;
 
 /**
  * 介绍：索引类的标志位的实体基类

@@ -1,4 +1,4 @@
-package com.youmai.hxsdk.contact.IndexBar.bean;
+package com.youmai.hxsdk.contact.letter.bean;
 
 /**
  * 介绍：索引类的汉语拼音的接口

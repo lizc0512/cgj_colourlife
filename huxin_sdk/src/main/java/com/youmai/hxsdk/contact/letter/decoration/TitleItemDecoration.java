@@ -1,4 +1,4 @@
-package com.youmai.hxsdk.contact.decoration;
+package com.youmai.hxsdk.contact.letter.decoration;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -12,15 +12,14 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 
-import com.youmai.hxsdk.contact.IndexBar.bean.BaseIndexTagBean;
+import com.youmai.hxsdk.contact.letter.bean.BaseIndexTagBean;
 
 import java.util.List;
 
-
 /**
  * 有分类title的 ItemDecoration
- * Created by zhangxutong .
- * Date: 16/08/28
+ * Created by YW
+ * Date: 18/03/20
  */
 
 public class TitleItemDecoration extends RecyclerView.ItemDecoration {
@@ -35,7 +34,6 @@ public class TitleItemDecoration extends RecyclerView.ItemDecoration {
     private static int COLOR_TITLE_FONT = Color.parseColor("#FF999999");
     private static int mTitleFontSize;//title字体大小
 
-
     public TitleItemDecoration(Context context, List<? extends BaseIndexTagBean> datas) {
         super();
         mDatas = datas;
@@ -48,12 +46,10 @@ public class TitleItemDecoration extends RecyclerView.ItemDecoration {
         mInflater = LayoutInflater.from(context);
     }
 
-
-    public TitleItemDecoration setmTitleHeight(int mTitleHeight) {
+    public TitleItemDecoration setTitleHeight(int mTitleHeight) {
         this.mTitleHeight = mTitleHeight;
         return this;
     }
-
 
     public TitleItemDecoration setColorTitleBg(int colorTitleBg) {
         COLOR_TITLE_BG = colorTitleBg;
@@ -70,8 +66,8 @@ public class TitleItemDecoration extends RecyclerView.ItemDecoration {
         return this;
     }
 
-    public TitleItemDecoration setmDatas(List<? extends BaseIndexTagBean> mDatas) {
-        this.mDatas = mDatas;
+    public TitleItemDecoration setDatas(List<? extends BaseIndexTagBean> datas) {
+        this.mDatas = datas;
         return this;
     }
 
@@ -191,7 +187,7 @@ public class TitleItemDecoration extends RecyclerView.ItemDecoration {
         button.draw(c);*/
 
         //inflate一个复杂布局 并draw出来
-/*        View toDrawView = mInflater.inflate(R.layout.header_complex, parent, false);
+/*        View toDrawView = mInflater.inflate(R.layout.letter_header_complex, parent, false);
         int toDrawWidthSpec;//用于测量的widthMeasureSpec
         int toDrawHeightSpec;//用于测量的heightMeasureSpec
         //拿到复杂布局的LayoutParams，如果为空，就new一个。

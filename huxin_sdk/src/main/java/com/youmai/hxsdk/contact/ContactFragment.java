@@ -16,10 +16,7 @@ import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.contact.letter.widget.LetterBar;
 import com.youmai.hxsdk.contact.letter.decoration.DividerItemDecoration;
 import com.youmai.hxsdk.contact.letter.decoration.TitleItemDecoration;
-import com.youmai.hxsdk.contact.letter.widget.LetterBar;
 import com.youmai.hxsdk.contact.letter.widget.LetterBarBuilder;
-import com.youmai.hxsdk.contact.letter.decoration.DividerItemDecoration;
-import com.youmai.hxsdk.contact.letter.decoration.TitleItemDecoration;
 
 import java.util.ArrayList;
 import java.util.List;

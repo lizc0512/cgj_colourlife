@@ -3,8 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <include layout="@layout/header_title" />
-
     <TextView
         android:id="@+id/tv_title"
         android:layout_width="wrap_content"

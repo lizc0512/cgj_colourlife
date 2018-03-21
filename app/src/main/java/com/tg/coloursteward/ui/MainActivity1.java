@@ -20,6 +20,11 @@ import com.youmai.hxsdk.contact.ContactFragment;
 
 public class MainActivity1 extends AppCompatActivity {
 
+    private ImageView img_left;
+    private TextView tv_title;
+    private ImageView img_right1;
+    private ImageView img_right2;
+
     private ViewPager mViewPager;
     private BottomNavigationViewEx navigation;
     //private TabLayout mTabLayout;
@@ -57,6 +62,11 @@ public class MainActivity1 extends AppCompatActivity {
 
 
     private void initView() {
+        img_left = (ImageView) findViewById(R.id.img_left);
+        tv_title = (TextView) findViewById(R.id.tv_title);
+
+        img_right1 = (ImageView) findViewById(R.id.img_right1);
+        img_right2 = (ImageView) findViewById(R.id.img_right2);
 
         mViewPager = (ViewPager) findViewById(R.id.view_pager);
         navigation = (BottomNavigationViewEx) findViewById(R.id.navigation);
@@ -75,7 +85,7 @@ public class MainActivity1 extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
-
+                tv_title.setText(navigation.getMenu().getItem(position).getTitle());
             }
 
             @Override
@@ -92,6 +102,8 @@ public class MainActivity1 extends AppCompatActivity {
         //mTabLayout.setupWithViewPager(mViewPager);
 
         mViewPager.setCurrentItem(0);
+
+        tv_title.setText(navigation.getMenu().getItem(0).getTitle());
     }
 
 

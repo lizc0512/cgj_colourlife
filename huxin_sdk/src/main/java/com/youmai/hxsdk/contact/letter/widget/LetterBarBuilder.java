@@ -199,7 +199,12 @@ public class LetterBarBuilder {
         List<? extends BaseIndexPinyinBean> mSourceDatas;
 
         public Builder build() {
-            return new Builder();
+            Builder builder = new Builder();
+            builder.mPressedShowTextView = this.mPressedShowTextView;
+            builder.isNeedRealIndex = this.isNeedRealIndex;
+            builder.mLayoutManager = this.mLayoutManager;
+            builder.mSourceDatas = this.mSourceDatas;
+            return builder;
         }
 
         public Builder setPressedShowTextView(TextView pressedShowTextView) {

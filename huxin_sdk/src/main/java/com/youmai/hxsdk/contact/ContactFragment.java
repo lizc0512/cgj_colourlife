@@ -16,10 +16,7 @@ import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.contact.letter.widget.LetterBar;
 import com.youmai.hxsdk.contact.letter.decoration.DividerItemDecoration;
 import com.youmai.hxsdk.contact.letter.decoration.TitleItemDecoration;
-import com.youmai.hxsdk.contact.letter.widget.LetterBar;
 import com.youmai.hxsdk.contact.letter.widget.LetterBarBuilder;
-import com.youmai.hxsdk.contact.letter.decoration.DividerItemDecoration;
-import com.youmai.hxsdk.contact.letter.decoration.TitleItemDecoration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,11 +78,12 @@ public class ContactFragment extends Fragment {
         mTvSideBarHint = view.findViewById(R.id.tvSideBarHint);//HintTextView
         mLetterBar = view.findViewById(R.id.indexBar);//IndexBar
 
-        LetterBarBuilder.Builder builder = new LetterBarBuilder.Builder().build()
+        LetterBarBuilder.Builder builder = new LetterBarBuilder.Builder()
                 .setPressedShowTextView(mTvSideBarHint)
                 .setNeedRealIndex(true)
                 .setLayoutManager(mManager)
-                .setSourceData(mDatas);
+                .setSourceData(mDatas)
+                .build();
         mLetterBar.setIndexParam(builder);
 
         view.findViewById(R.id.update).setOnClickListener(new View.OnClickListener() {

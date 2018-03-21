@@ -78,11 +78,12 @@ public class ContactFragment extends Fragment {
         mTvSideBarHint = view.findViewById(R.id.tvSideBarHint);//HintTextView
         mLetterBar = view.findViewById(R.id.indexBar);//IndexBar
 
-        LetterBarBuilder.Builder builder = new LetterBarBuilder.Builder().build()
+        LetterBarBuilder.Builder builder = new LetterBarBuilder.Builder()
                 .setPressedShowTextView(mTvSideBarHint)
                 .setNeedRealIndex(true)
                 .setLayoutManager(mManager)
-                .setSourceData(mDatas);
+                .setSourceData(mDatas)
+                .build();
         mLetterBar.setIndexParam(builder);
 
         view.findViewById(R.id.update).setOnClickListener(new View.OnClickListener() {

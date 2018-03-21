@@ -63,7 +63,7 @@ public class LetterBar extends View {
 
     private void init(Context context, AttributeSet attrs, int defStyleAttr) {
         int textSize = (int) TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_SP, 15,
+                TypedValue.COMPLEX_UNIT_SP, 13,
                 getResources().getDisplayMetrics());//默认的TextSize
         mPressedBackground = Color.BLACK;//默认按下是纯黑色
         TypedArray typedArray = context.getTheme().obtainStyledAttributes(attrs, R.styleable.LetterBar, defStyleAttr, 0);

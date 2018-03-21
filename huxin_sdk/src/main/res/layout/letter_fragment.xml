@@ -18,12 +18,12 @@
 
         <com.youmai.hxsdk.contact.letter.widget.LetterBar
             android:id="@+id/indexBar"
-            android:layout_width="21dp"
+            android:layout_width="20dp"
             android:layout_height="match_parent"
             android:layout_gravity="right|center_vertical"
             app:indexBarPressBackground="@color/letter_partTranslucent"
             android:paddingBottom="3dp"
-            app:indexBarTextSize="15sp" />
+            app:indexBarTextSize="13sp" />
 
         <TextView
             android:id="@+id/tvSideBarHint"

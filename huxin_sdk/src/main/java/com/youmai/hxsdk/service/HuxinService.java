@@ -1,7 +1,5 @@
 package com.youmai.hxsdk.service;
 
-import android.Manifest;
-import android.annotation.TargetApi;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -12,27 +10,14 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
-import android.media.AudioAttributes;
-import android.media.AudioManager;
-import android.media.SoundPool;
 import android.net.ConnectivityManager;
 import android.os.Binder;
-import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
 import android.os.SystemClock;
-import android.os.Vibrator;
-import android.support.v4.content.ContextCompat;
-import android.telephony.PhoneStateListener;
-import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -40,16 +25,8 @@ import com.google.protobuf.GeneratedMessage;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.ProtocolCallBack;
-import com.youmai.hxsdk.R;
-import com.youmai.hxsdk.activity.HookStrategyActivity;
 import com.youmai.hxsdk.config.AppConfig;
-import com.youmai.hxsdk.config.Constant;
-import com.youmai.hxsdk.db.bean.StatsData;
-import com.youmai.hxsdk.db.helper.BackGroundJob;
-import com.youmai.hxsdk.db.helper.HxShowHelper;
-import com.youmai.hxsdk.db.helper.HxUsersHelper;
 import com.youmai.hxsdk.db.manager.GreenDBUpdateManager;
-import com.youmai.hxsdk.entity.CallInfo;
 import com.youmai.hxsdk.entity.RespBaseBean;
 import com.youmai.hxsdk.im.IMMsgManager;
 import com.youmai.hxsdk.proto.YouMaiBasic;
@@ -61,17 +38,9 @@ import com.youmai.hxsdk.socket.PduBase;
 import com.youmai.hxsdk.socket.ReceiveListener;
 import com.youmai.hxsdk.socket.TcpClient;
 import com.youmai.hxsdk.utils.AppUtils;
-import com.youmai.hxsdk.utils.CallRecordUtil;
-import com.youmai.hxsdk.utils.CallUtils;
 import com.youmai.hxsdk.utils.DeviceUtils;
-import com.youmai.hxsdk.utils.FloatLogoUtil;
 import com.youmai.hxsdk.utils.LogFile;
-import com.youmai.hxsdk.utils.LogUtils;
-import com.youmai.hxsdk.utils.MultiHxService;
-import com.youmai.hxsdk.utils.PhoneNumTypes;
 import com.youmai.hxsdk.utils.StringUtils;
-import com.youmai.hxsdk.view.full.CallFullView;
-import com.youmai.hxsdk.view.full.FloatViewUtil;
 
 import java.net.InetSocketAddress;
 
@@ -91,65 +60,20 @@ public class HuxinService extends Service {
     private Context mContext;
     private int JobId;
 
-    private MultiHxService multiHxSer;
-
     /**
      * socket client
      */
     private TcpClient mClient;
 
-    /**
-     * 摇段子，sensor and vibrator
-     */
-    private SensorManager mSensorManager;
-    private Vibrator mVibrator;
-
-    /**
-     * 定义的检查到摇一摇后的回调通知
-     */
-    private SharkListener mSharkListener;
-
-    private static final int POOL_SIZE = 10;  //SoundPool load size 最多初始化10个音频（短促的音频）
-    private SoundPool mSoundPool;
 
     private static final int HX_ALL_CONFIG = 0;
     private static final int HX_ALL_SHOW = 1;
     private static final int HX_ALL_CONT = 2;
-    private static final int HX_STATS_SEND = 3;
-
-    private static final int HX_POST_EVENT_ID = 4;
-    private static final int HX_POST_EVENT_OBJ = 5;
-    private static final int HX_COLSE_HOOK_ACT = 6;
-
-    private static final int HX_POST_ALIVE = 7;
-    //保存通话记录
-    private static final int HX_POST_SAVE_CALLL = 8;
 
     private ServiceHandler mServiceHandler;
 
     private NetWorkChangeReceiver mNetWorkReceiver;
     private BroadcastReceiver mScreenReceiver;
-
-
-    /**
-     * 摇一摇回调通知接口
-     */
-    public interface SharkListener {
-        void onShark();
-    }
-
-
-    /**
-     * 浮屏类型
-     * Q版： 0
-     * 全屏版 ：1
-     */
-    public static final int MODEL_TYPE_Q = 0; //Q版
-    public static final int MODEL_TYPE_FULL = 1; //全屏板
-    public static final int MODEL_TYPE_HALF = 2; //半屏板
-    public static final int MODEL_TYPE_CLOSE = 3; //关闭弹屏
-
-    private int mFloatType = MODEL_TYPE_FULL;
 
     /**
      * Activity绑定后回调
@@ -169,28 +93,14 @@ public class HuxinService extends Service {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case HX_ALL_CONFIG:
-                    BackGroundJob.instance().reqConfig(mContext);
+                    //BackGroundJob.instance().reqConfig(mContext);
                     break;
                 case HX_ALL_SHOW:
-                    HxShowHelper.instance().updateAllShow(mContext);
-                    HxShowHelper.instance().loadUserShowList(mContext);
+                    //HxShowHelper.instance().updateAllShow(mContext);
+                    //HxShowHelper.instance().loadUserShowList(mContext);
                     break;
                 case HX_ALL_CONT:
-                    HxUsersHelper.instance().updateAllUser(mContext);
-                    break;
-                case HX_STATS_SEND:
-                    break;
-                case HX_POST_EVENT_ID:
-                    break;
-                case HX_POST_EVENT_OBJ:
-                    break;
-                case HX_COLSE_HOOK_ACT:
-                    HuxinSdkManager.instance().getStackAct().finishActivity(HookStrategyActivity.class);
-                    break;
-                case HX_POST_ALIVE:
-                    break;
-                case HX_POST_SAVE_CALLL:
-                    CallRecordUtil.saveCallInfo(mContext, (String) msg.obj, msg.arg1, msg.arg2 == 1);
+                    //HxUsersHelper.instance().updateAllUser(mContext);
                     break;
             }
         }
@@ -219,7 +129,7 @@ public class HuxinService extends Service {
          * @param callback  回调
          */
         public void sendProto(GeneratedMessage msg, int commandId, ReceiveListener callback) {
-            mClient.sendProto(msg, commandId, callback);
+            mClient.sendProto(msg, (short) commandId, callback);
         }
 
         public void setNotifyListener(NotifyListener listener) {
@@ -232,18 +142,7 @@ public class HuxinService extends Service {
         }
 
 
-        public int getFloatType() {
-            return mFloatType;
-        }
-
-        public void setFloatType(int type) {
-            mFloatType = type;
-            AppUtils.setIntSharedPreferences(mContext, "FLOAT_TYPE", type);
-        }
-
-
         public void setLogin(boolean isLogin) {
-
             mClient.setLogin(isLogin);
         }
 
@@ -259,45 +158,6 @@ public class HuxinService extends Service {
             mClient.close();
             mClient.setUserId(0);
             mClient.setCallBack(null);
-        }
-
-        /**
-         * 播放声音
-         *
-         * @param res 资源ID
-         */
-        public void playSound(int res) {
-            mSoundPool.load(mContext, res, 1);
-            mSoundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
-                @Override
-                public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
-                    if (status == 0)
-                        soundPool.play(sampleId, 1, 1, 0, 0, 1);
-                }
-            });
-
-        }
-
-        /**
-         * 注册摇一摇监听器
-         *
-         * @param listener 监听器
-         */
-        public void registerSharkListener(SharkListener listener) {
-            mSharkListener = listener;
-            Sensor accSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER); //加速度传感器
-            mSensorManager.registerListener(mSensorListener, accSensor, SensorManager.SENSOR_DELAY_UI);
-        }
-
-        /**
-         * 注销摇一摇监听器
-         */
-        public void unregisterSharkListener() {
-            if (mSensorManager == null) {
-                return;
-            }
-            mSensorManager.unregisterListener(mSensorListener);
-            mSharkListener = null;
         }
 
 
@@ -329,18 +189,6 @@ public class HuxinService extends Service {
             mClient.connect(callback);
         }
 
-        public void addEvent(int id) {
-            Message msg = mServiceHandler.obtainMessage(HX_POST_EVENT_ID);
-            msg.arg1 = id;
-            mServiceHandler.sendMessage(msg);
-        }
-
-        public void addEvent(StatsData data) {
-            Message msg = mServiceHandler.obtainMessage(HX_POST_EVENT_OBJ);
-            msg.obj = data;
-            mServiceHandler.sendMessage(msg);
-        }
-
     }
 
 
@@ -353,18 +201,15 @@ public class HuxinService extends Service {
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(ConnectivityManager.CONNECTIVITY_ACTION)) {
                 if (AppUtils.isWifi(context)) {
-
-                    Message msg0 = mServiceHandler.obtainMessage(HX_ALL_CONFIG);
+                    /*Message msg0 = mServiceHandler.obtainMessage(HX_ALL_CONFIG);
                     mServiceHandler.sendMessageDelayed(msg0, 1000 * 60);
 
                     Message msg1 = mServiceHandler.obtainMessage(HX_ALL_SHOW);
                     mServiceHandler.sendMessageDelayed(msg1, 1000 * 60 * 2);
 
                     Message msg2 = mServiceHandler.obtainMessage(HX_ALL_CONT);
-                    mServiceHandler.sendMessageDelayed(msg2, 1000 * 60 * 3);
+                    mServiceHandler.sendMessageDelayed(msg2, 1000 * 60 * 3);*/
 
-                    Message msg3 = mServiceHandler.obtainMessage(HX_STATS_SEND);
-                    mServiceHandler.sendMessageDelayed(msg3, 1000 * 60 * 4);
                 }
             }
         }
@@ -384,21 +229,12 @@ public class HuxinService extends Service {
 
             if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
                 // DO WHATEVER YOU NEED TO DO HERE
-                Message msg = mServiceHandler.obtainMessage(HX_COLSE_HOOK_ACT);
-                if (mServiceHandler.hasMessages(HX_COLSE_HOOK_ACT)) {
-                    mServiceHandler.removeMessages(HX_COLSE_HOOK_ACT);
-                }
-                mServiceHandler.sendMessageDelayed(msg, 1000 * 60 * 5);
             } else if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
                 // AND DO WHATEVER YOU NEED TO DO HERE
                 /*if (mClient != null && mClient.isConnect()) {
                     mClient.close();
                 }
                 mClient.connect();*/
-
-                if (mServiceHandler.hasMessages(HX_COLSE_HOOK_ACT)) {
-                    mServiceHandler.removeMessages(HX_COLSE_HOOK_ACT);
-                }
             }
         }
 
@@ -428,20 +264,10 @@ public class HuxinService extends Service {
         mScreenReceiver = new ScreenReceiver();
         registerReceiver(mScreenReceiver, filter);
 
-        initPhoneState();  //监听通话状态
-
-        multiHxSer = new MultiHxService(mContext, HuxinService.class.getName());
-        if (!multiHxSer.isEnable()) {
-            return;
-        }
-
         if (startService(new Intent(this, ForegroundEnablingService.class)) == null)
             throw new RuntimeException("Couldn't find " + ForegroundEnablingService.class.getSimpleName());
 
-        initShark();       //监听重力传感器
-        initSound();
         createTcp();
-
 
         HuxinSdkManager.instance().setNotifyListener(
                 IMMsgManager.getInstance().getIMListener());
@@ -454,141 +280,16 @@ public class HuxinService extends Service {
     }
 
 
-    /**
-     * 监听电话状态
-     */
-    private void initPhoneState() {
-        if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.READ_PHONE_STATE)
-                == PackageManager.PERMISSION_GRANTED) {
-            TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-            tm.listen(mPhoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
-        }
-    }
-
-
-    /**
-     * 电话状态监听
-     */
-    private final PhoneStateListener mPhoneStateListener = new PhoneStateListener() {
-        @Override
-        public void onCallStateChanged(int state, String phoneNumber) {
-            if (TextUtils.isEmpty(phoneNumber)) {
-                return;
-            }
-
-            if (!multiHxSer.isEnable()) {
-                if (mClient != null) {
-                    mClient.close();
-                }
-                return;
-            } else {
-                if (mClient != null
-                        && state != TelephonyManager.CALL_STATE_IDLE) {
-                    mClient.reConnect();
-                }
-            }
-
-            //TODO: 解决号码有空格、+86、0086
-            if (!TextUtils.isEmpty(phoneNumber)) {
-                phoneNumber = PhoneNumTypes.trimNumber(phoneNumber);
-
-                //处理不成功，依然带"+",直接把“+”去掉
-                if (phoneNumber.startsWith("+")) {
-                    phoneNumber = phoneNumber.substring(1);
-                }
-            }
-
-            switch (state) {
-                case TelephonyManager.CALL_STATE_RINGING: { //响铃
-                    CallInfo.setCallMTState(CallInfo.CALL_STATE_MT.CALL_STATE_RINGING);
-
-                    if (CallUtils.isSupportMTBefore(mContext) && !StringUtils.isEmpty(phoneNumber)) {
-                        FloatViewUtil.instance().showFloatViewDelay(mContext, phoneNumber);
-                    }
-
-                    //Todo: 暂时设置来电提醒
-                    if (null != FloatViewUtil.instance().getFullView()) {
-                        FloatViewUtil.instance().getFullView().setLocale(mContext.getString(R.string.hx_call_user_ring));
-                    }
-                }
-                break;
-
-                case TelephonyManager.CALL_STATE_OFFHOOK: {// 接通
-                    if (CallInfo.IsMOCalling()) {  //设置主叫状态
-                        CallInfo.setCallMOState(CallInfo.CALL_STATE_M0.CALL_STATE_OFFHOOK);
-                    } else if (CallInfo.IsMTCalling()) { //设置被叫状态
-                        CallInfo.setCallMTState(CallInfo.CALL_STATE_MT.CALL_STATE_OFFHOOK);
-                        if (Build.MODEL != null && Build.MODEL.startsWith("OPPO")) {
-                            oppoR9();
-                        }
-                    } else if (Build.MODEL != null && Build.MODEL.startsWith("OPPO")) {
-                        CallInfo.setCallMTState(CallInfo.CALL_STATE_MT.CALL_STATE_OFFHOOK);
-                        oppoR9();
-                    }
-
-                    if (!StringUtils.isEmpty(phoneNumber))
-                        FloatViewUtil.instance().showFloatViewDelay(mContext, phoneNumber);
-
-                    CallFullView fullView = FloatViewUtil.instance().getFullView();
-                    if (fullView != null) {
-                        fullView.setLayoutContent(false);
-                    }
-
-                    FloatViewUtil.instance().startCallTime();
-
-                }
-                break;
-                case TelephonyManager.CALL_STATE_IDLE: {//挂断
-                    boolean isMOCall = CallInfo.IsMOCalling();//是否主叫
-                    CallInfo.setIsCountFloatView(true);
-
-                    FloatLogoUtil.instance().hideFloat();
-                    FloatViewUtil.instance().hideFloatViewDelay();
-
-                    if (HuxinSdkManager.instance().isCallEndSrceen()) {
-                        if (FloatViewUtil.instance().getFullView() != null) {
-                            FloatViewUtil.instance().startCallHook(isMOCall);
-                        } else {
-                            //针对不支持通话前弹屏机型，在通话未接通的情况下就挂断了来电，而弹出通话后屏
-                            if (/*!CallUtils.isSupportMTBefore()
-                                    && */!StringUtils.isEmpty(phoneNumber)
-                                    && CallInfo.IsCalling()) {
-                                FloatViewUtil.instance().startCallHook(mContext, phoneNumber);
-                            }
-                        }
-                    }
-
-                    mServiceHandler.sendEmptyMessageDelayed(HX_POST_ALIVE, 20 * 1000); //汇报活跃
-
-
-                    CallInfo.setCallMTState(CallInfo.CALL_STATE_MT.CALL_STATE_IDLE);
-                    CallInfo.setCallMOState(CallInfo.CALL_STATE_M0.CALL_STATE_IDLE);
-                    HuxinSdkManager.instance().handleCloseCallBackgroundSound();
-
-                    HuxinSdkManager.instance().getStackAct().finishAll(-1);
-                }
-                break;
-            }
-
-        }
-    };
-
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
-        // LogUtils.w("push", "HuxinService start onStartCommand");
-        String action = "";
-        String phoneNumber = "";
+        String action = null;
 
         if (intent != null) {
             action = intent.getAction();
-            phoneNumber = intent.getStringExtra("phoneNumber");
-            if (!TextUtils.isEmpty(phoneNumber)) {
-                phoneNumber = PhoneNumTypes.trimNumber(phoneNumber);
-            }
         }
 
-        if (action != null) {
+        if (!TextUtils.isEmpty(action)) {
             switch (action) {
                 case BOOT_SERVICE:
                     String mSession = HuxinSdkManager.instance().getSession();
@@ -605,31 +306,6 @@ public class HuxinService extends Service {
                         }
                     }
                     break;
-                case NEW_OUTGOING_CALL:  //call
-                    if (!multiHxSer.isEnable()) {
-                        if (mClient != null) {
-                            mClient.close();
-                        }
-                        return START_STICKY;
-                    } else {
-                        if (mClient != null) {
-                            mClient.reConnect();
-                        }
-                    }
-
-                    CallInfo.setCallMOState(CallInfo.CALL_STATE_M0.CALL_STATE_OUTGOING);
-
-                    if (CallUtils.isSupportMOBefore(mContext)) {
-                        FloatViewUtil.instance().setOutgoingCallTime(System.currentTimeMillis());
-                        FloatViewUtil.instance().showFloatViewDelay(mContext, phoneNumber);
-                    }
-                    break;
-                case SHOW_FLOAT_VIEW:
-                    FloatViewUtil.instance().showFloatView(mContext);
-                    break;
-                case HIDE_FLOAT_VIEW:
-                    FloatViewUtil.instance().hideFloatView();
-                    break;
                 case IM_LOGIN_OUT:
                     if (mClient != null && mClient.isConnect() && mClient.isLogin()) {
                         mClient.close();
@@ -645,16 +321,12 @@ public class HuxinService extends Service {
 
     @Override
     public void onTrimMemory(int level) {
-        if (!multiHxSer.isEnable()) {
-            cancelJob();
-            AppUtils.stopService(mContext, HuxinService.class.getName());
+        if (level >= TRIM_MEMORY_COMPLETE /*&& UsageSharedPrefernceHelper.isServiceRunning(mContext)*/) {
+            jobStartService(60 * 5 * 1000);     //启动JobService拉起HuxinService
         } else {
-            if (level >= TRIM_MEMORY_COMPLETE /*&& UsageSharedPrefernceHelper.isServiceRunning(mContext)*/) {
-                jobStartService(60 * 5 * 1000);     //启动JobService拉起HuxinService
-            } else {
-                cancelJob();
-            }
+            cancelJob();
         }
+
     }
 
     @Override
@@ -768,111 +440,6 @@ public class HuxinService extends Service {
 
 
     /**
-     * 初始化声音
-     */
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    @SuppressWarnings("deprecated")
-    private void initSound() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-
-            AudioAttributes audioAtt = new AudioAttributes.Builder()
-                    .setUsage(AudioAttributes.USAGE_GAME)
-                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                    .build();
-            mSoundPool = new SoundPool.Builder().setAudioAttributes(audioAtt).setMaxStreams(POOL_SIZE).build();
-
-        } else {
-            mSoundPool = new SoundPool(POOL_SIZE, AudioManager.STREAM_MUSIC, 100);
-        }
-    }
-
-
-    /**
-     * 初始化震动传感器 start by 2016.8.4
-     */
-    private void initShark() {
-
-        mSensorManager = (SensorManager) mContext.getSystemService(Context.SENSOR_SERVICE);
-        mVibrator = (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);
-
-    }
-
-    private long last_time;//记录最后的时间
-    private float last_x;
-    private float last_y;
-    private float last_z;//记录上一次的z轴的值
-    private float ACCELL;
-    private long mills;//记录判断的上一次时间 -- 1000ms
-
-    /**
-     * sensor监听器
-     */
-    private final SensorEventListener mSensorListener = new SensorEventListener() {
-        public void onSensorChanged(SensorEvent se) {
-            sensorSpeed(se);
-        }
-
-        public void onAccuracyChanged(Sensor sensor, int accuracy) {
-        }
-    };
-
-    private void sensorSpeed(SensorEvent se) {
-        String model = android.os.Build.MODEL;
-        switch (model) {
-            case "SCL-AL00":
-                ACCELL = 3200;
-                break;
-            case "vivo X7":
-                ACCELL = 3200;
-                break;
-            case "Lenovo K50-t3s":
-                ACCELL = 9000;
-                break;
-            case "MI 2S":
-                ACCELL = 3600;
-                break;
-            default:
-                ACCELL = 8000;
-                break;
-        }
-        long currentTime = System.currentTimeMillis();
-        if (currentTime - last_time > 10) {
-            long timeDistance = currentTime - last_time;
-            last_time = currentTime;
-
-            float x = se.values[0];//x轴变化的值
-            float y = se.values[1];//y轴变化的值
-            float z = se.values[2];//z轴变化的值
-
-            double absValue = Math.abs(x + y + z - last_x - last_y - last_z);
-            double speed = absValue / timeDistance * 10000;
-            if (speed > ACCELL && checkRate()) {
-                //当x/y/z达到一定值进行后续的操作
-                if (mSharkListener != null) {
-                    mSharkListener.onShark();
-                    mVibrator.vibrate(50);
-                    LogUtils.e(Constant.SDK_UI_TAG, "speed = " + speed);
-                    LogUtils.e(Constant.SDK_UI_TAG, "Build.MODEL = " + Build.MODEL);
-                }
-            }
-            last_x = x;
-            last_y = y;
-            last_z = z;
-        }
-    }
-
-    private boolean checkRate() {
-        boolean res = false;
-        long curTime = System.currentTimeMillis();
-        if (curTime - mills > 2000) {
-            mills = curTime;
-            res = true;
-        }
-        return res;
-    }
-
-
-    /**
      * 发送登录IM服务器请求
      *
      * @param userId  用户ID
@@ -917,19 +484,6 @@ public class HuxinService extends Service {
             }
         };
         mClient.sendProto(user_Login, callback);
-    }
-
-    private void oppoR9() {
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                CallFullView fullView = FloatViewUtil.instance().getFullView();
-                if (fullView != null) {
-                    fullView.setLayoutContent(false);
-                }
-                FloatViewUtil.instance().startCallTime();
-            }
-        }, 350);
     }
 
 }

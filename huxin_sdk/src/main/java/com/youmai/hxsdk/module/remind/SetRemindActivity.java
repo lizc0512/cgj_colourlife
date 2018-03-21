@@ -413,9 +413,6 @@ public class SetRemindActivity extends SdkBaseActivity implements View.OnClickLi
         };
 
         hideSoftKey();
-
-        HuxinSdkManager.instance().remindSave(cacheMsgBean, iconNumRes, et_remind_content.getText().toString(),
-                timeFromWeekday, remindNumber, listener);
     }
 
     private void hideSoftKey() {

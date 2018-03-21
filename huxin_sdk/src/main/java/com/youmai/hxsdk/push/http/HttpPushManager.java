@@ -42,7 +42,7 @@ public class HttpPushManager {
                 }
             }
         };
-        HuxinSdkManager.instance().pushRegister(token, brand, iPostListener);
+        //HuxinSdkManager.instance().pushRegister(token, brand, iPostListener);
 
     }
 
@@ -77,7 +77,7 @@ public class HttpPushManager {
             }
         };
 
-        HuxinSdkManager.instance().pushMsg(phoneNum, targetPhone, message, type, iPostListener);
+        //HuxinSdkManager.instance().pushMsg(phoneNum, targetPhone, message, type, iPostListener);
     }
 
     /**

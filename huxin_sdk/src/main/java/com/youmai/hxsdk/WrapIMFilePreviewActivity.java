@@ -21,7 +21,6 @@ import com.youmai.hxsdk.entity.CallInfo;
 import com.youmai.hxsdk.im.IMHelper;
 import com.youmai.hxsdk.im.cache.CacheMsgFile;
 import com.youmai.hxsdk.utils.LogUtils;
-import com.youmai.hxsdk.view.full.FloatViewUtil;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -109,10 +108,6 @@ public class WrapIMFilePreviewActivity extends FragmentActivity {
 
     private void initDownload() {
 
-        if (isFloat) {
-            FloatViewUtil.instance().hideFloatView();
-        }
-
         cacheMsgBean = getIntent().getParcelableExtra(IM_FILE_BEAN);
 
         if (null == cacheMsgBean) {
@@ -149,11 +144,6 @@ public class WrapIMFilePreviewActivity extends FragmentActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (isFloat) {
-            if (CallInfo.IsCalling()) {
-                FloatViewUtil.instance().showFloatView(getApplicationContext());
-            }
-        }
     }
 
     private void initListener() {

@@ -17,7 +17,6 @@ import com.youmai.hxsdk.im.cache.CacheMsgVideo;
 import com.youmai.hxsdk.im.cache.CacheMsgVoice;
 import com.youmai.hxsdk.im.cache.ContactsDetailsBean;
 import com.youmai.hxsdk.im.cache.JsonFormate;
-import com.youmai.hxsdk.keep.KeepAdapter;
 
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;

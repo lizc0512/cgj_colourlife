@@ -77,20 +77,6 @@ public class LoginPromptActivity extends AppCompatActivity implements View.OnCli
                 final ProgressDialog dialog = new ProgressDialog(this);
                 dialog.setMessage("正在重新登录，请稍后...");
                 dialog.show();
-                HuxinSdkManager.instance().setPhoneNumber(phone, new HuxinSdkManager.LoginListener() {
-                    @Override
-                    public void success(String msg) {
-                        finish();
-                        Toast.makeText(LoginPromptActivity.this, "重新登录成功!", Toast.LENGTH_SHORT).show();
-                        dialog.dismiss();
-                    }
-
-                    @Override
-                    public void fail(String msg) {
-                        Toast.makeText(LoginPromptActivity.this, "重新登录失败!", Toast.LENGTH_SHORT).show();
-                        dialog.dismiss();
-                    }
-                });
             }
 
 

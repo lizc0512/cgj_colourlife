@@ -19,7 +19,6 @@ import com.youmai.hxsdk.module.filemanager.interfaces.PickerManagerListener;
 import com.youmai.hxsdk.module.filemanager.adapter.FileClassifyAdapter;
 import com.youmai.hxsdk.module.filemanager.bean.Document;
 import com.youmai.hxsdk.utils.ListUtils;
-import com.youmai.hxsdk.view.full.FloatViewUtil;
 
 import java.util.ArrayList;
 
@@ -131,9 +130,6 @@ public class FileDLClassifyActivity extends SdkHomeActivity implements View.OnCl
         }
         if (PickerManager.getInstance().getRefreshUI2Listener() != null) {
             PickerManager.getInstance().getRefreshUI2Listener().onRefresh(paths, PickerManager.getInstance().getRequestCode());
-        }
-        if (isFloatView && CallInfo.IsCalling()) {
-            FloatViewUtil.instance().showFloatViewDelay(mContext);
         }
         HuxinSdkManager.instance().getStackAct().finishAll(1);
         //PickerManager.getInstance().setPickerManagerListener(null);

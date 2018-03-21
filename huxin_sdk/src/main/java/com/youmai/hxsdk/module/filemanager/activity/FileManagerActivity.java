@@ -20,7 +20,6 @@ import com.youmai.hxsdk.module.filemanager.PickerManager;
 import com.youmai.hxsdk.module.filemanager.bean.Document;
 import com.youmai.hxsdk.module.filemanager.loader.FileListLoader;
 import com.youmai.hxsdk.utils.ListUtils;
-import com.youmai.hxsdk.view.full.FloatViewUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -100,18 +99,11 @@ public class FileManagerActivity extends SdkHomeActivity implements View.OnClick
         super.onResume();
         startLoad();
         bindDataToView();
-
-        if (isFloatView) {
-            FloatViewUtil.instance().hideFloatView();
-        }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        if (isFloatView && CallInfo.IsCalling() && !isPreview) {
-            FloatViewUtil.instance().showFloatViewDelay(mContext);
-        }
     }
 
     @Override

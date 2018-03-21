@@ -18,9 +18,7 @@ import com.youmai.hxsdk.module.filemanager.activity.FileManagerActivity;
 import com.youmai.hxsdk.picker.FilePickerBuilder;
 import com.youmai.hxsdk.module.filemanager.constant.FilePickerConst;
 import com.youmai.hxsdk.utils.CommonUtils;
-import com.youmai.hxsdk.utils.CompressImage;
 import com.youmai.hxsdk.utils.ToastUtil;
-import com.youmai.hxsdk.view.full.FloatViewUtil;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -67,7 +65,6 @@ public class WrapSendFileActivity extends FragmentActivity implements PickerRefr
     @Override
     protected void onStop() {
         super.onStop();
-        FloatViewUtil.instance().hideFloatView();
     }
 
     @Override

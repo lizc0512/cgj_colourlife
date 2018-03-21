@@ -51,11 +51,8 @@ import com.youmai.hxsdk.adapter.IMListAdapter;
 import com.youmai.hxsdk.config.FileConfig;
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
 import com.youmai.hxsdk.db.bean.ChatMsg;
-import com.youmai.hxsdk.db.utils.BizCardDBUtils;
 import com.youmai.hxsdk.dialog.HxDialog;
-import com.youmai.hxsdk.emo.EmoEditActivity;
 import com.youmai.hxsdk.entity.CallInfo;
-import com.youmai.hxsdk.http.IPostListener;
 import com.youmai.hxsdk.im.IMHelper;
 import com.youmai.hxsdk.im.IMMsgCallback;
 import com.youmai.hxsdk.im.IMMsgManager;
@@ -479,7 +476,6 @@ public class IMConnectionActivity extends SdkBaseActivity implements
 
         // FIXME: 2017/1/9  三方电话时号码重置
         if (CallInfo.IsCalling()) {
-            HuxinSdkManager.instance().getStackAct().finishActivity(HookStrategyActivity.class);
             finish();
         }
         imListAdapter.toastHidden();
@@ -1626,9 +1622,6 @@ public class IMConnectionActivity extends SdkBaseActivity implements
      */
     @Override
     public void onKeyBoardAddEmotion() {
-        Intent intent = new Intent(mContext, EmoEditActivity.class);
-        startActivityForResult(intent, IMConnectionActivity.REQUEST_CODE_ADDEMO);
-        isOpenEmotion = true;
     }
 
     /**

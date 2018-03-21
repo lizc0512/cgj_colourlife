@@ -19,7 +19,6 @@ import com.youmai.hxsdk.IMFilePreviewActivity;
 import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.activity.CropImageActivity;
 import com.youmai.hxsdk.activity.CropMapActivity;
-import com.youmai.hxsdk.activity.CropVideoActivity;
 import com.youmai.hxsdk.activity.SdkBaseActivity;
 import com.youmai.hxsdk.chat.ContentVideo;
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
@@ -32,14 +31,10 @@ import com.youmai.hxsdk.im.IMHelper;
 import com.youmai.hxsdk.im.cache.CacheMsgFile;
 import com.youmai.hxsdk.im.cache.CacheMsgJoke;
 import com.youmai.hxsdk.im.voice.manager.MediaManager;
-import com.youmai.hxsdk.service.HuxinService;
 import com.youmai.hxsdk.socket.IMContentType;
 import com.youmai.hxsdk.utils.AppUtils;
-import com.youmai.hxsdk.utils.FloatLogoUtil;
 import com.youmai.hxsdk.utils.StringUtils;
 import com.youmai.hxsdk.utils.TimeUtils;
-import com.youmai.hxsdk.view.full.FloatViewUtil;
-import com.youmai.hxsdk.view.full.MapViewUtil;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -429,11 +424,6 @@ public class MsgRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             }
         }
 
-        if (!AppUtils.isGooglePlay(mContext)) {
-            final MapViewUtil mMapViewUtil = new MapViewUtil(mContext, null);
-            mMapViewUtil.setLocation(location);//标志物
-        }
-
         final String url = "http://restapi.amap.com/v3/staticmap?location="
                 + mLocation.getLongitudeStr() + "," + mLocation.getLatitudeStr() + "&zoom=" + 17
                 + "&scale=2&size=720*550&traffic=1&markers=mid,0xff0000,A:" + mLocation.getLongitudeStr()
@@ -490,13 +480,6 @@ public class MsgRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     MsgActivity act = (MsgActivity) mContext;
                     act.setFloatView(false);
                 }
-
-                Intent intent = new Intent();
-                intent.setClass(mContext, CropVideoActivity.class);
-                intent.putExtra(SdkBaseActivity.SHOW_FLOAT_VIEW, false);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra("isVideoUrl", AppConfig.DOWNLOAD_IMAGE + video.getVideoId());
-                mContext.startActivity(intent);
             }
         });
     }
@@ -628,22 +611,4 @@ public class MsgRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
     }
 
-    private void hideFloat() {
-        switch (HuxinSdkManager.instance().getFloatType()) {
-            case HuxinService.MODEL_TYPE_FULL: {
-                FloatViewUtil.instance().hideFloatView();
-                FloatLogoUtil.instance().showFloat(mContext, HuxinService.MODEL_TYPE_FULL, false);
-                break;
-            }
-            case HuxinService.MODEL_TYPE_Q: {
-                FloatViewUtil.instance().hideFloatView();
-                FloatLogoUtil.instance().showFloat(mContext, HuxinService.MODEL_TYPE_Q, false);
-                break;
-            }
-            case HuxinService.MODEL_TYPE_HALF: {
-                FloatViewUtil.instance().hideFloatView();
-                break;
-            }
-        }
-    }
 }

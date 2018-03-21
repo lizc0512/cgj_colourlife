@@ -17,7 +17,6 @@ import com.youmai.hxsdk.im.cache.CacheMsgHelper;
 import com.youmai.hxsdk.utils.AppUtils;
 import com.youmai.hxsdk.utils.CodingUtils;
 import com.youmai.hxsdk.utils.SMSUtils;
-import com.youmai.hxsdk.view.full.FloatViewUtil;
 
 
 /**
@@ -102,7 +101,6 @@ public class SendSmsActivity extends SdkBaseActivity implements View.OnClickList
         findViewById(R.id.close_btn).setOnClickListener(this);
         findViewById(R.id.btn_confirm).setOnClickListener(this);
         findViewById(R.id.rel_content).setOnClickListener(this);
-        FloatViewUtil.instance().hideFloatView();
     }
 
     /**

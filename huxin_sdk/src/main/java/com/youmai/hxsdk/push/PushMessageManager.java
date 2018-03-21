@@ -17,7 +17,6 @@ import com.youmai.hxsdk.interfaces.impl.FileReceiveListenerImpl;
 import com.youmai.hxsdk.proto.YouMaiChat;
 import com.youmai.hxsdk.socket.IMContentType;
 import com.youmai.hxsdk.socket.IMContentUtil;
-import com.youmai.hxsdk.view.full.FloatViewUtil;
 
 import java.util.List;
 import java.util.Timer;
@@ -66,18 +65,6 @@ public class PushMessageManager {
                     IMMsgManager.getInstance().notifyMsg(msg, true);
                     break;
                 case TelephonyManager.CALL_STATE_RINGING:   //被叫响铃状态    需要修改为所有消息均需展示在弹屏上（图片、位置、表情、文件）
-                    //TODO 响铃通话
-                    if (!FloatViewUtil.instance().isFloatViewShow()) {
-                        Handler mainHandler = new Handler(Looper.getMainLooper());
-                        mainHandler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                FloatViewUtil.instance().showFloatView(context, phone);//未显示,拉起弹屏
-                            }
-                        });
-                    } else {
-                        Log.w(TAG, "已显示");
-                    }
 
                     TimerTask task = new TimerTask() {
 
@@ -103,18 +90,6 @@ public class PushMessageManager {
                     timer.schedule(task, 2000);//延迟300ms触发，要读取监听通话的状态
                     break;
                 case TelephonyManager.CALL_STATE_OFFHOOK:   //被叫接通状态    需要继续展示弹屏，消息展示在弹屏上面
-                    //TODO 接听通话
-                    if (!FloatViewUtil.instance().isFloatViewShow()) {
-                        Handler mainHandler = new Handler(Looper.getMainLooper());
-                        mainHandler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                FloatViewUtil.instance().showFloatView(context, phone);//未显示,拉起弹屏
-                            }
-                        });
-                    } else {
-                        Log.w(TAG, "已显示");
-                    }
                     TimerTask task2 = new TimerTask() {
 
                         @Override

@@ -154,12 +154,6 @@
             android:theme="@style/HxMsgTheme" />
 
         <activity
-            android:name="com.youmai.hxsdk.LoginActivity"
-            android:launchMode="singleInstance"
-            android:screenOrientation="portrait"
-            android:theme="@style/HxMsgTheme" />
-
-        <activity
             android:name="com.youmai.hxsdk.LoginPromptActivity"
             android:launchMode="singleInstance"
             android:screenOrientation="portrait"
@@ -192,11 +186,6 @@
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".activity.ShowPreviewActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/HxSdkNewTheme" />
-
-        <activity
             android:name="com.youmai.hxsdk.map.LocationActivity"
             android:screenOrientation="portrait"
             android:theme="@style/HxSdkTheme" />
@@ -219,12 +208,6 @@
             android:launchMode="singleTop"
             android:taskAffinity=""
             android:theme="@style/HxInvisible" />
-
-        <activity
-            android:name="com.youmai.hxsdk.activity.ShowResultActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:theme="@style/HxMsgTheme" />
 
         <activity
             android:name="com.youmai.hxsdk.activity.WebViewActivity"
@@ -263,12 +246,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/HxMsgTheme" />
 
-        <activity
-            android:name="com.youmai.hxsdk.activity.CropVideoActivity"
-            android:launchMode="singleInstance"
-            android:screenOrientation="portrait"
-            android:theme="@style/HxMsgTheme" />
-
         <!--视频录制-->
         <activity
             android:name="com.youmai.hxsdk.module.movierecord.MovieRecodeActivity"
@@ -277,12 +254,6 @@
             android:theme="@style/HxMsgTheme" />
 
         <!--挂机策略-->
-        <activity
-            android:name="com.youmai.hxsdk.activity.HookStrategyActivity"
-            android:configChanges="keyboardHidden|orientation"
-            android:screenOrientation="portrait"
-            android:theme="@style/HxThemeHook"
-            android:windowSoftInputMode="adjustResize|stateHidden" />
 
         <!--IM消息-->
         <activity
@@ -303,10 +274,6 @@
 
         <activity
             android:name="com.youmai.hxsdk.push.ui.PushMsgDetailActivity"
-            android:screenOrientation="portrait" />
-
-        <activity
-            android:name="com.youmai.hxsdk.push.ui.RemindMsgContentActivity"
             android:screenOrientation="portrait" />
 
         <!--IM文件预览、下载打开-->
@@ -386,18 +353,6 @@
 
                 <action android:name="huxin.intent.action.PUSH_MSG" />
 
-            </intent-filter>
-        </receiver>
-
-        <receiver
-            android:name="com.youmai.hxsdk.receiver.OfferReceiver"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.PACKAGE_ADDED" />
-                <!--<action android:name="android.intent.action.PACKAGE_REPLACED" />-->
-                <!--<action android:name="android.intent.action.PACKAGE_REMOVED" />-->
-
-                <data android:scheme="package" />
             </intent-filter>
         </receiver>
 

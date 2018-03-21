@@ -17,7 +17,6 @@ import android.widget.Toast;
 
 import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.activity.SdkBaseActivity;
-import com.youmai.hxsdk.activity.ShowResultActivity;
 import com.youmai.hxsdk.config.Constant;
 import com.youmai.hxsdk.utils.LogUtils;
 import com.youmai.hxsdk.utils.ToastUtil;
@@ -103,10 +102,6 @@ public class MovieRecodeActivity extends SdkBaseActivity {
             String filePath = mRecorderView.getmRecordFile().getAbsolutePath();
             LogUtils.e(Constant.SDK_DATA_TAG, "filePath = " + filePath);
 
-            Intent intent = new Intent(this, ShowResultActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.putExtra(ShowResultActivity.RECORD_MOVIE_PATH, filePath);//录制路径
-            startActivity(intent);
         }
         isFinish = false;
         finish();

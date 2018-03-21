@@ -6,10 +6,8 @@ import android.os.Message;
 import android.util.Log;
 
 import com.google.protobuf.GeneratedMessage;
-import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.proto.YouMaiBasic;
 import com.youmai.hxsdk.utils.AppUtils;
-import com.youmai.hxsdk.utils.DeviceUtils;
 import com.youmai.hxsdk.utils.LogFile;
 
 import java.io.IOException;
@@ -160,7 +158,7 @@ public class TcpClient extends PduUtil implements Runnable {
      * @param callback 回调
      */
     public void sendProto(GeneratedMessage msg, ReceiveListener callback) {
-        sendProto(msg, -1, callback);
+        sendProto(msg, (short)-1, callback);
     }
 
 
@@ -170,28 +168,18 @@ public class TcpClient extends PduUtil implements Runnable {
      * @param msg      消息体
      * @param callback 回调
      */
-    public synchronized void sendProto(GeneratedMessage msg, int commandId, ReceiveListener callback) {
+    public synchronized void sendProto(GeneratedMessage msg, short commandId, ReceiveListener callback) {
         PduBase pduBase = new PduBase();
         int seq_num = getSeqNum();
 
-        if (commandId == -1) {
-            pduBase.commandid = getActCode(msg.getClass().getSimpleName().toUpperCase());
-        } else {
-            pduBase.commandid = commandId;
-        }
+        pduBase.commandid = commandId;
 
         pduBase.body = msg.toByteArray();
         pduBase.length = msg.getSerializedSize();
         pduBase.seq_id = seq_num;
+        //pduBase.user_id
+        //pduBase.app_id
 
-        if (!isLogin && mUserId == 0) {
-            pduBase.terminal_token = DeviceUtils.getIMEI(mContext).hashCode();
-            pduBase.data_type = 'u';
-        } else {
-            pduBase.terminal_token = mUserId;
-        }
-
-        Log.v(TAG, "sendProto userId:" + pduBase.terminal_token);
         Log.v(TAG, "sendProto seq_num:" + seq_num);
         Log.v(TAG, "sendProto command_id:" + pduBase.commandid);
 
@@ -200,12 +188,6 @@ public class TcpClient extends PduUtil implements Runnable {
             mHandler.postDelayed(callback.getRunnable(), 5000);
         }
         sendPdu(pduBase);
-
-        if (pduBase.commandid == 125) {
-            HuxinSdkManager.instance().onEvent(HuxinSdkManager.TCP_SEND_IM_MSG);
-        }
-
-        HuxinSdkManager.instance().onEvent(HuxinSdkManager.TCP_SEND_PDU);
     }
 
     /**
@@ -349,7 +331,6 @@ public class TcpClient extends PduUtil implements Runnable {
                     callback.OnRec(pduBase);
                     mHandler.removeCallbacks(callback.getRunnable());
                     mCommonListener.remove(key);
-                    HuxinSdkManager.instance().onEvent(HuxinSdkManager.TCP_SEND_PDU_ACK);
                 } else {
                     OnCallback(pduBase);
                 }
@@ -365,10 +346,6 @@ public class TcpClient extends PduUtil implements Runnable {
         for (NotifyListener item : mNotifyListener) {
             if (item.getCommandId() == pduBase.commandid) {
                 item.OnRec(pduBase.body);
-
-                if (pduBase.commandid == 125) {
-                    HuxinSdkManager.instance().onEvent(HuxinSdkManager.TCP_REC_IM_ACK);
-                }
                 break;
             }
         }

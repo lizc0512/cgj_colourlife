@@ -14,7 +14,6 @@ import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.entity.CallInfo;
 import com.youmai.hxsdk.interfaces.impl.FileSendListenerImpl;
-import com.youmai.hxsdk.view.full.FloatViewUtil;
 
 import java.io.File;
 
@@ -73,17 +72,11 @@ public class PhotoPreViewActivity extends SdkPhotoActivity implements View.OnCli
     @Override
     protected void onResume() {
         super.onResume();
-        if (isFloatView && isPreview) {
-            FloatViewUtil.instance().hideFloatView();
-        }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        if (isFloatView && CallInfo.IsCalling() && !isPreview) {
-            FloatViewUtil.instance().showFloatViewDelay(mContext);
-        }
     }
 
     @Override

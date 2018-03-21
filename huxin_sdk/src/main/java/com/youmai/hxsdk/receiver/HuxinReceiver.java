@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.provider.Telephony;
 import android.telephony.SmsMessage;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.db.bean.PushMsg;
@@ -17,7 +16,6 @@ import com.youmai.hxsdk.db.bean.RemindMsg;
 import com.youmai.hxsdk.db.dao.PushMsgDao;
 import com.youmai.hxsdk.db.dao.RemindMsgDao;
 import com.youmai.hxsdk.db.manager.GreenDBIMManager;
-import com.youmai.hxsdk.fragment.LoginFragment;
 import com.youmai.hxsdk.http.IPostListener;
 import com.youmai.hxsdk.service.HuxinService;
 import com.youmai.hxsdk.utils.StringUtils;
@@ -84,28 +82,6 @@ public class HuxinReceiver extends BroadcastReceiver {
             context.startService(in);
         } else if (action.equals(Telephony.Sms.Intents.SMS_RECEIVED_ACTION)) {
             Bundle bundle = intent.getExtras();
-            if (bundle != null) {
-                Object[] pdu_Objects = (Object[]) bundle.get("pdus");
-                if (pdu_Objects != null) {
-                    for (Object aObject : pdu_Objects) {
-                        SmsMessage currentSMS = getIncomingMessage(aObject, bundle);
-                        String senderNo = currentSMS.getDisplayOriginatingAddress();
-                        //tring senderNo = currentSMS.getOriginatingAddress();
-
-                        //if (senderNo.equals(SEND_SMS_NUMBER1)
-                        //     || senderNo.equals(SEND_SMS_NUMBER2)) {
-                        String message = currentSMS.getDisplayMessageBody();
-
-                        String valid = patternCode(message);
-                        if (!StringUtils.isEmpty(valid)) {
-                            broadValid(context, valid);
-                            //abortBroadcast();
-                            break;
-                        }
-                        //}
-                    }
-                }
-            }
 
         } else if (intent.getAction().equals(Intent.ACTION_PACKAGE_ADDED)) {
             String packageName = intent.getData().getSchemeSpecificPart();
@@ -125,7 +101,6 @@ public class HuxinReceiver extends BroadcastReceiver {
                 }
             };
 
-            HuxinSdkManager.instance().appInsert(0, packageName, listener);
         } else if (intent.getAction().equals(ACTION_PUSH_MSG)) {
 
             /*Intent resultIntent = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
@@ -164,13 +139,6 @@ public class HuxinReceiver extends BroadcastReceiver {
                 context.startActivity(realIntent);
             }
         }
-    }
-
-
-    private void broadValid(Context context, String valid) {
-        Intent in = new Intent(LoginFragment.SMS_RECEIVED_ACTION);
-        in.putExtra(LoginFragment.VALID, valid);
-        context.sendBroadcast(in);
     }
 
 

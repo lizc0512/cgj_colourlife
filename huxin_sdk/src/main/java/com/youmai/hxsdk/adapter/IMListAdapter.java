@@ -13,9 +13,7 @@ import android.graphics.drawable.AnimationDrawable;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -40,7 +38,6 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
@@ -53,14 +50,9 @@ import com.youmai.hxsdk.activity.PictureIndicatorActivity;
 import com.youmai.hxsdk.config.AppConfig;
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
 import com.youmai.hxsdk.db.bean.HxUsers;
-import com.youmai.hxsdk.db.helper.HxUsersHelper;
 import com.youmai.hxsdk.dialog.HxCardDialog;
 import com.youmai.hxsdk.dialog.HxRemarkMergeDialog;
-import com.youmai.hxsdk.dialog.HxRemarkSendDialog;
-import com.youmai.hxsdk.entity.EmoItem;
 import com.youmai.hxsdk.entity.RespBaseBean;
-import com.youmai.hxsdk.entity.XFTextToVoiceEntity;
-import com.youmai.hxsdk.entity.XFVoiceToTextEntity;
 import com.youmai.hxsdk.http.IPostListener;
 import com.youmai.hxsdk.im.IMHelper;
 import com.youmai.hxsdk.im.IMMsgManager;
@@ -91,10 +83,6 @@ import com.youmai.hxsdk.push.ui.HxRemindCancelDialog;
 import com.youmai.hxsdk.service.DownloadService;
 import com.youmai.hxsdk.service.SendMsgService;
 import com.youmai.hxsdk.service.download.bean.FileQueue;
-import com.youmai.hxsdk.utils.AppUtils;
-import com.youmai.hxsdk.utils.CommonUtils;
-import com.youmai.hxsdk.utils.DisplayUtil;
-import com.youmai.hxsdk.utils.GlideCircleTransform;
 import com.youmai.hxsdk.utils.GsonUtil;
 import com.youmai.hxsdk.utils.IntentQueryUtil;
 import com.youmai.hxsdk.utils.QiniuUrl;
@@ -114,7 +102,6 @@ import com.youmai.hxsdk.view.tip.tools.TipsType;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -907,7 +894,6 @@ public class IMListAdapter extends RecyclerView.Adapter {
                     @Override
                     public void collect() {
                         //收藏操作
-                        HuxinSdkManager.instance().collectSave(cacheMsgBean, iCollectListener);
                     }
 
                     @Override
@@ -970,41 +956,6 @@ public class IMListAdapter extends RecyclerView.Adapter {
             cacheMsgBean.setSend_flag(-1);
             mImBeanList.set(position, cacheMsgBean);
             notifyItemChanged(position);
-            HuxinSdkManager.instance().textToVoice(text, new IPostListener() {
-                @Override
-                public void httpReqResult(String response) {
-                    cacheMsgBean.setSend_flag(0);
-                    mImBeanList.set(position, cacheMsgBean);
-                    notifyItemChanged(position);
-                    if (mIMConnectActivity == null || mIMConnectActivity.isFinishing()) {
-                        return;
-                    }
-                    XFTextToVoiceEntity data = GsonUtil.parse(response, XFTextToVoiceEntity.class);
-                    if (data != null) {
-                        String s = data.getS();
-                        if (TextUtils.equals(s, "1")) {
-                            //转语音成功
-                            String fid = data.getD().getFid();
-                            if (cacheMsgBean.getJsonBodyObj() instanceof CacheMsgJoke) {
-                                CacheMsgJoke jokeBodyMsg = (CacheMsgJoke) cacheMsgBean.getJsonBodyObj();
-                                jokeBodyMsg.setVoiceId(fid);
-                                cacheMsgBean.setJsonBodyObj(jokeBodyMsg);
-                            } else {
-                                CacheMsgTxt textBodyMsg = (CacheMsgTxt) cacheMsgBean.getJsonBodyObj();
-                                textBodyMsg.setVoiceId(fid);
-                                cacheMsgBean.setJsonBodyObj(textBodyMsg);
-                            }
-                            CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
-                            mImBeanList.set(position, cacheMsgBean);
-                            final String voiceUrl = AppConfig.getDownloadHost() + fid;//七牛路径
-                            readTxt(cacheMsgBean, voiceUrl, position);
-                        } else {
-                            String errorStr = data.getM();
-                            Toast.makeText(mContext, errorStr, Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                }
-            });
         } else {
             //已经缓存服务端的文件路径
             String voiceUrl = AppConfig.getDownloadHost() + voiceId;//服务端七牛路径
@@ -1121,45 +1072,6 @@ public class IMListAdapter extends RecyclerView.Adapter {
             cacheMsgBean.setSend_flag(-1);
             mImBeanList.set(position, cacheMsgBean);
             notifyItemChanged(position);
-            HuxinSdkManager.instance().voiceToText(fid, new IPostListener() {
-                @Override
-                public void httpReqResult(String response) {
-                    if (mIMConnectActivity == null || mIMConnectActivity.isFinishing()) {
-                        return;
-                    }
-                    XFVoiceToTextEntity data = GsonUtil.parse(response, XFVoiceToTextEntity.class);
-                    if (data != null) {
-                        String s = data.getS();
-                        if (TextUtils.equals(s, "1")) {
-                            cacheMsgBean.setSend_flag(0);
-                            mImBeanList.set(position, cacheMsgBean);
-                            notifyItemChanged(position);
-                            //转文字成功
-                            String text = data.getD().getText();
-                            text = TextUtils.isEmpty(text) ? mContext.getString(R.string.hx_im_turn_text_fail_default_tip) : text;
-                            CacheMsgBean bean = mImBeanList.get(position);
-                            CacheMsgVoice body = (CacheMsgVoice) bean.getJsonBodyObj();
-                            body.setVoiceText(text);
-                            bean.setJsonBodyObj(body);
-                            CacheMsgHelper.instance(mContext).insertOrUpdate(bean);
-                            mImBeanList.set(position, bean);
-
-                            //保存
-                            CacheMsgBean bean2 = mImBeanList.get(position);
-                            CacheMsgVoice body2 = (CacheMsgVoice) bean2.getJsonBodyObj();
-                            body2.setShowText(true);//默认打开不显示转文字，该数据保存数据库
-                            bean.setJsonBodyObj(body2);
-                            mImBeanList.set(position, bean2);
-                            notifyItemChanged(position);
-                            if (listener != null) {
-                                listener.smoothScroll(position, 0, false);
-                            }
-                        } else {
-                            Toast.makeText(mContext, R.string.hx_im_turn_text_tip, Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                }
-            });
         } else {
             CacheMsgBean cacheMsgBean2 = mImBeanList.get(position);
             cacheMsgVoice.setShowText(true);
@@ -1510,7 +1422,6 @@ public class IMListAdapter extends RecyclerView.Adapter {
             @Override
             public void collect() {
                 //收藏操作
-                HuxinSdkManager.instance().collectSave(cacheMsgBean, iCollectListener);
             }
 
             @Override
@@ -1715,7 +1626,6 @@ public class IMListAdapter extends RecyclerView.Adapter {
                     @Override
                     public void collect() {
                         //收藏操作
-                        HuxinSdkManager.instance().collectSave(cacheMsgBean, iCollectListener);
                     }
 
                     @Override
@@ -2141,18 +2051,6 @@ public class IMListAdapter extends RecyclerView.Adapter {
     private Bitmap mSelfBitmap = null;
 
     private void genIcon(String targetPhone, String selfPhone, boolean inContact) {
-        mOwnUser = HxUsersHelper.instance().getHxUser(mContext, selfPhone);
-
-        if (selfPhone.equals(targetPhone)) {
-            mOtherUser = HxUsersHelper.instance().getHxUser(mContext, targetPhone);
-        } else {
-            if (!inContact) {
-                mOtherUser = HxUsersHelper.instance().getSingleUserCache(mContext, targetPhone);
-            } else {
-                mOtherUser = null;
-                mTargetBitmap = null;
-            }
-        }
 
         if (!isIMType && !selfPhone.equals("4000")) {
             Glide.with(mContext)
@@ -2192,24 +2090,6 @@ public class IMListAdapter extends RecyclerView.Adapter {
             }
         }
 
-        String urlOwn = AppConfig.getThumbHeaderUrl(mContext, AppConfig.IMG_HEADER_W, AppConfig.IMG_HEADER_H, selfPhone);
-        if (null != mOwnUser && null != mOwnUser.getIconUrl()) {
-            urlOwn = mOwnUser.getIconUrl();
-        }
-        Glide.with(mContext)
-                .asBitmap()
-                .load(urlOwn)
-                .apply(new RequestOptions()
-                        .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-                        .circleCrop()
-                        .placeholder(R.drawable.hx_index_head01))
-                .into(new SimpleTarget<Bitmap>() {
-                    @Override
-                    public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
-                        mSelfBitmap = resource;
-                        notifyDataSetChanged();
-                    }
-                });
     }
 
     private void onBindCommon(final BaseViewHolder baseViewHolder, final int position) {
@@ -2347,7 +2227,6 @@ public class IMListAdapter extends RecyclerView.Adapter {
                                 @Override
                                 public void collect() {
                                     //收藏操作
-                                    HuxinSdkManager.instance().collectSave(cacheMsgBean, iCollectListener);
                                 }
 
                                 @Override
@@ -2474,39 +2353,6 @@ public class IMListAdapter extends RecyclerView.Adapter {
                                 @Override
                                 public void onClick(View v) {
                                     long msgId = bean.getMsgId();
-                                    HuxinSdkManager.instance().remindDel(msgId, remindTime, new IPostListener() {
-                                        @Override
-                                        public void httpReqResult(String response) {
-                                            RespBaseBean baseBean = GsonUtil.parse(response, RespBaseBean.class);
-                                            if (baseBean != null && baseBean.isSuccess()) {
-                                                Toast.makeText(mContext, "提醒删除成功!", Toast.LENGTH_SHORT).show();
-
-                                                mIMConnectActivity.setRemind(true);
-
-                                                mImBeanList.get(position).setRemindTime(0L);
-                                                notifyDataSetChanged();
-
-                                                CacheMsgHelper.instance(mContext).insertOrUpdate(bean);
-                                                String savedStr = AppUtils.getStringSharedPreferences(mContext, "last_set_remind", "");
-                                                if (!TextUtils.isEmpty(savedStr)) {
-                                                    String strs[] = savedStr.split("@");
-                                                    if (strs.length == 3) {
-                                                        try {
-                                                            long msgId = Long.parseLong(strs[2]);
-                                                            if (msgId == mImBeanList.get(position).getMsgId()) {
-                                                                AppUtils.setStringSharedPreferences(mContext, "last_set_remind", "");
-                                                            }
-
-                                                        } catch (Exception e) {
-                                                            e.printStackTrace();
-                                                        }
-
-                                                    }
-                                                }
-
-                                            }
-                                        }
-                                    });
                                 }
                             });
 
@@ -2528,52 +2374,6 @@ public class IMListAdapter extends RecyclerView.Adapter {
 
     public void setEmoKeep(String fid) {
 
-        if (!CommonUtils.isNetworkAvailable(mContext)) {
-            ToastUtil.showToast(mContext, mContext.getString(R.string.hx_network_exception_check));
-            return;
-        }
-
-        final List<EmoItem> list = HuxinSdkManager.instance().getEmoList();
-
-        for (EmoItem item : list) {
-            if (fid.equals(item.getFid())) {
-                Toast.makeText(mContext, "已收藏该表情", Toast.LENGTH_SHORT).show();
-                return;
-            }
-        }
-
-        String phoneNum = HuxinSdkManager.instance().getPhoneNum();
-
-        EmoItem item = new EmoItem();
-
-        item.setFid(fid);
-
-        if (list == null) {
-            item.setRank(0);
-        } else {
-            item.setRank(list.size());
-        }
-
-        list.add(item);
-
-        Collections.sort(list);
-
-        String content = GsonUtil.format(list);
-
-        HuxinSdkManager.instance().userInfoSave(phoneNum, 1, content, new IPostListener() {
-            @Override
-            public void httpReqResult(String response) {
-                RespBaseBean baseBean = GsonUtil.parse(response, RespBaseBean.class);
-                if (baseBean != null && baseBean.isSuccess() && mContext != null) {
-                    Toast.makeText(mContext, "添加表情成功", Toast.LENGTH_SHORT).show();
-
-                    HuxinSdkManager.instance().setEmoList(list);
-                    if (mIMConnectActivity != null && !mIMConnectActivity.isFinishing()) {
-                        mIMConnectActivity.keyboardLay.refreshEmotion();
-                    }
-                }
-            }
-        });
     }
 
 

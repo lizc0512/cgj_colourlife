@@ -11,6 +11,8 @@ import android.widget.TextView;
 
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 import com.tg.coloursteward.R;
+import com.tg.coloursteward.fragment.FragmentManagement;
+import com.tg.coloursteward.fragment.FragmentMine;
 import com.youmai.hxsdk.contact.ContactFragment;
 
 
@@ -128,10 +130,10 @@ public class MainActivity1 extends AppCompatActivity {
                     ft = new ContactFragment();
                     break;
                 case 2:
-                    ft = SignCountFragment.newInstance("title3");
+                    ft = new FragmentManagement();
                     break;
                 case 3:
-                    ft = SignCountFragment.newInstance("title4");
+                    ft = new FragmentMine();
                     break;
                 default:
                     break;

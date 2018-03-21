@@ -14,10 +14,11 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <com.tg.coloursteward.view.AdvertisementPager
-                android:id="@+id/adverPager"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+            <com.youth.banner.Banner xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/banner"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                app:indicator_drawable_selected="@drawable/selected_radius" />
 
             <include layout="@layout/fragment_work_item_1" />
 

@@ -14,7 +14,7 @@ import com.youmai.hxsdk.activity.SdkBaseActivity;
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
 import com.youmai.hxsdk.config.FileConfig;
 import com.youmai.hxsdk.db.bean.ChatMsg;
-import com.youmai.hxsdk.http.DownLoadingListener;
+import com.youmai.hxsdk.http.DownloadListener;
 import com.youmai.hxsdk.http.FileAsyncTaskDownload;
 import com.youmai.hxsdk.im.IMHelper;
 import com.youmai.hxsdk.im.cache.CacheMsgFile;
@@ -187,24 +187,23 @@ public class IMFilePreviewActivity extends SdkBaseActivity {
     }
 
     private void breakDownload(String path, String fileName) {
-        FileAsyncTaskDownload load = new FileAsyncTaskDownload(new DownLoadingListener() {
+        FileAsyncTaskDownload load = new FileAsyncTaskDownload(new DownloadListener() {
             @Override
             public void onProgress(int cur, int total) {
-                //pb_progress_bar.setProgress(rate);
                 pb_progress_bar.setProgress(cur);
                 pb_progress_bar.setMax(total);
                 downloadingProgressText.setText(String.format(getString(R.string.hx_sdk_downloading2), IMHelper.convertFileSize(cur), IMHelper.convertFileSize(total)));
             }
 
             @Override
-            public void downloadFail(String err) {
+            public void onFail(String err) {
                 isOpenFile = false;
                 tv_open_file.setVisibility(View.VISIBLE);
                 tv_open_file.setText("重新下载");
             }
 
             @Override
-            public void downloadSuccess(String path) {
+            public void onSuccess(String path) {
                 ll_progress_parent.setVisibility(View.GONE);
                 tv_open_file.setText(R.string.hx_sdk_open_other_app);
                 tv_open_file.setVisibility(View.VISIBLE);

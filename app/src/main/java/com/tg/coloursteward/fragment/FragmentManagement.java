@@ -7,14 +7,17 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.tg.coloursteward.DoorActivity;
-import com.tg.coloursteward.MainActivity;
 import com.tg.coloursteward.PublicAccountActivity;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.adapter.AdvPagerAdapter;
 import com.tg.coloursteward.adapter.ManagementAdapter;
 import com.tg.coloursteward.MyBrowserActivity;
 import com.tg.coloursteward.constant.Contants;
+import com.tg.coloursteward.entity.advConfig;
 import com.tg.coloursteward.info.AdvInfo;
 import com.tg.coloursteward.info.GridViewInfo;
 import com.tg.coloursteward.info.UserInfo;
@@ -28,14 +31,23 @@ import com.tg.coloursteward.serice.HomeService;
 import com.tg.coloursteward.util.AuthTimeUtils;
 import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.Tools;
-import com.tg.coloursteward.view.AdvertisementPager;
 import com.tg.coloursteward.view.ManageMentLinearlayout;
 import com.tg.coloursteward.view.ManageMentLinearlayout.NetworkRequestListener;
 import com.tg.coloursteward.view.MyGridView;
 import com.tg.coloursteward.view.MyGridView.NetGridViewRequestListener;
 import com.tg.coloursteward.view.dialog.ToastFactory;
+import com.youmai.hxsdk.http.IPostListener;
+import com.youmai.hxsdk.http.OkHttpConnector;
+import com.youmai.hxsdk.utils.ColorsConfig;
+import com.youmai.hxsdk.utils.GsonUtil;
+import com.youmai.hxsdk.utils.ListUtils;
+import com.youth.banner.Banner;
+import com.youth.banner.BannerConfig;
+import com.youth.banner.listener.OnBannerListener;
+import com.youth.banner.loader.ImageLoader;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -74,7 +86,10 @@ public class FragmentManagement extends Fragment {
     private String advListStr, commonjsonStr, elsejsonStr;
     private ArrayList<AdvInfo> listAdv = new ArrayList<AdvInfo>();
     private AdvPagerAdapter adapter;
-    private AdvertisementPager viewPager;
+    //private AdvertisementPager viewPager;
+
+    private Banner banner;
+
     private SingleClickListener singleListener = new SingleClickListener() {
 
         @Override
@@ -129,18 +144,24 @@ public class FragmentManagement extends Fragment {
         tvExamineNum = (TextView) mView.findViewById(R.id.tv_examineNum);
         mGridView1 = (MyGridView) mView.findViewById(R.id.gridview1);
         mGridView2 = (MyGridView) mView.findViewById(R.id.gridview2);
-        viewPager = (AdvertisementPager) mView.findViewById(R.id.adverPager);
-        int height = getResources().getDisplayMetrics().widthPixels / 3;
-        ViewGroup.LayoutParams lp = viewPager.getLayoutParams();
-        lp.height = height;
+        //viewPager = (AdvertisementPager) mView.findViewById(R.id.adverPager);
+        //int height = getResources().getDisplayMetrics().widthPixels / 3;
+        //ViewGroup.LayoutParams lp = viewPager.getLayoutParams();
+        //lp.height = height;
         //viewPager.setLayoutParams(lp);
-        AdvInfo info;
-        info = new AdvInfo();
-        info.advResId = R.color.default_bg;
-        listAdv.add(info);
-        adapter = new AdvPagerAdapter(listAdv, mActivity, true);
-        viewPager.setAdapter(adapter);
+        //AdvInfo info;
+        //info = new AdvInfo();
+        //info.advResId = R.color.default_bg;
+        //listAdv.add(info);
+        //adapter = new AdvPagerAdapter(listAdv, mActivity, true);
+        //viewPager.setAdapter(adapter);
         outLocalData();
+
+        banner = (Banner) mView.findViewById(R.id.banner);
+
+        //本地图片数据（资源文件）
+
+        getAdInfo();
 
         magLinearLayoutLeave.setOnClickListener(singleListener);// 请假
         magLinearLayoutSign.setOnClickListener(singleListener);// 签到
@@ -427,7 +448,7 @@ public class FragmentManagement extends Fragment {
      * @param list
      */
     public void setAdvList(ArrayList<AdvInfo> list) {
-        listAdv.clear();
+        /*listAdv.clear();
         if (list != null && list.size() > 0) {
             listAdv.addAll(list);
         } else {
@@ -436,7 +457,7 @@ public class FragmentManagement extends Fragment {
             info.advResId = R.color.default_bg;
             listAdv.add(info);
         }
-        viewPager.notifyDataSetChanged();
+        viewPager.notifyDataSetChanged();*/
     }
 
     /**
@@ -444,7 +465,7 @@ public class FragmentManagement extends Fragment {
      */
     public void outLocalData() {
         //轮播图
-        advListStr = Tools.getStringValue(mActivity, Contants.storage.ADVLIST);
+        /*advListStr = Tools.getStringValue(mActivity, Contants.storage.ADVLIST);
         if (StringUtils.isNotEmpty(advListStr)) {
             int code = HttpTools.getCode(advListStr);
             if (code == 0) {
@@ -469,7 +490,7 @@ public class FragmentManagement extends Fragment {
                     e.printStackTrace();
                 }
             }
-        }
+        }*/
         //常用应用
         commonjsonStr = Tools.getCommonName(mActivity);
         String jsonString = HttpTools.getContentString(commonjsonStr);
@@ -663,6 +684,71 @@ public class FragmentManagement extends Fragment {
         }
         // 判断packageNames中是否有目标程序的包名，有TRUE，没有FALSE
         return packageNames.contains(packageName);
+    }
+
+
+    //轮播图
+    private void getAdInfo() {
+
+        String url = Contants.URl.URL_ICETEST + "/newoa/banner/list";
+
+        ContentValues params = new ContentValues();
+        params.put("corp_id", Tools.getStringValue(getContext(), Contants.storage.CORPID));
+        params.put("plate_code", "100301");
+
+        ColorsConfig.commonParams(params);
+
+        OkHttpConnector.httpPost(url, params, new IPostListener() {
+            @Override
+            public void httpReqResult(String response) {
+                advConfig bean = GsonUtil.parse(response, advConfig.class);
+                if (bean != null && bean.isSuceess()) {
+
+                    final List<String> images = new ArrayList<>();
+                    final List<String> titles = new ArrayList<>();
+                    final List<String> urls = new ArrayList<>();
+
+                    List<advConfig.ContentBean.ListBean._$100301Bean> list = bean.getContent().getList().get_$100301();
+                    if (!ListUtils.isEmpty(list)) {
+                        for (advConfig.ContentBean.ListBean._$100301Bean item : list) {
+                            images.add(item.getImg_path());
+                            titles.add(item.getName());
+                            urls.add(item.getUrl());
+                        }
+
+                        OnBannerListener listener = new OnBannerListener() {
+                            @Override
+                            public void OnBannerClick(int position) {
+                                String url = urls.get(position);
+                            }
+                        };
+
+                        banner.setImages(images)
+                                .setBannerTitles(titles)
+                                .setImageLoader(new GlideImageLoader())
+                                .setOnBannerListener(listener)
+                                .setBannerStyle(BannerConfig.CIRCLE_INDICATOR_TITLE_INSIDE)
+                                .start();
+                    }
+
+
+                }
+            }
+        });
+
+    }
+
+
+    public class GlideImageLoader extends ImageLoader {
+        @Override
+        public void displayImage(Context context, Object path, ImageView imageView) {
+            //具体方法内容自己去选择，次方法是为了减少banner过多的依赖第三方包，所以将这个权限开放给使用者去选择
+            Glide.with(context.getApplicationContext())
+                    .load(path)
+                    .apply(new RequestOptions()
+                            .diskCacheStrategy(DiskCacheStrategy.ALL))
+                    .into(imageView);
+        }
     }
 
 }

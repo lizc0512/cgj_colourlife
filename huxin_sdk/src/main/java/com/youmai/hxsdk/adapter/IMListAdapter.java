@@ -5,13 +5,11 @@ import android.app.Dialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.graphics.drawable.AnimationDrawable;
 import android.media.MediaPlayer;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -49,8 +47,6 @@ import com.youmai.hxsdk.activity.IMConnectionActivity;
 import com.youmai.hxsdk.activity.PictureIndicatorActivity;
 import com.youmai.hxsdk.config.AppConfig;
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
-import com.youmai.hxsdk.dialog.HxCardDialog;
-import com.youmai.hxsdk.dialog.HxRemarkMergeDialog;
 import com.youmai.hxsdk.entity.RespBaseBean;
 import com.youmai.hxsdk.http.IPostListener;
 import com.youmai.hxsdk.im.IMHelper;
@@ -67,18 +63,13 @@ import com.youmai.hxsdk.im.cache.CacheMsgRemark;
 import com.youmai.hxsdk.im.cache.CacheMsgTxt;
 import com.youmai.hxsdk.im.cache.CacheMsgVideo;
 import com.youmai.hxsdk.im.cache.CacheMsgVoice;
-import com.youmai.hxsdk.im.cache.JsonFormate;
 import com.youmai.hxsdk.im.voice.manager.MediaManager;
 import com.youmai.hxsdk.module.map.AbstractStartOrQuit;
 import com.youmai.hxsdk.module.map.ActualLocation;
 import com.youmai.hxsdk.module.map.ActualLocationFragment;
 import com.youmai.hxsdk.module.map.AnswerOrReject;
 import com.youmai.hxsdk.module.remind.SetRemindActivity;
-import com.youmai.hxsdk.module.videoplayer.VideoPlayerActivity;
-import com.youmai.hxsdk.module.videoplayer.bean.VideoDetailInfo;
-import com.youmai.hxsdk.service.DownloadService;
 import com.youmai.hxsdk.service.SendMsgService;
-import com.youmai.hxsdk.service.download.bean.FileQueue;
 import com.youmai.hxsdk.utils.GsonUtil;
 import com.youmai.hxsdk.utils.QiniuUrl;
 import com.youmai.hxsdk.utils.TextMergeUtils;
@@ -680,66 +671,8 @@ public class IMListAdapter extends RecyclerView.Adapter {
         videoViewHolder.lay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                if (TextUtils.isEmpty(videoPath)) {
-                    downFileTip(videoUrl, mid, dstPhone);
-                } else {
-                    File videoFile = new File(videoPath);
-                    if (videoFile.exists()) {
-                        VideoDetailInfo info = new VideoDetailInfo();
-                        info.setVideoPath(cacheMsgBean.isRightUI() ? videoPath : videoPath); //视频路径
-                        Intent intent = new Intent(mContext, VideoPlayerActivity.class);
-                        intent.putExtra("info", info);
-                        mContext.startActivity(intent);
-                    } else {
-                        //文件被删掉，重新下载
-                        cacheMsgVideo.setProgress(1);
-                        cacheMsgVideo.setVideoPath("");
-                        cacheMsgBean.setJsonBodyObj(cacheMsgVideo);
-                        CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
-                        downFileTip(videoUrl, mid, dstPhone);
-                    }
-                }
             }
         });
-    }
-
-    //下载视频
-    void downFileTip(final String videoUrl, final long mid, final String dstPhone) {
-        //wifi下直接下载
-        if (IMHelper.isWifi(mContext)) {
-            Intent intent = new Intent(mContext, DownloadService.class);
-            FileQueue fileQueue = new FileQueue();
-            fileQueue.setPath(videoUrl);
-            fileQueue.setMid(mid);
-            fileQueue.setPro(0);
-            fileQueue.setPhone(mDstPhone);
-            intent.putExtra("data", fileQueue);
-            mContext.startService(intent);
-        } else {
-            HxCardDialog.Builder builder = new HxCardDialog.Builder(mContext)
-                    .setTitle("提示")
-                    .setContent("网络非WIFI下，是否要下载该视频")
-                    .setOnListener(new HxCardDialog.OnClickListener() {
-                        @Override
-                        public void onSubmitClick(DialogInterface dialog) {
-                            Intent intent = new Intent(mContext, DownloadService.class);
-                            FileQueue fileQueue = new FileQueue();
-                            fileQueue.setPath(videoUrl);
-                            fileQueue.setMid(mid);
-                            fileQueue.setPro(0);
-                            fileQueue.setPhone(mDstPhone);
-                            intent.putExtra("data", fileQueue);
-                            mContext.startService(intent);
-                        }
-
-                        @Override
-                        public void onCancelClick(DialogInterface dialog) {
-
-                        }
-                    });
-            builder.create().show();
-        }
     }
 
 

@@ -340,7 +340,7 @@ public class HttpTools {
 	 * @return
 	 * @throws Exception
 	 */
-	private static String getSign(String lastTime)
+	public static String getSign(String lastTime)
 			throws Exception {
 		return MD5.getMd5Value(DES.APP_ID +lastTime+ DES.TOKEN +"false").toLowerCase();
 	}

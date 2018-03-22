@@ -163,13 +163,6 @@ public class IMListAdapter extends RecyclerView.Adapter {
 
     private static final int CARD_MASK_FLAG = 0x00ff;// 校验消息类型
 
-    private static final int CARD_MENU_CREATE_REMARK = 1;
-
-    private static final int CARD_MENU_SEND_REMARK = 2;
-
-    private static final int CARD_MENU_ALARM = 3;
-
-    private static final int CARD_MENU_CALENDER = 4;
 
 
     private Context mContext;
@@ -194,8 +187,6 @@ public class IMListAdapter extends RecyclerView.Adapter {
 
     private final int REMARK_UNEDIT_STATE = -99;
     private int mEditingRemarkPos = REMARK_UNEDIT_STATE;
-    private String mCurrThemeEdit;
-    private String mCurrRemarkEdit;
 
     private boolean hasOpenRemark = false;//是否打开备注
 
@@ -1928,72 +1919,11 @@ public class IMListAdapter extends RecyclerView.Adapter {
         }
     }
 
-    //预览主题备注，真实显示数据，不做无主题以备注代替
-    private void showPreviewView(String themePreStr, String remarkPreStr, int type) {
-        if (TextUtils.isEmpty(themePreStr)) {
-            themePreStr = mContext.getString(R.string.hx_im_card_preview_theme_default);
-        }
-        if (TextUtils.isEmpty(remarkPreStr)) {
-            remarkPreStr = mContext.getString(R.string.hx_im_card_tail_no_remark);
-        }
-
-        final Dialog dialog = new Dialog(mContext, R.style.popupDialog);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        LayoutInflater inflater = LayoutInflater.from(mContext);
-        View popupRemark = inflater.inflate(R.layout.im_card_popup_remark, null);
-        ImageView typeImg = (ImageView) popupRemark.findViewById(R.id.im_card_popup_type_img);
-
-        TextView popupThemeText = (TextView) popupRemark.findViewById(R.id.im_card_popup_theme_text);
-        TextView popupRemarkText = (TextView) popupRemark.findViewById(R.id.im_card_popup_remark_text);
-        popupThemeText.setText(themePreStr);
-        popupRemarkText.setText(remarkPreStr);
-        popupRemark.findViewById(R.id.im_card_popup_lay).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-        dialog.setContentView(popupRemark);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setCancelable(true);
-        WindowManager.LayoutParams lay = dialog.getWindow().getAttributes();
-        DisplayMetrics dm = new DisplayMetrics();
-        Activity activity;
-        if (mIMConnectActivity == null) {
-            activity = fragment.getActivity();
-        } else {
-            activity = mIMConnectActivity;
-        }
-        activity.getWindowManager().getDefaultDisplay().getMetrics(dm);
-        Rect rect = new Rect();
-        View view;
-        view = activity.getWindow().getDecorView();//decorView是window中的最顶层view，可以从window中获取到decorView
-        view.getWindowVisibleDisplayFrame(rect);
-        lay.height = dm.heightPixels - rect.top;
-        lay.width = dm.widthPixels;
-
-        dialog.show();
-    }
 
     private void onBindTail(final BaseViewHolder baseViewHolder, final int position) {
 
     }
 
-
-    //离开编辑备注
-    private void quitEditRemark() {
-        mEditingRemarkPos = REMARK_UNEDIT_STATE;
-        mCurrThemeEdit = null;
-        mCurrRemarkEdit = null;
-    }
-
-    private void handleRemark(final BaseViewHolder baseViewHolder, final int position, final long headId) {
-    }
-
-
-    public int getEditingRemarkPos() {
-        return mEditingRemarkPos;
-    }
 
     public boolean isEditingRemark() {
         return mEditingRemarkPos != REMARK_UNEDIT_STATE;

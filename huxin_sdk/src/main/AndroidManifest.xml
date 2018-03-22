@@ -141,12 +141,6 @@
 
 
         <activity
-            android:name="com.youmai.hxsdk.MessageActivity"
-            android:launchMode="singleInstance"
-            android:screenOrientation="portrait"
-            android:theme="@style/HxMsgTheme" />
-
-        <activity
             android:name="com.youmai.hxsdk.WrapSendFileActivity"
             android:launchMode="singleInstance"
             android:theme="@style/HxMsgTheme" />

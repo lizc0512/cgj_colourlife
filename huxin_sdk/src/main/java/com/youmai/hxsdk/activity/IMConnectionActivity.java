@@ -89,7 +89,6 @@ import com.youmai.hxsdk.socket.PduBase;
 import com.youmai.hxsdk.socket.ReceiveListener;
 import com.youmai.hxsdk.sp.SPDataUtil;
 import com.youmai.hxsdk.utils.AbFileUtil;
-import com.youmai.hxsdk.utils.CallRecordUtil;
 import com.youmai.hxsdk.utils.CommonUtils;
 import com.youmai.hxsdk.utils.CompressImage;
 import com.youmai.hxsdk.utils.CompressVideo;
@@ -288,7 +287,6 @@ public class IMConnectionActivity extends SdkBaseActivity implements
         }
 
         contactID = fromIntent.getIntExtra(DST_CONTACT_ID, 0);
-        CallRecordUtil.clearMissedCalls(getApplicationContext(), targetPhone);//归零未接通话记录
 
         mScrollPosition = fromIntent.getLongExtra(EXTRA_SCROLL_POSITION, 0);
 

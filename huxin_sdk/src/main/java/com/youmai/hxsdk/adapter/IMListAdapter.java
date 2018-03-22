@@ -440,7 +440,6 @@ public class IMListAdapter extends RecyclerView.Adapter {
     }
 
 
-
     @Override
     public int getItemViewType(int position) {
         CacheMsgBean cacheMsgBean = mImBeanList.get(position);
@@ -501,8 +500,7 @@ public class IMListAdapter extends RecyclerView.Adapter {
         Glide.with(mContext)
                 .load(cacheMsgFile.getFileRes())
                 .apply(new RequestOptions()
-                        .error(R.drawable.hx_half_pic_moren)        //下载失败
-                        .placeholder(R.drawable.hx_half_pic_moren))
+                        .diskCacheStrategy(DiskCacheStrategy.RESOURCE))
                 .into(holder.fileIV);
 
         holder.fileNameTV.setText(cacheMsgFile.getFileName());
@@ -562,8 +560,6 @@ public class IMListAdapter extends RecyclerView.Adapter {
                 .load(cacheMsgBean.isRightUI() ? rightUrl : leftUrl)
                 .apply(new RequestOptions()
                         .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-                        .error(R.drawable.hx_half_pic_moren)        //下载失败
-                        .placeholder(R.drawable.hx_half_pic_moren)
                         .transform(new MaskTransformation(cacheMsgBean.isRightUI() ? R.drawable.hx_im_voice_bg_right : R.drawable.hx_im_voice_bg_left)))
                 .into(imgViewHolder.senderImg);
 
@@ -2332,7 +2328,6 @@ public class IMListAdapter extends RecyclerView.Adapter {
             }
         }
     }
-
 
 
     public interface OnListener {

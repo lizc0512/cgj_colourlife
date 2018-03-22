@@ -4,9 +4,6 @@ package com.youmai.hxsdk.config;
 import android.content.Context;
 
 import com.youmai.hxsdk.utils.AppUtils;
-import com.youmai.hxsdk.utils.LanguageUtil;
-
-import java.util.Locale;
 
 public class AppConfig {
 
@@ -77,13 +74,6 @@ public class AppConfig {
     public static final String DOWNLOAD_IMAGE = getDownloadHost();
 
 
-    /**
-     * tcp 负载均衡 host
-     */
-    public static String getTcpHost(Context context, int userId) {
-        return getSocketUrl() + "api/v1/sum?userid=" + userId + "&lang=" + LanguageUtil.getLang(context);
-    }
-
     /***
      * sign 签名
      *
@@ -104,7 +94,6 @@ public class AppConfig {
      */
     public static String getHeaderUrl(Context context, String phone) {
         return DOWNLOAD_IMAGE + phone
-                + "?lang=" + LanguageUtil.getLang(context)
                 + "&t=" + System.currentTimeMillis();
     }
 
@@ -118,8 +107,7 @@ public class AppConfig {
      */
     public static String getThumbHeaderUrl(Context context, int w, int h, String phone) {
         return DOWNLOAD_IMAGE + phone
-                + "?lang=" + LanguageUtil.getLang(context) +
-                "&imageView2/0/w/" + w + "/h/" + h +
+                + "&imageView2/0/w/" + w + "/h/" + h +
                 "&t=" + System.currentTimeMillis();
     }
 
@@ -141,8 +129,7 @@ public class AppConfig {
      * @return
      */
     public static String getImageUrl(Context context, String fid) {
-        return DOWNLOAD_IMAGE + fid
-                + "?lang=" + LanguageUtil.getLang(context);
+        return DOWNLOAD_IMAGE + fid;
     }
 
 

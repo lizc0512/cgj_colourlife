@@ -158,12 +158,6 @@
             android:theme="@style/HxMsgTheme" />
 
         <activity
-            android:name="com.youmai.hxsdk.PhizGifActivity"
-            android:launchMode="singleInstance"
-            android:screenOrientation="portrait"
-            android:theme="@style/HxMsgTheme" />
-
-        <activity
             android:name="com.youmai.hxsdk.map.LocationActivity"
             android:screenOrientation="portrait"
             android:theme="@style/HxSdkTheme" />
@@ -178,14 +172,6 @@
             android:name="com.youmai.hxsdk.crop.CropImageActivity"
             android:screenOrientation="portrait"
             android:theme="@style/HxWindowAnimTheme" />
-
-        <activity
-            android:name="com.youmai.hxsdk.AcceptCallActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:excludeFromRecents="true"
-            android:launchMode="singleTop"
-            android:taskAffinity=""
-            android:theme="@style/HxInvisible" />
 
         <activity
             android:name="com.youmai.hxsdk.activity.WebViewActivity"

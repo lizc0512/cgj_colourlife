@@ -53,7 +53,6 @@ public class CropImageActivity extends SdkBaseActivity {
         Glide.with(getApplicationContext())
                 .load(imgUrl)
                 .apply(new RequestOptions()
-                        .error(R.drawable.hx_half_pic_moren)        //下载失败
                         .diskCacheStrategy(DiskCacheStrategy.RESOURCE))
                 .into(img);
 

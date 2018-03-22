@@ -11,8 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:scaleType="fitCenter"
-        android:src="@drawable/hx_show_default_full" />
+        android:scaleType="fitCenter" />
 
     <TextView
         android:id="@+id/tv_download_original"
@@ -28,6 +27,6 @@
         android:paddingTop="8dp"
         android:text="@string/hx_im_check_original_img"
         android:textColor="#ffffff"
-        android:textSize="12sp"/>
+        android:textSize="12sp" />
 
 </RelativeLayout>

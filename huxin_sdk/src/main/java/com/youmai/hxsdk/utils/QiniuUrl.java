@@ -48,7 +48,6 @@ public class QiniuUrl {
      */
     public static String getThumbImageUrl(Context context, String fid, int scale) {
         return AppConfig.DOWNLOAD_IMAGE + fid
-                + "?lang=" + LanguageUtil.getLang(context)
                 + String.format(Locale.CHINA, "&imageMogr2/thumbnail/!%dp", scale);
     }
 }

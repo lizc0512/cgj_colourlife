@@ -162,7 +162,7 @@ public class ActualLocationFragment extends Fragment implements LocationSource,
         Glide.with(mContext)
                 .asBitmap()
                 .load(AppConfig.getThumbHeaderUrl(mContext, width, width, HuxinSdkManager.instance().getPhoneNum()))
-                .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.RESOURCE).circleCrop().error(R.drawable.hx_voip_header_normal))
+                .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.RESOURCE).circleCrop())
                 .into(new SimpleTarget<Bitmap>() {
                     @Override
                     public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
@@ -177,7 +177,7 @@ public class ActualLocationFragment extends Fragment implements LocationSource,
         Glide.with(context)
                 .asBitmap()
                 .load(AppConfig.getThumbHeaderUrl(context, width, width, mSharePhone))
-                .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.RESOURCE).circleCrop().error(R.drawable.hx_voip_header_normal))
+                .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.RESOURCE).circleCrop())
                 .into(new SimpleTarget<Bitmap>() {
                     @Override
                     public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {

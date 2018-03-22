@@ -24,13 +24,11 @@ import com.youmai.hxsdk.config.AppConfig;
 import com.youmai.hxsdk.config.FileConfig;
 import com.youmai.hxsdk.db.bean.ChatMsg;
 import com.youmai.hxsdk.entity.CallInfo;
-import com.youmai.hxsdk.entity.NotifyItem;
 import com.youmai.hxsdk.entity.RespBaseBean;
 import com.youmai.hxsdk.im.cache.CacheMsgEmotion;
 import com.youmai.hxsdk.im.cache.CacheMsgFile;
 import com.youmai.hxsdk.im.cache.CacheMsgHelper;
 import com.youmai.hxsdk.im.cache.CacheMsgImage;
-import com.youmai.hxsdk.im.cache.CacheMsgJoke;
 import com.youmai.hxsdk.im.cache.CacheMsgLShare;
 import com.youmai.hxsdk.im.cache.CacheMsgMap;
 import com.youmai.hxsdk.im.cache.CacheMsgRemark;
@@ -807,83 +805,6 @@ public class IMMsgManager {
             sum += count;
         }
         return sum;
-    }
-
-
-    private void notifyMsg(NotifyItem notifyItem) {
-        String title = notifyItem.getTitle();
-        String content = notifyItem.getContent();
-        if (title == null || content == null) {
-            return;
-        }
-
-        int entry_type = notifyItem.getEntry_type();
-        NotifyItem.ItemBean item = notifyItem.getItem();
-
-        int notifyID = title.hashCode();
-        NotificationCompat.Builder builder =
-                new NotificationCompat.Builder(mContext)
-                        .setSmallIcon(getNotificationIcon())
-                        .setContentTitle(title)
-                        .setContentText(content)
-                        .setTicker(content)
-                        .setDefaults(Notification.DEFAULT_ALL)
-                        .setAutoCancel(true);
-
-        Intent resultIntent = new Intent();
-
-        if (entry_type == 1) {
-
-        } else if (entry_type == 2) {
-            if (item != null && item.getId() != 0) {
-                resultIntent.setAction("com.youmai.huxinoffer.action.youmai.appinfo");
-                resultIntent.putExtra("AD_ID", item.getId() + "");
-                //resultIntent.setClass(mContext, YoumaiAppInfoActivity.class);
-                //resultIntent.putExtra(YoumaiAppInfoActivity.ADID, item.getId() + "");
-            } else {
-                resultIntent.setAction("com.youmai.huxinoffer.action.homeoffer");
-                //resultIntent.setClass(mContext, AdOfferMainActivity.class);
-            }
-        } else if (entry_type == 3) {  //用户获得呼币的通知
-
-        } else if (entry_type == 4) {
-            Intent intent = mContext.getPackageManager().getLaunchIntentForPackage(mContext.getPackageName());
-            if (intent != null) {
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            }
-        } else if (entry_type == 5) {  //在线充值
-            resultIntent.setClassName(mContext, "com.youmai.huxin.app.activity.purse.PurseRechargePayActivity");
-            resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-        } else {
-            return;
-        }
-
-        // The stack builder object will contain an artificial back stack for the
-        // started Activity.
-        // This ensures that navigating backward from the Activity leads out of
-        // your application to the Home screen.
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(mContext);
-        // Adds the back stack for the Intent (but not the Intent itself)
-
-        if (mainClass != null) {
-            //stackBuilder.addParentStack(backAct);
-            stackBuilder.addNextIntentWithParentStack(new Intent(mContext, mainClass));
-        } else {
-            stackBuilder.addParentStack(IMConnectionActivity.class);
-        }
-
-        // Adds the Intent that starts the Activity to the top of the stack
-        stackBuilder.addNextIntent(resultIntent);
-        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(notifyID,
-                PendingIntent.FLAG_UPDATE_CURRENT);
-
-        builder.setContentIntent(resultPendingIntent);
-
-        NotificationManager notificationManager =
-                (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
-        // mId allows you to update the notification later on.
-        notificationManager.notify(notifyID, builder.build());
     }
 
 

@@ -111,8 +111,7 @@ public class PhotoPreViewActivity extends SdkPhotoActivity implements View.OnCli
         try {
             Glide.with(mContext)
                     .load(mImagePath)
-                    .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.RESOURCE).centerCrop()
-                            .error(R.drawable.hx_show_default_full))
+                    .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.RESOURCE).centerCrop())
                     .into(mPhotoPreview);
         } catch (Exception e) {
             e.printStackTrace();

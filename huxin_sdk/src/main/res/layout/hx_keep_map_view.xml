@@ -59,8 +59,7 @@
             android:layout_height="46dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="15dp"
-            android:background="@drawable/hx_btn_half_circle_nav" />
+            android:layout_marginRight="15dp" />
 
     </RelativeLayout>
 

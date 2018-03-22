@@ -4,7 +4,7 @@ public class PduBase {
     /****************************************************
      * basic unit of data type length
      */
-    public static final int pdu_basic_length = 2;
+    public static final int pdu_basic_length = 4;
     public static final int pdu_header_length = 89;
 
 

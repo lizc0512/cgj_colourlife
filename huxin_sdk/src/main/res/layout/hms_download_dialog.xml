@@ -50,7 +50,7 @@
             android:contentDescription="@string/hms_cancel"
             android:focusable="true"
             android:gravity="center_vertical"
-            android:src="@drawable/hms_cancel"
+            android:src="@drawable/hx_btn_close"
             android:visibility="visible" />
     </LinearLayout>
 

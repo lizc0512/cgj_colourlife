@@ -57,7 +57,6 @@ import com.youmai.hxsdk.im.cache.CacheMsgFile;
 import com.youmai.hxsdk.im.cache.CacheMsgHelper;
 import com.youmai.hxsdk.im.cache.CacheMsgImage;
 import com.youmai.hxsdk.im.cache.CacheMsgMap;
-import com.youmai.hxsdk.im.cache.CacheMsgRemark;
 import com.youmai.hxsdk.im.cache.CacheMsgTxt;
 import com.youmai.hxsdk.im.cache.CacheMsgVideo;
 import com.youmai.hxsdk.im.cache.CacheMsgVoice;
@@ -120,7 +119,6 @@ public class IMConnectionActivity extends SdkBaseActivity implements
     public static final String DST_CONTACT_ID = "DST_CONTACT_ID";
     public static final String EXTRA_IS_UNREAD = "EXTRA_IS_UNREAD";
     public static final String EXTRA_SCROLL_POSITION = "EXTRA_SCROLL_POSITION";
-    public static final String DST_SHOW = "DST_SHOW";
     public static final String IS_SHOW_AUDIO = "IS_SHOW_AUDIO";
     public static final String IS_OPEN_REMARK = "IS_OPEN_REMARK";
     public static final String FROM_TO = "from_to";
@@ -129,13 +127,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
     public static final String IS_IM_TYPE = "IS_IM_TYPE";
     public static final String ACTIVITY_COME_TYPE = "ACTIVITY_COME_TYPE";
 
-    //sync app MyMsgListFragment INTENT_REQUEST_FOR_UPDATE_UI
-    public static final int INTENT_REQUEST_FOR_UPDATE_UI = 101;
-    private static final int SWAP_CARD_EQUEST = 102;
-    public static final int SAVE_CARD_EQUEST = 103;
     public static final long MAX_SENDER_FILE = 50 * 1024 * 1024;
-
-    public static final int FROM_HOOK_STRATE = 100;
 
     public static final int REQUEST_CODE_CAMERA = 400;
     public static final int REQUEST_CODE_CARD = 600;
@@ -158,15 +150,12 @@ public class IMConnectionActivity extends SdkBaseActivity implements
 
     private TextView tvTitle;
     private ImageView ivMore;
-    private ImageView tvTitleRightImg;
     private String targetPhone = "";
     private String contactName;
     private int contactID;
-    private long msgId;
 
     private int pageType;
     private boolean isOpenAudio = false;
-    private boolean isOpenRemark = false;
 
     private boolean isPauseOut = false;
     private boolean isOpenEmotion = false;
@@ -178,9 +167,6 @@ public class IMConnectionActivity extends SdkBaseActivity implements
     private int comeType;//分类界面 1: hook界面的IM图像跳过来的 2：
     private long mScrollPosition;
 
-    private boolean isRemind = false;
-
-    private BroadcastReceiver mUpdateContactNameReceiver;
     private BroadcastReceiver mReceiveSmsMsg;
 
     private BroadcastReceiver mUpdateImageStateReceiver = new BroadcastReceiver() {
@@ -240,10 +226,6 @@ public class IMConnectionActivity extends SdkBaseActivity implements
     }
 
 
-    public void setRemind(boolean remind) {
-        isRemind = remind;
-    }
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -255,7 +237,6 @@ public class IMConnectionActivity extends SdkBaseActivity implements
         Intent fromIntent = getIntent();
         targetPhone = fromIntent.getStringExtra(DST_PHONE);
         isOpenAudio = fromIntent.getBooleanExtra(IS_SHOW_AUDIO, false);
-        isOpenRemark = fromIntent.getBooleanExtra(IS_OPEN_REMARK, false);
         pageType = fromIntent.getIntExtra(DST_PAGE_TYPE, 0);
         isIMType = fromIntent.getBooleanExtra(IS_IM_TYPE, true);//是否沟通界面 默认true:沟通 false:问题反馈
         comeType = fromIntent.getIntExtra(ACTIVITY_COME_TYPE, -1);
@@ -267,9 +248,6 @@ public class IMConnectionActivity extends SdkBaseActivity implements
         contactID = fromIntent.getIntExtra(DST_CONTACT_ID, 0);
 
         mScrollPosition = fromIntent.getLongExtra(EXTRA_SCROLL_POSITION, 0);
-
-        IntentFilter homeFilter = new IntentFilter("com.youmai.hxsdk.updatecontact");
-        registerReceiver(mUpdateContactNameReceiver, homeFilter);
 
         mReceiveSmsMsg = new BroadcastReceiver() {
             @Override
@@ -441,10 +419,6 @@ public class IMConnectionActivity extends SdkBaseActivity implements
             }
         }
 
-        if (isRemind) {
-            setResult(Activity.RESULT_OK);
-        }
-
         finish();
 
         if (!CallInfo.IsCalling()) {
@@ -469,7 +443,6 @@ public class IMConnectionActivity extends SdkBaseActivity implements
     @Override
     public void onDestroy() {
         super.onDestroy();
-        unregisterReceiver(mUpdateContactNameReceiver);
         unregisterReceiver(mReceiveSmsMsg);
 
         localBroadcastManager.unregisterReceiver(mUpdateImageStateReceiver);
@@ -613,8 +586,6 @@ public class IMConnectionActivity extends SdkBaseActivity implements
                 showNewGuide();
             }
         }, 300);
-
-        msgId = getIntent().getLongExtra(MSG_ID, 0);
 
         if (mScrollPosition != 0) {
             recyclerView.scrollToPosition(imListAdapter.getItemPosition(mScrollPosition));
@@ -989,13 +960,6 @@ public class IMConnectionActivity extends SdkBaseActivity implements
             sendMap(data);
         } else if (requestCode == FilePickerConst.REQUEST_CODE_DOC && resultCode == Activity.RESULT_OK) {
             //交换名片编辑名片返回 发送(用不到)
-        } else if (requestCode == SWAP_CARD_EQUEST && resultCode == Activity.RESULT_OK) {
-        } else if (requestCode == SAVE_CARD_EQUEST && resultCode == Activity.RESULT_OK) {
-
-        } else if (requestCode == SWAP_CARD_EQUEST && resultCode == Activity.RESULT_CANCELED) {
-            if (fromTo == FROM_HOOK_STRATE) {
-                finish();
-            }
         } else if (requestCode == REQUEST_CODE_CAMERA) {
             //拍照回来后
             if (resultCode == 101) {
@@ -1316,10 +1280,8 @@ public class IMConnectionActivity extends SdkBaseActivity implements
     private void showToolsBar() {
         if (isIMType) {
             ivMore.setVisibility(View.VISIBLE);
-            tvTitleRightImg.setVisibility(View.VISIBLE);
         } else {
             ivMore.setVisibility(View.GONE);
-            tvTitleRightImg.setVisibility(View.GONE);
         }
     }
 
@@ -1521,7 +1483,6 @@ public class IMConnectionActivity extends SdkBaseActivity implements
      * @param isShow 更多选择:true
      */
     private void setRightUi(boolean isShow) {
-        tvTitleRightImg.setVisibility(isShow ? View.GONE : View.VISIBLE);
         ivMore.setVisibility(isShow ? View.GONE : View.VISIBLE);
         keyboardLay.changeMoreLay(isShow);
     }

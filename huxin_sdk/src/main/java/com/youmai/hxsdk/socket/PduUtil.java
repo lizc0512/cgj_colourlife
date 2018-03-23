@@ -4,6 +4,9 @@ import android.util.Log;
 
 import com.youmai.hxsdk.utils.LogFile;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.nio.ByteBuffer;
 
 
@@ -71,15 +74,15 @@ public abstract class PduUtil {
         buffer.put(bytes);
         buffer.flip();
 
-        buffer.getShort();  //units.startflag
-
-        buffer.get(units.user_id);
-        buffer.get(units.app_id);
-
-        units.service_id = buffer.getInt();
+        buffer.getInt();  //units.startflag
+        units.terminal_token = buffer.getInt();
         units.commandid = buffer.getInt();
         units.seq_id = buffer.getInt();
-        units.version = buffer.get();
+
+        units.data_type = buffer.get();
+        units.pdu_version = buffer.get();
+        units.extension_reserved[0] = buffer.get();
+        units.extension_reserved[1] = buffer.get();
 
         int length = buffer.getInt();
         units.length = length;
@@ -113,12 +116,14 @@ public abstract class PduUtil {
         byteBuffer.clear();
 
         byteBuffer.putInt(PduBase.startflag);
-        byteBuffer.put(pduBase.user_id);
-        byteBuffer.put(pduBase.app_id);
-        byteBuffer.putInt(pduBase.service_id);
+        byteBuffer.putInt(pduBase.terminal_token);
         byteBuffer.putInt(pduBase.commandid);
         byteBuffer.putInt(pduBase.seq_id);
-        byteBuffer.put(pduBase.version);
+
+        byteBuffer.put(pduBase.data_type);
+        byteBuffer.put(pduBase.pdu_version);
+        byteBuffer.put(pduBase.extension_reserved[0]);
+        byteBuffer.put(pduBase.extension_reserved[1]);
 
         byteBuffer.putInt(pduBase.length);
 

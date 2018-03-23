@@ -33,6 +33,7 @@ import com.youmai.hxsdk.im.cache.CacheMsgMap;
 import com.youmai.hxsdk.im.cache.CacheMsgTxt;
 import com.youmai.hxsdk.im.cache.CacheMsgVideo;
 import com.youmai.hxsdk.im.cache.CacheMsgVoice;
+import com.youmai.hxsdk.interfaces.OnChatMsg;
 import com.youmai.hxsdk.module.map.AnswerOrReject;
 import com.youmai.hxsdk.module.map.IAnswerOrRejectListener;
 import com.youmai.hxsdk.module.map.IReceiveStartListener;
@@ -76,6 +77,8 @@ public class IMMsgManager {
 
     private List<IMMsgCallback> imMsgCallbackList;
 
+    private List<OnChatMsg> mOnChatMsgList;
+
     private List<CacheMsgBean> mLShareList; // 位置共享
 
     private static IMMsgManager instance = null;
@@ -87,6 +90,7 @@ public class IMMsgManager {
 
     private IMMsgManager() {
         cacheMsgBeanList = new ArrayList<>();
+        mOnChatMsgList = new ArrayList<>();
         imMsgCallbackList = new ArrayList<>();
         pushMsgNotifyIdList = new ArrayList<>();
         mLShareList = new ArrayList<>();
@@ -138,6 +142,11 @@ public class IMMsgManager {
 
     public void clearCacheMsgBean() {
         cacheMsgBeanList.clear();
+    }
+
+    public void setOnChatMsg(OnChatMsg callback) {
+        if (!mOnChatMsgList.contains(callback))
+            mOnChatMsgList.add(callback);
     }
 
     //todo_k: 12-6
@@ -371,7 +380,27 @@ public class IMMsgManager {
         return onDeviceKickedNotify;
     }
 
+    public void registerChatMsg(OnChatMsg onChatMsg) {
+        if (!mOnChatMsgList.contains(onChatMsg)) {
+            mOnChatMsgList.add(onChatMsg);
+        }
+    }
 
+
+    public void unregisterChatMsg(OnChatMsg onChatMsg) {
+        if (mOnChatMsgList.contains(onChatMsg)) {
+            mOnChatMsgList.remove(onChatMsg);
+        }
+    }
+
+
+    private void handlerIMMsgCallback(CacheMsgBean cacheMsgBean) {
+        if (imMsgCallbackList != null) {
+            for (IMMsgCallback cb : imMsgCallbackList) {
+                cb.onCallback(cacheMsgBean);
+            }
+        }
+    }
     public void notifyMsg(ChatMsg msg, boolean isFormPush) {
         String srcPhone = msg.getSrcPhone();
         String newMsgTip = mContext.getString(R.string.hx_hook_strategy_msg);
@@ -391,18 +420,7 @@ public class IMMsgManager {
             notifyMsg(mContext, srcPhone, newMsgTip + mContext.getString(R.string.hx_hook_strategy_msg_voice), isFormPush);
         } else if (msg.getMsgType() == ChatMsg.MsgType.BIG_FILE) { //文件
             notifyMsg(mContext, srcPhone, newMsgTip + mContext.getString(R.string.hx_hook_strategy_msg_file), isFormPush);
-        } else if (msg.getMsgType() == ChatMsg.MsgType.BIZCARD) { //名片
-            //名片已有自己的通知栏消息
-            notifyMsg(mContext, srcPhone, newMsgTip + mContext.getString(R.string.hx_hook_strategy_msg_bizcard), isFormPush);
-        } else if (msg.getMsgType() == ChatMsg.MsgType.ERROR) {
-
-        } else if (msg.getMsgType().ordinal() < ChatMsg.MsgType.MAX_TYPE.ordinal()) {
-            notifyMsg(mContext, srcPhone, newMsgTip, isFormPush);
-        } else if (msg.getMsgType() == ChatMsg.MsgType.LOCATION_INVITE) {
-            notifyMsg(mContext, srcPhone, newMsgTip + mContext.getString(R.string.hx_hook_strategy_share_location), isFormPush);
-        } /*else if (msg.getMsgType() == ChatMsg.MsgType.LOCATION_QUIT) {
-            notifyMsg(mContext, srcPhone, newMsgTip + mContext.getString(R.string.hx_hook_strategy_share_location), isFormPush);
-        }*/
+        }
     }
 
 
@@ -438,6 +456,8 @@ public class IMMsgManager {
             CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
 
             cacheMsgBeanList.add(cacheMsgBean);
+            handlerIMMsgCallback(cacheMsgBean);
+
         } else if (msg.getMsgType() == ChatMsg.MsgType.PICTURE) { //图片
             String fid = msg.getMsgContent().getPicture().getPicUrl();
             String describe = msg.getMsgContent().getPicture().getDescribe();

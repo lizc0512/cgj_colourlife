@@ -8,6 +8,7 @@ import android.util.Log;
 import com.google.protobuf.GeneratedMessage;
 import com.youmai.hxsdk.proto.YouMaiBasic;
 import com.youmai.hxsdk.utils.AppUtils;
+import com.youmai.hxsdk.utils.DeviceUtils;
 import com.youmai.hxsdk.utils.LogFile;
 
 import java.io.IOException;
@@ -158,7 +159,7 @@ public class TcpClient extends PduUtil implements Runnable {
      * @param callback 回调
      */
     public void sendProto(GeneratedMessage msg, ReceiveListener callback) {
-        sendProto(msg, (short)-1, callback);
+        sendProto(msg, -1, callback);
     }
 
 
@@ -172,14 +173,24 @@ public class TcpClient extends PduUtil implements Runnable {
         PduBase pduBase = new PduBase();
         int seq_num = getSeqNum();
 
-        pduBase.commandid = commandId;
+        if (commandId == -1) {
+            pduBase.commandid = getActCode(msg.getClass().getSimpleName().toUpperCase());
+        } else {
+            pduBase.commandid = commandId;
+        }
 
         pduBase.body = msg.toByteArray();
         pduBase.length = msg.getSerializedSize();
         pduBase.seq_id = seq_num;
-        //pduBase.user_id
-        //pduBase.app_id
 
+        if (!isLogin && mUserId == 0) {
+            pduBase.terminal_token = DeviceUtils.getIMEI(mContext).hashCode();
+            pduBase.data_type = 'u';
+        } else {
+            pduBase.terminal_token = mUserId;
+        }
+
+        Log.v(TAG, "sendProto userId:" + pduBase.terminal_token);
         Log.v(TAG, "sendProto seq_num:" + seq_num);
         Log.v(TAG, "sendProto command_id:" + pduBase.commandid);
 

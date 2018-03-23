@@ -3,6 +3,8 @@ package com.youmai.hxsdk.chat;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.youmai.hxsdk.db.bean.ChatMsg;
+import com.youmai.hxsdk.socket.IMContentUtil;
 
 /**
  * Created by colin on 2016/7/27.
@@ -19,6 +21,46 @@ public class MsgContent implements Parcelable {
 
     public MsgContent() {
 
+    }
+
+    public MsgContent(ChatMsg.MsgType type, String json) {
+        IMContentUtil parser = new IMContentUtil(json);
+        parser.parseBody();
+
+        switch (type) {
+            case TEXT:
+                mText = new ContentText(parser);
+                break;
+            case PICTURE:
+                mPicture = new ContentPicture(parser);
+                break;
+            case AUDIO:
+                mAudio = new ContentAudio(parser);
+                break;
+            case VIDEO:
+                mVideo = new ContentVideo(parser);
+                break;
+            case URL:
+                mContentUrl = new ContentUrl(parser);
+                break;
+            case LOCATION:
+                mLocation = new ContentLocation(parser);
+                break;
+            case BEGIN_LOCATION:
+            case LOCATION_INVITE:
+            case LOCATION_ANSWER:
+            case LOCATION_QUIT:
+                mBeginLocation = new BeginLocation(parser);
+                break;
+            case BIZCARD:
+                mText = new ContentText(parser);
+                break;
+            case REMARK:
+                mText = new ContentText(parser);
+                break;
+            default:
+                break;
+        }
     }
 
     public void setText(ContentText text) {

@@ -4,6 +4,7 @@ package com.youmai.hxsdk.db.bean;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.chat.MsgContent;
 import com.youmai.hxsdk.proto.YouMaiChat;
 import com.youmai.hxsdk.proto.YouMaiChat.IMChat_Personal;
@@ -125,6 +126,7 @@ public class ChatMsg implements Parcelable {
 
         jsonBoby = imchat.getBody();
 
+        msgContent = new MsgContent(msgType, jsonBoby);
     }
 
 
@@ -144,6 +146,7 @@ public class ChatMsg implements Parcelable {
 
         contentType = IMContentUtil.getContentType(typeInt, YouMaiChat.IM_CONTENT_TYPE.IM_CONTENT_TYPE_LOCATION_VALUE);
         msgType = parseMsgType(contentType);
+        msgContent = new MsgContent(msgType, jsonBoby);
     }
 
     protected ChatMsg(Parcel in) {
@@ -462,6 +465,7 @@ public class ChatMsg implements Parcelable {
         return msgContent;
     }
 
+    //end set get method
 
     @Generated(hash = 1784406075)
     public ChatMsg(Long id, long msgTime, long msgId, String srcName, String srcPhone, int srcUserType, int srcUsrId,

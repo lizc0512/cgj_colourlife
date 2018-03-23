@@ -213,7 +213,7 @@ public class HuxinSdkManager {
             // Initialize the Mobile Ads SDK.
             // MobileAds.initialize(context, AppConfig.ADMOB_APP_ID);
 
-            autoLogin();
+            //autoLogin();
 
             mProcessHandler.sendEmptyMessage(HANDLER_THREAD_INIT_CONFIG_START);
 
@@ -240,21 +240,6 @@ public class HuxinSdkManager {
         EmotionInit.init(context.getApplicationContext());     //表情初始化
         //initEmo();
 
-        //appkey校验
-        if (!checkAppKey(context)) {
-            for (InitListener item : mInitListenerList) {
-                item.fail();
-            }
-            mInitListenerList.clear();
-            return;
-        }
-
-        //多个SDK后台运行
-        if (AppUtils.isMultiService(context, HuxinService.class.getName())) {
-            if (AppConfig.LAUNCH_MODE != 2) { //for test
-                Toast.makeText(mContext, mContext.getString(R.string.hx_toast_03), Toast.LENGTH_SHORT).show();
-            }
-        }
 
         Intent intent = new Intent(context.getApplicationContext(), HuxinService.class);
         context.getApplicationContext().bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);

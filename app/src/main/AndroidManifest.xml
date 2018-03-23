@@ -66,10 +66,25 @@
             </intent-filter>-->
         </activity>
 
-        <activity android:name=".ui.MainActivity1"
-            android:windowSoftInputMode="stateUnspecified|adjustPan"
+        <activity
+            android:name=".ui.MainActivity1"
             android:screenOrientation="portrait"
-            android:theme="@style/HxSdkTheme">
+            android:theme="@style/HxSdkTheme"
+            android:windowSoftInputMode="stateUnspecified|adjustPan">
+            <!--<intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>-->
+        </activity>
+
+        <activity
+            android:name="com.youmai.hxsdk.activity.IMConnectionActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/HxSdkNewTheme"
+            android:windowSoftInputMode="adjustResize|stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -165,8 +165,6 @@ public class IMListAdapter extends RecyclerView.Adapter {
     }
 
 
-
-
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(mContext);
@@ -257,6 +255,8 @@ public class IMListAdapter extends RecyclerView.Adapter {
         int oriType = -1;
         switch (cacheMsgBean.getMsgType()) {
             case CacheMsgBean.MSG_TYPE_TXT:
+                oriType = cacheMsgBean.isRightUI() ? TXT_RIGHT : TXT_LEFT;
+                break;
             case CacheMsgBean.MSG_TYPE_VOICE:
                 oriType = cacheMsgBean.isRightUI() ? VOICE_RIGHT : VOICE_LEFT;
                 break;

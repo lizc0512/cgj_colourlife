@@ -1189,6 +1189,10 @@ public class IMListAdapter extends RecyclerView.Adapter {
                     break;
                 }
             }
+            if (index != -1 && index < mImBeanList.size()) {
+                mImBeanList.set(index, cacheMsgBean);//更新数据
+                notifyItemChanged(index);
+            }
         }
     }
 

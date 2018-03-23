@@ -1101,9 +1101,6 @@ public class IMConnectionActivity extends SdkBaseActivity implements
                         showTcpTipDialog();
                     }
                 }
-            } else if ("com.youmai.huxin.driving".equals(action)) {
-                //退出
-                keyboardLay.showDrivingLay(false);
             }
         }
     }

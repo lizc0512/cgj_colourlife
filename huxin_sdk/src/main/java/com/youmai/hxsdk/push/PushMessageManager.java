@@ -17,7 +17,6 @@ import com.youmai.hxsdk.proto.YouMaiChat;
 import com.youmai.hxsdk.socket.IMContentType;
 import com.youmai.hxsdk.socket.IMContentUtil;
 
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 

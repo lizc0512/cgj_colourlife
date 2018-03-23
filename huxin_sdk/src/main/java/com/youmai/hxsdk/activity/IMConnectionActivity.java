@@ -24,7 +24,6 @@ import android.os.Message;
 import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
@@ -38,7 +37,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -50,7 +48,6 @@ import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.adapter.IMListAdapter;
 import com.youmai.hxsdk.config.FileConfig;
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
-import com.youmai.hxsdk.dialog.HxDialog;
 import com.youmai.hxsdk.entity.CallInfo;
 import com.youmai.hxsdk.im.IMHelper;
 import com.youmai.hxsdk.im.IMMsgCallback;
@@ -59,43 +56,29 @@ import com.youmai.hxsdk.im.cache.CacheMsgEmotion;
 import com.youmai.hxsdk.im.cache.CacheMsgFile;
 import com.youmai.hxsdk.im.cache.CacheMsgHelper;
 import com.youmai.hxsdk.im.cache.CacheMsgImage;
-import com.youmai.hxsdk.im.cache.CacheMsgLShare;
 import com.youmai.hxsdk.im.cache.CacheMsgMap;
 import com.youmai.hxsdk.im.cache.CacheMsgRemark;
 import com.youmai.hxsdk.im.cache.CacheMsgTxt;
 import com.youmai.hxsdk.im.cache.CacheMsgVideo;
 import com.youmai.hxsdk.im.cache.CacheMsgVoice;
-import com.youmai.hxsdk.im.voice.manager.DrivingModeMediaManager;
 import com.youmai.hxsdk.im.voice.manager.MediaManager;
 import com.youmai.hxsdk.map.LocationActivity;
 import com.youmai.hxsdk.module.filemanager.PickerManager;
 import com.youmai.hxsdk.module.filemanager.activity.FileManagerActivity;
 import com.youmai.hxsdk.module.filemanager.constant.FilePickerConst;
 import com.youmai.hxsdk.module.filemanager.interfaces.PickerRefreshUIListener;
-import com.youmai.hxsdk.module.map.AbstractStartOrQuit;
-import com.youmai.hxsdk.module.map.ActualLocation;
-import com.youmai.hxsdk.module.map.ActualLocationFragment;
-import com.youmai.hxsdk.module.map.IReceiveStartListener;
 import com.youmai.hxsdk.module.movierecord.MediaStoreUtils;
 import com.youmai.hxsdk.module.picker.PhotoPickerManager;
 import com.youmai.hxsdk.module.picker.PhotoPreviewActivity;
-import com.youmai.hxsdk.module.remind.HxFirstRemindDialog;
-import com.youmai.hxsdk.module.remind.RemindBean;
-import com.youmai.hxsdk.module.remind.SetRemindActivity;
 import com.youmai.hxsdk.service.SendMsgService;
 import com.youmai.hxsdk.service.download.bean.FileQueue;
 import com.youmai.hxsdk.service.sendmsg.SendMsg;
-import com.youmai.hxsdk.socket.PduBase;
-import com.youmai.hxsdk.socket.ReceiveListener;
-import com.youmai.hxsdk.sp.SPDataUtil;
 import com.youmai.hxsdk.utils.AbFileUtil;
 import com.youmai.hxsdk.utils.CommonUtils;
 import com.youmai.hxsdk.utils.CompressImage;
 import com.youmai.hxsdk.utils.CompressVideo;
-import com.youmai.hxsdk.utils.DisplayUtil;
 import com.youmai.hxsdk.utils.LogUtils;
 import com.youmai.hxsdk.utils.StringUtils;
-import com.youmai.hxsdk.utils.TimeUtils;
 import com.youmai.hxsdk.utils.ToastUtil;
 import com.youmai.hxsdk.utils.VideoUtils;
 import com.youmai.hxsdk.view.LinearLayoutManagerWithSmoothScroller;
@@ -125,8 +108,6 @@ import static android.support.v7.widget.RecyclerView.SCROLL_STATE_SETTLING;
 public class IMConnectionActivity extends SdkBaseActivity implements
         IMMsgCallback, InputMessageLay.KeyBoardBarViewListener,
         PickerRefreshUIListener {
-
-
     /*
      * Const.
      */
@@ -201,9 +182,6 @@ public class IMConnectionActivity extends SdkBaseActivity implements
 
     private BroadcastReceiver mUpdateContactNameReceiver;
     private BroadcastReceiver mReceiveSmsMsg;
-
-    private boolean isDrivingMode = false;
-    private boolean isMeetingMode = false;
 
     private BroadcastReceiver mUpdateImageStateReceiver = new BroadcastReceiver() {
         @Override
@@ -299,7 +277,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
                 CacheMsgBean cacheMsgBean = intent.getParcelableExtra("CacheMsgBean");
                 if (cacheMsgBean != null) {
                     if (cacheMsgBean.getSenderPhone().equals(targetPhone)) {
-                        imListAdapter.refreshIncomingMsgUI(cacheMsgBean, false);
+                        imListAdapter.refreshIncomingMsgUI(cacheMsgBean);
                     }
                 }
 
@@ -332,9 +310,6 @@ public class IMConnectionActivity extends SdkBaseActivity implements
         HuxinSdkManager.instance().getStackAct().addActivity(this);
 
         fromTo = fromIntent.getIntExtra(FROM_TO, 0);
-        //IMMsgManager.getInstance().stopDrivingMode();
-
-        initFragment();
     }
 
     @Override
@@ -351,11 +326,6 @@ public class IMConnectionActivity extends SdkBaseActivity implements
     @Override
     public void onResume() {
         super.onResume();
-
-        isDrivingMode = com.youmai.hxsdk.utils.AppUtils.getBooleanSharedPreferences(mContext, "huxin_driving_mode", false);
-        isMeetingMode = com.youmai.hxsdk.utils.AppUtils.getBooleanSharedPreferences(mContext, "huxin_meeting_mode", false);
-        keyboardLay.showDrivingLay(isDrivingMode);
-
         //srsm add start
         imListAdapter.resume(contactID == 0);
         IMMsgManager.getInstance().setImMsgCallback(this);
@@ -363,19 +333,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
 
         MediaManager.resume();
         isPauseOut = false;
-        /*if (imListAdapter != null && !imListAdapter.getHasItemClick() && !isPauseOut) {
-            mHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    if (mScrollPosition != 0) {
-                        recyclerView.scrollToPosition(imListAdapter.getItemPosition(mScrollPosition));
-                    } else {
-                        imListAdapter.focusBottom(true);
-                    }
-                }
-            }, 100);
-            isPauseOut = false;
-        }*/
+
         imListAdapter.setHasItemClick(false);
         if (isOpenAudio) {
             //只生效一次
@@ -385,8 +343,6 @@ public class IMConnectionActivity extends SdkBaseActivity implements
 
         PickerManager.getInstance().setRefreshUIListener(this);
         IMMsgManager.getInstance().removeBadge(targetPhone);
-
-        initLSListener();
     }
 
     public void handleIntent(Intent intent) {
@@ -416,17 +372,14 @@ public class IMConnectionActivity extends SdkBaseActivity implements
         //srsm add
         IMMsgManager.getInstance().removeImMsgCallback(this);
 
-        // FIXME: 2017/1/9  三方电话时号码重置
         if (CallInfo.IsCalling()) {
             finish();
         }
-        imListAdapter.stopTextVoice();
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        isCancelled = false;
     }
 
     @TargetApi(23)
@@ -480,21 +433,6 @@ public class IMConnectionActivity extends SdkBaseActivity implements
 
     @Override
     public void onBackPressed() {
-
-        if (tvShareLocation.getVisibility() == View.VISIBLE && mFragment.isAdded()) {
-            if (mFragment.isHidden()) {
-                mFragment.initDialog(mContext);
-            } else {
-                hideFragment();
-            }
-            return;
-        } else {
-            if (mStopRefreshUIListener != null) {
-                mStopRefreshUIListener.onQuit(null);
-                endActualLocationShared();
-            }
-        }
-
         List<CacheMsgBean> lShareList = IMMsgManager.getInstance().getLShareList();
         for (CacheMsgBean bean : lShareList) {
             if (bean.getSenderPhone().equals(targetPhone)) {
@@ -526,7 +464,6 @@ public class IMConnectionActivity extends SdkBaseActivity implements
         super.onStop();
         MediaManager.release();
         imListAdapter.onStop();
-        isCancelled = true;
     }
 
     @Override
@@ -549,7 +486,6 @@ public class IMConnectionActivity extends SdkBaseActivity implements
         }
 
         PickerManager.getInstance().setRefreshUIListener(null);
-        IMMsgManager.getInstance().setReceiveListener(null);
 
         //任务完成后，可以销毁消息服务
         Intent intent = new Intent(this, SendMsgService.class);
@@ -610,33 +546,6 @@ public class IMConnectionActivity extends SdkBaseActivity implements
             });
         }
 
-        tvTitleRightImg = (ImageView) findViewById(R.id.tv_title_right_img);
-        if (tvTitleRightImg != null) {
-            tvTitleRightImg.setVisibility(View.VISIBLE);
-            //tvTitleRightImg.setText(R.string.hx_imadapter_call);
-            tvTitleRightImg.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //HuxinSdkManager.instance().getStackAct().finishActivity(HookStrategyActivity.class);
-
-                    int voipTime = SPDataUtil.getVoipDialogTimestamp(mContext);
-                    String combo = SPDataUtil.getComboEnd(mContext);
-                    if (TextUtils.isEmpty(combo) && voipTime != 0 && (TimeUtils.getNightTimestamp() - voipTime < 86400)) {
-                        // 调系统拨号
-                        try {
-                            Intent intent = new Intent();
-                            intent.setAction(Intent.ACTION_CALL);
-                            intent.setData(Uri.parse("tel:" + targetPhone));
-                            startActivity(intent);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            Toast.makeText(getBaseContext(), R.string.hx_permissions_call_tip, Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                }
-            });
-        }
-
         keyboardLay = (InputMessageLay) findViewById(R.id.keyboard_lay);
         keyboardLay.setOnKeyBoardBarViewListener(this);
         keyboardLay.setEditableState(false);
@@ -665,23 +574,10 @@ public class IMConnectionActivity extends SdkBaseActivity implements
                             if (imListAdapter.mThemeIndex != -1) {
                                 imListAdapter.notifyItemChanged(imListAdapter.mThemeIndex);
                             }
-//                            recyclerView.setOnTouchListener(new View.OnTouchListener() {
-//                                @Override
-//                                public boolean onTouch(View v, MotionEvent event) {
-//                                    if (event.getAction() == MotionEvent.ACTION_DOWN) {
-//                                        keyboardLay.hideAutoView();
-//                                    }
-//                                    return false;
-//                                }
-//                            });
                         }
-//                        if (this != null)
-//                            Glide.with(getActivity()).resumeRequests();
                         break;
                     case SCROLL_STATE_DRAGGING:
                     case SCROLL_STATE_SETTLING:
-//                        if (this != null)
-//                            Glide.with(getActivity()).pauseRequests();
                         break;
                 }
             }
@@ -711,15 +607,6 @@ public class IMConnectionActivity extends SdkBaseActivity implements
         });
         imListAdapter.registerAdapterDataObserver(mEmptyRecyclerViewDataObserver);
         recyclerView.setAdapter(imListAdapter);
-        //打开备注
-        if (isOpenRemark) {
-            mHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    imListAdapter.setHasOpenRemark(true);
-                }
-            }, 100);
-        }
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -731,15 +618,6 @@ public class IMConnectionActivity extends SdkBaseActivity implements
 
         if (mScrollPosition != 0) {
             recyclerView.scrollToPosition(imListAdapter.getItemPosition(mScrollPosition));
-        } else if (msgId > 0) {
-            int position = imListAdapter.getItemPositionByMsgId(msgId);
-            if (position > 0) {
-                recyclerView.scrollToPosition(position);
-            } else {
-                recyclerView.scrollToPosition(imListAdapter.getItemCount() - 1); // scroll to bottom
-                imListAdapter.focusBottom(false, 30);
-            }
-
         } else {
             recyclerView.scrollToPosition(imListAdapter.getItemCount() - 1); // scroll to bottom
             imListAdapter.focusBottom(false, 30);//scrollToPosition在item超长时，不能滑到最底，这里补救
@@ -747,14 +625,6 @@ public class IMConnectionActivity extends SdkBaseActivity implements
         imListAdapter.setListener(new IMListAdapter.OnListener() {
             @Override
             public void smoothScroll(final int position, long delayMillis, final boolean isScrollerTop) {
-                //滑动冲突
-//                recyclerView.setOnTouchListener(new View.OnTouchListener() {
-//
-//                    @Override
-//                    public boolean onTouch(View v, MotionEvent event) {
-//                        return false;
-//                    }
-//                });
                 isSmoothBottom = false;
                 mHandler.postDelayed(new Runnable() {
                     @Override
@@ -852,82 +722,9 @@ public class IMConnectionActivity extends SdkBaseActivity implements
                     handlerContact();
                     popupWindow.dismiss();
                 }
-
             }
         });
 
-        //驾驶模式
-        TextView drivingModeButton = (TextView) popupWindowView.findViewById(R.id.im_driving_mode_button);
-        ImageView drivingModeIcon = (ImageView) popupWindowView.findViewById(R.id.im_driving_mode_icon);
-        isDrivingMode = com.youmai.hxsdk.utils.AppUtils.getBooleanSharedPreferences(mContext, "huxin_driving_mode", false);
-        if (isDrivingMode) {
-            drivingModeButton.setText(R.string.hx_meeting_mode_off);
-            drivingModeIcon.setImageResource(R.drawable.im_more_icon_driving_mode_on);
-        } else {
-            drivingModeButton.setText(R.string.hx_meeting_mode_on);
-            drivingModeIcon.setImageResource(R.drawable.im_more_icon_driving_mode_off);
-        }
-        view.findViewById(R.id.im_driving_mode_lay).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!isDrivingMode) {
-                    keyboardLay.showDrivingLay(true);
-                    mHandler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            recyclerView.smoothScrollBy(0, DisplayUtil.dip2px(mContext, 150), new DecelerateInterpolator());
-                        }
-                    }, 300);
-
-                    isDrivingMode = true;
-                    isMeetingMode = false;
-                    Intent intent = new Intent("com.youmai.huxin.drivingmode.open");
-                    sendBroadcast(intent);
-
-                } else {
-                    keyboardLay.showDrivingLay(false);
-                    ToastUtil.showPublicToast2(getBaseContext(), R.string.hx_im_driving_exit_tip, R.drawable.hx_driving_exit_ic);
-                    isDrivingMode = false;
-                    Intent intent = new Intent("com.youmai.huxin.drivingmode.close");
-                    sendBroadcast(intent);
-                }
-                popupWindow.dismiss();
-            }
-        });
-
-
-        //会议模式
-        TextView meetingModeButton = (TextView) popupWindowView.findViewById(R.id.im_meeting_mode_button);
-        ImageView meetingModeIcon = (ImageView) popupWindowView.findViewById(R.id.im_meeting_mode_icon);
-        isMeetingMode = com.youmai.hxsdk.utils.AppUtils.getBooleanSharedPreferences(mContext, "huxin_meeting_mode", false);
-        if (isMeetingMode) {
-            meetingModeButton.setText(R.string.hx_im_pop_close_meeting_mode);
-            meetingModeIcon.setImageResource(R.drawable.im_more_icon_meeting_mode_on);
-        } else {
-            meetingModeButton.setText(R.string.hx_im_pop_open_meeting_mode);
-            meetingModeIcon.setImageResource(R.drawable.im_more_icon_meeting_mode_off);
-        }
-        view.findViewById(R.id.im_meeting_mode_lay).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //开启会议模式
-                if (isMeetingMode) {
-                    isMeetingMode = false;
-                    ToastUtil.showPublicToast2(getBaseContext(), R.string.hx_im_pop_close_meeting_mode, R.drawable.hx_meeting_exit_ic);
-                    //驾驶模式和会议模式是互斥的
-                    com.youmai.hxsdk.utils.AppUtils.setBooleanSharedPreferences(mContext, "huxin_meeting_mode", false);
-                } else {
-                    isMeetingMode = true;
-                    isDrivingMode = false;
-                    //驾驶模式和会议模式是互斥的
-                    com.youmai.hxsdk.utils.AppUtils.setBooleanSharedPreferences(mContext, "huxin_meeting_mode", true);
-                    Intent intent = new Intent("com.youmai.huxin.drivingmode.close");
-                    intent.putExtra("type", "close_driving_ui");
-                    sendBroadcast(intent);
-                }
-                popupWindow.dismiss();
-            }
-        });
     }
 
 
@@ -1087,18 +884,6 @@ public class IMConnectionActivity extends SdkBaseActivity implements
     }
 
 
-    /**
-     * 发送备注.
-     */
-    public void sendRemark(final String theme, String remark, long time) {
-        CacheMsgBean cacheMsgBean = getBaseMsg();
-        CacheMsgRemark cacheMsgRemark = new CacheMsgRemark().setTheme(theme).setRemark(remark).setTimestamp(time).setType(0);
-        cacheMsgBean.setMsgType(CacheMsgBean.MSG_TYPE_REMARK).setJsonBodyObj(cacheMsgRemark);
-
-        imListAdapter.addAndRefreshUI(cacheMsgBean);
-        sendMsg(cacheMsgBean);
-    }
-
 
     //拍照
     private void useCamera() {
@@ -1231,29 +1016,6 @@ public class IMConnectionActivity extends SdkBaseActivity implements
                 Toast.makeText(this, "相机有误，请返回重试!", Toast.LENGTH_SHORT).show();
             }
         } else if (requestCode == REQUEST_CODE_CARD) {
-        } else if (requestCode == REQUEST_REMIND_CODE) {
-            if (resultCode == SetRemindActivity.RESULT_REMIND_CODE) {
-                long msgId = data.getLongExtra("msg_id", 0);
-                long remindTime = data.getLongExtra("remind_time", 0);
-                String remind = data.getStringExtra("remind");
-                int iconNumRes = data.getIntExtra("remindType", 0);
-
-                setRemind(true);
-                imListAdapter.setRemind(msgId, remindTime, remind, iconNumRes);
-
-                RemindBean remindBean = data.getParcelableExtra(SetRemindActivity.REMIND_BEAN);
-                if (!SPDataUtil.getFirstRemind(mContext)) {
-                    HxFirstRemindDialog dialog = new HxFirstRemindDialog(mContext);
-                    dialog.show();
-                    dialog.setMessage(remindBean.getTime())
-                            .setSureClickListener(new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                }
-                            });
-                    SPDataUtil.setFirstRemind(mContext, true);
-                }
-            }
         } else if (requestCode == REQUEST_CODE_FORWAED && resultCode == 200) {
             //批量转发后的回调
             imListAdapter.cancelMoreStat();
@@ -1295,8 +1057,6 @@ public class IMConnectionActivity extends SdkBaseActivity implements
                         }
                     });
             builder.show();
-        } else if (imListAdapter.isEditingRemark()) {
-            keyboardLay.hideAutoView();
         } else {
             onBackPressed();
         }
@@ -1326,14 +1086,13 @@ public class IMConnectionActivity extends SdkBaseActivity implements
     @Override
     public void onCallback(CacheMsgBean cacheMsgBean) {
         //刷新界面
-        if (this != null && !isFinishing()) {
+        if (!isFinishing()) {
             if (cacheMsgBean.getSenderPhone().equals(targetPhone))
-                imListAdapter.refreshIncomingMsgUI(cacheMsgBean, isMeetingMode);
+                imListAdapter.refreshIncomingMsgUI(cacheMsgBean);
         }
     }
 
     // 初始化、执行上传
-    private volatile boolean isCancelled = false;
     private volatile boolean isSend = false;
 
 
@@ -1499,44 +1258,6 @@ public class IMConnectionActivity extends SdkBaseActivity implements
             useCamera();
         } else if (type == InputMessageLay.TYPE_LOCATION) {
 
-            HxDialog hxDialog = new HxDialog(mContext);
-            HxDialog.HxCallback callback =
-                    new HxDialog.HxCallback() {
-                        @Override
-                        public void onItemOne() {
-                            sendLocation();
-                        }
-
-                        @Override
-                        public void onItemTwo() {
-                            if (mFragment != null && !mFragment.isAdded()) {
-                                CacheMsgBean cacheMsgBean = new CacheMsgBean()
-                                        .setMsgTime(System.currentTimeMillis())
-                                        .setSend_flag(-1)
-                                        .setSenderPhone(HuxinSdkManager.instance().getPhoneNum())
-                                        .setSenderUserId(HuxinSdkManager.instance().getUserId())
-                                        .setReceiverPhone(targetPhone)
-                                        .setMsgType(CacheMsgBean.MSG_TYPE_LOCATION_SHARE)
-                                        .setJsonBodyObj(new CacheMsgLShare()
-                                                .setTargetId(System.currentTimeMillis())
-                                                .setReceivePhone(targetPhone))
-                                        .setRightUI(true);
-
-                                ActualLocation.setStatus(ActualLocationFragment.LShareStatus.INVITE.ordinal());
-                                ActualLocation.setLSharePhone(targetPhone);
-                                ActualLocation.setInviteCacheMsgBean(cacheMsgBean);
-                                imListAdapter.addAndRefreshUI(cacheMsgBean);
-                            }
-
-                            showFragment();
-                            keyboardLay.hideAutoView();
-                        }
-                    };
-            hxDialog.setItemOneString("发送位置")
-                    .setItemTwoString("共享实时位置", targetPhone.equals(HuxinSdkManager.instance().getPhoneNum()))
-                    .setHxDialog(callback);
-            hxDialog.show();
-
         } else if (type == InputMessageLay.TYPE_FILE) {
             showFileChooser();
         } else if (type == InputMessageLay.TYPE_CARD) {
@@ -1556,10 +1277,6 @@ public class IMConnectionActivity extends SdkBaseActivity implements
 
     @Override
     public void onClickVoice() {
-        //点击录音，停止语音播放
-        imListAdapter.stopTextVoice();
-        //驾驶模式停止语音播放
-        DrivingModeMediaManager.release();
     }
 
     @Override
@@ -1809,127 +1526,5 @@ public class IMConnectionActivity extends SdkBaseActivity implements
         keyboardLay.changeMoreLay(isShow);
     }
 
-    //*****************start
-    private ActualLocationFragment mFragment;
-    private TextView tvShareLocation;
-    private AbstractStartOrQuit mStopRefreshUIListener;
-
-    private void initFragment() {
-        tvShareLocation = (TextView) findViewById(R.id.tv_share_location);
-        mFragment = ActualLocationFragment.newInstance();
-        ActualLocation.setLSharePhone(targetPhone);
-
-        tvShareLocation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (ActualLocation.getStatus() == ActualLocationFragment.LShareStatus.INVITE.ordinal()) {
-
-                } else if (ActualLocation.getStatus() == ActualLocationFragment.LShareStatus.ANSWER.ordinal()) {
-
-                }
-                ActualLocation.setLSharePhone(targetPhone);
-                showFragment();
-            }
-        });
-
-        List<CacheMsgBean> lShareList = IMMsgManager.getInstance().getLShareList();
-        for (int i = 0; i < lShareList.size(); i++) {
-            CacheMsgBean cacheMsgBean = lShareList.get(i);
-            if (cacheMsgBean.getSenderPhone().equals(targetPhone)) {
-                showLSView();
-                ActualLocation.setLSharePhone(targetPhone);
-                ActualLocation.setAnswerCacheMsgBean(cacheMsgBean);
-                ActualLocation.setStatus(ActualLocationFragment.LShareStatus.ANSWER.ordinal());
-                break;
-            }
-        }
-    }
-
-    private void initLSListener() {
-        IMMsgManager.getInstance().setReceiveListener(new IReceiveStartListener() {
-            @Override
-            public void onStartLShare(CacheMsgBean cacheMsgBean) {
-                // IM 位置共享过来
-                if (cacheMsgBean.getSenderPhone().equals(targetPhone)) {
-                    showLSView();
-                    ActualLocation.setLSharePhone(targetPhone);
-                    ActualLocation.setAnswerCacheMsgBean(cacheMsgBean);
-                    ActualLocation.setStatus(ActualLocationFragment.LShareStatus.ANSWER.ordinal());
-                }
-            }
-        });
-    }
-
-    public void showFragment() {
-        if (notNull()) {
-            return;
-        }
-        FragmentTransaction showTransaction = getSupportFragmentManager().beginTransaction();
-        if (!mFragment.isHidden()) {
-            showTransaction.add(R.id.frag_container, mFragment).commit();
-        } else {
-            showTransaction.show(mFragment).commit();
-        }
-        showLSView();
-        keyboardLay.hide();
-    }
-
-    public void hideFragment() {
-        if (notNull()) {
-            return;
-        }
-        FragmentTransaction hideTransaction = getSupportFragmentManager().beginTransaction();
-        if (mFragment.isAdded()) {
-            hideTransaction.hide(mFragment).commit();
-        }
-        keyboardLay.initLay();
-    }
-
-    public void showLSView() {
-        tvShareLocation.setVisibility(View.VISIBLE);
-    }
-
-    public void hideLSView() {
-        tvShareLocation.setVisibility(View.GONE);
-    }
-
-    public void removeFragment() {
-        if (notNull()) {
-            return;
-        }
-        FragmentTransaction removeTransaction = getSupportFragmentManager().beginTransaction();
-        if (mFragment.isAdded()) {
-            removeTransaction.remove(mFragment).commit();
-        }
-        keyboardLay.initLay();
-    }
-
-    private boolean notNull() {
-        return mFragment == null;
-    }
-
-    // 结束主动
-    public void setOnEndRefreshUIListener(AbstractStartOrQuit listener) {
-        mStopRefreshUIListener = listener;
-    }
-
-    public void endActualLocationShared() {
-        int userId = HuxinSdkManager.instance().getUserId();
-        ReceiveListener receiveListener = new ReceiveListener() {
-            @Override
-            public void OnRec(PduBase pduBase) {
-                if (mContext == null || ((IMConnectionActivity) mContext).isFinishing()) {
-                    return;
-                }
-                Toast.makeText(mContext, "位置共享结束", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onError(int errCode) {
-            }
-        };
-        HuxinSdkManager.instance().endLocation(userId, targetPhone, receiveListener);
-    }
-    //*****************end
 
 }

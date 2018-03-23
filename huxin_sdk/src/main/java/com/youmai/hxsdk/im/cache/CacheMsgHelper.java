@@ -49,23 +49,6 @@ public class CacheMsgHelper {
     }
 
 
-    /**
-     * 添加或者更新 by msgId
-     */
-    public void insertOrUpdate(long msgId) {
-        CacheMsgBeanDao cacheMsgBeanDao = GreenDBIMManager.instance(mContext).getCacheMsgDao();
-        List<CacheMsgBean> list = cacheMsgBeanDao.queryBuilder()
-                .where(CacheMsgBeanDao.Properties.MsgId.eq(msgId))
-                .list();
-        if (list != null && list.size() == 1) {
-            CacheMsgBean item = list.get(0);
-            item.setRemindTime(0L);
-            if (item.getId() != null && item.getId() != -1L) {
-                cacheMsgBeanDao.update(item);
-            }
-        }
-    }
-
 
     /**
      * 添加或者更新

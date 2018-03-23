@@ -35,10 +35,7 @@ public class CacheMsgBeanDao extends AbstractDao<CacheMsgBean, Long> {
         public final static Property Send_flag = new Property(8, int.class, "send_flag", false, "SEND_FLAG");
         public final static Property IsRightUI = new Property(9, int.class, "isRightUI", false, "IS_RIGHT_UI");
         public final static Property Is_read = new Property(10, int.class, "is_read", false, "IS_READ");
-        public final static Property RemindTime = new Property(11, Long.class, "remindTime", false, "REMIND_TIME");
-        public final static Property Remind = new Property(12, String.class, "remind", false, "REMIND");
-        public final static Property RemindType = new Property(13, Integer.class, "remindType", false, "REMIND_TYPE");
-        public final static Property MsgId = new Property(14, Long.class, "msgId", false, "MSG_ID");
+        public final static Property MsgId = new Property(11, Long.class, "msgId", false, "MSG_ID");
     }
 
 
@@ -65,10 +62,7 @@ public class CacheMsgBeanDao extends AbstractDao<CacheMsgBean, Long> {
                 "\"SEND_FLAG\" INTEGER NOT NULL ," + // 8: send_flag
                 "\"IS_RIGHT_UI\" INTEGER NOT NULL ," + // 9: isRightUI
                 "\"IS_READ\" INTEGER NOT NULL ," + // 10: is_read
-                "\"REMIND_TIME\" INTEGER," + // 11: remindTime
-                "\"REMIND\" TEXT," + // 12: remind
-                "\"REMIND_TYPE\" INTEGER," + // 13: remindType
-                "\"MSG_ID\" INTEGER);"); // 14: msgId
+                "\"MSG_ID\" INTEGER);"); // 11: msgId
     }
 
     /** Drops the underlying database table. */
@@ -108,24 +102,9 @@ public class CacheMsgBeanDao extends AbstractDao<CacheMsgBean, Long> {
         stmt.bindLong(10, entity.getIsRightUI());
         stmt.bindLong(11, entity.getIs_read());
  
-        Long remindTime = entity.getRemindTime();
-        if (remindTime != null) {
-            stmt.bindLong(12, remindTime);
-        }
- 
-        String remind = entity.getRemind();
-        if (remind != null) {
-            stmt.bindString(13, remind);
-        }
- 
-        Integer remindType = entity.getRemindType();
-        if (remindType != null) {
-            stmt.bindLong(14, remindType);
-        }
- 
         Long msgId = entity.getMsgId();
         if (msgId != null) {
-            stmt.bindLong(15, msgId);
+            stmt.bindLong(12, msgId);
         }
     }
 
@@ -160,24 +139,9 @@ public class CacheMsgBeanDao extends AbstractDao<CacheMsgBean, Long> {
         stmt.bindLong(10, entity.getIsRightUI());
         stmt.bindLong(11, entity.getIs_read());
  
-        Long remindTime = entity.getRemindTime();
-        if (remindTime != null) {
-            stmt.bindLong(12, remindTime);
-        }
- 
-        String remind = entity.getRemind();
-        if (remind != null) {
-            stmt.bindString(13, remind);
-        }
- 
-        Integer remindType = entity.getRemindType();
-        if (remindType != null) {
-            stmt.bindLong(14, remindType);
-        }
- 
         Long msgId = entity.getMsgId();
         if (msgId != null) {
-            stmt.bindLong(15, msgId);
+            stmt.bindLong(12, msgId);
         }
     }
 
@@ -200,10 +164,7 @@ public class CacheMsgBeanDao extends AbstractDao<CacheMsgBean, Long> {
             cursor.getInt(offset + 8), // send_flag
             cursor.getInt(offset + 9), // isRightUI
             cursor.getInt(offset + 10), // is_read
-            cursor.isNull(offset + 11) ? null : cursor.getLong(offset + 11), // remindTime
-            cursor.isNull(offset + 12) ? null : cursor.getString(offset + 12), // remind
-            cursor.isNull(offset + 13) ? null : cursor.getInt(offset + 13), // remindType
-            cursor.isNull(offset + 14) ? null : cursor.getLong(offset + 14) // msgId
+            cursor.isNull(offset + 11) ? null : cursor.getLong(offset + 11) // msgId
         );
         return entity;
     }
@@ -221,10 +182,7 @@ public class CacheMsgBeanDao extends AbstractDao<CacheMsgBean, Long> {
         entity.setSend_flag(cursor.getInt(offset + 8));
         entity.setIsRightUI(cursor.getInt(offset + 9));
         entity.setIs_read(cursor.getInt(offset + 10));
-        entity.setRemindTime(cursor.isNull(offset + 11) ? null : cursor.getLong(offset + 11));
-        entity.setRemind(cursor.isNull(offset + 12) ? null : cursor.getString(offset + 12));
-        entity.setRemindType(cursor.isNull(offset + 13) ? null : cursor.getInt(offset + 13));
-        entity.setMsgId(cursor.isNull(offset + 14) ? null : cursor.getLong(offset + 14));
+        entity.setMsgId(cursor.isNull(offset + 11) ? null : cursor.getLong(offset + 11));
      }
     
     @Override

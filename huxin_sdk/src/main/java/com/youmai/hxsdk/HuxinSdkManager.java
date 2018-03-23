@@ -8,8 +8,6 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -20,11 +18,6 @@ import android.provider.ContactsContract;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.ContextThemeWrapper;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import com.google.protobuf.GeneratedMessage;
@@ -43,13 +36,10 @@ import com.youmai.hxsdk.config.FileConfig;
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
 import com.youmai.hxsdk.db.bean.ChatMsg;
 import com.youmai.hxsdk.db.dao.CacheMsgBeanDao;
-import com.youmai.hxsdk.db.dao.ChatMsgDao;
 import com.youmai.hxsdk.db.manager.GreenDBIMManager;
 import com.youmai.hxsdk.db.manager.GreenDbManager;
-import com.youmai.hxsdk.entity.EmoItem;
 import com.youmai.hxsdk.entity.FileToken;
 import com.youmai.hxsdk.entity.RespBaseBean;
-import com.youmai.hxsdk.entity.SoundModel;
 import com.youmai.hxsdk.entity.UploadFile;
 import com.youmai.hxsdk.http.IPostListener;
 import com.youmai.hxsdk.im.IMHelper;
@@ -88,17 +78,13 @@ import com.youmai.hxsdk.utils.FileUtils;
 import com.youmai.hxsdk.utils.GsonUtil;
 import com.youmai.hxsdk.utils.LogFile;
 import com.youmai.hxsdk.utils.LogUtils;
-import com.youmai.hxsdk.utils.PhoneNumTypes;
 import com.youmai.hxsdk.utils.SignUtils;
 import com.youmai.hxsdk.utils.StringUtils;
 import com.youmai.hxsdk.view.chat.utils.EmotionInit;
 
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.InetSocketAddress;
@@ -922,7 +908,7 @@ public class HuxinSdkManager {
      */
     public boolean sendText(int userId, String desPhone, String content, ReceiveListener callback) {
         String srcPhone = getPhoneNum();
-        String tarPhone = PhoneNumTypes.changePhone(desPhone, mContext);
+        String tarPhone = desPhone;
 
         IMChat_Personal.Builder builder = IMChat_Personal.newBuilder();
         builder.setSrcUsrId(userId);
@@ -960,7 +946,7 @@ public class HuxinSdkManager {
      */
     public boolean sendRemark(int userId, String desPhone, String content, ReceiveListener callback) {
         String srcPhone = getPhoneNum();
-        String tarPhone = PhoneNumTypes.changePhone(desPhone, mContext);
+        String tarPhone = desPhone;
 
         IMChat_Personal.Builder builder = IMChat_Personal.newBuilder();
         builder.setSrcUsrId(userId);
@@ -990,7 +976,7 @@ public class HuxinSdkManager {
      */
     public boolean sendBizcardText(int userId, String desPhone, String content, ReceiveListener callback) {
         String srcPhone = getPhoneNum();
-        String tarPhone = PhoneNumTypes.changePhone(desPhone, mContext);
+        String tarPhone = desPhone;
 
         IMChat_Personal.Builder builder = IMChat_Personal.newBuilder();
         builder.setSrcUsrId(userId);
@@ -1029,7 +1015,7 @@ public class HuxinSdkManager {
             return false;
         }
         String srcPhone = getPhoneNum();
-        String tarPhone = PhoneNumTypes.changePhone(desPhone, mContext);
+        String tarPhone = desPhone;
 
         IMChat_Personal.Builder builder = IMChat_Personal.newBuilder();
         builder.setSrcUsrId(userId);
@@ -1070,7 +1056,7 @@ public class HuxinSdkManager {
             return;
         }
         String srcPhone = getPhoneNum();
-        String tarPhone = PhoneNumTypes.changePhone(desPhone, mContext);
+        String tarPhone = desPhone;
 
         IMChat_Personal.Builder builder = IMChat_Personal.newBuilder();
         builder.setSrcUsrId(userId);
@@ -1105,7 +1091,7 @@ public class HuxinSdkManager {
             return;
         }
         String srcPhone = getPhoneNum();
-        String tarPhone = PhoneNumTypes.changePhone(desPhone, mContext);
+        String tarPhone = desPhone;
 
         IMChat_Personal.Builder builder = IMChat_Personal.newBuilder();
         builder.setSrcUsrId(userId);
@@ -1138,7 +1124,7 @@ public class HuxinSdkManager {
             return;
         }
         String srcPhone = getPhoneNum();
-        String tarPhone = PhoneNumTypes.changePhone(desPhone, mContext);
+        String tarPhone = desPhone;
 
         IMChat_Personal.Builder builder = IMChat_Personal.newBuilder();
         builder.setSrcUsrId(userId);
@@ -2223,108 +2209,6 @@ public class HuxinSdkManager {
     }
 
     /**
-     * 发送段子
-     *
-     * @param con
-     * @param dstPhone
-     * @param listener
-     */
-    public void sendJokesText(final String con, final String dstPhone, final IFileSendListener listener) {
-
-        final int userId = HuxinSdkManager.instance().getUserId();
-
-        final FileBean fileBean = new FileBean()
-                .setUserId(userId)
-                .setDstPhone(dstPhone)
-                .setTextContent(con);
-
-        final String content = CacheMsgJoke.JOKES + con;
-
-        final CacheMsgBean cacheMsgBean = new CacheMsgBean()
-                .setMsgTime(System.currentTimeMillis())
-                .setSend_flag(-1)
-                .setSenderPhone(HuxinSdkManager.instance().getPhoneNum())
-                .setSenderUserId(userId)
-                .setReceiverPhone(dstPhone)
-                .setMsgType(CacheMsgBean.MSG_TYPE_JOKE)
-                .setJsonBodyObj(new CacheMsgJoke().setMsgJoke(content))
-                .setRightUI(true);
-
-        if (null != listener) {
-            if (!CommonUtils.isNetworkAvailable(mContext)) {
-                listener.onImFail(ChatMsg.MsgType.JOKE_TEXT.ordinal(), fileBean);
-            }
-        }
-
-        //add to db
-        CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
-        IMMsgManager.getInstance().addCacheMsgBean(cacheMsgBean);
-
-        ReceiveListener callback = new ReceiveListener() {
-            @Override
-            public void OnRec(PduBase pduBase) {
-                final CacheMsgBean newMsgBean;
-                if (dstPhone.equals(HuxinSdkManager.instance().getPhoneNum())) {
-                    newMsgBean = HuxinSdkManager.instance().getCacheMsgFromDBById(cacheMsgBean.getId());
-                } else {
-                    newMsgBean = cacheMsgBean;
-                }
-                try {
-                    YouMaiChat.IMChat_Personal_Ack ack = YouMaiChat.IMChat_Personal_Ack.parseFrom(pduBase.body);
-                    long msgId = ack.getMsgId();
-                    newMsgBean.setMsgId(msgId);
-
-                    if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_OK) {
-                        if (ack.getIsTargetOnline()) {
-                            newMsgBean.setSend_flag(0);
-                            CacheMsgHelper.instance(mContext).insertOrUpdate(newMsgBean);
-
-                            if (null != listener) {
-                                listener.onImSuccess(ChatMsg.MsgType.JOKE_TEXT.ordinal(), fileBean);
-                            }
-                        } else {
-                            // TODO: 2017/1/5 推送消息    发送文本 ok
-                            HttpPushManager.pushMsgForText(mContext, userId, dstPhone, content, new HttpPushManager.PushListener() {
-                                @Override
-                                public void success(String msg) {
-                                    newMsgBean.setSend_flag(0);
-                                    CacheMsgHelper.instance(mContext).insertOrUpdate(newMsgBean);
-
-                                    if (null != listener) {
-                                        listener.onImSuccess(ChatMsg.MsgType.JOKE_TEXT.ordinal(), fileBean);
-                                    }
-                                }
-
-                                @Override
-                                public void fail(String msg) {
-                                    newMsgBean.setSend_flag(0);
-                                    LogUtils.e(TAG, "推送消息异常:" + msg);
-                                }
-                            });
-                        }
-                    } else if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_NOT_HUXIN_USER) {
-                        showNotHuxinUser(cacheMsgBean.getReceiverPhone(), SendSmsActivity.SEND_JOKES, msgId, con);
-                    } else if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_ERR_SESSIONID) {
-                        ProtocolCallBack sCallBack = RespBaseBean.getsCallBack();
-                        if (sCallBack != null) {
-                            sCallBack.sessionExpire();
-                        }
-                    } else {
-                        LogFile.inStance().toFile("ErrerNo:" + ack.getErrerNo());
-                        if (null != listener) {
-                            listener.onImFail(ChatMsg.MsgType.JOKE_TEXT.ordinal(), fileBean);
-                        }
-                    }
-                } catch (InvalidProtocolBufferException e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-
-        boolean res = HuxinSdkManager.instance().sendText(userId, dstPhone, content, callback);
-    }
-
-    /**
      * tcp发送图片
      *
      * @param userId
@@ -2335,7 +2219,7 @@ public class HuxinSdkManager {
      */
     public void sendPicture(int userId, String desPhone, String fileId, String quality, ReceiveListener callback) {
         String srcPhone = getPhoneNum();
-        String tarPhone = PhoneNumTypes.changePhone(desPhone, mContext);
+        String tarPhone = desPhone;
 
         IMChat_Personal.Builder builder = IMChat_Personal.newBuilder();
         builder.setSrcUsrId(userId);
@@ -2369,7 +2253,7 @@ public class HuxinSdkManager {
      */
     public boolean sendAudio(int userId, String desPhone, String fileId, String secondsTime, String sourcePhone, String forwardCount, ReceiveListener callback) {
         String srcPhone = getPhoneNum();
-        String tarPhone = PhoneNumTypes.changePhone(desPhone, mContext);
+        String tarPhone = desPhone;
 
         IMChat_Personal.Builder builder = IMChat_Personal.newBuilder();
         builder.setSrcUsrId(userId);
@@ -2411,7 +2295,7 @@ public class HuxinSdkManager {
         imContentUtil.addVideo(fileId, frameId, name, size, time);//body的内容
 
         String srcPhone = getPhoneNum();
-        String tarPhone = PhoneNumTypes.changePhone(desPhone, mContext);
+        String tarPhone = desPhone;
 
         IMChat_Personal.Builder builder = IMChat_Personal.newBuilder();
         builder.setSrcUsrId(userId);
@@ -2442,7 +2326,7 @@ public class HuxinSdkManager {
     public boolean sendBigFile(int userId, String desPhone, String fileId,
                                String fileName, String fileSize, ReceiveListener callback) {
         String srcPhone = getPhoneNum();
-        String tarPhone = PhoneNumTypes.changePhone(desPhone, mContext);
+        String tarPhone = desPhone;
 
         IMChat_Personal.Builder builder = IMChat_Personal.newBuilder();
         builder.setSrcUsrId(userId);
@@ -2480,7 +2364,7 @@ public class HuxinSdkManager {
     public boolean sendUrl(int userId, String desPhone, String url, String title,
                            String description, ReceiveListener callback) {
         String srcPhone = getPhoneNum();
-        String tarPhone = PhoneNumTypes.changePhone(desPhone, mContext);
+        String tarPhone = desPhone;
 
         IMChat_Personal.Builder builder = IMChat_Personal.newBuilder();
         builder.setSrcUsrId(userId);
@@ -2505,20 +2389,6 @@ public class HuxinSdkManager {
     }
 
     /**
-     * 获取发送给desPhone的所有消息缓存
-     * 输入用户号码，返回缓存的用户聊天信息
-     *
-     * @param desPhone
-     * @return
-     */
-    public List<ChatMsg> getChatMsgFromCache(String desPhone) {
-        //读数据库数据
-        ChatMsgDao chatMsg = GreenDbManager.instance(mContext).getChatMsgDao();
-        List<ChatMsg> list = chatMsg.queryRaw("where targetPhone = ?", desPhone);
-        return list;
-    }
-
-    /**
      * 获取消息总数.
      *
      * @param desPhone
@@ -2528,19 +2398,6 @@ public class HuxinSdkManager {
         return CacheMsgHelper.instance(mContext).queryRaw("where targetPhone = ?", new String[]{desPhone}).size();
     }
 
-    /**
-     * 获取消息
-     *
-     * @param desPhone
-     * @return
-     */
-    public List<ChatMsg> getChatMsgFromcacheDesc(String desPhone) {
-        ChatMsgDao chatMsgDao = GreenDbManager.instance(mContext).getChatMsgDao();
-        List<ChatMsg> list = chatMsgDao.queryBuilder().where(
-                ChatMsgDao.Properties.TargetPhone.eq(desPhone))
-                .orderDesc(ChatMsgDao.Properties.MsgTime).list();
-        return list;
-    }
 
     /**
      * 获取消息总数.

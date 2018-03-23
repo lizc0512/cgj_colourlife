@@ -2,7 +2,6 @@ package com.youmai.hxsdk.db.manager;
 
 import android.content.Context;
 
-import com.youmai.hxsdk.db.dao.ChatMsgDao;
 import com.youmai.hxsdk.db.dao.DaoMaster;
 import com.youmai.hxsdk.db.dao.DaoSession;
 import com.youmai.hxsdk.db.helper.HMROpenHelper;
@@ -66,10 +65,6 @@ public class GreenDbManager {
     public void setDaoSession(DaoSession mDaoSession) {
         this.mDaoSession = mDaoSession;
         initDBDao();
-    }
-    public ChatMsgDao getChatMsgDao() {
-        initDBDao();
-        return mDaoSession.getChatMsgDao();
     }
 
 }

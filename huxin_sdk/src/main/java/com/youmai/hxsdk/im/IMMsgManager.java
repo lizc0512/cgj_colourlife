@@ -29,9 +29,7 @@ import com.youmai.hxsdk.im.cache.CacheMsgEmotion;
 import com.youmai.hxsdk.im.cache.CacheMsgFile;
 import com.youmai.hxsdk.im.cache.CacheMsgHelper;
 import com.youmai.hxsdk.im.cache.CacheMsgImage;
-import com.youmai.hxsdk.im.cache.CacheMsgLShare;
 import com.youmai.hxsdk.im.cache.CacheMsgMap;
-import com.youmai.hxsdk.im.cache.CacheMsgRemark;
 import com.youmai.hxsdk.im.cache.CacheMsgTxt;
 import com.youmai.hxsdk.im.cache.CacheMsgVideo;
 import com.youmai.hxsdk.im.cache.CacheMsgVoice;
@@ -86,24 +84,6 @@ public class IMMsgManager {
 
     private String targetPhone;
 
-    //driving mode
-    private List<CacheMsgBean> mDrivingModeMsgBeanList = new ArrayList<>();
-    private List<CacheMsgBean> mDrivingModeMixMsgBeanList = new ArrayList<>();
-
-    private AnswerOrReject mAnswerOrRejectListener, mRefreshListener;
-    private IReceiveStartListener mReceiveListener;
-
-    public void setOnAnswerOrRejectListener(IAnswerOrRejectListener listener) {
-        mAnswerOrRejectListener = (AnswerOrReject) listener;
-    }
-
-    public void setReceiveListener(IReceiveStartListener listener) {
-        mReceiveListener = listener;
-    }
-
-    public void setOnRefreshListener(IAnswerOrRejectListener listener) {
-        mRefreshListener = (AnswerOrReject) listener;
-    }
 
     private IMMsgManager() {
         cacheMsgBeanList = new ArrayList<>();
@@ -502,49 +482,6 @@ public class IMMsgManager {
             //add to db
             CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
             cacheMsgBeanList.add(cacheMsgBean);
-        } else if (msg.getMsgType() == ChatMsg.MsgType.LOCATION_INVITE
-                || msg.getMsgType() == ChatMsg.MsgType.LOCATION_ANSWER
-                || msg.getMsgType() == ChatMsg.MsgType.LOCATION_QUIT) { //定位
-
-            BeginLocation msgContent = msg.getMsgContent().getBeginLocation();
-
-            if (msg.getMsgType() == ChatMsg.MsgType.LOCATION_INVITE) {
-                cacheMsgBean.setMsgType(CacheMsgBean.MSG_TYPE_LOCATION_SHARE)
-                        .setJsonBodyObj(new CacheMsgLShare()
-                                .setEndOver(false)
-                                .setAnswerOrReject(false)
-                                .setLatitude(msgContent.getLatitudeStr())
-                                .setLongitude(msgContent.getLongitudeStr())
-                                .setReceivePhone(msg.getTargetPhone())
-                                .setReceiveUserId(msg.getTargetUserId()));
-
-                CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
-                cacheMsgBeanList.add(cacheMsgBean);
-                if (mReceiveListener != null) {
-                    mReceiveListener.onStartLShare(cacheMsgBean);
-                }
-
-                mLShareList.add(cacheMsgBean);
-
-            } else if (msg.getMsgType() == ChatMsg.MsgType.LOCATION_ANSWER) { //主动发送不走这里
-                if (mAnswerOrRejectListener != null) {
-                    mAnswerOrRejectListener.onAnswerOrReject(true, msgContent.getLocation(), msg.getSrcUsrId());
-                }
-            } else if (msg.getMsgType() == ChatMsg.MsgType.LOCATION_QUIT) {
-                if (mAnswerOrRejectListener != null) {
-                    mAnswerOrRejectListener.onQuit();
-                }
-                if (mRefreshListener != null) {
-                    mRefreshListener.onQuit();
-                }
-
-                for (CacheMsgBean bean : mLShareList) {
-                    if (bean.getSenderPhone().equals(msg.getSrcPhone())) {
-                        mLShareList.remove(bean);
-                        break;
-                    }
-                }
-            }
         } else if (msg.getMsgType() == ChatMsg.MsgType.AUDIO) { //音频
 
             String fid = msg.getMsgContent().getAudio().getAudioId();
@@ -594,15 +531,6 @@ public class IMMsgManager {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        } else if (msg.getMsgType() == ChatMsg.MsgType.REMARK) {
-            ContentText text = msg.getMsgContent().getText();
-            String cardStr = text.getContent();
-            CacheMsgRemark cacheMsgRemark = new CacheMsgRemark().fromJson(cardStr);
-            cacheMsgBean.setMsgType(CacheMsgBean.MSG_TYPE_REMARK).setJsonBodyObj(cacheMsgRemark);
-            //add to db
-            CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
-            cacheMsgBeanList.add(cacheMsgBean);
-
         } else if (msg.getMsgType() == ChatMsg.MsgType.VIDEO) {//视频
             ContentVideo contentVideo = msg.getMsgContent().getVideo();//获取解析jsonBoby的内容
             long time;

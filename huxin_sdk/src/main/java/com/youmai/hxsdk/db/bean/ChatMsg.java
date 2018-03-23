@@ -125,7 +125,6 @@ public class ChatMsg implements Parcelable {
 
         jsonBoby = imchat.getBody();
 
-        msgContent = new MsgContent(msgType, jsonBoby);
     }
 
 
@@ -145,7 +144,6 @@ public class ChatMsg implements Parcelable {
 
         contentType = IMContentUtil.getContentType(typeInt, YouMaiChat.IM_CONTENT_TYPE.IM_CONTENT_TYPE_LOCATION_VALUE);
         msgType = parseMsgType(contentType);
-        msgContent = new MsgContent(msgType, jsonBoby);
     }
 
     protected ChatMsg(Parcel in) {

@@ -4,7 +4,6 @@ import android.content.Context;
 
 import com.youmai.hxsdk.db.dao.CacheMsgBeanDao;
 import com.youmai.hxsdk.db.dao.DaoMaster;
-import com.youmai.hxsdk.db.manager.GreenDbManager;
 
 import org.greenrobot.greendao.database.Database;
 

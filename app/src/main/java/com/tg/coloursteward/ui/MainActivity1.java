@@ -1,6 +1,5 @@
 package com.tg.coloursteward.ui;
 
-import android.app.Application;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -15,6 +14,7 @@ import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.fragment.FragmentManagement;
 import com.tg.coloursteward.fragment.FragmentMine;
+import com.tg.coloursteward.meassage.MsgListFragment;
 import com.youmai.hxsdk.BuildConfig;
 import com.youmai.hxsdk.contact.ContactFragment;
 import com.youmai.hxsdk.router.RouterPath;
@@ -128,7 +128,7 @@ public class MainActivity1 extends AppCompatActivity {
             Fragment ft = null;
             switch (arg0) {
                 case 0:
-                    ft = SignCountFragment.newInstance("title1");
+                    ft = new MsgListFragment();
                     break;
                 case 1:
                     ft = (Fragment) ARouter.getInstance().build(RouterPath.CONTACT_GROUP).navigation();

@@ -40,4 +40,12 @@ public class CityBean extends BaseIndexPinyinBean {
     public String getTarget() {
         return city;
     }
+
+    @Override
+    public String toString() {
+        return "CityBean{" +
+                "Province='" + Province + '\'' +
+                ", city='" + city + '\'' +
+                '}';
+    }
 }

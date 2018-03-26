@@ -80,6 +80,13 @@ android {
 
 }
 
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+    google()
+}
+
 dependencies {
     implementation fileTree(include: '*.jar', dir: 'libs')
     implementation project(':huxin_sdk')
@@ -95,6 +102,8 @@ dependencies {
     implementation "com.android.support:design:${SUPPORT_VERSION}"
     implementation "com.android.support:support-v13:${SUPPORT_VERSION}"
     implementation "com.android.support:exifinterface:${SUPPORT_VERSION}"
+
+    implementation(name: 'xrecyclerview-release', ext: 'aar')
 
     annotationProcessor 'com.alibaba:arouter-compiler:1.1.4'
 }

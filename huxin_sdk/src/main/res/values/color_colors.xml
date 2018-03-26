@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--联系人letter-->
+    <color name="letter_partTranslucent">#39000000</color>
+
+    <!--新版UI新增-->
+    <color name="hxb_line_color">#e6e6e6</color>
+    <color name="hxb_subtitle_color">#999999</color>
+    <color name="hxb_text_color">#4a4a4a</color>
+
+</resources>

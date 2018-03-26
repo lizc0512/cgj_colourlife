@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,9 +23,11 @@ import com.youmai.hxsdk.router.RouterPath;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observer;
+import java.util.Observable;
 
 @Route(path = RouterPath.CONTACT_GROUP)
-public class ContactFragment extends Fragment {
+public class ContactFragment extends Fragment implements Observer {
 
     public final static String TAG = ContactFragment.class.getSimpleName();
 
@@ -46,6 +49,7 @@ public class ContactFragment extends Fragment {
     private TextView mTvSideBarHint;
 
     private Context mContext;
+    ContactsBindData bindData;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -94,6 +98,15 @@ public class ContactFragment extends Fragment {
                 updateDatas(null);
             }
         });
+
+        bindData = ContactsBindData.init();
+        bindData.addObserver(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        bindData.deleteObserver(this);
     }
 
     /**
@@ -122,10 +135,17 @@ public class ContactFragment extends Fragment {
      * @param view
      */
     public void updateDatas(View view) {
-        for (int i = 0; i < 999; i++) {
+        for (int i = 0; i < 99; i++) {
             mDatas.add(new CityBean("东京"));
             mDatas.add(new CityBean("泰山"));
         }
+        bindData.initData(mDatas);
+    }
+
+    @Override
+    public void update(Observable o, Object data) {
+        Log.e(TAG, "Observer" + data.toString());
+        System.out.println("Observer" + data.toString());
         mAdapter.notifyDataSetChanged();
         mLetterBar.setSourceData(mDatas);
     }

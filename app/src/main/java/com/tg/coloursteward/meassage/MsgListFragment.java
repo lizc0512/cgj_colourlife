@@ -445,7 +445,10 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
         }
     }
 
-
+    /**
+     * IM消息的入口回调
+     * @param imcomingMsg
+     */
     @Override
     public void onCallback(CacheMsgBean imcomingMsg) {
         if (imcomingMsg != null & mIncomingMsgList != null) {
@@ -467,7 +470,6 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
                 mRefreshRecyclerView.setVisibility(View.VISIBLE);
             }
             mEmptyView.setVisibility(View.GONE);
-
         }
     }
 
@@ -541,7 +543,9 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
         Log.d(TAG, "onLoaderReset");
     }
 
-
+    /**
+     * 异步监听新消息的更新 - HandlerThread
+     */
     private void startIncomingMessageProcess() {
         mIncomingMessageHandlerThread = new HandlerThread("MsgListFragmentImcomingMsg");
         mIncomingMessageHandlerThread.start();

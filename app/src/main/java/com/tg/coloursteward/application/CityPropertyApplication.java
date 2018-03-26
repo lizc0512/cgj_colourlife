@@ -13,6 +13,7 @@ import android.util.Log;
 
 import cn.jpush.android.api.JPushInterface;
 
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -24,26 +25,33 @@ import com.tg.coloursteward.log.Logger;
 import com.tg.coloursteward.net.ResponseData;
 import com.tg.coloursteward.util.Tools;
 import com.tencent.smtt.sdk.QbSdk;
+import com.youmai.hxsdk.BuildConfig;
 import com.youmai.hxsdk.HuxinSdkManager;
 
-public class CityPropertyApplication extends Application{
-	private List<Activity> mList = new LinkedList<Activity>();
-	private static CityPropertyApplication instance;
-	@Override
-	public void onCreate() {
-		// TODO Auto-generated method stub
-		super.onCreate();
-		HuxinSdkManager.instance().init(this);
-		instance = this;
-		JPushInterface.setDebugMode(true); 	// 设置开启日志,发布时请关闭日志
-       	JPushInterface.init(this);     		// 初始化 JPush
+public class CityPropertyApplication extends Application {
+    private List<Activity> mList = new LinkedList<Activity>();
+    private static CityPropertyApplication instance;
+
+    @Override
+    public void onCreate() {
+        //保证在application对ARouter初始化
+        if (BuildConfig.DEBUG) {    // 这两行必须写在init之前，否则这些配置在init过程中将无效
+            ARouter.openLog();      // 打印日志
+            ARouter.openDebug();    // 开启调试模式(如果在InstantRun模式下运行，必须开启调试模式！线上版本需要关闭,否则有安全风险)
+        }
+        ARouter.init(this); // 尽可能早，推荐在Application中初始化
+        super.onCreate();
+        HuxinSdkManager.instance().init(this);
+        instance = this;
+        JPushInterface.setDebugMode(true);    // 设置开启日志,发布时请关闭日志
+        JPushInterface.init(this);            // 初始化 JPush
         JPushInterface.setLatestNotificationNumber(this, 5);
-		Logger.logd("WisdomParkApplication onCreate");
-		Tools.mContext = getApplicationContext();
-		Tools.userHeadSize = getResources().getDimensionPixelSize(R.dimen.margin_80);
-		ResponseData data = SharedPreferencesTools.getUserInfo(Tools.mContext);
-		Tools.loadUserInfo(data, null);
-		initImageLoader(getApplicationContext());
+        Logger.logd("WisdomParkApplication onCreate");
+        Tools.mContext = getApplicationContext();
+        Tools.userHeadSize = getResources().getDimensionPixelSize(R.dimen.margin_80);
+        ResponseData data = SharedPreferencesTools.getUserInfo(Tools.mContext);
+        Tools.loadUserInfo(data, null);
+        initImageLoader(getApplicationContext());
         QbSdk.PreInitCallback cb = new QbSdk.PreInitCallback() {
 
             @Override
@@ -59,10 +67,10 @@ public class CityPropertyApplication extends Application{
             }
         };
         //x5内核初始化接口
-        QbSdk.initX5Environment(getApplicationContext(),  cb);
-	}
-	public static void initImageLoader(Context context)
-    {
+        QbSdk.initX5Environment(getApplicationContext(), cb);
+    }
+
+    public static void initImageLoader(Context context) {
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(
                 context).threadPriority(Thread.NORM_PRIORITY - 2)
                 .denyCacheImageMultipleSizesInMemory()
@@ -72,95 +80,98 @@ public class CityPropertyApplication extends Application{
         // Initialize ImageLoader with configuration.
         ImageLoader.getInstance().init(config);
     }
-	 public static CityPropertyApplication getInstance() {
 
-         if (instance == null)
-             instance = new CityPropertyApplication();
+    public static CityPropertyApplication getInstance() {
 
-         return instance;
-     }
-	public void exit() {
+        if (instance == null)
+            instance = new CityPropertyApplication();
+
+        return instance;
+    }
+
+    public void exit() {
         try {
             for (Activity activity : mList) {
-                if (activity != null){
-                	activity.finish();
+                if (activity != null) {
+                    activity.finish();
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-        	mList.clear();
+            mList.clear();
             System.exit(0);
         }
     }
 
-	 public static Activity getCurrentActivity(Context context){
-		 CityPropertyApplication application = (CityPropertyApplication)context.getApplicationContext();
-		 return application.currentActivity();
-	 }
+    public static Activity getCurrentActivity(Context context) {
+        CityPropertyApplication application = (CityPropertyApplication) context.getApplicationContext();
+        return application.currentActivity();
+    }
 
-	 public static void gotoLoginActivity(Activity activity){
-		 CityPropertyApplication application = (CityPropertyApplication)activity.getApplication();
-		 application.goLoginActivity(activity);
-	 }
+    public static void gotoLoginActivity(Activity activity) {
+        CityPropertyApplication application = (CityPropertyApplication) activity.getApplication();
+        application.goLoginActivity(activity);
+    }
 
-	 public Activity currentActivity(){
-		 if(mList.size() == 0){
-			 return null;
-		 }
-		 return mList.get(mList.size() -1);
-	 }
+    public Activity currentActivity() {
+        if (mList.size() == 0) {
+            return null;
+        }
+        return mList.get(mList.size() - 1);
+    }
 
-	 public void add(Activity activity) {
-	     mList.add(activity);
-	 }
+    public void add(Activity activity) {
+        mList.add(activity);
+    }
 
-	 public void remove(Activity activity){
-		 mList.remove(activity);
-	 }
+    public void remove(Activity activity) {
+        mList.remove(activity);
+    }
 
-	 private void finishOtherActivity(Class<? extends Activity> clazs){
-		 Activity activity;
-		 for (int i = 0 ;i < mList.size(); i ++) {
-			 activity = mList.get(i);
-             if (activity != null){
-            	 if(i == mList.size() - 1 && activity.getClass() == clazs){
-            	 }else{
-            		 activity.finish();
-            	 }
-             }
-         }
-	 }
+    private void finishOtherActivity(Class<? extends Activity> clazs) {
+        Activity activity;
+        for (int i = 0; i < mList.size(); i++) {
+            activity = mList.get(i);
+            if (activity != null) {
+                if (i == mList.size() - 1 && activity.getClass() == clazs) {
+                } else {
+                    activity.finish();
+                }
+            }
+        }
+    }
 
-	 public void goLoginActivity(Activity activity){
-		 activity.startActivity(new Intent(activity,LoginActivity.class));
-		 finishOtherActivity(LoginActivity.class);
-	 }
-	 public void onLowMemory() {
-	     super.onLowMemory();
-	     System.gc();
-	 }
+    public void goLoginActivity(Activity activity) {
+        activity.startActivity(new Intent(activity, LoginActivity.class));
+        finishOtherActivity(LoginActivity.class);
+    }
 
-	 public static void addActivity(Activity activity){
-		 CityPropertyApplication application = (CityPropertyApplication)activity.getApplication();
-		 application.add(activity);
-	 }
+    public void onLowMemory() {
+        super.onLowMemory();
+        System.gc();
+    }
 
-	 public static void removeActivity(Activity activity){
-		 CityPropertyApplication application = (CityPropertyApplication)activity.getApplication();
-		 application.remove(activity);
-	 }
+    public static void addActivity(Activity activity) {
+        CityPropertyApplication application = (CityPropertyApplication) activity.getApplication();
+        application.add(activity);
+    }
 
-	 public static void exitApp(Context context){
-		 CityPropertyApplication application = (CityPropertyApplication)context.getApplicationContext();
-		 application.exit();
-	 }
-	@Override
-	protected void attachBaseContext(Context base)
-	{
-		super.attachBaseContext(base);
-		MultiDex.install(base); //解决差分包的问题
-	}
+    public static void removeActivity(Activity activity) {
+        CityPropertyApplication application = (CityPropertyApplication) activity.getApplication();
+        application.remove(activity);
+    }
+
+    public static void exitApp(Context context) {
+        CityPropertyApplication application = (CityPropertyApplication) context.getApplicationContext();
+        application.exit();
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(base); //解决差分包的问题
+    }
 
 }
 

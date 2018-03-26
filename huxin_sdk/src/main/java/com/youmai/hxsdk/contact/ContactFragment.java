@@ -12,16 +12,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.contact.letter.widget.LetterBar;
 import com.youmai.hxsdk.contact.letter.decoration.DividerItemDecoration;
 import com.youmai.hxsdk.contact.letter.decoration.TitleItemDecoration;
 import com.youmai.hxsdk.contact.letter.widget.LetterBarBuilder;
+import com.youmai.hxsdk.router.RouterPath;
 
 import java.util.ArrayList;
 import java.util.List;
 
-
+@Route(path = RouterPath.CONTACT_GROUP)
 public class ContactFragment extends Fragment {
 
     public final static String TAG = ContactFragment.class.getSimpleName();

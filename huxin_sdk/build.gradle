@@ -30,10 +30,13 @@ dependencies {
     implementation "com.android.support:design:${SUPPORT_VERSION}"
     implementation "com.android.support:recyclerview-v7:${SUPPORT_VERSION}"
     implementation "com.android.support:cardview-v7:${SUPPORT_VERSION}"
+
+    api 'com.alibaba:arouter-api:1.3.1'
+    annotationProcessor 'com.alibaba:arouter-compiler:1.1.4'
 }
 
 greendao {
-    schemaVersion 16
+    schemaVersion 1
     daoPackage 'com.youmai.hxsdk.db.dao'
     targetGenDir 'src/main/java'
 }
@@ -55,6 +58,12 @@ android {
         // Enabling multidex support.
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = [moduleName: project.getName()]
+            }
+        }
     }
 
 

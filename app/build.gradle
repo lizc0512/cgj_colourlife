@@ -17,6 +17,12 @@ android {
         ndk {
             abiFilters "armeabi", "armeabi-v7a", "x86", "mips"
         }
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = [moduleName: project.getName()]
+            }
+        }
     }
 
     signingConfigs {
@@ -89,4 +95,6 @@ dependencies {
     implementation "com.android.support:design:${SUPPORT_VERSION}"
     implementation "com.android.support:support-v13:${SUPPORT_VERSION}"
     implementation "com.android.support:exifinterface:${SUPPORT_VERSION}"
+
+    annotationProcessor 'com.alibaba:arouter-compiler:1.1.4'
 }

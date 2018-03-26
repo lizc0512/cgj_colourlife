@@ -138,7 +138,7 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
         WeakReference<MsgListFragment> weakReference;
 
         public MsgHandler(MsgListFragment fragment) {
-            new WeakReference<>(fragment);
+            weakReference = new WeakReference<>(fragment);
         }
 
         @Override

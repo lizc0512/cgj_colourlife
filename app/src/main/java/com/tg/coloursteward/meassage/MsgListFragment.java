@@ -176,12 +176,13 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
                     HuxinSdkManager.instance().imReconnect();
                 }
                 break;
-                case LOAD_PROGRESS_DISMISS:
+                case LOAD_PROGRESS_DISMISS: {
                     if (fragment.mProgressDialog != null) {
                         fragment.mProgressDialog.dismiss();
                         fragment.mProgressDialog = null;
                     }
-                    break;
+                }
+                break;
             }
         }
     }
@@ -475,7 +476,7 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         isTipWindowShow = isVisibleToUser;
-        if(isVisibleToUser){
+        if (isVisibleToUser) {
 //            if (messageList.size()<8) {
 //                initMessageList();
 //            }

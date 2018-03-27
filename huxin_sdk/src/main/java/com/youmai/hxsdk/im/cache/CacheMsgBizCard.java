@@ -27,6 +27,15 @@ public class CacheMsgBizCard implements Parcelable, JsonFormate<CacheMsgBizCard>
     public CacheMsgBizCard() {
     }
 
+    public String getPhone() {
+        return phone;
+    }
+
+    public CacheMsgBizCard setPhone(String phone) {
+        this.phone = phone;
+        return this;
+    }
+
     protected CacheMsgBizCard(Parcel in) {
         name = in.readString();
         phone = in.readString();
@@ -70,5 +79,12 @@ public class CacheMsgBizCard implements Parcelable, JsonFormate<CacheMsgBizCard>
             e.printStackTrace();
         }
         return this;
+    }
+
+    @Override
+    public JsonFormate cloneProto(JsonFormate body) {
+        CacheMsgBizCard cacheMsgBizCard = (CacheMsgBizCard) body;
+        cacheMsgBizCard.setName(name);
+        return cacheMsgBizCard;
     }
 }

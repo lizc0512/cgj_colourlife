@@ -210,4 +210,21 @@ public class CacheMsgShow implements Parcelable, JsonFormate<CacheMsgShow> {
             return new CacheMsgShow[size];
         }
     };
+
+    @Override
+    public JsonFormate cloneProto(JsonFormate body) {
+        CacheMsgShow cacheMsgShow = (CacheMsgShow) body;
+        cacheMsgShow.setFid(fid)
+                .setVersion(version)
+                .setMsisdn(msisdn)
+                .setMphone(mphone)
+                .setPfid(pfid)
+                .setTitle(title)
+                .setVtime(vtime)
+                .setDetailurl(detailurl)
+                .setType(type)
+                .setName(name)
+                .setFile_type(file_type);
+        return cacheMsgShow;
+    }
 }

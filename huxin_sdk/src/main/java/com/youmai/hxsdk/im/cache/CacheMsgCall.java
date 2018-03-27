@@ -81,4 +81,12 @@ public class CacheMsgCall implements Parcelable, JsonFormate<CacheMsgCall> {
         }
         return this;
     }
+
+    @Override
+    public JsonFormate cloneProto(JsonFormate body) {
+        CacheMsgCall cacheMsgCall = (CacheMsgCall) body;
+        cacheMsgCall.setDuration(duration)
+                .setType(type);
+        return cacheMsgCall;
+    }
 }

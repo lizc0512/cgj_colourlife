@@ -131,8 +131,9 @@ public class CacheMsgVoice implements Parcelable, JsonFormate<CacheMsgVoice> {
         return voiceText;
     }
 
-    public void setVoiceText(String voiceText) {
+    public CacheMsgVoice setVoiceText(String voiceText) {
         this.voiceText = voiceText;
+        return this;
     }
 
     public String getVoiceUrl() {
@@ -186,5 +187,16 @@ public class CacheMsgVoice implements Parcelable, JsonFormate<CacheMsgVoice> {
         return this;
     }
 
-
+    @Override
+    public JsonFormate cloneProto(JsonFormate body) {
+        CacheMsgVoice cacheMsgVoice = (CacheMsgVoice) body;
+        cacheMsgVoice.setVoiceUrl(voiceUrl)
+                .setVoicePath(voicePath)
+                .setVoiceTime(voiceTime)
+                .setFid(fid)
+                .setHasLoad(hasLoad)
+                .setVoiceText(voiceText)
+                .setShowText(showText);
+        return cacheMsgVoice;
+    }
 }

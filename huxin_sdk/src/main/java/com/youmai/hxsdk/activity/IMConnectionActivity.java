@@ -52,6 +52,7 @@ import com.youmai.hxsdk.im.cache.CacheMsgEmotion;
 import com.youmai.hxsdk.im.cache.CacheMsgFile;
 import com.youmai.hxsdk.im.cache.CacheMsgHelper;
 import com.youmai.hxsdk.im.cache.CacheMsgImage;
+import com.youmai.hxsdk.im.cache.CacheMsgLShare;
 import com.youmai.hxsdk.im.cache.CacheMsgMap;
 import com.youmai.hxsdk.im.cache.CacheMsgTxt;
 import com.youmai.hxsdk.im.cache.CacheMsgVideo;
@@ -162,7 +163,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
                 for (int i = 0; i < size; i++) {
                     CacheMsgBean oriMsgBean = cacheMsgBeanList.get(i);
                     if (cacheMsgBean.getId().equals(oriMsgBean.getId())) {
-                        CacheMsgImage cacheImage = (CacheMsgImage) oriMsgBean.getJsonBodyObj();
+                        CacheMsgImage cacheImage = (CacheMsgImage) oriMsgBean.getJsonBodyObj(new CacheMsgImage());
                         cacheImage.setOriginalType(CacheMsgImage.SEND_IS_ORI_RECV_IS_ORI);
                         oriMsgBean.setJsonBodyObj(cacheImage);
 
@@ -1017,12 +1018,11 @@ public class IMConnectionActivity extends SdkBaseActivity implements
     private void refreshFinishVideo(FileQueue fileQueue) {
         long mid = fileQueue.getMid();
         CacheMsgBean cacheMsgBean = CacheMsgHelper.instance(this).queryByID(mid);
-        if (cacheMsgBean.getJsonBodyObj() instanceof CacheMsgVideo) {
-            CacheMsgVideo cacheMsgVideo = (CacheMsgVideo) cacheMsgBean.getJsonBodyObj();
-            cacheMsgVideo.setProgress(fileQueue.getPro());
-            cacheMsgBean.setJsonBodyObj(cacheMsgVideo);
-            imListAdapter.refreshItemUI(cacheMsgBean);
-        }
+        CacheMsgVideo cacheMsgVideo = (CacheMsgVideo) cacheMsgBean.getJsonBodyObj(new CacheMsgVideo());
+        cacheMsgVideo.setProgress(fileQueue.getPro());
+        cacheMsgBean.setJsonBodyObj(cacheMsgVideo);
+        imListAdapter.refreshItemUI(cacheMsgBean);
+
     }
 
 

@@ -114,4 +114,14 @@ public class CacheMsgRemark implements Parcelable, JsonFormate<CacheMsgRemark> {
                 ", type=" + type +
                 '}';
     }
+
+    @Override
+    public JsonFormate cloneProto(JsonFormate body) {
+        CacheMsgRemark cacheMsgRemark = (CacheMsgRemark) body;
+        cacheMsgRemark.setRemark(remark)
+                .setTheme(theme)
+                .setTimestamp(timestamp)
+                .setType(type);
+        return cacheMsgRemark;
+    }
 }

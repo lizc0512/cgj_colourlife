@@ -101,4 +101,13 @@ public class CacheMsgImage implements Parcelable, JsonFormate<CacheMsgImage> {
             return new CacheMsgImage[size];
         }
     };
+
+    @Override
+    public JsonFormate cloneProto(JsonFormate body) {
+        CacheMsgImage cacheMsgImage = (CacheMsgImage) body;
+        cacheMsgImage.setFid(fid)
+                .setFilePath(filePath)
+                .setOriginalType(originalType);
+        return cacheMsgImage;
+    }
 }

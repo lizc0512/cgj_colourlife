@@ -84,8 +84,9 @@ public class CacheMsgTxt implements Parcelable, JsonFormate<CacheMsgTxt> {
         return voiceId;
     }
 
-    public void setVoiceId(String voiceId) {
+    public CacheMsgTxt setVoiceId(String voiceId) {
         this.voiceId = voiceId;
+        return this;
     }
 
     public String getVoicePath() {
@@ -94,5 +95,14 @@ public class CacheMsgTxt implements Parcelable, JsonFormate<CacheMsgTxt> {
 
     public void setVoicePath(String voicePath) {
         this.voicePath = voicePath;
+    }
+
+    @Override
+    public JsonFormate cloneProto(JsonFormate body) {
+        CacheMsgTxt cacheMsgTxt = (CacheMsgTxt) body;
+        cacheMsgTxt.setMsgTxt(msgTxt)
+                .setVoiceId(voiceId)
+                .setVoicePath(voicePath);
+        return cacheMsgTxt;
     }
 }

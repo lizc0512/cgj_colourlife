@@ -48,6 +48,9 @@ public class CacheMsgBean implements Parcelable {
     public static final int SEND_EMOTION = 13;
     public static final int RECEIVE_EMOTION = 14;
 
+    public static final int SEND_JOKE = 15;
+    public static final int RECEIVE_JOKE = 16;
+
     public static final int SEND_DRAFT = 0;      //草稿
     public static final int SEND_GOING = 1;//正在发送
     public static final int SEND_SUCCEED = 2;    //发送成功
@@ -64,6 +67,10 @@ public class CacheMsgBean implements Parcelable {
 //    public static final int MSG_TYPE_VOICE = 6; //声音
 //    public static final int MSG_TYPE_FILE = 7; //文件
 //    public static final int MSG_TYPE_CALL = 9; //通话
+//    public static final int MSG_TYPE_BIZCARD = 10; //名片
+//    public static final int MSG_TYPE_REMARK = 11; //备注
+//    public static final int MSG_TYPE_JOKE = 12; //段子
+//    public static final int MSG_TYPE_LOCATION_SHARE = 13; //位置邀请 位置应答 位置结束
 
 //    public static final int MSG_READ_STATUS = 1; //已读
 //    public static final int MSG_UNREAD_STATUS = 0; //未读
@@ -191,6 +198,12 @@ public class CacheMsgBean implements Parcelable {
     public CacheMsgBean setMsgId(Long msgId) {
         this.msgId = msgId;
         return this;
+    }
+
+    public JsonFormate getJsonBodyObj(JsonFormate jsonBodyObj) {
+        jsonBodyObj.fromJson(contentJsonBody);
+        jsonBodyObj = jsonBodyObj.cloneProto(jsonBodyObj);
+        return jsonBodyObj;
     }
 
     public JsonFormate getJsonBodyObj() {

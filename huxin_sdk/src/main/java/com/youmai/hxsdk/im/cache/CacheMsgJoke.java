@@ -45,8 +45,9 @@ public class CacheMsgJoke implements Parcelable, JsonFormate<CacheMsgJoke> {
         return voicePath;
     }
 
-    public void setVoicePath(String voicePath) {
+    public CacheMsgJoke setVoicePath(String voicePath) {
         this.voicePath = voicePath;
+        return this;
     }
 
     @Override
@@ -95,5 +96,14 @@ public class CacheMsgJoke implements Parcelable, JsonFormate<CacheMsgJoke> {
         dest.writeString(msgJoke);
         dest.writeString(voiceId);
         dest.writeString(voicePath);
+    }
+
+    @Override
+    public JsonFormate cloneProto(JsonFormate body) {
+        CacheMsgJoke cacheMsgJoke = (CacheMsgJoke) body;
+        cacheMsgJoke.setMsgJoke(msgJoke)
+                .setVoicePath(voicePath)
+                .setVoiceId(voiceId);
+        return cacheMsgJoke;
     }
 }

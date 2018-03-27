@@ -98,4 +98,14 @@ public class CacheMsgMap implements Parcelable, JsonFormate<CacheMsgMap> {
         }
         return this;
     }
+
+    @Override
+    public JsonFormate cloneProto(JsonFormate body) {
+        CacheMsgMap cacheMsgMap = (CacheMsgMap) body;
+        cacheMsgMap.setAddress(address)
+                .setImgUrl(imgUrl)
+                .setAddress(address)
+                .setLocation(location);
+        return cacheMsgMap;
+    }
 }

@@ -1436,7 +1436,7 @@ public class HuxinSdkManager {
 
                             if (resp.isSucess()) {
                                 final String fileId = resp.getD().getFileid();
-                                CacheMsgImage cacheMsgImage = (CacheMsgImage) cacheMsgBean.getJsonBodyObj();
+                                CacheMsgImage cacheMsgImage = (CacheMsgImage) cacheMsgBean.getJsonBodyObj(new CacheMsgImage());
                                 if (cacheMsgImage == null) {
                                     cacheMsgImage = new CacheMsgImage();
                                 }
@@ -1674,7 +1674,7 @@ public class HuxinSdkManager {
 
                             if (resp != null && resp.isSucess()) {
                                 final String fileId = resp.getD().getFileid();
-                                CacheMsgVideo cacheMsgVideo = (CacheMsgVideo) cacheMsgBean.getJsonBodyObj();
+                                CacheMsgVideo cacheMsgVideo = (CacheMsgVideo) cacheMsgBean.getJsonBodyObj(new CacheMsgVideo());
                                 if (cacheMsgVideo == null) {
                                     cacheMsgVideo = new CacheMsgVideo();
                                 }
@@ -1687,7 +1687,7 @@ public class HuxinSdkManager {
                             }
                         }
                     };
-                    String framePath = ((CacheMsgVideo) cacheMsgBean.getJsonBodyObj()).getFramePath();
+                    String framePath = ((CacheMsgVideo) cacheMsgBean.getJsonBodyObj(new CacheMsgVideo())).getFramePath();
                     Map<String, String> params = new HashMap<>();
                     params.put("x:type", "2");
                     params.put("x:msisdn", getPhoneNum());
@@ -1762,7 +1762,7 @@ public class HuxinSdkManager {
 
                             if (resp != null && resp.isSucess()) {
                                 final String fileId = resp.getD().getFileid();
-                                CacheMsgVideo cacheMsgVideo = (CacheMsgVideo) cacheMsgBean.getJsonBodyObj();
+                                CacheMsgVideo cacheMsgVideo = (CacheMsgVideo) cacheMsgBean.getJsonBodyObj(new CacheMsgVideo());
                                 if (cacheMsgVideo == null) {
                                     cacheMsgVideo = new CacheMsgVideo();
                                 }
@@ -1776,7 +1776,7 @@ public class HuxinSdkManager {
                             }
                         }
                     };
-                    String videoPath = ((CacheMsgVideo) cacheMsgBean.getJsonBodyObj()).getVideoPath();
+                    String videoPath = ((CacheMsgVideo) cacheMsgBean.getJsonBodyObj(new CacheMsgVideo())).getVideoPath();
                     Map<String, String> params = new HashMap<>();
                     params.put("x:type", "2");
                     params.put("x:msisdn", getPhoneNum());
@@ -1806,7 +1806,7 @@ public class HuxinSdkManager {
      * 发送视频消息
      */
     public void sendImVideo(final boolean isSaveDB, final CacheMsgBean cacheMsgBean, final FileBean fileBean, final IFileSendListener listener) {
-        CacheMsgVideo cacheMsgVideo = (CacheMsgVideo) cacheMsgBean.getJsonBodyObj();
+        CacheMsgVideo cacheMsgVideo = (CacheMsgVideo) cacheMsgBean.getJsonBodyObj(new CacheMsgVideo());
         final String fileId = cacheMsgVideo.getVideoId();
         String frameId = cacheMsgVideo.getFrameId();
         String name = cacheMsgVideo.getName();
@@ -1846,7 +1846,7 @@ public class HuxinSdkManager {
                             }
                         } else {
                             final CacheMsgBean finalNewMsgBean = newMsgBean;
-                            CacheMsgVideo cacheMsgVideo = (CacheMsgVideo) cacheMsgBean.getJsonBodyObj();
+                            CacheMsgVideo cacheMsgVideo = (CacheMsgVideo) cacheMsgBean.getJsonBodyObj(new CacheMsgVideo());
                             String videoId = cacheMsgVideo.getVideoId();
                             HttpPushManager.pushMsgForPicture(cacheMsgBean.getSenderUserId(), cacheMsgBean.getReceiverPhone(), videoId,
                                     new HttpPushManager.PushListener() {

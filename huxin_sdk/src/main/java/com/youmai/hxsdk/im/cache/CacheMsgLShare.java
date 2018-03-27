@@ -147,10 +147,6 @@ public class CacheMsgLShare implements Parcelable, JsonFormate<CacheMsgLShare> {
         return this;
     }
 
-    public boolean isAnswerOrReject() {
-        return answerOrReject;
-    }
-
     public CacheMsgLShare setAnswerOrReject(boolean answerOrReject) {
         this.answerOrReject = answerOrReject;
         return this;
@@ -163,5 +159,19 @@ public class CacheMsgLShare implements Parcelable, JsonFormate<CacheMsgLShare> {
     public CacheMsgLShare setEndOver(boolean endOver) {
         isEndOver = endOver;
         return this;
+    }
+
+    @Override
+    public JsonFormate cloneProto(JsonFormate body) {
+        CacheMsgLShare cacheMsgLShare = (CacheMsgLShare) body;
+        cacheMsgLShare.setTargetId(targetId)
+                .setReceiveUserId(receiveUserId)
+                .setLongitude(longitude)
+                .setLatitude(latitude)
+                .setReceivePhone(receivePhone)
+                .setReceiveLocation(receiveLocation)
+                .setAnswerOrReject(answerOrReject)
+                .setEndOver(isEndOver);
+        return cacheMsgLShare;
     }
 }

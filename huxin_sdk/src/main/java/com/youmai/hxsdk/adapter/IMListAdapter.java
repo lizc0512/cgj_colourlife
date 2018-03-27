@@ -292,7 +292,7 @@ public class IMListAdapter extends RecyclerView.Adapter {
      */
     private void onBindFile(final FileViewHolder holder, final int position) { //文件
         final CacheMsgBean cacheMsgBean = mImBeanList.get(position);
-        final CacheMsgFile cacheMsgFile = (CacheMsgFile) cacheMsgBean.getJsonBodyObj();
+        final CacheMsgFile cacheMsgFile = (CacheMsgFile) cacheMsgBean.getJsonBodyObj(new CacheMsgFile());
 
         holder.rl.setTag(cacheMsgBean.getId());
         Glide.with(mContext)
@@ -338,7 +338,7 @@ public class IMListAdapter extends RecyclerView.Adapter {
      */
     private void onBindPic(final ImgViewHolder imgViewHolder, final int position) {
         final CacheMsgBean cacheMsgBean = mImBeanList.get(position);
-        final CacheMsgImage cacheMsgImage = (CacheMsgImage) cacheMsgBean.getJsonBodyObj();
+        final CacheMsgImage cacheMsgImage = (CacheMsgImage) cacheMsgBean.getJsonBodyObj(new CacheMsgImage());
         String leftUrl;
         switch (cacheMsgImage.getOriginalType()) {
             case CacheMsgImage.SEND_IS_ORI_RECV_NOT_ORI:
@@ -370,7 +370,7 @@ public class IMListAdapter extends RecyclerView.Adapter {
                     if (CacheMsgBean.SEND_IMAGE == item.getMsgType()
                             || CacheMsgBean.RECEIVE_IMAGE == item.getMsgType()) { //图片
                         beanList.add(item);
-                        final CacheMsgImage cacheImage = (CacheMsgImage) item.getJsonBodyObj();
+                        final CacheMsgImage cacheImage = (CacheMsgImage) item.getJsonBodyObj(new CacheMsgImage());
                         String fid = cacheImage.getFid();
                         if (!TextUtils.isEmpty(fid)) {
                             if (finalLeftUrl.equals(AppConfig.getImageUrl(mContext, fid))
@@ -404,7 +404,7 @@ public class IMListAdapter extends RecyclerView.Adapter {
      */
     private void onBindVideo(final VideoViewHolder videoViewHolder, final int position) {
         final CacheMsgBean cacheMsgBean = mImBeanList.get(position);
-        final CacheMsgVideo cacheMsgVideo = (CacheMsgVideo) cacheMsgBean.getJsonBodyObj();
+        final CacheMsgVideo cacheMsgVideo = (CacheMsgVideo) cacheMsgBean.getJsonBodyObj(new CacheMsgVideo());
         showSendStart(videoViewHolder, cacheMsgBean.getMsgStatus(), cacheMsgBean, position);
         final long mid = cacheMsgBean.getId();
         final String dstPhone = cacheMsgBean.getSenderPhone();
@@ -459,12 +459,12 @@ public class IMListAdapter extends RecyclerView.Adapter {
         final CacheMsgBean cacheMsgBean = mImBeanList.get(position);
 
         String txtContent = "";
-        if (cacheMsgBean.getJsonBodyObj() instanceof CacheMsgJoke) {
-            CacheMsgJoke cacheMsgJoke = (CacheMsgJoke) cacheMsgBean.getJsonBodyObj();
-            txtContent = cacheMsgJoke.getMsgJoke().replace(CacheMsgJoke.JOKES, "");
-        } else {
-            CacheMsgTxt cacheMsgTxt = (CacheMsgTxt) cacheMsgBean.getJsonBodyObj();
+        if (cacheMsgBean.getJsonBodyObj() instanceof CacheMsgTxt) {
+            CacheMsgTxt cacheMsgTxt = (CacheMsgTxt) cacheMsgBean.getJsonBodyObj(new CacheMsgTxt());
             txtContent = cacheMsgTxt.getMsgTxt();
+        } else {
+            CacheMsgJoke cacheMsgJoke = (CacheMsgJoke) cacheMsgBean.getJsonBodyObj(new CacheMsgJoke());
+            txtContent = cacheMsgJoke.getMsgJoke().replace(CacheMsgJoke.JOKES, "");
         }
 
         showSendStart(txtViewHolder, cacheMsgBean.getMsgStatus(), cacheMsgBean, position);
@@ -558,7 +558,7 @@ public class IMListAdapter extends RecyclerView.Adapter {
      */
     private void onBindMap(final MapViewHolder mapViewHolder, final int position) {
         final CacheMsgBean cacheMsgBean = mImBeanList.get(position);
-        CacheMsgMap cacheMsgMap = (CacheMsgMap) cacheMsgBean.getJsonBodyObj();
+        CacheMsgMap cacheMsgMap = (CacheMsgMap) cacheMsgBean.getJsonBodyObj(new CacheMsgMap());
 
         String mapUrl = cacheMsgMap.getImgUrl();
         final String mapAddr = cacheMsgMap.getAddress();
@@ -604,7 +604,7 @@ public class IMListAdapter extends RecyclerView.Adapter {
 
     private void onBindVoice(final VoiceViewHolder voiceViewHolder, final int position) {
         final CacheMsgBean cacheMsgBean = mImBeanList.get(position);
-        final CacheMsgVoice cacheMsgVoice = (CacheMsgVoice) cacheMsgBean.getJsonBodyObj();
+        final CacheMsgVoice cacheMsgVoice = (CacheMsgVoice) cacheMsgBean.getJsonBodyObj(new CacheMsgVoice());
 
         String voiceTime = cacheMsgVoice.getVoiceTime();
 
@@ -701,7 +701,7 @@ public class IMListAdapter extends RecyclerView.Adapter {
                                 || status == CacheMsgBean.RECEIVE_READ) {
                             CacheMsgBean bean = mImBeanList.get(position);
                             //语音设置是谁发的源头
-                            CacheMsgVoice cacheMsgVoice = (CacheMsgVoice) bean.getJsonBodyObj();
+                            CacheMsgVoice cacheMsgVoice = (CacheMsgVoice) bean.getJsonBodyObj(new CacheMsgVoice());
                             if (cacheMsgVoice.getForwardCount() == 0 && TextUtils.isEmpty(cacheMsgVoice.getSourcePhone())) {
                                 cacheMsgVoice.setSourcePhone(bean.isRightUI() ? bean.getReceiverPhone() : bean.getSenderPhone());
                                 bean.setJsonBodyObj(cacheMsgVoice);
@@ -1203,7 +1203,7 @@ public class IMListAdapter extends RecyclerView.Adapter {
             if (index != -1 && index < mImBeanList.size()) {
                 CacheMsgBean cacheMsgBean = mImBeanList.get(index);
                 if (cacheMsgBean.getJsonBodyObj() instanceof CacheMsgVideo) {
-                    CacheMsgVideo cacheMsgVideo = (CacheMsgVideo) cacheMsgBean.getJsonBodyObj();
+                    CacheMsgVideo cacheMsgVideo = (CacheMsgVideo) cacheMsgBean.getJsonBodyObj(new CacheMsgVideo());
                     cacheMsgVideo.setProgress(p);
                     cacheMsgBean.setJsonBodyObj(cacheMsgVideo);
                     mImBeanList.set(index, cacheMsgBean);//更新数据

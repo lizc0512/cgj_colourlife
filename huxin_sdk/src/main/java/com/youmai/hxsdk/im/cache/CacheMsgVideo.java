@@ -160,4 +160,18 @@ public class CacheMsgVideo implements Parcelable, JsonFormate<CacheMsgVideo> {
                 ", progress=" + progress +
                 '}';
     }
+
+    @Override
+    public JsonFormate cloneProto(JsonFormate body) {
+        CacheMsgVideo cacheMsgVideo = (CacheMsgVideo) body;
+        cacheMsgVideo.setVideoId(videoId)
+                .setVideoPath(videoPath)
+                .setFrameId(frameId)
+                .setFramePath(framePath)
+                .setName(name)
+                .setSize(size)
+                .setTime(time)
+                .setProgress(progress);
+        return cacheMsgVideo;
+    }
 }

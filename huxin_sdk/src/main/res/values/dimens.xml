@@ -1,32 +1,15 @@
 <resources>
 
     <!-- Default screen margins, per the Android Design guidelines. -->
-
-    <!-- 弹屏的布局尺寸 -->
-
-    <!--字体大小-->
-
     <!-- 验证对话框 -->
     <dimen name="hx_login_width">280dp</dimen>
     <dimen name="hx_login_title">16dp</dimen>
 
-    <!--show-->
-
-
-    <!--我的卡券-->
-
-
-    <!--代言-->
-
     <!-- crop -->
-    <dimen name="crop__bar_height">56dp</dimen>
-
-    <!-- 关于呼信 -->
+    <dimen name="crop_bar_height">56dp</dimen>
 
     <!--tip-->
     <dimen name="font_size_small">15sp</dimen>
-
-    <!--Red Packet-->
 
     <!--im card-->
     <dimen name="card_radius">8dp</dimen>
@@ -48,26 +31,14 @@
 
     <dimen name="title_back_padding">10dp</dimen>
 
-    <!-- 积分墙 -->
-
-    <!--钱包-->
-    <!--push notify-->
-
     <!--IMConnectFragment-->
     <dimen name="hx_im_pop_ment_width">150dp</dimen>
-
-    <!--lucky pan-->
-
-    <!-- 我要推广 -->
 
     <!--日期&城市联动器-->
     <dimen name="hx_pickerview_topbar_height">44dp</dimen> <!-- 顶部按钮栏高度 -->
     <dimen name="hx_pickerview_topbar_padding">20dp</dimen> <!-- 顶部按钮padding -->
     <!-- 顶部按钮文字大小 -->
     <dimen name="hx_pickerview_textsize">20sp</dimen> <!-- 选项文字大小 -->
-
-    <!--位置共享-->
-
 
     <!--wheelView-->
     <!-- 顶部按钮栏高度 -->

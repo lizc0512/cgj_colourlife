@@ -197,7 +197,7 @@ public class CropImageActivity extends MonitoredActivity {
             return;
         }
         imageView.setImageRotateBitmapResetBase(rotateBitmap, true);
-        CropUtil.startBackgroundJob(this, null, getResources().getString(R.string.hx_crop__wait),
+        CropUtil.startBackgroundJob(this, null, getResources().getString(R.string.hx_crop_wait),
                 new Runnable() {
                     public void run() {
                         final CountDownLatch latch = new CountDownLatch(1);

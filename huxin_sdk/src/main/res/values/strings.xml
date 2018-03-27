@@ -67,11 +67,11 @@
 
     <!--crop-->
     <string name="hx_crop__saving">正在保存照片…</string>
-    <string name="hx_crop__wait">请等待…</string>
-    <string name="hx_crop__pick_error">无效的图片</string>
+    <string name="hx_crop_wait">请等待…</string>
+    <string name="hx_crop_pick_error">无效的图片</string>
 
-    <string name="hx_crop__done">完成</string>
-    <string name="hx_crop__cancel">取消</string>
+    <string name="hx_crop_done">完成</string>
+    <string name="hx_crop_cancel">取消</string>
 
     <!-- 当RecyclerView没有查询到任何记录提示 -->
 

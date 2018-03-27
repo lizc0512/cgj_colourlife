@@ -32,7 +32,6 @@ import com.qiniu.android.storage.UploadOptions;
 import com.youmai.hxsdk.adapter.IMListAdapter;
 import com.youmai.hxsdk.config.AppConfig;
 import com.youmai.hxsdk.config.Constant;
-import com.youmai.hxsdk.config.FileConfig;
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
 import com.youmai.hxsdk.db.bean.ChatMsg;
 import com.youmai.hxsdk.db.dao.CacheMsgBeanDao;
@@ -50,11 +49,6 @@ import com.youmai.hxsdk.interfaces.IFileSendListener;
 import com.youmai.hxsdk.interfaces.OnFileListener;
 import com.youmai.hxsdk.interfaces.bean.FileBean;
 import com.youmai.hxsdk.proto.YouMaiBasic;
-import com.youmai.hxsdk.proto.YouMaiBizCard;
-import com.youmai.hxsdk.proto.YouMaiBizCard.BizCard;
-import com.youmai.hxsdk.proto.YouMaiBizCard.BizCard_Get_ByPhone;
-import com.youmai.hxsdk.proto.YouMaiBizCard.BizCard_Insert;
-import com.youmai.hxsdk.proto.YouMaiBizCard.BizCard_Update;
 import com.youmai.hxsdk.proto.YouMaiChat;
 import com.youmai.hxsdk.proto.YouMaiChat.IMChat_Personal;
 import com.youmai.hxsdk.proto.YouMaiLocation;
@@ -75,15 +69,12 @@ import com.youmai.hxsdk.utils.FileUtils;
 import com.youmai.hxsdk.utils.GsonUtil;
 import com.youmai.hxsdk.utils.LogFile;
 import com.youmai.hxsdk.utils.LogUtils;
-import com.youmai.hxsdk.utils.SignUtils;
 import com.youmai.hxsdk.utils.StringUtils;
 import com.youmai.hxsdk.view.chat.utils.EmotionInit;
 
 import org.json.JSONObject;
 
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -119,8 +110,6 @@ public class HuxinSdkManager {
     private StackAct mStackAct;
     private UserInfo mUserInfo;
     private Map<String, String> mContactName;
-
-    private String commonParam;
 
     /**
      * SDK初始化结果监听器
@@ -315,52 +304,6 @@ public class HuxinSdkManager {
     }
 
 
-    /**
-     * 获取通话中弹屏开关
-     * true 打开
-     * false 关闭
-     *
-     * @return
-     */
-    public boolean isCallFloatView() {
-        return mUserInfo.isCallFloatView();
-    }
-
-    /**
-     * 设置通话中弹屏开关
-     * true 打开
-     * false 关闭
-     *
-     * @return
-     */
-    public void setCallFloatView(boolean callFloatView) {
-        mUserInfo.setCallFloatView(callFloatView);
-    }
-
-
-    /**
-     * 获取通话后弹屏开关
-     * true 打开
-     * false 关闭
-     *
-     * @return
-     */
-    public boolean isCallEndSrceen() {
-        return mUserInfo.isCallEndSrceen();
-    }
-
-    /**
-     * 设置通话后弹屏开关
-     * true 打开
-     * false 关闭
-     *
-     * @return
-     */
-    public void setCallEndSrceen(boolean callEndSrceen) {
-        mUserInfo.setCallEndSrceen(callEndSrceen);
-    }
-
-
     public void clearUserData() {
         close();
         mUserInfo.clearUserData(mContext);
@@ -385,34 +328,6 @@ public class HuxinSdkManager {
                 && !TextUtils.isEmpty(getSession())
                 && getUserId() != 0) {
             res = true;
-        }
-        return res;
-    }
-
-    public String getCommonParam() {
-        if (commonParam == null) {
-            commonParam = AppUtils.getStringSharedPreferences(mContext, "common_param", "");
-        }
-        return commonParam;
-    }
-
-    public void setCommonParam(String commonParam) {
-        this.commonParam = commonParam;
-    }
-
-    /**
-     * 判断SDK是否登录(for能信安)
-     *
-     * @return
-     */
-    public boolean isNengXinAnLogin() {
-        boolean res = false;
-        if (mContext != null) {
-
-            String session = getSession();
-            if (!StringUtils.isEmpty(session)) {
-                res = true;
-            }
         }
         return res;
     }
@@ -475,9 +390,6 @@ public class HuxinSdkManager {
      * @return
      */
     public String getContactName(String phone) {
-        if (phone.equals("4000")) {
-            return mContext.getString(R.string.hx_sdk_feadback_service_name);
-        }
         String nickName = mContactName.get(phone);
         if (StringUtils.isEmpty(nickName)) {
             ContentResolver resolver = mContext.getContentResolver();
@@ -520,7 +432,7 @@ public class HuxinSdkManager {
     public boolean isContactName(String phone) {
         boolean ret = false;
         String name = getContactName(phone);
-        if (!name.equals(phone) || phone.equals("4000")) {
+        if (!name.equals(phone)) {
             ret = true;
         }
         return ret;
@@ -562,7 +474,6 @@ public class HuxinSdkManager {
                 mContactName.put(phone, nickName);
             }
         }
-
 
         return StringUtils.isEmpty(nickName);
     }
@@ -759,127 +670,6 @@ public class HuxinSdkManager {
 
 
     /**
-     * 调用有盟统计
-     *
-     * @param context
-     * @param eventId
-     */
-    public void onUmengEvent(Context context, String eventId) {
-        Class cls = null;
-        try {
-            cls = Class.forName("com.youmai.huxincommon.UmengMobclickAgent");
-            Method staticMethod = cls.getDeclaredMethod("onEvent", Context.class, String.class);
-            staticMethod.invoke(cls, context, eventId);
-        } catch (ClassNotFoundException e1) {
-            e1.printStackTrace();
-        } catch (NoSuchMethodException e1) {
-            e1.printStackTrace();
-        } catch (IllegalAccessException e1) {
-            e1.printStackTrace();
-        } catch (InvocationTargetException e1) {
-            e1.printStackTrace();
-        }
-
-    }
-
-    /**
-     * 调用有盟统计
-     *
-     * @param context
-     * @param eventId
-     * @param m
-     * @param du
-     */
-    public void onUmengEventValue(Context context, String eventId, Map<String, String> m, int du) {
-        Class cls = null;
-        try {
-            cls = Class.forName("com.youmai.huxincommon.UmengMobclickAgent");
-            Method staticMethod = cls.getDeclaredMethod("onEventValue", Context.class, String.class, Map.class, int.class);
-            staticMethod.invoke(cls, context, eventId, m, du);
-        } catch (ClassNotFoundException e1) {
-            e1.printStackTrace();
-        } catch (NoSuchMethodException e1) {
-            e1.printStackTrace();
-        } catch (IllegalAccessException e1) {
-            e1.printStackTrace();
-        } catch (InvocationTargetException e1) {
-            e1.printStackTrace();
-        }
-
-    }
-
-    /**
-     * tcp 获取用户信息
-     *
-     * @param userId
-     * @param srcPhone
-     * @param desPhone
-     * @param listener
-     */
-    public void getCardInfo(int userId, String srcPhone, String desPhone, ReceiveListener listener) {
-        BizCard_Get_ByPhone.Builder builder = BizCard_Get_ByPhone.newBuilder();
-        builder.setPhone(srcPhone);
-        builder.setUserId(userId);
-        builder.addTargetPhones(desPhone);
-
-        YouMaiBizCard.BizCard_Get_ByPhone bizCard = builder.build();
-
-        sendProto(bizCard, listener);
-
-    }
-
-    /**
-     * tcp 新建用户信息，用于首次创建
-     *
-     * @param userId
-     * @param phone
-     * @param cardBulider
-     * @param callback
-     */
-    public void insertCardInfo(int userId, String phone,
-                               BizCard.Builder cardBulider,
-                               ReceiveListener callback) {
-
-        BizCard_Insert.Builder builder = BizCard_Insert.newBuilder();
-        builder.setUserId(userId);
-        cardBulider.setPhone(phone);
-        cardBulider.setUserId(userId);
-
-        YouMaiBizCard.BizCard card = cardBulider.build();
-        builder.setBizcard(card);
-
-        YouMaiBizCard.BizCard_Insert bizCard = builder.build();
-        sendProto(bizCard, callback);
-    }
-
-
-    /**
-     * tcp更新用户信息
-     *
-     * @param userId
-     * @param phone
-     * @param cardBulider
-     * @param callback
-     */
-    public void updateCardInfo(int userId, String phone,
-                               BizCard.Builder cardBulider, ReceiveListener callback) {
-
-        BizCard_Update.Builder builder = BizCard_Update.newBuilder();
-        builder.setUserId(userId);
-
-        cardBulider.setPhone(phone);
-        cardBulider.setUserId(userId);
-
-        YouMaiBizCard.BizCard card = cardBulider.build();
-        builder.setBizcard(card);
-
-        YouMaiBizCard.BizCard_Update bizCard = builder.build();
-
-        sendProto(bizCard, callback);
-    }
-
-
-    /**
      * 发送文字
      *
      * @param userId
@@ -917,63 +707,6 @@ public class HuxinSdkManager {
         builder.setMsgId(msgId);
         YouMaiChat.IMChat_Personal_recv_Ack reply = builder.build();
         sendProto(reply, YouMaiBasic.COMMANDID.IMCHAT_PERSONAL_ACK_VALUE, null);
-        return true;
-    }
-
-
-    /**
-     * 发送备注
-     */
-    public boolean sendRemark(int userId, String desPhone, String content, ReceiveListener callback) {
-        String srcPhone = getPhoneNum();
-        String tarPhone = desPhone;
-
-        IMChat_Personal.Builder builder = IMChat_Personal.newBuilder();
-        builder.setSrcUsrId(userId);
-        builder.setSrcPhone(srcPhone);
-        builder.setTargetPhone(tarPhone);
-
-        IMContentUtil imContentUtil = new IMContentUtil();
-
-        final int type = IMContentUtil.getContentType(0, YouMaiChat.IM_CONTENT_TYPE.IM_CONTENT_TYPE_REMARK_VALUE);
-        builder.setContentType(type);
-        imContentUtil.appendText(content);
-        builder.setBody(imContentUtil.serializeToString());
-        YouMaiChat.IMChat_Personal imData = builder.build();
-        sendProto(imData, callback);
-
-        callback.setTarPhone(tarPhone);
-        callback.setContent(content);
-        return true;
-    }
-
-    /**
-     * 发送名片
-     *
-     * @param userId   用户标识
-     * @param desPhone 对方号码
-     * @param content  名片内容，string类型
-     */
-    public boolean sendBizcardText(int userId, String desPhone, String content, ReceiveListener callback) {
-        String srcPhone = getPhoneNum();
-        String tarPhone = desPhone;
-
-        IMChat_Personal.Builder builder = IMChat_Personal.newBuilder();
-        builder.setSrcUsrId(userId);
-        builder.setSrcPhone(srcPhone);
-        builder.setTargetPhone(tarPhone);
-
-        IMContentUtil imContentUtil = new IMContentUtil();
-
-        int type = IMContentUtil.getContentType(0, YouMaiChat.IM_CONTENT_TYPE.IM_CONTENT_TYPE_BIZCARD_VALUE);
-        builder.setContentType(type);
-        imContentUtil.appendText(content);
-        builder.setBody(imContentUtil.serializeToString());
-        YouMaiChat.IMChat_Personal imData = builder.build();
-        sendProto(imData, callback);
-
-        callback.setTarPhone(tarPhone);
-        callback.setContent(content);
         return true;
     }
 
@@ -2357,28 +2090,6 @@ public class HuxinSdkManager {
         return true;
     }
 
-    /**
-     * 获取消息总数.
-     *
-     * @param desPhone
-     * @return
-     */
-    public int getChatMsgCountFromCache(String desPhone) {
-        return CacheMsgHelper.instance(mContext).queryRaw("where targetPhone = ?", new String[]{desPhone}).size();
-    }
-
-
-    /**
-     * 获取消息总数.
-     *
-     * @param desPhone
-     * @return
-     */
-    public int getCacheMsgCountFromDB(String desPhone) {
-        return CacheMsgHelper.instance(mContext).queryRaw("where receiver_phone=? and is_right_ui=?",
-                new String[]{desPhone, "1"}).size();
-    }
-
 
     /**
      * 获取消息
@@ -2391,42 +2102,6 @@ public class HuxinSdkManager {
         CacheMsgBeanDao cacheMsgBeanDao = GreenDBIMManager.instance(mContext).getCacheMsgDao();
         CacheMsgBean msgBean = cacheMsgBeanDao.queryBuilder().where(CacheMsgBeanDao.Properties.Id.eq(id)).unique();
         return msgBean;
-    }
-
-
-    private void saveDeviceId() {
-        String imei = DeviceUtils.getIMEI(mContext);
-        String path = FileConfig.getInfoPaths() + "/device.info";
-
-        File file = new File(path);
-        if (!file.exists()) {
-            FileUtils.writeFile(path, imei);
-        }
-    }
-
-
-    public String getDeviceId() {
-        String res = "";
-        String path = FileConfig.getInfoPaths() + "/device.info";
-        String saveId = FileUtils.readFile(path);
-        if (!StringUtils.isEmpty(saveId)) {
-            res = saveId;
-        }
-
-        res = res.replace("\n", "");
-        return res;
-    }
-
-
-    public boolean checkAppKey(Context context) {
-        boolean res = false;
-        String value = AppUtils.getMetaData(context, "com.youmai.huxin.apikey");
-        if (value.equals(SignUtils.genSignature(context))) {
-            res = true;
-        }
-
-        res = true;  //固定返回true
-        return res;
     }
 
     /**
@@ -2442,7 +2117,6 @@ public class HuxinSdkManager {
                     item.success();
                 }
                 mInitListenerList.clear();
-                saveDeviceId();
                 Log.v(TAG, "Service Connected...");
             }
         }

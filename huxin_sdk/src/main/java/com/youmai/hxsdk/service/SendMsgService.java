@@ -26,7 +26,6 @@ import com.youmai.hxsdk.im.cache.CacheMsgHelper;
 import com.youmai.hxsdk.im.cache.CacheMsgImage;
 import com.youmai.hxsdk.im.cache.CacheMsgJoke;
 import com.youmai.hxsdk.im.cache.CacheMsgMap;
-import com.youmai.hxsdk.im.cache.CacheMsgRemark;
 import com.youmai.hxsdk.im.cache.CacheMsgTxt;
 import com.youmai.hxsdk.im.cache.CacheMsgVideo;
 import com.youmai.hxsdk.im.cache.CacheMsgVoice;
@@ -206,8 +205,6 @@ public class SendMsgService extends Service {
             } else if (jsonBody instanceof CacheMsgFile) {//文件
                 sendFile(msg);
                 sendingMsg.put(msg.getMsg().getId().intValue(), msg);
-            } else if (jsonBody instanceof CacheMsgRemark) {//备注
-                sendRemark(msg);
             } else if (jsonBody instanceof CacheMsgVideo) {//视频
                 sendVideo(msg);
                 sendingMsg.put(msg.getMsg().getId().intValue(), msg);
@@ -332,56 +329,6 @@ public class SendMsgService extends Service {
                 updateUI(msgBean, CacheMsgBean.SEND_FAILED, null, SEND_MSG_END);
             }
 
-        });
-    }
-
-    //发送备注
-    private void sendRemark(final SendMsg msgBean) {
-        CacheMsgRemark msgBody = (CacheMsgRemark) msgBean.getMsg().getJsonBodyObj();
-        final int userId = HuxinSdkManager.instance().getUserId();
-        final String targetPhone = msgBean.getMsg().getReceiverPhone();
-        final String content = msgBody.toJson();
-        HuxinSdkManager.instance().sendRemark(userId, targetPhone, content, new ReceiveListener() {
-            @Override
-            public void OnRec(PduBase pduBase) {
-                try {
-                    final YouMaiChat.IMChat_Personal_Ack ack = YouMaiChat.IMChat_Personal_Ack.parseFrom(pduBase.body);
-                    final long msgId = ack.getMsgId();
-                    msgBean.getMsg().setMsgId(msgId);
-
-                    if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_OK) {
-                        if (ack.getIsTargetOnline()) {
-                            updateUI(msgBean, CacheMsgBean.SEND_SUCCEED);
-                        } else {
-                            HttpPushManager.pushMsgForText(appContext, userId, targetPhone, content,
-                                    new HttpPushManager.PushListener() {
-                                        @Override
-                                        public void success(String msg) {
-                                            updateUI(msgBean, CacheMsgBean.SEND_SUCCEED);
-                                        }
-
-                                        @Override
-                                        public void fail(String msg) {
-                                            LogUtils.e(TAG, "推送消息异常:" + msg);
-                                            updateUI(msgBean, CacheMsgBean.SEND_FAILED);
-                                        }
-                                    });
-                        }
-                    } else if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_NOT_HUXIN_USER) {
-                        updateUI(msgBean, CacheMsgBean.SEND_FAILED, NOT_HUXIN_USER);
-                    } else {
-                        updateUI(msgBean, CacheMsgBean.SEND_FAILED);
-                    }
-                } catch (InvalidProtocolBufferException e) {
-                    e.printStackTrace();
-                    updateUI(msgBean, CacheMsgBean.SEND_FAILED);
-                }
-            }
-
-            @Override
-            public void onError(int errCode) {
-                updateUI(msgBean, CacheMsgBean.SEND_FAILED);
-            }
         });
     }
 

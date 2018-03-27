@@ -214,8 +214,16 @@
     <string name="hx_toast_59">视频播放失败了</string>
     <string name="hx_toast_66">短信已发送</string>
     <string name="hx_toast_67">非WIFI状态发送文件!!!</string>
-    ！
     <string name="hx_toast_74">上传视频失败</string>
 
+    <!--wheelview-->
+    <string name="pickerview_cancel" translatable="false">取消</string>
+    <string name="pickerview_submit" translatable="false">完成</string>
+    <string name="pickerview_year" translatable="false">年</string>
+    <string name="pickerview_month" translatable="false">月</string>
+    <string name="pickerview_day" translatable="false">日</string>
+    <string name="pickerview_hours" translatable="false">时</string>
+    <string name="pickerview_minutes" translatable="false">分</string>
+    <string name="pickerview_seconds" translatable="false">秒</string>
 
 </resources>

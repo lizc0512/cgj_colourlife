@@ -9,18 +9,7 @@
 
 
     <!-- 登录对话框 -->
-
-
     <string name="hx_prompt">短信发送提示</string>
-
-
-    <!-- 设置用户秀 -->
-
-    <!--我的卡券-->
-
-    <!--filepreview-->
-
-    <!--卡券详情-->
 
     <!--IMAdapter-->
     <string name="from">来自:</string>
@@ -28,10 +17,6 @@
     <string name="hx_imadapter_cancle">取消</string>
     <string name="hx_imadapter_file">文件不能大于50MB!!!</string>
     <string name="hx_imadapter_wifi_break">网络已断开，请检查！</string>
-
-    <!--chatfragment-->
-
-    <!--GetCardFragment-->
 
     <!--挂机策略-->
     <string name="hx_hook_strategy_msg_emoji">【表情】</string>
@@ -64,7 +49,6 @@
 
 
     <!--商家秀-->
-
     <string name="hx_upload_file">正在发送文件,退出将自动取消发送</string>
 
 
@@ -127,8 +111,6 @@
 
     <!--新版app增加-->
 
-    <!-- 摇段子 -->
-
     <string name="im_card_theme_default_name">未命名沟通</string>
     <string name="im_card_no_remark">暂无备注</string>
     <string name="hx_voice_tip_normal">按住 说话</string>
@@ -151,7 +133,6 @@
 
     <string name="hx_im_send_img_count" formatted="false">发送(%d/%d)</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="select_map_text">选择</string>
     <string name="hx_im_pop_contact_add">新建联系人</string>
 
@@ -174,10 +155,4 @@
 
     <!-- 收藏 -->
     <string name="collect_voice_second">%02d\"</string>
-
-    <!-- 驾驶模式-->
-
-    <!-- 会议模式-->
-
-    <string name="hx_im_driving_exit_tip">退出驾驶模式</string>
 </resources>

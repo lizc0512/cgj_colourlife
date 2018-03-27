@@ -120,31 +120,6 @@ public class CacheMsgHelper {
         return queryList;
     }
 
-    public List<CacheMsgBean> toQueryLastOutgoingCallLog(int count) {
-        String selfPhone = HuxinSdkManager.instance().getPhoneNum();
-        if (TextUtils.isEmpty(selfPhone)) {
-            return null;
-        }
-
-        final String receiverPhoneColumeName = CacheMsgBeanDao.Properties.ReceiverPhone.columnName;
-        final String senderPhoneColumeName = CacheMsgBeanDao.Properties.SenderPhone.columnName;
-        final String msgTimeColumeName = CacheMsgBeanDao.Properties.MsgTime.columnName;
-        final String msgTypeColumeName = CacheMsgBeanDao.Properties.MsgType.columnName;
-
-        String receiveSql = receiverPhoneColumeName + " != '4000'"
-                + " and " + receiverPhoneColumeName + " != '" + selfPhone + "'"
-                + " and " + senderPhoneColumeName + " = '" + selfPhone + "'"
-                + " and " + msgTypeColumeName + " = " + CacheMsgBean.MSG_TYPE_CALL
-                + " GROUP BY " + receiverPhoneColumeName
-                + " ORDER BY " + msgTimeColumeName + " DESC";
-
-        if (count > 0) {
-            receiveSql = receiveSql + " limit " + count;
-        }
-        List<CacheMsgBean> receiveList = CacheMsgHelper.instance(mContext).sqlToQueryList(receiveSql);
-
-        return receiveList;
-    }
 
     /**
      * 备注：MsgAsyncTaskLoader & MyMsgListFragment 同一线程调用
@@ -265,24 +240,6 @@ public class CacheMsgHelper {
                 .orderAsc(CacheMsgBeanDao.Properties.Id).list();
     }
 
-    /**
-     * 备注：IMMsgManager
-     * 按 id升序查询
-     * (receiver_phone=? and sender_phone=?) or (sender_phone=? and receiver_phone=?)
-     *
-     * @param dstPhone
-     * @param selfPhone
-     * @return
-     */
-    public List<CacheMsgBean> toQueryUnreadAscById(String dstPhone, String selfPhone) {
-        QueryBuilder<CacheMsgBean> qb = GreenDBIMManager.instance(mContext).getCacheMsgDao().queryBuilder();
-        return qb.where(qb.and(CacheMsgBeanDao.Properties.Is_read.eq(0), qb.or(
-                qb.and(CacheMsgBeanDao.Properties.ReceiverPhone.eq(dstPhone),
-                        CacheMsgBeanDao.Properties.SenderPhone.eq(selfPhone)),
-                qb.and(CacheMsgBeanDao.Properties.SenderPhone.eq(dstPhone),
-                        CacheMsgBeanDao.Properties.ReceiverPhone.eq(selfPhone)))))
-                .orderAsc(CacheMsgBeanDao.Properties.Id).list();
-    }
 
     /**
      * 备注：IMMsgManager

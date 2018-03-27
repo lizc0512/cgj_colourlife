@@ -94,6 +94,7 @@ dependencies {
     implementation 'com.loopj.android:android-async-http:1.4.6'
     implementation 'com.github.ittianyu:BottomNavigationViewEx:1.2.4'
     implementation 'com.youth.banner:banner:1.4.9'    //banner公告
+    implementation 'com.jcodecraeer:xrecyclerview:1.5.9'
 
     implementation 'com.android.support:multidex:1.0.3'
     implementation "com.android.support:support-v4:${SUPPORT_VERSION}"
@@ -102,8 +103,6 @@ dependencies {
     implementation "com.android.support:design:${SUPPORT_VERSION}"
     implementation "com.android.support:support-v13:${SUPPORT_VERSION}"
     implementation "com.android.support:exifinterface:${SUPPORT_VERSION}"
-
-    implementation(name: 'xrecyclerview-release', ext: 'aar')
 
     annotationProcessor 'com.alibaba:arouter-compiler:1.1.4'
 }

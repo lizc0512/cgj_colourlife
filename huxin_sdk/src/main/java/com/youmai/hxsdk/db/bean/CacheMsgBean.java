@@ -3,7 +3,6 @@ package com.youmai.hxsdk.db.bean;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.youmai.hxsdk.im.cache.CacheMsgCall;
 import com.youmai.hxsdk.im.cache.CacheMsgEmotion;
 import com.youmai.hxsdk.im.cache.CacheMsgFile;
 import com.youmai.hxsdk.im.cache.CacheMsgImage;
@@ -12,11 +11,11 @@ import com.youmai.hxsdk.im.cache.CacheMsgTxt;
 import com.youmai.hxsdk.im.cache.CacheMsgVideo;
 import com.youmai.hxsdk.im.cache.CacheMsgVoice;
 import com.youmai.hxsdk.im.cache.JsonFormate;
-import com.youmai.hxsdk.utils.LogUtils;
 
 import org.greenrobot.greendao.annotation.Entity;
-import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
+import org.greenrobot.greendao.annotation.Transient;
+import org.greenrobot.greendao.annotation.Generated;
 
 /**
  * Author:  Kevin Feng
@@ -25,27 +24,61 @@ import org.greenrobot.greendao.annotation.Id;
  * Description:  消息实体类
  */
 @Entity
-public class CacheMsgBean implements Parcelable, Cloneable {
+public class CacheMsgBean implements Parcelable {
 
-    public static final int MSG_TYPE_EMOTION = 1; //表情
-    public static final int MSG_TYPE_TXT = 2; //文字
-    public static final int MSG_TYPE_IMG = 3; //图片
-    public static final int MSG_TYPE_MAP = 4; //地图
-    public static final int MSG_TYPE_VIDEO = 5; //视频
-    public static final int MSG_TYPE_VOICE = 6; //声音
-    public static final int MSG_TYPE_FILE = 7; //文件
-    public static final int MSG_TYPE_CALL = 9; //通话
 
-    public static final int MSG_READ_STATUS = 1; //已读
-    public static final int MSG_UNREAD_STATUS = 0; //未读
-    public static final int MSG_SEND_FLAG_SENDING = -1;
-    public static final int MSG_SEND_FLAG_SUCCESS = 0;
-    public static final int MSG_SEND_FLAG_FAIL = 4;
+    public static final int SEND_TEXT = 1;
+    public static final int RECEIVE_TEXT = 2;
+
+    public static final int SEND_IMAGE = 3;
+    public static final int RECEIVE_IMAGE = 4;
+
+    public static final int SEND_VOICE = 5;
+    public static final int RECEIVE_VOICE = 6;
+
+    public static final int SEND_VIDEO = 7;
+    public static final int RECEIVE_VIDEO = 8;
+
+    public static final int SEND_LOCATION = 9;
+    public static final int RECEIVE_LOCATION = 10;
+
+    public static final int SEND_FILE = 11;
+    public static final int RECEIVE_FILE = 12;
+
+    public static final int SEND_EMOTION = 13;
+    public static final int RECEIVE_EMOTION = 14;
+
+    public static final int SEND_DRAFT = 0;      //草稿
+    public static final int SEND_GOING = 1;//正在发送
+    public static final int SEND_SUCCEED = 2;    //发送成功
+    public static final int SEND_FAILED = 3;  //发送失败
+    public static final int RECEIVE_UNREAD = 4;   //接收到消息，未读
+    public static final int RECEIVE_READ = 5;  //接收到消息，已读
+
+
+//    public static final int MSG_TYPE_EMOTION = 1; //表情
+//    public static final int MSG_TYPE_TXT = 2; //文字
+//    public static final int MSG_TYPE_IMG = 3; //图片
+//    public static final int MSG_TYPE_MAP = 4; //地图
+//    public static final int MSG_TYPE_VIDEO = 5; //视频
+//    public static final int MSG_TYPE_VOICE = 6; //声音
+//    public static final int MSG_TYPE_FILE = 7; //文件
+//    public static final int MSG_TYPE_CALL = 9; //通话
+
+//    public static final int MSG_READ_STATUS = 1; //已读
+//    public static final int MSG_UNREAD_STATUS = 0; //未读
+//    public static final int MSG_SEND_FLAG_SENDING = -1;
+//    public static final int MSG_SEND_FLAG_SUCCESS = 0;
+//    public static final int MSG_SEND_FLAG_FAIL = 4;
 
     @Id
     private Long id;  //消息ID
 
+    private Long msgId; //发送消息成功后IM后台回给的消息Id
+
     private int msgType; //消息类型
+
+    private int msgStatus;
 
     private long msgTime; //消息时间
 
@@ -58,15 +91,6 @@ public class CacheMsgBean implements Parcelable, Cloneable {
     private String receiverPhone; //接收者的电话
 
     private String contentJsonBody;  //消息内容json body
-
-    private int send_flag = 0;  //发送状态   0:发送成功  -1:正在发送  2:短信发送  4:发送错误
-
-    private int isRightUI = 0;  // 0--true  1--false
-
-    private int is_read = MSG_READ_STATUS;  //读取状态  1 已读   0 未读
-
-
-    private Long msgId; //发送消息成功后IM后台回给的消息Id
 
 
     public Long getId() {
@@ -83,6 +107,15 @@ public class CacheMsgBean implements Parcelable, Cloneable {
 
     public CacheMsgBean setMsgType(int msgType) {
         this.msgType = msgType;
+        return this;
+    }
+
+    public int getMsgStatus() {
+        return msgStatus;
+    }
+
+    public CacheMsgBean setMsgStatus(int msgStatus) {
+        this.msgStatus = msgStatus;
         return this;
     }
 
@@ -150,41 +183,6 @@ public class CacheMsgBean implements Parcelable, Cloneable {
         return contentJsonBody;
     }
 
-    public int getSend_flag() {
-        return send_flag;
-    }
-
-    public CacheMsgBean setSend_flag(int send_flag) {
-        this.send_flag = send_flag;
-        return this;
-    }
-
-    public int getIsRightUI() {
-        return isRightUI;
-    }
-
-    public CacheMsgBean setIsRightUI(int isRightUI) {
-        this.isRightUI = isRightUI;
-        return this;
-    }
-
-    public boolean isRightUI() {
-        return isRightUI == 0;
-    }
-
-    public CacheMsgBean setRightUI(boolean rightUI) {
-        isRightUI = rightUI ? 0 : 1;
-        return this;
-    }
-
-    public int getIs_read() {
-        return is_read;
-    }
-
-    public CacheMsgBean setIs_read(int read) {
-        is_read = read;
-        return this;
-    }
 
     public Long getMsgId() {
         return this.msgId;
@@ -198,28 +196,32 @@ public class CacheMsgBean implements Parcelable, Cloneable {
     public JsonFormate getJsonBodyObj() {
         JsonFormate jsonBodyObj = null;
         switch (msgType) {
-            case MSG_TYPE_TXT:
+            case SEND_TEXT:
+            case RECEIVE_TEXT:
                 jsonBodyObj = new CacheMsgTxt().fromJson(contentJsonBody);
                 break;
-            case MSG_TYPE_IMG:
+            case SEND_IMAGE:
+            case RECEIVE_IMAGE:
                 jsonBodyObj = new CacheMsgImage().fromJson(contentJsonBody);
                 break;
-            case MSG_TYPE_MAP:
+            case SEND_LOCATION:
+            case RECEIVE_LOCATION:
                 jsonBodyObj = new CacheMsgMap().fromJson(contentJsonBody);
                 break;
-            case MSG_TYPE_VOICE:
+            case SEND_VOICE:
+            case RECEIVE_VOICE:
                 jsonBodyObj = new CacheMsgVoice().fromJson(contentJsonBody);
                 break;
-            case MSG_TYPE_EMOTION:
+            case SEND_EMOTION:
+            case RECEIVE_EMOTION:
                 jsonBodyObj = new CacheMsgEmotion().fromJson(contentJsonBody);
                 break;
-            case MSG_TYPE_FILE:
+            case SEND_FILE:
+            case RECEIVE_FILE:
                 jsonBodyObj = new CacheMsgFile().fromJson(contentJsonBody);
                 break;
-            case MSG_TYPE_CALL:
-                jsonBodyObj = new CacheMsgCall().fromJson(contentJsonBody);
-                break;
-            case MSG_TYPE_VIDEO:
+            case SEND_VIDEO:
+            case RECEIVE_VIDEO:
                 jsonBodyObj = new CacheMsgVideo().fromJson(contentJsonBody);
                 break;
         }
@@ -227,49 +229,32 @@ public class CacheMsgBean implements Parcelable, Cloneable {
         return jsonBodyObj;
     }
 
-
-    public CacheMsgBean(CacheMsgBean bean) {
-        this.id = bean.getId();
-        this.msgType = bean.getMsgType();
-        this.msgTime = bean.getMsgTime();
-        this.senderUserId = bean.getSenderUserId();
-        this.receiverUserId = bean.getReceiverUserId();
-        this.senderPhone = bean.getSenderPhone();
-        this.receiverPhone = bean.getReceiverPhone();
-        this.contentJsonBody = bean.getContentJsonBody();
-        this.send_flag = bean.getSend_flag();
-        this.isRightUI = bean.getIsRightUI();
-        this.is_read = bean.getIs_read();
-        this.msgId = bean.getMsgId();
-    }
-
-
-    public Object clone() {
-        Object o = null;
-        try {
-            o = super.clone();
-        } catch (CloneNotSupportedException e) {
-            LogUtils.d("CacheMsgBean", "CloneNotSupportedException");
+    public boolean isRightUI() {
+        boolean res = false;
+        switch (msgType) {
+            case SEND_TEXT:
+                res = true;
+                break;
+            case SEND_IMAGE:
+                res = true;
+                break;
+            case SEND_LOCATION:
+                res = true;
+                break;
+            case SEND_VOICE:
+                res = true;
+                break;
+            case SEND_EMOTION:
+                res = true;
+                break;
+            case SEND_FILE:
+                res = true;
+                break;
+            case SEND_VIDEO:
+                res = true;
+                break;
         }
-        return o;
-    }
-
-    @Override
-    public String toString() {
-        return "CacheMsgBean{" +
-                "id=" + id +
-                ", msgType=" + msgType +
-                ", msgTime=" + msgTime +
-                ", senderUserId=" + senderUserId +
-                ", receiverUserId=" + receiverUserId +
-                ", senderPhone='" + senderPhone + '\'' +
-                ", receiverPhone='" + receiverPhone + '\'' +
-                ", contentJsonBody='" + contentJsonBody + '\'' +
-                ", send_flag=" + send_flag +
-                ", isRightUI=" + isRightUI +
-                ", is_read=" + is_read +
-                ", msgId=" + msgId +
-                '}';
+        return res;
     }
 
 
@@ -281,57 +266,50 @@ public class CacheMsgBean implements Parcelable, Cloneable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeValue(this.id);
+        dest.writeValue(this.msgId);
         dest.writeInt(this.msgType);
+        dest.writeInt(this.msgStatus);
         dest.writeLong(this.msgTime);
         dest.writeInt(this.senderUserId);
         dest.writeInt(this.receiverUserId);
         dest.writeString(this.senderPhone);
         dest.writeString(this.receiverPhone);
         dest.writeString(this.contentJsonBody);
-        dest.writeInt(this.send_flag);
-        dest.writeInt(this.isRightUI);
-        dest.writeInt(this.is_read);
-        dest.writeValue(this.msgId);
+    }
+
+    public CacheMsgBean() {
     }
 
     protected CacheMsgBean(Parcel in) {
         this.id = (Long) in.readValue(Long.class.getClassLoader());
+        this.msgId = (Long) in.readValue(Long.class.getClassLoader());
         this.msgType = in.readInt();
+        this.msgStatus = in.readInt();
         this.msgTime = in.readLong();
         this.senderUserId = in.readInt();
         this.receiverUserId = in.readInt();
         this.senderPhone = in.readString();
         this.receiverPhone = in.readString();
         this.contentJsonBody = in.readString();
-        this.send_flag = in.readInt();
-        this.isRightUI = in.readInt();
-        this.is_read = in.readInt();
-        this.msgId = (Long) in.readValue(Long.class.getClassLoader());
     }
 
-    @Generated(hash = 336231755)
-    public CacheMsgBean(Long id, int msgType, long msgTime, int senderUserId, int receiverUserId,
-            String senderPhone, String receiverPhone, String contentJsonBody, int send_flag, int isRightUI,
-            int is_read, Long msgId) {
+    @Generated(hash = 1056906974)
+    public CacheMsgBean(Long id, Long msgId, int msgType, int msgStatus, long msgTime,
+                        int senderUserId, int receiverUserId, String senderPhone, String receiverPhone,
+                        String contentJsonBody) {
         this.id = id;
+        this.msgId = msgId;
         this.msgType = msgType;
+        this.msgStatus = msgStatus;
         this.msgTime = msgTime;
         this.senderUserId = senderUserId;
         this.receiverUserId = receiverUserId;
         this.senderPhone = senderPhone;
         this.receiverPhone = receiverPhone;
         this.contentJsonBody = contentJsonBody;
-        this.send_flag = send_flag;
-        this.isRightUI = isRightUI;
-        this.is_read = is_read;
-        this.msgId = msgId;
     }
 
-    @Generated(hash = 107805209)
-    public CacheMsgBean() {
-    }
-
-    public static final Parcelable.Creator<CacheMsgBean> CREATOR = new Parcelable.Creator<CacheMsgBean>() {
+    public static final Creator<CacheMsgBean> CREATOR = new Creator<CacheMsgBean>() {
         @Override
         public CacheMsgBean createFromParcel(Parcel source) {
             return new CacheMsgBean(source);

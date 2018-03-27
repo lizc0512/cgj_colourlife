@@ -5,23 +5,19 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -115,17 +111,8 @@ public class IMConnectionActivity extends SdkBaseActivity implements
     public static final String DST_PHONE = "DST_PHONE";
     //srsm add @20170214
     public static final String DST_NAME = "DST_NAME";
-    public static final String DST_PAGE_TYPE = "PAGE_TYPE";
-    public static final String DST_CONTACT_ID = "DST_CONTACT_ID";
-    public static final String EXTRA_IS_UNREAD = "EXTRA_IS_UNREAD";
     public static final String EXTRA_SCROLL_POSITION = "EXTRA_SCROLL_POSITION";
     public static final String IS_SHOW_AUDIO = "IS_SHOW_AUDIO";
-    public static final String IS_OPEN_REMARK = "IS_OPEN_REMARK";
-    public static final String FROM_TO = "from_to";
-    public static final String MSG_ID = "msg_id";
-
-    public static final String IS_IM_TYPE = "IS_IM_TYPE";
-    public static final String ACTIVITY_COME_TYPE = "ACTIVITY_COME_TYPE";
 
     public static final long MAX_SENDER_FILE = 50 * 1024 * 1024;
 
@@ -152,9 +139,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
     private ImageView ivMore;
     private String targetPhone = "";
     private String contactName;
-    private int contactID;
 
-    private int pageType;
     private boolean isOpenAudio = false;
 
     private boolean isPauseOut = false;
@@ -163,8 +148,6 @@ public class IMConnectionActivity extends SdkBaseActivity implements
     private boolean isSmoothBottom = true;//是否滑动完成
     private boolean canSliding = true;//是否正可以滑动最底
 
-    private boolean isIMType = true;
-    private int comeType;//分类界面 1: hook界面的IM图像跳过来的 2：
     private long mScrollPosition;
 
     private BroadcastReceiver mReceiveSmsMsg;
@@ -183,8 +166,6 @@ public class IMConnectionActivity extends SdkBaseActivity implements
                         cacheImage.setOriginalType(CacheMsgImage.SEND_IS_ORI_RECV_IS_ORI);
                         oriMsgBean.setJsonBodyObj(cacheImage);
 
-                        //imListAdapter.update(oriMsgBean, i);
-                        //imListAdapter.refreshItemUI(oriMsgBean);
                         CacheMsgHelper.instance(mContext).insertOrUpdate(oriMsgBean);
                         break;
                     }
@@ -198,7 +179,6 @@ public class IMConnectionActivity extends SdkBaseActivity implements
 
     private Context mContext;
 
-    private int fromTo;
     private boolean isOriginal = false;
 
     private static final int MSG_GET_CONTACT_ID = 1000;
@@ -217,7 +197,6 @@ public class IMConnectionActivity extends SdkBaseActivity implements
             IMConnectionActivity act = mTarget.get();
             switch (msg.what) {
                 case MSG_GET_CONTACT_ID:
-                    act.contactID = act.getContactID(act.targetPhone, act.contactName);
                     break;
                 default:
                     break;
@@ -237,15 +216,10 @@ public class IMConnectionActivity extends SdkBaseActivity implements
         Intent fromIntent = getIntent();
         targetPhone = fromIntent.getStringExtra(DST_PHONE);
         isOpenAudio = fromIntent.getBooleanExtra(IS_SHOW_AUDIO, false);
-        pageType = fromIntent.getIntExtra(DST_PAGE_TYPE, 0);
-        isIMType = fromIntent.getBooleanExtra(IS_IM_TYPE, true);//是否沟通界面 默认true:沟通 false:问题反馈
-        comeType = fromIntent.getIntExtra(ACTIVITY_COME_TYPE, -1);
 
         if (StringUtils.isEmpty(targetPhone)) {
             targetPhone = HuxinSdkManager.instance().getPhoneNum();
         }
-
-        contactID = fromIntent.getIntExtra(DST_CONTACT_ID, 0);
 
         mScrollPosition = fromIntent.getLongExtra(EXTRA_SCROLL_POSITION, 0);
 
@@ -274,45 +248,28 @@ public class IMConnectionActivity extends SdkBaseActivity implements
         localBroadcastManager.registerReceiver(downloadBroadcastReceiver, filter);
         localBroadcastManager.registerReceiver(mUpdateImageStateReceiver, new IntentFilter("update_CacheMsgBean"));
 
-        if (fromIntent != null &&
-                fromIntent.getBooleanExtra(IMConnectionActivity.EXTRA_IS_UNREAD, false)) {
-            Intent intent = new Intent();
-            intent.putExtra("updatePhone", targetPhone);
-            setResult(Activity.RESULT_OK, intent);
-        }
-
         initView();
         initData();
         IMMsgManager.getInstance().setImMsgCallback(this);
 
-        HuxinSdkManager.instance().getStackAct().addActivity(this);
-
-        fromTo = fromIntent.getIntExtra(FROM_TO, 0);
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         handleIntent(intent);
-
-        /*fromTo = intent.getIntExtra(FROM_TO, 0);
-        if (fromTo == FROM_HOOK_STRATE) {
-            setSwapCard(1);
-        }*/
     }
 
     @Override
     public void onResume() {
         super.onResume();
         //srsm add start
-        imListAdapter.resume(contactID == 0);
         IMMsgManager.getInstance().setImMsgCallback(this);
         //srsm add end
 
         MediaManager.resume();
         isPauseOut = false;
 
-        imListAdapter.setHasItemClick(false);
         if (isOpenAudio) {
             //只生效一次
             keyboardLay.showVoice(true);//开启录音状态
@@ -419,18 +376,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
             }
         }
 
-        finish();
-
-        if (!CallInfo.IsCalling()) {
-            if (!HuxinSdkManager.instance().getStackAct().hasActivity("com.youmai.huxin.app.activity.MainAct")
-                    || comeType == 1) {
-                Intent huxinAppIntent = new Intent(Intent.ACTION_MAIN);
-                huxinAppIntent.setClassName("com.youmai.huxin", "com.youmai.huxin.app.activity.MainAct");
-                huxinAppIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-                huxinAppIntent.setFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
-                startActivity(huxinAppIntent);
-            }
-        }
+        super.onBackPressed();
     }
 
     @Override
@@ -449,10 +395,6 @@ public class IMConnectionActivity extends SdkBaseActivity implements
         localBroadcastManager.unregisterReceiver(downloadBroadcastReceiver);
         localBroadcastManager = null;
 
-        if (imListAdapter != null) {
-            imListAdapter.unregisterAdapterDataObserver(mEmptyRecyclerViewDataObserver);
-        }
-
         if (mHandler != null) {
             mHandler.removeCallbacksAndMessages(null);
             mHandler.removeMessages(MSG_GET_CONTACT_ID);
@@ -464,7 +406,6 @@ public class IMConnectionActivity extends SdkBaseActivity implements
         Intent intent = new Intent(this, SendMsgService.class);
         intent.putExtra("flag", false);
         startService(intent);
-        HuxinSdkManager.instance().getStackAct().finishActivity(this);
 
         PhotoPickerManager.getInstance().clearMap();
 
@@ -561,7 +502,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
         manager = new LinearLayoutManagerWithSmoothScroller(this, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(manager);
 
-        imListAdapter = new IMListAdapter(this, recyclerView, targetPhone, contactName, isIMType);
+        imListAdapter = new IMListAdapter(this, recyclerView, targetPhone, contactName);
         imListAdapter.setMoreListener(new IMListAdapter.OnClickMoreListener() {
             @Override
             public void showMore(boolean isShow) {
@@ -578,14 +519,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
                 }
             }
         });
-        imListAdapter.registerAdapterDataObserver(mEmptyRecyclerViewDataObserver);
         recyclerView.setAdapter(imListAdapter);
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                showNewGuide();
-            }
-        }, 300);
 
         if (mScrollPosition != 0) {
             recyclerView.scrollToPosition(imListAdapter.getItemPosition(mScrollPosition));
@@ -632,29 +566,12 @@ public class IMConnectionActivity extends SdkBaseActivity implements
 
             @Override
             public void onHandleAvatarClick() {
-                handlerContact();
             }
         });
     }
 
     PopupWindow popupWindow;
     long i = 0;
-
-    private void handlerContact() {
-        Intent intent = new Intent();
-        if (contactID == 0) {
-            //intent.setClassName(this, "com.youmai.huxin.app.activity.NewContactsActivity");
-            intent.setAction("com.youmai.huxincontacts.action.newcontacts");
-            intent.putExtra("contacts_operate", 2);
-            intent.putExtra("contacts_phone", targetPhone);
-        } else {
-            intent.setAction("com.youmai.huxin.CotactDetails");
-            intent.putExtra("contactID", contactID);
-            intent.putExtra("phone", targetPhone);
-            intent.putExtra("name", contactName);
-        }
-        startActivity(intent);
-    }
 
 
     private void showPopUp(View v) {
@@ -672,25 +589,16 @@ public class IMConnectionActivity extends SdkBaseActivity implements
         View view1 = view.findViewById(R.id.im_more_line);
         View popupWindowView = popupWindow.getContentView();
         TextView contactText = (TextView) popupWindowView.findViewById(R.id.im_more_contact_text);
-        if (contactID == 0) {
-            contactText.setText(R.string.hx_im_pop_contact_add);
-        } else {
-            contactText.setText(R.string.hx_im_pop_contact_information);
-        }
-        if (1 == pageType) {
-            layout.setVisibility(View.GONE);
-            view1.setVisibility(View.GONE);
-        } else {
-            layout.setVisibility(View.VISIBLE);
-            view1.setVisibility(View.VISIBLE);
-        }
+        contactText.setText(R.string.hx_im_pop_contact_add);
+        layout.setVisibility(View.GONE);
+        view1.setVisibility(View.GONE);
+
         layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (i + 2000 < System.currentTimeMillis()) {
                     i = System.currentTimeMillis();
                     //跳转联系人
-                    handlerContact();
                     popupWindow.dismiss();
                 }
             }
@@ -742,11 +650,10 @@ public class IMConnectionActivity extends SdkBaseActivity implements
     private CacheMsgBean getBaseMsg() {
         return new CacheMsgBean()
                 .setMsgTime(System.currentTimeMillis())
-                .setSend_flag(-1)
+                .setMsgStatus(CacheMsgBean.SEND_GOING)
                 .setSenderPhone(HuxinSdkManager.instance().getPhoneNum())
                 .setSenderUserId(HuxinSdkManager.instance().getUserId())
-                .setReceiverPhone(targetPhone)
-                .setRightUI(true);
+                .setReceiverPhone(targetPhone);
     }
 
     /**
@@ -755,9 +662,9 @@ public class IMConnectionActivity extends SdkBaseActivity implements
     private void sendTxt(final String content, int refContent, boolean isInput) {
         CacheMsgBean cacheMsgBean = getBaseMsg();
         if (isInput) {
-            cacheMsgBean.setMsgType(CacheMsgBean.MSG_TYPE_TXT).setJsonBodyObj(new CacheMsgTxt().setMsgTxt(content));
+            cacheMsgBean.setMsgType(CacheMsgBean.SEND_TEXT).setJsonBodyObj(new CacheMsgTxt().setMsgTxt(content));
         } else {
-            cacheMsgBean.setMsgType(CacheMsgBean.MSG_TYPE_EMOTION).setJsonBodyObj(new CacheMsgEmotion().setEmotion(content, refContent));
+            cacheMsgBean.setMsgType(CacheMsgBean.SEND_EMOTION).setJsonBodyObj(new CacheMsgEmotion().setEmotion(content, refContent));
         }
 
         imListAdapter.addAndRefreshUI(cacheMsgBean);
@@ -776,7 +683,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
         final String address = data.getStringExtra("address");
 
         CacheMsgBean cacheMsgBean = getBaseMsg();
-        cacheMsgBean.setMsgType(CacheMsgBean.MSG_TYPE_MAP)
+        cacheMsgBean.setMsgType(CacheMsgBean.SEND_LOCATION)
                 .setJsonBodyObj(new CacheMsgMap()
                         .setLocation(longitude + "," + latitude)
                         .setAddress(address)
@@ -797,7 +704,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
             return;
         }
         CacheMsgBean cacheMsgBean = getBaseMsg();
-        cacheMsgBean.setMsgType(CacheMsgBean.MSG_TYPE_VOICE)
+        cacheMsgBean.setMsgType(CacheMsgBean.SEND_VOICE)
                 .setJsonBodyObj(new CacheMsgVoice().setVoiceTime(seconds + "").setVoicePath(filePath));
 
         imListAdapter.addAndRefreshUI(cacheMsgBean);
@@ -811,7 +718,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
      */
     private void sendTakenPic(String path, boolean isOriginal) {
         CacheMsgBean cacheMsgBean = getBaseMsg();
-        cacheMsgBean.setMsgType(CacheMsgBean.MSG_TYPE_IMG)
+        cacheMsgBean.setMsgType(CacheMsgBean.SEND_IMAGE)
                 .setJsonBodyObj(new CacheMsgImage()
                         .setFilePath(path)
                         .setOriginalType(isOriginal ? CacheMsgImage.SEND_IS_ORI : CacheMsgImage.SEND_NOT_ORI));
@@ -828,7 +735,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
 
     public void sendFile(File file) {
         CacheMsgBean cacheMsgBean = getBaseMsg();
-        cacheMsgBean.setMsgType(CacheMsgBean.MSG_TYPE_FILE)
+        cacheMsgBean.setMsgType(CacheMsgBean.SEND_FILE)
                 .setJsonBodyObj(new CacheMsgFile()
                         .setFilePath(file.getAbsolutePath())
                         .setFileSize(file.length())
@@ -844,7 +751,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
      */
     public void sendVideo(String filePath, String framePath, long millisecond) {
         CacheMsgBean cacheMsgBean = getBaseMsg();
-        cacheMsgBean.setMsgType(CacheMsgBean.MSG_TYPE_VIDEO)
+        cacheMsgBean.setMsgType(CacheMsgBean.SEND_VIDEO)
                 .setJsonBodyObj(new CacheMsgVideo()
                         .setVideoPath(filePath)
                         .setFramePath(framePath)
@@ -853,7 +760,6 @@ public class IMConnectionActivity extends SdkBaseActivity implements
         imListAdapter.addAndRefreshUI(cacheMsgBean);
         sendMsg(cacheMsgBean);
     }
-
 
 
     //拍照
@@ -1275,87 +1181,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
      * 问题反馈不需要显示
      */
     private void showToolsBar() {
-        if (isIMType) {
-            ivMore.setVisibility(View.VISIBLE);
-        } else {
-            ivMore.setVisibility(View.GONE);
-        }
-    }
-
-    private EmptyRecyclerViewDataObserver mEmptyRecyclerViewDataObserver = new EmptyRecyclerViewDataObserver();
-
-    private void showNewGuide() {
-
-    }
-
-    /**
-     * 从通讯录获取ID
-     *
-     * @param phone
-     * @return
-     */
-    public int getContactID(String phone, String name) {
-        String nickName = name;
-        int contactId = 0;
-        ContentResolver resolver = getContentResolver();
-        Cursor cursor = null;
-        Uri uri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
-        String[] projection = {
-                ContactsContract.CommonDataKinds.Phone.CONTACT_ID,
-                ContactsContract.CommonDataKinds.Phone.NUMBER,
-                ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME};
-        try {
-            cursor = resolver.query(
-                    uri,
-                    projection,
-                    "replace(replace(replace(" + ContactsContract.CommonDataKinds.Phone.NUMBER + ",' ', '') ,'-',''),'+86','')" + "='" + phone + "'",
-                    null,
-                    null);
-            if (cursor != null) {
-                while (cursor.moveToNext()) {
-                    nickName = cursor.getString(2);
-                    if (nickName.trim().equals(name.trim())) {
-                        contactId = cursor.getInt(0);
-                        break;
-                    }
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
-        }
-        return contactId;
-    }
-
-
-    private class EmptyRecyclerViewDataObserver extends RecyclerView.AdapterDataObserver {
-        @Override
-        public void onChanged() {
-            showNewGuide();
-        }
-
-        @Override
-        public void onItemRangeChanged(int positionStart, int itemCount, Object payload) {
-            showNewGuide();
-        }
-
-        @Override
-        public void onItemRangeInserted(int positionStart, int itemCount) {
-            showNewGuide();
-        }
-
-        @Override
-        public void onItemRangeRemoved(int positionStart, int itemCount) {
-        }
-
-        @Override
-        public void onItemRangeMoved(int fromPosition, int toPosition, int itemCount) {
-
-        }
-
+        ivMore.setVisibility(View.GONE);
     }
 
 

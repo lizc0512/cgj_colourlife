@@ -11,16 +11,13 @@ public class ExCacheMsgBean extends CacheMsgBean {
     private String simplepinyin;//简拼
     private String displayName;//姓名
     private String phone;//对方号码
-//    private HxUsers hxUsers;
+    //    private HxUsers hxUsers;
     private int contactId;//通讯id  没有在通讯录内显示0
-    private boolean mIsMultiNumber=false;//多号码识别
+    private boolean mIsMultiNumber = false;//多号码识别
 
     public ExCacheMsgBean() {
     }
 
-    public ExCacheMsgBean(CacheMsgBean bean) {
-        super(bean);
-    }
 
     public boolean isMultiNumber() {
         return mIsMultiNumber;
@@ -76,12 +73,6 @@ public class ExCacheMsgBean extends CacheMsgBean {
 
     public void setContactId(int contactId) {
         this.contactId = contactId;
-    }
-
-    public Object clone() {
-        Object o = null;
-        o = super.clone();
-        return o;
     }
 
     @Override

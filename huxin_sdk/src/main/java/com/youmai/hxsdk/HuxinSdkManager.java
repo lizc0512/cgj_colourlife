@@ -37,9 +37,7 @@ import com.youmai.hxsdk.db.bean.CacheMsgBean;
 import com.youmai.hxsdk.db.bean.ChatMsg;
 import com.youmai.hxsdk.db.dao.CacheMsgBeanDao;
 import com.youmai.hxsdk.db.manager.GreenDBIMManager;
-import com.youmai.hxsdk.db.manager.GreenDbManager;
 import com.youmai.hxsdk.entity.FileToken;
-import com.youmai.hxsdk.entity.RespBaseBean;
 import com.youmai.hxsdk.entity.UploadFile;
 import com.youmai.hxsdk.http.IPostListener;
 import com.youmai.hxsdk.im.IMHelper;
@@ -47,7 +45,6 @@ import com.youmai.hxsdk.im.IMMsgManager;
 import com.youmai.hxsdk.im.cache.CacheMsgFile;
 import com.youmai.hxsdk.im.cache.CacheMsgHelper;
 import com.youmai.hxsdk.im.cache.CacheMsgImage;
-import com.youmai.hxsdk.im.cache.CacheMsgJoke;
 import com.youmai.hxsdk.im.cache.CacheMsgVideo;
 import com.youmai.hxsdk.interfaces.IFileSendListener;
 import com.youmai.hxsdk.interfaces.OnFileListener;
@@ -684,8 +681,6 @@ public class HuxinSdkManager {
             clearUserData();
         }
     }
-
-
 
 
     /**
@@ -1354,7 +1349,6 @@ public class HuxinSdkManager {
                                                     listener.onImNotUser(ChatMsg.MsgType.AUDIO.ordinal(), msgId);
                                                 }
                                             } else {
-                                                showNotHuxinUser(desPhone, SendSmsActivity.SEND_AUDIO, msgId);
                                                 listener.onImFail(ChatMsg.MsgType.AUDIO.ordinal(), fileBean);
                                             }
                                         } catch (InvalidProtocolBufferException e) {
@@ -1434,13 +1428,12 @@ public class HuxinSdkManager {
                 .setFileRes(IMHelper.getFileImgRes(file.getName(), false));
         final CacheMsgBean cacheMsgBean = new CacheMsgBean()
                 .setMsgTime(System.currentTimeMillis())
-                .setSend_flag(-1)
+                .setMsgStatus(CacheMsgBean.SEND_GOING)
                 .setSenderPhone(getPhoneNum())
                 .setSenderUserId(userId)
                 .setReceiverPhone(desPhone)
-                .setMsgType(CacheMsgBean.MSG_TYPE_FILE)
-                .setJsonBodyObj(cacheMsgFile)
-                .setRightUI(true);
+                .setMsgType(CacheMsgBean.SEND_FILE)
+                .setJsonBodyObj(cacheMsgFile);
         if (isSaveDB) {
             //add to db
             CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
@@ -1472,7 +1465,7 @@ public class HuxinSdkManager {
                     }
                     if (isSaveDB) {
                         //add to db
-                        cacheMsgBean.setSend_flag(4);
+                        cacheMsgBean.setMsgStatus(CacheMsgBean.SEND_FAILED);
                         CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
                     }
                     return;
@@ -1489,7 +1482,7 @@ public class HuxinSdkManager {
                                 }
                                 if (isSaveDB) {
                                     //add to db
-                                    cacheMsgBean.setSend_flag(4);
+                                    cacheMsgBean.setMsgStatus(CacheMsgBean.SEND_FAILED);
                                     CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
                                 }
                                 Toast.makeText(mContext, mContext.getString(R.string.hx_toast_06), Toast.LENGTH_SHORT).show();
@@ -1522,7 +1515,7 @@ public class HuxinSdkManager {
 
                                             if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_OK) {
                                                 if (ack.getIsTargetOnline()) {
-                                                    newMsgBean.setSend_flag(0);
+                                                    newMsgBean.setMsgStatus(CacheMsgBean.SEND_SUCCEED);
                                                     //add to db
                                                     CacheMsgHelper.instance(mContext).insertOrUpdate(newMsgBean);
                                                     //Toast.makeText(mContext, mContext.getString(R.string.hx_toast_21), Toast.LENGTH_SHORT).show();
@@ -1534,7 +1527,7 @@ public class HuxinSdkManager {
                                                                 @Override
                                                                 public void success(String msg) {
                                                                     LogUtils.w(TAG, msg);
-                                                                    newMsgBean.setSend_flag(0);
+                                                                    newMsgBean.setMsgStatus(CacheMsgBean.SEND_SUCCEED);
                                                                     //add to db
                                                                     CacheMsgHelper.instance(mContext).insertOrUpdate(newMsgBean);
                                                                     //Toast.makeText(mContext, mContext.getString(R.string.hx_toast_21), Toast.LENGTH_SHORT).show();
@@ -1553,9 +1546,8 @@ public class HuxinSdkManager {
                                                 }
 
                                             } else if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_NOT_HUXIN_USER) {
-                                                newMsgBean.setSend_flag(0);
+                                                newMsgBean.setMsgStatus(CacheMsgBean.SEND_SUCCEED);
                                                 CacheMsgHelper.instance(mContext).insertOrUpdate(newMsgBean);
-                                                showNotHuxinUser(desPhone, SendSmsActivity.SEND_FILE, msgId);
                                                 if (null != listener) {
                                                     listener.onImNotUser(ChatMsg.MsgType.BIG_FILE.ordinal(), msgId);
                                                 }
@@ -1595,7 +1587,7 @@ public class HuxinSdkManager {
                     }
                     if (isSaveDB) {
                         //add to db
-                        cacheMsgBean.setSend_flag(4);
+                        cacheMsgBean.setMsgStatus(CacheMsgBean.SEND_FAILED);
                         CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
                     }
                 }
@@ -1651,13 +1643,12 @@ public class HuxinSdkManager {
         final CacheMsgBean cacheMsgBean = new CacheMsgBean();
         if (isSaveDB) {
             cacheMsgBean.setMsgTime(System.currentTimeMillis())
-                    .setSend_flag(-1)
+                    .setMsgStatus(CacheMsgBean.SEND_GOING)
                     .setSenderPhone(getPhoneNum())
                     .setSenderUserId(userId)
                     .setReceiverPhone(desPhone)
-                    .setMsgType(CacheMsgBean.MSG_TYPE_IMG)
-                    .setJsonBodyObj(new CacheMsgImage().setFilePath(originalPath))
-                    .setRightUI(true);
+                    .setMsgType(CacheMsgBean.SEND_IMAGE)
+                    .setJsonBodyObj(new CacheMsgImage().setFilePath(originalPath));
 
             IMMsgManager.getInstance().addCacheMsgBean(cacheMsgBean);
             //add to db
@@ -1683,7 +1674,7 @@ public class HuxinSdkManager {
                     }
                     if (isSaveDB) {
                         //add to db
-                        cacheMsgBean.setSend_flag(4);
+                        cacheMsgBean.setMsgStatus(CacheMsgBean.SEND_FAILED);
                         CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
                     }
                     return;
@@ -1703,7 +1694,7 @@ public class HuxinSdkManager {
                                 Looper.loop();
                                 if (isSaveDB) {
                                     //add to db
-                                    cacheMsgBean.setSend_flag(4);
+                                    cacheMsgBean.setMsgStatus(CacheMsgBean.SEND_FAILED);
                                     CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
                                 }
                                 return;
@@ -1743,7 +1734,7 @@ public class HuxinSdkManager {
                                                     Toast.makeText(mContext, log, Toast.LENGTH_SHORT).show();*/
                                                     if (isSaveDB) {
                                                         //add to db
-                                                        newMsgBean.setSend_flag(0);
+                                                        newMsgBean.setMsgStatus(CacheMsgBean.SEND_SUCCEED);
                                                         CacheMsgHelper.instance(mContext).insertOrUpdate(newMsgBean);
                                                     }
                                                 } else {
@@ -1757,7 +1748,7 @@ public class HuxinSdkManager {
                                                                     Toast.makeText(mContext, log, Toast.LENGTH_SHORT).show();*/
                                                                     if (isSaveDB) {
                                                                         //add to db
-                                                                        finalNewMsgBean.setSend_flag(0);
+                                                                        finalNewMsgBean.setMsgStatus(CacheMsgBean.SEND_SUCCEED);
                                                                         CacheMsgHelper.instance(mContext).insertOrUpdate(finalNewMsgBean);
                                                                     }
                                                                 }
@@ -1774,9 +1765,6 @@ public class HuxinSdkManager {
                                                 }
 
                                             } else if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_NOT_HUXIN_USER) {
-                                                if (isSaveDB) {
-                                                    showNotHuxinUser2(desPhone, SendSmsActivity.SEND_PICTURE, msgId, newMsgBean);
-                                                }
                                                 if (null != listener) {
                                                     listener.onImNotUser(ChatMsg.MsgType.PICTURE.ordinal(), msgId);
                                                 }
@@ -1789,7 +1777,7 @@ public class HuxinSdkManager {
                                                 }
 
                                                 if (isSaveDB) {
-                                                    newMsgBean.setSend_flag(-1);
+                                                    newMsgBean.setMsgStatus(CacheMsgBean.SEND_FAILED);
                                                 }
                                             }
                                             //删除已发送的本地图片
@@ -1808,7 +1796,7 @@ public class HuxinSdkManager {
                                             listener.onImFail(ChatMsg.MsgType.PICTURE.ordinal(), fileBean);
                                         }
                                         if (isSaveDB) {
-                                            cacheMsgBean.setSend_flag(4);
+                                            cacheMsgBean.setMsgStatus(CacheMsgBean.SEND_FAILED);
                                             CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
                                         }
                                     }
@@ -1835,7 +1823,7 @@ public class HuxinSdkManager {
                     }
                     if (isSaveDB) {
                         //add to db
-                        cacheMsgBean.setSend_flag(4);
+                        cacheMsgBean.setMsgStatus(CacheMsgBean.SEND_FAILED);
                         CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
                     }
 
@@ -1890,13 +1878,12 @@ public class HuxinSdkManager {
         //todo_k: 视频
         final CacheMsgBean cacheMsgBean = new CacheMsgBean();
         cacheMsgBean.setMsgTime(System.currentTimeMillis())
-                .setSend_flag(-1)
+                .setMsgStatus(CacheMsgBean.SEND_FAILED)
                 .setSenderPhone(getPhoneNum())
                 .setSenderUserId(userId)
                 .setReceiverPhone(desPhone)
-                .setMsgType(CacheMsgBean.MSG_TYPE_VIDEO)
-                .setJsonBodyObj(new CacheMsgVideo().setVideoPath(filePath).setFramePath(framePath).setName(videoName).setSize(videoSize).setTime(seconds))
-                .setRightUI(true);
+                .setMsgType(CacheMsgBean.SEND_VIDEO)
+                .setJsonBodyObj(new CacheMsgVideo().setVideoPath(filePath).setFramePath(framePath).setName(videoName).setSize(videoSize).setTime(seconds));
         if (isSaveDB) {
             IMMsgManager.getInstance().addCacheMsgBean(cacheMsgBean);
             //add to db
@@ -1928,7 +1915,7 @@ public class HuxinSdkManager {
                     }
                     if (isSaveDB) {
                         //add to db
-                        cacheMsgBean.setSend_flag(4);
+                        cacheMsgBean.setMsgStatus(CacheMsgBean.SEND_FAILED);
                         CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
                     }
                     return;
@@ -1945,7 +1932,7 @@ public class HuxinSdkManager {
                                 }
                                 if (isSaveDB) {
                                     //add to db
-                                    cacheMsgBean.setSend_flag(4);
+                                    cacheMsgBean.setMsgStatus(CacheMsgBean.SEND_FAILED);
                                     CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
                                 }
                                 return;
@@ -1979,7 +1966,7 @@ public class HuxinSdkManager {
                     }
                     if (isSaveDB) {
                         //add to db
-                        cacheMsgBean.setSend_flag(4);
+                        cacheMsgBean.setMsgStatus(CacheMsgBean.SEND_FAILED);
                         CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
                     }
 
@@ -2015,7 +2002,7 @@ public class HuxinSdkManager {
                     }
                     if (isSaveDB) {
                         //add to db
-                        cacheMsgBean.setSend_flag(4);
+                        cacheMsgBean.setMsgStatus(CacheMsgBean.SEND_FAILED);
                         CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
                     }
                     return;
@@ -2032,7 +2019,7 @@ public class HuxinSdkManager {
                                 }
                                 if (isSaveDB) {
                                     //add to db
-                                    cacheMsgBean.setSend_flag(4);
+                                    cacheMsgBean.setMsgStatus(CacheMsgBean.SEND_FAILED);
                                     CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
                                 }
                                 Toast.makeText(mContext, mContext.getString(R.string.hx_toast_74), Toast.LENGTH_SHORT).show();
@@ -2069,7 +2056,7 @@ public class HuxinSdkManager {
                     }
                     if (isSaveDB) {
                         //add to db
-                        cacheMsgBean.setSend_flag(4);
+                        cacheMsgBean.setMsgStatus(CacheMsgBean.SEND_FAILED);
                         CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
                     }
 
@@ -2121,7 +2108,7 @@ public class HuxinSdkManager {
                             Toast.makeText(mContext, log, Toast.LENGTH_SHORT).show();*/
                             if (isSaveDB) {
                                 //add to db
-                                newMsgBean.setSend_flag(0);
+                                newMsgBean.setMsgStatus(CacheMsgBean.SEND_SUCCEED);
                                 CacheMsgHelper.instance(mContext).insertOrUpdate(newMsgBean);
                             }
                         } else {
@@ -2137,7 +2124,7 @@ public class HuxinSdkManager {
                                             Toast.makeText(mContext, log, Toast.LENGTH_SHORT).show();*/
                                             if (isSaveDB) {
                                                 //add to db
-                                                finalNewMsgBean.setSend_flag(0);
+                                                finalNewMsgBean.setMsgStatus(CacheMsgBean.SEND_SUCCEED);
                                                 CacheMsgHelper.instance(mContext).insertOrUpdate(finalNewMsgBean);
                                             }
                                         }
@@ -2154,9 +2141,6 @@ public class HuxinSdkManager {
                         }
 
                     } else if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_NOT_HUXIN_USER) {
-                        if (isSaveDB) {
-                            showNotHuxinUser2(cacheMsgBean.getReceiverPhone(), SendSmsActivity.SEND_VIDEO, msgId, newMsgBean);
-                        }
                         if (null != listener) {
                             listener.onImNotUser(ChatMsg.MsgType.VIDEO.ordinal(), msgId);
                         }
@@ -2169,7 +2153,7 @@ public class HuxinSdkManager {
                         }
 
                         if (isSaveDB) {
-                            newMsgBean.setSend_flag(-1);
+                            newMsgBean.setMsgStatus(CacheMsgBean.SEND_FAILED);
                         }
                     }
                 } catch (InvalidProtocolBufferException e) {
@@ -2184,7 +2168,7 @@ public class HuxinSdkManager {
                     listener.onImFail(ChatMsg.MsgType.VIDEO.ordinal(), fileBean);
                 }
                 if (isSaveDB) {
-                    cacheMsgBean.setSend_flag(4);
+                    cacheMsgBean.setMsgStatus(CacheMsgBean.SEND_FAILED);
                     CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
                 }
             }
@@ -2395,43 +2379,6 @@ public class HuxinSdkManager {
                 new String[]{desPhone, "1"}).size();
     }
 
-    /**
-     * 获取消息
-     * receiver_phone=? and is_right_ui=?
-     *
-     * @param desPhone
-     * @return
-     */
-    public List<CacheMsgBean> getCacheMsgFromDBDesc(String desPhone) {
-        CacheMsgBeanDao cacheMsgBeanDao = GreenDBIMManager.instance(mContext).getCacheMsgDao();
-        List<CacheMsgBean> list = cacheMsgBeanDao.queryBuilder().where(
-                CacheMsgBeanDao.Properties.ReceiverPhone.eq(desPhone),
-                CacheMsgBeanDao.Properties.IsRightUI.eq("1"))
-                .orderDesc(CacheMsgBeanDao.Properties.MsgTime).list();
-        return list;
-    }
-
-    /**
-     * 获取分页消息
-     *
-     * @param desPhone
-     * @return
-     */
-    public List<CacheMsgBean> getCacheMsgFromDBDesc(String desPhone, int startIndex, int pageSize) {
-       /*CacheMsgBeanDao cacheMsgBeanDao = new CacheMsgBeanDao(mContext);
-        cacheMsgBeanDao.startReadableDatabase();
-        List<CacheMsgBean> list = cacheMsgBeanDao.queryList(null, "receiver_phone=? and is_right_ui=?", new String[]{desPhone, "1"}, null, null, "msg_time DESC", startIndex + "," + pageSize);
-        cacheMsgBeanDao.closeDatabase();
-        return list;*/
-
-        CacheMsgBeanDao cacheMsgBeanDao = GreenDBIMManager.instance(mContext).getCacheMsgDao();
-        List<CacheMsgBean> list = cacheMsgBeanDao.queryBuilder().where(
-                CacheMsgBeanDao.Properties.ReceiverPhone.eq(desPhone),
-                CacheMsgBeanDao.Properties.IsRightUI.eq("1"))
-                .orderDesc(CacheMsgBeanDao.Properties.MsgTime)
-                .offset(startIndex).limit(pageSize).list();
-        return list;
-    }
 
     /**
      * 获取消息
@@ -2480,42 +2427,6 @@ public class HuxinSdkManager {
 
         res = true;  //固定返回true
         return res;
-    }
-
-
-    public void showNotHuxinUser(String desPhone, int type, long msgId) {
-
-        Intent intent = new Intent(mContext, SendSmsActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtra("desPhone", desPhone);
-        intent.putExtra("msgId", msgId);
-        intent.putExtra("type", type);
-        mContext.startActivity(intent);
-    }
-
-    public void showNotHuxinUser2(String desPhone, int type, long msgId, CacheMsgBean cacheMsgBean) {
-
-        Intent intent = new Intent(mContext, SendSmsActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtra("desPhone", desPhone);
-        intent.putExtra("msgId", msgId);
-        intent.putExtra("type", type);
-        intent.putExtra("bean", cacheMsgBean);
-        mContext.startActivity(intent);
-    }
-
-    /**
-     * 短信发文本
-     */
-    public void showNotHuxinUser(String desPhone, int type, long msgId, String text) {
-
-        Intent intent = new Intent(mContext, SendSmsActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtra("desPhone", desPhone);
-        intent.putExtra("msgId", msgId);
-        intent.putExtra("type", type);
-        intent.putExtra("text", text);
-        mContext.startActivity(intent);
     }
 
     /**

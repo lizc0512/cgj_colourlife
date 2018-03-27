@@ -111,11 +111,7 @@ public class IMListAdapter extends RecyclerView.Adapter {
     private List<CacheMsgBean> mImBeanList = new ArrayList<>();
     public int mThemeIndex = -1;
 
-    private boolean hasItemClick = false;
-
     private OnListener listener;
-
-    private Toast mGolbalToast;
 
     private final int REMARK_UNEDIT_STATE = -99;
     private int mEditingRemarkPos = REMARK_UNEDIT_STATE;
@@ -127,10 +123,8 @@ public class IMListAdapter extends RecyclerView.Adapter {
     private OnClickMoreListener moreListener;
 
     TipView tipView;
-    public float mRawX;
-    public float mRawY;
 
-    public IMListAdapter(IMConnectionActivity act, RecyclerView recyclerView, String dstPhone, String dstName, boolean isIM) {
+    public IMListAdapter(IMConnectionActivity act, RecyclerView recyclerView, String dstPhone, String dstName) {
         mIMConnectActivity = act;
         mContext = act;
         mRecyclerView = recyclerView;
@@ -158,10 +152,6 @@ public class IMListAdapter extends RecyclerView.Adapter {
 
     public void setMoreListener(OnClickMoreListener moreListener) {
         this.moreListener = moreListener;
-    }
-
-    public void setHasItemClick(boolean click) {
-        hasItemClick = click;
     }
 
 
@@ -254,23 +244,41 @@ public class IMListAdapter extends RecyclerView.Adapter {
         CacheMsgBean cacheMsgBean = mImBeanList.get(position);
         int oriType = -1;
         switch (cacheMsgBean.getMsgType()) {
-            case CacheMsgBean.MSG_TYPE_TXT:
-                oriType = cacheMsgBean.isRightUI() ? TXT_RIGHT : TXT_LEFT;
+            case CacheMsgBean.SEND_TEXT:
+                oriType = TXT_RIGHT;
                 break;
-            case CacheMsgBean.MSG_TYPE_VOICE:
-                oriType = cacheMsgBean.isRightUI() ? VOICE_RIGHT : VOICE_LEFT;
+            case CacheMsgBean.RECEIVE_TEXT:
+                oriType = TXT_LEFT;
                 break;
-            case CacheMsgBean.MSG_TYPE_IMG:
-                oriType = cacheMsgBean.isRightUI() ? IMG_RIGHT : IMG_LEFT;
+            case CacheMsgBean.SEND_VOICE:
+                oriType = VOICE_RIGHT;
                 break;
-            case CacheMsgBean.MSG_TYPE_MAP:
-                oriType = cacheMsgBean.isRightUI() ? MAP_RIGHT : MAP_LEFT;
+            case CacheMsgBean.RECEIVE_VOICE:
+                oriType = VOICE_LEFT;
                 break;
-            case CacheMsgBean.MSG_TYPE_FILE:
-                oriType = cacheMsgBean.isRightUI() ? FILE_RIGHT : FILE_LEFT;
+            case CacheMsgBean.SEND_IMAGE:
+                oriType = IMG_RIGHT;
                 break;
-            case CacheMsgBean.MSG_TYPE_VIDEO:
-                oriType = cacheMsgBean.isRightUI() ? VIDEO_RIGHT : VIDEO_LEFT;
+            case CacheMsgBean.RECEIVE_IMAGE:
+                oriType = IMG_LEFT;
+                break;
+            case CacheMsgBean.SEND_LOCATION:
+                oriType = MAP_RIGHT;
+                break;
+            case CacheMsgBean.RECEIVE_LOCATION:
+                oriType = MAP_LEFT;
+                break;
+            case CacheMsgBean.SEND_FILE:
+                oriType = FILE_RIGHT;
+                break;
+            case CacheMsgBean.RECEIVE_FILE:
+                oriType = FILE_LEFT;
+                break;
+            case CacheMsgBean.SEND_VIDEO:
+                oriType = VIDEO_RIGHT;
+                break;
+            case CacheMsgBean.RECEIVE_VIDEO:
+                oriType = VIDEO_LEFT;
                 break;
         }
         return oriType;
@@ -296,10 +304,10 @@ public class IMListAdapter extends RecyclerView.Adapter {
         holder.fileNameTV.setText(cacheMsgFile.getFileName());
         holder.fileSizeTV.setText(IMHelper.convertFileSize(cacheMsgFile.getFileSize()));
 
-        showSendStart(holder, cacheMsgBean.getSend_flag(), cacheMsgBean, position);
+        showSendStart(holder, cacheMsgBean.getMsgStatus(), cacheMsgBean, position);
 
         if (cacheMsgBean.isRightUI()) {
-            if (cacheMsgBean.getSend_flag() == 0) {
+            if (cacheMsgBean.getMsgType() == CacheMsgBean.SEND_SUCCEED) {
                 holder.fileSizeTV.setVisibility(View.VISIBLE);
                 holder.filePbar.setVisibility(View.GONE);
             } else {
@@ -314,7 +322,6 @@ public class IMListAdapter extends RecyclerView.Adapter {
         holder.fileBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                hasItemClick = true;
                 Intent intent = new Intent(mContext, IMFilePreviewActivity.class);
                 intent.putExtra(IMFilePreviewActivity.IM_FILE_BEAN, cacheMsgBean);
                 mContext.startActivity(intent);
@@ -344,7 +351,7 @@ public class IMListAdapter extends RecyclerView.Adapter {
         final File imgFile = new File(cacheMsgImage.getFilePath());
         String rightUrl = TextUtils.isEmpty(cacheMsgImage.getFilePath()) ? leftUrl : cacheMsgImage.getFilePath();
 
-        showSendStart(imgViewHolder, cacheMsgBean.getSend_flag(), cacheMsgBean, position);
+        showSendStart(imgViewHolder, cacheMsgBean.getMsgStatus(), cacheMsgBean, position);
 
         Glide.with(mContext)
                 .load(cacheMsgBean.isRightUI() ? rightUrl : leftUrl)
@@ -360,7 +367,8 @@ public class IMListAdapter extends RecyclerView.Adapter {
                 int index = 0;
                 ArrayList<CacheMsgBean> beanList = new ArrayList<>();
                 for (CacheMsgBean item : mImBeanList) {
-                    if (CacheMsgBean.MSG_TYPE_IMG == item.getMsgType()) { //图片
+                    if (CacheMsgBean.SEND_IMAGE == item.getMsgType()
+                            || CacheMsgBean.RECEIVE_IMAGE == item.getMsgType()) { //图片
                         beanList.add(item);
                         final CacheMsgImage cacheImage = (CacheMsgImage) item.getJsonBodyObj();
                         String fid = cacheImage.getFid();
@@ -369,12 +377,10 @@ public class IMListAdapter extends RecyclerView.Adapter {
                                     || finalLeftUrl.equals(QiniuUrl.getThumbImageUrl(mContext, fid, QiniuUrl.SCALE))) {
                                 index = beanList.indexOf(item);
                             }
-                            //list.add(AppConfig.getImageUrl(mContext, fid));
                         } else {
                             if (imgFile.getAbsolutePath().equals(cacheImage.getFilePath())) {
                                 index = beanList.indexOf(item);
                             }
-                            //list.add(cacheImage.getFilePath());
                         }
                     }
                 }
@@ -399,7 +405,7 @@ public class IMListAdapter extends RecyclerView.Adapter {
     private void onBindVideo(final VideoViewHolder videoViewHolder, final int position) {
         final CacheMsgBean cacheMsgBean = mImBeanList.get(position);
         final CacheMsgVideo cacheMsgVideo = (CacheMsgVideo) cacheMsgBean.getJsonBodyObj();
-        showSendStart(videoViewHolder, cacheMsgBean.getSend_flag(), cacheMsgBean, position);
+        showSendStart(videoViewHolder, cacheMsgBean.getMsgStatus(), cacheMsgBean, position);
         final long mid = cacheMsgBean.getId();
         final String dstPhone = cacheMsgBean.getSenderPhone();
 
@@ -461,7 +467,7 @@ public class IMListAdapter extends RecyclerView.Adapter {
             txtContent = cacheMsgTxt.getMsgTxt();
         }
 
-        showSendStart(txtViewHolder, cacheMsgBean.getSend_flag(), cacheMsgBean, position);
+        showSendStart(txtViewHolder, cacheMsgBean.getMsgStatus(), cacheMsgBean, position);
         if (txtContent != null) {
             txtViewHolder.senderTV.setAdapter(this);
             SpannableString msgSpan = new SpannableString(txtContent);
@@ -478,7 +484,7 @@ public class IMListAdapter extends RecyclerView.Adapter {
                             voicePlayAnim.stop();
                         }
                         CacheMsgBean cacheMsgBean1 = mImBeanList.get(mPlayVoicePosition);
-                        cacheMsgBean1.setSend_flag(0);
+                        cacheMsgBean1.setMsgStatus(CacheMsgBean.SEND_SUCCEED);
                         CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean1);
                         mImBeanList.set(mPlayVoicePosition, cacheMsgBean1);
                         notifyItemChanged(mPlayVoicePosition);
@@ -494,9 +500,10 @@ public class IMListAdapter extends RecyclerView.Adapter {
                 @Override
                 public void forwardText(CharSequence s) {
                     //点击转发事件
-                    if (mImBeanList.get(position).getSend_flag() == 0
-                            || mImBeanList.get(position).getSend_flag() == 2
-                            || mImBeanList.get(position).getSend_flag() == 4) {
+                    int status = mImBeanList.get(position).getMsgType();
+                    if (status == CacheMsgBean.SEND_SUCCEED
+                            || status == CacheMsgBean.SEND_FAILED
+                            || status == CacheMsgBean.RECEIVE_READ) {
                         Intent intent = new Intent();
                         intent.setAction("com.youmai.huxin.recent");
                         intent.putExtra("type", "forward_msg");
@@ -557,7 +564,7 @@ public class IMListAdapter extends RecyclerView.Adapter {
         final String mapAddr = cacheMsgMap.getAddress();
         final String mapLocation = cacheMsgMap.getLocation();
 
-        showSendStart(mapViewHolder, cacheMsgBean.getSend_flag(), cacheMsgBean, position);
+        showSendStart(mapViewHolder, cacheMsgBean.getMsgStatus(), cacheMsgBean, position);
 
         Glide.with(mContext)
                 .load(mapUrl)
@@ -571,7 +578,6 @@ public class IMListAdapter extends RecyclerView.Adapter {
         mapViewHolder.btnMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                hasItemClick = true;
                 Intent intent = new Intent();
 
                 intent.setClass(mContext, CropMapActivity.class);
@@ -602,7 +608,7 @@ public class IMListAdapter extends RecyclerView.Adapter {
 
         String voiceTime = cacheMsgVoice.getVoiceTime();
 
-        showSendStart(voiceViewHolder, cacheMsgBean.getSend_flag(), cacheMsgBean, position);
+        showSendStart(voiceViewHolder, cacheMsgBean.getMsgStatus(), cacheMsgBean, position);
 
         if (voiceViewHolder.readIV != null) {
             if (cacheMsgVoice.isHasLoad()) { //到达
@@ -689,9 +695,10 @@ public class IMListAdapter extends RecyclerView.Adapter {
                     @Override
                     public void forward() {
                         //转发操作
-                        if (mImBeanList.get(position).getSend_flag() == 0
-                                || mImBeanList.get(position).getSend_flag() == 2
-                                || mImBeanList.get(position).getSend_flag() == 4) {
+                        int status = mImBeanList.get(position).getMsgType();
+                        if (status == CacheMsgBean.SEND_SUCCEED
+                                || status == CacheMsgBean.SEND_FAILED
+                                || status == CacheMsgBean.RECEIVE_READ) {
                             CacheMsgBean bean = mImBeanList.get(position);
                             //语音设置是谁发的源头
                             CacheMsgVoice cacheMsgVoice = (CacheMsgVoice) bean.getJsonBodyObj();
@@ -744,7 +751,7 @@ public class IMListAdapter extends RecyclerView.Adapter {
                             if (voicePlayAnim != null && voicePlayAnim.isRunning()) {
                                 voicePlayAnim.stop();
                             }
-                            cacheMsgBean1.setSend_flag(0);
+                            cacheMsgBean1.setMsgStatus(CacheMsgBean.SEND_SUCCEED);
                             CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean1);
                             mImBeanList.set(mPlayVoicePosition, cacheMsgBean1);
                             notifyItemChanged(mPlayVoicePosition);
@@ -799,16 +806,12 @@ public class IMListAdapter extends RecyclerView.Adapter {
         if (viewHolder.progressBar != null) {
             viewHolder.smsImg.setBackgroundDrawable(null);
             viewHolder.smsImg.setOnClickListener(null);
-            if (flag == 0) {
+            if (flag == CacheMsgBean.SEND_SUCCEED
+                    || flag == CacheMsgBean.RECEIVE_READ) {
                 //显示到达状态
                 viewHolder.progressBar.setVisibility(View.INVISIBLE);
                 viewHolder.smsImg.setVisibility(View.GONE);
-            } else if (flag == 2) {
-                //显示短信状态
-                viewHolder.progressBar.setVisibility(View.GONE);
-                viewHolder.smsImg.setVisibility(View.VISIBLE);
-                viewHolder.smsImg.setImageResource(bean.isRightUI() ? R.drawable.hx_im_send_sms_icon : R.drawable.ic_sms_grey_left24dp);
-            } else if (flag == 4) {
+            } else if (flag == CacheMsgBean.SEND_FAILED) {
                 //显示发送失败状态
                 viewHolder.progressBar.setVisibility(View.GONE);
                 viewHolder.smsImg.setVisibility(View.VISIBLE);
@@ -820,7 +823,7 @@ public class IMListAdapter extends RecyclerView.Adapter {
                             return;
                         }
                         //重传
-                        bean.setSend_flag(-1);
+                        bean.setMsgStatus(CacheMsgBean.SEND_FAILED);
                         updateSendStatus(bean, position);
                         Intent intent = new Intent(mContext, SendMsgService.class);
                         intent.putExtra("data", bean);
@@ -844,11 +847,6 @@ public class IMListAdapter extends RecyclerView.Adapter {
                 voicePlayAnim.start();
                 Log.w("123", "voicePlayAnim.start() flag:5");
                 mPlayVoiceIV = viewHolder.smsImg;
-            } else if (flag == 6) {
-                //显示短信状态
-                viewHolder.progressBar.setVisibility(View.GONE);
-                viewHolder.smsImg.setVisibility(View.GONE);
-                viewHolder.smsImg.setImageResource(R.drawable.hx_ic_reminding);
             } else {
                 //正在发送状态
                 viewHolder.progressBar.setVisibility(View.VISIBLE);
@@ -860,7 +858,7 @@ public class IMListAdapter extends RecyclerView.Adapter {
     void updateSendStatus(CacheMsgBean cacheMsgBean, int position) {
         CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);//更新数据库
         if (position < mImBeanList.size()) {
-            mImBeanList.get(position).setSend_flag(cacheMsgBean.getSend_flag());//更新列表显示数据
+            mImBeanList.get(position).setMsgStatus(cacheMsgBean.getMsgStatus());//更新列表显示数据
             notifyItemChanged(position);
         }
     }
@@ -1120,11 +1118,6 @@ public class IMListAdapter extends RecyclerView.Adapter {
     }
 
 
-    public void resume(boolean inContact) {
-        genIcon(mDstPhone, mSelfPhone, inContact);
-        loadAfterList();
-    }
-
     public void loadAfterList() {
         long startId = -1;
         if (getItemCount() > 0) {
@@ -1174,7 +1167,7 @@ public class IMListAdapter extends RecyclerView.Adapter {
      */
     public void refreshIncomingMsgUI(CacheMsgBean cacheMsgBean) {
         //closeMenuDialog();//关闭菜单视图
-        cacheMsgBean.setIs_read(CacheMsgBean.MSG_READ_STATUS);
+        cacheMsgBean.setMsgStatus(CacheMsgBean.RECEIVE_READ);
         addAndRefreshUI(cacheMsgBean);
     }
 

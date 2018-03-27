@@ -146,12 +146,6 @@
             android:theme="@style/HxMsgTheme" />
 
         <activity
-            android:name="com.youmai.hxsdk.SendSmsActivity"
-            android:launchMode="singleInstance"
-            android:screenOrientation="portrait"
-            android:theme="@style/HxMsgTheme" />
-
-        <activity
             android:name="com.youmai.hxsdk.map.LocationActivity"
             android:screenOrientation="portrait"
             android:theme="@style/HxSdkTheme" />

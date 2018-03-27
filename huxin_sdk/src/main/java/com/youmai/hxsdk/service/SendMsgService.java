@@ -181,7 +181,7 @@ public class SendMsgService extends Service {
         if (AppUtils.isNetworkConnected(appContext)) {
             //判断Tcp是否已连接，防止消息入重传栈，引发多发送
             if (!HuxinSdkManager.instance().isConnect()) {
-                updateUI(msg, CacheMsgBean.MSG_SEND_FLAG_FAIL, NOT_TCP_CONNECT);//发送广播提示tcp尚未连接成功
+                updateUI(msg, CacheMsgBean.SEND_FAILED, NOT_TCP_CONNECT);//发送广播提示tcp尚未连接成功
                 HuxinSdkManager.instance().imReconnect();
                 return;
             }
@@ -214,7 +214,7 @@ public class SendMsgService extends Service {
             }
         } else {
             //无网络
-            updateUI(msg, CacheMsgBean.MSG_SEND_FLAG_FAIL, NOT_NETWORK);
+            updateUI(msg, CacheMsgBean.SEND_FAILED, NOT_NETWORK);
         }
     }
 
@@ -257,7 +257,7 @@ public class SendMsgService extends Service {
             sendingMsg.remove(key);
         }
         CacheMsgBean bean = msg.getMsg();
-        bean.setSend_flag(flag);
+        bean.setMsgStatus(flag);
         CacheMsgHelper.instance(appContext).insertOrUpdate(bean);
         Intent intent = new Intent("service.send.msg");
         intent.putExtra("data", msg);
@@ -295,47 +295,41 @@ public class SendMsgService extends Service {
 
                     if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_OK) {
                         if (ack.getIsTargetOnline()) {
-                            updateUI(msgBean, CacheMsgBean.MSG_SEND_FLAG_SUCCESS, null, SEND_MSG_END);
+                            updateUI(msgBean, CacheMsgBean.SEND_SUCCEED, null, SEND_MSG_END);
                         } else {
                             HttpPushManager.pushMsgForText(appContext, userId, targetPhone, content,
                                     new HttpPushManager.PushListener() {
                                         @Override
                                         public void success(String msg) {
                                             LogUtils.e(TAG, msg);
-                                            updateUI(msgBean, CacheMsgBean.MSG_SEND_FLAG_SUCCESS, null, SEND_MSG_END);
+                                            updateUI(msgBean, CacheMsgBean.SEND_SUCCEED, null, SEND_MSG_END);
                                         }
 
                                         @Override
                                         public void fail(String msg) {
                                             LogUtils.e(TAG, "推送消息异常:" + msg);
-                                            updateUI(msgBean, CacheMsgBean.MSG_SEND_FLAG_FAIL, null, SEND_MSG_END);
+                                            updateUI(msgBean, CacheMsgBean.SEND_FAILED, null, SEND_MSG_END);
                                         }
                                     });
-                        }
-                    } else if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_NOT_HUXIN_USER) {
-                        if (msgBean.getMsg().getMsgType() == CacheMsgBean.MSG_TYPE_EMOTION) { //表情不发短信
-                            updateUI(msgBean, CacheMsgBean.MSG_SEND_FLAG_FAIL, null, SEND_MSG_END);
-                        } else {
-                            updateUI(msgBean, CacheMsgBean.MSG_SEND_FLAG_FAIL, NOT_HUXIN_USER, SEND_MSG_END);
                         }
                     } else if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_ERR_SESSIONID) {
                         ProtocolCallBack sCallBack = RespBaseBean.getsCallBack();
                         if (sCallBack != null) {
                             sCallBack.sessionExpire();
                         }
-                        updateUI(msgBean, CacheMsgBean.MSG_SEND_FLAG_FAIL, null, SEND_MSG_END);
+                        updateUI(msgBean, CacheMsgBean.SEND_FAILED, null, SEND_MSG_END);
                     } else {
-                        updateUI(msgBean, CacheMsgBean.MSG_SEND_FLAG_FAIL, null, SEND_MSG_END);
+                        updateUI(msgBean, CacheMsgBean.SEND_FAILED, null, SEND_MSG_END);
                     }
                 } catch (InvalidProtocolBufferException e) {
                     e.printStackTrace();
-                    updateUI(msgBean, CacheMsgBean.MSG_SEND_FLAG_FAIL, null, SEND_MSG_END);
+                    updateUI(msgBean, CacheMsgBean.SEND_FAILED, null, SEND_MSG_END);
                 }
             }
 
             @Override
             public void onError(int errCode) {
-                updateUI(msgBean, CacheMsgBean.MSG_SEND_FLAG_FAIL, null, SEND_MSG_END);
+                updateUI(msgBean, CacheMsgBean.SEND_FAILED, null, SEND_MSG_END);
             }
 
         });
@@ -357,36 +351,36 @@ public class SendMsgService extends Service {
 
                     if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_OK) {
                         if (ack.getIsTargetOnline()) {
-                            updateUI(msgBean, CacheMsgBean.MSG_SEND_FLAG_SUCCESS);
+                            updateUI(msgBean, CacheMsgBean.SEND_SUCCEED);
                         } else {
                             HttpPushManager.pushMsgForText(appContext, userId, targetPhone, content,
                                     new HttpPushManager.PushListener() {
                                         @Override
                                         public void success(String msg) {
-                                            updateUI(msgBean, CacheMsgBean.MSG_SEND_FLAG_SUCCESS);
+                                            updateUI(msgBean, CacheMsgBean.SEND_SUCCEED);
                                         }
 
                                         @Override
                                         public void fail(String msg) {
                                             LogUtils.e(TAG, "推送消息异常:" + msg);
-                                            updateUI(msgBean, CacheMsgBean.MSG_SEND_FLAG_FAIL);
+                                            updateUI(msgBean, CacheMsgBean.SEND_FAILED);
                                         }
                                     });
                         }
                     } else if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_NOT_HUXIN_USER) {
-                        updateUI(msgBean, CacheMsgBean.MSG_SEND_FLAG_FAIL, NOT_HUXIN_USER);
+                        updateUI(msgBean, CacheMsgBean.SEND_FAILED, NOT_HUXIN_USER);
                     } else {
-                        updateUI(msgBean, CacheMsgBean.MSG_SEND_FLAG_FAIL);
+                        updateUI(msgBean, CacheMsgBean.SEND_FAILED);
                     }
                 } catch (InvalidProtocolBufferException e) {
                     e.printStackTrace();
-                    updateUI(msgBean, CacheMsgBean.MSG_SEND_FLAG_FAIL);
+                    updateUI(msgBean, CacheMsgBean.SEND_FAILED);
                 }
             }
 
             @Override
             public void onError(int errCode) {
-                updateUI(msgBean, CacheMsgBean.MSG_SEND_FLAG_FAIL);
+                updateUI(msgBean, CacheMsgBean.SEND_FAILED);
             }
         });
     }
@@ -413,37 +407,37 @@ public class SendMsgService extends Service {
 
                     if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_OK) {
                         if (ack.getIsTargetOnline()) {
-                            updateUI(msgBean, CacheMsgBean.MSG_SEND_FLAG_SUCCESS);
+                            updateUI(msgBean, CacheMsgBean.SEND_SUCCEED);
                         } else {
                             HttpPushManager.pushMsgForLocation(userId, targetPhone,
                                     longitude, latitude, 16, address,
                                     new HttpPushManager.PushListener() {
                                         @Override
                                         public void success(String msg) {
-                                            updateUI(msgBean, CacheMsgBean.MSG_SEND_FLAG_SUCCESS);
+                                            updateUI(msgBean, CacheMsgBean.SEND_SUCCEED);
                                         }
 
                                         @Override
                                         public void fail(String msg) {
-                                            updateUI(msgBean, CacheMsgBean.MSG_SEND_FLAG_FAIL);
+                                            updateUI(msgBean, CacheMsgBean.SEND_FAILED);
                                         }
                                     });
                         }
                     } else if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_NOT_HUXIN_USER) {
-                        updateUI(msgBean, CacheMsgBean.MSG_SEND_FLAG_FAIL, NOT_HUXIN_USER);
+                        updateUI(msgBean, CacheMsgBean.SEND_FAILED, NOT_HUXIN_USER);
                     } else {
-                        updateUI(msgBean, CacheMsgBean.MSG_SEND_FLAG_FAIL);
+                        updateUI(msgBean, CacheMsgBean.SEND_FAILED);
                     }
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    updateUI(msgBean, CacheMsgBean.MSG_SEND_FLAG_FAIL);
+                    updateUI(msgBean, CacheMsgBean.SEND_FAILED);
                 }
             }
 
             @Override
             public void onError(int errCode) {
-                updateUI(msgBean, CacheMsgBean.MSG_SEND_FLAG_FAIL);
+                updateUI(msgBean, CacheMsgBean.SEND_FAILED);
             }
         };
 
@@ -490,48 +484,48 @@ public class SendMsgService extends Service {
             public void success(final String fileId, final String desPhone) {
 
                 //已上传七牛，但仍未送达到用户，处于发送状态
-                if (msgType == CacheMsgBean.MSG_TYPE_FILE) {
+                if (msgType == CacheMsgBean.SEND_FILE) {
                     CacheMsgFile msgBody = (CacheMsgFile) msgBean.getMsg().getJsonBodyObj();
                     msgBody.setFid(fileId);
                     msgBean.getMsg().setJsonBodyObj(msgBody);
                     sendFileIM(msgBean);
-                } else if (msgType == CacheMsgBean.MSG_TYPE_IMG) {
+                } else if (msgType == CacheMsgBean.SEND_IMAGE) {
                     CacheMsgImage msgBody = (CacheMsgImage) msgBean.getMsg().getJsonBodyObj();
                     msgBody.setFid(fileId);
                     msgBean.getMsg().setJsonBodyObj(msgBody);
                     sendPicIM(msgBean);
-                } else if (msgType == CacheMsgBean.MSG_TYPE_VOICE) {
+                } else if (msgType == CacheMsgBean.SEND_VOICE) {
                     CacheMsgVoice msgBody = (CacheMsgVoice) msgBean.getMsg().getJsonBodyObj();
                     msgBody.setFid(fileId);
                     msgBean.getMsg().setJsonBodyObj(msgBody);
                     sendVoiceIM(msgBean);
                 }
-                updateUI(msgBean, CacheMsgBean.MSG_SEND_FLAG_SENDING);
+                updateUI(msgBean, CacheMsgBean.SEND_GOING);
             }
 
             @Override
             public void fail(String msg) {
-                if (msgType == CacheMsgBean.MSG_TYPE_FILE) {
+                if (msgType == CacheMsgBean.SEND_FILE) {
                     CacheMsgFile msgBody = (CacheMsgFile) msgBean.getMsg().getJsonBodyObj();
                     msgBody.setFid("-2");
                     msgBean.getMsg().setJsonBodyObj(msgBody);
-                } else if (msgType == CacheMsgBean.MSG_TYPE_IMG) {
+                } else if (msgType == CacheMsgBean.SEND_IMAGE) {
                     CacheMsgImage msgBody = (CacheMsgImage) msgBean.getMsg().getJsonBodyObj();
                     msgBody.setFid("-2");
                     msgBean.getMsg().setJsonBodyObj(msgBody);
-                } else if (msgType == CacheMsgBean.MSG_TYPE_VOICE) {
+                } else if (msgType == CacheMsgBean.SEND_VOICE) {
                     CacheMsgVoice msgBody = (CacheMsgVoice) msgBean.getMsg().getJsonBodyObj();
                     msgBody.setFid("-2");
                     msgBean.getMsg().setJsonBodyObj(msgBody);
                 }
-                updateUI(msgBean, CacheMsgBean.MSG_SEND_FLAG_FAIL, null, SEND_MSG_END);
+                updateUI(msgBean, CacheMsgBean.SEND_FAILED, null, SEND_MSG_END);
                 Message message = new Message();
                 message.what = SEND_FILE_FAIL;
                 handler.sendMessage(message);
             }
         };
 
-        if (msgType == CacheMsgBean.MSG_TYPE_FILE) {
+        if (msgType == CacheMsgBean.SEND_FILE) {
             CacheMsgFile msgBody = (CacheMsgFile) msgBean.getMsg().getJsonBodyObj();
             String fileId = msgBody.getFid();
             if (TextUtils.isEmpty(fileId) || TextUtils.equals(fileId, "-1") || TextUtils.equals(fileId, "-2")) {
@@ -541,7 +535,7 @@ public class SendMsgService extends Service {
                 //文件已经上传，直接发送消息
                 sendFileIM(msgBean);
             }
-        } else if (msgType == CacheMsgBean.MSG_TYPE_IMG) {
+        } else if (msgType == CacheMsgBean.SEND_IMAGE) {
             CacheMsgImage msgBody = (CacheMsgImage) msgBean.getMsg().getJsonBodyObj();
             String fileId = msgBody.getFid();
             if (TextUtils.isEmpty(fileId) || TextUtils.equals(fileId, "-1") || TextUtils.equals(fileId, "-2")) {
@@ -551,7 +545,7 @@ public class SendMsgService extends Service {
                 //图片文件已经上传，直接发送消息
                 sendPicIM(msgBean);
             }
-        } else if (msgType == CacheMsgBean.MSG_TYPE_VOICE) {
+        } else if (msgType == CacheMsgBean.SEND_VOICE) {
             CacheMsgVoice msgBody = (CacheMsgVoice) msgBean.getMsg().getJsonBodyObj();
             String fileId = msgBody.getFid();
             if (TextUtils.isEmpty(fileId) || TextUtils.equals(fileId, "-1") || TextUtils.equals(fileId, "-2")) {
@@ -562,7 +556,7 @@ public class SendMsgService extends Service {
                 sendVoiceIM(msgBean);
             }
         } else {
-            updateUI(msgBean, CacheMsgBean.MSG_SEND_FLAG_FAIL);
+            updateUI(msgBean, CacheMsgBean.SEND_FAILED);
         }
     }
 
@@ -595,7 +589,7 @@ public class SendMsgService extends Service {
                     msgBean.getMsg().setJsonBodyObj(msgBody);
                     sendVideoIM(msgBean);
                 }
-                updateUI(msgBean, CacheMsgBean.MSG_SEND_FLAG_SENDING);
+                updateUI(msgBean, CacheMsgBean.SEND_GOING);
             }
 
             @Override
@@ -607,7 +601,7 @@ public class SendMsgService extends Service {
                     msgBody.setVideoId("-2");
                 }
                 msgBean.getMsg().setJsonBodyObj(msgBody);
-                updateUI(msgBean, CacheMsgBean.MSG_SEND_FLAG_FAIL, null, SEND_MSG_END);
+                updateUI(msgBean, CacheMsgBean.SEND_FAILED, null, SEND_MSG_END);
                 Message message = new Message();
                 message.what = SEND_FILE_FAIL;
                 handler.sendMessage(message);
@@ -657,30 +651,30 @@ public class SendMsgService extends Service {
 
                     if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_OK) {
                         if (ack.getIsTargetOnline()) {
-                            updateUI(msgBean, CacheMsgBean.MSG_SEND_FLAG_SUCCESS, null, SEND_MSG_END);
+                            updateUI(msgBean, CacheMsgBean.SEND_SUCCEED, null, SEND_MSG_END);
                         } else {
                             HttpPushManager.pushMsgForAudio(userId, desPhone, fileId, secondTimes,
                                     new HttpPushManager.PushListener() {
                                         @Override
                                         public void success(String msg) {
-                                            updateUI(msgBean, CacheMsgBean.MSG_SEND_FLAG_SUCCESS, null, SEND_MSG_END);
+                                            updateUI(msgBean, CacheMsgBean.SEND_SUCCEED, null, SEND_MSG_END);
                                         }
 
                                         @Override
                                         public void fail(String msg) {
-                                            updateUI(msgBean, CacheMsgBean.MSG_SEND_FLAG_FAIL, null, SEND_MSG_END);
+                                            updateUI(msgBean, CacheMsgBean.SEND_FAILED, null, SEND_MSG_END);
                                         }
                                     });
 
                         }
                     } else if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_NOT_HUXIN_USER) {
-                        updateUI(msgBean, CacheMsgBean.MSG_SEND_FLAG_FAIL, NOT_HUXIN_USER, SEND_MSG_END);
+                        updateUI(msgBean, CacheMsgBean.SEND_FAILED, NOT_HUXIN_USER, SEND_MSG_END);
                     } else {
-                        updateUI(msgBean, CacheMsgBean.MSG_SEND_FLAG_FAIL, null, SEND_MSG_END);
+                        updateUI(msgBean, CacheMsgBean.SEND_FAILED, null, SEND_MSG_END);
                     }
                 } catch (InvalidProtocolBufferException e) {
                     e.printStackTrace();
-                    updateUI(msgBean, CacheMsgBean.MSG_SEND_FLAG_FAIL, null, SEND_MSG_END);
+                    updateUI(msgBean, CacheMsgBean.SEND_FAILED, null, SEND_MSG_END);
                 }
             }
         };
@@ -704,25 +698,25 @@ public class SendMsgService extends Service {
 
                     if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_OK) {
                         if (ack.getIsTargetOnline()) {
-                            updateUI(msgBean, CacheMsgBean.MSG_SEND_FLAG_SUCCESS, null, SEND_MSG_END);
+                            updateUI(msgBean, CacheMsgBean.SEND_SUCCEED, null, SEND_MSG_END);
                         } else {
                             HttpPushManager.pushMsgForPicture(userId, desPhone, fileId,
                                     new HttpPushManager.PushListener() {
                                         @Override
                                         public void success(String msg) {
-                                            updateUI(msgBean, CacheMsgBean.MSG_SEND_FLAG_SUCCESS, null, SEND_MSG_END);
+                                            updateUI(msgBean, CacheMsgBean.SEND_SUCCEED, null, SEND_MSG_END);
                                         }
 
                                         @Override
                                         public void fail(String msg) {
-                                            updateUI(msgBean, CacheMsgBean.MSG_SEND_FLAG_FAIL, null, SEND_MSG_END);
+                                            updateUI(msgBean, CacheMsgBean.SEND_FAILED, null, SEND_MSG_END);
                                         }
                                     });
                         }
                     } else if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_NOT_HUXIN_USER) {
-                        updateUI(msgBean, CacheMsgBean.MSG_SEND_FLAG_FAIL, NOT_HUXIN_USER, SEND_MSG_END);
+                        updateUI(msgBean, CacheMsgBean.SEND_FAILED, NOT_HUXIN_USER, SEND_MSG_END);
                     } else {
-                        updateUI(msgBean, CacheMsgBean.MSG_SEND_FLAG_FAIL, null, SEND_MSG_END);
+                        updateUI(msgBean, CacheMsgBean.SEND_FAILED, null, SEND_MSG_END);
                     }
 
                 } catch (InvalidProtocolBufferException e) {
@@ -733,7 +727,7 @@ public class SendMsgService extends Service {
             @Override
             public void onError(int errCode) {
                 super.onError(errCode);
-                updateUI(msgBean, CacheMsgBean.MSG_SEND_FLAG_FAIL);
+                updateUI(msgBean, CacheMsgBean.SEND_FAILED);
             }
         };
         HuxinSdkManager.instance().sendPicture(userId, desPhone, fileId, isOriginal ? "original" : "thumbnail", receiveListener);
@@ -758,27 +752,27 @@ public class SendMsgService extends Service {
 
                     if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_OK) {
                         if (ack.getIsTargetOnline()) {
-                            updateUI(msgBean, CacheMsgBean.MSG_SEND_FLAG_SUCCESS, null, SEND_MSG_END);
+                            updateUI(msgBean, CacheMsgBean.SEND_SUCCEED, null, SEND_MSG_END);
                         } else {
                             HttpPushManager.pushMsgForBigFile(userId, desPhone, fileId, fileName, fileSize,
                                     new HttpPushManager.PushListener() {
                                         @Override
                                         public void success(String msg) {
-                                            updateUI(msgBean, CacheMsgBean.MSG_SEND_FLAG_SUCCESS, null, SEND_MSG_END);
+                                            updateUI(msgBean, CacheMsgBean.SEND_SUCCEED, null, SEND_MSG_END);
                                         }
 
                                         @Override
                                         public void fail(String msg) {
-                                            updateUI(msgBean, CacheMsgBean.MSG_SEND_FLAG_FAIL, null, SEND_MSG_END);
+                                            updateUI(msgBean, CacheMsgBean.SEND_FAILED, null, SEND_MSG_END);
                                         }
                                     });
                         }
                     } else if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_NOT_HUXIN_USER) {
-                        updateUI(msgBean, CacheMsgBean.MSG_SEND_FLAG_FAIL, NOT_HUXIN_USER, SEND_MSG_END);
+                        updateUI(msgBean, CacheMsgBean.SEND_FAILED, NOT_HUXIN_USER, SEND_MSG_END);
                     }
                 } catch (InvalidProtocolBufferException e) {
                     e.printStackTrace();
-                    updateUI(msgBean, CacheMsgBean.MSG_SEND_FLAG_FAIL, null, SEND_MSG_END);
+                    updateUI(msgBean, CacheMsgBean.SEND_FAILED, null, SEND_MSG_END);
                 }
             }
         };
@@ -807,7 +801,7 @@ public class SendMsgService extends Service {
 
                     if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_OK) {
                         if (ack.getIsTargetOnline()) {
-                            updateUI(msgBean, CacheMsgBean.MSG_SEND_FLAG_SUCCESS, null, SEND_MSG_END);
+                            updateUI(msgBean, CacheMsgBean.SEND_SUCCEED, null, SEND_MSG_END);
                         } else {
                             CacheMsgVideo cacheMsgVideo = (CacheMsgVideo) msgBean.getMsg().getJsonBodyObj();
                             String videoId = cacheMsgVideo.getVideoId();
@@ -815,30 +809,30 @@ public class SendMsgService extends Service {
                                     new HttpPushManager.PushListener() {
                                         @Override
                                         public void success(String msg) {
-                                            updateUI(msgBean, CacheMsgBean.MSG_SEND_FLAG_SUCCESS, null, SEND_MSG_END);
+                                            updateUI(msgBean, CacheMsgBean.SEND_SUCCEED, null, SEND_MSG_END);
                                         }
 
                                         @Override
                                         public void fail(String msg) {
-                                            updateUI(msgBean, CacheMsgBean.MSG_SEND_FLAG_FAIL, null, SEND_MSG_END);
+                                            updateUI(msgBean, CacheMsgBean.SEND_FAILED, null, SEND_MSG_END);
                                         }
                                     });
                         }
                     } else if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_NOT_HUXIN_USER) {
-                        updateUI(msgBean, CacheMsgBean.MSG_SEND_FLAG_FAIL, NOT_HUXIN_USER, SEND_MSG_END);
+                        updateUI(msgBean, CacheMsgBean.SEND_FAILED, NOT_HUXIN_USER, SEND_MSG_END);
                     } else {
-                        updateUI(msgBean, CacheMsgBean.MSG_SEND_FLAG_FAIL, null, SEND_MSG_END);
+                        updateUI(msgBean, CacheMsgBean.SEND_FAILED, null, SEND_MSG_END);
                     }
                 } catch (InvalidProtocolBufferException e) {
                     e.printStackTrace();
-                    updateUI(msgBean, CacheMsgBean.MSG_SEND_FLAG_FAIL, null, SEND_MSG_END);
+                    updateUI(msgBean, CacheMsgBean.SEND_FAILED, null, SEND_MSG_END);
                 }
             }
 
             @Override
             public void onError(int errCode) {
                 super.onError(errCode);
-                updateUI(msgBean, CacheMsgBean.MSG_SEND_FLAG_FAIL, null, SEND_MSG_END);
+                updateUI(msgBean, CacheMsgBean.SEND_FAILED, null, SEND_MSG_END);
             }
         };
         HuxinSdkManager.instance().sendVideo(userId, desPhone, fileId, frameId, name, size, time + "", receiveListener);

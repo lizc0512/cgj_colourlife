@@ -45,7 +45,6 @@ import com.amap.api.services.poisearch.PoiResult;
 import com.amap.api.services.poisearch.PoiSearch;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.R;
-import com.youmai.hxsdk.SendSmsActivity;
 import com.youmai.hxsdk.activity.SdkBaseActivity;
 import com.youmai.hxsdk.adapter.DividerItemDecoration;
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
@@ -522,13 +521,12 @@ public class LocationActivity extends SdkBaseActivity implements
         //todo_k: 地图
         final CacheMsgBean cacheMsgBean = new CacheMsgBean()
                 .setMsgTime(System.currentTimeMillis())
-                .setSend_flag(-1)
+                .setMsgStatus(CacheMsgBean.SEND_GOING)
                 .setSenderPhone(HuxinSdkManager.instance().getPhoneNum())
                 .setSenderUserId(userId)
                 .setReceiverPhone(dstPhone)
-                .setMsgType(CacheMsgBean.MSG_TYPE_MAP)
-                .setJsonBodyObj(new CacheMsgMap().setLocation(longitude + "," + latitude).setAddress(address).setImgUrl(url))
-                .setRightUI(true);
+                .setMsgType(CacheMsgBean.SEND_LOCATION)
+                .setJsonBodyObj(new CacheMsgMap().setLocation(longitude + "," + latitude).setAddress(address).setImgUrl(url));
 
         //add to db
         CacheMsgHelper.instance(this).insertOrUpdate(cacheMsgBean);
@@ -568,7 +566,7 @@ public class LocationActivity extends SdkBaseActivity implements
                             /*String log = mContext.getString(R.string.hx_toast_30);
                             Toast.makeText(mContext, log, Toast.LENGTH_SHORT).show();*/
 
-                            newMsgBean.setSend_flag(0);
+                            newMsgBean.setMsgStatus(CacheMsgBean.SEND_SUCCEED);
                             //add to db
                             CacheMsgHelper.instance(mContext).insertOrUpdate(newMsgBean);
                         } else {
@@ -582,7 +580,7 @@ public class LocationActivity extends SdkBaseActivity implements
                                             /*String log = mContext.getString(R.string.hx_toast_30);
                                             Toast.makeText(mContext, log, Toast.LENGTH_SHORT).show();*/
 
-                                            newMsgBean.setSend_flag(0);
+                                            newMsgBean.setMsgStatus(CacheMsgBean.SEND_SUCCEED);
                                             //add to db
                                             CacheMsgHelper.instance(mContext).insertOrUpdate(newMsgBean);
                                         }
@@ -599,11 +597,6 @@ public class LocationActivity extends SdkBaseActivity implements
                             listener.onImSuccess(ChatMsg.MsgType.LOCATION.ordinal(), fileBean);
                         }
 
-                    } else if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_NOT_HUXIN_USER) {
-                        HuxinSdkManager.instance().showNotHuxinUser2(dstPhone, SendSmsActivity.SEND_LOCATION, msgId, newMsgBean);
-                        if (null != listener) {
-                            listener.onImNotUser(ChatMsg.MsgType.LOCATION.ordinal(), msgId);
-                        }
                     } else {
                         String log = "ErrerNo:" + ack.getErrerNo();
                         //Toast.makeText(mContext, log, Toast.LENGTH_SHORT).show();
@@ -626,7 +619,7 @@ public class LocationActivity extends SdkBaseActivity implements
                     listener.onImFail(ChatMsg.MsgType.LOCATION.ordinal(), fileBean);
                 }
 
-                cacheMsgBean.setSend_flag(4);
+                cacheMsgBean.setMsgStatus(CacheMsgBean.SEND_FAILED);
                 //add to db
                 CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
             }

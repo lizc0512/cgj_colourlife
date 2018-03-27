@@ -164,24 +164,14 @@ public class IMMsgManager {
     }
 
     // srsm add for get history
-    public List<CacheMsgBean> genUnreadCacheMsgBeanList(final Context context, String dstPhone, boolean setRead) {
-        String selfPhone = HuxinSdkManager.instance().getPhoneNum();
-        String selection = "where (receiver_phone=? or sender_phone=?) and is_read=?";
-        if (dstPhone.equals(selfPhone)) {
-            selection = "where (receiver_phone=? and sender_phone=?) and is_read=?";
-        }
-        //取未读，设置为已读
-        //List<CacheMsgBean> unreadMsgBeanList = new ArrayList<>();
-
-        /*unreadMsgBeanList = HuxinSdkManager.instance().getCacheMsgFromDB(null, selection,
-                new String[]{dstPhone, dstPhone, "0"}, null, null, null, null);*/
-
-        List<CacheMsgBean> unreadMsgBeanList = CacheMsgHelper.instance(mContext).queryRaw(selection, new String[]{dstPhone, dstPhone, "0"});
+    public List<CacheMsgBean> genUnreadCacheMsgBeanList(Context context, String dstPhone, boolean setRead) {
+        String selection = "where receiver_phone=? or sender_phone=?";
+        List<CacheMsgBean> unreadMsgBeanList = CacheMsgHelper.instance(context).queryRaw(selection, new String[]{dstPhone, dstPhone});
 
         if (setRead) {
             for (CacheMsgBean checkBean : unreadMsgBeanList) {
-                if (checkBean.getIs_read() == CacheMsgBean.MSG_UNREAD_STATUS) {
-                    checkBean.setIs_read(CacheMsgBean.MSG_READ_STATUS);
+                if (checkBean.getMsgStatus() == CacheMsgBean.RECEIVE_UNREAD) {
+                    checkBean.setMsgStatus(CacheMsgBean.RECEIVE_READ);
                 }
             }
             if (unreadMsgBeanList.size() > 0) {
@@ -199,8 +189,8 @@ public class IMMsgManager {
 
         if (setRead) {
             for (CacheMsgBean checkBean : unreadMsgBeanList) {
-                if (checkBean.getIs_read() == CacheMsgBean.MSG_UNREAD_STATUS) {
-                    checkBean.setIs_read(CacheMsgBean.MSG_READ_STATUS);
+                if (checkBean.getMsgStatus() == CacheMsgBean.RECEIVE_UNREAD) {
+                    checkBean.setMsgStatus(CacheMsgBean.RECEIVE_READ);
                 }
             }
             if (unreadMsgBeanList.size() > 0) {
@@ -248,8 +238,8 @@ public class IMMsgManager {
         //判断SendMsgService是否运行，运行说明仍有消息在发送，在不运行时再统一设置正在发送的消息为失败状态 2018-1-11
         if (!CommonUtils.isServiceRunning(context, "com.youmai.hxsdk.service.SendMsgService")) {
             for (CacheMsgBean item : cacheMsgBeanList) {
-                if (item.getSend_flag() == -1) {
-                    item.setSend_flag(4);
+                if (item.getMsgStatus() == CacheMsgBean.SEND_GOING) {
+                    item.setMsgStatus(CacheMsgBean.SEND_FAILED);
                 }
             }
         }
@@ -401,6 +391,7 @@ public class IMMsgManager {
             }
         }
     }
+
     public void notifyMsg(ChatMsg msg, boolean isFormPush) {
         String srcPhone = msg.getSrcPhone();
         String newMsgTip = mContext.getString(R.string.hx_hook_strategy_msg);
@@ -433,8 +424,7 @@ public class IMMsgManager {
                 .setSenderUserId(msg.getSrcUsrId())
                 .setReceiverUserId(msg.getTargetUserId())
                 .setMsgTime(msg.getMsgTime())
-                .setIs_read(CacheMsgBean.MSG_UNREAD_STATUS)
-                .setRightUI(false)
+                .setMsgStatus(CacheMsgBean.RECEIVE_UNREAD)
                 .setMsgId(msg.getMsgId());
 
         if (msg.getMsgType() == ChatMsg.MsgType.TEXT) {
@@ -444,11 +434,11 @@ public class IMMsgManager {
 
             //todo_k: 12-6 文字 表情
             if (content.startsWith("/")) { //自定义表情
-                cacheMsgBean.setMsgType(CacheMsgBean.MSG_TYPE_EMOTION)
+                cacheMsgBean.setMsgType(CacheMsgBean.RECEIVE_EMOTION)
                         .setJsonBodyObj(new CacheMsgEmotion().setEmotion(content, -1));
                 msg.setMsgType(ChatMsg.MsgType.EMO_TEXT);
             } else {  //文字
-                cacheMsgBean.setMsgType(CacheMsgBean.MSG_TYPE_TXT)
+                cacheMsgBean.setMsgType(CacheMsgBean.RECEIVE_TEXT)
                         .setJsonBodyObj(new CacheMsgTxt().setMsgTxt(content));
             }
 
@@ -467,7 +457,7 @@ public class IMMsgManager {
 
             //todo_k 图片
             int type = describe.equals("original") ? CacheMsgImage.SEND_IS_ORI_RECV_NOT_ORI : CacheMsgImage.SEND_NOT_ORI_RECV_NOT_ORI;
-            cacheMsgBean.setMsgType(CacheMsgBean.MSG_TYPE_IMG)
+            cacheMsgBean.setMsgType(CacheMsgBean.RECEIVE_IMAGE)
                     .setJsonBodyObj(new CacheMsgImage().setFid(fid).setOriginalType(type));
 
             //add to db
@@ -493,7 +483,7 @@ public class IMMsgManager {
             }
 
             //todo_k: 地图
-            cacheMsgBean.setMsgType(CacheMsgBean.MSG_TYPE_MAP)
+            cacheMsgBean.setMsgType(CacheMsgBean.RECEIVE_LOCATION)
                     .setJsonBodyObj(new CacheMsgMap()
                             .setImgUrl(url)
                             .setLocation(location)
@@ -516,7 +506,7 @@ public class IMMsgManager {
             }
 
             //todo_k: 音频
-            cacheMsgBean.setMsgType(CacheMsgBean.MSG_TYPE_VOICE)
+            cacheMsgBean.setMsgType(CacheMsgBean.RECEIVE_VOICE)
                     .setJsonBodyObj(new CacheMsgVoice()
                             .setVoiceTime(seconds)
                             .setVoiceUrl(url)
@@ -536,7 +526,7 @@ public class IMMsgManager {
 
 
                     //todo_k: 文件
-                    cacheMsgBean.setMsgType(CacheMsgBean.MSG_TYPE_FILE)
+                    cacheMsgBean.setMsgType(CacheMsgBean.RECEIVE_FILE)
                             .setJsonBodyObj(new CacheMsgFile()
                                     .setFid(fid)
                                     .setFileName(fileName)
@@ -565,7 +555,7 @@ public class IMMsgManager {
                     .setName(contentVideo.getName())
                     .setSize(contentVideo.getSize())
                     .setTime(time);
-            cacheMsgBean.setMsgType(CacheMsgBean.MSG_TYPE_VIDEO).setJsonBodyObj(cacheMsgVideo);
+            cacheMsgBean.setMsgType(CacheMsgBean.RECEIVE_VIDEO).setJsonBodyObj(cacheMsgVideo);
             CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
             cacheMsgBeanList.add(cacheMsgBean);
 
@@ -620,12 +610,7 @@ public class IMMsgManager {
         // Creates an explicit intent for an Activity in your app
         Intent resultIntent = new Intent(context, IMConnectionActivity.class);
         resultIntent.putExtra(IMConnectionActivity.DST_PHONE, srcPhone);
-        if (srcPhone.equals("4000")) {
-            resultIntent.putExtra(IMConnectionActivity.DST_NAME, mContext.getString(R.string.hx_sdk_feedback_name));
-            resultIntent.putExtra(IMConnectionActivity.IS_IM_TYPE, false);
-        } else {
-            resultIntent.putExtra(IMConnectionActivity.DST_NAME, HuxinSdkManager.instance().getContactName(srcPhone));
-        }
+        resultIntent.putExtra(IMConnectionActivity.DST_NAME, HuxinSdkManager.instance().getContactName(srcPhone));
         // The stack builder object will contain an artificial back stack for the
         // started Activity.
         // This ensures that navigating backward from the Activity leads out of

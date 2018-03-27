@@ -123,9 +123,9 @@ public class WrapIMFilePreviewActivity extends FragmentActivity {
         }
 
         boolean isFileExist = new File(FileConfig.getBigFileDownLoadPath(), cacheMsgFile.getFileName()).exists();
-        if ((cacheMsgBean.getMsgType() == CacheMsgBean.MSG_TYPE_FILE && !cacheMsgBean.isRightUI()
+        if ((cacheMsgBean.getMsgType() == CacheMsgBean.SEND_FILE && !cacheMsgBean.isRightUI()
                 && isFileExist)
-                || (cacheMsgBean.getMsgType() == CacheMsgBean.MSG_TYPE_FILE && cacheMsgBean.isRightUI())) {
+                || (cacheMsgBean.getMsgType() == CacheMsgBean.SEND_FILE && cacheMsgBean.isRightUI())) {
             isOpenFile = true;
             ll_progress_parent.setVisibility(View.GONE);
             tv_open_file.setVisibility(View.VISIBLE);
@@ -136,7 +136,7 @@ public class WrapIMFilePreviewActivity extends FragmentActivity {
         tv_file_name.setText(cacheMsgFile.getFileName());
         iv_file_logo.setImageResource(cacheMsgFile.getFileRes());
 
-        if (cacheMsgBean.getMsgType() == CacheMsgBean.MSG_TYPE_FILE && !isFileExist) {
+        if (cacheMsgBean.getMsgType() == CacheMsgBean.SEND_FILE && !isFileExist) {
             new Thread(new DownloadFile(cacheMsgFile.getFileUrl(), cacheMsgFile.getFileName())).start();
         }
     }

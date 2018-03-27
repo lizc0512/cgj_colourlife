@@ -1,15 +1,14 @@
 package com.youmai.hxsdk.view.chat.view;
 
 import android.content.Context;
+import android.support.v7.widget.AppCompatEditText;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.widget.EditText;
 
 import com.youmai.hxsdk.view.chat.emoticon.utils.EmoticonHandler;
 import com.youmai.hxsdk.view.chat.utils.Utils;
 
 
-public class HadEditText extends EditText {
+public class HadEditText extends AppCompatEditText {
     private Context mContext;
 
     public HadEditText(Context context, AttributeSet attrs, int defStyle) {
@@ -30,7 +29,7 @@ public class HadEditText extends EditText {
     @Override
     protected void onTextChanged(CharSequence arg0, int start, int lengthBefore, int after) {
         super.onTextChanged(arg0, start, lengthBefore, after);
-        if(onTextChangedInterface != null){
+        if (onTextChangedInterface != null) {
             onTextChangedInterface.onTextChanged(arg0);
         }
         String content = arg0.subSequence(0, start + after).toString();

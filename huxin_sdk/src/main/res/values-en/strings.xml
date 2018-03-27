@@ -133,13 +133,13 @@
     <string name="im_card_no_remark">No remark yet</string>
     <string name="hx_voice_tip_normal">Hold to talk</string>
     <string name="hx_voice_tip_error">Recording error</string>
-    <string name="hx_voice_tip_error2">Open the Record audio premission</string>
+    <string name="hx_voice_tip_error2">Open the Record audio permission</string>
     <string name="hx_voice_tip_cancel">Recording cancelled</string>
     <string name="hx_str_full_call_background_sound">Background tone</string>
     <string name="label_ok">Agree</string>
     <string name="label_cancel">Cancel</string>
-    <string name="permission_title_rationale">Apply premission</string>
-    <string name="permission_read_audio_rationale">Open the Recor audio prmission</string>
+    <string name="permission_title_rationale">Apply permission</string>
+    <string name="permission_read_audio_rationale">Open the Record audio permission</string>
     <string name="hx_im_card_cope_tip">Copyed</string>
     <string name="hx_im_pop_contact_information">View contact</string>
     <string name="hx_im_pop_theme">Communication Theme</string>

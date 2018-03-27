@@ -69,7 +69,7 @@
     <!-- dialog btn -->
 
     <!-- crop -->
-    <style name="Crop"></style>
+    <style name="Crop" />
 
     <style name="Crop.DoneCancelBar">
         <item name="android:layout_width">match_parent</item>

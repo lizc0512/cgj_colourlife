@@ -10,11 +10,10 @@ import com.youmai.hxsdk.im.cache.CacheMsgMap;
 import com.youmai.hxsdk.im.cache.CacheMsgTxt;
 import com.youmai.hxsdk.im.cache.CacheMsgVideo;
 import com.youmai.hxsdk.im.cache.CacheMsgVoice;
-import com.youmai.hxsdk.im.cache.JsonFormate;
+import com.youmai.hxsdk.im.cache.JsonFormat;
 
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
-import org.greenrobot.greendao.annotation.Transient;
 import org.greenrobot.greendao.annotation.Generated;
 
 /**
@@ -97,6 +96,8 @@ public class CacheMsgBean implements Parcelable {
 
     private String receiverPhone; //接收者的电话
 
+    private String targetPhone; //沟通列表查询的关键字段：eg:去重, 筛选时间最近的一条
+
     private String contentJsonBody;  //消息内容json body
 
 
@@ -171,13 +172,22 @@ public class CacheMsgBean implements Parcelable {
         return this;
     }
 
+    public String getTargetPhone() {
+        return targetPhone;
+    }
+
+    public CacheMsgBean setTargetPhone(String targetPhone) {
+        this.targetPhone = targetPhone;
+        return this;
+    }
+
     /**
      * 设置json body obj
      *
      * @param jsonBodyObj
      * @return
      */
-    public CacheMsgBean setJsonBodyObj(JsonFormate jsonBodyObj) {
+    public CacheMsgBean setJsonBodyObj(JsonFormat jsonBodyObj) {
         this.contentJsonBody = jsonBodyObj.toJson();
         return this;
     }
@@ -200,14 +210,14 @@ public class CacheMsgBean implements Parcelable {
         return this;
     }
 
-    public JsonFormate getJsonBodyObj(JsonFormate jsonBodyObj) {
+    public JsonFormat getJsonBodyObj(JsonFormat jsonBodyObj) {
         jsonBodyObj.fromJson(contentJsonBody);
         jsonBodyObj = jsonBodyObj.cloneProto(jsonBodyObj);
         return jsonBodyObj;
     }
 
-    public JsonFormate getJsonBodyObj() {
-        JsonFormate jsonBodyObj = null;
+    public JsonFormat getJsonBodyObj() {
+        JsonFormat jsonBodyObj = null;
         switch (msgType) {
             case SEND_TEXT:
             case RECEIVE_TEXT:

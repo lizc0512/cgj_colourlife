@@ -9,7 +9,7 @@ import com.youmai.hxsdk.utils.GsonUtil;
  * Created by fylder on 2017/10/19.
  */
 
-public class CacheMsgVideo implements Parcelable, JsonFormate<CacheMsgVideo> {
+public class CacheMsgVideo implements Parcelable, JsonFormat<CacheMsgVideo> {
 
     private String videoId;
     private String frameId;
@@ -162,7 +162,7 @@ public class CacheMsgVideo implements Parcelable, JsonFormate<CacheMsgVideo> {
     }
 
     @Override
-    public JsonFormate cloneProto(JsonFormate body) {
+    public JsonFormat cloneProto(JsonFormat body) {
         CacheMsgVideo cacheMsgVideo = (CacheMsgVideo) body;
         cacheMsgVideo.setVideoId(videoId)
                 .setVideoPath(videoPath)

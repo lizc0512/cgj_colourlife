@@ -13,7 +13,7 @@ import org.json.JSONObject;
  * Date:    2016-12-06 14:59
  * Description: 地图
  */
-public class CacheMsgMap implements Parcelable, JsonFormate<CacheMsgMap> {
+public class CacheMsgMap implements Parcelable, JsonFormat<CacheMsgMap> {
 
     public String address;
 
@@ -100,7 +100,7 @@ public class CacheMsgMap implements Parcelable, JsonFormate<CacheMsgMap> {
     }
 
     @Override
-    public JsonFormate cloneProto(JsonFormate body) {
+    public JsonFormat cloneProto(JsonFormat body) {
         CacheMsgMap cacheMsgMap = (CacheMsgMap) body;
         cacheMsgMap.setAddress(address)
                 .setImgUrl(imgUrl)

@@ -11,7 +11,7 @@ import org.json.JSONObject;
  * Created by fylder on 2017/2/14.
  */
 
-public class CacheMsgCall implements Parcelable, JsonFormate<CacheMsgCall> {
+public class CacheMsgCall implements Parcelable, JsonFormat<CacheMsgCall> {
 
     private long duration;//时长
     private int type;//1：呼入   2：呼出  3：未接  4：挂断
@@ -83,7 +83,7 @@ public class CacheMsgCall implements Parcelable, JsonFormate<CacheMsgCall> {
     }
 
     @Override
-    public JsonFormate cloneProto(JsonFormate body) {
+    public JsonFormat cloneProto(JsonFormat body) {
         CacheMsgCall cacheMsgCall = (CacheMsgCall) body;
         cacheMsgCall.setDuration(duration)
                 .setType(type);

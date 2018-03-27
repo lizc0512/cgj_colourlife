@@ -13,7 +13,7 @@ import org.json.JSONObject;
  * Date:    2016-12-06 14:53
  * Description: 声音
  */
-public class CacheMsgVoice implements Parcelable, JsonFormate<CacheMsgVoice> {
+public class CacheMsgVoice implements Parcelable, JsonFormat<CacheMsgVoice> {
 
     public String voiceUrl;
 
@@ -188,7 +188,7 @@ public class CacheMsgVoice implements Parcelable, JsonFormate<CacheMsgVoice> {
     }
 
     @Override
-    public JsonFormate cloneProto(JsonFormate body) {
+    public JsonFormat cloneProto(JsonFormat body) {
         CacheMsgVoice cacheMsgVoice = (CacheMsgVoice) body;
         cacheMsgVoice.setVoiceUrl(voiceUrl)
                 .setVoicePath(voicePath)

@@ -10,7 +10,7 @@ import com.youmai.hxsdk.utils.GsonUtil;
  * Created by fylder on 2017/4/18.
  */
 
-public class CacheMsgRemark implements Parcelable, JsonFormate<CacheMsgRemark> {
+public class CacheMsgRemark implements Parcelable, JsonFormat<CacheMsgRemark> {
 
     public static int TYPE_UPDATE = 0;
     public static int TYPE_PREVIEW = 1;
@@ -116,7 +116,7 @@ public class CacheMsgRemark implements Parcelable, JsonFormate<CacheMsgRemark> {
     }
 
     @Override
-    public JsonFormate cloneProto(JsonFormate body) {
+    public JsonFormat cloneProto(JsonFormat body) {
         CacheMsgRemark cacheMsgRemark = (CacheMsgRemark) body;
         cacheMsgRemark.setRemark(remark)
                 .setTheme(theme)

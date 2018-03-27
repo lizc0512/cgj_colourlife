@@ -11,7 +11,7 @@ import org.json.JSONObject;
  * Created by lee on 2017/3/8.
  */
 
-public class CacheMsgBizCard implements Parcelable, JsonFormate<CacheMsgBizCard> {
+public class CacheMsgBizCard implements Parcelable, JsonFormat<CacheMsgBizCard> {
     public String name;
     public String phone;
 
@@ -82,7 +82,7 @@ public class CacheMsgBizCard implements Parcelable, JsonFormate<CacheMsgBizCard>
     }
 
     @Override
-    public JsonFormate cloneProto(JsonFormate body) {
+    public JsonFormat cloneProto(JsonFormat body) {
         CacheMsgBizCard cacheMsgBizCard = (CacheMsgBizCard) body;
         cacheMsgBizCard.setName(name);
         return cacheMsgBizCard;

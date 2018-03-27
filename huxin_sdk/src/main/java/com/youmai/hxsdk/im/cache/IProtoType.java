@@ -7,5 +7,5 @@ package com.youmai.hxsdk.im.cache;
  */
 
 public interface IProtoType<T> {
-    JsonFormate cloneProto(JsonFormate body);
+    JsonFormat cloneProto(JsonFormat body);
 }

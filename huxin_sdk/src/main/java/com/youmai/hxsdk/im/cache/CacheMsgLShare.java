@@ -13,7 +13,7 @@ import org.json.JSONObject;
  * 日期：2017.12.11 10:10
  * 描述：位置共享
  */
-public class CacheMsgLShare implements Parcelable, JsonFormate<CacheMsgLShare> {
+public class CacheMsgLShare implements Parcelable, JsonFormat<CacheMsgLShare> {
 
     private long targetId;
     private int receiveUserId;
@@ -162,7 +162,7 @@ public class CacheMsgLShare implements Parcelable, JsonFormate<CacheMsgLShare> {
     }
 
     @Override
-    public JsonFormate cloneProto(JsonFormate body) {
+    public JsonFormat cloneProto(JsonFormat body) {
         CacheMsgLShare cacheMsgLShare = (CacheMsgLShare) body;
         cacheMsgLShare.setTargetId(targetId)
                 .setReceiveUserId(receiveUserId)

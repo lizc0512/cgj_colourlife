@@ -13,7 +13,7 @@ import org.json.JSONObject;
  * Date:    2016-12-07 11:51
  * Description:
  */
-public class CacheMsgImage implements Parcelable, JsonFormate<CacheMsgImage> {
+public class CacheMsgImage implements Parcelable, JsonFormat<CacheMsgImage> {
     public static final int SEND_IS_ORI = 0; // 发送原图
     public static final int SEND_NOT_ORI = 1; // 发送非原图
     public static final int SEND_IS_ORI_RECV_IS_ORI = 2; // 发送原图接收原图
@@ -103,7 +103,7 @@ public class CacheMsgImage implements Parcelable, JsonFormate<CacheMsgImage> {
     };
 
     @Override
-    public JsonFormate cloneProto(JsonFormate body) {
+    public JsonFormat cloneProto(JsonFormat body) {
         CacheMsgImage cacheMsgImage = (CacheMsgImage) body;
         cacheMsgImage.setFid(fid)
                 .setFilePath(filePath)

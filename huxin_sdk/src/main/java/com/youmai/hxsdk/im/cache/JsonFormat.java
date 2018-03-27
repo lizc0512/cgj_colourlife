@@ -6,7 +6,7 @@ package com.youmai.hxsdk.im.cache;
  * Date:    2016-12-06 15:52
  * Description:
  */
-public interface JsonFormate<T> extends IProtoType {
+public interface JsonFormat<T> extends IProtoType {
     String toJson();
 
     T fromJson(String jsonStr);

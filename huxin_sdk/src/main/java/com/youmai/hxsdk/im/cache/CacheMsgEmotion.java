@@ -13,7 +13,7 @@ import org.json.JSONObject;
  * Date:    2016-12-06 14:27
  * Description: 表情
  */
-public class CacheMsgEmotion implements Parcelable, JsonFormate<CacheMsgEmotion> {
+public class CacheMsgEmotion implements Parcelable, JsonFormat<CacheMsgEmotion> {
 
     public int emotionRes = -1;
     public String emotionContent;
@@ -84,7 +84,7 @@ public class CacheMsgEmotion implements Parcelable, JsonFormate<CacheMsgEmotion>
     };
 
     @Override
-    public JsonFormate cloneProto(JsonFormate body) {
+    public JsonFormat cloneProto(JsonFormat body) {
         CacheMsgEmotion cacheMsgEmotion = (CacheMsgEmotion) body;
         cacheMsgEmotion.setEmotion(emotionContent, emotionRes);
         return cacheMsgEmotion;

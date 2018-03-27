@@ -12,7 +12,7 @@ import org.json.JSONObject;
  * Date:    2017-11-28 16:27
  * Description: 段子
  */
-public class CacheMsgJoke implements Parcelable, JsonFormate<CacheMsgJoke> {
+public class CacheMsgJoke implements Parcelable, JsonFormat<CacheMsgJoke> {
 
     public static final String JOKES = "/hx_im_jokes";
 
@@ -99,7 +99,7 @@ public class CacheMsgJoke implements Parcelable, JsonFormate<CacheMsgJoke> {
     }
 
     @Override
-    public JsonFormate cloneProto(JsonFormate body) {
+    public JsonFormat cloneProto(JsonFormat body) {
         CacheMsgJoke cacheMsgJoke = (CacheMsgJoke) body;
         cacheMsgJoke.setMsgJoke(msgJoke)
                 .setVoicePath(voicePath)

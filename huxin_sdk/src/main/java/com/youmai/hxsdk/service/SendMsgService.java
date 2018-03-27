@@ -29,7 +29,6 @@ import com.youmai.hxsdk.im.cache.CacheMsgMap;
 import com.youmai.hxsdk.im.cache.CacheMsgTxt;
 import com.youmai.hxsdk.im.cache.CacheMsgVideo;
 import com.youmai.hxsdk.im.cache.CacheMsgVoice;
-import com.youmai.hxsdk.im.cache.JsonFormate;
 import com.youmai.hxsdk.proto.YouMaiBasic;
 import com.youmai.hxsdk.proto.YouMaiChat;
 import com.youmai.hxsdk.push.http.HttpPushManager;

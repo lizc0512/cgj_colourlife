@@ -13,7 +13,7 @@ import org.json.JSONObject;
  * Date:    2016-12-08 15:01
  * Description:
  */
-public class CacheMsgShow implements Parcelable, JsonFormate<CacheMsgShow> {
+public class CacheMsgShow implements Parcelable, JsonFormat<CacheMsgShow> {
 
     private String version;
 
@@ -212,7 +212,7 @@ public class CacheMsgShow implements Parcelable, JsonFormate<CacheMsgShow> {
     };
 
     @Override
-    public JsonFormate cloneProto(JsonFormate body) {
+    public JsonFormat cloneProto(JsonFormat body) {
         CacheMsgShow cacheMsgShow = (CacheMsgShow) body;
         cacheMsgShow.setFid(fid)
                 .setVersion(version)

@@ -13,7 +13,7 @@ import org.json.JSONObject;
  * Date:    2016-12-06 14:52
  * Description: 文字
  */
-public class CacheMsgTxt implements Parcelable, JsonFormate<CacheMsgTxt> {
+public class CacheMsgTxt implements Parcelable, JsonFormat<CacheMsgTxt> {
 
     private String msgTxt;
     private String voiceId;//服务端文件序列
@@ -98,7 +98,7 @@ public class CacheMsgTxt implements Parcelable, JsonFormate<CacheMsgTxt> {
     }
 
     @Override
-    public JsonFormate cloneProto(JsonFormate body) {
+    public JsonFormat cloneProto(JsonFormat body) {
         CacheMsgTxt cacheMsgTxt = (CacheMsgTxt) body;
         cacheMsgTxt.setMsgTxt(msgTxt)
                 .setVoiceId(voiceId)

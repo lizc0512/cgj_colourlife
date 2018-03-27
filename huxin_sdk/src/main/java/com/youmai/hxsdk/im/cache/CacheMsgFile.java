@@ -14,7 +14,7 @@ import org.json.JSONObject;
  * Date:    2016-12-06 14:59
  * Description:
  */
-public class CacheMsgFile implements Parcelable, JsonFormate<CacheMsgFile> {
+public class CacheMsgFile implements Parcelable, JsonFormat<CacheMsgFile> {
 
     private String fileName;
 
@@ -158,7 +158,7 @@ public class CacheMsgFile implements Parcelable, JsonFormate<CacheMsgFile> {
     };
 
     @Override
-    public JsonFormate cloneProto(JsonFormate body) {
+    public JsonFormat cloneProto(JsonFormat body) {
         CacheMsgFile cacheMsgFile = (CacheMsgFile) body;
         cacheMsgFile.setFid(fid)
                 .setFileName(fileName)

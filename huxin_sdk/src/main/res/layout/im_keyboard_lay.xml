@@ -26,7 +26,6 @@
             android:src="@drawable/hx_im_bar_voice_normal" />
 
         <RelativeLayout
-            android:id="@+id/keyboard_input_lay"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -80,7 +79,6 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/keyboard_more_and_add_lay"
             android:layout_width="wrap_content"
             android:layout_height="48dp"
             android:layout_gravity="bottom"

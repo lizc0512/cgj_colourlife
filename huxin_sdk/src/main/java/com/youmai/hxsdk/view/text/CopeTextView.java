@@ -4,14 +4,10 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.os.Build;
 import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.youmai.hxsdk.R;
@@ -182,108 +178,6 @@ public class CopeTextView extends AppCompatTextView {
         });
     }
 
-
-    /**
-     * 复制选项操作
-     */
-    private void select(View view) {
-        TextView copeText = (TextView) view.findViewById(R.id.text_select_cope);
-        copeText.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ClipboardManager cpb = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-                    cpb.setPrimaryClip(ClipData.newPlainText(null, getText().toString()));//加入剪贴板
-                }
-                if (onClickFirst != null) {
-                    onClickFirst.copeText();//回调任务
-                }
-            }
-        });
-    }
-
-    /**
-     * 转发选项操作
-     */
-    private void forward(View view) {
-        TextView forwardText = (TextView) view.findViewById(R.id.text_select_forward);
-        forwardText.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (onClickFirst != null) {
-                    onClickFirst.forwardText(getText());//回调任务
-                }
-            }
-        });
-    }
-
-    /**
-     * 收藏选项操作
-     */
-    private void collect(View view) {
-        TextView forwardText = (TextView) view.findViewById(R.id.text_select_collect);
-        forwardText.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (onClickFirst != null) {
-                    onClickFirst.collect();//回调任务
-                }
-            }
-        });
-    }
-
-    /**
-     * 提醒选项操作
-     */
-    private void remind(View view) {
-        TextView remindText = (TextView) view.findViewById(R.id.text_select_remind);
-        remindText.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (onClickFirst != null) {
-                    onClickFirst.remind();
-                }
-            }
-        });
-    }
-
-    /**
-     * 删除选项操作
-     */
-    private void delete(View view) {
-        TextView deleteText = (TextView) view.findViewById(R.id.text_select_delete);
-        View line = view.findViewById(R.id.text_select_delete_line);
-        if (deleteShow) {
-            deleteText.setVisibility(VISIBLE);
-            line.setVisibility(VISIBLE);
-            deleteText.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (onClickFirst != null) {
-                        onClickFirst.delete();//回调任务
-                    }
-                }
-            });
-        } else {
-            deleteText.setVisibility(GONE);
-            line.setVisibility(GONE);
-        }
-    }
-
-    public void setCanShow(boolean canShow) {
-        this.canShow = canShow;
-    }
-
-    /**
-     * 是否显示删除选项
-     * <p>
-     * 问题反馈不需要删除操作
-     *
-     * @param deleteShow
-     */
-    public void setDeleteShow(boolean deleteShow) {
-        this.deleteShow = deleteShow;
-    }
 
     public void setOnClickLis(OnCopeListener l) {
         this.onClickFirst = l;

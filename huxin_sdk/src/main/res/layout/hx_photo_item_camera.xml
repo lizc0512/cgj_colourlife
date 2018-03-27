@@ -5,7 +5,6 @@
     android:background="@color/hxs_color_white">
 
     <ImageView
-        android:id="@+id/iv_camera_logo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/hx_photo_icon_camera"

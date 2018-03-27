@@ -1,40 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="hx_primary">#FFA439</color>
-    <color name="hx_primary_dark">#ffaf32</color>
-    <color name="hx_primary_light">#B2DFDB</color>
     <color name="hx_accent">#ffb74d</color>
-    <color name="hx_primary_text">#212121</color>
-    <color name="hx_secondary_text">#727272</color>
-    <color name="hx_divider">#B6B6B6</color>
     <color name="hx_window_background">#FFF5F5F5</color>
-    <color name="hx_tab_bgcolor">#eeeeee</color>
-    <color name="hx_text_light">#9983CC39</color>
 
     <!--半透明 -->
-    <color name="hx_h_transparent">#4006509d</color>
     <!--透明 -->
     <color name="hx_transparent">#00000000</color>
-
-    <color name="hx_show_color_white">#80ffffff</color>
 
     <!-- 呼信颜色定义 -->
     <color name="hx_color_white">#ffffff</color>
     <color name="hx_color_black">#000000</color>
-    <color name="hx_color_black1">#333333</color>
     <color name="hx_color_gray">#757575</color>
-    <color name="hx_color_gray2">#555555</color>
-    <color name="hx_color_gray3">#8d9298</color>
-    <color name="hx_color_gray4">#bcbcbc</color>
     <color name="hx_color_green">#45af08</color>
-    <color name="hx_color_green2">#39a6ff</color>
-    <color name="hx_color_orange">#ffcb01</color>
     <color name="hx_color_orange2">#ffde00</color>
-    <color name="hx_color_orange3">#ffee7f</color>
-    <color name="hx_color_yellow">#ffde00</color>
-    <color name="hx_color_red">#ff0000</color>
-    <color name="hx_color_black2">#66000000</color>
     <color name="hx_color_red_tag">#f90404</color>
     <!--crop-->
     <color name="crop__button_bar">#f3f3f3</color>
@@ -42,114 +21,51 @@
     <color name="crop__selector_pressed">#1a000000</color>
     <color name="crop__selector_focused">#77000000</color>
 
-    <color name="hx_color_remind_bg">#ebf6ff</color>
-
     <!-- 默认背景 -->
-    <color name="hxs_common_bg">#fbfbfb</color>
 
     <!-- 字体 -->
     <color name="hxs_color_white">#ffffff</color>
-    <color name="hxs_color_black">#000000</color>
     <color name="hxs_color_black1">#333333</color>
-    <color name="hxs_color_black2">#60333333</color>
-    <color name="hxs_color_black3">#693900</color>
     <color name="hxs_color_gray1">#999999</color>
-    <color name="hxs_color_gray2">#555555</color>
-    <color name="hxs_color_gray3">#8d9298</color>
-    <color name="hxs_color_gray4">#bcbcbc</color>
-    <color name="hxs_color_gray5">#666666</color>
-    <color name="hxs_color_gray6">#616161</color>
     <color name="hxs_color_gray7">#e6e6e6</color>
-    <color name="hxs_color_gray8">#c0c0c0</color>
-    <color name="hxs_color_gray9">#b2b2b2</color>
-    <color name="hxs_color_gray10">#ebebeb</color>
-    <color name="hxs_color_gray11">#f0f0f0</color>
     <color name="hxs_color_gray12">#dcdcdc</color>
-    <color name="hxs_color_gray13">#8f000000</color>
-    <color name="hxs_color_gray14">#eeeaea</color>
-    <color name="hxs_color_green1">#45af08</color>
     <color name="hxs_color_green2">#49d17c</color>
     <color name="hxs_color_green3">#39a6ff</color>
-    <color name="hxs_color_green4">#26b626</color>
-    <color name="hxs_color_green5">#3eb369</color>
     <color name="hxs_color_orange1">#ffcb01</color>
-    <color name="hxs_color_orange2">#ffde00</color>
-    <color name="hxs_color_orange3">#ffee7f</color>
-    <color name="hxs_color_yellow1">#ffde00</color>
-    <color name="hxs_color_yellow2">#ffd705</color>
-    <color name="hxs_color_trans1">#3349494f</color>
 
     <!--字体 2017.5.19-->
     <color name="hxs_color_black4">#203442</color>
     <color name="hxs_color_gray15">#9ba5b2</color>
     <color name="hxs_color_gray16">#e4e9ee</color>
     <color name="hxs_color_gray17">#bfc3ca</color>
-    <color name="hxs_color_gray18">#d7dce0</color>
     <color name="hxs_color_gray19">#f2f2f2</color>
     <color name="hxs_color_gray20">#9cccff</color>
     <color name="hxs_color_gray21">#c7c7c7</color>
     <color name="hxs_color_gray22">#eeeeee</color>
     <color name="hxs_color_gray23">#f1f3f6</color>
-    <color name="hxs_color_yellow3">#ffcc00</color>
-    <color name="hxs_color_yellow4">#f1ad64</color>
-    <color name="hxs_color_yellow5">#f4c898</color>
-    <color name="hxs_color_yellow6">#fcd2a5</color>
-    <color name="hxs_color_yellow7">#f9e64d</color>
     <color name="hxs_color_blue1">#39a6ff</color>
     <color name="hxs_color_blue2">#8039a6ff</color>
     <color name="hxs_color_blue3">#566477</color>
-    <color name="hxs_color_red1">#ff5252</color>
-    <color name="hxs_color_red2">#ff4931</color>
-    <color name="hxs_color_white2">#fffefe</color>
 
 
     <!--picker && 日期联动器-->
     <color name="hxs_picker_gray">#ecedef</color>
     <color name="hxs_transparent_black">#94333232</color>
-    <color name="hx_pickerview_timebtn_nor">#057dff</color>
-    <color name="hx_pickerview_timebtn_pre">#c2daf5</color>
-    <color name="hx_pickerview_bg_topbar">#f5f5f5</color>
     <color name="hx_pickerview_topbar_title">#000000</color>
-    <color name="hx_pickerview_wheelview_textcolor_out">#a8a8a8</color>
-    <color name="hx_pickerview_wheelview_textcolor_center">#2a2a2a</color>
-    <color name="hx_pickerview_wheelview_textcolor_divider">#d5d5d5</color>
     <color name="hx_pickerview_bgColor_overlay">#60000000</color>
-    <color name="hx_pickerview_bgColor_default">#FFFFFFFF</color>
 
     <!--透明度 (0 - 100) %-->
-    <color name="hxs_color_white_zero">#00FFFFFF</color>
-    <color name="hxs_color_white_one">#19FFFFFF</color>
-    <color name="hxs_color_white_two">#33FFFFFF</color>
-    <color name="hxs_color_white_three">#4CFFFFFF</color>
-    <color name="hxs_color_white_four">#66FFFFFF</color>
-    <color name="hxs_color_white_five">#7FFFFFFF</color>
-    <color name="hxs_color_white_six">#99FFFFFF</color>
-    <color name="hxs_color_white_seven">#B2FFFFFF</color>
-    <color name="hxs_color_white_eight">#CCFFFFFF</color>
-    <color name="hxs_color_white_nine">#E5FFFFFF</color>
-    <color name="hxs_color_white_ten">#FFFFFFFF</color>
     <!--透明度 (0 - 100) %-->
-    <color name="hxs_color_trans_zero">#00000000</color>
-    <color name="hxs_color_trans_one">#19000000</color>
-    <color name="hxs_color_trans_two">#33000000</color>
     <color name="hxs_color_trans_three">#4C000000</color>
-    <color name="hxs_color_trans_four">#66000000</color>
     <color name="hxs_color_trans_five">#7F000000</color>
     <color name="hxs_color_trans_six">#99000000</color>
     <color name="hxs_color_trans_seven">#B2000000</color>
-    <color name="hxs_color_trans_eight">#CC000000</color>
-    <color name="hxs_color_trans_nine">#E5000000</color>
-    <color name="hxs_color_trans_ten">#FF000000</color>
 
     <!-- 列表 -->
-    <color name="hxs_list_item_bg_on">#2c000000</color>
 
     <!--权限设置-->
-    <color name="hx_perm_btn_txt">#49d17c</color>
-    <color name="hx_perm_btn_txt_on">#ffffff</color>
 
     <!--wheelView-->
-    <color name="bocop_dialog_bg">#77000000</color>
     <color name="color_transparent">#00000000</color>
     <color name="color_d8d8d8">#d8d8d8</color>
     <color name="color_323232">#323232</color>
@@ -158,46 +74,23 @@
     <!--im card-->
     <color name="im_bg">#F2F2F2</color>
     <color name="card_bg">#FFFFFF</color>
-    <color name="card_head_bg">#FFFFFF</color>
-    <color name="card_head_note_bg">#49D17C</color>
     <color name="card_head_no_note_bg">#FFFFFF</color>
-    <color name="card_head_bg_stroke">#aaaaaa</color>
-    <color name="card_head_note_font">#FFFFFF</color>
     <color name="card_head_no_note_font">#999999</color>
-    <color name="card_call_font">#888888</color>
-    <color name="card_call_font_red">#e75b5b</color>
     <color name="card_call_count_red">#ff543d</color>
-    <color name="card_font_black">#4A4A4A</color>
 
     <color name="im_right_font">#FFFFFF</color>
-    <color name="im_card_theme_font">#39a6ff</color>
     <color name="gray">#333333</color>
-    <color name="card_edit_gray_font">#4A4A4A</color>
-    <color name="card_edit_save_font">#E6E6E6</color>
 
-    <color name="audio_normal">#F2F2F2</color>
-    <color name="audio_normal_out">#e66e6e</color>
     <color name="audio_font_normal">#999999</color>
-    <color name="audio_font_normal_out">#FFFFFF</color>
     <!--录音激活背景色-->
     <color name="hx_audio_press_bg">#AA3bdcff</color>
     <color name="hx_im_recording_text">#4A4A4A</color>
 
     <color name="spilt_line">#EEEEEE</color>
-    <color name="toolbar_btn_select">#D9D9D9</color>
     <color name="toolbar_btn_nomal">#FFFFFF</color>
 
 
-    <color name="swap_line_color">#e6e6e6</color>
-    <color name="swap_titel_color">#333333</color>
-    <color name="swap_text_color">#999999</color>
-    <color name="red_packet_text">#FED0A7</color>
-
-    <color name="purse_font_gray">#80FFFFFF</color>
-    <color name="weixin_follow">#9BA5B2</color>
     <color name="hx_record_tip_bg">#EF6642</color>
-
-    <color name="hx_weixin_tip">#444444</color>
 
 
     <!--UI颜色调整-->
@@ -205,11 +98,8 @@
     <color name="hx_main_color">#39a6ff</color>
     <!--主色选中后颜色-->
     <color name="hx_selected_color">#3497e8</color>
-    <color name="hx_enabled_color">#D7DCE0</color>
     <!--辅色1-->
-    <color name="hx_assist_color">#3bdcff</color>
     <!--辅色2-->
-    <color name="hx_assist_color1">#566477</color>
     <!--背景色-->
     <color name="hx_background_color">#f1f3f6</color>
     <!--状态栏颜色-->
@@ -217,7 +107,6 @@
     <!--文字颜色-->
     <color name="hx_text_color">#9ba5b2</color>
     <color name="hx_text_color1">#203422</color>
-    <color name="hx_text_color2">#bfc3ca</color>
 
     <color name="hx_item_select">#F5F5F5</color>
     <!--沟通左消息文本主色调-->
@@ -226,14 +115,10 @@
     <color name="hx_toolbar_bg">@color/hx_main_color</color>
     <color name="hx_toolbar_font">#FFFFFF</color>
 
-    <color name="hx_share_invite_select">#f3f7ff</color>
     <color name="return_cancel_bg">#D7DCE0</color>
     <color name="return_cancel">#203442</color>
-    <color name="tip_divider">#e5e8e9</color>
 
     <!--ndk-->
-    <color name="color_381902">#222222</color>
-    <color name="transparent2">#50000000</color>
     <color name="camera_progress_three">#24ff00</color>
     <color name="camera_bg">#2c2c2c</color>
     <color name="camera_progress_split">#005084</color>

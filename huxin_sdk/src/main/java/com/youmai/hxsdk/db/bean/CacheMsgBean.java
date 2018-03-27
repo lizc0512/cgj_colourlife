@@ -316,10 +316,10 @@ public class CacheMsgBean implements Parcelable {
         this.contentJsonBody = in.readString();
     }
 
-    @Generated(hash = 1056906974)
-    public CacheMsgBean(Long id, Long msgId, int msgType, int msgStatus, long msgTime,
-                        int senderUserId, int receiverUserId, String senderPhone, String receiverPhone,
-                        String contentJsonBody) {
+    @Generated(hash = 1816649675)
+    public CacheMsgBean(Long id, Long msgId, int msgType, int msgStatus, long msgTime, int senderUserId,
+            int receiverUserId, String senderPhone, String receiverPhone, String targetPhone,
+            String contentJsonBody) {
         this.id = id;
         this.msgId = msgId;
         this.msgType = msgType;
@@ -329,6 +329,7 @@ public class CacheMsgBean implements Parcelable {
         this.receiverUserId = receiverUserId;
         this.senderPhone = senderPhone;
         this.receiverPhone = receiverPhone;
+        this.targetPhone = targetPhone;
         this.contentJsonBody = contentJsonBody;
     }
 

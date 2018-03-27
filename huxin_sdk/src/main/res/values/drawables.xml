@@ -1,6 +1,2 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
-<drawable name="hx_im_content_bg_on">#1c000000</drawable>
-<drawable name="hx_im_content_bg">#ffffff</drawable>
-<drawable name="hx_im_media_bg">#0000</drawable>
-</resources>
+<resources></resources>

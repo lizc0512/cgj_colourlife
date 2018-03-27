@@ -33,7 +33,8 @@ public class CacheMsgBeanDao extends AbstractDao<CacheMsgBean, Long> {
         public final static Property ReceiverUserId = new Property(6, int.class, "receiverUserId", false, "RECEIVER_USER_ID");
         public final static Property SenderPhone = new Property(7, String.class, "senderPhone", false, "SENDER_PHONE");
         public final static Property ReceiverPhone = new Property(8, String.class, "receiverPhone", false, "RECEIVER_PHONE");
-        public final static Property ContentJsonBody = new Property(9, String.class, "contentJsonBody", false, "CONTENT_JSON_BODY");
+        public final static Property TargetPhone = new Property(9, String.class, "targetPhone", false, "TARGET_PHONE");
+        public final static Property ContentJsonBody = new Property(10, String.class, "contentJsonBody", false, "CONTENT_JSON_BODY");
     }
 
 
@@ -58,7 +59,8 @@ public class CacheMsgBeanDao extends AbstractDao<CacheMsgBean, Long> {
                 "\"RECEIVER_USER_ID\" INTEGER NOT NULL ," + // 6: receiverUserId
                 "\"SENDER_PHONE\" TEXT," + // 7: senderPhone
                 "\"RECEIVER_PHONE\" TEXT," + // 8: receiverPhone
-                "\"CONTENT_JSON_BODY\" TEXT);"); // 9: contentJsonBody
+                "\"TARGET_PHONE\" TEXT," + // 9: targetPhone
+                "\"CONTENT_JSON_BODY\" TEXT);"); // 10: contentJsonBody
     }
 
     /** Drops the underlying database table. */
@@ -96,9 +98,14 @@ public class CacheMsgBeanDao extends AbstractDao<CacheMsgBean, Long> {
             stmt.bindString(9, receiverPhone);
         }
  
+        String targetPhone = entity.getTargetPhone();
+        if (targetPhone != null) {
+            stmt.bindString(10, targetPhone);
+        }
+ 
         String contentJsonBody = entity.getContentJsonBody();
         if (contentJsonBody != null) {
-            stmt.bindString(10, contentJsonBody);
+            stmt.bindString(11, contentJsonBody);
         }
     }
 
@@ -131,9 +138,14 @@ public class CacheMsgBeanDao extends AbstractDao<CacheMsgBean, Long> {
             stmt.bindString(9, receiverPhone);
         }
  
+        String targetPhone = entity.getTargetPhone();
+        if (targetPhone != null) {
+            stmt.bindString(10, targetPhone);
+        }
+ 
         String contentJsonBody = entity.getContentJsonBody();
         if (contentJsonBody != null) {
-            stmt.bindString(10, contentJsonBody);
+            stmt.bindString(11, contentJsonBody);
         }
     }
 
@@ -154,7 +166,8 @@ public class CacheMsgBeanDao extends AbstractDao<CacheMsgBean, Long> {
             cursor.getInt(offset + 6), // receiverUserId
             cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7), // senderPhone
             cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8), // receiverPhone
-            cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9) // contentJsonBody
+            cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9), // targetPhone
+            cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10) // contentJsonBody
         );
         return entity;
     }
@@ -170,7 +183,8 @@ public class CacheMsgBeanDao extends AbstractDao<CacheMsgBean, Long> {
         entity.setReceiverUserId(cursor.getInt(offset + 6));
         entity.setSenderPhone(cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7));
         entity.setReceiverPhone(cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8));
-        entity.setContentJsonBody(cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9));
+        entity.setTargetPhone(cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9));
+        entity.setContentJsonBody(cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10));
      }
     
     @Override

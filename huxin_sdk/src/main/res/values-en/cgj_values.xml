@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="cgj_crash_title">出现错误了,是否回滚到稳定版的彩管家?</string>
-    <string name="cgj_btn_sure">确定</string>
 </resources>

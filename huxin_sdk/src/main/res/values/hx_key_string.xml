@@ -2,7 +2,6 @@
 <resources>
 
     <!-- 呼信SDK 渠道号 T4001:google play-->
-    <string name="huxin_channel" translatable="false">T4000</string>
 
     <!-- 呼信SDK APPKEY-->
     <string name="huxin_apikey" translatable="false">3ccc97772773ae27</string>
@@ -11,10 +10,8 @@
     <string name="amap_apikey" translatable="false">4a7c39fcb403798a4f6bb61c26ff8720</string>
 
     <!-- 百度广告联盟-->
-    <string name="baidu_mobad_appid" translatable="false">c23b856d</string>
 
     <!-- google map APPKEY-->
-    <string name="google_map_apikey" translatable="false">AIzaSyDkE2Y0XXL2zmRZMlPnJft2xenYDkoBJ5M</string>
 
     <!--魅族推送-->
     <string name="flyme_appid" translatable="false">110177</string>

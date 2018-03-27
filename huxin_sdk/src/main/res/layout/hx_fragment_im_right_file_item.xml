@@ -5,7 +5,6 @@
     android:orientation="vertical">
 
     <ViewStub
-        android:id="@+id/im_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout="@layout/im_card_toolbar" />
@@ -31,7 +30,6 @@
             <include layout="@layout/hx_item_im_select_lay" />
 
             <LinearLayout
-                android:id="@+id/item_ly"
                 style="@style/im_content_card_msg_style"
                 android:gravity="right">
 
@@ -41,7 +39,6 @@
                     android:layout_weight="1" />
 
                 <ImageView
-                    android:id="@+id/imgRemind"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="5dp"

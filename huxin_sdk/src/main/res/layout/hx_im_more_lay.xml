@@ -57,7 +57,6 @@
         app:mrl_rippleOverlay="true">
 
         <LinearLayout
-            android:id="@+id/im_more_theme_lay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -95,21 +94,18 @@
         app:mrl_rippleOverlay="true">
 
         <LinearLayout
-            android:id="@+id/im_driving_mode_lay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:padding="4dp">
 
             <ImageView
-                android:id="@+id/im_driving_mode_icon"
                 android:layout_width="36dp"
                 android:layout_height="36dp"
                 android:layout_gravity="center_vertical"
                 android:src="@drawable/im_more_icon_driving_mode_off" />
 
             <TextView
-                android:id="@+id/im_driving_mode_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -134,21 +130,18 @@
         app:mrl_rippleOverlay="true">
 
         <LinearLayout
-            android:id="@+id/im_meeting_mode_lay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:padding="4dp">
 
             <ImageView
-                android:id="@+id/im_meeting_mode_icon"
                 android:layout_width="36dp"
                 android:layout_height="36dp"
                 android:layout_gravity="center_vertical"
                 android:src="@drawable/im_more_icon_meeting_mode_off" />
 
             <TextView
-                android:id="@+id/im_meeting_mode_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"

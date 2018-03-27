@@ -6,7 +6,6 @@
     android:paddingTop="8dp">
 
     <TextView
-        android:id="@+id/card_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
@@ -22,7 +21,6 @@
         android:visibility="gone" />
 
     <RelativeLayout
-        android:id="@+id/im_toolbar_card_lay"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/hx_im_card_head_no_note_bg"
@@ -43,7 +41,6 @@
             android:textSize="15sp" />
 
         <TextView
-            android:id="@+id/card_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/im_toolbar_card_name_text"
@@ -56,7 +53,6 @@
             android:textSize="10sp" />
 
         <ImageView
-            android:id="@+id/im_toolbar_card_arrows_img"
             android:layout_width="28dp"
             android:layout_height="28dp"
             android:layout_alignParentRight="true"

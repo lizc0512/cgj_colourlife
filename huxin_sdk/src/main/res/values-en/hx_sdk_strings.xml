@@ -3,21 +3,13 @@
     <!--xml中的string-->
 
     <!--hx_sdk_filepreview-->
-    <string name="hx_sdk_back">Back</string>
     <string name="hx_sdk_file_name">Filename</string>
-    <string name="hx_sdk_downloading">Downloading&#8230;&#8230;&#8230;(</string>
     <string name="hx_sdk_downloading2">Downloading&#8230;&#8230;&#8230;(%1$s/%2$s)</string>
     <string name="hx_sdk_downloading_continue">Continue to download(</string>
     <string name="hx_sdk_open_other_app">Use other applications open</string>
 
     <!--activity_media_dispay-->
-    <string name="hx_sdk_media_dispay_pic">Photos</string>
-    <string name="hx_sdk_media_dispay_frequency">Voices</string>
-    <string name="hx_sdk_media_dispay_video">Vidoes</string>
-    <string name="hx_sdk_media_dispay_file">Files</string>
     <string name="hx_sdk_media_take_photo">Camera</string>
-    <string name="hx_sdk_media_all_photos">All pictures</string>
-    <string name="hx_sdk_media_ten">10 photos</string>
 
     <!-- string -->
     <string name="hxs_mr_tip_1">Slide up for cancel</string>
@@ -25,148 +17,37 @@
     <string name="hxs_mr_change_camera_error">The phone does not support switching the camera</string>
 
     <!--fragment_audio-->
-    <string name="hx_sdk_fragment_audio">Audio resources</string>
-    <string name="hx_sdk_fragment_file">File resources</string>
-    <string name="hx_sdk_fragment_video">Video resources</string>
 
     <!--hx_activity_hook_layout &#160; -->
-    <string name="hx_sdk_hook_layout_01">Call ended</string>
-    <string name="hx_sdk_hook_layout_02">Messages</string>
-    <string name="hx_sdk_hook_layout_03">Send message</string>
-    <string name="hx_sdk_hook_layout_04">My calling\'s show</string>
-    <string name="hx_sdk_hook_layout_05">Setting</string>
-    <string name="hx_sdk_hook_layout_06">Apple pay</string>
-    <string name="hx_sdk_hook_layout_07">Promotion</string>
-    <string name="hx_sdk_hook_layout_08">Details</string>
-    <string name="hx_full_hook_view_voice">Voice</string>
-    <string name="hx_full_hook_view_pic">Image</string>
-    <string name="hx_full_hook_view_location">Location: </string>
-    <string name="hx_full_hook_view_file">File</string>
-    <string name="hx_full_hook_view_remark">Remark</string>
-    <string name="hx_full_hook_view_camera">拍照</string>
-    <string name="hx_full_hook_view_im_count">0</string>
-    <string name="hx_sdk_hook_layout_add">添加</string>
-    <string name="hx_sdk_hook_layout_11">Redial</string>
-    <string name="hx_sdk_hook_layout_12">Dialpad</string>
-    <string name="hx_sdk_hook_layout_13">Messages</string>
-    <string name="hx_sdk_hook_layout_14">递名片</string>
-    <string name="hx_sdk_hook_layout_15">This call the other party did not answer,click here to go to tease him~</string>
-    <string name="hx_sdk_hook_layout_16">Send the message to the other side, please click to view.</string>
-    <string name="hx_sdk_hook_layout_17">%1$s  %2$s  %3$s  %4$s</string>
-    <string name="hx_sdk_hook_layout_18">Callback</string>
-    <string name="hx_sdk_hook_layout_19">Activity Details >></string>
-    <string name="hx_sdk_hook_layout_20">呼信商家秀欢迎来到呼信的世界</string>
-    <string name="hx_sdk_hook_layout_21">Missed</string>
-    <string name="hx_sdk_hook_layout_22">Ringing</string>
-    <string name="hx_sdk_hook_layout_23">Holding</string>
-    <string name="hx_sdk_hook_layout_24">Headline</string>
-    <string name="hx_sdk_hook_layout_25">代言已完成，快去领钱吧~</string>
-    <string name="hx_sdk_hook_layout_26">请在活动结束前尽快领取</string>
-    <string name="hx_sdk_hook_layout_27">你有一个红包未领取</string>
-    <string name="hx_sdk_hook_layout_28">现金代言红包提醒</string>
 
     <!--hx_activity_location-->
-    <string name="hx_sdk_location_cancle">Cancel</string>
-    <string name="hx_sdk_location_send">Send</string>
 
     <!--hx_activity_picture-->
-    <string name="hx_sdk_picture_cancel">Cancel</string>
-    <string name="hx_sdk_picture_send">Send</string>
 
     <!--hx_activity_myselfcouponsdetail-->
-    <string name="hx_sdk_myself_coupons_detail_business_name">Business name</string>
-    <string name="hx_sdk_myself_coupons_detail_vaild">Validity period</string>
-    <string name="hx_sdk_myself_coupons_detail_exchange_code">Redemption code</string>
-    <string name="hx_sdk_myself_coupons_detail_use_conditions">Conditions of Use</string>
-    <string name="hx_sdk_myself_coupons_detail_current_state">Current state</string>
-    <string name="hx_sdk_myself_coupons_detail_overtime">expired</string>
 
     <!--hx_activity_perm_huawei_dial-->
-    <string name="hx_sdk_perm_huawei_dial_01">The first step in the application of the sliding list found</string>
-    <string name="hx_sdk_perm_huawei_dial_02">&quot;cool call&quot;</string>
-    <string name="hx_sdk_perm_huawei_dial_03">cool call</string>
-    <string name="hx_sdk_perm_huawei_dial_04">15 permissions</string>
-    <string name="hx_sdk_perm_huawei_dial_05">Step 2 Click into the details, set</string>
-    <string name="hx_sdk_perm_huawei_dial_06">Make a call to allow</string>
-    <string name="hx_sdk_perm_huawei_dial_07">Reading the contact person allows</string>
 
     <!--hx_activity_perm_huawei_protect-->
 
-    <string name="hx_sdk_perm_huawei_protect_01">Slide the list found</string>
-    <string name="hx_sdk_perm_huawei_protect_02">Protected</string>
-    <string name="hx_sdk_perm_huawei_protect_03">Turn on the switch</string>
-
     <!--hx_activity_perm_huawei_window-->
-    <string name="hx_sdk_perm_huawei_window_01">Slide the list found</string>
-    <string name="hx_sdk_perm_huawei_window_02">Has been allowed</string>
 
     <!--hx_activity_perm_meizu_dial-->
-    <string name="hx_activity_perm_meizu_dial_01">Open</string>
-    <string name="hx_activity_perm_meizu_dial_02">&quot;dial number&quot;</string>
-    <string name="hx_activity_perm_meizu_dial_03">Option, select</string>
-    <string name="hx_activity_perm_meizu_dial_04">&quot;allow&quot;</string>
-    <string name="hx_activity_perm_meizu_dial_05">&quot;读取联系人信息&quot;</string>
 
     <!--hx_activity_perm_meizu_note_dial-->
-    <string name="hx_activity_perm_meizu_note_dial_01">Open</string>
 
     <!--hx_activity_perm_meizu_note_protect-->
-    <string name="hx_activity_perm_meizu_note_protect_01">Slide the list found</string>
-    <string name="hx_activity_perm_meizu_note_protect_02">&quot;cool call&quot;</string>
 
     <!--hx_activity_perm_meizu_note_window-->
-    <string name="hx_activity_perm_meizu_note_window_01">Open</string>
-    <string name="hx_activity_perm_meizu_note_window_02">&quot;Floating window&quot;</string>
-    <string name="hx_activity_perm_meizu_note_window_03">switch</string>
-    <string name="hx_activity_perm_meizu_note_protect_04">First step Click on the top right corner</string>
-    <string name="hx_activity_perm_meizu_note_protect_05">&quot;Settings&quot;</string>
-    <string name="hx_activity_perm_meizu_note_protect_06">The second step to enter</string>
-    <string name="hx_activity_perm_meizu_note_protect_07">&quot;Memory Accelerated White List&quot;</string>
-    <string name="hx_activity_perm_meizu_note_protect_08">The third step will be</string>
-    <string name="hx_activity_perm_meizu_note_protect_09">Whitelist</string>
 
     <!--hx_activity_perm_oppo2_dial-->
-    <string name="hx_activity_perm_oppo2_dial_01">The first step in the rights management list to find "phone" and "option", click to enter</string>
-    <string name="hx_activity_perm_oppo2_dial_02">The second step to find</string>
-    <string name="hx_activity_perm_oppo2_dial_03">, Set to &quot; allow &quot;</string>
-    <string name="hx_activity_perm_oppo2_dial_04">Slide the list found</string>
-    <string name="hx_activity_perm_oppo2_dial_05">Click the Lock &quot; icon</string>
-    <string name="hx_activity_perm_oppo2_dial_06">The first step in the rights management list to find "floating window management" option, click to enter</string>
-    <string name="hx_activity_perm_oppo2_dial_07">, Turn on the switch</string>
-    <string name="hx_activity_perm_oppo2_dial_08">第一步 在权限管理列表中找到&quot;读取联系人信息&quot;选项, 点击进入</string>
-    <string name="hx_activity_perm_oppo3_dial_01">The first step is found in the application list</string>
-    <string name="hx_activity_perm_oppo3_dial_02">, Click into</string>
-    <string name="hx_activity_perm_oppo3_dial_03">Step 2 Click the Phone Options, select &quot; Allow &quot;</string>
-    <string name="hx_activity_perm_oppo3_dial_04">Turn on the switch</string>
-    <string name="hx_activity_perm_oppo3_dial_05">第二步 点击读取联系人选项, 选择&quot;允许&quot;</string>
 
     <!--hx_activity_perm_vivo_dial-->
-    <string name="hx_activity_perm_vivo_dial_01">Step 1 Click</string>
-    <string name="hx_activity_perm_vivo_dial_02">&quot;Software management&quot;</string>
-    <string name="hx_activity_perm_vivo_dial_03">Step 2 Click</string>
-    <string name="hx_activity_perm_vivo_dial_04">&quot;Software rights management&quot;</string>
-    <string name="hx_activity_perm_vivo_dial_05">&quot;dial number&quot;</string>
-    <string name="hx_activity_perm_vivo_dial_06">Click on</string>
-    <string name="hx_activity_perm_vivo_dial_07">The third step is found</string>
-    <string name="hx_activity_perm_vivo_dial_08">&quot;cool call&quot;</string>
-    <string name="hx_activity_perm_vivo_dial_09">, Make a call set to</string>
-    <string name="hx_activity_perm_vivo_dial_10">&quot;allow&quot;</string>
-    <string name="hx_activity_perm_vivo_dial_11">&quot;访问联系人&quot;</string>
-    <string name="hx_activity_perm_vivo_dial_12">, 将访问联系人设置为</string>
-
-    <string name="hx_activity_perm_vivo_protect_01">Slide the list found</string>
-    <string name="hx_activity_perm_vivo_protect_02">&quot;Software management&quot;</string>
-    <string name="hx_activity_perm_vivo_protect_03">turn up</string>
 
 
     <!--hx_activity_perm_xiaomi_dial-->
-    <string name="hx_activity_perm_xiaomi_dial_01">Turn on the switch</string>
 
     <!--hx_arc_call_layout-->
-    <string name="hx_arc_call_layout_01">Click to view the latest activity</string>
-
-    <string name="hx_arc_menu_01">Poke me to view the call show</string>
-    <string name="hx_call_msg_image_layout">Details</string>
 
     <!--hx_dialog_im_voice-->
     <string name="hx_dialog_im_voice_01">Slide up for cancel</string>
@@ -178,166 +59,52 @@
     <string name="hx_dialog_mediastore_cancle">Cancel</string>
 
     <!--hx_exc_result-->
-    <string name="hx_exc_result_01">Coupon name</string>
-    <string name="hx_exc_result_02">Current state</string>
-    <string name="hx_exc_result_03">usage time</string>
-    <string name="hx_exc_result_04">determine</string>
 
     <!--hx_frag_media_file-->
-    <string name="hx_frag_media_file_01">Select file</string>
 
     <!--hx_fragment_chat-->
-    <string name="hx_fragment_chat_text">Text</string>
-    <string name="hx_fragment_chat_location">Location</string>
-    <string name="hx_fragment_chat_pic">Image</string>
-    <string name="hx_fragment_chat_emoji">Emoticon</string>
-    <string name="hx_fragment_chat_card">Card</string>
 
     <!--hx_fragment_edit_card-->
-    <string name="hx_fragment_edit_card_fid">Avatar fid</string>
-    <string name="hx_fragment_edit_card_pic">upload image</string>
-    <string name="hx_fragment_edit_card_name">Business card photo</string>
-    <string name="hx_fragment_edit_card_name_pic">Upload business card photo</string>
-    <string name="hx_fragment_edit_card_nickname">nickname</string>
-    <string name="hx_fragment_edit_card_sex">gender</string>
-    <string name="hx_fragment_edit_card_sex_man">male</string>
-    <string name="hx_fragment_edit_card_sex_woman">Female</string>
-    <string name="hx_fragment_edit_card_area">area</string>
-    <string name="hx_fragment_edit_card_sign">signature</string>
-    <string name="hx_fragment_edit_card_email">mailbox</string>
-    <string name="hx_fragment_edit_card_position">position</string>
-    <string name="hx_fragment_edit_card_special_plane">Landline</string>
-    <string name="hx_fragment_edit_card_adress">address</string>
-    <string name="hx_fragment_edit_card_company_web">Company website</string>
-    <string name="hx_fragment_edit_card_company_name">company name</string>
 
     <!--hx_fragment_feedback-->
-    <string name="hx_fragment_feed_back">Contact us：</string>
-    <string name="hx_fragment_tips_name">Your name：</string>
-    <string name="hx_fragment_tips_content">Feedback</string>
-    <string name="hx_fragment_tips">Feedback</string>
-    <string name="hx_fragment_report">Report</string>
-    <string name="hx_fragment_commit">Submit</string>
 
     <!--hx_fragment_float-->
-    <string name="hx_fragment_float_Q">Q version</string>
-    <string name="hx_fragment_float_fullview">Full screen version</string>
-    <string name="hx_fragment_float_halfview">Half screen version</string>
-    <string name="hx_fragment_close_float">Close the screen</string>
 
     <!--hx_fragment_get_card-->
-    <string name="hx_fragment_get_card_image">Avatar</string>
-    <string name="hx_fragment_get_card_pic">Business card photo:</string>
 
     <!--hx_fragment_im_left_txt_item-->
-    <string name="hx_fragment_im_left_txt_item">This is the chat test, we are testing Ha ha ha, this text is the test statement.</string>
 
     <!--hx_fragment_im_main-->
     <string name="hx_fragment_im_main">Send</string>
-    <string name="hx_fragment_im_voice">Hold and talk</string>
 
     <!--hx_fragment_location-->
-    <string name="hx_fragment_location_send_phone_number">Send the phone number</string>
 
     <!--hx_fragment_login-->
-    <string name="hx_fragment_login_01">The content is empty, using the default address</string>
-    <string name="hx_fragment_login_phone_number">phone number</string>
-    <string name="hx_fragment_login_phone_valid">Verification code</string>
-    <string name="hx_fragment_login_phone_get_valid">get verification code</string>
-    <string name="hx_fragment_login_02">Enter the login IP, do not enter the default IP</string>
-    <string name="hx_fragment_login_03">Enter the login port and do not enter the default port</string>
 
     <!--hx_fragment_permission-->
-    <string name="hx_fragment_permission_01">To ensure high availability requirements,\n give this app full access those permissions please.</string>
-    <string name="hx_fragment_permission_02">Allow \"Make calls\"</string>
-    <string name="hx_fragment_permission_03">Open the phone 【Settings】, find APP is【phone】 or 【call】 permission, set to 【allow】.</string>
-    <string name="hx_fragment_permission_04">Allow \"to show drop zone\"</string>
-    <string name="hx_fragment_permission_05">Open the phone 【Settings】, find the APP 【rights management】, the 【floating window】 permissions set to 【open】 state.</string>
-    <string name="hx_fragment_permission_06">Allow&quot;Protected app&quot;</string>
-    <string name="hx_fragment_permission_07">Open the phone settings, in the list of protected applicationsOpen the phone settings, in the list of protected applications, the APP
-        will be added to the list of protected applications. Such as set no protected application management, can be built in the system is rights management software to find.,
-        the APP will be added to the list of protected applications. Such as [set] no [protected application] management, can be built in the system is rights management software to find.</string>
-    <string name="hx_fragment_permission_08">Allow read contacts</string>
-    <string name="hx_fragment_permission_09">Open the phone 【Settings】, find the APP 【rights management】, the 【contacts】 permissions set to 【open】 state.</string>
-    
+
     <!--hx_fragment_permission_main-->
-    <string name="hx_fragment_permission_main_01">To ensure high availability requirements,give this app full access those permissions please.</string>
-    <string name="hx_fragment_permission_main_02">Allow&quot;Make calls&quot;</string>
-    <string name="hx_fragment_permission_main_03">Allow&quot;to show dropzone&quot;</string>
-    <string name="hx_fragment_permission_main_04">Allow&quot;Protected app&quot;</string>
 
     <!--hx_fragment_shake-->
-    <string name="hx_fragment_shake_01">Shake it</string>
-    <string name="hx_fragment_shake_02">Play sounds</string>
     <!--hx_fragment_sms-->
-    <string name="hx_fragment_sms_01">The SMS will be sent to</string>
-    <string name="hx_fragment_sms_02">Send</string>
 
     <!--hx_fragment_update_card-->
-    <string name="hx_fragment_update_card_fid">Avatar fid</string>
-    <string name="hx_fragment_update_card_send_pic">upload image</string>
-    <string name="hx_fragment_update_card_image">Business card photo</string>
-    <string name="hx_fragment_update_card_send_image">Upload business card photo</string>
-    <string name="hx_fragment_update_card_nickname">nickname</string>
-    <string name="hx_fragment_update_card_sex">gender</string>
-    <string name="hx_fragment_update_card_man">male</string>
-    <string name="hx_fragment_update_card_woman">Female</string>
-    <string name="hx_fragment_update_card_location">area</string>
-    <string name="hx_fragment_update_card_sign">signature</string>
-    <string name="hx_fragment_update_card_email">mailbox</string>
-    <string name="hx_fragment_update_card_position">position</string>
-    <string name="hx_fragment_update_card_phone">Landline</string>
-    <string name="hx_fragment_update_card_address">address</string>
-    <string name="hx_fragment_update_card_company_net">Company website</string>
-    <string name="hx_fragment_update_card_company_name">company name</string>
 
     <!--hx_full_hook_merchant_view-->
-    <string name="hx_full_hook_merchant_view">Details</string>
 
     <!--hx_full_hook_person_view-->
-    <string name="hx_full_hook_person_view_01">You could also send a message</string>
-    <string name="hx_full_hook_person_view_voice">Voice</string>
-    <string name="hx_full_hook_person_view_pic">Image</string>
-    <string name="hx_full_hook_person_view_location">Location</string>
-    <string name="hx_full_hook_person_view_file">File</string>
-    <string name="hx_full_hook_person_view_more">More</string>
 
     <!--hx_full_phone_call_layout-->
-    <string name="hx_full_phone_call_layout_hide">Hide</string>
-    <string name="hx_full_phone_call_layout_send_location">Location</string>
-    <string name="hx_full_phone_call_layout_send_pic">Image</string>
-    <string name="hx_full_phone_call_layout_send_emoji">Sticker</string>
 
     <!--hx_item_disable_listview-->
-    <string name="hx_item_disable_listview_01">Starbucks</string>
-    <string name="hx_item_disable_listview_02">8.8% discount</string>
-    <string name="hx_item_disable_listview_03">July 8, 2016</string>
-    <string name="hx_item_disable_listview_04">Used</string>
-    <string name="hx_item_disable_listview_05">Click to return to the map interface</string>
 
     <!--hx_permission_dialog-->
-    <string name="hx_permission_dialog_01">To ensure high availability requirements,give this app full access those permissions please.</string>
-    <string name="hx_permission_dialog_02">Allow to make calls</string>
-    <string name="hx_permission_dialog_03">Allow to show dropzone</string>
-    <string name="hx_permission_dialog_04">Allow to protected app</string>
-    <string name="hx_permission_dialog_05">Don\'t be reminded again</string>
 
     <!--hx_person_show-->
-    <string name="hx_person_show_take_photo">Photos</string>
-    <string name="hx_person_show_video">Sight</string>
-    <string name="hx_person_show_pic">选择图片或视频</string>
-    <string name="hx_person_show_cancle">Cancel</string>
 
     <!--hx_phiz_item-->
-    <string name="hx_phiz_item">&#160;</string>
-    <string name="hx_phiz_item_remind">Prompt</string>
-    <string name="hx_phiz_item_send">has been sent</string>
-    <string name="hx_phiz_item_setting_success">Setting succeeded</string>
-    <string name="hx_phiz_item_send_pic_success">Send successfully</string>
-    <string name="hx_phiz_item_send_video_success">Send successfully</string>
 
     <!--hx_show_full_setting_info-->
-    <string name="hx_show_full_setting_info_hide">Hide</string>
     <string name="hx_show_full_setting_info_send_location">Location</string>
     <string name="hx_show_full_setting_info_send_pic">Image</string>
     <string name="hx_show_full_setting_info_send_emoji">Sticker</string>
@@ -345,181 +112,49 @@
     <string name="hx_show_full_setting_info_send_camera">Camera</string>
     <string name="hx_show_full_setting_info_shake">Jokes</string>
     <string name="hx_show_full_setting_info_whiteBoard">WhiteBoard</string>
-    <string name="hx_show_full_setting_info_detail">Details</string>
-    <string name="hx_show_full_setting_calling_address">SZ Ringing...</string>
 
     <!--hxm_merchant-->
-    <string name="hxm_merchant">  Input format：075526606921</string>
-    <string name="hxm_merchant_01">Jump to the merchant affiliate number show</string>
-    <string name="hxm_merchant_02">Endorsement, card coupons, business show, call show</string>
-    <string name="hxm_invitation_code">Invitation code</string>
 
     <!--hxm_represent_item-->
-    <string name="hxm_represent_item_01">Nanshang sea Starbucks open bargain discount</string>
-    <string name="hxm_represent_item_02">Name: Starbucks</string>
-    <string name="hxm_represent_item_03">【Public endorsement】</string>
 
     <!--hx_fragment_im_*-->
     <string name="hx_fragment_im_data">2016.10.01 16:24</string>
 
     <!--hx_push_fail_view-->
-    <string name="hx_push_fail_view">Failed to send!</string>
 
     <!--hx_full_user_info-->
-    <string name="hx_call_user_dialing">Dial in&#8230;</string>
-    <string name="hx_call_user_ring">Call&#8230;</string>
 
     <!--MsgFragment-->
-    <string name="hx_fragment_msg_title">Call message&#8230;</string>
 
     <!--HxClearProgressDialog-->
-    <string name="hxm_app_loading">Loading, please wait&#8230;</string>
 
     <!--represent-->
-    <string name="hxm_reqresent_detail_01">Preview endorsement effect</string>
-    <string name="hxm_reqresent_detail_sz">Shenzhen</string>
-    <string name="hxm_reqresent_detail_03">see details</string>
-    <string name="hxm_reqresent_detail_04">Endorsement reward</string>
-    <string name="hxm_reqresent_detail_05">Already available</string>
-    <string name="hxm_reqresent_detail_06">People join the endorsement "</string>
-    <string name="hxm_reqresent_detail_07">Add endorsement "</string>
 
     <!--代言详情-->
-    <string name="hx_represent_public">公益代言</string>
-    <string name="hx_represent_business">商业代言</string>
-    <string name="hx_represent_sponsor">主办方:&#160;</string>
-    <string name="hx_representing">代言中</string>
-    <string name="hx_representing_02">代言中, 剩余</string>
-    <string name="hx_represent_finish">天完成</string>
-    <string name="hx_represent_add">加入代言</string>
-    <string name="hx_represent_full">代言满</string>
-    <string name="hx_represent_reward">天即可获得优惠券奖励</string>
-    <string name="hx_represent_cancel">取消</string>
-    <string name="hx_represent_crash">现金代言</string>
-    <string name="hx_represent_date">天</string>
-    <string name="hx_represent_guide_01">1、点击“加入代言”，即可参与</string>
-    <string name="hx_represent_guide_02">的代言活动。\n\n</string>
-    <string name="hx_represent_guide_03">2、通话过程中，将会向对方展示代言内容。\n\n</string>
-    <string name="hx_represent_guide_04">3、代言期间，通话结束后，将会落下10次红包雨，更有随机红包等待你领取。\n\n</string>
-    <string name="hx_represent_guide_05">4、代言红包奖励，会存入我的钱包-临时收益中。\n\n</string>
-    <string name="hx_represent_guide_06">5、代言完成后，领取到的奖励将从临时收益自动转入我的钱包。\n\n</string>
-    <string name="hx_represent_guide_07">6、中途取消或更换代言，临时收益将会清空。</string>
-    <string name="hx_represent_get_award">领取奖励</string>
-    <string name="hx_represent_after_award">天后领奖</string>
-    <string name="hx_represent_already_received">已领取</string>
-    <string name="hx_represent_out_date">已过期</string>
-    <string name="hx_represent_remaining_places">剩余名额：</string>
-    <string name="hx_represent_expiration_date">截止日期：</string>
-    <string name="hx_represent_after_award_02">后领奖</string>
-    <string name="hx_represent_dialog_tip_01">上一个代言任务已完成，加入代言后还未领取的代言奖励将自动转入呼币余额，可在钱包中查看哦~</string>
-    <string name="hx_represent_dialog_tip_02">加入代言后，代言周期内通话时会将代言内容展示给对方，并领取代言收益哦~</string>
-    <string name="hx_represent_dialog_tip_03">上一个代言任务还未完成，加入新的代言原有代言将会被替换，代言临时收益也会自动清零！</string>
-    <string name="hx_represent_dialog_tip_04">上一个代言任务已完成，加入代言后还未领取的代言奖励将自动转入呼币余额，可在钱包中查看哦~</string>
-    <string name="hx_represent_get_fail">领取失败</string>
 
     <!--现金代言item-->
-    <string name="hxm_rep_crash_detail_01">点击预览</string>
-    <string name="hxm_rep_crash_detail_02">可提现</string>
-    <string name="hxm_rep_crash_detail_03">截止日期</string>
-    <string name="hxm_rep_crash_detail_04">代言天数</string>
-    <string name="hxm_rep_crash_detail_05">剩余名额</string>
-    <string name="hxm_rep_crash_detail_06">代言类型</string>
-    <string name="hxm_rep_crash_detail_07">活动简介</string>
-    <string name="hxm_rep_crash_detail_08">代言步骤</string>
-    <string name="hxm_rep_crash_detail_09">取消代言</string>
-    <string name="hxm_rep_crash_detail_10">再坚持</string>
-    <string name="hxm_rep_crash_detail_11">天，就能获得</string>
-    <string name="hxm_rep_crash_detail_12">呼币。取消代言，临时收益将被清空，是否确定取消当前代言？</string>
-    <string name="hxm_rep_crash_detail_13">是否确定取消当前代言？</string>
-    <string name="hxm_rep_crash_detail_14">呼币。替换代言，临时收益将被重新计算，是否确定加入当前代言？</string>
-    <string name="hxm_rep_crash_detail_15">取消代言成功</string>
 
     <!--RepresentAdapter-->
-    <string name="hx_represent_square_01">代言</string>
-    <string name="hx_represent_square_02">天</string>
-    <string name="hx_represent_square_03">剩余</string>
-    <string name="hx_represent_square_04">取消代言</string>
-    <string name="hx_represent_square_05">加入代言</string>
-    <string name="hx_represent_square_06">已完成</string>
-    <string name="hx_represent_square_07">领取奖励</string>
-    <string name="hx_represent_square_08">已过期</string>
-    <string name="hx_represent_square_09">再坚持</string>
-    <string name="hx_represent_square_10">天，就能获得</string>
-    <string name="hx_represent_square_11">呼币。替换代言，临时收益将被重新计算，是否确定加入当前代言？</string>
-    <string name="hx_represent_square_12">是否确定加入当前代言？</string>
-    <string name="hx_represent_square_13">呼币。取消代言，临时收益将被清空，是否确定取消当前代言？</string>
-    <string name="hx_represent_square_14">恭喜，代言成功</string>
-    <string name="hx_represent_square_15">取消代言成功</string>
 
     <!--RepHistoryActivity && RepHistoryAdapter-->
-    <string name="hxm_rep_history_title">历史代言</string>
-    <string name="hx_rep_history_01">代言</string>
-    <string name="hx_rep_history_02">天</string>
-    <string name="hx_rep_history_03">剩余</string>
-    <string name="hx_rep_history_04">取消代言</string>
-    <string name="hx_rep_history_05">加入代言</string>
-    <string name="hx_rep_history_06">已完成</string>
-    <string name="hx_rep_history_07">领取奖励</string>
-    <string name="hx_rep_history_08">已过期</string>
-    <string name="hx_rep_history_09">再坚持</string>
-    <string name="hx_rep_history_10">天，就能获得</string>
-    <string name="hx_rep_history_11">呼币。取消代言，临时收益将被清空，是否确定取消当前代言？</string>
-    <string name="hx_rep_history_12">是否确定取消当前代言？</string>
-    <string name="hx_rep_history_13">人参与</string>
-    <string name="hx_rep_history_14">恭喜，代言成功</string>
-    <string name="hx_rep_history_15">取消代言成功</string>
-    <string name="hx_rep_history_16">[代言]</string>
-    <string name="hx_rep_history_17">活动已结束</string>
 
     <!--RedPacketActivity-->
-    <string name="hx_red_packet_share_success">分享成功</string>
-    <string name="hx_red_packet_share_refuse">用户拒绝分享</string>
-    <string name="hx_red_packet_share_cancel">取消分享</string>
-    <string name="hx_red_packet_share_error">分享错误</string>
 
     <!--hx_red_packet-->
-    <string name="hx_red_packet_title">红包任务</string>
-    <string name="hx_red_packet_01">恭喜你获得代言红包</string>
-    <string name="hx_red_packet_02">呼币</string>
-    <string name="hx_red_packet_03">奖励已存入代言临时收益</string>
-    <string name="hx_red_packet_04">分享喜悦ヽ(✿◡‿◡)ノ</string>
 
     <!--hx_activity_share-->
-    <string name="hx_share_weixin_friend">微信好友</string>
-    <string name="hx_share_weixin_friends">朋友圈</string>
-    <string name="hx_share_title">现金代言等你来赚</string>
-    <string name="hx_share_description">点击下载呼信APP,在代言广场领取现金代言，即可获取现金收益，轻轻松松赚大钱</string>
 
     <!--hxm_rep_red_rain-->
-    <string name="hxm_red_rain_01">恭喜你获得代言奖励</string>
-    <string name="hxm_red_rain_02">呼币</string>
-    <string name="hxm_red_rain_03">已存入临时钱包</string>
 
     <!--hxm_rep_award-->
-    <string name="hxm_rep_award_01">恭喜你</string>
-    <string name="hxm_rep_award_02">本次代言所获得的&#160;</string>
-    <string name="hxm_rep_award_03">&#160;呼币奖励，已成功转入呼币账户。现加入其他代言可赚取更多奖励哦~</string>
-    <string name="hxm_rep_award_04">我知道了</string>
 
     <!--hxm_rep_award_finish-->
-    <string name="hxm_rep_award_finish_tip">你的代言完成了哦，赶紧领取奖励吧~</string>
 
     <!--hx_activity_invitation_code && InvitationCodeActivity-->
-    <string name="hx_invite_code_title">邀请码</string>
-    <string name="hx_invite_code_01">邀请码认证成功后，您与邀请者都会获得呼币奖励！</string>
-    <string name="hx_invite_code_02">请输入邀请人手机号</string>
-    <string name="hx_invite_code_03">验证失败</string>
-    <string name="hx_invite_code_04">立即领取奖励</string>
 
     <!--InvitationPopWindow-->
-    <string name="hx_invite_pop_01">领取成功</string>
-    <string name="hx_invite_pop_02">恭喜你，已验证成功，双方都获得&#160;</string>
-    <string name="hx_invite_pop_03">立即邀请好友</string>
-    <string name="hx_invite_pop_04">下次再说</string>
-    <string name="hx_invite_pop_05">呼币，你的奖励已自动转入钱包，可在我的钱包中查看哦~</string>
 
     <!--list null tip-->
-    <string name="hxm_viewstub_norecord">To earn coupons</string>
     <string name="hxm_viewstub_norecord_back">Back</string>
     <string name="hxm_viewstub_norecord_take_photo">Hold to capture</string>
 
@@ -530,18 +165,6 @@
     <string name="hx_camera_record_tip">Camera permission is off, please open!</string>
 
     <!--CallFullView-->
-    <string name="hx_call_full_view_sending">Sending&#8230;&#8230;&#8230;</string>
-    <string name="hx_call_full_view_send_success">Sent Successfully</string>
-    <string name="hx_call_full_view_send_fail">The network cannot be connect, please try again.</string>
-    <string name="hx_call_full_view_receiving">Message receiving&#8230;&#8230;&#8230;</string>
-    <string name="hx_call_full_view_file_receiving">File receiving&#8230;&#8230;&#8230;</string>
-    <string name="hx_call_full_view_picture_receiving">Picture receiving&#8230;&#8230;&#8230;</string>
-    <string name="hx_call_full_view_location_receiving">Location receiving&#8230;&#8230;&#8230;</string>
-    <string name="hx_call_full_view_video_receiving">视频接收&#8230;&#8230;</string>
-    <string name="hx_call_full_view_receive_success">Click to view</string>
-    <string name="hx_call_full_view_receive_fail">Failed to receive message due to the network.</string>
-    <string name="hx_call_full_view_receive_file_see">Click to view</string>
-    <string name="hx_call_full_view_receive_file_download">Click to download</string>
 
     <!--wheel 三级联动-->
     <string name="hx_wheel_year">Year</string>
@@ -571,95 +194,26 @@
     <string name="hx_file_manager_loading">加载中...</string>
 
 
-    <string name="hx_notify_one">notify1</string>
-    <string name="hx_notify_two">notify2</string>
-    <string name="hx_notify_three">notify3</string>
-    <string name="hx_notify_system">notify system</string>
-
-
     <!--toast-->
     <string name="hx_toast_01">Is using the development (42) server</string>
     <string name="hx_toast_02">Is using the development (50) server</string>
-    <string name="hx_toast_03">Multiple SDKs are running in the background!</string>
     <string name="hx_toast_04">Get FileToken failed</string>
-    <string name="hx_toast_05">Upload failed</string>
     <string name="hx_toast_06">Upload failed</string>
     <string name="hx_toast_07">Upload failed</string>
     <string name="hx_toast_08">socket login success</string>
-    <string name="hx_toast_09">Please check if the phone number is correct</string>
-    <string name="hx_toast_10">Unable to access the server</string>
-    <string name="hx_toast_11">Please check if the phone number is correct</string>
-    <string name="hx_toast_12">Please enter Cool Call code</string>
-    <string name="hx_toast_13">Picture resources</string>
-    <string name="hx_toast_14">Voice resources</string>
-    <string name="hx_toast_15">Video resources</string>
-    <string name="hx_toast_16">File resources</string>
     <string name="hx_toast_17">The picture is loading.Please hold on</string>
     <string name="hx_toast_18">Please choose one</string>
     <string name="hx_toast_19">The camera cannot be found</string>
     <string name="hx_toast_20">The file can not be opened</string>
-    <string name="hx_toast_21">Send successfully</string>
     <string name="hx_toast_22">File does not exist!</string>
-    <string name="hx_toast_23">Please install File Manager</string>
-    <string name="hx_toast_24">Get data failed!</string>
-    <string name="hx_toast_25">Holiday coupons are not available</string>
     <string name="hx_toast_26">The photo selection limit has been reached</string>
-    <string name="hx_toast_27">Please set the above permissions first</string>
-    <string name="hx_toast_28">Phone number is illegal</string>
     <string name="hx_toast_29">Send successfully</string>
-    <string name="hx_toast_30">Send successfully</string>
-    <string name="hx_toast_31">Send successfully</string>
-    <string name="hx_toast_32">Send successfully</string>
-    <string name="hx_toast_33">Send successfully</string>
-    <string name="hx_toast_34">Failed to get data</string>
-    <string name="hx_toast_35">Business card information saved successfully</string>
-    <string name="hx_toast_36">http Login failed</string>
-    <string name="hx_toast_37">http login successful</string>
-    <string name="hx_toast_38">The phone number is malformed</string>
-    <string name="hx_toast_39">Incorrect IP or port, using default logon</string>
-    <string name="hx_toast_40">Failed to get verification code</string>
-    <string name="hx_toast_41">The picture has not finished loading Oh</string>
-    <string name="hx_toast_42">Please choose one</string>
-    <string name="hx_toast_43">The current network is unstable and the data failed</string>
-    <string name="hx_toast_44">The current network is unstable</string>
-    <string name="hx_toast_45">The phone number you entered is not in the correct format</string>
-    <string name="hx_toast_46">E-mail format is incorrect</string>
-    <string name="hx_toast_47">Landline format is not correct</string>
-    <string name="hx_toast_48">Business card information updated success</string>
-    <string name="hx_toast_49">Business card photo update success</string>
-    <string name="hx_toast_50">The network cannot be connect, please try again.</string>
     <string name="hx_toast_51">Message too short</string>
-    <string name="hx_toast_52">Enter the illegal phone number, please check</string>
-    <string name="hx_toast_53">This number is not a business user</string>
-    <string name="hx_toast_54">Join the merchant show failed!</string>
     <string name="hx_toast_55">Video recording time is too short</string>
-    <string name="hx_toast_56">Send successfully</string>
-    <string name="hx_toast_57">The network connection was lost</string>
-    <string name="hx_toast_58">Socket login failed:</string>
     <string name="hx_toast_59">Video playback failed</string>
-    <string name="hx_toast_60">Call high German navigation error!</string>
-    <string name="hx_toast_61">Call Baidu navigation error!</string>
-    <string name="hx_toast_62">Please check if you have installed Baidu or Tak Tak map!</string>
-    <string name="hx_toast_63">End send statistics</string>
-    <string name="hx_toast_64">each</string>
-    <string name="hx_toast_65">Seconds to send statistics</string>
     <string name="hx_toast_66">SMS has been sent</string>
     <string name="hx_toast_67">Non-WIFI Status Send File !!!</string>
-    <string name="hx_toast_68">Login failed</string>
-    <string name="hx_toast_69">Resend failed</string>
-    <string name="hx_toast_70">Send failed</string>
-    <string name="hx_toast_71">Sending&#8230;&#8230;&#8230;</string>
-    <string name="hx_toast_72">The other is not a Cool Call user</string>
-    <string name="hx_toast_73">Download fail</string>
     <string name="hx_toast_74">Upload failed</string>
 
-
-    <string name="contact_name">Name：</string>
-    <string name="contacts_phone">Phone：</string>
-    <string name="contact_email">Email：</string>
-    <string name="contact_birthday">Birthday：</string>
-    <string name="contact_qq">qq：</string>
-    <string name="contact_web">Web：</string>
-    <string name="swap_card_failure">Please improve my personal information on my page! </string>
 
 </resources>

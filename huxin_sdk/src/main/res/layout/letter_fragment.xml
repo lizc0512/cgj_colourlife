@@ -8,21 +8,21 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:layout_weight="1">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rv"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent" />
 
         <com.youmai.hxsdk.contact.letter.widget.LetterBar
             android:id="@+id/indexBar"
             android:layout_width="20dp"
             android:layout_height="match_parent"
             android:layout_gravity="right|center_vertical"
-            app:indexBarPressBackground="@color/letter_partTranslucent"
             android:paddingTop="5dp"
+            app:indexBarPressBackground="@color/letter_partTranslucent"
             app:indexBarTextSize="13sp" />
 
         <TextView
@@ -47,8 +47,8 @@
             android:text="更新数据源" />
 
         <!--<EditText-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="60dp" />-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="60dp" />-->
 
     </FrameLayout>
 

@@ -263,8 +263,7 @@ public class IMMsgManager {
 
                 //中转
                 //IMChat.getInstance().init(imchat);
-                IMChat im = new IMChat();
-                im.init(imchat);
+                IMChat im = new IMChat(imchat);
 
                 long msgId = imchat.getMsgId();
                 HuxinSdkManager.instance().sendMsgReply(imchat.getMsgId());
@@ -392,7 +391,7 @@ public class IMMsgManager {
     }
 
     public void notifyMsg(IMChat msg, boolean isFormPush) {
-        String srcPhone = msg.mImChat.getSrcPhone();
+        String srcPhone = msg.getImChat().getSrcPhone();
         String newMsgTip = mContext.getString(R.string.hx_hook_strategy_msg);
         if (msg.getMsgType() == IMConst.IM_TEXT_VALUE) {  //文字
             ContentText text = msg.getContent().getText();
@@ -417,8 +416,7 @@ public class IMMsgManager {
     public void parseCharMsg(IMChat im) {
         //String srcPhone = im.getSrcPhone();
         //todo_k:
-        CacheMsgBean cacheMsgBean = new CacheMsgBean();
-        im.updateCacheBean(cacheMsgBean);
+        CacheMsgBean cacheMsgBean = im.getMsgBean();
 
         if (im.getMsgType() == IMConst.IM_TEXT_VALUE) {
 

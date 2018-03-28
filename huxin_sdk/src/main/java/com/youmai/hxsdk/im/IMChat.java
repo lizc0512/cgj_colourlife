@@ -16,19 +16,22 @@ import com.youmai.hxsdk.socket.IMContentUtil;
 
 public class IMChat {
 
-    YouMaiChat.IMChat_Personal mImChat;
-    String mJsonBody;
-    int mMsgType;
-    MsgContent mContent;
+    private int mMsgType;
+    private String mJsonBody;
+    private MsgContent mContent;
 
-    public void init(YouMaiChat.IMChat_Personal imChat) {
+    private YouMaiChat.IMChat_Personal mImChat;
+    private CacheMsgBean mMsgBean;
+
+    public IMChat(YouMaiChat.IMChat_Personal imChat) {
         mImChat = imChat;
         mJsonBody = imChat.getBody();
         mMsgType = getMsgType();
         mContent = new MsgContent(mMsgType, mJsonBody);
+        updateCacheBean();
     }
 
-    public void initPush(String pushMsg) {
+    public IMChat(String pushMsg) {
         String srcPhone = PushJsonUtils.getValue(pushMsg, String.valueOf(IMContentType.CONTENT_PHONE));//对方手机号
         String type = PushJsonUtils.getValue(pushMsg, String.valueOf(IMContentType.CONTEXT_TEXT_TYPE));//对方手机号
 
@@ -39,18 +42,17 @@ public class IMChat {
         mContent = new MsgContent(mMsgType, mJsonBody);
     }
 
-    private CacheMsgBean mMsgBean;
 
-    public void updateCacheBean(CacheMsgBean msgBean) {
-        msgBean.setReceiverPhone(mImChat.getTargetPhone())
+    private void updateCacheBean() {
+        mMsgBean = new CacheMsgBean();
+        mMsgBean.setReceiverPhone(mImChat.getTargetPhone())
                 .setSenderPhone(mImChat.getSrcPhone())
                 .setSenderUserId(mImChat.getSrcUsrId())
                 .setReceiverUserId(mImChat.getTargetUserId())
                 .setMsgTime(System.currentTimeMillis())
                 .setMsgStatus(CacheMsgBean.RECEIVE_UNREAD)
-                .setMsgId(mImChat.getMsgId());
-        msgBean.setContentJsonBody(mJsonBody);
-        mMsgBean = msgBean;
+                .setMsgId(mImChat.getMsgId())
+                .setContentJsonBody(mJsonBody);
     }
 
     public JsonFormat setFormatBody(int msgType, JsonFormat body) {
@@ -65,7 +67,6 @@ public class IMChat {
     }
 
     /**
-     *
      * @return
      */
     public MsgContent getContent() {
@@ -74,6 +75,7 @@ public class IMChat {
 
     /**
      * 消息类型
+     *
      * @return
      */
     public int getMsgType() {
@@ -125,4 +127,12 @@ public class IMChat {
         return msgType;
     }
 
+
+    public YouMaiChat.IMChat_Personal getImChat() {
+        return mImChat;
+    }
+
+    public CacheMsgBean getMsgBean() {
+        return mMsgBean;
+    }
 }

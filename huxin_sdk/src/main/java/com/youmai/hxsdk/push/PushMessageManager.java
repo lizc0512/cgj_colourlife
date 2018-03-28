@@ -46,8 +46,7 @@ public class PushMessageManager {
     public static void message(final Context context, final String message) {
         Log.e("TcpClient", "push message:" + message);
 
-        IMChat msg = new IMChat();
-        msg.initPush(message);
+        IMChat msg = new IMChat(message);
 
         //服务已经被拉起，消息在默认接收器会被处理，内容不全如目标号码为空也会导致其它问题   IMMsgManager.getInstance().parseCharMsg(msg);
 

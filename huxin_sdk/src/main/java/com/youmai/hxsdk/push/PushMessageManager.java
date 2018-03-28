@@ -6,7 +6,8 @@ import android.os.Looper;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
-import com.youmai.hxsdk.db.bean.ChatMsg;
+import com.youmai.hxsdk.im.IMChat;
+import com.youmai.hxsdk.im.IMConst;
 import com.youmai.hxsdk.im.IMMsgManager;
 import com.youmai.hxsdk.push.utils.PushJsonUtils;
 import com.youmai.hxsdk.config.AppConfig;
@@ -45,7 +46,9 @@ public class PushMessageManager {
     public static void message(final Context context, final String message) {
         Log.e("TcpClient", "push message:" + message);
 
-        ChatMsg msg = new ChatMsg(message);
+        IMChat msg = new IMChat();
+        msg.initPush(message);
+
         //服务已经被拉起，消息在默认接收器会被处理，内容不全如目标号码为空也会导致其它问题   IMMsgManager.getInstance().parseCharMsg(msg);
 
         final String phone = PushJsonUtils.getValue(message, String.valueOf(IMContentType.CONTENT_PHONE));//对方手机号
@@ -152,7 +155,7 @@ public class PushMessageManager {
         if (userId != 0) {
             final IFileReceiveListener listener = FileReceiveListenerImpl.getReceiveListener();
             final FileBean fileBean = new FileBean().setUserId(userId)
-                    .setFileMsgType(ChatMsg.MsgType.PICTURE.ordinal())
+                    .setFileMsgType(IMConst.IM_IMAGE_VALUE)
                     .setDstPhone(phone)
                     //.setOriginPath(AppConfig.DOWNLOAD_IMAGE + msg.getMsgContent().getPicture().getPicUrl());//  ? 2017-1-13 17:38:23
                     .setOriginPath(AppConfig.DOWNLOAD_IMAGE + pictureID);
@@ -162,7 +165,7 @@ public class PushMessageManager {
                 mainHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        listener.onImSuccess(ChatMsg.MsgType.PICTURE.ordinal(), fileBean);
+                        listener.onImSuccess(IMConst.IM_IMAGE_VALUE, fileBean);
                     }
                 });
             }
@@ -196,7 +199,7 @@ public class PushMessageManager {
                     + "," + latitude + "&key=" + AppConfig.staticMapKey;
 
             final FileBean fileBean = new FileBean().setUserId(userId)
-                    .setFileMsgType(ChatMsg.MsgType.LOCATION.ordinal())
+                    .setFileMsgType(IMConst.IM_LOCATION_VALUE)
                     .setDstPhone(phone)
                     .setLongitude(Double.valueOf(longitude))
                     .setLatitude(Double.valueOf(latitude))
@@ -208,7 +211,7 @@ public class PushMessageManager {
                 mainHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        listener.onImSuccess(ChatMsg.MsgType.LOCATION.ordinal(), fileBean);
+                        listener.onImSuccess(IMConst.IM_LOCATION_VALUE, fileBean);
                     }
                 });
             }

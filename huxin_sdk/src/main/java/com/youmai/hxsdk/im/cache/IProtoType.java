@@ -6,6 +6,6 @@ package com.youmai.hxsdk.im.cache;
  * 描述：原型封装
  */
 
-public interface IProtoType<T> {
+public interface IProtoType {
     JsonFormat cloneProto(JsonFormat body);
 }

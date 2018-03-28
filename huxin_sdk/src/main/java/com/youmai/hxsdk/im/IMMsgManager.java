@@ -15,14 +15,12 @@ import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.ProtocolCallBack;
 import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.activity.IMConnectionActivity;
-import com.youmai.hxsdk.chat.BeginLocation;
 import com.youmai.hxsdk.chat.ContentVideo;
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
 import com.youmai.hxsdk.chat.ContentLocation;
 import com.youmai.hxsdk.chat.ContentText;
 import com.youmai.hxsdk.config.AppConfig;
 import com.youmai.hxsdk.config.FileConfig;
-import com.youmai.hxsdk.db.bean.ChatMsg;
 import com.youmai.hxsdk.entity.CallInfo;
 import com.youmai.hxsdk.entity.RespBaseBean;
 import com.youmai.hxsdk.im.cache.CacheMsgEmotion;
@@ -34,9 +32,6 @@ import com.youmai.hxsdk.im.cache.CacheMsgTxt;
 import com.youmai.hxsdk.im.cache.CacheMsgVideo;
 import com.youmai.hxsdk.im.cache.CacheMsgVoice;
 import com.youmai.hxsdk.interfaces.OnChatMsg;
-import com.youmai.hxsdk.module.map.AnswerOrReject;
-import com.youmai.hxsdk.module.map.IAnswerOrRejectListener;
-import com.youmai.hxsdk.module.map.IReceiveStartListener;
 import com.youmai.hxsdk.proto.YouMaiBasic;
 import com.youmai.hxsdk.proto.YouMaiBulletin;
 import com.youmai.hxsdk.proto.YouMaiChat;
@@ -265,13 +260,17 @@ public class IMMsgManager {
             try {
                 YouMaiChat.IMChat_Personal_Notify notify = YouMaiChat.IMChat_Personal_Notify.parseFrom(data);
                 YouMaiChat.IMChat_Personal imchat = notify.getImchat();
-                ChatMsg msg = new ChatMsg(imchat);
 
-                long msgId = msg.getMsgId();
-                HuxinSdkManager.instance().sendMsgReply(msgId);
+                //中转
+                //IMChat.getInstance().init(imchat);
+                IMChat im = new IMChat();
+                im.init(imchat);
 
-                parseCharMsg(msg);
-                notifyMsg(msg, false);
+                long msgId = imchat.getMsgId();
+                HuxinSdkManager.instance().sendMsgReply(imchat.getMsgId());
+
+                parseCharMsg(im);
+                notifyMsg(im, false);
             } catch (InvalidProtocolBufferException e) {
                 e.printStackTrace();
             }
@@ -392,51 +391,45 @@ public class IMMsgManager {
         }
     }
 
-    public void notifyMsg(ChatMsg msg, boolean isFormPush) {
-        String srcPhone = msg.getSrcPhone();
+    public void notifyMsg(IMChat msg, boolean isFormPush) {
+        String srcPhone = msg.mImChat.getSrcPhone();
         String newMsgTip = mContext.getString(R.string.hx_hook_strategy_msg);
-        if (msg.getMsgType() == ChatMsg.MsgType.TEXT) {  //文字
-            ContentText text = msg.getMsgContent().getText();
+        if (msg.getMsgType() == IMConst.IM_TEXT_VALUE) {  //文字
+            ContentText text = msg.getContent().getText();
             String content = text.getContent();
             notifyMsg(mContext, srcPhone, content, isFormPush);
-        } else if (msg.getMsgType() == ChatMsg.MsgType.EMO_TEXT) { //表情
+        } else if (msg.getMsgType() == IMConst.IM_EMO_TEXT_VALUE) { //表情
             notifyMsg(mContext, srcPhone, newMsgTip + mContext.getString(R.string.hx_hook_strategy_msg_emoji), isFormPush);
-        } else if (msg.getMsgType() == ChatMsg.MsgType.PICTURE) { //图片
+        } else if (msg.getMsgType() == IMConst.IM_IMAGE_VALUE) { //图片
             notifyMsg(mContext, srcPhone, newMsgTip + mContext.getString(R.string.hx_hook_strategy_msg_pic), isFormPush);
-        } else if (msg.getMsgType() == ChatMsg.MsgType.VIDEO) { //视频
+        } else if (msg.getMsgType() == IMConst.IM_VIDEO_VALUE) { //视频
             notifyMsg(mContext, srcPhone, newMsgTip + mContext.getString(R.string.hx_hook_strategy_msg_tv), isFormPush);
-        } else if (msg.getMsgType() == ChatMsg.MsgType.LOCATION) { //定位
+        } else if (msg.getMsgType() == IMConst.IM_LOCATION_VALUE) { //定位
             notifyMsg(mContext, srcPhone, newMsgTip + mContext.getString(R.string.hx_hook_strategy_msg_map), isFormPush);
-        } else if (msg.getMsgType() == ChatMsg.MsgType.AUDIO) { //音频
+        } else if (msg.getMsgType() == IMConst.IM_AUDIO_VALUE) { //音频
             notifyMsg(mContext, srcPhone, newMsgTip + mContext.getString(R.string.hx_hook_strategy_msg_voice), isFormPush);
-        } else if (msg.getMsgType() == ChatMsg.MsgType.BIG_FILE) { //文件
+        } else if (msg.getMsgType() == IMConst.IM_FILE_VALUE) { //文件
             notifyMsg(mContext, srcPhone, newMsgTip + mContext.getString(R.string.hx_hook_strategy_msg_file), isFormPush);
         }
     }
 
 
-    public void parseCharMsg(ChatMsg msg) {
-        String srcPhone = msg.getSrcPhone();
+    public void parseCharMsg(IMChat im) {
+        //String srcPhone = im.getSrcPhone();
         //todo_k:
-        CacheMsgBean cacheMsgBean = new CacheMsgBean()
-                .setReceiverPhone(msg.getTargetPhone())
-                .setSenderPhone(srcPhone)
-                .setSenderUserId(msg.getSrcUsrId())
-                .setReceiverUserId(msg.getTargetUserId())
-                .setMsgTime(msg.getMsgTime())
-                .setMsgStatus(CacheMsgBean.RECEIVE_UNREAD)
-                .setMsgId(msg.getMsgId());
+        CacheMsgBean cacheMsgBean = new CacheMsgBean();
+        im.updateCacheBean(cacheMsgBean);
 
-        if (msg.getMsgType() == ChatMsg.MsgType.TEXT) {
+        if (im.getMsgType() == IMConst.IM_TEXT_VALUE) {
 
-            ContentText text = msg.getMsgContent().getText();
+            ContentText text = im.getContent().getText();
             String content = text.getContent();
 
             //todo_k: 12-6 文字 表情
             if (content.startsWith("/")) { //自定义表情
                 cacheMsgBean.setMsgType(CacheMsgBean.RECEIVE_EMOTION)
                         .setJsonBodyObj(new CacheMsgEmotion().setEmotion(content, -1));
-                msg.setMsgType(ChatMsg.MsgType.EMO_TEXT);
+                //msg.setMsgType(ChatMsg.MsgType.EMO_TEXT);
             } else {  //文字
                 cacheMsgBean.setMsgType(CacheMsgBean.RECEIVE_TEXT)
                         .setJsonBodyObj(new CacheMsgTxt().setMsgTxt(content));
@@ -448,9 +441,9 @@ public class IMMsgManager {
             cacheMsgBeanList.add(cacheMsgBean);
             handlerIMMsgCallback(cacheMsgBean);
 
-        } else if (msg.getMsgType() == ChatMsg.MsgType.PICTURE) { //图片
-            String fid = msg.getMsgContent().getPicture().getPicUrl();
-            String describe = msg.getMsgContent().getPicture().getDescribe();
+        } else if (im.getMsgType() == IMConst.IM_IMAGE_VALUE) { //图片
+            String fid = im.getContent().getPicture().getPicUrl();
+            String describe = im.getContent().getPicture().getDescribe();
             if (describe == null) {  //防止版本差异奔溃
                 describe = "";
             }
@@ -464,9 +457,9 @@ public class IMMsgManager {
             CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
 
             cacheMsgBeanList.add(cacheMsgBean);
-        } else if (msg.getMsgType() == ChatMsg.MsgType.LOCATION) { //定位
+        } else if (im.getMsgType() == IMConst.IM_LOCATION_VALUE) { //定位
 
-            ContentLocation mLocation = msg.getMsgContent().getLocation();
+            ContentLocation mLocation = im.getContent().getLocation();
             final String location = mLocation.getLongitudeStr() + "," + mLocation.getLatitudeStr();
             final String mLabelAddress = mLocation.getLabelStr();
             final String scale = mLocation.getScaleStr();
@@ -492,15 +485,15 @@ public class IMMsgManager {
             //add to db
             CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
             cacheMsgBeanList.add(cacheMsgBean);
-        } else if (msg.getMsgType() == ChatMsg.MsgType.AUDIO) { //音频
+        } else if (im.getMsgType() == IMConst.IM_AUDIO_VALUE) { //音频
 
-            String fid = msg.getMsgContent().getAudio().getAudioId();
+            String fid = im.getContent().getAudio().getAudioId();
             String url = AppConfig.DOWNLOAD_IMAGE + fid;
-            String seconds = msg.getMsgContent().getAudio().getBarTime();
-            String sourcePhone = msg.getMsgContent().getAudio().getSourcePhone();
+            String seconds = im.getContent().getAudio().getBarTime();
+            String sourcePhone = im.getContent().getAudio().getSourcePhone();
             int forwardCount;
             try {
-                forwardCount = Integer.valueOf(msg.getMsgContent().getAudio().getForwardCount());
+                forwardCount = Integer.valueOf(im.getContent().getAudio().getForwardCount());
             } catch (Exception e) {
                 forwardCount = 0;
             }
@@ -513,9 +506,9 @@ public class IMMsgManager {
                             .setFid(fid)
                             .setSourcePhone(sourcePhone)
                             .setForwardCount(forwardCount));
-        } else if (msg.getMsgType() == ChatMsg.MsgType.BIG_FILE) { //文件
+        } else if (im.getMsgType() == IMConst.IM_FILE_VALUE) { //文件
 
-            String jsonBody = msg.getJsonBoby();
+            String jsonBody = im.mJsonBody;
             try {
                 JSONArray jsonArray = new JSONArray(jsonBody);
                 if (jsonArray.length() > 0) {
@@ -541,8 +534,8 @@ public class IMMsgManager {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        } else if (msg.getMsgType() == ChatMsg.MsgType.VIDEO) {//视频
-            ContentVideo contentVideo = msg.getMsgContent().getVideo();//获取解析jsonBoby的内容
+        } else if (im.getMsgType() == IMConst.IM_VIDEO_VALUE) {//视频
+            ContentVideo contentVideo = im.getContent().getVideo();//获取解析jsonBoby的内容
             long time;
             try {
                 time = Long.valueOf(contentVideo.getBarTime());

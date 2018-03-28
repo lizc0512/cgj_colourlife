@@ -36,6 +36,7 @@ import com.youmai.hxsdk.activity.IMConnectionActivity;
 import com.youmai.hxsdk.activity.PictureIndicatorActivity;
 import com.youmai.hxsdk.config.AppConfig;
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
+import com.youmai.hxsdk.im.IMConst;
 import com.youmai.hxsdk.im.IMHelper;
 import com.youmai.hxsdk.im.IMMsgManager;
 import com.youmai.hxsdk.im.cache.CacheMsgFile;
@@ -47,6 +48,7 @@ import com.youmai.hxsdk.im.cache.CacheMsgMap;
 import com.youmai.hxsdk.im.cache.CacheMsgTxt;
 import com.youmai.hxsdk.im.cache.CacheMsgVideo;
 import com.youmai.hxsdk.im.cache.CacheMsgVoice;
+import com.youmai.hxsdk.im.cache.JsonFormat;
 import com.youmai.hxsdk.im.voice.manager.MediaManager;
 import com.youmai.hxsdk.module.remind.SetRemindActivity;
 import com.youmai.hxsdk.service.SendMsgService;
@@ -238,16 +240,18 @@ public class IMListAdapter extends RecyclerView.Adapter {
         }
     }
 
-
+    int type;
     @Override
     public int getItemViewType(int position) {
         CacheMsgBean cacheMsgBean = mImBeanList.get(position);
         int oriType = -1;
+        type = cacheMsgBean.getMsgType();
         switch (cacheMsgBean.getMsgType()) {
             case CacheMsgBean.SEND_TEXT:
                 oriType = TXT_RIGHT;
                 break;
             case CacheMsgBean.RECEIVE_TEXT:
+            case 0:
                 oriType = TXT_LEFT;
                 break;
             case CacheMsgBean.SEND_VOICE:
@@ -747,7 +751,7 @@ public class IMListAdapter extends RecyclerView.Adapter {
                     } else {
                         //停止文本朗读
                         CacheMsgBean cacheMsgBean1 = mImBeanList.get(mPlayVoicePosition);
-                        if (cacheMsgBean1.getJsonBodyObj() instanceof CacheMsgTxt) {
+                        if (cacheMsgBean1.getMsgType() == IMConst.IM_TEXT_VALUE) {
                             if (voicePlayAnim != null && voicePlayAnim.isRunning()) {
                                 voicePlayAnim.stop();
                             }

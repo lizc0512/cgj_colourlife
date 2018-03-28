@@ -7,7 +7,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.qiniu.android.storage.UpProgressHandler;
-import com.youmai.hxsdk.db.bean.ChatMsg;
+import com.youmai.hxsdk.im.IMConst;
 import com.youmai.hxsdk.im.IMHelper;
 import com.youmai.hxsdk.interfaces.IFileSendListener;
 import com.youmai.hxsdk.interfaces.impl.FileSendListenerImpl;
@@ -191,7 +191,7 @@ public class WrapSendFileActivity extends FragmentActivity implements PickerRefr
                 new UpProgressHandler() {
                     @Override
                     public void progress(String key, double percent) {
-                        listener.onProgress(ChatMsg.MsgType.BIG_FILE.ordinal(), percent, "file");
+                        listener.onProgress(IMConst.IM_FILE_VALUE, percent, "file");
                     }
                 }, true, listener);
         finish();

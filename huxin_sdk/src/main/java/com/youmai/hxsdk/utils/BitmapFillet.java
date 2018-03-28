@@ -10,7 +10,7 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
 
-import com.youmai.hxsdk.db.bean.ChatMsg;
+import com.youmai.hxsdk.im.IMConst;
 
 public class BitmapFillet {
 
@@ -156,7 +156,7 @@ public class BitmapFillet {
 			Paint arcPaint;
 			Paint linePaint;
 			Paint sharpPaint;
-			if (msgType == ChatMsg.MsgType.PICTURE.ordinal()) { // 图片类型
+			if (msgType == IMConst.IM_IMAGE_VALUE) { // 图片类型
 				arcPaint = new Paint();
 				arcPaint.setAntiAlias(true);
 				arcPaint.setStrokeWidth(3);

@@ -3,8 +3,12 @@ package com.youmai.hxsdk.chat;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.youmai.hxsdk.socket.IMContentItem;
 import com.youmai.hxsdk.socket.IMContentType;
 import com.youmai.hxsdk.socket.IMContentUtil;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 
 /**
@@ -35,8 +39,18 @@ public class ContentText implements Parcelable {
                 default:
                     parser.readNext();
                     break;
-
             }
+        }
+    }
+
+    public ContentText(String json) {
+        JSONObject jsonObject = null;
+        try {
+            jsonObject = new JSONObject(json);
+            content = jsonObject.optString(IMContentType.CONTENT_TEXT.name());
+            barTime = jsonObject.optString(IMContentType.CONTEXT_BAR_TIME.name());
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
     }
 

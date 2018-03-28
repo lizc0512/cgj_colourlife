@@ -1,7 +1,7 @@
 package com.youmai.hxsdk.interfaces;
 
 
-import com.youmai.hxsdk.db.bean.ChatMsg;
+import com.youmai.hxsdk.im.IMChat;
 
 /**
  * 作者：create by YW
@@ -10,5 +10,5 @@ import com.youmai.hxsdk.db.bean.ChatMsg;
  */
 
 public interface OnChatMsg {
-    void onCallback(ChatMsg msg);
+    void onCallback(IMChat msg);
 }

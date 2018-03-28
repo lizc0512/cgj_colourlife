@@ -3,7 +3,7 @@ package com.youmai.hxsdk.chat;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.youmai.hxsdk.db.bean.ChatMsg;
+import com.youmai.hxsdk.im.IMConst;
 import com.youmai.hxsdk.socket.IMContentUtil;
 
 /**
@@ -23,39 +23,35 @@ public class MsgContent implements Parcelable {
 
     }
 
-    public MsgContent(ChatMsg.MsgType type, String json) {
+    public MsgContent(int type, String json) {
         IMContentUtil parser = new IMContentUtil(json);
         parser.parseBody();
 
         switch (type) {
-            case TEXT:
+            case IMConst.IM_TEXT_VALUE:
                 mText = new ContentText(parser);
                 break;
-            case PICTURE:
+            case IMConst.IM_IMAGE_VALUE:
                 mPicture = new ContentPicture(parser);
                 break;
-            case AUDIO:
+            case IMConst.IM_AUDIO_VALUE:
                 mAudio = new ContentAudio(parser);
                 break;
-            case VIDEO:
+            case IMConst.IM_VIDEO_VALUE:
                 mVideo = new ContentVideo(parser);
                 break;
-            case URL:
+            case IMConst.IM_URL_VALUE:
                 mContentUrl = new ContentUrl(parser);
                 break;
-            case LOCATION:
+            case IMConst.IM_LOCATIONSHARE_VALUE:
                 mLocation = new ContentLocation(parser);
                 break;
-            case BEGIN_LOCATION:
-            case LOCATION_INVITE:
-            case LOCATION_ANSWER:
-            case LOCATION_QUIT:
+            case IMConst.IM_LOCATION_INVITE_VALUE:
+            case IMConst.IM_LOCATION_ANSWER_VALUE:
+            case IMConst.IM_LOCATION_QUIT_VALUE:
                 mBeginLocation = new BeginLocation(parser);
                 break;
-            case BIZCARD:
-                mText = new ContentText(parser);
-                break;
-            case REMARK:
+            case IMConst.IM_BIZCARD_VALUE:
                 mText = new ContentText(parser);
                 break;
             default:

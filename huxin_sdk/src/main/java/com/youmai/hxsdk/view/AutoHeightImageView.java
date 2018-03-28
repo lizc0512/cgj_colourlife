@@ -2,14 +2,14 @@ package com.youmai.hxsdk.view;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
-import android.widget.ImageView;
 
 /**
  * Created by fylder on 2017/11/20.
  */
 
-public class AutoHeightImageView extends ImageView {
+public class AutoHeightImageView extends AppCompatImageView {
 
     public AutoHeightImageView(Context context) {
         super(context);

@@ -1170,9 +1170,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
 
     @Override
     public void onDrivingExit() {
-        ToastUtil.showPublicToast2(getBaseContext(), R.string.hx_im_driving_exit_tip, R.drawable.hx_driving_exit_ic);
-        Intent intent = new Intent("com.youmai.huxin.drivingmode.close");
-        sendBroadcast(intent);
+
     }
 
 

@@ -1,9 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- ��Ϣ�ɹ���ͳ�ƣ� ͨ������Ϣת����SDK��SDK֪ͨͨ����Ϣ�ѽ��յ� -->
+    <string name="setTag" translatable="false">SetTag</string>
+    <string name="delTag" translatable="false">DeleteTag</string>
+    <string name="deleteToken" translatable="false">DeleteToken</string>
+    <string name="tag1" translatable="false">Tag1:</string>
+    <string name="tag2" translatable="false">Tag2:</string>
+    <string name="tag_key" translatable="false">input tag key(not set if empty)</string>
+    <string name="tag_value" translatable="false">input tag value</string>
+    <string name="tag_delete_key" translatable="false">input key to deleted</string>
+    <string name="getTag" translatable="false">GetTag</string>
+    <string name="inputToken" translatable="false">input the token to be deleted:</string>
+
+    <!-- 消息成功率统计： 通道将消息转发给SDK后，SDK通知通道消息已接收到 -->
     <string name="hwpush_ability_value" translatable="false">successRateAnalytics</string>
 
 
-    <!--��Ϊsdk��Ҫ-->
-</resources>
+    <!--华为sdk需要-->
+    <color name="hms_background">#f7f7f7</color>
+    <color name="hms_black">#000000</color>
+    <dimen name="hms_dialog_padding">15dp</dimen>
+    <dimen name="hms_textview_jump_size">14sp</dimen>
+</resources>    

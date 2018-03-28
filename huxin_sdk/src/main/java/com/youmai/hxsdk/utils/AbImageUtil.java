@@ -565,49 +565,6 @@ public class AbImageUtil {
         return mBitmapDrawable;
     }
 
-    /**
-     * Bitmap对象转换TransitionDrawable对象.
-     *
-     * @param bitmap 要转化的Bitmap对象 imageView.setImageDrawable(td);
-     *               td.startTransition(200);
-     * @return Drawable 转化完成的Drawable对象
-     */
-    public static TransitionDrawable bitmapToTransitionDrawable(Bitmap bitmap) {
-        TransitionDrawable mBitmapDrawable = null;
-        try {
-            if (bitmap == null) {
-                return null;
-            }
-            mBitmapDrawable = new TransitionDrawable(new Drawable[]{
-                    new ColorDrawable(android.R.color.transparent),
-                    new BitmapDrawable(bitmap)});
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return mBitmapDrawable;
-    }
-
-    /**
-     * Drawable对象转换TransitionDrawable对象.
-     *
-     * @param drawable 要转化的Drawable对象 imageView.setImageDrawable(td);
-     *                 td.startTransition(200);
-     * @return Drawable 转化完成的Drawable对象
-     */
-    public static TransitionDrawable drawableToTransitionDrawable(
-            Drawable drawable) {
-        TransitionDrawable mBitmapDrawable = null;
-        try {
-            if (drawable == null) {
-                return null;
-            }
-            mBitmapDrawable = new TransitionDrawable(new Drawable[]{
-                    new ColorDrawable(android.R.color.transparent), drawable});
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return mBitmapDrawable;
-    }
 
     /**
      * 将Bitmap转换为byte[].
@@ -1451,6 +1408,7 @@ public class AbImageUtil {
 
     /**
      * 保存图片
+     *
      * @param bitmap
      * @param path
      */

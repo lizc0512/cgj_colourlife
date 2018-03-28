@@ -16,12 +16,10 @@
     <color name="hx_color_orange2">#ffde00</color>
     <color name="hx_color_red_tag">#f90404</color>
     <!--crop-->
-    <color name="crop__button_bar">#f3f3f3</color>
-    <color name="crop__button_text">#666666</color>
-    <color name="crop__selector_pressed">#1a000000</color>
-    <color name="crop__selector_focused">#77000000</color>
-
-    <!-- 默认背景 -->
+    <color name="crop_button_bar">#f3f3f3</color>
+    <color name="crop_button_text">#666666</color>
+    <color name="crop_selector_pressed">#1a000000</color>
+    <color name="crop_selector_focused">#77000000</color>
 
     <!-- 字体 -->
     <color name="hxs_color_white">#ffffff</color>
@@ -47,7 +45,6 @@
     <color name="hxs_color_blue2">#8039a6ff</color>
     <color name="hxs_color_blue3">#566477</color>
 
-
     <!--picker && 日期联动器-->
     <color name="hxs_picker_gray">#ecedef</color>
     <color name="hxs_transparent_black">#94333232</color>
@@ -60,10 +57,6 @@
     <color name="hxs_color_trans_five">#7F000000</color>
     <color name="hxs_color_trans_six">#99000000</color>
     <color name="hxs_color_trans_seven">#B2000000</color>
-
-    <!-- 列表 -->
-
-    <!--权限设置-->
 
     <!--wheelView-->
     <color name="color_transparent">#00000000</color>
@@ -98,8 +91,6 @@
     <color name="hx_main_color">#39a6ff</color>
     <!--主色选中后颜色-->
     <color name="hx_selected_color">#3497e8</color>
-    <!--辅色1-->
-    <!--辅色2-->
     <!--背景色-->
     <color name="hx_background_color">#f1f3f6</color>
     <!--状态栏颜色-->
@@ -107,14 +98,12 @@
     <!--文字颜色-->
     <color name="hx_text_color">#9ba5b2</color>
     <color name="hx_text_color1">#203422</color>
-
     <color name="hx_item_select">#F5F5F5</color>
+
     <!--沟通左消息文本主色调-->
     <color name="hx_item_left_font">#203422</color>
-
     <color name="hx_toolbar_bg">@color/hx_main_color</color>
     <color name="hx_toolbar_font">#FFFFFF</color>
-
     <color name="return_cancel_bg">#D7DCE0</color>
     <color name="return_cancel">#203442</color>
 
@@ -124,5 +113,10 @@
     <color name="camera_progress_split">#005084</color>
     <color name="camera_progress_delete">#f68b2b</color>
     <color name="camera_progress_overflow">#1b5d89</color>
+
+    <!--wheelview-->
+    <color name="pickerview_timebtn_nor">#057dff</color>
+    <color name="pickerview_timebtn_pre">#c2daf5</color>
+    <color name="pickerview_bg_topbar">#f5f5f5</color>
 
 </resources>

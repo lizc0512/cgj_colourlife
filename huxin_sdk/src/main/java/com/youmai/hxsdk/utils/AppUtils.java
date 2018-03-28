@@ -1089,33 +1089,7 @@ public class AppUtils {
         Matcher m = p.matcher(telephone);
         return m.find();
     }
-
-
-    /**
-     * 获取最近的已知位置信息
-     *
-     * @param context
-     * @return
-     */
-    public static Location getLastKnownLocation(Context context) {
-        LocationManager lm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-        List<String> providers = lm.getProviders(true);
-        Location bestLocation = null;
-        if (providers != null) {
-            for (String provider : providers) {
-                Location l = lm.getLastKnownLocation(provider);
-                if (l == null) {
-                    continue;
-                }
-                if (bestLocation == null || l.getAccuracy() < bestLocation.getAccuracy()) {
-                    // Found best last known location: %s", l);
-                    bestLocation = l;
-                }
-            }
-        }
-        return bestLocation;
-    }
-
+    
 
     /**
      * 检查是否重复按键

@@ -262,7 +262,7 @@ public class Crop {
     }
 
     private static void showImagePickerError(Context context) {
-        Toast.makeText(context.getApplicationContext(), R.string.hx_crop__pick_error, Toast.LENGTH_SHORT).show();
+        Toast.makeText(context.getApplicationContext(), R.string.hx_crop_pick_error, Toast.LENGTH_SHORT).show();
     }
 
 }

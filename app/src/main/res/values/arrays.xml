@@ -2,13 +2,6 @@
 <resources>
 
 
-    <string-array name="tab_title">
-        <item>正常</item>
-        <item>异常</item>
-        <item>未签到</item>
-        <item>未激活</item>
-    </string-array>
-
     <!-- 开门服务器地址 -->
     <string-array name="open_door_service_list">
         <item>http://120.24.217.97/api/v1/</item>

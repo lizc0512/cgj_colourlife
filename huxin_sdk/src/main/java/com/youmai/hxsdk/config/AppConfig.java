@@ -34,6 +34,9 @@ public class AppConfig {
      */
     public final static int LAUNCH_MODE = 2; //0 本地测试,开发版        1服务器测试,测试版           2正式平台,正式版
 
+
+    private final static String SHOW_HOST[] = new String[]{"http://192.168.0.42:8989/", "http://test2.jweb.huxin.biz/", "http://api.ihuxin.net/"};
+
     private final static String SOCKET_URL[] = new String[]{"http://192.168.0.42:8000/", "http://test2.im.huxin.biz:8000/", "http://im.ihuxin.net:8000/"};
 
     private final static String SOCKET_HOST[] = new String[]{"192.168.0.42", "120.24.37.50", "120.77.1.224"};
@@ -42,6 +45,9 @@ public class AppConfig {
 
     private final static int SOCKET_PORT[] = new int[]{8003, 9951, 9951};//8886
 
+    public static String getShowHost() {
+        return SHOW_HOST[LAUNCH_MODE];
+    }
 
     public static String getSocketUrl() {
         return SOCKET_URL[LAUNCH_MODE];
@@ -73,6 +79,11 @@ public class AppConfig {
      */
     public static final String DOWNLOAD_IMAGE = getDownloadHost();
 
+
+    /**
+     * http post 文件前，获取文件token
+     */
+    public static final String GET_UPLOAD_FILE_TOKEN = getShowHost() + "jhuxin-openapi/qy/fileUpload/upToken";
 
     /***
      * sign 签名

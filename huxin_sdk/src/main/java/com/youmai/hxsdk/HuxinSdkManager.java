@@ -3,6 +3,7 @@ package com.youmai.hxsdk;
 import android.Manifest;
 import android.content.ComponentName;
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
@@ -37,6 +38,7 @@ import com.youmai.hxsdk.db.dao.CacheMsgBeanDao;
 import com.youmai.hxsdk.db.manager.GreenDBIMManager;
 import com.youmai.hxsdk.entity.FileToken;
 import com.youmai.hxsdk.entity.UploadFile;
+import com.youmai.hxsdk.http.HttpConnector;
 import com.youmai.hxsdk.http.IPostListener;
 import com.youmai.hxsdk.im.IMConst;
 import com.youmai.hxsdk.im.IMHelper;
@@ -595,6 +597,32 @@ public class HuxinSdkManager {
 
 
     /**
+     * java 获取上传文件token
+     *
+     * @param
+     */
+    public void getUploadFileToken(IPostListener callback) {
+
+        String url = AppConfig.GET_UPLOAD_FILE_TOKEN;
+
+        String imei = DeviceUtils.getIMEI(mContext);
+        String phoneNum = HuxinSdkManager.instance().getPhoneNum();
+        int uid = HuxinSdkManager.instance().getUserId();
+        String sid = HuxinSdkManager.instance().getSession();
+
+        ContentValues params = new ContentValues();
+        params.put("msisdn", phoneNum);
+        params.put("uid", uid);// 海外登录去除号码验证，只保留数字验证参数issms=3
+        params.put("sid", sid); //保存
+        params.put("termid", imei); //动态
+        params.put("sign", AppConfig.appSign(phoneNum, imei));// 发行的渠道
+        params.put("v", "5");
+        params.put("ps", "-4202-8980600-");
+        HttpConnector.httpPost(url, params, callback);
+    }
+
+
+    /**
      * 用户tcp协议登录
      *
      * @param userId
@@ -754,133 +782,6 @@ public class HuxinSdkManager {
         return true;
     }
 
-    /**
-     * 开始共享位置
-     *
-     * @param userId
-     * @param desPhone
-     * @param longitude
-     * @param latitude
-     * @param callback
-     */
-    public void beginLocation(int userId, String desPhone, String longitude, String latitude, ReceiveListener callback) {
-
-        if (StringUtils.isEmpty(desPhone)) {
-            return;
-        }
-        String srcPhone = getPhoneNum();
-        String tarPhone = desPhone;
-
-        IMChat_Personal.Builder builder = IMChat_Personal.newBuilder();
-        builder.setSrcUsrId(userId);
-        builder.setSrcPhone(srcPhone);
-        builder.setTargetPhone(tarPhone);
-
-        IMContentUtil imContentUtil = new IMContentUtil();
-
-        int command_id = IMContentUtil.getContentType(0, YouMaiChat.IM_CONTENT_TYPE.IM_CONTENT_TYPE_LOCATION_INVITE_VALUE);
-        builder.setContentType(command_id);
-
-        imContentUtil.appendLongitude(longitude);
-        imContentUtil.appendLaitude(latitude);
-
-        builder.setBody(imContentUtil.serializeToString());
-        YouMaiChat.IMChat_Personal imData = builder.build();
-
-        sendProto(imData, callback);
-    }
-
-    /**
-     * 应答共享位置 ：接收或拒绝
-     *
-     * @param userId
-     * @param location
-     * @param desPhone
-     * @param answerOrReject
-     * @param callback
-     */
-    public void answerLocation(int userId, String desPhone, String location, boolean answerOrReject, ReceiveListener callback) {
-        if (StringUtils.isEmpty(desPhone)) {
-            return;
-        }
-        String srcPhone = getPhoneNum();
-        String tarPhone = desPhone;
-
-        IMChat_Personal.Builder builder = IMChat_Personal.newBuilder();
-        builder.setSrcUsrId(userId);
-        builder.setSrcPhone(srcPhone);
-        builder.setTargetPhone(tarPhone);
-
-        IMContentUtil imContentUtil = new IMContentUtil();
-
-        int command_id = IMContentUtil.getContentType(0, YouMaiChat.IM_CONTENT_TYPE.IM_CONTENT_TYPE_LOCATION_ANSWER_VALUE);
-        builder.setContentType(command_id);
-
-        imContentUtil.appendLocAnswer(location);
-        imContentUtil.appendLocAnswerOrReject(answerOrReject ? "1" : "0");
-
-        builder.setBody(imContentUtil.serializeToString());
-        YouMaiChat.IMChat_Personal imData = builder.build();
-
-        sendProto(imData, callback);
-    }
-
-    /**
-     * 结束共享位置 ：结束
-     *
-     * @param userId
-     * @param desPhone
-     * @param callback
-     */
-    public void endLocation(int userId, String desPhone, ReceiveListener callback) {
-        if (StringUtils.isEmpty(desPhone)) {
-            return;
-        }
-        String srcPhone = getPhoneNum();
-        String tarPhone = desPhone;
-
-        IMChat_Personal.Builder builder = IMChat_Personal.newBuilder();
-        builder.setSrcUsrId(userId);
-        builder.setSrcPhone(srcPhone);
-        builder.setTargetPhone(tarPhone);
-
-        IMContentUtil imContentUtil = new IMContentUtil();
-
-        int command_id = IMContentUtil.getContentType(0, YouMaiChat.IM_CONTENT_TYPE.IM_CONTENT_TYPE_LOCATION_QUIT_VALUE);
-        builder.setContentType(command_id);
-
-        builder.setBody(imContentUtil.serializeToString());
-        YouMaiChat.IMChat_Personal imData = builder.build();
-
-        sendProto(imData, callback);
-    }
-
-    /**
-     * 轮询定时共享位置
-     *
-     * @param userId
-     * @param desPhone
-     * @param longitude
-     * @param latitude
-     * @param bearing
-     */
-    public void continueLocation(int userId, String desPhone, String longitude,
-                                 String latitude, String bearing) {
-        if (StringUtils.isEmpty(desPhone)) {
-            return;
-        }
-
-        YouMaiLocation.LocationShare.Builder shareBuilder = LocationShare.newBuilder();
-        shareBuilder.setLongitude(longitude);
-        shareBuilder.setLatitude(latitude);
-        shareBuilder.setAngle(bearing);
-        //shareBuilder.setTaskId(msgId);
-        shareBuilder.setUserId(userId);
-        shareBuilder.setPhone(desPhone);
-        LocationShare share = shareBuilder.build();
-
-        sendProto(share, null);
-    }
 
     /**
      * 发送图片
@@ -959,41 +860,9 @@ public class HuxinSdkManager {
                 }
             }
         };
+        getUploadFileToken(callback);
     }
 
-
-    /**
-     * 发送图片
-     *
-     * @param file
-     */
-    public void postShow(final File file, final UpCompletionHandler completionHandler,
-                         final UpProgressHandler progressHandler) {
-        IPostListener callback = new IPostListener() {
-            @Override
-            public void httpReqResult(String response) {
-
-                FileToken resp = GsonUtil.parse(response, FileToken.class);
-                if (resp == null) {
-                    LogUtils.w("error", mContext.getString(R.string.hx_toast_04));
-                    return;
-                }
-                if (resp.isSucess()) {
-                    String fidKey = resp.getD().getFid();
-                    String token = resp.getD().getUpToken();
-                    Map<String, String> params = new HashMap<>();
-                    params.put("x:type", "1");
-                    params.put("x:msisdn", getPhoneNum());
-                    UploadOptions options = new UploadOptions(params, null, false, progressHandler, null);
-                    uploadManager.put(file, fidKey, token, completionHandler, options);
-                } else {
-                    Toast.makeText(mContext, resp.getM(), Toast.LENGTH_SHORT).show();
-                }
-            }
-        };
-        //getUploadFileToken(callback);
-
-    }
 
     /**
      * 发送音频.
@@ -1111,7 +980,7 @@ public class HuxinSdkManager {
                 }
             }
         };
-        //getUploadFileToken(callback);
+        getUploadFileToken(callback);
 
         return true;
     }
@@ -1326,7 +1195,7 @@ public class HuxinSdkManager {
                 }
             }
         };
-        //getUploadFileToken(callback);
+        getUploadFileToken(callback);
 
         return true;
     }
@@ -1566,7 +1435,7 @@ public class HuxinSdkManager {
                 }
             }
         };
-        //getUploadFileToken(callback);
+        getUploadFileToken(callback);
     }
 
 
@@ -1709,7 +1578,7 @@ public class HuxinSdkManager {
                 }
             }
         };
-        //getUploadFileToken(callback);
+        getUploadFileToken(callback);
     }
 
     /**
@@ -1799,7 +1668,7 @@ public class HuxinSdkManager {
                 }
             }
         };
-        //getUploadFileToken(callback);
+        getUploadFileToken(callback);
     }
 
     /**

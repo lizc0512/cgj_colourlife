@@ -464,16 +464,10 @@ public class IMMsgManager {
             final String mLabelAddress = mLocation.getLabelStr();
             final String scale = mLocation.getScaleStr();
 
-            String url;
-            if (AppUtils.isGooglePlay(mContext)) {
-                url = "https://maps.googleapis.com/maps/api/staticmap?markers=color:red%7Clabel:C%7C"
-                        + mLocation.getLatitudeStr() + "," + mLocation.getLongitudeStr() + "&size=600x300&key=" + AppConfig.googleMapKey;
-            } else {
-                url = "http://restapi.amap.com/v3/staticmap?location="
-                        + mLocation.getLongitudeStr() + "," + mLocation.getLatitudeStr() + "&zoom=" + scale
-                        + "&size=720*550&traffic=1&markers=mid,0xff0000,A:" + mLocation.getLongitudeStr()
-                        + "," + mLocation.getLatitudeStr() + "&key=" + AppConfig.staticMapKey;
-            }
+            String url = "http://restapi.amap.com/v3/staticmap?location="
+                    + mLocation.getLongitudeStr() + "," + mLocation.getLatitudeStr() + "&zoom=" + scale
+                    + "&size=720*550&traffic=1&markers=mid,0xff0000,A:" + mLocation.getLongitudeStr()
+                    + "," + mLocation.getLatitudeStr() + "&key=" + AppConfig.staticMapKey;
 
             //todo_k: 地图
             cacheMsgBean.setMsgType(CacheMsgBean.RECEIVE_LOCATION)
@@ -507,33 +501,23 @@ public class IMMsgManager {
                             .setSourcePhone(sourcePhone)
                             .setForwardCount(forwardCount));
         } else if (im.getMsgType() == IMConst.IM_FILE_VALUE) { //文件
+            String fid = im.getContent().getFile().getFid();
+            String fileName = im.getContent().getFile().getFileName();
+            String fileSize = im.getContent().getFile().getFileSize();
 
-            String jsonBody = im.mJsonBody;
-            try {
-                JSONArray jsonArray = new JSONArray(jsonBody);
-                if (jsonArray.length() > 0) {
-                    JSONObject jsonObject = jsonArray.getJSONObject(0);
-                    String fid = jsonObject.optString(IMContentType.CONTENT_FILE.toString());
-                    String fileName = jsonObject.optString(IMContentType.CONTENT_FILE_NAME.toString());
-                    String fileSize = jsonObject.optString(IMContentType.CONTENT_FILE_SIZE.toString());
+            //todo_k: 文件
+            cacheMsgBean.setMsgType(CacheMsgBean.RECEIVE_FILE)
+                    .setJsonBodyObj(new CacheMsgFile()
+                            .setFid(fid)
+                            .setFileName(fileName)
+                            .setFileUrl(AppConfig.getImageUrl(mContext, fid))
+                            .setFileRes(IMHelper.getFileImgRes(fileName, false))
+                            .setFileSize(Long.parseLong(fileSize)));
 
+            //add to db
+            CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
+            cacheMsgBeanList.add(cacheMsgBean);
 
-                    //todo_k: 文件
-                    cacheMsgBean.setMsgType(CacheMsgBean.RECEIVE_FILE)
-                            .setJsonBodyObj(new CacheMsgFile()
-                                    .setFid(fid)
-                                    .setFileName(fileName)
-                                    .setFileUrl(AppConfig.getImageUrl(mContext, fid))
-                                    .setFileRes(IMHelper.getFileImgRes(fileName, false))
-                                    .setFileSize(Long.parseLong(fileSize)));
-
-                    //add to db
-                    CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
-                    cacheMsgBeanList.add(cacheMsgBean);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
         } else if (im.getMsgType() == IMConst.IM_VIDEO_VALUE) {//视频
             ContentVideo contentVideo = im.getContent().getVideo();//获取解析jsonBoby的内容
             long time;

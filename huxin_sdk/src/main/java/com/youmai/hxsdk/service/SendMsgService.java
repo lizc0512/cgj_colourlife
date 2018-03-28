@@ -187,9 +187,6 @@ public class SendMsgService extends Service {
             if (type == CacheMsgBean.SEND_TEXT) {//文本
                 sendTxt(msg);
                 sendingMsg.put(msg.getMsg().getId().intValue(), msg);
-            } else if (type == CacheMsgBean.SEND_JOKE) {
-                sendTxt(msg);
-                sendingMsg.put(msg.getMsg().getId().intValue(), msg);
             } else if (type == CacheMsgBean.SEND_EMOTION) {//表情
                 sendTxt(msg);
                 sendingMsg.put(msg.getMsg().getId().intValue(), msg);
@@ -270,9 +267,6 @@ public class SendMsgService extends Service {
         if (msgBean.getMsg().getMsgType() == CacheMsgBean.SEND_TEXT) {
             CacheMsgTxt msgBody = (CacheMsgTxt) msgBean.getMsg().getJsonBodyObj(new CacheMsgTxt());
             contentTemp = msgBody.getMsgTxt();
-        } else if (msgBean.getMsg().getMsgType() == CacheMsgBean.SEND_JOKE) {
-            CacheMsgJoke msgBody = (CacheMsgJoke) msgBean.getMsg().getJsonBodyObj(new CacheMsgJoke());
-            contentTemp = msgBody.getMsgJoke();
         } else if (msgBean.getMsg().getMsgType() == CacheMsgBean.SEND_EMOTION) {
             CacheMsgEmotion msgBody = (CacheMsgEmotion) msgBean.getMsg().getJsonBodyObj(new CacheMsgEmotion());
             contentTemp = msgBody.getEmotionContent();

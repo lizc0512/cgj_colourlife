@@ -193,22 +193,6 @@ public class AppUtils {
      * @param context
      * @return
      */
-    public static boolean isGooglePlay(Context context) {
-        String appKey = getMetaData(context, "HUXIN_OVERSEA");
-        if (!TextUtils.isEmpty(appKey)) {
-            return !appKey.trim().equals("china");
-        }
-
-        return false;
-    }
-
-
-    /**
-     * 获取发行的渠道信息
-     *
-     * @param context
-     * @return
-     */
     public static String getAppKey(Context context) {
         return getMetaData(context, "com.youmai.huxin.apikey");
     }

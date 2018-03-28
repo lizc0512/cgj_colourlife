@@ -28,28 +28,21 @@ public class CacheMsgBean implements Parcelable {
 
 
     public static final int SEND_TEXT = 1;
-    public static final int RECEIVE_TEXT = 2;
+    public static final int SEND_IMAGE = 2;
+    public static final int SEND_VOICE = 3;
+    public static final int SEND_VIDEO = 4;
+    public static final int SEND_LOCATION = 5;
+    public static final int SEND_FILE = 6;
+    public static final int SEND_EMOTION = 7;
 
-    public static final int SEND_IMAGE = 3;
-    public static final int RECEIVE_IMAGE = 4;
+    public static final int RECEIVE_TEXT = 101;
+    public static final int RECEIVE_IMAGE = 102;
+    public static final int RECEIVE_VOICE = 103;
+    public static final int RECEIVE_VIDEO = 104;
+    public static final int RECEIVE_LOCATION = 105;
+    public static final int RECEIVE_FILE = 106;
+    public static final int RECEIVE_EMOTION = 107;
 
-    public static final int SEND_VOICE = 5;
-    public static final int RECEIVE_VOICE = 6;
-
-    public static final int SEND_VIDEO = 7;
-    public static final int RECEIVE_VIDEO = 8;
-
-    public static final int SEND_LOCATION = 9;
-    public static final int RECEIVE_LOCATION = 10;
-
-    public static final int SEND_FILE = 11;
-    public static final int RECEIVE_FILE = 12;
-
-    public static final int SEND_EMOTION = 13;
-    public static final int RECEIVE_EMOTION = 14;
-
-    public static final int SEND_JOKE = 15;
-    public static final int RECEIVE_JOKE = 16;
 
     public static final int SEND_DRAFT = 0;      //草稿
     public static final int SEND_GOING = 1;//正在发送
@@ -57,26 +50,6 @@ public class CacheMsgBean implements Parcelable {
     public static final int SEND_FAILED = 3;  //发送失败
     public static final int RECEIVE_UNREAD = 4;   //接收到消息，未读
     public static final int RECEIVE_READ = 5;  //接收到消息，已读
-
-
-//    public static final int MSG_TYPE_EMOTION = 1; //表情
-//    public static final int MSG_TYPE_TXT = 2; //文字
-//    public static final int MSG_TYPE_IMG = 3; //图片
-//    public static final int MSG_TYPE_MAP = 4; //地图
-//    public static final int MSG_TYPE_VIDEO = 5; //视频
-//    public static final int MSG_TYPE_VOICE = 6; //声音
-//    public static final int MSG_TYPE_FILE = 7; //文件
-//    public static final int MSG_TYPE_CALL = 9; //通话
-//    public static final int MSG_TYPE_BIZCARD = 10; //名片
-//    public static final int MSG_TYPE_REMARK = 11; //备注
-//    public static final int MSG_TYPE_JOKE = 12; //段子
-//    public static final int MSG_TYPE_LOCATION_SHARE = 13; //位置邀请 位置应答 位置结束
-
-//    public static final int MSG_READ_STATUS = 1; //已读
-//    public static final int MSG_UNREAD_STATUS = 0; //未读
-//    public static final int MSG_SEND_FLAG_SENDING = -1;
-//    public static final int MSG_SEND_FLAG_SUCCESS = 0;
-//    public static final int MSG_SEND_FLAG_FAIL = 4;
 
     @Id
     private Long id;  //消息ID
@@ -319,8 +292,8 @@ public class CacheMsgBean implements Parcelable {
 
     @Generated(hash = 1816649675)
     public CacheMsgBean(Long id, Long msgId, int msgType, int msgStatus, long msgTime, int senderUserId,
-            int receiverUserId, String senderPhone, String receiverPhone, String targetPhone,
-            String contentJsonBody) {
+                        int receiverUserId, String senderPhone, String receiverPhone, String targetPhone,
+                        String contentJsonBody) {
         this.id = id;
         this.msgId = msgId;
         this.msgType = msgType;

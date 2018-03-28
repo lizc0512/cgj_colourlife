@@ -282,6 +282,7 @@ public class SendMsgService extends Service {
                     final YouMaiChat.IMChat_Personal_Ack ack = YouMaiChat.IMChat_Personal_Ack.parseFrom(pduBase.body);
                     final long msgId = ack.getMsgId();
                     msgBean.getMsg().setMsgId(msgId);
+                    msgBean.getMsg().setTargetPhone(targetPhone);
 
                     if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_OK) {
                         if (ack.getIsTargetOnline()) {
@@ -344,6 +345,7 @@ public class SendMsgService extends Service {
                     final YouMaiChat.IMChat_Personal_Ack ack = YouMaiChat.IMChat_Personal_Ack.parseFrom(pduBase.body);
                     final long msgId = ack.getMsgId();
                     msgBean.getMsg().setMsgId(msgId);
+                    msgBean.getMsg().setTargetPhone(targetPhone);
 
                     if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_OK) {
                         if (ack.getIsTargetOnline()) {
@@ -588,6 +590,7 @@ public class SendMsgService extends Service {
                     YouMaiChat.IMChat_Personal_Ack ack = YouMaiChat.IMChat_Personal_Ack.parseFrom(pduBase.body);
                     long msgId = ack.getMsgId();
                     msgBean.getMsg().setMsgId(msgId);
+                    msgBean.getMsg().setTargetPhone(desPhone);
 
                     if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_OK) {
                         if (ack.getIsTargetOnline()) {
@@ -635,6 +638,7 @@ public class SendMsgService extends Service {
                     YouMaiChat.IMChat_Personal_Ack ack = YouMaiChat.IMChat_Personal_Ack.parseFrom(pduBase.body);
                     long msgId = ack.getMsgId();
                     msgBean.getMsg().setMsgId(msgId);
+                    msgBean.getMsg().setTargetPhone(desPhone);
 
                     if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_OK) {
                         if (ack.getIsTargetOnline()) {
@@ -689,6 +693,7 @@ public class SendMsgService extends Service {
                     YouMaiChat.IMChat_Personal_Ack ack = YouMaiChat.IMChat_Personal_Ack.parseFrom(pduBase.body);
                     long msgId = ack.getMsgId();
                     msgBean.getMsg().setMsgId(msgId);
+                    msgBean.getMsg().setTargetPhone(desPhone);
 
                     if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_OK) {
                         if (ack.getIsTargetOnline()) {

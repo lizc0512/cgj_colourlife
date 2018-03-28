@@ -10,7 +10,7 @@ public class ExCacheMsgBean extends CacheMsgBean {
     private String pinyin; // 姓名拼音
     private String simplepinyin;//简拼
     private String displayName;//姓名
-    private String phone;//对方号码
+    //private String phone;//对方号码
     //    private HxUsers hxUsers;
     private int contactId;//通讯id  没有在通讯录内显示0
     private boolean mIsMultiNumber = false;//多号码识别
@@ -18,6 +18,9 @@ public class ExCacheMsgBean extends CacheMsgBean {
     public ExCacheMsgBean() {
     }
 
+    public ExCacheMsgBean(CacheMsgBean bean) {
+        super(bean);
+    }
 
     public boolean isMultiNumber() {
         return mIsMultiNumber;
@@ -59,13 +62,13 @@ public class ExCacheMsgBean extends CacheMsgBean {
         this.displayName = displayName;
     }
 
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
+//    public String getPhone() {
+//        return phone;
+//    }
+//
+//    public void setPhone(String phone) {
+//        this.phone = phone;
+//    }
 
     public int getContactId() {
         return contactId;
@@ -81,7 +84,6 @@ public class ExCacheMsgBean extends CacheMsgBean {
                 "  pinyin='" + pinyin + '\'' +
                 ", simplepinyin='" + simplepinyin + '\'' +
                 ", displayName='" + displayName + '\'' +
-                ", phone='" + phone + '\'' +
                 ", contactId=" + contactId +
                 '}';
     }

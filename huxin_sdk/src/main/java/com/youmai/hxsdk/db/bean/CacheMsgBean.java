@@ -307,6 +307,20 @@ public class CacheMsgBean implements Parcelable {
         this.contentJsonBody = contentJsonBody;
     }
 
+    public CacheMsgBean(CacheMsgBean bean) {
+        this.id = bean.getId();
+        this.msgId = bean.getMsgId();
+        this.msgType = bean.getMsgType();
+        this.msgStatus = bean.getMsgStatus();
+        this.msgTime = bean.getMsgTime();
+        this.senderUserId = bean.getSenderUserId();
+        this.receiverUserId = bean.getReceiverUserId();
+        this.senderPhone = bean.getSenderPhone();
+        this.receiverPhone = bean.getReceiverPhone();
+        this.targetPhone = bean.getTargetPhone();
+        this.contentJsonBody = bean.getContentJsonBody();
+    }
+
     public static final Creator<CacheMsgBean> CREATOR = new Creator<CacheMsgBean>() {
         @Override
         public CacheMsgBean createFromParcel(Parcel source) {

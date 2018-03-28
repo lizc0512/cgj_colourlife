@@ -71,11 +71,11 @@
             android:screenOrientation="portrait"
             android:theme="@style/HxSdkTheme"
             android:windowSoftInputMode="stateUnspecified|adjustPan">
-            <!--<intent-filter>
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>-->
+            </intent-filter>
         </activity>
 
         <activity
@@ -85,11 +85,11 @@
             android:screenOrientation="portrait"
             android:theme="@style/HxSdkNewTheme"
             android:windowSoftInputMode="adjustResize|stateHidden">
-            <intent-filter>
+            <!--<intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            </intent-filter>-->
         </activity>
 
         <activity

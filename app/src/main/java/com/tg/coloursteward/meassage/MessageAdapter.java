@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableString;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,10 @@ import android.widget.TextView;
 
 import com.tg.coloursteward.R;
 import com.youmai.hxsdk.HuxinSdkManager;
+import com.youmai.hxsdk.db.bean.CacheMsgBean;
+import com.youmai.hxsdk.im.cache.CacheMsgTxt;
+import com.youmai.hxsdk.view.chat.emoticon.utils.EmoticonHandler;
+import com.youmai.hxsdk.view.chat.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,10 +32,12 @@ import q.rorbin.badgeview.QBadgeView;
  */
 
 public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
+    private final String TAG = "MessageAdapter";
+
     public static final int ADAPTER_TYPE_HEADER = 1;
     public static final int ADAPTER_TYPE_NORMAL = 2;
-    
-    private final String TAG = "MessageAdapter";
+
     private final int NEW_MSG_UPDATE = 100;
     private final int NEW_MSG_UPDATE_COUNT = 101;
     private final int UPDATE_MSG_BY_INDEX = 102;
@@ -41,10 +48,9 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     private boolean mShowRightIcon = true;
     private boolean mShowUnread = true;
-    
+
     private Context mContext;
     private int pageType;
-    public static final int NOTIFY_PAGE = 1;
     private List<ExCacheMsgBean> messageList = new ArrayList();
     private Handler mHandler;
     private int mUpdateCount = 0;
@@ -54,8 +60,6 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private OnItemClickListener mOnRightButtionClickListener;
     private OnItemClickListener mOnAvatarButtionClickListener;
 
-    private String mNotificationMessageString;
-    
     public MessageAdapter(Context context) {
         mContext = context;
         mHandler = new Handler() {
@@ -80,7 +84,6 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 }
             }
         };
-        mNotificationMessageString = "Hello ";//mContext.getString(R.string.notify_msgage_flag);
     }
 
     public int getPageType() {
@@ -98,11 +101,11 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public void setShowRightIcon(boolean show) {
         this.mShowRightIcon = show;
     }
-    
+
     public void setShowUnread(boolean show) {
         this.mShowUnread = show;
     }
-    
+
     public List<ExCacheMsgBean> getMessageList() {
         return messageList;
     }
@@ -188,7 +191,54 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             final ExCacheMsgBean model = messageList.get(currPos);
 
             itemView.message_item.setTag(position);
+            itemView.message_time.setText(TimeFormatUtil.convertTimeMillli(mContext, model.getMsgTime()));
+            itemView.message_name.setText(model.getDisplayName());
 
+            switch (model.getMsgType()) {
+                case CacheMsgBean.SEND_EMOTION:
+                case CacheMsgBean.RECEIVE_EMOTION:
+                    itemView.message_type.setText(mContext.getString(R.string.message_type_1));
+                    break;
+                case CacheMsgBean.SEND_TEXT:
+                case CacheMsgBean.RECEIVE_TEXT:
+                    CacheMsgTxt textM = (CacheMsgTxt) model.getJsonBodyObj();
+                    SpannableString msgSpan = new SpannableString(textM.getMsgTxt());
+                    msgSpan = EmoticonHandler.getInstance(mContext.getApplicationContext()).getTextFace(
+                            textM.getMsgTxt(), msgSpan, 0, Utils.getFontSize(itemView.message_type.getTextSize()));
+                    itemView.message_type.setText(msgSpan);
+                    break;
+                case CacheMsgBean.SEND_IMAGE:
+                case CacheMsgBean.RECEIVE_IMAGE:
+                    itemView.message_type.setText(mContext.getString(R.string.message_type_3));
+                    break;
+                case CacheMsgBean.SEND_LOCATION:
+                case CacheMsgBean.RECEIVE_LOCATION:
+                    itemView.message_type.setText(mContext.getString(R.string.message_type_4));
+                    break;
+                case CacheMsgBean.SEND_VIDEO:
+                case CacheMsgBean.RECEIVE_VIDEO:
+                    itemView.message_type.setText(mContext.getString(R.string.message_type_5));
+                    break;
+                case CacheMsgBean.SEND_VOICE:
+                case CacheMsgBean.RECEIVE_VOICE:
+                    itemView.message_type.setText(mContext.getString(R.string.message_type_sounds));
+                    break;
+                case CacheMsgBean.SEND_FILE:
+                case CacheMsgBean.RECEIVE_FILE:
+                    itemView.message_type.setText(mContext.getString(R.string.message_type_file));
+                    break;
+                default:
+                    itemView.message_type.setText(mContext.getString(R.string.message_type));
+            }
+
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mOnItemClickListener != null) {
+                        mOnItemClickListener.onItemClick(model, position);
+                    }
+                }
+            });
         }
     }
 
@@ -232,7 +282,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     /**
      * 未读消息icon
      */
-    private void setUnreadIcon(QBadgeView message_status, boolean show){
+    private void setUnreadIcon(QBadgeView message_status, boolean show) {
 
     }
 
@@ -266,7 +316,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public void setOnAvatarButtionClickListener(OnItemClickListener listener) {
         this.mOnAvatarButtionClickListener = listener;
     }
-    
+
     public interface OnItemClickListener {
         void onItemClick(ExCacheMsgBean bean, int position);
     }

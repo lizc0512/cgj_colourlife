@@ -414,7 +414,6 @@ public class IMMsgManager {
 
 
     public void parseCharMsg(IMChat im) {
-        //String srcPhone = im.getSrcPhone();
         //todo_k:
         CacheMsgBean cacheMsgBean = im.getMsgBean();
 

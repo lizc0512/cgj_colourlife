@@ -15,6 +15,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +25,7 @@ import android.widget.LinearLayout;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.tg.coloursteward.R;
 import com.youmai.hxsdk.HuxinSdkManager;
+import com.youmai.hxsdk.activity.IMConnectionActivity;
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
 import com.youmai.hxsdk.im.IMMsgCallback;
 import com.youmai.hxsdk.im.IMMsgManager;
@@ -84,7 +86,6 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
     /*********此处从XRecyclerView源码 onBindViewHolder得知，POSITION被修改，不知原因*******/
     private MessageAdapter mMessageAdapter;
     private List<ExCacheMsgBean> messageList;
-    private List<ExCacheMsgBean> SearchMessageList;
 
     private ProgressDialog mProgressDialog;
     private Handler mHandler;
@@ -161,12 +162,6 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
                     fragment.dismissProgress("败"/*getString(R.string.sync_callLog_success_insert_failed)*/);
                 }
                 break;
-                //刷新搜索结果
-                case UPDATE_SEARCH_DATA_SUCCESS: {
-                    fragment.mMessageAdapter.setMessageList(fragment.SearchMessageList);
-                    fragment.mLinearLayoutManager.scrollToPosition(0);
-                }
-                break;
                 //获取消息数据库数据为空！加载本地通话记录
                 case GET_DABABASE_DATA_FAILED: {
                     //getCallLogData();
@@ -230,7 +225,7 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-//        if (INTENT_REQUEST_FOR_UPDATE_UI == requestCode) {
+        if (INTENT_REQUEST_FOR_UPDATE_UI == requestCode) {
 //            Log.e(TAG, "onActivityResult");
 //            if (data != null) { //刷新未读标记
 //                String upPhone = data.getStringExtra("updatePhone");
@@ -275,9 +270,9 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
 //                    mMessageAdapter.notifyDataSetChanged();//notifyItemChanged(index + mMessageAdapter.getHeaderCount() + adjSize);
 //                }
 //            }
-//        } else if (INTENT_REQUEST_PERMISSION == requestCode) {
-//            //从开启权限页面返回 从新拉去数据
-//        }
+        } else if (INTENT_REQUEST_PERMISSION == requestCode) {
+            //从开启权限页面返回 从新拉去数据
+        }
     }
 
     @Override
@@ -339,7 +334,7 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
             }
         });
         mRefreshRecyclerView.setLoadingMoreEnabled(false);
-        messageList = new ArrayList<ExCacheMsgBean>();
+        messageList = new ArrayList<>();
         mSearchEmptyView = (LinearLayout) rootView.findViewById(R.id.message_search_empty_view);
 
         mMessageAdapter.registerAdapterDataObserver(mEmptyRecyclerViewDataObserver);
@@ -347,14 +342,11 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
         mMessageAdapter.setOnItemClickListener(new MessageAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(ExCacheMsgBean bean, int position) {
-
-            }
-        });
-
-        mMessageAdapter.setOnRightButtionClickListener(new MessageAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(ExCacheMsgBean bean, int position) {
-
+                Intent intent = new Intent();
+                intent.setClass(getActivity(), IMConnectionActivity.class);
+                intent.putExtra(IMConnectionActivity.DST_PHONE, bean.getTargetPhone());
+                intent.putExtra(IMConnectionActivity.DST_NAME, bean.getDisplayName());
+                startActivityForResult(intent, INTENT_REQUEST_FOR_UPDATE_UI);
             }
         });
 
@@ -364,17 +356,9 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
                 String selfPhone = HuxinSdkManager.instance().getPhoneNum();
                 ExCacheMsgBean cacheMsgBean = mMessageAdapter.getMessageList().get(position);
                 mMessageAdapter.deleteMessage(position);
-                CacheMsgHelper.instance(getActivity()).deleteAllMsg(selfPhone, cacheMsgBean.getPhone());
+                CacheMsgHelper.instance(getActivity()).deleteAllMsg(selfPhone, cacheMsgBean.getTargetPhone());
                 //去掉未读消息计数
-                IMMsgManager.getInstance().removeBadge(cacheMsgBean.getPhone());
-            }
-        });
-
-        mMessageAdapter.setOnAvatarButtionClickListener(new MessageAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(ExCacheMsgBean bean, int position) {
-                int contactId = bean.getContactId();
-                //不在通讯录，则新建联系人
+                IMMsgManager.getInstance().removeBadge(cacheMsgBean.getTargetPhone());
             }
         });
 
@@ -447,6 +431,7 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
 
     /**
      * IM消息的入口回调
+     *
      * @param imcomingMsg
      */
     @Override
@@ -479,62 +464,52 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
         super.setUserVisibleHint(isVisibleToUser);
         isTipWindowShow = isVisibleToUser;
         if (isVisibleToUser) {
-//            if (messageList.size()<8) {
-//                initMessageList();
-//            }
+
         }
     }
 
     protected void startLoading() {
         Log.d(TAG, "startLoading");
-        //getLoaderManager().initLoader(LOADER_ID_GEN_MESSAGE_LIST, null, this);
+        getLoaderManager().initLoader(LOADER_ID_GEN_MESSAGE_LIST, null, this);
     }
 
     @Override
     public Loader<List<ExCacheMsgBean>> onCreateLoader(int id, Bundle args) {
         Log.d(TAG, "onCreateLoader");
-        //return new MsgAsyncTaskLoader(getContext(), true, false);
-        return null;
+        return new MsgAsyncTaskLoader(getContext(), false);
     }
 
     @Override
     public void onLoadFinished(Loader<List<ExCacheMsgBean>> loader, List<ExCacheMsgBean> data) {
-        Log.d(TAG, "onLoadFinished");
+        Log.d(TAG, "onLoadFinished" + data.toString());
         if (!HuxinSdkManager.instance().getPhoneNum().equals("")) {
             stopMessageListQueryContact();
             if (messageList.isEmpty()) {
-                //messageList = data;
                 messageList.addAll(data);
                 mMessageAdapter.setMessageList(messageList);
 
-                startMessageListQueryContact();
+                //startMessageListQueryContact();
             } else {
                 int newSize = data.size();
                 if (newSize > 0) {
                     List<ExCacheMsgBean> oldList = new ArrayList<>();
                     for (int newIndex = newSize - 1; newIndex >= 0; newIndex--) {
+                        if (TextUtils.isEmpty(data.get(newIndex).getTargetPhone())) {
+                            return;
+                        }
                         for (int i = 0; i < messageList.size(); i++) {
-                            if (data.get(newIndex).getPhone().equals(messageList.get(i).getPhone())) {
+                            if (data.get(newIndex).getTargetPhone().equals(messageList.get(i).getTargetPhone())) {
                                 oldList.add(messageList.get(i));
                                 break;
                             }
                         }
                     }
                     messageList.removeAll(oldList);
-//                    if (data.get(0).getDisplayName().equals(getString(R.string.notify_msgage_flag))) {
-//                        messageList.addAll(0, data);
-//                    } else {
-//                        messageList.addAll(1, data);
-//                    }
+                    messageList.addAll(0, data);
                     mMessageAdapter.notifyDataSetChanged();
                 }
             }
             mCurrPhoneNum = HuxinSdkManager.instance().getPhoneNum();
-        }
-
-        //如果数据为空就读取系统通话记录
-        if (messageList.isEmpty()) {
-            //在通话列表加载了  mHandler.sendEmptyMessage(GET_DABABASE_DATA_FAILED);
         }
     }
 

@@ -49,6 +49,7 @@ public class IMChat {
                 .setSenderPhone(mImChat.getSrcPhone())
                 .setSenderUserId(mImChat.getSrcUsrId())
                 .setReceiverUserId(mImChat.getTargetUserId())
+                .setTargetPhone(mImChat.getSrcPhone())
                 .setMsgTime(System.currentTimeMillis())
                 .setMsgStatus(CacheMsgBean.RECEIVE_UNREAD)
                 .setMsgId(mImChat.getMsgId())

@@ -184,7 +184,7 @@ public class SendMsgService extends Service {
                 return;
             }
             int type = msg.getMsg().getMsgType();
-            if (type == CacheMsgBean.RECEIVE_TEXT) {//文本
+            if (type == CacheMsgBean.SEND_TEXT) {//文本
                 sendTxt(msg);
                 sendingMsg.put(msg.getMsg().getId().intValue(), msg);
             } else if (type == CacheMsgBean.SEND_JOKE) {

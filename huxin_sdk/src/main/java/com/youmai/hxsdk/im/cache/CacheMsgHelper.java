@@ -62,6 +62,9 @@ public class CacheMsgHelper {
         if (cacheMsgBean.getId() != null && cacheMsgBean.getId() != -1L) {
             cacheMsgBeanDao.update(cacheMsgBean);
         } else {
+            if (TextUtils.isEmpty(cacheMsgBean.getTargetPhone())) {
+                cacheMsgBean.setTargetPhone(cacheMsgBean.getReceiverPhone()); //发送失败
+            }
             cacheMsgBean.setId(null); // FIXME: 2017/4/14 新增消息主键置空再插入表 ID从1自增
             long id = cacheMsgBeanDao.insert(cacheMsgBean);
             cacheMsgBean.setId(id);
@@ -126,6 +129,21 @@ public class CacheMsgHelper {
                         CacheMsgBeanDao.Properties.ReceiverPhone.eq(selfPhone))))
                 .orderAsc(CacheMsgBeanDao.Properties.Id).buildDelete();
 
+        dq.executeDeleteWithoutDetachingEntities();
+    }
+
+
+    /**
+     * 删除某个人的所有消息记录
+     *
+     * @param targetPhone
+     * @return
+     */
+    public void deleteAllMsg(String targetPhone) {
+        CacheMsgBeanDao cacheMsgBeanDao = GreenDBIMManager.instance(mContext).getCacheMsgDao();
+        QueryBuilder<CacheMsgBean> qb = cacheMsgBeanDao.queryBuilder();
+        DeleteQuery<CacheMsgBean> dq = qb.where(CacheMsgBeanDao.Properties.TargetPhone.eq(targetPhone))
+                .orderAsc(CacheMsgBeanDao.Properties.Id).buildDelete();
         dq.executeDeleteWithoutDetachingEntities();
     }
 

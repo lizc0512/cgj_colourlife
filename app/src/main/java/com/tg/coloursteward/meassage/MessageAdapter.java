@@ -54,7 +54,6 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private Context mContext;
     private int pageType;
     private List<ExCacheMsgBean> messageList = new ArrayList();
-    private Handler mHandler;
     private int mUpdateCount = 0;
 
     private OnItemClickListener mOnItemClickListener;
@@ -64,28 +63,6 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     public MessageAdapter(Context context) {
         mContext = context;
-        mHandler = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                super.handleMessage(msg);
-                switch (msg.what) {
-                    case NEW_MSG_UPDATE_COUNT:
-                        mUpdateCount++;
-                        if (mUpdateCount == 5) {
-                            mUpdateCount = 0;
-                            sendEmptyMessage(NEW_MSG_UPDATE);
-                        }
-                    case NEW_MSG_UPDATE: {
-                        notifyDataSetChanged();
-                    }
-                    break;
-                    case UPDATE_MSG_BY_INDEX: {
-                        notifyItemChanged(msg.arg1);
-                    }
-                    break;
-                }
-            }
-        };
     }
 
     public int getPageType() {
@@ -145,17 +122,6 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
 
         return null;
-    }
-
-    public void updateItem(int index, ExCacheMsgBean msgBean) {
-        int correctIndex = index + getHeaderCount();
-        messageList.set(index, msgBean);
-        Message msg = mHandler.obtainMessage(UPDATE_MSG_BY_INDEX, correctIndex, 0);
-        mHandler.sendMessage(msg);
-    }
-
-    public void postNotifyItemChanged() {
-        mHandler.sendEmptyMessage(NEW_MSG_UPDATE);
     }
 
     @Override
@@ -241,6 +207,16 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     }
                 }
             });
+
+            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    if (mOnLongItemClickListener != null) {
+                        mOnLongItemClickListener.onItemLongClick(v, position - getHeaderCount());
+                    }
+                    return true;
+                }
+            });
         }
     }
 
@@ -270,7 +246,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         String phone = msgBean.getTargetPhone();
         if (messageList.isEmpty()) {
             //没有聊天消息
-
+            messageList.add(0, msgBean);
         } else {
             int i;
             for (i = 0; i < messageList.size(); i++) {
@@ -291,7 +267,6 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             }
         }
         notifyDataSetChanged();
-        //mHandler.sendEmptyMessage(NEW_MSG_UPDATE);
     }
 
     /**

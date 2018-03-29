@@ -15,6 +15,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,6 +32,7 @@ import com.youmai.hxsdk.im.IMMsgCallback;
 import com.youmai.hxsdk.im.IMMsgManager;
 import com.youmai.hxsdk.im.cache.CacheMsgHelper;
 import com.youmai.hxsdk.router.APath;
+import com.youmai.hxsdk.utils.ToastUtil;
 import com.youmai.hxsdk.view.refresh.OnRecyclerScrollListener;
 
 import java.lang.ref.WeakReference;
@@ -346,10 +348,10 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
         mMessageAdapter.setOnLongItemClickListener(new MessageAdapter.OnItemLongClickListener() {
             @Override
             public void onItemLongClick(View view, int position) {
-                String selfPhone = HuxinSdkManager.instance().getPhoneNum();
+                ToastUtil.showToast(getContext(), "删除成功：" + position);
                 ExCacheMsgBean cacheMsgBean = mMessageAdapter.getMessageList().get(position);
                 mMessageAdapter.deleteMessage(position);
-                CacheMsgHelper.instance(getActivity()).deleteAllMsg(selfPhone, cacheMsgBean.getTargetPhone());
+                CacheMsgHelper.instance(getActivity()).deleteAllMsg(cacheMsgBean.getTargetPhone());
                 //去掉未读消息计数
                 IMMsgManager.getInstance().removeBadge(cacheMsgBean.getTargetPhone());
             }
@@ -434,23 +436,6 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
             ExCacheMsgBean bean = new ExCacheMsgBean(imComingMsg);
             bean.setDisplayName(imComingMsg.getTargetPhone());
             mMessageAdapter.addTop(bean);
-        }
-    }
-
-    private void checkIfEmpty() {
-        Log.e(TAG, "onSaveInstanceState--showGuide");
-        if (mMessageAdapter != null) {
-            int count = mMessageAdapter.getItemCount();
-
-            //搜索状态
-            if (count == mMessageAdapter.getHeaderCount()) {
-                mSearchEmptyView.setVisibility(View.VISIBLE);
-                mRefreshRecyclerView.setVisibility(View.GONE);
-            } else {
-                mSearchEmptyView.setVisibility(View.GONE);
-                mRefreshRecyclerView.setVisibility(View.VISIBLE);
-            }
-            mEmptyView.setVisibility(View.GONE);
         }
     }
 
@@ -559,6 +544,24 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
         @Override
         public void onItemRangeRemoved(int positionStart, int itemCount) {
             checkIfEmpty();
+        }
+    }
+
+    private void checkIfEmpty() {
+        Log.e(TAG, "onSaveInstanceState--showGuide");
+        if (mMessageAdapter != null) {
+            int count = mMessageAdapter.getItemCount();
+
+            //正常状态
+            if (count == mMessageAdapter.getHeaderCount()) {
+                mEmptyView.setVisibility(View.VISIBLE);
+                mRefreshRecyclerView.setVisibility(View.VISIBLE);
+            } else {
+                mEmptyView.setVisibility(View.GONE);
+                mRefreshRecyclerView.setVisibility(View.VISIBLE);
+            }
+            mSearchEmptyView.setVisibility(View.GONE);
+
         }
     }
 

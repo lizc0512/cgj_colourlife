@@ -251,6 +251,7 @@ public class SendMsgService extends Service {
         }
         CacheMsgBean bean = msg.getMsg();
         bean.setMsgStatus(flag);
+        bean.setTargetPhone(bean.getReceiverPhone());
         CacheMsgHelper.instance(appContext).insertOrUpdate(bean);
         Intent intent = new Intent("service.send.msg");
         intent.putExtra("data", msg);

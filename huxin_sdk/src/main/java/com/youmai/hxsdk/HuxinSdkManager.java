@@ -1034,6 +1034,7 @@ public class HuxinSdkManager {
                 .setSenderPhone(getPhoneNum())
                 .setSenderUserId(userId)
                 .setReceiverPhone(desPhone)
+                .setTargetPhone(desPhone)
                 .setMsgType(CacheMsgBean.SEND_FILE)
                 .setJsonBodyObj(cacheMsgFile);
         if (isSaveDB) {
@@ -1249,6 +1250,7 @@ public class HuxinSdkManager {
                     .setSenderPhone(getPhoneNum())
                     .setSenderUserId(userId)
                     .setReceiverPhone(desPhone)
+                    .setTargetPhone(desPhone)
                     .setMsgType(CacheMsgBean.SEND_IMAGE)
                     .setJsonBodyObj(new CacheMsgImage().setFilePath(originalPath));
 
@@ -1484,6 +1486,7 @@ public class HuxinSdkManager {
                 .setSenderPhone(getPhoneNum())
                 .setSenderUserId(userId)
                 .setReceiverPhone(desPhone)
+                .setTargetPhone(desPhone)
                 .setMsgType(CacheMsgBean.SEND_VIDEO)
                 .setJsonBodyObj(new CacheMsgVideo().setVideoPath(filePath).setFramePath(framePath).setName(videoName).setSize(videoSize).setTime(seconds));
         if (isSaveDB) {
@@ -1686,6 +1689,7 @@ public class HuxinSdkManager {
         fileBean.setVideoTime(time);
 
         final String desPhone = cacheMsgBean.getReceiverPhone();
+        cacheMsgBean.setTargetPhone(desPhone);
         ReceiveListener receiveListener = new ReceiveListener() {
             @Override
             public void OnRec(PduBase pduBase) {

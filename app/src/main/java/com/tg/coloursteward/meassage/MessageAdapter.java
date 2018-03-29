@@ -23,6 +23,8 @@ import com.youmai.hxsdk.view.chat.emoticon.utils.EmoticonHandler;
 import com.youmai.hxsdk.view.chat.utils.Utils;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import q.rorbin.badgeview.QBadgeView;
@@ -57,8 +59,8 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     private OnItemClickListener mOnItemClickListener;
     private OnItemLongClickListener mOnLongItemClickListener;
-    private OnItemClickListener mOnRightButtionClickListener;
-    private OnItemClickListener mOnAvatarButtionClickListener;
+    private OnItemClickListener mOnRightButtonClickListener;
+    private OnItemClickListener mOnAvatarButtonClickListener;
 
     public MessageAdapter(Context context) {
         mContext = context;
@@ -265,18 +267,31 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     public void addTop(ExCacheMsgBean msgBean) {
-        String selfPhone = HuxinSdkManager.instance().getPhoneNum();
-        String phone;
-        if (msgBean.getReceiverPhone().equals(selfPhone) && msgBean.getSenderPhone().equals(selfPhone)) {
-            phone = selfPhone;
-        } else if (msgBean.getReceiverPhone().equals(selfPhone)) {
-            phone = msgBean.getSenderPhone();
-        } else {
-            phone = msgBean.getReceiverPhone();
-        }
-        int i = 0;
+        String phone = msgBean.getTargetPhone();
+        if (messageList.isEmpty()) {
+            //没有聊天消息
 
-        mHandler.sendEmptyMessage(NEW_MSG_UPDATE);
+        } else {
+            int i;
+            for (i = 0; i < messageList.size(); i++) {
+                if (messageList.get(i).getTargetPhone().equals(phone)) {
+                    if (i == 0) {
+                        messageList.set(0, msgBean);
+                    } else {
+                        messageList.remove(messageList.get(i));
+                        messageList.add(0, msgBean);
+                        Comparator comp = new SortComparator();
+                        Collections.sort(messageList.subList(0, messageList.size()), comp);
+                    }
+                    break;
+                }
+            }
+            if (i == messageList.size()) {
+                messageList.add(0, msgBean);
+            }
+        }
+        notifyDataSetChanged();
+        //mHandler.sendEmptyMessage(NEW_MSG_UPDATE);
     }
 
     /**
@@ -309,12 +324,12 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         this.mOnLongItemClickListener = listener;
     }
 
-    public void setOnRightButtionClickListener(OnItemClickListener listener) {
-        this.mOnRightButtionClickListener = listener;
+    public void setOnRightButtonClickListener(OnItemClickListener listener) {
+        this.mOnRightButtonClickListener = listener;
     }
 
-    public void setOnAvatarButtionClickListener(OnItemClickListener listener) {
-        this.mOnAvatarButtionClickListener = listener;
+    public void setOnAvatarButtonClickListener(OnItemClickListener listener) {
+        this.mOnAvatarButtonClickListener = listener;
     }
 
     public interface OnItemClickListener {

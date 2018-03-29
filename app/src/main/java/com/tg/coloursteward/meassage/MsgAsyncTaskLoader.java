@@ -6,7 +6,10 @@ import android.util.Log;
 
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
 import com.youmai.hxsdk.db.dao.CacheMsgBeanDao;
+import com.youmai.hxsdk.db.manager.GreenDBIMManager;
 import com.youmai.hxsdk.im.cache.CacheMsgHelper;
+
+import org.greenrobot.greendao.query.Query;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -61,14 +64,30 @@ public class MsgAsyncTaskLoader extends AsyncTaskLoader<List<ExCacheMsgBean>> {
         final String msgTimeColumnName = CacheMsgBeanDao.Properties.MsgTime.columnName;
         final String targetPhoneColumnName = CacheMsgBeanDao.Properties.TargetPhone.columnName;
 
+        // FROM "CACHE_MSG_BEAN" T  WHERE count(distinct TARGET_PHONE) ORDER BY TARGET_PHONE , MSG_TIME DESC
         //先targetphone分组
-        String sql = "1=1 ORDER BY " + targetPhoneColumnName + " , " + msgTimeColumnName + " DESC" + " LIMIT 1";
+        String sql = "1=1" /*count(distinct " + targetPhoneColumnName + ")" */+ " GROUP BY " + targetPhoneColumnName + " ORDER BY " + msgTimeColumnName + " ASC"/* + " LIMIT 1"*/;
+
+
+        // fetch users with Joe as a first name born in 1970
+        Query<CacheMsgBean> query = GreenDBIMManager.instance(mContext).getCacheMsgDao().queryBuilder().build();
+        List<CacheMsgBean> allList = query.list();
+
+        Log.e("YW", "allList: " + allList.size() + "\t: " + allList.toString());
+
+        // using the same Query object, we can change the parameters
+        // to search for Marias born in 1977 later:
+        //query.setParameter(0, "Maria");
+        //query.setParameter(1, 1977);
+        //List<CacheMsgBean> mariasOf1977 = query.list();
+
 
         //再从组中按时间升序
         //String sql2 = sql + targetPhoneColumnName + " = " + mTargetPhone
         //        + " ORDER BY " + msgTimeColumnName + " ASC" + " LIMIT 1";
 
         List<CacheMsgBean> msgBeanList = CacheMsgHelper.instance(mContext).sqlToQueryList(sql);
+        Log.e("YW", "msgBeanList: " + msgBeanList.toString());
         Comparator comp = new SortComparator();
         Collections.sort(msgBeanList, comp);
 

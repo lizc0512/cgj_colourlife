@@ -274,6 +274,7 @@ public class SendMsgService extends Service {
         final int userId = HuxinSdkManager.instance().getUserId();
         final String targetPhone = msgBean.getMsg().getReceiverPhone();
         final String content = contentTemp;
+        msgBean.getMsg().setTargetPhone(targetPhone);
         HuxinSdkManager.instance().sendText(userId, targetPhone, content, new ReceiveListener() {
             @Override
             public void OnRec(PduBase pduBase) {
@@ -282,7 +283,6 @@ public class SendMsgService extends Service {
                     final YouMaiChat.IMChat_Personal_Ack ack = YouMaiChat.IMChat_Personal_Ack.parseFrom(pduBase.body);
                     final long msgId = ack.getMsgId();
                     msgBean.getMsg().setMsgId(msgId);
-                    msgBean.getMsg().setTargetPhone(targetPhone);
 
                     if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_OK) {
                         if (ack.getIsTargetOnline()) {
@@ -338,6 +338,7 @@ public class SendMsgService extends Service {
         final double longitude = Double.valueOf(location.substring(0, location.indexOf(",")));
         final double latitude = Double.valueOf(location.substring(location.indexOf(",") + 1, location.length()));
         final String address = msgBody.getAddress();
+        msgBean.getMsg().setTargetPhone(targetPhone);
         ReceiveListener callback = new ReceiveListener() {
             @Override
             public void OnRec(PduBase pduBase) {
@@ -345,7 +346,6 @@ public class SendMsgService extends Service {
                     final YouMaiChat.IMChat_Personal_Ack ack = YouMaiChat.IMChat_Personal_Ack.parseFrom(pduBase.body);
                     final long msgId = ack.getMsgId();
                     msgBean.getMsg().setMsgId(msgId);
-                    msgBean.getMsg().setTargetPhone(targetPhone);
 
                     if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_OK) {
                         if (ack.getIsTargetOnline()) {
@@ -413,6 +413,7 @@ public class SendMsgService extends Service {
      */
     private void uploadFile(final SendMsg msgBean) {
         final int msgType = msgBean.getMsg().getMsgType();
+        msgBean.getMsg().setTargetPhone(msgBean.getMsg().getReceiverPhone());
 
         UpProgressHandler upProgressHandler = new UpProgressHandler() {
             @Override
@@ -583,6 +584,7 @@ public class SendMsgService extends Service {
         final String desPhone = msgBean.getMsg().getReceiverPhone();
         final String sourcePhone = msgBody.getSourcePhone();
         final String forwardCount = msgBody.getForwardCount() + "";
+        msgBean.getMsg().setTargetPhone(desPhone);
         ReceiveListener receiveListener = new ReceiveListener() {
             @Override
             public void OnRec(PduBase pduBase) {
@@ -590,7 +592,7 @@ public class SendMsgService extends Service {
                     YouMaiChat.IMChat_Personal_Ack ack = YouMaiChat.IMChat_Personal_Ack.parseFrom(pduBase.body);
                     long msgId = ack.getMsgId();
                     msgBean.getMsg().setMsgId(msgId);
-                    msgBean.getMsg().setTargetPhone(desPhone);
+
 
                     if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_OK) {
                         if (ack.getIsTargetOnline()) {
@@ -631,6 +633,7 @@ public class SendMsgService extends Service {
         final String fileId = msgBody.getFid();
         final String desPhone = msgBean.getMsg().getReceiverPhone();
         boolean isOriginal = msgBody.getOriginalType() == CacheMsgImage.SEND_IS_ORI;
+        msgBean.getMsg().setTargetPhone(desPhone);
         ReceiveListener receiveListener = new ReceiveListener() {
             @Override
             public void OnRec(PduBase pduBase) {
@@ -638,7 +641,6 @@ public class SendMsgService extends Service {
                     YouMaiChat.IMChat_Personal_Ack ack = YouMaiChat.IMChat_Personal_Ack.parseFrom(pduBase.body);
                     long msgId = ack.getMsgId();
                     msgBean.getMsg().setMsgId(msgId);
-                    msgBean.getMsg().setTargetPhone(desPhone);
 
                     if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_OK) {
                         if (ack.getIsTargetOnline()) {
@@ -686,6 +688,7 @@ public class SendMsgService extends Service {
         final String fileName = msgBody.getFileName();
         final String fileSize = msgBody.getFileSize() + "";
         final String desPhone = msgBean.getMsg().getReceiverPhone();
+        msgBean.getMsg().setTargetPhone(desPhone);
         ReceiveListener receiveListener = new ReceiveListener() {
             @Override
             public void OnRec(PduBase pduBase) {
@@ -693,7 +696,6 @@ public class SendMsgService extends Service {
                     YouMaiChat.IMChat_Personal_Ack ack = YouMaiChat.IMChat_Personal_Ack.parseFrom(pduBase.body);
                     long msgId = ack.getMsgId();
                     msgBean.getMsg().setMsgId(msgId);
-                    msgBean.getMsg().setTargetPhone(desPhone);
 
                     if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_OK) {
                         if (ack.getIsTargetOnline()) {
@@ -736,6 +738,7 @@ public class SendMsgService extends Service {
         final String size = cacheMsgVideo.getSize();
         final long time = cacheMsgVideo.getTime();
         final String desPhone = msgBean.getMsg().getReceiverPhone();
+        msgBean.getMsg().setTargetPhone(desPhone);
         ReceiveListener receiveListener = new ReceiveListener() {
             @Override
             public void OnRec(PduBase pduBase) {

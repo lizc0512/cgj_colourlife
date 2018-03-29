@@ -54,10 +54,6 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
     private static final int INSERT_CALLLOG_FAILED = 101;
     //获取数据库记录为空
     private static final int GET_DABABASE_DATA_FAILED = 400;
-    //刷新搜索结果标记
-    private static final int UPDATE_SEARCH_DATA_SUCCESS = 300;
-    //刷新呼信小助手
-    private static final int UPDATE_HUXIN_ASSISTANT = 1000;
     //重新登录或重新连接
     private static final int RELOGIN_HUXIN_SERVER = 2000;
 
@@ -70,16 +66,11 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
     private final int NEW_MESSAGE_UPDATE = 11;
     private final int NEW_MESSAGE_SET_TOP = 12;
     private final int NEW_MESSAGE_PROCESS = 13;
-    private List<CacheMsgBean> mIncomingMsgList = new ArrayList<CacheMsgBean>();
+    private List<CacheMsgBean> mIncomingMsgList = new ArrayList<>();
     // incoming new message end
 
-    //生成列表
-    private final int GEN_MESSAGE_LIST_QUERY_CONTACT = 100;
-
-    private final String HUXIN_ASSISTANT_NUMBER = "4000";
     boolean isTipWindowShow = true;
 
-    //private RefreshRecyclerView mRefreshRecyclerView;
     private XRecyclerView mRefreshRecyclerView;
     /*********此处从XRecyclerView源码 onBindViewHolder得知，POSITION被修改，不知原因*******/
     private int adjSize = 1;
@@ -89,14 +80,9 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
 
     private ProgressDialog mProgressDialog;
     private Handler mHandler;
-    // 最新一条记录的Id ,用于间断是否刷新界面
-    private Long mDbLastId = -1L;
     // 换号登录需要去判断改变
     private String mCurrPhoneNum = "";
     private LinearLayoutManager mLinearLayoutManager;
-
-    private HandlerThread mGenMessageListHandlerThread;
-    private Handler mGenMessageListHandler;
 
     // 空页面 start
     private LinearLayout mEmptyView;
@@ -432,12 +418,15 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
     /**
      * IM消息的入口回调
      *
-     * @param imcomingMsg
+     * @param imComingMsg
      */
     @Override
-    public void onCallback(CacheMsgBean imcomingMsg) {
-        if (imcomingMsg != null & mIncomingMsgList != null) {
-            mIncomingMsgList.add(imcomingMsg);
+    public void onCallback(CacheMsgBean imComingMsg) {
+        if (imComingMsg != null & mIncomingMsgList != null) {
+            mIncomingMsgList.add(imComingMsg);
+            ExCacheMsgBean bean = new ExCacheMsgBean(imComingMsg);
+            bean.setDisplayName(imComingMsg.getTargetPhone());
+            mMessageAdapter.addTop(bean);
         }
     }
 
@@ -469,34 +458,30 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
     }
 
     protected void startLoading() {
-        Log.d(TAG, "startLoading");
         getLoaderManager().initLoader(LOADER_ID_GEN_MESSAGE_LIST, null, this);
     }
 
     @Override
     public Loader<List<ExCacheMsgBean>> onCreateLoader(int id, Bundle args) {
-        Log.d(TAG, "onCreateLoader");
         return new MsgAsyncTaskLoader(getContext(), false);
     }
 
     @Override
     public void onLoadFinished(Loader<List<ExCacheMsgBean>> loader, List<ExCacheMsgBean> data) {
         Log.d(TAG, "onLoadFinished" + data.toString());
+        if (data.isEmpty()) {
+            return;
+        }
         if (!HuxinSdkManager.instance().getPhoneNum().equals("")) {
-            stopMessageListQueryContact();
             if (messageList.isEmpty()) {
                 messageList.addAll(data);
                 mMessageAdapter.setMessageList(messageList);
 
-                //startMessageListQueryContact();
             } else {
                 int newSize = data.size();
                 if (newSize > 0) {
                     List<ExCacheMsgBean> oldList = new ArrayList<>();
                     for (int newIndex = newSize - 1; newIndex >= 0; newIndex--) {
-                        if (TextUtils.isEmpty(data.get(newIndex).getTargetPhone())) {
-                            return;
-                        }
                         for (int i = 0; i < messageList.size(); i++) {
                             if (data.get(newIndex).getTargetPhone().equals(messageList.get(i).getTargetPhone())) {
                                 oldList.add(messageList.get(i));
@@ -550,33 +535,6 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
         }
         if (mIncomingMessageHandlerThread != null) {
             mIncomingMessageHandlerThread.quit();
-        }
-    }
-
-    private void startMessageListQueryContact() {
-        mGenMessageListHandlerThread = new HandlerThread("GenMessageList");
-        mGenMessageListHandlerThread.start();
-        mGenMessageListHandler = new Handler(mGenMessageListHandlerThread.getLooper()) {
-            @Override
-            public void handleMessage(Message msg) {
-                switch (msg.what) {
-                    case GEN_MESSAGE_LIST_QUERY_CONTACT:
-                        //刷新
-                        break;
-                    default:
-                        break;
-                }
-            }
-        };
-        mGenMessageListHandler.sendEmptyMessage(GEN_MESSAGE_LIST_QUERY_CONTACT);
-    }
-
-    private void stopMessageListQueryContact() {
-        if (mGenMessageListHandler != null) {
-            mGenMessageListHandler.removeMessages(GEN_MESSAGE_LIST_QUERY_CONTACT);
-        }
-        if (mGenMessageListHandlerThread != null) {
-            mGenMessageListHandlerThread.quit();
         }
     }
 

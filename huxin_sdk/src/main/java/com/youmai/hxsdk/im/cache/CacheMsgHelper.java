@@ -62,31 +62,6 @@ public class CacheMsgHelper {
         if (cacheMsgBean.getId() != null && cacheMsgBean.getId() != -1L) {
             cacheMsgBeanDao.update(cacheMsgBean);
         } else {
-            //查询最新一条时间
-            String senderPhone = cacheMsgBean.getSenderPhone();
-            String receiverPhone = cacheMsgBean.getReceiverPhone();
-            String selfPhone = HuxinSdkManager.instance().getPhoneNum();
-            String who;
-            if (selfPhone.equals(senderPhone) && selfPhone.equals(receiverPhone)) {
-                who = selfPhone;
-            } else if (selfPhone.equals(senderPhone)) {
-                who = receiverPhone;
-            } else {
-                who = senderPhone;
-            }
-            QueryBuilder<CacheMsgBean> qb = cacheMsgBeanDao.queryBuilder();
-            List<CacheMsgBean> newestMsgBean = qb.where(qb.or(
-                    qb.and(CacheMsgBeanDao.Properties.ReceiverPhone.eq(who),
-                            CacheMsgBeanDao.Properties.SenderPhone.eq(selfPhone)),
-                    qb.and(CacheMsgBeanDao.Properties.SenderPhone.eq(who),
-                            CacheMsgBeanDao.Properties.ReceiverPhone.eq(selfPhone))))
-                    .orderDesc(CacheMsgBeanDao.Properties.Id).offset(0).limit(1).list();
-            long newestTime = 0;
-            if (newestMsgBean != null && newestMsgBean.size() > 0) {
-                newestTime = newestMsgBean.get(0).getMsgTime();
-            }
-            //查询最新一条时间
-
             cacheMsgBean.setId(null); // FIXME: 2017/4/14 新增消息主键置空再插入表 ID从1自增
             long id = cacheMsgBeanDao.insert(cacheMsgBean);
             cacheMsgBean.setId(id);

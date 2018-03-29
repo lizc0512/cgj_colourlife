@@ -454,6 +454,7 @@ public class IMMsgManager {
             CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
 
             cacheMsgBeanList.add(cacheMsgBean);
+            handlerIMMsgCallback(cacheMsgBean);
         } else if (im.getMsgType() == IMConst.IM_LOCATION_VALUE) { //定位
 
             ContentLocation mLocation = im.getContent().getLocation();
@@ -476,6 +477,7 @@ public class IMMsgManager {
             //add to db
             CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
             cacheMsgBeanList.add(cacheMsgBean);
+            handlerIMMsgCallback(cacheMsgBean);
         } else if (im.getMsgType() == IMConst.IM_AUDIO_VALUE) { //音频
 
             String fid = im.getContent().getAudio().getAudioId();
@@ -497,6 +499,10 @@ public class IMMsgManager {
                             .setFid(fid)
                             .setSourcePhone(sourcePhone)
                             .setForwardCount(forwardCount));
+
+            CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
+            cacheMsgBeanList.add(cacheMsgBean);
+            handlerIMMsgCallback(cacheMsgBean);
         } else if (im.getMsgType() == IMConst.IM_FILE_VALUE) { //文件
             String fid = im.getContent().getFile().getFid();
             String fileName = im.getContent().getFile().getFileName();
@@ -514,7 +520,7 @@ public class IMMsgManager {
             //add to db
             CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
             cacheMsgBeanList.add(cacheMsgBean);
-
+            handlerIMMsgCallback(cacheMsgBean);
         } else if (im.getMsgType() == IMConst.IM_VIDEO_VALUE) {//视频
             ContentVideo contentVideo = im.getContent().getVideo();//获取解析jsonBoby的内容
             long time;
@@ -532,7 +538,7 @@ public class IMMsgManager {
             cacheMsgBean.setMsgType(CacheMsgBean.RECEIVE_VIDEO).setJsonBodyObj(cacheMsgVideo);
             CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
             cacheMsgBeanList.add(cacheMsgBean);
-
+            handlerIMMsgCallback(cacheMsgBean);
         }
     }
 

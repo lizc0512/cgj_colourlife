@@ -42,8 +42,7 @@ public class XiaomiMsgReceiver extends PushMessageReceiver {
     private BaseReceiver baseReceiver;
 
     public XiaomiMsgReceiver() {
-        XiaomiPushReceiver receiver = XiaomiPushReceiver.getInstance();
-        receiver.initReceiver(this);//注入
+        XiaomiPushReceiver.getInstance().initReceiver(this);//注入
     }
 
     public void setBaseReceiver(BaseReceiver baseReceiver) {

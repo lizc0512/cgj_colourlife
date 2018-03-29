@@ -18,9 +18,10 @@ allprojects {
     repositories {
         jcenter()
         mavenCentral()
+        google()
+        maven { url 'http://developer.huawei.com/repo/' }
         maven { url "https://dl.bintray.com/thelasterstar/maven/" }
         maven { url "https://jitpack.io" }
-        google()
     }
 }
 

@@ -174,7 +174,6 @@ public class HuxinService extends Service {
                     HuxinSdkManager.instance().setPhoneNum(phone);
                     HuxinSdkManager.instance().setSession(session);
 
-                    MorePushManager.register(mContext.getApplicationContext());//注册送服务
                     tcpLogin(userId, phone, session);
                 }
             };
@@ -375,7 +374,6 @@ public class HuxinService extends Service {
             TcpClient.IClientListener callback = new TcpClient.IClientListener() {
                 @Override
                 public void connectSuccess() {
-                    MorePushManager.register(mContext.getApplicationContext());//注册送服务
                     tcpLogin(userId, phoneNum, session);
                 }
             };

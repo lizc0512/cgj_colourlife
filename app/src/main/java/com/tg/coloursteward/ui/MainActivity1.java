@@ -17,6 +17,7 @@ import com.tg.coloursteward.fragment.FragmentMine;
 import com.tg.coloursteward.meassage.MsgListFragment;
 import com.youmai.hxsdk.BuildConfig;
 import com.youmai.hxsdk.contact.ContactFragment;
+import com.youmai.hxsdk.push.MorePushManager;
 import com.youmai.hxsdk.router.RouterPath;
 
 
@@ -47,6 +48,7 @@ public class MainActivity1 extends AppCompatActivity {
         initTitle();
         initView();
 
+        MorePushManager.connect(this);
     }
 
 

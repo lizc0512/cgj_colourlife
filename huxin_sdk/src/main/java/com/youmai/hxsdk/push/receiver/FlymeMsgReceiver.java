@@ -3,7 +3,6 @@ package com.youmai.hxsdk.push.receiver;
 import android.content.Context;
 import android.util.Log;
 
-import com.meizu.cloud.pushinternal.DebugLogger;
 import com.meizu.cloud.pushsdk.MzPushMessageReceiver;
 import com.meizu.cloud.pushsdk.notification.PushNotificationBuilder;
 import com.meizu.cloud.pushsdk.platform.message.PushSwitchStatus;
@@ -31,8 +30,7 @@ public class FlymeMsgReceiver extends MzPushMessageReceiver {
     private BaseReceiver baseReceiver;
 
     public FlymeMsgReceiver() {
-        MeizuPushReceiver receiver = MeizuPushReceiver.getInstance();
-        receiver.initReceiver(this);//注入
+        MeizuPushReceiver.getInstance().initReceiver(this);//注入
     }
 
     public void setBaseReceiver(BaseReceiver baseReceiver) {
@@ -71,7 +69,7 @@ public class FlymeMsgReceiver extends MzPushMessageReceiver {
     //设置通知栏小图标
     @Override
     public void onUpdateNotificationBuilder(PushNotificationBuilder pushNotificationBuilder) {
-        pushNotificationBuilder.setmStatusbarIcon(R.drawable.hx_ic_launcher);
+        pushNotificationBuilder.setmStatusbarIcon(R.drawable.img_msg);
     }
 
     @Override
@@ -115,22 +113,5 @@ public class FlymeMsgReceiver extends MzPushMessageReceiver {
         //别名回调
     }
 
-    @Override
-    public void onNotificationArrived(Context context, String title, String content, String selfDefineContentString) {
-        //通知栏消息到达回调
-        DebugLogger.i(TAG, "onNotificationArrived title " + title + "content " + content + " selfDefineContentString " + selfDefineContentString);
-    }
-
-    @Override
-    public void onNotificationClicked(Context context, String title, String content, String selfDefineContentString) {
-        //通知栏消息点击回调
-        DebugLogger.i(TAG, "onNotificationClicked title " + title + "content " + content + " selfDefineContentString " + selfDefineContentString);
-    }
-
-    @Override
-    public void onNotificationDeleted(Context context, String title, String content, String selfDefineContentString) {
-        //通知栏消息删除回调；flyme6以上不再回调
-        DebugLogger.i(TAG, "onNotificationDeleted title " + title + "content " + content + " selfDefineContentString " + selfDefineContentString);
-    }
 
 }

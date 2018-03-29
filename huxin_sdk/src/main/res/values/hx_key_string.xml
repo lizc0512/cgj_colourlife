@@ -7,21 +7,21 @@
     <string name="huxin_apikey" translatable="false">3ccc97772773ae27</string>
 
     <!-- 高德地图 APPKEY-->
-    <string name="amap_apikey" translatable="false">4a7c39fcb403798a4f6bb61c26ff8720</string>
+    <string name="amap_apikey" translatable="false">035963d86ba302215300d4d7286fc3e7</string>
 
     <!-- 百度广告联盟-->
 
     <!-- google map APPKEY-->
 
     <!--魅族推送-->
-    <string name="flyme_appid" translatable="false">110177</string>
-    <string name="flyme_appkey" translatable="false">fc367025082d4113bc410367e0c21937</string>
+    <string name="flyme_appid" translatable="false">112880</string>
+    <string name="flyme_appkey" translatable="false">dd0e67c24d7f4d95aa1e8f46e638b617</string>
 
     <!--小米推送-->
-    <string name="mi_appid" translatable="false">2882303761517473150</string>
-    <string name="mi_appkey" translatable="false">5781747317150</string>
+    <string name="mi_appid" translatable="false">2882303761517753451</string>
+    <string name="mi_appkey" translatable="false">5821775340451</string>
 
     <!--华为推送-->
-    <string name="huawei_appid" translatable="false">10516706</string>
+    <string name="huawei_appid" translatable="false">appid=100240819</string>
 
 </resources>

@@ -189,6 +189,7 @@ public class HuxinSdkManager {
     public void init(final Context context, InitListener listener) {
         mContext = context.getApplicationContext();
         IMMsgManager.getInstance().init(mContext);
+        MorePushManager.register(mContext);//注册送服务
 
         if (listener != null) {
             mInitListenerList.add(listener);

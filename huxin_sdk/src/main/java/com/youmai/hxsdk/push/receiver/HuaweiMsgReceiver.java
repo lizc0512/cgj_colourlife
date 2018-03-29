@@ -6,7 +6,6 @@ import android.os.Bundle;
 
 import com.huawei.hms.support.api.push.PushReceiver;
 import com.youmai.hxsdk.push.message.HuaweiPushReceiver;
-import com.youmai.hxsdk.push.message.MeizuPushReceiver;
 import com.youmai.hxsdk.push.message.base.BaseReceiver;
 
 
@@ -26,8 +25,7 @@ public class HuaweiMsgReceiver extends PushReceiver {
     private BaseReceiver baseReceiver;
 
     public HuaweiMsgReceiver() {
-        HuaweiPushReceiver receiver = HuaweiPushReceiver.getInstance();
-        receiver.initReceiver(this);//注入
+        HuaweiPushReceiver.getInstance().initReceiver(this);//注入
     }
 
     public void setBaseReceiver(BaseReceiver baseReceiver) {

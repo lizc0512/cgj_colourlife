@@ -164,7 +164,6 @@ public class UserInfo {
         setUserId(0);
         setSession("");
         setPhoneNum("");
-        MorePushManager.unregister(context.getApplicationContext());//反注册送服务
     }
 
 

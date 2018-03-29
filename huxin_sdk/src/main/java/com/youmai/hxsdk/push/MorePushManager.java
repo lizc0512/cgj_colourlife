@@ -1,14 +1,17 @@
 package com.youmai.hxsdk.push;
 
+import android.app.Activity;
 import android.app.ActivityManager;
+import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Process;
 import android.util.Log;
 
+import com.huawei.android.hms.agent.HMSAgent;
+import com.huawei.android.hms.agent.common.handler.ConnectHandler;
 import com.meizu.cloud.pushsdk.PushManager;
 import com.xiaomi.mipush.sdk.MiPushClient;
-import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.im.IMMsgManager;
 import com.youmai.hxsdk.push.http.HttpPushManager;
 import com.youmai.hxsdk.push.manage.utils.HuaweiPushUtils;
@@ -27,6 +30,8 @@ import java.util.List;
  */
 
 public class MorePushManager {
+    private static final String TAG = MorePushManager.class.getSimpleName();
+
     /**
      * 使用推送服务
      * 华为开启透传递
@@ -50,7 +55,30 @@ public class MorePushManager {
                     }
                     break;
                 case huawei:
-                    HuaweiPushUtils.getIntance(context).register();
+                    HMSAgent.init((Application) context.getApplicationContext());
+                    break;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
+     * 暂时只有华为推送需要连接
+     *
+     * @param activity
+     */
+    public static void connect(final Activity activity) {
+        try {
+            PushPhoneUtils.ModelType brand = PushPhoneUtils.getBrand();
+            switch (brand) {
+                case meizu:
+                    break;
+                case xiaomi:
+                    break;
+                case huawei:
+                    HuaweiPushUtils.getIntance().getToken(activity);
                     break;
             }
         } catch (Exception e) {
@@ -77,7 +105,7 @@ public class MorePushManager {
                 MiPushClient.unregisterPush(context);
                 break;
             case huawei:
-                HuaweiPushUtils.getIntance(context).setPassByMsg(false);
+                HuaweiPushUtils.getIntance().deleteToken(context);
                 break;
         }
     }
@@ -101,13 +129,14 @@ public class MorePushManager {
     /**
      * 发送token注册
      */
-    public static void sendToken(final Context context, String token) {
+    public static void sendToken(final Context context, final String token) {
         String brand = PushPhoneUtils.getBrand().ordinal() + "";
         HttpPushManager.register(token, brand,
                 new HttpPushManager.PushListener() {
                     @Override
                     public void success(String msg) {
                         Log.w("push", "sendToken:" + msg);
+                        AppUtils.setStringSharedPreferences(context, "huawei_token", token);
                     }
 
                     @Override

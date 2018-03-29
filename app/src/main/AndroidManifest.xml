@@ -346,13 +346,6 @@
             android:value="0e45336a2e68ead59bb90df01be1c619" />
 
 
-        <!-- 高德 -->
-        <service android:name="com.amap.api.location.APSService" />
-        <!-- 高德 -->
-        <meta-data
-            android:name="com.amap.api.v2.apikey"
-            android:value="035963d86ba302215300d4d7286fc3e7"
-            tools:replace="android:value" />
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="com.tg.coloursteward.fileProvider"

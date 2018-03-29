@@ -332,4 +332,21 @@ public class CacheMsgBean implements Parcelable {
             return new CacheMsgBean[size];
         }
     };
+
+    @Override
+    public String toString() {
+        return "CacheMsgBean{" +
+                "id=" + id +
+                ", msgId=" + msgId +
+                ", msgType=" + msgType +
+                ", msgStatus=" + msgStatus +
+                ", msgTime=" + msgTime +
+                ", senderUserId=" + senderUserId +
+                ", receiverUserId=" + receiverUserId +
+                ", senderPhone='" + senderPhone + '\'' +
+                ", receiverPhone='" + receiverPhone + '\'' +
+                ", targetPhone='" + targetPhone + '\'' +
+                ", contentJsonBody='" + contentJsonBody + '\'' +
+                '}';
+    }
 }

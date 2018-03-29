@@ -19,14 +19,14 @@ import com.youmai.hxsdk.contact.letter.widget.LetterBar;
 import com.youmai.hxsdk.contact.letter.decoration.DividerItemDecoration;
 import com.youmai.hxsdk.contact.letter.decoration.TitleItemDecoration;
 import com.youmai.hxsdk.contact.letter.widget.LetterBarBuilder;
-import com.youmai.hxsdk.router.RouterPath;
+import com.youmai.hxsdk.router.APath;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observer;
 import java.util.Observable;
 
-@Route(path = RouterPath.CONTACT_GROUP)
+@Route(path = APath.CONTACT_GROUP)
 public class ContactFragment extends Fragment implements Observer {
 
     public final static String TAG = ContactFragment.class.getSimpleName();

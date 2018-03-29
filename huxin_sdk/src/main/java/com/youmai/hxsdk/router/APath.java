@@ -7,9 +7,14 @@ package com.youmai.hxsdk.router;
  * eg:/com/Activity com:代表组的标识 Activity代表类的标识
  */
 
-public class RouterPath {
+public class APath {
     /**
      * contacts分组
      */
     public static final String CONTACT_GROUP = "/contact/ContactFragment";
+
+    /**
+     * 搜索分组
+     */
+    public static final String SEARCH_GLOBAL_GROUP = "/search/global";
 }

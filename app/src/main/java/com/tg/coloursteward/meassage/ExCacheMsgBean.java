@@ -80,12 +80,20 @@ public class ExCacheMsgBean extends CacheMsgBean {
 
     @Override
     public String toString() {
-        return "CacheMsgBean{" +
-                "  pinyin='" + pinyin + '\'' +
+        return "ExCacheMsgBean{" +
+                "pinyin='" + pinyin + '\'' +
                 ", simplepinyin='" + simplepinyin + '\'' +
                 ", displayName='" + displayName + '\'' +
                 ", contactId=" + contactId +
+                ", msgId=" + getMsgId() +
+                ", msgType=" + getMsgType() +
+                ", msgStatus=" + getMsgStatus() +
+                ", msgTime=" + getMsgTime() +
+                ", senderPhone='" + getSenderPhone() + '\'' +
+                ", receiverPhone='" + getReceiverPhone() + '\'' +
+                ", targetPhone='" + getTargetPhone() + '\'' +
+                ", contentJsonBody='" + getContentJsonBody() + '\'' +
+                ", mIsMultiNumber=" + mIsMultiNumber +
                 '}';
     }
-
 }

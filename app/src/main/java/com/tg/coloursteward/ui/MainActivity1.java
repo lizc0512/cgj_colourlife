@@ -15,10 +15,8 @@ import com.tg.coloursteward.R;
 import com.tg.coloursteward.fragment.FragmentManagement;
 import com.tg.coloursteward.fragment.FragmentMine;
 import com.tg.coloursteward.meassage.MsgListFragment;
-import com.youmai.hxsdk.BuildConfig;
-import com.youmai.hxsdk.contact.ContactFragment;
 import com.youmai.hxsdk.push.MorePushManager;
-import com.youmai.hxsdk.router.RouterPath;
+import com.youmai.hxsdk.router.APath;
 
 
 /**
@@ -133,7 +131,7 @@ public class MainActivity1 extends AppCompatActivity {
                     ft = new MsgListFragment();
                     break;
                 case 1:
-                    ft = (Fragment) ARouter.getInstance().build(RouterPath.CONTACT_GROUP).navigation();
+                    ft = (Fragment) ARouter.getInstance().build(APath.CONTACT_GROUP).navigation();
                     break;
                 case 2:
                     ft = new FragmentManagement();

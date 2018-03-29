@@ -106,6 +106,7 @@ public class MainActivity1 extends AppCompatActivity {
         //mTabLayout.setupWithViewPager(mViewPager);
 
         mViewPager.setCurrentItem(0);
+        mViewPager.setOffscreenPageLimit(3);
 
         tv_title.setText(navigation.getMenu().getItem(0).getTitle());
     }

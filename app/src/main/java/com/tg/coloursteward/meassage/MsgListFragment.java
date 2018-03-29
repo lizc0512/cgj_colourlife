@@ -15,13 +15,13 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.tg.coloursteward.R;
 import com.youmai.hxsdk.HuxinSdkManager;
@@ -30,6 +30,7 @@ import com.youmai.hxsdk.db.bean.CacheMsgBean;
 import com.youmai.hxsdk.im.IMMsgCallback;
 import com.youmai.hxsdk.im.IMMsgManager;
 import com.youmai.hxsdk.im.cache.CacheMsgHelper;
+import com.youmai.hxsdk.router.APath;
 import com.youmai.hxsdk.view.refresh.OnRecyclerScrollListener;
 
 import java.lang.ref.WeakReference;
@@ -328,6 +329,12 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
         mMessageAdapter.setOnItemClickListener(new MessageAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(ExCacheMsgBean bean, int position) {
+                if (position == 0) {
+                    ARouter.getInstance()
+                            .build(APath.SEARCH_GLOBAL_GROUP)
+                            .navigation();
+                    return;
+                }
                 Intent intent = new Intent();
                 intent.setClass(getActivity(), IMConnectionActivity.class);
                 intent.putExtra(IMConnectionActivity.DST_PHONE, bean.getTargetPhone());

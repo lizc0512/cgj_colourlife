@@ -192,15 +192,27 @@
     <!--轮动日期&城市-->
     <declare-styleable name="hx_pickerview">
         <attr name="hx_pickerview_gravity">
-            <enum name="center" value="17"/>
-            <enum name="left" value="3"/>
-            <enum name="right" value="5"/>
+            <enum name="center" value="17" />
+            <enum name="left" value="3" />
+            <enum name="right" value="5" />
         </attr>
-        <attr name="hx_pickerview_textSize" format="dimension"/>
-        <attr name="hx_pickerview_textColorOut" format="color"/>
-        <attr name="hx_pickerview_textColorCenter" format="color"/>
-        <attr name="hx_pickerview_dividerColor" format="color"/>
-        <attr name="hx_pickerview_lineSpacingMultiplier" format="float"/>
+        <attr name="hx_pickerview_textSize" format="dimension" />
+        <attr name="hx_pickerview_textColorOut" format="color" />
+        <attr name="hx_pickerview_textColorCenter" format="color" />
+        <attr name="hx_pickerview_dividerColor" format="color" />
+        <attr name="hx_pickerview_lineSpacingMultiplier" format="float" />
     </declare-styleable>
+
+    <declare-styleable name="hxs_mr_MovieRecorderView">
+        <!-- 开始是否打开摄像头 -->
+        <attr name="is_open_camera" format="boolean" />
+        <!-- 一次拍摄最长时间 -->
+        <attr name="record_max_time" format="integer" />
+        <!-- 视频分辨率宽度 -->
+        <attr name="video_width" format="integer" />
+        <!-- 视频分辨率高度 -->
+        <attr name="video_height" format="integer" />
+    </declare-styleable>
+
 
 </resources>

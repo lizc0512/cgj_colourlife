@@ -209,7 +209,7 @@ public class LocationActivity extends SdkBaseActivity implements
 
         boolean isUserByCard = getIntent().getBooleanExtra("is_user_by_card", false);
         if (isUserByCard) {
-            btn_send.setText(R.string.select_map_text);
+            btn_send.setText(R.string.hx_select);
         }
         btn_send.setOnClickListener(new View.OnClickListener() {
             @Override

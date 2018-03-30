@@ -16,38 +16,6 @@
     <string name="hxs_mr_tip_2">松开取消</string>
     <string name="hxs_mr_change_camera_error">该手机设备不支持切换摄像头</string>
 
-    <!--fragment_audio-->
-
-    <!--hx_activity_hook_layout &#160; -->
-
-    <!--hx_activity_location-->
-
-    <!--hx_activity_picture-->
-
-    <!--hx_activity_myselfcouponsdetail-->
-
-    <!--hx_activity_perm_huawei_dial-->
-
-    <!--hx_activity_perm_huawei_protect-->
-
-    <!--hx_activity_perm_huawei_window-->
-
-    <!--hx_activity_perm_meizu_dial-->
-
-    <!--hx_activity_perm_meizu_note_dial-->
-
-    <!--hx_activity_perm_meizu_note_protect-->
-
-    <!--hx_activity_perm_meizu_note_window-->
-
-    <!--hx_activity_perm_oppo2_dial-->
-
-    <!--hx_activity_perm_vivo_dial-->
-
-
-    <!--hx_activity_perm_xiaomi_dial-->
-
-    <!--hx_arc_call_layout-->
 
     <!--hx_dialog_im_voice-->
     <string name="hx_dialog_im_voice_01">滑到这里取消</string>
@@ -56,106 +24,12 @@
     <!--hx_dialog_mediastore-->
     <string name="hx_dialog_sendtofriend">发送给朋友</string>
     <string name="hx_dialog_mediastore">保存到手机</string>
-    <string name="hx_dialog_mediastore_cancle">取消</string>
 
-    <!--hx_exc_result-->
-
-    <!--hx_frag_media_file-->
-
-    <!--hx_fragment_chat-->
-
-    <!--hx_fragment_edit_card-->
-
-    <!--hx_fragment_feedback-->
-
-    <!--hx_fragment_float-->
-
-    <!--hx_fragment_get_card-->
-
-    <!--hx_fragment_im_left_txt_item-->
-
-    <!--hx_fragment_im_main-->
-    <string name="hx_fragment_im_main">发送</string>
-
-    <!--hx_fragment_location-->
-
-    <!--hx_fragment_login-->
-
-    <!--hx_fragment_permission-->
-
-    <!--hx_fragment_permission_main-->
-
-    <!--hx_fragment_shake-->
-    <!--hx_fragment_sms-->
-
-    <!--hx_fragment_update_card-->
-
-    <!--hx_full_hook_merchant_view-->
-
-    <!--hx_full_hook_person_view-->
-
-    <!--hx_full_phone_call_layout-->
-
-    <!--hx_item_disable_listview-->
-
-    <!--hx_permission_dialog-->
-
-    <!--hx_person_show-->
-
-    <!--hx_phiz_item-->
-
-    <!--hx_show_full_setting_info-->
-    <string name="hx_show_full_setting_info_send_location">位置</string>
-    <string name="hx_show_full_setting_info_send_pic">图片</string>
-    <string name="hx_show_full_setting_info_send_emoji">表情</string>
-    <string name="hx_show_full_setting_info_send_file">文件</string>
-    <string name="hx_show_full_setting_info_send_camera">拍照</string>
-    <string name="hx_show_full_setting_info_shake">段子</string>
-    <string name="hx_show_full_setting_info_whiteBoard">画板</string>
-
-    <!--hxm_merchant-->
-
-    <!--hxm_represent_item-->
 
     <!--hx_fragment_im_*-->
-    <string name="hx_fragment_im_data">2016.10.01 16:24</string>
-
-    <!--hx_push_fail_view-->
-
-    <!--hx_full_user_info-->
-
-    <!--MsgFragment-->
-
-    <!--HxClearProgressDialog-->
-
-    <!--represent-->
-
-    <!--代言详情-->
-
-    <!--现金代言item-->
-
-    <!--RepresentAdapter-->
-
-    <!--RepHistoryActivity && RepHistoryAdapter-->
-
-    <!--RedPacketActivity-->
-
-    <!--hx_red_packet-->
-
-    <!--hx_activity_share-->
-
-    <!--hxm_rep_red_rain-->
-
-    <!--hxm_rep_award-->
-
-    <!--hxm_rep_award_finish-->
-
-    <!--hx_activity_invitation_code && InvitationCodeActivity-->
-
-    <!--InvitationPopWindow-->
+    <string name="hx_fragment_im_data">2018.05.01 16:24</string>
 
     <!--list null tip-->
-    <string name="hxm_viewstub_norecord_back">返回</string>
     <string name="hxm_viewstub_norecord_take_photo">按住拍</string>
 
     <!--VoiceManager-->
@@ -191,7 +65,7 @@
     <string name="hx_file_manager_select_03">选择文件</string>
     <string name="hx_file_manager_no_file">暂无文件</string>
     <string name="hx_file_manager_zero_count">0个文件</string>
-    <string name="hx_file_manager_loading">加载中...</string>
+    <string name="hx_file_manager_loading">加载中&#8230;&#8230;&#8230;</string>
 
     <!--日期&城市联动器-->
 

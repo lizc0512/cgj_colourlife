@@ -328,7 +328,7 @@ public class BasePickerView {
 
     public void createDialog() {
         if (dialogView != null) {
-            mDialog = new Dialog(context, R.style.custom_dialog2);
+            mDialog = new Dialog(context, R.style.wheel_dialog);
             mDialog.setCancelable(cancelable);//不能点外面取消,也不 能点back取消
             mDialog.setContentView(dialogView);
 

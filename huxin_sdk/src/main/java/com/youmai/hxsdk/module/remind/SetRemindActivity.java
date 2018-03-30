@@ -429,7 +429,7 @@ public class SetRemindActivity extends SdkBaseActivity implements View.OnClickLi
         popupWindow.setTouchable(true);
         popupWindow.setOutsideTouchable(true);
         popupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        popupWindow.setAnimationStyle(com.youmai.hxsdk.R.style.PopupAnimation2);
+        popupWindow.setAnimationStyle(R.style.PopupAnimation);
         popupWindow.update();
         int yOffset = iv_remind_logo.getHeight(); //下移高度
         if (!popupWindow.isShowing()) {

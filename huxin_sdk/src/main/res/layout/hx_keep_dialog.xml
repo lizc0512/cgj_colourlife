@@ -38,7 +38,7 @@
         android:layout_marginTop="5dp"
         android:background="#ffffff"
         android:padding="10dp"
-        android:text="@string/hx_dialog_mediastore_cancle"
+        android:text="@string/hx_cancel"
         android:textColor="@drawable/hx_txt_selector"
         android:textSize="15sp" />
 

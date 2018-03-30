@@ -183,7 +183,7 @@ public class VoiceUtils {
                         public void onClick(DialogInterface dialog, int which) {
                             ActivityCompat.requestPermissions(activity, new String[]{permission}, requestCode);
                         }
-                    }, activity.getString(R.string.label_ok), null, activity.getString(R.string.label_cancel));
+                    }, activity.getString(R.string.hx_setting), null, activity.getString(R.string.hx_cancel));
         } else {
             ActivityCompat.requestPermissions(activity, new String[]{permission}, requestCode);
         }

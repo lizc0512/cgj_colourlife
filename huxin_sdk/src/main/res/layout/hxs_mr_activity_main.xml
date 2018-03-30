@@ -22,7 +22,7 @@
         android:layout_marginTop="10dp"
         android:background="@android:color/transparent"
         android:onClick="onBack"
-        android:text="@string/hxm_viewstub_norecord_back"
+        android:text="@string/hx_back"
         android:textColor="@color/hx_color_white"
         android:textSize="18sp" />
 

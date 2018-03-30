@@ -908,7 +908,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
                     .setTitle(getString(R.string.hx_prompt))
                     .setMessage(getString(R.string.hx_upload_file));
 
-            builder.setPositiveButton(getString(R.string.hx_imadapter_sure),
+            builder.setPositiveButton(getString(R.string.hx_agree),
                     new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface arg0,
@@ -918,7 +918,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
                         }
                     });
 
-            builder.setNegativeButton(getString(R.string.hx_imadapter_cancle),
+            builder.setNegativeButton(getString(R.string.hx_cancel),
                     new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface arg0,

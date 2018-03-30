@@ -38,7 +38,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:gravity="center"
-            android:text="@string/hx_photo_picker_cancel"
+            android:text="@string/hx_cancel"
             android:textColor="@color/hx_color_white"
             android:textSize="16sp" />
     </RelativeLayout>
@@ -92,7 +92,7 @@
             android:layout_centerVertical="true"
             android:background="@drawable/hx_selector_blue"
             android:gravity="center"
-            android:text="@string/hx_photo_picker_send"
+            android:text="@string/hx_send"
             android:textColor="@color/hx_color_white" />
 
     </RelativeLayout>

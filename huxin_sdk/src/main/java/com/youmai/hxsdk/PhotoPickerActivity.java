@@ -285,7 +285,7 @@ public class PhotoPickerActivity extends SdkBaseActivity implements PhotoAdapter
             mCommitBtn.setText(String.format(getString(R.string.hx_picture_fragment_unit), list.size()));
         } else {
             mCommitBtn.setEnabled(false);
-            mCommitBtn.setText(R.string.hx_imadapter_sure);
+            mCommitBtn.setText(R.string.hx_confirm);
         }
     }
 

@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-
-    <string name="hx_feedbace">意见反馈</string>
-
     <!-- 通用字段 -->
+    <string name="hx_confirm">确定</string>
+    <string name="hx_done">完成</string>
     <string name="hx_cancel">取消</string>
+    <string name="hx_setting">设置</string>
+    <string name="hx_agree">同意</string>
+    <string name="hx_send">发送</string>
+    <string name="hx_select">选择</string>
+    <string name="hx_back">返回</string>
 
 
     <!-- 登录对话框 -->
@@ -13,8 +17,6 @@
 
     <!--IMAdapter-->
     <string name="from">来自:</string>
-    <string name="hx_imadapter_sure">确定</string>
-    <string name="hx_imadapter_cancle">取消</string>
     <string name="hx_imadapter_file">文件不能大于50MB!!!</string>
     <string name="hx_imadapter_wifi_break">网络已断开，请检查！</string>
 
@@ -33,8 +35,6 @@
     <!--pictureFragment-->
     <string name="hx_picture_fragment_unit">%1$d张</string>
 
-    <!--send sms-->
-
     <!--phone permission-->
     <string name="phone_permission_content">发送短信功能需要您开启短信权限</string>
 
@@ -44,13 +44,8 @@
     <!--permission-->
     <string name="permission_title">权限提示</string>
     <string name="permission_content">您需要开启权限</string>
-    <string name="confirm">设置</string>
-    <string name="cancel">取消</string>
 
-
-    <!--商家秀-->
     <string name="hx_upload_file">正在发送文件,退出将自动取消发送</string>
-
 
     <!-- 下拉刷新的文本 -->
     <string name="hx_pull_to_refresh_header_hint_ready">松开即可刷新&#8230;</string>
@@ -61,17 +56,11 @@
 
     <string name="hx_pull_to_refresh_load_more_text">努力加载中&#8230;</string>
 
-
-    <!-- 代言提示语 -->
-    <!--加入代言后，系统将会取消您设置的通话秀-->
-
     <!--crop-->
     <string name="hx_crop__saving">正在保存照片…</string>
     <string name="hx_crop_wait">请等待…</string>
     <string name="hx_crop_pick_error">无效的图片</string>
 
-    <string name="hx_crop_done">完成</string>
-    <string name="hx_crop_cancel">取消</string>
 
     <!-- 当RecyclerView没有查询到任何记录提示 -->
 
@@ -82,10 +71,6 @@
     <string name="expand">展开</string>
     <string name="collapse">收起</string>
 
-    <!-- 彩生活-->
-    <string name="open_door">开门</string>
-    <string name="add_owner">设为业主</string>
-
     <!--im tool-->
     <string name="bar_more_type">more</string>
     <string name="bar_more_close_type">close</string>
@@ -94,9 +79,6 @@
     <string name="bar_voice_open_type">voice_open</string>
     <string name="bar_voice_close_type">voice_close</string>
     <string name="audio_garbage_indicate">&#160;&#160;&#160;&#160;&#160;<![CDATA[< <]]></string>
-
-
-    <string name="done">完成</string>
 
     <string name="no_files_found">找不到文件</string>
     <string name="attachments_title_text">附件 (%1$d/%2$d)</string>
@@ -118,8 +100,7 @@
     <string name="hx_voice_tip_error2">请打开录音权限</string>
     <string name="hx_voice_tip_cancel">取消录音</string>
     <string name="hx_str_full_call_background_sound">背景音</string>
-    <string name="label_ok">同意</string>
-    <string name="label_cancel">取消</string>
+
     <string name="permission_title_rationale">申请权限</string>
     <string name="permission_read_audio_rationale">是否开启录音权限</string>
     <string name="hx_im_card_cope_tip">已复制</string>
@@ -133,7 +114,7 @@
 
     <string name="hx_im_send_img_count">发送(%1$d/%2$d)</string>
 
-    <string name="select_map_text">选择</string>
+
     <string name="hx_im_pop_contact_add">新建联系人</string>
 
     <string name="hx_voice_tip_normal2">松开 取消</string>
@@ -144,12 +125,10 @@
     <string name="hx_recording_tip4">说话时间超长</string>
     <string name="hx_recording_tip5">说话时间太短</string>
     <string name="hx_dialog_send_person">发送给 %1$s</string>
-    <string name="hx_send">发送</string>
+
     <string name="hx_photo_picker_all_images">所有图片</string>
-    <string name="hx_photo_picker_cancel">取消</string>
     <string name="hx_photo_picker_preview">预览</string>
     <string name="hx_photo_picker_original">原图</string>
-    <string name="hx_photo_picker_send">发送</string>
     <string name="hx_im_check_original_img">查看原图</string>
 
 

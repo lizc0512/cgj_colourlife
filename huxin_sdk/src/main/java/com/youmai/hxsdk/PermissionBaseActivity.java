@@ -81,7 +81,7 @@ public class PermissionBaseActivity extends AppCompatActivity {
                 builder.setTitle(getString(R.string.permission_title))
                         .setMessage(content);
 
-                builder.setPositiveButton(getString(R.string.confirm),
+                builder.setPositiveButton(getString(R.string.hx_confirm),
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface arg0, int arg1) {
@@ -92,7 +92,7 @@ public class PermissionBaseActivity extends AppCompatActivity {
                             }
                         });
 
-                builder.setNegativeButton(getString(R.string.cancel),
+                builder.setNegativeButton(getString(R.string.hx_cancel),
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface arg0, int arg1) {
@@ -150,7 +150,7 @@ public class PermissionBaseActivity extends AppCompatActivity {
         builder.setTitle(context.getString(R.string.permission_title))
                 .setMessage(mPermissionContent);
 
-        builder.setPositiveButton(context.getString(R.string.confirm),
+        builder.setPositiveButton(context.getString(R.string.hx_confirm),
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface arg0, int arg1) {
@@ -159,7 +159,7 @@ public class PermissionBaseActivity extends AppCompatActivity {
                     }
                 });
 
-        builder.setNegativeButton(context.getString(R.string.cancel),
+        builder.setNegativeButton(context.getString(R.string.hx_cancel),
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface arg0, int arg1) {

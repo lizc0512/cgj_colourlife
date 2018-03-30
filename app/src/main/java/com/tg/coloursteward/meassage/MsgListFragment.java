@@ -475,7 +475,8 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
                     List<ExCacheMsgBean> oldList = new ArrayList<>();
                     for (int newIndex = newSize - 1; newIndex >= 0; newIndex--) {
                         for (int i = 0; i < messageList.size(); i++) {
-                            if (data.get(newIndex).getTargetPhone().equals(messageList.get(i).getTargetPhone())) {
+                            String targetPhone = data.get(newIndex).getTargetPhone();
+                            if (!TextUtils.isEmpty(targetPhone) && targetPhone.equals(messageList.get(i).getTargetPhone())) {
                                 oldList.add(messageList.get(i));
                                 break;
                             }

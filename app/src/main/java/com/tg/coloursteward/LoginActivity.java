@@ -18,6 +18,7 @@ import com.tg.coloursteward.net.RequestConfig;
 import com.tg.coloursteward.net.RequestParams;
 import com.tg.coloursteward.net.ResponseData;
 import com.tg.coloursteward.object.ImageParams;
+import com.tg.coloursteward.ui.MainActivity1;
 import com.tg.coloursteward.util.NetWorkUtils;
 import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.Tools;
@@ -170,7 +171,8 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
                 String corp_id = Tools.getStringValue(LoginActivity.this, Contants.storage.CORPID);
                 if (userInfoData.length > 0 && StringUtils.isNotEmpty(skin_code) && StringUtils.isNotEmpty(corp_id)) {
                     Tools.loadUserInfo(userInfoData, null);
-                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    //Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    Intent intent = new Intent(LoginActivity.this, MainActivity1.class);
                     intent.putExtra(MainActivity.KEY_SKIN_CODE, Integer.valueOf(skin_code));
                     intent.putExtra(MainActivity.KEY_EXTRAS, extras);
                     startActivity(intent);
@@ -318,7 +320,8 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
                     try {
                         int skin_code = json.getInt("skin_code");
                         Tools.saveStringValue(LoginActivity.this, Contants.storage.SKINCODE, String.valueOf(skin_code));//保存皮肤包
-                        Intent intent = new Intent(this, MainActivity.class);
+                        //Intent intent = new Intent(this, MainActivity.class);
+                        Intent intent = new Intent(this, MainActivity1.class);
                         intent.putExtra(MainActivity.KEY_NEDD_FRESH, false);
                         intent.putExtra(MainActivity.KEY_SKIN_CODE, skin_code);
                         startActivity(intent);

@@ -1304,7 +1304,7 @@ public class Tools {
 		return editor.commit();
 	}
 
-	public static Boolean getBooleanValue(Context context, String key) {
+	public static boolean getBooleanValue(Context context, String key) {
 
 		if (context == null) {
 			return false;

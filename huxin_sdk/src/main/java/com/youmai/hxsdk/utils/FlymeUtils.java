@@ -1,12 +1,8 @@
 package com.youmai.hxsdk.utils;
 
 import android.os.Build;
-import android.os.Environment;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.lang.reflect.Method;
-import java.util.Properties;
 
 /**
  * Created by Administrator on 2017/1/10.

@@ -32,7 +32,6 @@ import com.youmai.hxsdk.photopicker.beans.Photo;
 import com.youmai.hxsdk.photopicker.beans.PhotoFolder;
 import com.youmai.hxsdk.photopicker.widgets.PhotoPickerView;
 import com.youmai.hxsdk.photopicker.widgets.PpTabbarView;
-import com.youmai.hxsdk.service.HuxinService;
 import com.youmai.hxsdk.utils.AppUtils;
 import com.youmai.hxsdk.utils.CompressImage;
 import com.youmai.hxsdk.utils.LogUtils;

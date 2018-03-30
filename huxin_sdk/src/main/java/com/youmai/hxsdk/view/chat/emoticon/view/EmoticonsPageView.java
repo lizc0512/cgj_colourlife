@@ -12,10 +12,6 @@ import android.view.ViewGroup;
 import android.widget.GridView;
 import android.widget.RelativeLayout;
 
-import com.youmai.hxsdk.HuxinSdkManager;
-import com.youmai.hxsdk.config.AppConfig;
-import com.youmai.hxsdk.entity.EmoItem;
-import com.youmai.hxsdk.utils.ListUtils;
 import com.youmai.hxsdk.view.chat.emoticon.adapter.EmoticonsAdapter;
 import com.youmai.hxsdk.view.chat.emoticon.bean.EmoticonBean;
 import com.youmai.hxsdk.view.chat.emoticon.bean.EmoticonSetBean;

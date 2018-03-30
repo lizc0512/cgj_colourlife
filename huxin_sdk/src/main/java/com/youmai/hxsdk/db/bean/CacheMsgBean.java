@@ -3,7 +3,6 @@ package com.youmai.hxsdk.db.bean;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.youmai.hxsdk.im.IMConst;
 import com.youmai.hxsdk.im.cache.CacheMsgEmotion;
 import com.youmai.hxsdk.im.cache.CacheMsgFile;
 import com.youmai.hxsdk.im.cache.CacheMsgImage;

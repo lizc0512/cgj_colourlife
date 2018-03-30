@@ -17,8 +17,6 @@ import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.utils.CommonUtils;
 import com.youmai.hxsdk.utils.StringUtils;
 
-import static android.webkit.WebSettings.LayoutAlgorithm.NARROW_COLUMNS;
-
 
 /**
  * WebView

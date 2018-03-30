@@ -1,7 +1,5 @@
 package com.youmai.hxsdk.module.picker.model;
 
-import java.util.ArrayList;
-
 
 /**
  * Created by colin on 2017/10/17.

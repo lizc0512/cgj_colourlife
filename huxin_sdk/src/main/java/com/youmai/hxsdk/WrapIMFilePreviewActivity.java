@@ -17,7 +17,6 @@ import android.widget.Toast;
 import com.youmai.hxsdk.config.Constant;
 import com.youmai.hxsdk.config.FileConfig;
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
-import com.youmai.hxsdk.entity.CallInfo;
 import com.youmai.hxsdk.im.IMHelper;
 import com.youmai.hxsdk.im.cache.CacheMsgFile;
 import com.youmai.hxsdk.utils.LogUtils;

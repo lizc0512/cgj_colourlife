@@ -1,7 +1,6 @@
 package com.youmai.hxsdk.push.http;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.youmai.hxsdk.HuxinSdkManager;
 

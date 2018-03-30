@@ -6,7 +6,6 @@ import com.youmai.hxsdk.R;
 
 import com.youmai.hxsdk.picker.models.BaseFile;
 import com.youmai.hxsdk.picker.models.FileType;
-import com.youmai.hxsdk.picker.utils.Utils;
 
 /**
  * Created by droidNinja on 29/07/16.

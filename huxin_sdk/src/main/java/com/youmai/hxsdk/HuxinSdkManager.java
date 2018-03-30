@@ -53,8 +53,6 @@ import com.youmai.hxsdk.interfaces.bean.FileBean;
 import com.youmai.hxsdk.proto.YouMaiBasic;
 import com.youmai.hxsdk.proto.YouMaiChat;
 import com.youmai.hxsdk.proto.YouMaiChat.IMChat_Personal;
-import com.youmai.hxsdk.proto.YouMaiLocation;
-import com.youmai.hxsdk.proto.YouMaiLocation.LocationShare;
 import com.youmai.hxsdk.proto.YouMaiUser;
 import com.youmai.hxsdk.push.MorePushManager;
 import com.youmai.hxsdk.push.http.HttpPushManager;

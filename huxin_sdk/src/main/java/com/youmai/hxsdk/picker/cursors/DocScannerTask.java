@@ -15,7 +15,6 @@ import com.youmai.hxsdk.picker.PickerManager;
 import com.youmai.hxsdk.picker.cursors.loadercallbacks.FileResultCallback;
 import com.youmai.hxsdk.picker.models.Document;
 import com.youmai.hxsdk.picker.models.FileType;
-import com.youmai.hxsdk.picker.utils.Utils;
 
 import static android.provider.BaseColumns._ID;
 import static android.provider.MediaStore.MediaColumns.DATA;

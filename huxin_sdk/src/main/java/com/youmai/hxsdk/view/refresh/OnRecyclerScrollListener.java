@@ -1,7 +1,5 @@
 package com.youmai.hxsdk.view.refresh;
 
-import android.support.annotation.RequiresApi;
-import android.support.v7.app.ActionBar;
 import android.support.v7.widget.RecyclerView;
 
 /**
@@ -13,9 +11,10 @@ public interface OnRecyclerScrollListener {
      * 当RecyclerView的滚动状态被改变，会回调
      *
      * @param recyclerView 滚动状态改变的RecyclerView
-     * @param newState     更新的滚动状态. {@link #SCROLL_STATE_IDLE}:静止,没有滚动,
-     *                     {@link #SCROLL_STATE_DRAGGING}:正在被外部拖拽,一般为用户正在用手指滚动
-     *                     or {@link #SCROLL_STATE_SETTLING}:自动滚动开始.
+     * @param newState     更新的滚动状态.
+     *                     SCROLL_STATE_IDLE :静止,没有滚动,
+     *                     SCROLL_STATE_DRAGGING :正在被外部拖拽,一般为用户正在用手指滚动
+     *                     SCROLL_STATE_SETTLING :自动滚动开始.
      */
     void onStateChanged(RecyclerView recyclerView, int newState);
 

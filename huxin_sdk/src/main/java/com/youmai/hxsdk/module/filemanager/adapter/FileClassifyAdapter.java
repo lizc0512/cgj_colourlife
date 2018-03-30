@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -77,12 +76,8 @@ public class FileClassifyAdapter extends RecyclerView.Adapter {
 
         } else if (path.toLowerCase().endsWith(".apk")) {
             try {
-                if (path.toLowerCase().contains("huxin")) {
-                    ((FileManagerHolder) holder).mIvLogo.setImageResource(R.drawable.ic_launcher);
-                } else {
-                    Drawable dbe = Utils.getUninstallAPKIcon(mContext, path);
-                    ((FileManagerHolder) holder).mIvLogo.setImageDrawable(dbe);
-                }
+                Drawable dbe = Utils.getUninstallAPKIcon(mContext, path);
+                ((FileManagerHolder) holder).mIvLogo.setImageDrawable(dbe);
             } catch (Exception e) {
                 e.printStackTrace();
             }

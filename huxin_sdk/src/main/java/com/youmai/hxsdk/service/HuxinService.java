@@ -31,7 +31,6 @@ import com.youmai.hxsdk.entity.RespBaseBean;
 import com.youmai.hxsdk.im.IMMsgManager;
 import com.youmai.hxsdk.proto.YouMaiBasic;
 import com.youmai.hxsdk.proto.YouMaiUser;
-import com.youmai.hxsdk.push.MorePushManager;
 import com.youmai.hxsdk.receiver.HuxinReceiver;
 import com.youmai.hxsdk.socket.NotifyListener;
 import com.youmai.hxsdk.socket.PduBase;

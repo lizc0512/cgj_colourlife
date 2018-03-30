@@ -2,8 +2,6 @@ package com.youmai.hxsdk.socket;
 
 import android.util.Log;
 
-import com.youmai.hxsdk.HuxinSdkManager;
-
 public abstract class ReceiveListener {
 
     public static final String TAG = "TcpClient";

@@ -12,7 +12,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.R;
-import com.youmai.hxsdk.entity.CallInfo;
 import com.youmai.hxsdk.interfaces.impl.FileSendListenerImpl;
 
 import java.io.File;

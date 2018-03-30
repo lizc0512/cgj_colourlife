@@ -65,6 +65,9 @@ public class DeviceUtils {
                     .getSystemService(Context.TELEPHONY_SERVICE);
             imsi = phoneManager.getSubscriberId();
             Log.v(TAG, imsi);
+        } catch (SecurityException e) {
+            Log.e(TAG, "getIMSI error!");
+            imsi = "";
         } catch (Exception e) {
             Log.e(TAG, "getIMSI error!");
             imsi = "";
@@ -88,6 +91,9 @@ public class DeviceUtils {
             TelephonyManager phoneManager = (TelephonyManager) context
                     .getSystemService(Context.TELEPHONY_SERVICE);
             imei = phoneManager.getDeviceId();
+        } catch (SecurityException e) {
+            Log.e(TAG, "getIMEI error!");
+            imei = "";
         } catch (Exception e) {
             Log.e(TAG, "getIMEI error!");
             imei = "";
@@ -115,8 +121,11 @@ public class DeviceUtils {
             TelephonyManager phoneManager = (TelephonyManager) context
                     .getSystemService(Context.TELEPHONY_SERVICE);
             iccid = phoneManager.getSimSerialNumber();
+        } catch (SecurityException e) {
+            Log.e(TAG, "getICCID error!");
+            iccid = "";
         } catch (Exception e) {
-            Log.e(TAG, "getIMEI error!");
+            Log.e(TAG, "getICCID error!");
             iccid = "";
         }
         if (iccid == null) {

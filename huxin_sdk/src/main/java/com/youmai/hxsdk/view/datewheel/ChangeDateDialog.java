@@ -17,7 +17,6 @@ import com.youmai.hxsdk.view.datewheel.wheelview.OnWheelChangedListener;
 import com.youmai.hxsdk.view.datewheel.wheelview.OnWheelScrollListener;
 import com.youmai.hxsdk.view.datewheel.wheelview.WheelView;
 import com.youmai.hxsdk.view.datewheel.wheelview.adapter.AbstractWheelTextAdapter1;
-import com.youmai.hxsdk.view.datewheel.wheelview.adapter.WheelViewAdapter;
 
 import java.util.ArrayList;
 import java.util.Calendar;

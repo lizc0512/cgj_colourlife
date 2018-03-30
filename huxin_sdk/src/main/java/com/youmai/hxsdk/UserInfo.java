@@ -3,7 +3,6 @@ package com.youmai.hxsdk;
 import android.content.Context;
 
 import com.youmai.hxsdk.config.FileConfig;
-import com.youmai.hxsdk.push.MorePushManager;
 import com.youmai.hxsdk.utils.StringUtils;
 
 import java.io.File;

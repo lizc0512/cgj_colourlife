@@ -24,7 +24,6 @@ import com.youmai.hxsdk.im.cache.CacheMsgEmotion;
 import com.youmai.hxsdk.im.cache.CacheMsgFile;
 import com.youmai.hxsdk.im.cache.CacheMsgHelper;
 import com.youmai.hxsdk.im.cache.CacheMsgImage;
-import com.youmai.hxsdk.im.cache.CacheMsgJoke;
 import com.youmai.hxsdk.im.cache.CacheMsgMap;
 import com.youmai.hxsdk.im.cache.CacheMsgTxt;
 import com.youmai.hxsdk.im.cache.CacheMsgVideo;

@@ -99,7 +99,7 @@
     <string name="done">完成</string>
 
     <string name="no_files_found">找不到文件</string>
-    <string name="attachments_title_text" formatted="false">附件 (%d/%d)</string>
+    <string name="attachments_title_text" formatted="false">附件 (%1$d/%2$d)</string>
     <string name="select_photo_text">选择照片</string>
     <string name="select_doc_text">选择文档</string>
     <string name="no_camera_exists">没有相机的应用程序！</string>
@@ -131,7 +131,7 @@
     <string name="hx_im_chat_more_file">文件</string>
     <string name="hx_im_chat_more_bizcard">分享名片</string>
 
-    <string name="hx_im_send_img_count" formatted="false">发送(%d/%d)</string>
+    <string name="hx_im_send_img_count" formatted="false">发送(%1$d/%2$d)</string>
 
     <string name="select_map_text">选择</string>
     <string name="hx_im_pop_contact_add">新建联系人</string>

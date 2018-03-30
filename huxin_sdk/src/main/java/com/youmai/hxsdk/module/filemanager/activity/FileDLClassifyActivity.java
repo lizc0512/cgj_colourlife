@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.R;
-import com.youmai.hxsdk.entity.CallInfo;
 import com.youmai.hxsdk.module.filemanager.constant.FilePickerConst;
 import com.youmai.hxsdk.module.filemanager.PickerManager;
 import com.youmai.hxsdk.module.filemanager.interfaces.PickerManagerListener;

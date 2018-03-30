@@ -48,7 +48,6 @@ import com.youmai.hxsdk.im.cache.CacheMsgMap;
 import com.youmai.hxsdk.im.cache.CacheMsgTxt;
 import com.youmai.hxsdk.im.cache.CacheMsgVideo;
 import com.youmai.hxsdk.im.cache.CacheMsgVoice;
-import com.youmai.hxsdk.im.cache.JsonFormat;
 import com.youmai.hxsdk.im.voice.manager.MediaManager;
 import com.youmai.hxsdk.module.remind.SetRemindActivity;
 import com.youmai.hxsdk.service.SendMsgService;

@@ -2,10 +2,8 @@ package com.youmai.hxsdk.im;
 
 
 import android.content.Context;
-import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
 
 
 import com.youmai.hxsdk.R;

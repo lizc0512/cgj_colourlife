@@ -11,7 +11,6 @@ import android.telephony.SmsMessage;
 import android.telephony.TelephonyManager;
 
 import com.youmai.hxsdk.HuxinSdkManager;
-import com.youmai.hxsdk.db.manager.GreenDBIMManager;
 import com.youmai.hxsdk.http.IPostListener;
 import com.youmai.hxsdk.service.HuxinService;
 import com.youmai.hxsdk.utils.StringUtils;

@@ -14,7 +14,6 @@ import java.util.ArrayList;
 
 import com.youmai.hxsdk.R;
 
-import com.youmai.hxsdk.entity.CallInfo;
 import com.youmai.hxsdk.picker.fragments.DocFragment;
 import com.youmai.hxsdk.picker.fragments.DocPickerFragment;
 import com.youmai.hxsdk.picker.fragments.MediaFolderPickerFragment;

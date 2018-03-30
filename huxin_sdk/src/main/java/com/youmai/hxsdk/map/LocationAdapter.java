@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.R;
 
 import java.util.List;

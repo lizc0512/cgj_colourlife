@@ -43,7 +43,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:onClick="updateDatas"
             android:text="更新数据源" />
 
         <!--<EditText-->

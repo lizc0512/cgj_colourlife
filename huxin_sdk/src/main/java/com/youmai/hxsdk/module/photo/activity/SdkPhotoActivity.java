@@ -10,7 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.entity.CallInfo;
-import com.youmai.hxsdk.service.HuxinService;
 
 /**
  * 作者：create by YW

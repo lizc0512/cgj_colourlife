@@ -9,7 +9,6 @@ import android.os.Process;
 import android.util.Log;
 
 import com.huawei.android.hms.agent.HMSAgent;
-import com.huawei.android.hms.agent.common.handler.ConnectHandler;
 import com.meizu.cloud.pushsdk.PushManager;
 import com.xiaomi.mipush.sdk.MiPushClient;
 import com.youmai.hxsdk.im.IMMsgManager;

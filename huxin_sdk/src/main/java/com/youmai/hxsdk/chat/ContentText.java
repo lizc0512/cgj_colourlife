@@ -3,7 +3,6 @@ package com.youmai.hxsdk.chat;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.youmai.hxsdk.socket.IMContentItem;
 import com.youmai.hxsdk.socket.IMContentType;
 import com.youmai.hxsdk.socket.IMContentUtil;
 

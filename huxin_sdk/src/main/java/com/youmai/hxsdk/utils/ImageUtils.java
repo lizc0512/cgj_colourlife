@@ -17,7 +17,6 @@ import android.graphics.RectF;
 import android.graphics.Shader.TileMode;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Environment;
 import android.util.Log;
 
 import com.youmai.hxsdk.config.FileConfig;

@@ -9,7 +9,6 @@ import com.xiaomi.mipush.sdk.MiPushClient;
 import com.xiaomi.mipush.sdk.MiPushCommandMessage;
 import com.xiaomi.mipush.sdk.MiPushMessage;
 import com.xiaomi.mipush.sdk.PushMessageReceiver;
-import com.youmai.hxsdk.push.message.HuaweiPushReceiver;
 import com.youmai.hxsdk.push.message.XiaomiPushReceiver;
 import com.youmai.hxsdk.push.message.base.BaseReceiver;
 

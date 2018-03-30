@@ -37,14 +37,12 @@ import com.youmai.hxsdk.proto.YouMaiBulletin;
 import com.youmai.hxsdk.proto.YouMaiChat;
 import com.youmai.hxsdk.proto.YouMaiUser;
 import com.youmai.hxsdk.socket.NotifyListener;
-import com.youmai.hxsdk.socket.IMContentType;
 import com.youmai.hxsdk.utils.AppUtils;
 import com.youmai.hxsdk.utils.BadgeUtil;
 import com.youmai.hxsdk.utils.CommonUtils;
 import com.youmai.hxsdk.utils.FileUtils;
 import com.youmai.hxsdk.utils.LogFile;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 

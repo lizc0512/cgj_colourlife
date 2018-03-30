@@ -24,7 +24,6 @@ import android.view.SurfaceHolder;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.youmai.hxsdk.R;

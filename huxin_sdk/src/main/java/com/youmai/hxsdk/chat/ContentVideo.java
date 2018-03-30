@@ -9,7 +9,6 @@ import com.youmai.hxsdk.socket.IMContentUtil;
 
 /**
  * 从获取proto的YouMaiChat的body
- * 解析ChatMsg{@link com.youmai.hxsdk.db.bean.ChatMsg}的jsonBody的数据
  * Created by colin on 2016/7/22.
  */
 public class ContentVideo implements Parcelable {

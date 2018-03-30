@@ -15,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.TranslateAnimation;
-import android.widget.ScrollView;
 
 import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.utils.DisplayUtil;
@@ -108,6 +107,7 @@ public class TranslucentScrollView extends NestedScrollView {
 
     @Override
     protected void onFinishInflate() {
+        super.onFinishInflate();
         if (getChildCount() > 0) {
             contentView = getChildAt(0);
         }

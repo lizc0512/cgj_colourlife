@@ -4,9 +4,6 @@ import android.util.Log;
 
 import com.youmai.hxsdk.utils.LogFile;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
 import java.nio.ByteBuffer;
 
 

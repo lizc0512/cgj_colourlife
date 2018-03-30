@@ -108,7 +108,11 @@ public class HuxinLocationManager {
      */
     public void requestGPS(final BetterLocationListener listener) {
         gpsLocationListener = listener;
-        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, gpsListener);
+        try {
+            lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, gpsListener);
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -118,7 +122,11 @@ public class HuxinLocationManager {
      */
     public void requestNetwork(final BetterLocationListener listener) {
         netLocationListener = listener;
-        lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, netListener);
+        try {
+            lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, netListener);
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -129,7 +137,13 @@ public class HuxinLocationManager {
         List<String> providers = lm.getProviders(true);
         if (providers != null) {
             for (String provider : providers) {
-                Location l = lm.getLastKnownLocation(provider);
+                Location l = null;
+                try {
+                    l = lm.getLastKnownLocation(provider);
+                } catch (SecurityException e) {
+                    e.printStackTrace();
+                }
+
                 if (l == null) {
                     continue;
                 }

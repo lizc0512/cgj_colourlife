@@ -1,7 +1,6 @@
 package com.youmai.hxsdk.activity;
 
 import android.content.ContentResolver;
-import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -42,7 +41,6 @@ import com.youmai.hxsdk.utils.AppUtils;
 import com.youmai.hxsdk.utils.QiniuUrl;
 import com.youmai.hxsdk.utils.ToastUtil;
 
-import java.io.FileNotFoundException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;

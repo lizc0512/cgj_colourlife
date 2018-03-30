@@ -6,9 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.youmai.hxsdk.utils.AppUtils;
 import com.youmai.hxsdk.utils.DisplayUtil;
-import com.youmai.hxsdk.utils.ScreenUtils;
 
 /**
  * Created by shichaohui on 2015/7/9 0009.

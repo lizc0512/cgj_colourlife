@@ -1059,17 +1059,6 @@ public class AppUtils {
         return m.find();
     }
 
-    /**
-     * 是否是座机号码
-     *
-     * @param telephone
-     * @return
-     */
-    public static boolean isTelephone(String telephone) {
-        Pattern p = Pattern.compile("[0]{1}[0-9]{2,3}[0-9]{7,8}", Pattern.CASE_INSENSITIVE);
-        Matcher m = p.matcher(telephone);
-        return m.find();
-    }
     
 
     /**

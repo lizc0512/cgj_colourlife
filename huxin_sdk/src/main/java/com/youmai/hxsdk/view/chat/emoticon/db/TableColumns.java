@@ -16,7 +16,7 @@ public final class TableColumns {
     public interface EmoticonSetColumns extends BaseColumns {
         String NAME = "name";
         String LINE = "line";
-        String ROW = "row";
+        String ROW = "rows";
         String ICON_URI = "iconuri";
         String IS_SHOW_DEL_BTN = "isshowdelbtn";
         String ITEM_PADDING = "itempadding";

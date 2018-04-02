@@ -10,6 +10,7 @@ import com.youmai.smallvideorecord.utils.Log;
  * zerochl0912@gmail.com
  */
 
+@SuppressWarnings("JniMissingFunction")
 public class FFmpegBridge {
     private static ArrayList<FFmpegStateListener> listeners=new ArrayList();
     static {

@@ -93,7 +93,6 @@
 
     <!--新版app增加-->
 
-    <string name="im_card_theme_default_name">未命名沟通</string>
     <string name="im_card_no_remark">暂无备注</string>
     <string name="hx_voice_tip_normal">按住 说话</string>
     <string name="hx_voice_tip_error">录音有误</string>

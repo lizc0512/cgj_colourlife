@@ -1,61 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/img_content_lay"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <ViewStub
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/sender_date"
+        style="@style/im_card_date"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout="@layout/im_card_toolbar" />
+        android:text="@string/hx_fragment_im_data" />
 
-    <LinearLayout
-        android:id="@+id/img_content_lay"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/hx_card_center_bg"
-        android:orientation="vertical">
+    <LinearLayout style="@style/im_content_card_style">
 
-        <TextView
-            android:id="@+id/sender_date"
-            style="@style/im_card_date"
+        <ImageView
+            android:id="@+id/sender_iv"
+            android:layout_width="@dimen/card_head"
+            android:layout_height="@dimen/card_head"
+            android:src="@drawable/hx_im_user_header" />
+
+        <FrameLayout
+            android:id="@+id/item_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/hx_fragment_im_data" />
-
-        <LinearLayout style="@style/im_content_card_style">
-
-            <include layout="@layout/hx_item_im_select_lay" />
+            android:layout_marginLeft="@dimen/card_head_to_content_margin"
+            android:clickable="true">
 
             <ImageView
-                android:id="@+id/sender_iv"
-                android:layout_width="@dimen/card_head"
-                android:layout_height="@dimen/card_head"
-                android:src="@drawable/hx_im_user_header" />
+                android:id="@+id/sender_img"
+                android:layout_width="120dp"
+                android:layout_height="90dp"
+                android:adjustViewBounds="true"
+                android:scaleType="centerInside"
+                android:transitionName="imimage" />
 
-            <FrameLayout
-                android:id="@+id/item_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/card_head_to_content_margin"
-                android:clickable="true">
+        </FrameLayout>
 
-                <ImageView
-                    android:id="@+id/sender_img"
-                    android:layout_width="120dp"
-                    android:layout_height="90dp"
-                    android:adjustViewBounds="true"
-                    android:scaleType="centerInside"
-                    android:transitionName="imimage" />
-
-            </FrameLayout>
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="5dp"
-                android:visibility="gone" />
-        </LinearLayout>
     </LinearLayout>
-
 </LinearLayout>

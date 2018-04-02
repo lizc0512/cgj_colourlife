@@ -1,10 +1,7 @@
 package com.youmai.hxsdk.adapter;
 
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.drawable.AnimationDrawable;
 import android.media.MediaPlayer;
 import android.os.Build;
@@ -12,12 +9,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -26,9 +20,6 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.transition.Transition;
-import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.IMFilePreviewActivity;
 import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.activity.CropMapActivity;
@@ -43,14 +34,12 @@ import com.youmai.hxsdk.im.cache.CacheMsgFile;
 import com.youmai.hxsdk.im.cache.CacheMsgHelper;
 import com.youmai.hxsdk.im.cache.CacheMsgImage;
 import com.youmai.hxsdk.im.cache.CacheMsgJoke;
-import com.youmai.hxsdk.im.cache.CacheMsgLShare;
 import com.youmai.hxsdk.im.cache.CacheMsgMap;
 import com.youmai.hxsdk.im.cache.CacheMsgTxt;
 import com.youmai.hxsdk.im.cache.CacheMsgVideo;
 import com.youmai.hxsdk.im.cache.CacheMsgVoice;
 import com.youmai.hxsdk.im.voice.manager.MediaManager;
 import com.youmai.hxsdk.module.remind.SetRemindActivity;
-import com.youmai.hxsdk.service.SendMsgService;
 import com.youmai.hxsdk.utils.QiniuUrl;
 import com.youmai.hxsdk.utils.TimeUtils;
 import com.youmai.hxsdk.view.LinearLayoutManagerWithSmoothScroller;
@@ -59,9 +48,6 @@ import com.youmai.hxsdk.view.chat.utils.Utils;
 import com.youmai.hxsdk.view.progressbar.CircleProgressView;
 import com.youmai.hxsdk.view.text.CopeTextView;
 import com.youmai.hxsdk.view.tip.TipView;
-import com.youmai.hxsdk.view.tip.bean.TipBean;
-import com.youmai.hxsdk.view.tip.listener.ItemListener;
-import com.youmai.hxsdk.view.tip.tools.TipsType;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -108,22 +94,16 @@ public class IMListAdapter extends RecyclerView.Adapter {
     private IMConnectionActivity mIMConnectActivity;
     private RecyclerView mRecyclerView;
     private String mDstPhone;
-    private String mSelfPhone = HuxinSdkManager.instance().getPhoneNum();
     private List<CacheMsgBean> mImBeanList = new ArrayList<>();
     public int mThemeIndex = -1;
 
     private OnListener listener;
-
-    private final int REMARK_UNEDIT_STATE = -99;
-    private int mEditingRemarkPos = REMARK_UNEDIT_STATE;
 
     public boolean isShowSelect = false;//用于控制显示更多的选项框
 
     private TreeMap<Integer, CacheMsgBean> selectMsg = new TreeMap<>();
 
     private OnClickMoreListener moreListener;
-
-    TipView tipView;
 
     public IMListAdapter(IMConnectionActivity act, RecyclerView recyclerView, String dstPhone, String dstName) {
         mIMConnectActivity = act;
@@ -223,7 +203,6 @@ public class IMListAdapter extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        onBindCommon((BaseViewHolder) holder, position);
         if (holder instanceof ImgViewHolder) { //图片
             onBindPic((ImgViewHolder) holder, position);
         } else if (holder instanceof TxtViewHolder) {  //文字
@@ -239,12 +218,10 @@ public class IMListAdapter extends RecyclerView.Adapter {
         }
     }
 
-    int type;
     @Override
     public int getItemViewType(int position) {
         CacheMsgBean cacheMsgBean = mImBeanList.get(position);
         int oriType = -1;
-        type = cacheMsgBean.getMsgType();
         switch (cacheMsgBean.getMsgType()) {
             case CacheMsgBean.SEND_TEXT:
                 oriType = TXT_RIGHT;
@@ -620,115 +597,8 @@ public class IMListAdapter extends RecyclerView.Adapter {
                 voiceViewHolder.readIV.setVisibility(View.VISIBLE);
             }
         }
-        if (cacheMsgVoice.getForwardCount() > 0) {
-            voiceViewHolder.voiceTypeText.setVisibility(View.VISIBLE);
-            if (TextUtils.equals(cacheMsgVoice.getSourcePhone(), mSelfPhone)) {
-                voiceViewHolder.voiceTypeText.setText("来自本人语音");
-            } else {
-                voiceViewHolder.voiceTypeText.setText("来自他人语音");
-            }
-        } else {
-            voiceViewHolder.voiceTypeText.setVisibility(View.GONE);
-        }
 
         voiceViewHolder.senderTime.setText(getFormateVoiceTime(voiceTime));
-
-        if (cacheMsgVoice.isShowText()) {
-            voiceViewHolder.textLay.setVisibility(View.VISIBLE);
-            String contentStr = cacheMsgVoice.getVoiceText();
-            if (TextUtils.isEmpty(contentStr)) {
-                voiceViewHolder.contentText.setVisibility(View.GONE);
-                voiceViewHolder.closeImg.setRotation(180);
-            } else {
-                voiceViewHolder.contentText.setVisibility(View.VISIBLE);
-                voiceViewHolder.contentText.setText(cacheMsgVoice.getVoiceText());
-                voiceViewHolder.closeImg.setRotation(0);
-            }
-        } else {
-            voiceViewHolder.textLay.setVisibility(View.GONE);
-        }
-
-        voiceViewHolder.closeImg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                voiceViewHolder.textLay.setVisibility(View.GONE);
-                cacheMsgVoice.setShowText(false);
-                cacheMsgBean.setJsonBodyObj(cacheMsgVoice);
-                CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
-                mImBeanList.set(position, cacheMsgBean);
-            }
-        });
-
-        voiceViewHolder.contentText.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    mVoiceRawX = event.getRawX();
-                    mVoiceRawY = event.getRawY();
-                }
-                return false;
-            }
-        });
-
-        voiceViewHolder.contentText.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                List<TipBean> tips = TipsType.getVoiceType3();
-                voiceTip = new TipView(mContext, tips, mVoiceRawX, mVoiceRawY);
-                voiceTip.setListener(new ItemListener() {
-                    @Override
-                    public void delete() {
-                        deleteMsg(cacheMsgBean, position, true);
-                    }
-
-                    @Override
-                    public void copy() {
-                        ClipboardManager cpb = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
-                        if (cpb != null) {
-                            cpb.setPrimaryClip(ClipData.newPlainText(null, voiceViewHolder.contentText.getText().toString()));//加入剪贴板
-                            Toast.makeText(mContext, R.string.hx_im_card_cope_tip, Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    @Override
-                    public void collect() {
-                        //收藏操作
-                    }
-
-                    @Override
-                    public void forward() {
-                        //转发操作
-                        int status = mImBeanList.get(position).getMsgType();
-                        if (status == CacheMsgBean.SEND_SUCCEED
-                                || status == CacheMsgBean.SEND_FAILED
-                                || status == CacheMsgBean.RECEIVE_READ) {
-                            CacheMsgBean bean = mImBeanList.get(position);
-                            //语音设置是谁发的源头
-                            CacheMsgVoice cacheMsgVoice = (CacheMsgVoice) bean.getJsonBodyObj(new CacheMsgVoice());
-                            if (cacheMsgVoice.getForwardCount() == 0 && TextUtils.isEmpty(cacheMsgVoice.getSourcePhone())) {
-                                cacheMsgVoice.setSourcePhone(bean.isRightUI() ? bean.getReceiverPhone() : bean.getSenderPhone());
-                                bean.setJsonBodyObj(cacheMsgVoice);
-                            }
-                            Intent intent = new Intent();
-                            intent.setAction("com.youmai.huxin.recent");
-                            intent.putExtra("type", "forward_msg");
-                            intent.putExtra("data", bean);
-                            mIMConnectActivity.startActivityForResult(intent, 300);
-                        } else {
-                            Toast.makeText(mContext, "转发失败", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    @Override
-                    public void remind() {
-                        Toast.makeText(mContext, "click:提醒", Toast.LENGTH_SHORT).show();
-                    }
-
-                });
-                voiceTip.show(voiceViewHolder.contentText);
-                return false;
-            }
-        });
 
         voiceViewHolder.voiceBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -807,53 +677,19 @@ public class IMListAdapter extends RecyclerView.Adapter {
     private void showSendStart(final BaseViewHolder viewHolder, int flag, final CacheMsgBean bean, final int position) {
 
         if (viewHolder.progressBar != null) {
-            viewHolder.smsImg.setBackgroundDrawable(null);
-            viewHolder.smsImg.setOnClickListener(null);
             if (flag == CacheMsgBean.SEND_SUCCEED
                     || flag == CacheMsgBean.RECEIVE_READ) {
                 //显示到达状态
                 viewHolder.progressBar.setVisibility(View.INVISIBLE);
-                viewHolder.smsImg.setVisibility(View.GONE);
             } else if (flag == CacheMsgBean.SEND_FAILED) {
                 //显示发送失败状态
                 viewHolder.progressBar.setVisibility(View.GONE);
-                viewHolder.smsImg.setVisibility(View.VISIBLE);
-                viewHolder.smsImg.setImageResource(R.drawable.hx_im_send_error2_icon);
-                viewHolder.smsImg.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (bean.getJsonBodyObj() instanceof CacheMsgLShare) {
-                            return;
-                        }
-                        //重传
-                        bean.setMsgStatus(CacheMsgBean.SEND_FAILED);
-                        updateSendStatus(bean, position);
-                        Intent intent = new Intent(mContext, SendMsgService.class);
-                        intent.putExtra("data", bean);
-                        intent.putExtra("data_from", SendMsgService.FROM_IM);
-                        mContext.startService(intent);
-                    }
-                });
             } else if (flag == 5) {
                 //显示文本播放语音状态
                 viewHolder.progressBar.setVisibility(View.GONE);
-                viewHolder.smsImg.setVisibility(View.VISIBLE);
-                viewHolder.smsImg.setBackgroundResource(R.drawable.hx_card_voice_play_bg);
-                viewHolder.smsImg.setImageResource(R.drawable.hx_im_voice_left_white_anim);
-                viewHolder.smsImg.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        notifyItemChanged(position);
-                    }
-                });
-                voicePlayAnim = (AnimationDrawable) viewHolder.smsImg.getDrawable();
-                voicePlayAnim.start();
-                Log.w("123", "voicePlayAnim.start() flag:5");
-                mPlayVoiceIV = viewHolder.smsImg;
             } else {
                 //正在发送状态
                 viewHolder.progressBar.setVisibility(View.VISIBLE);
-                viewHolder.smsImg.setVisibility(View.GONE);
             }
         }
     }
@@ -898,13 +734,8 @@ public class IMListAdapter extends RecyclerView.Adapter {
         protected TextView senderTime;
         protected View voiceBtn;
         protected ImageView voiceIV;
-
         protected View readIV;
-        private TextView voiceTypeText;
 
-        private View textLay;
-        private TextView contentText;
-        private ImageView closeImg;
 
         public VoiceViewHolder(View itemView) {
             super(itemView);
@@ -912,10 +743,6 @@ public class IMListAdapter extends RecyclerView.Adapter {
             voiceBtn = itemView.findViewById(R.id.item_btn);
             voiceIV = (ImageView) itemView.findViewById(R.id.voice_iv);
             readIV = itemView.findViewById(R.id.read_iv);
-            voiceTypeText = (TextView) itemView.findViewById(R.id.item_voice_send_type_text);
-            textLay = itemView.findViewById(R.id.item_voice_text_lay);
-            contentText = (TextView) itemView.findViewById(R.id.item_voice_text);
-            closeImg = (ImageView) itemView.findViewById(R.id.item_voice_text_close);
         }
     }
 
@@ -985,34 +812,6 @@ public class IMListAdapter extends RecyclerView.Adapter {
         }
     }
 
-    private Bitmap mTargetBitmap = null;
-    private Bitmap mSelfBitmap = null;
-
-    private void genIcon(String targetPhone, String selfPhone, boolean inContact) {
-
-        String urlOther = "";// = AppConfig.DOWNLOAD_IMAGE + targetPhone;
-        if (!urlOther.isEmpty()) {
-            Glide.with(mContext)
-                    .asBitmap()
-                    .load(urlOther)
-                    .apply(new RequestOptions()
-                            .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-                            .circleCrop()
-                            .placeholder(R.drawable.hx_index_head01))
-                    .into(new SimpleTarget<Bitmap>() {
-                        @Override
-                        public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
-                            mTargetBitmap = resource;
-                            notifyDataSetChanged();
-                        }
-                    });
-        }
-    }
-
-    private void onBindCommon(final BaseViewHolder baseViewHolder, final int position) {
-        moreAction(baseViewHolder, position);
-    }
-
 
     /**
      * 删除单条消息
@@ -1046,11 +845,9 @@ public class IMListAdapter extends RecyclerView.Adapter {
         ImageView senderIV;
         View itemBtn;
         public ProgressBar progressBar;
-        ImageView smsImg;
 
         View contentLay;
 
-        CheckBox selectbox;
 
         BaseViewHolder(View itemView) {
             super(itemView);
@@ -1060,37 +857,9 @@ public class IMListAdapter extends RecyclerView.Adapter {
             itemBtn = itemView.findViewById(R.id.item_btn);
             contentLay = itemView.findViewById(R.id.img_content_lay);// 中间背景
             progressBar = (ProgressBar) itemView.findViewById(R.id.pbar);
-            smsImg = (ImageView) itemView.findViewById(R.id.im_sms_img);
-
-            selectbox = (CheckBox) itemView.findViewById(R.id.sender_select_checkbox);
         }
     }
 
-    //更多选项
-    private void moreAction(final BaseViewHolder baseViewHolder, final int position) {
-        if (baseViewHolder.selectbox != null) {
-            baseViewHolder.selectbox.setVisibility(isShowSelect ? View.VISIBLE : View.GONE);
-            if (isShowSelect) {
-                //在更多选项的界面
-                baseViewHolder.selectbox.setTag(position);
-                baseViewHolder.selectbox.setChecked(selectMsg.containsKey(position));//复用容错判断
-            }
-            baseViewHolder.selectbox.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (moreListener != null) {
-                        if (selectMsg.containsKey(position)) {
-                            selectMsg.remove(position);
-                            moreListener.hasSelectMsg(selectMsg.size() != 0);
-                        } else {
-                            selectMsg.put(position, mImBeanList.get(position));
-                            moreListener.hasSelectMsg(true);
-                        }
-                    }
-                }
-            });
-        }
-    }
 
     //开启批量处理
     private void moreAction(int position) {
@@ -1111,10 +880,6 @@ public class IMListAdapter extends RecyclerView.Adapter {
 
     //srsm add start
     public void onStop() {
-        //WindowLeaked
-        if (tipView != null && tipView.isShowing()) {
-            tipView.dismiss();
-        }
         if (voiceTip != null && voiceTip.isShowing()) {
             voiceTip.dismiss();
         }
@@ -1145,7 +910,6 @@ public class IMListAdapter extends RecyclerView.Adapter {
             focusBottom(false);
         }
     }
-    //srsm add end
 
     //发送消息的刷新
     public void addAndRefreshUI(CacheMsgBean cacheMsgBean) {
@@ -1158,9 +922,8 @@ public class IMListAdapter extends RecyclerView.Adapter {
         } else {
             notifyItemChanged(getItemCount() - 1);
         }
-        if (mEditingRemarkPos == REMARK_UNEDIT_STATE) {
-            focusBottom(false);
-        }
+
+        focusBottom(false);
     }
 
     /**

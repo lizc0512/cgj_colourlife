@@ -162,7 +162,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
                 for (int i = 0; i < size; i++) {
                     CacheMsgBean oriMsgBean = cacheMsgBeanList.get(i);
                     if (cacheMsgBean.getId().equals(oriMsgBean.getId())) {
-                        CacheMsgImage cacheImage = (CacheMsgImage) oriMsgBean.getJsonBodyObj(new CacheMsgImage());
+                        CacheMsgImage cacheImage = (CacheMsgImage) oriMsgBean.getJsonBodyObj();
                         cacheImage.setOriginalType(CacheMsgImage.SEND_IS_ORI_RECV_IS_ORI);
                         oriMsgBean.setJsonBodyObj(cacheImage);
 
@@ -1016,11 +1016,12 @@ public class IMConnectionActivity extends SdkBaseActivity implements
     private void refreshFinishVideo(FileQueue fileQueue) {
         long mid = fileQueue.getMid();
         CacheMsgBean cacheMsgBean = CacheMsgHelper.instance(this).queryByID(mid);
-        CacheMsgVideo cacheMsgVideo = (CacheMsgVideo) cacheMsgBean.getJsonBodyObj(new CacheMsgVideo());
-        cacheMsgVideo.setProgress(fileQueue.getPro());
-        cacheMsgBean.setJsonBodyObj(cacheMsgVideo);
-        imListAdapter.refreshItemUI(cacheMsgBean);
-
+        if (cacheMsgBean.getJsonBodyObj() instanceof CacheMsgVideo) {
+            CacheMsgVideo cacheMsgVideo = (CacheMsgVideo) cacheMsgBean.getJsonBodyObj();
+            cacheMsgVideo.setProgress(fileQueue.getPro());
+            cacheMsgBean.setJsonBodyObj(cacheMsgVideo);
+            imListAdapter.refreshItemUI(cacheMsgBean);
+        }
     }
 
 
@@ -1127,7 +1128,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
             showFileChooser();
         } else if (type == InputMessageLay.TYPE_CARD) {
             //分享名片
-            try {
+            /*try {
                 Intent intent = new Intent();
                 intent.setAction("com.youmai.huxin.select.card");
                 intent.putExtra("disName", tvTitle.getText().toString());
@@ -1135,7 +1136,8 @@ public class IMConnectionActivity extends SdkBaseActivity implements
                 startActivityForResult(intent, REQUEST_CODE_CARD);
             } catch (Exception e) {
                 Toast.makeText(mContext, "tan90", Toast.LENGTH_SHORT).show();
-            }
+            }*/
+            Toast.makeText(mContext, "添加更多", Toast.LENGTH_SHORT).show();
         }
 
     }

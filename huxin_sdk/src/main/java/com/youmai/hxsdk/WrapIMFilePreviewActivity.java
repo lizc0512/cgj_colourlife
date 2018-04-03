@@ -114,7 +114,7 @@ public class WrapIMFilePreviewActivity extends FragmentActivity {
             return;
         }
 
-        cacheMsgFile = (CacheMsgFile) cacheMsgBean.getJsonBodyObj(new CacheMsgFile());
+        cacheMsgFile = (CacheMsgFile) cacheMsgBean.getJsonBodyObj();
 
         if (null == cacheMsgFile) {
             finish();

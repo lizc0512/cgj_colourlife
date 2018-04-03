@@ -134,7 +134,7 @@ public class IMFilePreviewActivity extends SdkBaseActivity {
             return;
         }
 
-        cacheMsgFile = (CacheMsgFile) cacheMsgBean.getJsonBodyObj(new CacheMsgFile());
+        cacheMsgFile = (CacheMsgFile) cacheMsgBean.getJsonBodyObj();
 
         if (null == cacheMsgFile) {
             return;

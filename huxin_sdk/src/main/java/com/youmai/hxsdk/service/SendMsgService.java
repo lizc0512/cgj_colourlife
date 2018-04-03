@@ -265,10 +265,10 @@ public class SendMsgService extends Service {
     private void sendTxt(final SendMsg msgBean) {
         String contentTemp = "";
         if (msgBean.getMsg().getMsgType() == CacheMsgBean.SEND_TEXT) {
-            CacheMsgTxt msgBody = (CacheMsgTxt) msgBean.getMsg().getJsonBodyObj(new CacheMsgTxt());
+            CacheMsgTxt msgBody = (CacheMsgTxt) msgBean.getMsg().getJsonBodyObj();
             contentTemp = msgBody.getMsgTxt();
         } else if (msgBean.getMsg().getMsgType() == CacheMsgBean.SEND_EMOTION) {
-            CacheMsgEmotion msgBody = (CacheMsgEmotion) msgBean.getMsg().getJsonBodyObj(new CacheMsgEmotion());
+            CacheMsgEmotion msgBody = (CacheMsgEmotion) msgBean.getMsg().getJsonBodyObj();
             contentTemp = msgBody.getEmotionContent();
         }
         final int userId = HuxinSdkManager.instance().getUserId();
@@ -330,7 +330,7 @@ public class SendMsgService extends Service {
     private void sendMap(final SendMsg msgBean) {
         final int userId = HuxinSdkManager.instance().getUserId();
         final String targetPhone = msgBean.getMsg().getReceiverPhone();
-        CacheMsgMap msgBody = (CacheMsgMap) msgBean.getMsg().getJsonBodyObj(new CacheMsgMap());
+        CacheMsgMap msgBody = (CacheMsgMap) msgBean.getMsg().getJsonBodyObj();
 
         final String url = msgBody.getImgUrl();
         final String location = msgBody.getLocation();
@@ -428,17 +428,17 @@ public class SendMsgService extends Service {
 
                 //已上传七牛，但仍未送达到用户，处于发送状态
                 if (msgType == CacheMsgBean.SEND_FILE) {
-                    CacheMsgFile msgBody = (CacheMsgFile) msgBean.getMsg().getJsonBodyObj(new CacheMsgFile());
+                    CacheMsgFile msgBody = (CacheMsgFile) msgBean.getMsg().getJsonBodyObj();
                     msgBody.setFid(fileId);
                     msgBean.getMsg().setJsonBodyObj(msgBody);
                     sendFileIM(msgBean);
                 } else if (msgType == CacheMsgBean.SEND_IMAGE) {
-                    CacheMsgImage msgBody = (CacheMsgImage) msgBean.getMsg().getJsonBodyObj(new CacheMsgImage());
+                    CacheMsgImage msgBody = (CacheMsgImage) msgBean.getMsg().getJsonBodyObj();
                     msgBody.setFid(fileId);
                     msgBean.getMsg().setJsonBodyObj(msgBody);
                     sendPicIM(msgBean);
                 } else if (msgType == CacheMsgBean.SEND_VOICE) {
-                    CacheMsgVoice msgBody = (CacheMsgVoice) msgBean.getMsg().getJsonBodyObj(new CacheMsgVoice());
+                    CacheMsgVoice msgBody = (CacheMsgVoice) msgBean.getMsg().getJsonBodyObj();
                     msgBody.setFid(fileId);
                     msgBean.getMsg().setJsonBodyObj(msgBody);
                     sendVoiceIM(msgBean);
@@ -449,15 +449,15 @@ public class SendMsgService extends Service {
             @Override
             public void fail(String msg) {
                 if (msgType == CacheMsgBean.SEND_FILE) {
-                    CacheMsgFile msgBody = (CacheMsgFile) msgBean.getMsg().getJsonBodyObj(new CacheMsgFile());
+                    CacheMsgFile msgBody = (CacheMsgFile) msgBean.getMsg().getJsonBodyObj();
                     msgBody.setFid("-2");
                     msgBean.getMsg().setJsonBodyObj(msgBody);
                 } else if (msgType == CacheMsgBean.SEND_IMAGE) {
-                    CacheMsgImage msgBody = (CacheMsgImage) msgBean.getMsg().getJsonBodyObj(new CacheMsgImage());
+                    CacheMsgImage msgBody = (CacheMsgImage) msgBean.getMsg().getJsonBodyObj();
                     msgBody.setFid("-2");
                     msgBean.getMsg().setJsonBodyObj(msgBody);
                 } else if (msgType == CacheMsgBean.SEND_VOICE) {
-                    CacheMsgVoice msgBody = (CacheMsgVoice) msgBean.getMsg().getJsonBodyObj(new CacheMsgVoice());
+                    CacheMsgVoice msgBody = (CacheMsgVoice) msgBean.getMsg().getJsonBodyObj();
                     msgBody.setFid("-2");
                     msgBean.getMsg().setJsonBodyObj(msgBody);
                 }
@@ -469,7 +469,7 @@ public class SendMsgService extends Service {
         };
 
         if (msgType == CacheMsgBean.SEND_FILE) {
-            CacheMsgFile msgBody = (CacheMsgFile) msgBean.getMsg().getJsonBodyObj(new CacheMsgFile());
+            CacheMsgFile msgBody = (CacheMsgFile) msgBean.getMsg().getJsonBodyObj();
             String fileId = msgBody.getFid();
             if (TextUtils.isEmpty(fileId) || TextUtils.equals(fileId, "-1") || TextUtils.equals(fileId, "-2")) {
                 QiniuUtils qiniuUtils = new QiniuUtils();
@@ -479,7 +479,7 @@ public class SendMsgService extends Service {
                 sendFileIM(msgBean);
             }
         } else if (msgType == CacheMsgBean.SEND_IMAGE) {
-            CacheMsgImage msgBody = (CacheMsgImage) msgBean.getMsg().getJsonBodyObj(new CacheMsgImage());
+            CacheMsgImage msgBody = (CacheMsgImage) msgBean.getMsg().getJsonBodyObj();
             String fileId = msgBody.getFid();
             if (TextUtils.isEmpty(fileId) || TextUtils.equals(fileId, "-1") || TextUtils.equals(fileId, "-2")) {
                 QiniuUtils qiniuUtils = new QiniuUtils();
@@ -489,7 +489,7 @@ public class SendMsgService extends Service {
                 sendPicIM(msgBean);
             }
         } else if (msgType == CacheMsgBean.SEND_VOICE) {
-            CacheMsgVoice msgBody = (CacheMsgVoice) msgBean.getMsg().getJsonBodyObj(new CacheMsgVoice());
+            CacheMsgVoice msgBody = (CacheMsgVoice) msgBean.getMsg().getJsonBodyObj();
             String fileId = msgBody.getFid();
             if (TextUtils.isEmpty(fileId) || TextUtils.equals(fileId, "-1") || TextUtils.equals(fileId, "-2")) {
                 QiniuUtils qiniuUtils = new QiniuUtils();
@@ -522,7 +522,7 @@ public class SendMsgService extends Service {
             public void success(String fileId, String desPhone) {
 
                 //已上传七牛，但仍未送达到用户，处于发送状态
-                CacheMsgVideo msgBody = (CacheMsgVideo) msgBean.getMsg().getJsonBodyObj(new CacheMsgVideo());
+                CacheMsgVideo msgBody = (CacheMsgVideo) msgBean.getMsg().getJsonBodyObj();
                 if (steps == 1) {
                     msgBody.setFrameId(fileId);
                     msgBean.getMsg().setJsonBodyObj(msgBody);
@@ -537,7 +537,7 @@ public class SendMsgService extends Service {
 
             @Override
             public void fail(String msg) {
-                CacheMsgVideo msgBody = (CacheMsgVideo) msgBean.getMsg().getJsonBodyObj(new CacheMsgVideo());
+                CacheMsgVideo msgBody = (CacheMsgVideo) msgBean.getMsg().getJsonBodyObj();
                 if (steps == 1) {
                     msgBody.setFrameId("-2");
                 } else {
@@ -551,7 +551,7 @@ public class SendMsgService extends Service {
             }
         };
 
-        CacheMsgVideo msgBody = (CacheMsgVideo) msgBean.getMsg().getJsonBodyObj(new CacheMsgVideo());
+        CacheMsgVideo msgBody = (CacheMsgVideo) msgBean.getMsg().getJsonBodyObj();
         String fileId;
         String filePath;
         if (steps == 1) {
@@ -578,7 +578,7 @@ public class SendMsgService extends Service {
     //语音    2、发送消息
     private void sendVoiceIM(final SendMsg msgBean) {
         final int userId = HuxinSdkManager.instance().getUserId();
-        CacheMsgVoice msgBody = (CacheMsgVoice) msgBean.getMsg().getJsonBodyObj(new CacheMsgVoice());
+        CacheMsgVoice msgBody = (CacheMsgVoice) msgBean.getMsg().getJsonBodyObj();
         final String fileId = msgBody.getFid();
         final String secondTimes = msgBody.getVoiceTime();
         final String desPhone = msgBean.getMsg().getReceiverPhone();
@@ -629,7 +629,7 @@ public class SendMsgService extends Service {
     //图片    2、发送消息
     private void sendPicIM(final SendMsg msgBean) {
         final int userId = HuxinSdkManager.instance().getUserId();
-        CacheMsgImage msgBody = (CacheMsgImage) msgBean.getMsg().getJsonBodyObj(new CacheMsgImage());
+        CacheMsgImage msgBody = (CacheMsgImage) msgBean.getMsg().getJsonBodyObj();
         final String fileId = msgBody.getFid();
         final String desPhone = msgBean.getMsg().getReceiverPhone();
         boolean isOriginal = msgBody.getOriginalType() == CacheMsgImage.SEND_IS_ORI;
@@ -682,7 +682,7 @@ public class SendMsgService extends Service {
     //文件    2、发送消息
     private void sendFileIM(final SendMsg msgBean) {
         final int userId = HuxinSdkManager.instance().getUserId();
-        CacheMsgFile msgBody = (CacheMsgFile) msgBean.getMsg().getJsonBodyObj(new CacheMsgFile());
+        CacheMsgFile msgBody = (CacheMsgFile) msgBean.getMsg().getJsonBodyObj();
 
         final String fileId = msgBody.getFid();
         final String fileName = msgBody.getFileName();
@@ -731,7 +731,7 @@ public class SendMsgService extends Service {
     //视频    2、发送消息
     public void sendVideoIM(final SendMsg msgBean) {
         final int userId = HuxinSdkManager.instance().getUserId();
-        CacheMsgVideo cacheMsgVideo = (CacheMsgVideo) msgBean.getMsg().getJsonBodyObj(new CacheMsgVideo());
+        CacheMsgVideo cacheMsgVideo = (CacheMsgVideo) msgBean.getMsg().getJsonBodyObj();
         final String fileId = cacheMsgVideo.getVideoId();
         final String frameId = cacheMsgVideo.getFrameId();
         final String name = cacheMsgVideo.getName();
@@ -751,7 +751,7 @@ public class SendMsgService extends Service {
                         if (ack.getIsTargetOnline()) {
                             updateUI(msgBean, CacheMsgBean.SEND_SUCCEED, null, SEND_MSG_END);
                         } else {
-                            CacheMsgVideo cacheMsgVideo = (CacheMsgVideo) msgBean.getMsg().getJsonBodyObj(new CacheMsgVideo());
+                            CacheMsgVideo cacheMsgVideo = (CacheMsgVideo) msgBean.getMsg().getJsonBodyObj();
                             String videoId = cacheMsgVideo.getVideoId();
                             HttpPushManager.pushMsgForPicture(userId, desPhone, videoId,
                                     new HttpPushManager.PushListener() {

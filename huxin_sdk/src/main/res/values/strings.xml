@@ -109,7 +109,7 @@
     <string name="hx_im_chat_more_camera">拍摄</string>
     <string name="hx_im_chat_more_location">位置</string>
     <string name="hx_im_chat_more_file">文件</string>
-    <string name="hx_im_chat_more_bizcard">分享名片</string>
+    <string name="hx_im_chat_more_func">更多</string>
 
     <string name="hx_im_send_img_count">发送(%1$d/%2$d)</string>
 

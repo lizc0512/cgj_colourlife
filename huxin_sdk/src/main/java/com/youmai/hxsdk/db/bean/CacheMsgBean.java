@@ -183,11 +183,11 @@ public class CacheMsgBean implements Parcelable {
         return this;
     }
 
-    public JsonFormat getJsonBodyObj(JsonFormat jsonBodyObj) {
+    /*public JsonFormat getJsonBodyObj(JsonFormat jsonBodyObj) {
         jsonBodyObj.fromJson(contentJsonBody);
         jsonBodyObj = jsonBodyObj.cloneProto(jsonBodyObj);
         return jsonBodyObj;
-    }
+    }*/
 
     public JsonFormat getJsonBodyObj() {
         JsonFormat jsonBodyObj = null;

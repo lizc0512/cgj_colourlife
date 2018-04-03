@@ -97,7 +97,7 @@ public class PictureIndicatorActivity extends AppCompatActivity {
         final List<View> listView = new ArrayList<>();
         LayoutInflater mInflater = getLayoutInflater();
         for (final CacheMsgBean item : beanList) {
-            final CacheMsgImage cacheImage = (CacheMsgImage) item.getJsonBodyObj(new CacheMsgImage());
+            final CacheMsgImage cacheImage = (CacheMsgImage) item.getJsonBodyObj();
             final String fid = cacheImage.getFid();
             String url = cacheImage.getFilePath();
             if (item.isRightUI()) {
@@ -161,7 +161,7 @@ public class PictureIndicatorActivity extends AppCompatActivity {
                                 @Override
                                 public void onCallSavePhoto() {
                                     if (mPosition < beanList.size()) {
-                                        CacheMsgImage cacheImage = (CacheMsgImage) beanList.get(mPosition).getJsonBodyObj(new CacheMsgImage());
+                                        CacheMsgImage cacheImage = (CacheMsgImage) beanList.get(mPosition).getJsonBodyObj();
                                         String fid = cacheImage.getFid();
                                         String path;
                                         if (!TextUtils.isEmpty(fid)) {
@@ -214,7 +214,7 @@ public class PictureIndicatorActivity extends AppCompatActivity {
         iv_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CacheMsgImage cacheImage = (CacheMsgImage) beanList.get(mPosition).getJsonBodyObj(new CacheMsgImage());
+                CacheMsgImage cacheImage = (CacheMsgImage) beanList.get(mPosition).getJsonBodyObj();
                 String fid = cacheImage.getFid();
                 String path;
                 if (!TextUtils.isEmpty(fid)) {

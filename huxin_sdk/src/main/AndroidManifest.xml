@@ -304,6 +304,10 @@
             android:permission="android.permission.BIND_JOB_SERVICE" />
 
         <service
+            android:name=".service.DownloadService"
+            android:permission="1000" />
+
+        <service
             android:name=".service.SendMsgService"
             android:permission="1000" />
 

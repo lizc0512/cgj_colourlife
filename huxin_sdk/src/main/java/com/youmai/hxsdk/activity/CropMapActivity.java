@@ -11,6 +11,7 @@ import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.config.Constant;
 import com.youmai.hxsdk.utils.LogUtils;
 import com.youmai.hxsdk.utils.StringUtils;
+import com.youmai.hxsdk.view.full.MapViewUtil;
 
 /**
  * 作者：create by YW
@@ -21,6 +22,7 @@ public class CropMapActivity extends SdkBaseActivity {
 
     public static CropMapActivity mapActivity;
 
+    private MapViewUtil mMapViewUtil;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -40,6 +42,10 @@ public class CropMapActivity extends SdkBaseActivity {
         ImageView iv_half_back = (ImageView) findViewById(R.id.iv_half_back);
 
 
+        mMapViewUtil = new MapViewUtil(this, mMapView);
+        mMapViewUtil.onCreate(null);
+        mMapViewUtil.setLocation(location);//标志物
+
         if (!StringUtils.isEmpty(location)) {
             final LatLng latLng1 = new LatLng(
                     Double.parseDouble(location.split(",")[1]),
@@ -47,7 +53,8 @@ public class CropMapActivity extends SdkBaseActivity {
             iv_navigate.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {//导航
-
+                    setFloatView(false);
+                    mMapViewUtil.toDaoHang(latLng1);
                 }
             });
         }

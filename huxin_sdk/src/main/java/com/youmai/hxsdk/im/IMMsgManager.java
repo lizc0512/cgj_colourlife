@@ -23,6 +23,8 @@ import com.youmai.hxsdk.config.AppConfig;
 import com.youmai.hxsdk.config.FileConfig;
 import com.youmai.hxsdk.entity.CallInfo;
 import com.youmai.hxsdk.entity.RespBaseBean;
+import com.youmai.hxsdk.http.DownloadListener;
+import com.youmai.hxsdk.http.FileAsyncTaskDownload;
 import com.youmai.hxsdk.im.cache.CacheMsgEmotion;
 import com.youmai.hxsdk.im.cache.CacheMsgFile;
 import com.youmai.hxsdk.im.cache.CacheMsgHelper;
@@ -497,10 +499,8 @@ public class IMMsgManager {
                             .setFid(fid)
                             .setSourcePhone(sourcePhone)
                             .setForwardCount(forwardCount));
+            downloadAudio(cacheMsgBean, url);
 
-            CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
-            cacheMsgBeanList.add(cacheMsgBean);
-            handlerIMMsgCallback(cacheMsgBean);
         } else if (im.getMsgType() == IMConst.IM_FILE_VALUE) { //文件
             String fid = im.getContent().getFile().getFid();
             String fileName = im.getContent().getFile().getFileName();
@@ -538,6 +538,42 @@ public class IMMsgManager {
             cacheMsgBeanList.add(cacheMsgBean);
             handlerIMMsgCallback(cacheMsgBean);
         }
+    }
+
+
+    private void downloadAudio(final CacheMsgBean cacheMsgBean, final String audioUrl) {
+        DownloadListener listener = new DownloadListener() {
+            @Override
+            public void onProgress(int cur, int total) {
+            }
+
+            @Override
+            public void onFail(String err) {
+            }
+
+            @Override
+            public void onSuccess(String path) {
+                if (cacheMsgBean != null) {
+                    if (cacheMsgBean.getJsonBodyObj() instanceof CacheMsgVoice) {
+                        CacheMsgVoice cacheMsgVoice = (CacheMsgVoice) cacheMsgBean.getJsonBodyObj();
+                        cacheMsgVoice.setVoicePath(path);
+                        cacheMsgBean.setJsonBodyObj(cacheMsgVoice);
+
+                        cacheMsgBeanList.add(cacheMsgBean);
+                        //add to db
+                        CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
+                        handlerIMMsgCallback(cacheMsgBean);
+                    }
+                }
+            }
+        };
+        FileAsyncTaskDownload fileDownload = new FileAsyncTaskDownload(listener);
+        String fileName = AppUtils.md5(audioUrl);
+        String path = FileConfig.getAudioDownLoadPath();
+        fileDownload.setDownloadpath(path);
+        fileDownload.setDownLoadFileName(fileName);
+
+        fileDownload.execute(audioUrl);
     }
 
     /**

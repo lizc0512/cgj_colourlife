@@ -437,7 +437,7 @@ public class IMListAdapter extends RecyclerView.Adapter {
     private void onBindTxt(TxtViewHolder txtViewHolder, final int position) {
         final CacheMsgBean cacheMsgBean = mImBeanList.get(position);
 
-        String txtContent = "";
+        String txtContent;
         if (cacheMsgBean.getJsonBodyObj() instanceof CacheMsgTxt) {
             CacheMsgTxt cacheMsgTxt = (CacheMsgTxt) cacheMsgBean.getJsonBodyObj(new CacheMsgTxt());
             txtContent = cacheMsgTxt.getMsgTxt();
@@ -579,7 +579,6 @@ public class IMListAdapter extends RecyclerView.Adapter {
     private ImageView mPlayVoiceIV;
 
     private TipView voiceTip;
-    private float mVoiceRawX, mVoiceRawY;
 
     private void onBindVoice(final VoiceViewHolder voiceViewHolder, final int position) {
         final CacheMsgBean cacheMsgBean = mImBeanList.get(position);
@@ -648,8 +647,15 @@ public class IMListAdapter extends RecyclerView.Adapter {
                 voicePlayAnim = (AnimationDrawable) voiceViewHolder.voiceIV.getDrawable();
                 voicePlayAnim.start();
 
+                String path;
+                if (TextUtils.isEmpty(cacheMsgVoice.getVoicePath())) {
+                    path = cacheMsgVoice.getVoiceUrl();
+                } else {
+                    path = cacheMsgVoice.getVoicePath();
+                }
+
                 //播放声音
-                MediaManager.playSound(cacheMsgVoice.getVoicePath(), new MediaPlayer.OnCompletionListener() {
+                MediaManager.playSound(path, new MediaPlayer.OnCompletionListener() {
                     @Override
                     public void onCompletion(MediaPlayer mp) {
                         voicePlayAnim.stop();

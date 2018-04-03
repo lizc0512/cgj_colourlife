@@ -170,16 +170,6 @@
         <item name="android:layout_marginBottom">@dimen/card_lay_msg_margin</item>
     </style>
 
-    <!--沟通卡主内容消息框样式-->
-    <style name="im_content_card_msg_style">
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_weight">1</item>
-        <item name="android:orientation">horizontal</item>
-    </style>
-
-    <!-- ActionSheet进出动画 -->
-
     <!--TipView-->
     <style name="tip_pop_anim_style">
         <item name="android:windowEnterAnimation">@anim/hx_pop_show_anim</item>

@@ -13,7 +13,6 @@
         android:text="@string/hx_fragment_im_data" />
 
     <LinearLayout
-        android:id="@+id/rl"
         style="@style/im_content_card_style">
 
         <ImageView

@@ -110,8 +110,6 @@ public class IMChat {
             msgType = IMConst.IM_VIDEO_VALUE;
         } else if (IMContentUtil.HasContentType(contentType, IMConst.IM_LOCATION_VALUE)) {
             msgType = IMConst.IM_LOCATION_VALUE;
-        } else if (IMContentUtil.HasContentType(contentType, IMConst.IM_LOCATIONSHARE_VALUE)) {
-            msgType = IMConst.IM_LOCATIONSHARE_VALUE;
         } else if (IMContentUtil.HasContentType(contentType, IMConst.IM_FILE_VALUE)) {
             msgType = IMConst.IM_FILE_VALUE;
         } else if (IMContentUtil.HasContentType(contentType, IMConst.IM_BIZCARD_VALUE)) {

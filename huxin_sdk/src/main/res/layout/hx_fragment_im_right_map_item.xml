@@ -11,52 +11,43 @@
         android:layout_height="wrap_content"
         android:text="@string/hx_fragment_im_data" />
 
-    <LinearLayout style="@style/im_content_card_style">
+    <LinearLayout
+        style="@style/im_content_card_style"
+        android:gravity="right">
 
-        <LinearLayout
-            style="@style/im_content_card_msg_style"
-            android:gravity="right">
+        <FrameLayout
+            android:id="@+id/item_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/card_head_to_content_margin"
+            android:layout_marginRight="@dimen/card_head_to_content_margin"
+            android:clickable="true"
+            android:paddingBottom="10dp">
 
             <ImageView
-                android:layout_width="wrap_content"
+                android:id="@+id/sender_map"
+                android:layout_width="200dp"
+                android:layout_height="150dp"
+                android:adjustViewBounds="true"
+                android:background="@drawable/hx_im_card_map_right"
+                android:paddingBottom="0.5dp"
+                android:paddingLeft="0.5dp"
+                android:paddingRight="0.5dp"
+                android:paddingTop="0.5dp" />
+
+            <TextView
+                android:id="@+id/sender_addr"
+                android:layout_width="195dp"
                 android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:background="@drawable/hx_circle_bottom_green_corner_bg"
+                android:ellipsize="end"
+                android:maxLines="2"
                 android:padding="5dp"
-                android:visibility="gone" />
+                android:textColor="#333333"
+                android:textSize="14sp" />
 
-            <FrameLayout
-                android:id="@+id/item_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/card_head_to_content_margin"
-                android:layout_marginRight="@dimen/card_head_to_content_margin"
-                android:clickable="true"
-                android:paddingBottom="10dp">
-
-                <ImageView
-                    android:id="@+id/sender_map"
-                    android:layout_width="200dp"
-                    android:layout_height="150dp"
-                    android:adjustViewBounds="true"
-                    android:background="@drawable/hx_im_card_map_right"
-                    android:paddingBottom="0.5dp"
-                    android:paddingLeft="0.5dp"
-                    android:paddingRight="0.5dp"
-                    android:paddingTop="0.5dp" />
-
-                <TextView
-                    android:id="@+id/sender_addr"
-                    android:layout_width="195dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:background="@drawable/hx_circle_bottom_green_corner_bg"
-                    android:ellipsize="end"
-                    android:maxLines="2"
-                    android:padding="5dp"
-                    android:textColor="#333333"
-                    android:textSize="14sp" />
-
-            </FrameLayout>
-        </LinearLayout>
+        </FrameLayout>
 
         <ImageView
             android:id="@+id/sender_iv"

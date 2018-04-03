@@ -791,7 +791,6 @@ public class IMConnectionActivity extends SdkBaseActivity implements
     private void sendLocation() {
         Intent intent = new Intent();
         intent.putExtra("is_user_by_im", true);
-        //intent.setClass(this, LocationActivity.class);
         intent.setClass(this, LocationActivity.class);
         startActivityForResult(intent, 2);
     }
@@ -1123,7 +1122,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
         } else if (type == InputMessageLay.TYPE_CAMERA) {
             useCamera();
         } else if (type == InputMessageLay.TYPE_LOCATION) {
-
+            sendLocation();
         } else if (type == InputMessageLay.TYPE_FILE) {
             showFileChooser();
         } else if (type == InputMessageLay.TYPE_CARD) {

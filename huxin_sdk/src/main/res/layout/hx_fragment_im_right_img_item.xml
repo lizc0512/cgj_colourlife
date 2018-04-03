@@ -11,35 +11,32 @@
         android:layout_height="wrap_content"
         android:text="@string/hx_fragment_im_data" />
 
-    <LinearLayout style="@style/im_content_card_style">
+    <LinearLayout
+        style="@style/im_content_card_style"
+        android:gravity="right">
 
-        <LinearLayout
-            style="@style/im_content_card_msg_style"
-            android:gravity="right">
+        <ProgressBar
+            android:id="@+id/pbar"
+            android:layout_width="24dp"
+            android:layout_height="24dp" />
 
-            <ProgressBar
-                android:id="@+id/pbar"
-                android:layout_width="24dp"
-                android:layout_height="24dp" />
+        <FrameLayout
+            android:id="@+id/item_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/card_head_to_content_margin"
+            android:layout_marginRight="@dimen/card_head_to_content_margin"
+            android:clickable="true">
 
-            <FrameLayout
-                android:id="@+id/item_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/card_head_to_content_margin"
-                android:layout_marginRight="@dimen/card_head_to_content_margin"
-                android:clickable="true">
+            <ImageView
+                android:id="@+id/sender_img"
+                android:layout_width="120dp"
+                android:layout_height="90dp"
+                android:adjustViewBounds="true"
+                android:transitionName="imimage" />
 
-                <ImageView
-                    android:id="@+id/sender_img"
-                    android:layout_width="120dp"
-                    android:layout_height="90dp"
-                    android:adjustViewBounds="true"
-                    android:transitionName="imimage" />
+        </FrameLayout>
 
-            </FrameLayout>
-
-        </LinearLayout>
 
         <ImageView
             android:id="@+id/sender_iv"

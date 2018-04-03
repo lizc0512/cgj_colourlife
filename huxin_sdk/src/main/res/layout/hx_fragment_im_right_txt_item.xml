@@ -1,72 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/img_content_lay"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/img_content_lay"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/sender_date"
+        style="@style/im_card_date"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:text="@string/hx_fragment_im_data" />
 
-        <TextView
-            android:id="@+id/sender_date"
-            style="@style/im_card_date"
+    <LinearLayout
+        style="@style/im_content_card_style"
+        android:gravity="right">
+
+        <FrameLayout
+            android:id="@+id/item_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/hx_fragment_im_data" />
+            android:layout_gravity="right"
+            android:layout_marginLeft="@dimen/card_head_to_content_margin"
+            android:layout_marginRight="@dimen/card_head_to_content_margin"
+            android:clickable="true">
 
-        <LinearLayout style="@style/im_content_card_style">
-            <LinearLayout
-                style="@style/im_content_card_msg_style"
-                android:gravity="right">
+            <com.youmai.hxsdk.view.text.CopeTextView
+                android:id="@+id/sender_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:autoLink="web"
+                android:background="@drawable/hx_im_voice_bg_right"
+                android:duplicateParentState="true"
+                android:lineSpacingExtra="@dimen/card_font_size_small_spacing"
+                android:maxWidth="180dp"
+                android:paddingBottom="10dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="14dp"
+                android:paddingTop="10dp"
+                android:text="消息"
+                android:textColor="@color/im_right_font"
+                android:textColorLink="@color/hx_color_orange2"
+                android:textSize="@dimen/card_font_size_small"
+                app:position="right" />
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="4dp"
-                    android:visibility="gone" />
+        </FrameLayout>
 
-                <FrameLayout
-                    android:id="@+id/item_btn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="right"
-                    android:layout_marginLeft="@dimen/card_head_to_content_margin"
-                    android:layout_marginRight="@dimen/card_head_to_content_margin"
-                    android:clickable="true">
+        <ImageView
+            android:id="@+id/sender_iv"
+            android:layout_width="@dimen/card_head"
+            android:layout_height="@dimen/card_head"
+            android:src="@drawable/hx_im_user_header" />
 
-                    <com.youmai.hxsdk.view.text.CopeTextView
-                        android:id="@+id/sender_tv"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:autoLink="web"
-                        android:background="@drawable/hx_im_voice_bg_right"
-                        android:duplicateParentState="true"
-                        android:lineSpacingExtra="@dimen/card_font_size_small_spacing"
-                        android:maxWidth="180dp"
-                        android:paddingBottom="10dp"
-                        android:paddingLeft="10dp"
-                        android:paddingRight="14dp"
-                        android:paddingTop="10dp"
-                        android:text="消息"
-                        android:textColor="@color/im_right_font"
-                        android:textColorLink="@color/hx_color_orange2"
-                        android:textSize="@dimen/card_font_size_small"
-                        app:position="right" />
-
-                </FrameLayout>
-            </LinearLayout>
-
-            <ImageView
-                android:id="@+id/sender_iv"
-                android:layout_width="@dimen/card_head"
-                android:layout_height="@dimen/card_head"
-                android:src="@drawable/hx_im_user_header" />
-
-        </LinearLayout>
     </LinearLayout>
 
 </LinearLayout>

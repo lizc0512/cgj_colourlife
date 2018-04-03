@@ -36,7 +36,7 @@ public class MsgContent implements Parcelable {
             case IMConst.IM_VIDEO_VALUE:
                 mVideo = new ContentVideo(parser);
                 break;
-            case IMConst.IM_LOCATIONSHARE_VALUE:
+            case IMConst.IM_LOCATION_VALUE:
                 mLocation = new ContentLocation(parser);
                 break;
             case IMConst.IM_FILE_VALUE:

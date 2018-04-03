@@ -13,70 +13,61 @@
         android:layout_height="wrap_content"
         android:text="@string/hx_fragment_im_data" />
 
-    <LinearLayout style="@style/im_content_card_style">
+    <LinearLayout
+        style="@style/im_content_card_style"
+        android:gravity="right">
 
-        <LinearLayout
-            style="@style/im_content_card_msg_style"
-            android:gravity="right">
+        <FrameLayout
+            android:id="@+id/item_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/card_head_to_content_margin"
+            android:layout_marginRight="@dimen/card_head_to_content_margin"
+            android:clickable="true">
 
             <ImageView
+                android:id="@+id/sender_img"
+                android:layout_width="120dp"
+                android:layout_height="90dp"
+                android:adjustViewBounds="true"
+                android:src="@drawable/hx_im_default_img"
+                android:transitionName="imimage" />
+
+            <TextView
+                android:id="@+id/item_video_time_text"
+                android:layout_width="114dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginRight="6dp"
+                android:background="@drawable/hx_video_time_bg"
+                android:gravity="right"
+                android:paddingBottom="2dp"
+                android:paddingRight="12dp"
+                android:paddingTop="2dp"
+                android:text="00:00"
+                android:textColor="#FFFFFF" />
+
+            <ImageView
+                android:id="@+id/item_video_play_img"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="5dp"
-                android:visibility="gone" />
+                android:layout_gravity="center"
+                android:src="@drawable/hx_im_video_play_small_icon" />
 
-            <FrameLayout
-                android:id="@+id/item_btn"
+            <com.youmai.hxsdk.view.progressbar.CircleProgressView
+                android:id="@+id/item_video_pro"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/card_head_to_content_margin"
-                android:layout_marginRight="@dimen/card_head_to_content_margin"
-                android:clickable="true">
+                android:layout_gravity="center"
+                android:padding="2dp"
+                android:progress="0"
+                android:visibility="gone"
+                app:progressNormalSize="2dp"
+                app:progressReachSize="2dp"
+                app:progressStyle="Normal"
+                app:radius="20dp" />
+        </FrameLayout>
 
-                <ImageView
-                    android:id="@+id/sender_img"
-                    android:layout_width="120dp"
-                    android:layout_height="90dp"
-                    android:adjustViewBounds="true"
-                    android:src="@drawable/hx_im_default_img"
-                    android:transitionName="imimage" />
-
-                <TextView
-                    android:id="@+id/item_video_time_text"
-                    android:layout_width="114dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:layout_marginRight="6dp"
-                    android:background="@drawable/hx_video_time_bg"
-                    android:gravity="right"
-                    android:paddingBottom="2dp"
-                    android:paddingRight="12dp"
-                    android:paddingTop="2dp"
-                    android:text="00:00"
-                    android:textColor="#FFFFFF" />
-
-                <ImageView
-                    android:id="@+id/item_video_play_img"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:src="@drawable/hx_im_video_play_small_icon" />
-
-                <com.youmai.hxsdk.view.progressbar.CircleProgressView
-                    android:id="@+id/item_video_pro"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:padding="2dp"
-                    android:progress="0"
-                    android:visibility="gone"
-                    app:progressNormalSize="2dp"
-                    app:progressReachSize="2dp"
-                    app:progressStyle="Normal"
-                    app:radius="20dp" />
-            </FrameLayout>
-
-        </LinearLayout>
 
         <ImageView
             android:id="@+id/sender_iv"

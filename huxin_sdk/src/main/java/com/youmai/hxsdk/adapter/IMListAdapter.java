@@ -274,7 +274,6 @@ public class IMListAdapter extends RecyclerView.Adapter {
         final CacheMsgBean cacheMsgBean = mImBeanList.get(position);
         final CacheMsgFile cacheMsgFile = (CacheMsgFile) cacheMsgBean.getJsonBodyObj(new CacheMsgFile());
 
-        holder.rl.setTag(cacheMsgBean.getId());
         Glide.with(mContext)
                 .load(cacheMsgFile.getFileRes())
                 .apply(new RequestOptions()
@@ -774,7 +773,6 @@ public class IMListAdapter extends RecyclerView.Adapter {
     }
 
     public class FileViewHolder extends BaseViewHolder {
-        protected View rl;
         public ProgressBar filePbar;
         private View fileBtn;
         public ImageView fileIV;
@@ -784,7 +782,6 @@ public class IMListAdapter extends RecyclerView.Adapter {
 
         FileViewHolder(View itemView) {
             super(itemView);
-            rl = itemView.findViewById(R.id.rl);
             filePbar = (ProgressBar) itemView.findViewById(R.id.file_pbar);
             fileBtn = itemView.findViewById(R.id.item_btn);
             fileNameTV = (TextView) itemView.findViewById(R.id.file_name);

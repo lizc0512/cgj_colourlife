@@ -73,6 +73,8 @@ public class CacheMsgBean implements Parcelable {
 
     private String contentJsonBody;  //消息内容json body
 
+    private int progress;//保存下载进度
+
 
     public Long getId() {
         return id;
@@ -151,6 +153,16 @@ public class CacheMsgBean implements Parcelable {
 
     public CacheMsgBean setTargetPhone(String targetPhone) {
         this.targetPhone = targetPhone;
+        return this;
+    }
+
+
+    public int getProgress() {
+        return progress;
+    }
+
+    public CacheMsgBean setProgress(int progress) {
+        this.progress = progress;
         return this;
     }
 
@@ -253,6 +265,20 @@ public class CacheMsgBean implements Parcelable {
         return res;
     }
 
+    public CacheMsgBean(CacheMsgBean bean) {
+        this.id = bean.getId();
+        this.msgId = bean.getMsgId();
+        this.msgType = bean.getMsgType();
+        this.msgStatus = bean.getMsgStatus();
+        this.msgTime = bean.getMsgTime();
+        this.senderUserId = bean.getSenderUserId();
+        this.receiverUserId = bean.getReceiverUserId();
+        this.senderPhone = bean.getSenderPhone();
+        this.receiverPhone = bean.getReceiverPhone();
+        this.targetPhone = bean.getTargetPhone();
+        this.contentJsonBody = bean.getContentJsonBody();
+        this.progress = bean.getProgress();
+    }
 
     @Override
     public int describeContents() {
@@ -270,7 +296,9 @@ public class CacheMsgBean implements Parcelable {
         dest.writeInt(this.receiverUserId);
         dest.writeString(this.senderPhone);
         dest.writeString(this.receiverPhone);
+        dest.writeString(this.targetPhone);
         dest.writeString(this.contentJsonBody);
+        dest.writeInt(this.progress);
     }
 
     public CacheMsgBean() {
@@ -286,13 +314,15 @@ public class CacheMsgBean implements Parcelable {
         this.receiverUserId = in.readInt();
         this.senderPhone = in.readString();
         this.receiverPhone = in.readString();
+        this.targetPhone = in.readString();
         this.contentJsonBody = in.readString();
+        this.progress = in.readInt();
     }
 
-    @Generated(hash = 1816649675)
-    public CacheMsgBean(Long id, Long msgId, int msgType, int msgStatus, long msgTime, int senderUserId,
-                        int receiverUserId, String senderPhone, String receiverPhone, String targetPhone,
-                        String contentJsonBody) {
+    @Generated(hash = 399473634)
+    public CacheMsgBean(Long id, Long msgId, int msgType, int msgStatus, long msgTime,
+                        int senderUserId, int receiverUserId, String senderPhone, String receiverPhone,
+                        String targetPhone, String contentJsonBody, int progress) {
         this.id = id;
         this.msgId = msgId;
         this.msgType = msgType;
@@ -304,20 +334,7 @@ public class CacheMsgBean implements Parcelable {
         this.receiverPhone = receiverPhone;
         this.targetPhone = targetPhone;
         this.contentJsonBody = contentJsonBody;
-    }
-
-    public CacheMsgBean(CacheMsgBean bean) {
-        this.id = bean.getId();
-        this.msgId = bean.getMsgId();
-        this.msgType = bean.getMsgType();
-        this.msgStatus = bean.getMsgStatus();
-        this.msgTime = bean.getMsgTime();
-        this.senderUserId = bean.getSenderUserId();
-        this.receiverUserId = bean.getReceiverUserId();
-        this.senderPhone = bean.getSenderPhone();
-        this.receiverPhone = bean.getReceiverPhone();
-        this.targetPhone = bean.getTargetPhone();
-        this.contentJsonBody = bean.getContentJsonBody();
+        this.progress = progress;
     }
 
     public static final Creator<CacheMsgBean> CREATOR = new Creator<CacheMsgBean>() {
@@ -331,21 +348,4 @@ public class CacheMsgBean implements Parcelable {
             return new CacheMsgBean[size];
         }
     };
-
-    @Override
-    public String toString() {
-        return "CacheMsgBean{" +
-                "id=" + id +
-                ", msgId=" + msgId +
-                ", msgType=" + msgType +
-                ", msgStatus=" + msgStatus +
-                ", msgTime=" + msgTime +
-                ", senderUserId=" + senderUserId +
-                ", receiverUserId=" + receiverUserId +
-                ", senderPhone='" + senderPhone + '\'' +
-                ", receiverPhone='" + receiverPhone + '\'' +
-                ", targetPhone='" + targetPhone + '\'' +
-                ", contentJsonBody='" + contentJsonBody + '\'' +
-                '}';
-    }
 }

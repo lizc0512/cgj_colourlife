@@ -18,7 +18,7 @@ public class CacheMsgVideo implements Parcelable, JsonFormat<CacheMsgVideo> {
     private String name;
     private String size;
     private long time;//毫秒
-    private int progress;//保存下载进度
+
 
     public CacheMsgVideo() {
     }
@@ -32,7 +32,6 @@ public class CacheMsgVideo implements Parcelable, JsonFormat<CacheMsgVideo> {
         name = in.readString();
         size = in.readString();
         time = in.readLong();
-        progress = in.readInt();
     }
 
     @Override
@@ -44,7 +43,6 @@ public class CacheMsgVideo implements Parcelable, JsonFormat<CacheMsgVideo> {
         dest.writeString(name);
         dest.writeString(size);
         dest.writeLong(time);
-        dest.writeInt(progress);
     }
 
     @Override
@@ -138,14 +136,6 @@ public class CacheMsgVideo implements Parcelable, JsonFormat<CacheMsgVideo> {
         return this;
     }
 
-    public int getProgress() {
-        return progress;
-    }
-
-    public CacheMsgVideo setProgress(int progress) {
-        this.progress = progress;
-        return this;
-    }
 
     @Override
     public String toString() {
@@ -157,7 +147,6 @@ public class CacheMsgVideo implements Parcelable, JsonFormat<CacheMsgVideo> {
                 ", name='" + name + '\'' +
                 ", size='" + size + '\'' +
                 ", time=" + time +
-                ", progress=" + progress +
                 '}';
     }
 
@@ -170,8 +159,7 @@ public class CacheMsgVideo implements Parcelable, JsonFormat<CacheMsgVideo> {
                 .setFramePath(framePath)
                 .setName(name)
                 .setSize(size)
-                .setTime(time)
-                .setProgress(progress);
+                .setTime(time);
         return cacheMsgVideo;
     }
 }

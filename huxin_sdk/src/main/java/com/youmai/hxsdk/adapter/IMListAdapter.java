@@ -1,11 +1,13 @@
 package com.youmai.hxsdk.adapter;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.media.MediaPlayer;
 import android.os.Build;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
@@ -27,8 +29,10 @@ import com.youmai.hxsdk.activity.CropMapActivity;
 import com.youmai.hxsdk.activity.IMConnectionActivity;
 import com.youmai.hxsdk.activity.PictureIndicatorActivity;
 import com.youmai.hxsdk.config.AppConfig;
+import com.youmai.hxsdk.config.FileConfig;
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
-import com.youmai.hxsdk.dialog.HxCardDialog;
+import com.youmai.hxsdk.http.DownloadListener;
+import com.youmai.hxsdk.http.FileAsyncTaskDownload;
 import com.youmai.hxsdk.im.IMConst;
 import com.youmai.hxsdk.im.IMHelper;
 import com.youmai.hxsdk.im.IMMsgManager;
@@ -44,8 +48,6 @@ import com.youmai.hxsdk.im.voice.manager.MediaManager;
 import com.youmai.hxsdk.module.remind.SetRemindActivity;
 import com.youmai.hxsdk.module.videoplayer.VideoPlayerActivity;
 import com.youmai.hxsdk.module.videoplayer.bean.VideoDetailInfo;
-import com.youmai.hxsdk.service.DownloadService;
-import com.youmai.hxsdk.service.download.bean.FileQueue;
 import com.youmai.hxsdk.utils.QiniuUrl;
 import com.youmai.hxsdk.utils.TimeUtils;
 import com.youmai.hxsdk.view.LinearLayoutManagerWithSmoothScroller;
@@ -56,6 +58,7 @@ import com.youmai.hxsdk.view.text.CopeTextView;
 import com.youmai.hxsdk.view.tip.TipView;
 
 import java.io.File;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
@@ -96,6 +99,8 @@ public class IMListAdapter extends RecyclerView.Adapter {
     private static final int VIDEO_RIGHT = 21;//视频右
 
 
+    private static final int HANDLER_REFRESH_PROGREE = 0;
+
     private Context mContext;
     private IMConnectionActivity mIMConnectActivity;
     private RecyclerView mRecyclerView;
@@ -110,10 +115,14 @@ public class IMListAdapter extends RecyclerView.Adapter {
     private TreeMap<Integer, CacheMsgBean> selectMsg = new TreeMap<>();
 
     private OnClickMoreListener moreListener;
+    private UIHandler mHandler;
 
     public IMListAdapter(IMConnectionActivity act, RecyclerView recyclerView, String dstPhone, String dstName) {
         mIMConnectActivity = act;
         mContext = act;
+
+        mHandler = new UIHandler(this);
+
         mRecyclerView = recyclerView;
         mDstPhone = dstPhone;
         //srsm add
@@ -338,6 +347,8 @@ public class IMListAdapter extends RecyclerView.Adapter {
 
         showSendStart(imgViewHolder, cacheMsgBean.getMsgStatus(), cacheMsgBean, position);
 
+        showMsgTime(position, imgViewHolder.senderDateTV, cacheMsgBean.getMsgTime());
+
         Glide.with(mContext)
                 .load(cacheMsgBean.isRightUI() ? rightUrl : leftUrl)
                 .apply(new RequestOptions()
@@ -391,8 +402,6 @@ public class IMListAdapter extends RecyclerView.Adapter {
         final CacheMsgBean cacheMsgBean = mImBeanList.get(position);
         final CacheMsgVideo cacheMsgVideo = (CacheMsgVideo) cacheMsgBean.getJsonBodyObj();
         showSendStart(videoViewHolder, cacheMsgBean.getMsgStatus(), cacheMsgBean, position);
-        final long mid = cacheMsgBean.getId();
-        final String dstPhone = cacheMsgBean.getSenderPhone();
 
         final String videoPath = cacheMsgVideo.getVideoPath();//本地视频
         final String framePath = cacheMsgVideo.getFramePath();//本地视频首帧
@@ -405,18 +414,21 @@ public class IMListAdapter extends RecyclerView.Adapter {
         }
 
         videoViewHolder.timeText.setText(TimeUtils.getTimeFromMillisecond(time));
+
+        showMsgTime(position, videoViewHolder.senderDateTV, cacheMsgBean.getMsgTime());
+
         Glide.with(mContext)
                 .load(cacheMsgBean.isRightUI() ? rightUrl : leftUrl)
                 .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.RESOURCE).placeholder(R.drawable.hx_im_default_img)
                         .transform(new MaskTransformation(cacheMsgBean.isRightUI() ? R.drawable.hx_im_voice_bg_right : R.drawable.hx_im_voice_bg_left)))
                 .into(videoViewHolder.videoImg);
 
-        if (TextUtils.isEmpty(videoPath) && cacheMsgVideo.getProgress() != 0) {
+        if (TextUtils.isEmpty(videoPath) && cacheMsgBean.getProgress() != 0) {
             videoViewHolder.videoPlayImg.setVisibility(View.GONE);
             videoViewHolder.videoCircleProgressView.setVisibility(View.VISIBLE);
-            videoViewHolder.videoCircleProgressView.setProgress(cacheMsgVideo.getProgress());
+            videoViewHolder.videoCircleProgressView.setProgress(cacheMsgBean.getProgress());
             videoViewHolder.videoImg.setEnabled(false);
-        } else if (TextUtils.isEmpty(videoPath) && cacheMsgVideo.getProgress() == -1) {
+        } else if (TextUtils.isEmpty(videoPath) && cacheMsgBean.getProgress() == -1) {
             //下载失败的显示
             videoViewHolder.videoPlayImg.setVisibility(View.VISIBLE);
             videoViewHolder.videoCircleProgressView.setVisibility(View.GONE);
@@ -429,9 +441,8 @@ public class IMListAdapter extends RecyclerView.Adapter {
         videoViewHolder.lay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 if (TextUtils.isEmpty(videoPath)) {
-                    downFileTip(videoUrl, mid, dstPhone);
+                    downVideo(position, videoUrl, cacheMsgBean);
                 } else {
                     File videoFile = new File(videoPath);
                     if (videoFile.exists()) {
@@ -442,53 +453,67 @@ public class IMListAdapter extends RecyclerView.Adapter {
                         mContext.startActivity(intent);
                     } else {
                         //文件被删掉，重新下载
-                        cacheMsgVideo.setProgress(1);
                         cacheMsgVideo.setVideoPath("");
                         cacheMsgBean.setJsonBodyObj(cacheMsgVideo);
+                        cacheMsgBean.setProgress(0);
                         CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
-                        downFileTip(videoUrl, mid, dstPhone);
+                        downVideo(position, videoUrl, cacheMsgBean);
                     }
                 }
             }
         });
     }
 
-    //下载视频
-    void downFileTip(final String videoUrl, final long mid, final String dstPhone) {
-        //wifi下直接下载
-        if (IMHelper.isWifi(mContext)) {
-            Intent intent = new Intent(mContext, DownloadService.class);
-            FileQueue fileQueue = new FileQueue();
-            fileQueue.setPath(videoUrl);
-            fileQueue.setMid(mid);
-            fileQueue.setPro(0);
-            fileQueue.setPhone(mDstPhone);
-            intent.putExtra("data", fileQueue);
-            mContext.startService(intent);
-        } else {
-            HxCardDialog.Builder builder = new HxCardDialog.Builder(mContext)
-                    .setTitle("提示")
-                    .setContent("网络非WIFI下，是否要下载该视频")
-                    .setOnListener(new HxCardDialog.OnClickListener() {
-                        @Override
-                        public void onSubmitClick(DialogInterface dialog) {
-                            Intent intent = new Intent(mContext, DownloadService.class);
-                            FileQueue fileQueue = new FileQueue();
-                            fileQueue.setPath(videoUrl);
-                            fileQueue.setMid(mid);
-                            fileQueue.setPro(0);
-                            fileQueue.setPhone(mDstPhone);
-                            intent.putExtra("data", fileQueue);
-                            mContext.startService(intent);
-                        }
+    private void downVideo(final int position, String path, final CacheMsgBean cacheMsgBean) {
+        FileAsyncTaskDownload load = new FileAsyncTaskDownload(new DownloadListener() {
+            @Override
+            public void onProgress(int cur, int total) {
+                if (cacheMsgBean.getJsonBodyObj() instanceof CacheMsgVideo) {
+                    cacheMsgBean.setProgress(cur * 100 / total);
 
-                        @Override
-                        public void onCancelClick(DialogInterface dialog) {
+                    Message msg = mHandler.obtainMessage(HANDLER_REFRESH_PROGREE);
+                    Bundle bundle = new Bundle();
+                    bundle.putParcelable("item", cacheMsgBean);
+                    msg.setData(bundle);
+                    mHandler.handleMessage(msg);
+                }
 
-                        }
-                    });
-            builder.create().show();
-        }
+            }
+
+            @Override
+            public void onFail(String err) {
+                cacheMsgBean.setProgress(-1);
+                mImBeanList.set(position, cacheMsgBean);//更新数据
+                CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
+                refreshItemUI(cacheMsgBean);
+            }
+
+            @Override
+            public void onSuccess(String path) {
+                if (cacheMsgBean.getJsonBodyObj() instanceof CacheMsgVideo) {
+                    cacheMsgBean.setProgress(100);
+
+                    CacheMsgVideo cacheMsgVideo = (CacheMsgVideo) cacheMsgBean.getJsonBodyObj();
+                    cacheMsgVideo.setVideoPath(path);
+                    cacheMsgBean.setJsonBodyObj(cacheMsgVideo);
+
+                    CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
+                    refreshItemUI(cacheMsgBean);
+
+                    File videoFile = new File(path);
+                    if (videoFile.exists()) {
+                        VideoDetailInfo info = new VideoDetailInfo();
+                        info.setVideoPath(path); //视频路径
+                        Intent intent = new Intent(mContext, VideoPlayerActivity.class);
+                        intent.putExtra("info", info);
+                        mContext.startActivity(intent);
+                    }
+                }
+            }
+        }, "video_" + System.currentTimeMillis() + ".jv");
+        load.setDownloadpath(FileConfig.getBigFileDownLoadPath());
+
+        load.execute(path);
     }
 
 
@@ -511,6 +536,9 @@ public class IMListAdapter extends RecyclerView.Adapter {
         }
 
         showSendStart(txtViewHolder, cacheMsgBean.getMsgStatus(), cacheMsgBean, position);
+
+        showMsgTime(position, txtViewHolder.senderDateTV, cacheMsgBean.getMsgTime());
+
         if (txtContent != null) {
             txtViewHolder.senderTV.setAdapter(this);
             SpannableString msgSpan = new SpannableString(txtContent);
@@ -609,6 +637,8 @@ public class IMListAdapter extends RecyclerView.Adapter {
 
         showSendStart(mapViewHolder, cacheMsgBean.getMsgStatus(), cacheMsgBean, position);
 
+        showMsgTime(position, mapViewHolder.senderDateTV, cacheMsgBean.getMsgTime());
+
         Glide.with(mContext)
                 .load(mapUrl)
                 .apply(new RequestOptions()
@@ -651,6 +681,8 @@ public class IMListAdapter extends RecyclerView.Adapter {
         String voiceTime = cacheMsgVoice.getVoiceTime();
 
         showSendStart(voiceViewHolder, cacheMsgBean.getMsgStatus(), cacheMsgBean, position);
+
+        showMsgTime(position, voiceViewHolder.senderDateTV, cacheMsgBean.getMsgTime());
 
         if (voiceViewHolder.readIV != null) {
             if (cacheMsgVoice.isHasLoad()) { //到达
@@ -738,6 +770,23 @@ public class IMListAdapter extends RecyclerView.Adapter {
         } catch (Exception e) {
             return voiceTime;
         }
+    }
+
+
+    private void showMsgTime(int position, TextView textView, long curTime) {
+        textView.setText(TimeUtils.getTime(curTime));
+
+        if (position >= 1) {
+            final CacheMsgBean cacheMsgBean = mImBeanList.get(position - 1);
+            long lastTime = cacheMsgBean.getMsgTime();
+
+            if (curTime - lastTime < 30 * 1000) {
+                textView.setVisibility(View.GONE);
+            } else {
+                textView.setVisibility(View.VISIBLE);
+            }
+        }
+
     }
 
 
@@ -907,11 +956,10 @@ public class IMListAdapter extends RecyclerView.Adapter {
 
     class BaseViewHolder extends RecyclerView.ViewHolder {
         int mItemViewType;
-
         TextView senderDateTV;
         ImageView senderIV;
         View itemBtn;
-        public ProgressBar progressBar;
+        ProgressBar progressBar;
 
         View contentLay;
 
@@ -1037,8 +1085,8 @@ public class IMListAdapter extends RecyclerView.Adapter {
                 CacheMsgBean cacheMsgBean = mImBeanList.get(index);
                 if (cacheMsgBean.getJsonBodyObj() instanceof CacheMsgVideo) {
                     CacheMsgVideo cacheMsgVideo = (CacheMsgVideo) cacheMsgBean.getJsonBodyObj();
-                    cacheMsgVideo.setProgress(p);
                     cacheMsgBean.setJsonBodyObj(cacheMsgVideo);
+                    cacheMsgBean.setProgress(p);
                     mImBeanList.set(index, cacheMsgBean);//更新数据
                     notifyItemChanged(index);
                 }
@@ -1128,6 +1176,31 @@ public class IMListAdapter extends RecyclerView.Adapter {
         void showMore(boolean isShow);
 
         void hasSelectMsg(boolean selected);
+    }
+
+
+    private static class UIHandler extends Handler {
+        private final WeakReference<IMListAdapter> mTarget;
+
+        UIHandler(IMListAdapter target) {
+            mTarget = new WeakReference<>(target);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            final IMListAdapter adapter = mTarget.get();
+
+            switch (msg.what) {
+                case HANDLER_REFRESH_PROGREE:
+                    Bundle bundle = msg.getData();
+                    CacheMsgBean cacheMsgBean = bundle.getParcelable("item");
+                    adapter.refreshItemUI(cacheMsgBean);
+                    break;
+                default:
+                    break;
+            }
+        }
+
     }
 
 }

@@ -26,7 +26,6 @@ public class VideoPlayerActivity extends AppCompatActivity {
 
             @Override
             public void onRetry(int errorStatus) {
-                // TODO: 2017/6/20 调用业务接口重新获取数据
                 // get info and call method "videoView.startPlayVideo(info);"
             }
 

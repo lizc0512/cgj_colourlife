@@ -35,6 +35,7 @@ public class CacheMsgBeanDao extends AbstractDao<CacheMsgBean, Long> {
         public final static Property ReceiverPhone = new Property(8, String.class, "receiverPhone", false, "RECEIVER_PHONE");
         public final static Property TargetPhone = new Property(9, String.class, "targetPhone", false, "TARGET_PHONE");
         public final static Property ContentJsonBody = new Property(10, String.class, "contentJsonBody", false, "CONTENT_JSON_BODY");
+        public final static Property Progress = new Property(11, int.class, "progress", false, "PROGRESS");
     }
 
 
@@ -60,7 +61,8 @@ public class CacheMsgBeanDao extends AbstractDao<CacheMsgBean, Long> {
                 "\"SENDER_PHONE\" TEXT," + // 7: senderPhone
                 "\"RECEIVER_PHONE\" TEXT," + // 8: receiverPhone
                 "\"TARGET_PHONE\" TEXT," + // 9: targetPhone
-                "\"CONTENT_JSON_BODY\" TEXT);"); // 10: contentJsonBody
+                "\"CONTENT_JSON_BODY\" TEXT," + // 10: contentJsonBody
+                "\"PROGRESS\" INTEGER NOT NULL );"); // 11: progress
     }
 
     /** Drops the underlying database table. */
@@ -107,6 +109,7 @@ public class CacheMsgBeanDao extends AbstractDao<CacheMsgBean, Long> {
         if (contentJsonBody != null) {
             stmt.bindString(11, contentJsonBody);
         }
+        stmt.bindLong(12, entity.getProgress());
     }
 
     @Override
@@ -147,6 +150,7 @@ public class CacheMsgBeanDao extends AbstractDao<CacheMsgBean, Long> {
         if (contentJsonBody != null) {
             stmt.bindString(11, contentJsonBody);
         }
+        stmt.bindLong(12, entity.getProgress());
     }
 
     @Override
@@ -167,7 +171,8 @@ public class CacheMsgBeanDao extends AbstractDao<CacheMsgBean, Long> {
             cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7), // senderPhone
             cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8), // receiverPhone
             cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9), // targetPhone
-            cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10) // contentJsonBody
+            cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10), // contentJsonBody
+            cursor.getInt(offset + 11) // progress
         );
         return entity;
     }
@@ -185,6 +190,7 @@ public class CacheMsgBeanDao extends AbstractDao<CacheMsgBean, Long> {
         entity.setReceiverPhone(cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8));
         entity.setTargetPhone(cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9));
         entity.setContentJsonBody(cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10));
+        entity.setProgress(cursor.getInt(offset + 11));
      }
     
     @Override

@@ -1018,8 +1018,8 @@ public class IMConnectionActivity extends SdkBaseActivity implements
         CacheMsgBean cacheMsgBean = CacheMsgHelper.instance(this).queryByID(mid);
         if (cacheMsgBean.getJsonBodyObj() instanceof CacheMsgVideo) {
             CacheMsgVideo cacheMsgVideo = (CacheMsgVideo) cacheMsgBean.getJsonBodyObj();
-            cacheMsgVideo.setProgress(fileQueue.getPro());
             cacheMsgBean.setJsonBodyObj(cacheMsgVideo);
+            cacheMsgBean.setProgress(fileQueue.getPro());
             imListAdapter.refreshItemUI(cacheMsgBean);
         }
     }

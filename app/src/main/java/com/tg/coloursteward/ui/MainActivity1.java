@@ -417,6 +417,9 @@ public class MainActivity1 extends AppCompatActivity implements MessageHandler.R
         CityPropertyApplication.addActivity(this);
     }
 
+    public Handler getHandler() {
+        return msgHand.getHandler();
+    }
 
     private void initProto() {
         msgHand = new MessageHandler(this);

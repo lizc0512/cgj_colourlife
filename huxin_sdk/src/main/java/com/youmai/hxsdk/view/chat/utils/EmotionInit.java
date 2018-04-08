@@ -88,28 +88,6 @@ public class EmotionInit {
                 emoticonDbHelper.insertEmoticonSet(setBean);
             }
 
-            //呼信表情
-            ArrayList<EmoticonBean> emojiArray = Utils.ParseData(DefEmoticons.huxinEmoticonArray, EmoticonBean.FACE_TYPE_USERDEF, EmoticonBase.Scheme.DRAWABLE);
-            EmoticonSetBean emojiEmoticonSetBean = new EmoticonSetBean("emoji", 2, 4);
-            emojiEmoticonSetBean.setIconUri("drawable://hx_hi_t");//表情显示的资源路径
-            emojiEmoticonSetBean.setItemPadding(25);
-            emojiEmoticonSetBean.setVerticalSpacing(10);
-            emojiEmoticonSetBean.setShowDelBtn(false);
-            emojiEmoticonSetBean.setEmoticonList(emojiArray);
-            emoticonDbHelper.insertEmoticonSet(emojiEmoticonSetBean);
-
-
-            //呼信自定义表情
-            ArrayList<EmoticonBean> emos = Utils.ParseData(DefEmoticons.huxinEmoticonSelf, EmoticonBean.FACE_TYPE_SELF_ADD, EmoticonBase.Scheme.DRAWABLE);
-            EmoticonSetBean emoBean = new EmoticonSetBean("self", 2, 4);
-            emoBean.setIconUri("drawable://hx_emo_keep");//表情显示的资源路径
-            emoBean.setItemPadding(25);
-            emoBean.setVerticalSpacing(10);
-            emoBean.setShowDelBtn(false);
-            emoBean.setEmoticonList(emos);
-            emoticonDbHelper.insertEmoticonSet(emoBean);
-
-
             emoticonDbHelper.cleanup();
 
             if (emoticonSetBeans.size() == emoticonEntities.size()) {

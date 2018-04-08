@@ -1,14 +1,7 @@
 package com.youmai.hxsdk.view.chat;
 
-import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.media.MediaRecorder;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
-import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -19,13 +12,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.dialog.HxRecordDialog;
 import com.youmai.hxsdk.utils.AnimatorUtils;
-import com.youmai.hxsdk.utils.LogUtils;
 import com.youmai.hxsdk.view.chat.emoticon.EmoticonLayout;
 import com.youmai.hxsdk.view.chat.emoticon.bean.EmoticonBean;
 import com.youmai.hxsdk.view.chat.emoticon.bean.EmoticonSetBean;
@@ -33,15 +23,11 @@ import com.youmai.hxsdk.view.chat.emoticon.db.EmoticonDBHelper;
 import com.youmai.hxsdk.view.chat.emoticon.utils.EmoticonHandler;
 import com.youmai.hxsdk.view.chat.emoticon.utils.EmoticonsKeyboardBuilder;
 import com.youmai.hxsdk.view.chat.emoticon.view.EmoticonsToolBarView;
-import com.youmai.hxsdk.view.chat.utils.DisplayUtils;
 import com.youmai.hxsdk.view.chat.utils.Utils;
-import com.youmai.hxsdk.view.chat.utils.VoiceUtils;
 import com.youmai.hxsdk.view.chat.view.AutoHeightLayout;
 import com.youmai.hxsdk.view.chat.view.HadEditText;
-import com.youmai.hxsdk.view.chat.view.RecordingView;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 /**
  * 聊天输入框
@@ -51,11 +37,10 @@ import java.util.Date;
 
 public class InputMessageLay extends AutoHeightLayout implements View.OnClickListener, EmoticonsToolBarView.OnToolBarItemClickListener {
 
-    String TAG = InputMessageLay.class.getName();
+    private static final String TAG = InputMessageLay.class.getName();
 
     public static final int FUNC_DEFAULT = 0;
     public static final int FUNC_MORE = 1;
-    public static final int FUNC_VOICE = 2;
     public static final int FUNC_EMOTICON = 3;
     public int mChildViewPosition = -1; //显示哪个子视图+
 
@@ -72,14 +57,11 @@ public class InputMessageLay extends AutoHeightLayout implements View.OnClickLis
     public static final int TYPE_FILE = 4;
     public static final int TYPE_CARD = 5;
 
-    private static int VOICE_TIME = 60;//录音时长,默认60秒
-    private static int VOICE_LAST_TIME = 10;//录音剩余时长,默认10秒
 
     private RelativeLayout footerLay;//显示内容
     private RelativeLayout msgLay;
     private HadEditText msgEdit;//信息输入
     private RelativeLayout msgDefaultLay;
-    private TextView voiceAction;//按住说话
     private ImageView voiceImg;
     private ImageView moreImg;
     private ImageView emotionImg;
@@ -89,12 +71,8 @@ public class InputMessageLay extends AutoHeightLayout implements View.OnClickLis
     private View moreChatView;
     private View mainLay;
     private View moreLay;
-    private View drivingLay;
     private ImageView forwardImg;
     private ImageView garbageImg;
-
-    private ImageView drivingVoiceImg;
-    private ImageView drivingExitImg;
 
 
     private Context mContext;
@@ -106,9 +84,6 @@ public class InputMessageLay extends AutoHeightLayout implements View.OnClickLis
 
     private boolean isCanHidden = true;//是否允许隐藏
 
-    int TYPE = 1;
-    int MORE_FLAG = 1;
-    int SEND_FLAG = 2;
 
     public InputMessageLay(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -133,14 +108,12 @@ public class InputMessageLay extends AutoHeightLayout implements View.OnClickLis
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        handler.removeCallbacksAndMessages(null);
     }
 
     private void initView() {
         msgLay = (RelativeLayout) findViewById(R.id.keyboard_msg_lay);
         msgEdit = (HadEditText) findViewById(R.id.keyboard_msg);
         msgDefaultLay = (RelativeLayout) findViewById(R.id.keyboard_msg_default_lay);
-        voiceAction = (TextView) findViewById(R.id.keyboard_msg_default_up_down);
         voiceImg = (ImageView) findViewById(R.id.keyboard_voice);
         emotionImg = (ImageView) findViewById(R.id.keyboard_emotion);
         moreImg = (ImageView) findViewById(R.id.keyboard_more);
@@ -148,12 +121,8 @@ public class InputMessageLay extends AutoHeightLayout implements View.OnClickLis
         footerLay = (RelativeLayout) findViewById(R.id.keyboard_footer_lay);
         mainLay = findViewById(R.id.keyboard_main_lay);
         moreLay = findViewById(R.id.keyboard_more_lay);
-        drivingLay = findViewById(R.id.keyboard_driving_lay);
         forwardImg = (ImageView) findViewById(R.id.keyboard_more_forward_img);
         garbageImg = (ImageView) findViewById(R.id.keyboard_more_garbage_img);
-
-        drivingVoiceImg = (ImageView) findViewById(R.id.keyboard_driving_record_img);
-        drivingExitImg = (ImageView) findViewById(R.id.keyboard_driving_exit_img);
 
 //        msgDefaultLay.setOnClickListener(this);
         moreImg.setOnClickListener(this);
@@ -162,7 +131,6 @@ public class InputMessageLay extends AutoHeightLayout implements View.OnClickLis
         emotionImg.setOnClickListener(this);
         forwardImg.setOnClickListener(this);
         garbageImg.setOnClickListener(this);
-        drivingExitImg.setOnClickListener(this);
 
         setAutoHeightLayoutView(footerLay);
         initLay();//初始化显示输入框
@@ -271,12 +239,6 @@ public class InputMessageLay extends AutoHeightLayout implements View.OnClickLis
             //垃圾删除
             if (mKeyBoardBarViewListener != null) {
                 mKeyBoardBarViewListener.onMoreGarbage();
-            }
-        } else if (id == R.id.keyboard_driving_exit_img) {
-            //退出驾驶模式
-            showDrivingLay(false);
-            if (mKeyBoardBarViewListener != null) {
-                mKeyBoardBarViewListener.onDrivingExit();
             }
         }
     }
@@ -409,34 +371,6 @@ public class InputMessageLay extends AutoHeightLayout implements View.OnClickLis
         }
     }
 
-    private void recordState(boolean isRecording, boolean isCancel) {
-        if (isRecording) {
-            if (isCancel) {
-                voiceAction.setText(R.string.hx_voice_tip_normal2);
-            } else {
-                voiceAction.setText(R.string.hx_voice_tip_normal3);
-            }
-            voiceAction.setTextColor(ContextCompat.getColor(mContext, R.color.hx_main_color));
-            msgDefaultLay.setBackgroundResource(R.drawable.hx_im_bar_chat_press_bg);
-            drivingVoiceImg.setImageResource(R.drawable.hx_dial_voice_press_ic);
-        } else {
-            voiceAction.setText(R.string.hx_voice_tip_normal);
-            voiceAction.setTextColor(ContextCompat.getColor(mContext, R.color.hx_im_recording_text));
-            msgDefaultLay.setBackgroundResource(R.drawable.hx_im_bar_chat_bg);
-            drivingVoiceImg.setImageResource(R.drawable.hx_dial_voice_normal_ic);
-        }
-    }
-
-    /**
-     * 模拟点击录音按钮
-     */
-    public void showVoice(boolean show) {
-        if (show) {
-            if (voiceImg != null) {
-                voiceImg.performClick();
-            }
-        }
-    }
 
     public boolean keyHasFocus() {
         boolean hasFocus = false;
@@ -549,12 +483,10 @@ public class InputMessageLay extends AutoHeightLayout implements View.OnClickLis
      * 语音、表情、更多的工具子视图
      */
     private void initTools() {
-        mHandler = new Handler(Looper.getMainLooper());
         LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         moreChatView = inflater.inflate(R.layout.im_chat_more_lay, null);
         initMoreLay(moreChatView);
         View voiceView = inflater.inflate(R.layout.im_chat_voice_lay, null);
-//        initRecordView(voiceView);
 
         add(moreChatView);
         add(voiceView);
@@ -581,15 +513,6 @@ public class InputMessageLay extends AutoHeightLayout implements View.OnClickLis
                         int code = KeyEvent.KEYCODE_DEL;
                         KeyEvent event = new KeyEvent(action, code);
                         msgEdit.onKeyDown(KeyEvent.KEYCODE_DEL, event);
-                        return;
-                    } else if (bean.getEventType() == EmoticonBean.FACE_TYPE_USERDEF) {
-                        return;
-                    } else if (bean.getEventType() == EmoticonBean.FACE_TYPE_SELF_ADD) {
-                        if (mKeyBoardBarViewListener != null) {
-                            mKeyBoardBarViewListener.onKeyBoardAddEmotion();
-                        }
-                        return;
-                    } else if (bean.getEventType() == EmoticonBean.FACE_TYPE_SELF_SETTING) {
                         return;
                     }
 
@@ -638,248 +561,8 @@ public class InputMessageLay extends AutoHeightLayout implements View.OnClickLis
 
         hxTipDialog = new HxRecordDialog(mContext);
 
-        msgDefaultLay.setOnTouchListener(new VoiceOnTouchListener());
-        drivingVoiceImg.setOnTouchListener(new VoiceOnTouchListener());
     }
 
-    class VoiceOnTouchListener implements OnTouchListener {
-
-        float x, y;
-        int flag = -1;
-
-        @Override
-        public boolean onTouch(View v, MotionEvent event) {
-            if (event.getAction() == MotionEvent.ACTION_DOWN) {
-
-                if (mKeyBoardBarViewListener != null) {
-                    mKeyBoardBarViewListener.onClickVoice();
-                }
-
-                x = event.getX();
-                y = event.getY();
-
-                StartTime = new Date().getTime();
-
-                if (VoiceUtils.request(Manifest.permission.RECORD_AUDIO, (Activity) voiceAction.getContext(), 200)) {
-                    flag = VoiceUtils.getInstance().startRecord();//开始录音 判断录音权限是否打开
-                    LogUtils.e("YW", "down flag: " + flag);
-                    if (flag != -1) {
-                        hxTipDialog.setRecording(1);
-                        hxTipDialog.show();
-                    }
-                } else {
-                    flag = -1;
-                }
-                IS_CANCEL = false;
-                IS_TIME_OUT = false;
-                if (flag == -1) {
-                    recordState(false, false);
-                    Toast.makeText(mContext, R.string.hx_voice_tip_error2, Toast.LENGTH_SHORT).show();
-                    VoiceUtils.getInstance().stopRecord();
-                    hxTipDialog.cancel();
-                } else if (flag == 1) {
-                    //开始录音
-                    recordShow2();//录音动画效果
-                    recordState(true, false);
-                } else if (flag == 2) {
-                    recordState(false, false);
-                    VoiceUtils.getInstance().stopRecord();
-                    hxTipDialog.cancel();
-                }
-            } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                recordState(false, false);
-                if (hxTipDialog != null && hxTipDialog.isShowing()) {
-                    hxTipDialog.dismiss();
-                }
-                if (isRecording) {
-                    isRecording = false;
-                    voiceEnd2(false);
-                }
-            } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
-
-                int moveTop = 60;//40dp的范围
-                float y1;
-                y1 = event.getY();
-                //是否超时
-                if (!IS_TIME_OUT) {
-                    //超出范围
-                    if (Math.abs(y1 - y) > DisplayUtils.dp2px(mContext, moveTop)) {
-                        if (!IS_CANCEL) {
-                            IS_CANCEL = true;
-                            if (isRecording) {
-//                                isRecording = false;
-//                                voiceEnd2();
-                                hxTipDialog.setCancel();
-                                recordState(true, true);
-                            }
-                        }
-                    } else {
-                        if (IS_CANCEL && isRecording) {
-                            //恢复
-                            IS_CANCEL = false;
-                            recordState(true, false);
-                        }
-                    }
-                }
-            }
-            return true;
-        }
-
-    }
-
-    //*******Record**********
-    Handler mHandler;
-//    RelativeLayout voiceLay;
-//    RecordingView recordingView;
-//    ImageView recordImg;
-//    TextView recordTimeText;
-//    TextView recordTipText;
-//    TextView garbageText;
-
-    long StartTime;
-    long RecordStartTime;
-    long RecordStopTime;
-
-    boolean IS_CANCEL = false;
-    boolean IS_TIME_OUT = false;
-
-
-    //录音结束
-    private void voiceEnd2(boolean isTimeout) {
-        if (!isTimeout) {
-            if (hxTipDialog != null && hxTipDialog.isShowing()) {
-                hxTipDialog.dismiss();
-            }
-        }
-        if (VoiceUtils.getInstance().isRuning()) {
-            String audioPath = VoiceUtils.getInstance().stopRecord();//停止录音
-            RecordStopTime = new Date().getTime();
-
-            long t = RecordStopTime - RecordStartTime;
-
-            if (!TextUtils.isEmpty(audioPath)) {
-                if (audioPath.equals(VoiceUtils.ERROR)) {
-                    LogUtils.w(TAG, mContext.getString(R.string.hx_voice_tip_error2));
-                } else {
-                    if (500 < t && t < 1000) {
-                        //少于一秒录音
-                        hxTipDialog.setLessTime();
-                        hxTipDialog.show();
-                        handler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (hxTipDialog != null && hxTipDialog.isShowing() && hxTipDialog.isLess()) {
-                                    hxTipDialog.dismiss();
-                                }
-                            }
-                        }, 1500);
-                    } else if (t >= 1000 && t <= VOICE_TIME * 1000) {
-                        sendRecord(audioPath, t);
-                    } else if (t > VOICE_TIME * 1000) {
-                        //超时录音
-                        sendRecord(audioPath, t);
-                    }
-                }
-            } else if (audioPath.equals("")) {
-                LogUtils.e("voice", mContext.getString(R.string.hx_voice_tip_error));
-                //Toast.makeText(mContext, R.string.hx_voice_tip_error, Toast.LENGTH_SHORT).show();
-            } else {
-                LogUtils.w(TAG, "计算时间有误");
-            }
-        }
-    }
-
-    //发送语音
-    void sendRecord(String audioPath, long t) {
-        //正常录音
-        if (IS_CANCEL) {
-            //放弃录音
-            Toast.makeText(mContext, R.string.hx_voice_tip_cancel, Toast.LENGTH_SHORT).show();
-            VoiceUtils.getInstance().delete(audioPath);
-            //mKeyBoardBarViewListener.onKeyBoardVoice("取消录音");
-        } else {
-            if (mKeyBoardBarViewListener != null) {
-                mKeyBoardBarViewListener.onKeyBoardVoice(audioPath, (int) (t / 1000));
-            }
-        }
-    }
-
-    private boolean isRecording = true;
-    private MediaRecorder mMediaRecorder;
-
-    /**
-     * 录音动态显示
-     * <p/>
-     * 50ms refresh
-     * <p/>
-     * 在run里注意mMediaRecorder的取值，
-     */
-    private void recordShow2() {
-        RecordStartTime = new Date().getTime();
-        isRecording = true;
-        mHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                mMediaRecorder = VoiceUtils.getInstance().getmMediaRecorder();
-                if (mMediaRecorder != null) {
-                    int i = mMediaRecorder.getMaxAmplitude();
-                    int radius = (int) (Math.log10(Math.max(1, i - 500)));
-//                    Log.w("voice", "录音大小radius:" + radius);
-//                    recordingView.animateRadius(radius);
-
-                    long t = new Date().getTime() - RecordStartTime;
-                    Message message = new Message();
-                    message.obj = (int) (t / 1000);
-                    message.arg1 = radius;
-                    boolean isUpdate = true;//是否继续更新
-                    //判断录音时间
-
-                    if (t >= VOICE_TIME * 1000) {
-                        isUpdate = false;
-                        IS_TIME_OUT = true;
-                        message.what = 2;
-                    } else {
-                        message.what = 1;
-                    }
-                    handler.sendMessage(message);//更新录音时间
-                    if (isUpdate) {
-                        mHandler.postDelayed(this, RecordingView.DTIME);
-                    }
-                } else {
-//                    recordingView.animateRadius(0);
-                }
-            }
-        });
-    }
-
-    /**
-     * 刷新时间UI
-     */
-    Handler handler = new Handler(new Handler.Callback() {
-        @Override
-        public boolean handleMessage(Message msg) {
-            if (msg.what == 1) {
-                // 更新时间
-                int rT = (int) msg.obj;
-                int radius = msg.arg1;
-                int t = VOICE_TIME - rT;
-                if (!IS_CANCEL) {
-                    if (t < VOICE_LAST_TIME) {
-                        hxTipDialog.setRemainingTime(t);
-                    } else {
-                        hxTipDialog.setRecording(radius);
-                    }
-                }
-//                recordTimeText.setText(String.format(mContext.getString(R.string.voice_time_tip), rT));
-            } else if (msg.what == 2) {
-                // 超时，重置时间
-//                recordTimeText.setText(String.format(mContext.getString(R.string.voice_time_tip), 0));
-                hxTipDialog.setLongTime();
-                voiceEnd2(true);
-            }
-            return false;
-        }
-    });
 
     private void initMoreLay(View view) {
         if (moreLocationHidden) {
@@ -950,76 +633,14 @@ public class InputMessageLay extends AutoHeightLayout implements View.OnClickLis
 
     }
 
-//    public void startAnimationBackground(final View view, int colorStart, int colorEnd) {
-//
-//        //创建动画,这里的关键就是使用ArgbEvaluator, 后面2个参数就是 开始的颜色,和结束的颜色.
-//        ValueAnimator colorAnimator = ValueAnimator.ofObject(new ArgbEvaluator(), colorStart, colorEnd);
-//        colorAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-//            @Override
-//            public void onAnimationUpdate(ValueAnimator animation) {
-//                int color = (int) animation.getAnimatedValue();//之后就可以得到动画的颜色了
-//                view.setBackgroundColor(color);//设置一下, 就可以看到效果.
-//            }
-//        });
-//        colorAnimator.setDuration(500);
-//        colorAnimator.start();
-//    }
-
-
-//    private RecyclerView emotionRecyclerView;
-//    private IMEmotionAdapter imEmotionAdapter;
-//    private long prelongTim = 0;//定义上一次单击的时间
-
-//    private void initEmotion2(View view) {
-//        emotionRecyclerView = (RecyclerView) view.findViewById(R.id.item_chat_emotion_recycler);
-//
-//        if (imEmotionAdapter == null) {
-//            imEmotionAdapter = new IMEmotionAdapter(mContext, new EmoInfo(mContext));
-//            emotionRecyclerView.setLayoutManager(new GridLayoutManager(mContext, 4));
-//            emotionRecyclerView.setAdapter(imEmotionAdapter);
-//
-//            imEmotionAdapter.setOnItemClickListener(new IMEmotionAdapter.OnItemClickListener() { //
-//                @Override
-//                public void onItemClick(View view, int position) {
-//                    if (prelongTim == 0) {//第一次单击，初始化为本次单击的时间
-//                        prelongTim = System.currentTimeMillis();
-//                        EmoInfo.EmoItem emoItem = imEmotionAdapter.getEmoInfo().getEmoList().get(position);
-//                        String emoStr = emoItem.getEmoStr();
-//                        int emoRes = emoItem.getEmoRes();
-//                        if (mKeyBoardBarViewListener != null) {
-//                            mKeyBoardBarViewListener.onKeyBoardEmotion(emoStr, emoRes);
-//                        }
-////                        sendTxt(emoStr, emoRes, false);
-//                    } else {
-//                        long curTime = System.currentTimeMillis();//本地单击的时间
-//                        if (curTime - prelongTim > 500) {
-//                            EmoInfo.EmoItem emoItem = imEmotionAdapter.getEmoInfo().getEmoList().get(position);
-//                            String emoStr = emoItem.getEmoStr();
-//                            int emoRes = emoItem.getEmoRes();
-//                            if (mKeyBoardBarViewListener != null) {
-//                                mKeyBoardBarViewListener.onKeyBoardEmotion(emoStr, emoRes);
-//                            }
-////                            sendTxt(emoStr, emoRes, false);
-//                        }
-//
-//                        prelongTim = curTime;//当前单击事件变为上次时间
-//                    }
-//                }
-//            });
-//        }
-//
-//    }
-
     public void initLay() {
         mainLay.setVisibility(VISIBLE);
         moreLay.setVisibility(GONE);
-        drivingLay.setVisibility(GONE);
     }
 
     public void hide() {
         mainLay.setVisibility(GONE);
         moreLay.setVisibility(GONE);
-        drivingLay.setVisibility(GONE);
         footerLay.setVisibility(GONE);
         moreImg.setImageResource(R.drawable.hx_im_bar_open);
         Utils.closeSoftKeyboard(mContext);
@@ -1038,34 +659,9 @@ public class InputMessageLay extends AutoHeightLayout implements View.OnClickLis
             changeMoreAction(true);
         } else {
             moreLay.setVisibility(GONE);
-            if (drivingLay.getVisibility() == GONE) {
-                mainLay.setVisibility(VISIBLE);
-            }
         }
     }
 
-    /**
-     * 切换驾驶模式
-     *
-     * @param isShow 是否显示驾驶模式
-     */
-    public void showDrivingLay(boolean isShow) {
-        if (isShow) {
-            if (mainLay.getVisibility() != GONE) {
-                mainLay.setVisibility(GONE);
-                moreLay.setVisibility(GONE);
-                drivingLay.setVisibility(INVISIBLE);
-                AnimatorUtils.moveFromDown(drivingLay, 600);
-                changeMoreAction(true);
-            }
-        } else {
-            if (mainLay.getVisibility() != VISIBLE) {
-                drivingLay.setVisibility(GONE);
-                moreLay.setVisibility(GONE);
-                mainLay.setVisibility(VISIBLE);
-            }
-        }
-    }
 
     /**
      * 是否可点击

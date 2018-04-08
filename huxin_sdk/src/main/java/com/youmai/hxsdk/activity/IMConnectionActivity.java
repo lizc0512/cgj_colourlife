@@ -272,11 +272,6 @@ public class IMConnectionActivity extends SdkBaseActivity implements
         MediaManager.resume();
         isPauseOut = false;
 
-        if (isOpenAudio) {
-            //只生效一次
-            keyboardLay.showVoice(true);//开启录音状态
-            isOpenAudio = false;
-        }
 
         PickerManager.getInstance().setRefreshUIListener(this);
         IMMsgManager.getInstance().removeBadge(targetPhone);
@@ -919,11 +914,6 @@ public class IMConnectionActivity extends SdkBaseActivity implements
             imListAdapter.cancelMoreStat();
 
             setRightUi(false);
-        } else if (requestCode == REQUEST_CODE_CARD_UPDATE && resultCode == 200) {
-
-        } else if (requestCode == REQUEST_CODE_ADDEMO && resultCode == Activity.RESULT_OK) {
-            //colin
-            keyboardLay.refreshEmotion();
         }
     }
 

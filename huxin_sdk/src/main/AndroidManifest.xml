@@ -277,6 +277,10 @@
             android:screenOrientation="portrait"
             android:theme="@style/HxSdkTheme" />
 
+        <activity
+            android:name=".contact.search.demo.GlobalSearchActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/HxSdkTheme" />
 
         <receiver
             android:name="com.youmai.hxsdk.receiver.HuxinReceiver"

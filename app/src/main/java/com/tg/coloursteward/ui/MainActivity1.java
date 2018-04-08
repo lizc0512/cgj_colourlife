@@ -58,6 +58,7 @@ import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.dialog.ToastFactory;
 import com.youmai.hxsdk.activity.IMConnectionActivity;
+import com.youmai.hxsdk.contact.search.demo.ContactsFragment;
 import com.youmai.hxsdk.push.MorePushManager;
 import com.youmai.hxsdk.router.APath;
 
@@ -809,7 +810,8 @@ public class MainActivity1 extends AppCompatActivity implements MessageHandler.R
                     ft = new MsgListFragment();
                     break;
                 case 1:
-                    ft = (Fragment) ARouter.getInstance().build(APath.CONTACT_GROUP).navigation();
+                    ft = new ContactsFragment();
+                    //ft = (Fragment) ARouter.getInstance().build(APath.CONTACT_GROUP).navigation();
                     break;
                 case 2:
                     ft = new FragmentManagement();

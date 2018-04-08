@@ -13,5 +13,22 @@
     <string name="message_time_yesterday">昨天</string>
     <string name="message_time_before_yesterday">前天</string>
 
+    <!-- gloabl search -->
+    <string name="hx_common_phone_number">电话号码</string>
+    <string name="hx_common_name">名字</string>
+    <string name="hx_common_message_record">沟通记录</string>
+    <string name="hx_common_new_contact">新建联系人</string>
+    <string name="hx_common_send_sms">发送消息</string>
+    <string name="hx_common_view_more_message_record">查看更多沟通记录</string>
+    <string name="hx_common_more_message_record">更多沟通记录</string>
+    <string name="hx_common_more_message_list_title">共%1$d条与\"%2$s\"相关的沟通记录</string>
+    <string name="hx_common_more_message_list_info">%1$d条相关沟通记录</string>
+    <string name="hx_common_gloabl_can_seach">可搜索联系人与沟通记录</string>
+    <string name="hx_common_global_search_no_finded">暂无搜索结果</string>
+    <string name="hx_common_global_can_input">可输入内容</string>
+    <string name="hx_common_global_can_do">您可以做以下操作</string>
+    <string name="hx_contacts_search_title">联系人</string>
+    <string name="hx_contacts_view_more_contacts">查看更多联系人</string>
+
 
 </resources>

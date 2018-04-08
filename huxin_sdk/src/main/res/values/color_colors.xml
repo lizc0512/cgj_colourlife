@@ -4,6 +4,9 @@
     <!--联系人letter-->
     <color name="letter_partTranslucent">#39000000</color>
 
+    <drawable name="charIndexColor">#33000000</drawable>
+    <color name="charIndexColor">#33000000</color>
+
     <!--新版UI新增-->
     <color name="hxb_line_color">#e6e6e6</color>
     <color name="hxb_subtitle_color">#999999</color>

@@ -23,7 +23,7 @@ public class EmoticonLayout extends RelativeLayout implements EmoticonsPageView.
     Context mContext;
     EmoticonsPageView epvContent;
     IndicatorView ivIndicator;
-    EmoticonsToolBarView etvToolBar;
+    //EmoticonsToolBarView etvToolBar;
 
     private int initPage = 0;
 
@@ -50,7 +50,7 @@ public class EmoticonLayout extends RelativeLayout implements EmoticonsPageView.
         inflater.inflate(R.layout.keyboard_bottom_emoticons, this);
         ivIndicator = (IndicatorView) findViewById(R.id.emoticon_indicator_view);
         epvContent = (EmoticonsPageView) findViewById(R.id.emoticon_page_view);
-        etvToolBar = (EmoticonsToolBarView) findViewById(R.id.emoticon_page_toolbar);
+        //etvToolBar = (EmoticonsToolBarView) findViewById(R.id.emoticon_page_toolbar);
         epvContent.setOnIndicatorListener(this);
         epvContent.setIViewListener(new IView() {
             @Override
@@ -60,15 +60,15 @@ public class EmoticonLayout extends RelativeLayout implements EmoticonsPageView.
 
             @Override
             public void onPageChangeTo(int position) {
-                etvToolBar.setToolBtnSelect(position);
+                //etvToolBar.setToolBtnSelect(position);
             }
         });
-        etvToolBar.setOnToolBarItemClickListener(new EmoticonsToolBarView.OnToolBarItemClickListener() {
+        /*etvToolBar.setOnToolBarItemClickListener(new EmoticonsToolBarView.OnToolBarItemClickListener() {
             @Override
             public void onToolBarItemClick(int position) {
                 epvContent.setPageSelect(position);
             }
-        });
+        });*/
     }
 
     OnEmoticonListener mListener = null;
@@ -92,7 +92,7 @@ public class EmoticonLayout extends RelativeLayout implements EmoticonsPageView.
         ivIndicator.moveTo(newPosition);
     }
 
-    public void addToolView(int icon) {
+    /*public void addToolView(int icon) {
         if (etvToolBar != null && icon > 0) {
             etvToolBar.addData(icon);
         }
@@ -102,7 +102,7 @@ public class EmoticonLayout extends RelativeLayout implements EmoticonsPageView.
         if (etvToolBar != null) {
             etvToolBar.addFixedView(view, isRight);
         }
-    }
+    }*/
 
     /**
      * 设置监听事件
@@ -117,7 +117,7 @@ public class EmoticonLayout extends RelativeLayout implements EmoticonsPageView.
      */
     public void setContents(EmoticonsKeyboardBuilder builder, int initPage) {
         epvContent.setEmoticonContents(builder, initPage);
-        etvToolBar.setEmoticonContents(builder, initPage);
+        //etvToolBar.setEmoticonContents(builder, initPage);
 
         //初始化指示标
         if (builder.builder.getEmoticonSetBeanList() != null && builder.builder.getEmoticonSetBeanList().size() > 0) {

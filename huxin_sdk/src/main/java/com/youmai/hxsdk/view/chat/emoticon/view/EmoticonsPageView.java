@@ -73,7 +73,7 @@ public class EmoticonsPageView extends ViewPager implements IView {
         mEmoticonsViewPagerAdapter.notifyDataSetChanged();
 
         for (EmoticonSetBean bean : mEmoticonSetBeanList) {
-            if (bean.getName().equals("self")) {
+            /*if (bean.getName().equals("self")) {
                 ArrayList<EmoticonBean> list = new ArrayList<>();
 
                 if (bean.getIndex() != 1) {
@@ -85,7 +85,7 @@ public class EmoticonsPageView extends ViewPager implements IView {
                     addBean.setTag("/hx_emo_add1");
                     list.add(addBean);
                 }
-            }
+            }*/
 
             ArrayList<EmoticonBean> emoticonList = bean.getEmoticonList();
             if (emoticonList != null) {

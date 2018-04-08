@@ -4,9 +4,9 @@ public class EmoticonBean {
 
     public final static int FACE_TYPE_NORMAL = 0;
     public final static int FACE_TYPE_DEL = 1;
-    public final static int FACE_TYPE_USERDEF = 2; // user downloaded emoticons
-    public final static int FACE_TYPE_SELF_ADD = 3; // user downloaded emoticons
-    public final static int FACE_TYPE_SELF_SETTING = 4; // user downloaded emoticons
+    //public final static int FACE_TYPE_USERDEF = 2; // user downloaded emoticons
+    //public final static int FACE_TYPE_SELF_ADD = 3; // user downloaded emoticons
+    //public final static int FACE_TYPE_SELF_SETTING = 4; // user downloaded emoticons
 
     private long eventType;
     private String iconUri;

@@ -3,6 +3,8 @@ package com.youmai.hxsdk.contact.search.cn;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.List;
+
 /**
  * Created by srsm
  */
@@ -42,19 +44,10 @@ public class SearchContactBean implements Comparable<SearchContactBean>, Parcela
     private DuoYinZi mDuoYinzi;
     private int[] wholePinYinFindIndex;
     private SearchContactBean nextSearchContactBean;
+    private List<String> indexPinyin;
 
     public SearchContactBean() {
 
-    }
-
-    public SearchContactBean(int contactId, String name, String number, String simplePinyin, String pinyin, String searchStr, int type) {
-        this.contactId = contactId;
-        this.displayName = name;
-        this.phoneNum = number;
-        this.simplepinyin = simplePinyin;
-        this.wholePinyin = pinyin;
-        this.searchKey = searchStr;
-        this.searchType = type;
     }
 
     public SearchContactBean(SearchContactBean bean, boolean hasNext) {
@@ -72,6 +65,7 @@ public class SearchContactBean implements Comparable<SearchContactBean>, Parcela
         this.searchType = bean.getSearchType();
         this.mDuoYinzi = bean.getDuoYinzi();
         this.wholePinYinFindIndex = bean.getWholePinYinFindIndex();
+        this.indexPinyin = bean.indexPinyin;
         if (hasNext) {
             this.nextSearchContactBean = bean.getNextBean();
         }
@@ -175,6 +169,14 @@ public class SearchContactBean implements Comparable<SearchContactBean>, Parcela
         if (wholePinyin != null) {
             this.wholePinyin = wholePinyin;
         }
+    }
+
+    public void setIndexPinyin(List<String> indexPinyin) {
+        this.indexPinyin = indexPinyin;
+    }
+
+    public List<String> getIndexPinyin() {
+        return indexPinyin;
     }
 
     public String getSimplepinyin() {

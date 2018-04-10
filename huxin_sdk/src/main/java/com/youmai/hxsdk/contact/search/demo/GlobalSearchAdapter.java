@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,21 +15,20 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.contact.search.cn.SearchContactBean;
+import com.youmai.hxsdk.contact.search.utils.PinYinUtils;
 import com.youmai.hxsdk.utils.GlideCircleTransform;
+import com.youmai.hxsdk.utils.ListUtils;
 
 import java.util.ArrayList;
-
+import java.util.List;
 
 /**
  * Created by srsm on 17/3/2.
  */
-
 public class GlobalSearchAdapter<T> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     
     public static final int ADAPTER_TYPE_NORMAL = 1;
@@ -126,19 +126,6 @@ public class GlobalSearchAdapter<T> extends RecyclerView.Adapter<RecyclerView.Vi
         }
         if (holder instanceof GlobalSearchAdapter.SearchItem) {
 
-//            CNPinyinIndex<Contact> model = (CNPinyinIndex<Contact>) mDataList.get(finalPosition);
-//            SearchItem searchItemHolder = (SearchItem) holder;
-//
-//            Contact contact = model.cnPinyin.data;
-//
-//
-//            SpannableStringBuilder ssb = new SpannableStringBuilder(contact.chinese());
-//            ForegroundColorSpan span = new ForegroundColorSpan(Color.BLUE);
-//            ssb.setSpan(span, model.start, model.end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-//
-//            searchItemHolder.search_icon.setImageResource(model.cnPinyin.data.imgUrl);
-//            searchItemHolder.search_name.setText(ssb);
-
             SearchItem searchItemHolder = (SearchItem) holder;
             SearchContactBean model = (SearchContactBean) mDataList.get(finalPosition);
             searchItemHolder.search_name.setText(model.getDisplayName());
@@ -180,22 +167,38 @@ public class GlobalSearchAdapter<T> extends RecyclerView.Adapter<RecyclerView.Vi
                         }
                         break;
                     //全拼的高亮暂不支持
-                    case SearchContactBean.SEARCH_TYPE_WHOLE_SPECL: {
+                    case SearchContactBean.SEARCH_TYPE_WHOLE_SPECL:
                         int[] findIndex = model.getWholePinYinFindIndex();
-                        SpannableStringBuilder builder = new SpannableStringBuilder(model.getDisplayName());
-//                        builder.setSpan(new ForegroundColorSpan(highlightColor),
-//                                findIndex[0], findIndex[1]+1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        String displayName = model.getDisplayName();
+                        SpannableStringBuilder builder = new SpannableStringBuilder(displayName);
+
+                        List<Integer> integers = PinYinUtils.match2(displayName, queryString);
+                        Log.e("YW", "i begin");
+                        int start = 0;
+                        int end = 0;
+
+                        if (!ListUtils.isEmpty(integers)) {
+                            start = integers.get(0);
+                            end = integers.get(integers.size() - 1);
+                        }
+
+                        Log.e("YW", "start: " + start + "\tend: " + end);
+                        for (Integer i : integers) {
+                            Log.e("YW", "i: " + i);
+                        }
+
+                        builder.setSpan(new ForegroundColorSpan(highlightColor),
+                                /*findIndex[0], findIndex[1]+1,*/start, end + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                         searchItemHolder.search_name.setText(builder);
-                    }
                         break;
                     case SearchContactBean.SEARCH_TYPE_SIMPLE_T9:
                         if (model.getSimpleT9().contains(queryString)) {
                             int a = model.getSimpleT9().indexOf(queryString);
                             int b = a + queryString.length();
-                            SpannableStringBuilder builder = new SpannableStringBuilder(model.getDisplayName());
-                            builder.setSpan(new ForegroundColorSpan(highlightColor),
+                            SpannableStringBuilder build = new SpannableStringBuilder(model.getDisplayName());
+                            build.setSpan(new ForegroundColorSpan(highlightColor),
                                     a, b, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                            searchItemHolder.search_name.setText(builder);
+                            searchItemHolder.search_name.setText(build);
                         }
                         break;
                     default:

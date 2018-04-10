@@ -1,6 +1,7 @@
 package com.youmai.hxsdk.contact.search.demo;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.youmai.hxsdk.contact.search.adapter.TestUtils;
 import com.youmai.hxsdk.contact.search.cn.SearchContactBean;
@@ -52,8 +53,22 @@ public class ContactsSearchLoader extends GlobalSearchLoader<SearchContactBean> 
                 searchType = SearchContactBean.SEARCH_TYPE_SIMPLE_SPELL;
                 finalQuery = queryUpper;
             } else if (bean.getWholePinyin().contains(queryUpper)) {
-                searchType = SearchContactBean.SEARCH_TYPE_WHOLE_SPECL;
+
+                List<String> indexPinyin = bean.getIndexPinyin();
+                for (String pinyin : indexPinyin) {
+                    boolean b = pinyin.startsWith(queryUpper);//每个汉字拼音
+                    boolean c = queryUpper.startsWith(pinyin);
+                    Log.e("YW", "pinyin: " + pinyin);
+                    if (b || c) {
+                        searchType = SearchContactBean.SEARCH_TYPE_WHOLE_SPECL;
+                        break;
+                    }
+                }
                 finalQuery = queryUpper;
+
+                //去匹配中文名的
+                Log.e("YW", "i: getWholePinyin");
+
             } else if (bean.getDuoYinzi().find(queryUpper, findResult)) {
                 searchType = SearchContactBean.SEARCH_TYPE_WHOLE_SPECL;
                 finalQuery = queryUpper;

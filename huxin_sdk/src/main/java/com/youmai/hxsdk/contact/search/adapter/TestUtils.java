@@ -54,6 +54,8 @@ public class TestUtils {
         List<SearchContactBean> contactList = new ArrayList<>();
         Random random = new Random(System.currentTimeMillis());
         String[] names = context.getResources().getStringArray(R.array.names); //获取
+
+
         for (int i = 0; i < names.length; i++) {
             int urlIndex = random.nextInt(URLS.length - 1);
             int url = URLS[urlIndex];
@@ -61,10 +63,12 @@ public class TestUtils {
             StringBuffer pinyin = new StringBuffer();
             StringBuffer ch = new StringBuffer();
             String hanzi = names[i];
+            List<String> chStr = new ArrayList<>(); //每个汉字的 拼音集合
             for (int j = 0; j < hanzi.length(); j++) {
                 System.out.println("yw-i: " + hanzi.charAt(j));
                 pinyin.append(Pinyin.toPinyin(hanzi.charAt(j)).toUpperCase());
                 ch.append(Pinyin.toPinyin(hanzi.charAt(j)).substring(0, 1));
+                chStr.add(Pinyin.toPinyin(hanzi.charAt(j)));
             }
 
             SearchContactBean contact = new SearchContactBean();
@@ -72,6 +76,7 @@ public class TestUtils {
             contact.setDisplayName(hanzi);
             contact.setWholePinyin(pinyin.toString());
             contact.setSimplepinyin(ch.toString());
+            contact.setIndexPinyin(chStr);
 
             DuoYinZi duoYinZi = PinYinUtils.HanziToPinYin(hanzi);
             contact.setDuoYinzi(duoYinZi);
@@ -80,6 +85,11 @@ public class TestUtils {
 
             contactList.add(contact);
         }
+
+
+        //先把第一个汉字拿出来
+
+
         return contactList;
     }
 

@@ -1,7 +1,9 @@
 package com.youmai.hxsdk.contact.search.utils;
 
 import android.text.TextUtils;
+import android.util.Log;
 
+import com.youmai.hxsdk.contact.pinyin.Pinyin;
 import com.youmai.hxsdk.contact.search.cn.DuoYinZi;
 
 import net.sourceforge.pinyin4j.PinyinHelper;
@@ -11,6 +13,7 @@ import net.sourceforge.pinyin4j.format.HanyuPinyinToneType;
 import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by fan on 2016/8/9.
@@ -208,6 +211,63 @@ public class PinYinUtils {
             }
         }
         return duoYinZi;
+    }
+
+
+    /**
+     * str：汉字
+     * key:拼音
+     * @param str
+     * @param key
+     * @return
+     */
+    public static List<Integer> match2(final String str, String key) {
+        System.out.println("matching: " + str + " " + key);
+        if (key.length() == 0)
+            new ArrayList<Integer>();
+        List<Integer> matchIndex = new ArrayList<>();
+
+        List<String> st = new ArrayList<>();
+        //先把第一个汉字拿出来
+        for (int k = 0; k < str.length(); k++) {
+            st.add(Pinyin.toPinyin(str.charAt(k)));
+        }
+
+        int j = 0;
+        //st 集合装着每个汉字的拼音
+        for (int m = 0; m < st.size(); m++) {
+            String s = st.get(m);        //m : 第几个汉字 对应的拼音
+            for (int n = 0; n < s.length() && j < key.length(); n++) {
+//                if (!s.startsWith(key)) {
+//                    continue;
+//                }
+                Log.e("YW", "key: " + key +"\tj: " + j + "\t汉字s：" + s + "\tn: " + n);
+                if (key.contains(s)) {
+                    j += s.length() - 1;
+                    matchIndex.add(m);
+                    Log.e("YW", "n: " + n);
+                    key = key.substring(s.length(), key.length());
+                    j = 0;
+                    continue;
+                }
+
+                //先判断第m个汉字拼音是否包含有key 如果有就继续下面的操作
+                if (!s.contains(key)) {
+                    continue;
+                }
+
+                if (key.charAt(j) == s.charAt(n)) { // zh  zhou   n : 第m个汉字拼音的  第n个字母
+                    j++;  //1 z  2 h       j : 表示关键字的第几个字母
+                    Log.e("YW", "j: " + j +"\t关键字: " /*+ key.charAt(j)*/ + "\t对应着汉字拼字： " + s.charAt(n));
+                }
+                //j=2
+                if (j == key.length()) {
+                    if (!matchIndex.contains(m))
+                        matchIndex.add(m);
+                }
+            }
+        }
+        return matchIndex;
     }
 
 }

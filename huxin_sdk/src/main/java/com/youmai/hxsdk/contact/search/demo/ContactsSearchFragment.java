@@ -60,6 +60,7 @@ public class ContactsSearchFragment<T extends Parcelable> extends SearchFragment
         mGlobalSearchAdapter.setTailTitle(getString(R.string.hx_contacts_view_more_contacts));
         mRecyclerView.setAdapter(mGlobalSearchAdapter);
 
+        PinyinUtil.init(getContext().getApplicationContext());
         getLoaderManager().initLoader(GLOBAL_SEARCH_LOADER_ID, null, this);
     }
 

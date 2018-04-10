@@ -1,11 +1,13 @@
 package com.youmai.hxsdk.contact.search.cn;
 
+import android.support.annotation.NonNull;
+
 import com.youmai.hxsdk.contact.search.cn.CN;
 
 /**
  * Created by you on 2017/9/11.
  */
-public class Contact implements CN {
+public class Contact implements CN, Comparable<Contact> {
 
     private int contactId; //id
     private int iconUrl; //头像url
@@ -62,5 +64,10 @@ public class Contact implements CN {
                 ", pinyin='" + pinyin + '\'' +
                 ", simplePinyin='" + simplePinyin + '\'' +
                 '}';
+    }
+
+    @Override
+    public int compareTo(@NonNull Contact o) {
+        return 0;
     }
 }

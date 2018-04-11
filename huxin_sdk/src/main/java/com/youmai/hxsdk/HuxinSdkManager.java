@@ -2,20 +2,16 @@ package com.youmai.hxsdk;
 
 import android.Manifest;
 import android.content.ComponentName;
-import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
-import android.provider.ContactsContract;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
@@ -37,8 +33,10 @@ import com.youmai.hxsdk.db.bean.CacheMsgBean;
 import com.youmai.hxsdk.db.dao.CacheMsgBeanDao;
 import com.youmai.hxsdk.db.manager.GreenDBIMManager;
 import com.youmai.hxsdk.entity.FileToken;
+import com.youmai.hxsdk.entity.IpConfig;
 import com.youmai.hxsdk.entity.UploadFile;
 import com.youmai.hxsdk.http.HttpConnector;
+import com.youmai.hxsdk.http.IGetListener;
 import com.youmai.hxsdk.http.IPostListener;
 import com.youmai.hxsdk.im.IMConst;
 import com.youmai.hxsdk.im.IMHelper;
@@ -109,7 +107,8 @@ public class HuxinSdkManager {
 
     private StackAct mStackAct;
     private UserInfo mUserInfo;
-    private Map<String, String> mContactName;
+
+    private String mUuid;   //用户UUID
 
     /**
      * SDK初始化结果监听器
@@ -122,30 +121,19 @@ public class HuxinSdkManager {
 
 
     /**
-     * 登录结果监听器
-     */
-    public interface LoginListener {
-        void success(String msg);
-
-        void fail(String msg);
-    }
-
-    Configuration qiNiuConfig = new Configuration.Builder()
-            .connectTimeout(10)           // 链接超时。默认10秒
-            .useHttps(true)               // 是否使用https上传域名
-            .responseTimeout(30)          // 服务器响应超时。默认30秒
-            .zone(AutoZone.autoZone)        // 设置区域，指定不同区域的上传域名、备用域名、备用IP。
-            .build();
-
-    /**
      * 私有构造函数
      */
     private HuxinSdkManager() {
+        Configuration qiNiuConfig = new Configuration.Builder()
+                .connectTimeout(10)           // 链接超时。默认10秒
+                .useHttps(true)               // 是否使用https上传域名
+                .responseTimeout(30)          // 服务器响应超时。默认30秒
+                .zone(AutoZone.autoZone)        // 设置区域，指定不同区域的上传域名、备用域名、备用IP。
+                .build();
         uploadManager = new UploadManager(qiNiuConfig);
         mStackAct = StackAct.instance();
         mUserInfo = new UserInfo();
         mInitListenerList = new ArrayList<>();
-        mContactName = new HashMap<>();
     }
 
     @Override
@@ -305,6 +293,27 @@ public class HuxinSdkManager {
     }
 
 
+    public void setUuid(String uuid) {
+        if (!TextUtils.isEmpty(uuid)) {
+            mUuid = uuid;
+            String saveId = AppUtils.getStringSharedPreferences(mContext, "color_uuid", "");
+            if (TextUtils.isEmpty(saveId) || !saveId.equals(uuid)) {
+                AppUtils.setStringSharedPreferences(mContext, "color_uuid", uuid);
+                socketLogin(uuid);
+            }
+        }
+    }
+
+
+    public String getUuid() {
+        if (TextUtils.isEmpty(mUuid)) {
+            mUuid = AppUtils.getStringSharedPreferences(mContext, "color_uuid", "");
+        }
+        return mUuid;
+
+    }
+
+
     public void clearUserData() {
         close();
         mUserInfo.clearUserData(mContext);
@@ -381,102 +390,6 @@ public class HuxinSdkManager {
         if (mContext != null && binded == BIND_STATUS.BINDED) {
             huxinService.close();
         }
-    }
-
-
-    /**
-     * 从通讯录获取名称
-     *
-     * @param phone
-     * @return
-     */
-    public String getContactName(String phone) {
-        String nickName = mContactName.get(phone);
-        if (StringUtils.isEmpty(nickName)) {
-            ContentResolver resolver = mContext.getContentResolver();
-            Cursor cursor = null;
-            try {
-                cursor = resolver.query(Uri.withAppendedPath(
-                        ContactsContract.PhoneLookup.CONTENT_FILTER_URI, phone), new String[]{
-                        ContactsContract.PhoneLookup._ID,
-                        ContactsContract.PhoneLookup.NUMBER,
-                        ContactsContract.PhoneLookup.DISPLAY_NAME,
-                        ContactsContract.PhoneLookup.TYPE,
-                        ContactsContract.PhoneLookup.LABEL}, null, null, null);
-                if (cursor != null) {
-                    if (cursor.moveToFirst()) {
-                        nickName = cursor.getString(2);
-                    }
-                    LogUtils.e(Constant.SDK_UI_TAG, "phone = " + phone + "nickName = " + nickName);
-                }
-
-            } catch (Exception e) {
-                e.printStackTrace();
-                nickName = "";
-            } finally {
-                if (cursor != null)
-                    cursor.close();
-            }
-
-            if (!StringUtils.isEmpty(nickName)) {
-                mContactName.put(phone, nickName);
-            }
-        }
-
-        if (StringUtils.isEmpty(nickName)) {
-            nickName = phone;
-        }
-        return nickName;
-    }
-
-
-    public boolean isContactName(String phone) {
-        boolean ret = false;
-        String name = getContactName(phone);
-        if (!name.equals(phone)) {
-            ret = true;
-        }
-        return ret;
-    }
-
-
-    /**
-     * 是否本地联系人
-     *
-     * @param phone
-     * @return
-     */
-    public boolean isContact(String phone) {
-
-        String nickName = "";
-        Cursor cursor = null;
-        try {
-            ContentResolver resolver = mContext.getContentResolver();
-            cursor = resolver.query(Uri.withAppendedPath(
-                    ContactsContract.PhoneLookup.CONTENT_FILTER_URI, phone), new String[]{
-                    ContactsContract.PhoneLookup._ID,
-                    ContactsContract.PhoneLookup.NUMBER,
-                    ContactsContract.PhoneLookup.DISPLAY_NAME,
-                    ContactsContract.PhoneLookup.TYPE,
-                    ContactsContract.PhoneLookup.LABEL}, null, null, null);
-            if (cursor != null) {
-                if (cursor.moveToFirst()) {
-                    nickName = cursor.getString(2);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            nickName = "";
-        } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
-            if (!StringUtils.isEmpty(nickName)) {
-                mContactName.put(phone, nickName);
-            }
-        }
-
-        return StringUtils.isEmpty(nickName);
     }
 
 
@@ -596,6 +509,32 @@ public class HuxinSdkManager {
 
 
     /**
+     * req socket ip and port
+     * tcp login
+     */
+    private void socketLogin(final String uuid) {
+        String url = AppConfig.getTcpHost(uuid);
+
+        HttpConnector.httpGet(url, new IGetListener() {
+            @Override
+            public void httpReqResult(String response) {
+                IpConfig resp = GsonUtil.parse(response, IpConfig.class);
+                if (resp != null) {
+                    String ip = resp.getIp();
+                    int port = resp.getPort();
+
+                    AppUtils.setStringSharedPreferences(mContext, "IP", ip);
+                    AppUtils.setIntSharedPreferences(mContext, "PORT", port);
+
+                    InetSocketAddress isa = new InetSocketAddress(ip, port);
+                    connectTcp(isa);
+                }
+            }
+        });
+    }
+
+
+    /**
      * java 获取上传文件token
      *
      * @param
@@ -684,14 +623,11 @@ public class HuxinSdkManager {
     /**
      * 用户tcp协议重登录，仅仅用于测试
      *
-     * @param userId
-     * @param phone
-     * @param session
      * @param isa
      */
-    public void connectTcp(int userId, String phone, String session, InetSocketAddress isa) {
+    public void connectTcp(InetSocketAddress isa) {
         if (mContext != null && binded == BIND_STATUS.BINDED) {
-            huxinService.connectTcp(userId, phone, session, isa);
+            huxinService.connectTcp(isa);
         }
     }
 

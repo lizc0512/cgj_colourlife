@@ -18,9 +18,9 @@ public abstract class PduUtil {
 
     public int ParsePdu(ByteBuffer buffer) {
         if (buffer.limit() > PduBase.pdu_basic_length) {
-            int begin = buffer.getInt(PduBaseEnum.startflag.ordinal() * PduBase.pdu_basic_length);
+            int begin = buffer.getInt(0);
             Log.v(TAG, "begin is " + begin);
-            if (begin != PduBase.startflag) {
+            if (begin != PduBase.flag) {
                 Log.e(TAG, "header error...");
                 LogFile.inStance().toFile("header error...");
                 buffer.clear();
@@ -33,13 +33,12 @@ public abstract class PduUtil {
             return 0;
         }
 
-        if (buffer.limit() >= (PduBaseEnum.length.ordinal() + 1) * PduBase.pdu_basic_length) {
+        if (buffer.limit() >= PduBase.pdu_header_length) {
             //has full header
             int bodyLength = buffer
-                    .getInt(PduBaseEnum.length.ordinal() * PduBase.pdu_basic_length);
+                    .getInt(PduBase.pdu_body_length_index);
+            int totalLength = bodyLength + PduBase.pdu_header_length;
 
-            int totalLength = bodyLength
-                    + (PduBaseEnum.length.ordinal() + 1) * PduBase.pdu_basic_length;
             if (totalLength <= buffer.limit()) {
                 //has a full pack.
                 byte[] packByte = new byte[totalLength];
@@ -71,40 +70,18 @@ public abstract class PduUtil {
         buffer.put(bytes);
         buffer.flip();
 
-        buffer.getInt();  //units.startflag
-        units.terminal_token = buffer.getInt();
-        units.commandid = buffer.getInt();
+        buffer.getInt();  //units.flag
+        buffer.get(units.user_id);
+        units.service_id = buffer.getInt();
+        units.command_id = buffer.getInt();
         units.seq_id = buffer.getInt();
-
-        units.data_type = buffer.get();
-        units.pdu_version = buffer.get();
-        units.extension_reserved[0] = buffer.get();
-        units.extension_reserved[1] = buffer.get();
+        units.version = buffer.get();
 
         int length = buffer.getInt();
         units.length = length;
         units.body = new byte[length];
         buffer.get(units.body);
         return units;
-
-
-        /*units.terminal_token = buffer.getInt(PduBaseEnum.terminal_token.ordinal() * PduBase.pdu_basic_length);
-        units.commandid = buffer.getInt(PduBaseEnum.commandid.ordinal() * PduBase.pdu_basic_length);
-        units.seq_id = buffer.getInt(PduBaseEnum.seq_id.ordinal() * PduBase.pdu_basic_length);
-
-        units.data_type = buffer.get(PduBaseEnum.place_holder.ordinal() * PduBase.pdu_basic_length);
-        units.pdu_version = buffer.get(PduBaseEnum.place_holder.ordinal() * PduBase.pdu_basic_length + 1);
-        units.extension_reserved[0] = buffer.get(PduBaseEnum.place_holder.ordinal() * PduBase.pdu_basic_length + 2);
-        units.extension_reserved[1] = buffer.get(PduBaseEnum.place_holder.ordinal() * PduBase.pdu_basic_length + 3);
-
-        int length = buffer.getInt(PduBaseEnum.length.ordinal() * PduBase.pdu_basic_length);
-        units.length = length;
-        units.body = new byte[length];
-        buffer.position(PduBaseEnum.body.ordinal() * PduBase.pdu_basic_length);
-        buffer.get(units.body, 0, length);
-
-        return units;*/
-
     }
 
     public ByteBuffer serializePdu(PduBase pduBase) {
@@ -112,44 +89,17 @@ public abstract class PduUtil {
         ByteBuffer byteBuffer = ByteBuffer.allocate(length);
         byteBuffer.clear();
 
-        byteBuffer.putInt(PduBase.startflag);
-        byteBuffer.putInt(pduBase.terminal_token);
-        byteBuffer.putInt(pduBase.commandid);
+        byteBuffer.putInt(PduBase.flag);
+        byteBuffer.put(pduBase.user_id);
+        byteBuffer.putInt(pduBase.service_id);
+        byteBuffer.putInt(pduBase.command_id);
         byteBuffer.putInt(pduBase.seq_id);
-
-        byteBuffer.put(pduBase.data_type);
-        byteBuffer.put(pduBase.pdu_version);
-        byteBuffer.put(pduBase.extension_reserved[0]);
-        byteBuffer.put(pduBase.extension_reserved[1]);
-
+        byteBuffer.put(pduBase.version);
         byteBuffer.putInt(pduBase.length);
-
         byteBuffer.put(pduBase.body);
 
         return byteBuffer;
 
-        /*ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        DataOutputStream dos = new DataOutputStream(bos);
-        try {
-            dos.writeInt(PduBase.startflag);
-            dos.writeInt(pduBase.terminal_token);
-            dos.writeInt(pduBase.commandid);
-            dos.writeInt(pduBase.seq_id);
-            dos.writeByte(pduBase.data_type);
-            dos.writeByte(pduBase.pdu_version);
-
-            dos.writeByte(pduBase.extension_reserved[0]);
-
-            dos.writeByte(pduBase.extension_reserved[1]);
-
-            dos.writeInt(pduBase.length);
-
-            dos.write(pduBase.body);
-            return bos.toByteArray();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }*/
     }
 
 

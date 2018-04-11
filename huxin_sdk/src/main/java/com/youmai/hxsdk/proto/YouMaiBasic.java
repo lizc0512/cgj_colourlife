@@ -12,6 +12,302 @@ public final class YouMaiBasic {
     }
 
     /**
+     * Protobuf enum {@code ServiceType}
+     */
+    public enum ServiceType
+            implements com.google.protobuf.ProtocolMessageEnum {
+        /**
+         * <code>COM_SERVER = 1;</code>
+         */
+        COM_SERVER(0, 1),
+        /**
+         * <code>ROUTER_SERVER = 2;</code>
+         */
+        ROUTER_SERVER(1, 2),
+        /**
+         * <code>LOADBALANCE_SERVER = 3;</code>
+         */
+        LOADBALANCE_SERVER(2, 3),
+        /**
+         * <code>TRANSFER_SERVER = 4;</code>
+         */
+        TRANSFER_SERVER(3, 4),;
+
+        /**
+         * <code>COM_SERVER = 1;</code>
+         */
+        public static final int COM_SERVER_VALUE = 1;
+        /**
+         * <code>ROUTER_SERVER = 2;</code>
+         */
+        public static final int ROUTER_SERVER_VALUE = 2;
+        /**
+         * <code>LOADBALANCE_SERVER = 3;</code>
+         */
+        public static final int LOADBALANCE_SERVER_VALUE = 3;
+        /**
+         * <code>TRANSFER_SERVER = 4;</code>
+         */
+        public static final int TRANSFER_SERVER_VALUE = 4;
+
+
+        public final int getNumber() {
+            return value;
+        }
+
+        public static ServiceType valueOf(int value) {
+            switch (value) {
+                case 1:
+                    return COM_SERVER;
+                case 2:
+                    return ROUTER_SERVER;
+                case 3:
+                    return LOADBALANCE_SERVER;
+                case 4:
+                    return TRANSFER_SERVER;
+                default:
+                    return null;
+            }
+        }
+
+        public static com.google.protobuf.Internal.EnumLiteMap<ServiceType>
+        internalGetValueMap() {
+            return internalValueMap;
+        }
+
+        private static com.google.protobuf.Internal.EnumLiteMap<ServiceType>
+                internalValueMap =
+                new com.google.protobuf.Internal.EnumLiteMap<ServiceType>() {
+                    public ServiceType findValueByNumber(int number) {
+                        return ServiceType.valueOf(number);
+                    }
+                };
+
+        public final com.google.protobuf.Descriptors.EnumValueDescriptor
+        getValueDescriptor() {
+            return getDescriptor().getValues().get(index);
+        }
+
+        public final com.google.protobuf.Descriptors.EnumDescriptor
+        getDescriptorForType() {
+            return getDescriptor();
+        }
+
+        public static final com.google.protobuf.Descriptors.EnumDescriptor
+        getDescriptor() {
+            return YouMaiBasic.getDescriptor().getEnumTypes().get(0);
+        }
+
+        private static final ServiceType[] VALUES = values();
+
+        public static ServiceType valueOf(
+                com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
+            if (desc.getType() != getDescriptor()) {
+                throw new IllegalArgumentException(
+                        "EnumValueDescriptor is not for this type.");
+            }
+            return VALUES[desc.getIndex()];
+        }
+
+        private final int index;
+        private final int value;
+
+        private ServiceType(int index, int value) {
+            this.index = index;
+            this.value = value;
+        }
+
+        // @@protoc_insertion_point(enum_scope:ServiceType)
+    }
+
+    /**
+     * Protobuf enum {@code ServiceID}
+     */
+    public enum ServiceID
+            implements com.google.protobuf.ProtocolMessageEnum {
+        /**
+         * <code>SID_MONITOR = 1;</code>
+         */
+        SID_MONITOR(0, 1),
+        /**
+         * <code>SID_CONN = 2;</code>
+         */
+        SID_CONN(1, 2),
+        /**
+         * <code>SID_DISPATCH = 3;</code>
+         */
+        SID_DISPATCH(2, 3),
+        /**
+         * <code>SID_LOGIN = 4;</code>
+         */
+        SID_LOGIN(3, 4),
+        /**
+         * <code>SID_MSG = 5;</code>
+         */
+        SID_MSG(4, 5),
+        /**
+         * <code>SID_LOADBALANCE = 6;</code>
+         */
+        SID_LOADBALANCE(5, 6),
+        /**
+         * <code>SID_BROADCAST = 7;</code>
+         */
+        SID_BROADCAST(6, 7),
+        /**
+         * <code>SID_DBPROXY = 8;</code>
+         */
+        SID_DBPROXY(7, 8),
+        /**
+         * <code>SID_GROUP = 9;</code>
+         */
+        SID_GROUP(8, 9),
+        /**
+         * <code>SID_BUDDY = 10;</code>
+         */
+        SID_BUDDY(9, 10),
+        /**
+         * <code>SID_REDIS = 100;</code>
+         * <p>
+         * <pre>
+         * other server
+         * </pre>
+         */
+        SID_REDIS(10, 100),;
+
+        /**
+         * <code>SID_MONITOR = 1;</code>
+         */
+        public static final int SID_MONITOR_VALUE = 1;
+        /**
+         * <code>SID_CONN = 2;</code>
+         */
+        public static final int SID_CONN_VALUE = 2;
+        /**
+         * <code>SID_DISPATCH = 3;</code>
+         */
+        public static final int SID_DISPATCH_VALUE = 3;
+        /**
+         * <code>SID_LOGIN = 4;</code>
+         */
+        public static final int SID_LOGIN_VALUE = 4;
+        /**
+         * <code>SID_MSG = 5;</code>
+         */
+        public static final int SID_MSG_VALUE = 5;
+        /**
+         * <code>SID_LOADBALANCE = 6;</code>
+         */
+        public static final int SID_LOADBALANCE_VALUE = 6;
+        /**
+         * <code>SID_BROADCAST = 7;</code>
+         */
+        public static final int SID_BROADCAST_VALUE = 7;
+        /**
+         * <code>SID_DBPROXY = 8;</code>
+         */
+        public static final int SID_DBPROXY_VALUE = 8;
+        /**
+         * <code>SID_GROUP = 9;</code>
+         */
+        public static final int SID_GROUP_VALUE = 9;
+        /**
+         * <code>SID_BUDDY = 10;</code>
+         */
+        public static final int SID_BUDDY_VALUE = 10;
+        /**
+         * <code>SID_REDIS = 100;</code>
+         * <p>
+         * <pre>
+         * other server
+         * </pre>
+         */
+        public static final int SID_REDIS_VALUE = 100;
+
+
+        public final int getNumber() {
+            return value;
+        }
+
+        public static ServiceID valueOf(int value) {
+            switch (value) {
+                case 1:
+                    return SID_MONITOR;
+                case 2:
+                    return SID_CONN;
+                case 3:
+                    return SID_DISPATCH;
+                case 4:
+                    return SID_LOGIN;
+                case 5:
+                    return SID_MSG;
+                case 6:
+                    return SID_LOADBALANCE;
+                case 7:
+                    return SID_BROADCAST;
+                case 8:
+                    return SID_DBPROXY;
+                case 9:
+                    return SID_GROUP;
+                case 10:
+                    return SID_BUDDY;
+                case 100:
+                    return SID_REDIS;
+                default:
+                    return null;
+            }
+        }
+
+        public static com.google.protobuf.Internal.EnumLiteMap<ServiceID>
+        internalGetValueMap() {
+            return internalValueMap;
+        }
+
+        private static com.google.protobuf.Internal.EnumLiteMap<ServiceID>
+                internalValueMap =
+                new com.google.protobuf.Internal.EnumLiteMap<ServiceID>() {
+                    public ServiceID findValueByNumber(int number) {
+                        return ServiceID.valueOf(number);
+                    }
+                };
+
+        public final com.google.protobuf.Descriptors.EnumValueDescriptor
+        getValueDescriptor() {
+            return getDescriptor().getValues().get(index);
+        }
+
+        public final com.google.protobuf.Descriptors.EnumDescriptor
+        getDescriptorForType() {
+            return getDescriptor();
+        }
+
+        public static final com.google.protobuf.Descriptors.EnumDescriptor
+        getDescriptor() {
+            return YouMaiBasic.getDescriptor().getEnumTypes().get(1);
+        }
+
+        private static final ServiceID[] VALUES = values();
+
+        public static ServiceID valueOf(
+                com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
+            if (desc.getType() != getDescriptor()) {
+                throw new IllegalArgumentException(
+                        "EnumValueDescriptor is not for this type.");
+            }
+            return VALUES[desc.getIndex()];
+        }
+
+        private final int index;
+        private final int value;
+
+        private ServiceID(int index, int value) {
+            this.index = index;
+            this.value = value;
+        }
+
+        // @@protoc_insertion_point(enum_scope:ServiceID)
+    }
+
+    /**
      * Protobuf enum {@code COMMANDID}
      */
     public enum COMMANDID
@@ -29,109 +325,129 @@ public final class YouMaiBasic {
          */
         ROUTE_REQ(2, 20),
         /**
+         * <code>ROUTE_ONLINECHECK = 21;</code>
+         */
+        ROUTE_ONLINECHECK(3, 21),
+        /**
+         * <code>ROUTE_ONLINECHECK_ACK = 22;</code>
+         */
+        ROUTE_ONLINECHECK_ACK(4, 22),
+        /**
+         * <code>ROUTE_PHONE_CHECK = 23;</code>
+         */
+        ROUTE_PHONE_CHECK(5, 23),
+        /**
+         * <code>ROUTE_PHONE_CHECK_ACK = 24;</code>
+         */
+        ROUTE_PHONE_CHECK_ACK(6, 24),
+        /**
          * <code>USER_LOGIN = 101;</code>
          */
-        USER_LOGIN(3, 101),
+        USER_LOGIN(7, 101),
         /**
          * <code>USER_LOGIN_ACK = 102;</code>
          */
-        USER_LOGIN_ACK(4, 102),
+        USER_LOGIN_ACK(8, 102),
         /**
          * <code>USER_LOGOFF = 103;</code>
          */
-        USER_LOGOFF(5, 103),
+        USER_LOGOFF(9, 103),
         /**
          * <code>USER_LOGOFF_ACK = 104;</code>
          */
-        USER_LOGOFF_ACK(6, 104),
+        USER_LOGOFF_ACK(10, 104),
         /**
          * <code>MULTI_DEVICE_KICKED_NOTIFY = 105;</code>
          */
-        MULTI_DEVICE_KICKED_NOTIFY(7, 105),
+        MULTI_DEVICE_KICKED_NOTIFY(11, 105),
         /**
          * <code>IM_TEXT = 106;</code>
          */
-        IM_TEXT(8, 106),
+        IM_TEXT(12, 106),
         /**
          * <code>IM_PICTURE = 107;</code>
          */
-        IM_PICTURE(9, 107),
+        IM_PICTURE(13, 107),
         /**
          * <code>IM_AUDIO = 108;</code>
          */
-        IM_AUDIO(10, 108),
+        IM_AUDIO(14, 108),
         /**
          * <code>IM_VIDEO = 109;</code>
          */
-        IM_VIDEO(11, 109),
+        IM_VIDEO(15, 109),
         /**
          * <code>IM_URL = 110;</code>
          */
-        IM_URL(12, 110),
+        IM_URL(16, 110),
         /**
          * <code>IM_LOCATION = 111;</code>
          */
-        IM_LOCATION(13, 111),
+        IM_LOCATION(17, 111),
         /**
          * <code>IM_LOCATION_SHARE_BEGIN = 112;</code>
          */
-        IM_LOCATION_SHARE_BEGIN(14, 112),
+        IM_LOCATION_SHARE_BEGIN(18, 112),
         /**
          * <code>IM_LOCATION_SHARE_ANSWER = 113;</code>
          */
-        IM_LOCATION_SHARE_ANSWER(15, 113),
+        IM_LOCATION_SHARE_ANSWER(19, 113),
         /**
          * <code>IM_LOCATION_SHARE_CONTINUE = 114;</code>
          */
-        IM_LOCATION_SHARE_CONTINUE(16, 114),
+        IM_LOCATION_SHARE_CONTINUE(20, 114),
         /**
          * <code>IM_LOCATION_SHARE_END = 115;</code>
          */
-        IM_LOCATION_SHARE_END(17, 115),
+        IM_LOCATION_SHARE_END(21, 115),
         /**
          * <code>PHONEDIAL = 117;</code>
          */
-        PHONEDIAL(18, 117),
+        PHONEDIAL(22, 117),
         /**
          * <code>PHONEDIAL_ACK = 118;</code>
          */
-        PHONEDIAL_ACK(19, 118),
+        PHONEDIAL_ACK(23, 118),
         /**
          * <code>GET_CONTACTS_INFO = 119;</code>
          */
-        GET_CONTACTS_INFO(20, 119),
+        GET_CONTACTS_INFO(24, 119),
         /**
          * <code>GET_CONTACTS_INFO_ACK = 120;</code>
          */
-        GET_CONTACTS_INFO_ACK(21, 120),
+        GET_CONTACTS_INFO_ACK(25, 120),
         /**
          * <code>PHP_USER_MODIFYSTATUS = 121;</code>
          */
-        PHP_USER_MODIFYSTATUS(22, 121),
+        PHP_USER_MODIFYSTATUS(26, 121),
         /**
          * <code>PHP_USER_MODIFYSTATUS_ACK = 122;</code>
          */
-        PHP_USER_MODIFYSTATUS_ACK(23, 122),
+        PHP_USER_MODIFYSTATUS_ACK(27, 122),
         /**
          * <code>PHP_ADMIN_MODIFYUSERSTATUS = 123;</code>
          */
-        PHP_ADMIN_MODIFYUSERSTATUS(24, 123),
+        PHP_ADMIN_MODIFYUSERSTATUS(28, 123),
         /**
          * <code>PHP_ADMIN_MODIFYUSERSTATUS_ACK = 124;</code>
          */
-        PHP_ADMIN_MODIFYUSERSTATUS_ACK(25, 124),
+        PHP_ADMIN_MODIFYUSERSTATUS_ACK(29, 124),
         /**
          * <code>IMCHAT_PERSONAL = 125;</code>
          */
-        IMCHAT_PERSONAL(26, 125),
+        IMCHAT_PERSONAL(30, 125),
         /**
          * <code>IMCHAT_PERSONAL_ACK = 126;</code>
          */
-        IMCHAT_PERSONAL_ACK(27, 126),
+        IMCHAT_PERSONAL_ACK(31, 126),
         /**
          * <code>IMCHAT_PERSONAL_NOTIFY = 127;</code>
          */
-        IMCHAT_PERSONAL_NOTIFY(28, 127),
+        IMCHAT_PERSONAL_NOTIFY(32, 127),
+        /**
+         * <code>IM_OFFLINE_MSG = 128;</code>
+         */
+        IM_OFFLINE_MSG(33, 128),
         /**
          * <code>REQUEST_IP = 400;</code>
          * <p>
@@ -139,75 +455,115 @@ public final class YouMaiBasic {
          * BACKEND ONLY.
          * </pre>
          */
-        REQUEST_IP(29, 400),
+        REQUEST_IP(34, 400),
         /**
          * <code>REQUEST_IP_ACK = 401;</code>
          */
-        REQUEST_IP_ACK(30, 401),
+        REQUEST_IP_ACK(35, 401),
         /**
          * <code>REGIST_COMMUNICATIONSERVICE = 402;</code>
+         * <p>
+         * <pre>
+         * route注册
+         * </pre>
          */
-        REGIST_COMMUNICATIONSERVICE(31, 402),
+        REGIST_COMMUNICATIONSERVICE(36, 402),
+        /**
+         * <code>REPORT_ONLINERS = 403;</code>
+         */
+        REPORT_ONLINERS(37, 403),
+        /**
+         * <code>BROATCAT_NOTIFY = 404;</code>
+         */
+        BROATCAT_NOTIFY(38, 404),
+        /**
+         * <code>ROUTE_BRAODCAST = 405;</code>
+         * <p>
+         * <pre>
+         * route 广播
+         * </pre>
+         */
+        ROUTE_BRAODCAST(39, 405),
+        /**
+         * <code>CID_USER_STAT_PUSH_REQ = 406;</code>
+         * <p>
+         * <pre>
+         * 用户状态广播
+         * </pre>
+         */
+        CID_USER_STAT_PUSH_REQ(40, 406),
+        /**
+         * <code>CID_USER_STAT_SYNC_REQ = 407;</code>
+         */
+        CID_USER_STAT_SYNC_REQ(41, 407),
+        /**
+         * <code>CID_USER_STAT_SYNC_RSP = 408;</code>
+         */
+        CID_USER_STAT_SYNC_RSP(42, 408),
+        /**
+         * <code>REGIST_RSP = 409;</code>
+         */
+        REGIST_RSP(43, 409),
         /**
          * <code>GENERAL_MESSAGE = 501;</code>
          */
-        GENERAL_MESSAGE(32, 501),
+        GENERAL_MESSAGE(44, 501),
         /**
          * <code>POP_GENERAL_MESSAGE = 502;</code>
          */
-        POP_GENERAL_MESSAGE(33, 502),
+        POP_GENERAL_MESSAGE(45, 502),
         /**
          * <code>POP_GENERAL_MESSAGE_ACK = 503;</code>
          */
-        POP_GENERAL_MESSAGE_ACK(34, 503),
+        POP_GENERAL_MESSAGE_ACK(46, 503),
         /**
          * <code>BULLETIN = 600;</code>
          */
-        BULLETIN(35, 600),
+        BULLETIN(47, 600),
         /**
          * <code>BULLETIN_NOTIFY = 601;</code>
          */
-        BULLETIN_NOTIFY(36, 601),
+        BULLETIN_NOTIFY(48, 601),
         /**
          * <code>BULLETIN_PUBLISH = 605;</code>
          */
-        BULLETIN_PUBLISH(37, 605),
+        BULLETIN_PUBLISH(49, 605),
         /**
          * <code>BULLETIN_PUBLISH_ACK = 606;</code>
          */
-        BULLETIN_PUBLISH_ACK(38, 606),
+        BULLETIN_PUBLISH_ACK(50, 606),
         /**
          * <code>BIZCARD_GET_BYPHONE = 701;</code>
          */
-        BIZCARD_GET_BYPHONE(39, 701),
+        BIZCARD_GET_BYPHONE(51, 701),
         /**
          * <code>BIZCARD_GET_BYPHONE_ACK = 702;</code>
          */
-        BIZCARD_GET_BYPHONE_ACK(40, 702),
+        BIZCARD_GET_BYPHONE_ACK(52, 702),
         /**
          * <code>BIZCARD_INSERT = 703;</code>
          */
-        BIZCARD_INSERT(41, 703),
+        BIZCARD_INSERT(53, 703),
         /**
          * <code>BIZCARD_INSERT_ACK = 704;</code>
          */
-        BIZCARD_INSERT_ACK(42, 704),
+        BIZCARD_INSERT_ACK(54, 704),
         /**
          * <code>BIZCARD_UPDATE = 705;</code>
          */
-        BIZCARD_UPDATE(43, 705),
+        BIZCARD_UPDATE(55, 705),
         /**
          * <code>BIZCARD_UPDATE_ACK = 706;</code>
          */
-        BIZCARD_UPDATE_ACK(44, 706),
+        BIZCARD_UPDATE_ACK(56, 706),
         /**
          * <code>BIZCARD_DELETE = 707;</code>
          */
-        BIZCARD_DELETE(45, 707),
+        BIZCARD_DELETE(57, 707),
         /**
          * <code>BIZCARD_DELETE_ACK = 708;</code>
          */
-        BIZCARD_DELETE_ACK(46, 708),
+        BIZCARD_DELETE_ACK(58, 708),
         /**
          * <code>BUSINESS_QUERY_AD = 750;</code>
          * <p>
@@ -215,55 +571,55 @@ public final class YouMaiBasic {
          * 商家查询代言
          * </pre>
          */
-        BUSINESS_QUERY_AD(47, 750),
+        BUSINESS_QUERY_AD(59, 750),
         /**
          * <code>BUSINESS_QUERY_AD_ACK = 751;</code>
          */
-        BUSINESS_QUERY_AD_ACK(48, 751),
+        BUSINESS_QUERY_AD_ACK(60, 751),
         /**
          * <code>BUSINESS_SAVE_AD = 752;</code>
          */
-        BUSINESS_SAVE_AD(49, 752),
+        BUSINESS_SAVE_AD(61, 752),
         /**
          * <code>BUSINESS_SAVE_AD_ACK = 753;</code>
          */
-        BUSINESS_SAVE_AD_ACK(50, 753),
+        BUSINESS_SAVE_AD_ACK(62, 753),
         /**
          * <code>BUSINESS_UPDATE_AD = 754;</code>
          */
-        BUSINESS_UPDATE_AD(51, 754),
+        BUSINESS_UPDATE_AD(63, 754),
         /**
          * <code>BUSINESS_UPDATE_AD_ACK = 755;</code>
          */
-        BUSINESS_UPDATE_AD_ACK(52, 755),
+        BUSINESS_UPDATE_AD_ACK(64, 755),
         /**
          * <code>BUSINESS_DELETE_AD = 756;</code>
          */
-        BUSINESS_DELETE_AD(53, 756),
+        BUSINESS_DELETE_AD(65, 756),
         /**
          * <code>BUSINESS_DELETE_AD_ACK = 757;</code>
          */
-        BUSINESS_DELETE_AD_ACK(54, 757),
+        BUSINESS_DELETE_AD_ACK(66, 757),
         /**
          * <code>USERSHOWRULE_RESULT = 758;</code>
          */
-        USERSHOWRULE_RESULT(55, 758),
+        USERSHOWRULE_RESULT(67, 758),
         /**
          * <code>USERSHOWRULE_GET = 759;</code>
          */
-        USERSHOWRULE_GET(56, 759),
+        USERSHOWRULE_GET(68, 759),
         /**
          * <code>USERSHOWRULE_SAVE = 760;</code>
          */
-        USERSHOWRULE_SAVE(57, 760),
+        USERSHOWRULE_SAVE(69, 760),
         /**
          * <code>USERSHOWRULE_UPDATE = 761;</code>
          */
-        USERSHOWRULE_UPDATE(58, 761),
+        USERSHOWRULE_UPDATE(70, 761),
         /**
          * <code>USERSHOWRULE_DELETE = 762;</code>
          */
-        USERSHOWRULE_DELETE(59, 762),
+        USERSHOWRULE_DELETE(71, 762),
         /**
          * <code>BONDERY_MQ = 10000;</code>
          * <p>
@@ -271,55 +627,55 @@ public final class YouMaiBasic {
          * this is the bondery for mq. outside the bondery; com service should post the request to mq.
          * </pre>
          */
-        BONDERY_MQ(60, 10000),
+        BONDERY_MQ(72, 10000),
         /**
          * <code>SYSTEM_LOG = 10001;</code>
          */
-        SYSTEM_LOG(61, 10001),
+        SYSTEM_LOG(73, 10001),
         /**
          * <code>LOCATIONSHARE = 10700;</code>
          */
-        LOCATIONSHARE(62, 10700),
+        LOCATIONSHARE(74, 10700),
         /**
          * <code>LOCATIONSHARE_NOTIFY = 10701;</code>
          */
-        LOCATIONSHARE_NOTIFY(63, 10701),
+        LOCATIONSHARE_NOTIFY(75, 10701),
         /**
          * <code>LOCATIONSHARE_INVIT = 10702;</code>
          */
-        LOCATIONSHARE_INVIT(64, 10702),
+        LOCATIONSHARE_INVIT(76, 10702),
         /**
          * <code>LOCATIONSHARE_INVIT_ACK = 10703;</code>
          */
-        LOCATIONSHARE_INVIT_ACK(65, 10703),
+        LOCATIONSHARE_INVIT_ACK(77, 10703),
         /**
          * <code>LOCATIONSHARE_INVIT_NOTIFY = 10704;</code>
          */
-        LOCATIONSHARE_INVIT_NOTIFY(66, 10704),
+        LOCATIONSHARE_INVIT_NOTIFY(78, 10704),
         /**
          * <code>LOCATIONSHARE_JOIN = 10705;</code>
          */
-        LOCATIONSHARE_JOIN(67, 10705),
+        LOCATIONSHARE_JOIN(79, 10705),
         /**
          * <code>LOCATIONSHARE_JOIN_ACK = 10706;</code>
          */
-        LOCATIONSHARE_JOIN_ACK(68, 10706),
+        LOCATIONSHARE_JOIN_ACK(80, 10706),
         /**
          * <code>LOCATIONSHARE_JOIN_NOTIFY = 10707;</code>
          */
-        LOCATIONSHARE_JOIN_NOTIFY(69, 10707),
+        LOCATIONSHARE_JOIN_NOTIFY(81, 10707),
         /**
          * <code>LOCATIONSHARE_QUIT = 10709;</code>
          */
-        LOCATIONSHARE_QUIT(70, 10709),
+        LOCATIONSHARE_QUIT(82, 10709),
         /**
          * <code>LOCATIONSHARE_QUIT_ACK = 10710;</code>
          */
-        LOCATIONSHARE_QUIT_ACK(71, 10710),
+        LOCATIONSHARE_QUIT_ACK(83, 10710),
         /**
          * <code>LOCATIONSHARE_QUIT_NOTIFY = 10711;</code>
          */
-        LOCATIONSHARE_QUIT_NOTIFY(72, 10711),
+        LOCATIONSHARE_QUIT_NOTIFY(84, 10711),
         /**
          * <code>PUSH_APNS = 10801;</code>
          * <p>
@@ -327,7 +683,7 @@ public final class YouMaiBasic {
          * this does not guarantee successed.
          * </pre>
          */
-        PUSH_APNS(73, 10801),
+        PUSH_APNS(85, 10801),
         /**
          * <code>PUSH_APNS_ACK = 10802;</code>
          * <p>
@@ -335,7 +691,7 @@ public final class YouMaiBasic {
          * and does not give you a ack.
          * </pre>
          */
-        PUSH_APNS_ACK(74, 10802),
+        PUSH_APNS_ACK(86, 10802),
         /**
          * <code>PUSH_GENERAL = 10805;</code>
          * <p>
@@ -343,7 +699,7 @@ public final class YouMaiBasic {
          * Push_General
          * </pre>
          */
-        PUSH_GENERAL(75, 10805),
+        PUSH_GENERAL(87, 10805),
         /**
          * <code>PUSH_SMS = 10806;</code>
          * <p>
@@ -351,31 +707,31 @@ public final class YouMaiBasic {
          * Push_SMS
          * </pre>
          */
-        PUSH_SMS(76, 10806),
+        PUSH_SMS(88, 10806),
         /**
          * <code>ENDORSEMENT_TAKE = 10901;</code>
          */
-        ENDORSEMENT_TAKE(77, 10901),
+        ENDORSEMENT_TAKE(89, 10901),
         /**
          * <code>ENDORSEMENT_TAKE_ACK = 10902;</code>
          */
-        ENDORSEMENT_TAKE_ACK(78, 10902),
+        ENDORSEMENT_TAKE_ACK(90, 10902),
         /**
          * <code>ENDORSEMENT_QUERY = 10911;</code>
          */
-        ENDORSEMENT_QUERY(79, 10911),
+        ENDORSEMENT_QUERY(91, 10911),
         /**
          * <code>ENDORSEMENT_QUERY_ACK = 10912;</code>
          */
-        ENDORSEMENT_QUERY_ACK(80, 10912),
+        ENDORSEMENT_QUERY_ACK(92, 10912),
         /**
          * <code>ENDORSEMENT_DELET = 10921;</code>
          */
-        ENDORSEMENT_DELET(81, 10921),
+        ENDORSEMENT_DELET(93, 10921),
         /**
          * <code>ENDORSEMENT_DELETE_ACK = 10922;</code>
          */
-        ENDORSEMENT_DELETE_ACK(82, 10922),
+        ENDORSEMENT_DELETE_ACK(94, 10922),
         /**
          * <code>ENDORSEMENT_ADMIN_QUERY = 10951;</code>
          * <p>
@@ -383,100 +739,375 @@ public final class YouMaiBasic {
          * 商家查询代言领取记录数据。
          * </pre>
          */
-        ENDORSEMENT_ADMIN_QUERY(83, 10951),
+        ENDORSEMENT_ADMIN_QUERY(95, 10951),
         /**
          * <code>ENDORSEMENT_ADMIN_QUERY_ACK = 10952;</code>
          */
-        ENDORSEMENT_ADMIN_QUERY_ACK(84, 10952),
+        ENDORSEMENT_ADMIN_QUERY_ACK(96, 10952),
         /**
          * <code>SHOWBIZ_QUERY = 11001;</code>
          */
-        SHOWBIZ_QUERY(85, 11001),
+        SHOWBIZ_QUERY(97, 11001),
         /**
          * <code>SHOWBIZ_QUERY_ACK = 11002;</code>
          */
-        SHOWBIZ_QUERY_ACK(86, 11002),
+        SHOWBIZ_QUERY_ACK(98, 11002),
         /**
          * <code>SHOWBIZ_INSERT = 11011;</code>
          */
-        SHOWBIZ_INSERT(87, 11011),
+        SHOWBIZ_INSERT(99, 11011),
         /**
          * <code>SHOWBIZ_INSERT_ACK = 11012;</code>
          */
-        SHOWBIZ_INSERT_ACK(88, 11012),
+        SHOWBIZ_INSERT_ACK(100, 11012),
         /**
          * <code>SHOWBIZ_DELETE = 11021;</code>
          */
-        SHOWBIZ_DELETE(89, 11021),
+        SHOWBIZ_DELETE(101, 11021),
         /**
          * <code>SHOWBIZ_DELETE_ACK = 11022;</code>
          */
-        SHOWBIZ_DELETE_ACK(90, 11022),
+        SHOWBIZ_DELETE_ACK(102, 11022),
         /**
          * <code>SHOWBIZ_UPDATE = 11031;</code>
          */
-        SHOWBIZ_UPDATE(91, 11031),
+        SHOWBIZ_UPDATE(103, 11031),
         /**
          * <code>SHOWBIZ_UPDATE_ACK = 11032;</code>
          */
-        SHOWBIZ_UPDATE_ACK(92, 11032),
+        SHOWBIZ_UPDATE_ACK(104, 11032),
         /**
          * <code>SHOWPERSONAL_QUERY = 11041;</code>
          */
-        SHOWPERSONAL_QUERY(93, 11041),
+        SHOWPERSONAL_QUERY(105, 11041),
         /**
          * <code>SHOWPERSONAL_QUERY_ACK = 11042;</code>
          */
-        SHOWPERSONAL_QUERY_ACK(94, 11042),
+        SHOWPERSONAL_QUERY_ACK(106, 11042),
         /**
          * <code>SHOWPERSONAL_INSERT = 11051;</code>
          */
-        SHOWPERSONAL_INSERT(95, 11051),
+        SHOWPERSONAL_INSERT(107, 11051),
         /**
          * <code>SHOWPERSONAL_INSERT_ACK = 11052;</code>
          */
-        SHOWPERSONAL_INSERT_ACK(96, 11052),
+        SHOWPERSONAL_INSERT_ACK(108, 11052),
         /**
          * <code>SHOWPERSONAL_UPDATE = 11061;</code>
          */
-        SHOWPERSONAL_UPDATE(97, 11061),
+        SHOWPERSONAL_UPDATE(109, 11061),
         /**
          * <code>SHOWPERSONAL_UPDATE_ACK = 11062;</code>
          */
-        SHOWPERSONAL_UPDATE_ACK(98, 11062),
+        SHOWPERSONAL_UPDATE_ACK(110, 11062),
         /**
          * <code>SHOWPERSONAL_DELETE = 11071;</code>
          */
-        SHOWPERSONAL_DELETE(99, 11071),
+        SHOWPERSONAL_DELETE(111, 11071),
         /**
          * <code>SHOWPERSONAL_DELETE_ACK = 11072;</code>
          */
-        SHOWPERSONAL_DELETE_ACK(100, 11072),
+        SHOWPERSONAL_DELETE_ACK(112, 11072),
         /**
          * <code>SHOWDIAL = 11081;</code>
          */
-        SHOWDIAL(101, 11081),
+        SHOWDIAL(113, 11081),
         /**
          * <code>SHOWDIAL_ACK = 11082;</code>
          */
-        SHOWDIAL_ACK(102, 11082),
+        SHOWDIAL_ACK(114, 11082),
         /**
          * <code>SHOWDIAL_NOTIFY = 11083;</code>
          */
-        SHOWDIAL_NOTIFY(103, 11083),
+        SHOWDIAL_NOTIFY(115, 11083),
         /**
          * <code>SHOWDIAL_CACHE_UPDATE_SYSTEMNOTIFY = 11091;</code>
+         */
+        SHOWDIAL_CACHE_UPDATE_SYSTEMNOTIFY(116, 11091),
+        /**
+         * <code>CID_USER_CONNECT_EXCEPT = 16401;</code>
+         */
+        CID_USER_CONNECT_EXCEPT(117, 16401),
+        /**
+         * <code>CID_USER_STATE_BROADCAST = 16657;</code>
          * <p>
          * <pre>
-         * 	REPRESENT_QUERY = 11081;
-         * 	REPRESENT_QUERY_ACK = 11082;
-         * 	REPRESENT_INSERT = 11091;
-         * 	REPRESENT_INSERT_ACK = 11092;
-         * 	REPRESENT_REVIEW = 11101;
-         * 	REPRESENT_REVIEW_ACK = 11102;
+         * 服务端用
          * </pre>
          */
-        SHOWDIAL_CACHE_UPDATE_SYSTEMNOTIFY(104, 11091),;
+        CID_USER_STATE_BROADCAST(118, 16657),
+        /**
+         * <code>CID_USER_STATE_REPORT = 16658;</code>
+         */
+        CID_USER_STATE_REPORT(119, 16658),
+        /**
+         * <code>CID_MONITOR_CLIENT_REGISTER_REQ = 16913;</code>
+         */
+        CID_MONITOR_CLIENT_REGISTER_REQ(120, 16913),
+        /**
+         * <code>CID_MONITOR_CLIENT_REGISTER_RSP = 16914;</code>
+         */
+        CID_MONITOR_CLIENT_REGISTER_RSP(121, 16914),
+        /**
+         * <code>CID_MASTER_BROADCAST_SERVER_INFO = 16915;</code>
+         */
+        CID_MASTER_BROADCAST_SERVER_INFO(122, 16915),
+        /**
+         * <code>CID_S2S_AUTHENTICATION_REQ = 16916;</code>
+         */
+        CID_S2S_AUTHENTICATION_REQ(123, 16916),
+        /**
+         * <code>CID_S2S_AUTHENTICATION_RSP = 16917;</code>
+         */
+        CID_S2S_AUTHENTICATION_RSP(124, 16917),
+        /**
+         * <code>CID_S2S_PING = 16918;</code>
+         */
+        CID_S2S_PING(125, 16918),
+        /**
+         * <code>CID_S2S_PONG = 16919;</code>
+         */
+        CID_S2S_PONG(126, 16919),
+        /**
+         * <code>CID_REGISTER_CMD_REQ = 16929;</code>
+         */
+        CID_REGISTER_CMD_REQ(127, 16929),
+        /**
+         * <code>CID_CLUSTER_STATUS_REQ = 17185;</code>
+         */
+        CID_CLUSTER_STATUS_REQ(128, 17185),
+        /**
+         * <code>CID_CLUSTER_STATUS_RSP = 17186;</code>
+         */
+        CID_CLUSTER_STATUS_RSP(129, 17186),
+        /**
+         * <code>CID_CONFIG_SET_REQ = 17190;</code>
+         */
+        CID_CONFIG_SET_REQ(130, 17190),
+        /**
+         * <code>CID_CONFIG_SET_RSP = 17191;</code>
+         */
+        CID_CONFIG_SET_RSP(131, 17191),
+        /**
+         * <code>CID_CHAT_BUDDY = 20497;</code>
+         * <p>
+         * <pre>
+         * 消息 cmd
+         * </pre>
+         */
+        CID_CHAT_BUDDY(132, 20497),
+        /**
+         * <code>CID_CHAT_GROUP = 20498;</code>
+         */
+        CID_CHAT_GROUP(133, 20498),
+        /**
+         * <code>CID_OFFLINE_MSG_NOTIFY = 20499;</code>
+         */
+        CID_OFFLINE_MSG_NOTIFY(134, 20499),
+        /**
+         * <code>CID_CHAT_MSG_ACK = 20500;</code>
+         */
+        CID_CHAT_MSG_ACK(135, 20500),
+        /**
+         * <code>CID_GROUP_LIST_REQ = 24593;</code>
+         * <p>
+         * <pre>
+         * 群
+         * </pre>
+         */
+        CID_GROUP_LIST_REQ(136, 24593),
+        /**
+         * <code>CID_GROUP_LIST_RSP = 24594;</code>
+         */
+        CID_GROUP_LIST_RSP(137, 24594),
+        /**
+         * <code>CID_GROUP_INFO_REQ = 24595;</code>
+         */
+        CID_GROUP_INFO_REQ(138, 24595),
+        /**
+         * <code>CID_GROUP_INFO_RSP = 24596;</code>
+         */
+        CID_GROUP_INFO_RSP(139, 24596),
+        /**
+         * <code>CID_GROUP_MEMBER_REQ = 24597;</code>
+         */
+        CID_GROUP_MEMBER_REQ(140, 24597),
+        /**
+         * <code>CID_GROUP_MEMBER_RSP = 24598;</code>
+         */
+        CID_GROUP_MEMBER_RSP(141, 24598),
+        /**
+         * <code>CID_GROUP_CREATE_REQ = 24599;</code>
+         */
+        CID_GROUP_CREATE_REQ(142, 24599),
+        /**
+         * <code>CID_GROUP_CREATE_RSP = 24600;</code>
+         */
+        CID_GROUP_CREATE_RSP(143, 24600),
+        /**
+         * <code>CID_GROUP_DISSOLVE_REQ = 24601;</code>
+         */
+        CID_GROUP_DISSOLVE_REQ(144, 24601),
+        /**
+         * <code>CID_GROUP_DISSOLVE_RSP = 24602;</code>
+         */
+        CID_GROUP_DISSOLVE_RSP(145, 24602),
+        /**
+         * <code>CID_GROUP_INFO_MODIFY_REQ = 24603;</code>
+         */
+        CID_GROUP_INFO_MODIFY_REQ(146, 24603),
+        /**
+         * <code>CID_GROUP_INFO_MODIFY_RSP = 24604;</code>
+         */
+        CID_GROUP_INFO_MODIFY_RSP(147, 24604),
+        /**
+         * <code>CID_GROUP_CHANGE_MEMBER_REQ = 24605;</code>
+         */
+        CID_GROUP_CHANGE_MEMBER_REQ(148, 24605),
+        /**
+         * <code>CID_GROUP_CHANGE_MEMBER_RSP = 24606;</code>
+         */
+        CID_GROUP_CHANGE_MEMBER_RSP(149, 24606),
+        /**
+         * <code>CID_ORG_LIST_REQ = 24849;</code>
+         * <p>
+         * <pre>
+         * 组织架构
+         * </pre>
+         */
+        CID_ORG_LIST_REQ(150, 24849),
+        /**
+         * <code>CID_ORG_LIST_RSP = 24850;</code>
+         */
+        CID_ORG_LIST_RSP(151, 24850),
+        /**
+         * <code>CID_GMSG_OFFLINE_MSG_NOTIFY = 25122;</code>
+         */
+        CID_GMSG_OFFLINE_MSG_NOTIFY(152, 25122),
+        /**
+         * <code>CID_MSG_DATA_LIST_REQ = 25123;</code>
+         * <p>
+         * <pre>
+         * 历史消息
+         * </pre>
+         */
+        CID_MSG_DATA_LIST_REQ(153, 25123),
+        /**
+         * <code>CID_MSG_DATA_LIST_RSP = 25124;</code>
+         */
+        CID_MSG_DATA_LIST_RSP(154, 25124),
+        /**
+         * <code>CID_GROUP_CHAT_MSG_CANCEL = 25125;</code>
+         */
+        CID_GROUP_CHAT_MSG_CANCEL(155, 25125),
+        /**
+         * <code>CID_GMSG_OFFLINE_MSG_ACK = 25126;</code>
+         */
+        CID_GMSG_OFFLINE_MSG_ACK(156, 25126),
+        /**
+         * <code>CID_S2S_CHAT_MSG = 25127;</code>
+         */
+        CID_S2S_CHAT_MSG(157, 25127),
+        /**
+         * <code>CID_USER_INFO_REQ = 28689;</code>
+         * <p>
+         * <pre>
+         * 用户资料
+         * </pre>
+         */
+        CID_USER_INFO_REQ(158, 28689),
+        /**
+         * <code>CID_USER_INFO_RSP = 28690;</code>
+         */
+        CID_USER_INFO_RSP(159, 28690),
+        /**
+         * <code>CID_BUDDY_LIST_SINGLE_USER_INFO_REQ = 29191;</code>
+         * <p>
+         * <pre>
+         * 好友命令
+         * </pre>
+         */
+        CID_BUDDY_LIST_SINGLE_USER_INFO_REQ(160, 29191),
+        /**
+         * <code>CID_BUDDY_LIST_USER_INFO_RSP = 29192;</code>
+         */
+        CID_BUDDY_LIST_USER_INFO_RSP(161, 29192),
+        /**
+         * <code>CID_BUDDY_LIST_CHANGE_AVATAR_REQ = 29199;</code>
+         * <p>
+         * <pre>
+         * 头像修改
+         * </pre>
+         */
+        CID_BUDDY_LIST_CHANGE_AVATAR_REQ(162, 29199),
+        /**
+         * <code>CID_BUDDY_LIST_CHANGE_AVATAR_RSP = 29200;</code>
+         */
+        CID_BUDDY_LIST_CHANGE_AVATAR_RSP(163, 29200),
+        /**
+         * <code>CID_BUDDY_LIST_CHANGE_SIGN_INFO_REQ = 29202;</code>
+         * <p>
+         * <pre>
+         * 修改个性签名
+         * </pre>
+         */
+        CID_BUDDY_LIST_CHANGE_SIGN_INFO_REQ(164, 29202),
+        /**
+         * <code>CID_BUDDY_LIST_CHANGE_SIGN_INFO_RSP = 29203;</code>
+         */
+        CID_BUDDY_LIST_CHANGE_SIGN_INFO_RSP(165, 29203),
+        /**
+         * <code>CID_BUDDY_LIST_MODIFY_USER_INFO_REQ = 29204;</code>
+         * <p>
+         * <pre>
+         * 修改个人信息
+         * </pre>
+         */
+        CID_BUDDY_LIST_MODIFY_USER_INFO_REQ(166, 29204),
+        /**
+         * <code>CID_BUDDY_LIST_MODIFY_USER_INFO_RSP = 29205;</code>
+         */
+        CID_BUDDY_LIST_MODIFY_USER_INFO_RSP(167, 29205),
+        /**
+         * <code>CID_BUDDY_LIST_OPT_REQ = 29206;</code>
+         * <p>
+         * <pre>
+         * 好友操作（add or delete）
+         * </pre>
+         */
+        CID_BUDDY_LIST_OPT_REQ(168, 29206),
+        /**
+         * <code>CID_BUDDY_LIST_OPT_RSP = 29207;</code>
+         */
+        CID_BUDDY_LIST_OPT_RSP(169, 29207),
+        /**
+         * <code>CID_BUDDY_LIST_MODIFY_NICKNAME_REQ = 29208;</code>
+         * <p>
+         * <pre>
+         * 修改好友备注
+         * </pre>
+         */
+        CID_BUDDY_LIST_MODIFY_NICKNAME_REQ(170, 29208),
+        /**
+         * <code>CID_BUDDY_LIST_MODIFY_NICKNAME_RSP = 29209;</code>
+         */
+        CID_BUDDY_LIST_MODIFY_NICKNAME_RSP(171, 29209),
+        /**
+         * <code>CID_BUDDY_LIST_REQUEST_LIST_REQ = 29210;</code>
+         * <p>
+         * <pre>
+         * 获取好友请求列表
+         * </pre>
+         */
+        CID_BUDDY_LIST_REQUEST_LIST_REQ(172, 29210),
+        /**
+         * <code>CID_BUDDY_LIST_REQUEST_LIST_RSP = 29211;</code>
+         */
+        CID_BUDDY_LIST_REQUEST_LIST_RSP(173, 29211),
+        /**
+         * <code>CID_BUDDY_LIST_OPT_RESULT = 29212;</code>
+         */
+        CID_BUDDY_LIST_OPT_RESULT(174, 29212),;
 
         /**
          * <code>HEART_BEAT = 1;</code>
@@ -490,6 +1121,22 @@ public final class YouMaiBasic {
          * <code>ROUTE_REQ = 20;</code>
          */
         public static final int ROUTE_REQ_VALUE = 20;
+        /**
+         * <code>ROUTE_ONLINECHECK = 21;</code>
+         */
+        public static final int ROUTE_ONLINECHECK_VALUE = 21;
+        /**
+         * <code>ROUTE_ONLINECHECK_ACK = 22;</code>
+         */
+        public static final int ROUTE_ONLINECHECK_ACK_VALUE = 22;
+        /**
+         * <code>ROUTE_PHONE_CHECK = 23;</code>
+         */
+        public static final int ROUTE_PHONE_CHECK_VALUE = 23;
+        /**
+         * <code>ROUTE_PHONE_CHECK_ACK = 24;</code>
+         */
+        public static final int ROUTE_PHONE_CHECK_ACK_VALUE = 24;
         /**
          * <code>USER_LOGIN = 101;</code>
          */
@@ -595,6 +1242,10 @@ public final class YouMaiBasic {
          */
         public static final int IMCHAT_PERSONAL_NOTIFY_VALUE = 127;
         /**
+         * <code>IM_OFFLINE_MSG = 128;</code>
+         */
+        public static final int IM_OFFLINE_MSG_VALUE = 128;
+        /**
          * <code>REQUEST_IP = 400;</code>
          * <p>
          * <pre>
@@ -608,8 +1259,48 @@ public final class YouMaiBasic {
         public static final int REQUEST_IP_ACK_VALUE = 401;
         /**
          * <code>REGIST_COMMUNICATIONSERVICE = 402;</code>
+         * <p>
+         * <pre>
+         * route注册
+         * </pre>
          */
         public static final int REGIST_COMMUNICATIONSERVICE_VALUE = 402;
+        /**
+         * <code>REPORT_ONLINERS = 403;</code>
+         */
+        public static final int REPORT_ONLINERS_VALUE = 403;
+        /**
+         * <code>BROATCAT_NOTIFY = 404;</code>
+         */
+        public static final int BROATCAT_NOTIFY_VALUE = 404;
+        /**
+         * <code>ROUTE_BRAODCAST = 405;</code>
+         * <p>
+         * <pre>
+         * route 广播
+         * </pre>
+         */
+        public static final int ROUTE_BRAODCAST_VALUE = 405;
+        /**
+         * <code>CID_USER_STAT_PUSH_REQ = 406;</code>
+         * <p>
+         * <pre>
+         * 用户状态广播
+         * </pre>
+         */
+        public static final int CID_USER_STAT_PUSH_REQ_VALUE = 406;
+        /**
+         * <code>CID_USER_STAT_SYNC_REQ = 407;</code>
+         */
+        public static final int CID_USER_STAT_SYNC_REQ_VALUE = 407;
+        /**
+         * <code>CID_USER_STAT_SYNC_RSP = 408;</code>
+         */
+        public static final int CID_USER_STAT_SYNC_RSP_VALUE = 408;
+        /**
+         * <code>REGIST_RSP = 409;</code>
+         */
+        public static final int REGIST_RSP_VALUE = 409;
         /**
          * <code>GENERAL_MESSAGE = 501;</code>
          */
@@ -928,17 +1619,292 @@ public final class YouMaiBasic {
         public static final int SHOWDIAL_NOTIFY_VALUE = 11083;
         /**
          * <code>SHOWDIAL_CACHE_UPDATE_SYSTEMNOTIFY = 11091;</code>
-         * <p>
-         * <pre>
-         * 	REPRESENT_QUERY = 11081;
-         * 	REPRESENT_QUERY_ACK = 11082;
-         * 	REPRESENT_INSERT = 11091;
-         * 	REPRESENT_INSERT_ACK = 11092;
-         * 	REPRESENT_REVIEW = 11101;
-         * 	REPRESENT_REVIEW_ACK = 11102;
-         * </pre>
          */
         public static final int SHOWDIAL_CACHE_UPDATE_SYSTEMNOTIFY_VALUE = 11091;
+        /**
+         * <code>CID_USER_CONNECT_EXCEPT = 16401;</code>
+         */
+        public static final int CID_USER_CONNECT_EXCEPT_VALUE = 16401;
+        /**
+         * <code>CID_USER_STATE_BROADCAST = 16657;</code>
+         * <p>
+         * <pre>
+         * 服务端用
+         * </pre>
+         */
+        public static final int CID_USER_STATE_BROADCAST_VALUE = 16657;
+        /**
+         * <code>CID_USER_STATE_REPORT = 16658;</code>
+         */
+        public static final int CID_USER_STATE_REPORT_VALUE = 16658;
+        /**
+         * <code>CID_MONITOR_CLIENT_REGISTER_REQ = 16913;</code>
+         */
+        public static final int CID_MONITOR_CLIENT_REGISTER_REQ_VALUE = 16913;
+        /**
+         * <code>CID_MONITOR_CLIENT_REGISTER_RSP = 16914;</code>
+         */
+        public static final int CID_MONITOR_CLIENT_REGISTER_RSP_VALUE = 16914;
+        /**
+         * <code>CID_MASTER_BROADCAST_SERVER_INFO = 16915;</code>
+         */
+        public static final int CID_MASTER_BROADCAST_SERVER_INFO_VALUE = 16915;
+        /**
+         * <code>CID_S2S_AUTHENTICATION_REQ = 16916;</code>
+         */
+        public static final int CID_S2S_AUTHENTICATION_REQ_VALUE = 16916;
+        /**
+         * <code>CID_S2S_AUTHENTICATION_RSP = 16917;</code>
+         */
+        public static final int CID_S2S_AUTHENTICATION_RSP_VALUE = 16917;
+        /**
+         * <code>CID_S2S_PING = 16918;</code>
+         */
+        public static final int CID_S2S_PING_VALUE = 16918;
+        /**
+         * <code>CID_S2S_PONG = 16919;</code>
+         */
+        public static final int CID_S2S_PONG_VALUE = 16919;
+        /**
+         * <code>CID_REGISTER_CMD_REQ = 16929;</code>
+         */
+        public static final int CID_REGISTER_CMD_REQ_VALUE = 16929;
+        /**
+         * <code>CID_CLUSTER_STATUS_REQ = 17185;</code>
+         */
+        public static final int CID_CLUSTER_STATUS_REQ_VALUE = 17185;
+        /**
+         * <code>CID_CLUSTER_STATUS_RSP = 17186;</code>
+         */
+        public static final int CID_CLUSTER_STATUS_RSP_VALUE = 17186;
+        /**
+         * <code>CID_CONFIG_SET_REQ = 17190;</code>
+         */
+        public static final int CID_CONFIG_SET_REQ_VALUE = 17190;
+        /**
+         * <code>CID_CONFIG_SET_RSP = 17191;</code>
+         */
+        public static final int CID_CONFIG_SET_RSP_VALUE = 17191;
+        /**
+         * <code>CID_CHAT_BUDDY = 20497;</code>
+         * <p>
+         * <pre>
+         * 消息 cmd
+         * </pre>
+         */
+        public static final int CID_CHAT_BUDDY_VALUE = 20497;
+        /**
+         * <code>CID_CHAT_GROUP = 20498;</code>
+         */
+        public static final int CID_CHAT_GROUP_VALUE = 20498;
+        /**
+         * <code>CID_OFFLINE_MSG_NOTIFY = 20499;</code>
+         */
+        public static final int CID_OFFLINE_MSG_NOTIFY_VALUE = 20499;
+        /**
+         * <code>CID_CHAT_MSG_ACK = 20500;</code>
+         */
+        public static final int CID_CHAT_MSG_ACK_VALUE = 20500;
+        /**
+         * <code>CID_GROUP_LIST_REQ = 24593;</code>
+         * <p>
+         * <pre>
+         * 群
+         * </pre>
+         */
+        public static final int CID_GROUP_LIST_REQ_VALUE = 24593;
+        /**
+         * <code>CID_GROUP_LIST_RSP = 24594;</code>
+         */
+        public static final int CID_GROUP_LIST_RSP_VALUE = 24594;
+        /**
+         * <code>CID_GROUP_INFO_REQ = 24595;</code>
+         */
+        public static final int CID_GROUP_INFO_REQ_VALUE = 24595;
+        /**
+         * <code>CID_GROUP_INFO_RSP = 24596;</code>
+         */
+        public static final int CID_GROUP_INFO_RSP_VALUE = 24596;
+        /**
+         * <code>CID_GROUP_MEMBER_REQ = 24597;</code>
+         */
+        public static final int CID_GROUP_MEMBER_REQ_VALUE = 24597;
+        /**
+         * <code>CID_GROUP_MEMBER_RSP = 24598;</code>
+         */
+        public static final int CID_GROUP_MEMBER_RSP_VALUE = 24598;
+        /**
+         * <code>CID_GROUP_CREATE_REQ = 24599;</code>
+         */
+        public static final int CID_GROUP_CREATE_REQ_VALUE = 24599;
+        /**
+         * <code>CID_GROUP_CREATE_RSP = 24600;</code>
+         */
+        public static final int CID_GROUP_CREATE_RSP_VALUE = 24600;
+        /**
+         * <code>CID_GROUP_DISSOLVE_REQ = 24601;</code>
+         */
+        public static final int CID_GROUP_DISSOLVE_REQ_VALUE = 24601;
+        /**
+         * <code>CID_GROUP_DISSOLVE_RSP = 24602;</code>
+         */
+        public static final int CID_GROUP_DISSOLVE_RSP_VALUE = 24602;
+        /**
+         * <code>CID_GROUP_INFO_MODIFY_REQ = 24603;</code>
+         */
+        public static final int CID_GROUP_INFO_MODIFY_REQ_VALUE = 24603;
+        /**
+         * <code>CID_GROUP_INFO_MODIFY_RSP = 24604;</code>
+         */
+        public static final int CID_GROUP_INFO_MODIFY_RSP_VALUE = 24604;
+        /**
+         * <code>CID_GROUP_CHANGE_MEMBER_REQ = 24605;</code>
+         */
+        public static final int CID_GROUP_CHANGE_MEMBER_REQ_VALUE = 24605;
+        /**
+         * <code>CID_GROUP_CHANGE_MEMBER_RSP = 24606;</code>
+         */
+        public static final int CID_GROUP_CHANGE_MEMBER_RSP_VALUE = 24606;
+        /**
+         * <code>CID_ORG_LIST_REQ = 24849;</code>
+         * <p>
+         * <pre>
+         * 组织架构
+         * </pre>
+         */
+        public static final int CID_ORG_LIST_REQ_VALUE = 24849;
+        /**
+         * <code>CID_ORG_LIST_RSP = 24850;</code>
+         */
+        public static final int CID_ORG_LIST_RSP_VALUE = 24850;
+        /**
+         * <code>CID_GMSG_OFFLINE_MSG_NOTIFY = 25122;</code>
+         */
+        public static final int CID_GMSG_OFFLINE_MSG_NOTIFY_VALUE = 25122;
+        /**
+         * <code>CID_MSG_DATA_LIST_REQ = 25123;</code>
+         * <p>
+         * <pre>
+         * 历史消息
+         * </pre>
+         */
+        public static final int CID_MSG_DATA_LIST_REQ_VALUE = 25123;
+        /**
+         * <code>CID_MSG_DATA_LIST_RSP = 25124;</code>
+         */
+        public static final int CID_MSG_DATA_LIST_RSP_VALUE = 25124;
+        /**
+         * <code>CID_GROUP_CHAT_MSG_CANCEL = 25125;</code>
+         */
+        public static final int CID_GROUP_CHAT_MSG_CANCEL_VALUE = 25125;
+        /**
+         * <code>CID_GMSG_OFFLINE_MSG_ACK = 25126;</code>
+         */
+        public static final int CID_GMSG_OFFLINE_MSG_ACK_VALUE = 25126;
+        /**
+         * <code>CID_S2S_CHAT_MSG = 25127;</code>
+         */
+        public static final int CID_S2S_CHAT_MSG_VALUE = 25127;
+        /**
+         * <code>CID_USER_INFO_REQ = 28689;</code>
+         * <p>
+         * <pre>
+         * 用户资料
+         * </pre>
+         */
+        public static final int CID_USER_INFO_REQ_VALUE = 28689;
+        /**
+         * <code>CID_USER_INFO_RSP = 28690;</code>
+         */
+        public static final int CID_USER_INFO_RSP_VALUE = 28690;
+        /**
+         * <code>CID_BUDDY_LIST_SINGLE_USER_INFO_REQ = 29191;</code>
+         * <p>
+         * <pre>
+         * 好友命令
+         * </pre>
+         */
+        public static final int CID_BUDDY_LIST_SINGLE_USER_INFO_REQ_VALUE = 29191;
+        /**
+         * <code>CID_BUDDY_LIST_USER_INFO_RSP = 29192;</code>
+         */
+        public static final int CID_BUDDY_LIST_USER_INFO_RSP_VALUE = 29192;
+        /**
+         * <code>CID_BUDDY_LIST_CHANGE_AVATAR_REQ = 29199;</code>
+         * <p>
+         * <pre>
+         * 头像修改
+         * </pre>
+         */
+        public static final int CID_BUDDY_LIST_CHANGE_AVATAR_REQ_VALUE = 29199;
+        /**
+         * <code>CID_BUDDY_LIST_CHANGE_AVATAR_RSP = 29200;</code>
+         */
+        public static final int CID_BUDDY_LIST_CHANGE_AVATAR_RSP_VALUE = 29200;
+        /**
+         * <code>CID_BUDDY_LIST_CHANGE_SIGN_INFO_REQ = 29202;</code>
+         * <p>
+         * <pre>
+         * 修改个性签名
+         * </pre>
+         */
+        public static final int CID_BUDDY_LIST_CHANGE_SIGN_INFO_REQ_VALUE = 29202;
+        /**
+         * <code>CID_BUDDY_LIST_CHANGE_SIGN_INFO_RSP = 29203;</code>
+         */
+        public static final int CID_BUDDY_LIST_CHANGE_SIGN_INFO_RSP_VALUE = 29203;
+        /**
+         * <code>CID_BUDDY_LIST_MODIFY_USER_INFO_REQ = 29204;</code>
+         * <p>
+         * <pre>
+         * 修改个人信息
+         * </pre>
+         */
+        public static final int CID_BUDDY_LIST_MODIFY_USER_INFO_REQ_VALUE = 29204;
+        /**
+         * <code>CID_BUDDY_LIST_MODIFY_USER_INFO_RSP = 29205;</code>
+         */
+        public static final int CID_BUDDY_LIST_MODIFY_USER_INFO_RSP_VALUE = 29205;
+        /**
+         * <code>CID_BUDDY_LIST_OPT_REQ = 29206;</code>
+         * <p>
+         * <pre>
+         * 好友操作（add or delete）
+         * </pre>
+         */
+        public static final int CID_BUDDY_LIST_OPT_REQ_VALUE = 29206;
+        /**
+         * <code>CID_BUDDY_LIST_OPT_RSP = 29207;</code>
+         */
+        public static final int CID_BUDDY_LIST_OPT_RSP_VALUE = 29207;
+        /**
+         * <code>CID_BUDDY_LIST_MODIFY_NICKNAME_REQ = 29208;</code>
+         * <p>
+         * <pre>
+         * 修改好友备注
+         * </pre>
+         */
+        public static final int CID_BUDDY_LIST_MODIFY_NICKNAME_REQ_VALUE = 29208;
+        /**
+         * <code>CID_BUDDY_LIST_MODIFY_NICKNAME_RSP = 29209;</code>
+         */
+        public static final int CID_BUDDY_LIST_MODIFY_NICKNAME_RSP_VALUE = 29209;
+        /**
+         * <code>CID_BUDDY_LIST_REQUEST_LIST_REQ = 29210;</code>
+         * <p>
+         * <pre>
+         * 获取好友请求列表
+         * </pre>
+         */
+        public static final int CID_BUDDY_LIST_REQUEST_LIST_REQ_VALUE = 29210;
+        /**
+         * <code>CID_BUDDY_LIST_REQUEST_LIST_RSP = 29211;</code>
+         */
+        public static final int CID_BUDDY_LIST_REQUEST_LIST_RSP_VALUE = 29211;
+        /**
+         * <code>CID_BUDDY_LIST_OPT_RESULT = 29212;</code>
+         */
+        public static final int CID_BUDDY_LIST_OPT_RESULT_VALUE = 29212;
 
 
         public final int getNumber() {
@@ -953,6 +1919,14 @@ public final class YouMaiBasic {
                     return HEART_BEAT_ACK;
                 case 20:
                     return ROUTE_REQ;
+                case 21:
+                    return ROUTE_ONLINECHECK;
+                case 22:
+                    return ROUTE_ONLINECHECK_ACK;
+                case 23:
+                    return ROUTE_PHONE_CHECK;
+                case 24:
+                    return ROUTE_PHONE_CHECK_ACK;
                 case 101:
                     return USER_LOGIN;
                 case 102:
@@ -1005,12 +1979,28 @@ public final class YouMaiBasic {
                     return IMCHAT_PERSONAL_ACK;
                 case 127:
                     return IMCHAT_PERSONAL_NOTIFY;
+                case 128:
+                    return IM_OFFLINE_MSG;
                 case 400:
                     return REQUEST_IP;
                 case 401:
                     return REQUEST_IP_ACK;
                 case 402:
                     return REGIST_COMMUNICATIONSERVICE;
+                case 403:
+                    return REPORT_ONLINERS;
+                case 404:
+                    return BROATCAT_NOTIFY;
+                case 405:
+                    return ROUTE_BRAODCAST;
+                case 406:
+                    return CID_USER_STAT_PUSH_REQ;
+                case 407:
+                    return CID_USER_STAT_SYNC_REQ;
+                case 408:
+                    return CID_USER_STAT_SYNC_RSP;
+                case 409:
+                    return REGIST_RSP;
                 case 501:
                     return GENERAL_MESSAGE;
                 case 502:
@@ -1157,6 +2147,122 @@ public final class YouMaiBasic {
                     return SHOWDIAL_NOTIFY;
                 case 11091:
                     return SHOWDIAL_CACHE_UPDATE_SYSTEMNOTIFY;
+                case 16401:
+                    return CID_USER_CONNECT_EXCEPT;
+                case 16657:
+                    return CID_USER_STATE_BROADCAST;
+                case 16658:
+                    return CID_USER_STATE_REPORT;
+                case 16913:
+                    return CID_MONITOR_CLIENT_REGISTER_REQ;
+                case 16914:
+                    return CID_MONITOR_CLIENT_REGISTER_RSP;
+                case 16915:
+                    return CID_MASTER_BROADCAST_SERVER_INFO;
+                case 16916:
+                    return CID_S2S_AUTHENTICATION_REQ;
+                case 16917:
+                    return CID_S2S_AUTHENTICATION_RSP;
+                case 16918:
+                    return CID_S2S_PING;
+                case 16919:
+                    return CID_S2S_PONG;
+                case 16929:
+                    return CID_REGISTER_CMD_REQ;
+                case 17185:
+                    return CID_CLUSTER_STATUS_REQ;
+                case 17186:
+                    return CID_CLUSTER_STATUS_RSP;
+                case 17190:
+                    return CID_CONFIG_SET_REQ;
+                case 17191:
+                    return CID_CONFIG_SET_RSP;
+                case 20497:
+                    return CID_CHAT_BUDDY;
+                case 20498:
+                    return CID_CHAT_GROUP;
+                case 20499:
+                    return CID_OFFLINE_MSG_NOTIFY;
+                case 20500:
+                    return CID_CHAT_MSG_ACK;
+                case 24593:
+                    return CID_GROUP_LIST_REQ;
+                case 24594:
+                    return CID_GROUP_LIST_RSP;
+                case 24595:
+                    return CID_GROUP_INFO_REQ;
+                case 24596:
+                    return CID_GROUP_INFO_RSP;
+                case 24597:
+                    return CID_GROUP_MEMBER_REQ;
+                case 24598:
+                    return CID_GROUP_MEMBER_RSP;
+                case 24599:
+                    return CID_GROUP_CREATE_REQ;
+                case 24600:
+                    return CID_GROUP_CREATE_RSP;
+                case 24601:
+                    return CID_GROUP_DISSOLVE_REQ;
+                case 24602:
+                    return CID_GROUP_DISSOLVE_RSP;
+                case 24603:
+                    return CID_GROUP_INFO_MODIFY_REQ;
+                case 24604:
+                    return CID_GROUP_INFO_MODIFY_RSP;
+                case 24605:
+                    return CID_GROUP_CHANGE_MEMBER_REQ;
+                case 24606:
+                    return CID_GROUP_CHANGE_MEMBER_RSP;
+                case 24849:
+                    return CID_ORG_LIST_REQ;
+                case 24850:
+                    return CID_ORG_LIST_RSP;
+                case 25122:
+                    return CID_GMSG_OFFLINE_MSG_NOTIFY;
+                case 25123:
+                    return CID_MSG_DATA_LIST_REQ;
+                case 25124:
+                    return CID_MSG_DATA_LIST_RSP;
+                case 25125:
+                    return CID_GROUP_CHAT_MSG_CANCEL;
+                case 25126:
+                    return CID_GMSG_OFFLINE_MSG_ACK;
+                case 25127:
+                    return CID_S2S_CHAT_MSG;
+                case 28689:
+                    return CID_USER_INFO_REQ;
+                case 28690:
+                    return CID_USER_INFO_RSP;
+                case 29191:
+                    return CID_BUDDY_LIST_SINGLE_USER_INFO_REQ;
+                case 29192:
+                    return CID_BUDDY_LIST_USER_INFO_RSP;
+                case 29199:
+                    return CID_BUDDY_LIST_CHANGE_AVATAR_REQ;
+                case 29200:
+                    return CID_BUDDY_LIST_CHANGE_AVATAR_RSP;
+                case 29202:
+                    return CID_BUDDY_LIST_CHANGE_SIGN_INFO_REQ;
+                case 29203:
+                    return CID_BUDDY_LIST_CHANGE_SIGN_INFO_RSP;
+                case 29204:
+                    return CID_BUDDY_LIST_MODIFY_USER_INFO_REQ;
+                case 29205:
+                    return CID_BUDDY_LIST_MODIFY_USER_INFO_RSP;
+                case 29206:
+                    return CID_BUDDY_LIST_OPT_REQ;
+                case 29207:
+                    return CID_BUDDY_LIST_OPT_RSP;
+                case 29208:
+                    return CID_BUDDY_LIST_MODIFY_NICKNAME_REQ;
+                case 29209:
+                    return CID_BUDDY_LIST_MODIFY_NICKNAME_RSP;
+                case 29210:
+                    return CID_BUDDY_LIST_REQUEST_LIST_REQ;
+                case 29211:
+                    return CID_BUDDY_LIST_REQUEST_LIST_RSP;
+                case 29212:
+                    return CID_BUDDY_LIST_OPT_RESULT;
                 default:
                     return null;
             }
@@ -1187,7 +2293,7 @@ public final class YouMaiBasic {
 
         public static final com.google.protobuf.Descriptors.EnumDescriptor
         getDescriptor() {
-            return YouMaiBasic.getDescriptor().getEnumTypes().get(0);
+            return YouMaiBasic.getDescriptor().getEnumTypes().get(2);
         }
 
         private static final COMMANDID[] VALUES = values();
@@ -1195,7 +2301,7 @@ public final class YouMaiBasic {
         public static COMMANDID valueOf(
                 com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
             if (desc.getType() != getDescriptor()) {
-                throw new java.lang.IllegalArgumentException(
+                throw new IllegalArgumentException(
                         "EnumValueDescriptor is not for this type.");
             }
             return VALUES[desc.getIndex()];
@@ -1204,7 +2310,7 @@ public final class YouMaiBasic {
         private final int index;
         private final int value;
 
-        COMMANDID(int index, int value) {
+        private COMMANDID(int index, int value) {
             this.index = index;
             this.value = value;
         }
@@ -1286,7 +2392,7 @@ public final class YouMaiBasic {
 
         public static final com.google.protobuf.Descriptors.EnumDescriptor
         getDescriptor() {
-            return YouMaiBasic.getDescriptor().getEnumTypes().get(1);
+            return YouMaiBasic.getDescriptor().getEnumTypes().get(3);
         }
 
         private static final USER_TYPE[] VALUES = values();
@@ -1294,7 +2400,7 @@ public final class YouMaiBasic {
         public static USER_TYPE valueOf(
                 com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
             if (desc.getType() != getDescriptor()) {
-                throw new java.lang.IllegalArgumentException(
+                throw new IllegalArgumentException(
                         "EnumValueDescriptor is not for this type.");
             }
             return VALUES[desc.getIndex()];
@@ -1303,7 +2409,7 @@ public final class YouMaiBasic {
         private final int index;
         private final int value;
 
-        USER_TYPE(int index, int value) {
+        private USER_TYPE(int index, int value) {
             this.index = index;
             this.value = value;
         }
@@ -1625,40 +2731,48 @@ public final class YouMaiBasic {
          */
         ERRNO_CODE_NOT_HUXIN_USER(38, 403),
         /**
+         * <code>ERRNO_CODE_NOT_DEVICE_ID = 404;</code>
+         * <p>
+         * <pre>
+         * 没有设备id
+         * </pre>
+         */
+        ERRNO_CODE_NOT_DEVICE_ID(39, 404),
+        /**
          * <code>ERRNO_CODE_BLOCKED_BY_DST_USER = 501;</code>
          * <p>
          * <pre>
          * </pre>
          */
-        ERRNO_CODE_BLOCKED_BY_DST_USER(39, 501),
+        ERRNO_CODE_BLOCKED_BY_DST_USER(40, 501),
         /**
          * <code>ERRNO_CODE_INVALID_USER_INFO = 1101;</code>
          */
-        ERRNO_CODE_INVALID_USER_INFO(40, 1101),
+        ERRNO_CODE_INVALID_USER_INFO(41, 1101),
         /**
          * <code>ERRNO_CODE_INVALID_SESSION = 1102;</code>
          */
-        ERRNO_CODE_INVALID_SESSION(41, 1102),
+        ERRNO_CODE_INVALID_SESSION(42, 1102),
         /**
          * <code>ERRNO_CODE_INVALID_PASSWD = 1103;</code>
          */
-        ERRNO_CODE_INVALID_PASSWD(42, 1103),
+        ERRNO_CODE_INVALID_PASSWD(43, 1103),
         /**
          * <code>ERRNO_CODE_INVALID_IM_CHAT_TARGET_USER = 1201;</code>
          */
-        ERRNO_CODE_INVALID_IM_CHAT_TARGET_USER(43, 1201),
+        ERRNO_CODE_INVALID_IM_CHAT_TARGET_USER(44, 1201),
         /**
          * <code>ERRNO_CODE_INVALID_IM_CHAT_EMPTY_BODY_NOT_ALLOWED = 1202;</code>
          */
-        ERRNO_CODE_INVALID_IM_CHAT_EMPTY_BODY_NOT_ALLOWED(44, 1202),
+        ERRNO_CODE_INVALID_IM_CHAT_EMPTY_BODY_NOT_ALLOWED(45, 1202),
         /**
          * <code>ERRNO_CODE_LOCATIONSHARE_TASK_NOT_EXIST = 1301;</code>
          */
-        ERRNO_CODE_LOCATIONSHARE_TASK_NOT_EXIST(45, 1301),
+        ERRNO_CODE_LOCATIONSHARE_TASK_NOT_EXIST(46, 1301),
         /**
          * <code>ERRNO_CODE_LOCATIONSHARE_NOT_INSIDE_TASK = 1302;</code>
          */
-        ERRNO_CODE_LOCATIONSHARE_NOT_INSIDE_TASK(46, 1302),;
+        ERRNO_CODE_LOCATIONSHARE_NOT_INSIDE_TASK(47, 1302),;
 
         /**
          * <code>ERRNO_CODE_OK = 0;</code>
@@ -1969,6 +3083,14 @@ public final class YouMaiBasic {
          */
         public static final int ERRNO_CODE_NOT_HUXIN_USER_VALUE = 403;
         /**
+         * <code>ERRNO_CODE_NOT_DEVICE_ID = 404;</code>
+         * <p>
+         * <pre>
+         * 没有设备id
+         * </pre>
+         */
+        public static final int ERRNO_CODE_NOT_DEVICE_ID_VALUE = 404;
+        /**
          * <code>ERRNO_CODE_BLOCKED_BY_DST_USER = 501;</code>
          * <p>
          * <pre>
@@ -2089,6 +3211,8 @@ public final class YouMaiBasic {
                     return ERRNO_CODE_NOT_SHOW;
                 case 403:
                     return ERRNO_CODE_NOT_HUXIN_USER;
+                case 404:
+                    return ERRNO_CODE_NOT_DEVICE_ID;
                 case 501:
                     return ERRNO_CODE_BLOCKED_BY_DST_USER;
                 case 1101:
@@ -2135,7 +3259,7 @@ public final class YouMaiBasic {
 
         public static final com.google.protobuf.Descriptors.EnumDescriptor
         getDescriptor() {
-            return YouMaiBasic.getDescriptor().getEnumTypes().get(2);
+            return YouMaiBasic.getDescriptor().getEnumTypes().get(4);
         }
 
         private static final ERRNO_CODE[] VALUES = values();
@@ -2143,7 +3267,7 @@ public final class YouMaiBasic {
         public static ERRNO_CODE valueOf(
                 com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
             if (desc.getType() != getDescriptor()) {
-                throw new java.lang.IllegalArgumentException(
+                throw new IllegalArgumentException(
                         "EnumValueDescriptor is not for this type.");
             }
             return VALUES[desc.getIndex()];
@@ -2152,7 +3276,7 @@ public final class YouMaiBasic {
         private final int index;
         private final int value;
 
-        ERRNO_CODE(int index, int value) {
+        private ERRNO_CODE(int index, int value) {
             this.index = index;
             this.value = value;
         }
@@ -2254,7 +3378,7 @@ public final class YouMaiBasic {
 
         public static final com.google.protobuf.Descriptors.EnumDescriptor
         getDescriptor() {
-            return YouMaiBasic.getDescriptor().getEnumTypes().get(3);
+            return YouMaiBasic.getDescriptor().getEnumTypes().get(5);
         }
 
         private static final Device_Type[] VALUES = values();
@@ -2262,7 +3386,7 @@ public final class YouMaiBasic {
         public static Device_Type valueOf(
                 com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
             if (desc.getType() != getDescriptor()) {
-                throw new java.lang.IllegalArgumentException(
+                throw new IllegalArgumentException(
                         "EnumValueDescriptor is not for this type.");
             }
             return VALUES[desc.getIndex()];
@@ -2271,7 +3395,7 @@ public final class YouMaiBasic {
         private final int index;
         private final int value;
 
-        Device_Type(int index, int value) {
+        private Device_Type(int index, int value) {
             this.index = index;
             this.value = value;
         }
@@ -2361,7 +3485,7 @@ public final class YouMaiBasic {
 
         public static final com.google.protobuf.Descriptors.EnumDescriptor
         getDescriptor() {
-            return YouMaiBasic.getDescriptor().getEnumTypes().get(4);
+            return YouMaiBasic.getDescriptor().getEnumTypes().get(6);
         }
 
         private static final USER_SHOW_STATUS[] VALUES = values();
@@ -2369,7 +3493,7 @@ public final class YouMaiBasic {
         public static USER_SHOW_STATUS valueOf(
                 com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
             if (desc.getType() != getDescriptor()) {
-                throw new java.lang.IllegalArgumentException(
+                throw new IllegalArgumentException(
                         "EnumValueDescriptor is not for this type.");
             }
             return VALUES[desc.getIndex()];
@@ -2378,12 +3502,299 @@ public final class YouMaiBasic {
         private final int index;
         private final int value;
 
-        USER_SHOW_STATUS(int index, int value) {
+        private USER_SHOW_STATUS(int index, int value) {
             this.index = index;
             this.value = value;
         }
 
         // @@protoc_insertion_point(enum_scope:USER_SHOW_STATUS)
+    }
+
+    /**
+     * Protobuf enum {@code UserState}
+     */
+    public enum UserState
+            implements com.google.protobuf.ProtocolMessageEnum {
+        /**
+         * <code>USER_STATE_ONLINE = 0;</code>
+         */
+        USER_STATE_ONLINE(0, 0),
+        /**
+         * <code>USER_STATE_OFFLINE = 1;</code>
+         */
+        USER_STATE_OFFLINE(1, 1),
+        /**
+         * <code>USER_STATE_LOGOUT = 3;</code>
+         */
+        USER_STATE_LOGOUT(2, 3),;
+
+        /**
+         * <code>USER_STATE_ONLINE = 0;</code>
+         */
+        public static final int USER_STATE_ONLINE_VALUE = 0;
+        /**
+         * <code>USER_STATE_OFFLINE = 1;</code>
+         */
+        public static final int USER_STATE_OFFLINE_VALUE = 1;
+        /**
+         * <code>USER_STATE_LOGOUT = 3;</code>
+         */
+        public static final int USER_STATE_LOGOUT_VALUE = 3;
+
+
+        public final int getNumber() {
+            return value;
+        }
+
+        public static UserState valueOf(int value) {
+            switch (value) {
+                case 0:
+                    return USER_STATE_ONLINE;
+                case 1:
+                    return USER_STATE_OFFLINE;
+                case 3:
+                    return USER_STATE_LOGOUT;
+                default:
+                    return null;
+            }
+        }
+
+        public static com.google.protobuf.Internal.EnumLiteMap<UserState>
+        internalGetValueMap() {
+            return internalValueMap;
+        }
+
+        private static com.google.protobuf.Internal.EnumLiteMap<UserState>
+                internalValueMap =
+                new com.google.protobuf.Internal.EnumLiteMap<UserState>() {
+                    public UserState findValueByNumber(int number) {
+                        return UserState.valueOf(number);
+                    }
+                };
+
+        public final com.google.protobuf.Descriptors.EnumValueDescriptor
+        getValueDescriptor() {
+            return getDescriptor().getValues().get(index);
+        }
+
+        public final com.google.protobuf.Descriptors.EnumDescriptor
+        getDescriptorForType() {
+            return getDescriptor();
+        }
+
+        public static final com.google.protobuf.Descriptors.EnumDescriptor
+        getDescriptor() {
+            return YouMaiBasic.getDescriptor().getEnumTypes().get(7);
+        }
+
+        private static final UserState[] VALUES = values();
+
+        public static UserState valueOf(
+                com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
+            if (desc.getType() != getDescriptor()) {
+                throw new IllegalArgumentException(
+                        "EnumValueDescriptor is not for this type.");
+            }
+            return VALUES[desc.getIndex()];
+        }
+
+        private final int index;
+        private final int value;
+
+        private UserState(int index, int value) {
+            this.index = index;
+            this.value = value;
+        }
+
+        // @@protoc_insertion_point(enum_scope:UserState)
+    }
+
+    /**
+     * Protobuf enum {@code ResultCode}
+     */
+    public enum ResultCode
+            implements com.google.protobuf.ProtocolMessageEnum {
+        /**
+         * <code>RESULT_CODE_SUCCESS = 1;</code>
+         */
+        RESULT_CODE_SUCCESS(0, 1),
+        /**
+         * <code>RESULT_CODE_FAIL = 2;</code>
+         */
+        RESULT_CODE_FAIL(1, 2),;
+
+        /**
+         * <code>RESULT_CODE_SUCCESS = 1;</code>
+         */
+        public static final int RESULT_CODE_SUCCESS_VALUE = 1;
+        /**
+         * <code>RESULT_CODE_FAIL = 2;</code>
+         */
+        public static final int RESULT_CODE_FAIL_VALUE = 2;
+
+
+        public final int getNumber() {
+            return value;
+        }
+
+        public static ResultCode valueOf(int value) {
+            switch (value) {
+                case 1:
+                    return RESULT_CODE_SUCCESS;
+                case 2:
+                    return RESULT_CODE_FAIL;
+                default:
+                    return null;
+            }
+        }
+
+        public static com.google.protobuf.Internal.EnumLiteMap<ResultCode>
+        internalGetValueMap() {
+            return internalValueMap;
+        }
+
+        private static com.google.protobuf.Internal.EnumLiteMap<ResultCode>
+                internalValueMap =
+                new com.google.protobuf.Internal.EnumLiteMap<ResultCode>() {
+                    public ResultCode findValueByNumber(int number) {
+                        return ResultCode.valueOf(number);
+                    }
+                };
+
+        public final com.google.protobuf.Descriptors.EnumValueDescriptor
+        getValueDescriptor() {
+            return getDescriptor().getValues().get(index);
+        }
+
+        public final com.google.protobuf.Descriptors.EnumDescriptor
+        getDescriptorForType() {
+            return getDescriptor();
+        }
+
+        public static final com.google.protobuf.Descriptors.EnumDescriptor
+        getDescriptor() {
+            return YouMaiBasic.getDescriptor().getEnumTypes().get(8);
+        }
+
+        private static final ResultCode[] VALUES = values();
+
+        public static ResultCode valueOf(
+                com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
+            if (desc.getType() != getDescriptor()) {
+                throw new IllegalArgumentException(
+                        "EnumValueDescriptor is not for this type.");
+            }
+            return VALUES[desc.getIndex()];
+        }
+
+        private final int index;
+        private final int value;
+
+        private ResultCode(int index, int value) {
+            this.index = index;
+            this.value = value;
+        }
+
+        // @@protoc_insertion_point(enum_scope:ResultCode)
+    }
+
+    /**
+     * Protobuf enum {@code IM_CHANNEL}
+     */
+    public enum IM_CHANNEL
+            implements com.google.protobuf.ProtocolMessageEnum {
+        /**
+         * <code>IM_CHANNEL_DEFAULT = 0;</code>
+         */
+        IM_CHANNEL_DEFAULT(0, 0),
+        /**
+         * <code>IM_CHANNEL_SMS = 1;</code>
+         */
+        IM_CHANNEL_SMS(1, 1),
+        /**
+         * <code>IM_CHANNEL_QQ = 2;</code>
+         */
+        IM_CHANNEL_QQ(2, 2),;
+
+        /**
+         * <code>IM_CHANNEL_DEFAULT = 0;</code>
+         */
+        public static final int IM_CHANNEL_DEFAULT_VALUE = 0;
+        /**
+         * <code>IM_CHANNEL_SMS = 1;</code>
+         */
+        public static final int IM_CHANNEL_SMS_VALUE = 1;
+        /**
+         * <code>IM_CHANNEL_QQ = 2;</code>
+         */
+        public static final int IM_CHANNEL_QQ_VALUE = 2;
+
+
+        public final int getNumber() {
+            return value;
+        }
+
+        public static IM_CHANNEL valueOf(int value) {
+            switch (value) {
+                case 0:
+                    return IM_CHANNEL_DEFAULT;
+                case 1:
+                    return IM_CHANNEL_SMS;
+                case 2:
+                    return IM_CHANNEL_QQ;
+                default:
+                    return null;
+            }
+        }
+
+        public static com.google.protobuf.Internal.EnumLiteMap<IM_CHANNEL>
+        internalGetValueMap() {
+            return internalValueMap;
+        }
+
+        private static com.google.protobuf.Internal.EnumLiteMap<IM_CHANNEL>
+                internalValueMap =
+                new com.google.protobuf.Internal.EnumLiteMap<IM_CHANNEL>() {
+                    public IM_CHANNEL findValueByNumber(int number) {
+                        return IM_CHANNEL.valueOf(number);
+                    }
+                };
+
+        public final com.google.protobuf.Descriptors.EnumValueDescriptor
+        getValueDescriptor() {
+            return getDescriptor().getValues().get(index);
+        }
+
+        public final com.google.protobuf.Descriptors.EnumDescriptor
+        getDescriptorForType() {
+            return getDescriptor();
+        }
+
+        public static final com.google.protobuf.Descriptors.EnumDescriptor
+        getDescriptor() {
+            return YouMaiBasic.getDescriptor().getEnumTypes().get(9);
+        }
+
+        private static final IM_CHANNEL[] VALUES = values();
+
+        public static IM_CHANNEL valueOf(
+                com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
+            if (desc.getType() != getDescriptor()) {
+                throw new IllegalArgumentException(
+                        "EnumValueDescriptor is not for this type.");
+            }
+            return VALUES[desc.getIndex()];
+        }
+
+        private final int index;
+        private final int value;
+
+        private IM_CHANNEL(int index, int value) {
+            this.index = index;
+            this.value = value;
+        }
+
+        // @@protoc_insertion_point(enum_scope:IM_CHANNEL)
     }
 
     public interface Heart_BeatOrBuilder extends
@@ -2424,7 +3835,7 @@ public final class YouMaiBasic {
 
         private final com.google.protobuf.UnknownFieldSet unknownFields;
 
-        @java.lang.Override
+        @Override
         public final com.google.protobuf.UnknownFieldSet
         getUnknownFields() {
             return this.unknownFields;
@@ -2467,12 +3878,12 @@ public final class YouMaiBasic {
 
         public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-            return YouMaiBasic.internal_static_com_youmai_hxsdk_proto_Heart_Beat_descriptor;
+            return YouMaiBasic.internal_static_com_proto_basic_Heart_Beat_descriptor;
         }
 
-        protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        protected FieldAccessorTable
         internalGetFieldAccessorTable() {
-            return YouMaiBasic.internal_static_com_youmai_hxsdk_proto_Heart_Beat_fieldAccessorTable
+            return YouMaiBasic.internal_static_com_proto_basic_Heart_Beat_fieldAccessorTable
                     .ensureFieldAccessorsInitialized(
                             YouMaiBasic.Heart_Beat.class, YouMaiBasic.Heart_Beat.Builder.class);
         }
@@ -2487,7 +3898,7 @@ public final class YouMaiBasic {
                     }
                 };
 
-        @java.lang.Override
+        @Override
         public com.google.protobuf.Parser<Heart_Beat> getParserForType() {
             return PARSER;
         }
@@ -2526,8 +3937,8 @@ public final class YouMaiBasic {
 
         private static final long serialVersionUID = 0L;
 
-        @java.lang.Override
-        protected java.lang.Object writeReplace()
+        @Override
+        protected Object writeReplace()
                 throws java.io.ObjectStreamException {
             return super.writeReplace();
         }
@@ -2610,9 +4021,9 @@ public final class YouMaiBasic {
             return newBuilder(this);
         }
 
-        @java.lang.Override
+        @Override
         protected Builder newBuilderForType(
-                com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+                BuilderParent parent) {
             Builder builder = new Builder(parent);
             return builder;
         }
@@ -2630,12 +4041,12 @@ public final class YouMaiBasic {
                 YouMaiBasic.Heart_BeatOrBuilder {
             public static final com.google.protobuf.Descriptors.Descriptor
             getDescriptor() {
-                return YouMaiBasic.internal_static_com_youmai_hxsdk_proto_Heart_Beat_descriptor;
+                return YouMaiBasic.internal_static_com_proto_basic_Heart_Beat_descriptor;
             }
 
-            protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+            protected FieldAccessorTable
             internalGetFieldAccessorTable() {
-                return YouMaiBasic.internal_static_com_youmai_hxsdk_proto_Heart_Beat_fieldAccessorTable
+                return YouMaiBasic.internal_static_com_proto_basic_Heart_Beat_fieldAccessorTable
                         .ensureFieldAccessorsInitialized(
                                 YouMaiBasic.Heart_Beat.class, YouMaiBasic.Heart_Beat.Builder.class);
             }
@@ -2646,7 +4057,7 @@ public final class YouMaiBasic {
             }
 
             private Builder(
-                    com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+                    BuilderParent parent) {
                 super(parent);
                 maybeForceBuilderInitialization();
             }
@@ -2671,7 +4082,7 @@ public final class YouMaiBasic {
 
             public com.google.protobuf.Descriptors.Descriptor
             getDescriptorForType() {
-                return YouMaiBasic.internal_static_com_youmai_hxsdk_proto_Heart_Beat_descriptor;
+                return YouMaiBasic.internal_static_com_proto_basic_Heart_Beat_descriptor;
             }
 
             public YouMaiBasic.Heart_Beat getDefaultInstanceForType() {
@@ -2702,8 +4113,7 @@ public final class YouMaiBasic {
             }
 
             public Builder mergeFrom(YouMaiBasic.Heart_Beat other) {
-                if (other == YouMaiBasic.Heart_Beat.getDefaultInstance())
-                    return this;
+                if (other == YouMaiBasic.Heart_Beat.getDefaultInstance()) return this;
                 this.mergeUnknownFields(other.getUnknownFields());
                 return this;
             }
@@ -2779,7 +4189,7 @@ public final class YouMaiBasic {
 
         private final com.google.protobuf.UnknownFieldSet unknownFields;
 
-        @java.lang.Override
+        @Override
         public final com.google.protobuf.UnknownFieldSet
         getUnknownFields() {
             return this.unknownFields;
@@ -2822,12 +4232,12 @@ public final class YouMaiBasic {
 
         public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-            return YouMaiBasic.internal_static_com_youmai_hxsdk_proto_Heart_Beat_Ack_descriptor;
+            return YouMaiBasic.internal_static_com_proto_basic_Heart_Beat_Ack_descriptor;
         }
 
-        protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        protected FieldAccessorTable
         internalGetFieldAccessorTable() {
-            return YouMaiBasic.internal_static_com_youmai_hxsdk_proto_Heart_Beat_Ack_fieldAccessorTable
+            return YouMaiBasic.internal_static_com_proto_basic_Heart_Beat_Ack_fieldAccessorTable
                     .ensureFieldAccessorsInitialized(
                             YouMaiBasic.Heart_Beat_Ack.class, YouMaiBasic.Heart_Beat_Ack.Builder.class);
         }
@@ -2842,7 +4252,7 @@ public final class YouMaiBasic {
                     }
                 };
 
-        @java.lang.Override
+        @Override
         public com.google.protobuf.Parser<Heart_Beat_Ack> getParserForType() {
             return PARSER;
         }
@@ -2881,8 +4291,8 @@ public final class YouMaiBasic {
 
         private static final long serialVersionUID = 0L;
 
-        @java.lang.Override
-        protected java.lang.Object writeReplace()
+        @Override
+        protected Object writeReplace()
                 throws java.io.ObjectStreamException {
             return super.writeReplace();
         }
@@ -2965,9 +4375,9 @@ public final class YouMaiBasic {
             return newBuilder(this);
         }
 
-        @java.lang.Override
+        @Override
         protected Builder newBuilderForType(
-                com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+                BuilderParent parent) {
             Builder builder = new Builder(parent);
             return builder;
         }
@@ -2985,12 +4395,12 @@ public final class YouMaiBasic {
                 YouMaiBasic.Heart_Beat_AckOrBuilder {
             public static final com.google.protobuf.Descriptors.Descriptor
             getDescriptor() {
-                return YouMaiBasic.internal_static_com_youmai_hxsdk_proto_Heart_Beat_Ack_descriptor;
+                return YouMaiBasic.internal_static_com_proto_basic_Heart_Beat_Ack_descriptor;
             }
 
-            protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+            protected FieldAccessorTable
             internalGetFieldAccessorTable() {
-                return YouMaiBasic.internal_static_com_youmai_hxsdk_proto_Heart_Beat_Ack_fieldAccessorTable
+                return YouMaiBasic.internal_static_com_proto_basic_Heart_Beat_Ack_fieldAccessorTable
                         .ensureFieldAccessorsInitialized(
                                 YouMaiBasic.Heart_Beat_Ack.class, YouMaiBasic.Heart_Beat_Ack.Builder.class);
             }
@@ -3001,7 +4411,7 @@ public final class YouMaiBasic {
             }
 
             private Builder(
-                    com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+                    BuilderParent parent) {
                 super(parent);
                 maybeForceBuilderInitialization();
             }
@@ -3026,7 +4436,7 @@ public final class YouMaiBasic {
 
             public com.google.protobuf.Descriptors.Descriptor
             getDescriptorForType() {
-                return YouMaiBasic.internal_static_com_youmai_hxsdk_proto_Heart_Beat_Ack_descriptor;
+                return YouMaiBasic.internal_static_com_proto_basic_Heart_Beat_Ack_descriptor;
             }
 
             public YouMaiBasic.Heart_Beat_Ack getDefaultInstanceForType() {
@@ -3057,8 +4467,7 @@ public final class YouMaiBasic {
             }
 
             public Builder mergeFrom(YouMaiBasic.Heart_Beat_Ack other) {
-                if (other == YouMaiBasic.Heart_Beat_Ack.getDefaultInstance())
-                    return this;
+                if (other == YouMaiBasic.Heart_Beat_Ack.getDefaultInstance()) return this;
                 this.mergeUnknownFields(other.getUnknownFields());
                 return this;
             }
@@ -3097,15 +4506,15 @@ public final class YouMaiBasic {
     }
 
     private static final com.google.protobuf.Descriptors.Descriptor
-            internal_static_com_youmai_hxsdk_proto_Heart_Beat_descriptor;
+            internal_static_com_proto_basic_Heart_Beat_descriptor;
     private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
-            internal_static_com_youmai_hxsdk_proto_Heart_Beat_fieldAccessorTable;
+            internal_static_com_proto_basic_Heart_Beat_fieldAccessorTable;
     private static final com.google.protobuf.Descriptors.Descriptor
-            internal_static_com_youmai_hxsdk_proto_Heart_Beat_Ack_descriptor;
+            internal_static_com_proto_basic_Heart_Beat_Ack_descriptor;
     private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
-            internal_static_com_youmai_hxsdk_proto_Heart_Beat_Ack_fieldAccessorTable;
+            internal_static_com_proto_basic_Heart_Beat_Ack_fieldAccessorTable;
 
     public static com.google.protobuf.Descriptors.FileDescriptor
     getDescriptor() {
@@ -3116,121 +4525,187 @@ public final class YouMaiBasic {
             descriptor;
 
     static {
-        java.lang.String[] descriptorData = {
-                "\n\022YouMai.Basic.proto\022\026com.youmai.hxsdk.p" +
-                        "roto\"\014\n\nHeart_Beat\"\020\n\016Heart_Beat_Ack*\372\023\n" +
-                        "\tCOMMANDID\022\016\n\nHEART_BEAT\020\001\022\022\n\016HEART_BEAT" +
-                        "_ACK\020\002\022\r\n\tROUTE_REQ\020\024\022\016\n\nUSER_LOGIN\020e\022\022\n" +
-                        "\016USER_LOGIN_ACK\020f\022\017\n\013USER_LOGOFF\020g\022\023\n\017US" +
-                        "ER_LOGOFF_ACK\020h\022\036\n\032MULTI_DEVICE_KICKED_N" +
-                        "OTIFY\020i\022\013\n\007IM_TEXT\020j\022\016\n\nIM_PICTURE\020k\022\014\n\010" +
-                        "IM_AUDIO\020l\022\014\n\010IM_VIDEO\020m\022\n\n\006IM_URL\020n\022\017\n\013" +
-                        "IM_LOCATION\020o\022\033\n\027IM_LOCATION_SHARE_BEGIN" +
-                        "\020p\022\034\n\030IM_LOCATION_SHARE_ANSWER\020q\022\036\n\032IM_L",
-                "OCATION_SHARE_CONTINUE\020r\022\031\n\025IM_LOCATION_" +
-                        "SHARE_END\020s\022\r\n\tPHONEDIAL\020u\022\021\n\rPHONEDIAL_" +
-                        "ACK\020v\022\025\n\021GET_CONTACTS_INFO\020w\022\031\n\025GET_CONT" +
-                        "ACTS_INFO_ACK\020x\022\031\n\025PHP_USER_MODIFYSTATUS" +
-                        "\020y\022\035\n\031PHP_USER_MODIFYSTATUS_ACK\020z\022\036\n\032PHP" +
-                        "_ADMIN_MODIFYUSERSTATUS\020{\022\"\n\036PHP_ADMIN_M" +
-                        "ODIFYUSERSTATUS_ACK\020|\022\023\n\017IMCHAT_PERSONAL" +
-                        "\020}\022\027\n\023IMCHAT_PERSONAL_ACK\020~\022\032\n\026IMCHAT_PE" +
-                        "RSONAL_NOTIFY\020\177\022\017\n\nREQUEST_IP\020\220\003\022\023\n\016REQU" +
-                        "EST_IP_ACK\020\221\003\022 \n\033REGIST_COMMUNICATIONSER",
-                "VICE\020\222\003\022\024\n\017GENERAL_MESSAGE\020\365\003\022\030\n\023POP_GEN" +
-                        "ERAL_MESSAGE\020\366\003\022\034\n\027POP_GENERAL_MESSAGE_A" +
-                        "CK\020\367\003\022\r\n\010BULLETIN\020\330\004\022\024\n\017BULLETIN_NOTIFY\020" +
-                        "\331\004\022\025\n\020BULLETIN_PUBLISH\020\335\004\022\031\n\024BULLETIN_PU" +
-                        "BLISH_ACK\020\336\004\022\030\n\023BIZCARD_GET_BYPHONE\020\275\005\022\034" +
-                        "\n\027BIZCARD_GET_BYPHONE_ACK\020\276\005\022\023\n\016BIZCARD_" +
-                        "INSERT\020\277\005\022\027\n\022BIZCARD_INSERT_ACK\020\300\005\022\023\n\016BI" +
-                        "ZCARD_UPDATE\020\301\005\022\027\n\022BIZCARD_UPDATE_ACK\020\302\005" +
-                        "\022\023\n\016BIZCARD_DELETE\020\303\005\022\027\n\022BIZCARD_DELETE_" +
-                        "ACK\020\304\005\022\026\n\021BUSINESS_QUERY_AD\020\356\005\022\032\n\025BUSINE",
-                "SS_QUERY_AD_ACK\020\357\005\022\025\n\020BUSINESS_SAVE_AD\020\360" +
-                        "\005\022\031\n\024BUSINESS_SAVE_AD_ACK\020\361\005\022\027\n\022BUSINESS" +
-                        "_UPDATE_AD\020\362\005\022\033\n\026BUSINESS_UPDATE_AD_ACK\020" +
-                        "\363\005\022\027\n\022BUSINESS_DELETE_AD\020\364\005\022\033\n\026BUSINESS_" +
-                        "DELETE_AD_ACK\020\365\005\022\030\n\023USERSHOWRULE_RESULT\020" +
-                        "\366\005\022\025\n\020USERSHOWRULE_GET\020\367\005\022\026\n\021USERSHOWRUL" +
-                        "E_SAVE\020\370\005\022\030\n\023USERSHOWRULE_UPDATE\020\371\005\022\030\n\023U" +
-                        "SERSHOWRULE_DELETE\020\372\005\022\017\n\nBONDERY_MQ\020\220N\022\017" +
-                        "\n\nSYSTEM_LOG\020\221N\022\022\n\rLOCATIONSHARE\020\314S\022\031\n\024L" +
-                        "OCATIONSHARE_NOTIFY\020\315S\022\030\n\023LOCATIONSHARE_",
-                "INVIT\020\316S\022\034\n\027LOCATIONSHARE_INVIT_ACK\020\317S\022\037" +
-                        "\n\032LOCATIONSHARE_INVIT_NOTIFY\020\320S\022\027\n\022LOCAT" +
-                        "IONSHARE_JOIN\020\321S\022\033\n\026LOCATIONSHARE_JOIN_A" +
-                        "CK\020\322S\022\036\n\031LOCATIONSHARE_JOIN_NOTIFY\020\323S\022\027\n" +
-                        "\022LOCATIONSHARE_QUIT\020\325S\022\033\n\026LOCATIONSHARE_" +
-                        "QUIT_ACK\020\326S\022\036\n\031LOCATIONSHARE_QUIT_NOTIFY" +
-                        "\020\327S\022\016\n\tPUSH_APNS\020\261T\022\022\n\rPUSH_APNS_ACK\020\262T\022" +
-                        "\021\n\014PUSH_GENERAL\020\265T\022\r\n\010PUSH_SMS\020\266T\022\025\n\020END" +
-                        "ORSEMENT_TAKE\020\225U\022\031\n\024ENDORSEMENT_TAKE_ACK" +
-                        "\020\226U\022\026\n\021ENDORSEMENT_QUERY\020\237U\022\032\n\025ENDORSEME",
-                "NT_QUERY_ACK\020\240U\022\026\n\021ENDORSEMENT_DELET\020\251U\022" +
-                        "\033\n\026ENDORSEMENT_DELETE_ACK\020\252U\022\034\n\027ENDORSEM" +
-                        "ENT_ADMIN_QUERY\020\307U\022 \n\033ENDORSEMENT_ADMIN_" +
-                        "QUERY_ACK\020\310U\022\022\n\rSHOWBIZ_QUERY\020\371U\022\026\n\021SHOW" +
-                        "BIZ_QUERY_ACK\020\372U\022\023\n\016SHOWBIZ_INSERT\020\203V\022\027\n" +
-                        "\022SHOWBIZ_INSERT_ACK\020\204V\022\023\n\016SHOWBIZ_DELETE" +
-                        "\020\215V\022\027\n\022SHOWBIZ_DELETE_ACK\020\216V\022\023\n\016SHOWBIZ_" +
-                        "UPDATE\020\227V\022\027\n\022SHOWBIZ_UPDATE_ACK\020\230V\022\027\n\022SH" +
-                        "OWPERSONAL_QUERY\020\241V\022\033\n\026SHOWPERSONAL_QUER" +
-                        "Y_ACK\020\242V\022\030\n\023SHOWPERSONAL_INSERT\020\253V\022\034\n\027SH",
-                "OWPERSONAL_INSERT_ACK\020\254V\022\030\n\023SHOWPERSONAL" +
-                        "_UPDATE\020\265V\022\034\n\027SHOWPERSONAL_UPDATE_ACK\020\266V" +
-                        "\022\030\n\023SHOWPERSONAL_DELETE\020\277V\022\034\n\027SHOWPERSON" +
-                        "AL_DELETE_ACK\020\300V\022\r\n\010SHOWDIAL\020\311V\022\021\n\014SHOWD" +
-                        "IAL_ACK\020\312V\022\024\n\017SHOWDIAL_NOTIFY\020\313V\022\'\n\"SHOW" +
-                        "DIAL_CACHE_UPDATE_SYSTEMNOTIFY\020\323V*X\n\tUSE" +
-                        "R_TYPE\022\025\n\021USER_TYPE_UNKNOWN\020\000\022\026\n\022USER_TY" +
-                        "PE_PERSONAL\020\001\022\034\n\030USER_TYPE_PUBLIC_ACCOUN" +
-                        "T\020\002*\223\014\n\nERRNO_CODE\022\021\n\rERRNO_CODE_OK\020\000\022\026\n" +
-                        "\022ERRNO_CODE_DEFAULT\020\002\022$\n ERRNO_CODE_LOGI",
-                "N_IN_OTHER_DEVICE\020d\022\032\n\026ERRNO_CODE_NO_PRO" +
-                        "TOCOL\020e\022\036\n\032ERRNO_CODE_TAG_NO_PROTOCOL\020f\022" +
-                        "\031\n\025ERRNO_CODE_PUSH_QUEUE\020g\022\037\n\033ERRNO_CODE" +
-                        "_LOGON_NO_PHONE_S\020h\022\"\n\036ERRNO_CODE_HEART_" +
-                        "ERR_SESSION_S\020i\022\030\n\024ERRNO_CODE_NOT_LOGON\020" +
-                        "j\022\032\n\026ERRNO_CODE_WITHOUT_TAG\020k\022\032\n\026ERRNO_C" +
-                        "ODE_WITHOUT_UID\020l\022\035\n\031ERRNO_CODE_WITHOUT_" +
-                        "TERMID\020m\022\034\n\030ERRNO_CODE_ERR_SESSIONID\020n\022\033" +
-                        "\n\027ERRNO_CODE_TERM_UNALIVE\020o\022\026\n\022ERRNO_COD" +
-                        "E_ERR_UID\020p\022\026\n\022ERRNO_CODE_ERR_PID\020q\022\031\n\025E",
-                "RRNO_CODE_ERR_RESEND\020r\022\026\n\022ERRNO_CODE_ERR" +
-                        "_TID\020s\022\023\n\016ERRNO_CODE_SQL\020\310\001\022\031\n\024ERRNO_COD" +
-                        "E_DATA_SRAL\020\311\001\022&\n!ERRNO_CODE_NOT_FIND_TA" +
-                        "RGET_USERID\020\313\001\022.\n)ERRNO_CODE_DATA_WAREHO" +
-                        "USING_FAILURE_MYSQL\020\314\001\022.\n)ERRNO_CODE_DAT" +
-                        "A_WAREHOUSING_FAILURE_REDIS\020\315\001\022#\n\036ERRNO_" +
-                        "CODE_DB_SERVER_EXCEPTION\020\316\001\022\"\n\035ERRNO_COD" +
-                        "E_USER_SESSION_ERROR\020\317\001\022\036\n\031ERRNO_CODE_US" +
-                        "ER_NOT_LOGIN\020\320\001\022\035\n\030ERRNO_CODE_USER_ID_ER" +
-                        "ROR\020\321\001\022\'\n\"ERRNO_CODE_USER_SEND_TOROUTE_E",
-                "RROR\020\322\001\022\035\n\030ERRNO_CODE_NOT_DST_PHONE\020\323\001\022&" +
-                        "\n!ERRNO_CODE_DATABASE_QUERY_FAILDED\020\324\001\022\036" +
-                        "\n\031ERRNO_CODE_DATA_EXCEPTION\020\325\001\022\035\n\030ERRNO_" +
-                        "CODE_NOT_SESSIONID\020\326\001\022\031\n\024ERRNO_CODE_NOT_" +
-                        "PHONE\020\327\001\022\033\n\026ERRNO_CODE_PHONE_ERROR\020\330\001\022!\n" +
-                        "\034ERRNO_CODE_DATABASE_NOT_DATA\020\331\001\022\034\n\027ERRN" +
-                        "O_CODE_SHOW_EXPIRED\020\332\001\022\034\n\027ERRNO_CODE_NOT" +
-                        "_TOKEN_ID\020\333\001\022\030\n\023ERRNO_CODE_NOT_SHOW\020\334\001\022\036" +
-                        "\n\031ERRNO_CODE_NOT_HUXIN_USER\020\223\003\022#\n\036ERRNO_" +
-                        "CODE_BLOCKED_BY_DST_USER\020\365\003\022!\n\034ERRNO_COD",
-                "E_INVALID_USER_INFO\020\315\010\022\037\n\032ERRNO_CODE_INV" +
-                        "ALID_SESSION\020\316\010\022\036\n\031ERRNO_CODE_INVALID_PA" +
-                        "SSWD\020\317\010\022+\n&ERRNO_CODE_INVALID_IM_CHAT_TA" +
-                        "RGET_USER\020\261\t\0226\n1ERRNO_CODE_INVALID_IM_CH" +
-                        "AT_EMPTY_BODY_NOT_ALLOWED\020\262\t\022,\n\'ERRNO_CO" +
-                        "DE_LOCATIONSHARE_TASK_NOT_EXIST\020\225\n\022-\n(ER" +
-                        "RNO_CODE_LOCATIONSHARE_NOT_INSIDE_TASK\020\226" +
-                        "\n*\204\001\n\013Device_Type\022\025\n\021DeviceType_IPhone\020\001" +
-                        "\022\026\n\022DeviceType_Android\020\002\022\023\n\017DeviceType_I" +
-                        "Pad\020\003\022\031\n\025DeviceType_AndroidPad\020\004\022\026\n\022Devi",
-                "ceType_UNKNOWN\020\005*j\n\020USER_SHOW_STATUS\022\033\n\027" +
-                        "USER_SHOW_STATUS_NORMAL\020\000\022\034\n\030USER_SHOW_S" +
-                        "TATUS_DISABLE\020\001\022\033\n\027USER_SHOW_STATUS_FROZ" +
-                        "EN\020\002"
+        String[] descriptorData = {
+                "\n\022YouMai.Basic.proto\022\017com.proto.basic\"\014\n" +
+                        "\nHeart_Beat\"\020\n\016Heart_Beat_Ack*]\n\013Service" +
+                        "Type\022\016\n\nCOM_SERVER\020\001\022\021\n\rROUTER_SERVER\020\002\022" +
+                        "\026\n\022LOADBALANCE_SERVER\020\003\022\023\n\017TRANSFER_SERV" +
+                        "ER\020\004*\276\001\n\tServiceID\022\017\n\013SID_MONITOR\020\001\022\014\n\010S" +
+                        "ID_CONN\020\002\022\020\n\014SID_DISPATCH\020\003\022\r\n\tSID_LOGIN" +
+                        "\020\004\022\013\n\007SID_MSG\020\005\022\023\n\017SID_LOADBALANCE\020\006\022\021\n\r" +
+                        "SID_BROADCAST\020\007\022\017\n\013SID_DBPROXY\020\010\022\r\n\tSID_" +
+                        "GROUP\020\t\022\r\n\tSID_BUDDY\020\n\022\r\n\tSID_REDIS\020d*\307$" +
+                        "\n\tCOMMANDID\022\016\n\nHEART_BEAT\020\001\022\022\n\016HEART_BEA",
+                "T_ACK\020\002\022\r\n\tROUTE_REQ\020\024\022\025\n\021ROUTE_ONLINECH" +
+                        "ECK\020\025\022\031\n\025ROUTE_ONLINECHECK_ACK\020\026\022\025\n\021ROUT" +
+                        "E_PHONE_CHECK\020\027\022\031\n\025ROUTE_PHONE_CHECK_ACK" +
+                        "\020\030\022\016\n\nUSER_LOGIN\020e\022\022\n\016USER_LOGIN_ACK\020f\022\017" +
+                        "\n\013USER_LOGOFF\020g\022\023\n\017USER_LOGOFF_ACK\020h\022\036\n\032" +
+                        "MULTI_DEVICE_KICKED_NOTIFY\020i\022\013\n\007IM_TEXT\020" +
+                        "j\022\016\n\nIM_PICTURE\020k\022\014\n\010IM_AUDIO\020l\022\014\n\010IM_VI" +
+                        "DEO\020m\022\n\n\006IM_URL\020n\022\017\n\013IM_LOCATION\020o\022\033\n\027IM" +
+                        "_LOCATION_SHARE_BEGIN\020p\022\034\n\030IM_LOCATION_S" +
+                        "HARE_ANSWER\020q\022\036\n\032IM_LOCATION_SHARE_CONTI",
+                "NUE\020r\022\031\n\025IM_LOCATION_SHARE_END\020s\022\r\n\tPHON" +
+                        "EDIAL\020u\022\021\n\rPHONEDIAL_ACK\020v\022\025\n\021GET_CONTAC" +
+                        "TS_INFO\020w\022\031\n\025GET_CONTACTS_INFO_ACK\020x\022\031\n\025" +
+                        "PHP_USER_MODIFYSTATUS\020y\022\035\n\031PHP_USER_MODI" +
+                        "FYSTATUS_ACK\020z\022\036\n\032PHP_ADMIN_MODIFYUSERST" +
+                        "ATUS\020{\022\"\n\036PHP_ADMIN_MODIFYUSERSTATUS_ACK" +
+                        "\020|\022\023\n\017IMCHAT_PERSONAL\020}\022\027\n\023IMCHAT_PERSON" +
+                        "AL_ACK\020~\022\032\n\026IMCHAT_PERSONAL_NOTIFY\020\177\022\023\n\016" +
+                        "IM_OFFLINE_MSG\020\200\001\022\017\n\nREQUEST_IP\020\220\003\022\023\n\016RE" +
+                        "QUEST_IP_ACK\020\221\003\022 \n\033REGIST_COMMUNICATIONS",
+                "ERVICE\020\222\003\022\024\n\017REPORT_ONLINERS\020\223\003\022\024\n\017BROAT" +
+                        "CAT_NOTIFY\020\224\003\022\024\n\017ROUTE_BRAODCAST\020\225\003\022\033\n\026C" +
+                        "ID_USER_STAT_PUSH_REQ\020\226\003\022\033\n\026CID_USER_STA" +
+                        "T_SYNC_REQ\020\227\003\022\033\n\026CID_USER_STAT_SYNC_RSP\020" +
+                        "\230\003\022\017\n\nREGIST_RSP\020\231\003\022\024\n\017GENERAL_MESSAGE\020\365" +
+                        "\003\022\030\n\023POP_GENERAL_MESSAGE\020\366\003\022\034\n\027POP_GENER" +
+                        "AL_MESSAGE_ACK\020\367\003\022\r\n\010BULLETIN\020\330\004\022\024\n\017BULL" +
+                        "ETIN_NOTIFY\020\331\004\022\025\n\020BULLETIN_PUBLISH\020\335\004\022\031\n" +
+                        "\024BULLETIN_PUBLISH_ACK\020\336\004\022\030\n\023BIZCARD_GET_" +
+                        "BYPHONE\020\275\005\022\034\n\027BIZCARD_GET_BYPHONE_ACK\020\276\005",
+                "\022\023\n\016BIZCARD_INSERT\020\277\005\022\027\n\022BIZCARD_INSERT_" +
+                        "ACK\020\300\005\022\023\n\016BIZCARD_UPDATE\020\301\005\022\027\n\022BIZCARD_U" +
+                        "PDATE_ACK\020\302\005\022\023\n\016BIZCARD_DELETE\020\303\005\022\027\n\022BIZ" +
+                        "CARD_DELETE_ACK\020\304\005\022\026\n\021BUSINESS_QUERY_AD\020" +
+                        "\356\005\022\032\n\025BUSINESS_QUERY_AD_ACK\020\357\005\022\025\n\020BUSINE" +
+                        "SS_SAVE_AD\020\360\005\022\031\n\024BUSINESS_SAVE_AD_ACK\020\361\005" +
+                        "\022\027\n\022BUSINESS_UPDATE_AD\020\362\005\022\033\n\026BUSINESS_UP" +
+                        "DATE_AD_ACK\020\363\005\022\027\n\022BUSINESS_DELETE_AD\020\364\005\022" +
+                        "\033\n\026BUSINESS_DELETE_AD_ACK\020\365\005\022\030\n\023USERSHOW" +
+                        "RULE_RESULT\020\366\005\022\025\n\020USERSHOWRULE_GET\020\367\005\022\026\n",
+                "\021USERSHOWRULE_SAVE\020\370\005\022\030\n\023USERSHOWRULE_UP" +
+                        "DATE\020\371\005\022\030\n\023USERSHOWRULE_DELETE\020\372\005\022\017\n\nBON" +
+                        "DERY_MQ\020\220N\022\017\n\nSYSTEM_LOG\020\221N\022\022\n\rLOCATIONS" +
+                        "HARE\020\314S\022\031\n\024LOCATIONSHARE_NOTIFY\020\315S\022\030\n\023LO" +
+                        "CATIONSHARE_INVIT\020\316S\022\034\n\027LOCATIONSHARE_IN" +
+                        "VIT_ACK\020\317S\022\037\n\032LOCATIONSHARE_INVIT_NOTIFY" +
+                        "\020\320S\022\027\n\022LOCATIONSHARE_JOIN\020\321S\022\033\n\026LOCATION" +
+                        "SHARE_JOIN_ACK\020\322S\022\036\n\031LOCATIONSHARE_JOIN_" +
+                        "NOTIFY\020\323S\022\027\n\022LOCATIONSHARE_QUIT\020\325S\022\033\n\026LO" +
+                        "CATIONSHARE_QUIT_ACK\020\326S\022\036\n\031LOCATIONSHARE",
+                "_QUIT_NOTIFY\020\327S\022\016\n\tPUSH_APNS\020\261T\022\022\n\rPUSH_" +
+                        "APNS_ACK\020\262T\022\021\n\014PUSH_GENERAL\020\265T\022\r\n\010PUSH_S" +
+                        "MS\020\266T\022\025\n\020ENDORSEMENT_TAKE\020\225U\022\031\n\024ENDORSEM" +
+                        "ENT_TAKE_ACK\020\226U\022\026\n\021ENDORSEMENT_QUERY\020\237U\022" +
+                        "\032\n\025ENDORSEMENT_QUERY_ACK\020\240U\022\026\n\021ENDORSEME" +
+                        "NT_DELET\020\251U\022\033\n\026ENDORSEMENT_DELETE_ACK\020\252U" +
+                        "\022\034\n\027ENDORSEMENT_ADMIN_QUERY\020\307U\022 \n\033ENDORS" +
+                        "EMENT_ADMIN_QUERY_ACK\020\310U\022\022\n\rSHOWBIZ_QUER" +
+                        "Y\020\371U\022\026\n\021SHOWBIZ_QUERY_ACK\020\372U\022\023\n\016SHOWBIZ_" +
+                        "INSERT\020\203V\022\027\n\022SHOWBIZ_INSERT_ACK\020\204V\022\023\n\016SH",
+                "OWBIZ_DELETE\020\215V\022\027\n\022SHOWBIZ_DELETE_ACK\020\216V" +
+                        "\022\023\n\016SHOWBIZ_UPDATE\020\227V\022\027\n\022SHOWBIZ_UPDATE_" +
+                        "ACK\020\230V\022\027\n\022SHOWPERSONAL_QUERY\020\241V\022\033\n\026SHOWP" +
+                        "ERSONAL_QUERY_ACK\020\242V\022\030\n\023SHOWPERSONAL_INS" +
+                        "ERT\020\253V\022\034\n\027SHOWPERSONAL_INSERT_ACK\020\254V\022\030\n\023" +
+                        "SHOWPERSONAL_UPDATE\020\265V\022\034\n\027SHOWPERSONAL_U" +
+                        "PDATE_ACK\020\266V\022\030\n\023SHOWPERSONAL_DELETE\020\277V\022\034" +
+                        "\n\027SHOWPERSONAL_DELETE_ACK\020\300V\022\r\n\010SHOWDIAL" +
+                        "\020\311V\022\021\n\014SHOWDIAL_ACK\020\312V\022\024\n\017SHOWDIAL_NOTIF" +
+                        "Y\020\313V\022\'\n\"SHOWDIAL_CACHE_UPDATE_SYSTEMNOTI",
+                "FY\020\323V\022\035\n\027CID_USER_CONNECT_EXCEPT\020\221\200\001\022\036\n\030" +
+                        "CID_USER_STATE_BROADCAST\020\221\202\001\022\033\n\025CID_USER" +
+                        "_STATE_REPORT\020\222\202\001\022%\n\037CID_MONITOR_CLIENT_" +
+                        "REGISTER_REQ\020\221\204\001\022%\n\037CID_MONITOR_CLIENT_R" +
+                        "EGISTER_RSP\020\222\204\001\022&\n CID_MASTER_BROADCAST_" +
+                        "SERVER_INFO\020\223\204\001\022 \n\032CID_S2S_AUTHENTICATIO" +
+                        "N_REQ\020\224\204\001\022 \n\032CID_S2S_AUTHENTICATION_RSP\020" +
+                        "\225\204\001\022\022\n\014CID_S2S_PING\020\226\204\001\022\022\n\014CID_S2S_PONG\020" +
+                        "\227\204\001\022\032\n\024CID_REGISTER_CMD_REQ\020\241\204\001\022\034\n\026CID_C" +
+                        "LUSTER_STATUS_REQ\020\241\206\001\022\034\n\026CID_CLUSTER_STA",
+                "TUS_RSP\020\242\206\001\022\030\n\022CID_CONFIG_SET_REQ\020\246\206\001\022\030\n" +
+                        "\022CID_CONFIG_SET_RSP\020\247\206\001\022\024\n\016CID_CHAT_BUDD" +
+                        "Y\020\221\240\001\022\024\n\016CID_CHAT_GROUP\020\222\240\001\022\034\n\026CID_OFFLI" +
+                        "NE_MSG_NOTIFY\020\223\240\001\022\026\n\020CID_CHAT_MSG_ACK\020\224\240" +
+                        "\001\022\030\n\022CID_GROUP_LIST_REQ\020\221\300\001\022\030\n\022CID_GROUP" +
+                        "_LIST_RSP\020\222\300\001\022\030\n\022CID_GROUP_INFO_REQ\020\223\300\001\022" +
+                        "\030\n\022CID_GROUP_INFO_RSP\020\224\300\001\022\032\n\024CID_GROUP_M" +
+                        "EMBER_REQ\020\225\300\001\022\032\n\024CID_GROUP_MEMBER_RSP\020\226\300" +
+                        "\001\022\032\n\024CID_GROUP_CREATE_REQ\020\227\300\001\022\032\n\024CID_GRO" +
+                        "UP_CREATE_RSP\020\230\300\001\022\034\n\026CID_GROUP_DISSOLVE_",
+                "REQ\020\231\300\001\022\034\n\026CID_GROUP_DISSOLVE_RSP\020\232\300\001\022\037\n" +
+                        "\031CID_GROUP_INFO_MODIFY_REQ\020\233\300\001\022\037\n\031CID_GR" +
+                        "OUP_INFO_MODIFY_RSP\020\234\300\001\022!\n\033CID_GROUP_CHA" +
+                        "NGE_MEMBER_REQ\020\235\300\001\022!\n\033CID_GROUP_CHANGE_M" +
+                        "EMBER_RSP\020\236\300\001\022\026\n\020CID_ORG_LIST_REQ\020\221\302\001\022\026\n" +
+                        "\020CID_ORG_LIST_RSP\020\222\302\001\022!\n\033CID_GMSG_OFFLIN" +
+                        "E_MSG_NOTIFY\020\242\304\001\022\033\n\025CID_MSG_DATA_LIST_RE" +
+                        "Q\020\243\304\001\022\033\n\025CID_MSG_DATA_LIST_RSP\020\244\304\001\022\037\n\031CI" +
+                        "D_GROUP_CHAT_MSG_CANCEL\020\245\304\001\022\036\n\030CID_GMSG_" +
+                        "OFFLINE_MSG_ACK\020\246\304\001\022\026\n\020CID_S2S_CHAT_MSG\020",
+                "\247\304\001\022\027\n\021CID_USER_INFO_REQ\020\221\340\001\022\027\n\021CID_USER" +
+                        "_INFO_RSP\020\222\340\001\022)\n#CID_BUDDY_LIST_SINGLE_U" +
+                        "SER_INFO_REQ\020\207\344\001\022\"\n\034CID_BUDDY_LIST_USER_" +
+                        "INFO_RSP\020\210\344\001\022&\n CID_BUDDY_LIST_CHANGE_AV" +
+                        "ATAR_REQ\020\217\344\001\022&\n CID_BUDDY_LIST_CHANGE_AV" +
+                        "ATAR_RSP\020\220\344\001\022)\n#CID_BUDDY_LIST_CHANGE_SI" +
+                        "GN_INFO_REQ\020\222\344\001\022)\n#CID_BUDDY_LIST_CHANGE" +
+                        "_SIGN_INFO_RSP\020\223\344\001\022)\n#CID_BUDDY_LIST_MOD" +
+                        "IFY_USER_INFO_REQ\020\224\344\001\022)\n#CID_BUDDY_LIST_" +
+                        "MODIFY_USER_INFO_RSP\020\225\344\001\022\034\n\026CID_BUDDY_LI",
+                "ST_OPT_REQ\020\226\344\001\022\034\n\026CID_BUDDY_LIST_OPT_RSP" +
+                        "\020\227\344\001\022(\n\"CID_BUDDY_LIST_MODIFY_NICKNAME_R" +
+                        "EQ\020\230\344\001\022(\n\"CID_BUDDY_LIST_MODIFY_NICKNAME" +
+                        "_RSP\020\231\344\001\022%\n\037CID_BUDDY_LIST_REQUEST_LIST_" +
+                        "REQ\020\232\344\001\022%\n\037CID_BUDDY_LIST_REQUEST_LIST_R" +
+                        "SP\020\233\344\001\022\037\n\031CID_BUDDY_LIST_OPT_RESULT\020\234\344\001*" +
+                        "X\n\tUSER_TYPE\022\025\n\021USER_TYPE_UNKNOWN\020\000\022\026\n\022U" +
+                        "SER_TYPE_PERSONAL\020\001\022\034\n\030USER_TYPE_PUBLIC_" +
+                        "ACCOUNT\020\002*\262\014\n\nERRNO_CODE\022\021\n\rERRNO_CODE_O" +
+                        "K\020\000\022\026\n\022ERRNO_CODE_DEFAULT\020\002\022$\n ERRNO_COD",
+                "E_LOGIN_IN_OTHER_DEVICE\020d\022\032\n\026ERRNO_CODE_" +
+                        "NO_PROTOCOL\020e\022\036\n\032ERRNO_CODE_TAG_NO_PROTO" +
+                        "COL\020f\022\031\n\025ERRNO_CODE_PUSH_QUEUE\020g\022\037\n\033ERRN" +
+                        "O_CODE_LOGON_NO_PHONE_S\020h\022\"\n\036ERRNO_CODE_" +
+                        "HEART_ERR_SESSION_S\020i\022\030\n\024ERRNO_CODE_NOT_" +
+                        "LOGON\020j\022\032\n\026ERRNO_CODE_WITHOUT_TAG\020k\022\032\n\026E" +
+                        "RRNO_CODE_WITHOUT_UID\020l\022\035\n\031ERRNO_CODE_WI" +
+                        "THOUT_TERMID\020m\022\034\n\030ERRNO_CODE_ERR_SESSION" +
+                        "ID\020n\022\033\n\027ERRNO_CODE_TERM_UNALIVE\020o\022\026\n\022ERR" +
+                        "NO_CODE_ERR_UID\020p\022\026\n\022ERRNO_CODE_ERR_PID\020",
+                "q\022\031\n\025ERRNO_CODE_ERR_RESEND\020r\022\026\n\022ERRNO_CO" +
+                        "DE_ERR_TID\020s\022\023\n\016ERRNO_CODE_SQL\020\310\001\022\031\n\024ERR" +
+                        "NO_CODE_DATA_SRAL\020\311\001\022&\n!ERRNO_CODE_NOT_F" +
+                        "IND_TARGET_USERID\020\313\001\022.\n)ERRNO_CODE_DATA_" +
+                        "WAREHOUSING_FAILURE_MYSQL\020\314\001\022.\n)ERRNO_CO" +
+                        "DE_DATA_WAREHOUSING_FAILURE_REDIS\020\315\001\022#\n\036" +
+                        "ERRNO_CODE_DB_SERVER_EXCEPTION\020\316\001\022\"\n\035ERR" +
+                        "NO_CODE_USER_SESSION_ERROR\020\317\001\022\036\n\031ERRNO_C" +
+                        "ODE_USER_NOT_LOGIN\020\320\001\022\035\n\030ERRNO_CODE_USER" +
+                        "_ID_ERROR\020\321\001\022\'\n\"ERRNO_CODE_USER_SEND_TOR",
+                "OUTE_ERROR\020\322\001\022\035\n\030ERRNO_CODE_NOT_DST_PHON" +
+                        "E\020\323\001\022&\n!ERRNO_CODE_DATABASE_QUERY_FAILDE" +
+                        "D\020\324\001\022\036\n\031ERRNO_CODE_DATA_EXCEPTION\020\325\001\022\035\n\030" +
+                        "ERRNO_CODE_NOT_SESSIONID\020\326\001\022\031\n\024ERRNO_COD" +
+                        "E_NOT_PHONE\020\327\001\022\033\n\026ERRNO_CODE_PHONE_ERROR" +
+                        "\020\330\001\022!\n\034ERRNO_CODE_DATABASE_NOT_DATA\020\331\001\022\034" +
+                        "\n\027ERRNO_CODE_SHOW_EXPIRED\020\332\001\022\034\n\027ERRNO_CO" +
+                        "DE_NOT_TOKEN_ID\020\333\001\022\030\n\023ERRNO_CODE_NOT_SHO" +
+                        "W\020\334\001\022\036\n\031ERRNO_CODE_NOT_HUXIN_USER\020\223\003\022\035\n\030" +
+                        "ERRNO_CODE_NOT_DEVICE_ID\020\224\003\022#\n\036ERRNO_COD",
+                "E_BLOCKED_BY_DST_USER\020\365\003\022!\n\034ERRNO_CODE_I" +
+                        "NVALID_USER_INFO\020\315\010\022\037\n\032ERRNO_CODE_INVALI" +
+                        "D_SESSION\020\316\010\022\036\n\031ERRNO_CODE_INVALID_PASSW" +
+                        "D\020\317\010\022+\n&ERRNO_CODE_INVALID_IM_CHAT_TARGE" +
+                        "T_USER\020\261\t\0226\n1ERRNO_CODE_INVALID_IM_CHAT_" +
+                        "EMPTY_BODY_NOT_ALLOWED\020\262\t\022,\n\'ERRNO_CODE_" +
+                        "LOCATIONSHARE_TASK_NOT_EXIST\020\225\n\022-\n(ERRNO" +
+                        "_CODE_LOCATIONSHARE_NOT_INSIDE_TASK\020\226\n*\204" +
+                        "\001\n\013Device_Type\022\025\n\021DeviceType_IPhone\020\001\022\026\n" +
+                        "\022DeviceType_Android\020\002\022\023\n\017DeviceType_IPad",
+                "\020\003\022\031\n\025DeviceType_AndroidPad\020\004\022\026\n\022DeviceT" +
+                        "ype_UNKNOWN\020\005*j\n\020USER_SHOW_STATUS\022\033\n\027USE" +
+                        "R_SHOW_STATUS_NORMAL\020\000\022\034\n\030USER_SHOW_STAT" +
+                        "US_DISABLE\020\001\022\033\n\027USER_SHOW_STATUS_FROZEN\020" +
+                        "\002*Q\n\tUserState\022\025\n\021USER_STATE_ONLINE\020\000\022\026\n" +
+                        "\022USER_STATE_OFFLINE\020\001\022\025\n\021USER_STATE_LOGO" +
+                        "UT\020\003*;\n\nResultCode\022\027\n\023RESULT_CODE_SUCCES" +
+                        "S\020\001\022\024\n\020RESULT_CODE_FAIL\020\002*K\n\nIM_CHANNEL\022" +
+                        "\026\n\022IM_CHANNEL_DEFAULT\020\000\022\022\n\016IM_CHANNEL_SM" +
+                        "S\020\001\022\021\n\rIM_CHANNEL_QQ\020\002"
         };
         com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
                 new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -3244,18 +4719,18 @@ public final class YouMaiBasic {
                 .internalBuildGeneratedFileFrom(descriptorData,
                         new com.google.protobuf.Descriptors.FileDescriptor[]{
                         }, assigner);
-        internal_static_com_youmai_hxsdk_proto_Heart_Beat_descriptor =
+        internal_static_com_proto_basic_Heart_Beat_descriptor =
                 getDescriptor().getMessageTypes().get(0);
-        internal_static_com_youmai_hxsdk_proto_Heart_Beat_fieldAccessorTable = new
+        internal_static_com_proto_basic_Heart_Beat_fieldAccessorTable = new
                 com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-                internal_static_com_youmai_hxsdk_proto_Heart_Beat_descriptor,
-                new java.lang.String[]{});
-        internal_static_com_youmai_hxsdk_proto_Heart_Beat_Ack_descriptor =
+                internal_static_com_proto_basic_Heart_Beat_descriptor,
+                new String[]{});
+        internal_static_com_proto_basic_Heart_Beat_Ack_descriptor =
                 getDescriptor().getMessageTypes().get(1);
-        internal_static_com_youmai_hxsdk_proto_Heart_Beat_Ack_fieldAccessorTable = new
+        internal_static_com_proto_basic_Heart_Beat_Ack_fieldAccessorTable = new
                 com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-                internal_static_com_youmai_hxsdk_proto_Heart_Beat_Ack_descriptor,
-                new java.lang.String[]{});
+                internal_static_com_proto_basic_Heart_Beat_Ack_descriptor,
+                new String[]{});
     }
 
     // @@protoc_insertion_point(outer_class_scope)

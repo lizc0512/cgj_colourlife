@@ -39,11 +39,13 @@ public class AppConfig {
 
     private final static String SOCKET_URL[] = new String[]{"http://192.168.0.42:8000/", "http://test2.im.huxin.biz:8000/", "http://im.ihuxin.net:8000/"};
 
-    private final static String SOCKET_HOST[] = new String[]{"192.168.0.42", "120.24.37.50", "120.77.1.224"};
+    //private final static String SOCKET_HOST[] = new String[]{"192.168.0.42", "120.24.37.50", "120.77.1.224"};
+    private final static String SOCKET_HOST[] = new String[]{"192.168.0.42", "120.24.37.50", "192.168.0.16"};
 
     private final static String DOWNLOAD_HOST[] = new String[]{"http://test2.file.huxin.biz/", "http://test2.file.huxin.biz/", "http://file.ihuxin.net/"};
 
-    private final static int SOCKET_PORT[] = new int[]{8003, 9951, 9951};//8886
+    //private final static int SOCKET_PORT[] = new int[]{8003, 9951, 9951};//8886
+    private final static int SOCKET_PORT[] = new int[]{8003, 9951, 6602};
 
     public static String getShowHost() {
         return SHOW_HOST[LAUNCH_MODE];
@@ -143,5 +145,12 @@ public class AppConfig {
         return DOWNLOAD_IMAGE + fid;
     }
 
+
+    /**
+     * tcp 负载均衡 host
+     */
+    public static String getTcpHost(String uuid) {
+        return getSocketUrl() + "api/v1/sum?userid=" + uuid;
+    }
 
 }

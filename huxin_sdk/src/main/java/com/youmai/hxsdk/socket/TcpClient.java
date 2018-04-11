@@ -3,12 +3,13 @@ package com.youmai.hxsdk.socket;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.protobuf.GeneratedMessage;
+import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.proto.YouMaiBasic;
 import com.youmai.hxsdk.utils.AppUtils;
-import com.youmai.hxsdk.utils.DeviceUtils;
 import com.youmai.hxsdk.utils.LogFile;
 
 import java.io.IOException;
@@ -46,7 +47,6 @@ public class TcpClient extends PduUtil implements Runnable {
 
     private boolean isLogin = false;
 
-    private int mUserId = 0;
     private int mSeqNum = 1; //服务器发送notify消息，SeqNum默认为0
     private int heartBeatCount = 0;
 
@@ -174,25 +174,26 @@ public class TcpClient extends PduUtil implements Runnable {
         int seq_num = getSeqNum();
 
         if (commandId == -1) {
-            pduBase.commandid = getActCode(msg.getClass().getSimpleName().toUpperCase());
+            pduBase.command_id = getActCode(msg.getClass().getSimpleName().toUpperCase());
         } else {
-            pduBase.commandid = commandId;
+            pduBase.command_id = commandId;
         }
 
-        pduBase.body = msg.toByteArray();
-        pduBase.length = msg.getSerializedSize();
+        String uuid = HuxinSdkManager.instance().getUuid();
+        if (TextUtils.isEmpty(uuid)) {
+            Log.e(TAG, "not find user id");
+            return;
+        }
+
+        pduBase.user_id = uuid.getBytes();
         pduBase.seq_id = seq_num;
+        pduBase.length = msg.getSerializedSize();
+        pduBase.body = msg.toByteArray();
 
-        if (!isLogin && mUserId == 0) {
-            pduBase.terminal_token = DeviceUtils.getIMEI(mContext).hashCode();
-            pduBase.data_type = 'u';
-        } else {
-            pduBase.terminal_token = mUserId;
-        }
 
-        Log.v(TAG, "sendProto userId:" + pduBase.terminal_token);
+        Log.v(TAG, "sendProto userId:" + pduBase.user_id);
         Log.v(TAG, "sendProto seq_num:" + seq_num);
-        Log.v(TAG, "sendProto command_id:" + pduBase.commandid);
+        Log.v(TAG, "sendProto command_id:" + pduBase.command_id);
 
         if (callback != null) {
             mCommonListener.put(seq_num, callback);
@@ -258,13 +259,6 @@ public class TcpClient extends PduUtil implements Runnable {
         LogFile.inStance().toFile("tcp is closed");
     }
 
-    /**
-     * 设置用户ID
-     */
-    public void setUserId(int id) {
-        mUserId = id;
-    }
-
 
     /**
      * Socket连接是否是正常的
@@ -323,7 +317,7 @@ public class TcpClient extends PduUtil implements Runnable {
         final int key = pduBase.seq_id;
         String onRecSeqId = "OnRec pduBase seq_num:" + pduBase.seq_id;
         String onRecLength = "OnRec pduBase length:" + pduBase.length;
-        String logCommandId = "common Listener command_id:" + pduBase.commandid;
+        String logCommandId = "common Listener command_id:" + pduBase.command_id;
 
         Log.v(TAG, onRecSeqId);
         Log.v(TAG, onRecLength);
@@ -355,7 +349,7 @@ public class TcpClient extends PduUtil implements Runnable {
     @Override
     public void OnCallback(PduBase pduBase) {
         for (NotifyListener item : mNotifyListener) {
-            if (item.getCommandId() == pduBase.commandid) {
+            if (item.getCommandId() == pduBase.command_id) {
                 item.OnRec(pduBase.body);
                 break;
             }

@@ -26,10 +26,12 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.ProtocolCallBack;
 import com.youmai.hxsdk.config.AppConfig;
+import com.youmai.hxsdk.config.ColorsConfig;
 import com.youmai.hxsdk.db.manager.GreenDBUpdateManager;
 import com.youmai.hxsdk.entity.RespBaseBean;
 import com.youmai.hxsdk.im.IMMsgManager;
 import com.youmai.hxsdk.proto.YouMaiBasic;
+import com.youmai.hxsdk.proto.YouMaiBuddy;
 import com.youmai.hxsdk.proto.YouMaiUser;
 import com.youmai.hxsdk.receiver.HuxinReceiver;
 import com.youmai.hxsdk.socket.NotifyListener;
@@ -42,6 +44,7 @@ import com.youmai.hxsdk.utils.LogFile;
 import com.youmai.hxsdk.utils.StringUtils;
 
 import java.net.InetSocketAddress;
+import java.util.List;
 
 
 public class HuxinService extends Service {
@@ -50,10 +53,6 @@ public class HuxinService extends Service {
 
     public static final String BOOT_SERVICE = "com.youmai.huxin.service.BOOT_SERVICE"; //启动服务
     public static final String IM_LOGIN_OUT = "com.youmai.huxin.service.IM_LOGIN_OUT";  //im login out
-
-    //private static final int HX_ALL_CONFIG = 0;
-    //private static final int HX_ALL_SHOW = 1;
-    //private static final int HX_ALL_CONT = 2;
 
     static HuxinService instance;
 
@@ -148,35 +147,23 @@ public class HuxinService extends Service {
 
         public void close() {
             mClient.close();
-            mClient.setUserId(0);
             mClient.setCallBack(null);
         }
 
 
-        public void connectTcp(final int userId, final String phone, final String session,
-                               InetSocketAddress isa) {
+        public void connectTcp(InetSocketAddress isa) {
             if (mClient == null) {
                 return;
             }
-
-            if (mClient.isConnect() && mClient.isLogin()) {
-                return;
-            }
-
             mClient.close();
             mClient.setRemoteAddress(isa);
 
             TcpClient.IClientListener callback = new TcpClient.IClientListener() {
                 @Override
                 public void connectSuccess() {
-                    HuxinSdkManager.instance().setUserId(userId);
-                    HuxinSdkManager.instance().setPhoneNum(phone);
-                    HuxinSdkManager.instance().setSession(session);
-
-                    tcpLogin(userId, phone, session);
+                    //do nothing
                 }
             };
-            mClient.setUserId(userId);
             mClient.connect(callback);
         }
 
@@ -288,7 +275,6 @@ public class HuxinService extends Service {
 
                     if (mClient.isIdle()) {
                         Log.v(TAG, "tcp is reconnect");
-                        mClient.setUserId(userId);
                         mClient.reConnect();
                     } else if (mClient.isConnect()) {
                         if (!mClient.isLogin()) {  //登录后的重连，不需要二次登录，服务器做支持
@@ -347,18 +333,10 @@ public class HuxinService extends Service {
         String ip = AppUtils.getStringSharedPreferences(mContext, "IP", AppConfig.getSocketHost());
         int port = AppUtils.getIntSharedPreferences(mContext, "PORT", AppConfig.getSocketPort());
 
+        final String uuid = HuxinSdkManager.instance().getUuid();
 
-        final String session = HuxinSdkManager.instance().getSession();
-        final int userId = HuxinSdkManager.instance().getUserId();
-        final String phoneNum = HuxinSdkManager.instance().getPhoneNum();
-
-        if (StringUtils.isEmpty(ip)
-                || port == 0
-                || userId == 0
-                || StringUtils.isEmpty(phoneNum)
-                || StringUtils.isEmpty(session)) {
-            Log.e(TAG, "tcp user info error or phoneNum is empty");
-            //Toast.makeText(mContext, "tcp user info error!", Toast.LENGTH_SHORT).show();
+        if (StringUtils.isEmpty(uuid)) {
+            Log.e(TAG, "find uuid is empty");
             return;
         }
 
@@ -368,12 +346,11 @@ public class HuxinService extends Service {
 
             InetSocketAddress isa = new InetSocketAddress(ip, port);
             mClient.setRemoteAddress(isa);
-            mClient.setUserId(userId);
-
             TcpClient.IClientListener callback = new TcpClient.IClientListener() {
                 @Override
                 public void connectSuccess() {
-                    tcpLogin(userId, phoneNum, session);
+                    //tcpLogin(userId, phoneNum, session);
+                    test();
                 }
             };
             mClient.connect(callback);
@@ -475,4 +452,35 @@ public class HuxinService extends Service {
         mClient.sendProto(user_Login, callback);
     }
 
+
+    private void test() {
+
+        YouMaiBuddy.IMGetOrgReq.Builder builder = YouMaiBuddy.IMGetOrgReq.newBuilder();
+        builder.setOrgId(ColorsConfig.ColorLifeAppId);
+
+        YouMaiBuddy.IMGetOrgReq orgReq = builder.build();
+
+        ReceiveListener callback = new ReceiveListener() {
+            @Override
+            public void OnRec(PduBase pduBase) {
+                try {
+                    YouMaiBuddy.IMGetOrgRsp rsp = YouMaiBuddy.IMGetOrgRsp.parseFrom(pduBase.body);
+                    List<YouMaiBuddy.OrgInfo> list = rsp.getOrgListList();
+
+                    for (YouMaiBuddy.OrgInfo item : list) {
+                        String test1 = item.getAvator();
+                        String test2 = item.getName();
+                        String test3 = item.getOrgId();
+                        String test4 = item.getUsername();
+                        int test5 = item.getType();
+
+                    }
+
+                } catch (InvalidProtocolBufferException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        mClient.sendProto(orgReq, YouMaiBasic.COMMANDID.CID_ORG_LIST_REQ_VALUE, callback);
+    }
 }

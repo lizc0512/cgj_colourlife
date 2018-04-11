@@ -36,7 +36,7 @@ import com.tg.coloursteward.view.MyGridView.NetGridViewRequestListener;
 import com.tg.coloursteward.view.dialog.ToastFactory;
 import com.youmai.hxsdk.http.IPostListener;
 import com.youmai.hxsdk.http.OkHttpConnector;
-import com.youmai.hxsdk.utils.ColorsConfig;
+import com.youmai.hxsdk.config.ColorsConfig;
 import com.youmai.hxsdk.utils.GsonUtil;
 import com.youmai.hxsdk.utils.ListUtils;
 import com.youth.banner.Banner;

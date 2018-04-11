@@ -43,6 +43,7 @@ import com.tg.coloursteward.info.door.DoorOpenLogResp;
 import com.tg.coloursteward.log.Logger;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.ResponseData;
+import com.youmai.hxsdk.HuxinSdkManager;
 
 import android.app.Activity;
 import android.app.ActivityManager;
@@ -566,6 +567,8 @@ public class Tools {
 		if(uuid == null){
 			return false;
 		}
+
+		HuxinSdkManager.instance().setUuid(uuid);
 		String employeeAccount = data.getString("employeeAccount");
 		String realName = data.getString("realname");
 		String password = data.getString("password");

@@ -1,9 +1,15 @@
-package com.youmai.hxsdk.utils;
+package com.youmai.hxsdk.config;
 
 
 import android.content.ContentValues;
 
+import com.youmai.hxsdk.utils.AppUtils;
+
 public class ColorsConfig {
+
+    public static final String ColorLifeAppId = "9959f117-df60-4d1b-a354-776c20ffb8c7";  //彩生活服务集团
+    public static final String ColorLifeAppName = "彩生活服务集团";  //彩生活服务集团
+
 
     private static int LAUNCH_MODE_COLOR = 1; //0 测试       1正式
 

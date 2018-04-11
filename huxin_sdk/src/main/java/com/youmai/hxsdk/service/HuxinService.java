@@ -32,7 +32,7 @@ import com.youmai.hxsdk.entity.RespBaseBean;
 import com.youmai.hxsdk.im.IMMsgManager;
 import com.youmai.hxsdk.proto.YouMaiBasic;
 import com.youmai.hxsdk.proto.YouMaiBuddy;
-import com.youmai.hxsdk.proto.YouMaiUser;
+import com.youmai.hxsdk.proto.YouMaiLogin;
 import com.youmai.hxsdk.receiver.HuxinReceiver;
 import com.youmai.hxsdk.socket.NotifyListener;
 import com.youmai.hxsdk.socket.PduBase;
@@ -151,17 +151,22 @@ public class HuxinService extends Service {
         }
 
 
-        public void connectTcp(InetSocketAddress isa) {
+        public void connectTcp(final String uuid, InetSocketAddress isa) {
             if (mClient == null) {
                 return;
             }
+
+            if (mClient.isConnect() && mClient.isLogin()) {
+                return;
+            }
+
             mClient.close();
             mClient.setRemoteAddress(isa);
 
             TcpClient.IClientListener callback = new TcpClient.IClientListener() {
                 @Override
                 public void connectSuccess() {
-                    //do nothing
+                    tcpLogin(uuid, ColorsConfig.ColorLifeAppId);
                 }
             };
             mClient.connect(callback);
@@ -269,16 +274,14 @@ public class HuxinService extends Service {
         if (!TextUtils.isEmpty(action)) {
             switch (action) {
                 case BOOT_SERVICE:
-                    String mSession = HuxinSdkManager.instance().getSession();
-                    int userId = HuxinSdkManager.instance().getUserId();
-                    String phoneNum = HuxinSdkManager.instance().getPhoneNum();
+                    String uuid = HuxinSdkManager.instance().getUuid();
 
                     if (mClient.isIdle()) {
                         Log.v(TAG, "tcp is reconnect");
                         mClient.reConnect();
                     } else if (mClient.isConnect()) {
                         if (!mClient.isLogin()) {  //登录后的重连，不需要二次登录，服务器做支持
-                            tcpLogin(userId, phoneNum, mSession);
+                            tcpLogin(uuid, ColorsConfig.ColorLifeAppId);
                         }
                     }
                     break;
@@ -349,7 +352,7 @@ public class HuxinService extends Service {
             TcpClient.IClientListener callback = new TcpClient.IClientListener() {
                 @Override
                 public void connectSuccess() {
-                    //tcpLogin(userId, phoneNum, session);
+                    tcpLogin(uuid, ColorsConfig.ColorLifeAppId);
                     test();
                 }
             };
@@ -407,38 +410,27 @@ public class HuxinService extends Service {
 
     /**
      * 发送登录IM服务器请求
-     *
-     * @param userId  用户ID
-     * @param phone   手机号码
-     * @param session 用户session
      */
-    private void tcpLogin(final int userId, final String phone, final String session) {
+    private void tcpLogin(final String uuId, final String appId) {
         String imei = DeviceUtils.getIMEI(mContext);
-        YouMaiUser.User_Login.Builder login = YouMaiUser.User_Login.newBuilder();
-        login.setUserId(userId);
-        login.setPhone(phone);
-        login.setSessionId(session);
-        login.setDeviceId(imei);
-        login.setDeviceType(YouMaiBasic.Device_Type.DeviceType_Android);
-        login.setVersion(2);
-
-        YouMaiUser.User_Login user_Login = login.build();
+        YouMaiLogin.User_Login.Builder builder = YouMaiLogin.User_Login.newBuilder();
+        builder.setUserId(uuId);
+        builder.setAppId(appId);
+        builder.setDeviceId(imei);
+        builder.setDeviceType(YouMaiBasic.Device_Type.DeviceType_Android);
+        builder.setVersion(1);
+        YouMaiLogin.User_Login login = builder.build();
 
         ReceiveListener callback = new ReceiveListener() {
             @Override
             public void OnRec(PduBase pduBase) {
                 try {
-                    YouMaiUser.User_Login_Ack ack = YouMaiUser.User_Login_Ack.parseFrom(pduBase.body);
+                    YouMaiLogin.User_Login_Ack ack = YouMaiLogin.User_Login_Ack.parseFrom(pduBase.body);
                     if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_OK) {
                         //Toast.makeText(mContext, "socket登录成功", Toast.LENGTH_SHORT).show();
-                        LogFile.inStance().toFile("phone=" + phone + " & userId=" + userId
-                                + " & session=" + session + "socket login success");
                         mClient.setLogin(true);
                     } else {
                         mClient.setLogin(false);
-                        LogFile.inStance().toFile("phone=" + phone + " & userId=" + userId
-                                + " & session=" + session + "socket login fail and error code:" + ack.getErrerNo());
-                        //Toast.makeText(mContext, getString(R.string.hx_toast_58) + ack.getErrerNo(), Toast.LENGTH_SHORT).show();
                         ProtocolCallBack sCallBack = RespBaseBean.getsCallBack();
                         if (sCallBack != null) {
                             sCallBack.sessionExpire();
@@ -449,7 +441,7 @@ public class HuxinService extends Service {
                 }
             }
         };
-        mClient.sendProto(user_Login, callback);
+        mClient.sendProto(login, callback);
     }
 
 

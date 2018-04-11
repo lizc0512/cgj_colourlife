@@ -527,7 +527,7 @@ public class HuxinSdkManager {
                     AppUtils.setIntSharedPreferences(mContext, "PORT", port);
 
                     InetSocketAddress isa = new InetSocketAddress(ip, port);
-                    connectTcp(isa);
+                    connectTcp(uuid, isa);
                 }
             }
         });
@@ -623,11 +623,12 @@ public class HuxinSdkManager {
     /**
      * 用户tcp协议重登录，仅仅用于测试
      *
+     * @param uuid
      * @param isa
      */
-    public void connectTcp(InetSocketAddress isa) {
+    public void connectTcp(String uuid, InetSocketAddress isa) {
         if (mContext != null && binded == BIND_STATUS.BINDED) {
-            huxinService.connectTcp(isa);
+            huxinService.connectTcp(uuid, isa);
         }
     }
 

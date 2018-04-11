@@ -14,12 +14,20 @@ import static com.youmai.hxsdk.contact.search.cn.CNPinyinFactory.PRE_CHAR;
  */
 public class CNPinyin <T extends CN> implements Parcelable, Comparable<CNPinyin<T>> {
 
-    List<String> headerFilter = new ArrayList<>();
+    private char[] CHARS = {'↑', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K',
+            'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
+
+    public static List<Character> characters = new ArrayList<>();
+    private List<String> headerFilter = new ArrayList<>();
 
     {
         headerFilter.add(new Contact("↑###@@**新的朋友**@@###").chinese());
         headerFilter.add(new Contact("↑群聊").chinese());
         headerFilter.add(new Contact("↑第三个标签").chinese());
+
+        for (char ch: CHARS) {
+            characters.add(ch);
+        }
     }
 
     protected CNPinyin(Parcel in) {
@@ -84,12 +92,12 @@ public class CNPinyin <T extends CN> implements Parcelable, Comparable<CNPinyin<
     }
 
     int compareValue() {
-        if (firstChar == DEF_CHAR) {
+        if (!characters.contains(firstChar)) {
             return 'Z' + 1;
         }
-
-//        Log.e("YW", "firstChar: " + firstChar + "\tpinyins.toString(): " + data.chinese()
-//        + "\theaderFilter: " + headerFilter.get(0));
+        /*if (firstChar == DEF_CHAR) {
+            return 'Z' + 1;
+        }*/
 
         if (firstChar == PRE_CHAR && headerFilter.contains(data.chinese())) {
             return 'A' - 1;
@@ -104,6 +112,8 @@ public class CNPinyin <T extends CN> implements Parcelable, Comparable<CNPinyin<
             String chinese1 = data.chinese();
             String chinese2 = tcnPinyin.data.chinese();
             return chinese1.compareTo(chinese2);
+        } else {
+
         }
         return compare;
     }

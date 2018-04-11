@@ -70,6 +70,7 @@ public class StickyHeaderDecoration extends RecyclerView.ItemDecoration {
 
                     header.setTranslationX(left);
                     header.setTranslationY(top);
+                    //过滤不绘制item头
                     if (!mAdapter.specialIndex(adapterPos) && !isFilter(adapterPos)) {
                         header.draw(canvas);
                     }

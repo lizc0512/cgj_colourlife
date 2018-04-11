@@ -612,7 +612,7 @@ public class IMMsgManager {
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(context)
                         .setSmallIcon(getNotificationIcon())
-                        .setContentTitle(context.getString(R.string.from) + HuxinSdkManager.instance().getContactName(srcPhone))
+                        //.setContentTitle(context.getString(R.string.from) + HuxinSdkManager.instance().getContactName(srcPhone))
                         .setContentText(content)
                         .setTicker(content)
                         //.setDefaults(Notification.DEFAULT_LIGHTS)
@@ -624,7 +624,7 @@ public class IMMsgManager {
         // Creates an explicit intent for an Activity in your app
         Intent resultIntent = new Intent(context, IMConnectionActivity.class);
         resultIntent.putExtra(IMConnectionActivity.DST_PHONE, srcPhone);
-        resultIntent.putExtra(IMConnectionActivity.DST_NAME, HuxinSdkManager.instance().getContactName(srcPhone));
+        //resultIntent.putExtra(IMConnectionActivity.DST_NAME, HuxinSdkManager.instance().getContactName(srcPhone));
         // The stack builder object will contain an artificial back stack for the
         // started Activity.
         // This ensures that navigating backward from the Activity leads out of

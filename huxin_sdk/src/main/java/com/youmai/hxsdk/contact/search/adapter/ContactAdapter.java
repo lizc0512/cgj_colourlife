@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.contact.search.cn.CNPinyin;
 import com.youmai.hxsdk.contact.search.stickyheader.StickyHeaderAdapter;
-import com.youmai.hxsdk.contact.search.cn.Contact;
+import com.youmai.hxsdk.db.bean.Contact;
 
 import java.util.List;
 
@@ -36,12 +36,11 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactH
                 .inflate(R.layout.contacts_fragment_item, parent, false));
     }
 
-
     @Override
     public void onBindViewHolder(ContactHolder holder, int position) {
         Contact contact = cnPinyinList.get(position).data;
-        holder.iv_header.setImageResource(contact.getIconUrl());
-        holder.tv_name.setText(contact.getDisplayName());
+        holder.iv_header.setImageResource(Integer.parseInt(contact.getAvator()));
+        holder.tv_name.setText(contact.getNick_name());
     }
 
     @Override
@@ -52,14 +51,13 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactH
     @Override
     public boolean specialIndex(int childAdapterPosition) {
         CNPinyin<Contact> contactCNPinyin = cnPinyinList.get(childAdapterPosition);
-        return contactCNPinyin.getHeaderFilter().contains(contactCNPinyin.data.getDisplayName());
+        return contactCNPinyin.getHeaderFilter().contains(contactCNPinyin.data.getNick_name());
     }
 
     @Override
     public String index(int childAdapterPosition) {
         return cnPinyinList.get(childAdapterPosition).getFirstChar() + "";
     }
-
 
     @Override
     public void onBindHeaderViewHolder(HeaderHolder holder, int childAdapterPosition) {

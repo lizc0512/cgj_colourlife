@@ -3,6 +3,7 @@ package com.youmai.hxsdk.db.helper;
 import android.content.Context;
 
 import com.youmai.hxsdk.db.dao.CacheMsgBeanDao;
+import com.youmai.hxsdk.db.dao.ContactDao;
 import com.youmai.hxsdk.db.dao.DaoMaster;
 
 import org.greenrobot.greendao.database.Database;
@@ -37,7 +38,7 @@ public class HMROpenHelper extends DaoMaster.DevOpenHelper {
     @Override
     public void onUpgrade(Database db, int oldVersion, int newVersion) {
         //操作数据库的更新
-        MigrationHelper.migrate(db, CacheMsgBeanDao.class);
+        MigrationHelper.migrate(db, CacheMsgBeanDao.class, ContactDao.class);
     }
 
 }

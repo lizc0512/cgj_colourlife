@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.contact.search.cn.CNPinyin;
-import com.youmai.hxsdk.contact.search.cn.Contact;
+import com.youmai.hxsdk.db.bean.Contact;
 
 import java.util.ArrayList;
 import java.util.regex.Matcher;
@@ -36,10 +36,6 @@ public class GlobalSearchActivity extends AppCompatActivity implements View.OnCl
     private TextView mBtnBackMain;
     private TextView mBtnBack;
     private TextView mSearchStatus;
-
-    private int MAX_CALLBACK_TIME;
-    private int mCurrCallbacktime = 0;
-    private boolean mFinded;
 
     private ArrayList<CNPinyin<Contact>> contactList;
 
@@ -116,7 +112,6 @@ public class GlobalSearchActivity extends AppCompatActivity implements View.OnCl
         };
     }
 
-
     @Override
     public void onClick(View v) {
         if (v == mBtnBack) {
@@ -134,16 +129,4 @@ public class GlobalSearchActivity extends AppCompatActivity implements View.OnCl
         }
     }
 
-    /**
-     * 是否是数字
-     *
-     * @param str
-     * @return
-     */
-    public static boolean isNumber(String str) {
-
-        Pattern pattern = Pattern.compile("[0-9]*");
-        Matcher isNum = pattern.matcher(str);
-        return isNum.matches();
-    }
 }

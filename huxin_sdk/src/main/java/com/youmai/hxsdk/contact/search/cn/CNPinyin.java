@@ -3,10 +3,11 @@ package com.youmai.hxsdk.contact.search.cn;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.youmai.hxsdk.db.bean.Contact;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.youmai.hxsdk.contact.search.cn.CNPinyinFactory.DEF_CHAR;
 import static com.youmai.hxsdk.contact.search.cn.CNPinyinFactory.PRE_CHAR;
 
 /**

@@ -7,7 +7,7 @@ import com.youmai.hxsdk.contact.search.cn.CN;
 /**
  * Created by you on 2017/9/11.
  */
-public class Contact implements CN, Comparable<Contact> {
+public class Contact implements CN {
 
     private int contactId; //id
     private int iconUrl; //头像url
@@ -66,8 +66,4 @@ public class Contact implements CN, Comparable<Contact> {
                 '}';
     }
 
-    @Override
-    public int compareTo(@NonNull Contact o) {
-        return 0;
-    }
 }

@@ -114,7 +114,9 @@ public final class CNPinyinFactory {
         if (pinyins != null && pinyins.length > 0) {
             String firstPinying = pinyins[0];
             if (firstPinying.length() > 0) {
-                return charToUpperCase(firstPinying.charAt(0));
+                if (CNPinyin.characters.contains(firstPinying.charAt(0))) {
+                    return charToUpperCase(firstPinying.charAt(0));
+                }
             }
         }
         return DEF_CHAR;

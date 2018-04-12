@@ -177,11 +177,7 @@ public class SendMsgService extends IntentService {
                     msgBean.getMsg().setMsgId(msgId);
 
                     if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_OK) {
-                        if (ack.getIsTargetOnline()) {
-                            updateUI(msgBean, CacheMsgBean.SEND_SUCCEED, null, SEND_MSG_END);
-                        } else {
-
-                        }
+                        updateUI(msgBean, CacheMsgBean.SEND_SUCCEED, null, SEND_MSG_END);
                     } else if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_ERR_SESSIONID) {
                         ProtocolCallBack sCallBack = RespBaseBean.getsCallBack();
                         if (sCallBack != null) {
@@ -227,11 +223,7 @@ public class SendMsgService extends IntentService {
                     msgBean.getMsg().setMsgId(msgId);
 
                     if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_OK) {
-                        if (ack.getIsTargetOnline()) {
-                            updateUI(msgBean, CacheMsgBean.SEND_SUCCEED);
-                        } else {
-
-                        }
+                        updateUI(msgBean, CacheMsgBean.SEND_SUCCEED);
                     } else if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_NOT_HUXIN_USER) {
                         updateUI(msgBean, CacheMsgBean.SEND_FAILED, NOT_HUXIN_USER);
                     } else {
@@ -454,13 +446,8 @@ public class SendMsgService extends IntentService {
                     long msgId = ack.getMsgId();
                     msgBean.getMsg().setMsgId(msgId);
 
-
                     if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_OK) {
-                        if (ack.getIsTargetOnline()) {
-                            updateUI(msgBean, CacheMsgBean.SEND_SUCCEED, null, SEND_MSG_END);
-                        } else {
-
-                        }
+                        updateUI(msgBean, CacheMsgBean.SEND_SUCCEED, null, SEND_MSG_END);
                     } else if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_NOT_HUXIN_USER) {
                         updateUI(msgBean, CacheMsgBean.SEND_FAILED, NOT_HUXIN_USER, SEND_MSG_END);
                     } else {
@@ -492,11 +479,7 @@ public class SendMsgService extends IntentService {
                     msgBean.getMsg().setMsgId(msgId);
 
                     if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_OK) {
-                        if (ack.getIsTargetOnline()) {
-                            updateUI(msgBean, CacheMsgBean.SEND_SUCCEED, null, SEND_MSG_END);
-                        } else {
-
-                        }
+                        updateUI(msgBean, CacheMsgBean.SEND_SUCCEED, null, SEND_MSG_END);
                     } else if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_NOT_HUXIN_USER) {
                         updateUI(msgBean, CacheMsgBean.SEND_FAILED, NOT_HUXIN_USER, SEND_MSG_END);
                     } else {
@@ -536,11 +519,7 @@ public class SendMsgService extends IntentService {
                     msgBean.getMsg().setMsgId(msgId);
 
                     if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_OK) {
-                        if (ack.getIsTargetOnline()) {
-                            updateUI(msgBean, CacheMsgBean.SEND_SUCCEED, null, SEND_MSG_END);
-                        } else {
-
-                        }
+                        updateUI(msgBean, CacheMsgBean.SEND_SUCCEED, null, SEND_MSG_END);
                     } else if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_NOT_HUXIN_USER) {
                         updateUI(msgBean, CacheMsgBean.SEND_FAILED, NOT_HUXIN_USER, SEND_MSG_END);
                     }
@@ -575,11 +554,7 @@ public class SendMsgService extends IntentService {
                     msgBean.getMsg().setMsgId(msgId);
 
                     if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_OK) {
-                        if (ack.getIsTargetOnline()) {
-                            updateUI(msgBean, CacheMsgBean.SEND_SUCCEED, null, SEND_MSG_END);
-                        } else {
-
-                        }
+                        updateUI(msgBean, CacheMsgBean.SEND_SUCCEED, null, SEND_MSG_END);
                     } else if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_NOT_HUXIN_USER) {
                         updateUI(msgBean, CacheMsgBean.SEND_FAILED, NOT_HUXIN_USER, SEND_MSG_END);
                     } else {

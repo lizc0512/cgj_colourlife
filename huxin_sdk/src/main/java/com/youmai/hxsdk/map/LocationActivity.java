@@ -561,18 +561,9 @@ public class LocationActivity extends SdkBaseActivity implements
                     newMsgBean.setMsgId(msgId);
 
                     if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_OK) {
-
-                        if (ack.getIsTargetOnline()) {
-                            /*String log = mContext.getString(R.string.hx_toast_30);
-                            Toast.makeText(mContext, log, Toast.LENGTH_SHORT).show();*/
-
-                            newMsgBean.setMsgStatus(CacheMsgBean.SEND_SUCCEED);
-                            //add to db
-                            CacheMsgHelper.instance(mContext).insertOrUpdate(newMsgBean);
-                        } else {
-
-                        }
-
+                        newMsgBean.setMsgStatus(CacheMsgBean.SEND_SUCCEED);
+                        //add to db
+                        CacheMsgHelper.instance(mContext).insertOrUpdate(newMsgBean);
                         if (null != listener) {
                             listener.onProgress(IMConst.IM_LOCATION_VALUE, 1.00, "location");
                             listener.onImSuccess(IMConst.IM_LOCATION_VALUE, fileBean);

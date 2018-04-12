@@ -942,17 +942,13 @@ public class HuxinSdkManager {
                                             long msgId = ack.getMsgId();
 
                                             if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_OK) {
-                                                if (ack.getIsTargetOnline()) {
-                                                    Toast.makeText(mContext, mContext.getString(R.string.hx_toast_29), Toast.LENGTH_SHORT).show();
-                                                } else {
-
-                                                }
+                                                Toast.makeText(mContext, mContext.getString(R.string.hx_toast_29), Toast.LENGTH_SHORT).show();
                                                 if (null != listener) {
                                                     listener.onImSuccess(IMConst.IM_AUDIO_VALUE, fileBean);
                                                 }
 
                                             } else if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_NOT_HUXIN_USER) {
-                                                //Todo: 非呼信用户
+                                                // 非呼信用户
                                                 if (null != listener) {
                                                     listener.onImNotUser(IMConst.IM_AUDIO_VALUE, msgId);
                                                 }
@@ -1123,16 +1119,9 @@ public class HuxinSdkManager {
                                             newMsgBean.setMsgId(msgId);
 
                                             if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_OK) {
-                                                if (ack.getIsTargetOnline()) {
-                                                    newMsgBean.setMsgStatus(CacheMsgBean.SEND_SUCCEED);
-                                                    //add to db
-                                                    CacheMsgHelper.instance(mContext).insertOrUpdate(newMsgBean);
-                                                    //Toast.makeText(mContext, mContext.getString(R.string.hx_toast_21), Toast.LENGTH_SHORT).show();
-
-                                                } else {
-
-                                                }
-
+                                                newMsgBean.setMsgStatus(CacheMsgBean.SEND_SUCCEED);
+                                                //add to db
+                                                CacheMsgHelper.instance(mContext).insertOrUpdate(newMsgBean);
                                                 if (null != listener) {
                                                     listener.onImSuccess(IMConst.IM_FILE_VALUE, fileBean);
                                                 }
@@ -1322,16 +1311,10 @@ public class HuxinSdkManager {
                                             newMsgBean.setMsgId(msgId);
 
                                             if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_OK) {
-                                                if (ack.getIsTargetOnline()) {
-                                                    /*String log = mContext.getString(R.string.hx_phiz_item_send_pic_success);
-                                                    Toast.makeText(mContext, log, Toast.LENGTH_SHORT).show();*/
-                                                    if (isSaveDB) {
-                                                        //add to db
-                                                        newMsgBean.setMsgStatus(CacheMsgBean.SEND_SUCCEED);
-                                                        CacheMsgHelper.instance(mContext).insertOrUpdate(newMsgBean);
-                                                    }
-                                                } else {
-
+                                                if (isSaveDB) {
+                                                    //add to db
+                                                    newMsgBean.setMsgStatus(CacheMsgBean.SEND_SUCCEED);
+                                                    CacheMsgHelper.instance(mContext).insertOrUpdate(newMsgBean);
                                                 }
 
                                                 if (null != listener) {
@@ -1679,16 +1662,10 @@ public class HuxinSdkManager {
                     newMsgBean.setMsgId(msgId);
 
                     if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_OK) {
-                        if (ack.getIsTargetOnline()) {
-                            /*String log = mContext.getString(R.string.hx_phiz_item_send_video_success);
-                            Toast.makeText(mContext, log, Toast.LENGTH_SHORT).show();*/
-                            if (isSaveDB) {
-                                //add to db
-                                newMsgBean.setMsgStatus(CacheMsgBean.SEND_SUCCEED);
-                                CacheMsgHelper.instance(mContext).insertOrUpdate(newMsgBean);
-                            }
-                        } else {
-
+                        if (isSaveDB) {
+                            //add to db
+                            newMsgBean.setMsgStatus(CacheMsgBean.SEND_SUCCEED);
+                            CacheMsgHelper.instance(mContext).insertOrUpdate(newMsgBean);
                         }
 
                         if (null != listener) {

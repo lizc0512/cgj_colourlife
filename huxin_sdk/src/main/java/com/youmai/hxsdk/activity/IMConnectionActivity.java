@@ -666,7 +666,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
                 .setMsgTime(System.currentTimeMillis())
                 .setMsgStatus(CacheMsgBean.SEND_GOING)
                 .setSenderPhone(HuxinSdkManager.instance().getPhoneNum())
-                .setSenderUserId(HuxinSdkManager.instance().getUserId())
+                .setSenderUserId(HuxinSdkManager.instance().getUuid())
                 .setReceiverPhone(targetPhone);
     }
 

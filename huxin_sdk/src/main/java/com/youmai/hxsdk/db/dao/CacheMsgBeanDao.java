@@ -29,8 +29,8 @@ public class CacheMsgBeanDao extends AbstractDao<CacheMsgBean, Long> {
         public final static Property MsgType = new Property(2, int.class, "msgType", false, "MSG_TYPE");
         public final static Property MsgStatus = new Property(3, int.class, "msgStatus", false, "MSG_STATUS");
         public final static Property MsgTime = new Property(4, long.class, "msgTime", false, "MSG_TIME");
-        public final static Property SenderUserId = new Property(5, int.class, "senderUserId", false, "SENDER_USER_ID");
-        public final static Property ReceiverUserId = new Property(6, int.class, "receiverUserId", false, "RECEIVER_USER_ID");
+        public final static Property SenderUserId = new Property(5, String.class, "senderUserId", false, "SENDER_USER_ID");
+        public final static Property ReceiverUserId = new Property(6, String.class, "receiverUserId", false, "RECEIVER_USER_ID");
         public final static Property SenderPhone = new Property(7, String.class, "senderPhone", false, "SENDER_PHONE");
         public final static Property ReceiverPhone = new Property(8, String.class, "receiverPhone", false, "RECEIVER_PHONE");
         public final static Property TargetPhone = new Property(9, String.class, "targetPhone", false, "TARGET_PHONE");
@@ -56,8 +56,8 @@ public class CacheMsgBeanDao extends AbstractDao<CacheMsgBean, Long> {
                 "\"MSG_TYPE\" INTEGER NOT NULL ," + // 2: msgType
                 "\"MSG_STATUS\" INTEGER NOT NULL ," + // 3: msgStatus
                 "\"MSG_TIME\" INTEGER NOT NULL ," + // 4: msgTime
-                "\"SENDER_USER_ID\" INTEGER NOT NULL ," + // 5: senderUserId
-                "\"RECEIVER_USER_ID\" INTEGER NOT NULL ," + // 6: receiverUserId
+                "\"SENDER_USER_ID\" TEXT," + // 5: senderUserId
+                "\"RECEIVER_USER_ID\" TEXT," + // 6: receiverUserId
                 "\"SENDER_PHONE\" TEXT," + // 7: senderPhone
                 "\"RECEIVER_PHONE\" TEXT," + // 8: receiverPhone
                 "\"TARGET_PHONE\" TEXT," + // 9: targetPhone
@@ -87,8 +87,16 @@ public class CacheMsgBeanDao extends AbstractDao<CacheMsgBean, Long> {
         stmt.bindLong(3, entity.getMsgType());
         stmt.bindLong(4, entity.getMsgStatus());
         stmt.bindLong(5, entity.getMsgTime());
-        stmt.bindLong(6, entity.getSenderUserId());
-        stmt.bindLong(7, entity.getReceiverUserId());
+ 
+        String senderUserId = entity.getSenderUserId();
+        if (senderUserId != null) {
+            stmt.bindString(6, senderUserId);
+        }
+ 
+        String receiverUserId = entity.getReceiverUserId();
+        if (receiverUserId != null) {
+            stmt.bindString(7, receiverUserId);
+        }
  
         String senderPhone = entity.getSenderPhone();
         if (senderPhone != null) {
@@ -128,8 +136,16 @@ public class CacheMsgBeanDao extends AbstractDao<CacheMsgBean, Long> {
         stmt.bindLong(3, entity.getMsgType());
         stmt.bindLong(4, entity.getMsgStatus());
         stmt.bindLong(5, entity.getMsgTime());
-        stmt.bindLong(6, entity.getSenderUserId());
-        stmt.bindLong(7, entity.getReceiverUserId());
+ 
+        String senderUserId = entity.getSenderUserId();
+        if (senderUserId != null) {
+            stmt.bindString(6, senderUserId);
+        }
+ 
+        String receiverUserId = entity.getReceiverUserId();
+        if (receiverUserId != null) {
+            stmt.bindString(7, receiverUserId);
+        }
  
         String senderPhone = entity.getSenderPhone();
         if (senderPhone != null) {
@@ -166,8 +182,8 @@ public class CacheMsgBeanDao extends AbstractDao<CacheMsgBean, Long> {
             cursor.getInt(offset + 2), // msgType
             cursor.getInt(offset + 3), // msgStatus
             cursor.getLong(offset + 4), // msgTime
-            cursor.getInt(offset + 5), // senderUserId
-            cursor.getInt(offset + 6), // receiverUserId
+            cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // senderUserId
+            cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6), // receiverUserId
             cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7), // senderPhone
             cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8), // receiverPhone
             cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9), // targetPhone
@@ -184,8 +200,8 @@ public class CacheMsgBeanDao extends AbstractDao<CacheMsgBean, Long> {
         entity.setMsgType(cursor.getInt(offset + 2));
         entity.setMsgStatus(cursor.getInt(offset + 3));
         entity.setMsgTime(cursor.getLong(offset + 4));
-        entity.setSenderUserId(cursor.getInt(offset + 5));
-        entity.setReceiverUserId(cursor.getInt(offset + 6));
+        entity.setSenderUserId(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
+        entity.setReceiverUserId(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
         entity.setSenderPhone(cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7));
         entity.setReceiverPhone(cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8));
         entity.setTargetPhone(cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9));

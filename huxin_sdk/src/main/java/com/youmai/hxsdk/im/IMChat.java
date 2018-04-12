@@ -4,6 +4,7 @@ import com.youmai.hxsdk.chat.MsgContent;
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
 import com.youmai.hxsdk.im.cache.JsonFormat;
 import com.youmai.hxsdk.proto.YouMaiChat;
+import com.youmai.hxsdk.proto.YouMaiMsg;
 import com.youmai.hxsdk.push.utils.PushJsonUtils;
 import com.youmai.hxsdk.socket.IMContentType;
 import com.youmai.hxsdk.socket.IMContentUtil;
@@ -20,13 +21,13 @@ public class IMChat {
     private String mJsonBody;
     private MsgContent mContent;
 
-    private YouMaiChat.IMChat_Personal mImChat;
+    private YouMaiMsg.MsgData mImChat;
     private CacheMsgBean mMsgBean;
 
-    public IMChat(YouMaiChat.IMChat_Personal imChat) {
+    public IMChat(YouMaiMsg.MsgData imChat) {
         mImChat = imChat;
-        mJsonBody = imChat.getBody();
-        mMsgType = getMsgType();
+        mJsonBody = imChat.getMsgContent();
+        mMsgType = imChat.getContentType().getNumber();
         mContent = new MsgContent(mMsgType, mJsonBody);
         updateCacheBean();
     }
@@ -45,11 +46,10 @@ public class IMChat {
 
     private void updateCacheBean() {
         mMsgBean = new CacheMsgBean();
-        mMsgBean.setReceiverPhone(mImChat.getTargetPhone())
-                .setSenderPhone(mImChat.getSrcPhone())
-                .setSenderUserId(mImChat.getSrcUsrId())
-                .setReceiverUserId(mImChat.getTargetUserId())
-                .setTargetPhone(mImChat.getSrcPhone())
+        mMsgBean.setReceiverPhone(mImChat.getDestUserId())
+                .setSenderPhone(mImChat.getSrcUserId())
+                .setSenderUserId(mImChat.getSrcUserId())
+                .setReceiverUserId(mImChat.getDestUserId())
                 .setMsgTime(System.currentTimeMillis())
                 .setMsgStatus(CacheMsgBean.RECEIVE_UNREAD)
                 .setMsgId(mImChat.getMsgId())
@@ -80,14 +80,7 @@ public class IMChat {
      * @return
      */
     public int getMsgType() {
-        int contentType = mImChat.getContentType();
-        int msgType = parseMsgType(contentType);
-        if (msgType < -1) {
-            if (contentType != 0) {
-                msgType = parseMsgType(contentType);
-            }
-        }
-        return msgType;
+        return mMsgType;
     }
 
     private int parseMsgType(int contentType) {
@@ -127,7 +120,7 @@ public class IMChat {
     }
 
 
-    public YouMaiChat.IMChat_Personal getImChat() {
+    public YouMaiMsg.MsgData getImChat() {
         return mImChat;
     }
 

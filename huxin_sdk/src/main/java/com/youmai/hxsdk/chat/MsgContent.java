@@ -3,7 +3,7 @@ package com.youmai.hxsdk.chat;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.youmai.hxsdk.im.IMConst;
+import com.youmai.hxsdk.proto.YouMaiMsg;
 import com.youmai.hxsdk.socket.IMContentUtil;
 
 /**
@@ -24,22 +24,22 @@ public class MsgContent implements Parcelable {
         parser.parseBody();
 
         switch (type) {
-            case IMConst.IM_TEXT_VALUE:
+            case YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_TEXT_VALUE:
                 mText = new ContentText(parser);
                 break;
-            case IMConst.IM_IMAGE_VALUE:
+            case YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_IMAGE_VALUE:
                 mPicture = new ContentPicture(parser);
                 break;
-            case IMConst.IM_AUDIO_VALUE:
+            case YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_AUDIO_VALUE:
                 mAudio = new ContentAudio(parser);
                 break;
-            case IMConst.IM_VIDEO_VALUE:
+            case YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_VIDEO_VALUE:
                 mVideo = new ContentVideo(parser);
                 break;
-            case IMConst.IM_LOCATION_VALUE:
+            case YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_LOCATION_VALUE:
                 mLocation = new ContentLocation(parser);
                 break;
-            case IMConst.IM_FILE_VALUE:
+            case YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_FILE_VALUE:
                 mFile = new ContentFile(parser);
                 break;
             default:

@@ -42,7 +42,7 @@ public class PhotoPreViewActivity extends SdkPhotoActivity implements View.OnCli
             if (!file.exists()) {
                 return;
             }
-            int userId = HuxinSdkManager.instance().getUserId();
+            String userId = HuxinSdkManager.instance().getUuid();
             HuxinSdkManager.instance().postPicture(userId, mTargetPhone, file, mImagePath,
                     true, FileSendListenerImpl.getListener());
             if (Build.MODEL != null && Build.MODEL.startsWith("OPPO R9m")) {

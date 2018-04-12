@@ -37,6 +37,7 @@ import com.youmai.hxsdk.interfaces.OnChatMsg;
 import com.youmai.hxsdk.proto.YouMaiBasic;
 import com.youmai.hxsdk.proto.YouMaiBulletin;
 import com.youmai.hxsdk.proto.YouMaiChat;
+import com.youmai.hxsdk.proto.YouMaiMsg;
 import com.youmai.hxsdk.proto.YouMaiUser;
 import com.youmai.hxsdk.socket.NotifyListener;
 import com.youmai.hxsdk.utils.AppUtils;
@@ -258,15 +259,12 @@ public class IMMsgManager {
         @Override
         public void OnRec(byte[] data) {
             try {
-                YouMaiChat.IMChat_Personal_Notify notify = YouMaiChat.IMChat_Personal_Notify.parseFrom(data);
-                YouMaiChat.IMChat_Personal imchat = notify.getImchat();
+                YouMaiMsg.ChatMsg notify=YouMaiMsg.ChatMsg.parseFrom(data);
+                YouMaiMsg.MsgData imChat= notify.getData();
 
-                //中转
-                //IMChat.getInstance().init(imchat);
-                IMChat im = new IMChat(imchat);
+                IMChat im = new IMChat(imChat);
 
-                long msgId = imchat.getMsgId();
-                HuxinSdkManager.instance().sendMsgReply(imchat.getMsgId());
+                HuxinSdkManager.instance().sendMsgReply(imChat.getMsgId());
 
                 parseCharMsg(im);
                 notifyMsg(im, false);
@@ -391,7 +389,7 @@ public class IMMsgManager {
     }
 
     public void notifyMsg(IMChat msg, boolean isFormPush) {
-        String srcPhone = msg.getImChat().getSrcPhone();
+        String srcPhone = msg.getImChat().getSrcUserId();
         String newMsgTip = mContext.getString(R.string.hx_hook_strategy_msg);
         if (msg.getMsgType() == IMConst.IM_TEXT_VALUE) {  //文字
             ContentText text = msg.getContent().getText();

@@ -498,7 +498,7 @@ public class LocationActivity extends SdkBaseActivity implements
                 + "&size=600*400&traffic=1&markers=mid,0xff0000,A:" + longitude
                 + "," + latitude + "&key=" + AppConfig.staticMapKey;
 
-        final int userId = HuxinSdkManager.instance().getUserId();
+        final String userId = HuxinSdkManager.instance().getUuid();
 
         final FileBean fileBean = new FileBean().setUserId(userId)
                 .setFileMsgType(IMConst.IM_LOCATION_VALUE)
@@ -570,26 +570,7 @@ public class LocationActivity extends SdkBaseActivity implements
                             //add to db
                             CacheMsgHelper.instance(mContext).insertOrUpdate(newMsgBean);
                         } else {
-                            HttpPushManager.pushMsgForLocation(userId, dstPhone,
-                                    finalLongitude, finalLatitude,
-                                    zoomLevel, finalAddress,
-                                    new HttpPushManager.PushListener() {
-                                        @Override
-                                        public void success(String msg) {
-                                            LogUtils.w(TAG, msg);
-                                            /*String log = mContext.getString(R.string.hx_toast_30);
-                                            Toast.makeText(mContext, log, Toast.LENGTH_SHORT).show();*/
 
-                                            newMsgBean.setMsgStatus(CacheMsgBean.SEND_SUCCEED);
-                                            //add to db
-                                            CacheMsgHelper.instance(mContext).insertOrUpdate(newMsgBean);
-                                        }
-
-                                        @Override
-                                        public void fail(String msg) {
-
-                                        }
-                                    });
                         }
 
                         if (null != listener) {
@@ -625,7 +606,7 @@ public class LocationActivity extends SdkBaseActivity implements
             }
         };
 
-        HuxinSdkManager.instance().sendLocation(userId, dstPhone,
+        HuxinSdkManager.instance().sendLocation(userId,
                 longitude, latitude, zoomLevel, address, callback);
         finish();
     }

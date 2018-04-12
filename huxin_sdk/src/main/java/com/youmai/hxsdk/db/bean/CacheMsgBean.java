@@ -280,6 +280,7 @@ public class CacheMsgBean implements Parcelable {
         this.progress = bean.getProgress();
     }
 
+
     @Override
     public int describeContents() {
         return 0;
@@ -301,9 +302,6 @@ public class CacheMsgBean implements Parcelable {
         dest.writeInt(this.progress);
     }
 
-    public CacheMsgBean() {
-    }
-
     protected CacheMsgBean(Parcel in) {
         this.id = (Long) in.readValue(Long.class.getClassLoader());
         this.msgId = (Long) in.readValue(Long.class.getClassLoader());
@@ -319,10 +317,10 @@ public class CacheMsgBean implements Parcelable {
         this.progress = in.readInt();
     }
 
-    @Generated(hash = 399473634)
+    @Generated(hash = 1000261412)
     public CacheMsgBean(Long id, Long msgId, int msgType, int msgStatus, long msgTime,
-                        String senderUserId, String receiverUserId, String senderPhone, String receiverPhone,
-                        String targetPhone, String contentJsonBody, int progress) {
+            String senderUserId, String receiverUserId, String senderPhone,
+            String receiverPhone, String targetPhone, String contentJsonBody, int progress) {
         this.id = id;
         this.msgId = msgId;
         this.msgType = msgType;
@@ -335,6 +333,10 @@ public class CacheMsgBean implements Parcelable {
         this.targetPhone = targetPhone;
         this.contentJsonBody = contentJsonBody;
         this.progress = progress;
+    }
+
+    @Generated(hash = 107805209)
+    public CacheMsgBean() {
     }
 
     public static final Creator<CacheMsgBean> CREATOR = new Creator<CacheMsgBean>() {

@@ -183,7 +183,7 @@ public class WrapSendFileActivity extends FragmentActivity implements PickerRefr
      * @param file
      */
     public void handleSendFile(final File file) {
-        final int userId = HuxinSdkManager.instance().getUserId();
+        final String userId = HuxinSdkManager.instance().getUuid();
         final IFileSendListener listener = FileSendListenerImpl.getListener();
         //发送 userId, desPhone, fileId, fileName, fileSize, receiveListener
         HuxinSdkManager.instance().postBigFile(userId, dstPhone, file,

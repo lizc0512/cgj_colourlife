@@ -271,11 +271,11 @@ public class SendMsgService extends Service {
             CacheMsgEmotion msgBody = (CacheMsgEmotion) msgBean.getMsg().getJsonBodyObj();
             contentTemp = msgBody.getEmotionContent();
         }
-        final int userId = HuxinSdkManager.instance().getUserId();
+        final String userId = HuxinSdkManager.instance().getUuid();
         final String targetPhone = msgBean.getMsg().getReceiverPhone();
         final String content = contentTemp;
         msgBean.getMsg().setTargetPhone(targetPhone);
-        HuxinSdkManager.instance().sendText(userId, targetPhone, content, new ReceiveListener() {
+        HuxinSdkManager.instance().sendText(userId, content, new ReceiveListener() {
             @Override
             public void OnRec(PduBase pduBase) {
                 //TODO tcp会有消息缓存，在无网络状态下会执行onError()，一旦联网后，又继续尝试发送，就会执行OnRec()
@@ -288,20 +288,7 @@ public class SendMsgService extends Service {
                         if (ack.getIsTargetOnline()) {
                             updateUI(msgBean, CacheMsgBean.SEND_SUCCEED, null, SEND_MSG_END);
                         } else {
-                            HttpPushManager.pushMsgForText(appContext, userId, targetPhone, content,
-                                    new HttpPushManager.PushListener() {
-                                        @Override
-                                        public void success(String msg) {
-                                            LogUtils.e(TAG, msg);
-                                            updateUI(msgBean, CacheMsgBean.SEND_SUCCEED, null, SEND_MSG_END);
-                                        }
 
-                                        @Override
-                                        public void fail(String msg) {
-                                            LogUtils.e(TAG, "推送消息异常:" + msg);
-                                            updateUI(msgBean, CacheMsgBean.SEND_FAILED, null, SEND_MSG_END);
-                                        }
-                                    });
                         }
                     } else if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_ERR_SESSIONID) {
                         ProtocolCallBack sCallBack = RespBaseBean.getsCallBack();
@@ -328,7 +315,7 @@ public class SendMsgService extends Service {
 
     //发送位置
     private void sendMap(final SendMsg msgBean) {
-        final int userId = HuxinSdkManager.instance().getUserId();
+        final String userId = HuxinSdkManager.instance().getUuid();
         final String targetPhone = msgBean.getMsg().getReceiverPhone();
         CacheMsgMap msgBody = (CacheMsgMap) msgBean.getMsg().getJsonBodyObj();
 
@@ -351,19 +338,7 @@ public class SendMsgService extends Service {
                         if (ack.getIsTargetOnline()) {
                             updateUI(msgBean, CacheMsgBean.SEND_SUCCEED);
                         } else {
-                            HttpPushManager.pushMsgForLocation(userId, targetPhone,
-                                    longitude, latitude, 16, address,
-                                    new HttpPushManager.PushListener() {
-                                        @Override
-                                        public void success(String msg) {
-                                            updateUI(msgBean, CacheMsgBean.SEND_SUCCEED);
-                                        }
 
-                                        @Override
-                                        public void fail(String msg) {
-                                            updateUI(msgBean, CacheMsgBean.SEND_FAILED);
-                                        }
-                                    });
                         }
                     } else if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_NOT_HUXIN_USER) {
                         updateUI(msgBean, CacheMsgBean.SEND_FAILED, NOT_HUXIN_USER);
@@ -383,7 +358,7 @@ public class SendMsgService extends Service {
             }
         };
 
-        HuxinSdkManager.instance().sendLocation(userId, targetPhone, longitude, latitude, 16, address, callback);
+        HuxinSdkManager.instance().sendLocation(userId,  longitude, latitude, 16, address, callback);
     }
 
     //发送语音(先上传文件，再发送消息)
@@ -577,7 +552,7 @@ public class SendMsgService extends Service {
 
     //语音    2、发送消息
     private void sendVoiceIM(final SendMsg msgBean) {
-        final int userId = HuxinSdkManager.instance().getUserId();
+        final String userId = HuxinSdkManager.instance().getUuid();
         CacheMsgVoice msgBody = (CacheMsgVoice) msgBean.getMsg().getJsonBodyObj();
         final String fileId = msgBody.getFid();
         final String secondTimes = msgBody.getVoiceTime();
@@ -598,18 +573,6 @@ public class SendMsgService extends Service {
                         if (ack.getIsTargetOnline()) {
                             updateUI(msgBean, CacheMsgBean.SEND_SUCCEED, null, SEND_MSG_END);
                         } else {
-                            HttpPushManager.pushMsgForAudio(userId, desPhone, fileId, secondTimes,
-                                    new HttpPushManager.PushListener() {
-                                        @Override
-                                        public void success(String msg) {
-                                            updateUI(msgBean, CacheMsgBean.SEND_SUCCEED, null, SEND_MSG_END);
-                                        }
-
-                                        @Override
-                                        public void fail(String msg) {
-                                            updateUI(msgBean, CacheMsgBean.SEND_FAILED, null, SEND_MSG_END);
-                                        }
-                                    });
 
                         }
                     } else if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_NOT_HUXIN_USER) {
@@ -623,12 +586,12 @@ public class SendMsgService extends Service {
                 }
             }
         };
-        HuxinSdkManager.instance().sendAudio(userId, desPhone, fileId, secondTimes, sourcePhone, forwardCount, receiveListener);
+        HuxinSdkManager.instance().sendAudio(userId,  fileId, secondTimes, sourcePhone, forwardCount, receiveListener);
     }
 
     //图片    2、发送消息
     private void sendPicIM(final SendMsg msgBean) {
-        final int userId = HuxinSdkManager.instance().getUserId();
+        final String userId = HuxinSdkManager.instance().getUuid();
         CacheMsgImage msgBody = (CacheMsgImage) msgBean.getMsg().getJsonBodyObj();
         final String fileId = msgBody.getFid();
         final String desPhone = msgBean.getMsg().getReceiverPhone();
@@ -646,18 +609,7 @@ public class SendMsgService extends Service {
                         if (ack.getIsTargetOnline()) {
                             updateUI(msgBean, CacheMsgBean.SEND_SUCCEED, null, SEND_MSG_END);
                         } else {
-                            HttpPushManager.pushMsgForPicture(userId, desPhone, fileId,
-                                    new HttpPushManager.PushListener() {
-                                        @Override
-                                        public void success(String msg) {
-                                            updateUI(msgBean, CacheMsgBean.SEND_SUCCEED, null, SEND_MSG_END);
-                                        }
 
-                                        @Override
-                                        public void fail(String msg) {
-                                            updateUI(msgBean, CacheMsgBean.SEND_FAILED, null, SEND_MSG_END);
-                                        }
-                                    });
                         }
                     } else if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_NOT_HUXIN_USER) {
                         updateUI(msgBean, CacheMsgBean.SEND_FAILED, NOT_HUXIN_USER, SEND_MSG_END);
@@ -676,12 +628,12 @@ public class SendMsgService extends Service {
                 updateUI(msgBean, CacheMsgBean.SEND_FAILED);
             }
         };
-        HuxinSdkManager.instance().sendPicture(userId, desPhone, fileId, isOriginal ? "original" : "thumbnail", receiveListener);
+        HuxinSdkManager.instance().sendPicture(userId,  fileId, isOriginal ? "original" : "thumbnail", receiveListener);
     }
 
     //文件    2、发送消息
     private void sendFileIM(final SendMsg msgBean) {
-        final int userId = HuxinSdkManager.instance().getUserId();
+        final String userId = HuxinSdkManager.instance().getUuid();
         CacheMsgFile msgBody = (CacheMsgFile) msgBean.getMsg().getJsonBodyObj();
 
         final String fileId = msgBody.getFid();
@@ -701,18 +653,7 @@ public class SendMsgService extends Service {
                         if (ack.getIsTargetOnline()) {
                             updateUI(msgBean, CacheMsgBean.SEND_SUCCEED, null, SEND_MSG_END);
                         } else {
-                            HttpPushManager.pushMsgForBigFile(userId, desPhone, fileId, fileName, fileSize,
-                                    new HttpPushManager.PushListener() {
-                                        @Override
-                                        public void success(String msg) {
-                                            updateUI(msgBean, CacheMsgBean.SEND_SUCCEED, null, SEND_MSG_END);
-                                        }
 
-                                        @Override
-                                        public void fail(String msg) {
-                                            updateUI(msgBean, CacheMsgBean.SEND_FAILED, null, SEND_MSG_END);
-                                        }
-                                    });
                         }
                     } else if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_NOT_HUXIN_USER) {
                         updateUI(msgBean, CacheMsgBean.SEND_FAILED, NOT_HUXIN_USER, SEND_MSG_END);
@@ -724,13 +665,13 @@ public class SendMsgService extends Service {
             }
         };
         if (!"-1".equals(fileId)) {
-            HuxinSdkManager.instance().sendBigFile(userId, desPhone, fileId, fileName, fileSize, receiveListener);
+            HuxinSdkManager.instance().sendBigFile(userId,  fileId, fileName, fileSize, receiveListener);
         }
     }
 
     //视频    2、发送消息
     public void sendVideoIM(final SendMsg msgBean) {
-        final int userId = HuxinSdkManager.instance().getUserId();
+        final String userId = HuxinSdkManager.instance().getUuid();
         CacheMsgVideo cacheMsgVideo = (CacheMsgVideo) msgBean.getMsg().getJsonBodyObj();
         final String fileId = cacheMsgVideo.getVideoId();
         final String frameId = cacheMsgVideo.getFrameId();
@@ -751,20 +692,7 @@ public class SendMsgService extends Service {
                         if (ack.getIsTargetOnline()) {
                             updateUI(msgBean, CacheMsgBean.SEND_SUCCEED, null, SEND_MSG_END);
                         } else {
-                            CacheMsgVideo cacheMsgVideo = (CacheMsgVideo) msgBean.getMsg().getJsonBodyObj();
-                            String videoId = cacheMsgVideo.getVideoId();
-                            HttpPushManager.pushMsgForPicture(userId, desPhone, videoId,
-                                    new HttpPushManager.PushListener() {
-                                        @Override
-                                        public void success(String msg) {
-                                            updateUI(msgBean, CacheMsgBean.SEND_SUCCEED, null, SEND_MSG_END);
-                                        }
-
-                                        @Override
-                                        public void fail(String msg) {
-                                            updateUI(msgBean, CacheMsgBean.SEND_FAILED, null, SEND_MSG_END);
-                                        }
-                                    });
+                            
                         }
                     } else if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_NOT_HUXIN_USER) {
                         updateUI(msgBean, CacheMsgBean.SEND_FAILED, NOT_HUXIN_USER, SEND_MSG_END);
@@ -783,7 +711,7 @@ public class SendMsgService extends Service {
                 updateUI(msgBean, CacheMsgBean.SEND_FAILED, null, SEND_MSG_END);
             }
         };
-        HuxinSdkManager.instance().sendVideo(userId, desPhone, fileId, frameId, name, size, time + "", receiveListener);
+        HuxinSdkManager.instance().sendVideo(userId,  fileId, frameId, name, size, time + "", receiveListener);
     }
 
 }

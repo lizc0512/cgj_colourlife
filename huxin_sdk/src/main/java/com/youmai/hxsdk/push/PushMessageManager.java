@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.youmai.hxsdk.im.IMChat;
@@ -150,10 +151,9 @@ public class PushMessageManager {
         String pictureID = PushJsonUtils.getValue(message, String.valueOf(IMContentType.CONTEXT_PICTURE_ID));//内容
         String msgid = PushJsonUtils.getValue(message, String.valueOf(IMContentType.CONTEXT_MSGID));//用户id
 
-        int userId = getID(msgid);
-        if (userId != 0) {
+        if (!TextUtils.isEmpty(msgid)) {
             final IFileReceiveListener listener = FileReceiveListenerImpl.getReceiveListener();
-            final FileBean fileBean = new FileBean().setUserId(userId)
+            final FileBean fileBean = new FileBean().setUserId(msgid)
                     .setFileMsgType(IMConst.IM_IMAGE_VALUE)
                     .setDstPhone(phone)
                     //.setOriginPath(AppConfig.DOWNLOAD_IMAGE + msg.getMsgContent().getPicture().getPicUrl());//  ? 2017-1-13 17:38:23
@@ -185,8 +185,7 @@ public class PushMessageManager {
         String address = PushJsonUtils.getValue(message, String.valueOf(IMContentType.CONTEXT_LABEL));
 
 
-        int userId = getID(msgid);
-        if (userId != 0) {
+        if (!TextUtils.isEmpty(msgid)) {
 
             final IFileReceiveListener listener = FileReceiveListenerImpl.getReceiveListener();
             // ContentLocation mLocation = msg.getMsgContent().getLocation();
@@ -197,7 +196,7 @@ public class PushMessageManager {
                     + "&scale=2&size=720*550&traffic=1&markers=mid,0xff0000,A:" + longitude
                     + "," + latitude + "&key=" + AppConfig.staticMapKey;
 
-            final FileBean fileBean = new FileBean().setUserId(userId)
+            final FileBean fileBean = new FileBean().setUserId(msgid)
                     .setFileMsgType(IMConst.IM_LOCATION_VALUE)
                     .setDstPhone(phone)
                     .setLongitude(Double.valueOf(longitude))

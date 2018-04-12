@@ -1,6 +1,7 @@
 package com.youmai.hxsdk;
 
 import android.Manifest;
+import android.app.Application;
 import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Context;
@@ -17,6 +18,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.google.protobuf.GeneratedMessage;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.qiniu.android.common.AutoZone;
@@ -28,6 +30,7 @@ import com.qiniu.android.storage.UploadManager;
 import com.qiniu.android.storage.UploadOptions;
 import com.youmai.hxsdk.adapter.IMListAdapter;
 import com.youmai.hxsdk.config.AppConfig;
+import com.youmai.hxsdk.config.ColorsConfig;
 import com.youmai.hxsdk.config.Constant;
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
 import com.youmai.hxsdk.db.dao.CacheMsgBeanDao;
@@ -49,6 +52,7 @@ import com.youmai.hxsdk.interfaces.IFileSendListener;
 import com.youmai.hxsdk.interfaces.OnFileListener;
 import com.youmai.hxsdk.interfaces.bean.FileBean;
 import com.youmai.hxsdk.proto.YouMaiBasic;
+import com.youmai.hxsdk.proto.YouMaiBuddy;
 import com.youmai.hxsdk.proto.YouMaiChat;
 import com.youmai.hxsdk.proto.YouMaiMsg;
 import com.youmai.hxsdk.proto.YouMaiUser;
@@ -167,6 +171,20 @@ public class HuxinSdkManager {
     }
 
     /**
+     * 初始化ARouter
+     * 保证在application对ARouter初始化
+     */
+    void initARouter() {
+        if (BuildConfig.DEBUG) {    // 这两行必须写在init之前，否则这些配置在init过程中将无效
+            ARouter.openLog();      // 打印日志
+            ARouter.openDebug();    // 开启调试模式(如果在InstantRun模式下运行，必须开启调试模式！线上版本需要关闭,否则有安全风险)
+        }
+        if (mContext instanceof Application) {
+            ARouter.init((Application) mContext); // 尽可能早，推荐在Application中初始化
+        }
+    }
+
+    /**
      * 呼信sdk初始化
      *
      * @param context
@@ -174,6 +192,7 @@ public class HuxinSdkManager {
     public void init(final Context context, InitListener listener) {
         mContext = context.getApplicationContext();
         IMMsgManager.getInstance().init(mContext);
+        initARouter();
         MorePushManager.register(mContext);//注册送服务
 
         if (listener != null) {
@@ -1712,6 +1731,21 @@ public class HuxinSdkManager {
         sendVideo(cacheMsgBean.getSenderUserId(), fileId, frameId, name, size, time + "", receiveListener);
     }
 
+    /**
+     * 拉取组织结构
+     * @return
+     */
+    public void sendOrgInfo(String groupId, ReceiveListener callback) {
+        YouMaiBuddy.IMGetOrgReq defaultInstance = YouMaiBuddy.IMGetOrgReq.getDefaultInstance();
+        YouMaiBuddy.IMGetOrgReq.Builder builder1 = defaultInstance.toBuilder();
+        builder1.setOrgId(groupId);
+        YouMaiBuddy.IMGetOrgReq build = builder1.build();
+
+//        YouMaiBuddy.IMGetOrgReq.Builder builder = YouMaiBuddy.IMGetOrgReq.newBuilder();
+//        builder.setOrgId(groupId);
+//        YouMaiBuddy.IMGetOrgReq orgReq = builder.build();
+        sendProto(build, YouMaiBasic.COMMANDID.CID_ORG_LIST_REQ_VALUE, callback);
+    }
 
     /**
      * 获取消息

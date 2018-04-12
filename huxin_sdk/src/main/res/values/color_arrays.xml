@@ -71,7 +71,35 @@
         <!--<item>W</item>-->
     </string-array>
 
+    <string-array name="names_1">
+        <item>↑##@@**1 组织架构</item>
+        <item>↑##@@**2 我的部门</item>
+        <item>↑##@@**3 手机联系人</item>
+        <item>↑##@@**4 群聊</item>
+
+        <item>游小陈</item>
+        <item>扫地神僧</item>
+        <item>无崖子</item>
+        <item>虚竹</item>
+        <item>段誉</item>
+        <item>李秋水</item>
+        <item>乔峰</item>
+        <item>萧峰</item>
+        <item>天山童姥</item>
+
+        <item>↑1##@@**组织架构</item>
+        <item>↑2##@@**我的部门</item>
+        <item>↑3##@@**手机联系人</item>
+        <item>↑4##@@**群聊</item>
+        <item>↑###@@**新的朋友**@@###</item>
+    </string-array>
+
     <string-array name="names">
+        <item>↑##@@**1 组织架构</item>
+        <item>↑##@@**2 我的部门</item>
+        <item>↑##@@**3 手机联系人</item>
+        <item>↑##@@**4 群聊</item>
+
         <item>游小陈</item>
         <item>扫地神僧</item>
         <item>无崖子</item>
@@ -127,24 +155,8 @@
         <item>↑</item>
         <item>周伯通hh</item>
         <item>仇笑天</item>
-        <item>#youxiaochen</item>
+        <!--<item>#youxiaochen</item>-->
 
-
-
-        <item>.a</item>
-        <item>;b</item>
-        <item>#c</item>
-        <item>d</item>
-
-        <item>.a</item>
-        <item>;b</item>
-        <item>#c</item>
-        <item>d</item>
-
-        <item>..a</item>
-        <item>.;b</item>
-        <item>.#c</item>
-        <item>.d</item>
 
         <item>广东</item>
         <item>北京</item>
@@ -242,24 +254,7 @@
         <item>↑</item>
         <item>周伯通hh</item>
         <item>仇笑天</item>
-        <item>#youxiaochen</item>
 
-
-
-        <item>.a</item>
-        <item>;b</item>
-        <item>#c</item>
-        <item>d</item>
-
-        <item>.a</item>
-        <item>;b</item>
-        <item>#c</item>
-        <item>d</item>
-
-        <item>..a</item>
-        <item>.;b</item>
-        <item>.#c</item>
-        <item>.d</item>
 
         <item>广东</item>
         <item>北京</item>
@@ -357,24 +352,6 @@
         <item>↑</item>
         <item>周伯通hh</item>
         <item>仇笑天</item>
-        <item>#youxiaochen</item>
-
-
-
-        <item>.a</item>
-        <item>;b</item>
-        <item>#c</item>
-        <item>d</item>
-
-        <item>.a</item>
-        <item>;b</item>
-        <item>#c</item>
-        <item>d</item>
-
-        <item>..a</item>
-        <item>.;b</item>
-        <item>.#c</item>
-        <item>.d</item>
 
         <item>广东</item>
         <item>北京</item>

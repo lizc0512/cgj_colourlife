@@ -171,7 +171,7 @@ public class StickyHeaderDecoration extends RecyclerView.ItemDecoration {
     }
 
     boolean isFilter(int pos) {
-        if (mAdapter.index(pos).equals("↑")) {
+        if (mAdapter.index(pos).startsWith("↑")) {
             return true;
         } else {
             return false;

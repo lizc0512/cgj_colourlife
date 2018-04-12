@@ -3,6 +3,7 @@ package com.youmai.hxsdk.contact.search.demo;
 import android.content.Context;
 import android.util.Log;
 
+import com.youmai.hxsdk.contact.ContactsBindData;
 import com.youmai.hxsdk.contact.search.adapter.TestUtils;
 import com.youmai.hxsdk.contact.search.cn.SearchContactBean;
 
@@ -26,7 +27,7 @@ public class ContactsSearchLoader extends GlobalSearchLoader<SearchContactBean> 
 
         mContactBeanList.clear();
 
-        List<SearchContactBean> contactList = TestUtils.searchContactsList(mContext);
+        List<SearchContactBean> contactList = ContactsBindData.searchContactsList(mContext);
         mContactBeanList.addAll(contactList);
         if (mQuery.isEmpty()) {
             return null;
@@ -34,6 +35,8 @@ public class ContactsSearchLoader extends GlobalSearchLoader<SearchContactBean> 
             return mContactBeanList;
         }
     }
+
+
 
     @Override
     public ArrayList<SearchContactBean> reloadInBackground() {

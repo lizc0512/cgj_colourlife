@@ -22,9 +22,10 @@ public class CNPinyin <T extends CN> implements Parcelable, Comparable<CNPinyin<
     private List<String> headerFilter = new ArrayList<>();
 
     {
-        headerFilter.add(new Contact("↑###@@**新的朋友**@@###").chinese());
-        headerFilter.add(new Contact("↑群聊").chinese());
-        headerFilter.add(new Contact("↑第三个标签").chinese());
+        headerFilter.add(new Contact("↑##@@**1 组织架构").chinese());
+        headerFilter.add(new Contact("↑##@@**2 我的部门").chinese());
+        headerFilter.add(new Contact("↑##@@**3 手机联系人").chinese());
+        headerFilter.add(new Contact("↑##@@**4 群聊").chinese());
 
         for (char ch: CHARS) {
             characters.add(ch);

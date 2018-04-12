@@ -6,7 +6,7 @@ public abstract class ReceiveListener {
 
     public static final String TAG = "TcpClient";
 
-    public static final int SOCKET_TIMEOUT = 1;
+    public static final int SOCKET_TIMEOUT = -1;
 
     private Runnable runnable;
 

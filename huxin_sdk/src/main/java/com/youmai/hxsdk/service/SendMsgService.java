@@ -1,18 +1,12 @@
 package com.youmai.hxsdk.service;
 
-import android.app.Service;
+import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Handler;
-import android.os.IBinder;
-import android.os.Looper;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.util.Log;
-import android.util.SparseArray;
-import android.widget.Toast;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.qiniu.android.storage.UpProgressHandler;
@@ -29,51 +23,29 @@ import com.youmai.hxsdk.im.cache.CacheMsgTxt;
 import com.youmai.hxsdk.im.cache.CacheMsgVideo;
 import com.youmai.hxsdk.im.cache.CacheMsgVoice;
 import com.youmai.hxsdk.proto.YouMaiBasic;
-import com.youmai.hxsdk.proto.YouMaiChat;
-import com.youmai.hxsdk.push.http.HttpPushManager;
-import com.youmai.hxsdk.service.download.DownloadStatus;
+import com.youmai.hxsdk.proto.YouMaiMsg;
 import com.youmai.hxsdk.service.sendmsg.PostFile;
 import com.youmai.hxsdk.service.sendmsg.QiniuUtils;
 import com.youmai.hxsdk.service.sendmsg.SendMsg;
 import com.youmai.hxsdk.socket.PduBase;
 import com.youmai.hxsdk.socket.ReceiveListener;
 import com.youmai.hxsdk.utils.AppUtils;
-import com.youmai.hxsdk.utils.LogUtils;
 
-import java.util.LinkedList;
-import java.util.Queue;
 
 /**
  * 发送消息的服务
  * Created by fylder on 2017/11/9.
  */
 
-public class SendMsgService extends Service {
+public class SendMsgService extends IntentService {
 
     private static final String TAG = SendMsgService.class.getName();
-
-    public static final String FROM_IM = "IM";
-    public static final String FROM_SHARE = "Share";
-    public static final String FROM_SHARE_PERSON = "SharePerson";
-
-    private static final int SEND_FILE_FAIL = 1;//上传文件失败
 
     private static Context appContext;
 
     public static final String KEY_DATA = "data";
     public static final String KEY_DATA_FROM = "data_from";
-    public static final String KEY_FLAG = "flag";
-
-
-    //    private static final int RUNNING_MAX = 1;//最大同时发送数
-//    private static int running = 0;//IM的失败缓存的因素导致运行统计有误，暂去掉
-    private Queue<SendMsg> msgQueue = new LinkedList<>();//存放要发送的消息队列
-    private static SparseArray<SendMsg> datas = new SparseArray<>();
-    private SparseArray<SendMsg> sendingMsg = new SparseArray<>();//正在上传的消息列表
-    private boolean hasTask = true;
-//    private boolean hasRun = false;
-
-    private boolean hasConnecting = false;//是否正在聊天界面,用于判断service能否结束
+    public static final String FROM_IM = "IM";
 
     public static final String NOT_NETWORK = "NOT_NETWORK";
     public static final String NOT_HUXIN_USER = "NOT_HUXIN_USER";
@@ -81,93 +53,33 @@ public class SendMsgService extends Service {
 
     public static final int SEND_MSG_END = 200;//该消息的发送流程结束
 
-    @Nullable
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
+
+    public SendMsgService() {
+        super("SendMsgService");
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
         appContext = getApplicationContext();
-        runThread.start();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (intent != null) {
-            hasConnecting = true;
-            if (intent.hasExtra(KEY_DATA)) {
-                CacheMsgBean msgData = intent.getParcelableExtra(KEY_DATA);
-                String msgDataFrom = intent.getStringExtra(KEY_DATA_FROM);//消息从哪里发起
-                SendMsg sendMsg = new SendMsg(msgData, msgDataFrom);
-                int index = datas.size() + 1;
-                datas.put(index, sendMsg);
-                addMsg(sendMsg);//发送消息放入队列
-            }
-            if (intent.hasExtra(KEY_FLAG)) {
-                hasConnecting = intent.getBooleanExtra(KEY_FLAG, false);
-            }
-        }
-        return super.onStartCommand(intent, Service.START_FLAG_REDELIVERY, startId);
+        return super.onStartCommand(intent, flags, startId);
     }
+
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        handler.removeCallbacksAndMessages(null);
-    }
-
-    /**
-     * 添加发送消息到队列
-     */
-    public void addMsg(SendMsg fileQueue) {
-        if (!msgQueue.contains(fileQueue)) {
-            msgQueue.offer(fileQueue);
+    protected void onHandleIntent(@Nullable Intent intent) {
+        if (intent.hasExtra(KEY_DATA)) {
+            CacheMsgBean msgData = intent.getParcelableExtra(KEY_DATA);
+            String msgDataFrom = intent.getStringExtra(KEY_DATA_FROM);//消息从哪里发起
+            SendMsg sendMsg = new SendMsg(msgData, msgDataFrom);
+            sendMsg(sendMsg);
         }
     }
 
-    private Thread runThread = new Thread(new Runnable() {
-        @Override
-        public void run() {
-            // 退出聊天界面并发送消息完成后结束线程服务
-            while (hasTask || hasConnecting || sendingMsg.size() > 0) {
-                try {
-                    if (msgQueue.size() > 0) {
-                        Thread.sleep(100);
-                    } else {
-                        Thread.sleep(1000);
-                    }
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                runSendMsg();
-            }
-            stopSelf();
-            Log.w(TAG, "stopSelf");
-            DownloadStatus response = new DownloadStatus();
-            response.setStatus(2);
-        }
-    });
-
-    /**
-     * 控制发送
-     */
-    private void runSendMsg() {
-        if (msgQueue.size() > 0) {
-            hasTask = true;
-//            if (running < RUNNING_MAX) {
-            SendMsg msg = msgQueue.poll();
-            if (msg != null) {
-                sendMsg(msg);//发送消息业务
-            }
-//            }
-//        } else if (running == 0) {
-        } else {
-            hasTask = false;
-        }
-    }
 
     /**
      * 发送消息
@@ -185,24 +97,18 @@ public class SendMsgService extends Service {
             int type = msg.getMsg().getMsgType();
             if (type == CacheMsgBean.SEND_TEXT) {//文本
                 sendTxt(msg);
-                sendingMsg.put(msg.getMsg().getId().intValue(), msg);
             } else if (type == CacheMsgBean.SEND_EMOTION) {//表情
                 sendTxt(msg);
-                sendingMsg.put(msg.getMsg().getId().intValue(), msg);
             } else if (type == CacheMsgBean.SEND_VOICE) {//语音
                 sendAudio(msg);
-                sendingMsg.put(msg.getMsg().getId().intValue(), msg);
             } else if (type == CacheMsgBean.SEND_IMAGE) {//图片
                 sendPic(msg);
-                sendingMsg.put(msg.getMsg().getId().intValue(), msg);
             } else if (type == CacheMsgBean.SEND_LOCATION) {//地图
                 sendMap(msg);
             } else if (type == CacheMsgBean.SEND_FILE) {//文件
                 sendFile(msg);
-                sendingMsg.put(msg.getMsg().getId().intValue(), msg);
             } else if (type == CacheMsgBean.SEND_VIDEO) {//视频
                 sendVideo(msg);
-                sendingMsg.put(msg.getMsg().getId().intValue(), msg);
             }
         } else {
             //无网络
@@ -210,15 +116,6 @@ public class SendMsgService extends Service {
         }
     }
 
-    Handler handler = new Handler(Looper.getMainLooper()) {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            if (msg.what == SEND_FILE_FAIL) {
-                Toast.makeText(SendMsgService.this, "发送失败", Toast.LENGTH_SHORT).show();
-            }
-        }
-    };
 
     /**
      * 发送本地广播通知更新ui
@@ -243,11 +140,6 @@ public class SendMsgService extends Service {
      * @param send_flag 发送结果,关系到Service是否还存在发送消息的统计
      */
     private void updateUI(SendMsg msg, int flag, String type, int send_flag) {
-        //该消息的发送已经完全结束，移除发送统计
-        if (send_flag == SEND_MSG_END) {
-            int key = msg.getMsg().getId().intValue();
-            sendingMsg.remove(key);
-        }
         CacheMsgBean bean = msg.getMsg();
         bean.setMsgStatus(flag);
         bean.setTargetPhone(bean.getReceiverPhone());
@@ -280,7 +172,7 @@ public class SendMsgService extends Service {
             public void OnRec(PduBase pduBase) {
                 //tcp会有消息缓存，在无网络状态下会执行onError()，一旦联网后，又继续尝试发送，就会执行OnRec()
                 try {
-                    final YouMaiChat.IMChat_Personal_Ack ack = YouMaiChat.IMChat_Personal_Ack.parseFrom(pduBase.body);
+                    final YouMaiMsg.ChatMsg_Ack ack = YouMaiMsg.ChatMsg_Ack.parseFrom(pduBase.body);
                     final long msgId = ack.getMsgId();
                     msgBean.getMsg().setMsgId(msgId);
 
@@ -330,7 +222,7 @@ public class SendMsgService extends Service {
             @Override
             public void OnRec(PduBase pduBase) {
                 try {
-                    final YouMaiChat.IMChat_Personal_Ack ack = YouMaiChat.IMChat_Personal_Ack.parseFrom(pduBase.body);
+                    final YouMaiMsg.ChatMsg_Ack ack = YouMaiMsg.ChatMsg_Ack.parseFrom(pduBase.body);
                     final long msgId = ack.getMsgId();
                     msgBean.getMsg().setMsgId(msgId);
 
@@ -437,9 +329,6 @@ public class SendMsgService extends Service {
                     msgBean.getMsg().setJsonBodyObj(msgBody);
                 }
                 updateUI(msgBean, CacheMsgBean.SEND_FAILED, null, SEND_MSG_END);
-                Message message = new Message();
-                message.what = SEND_FILE_FAIL;
-                handler.sendMessage(message);
             }
         };
 
@@ -520,9 +409,6 @@ public class SendMsgService extends Service {
                 }
                 msgBean.getMsg().setJsonBodyObj(msgBody);
                 updateUI(msgBean, CacheMsgBean.SEND_FAILED, null, SEND_MSG_END);
-                Message message = new Message();
-                message.what = SEND_FILE_FAIL;
-                handler.sendMessage(message);
             }
         };
 
@@ -564,7 +450,7 @@ public class SendMsgService extends Service {
             @Override
             public void OnRec(PduBase pduBase) {
                 try {
-                    YouMaiChat.IMChat_Personal_Ack ack = YouMaiChat.IMChat_Personal_Ack.parseFrom(pduBase.body);
+                    final YouMaiMsg.ChatMsg_Ack ack = YouMaiMsg.ChatMsg_Ack.parseFrom(pduBase.body);
                     long msgId = ack.getMsgId();
                     msgBean.getMsg().setMsgId(msgId);
 
@@ -601,7 +487,7 @@ public class SendMsgService extends Service {
             @Override
             public void OnRec(PduBase pduBase) {
                 try {
-                    YouMaiChat.IMChat_Personal_Ack ack = YouMaiChat.IMChat_Personal_Ack.parseFrom(pduBase.body);
+                    final YouMaiMsg.ChatMsg_Ack ack = YouMaiMsg.ChatMsg_Ack.parseFrom(pduBase.body);
                     long msgId = ack.getMsgId();
                     msgBean.getMsg().setMsgId(msgId);
 
@@ -645,7 +531,7 @@ public class SendMsgService extends Service {
             @Override
             public void OnRec(PduBase pduBase) {
                 try {
-                    YouMaiChat.IMChat_Personal_Ack ack = YouMaiChat.IMChat_Personal_Ack.parseFrom(pduBase.body);
+                    final YouMaiMsg.ChatMsg_Ack ack = YouMaiMsg.ChatMsg_Ack.parseFrom(pduBase.body);
                     long msgId = ack.getMsgId();
                     msgBean.getMsg().setMsgId(msgId);
 
@@ -684,7 +570,7 @@ public class SendMsgService extends Service {
             @Override
             public void OnRec(PduBase pduBase) {
                 try {
-                    YouMaiChat.IMChat_Personal_Ack ack = YouMaiChat.IMChat_Personal_Ack.parseFrom(pduBase.body);
+                    final YouMaiMsg.ChatMsg_Ack ack = YouMaiMsg.ChatMsg_Ack.parseFrom(pduBase.body);
                     long msgId = ack.getMsgId();
                     msgBean.getMsg().setMsgId(msgId);
 

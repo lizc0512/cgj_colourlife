@@ -567,66 +567,6 @@ public class HuxinSdkManager {
 
 
     /**
-     * 用户tcp协议登录
-     *
-     * @param userId
-     * @param phone
-     * @param session
-     */
-
-    public void tcpLogin(int userId, String phone, String session) {
-        String imei = DeviceUtils.getIMEI(mContext);
-        YouMaiUser.User_Login.Builder login = YouMaiUser.User_Login.newBuilder();
-        login.setUserId(userId);
-        login.setPhone(phone);
-        login.setSessionId(session);
-        login.setDeviceId(imei);
-        login.setDeviceType(YouMaiBasic.Device_Type.DeviceType_Android);
-
-        YouMaiUser.User_Login user_Login = login.build();
-
-        ReceiveListener callback = new ReceiveListener() {
-            @Override
-            public void OnRec(PduBase pduBase) {
-                try {
-                    YouMaiUser.User_Login_Ack ack = YouMaiUser.User_Login_Ack.parseFrom(pduBase.body);
-                    if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_OK) {
-                        Toast.makeText(mContext, mContext.getString(R.string.hx_toast_08), Toast.LENGTH_SHORT).show();
-                        huxinService.setLogin(true);
-                    }
-                } catch (InvalidProtocolBufferException e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-        sendProto(user_Login, callback);
-    }
-
-    /**
-     * 用户tcp协议登录
-     *
-     * @param userId
-     * @param phone
-     * @param session
-     * @param callback
-     */
-
-    public void tcpLogin(int userId, String phone, String session, ReceiveListener callback) {
-        String imei = DeviceUtils.getIMEI(mContext);
-        YouMaiUser.User_Login.Builder login = YouMaiUser.User_Login.newBuilder();
-        login.setUserId(userId);
-        login.setPhone(phone);
-        login.setSessionId(session);
-        login.setDeviceId(imei);
-        login.setDeviceType(YouMaiBasic.Device_Type.DeviceType_Android);
-
-        YouMaiUser.User_Login user_Login = login.build();
-
-        sendProto(user_Login, callback);
-    }
-
-
-    /**
      * 用户tcp协议重登录，仅仅用于测试
      *
      * @param uuid
@@ -669,7 +609,7 @@ public class HuxinSdkManager {
         builder.setData(msgData);
         YouMaiMsg.ChatMsg chatMsg = builder.build();
 
-        sendProto(chatMsg, callback);
+        sendProto(chatMsg, YouMaiBasic.COMMANDID.IMCHAT_PERSONAL_VALUE, callback);
     }
 
 
@@ -702,7 +642,7 @@ public class HuxinSdkManager {
         builder.setData(msgData);
         YouMaiMsg.ChatMsg chatMsg = builder.build();
 
-        sendProto(chatMsg, callback);
+        sendProto(chatMsg, YouMaiBasic.COMMANDID.IMCHAT_PERSONAL_VALUE, callback);
     }
 
 
@@ -729,7 +669,7 @@ public class HuxinSdkManager {
         builder.setData(msgData);
         YouMaiMsg.ChatMsg chatMsg = builder.build();
 
-        sendProto(chatMsg, callback);
+        sendProto(chatMsg, YouMaiBasic.COMMANDID.IMCHAT_PERSONAL_VALUE, callback);
     }
 
 
@@ -757,7 +697,7 @@ public class HuxinSdkManager {
         builder.setData(msgData);
         YouMaiMsg.ChatMsg chatMsg = builder.build();
 
-        sendProto(chatMsg, callback);
+        sendProto(chatMsg, YouMaiBasic.COMMANDID.IMCHAT_PERSONAL_VALUE, callback);
 
 
     }
@@ -784,7 +724,7 @@ public class HuxinSdkManager {
         builder.setData(msgData);
         YouMaiMsg.ChatMsg chatMsg = builder.build();
 
-        sendProto(chatMsg, callback);
+        sendProto(chatMsg, YouMaiBasic.COMMANDID.IMCHAT_PERSONAL_VALUE, callback);
     }
 
     /**
@@ -809,7 +749,7 @@ public class HuxinSdkManager {
         builder.setData(msgData);
         YouMaiMsg.ChatMsg chatMsg = builder.build();
 
-        sendProto(chatMsg, callback);
+        sendProto(chatMsg, YouMaiBasic.COMMANDID.IMCHAT_PERSONAL_VALUE, callback);
     }
 
 
@@ -839,7 +779,7 @@ public class HuxinSdkManager {
         builder.setData(msgData);
         YouMaiMsg.ChatMsg chatMsg = builder.build();
 
-        sendProto(chatMsg, callback);
+        sendProto(chatMsg, YouMaiBasic.COMMANDID.IMCHAT_PERSONAL_VALUE, callback);
     }
 
 

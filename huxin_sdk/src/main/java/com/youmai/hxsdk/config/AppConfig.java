@@ -32,7 +32,7 @@ public class AppConfig {
     /**
      * HuXin 服务器连接配置
      */
-    public final static int LAUNCH_MODE = 2; //0 本地测试,开发版        1服务器测试,测试版           2正式平台,正式版
+    public final static int LAUNCH_MODE = 1; //0 本地测试,开发版        1服务器测试,测试版           2正式平台,正式版
 
 
     private final static String SHOW_HOST[] = new String[]{"http://192.168.0.42:8989/", "http://test2.jweb.huxin.biz/", "http://api.ihuxin.net/"};
@@ -45,7 +45,7 @@ public class AppConfig {
     private final static String DOWNLOAD_HOST[] = new String[]{"http://test2.file.huxin.biz/", "http://test2.file.huxin.biz/", "http://file.ihuxin.net/"};
 
     //private final static int SOCKET_PORT[] = new int[]{8003, 9951, 9951};//8886
-    private final static int SOCKET_PORT[] = new int[]{8003, 9951, 6602};
+    private final static int SOCKET_PORT[] = new int[]{8003, 6602, 6602};
 
     public static String getShowHost() {
         return SHOW_HOST[LAUNCH_MODE];

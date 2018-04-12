@@ -334,8 +334,10 @@ public class HuxinService extends Service {
 
 
     private void createTcp() {
-        String ip = AppUtils.getStringSharedPreferences(mContext, "IP", AppConfig.getSocketHost());
-        int port = AppUtils.getIntSharedPreferences(mContext, "PORT", AppConfig.getSocketPort());
+        //String ip = AppUtils.getStringSharedPreferences(mContext, "IP", AppConfig.getSocketHost());
+        //int port = AppUtils.getIntSharedPreferences(mContext, "PORT", AppConfig.getSocketPort());
+        String ip = AppConfig.getSocketHost();  //for test
+        int port = AppConfig.getSocketPort();   //for test
 
         final String uuid = HuxinSdkManager.instance().getUuid();
 

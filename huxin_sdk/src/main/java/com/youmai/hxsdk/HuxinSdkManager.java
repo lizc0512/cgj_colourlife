@@ -598,12 +598,13 @@ public class HuxinSdkManager {
     }
 
     public boolean sendMsgReply(long msgId) {
-        int userId = getUserId();
-        YouMaiChat.IMChat_Personal_recv_Ack.Builder builder = YouMaiChat.IMChat_Personal_recv_Ack.newBuilder();
-        builder.setUserId(userId);
+        String uuid = getUuid();
+        YouMaiMsg.ChatMsg_Ack.Builder builder = YouMaiMsg.ChatMsg_Ack.newBuilder();
+
+        builder.setUserId(uuid);
         builder.setMsgId(msgId);
-        YouMaiChat.IMChat_Personal_recv_Ack reply = builder.build();
-        sendProto(reply, YouMaiBasic.COMMANDID.IMCHAT_PERSONAL_ACK_VALUE, null);
+        YouMaiMsg.ChatMsg_Ack reply = builder.build();
+        sendProto(reply, YouMaiBasic.COMMANDID.CID_CHAT_MSG_ACK_VALUE, null);
         return true;
     }
 
@@ -628,7 +629,7 @@ public class HuxinSdkManager {
         builder.setData(msgData);
         YouMaiMsg.ChatMsg chatMsg = builder.build();
 
-        sendProto(chatMsg, YouMaiBasic.COMMANDID.IMCHAT_PERSONAL_VALUE, callback);
+        sendProto(chatMsg, YouMaiBasic.COMMANDID.CID_CHAT_BUDDY_VALUE, callback);
     }
 
 
@@ -661,7 +662,7 @@ public class HuxinSdkManager {
         builder.setData(msgData);
         YouMaiMsg.ChatMsg chatMsg = builder.build();
 
-        sendProto(chatMsg, YouMaiBasic.COMMANDID.IMCHAT_PERSONAL_VALUE, callback);
+        sendProto(chatMsg, YouMaiBasic.COMMANDID.CID_CHAT_BUDDY_VALUE, callback);
     }
 
 
@@ -688,7 +689,7 @@ public class HuxinSdkManager {
         builder.setData(msgData);
         YouMaiMsg.ChatMsg chatMsg = builder.build();
 
-        sendProto(chatMsg, YouMaiBasic.COMMANDID.IMCHAT_PERSONAL_VALUE, callback);
+        sendProto(chatMsg, YouMaiBasic.COMMANDID.CID_CHAT_BUDDY_VALUE, callback);
     }
 
 
@@ -716,7 +717,7 @@ public class HuxinSdkManager {
         builder.setData(msgData);
         YouMaiMsg.ChatMsg chatMsg = builder.build();
 
-        sendProto(chatMsg, YouMaiBasic.COMMANDID.IMCHAT_PERSONAL_VALUE, callback);
+        sendProto(chatMsg, YouMaiBasic.COMMANDID.CID_CHAT_BUDDY_VALUE, callback);
 
 
     }
@@ -743,7 +744,7 @@ public class HuxinSdkManager {
         builder.setData(msgData);
         YouMaiMsg.ChatMsg chatMsg = builder.build();
 
-        sendProto(chatMsg, YouMaiBasic.COMMANDID.IMCHAT_PERSONAL_VALUE, callback);
+        sendProto(chatMsg, YouMaiBasic.COMMANDID.CID_CHAT_BUDDY_VALUE, callback);
     }
 
     /**
@@ -768,7 +769,7 @@ public class HuxinSdkManager {
         builder.setData(msgData);
         YouMaiMsg.ChatMsg chatMsg = builder.build();
 
-        sendProto(chatMsg, YouMaiBasic.COMMANDID.IMCHAT_PERSONAL_VALUE, callback);
+        sendProto(chatMsg, YouMaiBasic.COMMANDID.CID_CHAT_BUDDY_VALUE, callback);
     }
 
 
@@ -798,7 +799,7 @@ public class HuxinSdkManager {
         builder.setData(msgData);
         YouMaiMsg.ChatMsg chatMsg = builder.build();
 
-        sendProto(chatMsg, YouMaiBasic.COMMANDID.IMCHAT_PERSONAL_VALUE, callback);
+        sendProto(chatMsg, YouMaiBasic.COMMANDID.CID_CHAT_BUDDY_VALUE, callback);
     }
 
 
@@ -1733,6 +1734,7 @@ public class HuxinSdkManager {
 
     /**
      * 拉取组织结构
+     *
      * @return
      */
     public void sendOrgInfo(String groupId, ReceiveListener callback) {

@@ -255,7 +255,7 @@ public class IMMsgManager {
         *  4：回调原则：自己注册，自己负责解注册，监听器处理消息，回调拿去用。
         * */
     private NotifyListener mNotifyListener = new NotifyListener(
-            YouMaiBasic.COMMANDID.IMCHAT_PERSONAL_VALUE) {
+            YouMaiBasic.COMMANDID.CID_CHAT_BUDDY_VALUE) {
         @Override
         public void OnRec(byte[] data) {
             try {

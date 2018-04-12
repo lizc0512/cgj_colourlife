@@ -16,7 +16,7 @@ import android.widget.Toast;
 
 import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.contact.search.cn.CNPinyin;
-import com.youmai.hxsdk.contact.search.cn.Contact;
+import com.youmai.hxsdk.db.bean.Contact;
 
 import java.util.ArrayList;
 

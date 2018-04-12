@@ -4,10 +4,10 @@ import android.content.Context;
 
 import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.contact.pinyin.Pinyin;
-import com.youmai.hxsdk.contact.search.cn.Contact;
 import com.youmai.hxsdk.contact.search.cn.DuoYinZi;
 import com.youmai.hxsdk.contact.search.utils.PinYinUtils;
 import com.youmai.hxsdk.contact.search.cn.SearchContactBean;
+import com.youmai.hxsdk.db.bean.Contact;
 import com.youmai.smallvideorecord.utils.Log;
 
 import java.util.ArrayList;
@@ -41,8 +41,8 @@ public class TestUtils {
             }
 
             Contact contact = new Contact();
-            contact.setIconUrl(url);
-            contact.setDisplayName(hanzi);
+            contact.setAvator(url + "");
+            contact.setNick_name(hanzi);
             contact.setPinyin(pinyin.toString());
             contact.setSimplePinyin(ch.toString());
             contactList.add(contact);
@@ -85,10 +85,6 @@ public class TestUtils {
 
             contactList.add(contact);
         }
-
-
-        //先把第一个汉字拿出来
-
 
         return contactList;
     }

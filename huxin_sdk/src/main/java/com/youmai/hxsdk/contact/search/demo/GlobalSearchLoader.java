@@ -4,10 +4,8 @@ import android.content.Context;
 import android.support.v4.content.AsyncTaskLoader;
 import android.util.Log;
 
-import com.youmai.hxsdk.contact.search.cn.Contact;
 import com.youmai.hxsdk.contact.search.cn.SearchContactBean;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -31,7 +29,6 @@ public class GlobalSearchLoader<T> extends AsyncTaskLoader<ArrayList<T>> {
 
     public void configureQuery(String query) {
         mQuery = query;
-
         //字串合法判断处理
     }
 
@@ -88,30 +85,6 @@ public class GlobalSearchLoader<T> extends AsyncTaskLoader<ArrayList<T>> {
     }
 
 
-//    /**
-//     * 解析sort_key,封装简拼,全拼
-//     *
-//     * @param sortKey
-//     * @return
-//     */
-//    private SortToken parseSortKey(String sortKey) {
-//        SortToken token = new SortToken();
-//        if (sortKey != null && sortKey.length() > 0) {
-//            //其中包含的中文字符
-//            String[] enStrs = sortKey.replace(" ", "").split(chReg);
-//            for (int i = 0, length = enStrs.length; i < length; i++) {
-//                if (enStrs[i].length() > 0) {
-//                    //拼接简拼
-//                    char ch = enStrs[i].toLowerCase().charAt(0);
-//                    token.simpleSpell += ch;
-//                    //拼接全拼
-//                    token.wholeSpell += enStrs[i];
-//                }
-//            }
-//        }
-//        return token;
-//    }
-
     public void setConfigQueryParamListener(ConfigQueryParamListener configListener) {
         mConfigQueryParamListener = configListener;
     }
@@ -132,12 +105,4 @@ public class GlobalSearchLoader<T> extends AsyncTaskLoader<ArrayList<T>> {
         void preLoad(ArrayList<T> preList);
     }
 
-    /**
-     * 拼音
-     */
-//    public class SortToken implements Serializable {
-//        public String simpleSpell = "";//简拼
-//        public String wholeSpell = "";//全拼
-//        public String chName = "";//中文全名
-//    }
 }

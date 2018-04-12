@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.db.dao.CacheMsgBeanDao;
+import com.youmai.hxsdk.db.dao.ContactDao;
 import com.youmai.hxsdk.db.dao.DaoMaster;
 import com.youmai.hxsdk.db.dao.DaoSession;
 import com.youmai.hxsdk.db.helper.HMROpenHelper;
@@ -74,6 +75,11 @@ public class GreenDBIMManager {
     public CacheMsgBeanDao getCacheMsgDao() {
         initDBDao();
         return mDaoSession.getCacheMsgBeanDao();
+    }
+
+    public ContactDao getContactDao() {
+        initDBDao();
+        return mDaoSession.getContactDao();
     }
 
     public void dropTables() {

@@ -40,7 +40,7 @@ dependencies {
 }
 
 greendao {
-    schemaVersion 2
+    schemaVersion 3
     daoPackage 'com.youmai.hxsdk.db.dao'
     targetGenDir 'src/main/java'
 }

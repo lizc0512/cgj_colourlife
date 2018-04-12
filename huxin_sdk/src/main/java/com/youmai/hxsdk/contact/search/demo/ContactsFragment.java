@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +19,7 @@ import com.youmai.hxsdk.contact.search.cn.CNPinyin;
 import com.youmai.hxsdk.contact.search.cn.CNPinyinFactory;
 import com.youmai.hxsdk.contact.search.stickyheader.StickyHeaderDecoration;
 import com.youmai.hxsdk.contact.search.widget.CharIndexView;
-import com.youmai.hxsdk.contact.search.cn.Contact;
+import com.youmai.hxsdk.db.bean.Contact;
 
 import java.util.ArrayList;
 import java.util.Collections;

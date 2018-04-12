@@ -18,6 +18,8 @@ import android.widget.Toast;
 import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.contact.ContactsBindData;
 import com.youmai.hxsdk.module.department.DepartmentActivity;
+import com.youmai.hxsdk.module.groupchat.GroupListActivity;
+import com.youmai.hxsdk.module.localcontacts.LocalContactsActivity;
 import com.youmai.hxsdk.module.organization.OrganizationalStructureActivity;
 import com.youmai.hxsdk.contact.search.adapter.ContactAdapter;
 import com.youmai.hxsdk.contact.search.cn.CNPinyin;
@@ -213,10 +215,13 @@ public class ContactsFragment extends Fragment implements Observer, ContactAdapt
                 startActivity(new Intent(getContext(), DepartmentActivity.class));
                 break;
             case 2:
+                startActivity(new Intent(getContext(), LocalContactsActivity.class));
                 break;
             case 3:
+                startActivity(new Intent(getContext(), GroupListActivity.class));
                 break;
             default:
+                startActivity(new Intent(getContext(), ContactsDetailActivity.class));
                 break;
         }
     }

@@ -61,9 +61,9 @@ public class CacheMsgBean implements Parcelable {
 
     private long msgTime; //消息时间
 
-    private int senderUserId; //发送者的userid
+    private String senderUserId; //发送者的userid
 
-    private int receiverUserId; //接收者的userid
+    private String receiverUserId; //接收者的userid
 
     private String senderPhone; //发送者的电话
 
@@ -111,20 +111,20 @@ public class CacheMsgBean implements Parcelable {
         return this;
     }
 
-    public int getSenderUserId() {
+    public String getSenderUserId() {
         return senderUserId;
     }
 
-    public CacheMsgBean setSenderUserId(int senderUserId) {
+    public CacheMsgBean setSenderUserId(String senderUserId) {
         this.senderUserId = senderUserId;
         return this;
     }
 
-    public int getReceiverUserId() {
+    public String getReceiverUserId() {
         return receiverUserId;
     }
 
-    public CacheMsgBean setReceiverUserId(int receiverUserId) {
+    public CacheMsgBean setReceiverUserId(String receiverUserId) {
         this.receiverUserId = receiverUserId;
         return this;
     }
@@ -292,8 +292,8 @@ public class CacheMsgBean implements Parcelable {
         dest.writeInt(this.msgType);
         dest.writeInt(this.msgStatus);
         dest.writeLong(this.msgTime);
-        dest.writeInt(this.senderUserId);
-        dest.writeInt(this.receiverUserId);
+        dest.writeString(this.senderUserId);
+        dest.writeString(this.receiverUserId);
         dest.writeString(this.senderPhone);
         dest.writeString(this.receiverPhone);
         dest.writeString(this.targetPhone);
@@ -310,8 +310,8 @@ public class CacheMsgBean implements Parcelable {
         this.msgType = in.readInt();
         this.msgStatus = in.readInt();
         this.msgTime = in.readLong();
-        this.senderUserId = in.readInt();
-        this.receiverUserId = in.readInt();
+        this.senderUserId = in.readString();
+        this.receiverUserId = in.readString();
         this.senderPhone = in.readString();
         this.receiverPhone = in.readString();
         this.targetPhone = in.readString();
@@ -321,7 +321,7 @@ public class CacheMsgBean implements Parcelable {
 
     @Generated(hash = 399473634)
     public CacheMsgBean(Long id, Long msgId, int msgType, int msgStatus, long msgTime,
-                        int senderUserId, int receiverUserId, String senderPhone, String receiverPhone,
+                        String senderUserId, String receiverUserId, String senderPhone, String receiverPhone,
                         String targetPhone, String contentJsonBody, int progress) {
         this.id = id;
         this.msgId = msgId;

@@ -20,6 +20,7 @@ import android.os.Message;
 import android.os.SystemClock;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.protobuf.GeneratedMessage;
 import com.google.protobuf.InvalidProtocolBufferException;
@@ -427,7 +428,7 @@ public class HuxinService extends Service {
                 try {
                     YouMaiLogin.User_Login_Ack ack = YouMaiLogin.User_Login_Ack.parseFrom(pduBase.body);
                     if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_OK) {
-                        //Toast.makeText(mContext, "socket登录成功", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext, "socket登录成功", Toast.LENGTH_SHORT).show();
                         mClient.setLogin(true);
                     } else {
                         mClient.setLogin(false);

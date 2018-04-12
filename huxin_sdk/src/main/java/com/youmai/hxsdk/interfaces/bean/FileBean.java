@@ -19,7 +19,7 @@ public class FileBean implements Parcelable {
      * 公共类型
      */
     private int fileMsgType;
-    private int userId;
+    private String userId;
     private String dstPhone;
 
     /**
@@ -81,7 +81,7 @@ public class FileBean implements Parcelable {
 
     protected FileBean(Parcel in) {
         fileMsgType = in.readInt();
-        userId = in.readInt();
+        userId = in.readString();
         dstPhone = in.readString();
         fileName = in.readString();
         fileLength = in.readString();
@@ -109,7 +109,7 @@ public class FileBean implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(fileMsgType);
-        dest.writeInt(userId);
+        dest.writeString(userId);
         dest.writeString(dstPhone);
         dest.writeString(fileName);
         dest.writeString(fileLength);
@@ -160,11 +160,11 @@ public class FileBean implements Parcelable {
         return this;
     }
 
-    public int getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public FileBean setUserId(int userId) {
+    public FileBean setUserId(String userId) {
         this.userId = userId;
         return this;
     }

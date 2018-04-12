@@ -50,10 +50,9 @@ import com.youmai.hxsdk.interfaces.OnFileListener;
 import com.youmai.hxsdk.interfaces.bean.FileBean;
 import com.youmai.hxsdk.proto.YouMaiBasic;
 import com.youmai.hxsdk.proto.YouMaiChat;
-import com.youmai.hxsdk.proto.YouMaiChat.IMChat_Personal;
+import com.youmai.hxsdk.proto.YouMaiMsg;
 import com.youmai.hxsdk.proto.YouMaiUser;
 import com.youmai.hxsdk.push.MorePushManager;
-import com.youmai.hxsdk.push.http.HttpPushManager;
 import com.youmai.hxsdk.service.HuxinService;
 import com.youmai.hxsdk.socket.IMContentUtil;
 import com.youmai.hxsdk.socket.NotifyListener;
@@ -294,6 +293,8 @@ public class HuxinSdkManager {
 
 
     public void setUuid(String uuid) {
+        uuid = "739ca86c-ea5d-4dad-b8ae-f5277942d281";  //TODO  for test
+
         if (!TextUtils.isEmpty(uuid)) {
             mUuid = uuid;
             String saveId = AppUtils.getStringSharedPreferences(mContext, "color_uuid", "");
@@ -519,16 +520,21 @@ public class HuxinSdkManager {
             @Override
             public void httpReqResult(String response) {
                 IpConfig resp = GsonUtil.parse(response, IpConfig.class);
+
+                String ip = AppConfig.getSocketHost();
+                int port = AppConfig.getSocketPort();
+
                 if (resp != null) {
-                    String ip = resp.getIp();
-                    int port = resp.getPort();
+                    ip = resp.getIp();
+                    port = resp.getPort();
 
                     AppUtils.setStringSharedPreferences(mContext, "IP", ip);
                     AppUtils.setIntSharedPreferences(mContext, "PORT", port);
 
-                    InetSocketAddress isa = new InetSocketAddress(ip, port);
-                    connectTcp(uuid, isa);
                 }
+
+                InetSocketAddress isa = new InetSocketAddress(ip, port);
+                connectTcp(uuid, isa);
             }
         });
     }
@@ -632,38 +638,6 @@ public class HuxinSdkManager {
         }
     }
 
-
-    /**
-     * 发送文字
-     *
-     * @param userId
-     * @param desPhone
-     * @param content
-     */
-    public boolean sendText(int userId, String desPhone, String content, ReceiveListener callback) {
-        String srcPhone = getPhoneNum();
-        String tarPhone = desPhone;
-
-        IMChat_Personal.Builder builder = IMChat_Personal.newBuilder();
-        builder.setSrcUsrId(userId);
-        builder.setSrcPhone(srcPhone);
-        builder.setTargetPhone(tarPhone);
-
-        IMContentUtil imContentUtil = new IMContentUtil();
-
-        final int type = IMContentUtil.getContentType(0, YouMaiChat.IM_CONTENT_TYPE.IM_CONTENT_TYPE_TEXT_VALUE);
-        builder.setContentType(type);
-        imContentUtil.appendText(content);
-        builder.setBody(imContentUtil.serializeToString());
-        YouMaiChat.IMChat_Personal imData = builder.build();
-        sendProto(imData, callback);
-
-        callback.setTarPhone(tarPhone);
-        callback.setContent(content);
-        return true;
-    }
-
-
     public boolean sendMsgReply(long msgId) {
         int userId = getUserId();
         YouMaiChat.IMChat_Personal_recv_Ack.Builder builder = YouMaiChat.IMChat_Personal_recv_Ack.newBuilder();
@@ -676,46 +650,196 @@ public class HuxinSdkManager {
 
 
     /**
+     * 发送文字
+     *
+     * @param destUuid
+     * @param content
+     */
+    public void sendText(String destUuid, String content, ReceiveListener callback) {
+        YouMaiMsg.MsgData.Builder msgData = YouMaiMsg.MsgData.newBuilder();
+        msgData.setSrcUserId(getUuid());
+        msgData.setDestUserId(destUuid);
+        msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_TEXT);
+
+        IMContentUtil imContentUtil = new IMContentUtil();
+        imContentUtil.appendText(content);
+        msgData.setMsgContent(imContentUtil.serializeToString());
+
+        YouMaiMsg.ChatMsg.Builder builder = YouMaiMsg.ChatMsg.newBuilder();
+        builder.setData(msgData);
+        YouMaiMsg.ChatMsg chatMsg = builder.build();
+
+        sendProto(chatMsg, callback);
+    }
+
+
+    /**
      * 发送位置
      *
-     * @param userId
-     * @param desPhone
+     * @param destUuid
      * @param longitude
      * @param latitude
      * @param scale
      * @param label
      * @param callback
      */
-    public boolean sendLocation(int userId, String desPhone, double longitude, double latitude,
-                                int scale, String label, ReceiveListener callback) {
-        if (StringUtils.isEmpty(desPhone)) {
-            return false;
-        }
-        String srcPhone = getPhoneNum();
-        String tarPhone = desPhone;
+    public void sendLocation(String destUuid, double longitude, double latitude,
+                             int scale, String label, ReceiveListener callback) {
 
-        IMChat_Personal.Builder builder = IMChat_Personal.newBuilder();
-        builder.setSrcUsrId(userId);
-        builder.setSrcPhone(srcPhone);
-        builder.setTargetPhone(tarPhone);
+        YouMaiMsg.MsgData.Builder msgData = YouMaiMsg.MsgData.newBuilder();
+        msgData.setSrcUserId(getUuid());
+        msgData.setDestUserId(destUuid);
+        msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_LOCATION);
 
         IMContentUtil imContentUtil = new IMContentUtil();
-        int type = IMContentUtil.getContentType(0, YouMaiChat.IM_CONTENT_TYPE.IM_CONTENT_TYPE_LOCATION_VALUE);
-        builder.setContentType(type);
-
         imContentUtil.appendLongitude(longitude + "");
         imContentUtil.appendLaitude(latitude + "");
         imContentUtil.appendScale(scale + "");
         imContentUtil.appendLabel(label);
+        msgData.setMsgContent(imContentUtil.serializeToString());
 
-        builder.setBody(imContentUtil.serializeToString());
-        YouMaiChat.IMChat_Personal imData = builder.build();
+        YouMaiMsg.ChatMsg.Builder builder = YouMaiMsg.ChatMsg.newBuilder();
+        builder.setData(msgData);
+        YouMaiMsg.ChatMsg chatMsg = builder.build();
 
-        sendProto(imData, callback);
+        sendProto(chatMsg, callback);
+    }
 
-        callback.setTarPhone(tarPhone);
-        callback.setContent(longitude + "," + latitude);
-        return true;
+
+    /**
+     * tcp发送图片
+     *
+     * @param destUuid
+     * @param fileId
+     * @param quality
+     * @param callback
+     */
+    public void sendPicture(String destUuid, String fileId, String quality, ReceiveListener callback) {
+        YouMaiMsg.MsgData.Builder msgData = YouMaiMsg.MsgData.newBuilder();
+        msgData.setSrcUserId(getUuid());
+        msgData.setDestUserId(destUuid);
+        msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_IMAGE);
+
+        IMContentUtil imContentUtil = new IMContentUtil();
+        imContentUtil.appendPictureId(fileId);
+        imContentUtil.appendDescribe(quality); // 是否原图
+        msgData.setMsgContent(imContentUtil.serializeToString());
+
+        YouMaiMsg.ChatMsg.Builder builder = YouMaiMsg.ChatMsg.newBuilder();
+        builder.setData(msgData);
+        YouMaiMsg.ChatMsg chatMsg = builder.build();
+
+        sendProto(chatMsg, callback);
+    }
+
+
+    /**
+     * tcp 发送音频
+     *
+     * @param destUuid
+     * @param fileId
+     * @param callback
+     */
+    public void sendAudio(String destUuid, String fileId, String secondsTime, String sourcePhone, String forwardCount, ReceiveListener callback) {
+        YouMaiMsg.MsgData.Builder msgData = YouMaiMsg.MsgData.newBuilder();
+        msgData.setSrcUserId(getUuid());
+        msgData.setDestUserId(destUuid);
+        msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_IMAGE);
+
+        IMContentUtil imContentUtil = new IMContentUtil();
+        imContentUtil.appendAudioId(fileId);
+        imContentUtil.appendBarTime(secondsTime);
+        imContentUtil.appendSourcePhone(sourcePhone);
+        imContentUtil.appendForwardCount(forwardCount);
+        msgData.setMsgContent(imContentUtil.serializeToString());
+
+        YouMaiMsg.ChatMsg.Builder builder = YouMaiMsg.ChatMsg.newBuilder();
+        builder.setData(msgData);
+        YouMaiMsg.ChatMsg chatMsg = builder.build();
+
+        sendProto(chatMsg, callback);
+
+
+    }
+
+
+    /**
+     * tcp发送视频
+     *
+     * @param destUuid
+     * @param fileId
+     * @param callback
+     */
+    public void sendVideo(String destUuid, String fileId, String frameId, String name, String size, String time, ReceiveListener callback) {
+        YouMaiMsg.MsgData.Builder msgData = YouMaiMsg.MsgData.newBuilder();
+        msgData.setSrcUserId(getUuid());
+        msgData.setDestUserId(destUuid);
+        msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_VIDEO);
+
+        IMContentUtil imContentUtil = new IMContentUtil();
+        imContentUtil.addVideo(fileId, frameId, name, size, time);//body的内容
+        msgData.setMsgContent(imContentUtil.serializeToString());
+
+        YouMaiMsg.ChatMsg.Builder builder = YouMaiMsg.ChatMsg.newBuilder();
+        builder.setData(msgData);
+        YouMaiMsg.ChatMsg chatMsg = builder.build();
+
+        sendProto(chatMsg, callback);
+    }
+
+    /**
+     * tcp发送视频
+     *
+     * @param destUuid
+     * @param fileId
+     * @param callback
+     */
+    public void sendBigFile(String destUuid, String fileId,
+                            String fileName, String fileSize, ReceiveListener callback) {
+        YouMaiMsg.MsgData.Builder msgData = YouMaiMsg.MsgData.newBuilder();
+        msgData.setSrcUserId(getUuid());
+        msgData.setDestUserId(destUuid);
+        msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_FILE);
+
+        IMContentUtil imContentUtil = new IMContentUtil();
+        imContentUtil.appendBigFileId(fileId, fileName, fileSize);
+        msgData.setMsgContent(imContentUtil.serializeToString());
+
+        YouMaiMsg.ChatMsg.Builder builder = YouMaiMsg.ChatMsg.newBuilder();
+        builder.setData(msgData);
+        YouMaiMsg.ChatMsg chatMsg = builder.build();
+
+        sendProto(chatMsg, callback);
+    }
+
+
+    /**
+     * tcp发送url
+     *
+     * @param destUuid
+     * @param url
+     * @param title
+     * @param description
+     * @param callback
+     */
+    public void sendUrl(String destUuid, String url, String title,
+                        String description, ReceiveListener callback) {
+        YouMaiMsg.MsgData.Builder msgData = YouMaiMsg.MsgData.newBuilder();
+        msgData.setSrcUserId(getUuid());
+        msgData.setDestUserId(destUuid);
+        msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_FILE);
+
+        IMContentUtil imContentUtil = new IMContentUtil();
+        imContentUtil.appendUrl(url);
+        imContentUtil.appendTitle(title);
+        imContentUtil.appendDescribe(description);
+        msgData.setMsgContent(imContentUtil.serializeToString());
+
+        YouMaiMsg.ChatMsg.Builder builder = YouMaiMsg.ChatMsg.newBuilder();
+        builder.setData(msgData);
+        YouMaiMsg.ChatMsg chatMsg = builder.build();
+
+        sendProto(chatMsg, callback);
     }
 
 
@@ -809,7 +933,7 @@ public class HuxinSdkManager {
      * @param secondTimes
      * @return
      */
-    public boolean postAudio(final int userId, final String desPhone,
+    public boolean postAudio(final String userId, final String desPhone,
                              final File file, final String secondTimes,
                              final UpProgressHandler progressHandler,
                              final IFileSendListener listener) {
@@ -861,20 +985,6 @@ public class HuxinSdkManager {
                                                 if (ack.getIsTargetOnline()) {
                                                     Toast.makeText(mContext, mContext.getString(R.string.hx_toast_29), Toast.LENGTH_SHORT).show();
                                                 } else {
-                                                    HttpPushManager.pushMsgForAudio(userId, desPhone,
-                                                            fileId, secondTimes,
-                                                            new HttpPushManager.PushListener() {
-                                                                @Override
-                                                                public void success(String msg) {
-                                                                    LogUtils.w(TAG, msg);
-                                                                    Toast.makeText(mContext, mContext.getString(R.string.hx_toast_29), Toast.LENGTH_SHORT).show();
-                                                                }
-
-                                                                @Override
-                                                                public void fail(String msg) {
-
-                                                                }
-                                                            });
 
                                                 }
                                                 if (null != listener) {
@@ -894,7 +1004,7 @@ public class HuxinSdkManager {
                                         }
                                     }
                                 };
-                                sendAudio(userId, desPhone, fileId, secondTimes, "", "0", receiveListener);
+                                sendAudio(userId, fileId, secondTimes, "", "0", receiveListener);
 
                             } else {
                                 Toast.makeText(mContext, resp.getM(), Toast.LENGTH_SHORT).show();
@@ -932,7 +1042,7 @@ public class HuxinSdkManager {
      * @param isSaveDB 是否保存到本地数据库，IMConnectFragment的适配器会在 {@link IMListAdapter#addAndRefreshUI}已有保存操作
      * @return
      */
-    public boolean postBigFile(final int userId, final String desPhone, final String path,
+    public boolean postBigFile(final String userId, final String desPhone, final String path,
                                final String fileName, final String fileSize,
                                final UpProgressHandler progressHandler,
                                final boolean isSaveDB,
@@ -953,7 +1063,7 @@ public class HuxinSdkManager {
      * @param isSaveDB 是否保存到本地数据库，IMConnectFragment的适配器会在 {@link IMListAdapter#addAndRefreshUI}已有保存操作
      * @return
      */
-    public boolean postBigFile(final int userId, final String desPhone, final File file,
+    public boolean postBigFile(final String userId, final String desPhone, final File file,
                                final String fileName, final String fileSize,
                                final UpProgressHandler progressHandler,
                                final boolean isSaveDB,
@@ -1060,23 +1170,6 @@ public class HuxinSdkManager {
                                                     //Toast.makeText(mContext, mContext.getString(R.string.hx_toast_21), Toast.LENGTH_SHORT).show();
 
                                                 } else {
-                                                    HttpPushManager.pushMsgForBigFile(userId, desPhone,
-                                                            fileId, fileName, fileSize,
-                                                            new HttpPushManager.PushListener() {
-                                                                @Override
-                                                                public void success(String msg) {
-                                                                    LogUtils.w(TAG, msg);
-                                                                    newMsgBean.setMsgStatus(CacheMsgBean.SEND_SUCCEED);
-                                                                    //add to db
-                                                                    CacheMsgHelper.instance(mContext).insertOrUpdate(newMsgBean);
-                                                                    //Toast.makeText(mContext, mContext.getString(R.string.hx_toast_21), Toast.LENGTH_SHORT).show();
-                                                                }
-
-                                                                @Override
-                                                                public void fail(String msg) {
-
-                                                                }
-                                                            });
 
                                                 }
 
@@ -1101,7 +1194,7 @@ public class HuxinSdkManager {
 
                                     }
                                 };
-                                sendBigFile(userId, desPhone, fileId, fileName, fileSize, receiveListener);
+                                sendBigFile(userId, fileId, fileName, fileSize, receiveListener);
 
                             } else {
                                 Toast.makeText(mContext, resp.getM(), Toast.LENGTH_SHORT).show();
@@ -1148,7 +1241,7 @@ public class HuxinSdkManager {
      * @param listener
      * @return
      */
-    public void postPicture(final int userId,
+    public void postPicture(final String userId,
                             final String desPhone,
                             final File file,
                             final String originalPath,
@@ -1158,7 +1251,7 @@ public class HuxinSdkManager {
         postPicture(userId, desPhone, file, originalPath, isSaveDB, false, listener);
     }
 
-    public void postPicture(final int userId,
+    public void postPicture(final String userId,
                             final String desPhone,
                             final File file,
                             final String originalPath,
@@ -1278,26 +1371,7 @@ public class HuxinSdkManager {
                                                         CacheMsgHelper.instance(mContext).insertOrUpdate(newMsgBean);
                                                     }
                                                 } else {
-                                                    final CacheMsgBean finalNewMsgBean = newMsgBean;
-                                                    HttpPushManager.pushMsgForPicture(userId, desPhone, fileId,
-                                                            new HttpPushManager.PushListener() {
-                                                                @Override
-                                                                public void success(String msg) {
-                                                                    LogUtils.w(TAG, msg);
-                                                                    /*String log = mContext.getString(R.string.hx_phiz_item_send_pic_success);
-                                                                    Toast.makeText(mContext, log, Toast.LENGTH_SHORT).show();*/
-                                                                    if (isSaveDB) {
-                                                                        //add to db
-                                                                        finalNewMsgBean.setMsgStatus(CacheMsgBean.SEND_SUCCEED);
-                                                                        CacheMsgHelper.instance(mContext).insertOrUpdate(finalNewMsgBean);
-                                                                    }
-                                                                }
 
-                                                                @Override
-                                                                public void fail(String msg) {
-
-                                                                }
-                                                            });
                                                 }
 
                                                 if (null != listener) {
@@ -1342,7 +1416,7 @@ public class HuxinSdkManager {
                                     }
                                 };
 
-                                sendPicture(userId, desPhone, fileId, isOriginal ? "original" : "thumbnail", receiveListener);
+                                sendPicture(userId, fileId, isOriginal ? "original" : "thumbnail", receiveListener);
 
                             } else {
                                 Toast.makeText(mContext, resp.getM(), Toast.LENGTH_SHORT).show();
@@ -1388,7 +1462,7 @@ public class HuxinSdkManager {
      * @param listener
      * @return
      */
-    public void postVideo(final int userId,
+    public void postVideo(final String userId,
                           final String desPhone,
                           final File file,
                           final String filePath,
@@ -1654,28 +1728,7 @@ public class HuxinSdkManager {
                                 CacheMsgHelper.instance(mContext).insertOrUpdate(newMsgBean);
                             }
                         } else {
-                            final CacheMsgBean finalNewMsgBean = newMsgBean;
-                            CacheMsgVideo cacheMsgVideo = (CacheMsgVideo) cacheMsgBean.getJsonBodyObj();
-                            String videoId = cacheMsgVideo.getVideoId();
-                            HttpPushManager.pushMsgForPicture(cacheMsgBean.getSenderUserId(), cacheMsgBean.getReceiverPhone(), videoId,
-                                    new HttpPushManager.PushListener() {
-                                        @Override
-                                        public void success(String msg) {
-                                            LogUtils.w(TAG, msg);
-                                            /*String log = mContext.getString(R.string.hx_phiz_item_send_video_success);
-                                            Toast.makeText(mContext, log, Toast.LENGTH_SHORT).show();*/
-                                            if (isSaveDB) {
-                                                //add to db
-                                                finalNewMsgBean.setMsgStatus(CacheMsgBean.SEND_SUCCEED);
-                                                CacheMsgHelper.instance(mContext).insertOrUpdate(finalNewMsgBean);
-                                            }
-                                        }
 
-                                        @Override
-                                        public void fail(String msg) {
-
-                                        }
-                                    });
                         }
 
                         if (null != listener) {
@@ -1716,187 +1769,7 @@ public class HuxinSdkManager {
             }
         };
 
-        sendVideo(cacheMsgBean.getSenderUserId(), desPhone, fileId, frameId, name, size, time + "", receiveListener);
-    }
-
-    /**
-     * tcp发送图片
-     *
-     * @param userId
-     * @param desPhone
-     * @param fileId
-     * @param quality
-     * @param callback
-     */
-    public void sendPicture(int userId, String desPhone, String fileId, String quality, ReceiveListener callback) {
-        String srcPhone = getPhoneNum();
-        String tarPhone = desPhone;
-
-        IMChat_Personal.Builder builder = IMChat_Personal.newBuilder();
-        builder.setSrcUsrId(userId);
-        builder.setSrcPhone(srcPhone);
-        builder.setTargetPhone(tarPhone);
-
-        IMContentUtil imContentUtil = new IMContentUtil();
-
-        int type = IMContentUtil.getContentType(0, YouMaiChat.IM_CONTENT_TYPE.IM_CONTENT_TYPE_IMAGE_VALUE);
-        builder.setContentType(type);
-        imContentUtil.appendPictureId(fileId);
-        imContentUtil.appendDescribe(quality); // 是否原图
-
-        builder.setBody(imContentUtil.serializeToString());
-
-        YouMaiChat.IMChat_Personal imData = builder.build();
-
-        callback.setTarPhone(tarPhone);
-        callback.setContent(fileId);
-        sendProto(imData, callback);
-    }
-
-
-    /**
-     * tcp 发送音频
-     *
-     * @param userId
-     * @param desPhone
-     * @param fileId
-     * @param callback
-     */
-    public boolean sendAudio(int userId, String desPhone, String fileId, String secondsTime, String sourcePhone, String forwardCount, ReceiveListener callback) {
-        String srcPhone = getPhoneNum();
-        String tarPhone = desPhone;
-
-        IMChat_Personal.Builder builder = IMChat_Personal.newBuilder();
-        builder.setSrcUsrId(userId);
-        builder.setSrcPhone(srcPhone);
-        builder.setTargetPhone(tarPhone);
-
-        IMContentUtil imContentUtil = new IMContentUtil();
-
-        int type = IMContentUtil.getContentType(0, YouMaiChat.IM_CONTENT_TYPE.IM_CONTENT_TYPE_AUDIO_VALUE);
-        builder.setContentType(type);
-        imContentUtil.appendAudioId(fileId);
-        imContentUtil.appendBarTime(secondsTime);
-        imContentUtil.appendSourcePhone(sourcePhone);
-        imContentUtil.appendForwardCount(forwardCount);
-
-        builder.setBody(imContentUtil.serializeToString());
-
-        YouMaiChat.IMChat_Personal imData = builder.build();
-
-        sendProto(imData, callback);
-
-        callback.setTarPhone(tarPhone);
-        callback.setContent(fileId);
-        return true;
-    }
-
-
-    /**
-     * tcp发送视频
-     *
-     * @param userId
-     * @param desPhone
-     * @param fileId
-     * @param callback
-     */
-    public boolean sendVideo(int userId, String desPhone, String fileId, String frameId, String name, String size, String time, ReceiveListener callback) {
-        IMContentUtil imContentUtil = new IMContentUtil();
-        int type = IMContentUtil.getContentType(0, YouMaiChat.IM_CONTENT_TYPE.IM_CONTENT_TYPE_VIDEO_VALUE);
-        imContentUtil.addVideo(fileId, frameId, name, size, time);//body的内容
-
-        String srcPhone = getPhoneNum();
-        String tarPhone = desPhone;
-
-        IMChat_Personal.Builder builder = IMChat_Personal.newBuilder();
-        builder.setSrcUsrId(userId);
-        builder.setSrcPhone(srcPhone);
-        builder.setTargetPhone(tarPhone);
-
-        builder.setContentType(type);
-
-        builder.setBody(imContentUtil.serializeToString());
-
-        YouMaiChat.IMChat_Personal imData = builder.build();
-
-        sendProto(imData, callback);
-
-        callback.setTarPhone(tarPhone);
-        callback.setContent(fileId);
-        return true;
-    }
-
-    /**
-     * tcp发送视频
-     *
-     * @param userId
-     * @param desPhone
-     * @param fileId
-     * @param callback
-     */
-    public boolean sendBigFile(int userId, String desPhone, String fileId,
-                               String fileName, String fileSize, ReceiveListener callback) {
-        String srcPhone = getPhoneNum();
-        String tarPhone = desPhone;
-
-        IMChat_Personal.Builder builder = IMChat_Personal.newBuilder();
-        builder.setSrcUsrId(userId);
-        builder.setSrcPhone(srcPhone);
-        builder.setTargetPhone(tarPhone);
-
-        IMContentUtil imContentUtil = new IMContentUtil();
-
-        int type = IMContentUtil.getContentType(0, YouMaiChat.IM_CONTENT_TYPE.IM_CONTENT_TYPE_FILE_VALUE);
-        builder.setContentType(type);
-        imContentUtil.appendBigFileId(fileId, fileName, fileSize);
-
-        builder.setBody(imContentUtil.serializeBigFileToString());
-
-        YouMaiChat.IMChat_Personal imData = builder.build();
-
-        sendProto(imData, callback);
-
-        callback.setTarPhone(tarPhone);
-        callback.setContent(fileId);
-        return true;
-    }
-
-
-    /**
-     * tcp发送url
-     *
-     * @param userId
-     * @param desPhone
-     * @param url
-     * @param title
-     * @param description
-     * @param callback
-     */
-    public boolean sendUrl(int userId, String desPhone, String url, String title,
-                           String description, ReceiveListener callback) {
-        String srcPhone = getPhoneNum();
-        String tarPhone = desPhone;
-
-        IMChat_Personal.Builder builder = IMChat_Personal.newBuilder();
-        builder.setSrcUsrId(userId);
-        builder.setSrcPhone(srcPhone);
-        builder.setTargetPhone(tarPhone);
-
-        IMContentUtil imContentUtil = new IMContentUtil();
-
-        int type = IMContentUtil.getContentType(0, YouMaiChat.IM_CONTENT_TYPE.IM_CONTENT_TYPE_URL_VALUE);
-        builder.setContentType(type);
-        imContentUtil.appendUrl(url);
-        imContentUtil.appendTitle(title);
-        imContentUtil.appendDescribe(description);
-        builder.setBody(imContentUtil.serializeToString());
-        YouMaiChat.IMChat_Personal imData = builder.build();
-
-        sendProto(imData, callback);
-
-        callback.setTarPhone(tarPhone);
-        callback.setContent(url);
-        return true;
+        sendVideo(cacheMsgBean.getSenderUserId(), fileId, frameId, name, size, time + "", receiveListener);
     }
 
 

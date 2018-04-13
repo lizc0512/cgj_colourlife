@@ -7,7 +7,6 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.qiniu.android.storage.UpProgressHandler;
-import com.youmai.hxsdk.im.IMConst;
 import com.youmai.hxsdk.im.IMHelper;
 import com.youmai.hxsdk.interfaces.IFileSendListener;
 import com.youmai.hxsdk.interfaces.impl.FileSendListenerImpl;
@@ -16,6 +15,7 @@ import com.youmai.hxsdk.module.filemanager.interfaces.PickerRefreshUIListener;
 import com.youmai.hxsdk.module.filemanager.activity.FileManagerActivity;
 import com.youmai.hxsdk.picker.FilePickerBuilder;
 import com.youmai.hxsdk.module.filemanager.constant.FilePickerConst;
+import com.youmai.hxsdk.proto.YouMaiMsg;
 import com.youmai.hxsdk.utils.CommonUtils;
 import com.youmai.hxsdk.utils.ToastUtil;
 
@@ -191,7 +191,7 @@ public class WrapSendFileActivity extends FragmentActivity implements PickerRefr
                 new UpProgressHandler() {
                     @Override
                     public void progress(String key, double percent) {
-                        listener.onProgress(IMConst.IM_FILE_VALUE, percent, "file");
+                        listener.onProgress(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_FILE_VALUE, percent, "file");
                     }
                 }, true, listener);
         finish();

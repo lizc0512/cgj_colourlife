@@ -33,7 +33,6 @@ import com.youmai.hxsdk.config.FileConfig;
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
 import com.youmai.hxsdk.http.DownloadListener;
 import com.youmai.hxsdk.http.FileAsyncTaskDownload;
-import com.youmai.hxsdk.im.IMConst;
 import com.youmai.hxsdk.im.IMHelper;
 import com.youmai.hxsdk.im.IMMsgManager;
 import com.youmai.hxsdk.im.cache.CacheMsgFile;
@@ -48,6 +47,7 @@ import com.youmai.hxsdk.im.voice.manager.MediaManager;
 import com.youmai.hxsdk.module.remind.SetRemindActivity;
 import com.youmai.hxsdk.module.videoplayer.VideoPlayerActivity;
 import com.youmai.hxsdk.module.videoplayer.bean.VideoDetailInfo;
+import com.youmai.hxsdk.proto.YouMaiMsg;
 import com.youmai.hxsdk.utils.QiniuUrl;
 import com.youmai.hxsdk.utils.TimeUtils;
 import com.youmai.hxsdk.view.LinearLayoutManagerWithSmoothScroller;
@@ -104,7 +104,7 @@ public class IMListAdapter extends RecyclerView.Adapter {
     private Context mContext;
     private IMConnectionActivity mIMConnectActivity;
     private RecyclerView mRecyclerView;
-    private String mDstPhone;
+    private String mDstUuid;
     private List<CacheMsgBean> mImBeanList = new ArrayList<>();
     public int mThemeIndex = -1;
 
@@ -117,16 +117,16 @@ public class IMListAdapter extends RecyclerView.Adapter {
     private OnClickMoreListener moreListener;
     private UIHandler mHandler;
 
-    public IMListAdapter(IMConnectionActivity act, RecyclerView recyclerView, String dstPhone, String dstName) {
+    public IMListAdapter(IMConnectionActivity act, RecyclerView recyclerView, String dstUuid) {
         mIMConnectActivity = act;
         mContext = act;
 
         mHandler = new UIHandler(this);
 
         mRecyclerView = recyclerView;
-        mDstPhone = dstPhone;
+        mDstUuid = dstUuid;
         //srsm add
-        mImBeanList.addAll(IMMsgManager.getInstance().genCacheMsgBeanList(mContext, mDstPhone, true));
+        mImBeanList.addAll(IMMsgManager.getInstance().genCacheMsgBeanList(mContext, dstUuid, true));
 
         mRecyclerView.getItemAnimator().setChangeDuration(0);
         mRecyclerView.getItemAnimator().setAddDuration(0);
@@ -714,7 +714,7 @@ public class IMListAdapter extends RecyclerView.Adapter {
                     } else {
                         //停止文本朗读
                         CacheMsgBean cacheMsgBean1 = mImBeanList.get(mPlayVoicePosition);
-                        if (cacheMsgBean1.getMsgType() == IMConst.IM_TEXT_VALUE) {
+                        if (cacheMsgBean1.getMsgType() == YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_TEXT_VALUE) {
                             if (voicePlayAnim != null && voicePlayAnim.isRunning()) {
                                 voicePlayAnim.stop();
                             }
@@ -1008,7 +1008,7 @@ public class IMListAdapter extends RecyclerView.Adapter {
         }
 
         List<CacheMsgBean> unReadList = IMMsgManager.getInstance().getCacheMsgBeanListFromStartIndex(
-                mDstPhone, true, startId);
+                mDstUuid, true, startId);
 
         if (unReadList.size() > 0) {
             if (getItemCount() > 0) {

@@ -110,9 +110,11 @@ public class IMConnectionActivity extends SdkBaseActivity implements
      */
     public static final String TAG = IMConnectionActivity.class.getSimpleName();
 
-    public static final String DST_PHONE = "DST_PHONE";
+
     //srsm add @20170214
     public static final String DST_NAME = "DST_NAME";
+    public static final String DST_UUID = "DST_UUID";
+
     public static final String EXTRA_SCROLL_POSITION = "EXTRA_SCROLL_POSITION";
     public static final String IS_SHOW_AUDIO = "IS_SHOW_AUDIO";
 
@@ -139,10 +141,9 @@ public class IMConnectionActivity extends SdkBaseActivity implements
 
     private TextView tvTitle;
     private ImageView ivMore;
-    private String targetPhone = "";
-    private String contactName;
 
-    private boolean isOpenAudio = false;
+    private String destNickName;  //目标昵称
+    private String destUuid;      //目标UUID
 
     private boolean isPauseOut = false;
     private boolean isOpenEmotion = false;
@@ -216,11 +217,12 @@ public class IMConnectionActivity extends SdkBaseActivity implements
         mHandler = new NormalHandler(this);
 
         Intent fromIntent = getIntent();
-        targetPhone = fromIntent.getStringExtra(DST_PHONE);
-        isOpenAudio = fromIntent.getBooleanExtra(IS_SHOW_AUDIO, false);
 
-        if (StringUtils.isEmpty(targetPhone)) {
-            targetPhone = HuxinSdkManager.instance().getPhoneNum();
+        destNickName = fromIntent.getStringExtra(DST_NAME);
+        destUuid = fromIntent.getStringExtra(DST_UUID);
+
+        if (StringUtils.isEmpty(destUuid)) {
+            destUuid = HuxinSdkManager.instance().getUuid();
         }
 
         mScrollPosition = fromIntent.getLongExtra(EXTRA_SCROLL_POSITION, 0);
@@ -230,7 +232,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
             public void onReceive(Context context, Intent intent) {
                 CacheMsgBean cacheMsgBean = intent.getParcelableExtra("CacheMsgBean");
                 if (cacheMsgBean != null) {
-                    if (cacheMsgBean.getSenderPhone().equals(targetPhone)) {
+                    if (cacheMsgBean.getSenderUserId().equals(destUuid)) {
                         imListAdapter.refreshIncomingMsgUI(cacheMsgBean);
                     }
                 }
@@ -274,17 +276,15 @@ public class IMConnectionActivity extends SdkBaseActivity implements
 
 
         PickerManager.getInstance().setRefreshUIListener(this);
-        IMMsgManager.getInstance().removeBadge(targetPhone);
+        IMMsgManager.getInstance().removeBadge(destUuid);
     }
 
     public void handleIntent(Intent intent) {
-        targetPhone = intent.getStringExtra(DST_PHONE);
-        contactName = intent.getStringExtra(DST_NAME);
+        destNickName = intent.getStringExtra(DST_NAME);
+        destUuid = intent.getStringExtra(DST_UUID);
 
-        if (!TextUtils.isEmpty(contactName)) {
-            tvTitle.setText(contactName);
-        } else if (TextUtils.isEmpty(targetPhone)) {
-            tvTitle.setText(targetPhone);
+        if (!TextUtils.isEmpty(destNickName)) {
+            tvTitle.setText(destNickName);
         }
     }
 
@@ -384,7 +384,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
     public void onBackPressed() {
         List<CacheMsgBean> lShareList = IMMsgManager.getInstance().getLShareList();
         for (CacheMsgBean bean : lShareList) {
-            if (bean.getSenderPhone().equals(targetPhone)) {
+            if (bean.getSenderUserId().equals(destUuid)) {
                 lShareList.remove(bean);
                 break;
             }
@@ -428,17 +428,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
 
     private void initView() {
         tvTitle = (TextView) findViewById(R.id.tv_title);
-        if (tvTitle != null) {
-            tvTitle.setText(targetPhone);
-        }
-
-        //srsm add start
-        contactName = getIntent().getStringExtra(DST_NAME);
-        if (contactName != null && !TextUtils.isEmpty(contactName)) {
-            tvTitle.setText(contactName);
-        }
-        mHandler.sendEmptyMessageDelayed(MSG_GET_CONTACT_ID, 100);
-        //srsm add end
+        tvTitle.setText(destNickName);
 
         TextView tvBack = (TextView) findViewById(R.id.tv_back);
         if (tvBack != null) {
@@ -516,7 +506,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
         manager = new LinearLayoutManagerWithSmoothScroller(this, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(manager);
 
-        imListAdapter = new IMListAdapter(this, recyclerView, targetPhone, contactName);
+        imListAdapter = new IMListAdapter(this, recyclerView, destUuid);
         imListAdapter.setMoreListener(new IMListAdapter.OnClickMoreListener() {
             @Override
             public void showMore(boolean isShow) {
@@ -572,7 +562,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
             public void deleteMsgCallback(int type) {
                 if (!isFinishing()) {
                     Intent intent = new Intent();
-                    intent.putExtra("updatePhone", targetPhone);
+                    intent.putExtra("updatePhone", destUuid);
                     intent.putExtra("isDeleteMsgType", type);
                     setResult(Activity.RESULT_OK, intent);
                 }
@@ -648,7 +638,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
         docPaths.clear();
         PickerManager.getInstance().addDocTypes();
         Intent intent = new Intent(this, FileManagerActivity.class);
-        intent.putExtra("dstPhone", targetPhone);
+        intent.putExtra("dstPhone", destUuid);
         startActivity(intent);
     }
 
@@ -665,9 +655,8 @@ public class IMConnectionActivity extends SdkBaseActivity implements
         return new CacheMsgBean()
                 .setMsgTime(System.currentTimeMillis())
                 .setMsgStatus(CacheMsgBean.SEND_GOING)
-                .setSenderPhone(HuxinSdkManager.instance().getPhoneNum())
                 .setSenderUserId(HuxinSdkManager.instance().getUuid())
-                .setReceiverPhone(targetPhone);
+                .setReceiverUserId(destUuid);
     }
 
     /**
@@ -975,7 +964,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
     public void onCallback(CacheMsgBean cacheMsgBean) {
         //刷新界面
         if (!isFinishing()) {
-            if (cacheMsgBean.getSenderPhone().equals(targetPhone))
+            if (cacheMsgBean.getSenderUserId().equals(destUuid))
                 imListAdapter.refreshIncomingMsgUI(cacheMsgBean);
         }
     }
@@ -998,7 +987,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
                 FileQueue fileQueue = intent.getParcelableExtra("data");
                 String phone = fileQueue.getPhone();
                 int pro = fileQueue.getPro();
-                if (TextUtils.equals(targetPhone, phone)) {
+                if (TextUtils.equals(destUuid, phone)) {
                     if (pro == 100) {
                         //下载完成,刷新ui
                         refreshFinishVideo(fileQueue);

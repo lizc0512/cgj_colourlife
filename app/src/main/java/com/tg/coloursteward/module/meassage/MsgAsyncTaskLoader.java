@@ -62,7 +62,7 @@ public class MsgAsyncTaskLoader extends AsyncTaskLoader<List<ExCacheMsgBean>> {
         long startTime = System.currentTimeMillis();
 
         final String msgTimeColumnName = CacheMsgBeanDao.Properties.MsgTime.columnName;
-        final String targetPhoneColumnName = CacheMsgBeanDao.Properties.TargetPhone.columnName;
+        final String targetPhoneColumnName = CacheMsgBeanDao.Properties.TargetUuid.columnName;
 
         // FROM "CACHE_MSG_BEAN" T  WHERE count(distinct TARGET_PHONE) ORDER BY TARGET_PHONE , MSG_TIME DESC
         //先targetphone分组
@@ -94,7 +94,7 @@ public class MsgAsyncTaskLoader extends AsyncTaskLoader<List<ExCacheMsgBean>> {
         List<ExCacheMsgBean> tempList = new ArrayList<>();
         for (CacheMsgBean bean : msgBeanList) {
             ExCacheMsgBean exBean = new ExCacheMsgBean(bean);
-            exBean.setDisplayName(bean.getTargetPhone());
+            exBean.setDisplayName(bean.getTargetUuid());
             tempList.add(exBean);
         }
 

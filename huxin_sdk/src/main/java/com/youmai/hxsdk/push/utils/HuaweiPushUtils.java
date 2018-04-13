@@ -1,4 +1,4 @@
-package com.youmai.hxsdk.push.manage.utils;
+package com.youmai.hxsdk.push.utils;
 
 import android.app.Activity;
 import android.content.Context;

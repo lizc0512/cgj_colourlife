@@ -27,15 +27,14 @@ public class CacheMsgBeanDao extends AbstractDao<CacheMsgBean, Long> {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
         public final static Property MsgId = new Property(1, Long.class, "msgId", false, "MSG_ID");
         public final static Property MsgType = new Property(2, int.class, "msgType", false, "MSG_TYPE");
-        public final static Property MsgStatus = new Property(3, int.class, "msgStatus", false, "MSG_STATUS");
-        public final static Property MsgTime = new Property(4, long.class, "msgTime", false, "MSG_TIME");
-        public final static Property SenderUserId = new Property(5, String.class, "senderUserId", false, "SENDER_USER_ID");
-        public final static Property ReceiverUserId = new Property(6, String.class, "receiverUserId", false, "RECEIVER_USER_ID");
-        public final static Property SenderPhone = new Property(7, String.class, "senderPhone", false, "SENDER_PHONE");
-        public final static Property ReceiverPhone = new Property(8, String.class, "receiverPhone", false, "RECEIVER_PHONE");
-        public final static Property TargetPhone = new Property(9, String.class, "targetPhone", false, "TARGET_PHONE");
-        public final static Property ContentJsonBody = new Property(10, String.class, "contentJsonBody", false, "CONTENT_JSON_BODY");
-        public final static Property Progress = new Property(11, int.class, "progress", false, "PROGRESS");
+        public final static Property MsgTime = new Property(3, long.class, "msgTime", false, "MSG_TIME");
+        public final static Property SenderUserId = new Property(4, String.class, "senderUserId", false, "SENDER_USER_ID");
+        public final static Property ReceiverUserId = new Property(5, String.class, "receiverUserId", false, "RECEIVER_USER_ID");
+        public final static Property ContentJsonBody = new Property(6, String.class, "contentJsonBody", false, "CONTENT_JSON_BODY");
+        public final static Property GroupId = new Property(7, int.class, "groupId", false, "GROUP_ID");
+        public final static Property TargetUuid = new Property(8, String.class, "targetUuid", false, "TARGET_UUID");
+        public final static Property MsgStatus = new Property(9, int.class, "msgStatus", false, "MSG_STATUS");
+        public final static Property Progress = new Property(10, int.class, "progress", false, "PROGRESS");
     }
 
 
@@ -54,15 +53,14 @@ public class CacheMsgBeanDao extends AbstractDao<CacheMsgBean, Long> {
                 "\"_id\" INTEGER PRIMARY KEY ," + // 0: id
                 "\"MSG_ID\" INTEGER," + // 1: msgId
                 "\"MSG_TYPE\" INTEGER NOT NULL ," + // 2: msgType
-                "\"MSG_STATUS\" INTEGER NOT NULL ," + // 3: msgStatus
-                "\"MSG_TIME\" INTEGER NOT NULL ," + // 4: msgTime
-                "\"SENDER_USER_ID\" TEXT," + // 5: senderUserId
-                "\"RECEIVER_USER_ID\" TEXT," + // 6: receiverUserId
-                "\"SENDER_PHONE\" TEXT," + // 7: senderPhone
-                "\"RECEIVER_PHONE\" TEXT," + // 8: receiverPhone
-                "\"TARGET_PHONE\" TEXT," + // 9: targetPhone
-                "\"CONTENT_JSON_BODY\" TEXT," + // 10: contentJsonBody
-                "\"PROGRESS\" INTEGER NOT NULL );"); // 11: progress
+                "\"MSG_TIME\" INTEGER NOT NULL ," + // 3: msgTime
+                "\"SENDER_USER_ID\" TEXT," + // 4: senderUserId
+                "\"RECEIVER_USER_ID\" TEXT," + // 5: receiverUserId
+                "\"CONTENT_JSON_BODY\" TEXT," + // 6: contentJsonBody
+                "\"GROUP_ID\" INTEGER NOT NULL ," + // 7: groupId
+                "\"TARGET_UUID\" TEXT," + // 8: targetUuid
+                "\"MSG_STATUS\" INTEGER NOT NULL ," + // 9: msgStatus
+                "\"PROGRESS\" INTEGER NOT NULL );"); // 10: progress
     }
 
     /** Drops the underlying database table. */
@@ -85,39 +83,30 @@ public class CacheMsgBeanDao extends AbstractDao<CacheMsgBean, Long> {
             stmt.bindLong(2, msgId);
         }
         stmt.bindLong(3, entity.getMsgType());
-        stmt.bindLong(4, entity.getMsgStatus());
-        stmt.bindLong(5, entity.getMsgTime());
+        stmt.bindLong(4, entity.getMsgTime());
  
         String senderUserId = entity.getSenderUserId();
         if (senderUserId != null) {
-            stmt.bindString(6, senderUserId);
+            stmt.bindString(5, senderUserId);
         }
  
         String receiverUserId = entity.getReceiverUserId();
         if (receiverUserId != null) {
-            stmt.bindString(7, receiverUserId);
-        }
- 
-        String senderPhone = entity.getSenderPhone();
-        if (senderPhone != null) {
-            stmt.bindString(8, senderPhone);
-        }
- 
-        String receiverPhone = entity.getReceiverPhone();
-        if (receiverPhone != null) {
-            stmt.bindString(9, receiverPhone);
-        }
- 
-        String targetPhone = entity.getTargetPhone();
-        if (targetPhone != null) {
-            stmt.bindString(10, targetPhone);
+            stmt.bindString(6, receiverUserId);
         }
  
         String contentJsonBody = entity.getContentJsonBody();
         if (contentJsonBody != null) {
-            stmt.bindString(11, contentJsonBody);
+            stmt.bindString(7, contentJsonBody);
         }
-        stmt.bindLong(12, entity.getProgress());
+        stmt.bindLong(8, entity.getGroupId());
+ 
+        String targetUuid = entity.getTargetUuid();
+        if (targetUuid != null) {
+            stmt.bindString(9, targetUuid);
+        }
+        stmt.bindLong(10, entity.getMsgStatus());
+        stmt.bindLong(11, entity.getProgress());
     }
 
     @Override
@@ -134,39 +123,30 @@ public class CacheMsgBeanDao extends AbstractDao<CacheMsgBean, Long> {
             stmt.bindLong(2, msgId);
         }
         stmt.bindLong(3, entity.getMsgType());
-        stmt.bindLong(4, entity.getMsgStatus());
-        stmt.bindLong(5, entity.getMsgTime());
+        stmt.bindLong(4, entity.getMsgTime());
  
         String senderUserId = entity.getSenderUserId();
         if (senderUserId != null) {
-            stmt.bindString(6, senderUserId);
+            stmt.bindString(5, senderUserId);
         }
  
         String receiverUserId = entity.getReceiverUserId();
         if (receiverUserId != null) {
-            stmt.bindString(7, receiverUserId);
-        }
- 
-        String senderPhone = entity.getSenderPhone();
-        if (senderPhone != null) {
-            stmt.bindString(8, senderPhone);
-        }
- 
-        String receiverPhone = entity.getReceiverPhone();
-        if (receiverPhone != null) {
-            stmt.bindString(9, receiverPhone);
-        }
- 
-        String targetPhone = entity.getTargetPhone();
-        if (targetPhone != null) {
-            stmt.bindString(10, targetPhone);
+            stmt.bindString(6, receiverUserId);
         }
  
         String contentJsonBody = entity.getContentJsonBody();
         if (contentJsonBody != null) {
-            stmt.bindString(11, contentJsonBody);
+            stmt.bindString(7, contentJsonBody);
         }
-        stmt.bindLong(12, entity.getProgress());
+        stmt.bindLong(8, entity.getGroupId());
+ 
+        String targetUuid = entity.getTargetUuid();
+        if (targetUuid != null) {
+            stmt.bindString(9, targetUuid);
+        }
+        stmt.bindLong(10, entity.getMsgStatus());
+        stmt.bindLong(11, entity.getProgress());
     }
 
     @Override
@@ -180,15 +160,14 @@ public class CacheMsgBeanDao extends AbstractDao<CacheMsgBean, Long> {
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
             cursor.isNull(offset + 1) ? null : cursor.getLong(offset + 1), // msgId
             cursor.getInt(offset + 2), // msgType
-            cursor.getInt(offset + 3), // msgStatus
-            cursor.getLong(offset + 4), // msgTime
-            cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // senderUserId
-            cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6), // receiverUserId
-            cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7), // senderPhone
-            cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8), // receiverPhone
-            cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9), // targetPhone
-            cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10), // contentJsonBody
-            cursor.getInt(offset + 11) // progress
+            cursor.getLong(offset + 3), // msgTime
+            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // senderUserId
+            cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // receiverUserId
+            cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6), // contentJsonBody
+            cursor.getInt(offset + 7), // groupId
+            cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8), // targetUuid
+            cursor.getInt(offset + 9), // msgStatus
+            cursor.getInt(offset + 10) // progress
         );
         return entity;
     }
@@ -198,15 +177,14 @@ public class CacheMsgBeanDao extends AbstractDao<CacheMsgBean, Long> {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setMsgId(cursor.isNull(offset + 1) ? null : cursor.getLong(offset + 1));
         entity.setMsgType(cursor.getInt(offset + 2));
-        entity.setMsgStatus(cursor.getInt(offset + 3));
-        entity.setMsgTime(cursor.getLong(offset + 4));
-        entity.setSenderUserId(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
-        entity.setReceiverUserId(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
-        entity.setSenderPhone(cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7));
-        entity.setReceiverPhone(cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8));
-        entity.setTargetPhone(cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9));
-        entity.setContentJsonBody(cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10));
-        entity.setProgress(cursor.getInt(offset + 11));
+        entity.setMsgTime(cursor.getLong(offset + 3));
+        entity.setSenderUserId(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
+        entity.setReceiverUserId(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
+        entity.setContentJsonBody(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
+        entity.setGroupId(cursor.getInt(offset + 7));
+        entity.setTargetUuid(cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8));
+        entity.setMsgStatus(cursor.getInt(offset + 9));
+        entity.setProgress(cursor.getInt(offset + 10));
      }
     
     @Override

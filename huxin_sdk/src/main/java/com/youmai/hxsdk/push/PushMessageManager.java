@@ -8,14 +8,13 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.youmai.hxsdk.im.IMChat;
-import com.youmai.hxsdk.im.IMConst;
 import com.youmai.hxsdk.im.IMMsgManager;
+import com.youmai.hxsdk.proto.YouMaiMsg;
 import com.youmai.hxsdk.push.utils.PushJsonUtils;
 import com.youmai.hxsdk.config.AppConfig;
 import com.youmai.hxsdk.interfaces.IFileReceiveListener;
 import com.youmai.hxsdk.interfaces.bean.FileBean;
 import com.youmai.hxsdk.interfaces.impl.FileReceiveListenerImpl;
-import com.youmai.hxsdk.proto.YouMaiChat;
 import com.youmai.hxsdk.socket.IMContentType;
 import com.youmai.hxsdk.socket.IMContentUtil;
 
@@ -128,13 +127,13 @@ public class PushMessageManager {
     private static int isType(String typeStr) {
         int iType;
         IMContentUtil imContentUtil = new IMContentUtil();
-        if (typeStr.equals(IMContentUtil.getContentType(0, YouMaiChat.IM_CONTENT_TYPE.IM_CONTENT_TYPE_TEXT_VALUE) + "")) {
+        if (typeStr.equals(IMContentUtil.getContentType(0, YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_TEXT_VALUE) + "")) {
             iType = 1;
-        } else if (typeStr.equals(IMContentUtil.getContentType(0, YouMaiChat.IM_CONTENT_TYPE.IM_CONTENT_TYPE_IMAGE_VALUE) + "")) {
+        } else if (typeStr.equals(IMContentUtil.getContentType(0, YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_IMAGE_VALUE) + "")) {
             iType = 2;
-        } else if (typeStr.equals(IMContentUtil.getContentType(0, YouMaiChat.IM_CONTENT_TYPE.IM_CONTENT_TYPE_LOCATION_VALUE) + "")) {
+        } else if (typeStr.equals(IMContentUtil.getContentType(0, YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_LOCATION_VALUE) + "")) {
             iType = 3;
-        } else if (typeStr.equals(IMContentUtil.getContentType(0, YouMaiChat.IM_CONTENT_TYPE.IM_CONTENT_TYPE_FILE_VALUE) + "")) {
+        } else if (typeStr.equals(IMContentUtil.getContentType(0, YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_FILE_VALUE) + "")) {
             iType = 4;
         } else {
             iType = 0;
@@ -154,7 +153,7 @@ public class PushMessageManager {
         if (!TextUtils.isEmpty(msgid)) {
             final IFileReceiveListener listener = FileReceiveListenerImpl.getReceiveListener();
             final FileBean fileBean = new FileBean().setUserId(msgid)
-                    .setFileMsgType(IMConst.IM_IMAGE_VALUE)
+                    .setFileMsgType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_IMAGE_VALUE)
                     .setDstPhone(phone)
                     //.setOriginPath(AppConfig.DOWNLOAD_IMAGE + msg.getMsgContent().getPicture().getPicUrl());//  ? 2017-1-13 17:38:23
                     .setOriginPath(AppConfig.DOWNLOAD_IMAGE + pictureID);
@@ -164,7 +163,7 @@ public class PushMessageManager {
                 mainHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        listener.onImSuccess(IMConst.IM_IMAGE_VALUE, fileBean);
+                        listener.onImSuccess(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_IMAGE_VALUE, fileBean);
                     }
                 });
             }
@@ -197,7 +196,7 @@ public class PushMessageManager {
                     + "," + latitude + "&key=" + AppConfig.staticMapKey;
 
             final FileBean fileBean = new FileBean().setUserId(msgid)
-                    .setFileMsgType(IMConst.IM_LOCATION_VALUE)
+                    .setFileMsgType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_LOCATION_VALUE)
                     .setDstPhone(phone)
                     .setLongitude(Double.valueOf(longitude))
                     .setLatitude(Double.valueOf(latitude))
@@ -209,7 +208,7 @@ public class PushMessageManager {
                 mainHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        listener.onImSuccess(IMConst.IM_LOCATION_VALUE, fileBean);
+                        listener.onImSuccess(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_LOCATION_VALUE, fileBean);
                     }
                 });
             }

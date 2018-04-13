@@ -89,9 +89,7 @@ public class ExCacheMsgBean extends CacheMsgBean {
                 ", msgType=" + getMsgType() +
                 ", msgStatus=" + getMsgStatus() +
                 ", msgTime=" + getMsgTime() +
-                ", senderPhone='" + getSenderPhone() + '\'' +
-                ", receiverPhone='" + getReceiverPhone() + '\'' +
-                ", targetPhone='" + getTargetPhone() + '\'' +
+                ", targetUuid='" + getTargetUuid() + '\'' +
                 ", contentJsonBody='" + getContentJsonBody() + '\'' +
                 ", mIsMultiNumber=" + mIsMultiNumber +
                 '}';

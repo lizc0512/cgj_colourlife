@@ -5,9 +5,9 @@ import android.content.Context;
 import com.youmai.hxsdk.HuxinSdkManager;
 
 import com.youmai.hxsdk.http.IPostListener;
+import com.youmai.hxsdk.proto.YouMaiMsg;
 import com.youmai.hxsdk.push.http.entity.PushMsgResult;
 import com.youmai.hxsdk.push.http.entity.PushRegisterResult;
-import com.youmai.hxsdk.proto.YouMaiChat;
 import com.youmai.hxsdk.socket.IMContentUtil;
 import com.youmai.hxsdk.utils.GsonUtil;
 
@@ -88,7 +88,7 @@ public class HttpPushManager {
     public static void pushMsgForText(Context context, int msgid, String targetPhone, String content, PushListener listener) {
         String myPhone = HuxinSdkManager.instance().getPhoneNum();
         IMContentUtil imContentUtil = new IMContentUtil();
-        int type = IMContentUtil.getContentType(0, YouMaiChat.IM_CONTENT_TYPE.IM_CONTENT_TYPE_TEXT_VALUE);
+        int type = IMContentUtil.getContentType(0, YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_TEXT_VALUE);
         imContentUtil.appendMsgid(msgid + "");
         imContentUtil.appendPhone(myPhone);
         imContentUtil.appendTextType(type + "");
@@ -106,7 +106,7 @@ public class HttpPushManager {
     public static void pushMsgForCardText(int msgId, String targetPhone, String content, PushListener listener) {
         String myPhone = HuxinSdkManager.instance().getPhoneNum();
         IMContentUtil imContentUtil = new IMContentUtil();
-        int type = IMContentUtil.getContentType(0, YouMaiChat.IM_CONTENT_TYPE.IM_CONTENT_TYPE_BIZCARD_VALUE);
+        int type = IMContentUtil.getContentType(0, YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_BIZCARD_VALUE);
         imContentUtil.appendMsgid(msgId + "");
         imContentUtil.appendPhone(myPhone);
         imContentUtil.appendTextType(type + "");
@@ -130,7 +130,7 @@ public class HttpPushManager {
                                           PushListener listener) {
         String myPhone = HuxinSdkManager.instance().getPhoneNum();
         IMContentUtil imContentUtil = new IMContentUtil();
-        int type = IMContentUtil.getContentType(0, YouMaiChat.IM_CONTENT_TYPE.IM_CONTENT_TYPE_LOCATION_VALUE);
+        int type = IMContentUtil.getContentType(0, YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_LOCATION_VALUE);
         imContentUtil.appendMsgid(msgId + "");
         imContentUtil.appendPhone(myPhone);
         imContentUtil.appendTextType(type + "");
@@ -151,7 +151,7 @@ public class HttpPushManager {
     public static void pushMsgForPicture(int msgId, String targetPhone, String fileId, PushListener listener) {
         String myPhone = HuxinSdkManager.instance().getPhoneNum();
         IMContentUtil imContentUtil = new IMContentUtil();
-        int type = IMContentUtil.getContentType(0, YouMaiChat.IM_CONTENT_TYPE.IM_CONTENT_TYPE_IMAGE_VALUE);
+        int type = IMContentUtil.getContentType(0, YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_IMAGE_VALUE);
         imContentUtil.appendMsgid(msgId + "");
         imContentUtil.appendPhone(myPhone);
         imContentUtil.appendTextType(type + "");
@@ -170,7 +170,7 @@ public class HttpPushManager {
     public static void pushMsgForAudio(int msgId, String targetPhone, String fileId, String secondTimes, PushListener listener) {
         String myPhone = HuxinSdkManager.instance().getPhoneNum();
         IMContentUtil imContentUtil = new IMContentUtil();
-        int type = IMContentUtil.getContentType(0, YouMaiChat.IM_CONTENT_TYPE.IM_CONTENT_TYPE_AUDIO_VALUE);
+        int type = IMContentUtil.getContentType(0, YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_AUDIO_VALUE);
         imContentUtil.appendMsgid(msgId + "");
         imContentUtil.appendPhone(myPhone);
         imContentUtil.appendTextType(type + "");
@@ -191,7 +191,7 @@ public class HttpPushManager {
     public static void pushMsgForBigFile(int msgId, String targetPhone, String fileId, String fileName, String fileSize, PushListener listener) {
         String myPhone = HuxinSdkManager.instance().getPhoneNum();
         IMContentUtil imContentUtil = new IMContentUtil();
-        int type = IMContentUtil.getContentType(0, YouMaiChat.IM_CONTENT_TYPE.IM_CONTENT_TYPE_FILE_VALUE);
+        int type = IMContentUtil.getContentType(0, YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_FILE_VALUE);
         imContentUtil.appendMsgid(msgId + "");
         imContentUtil.appendPhone(myPhone);
         imContentUtil.appendTextType(type + "");

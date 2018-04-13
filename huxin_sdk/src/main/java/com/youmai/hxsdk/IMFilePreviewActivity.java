@@ -15,11 +15,11 @@ import com.youmai.hxsdk.db.bean.CacheMsgBean;
 import com.youmai.hxsdk.config.FileConfig;
 import com.youmai.hxsdk.http.DownloadListener;
 import com.youmai.hxsdk.http.FileAsyncTaskDownload;
-import com.youmai.hxsdk.im.IMConst;
 import com.youmai.hxsdk.im.IMHelper;
 import com.youmai.hxsdk.im.cache.CacheMsgFile;
 import com.youmai.hxsdk.interfaces.bean.FileBean;
 import com.youmai.hxsdk.interfaces.impl.FileReceiveListenerImpl;
+import com.youmai.hxsdk.proto.YouMaiMsg;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -103,7 +103,7 @@ public class IMFilePreviewActivity extends SdkBaseActivity {
         super.onDestroy();
         if (isFullViewFile) {
             fileBean.setJumpFile(true);
-            FileReceiveListenerImpl.getReceiveListener().onImSuccess(IMConst.IM_FILE_VALUE, fileBean);
+            FileReceiveListenerImpl.getReceiveListener().onImSuccess(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_FILE_VALUE, fileBean);
         }
     }
 

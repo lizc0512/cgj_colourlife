@@ -339,7 +339,7 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
                 }
                 Intent intent = new Intent();
                 intent.setClass(getActivity(), IMConnectionActivity.class);
-                intent.putExtra(IMConnectionActivity.DST_PHONE, bean.getTargetPhone());
+                intent.putExtra(IMConnectionActivity.DST_UUID, bean.getTargetUuid());
                 intent.putExtra(IMConnectionActivity.DST_NAME, bean.getDisplayName());
                 startActivityForResult(intent, INTENT_REQUEST_FOR_UPDATE_UI);
             }
@@ -351,9 +351,9 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
                 ToastUtil.showToast(getContext(), "删除成功：" + position);
                 ExCacheMsgBean cacheMsgBean = mMessageAdapter.getMessageList().get(position);
                 mMessageAdapter.deleteMessage(position);
-                CacheMsgHelper.instance(getActivity()).deleteAllMsg(cacheMsgBean.getTargetPhone());
+                CacheMsgHelper.instance(getActivity()).deleteAllMsg(cacheMsgBean.getTargetUuid());
                 //去掉未读消息计数
-                IMMsgManager.getInstance().removeBadge(cacheMsgBean.getTargetPhone());
+                IMMsgManager.getInstance().removeBadge(cacheMsgBean.getTargetUuid());
             }
         });
 
@@ -434,7 +434,7 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
         if (imComingMsg != null & mIncomingMsgList != null) {
             mIncomingMsgList.add(imComingMsg);
             ExCacheMsgBean bean = new ExCacheMsgBean(imComingMsg);
-            bean.setDisplayName(imComingMsg.getTargetPhone());
+            bean.setDisplayName(imComingMsg.getTargetUuid());
             mMessageAdapter.addTop(bean);
         }
     }
@@ -475,8 +475,8 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
                     List<ExCacheMsgBean> oldList = new ArrayList<>();
                     for (int newIndex = newSize - 1; newIndex >= 0; newIndex--) {
                         for (int i = 0; i < messageList.size(); i++) {
-                            String targetPhone = data.get(newIndex).getTargetPhone();
-                            if (!TextUtils.isEmpty(targetPhone) && targetPhone.equals(messageList.get(i).getTargetPhone())) {
+                            String targetPhone = data.get(newIndex).getTargetUuid();
+                            if (!TextUtils.isEmpty(targetPhone) && targetPhone.equals(messageList.get(i).getTargetUuid())) {
                                 oldList.add(messageList.get(i));
                                 break;
                             }

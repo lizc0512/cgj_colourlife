@@ -13,7 +13,7 @@ import com.meizu.cloud.pushsdk.PushManager;
 import com.xiaomi.mipush.sdk.MiPushClient;
 import com.youmai.hxsdk.im.IMMsgManager;
 import com.youmai.hxsdk.push.http.HttpPushManager;
-import com.youmai.hxsdk.push.manage.utils.HuaweiPushUtils;
+import com.youmai.hxsdk.push.utils.HuaweiPushUtils;
 import com.youmai.hxsdk.push.utils.PushPhoneUtils;
 import com.youmai.hxsdk.push.utils.PushValueUtils;
 import com.youmai.hxsdk.service.HuxinService;

@@ -391,7 +391,7 @@ public class SetRemindActivity extends SdkBaseActivity implements View.OnClickLi
                                 iconNumRes,
                                 remind,
                                 dateWithDay,
-                                cacheMsgBean.getReceiverPhone());
+                                cacheMsgBean.getReceiverUserId());
                         intent.putExtra(REMIND_BEAN, remindBean);
                     }
 

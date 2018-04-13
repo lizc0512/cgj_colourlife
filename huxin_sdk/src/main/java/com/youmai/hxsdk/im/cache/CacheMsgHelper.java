@@ -45,9 +45,8 @@ public class CacheMsgHelper {
      * @param cacheMsgBean
      */
     public void insertOrUpdate(CacheMsgBean cacheMsgBean) {
-        insertOrUpdate(mContext, cacheMsgBean, false);
+        insertOrUpdate(mContext, cacheMsgBean);
     }
-
 
 
     /**
@@ -55,15 +54,14 @@ public class CacheMsgHelper {
      *
      * @param context
      * @param cacheMsgBean
-     * @param newCard      是否生成新沟通卡
      */
-    public void insertOrUpdate(Context context, CacheMsgBean cacheMsgBean, boolean newCard) {
+    public void insertOrUpdate(Context context, CacheMsgBean cacheMsgBean) {
         CacheMsgBeanDao cacheMsgBeanDao = GreenDBIMManager.instance(context).getCacheMsgDao();
         if (cacheMsgBean.getId() != null && cacheMsgBean.getId() != -1L) {
             cacheMsgBeanDao.update(cacheMsgBean);
         } else {
-            if (TextUtils.isEmpty(cacheMsgBean.getTargetPhone())) {
-                cacheMsgBean.setTargetPhone(cacheMsgBean.getReceiverPhone()); //发送失败
+            if (TextUtils.isEmpty(cacheMsgBean.getTargetUuid())) {
+                cacheMsgBean.setTargetUuid(cacheMsgBean.getReceiverUserId()); //发送失败
             }
             cacheMsgBean.setId(null); // FIXME: 2017/4/14 新增消息主键置空再插入表 ID从1自增
             long id = cacheMsgBeanDao.insert(cacheMsgBean);
@@ -80,16 +78,16 @@ public class CacheMsgHelper {
      * @return
      */
     public List<CacheMsgBean> toQuerySelfMsgDescByMsgTime(int count) {
-        String selfPhone = HuxinSdkManager.instance().getPhoneNum();
-        if (TextUtils.isEmpty(selfPhone)) {
+        String selfUuid = HuxinSdkManager.instance().getUuid();
+        if (TextUtils.isEmpty(selfUuid)) {
             return null;
         }
 
         CacheMsgBeanDao cacheMsgBeanDao = GreenDBIMManager.instance(mContext).getCacheMsgDao();
         QueryBuilder<CacheMsgBean> qb = cacheMsgBeanDao.queryBuilder();
         qb = qb.where(
-                qb.and(CacheMsgBeanDao.Properties.ReceiverPhone.eq(selfPhone),
-                        CacheMsgBeanDao.Properties.SenderPhone.eq(selfPhone)))
+                qb.and(CacheMsgBeanDao.Properties.ReceiverUserId.eq(selfUuid),
+                        CacheMsgBeanDao.Properties.SenderUserId.eq(selfUuid)))
                 .orderDesc(CacheMsgBeanDao.Properties.MsgTime)
                 .offset(0).limit(count > 0 ? count : 1);
 
@@ -115,18 +113,18 @@ public class CacheMsgHelper {
     /**
      * 删除某个人的所有消息记录
      *
-     * @param selfPhone
-     * @param dstPhone
+     * @param selfUuid
+     * @param dstUuid
      * @return
      */
-    public void deleteAllMsg(String selfPhone, String dstPhone) {
+    public void deleteAllMsg(String selfUuid, String dstUuid) {
         CacheMsgBeanDao cacheMsgBeanDao = GreenDBIMManager.instance(mContext).getCacheMsgDao();
         QueryBuilder<CacheMsgBean> qb = cacheMsgBeanDao.queryBuilder();
         DeleteQuery<CacheMsgBean> dq = qb.where(qb.or(
-                qb.and(CacheMsgBeanDao.Properties.ReceiverPhone.eq(dstPhone),
-                        CacheMsgBeanDao.Properties.SenderPhone.eq(selfPhone)),
-                qb.and(CacheMsgBeanDao.Properties.SenderPhone.eq(dstPhone),
-                        CacheMsgBeanDao.Properties.ReceiverPhone.eq(selfPhone))))
+                qb.and(CacheMsgBeanDao.Properties.ReceiverUserId.eq(dstUuid),
+                        CacheMsgBeanDao.Properties.SenderUserId.eq(selfUuid)),
+                qb.and(CacheMsgBeanDao.Properties.SenderUserId.eq(dstUuid),
+                        CacheMsgBeanDao.Properties.ReceiverUserId.eq(selfUuid))))
                 .orderAsc(CacheMsgBeanDao.Properties.Id).buildDelete();
 
         dq.executeDeleteWithoutDetachingEntities();
@@ -136,13 +134,13 @@ public class CacheMsgHelper {
     /**
      * 删除某个人的所有消息记录
      *
-     * @param targetPhone
+     * @param targetUuid
      * @return
      */
-    public void deleteAllMsg(String targetPhone) {
+    public void deleteAllMsg(String targetUuid) {
         CacheMsgBeanDao cacheMsgBeanDao = GreenDBIMManager.instance(mContext).getCacheMsgDao();
         QueryBuilder<CacheMsgBean> qb = cacheMsgBeanDao.queryBuilder();
-        DeleteQuery<CacheMsgBean> dq = qb.where(CacheMsgBeanDao.Properties.TargetPhone.eq(targetPhone))
+        DeleteQuery<CacheMsgBean> dq = qb.where(CacheMsgBeanDao.Properties.TargetUuid.eq(targetUuid))
                 .orderAsc(CacheMsgBeanDao.Properties.Id).buildDelete();
         dq.executeDeleteWithoutDetachingEntities();
     }
@@ -222,14 +220,14 @@ public class CacheMsgHelper {
      * 按 id升序查询
      * receiver_phone=? and sender_phone=?
      *
-     * @param receiverPhone
-     * @param sendPhone
+     * @param receiverUuid
+     * @param sendUuid
      * @return
      */
-    public List<CacheMsgBean> toQueryAndAscById(String receiverPhone, String sendPhone) {
+    public List<CacheMsgBean> toQueryAndAscById(String receiverUuid, String sendUuid) {
         QueryBuilder<CacheMsgBean> qb = GreenDBIMManager.instance(mContext).getCacheMsgDao().queryBuilder();
-        return qb.where(qb.and(CacheMsgBeanDao.Properties.ReceiverPhone.eq(receiverPhone),
-                CacheMsgBeanDao.Properties.SenderPhone.eq(sendPhone)))
+        return qb.where(qb.and(CacheMsgBeanDao.Properties.ReceiverUserId.eq(receiverUuid),
+                CacheMsgBeanDao.Properties.SenderUserId.eq(sendUuid)))
                 .orderAsc(CacheMsgBeanDao.Properties.Id).list();
     }
 
@@ -239,17 +237,17 @@ public class CacheMsgHelper {
      * 按 id升序查询
      * (receiver_phone=? and sender_phone=?) or (sender_phone=? and receiver_phone=?)
      *
-     * @param dstPhone
-     * @param selfPhone
+     * @param dstUuid
+     * @param selfUuid
      * @return
      */
-    public List<CacheMsgBean> toQueryOrAscById(String dstPhone, String selfPhone) {
+    public List<CacheMsgBean> toQueryOrAscById(String dstUuid, String selfUuid) {
         QueryBuilder<CacheMsgBean> qb = GreenDBIMManager.instance(mContext).getCacheMsgDao().queryBuilder();
         return qb.where(qb.or(
-                qb.and(CacheMsgBeanDao.Properties.ReceiverPhone.eq(dstPhone),
-                        CacheMsgBeanDao.Properties.SenderPhone.eq(selfPhone)),
-                qb.and(CacheMsgBeanDao.Properties.SenderPhone.eq(dstPhone),
-                        CacheMsgBeanDao.Properties.ReceiverPhone.eq(selfPhone))))
+                qb.and(CacheMsgBeanDao.Properties.ReceiverUserId.eq(dstUuid),
+                        CacheMsgBeanDao.Properties.SenderUserId.eq(selfUuid)),
+                qb.and(CacheMsgBeanDao.Properties.SenderUserId.eq(dstUuid),
+                        CacheMsgBeanDao.Properties.ReceiverUserId.eq(selfUuid))))
                 .orderAsc(CacheMsgBeanDao.Properties.Id).list();
     }
 
@@ -258,18 +256,18 @@ public class CacheMsgHelper {
      * 按 id升序查询
      * id>? and ((receiver_phone=? and sender_phone=?) or (sender_phone=? and receiver_phone=?))
      *
-     * @param dstPhone
-     * @param selfPhone
+     * @param dstUuid
+     * @param selfUuid
      * @param statIndex
      * @return
      */
-    public List<CacheMsgBean> toQueryOrAscById(String dstPhone, String selfPhone, long statIndex) {
+    public List<CacheMsgBean> toQueryOrAscById(String dstUuid, String selfUuid, long statIndex) {
         QueryBuilder<CacheMsgBean> qb = GreenDBIMManager.instance(mContext).getCacheMsgDao().queryBuilder();
         return qb.where(qb.and(CacheMsgBeanDao.Properties.Id.gt(statIndex), qb.or(
-                qb.and(CacheMsgBeanDao.Properties.ReceiverPhone.eq(dstPhone),
-                        CacheMsgBeanDao.Properties.SenderPhone.eq(selfPhone)),
-                qb.and(CacheMsgBeanDao.Properties.SenderPhone.eq(dstPhone),
-                        CacheMsgBeanDao.Properties.ReceiverPhone.eq(selfPhone)))))
+                qb.and(CacheMsgBeanDao.Properties.ReceiverUserId.eq(dstUuid),
+                        CacheMsgBeanDao.Properties.SenderUserId.eq(selfUuid)),
+                qb.and(CacheMsgBeanDao.Properties.SenderUserId.eq(dstUuid),
+                        CacheMsgBeanDao.Properties.ReceiverUserId.eq(selfUuid)))))
                 .orderAsc(CacheMsgBeanDao.Properties.Id).list();
     }
 
@@ -287,18 +285,18 @@ public class CacheMsgHelper {
     }
 
 
-    public List<CacheMsgBean> toQueryLastMsgByPhone(String dstPhone) {
-        String selfPhone = HuxinSdkManager.instance().getPhoneNum();
-        if (TextUtils.isEmpty(selfPhone)) {
+    public List<CacheMsgBean> toQueryLastMsgByPhone(String dstUuid) {
+        String selfUuid = HuxinSdkManager.instance().getUuid();
+        if (TextUtils.isEmpty(selfUuid)) {
             return null;
         }
 
         QueryBuilder<CacheMsgBean> qb = GreenDBIMManager.instance(mContext).getCacheMsgDao().queryBuilder();
         return qb.where(qb.or(
-                qb.and(CacheMsgBeanDao.Properties.ReceiverPhone.eq(dstPhone),
-                        CacheMsgBeanDao.Properties.SenderPhone.eq(selfPhone)),
-                qb.and(CacheMsgBeanDao.Properties.SenderPhone.eq(dstPhone),
-                        CacheMsgBeanDao.Properties.ReceiverPhone.eq(selfPhone))))
+                qb.and(CacheMsgBeanDao.Properties.ReceiverUserId.eq(dstUuid),
+                        CacheMsgBeanDao.Properties.SenderUserId.eq(selfUuid)),
+                qb.and(CacheMsgBeanDao.Properties.SenderUserId.eq(dstUuid),
+                        CacheMsgBeanDao.Properties.ReceiverUserId.eq(selfUuid))))
                 .orderDesc(CacheMsgBeanDao.Properties.Id).limit(1).list();
     }
 

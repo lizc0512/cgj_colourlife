@@ -240,14 +240,14 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     public void addTop(ExCacheMsgBean msgBean) {
-        String phone = msgBean.getTargetPhone();
+        String uuid = msgBean.getTargetUuid();
         if (messageList.isEmpty()) {
             //没有聊天消息
             messageList.add(0, msgBean);
         } else {
             int i;
             for (i = 0; i < messageList.size(); i++) {
-                if (messageList.get(i).getTargetPhone().equals(phone)) {
+                if (messageList.get(i).getTargetUuid().equals(uuid)) {
                     if (i == 0) {
                         messageList.set(0, msgBean);
                     } else {

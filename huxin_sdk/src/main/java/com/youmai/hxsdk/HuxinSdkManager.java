@@ -30,7 +30,6 @@ import com.qiniu.android.storage.UploadManager;
 import com.qiniu.android.storage.UploadOptions;
 import com.youmai.hxsdk.adapter.IMListAdapter;
 import com.youmai.hxsdk.config.AppConfig;
-import com.youmai.hxsdk.config.ColorsConfig;
 import com.youmai.hxsdk.config.Constant;
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
 import com.youmai.hxsdk.db.dao.CacheMsgBeanDao;
@@ -41,7 +40,6 @@ import com.youmai.hxsdk.entity.UploadFile;
 import com.youmai.hxsdk.http.HttpConnector;
 import com.youmai.hxsdk.http.IGetListener;
 import com.youmai.hxsdk.http.IPostListener;
-import com.youmai.hxsdk.im.IMConst;
 import com.youmai.hxsdk.im.IMHelper;
 import com.youmai.hxsdk.im.IMMsgManager;
 import com.youmai.hxsdk.im.cache.CacheMsgFile;
@@ -53,9 +51,7 @@ import com.youmai.hxsdk.interfaces.OnFileListener;
 import com.youmai.hxsdk.interfaces.bean.FileBean;
 import com.youmai.hxsdk.proto.YouMaiBasic;
 import com.youmai.hxsdk.proto.YouMaiBuddy;
-import com.youmai.hxsdk.proto.YouMaiChat;
 import com.youmai.hxsdk.proto.YouMaiMsg;
-import com.youmai.hxsdk.proto.YouMaiUser;
 import com.youmai.hxsdk.push.MorePushManager;
 import com.youmai.hxsdk.service.HuxinService;
 import com.youmai.hxsdk.socket.IMContentUtil;
@@ -909,7 +905,7 @@ public class HuxinSdkManager {
                 FileToken resp = GsonUtil.parse(response, FileToken.class);
                 if (resp == null) {
                     if (null != listener) {
-                        listener.onImFail(IMConst.IM_AUDIO_VALUE, fileBean);
+                        listener.onImFail(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_AUDIO_VALUE, fileBean);
                     }
                     return;
                 }
@@ -921,14 +917,14 @@ public class HuxinSdkManager {
                         public void complete(String key, ResponseInfo info, JSONObject response) {
                             if (response == null) {
                                 if (null != listener) {
-                                    listener.onImFail(IMConst.IM_AUDIO_VALUE, fileBean);
+                                    listener.onImFail(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_AUDIO_VALUE, fileBean);
                                 }
                                 return;
                             }
                             UploadFile resp = GsonUtil.parse(response.toString(), UploadFile.class);
                             if (resp == null) {
                                 if (null != listener) {
-                                    listener.onImFail(IMConst.IM_AUDIO_VALUE, fileBean);
+                                    listener.onImFail(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_AUDIO_VALUE, fileBean);
                                 }
                                 return;
                             }
@@ -938,22 +934,22 @@ public class HuxinSdkManager {
                                     @Override
                                     public void OnRec(PduBase pduBase) {
                                         try {
-                                            YouMaiChat.IMChat_Personal_Ack ack = YouMaiChat.IMChat_Personal_Ack.parseFrom(pduBase.body);
+                                            YouMaiMsg.ChatMsg_Ack ack = YouMaiMsg.ChatMsg_Ack.parseFrom(pduBase.body);
                                             long msgId = ack.getMsgId();
 
                                             if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_OK) {
                                                 Toast.makeText(mContext, mContext.getString(R.string.hx_toast_29), Toast.LENGTH_SHORT).show();
                                                 if (null != listener) {
-                                                    listener.onImSuccess(IMConst.IM_AUDIO_VALUE, fileBean);
+                                                    listener.onImSuccess(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_AUDIO_VALUE, fileBean);
                                                 }
 
                                             } else if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_NOT_HUXIN_USER) {
                                                 // 非呼信用户
                                                 if (null != listener) {
-                                                    listener.onImNotUser(IMConst.IM_AUDIO_VALUE, msgId);
+                                                    listener.onImNotUser(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_AUDIO_VALUE, msgId);
                                                 }
                                             } else {
-                                                listener.onImFail(IMConst.IM_AUDIO_VALUE, fileBean);
+                                                listener.onImFail(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_AUDIO_VALUE, fileBean);
                                             }
                                         } catch (InvalidProtocolBufferException e) {
                                             e.printStackTrace();
@@ -1033,10 +1029,8 @@ public class HuxinSdkManager {
         final CacheMsgBean cacheMsgBean = new CacheMsgBean()
                 .setMsgTime(System.currentTimeMillis())
                 .setMsgStatus(CacheMsgBean.SEND_GOING)
-                .setSenderPhone(getPhoneNum())
                 .setSenderUserId(userId)
-                .setReceiverPhone(desPhone)
-                .setTargetPhone(desPhone)
+                .setTargetUuid(userId)
                 .setMsgType(CacheMsgBean.SEND_FILE)
                 .setJsonBodyObj(cacheMsgFile);
         if (isSaveDB) {
@@ -1055,9 +1049,9 @@ public class HuxinSdkManager {
 
         if (null != listener) {
             if (CommonUtils.isNetworkAvailable(mContext)) {
-                listener.onProgress(IMConst.IM_FILE_VALUE, 0.05, "file");
+                listener.onProgress(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_FILE_VALUE, 0.05, "file");
             } else {
-                listener.onImFail(IMConst.IM_FILE_VALUE, fileBean);
+                listener.onImFail(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_FILE_VALUE, fileBean);
             }
         }
         IPostListener callback = new IPostListener() {
@@ -1066,7 +1060,7 @@ public class HuxinSdkManager {
                 FileToken resp = GsonUtil.parse(response, FileToken.class);
                 if (resp == null) {
                     if (null != listener) {
-                        listener.onImFail(IMConst.IM_FILE_VALUE, fileBean);
+                        listener.onImFail(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_FILE_VALUE, fileBean);
                     }
                     if (isSaveDB) {
                         //add to db
@@ -1083,7 +1077,7 @@ public class HuxinSdkManager {
                         public void complete(String key, ResponseInfo info, JSONObject response) {
                             if (response == null) {
                                 if (null != listener) {
-                                    listener.onImFail(IMConst.IM_FILE_VALUE, fileBean);
+                                    listener.onImFail(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_FILE_VALUE, fileBean);
                                 }
                                 if (isSaveDB) {
                                     //add to db
@@ -1114,7 +1108,7 @@ public class HuxinSdkManager {
                                             newMsgBean = cacheMsgBean;
                                         }
                                         try {
-                                            YouMaiChat.IMChat_Personal_Ack ack = YouMaiChat.IMChat_Personal_Ack.parseFrom(pduBase.body);
+                                            YouMaiMsg.ChatMsg_Ack ack = YouMaiMsg.ChatMsg_Ack.parseFrom(pduBase.body);
                                             long msgId = ack.getMsgId();
                                             newMsgBean.setMsgId(msgId);
 
@@ -1123,18 +1117,18 @@ public class HuxinSdkManager {
                                                 //add to db
                                                 CacheMsgHelper.instance(mContext).insertOrUpdate(newMsgBean);
                                                 if (null != listener) {
-                                                    listener.onImSuccess(IMConst.IM_FILE_VALUE, fileBean);
+                                                    listener.onImSuccess(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_FILE_VALUE, fileBean);
                                                 }
 
                                             } else if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_NOT_HUXIN_USER) {
                                                 newMsgBean.setMsgStatus(CacheMsgBean.SEND_SUCCEED);
                                                 CacheMsgHelper.instance(mContext).insertOrUpdate(newMsgBean);
                                                 if (null != listener) {
-                                                    listener.onImNotUser(IMConst.IM_FILE_VALUE, msgId);
+                                                    listener.onImNotUser(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_FILE_VALUE, msgId);
                                                 }
                                             } else {
                                                 if (null != listener) {
-                                                    listener.onImFail(IMConst.IM_FILE_VALUE, fileBean);
+                                                    listener.onImFail(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_FILE_VALUE, fileBean);
                                                 }
                                             }
                                         } catch (InvalidProtocolBufferException e) {
@@ -1164,7 +1158,7 @@ public class HuxinSdkManager {
                     LogFile.inStance().toFile(log);
 
                     if (null != listener) {
-                        listener.onImFail(IMConst.IM_FILE_VALUE, fileBean);
+                        listener.onImFail(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_FILE_VALUE, fileBean);
                     }
                     if (isSaveDB) {
                         //add to db
@@ -1209,15 +1203,15 @@ public class HuxinSdkManager {
                             final IFileSendListener listener) {
 
         final FileBean fileBean = new FileBean().setUserId(userId)
-                .setFileMsgType(IMConst.IM_IMAGE_VALUE)
+                .setFileMsgType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_IMAGE_VALUE)
                 .setDstPhone(desPhone)
                 .setFile(file)
                 .setOriginPath(originalPath);
         if (null != listener) {
             if (CommonUtils.isNetworkAvailable(mContext)) {
-                listener.onProgress(IMConst.IM_IMAGE_VALUE, 0.01, originalPath);
+                listener.onProgress(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_IMAGE_VALUE, 0.01, originalPath);
             } else {
-                listener.onImFail(IMConst.IM_IMAGE_VALUE, fileBean);
+                listener.onImFail(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_IMAGE_VALUE, fileBean);
             }
         }
         //todo_k: 图片
@@ -1225,10 +1219,8 @@ public class HuxinSdkManager {
         if (isSaveDB) {
             cacheMsgBean.setMsgTime(System.currentTimeMillis())
                     .setMsgStatus(CacheMsgBean.SEND_GOING)
-                    .setSenderPhone(getPhoneNum())
                     .setSenderUserId(userId)
-                    .setReceiverPhone(desPhone)
-                    .setTargetPhone(desPhone)
+                    .setTargetUuid(userId)
                     .setMsgType(CacheMsgBean.SEND_IMAGE)
                     .setJsonBodyObj(new CacheMsgImage().setFilePath(originalPath));
 
@@ -1241,7 +1233,7 @@ public class HuxinSdkManager {
             public void progress(String key, double percent) {
                 LogUtils.e(Constant.SDK_UI_TAG, "manager percent = " + percent);
                 if (null != listener) {
-                    listener.onProgress(IMConst.IM_IMAGE_VALUE, percent, originalPath);
+                    listener.onProgress(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_IMAGE_VALUE, percent, originalPath);
                 }
             }
         };
@@ -1252,7 +1244,7 @@ public class HuxinSdkManager {
                 FileToken resp = GsonUtil.parse(response, FileToken.class);
                 if (resp == null) {
                     if (null != listener) {
-                        listener.onImFail(IMConst.IM_IMAGE_VALUE, fileBean);
+                        listener.onImFail(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_IMAGE_VALUE, fileBean);
                     }
                     if (isSaveDB) {
                         //add to db
@@ -1270,7 +1262,7 @@ public class HuxinSdkManager {
                             if (response == null) {
                                 Looper.prepare();
                                 if (null != listener) {
-                                    listener.onImFail(IMConst.IM_IMAGE_VALUE, fileBean);
+                                    listener.onImFail(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_IMAGE_VALUE, fileBean);
                                 }
                                 Toast.makeText(mContext, mContext.getString(R.string.hx_toast_07), Toast.LENGTH_SHORT).show();
                                 Looper.loop();
@@ -1306,7 +1298,7 @@ public class HuxinSdkManager {
                                             newMsgBean = cacheMsgBean;
                                         }
                                         try {
-                                            YouMaiChat.IMChat_Personal_Ack ack = YouMaiChat.IMChat_Personal_Ack.parseFrom(pduBase.body);
+                                            YouMaiMsg.ChatMsg_Ack ack = YouMaiMsg.ChatMsg_Ack.parseFrom(pduBase.body);
                                             long msgId = ack.getMsgId();
                                             newMsgBean.setMsgId(msgId);
 
@@ -1318,19 +1310,19 @@ public class HuxinSdkManager {
                                                 }
 
                                                 if (null != listener) {
-                                                    listener.onImSuccess(IMConst.IM_IMAGE_VALUE, fileBean);
+                                                    listener.onImSuccess(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_IMAGE_VALUE, fileBean);
                                                 }
 
                                             } else if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_NOT_HUXIN_USER) {
                                                 if (null != listener) {
-                                                    listener.onImNotUser(IMConst.IM_IMAGE_VALUE, msgId);
+                                                    listener.onImNotUser(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_IMAGE_VALUE, msgId);
                                                 }
                                             } else {
                                                 String log = "ErrerNo:" + ack.getErrerNo();
                                                 Toast.makeText(mContext, log, Toast.LENGTH_SHORT).show();
                                                 LogFile.inStance().toFile(log);
                                                 if (null != listener) {
-                                                    listener.onImFail(IMConst.IM_IMAGE_VALUE, fileBean);
+                                                    listener.onImFail(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_IMAGE_VALUE, fileBean);
                                                 }
 
                                                 if (isSaveDB) {
@@ -1350,7 +1342,7 @@ public class HuxinSdkManager {
                                     public void onError(int errCode) {
                                         super.onError(errCode);
                                         if (null != listener) {
-                                            listener.onImFail(IMConst.IM_IMAGE_VALUE, fileBean);
+                                            listener.onImFail(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_IMAGE_VALUE, fileBean);
                                         }
                                         if (isSaveDB) {
                                             cacheMsgBean.setMsgStatus(CacheMsgBean.SEND_FAILED);
@@ -1376,7 +1368,7 @@ public class HuxinSdkManager {
 
                 } else {
                     if (null != listener) {
-                        listener.onImFail(IMConst.IM_IMAGE_VALUE, fileBean);
+                        listener.onImFail(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_IMAGE_VALUE, fileBean);
                     }
                     if (isSaveDB) {
                         //add to db
@@ -1415,7 +1407,7 @@ public class HuxinSdkManager {
                           final IFileSendListener listener) {
 
         final FileBean fileBean = new FileBean().setUserId(userId)
-                .setFileMsgType(IMConst.IM_VIDEO_VALUE)
+                .setFileMsgType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_VIDEO_VALUE)
                 .setDstPhone(desPhone)
                 .setFile(file)
                 .setLocalFramePath(framePath)
@@ -1424,9 +1416,9 @@ public class HuxinSdkManager {
 
         if (null != listener) {
             if (CommonUtils.isNetworkAvailable(mContext)) {
-                listener.onProgress(IMConst.IM_VIDEO_VALUE, 0.01, filePath);
+                listener.onProgress(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_VIDEO_VALUE, 0.01, filePath);
             } else {
-                listener.onImFail(IMConst.IM_VIDEO_VALUE, fileBean);
+                listener.onImFail(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_VIDEO_VALUE, fileBean);
             }
         }
         String videoName = file.getName();
@@ -1436,10 +1428,8 @@ public class HuxinSdkManager {
         final CacheMsgBean cacheMsgBean = new CacheMsgBean();
         cacheMsgBean.setMsgTime(System.currentTimeMillis())
                 .setMsgStatus(CacheMsgBean.SEND_FAILED)
-                .setSenderPhone(getPhoneNum())
                 .setSenderUserId(userId)
-                .setReceiverPhone(desPhone)
-                .setTargetPhone(desPhone)
+                .setTargetUuid(userId)
                 .setMsgType(CacheMsgBean.SEND_VIDEO)
                 .setJsonBodyObj(new CacheMsgVideo().setVideoPath(filePath).setFramePath(framePath).setName(videoName).setSize(videoSize).setTime(seconds));
         if (isSaveDB) {
@@ -1459,7 +1449,7 @@ public class HuxinSdkManager {
             public void progress(String key, double percent) {
                 LogUtils.e(Constant.SDK_UI_TAG, "manager percent = " + percent);
                 if (null != listener && percent < 0.5f) {
-                    listener.onProgress(IMConst.IM_VIDEO_VALUE, percent, fileBean.getLocalFramePath());
+                    listener.onProgress(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_VIDEO_VALUE, percent, fileBean.getLocalFramePath());
                 }
             }
         };
@@ -1469,7 +1459,7 @@ public class HuxinSdkManager {
                 FileToken resp = GsonUtil.parse(response, FileToken.class);
                 if (resp == null) {
                     if (null != listener) {
-                        listener.onImFail(IMConst.IM_VIDEO_VALUE, fileBean);
+                        listener.onImFail(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_VIDEO_VALUE, fileBean);
                     }
                     if (isSaveDB) {
                         //add to db
@@ -1486,7 +1476,7 @@ public class HuxinSdkManager {
                         public void complete(String key, ResponseInfo info, JSONObject response) {
                             if (response == null) {
                                 if (null != listener) {
-                                    listener.onImFail(IMConst.IM_VIDEO_VALUE, fileBean);
+                                    listener.onImFail(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_VIDEO_VALUE, fileBean);
                                 }
                                 if (isSaveDB) {
                                     //add to db
@@ -1520,7 +1510,7 @@ public class HuxinSdkManager {
                     uploadManager.put(new File(framePath), fidKey, token, completionHandler, options);
                 } else {
                     if (null != listener) {
-                        listener.onImFail(IMConst.IM_VIDEO_VALUE, fileBean);
+                        listener.onImFail(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_VIDEO_VALUE, fileBean);
                     }
                     if (isSaveDB) {
                         //add to db
@@ -1546,7 +1536,7 @@ public class HuxinSdkManager {
             public void progress(String key, double percent) {
                 LogUtils.e(Constant.SDK_UI_TAG, "manager percent = " + percent);
                 if (null != listener && percent >= 0.5f) {
-                    listener.onProgress(IMConst.IM_VIDEO_VALUE, percent, fileBean.getLocalVideoPath());
+                    listener.onProgress(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_VIDEO_VALUE, percent, fileBean.getLocalVideoPath());
                 }
             }
         };
@@ -1556,7 +1546,7 @@ public class HuxinSdkManager {
                 FileToken resp = GsonUtil.parse(response, FileToken.class);
                 if (resp == null) {
                     if (null != listener) {
-                        listener.onImFail(IMConst.IM_VIDEO_VALUE, fileBean);
+                        listener.onImFail(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_VIDEO_VALUE, fileBean);
                     }
                     if (isSaveDB) {
                         //add to db
@@ -1573,7 +1563,7 @@ public class HuxinSdkManager {
                         public void complete(String key, ResponseInfo info, JSONObject response) {
                             if (response == null) {
                                 if (null != listener) {
-                                    listener.onImFail(IMConst.IM_VIDEO_VALUE, fileBean);
+                                    listener.onImFail(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_VIDEO_VALUE, fileBean);
                                 }
                                 if (isSaveDB) {
                                     //add to db
@@ -1610,7 +1600,7 @@ public class HuxinSdkManager {
 
                 } else {
                     if (null != listener) {
-                        listener.onImFail(IMConst.IM_VIDEO_VALUE, fileBean);
+                        listener.onImFail(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_VIDEO_VALUE, fileBean);
                     }
                     if (isSaveDB) {
                         //add to db
@@ -1641,14 +1631,14 @@ public class HuxinSdkManager {
         fileBean.setPictrueId(frameId);
         fileBean.setVideoTime(time);
 
-        final String desPhone = cacheMsgBean.getReceiverPhone();
-        cacheMsgBean.setTargetPhone(desPhone);
+        cacheMsgBean.setTargetUuid(cacheMsgBean.getSenderUserId());
+
         ReceiveListener receiveListener = new ReceiveListener() {
             @Override
             public void OnRec(PduBase pduBase) {
                 //发自己处理
                 CacheMsgBean newMsgBean = null;
-                if (cacheMsgBean.getReceiverPhone().equals(HuxinSdkManager.instance().getPhoneNum())) {
+                if (cacheMsgBean.getReceiverUserId().equals(getUuid())) {
                     // FIXME: 2017/4/10 消息屏发送主键 ID为 null
                     if (cacheMsgBean.getId() != null) {
                         newMsgBean = HuxinSdkManager.instance().getCacheMsgFromDBById(cacheMsgBean.getId());
@@ -1657,7 +1647,7 @@ public class HuxinSdkManager {
                     newMsgBean = cacheMsgBean;
                 }
                 try {
-                    YouMaiChat.IMChat_Personal_Ack ack = YouMaiChat.IMChat_Personal_Ack.parseFrom(pduBase.body);
+                    YouMaiMsg.ChatMsg_Ack ack = YouMaiMsg.ChatMsg_Ack.parseFrom(pduBase.body);
                     long msgId = ack.getMsgId();
                     newMsgBean.setMsgId(msgId);
 
@@ -1669,19 +1659,19 @@ public class HuxinSdkManager {
                         }
 
                         if (null != listener) {
-                            listener.onImSuccess(IMConst.IM_VIDEO_VALUE, fileBean);
+                            listener.onImSuccess(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_VIDEO_VALUE, fileBean);
                         }
 
                     } else if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_NOT_HUXIN_USER) {
                         if (null != listener) {
-                            listener.onImNotUser(IMConst.IM_VIDEO_VALUE, msgId);
+                            listener.onImNotUser(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_VIDEO_VALUE, msgId);
                         }
                     } else {
                         String log = "ErrorNo:" + ack.getErrerNo();
                         Toast.makeText(mContext, log, Toast.LENGTH_SHORT).show();
                         LogFile.inStance().toFile(log);
                         if (null != listener) {
-                            listener.onImFail(IMConst.IM_VIDEO_VALUE, fileBean);
+                            listener.onImFail(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_VIDEO_VALUE, fileBean);
                         }
 
                         if (isSaveDB) {
@@ -1697,7 +1687,7 @@ public class HuxinSdkManager {
             public void onError(int errCode) {
                 super.onError(errCode);
                 if (null != listener) {
-                    listener.onImFail(IMConst.IM_VIDEO_VALUE, fileBean);
+                    listener.onImFail(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_VIDEO_VALUE, fileBean);
                 }
                 if (isSaveDB) {
                     cacheMsgBean.setMsgStatus(CacheMsgBean.SEND_FAILED);

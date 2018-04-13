@@ -142,7 +142,7 @@ public class SendMsgService extends IntentService {
     private void updateUI(SendMsg msg, int flag, String type, int send_flag) {
         CacheMsgBean bean = msg.getMsg();
         bean.setMsgStatus(flag);
-        bean.setTargetPhone(bean.getReceiverPhone());
+        bean.setTargetUuid(bean.getReceiverUserId());
         CacheMsgHelper.instance(appContext).insertOrUpdate(bean);
         Intent intent = new Intent("service.send.msg");
         intent.putExtra("data", msg);
@@ -164,9 +164,9 @@ public class SendMsgService extends IntentService {
             contentTemp = msgBody.getEmotionContent();
         }
         final String userId = HuxinSdkManager.instance().getUuid();
-        final String targetPhone = msgBean.getMsg().getReceiverPhone();
+        final String targetUuid = msgBean.getMsg().getReceiverUserId();
         final String content = contentTemp;
-        msgBean.getMsg().setTargetPhone(targetPhone);
+        msgBean.getMsg().setTargetUuid(targetUuid);
         HuxinSdkManager.instance().sendText(userId, content, new ReceiveListener() {
             @Override
             public void OnRec(PduBase pduBase) {
@@ -204,7 +204,7 @@ public class SendMsgService extends IntentService {
     //发送位置
     private void sendMap(final SendMsg msgBean) {
         final String userId = HuxinSdkManager.instance().getUuid();
-        final String targetPhone = msgBean.getMsg().getReceiverPhone();
+        final String targetUuid = msgBean.getMsg().getReceiverUserId();
         CacheMsgMap msgBody = (CacheMsgMap) msgBean.getMsg().getJsonBodyObj();
 
         final String url = msgBody.getImgUrl();
@@ -213,7 +213,7 @@ public class SendMsgService extends IntentService {
         final double longitude = Double.valueOf(location.substring(0, location.indexOf(",")));
         final double latitude = Double.valueOf(location.substring(location.indexOf(",") + 1, location.length()));
         final String address = msgBody.getAddress();
-        msgBean.getMsg().setTargetPhone(targetPhone);
+        msgBean.getMsg().setTargetUuid(targetUuid);
         ReceiveListener callback = new ReceiveListener() {
             @Override
             public void OnRec(PduBase pduBase) {
@@ -272,7 +272,7 @@ public class SendMsgService extends IntentService {
      */
     private void uploadFile(final SendMsg msgBean) {
         final int msgType = msgBean.getMsg().getMsgType();
-        msgBean.getMsg().setTargetPhone(msgBean.getMsg().getReceiverPhone());
+        msgBean.getMsg().setTargetUuid(msgBean.getMsg().getReceiverUserId());
 
         UpProgressHandler upProgressHandler = new UpProgressHandler() {
             @Override
@@ -329,7 +329,7 @@ public class SendMsgService extends IntentService {
             String fileId = msgBody.getFid();
             if (TextUtils.isEmpty(fileId) || TextUtils.equals(fileId, "-1") || TextUtils.equals(fileId, "-2")) {
                 QiniuUtils qiniuUtils = new QiniuUtils();
-                qiniuUtils.postFileToQiNiu(msgBody.getFilePath(), msgBean.getMsg().getReceiverPhone(), upProgressHandler, postFile);
+                qiniuUtils.postFileToQiNiu(msgBody.getFilePath(), msgBean.getMsg().getReceiverUserId(), upProgressHandler, postFile);
             } else {
                 //文件已经上传，直接发送消息
                 sendFileIM(msgBean);
@@ -339,7 +339,7 @@ public class SendMsgService extends IntentService {
             String fileId = msgBody.getFid();
             if (TextUtils.isEmpty(fileId) || TextUtils.equals(fileId, "-1") || TextUtils.equals(fileId, "-2")) {
                 QiniuUtils qiniuUtils = new QiniuUtils();
-                qiniuUtils.postFileToQiNiu(msgBody.getFilePath(), msgBean.getMsg().getReceiverPhone(), upProgressHandler, postFile);
+                qiniuUtils.postFileToQiNiu(msgBody.getFilePath(), msgBean.getMsg().getReceiverUserId(), upProgressHandler, postFile);
             } else {
                 //图片文件已经上传，直接发送消息
                 sendPicIM(msgBean);
@@ -349,7 +349,7 @@ public class SendMsgService extends IntentService {
             String fileId = msgBody.getFid();
             if (TextUtils.isEmpty(fileId) || TextUtils.equals(fileId, "-1") || TextUtils.equals(fileId, "-2")) {
                 QiniuUtils qiniuUtils = new QiniuUtils();
-                qiniuUtils.postFileToQiNiu(msgBody.getVoicePath(), msgBean.getMsg().getReceiverPhone(), upProgressHandler, postFile);
+                qiniuUtils.postFileToQiNiu(msgBody.getVoicePath(), msgBean.getMsg().getReceiverUserId(), upProgressHandler, postFile);
             } else {
                 //音频文件已经上传，直接发送消息
                 sendVoiceIM(msgBean);
@@ -416,7 +416,7 @@ public class SendMsgService extends IntentService {
         }
         if (TextUtils.isEmpty(fileId) || TextUtils.equals(fileId, "-1") || TextUtils.equals(fileId, "-2")) {
             QiniuUtils qiniuUtils = new QiniuUtils();
-            qiniuUtils.postFileToQiNiu(filePath, msgBean.getMsg().getReceiverPhone(), upProgressHandler, postFile);
+            qiniuUtils.postFileToQiNiu(filePath, msgBean.getMsg().getReceiverUserId(), upProgressHandler, postFile);
         } else {
             if (steps == 1) {
                 //首帧已上传,进入上传视频
@@ -434,10 +434,11 @@ public class SendMsgService extends IntentService {
         CacheMsgVoice msgBody = (CacheMsgVoice) msgBean.getMsg().getJsonBodyObj();
         final String fileId = msgBody.getFid();
         final String secondTimes = msgBody.getVoiceTime();
-        final String desPhone = msgBean.getMsg().getReceiverPhone();
+        final String uuid = msgBean.getMsg().getReceiverUserId();
         final String sourcePhone = msgBody.getSourcePhone();
         final String forwardCount = msgBody.getForwardCount() + "";
-        msgBean.getMsg().setTargetPhone(desPhone);
+        msgBean.getMsg().setTargetUuid(uuid);
+
         ReceiveListener receiveListener = new ReceiveListener() {
             @Override
             public void OnRec(PduBase pduBase) {
@@ -467,9 +468,9 @@ public class SendMsgService extends IntentService {
         final String userId = HuxinSdkManager.instance().getUuid();
         CacheMsgImage msgBody = (CacheMsgImage) msgBean.getMsg().getJsonBodyObj();
         final String fileId = msgBody.getFid();
-        final String desPhone = msgBean.getMsg().getReceiverPhone();
+        final String uuid = msgBean.getMsg().getReceiverUserId();
         boolean isOriginal = msgBody.getOriginalType() == CacheMsgImage.SEND_IS_ORI;
-        msgBean.getMsg().setTargetPhone(desPhone);
+        msgBean.getMsg().setTargetUuid(uuid);
         ReceiveListener receiveListener = new ReceiveListener() {
             @Override
             public void OnRec(PduBase pduBase) {
@@ -508,8 +509,8 @@ public class SendMsgService extends IntentService {
         final String fileId = msgBody.getFid();
         final String fileName = msgBody.getFileName();
         final String fileSize = msgBody.getFileSize() + "";
-        final String desPhone = msgBean.getMsg().getReceiverPhone();
-        msgBean.getMsg().setTargetPhone(desPhone);
+        final String destUuid = msgBean.getMsg().getReceiverUserId();
+        msgBean.getMsg().setTargetUuid(destUuid);
         ReceiveListener receiveListener = new ReceiveListener() {
             @Override
             public void OnRec(PduBase pduBase) {
@@ -543,8 +544,8 @@ public class SendMsgService extends IntentService {
         final String name = cacheMsgVideo.getName();
         final String size = cacheMsgVideo.getSize();
         final long time = cacheMsgVideo.getTime();
-        final String desPhone = msgBean.getMsg().getReceiverPhone();
-        msgBean.getMsg().setTargetPhone(desPhone);
+        final String uuid = msgBean.getMsg().getReceiverUserId();
+        msgBean.getMsg().setTargetUuid(uuid);
         ReceiveListener receiveListener = new ReceiveListener() {
             @Override
             public void OnRec(PduBase pduBase) {

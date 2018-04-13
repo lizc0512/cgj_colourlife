@@ -36,7 +36,6 @@ import com.youmai.hxsdk.im.cache.CacheMsgVoice;
 import com.youmai.hxsdk.interfaces.OnChatMsg;
 import com.youmai.hxsdk.proto.YouMaiBasic;
 import com.youmai.hxsdk.proto.YouMaiBulletin;
-import com.youmai.hxsdk.proto.YouMaiChat;
 import com.youmai.hxsdk.proto.YouMaiMsg;
 import com.youmai.hxsdk.proto.YouMaiUser;
 import com.youmai.hxsdk.socket.NotifyListener;
@@ -146,13 +145,13 @@ public class IMMsgManager {
     }
 
     //todo_k: 12-6
-    public List<CacheMsgBean> getCacheMsgBeanList(String dstPhone) {
-        String selfPhone = HuxinSdkManager.instance().getPhoneNum();
+    public List<CacheMsgBean> getCacheMsgBeanList(String dstUuid) {
+        String selfUuid = HuxinSdkManager.instance().getUuid();
         List<CacheMsgBean> targetBeanList = new ArrayList<>();
         for (CacheMsgBean cacheMsgBean : cacheMsgBeanList) {
-            if (dstPhone.equals(cacheMsgBean.getReceiverPhone()) && selfPhone.equals(cacheMsgBean.getSenderPhone())) { //目标为接收
+            if (dstUuid.equals(cacheMsgBean.getReceiverUserId()) && selfUuid.equals(cacheMsgBean.getSenderUserId())) { //目标为接收
                 targetBeanList.add(cacheMsgBean);
-            } else if (dstPhone.equals(cacheMsgBean.getSenderPhone()) && selfPhone.equals(cacheMsgBean.getReceiverPhone())) { //目标为发送
+            } else if (dstUuid.equals(cacheMsgBean.getSenderUserId()) && selfUuid.equals(cacheMsgBean.getReceiverUserId())) { //目标为发送
                 targetBeanList.add(cacheMsgBean);
             }
         }
@@ -206,8 +205,8 @@ public class IMMsgManager {
         return 0;
     }
 
-    public List<CacheMsgBean> genCacheMsgBeanList(final Context context, String dstPhone, boolean setRead) {
-        String selfPhone = HuxinSdkManager.instance().getPhoneNum();
+    public List<CacheMsgBean> genCacheMsgBeanList(final Context context, String dstUuid, boolean setRead) {
+        String selfUuid = HuxinSdkManager.instance().getUuid();
         /*String selection = "(receiver_phone=? and sender_phone=?) or (sender_phone=? and receiver_phone=?)";
         String[] selcetionArg = new String[]{dstPhone, selfPhone, dstPhone, selfPhone};
         if (dstPhone.equals(selfPhone)) {
@@ -216,17 +215,17 @@ public class IMMsgManager {
         }*/
         //取未读，设置为已读
         if (setRead) {
-            genUnreadCacheMsgBeanList(context, dstPhone, true);
+            genUnreadCacheMsgBeanList(context, dstUuid, true);
         }
 
         /*cacheMsgBeanList = HuxinSdkManager.instance().getCacheMsgFromDB(null, selection,
                 selcetionArg, null, null, "id ASC", null);*/
 
         List<CacheMsgBean> list;
-        if (dstPhone.equals(selfPhone)) {
-            list = CacheMsgHelper.instance(mContext).toQueryAndAscById(selfPhone, selfPhone);
+        if (dstUuid.equals(selfUuid)) {
+            list = CacheMsgHelper.instance(mContext).toQueryAndAscById(selfUuid, selfUuid);
         } else {
-            list = CacheMsgHelper.instance(mContext).toQueryOrAscById(dstPhone, selfPhone);
+            list = CacheMsgHelper.instance(mContext).toQueryOrAscById(dstUuid, selfUuid);
         }
         cacheMsgBeanList.clear();
         cacheMsgBeanList.addAll(list);
@@ -248,19 +247,19 @@ public class IMMsgManager {
     }
 
     /*
-        *  1：有socket 连接即有消息接收，IM 就必须有mNotifyListener 这个监听器，目前有且只有这个。
-        *    【因为如果没有处理，则消息不会再次来到，除非本来没有socket连接，如应用没有启动的情况】
-        *  2：mNotifyListener 调用 parseCharMsg 处理消息，回调imMsgCallbackList（目前存在于沟通列表，聊天界面两个回调）
-        *  3：mNotifyListener 调用 notifyMsg ，如果有 mOnChatMsgList回调（目前存在于各个通话屏中，与继承SdkBaseActivity 的界面) ，就不通知。
-        *  4：回调原则：自己注册，自己负责解注册，监听器处理消息，回调拿去用。
-        * */
+     *  1：有socket 连接即有消息接收，IM 就必须有mNotifyListener 这个监听器，目前有且只有这个。
+     *    【因为如果没有处理，则消息不会再次来到，除非本来没有socket连接，如应用没有启动的情况】
+     *  2：mNotifyListener 调用 parseCharMsg 处理消息，回调imMsgCallbackList（目前存在于沟通列表，聊天界面两个回调）
+     *  3：mNotifyListener 调用 notifyMsg ，如果有 mOnChatMsgList回调（目前存在于各个通话屏中，与继承SdkBaseActivity 的界面) ，就不通知。
+     *  4：回调原则：自己注册，自己负责解注册，监听器处理消息，回调拿去用。
+     * */
     private NotifyListener mNotifyListener = new NotifyListener(
             YouMaiBasic.COMMANDID.CID_CHAT_BUDDY_VALUE) {
         @Override
         public void OnRec(byte[] data) {
             try {
-                YouMaiMsg.ChatMsg notify=YouMaiMsg.ChatMsg.parseFrom(data);
-                YouMaiMsg.MsgData imChat= notify.getData();
+                YouMaiMsg.ChatMsg notify = YouMaiMsg.ChatMsg.parseFrom(data);
+                YouMaiMsg.MsgData imChat = notify.getData();
 
                 IMChat im = new IMChat(imChat);
 
@@ -391,21 +390,23 @@ public class IMMsgManager {
     public void notifyMsg(IMChat msg, boolean isFormPush) {
         String srcPhone = msg.getImChat().getSrcUserId();
         String newMsgTip = mContext.getString(R.string.hx_hook_strategy_msg);
-        if (msg.getMsgType() == IMConst.IM_TEXT_VALUE) {  //文字
+        if (msg.getMsgType() == YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_TEXT_VALUE) {  //文字
             ContentText text = msg.getContent().getText();
             String content = text.getContent();
-            notifyMsg(mContext, srcPhone, content, isFormPush);
-        } else if (msg.getMsgType() == IMConst.IM_EMO_TEXT_VALUE) { //表情
-            notifyMsg(mContext, srcPhone, newMsgTip + mContext.getString(R.string.hx_hook_strategy_msg_emoji), isFormPush);
-        } else if (msg.getMsgType() == IMConst.IM_IMAGE_VALUE) { //图片
+            if (content.startsWith("/")) { //自定义表情
+                notifyMsg(mContext, srcPhone, newMsgTip + mContext.getString(R.string.hx_hook_strategy_msg_emoji), isFormPush);
+            } else {  //文字
+                notifyMsg(mContext, srcPhone, content, isFormPush);
+            }
+        } else if (msg.getMsgType() == YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_IMAGE_VALUE) { //图片
             notifyMsg(mContext, srcPhone, newMsgTip + mContext.getString(R.string.hx_hook_strategy_msg_pic), isFormPush);
-        } else if (msg.getMsgType() == IMConst.IM_VIDEO_VALUE) { //视频
+        } else if (msg.getMsgType() == YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_VIDEO_VALUE) { //视频
             notifyMsg(mContext, srcPhone, newMsgTip + mContext.getString(R.string.hx_hook_strategy_msg_tv), isFormPush);
-        } else if (msg.getMsgType() == IMConst.IM_LOCATION_VALUE) { //定位
+        } else if (msg.getMsgType() == YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_LOCATION_VALUE) { //定位
             notifyMsg(mContext, srcPhone, newMsgTip + mContext.getString(R.string.hx_hook_strategy_msg_map), isFormPush);
-        } else if (msg.getMsgType() == IMConst.IM_AUDIO_VALUE) { //音频
+        } else if (msg.getMsgType() == YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_AUDIO_VALUE) { //音频
             notifyMsg(mContext, srcPhone, newMsgTip + mContext.getString(R.string.hx_hook_strategy_msg_voice), isFormPush);
-        } else if (msg.getMsgType() == IMConst.IM_FILE_VALUE) { //文件
+        } else if (msg.getMsgType() == YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_FILE_VALUE) { //文件
             notifyMsg(mContext, srcPhone, newMsgTip + mContext.getString(R.string.hx_hook_strategy_msg_file), isFormPush);
         }
     }
@@ -415,7 +416,7 @@ public class IMMsgManager {
         //todo_k:
         CacheMsgBean cacheMsgBean = im.getMsgBean();
 
-        if (im.getMsgType() == IMConst.IM_TEXT_VALUE) {
+        if (im.getMsgType() == YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_TEXT_VALUE) {
 
             ContentText text = im.getContent().getText();
             String content = text.getContent();
@@ -436,7 +437,7 @@ public class IMMsgManager {
             cacheMsgBeanList.add(cacheMsgBean);
             handlerIMMsgCallback(cacheMsgBean);
 
-        } else if (im.getMsgType() == IMConst.IM_IMAGE_VALUE) { //图片
+        } else if (im.getMsgType() == YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_IMAGE_VALUE) { //图片
             String fid = im.getContent().getPicture().getPicUrl();
             String describe = im.getContent().getPicture().getDescribe();
             if (describe == null) {  //防止版本差异奔溃
@@ -453,7 +454,7 @@ public class IMMsgManager {
 
             cacheMsgBeanList.add(cacheMsgBean);
             handlerIMMsgCallback(cacheMsgBean);
-        } else if (im.getMsgType() == IMConst.IM_LOCATION_VALUE) { //定位
+        } else if (im.getMsgType() == YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_LOCATION_VALUE) { //定位
 
             ContentLocation mLocation = im.getContent().getLocation();
             final String location = mLocation.getLongitudeStr() + "," + mLocation.getLatitudeStr();
@@ -476,7 +477,7 @@ public class IMMsgManager {
             CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
             cacheMsgBeanList.add(cacheMsgBean);
             handlerIMMsgCallback(cacheMsgBean);
-        } else if (im.getMsgType() == IMConst.IM_AUDIO_VALUE) { //音频
+        } else if (im.getMsgType() == YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_AUDIO_VALUE) { //音频
 
             String fid = im.getContent().getAudio().getAudioId();
             String url = AppConfig.DOWNLOAD_IMAGE + fid;
@@ -499,7 +500,7 @@ public class IMMsgManager {
                             .setForwardCount(forwardCount));
             downloadAudio(cacheMsgBean, url);
 
-        } else if (im.getMsgType() == IMConst.IM_FILE_VALUE) { //文件
+        } else if (im.getMsgType() == YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_FILE_VALUE) { //文件
             String fid = im.getContent().getFile().getFid();
             String fileName = im.getContent().getFile().getFileName();
             String fileSize = im.getContent().getFile().getFileSize();
@@ -517,7 +518,7 @@ public class IMMsgManager {
             CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
             cacheMsgBeanList.add(cacheMsgBean);
             handlerIMMsgCallback(cacheMsgBean);
-        } else if (im.getMsgType() == IMConst.IM_VIDEO_VALUE) {//视频
+        } else if (im.getMsgType() == YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_VIDEO_VALUE) {//视频
             ContentVideo contentVideo = im.getContent().getVideo();//获取解析jsonBoby的内容
             long time;
             try {
@@ -621,7 +622,7 @@ public class IMMsgManager {
 
         // Creates an explicit intent for an Activity in your app
         Intent resultIntent = new Intent(context, IMConnectionActivity.class);
-        resultIntent.putExtra(IMConnectionActivity.DST_PHONE, srcPhone);
+        resultIntent.putExtra(IMConnectionActivity.DST_UUID, srcPhone);
         //resultIntent.putExtra(IMConnectionActivity.DST_NAME, HuxinSdkManager.instance().getContactName(srcPhone));
         // The stack builder object will contain an artificial back stack for the
         // started Activity.

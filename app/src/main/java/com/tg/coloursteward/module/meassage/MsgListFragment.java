@@ -1,4 +1,4 @@
-package com.tg.coloursteward.meassage;
+package com.tg.coloursteward.module.meassage;
 
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;

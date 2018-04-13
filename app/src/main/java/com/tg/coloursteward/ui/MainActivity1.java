@@ -34,7 +34,7 @@ import com.tg.coloursteward.fragment.FragmentMine;
 import com.tg.coloursteward.info.HomeDeskTopInfo;
 import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.log.Logger;
-import com.tg.coloursteward.meassage.MsgListFragment;
+import com.tg.coloursteward.module.meassage.MsgListFragment;
 import com.tg.coloursteward.module.contact.ContactsFragment;
 import com.tg.coloursteward.net.GetTwoRecordListener;
 import com.tg.coloursteward.net.HttpTools;

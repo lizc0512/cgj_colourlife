@@ -1,8 +1,6 @@
-package com.tg.coloursteward.meassage;
+package com.tg.coloursteward.module.meassage;
 
 import android.content.Context;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
@@ -16,7 +14,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.tg.coloursteward.R;
-import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
 import com.youmai.hxsdk.im.cache.CacheMsgTxt;
 import com.youmai.hxsdk.view.chat.emoticon.utils.EmoticonHandler;

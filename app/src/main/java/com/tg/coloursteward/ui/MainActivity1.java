@@ -781,7 +781,6 @@ public class MainActivity1 extends AppCompatActivity implements MessageHandler.R
         }
     }
 
-
     private class TabFragmentPagerAdapter extends FragmentStatePagerAdapter {
 
         private int mCount;

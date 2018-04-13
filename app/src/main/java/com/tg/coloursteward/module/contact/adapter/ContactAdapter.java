@@ -1,6 +1,7 @@
 package com.tg.coloursteward.module.contact.adapter;
 
 import android.content.Context;
+import android.os.Message;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tg.coloursteward.module.contact.stickyheader.StickyHeaderAdapter;
+import com.tg.coloursteward.net.HttpTools;
+import com.tg.coloursteward.net.MessageHandler;
 import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.db.bean.Contact;
 import com.youmai.hxsdk.entity.cn.CNPinyin;
@@ -17,9 +20,10 @@ import com.youmai.hxsdk.entity.cn.CNPinyin;
 import java.util.List;
 
 /**
- * Created by you on 2017/9/11.
+ * Created by yw on 2018/4/13.
  */
-public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactHolder> implements StickyHeaderAdapter<ContactAdapter.HeaderHolder> {
+public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactHolder> implements
+        StickyHeaderAdapter<ContactAdapter.HeaderHolder>, MessageHandler.ResponseListener {
 
     private Context mContext;
     private ItemEventListener itemEventListener;
@@ -29,6 +33,9 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactH
         this.mContext = context.getApplicationContext();
         this.cnPinyinList = cnPinyinList;
         this.itemEventListener = listener;
+
+        msgHandler = new MessageHandler(context);
+        msgHandler.setResponseListener(this);
     }
 
     @Override
@@ -127,6 +134,51 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactH
         void onItemClick(int pos, Contact contact);
 
         void onLongClick(int pos);
+    }
+
+    //--------------------------------------------------------------
+    public interface NetRelativeRequestListener {
+        public void onRequest(MessageHandler msgHand);
+        public void onSuccess(Message msg, String response);
+    }
+    private NetRelativeRequestListener requestListener;
+    private boolean isLoadding = false;
+    private MessageHandler msgHandler;
+
+    public void loadingData() {
+        if (!isLoadding) {
+            if (requestListener != null) {
+                isLoadding = true;
+                requestListener.onRequest(msgHandler);
+            }
+        }
+    }
+
+    public void setNetworkRequestListener(NetRelativeRequestListener l) {
+        requestListener = l;
+    }
+
+    @Override
+    public void onRequestStart(Message msg, String hintString) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void onSuccess(Message msg, String jsonString, String hintString) {
+        // TODO Auto-generated method stub
+        int code = HttpTools.getCode(jsonString);
+        if (code == 0) {
+            if (requestListener != null) {
+                requestListener.onSuccess(msg, jsonString);
+            }
+        }
+        isLoadding= false;
+    }
+
+    @Override
+    public void onFail(Message msg, String hintString) {
+        // TODO Auto-generated method stub
     }
 
 }

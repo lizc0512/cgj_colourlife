@@ -277,17 +277,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/HxSdkTheme" />
 
-        <activity
-            android:name=".contact.search.demo.GlobalSearchActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/HxSdkTheme" />
-
-        <!--联系人详情-->
-        <activity
-            android:name=".contact.search.demo.ContactsDetailActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/HxSdkTheme"/>
-
         <!--组织架构-->
         <activity
             android:name=".module.organization.OrganizationalStructureActivity"

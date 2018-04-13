@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--app主题标题栏颜色 -->
-    <color name="colorPrimary">#4fbcfa</color>
+    <color name="colorPrimary">#2E363F</color>
     <!--app主题通知栏颜色 -->
-    <color name="colorPrimaryDark">#4fbcfa</color>
+    <color name="colorPrimaryDark">#2E363F</color>
     <!--app主题标题默认控件颜色 -->
-    <color name="colorAccent">#4fbcfa</color>
+    <color name="colorAccent">#2E363F</color>
 
 
     <color name="transparent">#00000000</color>

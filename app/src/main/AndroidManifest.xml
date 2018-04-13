@@ -69,7 +69,7 @@
         <activity
             android:name=".ui.MainActivity1"
             android:screenOrientation="portrait"
-            android:theme="@style/HxSdkTheme"
+            android:theme="@style/BaseAppTheme"
             android:windowSoftInputMode="stateUnspecified|adjustPan">
             <!--<intent-filter>
                 <action android:name="android.intent.action.MAIN" />

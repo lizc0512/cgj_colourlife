@@ -4,7 +4,6 @@ import android.content.Context;
 import android.view.inputmethod.InputMethodManager;
 
 import com.google.protobuf.InvalidProtocolBufferException;
-import com.tg.coloursteward.module.contact.pinyin.Pinyin;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.config.ColorsConfig;
@@ -12,6 +11,7 @@ import com.youmai.hxsdk.db.bean.Contact;
 import com.youmai.hxsdk.entity.cn.CN;
 import com.youmai.hxsdk.entity.cn.DuoYinZi;
 import com.youmai.hxsdk.entity.cn.SearchContactBean;
+import com.youmai.hxsdk.entity.cn.pinyin.Pinyin;
 import com.youmai.hxsdk.proto.YouMaiBuddy;
 import com.youmai.hxsdk.socket.PduBase;
 import com.youmai.hxsdk.socket.ReceiveListener;
@@ -91,8 +91,7 @@ public class ContactsBindData extends Observable {
         Random random = new Random(System.currentTimeMillis());
         String[] names = context.getResources().getStringArray(R.array.names_1); //获取
         for (int i = 0; i < names.length; i++) {
-            int urlIndex = random.nextInt(URLS.length - 1);
-            int url = URLS[urlIndex];
+            int url = R.drawable.contacts_common_default_user_bg;
 
             StringBuffer pinyin = new StringBuffer();
             StringBuffer ch = new StringBuffer();

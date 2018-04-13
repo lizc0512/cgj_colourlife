@@ -3,8 +3,8 @@ package com.tg.coloursteward.module.contact.utils;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.tg.coloursteward.module.contact.pinyin.Pinyin;
 import com.youmai.hxsdk.entity.cn.DuoYinZi;
+import com.youmai.hxsdk.entity.cn.pinyin.Pinyin;
 
 import net.sourceforge.pinyin4j.PinyinHelper;
 import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType;

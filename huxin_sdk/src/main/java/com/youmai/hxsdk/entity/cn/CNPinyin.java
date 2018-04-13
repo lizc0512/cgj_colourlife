@@ -3,6 +3,7 @@ package com.youmai.hxsdk.entity.cn;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.db.bean.Contact;
 
 import java.util.ArrayList;

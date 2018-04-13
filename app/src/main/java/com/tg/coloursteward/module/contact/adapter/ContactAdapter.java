@@ -10,12 +10,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.tg.coloursteward.module.contact.stickyheader.StickyHeaderAdapter;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.MessageHandler;
 import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.db.bean.Contact;
 import com.youmai.hxsdk.entity.cn.CNPinyin;
+import com.youmai.hxsdk.utils.GlideRoundTransform;
 
 import java.util.List;
 
@@ -52,8 +56,21 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactH
     @Override
     public void onBindViewHolder(ContactHolder holder, final int position) {
         final Contact contact = cnPinyinList.get(position).data;
-        holder.iv_header.setImageResource(Integer.parseInt(contact.getAvatar()));
 
+        if (position < 4) {
+            int icon = defaultIcon(position);
+            holder.iv_header.setImageResource(icon);
+        } else {
+            RequestOptions options = new RequestOptions();
+            options.diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+                    .transform(new GlideRoundTransform(mContext))
+                    .centerCrop()
+                    .error(R.drawable.contacts_common_default_user_bg);
+            Glide.with(mContext)
+                    .load(contact.getAvatar())
+                    .apply(options)
+                    .into(holder.iv_header);
+        }
 
         if (contact.getNick_name().startsWith("↑##@@**") && position < 4) {
             holder.tv_name.setText(contact.getNick_name().substring(9));
@@ -109,7 +126,6 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactH
                 .inflate(R.layout.item_header, parent, false));
     }
 
-
     public class HeaderHolder extends RecyclerView.ViewHolder {
         public final TextView tv_header;
 
@@ -134,6 +150,30 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactH
         void onItemClick(int pos, Contact contact);
 
         void onLongClick(int pos);
+    }
+
+    /**
+     * 默认功能的头像
+     * @param position
+     * @return
+     */
+    int defaultIcon(int position) {
+        int icon = -1;
+        switch (position) {
+            case 0:
+                icon = R.drawable.contacts_org;
+                break;
+            case 1:
+                icon = R.drawable.contacts_department;
+                break;
+            case 2:
+                icon = R.drawable.contacts_phone_list;
+                break;
+            case 3:
+                icon = R.drawable.contacts_groupchat;
+                break;
+        }
+        return icon;
     }
 
     //--------------------------------------------------------------

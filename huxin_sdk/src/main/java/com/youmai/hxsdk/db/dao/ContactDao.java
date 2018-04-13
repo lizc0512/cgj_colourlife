@@ -28,12 +28,14 @@ public class ContactDao extends AbstractDao<Contact, Integer> {
         public final static Property User_id = new Property(1, String.class, "user_id", false, "USER_ID");
         public final static Property Phone = new Property(2, String.class, "phone", false, "PHONE");
         public final static Property Nick_name = new Property(3, String.class, "nick_name", false, "NICK_NAME");
-        public final static Property Avator = new Property(4, String.class, "avator", false, "AVATOR");
+        public final static Property Avatar = new Property(4, String.class, "avatar", false, "AVATAR");
         public final static Property Sex = new Property(5, int.class, "sex", false, "SEX");
         public final static Property Sign = new Property(6, String.class, "sign", false, "SIGN");
         public final static Property Is_hx = new Property(7, boolean.class, "is_hx", false, "IS_HX");
         public final static Property Pinyin = new Property(8, String.class, "pinyin", false, "PINYIN");
         public final static Property SimplePinyin = new Property(9, String.class, "simplePinyin", false, "SIMPLE_PINYIN");
+        public final static Property Type = new Property(10, String.class, "type", false, "TYPE");
+        public final static Property Username = new Property(11, String.class, "username", false, "USERNAME");
     }
 
 
@@ -53,12 +55,14 @@ public class ContactDao extends AbstractDao<Contact, Integer> {
                 "\"USER_ID\" TEXT," + // 1: user_id
                 "\"PHONE\" TEXT," + // 2: phone
                 "\"NICK_NAME\" TEXT," + // 3: nick_name
-                "\"AVATOR\" TEXT," + // 4: avator
+                "\"AVATAR\" TEXT," + // 4: avatar
                 "\"SEX\" INTEGER NOT NULL ," + // 5: sex
                 "\"SIGN\" TEXT," + // 6: sign
                 "\"IS_HX\" INTEGER NOT NULL ," + // 7: is_hx
                 "\"PINYIN\" TEXT," + // 8: pinyin
-                "\"SIMPLE_PINYIN\" TEXT);"); // 9: simplePinyin
+                "\"SIMPLE_PINYIN\" TEXT," + // 9: simplePinyin
+                "\"TYPE\" TEXT," + // 10: type
+                "\"USERNAME\" TEXT);"); // 11: username
     }
 
     /** Drops the underlying database table. */
@@ -87,9 +91,9 @@ public class ContactDao extends AbstractDao<Contact, Integer> {
             stmt.bindString(4, nick_name);
         }
  
-        String avator = entity.getAvator();
-        if (avator != null) {
-            stmt.bindString(5, avator);
+        String avatar = entity.getAvatar();
+        if (avatar != null) {
+            stmt.bindString(5, avatar);
         }
         stmt.bindLong(6, entity.getSex());
  
@@ -107,6 +111,16 @@ public class ContactDao extends AbstractDao<Contact, Integer> {
         String simplePinyin = entity.getSimplePinyin();
         if (simplePinyin != null) {
             stmt.bindString(10, simplePinyin);
+        }
+ 
+        String type = entity.getType();
+        if (type != null) {
+            stmt.bindString(11, type);
+        }
+ 
+        String username = entity.getUsername();
+        if (username != null) {
+            stmt.bindString(12, username);
         }
     }
 
@@ -130,9 +144,9 @@ public class ContactDao extends AbstractDao<Contact, Integer> {
             stmt.bindString(4, nick_name);
         }
  
-        String avator = entity.getAvator();
-        if (avator != null) {
-            stmt.bindString(5, avator);
+        String avatar = entity.getAvatar();
+        if (avatar != null) {
+            stmt.bindString(5, avatar);
         }
         stmt.bindLong(6, entity.getSex());
  
@@ -151,6 +165,16 @@ public class ContactDao extends AbstractDao<Contact, Integer> {
         if (simplePinyin != null) {
             stmt.bindString(10, simplePinyin);
         }
+ 
+        String type = entity.getType();
+        if (type != null) {
+            stmt.bindString(11, type);
+        }
+ 
+        String username = entity.getUsername();
+        if (username != null) {
+            stmt.bindString(12, username);
+        }
     }
 
     @Override
@@ -165,12 +189,14 @@ public class ContactDao extends AbstractDao<Contact, Integer> {
             cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // user_id
             cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // phone
             cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // nick_name
-            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // avator
+            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // avatar
             cursor.getInt(offset + 5), // sex
             cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6), // sign
             cursor.getShort(offset + 7) != 0, // is_hx
             cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8), // pinyin
-            cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9) // simplePinyin
+            cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9), // simplePinyin
+            cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10), // type
+            cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11) // username
         );
         return entity;
     }
@@ -181,12 +207,14 @@ public class ContactDao extends AbstractDao<Contact, Integer> {
         entity.setUser_id(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
         entity.setPhone(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
         entity.setNick_name(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
-        entity.setAvator(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
+        entity.setAvatar(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
         entity.setSex(cursor.getInt(offset + 5));
         entity.setSign(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
         entity.setIs_hx(cursor.getShort(offset + 7) != 0);
         entity.setPinyin(cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8));
         entity.setSimplePinyin(cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9));
+        entity.setType(cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10));
+        entity.setUsername(cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11));
      }
     
     @Override

@@ -1,6 +1,6 @@
 package com.youmai.hxsdk.db.bean;
 
-import com.youmai.hxsdk.contact.search.cn.CN;
+import com.youmai.hxsdk.entity.cn.CN;
 
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
@@ -14,15 +14,18 @@ public class Contact implements CN {
 
     @Id
     private int contactId; //主键id
-    private String user_id;  //用户id
+    private String user_id;  //用户id - uuid
     private String phone;    //联系人号码
     private String nick_name; //姓名 - 联系人名
-    private String avator; //头像url
+    private String avatar; //头像url
     private int sex;       //性别
     private String sign;     //个性签名
     private boolean is_hx;   //true/false
     private String pinyin = "#"; //姓名拼音
     private String simplePinyin;//简拼
+
+    public String type = ""; //信息类型 企业：org 个人：user
+    public String username =""; //拼音的姓 与 名的首字母
 
     public Contact() {
     }
@@ -31,20 +34,22 @@ public class Contact implements CN {
         this.nick_name = name;
     }
 
-    @Generated(hash = 96194698)
+    @Generated(hash = 312957562)
     public Contact(int contactId, String user_id, String phone, String nick_name,
-            String avator, int sex, String sign, boolean is_hx, String pinyin,
-            String simplePinyin) {
+            String avatar, int sex, String sign, boolean is_hx, String pinyin,
+            String simplePinyin, String type, String username) {
         this.contactId = contactId;
         this.user_id = user_id;
         this.phone = phone;
         this.nick_name = nick_name;
-        this.avator = avator;
+        this.avatar = avatar;
         this.sex = sex;
         this.sign = sign;
         this.is_hx = is_hx;
         this.pinyin = pinyin;
         this.simplePinyin = simplePinyin;
+        this.type = type;
+        this.username = username;
     }
 
     @Override
@@ -84,12 +89,12 @@ public class Contact implements CN {
         this.nick_name = nick_name;
     }
 
-    public String getAvator() {
-        return avator;
+    public String getAvatar() {
+        return avatar;
     }
 
-    public void setAvator(String avator) {
-        this.avator = avator;
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     public int getSex() {
@@ -132,15 +137,37 @@ public class Contact implements CN {
         this.simplePinyin = simplePinyin;
     }
 
+    public String getType() {
+        return this.type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getUsername() {
+        return this.username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
     @Override
     public String toString() {
         return "Contact{" +
                 "contactId=" + contactId +
-                ", avator=" + avator +
-                ", displayName='" + nick_name + '\'' +
+                ", user_id='" + user_id + '\'' +
+                ", phone='" + phone + '\'' +
+                ", nick_name='" + nick_name + '\'' +
+                ", avatar='" + avatar + '\'' +
+                ", sex=" + sex +
+                ", sign='" + sign + '\'' +
+                ", is_hx=" + is_hx +
                 ", pinyin='" + pinyin + '\'' +
                 ", simplePinyin='" + simplePinyin + '\'' +
+                ", type='" + type + '\'' +
+                ", username='" + username + '\'' +
                 '}';
     }
-
 }

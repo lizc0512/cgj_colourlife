@@ -1037,7 +1037,6 @@ public class HuxinSdkManager {
         if (isSaveDB) {
             //add to db
             CacheMsgHelper.instance().insertOrUpdate(mContext, cacheMsgBean);
-            IMMsgManager.instance().addCacheMsgBean(cacheMsgBean);
         }
 
         final FileBean fileBean = new FileBean()
@@ -1226,7 +1225,6 @@ public class HuxinSdkManager {
                     .setMsgType(CacheMsgBean.SEND_IMAGE)
                     .setJsonBodyObj(new CacheMsgImage().setFilePath(originalPath));
 
-            IMMsgManager.instance().addCacheMsgBean(cacheMsgBean);
             //add to db
             CacheMsgHelper.instance().insertOrUpdate(mContext, cacheMsgBean);
         }
@@ -1437,7 +1435,6 @@ public class HuxinSdkManager {
                 .setMsgType(CacheMsgBean.SEND_VIDEO)
                 .setJsonBodyObj(new CacheMsgVideo().setVideoPath(filePath).setFramePath(framePath).setName(videoName).setSize(videoSize).setTime(seconds));
         if (isSaveDB) {
-            IMMsgManager.instance().addCacheMsgBean(cacheMsgBean);
             //add to db
             CacheMsgHelper.instance().insertOrUpdate(mContext, cacheMsgBean);
         }

@@ -1009,7 +1009,7 @@ public class HuxinSdkManager {
     /**
      * 发送文件.
      *
-     * @param userId
+     * @param dstUuid
      * @param desPhone
      * @param file
      * @param fileName
@@ -1017,7 +1017,7 @@ public class HuxinSdkManager {
      * @param isSaveDB 是否保存到本地数据库，IMConnectFragment的适配器会在 {@link IMListAdapter#addAndRefreshUI}已有保存操作
      * @return
      */
-    public boolean postBigFile(final String userId, final String desPhone, final File file,
+    public boolean postBigFile(final String dstUuid, final String desPhone, final File file,
                                final String fileName, final String fileSize,
                                final UpProgressHandler progressHandler,
                                final boolean isSaveDB,
@@ -1031,8 +1031,9 @@ public class HuxinSdkManager {
         final CacheMsgBean cacheMsgBean = new CacheMsgBean()
                 .setMsgTime(System.currentTimeMillis())
                 .setMsgStatus(CacheMsgBean.SEND_GOING)
-                .setSenderUserId(userId)
-                .setTargetUuid(userId)
+                .setSenderUserId(getUuid())
+                .setReceiverUserId(dstUuid)
+                .setTargetUuid(dstUuid)
                 .setMsgType(CacheMsgBean.SEND_FILE)
                 .setJsonBodyObj(cacheMsgFile);
         if (isSaveDB) {
@@ -1042,7 +1043,7 @@ public class HuxinSdkManager {
         }
 
         final FileBean fileBean = new FileBean()
-                .setUserId(userId)
+                .setUserId(dstUuid)
                 .setDstPhone(desPhone)
                 .setFile(file)
                 .setFileName(file.getName())
@@ -1139,7 +1140,7 @@ public class HuxinSdkManager {
 
                                     }
                                 };
-                                sendBigFile(userId, fileId, fileName, fileSize, receiveListener);
+                                sendBigFile(dstUuid, fileId, fileName, fileSize, receiveListener);
 
                             } else {
                                 Toast.makeText(mContext, resp.getM(), Toast.LENGTH_SHORT).show();
@@ -1178,7 +1179,7 @@ public class HuxinSdkManager {
     /**
      * 发送图片
      *
-     * @param userId
+     * @param dstUuid
      * @param desPhone
      * @param file         (压缩后图片文件,发送完删除)
      * @param originalPath 地图片的原始路径(原图)
@@ -1186,17 +1187,17 @@ public class HuxinSdkManager {
      * @param listener
      * @return
      */
-    public void postPicture(final String userId,
+    public void postPicture(final String dstUuid,
                             final String desPhone,
                             final File file,
                             final String originalPath,
                             final boolean isSaveDB,
                             final IFileSendListener listener) {
 
-        postPicture(userId, desPhone, file, originalPath, isSaveDB, false, listener);
+        postPicture(dstUuid, desPhone, file, originalPath, isSaveDB, false, listener);
     }
 
-    public void postPicture(final String userId,
+    public void postPicture(final String dstUuid,
                             final String desPhone,
                             final File file,
                             final String originalPath,
@@ -1204,7 +1205,7 @@ public class HuxinSdkManager {
                             final boolean isOriginal,
                             final IFileSendListener listener) {
 
-        final FileBean fileBean = new FileBean().setUserId(userId)
+        final FileBean fileBean = new FileBean().setUserId(dstUuid)
                 .setFileMsgType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_IMAGE_VALUE)
                 .setDstPhone(desPhone)
                 .setFile(file)
@@ -1221,8 +1222,9 @@ public class HuxinSdkManager {
         if (isSaveDB) {
             cacheMsgBean.setMsgTime(System.currentTimeMillis())
                     .setMsgStatus(CacheMsgBean.SEND_GOING)
-                    .setSenderUserId(userId)
-                    .setTargetUuid(userId)
+                    .setSenderUserId(getUuid())
+                    .setReceiverUserId(dstUuid)
+                    .setTargetUuid(dstUuid)
                     .setMsgType(CacheMsgBean.SEND_IMAGE)
                     .setJsonBodyObj(new CacheMsgImage().setFilePath(originalPath));
 
@@ -1354,7 +1356,7 @@ public class HuxinSdkManager {
                                     }
                                 };
 
-                                sendPicture(userId, fileId, isOriginal ? "original" : "thumbnail", receiveListener);
+                                sendPicture(dstUuid, fileId, isOriginal ? "original" : "thumbnail", receiveListener);
 
                             } else {
                                 Toast.makeText(mContext, resp.getM(), Toast.LENGTH_SHORT).show();
@@ -1392,7 +1394,7 @@ public class HuxinSdkManager {
     /**
      * 发送视频
      *
-     * @param userId
+     * @param dstUuid
      * @param desPhone
      * @param file     (压缩后图片文件,发送完删除)
      * @param filePath 地图片的原始路径(原图)
@@ -1400,7 +1402,7 @@ public class HuxinSdkManager {
      * @param listener
      * @return
      */
-    public void postVideo(final String userId,
+    public void postVideo(final String dstUuid,
                           final String desPhone,
                           final File file,
                           final String filePath,
@@ -1409,7 +1411,7 @@ public class HuxinSdkManager {
                           final boolean isSaveDB,
                           final IFileSendListener listener) {
 
-        final FileBean fileBean = new FileBean().setUserId(userId)
+        final FileBean fileBean = new FileBean().setUserId(dstUuid)
                 .setFileMsgType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_VIDEO_VALUE)
                 .setDstPhone(desPhone)
                 .setFile(file)
@@ -1431,8 +1433,9 @@ public class HuxinSdkManager {
         final CacheMsgBean cacheMsgBean = new CacheMsgBean();
         cacheMsgBean.setMsgTime(System.currentTimeMillis())
                 .setMsgStatus(CacheMsgBean.SEND_FAILED)
-                .setSenderUserId(userId)
-                .setTargetUuid(userId)
+                .setSenderUserId(getUuid())
+                .setReceiverUserId(dstUuid)
+                .setTargetUuid(dstUuid)
                 .setMsgType(CacheMsgBean.SEND_VIDEO)
                 .setJsonBodyObj(new CacheMsgVideo().setVideoPath(filePath).setFramePath(framePath).setName(videoName).setSize(videoSize).setTime(seconds));
         if (isSaveDB) {
@@ -1633,8 +1636,6 @@ public class HuxinSdkManager {
         fileBean.setFileId(fileId);
         fileBean.setPictrueId(frameId);
         fileBean.setVideoTime(time);
-
-        cacheMsgBean.setTargetUuid(cacheMsgBean.getSenderUserId());
 
         ReceiveListener receiveListener = new ReceiveListener() {
             @Override

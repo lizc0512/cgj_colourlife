@@ -7,7 +7,6 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Message;
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -25,9 +24,9 @@ import android.widget.Toast;
 import com.tg.coloursteward.ContactsActivity;
 import com.tg.coloursteward.EmployeeDataActivity;
 import com.tg.coloursteward.HomeContactOrgActivity;
+import com.tg.coloursteward.R;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.info.FamilyInfo;
-import com.tg.coloursteward.info.LinkManInfo;
 import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.module.contact.utils.ContactsBindData;
 import com.tg.coloursteward.module.contact.adapter.ContactAdapter;
@@ -84,7 +83,6 @@ public class ContactsFragment extends Fragment implements Observer,
     private MainActivity1 mActivity;
     private static final int ISTREAD = 1;
     private View mView;
-    private LinearLayout llSearch;
     private AuthAppService authAppService;
     private String accessToken;
     private String skincode;
@@ -110,19 +108,19 @@ public class ContactsFragment extends Fragment implements Observer,
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mView = inflater.inflate(com.tg.coloursteward.R.layout.fragment_contacts_layout, container, false);
+        mView = inflater.inflate(R.layout.fragment_contacts_layout, container, false);
         return mView;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        rv_main = (RecyclerView) view.findViewById(com.youmai.hxsdk.R.id.rv_main);
-        iv_main = (CharIndexView) view.findViewById(com.youmai.hxsdk.R.id.iv_main);
-        tv_index = (TextView) view.findViewById(com.youmai.hxsdk.R.id.tv_index);
-        global_search_root = view.findViewById(com.youmai.hxsdk.R.id.global_search_root);
+        rv_main = view.findViewById(R.id.rv_main);
+        iv_main = view.findViewById(R.id.iv_main);
+        tv_index = view.findViewById(R.id.tv_index);
+        global_search_root = view.findViewById(R.id.global_search_root);
 
-        manager = new LinearLayoutManager(getActivity());
+        manager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         rv_main.setLayoutManager(manager);
 
         adapter = new ContactAdapter(getContext(), contactList, this);
@@ -352,14 +350,6 @@ public class ContactsFragment extends Fragment implements Observer,
 //        if (StringUtils.isNotEmpty(orgName)) {
 //            tvOrgName.setText(orgName);
 //        }
-        /**
-         * 搜索框
-         */
-//        llSearch = (LinearLayout) mView.findViewById(R.id.ll_search);
-//        llSearch.setOnClickListener(singleListener);
-//        //rlOrganization.setOnClickListener(singleListener);
-//        rlDepartment.setOnClickListener(singleListener);
-//        rlContacts.setOnClickListener(singleListener);
 
         adapter.setNetworkRequestListener(new ContactAdapter.NetRelativeRequestListener() {
             @Override
@@ -404,60 +394,8 @@ public class ContactsFragment extends Fragment implements Observer,
                 HttpTools.httpGet(Contants.URl.URL_ICETEST, "/orgms/org/batch", config, params);
             }
         });
-//        pullListView = (PullRefreshListView) mView.findViewById(R.id.pull_listview);
-//        pullListView.setEnableMoreButton(false);
-//        pullListView.setOnItemClickListener(this);
-//        pullListView.setDividerHeight(0);
         //读取本地缓存列表
         getCacheList();
-
-        //加载收藏联系人 - 对应着rxjava
-//        /**pullListView.setOnLoadingListener(new OnLoadingListener<PullRefreshListView>() {
-//
-//        @Override public void refreshData(PullRefreshListView t, boolean isLoadMore,
-//        Message msg, String response) {
-//            // TODO Auto-generated method stub
-//            JSONArray jsonString = HttpTools.getContentJsonArray(response);
-//            if (jsonString != null) {
-//                Tools.saveLinkManList(mActivity, response);
-//                ResponseData data = HttpTools.getResponseContent(jsonString);
-//                if (jsonString.length() > 0) {
-//                rlNulllinkman.setVisibility(View.GONE);
-//                }
-//                LinkManInfo item;
-//                for (int i = 0; i < data.length; i++) {
-//                    item = new LinkManInfo();
-//                    item.username = data.getString(i, "username");
-//                    item.realname = data.getString(i, "realname");
-//                    item.icon = data.getString(i, "avatar");
-//                    item.job_name = data.getString(i, "jobName");
-//                    item.orgName = data.getString(i, "orgName");
-//                    linkManList.add(item);
-//                }
-//            }
-//        }
-//
-//        @Override public void onLoadingMore(PullRefreshListView t, Handler hand, int pageIndex) {
-//            // TODO Auto-generated method stub
-//            RequestConfig config = new RequestConfig(mActivity, PullRefreshListView.HTTP_MORE_CODE);
-//            config.handler = hand;
-//            RequestParams params = new RequestParams();
-//            params.put("uid", UserInfo.employeeAccount);
-//            HttpTools.httpGet(Contants.URl.URL_ICETEST, "/phonebook/frequentContacts", config, params);
-//
-//        }
-//
-//        @Override public void onLoading(PullRefreshListView t, Handler hand) {
-//            // TODO Auto-generated method stub
-//            RequestConfig config = new RequestConfig(mActivity, PullRefreshListView.HTTP_FRESH_CODE);
-//            config.handler = hand;
-//            RequestParams params = new RequestParams();
-//            params.put("uid", UserInfo.employeeAccount);
-//            HttpTools.httpGet(Contants.URl.URL_ICETEST, "/phonebook/frequentContacts", config, params);
-//
-//        }
-//        });*/
-        rv_main.setAdapter(adapter);
 
         Date dt = new Date();
         Long time = dt.getTime();
@@ -500,7 +438,6 @@ public class ContactsFragment extends Fragment implements Observer,
                 }
                 getPinyinList(data);
             }
-            rv_main.setAdapter(adapter);
         }
     }
 

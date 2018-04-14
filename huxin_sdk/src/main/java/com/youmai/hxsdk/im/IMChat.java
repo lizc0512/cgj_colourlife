@@ -42,6 +42,7 @@ public class IMChat {
     private void updateCacheBean() {
         mMsgBean = new CacheMsgBean();
         mMsgBean.setSenderUserId(mImChat.getSrcUserId())
+                .setTargetUuid(mImChat.getSrcUserId())
                 .setReceiverUserId(mImChat.getDestUserId())
                 .setGroupId(mImChat.getGroupId())
                 .setMsgTime(System.currentTimeMillis())

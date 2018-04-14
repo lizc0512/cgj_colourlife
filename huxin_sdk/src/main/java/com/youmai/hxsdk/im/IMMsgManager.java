@@ -625,7 +625,7 @@ public class IMMsgManager {
      * @return
      */
     public String getBadgeSharedPreferenceKey() {
-        return "badge-" + HuxinSdkManager.instance().getPhoneNum();
+        return "badge-" + HuxinSdkManager.instance().getUuid();
     }
 
     public void removeBadge(String dstPhone) {

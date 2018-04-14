@@ -50,9 +50,6 @@ public class CacheMsgHelper {
         if (cacheMsgBean.getId() != null && cacheMsgBean.getId() != -1L) {
             cacheMsgBeanDao.update(cacheMsgBean);
         } else {
-            if (TextUtils.isEmpty(cacheMsgBean.getTargetUuid())) {
-                cacheMsgBean.setTargetUuid(cacheMsgBean.getReceiverUserId()); //发送失败
-            }
             cacheMsgBean.setId(null); // FIXME: 2017/4/14 新增消息主键置空再插入表 ID从1自增
             long id = cacheMsgBeanDao.insert(cacheMsgBean);
             cacheMsgBean.setId(id);
@@ -363,10 +360,10 @@ public class CacheMsgHelper {
     }
 
     public List<CacheMsgBean> getCacheMsgBeanListFromStartIndex(Context context, long startIndex,
-                                                                String dstPhone, boolean setRead) {
-        String selfPhone = HuxinSdkManager.instance().getPhoneNum();
+                                                                String dstUuid, boolean setRead) {
+        String selfUuid = HuxinSdkManager.instance().getUuid();
         List<CacheMsgBean> list =
-                CacheMsgHelper.instance().toQueryOrAscById(context, startIndex, selfPhone, dstPhone);
+                CacheMsgHelper.instance().toQueryOrAscById(context, startIndex, selfUuid, dstUuid);
 
         if (setRead) {
             List<CacheMsgBean> unReadList = new ArrayList<>();

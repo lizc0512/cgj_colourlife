@@ -30,10 +30,10 @@ public class HttpPushManager {
             @Override
             public void httpReqResult(String response) {
                 PushRegisterResult resp = GsonUtil.parse(response, PushRegisterResult.class);
-                if (resp != null){
-                    if(resp.isSuccess()) {
+                if (resp != null) {
+                    if (resp.isSuccess()) {
                         listener.success(resp.getM());
-                    }else{
+                    } else {
                         listener.fail(resp.getM());
                     }
                 } else {
@@ -86,7 +86,7 @@ public class HttpPushManager {
      * @param content     文本内容
      */
     public static void pushMsgForText(Context context, int msgid, String targetPhone, String content, PushListener listener) {
-        String myPhone = HuxinSdkManager.instance().getPhoneNum();
+        String myPhone = HuxinSdkManager.instance().getUuid();
         IMContentUtil imContentUtil = new IMContentUtil();
         int type = IMContentUtil.getContentType(0, YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_TEXT_VALUE);
         imContentUtil.appendMsgid(msgid + "");
@@ -104,7 +104,7 @@ public class HttpPushManager {
      * @param content     文本内容
      */
     public static void pushMsgForCardText(int msgId, String targetPhone, String content, PushListener listener) {
-        String myPhone = HuxinSdkManager.instance().getPhoneNum();
+        String myPhone = HuxinSdkManager.instance().getUuid();
         IMContentUtil imContentUtil = new IMContentUtil();
         int type = IMContentUtil.getContentType(0, YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_BIZCARD_VALUE);
         imContentUtil.appendMsgid(msgId + "");
@@ -128,7 +128,7 @@ public class HttpPushManager {
                                           double longitude, double latitude,
                                           int zoomLevel, String address,
                                           PushListener listener) {
-        String myPhone = HuxinSdkManager.instance().getPhoneNum();
+        String myPhone = HuxinSdkManager.instance().getUuid();
         IMContentUtil imContentUtil = new IMContentUtil();
         int type = IMContentUtil.getContentType(0, YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_LOCATION_VALUE);
         imContentUtil.appendMsgid(msgId + "");
@@ -149,7 +149,7 @@ public class HttpPushManager {
      * @param fileId      图片文件标识
      */
     public static void pushMsgForPicture(int msgId, String targetPhone, String fileId, PushListener listener) {
-        String myPhone = HuxinSdkManager.instance().getPhoneNum();
+        String myPhone = HuxinSdkManager.instance().getUuid();
         IMContentUtil imContentUtil = new IMContentUtil();
         int type = IMContentUtil.getContentType(0, YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_IMAGE_VALUE);
         imContentUtil.appendMsgid(msgId + "");
@@ -168,7 +168,7 @@ public class HttpPushManager {
      * @param secondTimes 语音时间
      */
     public static void pushMsgForAudio(int msgId, String targetPhone, String fileId, String secondTimes, PushListener listener) {
-        String myPhone = HuxinSdkManager.instance().getPhoneNum();
+        String myPhone = HuxinSdkManager.instance().getUuid();
         IMContentUtil imContentUtil = new IMContentUtil();
         int type = IMContentUtil.getContentType(0, YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_AUDIO_VALUE);
         imContentUtil.appendMsgid(msgId + "");
@@ -189,7 +189,7 @@ public class HttpPushManager {
      * @param fileSize    文件大小
      */
     public static void pushMsgForBigFile(int msgId, String targetPhone, String fileId, String fileName, String fileSize, PushListener listener) {
-        String myPhone = HuxinSdkManager.instance().getPhoneNum();
+        String myPhone = HuxinSdkManager.instance().getUuid();
         IMContentUtil imContentUtil = new IMContentUtil();
         int type = IMContentUtil.getContentType(0, YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_FILE_VALUE);
         imContentUtil.appendMsgid(msgId + "");

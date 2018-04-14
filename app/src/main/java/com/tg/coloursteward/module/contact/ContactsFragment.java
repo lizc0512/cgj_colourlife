@@ -78,11 +78,6 @@ public class ContactsFragment extends Fragment implements Observer, ContactAdapt
     private MainActivity1 mActivity;
     private static final int ISTREAD = 1;
     private View mView;
-    //private TextView tvSection;
-    //private TextView tvOrgName;
-    //private PullRefreshListView pullListView;
-    //private HomeRelativeLayout rlOrganization;
-    //private RelativeLayout rlNulllinkman, rlDepartment, rlContacts;
     private ArrayList<LinkManInfo> linkManList = new ArrayList<LinkManInfo>(); //收藏联系人
     private LinearLayout llSearch;
     private AuthAppService authAppService;
@@ -368,8 +363,6 @@ public class ContactsFragment extends Fragment implements Observer, ContactAdapt
                         ToastFactory.showToast(mActivity, "正在获取组织架构，请稍后...");
                     }
                 }
-
-                //startActivity(new Intent(getContext(), OrganizationalStructureActivity.class));
                 break;
             case 1: //部门
                 info = new FamilyInfo();
@@ -379,7 +372,6 @@ public class ContactsFragment extends Fragment implements Observer, ContactAdapt
                 intent = new Intent(mActivity, HomeContactOrgActivity.class);
                 intent.putExtra(HomeContactOrgActivity.FAMILY_INFO, info);
                 startActivity(intent);
-                //startActivity(new Intent(getContext(), DepartmentActivity.class));
                 break;
             case 2: //手机通讯录
                 if (ContextCompat.checkSelfPermission(mActivity, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
@@ -389,17 +381,15 @@ public class ContactsFragment extends Fragment implements Observer, ContactAdapt
                 } else {
                     startActivity(new Intent(mActivity, ContactsActivity.class));
                 }
-                //startActivity(new Intent(getContext(), LocalContactsActivity.class));
                 break;
             case 3:
                 startActivity(new Intent(getContext(), GroupListActivity.class));
                 break;
             default: //item
-                LinkManInfo item = linkManList.get(pos);
+                LinkManInfo item = linkManList.get(pos-3);
                 Intent i = new Intent(mActivity, EmployeeDataActivity.class);
                 i.putExtra(EmployeeDataActivity.CONTACTS_ID, item.username);
                 startActivityForResult(i, ISTREAD);
-                //startActivity(new Intent(getContext(), ContactsDetailActivity.class));
                 break;
         }
     }
@@ -482,7 +472,7 @@ public class ContactsFragment extends Fragment implements Observer, ContactAdapt
         getCacheList();
 
         //加载收藏联系人 - 对应着rxjava
-        /*pullListView.setOnLoadingListener(new OnLoadingListener<PullRefreshListView>() {
+        /**pullListView.setOnLoadingListener(new OnLoadingListener<PullRefreshListView>() {
 
             @Override
             public void refreshData(PullRefreshListView t, boolean isLoadMore,
@@ -604,9 +594,7 @@ public class ContactsFragment extends Fragment implements Observer, ContactAdapt
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-
                     }
-
                 }
             }
 
@@ -645,17 +633,6 @@ public class ContactsFragment extends Fragment implements Observer, ContactAdapt
                 break;
         }
     }
-
-    /**
-     * 点击ListView item
-     */
-//    @Override
-//    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//        LinkManInfo item = linkManList.get(position);
-//        Intent intent = new Intent(mActivity, EmployeeDataActivity.class);
-//        intent.putExtra(EmployeeDataActivity.CONTACTS_ID, item.username);
-//        startActivityForResult(intent, ISTREAD);
-//    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

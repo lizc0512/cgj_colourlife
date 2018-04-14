@@ -360,10 +360,10 @@ public class CacheMsgHelper {
     }
 
     public List<CacheMsgBean> getCacheMsgBeanListFromStartIndex(Context context, long startIndex,
-                                                                String dstPhone, boolean setRead) {
-        String selfPhone = HuxinSdkManager.instance().getPhoneNum();
+                                                                String dstUuid, boolean setRead) {
+        String selfUuid = HuxinSdkManager.instance().getUuid();
         List<CacheMsgBean> list =
-                CacheMsgHelper.instance().toQueryOrAscById(context, startIndex, selfPhone, dstPhone);
+                CacheMsgHelper.instance().toQueryOrAscById(context, startIndex, selfUuid, dstUuid);
 
         if (setRead) {
             List<CacheMsgBean> unReadList = new ArrayList<>();

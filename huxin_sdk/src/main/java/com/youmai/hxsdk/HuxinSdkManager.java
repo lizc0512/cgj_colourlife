@@ -352,9 +352,7 @@ public class HuxinSdkManager {
      */
     public boolean isLogin() {
         boolean res = false;
-        if (!TextUtils.isEmpty(getPhoneNum())
-                && !TextUtils.isEmpty(getSession())
-                && getUserId() != 0) {
+        if (!TextUtils.isEmpty(getUuid())) {
             res = true;
         }
         return res;
@@ -567,9 +565,9 @@ public class HuxinSdkManager {
         String url = AppConfig.GET_UPLOAD_FILE_TOKEN;
 
         String imei = DeviceUtils.getIMEI(mContext);
-        String phoneNum = HuxinSdkManager.instance().getPhoneNum();
-        int uid = HuxinSdkManager.instance().getUserId();
-        String sid = HuxinSdkManager.instance().getSession();
+        String phoneNum = getPhoneNum();
+        int uid = getUserId();
+        String sid = getSession();
 
         ContentValues params = new ContentValues();
         params.put("msisdn", phoneNum);
@@ -1100,8 +1098,8 @@ public class HuxinSdkManager {
                                     @Override
                                     public void OnRec(PduBase pduBase) {
                                         final CacheMsgBean newMsgBean;
-                                        if (desPhone.equals(HuxinSdkManager.instance().getPhoneNum())) {
-                                            CacheMsgBean newBean = HuxinSdkManager.instance().getCacheMsgFromDBById(cacheMsgBean.getId());
+                                        if (desPhone.equals(getPhoneNum())) {
+                                            CacheMsgBean newBean = getCacheMsgFromDBById(cacheMsgBean.getId());
                                             if (newBean != null) {
                                                 newMsgBean = newBean;
                                             } else {
@@ -1293,10 +1291,10 @@ public class HuxinSdkManager {
                                     public void OnRec(PduBase pduBase) {
                                         //发自己处理
                                         CacheMsgBean newMsgBean = null;
-                                        if (desPhone.equals(HuxinSdkManager.instance().getPhoneNum())) {
+                                        if (desPhone.equals(getPhoneNum())) {
                                             // FIXME: 2017/4/10 消息屏发送主键 ID为 null
                                             if (cacheMsgBean.getId() != null) {
-                                                newMsgBean = HuxinSdkManager.instance().getCacheMsgFromDBById(cacheMsgBean.getId());
+                                                newMsgBean = getCacheMsgFromDBById(cacheMsgBean.getId());
                                             }
                                         } else {
                                             newMsgBean = cacheMsgBean;
@@ -1645,7 +1643,7 @@ public class HuxinSdkManager {
                 if (cacheMsgBean.getReceiverUserId().equals(getUuid())) {
                     // FIXME: 2017/4/10 消息屏发送主键 ID为 null
                     if (cacheMsgBean.getId() != null) {
-                        newMsgBean = HuxinSdkManager.instance().getCacheMsgFromDBById(cacheMsgBean.getId());
+                        newMsgBean = getCacheMsgFromDBById(cacheMsgBean.getId());
                     }
                 } else {
                     newMsgBean = cacheMsgBean;

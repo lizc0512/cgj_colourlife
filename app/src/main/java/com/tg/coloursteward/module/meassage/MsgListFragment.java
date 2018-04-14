@@ -199,7 +199,7 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
     @Override
     public void onPause() {
         super.onPause();
-        IMMsgManager.getInstance().removeImMsgCallback(this);
+        IMMsgManager.instance().removeImMsgCallback(this);
 
     }
 
@@ -208,7 +208,7 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
         super.onResume();
         Log.d(TAG, "onResume");
 
-        IMMsgManager.getInstance().setImMsgCallback(this);
+        IMMsgManager.instance().setImMsgCallback(this);
     }
 
     @Override
@@ -351,9 +351,9 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
                 ToastUtil.showToast(getContext(), "删除成功：" + position);
                 ExCacheMsgBean cacheMsgBean = mMessageAdapter.getMessageList().get(position);
                 mMessageAdapter.deleteMessage(position);
-                CacheMsgHelper.instance(getActivity()).deleteAllMsg(cacheMsgBean.getTargetUuid());
+                CacheMsgHelper.instance().deleteAllMsg(getActivity(), cacheMsgBean.getTargetUuid());
                 //去掉未读消息计数
-                IMMsgManager.getInstance().removeBadge(cacheMsgBean.getTargetUuid());
+                IMMsgManager.instance().removeBadge(cacheMsgBean.getTargetUuid());
             }
         });
 

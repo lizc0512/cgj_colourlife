@@ -13,6 +13,7 @@ import org.greenrobot.greendao.query.Query;
 import org.greenrobot.greendao.query.QueryBuilder;
 import org.greenrobot.greendao.query.WhereCondition;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -26,28 +27,17 @@ public class CacheMsgHelper {
 
     private static CacheMsgHelper instance;
 
-    private Context mContext;
 
-    public static CacheMsgHelper instance(Context context) {
+    public static CacheMsgHelper instance() {
         if (instance == null) {
-            instance = new CacheMsgHelper(context);
+            instance = new CacheMsgHelper();
         }
         return instance;
     }
 
-    private CacheMsgHelper(Context context) {
-        mContext = context.getApplicationContext();
-    }
+    private CacheMsgHelper() {
 
-    /**
-     * 添加或者更新
-     *
-     * @param cacheMsgBean
-     */
-    public void insertOrUpdate(CacheMsgBean cacheMsgBean) {
-        insertOrUpdate(mContext, cacheMsgBean);
     }
-
 
     /**
      * 添加或者更新
@@ -77,13 +67,13 @@ public class CacheMsgHelper {
      * @param count
      * @return
      */
-    public List<CacheMsgBean> toQuerySelfMsgDescByMsgTime(int count) {
+    public List<CacheMsgBean> toQuerySelfMsgDescByMsgTime(Context context, int count) {
         String selfUuid = HuxinSdkManager.instance().getUuid();
         if (TextUtils.isEmpty(selfUuid)) {
             return null;
         }
 
-        CacheMsgBeanDao cacheMsgBeanDao = GreenDBIMManager.instance(mContext).getCacheMsgDao();
+        CacheMsgBeanDao cacheMsgBeanDao = GreenDBIMManager.instance(context).getCacheMsgDao();
         QueryBuilder<CacheMsgBean> qb = cacheMsgBeanDao.queryBuilder();
         qb = qb.where(
                 qb.and(CacheMsgBeanDao.Properties.ReceiverUserId.eq(selfUuid),
@@ -104,8 +94,8 @@ public class CacheMsgHelper {
      * @param sql
      * @return
      */
-    public List<CacheMsgBean> sqlToQueryList(String sql) {
-        QueryBuilder<CacheMsgBean> qb = GreenDBIMManager.instance(mContext).getCacheMsgDao().queryBuilder();
+    public List<CacheMsgBean> sqlToQueryList(Context context, String sql) {
+        QueryBuilder<CacheMsgBean> qb = GreenDBIMManager.instance(context).getCacheMsgDao().queryBuilder();
         return qb.where(new WhereCondition.StringCondition(sql)).list();
     }
 
@@ -117,8 +107,8 @@ public class CacheMsgHelper {
      * @param dstUuid
      * @return
      */
-    public void deleteAllMsg(String selfUuid, String dstUuid) {
-        CacheMsgBeanDao cacheMsgBeanDao = GreenDBIMManager.instance(mContext).getCacheMsgDao();
+    public void deleteAllMsg(Context context, String selfUuid, String dstUuid) {
+        CacheMsgBeanDao cacheMsgBeanDao = GreenDBIMManager.instance(context).getCacheMsgDao();
         QueryBuilder<CacheMsgBean> qb = cacheMsgBeanDao.queryBuilder();
         DeleteQuery<CacheMsgBean> dq = qb.where(qb.or(
                 qb.and(CacheMsgBeanDao.Properties.ReceiverUserId.eq(dstUuid),
@@ -137,8 +127,8 @@ public class CacheMsgHelper {
      * @param targetUuid
      * @return
      */
-    public void deleteAllMsg(String targetUuid) {
-        CacheMsgBeanDao cacheMsgBeanDao = GreenDBIMManager.instance(mContext).getCacheMsgDao();
+    public void deleteAllMsg(Context context, String targetUuid) {
+        CacheMsgBeanDao cacheMsgBeanDao = GreenDBIMManager.instance(context).getCacheMsgDao();
         QueryBuilder<CacheMsgBean> qb = cacheMsgBeanDao.queryBuilder();
         DeleteQuery<CacheMsgBean> dq = qb.where(CacheMsgBeanDao.Properties.TargetUuid.eq(targetUuid))
                 .orderAsc(CacheMsgBeanDao.Properties.Id).buildDelete();
@@ -150,8 +140,8 @@ public class CacheMsgHelper {
      *
      * @param id
      */
-    public void deleteOneMsg(Long id) {
-        CacheMsgBeanDao cacheMsgBeanDao = GreenDBIMManager.instance(mContext).getCacheMsgDao();
+    public void deleteOneMsg(Context context, Long id) {
+        CacheMsgBeanDao cacheMsgBeanDao = GreenDBIMManager.instance(context).getCacheMsgDao();
         QueryBuilder<CacheMsgBean> qb = cacheMsgBeanDao.queryBuilder();
         DeleteQuery<CacheMsgBean> dq = qb.where(
                 CacheMsgBeanDao.Properties.Id.eq(id))
@@ -167,8 +157,8 @@ public class CacheMsgHelper {
      * @param deleteCardFlag
      * @param replaceId
      */
-    public void deleteOneMsg(Long deleteId, int deleteCardFlag, Long replaceId) {
-        CacheMsgBeanDao cacheMsgBeanDao = GreenDBIMManager.instance(mContext).getCacheMsgDao();
+    public void deleteOneMsg(Context context, Long deleteId, int deleteCardFlag, Long replaceId) {
+        CacheMsgBeanDao cacheMsgBeanDao = GreenDBIMManager.instance(context).getCacheMsgDao();
         QueryBuilder<CacheMsgBean> qb = cacheMsgBeanDao.queryBuilder();
         DeleteQuery<CacheMsgBean> dq = qb.where(
                 CacheMsgBeanDao.Properties.Id.eq(deleteId))
@@ -185,8 +175,8 @@ public class CacheMsgHelper {
      * @param sql
      * @return
      */
-    public List<CacheMsgBean> sqlToQueryListThread(String sql) {
-        CacheMsgBeanDao cacheMsgDao = GreenDBIMManager.instance(mContext).getCacheMsgDao();
+    public List<CacheMsgBean> sqlToQueryListThread(Context context, String sql) {
+        CacheMsgBeanDao cacheMsgDao = GreenDBIMManager.instance(context).getCacheMsgDao();
         Query<CacheMsgBean> query = cacheMsgDao.queryBuilder()
                 .where(new WhereCondition.StringCondition(sql))
                 .build().forCurrentThread();
@@ -197,8 +187,8 @@ public class CacheMsgHelper {
     /**
      * 根据id查询
      */
-    public CacheMsgBean queryByID(long msgID) {
-        CacheMsgBeanDao cacheMsgDao = GreenDBIMManager.instance(mContext).getCacheMsgDao();
+    public CacheMsgBean queryByID(Context context, long msgID) {
+        CacheMsgBeanDao cacheMsgDao = GreenDBIMManager.instance(context).getCacheMsgDao();
         return cacheMsgDao.loadByRowId(msgID);
     }
 
@@ -210,10 +200,26 @@ public class CacheMsgHelper {
      * @param whereArgs
      * @return
      */
-    public List<CacheMsgBean> queryRaw(String selection, String[] whereArgs) {
-        CacheMsgBeanDao cacheMsgDao = GreenDBIMManager.instance(mContext).getCacheMsgDao();
+    public List<CacheMsgBean> queryRaw(Context context, String selection, String[] whereArgs) {
+        CacheMsgBeanDao cacheMsgDao = GreenDBIMManager.instance(context).getCacheMsgDao();
         return cacheMsgDao.queryRaw(selection, whereArgs);
     }
+
+
+    /**
+     * 备注：IMMsgManager
+     * 按 id升序查询
+     * receiver_phone=? and sender_phone=?
+     *
+     * @param desUuid
+     * @return
+     */
+    public List<CacheMsgBean> toQueryAndAscById(Context context, String desUuid) {
+        QueryBuilder<CacheMsgBean> qb = GreenDBIMManager.instance(context).getCacheMsgDao().queryBuilder();
+        return qb.where(CacheMsgBeanDao.Properties.TargetUuid.eq(desUuid))
+                .orderAsc(CacheMsgBeanDao.Properties.Id).list();
+    }
+
 
     /**
      * 备注：IMMsgManager
@@ -224,8 +230,8 @@ public class CacheMsgHelper {
      * @param sendUuid
      * @return
      */
-    public List<CacheMsgBean> toQueryAndAscById(String receiverUuid, String sendUuid) {
-        QueryBuilder<CacheMsgBean> qb = GreenDBIMManager.instance(mContext).getCacheMsgDao().queryBuilder();
+    public List<CacheMsgBean> toQueryAndAscById(Context context, String receiverUuid, String sendUuid) {
+        QueryBuilder<CacheMsgBean> qb = GreenDBIMManager.instance(context).getCacheMsgDao().queryBuilder();
         return qb.where(qb.and(CacheMsgBeanDao.Properties.ReceiverUserId.eq(receiverUuid),
                 CacheMsgBeanDao.Properties.SenderUserId.eq(sendUuid)))
                 .orderAsc(CacheMsgBeanDao.Properties.Id).list();
@@ -241,13 +247,15 @@ public class CacheMsgHelper {
      * @param selfUuid
      * @return
      */
-    public List<CacheMsgBean> toQueryOrAscById(String dstUuid, String selfUuid) {
-        QueryBuilder<CacheMsgBean> qb = GreenDBIMManager.instance(mContext).getCacheMsgDao().queryBuilder();
-        return qb.where(qb.or(
-                qb.and(CacheMsgBeanDao.Properties.ReceiverUserId.eq(dstUuid),
-                        CacheMsgBeanDao.Properties.SenderUserId.eq(selfUuid)),
-                qb.and(CacheMsgBeanDao.Properties.SenderUserId.eq(dstUuid),
-                        CacheMsgBeanDao.Properties.ReceiverUserId.eq(selfUuid))))
+    public List<CacheMsgBean> toQueryOrAscById(Context context, String dstUuid, String selfUuid) {
+        QueryBuilder<CacheMsgBean> qb = GreenDBIMManager.instance(context).getCacheMsgDao().queryBuilder();
+
+        WhereCondition condition1 = qb.and(CacheMsgBeanDao.Properties.SenderUserId.eq(dstUuid),
+                CacheMsgBeanDao.Properties.ReceiverUserId.eq(selfUuid));
+        WhereCondition condition2 = qb.and(CacheMsgBeanDao.Properties.ReceiverUserId.eq(dstUuid),
+                CacheMsgBeanDao.Properties.SenderUserId.eq(selfUuid));
+
+        return qb.where(qb.or(condition1, condition2))
                 .orderAsc(CacheMsgBeanDao.Properties.Id).list();
     }
 
@@ -256,18 +264,20 @@ public class CacheMsgHelper {
      * 按 id升序查询
      * id>? and ((receiver_phone=? and sender_phone=?) or (sender_phone=? and receiver_phone=?))
      *
+     * @param statIndex
      * @param dstUuid
      * @param selfUuid
-     * @param statIndex
      * @return
      */
-    public List<CacheMsgBean> toQueryOrAscById(String dstUuid, String selfUuid, long statIndex) {
-        QueryBuilder<CacheMsgBean> qb = GreenDBIMManager.instance(mContext).getCacheMsgDao().queryBuilder();
-        return qb.where(qb.and(CacheMsgBeanDao.Properties.Id.gt(statIndex), qb.or(
-                qb.and(CacheMsgBeanDao.Properties.ReceiverUserId.eq(dstUuid),
-                        CacheMsgBeanDao.Properties.SenderUserId.eq(selfUuid)),
-                qb.and(CacheMsgBeanDao.Properties.SenderUserId.eq(dstUuid),
-                        CacheMsgBeanDao.Properties.ReceiverUserId.eq(selfUuid)))))
+    public List<CacheMsgBean> toQueryOrAscById(Context context, long statIndex, String dstUuid, String selfUuid) {
+        QueryBuilder<CacheMsgBean> qb = GreenDBIMManager.instance(context).getCacheMsgDao().queryBuilder();
+
+        WhereCondition condition1 = qb.and(CacheMsgBeanDao.Properties.SenderUserId.eq(dstUuid),
+                CacheMsgBeanDao.Properties.ReceiverUserId.eq(selfUuid));
+        WhereCondition condition2 = qb.and(CacheMsgBeanDao.Properties.ReceiverUserId.eq(dstUuid),
+                CacheMsgBeanDao.Properties.SenderUserId.eq(selfUuid));
+
+        return qb.where(qb.and(CacheMsgBeanDao.Properties.Id.gt(statIndex), qb.or(condition1, condition2)))
                 .orderAsc(CacheMsgBeanDao.Properties.Id).list();
     }
 
@@ -277,21 +287,21 @@ public class CacheMsgHelper {
      * @param id
      * @return
      */
-    public List<CacheMsgBean> toQueryDescById(long id) {
-        CacheMsgBeanDao cacheMsgDao = GreenDBIMManager.instance(mContext).getCacheMsgDao();
+    public List<CacheMsgBean> toQueryDescById(Context context, long id) {
+        CacheMsgBeanDao cacheMsgDao = GreenDBIMManager.instance(context).getCacheMsgDao();
         return cacheMsgDao.queryBuilder()
                 .where(CacheMsgBeanDao.Properties.Id.eq(id))
                 .orderDesc(CacheMsgBeanDao.Properties.Id).list();
     }
 
 
-    public List<CacheMsgBean> toQueryLastMsgByPhone(String dstUuid) {
+    public List<CacheMsgBean> toQueryLastMsgByPhone(Context context, String dstUuid) {
         String selfUuid = HuxinSdkManager.instance().getUuid();
         if (TextUtils.isEmpty(selfUuid)) {
             return null;
         }
 
-        QueryBuilder<CacheMsgBean> qb = GreenDBIMManager.instance(mContext).getCacheMsgDao().queryBuilder();
+        QueryBuilder<CacheMsgBean> qb = GreenDBIMManager.instance(context).getCacheMsgDao().queryBuilder();
         return qb.where(qb.or(
                 qb.and(CacheMsgBeanDao.Properties.ReceiverUserId.eq(dstUuid),
                         CacheMsgBeanDao.Properties.SenderUserId.eq(selfUuid)),
@@ -306,8 +316,8 @@ public class CacheMsgHelper {
      *
      * @return
      */
-    public List<CacheMsgBean> toQueryLastMsgById() {
-        CacheMsgBeanDao cacheMsgDao = GreenDBIMManager.instance(mContext).getCacheMsgDao();
+    public List<CacheMsgBean> toQueryLastMsgById(Context context) {
+        CacheMsgBeanDao cacheMsgDao = GreenDBIMManager.instance(context).getCacheMsgDao();
         return cacheMsgDao.queryBuilder().orderDesc(CacheMsgBeanDao.Properties.Id).limit(1).list();
     }
 
@@ -317,16 +327,86 @@ public class CacheMsgHelper {
      *
      * @param msgBeanList
      */
-    public void updateList(List<CacheMsgBean> msgBeanList) {
-        CacheMsgBeanDao cacheMsgBeanDao = GreenDBIMManager.instance(mContext).getCacheMsgDao();
+    public void updateList(Context context, List<CacheMsgBean> msgBeanList) {
+        CacheMsgBeanDao cacheMsgBeanDao = GreenDBIMManager.instance(context).getCacheMsgDao();
         cacheMsgBeanDao.updateInTx(msgBeanList);
+    }
+
+
+    // srsm add for get history
+    public List<CacheMsgBean> toQueryAndAscByIdAndSetRead(Context context, String dstUuid, boolean setRead) {
+        CacheMsgBeanDao cacheMsgBeanDao = GreenDBIMManager.instance(context).getCacheMsgDao();
+        QueryBuilder<CacheMsgBean> qb = cacheMsgBeanDao.queryBuilder();
+        /*List<CacheMsgBean> list = qb
+                .where(qb.or(CacheMsgBeanDao.Properties.ReceiverUserId.eq(dstUuid),
+                        CacheMsgBeanDao.Properties.SenderUserId.eq(dstUuid)))
+                .orderDesc(CacheMsgBeanDao.Properties.MsgTime).list();*/
+
+        List<CacheMsgBean> list = qb.where(CacheMsgBeanDao.Properties.TargetUuid.eq(dstUuid))
+                .orderDesc(CacheMsgBeanDao.Properties.MsgTime).list();
+
+
+        if (setRead) {
+            List<CacheMsgBean> unReadList = new ArrayList<>();
+            for (CacheMsgBean checkBean : list) {
+                if (checkBean.getMsgStatus() == CacheMsgBean.RECEIVE_UNREAD) {
+                    checkBean.setMsgStatus(CacheMsgBean.RECEIVE_READ);
+                    unReadList.add(checkBean);
+                }
+            }
+            if (unReadList.size() > 0) {
+                CacheMsgHelper.instance().updateList(context, unReadList);
+            }
+        }
+
+        return list;
+    }
+
+    public List<CacheMsgBean> getCacheMsgBeanListFromStartIndex(Context context, long startIndex,
+                                                                String dstPhone, boolean setRead) {
+        String selfPhone = HuxinSdkManager.instance().getPhoneNum();
+        List<CacheMsgBean> list =
+                CacheMsgHelper.instance().toQueryOrAscById(context, startIndex, selfPhone, dstPhone);
+
+        if (setRead) {
+            List<CacheMsgBean> unReadList = new ArrayList<>();
+            for (CacheMsgBean checkBean : list) {
+                if (checkBean.getMsgStatus() == CacheMsgBean.RECEIVE_UNREAD) {
+                    checkBean.setMsgStatus(CacheMsgBean.RECEIVE_READ);
+                    unReadList.add(checkBean);
+                }
+            }
+            if (unReadList.size() > 0) {
+                CacheMsgHelper.instance().updateList(context, unReadList);
+            }
+        }
+
+        return list;
+    }
+
+    public int getUnreadCacheMsgBeanListCount(final Context context, String dstUuid) {
+        CacheMsgBeanDao cacheMsgBeanDao = GreenDBIMManager.instance(context).getCacheMsgDao();
+        QueryBuilder<CacheMsgBean> qb = cacheMsgBeanDao.queryBuilder();
+
+        List<CacheMsgBean> list = qb.where(CacheMsgBeanDao.Properties.TargetUuid.eq(dstUuid))
+                .orderDesc(CacheMsgBeanDao.Properties.MsgTime).list();
+
+
+        List<CacheMsgBean> unReadList = new ArrayList<>();
+        for (CacheMsgBean checkBean : list) {
+            if (checkBean.getMsgStatus() == CacheMsgBean.RECEIVE_UNREAD) {
+                checkBean.setMsgStatus(CacheMsgBean.RECEIVE_READ);
+                unReadList.add(checkBean);
+            }
+        }
+        return unReadList.size();
     }
 
     /**
      * 清空表所有消息
      */
-    public void deleteAll() {
-        GreenDBIMManager.instance(mContext).getCacheMsgDao().deleteAll();
+    public void deleteAll(Context context) {
+        GreenDBIMManager.instance(context).getCacheMsgDao().deleteAll();
     }
 
 }

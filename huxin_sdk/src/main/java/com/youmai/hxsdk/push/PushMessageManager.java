@@ -62,7 +62,7 @@ public class PushMessageManager {
 //                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 //                    intent.putExtra(IMConnectFragment.DST_PHONE, phone);
 //                    context.startActivity(intent);
-                    IMMsgManager.getInstance().notifyMsg(msg, true);
+                    IMMsgManager.instance().notifyMsg(msg, true);
                     break;
                 case TelephonyManager.CALL_STATE_RINGING:   //被叫响铃状态    需要修改为所有消息均需展示在弹屏上（图片、位置、表情、文件）
 

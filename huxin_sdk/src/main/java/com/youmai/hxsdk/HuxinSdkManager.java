@@ -187,7 +187,9 @@ public class HuxinSdkManager {
      */
     public void init(final Context context, InitListener listener) {
         mContext = context.getApplicationContext();
-        IMMsgManager.getInstance().init(mContext);
+        GreenDBIMManager.instance(mContext);
+        IMMsgManager.instance().init(mContext);
+
         initARouter();
         MorePushManager.register(mContext);//注册送服务
 
@@ -339,7 +341,7 @@ public class HuxinSdkManager {
 
         MorePushManager.unregister(mContext);//反注册送服务
         SPDataUtil.setUserInfoJson(mContext, "");// FIXME: 2017/3/20
-        IMMsgManager.getInstance().clearShortcutBadger();
+        IMMsgManager.instance().clearShortcutBadger();
     }
 
 
@@ -1035,8 +1037,8 @@ public class HuxinSdkManager {
                 .setJsonBodyObj(cacheMsgFile);
         if (isSaveDB) {
             //add to db
-            CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
-            IMMsgManager.getInstance().addCacheMsgBean(cacheMsgBean);
+            CacheMsgHelper.instance().insertOrUpdate(mContext, cacheMsgBean);
+            IMMsgManager.instance().addCacheMsgBean(cacheMsgBean);
         }
 
         final FileBean fileBean = new FileBean()
@@ -1065,7 +1067,7 @@ public class HuxinSdkManager {
                     if (isSaveDB) {
                         //add to db
                         cacheMsgBean.setMsgStatus(CacheMsgBean.SEND_FAILED);
-                        CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
+                        CacheMsgHelper.instance().insertOrUpdate(mContext, cacheMsgBean);
                     }
                     return;
                 }
@@ -1082,7 +1084,7 @@ public class HuxinSdkManager {
                                 if (isSaveDB) {
                                     //add to db
                                     cacheMsgBean.setMsgStatus(CacheMsgBean.SEND_FAILED);
-                                    CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
+                                    CacheMsgHelper.instance().insertOrUpdate(mContext, cacheMsgBean);
                                 }
                                 Toast.makeText(mContext, mContext.getString(R.string.hx_toast_06), Toast.LENGTH_SHORT).show();
                                 return;
@@ -1115,14 +1117,14 @@ public class HuxinSdkManager {
                                             if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_OK) {
                                                 newMsgBean.setMsgStatus(CacheMsgBean.SEND_SUCCEED);
                                                 //add to db
-                                                CacheMsgHelper.instance(mContext).insertOrUpdate(newMsgBean);
+                                                CacheMsgHelper.instance().insertOrUpdate(mContext, newMsgBean);
                                                 if (null != listener) {
                                                     listener.onImSuccess(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_FILE_VALUE, fileBean);
                                                 }
 
                                             } else if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_NOT_HUXIN_USER) {
                                                 newMsgBean.setMsgStatus(CacheMsgBean.SEND_SUCCEED);
-                                                CacheMsgHelper.instance(mContext).insertOrUpdate(newMsgBean);
+                                                CacheMsgHelper.instance().insertOrUpdate(mContext, newMsgBean);
                                                 if (null != listener) {
                                                     listener.onImNotUser(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_FILE_VALUE, msgId);
                                                 }
@@ -1163,7 +1165,7 @@ public class HuxinSdkManager {
                     if (isSaveDB) {
                         //add to db
                         cacheMsgBean.setMsgStatus(CacheMsgBean.SEND_FAILED);
-                        CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
+                        CacheMsgHelper.instance().insertOrUpdate(mContext, cacheMsgBean);
                     }
                 }
             }
@@ -1224,9 +1226,9 @@ public class HuxinSdkManager {
                     .setMsgType(CacheMsgBean.SEND_IMAGE)
                     .setJsonBodyObj(new CacheMsgImage().setFilePath(originalPath));
 
-            IMMsgManager.getInstance().addCacheMsgBean(cacheMsgBean);
+            IMMsgManager.instance().addCacheMsgBean(cacheMsgBean);
             //add to db
-            CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
+            CacheMsgHelper.instance().insertOrUpdate(mContext, cacheMsgBean);
         }
         final UpProgressHandler progressHandler = new UpProgressHandler() {
             @Override
@@ -1249,7 +1251,7 @@ public class HuxinSdkManager {
                     if (isSaveDB) {
                         //add to db
                         cacheMsgBean.setMsgStatus(CacheMsgBean.SEND_FAILED);
-                        CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
+                        CacheMsgHelper.instance().insertOrUpdate(mContext, cacheMsgBean);
                     }
                     return;
                 }
@@ -1269,7 +1271,7 @@ public class HuxinSdkManager {
                                 if (isSaveDB) {
                                     //add to db
                                     cacheMsgBean.setMsgStatus(CacheMsgBean.SEND_FAILED);
-                                    CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
+                                    CacheMsgHelper.instance().insertOrUpdate(mContext, cacheMsgBean);
                                 }
                                 return;
                             }
@@ -1306,7 +1308,7 @@ public class HuxinSdkManager {
                                                 if (isSaveDB) {
                                                     //add to db
                                                     newMsgBean.setMsgStatus(CacheMsgBean.SEND_SUCCEED);
-                                                    CacheMsgHelper.instance(mContext).insertOrUpdate(newMsgBean);
+                                                    CacheMsgHelper.instance().insertOrUpdate(mContext, newMsgBean);
                                                 }
 
                                                 if (null != listener) {
@@ -1346,7 +1348,8 @@ public class HuxinSdkManager {
                                         }
                                         if (isSaveDB) {
                                             cacheMsgBean.setMsgStatus(CacheMsgBean.SEND_FAILED);
-                                            CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
+                                            CacheMsgHelper.instance().insertOrUpdate(mContext, cacheMsgBean);
+
                                         }
                                     }
                                 };
@@ -1373,7 +1376,7 @@ public class HuxinSdkManager {
                     if (isSaveDB) {
                         //add to db
                         cacheMsgBean.setMsgStatus(CacheMsgBean.SEND_FAILED);
-                        CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
+                        CacheMsgHelper.instance().insertOrUpdate(mContext, cacheMsgBean);
                     }
 
                     String log = resp.getM();
@@ -1433,9 +1436,9 @@ public class HuxinSdkManager {
                 .setMsgType(CacheMsgBean.SEND_VIDEO)
                 .setJsonBodyObj(new CacheMsgVideo().setVideoPath(filePath).setFramePath(framePath).setName(videoName).setSize(videoSize).setTime(seconds));
         if (isSaveDB) {
-            IMMsgManager.getInstance().addCacheMsgBean(cacheMsgBean);
+            IMMsgManager.instance().addCacheMsgBean(cacheMsgBean);
             //add to db
-            CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
+            CacheMsgHelper.instance().insertOrUpdate(mContext, cacheMsgBean);
         }
         uploadQiVideoFrame(cacheMsgBean, fileBean, isSaveDB, listener);
     }
@@ -1464,7 +1467,7 @@ public class HuxinSdkManager {
                     if (isSaveDB) {
                         //add to db
                         cacheMsgBean.setMsgStatus(CacheMsgBean.SEND_FAILED);
-                        CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
+                        CacheMsgHelper.instance().insertOrUpdate(mContext, cacheMsgBean);
                     }
                     return;
                 }
@@ -1481,7 +1484,7 @@ public class HuxinSdkManager {
                                 if (isSaveDB) {
                                     //add to db
                                     cacheMsgBean.setMsgStatus(CacheMsgBean.SEND_FAILED);
-                                    CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
+                                    CacheMsgHelper.instance().insertOrUpdate(mContext, cacheMsgBean);
                                 }
                                 return;
                             }
@@ -1515,7 +1518,7 @@ public class HuxinSdkManager {
                     if (isSaveDB) {
                         //add to db
                         cacheMsgBean.setMsgStatus(CacheMsgBean.SEND_FAILED);
-                        CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
+                        CacheMsgHelper.instance().insertOrUpdate(mContext, cacheMsgBean);
                     }
 
                     String log = resp.getM();
@@ -1551,7 +1554,7 @@ public class HuxinSdkManager {
                     if (isSaveDB) {
                         //add to db
                         cacheMsgBean.setMsgStatus(CacheMsgBean.SEND_FAILED);
-                        CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
+                        CacheMsgHelper.instance().insertOrUpdate(mContext, cacheMsgBean);
                     }
                     return;
                 }
@@ -1568,7 +1571,7 @@ public class HuxinSdkManager {
                                 if (isSaveDB) {
                                     //add to db
                                     cacheMsgBean.setMsgStatus(CacheMsgBean.SEND_FAILED);
-                                    CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
+                                    CacheMsgHelper.instance().insertOrUpdate(mContext, cacheMsgBean);
                                 }
                                 Toast.makeText(mContext, mContext.getString(R.string.hx_toast_74), Toast.LENGTH_SHORT).show();
                                 return;
@@ -1605,7 +1608,7 @@ public class HuxinSdkManager {
                     if (isSaveDB) {
                         //add to db
                         cacheMsgBean.setMsgStatus(CacheMsgBean.SEND_FAILED);
-                        CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
+                        CacheMsgHelper.instance().insertOrUpdate(mContext, cacheMsgBean);
                     }
 
                     String log = resp.getM();
@@ -1655,7 +1658,7 @@ public class HuxinSdkManager {
                         if (isSaveDB) {
                             //add to db
                             newMsgBean.setMsgStatus(CacheMsgBean.SEND_SUCCEED);
-                            CacheMsgHelper.instance(mContext).insertOrUpdate(newMsgBean);
+                            CacheMsgHelper.instance().insertOrUpdate(mContext, newMsgBean);
                         }
 
                         if (null != listener) {
@@ -1691,7 +1694,7 @@ public class HuxinSdkManager {
                 }
                 if (isSaveDB) {
                     cacheMsgBean.setMsgStatus(CacheMsgBean.SEND_FAILED);
-                    CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
+                    CacheMsgHelper.instance().insertOrUpdate(mContext, cacheMsgBean);
                 }
             }
         };

@@ -156,7 +156,7 @@ public class MorePushManager {
 
         LogFile.inStance().toFile(message);
 
-        IMMsgManager.getInstance().parseBulletin(message);
+        IMMsgManager.instance().parseBulletin(message);
 
         // 0认为账号退出，消息不做处理
         if (AppUtils.getIntSharedPreferences(context, "uid_sdk", 0) != 0) {

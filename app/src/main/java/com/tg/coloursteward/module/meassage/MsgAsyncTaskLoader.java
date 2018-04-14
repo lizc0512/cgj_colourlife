@@ -66,7 +66,7 @@ public class MsgAsyncTaskLoader extends AsyncTaskLoader<List<ExCacheMsgBean>> {
 
         // FROM "CACHE_MSG_BEAN" T  WHERE count(distinct TARGET_PHONE) ORDER BY TARGET_PHONE , MSG_TIME DESC
         //先targetphone分组
-        String sql = "1=1" /*count(distinct " + targetPhoneColumnName + ")" */+ " GROUP BY " + targetPhoneColumnName + " ORDER BY " + msgTimeColumnName + " ASC"/* + " LIMIT 1"*/;
+        String sql = "1=1" /*count(distinct " + targetPhoneColumnName + ")" */ + " GROUP BY " + targetPhoneColumnName + " ORDER BY " + msgTimeColumnName + " ASC"/* + " LIMIT 1"*/;
 
 
         // fetch users with Joe as a first name born in 1970
@@ -86,7 +86,7 @@ public class MsgAsyncTaskLoader extends AsyncTaskLoader<List<ExCacheMsgBean>> {
         //String sql2 = sql + targetPhoneColumnName + " = " + mTargetPhone
         //        + " ORDER BY " + msgTimeColumnName + " ASC" + " LIMIT 1";
 
-        List<CacheMsgBean> msgBeanList = CacheMsgHelper.instance(mContext).sqlToQueryList(sql);
+        List<CacheMsgBean> msgBeanList = CacheMsgHelper.instance().sqlToQueryList(mContext, sql);
         Log.e("YW", "msgBeanList: " + msgBeanList.toString());
         Comparator comp = new SortComparator();
         Collections.sort(msgBeanList, comp);

@@ -126,7 +126,7 @@ public class IMListAdapter extends RecyclerView.Adapter {
         mRecyclerView = recyclerView;
         mDstUuid = dstUuid;
         //srsm add
-        mImBeanList.addAll(IMMsgManager.getInstance().genCacheMsgBeanList(mContext, dstUuid, true));
+        mImBeanList.addAll(IMMsgManager.instance().genCacheMsgBeanList(mContext, dstUuid, true));
 
         mRecyclerView.getItemAnimator().setChangeDuration(0);
         mRecyclerView.getItemAnimator().setAddDuration(0);
@@ -456,7 +456,7 @@ public class IMListAdapter extends RecyclerView.Adapter {
                         cacheMsgVideo.setVideoPath("");
                         cacheMsgBean.setJsonBodyObj(cacheMsgVideo);
                         cacheMsgBean.setProgress(0);
-                        CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
+                        CacheMsgHelper.instance().insertOrUpdate(mContext, cacheMsgBean);
                         downVideo(position, videoUrl, cacheMsgBean);
                     }
                 }
@@ -484,7 +484,7 @@ public class IMListAdapter extends RecyclerView.Adapter {
             public void onFail(String err) {
                 cacheMsgBean.setProgress(-1);
                 mImBeanList.set(position, cacheMsgBean);//更新数据
-                CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
+                CacheMsgHelper.instance().insertOrUpdate(mContext, cacheMsgBean);
                 refreshItemUI(cacheMsgBean);
             }
 
@@ -497,7 +497,7 @@ public class IMListAdapter extends RecyclerView.Adapter {
                     cacheMsgVideo.setVideoPath(path);
                     cacheMsgBean.setJsonBodyObj(cacheMsgVideo);
 
-                    CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
+                    CacheMsgHelper.instance().insertOrUpdate(mContext, cacheMsgBean);
                     refreshItemUI(cacheMsgBean);
 
                     File videoFile = new File(path);
@@ -556,7 +556,7 @@ public class IMListAdapter extends RecyclerView.Adapter {
                         }
                         CacheMsgBean cacheMsgBean1 = mImBeanList.get(mPlayVoicePosition);
                         cacheMsgBean1.setMsgStatus(CacheMsgBean.SEND_SUCCEED);
-                        CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean1);
+                        CacheMsgHelper.instance().insertOrUpdate(mContext, cacheMsgBean1);
                         mImBeanList.set(mPlayVoicePosition, cacheMsgBean1);
                         notifyItemChanged(mPlayVoicePosition);
                     }
@@ -719,7 +719,7 @@ public class IMListAdapter extends RecyclerView.Adapter {
                                 voicePlayAnim.stop();
                             }
                             cacheMsgBean1.setMsgStatus(CacheMsgBean.SEND_SUCCEED);
-                            CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean1);
+                            CacheMsgHelper.instance().insertOrUpdate(mContext, cacheMsgBean1);
                             mImBeanList.set(mPlayVoicePosition, cacheMsgBean1);
                             notifyItemChanged(mPlayVoicePosition);
                         }
@@ -734,7 +734,7 @@ public class IMListAdapter extends RecyclerView.Adapter {
                         //add to db
                         cacheMsgVoice.setHasLoad(true);
                         cacheMsgBean.setJsonBodyObj(cacheMsgVoice);
-                        CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
+                        CacheMsgHelper.instance().insertOrUpdate(mContext, cacheMsgBean);
                     }
                     voiceViewHolder.readIV.setVisibility(View.INVISIBLE);
                 }
@@ -813,7 +813,7 @@ public class IMListAdapter extends RecyclerView.Adapter {
     }
 
     void updateSendStatus(CacheMsgBean cacheMsgBean, int position) {
-        CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);//更新数据库
+        CacheMsgHelper.instance().insertOrUpdate(mContext, cacheMsgBean);//更新数据库
         if (position < mImBeanList.size()) {
             mImBeanList.get(position).setMsgStatus(cacheMsgBean.getMsgStatus());//更新列表显示数据
             notifyItemChanged(position);
@@ -947,7 +947,7 @@ public class IMListAdapter extends RecyclerView.Adapter {
 
         //删除本地
         mImBeanList.remove(cacheMsgBean);
-        IMMsgManager.getInstance().removeCacheMsgBean(cacheMsgBean);
+        IMMsgManager.instance().removeCacheMsgBean(cacheMsgBean);
         if (refreshUI) {
             notifyDataSetChanged();
         }
@@ -1007,13 +1007,13 @@ public class IMListAdapter extends RecyclerView.Adapter {
             startId = mImBeanList.get(getItemCount() - 1).getId();
         }
 
-        List<CacheMsgBean> unReadList = IMMsgManager.getInstance().getCacheMsgBeanListFromStartIndex(
-                mDstUuid, true, startId);
+        List<CacheMsgBean> unReadList = CacheMsgHelper.instance().getCacheMsgBeanListFromStartIndex(
+                mContext, startId, mDstUuid, true);
 
         if (unReadList.size() > 0) {
             if (getItemCount() > 0) {
                 CacheMsgBean lastMsgBean = mImBeanList.get(getItemCount() - 1);
-                List<CacheMsgBean> lastListBean = CacheMsgHelper.instance(mContext).toQueryDescById(lastMsgBean.getId());
+                List<CacheMsgBean> lastListBean = CacheMsgHelper.instance().toQueryDescById(mContext, lastMsgBean.getId());
 
                 if (lastListBean.size() > 0) {
                     //重新处理最后一条的沟通卡状态
@@ -1029,8 +1029,9 @@ public class IMListAdapter extends RecyclerView.Adapter {
     //发送消息的刷新
     public void addAndRefreshUI(CacheMsgBean cacheMsgBean) {
         //add to db
-        CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
-        IMMsgManager.getInstance().addCacheMsgBean(cacheMsgBean);
+        CacheMsgHelper.instance().insertOrUpdate(mContext, cacheMsgBean);
+        IMMsgManager.instance().addCacheMsgBean(cacheMsgBean);
+
         mImBeanList.add(cacheMsgBean);
         if (getItemCount() > 1) {
             notifyItemRangeChanged(getItemCount() - 2, 2);//需要更新上一条

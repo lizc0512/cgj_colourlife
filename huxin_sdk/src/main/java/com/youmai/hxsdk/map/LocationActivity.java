@@ -525,8 +525,8 @@ public class LocationActivity extends SdkBaseActivity implements
                 .setJsonBodyObj(new CacheMsgMap().setLocation(longitude + "," + latitude).setAddress(address).setImgUrl(url));
 
         //add to db
-        CacheMsgHelper.instance(this).insertOrUpdate(cacheMsgBean);
-        IMMsgManager.getInstance().addCacheMsgBean(cacheMsgBean);
+        CacheMsgHelper.instance().insertOrUpdate(this, cacheMsgBean);
+        IMMsgManager.instance().addCacheMsgBean(cacheMsgBean);
 
         if (null != listener) {
             if (CommonUtils.isNetworkAvailable(mContext)) {
@@ -559,7 +559,7 @@ public class LocationActivity extends SdkBaseActivity implements
                     if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_OK) {
                         newMsgBean.setMsgStatus(CacheMsgBean.SEND_SUCCEED);
                         //add to db
-                        CacheMsgHelper.instance(mContext).insertOrUpdate(newMsgBean);
+                        CacheMsgHelper.instance().insertOrUpdate(mContext, newMsgBean);
                         if (null != listener) {
                             listener.onProgress(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_LOCATION_VALUE, 1.00, "location");
                             listener.onImSuccess(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_LOCATION_VALUE, fileBean);
@@ -589,7 +589,7 @@ public class LocationActivity extends SdkBaseActivity implements
 
                 cacheMsgBean.setMsgStatus(CacheMsgBean.SEND_FAILED);
                 //add to db
-                CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
+                CacheMsgHelper.instance().insertOrUpdate(mContext, cacheMsgBean);
             }
         };
 

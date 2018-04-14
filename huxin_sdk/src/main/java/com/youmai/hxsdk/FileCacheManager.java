@@ -190,7 +190,7 @@ public class FileCacheManager {
     public static void clearIMTableCache(Context context) {
         LogUtils.i(TAG, "清除缓存个人IM信息");
         try {
-            CacheMsgHelper.instance(context).deleteAll();
+            CacheMsgHelper.instance().deleteAll(context);
         } catch (Exception e) {
             e.printStackTrace();
         }

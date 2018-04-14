@@ -28,7 +28,6 @@ import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.ProtocolCallBack;
 import com.youmai.hxsdk.config.AppConfig;
 import com.youmai.hxsdk.config.ColorsConfig;
-import com.youmai.hxsdk.db.manager.GreenDBUpdateManager;
 import com.youmai.hxsdk.entity.RespBaseBean;
 import com.youmai.hxsdk.im.IMMsgManager;
 import com.youmai.hxsdk.proto.YouMaiBasic;
@@ -231,7 +230,6 @@ public class HuxinService extends Service {
 
         mContext = getApplicationContext();//this
         mClient = new TcpClient(this);
-        GreenDBUpdateManager.instance(this);
 
         HandlerThread thread = new HandlerThread("IntentService");
         thread.start();
@@ -253,13 +251,13 @@ public class HuxinService extends Service {
         createTcp();
 
         HuxinSdkManager.instance().setNotifyListener(
-                IMMsgManager.getInstance().getIMListener());
+                IMMsgManager.instance().getIMListener());
 
         HuxinSdkManager.instance().setNotifyListener(
-                IMMsgManager.getInstance().getBulletinListener());
+                IMMsgManager.instance().getBulletinListener());
 
         HuxinSdkManager.instance().setNotifyListener(
-                IMMsgManager.getInstance().getOnDeviceKickedNotify());
+                IMMsgManager.instance().getOnDeviceKickedNotify());
     }
 
 
@@ -323,10 +321,10 @@ public class HuxinService extends Service {
         HuxinSdkManager.instance().destroy();
 
         HuxinSdkManager.instance().clearNotifyListener(
-                IMMsgManager.getInstance().getIMListener());
+                IMMsgManager.instance().getIMListener());
 
         HuxinSdkManager.instance().clearNotifyListener(
-                IMMsgManager.getInstance().getBulletinListener());
+                IMMsgManager.instance().getBulletinListener());
 
         LogFile.inStance().toFile("HuXinService is onDestroy");
         Log.v(TAG, "HuXinService is onDestroy");

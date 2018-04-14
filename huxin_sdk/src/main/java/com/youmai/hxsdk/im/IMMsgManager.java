@@ -91,7 +91,7 @@ public class IMMsgManager {
         mLShareList = new ArrayList<>();
     }
 
-    public synchronized static IMMsgManager getInstance() {
+    public synchronized static IMMsgManager instance() {
         if (instance == null) {
             instance = new IMMsgManager();
         }
@@ -144,89 +144,23 @@ public class IMMsgManager {
             mOnChatMsgList.add(callback);
     }
 
-    //todo_k: 12-6
-    public List<CacheMsgBean> getCacheMsgBeanList(String dstUuid) {
-        String selfUuid = HuxinSdkManager.instance().getUuid();
-        List<CacheMsgBean> targetBeanList = new ArrayList<>();
-        for (CacheMsgBean cacheMsgBean : cacheMsgBeanList) {
-            if (dstUuid.equals(cacheMsgBean.getReceiverUserId()) && selfUuid.equals(cacheMsgBean.getSenderUserId())) { //目标为接收
-                targetBeanList.add(cacheMsgBean);
-            } else if (dstUuid.equals(cacheMsgBean.getSenderUserId()) && selfUuid.equals(cacheMsgBean.getReceiverUserId())) { //目标为发送
-                targetBeanList.add(cacheMsgBean);
-            }
-        }
-        return targetBeanList;
-    }
-
-    // srsm add for get history
-    public List<CacheMsgBean> genUnreadCacheMsgBeanList(Context context, String dstPhone, boolean setRead) {
-        String selection = "where receiver_phone=? or sender_phone=?";
-        List<CacheMsgBean> unreadMsgBeanList = CacheMsgHelper.instance(context).queryRaw(selection, new String[]{dstPhone, dstPhone});
-
-        if (setRead) {
-            for (CacheMsgBean checkBean : unreadMsgBeanList) {
-                if (checkBean.getMsgStatus() == CacheMsgBean.RECEIVE_UNREAD) {
-                    checkBean.setMsgStatus(CacheMsgBean.RECEIVE_READ);
-                }
-            }
-            if (unreadMsgBeanList.size() > 0) {
-                CacheMsgHelper.instance(mContext).updateList(unreadMsgBeanList);
-            }
-        }
-
-        return unreadMsgBeanList;
-    }
-
-    public List<CacheMsgBean> getCacheMsgBeanListFromStartIndex(String dstPhone, boolean setRead, long startIndex) {
-        String selfPhone = HuxinSdkManager.instance().getPhoneNum();
-        List<CacheMsgBean> unreadMsgBeanList =
-                CacheMsgHelper.instance(mContext).toQueryOrAscById(selfPhone, dstPhone, startIndex);
-
-        if (setRead) {
-            for (CacheMsgBean checkBean : unreadMsgBeanList) {
-                if (checkBean.getMsgStatus() == CacheMsgBean.RECEIVE_UNREAD) {
-                    checkBean.setMsgStatus(CacheMsgBean.RECEIVE_READ);
-                }
-            }
-            if (unreadMsgBeanList.size() > 0) {
-                CacheMsgHelper.instance(mContext).updateList(unreadMsgBeanList);
-            }
-        }
-
-        return unreadMsgBeanList;
-    }
-
-    public int genUnreadCacheMsgBeanListCount(final Context context, String dstPhone) {
-        List<CacheMsgBean> unreadMsgBeanList = genUnreadCacheMsgBeanList(context, dstPhone, false);
-        if (unreadMsgBeanList != null) {
-            return unreadMsgBeanList.size();
-        }
-
-        return 0;
-    }
 
     public List<CacheMsgBean> genCacheMsgBeanList(final Context context, String dstUuid, boolean setRead) {
-        String selfUuid = HuxinSdkManager.instance().getUuid();
-        /*String selection = "(receiver_phone=? and sender_phone=?) or (sender_phone=? and receiver_phone=?)";
-        String[] selcetionArg = new String[]{dstPhone, selfPhone, dstPhone, selfPhone};
-        if (dstPhone.equals(selfPhone)) {
-            selection = "receiver_phone=? and sender_phone=?";
-            selcetionArg = new String[]{selfPhone, selfPhone};
-        }*/
-        //取未读，设置为已读
-        if (setRead) {
-            genUnreadCacheMsgBeanList(context, dstUuid, true);
-        }
-
-        /*cacheMsgBeanList = HuxinSdkManager.instance().getCacheMsgFromDB(null, selection,
-                selcetionArg, null, null, "id ASC", null);*/
 
         List<CacheMsgBean> list;
-        if (dstUuid.equals(selfUuid)) {
-            list = CacheMsgHelper.instance(mContext).toQueryAndAscById(selfUuid, selfUuid);
+        //取未读，设置为已读
+        if (setRead) {
+            list = CacheMsgHelper.instance().toQueryAndAscByIdAndSetRead(context, dstUuid, true);
         } else {
-            list = CacheMsgHelper.instance(mContext).toQueryOrAscById(dstUuid, selfUuid);
+            list = CacheMsgHelper.instance().toQueryAndAscById(context, dstUuid);
+            /*if (dstUuid.equals(selfUuid)) {
+                //自己发给自己的消息
+                list = CacheMsgHelper.instance().toQueryAndAscById(context, selfUuid, selfUuid);
+            } else {
+                list = CacheMsgHelper.instance().toQueryOrAscById(context, dstUuid, selfUuid);
+            }*/
         }
+
         cacheMsgBeanList.clear();
         cacheMsgBeanList.addAll(list);
 
@@ -432,7 +366,7 @@ public class IMMsgManager {
             }
 
             //add to db
-            CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
+            CacheMsgHelper.instance().insertOrUpdate(mContext, cacheMsgBean);
 
             cacheMsgBeanList.add(cacheMsgBean);
             handlerIMMsgCallback(cacheMsgBean);
@@ -450,7 +384,7 @@ public class IMMsgManager {
                     .setJsonBodyObj(new CacheMsgImage().setFid(fid).setOriginalType(type));
 
             //add to db
-            CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
+            CacheMsgHelper.instance().insertOrUpdate(mContext, cacheMsgBean);
 
             cacheMsgBeanList.add(cacheMsgBean);
             handlerIMMsgCallback(cacheMsgBean);
@@ -474,7 +408,7 @@ public class IMMsgManager {
                             .setAddress(mLabelAddress));
 
             //add to db
-            CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
+            CacheMsgHelper.instance().insertOrUpdate(mContext, cacheMsgBean);
             cacheMsgBeanList.add(cacheMsgBean);
             handlerIMMsgCallback(cacheMsgBean);
         } else if (im.getMsgType() == YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_AUDIO_VALUE) { //音频
@@ -515,7 +449,7 @@ public class IMMsgManager {
                             .setFileSize(Long.parseLong(fileSize)));
 
             //add to db
-            CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
+            CacheMsgHelper.instance().insertOrUpdate(mContext, cacheMsgBean);
             cacheMsgBeanList.add(cacheMsgBean);
             handlerIMMsgCallback(cacheMsgBean);
         } else if (im.getMsgType() == YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_VIDEO_VALUE) {//视频
@@ -533,7 +467,7 @@ public class IMMsgManager {
                     .setSize(contentVideo.getSize())
                     .setTime(time);
             cacheMsgBean.setMsgType(CacheMsgBean.RECEIVE_VIDEO).setJsonBodyObj(cacheMsgVideo);
-            CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
+            CacheMsgHelper.instance().insertOrUpdate(mContext, cacheMsgBean);
             cacheMsgBeanList.add(cacheMsgBean);
             handlerIMMsgCallback(cacheMsgBean);
         }
@@ -560,7 +494,7 @@ public class IMMsgManager {
 
                         cacheMsgBeanList.add(cacheMsgBean);
                         //add to db
-                        CacheMsgHelper.instance(mContext).insertOrUpdate(cacheMsgBean);
+                        CacheMsgHelper.instance().insertOrUpdate(mContext, cacheMsgBean);
                         handlerIMMsgCallback(cacheMsgBean);
                     }
                 }

@@ -169,7 +169,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
                         cacheImage.setOriginalType(CacheMsgImage.SEND_IS_ORI_RECV_IS_ORI);
                         oriMsgBean.setJsonBodyObj(cacheImage);
 
-                        CacheMsgHelper.instance(mContext).insertOrUpdate(oriMsgBean);
+                        CacheMsgHelper.instance().insertOrUpdate(mContext, oriMsgBean);
                         break;
                     }
                 }
@@ -254,7 +254,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
 
         initView();
         initData();
-        IMMsgManager.getInstance().setImMsgCallback(this);
+        IMMsgManager.instance().setImMsgCallback(this);
 
     }
 
@@ -268,7 +268,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
     public void onResume() {
         super.onResume();
         //srsm add start
-        IMMsgManager.getInstance().setImMsgCallback(this);
+        IMMsgManager.instance().setImMsgCallback(this);
         //srsm add end
 
         MediaManager.resume();
@@ -276,7 +276,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
 
 
         PickerManager.getInstance().setRefreshUIListener(this);
-        IMMsgManager.getInstance().removeBadge(destUuid);
+        IMMsgManager.instance().removeBadge(destUuid);
     }
 
     public void handleIntent(Intent intent) {
@@ -302,7 +302,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
         MediaManager.pause();
         isPauseOut = true;
         //srsm add
-        IMMsgManager.getInstance().removeImMsgCallback(this);
+        IMMsgManager.instance().removeImMsgCallback(this);
 
         if (CallInfo.IsCalling()) {
             finish();
@@ -382,7 +382,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
 
     @Override
     public void onBackPressed() {
-        List<CacheMsgBean> lShareList = IMMsgManager.getInstance().getLShareList();
+        List<CacheMsgBean> lShareList = IMMsgManager.instance().getLShareList();
         for (CacheMsgBean bean : lShareList) {
             if (bean.getSenderUserId().equals(destUuid)) {
                 lShareList.remove(bean);
@@ -1023,7 +1023,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
 
     private void refreshFinishVideo(FileQueue fileQueue) {
         long mid = fileQueue.getMid();
-        CacheMsgBean cacheMsgBean = CacheMsgHelper.instance(this).queryByID(mid);
+        CacheMsgBean cacheMsgBean = CacheMsgHelper.instance().queryByID(this, mid);
         if (cacheMsgBean.getJsonBodyObj() instanceof CacheMsgVideo) {
             CacheMsgVideo cacheMsgVideo = (CacheMsgVideo) cacheMsgBean.getJsonBodyObj();
             cacheMsgBean.setJsonBodyObj(cacheMsgVideo);

@@ -277,12 +277,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/HxSdkTheme" />
 
-        <!--群聊列表-->
-        <activity
-            android:name=".module.groupchat.GroupListActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/HxSdkTheme"/>
-
         <receiver
             android:name="com.youmai.hxsdk.receiver.HuxinReceiver"
             android:exported="true">

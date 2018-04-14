@@ -33,6 +33,7 @@ import com.tg.coloursteward.module.contact.utils.ContactsBindData;
 import com.tg.coloursteward.module.contact.adapter.ContactAdapter;
 import com.tg.coloursteward.module.contact.stickyheader.StickyHeaderDecoration;
 import com.tg.coloursteward.module.contact.widget.CharIndexView;
+import com.tg.coloursteward.module.groupchat.GroupListActivity;
 import com.tg.coloursteward.module.search.GlobalSearchActivity;
 import com.tg.coloursteward.net.GetTwoRecordListener;
 import com.tg.coloursteward.net.HttpTools;
@@ -49,7 +50,6 @@ import com.tg.coloursteward.view.dialog.ToastFactory;
 import com.youmai.hxsdk.db.bean.Contact;
 import com.youmai.hxsdk.entity.cn.CNPinyin;
 import com.youmai.hxsdk.entity.cn.CNPinyinFactory;
-import com.youmai.hxsdk.module.groupchat.GroupListActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;

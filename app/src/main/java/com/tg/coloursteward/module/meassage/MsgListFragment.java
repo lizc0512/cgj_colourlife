@@ -323,6 +323,7 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
             }
         });
         mRefreshRecyclerView.setLoadingMoreEnabled(false);
+        mRefreshRecyclerView.setArrowImageView(R.drawable.rv_loading);
         messageList = new ArrayList<>();
         mSearchEmptyView = (LinearLayout) rootView.findViewById(R.id.message_search_empty_view);
 

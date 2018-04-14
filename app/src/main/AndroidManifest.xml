@@ -485,6 +485,8 @@
         <activity android:name=".PublicAccountActivity" />
         <activity android:name=".ForgetPasswordActivity" />
         <activity android:name=".ForgetPasswordVerifyActivity" />
+
+        <activity android:name=".module.groupchat.GroupListActivity" />
     </application>
 
 </manifest>

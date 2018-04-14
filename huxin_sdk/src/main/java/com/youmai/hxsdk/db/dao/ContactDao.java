@@ -25,17 +25,22 @@ public class ContactDao extends AbstractDao<Contact, Integer> {
      */
     public static class Properties {
         public final static Property ContactId = new Property(0, int.class, "contactId", true, "CONTACT_ID");
-        public final static Property User_id = new Property(1, String.class, "user_id", false, "USER_ID");
-        public final static Property Phone = new Property(2, String.class, "phone", false, "PHONE");
-        public final static Property Nick_name = new Property(3, String.class, "nick_name", false, "NICK_NAME");
+        public final static Property Uid = new Property(1, String.class, "uid", false, "UID");
+        public final static Property Mobile = new Property(2, String.class, "mobile", false, "MOBILE");
+        public final static Property Realname = new Property(3, String.class, "realname", false, "REALNAME");
         public final static Property Avatar = new Property(4, String.class, "avatar", false, "AVATAR");
-        public final static Property Sex = new Property(5, int.class, "sex", false, "SEX");
-        public final static Property Sign = new Property(6, String.class, "sign", false, "SIGN");
-        public final static Property Is_hx = new Property(7, boolean.class, "is_hx", false, "IS_HX");
-        public final static Property Pinyin = new Property(8, String.class, "pinyin", false, "PINYIN");
-        public final static Property SimplePinyin = new Property(9, String.class, "simplePinyin", false, "SIMPLE_PINYIN");
-        public final static Property Type = new Property(10, String.class, "type", false, "TYPE");
-        public final static Property Username = new Property(11, String.class, "username", false, "USERNAME");
+        public final static Property Sex = new Property(5, String.class, "sex", false, "SEX");
+        public final static Property Email = new Property(6, String.class, "email", false, "EMAIL");
+        public final static Property IsFavorite = new Property(7, String.class, "isFavorite", false, "IS_FAVORITE");
+        public final static Property JobName = new Property(8, String.class, "jobName", false, "JOB_NAME");
+        public final static Property Landline = new Property(9, String.class, "landline", false, "LANDLINE");
+        public final static Property OrgID = new Property(10, String.class, "orgID", false, "ORG_ID");
+        public final static Property OrgName = new Property(11, String.class, "orgName", false, "ORG_NAME");
+        public final static Property Username = new Property(12, String.class, "username", false, "USERNAME");
+        public final static Property Sign = new Property(13, String.class, "sign", false, "SIGN");
+        public final static Property Is_hx = new Property(14, boolean.class, "is_hx", false, "IS_HX");
+        public final static Property Pinyin = new Property(15, String.class, "pinyin", false, "PINYIN");
+        public final static Property SimplePinyin = new Property(16, String.class, "simplePinyin", false, "SIMPLE_PINYIN");
     }
 
 
@@ -52,17 +57,22 @@ public class ContactDao extends AbstractDao<Contact, Integer> {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"CONTACT\" (" + //
                 "\"CONTACT_ID\" INTEGER PRIMARY KEY NOT NULL ," + // 0: contactId
-                "\"USER_ID\" TEXT," + // 1: user_id
-                "\"PHONE\" TEXT," + // 2: phone
-                "\"NICK_NAME\" TEXT," + // 3: nick_name
+                "\"UID\" TEXT," + // 1: uid
+                "\"MOBILE\" TEXT," + // 2: mobile
+                "\"REALNAME\" TEXT," + // 3: realname
                 "\"AVATAR\" TEXT," + // 4: avatar
-                "\"SEX\" INTEGER NOT NULL ," + // 5: sex
-                "\"SIGN\" TEXT," + // 6: sign
-                "\"IS_HX\" INTEGER NOT NULL ," + // 7: is_hx
-                "\"PINYIN\" TEXT," + // 8: pinyin
-                "\"SIMPLE_PINYIN\" TEXT," + // 9: simplePinyin
-                "\"TYPE\" TEXT," + // 10: type
-                "\"USERNAME\" TEXT);"); // 11: username
+                "\"SEX\" TEXT," + // 5: sex
+                "\"EMAIL\" TEXT," + // 6: email
+                "\"IS_FAVORITE\" TEXT," + // 7: isFavorite
+                "\"JOB_NAME\" TEXT," + // 8: jobName
+                "\"LANDLINE\" TEXT," + // 9: landline
+                "\"ORG_ID\" TEXT," + // 10: orgID
+                "\"ORG_NAME\" TEXT," + // 11: orgName
+                "\"USERNAME\" TEXT," + // 12: username
+                "\"SIGN\" TEXT," + // 13: sign
+                "\"IS_HX\" INTEGER NOT NULL ," + // 14: is_hx
+                "\"PINYIN\" TEXT," + // 15: pinyin
+                "\"SIMPLE_PINYIN\" TEXT);"); // 16: simplePinyin
     }
 
     /** Drops the underlying database table. */
@@ -76,51 +86,80 @@ public class ContactDao extends AbstractDao<Contact, Integer> {
         stmt.clearBindings();
         stmt.bindLong(1, entity.getContactId());
  
-        String user_id = entity.getUser_id();
-        if (user_id != null) {
-            stmt.bindString(2, user_id);
+        String uid = entity.getUid();
+        if (uid != null) {
+            stmt.bindString(2, uid);
         }
  
-        String phone = entity.getPhone();
-        if (phone != null) {
-            stmt.bindString(3, phone);
+        String mobile = entity.getMobile();
+        if (mobile != null) {
+            stmt.bindString(3, mobile);
         }
  
-        String nick_name = entity.getNick_name();
-        if (nick_name != null) {
-            stmt.bindString(4, nick_name);
+        String realname = entity.getRealname();
+        if (realname != null) {
+            stmt.bindString(4, realname);
         }
  
         String avatar = entity.getAvatar();
         if (avatar != null) {
             stmt.bindString(5, avatar);
         }
-        stmt.bindLong(6, entity.getSex());
  
-        String sign = entity.getSign();
-        if (sign != null) {
-            stmt.bindString(7, sign);
-        }
-        stmt.bindLong(8, entity.getIs_hx() ? 1L: 0L);
- 
-        String pinyin = entity.getPinyin();
-        if (pinyin != null) {
-            stmt.bindString(9, pinyin);
+        String sex = entity.getSex();
+        if (sex != null) {
+            stmt.bindString(6, sex);
         }
  
-        String simplePinyin = entity.getSimplePinyin();
-        if (simplePinyin != null) {
-            stmt.bindString(10, simplePinyin);
+        String email = entity.getEmail();
+        if (email != null) {
+            stmt.bindString(7, email);
         }
  
-        String type = entity.getType();
-        if (type != null) {
-            stmt.bindString(11, type);
+        String isFavorite = entity.getIsFavorite();
+        if (isFavorite != null) {
+            stmt.bindString(8, isFavorite);
+        }
+ 
+        String jobName = entity.getJobName();
+        if (jobName != null) {
+            stmt.bindString(9, jobName);
+        }
+ 
+        String landline = entity.getLandline();
+        if (landline != null) {
+            stmt.bindString(10, landline);
+        }
+ 
+        String orgID = entity.getOrgID();
+        if (orgID != null) {
+            stmt.bindString(11, orgID);
+        }
+ 
+        String orgName = entity.getOrgName();
+        if (orgName != null) {
+            stmt.bindString(12, orgName);
         }
  
         String username = entity.getUsername();
         if (username != null) {
-            stmt.bindString(12, username);
+            stmt.bindString(13, username);
+        }
+ 
+        String sign = entity.getSign();
+        if (sign != null) {
+            stmt.bindString(14, sign);
+        }
+        stmt.bindLong(15, entity.getIs_hx() ? 1L: 0L);
+ 
+        String pinyin = entity.getPinyin();
+        if (pinyin != null) {
+            stmt.bindString(16, pinyin);
+        }
+ 
+        String simplePinyin = entity.getSimplePinyin();
+        if (simplePinyin != null) {
+            stmt.bindString(17, simplePinyin);
         }
     }
 
@@ -129,51 +168,80 @@ public class ContactDao extends AbstractDao<Contact, Integer> {
         stmt.clearBindings();
         stmt.bindLong(1, entity.getContactId());
  
-        String user_id = entity.getUser_id();
-        if (user_id != null) {
-            stmt.bindString(2, user_id);
+        String uid = entity.getUid();
+        if (uid != null) {
+            stmt.bindString(2, uid);
         }
  
-        String phone = entity.getPhone();
-        if (phone != null) {
-            stmt.bindString(3, phone);
+        String mobile = entity.getMobile();
+        if (mobile != null) {
+            stmt.bindString(3, mobile);
         }
  
-        String nick_name = entity.getNick_name();
-        if (nick_name != null) {
-            stmt.bindString(4, nick_name);
+        String realname = entity.getRealname();
+        if (realname != null) {
+            stmt.bindString(4, realname);
         }
  
         String avatar = entity.getAvatar();
         if (avatar != null) {
             stmt.bindString(5, avatar);
         }
-        stmt.bindLong(6, entity.getSex());
  
-        String sign = entity.getSign();
-        if (sign != null) {
-            stmt.bindString(7, sign);
-        }
-        stmt.bindLong(8, entity.getIs_hx() ? 1L: 0L);
- 
-        String pinyin = entity.getPinyin();
-        if (pinyin != null) {
-            stmt.bindString(9, pinyin);
+        String sex = entity.getSex();
+        if (sex != null) {
+            stmt.bindString(6, sex);
         }
  
-        String simplePinyin = entity.getSimplePinyin();
-        if (simplePinyin != null) {
-            stmt.bindString(10, simplePinyin);
+        String email = entity.getEmail();
+        if (email != null) {
+            stmt.bindString(7, email);
         }
  
-        String type = entity.getType();
-        if (type != null) {
-            stmt.bindString(11, type);
+        String isFavorite = entity.getIsFavorite();
+        if (isFavorite != null) {
+            stmt.bindString(8, isFavorite);
+        }
+ 
+        String jobName = entity.getJobName();
+        if (jobName != null) {
+            stmt.bindString(9, jobName);
+        }
+ 
+        String landline = entity.getLandline();
+        if (landline != null) {
+            stmt.bindString(10, landline);
+        }
+ 
+        String orgID = entity.getOrgID();
+        if (orgID != null) {
+            stmt.bindString(11, orgID);
+        }
+ 
+        String orgName = entity.getOrgName();
+        if (orgName != null) {
+            stmt.bindString(12, orgName);
         }
  
         String username = entity.getUsername();
         if (username != null) {
-            stmt.bindString(12, username);
+            stmt.bindString(13, username);
+        }
+ 
+        String sign = entity.getSign();
+        if (sign != null) {
+            stmt.bindString(14, sign);
+        }
+        stmt.bindLong(15, entity.getIs_hx() ? 1L: 0L);
+ 
+        String pinyin = entity.getPinyin();
+        if (pinyin != null) {
+            stmt.bindString(16, pinyin);
+        }
+ 
+        String simplePinyin = entity.getSimplePinyin();
+        if (simplePinyin != null) {
+            stmt.bindString(17, simplePinyin);
         }
     }
 
@@ -186,17 +254,22 @@ public class ContactDao extends AbstractDao<Contact, Integer> {
     public Contact readEntity(Cursor cursor, int offset) {
         Contact entity = new Contact( //
             cursor.getInt(offset + 0), // contactId
-            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // user_id
-            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // phone
-            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // nick_name
+            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // uid
+            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // mobile
+            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // realname
             cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // avatar
-            cursor.getInt(offset + 5), // sex
-            cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6), // sign
-            cursor.getShort(offset + 7) != 0, // is_hx
-            cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8), // pinyin
-            cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9), // simplePinyin
-            cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10), // type
-            cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11) // username
+            cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // sex
+            cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6), // email
+            cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7), // isFavorite
+            cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8), // jobName
+            cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9), // landline
+            cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10), // orgID
+            cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11), // orgName
+            cursor.isNull(offset + 12) ? null : cursor.getString(offset + 12), // username
+            cursor.isNull(offset + 13) ? null : cursor.getString(offset + 13), // sign
+            cursor.getShort(offset + 14) != 0, // is_hx
+            cursor.isNull(offset + 15) ? null : cursor.getString(offset + 15), // pinyin
+            cursor.isNull(offset + 16) ? null : cursor.getString(offset + 16) // simplePinyin
         );
         return entity;
     }
@@ -204,17 +277,22 @@ public class ContactDao extends AbstractDao<Contact, Integer> {
     @Override
     public void readEntity(Cursor cursor, Contact entity, int offset) {
         entity.setContactId(cursor.getInt(offset + 0));
-        entity.setUser_id(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
-        entity.setPhone(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
-        entity.setNick_name(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
+        entity.setUid(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
+        entity.setMobile(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
+        entity.setRealname(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
         entity.setAvatar(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
-        entity.setSex(cursor.getInt(offset + 5));
-        entity.setSign(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
-        entity.setIs_hx(cursor.getShort(offset + 7) != 0);
-        entity.setPinyin(cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8));
-        entity.setSimplePinyin(cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9));
-        entity.setType(cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10));
-        entity.setUsername(cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11));
+        entity.setSex(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
+        entity.setEmail(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
+        entity.setIsFavorite(cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7));
+        entity.setJobName(cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8));
+        entity.setLandline(cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9));
+        entity.setOrgID(cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10));
+        entity.setOrgName(cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11));
+        entity.setUsername(cursor.isNull(offset + 12) ? null : cursor.getString(offset + 12));
+        entity.setSign(cursor.isNull(offset + 13) ? null : cursor.getString(offset + 13));
+        entity.setIs_hx(cursor.getShort(offset + 14) != 0);
+        entity.setPinyin(cursor.isNull(offset + 15) ? null : cursor.getString(offset + 15));
+        entity.setSimplePinyin(cursor.isNull(offset + 16) ? null : cursor.getString(offset + 16));
      }
     
     @Override

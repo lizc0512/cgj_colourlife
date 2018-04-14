@@ -11,7 +11,7 @@
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:padding="10dp"
-        android:src="@drawable/header0" />
+        android:src="@drawable/contacts_common_default_user_bg" />
 
     <TextView
         android:id="@+id/tv_name"
@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_toRightOf="@+id/iv_header"
-        android:text="王二麻子"
+        android:text="王二子"
         android:textSize="15sp" />
 
     <View

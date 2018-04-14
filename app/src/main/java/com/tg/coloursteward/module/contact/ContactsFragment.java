@@ -44,6 +44,7 @@ import com.tg.coloursteward.serice.AuthAppService;
 import com.tg.coloursteward.ui.MainActivity1;
 import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.Tools;
+import com.tg.coloursteward.view.PullRefreshListView;
 import com.tg.coloursteward.view.dialog.ToastFactory;
 import com.youmai.hxsdk.db.bean.Contact;
 import com.youmai.hxsdk.entity.cn.CNPinyin;
@@ -66,19 +67,23 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
+import com.tg.coloursteward.net.MessageHandler.ResponseListener;
+import com.tg.coloursteward.module.contact.adapter.ContactAdapter.ItemEventListener;
+import com.youmai.hxsdk.utils.ListUtils;
+
 /**
  * 作者：create by YW
  * 日期：2018.04.03 11:59
  * 描述：
  */
-public class ContactsFragment extends Fragment implements Observer, ContactAdapter.ItemEventListener {
+public class ContactsFragment extends Fragment implements Observer,
+        ResponseListener, ItemEventListener {
 
     private static final String TAG = ContactsFragment.class.getName();
 
     private MainActivity1 mActivity;
     private static final int ISTREAD = 1;
     private View mView;
-    private ArrayList<LinkManInfo> linkManList = new ArrayList<LinkManInfo>(); //收藏联系人
     private LinearLayout llSearch;
     private AuthAppService authAppService;
     private String accessToken;
@@ -88,77 +93,6 @@ public class ContactsFragment extends Fragment implements Observer, ContactAdapt
     private final int REQUESTPERMISSION = 110;
     private String LinkManListCache;
     private ArrayList<FamilyInfo> familyList = new ArrayList<FamilyInfo>(); //组织架构人
-    /**private SingleClickListener singleListener = new SingleClickListener() {
-
-    @Override
-    public void onSingleClick(View v) {
-    Intent intent;
-    FamilyInfo info;
-    switch (v.getId()) {
-    case R.id.rl_organization://组织架构
-    if (familyList.size() > 0) {
-    if (skincode.equals("101")) {//101 彩生活
-    for (int i = 0; i < familyList.size(); i++) {
-    if (familyList.get(i).name.equals("彩生活服务集团")) {
-    info = new FamilyInfo();
-    info.id = familyList.get(i).id;
-    info.type = "org";
-    info.name = familyList.get(i).name;
-    intent = new Intent(mActivity, HomeContactOrgActivity.class);
-    intent.putExtra(HomeContactOrgActivity.FAMILY_INFO, info);
-    startActivity(intent);
-    }
-    }
-    } else {
-    info = new FamilyInfo();
-    info.id = familyList.get(0).id;
-    info.type = "org";
-    info.name = familyList.get(0).name;
-    intent = new Intent(mActivity, HomeContactOrgActivity.class);
-    intent.putExtra(HomeContactOrgActivity.FAMILY_INFO, info);
-    startActivity(intent);
-    }
-
-    } else {
-    if (StringUtils.isNotEmpty(orgId) && StringUtils.isNotEmpty(orgName)) {
-    info = new FamilyInfo();
-    info.id = orgId;
-    info.type = "org";
-    info.name = orgName;
-    intent = new Intent(mActivity, HomeContactOrgActivity.class);
-    intent.putExtra(HomeContactOrgActivity.FAMILY_INFO, info);
-    startActivity(intent);
-    } else {
-    ToastFactory.showToast(mActivity, "正在获取组织架构，请稍后...");
-    }
-    }
-
-    break;
-    case R.id.rl_department://部门
-    info = new FamilyInfo();
-    info.id = UserInfo.orgId;
-    info.type = "org";
-    info.name = UserInfo.familyName;
-    intent = new Intent(mActivity, HomeContactOrgActivity.class);
-    intent.putExtra(HomeContactOrgActivity.FAMILY_INFO, info);
-    startActivity(intent);
-    break;
-    case R.id.rl_contacts://手机通讯录
-    if (ContextCompat.checkSelfPermission(mActivity, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
-    //申请权限
-    ActivityCompat.requestPermissions(mActivity, new String[]{Manifest.permission.READ_CONTACTS}, REQUESTPERMISSION);
-    ToastFactory.showToast(mActivity, "请允许权限");
-    } else {
-    startActivity(new Intent(mActivity, ContactsActivity.class));
-    }
-
-    break;
-    case R.id.ll_search://搜索框
-    startActivity(new Intent(mActivity, HomeContactSearchActivity.class));
-    break;
-    }
-    }
-    };*/
 
     private RecyclerView rv_main;
     private ContactAdapter adapter;
@@ -172,9 +106,10 @@ public class ContactsFragment extends Fragment implements Observer, ContactAdapt
     private Subscription subscription;
     private ContactsBindData bindData;
 
+    private MessageHandler msgHand;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
         mView = inflater.inflate(com.tg.coloursteward.R.layout.fragment_contacts_layout, container, false);
         return mView;
     }
@@ -196,14 +131,15 @@ public class ContactsFragment extends Fragment implements Observer, ContactAdapt
 
         bindData = ContactsBindData.init();
         bindData.addObserver(this);
-
         bindData.loadOrgInfo();
+
+        msgHand = new MessageHandler(getActivity());
+        msgHand.setResponseListener(this);
 
         initView();
         setListener();
-        getPinyinList();
-    }
 
+    }
 
     private void setListener() {
         global_search_root.setOnClickListener(new View.OnClickListener() {
@@ -240,13 +176,14 @@ public class ContactsFragment extends Fragment implements Observer, ContactAdapt
         });
     }
 
-    private void getPinyinList() {
+    private void getPinyinList(final ResponseData data) {
+
         subscription = Observable.create(new Observable.OnSubscribe<List<CNPinyin<Contact>>>() {
             @Override
             public void call(Subscriber<? super List<CNPinyin<Contact>>> subscriber) {
                 if (!subscriber.isUnsubscribed()) {
                     //子线程查数据库，返回List<Contacts>
-                    List<CNPinyin<Contact>> contactList = CNPinyinFactory.createCNPinyinList(bindData.contactList(getActivity()));
+                    List<CNPinyin<Contact>> contactList = CNPinyinFactory.createCNPinyinList(bindData.contactList(getContext(), data));
                     Collections.sort(contactList);
                     subscriber.onNext(contactList);
                     subscriber.onCompleted();
@@ -264,6 +201,9 @@ public class ContactsFragment extends Fragment implements Observer, ContactAdapt
 
                     @Override
                     public void onNext(List<CNPinyin<Contact>> cnPinyins) {
+                        if (!ListUtils.isEmpty(contactList)) {
+                            contactList.clear();
+                        }
                         //回调业务数据
                         contactList.addAll(cnPinyins);
                         adapter.notifyDataSetChanged();
@@ -386,7 +326,7 @@ public class ContactsFragment extends Fragment implements Observer, ContactAdapt
                 startActivity(new Intent(getContext(), GroupListActivity.class));
                 break;
             default: //item
-                LinkManInfo item = linkManList.get(pos-3);
+                Contact item = contactList.get(pos).data;
                 Intent i = new Intent(mActivity, EmployeeDataActivity.class);
                 i.putExtra(EmployeeDataActivity.CONTACTS_ID, item.username);
                 startActivityForResult(i, ISTREAD);
@@ -472,56 +412,52 @@ public class ContactsFragment extends Fragment implements Observer, ContactAdapt
         getCacheList();
 
         //加载收藏联系人 - 对应着rxjava
-        /**pullListView.setOnLoadingListener(new OnLoadingListener<PullRefreshListView>() {
-
-            @Override
-            public void refreshData(PullRefreshListView t, boolean isLoadMore,
-                                    Message msg, String response) {
-                // TODO Auto-generated method stub
-                JSONArray jsonString = HttpTools.getContentJsonArray(response);
-                if (jsonString != null) {
-                    Tools.saveLinkManList(mActivity, response);
-                    ResponseData data = HttpTools.getResponseContent(jsonString);
-                    if (jsonString.length() > 0) {
-                        rlNulllinkman.setVisibility(View.GONE);
-                    }
-                    LinkManInfo item;
-                    for (int i = 0; i < data.length; i++) {
-                        item = new LinkManInfo();
-                        item.username = data.getString(i, "username");
-                        item.realname = data.getString(i, "realname");
-                        item.icon = data.getString(i, "avatar");
-                        item.job_name = data.getString(i, "jobName");
-                        item.orgName = data.getString(i, "orgName");
-                        linkManList.add(item);
-                    }
-                }
-            }
-
-            @Override
-            public void onLoadingMore(PullRefreshListView t, Handler hand, int pageIndex) {
-                // TODO Auto-generated method stub
-                RequestConfig config = new RequestConfig(mActivity, PullRefreshListView.HTTP_MORE_CODE);
-                config.handler = hand;
-                RequestParams params = new RequestParams();
-                params.put("uid", UserInfo.employeeAccount);
-                HttpTools.httpGet(Contants.URl.URL_ICETEST, "/phonebook/frequentContacts", config, params);
-
-            }
-
-            @Override
-            public void onLoading(PullRefreshListView t, Handler hand) {
-                // TODO Auto-generated method stub
-                RequestConfig config = new RequestConfig(mActivity, PullRefreshListView.HTTP_FRESH_CODE);
-                config.handler = hand;
-                RequestParams params = new RequestParams();
-                params.put("uid", UserInfo.employeeAccount);
-                HttpTools.httpGet(Contants.URl.URL_ICETEST, "/phonebook/frequentContacts", config, params);
-
-            }
-        });*/
+//        /**pullListView.setOnLoadingListener(new OnLoadingListener<PullRefreshListView>() {
+//
+//        @Override public void refreshData(PullRefreshListView t, boolean isLoadMore,
+//        Message msg, String response) {
+//            // TODO Auto-generated method stub
+//            JSONArray jsonString = HttpTools.getContentJsonArray(response);
+//            if (jsonString != null) {
+//                Tools.saveLinkManList(mActivity, response);
+//                ResponseData data = HttpTools.getResponseContent(jsonString);
+//                if (jsonString.length() > 0) {
+//                rlNulllinkman.setVisibility(View.GONE);
+//                }
+//                LinkManInfo item;
+//                for (int i = 0; i < data.length; i++) {
+//                    item = new LinkManInfo();
+//                    item.username = data.getString(i, "username");
+//                    item.realname = data.getString(i, "realname");
+//                    item.icon = data.getString(i, "avatar");
+//                    item.job_name = data.getString(i, "jobName");
+//                    item.orgName = data.getString(i, "orgName");
+//                    linkManList.add(item);
+//                }
+//            }
+//        }
+//
+//        @Override public void onLoadingMore(PullRefreshListView t, Handler hand, int pageIndex) {
+//            // TODO Auto-generated method stub
+//            RequestConfig config = new RequestConfig(mActivity, PullRefreshListView.HTTP_MORE_CODE);
+//            config.handler = hand;
+//            RequestParams params = new RequestParams();
+//            params.put("uid", UserInfo.employeeAccount);
+//            HttpTools.httpGet(Contants.URl.URL_ICETEST, "/phonebook/frequentContacts", config, params);
+//
+//        }
+//
+//        @Override public void onLoading(PullRefreshListView t, Handler hand) {
+//            // TODO Auto-generated method stub
+//            RequestConfig config = new RequestConfig(mActivity, PullRefreshListView.HTTP_FRESH_CODE);
+//            config.handler = hand;
+//            RequestParams params = new RequestParams();
+//            params.put("uid", UserInfo.employeeAccount);
+//            HttpTools.httpGet(Contants.URl.URL_ICETEST, "/phonebook/frequentContacts", config, params);
+//
+//        }
+//        });*/
         rv_main.setAdapter(adapter);
-        //pullListView.performLoading();
 
         Date dt = new Date();
         Long time = dt.getTime();
@@ -546,6 +482,13 @@ public class ContactsFragment extends Fragment implements Observer, ContactAdapt
      * 获取首页缓存列表
      */
     private void getCacheList() {
+
+        RequestConfig config = new RequestConfig(mActivity, PullRefreshListView.HTTP_FRESH_CODE);
+        config.handler = msgHand.getHandler();
+        RequestParams params = new RequestParams();
+        params.put("uid", UserInfo.employeeAccount);
+        HttpTools.httpGet(Contants.URl.URL_ICETEST, "/phonebook/frequentContacts", config, params);
+
         LinkManListCache = Tools.getLinkManList(mActivity);
         if (StringUtils.isNotEmpty(LinkManListCache)) {
             JSONArray jsonString = HttpTools.getContentJsonArray(LinkManListCache);
@@ -555,16 +498,7 @@ public class ContactsFragment extends Fragment implements Observer, ContactAdapt
                     //有收藏联系人
                     //rlNulllinkman.setVisibility(View.GONE);
                 }
-                LinkManInfo item;
-                for (int i = 0; i < data.length; i++) {
-                    item = new LinkManInfo();
-                    item.username = data.getString(i, "username");
-                    item.realname = data.getString(i, "realname");
-                    item.icon = data.getString(i, "avatar");
-                    item.job_name = data.getString(i, "jobName");
-                    item.orgName = data.getString(i, "orgName");
-                    linkManList.add(item);
-                }
+                getPinyinList(data);
             }
             rv_main.setAdapter(adapter);
         }
@@ -617,21 +551,6 @@ public class ContactsFragment extends Fragment implements Observer, ContactAdapt
         // TODO Auto-generated method stub
         super.onAttach(activity);
         mActivity = (MainActivity1) activity;
-        //adapter = new ContactAdapter(mActivity, linkManList);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
-            case REQUESTPERMISSION:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    startActivity(new Intent(mActivity, ContactsActivity.class));
-                } else {
-
-                }
-                break;
-        }
     }
 
     @Override
@@ -640,5 +559,30 @@ public class ContactsFragment extends Fragment implements Observer, ContactAdapt
         if (requestCode == ISTREAD) {
             //pullListView.performLoading();
         }
+    }
+
+    @Override
+    public void onRequestStart(Message msg, String hintString) {
+        Log.e(TAG, "onRequestStart");
+    }
+
+    @Override
+    public void onSuccess(Message msg, String jsonString, String hintString) {
+        Log.e(TAG, "onSuccess" + jsonString);
+
+        JSONArray json = HttpTools.getContentJsonArray(jsonString);
+        if (json != null) {
+            Tools.saveLinkManList(mActivity, jsonString);
+            ResponseData data = HttpTools.getResponseContent(json);
+            if (json.length() > 0) {
+                //rlNulllinkman.setVisibility(View.GONE);
+            }
+            getPinyinList(data);
+        }
+    }
+
+    @Override
+    public void onFail(Message msg, String hintString) {
+        Log.e(TAG, "onFail");
     }
 }

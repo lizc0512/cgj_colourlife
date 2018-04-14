@@ -304,12 +304,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/HxSdkTheme" />
 
-        <!--联系人详情-->
-        <activity
-            android:name=".module.contact.ContactsDetailActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/HxSdkTheme"/>
-
         <service android:name=".serice.MessageService" />
 
         <!--分享-->

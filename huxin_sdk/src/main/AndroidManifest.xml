@@ -277,24 +277,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/HxSdkTheme" />
 
-        <!--组织架构-->
-        <activity
-            android:name=".module.organization.OrganizationalStructureActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/HxSdkTheme"/>
-
-        <!--我的部门-->
-        <activity
-            android:name=".module.department.DepartmentActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/HxSdkTheme"/>
-
-        <!--手机联系人-->
-        <activity
-            android:name=".module.localcontacts.LocalContactsActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/HxSdkTheme"/>
-
         <!--群聊列表-->
         <activity
             android:name=".module.groupchat.GroupListActivity"

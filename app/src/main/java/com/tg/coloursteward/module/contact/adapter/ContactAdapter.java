@@ -72,10 +72,10 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactH
                     .into(holder.iv_header);
         }
 
-        if (contact.getNick_name().startsWith("↑##@@**") && position < 4) {
-            holder.tv_name.setText(contact.getNick_name().substring(9));
+        if (contact.getRealname().startsWith("↑##@@**") && position < 4) {
+            holder.tv_name.setText(contact.getRealname().substring(9));
         } else {
-            holder.tv_name.setText(contact.getNick_name());
+            holder.tv_name.setText(contact.getRealname());
         }
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -107,7 +107,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactH
     @Override
     public boolean specialIndex(int childAdapterPosition) {
         CNPinyin<Contact> contactCNPinyin = cnPinyinList.get(childAdapterPosition);
-        return contactCNPinyin.getHeaderFilter().contains(contactCNPinyin.data.getNick_name());
+        return contactCNPinyin.getHeaderFilter().contains(contactCNPinyin.data.getRealname());
     }
 
     @Override

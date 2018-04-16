@@ -92,16 +92,20 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 int icon = defaultIcon(position);
                 ((ContactHolder) holder).iv_header.setImageResource(icon);
             } else {
-                RequestOptions options = new RequestOptions();
-                options.diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-                        .centerCrop()
-                        .transform(new GlideRoundTransform(mContext))
-                        .placeholder(R.drawable.contacts_common_default_user_bg)
-                        .error(R.drawable.contacts_common_default_user_bg);
-                Glide.with(mContext)
-                        .load(contact.getAvatar())
-                        .apply(options)
-                        .into(((ContactHolder) holder).iv_header);
+                try {
+                    RequestOptions options = new RequestOptions();
+                    options.diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+                            .centerCrop()
+                            .override(120, 120)
+                            .transform(new GlideRoundTransform(mContext))
+                            .placeholder(R.drawable.contacts_common_default_user_bg)
+                            .error(R.drawable.contacts_common_default_user_bg);
+                    Glide.with(mContext)
+                            .load(contact.getAvatar())
+                            .apply(options)
+                            .into(((ContactHolder) holder).iv_header);
+                } catch (Exception e) {
+                }
             }
 
             if (contact.getRealname().startsWith("↑##@@**") && position < 6) {

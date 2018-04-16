@@ -16,5 +16,6 @@
     <color name="color_item_select">#F5F5F5</color>
     <color name="color_text_black1">#122634</color>
     <color name="color_text_gray1">#979797</color>
+    <color name="color_bg1">#F5F5F5</color>
 
 </resources>

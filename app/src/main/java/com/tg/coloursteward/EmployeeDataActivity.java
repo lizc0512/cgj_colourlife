@@ -228,7 +228,7 @@ public class EmployeeDataActivity extends BaseActivity {
             }
 
             if (item != null) {
-                tvName.setText(item.realname + "(" + item.username + ")");
+                tvName.setText(item.realname /*+ "(" + item.username + ")"*/);
                 if (item.job_name.contains("(")) {
                     int i = item.job_name.indexOf("(");
                     item.job_name = item.job_name.substring(0, i);

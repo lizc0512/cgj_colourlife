@@ -26,7 +26,7 @@ public class Contact implements CN {
     private String landline;
     private String orgID;
     private String orgName;
-    public String username =""; //拼音的姓 与 名的首字母
+    private String username =""; //拼音的姓 与 名的首字母
 
     private String sign;     //个性签名
     private boolean is_hx;   //true/false

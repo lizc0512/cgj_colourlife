@@ -142,7 +142,7 @@ public class SendMsgService extends IntentService {
     private void updateUI(SendMsg msg, int flag, String type, int send_flag) {
         CacheMsgBean bean = msg.getMsg();
         bean.setMsgStatus(flag);
-        bean.setTargetUuid(bean.getReceiverUserId());
+
         CacheMsgHelper.instance().insertOrUpdate(appContext, bean);
         Intent intent = new Intent("service.send.msg");
         intent.putExtra("data", msg);
@@ -163,11 +163,10 @@ public class SendMsgService extends IntentService {
             CacheMsgEmotion msgBody = (CacheMsgEmotion) msgBean.getMsg().getJsonBodyObj();
             contentTemp = msgBody.getEmotionContent();
         }
-        final String userId = HuxinSdkManager.instance().getUuid();
-        final String targetUuid = msgBean.getMsg().getReceiverUserId();
+        final String dstUuid = msgBean.getMsg().getReceiverUserId();
         final String content = contentTemp;
-        msgBean.getMsg().setTargetUuid(targetUuid);
-        HuxinSdkManager.instance().sendText(userId, content, new ReceiveListener() {
+
+        HuxinSdkManager.instance().sendText(dstUuid, content, new ReceiveListener() {
             @Override
             public void OnRec(PduBase pduBase) {
                 //tcp会有消息缓存，在无网络状态下会执行onError()，一旦联网后，又继续尝试发送，就会执行OnRec()
@@ -203,8 +202,6 @@ public class SendMsgService extends IntentService {
 
     //发送位置
     private void sendMap(final SendMsg msgBean) {
-        final String userId = HuxinSdkManager.instance().getUuid();
-        final String targetUuid = msgBean.getMsg().getReceiverUserId();
         CacheMsgMap msgBody = (CacheMsgMap) msgBean.getMsg().getJsonBodyObj();
 
         final String url = msgBody.getImgUrl();
@@ -213,7 +210,9 @@ public class SendMsgService extends IntentService {
         final double longitude = Double.valueOf(location.substring(0, location.indexOf(",")));
         final double latitude = Double.valueOf(location.substring(location.indexOf(",") + 1, location.length()));
         final String address = msgBody.getAddress();
-        msgBean.getMsg().setTargetUuid(targetUuid);
+
+        final String dstUuid = msgBean.getMsg().getReceiverUserId();
+
         ReceiveListener callback = new ReceiveListener() {
             @Override
             public void OnRec(PduBase pduBase) {
@@ -242,7 +241,7 @@ public class SendMsgService extends IntentService {
             }
         };
 
-        HuxinSdkManager.instance().sendLocation(userId, longitude, latitude, 16, address, callback);
+        HuxinSdkManager.instance().sendLocation(dstUuid, longitude, latitude, 16, address, callback);
     }
 
     //发送语音(先上传文件，再发送消息)
@@ -272,7 +271,6 @@ public class SendMsgService extends IntentService {
      */
     private void uploadFile(final SendMsg msgBean) {
         final int msgType = msgBean.getMsg().getMsgType();
-        msgBean.getMsg().setTargetUuid(msgBean.getMsg().getReceiverUserId());
 
         UpProgressHandler upProgressHandler = new UpProgressHandler() {
             @Override
@@ -430,14 +428,12 @@ public class SendMsgService extends IntentService {
 
     //语音    2、发送消息
     private void sendVoiceIM(final SendMsg msgBean) {
-        final String userId = HuxinSdkManager.instance().getUuid();
         CacheMsgVoice msgBody = (CacheMsgVoice) msgBean.getMsg().getJsonBodyObj();
         final String fileId = msgBody.getFid();
         final String secondTimes = msgBody.getVoiceTime();
-        final String uuid = msgBean.getMsg().getReceiverUserId();
         final String sourcePhone = msgBody.getSourcePhone();
         final String forwardCount = msgBody.getForwardCount() + "";
-        msgBean.getMsg().setTargetUuid(uuid);
+        final String dstUuid = msgBean.getMsg().getReceiverUserId();
 
         ReceiveListener receiveListener = new ReceiveListener() {
             @Override
@@ -460,17 +456,16 @@ public class SendMsgService extends IntentService {
                 }
             }
         };
-        HuxinSdkManager.instance().sendAudio(userId, fileId, secondTimes, sourcePhone, forwardCount, receiveListener);
+        HuxinSdkManager.instance().sendAudio(dstUuid, fileId, secondTimes, sourcePhone, forwardCount, receiveListener);
     }
 
     //图片    2、发送消息
     private void sendPicIM(final SendMsg msgBean) {
-        final String userId = HuxinSdkManager.instance().getUuid();
         CacheMsgImage msgBody = (CacheMsgImage) msgBean.getMsg().getJsonBodyObj();
         final String fileId = msgBody.getFid();
-        final String uuid = msgBean.getMsg().getReceiverUserId();
         boolean isOriginal = msgBody.getOriginalType() == CacheMsgImage.SEND_IS_ORI;
-        msgBean.getMsg().setTargetUuid(uuid);
+
+        final String dstUuid = msgBean.getMsg().getReceiverUserId();
         ReceiveListener receiveListener = new ReceiveListener() {
             @Override
             public void OnRec(PduBase pduBase) {
@@ -498,19 +493,18 @@ public class SendMsgService extends IntentService {
                 updateUI(msgBean, CacheMsgBean.SEND_FAILED);
             }
         };
-        HuxinSdkManager.instance().sendPicture(userId, fileId, isOriginal ? "original" : "thumbnail", receiveListener);
+        HuxinSdkManager.instance().sendPicture(dstUuid, fileId, isOriginal ? "original" : "thumbnail", receiveListener);
     }
 
     //文件    2、发送消息
     private void sendFileIM(final SendMsg msgBean) {
-        final String userId = HuxinSdkManager.instance().getUuid();
         CacheMsgFile msgBody = (CacheMsgFile) msgBean.getMsg().getJsonBodyObj();
 
         final String fileId = msgBody.getFid();
         final String fileName = msgBody.getFileName();
         final String fileSize = msgBody.getFileSize() + "";
-        final String destUuid = msgBean.getMsg().getReceiverUserId();
-        msgBean.getMsg().setTargetUuid(destUuid);
+        final String dstUuid = msgBean.getMsg().getReceiverUserId();
+
         ReceiveListener receiveListener = new ReceiveListener() {
             @Override
             public void OnRec(PduBase pduBase) {
@@ -531,21 +525,21 @@ public class SendMsgService extends IntentService {
             }
         };
         if (!"-1".equals(fileId)) {
-            HuxinSdkManager.instance().sendBigFile(userId, fileId, fileName, fileSize, receiveListener);
+            HuxinSdkManager.instance().sendBigFile(dstUuid, fileId, fileName, fileSize, receiveListener);
         }
     }
 
     //视频    2、发送消息
     public void sendVideoIM(final SendMsg msgBean) {
-        final String userId = HuxinSdkManager.instance().getUuid();
         CacheMsgVideo cacheMsgVideo = (CacheMsgVideo) msgBean.getMsg().getJsonBodyObj();
         final String fileId = cacheMsgVideo.getVideoId();
         final String frameId = cacheMsgVideo.getFrameId();
         final String name = cacheMsgVideo.getName();
         final String size = cacheMsgVideo.getSize();
         final long time = cacheMsgVideo.getTime();
-        final String uuid = msgBean.getMsg().getReceiverUserId();
-        msgBean.getMsg().setTargetUuid(uuid);
+
+        final String dstUuid = msgBean.getMsg().getReceiverUserId();
+
         ReceiveListener receiveListener = new ReceiveListener() {
             @Override
             public void OnRec(PduBase pduBase) {
@@ -573,7 +567,7 @@ public class SendMsgService extends IntentService {
                 updateUI(msgBean, CacheMsgBean.SEND_FAILED, null, SEND_MSG_END);
             }
         };
-        HuxinSdkManager.instance().sendVideo(userId, fileId, frameId, name, size, time + "", receiveListener);
+        HuxinSdkManager.instance().sendVideo(dstUuid, fileId, frameId, name, size, time + "", receiveListener);
     }
 
 }

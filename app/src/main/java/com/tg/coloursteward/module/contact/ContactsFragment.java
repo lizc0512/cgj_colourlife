@@ -340,7 +340,7 @@ public class ContactsFragment extends Fragment implements Observer,
             default: //item
                 Contact item = contactList.get(pos).data;
                 Intent i = new Intent(mActivity, EmployeeDataActivity.class);
-                i.putExtra(EmployeeDataActivity.CONTACTS_ID, item.username);
+                i.putExtra(EmployeeDataActivity.CONTACTS_ID, item.getUsername());
                 startActivityForResult(i, ISTREAD);
                 break;
         }

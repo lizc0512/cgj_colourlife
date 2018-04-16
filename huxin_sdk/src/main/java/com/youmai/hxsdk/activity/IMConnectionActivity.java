@@ -114,6 +114,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
     //srsm add @20170214
     public static final String DST_NAME = "DST_NAME";
     public static final String DST_UUID = "DST_UUID";
+    public static final String DST_PHONE = "DST_PHONE";
 
     public static final String EXTRA_SCROLL_POSITION = "EXTRA_SCROLL_POSITION";
     public static final String IS_SHOW_AUDIO = "IS_SHOW_AUDIO";
@@ -142,8 +143,9 @@ public class IMConnectionActivity extends SdkBaseActivity implements
     private TextView tvTitle;
     private ImageView ivMore;
 
-    private String destNickName;  //目标昵称
+    private String detNickName;  //目标昵称
     private String dstUuid;      //目标UUID
+    private String dstPhone;      //目标手机号
 
     private boolean isPauseOut = false;
     private boolean isOpenEmotion = false;
@@ -218,8 +220,9 @@ public class IMConnectionActivity extends SdkBaseActivity implements
 
         Intent fromIntent = getIntent();
 
-        destNickName = fromIntent.getStringExtra(DST_NAME);
+        detNickName = fromIntent.getStringExtra(DST_NAME);
         dstUuid = fromIntent.getStringExtra(DST_UUID);
+        dstPhone = fromIntent.getStringExtra(DST_PHONE);
 
         if (StringUtils.isEmpty(dstUuid)) {
             dstUuid = HuxinSdkManager.instance().getUuid();
@@ -280,11 +283,11 @@ public class IMConnectionActivity extends SdkBaseActivity implements
     }
 
     public void handleIntent(Intent intent) {
-        destNickName = intent.getStringExtra(DST_NAME);
+        detNickName = intent.getStringExtra(DST_NAME);
         dstUuid = intent.getStringExtra(DST_UUID);
 
-        if (!TextUtils.isEmpty(destNickName)) {
-            tvTitle.setText(destNickName);
+        if (!TextUtils.isEmpty(detNickName)) {
+            tvTitle.setText(detNickName);
         }
     }
 
@@ -420,7 +423,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
 
     private void initView() {
         tvTitle = (TextView) findViewById(R.id.tv_title);
-        tvTitle.setText(destNickName);
+        tvTitle.setText(detNickName);
 
         TextView tvBack = (TextView) findViewById(R.id.tv_back);
         if (tvBack != null) {

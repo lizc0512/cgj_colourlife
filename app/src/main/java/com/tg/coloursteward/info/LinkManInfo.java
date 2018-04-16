@@ -20,5 +20,6 @@ public class LinkManInfo implements Serializable{
 	public String orgName ="";
 	public int eid ;
 	public int iscontacts ;
+	public String uid ;
 
 }

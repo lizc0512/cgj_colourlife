@@ -67,14 +67,8 @@ public class CacheMsgHelper {
         CacheMsgBeanDao cacheMsgBeanDao = GreenDBIMManager.instance(context).getCacheMsgDao();
         QueryBuilder<CacheMsgBean> qb = cacheMsgBeanDao.queryBuilder();
 
-        /*List<CacheMsgBean> list = qb
-                .where(qb.or(CacheMsgBeanDao.Properties.ReceiverUserId.eq(dstUuid),
-                        CacheMsgBeanDao.Properties.SenderUserId.eq(dstUuid)))
-                .orderDesc(CacheMsgBeanDao.Properties.MsgTime).list();*/
-
         List<CacheMsgBean> list = qb.where(CacheMsgBeanDao.Properties.TargetUuid.eq(dstUuid))
-                .orderDesc(CacheMsgBeanDao.Properties.MsgTime).list();
-
+                .orderAsc(CacheMsgBeanDao.Properties.MsgTime).list();
 
         if (setRead) {
             List<CacheMsgBean> unReadList = new ArrayList<>();
@@ -311,5 +305,18 @@ public class CacheMsgHelper {
     public void deleteAll(Context context) {
         GreenDBIMManager.instance(context).getCacheMsgDao().deleteAll();
     }
+
+
+    public List<CacheMsgBean> toQueryMsgListDistinctTargetUuid(Context context) {
+        QueryBuilder<CacheMsgBean> qb = GreenDBIMManager.instance(context).getCacheMsgDao().queryBuilder();
+        String queryString = "1=1"   //where true
+                + " GROUP BY "
+                + CacheMsgBeanDao.Properties.TargetUuid.columnName
+                + " ORDER BY "
+                + CacheMsgBeanDao.Properties.MsgTime.columnName
+                + " DESC";
+        return qb.where(new WhereCondition.StringCondition(queryString)).list();
+    }
+
 
 }

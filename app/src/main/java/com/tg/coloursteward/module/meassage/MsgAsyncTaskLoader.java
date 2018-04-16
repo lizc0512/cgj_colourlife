@@ -59,36 +59,9 @@ public class MsgAsyncTaskLoader extends AsyncTaskLoader<List<ExCacheMsgBean>> {
     }
 
     private List<ExCacheMsgBean> getCacheMsgFromDBDesc() {
-        long startTime = System.currentTimeMillis();
+        List<CacheMsgBean> msgBeanList = CacheMsgHelper.instance().toQueryMsgListDistinctTargetUuid(mContext);
 
-        final String msgTimeColumnName = CacheMsgBeanDao.Properties.MsgTime.columnName;
-        final String targetPhoneColumnName = CacheMsgBeanDao.Properties.TargetUuid.columnName;
-
-        // FROM "CACHE_MSG_BEAN" T  WHERE count(distinct TARGET_PHONE) ORDER BY TARGET_PHONE , MSG_TIME DESC
-        //先targetphone分组
-        String sql = "1=1" /*count(distinct " + targetPhoneColumnName + ")" */ + " GROUP BY " + targetPhoneColumnName + " ORDER BY " + msgTimeColumnName + " ASC"/* + " LIMIT 1"*/;
-
-
-        // fetch users with Joe as a first name born in 1970
-        Query<CacheMsgBean> query = GreenDBIMManager.instance(mContext).getCacheMsgDao().queryBuilder().build();
-        List<CacheMsgBean> allList = query.list();
-
-        Log.e("YW", "allList: " + allList.size() + "\t: " + allList.toString());
-
-        // using the same Query object, we can change the parameters
-        // to search for Marias born in 1977 later:
-        //query.setParameter(0, "Maria");
-        //query.setParameter(1, 1977);
-        //List<CacheMsgBean> mariasOf1977 = query.list();
-
-
-        //再从组中按时间升序
-        //String sql2 = sql + targetPhoneColumnName + " = " + mTargetPhone
-        //        + " ORDER BY " + msgTimeColumnName + " ASC" + " LIMIT 1";
-
-        List<CacheMsgBean> msgBeanList = CacheMsgHelper.instance().sqlToQueryList(mContext, sql);
-        Log.e("YW", "msgBeanList: " + msgBeanList.toString());
-        Comparator comp = new SortComparator();
+        SortComparator comp = new SortComparator();
         Collections.sort(msgBeanList, comp);
 
         List<ExCacheMsgBean> tempList = new ArrayList<>();
@@ -97,9 +70,6 @@ public class MsgAsyncTaskLoader extends AsyncTaskLoader<List<ExCacheMsgBean>> {
             exBean.setDisplayName(bean.getTargetUuid());
             tempList.add(exBean);
         }
-
-        long endTime = System.currentTimeMillis();
-        Log.d(TAG, "getCacheMsgFromDBDesc---" + (endTime - startTime));
 
         return tempList;
     }

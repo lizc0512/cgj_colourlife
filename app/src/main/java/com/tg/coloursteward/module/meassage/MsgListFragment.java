@@ -84,7 +84,6 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
     private ProgressDialog mProgressDialog;
     private Handler mHandler;
     // 换号登录需要去判断改变
-    private String mCurrPhoneNum = "";
     private LinearLayoutManager mLinearLayoutManager;
 
     // 空页面 start
@@ -404,9 +403,6 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
     }
 
     public void initMessageList() {
-        if (HuxinSdkManager.instance().getPhoneNum().equals("")) {
-            return;
-        }
         if (getLoaderManager().getLoader(LOADER_ID_GEN_MESSAGE_LIST) == null) {
             startLoading();
         } else {
@@ -415,9 +411,6 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
     }
 
     public void reloadMessageList() {
-        if (HuxinSdkManager.instance().getPhoneNum().equals("")) {
-            return;
-        }
         if (getLoaderManager().getLoader(LOADER_ID_GEN_MESSAGE_LIST) == null) {
             startLoading();
         } else {
@@ -465,30 +458,25 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
         if (data.isEmpty()) {
             return;
         }
-        if (!HuxinSdkManager.instance().getPhoneNum().equals("")) {
-            if (messageList.isEmpty()) {
-                messageList.addAll(data);
-                mMessageAdapter.setMessageList(messageList);
+        if (messageList.isEmpty()) {
+            messageList.addAll(data);
+            mMessageAdapter.setMessageList(messageList);
 
-            } else {
-                int newSize = data.size();
-                if (newSize > 0) {
-                    List<ExCacheMsgBean> oldList = new ArrayList<>();
-                    for (int newIndex = newSize - 1; newIndex >= 0; newIndex--) {
-                        for (int i = 0; i < messageList.size(); i++) {
-                            String targetPhone = data.get(newIndex).getTargetUuid();
-                            if (!TextUtils.isEmpty(targetPhone) && targetPhone.equals(messageList.get(i).getTargetUuid())) {
-                                oldList.add(messageList.get(i));
-                                break;
-                            }
-                        }
+        } else {
+            int newSize = data.size();
+            List<ExCacheMsgBean> oldList = new ArrayList<>();
+            for (int newIndex = newSize - 1; newIndex >= 0; newIndex--) {
+                for (int i = 0; i < messageList.size(); i++) {
+                    String targetPhone = data.get(newIndex).getTargetUuid();
+                    if (!TextUtils.isEmpty(targetPhone) && targetPhone.equals(messageList.get(i).getTargetUuid())) {
+                        oldList.add(messageList.get(i));
+                        break;
                     }
-                    messageList.removeAll(oldList);
-                    messageList.addAll(0, data);
-                    mMessageAdapter.notifyDataSetChanged();
                 }
             }
-            mCurrPhoneNum = HuxinSdkManager.instance().getPhoneNum();
+            messageList.removeAll(oldList);
+            messageList.addAll(0, data);
+            mMessageAdapter.notifyDataSetChanged();
         }
     }
 

@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.request.RequestOptions;
 import com.tg.coloursteward.module.contact.stickyheader.StickyHeaderAdapter;
 import com.tg.coloursteward.net.HttpTools;
@@ -86,8 +87,9 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             } else {
                 RequestOptions options = new RequestOptions();
                 options.diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-                        .bitmapTransform(new GlideRoundTransform(mContext))
                         .centerCrop()
+                        .transform(new GlideRoundTransform(mContext))
+                        .placeholder(R.drawable.contacts_common_default_user_bg)
                         .error(R.drawable.contacts_common_default_user_bg);
                 Glide.with(mContext)
                         .load(contact.getAvatar())

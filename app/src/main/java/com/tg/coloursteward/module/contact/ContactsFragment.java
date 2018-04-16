@@ -142,6 +142,20 @@ public class ContactsFragment extends Fragment implements Observer,
 
     }
 
+    @Override
+    public void onDestroy() {
+        if (subscription != null) {
+            subscription.unsubscribe();
+        }
+        if (null != bindData) {
+            bindData.deleteObserver(this);
+        }
+        if (!ListUtils.isEmpty(contactList)) {
+            contactList.clear();
+        }
+        super.onDestroy();
+    }
+
     private void setListener() {
         global_search_root.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -184,7 +198,8 @@ public class ContactsFragment extends Fragment implements Observer,
             public void call(Subscriber<? super List<CNPinyin<Contact>>> subscriber) {
                 if (!subscriber.isUnsubscribed()) {
                     //子线程查数据库，返回List<Contacts>
-                    List<CNPinyin<Contact>> contactList = CNPinyinFactory.createCNPinyinList(bindData.contactList(getContext(), data));
+                    List<CNPinyin<Contact>> contactList = CNPinyinFactory.createCNPinyinList(
+                            bindData.contactList(getContext(), data));
                     Collections.sort(contactList);
                     subscriber.onNext(contactList);
                     subscriber.onCompleted();
@@ -210,17 +225,6 @@ public class ContactsFragment extends Fragment implements Observer,
                         adapter.notifyDataSetChanged();
                     }
                 });
-    }
-
-    @Override
-    public void onDestroy() {
-        if (subscription != null) {
-            subscription.unsubscribe();
-        }
-        if (null != bindData) {
-            bindData.deleteObserver(this);
-        }
-        super.onDestroy();
     }
 
     /**

@@ -26,8 +26,12 @@ import java.util.List;
 /**
  * Created by yw on 2018/4/13.
  */
-public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactHolder> implements
+public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements
         StickyHeaderAdapter<ContactAdapter.HeaderHolder>, MessageHandler.ResponseListener {
+
+    enum TYPE {
+        SEARCH, DEFAULT
+    }
 
     private Context mContext;
     private ItemEventListener itemEventListener;
@@ -48,34 +52,55 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactH
     }
 
     @Override
-    public ContactHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ContactHolder(LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.contacts_fragment_item, parent, false));
+    public int getItemViewType(int position) {
+        int type;
+        if (position == 0) {
+            type = TYPE.SEARCH.ordinal();
+        } else {
+            type = TYPE.DEFAULT.ordinal();
+        }
+        return type;
     }
 
     @Override
-    public void onBindViewHolder(ContactHolder holder, final int position) {
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if (viewType == TYPE.SEARCH.ordinal()) {
+            return new SearchHolder(LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.global_list_item_header_search, parent, false));
+        } else {
+            return new ContactHolder(LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.contacts_fragment_item, parent, false));
+        }
+    }
+
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         final Contact contact = cnPinyinList.get(position).data;
 
-        if (position < 4) {
-            int icon = defaultIcon(position);
-            holder.iv_header.setImageResource(icon);
+        if (holder instanceof SearchHolder) {
+            //搜索框不处理
         } else {
-            RequestOptions options = new RequestOptions();
-            options.diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-                    .transform(new GlideRoundTransform(mContext))
-                    .centerCrop()
-                    .error(R.drawable.contacts_common_default_user_bg);
-            Glide.with(mContext)
-                    .load(contact.getAvatar())
-                    .apply(options)
-                    .into(holder.iv_header);
-        }
+            if (position > 0 && position < 5) {
+                int icon = defaultIcon(position);
+                ((ContactHolder) holder).iv_header.setImageResource(icon);
+            } else {
+                RequestOptions options = new RequestOptions();
+                options.diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+                        .bitmapTransform(new GlideRoundTransform(mContext))
+                        .centerCrop()
+                        .error(R.drawable.contacts_common_default_user_bg);
+                Glide.with(mContext)
+                        .load(contact.getAvatar())
+                        .apply(options)
+                        .into(((ContactHolder) holder).iv_header);
+            }
 
-        if (contact.getRealname().startsWith("↑##@@**") && position < 4) {
-            holder.tv_name.setText(contact.getRealname().substring(9));
-        } else {
-            holder.tv_name.setText(contact.getRealname());
+            if (contact.getRealname().startsWith("↑##@@**") && position < 5) {
+                ((ContactHolder) holder).tv_name.setText(contact.getRealname().substring(9));
+            } else {
+                ((ContactHolder) holder).tv_name.setText(contact.getRealname());
+            }
+
         }
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -126,6 +151,12 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactH
                 .inflate(R.layout.item_header, parent, false));
     }
 
+    public class SearchHolder extends RecyclerView.ViewHolder {
+        public SearchHolder(View itemView) {
+            super(itemView);
+        }
+    }
+
     public class HeaderHolder extends RecyclerView.ViewHolder {
         public final TextView tv_header;
 
@@ -160,16 +191,16 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactH
     int defaultIcon(int position) {
         int icon = -1;
         switch (position) {
-            case 0:
+            case 1:
                 icon = R.drawable.contacts_org;
                 break;
-            case 1:
+            case 2:
                 icon = R.drawable.contacts_department;
                 break;
-            case 2:
+            case 3:
                 icon = R.drawable.contacts_phone_list;
                 break;
-            case 3:
+            case 4:
                 icon = R.drawable.contacts_groupchat;
                 break;
         }

@@ -115,6 +115,9 @@ public class ContactsFragment extends Fragment implements Observer,
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        if (!ListUtils.isEmpty(contactList)) {
+            contactList.clear();
+        }
         rv_main = view.findViewById(R.id.rv_main);
         iv_main = view.findViewById(R.id.iv_main);
         tv_index = view.findViewById(R.id.tv_index);
@@ -264,7 +267,14 @@ public class ContactsFragment extends Fragment implements Observer,
         Intent intent;
         FamilyInfo info;
         switch (pos) {
-            case 0: //组织架构
+            case 0:
+                intent = new Intent(getActivity(), GlobalSearchActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                intent.putParcelableArrayListExtra("contactList",
+                        (ArrayList<? extends Parcelable>) bindData.searchContactsList(getContext()));
+                startActivity(intent);
+                break;
+            case 1: //组织架构
                 if (familyList.size() > 0) {
                     if (skincode.equals("101")) {//101 彩生活
                         for (int i = 0; i < familyList.size(); i++) {
@@ -302,7 +312,7 @@ public class ContactsFragment extends Fragment implements Observer,
                     }
                 }
                 break;
-            case 1: //部门
+            case 2: //部门
                 info = new FamilyInfo();
                 info.id = UserInfo.orgId;
                 info.type = "org";
@@ -311,7 +321,7 @@ public class ContactsFragment extends Fragment implements Observer,
                 intent.putExtra(HomeContactOrgActivity.FAMILY_INFO, info);
                 startActivity(intent);
                 break;
-            case 2: //手机通讯录
+            case 3: //手机通讯录
                 if (ContextCompat.checkSelfPermission(mActivity, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
                     //申请权限
                     ActivityCompat.requestPermissions(mActivity, new String[]{Manifest.permission.READ_CONTACTS}, REQUESTPERMISSION);
@@ -320,7 +330,7 @@ public class ContactsFragment extends Fragment implements Observer,
                     startActivity(new Intent(mActivity, ContactsActivity.class));
                 }
                 break;
-            case 3:
+            case 4:
                 startActivity(new Intent(getContext(), GroupListActivity.class));
                 break;
             default: //item

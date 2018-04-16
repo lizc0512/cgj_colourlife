@@ -4,14 +4,8 @@
     android:layout_height="60dp"
     android:gravity="center_vertical"
     android:orientation="vertical"
-    android:background="@drawable/contacts_list_item_selector">
+    android:background="@color/color_item_select">
 
-    <ImageView
-        android:id="@+id/iv_header"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:padding="10dp"
-        android:src="@drawable/contacts_common_default_user_bg" />
 
     <TextView
         android:id="@+id/tv_name"
@@ -19,14 +13,8 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_toRightOf="@+id/iv_header"
-        android:text="王二子"
+        android:text="收藏联系人"
+        android:layout_marginLeft="12sp"
         android:textSize="15sp" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.3dp"
-        android:layout_alignParentBottom="true"
-        android:layout_marginLeft="10dp"
-        android:background="#e0e0e0" />
 
 </RelativeLayout>

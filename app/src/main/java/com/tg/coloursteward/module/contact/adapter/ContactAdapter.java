@@ -31,7 +31,7 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         StickyHeaderAdapter<ContactAdapter.HeaderHolder>, MessageHandler.ResponseListener {
 
     enum TYPE {
-        SEARCH, DEFAULT
+        SEARCH, COLLECT, DEFAULT
     }
 
     private Context mContext;
@@ -57,6 +57,8 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         int type;
         if (position == 0) {
             type = TYPE.SEARCH.ordinal();
+        } else if (position == 5) {
+            type = TYPE.COLLECT.ordinal();
         } else {
             type = TYPE.DEFAULT.ordinal();
         }
@@ -68,6 +70,9 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         if (viewType == TYPE.SEARCH.ordinal()) {
             return new SearchHolder(LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.global_list_item_header_search, parent, false));
+        } else if (viewType == TYPE.COLLECT.ordinal()) {
+            return new CollectHolder(LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.collect_fragment_item, parent, false));
         } else {
             return new ContactHolder(LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.contacts_fragment_item, parent, false));
@@ -80,24 +85,30 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         if (holder instanceof SearchHolder) {
             //搜索框不处理
+        } else if (holder instanceof CollectHolder) {
+            ((CollectHolder) holder).itemView.setBackgroundColor(0xF5F5F5);
         } else {
             if (position > 0 && position < 5) {
                 int icon = defaultIcon(position);
                 ((ContactHolder) holder).iv_header.setImageResource(icon);
             } else {
-                RequestOptions options = new RequestOptions();
-                options.diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-                        .centerCrop()
-                        .transform(new GlideRoundTransform(mContext))
-                        .placeholder(R.drawable.contacts_common_default_user_bg)
-                        .error(R.drawable.contacts_common_default_user_bg);
-                Glide.with(mContext)
-                        .load(contact.getAvatar())
-                        .apply(options)
-                        .into(((ContactHolder) holder).iv_header);
+                try {
+                    RequestOptions options = new RequestOptions();
+                    options.diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+                            .centerCrop()
+                            .override(120, 120)
+                            .transform(new GlideRoundTransform(mContext))
+                            .placeholder(R.drawable.contacts_common_default_user_bg)
+                            .error(R.drawable.contacts_common_default_user_bg);
+                    Glide.with(mContext)
+                            .load(contact.getAvatar())
+                            .apply(options)
+                            .into(((ContactHolder) holder).iv_header);
+                } catch (Exception e) {
+                }
             }
 
-            if (contact.getRealname().startsWith("↑##@@**") && position < 5) {
+            if (contact.getRealname().startsWith("↑##@@**") && position < 6) {
                 ((ContactHolder) holder).tv_name.setText(contact.getRealname().substring(9));
             } else {
                 ((ContactHolder) holder).tv_name.setText(contact.getRealname());
@@ -160,7 +171,7 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     public class HeaderHolder extends RecyclerView.ViewHolder {
-        public final TextView tv_header;
+        private TextView tv_header;
 
         public HeaderHolder(View itemView) {
             super(itemView);
@@ -168,9 +179,18 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
     }
 
+    public class CollectHolder extends RecyclerView.ViewHolder {
+        private TextView tv_name;
+
+        public CollectHolder(View itemView) {
+            super(itemView);
+            tv_name = (TextView) itemView.findViewById(R.id.tv_name);
+        }
+    }
+
     public class ContactHolder extends RecyclerView.ViewHolder {
-        public final ImageView iv_header;
-        public final TextView tv_name;
+        private ImageView iv_header;
+        private TextView tv_name;
 
         public ContactHolder(View itemView) {
             super(itemView);
@@ -187,6 +207,7 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     /**
      * 默认功能的头像
+     *
      * @param position
      * @return
      */
@@ -212,8 +233,10 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     //--------------------------------------------------------------
     public interface NetRelativeRequestListener {
         public void onRequest(MessageHandler msgHand);
+
         public void onSuccess(Message msg, String response);
     }
+
     private NetRelativeRequestListener requestListener;
     private boolean isLoadding = false;
     private MessageHandler msgHandler;
@@ -246,7 +269,7 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 requestListener.onSuccess(msg, jsonString);
             }
         }
-        isLoadding= false;
+        isLoadding = false;
     }
 
     @Override

@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--通讯录测试数据-->
+    <!--通讯录头数据-->
     <string-array name="names_1">
         <item>↑##@@**0 搜索</item>
         <item>↑##@@**1 组织架构</item>
         <item>↑##@@**2 我的部门</item>
         <item>↑##@@**3 手机联系人</item>
         <item>↑##@@**4 群聊</item>
+        <item>↑##@@**5 收藏联系人</item>
     </string-array>
 
     <string-array name="names">

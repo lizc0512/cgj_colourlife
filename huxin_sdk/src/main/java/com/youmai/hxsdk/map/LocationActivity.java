@@ -526,7 +526,6 @@ public class LocationActivity extends SdkBaseActivity implements
 
         //add to db
         CacheMsgHelper.instance().insertOrUpdate(this, cacheMsgBean);
-        IMMsgManager.instance().addCacheMsgBean(cacheMsgBean);
 
         if (null != listener) {
             if (CommonUtils.isNetworkAvailable(mContext)) {

@@ -126,7 +126,8 @@ public class IMListAdapter extends RecyclerView.Adapter {
         mRecyclerView = recyclerView;
         mDstUuid = dstUuid;
         //srsm add
-        mImBeanList.addAll(IMMsgManager.instance().genCacheMsgBeanList(mContext, dstUuid, true));
+
+        mImBeanList = CacheMsgHelper.instance().toQueryCacheMsgListAndSetRead(mContext, dstUuid, true);
 
         mRecyclerView.getItemAnimator().setChangeDuration(0);
         mRecyclerView.getItemAnimator().setAddDuration(0);
@@ -947,7 +948,6 @@ public class IMListAdapter extends RecyclerView.Adapter {
 
         //删除本地
         mImBeanList.remove(cacheMsgBean);
-        IMMsgManager.instance().removeCacheMsgBean(cacheMsgBean);
         if (refreshUI) {
             notifyDataSetChanged();
         }
@@ -1030,7 +1030,6 @@ public class IMListAdapter extends RecyclerView.Adapter {
     public void addAndRefreshUI(CacheMsgBean cacheMsgBean) {
         //add to db
         CacheMsgHelper.instance().insertOrUpdate(mContext, cacheMsgBean);
-        IMMsgManager.instance().addCacheMsgBean(cacheMsgBean);
 
         mImBeanList.add(cacheMsgBean);
         if (getItemCount() > 1) {

@@ -382,14 +382,6 @@ public class IMConnectionActivity extends SdkBaseActivity implements
 
     @Override
     public void onBackPressed() {
-        List<CacheMsgBean> lShareList = IMMsgManager.instance().getLShareList();
-        for (CacheMsgBean bean : lShareList) {
-            if (bean.getSenderUserId().equals(dstUuid)) {
-                lShareList.remove(bean);
-                break;
-            }
-        }
-
         super.onBackPressed();
     }
 
@@ -1024,7 +1016,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
 
     private void refreshFinishVideo(FileQueue fileQueue) {
         long mid = fileQueue.getMid();
-        CacheMsgBean cacheMsgBean = CacheMsgHelper.instance().queryByID(this, mid);
+        CacheMsgBean cacheMsgBean = CacheMsgHelper.instance().queryById(this, mid);
         if (cacheMsgBean.getJsonBodyObj() instanceof CacheMsgVideo) {
             CacheMsgVideo cacheMsgVideo = (CacheMsgVideo) cacheMsgBean.getJsonBodyObj();
             cacheMsgBean.setJsonBodyObj(cacheMsgVideo);

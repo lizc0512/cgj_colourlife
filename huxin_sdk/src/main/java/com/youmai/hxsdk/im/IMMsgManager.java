@@ -33,7 +33,6 @@ import com.youmai.hxsdk.im.cache.CacheMsgMap;
 import com.youmai.hxsdk.im.cache.CacheMsgTxt;
 import com.youmai.hxsdk.im.cache.CacheMsgVideo;
 import com.youmai.hxsdk.im.cache.CacheMsgVoice;
-import com.youmai.hxsdk.interfaces.OnChatMsg;
 import com.youmai.hxsdk.proto.YouMaiBasic;
 import com.youmai.hxsdk.proto.YouMaiBulletin;
 import com.youmai.hxsdk.proto.YouMaiMsg;
@@ -41,14 +40,11 @@ import com.youmai.hxsdk.proto.YouMaiUser;
 import com.youmai.hxsdk.socket.NotifyListener;
 import com.youmai.hxsdk.utils.AppUtils;
 import com.youmai.hxsdk.utils.BadgeUtil;
-import com.youmai.hxsdk.utils.CommonUtils;
-import com.youmai.hxsdk.utils.FileUtils;
 import com.youmai.hxsdk.utils.LogFile;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -68,13 +64,9 @@ public class IMMsgManager {
 
     private Context mContext;
 
-    private List<CacheMsgBean> cacheMsgBeanList;
-
     private List<IMMsgCallback> imMsgCallbackList;
 
-    private List<OnChatMsg> mOnChatMsgList;
-
-    private List<CacheMsgBean> mLShareList; // 位置共享
+    private List<Integer> pushMsgNotifyIdList;
 
     private static IMMsgManager instance = null;
 
@@ -84,11 +76,8 @@ public class IMMsgManager {
 
 
     private IMMsgManager() {
-        cacheMsgBeanList = new ArrayList<>();
-        mOnChatMsgList = new ArrayList<>();
         imMsgCallbackList = new ArrayList<>();
         pushMsgNotifyIdList = new ArrayList<>();
-        mLShareList = new ArrayList<>();
     }
 
     public synchronized static IMMsgManager instance() {
@@ -112,73 +101,17 @@ public class IMMsgManager {
     }
 
     public void setImMsgCallback(IMMsgCallback imMsgCallback) {
-        if (imMsgCallbackList != null) {
-            if (!imMsgCallbackList.contains(imMsgCallback)) {
-                imMsgCallbackList.add(imMsgCallback);
-            }
+        if (!imMsgCallbackList.contains(imMsgCallback)) {
+            imMsgCallbackList.add(imMsgCallback);
         }
     }
 
     public void removeImMsgCallback(IMMsgCallback imMsgCallback) {
-        if (imMsgCallbackList != null) {
-            if (imMsgCallbackList.contains(imMsgCallback)) {
-                imMsgCallbackList.remove(imMsgCallback);
-            }
+        if (imMsgCallbackList.contains(imMsgCallback)) {
+            imMsgCallbackList.remove(imMsgCallback);
         }
     }
 
-    public void addCacheMsgBean(CacheMsgBean item) {
-        cacheMsgBeanList.add(item);
-    }
-
-    public void removeCacheMsgBean(CacheMsgBean item) {
-        cacheMsgBeanList.remove(item);
-    }
-
-    public void clearCacheMsgBean() {
-        cacheMsgBeanList.clear();
-    }
-
-    public void setOnChatMsg(OnChatMsg callback) {
-        if (!mOnChatMsgList.contains(callback))
-            mOnChatMsgList.add(callback);
-    }
-
-
-    public List<CacheMsgBean> genCacheMsgBeanList(final Context context, String dstUuid, boolean setRead) {
-
-        List<CacheMsgBean> list;
-        //取未读，设置为已读
-        if (setRead) {
-            list = CacheMsgHelper.instance().toQueryAndAscByIdAndSetRead(context, dstUuid, true);
-        } else {
-            list = CacheMsgHelper.instance().toQueryAndAscById(context, dstUuid);
-            /*if (dstUuid.equals(selfUuid)) {
-                //自己发给自己的消息
-                list = CacheMsgHelper.instance().toQueryAndAscById(context, selfUuid, selfUuid);
-            } else {
-                list = CacheMsgHelper.instance().toQueryOrAscById(context, dstUuid, selfUuid);
-            }*/
-        }
-
-        cacheMsgBeanList.clear();
-        cacheMsgBeanList.addAll(list);
-
-        //判断SendMsgService是否运行，运行说明仍有消息在发送，在不运行时再统一设置正在发送的消息为失败状态 2018-1-11
-        if (!CommonUtils.isServiceRunning(context, "com.youmai.hxsdk.service.SendMsgService")) {
-            for (CacheMsgBean item : cacheMsgBeanList) {
-                if (item.getMsgStatus() == CacheMsgBean.SEND_GOING) {
-                    item.setMsgStatus(CacheMsgBean.SEND_FAILED);
-                }
-            }
-        }
-
-        return cacheMsgBeanList;
-    }
-
-    public List<CacheMsgBean> getLShareList() {
-        return mLShareList;
-    }
 
     /*
      *  1：有socket 连接即有消息接收，IM 就必须有mNotifyListener 这个监听器，目前有且只有这个。
@@ -260,17 +193,6 @@ public class IMMsgManager {
     };
 
 
-    public void parseFormFile() {
-        File file = new File(FileConfig.getInfoPaths(), "notify.xml");
-        if (file.exists()) {
-            String json = FileUtils.readFile(file);
-            parseBulletin(json);
-
-        }
-        file.delete();
-    }
-
-
     public void parseBulletin(String content) {
         /*try {
             JSONObject object = new JSONObject(content);
@@ -297,19 +219,6 @@ public class IMMsgManager {
 
     public NotifyListener getOnDeviceKickedNotify() {
         return onDeviceKickedNotify;
-    }
-
-    public void registerChatMsg(OnChatMsg onChatMsg) {
-        if (!mOnChatMsgList.contains(onChatMsg)) {
-            mOnChatMsgList.add(onChatMsg);
-        }
-    }
-
-
-    public void unregisterChatMsg(OnChatMsg onChatMsg) {
-        if (mOnChatMsgList.contains(onChatMsg)) {
-            mOnChatMsgList.remove(onChatMsg);
-        }
     }
 
 
@@ -368,7 +277,6 @@ public class IMMsgManager {
             //add to db
             CacheMsgHelper.instance().insertOrUpdate(mContext, cacheMsgBean);
 
-            cacheMsgBeanList.add(cacheMsgBean);
             handlerIMMsgCallback(cacheMsgBean);
 
         } else if (im.getMsgType() == YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_IMAGE_VALUE) { //图片
@@ -386,7 +294,6 @@ public class IMMsgManager {
             //add to db
             CacheMsgHelper.instance().insertOrUpdate(mContext, cacheMsgBean);
 
-            cacheMsgBeanList.add(cacheMsgBean);
             handlerIMMsgCallback(cacheMsgBean);
         } else if (im.getMsgType() == YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_LOCATION_VALUE) { //定位
 
@@ -409,7 +316,6 @@ public class IMMsgManager {
 
             //add to db
             CacheMsgHelper.instance().insertOrUpdate(mContext, cacheMsgBean);
-            cacheMsgBeanList.add(cacheMsgBean);
             handlerIMMsgCallback(cacheMsgBean);
         } else if (im.getMsgType() == YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_AUDIO_VALUE) { //音频
 
@@ -450,7 +356,6 @@ public class IMMsgManager {
 
             //add to db
             CacheMsgHelper.instance().insertOrUpdate(mContext, cacheMsgBean);
-            cacheMsgBeanList.add(cacheMsgBean);
             handlerIMMsgCallback(cacheMsgBean);
         } else if (im.getMsgType() == YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_VIDEO_VALUE) {//视频
             ContentVideo contentVideo = im.getContent().getVideo();//获取解析jsonBoby的内容
@@ -468,7 +373,6 @@ public class IMMsgManager {
                     .setTime(time);
             cacheMsgBean.setMsgType(CacheMsgBean.RECEIVE_VIDEO).setJsonBodyObj(cacheMsgVideo);
             CacheMsgHelper.instance().insertOrUpdate(mContext, cacheMsgBean);
-            cacheMsgBeanList.add(cacheMsgBean);
             handlerIMMsgCallback(cacheMsgBean);
         }
     }
@@ -491,8 +395,6 @@ public class IMMsgManager {
                         CacheMsgVoice cacheMsgVoice = (CacheMsgVoice) cacheMsgBean.getJsonBodyObj();
                         cacheMsgVoice.setVoicePath(path);
                         cacheMsgBean.setJsonBodyObj(cacheMsgVoice);
-
-                        cacheMsgBeanList.add(cacheMsgBean);
                         //add to db
                         CacheMsgHelper.instance().insertOrUpdate(mContext, cacheMsgBean);
                         handlerIMMsgCallback(cacheMsgBean);
@@ -688,7 +590,7 @@ public class IMMsgManager {
     }
 
 
-    private List<Integer> pushMsgNotifyIdList;
+
 
     public List<Integer> getPushMsgNotifyIdList() {
         return pushMsgNotifyIdList;

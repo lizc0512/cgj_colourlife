@@ -337,6 +337,8 @@ public class ContactsFragment extends Fragment implements Observer,
             case 4:
                 startActivity(new Intent(getContext(), GroupListActivity.class));
                 break;
+            case 5:
+                break;
             default: //item
                 Contact item = contactList.get(pos).data;
                 Intent i = new Intent(mActivity, EmployeeDataActivity.class);

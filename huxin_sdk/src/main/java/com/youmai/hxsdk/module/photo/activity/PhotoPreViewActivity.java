@@ -1,8 +1,6 @@
 package com.youmai.hxsdk.module.photo.activity;
 
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -12,7 +10,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.R;
-import com.youmai.hxsdk.interfaces.impl.FileSendListenerImpl;
 
 import java.io.File;
 
@@ -26,9 +23,9 @@ public class PhotoPreViewActivity extends SdkPhotoActivity implements View.OnCli
 
     public static final String TAG = "PhotoPreViewActivity";
     public static final String URL = "file_url";
-    public static final String TARGET_PHONE = "target_phone";
+    public static final String DST_UUID = "dst_uuid";
 
-    private String mImagePath, mTargetPhone;
+    private String mImagePath, mDstUuid;
 
     ImageView mPhotoPreview;
 
@@ -42,20 +39,7 @@ public class PhotoPreViewActivity extends SdkPhotoActivity implements View.OnCli
             if (!file.exists()) {
                 return;
             }
-            String userId = HuxinSdkManager.instance().getUuid();
-            HuxinSdkManager.instance().postPicture(userId, mTargetPhone, file, mImagePath,
-                    true, FileSendListenerImpl.getListener());
-            if (Build.MODEL != null && Build.MODEL.startsWith("OPPO R9m")) {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        finish();
-                    }
-                }, 200);
-            } else {
-                finish();
-            }
-            isPreview = false;
+            HuxinSdkManager.instance().postPicture(mDstUuid, "", mImagePath, false);
         }
     }
 
@@ -92,7 +76,7 @@ public class PhotoPreViewActivity extends SdkPhotoActivity implements View.OnCli
     @Override
     public void initData() {
         mImagePath = getIntent().getStringExtra(URL);
-        mTargetPhone = getIntent().getStringExtra(TARGET_PHONE);
+        mDstUuid = getIntent().getStringExtra(DST_UUID);
     }
 
     private void bindViews() {

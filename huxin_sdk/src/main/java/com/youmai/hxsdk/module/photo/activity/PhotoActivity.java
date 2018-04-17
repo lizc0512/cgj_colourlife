@@ -96,7 +96,7 @@ public class PhotoActivity extends SdkPhotoActivity implements PhotoAdapter.Phot
      */
     private File mTmpFile;
 
-    private String dstPhone;
+    private String dstUuid;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -130,7 +130,7 @@ public class PhotoActivity extends SdkPhotoActivity implements PhotoAdapter.Phot
 
     @Override
     public void initData() {
-        dstPhone = getIntent().getStringExtra("dstPhone");
+        dstUuid = getIntent().getStringExtra("dstPhone");
 
         mIsShowCamera = getIntent().getBooleanExtra(EXTRA_SHOW_CAMERA, false);
         mSelectMode = getIntent().getIntExtra(EXTRA_SELECT_MODE, MODE_SINGLE);
@@ -259,7 +259,7 @@ public class PhotoActivity extends SdkPhotoActivity implements PhotoAdapter.Phot
 
         Intent intent = new Intent(this, PhotoPreViewActivity.class);
         intent.putExtra(PhotoPreViewActivity.URL, imagePath);
-        intent.putExtra(PhotoPreViewActivity.TARGET_PHONE, dstPhone);
+        intent.putExtra(PhotoPreViewActivity.DST_UUID, dstUuid);
         startActivity(intent);
         //finish();
     }

@@ -12,9 +12,6 @@ import com.youmai.hxsdk.im.IMMsgManager;
 import com.youmai.hxsdk.proto.YouMaiMsg;
 import com.youmai.hxsdk.push.utils.PushJsonUtils;
 import com.youmai.hxsdk.config.AppConfig;
-import com.youmai.hxsdk.interfaces.IFileReceiveListener;
-import com.youmai.hxsdk.interfaces.bean.FileBean;
-import com.youmai.hxsdk.interfaces.impl.FileReceiveListenerImpl;
 import com.youmai.hxsdk.socket.IMContentType;
 import com.youmai.hxsdk.socket.IMContentUtil;
 
@@ -150,24 +147,6 @@ public class PushMessageManager {
         String pictureID = PushJsonUtils.getValue(message, String.valueOf(IMContentType.CONTEXT_PICTURE_ID));//内容
         String msgid = PushJsonUtils.getValue(message, String.valueOf(IMContentType.CONTEXT_MSGID));//用户id
 
-        if (!TextUtils.isEmpty(msgid)) {
-            final IFileReceiveListener listener = FileReceiveListenerImpl.getReceiveListener();
-            final FileBean fileBean = new FileBean().setUserId(msgid)
-                    .setFileMsgType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_IMAGE_VALUE)
-                    .setDstPhone(phone)
-                    //.setOriginPath(AppConfig.DOWNLOAD_IMAGE + msg.getMsgContent().getPicture().getPicUrl());//  ? 2017-1-13 17:38:23
-                    .setOriginPath(AppConfig.DOWNLOAD_IMAGE + pictureID);
-            if (null != listener) {
-                //要在主线程调用
-                Handler mainHandler = new Handler(Looper.getMainLooper());
-                mainHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        listener.onImSuccess(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_IMAGE_VALUE, fileBean);
-                    }
-                });
-            }
-        }
     }
 
     /**
@@ -184,35 +163,6 @@ public class PushMessageManager {
         String address = PushJsonUtils.getValue(message, String.valueOf(IMContentType.CONTEXT_LABEL));
 
 
-        if (!TextUtils.isEmpty(msgid)) {
-
-            final IFileReceiveListener listener = FileReceiveListenerImpl.getReceiveListener();
-            // ContentLocation mLocation = msg.getMsgContent().getLocation();
-            String mLabelAddress = address;
-
-            final String url = "http://restapi.amap.com/v3/staticmap?location="
-                    + longitude + "," + latitude + "&zoom=" + zoomLevel
-                    + "&scale=2&size=720*550&traffic=1&markers=mid,0xff0000,A:" + longitude
-                    + "," + latitude + "&key=" + AppConfig.staticMapKey;
-
-            final FileBean fileBean = new FileBean().setUserId(msgid)
-                    .setFileMsgType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_LOCATION_VALUE)
-                    .setDstPhone(phone)
-                    .setLongitude(Double.valueOf(longitude))
-                    .setLatitude(Double.valueOf(latitude))
-                    .setAddress(mLabelAddress)
-                    .setMapUrl(url);
-            if (null != listener) {
-                //要在主线程调用
-                Handler mainHandler = new Handler(Looper.getMainLooper());
-                mainHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        listener.onImSuccess(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_LOCATION_VALUE, fileBean);
-                    }
-                });
-            }
-        }
     }
 
     private static int getID(String idStr) {

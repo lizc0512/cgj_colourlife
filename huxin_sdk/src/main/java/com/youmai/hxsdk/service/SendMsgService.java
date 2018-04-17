@@ -519,7 +519,7 @@ public class SendMsgService extends IntentService {
             }
         };
         if (!"-1".equals(fileId)) {
-            HuxinSdkManager.instance().sendBigFile(dstUuid, fileId, fileName, fileSize, receiveListener);
+            HuxinSdkManager.instance().sendFile(dstUuid, fileId, fileName, fileSize, receiveListener);
         }
     }
 

@@ -49,17 +49,12 @@ import com.youmai.hxsdk.activity.SdkBaseActivity;
 import com.youmai.hxsdk.adapter.DividerItemDecoration;
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
 import com.youmai.hxsdk.config.AppConfig;
-import com.youmai.hxsdk.im.IMMsgManager;
 import com.youmai.hxsdk.im.cache.CacheMsgHelper;
 import com.youmai.hxsdk.im.cache.CacheMsgMap;
-import com.youmai.hxsdk.interfaces.IFileSendListener;
-import com.youmai.hxsdk.interfaces.bean.FileBean;
-import com.youmai.hxsdk.interfaces.impl.FileSendListenerImpl;
 import com.youmai.hxsdk.proto.YouMaiBasic;
 import com.youmai.hxsdk.proto.YouMaiMsg;
 import com.youmai.hxsdk.socket.PduBase;
 import com.youmai.hxsdk.socket.ReceiveListener;
-import com.youmai.hxsdk.utils.CommonUtils;
 import com.youmai.hxsdk.utils.LogFile;
 
 import java.util.ArrayList;
@@ -88,7 +83,7 @@ public class LocationActivity extends SdkBaseActivity implements
 
     // Logic
     private Marker marker;
-    private String dstPhone;
+    private String dstUuid;
 
     private AutoCompleteTextView et_search;
     private ImageView img_cancel;
@@ -128,7 +123,7 @@ public class LocationActivity extends SdkBaseActivity implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.hx_activity_location);
-        dstPhone = getIntent().getStringExtra("dstPhone");
+        dstUuid = getIntent().getStringExtra("dstPhone");
 
         mapView = (MapView) findViewById(R.id.map_view);
         mapView.onCreate(savedInstanceState);// 此方法必须重写
@@ -470,8 +465,6 @@ public class LocationActivity extends SdkBaseActivity implements
      */
     public void sendMarkerLocation(PoiItem poiItem) {
 
-        final IFileSendListener listener = FileSendListenerImpl.getListener();
-
         double longitude = 0;
         double latitude = 0;
         String address = "";
@@ -497,22 +490,6 @@ public class LocationActivity extends SdkBaseActivity implements
 
         final String userId = HuxinSdkManager.instance().getUuid();
 
-        final FileBean fileBean = new FileBean().setUserId(userId)
-                .setFileMsgType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_LOCATION_VALUE)
-                .setDstPhone(dstPhone)
-                .setLongitude(longitude)
-                .setLatitude(latitude)
-                .setZoomLevel(zoomLevel)
-                .setAddress(address)
-                .setMapUrl(url);
-        if (null != listener) {
-            if (CommonUtils.isNetworkAvailable(mContext)) {
-                listener.onProgress(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_LOCATION_VALUE, 0.10, "location");
-            } else {
-                listener.onImFail(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_LOCATION_VALUE, fileBean);
-            }
-        }
-
         /*************IM*************/
 
         //todo_k: 地图
@@ -520,20 +497,13 @@ public class LocationActivity extends SdkBaseActivity implements
                 .setMsgTime(System.currentTimeMillis())
                 .setMsgStatus(CacheMsgBean.SEND_GOING)
                 .setSenderUserId(userId)
-                .setReceiverUserId(dstPhone)
+                .setReceiverUserId(dstUuid)
                 .setMsgType(CacheMsgBean.SEND_LOCATION)
                 .setJsonBodyObj(new CacheMsgMap().setLocation(longitude + "," + latitude).setAddress(address).setImgUrl(url));
 
         //add to db
         CacheMsgHelper.instance().insertOrUpdate(this, cacheMsgBean);
 
-        if (null != listener) {
-            if (CommonUtils.isNetworkAvailable(mContext)) {
-                listener.onProgress(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_LOCATION_VALUE, 0.45, "location");
-            } else {
-                listener.onImFail(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_LOCATION_VALUE, fileBean);
-            }
-        }
 
         final double finalLongitude = longitude;
         final double finalLatitude = latitude;
@@ -547,7 +517,7 @@ public class LocationActivity extends SdkBaseActivity implements
                     YouMaiMsg.ChatMsg_Ack ack = YouMaiMsg.ChatMsg_Ack.parseFrom(pduBase.body);
                     long msgId = ack.getMsgId();
                     final CacheMsgBean newMsgBean;
-                    if (dstPhone.equals(HuxinSdkManager.instance().getUuid())) {
+                    if (dstUuid.equals(HuxinSdkManager.instance().getUuid())) {
                         newMsgBean = HuxinSdkManager.instance().getCacheMsgFromDBById(cacheMsgBean.getId());
                     } else {
                         newMsgBean = cacheMsgBean;
@@ -559,19 +529,12 @@ public class LocationActivity extends SdkBaseActivity implements
                         newMsgBean.setMsgStatus(CacheMsgBean.SEND_SUCCEED);
                         //add to db
                         CacheMsgHelper.instance().insertOrUpdate(mContext, newMsgBean);
-                        if (null != listener) {
-                            listener.onProgress(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_LOCATION_VALUE, 1.00, "location");
-                            listener.onImSuccess(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_LOCATION_VALUE, fileBean);
-                        }
+
 
                     } else {
                         String log = "ErrerNo:" + ack.getErrerNo();
                         //Toast.makeText(mContext, log, Toast.LENGTH_SHORT).show();
                         LogFile.inStance().toFile(log);
-
-                        if (null != listener) {
-                            listener.onImFail(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_LOCATION_VALUE, fileBean);
-                        }
                     }
 
                 } catch (Exception e) {
@@ -582,10 +545,6 @@ public class LocationActivity extends SdkBaseActivity implements
             @Override
             public void onError(int errCode) {
                 super.onError(errCode);
-                if (null != listener) {
-                    listener.onImFail(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_LOCATION_VALUE, fileBean);
-                }
-
                 cacheMsgBean.setMsgStatus(CacheMsgBean.SEND_FAILED);
                 //add to db
                 CacheMsgHelper.instance().insertOrUpdate(mContext, cacheMsgBean);

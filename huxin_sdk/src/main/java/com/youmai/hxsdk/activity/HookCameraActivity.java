@@ -13,7 +13,6 @@ import android.widget.Toast;
 
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.R;
-import com.youmai.hxsdk.interfaces.impl.FileSendListenerImpl;
 import com.youmai.hxsdk.view.camera.JCameraView;
 import com.youmai.hxsdk.view.camera.listener.ClickListener;
 import com.youmai.hxsdk.view.camera.listener.ErrorListener;
@@ -30,10 +29,10 @@ import java.io.File;
  */
 public class HookCameraActivity extends SdkBaseActivity {
 
-    public static final String CAMERA_TYPE = "Camera_type";
-    public static final String TARGET_PHONE = "Target_phone";
+    public static final String CAMERA_TYPE = "camera_type";
+    public static final String TARGET_UUID = "target_uuid";
     private JCameraView jCameraView;
-    private String mTargetPhone;
+    private String mUuid;
     private int mState;
 
     @Override
@@ -44,7 +43,7 @@ public class HookCameraActivity extends SdkBaseActivity {
         setContentView(R.layout.activity_camera);
 
         mState = getIntent().getIntExtra(CAMERA_TYPE, JCameraView.BUTTON_STATE_BOTH);
-        mTargetPhone = getIntent().getStringExtra(TARGET_PHONE);
+        mUuid = getIntent().getStringExtra(TARGET_UUID);
 
         jCameraView = (JCameraView) findViewById(R.id.jcameraview);
         //设置视频保存路径
@@ -83,13 +82,7 @@ public class HookCameraActivity extends SdkBaseActivity {
             public void captureSuccess(Bitmap bitmap) {
                 String path = FileUtil.saveBitmap("HCamera", bitmap); //获取图片bitmap
                 if (mState == JCameraView.BUTTON_STATE_ONLY_CAPTURE) {
-                    HuxinSdkManager.instance().postPicture(
-                            HuxinSdkManager.instance().getUuid(),
-                            mTargetPhone,
-                            new File(path),
-                            path,
-                            true,
-                            FileSendListenerImpl.getListener());
+                    HuxinSdkManager.instance().postPicture(mUuid, path, path, false);
                 } else {
                     Intent intent = new Intent();
                     intent.putExtra("filePath", path);
@@ -143,12 +136,12 @@ public class HookCameraActivity extends SdkBaseActivity {
                                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
             } else {
                 decorView.setSystemUiVisibility(
-                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                            | View.SYSTEM_UI_FLAG_FULLSCREEN
-                            | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+                        View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                                | View.SYSTEM_UI_FLAG_FULLSCREEN
+                                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
             }
         } else {
             View decorView = getWindow().getDecorView();

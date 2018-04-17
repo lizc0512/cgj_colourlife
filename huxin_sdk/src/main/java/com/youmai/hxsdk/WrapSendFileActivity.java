@@ -6,16 +6,12 @@ import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.qiniu.android.storage.UpProgressHandler;
 import com.youmai.hxsdk.im.IMHelper;
-import com.youmai.hxsdk.interfaces.IFileSendListener;
-import com.youmai.hxsdk.interfaces.impl.FileSendListenerImpl;
 import com.youmai.hxsdk.module.filemanager.PickerManager;
 import com.youmai.hxsdk.module.filemanager.interfaces.PickerRefreshUIListener;
 import com.youmai.hxsdk.module.filemanager.activity.FileManagerActivity;
 import com.youmai.hxsdk.picker.FilePickerBuilder;
 import com.youmai.hxsdk.module.filemanager.constant.FilePickerConst;
-import com.youmai.hxsdk.proto.YouMaiMsg;
 import com.youmai.hxsdk.utils.CommonUtils;
 import com.youmai.hxsdk.utils.ToastUtil;
 
@@ -33,7 +29,7 @@ public class WrapSendFileActivity extends FragmentActivity implements PickerRefr
     public static final int TYPE_PIC = 0;
     public static final int TYPE_FILE = 1;
 
-    private String dstPhone;
+    private String dstUuid;
 
     private ArrayList<String> docPaths = new ArrayList<>();
     private ArrayList<String> photoPaths = new ArrayList<>();
@@ -44,7 +40,7 @@ public class WrapSendFileActivity extends FragmentActivity implements PickerRefr
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        dstPhone = getIntent().getStringExtra("dstPhone");
+        dstUuid = getIntent().getStringExtra("dstPhone");
         type = getIntent().getIntExtra("type", TYPE_PIC);
 
         HuxinSdkManager.instance().getStackAct().addActivity(this);
@@ -112,7 +108,7 @@ public class WrapSendFileActivity extends FragmentActivity implements PickerRefr
 
         PickerManager.getInstance().addDocTypes();
         Intent intent = new Intent(this, FileManagerActivity.class);
-        intent.putExtra("dstPhone", dstPhone);
+        intent.putExtra("dstPhone", dstUuid);
         intent.putExtra(FileManagerActivity.REQUEST_CODE_CALLBACK, FilePickerConst.CALL_REQUEST_CALLBACK);
         startActivity(intent);
     }
@@ -183,17 +179,8 @@ public class WrapSendFileActivity extends FragmentActivity implements PickerRefr
      * @param file
      */
     public void handleSendFile(final File file) {
-        final String userId = HuxinSdkManager.instance().getUuid();
-        final IFileSendListener listener = FileSendListenerImpl.getListener();
-        //发送 userId, desPhone, fileId, fileName, fileSize, receiveListener
-        HuxinSdkManager.instance().postBigFile(userId, dstPhone, file,
-                file.getName(), file.length() + "",
-                new UpProgressHandler() {
-                    @Override
-                    public void progress(String key, double percent) {
-                        listener.onProgress(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_FILE_VALUE, percent, "file");
-                    }
-                }, true, listener);
+        HuxinSdkManager.instance().postFile(dstUuid, file,
+                file.getName(), file.length() + "");
         finish();
     }
 

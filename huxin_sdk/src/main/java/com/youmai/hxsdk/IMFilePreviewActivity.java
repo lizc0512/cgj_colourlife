@@ -17,9 +17,6 @@ import com.youmai.hxsdk.http.DownloadListener;
 import com.youmai.hxsdk.http.FileAsyncTaskDownload;
 import com.youmai.hxsdk.im.IMHelper;
 import com.youmai.hxsdk.im.cache.CacheMsgFile;
-import com.youmai.hxsdk.interfaces.bean.FileBean;
-import com.youmai.hxsdk.interfaces.impl.FileReceiveListenerImpl;
-import com.youmai.hxsdk.proto.YouMaiMsg;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -101,10 +98,6 @@ public class IMFilePreviewActivity extends SdkBaseActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (isFullViewFile) {
-            fileBean.setJumpFile(true);
-            FileReceiveListenerImpl.getReceiveListener().onImSuccess(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_FILE_VALUE, fileBean);
-        }
     }
 
     private void initView() {
@@ -122,12 +115,10 @@ public class IMFilePreviewActivity extends SdkBaseActivity {
 
     private CacheMsgBean cacheMsgBean;
     private CacheMsgFile cacheMsgFile;
-    private FileBean fileBean;
 
     private void initDownload() {
 
         cacheMsgBean = getIntent().getParcelableExtra(IM_FILE_BEAN);
-        fileBean = getIntent().getParcelableExtra(FULL_FILE_BEAN);
         isFullViewFile = getIntent().getBooleanExtra(FULL_VIEW_FILE, false);
 
         if (null == cacheMsgBean) {

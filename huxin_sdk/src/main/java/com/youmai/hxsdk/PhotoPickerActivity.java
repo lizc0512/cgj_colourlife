@@ -27,7 +27,6 @@ import com.youmai.hxsdk.activity.SdkBaseActivity;
 import com.youmai.hxsdk.adapter.PhotoAdapter;
 import com.youmai.hxsdk.config.Constant;
 import com.youmai.hxsdk.config.FileConfig;
-import com.youmai.hxsdk.interfaces.impl.FileSendListenerImpl;
 import com.youmai.hxsdk.photopicker.beans.Photo;
 import com.youmai.hxsdk.photopicker.beans.PhotoFolder;
 import com.youmai.hxsdk.photopicker.widgets.PhotoPickerView;
@@ -121,7 +120,7 @@ public class PhotoPickerActivity extends SdkBaseActivity implements PhotoAdapter
     private File mTmpFile;
 
     private PhotoPickerView pickerView;
-    private String dstPhone;
+    private String dstUuid;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -129,7 +128,7 @@ public class PhotoPickerActivity extends SdkBaseActivity implements PhotoAdapter
         pickerView = new PhotoPickerView(this);
         setContentView(pickerView);
 
-        dstPhone = getIntent().getStringExtra("dstPhone");
+        dstUuid = getIntent().getStringExtra("dstPhone");
 
         initIntentParams();
         initView();
@@ -303,24 +302,17 @@ public class PhotoPickerActivity extends SdkBaseActivity implements PhotoAdapter
                 photo.delete();
             }
         }
-        File file;
-        if (imagePath == null) {
+
+        if (imagePath == null || !new File(imagePath).exists()) {
             Log.w("123", "imagePath is null");
             Toast.makeText(this, "该照片不存在", Toast.LENGTH_SHORT).show();
             return;
-        } else {
-            file = new File(imagePath);
-            if (!file.exists()) {
-                return;
-            }
         }
 
         // im使用
         boolean isUserByIM = getIntent().getBooleanExtra("is_user_by_im", false);
         if (!isUserByIM) {
-            String userId = HuxinSdkManager.instance().getUuid();
-            HuxinSdkManager.instance().postPicture(userId, dstPhone, file, imagePath,
-                    true, FileSendListenerImpl.getListener());
+            HuxinSdkManager.instance().postPicture(dstUuid, imagePath, imagePath, true);
             if (Build.MODEL != null && Build.MODEL.startsWith("OPPO R9m")) {
                 new Handler().postDelayed(new Runnable() {
                     @Override

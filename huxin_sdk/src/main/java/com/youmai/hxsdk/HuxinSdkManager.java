@@ -28,7 +28,6 @@ import com.qiniu.android.storage.UpCompletionHandler;
 import com.qiniu.android.storage.UpProgressHandler;
 import com.qiniu.android.storage.UploadManager;
 import com.qiniu.android.storage.UploadOptions;
-import com.youmai.hxsdk.adapter.IMListAdapter;
 import com.youmai.hxsdk.config.AppConfig;
 import com.youmai.hxsdk.config.Constant;
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
@@ -40,15 +39,8 @@ import com.youmai.hxsdk.entity.UploadFile;
 import com.youmai.hxsdk.http.HttpConnector;
 import com.youmai.hxsdk.http.IGetListener;
 import com.youmai.hxsdk.http.IPostListener;
-import com.youmai.hxsdk.im.IMHelper;
 import com.youmai.hxsdk.im.IMMsgManager;
-import com.youmai.hxsdk.im.cache.CacheMsgFile;
-import com.youmai.hxsdk.im.cache.CacheMsgHelper;
-import com.youmai.hxsdk.im.cache.CacheMsgImage;
-import com.youmai.hxsdk.im.cache.CacheMsgVideo;
-import com.youmai.hxsdk.interfaces.IFileSendListener;
 import com.youmai.hxsdk.interfaces.OnFileListener;
-import com.youmai.hxsdk.interfaces.bean.FileBean;
 import com.youmai.hxsdk.proto.YouMaiBasic;
 import com.youmai.hxsdk.proto.YouMaiBuddy;
 import com.youmai.hxsdk.proto.YouMaiMsg;
@@ -60,9 +52,7 @@ import com.youmai.hxsdk.socket.PduBase;
 import com.youmai.hxsdk.socket.ReceiveListener;
 import com.youmai.hxsdk.sp.SPDataUtil;
 import com.youmai.hxsdk.utils.AppUtils;
-import com.youmai.hxsdk.utils.CommonUtils;
 import com.youmai.hxsdk.utils.DeviceUtils;
-import com.youmai.hxsdk.utils.FileUtils;
 import com.youmai.hxsdk.utils.GsonUtil;
 import com.youmai.hxsdk.utils.LogFile;
 import com.youmai.hxsdk.utils.LogUtils;
@@ -785,8 +775,8 @@ public class HuxinSdkManager {
      * @param fileId
      * @param callback
      */
-    public void sendBigFile(String destUuid, String fileId,
-                            String fileName, String fileSize, ReceiveListener callback) {
+    public void sendFile(String destUuid, String fileId,
+                         String fileName, String fileSize, ReceiveListener callback) {
         YouMaiMsg.MsgData.Builder msgData = YouMaiMsg.MsgData.newBuilder();
         msgData.setSrcUserId(getUuid());
         msgData.setSrcAvatar(getHeadUrl());
@@ -849,8 +839,11 @@ public class HuxinSdkManager {
      * @param listener
      * @return
      */
-    public void postFile(String path, String type, OnFileListener listener) {
-        postFile(new File(path), type, listener);
+    public void postFileToQiNiu(String path, String type, OnFileListener listener) {
+        File file = new File(path);
+        if (file.exists()) {
+            postFileToQiNiu(file, type, listener);
+        }
     }
 
     /**
@@ -860,12 +853,11 @@ public class HuxinSdkManager {
      * @param listener
      * @return
      */
-    public void postFile(final File file, final String type, final OnFileListener listener) {
+    public void postFileToQiNiu(final File file, final String type, final OnFileListener listener) {
 
         final UpProgressHandler progressHandler = new UpProgressHandler() {
             @Override
             public void progress(String key, double percent) {
-                LogUtils.e(Constant.SDK_UI_TAG, "manager percent = " + percent);
                 if (null != listener) {
                     listener.onProgress(percent);
                 }
@@ -887,7 +879,7 @@ public class HuxinSdkManager {
                         public void complete(String key, ResponseInfo info, JSONObject response) {
                             if (response == null) {
                                 if (null != listener) {
-                                    listener.onFail(mContext.getString(R.string.hx_toast_07));
+                                    listener.onFail("上传文件失败");
                                 }
                                 return;
                             }
@@ -926,819 +918,165 @@ public class HuxinSdkManager {
     /**
      * 发送音频.
      *
-     * @param userId
-     * @param desPhone
+     * @param uuid
      * @param file
      * @param secondTimes
      * @return
      */
-    public boolean postAudio(final String userId, final String desPhone,
-                             final File file, final String secondTimes,
-                             final UpProgressHandler progressHandler,
-                             final IFileSendListener listener) {
+    public void postAudio(final String uuid, final File file, final String secondTimes) {
 
-        final FileBean fileBean = new FileBean()
-                .setUserId(userId)
-                .setDstPhone(desPhone)
-                .setFile(file)
-                .setAudioDuration(secondTimes);
-        IPostListener callback = new IPostListener() {
+        postFileToQiNiu(file, "2", new OnFileListener() {
             @Override
-            public void httpReqResult(String response) {
-                FileToken resp = GsonUtil.parse(response, FileToken.class);
-                if (resp == null) {
-                    if (null != listener) {
-                        listener.onImFail(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_AUDIO_VALUE, fileBean);
-                    }
-                    return;
-                }
-                if (resp.isSucess()) {
-                    String fidKey = resp.getD().getFid();
-                    String token = resp.getD().getUpToken();
-                    UpCompletionHandler completionHandler = new UpCompletionHandler() {
-                        @Override
-                        public void complete(String key, ResponseInfo info, JSONObject response) {
-                            if (response == null) {
-                                if (null != listener) {
-                                    listener.onImFail(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_AUDIO_VALUE, fileBean);
-                                }
-                                return;
-                            }
-                            UploadFile resp = GsonUtil.parse(response.toString(), UploadFile.class);
-                            if (resp == null) {
-                                if (null != listener) {
-                                    listener.onImFail(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_AUDIO_VALUE, fileBean);
-                                }
-                                return;
-                            }
-                            if (resp.isSucess()) {
-                                final String fileId = resp.getD().getFileid();
-                                ReceiveListener receiveListener = new ReceiveListener() {
-                                    @Override
-                                    public void OnRec(PduBase pduBase) {
-                                        try {
-                                            YouMaiMsg.ChatMsg_Ack ack = YouMaiMsg.ChatMsg_Ack.parseFrom(pduBase.body);
-                                            long msgId = ack.getMsgId();
-
-                                            if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_OK) {
-                                                Toast.makeText(mContext, mContext.getString(R.string.hx_toast_29), Toast.LENGTH_SHORT).show();
-                                                if (null != listener) {
-                                                    listener.onImSuccess(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_AUDIO_VALUE, fileBean);
-                                                }
-
-                                            } else if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_NOT_HUXIN_USER) {
-                                                // 非呼信用户
-                                                if (null != listener) {
-                                                    listener.onImNotUser(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_AUDIO_VALUE, msgId);
-                                                }
-                                            } else {
-                                                listener.onImFail(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_AUDIO_VALUE, fileBean);
-                                            }
-                                        } catch (InvalidProtocolBufferException e) {
-                                            e.printStackTrace();
-                                        }
-                                    }
-                                };
-                                sendAudio(userId, fileId, secondTimes, "", "0", receiveListener);
-
-                            } else {
-                                Toast.makeText(mContext, resp.getM(), Toast.LENGTH_SHORT).show();
-                            }
-
-                        }
-                    };
-                    Map<String, String> params = new HashMap<>();
-                    params.put("x:type", "2");
-                    params.put("x:msisdn", getPhoneNum());
-                    UploadOptions options = new UploadOptions(params, null, false, progressHandler, null);
-
-                    uploadManager.put(file, fidKey, token, completionHandler, options);
-
-                } else {
-                    String log = resp.getM();
-                    Toast.makeText(mContext, log, Toast.LENGTH_SHORT).show();
-                    LogFile.inStance().toFile(log);
-                }
+            public void onProgress(double progress) {
+                LogUtils.v(Constant.SDK_UI_TAG, "uploading percent = " + progress);
             }
-        };
-        getUploadFileToken(callback);
 
-        return true;
-    }
+            @Override
+            public void onSuccess(String fileId) {
+                ReceiveListener receiveListener = new ReceiveListener() {
+                    @Override
+                    public void OnRec(PduBase pduBase) {
+                        try {
+                            YouMaiMsg.ChatMsg_Ack ack = YouMaiMsg.ChatMsg_Ack.parseFrom(pduBase.body);
+                            //long msgId = ack.getMsgId();
+                            if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_OK) {
+                                Toast.makeText(mContext, "发送语音成功", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(mContext, "发送语音失败", Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (InvalidProtocolBufferException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                };
+                sendAudio(uuid, fileId, secondTimes, getPhoneNum(), "0", receiveListener);
+            }
 
-    /**
-     * 发送文件.
-     *
-     * @param userId
-     * @param desPhone
-     * @param path
-     * @param fileName
-     * @param fileSize
-     * @param isSaveDB 是否保存到本地数据库，IMConnectFragment的适配器会在 {@link IMListAdapter#addAndRefreshUI}已有保存操作
-     * @return
-     */
-    public boolean postBigFile(final String userId, final String desPhone, final String path,
-                               final String fileName, final String fileSize,
-                               final UpProgressHandler progressHandler,
-                               final boolean isSaveDB,
-                               final IFileSendListener listener) {
-        return postBigFile(userId, desPhone, new File(path),
-                fileName, fileSize, progressHandler,
-                isSaveDB, listener);
+            @Override
+            public void onFail(String msg) {
+                Toast.makeText(mContext, "语音上传失败", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
     }
 
     /**
      * 发送文件.
      *
      * @param dstUuid
-     * @param desPhone
+     * @param path
+     * @param fileName
+     * @param fileSize
+     * @return
+     */
+    public void postFile(final String dstUuid, final String path,
+                         final String fileName, final String fileSize) {
+        File file = new File(path);
+        if (file.exists()) {
+            postFile(dstUuid, file, fileName, fileSize);
+        }
+
+    }
+
+    /**
+     * 发送文件.
+     *
+     * @param dstUuid
      * @param file
      * @param fileName
      * @param fileSize
-     * @param isSaveDB 是否保存到本地数据库，IMConnectFragment的适配器会在 {@link IMListAdapter#addAndRefreshUI}已有保存操作
      * @return
      */
-    public boolean postBigFile(final String dstUuid, final String desPhone, final File file,
-                               final String fileName, final String fileSize,
-                               final UpProgressHandler progressHandler,
-                               final boolean isSaveDB,
-                               final IFileSendListener listener) {
-        //todo_k: 文件
-        final CacheMsgFile cacheMsgFile = new CacheMsgFile()
-                .setFilePath(file.getAbsolutePath())
-                .setFileSize(file.length())
-                .setFileName(file.getName())
-                .setFileRes(IMHelper.getFileImgRes(file.getName(), false));
-        final CacheMsgBean cacheMsgBean = new CacheMsgBean()
-                .setMsgTime(System.currentTimeMillis())
-                .setMsgStatus(CacheMsgBean.SEND_GOING)
-                .setSenderUserId(getUuid())
-                .setReceiverUserId(dstUuid)
-                .setTargetUuid(dstUuid)
-                .setMsgType(CacheMsgBean.SEND_FILE)
-                .setJsonBodyObj(cacheMsgFile);
-        if (isSaveDB) {
-            //add to db
-            CacheMsgHelper.instance().insertOrUpdate(mContext, cacheMsgBean);
-        }
-
-        final FileBean fileBean = new FileBean()
-                .setUserId(dstUuid)
-                .setDstPhone(desPhone)
-                .setFile(file)
-                .setFileName(file.getName())
-                .setFileLength(fileSize)
-                .setFileRes(IMHelper.getFileImgRes(file.getName(), true));
-
-        if (null != listener) {
-            if (CommonUtils.isNetworkAvailable(mContext)) {
-                listener.onProgress(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_FILE_VALUE, 0.05, "file");
-            } else {
-                listener.onImFail(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_FILE_VALUE, fileBean);
-            }
-        }
-        IPostListener callback = new IPostListener() {
+    public void postFile(final String dstUuid, final File file,
+                         final String fileName, final String fileSize) {
+        postFileToQiNiu(file, "2", new OnFileListener() {
             @Override
-            public void httpReqResult(String response) {
-                FileToken resp = GsonUtil.parse(response, FileToken.class);
-                if (resp == null) {
-                    if (null != listener) {
-                        listener.onImFail(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_FILE_VALUE, fileBean);
-                    }
-                    if (isSaveDB) {
-                        //add to db
-                        cacheMsgBean.setMsgStatus(CacheMsgBean.SEND_FAILED);
-                        CacheMsgHelper.instance().insertOrUpdate(mContext, cacheMsgBean);
-                    }
-                    return;
-                }
-                if (resp.isSucess()) {
-                    String fidKey = resp.getD().getFid();
-                    String token = resp.getD().getUpToken();
-                    UpCompletionHandler completionHandler = new UpCompletionHandler() {
-                        @Override
-                        public void complete(String key, ResponseInfo info, JSONObject response) {
-                            if (response == null) {
-                                if (null != listener) {
-                                    listener.onImFail(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_FILE_VALUE, fileBean);
-                                }
-                                if (isSaveDB) {
-                                    //add to db
-                                    cacheMsgBean.setMsgStatus(CacheMsgBean.SEND_FAILED);
-                                    CacheMsgHelper.instance().insertOrUpdate(mContext, cacheMsgBean);
-                                }
-                                Toast.makeText(mContext, mContext.getString(R.string.hx_toast_06), Toast.LENGTH_SHORT).show();
-                                return;
-                            }
-                            UploadFile resp = GsonUtil.parse(response.toString(), UploadFile.class);
-                            if (resp == null) {
-                                return;
-                            }
-                            if (resp.isSucess()) {
-                                final String fileId = resp.getD().getFileid();
-                                ReceiveListener receiveListener = new ReceiveListener() {
-                                    @Override
-                                    public void OnRec(PduBase pduBase) {
-                                        final CacheMsgBean newMsgBean;
-                                        if (desPhone.equals(getPhoneNum())) {
-                                            CacheMsgBean newBean = getCacheMsgFromDBById(cacheMsgBean.getId());
-                                            if (newBean != null) {
-                                                newMsgBean = newBean;
-                                            } else {
-                                                newMsgBean = cacheMsgBean;
-                                            }
-                                        } else {
-                                            newMsgBean = cacheMsgBean;
-                                        }
-                                        try {
-                                            YouMaiMsg.ChatMsg_Ack ack = YouMaiMsg.ChatMsg_Ack.parseFrom(pduBase.body);
-                                            long msgId = ack.getMsgId();
-                                            newMsgBean.setMsgId(msgId);
-
-                                            if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_OK) {
-                                                newMsgBean.setMsgStatus(CacheMsgBean.SEND_SUCCEED);
-                                                //add to db
-                                                CacheMsgHelper.instance().insertOrUpdate(mContext, newMsgBean);
-                                                if (null != listener) {
-                                                    listener.onImSuccess(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_FILE_VALUE, fileBean);
-                                                }
-
-                                            } else if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_NOT_HUXIN_USER) {
-                                                newMsgBean.setMsgStatus(CacheMsgBean.SEND_SUCCEED);
-                                                CacheMsgHelper.instance().insertOrUpdate(mContext, newMsgBean);
-                                                if (null != listener) {
-                                                    listener.onImNotUser(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_FILE_VALUE, msgId);
-                                                }
-                                            } else {
-                                                if (null != listener) {
-                                                    listener.onImFail(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_FILE_VALUE, fileBean);
-                                                }
-                                            }
-                                        } catch (InvalidProtocolBufferException e) {
-                                            e.printStackTrace();
-                                        }
-
-                                    }
-                                };
-                                sendBigFile(dstUuid, fileId, fileName, fileSize, receiveListener);
-
-                            } else {
-                                Toast.makeText(mContext, resp.getM(), Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    };
-
-                    Map<String, String> params = new HashMap<>();
-                    params.put("x:type", "2");
-                    params.put("x:msisdn", getPhoneNum());
-                    UploadOptions options = new UploadOptions(params, null, false, progressHandler, null);
-
-                    uploadManager.put(file, fidKey, token, completionHandler, options);
-
-                } else {
-                    String log = resp.getM();
-                    Toast.makeText(mContext, log, Toast.LENGTH_SHORT).show();
-                    LogFile.inStance().toFile(log);
-
-                    if (null != listener) {
-                        listener.onImFail(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_FILE_VALUE, fileBean);
-                    }
-                    if (isSaveDB) {
-                        //add to db
-                        cacheMsgBean.setMsgStatus(CacheMsgBean.SEND_FAILED);
-                        CacheMsgHelper.instance().insertOrUpdate(mContext, cacheMsgBean);
-                    }
-                }
+            public void onProgress(double progress) {
+                LogUtils.v(Constant.SDK_UI_TAG, "uploading percent = " + progress);
             }
-        };
-        getUploadFileToken(callback);
 
-        return true;
+            @Override
+            public void onSuccess(String fileId) {
+                ReceiveListener receiveListener = new ReceiveListener() {
+                    @Override
+                    public void OnRec(PduBase pduBase) {
+                        try {
+                            YouMaiMsg.ChatMsg_Ack ack = YouMaiMsg.ChatMsg_Ack.parseFrom(pduBase.body);
+                            //long msgId = ack.getMsgId();
+                            if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_OK) {
+                                Toast.makeText(mContext, "发送文件成功", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(mContext, "发送文件失败", Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (InvalidProtocolBufferException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                };
+                sendFile(dstUuid, fileId, fileName, fileSize, receiveListener);
+            }
+
+            @Override
+            public void onFail(String msg) {
+                Toast.makeText(mContext, "上传文件失败", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     /**
      * 发送图片
      *
      * @param dstUuid
-     * @param desPhone
-     * @param file         (压缩后图片文件,发送完删除)
+     * @param compressPath (压缩后图片文件,发送完删除)
      * @param originalPath 地图片的原始路径(原图)
-     * @param isSaveDB     是否保存到数据库
-     * @param listener
-     * @return
      */
     public void postPicture(final String dstUuid,
-                            final String desPhone,
-                            final File file,
+                            final String compressPath,
                             final String originalPath,
-                            final boolean isSaveDB,
-                            final IFileSendListener listener) {
+                            final boolean isOriginal) {
 
-        postPicture(dstUuid, desPhone, file, originalPath, isSaveDB, false, listener);
-    }
-
-    public void postPicture(final String dstUuid,
-                            final String desPhone,
-                            final File file,
-                            final String originalPath,
-                            final boolean isSaveDB,
-                            final boolean isOriginal,
-                            final IFileSendListener listener) {
-
-        final FileBean fileBean = new FileBean().setUserId(dstUuid)
-                .setFileMsgType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_IMAGE_VALUE)
-                .setDstPhone(desPhone)
-                .setFile(file)
-                .setOriginPath(originalPath);
-        if (null != listener) {
-            if (CommonUtils.isNetworkAvailable(mContext)) {
-                listener.onProgress(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_IMAGE_VALUE, 0.01, originalPath);
-            } else {
-                listener.onImFail(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_IMAGE_VALUE, fileBean);
-            }
+        File file;
+        if (isOriginal) {
+            file = new File(originalPath);
+        } else {
+            file = new File(compressPath);
         }
-        //todo_k: 图片
-        final CacheMsgBean cacheMsgBean = new CacheMsgBean();
-        if (isSaveDB) {
-            cacheMsgBean.setMsgTime(System.currentTimeMillis())
-                    .setMsgStatus(CacheMsgBean.SEND_GOING)
-                    .setSenderUserId(getUuid())
-                    .setReceiverUserId(dstUuid)
-                    .setTargetUuid(dstUuid)
-                    .setMsgType(CacheMsgBean.SEND_IMAGE)
-                    .setJsonBodyObj(new CacheMsgImage().setFilePath(originalPath));
 
-            //add to db
-            CacheMsgHelper.instance().insertOrUpdate(mContext, cacheMsgBean);
-        }
-        final UpProgressHandler progressHandler = new UpProgressHandler() {
+        postFileToQiNiu(file, "2", new OnFileListener() {
             @Override
-            public void progress(String key, double percent) {
-                LogUtils.e(Constant.SDK_UI_TAG, "manager percent = " + percent);
-                if (null != listener) {
-                    listener.onProgress(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_IMAGE_VALUE, percent, originalPath);
-                }
+            public void onProgress(double progress) {
+                LogUtils.v(Constant.SDK_UI_TAG, "uploading percent = " + progress);
             }
-        };
 
-        IPostListener callback = new IPostListener() {
             @Override
-            public void httpReqResult(String response) {
-                FileToken resp = GsonUtil.parse(response, FileToken.class);
-                if (resp == null) {
-                    if (null != listener) {
-                        listener.onImFail(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_IMAGE_VALUE, fileBean);
-                    }
-                    if (isSaveDB) {
-                        //add to db
-                        cacheMsgBean.setMsgStatus(CacheMsgBean.SEND_FAILED);
-                        CacheMsgHelper.instance().insertOrUpdate(mContext, cacheMsgBean);
-                    }
-                    return;
-                }
-                if (resp.isSucess()) {
-                    String fidKey = resp.getD().getFid();
-                    String token = resp.getD().getUpToken();
-                    UpCompletionHandler completionHandler = new UpCompletionHandler() {
-                        @Override
-                        public void complete(String key, ResponseInfo info, JSONObject response) {
-                            if (response == null) {
-                                Looper.prepare();
-                                if (null != listener) {
-                                    listener.onImFail(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_IMAGE_VALUE, fileBean);
-                                }
-                                Toast.makeText(mContext, mContext.getString(R.string.hx_toast_07), Toast.LENGTH_SHORT).show();
-                                Looper.loop();
-                                if (isSaveDB) {
-                                    //add to db
-                                    cacheMsgBean.setMsgStatus(CacheMsgBean.SEND_FAILED);
-                                    CacheMsgHelper.instance().insertOrUpdate(mContext, cacheMsgBean);
-                                }
-                                return;
-                            }
-                            UploadFile resp = GsonUtil.parse(response.toString(), UploadFile.class);
-
-                            if (resp.isSucess()) {
-                                final String fileId = resp.getD().getFileid();
-                                CacheMsgImage cacheMsgImage = (CacheMsgImage) cacheMsgBean.getJsonBodyObj();
-                                if (cacheMsgImage == null) {
-                                    cacheMsgImage = new CacheMsgImage();
-                                }
-                                cacheMsgImage.setFid(fileId);
-                                cacheMsgBean.setJsonBodyObj(cacheMsgImage);
-                                fileBean.setFileId(fileId);
-                                ReceiveListener receiveListener = new ReceiveListener() {
-                                    @Override
-                                    public void OnRec(PduBase pduBase) {
-                                        //发自己处理
-                                        CacheMsgBean newMsgBean = null;
-                                        if (desPhone.equals(getPhoneNum())) {
-                                            // FIXME: 2017/4/10 消息屏发送主键 ID为 null
-                                            if (cacheMsgBean.getId() != null) {
-                                                newMsgBean = getCacheMsgFromDBById(cacheMsgBean.getId());
-                                            }
-                                        } else {
-                                            newMsgBean = cacheMsgBean;
-                                        }
-                                        try {
-                                            YouMaiMsg.ChatMsg_Ack ack = YouMaiMsg.ChatMsg_Ack.parseFrom(pduBase.body);
-                                            long msgId = ack.getMsgId();
-                                            newMsgBean.setMsgId(msgId);
-
-                                            if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_OK) {
-                                                if (isSaveDB) {
-                                                    //add to db
-                                                    newMsgBean.setMsgStatus(CacheMsgBean.SEND_SUCCEED);
-                                                    CacheMsgHelper.instance().insertOrUpdate(mContext, newMsgBean);
-                                                }
-
-                                                if (null != listener) {
-                                                    listener.onImSuccess(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_IMAGE_VALUE, fileBean);
-                                                }
-
-                                            } else if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_NOT_HUXIN_USER) {
-                                                if (null != listener) {
-                                                    listener.onImNotUser(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_IMAGE_VALUE, msgId);
-                                                }
-                                            } else {
-                                                String log = "ErrerNo:" + ack.getErrerNo();
-                                                Toast.makeText(mContext, log, Toast.LENGTH_SHORT).show();
-                                                LogFile.inStance().toFile(log);
-                                                if (null != listener) {
-                                                    listener.onImFail(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_IMAGE_VALUE, fileBean);
-                                                }
-
-                                                if (isSaveDB) {
-                                                    newMsgBean.setMsgStatus(CacheMsgBean.SEND_FAILED);
-                                                }
-                                            }
-                                            //删除已发送的本地图片
-                                            /*if (file.exists() && file.getAbsolutePath().contains(FileConfig.getPicDownLoadPath())) {
-                                                file.delete();
-                                            }*/
-                                        } catch (InvalidProtocolBufferException e) {
-                                            e.printStackTrace();
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onError(int errCode) {
-                                        super.onError(errCode);
-                                        if (null != listener) {
-                                            listener.onImFail(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_IMAGE_VALUE, fileBean);
-                                        }
-                                        if (isSaveDB) {
-                                            cacheMsgBean.setMsgStatus(CacheMsgBean.SEND_FAILED);
-                                            CacheMsgHelper.instance().insertOrUpdate(mContext, cacheMsgBean);
-
-                                        }
-                                    }
-                                };
-
-                                sendPicture(dstUuid, fileId, isOriginal ? "original" : "thumbnail", receiveListener);
-
+            public void onSuccess(String fileId) {
+                ReceiveListener receiveListener = new ReceiveListener() {
+                    @Override
+                    public void OnRec(PduBase pduBase) {
+                        try {
+                            YouMaiMsg.ChatMsg_Ack ack = YouMaiMsg.ChatMsg_Ack.parseFrom(pduBase.body);
+                            //long msgId = ack.getMsgId();
+                            if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_OK) {
+                                Toast.makeText(mContext, "发送图片成功", Toast.LENGTH_SHORT).show();
                             } else {
-                                Toast.makeText(mContext, resp.getM(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(mContext, "发送图片失败", Toast.LENGTH_SHORT).show();
                             }
-                        }
-                    };
-
-                    Map<String, String> params = new HashMap<>();
-                    params.put("x:type", "2");
-                    params.put("x:msisdn", getPhoneNum());
-                    UploadOptions options = new UploadOptions(params, null, false, progressHandler, null);
-
-                    uploadManager.put(file, fidKey, token, completionHandler, options);
-
-                } else {
-                    if (null != listener) {
-                        listener.onImFail(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_IMAGE_VALUE, fileBean);
-                    }
-                    if (isSaveDB) {
-                        //add to db
-                        cacheMsgBean.setMsgStatus(CacheMsgBean.SEND_FAILED);
-                        CacheMsgHelper.instance().insertOrUpdate(mContext, cacheMsgBean);
-                    }
-
-                    String log = resp.getM();
-                    Toast.makeText(mContext, log, Toast.LENGTH_SHORT).show();
-                    LogFile.inStance().toFile(log);
-                }
-            }
-        };
-        getUploadFileToken(callback);
-    }
-
-
-    /**
-     * 发送视频
-     *
-     * @param dstUuid
-     * @param desPhone
-     * @param file     (压缩后图片文件,发送完删除)
-     * @param filePath 地图片的原始路径(原图)
-     * @param isSaveDB 是否保存到数据库
-     * @param listener
-     * @return
-     */
-    public void postVideo(final String dstUuid,
-                          final String desPhone,
-                          final File file,
-                          final String filePath,
-                          final String framePath,
-                          final long seconds,
-                          final boolean isSaveDB,
-                          final IFileSendListener listener) {
-
-        final FileBean fileBean = new FileBean().setUserId(dstUuid)
-                .setFileMsgType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_VIDEO_VALUE)
-                .setDstPhone(desPhone)
-                .setFile(file)
-                .setLocalFramePath(framePath)
-                .setLocalVideoPath(filePath)
-                .setVideoTime(seconds);
-
-        if (null != listener) {
-            if (CommonUtils.isNetworkAvailable(mContext)) {
-                listener.onProgress(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_VIDEO_VALUE, 0.01, filePath);
-            } else {
-                listener.onImFail(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_VIDEO_VALUE, fileBean);
-            }
-        }
-        String videoName = file.getName();
-        long size = FileUtils.getFileSize(filePath);
-        String videoSize = com.youmai.smallvideorecord.utils.StringUtils.generateFileSize(size);
-        //todo_k: 视频
-        final CacheMsgBean cacheMsgBean = new CacheMsgBean();
-        cacheMsgBean.setMsgTime(System.currentTimeMillis())
-                .setMsgStatus(CacheMsgBean.SEND_FAILED)
-                .setSenderUserId(getUuid())
-                .setReceiverUserId(dstUuid)
-                .setTargetUuid(dstUuid)
-                .setMsgType(CacheMsgBean.SEND_VIDEO)
-                .setJsonBodyObj(new CacheMsgVideo().setVideoPath(filePath).setFramePath(framePath).setName(videoName).setSize(videoSize).setTime(seconds));
-        if (isSaveDB) {
-            //add to db
-            CacheMsgHelper.instance().insertOrUpdate(mContext, cacheMsgBean);
-        }
-        uploadQiVideoFrame(cacheMsgBean, fileBean, isSaveDB, listener);
-    }
-
-    /**
-     * 先上传视频帧图片,以获取图片ID
-     */
-    public void uploadQiVideoFrame(final CacheMsgBean cacheMsgBean, final FileBean fileBean, final boolean isSaveDB, final IFileSendListener listener) {
-        final UpProgressHandler progressHandler = new UpProgressHandler() {
-            @Override
-            public void progress(String key, double percent) {
-                LogUtils.e(Constant.SDK_UI_TAG, "manager percent = " + percent);
-                if (null != listener && percent < 0.5f) {
-                    listener.onProgress(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_VIDEO_VALUE, percent, fileBean.getLocalFramePath());
-                }
-            }
-        };
-        IPostListener callback = new IPostListener() {
-            @Override
-            public void httpReqResult(String response) {
-                FileToken resp = GsonUtil.parse(response, FileToken.class);
-                if (resp == null) {
-                    if (null != listener) {
-                        listener.onImFail(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_VIDEO_VALUE, fileBean);
-                    }
-                    if (isSaveDB) {
-                        //add to db
-                        cacheMsgBean.setMsgStatus(CacheMsgBean.SEND_FAILED);
-                        CacheMsgHelper.instance().insertOrUpdate(mContext, cacheMsgBean);
-                    }
-                    return;
-                }
-                if (resp.isSucess()) {
-                    String fidKey = resp.getD().getFid();
-                    String token = resp.getD().getUpToken();
-                    UpCompletionHandler completionHandler = new UpCompletionHandler() {
-                        @Override
-                        public void complete(String key, ResponseInfo info, JSONObject response) {
-                            if (response == null) {
-                                if (null != listener) {
-                                    listener.onImFail(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_VIDEO_VALUE, fileBean);
-                                }
-                                if (isSaveDB) {
-                                    //add to db
-                                    cacheMsgBean.setMsgStatus(CacheMsgBean.SEND_FAILED);
-                                    CacheMsgHelper.instance().insertOrUpdate(mContext, cacheMsgBean);
-                                }
-                                return;
-                            }
-                            UploadFile resp = GsonUtil.parse(response.toString(), UploadFile.class);
-
-                            if (resp != null && resp.isSucess()) {
-                                final String fileId = resp.getD().getFileid();
-                                CacheMsgVideo cacheMsgVideo = (CacheMsgVideo) cacheMsgBean.getJsonBodyObj();
-                                if (cacheMsgVideo == null) {
-                                    cacheMsgVideo = new CacheMsgVideo();
-                                }
-                                cacheMsgVideo.setFrameId(fileId);
-                                cacheMsgBean.setJsonBodyObj(cacheMsgVideo);
-                                fileBean.setVideoPFidUrl(fileId);
-                                uploadQiVideo(cacheMsgBean, fileBean, isSaveDB, listener);//继续上传视频
-                            } else {
-                                Toast.makeText(mContext, resp.getM(), Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    };
-                    String framePath = ((CacheMsgVideo) cacheMsgBean.getJsonBodyObj()).getFramePath();
-                    Map<String, String> params = new HashMap<>();
-                    params.put("x:type", "2");
-                    params.put("x:msisdn", getPhoneNum());
-                    UploadOptions options = new UploadOptions(params, null, false, progressHandler, null);
-                    uploadManager.put(new File(framePath), fidKey, token, completionHandler, options);
-                } else {
-                    if (null != listener) {
-                        listener.onImFail(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_VIDEO_VALUE, fileBean);
-                    }
-                    if (isSaveDB) {
-                        //add to db
-                        cacheMsgBean.setMsgStatus(CacheMsgBean.SEND_FAILED);
-                        CacheMsgHelper.instance().insertOrUpdate(mContext, cacheMsgBean);
-                    }
-
-                    String log = resp.getM();
-                    Toast.makeText(mContext, log, Toast.LENGTH_SHORT).show();
-                    LogFile.inStance().toFile(log);
-                }
-            }
-        };
-        getUploadFileToken(callback);
-    }
-
-    /**
-     * 上传视频，以获取视频ID
-     */
-    public void uploadQiVideo(final CacheMsgBean cacheMsgBean, final FileBean fileBean, final boolean isSaveDB, final IFileSendListener listener) {
-        final UpProgressHandler progressHandler = new UpProgressHandler() {
-            @Override
-            public void progress(String key, double percent) {
-                LogUtils.e(Constant.SDK_UI_TAG, "manager percent = " + percent);
-                if (null != listener && percent >= 0.5f) {
-                    listener.onProgress(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_VIDEO_VALUE, percent, fileBean.getLocalVideoPath());
-                }
-            }
-        };
-        IPostListener callback = new IPostListener() {
-            @Override
-            public void httpReqResult(String response) {
-                FileToken resp = GsonUtil.parse(response, FileToken.class);
-                if (resp == null) {
-                    if (null != listener) {
-                        listener.onImFail(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_VIDEO_VALUE, fileBean);
-                    }
-                    if (isSaveDB) {
-                        //add to db
-                        cacheMsgBean.setMsgStatus(CacheMsgBean.SEND_FAILED);
-                        CacheMsgHelper.instance().insertOrUpdate(mContext, cacheMsgBean);
-                    }
-                    return;
-                }
-                if (resp.isSucess()) {
-                    String fidKey = resp.getD().getFid();
-                    String token = resp.getD().getUpToken();
-                    UpCompletionHandler completionHandler = new UpCompletionHandler() {
-                        @Override
-                        public void complete(String key, ResponseInfo info, JSONObject response) {
-                            if (response == null) {
-                                if (null != listener) {
-                                    listener.onImFail(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_VIDEO_VALUE, fileBean);
-                                }
-                                if (isSaveDB) {
-                                    //add to db
-                                    cacheMsgBean.setMsgStatus(CacheMsgBean.SEND_FAILED);
-                                    CacheMsgHelper.instance().insertOrUpdate(mContext, cacheMsgBean);
-                                }
-                                Toast.makeText(mContext, mContext.getString(R.string.hx_toast_74), Toast.LENGTH_SHORT).show();
-                                return;
-                            }
-                            UploadFile resp = GsonUtil.parse(response.toString(), UploadFile.class);
-
-                            if (resp != null && resp.isSucess()) {
-                                final String fileId = resp.getD().getFileid();
-                                CacheMsgVideo cacheMsgVideo = (CacheMsgVideo) cacheMsgBean.getJsonBodyObj();
-                                if (cacheMsgVideo == null) {
-                                    cacheMsgVideo = new CacheMsgVideo();
-                                }
-                                cacheMsgVideo.setVideoId(fileId);
-                                cacheMsgBean.setJsonBodyObj(cacheMsgVideo);
-                                fileBean.setVideoFidUrl(fileId);
-                                sendImVideo(isSaveDB, cacheMsgBean, fileBean, listener);//发送消息给对方
-
-                            } else {
-                                Toast.makeText(mContext, resp.getM(), Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    };
-                    String videoPath = ((CacheMsgVideo) cacheMsgBean.getJsonBodyObj()).getVideoPath();
-                    Map<String, String> params = new HashMap<>();
-                    params.put("x:type", "2");
-                    params.put("x:msisdn", getPhoneNum());
-                    UploadOptions options = new UploadOptions(params, null, false, progressHandler, null);
-                    uploadManager.put(new File(videoPath), fidKey, token, completionHandler, options);
-
-                } else {
-                    if (null != listener) {
-                        listener.onImFail(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_VIDEO_VALUE, fileBean);
-                    }
-                    if (isSaveDB) {
-                        //add to db
-                        cacheMsgBean.setMsgStatus(CacheMsgBean.SEND_FAILED);
-                        CacheMsgHelper.instance().insertOrUpdate(mContext, cacheMsgBean);
-                    }
-
-                    String log = resp.getM();
-                    Toast.makeText(mContext, log, Toast.LENGTH_SHORT).show();
-                    LogFile.inStance().toFile(log);
-                }
-            }
-        };
-        getUploadFileToken(callback);
-    }
-
-    /**
-     * 发送视频消息
-     */
-    public void sendImVideo(final boolean isSaveDB, final CacheMsgBean cacheMsgBean, final FileBean fileBean, final IFileSendListener listener) {
-        CacheMsgVideo cacheMsgVideo = (CacheMsgVideo) cacheMsgBean.getJsonBodyObj();
-        final String fileId = cacheMsgVideo.getVideoId();
-        String frameId = cacheMsgVideo.getFrameId();
-        String name = cacheMsgVideo.getName();
-        String size = cacheMsgVideo.getSize();
-        long time = cacheMsgVideo.getTime();
-        fileBean.setFileId(fileId);
-        fileBean.setPictrueId(frameId);
-        fileBean.setVideoTime(time);
-
-        ReceiveListener receiveListener = new ReceiveListener() {
-            @Override
-            public void OnRec(PduBase pduBase) {
-                //发自己处理
-                CacheMsgBean newMsgBean = null;
-                if (cacheMsgBean.getReceiverUserId().equals(getUuid())) {
-                    // FIXME: 2017/4/10 消息屏发送主键 ID为 null
-                    if (cacheMsgBean.getId() != null) {
-                        newMsgBean = getCacheMsgFromDBById(cacheMsgBean.getId());
-                    }
-                } else {
-                    newMsgBean = cacheMsgBean;
-                }
-                try {
-                    YouMaiMsg.ChatMsg_Ack ack = YouMaiMsg.ChatMsg_Ack.parseFrom(pduBase.body);
-                    long msgId = ack.getMsgId();
-                    newMsgBean.setMsgId(msgId);
-
-                    if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_OK) {
-                        if (isSaveDB) {
-                            //add to db
-                            newMsgBean.setMsgStatus(CacheMsgBean.SEND_SUCCEED);
-                            CacheMsgHelper.instance().insertOrUpdate(mContext, newMsgBean);
-                        }
-
-                        if (null != listener) {
-                            listener.onImSuccess(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_VIDEO_VALUE, fileBean);
-                        }
-
-                    } else if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_NOT_HUXIN_USER) {
-                        if (null != listener) {
-                            listener.onImNotUser(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_VIDEO_VALUE, msgId);
-                        }
-                    } else {
-                        String log = "ErrorNo:" + ack.getErrerNo();
-                        Toast.makeText(mContext, log, Toast.LENGTH_SHORT).show();
-                        LogFile.inStance().toFile(log);
-                        if (null != listener) {
-                            listener.onImFail(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_VIDEO_VALUE, fileBean);
-                        }
-
-                        if (isSaveDB) {
-                            newMsgBean.setMsgStatus(CacheMsgBean.SEND_FAILED);
+                        } catch (InvalidProtocolBufferException e) {
+                            e.printStackTrace();
                         }
                     }
-                } catch (InvalidProtocolBufferException e) {
-                    e.printStackTrace();
-                }
+                };
+
+                sendPicture(dstUuid, fileId, isOriginal ? "original" : "thumbnail", receiveListener);
             }
 
             @Override
-            public void onError(int errCode) {
-                super.onError(errCode);
-                if (null != listener) {
-                    listener.onImFail(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_VIDEO_VALUE, fileBean);
-                }
-                if (isSaveDB) {
-                    cacheMsgBean.setMsgStatus(CacheMsgBean.SEND_FAILED);
-                    CacheMsgHelper.instance().insertOrUpdate(mContext, cacheMsgBean);
-                }
+            public void onFail(String msg) {
+                Toast.makeText(mContext, "上传图片失败", Toast.LENGTH_SHORT).show();
             }
-        };
-
-        sendVideo(cacheMsgBean.getSenderUserId(), fileId, frameId, name, size, time + "", receiveListener);
+        });
     }
 
     /**
@@ -1752,9 +1090,9 @@ public class HuxinSdkManager {
         builder1.setOrgId(groupId);
         YouMaiBuddy.IMGetOrgReq build = builder1.build();
 
-//        YouMaiBuddy.IMGetOrgReq.Builder builder = YouMaiBuddy.IMGetOrgReq.newBuilder();
-//        builder.setOrgId(groupId);
-//        YouMaiBuddy.IMGetOrgReq orgReq = builder.build();
+        //YouMaiBuddy.IMGetOrgReq.Builder builder = YouMaiBuddy.IMGetOrgReq.newBuilder();
+        //builder.setOrgId(groupId);
+        //YouMaiBuddy.IMGetOrgReq orgReq = builder.build();
         sendProto(build, YouMaiBasic.COMMANDID.CID_ORG_LIST_REQ_VALUE, callback);
     }
 

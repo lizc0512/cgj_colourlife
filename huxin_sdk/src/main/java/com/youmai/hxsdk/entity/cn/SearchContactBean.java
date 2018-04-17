@@ -36,8 +36,8 @@ public class SearchContactBean implements Comparable<SearchContactBean>, Parcela
     private String wholeT9;//全拼对应T9
     private String simplepinyin;//简拼
     private String simplepT9;//简拼对应T9
-    private int iconUrl;
-    private String info;
+    private String iconUrl;
+    private String info; //App 应用信息
     private long infoId;
     private String searchKey;
     private int searchType = SEARCH_TYPE_NONE;
@@ -45,6 +45,8 @@ public class SearchContactBean implements Comparable<SearchContactBean>, Parcela
     private int[] wholePinYinFindIndex;
     private SearchContactBean nextSearchContactBean;
     private List<String> indexPinyin;
+
+    private String username; //收藏联系人查询员工详情使用
 
     public SearchContactBean() {
 
@@ -79,7 +81,7 @@ public class SearchContactBean implements Comparable<SearchContactBean>, Parcela
         wholeT9 = in.readString();
         simplepinyin = in.readString();
         simplepT9 = in.readString();
-        iconUrl = in.readInt();
+        iconUrl = in.readString();
         info = in.readString();
         infoId = in.readLong();
         searchKey = in.readString();
@@ -129,11 +131,11 @@ public class SearchContactBean implements Comparable<SearchContactBean>, Parcela
         this.searchType = searchType;
     }
 
-    public int getIconUrl() {
+    public String getIconUrl() {
         return iconUrl;
     }
 
-    public void setIconUrl(int iconUrl) {
+    public void setIconUrl(String iconUrl) {
         this.iconUrl = iconUrl;
     }
 
@@ -203,6 +205,14 @@ public class SearchContactBean implements Comparable<SearchContactBean>, Parcela
         this.nextSearchContactBean = bean;
     }
 
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
     @Override
     public String toString() {
         return "ContactBean{" +
@@ -235,7 +245,7 @@ public class SearchContactBean implements Comparable<SearchContactBean>, Parcela
         dest.writeString(wholeT9);
         dest.writeString(simplepinyin);
         dest.writeString(simplepT9);
-        dest.writeInt(iconUrl);
+        dest.writeString(iconUrl);
         dest.writeString(info);
         dest.writeLong(infoId);
         dest.writeString(searchKey);

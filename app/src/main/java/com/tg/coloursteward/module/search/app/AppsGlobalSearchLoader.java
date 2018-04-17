@@ -1,9 +1,10 @@
-package com.tg.coloursteward.module.search;
+package com.tg.coloursteward.module.search.app;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 
-import com.tg.coloursteward.module.contact.utils.ContactsBindData;
+import com.tg.coloursteward.module.search.GlobalSearchLoader;
 import com.tg.coloursteward.module.search.data.SearchData;
 import com.youmai.hxsdk.entity.cn.SearchContactBean;
 
@@ -11,38 +12,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by srsm on 2017/8/7.
+ * Created by srsm on 2018/4/17.
  */
-public class ContactsSearchLoader extends GlobalSearchLoader<SearchContactBean> {
-    private final String TAG = ContactsSearchLoader.class.getSimpleName();
-    private final Context mContext;
+public class AppsGlobalSearchLoader<T> extends GlobalSearchLoader<SearchContactBean> {
+    private final String TAG = AppsGlobalSearchLoader.class.getSimpleName();
+    private Activity mContext;
 
-    public ContactsSearchLoader(Context context) {
+    public AppsGlobalSearchLoader(Activity context) {
         super(context);
         mContext = context;
     }
 
     @Override
     public ArrayList<SearchContactBean> fullLoadInBackground() {
-
-        mContactBeanList.clear();
-
-        List<SearchContactBean> contactList = SearchData.peekInstance().searchContactsList(mContext);
-        mContactBeanList.addAll(contactList);
-        if (mQuery.isEmpty()) {
+        if (mQuery == null || mQuery.isEmpty()) {
             return null;
-        } else {
-            return mContactBeanList;
         }
-    }
 
-    @Override
-    public ArrayList<SearchContactBean> reloadInBackground() {
         ArrayList<SearchContactBean> searchContactBeenList = new ArrayList<>();
         String finalQuery = mQuery;
         String queryUpper = mQuery.toUpperCase();
 
-        for (SearchContactBean bean : mContactBeanList) {
+        List<SearchContactBean> appsList = SearchData.peekInstance().searchCacheAppsList(mContext);
+
+        for (SearchContactBean bean : appsList) {
             int searchType = SearchContactBean.SEARCH_TYPE_NONE;
             //全拼搜索
             int[] findResult = new int[2];
@@ -88,6 +81,11 @@ public class ContactsSearchLoader extends GlobalSearchLoader<SearchContactBean> 
 
         postPreLoad(searchContactBeenList);
         return searchContactBeenList;
+    }
+
+    @Override
+    public ArrayList<SearchContactBean> reloadInBackground() {
+        return fullLoadInBackground();
     }
 
 }

@@ -14,6 +14,7 @@ import com.jcodecraeer.xrecyclerview.progressindicator.AVLoadingIndicatorView;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.module.meassage.MessageAdapter;
+import com.tg.coloursteward.module.search.GlobalSearchActivity;
 import com.youmai.hxsdk.activity.IMConnectionActivity;
 import com.youmai.hxsdk.router.APath;
 import com.youmai.hxsdk.utils.ListUtils;
@@ -95,9 +96,9 @@ public class GroupListActivity extends BaseActivity {
             @Override
             public void onItemClick(Group bean, int position) {
                 if (position == 0) {
-                    ARouter.getInstance()
-                            .build(APath.SEARCH_GLOBAL_GROUP)
-                            .navigation();
+                    Intent intent = new Intent(GroupListActivity.this, GlobalSearchActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    startActivity(intent);
                     return;
                 }
                 Intent intent = new Intent();

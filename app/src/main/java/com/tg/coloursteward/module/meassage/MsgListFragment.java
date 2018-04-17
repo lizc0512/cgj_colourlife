@@ -25,6 +25,7 @@ import android.widget.LinearLayout;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.tg.coloursteward.R;
+import com.tg.coloursteward.module.search.GlobalSearchActivity;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.activity.IMConnectionActivity;
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
@@ -332,9 +333,9 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
             @Override
             public void onItemClick(ExCacheMsgBean bean, int position) {
                 if (position == 0) {
-                    ARouter.getInstance()
-                            .build(APath.SEARCH_GLOBAL_GROUP)
-                            .navigation();
+                    Intent intent = new Intent(getActivity(), GlobalSearchActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    startActivity(intent);
                     return;
                 }
                 Intent intent = new Intent();

@@ -17,10 +17,12 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.tg.coloursteward.module.contact.adapter.ContactAdapter;
 import com.tg.coloursteward.module.contact.utils.PinYinUtils;
 import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.entity.cn.SearchContactBean;
 import com.youmai.hxsdk.utils.GlideCircleTransform;
+import com.youmai.hxsdk.utils.GlideRoundTransform;
 import com.youmai.hxsdk.utils.ListUtils;
 
 import java.util.ArrayList;
@@ -206,15 +208,16 @@ public class GlobalSearchAdapter<T> extends RecyclerView.Adapter<RecyclerView.Vi
                 }
             }
 
-            RequestOptions mOptions = new RequestOptions()
-                    .centerInside()
-                    .transform(new GlideCircleTransform(mContext))
-                    .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-                    .placeholder(R.drawable.hx_index_head01)
-                    .override(60, 60);
+            RequestOptions options = new RequestOptions();
+            options.diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+                    .centerCrop()
+                    .override(60, 60)
+                    .transform(new GlideRoundTransform(mContext))
+                    .placeholder(R.drawable.contacts_common_default_user_bg)
+                    .error(R.drawable.contacts_common_default_user_bg);
             Glide.with(mContext)
                     .load(model.getIconUrl())
-                    .apply(mOptions)
+                    .apply(options)
                     .into(searchItemHolder.search_icon);
 
             searchItemHolder.search_item.setTag(finalPosition);

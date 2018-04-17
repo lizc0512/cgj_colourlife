@@ -34,6 +34,7 @@ import com.tg.coloursteward.module.contact.stickyheader.StickyHeaderDecoration;
 import com.tg.coloursteward.module.contact.widget.CharIndexView;
 import com.tg.coloursteward.module.groupchat.GroupListActivity;
 import com.tg.coloursteward.module.search.GlobalSearchActivity;
+import com.tg.coloursteward.module.search.data.SearchData;
 import com.tg.coloursteward.net.GetTwoRecordListener;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.MessageHandler;
@@ -68,6 +69,7 @@ import rx.schedulers.Schedulers;
 
 import com.tg.coloursteward.net.MessageHandler.ResponseListener;
 import com.tg.coloursteward.module.contact.adapter.ContactAdapter.ItemEventListener;
+import com.youmai.hxsdk.entity.cn.SearchContactBean;
 import com.youmai.hxsdk.utils.ListUtils;
 
 /**
@@ -132,14 +134,12 @@ public class ContactsFragment extends Fragment implements Observer,
 
         bindData = ContactsBindData.init();
         bindData.addObserver(this);
-        bindData.loadOrgInfo();
 
         msgHand = new MessageHandler(getActivity());
         msgHand.setResponseListener(this);
 
         initView();
         setListener();
-
     }
 
     @Override
@@ -274,8 +274,6 @@ public class ContactsFragment extends Fragment implements Observer,
             case 0:
                 intent = new Intent(getActivity(), GlobalSearchActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                intent.putParcelableArrayListExtra("contactList",
-                        (ArrayList<? extends Parcelable>) bindData.searchContactsList(getContext()));
                 startActivity(intent);
                 break;
             case 1: //组织架构

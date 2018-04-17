@@ -30,5 +30,8 @@
     <string name="hx_contacts_search_title">联系人</string>
     <string name="hx_contacts_view_more_contacts">查看更多联系人</string>
 
+    <string name="hx_common_app_record">应用</string>
+    <string name="hx_common_view_more_app_record">查看更多应用</string>
+
 
 </resources>

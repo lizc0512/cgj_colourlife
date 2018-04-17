@@ -1,43 +1,39 @@
-package com.tg.coloursteward.module.search;
+package com.tg.coloursteward.module.search.app;
 
-import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
-import com.youmai.hxsdk.R;
-import com.youmai.hxsdk.db.bean.Contact;
-import com.youmai.hxsdk.entity.cn.CNPinyin;
+import com.tg.coloursteward.R;
+import com.tg.coloursteward.module.search.GlobalSearchAdapter;
+import com.tg.coloursteward.module.search.GlobalSearchLoader;
+import com.tg.coloursteward.module.search.SearchFragment;
+import com.youmai.hxsdk.activity.IMConnectionActivity;
+import com.youmai.hxsdk.entity.cn.SearchContactBean;
+import com.youmai.hxsdk.view.chat.utils.Utils;
 
 import java.util.ArrayList;
 
 /**
  * Created by srsm on 2017/8/24.
  */
-
-public class ContactsSearchFragment<T extends Parcelable> extends SearchFragment implements
+public class AppsSearchFragment<T extends Parcelable> extends SearchFragment implements
         LoaderManager.LoaderCallbacks<ArrayList<T>>, GlobalSearchAdapter.GlobalSearchAdapterListener {
 
-    private static final String TAG = "YW";//ContactsSearchFragment.class.getSimpleName();
-
-    private final int GLOBAL_SEARCH_LOADER_ID = 2;
-    private Handler mHandler = new Handler();
-    private ArrayList<T> mPreLoadList = new ArrayList<T>();
-
+    private static final String TAG = AppsSearchFragment.class.getSimpleName();
+    private final int GLOBAL_SEARCH_LOADER_ID = 1;
     private RecyclerView mRecyclerView;
     private GlobalSearchAdapter mGlobalSearchAdapter;
-    private String mQueryString = "";
-
-    public ContactsSearchFragment() {}
+    private ArrayList<T> mMoreSearchContactsList = new ArrayList<T>();
+    private ArrayList<T> mPreLoadList = new ArrayList<T>();
+    private Handler mHandler = new Handler();
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -48,16 +44,22 @@ public class ContactsSearchFragment<T extends Parcelable> extends SearchFragment
         mGlobalSearchAdapter = new GlobalSearchAdapter(getActivity());
         mGlobalSearchAdapter.setGlobalSearchAdapterListener(this);
         mGlobalSearchAdapter.setAdapterType(GlobalSearchAdapter.ADAPTER_TYPE_MORE);
-        mGlobalSearchAdapter.setHeadTitle(getString(R.string.hx_contacts_search_title));
-        mGlobalSearchAdapter.setTailTitle(getString(R.string.hx_contacts_view_more_contacts));
+        mGlobalSearchAdapter.setItemInnerType(GlobalSearchAdapter.ITEM_INNER_MORE);
+        mGlobalSearchAdapter.setHeadTitle(getString(R.string.hx_common_app_record));
+        mGlobalSearchAdapter.setTailTitle(getString(R.string.hx_common_view_more_app_record));
         mRecyclerView.setAdapter(mGlobalSearchAdapter);
 
-        getLoaderManager().initLoader(GLOBAL_SEARCH_LOADER_ID, null, this);
+        startLoading();
     }
 
     public void reset() {
         mGlobalSearchAdapter.setAdapterType(GlobalSearchAdapter.ADAPTER_TYPE_MORE);
         mGlobalSearchAdapter.notifyDataSetChanged();
+    }
+
+    protected void startLoading() {
+        Log.d(TAG, "startLoading");
+        getLoaderManager().initLoader(GLOBAL_SEARCH_LOADER_ID, null, this);
     }
 
     @Override
@@ -66,12 +68,10 @@ public class ContactsSearchFragment<T extends Parcelable> extends SearchFragment
         getLoaderManager().getLoader(GLOBAL_SEARCH_LOADER_ID).startLoading();
     }
 
-
-    @NonNull
     @Override
-    public Loader<ArrayList<T>> onCreateLoader(int id, @Nullable Bundle args) {
+    public Loader<ArrayList<T>> onCreateLoader(int id, Bundle args) {
         Log.d(TAG, "onCreateLoader");
-        GlobalSearchLoader loader = new ContactsSearchLoader(getContext());
+        GlobalSearchLoader loader = new AppsGlobalSearchLoader(getActivity());
         loader.setConfigQueryParamListener(new GlobalSearchLoader.ConfigQueryParamListener() {
             @Override
             public String getConfigQueryParamString() {
@@ -97,8 +97,9 @@ public class ContactsSearchFragment<T extends Parcelable> extends SearchFragment
     }
 
     @Override
-    public void onLoadFinished(@NonNull Loader<ArrayList<T>> loader, ArrayList<T> data) {
+    public void onLoadFinished(Loader<ArrayList<T>> loader, ArrayList<T> data) {
         Log.d(TAG, "onLoadFinished");
+
         if (getOnLoadFinishListener() != null) {
             if (data != null && data.size() > 0) {
                 getOnLoadFinishListener().onFinishCallback(true, getQueryString());
@@ -106,21 +107,51 @@ public class ContactsSearchFragment<T extends Parcelable> extends SearchFragment
                 getOnLoadFinishListener().onFinishCallback(false, getQueryString());
             }
         }
+
         mGlobalSearchAdapter.setArrayList(data);
+
+/*        if (data != null) {
+            mMoreSearchContactsList.clear();
+            mMoreSearchContactsList.addAll(data);
+        }*/
     }
 
     @Override
-    public void onLoaderReset(@NonNull Loader<ArrayList<T>> loader) {
+    public void onLoaderReset(Loader loader) {
         Log.d(TAG, "onLoaderReset");
     }
 
     @Override
     public void onItemClick(Object item) {
-        Toast.makeText(getContext(), "onItemClick", Toast.LENGTH_SHORT).show();
+        SearchContactBean bean = (SearchContactBean) item;
+        if (bean.getNextBean() != null) {
+
+            Intent moreIntent = new Intent();
+            //moreIntent.setClass(getActivity(), MessageGlobalSearchViewActivity.class);
+            //moreIntent.putParcelableArrayListExtra("moreSearchList", searchBeanList);
+            moreIntent.putExtra("adapter_type", GlobalSearchAdapter.ADAPTER_TYPE_TITLE);
+            moreIntent.putExtra("target_phone", bean.getPhoneNum());
+            moreIntent.putExtra("target_query", bean.getSearchKey());
+
+            getActivity().startActivity(moreIntent);
+        } else {
+            Utils.closeSoftKeyboard(getActivity());
+            Intent intent = new Intent(getActivity(), IMConnectionActivity.class);
+            intent.putExtra(IMConnectionActivity.DST_PHONE, bean.getPhoneNum());
+            intent.putExtra(IMConnectionActivity.DST_NAME, bean.getDisplayName());
+            //intent.putExtra(IMConnectionActivity.DST_CONTACT_ID, bean.getContactId());
+            intent.putExtra(IMConnectionActivity.EXTRA_SCROLL_POSITION, bean.getInfoId());
+            startActivity(intent);
+        }
     }
 
     @Override
     public void onMoreItemClick() {
-        Toast.makeText(getContext(), "onMoreItemClick", Toast.LENGTH_SHORT).show();
+
+        if (getOnLoadFinishListener() != null) {
+            getOnLoadFinishListener().onWhoShowMoreCallback(getTag());
+        }
+        mGlobalSearchAdapter.setAdapterType(GlobalSearchAdapter.ADAPTER_TYPE_TITLE);
+        mGlobalSearchAdapter.notifyDataSetChanged();
     }
 }

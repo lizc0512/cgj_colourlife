@@ -99,7 +99,6 @@ public class ContactsFragment extends Fragment implements Observer,
 
     private CharIndexView iv_main;
     private TextView tv_index;
-    private LinearLayout global_search_root;
 
     private ArrayList<CNPinyin<Contact>> contactList = new ArrayList<>();
     private LinearLayoutManager manager;
@@ -123,7 +122,6 @@ public class ContactsFragment extends Fragment implements Observer,
         rv_main = view.findViewById(R.id.rv_main);
         iv_main = view.findViewById(R.id.iv_main);
         tv_index = view.findViewById(R.id.tv_index);
-        global_search_root = view.findViewById(R.id.global_search_root);
 
         manager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         rv_main.setLayoutManager(manager);
@@ -157,17 +155,6 @@ public class ContactsFragment extends Fragment implements Observer,
     }
 
     private void setListener() {
-        global_search_root.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), GlobalSearchActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                intent.putParcelableArrayListExtra("contactList",
-                        (ArrayList<? extends Parcelable>) bindData.searchContactsList(getContext()));
-                startActivity(intent);
-            }
-        });
-
         iv_main.setOnCharIndexChangedListener(new CharIndexView.OnCharIndexChangedListener() {
             @Override
             public void onCharIndexChanged(char currentIndex) {

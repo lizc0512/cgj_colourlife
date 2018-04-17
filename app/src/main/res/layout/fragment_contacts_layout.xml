@@ -8,10 +8,6 @@
     android:focusableInTouchMode="true"
     android:orientation="vertical" >
 
-    <include
-        layout="@layout/global_list_item_header_search"
-        android:visibility="gone"/>
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">

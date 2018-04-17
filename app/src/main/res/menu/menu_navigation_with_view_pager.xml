@@ -3,21 +3,21 @@
 
     <item
         android:id="@+id/navigation_message"
-        android:icon="@drawable/tab1_selector"
+        android:icon="@drawable/shouye_1"
         android:title="@string/message" />
 
     <item
         android:id="@+id/navigation_contact"
-        android:icon="@drawable/tab2_selector"
+        android:icon="@drawable/tongxunlu_1"
         android:title="@string/contact" />
 
     <item
         android:id="@+id/navigation_job"
-        android:icon="@drawable/tab3_selector"
+        android:icon="@drawable/weiwuguan_1"
         android:title="@string/job" />
 
     <item
         android:id="@+id/navigation_mine"
-        android:icon="@drawable/tab4_selector"
+        android:icon="@drawable/wode_1"
         android:title="@string/mine" />
 </menu>

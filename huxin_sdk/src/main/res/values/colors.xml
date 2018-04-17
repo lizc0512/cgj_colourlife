@@ -4,6 +4,9 @@
     <color name="hx_accent">#ffb74d</color>
     <color name="hx_window_background">#FFF5F5F5</color>
 
+    <color name="hxs_color_gray">#848e96</color>
+    <color name="hxs_color_blue">#38adff</color>
+
     <!--半透明 -->
     <!--透明 -->
     <color name="hx_transparent">#00000000</color>

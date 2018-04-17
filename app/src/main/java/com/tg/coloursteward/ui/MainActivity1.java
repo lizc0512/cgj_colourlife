@@ -383,7 +383,7 @@ public class MainActivity1 extends AppCompatActivity implements MessageHandler.R
         navigation.setupWithViewPager(mViewPager);
 
         mViewPager.setCurrentItem(0);
-        mViewPager.setOffscreenPageLimit(3);
+        //mViewPager.setOffscreenPageLimit(3);
 
         tv_title.setText(navigation.getMenu().getItem(0).getTitle());
 

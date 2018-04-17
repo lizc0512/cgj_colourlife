@@ -6626,7 +6626,7 @@ public final class YouMaiBuddy {
         getDestUserIdBytes();
 
         /**
-         * <code>optional bytes nick_name = 20;</code>
+         * <code>optional string nick_name = 20;</code>
          * <p>
          * <pre>
          * 备注好友姓名
@@ -6635,13 +6635,23 @@ public final class YouMaiBuddy {
         boolean hasNickName();
 
         /**
-         * <code>optional bytes nick_name = 20;</code>
+         * <code>optional string nick_name = 20;</code>
          * <p>
          * <pre>
          * 备注好友姓名
          * </pre>
          */
-        com.google.protobuf.ByteString getNickName();
+        String getNickName();
+
+        /**
+         * <code>optional string nick_name = 20;</code>
+         * <p>
+         * <pre>
+         * 备注好友姓名
+         * </pre>
+         */
+        com.google.protobuf.ByteString
+        getNickNameBytes();
     }
 
     /**
@@ -6719,8 +6729,9 @@ public final class YouMaiBuddy {
                             break;
                         }
                         case 162: {
+                            com.google.protobuf.ByteString bs = input.readBytes();
                             bitField0_ |= 0x00000004;
-                            nickName_ = input.readBytes();
+                            nickName_ = bs;
                             break;
                         }
                     }
@@ -6879,10 +6890,10 @@ public final class YouMaiBuddy {
         }
 
         public static final int NICK_NAME_FIELD_NUMBER = 20;
-        private com.google.protobuf.ByteString nickName_;
+        private Object nickName_;
 
         /**
-         * <code>optional bytes nick_name = 20;</code>
+         * <code>optional string nick_name = 20;</code>
          * <p>
          * <pre>
          * 备注好友姓名
@@ -6893,20 +6904,52 @@ public final class YouMaiBuddy {
         }
 
         /**
-         * <code>optional bytes nick_name = 20;</code>
+         * <code>optional string nick_name = 20;</code>
          * <p>
          * <pre>
          * 备注好友姓名
          * </pre>
          */
-        public com.google.protobuf.ByteString getNickName() {
-            return nickName_;
+        public String getNickName() {
+            Object ref = nickName_;
+            if (ref instanceof String) {
+                return (String) ref;
+            } else {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                String s = bs.toStringUtf8();
+                if (bs.isValidUtf8()) {
+                    nickName_ = s;
+                }
+                return s;
+            }
+        }
+
+        /**
+         * <code>optional string nick_name = 20;</code>
+         * <p>
+         * <pre>
+         * 备注好友姓名
+         * </pre>
+         */
+        public com.google.protobuf.ByteString
+        getNickNameBytes() {
+            Object ref = nickName_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (String) ref);
+                nickName_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
         }
 
         private void initFields() {
             srcUserId_ = "";
             destUserId_ = "";
-            nickName_ = com.google.protobuf.ByteString.EMPTY;
+            nickName_ = "";
         }
 
         private byte memoizedIsInitialized = -1;
@@ -6930,7 +6973,7 @@ public final class YouMaiBuddy {
                 output.writeBytes(3, getDestUserIdBytes());
             }
             if (((bitField0_ & 0x00000004) == 0x00000004)) {
-                output.writeBytes(20, nickName_);
+                output.writeBytes(20, getNickNameBytes());
             }
             getUnknownFields().writeTo(output);
         }
@@ -6952,7 +6995,7 @@ public final class YouMaiBuddy {
             }
             if (((bitField0_ & 0x00000004) == 0x00000004)) {
                 size += com.google.protobuf.CodedOutputStream
-                        .computeBytesSize(20, nickName_);
+                        .computeBytesSize(20, getNickNameBytes());
             }
             size += getUnknownFields().getSerializedSize();
             memoizedSerializedSize = size;
@@ -7101,7 +7144,7 @@ public final class YouMaiBuddy {
                 bitField0_ = (bitField0_ & ~0x00000001);
                 destUserId_ = "";
                 bitField0_ = (bitField0_ & ~0x00000002);
-                nickName_ = com.google.protobuf.ByteString.EMPTY;
+                nickName_ = "";
                 bitField0_ = (bitField0_ & ~0x00000004);
                 return this;
             }
@@ -7170,7 +7213,9 @@ public final class YouMaiBuddy {
                     onChanged();
                 }
                 if (other.hasNickName()) {
-                    setNickName(other.getNickName());
+                    bitField0_ |= 0x00000004;
+                    nickName_ = other.nickName_;
+                    onChanged();
                 }
                 this.mergeUnknownFields(other.getUnknownFields());
                 return this;
@@ -7412,10 +7457,10 @@ public final class YouMaiBuddy {
                 return this;
             }
 
-            private com.google.protobuf.ByteString nickName_ = com.google.protobuf.ByteString.EMPTY;
+            private Object nickName_ = "";
 
             /**
-             * <code>optional bytes nick_name = 20;</code>
+             * <code>optional string nick_name = 20;</code>
              * <p>
              * <pre>
              * 备注好友姓名
@@ -7426,24 +7471,57 @@ public final class YouMaiBuddy {
             }
 
             /**
-             * <code>optional bytes nick_name = 20;</code>
+             * <code>optional string nick_name = 20;</code>
              * <p>
              * <pre>
              * 备注好友姓名
              * </pre>
              */
-            public com.google.protobuf.ByteString getNickName() {
-                return nickName_;
+            public String getNickName() {
+                Object ref = nickName_;
+                if (!(ref instanceof String)) {
+                    com.google.protobuf.ByteString bs =
+                            (com.google.protobuf.ByteString) ref;
+                    String s = bs.toStringUtf8();
+                    if (bs.isValidUtf8()) {
+                        nickName_ = s;
+                    }
+                    return s;
+                } else {
+                    return (String) ref;
+                }
             }
 
             /**
-             * <code>optional bytes nick_name = 20;</code>
+             * <code>optional string nick_name = 20;</code>
              * <p>
              * <pre>
              * 备注好友姓名
              * </pre>
              */
-            public Builder setNickName(com.google.protobuf.ByteString value) {
+            public com.google.protobuf.ByteString
+            getNickNameBytes() {
+                Object ref = nickName_;
+                if (ref instanceof String) {
+                    com.google.protobuf.ByteString b =
+                            com.google.protobuf.ByteString.copyFromUtf8(
+                                    (String) ref);
+                    nickName_ = b;
+                    return b;
+                } else {
+                    return (com.google.protobuf.ByteString) ref;
+                }
+            }
+
+            /**
+             * <code>optional string nick_name = 20;</code>
+             * <p>
+             * <pre>
+             * 备注好友姓名
+             * </pre>
+             */
+            public Builder setNickName(
+                    String value) {
                 if (value == null) {
                     throw new NullPointerException();
                 }
@@ -7454,7 +7532,7 @@ public final class YouMaiBuddy {
             }
 
             /**
-             * <code>optional bytes nick_name = 20;</code>
+             * <code>optional string nick_name = 20;</code>
              * <p>
              * <pre>
              * 备注好友姓名
@@ -7463,6 +7541,24 @@ public final class YouMaiBuddy {
             public Builder clearNickName() {
                 bitField0_ = (bitField0_ & ~0x00000004);
                 nickName_ = getDefaultInstance().getNickName();
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string nick_name = 20;</code>
+             * <p>
+             * <pre>
+             * 备注好友姓名
+             * </pre>
+             */
+            public Builder setNickNameBytes(
+                    com.google.protobuf.ByteString value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000004;
+                nickName_ = value;
                 onChanged();
                 return this;
             }
@@ -7511,14 +7607,20 @@ public final class YouMaiBuddy {
         getUserIdBytes();
 
         /**
-         * <code>optional bytes nick_name = 2;</code>
+         * <code>optional string nick_name = 2;</code>
          */
         boolean hasNickName();
 
         /**
-         * <code>optional bytes nick_name = 2;</code>
+         * <code>optional string nick_name = 2;</code>
          */
-        com.google.protobuf.ByteString getNickName();
+        String getNickName();
+
+        /**
+         * <code>optional string nick_name = 2;</code>
+         */
+        com.google.protobuf.ByteString
+        getNickNameBytes();
 
         /**
          * <code>optional uint64 update_time = 3;</code>
@@ -7600,8 +7702,9 @@ public final class YouMaiBuddy {
                             break;
                         }
                         case 18: {
+                            com.google.protobuf.ByteString bs = input.readBytes();
                             bitField0_ |= 0x00000002;
-                            nickName_ = input.readBytes();
+                            nickName_ = bs;
                             break;
                         }
                         case 24: {
@@ -7708,20 +7811,48 @@ public final class YouMaiBuddy {
         }
 
         public static final int NICK_NAME_FIELD_NUMBER = 2;
-        private com.google.protobuf.ByteString nickName_;
+        private Object nickName_;
 
         /**
-         * <code>optional bytes nick_name = 2;</code>
+         * <code>optional string nick_name = 2;</code>
          */
         public boolean hasNickName() {
             return ((bitField0_ & 0x00000002) == 0x00000002);
         }
 
         /**
-         * <code>optional bytes nick_name = 2;</code>
+         * <code>optional string nick_name = 2;</code>
          */
-        public com.google.protobuf.ByteString getNickName() {
-            return nickName_;
+        public String getNickName() {
+            Object ref = nickName_;
+            if (ref instanceof String) {
+                return (String) ref;
+            } else {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                String s = bs.toStringUtf8();
+                if (bs.isValidUtf8()) {
+                    nickName_ = s;
+                }
+                return s;
+            }
+        }
+
+        /**
+         * <code>optional string nick_name = 2;</code>
+         */
+        public com.google.protobuf.ByteString
+        getNickNameBytes() {
+            Object ref = nickName_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (String) ref);
+                nickName_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
         }
 
         public static final int UPDATE_TIME_FIELD_NUMBER = 3;
@@ -7743,7 +7874,7 @@ public final class YouMaiBuddy {
 
         private void initFields() {
             userId_ = "";
-            nickName_ = com.google.protobuf.ByteString.EMPTY;
+            nickName_ = "";
             updateTime_ = 0L;
         }
 
@@ -7765,7 +7896,7 @@ public final class YouMaiBuddy {
                 output.writeBytes(1, getUserIdBytes());
             }
             if (((bitField0_ & 0x00000002) == 0x00000002)) {
-                output.writeBytes(2, nickName_);
+                output.writeBytes(2, getNickNameBytes());
             }
             if (((bitField0_ & 0x00000004) == 0x00000004)) {
                 output.writeUInt64(3, updateTime_);
@@ -7786,7 +7917,7 @@ public final class YouMaiBuddy {
             }
             if (((bitField0_ & 0x00000002) == 0x00000002)) {
                 size += com.google.protobuf.CodedOutputStream
-                        .computeBytesSize(2, nickName_);
+                        .computeBytesSize(2, getNickNameBytes());
             }
             if (((bitField0_ & 0x00000004) == 0x00000004)) {
                 size += com.google.protobuf.CodedOutputStream
@@ -7937,7 +8068,7 @@ public final class YouMaiBuddy {
                 super.clear();
                 userId_ = "";
                 bitField0_ = (bitField0_ & ~0x00000001);
-                nickName_ = com.google.protobuf.ByteString.EMPTY;
+                nickName_ = "";
                 bitField0_ = (bitField0_ & ~0x00000002);
                 updateTime_ = 0L;
                 bitField0_ = (bitField0_ & ~0x00000004);
@@ -8003,7 +8134,9 @@ public final class YouMaiBuddy {
                     onChanged();
                 }
                 if (other.hasNickName()) {
-                    setNickName(other.getNickName());
+                    bitField0_ |= 0x00000002;
+                    nickName_ = other.nickName_;
+                    onChanged();
                 }
                 if (other.hasUpdateTime()) {
                     setUpdateTime(other.getUpdateTime());
@@ -8142,26 +8275,55 @@ public final class YouMaiBuddy {
                 return this;
             }
 
-            private com.google.protobuf.ByteString nickName_ = com.google.protobuf.ByteString.EMPTY;
+            private Object nickName_ = "";
 
             /**
-             * <code>optional bytes nick_name = 2;</code>
+             * <code>optional string nick_name = 2;</code>
              */
             public boolean hasNickName() {
                 return ((bitField0_ & 0x00000002) == 0x00000002);
             }
 
             /**
-             * <code>optional bytes nick_name = 2;</code>
+             * <code>optional string nick_name = 2;</code>
              */
-            public com.google.protobuf.ByteString getNickName() {
-                return nickName_;
+            public String getNickName() {
+                Object ref = nickName_;
+                if (!(ref instanceof String)) {
+                    com.google.protobuf.ByteString bs =
+                            (com.google.protobuf.ByteString) ref;
+                    String s = bs.toStringUtf8();
+                    if (bs.isValidUtf8()) {
+                        nickName_ = s;
+                    }
+                    return s;
+                } else {
+                    return (String) ref;
+                }
             }
 
             /**
-             * <code>optional bytes nick_name = 2;</code>
+             * <code>optional string nick_name = 2;</code>
              */
-            public Builder setNickName(com.google.protobuf.ByteString value) {
+            public com.google.protobuf.ByteString
+            getNickNameBytes() {
+                Object ref = nickName_;
+                if (ref instanceof String) {
+                    com.google.protobuf.ByteString b =
+                            com.google.protobuf.ByteString.copyFromUtf8(
+                                    (String) ref);
+                    nickName_ = b;
+                    return b;
+                } else {
+                    return (com.google.protobuf.ByteString) ref;
+                }
+            }
+
+            /**
+             * <code>optional string nick_name = 2;</code>
+             */
+            public Builder setNickName(
+                    String value) {
                 if (value == null) {
                     throw new NullPointerException();
                 }
@@ -8172,11 +8334,25 @@ public final class YouMaiBuddy {
             }
 
             /**
-             * <code>optional bytes nick_name = 2;</code>
+             * <code>optional string nick_name = 2;</code>
              */
             public Builder clearNickName() {
                 bitField0_ = (bitField0_ & ~0x00000002);
                 nickName_ = getDefaultInstance().getNickName();
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string nick_name = 2;</code>
+             */
+            public Builder setNickNameBytes(
+                    com.google.protobuf.ByteString value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000002;
+                nickName_ = value;
                 onChanged();
                 return this;
             }
@@ -11190,6 +11366,34 @@ public final class YouMaiBuddy {
          */
         com.google.protobuf.ByteString
         getAvatorBytes();
+
+        /**
+         * <code>optional string jobname = 6;</code>
+         * <p>
+         * <pre>
+         * 岗位
+         * </pre>
+         */
+        boolean hasJobname();
+
+        /**
+         * <code>optional string jobname = 6;</code>
+         * <p>
+         * <pre>
+         * 岗位
+         * </pre>
+         */
+        String getJobname();
+
+        /**
+         * <code>optional string jobname = 6;</code>
+         * <p>
+         * <pre>
+         * 岗位
+         * </pre>
+         */
+        com.google.protobuf.ByteString
+        getJobnameBytes();
     }
 
     /**
@@ -11281,6 +11485,12 @@ public final class YouMaiBuddy {
                             com.google.protobuf.ByteString bs = input.readBytes();
                             bitField0_ |= 0x00000010;
                             avator_ = bs;
+                            break;
+                        }
+                        case 50: {
+                            com.google.protobuf.ByteString bs = input.readBytes();
+                            bitField0_ |= 0x00000020;
+                            jobname_ = bs;
                             break;
                         }
                     }
@@ -11553,12 +11763,70 @@ public final class YouMaiBuddy {
             }
         }
 
+        public static final int JOBNAME_FIELD_NUMBER = 6;
+        private Object jobname_;
+
+        /**
+         * <code>optional string jobname = 6;</code>
+         * <p>
+         * <pre>
+         * 岗位
+         * </pre>
+         */
+        public boolean hasJobname() {
+            return ((bitField0_ & 0x00000020) == 0x00000020);
+        }
+
+        /**
+         * <code>optional string jobname = 6;</code>
+         * <p>
+         * <pre>
+         * 岗位
+         * </pre>
+         */
+        public String getJobname() {
+            Object ref = jobname_;
+            if (ref instanceof String) {
+                return (String) ref;
+            } else {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                String s = bs.toStringUtf8();
+                if (bs.isValidUtf8()) {
+                    jobname_ = s;
+                }
+                return s;
+            }
+        }
+
+        /**
+         * <code>optional string jobname = 6;</code>
+         * <p>
+         * <pre>
+         * 岗位
+         * </pre>
+         */
+        public com.google.protobuf.ByteString
+        getJobnameBytes() {
+            Object ref = jobname_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (String) ref);
+                jobname_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
         private void initFields() {
             orgId_ = "";
             type_ = 0;
             name_ = "";
             username_ = "";
             avator_ = "";
+            jobname_ = "";
         }
 
         private byte memoizedIsInitialized = -1;
@@ -11590,6 +11858,9 @@ public final class YouMaiBuddy {
             if (((bitField0_ & 0x00000010) == 0x00000010)) {
                 output.writeBytes(5, getAvatorBytes());
             }
+            if (((bitField0_ & 0x00000020) == 0x00000020)) {
+                output.writeBytes(6, getJobnameBytes());
+            }
             getUnknownFields().writeTo(output);
         }
 
@@ -11619,6 +11890,10 @@ public final class YouMaiBuddy {
             if (((bitField0_ & 0x00000010) == 0x00000010)) {
                 size += com.google.protobuf.CodedOutputStream
                         .computeBytesSize(5, getAvatorBytes());
+            }
+            if (((bitField0_ & 0x00000020) == 0x00000020)) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeBytesSize(6, getJobnameBytes());
             }
             size += getUnknownFields().getSerializedSize();
             memoizedSerializedSize = size;
@@ -11773,6 +12048,8 @@ public final class YouMaiBuddy {
                 bitField0_ = (bitField0_ & ~0x00000008);
                 avator_ = "";
                 bitField0_ = (bitField0_ & ~0x00000010);
+                jobname_ = "";
+                bitField0_ = (bitField0_ & ~0x00000020);
                 return this;
             }
 
@@ -11821,6 +12098,10 @@ public final class YouMaiBuddy {
                     to_bitField0_ |= 0x00000010;
                 }
                 result.avator_ = avator_;
+                if (((from_bitField0_ & 0x00000020) == 0x00000020)) {
+                    to_bitField0_ |= 0x00000020;
+                }
+                result.jobname_ = jobname_;
                 result.bitField0_ = to_bitField0_;
                 onBuilt();
                 return result;
@@ -11858,6 +12139,11 @@ public final class YouMaiBuddy {
                 if (other.hasAvator()) {
                     bitField0_ |= 0x00000010;
                     avator_ = other.avator_;
+                    onChanged();
+                }
+                if (other.hasJobname()) {
+                    bitField0_ |= 0x00000020;
+                    jobname_ = other.jobname_;
                     onChanged();
                 }
                 this.mergeUnknownFields(other.getUnknownFields());
@@ -12312,6 +12598,112 @@ public final class YouMaiBuddy {
                 }
                 bitField0_ |= 0x00000010;
                 avator_ = value;
+                onChanged();
+                return this;
+            }
+
+            private Object jobname_ = "";
+
+            /**
+             * <code>optional string jobname = 6;</code>
+             * <p>
+             * <pre>
+             * 岗位
+             * </pre>
+             */
+            public boolean hasJobname() {
+                return ((bitField0_ & 0x00000020) == 0x00000020);
+            }
+
+            /**
+             * <code>optional string jobname = 6;</code>
+             * <p>
+             * <pre>
+             * 岗位
+             * </pre>
+             */
+            public String getJobname() {
+                Object ref = jobname_;
+                if (!(ref instanceof String)) {
+                    com.google.protobuf.ByteString bs =
+                            (com.google.protobuf.ByteString) ref;
+                    String s = bs.toStringUtf8();
+                    if (bs.isValidUtf8()) {
+                        jobname_ = s;
+                    }
+                    return s;
+                } else {
+                    return (String) ref;
+                }
+            }
+
+            /**
+             * <code>optional string jobname = 6;</code>
+             * <p>
+             * <pre>
+             * 岗位
+             * </pre>
+             */
+            public com.google.protobuf.ByteString
+            getJobnameBytes() {
+                Object ref = jobname_;
+                if (ref instanceof String) {
+                    com.google.protobuf.ByteString b =
+                            com.google.protobuf.ByteString.copyFromUtf8(
+                                    (String) ref);
+                    jobname_ = b;
+                    return b;
+                } else {
+                    return (com.google.protobuf.ByteString) ref;
+                }
+            }
+
+            /**
+             * <code>optional string jobname = 6;</code>
+             * <p>
+             * <pre>
+             * 岗位
+             * </pre>
+             */
+            public Builder setJobname(
+                    String value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000020;
+                jobname_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string jobname = 6;</code>
+             * <p>
+             * <pre>
+             * 岗位
+             * </pre>
+             */
+            public Builder clearJobname() {
+                bitField0_ = (bitField0_ & ~0x00000020);
+                jobname_ = getDefaultInstance().getJobname();
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string jobname = 6;</code>
+             * <p>
+             * <pre>
+             * 岗位
+             * </pre>
+             */
+            public Builder setJobnameBytes(
+                    com.google.protobuf.ByteString value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000020;
+                jobname_ = value;
                 onChanged();
                 return this;
             }
@@ -13779,65 +14171,113 @@ public final class YouMaiBuddy {
         getUserIdBytes();
 
         /**
-         * <code>optional string phone = 2;</code>
-         */
-        boolean hasPhone();
-
-        /**
-         * <code>optional string phone = 2;</code>
-         */
-        String getPhone();
-
-        /**
-         * <code>optional string phone = 2;</code>
-         */
-        com.google.protobuf.ByteString
-        getPhoneBytes();
-
-        /**
-         * <code>optional string nick_name = 3;</code>
+         * <code>optional string nick_name = 2;</code>
          */
         boolean hasNickName();
 
         /**
-         * <code>optional string nick_name = 3;</code>
+         * <code>optional string nick_name = 2;</code>
          */
         String getNickName();
 
         /**
-         * <code>optional string nick_name = 3;</code>
+         * <code>optional string nick_name = 2;</code>
          */
         com.google.protobuf.ByteString
         getNickNameBytes();
 
         /**
-         * <code>optional string avator = 4;</code>
+         * <code>optional string real_name = 3;</code>
+         */
+        boolean hasRealName();
+
+        /**
+         * <code>optional string real_name = 3;</code>
+         */
+        String getRealName();
+
+        /**
+         * <code>optional string real_name = 3;</code>
+         */
+        com.google.protobuf.ByteString
+        getRealNameBytes();
+
+        /**
+         * <code>optional string user_name = 4;</code>
+         */
+        boolean hasUserName();
+
+        /**
+         * <code>optional string user_name = 4;</code>
+         */
+        String getUserName();
+
+        /**
+         * <code>optional string user_name = 4;</code>
+         */
+        com.google.protobuf.ByteString
+        getUserNameBytes();
+
+        /**
+         * <code>optional string phone = 5;</code>
+         */
+        boolean hasPhone();
+
+        /**
+         * <code>optional string phone = 5;</code>
+         */
+        String getPhone();
+
+        /**
+         * <code>optional string phone = 5;</code>
+         */
+        com.google.protobuf.ByteString
+        getPhoneBytes();
+
+        /**
+         * <code>optional string email = 6;</code>
+         */
+        boolean hasEmail();
+
+        /**
+         * <code>optional string email = 6;</code>
+         */
+        String getEmail();
+
+        /**
+         * <code>optional string email = 6;</code>
+         */
+        com.google.protobuf.ByteString
+        getEmailBytes();
+
+        /**
+         * <code>optional string avator = 7;</code>
          */
         boolean hasAvator();
 
         /**
-         * <code>optional string avator = 4;</code>
+         * <code>optional string avator = 7;</code>
          */
         String getAvator();
 
         /**
-         * <code>optional string avator = 4;</code>
+         * <code>optional string avator = 7;</code>
          */
         com.google.protobuf.ByteString
         getAvatorBytes();
 
         /**
-         * <code>optional int32 sex = 5;</code>
+         * <code>optional int32 sex = 8;</code>
          */
         boolean hasSex();
 
         /**
-         * <code>optional int32 sex = 5;</code>
+         * <code>optional int32 sex = 8;</code>
          */
         int getSex();
 
         /**
-         * <code>optional string sign = 6;</code>
+         * <code>optional string sign = 9;</code>
          * <p>
          * <pre>
          * 个性签名
@@ -13846,7 +14286,7 @@ public final class YouMaiBuddy {
         boolean hasSign();
 
         /**
-         * <code>optional string sign = 6;</code>
+         * <code>optional string sign = 9;</code>
          * <p>
          * <pre>
          * 个性签名
@@ -13855,7 +14295,7 @@ public final class YouMaiBuddy {
         String getSign();
 
         /**
-         * <code>optional string sign = 6;</code>
+         * <code>optional string sign = 9;</code>
          * <p>
          * <pre>
          * 个性签名
@@ -13865,22 +14305,60 @@ public final class YouMaiBuddy {
         getSignBytes();
 
         /**
-         * <code>optional bool is_hx = 20;</code>
+         * <code>optional string job_name = 10;</code>
          * <p>
          * <pre>
-         * true/false
+         * 岗位名称
          * </pre>
          */
-        boolean hasIsHx();
+        boolean hasJobName();
 
         /**
-         * <code>optional bool is_hx = 20;</code>
+         * <code>optional string job_name = 10;</code>
          * <p>
          * <pre>
-         * true/false
+         * 岗位名称
          * </pre>
          */
-        boolean getIsHx();
+        String getJobName();
+
+        /**
+         * <code>optional string job_name = 10;</code>
+         * <p>
+         * <pre>
+         * 岗位名称
+         * </pre>
+         */
+        com.google.protobuf.ByteString
+        getJobNameBytes();
+
+        /**
+         * <code>optional string org_name = 11;</code>
+         * <p>
+         * <pre>
+         * 部门名称
+         * </pre>
+         */
+        boolean hasOrgName();
+
+        /**
+         * <code>optional string org_name = 11;</code>
+         * <p>
+         * <pre>
+         * 部门名称
+         * </pre>
+         */
+        String getOrgName();
+
+        /**
+         * <code>optional string org_name = 11;</code>
+         * <p>
+         * <pre>
+         * 部门名称
+         * </pre>
+         */
+        com.google.protobuf.ByteString
+        getOrgNameBytes();
     }
 
     /**
@@ -13954,35 +14432,60 @@ public final class YouMaiBuddy {
                         case 18: {
                             com.google.protobuf.ByteString bs = input.readBytes();
                             bitField0_ |= 0x00000002;
-                            phone_ = bs;
+                            nickName_ = bs;
                             break;
                         }
                         case 26: {
                             com.google.protobuf.ByteString bs = input.readBytes();
                             bitField0_ |= 0x00000004;
-                            nickName_ = bs;
+                            realName_ = bs;
                             break;
                         }
                         case 34: {
                             com.google.protobuf.ByteString bs = input.readBytes();
                             bitField0_ |= 0x00000008;
-                            avator_ = bs;
+                            userName_ = bs;
                             break;
                         }
-                        case 40: {
+                        case 42: {
+                            com.google.protobuf.ByteString bs = input.readBytes();
                             bitField0_ |= 0x00000010;
-                            sex_ = input.readInt32();
+                            phone_ = bs;
                             break;
                         }
                         case 50: {
                             com.google.protobuf.ByteString bs = input.readBytes();
                             bitField0_ |= 0x00000020;
+                            email_ = bs;
+                            break;
+                        }
+                        case 58: {
+                            com.google.protobuf.ByteString bs = input.readBytes();
+                            bitField0_ |= 0x00000040;
+                            avator_ = bs;
+                            break;
+                        }
+                        case 64: {
+                            bitField0_ |= 0x00000080;
+                            sex_ = input.readInt32();
+                            break;
+                        }
+                        case 74: {
+                            com.google.protobuf.ByteString bs = input.readBytes();
+                            bitField0_ |= 0x00000100;
                             sign_ = bs;
                             break;
                         }
-                        case 160: {
-                            bitField0_ |= 0x00000040;
-                            isHx_ = input.readBool();
+                        case 82: {
+                            com.google.protobuf.ByteString bs = input.readBytes();
+                            bitField0_ |= 0x00000200;
+                            jobName_ = bs;
+                            break;
+                        }
+                        case 90: {
+                            com.google.protobuf.ByteString bs = input.readBytes();
+                            bitField0_ |= 0x00000400;
+                            orgName_ = bs;
                             break;
                         }
                     }
@@ -14071,63 +14574,18 @@ public final class YouMaiBuddy {
             }
         }
 
-        public static final int PHONE_FIELD_NUMBER = 2;
-        private Object phone_;
+        public static final int NICK_NAME_FIELD_NUMBER = 2;
+        private Object nickName_;
 
         /**
-         * <code>optional string phone = 2;</code>
+         * <code>optional string nick_name = 2;</code>
          */
-        public boolean hasPhone() {
+        public boolean hasNickName() {
             return ((bitField0_ & 0x00000002) == 0x00000002);
         }
 
         /**
-         * <code>optional string phone = 2;</code>
-         */
-        public String getPhone() {
-            Object ref = phone_;
-            if (ref instanceof String) {
-                return (String) ref;
-            } else {
-                com.google.protobuf.ByteString bs =
-                        (com.google.protobuf.ByteString) ref;
-                String s = bs.toStringUtf8();
-                if (bs.isValidUtf8()) {
-                    phone_ = s;
-                }
-                return s;
-            }
-        }
-
-        /**
-         * <code>optional string phone = 2;</code>
-         */
-        public com.google.protobuf.ByteString
-        getPhoneBytes() {
-            Object ref = phone_;
-            if (ref instanceof String) {
-                com.google.protobuf.ByteString b =
-                        com.google.protobuf.ByteString.copyFromUtf8(
-                                (String) ref);
-                phone_ = b;
-                return b;
-            } else {
-                return (com.google.protobuf.ByteString) ref;
-            }
-        }
-
-        public static final int NICK_NAME_FIELD_NUMBER = 3;
-        private Object nickName_;
-
-        /**
-         * <code>optional string nick_name = 3;</code>
-         */
-        public boolean hasNickName() {
-            return ((bitField0_ & 0x00000004) == 0x00000004);
-        }
-
-        /**
-         * <code>optional string nick_name = 3;</code>
+         * <code>optional string nick_name = 2;</code>
          */
         public String getNickName() {
             Object ref = nickName_;
@@ -14145,7 +14603,7 @@ public final class YouMaiBuddy {
         }
 
         /**
-         * <code>optional string nick_name = 3;</code>
+         * <code>optional string nick_name = 2;</code>
          */
         public com.google.protobuf.ByteString
         getNickNameBytes() {
@@ -14161,18 +14619,198 @@ public final class YouMaiBuddy {
             }
         }
 
-        public static final int AVATOR_FIELD_NUMBER = 4;
-        private Object avator_;
+        public static final int REAL_NAME_FIELD_NUMBER = 3;
+        private Object realName_;
 
         /**
-         * <code>optional string avator = 4;</code>
+         * <code>optional string real_name = 3;</code>
          */
-        public boolean hasAvator() {
+        public boolean hasRealName() {
+            return ((bitField0_ & 0x00000004) == 0x00000004);
+        }
+
+        /**
+         * <code>optional string real_name = 3;</code>
+         */
+        public String getRealName() {
+            Object ref = realName_;
+            if (ref instanceof String) {
+                return (String) ref;
+            } else {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                String s = bs.toStringUtf8();
+                if (bs.isValidUtf8()) {
+                    realName_ = s;
+                }
+                return s;
+            }
+        }
+
+        /**
+         * <code>optional string real_name = 3;</code>
+         */
+        public com.google.protobuf.ByteString
+        getRealNameBytes() {
+            Object ref = realName_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (String) ref);
+                realName_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
+        public static final int USER_NAME_FIELD_NUMBER = 4;
+        private Object userName_;
+
+        /**
+         * <code>optional string user_name = 4;</code>
+         */
+        public boolean hasUserName() {
             return ((bitField0_ & 0x00000008) == 0x00000008);
         }
 
         /**
-         * <code>optional string avator = 4;</code>
+         * <code>optional string user_name = 4;</code>
+         */
+        public String getUserName() {
+            Object ref = userName_;
+            if (ref instanceof String) {
+                return (String) ref;
+            } else {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                String s = bs.toStringUtf8();
+                if (bs.isValidUtf8()) {
+                    userName_ = s;
+                }
+                return s;
+            }
+        }
+
+        /**
+         * <code>optional string user_name = 4;</code>
+         */
+        public com.google.protobuf.ByteString
+        getUserNameBytes() {
+            Object ref = userName_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (String) ref);
+                userName_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
+        public static final int PHONE_FIELD_NUMBER = 5;
+        private Object phone_;
+
+        /**
+         * <code>optional string phone = 5;</code>
+         */
+        public boolean hasPhone() {
+            return ((bitField0_ & 0x00000010) == 0x00000010);
+        }
+
+        /**
+         * <code>optional string phone = 5;</code>
+         */
+        public String getPhone() {
+            Object ref = phone_;
+            if (ref instanceof String) {
+                return (String) ref;
+            } else {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                String s = bs.toStringUtf8();
+                if (bs.isValidUtf8()) {
+                    phone_ = s;
+                }
+                return s;
+            }
+        }
+
+        /**
+         * <code>optional string phone = 5;</code>
+         */
+        public com.google.protobuf.ByteString
+        getPhoneBytes() {
+            Object ref = phone_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (String) ref);
+                phone_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
+        public static final int EMAIL_FIELD_NUMBER = 6;
+        private Object email_;
+
+        /**
+         * <code>optional string email = 6;</code>
+         */
+        public boolean hasEmail() {
+            return ((bitField0_ & 0x00000020) == 0x00000020);
+        }
+
+        /**
+         * <code>optional string email = 6;</code>
+         */
+        public String getEmail() {
+            Object ref = email_;
+            if (ref instanceof String) {
+                return (String) ref;
+            } else {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                String s = bs.toStringUtf8();
+                if (bs.isValidUtf8()) {
+                    email_ = s;
+                }
+                return s;
+            }
+        }
+
+        /**
+         * <code>optional string email = 6;</code>
+         */
+        public com.google.protobuf.ByteString
+        getEmailBytes() {
+            Object ref = email_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (String) ref);
+                email_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
+        public static final int AVATOR_FIELD_NUMBER = 7;
+        private Object avator_;
+
+        /**
+         * <code>optional string avator = 7;</code>
+         */
+        public boolean hasAvator() {
+            return ((bitField0_ & 0x00000040) == 0x00000040);
+        }
+
+        /**
+         * <code>optional string avator = 7;</code>
          */
         public String getAvator() {
             Object ref = avator_;
@@ -14190,7 +14828,7 @@ public final class YouMaiBuddy {
         }
 
         /**
-         * <code>optional string avator = 4;</code>
+         * <code>optional string avator = 7;</code>
          */
         public com.google.protobuf.ByteString
         getAvatorBytes() {
@@ -14206,39 +14844,39 @@ public final class YouMaiBuddy {
             }
         }
 
-        public static final int SEX_FIELD_NUMBER = 5;
+        public static final int SEX_FIELD_NUMBER = 8;
         private int sex_;
 
         /**
-         * <code>optional int32 sex = 5;</code>
+         * <code>optional int32 sex = 8;</code>
          */
         public boolean hasSex() {
-            return ((bitField0_ & 0x00000010) == 0x00000010);
+            return ((bitField0_ & 0x00000080) == 0x00000080);
         }
 
         /**
-         * <code>optional int32 sex = 5;</code>
+         * <code>optional int32 sex = 8;</code>
          */
         public int getSex() {
             return sex_;
         }
 
-        public static final int SIGN_FIELD_NUMBER = 6;
+        public static final int SIGN_FIELD_NUMBER = 9;
         private Object sign_;
 
         /**
-         * <code>optional string sign = 6;</code>
+         * <code>optional string sign = 9;</code>
          * <p>
          * <pre>
          * 个性签名
          * </pre>
          */
         public boolean hasSign() {
-            return ((bitField0_ & 0x00000020) == 0x00000020);
+            return ((bitField0_ & 0x00000100) == 0x00000100);
         }
 
         /**
-         * <code>optional string sign = 6;</code>
+         * <code>optional string sign = 9;</code>
          * <p>
          * <pre>
          * 个性签名
@@ -14260,7 +14898,7 @@ public final class YouMaiBuddy {
         }
 
         /**
-         * <code>optional string sign = 6;</code>
+         * <code>optional string sign = 9;</code>
          * <p>
          * <pre>
          * 个性签名
@@ -14280,39 +14918,132 @@ public final class YouMaiBuddy {
             }
         }
 
-        public static final int IS_HX_FIELD_NUMBER = 20;
-        private boolean isHx_;
+        public static final int JOB_NAME_FIELD_NUMBER = 10;
+        private Object jobName_;
 
         /**
-         * <code>optional bool is_hx = 20;</code>
+         * <code>optional string job_name = 10;</code>
          * <p>
          * <pre>
-         * true/false
+         * 岗位名称
          * </pre>
          */
-        public boolean hasIsHx() {
-            return ((bitField0_ & 0x00000040) == 0x00000040);
+        public boolean hasJobName() {
+            return ((bitField0_ & 0x00000200) == 0x00000200);
         }
 
         /**
-         * <code>optional bool is_hx = 20;</code>
+         * <code>optional string job_name = 10;</code>
          * <p>
          * <pre>
-         * true/false
+         * 岗位名称
          * </pre>
          */
-        public boolean getIsHx() {
-            return isHx_;
+        public String getJobName() {
+            Object ref = jobName_;
+            if (ref instanceof String) {
+                return (String) ref;
+            } else {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                String s = bs.toStringUtf8();
+                if (bs.isValidUtf8()) {
+                    jobName_ = s;
+                }
+                return s;
+            }
+        }
+
+        /**
+         * <code>optional string job_name = 10;</code>
+         * <p>
+         * <pre>
+         * 岗位名称
+         * </pre>
+         */
+        public com.google.protobuf.ByteString
+        getJobNameBytes() {
+            Object ref = jobName_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (String) ref);
+                jobName_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
+        public static final int ORG_NAME_FIELD_NUMBER = 11;
+        private Object orgName_;
+
+        /**
+         * <code>optional string org_name = 11;</code>
+         * <p>
+         * <pre>
+         * 部门名称
+         * </pre>
+         */
+        public boolean hasOrgName() {
+            return ((bitField0_ & 0x00000400) == 0x00000400);
+        }
+
+        /**
+         * <code>optional string org_name = 11;</code>
+         * <p>
+         * <pre>
+         * 部门名称
+         * </pre>
+         */
+        public String getOrgName() {
+            Object ref = orgName_;
+            if (ref instanceof String) {
+                return (String) ref;
+            } else {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                String s = bs.toStringUtf8();
+                if (bs.isValidUtf8()) {
+                    orgName_ = s;
+                }
+                return s;
+            }
+        }
+
+        /**
+         * <code>optional string org_name = 11;</code>
+         * <p>
+         * <pre>
+         * 部门名称
+         * </pre>
+         */
+        public com.google.protobuf.ByteString
+        getOrgNameBytes() {
+            Object ref = orgName_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (String) ref);
+                orgName_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
         }
 
         private void initFields() {
             userId_ = "";
-            phone_ = "";
             nickName_ = "";
+            realName_ = "";
+            userName_ = "";
+            phone_ = "";
+            email_ = "";
             avator_ = "";
             sex_ = 0;
             sign_ = "";
-            isHx_ = false;
+            jobName_ = "";
+            orgName_ = "";
         }
 
         private byte memoizedIsInitialized = -1;
@@ -14333,22 +15064,34 @@ public final class YouMaiBuddy {
                 output.writeBytes(1, getUserIdBytes());
             }
             if (((bitField0_ & 0x00000002) == 0x00000002)) {
-                output.writeBytes(2, getPhoneBytes());
+                output.writeBytes(2, getNickNameBytes());
             }
             if (((bitField0_ & 0x00000004) == 0x00000004)) {
-                output.writeBytes(3, getNickNameBytes());
+                output.writeBytes(3, getRealNameBytes());
             }
             if (((bitField0_ & 0x00000008) == 0x00000008)) {
-                output.writeBytes(4, getAvatorBytes());
+                output.writeBytes(4, getUserNameBytes());
             }
             if (((bitField0_ & 0x00000010) == 0x00000010)) {
-                output.writeInt32(5, sex_);
+                output.writeBytes(5, getPhoneBytes());
             }
             if (((bitField0_ & 0x00000020) == 0x00000020)) {
-                output.writeBytes(6, getSignBytes());
+                output.writeBytes(6, getEmailBytes());
             }
             if (((bitField0_ & 0x00000040) == 0x00000040)) {
-                output.writeBool(20, isHx_);
+                output.writeBytes(7, getAvatorBytes());
+            }
+            if (((bitField0_ & 0x00000080) == 0x00000080)) {
+                output.writeInt32(8, sex_);
+            }
+            if (((bitField0_ & 0x00000100) == 0x00000100)) {
+                output.writeBytes(9, getSignBytes());
+            }
+            if (((bitField0_ & 0x00000200) == 0x00000200)) {
+                output.writeBytes(10, getJobNameBytes());
+            }
+            if (((bitField0_ & 0x00000400) == 0x00000400)) {
+                output.writeBytes(11, getOrgNameBytes());
             }
             getUnknownFields().writeTo(output);
         }
@@ -14366,27 +15109,43 @@ public final class YouMaiBuddy {
             }
             if (((bitField0_ & 0x00000002) == 0x00000002)) {
                 size += com.google.protobuf.CodedOutputStream
-                        .computeBytesSize(2, getPhoneBytes());
+                        .computeBytesSize(2, getNickNameBytes());
             }
             if (((bitField0_ & 0x00000004) == 0x00000004)) {
                 size += com.google.protobuf.CodedOutputStream
-                        .computeBytesSize(3, getNickNameBytes());
+                        .computeBytesSize(3, getRealNameBytes());
             }
             if (((bitField0_ & 0x00000008) == 0x00000008)) {
                 size += com.google.protobuf.CodedOutputStream
-                        .computeBytesSize(4, getAvatorBytes());
+                        .computeBytesSize(4, getUserNameBytes());
             }
             if (((bitField0_ & 0x00000010) == 0x00000010)) {
                 size += com.google.protobuf.CodedOutputStream
-                        .computeInt32Size(5, sex_);
+                        .computeBytesSize(5, getPhoneBytes());
             }
             if (((bitField0_ & 0x00000020) == 0x00000020)) {
                 size += com.google.protobuf.CodedOutputStream
-                        .computeBytesSize(6, getSignBytes());
+                        .computeBytesSize(6, getEmailBytes());
             }
             if (((bitField0_ & 0x00000040) == 0x00000040)) {
                 size += com.google.protobuf.CodedOutputStream
-                        .computeBoolSize(20, isHx_);
+                        .computeBytesSize(7, getAvatorBytes());
+            }
+            if (((bitField0_ & 0x00000080) == 0x00000080)) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeInt32Size(8, sex_);
+            }
+            if (((bitField0_ & 0x00000100) == 0x00000100)) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeBytesSize(9, getSignBytes());
+            }
+            if (((bitField0_ & 0x00000200) == 0x00000200)) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeBytesSize(10, getJobNameBytes());
+            }
+            if (((bitField0_ & 0x00000400) == 0x00000400)) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeBytesSize(11, getOrgNameBytes());
             }
             size += getUnknownFields().getSerializedSize();
             memoizedSerializedSize = size;
@@ -14533,18 +15292,26 @@ public final class YouMaiBuddy {
                 super.clear();
                 userId_ = "";
                 bitField0_ = (bitField0_ & ~0x00000001);
-                phone_ = "";
-                bitField0_ = (bitField0_ & ~0x00000002);
                 nickName_ = "";
+                bitField0_ = (bitField0_ & ~0x00000002);
+                realName_ = "";
                 bitField0_ = (bitField0_ & ~0x00000004);
-                avator_ = "";
+                userName_ = "";
                 bitField0_ = (bitField0_ & ~0x00000008);
-                sex_ = 0;
+                phone_ = "";
                 bitField0_ = (bitField0_ & ~0x00000010);
-                sign_ = "";
+                email_ = "";
                 bitField0_ = (bitField0_ & ~0x00000020);
-                isHx_ = false;
+                avator_ = "";
                 bitField0_ = (bitField0_ & ~0x00000040);
+                sex_ = 0;
+                bitField0_ = (bitField0_ & ~0x00000080);
+                sign_ = "";
+                bitField0_ = (bitField0_ & ~0x00000100);
+                jobName_ = "";
+                bitField0_ = (bitField0_ & ~0x00000200);
+                orgName_ = "";
+                bitField0_ = (bitField0_ & ~0x00000400);
                 return this;
             }
 
@@ -14580,27 +15347,43 @@ public final class YouMaiBuddy {
                 if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
                     to_bitField0_ |= 0x00000002;
                 }
-                result.phone_ = phone_;
+                result.nickName_ = nickName_;
                 if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
                     to_bitField0_ |= 0x00000004;
                 }
-                result.nickName_ = nickName_;
+                result.realName_ = realName_;
                 if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
                     to_bitField0_ |= 0x00000008;
                 }
-                result.avator_ = avator_;
+                result.userName_ = userName_;
                 if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
                     to_bitField0_ |= 0x00000010;
                 }
-                result.sex_ = sex_;
+                result.phone_ = phone_;
                 if (((from_bitField0_ & 0x00000020) == 0x00000020)) {
                     to_bitField0_ |= 0x00000020;
                 }
-                result.sign_ = sign_;
+                result.email_ = email_;
                 if (((from_bitField0_ & 0x00000040) == 0x00000040)) {
                     to_bitField0_ |= 0x00000040;
                 }
-                result.isHx_ = isHx_;
+                result.avator_ = avator_;
+                if (((from_bitField0_ & 0x00000080) == 0x00000080)) {
+                    to_bitField0_ |= 0x00000080;
+                }
+                result.sex_ = sex_;
+                if (((from_bitField0_ & 0x00000100) == 0x00000100)) {
+                    to_bitField0_ |= 0x00000100;
+                }
+                result.sign_ = sign_;
+                if (((from_bitField0_ & 0x00000200) == 0x00000200)) {
+                    to_bitField0_ |= 0x00000200;
+                }
+                result.jobName_ = jobName_;
+                if (((from_bitField0_ & 0x00000400) == 0x00000400)) {
+                    to_bitField0_ |= 0x00000400;
+                }
+                result.orgName_ = orgName_;
                 result.bitField0_ = to_bitField0_;
                 onBuilt();
                 return result;
@@ -14622,18 +15405,33 @@ public final class YouMaiBuddy {
                     userId_ = other.userId_;
                     onChanged();
                 }
-                if (other.hasPhone()) {
-                    bitField0_ |= 0x00000002;
-                    phone_ = other.phone_;
-                    onChanged();
-                }
                 if (other.hasNickName()) {
-                    bitField0_ |= 0x00000004;
+                    bitField0_ |= 0x00000002;
                     nickName_ = other.nickName_;
                     onChanged();
                 }
-                if (other.hasAvator()) {
+                if (other.hasRealName()) {
+                    bitField0_ |= 0x00000004;
+                    realName_ = other.realName_;
+                    onChanged();
+                }
+                if (other.hasUserName()) {
                     bitField0_ |= 0x00000008;
+                    userName_ = other.userName_;
+                    onChanged();
+                }
+                if (other.hasPhone()) {
+                    bitField0_ |= 0x00000010;
+                    phone_ = other.phone_;
+                    onChanged();
+                }
+                if (other.hasEmail()) {
+                    bitField0_ |= 0x00000020;
+                    email_ = other.email_;
+                    onChanged();
+                }
+                if (other.hasAvator()) {
+                    bitField0_ |= 0x00000040;
                     avator_ = other.avator_;
                     onChanged();
                 }
@@ -14641,12 +15439,19 @@ public final class YouMaiBuddy {
                     setSex(other.getSex());
                 }
                 if (other.hasSign()) {
-                    bitField0_ |= 0x00000020;
+                    bitField0_ |= 0x00000100;
                     sign_ = other.sign_;
                     onChanged();
                 }
-                if (other.hasIsHx()) {
-                    setIsHx(other.getIsHx());
+                if (other.hasJobName()) {
+                    bitField0_ |= 0x00000200;
+                    jobName_ = other.jobName_;
+                    onChanged();
+                }
+                if (other.hasOrgName()) {
+                    bitField0_ |= 0x00000400;
+                    orgName_ = other.orgName_;
+                    onChanged();
                 }
                 this.mergeUnknownFields(other.getUnknownFields());
                 return this;
@@ -14758,99 +15563,17 @@ public final class YouMaiBuddy {
                 return this;
             }
 
-            private Object phone_ = "";
+            private Object nickName_ = "";
 
             /**
-             * <code>optional string phone = 2;</code>
+             * <code>optional string nick_name = 2;</code>
              */
-            public boolean hasPhone() {
+            public boolean hasNickName() {
                 return ((bitField0_ & 0x00000002) == 0x00000002);
             }
 
             /**
-             * <code>optional string phone = 2;</code>
-             */
-            public String getPhone() {
-                Object ref = phone_;
-                if (!(ref instanceof String)) {
-                    com.google.protobuf.ByteString bs =
-                            (com.google.protobuf.ByteString) ref;
-                    String s = bs.toStringUtf8();
-                    if (bs.isValidUtf8()) {
-                        phone_ = s;
-                    }
-                    return s;
-                } else {
-                    return (String) ref;
-                }
-            }
-
-            /**
-             * <code>optional string phone = 2;</code>
-             */
-            public com.google.protobuf.ByteString
-            getPhoneBytes() {
-                Object ref = phone_;
-                if (ref instanceof String) {
-                    com.google.protobuf.ByteString b =
-                            com.google.protobuf.ByteString.copyFromUtf8(
-                                    (String) ref);
-                    phone_ = b;
-                    return b;
-                } else {
-                    return (com.google.protobuf.ByteString) ref;
-                }
-            }
-
-            /**
-             * <code>optional string phone = 2;</code>
-             */
-            public Builder setPhone(
-                    String value) {
-                if (value == null) {
-                    throw new NullPointerException();
-                }
-                bitField0_ |= 0x00000002;
-                phone_ = value;
-                onChanged();
-                return this;
-            }
-
-            /**
-             * <code>optional string phone = 2;</code>
-             */
-            public Builder clearPhone() {
-                bitField0_ = (bitField0_ & ~0x00000002);
-                phone_ = getDefaultInstance().getPhone();
-                onChanged();
-                return this;
-            }
-
-            /**
-             * <code>optional string phone = 2;</code>
-             */
-            public Builder setPhoneBytes(
-                    com.google.protobuf.ByteString value) {
-                if (value == null) {
-                    throw new NullPointerException();
-                }
-                bitField0_ |= 0x00000002;
-                phone_ = value;
-                onChanged();
-                return this;
-            }
-
-            private Object nickName_ = "";
-
-            /**
-             * <code>optional string nick_name = 3;</code>
-             */
-            public boolean hasNickName() {
-                return ((bitField0_ & 0x00000004) == 0x00000004);
-            }
-
-            /**
-             * <code>optional string nick_name = 3;</code>
+             * <code>optional string nick_name = 2;</code>
              */
             public String getNickName() {
                 Object ref = nickName_;
@@ -14868,7 +15591,7 @@ public final class YouMaiBuddy {
             }
 
             /**
-             * <code>optional string nick_name = 3;</code>
+             * <code>optional string nick_name = 2;</code>
              */
             public com.google.protobuf.ByteString
             getNickNameBytes() {
@@ -14885,39 +15608,367 @@ public final class YouMaiBuddy {
             }
 
             /**
-             * <code>optional string nick_name = 3;</code>
+             * <code>optional string nick_name = 2;</code>
              */
             public Builder setNickName(
                     String value) {
                 if (value == null) {
                     throw new NullPointerException();
                 }
-                bitField0_ |= 0x00000004;
+                bitField0_ |= 0x00000002;
                 nickName_ = value;
                 onChanged();
                 return this;
             }
 
             /**
-             * <code>optional string nick_name = 3;</code>
+             * <code>optional string nick_name = 2;</code>
              */
             public Builder clearNickName() {
-                bitField0_ = (bitField0_ & ~0x00000004);
+                bitField0_ = (bitField0_ & ~0x00000002);
                 nickName_ = getDefaultInstance().getNickName();
                 onChanged();
                 return this;
             }
 
             /**
-             * <code>optional string nick_name = 3;</code>
+             * <code>optional string nick_name = 2;</code>
              */
             public Builder setNickNameBytes(
                     com.google.protobuf.ByteString value) {
                 if (value == null) {
                     throw new NullPointerException();
                 }
-                bitField0_ |= 0x00000004;
+                bitField0_ |= 0x00000002;
                 nickName_ = value;
+                onChanged();
+                return this;
+            }
+
+            private Object realName_ = "";
+
+            /**
+             * <code>optional string real_name = 3;</code>
+             */
+            public boolean hasRealName() {
+                return ((bitField0_ & 0x00000004) == 0x00000004);
+            }
+
+            /**
+             * <code>optional string real_name = 3;</code>
+             */
+            public String getRealName() {
+                Object ref = realName_;
+                if (!(ref instanceof String)) {
+                    com.google.protobuf.ByteString bs =
+                            (com.google.protobuf.ByteString) ref;
+                    String s = bs.toStringUtf8();
+                    if (bs.isValidUtf8()) {
+                        realName_ = s;
+                    }
+                    return s;
+                } else {
+                    return (String) ref;
+                }
+            }
+
+            /**
+             * <code>optional string real_name = 3;</code>
+             */
+            public com.google.protobuf.ByteString
+            getRealNameBytes() {
+                Object ref = realName_;
+                if (ref instanceof String) {
+                    com.google.protobuf.ByteString b =
+                            com.google.protobuf.ByteString.copyFromUtf8(
+                                    (String) ref);
+                    realName_ = b;
+                    return b;
+                } else {
+                    return (com.google.protobuf.ByteString) ref;
+                }
+            }
+
+            /**
+             * <code>optional string real_name = 3;</code>
+             */
+            public Builder setRealName(
+                    String value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000004;
+                realName_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string real_name = 3;</code>
+             */
+            public Builder clearRealName() {
+                bitField0_ = (bitField0_ & ~0x00000004);
+                realName_ = getDefaultInstance().getRealName();
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string real_name = 3;</code>
+             */
+            public Builder setRealNameBytes(
+                    com.google.protobuf.ByteString value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000004;
+                realName_ = value;
+                onChanged();
+                return this;
+            }
+
+            private Object userName_ = "";
+
+            /**
+             * <code>optional string user_name = 4;</code>
+             */
+            public boolean hasUserName() {
+                return ((bitField0_ & 0x00000008) == 0x00000008);
+            }
+
+            /**
+             * <code>optional string user_name = 4;</code>
+             */
+            public String getUserName() {
+                Object ref = userName_;
+                if (!(ref instanceof String)) {
+                    com.google.protobuf.ByteString bs =
+                            (com.google.protobuf.ByteString) ref;
+                    String s = bs.toStringUtf8();
+                    if (bs.isValidUtf8()) {
+                        userName_ = s;
+                    }
+                    return s;
+                } else {
+                    return (String) ref;
+                }
+            }
+
+            /**
+             * <code>optional string user_name = 4;</code>
+             */
+            public com.google.protobuf.ByteString
+            getUserNameBytes() {
+                Object ref = userName_;
+                if (ref instanceof String) {
+                    com.google.protobuf.ByteString b =
+                            com.google.protobuf.ByteString.copyFromUtf8(
+                                    (String) ref);
+                    userName_ = b;
+                    return b;
+                } else {
+                    return (com.google.protobuf.ByteString) ref;
+                }
+            }
+
+            /**
+             * <code>optional string user_name = 4;</code>
+             */
+            public Builder setUserName(
+                    String value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000008;
+                userName_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string user_name = 4;</code>
+             */
+            public Builder clearUserName() {
+                bitField0_ = (bitField0_ & ~0x00000008);
+                userName_ = getDefaultInstance().getUserName();
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string user_name = 4;</code>
+             */
+            public Builder setUserNameBytes(
+                    com.google.protobuf.ByteString value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000008;
+                userName_ = value;
+                onChanged();
+                return this;
+            }
+
+            private Object phone_ = "";
+
+            /**
+             * <code>optional string phone = 5;</code>
+             */
+            public boolean hasPhone() {
+                return ((bitField0_ & 0x00000010) == 0x00000010);
+            }
+
+            /**
+             * <code>optional string phone = 5;</code>
+             */
+            public String getPhone() {
+                Object ref = phone_;
+                if (!(ref instanceof String)) {
+                    com.google.protobuf.ByteString bs =
+                            (com.google.protobuf.ByteString) ref;
+                    String s = bs.toStringUtf8();
+                    if (bs.isValidUtf8()) {
+                        phone_ = s;
+                    }
+                    return s;
+                } else {
+                    return (String) ref;
+                }
+            }
+
+            /**
+             * <code>optional string phone = 5;</code>
+             */
+            public com.google.protobuf.ByteString
+            getPhoneBytes() {
+                Object ref = phone_;
+                if (ref instanceof String) {
+                    com.google.protobuf.ByteString b =
+                            com.google.protobuf.ByteString.copyFromUtf8(
+                                    (String) ref);
+                    phone_ = b;
+                    return b;
+                } else {
+                    return (com.google.protobuf.ByteString) ref;
+                }
+            }
+
+            /**
+             * <code>optional string phone = 5;</code>
+             */
+            public Builder setPhone(
+                    String value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000010;
+                phone_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string phone = 5;</code>
+             */
+            public Builder clearPhone() {
+                bitField0_ = (bitField0_ & ~0x00000010);
+                phone_ = getDefaultInstance().getPhone();
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string phone = 5;</code>
+             */
+            public Builder setPhoneBytes(
+                    com.google.protobuf.ByteString value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000010;
+                phone_ = value;
+                onChanged();
+                return this;
+            }
+
+            private Object email_ = "";
+
+            /**
+             * <code>optional string email = 6;</code>
+             */
+            public boolean hasEmail() {
+                return ((bitField0_ & 0x00000020) == 0x00000020);
+            }
+
+            /**
+             * <code>optional string email = 6;</code>
+             */
+            public String getEmail() {
+                Object ref = email_;
+                if (!(ref instanceof String)) {
+                    com.google.protobuf.ByteString bs =
+                            (com.google.protobuf.ByteString) ref;
+                    String s = bs.toStringUtf8();
+                    if (bs.isValidUtf8()) {
+                        email_ = s;
+                    }
+                    return s;
+                } else {
+                    return (String) ref;
+                }
+            }
+
+            /**
+             * <code>optional string email = 6;</code>
+             */
+            public com.google.protobuf.ByteString
+            getEmailBytes() {
+                Object ref = email_;
+                if (ref instanceof String) {
+                    com.google.protobuf.ByteString b =
+                            com.google.protobuf.ByteString.copyFromUtf8(
+                                    (String) ref);
+                    email_ = b;
+                    return b;
+                } else {
+                    return (com.google.protobuf.ByteString) ref;
+                }
+            }
+
+            /**
+             * <code>optional string email = 6;</code>
+             */
+            public Builder setEmail(
+                    String value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000020;
+                email_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string email = 6;</code>
+             */
+            public Builder clearEmail() {
+                bitField0_ = (bitField0_ & ~0x00000020);
+                email_ = getDefaultInstance().getEmail();
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string email = 6;</code>
+             */
+            public Builder setEmailBytes(
+                    com.google.protobuf.ByteString value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000020;
+                email_ = value;
                 onChanged();
                 return this;
             }
@@ -14925,14 +15976,14 @@ public final class YouMaiBuddy {
             private Object avator_ = "";
 
             /**
-             * <code>optional string avator = 4;</code>
+             * <code>optional string avator = 7;</code>
              */
             public boolean hasAvator() {
-                return ((bitField0_ & 0x00000008) == 0x00000008);
+                return ((bitField0_ & 0x00000040) == 0x00000040);
             }
 
             /**
-             * <code>optional string avator = 4;</code>
+             * <code>optional string avator = 7;</code>
              */
             public String getAvator() {
                 Object ref = avator_;
@@ -14950,7 +16001,7 @@ public final class YouMaiBuddy {
             }
 
             /**
-             * <code>optional string avator = 4;</code>
+             * <code>optional string avator = 7;</code>
              */
             public com.google.protobuf.ByteString
             getAvatorBytes() {
@@ -14967,38 +16018,38 @@ public final class YouMaiBuddy {
             }
 
             /**
-             * <code>optional string avator = 4;</code>
+             * <code>optional string avator = 7;</code>
              */
             public Builder setAvator(
                     String value) {
                 if (value == null) {
                     throw new NullPointerException();
                 }
-                bitField0_ |= 0x00000008;
+                bitField0_ |= 0x00000040;
                 avator_ = value;
                 onChanged();
                 return this;
             }
 
             /**
-             * <code>optional string avator = 4;</code>
+             * <code>optional string avator = 7;</code>
              */
             public Builder clearAvator() {
-                bitField0_ = (bitField0_ & ~0x00000008);
+                bitField0_ = (bitField0_ & ~0x00000040);
                 avator_ = getDefaultInstance().getAvator();
                 onChanged();
                 return this;
             }
 
             /**
-             * <code>optional string avator = 4;</code>
+             * <code>optional string avator = 7;</code>
              */
             public Builder setAvatorBytes(
                     com.google.protobuf.ByteString value) {
                 if (value == null) {
                     throw new NullPointerException();
                 }
-                bitField0_ |= 0x00000008;
+                bitField0_ |= 0x00000040;
                 avator_ = value;
                 onChanged();
                 return this;
@@ -15007,34 +16058,34 @@ public final class YouMaiBuddy {
             private int sex_;
 
             /**
-             * <code>optional int32 sex = 5;</code>
+             * <code>optional int32 sex = 8;</code>
              */
             public boolean hasSex() {
-                return ((bitField0_ & 0x00000010) == 0x00000010);
+                return ((bitField0_ & 0x00000080) == 0x00000080);
             }
 
             /**
-             * <code>optional int32 sex = 5;</code>
+             * <code>optional int32 sex = 8;</code>
              */
             public int getSex() {
                 return sex_;
             }
 
             /**
-             * <code>optional int32 sex = 5;</code>
+             * <code>optional int32 sex = 8;</code>
              */
             public Builder setSex(int value) {
-                bitField0_ |= 0x00000010;
+                bitField0_ |= 0x00000080;
                 sex_ = value;
                 onChanged();
                 return this;
             }
 
             /**
-             * <code>optional int32 sex = 5;</code>
+             * <code>optional int32 sex = 8;</code>
              */
             public Builder clearSex() {
-                bitField0_ = (bitField0_ & ~0x00000010);
+                bitField0_ = (bitField0_ & ~0x00000080);
                 sex_ = 0;
                 onChanged();
                 return this;
@@ -15043,18 +16094,18 @@ public final class YouMaiBuddy {
             private Object sign_ = "";
 
             /**
-             * <code>optional string sign = 6;</code>
+             * <code>optional string sign = 9;</code>
              * <p>
              * <pre>
              * 个性签名
              * </pre>
              */
             public boolean hasSign() {
-                return ((bitField0_ & 0x00000020) == 0x00000020);
+                return ((bitField0_ & 0x00000100) == 0x00000100);
             }
 
             /**
-             * <code>optional string sign = 6;</code>
+             * <code>optional string sign = 9;</code>
              * <p>
              * <pre>
              * 个性签名
@@ -15076,7 +16127,7 @@ public final class YouMaiBuddy {
             }
 
             /**
-             * <code>optional string sign = 6;</code>
+             * <code>optional string sign = 9;</code>
              * <p>
              * <pre>
              * 个性签名
@@ -15097,7 +16148,7 @@ public final class YouMaiBuddy {
             }
 
             /**
-             * <code>optional string sign = 6;</code>
+             * <code>optional string sign = 9;</code>
              * <p>
              * <pre>
              * 个性签名
@@ -15108,28 +16159,28 @@ public final class YouMaiBuddy {
                 if (value == null) {
                     throw new NullPointerException();
                 }
-                bitField0_ |= 0x00000020;
+                bitField0_ |= 0x00000100;
                 sign_ = value;
                 onChanged();
                 return this;
             }
 
             /**
-             * <code>optional string sign = 6;</code>
+             * <code>optional string sign = 9;</code>
              * <p>
              * <pre>
              * 个性签名
              * </pre>
              */
             public Builder clearSign() {
-                bitField0_ = (bitField0_ & ~0x00000020);
+                bitField0_ = (bitField0_ & ~0x00000100);
                 sign_ = getDefaultInstance().getSign();
                 onChanged();
                 return this;
             }
 
             /**
-             * <code>optional string sign = 6;</code>
+             * <code>optional string sign = 9;</code>
              * <p>
              * <pre>
              * 个性签名
@@ -15140,60 +16191,220 @@ public final class YouMaiBuddy {
                 if (value == null) {
                     throw new NullPointerException();
                 }
-                bitField0_ |= 0x00000020;
+                bitField0_ |= 0x00000100;
                 sign_ = value;
                 onChanged();
                 return this;
             }
 
-            private boolean isHx_;
+            private Object jobName_ = "";
 
             /**
-             * <code>optional bool is_hx = 20;</code>
+             * <code>optional string job_name = 10;</code>
              * <p>
              * <pre>
-             * true/false
+             * 岗位名称
              * </pre>
              */
-            public boolean hasIsHx() {
-                return ((bitField0_ & 0x00000040) == 0x00000040);
+            public boolean hasJobName() {
+                return ((bitField0_ & 0x00000200) == 0x00000200);
             }
 
             /**
-             * <code>optional bool is_hx = 20;</code>
+             * <code>optional string job_name = 10;</code>
              * <p>
              * <pre>
-             * true/false
+             * 岗位名称
              * </pre>
              */
-            public boolean getIsHx() {
-                return isHx_;
+            public String getJobName() {
+                Object ref = jobName_;
+                if (!(ref instanceof String)) {
+                    com.google.protobuf.ByteString bs =
+                            (com.google.protobuf.ByteString) ref;
+                    String s = bs.toStringUtf8();
+                    if (bs.isValidUtf8()) {
+                        jobName_ = s;
+                    }
+                    return s;
+                } else {
+                    return (String) ref;
+                }
             }
 
             /**
-             * <code>optional bool is_hx = 20;</code>
+             * <code>optional string job_name = 10;</code>
              * <p>
              * <pre>
-             * true/false
+             * 岗位名称
              * </pre>
              */
-            public Builder setIsHx(boolean value) {
-                bitField0_ |= 0x00000040;
-                isHx_ = value;
+            public com.google.protobuf.ByteString
+            getJobNameBytes() {
+                Object ref = jobName_;
+                if (ref instanceof String) {
+                    com.google.protobuf.ByteString b =
+                            com.google.protobuf.ByteString.copyFromUtf8(
+                                    (String) ref);
+                    jobName_ = b;
+                    return b;
+                } else {
+                    return (com.google.protobuf.ByteString) ref;
+                }
+            }
+
+            /**
+             * <code>optional string job_name = 10;</code>
+             * <p>
+             * <pre>
+             * 岗位名称
+             * </pre>
+             */
+            public Builder setJobName(
+                    String value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000200;
+                jobName_ = value;
                 onChanged();
                 return this;
             }
 
             /**
-             * <code>optional bool is_hx = 20;</code>
+             * <code>optional string job_name = 10;</code>
              * <p>
              * <pre>
-             * true/false
+             * 岗位名称
              * </pre>
              */
-            public Builder clearIsHx() {
-                bitField0_ = (bitField0_ & ~0x00000040);
-                isHx_ = false;
+            public Builder clearJobName() {
+                bitField0_ = (bitField0_ & ~0x00000200);
+                jobName_ = getDefaultInstance().getJobName();
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string job_name = 10;</code>
+             * <p>
+             * <pre>
+             * 岗位名称
+             * </pre>
+             */
+            public Builder setJobNameBytes(
+                    com.google.protobuf.ByteString value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000200;
+                jobName_ = value;
+                onChanged();
+                return this;
+            }
+
+            private Object orgName_ = "";
+
+            /**
+             * <code>optional string org_name = 11;</code>
+             * <p>
+             * <pre>
+             * 部门名称
+             * </pre>
+             */
+            public boolean hasOrgName() {
+                return ((bitField0_ & 0x00000400) == 0x00000400);
+            }
+
+            /**
+             * <code>optional string org_name = 11;</code>
+             * <p>
+             * <pre>
+             * 部门名称
+             * </pre>
+             */
+            public String getOrgName() {
+                Object ref = orgName_;
+                if (!(ref instanceof String)) {
+                    com.google.protobuf.ByteString bs =
+                            (com.google.protobuf.ByteString) ref;
+                    String s = bs.toStringUtf8();
+                    if (bs.isValidUtf8()) {
+                        orgName_ = s;
+                    }
+                    return s;
+                } else {
+                    return (String) ref;
+                }
+            }
+
+            /**
+             * <code>optional string org_name = 11;</code>
+             * <p>
+             * <pre>
+             * 部门名称
+             * </pre>
+             */
+            public com.google.protobuf.ByteString
+            getOrgNameBytes() {
+                Object ref = orgName_;
+                if (ref instanceof String) {
+                    com.google.protobuf.ByteString b =
+                            com.google.protobuf.ByteString.copyFromUtf8(
+                                    (String) ref);
+                    orgName_ = b;
+                    return b;
+                } else {
+                    return (com.google.protobuf.ByteString) ref;
+                }
+            }
+
+            /**
+             * <code>optional string org_name = 11;</code>
+             * <p>
+             * <pre>
+             * 部门名称
+             * </pre>
+             */
+            public Builder setOrgName(
+                    String value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000400;
+                orgName_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string org_name = 11;</code>
+             * <p>
+             * <pre>
+             * 部门名称
+             * </pre>
+             */
+            public Builder clearOrgName() {
+                bitField0_ = (bitField0_ & ~0x00000400);
+                orgName_ = getDefaultInstance().getOrgName();
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string org_name = 11;</code>
+             * <p>
+             * <pre>
+             * 部门名称
+             * </pre>
+             */
+            public Builder setOrgNameBytes(
+                    com.google.protobuf.ByteString value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000400;
+                orgName_ = value;
                 onChanged();
                 return this;
             }
@@ -16380,6 +17591,2830 @@ public final class YouMaiBuddy {
         // @@protoc_insertion_point(class_scope:IMGetUserInfoRsp)
     }
 
+    public interface ContactInfoOrBuilder extends
+            // @@protoc_insertion_point(interface_extends:ContactInfo)
+            com.google.protobuf.MessageOrBuilder {
+
+        /**
+         * <code>optional string user_id = 1;</code>
+         */
+        boolean hasUserId();
+
+        /**
+         * <code>optional string user_id = 1;</code>
+         */
+        String getUserId();
+
+        /**
+         * <code>optional string user_id = 1;</code>
+         */
+        com.google.protobuf.ByteString
+        getUserIdBytes();
+
+        /**
+         * <code>optional string user_info = 2;</code>
+         */
+        boolean hasUserInfo();
+
+        /**
+         * <code>optional string user_info = 2;</code>
+         */
+        String getUserInfo();
+
+        /**
+         * <code>optional string user_info = 2;</code>
+         */
+        com.google.protobuf.ByteString
+        getUserInfoBytes();
+
+        /**
+         * <code>optional uint32 flag = 3;</code>
+         * <p>
+         * <pre>
+         * 收藏标识(0:新增，1：删除 2：修改)
+         * </pre>
+         */
+        boolean hasFlag();
+
+        /**
+         * <code>optional uint32 flag = 3;</code>
+         * <p>
+         * <pre>
+         * 收藏标识(0:新增，1：删除 2：修改)
+         * </pre>
+         */
+        int getFlag();
+    }
+
+    /**
+     * Protobuf type {@code ContactInfo}
+     * <p>
+     * <pre>
+     * 收藏联系人
+     * </pre>
+     */
+    public static final class ContactInfo extends
+            com.google.protobuf.GeneratedMessage implements
+            // @@protoc_insertion_point(message_implements:ContactInfo)
+            ContactInfoOrBuilder {
+        // Use ContactInfo.newBuilder() to construct.
+        private ContactInfo(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+            super(builder);
+            this.unknownFields = builder.getUnknownFields();
+        }
+
+        private ContactInfo(boolean noInit) {
+            this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance();
+        }
+
+        private static final ContactInfo defaultInstance;
+
+        public static ContactInfo getDefaultInstance() {
+            return defaultInstance;
+        }
+
+        public ContactInfo getDefaultInstanceForType() {
+            return defaultInstance;
+        }
+
+        private final com.google.protobuf.UnknownFieldSet unknownFields;
+
+        @Override
+        public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+            return this.unknownFields;
+        }
+
+        private ContactInfo(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            initFields();
+            int mutable_bitField0_ = 0;
+            com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+                    com.google.protobuf.UnknownFieldSet.newBuilder();
+            try {
+                boolean done = false;
+                while (!done) {
+                    int tag = input.readTag();
+                    switch (tag) {
+                        case 0:
+                            done = true;
+                            break;
+                        default: {
+                            if (!parseUnknownField(input, unknownFields,
+                                    extensionRegistry, tag)) {
+                                done = true;
+                            }
+                            break;
+                        }
+                        case 10: {
+                            com.google.protobuf.ByteString bs = input.readBytes();
+                            bitField0_ |= 0x00000001;
+                            userId_ = bs;
+                            break;
+                        }
+                        case 18: {
+                            com.google.protobuf.ByteString bs = input.readBytes();
+                            bitField0_ |= 0x00000002;
+                            userInfo_ = bs;
+                            break;
+                        }
+                        case 24: {
+                            bitField0_ |= 0x00000004;
+                            flag_ = input.readUInt32();
+                            break;
+                        }
+                    }
+                }
+            } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+                throw e.setUnfinishedMessage(this);
+            } catch (java.io.IOException e) {
+                throw new com.google.protobuf.InvalidProtocolBufferException(
+                        e.getMessage()).setUnfinishedMessage(this);
+            } finally {
+                this.unknownFields = unknownFields.build();
+                makeExtensionsImmutable();
+            }
+        }
+
+        public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+            return YouMaiBuddy.internal_static_com_proto_buddy_ContactInfo_descriptor;
+        }
+
+        protected FieldAccessorTable
+        internalGetFieldAccessorTable() {
+            return YouMaiBuddy.internal_static_com_proto_buddy_ContactInfo_fieldAccessorTable
+                    .ensureFieldAccessorsInitialized(
+                            YouMaiBuddy.ContactInfo.class, YouMaiBuddy.ContactInfo.Builder.class);
+        }
+
+        public static com.google.protobuf.Parser<ContactInfo> PARSER =
+                new com.google.protobuf.AbstractParser<ContactInfo>() {
+                    public ContactInfo parsePartialFrom(
+                            com.google.protobuf.CodedInputStream input,
+                            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                            throws com.google.protobuf.InvalidProtocolBufferException {
+                        return new ContactInfo(input, extensionRegistry);
+                    }
+                };
+
+        @Override
+        public com.google.protobuf.Parser<ContactInfo> getParserForType() {
+            return PARSER;
+        }
+
+        private int bitField0_;
+        public static final int USER_ID_FIELD_NUMBER = 1;
+        private Object userId_;
+
+        /**
+         * <code>optional string user_id = 1;</code>
+         */
+        public boolean hasUserId() {
+            return ((bitField0_ & 0x00000001) == 0x00000001);
+        }
+
+        /**
+         * <code>optional string user_id = 1;</code>
+         */
+        public String getUserId() {
+            Object ref = userId_;
+            if (ref instanceof String) {
+                return (String) ref;
+            } else {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                String s = bs.toStringUtf8();
+                if (bs.isValidUtf8()) {
+                    userId_ = s;
+                }
+                return s;
+            }
+        }
+
+        /**
+         * <code>optional string user_id = 1;</code>
+         */
+        public com.google.protobuf.ByteString
+        getUserIdBytes() {
+            Object ref = userId_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (String) ref);
+                userId_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
+        public static final int USER_INFO_FIELD_NUMBER = 2;
+        private Object userInfo_;
+
+        /**
+         * <code>optional string user_info = 2;</code>
+         */
+        public boolean hasUserInfo() {
+            return ((bitField0_ & 0x00000002) == 0x00000002);
+        }
+
+        /**
+         * <code>optional string user_info = 2;</code>
+         */
+        public String getUserInfo() {
+            Object ref = userInfo_;
+            if (ref instanceof String) {
+                return (String) ref;
+            } else {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                String s = bs.toStringUtf8();
+                if (bs.isValidUtf8()) {
+                    userInfo_ = s;
+                }
+                return s;
+            }
+        }
+
+        /**
+         * <code>optional string user_info = 2;</code>
+         */
+        public com.google.protobuf.ByteString
+        getUserInfoBytes() {
+            Object ref = userInfo_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (String) ref);
+                userInfo_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
+        public static final int FLAG_FIELD_NUMBER = 3;
+        private int flag_;
+
+        /**
+         * <code>optional uint32 flag = 3;</code>
+         * <p>
+         * <pre>
+         * 收藏标识(0:新增，1：删除 2：修改)
+         * </pre>
+         */
+        public boolean hasFlag() {
+            return ((bitField0_ & 0x00000004) == 0x00000004);
+        }
+
+        /**
+         * <code>optional uint32 flag = 3;</code>
+         * <p>
+         * <pre>
+         * 收藏标识(0:新增，1：删除 2：修改)
+         * </pre>
+         */
+        public int getFlag() {
+            return flag_;
+        }
+
+        private void initFields() {
+            userId_ = "";
+            userInfo_ = "";
+            flag_ = 0;
+        }
+
+        private byte memoizedIsInitialized = -1;
+
+        public final boolean isInitialized() {
+            byte isInitialized = memoizedIsInitialized;
+            if (isInitialized == 1) return true;
+            if (isInitialized == 0) return false;
+
+            memoizedIsInitialized = 1;
+            return true;
+        }
+
+        public void writeTo(com.google.protobuf.CodedOutputStream output)
+                throws java.io.IOException {
+            getSerializedSize();
+            if (((bitField0_ & 0x00000001) == 0x00000001)) {
+                output.writeBytes(1, getUserIdBytes());
+            }
+            if (((bitField0_ & 0x00000002) == 0x00000002)) {
+                output.writeBytes(2, getUserInfoBytes());
+            }
+            if (((bitField0_ & 0x00000004) == 0x00000004)) {
+                output.writeUInt32(3, flag_);
+            }
+            getUnknownFields().writeTo(output);
+        }
+
+        private int memoizedSerializedSize = -1;
+
+        public int getSerializedSize() {
+            int size = memoizedSerializedSize;
+            if (size != -1) return size;
+
+            size = 0;
+            if (((bitField0_ & 0x00000001) == 0x00000001)) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeBytesSize(1, getUserIdBytes());
+            }
+            if (((bitField0_ & 0x00000002) == 0x00000002)) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeBytesSize(2, getUserInfoBytes());
+            }
+            if (((bitField0_ & 0x00000004) == 0x00000004)) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeUInt32Size(3, flag_);
+            }
+            size += getUnknownFields().getSerializedSize();
+            memoizedSerializedSize = size;
+            return size;
+        }
+
+        private static final long serialVersionUID = 0L;
+
+        @Override
+        protected Object writeReplace()
+                throws java.io.ObjectStreamException {
+            return super.writeReplace();
+        }
+
+        public static YouMaiBuddy.ContactInfo parseFrom(
+                com.google.protobuf.ByteString data)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data);
+        }
+
+        public static YouMaiBuddy.ContactInfo parseFrom(
+                com.google.protobuf.ByteString data,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data, extensionRegistry);
+        }
+
+        public static YouMaiBuddy.ContactInfo parseFrom(byte[] data)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data);
+        }
+
+        public static YouMaiBuddy.ContactInfo parseFrom(
+                byte[] data,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data, extensionRegistry);
+        }
+
+        public static YouMaiBuddy.ContactInfo parseFrom(java.io.InputStream input)
+                throws java.io.IOException {
+            return PARSER.parseFrom(input);
+        }
+
+        public static YouMaiBuddy.ContactInfo parseFrom(
+                java.io.InputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            return PARSER.parseFrom(input, extensionRegistry);
+        }
+
+        public static YouMaiBuddy.ContactInfo parseDelimitedFrom(java.io.InputStream input)
+                throws java.io.IOException {
+            return PARSER.parseDelimitedFrom(input);
+        }
+
+        public static YouMaiBuddy.ContactInfo parseDelimitedFrom(
+                java.io.InputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            return PARSER.parseDelimitedFrom(input, extensionRegistry);
+        }
+
+        public static YouMaiBuddy.ContactInfo parseFrom(
+                com.google.protobuf.CodedInputStream input)
+                throws java.io.IOException {
+            return PARSER.parseFrom(input);
+        }
+
+        public static YouMaiBuddy.ContactInfo parseFrom(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            return PARSER.parseFrom(input, extensionRegistry);
+        }
+
+        public static Builder newBuilder() {
+            return Builder.create();
+        }
+
+        public Builder newBuilderForType() {
+            return newBuilder();
+        }
+
+        public static Builder newBuilder(YouMaiBuddy.ContactInfo prototype) {
+            return newBuilder().mergeFrom(prototype);
+        }
+
+        public Builder toBuilder() {
+            return newBuilder(this);
+        }
+
+        @Override
+        protected Builder newBuilderForType(
+                BuilderParent parent) {
+            Builder builder = new Builder(parent);
+            return builder;
+        }
+
+        /**
+         * Protobuf type {@code ContactInfo}
+         * <p>
+         * <pre>
+         * 收藏联系人
+         * </pre>
+         */
+        public static final class Builder extends
+                com.google.protobuf.GeneratedMessage.Builder<Builder> implements
+                // @@protoc_insertion_point(builder_implements:ContactInfo)
+                YouMaiBuddy.ContactInfoOrBuilder {
+            public static final com.google.protobuf.Descriptors.Descriptor
+            getDescriptor() {
+                return YouMaiBuddy.internal_static_com_proto_buddy_ContactInfo_descriptor;
+            }
+
+            protected FieldAccessorTable
+            internalGetFieldAccessorTable() {
+                return YouMaiBuddy.internal_static_com_proto_buddy_ContactInfo_fieldAccessorTable
+                        .ensureFieldAccessorsInitialized(
+                                YouMaiBuddy.ContactInfo.class, YouMaiBuddy.ContactInfo.Builder.class);
+            }
+
+            // Construct using YouMaiBuddy.ContactInfo.newBuilder()
+            private Builder() {
+                maybeForceBuilderInitialization();
+            }
+
+            private Builder(
+                    BuilderParent parent) {
+                super(parent);
+                maybeForceBuilderInitialization();
+            }
+
+            private void maybeForceBuilderInitialization() {
+                if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+                }
+            }
+
+            private static Builder create() {
+                return new Builder();
+            }
+
+            public Builder clear() {
+                super.clear();
+                userId_ = "";
+                bitField0_ = (bitField0_ & ~0x00000001);
+                userInfo_ = "";
+                bitField0_ = (bitField0_ & ~0x00000002);
+                flag_ = 0;
+                bitField0_ = (bitField0_ & ~0x00000004);
+                return this;
+            }
+
+            public Builder clone() {
+                return create().mergeFrom(buildPartial());
+            }
+
+            public com.google.protobuf.Descriptors.Descriptor
+            getDescriptorForType() {
+                return YouMaiBuddy.internal_static_com_proto_buddy_ContactInfo_descriptor;
+            }
+
+            public YouMaiBuddy.ContactInfo getDefaultInstanceForType() {
+                return YouMaiBuddy.ContactInfo.getDefaultInstance();
+            }
+
+            public YouMaiBuddy.ContactInfo build() {
+                YouMaiBuddy.ContactInfo result = buildPartial();
+                if (!result.isInitialized()) {
+                    throw newUninitializedMessageException(result);
+                }
+                return result;
+            }
+
+            public YouMaiBuddy.ContactInfo buildPartial() {
+                YouMaiBuddy.ContactInfo result = new YouMaiBuddy.ContactInfo(this);
+                int from_bitField0_ = bitField0_;
+                int to_bitField0_ = 0;
+                if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+                    to_bitField0_ |= 0x00000001;
+                }
+                result.userId_ = userId_;
+                if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+                    to_bitField0_ |= 0x00000002;
+                }
+                result.userInfo_ = userInfo_;
+                if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+                    to_bitField0_ |= 0x00000004;
+                }
+                result.flag_ = flag_;
+                result.bitField0_ = to_bitField0_;
+                onBuilt();
+                return result;
+            }
+
+            public Builder mergeFrom(com.google.protobuf.Message other) {
+                if (other instanceof YouMaiBuddy.ContactInfo) {
+                    return mergeFrom((YouMaiBuddy.ContactInfo) other);
+                } else {
+                    super.mergeFrom(other);
+                    return this;
+                }
+            }
+
+            public Builder mergeFrom(YouMaiBuddy.ContactInfo other) {
+                if (other == YouMaiBuddy.ContactInfo.getDefaultInstance()) return this;
+                if (other.hasUserId()) {
+                    bitField0_ |= 0x00000001;
+                    userId_ = other.userId_;
+                    onChanged();
+                }
+                if (other.hasUserInfo()) {
+                    bitField0_ |= 0x00000002;
+                    userInfo_ = other.userInfo_;
+                    onChanged();
+                }
+                if (other.hasFlag()) {
+                    setFlag(other.getFlag());
+                }
+                this.mergeUnknownFields(other.getUnknownFields());
+                return this;
+            }
+
+            public final boolean isInitialized() {
+                return true;
+            }
+
+            public Builder mergeFrom(
+                    com.google.protobuf.CodedInputStream input,
+                    com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                    throws java.io.IOException {
+                YouMaiBuddy.ContactInfo parsedMessage = null;
+                try {
+                    parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+                } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+                    parsedMessage = (YouMaiBuddy.ContactInfo) e.getUnfinishedMessage();
+                    throw e;
+                } finally {
+                    if (parsedMessage != null) {
+                        mergeFrom(parsedMessage);
+                    }
+                }
+                return this;
+            }
+
+            private int bitField0_;
+
+            private Object userId_ = "";
+
+            /**
+             * <code>optional string user_id = 1;</code>
+             */
+            public boolean hasUserId() {
+                return ((bitField0_ & 0x00000001) == 0x00000001);
+            }
+
+            /**
+             * <code>optional string user_id = 1;</code>
+             */
+            public String getUserId() {
+                Object ref = userId_;
+                if (!(ref instanceof String)) {
+                    com.google.protobuf.ByteString bs =
+                            (com.google.protobuf.ByteString) ref;
+                    String s = bs.toStringUtf8();
+                    if (bs.isValidUtf8()) {
+                        userId_ = s;
+                    }
+                    return s;
+                } else {
+                    return (String) ref;
+                }
+            }
+
+            /**
+             * <code>optional string user_id = 1;</code>
+             */
+            public com.google.protobuf.ByteString
+            getUserIdBytes() {
+                Object ref = userId_;
+                if (ref instanceof String) {
+                    com.google.protobuf.ByteString b =
+                            com.google.protobuf.ByteString.copyFromUtf8(
+                                    (String) ref);
+                    userId_ = b;
+                    return b;
+                } else {
+                    return (com.google.protobuf.ByteString) ref;
+                }
+            }
+
+            /**
+             * <code>optional string user_id = 1;</code>
+             */
+            public Builder setUserId(
+                    String value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000001;
+                userId_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string user_id = 1;</code>
+             */
+            public Builder clearUserId() {
+                bitField0_ = (bitField0_ & ~0x00000001);
+                userId_ = getDefaultInstance().getUserId();
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string user_id = 1;</code>
+             */
+            public Builder setUserIdBytes(
+                    com.google.protobuf.ByteString value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000001;
+                userId_ = value;
+                onChanged();
+                return this;
+            }
+
+            private Object userInfo_ = "";
+
+            /**
+             * <code>optional string user_info = 2;</code>
+             */
+            public boolean hasUserInfo() {
+                return ((bitField0_ & 0x00000002) == 0x00000002);
+            }
+
+            /**
+             * <code>optional string user_info = 2;</code>
+             */
+            public String getUserInfo() {
+                Object ref = userInfo_;
+                if (!(ref instanceof String)) {
+                    com.google.protobuf.ByteString bs =
+                            (com.google.protobuf.ByteString) ref;
+                    String s = bs.toStringUtf8();
+                    if (bs.isValidUtf8()) {
+                        userInfo_ = s;
+                    }
+                    return s;
+                } else {
+                    return (String) ref;
+                }
+            }
+
+            /**
+             * <code>optional string user_info = 2;</code>
+             */
+            public com.google.protobuf.ByteString
+            getUserInfoBytes() {
+                Object ref = userInfo_;
+                if (ref instanceof String) {
+                    com.google.protobuf.ByteString b =
+                            com.google.protobuf.ByteString.copyFromUtf8(
+                                    (String) ref);
+                    userInfo_ = b;
+                    return b;
+                } else {
+                    return (com.google.protobuf.ByteString) ref;
+                }
+            }
+
+            /**
+             * <code>optional string user_info = 2;</code>
+             */
+            public Builder setUserInfo(
+                    String value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000002;
+                userInfo_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string user_info = 2;</code>
+             */
+            public Builder clearUserInfo() {
+                bitField0_ = (bitField0_ & ~0x00000002);
+                userInfo_ = getDefaultInstance().getUserInfo();
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string user_info = 2;</code>
+             */
+            public Builder setUserInfoBytes(
+                    com.google.protobuf.ByteString value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000002;
+                userInfo_ = value;
+                onChanged();
+                return this;
+            }
+
+            private int flag_;
+
+            /**
+             * <code>optional uint32 flag = 3;</code>
+             * <p>
+             * <pre>
+             * 收藏标识(0:新增，1：删除 2：修改)
+             * </pre>
+             */
+            public boolean hasFlag() {
+                return ((bitField0_ & 0x00000004) == 0x00000004);
+            }
+
+            /**
+             * <code>optional uint32 flag = 3;</code>
+             * <p>
+             * <pre>
+             * 收藏标识(0:新增，1：删除 2：修改)
+             * </pre>
+             */
+            public int getFlag() {
+                return flag_;
+            }
+
+            /**
+             * <code>optional uint32 flag = 3;</code>
+             * <p>
+             * <pre>
+             * 收藏标识(0:新增，1：删除 2：修改)
+             * </pre>
+             */
+            public Builder setFlag(int value) {
+                bitField0_ |= 0x00000004;
+                flag_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional uint32 flag = 3;</code>
+             * <p>
+             * <pre>
+             * 收藏标识(0:新增，1：删除 2：修改)
+             * </pre>
+             */
+            public Builder clearFlag() {
+                bitField0_ = (bitField0_ & ~0x00000004);
+                flag_ = 0;
+                onChanged();
+                return this;
+            }
+
+            // @@protoc_insertion_point(builder_scope:ContactInfo)
+        }
+
+        static {
+            defaultInstance = new ContactInfo(true);
+            defaultInstance.initFields();
+        }
+
+        // @@protoc_insertion_point(class_scope:ContactInfo)
+    }
+
+    public interface collectContactsReqOrBuilder extends
+            // @@protoc_insertion_point(interface_extends:collectContactsReq)
+            com.google.protobuf.MessageOrBuilder {
+
+        /**
+         * <code>optional string user_id = 1;</code>
+         * <p>
+         * <pre>
+         * cmd :CID_CONTACT_COLLECTION_REQ
+         * </pre>
+         */
+        boolean hasUserId();
+
+        /**
+         * <code>optional string user_id = 1;</code>
+         * <p>
+         * <pre>
+         * cmd :CID_CONTACT_COLLECTION_REQ
+         * </pre>
+         */
+        String getUserId();
+
+        /**
+         * <code>optional string user_id = 1;</code>
+         * <p>
+         * <pre>
+         * cmd :CID_CONTACT_COLLECTION_REQ
+         * </pre>
+         */
+        com.google.protobuf.ByteString
+        getUserIdBytes();
+
+        /**
+         * <code>repeated .ContactInfo user_id_list = 2;</code>
+         */
+        java.util.List<YouMaiBuddy.ContactInfo>
+        getUserIdListList();
+
+        /**
+         * <code>repeated .ContactInfo user_id_list = 2;</code>
+         */
+        YouMaiBuddy.ContactInfo getUserIdList(int index);
+
+        /**
+         * <code>repeated .ContactInfo user_id_list = 2;</code>
+         */
+        int getUserIdListCount();
+
+        /**
+         * <code>repeated .ContactInfo user_id_list = 2;</code>
+         */
+        java.util.List<? extends YouMaiBuddy.ContactInfoOrBuilder>
+        getUserIdListOrBuilderList();
+
+        /**
+         * <code>repeated .ContactInfo user_id_list = 2;</code>
+         */
+        YouMaiBuddy.ContactInfoOrBuilder getUserIdListOrBuilder(
+                int index);
+    }
+
+    /**
+     * Protobuf type {@code collectContactsReq}
+     */
+    public static final class collectContactsReq extends
+            com.google.protobuf.GeneratedMessage implements
+            // @@protoc_insertion_point(message_implements:collectContactsReq)
+            collectContactsReqOrBuilder {
+        // Use collectContactsReq.newBuilder() to construct.
+        private collectContactsReq(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+            super(builder);
+            this.unknownFields = builder.getUnknownFields();
+        }
+
+        private collectContactsReq(boolean noInit) {
+            this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance();
+        }
+
+        private static final collectContactsReq defaultInstance;
+
+        public static collectContactsReq getDefaultInstance() {
+            return defaultInstance;
+        }
+
+        public collectContactsReq getDefaultInstanceForType() {
+            return defaultInstance;
+        }
+
+        private final com.google.protobuf.UnknownFieldSet unknownFields;
+
+        @Override
+        public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+            return this.unknownFields;
+        }
+
+        private collectContactsReq(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            initFields();
+            int mutable_bitField0_ = 0;
+            com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+                    com.google.protobuf.UnknownFieldSet.newBuilder();
+            try {
+                boolean done = false;
+                while (!done) {
+                    int tag = input.readTag();
+                    switch (tag) {
+                        case 0:
+                            done = true;
+                            break;
+                        default: {
+                            if (!parseUnknownField(input, unknownFields,
+                                    extensionRegistry, tag)) {
+                                done = true;
+                            }
+                            break;
+                        }
+                        case 10: {
+                            com.google.protobuf.ByteString bs = input.readBytes();
+                            bitField0_ |= 0x00000001;
+                            userId_ = bs;
+                            break;
+                        }
+                        case 18: {
+                            if (!((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
+                                userIdList_ = new java.util.ArrayList<YouMaiBuddy.ContactInfo>();
+                                mutable_bitField0_ |= 0x00000002;
+                            }
+                            userIdList_.add(input.readMessage(YouMaiBuddy.ContactInfo.PARSER, extensionRegistry));
+                            break;
+                        }
+                    }
+                }
+            } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+                throw e.setUnfinishedMessage(this);
+            } catch (java.io.IOException e) {
+                throw new com.google.protobuf.InvalidProtocolBufferException(
+                        e.getMessage()).setUnfinishedMessage(this);
+            } finally {
+                if (((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
+                    userIdList_ = java.util.Collections.unmodifiableList(userIdList_);
+                }
+                this.unknownFields = unknownFields.build();
+                makeExtensionsImmutable();
+            }
+        }
+
+        public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+            return YouMaiBuddy.internal_static_com_proto_buddy_collectContactsReq_descriptor;
+        }
+
+        protected FieldAccessorTable
+        internalGetFieldAccessorTable() {
+            return YouMaiBuddy.internal_static_com_proto_buddy_collectContactsReq_fieldAccessorTable
+                    .ensureFieldAccessorsInitialized(
+                            YouMaiBuddy.collectContactsReq.class, YouMaiBuddy.collectContactsReq.Builder.class);
+        }
+
+        public static com.google.protobuf.Parser<collectContactsReq> PARSER =
+                new com.google.protobuf.AbstractParser<collectContactsReq>() {
+                    public collectContactsReq parsePartialFrom(
+                            com.google.protobuf.CodedInputStream input,
+                            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                            throws com.google.protobuf.InvalidProtocolBufferException {
+                        return new collectContactsReq(input, extensionRegistry);
+                    }
+                };
+
+        @Override
+        public com.google.protobuf.Parser<collectContactsReq> getParserForType() {
+            return PARSER;
+        }
+
+        private int bitField0_;
+        public static final int USER_ID_FIELD_NUMBER = 1;
+        private Object userId_;
+
+        /**
+         * <code>optional string user_id = 1;</code>
+         * <p>
+         * <pre>
+         * cmd :CID_CONTACT_COLLECTION_REQ
+         * </pre>
+         */
+        public boolean hasUserId() {
+            return ((bitField0_ & 0x00000001) == 0x00000001);
+        }
+
+        /**
+         * <code>optional string user_id = 1;</code>
+         * <p>
+         * <pre>
+         * cmd :CID_CONTACT_COLLECTION_REQ
+         * </pre>
+         */
+        public String getUserId() {
+            Object ref = userId_;
+            if (ref instanceof String) {
+                return (String) ref;
+            } else {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                String s = bs.toStringUtf8();
+                if (bs.isValidUtf8()) {
+                    userId_ = s;
+                }
+                return s;
+            }
+        }
+
+        /**
+         * <code>optional string user_id = 1;</code>
+         * <p>
+         * <pre>
+         * cmd :CID_CONTACT_COLLECTION_REQ
+         * </pre>
+         */
+        public com.google.protobuf.ByteString
+        getUserIdBytes() {
+            Object ref = userId_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (String) ref);
+                userId_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
+        public static final int USER_ID_LIST_FIELD_NUMBER = 2;
+        private java.util.List<YouMaiBuddy.ContactInfo> userIdList_;
+
+        /**
+         * <code>repeated .ContactInfo user_id_list = 2;</code>
+         */
+        public java.util.List<YouMaiBuddy.ContactInfo> getUserIdListList() {
+            return userIdList_;
+        }
+
+        /**
+         * <code>repeated .ContactInfo user_id_list = 2;</code>
+         */
+        public java.util.List<? extends YouMaiBuddy.ContactInfoOrBuilder>
+        getUserIdListOrBuilderList() {
+            return userIdList_;
+        }
+
+        /**
+         * <code>repeated .ContactInfo user_id_list = 2;</code>
+         */
+        public int getUserIdListCount() {
+            return userIdList_.size();
+        }
+
+        /**
+         * <code>repeated .ContactInfo user_id_list = 2;</code>
+         */
+        public YouMaiBuddy.ContactInfo getUserIdList(int index) {
+            return userIdList_.get(index);
+        }
+
+        /**
+         * <code>repeated .ContactInfo user_id_list = 2;</code>
+         */
+        public YouMaiBuddy.ContactInfoOrBuilder getUserIdListOrBuilder(
+                int index) {
+            return userIdList_.get(index);
+        }
+
+        private void initFields() {
+            userId_ = "";
+            userIdList_ = java.util.Collections.emptyList();
+        }
+
+        private byte memoizedIsInitialized = -1;
+
+        public final boolean isInitialized() {
+            byte isInitialized = memoizedIsInitialized;
+            if (isInitialized == 1) return true;
+            if (isInitialized == 0) return false;
+
+            memoizedIsInitialized = 1;
+            return true;
+        }
+
+        public void writeTo(com.google.protobuf.CodedOutputStream output)
+                throws java.io.IOException {
+            getSerializedSize();
+            if (((bitField0_ & 0x00000001) == 0x00000001)) {
+                output.writeBytes(1, getUserIdBytes());
+            }
+            for (int i = 0; i < userIdList_.size(); i++) {
+                output.writeMessage(2, userIdList_.get(i));
+            }
+            getUnknownFields().writeTo(output);
+        }
+
+        private int memoizedSerializedSize = -1;
+
+        public int getSerializedSize() {
+            int size = memoizedSerializedSize;
+            if (size != -1) return size;
+
+            size = 0;
+            if (((bitField0_ & 0x00000001) == 0x00000001)) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeBytesSize(1, getUserIdBytes());
+            }
+            for (int i = 0; i < userIdList_.size(); i++) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeMessageSize(2, userIdList_.get(i));
+            }
+            size += getUnknownFields().getSerializedSize();
+            memoizedSerializedSize = size;
+            return size;
+        }
+
+        private static final long serialVersionUID = 0L;
+
+        @Override
+        protected Object writeReplace()
+                throws java.io.ObjectStreamException {
+            return super.writeReplace();
+        }
+
+        public static YouMaiBuddy.collectContactsReq parseFrom(
+                com.google.protobuf.ByteString data)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data);
+        }
+
+        public static YouMaiBuddy.collectContactsReq parseFrom(
+                com.google.protobuf.ByteString data,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data, extensionRegistry);
+        }
+
+        public static YouMaiBuddy.collectContactsReq parseFrom(byte[] data)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data);
+        }
+
+        public static YouMaiBuddy.collectContactsReq parseFrom(
+                byte[] data,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data, extensionRegistry);
+        }
+
+        public static YouMaiBuddy.collectContactsReq parseFrom(java.io.InputStream input)
+                throws java.io.IOException {
+            return PARSER.parseFrom(input);
+        }
+
+        public static YouMaiBuddy.collectContactsReq parseFrom(
+                java.io.InputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            return PARSER.parseFrom(input, extensionRegistry);
+        }
+
+        public static YouMaiBuddy.collectContactsReq parseDelimitedFrom(java.io.InputStream input)
+                throws java.io.IOException {
+            return PARSER.parseDelimitedFrom(input);
+        }
+
+        public static YouMaiBuddy.collectContactsReq parseDelimitedFrom(
+                java.io.InputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            return PARSER.parseDelimitedFrom(input, extensionRegistry);
+        }
+
+        public static YouMaiBuddy.collectContactsReq parseFrom(
+                com.google.protobuf.CodedInputStream input)
+                throws java.io.IOException {
+            return PARSER.parseFrom(input);
+        }
+
+        public static YouMaiBuddy.collectContactsReq parseFrom(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            return PARSER.parseFrom(input, extensionRegistry);
+        }
+
+        public static Builder newBuilder() {
+            return Builder.create();
+        }
+
+        public Builder newBuilderForType() {
+            return newBuilder();
+        }
+
+        public static Builder newBuilder(YouMaiBuddy.collectContactsReq prototype) {
+            return newBuilder().mergeFrom(prototype);
+        }
+
+        public Builder toBuilder() {
+            return newBuilder(this);
+        }
+
+        @Override
+        protected Builder newBuilderForType(
+                BuilderParent parent) {
+            Builder builder = new Builder(parent);
+            return builder;
+        }
+
+        /**
+         * Protobuf type {@code collectContactsReq}
+         */
+        public static final class Builder extends
+                com.google.protobuf.GeneratedMessage.Builder<Builder> implements
+                // @@protoc_insertion_point(builder_implements:collectContactsReq)
+                YouMaiBuddy.collectContactsReqOrBuilder {
+            public static final com.google.protobuf.Descriptors.Descriptor
+            getDescriptor() {
+                return YouMaiBuddy.internal_static_com_proto_buddy_collectContactsReq_descriptor;
+            }
+
+            protected FieldAccessorTable
+            internalGetFieldAccessorTable() {
+                return YouMaiBuddy.internal_static_com_proto_buddy_collectContactsReq_fieldAccessorTable
+                        .ensureFieldAccessorsInitialized(
+                                YouMaiBuddy.collectContactsReq.class, YouMaiBuddy.collectContactsReq.Builder.class);
+            }
+
+            // Construct using YouMaiBuddy.collectContactsReq.newBuilder()
+            private Builder() {
+                maybeForceBuilderInitialization();
+            }
+
+            private Builder(
+                    BuilderParent parent) {
+                super(parent);
+                maybeForceBuilderInitialization();
+            }
+
+            private void maybeForceBuilderInitialization() {
+                if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+                    getUserIdListFieldBuilder();
+                }
+            }
+
+            private static Builder create() {
+                return new Builder();
+            }
+
+            public Builder clear() {
+                super.clear();
+                userId_ = "";
+                bitField0_ = (bitField0_ & ~0x00000001);
+                if (userIdListBuilder_ == null) {
+                    userIdList_ = java.util.Collections.emptyList();
+                    bitField0_ = (bitField0_ & ~0x00000002);
+                } else {
+                    userIdListBuilder_.clear();
+                }
+                return this;
+            }
+
+            public Builder clone() {
+                return create().mergeFrom(buildPartial());
+            }
+
+            public com.google.protobuf.Descriptors.Descriptor
+            getDescriptorForType() {
+                return YouMaiBuddy.internal_static_com_proto_buddy_collectContactsReq_descriptor;
+            }
+
+            public YouMaiBuddy.collectContactsReq getDefaultInstanceForType() {
+                return YouMaiBuddy.collectContactsReq.getDefaultInstance();
+            }
+
+            public YouMaiBuddy.collectContactsReq build() {
+                YouMaiBuddy.collectContactsReq result = buildPartial();
+                if (!result.isInitialized()) {
+                    throw newUninitializedMessageException(result);
+                }
+                return result;
+            }
+
+            public YouMaiBuddy.collectContactsReq buildPartial() {
+                YouMaiBuddy.collectContactsReq result = new YouMaiBuddy.collectContactsReq(this);
+                int from_bitField0_ = bitField0_;
+                int to_bitField0_ = 0;
+                if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+                    to_bitField0_ |= 0x00000001;
+                }
+                result.userId_ = userId_;
+                if (userIdListBuilder_ == null) {
+                    if (((bitField0_ & 0x00000002) == 0x00000002)) {
+                        userIdList_ = java.util.Collections.unmodifiableList(userIdList_);
+                        bitField0_ = (bitField0_ & ~0x00000002);
+                    }
+                    result.userIdList_ = userIdList_;
+                } else {
+                    result.userIdList_ = userIdListBuilder_.build();
+                }
+                result.bitField0_ = to_bitField0_;
+                onBuilt();
+                return result;
+            }
+
+            public Builder mergeFrom(com.google.protobuf.Message other) {
+                if (other instanceof YouMaiBuddy.collectContactsReq) {
+                    return mergeFrom((YouMaiBuddy.collectContactsReq) other);
+                } else {
+                    super.mergeFrom(other);
+                    return this;
+                }
+            }
+
+            public Builder mergeFrom(YouMaiBuddy.collectContactsReq other) {
+                if (other == YouMaiBuddy.collectContactsReq.getDefaultInstance()) return this;
+                if (other.hasUserId()) {
+                    bitField0_ |= 0x00000001;
+                    userId_ = other.userId_;
+                    onChanged();
+                }
+                if (userIdListBuilder_ == null) {
+                    if (!other.userIdList_.isEmpty()) {
+                        if (userIdList_.isEmpty()) {
+                            userIdList_ = other.userIdList_;
+                            bitField0_ = (bitField0_ & ~0x00000002);
+                        } else {
+                            ensureUserIdListIsMutable();
+                            userIdList_.addAll(other.userIdList_);
+                        }
+                        onChanged();
+                    }
+                } else {
+                    if (!other.userIdList_.isEmpty()) {
+                        if (userIdListBuilder_.isEmpty()) {
+                            userIdListBuilder_.dispose();
+                            userIdListBuilder_ = null;
+                            userIdList_ = other.userIdList_;
+                            bitField0_ = (bitField0_ & ~0x00000002);
+                            userIdListBuilder_ =
+                                    com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
+                                            getUserIdListFieldBuilder() : null;
+                        } else {
+                            userIdListBuilder_.addAllMessages(other.userIdList_);
+                        }
+                    }
+                }
+                this.mergeUnknownFields(other.getUnknownFields());
+                return this;
+            }
+
+            public final boolean isInitialized() {
+                return true;
+            }
+
+            public Builder mergeFrom(
+                    com.google.protobuf.CodedInputStream input,
+                    com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                    throws java.io.IOException {
+                YouMaiBuddy.collectContactsReq parsedMessage = null;
+                try {
+                    parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+                } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+                    parsedMessage = (YouMaiBuddy.collectContactsReq) e.getUnfinishedMessage();
+                    throw e;
+                } finally {
+                    if (parsedMessage != null) {
+                        mergeFrom(parsedMessage);
+                    }
+                }
+                return this;
+            }
+
+            private int bitField0_;
+
+            private Object userId_ = "";
+
+            /**
+             * <code>optional string user_id = 1;</code>
+             * <p>
+             * <pre>
+             * cmd :CID_CONTACT_COLLECTION_REQ
+             * </pre>
+             */
+            public boolean hasUserId() {
+                return ((bitField0_ & 0x00000001) == 0x00000001);
+            }
+
+            /**
+             * <code>optional string user_id = 1;</code>
+             * <p>
+             * <pre>
+             * cmd :CID_CONTACT_COLLECTION_REQ
+             * </pre>
+             */
+            public String getUserId() {
+                Object ref = userId_;
+                if (!(ref instanceof String)) {
+                    com.google.protobuf.ByteString bs =
+                            (com.google.protobuf.ByteString) ref;
+                    String s = bs.toStringUtf8();
+                    if (bs.isValidUtf8()) {
+                        userId_ = s;
+                    }
+                    return s;
+                } else {
+                    return (String) ref;
+                }
+            }
+
+            /**
+             * <code>optional string user_id = 1;</code>
+             * <p>
+             * <pre>
+             * cmd :CID_CONTACT_COLLECTION_REQ
+             * </pre>
+             */
+            public com.google.protobuf.ByteString
+            getUserIdBytes() {
+                Object ref = userId_;
+                if (ref instanceof String) {
+                    com.google.protobuf.ByteString b =
+                            com.google.protobuf.ByteString.copyFromUtf8(
+                                    (String) ref);
+                    userId_ = b;
+                    return b;
+                } else {
+                    return (com.google.protobuf.ByteString) ref;
+                }
+            }
+
+            /**
+             * <code>optional string user_id = 1;</code>
+             * <p>
+             * <pre>
+             * cmd :CID_CONTACT_COLLECTION_REQ
+             * </pre>
+             */
+            public Builder setUserId(
+                    String value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000001;
+                userId_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string user_id = 1;</code>
+             * <p>
+             * <pre>
+             * cmd :CID_CONTACT_COLLECTION_REQ
+             * </pre>
+             */
+            public Builder clearUserId() {
+                bitField0_ = (bitField0_ & ~0x00000001);
+                userId_ = getDefaultInstance().getUserId();
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string user_id = 1;</code>
+             * <p>
+             * <pre>
+             * cmd :CID_CONTACT_COLLECTION_REQ
+             * </pre>
+             */
+            public Builder setUserIdBytes(
+                    com.google.protobuf.ByteString value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000001;
+                userId_ = value;
+                onChanged();
+                return this;
+            }
+
+            private java.util.List<YouMaiBuddy.ContactInfo> userIdList_ =
+                    java.util.Collections.emptyList();
+
+            private void ensureUserIdListIsMutable() {
+                if (!((bitField0_ & 0x00000002) == 0x00000002)) {
+                    userIdList_ = new java.util.ArrayList<YouMaiBuddy.ContactInfo>(userIdList_);
+                    bitField0_ |= 0x00000002;
+                }
+            }
+
+            private com.google.protobuf.RepeatedFieldBuilder<
+                    YouMaiBuddy.ContactInfo, YouMaiBuddy.ContactInfo.Builder, YouMaiBuddy.ContactInfoOrBuilder> userIdListBuilder_;
+
+            /**
+             * <code>repeated .ContactInfo user_id_list = 2;</code>
+             */
+            public java.util.List<YouMaiBuddy.ContactInfo> getUserIdListList() {
+                if (userIdListBuilder_ == null) {
+                    return java.util.Collections.unmodifiableList(userIdList_);
+                } else {
+                    return userIdListBuilder_.getMessageList();
+                }
+            }
+
+            /**
+             * <code>repeated .ContactInfo user_id_list = 2;</code>
+             */
+            public int getUserIdListCount() {
+                if (userIdListBuilder_ == null) {
+                    return userIdList_.size();
+                } else {
+                    return userIdListBuilder_.getCount();
+                }
+            }
+
+            /**
+             * <code>repeated .ContactInfo user_id_list = 2;</code>
+             */
+            public YouMaiBuddy.ContactInfo getUserIdList(int index) {
+                if (userIdListBuilder_ == null) {
+                    return userIdList_.get(index);
+                } else {
+                    return userIdListBuilder_.getMessage(index);
+                }
+            }
+
+            /**
+             * <code>repeated .ContactInfo user_id_list = 2;</code>
+             */
+            public Builder setUserIdList(
+                    int index, YouMaiBuddy.ContactInfo value) {
+                if (userIdListBuilder_ == null) {
+                    if (value == null) {
+                        throw new NullPointerException();
+                    }
+                    ensureUserIdListIsMutable();
+                    userIdList_.set(index, value);
+                    onChanged();
+                } else {
+                    userIdListBuilder_.setMessage(index, value);
+                }
+                return this;
+            }
+
+            /**
+             * <code>repeated .ContactInfo user_id_list = 2;</code>
+             */
+            public Builder setUserIdList(
+                    int index, YouMaiBuddy.ContactInfo.Builder builderForValue) {
+                if (userIdListBuilder_ == null) {
+                    ensureUserIdListIsMutable();
+                    userIdList_.set(index, builderForValue.build());
+                    onChanged();
+                } else {
+                    userIdListBuilder_.setMessage(index, builderForValue.build());
+                }
+                return this;
+            }
+
+            /**
+             * <code>repeated .ContactInfo user_id_list = 2;</code>
+             */
+            public Builder addUserIdList(YouMaiBuddy.ContactInfo value) {
+                if (userIdListBuilder_ == null) {
+                    if (value == null) {
+                        throw new NullPointerException();
+                    }
+                    ensureUserIdListIsMutable();
+                    userIdList_.add(value);
+                    onChanged();
+                } else {
+                    userIdListBuilder_.addMessage(value);
+                }
+                return this;
+            }
+
+            /**
+             * <code>repeated .ContactInfo user_id_list = 2;</code>
+             */
+            public Builder addUserIdList(
+                    int index, YouMaiBuddy.ContactInfo value) {
+                if (userIdListBuilder_ == null) {
+                    if (value == null) {
+                        throw new NullPointerException();
+                    }
+                    ensureUserIdListIsMutable();
+                    userIdList_.add(index, value);
+                    onChanged();
+                } else {
+                    userIdListBuilder_.addMessage(index, value);
+                }
+                return this;
+            }
+
+            /**
+             * <code>repeated .ContactInfo user_id_list = 2;</code>
+             */
+            public Builder addUserIdList(
+                    YouMaiBuddy.ContactInfo.Builder builderForValue) {
+                if (userIdListBuilder_ == null) {
+                    ensureUserIdListIsMutable();
+                    userIdList_.add(builderForValue.build());
+                    onChanged();
+                } else {
+                    userIdListBuilder_.addMessage(builderForValue.build());
+                }
+                return this;
+            }
+
+            /**
+             * <code>repeated .ContactInfo user_id_list = 2;</code>
+             */
+            public Builder addUserIdList(
+                    int index, YouMaiBuddy.ContactInfo.Builder builderForValue) {
+                if (userIdListBuilder_ == null) {
+                    ensureUserIdListIsMutable();
+                    userIdList_.add(index, builderForValue.build());
+                    onChanged();
+                } else {
+                    userIdListBuilder_.addMessage(index, builderForValue.build());
+                }
+                return this;
+            }
+
+            /**
+             * <code>repeated .ContactInfo user_id_list = 2;</code>
+             */
+            public Builder addAllUserIdList(
+                    Iterable<? extends YouMaiBuddy.ContactInfo> values) {
+                if (userIdListBuilder_ == null) {
+                    ensureUserIdListIsMutable();
+                    com.google.protobuf.AbstractMessageLite.Builder.addAll(
+                            values, userIdList_);
+                    onChanged();
+                } else {
+                    userIdListBuilder_.addAllMessages(values);
+                }
+                return this;
+            }
+
+            /**
+             * <code>repeated .ContactInfo user_id_list = 2;</code>
+             */
+            public Builder clearUserIdList() {
+                if (userIdListBuilder_ == null) {
+                    userIdList_ = java.util.Collections.emptyList();
+                    bitField0_ = (bitField0_ & ~0x00000002);
+                    onChanged();
+                } else {
+                    userIdListBuilder_.clear();
+                }
+                return this;
+            }
+
+            /**
+             * <code>repeated .ContactInfo user_id_list = 2;</code>
+             */
+            public Builder removeUserIdList(int index) {
+                if (userIdListBuilder_ == null) {
+                    ensureUserIdListIsMutable();
+                    userIdList_.remove(index);
+                    onChanged();
+                } else {
+                    userIdListBuilder_.remove(index);
+                }
+                return this;
+            }
+
+            /**
+             * <code>repeated .ContactInfo user_id_list = 2;</code>
+             */
+            public YouMaiBuddy.ContactInfo.Builder getUserIdListBuilder(
+                    int index) {
+                return getUserIdListFieldBuilder().getBuilder(index);
+            }
+
+            /**
+             * <code>repeated .ContactInfo user_id_list = 2;</code>
+             */
+            public YouMaiBuddy.ContactInfoOrBuilder getUserIdListOrBuilder(
+                    int index) {
+                if (userIdListBuilder_ == null) {
+                    return userIdList_.get(index);
+                } else {
+                    return userIdListBuilder_.getMessageOrBuilder(index);
+                }
+            }
+
+            /**
+             * <code>repeated .ContactInfo user_id_list = 2;</code>
+             */
+            public java.util.List<? extends YouMaiBuddy.ContactInfoOrBuilder>
+            getUserIdListOrBuilderList() {
+                if (userIdListBuilder_ != null) {
+                    return userIdListBuilder_.getMessageOrBuilderList();
+                } else {
+                    return java.util.Collections.unmodifiableList(userIdList_);
+                }
+            }
+
+            /**
+             * <code>repeated .ContactInfo user_id_list = 2;</code>
+             */
+            public YouMaiBuddy.ContactInfo.Builder addUserIdListBuilder() {
+                return getUserIdListFieldBuilder().addBuilder(
+                        YouMaiBuddy.ContactInfo.getDefaultInstance());
+            }
+
+            /**
+             * <code>repeated .ContactInfo user_id_list = 2;</code>
+             */
+            public YouMaiBuddy.ContactInfo.Builder addUserIdListBuilder(
+                    int index) {
+                return getUserIdListFieldBuilder().addBuilder(
+                        index, YouMaiBuddy.ContactInfo.getDefaultInstance());
+            }
+
+            /**
+             * <code>repeated .ContactInfo user_id_list = 2;</code>
+             */
+            public java.util.List<YouMaiBuddy.ContactInfo.Builder>
+            getUserIdListBuilderList() {
+                return getUserIdListFieldBuilder().getBuilderList();
+            }
+
+            private com.google.protobuf.RepeatedFieldBuilder<
+                    YouMaiBuddy.ContactInfo, YouMaiBuddy.ContactInfo.Builder, YouMaiBuddy.ContactInfoOrBuilder>
+            getUserIdListFieldBuilder() {
+                if (userIdListBuilder_ == null) {
+                    userIdListBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
+                            YouMaiBuddy.ContactInfo, YouMaiBuddy.ContactInfo.Builder, YouMaiBuddy.ContactInfoOrBuilder>(
+                            userIdList_,
+                            ((bitField0_ & 0x00000002) == 0x00000002),
+                            getParentForChildren(),
+                            isClean());
+                    userIdList_ = null;
+                }
+                return userIdListBuilder_;
+            }
+
+            // @@protoc_insertion_point(builder_scope:collectContactsReq)
+        }
+
+        static {
+            defaultInstance = new collectContactsReq(true);
+            defaultInstance.initFields();
+        }
+
+        // @@protoc_insertion_point(class_scope:collectContactsReq)
+    }
+
+    public interface collectContactsRspOrBuilder extends
+            // @@protoc_insertion_point(interface_extends:collectContactsRsp)
+            com.google.protobuf.MessageOrBuilder {
+
+        /**
+         * <code>optional string user_id = 1;</code>
+         * <p>
+         * <pre>
+         * cmd :CID_CONTACT_COLLECTION_RSP
+         * </pre>
+         */
+        boolean hasUserId();
+
+        /**
+         * <code>optional string user_id = 1;</code>
+         * <p>
+         * <pre>
+         * cmd :CID_CONTACT_COLLECTION_RSP
+         * </pre>
+         */
+        String getUserId();
+
+        /**
+         * <code>optional string user_id = 1;</code>
+         * <p>
+         * <pre>
+         * cmd :CID_CONTACT_COLLECTION_RSP
+         * </pre>
+         */
+        com.google.protobuf.ByteString
+        getUserIdBytes();
+
+        /**
+         * <code>repeated .ContactInfo user_id_list = 2;</code>
+         */
+        java.util.List<YouMaiBuddy.ContactInfo>
+        getUserIdListList();
+
+        /**
+         * <code>repeated .ContactInfo user_id_list = 2;</code>
+         */
+        YouMaiBuddy.ContactInfo getUserIdList(int index);
+
+        /**
+         * <code>repeated .ContactInfo user_id_list = 2;</code>
+         */
+        int getUserIdListCount();
+
+        /**
+         * <code>repeated .ContactInfo user_id_list = 2;</code>
+         */
+        java.util.List<? extends YouMaiBuddy.ContactInfoOrBuilder>
+        getUserIdListOrBuilderList();
+
+        /**
+         * <code>repeated .ContactInfo user_id_list = 2;</code>
+         */
+        YouMaiBuddy.ContactInfoOrBuilder getUserIdListOrBuilder(
+                int index);
+
+        /**
+         * <code>optional .ResultCode result = 3;</code>
+         */
+        boolean hasResult();
+
+        /**
+         * <code>optional .ResultCode result = 3;</code>
+         */
+        YouMaiBasic.ResultCode getResult();
+    }
+
+    /**
+     * Protobuf type {@code collectContactsRsp}
+     */
+    public static final class collectContactsRsp extends
+            com.google.protobuf.GeneratedMessage implements
+            // @@protoc_insertion_point(message_implements:collectContactsRsp)
+            collectContactsRspOrBuilder {
+        // Use collectContactsRsp.newBuilder() to construct.
+        private collectContactsRsp(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+            super(builder);
+            this.unknownFields = builder.getUnknownFields();
+        }
+
+        private collectContactsRsp(boolean noInit) {
+            this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance();
+        }
+
+        private static final collectContactsRsp defaultInstance;
+
+        public static collectContactsRsp getDefaultInstance() {
+            return defaultInstance;
+        }
+
+        public collectContactsRsp getDefaultInstanceForType() {
+            return defaultInstance;
+        }
+
+        private final com.google.protobuf.UnknownFieldSet unknownFields;
+
+        @Override
+        public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+            return this.unknownFields;
+        }
+
+        private collectContactsRsp(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            initFields();
+            int mutable_bitField0_ = 0;
+            com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+                    com.google.protobuf.UnknownFieldSet.newBuilder();
+            try {
+                boolean done = false;
+                while (!done) {
+                    int tag = input.readTag();
+                    switch (tag) {
+                        case 0:
+                            done = true;
+                            break;
+                        default: {
+                            if (!parseUnknownField(input, unknownFields,
+                                    extensionRegistry, tag)) {
+                                done = true;
+                            }
+                            break;
+                        }
+                        case 10: {
+                            com.google.protobuf.ByteString bs = input.readBytes();
+                            bitField0_ |= 0x00000001;
+                            userId_ = bs;
+                            break;
+                        }
+                        case 18: {
+                            if (!((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
+                                userIdList_ = new java.util.ArrayList<YouMaiBuddy.ContactInfo>();
+                                mutable_bitField0_ |= 0x00000002;
+                            }
+                            userIdList_.add(input.readMessage(YouMaiBuddy.ContactInfo.PARSER, extensionRegistry));
+                            break;
+                        }
+                        case 24: {
+                            int rawValue = input.readEnum();
+                            YouMaiBasic.ResultCode value = YouMaiBasic.ResultCode.valueOf(rawValue);
+                            if (value == null) {
+                                unknownFields.mergeVarintField(3, rawValue);
+                            } else {
+                                bitField0_ |= 0x00000002;
+                                result_ = value;
+                            }
+                            break;
+                        }
+                    }
+                }
+            } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+                throw e.setUnfinishedMessage(this);
+            } catch (java.io.IOException e) {
+                throw new com.google.protobuf.InvalidProtocolBufferException(
+                        e.getMessage()).setUnfinishedMessage(this);
+            } finally {
+                if (((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
+                    userIdList_ = java.util.Collections.unmodifiableList(userIdList_);
+                }
+                this.unknownFields = unknownFields.build();
+                makeExtensionsImmutable();
+            }
+        }
+
+        public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+            return YouMaiBuddy.internal_static_com_proto_buddy_collectContactsRsp_descriptor;
+        }
+
+        protected FieldAccessorTable
+        internalGetFieldAccessorTable() {
+            return YouMaiBuddy.internal_static_com_proto_buddy_collectContactsRsp_fieldAccessorTable
+                    .ensureFieldAccessorsInitialized(
+                            YouMaiBuddy.collectContactsRsp.class, YouMaiBuddy.collectContactsRsp.Builder.class);
+        }
+
+        public static com.google.protobuf.Parser<collectContactsRsp> PARSER =
+                new com.google.protobuf.AbstractParser<collectContactsRsp>() {
+                    public collectContactsRsp parsePartialFrom(
+                            com.google.protobuf.CodedInputStream input,
+                            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                            throws com.google.protobuf.InvalidProtocolBufferException {
+                        return new collectContactsRsp(input, extensionRegistry);
+                    }
+                };
+
+        @Override
+        public com.google.protobuf.Parser<collectContactsRsp> getParserForType() {
+            return PARSER;
+        }
+
+        private int bitField0_;
+        public static final int USER_ID_FIELD_NUMBER = 1;
+        private Object userId_;
+
+        /**
+         * <code>optional string user_id = 1;</code>
+         * <p>
+         * <pre>
+         * cmd :CID_CONTACT_COLLECTION_RSP
+         * </pre>
+         */
+        public boolean hasUserId() {
+            return ((bitField0_ & 0x00000001) == 0x00000001);
+        }
+
+        /**
+         * <code>optional string user_id = 1;</code>
+         * <p>
+         * <pre>
+         * cmd :CID_CONTACT_COLLECTION_RSP
+         * </pre>
+         */
+        public String getUserId() {
+            Object ref = userId_;
+            if (ref instanceof String) {
+                return (String) ref;
+            } else {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                String s = bs.toStringUtf8();
+                if (bs.isValidUtf8()) {
+                    userId_ = s;
+                }
+                return s;
+            }
+        }
+
+        /**
+         * <code>optional string user_id = 1;</code>
+         * <p>
+         * <pre>
+         * cmd :CID_CONTACT_COLLECTION_RSP
+         * </pre>
+         */
+        public com.google.protobuf.ByteString
+        getUserIdBytes() {
+            Object ref = userId_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (String) ref);
+                userId_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
+        public static final int USER_ID_LIST_FIELD_NUMBER = 2;
+        private java.util.List<YouMaiBuddy.ContactInfo> userIdList_;
+
+        /**
+         * <code>repeated .ContactInfo user_id_list = 2;</code>
+         */
+        public java.util.List<YouMaiBuddy.ContactInfo> getUserIdListList() {
+            return userIdList_;
+        }
+
+        /**
+         * <code>repeated .ContactInfo user_id_list = 2;</code>
+         */
+        public java.util.List<? extends YouMaiBuddy.ContactInfoOrBuilder>
+        getUserIdListOrBuilderList() {
+            return userIdList_;
+        }
+
+        /**
+         * <code>repeated .ContactInfo user_id_list = 2;</code>
+         */
+        public int getUserIdListCount() {
+            return userIdList_.size();
+        }
+
+        /**
+         * <code>repeated .ContactInfo user_id_list = 2;</code>
+         */
+        public YouMaiBuddy.ContactInfo getUserIdList(int index) {
+            return userIdList_.get(index);
+        }
+
+        /**
+         * <code>repeated .ContactInfo user_id_list = 2;</code>
+         */
+        public YouMaiBuddy.ContactInfoOrBuilder getUserIdListOrBuilder(
+                int index) {
+            return userIdList_.get(index);
+        }
+
+        public static final int RESULT_FIELD_NUMBER = 3;
+        private YouMaiBasic.ResultCode result_;
+
+        /**
+         * <code>optional .ResultCode result = 3;</code>
+         */
+        public boolean hasResult() {
+            return ((bitField0_ & 0x00000002) == 0x00000002);
+        }
+
+        /**
+         * <code>optional .ResultCode result = 3;</code>
+         */
+        public YouMaiBasic.ResultCode getResult() {
+            return result_;
+        }
+
+        private void initFields() {
+            userId_ = "";
+            userIdList_ = java.util.Collections.emptyList();
+            result_ = YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
+        }
+
+        private byte memoizedIsInitialized = -1;
+
+        public final boolean isInitialized() {
+            byte isInitialized = memoizedIsInitialized;
+            if (isInitialized == 1) return true;
+            if (isInitialized == 0) return false;
+
+            memoizedIsInitialized = 1;
+            return true;
+        }
+
+        public void writeTo(com.google.protobuf.CodedOutputStream output)
+                throws java.io.IOException {
+            getSerializedSize();
+            if (((bitField0_ & 0x00000001) == 0x00000001)) {
+                output.writeBytes(1, getUserIdBytes());
+            }
+            for (int i = 0; i < userIdList_.size(); i++) {
+                output.writeMessage(2, userIdList_.get(i));
+            }
+            if (((bitField0_ & 0x00000002) == 0x00000002)) {
+                output.writeEnum(3, result_.getNumber());
+            }
+            getUnknownFields().writeTo(output);
+        }
+
+        private int memoizedSerializedSize = -1;
+
+        public int getSerializedSize() {
+            int size = memoizedSerializedSize;
+            if (size != -1) return size;
+
+            size = 0;
+            if (((bitField0_ & 0x00000001) == 0x00000001)) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeBytesSize(1, getUserIdBytes());
+            }
+            for (int i = 0; i < userIdList_.size(); i++) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeMessageSize(2, userIdList_.get(i));
+            }
+            if (((bitField0_ & 0x00000002) == 0x00000002)) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeEnumSize(3, result_.getNumber());
+            }
+            size += getUnknownFields().getSerializedSize();
+            memoizedSerializedSize = size;
+            return size;
+        }
+
+        private static final long serialVersionUID = 0L;
+
+        @Override
+        protected Object writeReplace()
+                throws java.io.ObjectStreamException {
+            return super.writeReplace();
+        }
+
+        public static YouMaiBuddy.collectContactsRsp parseFrom(
+                com.google.protobuf.ByteString data)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data);
+        }
+
+        public static YouMaiBuddy.collectContactsRsp parseFrom(
+                com.google.protobuf.ByteString data,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data, extensionRegistry);
+        }
+
+        public static YouMaiBuddy.collectContactsRsp parseFrom(byte[] data)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data);
+        }
+
+        public static YouMaiBuddy.collectContactsRsp parseFrom(
+                byte[] data,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data, extensionRegistry);
+        }
+
+        public static YouMaiBuddy.collectContactsRsp parseFrom(java.io.InputStream input)
+                throws java.io.IOException {
+            return PARSER.parseFrom(input);
+        }
+
+        public static YouMaiBuddy.collectContactsRsp parseFrom(
+                java.io.InputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            return PARSER.parseFrom(input, extensionRegistry);
+        }
+
+        public static YouMaiBuddy.collectContactsRsp parseDelimitedFrom(java.io.InputStream input)
+                throws java.io.IOException {
+            return PARSER.parseDelimitedFrom(input);
+        }
+
+        public static YouMaiBuddy.collectContactsRsp parseDelimitedFrom(
+                java.io.InputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            return PARSER.parseDelimitedFrom(input, extensionRegistry);
+        }
+
+        public static YouMaiBuddy.collectContactsRsp parseFrom(
+                com.google.protobuf.CodedInputStream input)
+                throws java.io.IOException {
+            return PARSER.parseFrom(input);
+        }
+
+        public static YouMaiBuddy.collectContactsRsp parseFrom(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            return PARSER.parseFrom(input, extensionRegistry);
+        }
+
+        public static Builder newBuilder() {
+            return Builder.create();
+        }
+
+        public Builder newBuilderForType() {
+            return newBuilder();
+        }
+
+        public static Builder newBuilder(YouMaiBuddy.collectContactsRsp prototype) {
+            return newBuilder().mergeFrom(prototype);
+        }
+
+        public Builder toBuilder() {
+            return newBuilder(this);
+        }
+
+        @Override
+        protected Builder newBuilderForType(
+                BuilderParent parent) {
+            Builder builder = new Builder(parent);
+            return builder;
+        }
+
+        /**
+         * Protobuf type {@code collectContactsRsp}
+         */
+        public static final class Builder extends
+                com.google.protobuf.GeneratedMessage.Builder<Builder> implements
+                // @@protoc_insertion_point(builder_implements:collectContactsRsp)
+                YouMaiBuddy.collectContactsRspOrBuilder {
+            public static final com.google.protobuf.Descriptors.Descriptor
+            getDescriptor() {
+                return YouMaiBuddy.internal_static_com_proto_buddy_collectContactsRsp_descriptor;
+            }
+
+            protected FieldAccessorTable
+            internalGetFieldAccessorTable() {
+                return YouMaiBuddy.internal_static_com_proto_buddy_collectContactsRsp_fieldAccessorTable
+                        .ensureFieldAccessorsInitialized(
+                                YouMaiBuddy.collectContactsRsp.class, YouMaiBuddy.collectContactsRsp.Builder.class);
+            }
+
+            // Construct using YouMaiBuddy.collectContactsRsp.newBuilder()
+            private Builder() {
+                maybeForceBuilderInitialization();
+            }
+
+            private Builder(
+                    BuilderParent parent) {
+                super(parent);
+                maybeForceBuilderInitialization();
+            }
+
+            private void maybeForceBuilderInitialization() {
+                if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+                    getUserIdListFieldBuilder();
+                }
+            }
+
+            private static Builder create() {
+                return new Builder();
+            }
+
+            public Builder clear() {
+                super.clear();
+                userId_ = "";
+                bitField0_ = (bitField0_ & ~0x00000001);
+                if (userIdListBuilder_ == null) {
+                    userIdList_ = java.util.Collections.emptyList();
+                    bitField0_ = (bitField0_ & ~0x00000002);
+                } else {
+                    userIdListBuilder_.clear();
+                }
+                result_ = YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
+                bitField0_ = (bitField0_ & ~0x00000004);
+                return this;
+            }
+
+            public Builder clone() {
+                return create().mergeFrom(buildPartial());
+            }
+
+            public com.google.protobuf.Descriptors.Descriptor
+            getDescriptorForType() {
+                return YouMaiBuddy.internal_static_com_proto_buddy_collectContactsRsp_descriptor;
+            }
+
+            public YouMaiBuddy.collectContactsRsp getDefaultInstanceForType() {
+                return YouMaiBuddy.collectContactsRsp.getDefaultInstance();
+            }
+
+            public YouMaiBuddy.collectContactsRsp build() {
+                YouMaiBuddy.collectContactsRsp result = buildPartial();
+                if (!result.isInitialized()) {
+                    throw newUninitializedMessageException(result);
+                }
+                return result;
+            }
+
+            public YouMaiBuddy.collectContactsRsp buildPartial() {
+                YouMaiBuddy.collectContactsRsp result = new YouMaiBuddy.collectContactsRsp(this);
+                int from_bitField0_ = bitField0_;
+                int to_bitField0_ = 0;
+                if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+                    to_bitField0_ |= 0x00000001;
+                }
+                result.userId_ = userId_;
+                if (userIdListBuilder_ == null) {
+                    if (((bitField0_ & 0x00000002) == 0x00000002)) {
+                        userIdList_ = java.util.Collections.unmodifiableList(userIdList_);
+                        bitField0_ = (bitField0_ & ~0x00000002);
+                    }
+                    result.userIdList_ = userIdList_;
+                } else {
+                    result.userIdList_ = userIdListBuilder_.build();
+                }
+                if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+                    to_bitField0_ |= 0x00000002;
+                }
+                result.result_ = result_;
+                result.bitField0_ = to_bitField0_;
+                onBuilt();
+                return result;
+            }
+
+            public Builder mergeFrom(com.google.protobuf.Message other) {
+                if (other instanceof YouMaiBuddy.collectContactsRsp) {
+                    return mergeFrom((YouMaiBuddy.collectContactsRsp) other);
+                } else {
+                    super.mergeFrom(other);
+                    return this;
+                }
+            }
+
+            public Builder mergeFrom(YouMaiBuddy.collectContactsRsp other) {
+                if (other == YouMaiBuddy.collectContactsRsp.getDefaultInstance()) return this;
+                if (other.hasUserId()) {
+                    bitField0_ |= 0x00000001;
+                    userId_ = other.userId_;
+                    onChanged();
+                }
+                if (userIdListBuilder_ == null) {
+                    if (!other.userIdList_.isEmpty()) {
+                        if (userIdList_.isEmpty()) {
+                            userIdList_ = other.userIdList_;
+                            bitField0_ = (bitField0_ & ~0x00000002);
+                        } else {
+                            ensureUserIdListIsMutable();
+                            userIdList_.addAll(other.userIdList_);
+                        }
+                        onChanged();
+                    }
+                } else {
+                    if (!other.userIdList_.isEmpty()) {
+                        if (userIdListBuilder_.isEmpty()) {
+                            userIdListBuilder_.dispose();
+                            userIdListBuilder_ = null;
+                            userIdList_ = other.userIdList_;
+                            bitField0_ = (bitField0_ & ~0x00000002);
+                            userIdListBuilder_ =
+                                    com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
+                                            getUserIdListFieldBuilder() : null;
+                        } else {
+                            userIdListBuilder_.addAllMessages(other.userIdList_);
+                        }
+                    }
+                }
+                if (other.hasResult()) {
+                    setResult(other.getResult());
+                }
+                this.mergeUnknownFields(other.getUnknownFields());
+                return this;
+            }
+
+            public final boolean isInitialized() {
+                return true;
+            }
+
+            public Builder mergeFrom(
+                    com.google.protobuf.CodedInputStream input,
+                    com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                    throws java.io.IOException {
+                YouMaiBuddy.collectContactsRsp parsedMessage = null;
+                try {
+                    parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+                } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+                    parsedMessage = (YouMaiBuddy.collectContactsRsp) e.getUnfinishedMessage();
+                    throw e;
+                } finally {
+                    if (parsedMessage != null) {
+                        mergeFrom(parsedMessage);
+                    }
+                }
+                return this;
+            }
+
+            private int bitField0_;
+
+            private Object userId_ = "";
+
+            /**
+             * <code>optional string user_id = 1;</code>
+             * <p>
+             * <pre>
+             * cmd :CID_CONTACT_COLLECTION_RSP
+             * </pre>
+             */
+            public boolean hasUserId() {
+                return ((bitField0_ & 0x00000001) == 0x00000001);
+            }
+
+            /**
+             * <code>optional string user_id = 1;</code>
+             * <p>
+             * <pre>
+             * cmd :CID_CONTACT_COLLECTION_RSP
+             * </pre>
+             */
+            public String getUserId() {
+                Object ref = userId_;
+                if (!(ref instanceof String)) {
+                    com.google.protobuf.ByteString bs =
+                            (com.google.protobuf.ByteString) ref;
+                    String s = bs.toStringUtf8();
+                    if (bs.isValidUtf8()) {
+                        userId_ = s;
+                    }
+                    return s;
+                } else {
+                    return (String) ref;
+                }
+            }
+
+            /**
+             * <code>optional string user_id = 1;</code>
+             * <p>
+             * <pre>
+             * cmd :CID_CONTACT_COLLECTION_RSP
+             * </pre>
+             */
+            public com.google.protobuf.ByteString
+            getUserIdBytes() {
+                Object ref = userId_;
+                if (ref instanceof String) {
+                    com.google.protobuf.ByteString b =
+                            com.google.protobuf.ByteString.copyFromUtf8(
+                                    (String) ref);
+                    userId_ = b;
+                    return b;
+                } else {
+                    return (com.google.protobuf.ByteString) ref;
+                }
+            }
+
+            /**
+             * <code>optional string user_id = 1;</code>
+             * <p>
+             * <pre>
+             * cmd :CID_CONTACT_COLLECTION_RSP
+             * </pre>
+             */
+            public Builder setUserId(
+                    String value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000001;
+                userId_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string user_id = 1;</code>
+             * <p>
+             * <pre>
+             * cmd :CID_CONTACT_COLLECTION_RSP
+             * </pre>
+             */
+            public Builder clearUserId() {
+                bitField0_ = (bitField0_ & ~0x00000001);
+                userId_ = getDefaultInstance().getUserId();
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string user_id = 1;</code>
+             * <p>
+             * <pre>
+             * cmd :CID_CONTACT_COLLECTION_RSP
+             * </pre>
+             */
+            public Builder setUserIdBytes(
+                    com.google.protobuf.ByteString value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000001;
+                userId_ = value;
+                onChanged();
+                return this;
+            }
+
+            private java.util.List<YouMaiBuddy.ContactInfo> userIdList_ =
+                    java.util.Collections.emptyList();
+
+            private void ensureUserIdListIsMutable() {
+                if (!((bitField0_ & 0x00000002) == 0x00000002)) {
+                    userIdList_ = new java.util.ArrayList<YouMaiBuddy.ContactInfo>(userIdList_);
+                    bitField0_ |= 0x00000002;
+                }
+            }
+
+            private com.google.protobuf.RepeatedFieldBuilder<
+                    YouMaiBuddy.ContactInfo, YouMaiBuddy.ContactInfo.Builder, YouMaiBuddy.ContactInfoOrBuilder> userIdListBuilder_;
+
+            /**
+             * <code>repeated .ContactInfo user_id_list = 2;</code>
+             */
+            public java.util.List<YouMaiBuddy.ContactInfo> getUserIdListList() {
+                if (userIdListBuilder_ == null) {
+                    return java.util.Collections.unmodifiableList(userIdList_);
+                } else {
+                    return userIdListBuilder_.getMessageList();
+                }
+            }
+
+            /**
+             * <code>repeated .ContactInfo user_id_list = 2;</code>
+             */
+            public int getUserIdListCount() {
+                if (userIdListBuilder_ == null) {
+                    return userIdList_.size();
+                } else {
+                    return userIdListBuilder_.getCount();
+                }
+            }
+
+            /**
+             * <code>repeated .ContactInfo user_id_list = 2;</code>
+             */
+            public YouMaiBuddy.ContactInfo getUserIdList(int index) {
+                if (userIdListBuilder_ == null) {
+                    return userIdList_.get(index);
+                } else {
+                    return userIdListBuilder_.getMessage(index);
+                }
+            }
+
+            /**
+             * <code>repeated .ContactInfo user_id_list = 2;</code>
+             */
+            public Builder setUserIdList(
+                    int index, YouMaiBuddy.ContactInfo value) {
+                if (userIdListBuilder_ == null) {
+                    if (value == null) {
+                        throw new NullPointerException();
+                    }
+                    ensureUserIdListIsMutable();
+                    userIdList_.set(index, value);
+                    onChanged();
+                } else {
+                    userIdListBuilder_.setMessage(index, value);
+                }
+                return this;
+            }
+
+            /**
+             * <code>repeated .ContactInfo user_id_list = 2;</code>
+             */
+            public Builder setUserIdList(
+                    int index, YouMaiBuddy.ContactInfo.Builder builderForValue) {
+                if (userIdListBuilder_ == null) {
+                    ensureUserIdListIsMutable();
+                    userIdList_.set(index, builderForValue.build());
+                    onChanged();
+                } else {
+                    userIdListBuilder_.setMessage(index, builderForValue.build());
+                }
+                return this;
+            }
+
+            /**
+             * <code>repeated .ContactInfo user_id_list = 2;</code>
+             */
+            public Builder addUserIdList(YouMaiBuddy.ContactInfo value) {
+                if (userIdListBuilder_ == null) {
+                    if (value == null) {
+                        throw new NullPointerException();
+                    }
+                    ensureUserIdListIsMutable();
+                    userIdList_.add(value);
+                    onChanged();
+                } else {
+                    userIdListBuilder_.addMessage(value);
+                }
+                return this;
+            }
+
+            /**
+             * <code>repeated .ContactInfo user_id_list = 2;</code>
+             */
+            public Builder addUserIdList(
+                    int index, YouMaiBuddy.ContactInfo value) {
+                if (userIdListBuilder_ == null) {
+                    if (value == null) {
+                        throw new NullPointerException();
+                    }
+                    ensureUserIdListIsMutable();
+                    userIdList_.add(index, value);
+                    onChanged();
+                } else {
+                    userIdListBuilder_.addMessage(index, value);
+                }
+                return this;
+            }
+
+            /**
+             * <code>repeated .ContactInfo user_id_list = 2;</code>
+             */
+            public Builder addUserIdList(
+                    YouMaiBuddy.ContactInfo.Builder builderForValue) {
+                if (userIdListBuilder_ == null) {
+                    ensureUserIdListIsMutable();
+                    userIdList_.add(builderForValue.build());
+                    onChanged();
+                } else {
+                    userIdListBuilder_.addMessage(builderForValue.build());
+                }
+                return this;
+            }
+
+            /**
+             * <code>repeated .ContactInfo user_id_list = 2;</code>
+             */
+            public Builder addUserIdList(
+                    int index, YouMaiBuddy.ContactInfo.Builder builderForValue) {
+                if (userIdListBuilder_ == null) {
+                    ensureUserIdListIsMutable();
+                    userIdList_.add(index, builderForValue.build());
+                    onChanged();
+                } else {
+                    userIdListBuilder_.addMessage(index, builderForValue.build());
+                }
+                return this;
+            }
+
+            /**
+             * <code>repeated .ContactInfo user_id_list = 2;</code>
+             */
+            public Builder addAllUserIdList(
+                    Iterable<? extends YouMaiBuddy.ContactInfo> values) {
+                if (userIdListBuilder_ == null) {
+                    ensureUserIdListIsMutable();
+                    com.google.protobuf.AbstractMessageLite.Builder.addAll(
+                            values, userIdList_);
+                    onChanged();
+                } else {
+                    userIdListBuilder_.addAllMessages(values);
+                }
+                return this;
+            }
+
+            /**
+             * <code>repeated .ContactInfo user_id_list = 2;</code>
+             */
+            public Builder clearUserIdList() {
+                if (userIdListBuilder_ == null) {
+                    userIdList_ = java.util.Collections.emptyList();
+                    bitField0_ = (bitField0_ & ~0x00000002);
+                    onChanged();
+                } else {
+                    userIdListBuilder_.clear();
+                }
+                return this;
+            }
+
+            /**
+             * <code>repeated .ContactInfo user_id_list = 2;</code>
+             */
+            public Builder removeUserIdList(int index) {
+                if (userIdListBuilder_ == null) {
+                    ensureUserIdListIsMutable();
+                    userIdList_.remove(index);
+                    onChanged();
+                } else {
+                    userIdListBuilder_.remove(index);
+                }
+                return this;
+            }
+
+            /**
+             * <code>repeated .ContactInfo user_id_list = 2;</code>
+             */
+            public YouMaiBuddy.ContactInfo.Builder getUserIdListBuilder(
+                    int index) {
+                return getUserIdListFieldBuilder().getBuilder(index);
+            }
+
+            /**
+             * <code>repeated .ContactInfo user_id_list = 2;</code>
+             */
+            public YouMaiBuddy.ContactInfoOrBuilder getUserIdListOrBuilder(
+                    int index) {
+                if (userIdListBuilder_ == null) {
+                    return userIdList_.get(index);
+                } else {
+                    return userIdListBuilder_.getMessageOrBuilder(index);
+                }
+            }
+
+            /**
+             * <code>repeated .ContactInfo user_id_list = 2;</code>
+             */
+            public java.util.List<? extends YouMaiBuddy.ContactInfoOrBuilder>
+            getUserIdListOrBuilderList() {
+                if (userIdListBuilder_ != null) {
+                    return userIdListBuilder_.getMessageOrBuilderList();
+                } else {
+                    return java.util.Collections.unmodifiableList(userIdList_);
+                }
+            }
+
+            /**
+             * <code>repeated .ContactInfo user_id_list = 2;</code>
+             */
+            public YouMaiBuddy.ContactInfo.Builder addUserIdListBuilder() {
+                return getUserIdListFieldBuilder().addBuilder(
+                        YouMaiBuddy.ContactInfo.getDefaultInstance());
+            }
+
+            /**
+             * <code>repeated .ContactInfo user_id_list = 2;</code>
+             */
+            public YouMaiBuddy.ContactInfo.Builder addUserIdListBuilder(
+                    int index) {
+                return getUserIdListFieldBuilder().addBuilder(
+                        index, YouMaiBuddy.ContactInfo.getDefaultInstance());
+            }
+
+            /**
+             * <code>repeated .ContactInfo user_id_list = 2;</code>
+             */
+            public java.util.List<YouMaiBuddy.ContactInfo.Builder>
+            getUserIdListBuilderList() {
+                return getUserIdListFieldBuilder().getBuilderList();
+            }
+
+            private com.google.protobuf.RepeatedFieldBuilder<
+                    YouMaiBuddy.ContactInfo, YouMaiBuddy.ContactInfo.Builder, YouMaiBuddy.ContactInfoOrBuilder>
+            getUserIdListFieldBuilder() {
+                if (userIdListBuilder_ == null) {
+                    userIdListBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
+                            YouMaiBuddy.ContactInfo, YouMaiBuddy.ContactInfo.Builder, YouMaiBuddy.ContactInfoOrBuilder>(
+                            userIdList_,
+                            ((bitField0_ & 0x00000002) == 0x00000002),
+                            getParentForChildren(),
+                            isClean());
+                    userIdList_ = null;
+                }
+                return userIdListBuilder_;
+            }
+
+            private YouMaiBasic.ResultCode result_ = YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
+
+            /**
+             * <code>optional .ResultCode result = 3;</code>
+             */
+            public boolean hasResult() {
+                return ((bitField0_ & 0x00000004) == 0x00000004);
+            }
+
+            /**
+             * <code>optional .ResultCode result = 3;</code>
+             */
+            public YouMaiBasic.ResultCode getResult() {
+                return result_;
+            }
+
+            /**
+             * <code>optional .ResultCode result = 3;</code>
+             */
+            public Builder setResult(YouMaiBasic.ResultCode value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000004;
+                result_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional .ResultCode result = 3;</code>
+             */
+            public Builder clearResult() {
+                bitField0_ = (bitField0_ & ~0x00000004);
+                result_ = YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
+                onChanged();
+                return this;
+            }
+
+            // @@protoc_insertion_point(builder_scope:collectContactsRsp)
+        }
+
+        static {
+            defaultInstance = new collectContactsRsp(true);
+            defaultInstance.initFields();
+        }
+
+        // @@protoc_insertion_point(class_scope:collectContactsRsp)
+    }
+
     private static final com.google.protobuf.Descriptors.Descriptor
             internal_static_com_proto_buddy_IMChangeAvatarReq_descriptor;
     private static
@@ -16470,6 +20505,21 @@ public final class YouMaiBuddy {
     private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
             internal_static_com_proto_buddy_IMGetUserInfoRsp_fieldAccessorTable;
+    private static final com.google.protobuf.Descriptors.Descriptor
+            internal_static_com_proto_buddy_ContactInfo_descriptor;
+    private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+            internal_static_com_proto_buddy_ContactInfo_fieldAccessorTable;
+    private static final com.google.protobuf.Descriptors.Descriptor
+            internal_static_com_proto_buddy_collectContactsReq_descriptor;
+    private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+            internal_static_com_proto_buddy_collectContactsReq_fieldAccessorTable;
+    private static final com.google.protobuf.Descriptors.Descriptor
+            internal_static_com_proto_buddy_collectContactsRsp_descriptor;
+    private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+            internal_static_com_proto_buddy_collectContactsRsp_fieldAccessorTable;
 
     public static com.google.protobuf.Descriptors.FileDescriptor
     getDescriptor() {
@@ -16505,8 +20555,8 @@ public final class YouMaiBuddy {
                         "uddyOptType\022\016\n\006result\030\004 \001(\005\022\022\n\nopt_remar" +
                         "k\030\005 \001(\t\"Q\n\021IMModiNickNameReq\022\023\n\013src_user" +
                         "_id\030\001 \001(\t\022\024\n\014dest_user_id\030\003 \001(\t\022\021\n\tnick_" +
-                        "name\030\024 \001(\014\"L\n\021IMModiNickNameRsp\022\017\n\007user_" +
-                        "id\030\001 \001(\t\022\021\n\tnick_name\030\002 \001(\014\022\023\n\013update_ti" +
+                        "name\030\024 \001(\t\"L\n\021IMModiNickNameRsp\022\017\n\007user_" +
+                        "id\030\001 \001(\t\022\021\n\tnick_name\030\002 \001(\t\022\023\n\013update_ti" +
                         "me\030\003 \001(\004\"U\n\016IMBuddyReqInfo\022\017\n\007user_id\030\001 " +
                         "\001(\t\022\020\n\010req_stat\030\002 \001(\r\022\020\n\010req_time\030\003 \001(\004\022" +
                         "\016\n\006remark\030\004 \001(\t\"P\n\024IMGetBuddyReqListReq\022" +
@@ -16514,20 +20564,30 @@ public final class YouMaiBuddy {
                 "\npack_index\030\003 \001(\r\"\210\001\n\024IMGetBuddyReqListR" +
                         "sp\022\023\n\013update_time\030\001 \001(\004\0223\n\nBuddysReqs\030\002 " +
                         "\003(\0132\037.IMBuddyReqInfo\022\022\n\n" +
-                        "pack_index\030\003 \001(\r\022\022\n\npack_count\030\004 \001(\r\"W\n\007" +
+                        "pack_index\030\003 \001(\r\022\022\n\npack_count\030\004 \001(\r\"h\n\007" +
                         "OrgInfo\022\016\n\006org_id\030\001 \001(\t\022\014\n\004type\030\002 \001(\005\022\014\n" +
                         "\004name\030\003 \001(\t\022\020\n\010username\030\004 \001(\t\022\016\n\006avator\030" +
-                        "\005 \001(\t\"\035\n\013IMGetOrgReq\022\016\n\006org_id\030\001 \001(\t\"I\n\013" +
-                        "IMGetOrgRsp\022\016\n\006org_id\030\001 \001(\t\022*\n\010org_list\030" +
-                        "\002 \003(\0132\030.OrgInfo\"w\n\010UserI" +
-                        "nfo\022\017\n\007user_id\030\001 \001(\t\022\r\n\005phone\030\002 \001(\t\022\021\n\tn",
-                "ick_name\030\003 \001(\t\022\016\n\006avator\030\004 \001(\t\022\013\n\003sex\030\005 " +
-                        "\001(\005\022\014\n\004sign\030\006 \001(\t\022\r\n\005is_hx\030\024 \001(\010\"#\n\020IMGe" +
-                        "tUserInfoReq\022\017\n\007user_id\030\001 \001(\t\"m\n\020IMGetUs" +
-                        "erInfoRsp\022,\n\tuser_info\030\001 \001(\0132\031.com.proto" +
-                        ".buddy.UserInfo\022+\n\006result\030\002 \001(\0162\033.com.pr" +
-                        "oto.basic.ResultCode*4\n\014BuddyOptType\022\021\n\r" +
-                        "BUDDY_OPT_ADD\020\001\022\021\n\rBUDDY_OPT_DEL\020\002"
+                        "\005 \001(\t\022\017\n\007jobname\030\006 \001(\t\"\035\n\013IMGetOrgReq\022\016\n" +
+                        "\006org_id\030\001 \001(\t\"I\n\013IMGetOrgRsp\022\016\n\006org_id\030\001" +
+                        " \001(\t\022*\n\010org_list\030\002 \003(\0132\030.com.proto.buddy" +
+                        ".OrgInfo\"\301\001\n\010UserInfo\022\017\n\007user_id\030\001 \001(\t\022\021",
+                "\n\tnick_name\030\002 \001(\t\022\021\n\treal_name\030\003 \001(\t\022\021\n\t" +
+                        "user_name\030\004 \001(\t\022\r\n\005phone\030\005 \001(\t\022\r\n\005email\030" +
+                        "\006 \001(\t\022\016\n\006avator\030\007 \001(\t\022\013\n\003sex\030\010 \001(\005\022\014\n\004si" +
+                        "gn\030\t \001(\t\022\020\n\010job_name\030\n \001(\t\022\020\n\010org_name\030\013" +
+                        " \001(\t\"#\n\020IMGetUserInfoReq\022\017\n\007user_id\030\001 \001(" +
+                        "\t\"m\n\020IMGetUserInfoRsp\022,\n\tuser_info\030\001 \001(\013" +
+                        "2\031.UserInfo\022+\n\006result\030\002 " +
+                        "\001(\0162\033.ResultCode\"?\n\013Cont" +
+                        "actInfo\022\017\n\007user_id\030\001 \001(\t\022\021\n\tuser_info\030\002 " +
+                        "\001(\t\022\014\n\004flag\030\003 \001(\r\"Y\n\022collectContactsReq\022",
+                "\017\n\007user_id\030\001 \001(\t\0222\n\014user_id_list\030\002 \003(\0132\034" +
+                        ".ContactInfo\"\206\001\n\022collect" +
+                        "ContactsRsp\022\017\n\007user_id\030\001 \001(\t\0222\n\014user_id_" +
+                        "list\030\002 \003(\0132\034.ContactInfo" +
+                        "\022+\n\006result\030\003 \001(\0162\033.Resul" +
+                        "tCode*4\n\014BuddyOptType\022\021\n\rBUDDY_OPT_ADD\020\001" +
+                        "\022\021\n\rBUDDY_OPT_DEL\020\002"
         };
         com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
                 new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -16619,7 +20679,7 @@ public final class YouMaiBuddy {
         internal_static_com_proto_buddy_OrgInfo_fieldAccessorTable = new
                 com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_proto_buddy_OrgInfo_descriptor,
-                new String[]{"OrgId", "Type", "Name", "Username", "Avator",});
+                new String[]{"OrgId", "Type", "Name", "Username", "Avator", "Jobname",});
         internal_static_com_proto_buddy_IMGetOrgReq_descriptor =
                 getDescriptor().getMessageTypes().get(13);
         internal_static_com_proto_buddy_IMGetOrgReq_fieldAccessorTable = new
@@ -16637,7 +20697,7 @@ public final class YouMaiBuddy {
         internal_static_com_proto_buddy_UserInfo_fieldAccessorTable = new
                 com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_proto_buddy_UserInfo_descriptor,
-                new String[]{"UserId", "Phone", "NickName", "Avator", "Sex", "Sign", "IsHx",});
+                new String[]{"UserId", "NickName", "RealName", "UserName", "Phone", "Email", "Avator", "Sex", "Sign", "JobName", "OrgName",});
         internal_static_com_proto_buddy_IMGetUserInfoReq_descriptor =
                 getDescriptor().getMessageTypes().get(16);
         internal_static_com_proto_buddy_IMGetUserInfoReq_fieldAccessorTable = new
@@ -16650,6 +20710,24 @@ public final class YouMaiBuddy {
                 com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_proto_buddy_IMGetUserInfoRsp_descriptor,
                 new String[]{"UserInfo", "Result",});
+        internal_static_com_proto_buddy_ContactInfo_descriptor =
+                getDescriptor().getMessageTypes().get(18);
+        internal_static_com_proto_buddy_ContactInfo_fieldAccessorTable = new
+                com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+                internal_static_com_proto_buddy_ContactInfo_descriptor,
+                new String[]{"UserId", "UserInfo", "Flag",});
+        internal_static_com_proto_buddy_collectContactsReq_descriptor =
+                getDescriptor().getMessageTypes().get(19);
+        internal_static_com_proto_buddy_collectContactsReq_fieldAccessorTable = new
+                com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+                internal_static_com_proto_buddy_collectContactsReq_descriptor,
+                new String[]{"UserId", "UserIdList",});
+        internal_static_com_proto_buddy_collectContactsRsp_descriptor =
+                getDescriptor().getMessageTypes().get(20);
+        internal_static_com_proto_buddy_collectContactsRsp_fieldAccessorTable = new
+                com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+                internal_static_com_proto_buddy_collectContactsRsp_descriptor,
+                new String[]{"UserId", "UserIdList", "Result",});
         YouMaiBasic.getDescriptor();
     }
 

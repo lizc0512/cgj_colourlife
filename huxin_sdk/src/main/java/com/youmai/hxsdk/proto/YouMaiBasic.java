@@ -433,33 +433,17 @@ public final class YouMaiBasic {
          */
         PHP_ADMIN_MODIFYUSERSTATUS_ACK(29, 124),
         /**
-         * <code>IMCHAT_PERSONAL = 125;</code>
-         */
-        IMCHAT_PERSONAL(30, 125),
-        /**
-         * <code>IMCHAT_PERSONAL_ACK = 126;</code>
-         */
-        IMCHAT_PERSONAL_ACK(31, 126),
-        /**
-         * <code>IMCHAT_PERSONAL_NOTIFY = 127;</code>
-         */
-        IMCHAT_PERSONAL_NOTIFY(32, 127),
-        /**
-         * <code>IM_OFFLINE_MSG = 128;</code>
-         */
-        IM_OFFLINE_MSG(33, 128),
-        /**
          * <code>REQUEST_IP = 400;</code>
          * <p>
          * <pre>
          * BACKEND ONLY.
          * </pre>
          */
-        REQUEST_IP(34, 400),
+        REQUEST_IP(30, 400),
         /**
          * <code>REQUEST_IP_ACK = 401;</code>
          */
-        REQUEST_IP_ACK(35, 401),
+        REQUEST_IP_ACK(31, 401),
         /**
          * <code>REGIST_COMMUNICATIONSERVICE = 402;</code>
          * <p>
@@ -467,15 +451,15 @@ public final class YouMaiBasic {
          * route注册
          * </pre>
          */
-        REGIST_COMMUNICATIONSERVICE(36, 402),
+        REGIST_COMMUNICATIONSERVICE(32, 402),
         /**
          * <code>REPORT_ONLINERS = 403;</code>
          */
-        REPORT_ONLINERS(37, 403),
+        REPORT_ONLINERS(33, 403),
         /**
          * <code>BROATCAT_NOTIFY = 404;</code>
          */
-        BROATCAT_NOTIFY(38, 404),
+        BROATCAT_NOTIFY(34, 404),
         /**
          * <code>ROUTE_BRAODCAST = 405;</code>
          * <p>
@@ -483,7 +467,7 @@ public final class YouMaiBasic {
          * route 广播
          * </pre>
          */
-        ROUTE_BRAODCAST(39, 405),
+        ROUTE_BRAODCAST(35, 405),
         /**
          * <code>CID_USER_STAT_PUSH_REQ = 406;</code>
          * <p>
@@ -491,79 +475,79 @@ public final class YouMaiBasic {
          * 用户状态广播
          * </pre>
          */
-        CID_USER_STAT_PUSH_REQ(40, 406),
+        CID_USER_STAT_PUSH_REQ(36, 406),
         /**
          * <code>CID_USER_STAT_SYNC_REQ = 407;</code>
          */
-        CID_USER_STAT_SYNC_REQ(41, 407),
+        CID_USER_STAT_SYNC_REQ(37, 407),
         /**
          * <code>CID_USER_STAT_SYNC_RSP = 408;</code>
          */
-        CID_USER_STAT_SYNC_RSP(42, 408),
+        CID_USER_STAT_SYNC_RSP(38, 408),
         /**
          * <code>REGIST_RSP = 409;</code>
          */
-        REGIST_RSP(43, 409),
+        REGIST_RSP(39, 409),
         /**
          * <code>GENERAL_MESSAGE = 501;</code>
          */
-        GENERAL_MESSAGE(44, 501),
+        GENERAL_MESSAGE(40, 501),
         /**
          * <code>POP_GENERAL_MESSAGE = 502;</code>
          */
-        POP_GENERAL_MESSAGE(45, 502),
+        POP_GENERAL_MESSAGE(41, 502),
         /**
          * <code>POP_GENERAL_MESSAGE_ACK = 503;</code>
          */
-        POP_GENERAL_MESSAGE_ACK(46, 503),
+        POP_GENERAL_MESSAGE_ACK(42, 503),
         /**
          * <code>BULLETIN = 600;</code>
          */
-        BULLETIN(47, 600),
+        BULLETIN(43, 600),
         /**
          * <code>BULLETIN_NOTIFY = 601;</code>
          */
-        BULLETIN_NOTIFY(48, 601),
+        BULLETIN_NOTIFY(44, 601),
         /**
          * <code>BULLETIN_PUBLISH = 605;</code>
          */
-        BULLETIN_PUBLISH(49, 605),
+        BULLETIN_PUBLISH(45, 605),
         /**
          * <code>BULLETIN_PUBLISH_ACK = 606;</code>
          */
-        BULLETIN_PUBLISH_ACK(50, 606),
+        BULLETIN_PUBLISH_ACK(46, 606),
         /**
          * <code>BIZCARD_GET_BYPHONE = 701;</code>
          */
-        BIZCARD_GET_BYPHONE(51, 701),
+        BIZCARD_GET_BYPHONE(47, 701),
         /**
          * <code>BIZCARD_GET_BYPHONE_ACK = 702;</code>
          */
-        BIZCARD_GET_BYPHONE_ACK(52, 702),
+        BIZCARD_GET_BYPHONE_ACK(48, 702),
         /**
          * <code>BIZCARD_INSERT = 703;</code>
          */
-        BIZCARD_INSERT(53, 703),
+        BIZCARD_INSERT(49, 703),
         /**
          * <code>BIZCARD_INSERT_ACK = 704;</code>
          */
-        BIZCARD_INSERT_ACK(54, 704),
+        BIZCARD_INSERT_ACK(50, 704),
         /**
          * <code>BIZCARD_UPDATE = 705;</code>
          */
-        BIZCARD_UPDATE(55, 705),
+        BIZCARD_UPDATE(51, 705),
         /**
          * <code>BIZCARD_UPDATE_ACK = 706;</code>
          */
-        BIZCARD_UPDATE_ACK(56, 706),
+        BIZCARD_UPDATE_ACK(52, 706),
         /**
          * <code>BIZCARD_DELETE = 707;</code>
          */
-        BIZCARD_DELETE(57, 707),
+        BIZCARD_DELETE(53, 707),
         /**
          * <code>BIZCARD_DELETE_ACK = 708;</code>
          */
-        BIZCARD_DELETE_ACK(58, 708),
+        BIZCARD_DELETE_ACK(54, 708),
         /**
          * <code>BUSINESS_QUERY_AD = 750;</code>
          * <p>
@@ -571,55 +555,55 @@ public final class YouMaiBasic {
          * 商家查询代言
          * </pre>
          */
-        BUSINESS_QUERY_AD(59, 750),
+        BUSINESS_QUERY_AD(55, 750),
         /**
          * <code>BUSINESS_QUERY_AD_ACK = 751;</code>
          */
-        BUSINESS_QUERY_AD_ACK(60, 751),
+        BUSINESS_QUERY_AD_ACK(56, 751),
         /**
          * <code>BUSINESS_SAVE_AD = 752;</code>
          */
-        BUSINESS_SAVE_AD(61, 752),
+        BUSINESS_SAVE_AD(57, 752),
         /**
          * <code>BUSINESS_SAVE_AD_ACK = 753;</code>
          */
-        BUSINESS_SAVE_AD_ACK(62, 753),
+        BUSINESS_SAVE_AD_ACK(58, 753),
         /**
          * <code>BUSINESS_UPDATE_AD = 754;</code>
          */
-        BUSINESS_UPDATE_AD(63, 754),
+        BUSINESS_UPDATE_AD(59, 754),
         /**
          * <code>BUSINESS_UPDATE_AD_ACK = 755;</code>
          */
-        BUSINESS_UPDATE_AD_ACK(64, 755),
+        BUSINESS_UPDATE_AD_ACK(60, 755),
         /**
          * <code>BUSINESS_DELETE_AD = 756;</code>
          */
-        BUSINESS_DELETE_AD(65, 756),
+        BUSINESS_DELETE_AD(61, 756),
         /**
          * <code>BUSINESS_DELETE_AD_ACK = 757;</code>
          */
-        BUSINESS_DELETE_AD_ACK(66, 757),
+        BUSINESS_DELETE_AD_ACK(62, 757),
         /**
          * <code>USERSHOWRULE_RESULT = 758;</code>
          */
-        USERSHOWRULE_RESULT(67, 758),
+        USERSHOWRULE_RESULT(63, 758),
         /**
          * <code>USERSHOWRULE_GET = 759;</code>
          */
-        USERSHOWRULE_GET(68, 759),
+        USERSHOWRULE_GET(64, 759),
         /**
          * <code>USERSHOWRULE_SAVE = 760;</code>
          */
-        USERSHOWRULE_SAVE(69, 760),
+        USERSHOWRULE_SAVE(65, 760),
         /**
          * <code>USERSHOWRULE_UPDATE = 761;</code>
          */
-        USERSHOWRULE_UPDATE(70, 761),
+        USERSHOWRULE_UPDATE(66, 761),
         /**
          * <code>USERSHOWRULE_DELETE = 762;</code>
          */
-        USERSHOWRULE_DELETE(71, 762),
+        USERSHOWRULE_DELETE(67, 762),
         /**
          * <code>BONDERY_MQ = 10000;</code>
          * <p>
@@ -627,55 +611,55 @@ public final class YouMaiBasic {
          * this is the bondery for mq. outside the bondery; com service should post the request to mq.
          * </pre>
          */
-        BONDERY_MQ(72, 10000),
+        BONDERY_MQ(68, 10000),
         /**
          * <code>SYSTEM_LOG = 10001;</code>
          */
-        SYSTEM_LOG(73, 10001),
+        SYSTEM_LOG(69, 10001),
         /**
          * <code>LOCATIONSHARE = 10700;</code>
          */
-        LOCATIONSHARE(74, 10700),
+        LOCATIONSHARE(70, 10700),
         /**
          * <code>LOCATIONSHARE_NOTIFY = 10701;</code>
          */
-        LOCATIONSHARE_NOTIFY(75, 10701),
+        LOCATIONSHARE_NOTIFY(71, 10701),
         /**
          * <code>LOCATIONSHARE_INVIT = 10702;</code>
          */
-        LOCATIONSHARE_INVIT(76, 10702),
+        LOCATIONSHARE_INVIT(72, 10702),
         /**
          * <code>LOCATIONSHARE_INVIT_ACK = 10703;</code>
          */
-        LOCATIONSHARE_INVIT_ACK(77, 10703),
+        LOCATIONSHARE_INVIT_ACK(73, 10703),
         /**
          * <code>LOCATIONSHARE_INVIT_NOTIFY = 10704;</code>
          */
-        LOCATIONSHARE_INVIT_NOTIFY(78, 10704),
+        LOCATIONSHARE_INVIT_NOTIFY(74, 10704),
         /**
          * <code>LOCATIONSHARE_JOIN = 10705;</code>
          */
-        LOCATIONSHARE_JOIN(79, 10705),
+        LOCATIONSHARE_JOIN(75, 10705),
         /**
          * <code>LOCATIONSHARE_JOIN_ACK = 10706;</code>
          */
-        LOCATIONSHARE_JOIN_ACK(80, 10706),
+        LOCATIONSHARE_JOIN_ACK(76, 10706),
         /**
          * <code>LOCATIONSHARE_JOIN_NOTIFY = 10707;</code>
          */
-        LOCATIONSHARE_JOIN_NOTIFY(81, 10707),
+        LOCATIONSHARE_JOIN_NOTIFY(77, 10707),
         /**
          * <code>LOCATIONSHARE_QUIT = 10709;</code>
          */
-        LOCATIONSHARE_QUIT(82, 10709),
+        LOCATIONSHARE_QUIT(78, 10709),
         /**
          * <code>LOCATIONSHARE_QUIT_ACK = 10710;</code>
          */
-        LOCATIONSHARE_QUIT_ACK(83, 10710),
+        LOCATIONSHARE_QUIT_ACK(79, 10710),
         /**
          * <code>LOCATIONSHARE_QUIT_NOTIFY = 10711;</code>
          */
-        LOCATIONSHARE_QUIT_NOTIFY(84, 10711),
+        LOCATIONSHARE_QUIT_NOTIFY(80, 10711),
         /**
          * <code>PUSH_APNS = 10801;</code>
          * <p>
@@ -683,7 +667,7 @@ public final class YouMaiBasic {
          * this does not guarantee successed.
          * </pre>
          */
-        PUSH_APNS(85, 10801),
+        PUSH_APNS(81, 10801),
         /**
          * <code>PUSH_APNS_ACK = 10802;</code>
          * <p>
@@ -691,7 +675,7 @@ public final class YouMaiBasic {
          * and does not give you a ack.
          * </pre>
          */
-        PUSH_APNS_ACK(86, 10802),
+        PUSH_APNS_ACK(82, 10802),
         /**
          * <code>PUSH_GENERAL = 10805;</code>
          * <p>
@@ -699,7 +683,7 @@ public final class YouMaiBasic {
          * Push_General
          * </pre>
          */
-        PUSH_GENERAL(87, 10805),
+        PUSH_GENERAL(83, 10805),
         /**
          * <code>PUSH_SMS = 10806;</code>
          * <p>
@@ -707,31 +691,31 @@ public final class YouMaiBasic {
          * Push_SMS
          * </pre>
          */
-        PUSH_SMS(88, 10806),
+        PUSH_SMS(84, 10806),
         /**
          * <code>ENDORSEMENT_TAKE = 10901;</code>
          */
-        ENDORSEMENT_TAKE(89, 10901),
+        ENDORSEMENT_TAKE(85, 10901),
         /**
          * <code>ENDORSEMENT_TAKE_ACK = 10902;</code>
          */
-        ENDORSEMENT_TAKE_ACK(90, 10902),
+        ENDORSEMENT_TAKE_ACK(86, 10902),
         /**
          * <code>ENDORSEMENT_QUERY = 10911;</code>
          */
-        ENDORSEMENT_QUERY(91, 10911),
+        ENDORSEMENT_QUERY(87, 10911),
         /**
          * <code>ENDORSEMENT_QUERY_ACK = 10912;</code>
          */
-        ENDORSEMENT_QUERY_ACK(92, 10912),
+        ENDORSEMENT_QUERY_ACK(88, 10912),
         /**
          * <code>ENDORSEMENT_DELET = 10921;</code>
          */
-        ENDORSEMENT_DELET(93, 10921),
+        ENDORSEMENT_DELET(89, 10921),
         /**
          * <code>ENDORSEMENT_DELETE_ACK = 10922;</code>
          */
-        ENDORSEMENT_DELETE_ACK(94, 10922),
+        ENDORSEMENT_DELETE_ACK(90, 10922),
         /**
          * <code>ENDORSEMENT_ADMIN_QUERY = 10951;</code>
          * <p>
@@ -739,95 +723,95 @@ public final class YouMaiBasic {
          * 商家查询代言领取记录数据。
          * </pre>
          */
-        ENDORSEMENT_ADMIN_QUERY(95, 10951),
+        ENDORSEMENT_ADMIN_QUERY(91, 10951),
         /**
          * <code>ENDORSEMENT_ADMIN_QUERY_ACK = 10952;</code>
          */
-        ENDORSEMENT_ADMIN_QUERY_ACK(96, 10952),
+        ENDORSEMENT_ADMIN_QUERY_ACK(92, 10952),
         /**
          * <code>SHOWBIZ_QUERY = 11001;</code>
          */
-        SHOWBIZ_QUERY(97, 11001),
+        SHOWBIZ_QUERY(93, 11001),
         /**
          * <code>SHOWBIZ_QUERY_ACK = 11002;</code>
          */
-        SHOWBIZ_QUERY_ACK(98, 11002),
+        SHOWBIZ_QUERY_ACK(94, 11002),
         /**
          * <code>SHOWBIZ_INSERT = 11011;</code>
          */
-        SHOWBIZ_INSERT(99, 11011),
+        SHOWBIZ_INSERT(95, 11011),
         /**
          * <code>SHOWBIZ_INSERT_ACK = 11012;</code>
          */
-        SHOWBIZ_INSERT_ACK(100, 11012),
+        SHOWBIZ_INSERT_ACK(96, 11012),
         /**
          * <code>SHOWBIZ_DELETE = 11021;</code>
          */
-        SHOWBIZ_DELETE(101, 11021),
+        SHOWBIZ_DELETE(97, 11021),
         /**
          * <code>SHOWBIZ_DELETE_ACK = 11022;</code>
          */
-        SHOWBIZ_DELETE_ACK(102, 11022),
+        SHOWBIZ_DELETE_ACK(98, 11022),
         /**
          * <code>SHOWBIZ_UPDATE = 11031;</code>
          */
-        SHOWBIZ_UPDATE(103, 11031),
+        SHOWBIZ_UPDATE(99, 11031),
         /**
          * <code>SHOWBIZ_UPDATE_ACK = 11032;</code>
          */
-        SHOWBIZ_UPDATE_ACK(104, 11032),
+        SHOWBIZ_UPDATE_ACK(100, 11032),
         /**
          * <code>SHOWPERSONAL_QUERY = 11041;</code>
          */
-        SHOWPERSONAL_QUERY(105, 11041),
+        SHOWPERSONAL_QUERY(101, 11041),
         /**
          * <code>SHOWPERSONAL_QUERY_ACK = 11042;</code>
          */
-        SHOWPERSONAL_QUERY_ACK(106, 11042),
+        SHOWPERSONAL_QUERY_ACK(102, 11042),
         /**
          * <code>SHOWPERSONAL_INSERT = 11051;</code>
          */
-        SHOWPERSONAL_INSERT(107, 11051),
+        SHOWPERSONAL_INSERT(103, 11051),
         /**
          * <code>SHOWPERSONAL_INSERT_ACK = 11052;</code>
          */
-        SHOWPERSONAL_INSERT_ACK(108, 11052),
+        SHOWPERSONAL_INSERT_ACK(104, 11052),
         /**
          * <code>SHOWPERSONAL_UPDATE = 11061;</code>
          */
-        SHOWPERSONAL_UPDATE(109, 11061),
+        SHOWPERSONAL_UPDATE(105, 11061),
         /**
          * <code>SHOWPERSONAL_UPDATE_ACK = 11062;</code>
          */
-        SHOWPERSONAL_UPDATE_ACK(110, 11062),
+        SHOWPERSONAL_UPDATE_ACK(106, 11062),
         /**
          * <code>SHOWPERSONAL_DELETE = 11071;</code>
          */
-        SHOWPERSONAL_DELETE(111, 11071),
+        SHOWPERSONAL_DELETE(107, 11071),
         /**
          * <code>SHOWPERSONAL_DELETE_ACK = 11072;</code>
          */
-        SHOWPERSONAL_DELETE_ACK(112, 11072),
+        SHOWPERSONAL_DELETE_ACK(108, 11072),
         /**
          * <code>SHOWDIAL = 11081;</code>
          */
-        SHOWDIAL(113, 11081),
+        SHOWDIAL(109, 11081),
         /**
          * <code>SHOWDIAL_ACK = 11082;</code>
          */
-        SHOWDIAL_ACK(114, 11082),
+        SHOWDIAL_ACK(110, 11082),
         /**
          * <code>SHOWDIAL_NOTIFY = 11083;</code>
          */
-        SHOWDIAL_NOTIFY(115, 11083),
+        SHOWDIAL_NOTIFY(111, 11083),
         /**
          * <code>SHOWDIAL_CACHE_UPDATE_SYSTEMNOTIFY = 11091;</code>
          */
-        SHOWDIAL_CACHE_UPDATE_SYSTEMNOTIFY(116, 11091),
+        SHOWDIAL_CACHE_UPDATE_SYSTEMNOTIFY(112, 11091),
         /**
          * <code>CID_USER_CONNECT_EXCEPT = 16401;</code>
          */
-        CID_USER_CONNECT_EXCEPT(117, 16401),
+        CID_USER_CONNECT_EXCEPT(113, 16401),
         /**
          * <code>CID_USER_STATE_BROADCAST = 16657;</code>
          * <p>
@@ -835,79 +819,80 @@ public final class YouMaiBasic {
          * 服务端用
          * </pre>
          */
-        CID_USER_STATE_BROADCAST(118, 16657),
+        CID_USER_STATE_BROADCAST(114, 16657),
         /**
          * <code>CID_USER_STATE_REPORT = 16658;</code>
          */
-        CID_USER_STATE_REPORT(119, 16658),
+        CID_USER_STATE_REPORT(115, 16658),
         /**
          * <code>CID_MONITOR_CLIENT_REGISTER_REQ = 16913;</code>
          */
-        CID_MONITOR_CLIENT_REGISTER_REQ(120, 16913),
+        CID_MONITOR_CLIENT_REGISTER_REQ(116, 16913),
         /**
          * <code>CID_MONITOR_CLIENT_REGISTER_RSP = 16914;</code>
          */
-        CID_MONITOR_CLIENT_REGISTER_RSP(121, 16914),
+        CID_MONITOR_CLIENT_REGISTER_RSP(117, 16914),
         /**
          * <code>CID_MASTER_BROADCAST_SERVER_INFO = 16915;</code>
          */
-        CID_MASTER_BROADCAST_SERVER_INFO(122, 16915),
+        CID_MASTER_BROADCAST_SERVER_INFO(118, 16915),
         /**
          * <code>CID_S2S_AUTHENTICATION_REQ = 16916;</code>
          */
-        CID_S2S_AUTHENTICATION_REQ(123, 16916),
+        CID_S2S_AUTHENTICATION_REQ(119, 16916),
         /**
          * <code>CID_S2S_AUTHENTICATION_RSP = 16917;</code>
          */
-        CID_S2S_AUTHENTICATION_RSP(124, 16917),
+        CID_S2S_AUTHENTICATION_RSP(120, 16917),
         /**
          * <code>CID_S2S_PING = 16918;</code>
          */
-        CID_S2S_PING(125, 16918),
+        CID_S2S_PING(121, 16918),
         /**
          * <code>CID_S2S_PONG = 16919;</code>
          */
-        CID_S2S_PONG(126, 16919),
+        CID_S2S_PONG(122, 16919),
         /**
          * <code>CID_REGISTER_CMD_REQ = 16929;</code>
          */
-        CID_REGISTER_CMD_REQ(127, 16929),
+        CID_REGISTER_CMD_REQ(123, 16929),
         /**
          * <code>CID_CLUSTER_STATUS_REQ = 17185;</code>
          */
-        CID_CLUSTER_STATUS_REQ(128, 17185),
+        CID_CLUSTER_STATUS_REQ(124, 17185),
         /**
          * <code>CID_CLUSTER_STATUS_RSP = 17186;</code>
          */
-        CID_CLUSTER_STATUS_RSP(129, 17186),
+        CID_CLUSTER_STATUS_RSP(125, 17186),
         /**
          * <code>CID_CONFIG_SET_REQ = 17190;</code>
          */
-        CID_CONFIG_SET_REQ(130, 17190),
+        CID_CONFIG_SET_REQ(126, 17190),
         /**
          * <code>CID_CONFIG_SET_RSP = 17191;</code>
          */
-        CID_CONFIG_SET_RSP(131, 17191),
+        CID_CONFIG_SET_RSP(127, 17191),
         /**
          * <code>CID_CHAT_BUDDY = 20497;</code>
          * <p>
          * <pre>
+         * 客户端cmd
          * 消息 cmd
          * </pre>
          */
-        CID_CHAT_BUDDY(132, 20497),
+        CID_CHAT_BUDDY(128, 20497),
         /**
          * <code>CID_CHAT_GROUP = 20498;</code>
          */
-        CID_CHAT_GROUP(133, 20498),
+        CID_CHAT_GROUP(129, 20498),
         /**
          * <code>CID_OFFLINE_MSG_NOTIFY = 20499;</code>
          */
-        CID_OFFLINE_MSG_NOTIFY(134, 20499),
+        CID_OFFLINE_MSG_NOTIFY(130, 20499),
         /**
          * <code>CID_CHAT_MSG_ACK = 20500;</code>
          */
-        CID_CHAT_MSG_ACK(135, 20500),
+        CID_CHAT_MSG_ACK(131, 20500),
         /**
          * <code>CID_GROUP_LIST_REQ = 24593;</code>
          * <p>
@@ -915,59 +900,75 @@ public final class YouMaiBasic {
          * 群
          * </pre>
          */
-        CID_GROUP_LIST_REQ(136, 24593),
+        CID_GROUP_LIST_REQ(132, 24593),
         /**
          * <code>CID_GROUP_LIST_RSP = 24594;</code>
          */
-        CID_GROUP_LIST_RSP(137, 24594),
+        CID_GROUP_LIST_RSP(133, 24594),
         /**
          * <code>CID_GROUP_INFO_REQ = 24595;</code>
          */
-        CID_GROUP_INFO_REQ(138, 24595),
+        CID_GROUP_INFO_REQ(134, 24595),
         /**
          * <code>CID_GROUP_INFO_RSP = 24596;</code>
          */
-        CID_GROUP_INFO_RSP(139, 24596),
+        CID_GROUP_INFO_RSP(135, 24596),
         /**
          * <code>CID_GROUP_MEMBER_REQ = 24597;</code>
          */
-        CID_GROUP_MEMBER_REQ(140, 24597),
+        CID_GROUP_MEMBER_REQ(136, 24597),
         /**
          * <code>CID_GROUP_MEMBER_RSP = 24598;</code>
          */
-        CID_GROUP_MEMBER_RSP(141, 24598),
+        CID_GROUP_MEMBER_RSP(137, 24598),
         /**
          * <code>CID_GROUP_CREATE_REQ = 24599;</code>
          */
-        CID_GROUP_CREATE_REQ(142, 24599),
+        CID_GROUP_CREATE_REQ(138, 24599),
         /**
          * <code>CID_GROUP_CREATE_RSP = 24600;</code>
          */
-        CID_GROUP_CREATE_RSP(143, 24600),
+        CID_GROUP_CREATE_RSP(139, 24600),
         /**
          * <code>CID_GROUP_DISSOLVE_REQ = 24601;</code>
          */
-        CID_GROUP_DISSOLVE_REQ(144, 24601),
+        CID_GROUP_DISSOLVE_REQ(140, 24601),
         /**
          * <code>CID_GROUP_DISSOLVE_RSP = 24602;</code>
          */
-        CID_GROUP_DISSOLVE_RSP(145, 24602),
+        CID_GROUP_DISSOLVE_RSP(141, 24602),
         /**
          * <code>CID_GROUP_INFO_MODIFY_REQ = 24603;</code>
          */
-        CID_GROUP_INFO_MODIFY_REQ(146, 24603),
+        CID_GROUP_INFO_MODIFY_REQ(142, 24603),
         /**
          * <code>CID_GROUP_INFO_MODIFY_RSP = 24604;</code>
          */
-        CID_GROUP_INFO_MODIFY_RSP(147, 24604),
+        CID_GROUP_INFO_MODIFY_RSP(143, 24604),
         /**
          * <code>CID_GROUP_CHANGE_MEMBER_REQ = 24605;</code>
          */
-        CID_GROUP_CHANGE_MEMBER_REQ(148, 24605),
+        CID_GROUP_CHANGE_MEMBER_REQ(144, 24605),
         /**
          * <code>CID_GROUP_CHANGE_MEMBER_RSP = 24606;</code>
          */
-        CID_GROUP_CHANGE_MEMBER_RSP(149, 24606),
+        CID_GROUP_CHANGE_MEMBER_RSP(145, 24606),
+        /**
+         * <code>CID_GROUP_OPT_NOTIFY = 24609;</code>
+         * <p>
+         * <pre>
+         * notify
+         * </pre>
+         */
+        CID_GROUP_OPT_NOTIFY(146, 24609),
+        /**
+         * <code>CID_GROUP_CHANGE_MEMBER_NOTIFY = 24611;</code>
+         */
+        CID_GROUP_CHANGE_MEMBER_NOTIFY(147, 24611),
+        /**
+         * <code>CID_GROUP_INFO_MODIFY__NOTIFY = 24612;</code>
+         */
+        CID_GROUP_INFO_MODIFY__NOTIFY(148, 24612),
         /**
          * <code>CID_ORG_LIST_REQ = 24849;</code>
          * <p>
@@ -975,15 +976,15 @@ public final class YouMaiBasic {
          * 组织架构
          * </pre>
          */
-        CID_ORG_LIST_REQ(150, 24849),
+        CID_ORG_LIST_REQ(149, 24849),
         /**
          * <code>CID_ORG_LIST_RSP = 24850;</code>
          */
-        CID_ORG_LIST_RSP(151, 24850),
+        CID_ORG_LIST_RSP(150, 24850),
         /**
          * <code>CID_GMSG_OFFLINE_MSG_NOTIFY = 25122;</code>
          */
-        CID_GMSG_OFFLINE_MSG_NOTIFY(152, 25122),
+        CID_GMSG_OFFLINE_MSG_NOTIFY(151, 25122),
         /**
          * <code>CID_MSG_DATA_LIST_REQ = 25123;</code>
          * <p>
@@ -991,23 +992,23 @@ public final class YouMaiBasic {
          * 历史消息
          * </pre>
          */
-        CID_MSG_DATA_LIST_REQ(153, 25123),
+        CID_MSG_DATA_LIST_REQ(152, 25123),
         /**
          * <code>CID_MSG_DATA_LIST_RSP = 25124;</code>
          */
-        CID_MSG_DATA_LIST_RSP(154, 25124),
+        CID_MSG_DATA_LIST_RSP(153, 25124),
         /**
          * <code>CID_GROUP_CHAT_MSG_CANCEL = 25125;</code>
          */
-        CID_GROUP_CHAT_MSG_CANCEL(155, 25125),
+        CID_GROUP_CHAT_MSG_CANCEL(154, 25125),
         /**
          * <code>CID_GMSG_OFFLINE_MSG_ACK = 25126;</code>
          */
-        CID_GMSG_OFFLINE_MSG_ACK(156, 25126),
+        CID_GMSG_OFFLINE_MSG_ACK(155, 25126),
         /**
          * <code>CID_S2S_CHAT_MSG = 25127;</code>
          */
-        CID_S2S_CHAT_MSG(157, 25127),
+        CID_S2S_CHAT_MSG(156, 25127),
         /**
          * <code>CID_USER_INFO_REQ = 28689;</code>
          * <p>
@@ -1015,11 +1016,11 @@ public final class YouMaiBasic {
          * 用户资料
          * </pre>
          */
-        CID_USER_INFO_REQ(158, 28689),
+        CID_USER_INFO_REQ(157, 28689),
         /**
          * <code>CID_USER_INFO_RSP = 28690;</code>
          */
-        CID_USER_INFO_RSP(159, 28690),
+        CID_USER_INFO_RSP(158, 28690),
         /**
          * <code>CID_BUDDY_LIST_SINGLE_USER_INFO_REQ = 29191;</code>
          * <p>
@@ -1027,11 +1028,11 @@ public final class YouMaiBasic {
          * 好友命令
          * </pre>
          */
-        CID_BUDDY_LIST_SINGLE_USER_INFO_REQ(160, 29191),
+        CID_BUDDY_LIST_SINGLE_USER_INFO_REQ(159, 29191),
         /**
          * <code>CID_BUDDY_LIST_USER_INFO_RSP = 29192;</code>
          */
-        CID_BUDDY_LIST_USER_INFO_RSP(161, 29192),
+        CID_BUDDY_LIST_USER_INFO_RSP(160, 29192),
         /**
          * <code>CID_BUDDY_LIST_CHANGE_AVATAR_REQ = 29199;</code>
          * <p>
@@ -1039,11 +1040,11 @@ public final class YouMaiBasic {
          * 头像修改
          * </pre>
          */
-        CID_BUDDY_LIST_CHANGE_AVATAR_REQ(162, 29199),
+        CID_BUDDY_LIST_CHANGE_AVATAR_REQ(161, 29199),
         /**
          * <code>CID_BUDDY_LIST_CHANGE_AVATAR_RSP = 29200;</code>
          */
-        CID_BUDDY_LIST_CHANGE_AVATAR_RSP(163, 29200),
+        CID_BUDDY_LIST_CHANGE_AVATAR_RSP(162, 29200),
         /**
          * <code>CID_BUDDY_LIST_CHANGE_SIGN_INFO_REQ = 29202;</code>
          * <p>
@@ -1051,11 +1052,11 @@ public final class YouMaiBasic {
          * 修改个性签名
          * </pre>
          */
-        CID_BUDDY_LIST_CHANGE_SIGN_INFO_REQ(164, 29202),
+        CID_BUDDY_LIST_CHANGE_SIGN_INFO_REQ(163, 29202),
         /**
          * <code>CID_BUDDY_LIST_CHANGE_SIGN_INFO_RSP = 29203;</code>
          */
-        CID_BUDDY_LIST_CHANGE_SIGN_INFO_RSP(165, 29203),
+        CID_BUDDY_LIST_CHANGE_SIGN_INFO_RSP(164, 29203),
         /**
          * <code>CID_BUDDY_LIST_MODIFY_USER_INFO_REQ = 29204;</code>
          * <p>
@@ -1063,11 +1064,11 @@ public final class YouMaiBasic {
          * 修改个人信息
          * </pre>
          */
-        CID_BUDDY_LIST_MODIFY_USER_INFO_REQ(166, 29204),
+        CID_BUDDY_LIST_MODIFY_USER_INFO_REQ(165, 29204),
         /**
          * <code>CID_BUDDY_LIST_MODIFY_USER_INFO_RSP = 29205;</code>
          */
-        CID_BUDDY_LIST_MODIFY_USER_INFO_RSP(167, 29205),
+        CID_BUDDY_LIST_MODIFY_USER_INFO_RSP(166, 29205),
         /**
          * <code>CID_BUDDY_LIST_OPT_REQ = 29206;</code>
          * <p>
@@ -1075,11 +1076,11 @@ public final class YouMaiBasic {
          * 好友操作（add or delete）
          * </pre>
          */
-        CID_BUDDY_LIST_OPT_REQ(168, 29206),
+        CID_BUDDY_LIST_OPT_REQ(167, 29206),
         /**
          * <code>CID_BUDDY_LIST_OPT_RSP = 29207;</code>
          */
-        CID_BUDDY_LIST_OPT_RSP(169, 29207),
+        CID_BUDDY_LIST_OPT_RSP(168, 29207),
         /**
          * <code>CID_BUDDY_LIST_MODIFY_NICKNAME_REQ = 29208;</code>
          * <p>
@@ -1087,11 +1088,11 @@ public final class YouMaiBasic {
          * 修改好友备注
          * </pre>
          */
-        CID_BUDDY_LIST_MODIFY_NICKNAME_REQ(170, 29208),
+        CID_BUDDY_LIST_MODIFY_NICKNAME_REQ(169, 29208),
         /**
          * <code>CID_BUDDY_LIST_MODIFY_NICKNAME_RSP = 29209;</code>
          */
-        CID_BUDDY_LIST_MODIFY_NICKNAME_RSP(171, 29209),
+        CID_BUDDY_LIST_MODIFY_NICKNAME_RSP(170, 29209),
         /**
          * <code>CID_BUDDY_LIST_REQUEST_LIST_REQ = 29210;</code>
          * <p>
@@ -1099,15 +1100,23 @@ public final class YouMaiBasic {
          * 获取好友请求列表
          * </pre>
          */
-        CID_BUDDY_LIST_REQUEST_LIST_REQ(172, 29210),
+        CID_BUDDY_LIST_REQUEST_LIST_REQ(171, 29210),
         /**
          * <code>CID_BUDDY_LIST_REQUEST_LIST_RSP = 29211;</code>
          */
-        CID_BUDDY_LIST_REQUEST_LIST_RSP(173, 29211),
+        CID_BUDDY_LIST_REQUEST_LIST_RSP(172, 29211),
         /**
          * <code>CID_BUDDY_LIST_OPT_RESULT = 29212;</code>
          */
-        CID_BUDDY_LIST_OPT_RESULT(174, 29212),;
+        CID_BUDDY_LIST_OPT_RESULT(173, 29212),
+        /**
+         * <code>CID_CONTACT_COLLECTION_REQ = 29217;</code>
+         */
+        CID_CONTACT_COLLECTION_REQ(174, 29217),
+        /**
+         * <code>CID_CONTACT_COLLECTION_RSP = 29218;</code>
+         */
+        CID_CONTACT_COLLECTION_RSP(175, 29218),;
 
         /**
          * <code>HEART_BEAT = 1;</code>
@@ -1229,22 +1238,6 @@ public final class YouMaiBasic {
          * <code>PHP_ADMIN_MODIFYUSERSTATUS_ACK = 124;</code>
          */
         public static final int PHP_ADMIN_MODIFYUSERSTATUS_ACK_VALUE = 124;
-        /**
-         * <code>IMCHAT_PERSONAL = 125;</code>
-         */
-        public static final int IMCHAT_PERSONAL_VALUE = 125;
-        /**
-         * <code>IMCHAT_PERSONAL_ACK = 126;</code>
-         */
-        public static final int IMCHAT_PERSONAL_ACK_VALUE = 126;
-        /**
-         * <code>IMCHAT_PERSONAL_NOTIFY = 127;</code>
-         */
-        public static final int IMCHAT_PERSONAL_NOTIFY_VALUE = 127;
-        /**
-         * <code>IM_OFFLINE_MSG = 128;</code>
-         */
-        public static final int IM_OFFLINE_MSG_VALUE = 128;
         /**
          * <code>REQUEST_IP = 400;</code>
          * <p>
@@ -1689,6 +1682,7 @@ public final class YouMaiBasic {
          * <code>CID_CHAT_BUDDY = 20497;</code>
          * <p>
          * <pre>
+         * 客户端cmd
          * 消息 cmd
          * </pre>
          */
@@ -1765,6 +1759,22 @@ public final class YouMaiBasic {
          * <code>CID_GROUP_CHANGE_MEMBER_RSP = 24606;</code>
          */
         public static final int CID_GROUP_CHANGE_MEMBER_RSP_VALUE = 24606;
+        /**
+         * <code>CID_GROUP_OPT_NOTIFY = 24609;</code>
+         * <p>
+         * <pre>
+         * notify
+         * </pre>
+         */
+        public static final int CID_GROUP_OPT_NOTIFY_VALUE = 24609;
+        /**
+         * <code>CID_GROUP_CHANGE_MEMBER_NOTIFY = 24611;</code>
+         */
+        public static final int CID_GROUP_CHANGE_MEMBER_NOTIFY_VALUE = 24611;
+        /**
+         * <code>CID_GROUP_INFO_MODIFY__NOTIFY = 24612;</code>
+         */
+        public static final int CID_GROUP_INFO_MODIFY__NOTIFY_VALUE = 24612;
         /**
          * <code>CID_ORG_LIST_REQ = 24849;</code>
          * <p>
@@ -1905,6 +1915,14 @@ public final class YouMaiBasic {
          * <code>CID_BUDDY_LIST_OPT_RESULT = 29212;</code>
          */
         public static final int CID_BUDDY_LIST_OPT_RESULT_VALUE = 29212;
+        /**
+         * <code>CID_CONTACT_COLLECTION_REQ = 29217;</code>
+         */
+        public static final int CID_CONTACT_COLLECTION_REQ_VALUE = 29217;
+        /**
+         * <code>CID_CONTACT_COLLECTION_RSP = 29218;</code>
+         */
+        public static final int CID_CONTACT_COLLECTION_RSP_VALUE = 29218;
 
 
         public final int getNumber() {
@@ -1973,14 +1991,6 @@ public final class YouMaiBasic {
                     return PHP_ADMIN_MODIFYUSERSTATUS;
                 case 124:
                     return PHP_ADMIN_MODIFYUSERSTATUS_ACK;
-                case 125:
-                    return IMCHAT_PERSONAL;
-                case 126:
-                    return IMCHAT_PERSONAL_ACK;
-                case 127:
-                    return IMCHAT_PERSONAL_NOTIFY;
-                case 128:
-                    return IM_OFFLINE_MSG;
                 case 400:
                     return REQUEST_IP;
                 case 401:
@@ -2213,6 +2223,12 @@ public final class YouMaiBasic {
                     return CID_GROUP_CHANGE_MEMBER_REQ;
                 case 24606:
                     return CID_GROUP_CHANGE_MEMBER_RSP;
+                case 24609:
+                    return CID_GROUP_OPT_NOTIFY;
+                case 24611:
+                    return CID_GROUP_CHANGE_MEMBER_NOTIFY;
+                case 24612:
+                    return CID_GROUP_INFO_MODIFY__NOTIFY;
                 case 24849:
                     return CID_ORG_LIST_REQ;
                 case 24850:
@@ -2263,6 +2279,10 @@ public final class YouMaiBasic {
                     return CID_BUDDY_LIST_REQUEST_LIST_RSP;
                 case 29212:
                     return CID_BUDDY_LIST_OPT_RESULT;
+                case 29217:
+                    return CID_CONTACT_COLLECTION_REQ;
+                case 29218:
+                    return CID_CONTACT_COLLECTION_RSP;
                 default:
                     return null;
             }
@@ -4534,7 +4554,7 @@ public final class YouMaiBasic {
                         "ID_CONN\020\002\022\020\n\014SID_DISPATCH\020\003\022\r\n\tSID_LOGIN" +
                         "\020\004\022\013\n\007SID_MSG\020\005\022\023\n\017SID_LOADBALANCE\020\006\022\021\n\r" +
                         "SID_BROADCAST\020\007\022\017\n\013SID_DBPROXY\020\010\022\r\n\tSID_" +
-                        "GROUP\020\t\022\r\n\tSID_BUDDY\020\n\022\r\n\tSID_REDIS\020d*\307$" +
+                        "GROUP\020\t\022\r\n\tSID_BUDDY\020\n\022\r\n\tSID_REDIS\020d*\223%" +
                         "\n\tCOMMANDID\022\016\n\nHEART_BEAT\020\001\022\022\n\016HEART_BEA",
                 "T_ACK\020\002\022\r\n\tROUTE_REQ\020\024\022\025\n\021ROUTE_ONLINECH" +
                         "ECK\020\025\022\031\n\025ROUTE_ONLINECHECK_ACK\020\026\022\025\n\021ROUT" +
@@ -4552,160 +4572,162 @@ public final class YouMaiBasic {
                         "PHP_USER_MODIFYSTATUS\020y\022\035\n\031PHP_USER_MODI" +
                         "FYSTATUS_ACK\020z\022\036\n\032PHP_ADMIN_MODIFYUSERST" +
                         "ATUS\020{\022\"\n\036PHP_ADMIN_MODIFYUSERSTATUS_ACK" +
-                        "\020|\022\023\n\017IMCHAT_PERSONAL\020}\022\027\n\023IMCHAT_PERSON" +
-                        "AL_ACK\020~\022\032\n\026IMCHAT_PERSONAL_NOTIFY\020\177\022\023\n\016" +
-                        "IM_OFFLINE_MSG\020\200\001\022\017\n\nREQUEST_IP\020\220\003\022\023\n\016RE" +
-                        "QUEST_IP_ACK\020\221\003\022 \n\033REGIST_COMMUNICATIONS",
-                "ERVICE\020\222\003\022\024\n\017REPORT_ONLINERS\020\223\003\022\024\n\017BROAT" +
-                        "CAT_NOTIFY\020\224\003\022\024\n\017ROUTE_BRAODCAST\020\225\003\022\033\n\026C" +
-                        "ID_USER_STAT_PUSH_REQ\020\226\003\022\033\n\026CID_USER_STA" +
-                        "T_SYNC_REQ\020\227\003\022\033\n\026CID_USER_STAT_SYNC_RSP\020" +
-                        "\230\003\022\017\n\nREGIST_RSP\020\231\003\022\024\n\017GENERAL_MESSAGE\020\365" +
-                        "\003\022\030\n\023POP_GENERAL_MESSAGE\020\366\003\022\034\n\027POP_GENER" +
-                        "AL_MESSAGE_ACK\020\367\003\022\r\n\010BULLETIN\020\330\004\022\024\n\017BULL" +
-                        "ETIN_NOTIFY\020\331\004\022\025\n\020BULLETIN_PUBLISH\020\335\004\022\031\n" +
-                        "\024BULLETIN_PUBLISH_ACK\020\336\004\022\030\n\023BIZCARD_GET_" +
-                        "BYPHONE\020\275\005\022\034\n\027BIZCARD_GET_BYPHONE_ACK\020\276\005",
-                "\022\023\n\016BIZCARD_INSERT\020\277\005\022\027\n\022BIZCARD_INSERT_" +
-                        "ACK\020\300\005\022\023\n\016BIZCARD_UPDATE\020\301\005\022\027\n\022BIZCARD_U" +
-                        "PDATE_ACK\020\302\005\022\023\n\016BIZCARD_DELETE\020\303\005\022\027\n\022BIZ" +
-                        "CARD_DELETE_ACK\020\304\005\022\026\n\021BUSINESS_QUERY_AD\020" +
-                        "\356\005\022\032\n\025BUSINESS_QUERY_AD_ACK\020\357\005\022\025\n\020BUSINE" +
-                        "SS_SAVE_AD\020\360\005\022\031\n\024BUSINESS_SAVE_AD_ACK\020\361\005" +
-                        "\022\027\n\022BUSINESS_UPDATE_AD\020\362\005\022\033\n\026BUSINESS_UP" +
-                        "DATE_AD_ACK\020\363\005\022\027\n\022BUSINESS_DELETE_AD\020\364\005\022" +
-                        "\033\n\026BUSINESS_DELETE_AD_ACK\020\365\005\022\030\n\023USERSHOW" +
-                        "RULE_RESULT\020\366\005\022\025\n\020USERSHOWRULE_GET\020\367\005\022\026\n",
-                "\021USERSHOWRULE_SAVE\020\370\005\022\030\n\023USERSHOWRULE_UP" +
-                        "DATE\020\371\005\022\030\n\023USERSHOWRULE_DELETE\020\372\005\022\017\n\nBON" +
-                        "DERY_MQ\020\220N\022\017\n\nSYSTEM_LOG\020\221N\022\022\n\rLOCATIONS" +
-                        "HARE\020\314S\022\031\n\024LOCATIONSHARE_NOTIFY\020\315S\022\030\n\023LO" +
-                        "CATIONSHARE_INVIT\020\316S\022\034\n\027LOCATIONSHARE_IN" +
-                        "VIT_ACK\020\317S\022\037\n\032LOCATIONSHARE_INVIT_NOTIFY" +
-                        "\020\320S\022\027\n\022LOCATIONSHARE_JOIN\020\321S\022\033\n\026LOCATION" +
-                        "SHARE_JOIN_ACK\020\322S\022\036\n\031LOCATIONSHARE_JOIN_" +
-                        "NOTIFY\020\323S\022\027\n\022LOCATIONSHARE_QUIT\020\325S\022\033\n\026LO" +
-                        "CATIONSHARE_QUIT_ACK\020\326S\022\036\n\031LOCATIONSHARE",
-                "_QUIT_NOTIFY\020\327S\022\016\n\tPUSH_APNS\020\261T\022\022\n\rPUSH_" +
-                        "APNS_ACK\020\262T\022\021\n\014PUSH_GENERAL\020\265T\022\r\n\010PUSH_S" +
-                        "MS\020\266T\022\025\n\020ENDORSEMENT_TAKE\020\225U\022\031\n\024ENDORSEM" +
-                        "ENT_TAKE_ACK\020\226U\022\026\n\021ENDORSEMENT_QUERY\020\237U\022" +
-                        "\032\n\025ENDORSEMENT_QUERY_ACK\020\240U\022\026\n\021ENDORSEME" +
-                        "NT_DELET\020\251U\022\033\n\026ENDORSEMENT_DELETE_ACK\020\252U" +
-                        "\022\034\n\027ENDORSEMENT_ADMIN_QUERY\020\307U\022 \n\033ENDORS" +
-                        "EMENT_ADMIN_QUERY_ACK\020\310U\022\022\n\rSHOWBIZ_QUER" +
-                        "Y\020\371U\022\026\n\021SHOWBIZ_QUERY_ACK\020\372U\022\023\n\016SHOWBIZ_" +
-                        "INSERT\020\203V\022\027\n\022SHOWBIZ_INSERT_ACK\020\204V\022\023\n\016SH",
-                "OWBIZ_DELETE\020\215V\022\027\n\022SHOWBIZ_DELETE_ACK\020\216V" +
-                        "\022\023\n\016SHOWBIZ_UPDATE\020\227V\022\027\n\022SHOWBIZ_UPDATE_" +
-                        "ACK\020\230V\022\027\n\022SHOWPERSONAL_QUERY\020\241V\022\033\n\026SHOWP" +
-                        "ERSONAL_QUERY_ACK\020\242V\022\030\n\023SHOWPERSONAL_INS" +
-                        "ERT\020\253V\022\034\n\027SHOWPERSONAL_INSERT_ACK\020\254V\022\030\n\023" +
-                        "SHOWPERSONAL_UPDATE\020\265V\022\034\n\027SHOWPERSONAL_U" +
-                        "PDATE_ACK\020\266V\022\030\n\023SHOWPERSONAL_DELETE\020\277V\022\034" +
-                        "\n\027SHOWPERSONAL_DELETE_ACK\020\300V\022\r\n\010SHOWDIAL" +
-                        "\020\311V\022\021\n\014SHOWDIAL_ACK\020\312V\022\024\n\017SHOWDIAL_NOTIF" +
-                        "Y\020\313V\022\'\n\"SHOWDIAL_CACHE_UPDATE_SYSTEMNOTI",
-                "FY\020\323V\022\035\n\027CID_USER_CONNECT_EXCEPT\020\221\200\001\022\036\n\030" +
-                        "CID_USER_STATE_BROADCAST\020\221\202\001\022\033\n\025CID_USER" +
-                        "_STATE_REPORT\020\222\202\001\022%\n\037CID_MONITOR_CLIENT_" +
-                        "REGISTER_REQ\020\221\204\001\022%\n\037CID_MONITOR_CLIENT_R" +
-                        "EGISTER_RSP\020\222\204\001\022&\n CID_MASTER_BROADCAST_" +
-                        "SERVER_INFO\020\223\204\001\022 \n\032CID_S2S_AUTHENTICATIO" +
-                        "N_REQ\020\224\204\001\022 \n\032CID_S2S_AUTHENTICATION_RSP\020" +
-                        "\225\204\001\022\022\n\014CID_S2S_PING\020\226\204\001\022\022\n\014CID_S2S_PONG\020" +
-                        "\227\204\001\022\032\n\024CID_REGISTER_CMD_REQ\020\241\204\001\022\034\n\026CID_C" +
-                        "LUSTER_STATUS_REQ\020\241\206\001\022\034\n\026CID_CLUSTER_STA",
-                "TUS_RSP\020\242\206\001\022\030\n\022CID_CONFIG_SET_REQ\020\246\206\001\022\030\n" +
-                        "\022CID_CONFIG_SET_RSP\020\247\206\001\022\024\n\016CID_CHAT_BUDD" +
-                        "Y\020\221\240\001\022\024\n\016CID_CHAT_GROUP\020\222\240\001\022\034\n\026CID_OFFLI" +
-                        "NE_MSG_NOTIFY\020\223\240\001\022\026\n\020CID_CHAT_MSG_ACK\020\224\240" +
-                        "\001\022\030\n\022CID_GROUP_LIST_REQ\020\221\300\001\022\030\n\022CID_GROUP" +
-                        "_LIST_RSP\020\222\300\001\022\030\n\022CID_GROUP_INFO_REQ\020\223\300\001\022" +
-                        "\030\n\022CID_GROUP_INFO_RSP\020\224\300\001\022\032\n\024CID_GROUP_M" +
-                        "EMBER_REQ\020\225\300\001\022\032\n\024CID_GROUP_MEMBER_RSP\020\226\300" +
-                        "\001\022\032\n\024CID_GROUP_CREATE_REQ\020\227\300\001\022\032\n\024CID_GRO" +
-                        "UP_CREATE_RSP\020\230\300\001\022\034\n\026CID_GROUP_DISSOLVE_",
-                "REQ\020\231\300\001\022\034\n\026CID_GROUP_DISSOLVE_RSP\020\232\300\001\022\037\n" +
-                        "\031CID_GROUP_INFO_MODIFY_REQ\020\233\300\001\022\037\n\031CID_GR" +
-                        "OUP_INFO_MODIFY_RSP\020\234\300\001\022!\n\033CID_GROUP_CHA" +
-                        "NGE_MEMBER_REQ\020\235\300\001\022!\n\033CID_GROUP_CHANGE_M" +
-                        "EMBER_RSP\020\236\300\001\022\026\n\020CID_ORG_LIST_REQ\020\221\302\001\022\026\n" +
-                        "\020CID_ORG_LIST_RSP\020\222\302\001\022!\n\033CID_GMSG_OFFLIN" +
-                        "E_MSG_NOTIFY\020\242\304\001\022\033\n\025CID_MSG_DATA_LIST_RE" +
-                        "Q\020\243\304\001\022\033\n\025CID_MSG_DATA_LIST_RSP\020\244\304\001\022\037\n\031CI" +
-                        "D_GROUP_CHAT_MSG_CANCEL\020\245\304\001\022\036\n\030CID_GMSG_" +
-                        "OFFLINE_MSG_ACK\020\246\304\001\022\026\n\020CID_S2S_CHAT_MSG\020",
-                "\247\304\001\022\027\n\021CID_USER_INFO_REQ\020\221\340\001\022\027\n\021CID_USER" +
-                        "_INFO_RSP\020\222\340\001\022)\n#CID_BUDDY_LIST_SINGLE_U" +
-                        "SER_INFO_REQ\020\207\344\001\022\"\n\034CID_BUDDY_LIST_USER_" +
-                        "INFO_RSP\020\210\344\001\022&\n CID_BUDDY_LIST_CHANGE_AV" +
-                        "ATAR_REQ\020\217\344\001\022&\n CID_BUDDY_LIST_CHANGE_AV" +
-                        "ATAR_RSP\020\220\344\001\022)\n#CID_BUDDY_LIST_CHANGE_SI" +
-                        "GN_INFO_REQ\020\222\344\001\022)\n#CID_BUDDY_LIST_CHANGE" +
-                        "_SIGN_INFO_RSP\020\223\344\001\022)\n#CID_BUDDY_LIST_MOD" +
-                        "IFY_USER_INFO_REQ\020\224\344\001\022)\n#CID_BUDDY_LIST_" +
-                        "MODIFY_USER_INFO_RSP\020\225\344\001\022\034\n\026CID_BUDDY_LI",
-                "ST_OPT_REQ\020\226\344\001\022\034\n\026CID_BUDDY_LIST_OPT_RSP" +
-                        "\020\227\344\001\022(\n\"CID_BUDDY_LIST_MODIFY_NICKNAME_R" +
-                        "EQ\020\230\344\001\022(\n\"CID_BUDDY_LIST_MODIFY_NICKNAME" +
-                        "_RSP\020\231\344\001\022%\n\037CID_BUDDY_LIST_REQUEST_LIST_" +
-                        "REQ\020\232\344\001\022%\n\037CID_BUDDY_LIST_REQUEST_LIST_R" +
-                        "SP\020\233\344\001\022\037\n\031CID_BUDDY_LIST_OPT_RESULT\020\234\344\001*" +
-                        "X\n\tUSER_TYPE\022\025\n\021USER_TYPE_UNKNOWN\020\000\022\026\n\022U" +
-                        "SER_TYPE_PERSONAL\020\001\022\034\n\030USER_TYPE_PUBLIC_" +
-                        "ACCOUNT\020\002*\262\014\n\nERRNO_CODE\022\021\n\rERRNO_CODE_O" +
-                        "K\020\000\022\026\n\022ERRNO_CODE_DEFAULT\020\002\022$\n ERRNO_COD",
-                "E_LOGIN_IN_OTHER_DEVICE\020d\022\032\n\026ERRNO_CODE_" +
-                        "NO_PROTOCOL\020e\022\036\n\032ERRNO_CODE_TAG_NO_PROTO" +
-                        "COL\020f\022\031\n\025ERRNO_CODE_PUSH_QUEUE\020g\022\037\n\033ERRN" +
-                        "O_CODE_LOGON_NO_PHONE_S\020h\022\"\n\036ERRNO_CODE_" +
-                        "HEART_ERR_SESSION_S\020i\022\030\n\024ERRNO_CODE_NOT_" +
-                        "LOGON\020j\022\032\n\026ERRNO_CODE_WITHOUT_TAG\020k\022\032\n\026E" +
-                        "RRNO_CODE_WITHOUT_UID\020l\022\035\n\031ERRNO_CODE_WI" +
-                        "THOUT_TERMID\020m\022\034\n\030ERRNO_CODE_ERR_SESSION" +
-                        "ID\020n\022\033\n\027ERRNO_CODE_TERM_UNALIVE\020o\022\026\n\022ERR" +
-                        "NO_CODE_ERR_UID\020p\022\026\n\022ERRNO_CODE_ERR_PID\020",
-                "q\022\031\n\025ERRNO_CODE_ERR_RESEND\020r\022\026\n\022ERRNO_CO" +
-                        "DE_ERR_TID\020s\022\023\n\016ERRNO_CODE_SQL\020\310\001\022\031\n\024ERR" +
-                        "NO_CODE_DATA_SRAL\020\311\001\022&\n!ERRNO_CODE_NOT_F" +
-                        "IND_TARGET_USERID\020\313\001\022.\n)ERRNO_CODE_DATA_" +
-                        "WAREHOUSING_FAILURE_MYSQL\020\314\001\022.\n)ERRNO_CO" +
-                        "DE_DATA_WAREHOUSING_FAILURE_REDIS\020\315\001\022#\n\036" +
-                        "ERRNO_CODE_DB_SERVER_EXCEPTION\020\316\001\022\"\n\035ERR" +
-                        "NO_CODE_USER_SESSION_ERROR\020\317\001\022\036\n\031ERRNO_C" +
-                        "ODE_USER_NOT_LOGIN\020\320\001\022\035\n\030ERRNO_CODE_USER" +
-                        "_ID_ERROR\020\321\001\022\'\n\"ERRNO_CODE_USER_SEND_TOR",
-                "OUTE_ERROR\020\322\001\022\035\n\030ERRNO_CODE_NOT_DST_PHON" +
-                        "E\020\323\001\022&\n!ERRNO_CODE_DATABASE_QUERY_FAILDE" +
-                        "D\020\324\001\022\036\n\031ERRNO_CODE_DATA_EXCEPTION\020\325\001\022\035\n\030" +
-                        "ERRNO_CODE_NOT_SESSIONID\020\326\001\022\031\n\024ERRNO_COD" +
-                        "E_NOT_PHONE\020\327\001\022\033\n\026ERRNO_CODE_PHONE_ERROR" +
-                        "\020\330\001\022!\n\034ERRNO_CODE_DATABASE_NOT_DATA\020\331\001\022\034" +
-                        "\n\027ERRNO_CODE_SHOW_EXPIRED\020\332\001\022\034\n\027ERRNO_CO" +
-                        "DE_NOT_TOKEN_ID\020\333\001\022\030\n\023ERRNO_CODE_NOT_SHO" +
-                        "W\020\334\001\022\036\n\031ERRNO_CODE_NOT_HUXIN_USER\020\223\003\022\035\n\030" +
-                        "ERRNO_CODE_NOT_DEVICE_ID\020\224\003\022#\n\036ERRNO_COD",
-                "E_BLOCKED_BY_DST_USER\020\365\003\022!\n\034ERRNO_CODE_I" +
-                        "NVALID_USER_INFO\020\315\010\022\037\n\032ERRNO_CODE_INVALI" +
-                        "D_SESSION\020\316\010\022\036\n\031ERRNO_CODE_INVALID_PASSW" +
-                        "D\020\317\010\022+\n&ERRNO_CODE_INVALID_IM_CHAT_TARGE" +
-                        "T_USER\020\261\t\0226\n1ERRNO_CODE_INVALID_IM_CHAT_" +
-                        "EMPTY_BODY_NOT_ALLOWED\020\262\t\022,\n\'ERRNO_CODE_" +
-                        "LOCATIONSHARE_TASK_NOT_EXIST\020\225\n\022-\n(ERRNO" +
-                        "_CODE_LOCATIONSHARE_NOT_INSIDE_TASK\020\226\n*\204" +
-                        "\001\n\013Device_Type\022\025\n\021DeviceType_IPhone\020\001\022\026\n" +
-                        "\022DeviceType_Android\020\002\022\023\n\017DeviceType_IPad",
-                "\020\003\022\031\n\025DeviceType_AndroidPad\020\004\022\026\n\022DeviceT" +
-                        "ype_UNKNOWN\020\005*j\n\020USER_SHOW_STATUS\022\033\n\027USE" +
-                        "R_SHOW_STATUS_NORMAL\020\000\022\034\n\030USER_SHOW_STAT" +
-                        "US_DISABLE\020\001\022\033\n\027USER_SHOW_STATUS_FROZEN\020" +
-                        "\002*Q\n\tUserState\022\025\n\021USER_STATE_ONLINE\020\000\022\026\n" +
-                        "\022USER_STATE_OFFLINE\020\001\022\025\n\021USER_STATE_LOGO" +
-                        "UT\020\003*;\n\nResultCode\022\027\n\023RESULT_CODE_SUCCES" +
-                        "S\020\001\022\024\n\020RESULT_CODE_FAIL\020\002*K\n\nIM_CHANNEL\022" +
-                        "\026\n\022IM_CHANNEL_DEFAULT\020\000\022\022\n\016IM_CHANNEL_SM" +
-                        "S\020\001\022\021\n\rIM_CHANNEL_QQ\020\002"
+                        "\020|\022\017\n\nREQUEST_IP\020\220\003\022\023\n\016REQUEST_IP_ACK\020\221\003" +
+                        "\022 \n\033REGIST_COMMUNICATIONSERVICE\020\222\003\022\024\n\017RE" +
+                        "PORT_ONLINERS\020\223\003\022\024\n\017BROATCAT_NOTIFY\020\224\003\022\024" +
+                        "\n\017ROUTE_BRAODCAST\020\225\003\022\033\n\026CID_USER_STAT_PU",
+                "SH_REQ\020\226\003\022\033\n\026CID_USER_STAT_SYNC_REQ\020\227\003\022\033" +
+                        "\n\026CID_USER_STAT_SYNC_RSP\020\230\003\022\017\n\nREGIST_RS" +
+                        "P\020\231\003\022\024\n\017GENERAL_MESSAGE\020\365\003\022\030\n\023POP_GENERA" +
+                        "L_MESSAGE\020\366\003\022\034\n\027POP_GENERAL_MESSAGE_ACK\020" +
+                        "\367\003\022\r\n\010BULLETIN\020\330\004\022\024\n\017BULLETIN_NOTIFY\020\331\004\022" +
+                        "\025\n\020BULLETIN_PUBLISH\020\335\004\022\031\n\024BULLETIN_PUBLI" +
+                        "SH_ACK\020\336\004\022\030\n\023BIZCARD_GET_BYPHONE\020\275\005\022\034\n\027B" +
+                        "IZCARD_GET_BYPHONE_ACK\020\276\005\022\023\n\016BIZCARD_INS" +
+                        "ERT\020\277\005\022\027\n\022BIZCARD_INSERT_ACK\020\300\005\022\023\n\016BIZCA" +
+                        "RD_UPDATE\020\301\005\022\027\n\022BIZCARD_UPDATE_ACK\020\302\005\022\023\n",
+                "\016BIZCARD_DELETE\020\303\005\022\027\n\022BIZCARD_DELETE_ACK" +
+                        "\020\304\005\022\026\n\021BUSINESS_QUERY_AD\020\356\005\022\032\n\025BUSINESS_" +
+                        "QUERY_AD_ACK\020\357\005\022\025\n\020BUSINESS_SAVE_AD\020\360\005\022\031" +
+                        "\n\024BUSINESS_SAVE_AD_ACK\020\361\005\022\027\n\022BUSINESS_UP" +
+                        "DATE_AD\020\362\005\022\033\n\026BUSINESS_UPDATE_AD_ACK\020\363\005\022" +
+                        "\027\n\022BUSINESS_DELETE_AD\020\364\005\022\033\n\026BUSINESS_DEL" +
+                        "ETE_AD_ACK\020\365\005\022\030\n\023USERSHOWRULE_RESULT\020\366\005\022" +
+                        "\025\n\020USERSHOWRULE_GET\020\367\005\022\026\n\021USERSHOWRULE_S" +
+                        "AVE\020\370\005\022\030\n\023USERSHOWRULE_UPDATE\020\371\005\022\030\n\023USER" +
+                        "SHOWRULE_DELETE\020\372\005\022\017\n\nBONDERY_MQ\020\220N\022\017\n\nS",
+                "YSTEM_LOG\020\221N\022\022\n\rLOCATIONSHARE\020\314S\022\031\n\024LOCA" +
+                        "TIONSHARE_NOTIFY\020\315S\022\030\n\023LOCATIONSHARE_INV" +
+                        "IT\020\316S\022\034\n\027LOCATIONSHARE_INVIT_ACK\020\317S\022\037\n\032L" +
+                        "OCATIONSHARE_INVIT_NOTIFY\020\320S\022\027\n\022LOCATION" +
+                        "SHARE_JOIN\020\321S\022\033\n\026LOCATIONSHARE_JOIN_ACK\020" +
+                        "\322S\022\036\n\031LOCATIONSHARE_JOIN_NOTIFY\020\323S\022\027\n\022LO" +
+                        "CATIONSHARE_QUIT\020\325S\022\033\n\026LOCATIONSHARE_QUI" +
+                        "T_ACK\020\326S\022\036\n\031LOCATIONSHARE_QUIT_NOTIFY\020\327S" +
+                        "\022\016\n\tPUSH_APNS\020\261T\022\022\n\rPUSH_APNS_ACK\020\262T\022\021\n\014" +
+                        "PUSH_GENERAL\020\265T\022\r\n\010PUSH_SMS\020\266T\022\025\n\020ENDORS",
+                "EMENT_TAKE\020\225U\022\031\n\024ENDORSEMENT_TAKE_ACK\020\226U" +
+                        "\022\026\n\021ENDORSEMENT_QUERY\020\237U\022\032\n\025ENDORSEMENT_" +
+                        "QUERY_ACK\020\240U\022\026\n\021ENDORSEMENT_DELET\020\251U\022\033\n\026" +
+                        "ENDORSEMENT_DELETE_ACK\020\252U\022\034\n\027ENDORSEMENT" +
+                        "_ADMIN_QUERY\020\307U\022 \n\033ENDORSEMENT_ADMIN_QUE" +
+                        "RY_ACK\020\310U\022\022\n\rSHOWBIZ_QUERY\020\371U\022\026\n\021SHOWBIZ" +
+                        "_QUERY_ACK\020\372U\022\023\n\016SHOWBIZ_INSERT\020\203V\022\027\n\022SH" +
+                        "OWBIZ_INSERT_ACK\020\204V\022\023\n\016SHOWBIZ_DELETE\020\215V" +
+                        "\022\027\n\022SHOWBIZ_DELETE_ACK\020\216V\022\023\n\016SHOWBIZ_UPD" +
+                        "ATE\020\227V\022\027\n\022SHOWBIZ_UPDATE_ACK\020\230V\022\027\n\022SHOWP",
+                "ERSONAL_QUERY\020\241V\022\033\n\026SHOWPERSONAL_QUERY_A" +
+                        "CK\020\242V\022\030\n\023SHOWPERSONAL_INSERT\020\253V\022\034\n\027SHOWP" +
+                        "ERSONAL_INSERT_ACK\020\254V\022\030\n\023SHOWPERSONAL_UP" +
+                        "DATE\020\265V\022\034\n\027SHOWPERSONAL_UPDATE_ACK\020\266V\022\030\n" +
+                        "\023SHOWPERSONAL_DELETE\020\277V\022\034\n\027SHOWPERSONAL_" +
+                        "DELETE_ACK\020\300V\022\r\n\010SHOWDIAL\020\311V\022\021\n\014SHOWDIAL" +
+                        "_ACK\020\312V\022\024\n\017SHOWDIAL_NOTIFY\020\313V\022\'\n\"SHOWDIA" +
+                        "L_CACHE_UPDATE_SYSTEMNOTIFY\020\323V\022\035\n\027CID_US" +
+                        "ER_CONNECT_EXCEPT\020\221\200\001\022\036\n\030CID_USER_STATE_" +
+                        "BROADCAST\020\221\202\001\022\033\n\025CID_USER_STATE_REPORT\020\222",
+                "\202\001\022%\n\037CID_MONITOR_CLIENT_REGISTER_REQ\020\221\204" +
+                        "\001\022%\n\037CID_MONITOR_CLIENT_REGISTER_RSP\020\222\204\001" +
+                        "\022&\n CID_MASTER_BROADCAST_SERVER_INFO\020\223\204\001" +
+                        "\022 \n\032CID_S2S_AUTHENTICATION_REQ\020\224\204\001\022 \n\032CI" +
+                        "D_S2S_AUTHENTICATION_RSP\020\225\204\001\022\022\n\014CID_S2S_" +
+                        "PING\020\226\204\001\022\022\n\014CID_S2S_PONG\020\227\204\001\022\032\n\024CID_REGI" +
+                        "STER_CMD_REQ\020\241\204\001\022\034\n\026CID_CLUSTER_STATUS_R" +
+                        "EQ\020\241\206\001\022\034\n\026CID_CLUSTER_STATUS_RSP\020\242\206\001\022\030\n\022" +
+                        "CID_CONFIG_SET_REQ\020\246\206\001\022\030\n\022CID_CONFIG_SET" +
+                        "_RSP\020\247\206\001\022\024\n\016CID_CHAT_BUDDY\020\221\240\001\022\024\n\016CID_CH",
+                "AT_GROUP\020\222\240\001\022\034\n\026CID_OFFLINE_MSG_NOTIFY\020\223" +
+                        "\240\001\022\026\n\020CID_CHAT_MSG_ACK\020\224\240\001\022\030\n\022CID_GROUP_" +
+                        "LIST_REQ\020\221\300\001\022\030\n\022CID_GROUP_LIST_RSP\020\222\300\001\022\030" +
+                        "\n\022CID_GROUP_INFO_REQ\020\223\300\001\022\030\n\022CID_GROUP_IN" +
+                        "FO_RSP\020\224\300\001\022\032\n\024CID_GROUP_MEMBER_REQ\020\225\300\001\022\032" +
+                        "\n\024CID_GROUP_MEMBER_RSP\020\226\300\001\022\032\n\024CID_GROUP_" +
+                        "CREATE_REQ\020\227\300\001\022\032\n\024CID_GROUP_CREATE_RSP\020\230" +
+                        "\300\001\022\034\n\026CID_GROUP_DISSOLVE_REQ\020\231\300\001\022\034\n\026CID_" +
+                        "GROUP_DISSOLVE_RSP\020\232\300\001\022\037\n\031CID_GROUP_INFO" +
+                        "_MODIFY_REQ\020\233\300\001\022\037\n\031CID_GROUP_INFO_MODIFY",
+                "_RSP\020\234\300\001\022!\n\033CID_GROUP_CHANGE_MEMBER_REQ\020" +
+                        "\235\300\001\022!\n\033CID_GROUP_CHANGE_MEMBER_RSP\020\236\300\001\022\032" +
+                        "\n\024CID_GROUP_OPT_NOTIFY\020\241\300\001\022$\n\036CID_GROUP_" +
+                        "CHANGE_MEMBER_NOTIFY\020\243\300\001\022#\n\035CID_GROUP_IN" +
+                        "FO_MODIFY__NOTIFY\020\244\300\001\022\026\n\020CID_ORG_LIST_RE" +
+                        "Q\020\221\302\001\022\026\n\020CID_ORG_LIST_RSP\020\222\302\001\022!\n\033CID_GMS" +
+                        "G_OFFLINE_MSG_NOTIFY\020\242\304\001\022\033\n\025CID_MSG_DATA" +
+                        "_LIST_REQ\020\243\304\001\022\033\n\025CID_MSG_DATA_LIST_RSP\020\244" +
+                        "\304\001\022\037\n\031CID_GROUP_CHAT_MSG_CANCEL\020\245\304\001\022\036\n\030C" +
+                        "ID_GMSG_OFFLINE_MSG_ACK\020\246\304\001\022\026\n\020CID_S2S_C",
+                "HAT_MSG\020\247\304\001\022\027\n\021CID_USER_INFO_REQ\020\221\340\001\022\027\n\021" +
+                        "CID_USER_INFO_RSP\020\222\340\001\022)\n#CID_BUDDY_LIST_" +
+                        "SINGLE_USER_INFO_REQ\020\207\344\001\022\"\n\034CID_BUDDY_LI" +
+                        "ST_USER_INFO_RSP\020\210\344\001\022&\n CID_BUDDY_LIST_C" +
+                        "HANGE_AVATAR_REQ\020\217\344\001\022&\n CID_BUDDY_LIST_C" +
+                        "HANGE_AVATAR_RSP\020\220\344\001\022)\n#CID_BUDDY_LIST_C" +
+                        "HANGE_SIGN_INFO_REQ\020\222\344\001\022)\n#CID_BUDDY_LIS" +
+                        "T_CHANGE_SIGN_INFO_RSP\020\223\344\001\022)\n#CID_BUDDY_" +
+                        "LIST_MODIFY_USER_INFO_REQ\020\224\344\001\022)\n#CID_BUD" +
+                        "DY_LIST_MODIFY_USER_INFO_RSP\020\225\344\001\022\034\n\026CID_",
+                "BUDDY_LIST_OPT_REQ\020\226\344\001\022\034\n\026CID_BUDDY_LIST" +
+                        "_OPT_RSP\020\227\344\001\022(\n\"CID_BUDDY_LIST_MODIFY_NI" +
+                        "CKNAME_REQ\020\230\344\001\022(\n\"CID_BUDDY_LIST_MODIFY_" +
+                        "NICKNAME_RSP\020\231\344\001\022%\n\037CID_BUDDY_LIST_REQUE" +
+                        "ST_LIST_REQ\020\232\344\001\022%\n\037CID_BUDDY_LIST_REQUES" +
+                        "T_LIST_RSP\020\233\344\001\022\037\n\031CID_BUDDY_LIST_OPT_RES" +
+                        "ULT\020\234\344\001\022 \n\032CID_CONTACT_COLLECTION_REQ\020\241\344" +
+                        "\001\022 \n\032CID_CONTACT_COLLECTION_RSP\020\242\344\001*X\n\tU" +
+                        "SER_TYPE\022\025\n\021USER_TYPE_UNKNOWN\020\000\022\026\n\022USER_" +
+                        "TYPE_PERSONAL\020\001\022\034\n\030USER_TYPE_PUBLIC_ACCO",
+                "UNT\020\002*\262\014\n\nERRNO_CODE\022\021\n\rERRNO_CODE_OK\020\000\022" +
+                        "\026\n\022ERRNO_CODE_DEFAULT\020\002\022$\n ERRNO_CODE_LO" +
+                        "GIN_IN_OTHER_DEVICE\020d\022\032\n\026ERRNO_CODE_NO_P" +
+                        "ROTOCOL\020e\022\036\n\032ERRNO_CODE_TAG_NO_PROTOCOL\020" +
+                        "f\022\031\n\025ERRNO_CODE_PUSH_QUEUE\020g\022\037\n\033ERRNO_CO" +
+                        "DE_LOGON_NO_PHONE_S\020h\022\"\n\036ERRNO_CODE_HEAR" +
+                        "T_ERR_SESSION_S\020i\022\030\n\024ERRNO_CODE_NOT_LOGO" +
+                        "N\020j\022\032\n\026ERRNO_CODE_WITHOUT_TAG\020k\022\032\n\026ERRNO" +
+                        "_CODE_WITHOUT_UID\020l\022\035\n\031ERRNO_CODE_WITHOU" +
+                        "T_TERMID\020m\022\034\n\030ERRNO_CODE_ERR_SESSIONID\020n",
+                "\022\033\n\027ERRNO_CODE_TERM_UNALIVE\020o\022\026\n\022ERRNO_C" +
+                        "ODE_ERR_UID\020p\022\026\n\022ERRNO_CODE_ERR_PID\020q\022\031\n" +
+                        "\025ERRNO_CODE_ERR_RESEND\020r\022\026\n\022ERRNO_CODE_E" +
+                        "RR_TID\020s\022\023\n\016ERRNO_CODE_SQL\020\310\001\022\031\n\024ERRNO_C" +
+                        "ODE_DATA_SRAL\020\311\001\022&\n!ERRNO_CODE_NOT_FIND_" +
+                        "TARGET_USERID\020\313\001\022.\n)ERRNO_CODE_DATA_WARE" +
+                        "HOUSING_FAILURE_MYSQL\020\314\001\022.\n)ERRNO_CODE_D" +
+                        "ATA_WAREHOUSING_FAILURE_REDIS\020\315\001\022#\n\036ERRN" +
+                        "O_CODE_DB_SERVER_EXCEPTION\020\316\001\022\"\n\035ERRNO_C" +
+                        "ODE_USER_SESSION_ERROR\020\317\001\022\036\n\031ERRNO_CODE_",
+                "USER_NOT_LOGIN\020\320\001\022\035\n\030ERRNO_CODE_USER_ID_" +
+                        "ERROR\020\321\001\022\'\n\"ERRNO_CODE_USER_SEND_TOROUTE" +
+                        "_ERROR\020\322\001\022\035\n\030ERRNO_CODE_NOT_DST_PHONE\020\323\001" +
+                        "\022&\n!ERRNO_CODE_DATABASE_QUERY_FAILDED\020\324\001" +
+                        "\022\036\n\031ERRNO_CODE_DATA_EXCEPTION\020\325\001\022\035\n\030ERRN" +
+                        "O_CODE_NOT_SESSIONID\020\326\001\022\031\n\024ERRNO_CODE_NO" +
+                        "T_PHONE\020\327\001\022\033\n\026ERRNO_CODE_PHONE_ERROR\020\330\001\022" +
+                        "!\n\034ERRNO_CODE_DATABASE_NOT_DATA\020\331\001\022\034\n\027ER" +
+                        "RNO_CODE_SHOW_EXPIRED\020\332\001\022\034\n\027ERRNO_CODE_N" +
+                        "OT_TOKEN_ID\020\333\001\022\030\n\023ERRNO_CODE_NOT_SHOW\020\334\001",
+                "\022\036\n\031ERRNO_CODE_NOT_HUXIN_USER\020\223\003\022\035\n\030ERRN" +
+                        "O_CODE_NOT_DEVICE_ID\020\224\003\022#\n\036ERRNO_CODE_BL" +
+                        "OCKED_BY_DST_USER\020\365\003\022!\n\034ERRNO_CODE_INVAL" +
+                        "ID_USER_INFO\020\315\010\022\037\n\032ERRNO_CODE_INVALID_SE" +
+                        "SSION\020\316\010\022\036\n\031ERRNO_CODE_INVALID_PASSWD\020\317\010" +
+                        "\022+\n&ERRNO_CODE_INVALID_IM_CHAT_TARGET_US" +
+                        "ER\020\261\t\0226\n1ERRNO_CODE_INVALID_IM_CHAT_EMPT" +
+                        "Y_BODY_NOT_ALLOWED\020\262\t\022,\n\'ERRNO_CODE_LOCA" +
+                        "TIONSHARE_TASK_NOT_EXIST\020\225\n\022-\n(ERRNO_COD" +
+                        "E_LOCATIONSHARE_NOT_INSIDE_TASK\020\226\n*\204\001\n\013D",
+                "evice_Type\022\025\n\021DeviceType_IPhone\020\001\022\026\n\022Dev" +
+                        "iceType_Android\020\002\022\023\n\017DeviceType_IPad\020\003\022\031" +
+                        "\n\025DeviceType_AndroidPad\020\004\022\026\n\022DeviceType_" +
+                        "UNKNOWN\020\005*j\n\020USER_SHOW_STATUS\022\033\n\027USER_SH" +
+                        "OW_STATUS_NORMAL\020\000\022\034\n\030USER_SHOW_STATUS_D" +
+                        "ISABLE\020\001\022\033\n\027USER_SHOW_STATUS_FROZEN\020\002*Q\n" +
+                        "\tUserState\022\025\n\021USER_STATE_ONLINE\020\000\022\026\n\022USE" +
+                        "R_STATE_OFFLINE\020\001\022\025\n\021USER_STATE_LOGOUT\020\003" +
+                        "*;\n\nResultCode\022\027\n\023RESULT_CODE_SUCCESS\020\001\022" +
+                        "\024\n\020RESULT_CODE_FAIL\020\002*K\n\nIM_CHANNEL\022\026\n\022I",
+                "M_CHANNEL_DEFAULT\020\000\022\022\n\016IM_CHANNEL_SMS\020\001\022" +
+                        "\021\n\rIM_CHANNEL_QQ\020\002"
         };
         com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
                 new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {

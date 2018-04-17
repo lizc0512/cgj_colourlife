@@ -3,7 +3,6 @@ package com.tg.coloursteward.module.search;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -11,12 +10,7 @@ import com.alibaba.android.arouter.facade.annotation.Route;
 import com.tg.coloursteward.module.search.app.AppsSearchFragment;
 import com.tg.coloursteward.module.search.data.SearchData;
 import com.youmai.hxsdk.R;
-import com.youmai.hxsdk.db.bean.Contact;
-import com.youmai.hxsdk.entity.cn.CNPinyin;
 import com.youmai.hxsdk.router.APath;
-
-import java.util.ArrayList;
-
 
 /**
  * Created by srsm on 2017/8/21.

@@ -39,6 +39,7 @@ public class SearchData implements MessageHandler.ResponseListener {
 
     private static SearchData instance;
     private Activity mActivity;
+    private MessageHandler msgHandler;
 
     public static SearchData init(Activity context) {
         synchronized (SearchData.class) {
@@ -62,6 +63,7 @@ public class SearchData implements MessageHandler.ResponseListener {
     public void onDestroy() {
         instance = null;
         mActivity = null;
+        msgHandler = null;
     }
 
     /**
@@ -119,8 +121,7 @@ public class SearchData implements MessageHandler.ResponseListener {
     public List<SearchContactBean> searchCacheAppsList(Context context) {
         List<SearchContactBean> appsList = new ArrayList<>();
         String cacheData = Tools.getCommonName(context);
-        String json = HttpTools.getContentString(cacheData);
-        ResponseData app_list = HttpTools.getResponseKey(json, "app_list");
+        ResponseData app_list = HttpTools.getResponseKey(cacheData, "app_list");
         if (app_list.length > 0) {
             JSONArray commonArray = app_list.getJSONArray(0, "list");
             JSONArray otherArray = app_list.getJSONArray(1, "list");
@@ -133,8 +134,6 @@ public class SearchData implements MessageHandler.ResponseListener {
         }
         return appsList;
     }
-
-
 
     private List<SearchContactBean> searchAppsList(ResponseData data) {
         List<SearchContactBean> mAppsList = new ArrayList<>();
@@ -179,8 +178,6 @@ public class SearchData implements MessageHandler.ResponseListener {
         }
         return mAppsList;
     }
-
-    MessageHandler msgHandler;
 
     public void initApps(int type) {
         switch (type) {
@@ -230,8 +227,7 @@ public class SearchData implements MessageHandler.ResponseListener {
     }
 
     void searchForCacheApps(String cacheData) {
-        String json = HttpTools.getContentString(cacheData);
-        ResponseData app_list = HttpTools.getResponseKey(json, "app_list");
+        ResponseData app_list = HttpTools.getResponseKey(cacheData, "app_list");
         if (app_list.length > 0) {
             JSONArray commonArray = app_list.getJSONArray(0, "list");
             JSONArray otherArray = app_list.getJSONArray(1, "list");

@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Message;
-import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -17,7 +16,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -69,7 +67,6 @@ import rx.schedulers.Schedulers;
 
 import com.tg.coloursteward.net.MessageHandler.ResponseListener;
 import com.tg.coloursteward.module.contact.adapter.ContactAdapter.ItemEventListener;
-import com.youmai.hxsdk.entity.cn.SearchContactBean;
 import com.youmai.hxsdk.utils.ListUtils;
 
 /**

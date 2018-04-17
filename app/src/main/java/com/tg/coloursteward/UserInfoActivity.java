@@ -56,9 +56,11 @@ public class UserInfoActivity extends BaseActivity implements ItemClickListener,
     private static final int RESULT_REQUEST_CODE = 2;
     private MessageArrowView messageView1;
     private MessageArrowView messageView2;
+    private MessageArrowView messageView3;
     private ArrayList<SlideItemObj> genderList;
     private ArrayList<ViewConfig> list1 = new ArrayList<ViewConfig>();
     private ArrayList<ViewConfig> list2 = new ArrayList<ViewConfig>();
+    private ArrayList<ViewConfig> list3 = new ArrayList<ViewConfig>();
     private boolean needPostImage = false;
     private String realname = "";
     private String email = "";
@@ -77,10 +79,13 @@ public class UserInfoActivity extends BaseActivity implements ItemClickListener,
         super.onCreate(savedInstanceState);
         messageView1 = (MessageArrowView) findViewById(R.id.messageView1);
         messageView2 = (MessageArrowView) findViewById(R.id.messageView2);
+        messageView3 = (MessageArrowView) findViewById(R.id.messageView3);
         messageView1.setItemClickListener(this);
         messageView2.setItemClickListener(this);
+        messageView3.setItemClickListener(this);
         messageView1.setEditable(true);
         messageView2.setEditable(true);
+        messageView3.setEditable(true);
         initView();
         RequestParams params = new RequestParams();
         params.put("uid", UserInfo.uid);
@@ -124,17 +129,19 @@ public class UserInfoActivity extends BaseActivity implements ItemClickListener,
         config.rightEditable = false;
         config.enable = false;
         list2.add(config);
+        messageView2.setData(list2);
 
+        list3.clear();
         config = new ViewConfig("手机号码", UserInfo.mobile, false);
         config.rightEditable = false;
         config.enable = false;
-        list2.add(config);
+        list3.add(config);
 
         config = new ViewConfig("Email", email, false);
         config.enable = false;
         config.rightEditable = true;
-        list2.add(config);
-        messageView2.setData(list2);
+        list3.add(config);
+        messageView3.setData(list3);
 
         imageLoader.clearMemoryCache();
         imageLoader.clearDiskCache();
@@ -158,9 +165,9 @@ public class UserInfoActivity extends BaseActivity implements ItemClickListener,
     private void updateView() {
         list1.get(0).rightText = UserInfo.realname;
         list1.get(1).rightText = UserInfo.sex;
-        list2.get(3).rightText = UserInfo.email;
+        list3.get(1).rightText = UserInfo.email;
         messageView1.freshAll();
-        messageView2.freshAll();
+        messageView3.freshAll();
     }
 
     @Override
@@ -172,6 +179,7 @@ public class UserInfoActivity extends BaseActivity implements ItemClickListener,
             headView.setRightText("保存");
             messageView1.setEditable(true);
             messageView2.setEditable(true);
+            messageView3.setEditable(true);
             setUserInfo();
             updateView();
             ToastFactory.showToast(this, hintString);
@@ -329,12 +337,13 @@ public class UserInfoActivity extends BaseActivity implements ItemClickListener,
 			DialogFactory.getInstance().showPhotoSelector(this, null,headImgPath, 0, 0, 0);*/
             showFileChooser();
         } else {
-            if (messageView1.isEditable() || messageView2.isEditable()) {
+            if (messageView1.isEditable() || messageView2.isEditable() || messageView3.isEditable()) {
                 submitUserInfo();
             } else {
                 headView.setRightText("保存");
                 messageView1.setEditable(true);
                 messageView2.setEditable(true);
+                messageView3.setEditable(true);
             }
         }
     }
@@ -355,6 +364,7 @@ public class UserInfoActivity extends BaseActivity implements ItemClickListener,
             headView.setRightText("保存");
             messageView1.setEditable(true);
             messageView2.setEditable(true);
+            messageView3.setEditable(true);
             return;
         }
         RequestConfig config = new RequestConfig(this, HttpTools.SET_USER_INFO);
@@ -370,7 +380,7 @@ public class UserInfoActivity extends BaseActivity implements ItemClickListener,
     private boolean hasChanged() {
         realname = messageView1.getRightTextString(0);
         sex = messageView1.getRightTextString(1);
-        email = messageView2.getRightTextString(3);
+        email = messageView3.getRightTextString(1);
         if (!TextUtils.equals(realname, UserInfo.realname)) {
             return true;
         }

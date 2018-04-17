@@ -53,7 +53,7 @@ public class VideoUtils {
         if (AbFileUtil.isEmptyString(hasFile)) {
             if (!CommonUtils.isNetworkAvailable(mContext)) {
                 if (isTip) {
-                    ToastUtil.showToast(mContext, mContext.getString(R.string.hx_toast_59));
+                    ToastUtil.showToast(mContext, "视频播放失败了");
                 } else {
                     setDefaultShow(videoView);//播放默认视频秀
                 }
@@ -83,7 +83,7 @@ public class VideoUtils {
                                 loadLocalVideo(path, null, videoView);
                             } else {
                                 if (isTip) {
-                                    ToastUtil.showToast(mContext, mContext.getString(R.string.hx_toast_59));
+                                    ToastUtil.showToast(mContext, "视频播放失败了");
                                 } else {
                                     onLoadLocalVideo(videoView);
                                 }

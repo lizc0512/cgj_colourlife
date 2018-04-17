@@ -161,7 +161,7 @@ public class MovieRecodeActivity extends SdkBaseActivity {
                             handler.sendEmptyMessage(MSG_RECORD_FINISH);
                             return true;
                         } else if (isContainShootBtn) {  //录制时间太短 //condition 2  time too short
-                            Toast.makeText(MovieRecodeActivity.this, getString(R.string.hx_toast_55), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MovieRecodeActivity.this, "视频录制时间太短", Toast.LENGTH_SHORT).show();
                         }
 
                         //condition 3  cancel

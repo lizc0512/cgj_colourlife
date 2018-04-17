@@ -295,7 +295,7 @@ public class WrapIMFilePreviewActivity extends FragmentActivity {
             //跳转
             startActivity(intent);
         } catch (Exception e) {
-            Toast.makeText(getApplicationContext(), getString(R.string.hx_toast_20), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "该文件无法打开", Toast.LENGTH_SHORT).show();
         }
     }
 

@@ -109,7 +109,7 @@ public class SMSUtils extends BroadcastReceiver {
             }, 10 * 1000);
         }
 
-        Toast.makeText(context.getApplicationContext(), context.getResources().getString(R.string.hx_toast_66), Toast.LENGTH_SHORT).show();
+        Toast.makeText(context.getApplicationContext(), "短信已发送", Toast.LENGTH_SHORT).show();
     }
 
 }

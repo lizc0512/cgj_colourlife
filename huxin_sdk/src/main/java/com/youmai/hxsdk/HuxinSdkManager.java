@@ -217,9 +217,9 @@ public class HuxinSdkManager {
 
     private void initWork(Context context) {
         if (AppConfig.LAUNCH_MODE == 0) {
-            Toast.makeText(mContext, mContext.getString(R.string.hx_toast_01), Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, "正在使用开发（42）服务器", Toast.LENGTH_SHORT).show();
         } else if (AppConfig.LAUNCH_MODE == 1) {
-            Toast.makeText(mContext, mContext.getString(R.string.hx_toast_02), Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, "正在使用开发（50）服务器", Toast.LENGTH_SHORT).show();
         }
 
         EmotionInit.init(context.getApplicationContext());     //表情初始化

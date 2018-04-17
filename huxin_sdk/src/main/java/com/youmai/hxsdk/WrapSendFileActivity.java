@@ -201,12 +201,12 @@ public class WrapSendFileActivity extends FragmentActivity implements PickerRefr
                     }
 
                     if (!IMHelper.isWifi(getApplicationContext())) {
-                        Toast.makeText(getApplicationContext(), getString(R.string.hx_toast_67), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "非WIFI状态发送文件!!!", Toast.LENGTH_SHORT).show();
                     }
                     handleSendFile(file);
                 }
             } else {
-                Toast.makeText(getApplicationContext(), getString(R.string.hx_toast_22), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "文件不存在!!!", Toast.LENGTH_SHORT).show();
             }
         }
     }

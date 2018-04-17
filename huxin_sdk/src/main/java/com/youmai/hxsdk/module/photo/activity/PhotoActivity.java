@@ -312,7 +312,7 @@ public class PhotoActivity extends SdkPhotoActivity implements PhotoAdapter.Phot
 
                 isFloatView = false;
             } else {
-                Toast.makeText(getApplicationContext(), mContext.getString(R.string.hx_toast_19), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "没找到摄像头", Toast.LENGTH_SHORT).show();
             }
 
         } catch (RuntimeException e) {

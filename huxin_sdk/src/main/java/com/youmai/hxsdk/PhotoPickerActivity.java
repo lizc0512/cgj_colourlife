@@ -180,7 +180,7 @@ public class PhotoPickerActivity extends SdkBaseActivity implements PhotoAdapter
             @Override
             public void onClick(View v) {
                 if (mPhotoAdapter == null) {
-                    ToastUtil.showToast(mContext, mContext.getString(R.string.hx_toast_17));
+                    ToastUtil.showToast(mContext, "图片还没加载完成哦");
                 } else {
                     selectPhoto(mPhotoAdapter.getItem(mPosition));
                 }
@@ -266,7 +266,7 @@ public class PhotoPickerActivity extends SdkBaseActivity implements PhotoAdapter
     private void selectPhoto(Photo photo) {
         LogUtils.e(TAG, "selectPhoto");
         if (photo == null) {
-            ToastUtil.showToast(mContext, mContext.getString(R.string.hx_toast_18));
+            ToastUtil.showToast(mContext, "未选择发送图片");
             return;
         }
         String path = photo.getPath();
@@ -383,7 +383,7 @@ public class PhotoPickerActivity extends SdkBaseActivity implements PhotoAdapter
 
                 setFloatView(false);
             } else {
-                Toast.makeText(getApplicationContext(), mContext.getString(R.string.hx_toast_19), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "没找到摄像头", Toast.LENGTH_SHORT).show();
             }
 
         } catch (RuntimeException e) {

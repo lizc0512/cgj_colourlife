@@ -203,7 +203,7 @@ public class AudioRecorderButton extends AppCompatImageView implements VoiceMana
                 }
 
                 if (!isRecording || mTime < 0.6f) {
-                    Toast.makeText(getContext(), getContext().getString(R.string.hx_toast_51), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "录音时间过短", Toast.LENGTH_SHORT).show();
                     mAudioManager.cancel();
                     mHandler.sendEmptyMessageDelayed(MSG_DIALOG_DISMISS, 1300);
                     if (onTimeCallback != null) {

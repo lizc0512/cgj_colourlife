@@ -952,7 +952,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
                     sendFile(file);
                 }
             } else {
-                Toast.makeText(this, getString(R.string.hx_toast_22), Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "文件不存在!!!", Toast.LENGTH_SHORT).show();
             }
         }
     }

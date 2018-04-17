@@ -150,7 +150,7 @@ public class PhotoAdapter extends BaseAdapter {
                     mSelectedPhotos.remove(path);
                 } else {
                     if (mSelectedPhotos.size() >= mMaxNum) {
-                        Toast.makeText(mContext, mContext.getString(R.string.hx_toast_26),
+                        Toast.makeText(mContext, "已达到照片选择上限",
                                 Toast.LENGTH_SHORT).show();
                         return;
                     }

@@ -69,27 +69,6 @@
 
     <!--日期&城市联动器-->
 
-    <!--toast-->
-    <string name="hx_toast_01">正在使用开发（42）服务器</string>
-    <string name="hx_toast_02">正在使用开发（50）服务器</string>
-    <string name="hx_toast_04">获取FileToken失败</string>
-    <string name="hx_toast_06">上传文件失败</string>
-    <string name="hx_toast_07"> 上传图片失败</string>
-    <string name="hx_toast_08"> socket登录成功</string>
-    <string name="hx_toast_17"> 图片还没加载完成哦</string>
-    <string name="hx_toast_18"> 未选择发送图片</string>
-    <string name="hx_toast_19"> 没找到摄像头</string>
-    <string name="hx_toast_20"> 该文件无法打开</string>
-    <string name="hx_toast_22"> 文件不存在!!!</string>
-    <string name="hx_toast_26">已达到照片选择上限</string>
-    <string name="hx_toast_29">发送语音成功</string>
-    <string name="hx_toast_51">录音时间过短</string>
-    <string name="hx_toast_55">视频录制时间太短</string>
-    <string name="hx_toast_59">视频播放失败了</string>
-    <string name="hx_toast_66">短信已发送</string>
-    <string name="hx_toast_67">非WIFI状态发送文件!!!</string>
-    <string name="hx_toast_74">上传视频失败</string>
-
     <!--wheelview-->
     <string name="pickerview_cancel" translatable="false">取消</string>
     <string name="pickerview_submit" translatable="false">完成</string>

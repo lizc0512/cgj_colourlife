@@ -428,7 +428,7 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
         if (imComingMsg != null & mIncomingMsgList != null) {
             mIncomingMsgList.add(imComingMsg);
             ExCacheMsgBean bean = new ExCacheMsgBean(imComingMsg);
-            bean.setDisplayName(imComingMsg.getTargetUuid());
+            bean.setDisplayName(imComingMsg.getTargetName());
             mMessageAdapter.addTop(bean);
         }
     }

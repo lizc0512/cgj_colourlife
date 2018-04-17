@@ -2,10 +2,6 @@ package com.tg.coloursteward;
 
 import java.util.ArrayList;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
@@ -14,28 +10,23 @@ import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.info.EmployeePhoneInfo;
 import com.tg.coloursteward.info.GridViewInfo;
-import com.tg.coloursteward.info.LinkManInfo;
 import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.net.HttpTools;
-import com.tg.coloursteward.net.MessageHandler;
 import com.tg.coloursteward.net.RequestConfig;
 import com.tg.coloursteward.net.RequestParams;
 import com.tg.coloursteward.net.ResponseData;
-import com.tg.coloursteward.net.image.VolleyUtils;
 import com.tg.coloursteward.util.AuthTimeUtils;
 import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.Tools;
-import com.tg.coloursteward.view.ManageMentLinearlayout;
-import com.tg.coloursteward.view.ManageMentLinearlayout.NetworkRequestListener;
 import com.tg.coloursteward.view.dialog.ToastFactory;
 import com.youmai.hxsdk.activity.IMConnectionActivity;
+import com.youmai.hxsdk.db.bean.EmployeeBean;
+import com.youmai.hxsdk.db.helper.CacheEmployeeHelper;
 import com.youmai.hxsdk.utils.GlideRoundTransform;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Message;
-import android.support.annotation.StringRes;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -45,9 +36,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 /**
@@ -64,7 +53,7 @@ public class EmployeeDataActivity extends BaseActivity {
     //private ManageMentLinearlayout magLinearLayout;
     private CheckBox cbCollect;
     //private LinearLayout llSendSms;
-    private LinkManInfo item;
+    private EmployeeBean item;
     private EmployeePhoneInfo info;
     private TextView tvName, tvJob, tvBranch;
     private ImageView ivHead;
@@ -133,8 +122,8 @@ public class EmployeeDataActivity extends BaseActivity {
                 } else if (tag.equals("ID")) {
                     Intent intent = new Intent();
                     intent.setClass(EmployeeDataActivity.this, IMConnectionActivity.class);
-                    intent.putExtra(IMConnectionActivity.DST_UUID, item.uid);
-                    intent.putExtra(IMConnectionActivity.DST_NAME, item.realname);
+                    intent.putExtra(IMConnectionActivity.DST_UUID, item.getUid());
+                    intent.putExtra(IMConnectionActivity.DST_NAME, item.getRealname());
                     //intent.putExtra(IMConnectionActivity.DST_PHONE, mobile);
                     startActivity(intent);
                 } else if (tag.equals("email")) {
@@ -212,32 +201,34 @@ public class EmployeeDataActivity extends BaseActivity {
             String response = HttpTools.getContentString(jsonString);
             if (jsonString != null) {
                 ResponseData data = HttpTools.getResponseContentObject(response);
-                item = new LinkManInfo();
-                item.id = data.getString("id");
-                item.iscontacts = data.getInt("isFavorite");
-                item.username = data.getString("uid");
-                item.username = data.getString("username");
-                item.realname = data.getString("realname");
-                item.icon = data.getString("avatar");
-                item.sex = data.getString("sex");
-                item.email = data.getString("email");
-                item.phone = data.getString("mobile");
-                item.job_name = data.getString("jobName");
-                item.orgName = data.getString("orgName");
-                item.uid = data.getString("uid");
+                item = new EmployeeBean();
+                item.setIsFavorite(data.getString("isFavorite"));
+                item.setUid(data.getString("uid"));
+                item.setUsername(data.getString("username"));
+                item.setRealname(data.getString("realname"));
+                item.setAvatar(data.getString("avatar"));
+                item.setSex(data.getString("sex"));
+                item.setEmail(data.getString("email"));
+                item.setMobile(data.getString("mobile"));
+                item.setJobName(data.getString("jobName"));
+                item.setOrgName(data.getString("orgName"));
+                item.setLandline(data.getString("landline"));
             }
 
             if (item != null) {
-                tvName.setText(item.realname /*+ "(" + item.username + ")"*/);
-                if (item.job_name.contains("(")) {
-                    int i = item.job_name.indexOf("(");
-                    item.job_name = item.job_name.substring(0, i);
+
+                CacheEmployeeHelper.instance().insertOrUpdate(this, item);
+
+                tvName.setText(item.getRealname() + "(" + item.getUsername() + ")");
+                if (item.getJobName().contains("(")) {
+                    int i = item.getJobName().indexOf("(");
+                    item.setJobName(item.getJobName().substring(0, i));
                 }
-                tvJob.setText(item.job_name);
-                tvBranch.setText(item.orgName);
+                tvJob.setText(item.getJobName());
+                tvBranch.setText(item.getOrgName());
                 try {
                     Glide.with(this)
-                            .load(item.icon)
+                            .load(item.getAvatar())
                             .apply(new RequestOptions()
                                     .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                                     .override(120, 120)
@@ -250,17 +241,17 @@ public class EmployeeDataActivity extends BaseActivity {
                     e.printStackTrace();
                 }
                 //VolleyUtils.getImage(this, item.icon, ivHead, R.drawable.moren_geren);
-                if (item.iscontacts == 1) {
+                if (item.getIsFavorite().equals("1")) {
                     cbCollect.setChecked(true);
-                } else if (item.iscontacts > 1) {
+                } else {
                     cbCollect.setChecked(false);
                 }
                 cbCollect.setOnCheckedChangeListener(new OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        if (isChecked == true) {
+                        if (isChecked) {
                             submit();//添加联系人
-                        } else if (isChecked == false) {
+                        } else {
                             delete();
                         }
                     }
@@ -268,15 +259,15 @@ public class EmployeeDataActivity extends BaseActivity {
 
                 //添加按钮
                 info = new EmployeePhoneInfo();
-                info.phone = item.id;
+                // info.phone = item.id;  //to do
                 info.tag = "ID";
                 mPhoneList.add(info);
 
                 if (mlListView.getFooterViewsCount() > 0) {
                     mlListView.removeFooterView(footView);
                 }
-                if (item.phone != null) {
-                    String[] str = item.phone.split("，");
+                if (item.getMobile() != null) {
+                    String[] str = item.getMobile().split("，");
                     for (int i = 0; i < str.length; i++) {
                         info = new EmployeePhoneInfo();
                         info.phone = str[i];
@@ -285,9 +276,9 @@ public class EmployeeDataActivity extends BaseActivity {
                     }
                 }
 
-                if (!StringUtils.isEmpty(item.email)) {
+                if (!StringUtils.isEmpty(item.getEmail())) {
                     info = new EmployeePhoneInfo();
-                    info.phone = item.email;
+                    info.phone = item.getEmail();
                     info.tag = "email";
                     mPhoneList.add(info);
                 }

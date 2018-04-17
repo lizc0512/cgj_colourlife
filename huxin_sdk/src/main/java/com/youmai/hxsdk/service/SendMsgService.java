@@ -177,12 +177,6 @@ public class SendMsgService extends IntentService {
 
                     if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_OK) {
                         updateUI(msgBean, CacheMsgBean.SEND_SUCCEED, null, SEND_MSG_END);
-                    } else if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_ERR_SESSIONID) {
-                        ProtocolCallBack sCallBack = RespBaseBean.getsCallBack();
-                        if (sCallBack != null) {
-                            sCallBack.sessionExpire();
-                        }
-                        updateUI(msgBean, CacheMsgBean.SEND_FAILED, null, SEND_MSG_END);
                     } else {
                         updateUI(msgBean, CacheMsgBean.SEND_FAILED, null, SEND_MSG_END);
                     }

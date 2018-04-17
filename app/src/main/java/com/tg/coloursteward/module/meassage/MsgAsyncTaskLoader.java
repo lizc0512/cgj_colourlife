@@ -67,7 +67,7 @@ public class MsgAsyncTaskLoader extends AsyncTaskLoader<List<ExCacheMsgBean>> {
         List<ExCacheMsgBean> tempList = new ArrayList<>();
         for (CacheMsgBean bean : msgBeanList) {
             ExCacheMsgBean exBean = new ExCacheMsgBean(bean);
-            exBean.setDisplayName(bean.getTargetUuid());
+            exBean.setDisplayName(bean.getTargetName());
             tempList.add(exBean);
         }
 

@@ -568,7 +568,6 @@ public class Tools {
 			return false;
 		}
 
-		HuxinSdkManager.instance().setUuid(uuid);
 		String employeeAccount = data.getString("employeeAccount");
 		String realName = data.getString("realname");
 		String password = data.getString("password");
@@ -604,6 +603,12 @@ public class Tools {
 		int admintype = data.getInt("admintype");
 		int Jobonline = data.getInt("Jobonline");
 		int sort = data.getInt("sort");
+
+		HuxinSdkManager.instance().setUuid(uuid);
+		HuxinSdkManager.instance().setHeadUrl(headUrl);
+		HuxinSdkManager.instance().setRealName(realName);
+		HuxinSdkManager.instance().setPhoneNum(mobile);
+		HuxinSdkManager.instance().setSex(sex);
 
 		Tools.saveUserName(Tools.mContext, UserInfo.employeeAccount);
 		

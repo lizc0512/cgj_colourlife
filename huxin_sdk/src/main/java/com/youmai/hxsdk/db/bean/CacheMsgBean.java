@@ -58,12 +58,18 @@ public class CacheMsgBean implements Parcelable {
     private long msgTime; //消息时间
 
     private String senderUserId; //发送者的uuid
+    private String senderMobile; //发送者的手机号
+    private String senderSex; //发送者的性别
+    private String senderRealName; //发送者的姓名
+    private String senderAvatar; //发送者的头像
+
     private String receiverUserId; //接收者的uuid
 
     private String contentJsonBody;  //消息内容json body
 
     private int groupId;  //标识群组id
 
+    private String targetName; //沟通对方的姓名
     private String targetUuid; //沟通列表查询的关键字段：eg:去重, 筛选时间最近的一条
     private int msgStatus;  //消息发送状态
     private int progress;//保存下载进度
@@ -83,24 +89,6 @@ public class CacheMsgBean implements Parcelable {
         this.targetUuid = bean.getTargetUuid();
         this.msgStatus = bean.getMsgStatus();
         this.progress = bean.getProgress();
-    }
-
-
-    @Generated(hash = 351995807)
-    public CacheMsgBean(Long id, Long msgId, int msgType, long msgTime, String senderUserId,
-                        String receiverUserId, String contentJsonBody, int groupId, String targetUuid,
-                        int msgStatus, int progress) {
-        this.id = id;
-        this.msgId = msgId;
-        this.msgType = msgType;
-        this.msgTime = msgTime;
-        this.senderUserId = senderUserId;
-        this.receiverUserId = receiverUserId;
-        this.contentJsonBody = contentJsonBody;
-        this.groupId = groupId;
-        this.targetUuid = targetUuid;
-        this.msgStatus = msgStatus;
-        this.progress = progress;
     }
 
 
@@ -216,6 +204,42 @@ public class CacheMsgBean implements Parcelable {
         return this;
     }
 
+    public String getSenderMobile() {
+        return senderMobile;
+    }
+
+    public CacheMsgBean setSenderMobile(String senderMobile) {
+        this.senderMobile = senderMobile;
+        return this;
+    }
+
+    public String getSenderSex() {
+        return senderSex;
+    }
+
+    public CacheMsgBean setSenderSex(String senderSex) {
+        this.senderSex = senderSex;
+        return this;
+    }
+
+    public String getSenderRealName() {
+        return senderRealName;
+    }
+
+    public CacheMsgBean setSenderRealName(String senderRealName) {
+        this.senderRealName = senderRealName;
+        return this;
+    }
+
+    public String getSenderAvatar() {
+        return senderAvatar;
+    }
+
+    public CacheMsgBean setSenderAvatar(String senderAvatar) {
+        this.senderAvatar = senderAvatar;
+        return this;
+    }
+
     public String getReceiverUserId() {
         return receiverUserId;
     }
@@ -262,6 +286,15 @@ public class CacheMsgBean implements Parcelable {
         return this;
     }
 
+    public String getTargetName() {
+        return targetName;
+    }
+
+    public CacheMsgBean setTargetName(String targetName) {
+        this.targetName = targetName;
+        return this;
+    }
+
     public int getProgress() {
         return progress;
     }
@@ -284,6 +317,30 @@ public class CacheMsgBean implements Parcelable {
     }
 
 
+    @Generated(hash = 1932543152)
+    public CacheMsgBean(Long id, Long msgId, int msgType, long msgTime, String senderUserId,
+                        String senderMobile, String senderSex, String senderRealName, String senderAvatar,
+                        String receiverUserId, String contentJsonBody, int groupId, String targetName,
+                        String targetUuid, int msgStatus, int progress) {
+        this.id = id;
+        this.msgId = msgId;
+        this.msgType = msgType;
+        this.msgTime = msgTime;
+        this.senderUserId = senderUserId;
+        this.senderMobile = senderMobile;
+        this.senderSex = senderSex;
+        this.senderRealName = senderRealName;
+        this.senderAvatar = senderAvatar;
+        this.receiverUserId = receiverUserId;
+        this.contentJsonBody = contentJsonBody;
+        this.groupId = groupId;
+        this.targetName = targetName;
+        this.targetUuid = targetUuid;
+        this.msgStatus = msgStatus;
+        this.progress = progress;
+    }
+
+
     @Override
     public int describeContents() {
         return 0;
@@ -296,9 +353,14 @@ public class CacheMsgBean implements Parcelable {
         dest.writeInt(this.msgType);
         dest.writeLong(this.msgTime);
         dest.writeString(this.senderUserId);
+        dest.writeString(this.senderMobile);
+        dest.writeString(this.senderSex);
+        dest.writeString(this.senderRealName);
+        dest.writeString(this.senderAvatar);
         dest.writeString(this.receiverUserId);
         dest.writeString(this.contentJsonBody);
         dest.writeInt(this.groupId);
+        dest.writeString(this.targetName);
         dest.writeString(this.targetUuid);
         dest.writeInt(this.msgStatus);
         dest.writeInt(this.progress);
@@ -310,14 +372,18 @@ public class CacheMsgBean implements Parcelable {
         this.msgType = in.readInt();
         this.msgTime = in.readLong();
         this.senderUserId = in.readString();
+        this.senderMobile = in.readString();
+        this.senderSex = in.readString();
+        this.senderRealName = in.readString();
+        this.senderAvatar = in.readString();
         this.receiverUserId = in.readString();
         this.contentJsonBody = in.readString();
         this.groupId = in.readInt();
+        this.targetName = in.readString();
         this.targetUuid = in.readString();
         this.msgStatus = in.readInt();
         this.progress = in.readInt();
     }
-
 
     public static final Creator<CacheMsgBean> CREATOR = new Creator<CacheMsgBean>() {
         @Override

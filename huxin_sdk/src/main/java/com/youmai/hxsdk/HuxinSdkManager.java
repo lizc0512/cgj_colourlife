@@ -108,6 +108,10 @@ public class HuxinSdkManager {
     private UserInfo mUserInfo;
 
     private String mUuid;   //用户UUID
+    private String mPhoneNum;   //用户电话号码
+    private String mRealName;   //用户名称
+    private String mSex;   //用户性别
+    private String mHeadUrl;   //用户头像
 
     /**
      * SDK初始化结果监听器
@@ -288,27 +292,6 @@ public class HuxinSdkManager {
     }
 
 
-    public void setPhoneNum(String phoneNum) {
-        if (AppUtils.isMobileNum(phoneNum) || phoneNum.equals("4000")) {
-            mUserInfo.setPhoneNum(phoneNum);
-            AppUtils.setStringSharedPreferences(mContext, "myPhone_sdk", phoneNum);
-        }
-
-    }
-
-
-    public String getPhoneNum() {
-        String phoneNum = mUserInfo.getPhoneNum();
-        if (StringUtils.isEmpty(phoneNum) && mContext != null) {
-            phoneNum = AppUtils.getStringSharedPreferences(mContext, "myPhone_sdk", "");
-            if (!StringUtils.isEmpty(phoneNum)) {
-                mUserInfo.setPhoneNum(phoneNum);
-            }
-        }
-        return phoneNum;
-    }
-
-
     public void setUuid(String uuid) {
         uuid = "739ca86c-ea5d-4dad-b8ae-f5277942d281";  //TODO  for test
 
@@ -331,6 +314,38 @@ public class HuxinSdkManager {
 
     }
 
+
+    public String getPhoneNum() {
+        return mPhoneNum;
+    }
+
+    public void setPhoneNum(String phoneNum) {
+        this.mPhoneNum = phoneNum;
+    }
+
+    public String getRealName() {
+        return mRealName;
+    }
+
+    public void setRealName(String realName) {
+        this.mRealName = realName;
+    }
+
+    public String getSex() {
+        return mSex;
+    }
+
+    public void setSex(String sex) {
+        this.mSex = sex;
+    }
+
+    public String getHeadUrl() {
+        return mHeadUrl;
+    }
+
+    public void setHeadUrl(String url) {
+        this.mHeadUrl = url;
+    }
 
     public void clearUserData() {
         close();
@@ -614,6 +629,10 @@ public class HuxinSdkManager {
     public void sendText(String destUuid, String content, ReceiveListener callback) {
         YouMaiMsg.MsgData.Builder msgData = YouMaiMsg.MsgData.newBuilder();
         msgData.setSrcUserId(getUuid());
+        msgData.setSrcAvatar(getHeadUrl());
+        msgData.setSrcSex(getSex());
+        msgData.setSrcRealname(getRealName());
+        msgData.setSrcMobile(getPhoneNum());
         msgData.setDestUserId(destUuid);
         msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_TEXT);
 
@@ -644,6 +663,10 @@ public class HuxinSdkManager {
 
         YouMaiMsg.MsgData.Builder msgData = YouMaiMsg.MsgData.newBuilder();
         msgData.setSrcUserId(getUuid());
+        msgData.setSrcAvatar(getHeadUrl());
+        msgData.setSrcSex(getSex());
+        msgData.setSrcRealname(getRealName());
+        msgData.setSrcMobile(getPhoneNum());
         msgData.setDestUserId(destUuid);
         msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_LOCATION);
 
@@ -673,6 +696,10 @@ public class HuxinSdkManager {
     public void sendPicture(String destUuid, String fileId, String quality, ReceiveListener callback) {
         YouMaiMsg.MsgData.Builder msgData = YouMaiMsg.MsgData.newBuilder();
         msgData.setSrcUserId(getUuid());
+        msgData.setSrcAvatar(getHeadUrl());
+        msgData.setSrcSex(getSex());
+        msgData.setSrcRealname(getRealName());
+        msgData.setSrcMobile(getPhoneNum());
         msgData.setDestUserId(destUuid);
         msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_IMAGE);
 
@@ -699,6 +726,10 @@ public class HuxinSdkManager {
     public void sendAudio(String destUuid, String fileId, String secondsTime, String sourcePhone, String forwardCount, ReceiveListener callback) {
         YouMaiMsg.MsgData.Builder msgData = YouMaiMsg.MsgData.newBuilder();
         msgData.setSrcUserId(getUuid());
+        msgData.setSrcAvatar(getHeadUrl());
+        msgData.setSrcSex(getSex());
+        msgData.setSrcRealname(getRealName());
+        msgData.setSrcMobile(getPhoneNum());
         msgData.setDestUserId(destUuid);
         msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_IMAGE);
 
@@ -729,6 +760,10 @@ public class HuxinSdkManager {
     public void sendVideo(String destUuid, String fileId, String frameId, String name, String size, String time, ReceiveListener callback) {
         YouMaiMsg.MsgData.Builder msgData = YouMaiMsg.MsgData.newBuilder();
         msgData.setSrcUserId(getUuid());
+        msgData.setSrcAvatar(getHeadUrl());
+        msgData.setSrcSex(getSex());
+        msgData.setSrcRealname(getRealName());
+        msgData.setSrcMobile(getPhoneNum());
         msgData.setDestUserId(destUuid);
         msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_VIDEO);
 
@@ -754,6 +789,10 @@ public class HuxinSdkManager {
                             String fileName, String fileSize, ReceiveListener callback) {
         YouMaiMsg.MsgData.Builder msgData = YouMaiMsg.MsgData.newBuilder();
         msgData.setSrcUserId(getUuid());
+        msgData.setSrcAvatar(getHeadUrl());
+        msgData.setSrcSex(getSex());
+        msgData.setSrcRealname(getRealName());
+        msgData.setSrcMobile(getPhoneNum());
         msgData.setDestUserId(destUuid);
         msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_FILE);
 
@@ -782,6 +821,10 @@ public class HuxinSdkManager {
                         String description, ReceiveListener callback) {
         YouMaiMsg.MsgData.Builder msgData = YouMaiMsg.MsgData.newBuilder();
         msgData.setSrcUserId(getUuid());
+        msgData.setSrcAvatar(getHeadUrl());
+        msgData.setSrcSex(getSex());
+        msgData.setSrcRealname(getRealName());
+        msgData.setSrcMobile(getPhoneNum());
         msgData.setDestUserId(destUuid);
         msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_FILE);
 

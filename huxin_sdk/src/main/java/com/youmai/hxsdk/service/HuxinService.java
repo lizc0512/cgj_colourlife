@@ -354,7 +354,7 @@ public class HuxinService extends Service {
                 @Override
                 public void connectSuccess() {
                     tcpLogin(uuid, ColorsConfig.ColorLifeAppId);
-                    test();
+                    //test();
                 }
             };
             mClient.connect(callback);
@@ -431,11 +431,8 @@ public class HuxinService extends Service {
                         Toast.makeText(mContext, "socket登录成功", Toast.LENGTH_SHORT).show();
                         mClient.setLogin(true);
                     } else {
+                        Toast.makeText(mContext, "socket登录失败", Toast.LENGTH_SHORT).show();
                         mClient.setLogin(false);
-                        ProtocolCallBack sCallBack = RespBaseBean.getsCallBack();
-                        if (sCallBack != null) {
-                            sCallBack.sessionExpire();
-                        }
                     }
                 } catch (InvalidProtocolBufferException e) {
                     e.printStackTrace();

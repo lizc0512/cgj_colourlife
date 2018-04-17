@@ -143,7 +143,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
     private TextView tvTitle;
     private ImageView ivMore;
 
-    private String detNickName;  //目标昵称
+    private String dstNickName;  //目标昵称
     private String dstUuid;      //目标UUID
     private String dstPhone;      //目标手机号
 
@@ -220,7 +220,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
 
         Intent fromIntent = getIntent();
 
-        detNickName = fromIntent.getStringExtra(DST_NAME);
+        dstNickName = fromIntent.getStringExtra(DST_NAME);
         dstUuid = fromIntent.getStringExtra(DST_UUID);
         dstPhone = fromIntent.getStringExtra(DST_PHONE);
 
@@ -283,11 +283,11 @@ public class IMConnectionActivity extends SdkBaseActivity implements
     }
 
     public void handleIntent(Intent intent) {
-        detNickName = intent.getStringExtra(DST_NAME);
+        dstNickName = intent.getStringExtra(DST_NAME);
         dstUuid = intent.getStringExtra(DST_UUID);
 
-        if (!TextUtils.isEmpty(detNickName)) {
-            tvTitle.setText(detNickName);
+        if (!TextUtils.isEmpty(dstNickName)) {
+            tvTitle.setText(dstNickName);
         }
     }
 
@@ -423,7 +423,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
 
     private void initView() {
         tvTitle = (TextView) findViewById(R.id.tv_title);
-        tvTitle.setText(detNickName);
+        tvTitle.setText(dstNickName);
 
         TextView tvBack = (TextView) findViewById(R.id.tv_back);
         if (tvBack != null) {
@@ -652,6 +652,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
                 .setMsgStatus(CacheMsgBean.SEND_GOING)
                 .setSenderUserId(HuxinSdkManager.instance().getUuid())
                 .setReceiverUserId(dstUuid)
+                .setTargetName(dstNickName)
                 .setTargetUuid(dstUuid);
     }
 

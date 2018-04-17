@@ -1630,6 +1630,70 @@ public final class YouMaiMsg {
          */
         com.google.protobuf.ByteString
         getForcePushIdsListBytes(int index);
+
+        /**
+         * <code>optional string src_realname = 13;</code>
+         */
+        boolean hasSrcRealname();
+
+        /**
+         * <code>optional string src_realname = 13;</code>
+         */
+        String getSrcRealname();
+
+        /**
+         * <code>optional string src_realname = 13;</code>
+         */
+        com.google.protobuf.ByteString
+        getSrcRealnameBytes();
+
+        /**
+         * <code>optional string src_avatar = 14;</code>
+         */
+        boolean hasSrcAvatar();
+
+        /**
+         * <code>optional string src_avatar = 14;</code>
+         */
+        String getSrcAvatar();
+
+        /**
+         * <code>optional string src_avatar = 14;</code>
+         */
+        com.google.protobuf.ByteString
+        getSrcAvatarBytes();
+
+        /**
+         * <code>optional string src_mobile = 15;</code>
+         */
+        boolean hasSrcMobile();
+
+        /**
+         * <code>optional string src_mobile = 15;</code>
+         */
+        String getSrcMobile();
+
+        /**
+         * <code>optional string src_mobile = 15;</code>
+         */
+        com.google.protobuf.ByteString
+        getSrcMobileBytes();
+
+        /**
+         * <code>optional string src_sex = 16;</code>
+         */
+        boolean hasSrcSex();
+
+        /**
+         * <code>optional string src_sex = 16;</code>
+         */
+        String getSrcSex();
+
+        /**
+         * <code>optional string src_sex = 16;</code>
+         */
+        com.google.protobuf.ByteString
+        getSrcSexBytes();
     }
 
     /**
@@ -1785,6 +1849,30 @@ public final class YouMaiMsg {
                                 mutable_bitField0_ |= 0x00000800;
                             }
                             forcePushIdsList_.add(bs);
+                            break;
+                        }
+                        case 106: {
+                            com.google.protobuf.ByteString bs = input.readBytes();
+                            bitField0_ |= 0x00000800;
+                            srcRealname_ = bs;
+                            break;
+                        }
+                        case 114: {
+                            com.google.protobuf.ByteString bs = input.readBytes();
+                            bitField0_ |= 0x00001000;
+                            srcAvatar_ = bs;
+                            break;
+                        }
+                        case 122: {
+                            com.google.protobuf.ByteString bs = input.readBytes();
+                            bitField0_ |= 0x00002000;
+                            srcMobile_ = bs;
+                            break;
+                        }
+                        case 130: {
+                            com.google.protobuf.ByteString bs = input.readBytes();
+                            bitField0_ |= 0x00004000;
+                            srcSex_ = bs;
                             break;
                         }
                     }
@@ -2254,6 +2342,186 @@ public final class YouMaiMsg {
             return forcePushIdsList_.getByteString(index);
         }
 
+        public static final int SRC_REALNAME_FIELD_NUMBER = 13;
+        private Object srcRealname_;
+
+        /**
+         * <code>optional string src_realname = 13;</code>
+         */
+        public boolean hasSrcRealname() {
+            return ((bitField0_ & 0x00000800) == 0x00000800);
+        }
+
+        /**
+         * <code>optional string src_realname = 13;</code>
+         */
+        public String getSrcRealname() {
+            Object ref = srcRealname_;
+            if (ref instanceof String) {
+                return (String) ref;
+            } else {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                String s = bs.toStringUtf8();
+                if (bs.isValidUtf8()) {
+                    srcRealname_ = s;
+                }
+                return s;
+            }
+        }
+
+        /**
+         * <code>optional string src_realname = 13;</code>
+         */
+        public com.google.protobuf.ByteString
+        getSrcRealnameBytes() {
+            Object ref = srcRealname_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (String) ref);
+                srcRealname_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
+        public static final int SRC_AVATAR_FIELD_NUMBER = 14;
+        private Object srcAvatar_;
+
+        /**
+         * <code>optional string src_avatar = 14;</code>
+         */
+        public boolean hasSrcAvatar() {
+            return ((bitField0_ & 0x00001000) == 0x00001000);
+        }
+
+        /**
+         * <code>optional string src_avatar = 14;</code>
+         */
+        public String getSrcAvatar() {
+            Object ref = srcAvatar_;
+            if (ref instanceof String) {
+                return (String) ref;
+            } else {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                String s = bs.toStringUtf8();
+                if (bs.isValidUtf8()) {
+                    srcAvatar_ = s;
+                }
+                return s;
+            }
+        }
+
+        /**
+         * <code>optional string src_avatar = 14;</code>
+         */
+        public com.google.protobuf.ByteString
+        getSrcAvatarBytes() {
+            Object ref = srcAvatar_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (String) ref);
+                srcAvatar_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
+        public static final int SRC_MOBILE_FIELD_NUMBER = 15;
+        private Object srcMobile_;
+
+        /**
+         * <code>optional string src_mobile = 15;</code>
+         */
+        public boolean hasSrcMobile() {
+            return ((bitField0_ & 0x00002000) == 0x00002000);
+        }
+
+        /**
+         * <code>optional string src_mobile = 15;</code>
+         */
+        public String getSrcMobile() {
+            Object ref = srcMobile_;
+            if (ref instanceof String) {
+                return (String) ref;
+            } else {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                String s = bs.toStringUtf8();
+                if (bs.isValidUtf8()) {
+                    srcMobile_ = s;
+                }
+                return s;
+            }
+        }
+
+        /**
+         * <code>optional string src_mobile = 15;</code>
+         */
+        public com.google.protobuf.ByteString
+        getSrcMobileBytes() {
+            Object ref = srcMobile_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (String) ref);
+                srcMobile_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
+        public static final int SRC_SEX_FIELD_NUMBER = 16;
+        private Object srcSex_;
+
+        /**
+         * <code>optional string src_sex = 16;</code>
+         */
+        public boolean hasSrcSex() {
+            return ((bitField0_ & 0x00004000) == 0x00004000);
+        }
+
+        /**
+         * <code>optional string src_sex = 16;</code>
+         */
+        public String getSrcSex() {
+            Object ref = srcSex_;
+            if (ref instanceof String) {
+                return (String) ref;
+            } else {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                String s = bs.toStringUtf8();
+                if (bs.isValidUtf8()) {
+                    srcSex_ = s;
+                }
+                return s;
+            }
+        }
+
+        /**
+         * <code>optional string src_sex = 16;</code>
+         */
+        public com.google.protobuf.ByteString
+        getSrcSexBytes() {
+            Object ref = srcSex_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (String) ref);
+                srcSex_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
         private void initFields() {
             msgId_ = 0L;
             srcUserId_ = "";
@@ -2267,6 +2535,10 @@ public final class YouMaiMsg {
             msgStatus_ = 0;
             msgProperty_ = YouMaiMsg.MsgProperty.MSG_PTOPERTY_NONE;
             forcePushIdsList_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+            srcRealname_ = "";
+            srcAvatar_ = "";
+            srcMobile_ = "";
+            srcSex_ = "";
         }
 
         private byte memoizedIsInitialized = -1;
@@ -2318,6 +2590,18 @@ public final class YouMaiMsg {
             }
             for (int i = 0; i < forcePushIdsList_.size(); i++) {
                 output.writeBytes(12, forcePushIdsList_.getByteString(i));
+            }
+            if (((bitField0_ & 0x00000800) == 0x00000800)) {
+                output.writeBytes(13, getSrcRealnameBytes());
+            }
+            if (((bitField0_ & 0x00001000) == 0x00001000)) {
+                output.writeBytes(14, getSrcAvatarBytes());
+            }
+            if (((bitField0_ & 0x00002000) == 0x00002000)) {
+                output.writeBytes(15, getSrcMobileBytes());
+            }
+            if (((bitField0_ & 0x00004000) == 0x00004000)) {
+                output.writeBytes(16, getSrcSexBytes());
             }
             getUnknownFields().writeTo(output);
         }
@@ -2381,6 +2665,22 @@ public final class YouMaiMsg {
                 }
                 size += dataSize;
                 size += 1 * getForcePushIdsListList().size();
+            }
+            if (((bitField0_ & 0x00000800) == 0x00000800)) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeBytesSize(13, getSrcRealnameBytes());
+            }
+            if (((bitField0_ & 0x00001000) == 0x00001000)) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeBytesSize(14, getSrcAvatarBytes());
+            }
+            if (((bitField0_ & 0x00002000) == 0x00002000)) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeBytesSize(15, getSrcMobileBytes());
+            }
+            if (((bitField0_ & 0x00004000) == 0x00004000)) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeBytesSize(16, getSrcSexBytes());
             }
             size += getUnknownFields().getSerializedSize();
             memoizedSerializedSize = size;
@@ -2554,6 +2854,14 @@ public final class YouMaiMsg {
                 bitField0_ = (bitField0_ & ~0x00000400);
                 forcePushIdsList_ = com.google.protobuf.LazyStringArrayList.EMPTY;
                 bitField0_ = (bitField0_ & ~0x00000800);
+                srcRealname_ = "";
+                bitField0_ = (bitField0_ & ~0x00001000);
+                srcAvatar_ = "";
+                bitField0_ = (bitField0_ & ~0x00002000);
+                srcMobile_ = "";
+                bitField0_ = (bitField0_ & ~0x00004000);
+                srcSex_ = "";
+                bitField0_ = (bitField0_ & ~0x00008000);
                 return this;
             }
 
@@ -2635,6 +2943,22 @@ public final class YouMaiMsg {
                     bitField0_ = (bitField0_ & ~0x00000800);
                 }
                 result.forcePushIdsList_ = forcePushIdsList_;
+                if (((from_bitField0_ & 0x00001000) == 0x00001000)) {
+                    to_bitField0_ |= 0x00000800;
+                }
+                result.srcRealname_ = srcRealname_;
+                if (((from_bitField0_ & 0x00002000) == 0x00002000)) {
+                    to_bitField0_ |= 0x00001000;
+                }
+                result.srcAvatar_ = srcAvatar_;
+                if (((from_bitField0_ & 0x00004000) == 0x00004000)) {
+                    to_bitField0_ |= 0x00002000;
+                }
+                result.srcMobile_ = srcMobile_;
+                if (((from_bitField0_ & 0x00008000) == 0x00008000)) {
+                    to_bitField0_ |= 0x00004000;
+                }
+                result.srcSex_ = srcSex_;
                 result.bitField0_ = to_bitField0_;
                 onBuilt();
                 return result;
@@ -2698,6 +3022,26 @@ public final class YouMaiMsg {
                         ensureForcePushIdsListIsMutable();
                         forcePushIdsList_.addAll(other.forcePushIdsList_);
                     }
+                    onChanged();
+                }
+                if (other.hasSrcRealname()) {
+                    bitField0_ |= 0x00001000;
+                    srcRealname_ = other.srcRealname_;
+                    onChanged();
+                }
+                if (other.hasSrcAvatar()) {
+                    bitField0_ |= 0x00002000;
+                    srcAvatar_ = other.srcAvatar_;
+                    onChanged();
+                }
+                if (other.hasSrcMobile()) {
+                    bitField0_ |= 0x00004000;
+                    srcMobile_ = other.srcMobile_;
+                    onChanged();
+                }
+                if (other.hasSrcSex()) {
+                    bitField0_ |= 0x00008000;
+                    srcSex_ = other.srcSex_;
                     onChanged();
                 }
                 this.mergeUnknownFields(other.getUnknownFields());
@@ -3699,6 +4043,334 @@ public final class YouMaiMsg {
                 }
                 ensureForcePushIdsListIsMutable();
                 forcePushIdsList_.add(value);
+                onChanged();
+                return this;
+            }
+
+            private Object srcRealname_ = "";
+
+            /**
+             * <code>optional string src_realname = 13;</code>
+             */
+            public boolean hasSrcRealname() {
+                return ((bitField0_ & 0x00001000) == 0x00001000);
+            }
+
+            /**
+             * <code>optional string src_realname = 13;</code>
+             */
+            public String getSrcRealname() {
+                Object ref = srcRealname_;
+                if (!(ref instanceof String)) {
+                    com.google.protobuf.ByteString bs =
+                            (com.google.protobuf.ByteString) ref;
+                    String s = bs.toStringUtf8();
+                    if (bs.isValidUtf8()) {
+                        srcRealname_ = s;
+                    }
+                    return s;
+                } else {
+                    return (String) ref;
+                }
+            }
+
+            /**
+             * <code>optional string src_realname = 13;</code>
+             */
+            public com.google.protobuf.ByteString
+            getSrcRealnameBytes() {
+                Object ref = srcRealname_;
+                if (ref instanceof String) {
+                    com.google.protobuf.ByteString b =
+                            com.google.protobuf.ByteString.copyFromUtf8(
+                                    (String) ref);
+                    srcRealname_ = b;
+                    return b;
+                } else {
+                    return (com.google.protobuf.ByteString) ref;
+                }
+            }
+
+            /**
+             * <code>optional string src_realname = 13;</code>
+             */
+            public Builder setSrcRealname(
+                    String value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00001000;
+                srcRealname_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string src_realname = 13;</code>
+             */
+            public Builder clearSrcRealname() {
+                bitField0_ = (bitField0_ & ~0x00001000);
+                srcRealname_ = getDefaultInstance().getSrcRealname();
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string src_realname = 13;</code>
+             */
+            public Builder setSrcRealnameBytes(
+                    com.google.protobuf.ByteString value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00001000;
+                srcRealname_ = value;
+                onChanged();
+                return this;
+            }
+
+            private Object srcAvatar_ = "";
+
+            /**
+             * <code>optional string src_avatar = 14;</code>
+             */
+            public boolean hasSrcAvatar() {
+                return ((bitField0_ & 0x00002000) == 0x00002000);
+            }
+
+            /**
+             * <code>optional string src_avatar = 14;</code>
+             */
+            public String getSrcAvatar() {
+                Object ref = srcAvatar_;
+                if (!(ref instanceof String)) {
+                    com.google.protobuf.ByteString bs =
+                            (com.google.protobuf.ByteString) ref;
+                    String s = bs.toStringUtf8();
+                    if (bs.isValidUtf8()) {
+                        srcAvatar_ = s;
+                    }
+                    return s;
+                } else {
+                    return (String) ref;
+                }
+            }
+
+            /**
+             * <code>optional string src_avatar = 14;</code>
+             */
+            public com.google.protobuf.ByteString
+            getSrcAvatarBytes() {
+                Object ref = srcAvatar_;
+                if (ref instanceof String) {
+                    com.google.protobuf.ByteString b =
+                            com.google.protobuf.ByteString.copyFromUtf8(
+                                    (String) ref);
+                    srcAvatar_ = b;
+                    return b;
+                } else {
+                    return (com.google.protobuf.ByteString) ref;
+                }
+            }
+
+            /**
+             * <code>optional string src_avatar = 14;</code>
+             */
+            public Builder setSrcAvatar(
+                    String value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00002000;
+                srcAvatar_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string src_avatar = 14;</code>
+             */
+            public Builder clearSrcAvatar() {
+                bitField0_ = (bitField0_ & ~0x00002000);
+                srcAvatar_ = getDefaultInstance().getSrcAvatar();
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string src_avatar = 14;</code>
+             */
+            public Builder setSrcAvatarBytes(
+                    com.google.protobuf.ByteString value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00002000;
+                srcAvatar_ = value;
+                onChanged();
+                return this;
+            }
+
+            private Object srcMobile_ = "";
+
+            /**
+             * <code>optional string src_mobile = 15;</code>
+             */
+            public boolean hasSrcMobile() {
+                return ((bitField0_ & 0x00004000) == 0x00004000);
+            }
+
+            /**
+             * <code>optional string src_mobile = 15;</code>
+             */
+            public String getSrcMobile() {
+                Object ref = srcMobile_;
+                if (!(ref instanceof String)) {
+                    com.google.protobuf.ByteString bs =
+                            (com.google.protobuf.ByteString) ref;
+                    String s = bs.toStringUtf8();
+                    if (bs.isValidUtf8()) {
+                        srcMobile_ = s;
+                    }
+                    return s;
+                } else {
+                    return (String) ref;
+                }
+            }
+
+            /**
+             * <code>optional string src_mobile = 15;</code>
+             */
+            public com.google.protobuf.ByteString
+            getSrcMobileBytes() {
+                Object ref = srcMobile_;
+                if (ref instanceof String) {
+                    com.google.protobuf.ByteString b =
+                            com.google.protobuf.ByteString.copyFromUtf8(
+                                    (String) ref);
+                    srcMobile_ = b;
+                    return b;
+                } else {
+                    return (com.google.protobuf.ByteString) ref;
+                }
+            }
+
+            /**
+             * <code>optional string src_mobile = 15;</code>
+             */
+            public Builder setSrcMobile(
+                    String value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00004000;
+                srcMobile_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string src_mobile = 15;</code>
+             */
+            public Builder clearSrcMobile() {
+                bitField0_ = (bitField0_ & ~0x00004000);
+                srcMobile_ = getDefaultInstance().getSrcMobile();
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string src_mobile = 15;</code>
+             */
+            public Builder setSrcMobileBytes(
+                    com.google.protobuf.ByteString value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00004000;
+                srcMobile_ = value;
+                onChanged();
+                return this;
+            }
+
+            private Object srcSex_ = "";
+
+            /**
+             * <code>optional string src_sex = 16;</code>
+             */
+            public boolean hasSrcSex() {
+                return ((bitField0_ & 0x00008000) == 0x00008000);
+            }
+
+            /**
+             * <code>optional string src_sex = 16;</code>
+             */
+            public String getSrcSex() {
+                Object ref = srcSex_;
+                if (!(ref instanceof String)) {
+                    com.google.protobuf.ByteString bs =
+                            (com.google.protobuf.ByteString) ref;
+                    String s = bs.toStringUtf8();
+                    if (bs.isValidUtf8()) {
+                        srcSex_ = s;
+                    }
+                    return s;
+                } else {
+                    return (String) ref;
+                }
+            }
+
+            /**
+             * <code>optional string src_sex = 16;</code>
+             */
+            public com.google.protobuf.ByteString
+            getSrcSexBytes() {
+                Object ref = srcSex_;
+                if (ref instanceof String) {
+                    com.google.protobuf.ByteString b =
+                            com.google.protobuf.ByteString.copyFromUtf8(
+                                    (String) ref);
+                    srcSex_ = b;
+                    return b;
+                } else {
+                    return (com.google.protobuf.ByteString) ref;
+                }
+            }
+
+            /**
+             * <code>optional string src_sex = 16;</code>
+             */
+            public Builder setSrcSex(
+                    String value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00008000;
+                srcSex_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string src_sex = 16;</code>
+             */
+            public Builder clearSrcSex() {
+                bitField0_ = (bitField0_ & ~0x00008000);
+                srcSex_ = getDefaultInstance().getSrcSex();
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string src_sex = 16;</code>
+             */
+            public Builder setSrcSexBytes(
+                    com.google.protobuf.ByteString value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00008000;
+                srcSex_ = value;
                 onChanged();
                 return this;
             }
@@ -7260,7 +7932,7 @@ public final class YouMaiMsg {
                 "\n\020YouMai.Msg.proto\022\rcom.proto.msg\032\022YouMa" +
                         "i.Basic.proto\"W\n\007MsgFont\022\021\n\tfont_name\030\001 " +
                         "\001(\t\022\021\n\tfont_size\030\002 \001(\r\022\022\n\nfont_color\030\003 \001" +
-                        "(\r\022\022\n\nfont_style\030\004 \001(\r\"\365\002\n\007MsgData\022\016\n\006ms" +
+                        "(\r\022\022\n\nfont_style\030\004 \001(\r\"\304\003\n\007MsgData\022\016\n\006ms" +
                         "g_id\030\001 \001(\003\022\023\n\013src_user_id\030\002 \001(\t\022\024\n\014dest_" +
                         "user_id\030\003 \001(\t\022\020\n\010group_id\030\004 \001(\r\0220\n\014sessi" +
                         "on_type\030\005 \001(\0162\032.SessionTyp" +
@@ -7269,34 +7941,36 @@ public final class YouMaiMsg {
                         "g.IM_CONTENT_TYPE\022(\n\010msg_font\030\t \001(\0132\026.co",
                 "m.proto.msg.MsgFont\022\022\n\nmsg_status\030\n \001(\r\022" +
                         "0\n\014msg_property\030\013 \001(\0162\032.Ms" +
-                        "gProperty\022\033\n\023force_push_ids_list\030\014 \003(\t\"/" +
-                        "\n\007ChatMsg\022$\n\004data\030\001 \001(\0132\026." +
-                        "MsgData\"D\n\020OfflineMsgNotify\0220\n\020offline_m" +
-                        "sg_list\030\001 \003(\0132\026.MsgData\"w\n" +
-                        "\013ChatMsg_Ack\022\017\n\007user_id\030\001 \001(\t\022\016\n\006msg_id\030" +
-                        "\002 \001(\003\022-\n\010errer_no\030\003 \001(\0162\033.com.proto.basi" +
-                        "c.ERRNO_CODE\022\030\n\020is_target_online\030\024 \001(\010\"$" +
-                        "\n\rOfflineMsgAck\022\023\n\013msg_id_list\030\001 \003(\003\"S\n\n",
-                "S2SChatMsg\022\017\n\007user_id\030\001 \003(\t\022$\n\004data\030\002 \001(" +
-                        "\0132\026.ChatMsg\022\016\n\006msg_id\030\003 \001(" +
-                        "\003*\305\003\n\017IM_CONTENT_TYPE\022\030\n\024IM_CONTENT_TYPE" +
-                        "_TEXT\020\000\022!\n\035IM_CONTENT_TYPE_SHORT_MESSAGE" +
-                        "\020\001\022\034\n\030IM_CONTENT_TYPE_CONTACTS\020\002\022!\n\035IM_C" +
-                        "ONTENT_TYPE_RECOMMEND_APP\020\003\022\036\n\032IM_CONTEN" +
-                        "T_TYPE_NO_DISTURB\020\004\022!\n\035IM_CONTENT_TYPE_L" +
-                        "OCATIONSHARE\020\005\022\031\n\025IM_CONTENT_TYPE_IMAGE\020" +
-                        "\006\022\026\n\022IM_CONTENT_TYPE_AT\020\007\022\027\n\023IM_CONTENT_" +
-                        "TYPE_URL\020\010\022\031\n\025IM_CONTENT_TYPE_AUDIO\020\t\022\031\n",
-                "\025IM_CONTENT_TYPE_VIDEO\020\n\022\034\n\030IM_CONTENT_T" +
-                        "YPE_LOCATION\020\013\022\030\n\024IM_CONTENT_TYPE_FILE\020\014" +
-                        "\022\033\n\027IM_CONTENT_TYPE_BIZCARD\020\r\022\032\n\026IM_CONT" +
-                        "ENT_TYPE_KAQUAN\020\016*\210\001\n\013MsgProperty\022\025\n\021MSG" +
-                        "_PTOPERTY_NONE\020\001\022\030\n\024MSG_PROPERTY_RECEIPT" +
-                        "\020\002\022\027\n\023MSG_PROPERTY_URGENT\020\003\022\026\n\022MSG_PROPE" +
-                        "RTY_QUOTE\020\004\022\027\n\023MSG_PROPERTY_RECALL\020\005*]\n\013" +
-                        "SessionType\022\027\n\023SESSION_TYPE_SINGLE\020\001\022\032\n\026" +
-                        "SESSION_TYPE_MULTICHAT\020\002\022\031\n\025SESSION_TYPE" +
-                        "_ORGGROUP\020\003"
+                        "gProperty\022\033\n\023force_push_ids_list\030\014 \003(\t\022\024" +
+                        "\n\014src_realname\030\r \001(\t\022\022\n\nsrc_avatar\030\016 \001(\t" +
+                        "\022\022\n\nsrc_mobile\030\017 \001(\t\022\017\n\007src_sex\030\020 \001(\t\"/\n" +
+                        "\007ChatMsg\022$\n\004data\030\001 \001(\0132\026.M" +
+                        "sgData\"D\n\020OfflineMsgNotify\0220\n\020offline_ms" +
+                        "g_list\030\001 \003(\0132\026.MsgData\"w\n\013" +
+                        "ChatMsg_Ack\022\017\n\007user_id\030\001 \001(\t\022\016\n\006msg_id\030\002" +
+                        " \001(\003\022-\n\010errer_no\030\003 \001(\0162\033.com.proto.basic",
+                ".ERRNO_CODE\022\030\n\020is_target_online\030\024 \001(\010\"$\n" +
+                        "\rOfflineMsgAck\022\023\n\013msg_id_list\030\001 \003(\003\"S\n\nS" +
+                        "2SChatMsg\022\017\n\007user_id\030\001 \003(\t\022$\n\004data\030\002 \001(\013" +
+                        "2\026.ChatMsg\022\016\n\006msg_id\030\003 \001(\003" +
+                        "*\305\003\n\017IM_CONTENT_TYPE\022\030\n\024IM_CONTENT_TYPE_" +
+                        "TEXT\020\000\022!\n\035IM_CONTENT_TYPE_SHORT_MESSAGE\020" +
+                        "\001\022\034\n\030IM_CONTENT_TYPE_CONTACTS\020\002\022!\n\035IM_CO" +
+                        "NTENT_TYPE_RECOMMEND_APP\020\003\022\036\n\032IM_CONTENT" +
+                        "_TYPE_NO_DISTURB\020\004\022!\n\035IM_CONTENT_TYPE_LO" +
+                        "CATIONSHARE\020\005\022\031\n\025IM_CONTENT_TYPE_IMAGE\020\006",
+                "\022\026\n\022IM_CONTENT_TYPE_AT\020\007\022\027\n\023IM_CONTENT_T" +
+                        "YPE_URL\020\010\022\031\n\025IM_CONTENT_TYPE_AUDIO\020\t\022\031\n\025" +
+                        "IM_CONTENT_TYPE_VIDEO\020\n\022\034\n\030IM_CONTENT_TY" +
+                        "PE_LOCATION\020\013\022\030\n\024IM_CONTENT_TYPE_FILE\020\014\022" +
+                        "\033\n\027IM_CONTENT_TYPE_BIZCARD\020\r\022\032\n\026IM_CONTE" +
+                        "NT_TYPE_KAQUAN\020\016*\210\001\n\013MsgProperty\022\025\n\021MSG_" +
+                        "PTOPERTY_NONE\020\001\022\030\n\024MSG_PROPERTY_RECEIPT\020" +
+                        "\002\022\027\n\023MSG_PROPERTY_URGENT\020\003\022\026\n\022MSG_PROPER" +
+                        "TY_QUOTE\020\004\022\027\n\023MSG_PROPERTY_RECALL\020\005*]\n\013S" +
+                        "essionType\022\027\n\023SESSION_TYPE_SINGLE\020\001\022\032\n\026S",
+                "ESSION_TYPE_MULTICHAT\020\002\022\031\n\025SESSION_TYPE_" +
+                        "ORGGROUP\020\003"
         };
         com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
                 new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -7322,7 +7996,7 @@ public final class YouMaiMsg {
         internal_static_com_proto_msg_MsgData_fieldAccessorTable = new
                 com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_proto_msg_MsgData_descriptor,
-                new String[]{"MsgId", "SrcUserId", "DestUserId", "GroupId", "SessionType", "CreateTime", "MsgContent", "ContentType", "MsgFont", "MsgStatus", "MsgProperty", "ForcePushIdsList",});
+                new String[]{"MsgId", "SrcUserId", "DestUserId", "GroupId", "SessionType", "CreateTime", "MsgContent", "ContentType", "MsgFont", "MsgStatus", "MsgProperty", "ForcePushIdsList", "SrcRealname", "SrcAvatar", "SrcMobile", "SrcSex",});
         internal_static_com_proto_msg_ChatMsg_descriptor =
                 getDescriptor().getMessageTypes().get(2);
         internal_static_com_proto_msg_ChatMsg_fieldAccessorTable = new

@@ -45,7 +45,7 @@ public class CameraActivity extends AppCompatActivity {
                 //错误监听
                 Log.i("CJT", "camera error");
                 Intent intent = new Intent();
-                setResult(103, intent);
+                setResult(IMConnectionActivity.RESULT_CODE_ERROR, intent);
                 finish();
             }
 
@@ -62,7 +62,7 @@ public class CameraActivity extends AppCompatActivity {
                 String path = FileUtil.saveBitmap("HCamera", bitmap);
                 Intent intent = new Intent();
                 intent.putExtra("filePath", path);
-                setResult(101, intent);
+                setResult(IMConnectionActivity.RESULT_CODE_IMAGE, intent);
                 finish();
             }
 
@@ -75,7 +75,7 @@ public class CameraActivity extends AppCompatActivity {
                 intent.putExtra("framePath", path);
                 intent.putExtra("filePath", url);
                 intent.putExtra("millisecond", millisecond);
-                setResult(102, intent);
+                setResult(IMConnectionActivity.RESULT_CODE_VIDEO, intent);
                 finish();
             }
         });

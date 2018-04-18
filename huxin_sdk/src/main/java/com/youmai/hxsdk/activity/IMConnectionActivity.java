@@ -110,27 +110,27 @@ public class IMConnectionActivity extends SdkBaseActivity implements
      */
     public static final String TAG = IMConnectionActivity.class.getSimpleName();
 
-
     //srsm add @20170214
     public static final String DST_NAME = "DST_NAME";
     public static final String DST_UUID = "DST_UUID";
     public static final String DST_PHONE = "DST_PHONE";
-
     public static final String EXTRA_SCROLL_POSITION = "EXTRA_SCROLL_POSITION";
-    public static final String IS_SHOW_AUDIO = "IS_SHOW_AUDIO";
 
-    public static final long MAX_SENDER_FILE = 50 * 1024 * 1024;
-
+    private static final int REQUEST_CODE_PICTURE = 1;
+    private static final int REQUEST_CODE_LOCATION = 2;
     public static final int REQUEST_CODE_CAMERA = 400;
     public static final int REQUEST_CODE_CARD = 600;
-
-    public static final int REQUEST_CODE_ADDEMO = 1000;
-
-    private final int GET_PERMISSION_REQUEST = 500; //权限申请自定义码
-    public static final int REQUEST_REMIND_CODE = 700;
     public static final int REQUEST_CODE_FORWAED = 800;
-    public static final int REQUEST_CODE_CARD_UPDATE = 900;
+    public static final int REQUEST_REMIND_CODE = 700;
 
+    public static final int RESULT_CODE_IMAGE = 101;
+    public static final int RESULT_CODE_VIDEO = 102;
+    public static final int RESULT_CODE_ERROR = 103;
+
+    private static final int MSG_GET_CONTACT_ID = 1000;
+    private final int GET_PERMISSION_REQUEST = 500; //权限申请自定义码
+
+    public static final long MAX_SENDER_FILE = 50 * 1024 * 1024;
 
     //UI
     private RecyclerView recyclerView;
@@ -156,6 +156,15 @@ public class IMConnectionActivity extends SdkBaseActivity implements
     private long mScrollPosition;
 
     private BroadcastReceiver mReceiveSmsMsg;
+    private LocalBroadcastManager localBroadcastManager;
+    private DownloadBroadcastReceiver downloadBroadcastReceiver;
+
+    private Context mContext;
+
+    private boolean isOriginal = false;
+
+    private NormalHandler mHandler;
+
 
     private BroadcastReceiver mUpdateImageStateReceiver = new BroadcastReceiver() {
         @Override
@@ -179,16 +188,6 @@ public class IMConnectionActivity extends SdkBaseActivity implements
         }
     };
 
-    private LocalBroadcastManager localBroadcastManager;
-    private DownloadBroadcastReceiver downloadBroadcastReceiver;
-
-    private Context mContext;
-
-    private boolean isOriginal = false;
-
-    private static final int MSG_GET_CONTACT_ID = 1000;
-
-    private NormalHandler mHandler;
 
     private static class NormalHandler extends Handler {
         private final WeakReference<IMConnectionActivity> mTarget;
@@ -633,7 +632,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
         docPaths.clear();
         PickerManager.getInstance().addDocTypes();
         Intent intent = new Intent(this, FileManagerActivity.class);
-        intent.putExtra("dstPhone", dstUuid);
+        intent.putExtra("dstUuid", dstUuid);
         startActivity(intent);
     }
 
@@ -797,10 +796,6 @@ public class IMConnectionActivity extends SdkBaseActivity implements
     }
 
 
-    private static final int TO_PICTURE = 1;
-    private static final int TO_LOCATION = 2;
-
-
     /**
      * 发位置
      */
@@ -809,14 +804,14 @@ public class IMConnectionActivity extends SdkBaseActivity implements
         intent.putExtra(LocationActivity.FROM_TO_IM, true);
         intent.putExtra(LocationActivity.DST_UUID, dstUuid);
         intent.setClass(this, LocationActivity.class);
-        startActivityForResult(intent, TO_LOCATION);
+        startActivityForResult(intent, REQUEST_CODE_LOCATION);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == PhotoPreviewActivity.REQUEST_CODE_PHOTO) { //图片
+        if (requestCode == PhotoPreviewActivity.REQUEST_CODE_PHOTO && resultCode == Activity.RESULT_OK) { //图片
             ArrayList<String> photoPaths = new ArrayList<>();
             if (data == null) {
                 isOriginal = PhotoPickerManager.getInstance().isOriginal();
@@ -826,11 +821,6 @@ public class IMConnectionActivity extends SdkBaseActivity implements
                 photoPaths.addAll(data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_MEDIA));
             }
             PhotoPickerManager.getInstance().clear();
-
-            if (photoPaths == null || photoPaths.size() == 0) {
-                //ToastUtil.showToast(this, getString(R.string.hx_toast_70));
-                return;
-            }
 
             String path = photoPaths.get(0);
             if (path.toLowerCase().endsWith(".mp4") || path.toLowerCase().endsWith(".rmvb")
@@ -875,20 +865,20 @@ public class IMConnectionActivity extends SdkBaseActivity implements
                 }
             }
 
-        } else if (requestCode == TO_PICTURE && resultCode == Activity.RESULT_OK) { //图片
+        } else if (requestCode == REQUEST_CODE_PICTURE && resultCode == Activity.RESULT_OK) { //图片
             final String filePath = data.getStringExtra("path");
             sendTakenPic(filePath, isOriginal);
-        } else if (requestCode == TO_LOCATION && resultCode == Activity.RESULT_OK) {  //地图
+        } else if (requestCode == REQUEST_CODE_LOCATION && resultCode == Activity.RESULT_OK) {  //地图
             sendMap(data);
         } else if (requestCode == FilePickerConst.REQUEST_CODE_DOC && resultCode == Activity.RESULT_OK) {
             //交换名片编辑名片返回 发送(用不到)
         } else if (requestCode == REQUEST_CODE_CAMERA) {
             //拍照回来后
-            if (resultCode == 101) {
+            if (resultCode == RESULT_CODE_IMAGE) {
                 //图片
                 String path = data.getStringExtra("filePath");
                 sendTakenPic(path, isOriginal);
-            } else if (resultCode == 102) {
+            } else if (resultCode == RESULT_CODE_VIDEO) {
                 //视频
                 String framePath = data.getStringExtra("framePath");
                 String path = data.getStringExtra("filePath");
@@ -898,10 +888,9 @@ public class IMConnectionActivity extends SdkBaseActivity implements
                     millisecond = data.getLongExtra("millisecond", 0L);
                 }
                 sendVideo(path, framePath, millisecond);
-            } else if (resultCode == 103) {
+            } else if (resultCode == RESULT_CODE_ERROR) {
                 Toast.makeText(this, "相机有误，请返回重试!", Toast.LENGTH_SHORT).show();
             }
-        } else if (requestCode == REQUEST_CODE_CARD) {
         } else if (requestCode == REQUEST_CODE_FORWAED && resultCode == 200) {
             //批量转发后的回调
             imListAdapter.cancelMoreStat();

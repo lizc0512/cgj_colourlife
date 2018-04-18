@@ -82,10 +82,17 @@ public class CacheMsgBean implements Parcelable {
         this.msgTime = bean.getMsgTime();
 
         this.senderUserId = bean.getSenderUserId();
+        this.senderMobile = bean.getSenderMobile(); //发送者的手机号
+        this.senderSex = bean.getSenderSex(); //发送者的性别
+        this.senderRealName = bean.getSenderRealName(); //发送者的姓名
+        this.senderAvatar = bean.getSenderAvatar(); //发送者的头像
+
         this.receiverUserId = bean.getReceiverUserId();
 
         this.contentJsonBody = bean.getContentJsonBody();
 
+        this.groupId = bean.getGroupId();  //标识群组id
+        this.targetName = bean.getTargetName(); //沟通对方的姓名
         this.targetUuid = bean.getTargetUuid();
         this.msgStatus = bean.getMsgStatus();
         this.progress = bean.getProgress();

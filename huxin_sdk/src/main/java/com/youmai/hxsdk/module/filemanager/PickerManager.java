@@ -357,15 +357,15 @@ public class PickerManager {
         return listFiles;
     }
 
-    private String targetPhone; // IM & 电话 对方号码
+    private String dstUuid; // IM & 电话 对方号码
     private int requestCode; // 分类请求码
 
-    public String getTargetPhone() {
-        return targetPhone;
+    public String getDstUuid() {
+        return dstUuid;
     }
 
-    public void setTargetPhone(String targetPhone) {
-        this.targetPhone = targetPhone;
+    public void setDstUuid(String dstUuid) {
+        this.dstUuid = dstUuid;
     }
 
     public int getRequestCode() {

@@ -28,9 +28,9 @@ public class FileManagerActivity extends SdkHomeActivity implements View.OnClick
     private static final String TAG = "FileManagerActivity";
     public static final String REQUEST_CODE_CALLBACK = "requestCode";
 
-    private String targetPhone;
+    private String dstUuid;
     private ArrayList<Document> mQQListData, mWeiXinListData, mDownloadListData;
-    ProgressDialog progressDialog = null;
+    private ProgressDialog progressDialog = null;
 
     @Override
     public void onClick(View v) {
@@ -210,8 +210,8 @@ public class FileManagerActivity extends SdkHomeActivity implements View.OnClick
 
     @Override
     public void initData() {
-        targetPhone = getIntent().getStringExtra("dstPhone");
-        PickerManager.getInstance().setTargetPhone(targetPhone);
+        dstUuid = getIntent().getStringExtra("dstUuid");
+        PickerManager.getInstance().setDstUuid(dstUuid);
         int requestCode = getIntent().getIntExtra(REQUEST_CODE_CALLBACK, FilePickerConst.IM_REQUEST_CALLBACK);
         PickerManager.getInstance().setRequestCode(requestCode);
     }

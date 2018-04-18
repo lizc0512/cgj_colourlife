@@ -15,10 +15,10 @@
         style="@style/im_content_card_style"
         android:gravity="right">
 
-        <ProgressBar
-            android:id="@+id/pbar"
-            android:layout_width="24dp"
-            android:layout_height="24dp" />
+        <include
+            layout="@layout/hx_im_send_status_lay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
         <FrameLayout
             android:id="@+id/item_btn"

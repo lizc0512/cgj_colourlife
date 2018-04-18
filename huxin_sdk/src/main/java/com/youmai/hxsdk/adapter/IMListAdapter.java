@@ -46,6 +46,7 @@ import com.youmai.hxsdk.module.remind.SetRemindActivity;
 import com.youmai.hxsdk.module.videoplayer.VideoPlayerActivity;
 import com.youmai.hxsdk.module.videoplayer.bean.VideoDetailInfo;
 import com.youmai.hxsdk.proto.YouMaiMsg;
+import com.youmai.hxsdk.service.SendMsgService;
 import com.youmai.hxsdk.utils.QiniuUrl;
 import com.youmai.hxsdk.utils.TimeUtils;
 import com.youmai.hxsdk.view.LinearLayoutManagerWithSmoothScroller;
@@ -797,9 +798,20 @@ public class IMListAdapter extends RecyclerView.Adapter {
             } else if (flag == CacheMsgBean.SEND_FAILED) {
                 //显示发送失败状态
                 viewHolder.progressBar.setVisibility(View.GONE);
-            } else if (flag == 5) {
-                //显示文本播放语音状态
-                viewHolder.progressBar.setVisibility(View.GONE);
+                viewHolder.smsImg.setVisibility(View.VISIBLE);
+                viewHolder.smsImg.setImageResource(R.drawable.hx_im_send_error2_icon);
+                viewHolder.smsImg.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //重传
+                        bean.setMsgStatus(CacheMsgBean.SEND_GOING);
+                        updateSendStatus(bean, position);
+                        Intent intent = new Intent(mContext, SendMsgService.class);
+                        intent.putExtra("data", bean);
+                        intent.putExtra("data_from", SendMsgService.FROM_IM);
+                        mContext.startService(intent);
+                    }
+                });
             } else {
                 //正在发送状态
                 viewHolder.progressBar.setVisibility(View.VISIBLE);
@@ -954,7 +966,7 @@ public class IMListAdapter extends RecyclerView.Adapter {
         ImageView senderIV;
         View itemBtn;
         ProgressBar progressBar;
-
+        ImageView smsImg;
         View contentLay;
 
 
@@ -966,6 +978,7 @@ public class IMListAdapter extends RecyclerView.Adapter {
             itemBtn = itemView.findViewById(R.id.item_btn);
             contentLay = itemView.findViewById(R.id.img_content_lay);// 中间背景
             progressBar = (ProgressBar) itemView.findViewById(R.id.pbar);
+            smsImg = (ImageView) itemView.findViewById(R.id.im_sms_img);
         }
     }
 

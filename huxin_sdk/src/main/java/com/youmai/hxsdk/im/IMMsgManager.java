@@ -5,6 +5,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.text.TextUtils;
@@ -33,6 +34,7 @@ import com.youmai.hxsdk.im.cache.CacheMsgMap;
 import com.youmai.hxsdk.im.cache.CacheMsgTxt;
 import com.youmai.hxsdk.im.cache.CacheMsgVideo;
 import com.youmai.hxsdk.im.cache.CacheMsgVoice;
+import com.youmai.hxsdk.module.groupchat.ChatDetailsActivity;
 import com.youmai.hxsdk.proto.YouMaiBasic;
 import com.youmai.hxsdk.proto.YouMaiBulletin;
 import com.youmai.hxsdk.proto.YouMaiMsg;
@@ -127,13 +129,31 @@ public class IMMsgManager {
             try {
                 YouMaiMsg.ChatMsg notify = YouMaiMsg.ChatMsg.parseFrom(data);
                 YouMaiMsg.MsgData imChat = notify.getData();
-
-                IMChat im = new IMChat(imChat);
-
                 HuxinSdkManager.instance().sendMsgReply(imChat.getMsgId());
 
+                IMChat im = new IMChat(imChat);
                 parseCharMsg(im);
-                notifyMsg(im, false);
+                notifyMsg(im, false, true);
+
+            } catch (InvalidProtocolBufferException e) {
+                e.printStackTrace();
+            }
+        }
+    };
+
+    private NotifyListener mGroupListener = new NotifyListener(
+            YouMaiBasic.COMMANDID.CID_CHAT_GROUP_VALUE) {
+        @Override
+        public void OnRec(byte[] data) {
+            try {
+                YouMaiMsg.ChatMsg notify = YouMaiMsg.ChatMsg.parseFrom(data);
+                YouMaiMsg.MsgData imChat = notify.getData();
+                HuxinSdkManager.instance().sendMsgReply(imChat.getMsgId());
+
+                IMChat im = new IMChat(imChat);
+                parseCharMsg(im);
+                notifyMsg(im, false, true);
+
             } catch (InvalidProtocolBufferException e) {
                 e.printStackTrace();
             }
@@ -204,21 +224,23 @@ public class IMMsgManager {
 
 
     /**
-     * IM监听
+     * 添加消息监听
      */
-    public NotifyListener getIMListener() {
-        return mNotifyListener;
+    public void addChatListener() {
+        HuxinSdkManager.instance().setNotifyListener(mNotifyListener);
+        HuxinSdkManager.instance().setNotifyListener(mGroupListener);
+        HuxinSdkManager.instance().setNotifyListener(OnRecvBulletin);
+        HuxinSdkManager.instance().setNotifyListener(onDeviceKickedNotify);
     }
 
     /**
-     * 公告监听
+     * 移除消息监听
      */
-    public NotifyListener getBulletinListener() {
-        return OnRecvBulletin;
-    }
-
-    public NotifyListener getOnDeviceKickedNotify() {
-        return onDeviceKickedNotify;
+    public void removeChatListener() {
+        HuxinSdkManager.instance().clearNotifyListener(mNotifyListener);
+        HuxinSdkManager.instance().clearNotifyListener(mGroupListener);
+        HuxinSdkManager.instance().clearNotifyListener(OnRecvBulletin);
+        HuxinSdkManager.instance().clearNotifyListener(onDeviceKickedNotify);
     }
 
 
@@ -230,32 +252,32 @@ public class IMMsgManager {
         }
     }
 
-    public void notifyMsg(IMChat msg, boolean isFormPush) {
-        String srcPhone = msg.getImChat().getSrcUserId();
+    public void notifyMsg(IMChat msg, boolean isFormPush, boolean isGroup) {
+        String srcUuid = msg.getImChat().getSrcUserId();
         String newMsgTip = mContext.getString(R.string.hx_hook_strategy_msg);
         if (msg.getMsgType() == YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_TEXT_VALUE) {  //文字
             ContentText text = msg.getContent().getText();
             String content = text.getContent();
             if (content.startsWith("/")) { //自定义表情
-                notifyMsg(mContext, srcPhone, newMsgTip + mContext.getString(R.string.hx_hook_strategy_msg_emoji), isFormPush);
+                notifyMsg(mContext, srcUuid, newMsgTip + mContext.getString(R.string.hx_hook_strategy_msg_emoji), isFormPush, isGroup);
             } else {  //文字
-                notifyMsg(mContext, srcPhone, content, isFormPush);
+                notifyMsg(mContext, srcUuid, content, isFormPush, isGroup);
             }
         } else if (msg.getMsgType() == YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_IMAGE_VALUE) { //图片
-            notifyMsg(mContext, srcPhone, newMsgTip + mContext.getString(R.string.hx_hook_strategy_msg_pic), isFormPush);
+            notifyMsg(mContext, srcUuid, newMsgTip + mContext.getString(R.string.hx_hook_strategy_msg_pic), isFormPush, isGroup);
         } else if (msg.getMsgType() == YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_VIDEO_VALUE) { //视频
-            notifyMsg(mContext, srcPhone, newMsgTip + mContext.getString(R.string.hx_hook_strategy_msg_tv), isFormPush);
+            notifyMsg(mContext, srcUuid, newMsgTip + mContext.getString(R.string.hx_hook_strategy_msg_tv), isFormPush, isGroup);
         } else if (msg.getMsgType() == YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_LOCATION_VALUE) { //定位
-            notifyMsg(mContext, srcPhone, newMsgTip + mContext.getString(R.string.hx_hook_strategy_msg_map), isFormPush);
+            notifyMsg(mContext, srcUuid, newMsgTip + mContext.getString(R.string.hx_hook_strategy_msg_map), isFormPush, isGroup);
         } else if (msg.getMsgType() == YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_AUDIO_VALUE) { //音频
-            notifyMsg(mContext, srcPhone, newMsgTip + mContext.getString(R.string.hx_hook_strategy_msg_voice), isFormPush);
+            notifyMsg(mContext, srcUuid, newMsgTip + mContext.getString(R.string.hx_hook_strategy_msg_voice), isFormPush, isGroup);
         } else if (msg.getMsgType() == YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_FILE_VALUE) { //文件
-            notifyMsg(mContext, srcPhone, newMsgTip + mContext.getString(R.string.hx_hook_strategy_msg_file), isFormPush);
+            notifyMsg(mContext, srcUuid, newMsgTip + mContext.getString(R.string.hx_hook_strategy_msg_file), isFormPush, isGroup);
         }
     }
 
 
-    public void parseCharMsg(IMChat im) {
+    private void parseCharMsg(IMChat im) {
         //todo_k:
         CacheMsgBean cacheMsgBean = im.getMsgBean();
 
@@ -438,28 +460,40 @@ public class IMMsgManager {
         }
     }
 
-    private void notifyMsg(Context context, String srcPhone, String content, boolean isFormPush) {
+    private void notifyMsg(Context context, String srcUuid, String content,
+                           boolean isFormPush, boolean isGroup) {
         /*if (AppUtils.isTopActiviy(mContext, IMConnectionActivity.class.getName())
                 && !TextUtils.isEmpty(targetPhone)
                 && targetPhone.equals(srcPhone)) {
             return;
         }*/
-        int notifyID = srcPhone.hashCode();
-        NotificationCompat.Builder builder =
-                new NotificationCompat.Builder(context)
-                        .setSmallIcon(getNotificationIcon())
-                        //.setContentTitle(context.getString(R.string.from) + HuxinSdkManager.instance().getContactName(srcPhone))
-                        .setContentText(content)
-                        .setTicker(content)
-                        //.setDefaults(Notification.DEFAULT_LIGHTS)
-                        //.setColor(Color.GREEN)
-                        .setAutoCancel(true);
+        int notifyID = srcUuid.hashCode();
+        NotificationCompat.Builder builder;
+        if (Build.VERSION.SDK_INT >= 26) {
+            builder = new NotificationCompat.Builder(context, "im_chat");
+        } else {
+            builder = new NotificationCompat.Builder(context);
+        }
+
+        builder.setSmallIcon(getNotificationIcon())
+                //.setContentTitle(context.getString(R.string.from) + HuxinSdkManager.instance().getContactName(srcPhone))
+                .setContentText(content)
+                .setTicker(content)
+                //.setDefaults(Notification.DEFAULT_LIGHTS)
+                //.setColor(Color.GREEN)
+                .setAutoCancel(true);
 
         builder.setDefaults(Notification.DEFAULT_SOUND);
 
         // Creates an explicit intent for an Activity in your app
-        Intent resultIntent = new Intent(context, IMConnectionActivity.class);
-        resultIntent.putExtra(IMConnectionActivity.DST_UUID, srcPhone);
+        Intent resultIntent;
+        if (isGroup) {
+            resultIntent = new Intent(context, ChatDetailsActivity.class);
+        } else {
+            resultIntent = new Intent(context, IMConnectionActivity.class);
+        }
+
+        resultIntent.putExtra(IMConnectionActivity.DST_UUID, srcUuid);
         //resultIntent.putExtra(IMConnectionActivity.DST_NAME, HuxinSdkManager.instance().getContactName(srcPhone));
         // The stack builder object will contain an artificial back stack for the
         // started Activity.
@@ -471,7 +505,11 @@ public class IMMsgManager {
         if (mainClass != null) {
             stackBuilder.addNextIntentWithParentStack(new Intent(context, mainClass));
         } else {
-            stackBuilder.addParentStack(IMConnectionActivity.class);
+            if (isGroup) {
+                stackBuilder.addParentStack(ChatDetailsActivity.class);
+            } else {
+                stackBuilder.addParentStack(IMConnectionActivity.class);
+            }
         }
 
         // Adds the Intent that starts the Activity to the top of the stack
@@ -485,7 +523,7 @@ public class IMMsgManager {
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
         boolean isNotBadge = CallInfo.IsCalling()
-                || (AppUtils.isTopActiviy(mContext, "com.youmai.hxsdk.activity.IMConnectionActivity") && targetPhone.equals(srcPhone));
+                || (AppUtils.isTopActiviy(mContext, "com.youmai.hxsdk.activity.IMConnectionActivity") && targetPhone.equals(srcUuid));
 
         if (isNotBadge) {
             //for 隐藏不该收到的通知,会崩 小米手机必须设置small icon
@@ -495,10 +533,10 @@ public class IMMsgManager {
         } else {
             // mId allows you to update the notification later on.
             notificationManager.notify(notifyID, builder.build());
-            addNotifyCount(srcPhone, notifyID);   //添加通知栏消息
+            addNotifyCount(srcUuid, notifyID);   //添加通知栏消息
 
             if (!isFormPush) {
-                addBadge(srcPhone);   //添加桌面圆点
+                addBadge(srcUuid);   //添加桌面圆点
             }
         }
     }

@@ -26,7 +26,7 @@ public class IMChat {
         mJsonBody = imChat.getMsgContent();
         mMsgType = imChat.getContentType().getNumber();
         mContent = new MsgContent(mMsgType, mJsonBody);
-        updateCacheBean();
+        updateCacheBean(imChat);
     }
 
     public IMChat(String pushMsg) {
@@ -39,21 +39,21 @@ public class IMChat {
     }
 
 
-    private void updateCacheBean() {
+    private void updateCacheBean(YouMaiMsg.MsgData imChat) {
         mMsgBean = new CacheMsgBean();
-        mMsgBean.setSenderUserId(mImChat.getSrcUserId())
-                .setSenderSex(mImChat.getSrcSex())
-                .setSenderMobile(mImChat.getSrcMobile())
-                .setSenderAvatar(mImChat.getSrcAvatar())
-                .setSenderRealName(mImChat.getSrcRealname())
-                .setTargetUuid(mImChat.getSrcUserId())
-                .setTargetName(mImChat.getSrcRealname())
-                .setReceiverUserId(mImChat.getDestUserId())
-                .setGroupId(mImChat.getGroupId())
+        mMsgBean.setSenderUserId(imChat.getSrcUserId())
+                .setSenderSex(imChat.getSrcSex())
+                .setSenderMobile(imChat.getSrcMobile())
+                .setSenderAvatar(imChat.getSrcAvatar())
+                .setSenderRealName(imChat.getSrcRealname())
+                .setTargetUuid(imChat.getSrcUserId())
+                .setTargetName(imChat.getSrcRealname())
+                .setReceiverUserId(imChat.getDestUserId())
+                .setGroupId(imChat.getGroupId())
                 .setMsgTime(System.currentTimeMillis())
                 .setMsgStatus(CacheMsgBean.RECEIVE_UNREAD)
-                .setMsgId(mImChat.getMsgId())
-                .setContentJsonBody(mJsonBody);
+                .setMsgId(imChat.getMsgId())
+                .setContentJsonBody(imChat.getMsgContent());
     }
 
 

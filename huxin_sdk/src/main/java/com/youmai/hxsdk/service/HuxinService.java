@@ -250,14 +250,7 @@ public class HuxinService extends Service {
 
         createTcp();
 
-        HuxinSdkManager.instance().setNotifyListener(
-                IMMsgManager.instance().getIMListener());
-
-        HuxinSdkManager.instance().setNotifyListener(
-                IMMsgManager.instance().getBulletinListener());
-
-        HuxinSdkManager.instance().setNotifyListener(
-                IMMsgManager.instance().getOnDeviceKickedNotify());
+        IMMsgManager.instance().addChatListener();
     }
 
 
@@ -320,11 +313,7 @@ public class HuxinService extends Service {
 
         HuxinSdkManager.instance().destroy();
 
-        HuxinSdkManager.instance().clearNotifyListener(
-                IMMsgManager.instance().getIMListener());
-
-        HuxinSdkManager.instance().clearNotifyListener(
-                IMMsgManager.instance().getBulletinListener());
+        IMMsgManager.instance().removeChatListener();
 
         LogFile.inStance().toFile("HuXinService is onDestroy");
         Log.v(TAG, "HuXinService is onDestroy");

@@ -312,7 +312,7 @@ public class IMMsgManager {
                             .setImgUrl(url)
                             .setLatitude(Double.parseDouble(location.getLatitudeStr()))
                             .setLongitude(Double.parseDouble(location.getLongitudeStr()))
-                            .setScale(Integer.parseInt(location.getLongitudeStr()))
+                            .setScale(Integer.parseInt(location.getScaleStr()))
                             .setAddress(mLabelAddress));
 
             //add to db

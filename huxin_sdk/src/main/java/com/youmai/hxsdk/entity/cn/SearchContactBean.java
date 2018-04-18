@@ -28,7 +28,7 @@ public class SearchContactBean implements Comparable<SearchContactBean>, Parcela
     private String simplepinyin;//简拼
     private String simplepT9;//简拼对应T9
     private String iconUrl;
-    private String info; //App 应用信息
+    private String info; //App 应用信息 url
     private long infoId;
     private String searchKey;
     private int searchType = SEARCH_TYPE_NONE;
@@ -37,7 +37,13 @@ public class SearchContactBean implements Comparable<SearchContactBean>, Parcela
     private SearchContactBean nextSearchContactBean;
     private List<String> indexPinyin;
 
+    //联系人 信息
     private String username; //收藏联系人查询员工详情使用
+
+    //app 应用信息
+    private String oauthType = "";
+    private String developerCode = "";
+    private String clientCode = "";
 
     public SearchContactBean() {
 
@@ -60,6 +66,9 @@ public class SearchContactBean implements Comparable<SearchContactBean>, Parcela
         this.wholePinYinFindIndex = bean.getWholePinYinFindIndex();
         this.indexPinyin = bean.indexPinyin;
         this.username = bean.getUsername();
+        this.oauthType = bean.getOauthType();
+        this.developerCode = bean.getDeveloperCode();
+        this.clientCode = bean.getClientCode();
         if (hasNext) {
             this.nextSearchContactBean = bean.getNextBean();
         }
@@ -83,6 +92,9 @@ public class SearchContactBean implements Comparable<SearchContactBean>, Parcela
         nextSearchContactBean = in.readParcelable(SearchContactBean.class.getClassLoader());
         indexPinyin = in.createStringArrayList();
         username = in.readString();
+        oauthType = in.readString();
+        developerCode = in.readString();
+        clientCode = in.readString();
     }
 
     public static final Creator<SearchContactBean> CREATOR = new Creator<SearchContactBean>() {
@@ -235,6 +247,30 @@ public class SearchContactBean implements Comparable<SearchContactBean>, Parcela
         this.wholePinYinFindIndex = wholePinYinFindIndex;
     }
 
+    public String getOauthType() {
+        return oauthType;
+    }
+
+    public void setOauthType(String oauthType) {
+        this.oauthType = oauthType;
+    }
+
+    public String getDeveloperCode() {
+        return developerCode;
+    }
+
+    public void setDeveloperCode(String developerCode) {
+        this.developerCode = developerCode;
+    }
+
+    public String getClientCode() {
+        return clientCode;
+    }
+
+    public void setClientCode(String clientCode) {
+        this.clientCode = clientCode;
+    }
+
     @Override
     public String toString() {
         return "SearchContactBean{" +
@@ -261,7 +297,6 @@ public class SearchContactBean implements Comparable<SearchContactBean>, Parcela
     @Override
     public int compareTo(SearchContactBean another) {
         return this.wholePinyin.compareTo(another.getWholePinyin());
-
     }
 
     @Override
@@ -271,7 +306,6 @@ public class SearchContactBean implements Comparable<SearchContactBean>, Parcela
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-
         dest.writeInt(contactId);
         dest.writeString(displayName);
         dest.writeString(phoneNum);
@@ -287,6 +321,10 @@ public class SearchContactBean implements Comparable<SearchContactBean>, Parcela
         dest.writeParcelable(mDuoYinzi, flags);
         dest.writeIntArray(wholePinYinFindIndex);
         dest.writeParcelable(nextSearchContactBean, flags);
+        dest.writeString(username);
+        dest.writeString(oauthType);
+        dest.writeString(developerCode);
+        dest.writeString(clientCode);
     }
 
 }

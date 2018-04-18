@@ -3,6 +3,7 @@ package com.youmai.hxsdk.entity.cn;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -18,17 +19,7 @@ public class SearchContactBean implements Comparable<SearchContactBean>, Parcela
     public static final int SEARCH_TYPE_SIMPLE_T9 = 0x0010;
     public static final int SEARCH_TYPE_WHOLE_T9 = 0x0020;
     public static final int SEARCH_TYPE_INFO = 0x0040;
-    public static final Creator<SearchContactBean> CREATOR = new Creator<SearchContactBean>() {
-        @Override
-        public SearchContactBean createFromParcel(Parcel in) {
-            return new SearchContactBean(in);
-        }
 
-        @Override
-        public SearchContactBean[] newArray(int size) {
-            return new SearchContactBean[size];
-        }
-    };
     private int contactId; //id
     private String displayName;//姓名
     private String phoneNum; // 电话号码
@@ -68,6 +59,7 @@ public class SearchContactBean implements Comparable<SearchContactBean>, Parcela
         this.mDuoYinzi = bean.getDuoYinzi();
         this.wholePinYinFindIndex = bean.getWholePinYinFindIndex();
         this.indexPinyin = bean.indexPinyin;
+        this.username = bean.getUsername();
         if (hasNext) {
             this.nextSearchContactBean = bean.getNextBean();
         }
@@ -89,7 +81,21 @@ public class SearchContactBean implements Comparable<SearchContactBean>, Parcela
         mDuoYinzi = in.readParcelable(DuoYinZi.class.getClassLoader());
         wholePinYinFindIndex = in.createIntArray();
         nextSearchContactBean = in.readParcelable(SearchContactBean.class.getClassLoader());
+        indexPinyin = in.createStringArrayList();
+        username = in.readString();
     }
+
+    public static final Creator<SearchContactBean> CREATOR = new Creator<SearchContactBean>() {
+        @Override
+        public SearchContactBean createFromParcel(Parcel in) {
+            return new SearchContactBean(in);
+        }
+
+        @Override
+        public SearchContactBean[] newArray(int size) {
+            return new SearchContactBean[size];
+        }
+    };
 
     public long getInfoId() {
         return infoId;
@@ -213,14 +219,42 @@ public class SearchContactBean implements Comparable<SearchContactBean>, Parcela
         this.username = username;
     }
 
+    public DuoYinZi getDuoYinzi() {
+        return mDuoYinzi;
+    }
+
+    public void setDuoYinzi(DuoYinZi duoYinzi) {
+        this.mDuoYinzi = duoYinzi;
+    }
+
+    public int[] getWholePinYinFindIndex() {
+        return wholePinYinFindIndex;
+    }
+
+    public void setWholePinYinFindIndex(int[] wholePinYinFindIndex) {
+        this.wholePinYinFindIndex = wholePinYinFindIndex;
+    }
+
     @Override
     public String toString() {
-        return "ContactBean{" +
+        return "SearchContactBean{" +
                 "contactId=" + contactId +
                 ", displayName='" + displayName + '\'' +
                 ", phoneNum='" + phoneNum + '\'' +
                 ", wholePinyin='" + wholePinyin + '\'' +
+                ", wholeT9='" + wholeT9 + '\'' +
                 ", simplepinyin='" + simplepinyin + '\'' +
+                ", simplepT9='" + simplepT9 + '\'' +
+                ", iconUrl='" + iconUrl + '\'' +
+                ", info='" + info + '\'' +
+                ", infoId=" + infoId +
+                ", searchKey='" + searchKey + '\'' +
+                ", searchType=" + searchType +
+                ", mDuoYinzi=" + mDuoYinzi +
+                ", wholePinYinFindIndex=" + Arrays.toString(wholePinYinFindIndex) +
+                ", nextSearchContactBean=" + nextSearchContactBean +
+                ", indexPinyin=" + indexPinyin +
+                ", username='" + username + '\'' +
                 '}';
     }
 
@@ -250,24 +284,9 @@ public class SearchContactBean implements Comparable<SearchContactBean>, Parcela
         dest.writeLong(infoId);
         dest.writeString(searchKey);
         dest.writeInt(searchType);
-        dest.writeParcelable(mDuoYinzi,flags);
+        dest.writeParcelable(mDuoYinzi, flags);
         dest.writeIntArray(wholePinYinFindIndex);
         dest.writeParcelable(nextSearchContactBean, flags);
     }
 
-    public DuoYinZi getDuoYinzi() {
-        return mDuoYinzi;
-    }
-
-    public void setDuoYinzi(DuoYinZi duoYinzi) {
-        this.mDuoYinzi = duoYinzi;
-    }
-
-    public int[] getWholePinYinFindIndex() {
-        return wholePinYinFindIndex;
-    }
-
-    public void setWholePinYinFindIndex(int[] wholePinYinFindIndex) {
-        this.wholePinYinFindIndex = wholePinYinFindIndex;
-    }
 }

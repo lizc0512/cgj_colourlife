@@ -64,10 +64,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/rl_title"
-                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
-                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
                 app:cardBackgroundColor="@color/white"
                 app:cardCornerRadius="8dp">
 
@@ -102,6 +102,15 @@
                             android:text="姓名"
                             android:textColor="@color/color_text_black1"
                             android:textSize="24sp" />
+
+                        <ImageView
+                            android:id="@+id/iv_sex"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignBottom="@+id/tv_name"
+                            android:layout_margin="5dp"
+                            android:layout_toRightOf="@+id/tv_name" />
+
                     </RelativeLayout>
 
                     <LinearLayout

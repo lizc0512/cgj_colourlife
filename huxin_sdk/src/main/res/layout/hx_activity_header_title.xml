@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="48dp"
-    android:background="@color/hx_toolbar_bg">
+    android:background="@color/color_theme_main">
 
     <!--android:text="@string/hx_back"-->
     <TextView
@@ -83,6 +83,19 @@
         android:layout_marginRight="2dp"
         android:padding="6dp"
         android:src="@drawable/im_title_more_icon"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/iv_group_img"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="8dp"
+        android:clickable="true"
+        android:padding="6dp"
+        android:src="@drawable/tint_src_add_group_selector"
+        android:tint="@color/tint_color_add_group_selector"
         android:visibility="gone" />
 
     <ImageView

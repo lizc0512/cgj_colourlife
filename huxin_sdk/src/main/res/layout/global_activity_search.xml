@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:layout_alignParentTop="true"
-        android:background="@color/color_text_black1"
+        android:background="@color/color_theme_main"
         android:orientation="horizontal">
 
         <TextView

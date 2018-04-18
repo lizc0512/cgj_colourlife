@@ -63,6 +63,7 @@ import com.youmai.hxsdk.module.filemanager.PickerManager;
 import com.youmai.hxsdk.module.filemanager.activity.FileManagerActivity;
 import com.youmai.hxsdk.module.filemanager.constant.FilePickerConst;
 import com.youmai.hxsdk.module.filemanager.interfaces.PickerRefreshUIListener;
+import com.youmai.hxsdk.module.groupchat.ChatDetailsActivity;
 import com.youmai.hxsdk.module.movierecord.MediaStoreUtils;
 import com.youmai.hxsdk.module.picker.PhotoPickerManager;
 import com.youmai.hxsdk.module.picker.PhotoPreviewActivity;
@@ -142,6 +143,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
 
     private TextView tvTitle;
     private ImageView ivMore;
+    private ImageView ivGroup; //建群
 
     private String dstNickName;  //目标昵称
     private String dstUuid;      //目标UUID
@@ -457,6 +459,15 @@ public class IMConnectionActivity extends SdkBaseActivity implements
                 }
             });
         }
+
+        ivGroup = (ImageView) findViewById(R.id.iv_group_img);
+        ivGroup.setVisibility(View.VISIBLE);
+        ivGroup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(IMConnectionActivity.this, ChatDetailsActivity.class));
+            }
+        });
 
         keyboardLay = (InputMessageLay) findViewById(R.id.keyboard_lay);
         keyboardLay.setOnKeyBoardBarViewListener(this);

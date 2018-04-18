@@ -100,7 +100,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="姓名"
-                            android:textColor="@color/color_text_black1"
+                            android:textColor="@color/color_theme_main"
                             android:textSize="24sp" />
 
                         <ImageView

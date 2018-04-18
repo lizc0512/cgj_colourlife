@@ -2,7 +2,10 @@ package com.tg.coloursteward.module.contact;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Message;
@@ -10,6 +13,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -104,6 +108,43 @@ public class ContactsFragment extends Fragment implements Observer,
 
     private MessageHandler msgHand;
 
+    public static final String BROADCAST_INTENT_FILTER = "com.tg.coloursteward.contact";
+    public static final String ACTION = "action";
+    public static final String INSERT_CONTACT = "insert";
+    public static final String DELETE_CONTACT = "delete";
+    public static final String UPDATE_CONTACT = "update";
+
+    static class ModifyContactsReceiver extends BroadcastReceiver {
+        ContactsFragment mFragment;
+
+        public ModifyContactsReceiver(ContactsFragment fragment) {
+            mFragment = fragment;
+        }
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.e("YW", "收藏联系人有更新的信息到达......");
+            String action = intent.getStringExtra(ACTION);
+            if (action.equals(INSERT_CONTACT)) {
+                mFragment.modifyContactsList();
+            } else if (action.equals(DELETE_CONTACT)) {
+                mFragment.modifyContactsList();
+            }
+        }
+    }
+
+    ModifyContactsReceiver mModifyContactsReceiver;
+
+    void registerReceiver() {
+        mModifyContactsReceiver = new ModifyContactsReceiver(this);
+        IntentFilter intentFilter = new IntentFilter(BROADCAST_INTENT_FILTER);
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mModifyContactsReceiver, intentFilter);
+    }
+
+    void unRegisterReceiver() {
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mModifyContactsReceiver);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_contacts_layout, container, false);
@@ -116,6 +157,8 @@ public class ContactsFragment extends Fragment implements Observer,
         if (!ListUtils.isEmpty(contactList)) {
             contactList.clear();
         }
+        registerReceiver();
+
         rv_main = view.findViewById(R.id.rv_main);
         iv_main = view.findViewById(R.id.iv_main);
         tv_index = view.findViewById(R.id.tv_index);
@@ -139,6 +182,7 @@ public class ContactsFragment extends Fragment implements Observer,
 
     @Override
     public void onDestroy() {
+        unRegisterReceiver();
         if (subscription != null) {
             subscription.unsubscribe();
         }
@@ -338,16 +382,6 @@ public class ContactsFragment extends Fragment implements Observer,
         skincode = Tools.getStringValue(mActivity, Contants.storage.SKINCODE);
         orgName = Tools.getStringValue(mActivity, Contants.storage.ORGNAME);
         orgId = Tools.getStringValue(mActivity, Contants.storage.ORGID);
-        //rlNulllinkman = (RelativeLayout) mView.findViewById(R.id.rl_nulllinkman);//无联系人提示
-        //rlOrganization = (HomeRelativeLayout) mView.findViewById(R.id.rl_organization);//组织架构
-        //rlDepartment = (RelativeLayout) mView.findViewById(R.id.rl_department);//我的部门
-        //rlContacts = (RelativeLayout) mView.findViewById(R.id.rl_contacts);//手机通讯录
-//        tvSection = (TextView) mView.findViewById(R.id.tv_section);
-//        tvOrgName = (TextView) mView.findViewById(R.id.tv_orgName);
-//        tvSection.setText(UserInfo.familyName);
-//        if (StringUtils.isNotEmpty(orgName)) {
-//            tvOrgName.setText(orgName);
-//        }
 
         adapter.setNetworkRequestListener(new ContactAdapter.NetRelativeRequestListener() {
             @Override
@@ -439,6 +473,14 @@ public class ContactsFragment extends Fragment implements Observer,
         }
     }
 
+    void modifyContactsList() {
+        RequestConfig config = new RequestConfig(mActivity, PullRefreshListView.HTTP_FRESH_CODE);
+        config.handler = msgHand.getHandler();
+        RequestParams params = new RequestParams();
+        params.put("uid", UserInfo.employeeAccount);
+        HttpTools.httpGet(Contants.URl.URL_ICETEST, "/phonebook/frequentContacts", config, params);
+    }
+
     /**
      * 获取token
      * sectet
@@ -508,6 +550,7 @@ public class ContactsFragment extends Fragment implements Observer,
         JSONArray json = HttpTools.getContentJsonArray(jsonString);
         if (json != null) {
             Tools.saveLinkManList(mActivity, jsonString);
+            LinkManListCache = jsonString;
             ResponseData data = HttpTools.getResponseContent(json);
             if (json.length() > 0) {
                 //rlNulllinkman.setVisibility(View.GONE);

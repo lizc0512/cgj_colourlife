@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="HxSdkTheme" parent="HxBaseSdkTheme" />
+    <style name="HxSdkTheme" parent="HxColorBaseTheme" />
 
     <!-- Base application theme. -->
     <style name="HxBaseSdkTheme" parent="Theme.AppCompat.Light.NoActionBar">
@@ -8,6 +8,13 @@
         <item name="colorPrimary">@color/hx_main_color</item>
         <item name="colorPrimaryDark">@color/hx_status_color</item>
         <item name="colorAccent">@color/hx_main_color</item>
+        <item name="android:windowBackground">@color/hx_window_background</item>
+    </style>
+
+    <style name="HxColorBaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/color_theme_main</item>
+        <item name="colorPrimaryDark">@color/color_theme_main</item>
+        <item name="colorAccent">@color/color_theme_main</item>
         <item name="android:windowBackground">@color/hx_window_background</item>
     </style>
 

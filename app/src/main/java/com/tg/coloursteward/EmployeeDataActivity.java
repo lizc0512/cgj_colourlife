@@ -11,6 +11,7 @@ import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.info.EmployeePhoneInfo;
 import com.tg.coloursteward.info.GridViewInfo;
 import com.tg.coloursteward.info.UserInfo;
+import com.tg.coloursteward.module.contact.ContactsFragment;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.RequestConfig;
 import com.tg.coloursteward.net.RequestParams;
@@ -27,6 +28,7 @@ import com.youmai.hxsdk.utils.GlideRoundTransform;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -330,10 +332,16 @@ public class EmployeeDataActivity extends BaseActivity {
         } else if (msg.arg1 == HttpTools.SET_EMPLOYEE_INFO) {
             if (code == 0) {
                 ToastFactory.showToast(EmployeeDataActivity.this, "添加收藏成功");
+                Intent intent = new Intent(ContactsFragment.BROADCAST_INTENT_FILTER);
+                intent.putExtra(ContactsFragment.ACTION, ContactsFragment.INSERT_CONTACT);
+                LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
             }
         } else if (msg.arg1 == HttpTools.DELETE_EMPLOYEE_INFO) {
             if (code == 0) {
                 ToastFactory.showToast(EmployeeDataActivity.this, "取消收藏成功");
+                Intent intent = new Intent(ContactsFragment.BROADCAST_INTENT_FILTER);
+                intent.putExtra(ContactsFragment.ACTION, ContactsFragment.DELETE_CONTACT);
+                LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
             }
         }
     }

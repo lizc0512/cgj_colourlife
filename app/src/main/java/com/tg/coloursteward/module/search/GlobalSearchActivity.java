@@ -6,32 +6,25 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 
-import com.alibaba.android.arouter.facade.annotation.Route;
 import com.tg.coloursteward.module.search.app.AppsSearchFragment;
 import com.tg.coloursteward.module.search.data.SearchData;
 import com.youmai.hxsdk.R;
-import com.youmai.hxsdk.router.APath;
 
 /**
  * Created by srsm on 2017/8/21.
  */
-@Route(path = APath.SEARCH_GLOBAL_GROUP)
 public class GlobalSearchActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String TAG_SEARCH_CONTACTS_FRAGMENT = "search_contacts_fragment";
-    private static final String TAG_SEARCH_MESSAGE_FRAGMENT = "search_message_fragment";
+    private static final String TAG_SEARCH_APPS_FRAGMENT = "search_apps_fragment";
 
     private ContactsSearchFragment mContactsSearchFragment;
-    private AppsSearchFragment mMessageSearchFragment;
+    private AppsSearchFragment mAppsSearchFragment;
     private SearchFragment.OnLoadFinishListener mLoadFinishListener;
-
-    private View mSearchStatusContainer;
-    private View mSearchEmptyButtonContainer;
 
     private SearchEditText mSearchEditText;
     private TextView mBtnBackMain;
     private TextView mBtnBack;
-    private TextView mSearchStatus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,10 +38,9 @@ public class GlobalSearchActivity extends AppCompatActivity implements View.OnCl
         mContactsSearchFragment.setOnLoadFinishListener(mLoadFinishListener);
         transaction.add(R.id.contacts_search_container, mContactsSearchFragment, TAG_SEARCH_CONTACTS_FRAGMENT);
 
-
-        mMessageSearchFragment = new AppsSearchFragment();
-        mMessageSearchFragment.setOnLoadFinishListener(mLoadFinishListener);
-        transaction.add(R.id.message_search_container, mMessageSearchFragment, TAG_SEARCH_MESSAGE_FRAGMENT);
+        mAppsSearchFragment = new AppsSearchFragment();
+        mAppsSearchFragment.setOnLoadFinishListener(mLoadFinishListener);
+        transaction.add(R.id.apps_search_container, mAppsSearchFragment, TAG_SEARCH_APPS_FRAGMENT);
 
         transaction.commitAllowingStateLoss();
     }
@@ -77,12 +69,12 @@ public class GlobalSearchActivity extends AppCompatActivity implements View.OnCl
                     mContactsSearchFragment.setQueryString(queryStr);
                     mContactsSearchFragment.reset();
                 }
-                if (mMessageSearchFragment != null) {
-                    if (mMessageSearchFragment.isHidden()) {
-                        transaction.show(mMessageSearchFragment);
+                if (mAppsSearchFragment != null) {
+                    if (mAppsSearchFragment.isHidden()) {
+                        transaction.show(mAppsSearchFragment);
                     }
-                    mMessageSearchFragment.setQueryString(queryStr);
-                    mMessageSearchFragment.reset();
+                    mAppsSearchFragment.setQueryString(queryStr);
+                    mAppsSearchFragment.reset();
                 }
                 transaction.commit();
             }
@@ -91,22 +83,12 @@ public class GlobalSearchActivity extends AppCompatActivity implements View.OnCl
         mBtnBack = (TextView) findViewById(R.id.global_search_bar_cancel);
         mBtnBack.setOnClickListener(this);
 
-        mSearchStatusContainer = findViewById(R.id.global_search_status_container);
-        mSearchEmptyButtonContainer = findViewById(R.id.global_search_empty_button_container);
-
-        mSearchStatus = (TextView) findViewById(R.id.global_search_status);
-        mSearchStatus.setText(R.string.hx_common_global_can_input);
-
         mLoadFinishListener = new SearchFragment.OnLoadFinishListener() {
             @Override
             public void onFinishCallback(boolean finish, String query) {
                 // 多个回调，有先后...
                 synchronized (this) {
-                    if (finish) {
-                        mSearchStatusContainer.setVisibility(View.GONE);
-                    } else {
-                        mSearchStatusContainer.setVisibility(View.VISIBLE);
-                    }
+
                 }
             }
 
@@ -116,7 +98,7 @@ public class GlobalSearchActivity extends AppCompatActivity implements View.OnCl
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
                 if (fragmentTag.equals(TAG_SEARCH_CONTACTS_FRAGMENT)) {
-                    transaction.hide(mMessageSearchFragment);
+                    transaction.hide(mAppsSearchFragment);
                 } else {
                     transaction.hide(mContactsSearchFragment);
                 }
@@ -139,11 +121,11 @@ public class GlobalSearchActivity extends AppCompatActivity implements View.OnCl
                 }
                 mContactsSearchFragment.reset();
             }
-            if (mMessageSearchFragment != null) {
-                if (mMessageSearchFragment.isHidden()) {
-                    transaction.show(mMessageSearchFragment);
+            if (mAppsSearchFragment != null) {
+                if (mAppsSearchFragment.isHidden()) {
+                    transaction.show(mAppsSearchFragment);
                 }
-                mMessageSearchFragment.reset();
+                mAppsSearchFragment.reset();
             }
             transaction.commit();
         }

@@ -98,8 +98,8 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                             .centerCrop()
                             .override(120, 120)
                             .transform(new GlideRoundTransform(mContext))
-                            .placeholder(R.drawable.contacts_common_default_user_bg)
-                            .error(R.drawable.contacts_common_default_user_bg);
+                            .placeholder(R.drawable.color_default_header)
+                            .error(R.drawable.color_default_header);
                     Glide.with(mContext)
                             .load(contact.getAvatar())
                             .apply(options)

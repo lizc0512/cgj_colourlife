@@ -144,16 +144,6 @@ public class SearchData implements MessageHandler.ResponseListener {
         for (int i = 0; i < data.length; i++) {
             appsBean = new SearchContactBean();
             String hanzi = data.getString(i, "name");
-            try {
-                appsBean.setDisplayName(hanzi);
-                appsBean.setIconUrl(data.getString(i, "url"));
-                JSONObject icon = data.getJSONObject(i, "icon");
-                if (icon != null || icon.length() > 0) {
-                    appsBean.setInfo(icon.getString("android"));
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
 
             StringBuffer ch = new StringBuffer();
             StringBuffer pinyin = new StringBuffer();
@@ -163,6 +153,20 @@ public class SearchData implements MessageHandler.ResponseListener {
                 pinyin.append(Pinyin.toPinyin(hanzi.charAt(j)).toUpperCase());
                 ch.append(Pinyin.toPinyin(hanzi.charAt(j)).substring(0, 1));
                 chStr.add(Pinyin.toPinyin(hanzi.charAt(j)));
+            }
+
+            try {
+                appsBean.setDisplayName(hanzi);
+                appsBean.setInfo(data.getString(i, "url"));
+                appsBean.setOauthType(data.getString(i, "oauthType"));
+                appsBean.setDeveloperCode(data.getString(i, "app_code"));
+                appsBean.setClientCode(data.getString(i, "app_code"));
+                JSONObject icon = data.getJSONObject(i, "icon");
+                if (icon != null || icon.length() > 0) {
+                    appsBean.setIconUrl(icon.getString("android"));
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
 
             appsBean.setWholePinyin(pinyin.toString());

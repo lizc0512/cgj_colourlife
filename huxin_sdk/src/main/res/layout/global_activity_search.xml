@@ -64,9 +64,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
-            
-            <include layout="@layout/global_activity_search_empty_layout"
-                android:visibility="gone"/>
 
             <FrameLayout
                 android:id="@+id/contacts_search_container"
@@ -76,38 +73,13 @@
                 android:clipChildren="false" />
 
             <FrameLayout
-                android:id="@+id/message_search_container"
+                android:id="@+id/apps_search_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clipChildren="false" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="36dp"
-                android:gravity="center"
-                android:orientation="horizontal">
+            <include layout="@layout/global_bottom_tip" />
 
-                <View
-                    android:layout_width="40dp"
-                    android:layout_height="1px"
-                    android:background="#979797" />
-
-                <TextView
-                    android:id="@+id/group_empty_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:textColor="#979797"
-                    android:gravity="center"
-                    android:text="把社区服务做到家" />
-
-                <View
-                    android:layout_width="40dp"
-                    android:layout_height="1px"
-                    android:background="#979797" />
-
-            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

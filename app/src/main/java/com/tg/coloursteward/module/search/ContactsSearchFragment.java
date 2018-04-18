@@ -1,6 +1,6 @@
 package com.tg.coloursteward.module.search;
 
-import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
@@ -14,16 +14,15 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.tg.coloursteward.EmployeeDataActivity;
 import com.youmai.hxsdk.R;
-import com.youmai.hxsdk.db.bean.Contact;
-import com.youmai.hxsdk.entity.cn.CNPinyin;
+import com.youmai.hxsdk.entity.cn.SearchContactBean;
 
 import java.util.ArrayList;
 
 /**
  * Created by srsm on 2017/8/24.
  */
-
 public class ContactsSearchFragment<T extends Parcelable> extends SearchFragment implements
         LoaderManager.LoaderCallbacks<ArrayList<T>>, GlobalSearchAdapter.GlobalSearchAdapterListener {
 
@@ -117,10 +116,20 @@ public class ContactsSearchFragment<T extends Parcelable> extends SearchFragment
     @Override
     public void onItemClick(Object item) {
         Toast.makeText(getContext(), "onItemClick", Toast.LENGTH_SHORT).show();
+        String username = ((SearchContactBean) item).getUsername();
+        Intent i = new Intent(getActivity(), EmployeeDataActivity.class);
+        i.putExtra(EmployeeDataActivity.CONTACTS_ID, username);
+        startActivity(i);
     }
 
     @Override
     public void onMoreItemClick() {
         Toast.makeText(getContext(), "onMoreItemClick", Toast.LENGTH_SHORT).show();
+        if (getOnLoadFinishListener() != null) {
+            getOnLoadFinishListener().onWhoShowMoreCallback(getTag());
+        }
+
+        mGlobalSearchAdapter.setAdapterType(GlobalSearchAdapter.ADAPTER_TYPE_TITLE);
+        mGlobalSearchAdapter.notifyDataSetChanged();
     }
 }

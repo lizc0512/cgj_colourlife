@@ -57,6 +57,7 @@ public class EmployeeDataActivity extends BaseActivity {
     private EmployeePhoneInfo info;
     private TextView tvName, tvJob, tvBranch;
     private ImageView ivHead;
+    private ImageView ivSex;
     private ImageView ivClose;
     private ListView mlListView;
     private View footView;
@@ -93,6 +94,7 @@ public class EmployeeDataActivity extends BaseActivity {
     private void initView() {
         ivHead = (ImageView) findViewById(R.id.iv_head);
         //ivHead.setCircleShape();
+        ivSex = (ImageView) findViewById(R.id.iv_sex);
         tvName = (TextView) findViewById(R.id.tv_name);
         tvJob = (TextView) findViewById(R.id.tv_job);
         tvBranch = (TextView) findViewById(R.id.tv_branch);
@@ -239,6 +241,11 @@ public class EmployeeDataActivity extends BaseActivity {
                             .into(ivHead);
                 } catch (Exception e) {
                     e.printStackTrace();
+                }
+                if (item.getSex().equals("女")) {
+                    ivSex.setImageResource(R.drawable.employee_female);
+                } else {
+                    ivSex.setImageResource(R.drawable.employee_male);
                 }
                 //VolleyUtils.getImage(this, item.icon, ivHead, R.drawable.moren_geren);
                 if (item.getIsFavorite().equals("1")) {

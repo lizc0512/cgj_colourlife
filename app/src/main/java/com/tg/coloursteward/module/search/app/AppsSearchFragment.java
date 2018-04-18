@@ -11,13 +11,14 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 
+import com.tg.coloursteward.DoorActivity;
+import com.tg.coloursteward.PublicAccountActivity;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.module.search.GlobalSearchAdapter;
 import com.tg.coloursteward.module.search.GlobalSearchLoader;
 import com.tg.coloursteward.module.search.SearchFragment;
-import com.youmai.hxsdk.activity.IMConnectionActivity;
+import com.tg.coloursteward.util.AuthTimeUtils;
 import com.youmai.hxsdk.entity.cn.SearchContactBean;
-import com.youmai.hxsdk.view.chat.utils.Utils;
 
 import java.util.ArrayList;
 
@@ -123,31 +124,22 @@ public class AppsSearchFragment<T extends Parcelable> extends SearchFragment imp
 
     @Override
     public void onItemClick(Object item) {
-        SearchContactBean bean = (SearchContactBean) item;
-        if (bean.getNextBean() != null) {
-
-            Intent moreIntent = new Intent();
-            //moreIntent.setClass(getActivity(), MessageGlobalSearchViewActivity.class);
-            //moreIntent.putParcelableArrayListExtra("moreSearchList", searchBeanList);
-            moreIntent.putExtra("adapter_type", GlobalSearchAdapter.ADAPTER_TYPE_TITLE);
-            moreIntent.putExtra("target_phone", bean.getPhoneNum());
-            moreIntent.putExtra("target_query", bean.getSearchKey());
-
-            getActivity().startActivity(moreIntent);
+        SearchContactBean info = (SearchContactBean) item;
+        if (info.getClientCode().equals("smkm")) {//扫码开门
+            startActivity(new Intent(getActivity(), DoorActivity.class));
+        } else if (info.getClientCode().equals("dgzh")) {//对公账户
+            startActivity(new Intent(getActivity(), PublicAccountActivity.class));
         } else {
-            Utils.closeSoftKeyboard(getActivity());
-            Intent intent = new Intent(getActivity(), IMConnectionActivity.class);
-            intent.putExtra(IMConnectionActivity.DST_PHONE, bean.getPhoneNum());
-            intent.putExtra(IMConnectionActivity.DST_NAME, bean.getDisplayName());
-            //intent.putExtra(IMConnectionActivity.DST_CONTACT_ID, bean.getContactId());
-            intent.putExtra(IMConnectionActivity.EXTRA_SCROLL_POSITION, bean.getInfoId());
-            startActivity(intent);
+            if (info.getInfo() != "") {
+                AuthTimeUtils mAuthTimeUtils = new AuthTimeUtils();
+                mAuthTimeUtils.IsAuthTime(getActivity(), info.getInfo(),
+                        info.getClientCode(), info.getOauthType(), info.getDeveloperCode(), "");
+            }
         }
     }
 
     @Override
     public void onMoreItemClick() {
-
         if (getOnLoadFinishListener() != null) {
             getOnLoadFinishListener().onWhoShowMoreCallback(getTag());
         }

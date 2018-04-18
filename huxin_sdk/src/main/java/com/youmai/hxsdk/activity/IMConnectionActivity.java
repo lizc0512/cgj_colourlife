@@ -51,7 +51,7 @@ import com.youmai.hxsdk.im.IMMsgCallback;
 import com.youmai.hxsdk.im.IMMsgManager;
 import com.youmai.hxsdk.im.cache.CacheMsgEmotion;
 import com.youmai.hxsdk.im.cache.CacheMsgFile;
-import com.youmai.hxsdk.im.cache.CacheMsgHelper;
+import com.youmai.hxsdk.db.helper.CacheMsgHelper;
 import com.youmai.hxsdk.im.cache.CacheMsgImage;
 import com.youmai.hxsdk.im.cache.CacheMsgMap;
 import com.youmai.hxsdk.im.cache.CacheMsgTxt;
@@ -685,7 +685,9 @@ public class IMConnectionActivity extends SdkBaseActivity implements
         CacheMsgBean cacheMsgBean = getBaseMsg();
         cacheMsgBean.setMsgType(CacheMsgBean.SEND_LOCATION)
                 .setJsonBodyObj(new CacheMsgMap()
-                        .setLocation(longitude + "," + latitude)
+                        .setLongitude(longitude)
+                        .setLatitude(latitude)
+                        .setScale(zoomLevel)
                         .setAddress(address)
                         .setImgUrl(url));
 
@@ -795,14 +797,19 @@ public class IMConnectionActivity extends SdkBaseActivity implements
     }
 
 
+    private static final int TO_PICTURE = 1;
+    private static final int TO_LOCATION = 2;
+
+
     /**
      * 发位置
      */
     private void sendLocation() {
         Intent intent = new Intent();
-        intent.putExtra("is_user_by_im", true);
+        intent.putExtra(LocationActivity.FROM_TO_IM, true);
+        intent.putExtra(LocationActivity.DST_UUID, dstUuid);
         intent.setClass(this, LocationActivity.class);
-        startActivityForResult(intent, 2);
+        startActivityForResult(intent, TO_LOCATION);
     }
 
     @Override
@@ -868,10 +875,10 @@ public class IMConnectionActivity extends SdkBaseActivity implements
                 }
             }
 
-        } else if (requestCode == 1 && resultCode == 1) { //图片
+        } else if (requestCode == TO_PICTURE && resultCode == Activity.RESULT_OK) { //图片
             final String filePath = data.getStringExtra("path");
             sendTakenPic(filePath, isOriginal);
-        } else if (requestCode == 2 && resultCode == 1) {  //地图
+        } else if (requestCode == TO_LOCATION && resultCode == Activity.RESULT_OK) {  //地图
             sendMap(data);
         } else if (requestCode == FilePickerConst.REQUEST_CODE_DOC && resultCode == Activity.RESULT_OK) {
             //交换名片编辑名片返回 发送(用不到)

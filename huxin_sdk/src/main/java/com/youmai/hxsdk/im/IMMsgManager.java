@@ -27,7 +27,7 @@ import com.youmai.hxsdk.http.DownloadListener;
 import com.youmai.hxsdk.http.FileAsyncTaskDownload;
 import com.youmai.hxsdk.im.cache.CacheMsgEmotion;
 import com.youmai.hxsdk.im.cache.CacheMsgFile;
-import com.youmai.hxsdk.im.cache.CacheMsgHelper;
+import com.youmai.hxsdk.db.helper.CacheMsgHelper;
 import com.youmai.hxsdk.im.cache.CacheMsgImage;
 import com.youmai.hxsdk.im.cache.CacheMsgMap;
 import com.youmai.hxsdk.im.cache.CacheMsgTxt;
@@ -297,21 +297,22 @@ public class IMMsgManager {
             handlerIMMsgCallback(cacheMsgBean);
         } else if (im.getMsgType() == YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_LOCATION_VALUE) { //定位
 
-            ContentLocation mLocation = im.getContent().getLocation();
-            final String location = mLocation.getLongitudeStr() + "," + mLocation.getLatitudeStr();
-            final String mLabelAddress = mLocation.getLabelStr();
-            final String scale = mLocation.getScaleStr();
+            ContentLocation location = im.getContent().getLocation();
+            final String mLabelAddress = location.getLabelStr();
+            final String scale = location.getScaleStr();
 
             String url = "http://restapi.amap.com/v3/staticmap?location="
-                    + mLocation.getLongitudeStr() + "," + mLocation.getLatitudeStr() + "&zoom=" + scale
-                    + "&size=720*550&traffic=1&markers=mid,0xff0000,A:" + mLocation.getLongitudeStr()
-                    + "," + mLocation.getLatitudeStr() + "&key=" + AppConfig.staticMapKey;
+                    + location.getLongitudeStr() + "," + location.getLatitudeStr() + "&zoom=" + scale
+                    + "&size=720*550&traffic=1&markers=mid,0xff0000,A:" + location.getLongitudeStr()
+                    + "," + location.getLatitudeStr() + "&key=" + AppConfig.staticMapKey;
 
             //todo_k: 地图
             cacheMsgBean.setMsgType(CacheMsgBean.RECEIVE_LOCATION)
                     .setJsonBodyObj(new CacheMsgMap()
                             .setImgUrl(url)
-                            .setLocation(location)
+                            .setLatitude(Double.parseDouble(location.getLatitudeStr()))
+                            .setLongitude(Double.parseDouble(location.getLongitudeStr()))
+                            .setScale(Integer.parseInt(location.getLongitudeStr()))
                             .setAddress(mLabelAddress));
 
             //add to db
@@ -588,8 +589,6 @@ public class IMMsgManager {
         }
         return sum;
     }
-
-
 
 
     public List<Integer> getPushMsgNotifyIdList() {

@@ -15,44 +15,41 @@ import org.json.JSONObject;
  */
 public class CacheMsgMap implements Parcelable, JsonFormat<CacheMsgMap> {
 
-    public String address;
-
-    public String location;
-
-    public String imgUrl;
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.address);
-        dest.writeString(this.location);
-        dest.writeString(this.imgUrl);
-    }
+    private double longitude;
+    private double latitude;
+    private int scale;
+    private String address;
+    private String imgUrl;
 
     public CacheMsgMap() {
     }
 
-    protected CacheMsgMap(Parcel in) {
-        this.address = in.readString();
-        this.location = in.readString();
-        this.imgUrl = in.readString();
+    public double getLongitude() {
+        return longitude;
     }
 
-    public static final Parcelable.Creator<CacheMsgMap> CREATOR = new Parcelable.Creator<CacheMsgMap>() {
-        @Override
-        public CacheMsgMap createFromParcel(Parcel source) {
-            return new CacheMsgMap(source);
-        }
+    public CacheMsgMap setLongitude(double longitude) {
+        this.longitude = longitude;
+        return this;
+    }
 
-        @Override
-        public CacheMsgMap[] newArray(int size) {
-            return new CacheMsgMap[size];
-        }
-    };
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public CacheMsgMap setLatitude(double latitude) {
+        this.latitude = latitude;
+        return this;
+    }
+
+    public int getScale() {
+        return scale;
+    }
+
+    public CacheMsgMap setScale(int scale) {
+        this.scale = scale;
+        return this;
+    }
 
     public String getAddress() {
         return address;
@@ -60,15 +57,6 @@ public class CacheMsgMap implements Parcelable, JsonFormat<CacheMsgMap> {
 
     public CacheMsgMap setAddress(String address) {
         this.address = address;
-        return this;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public CacheMsgMap setLocation(String location) {
-        this.location = location;
         return this;
     }
 
@@ -90,22 +78,50 @@ public class CacheMsgMap implements Parcelable, JsonFormat<CacheMsgMap> {
     public CacheMsgMap fromJson(String jsonStr) {
         try {
             JSONObject jsonObject = new JSONObject(jsonStr);
+            longitude = jsonObject.optDouble("longitude");
+            latitude = jsonObject.optDouble("latitude");
+            scale = jsonObject.optInt("scale");
             address = jsonObject.optString("address");
-            location = jsonObject.optString("location");
             imgUrl = jsonObject.optString("imgUrl");
+
         } catch (Exception e) {
             e.printStackTrace();
         }
         return this;
     }
 
+
     @Override
-    public JsonFormat cloneProto(JsonFormat body) {
-        CacheMsgMap cacheMsgMap = (CacheMsgMap) body;
-        cacheMsgMap.setAddress(address)
-                .setImgUrl(imgUrl)
-                .setAddress(address)
-                .setLocation(location);
-        return cacheMsgMap;
+    public int describeContents() {
+        return 0;
     }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeDouble(this.longitude);
+        dest.writeDouble(this.latitude);
+        dest.writeInt(this.scale);
+        dest.writeString(this.address);
+        dest.writeString(this.imgUrl);
+    }
+
+    protected CacheMsgMap(Parcel in) {
+        this.longitude = in.readDouble();
+        this.latitude = in.readDouble();
+        this.scale = in.readInt();
+        this.address = in.readString();
+        this.imgUrl = in.readString();
+    }
+
+    public static final Creator<CacheMsgMap> CREATOR = new Creator<CacheMsgMap>() {
+        @Override
+        public CacheMsgMap createFromParcel(Parcel source) {
+            return new CacheMsgMap(source);
+        }
+
+        @Override
+        public CacheMsgMap[] newArray(int size) {
+            return new CacheMsgMap[size];
+        }
+    };
 }

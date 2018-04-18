@@ -34,11 +34,9 @@ import com.youmai.hxsdk.db.bean.CacheMsgBean;
 import com.youmai.hxsdk.http.DownloadListener;
 import com.youmai.hxsdk.http.FileAsyncTaskDownload;
 import com.youmai.hxsdk.im.IMHelper;
-import com.youmai.hxsdk.im.IMMsgManager;
 import com.youmai.hxsdk.im.cache.CacheMsgFile;
-import com.youmai.hxsdk.im.cache.CacheMsgHelper;
+import com.youmai.hxsdk.db.helper.CacheMsgHelper;
 import com.youmai.hxsdk.im.cache.CacheMsgImage;
-import com.youmai.hxsdk.im.cache.CacheMsgJoke;
 import com.youmai.hxsdk.im.cache.CacheMsgMap;
 import com.youmai.hxsdk.im.cache.CacheMsgTxt;
 import com.youmai.hxsdk.im.cache.CacheMsgVideo;
@@ -527,14 +525,8 @@ public class IMListAdapter extends RecyclerView.Adapter {
     private void onBindTxt(TxtViewHolder txtViewHolder, final int position) {
         final CacheMsgBean cacheMsgBean = mImBeanList.get(position);
 
-        String txtContent;
-        if (cacheMsgBean.getJsonBodyObj() instanceof CacheMsgTxt) {
-            CacheMsgTxt cacheMsgTxt = (CacheMsgTxt) cacheMsgBean.getJsonBodyObj();
-            txtContent = cacheMsgTxt.getMsgTxt();
-        } else {
-            CacheMsgJoke cacheMsgJoke = (CacheMsgJoke) cacheMsgBean.getJsonBodyObj();
-            txtContent = cacheMsgJoke.getMsgJoke().replace(CacheMsgJoke.JOKES, "");
-        }
+        CacheMsgTxt cacheMsgTxt = (CacheMsgTxt) cacheMsgBean.getJsonBodyObj();
+        String txtContent = cacheMsgTxt.getMsgTxt();
 
         showSendStart(txtViewHolder, cacheMsgBean.getMsgStatus(), cacheMsgBean, position);
 
@@ -634,7 +626,8 @@ public class IMListAdapter extends RecyclerView.Adapter {
 
         String mapUrl = cacheMsgMap.getImgUrl();
         final String mapAddr = cacheMsgMap.getAddress();
-        final String mapLocation = cacheMsgMap.getLocation();
+        final double latitude = cacheMsgMap.getLatitude();
+        final double longitude = cacheMsgMap.getLongitude();
 
         showSendStart(mapViewHolder, cacheMsgBean.getMsgStatus(), cacheMsgBean, position);
 
@@ -656,7 +649,8 @@ public class IMListAdapter extends RecyclerView.Adapter {
 
                 intent.setClass(mContext, CropMapActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra("location", mapLocation);
+                intent.putExtra("latitude", latitude);
+                intent.putExtra("longitude", longitude);
                 intent.putExtra("labelAddress", mapAddr);
                 mContext.startActivity(intent);
             }

@@ -2,18 +2,12 @@ package com.tg.coloursteward.module.meassage;
 
 import android.content.Context;
 import android.support.v4.content.AsyncTaskLoader;
-import android.util.Log;
 
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
-import com.youmai.hxsdk.db.dao.CacheMsgBeanDao;
-import com.youmai.hxsdk.db.manager.GreenDBIMManager;
-import com.youmai.hxsdk.im.cache.CacheMsgHelper;
-
-import org.greenrobot.greendao.query.Query;
+import com.youmai.hxsdk.db.helper.CacheMsgHelper;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 /*

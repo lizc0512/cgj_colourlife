@@ -75,14 +75,11 @@ public class MapViewUtil implements LocationSource, AMapLocationListener, AMap.O
         }
     }
 
-    public void setLocation(String location) {
+
+    public void setLocation(double latitude, double longitude) {
         try {
-
             aMap.setLocationSource(null);
-            String[] spit = location.split(",");
-
-            latLng = new LatLng(Double.parseDouble(spit[1]), Double.parseDouble(spit[0]));
-
+            latLng = new LatLng(latitude, longitude);
             addMarkersToMap(latLng);
 
         } catch (Exception e) {
@@ -90,8 +87,9 @@ public class MapViewUtil implements LocationSource, AMapLocationListener, AMap.O
         }
     }
 
-    public void toDaoHang(LatLng hisLatlng) {
-        if (hisLatlng == null) {
+
+    public void toDaoHang(double latitude, double longitude) {
+        if (latitude == 0 || longitude == 0) {
             return;
         }
 
@@ -103,9 +101,9 @@ public class MapViewUtil implements LocationSource, AMapLocationListener, AMap.O
                         "android.intent.action.VIEW",
                         android.net.Uri
                                 .parse("androidamap://navi?sourceApplication=huxin&lat="
-                                        + hisLatlng.latitude
+                                        + latitude
                                         + "&lon="
-                                        + hisLatlng.longitude
+                                        + longitude
                                         + "&dev=0&style=2"));
                 intent.setPackage("com.autonavi.minimap");
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -150,8 +148,8 @@ public class MapViewUtil implements LocationSource, AMapLocationListener, AMap.O
                 // 尝试调用百度地图
                 double fromLoc[] = gcjToBd09(aMapLocation.getLongitude(),
                         aMapLocation.getLatitude());
-                double toLoc[] = gcjToBd09(hisLatlng.longitude,
-                        hisLatlng.latitude);
+                double toLoc[] = gcjToBd09(longitude,
+                        latitude);
 
                 StringBuilder loc = new StringBuilder();
                 loc.append("intent://map/direction?origin=latlng:");

@@ -83,10 +83,4 @@ public class CacheMsgEmotion implements Parcelable, JsonFormat<CacheMsgEmotion> 
         }
     };
 
-    @Override
-    public JsonFormat cloneProto(JsonFormat body) {
-        CacheMsgEmotion cacheMsgEmotion = (CacheMsgEmotion) body;
-        cacheMsgEmotion.setEmotion(emotionContent, emotionRes);
-        return cacheMsgEmotion;
-    }
 }

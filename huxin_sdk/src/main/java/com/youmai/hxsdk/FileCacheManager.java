@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.bumptech.glide.Glide;
 import com.youmai.hxsdk.config.FileConfig;
-import com.youmai.hxsdk.im.cache.CacheMsgHelper;
+import com.youmai.hxsdk.db.helper.CacheMsgHelper;
 import com.youmai.hxsdk.utils.LogUtils;
 
 import java.io.File;

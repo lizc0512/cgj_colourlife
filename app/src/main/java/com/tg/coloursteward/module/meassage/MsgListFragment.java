@@ -22,7 +22,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import com.alibaba.android.arouter.launcher.ARouter;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.module.search.GlobalSearchActivity;
@@ -31,8 +30,7 @@ import com.youmai.hxsdk.activity.IMConnectionActivity;
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
 import com.youmai.hxsdk.im.IMMsgCallback;
 import com.youmai.hxsdk.im.IMMsgManager;
-import com.youmai.hxsdk.im.cache.CacheMsgHelper;
-import com.youmai.hxsdk.router.APath;
+import com.youmai.hxsdk.db.helper.CacheMsgHelper;
 import com.youmai.hxsdk.utils.ToastUtil;
 import com.youmai.hxsdk.view.refresh.OnRecyclerScrollListener;
 

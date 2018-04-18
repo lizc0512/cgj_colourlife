@@ -32,8 +32,9 @@ public class CropMapActivity extends SdkBaseActivity {
 
         mapActivity = this;
 
-        String location = getIntent().getStringExtra("location");
-        String mLabelAddress = getIntent().getStringExtra("labelAddress");
+        final double latitude = getIntent().getDoubleExtra("latitude", 0);
+        final double longitude = getIntent().getDoubleExtra("longitude", 0);
+        String address = getIntent().getStringExtra("labelAddress");
 
         MapView mMapView = (MapView) findViewById(R.id.fm_msg_map);
         TextView tv_location_address = (TextView) findViewById(R.id.tv_location_address);
@@ -44,37 +45,34 @@ public class CropMapActivity extends SdkBaseActivity {
 
         mMapViewUtil = new MapViewUtil(this, mMapView);
         mMapViewUtil.onCreate(null);
-        mMapViewUtil.setLocation(location);//标志物
+        mMapViewUtil.setLocation(latitude, longitude);//标志物
 
-        if (!StringUtils.isEmpty(location)) {
-            final LatLng latLng1 = new LatLng(
-                    Double.parseDouble(location.split(",")[1]),
-                    Double.parseDouble(location.split(",")[0]));
-            iv_navigate.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {//导航
-                    setFloatView(false);
-                    mMapViewUtil.toDaoHang(latLng1);
-                }
-            });
-        }
 
-        if (!StringUtils.isEmpty(mLabelAddress)) {
+        iv_navigate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {//导航
+                setFloatView(false);
+                mMapViewUtil.toDaoHang(latitude, longitude);
+            }
+        });
+
+
+        if (!StringUtils.isEmpty(address)) {
             try {
-                if (mLabelAddress.contains(":")) {
+                if (address.contains(":")) {
                     tv_location_address.setVisibility(View.VISIBLE);
-                    tv_location_address.setText(mLabelAddress.split(":")[0]);
+                    tv_location_address.setText(address.split(":")[0]);
                     tv_location_long_address.setVisibility(View.VISIBLE);
-                    tv_location_long_address.setText(mLabelAddress.split(":")[1]);
+                    tv_location_long_address.setText(address.split(":")[1]);
                 } else {
                     tv_location_address.setVisibility(View.VISIBLE);
                     tv_location_long_address.setVisibility(View.GONE);
-                    tv_location_address.setText(mLabelAddress);
+                    tv_location_address.setText(address);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
                 tv_location_address.setVisibility(View.VISIBLE);
-                tv_location_address.setText(mLabelAddress);
+                tv_location_address.setText(address);
                 LogUtils.e(Constant.SDK_UI_TAG, "地图位置拆分有异常");
             }
         }

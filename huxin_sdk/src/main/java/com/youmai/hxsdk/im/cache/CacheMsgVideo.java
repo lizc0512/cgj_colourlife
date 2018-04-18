@@ -150,16 +150,4 @@ public class CacheMsgVideo implements Parcelable, JsonFormat<CacheMsgVideo> {
                 '}';
     }
 
-    @Override
-    public JsonFormat cloneProto(JsonFormat body) {
-        CacheMsgVideo cacheMsgVideo = (CacheMsgVideo) body;
-        cacheMsgVideo.setVideoId(videoId)
-                .setVideoPath(videoPath)
-                .setFrameId(frameId)
-                .setFramePath(framePath)
-                .setName(name)
-                .setSize(size)
-                .setTime(time);
-        return cacheMsgVideo;
-    }
 }

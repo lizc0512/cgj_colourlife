@@ -187,16 +187,4 @@ public class CacheMsgVoice implements Parcelable, JsonFormat<CacheMsgVoice> {
         return this;
     }
 
-    @Override
-    public JsonFormat cloneProto(JsonFormat body) {
-        CacheMsgVoice cacheMsgVoice = (CacheMsgVoice) body;
-        cacheMsgVoice.setVoiceUrl(voiceUrl)
-                .setVoicePath(voicePath)
-                .setVoiceTime(voiceTime)
-                .setFid(fid)
-                .setHasLoad(hasLoad)
-                .setVoiceText(voiceText)
-                .setShowText(showText);
-        return cacheMsgVoice;
-    }
 }

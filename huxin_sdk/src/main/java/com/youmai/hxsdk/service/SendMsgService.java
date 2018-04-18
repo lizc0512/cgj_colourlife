@@ -11,12 +11,10 @@ import android.util.Log;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.qiniu.android.storage.UpProgressHandler;
 import com.youmai.hxsdk.HuxinSdkManager;
-import com.youmai.hxsdk.ProtocolCallBack;
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
-import com.youmai.hxsdk.entity.RespBaseBean;
 import com.youmai.hxsdk.im.cache.CacheMsgEmotion;
 import com.youmai.hxsdk.im.cache.CacheMsgFile;
-import com.youmai.hxsdk.im.cache.CacheMsgHelper;
+import com.youmai.hxsdk.db.helper.CacheMsgHelper;
 import com.youmai.hxsdk.im.cache.CacheMsgImage;
 import com.youmai.hxsdk.im.cache.CacheMsgMap;
 import com.youmai.hxsdk.im.cache.CacheMsgTxt;
@@ -198,11 +196,10 @@ public class SendMsgService extends IntentService {
     private void sendMap(final SendMsg msgBean) {
         CacheMsgMap msgBody = (CacheMsgMap) msgBean.getMsg().getJsonBodyObj();
 
-        final String url = msgBody.getImgUrl();
-        final String location = msgBody.getLocation();
-
-        final double longitude = Double.valueOf(location.substring(0, location.indexOf(",")));
-        final double latitude = Double.valueOf(location.substring(location.indexOf(",") + 1, location.length()));
+        //final String url = msgBody.getImgUrl();
+        final double longitude = msgBody.getLongitude();
+        final double latitude = msgBody.getLatitude();
+        final int scale = msgBody.getScale();
         final String address = msgBody.getAddress();
 
         final String dstUuid = msgBean.getMsg().getReceiverUserId();
@@ -235,7 +232,7 @@ public class SendMsgService extends IntentService {
             }
         };
 
-        HuxinSdkManager.instance().sendLocation(dstUuid, longitude, latitude, 16, address, callback);
+        HuxinSdkManager.instance().sendLocation(dstUuid, longitude, latitude, scale, address, callback);
     }
 
     //发送语音(先上传文件，再发送消息)

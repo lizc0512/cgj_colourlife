@@ -1,5 +1,6 @@
 package com.youmai.hxsdk.map;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -49,7 +50,7 @@ import com.youmai.hxsdk.activity.SdkBaseActivity;
 import com.youmai.hxsdk.adapter.DividerItemDecoration;
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
 import com.youmai.hxsdk.config.AppConfig;
-import com.youmai.hxsdk.im.cache.CacheMsgHelper;
+import com.youmai.hxsdk.db.helper.CacheMsgHelper;
 import com.youmai.hxsdk.im.cache.CacheMsgMap;
 import com.youmai.hxsdk.proto.YouMaiBasic;
 import com.youmai.hxsdk.proto.YouMaiMsg;
@@ -64,6 +65,11 @@ import java.util.List;
 public class LocationActivity extends SdkBaseActivity implements
         LocationSource, AMapLocationListener, OnCameraChangeListener,
         OnMarkerClickListener, OnGeocodeSearchListener, PoiSearch.OnPoiSearchListener {
+
+    public static final String DST_UUID = "dst_uuid";
+    public static final String FROM_TO_IM = "from_to_im";
+    public static final String FROM_TO_CARD = "from_to_card";
+
     // UI
     private AMap aMap;
     private MapView mapView;
@@ -123,7 +129,7 @@ public class LocationActivity extends SdkBaseActivity implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.hx_activity_location);
-        dstUuid = getIntent().getStringExtra("dstPhone");
+        dstUuid = getIntent().getStringExtra(DST_UUID);
 
         mapView = (MapView) findViewById(R.id.map_view);
         mapView.onCreate(savedInstanceState);// 此方法必须重写
@@ -199,7 +205,7 @@ public class LocationActivity extends SdkBaseActivity implements
         });
         btn_send = (TextView) findViewById(R.id.btn_send);
 
-        boolean isUserByCard = getIntent().getBooleanExtra("is_user_by_card", false);
+        boolean isUserByCard = getIntent().getBooleanExtra(FROM_TO_CARD, false);
         if (isUserByCard) {
             btn_send.setText(R.string.hx_select);
         }
@@ -208,7 +214,7 @@ public class LocationActivity extends SdkBaseActivity implements
             public void onClick(View v) {
                 if (adapter != null) {
                     PoiItem poiItem = adapter.getSelectPoiItem();
-                    boolean isUserByIm = getIntent().getBooleanExtra("is_user_by_im", false);
+                    boolean isUserByIm = getIntent().getBooleanExtra(FROM_TO_IM, false);
                     if (!isUserByIm) {
                         sendMarkerLocation(poiItem);
                     } else {
@@ -455,7 +461,7 @@ public class LocationActivity extends SdkBaseActivity implements
         it.putExtra("latitude", latitude);
         it.putExtra("zoom_level", zoomLevel);
         it.putExtra("address", address);
-        setResult(1, it);
+        setResult(Activity.RESULT_OK, it);
         finish();
     }
 
@@ -499,7 +505,12 @@ public class LocationActivity extends SdkBaseActivity implements
                 .setSenderUserId(userId)
                 .setReceiverUserId(dstUuid)
                 .setMsgType(CacheMsgBean.SEND_LOCATION)
-                .setJsonBodyObj(new CacheMsgMap().setLocation(longitude + "," + latitude).setAddress(address).setImgUrl(url));
+                .setJsonBodyObj(new CacheMsgMap()
+                        .setLatitude(latitude)
+                        .setLongitude(longitude)
+                        .setScale(zoomLevel)
+                        .setAddress(address)
+                        .setImgUrl(url));
 
         //add to db
         CacheMsgHelper.instance().insertOrUpdate(this, cacheMsgBean);

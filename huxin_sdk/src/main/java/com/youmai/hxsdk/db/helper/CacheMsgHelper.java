@@ -1,4 +1,4 @@
-package com.youmai.hxsdk.im.cache;
+package com.youmai.hxsdk.db.helper;
 
 import android.content.Context;
 

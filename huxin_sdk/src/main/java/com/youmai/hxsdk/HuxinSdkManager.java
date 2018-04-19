@@ -800,14 +800,15 @@ public class HuxinSdkManager {
 
 
     /**
-     * 创建群组聊天
+     * 创建群组
      *
      * @param callback
      */
-    public void createGroup(ReceiveListener callback) {
+    public void createGroup(ReceiveListener callback, String groupName, List<YouMaiGroup.MemberItem> list) {
         YouMaiGroup.GroupCreateReq.Builder builder = YouMaiGroup.GroupCreateReq.newBuilder();
         builder.setUserId(getUuid());
-        //builder.addAllMemberList();
+        builder.setGroupName(groupName);
+        builder.addAllMemberList(list);
 
 
         YouMaiGroup.GroupCreateReq group = builder.build();
@@ -835,32 +836,19 @@ public class HuxinSdkManager {
 
 
     /**
-     * 添加群组成员
+     * 添加/删除 群组成员
      *
+     * @param type
+     * @param list
      * @param callback
      */
-    public void addGroupMember(ReceiveListener callback) {
+    public void changeGroupMember(YouMaiGroup.GroupMemberOptType type,
+                                  List<YouMaiGroup.MemberItem> list,
+                                  ReceiveListener callback) {
         YouMaiGroup.GroupMemberChangeReq.Builder builder = YouMaiGroup.GroupMemberChangeReq.newBuilder();
-        builder.setUserId(getUuid());
-        //builder.addAllMemberList();
-
-
-        YouMaiGroup.GroupMemberChangeReq group = builder.build();
-
-        sendProto(group, YouMaiBasic.COMMANDID.CID_GROUP_CHANGE_MEMBER_REQ_VALUE, callback);
-    }
-
-
-    /**
-     * 添加群组成员
-     *
-     * @param callback
-     */
-    public void delGroupMember(YouMaiGroup.GroupMemberOptType type, ReceiveListener callback) {
-        YouMaiGroup.GroupMemberChangeReq.Builder builder = YouMaiGroup.GroupMemberChangeReq.newBuilder();
-        builder.setUserId(getUuid());
         builder.setType(type);
-        //builder.addAllMemberList();
+        builder.setUserId(getUuid());
+        builder.addAllMemberList(list);
 
 
         YouMaiGroup.GroupMemberChangeReq group = builder.build();
@@ -872,12 +860,13 @@ public class HuxinSdkManager {
     /**
      * 请求群列表
      *
+     * @param list
      * @param callback
      */
-    public void reqGroupList(ReceiveListener callback) {
+    public void reqGroupList(List<YouMaiGroup.GroupItem> list, ReceiveListener callback) {
         YouMaiGroup.GroupListReq.Builder builder = YouMaiGroup.GroupListReq.newBuilder();
         builder.setUserId(getUuid());
-
+        builder.addAllGroupItemList(list);
 
         YouMaiGroup.GroupListReq group = builder.build();
 
@@ -888,12 +877,14 @@ public class HuxinSdkManager {
     /**
      * 获取群成员列表
      *
+     * @param groupId
      * @param callback
      */
-    public void reqGroupMember(ReceiveListener callback) {
+    public void reqGroupMember(int groupId, ReceiveListener callback) {
         YouMaiGroup.GroupMemberReq.Builder builder = YouMaiGroup.GroupMemberReq.newBuilder();
         builder.setUserId(getUuid());
-
+        builder.setGroupId(groupId);
+        builder.setUpdateTime(System.currentTimeMillis());
 
         YouMaiGroup.GroupMemberReq group = builder.build();
 
@@ -910,32 +901,23 @@ public class HuxinSdkManager {
         YouMaiGroup.GroupInfoReq.Builder builder = YouMaiGroup.GroupInfoReq.newBuilder();
         builder.setUserId(getUuid());
         builder.setGroupId(groupId);
+        builder.setUpdateTime(System.currentTimeMillis());
 
         YouMaiGroup.GroupInfoReq group = builder.build();
 
         sendProto(group, YouMaiBasic.COMMANDID.CID_GROUP_INFO_REQ_VALUE, callback);
     }
 
-//    // 群资料修改
-//    message GroupInfoModifyReq{
-//        //cmd id:			CID_GROUP_INFO_MODIFY_REQ
-//        optional string user_id = 1;
-//        optional uint32 group_id = 2;
-//        optional string group_name = 3;
-//        optional string group_avatar = 4;
-//        optional string topic        =5;    //主题
-//
-//    }
 
     /**
-     * 获取群资料
+     * 修改群资料
      *
      * @param groupId
      * @param groupName
      * @param groupAvatar
      * @param callback
      */
-    public void reqGroupInfoModify(int groupId, String groupName, String groupAvatar, ReceiveListener callback) {
+    public void reqModifyGroupInfo(int groupId, String groupName, String groupAvatar, ReceiveListener callback) {
         YouMaiGroup.GroupInfoModifyReq.Builder builder = YouMaiGroup.GroupInfoModifyReq.newBuilder();
         builder.setUserId(getUuid());
         builder.setGroupId(groupId);
@@ -953,7 +935,7 @@ public class HuxinSdkManager {
      *
      * @return
      */
-    public void getOrgInfo(String groupId, ReceiveListener callback) {
+    public void reqOrgInfo(String groupId, ReceiveListener callback) {
         YouMaiBuddy.IMGetOrgReq defaultInstance = YouMaiBuddy.IMGetOrgReq.getDefaultInstance();
         YouMaiBuddy.IMGetOrgReq.Builder builder = defaultInstance.toBuilder();
         builder.setOrgId(groupId);

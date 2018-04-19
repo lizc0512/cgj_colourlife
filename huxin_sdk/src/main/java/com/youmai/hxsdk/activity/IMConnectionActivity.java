@@ -115,6 +115,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
     public static final String DST_NAME = "DST_NAME";
     public static final String DST_UUID = "DST_UUID";
     public static final String DST_PHONE = "DST_PHONE";
+    public static final String DST_AVATAR = "DST_AVATAR";
     public static final String EXTRA_SCROLL_POSITION = "EXTRA_SCROLL_POSITION";
 
     private static final int REQUEST_CODE_PICTURE = 1;
@@ -148,6 +149,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
     private String dstNickName;  //目标昵称
     private String dstUuid;      //目标UUID
     private String dstPhone;      //目标手机号
+    private String dstAvatar;     //目标的头像
 
     private boolean isPauseOut = false;
     private boolean isOpenEmotion = false;
@@ -264,6 +266,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
         dstNickName = fromIntent.getStringExtra(DST_NAME);
         dstUuid = fromIntent.getStringExtra(DST_UUID);
         dstPhone = fromIntent.getStringExtra(DST_PHONE);
+        dstAvatar = fromIntent.getStringExtra(DST_AVATAR);
 
         if (StringUtils.isEmpty(dstUuid)) {
             dstUuid = HuxinSdkManager.instance().getUuid();
@@ -487,7 +490,11 @@ public class IMConnectionActivity extends SdkBaseActivity implements
         ivGroup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(IMConnectionActivity.this, ChatDetailsActivity.class));
+                Intent intent = new Intent();
+                intent.setClass(IMConnectionActivity.this, ChatDetailsActivity.class);
+                intent.putExtra(DST_NAME, dstNickName);
+                intent.putExtra(ChatDetailsActivity.USER_AVATAR, dstAvatar);
+                startActivity(intent);
             }
         });
 

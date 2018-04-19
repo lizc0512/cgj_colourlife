@@ -3,16 +3,17 @@ package com.tg.coloursteward.module.contact.adapter;
 import android.content.Context;
 import android.os.Message;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.request.RequestOptions;
 import com.tg.coloursteward.module.contact.stickyheader.StickyHeaderAdapter;
 import com.tg.coloursteward.net.HttpTools;
@@ -22,7 +23,9 @@ import com.youmai.hxsdk.db.bean.Contact;
 import com.youmai.hxsdk.entity.cn.CNPinyin;
 import com.youmai.hxsdk.utils.GlideRoundTransform;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by yw on 2018/4/13.
@@ -34,17 +37,32 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         SEARCH, COLLECT, DEFAULT
     }
 
+    public static final int mIndexForCollect = 2;
+    public static final int mIndexForContact = 5;
+
+    private Map<Integer, Contact> mCacheMap;
+
     private Context mContext;
+    private int mCollectIndex = 5;
     private ItemEventListener itemEventListener;
     private final List<CNPinyin<Contact>> cnPinyinList;
 
-    public ContactAdapter(Context context, List<CNPinyin<Contact>> cnPinyinList, ItemEventListener listener) {
+    public ContactAdapter(Context context, List<CNPinyin<Contact>> cnPinyinList, int collectIndex, ItemEventListener listener) {
         this.mContext = context.getApplicationContext();
         this.cnPinyinList = cnPinyinList;
+        this.mCollectIndex = collectIndex;
         this.itemEventListener = listener;
+
+        //if (mCollectIndex == 3) {
+        mCacheMap = new HashMap(cnPinyinList.size());
+        //}
 
         msgHandler = new MessageHandler(context);
         msgHandler.setResponseListener(this);
+    }
+
+    public Map<Integer, Contact> getCacheMap() {
+        return mCacheMap;
     }
 
     @Override
@@ -57,7 +75,7 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         int type;
         if (position == 0) {
             type = TYPE.SEARCH.ordinal();
-        } else if (position == 5) {
+        } else if (position == mCollectIndex) {
             type = TYPE.COLLECT.ordinal();
         } else {
             type = TYPE.DEFAULT.ordinal();
@@ -80,50 +98,81 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         final Contact contact = cnPinyinList.get(position).data;
 
-        if (holder instanceof SearchHolder) {
-            //搜索框不处理
-        } else if (holder instanceof CollectHolder) {
-            ((CollectHolder) holder).itemView.setBackgroundColor(0xF5F5F5);
-        } else {
-            if (position > 0 && position < 5) {
+        if (holder instanceof ContactHolder) {
+            if (position > 0 && position < mCollectIndex) {
                 int icon = defaultIcon(position);
                 ((ContactHolder) holder).iv_header.setImageResource(icon);
+                ((ContactHolder) holder).cb_collect.setVisibility(View.GONE);
             } else {
+                if (mCollectIndex == mIndexForCollect) {
+                    ((ContactHolder) holder).cb_collect.setVisibility(View.VISIBLE);
+                } else {
+                    ((ContactHolder) holder).cb_collect.setVisibility(View.GONE);
+                }
+
+                Log.d("YW", "position: " + position + "\tsize：" + mCacheMap.size() + "\t" +
+                        (mCacheMap.get(position) != null ? mCacheMap.get(position).toString() : "空"));
+
+                if (mCacheMap.get(position) != null) {
+                    ((ContactHolder) holder).cb_collect.setChecked(true);
+                } else {
+                    ((ContactHolder) holder).cb_collect.setChecked(false);
+                }
+
                 try {
-                    RequestOptions options = new RequestOptions();
-                    options.diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-                            .centerCrop()
-                            .override(120, 120)
-                            .transform(new GlideRoundTransform(mContext))
-                            .placeholder(R.drawable.color_default_header)
-                            .error(R.drawable.color_default_header);
                     Glide.with(mContext)
                             .load(contact.getAvatar())
-                            .apply(options)
+                            .apply(new RequestOptions()
+                                    .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+                                    .centerCrop()
+                                    .override(120, 120)
+                                    .transform(new GlideRoundTransform(mContext))
+                                    .placeholder(R.drawable.color_default_header)
+                                    .error(R.drawable.color_default_header))
                             .into(((ContactHolder) holder).iv_header);
                 } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
 
-            if (contact.getRealname().startsWith("↑##@@**") && position < 6) {
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (null != itemEventListener) {
+                        itemEventListener.onItemClick(position, contact);
+                    }
+                    if (((ContactHolder) holder).cb_collect.isChecked()) {
+                        mCacheMap.remove(position);
+                        ((ContactHolder) holder).cb_collect.setChecked(false);
+                    } else {
+                        mCacheMap.put(position, contact);
+                        ((ContactHolder) holder).cb_collect.setChecked(true);
+                    }
+                }
+            });
+
+            if (contact.getRealname().startsWith("↑##@@**") && position <= mCollectIndex) {
                 ((ContactHolder) holder).tv_name.setText(contact.getRealname().substring(9));
             } else {
                 ((ContactHolder) holder).tv_name.setText(contact.getRealname());
             }
 
-        }
-
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (null != itemEventListener) {
-                    itemEventListener.onItemClick(position, contact);
+        } else if (holder instanceof CollectHolder) {
+            ((CollectHolder) holder).itemView.setBackgroundColor(0xF5F5F5);
+        } else if (holder instanceof SearchHolder) {
+            //搜索框不处理
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (null != itemEventListener) {
+                        itemEventListener.onItemClick(position, contact);
+                    }
                 }
-            }
-        });
+            });
+        }
 
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -139,7 +188,11 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public long getHeaderId(int childAdapterPosition) {
-        return cnPinyinList.get(childAdapterPosition).getFirstChar();
+        if (childAdapterPosition <= mCollectIndex) {
+            return '↑';
+        } else {
+            return cnPinyinList.get(childAdapterPosition).getFirstChar();
+        }
     }
 
     @Override
@@ -191,11 +244,13 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public class ContactHolder extends RecyclerView.ViewHolder {
         private ImageView iv_header;
         private TextView tv_name;
+        private CheckBox cb_collect;
 
         public ContactHolder(View itemView) {
             super(itemView);
             iv_header = (ImageView) itemView.findViewById(R.id.iv_header);
             tv_name = (TextView) itemView.findViewById(R.id.tv_name);
+            cb_collect = itemView.findViewById(R.id.cb_collect);
         }
     }
 

@@ -17,4 +17,9 @@ public class APath {
      * 搜索分组
      */
     public static final String SEARCH_GLOBAL_GROUP = "/search/global";
+
+    /**
+     * 添加群组分组
+     */
+    public static final String GROUP_CREATE_ADD_CONTACT = "/group/addcontact";
 }

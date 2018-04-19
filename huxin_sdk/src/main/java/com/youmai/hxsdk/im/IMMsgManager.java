@@ -16,6 +16,7 @@ import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.ProtocolCallBack;
 import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.activity.IMConnectionActivity;
+import com.youmai.hxsdk.activity.IMGroupActivity;
 import com.youmai.hxsdk.chat.ContentVideo;
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
 import com.youmai.hxsdk.chat.ContentLocation;
@@ -34,7 +35,6 @@ import com.youmai.hxsdk.im.cache.CacheMsgMap;
 import com.youmai.hxsdk.im.cache.CacheMsgTxt;
 import com.youmai.hxsdk.im.cache.CacheMsgVideo;
 import com.youmai.hxsdk.im.cache.CacheMsgVoice;
-import com.youmai.hxsdk.module.groupchat.ChatDetailsActivity;
 import com.youmai.hxsdk.proto.YouMaiBasic;
 import com.youmai.hxsdk.proto.YouMaiBulletin;
 import com.youmai.hxsdk.proto.YouMaiGroup;
@@ -549,7 +549,7 @@ public class IMMsgManager {
         // Creates an explicit intent for an Activity in your app
         Intent resultIntent;
         if (isGroup) {
-            resultIntent = new Intent(context, ChatDetailsActivity.class);
+            resultIntent = new Intent(context, IMGroupActivity.class);
         } else {
             resultIntent = new Intent(context, IMConnectionActivity.class);
         }
@@ -567,7 +567,7 @@ public class IMMsgManager {
             stackBuilder.addNextIntentWithParentStack(new Intent(context, mainClass));
         } else {
             if (isGroup) {
-                stackBuilder.addParentStack(ChatDetailsActivity.class);
+                stackBuilder.addParentStack(IMGroupActivity.class);
             } else {
                 stackBuilder.addParentStack(IMConnectionActivity.class);
             }

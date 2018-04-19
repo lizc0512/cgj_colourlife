@@ -92,6 +92,22 @@
             </intent-filter>-->
         </activity>
 
+
+        <activity
+            android:name="com.youmai.hxsdk.activity.IMGroupActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/HxSdkNewTheme"
+            android:windowSoftInputMode="adjustResize|stateHidden">
+            <!--<intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>-->
+        </activity>
+
+
         <activity
             android:name=".MainActivity"
             android:configChanges="locale|orientation|keyboard|keyboardHidden"

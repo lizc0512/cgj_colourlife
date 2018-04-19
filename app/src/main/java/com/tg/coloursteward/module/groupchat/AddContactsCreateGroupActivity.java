@@ -30,7 +30,6 @@ import com.tg.coloursteward.serice.AuthAppService;
 import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.PullRefreshListView;
-import com.tg.coloursteward.view.dialog.ToastFactory;
 import com.youmai.hxsdk.activity.SdkBaseActivity;
 import com.youmai.hxsdk.db.bean.Contact;
 import com.youmai.hxsdk.entity.cn.CNPinyin;
@@ -133,7 +132,7 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
         manager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         rv_main.setLayoutManager(manager);
 
-        adapter = new ContactAdapter(this, contactList, 3, this);
+        adapter = new ContactAdapter(this, contactList, adapter.mIndexForCollect, this);
         rv_main.setAdapter(adapter);
         rv_main.addItemDecoration(new StickyHeaderDecoration(adapter));
 
@@ -407,45 +406,7 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
                 intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(intent);
                 break;
-            case 1: //组织架构
-                if (familyList.size() > 0) {
-                    if (skincode.equals("101")) {//101 彩生活
-                        for (int i = 0; i < familyList.size(); i++) {
-                            if (familyList.get(i).name.equals("彩生活服务集团")) {
-                                info = new FamilyInfo();
-                                info.id = familyList.get(i).id;
-                                info.type = "org";
-                                info.name = familyList.get(i).name;
-                                intent = new Intent(mActivity, HomeContactOrgActivity.class);
-                                intent.putExtra(HomeContactOrgActivity.FAMILY_INFO, info);
-                                startActivity(intent);
-                            }
-                        }
-                    } else {
-                        info = new FamilyInfo();
-                        info.id = familyList.get(0).id;
-                        info.type = "org";
-                        info.name = familyList.get(0).name;
-                        intent = new Intent(mActivity, HomeContactOrgActivity.class);
-                        intent.putExtra(HomeContactOrgActivity.FAMILY_INFO, info);
-                        startActivity(intent);
-                    }
-
-                } else {
-                    if (StringUtils.isNotEmpty(orgId) && StringUtils.isNotEmpty(orgName)) {
-                        info = new FamilyInfo();
-                        info.id = orgId;
-                        info.type = "org";
-                        info.name = orgName;
-                        intent = new Intent(mActivity, HomeContactOrgActivity.class);
-                        intent.putExtra(HomeContactOrgActivity.FAMILY_INFO, info);
-                        startActivity(intent);
-                    } else {
-                        ToastFactory.showToast(mActivity, "正在获取组织架构，请稍后...");
-                    }
-                }
-                break;
-            case 2: //部门
+            case 1: //部门
                 info = new FamilyInfo();
                 info.id = UserInfo.orgId;
                 info.type = "org";
@@ -453,8 +414,6 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
                 intent = new Intent(mActivity, HomeContactOrgActivity.class);
                 intent.putExtra(HomeContactOrgActivity.FAMILY_INFO, info);
                 startActivity(intent);
-                break;
-            case 3:
                 break;
             default: //item
 

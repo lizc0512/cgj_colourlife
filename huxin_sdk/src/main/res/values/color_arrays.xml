@@ -12,7 +12,7 @@
 
     <string-array name="names_add_contact">
         <item>↑##@@**0 搜索</item>
-        <item>↑##@@**1 组织架构</item>
+        <!--<item>↑##@@**1 组织架构</item>-->
         <item>↑##@@**2 我的部门</item>
         <item>↑##@@**5 收藏联系人</item>
     </string-array>

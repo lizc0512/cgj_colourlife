@@ -163,7 +163,7 @@ public class ContactsFragment extends Fragment implements Observer,
         manager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         rv_main.setLayoutManager(manager);
 
-        adapter = new ContactAdapter(getContext(), contactList, 5, this);
+        adapter = new ContactAdapter(getContext(), contactList, adapter.mIndexForContact, this);
         rv_main.setAdapter(adapter);
         rv_main.addItemDecoration(new StickyHeaderDecoration(adapter));
 

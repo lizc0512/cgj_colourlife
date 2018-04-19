@@ -37,6 +37,9 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         SEARCH, COLLECT, DEFAULT
     }
 
+    public static final int mIndexForCollect = 2;
+    public static final int mIndexForContact = 5;
+
     private Map<Integer, Contact> mCacheMap;
 
     private Context mContext;
@@ -104,13 +107,14 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 ((ContactHolder) holder).iv_header.setImageResource(icon);
                 ((ContactHolder) holder).cb_collect.setVisibility(View.GONE);
             } else {
-                if (mCollectIndex == 3) {
+                if (mCollectIndex == mIndexForCollect) {
                     ((ContactHolder) holder).cb_collect.setVisibility(View.VISIBLE);
                 } else {
                     ((ContactHolder) holder).cb_collect.setVisibility(View.GONE);
                 }
 
-                Log.e("YW", "position: " + position + "\tsize：" + mCacheMap.size() + "\t" + (mCacheMap.get(position) != null ? mCacheMap.get(position).toString() : "空"));
+                Log.d("YW", "position: " + position + "\tsize：" + mCacheMap.size() + "\t" +
+                        (mCacheMap.get(position) != null ? mCacheMap.get(position).toString() : "空"));
 
                 if (mCacheMap.get(position) != null) {
                     ((ContactHolder) holder).cb_collect.setChecked(true);

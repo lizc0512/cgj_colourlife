@@ -154,6 +154,9 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                             mCacheMap.put(position, contact);
                             ((ContactHolder) holder).cb_collect.setChecked(true);
                         }
+                        if (null != itemEventListener) {
+                            itemEventListener.collectCount(mCacheMap.size());
+                        }
                     }
                 }
             });
@@ -260,8 +263,8 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     public interface ItemEventListener {
         void onItemClick(int pos, Contact contact);
-
         void onLongClick(int pos);
+        void collectCount(int count);
     }
 
     /**

@@ -391,6 +391,11 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
 
     }
 
+    @Override
+    public void collectCount(int count) {
+        tv_Sure.setText("完成(" + count + ")");
+    }
+
     /**
      * 固定头item的跳转
      *

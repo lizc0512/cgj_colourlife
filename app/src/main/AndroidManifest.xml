@@ -488,7 +488,10 @@
 
         <activity android:name=".module.groupchat.GroupListActivity" />
 
-        <activity android:name=".module.groupchat.AddContactsCreateGroupActivity" />
+        <activity
+            android:name=".module.groupchat.AddContactsCreateGroupActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateUnspecified|adjustPan" />
     </application>
 
 </manifest>

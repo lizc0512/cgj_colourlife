@@ -27,7 +27,8 @@ import java.util.Observable;
  */
 public class ContactsBindData extends Observable {
 
-    private List<CN> mData = new ArrayList<>();
+    public static final int TYPE_HOME = 0x01;
+    public static final int TYPE_ADD_CONTACT = 0x02;
 
     private static ContactsBindData instance;
 
@@ -45,35 +46,24 @@ public class ContactsBindData extends Observable {
     }
 
     public void initData(List<? extends CN> data) {
-        mData.addAll(data);
         setChanged();
-        notifyObservers(mData);
+        notifyObservers(null);
     }
 
-    public List<Contact> contactList(Context context, ResponseData data) {
+    public List<Contact> contactList(Context context, ResponseData data, int type) {
         List<Contact> contactList = new ArrayList<>();
         Contact contact;
 
-        String[] names = context.getResources().getStringArray(R.array.names_1); //获取
-        for (int i = 0; i < names.length; i++) {
-
-            contact = new Contact();
-            StringBuffer pinyin = new StringBuffer();
-            StringBuffer ch = new StringBuffer();
-            String hanzi = names[i];
-            List<String> chStr = new ArrayList<>(); //每个汉字的 拼音集合
-            for (int j = 0; j < hanzi.length(); j++) {
-                System.out.println("yw-i: " + hanzi.charAt(j));
-                pinyin.append(Pinyin.toPinyin(hanzi.charAt(j)).toUpperCase());
-                ch.append(Pinyin.toPinyin(hanzi.charAt(j)).substring(0, 1));
-                chStr.add(Pinyin.toPinyin(hanzi.charAt(j)));
+        if (type == TYPE_HOME) {
+            String[] names = context.getResources().getStringArray(R.array.names_collect_contact); //获取
+            for (int i = 0; i < names.length; i++) {
+                contactList.add(addHeadItem(names[i]));
             }
-
-            contact.setIs_hx(true);
-            contact.setRealname(hanzi);
-            contact.setPinyin(pinyin.toString());
-            contact.setSimplePinyin(ch.toString());
-            contactList.add(contact);
+        } else if (type == TYPE_ADD_CONTACT) {
+            String[] names = context.getResources().getStringArray(R.array.names_add_contact); //获取
+            for (int i = 0; i < names.length; i++) {
+                contactList.add(addHeadItem(names[i]));
+            }
         }
         for (int i = 0; i < data.length; i++) {
 
@@ -101,6 +91,25 @@ public class ContactsBindData extends Observable {
             contactList.add(contact);
         }
         return contactList;
+    }
+
+    Contact addHeadItem(String hanzi) {
+        Contact contact = new Contact();
+        StringBuffer pinyin = new StringBuffer();
+        StringBuffer ch = new StringBuffer();
+        List<String> chStr = new ArrayList<>(); //每个汉字的 拼音集合
+        for (int j = 0; j < hanzi.length(); j++) {
+            System.out.println("yw-i: " + hanzi.charAt(j));
+            pinyin.append(Pinyin.toPinyin(hanzi.charAt(j)).toUpperCase());
+            ch.append(Pinyin.toPinyin(hanzi.charAt(j)).substring(0, 1));
+            chStr.add(Pinyin.toPinyin(hanzi.charAt(j)));
+        }
+
+        contact.setIs_hx(true);
+        contact.setRealname(hanzi);
+        contact.setPinyin(pinyin.toString());
+        contact.setSimplePinyin(ch.toString());
+        return contact;
     }
 
 }

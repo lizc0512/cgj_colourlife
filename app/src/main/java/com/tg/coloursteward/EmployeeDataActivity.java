@@ -128,6 +128,7 @@ public class EmployeeDataActivity extends BaseActivity {
                     intent.setClass(EmployeeDataActivity.this, IMConnectionActivity.class);
                     intent.putExtra(IMConnectionActivity.DST_UUID, item.getUid());
                     intent.putExtra(IMConnectionActivity.DST_NAME, item.getRealname());
+                    intent.putExtra(IMConnectionActivity.DST_AVATAR, item.getAvatar());
                     //intent.putExtra(IMConnectionActivity.DST_PHONE, mobile);
                     startActivity(intent);
                 } else if (tag.equals("email")) {

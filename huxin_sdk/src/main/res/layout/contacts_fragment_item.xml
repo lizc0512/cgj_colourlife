@@ -2,15 +2,27 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="60dp"
-    android:gravity="center_vertical"
-    android:orientation="vertical"
-    android:background="@drawable/contacts_list_item_selector">
+    android:background="@drawable/contacts_list_item_selector"
+    android:gravity="center_vertical">
+
+    <CheckBox
+        android:id="@+id/cb_collect"
+        android:layout_width="30dp"
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
+        android:paddingTop="20dp"
+        android:drawableTop="@drawable/contacts_select_selector"
+        android:button="@null"
+        android:clickable="false"
+        android:visibility="gone" />
 
     <ImageView
         android:id="@+id/iv_header"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:padding="10dp"/>
+        android:layout_toRightOf="@+id/cb_collect"
+        android:padding="10dp" />
 
     <TextView
         android:id="@+id/tv_name"

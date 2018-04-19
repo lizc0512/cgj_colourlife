@@ -1,42 +1,25 @@
-package com.tg.coloursteward.module.contact;
+package com.tg.coloursteward.module.groupchat;
 
-import android.Manifest;
-import android.app.Activity;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Message;
-import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.tg.coloursteward.ContactsActivity;
-import com.tg.coloursteward.EmployeeDataActivity;
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.tg.coloursteward.HomeContactOrgActivity;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.info.FamilyInfo;
 import com.tg.coloursteward.info.UserInfo;
-import com.tg.coloursteward.module.contact.utils.ContactsBindData;
 import com.tg.coloursteward.module.contact.adapter.ContactAdapter;
 import com.tg.coloursteward.module.contact.stickyheader.StickyHeaderDecoration;
+import com.tg.coloursteward.module.contact.utils.ContactsBindData;
 import com.tg.coloursteward.module.contact.widget.CharIndexView;
-import com.tg.coloursteward.module.groupchat.GroupListActivity;
 import com.tg.coloursteward.module.search.GlobalSearchActivity;
-import com.tg.coloursteward.module.search.data.SearchData;
 import com.tg.coloursteward.net.GetTwoRecordListener;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.MessageHandler;
@@ -44,14 +27,16 @@ import com.tg.coloursteward.net.RequestConfig;
 import com.tg.coloursteward.net.RequestParams;
 import com.tg.coloursteward.net.ResponseData;
 import com.tg.coloursteward.serice.AuthAppService;
-import com.tg.coloursteward.ui.MainActivity1;
 import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.PullRefreshListView;
 import com.tg.coloursteward.view.dialog.ToastFactory;
+import com.youmai.hxsdk.activity.SdkBaseActivity;
 import com.youmai.hxsdk.db.bean.Contact;
 import com.youmai.hxsdk.entity.cn.CNPinyin;
 import com.youmai.hxsdk.entity.cn.CNPinyinFactory;
+import com.youmai.hxsdk.router.APath;
+import com.youmai.hxsdk.utils.ListUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -61,7 +46,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.Observer;
+import java.util.Map;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -69,21 +54,16 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-import com.tg.coloursteward.net.MessageHandler.ResponseListener;
-import com.tg.coloursteward.module.contact.adapter.ContactAdapter.ItemEventListener;
-import com.youmai.hxsdk.utils.ListUtils;
-
 /**
  * 作者：create by YW
- * 日期：2018.04.03 11:59
- * 描述：
+ * 日期：2018.04.19 09:41
+ * 描述：创建群
  */
-public class ContactsFragment extends Fragment implements Observer,
-        ResponseListener, ItemEventListener {
+@Route(path = APath.GROUP_CREATE_ADD_CONTACT)
+public class AddContactsCreateGroupActivity extends SdkBaseActivity
+        implements MessageHandler.ResponseListener, ContactAdapter.ItemEventListener {
 
-    private static final String TAG = ContactsFragment.class.getName();
-
-    private MainActivity1 mActivity;
+    private AddContactsCreateGroupActivity mActivity;
     private static final int ISTREAD = 1;
     private AuthAppService authAppService;
     private String accessToken;
@@ -99,100 +79,86 @@ public class ContactsFragment extends Fragment implements Observer,
 
     private CharIndexView iv_main;
     private TextView tv_index;
+    private TextView tv_Cancel;
+    private TextView tv_Sure;
+
+    private MessageHandler msgHand;
 
     private ArrayList<CNPinyin<Contact>> contactList = new ArrayList<>();
     private LinearLayoutManager manager;
     private Subscription subscription;
     private ContactsBindData bindData;
 
-    private MessageHandler msgHand;
-
-    public static final String BROADCAST_INTENT_FILTER = "com.tg.coloursteward.contact";
-    public static final String ACTION = "action";
-    public static final String INSERT_CONTACT = "insert";
-    public static final String DELETE_CONTACT = "delete";
-
-    static class ModifyContactsReceiver extends BroadcastReceiver {
-        ContactsFragment mFragment;
-
-        public ModifyContactsReceiver(ContactsFragment fragment) {
-            mFragment = fragment;
-        }
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Log.e("YW", "收藏联系人有更新的信息到达......");
-            String action = intent.getStringExtra(ACTION);
-            if (action.equals(INSERT_CONTACT)) {
-                mFragment.modifyContactsList();
-            } else if (action.equals(DELETE_CONTACT)) {
-                mFragment.modifyContactsList();
-            }
-        }
-    }
-
-    ModifyContactsReceiver mModifyContactsReceiver;
-
-    void registerReceiver() {
-        mModifyContactsReceiver = new ModifyContactsReceiver(this);
-        IntentFilter intentFilter = new IntentFilter(BROADCAST_INTENT_FILTER);
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mModifyContactsReceiver, intentFilter);
-    }
-
-    void unRegisterReceiver() {
-        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mModifyContactsReceiver);
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_add_contacts_layout);
+        init();
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_contacts_layout, container, false);
-    }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public void onDestroy() {
+        if (null != subscription) {
+            subscription.unsubscribe();
+        }
+        if (null != bindData) {
+        }
         if (!ListUtils.isEmpty(contactList)) {
             contactList.clear();
         }
-        registerReceiver();
+        if (null != adapter) {
+            Map<Integer, Contact> cacheMap = adapter.getCacheMap();
+            if (null != cacheMap) {
+                cacheMap.clear();
+                cacheMap = null;
+            }
+        }
+        super.onDestroy();
+    }
 
-        rv_main = view.findViewById(R.id.rv_main);
-        iv_main = view.findViewById(R.id.iv_main);
-        tv_index = view.findViewById(R.id.tv_index);
+    private void init() {
+        mActivity = this;
+        if (!ListUtils.isEmpty(contactList)) {
+            contactList.clear();
+        }
 
-        manager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+        //标题
+        tv_Cancel = findViewById(R.id.tv_left_cancel);
+        tv_Sure = findViewById(R.id.tv_right_sure);
+
+        rv_main = findViewById(R.id.rv_main);
+        iv_main = findViewById(R.id.iv_main);
+        tv_index = findViewById(R.id.tv_index);
+
+        manager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         rv_main.setLayoutManager(manager);
 
-        adapter = new ContactAdapter(getContext(), contactList, 5, this);
+        adapter = new ContactAdapter(this, contactList, 3, this);
         rv_main.setAdapter(adapter);
         rv_main.addItemDecoration(new StickyHeaderDecoration(adapter));
 
         bindData = ContactsBindData.init();
-        bindData.addObserver(this);
 
-        msgHand = new MessageHandler(getActivity());
+        msgHand = new MessageHandler(this);
         msgHand.setResponseListener(this);
 
         initView();
         setListener();
     }
 
-    @Override
-    public void onDestroy() {
-        unRegisterReceiver();
-        if (subscription != null) {
-            subscription.unsubscribe();
-        }
-        if (null != bindData) {
-            bindData.deleteObserver(this);
-        }
-        if (!ListUtils.isEmpty(contactList)) {
-            contactList.clear();
-        }
-        super.onDestroy();
-    }
-
     private void setListener() {
+        tv_Sure.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(mContext, "创建群", Toast.LENGTH_SHORT).show();
+            }
+        });
+        tv_Cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         iv_main.setOnCharIndexChangedListener(new CharIndexView.OnCharIndexChangedListener() {
             @Override
             public void onCharIndexChanged(char currentIndex) {
@@ -224,7 +190,7 @@ public class ContactsFragment extends Fragment implements Observer,
                 if (!subscriber.isUnsubscribed()) {
                     //子线程查数据库，返回List<Contacts>
                     List<CNPinyin<Contact>> contactList = CNPinyinFactory.createCNPinyinList(
-                            bindData.contactList(getContext(), data, ContactsBindData.TYPE_HOME));
+                            bindData.contactList(mActivity, data, ContactsBindData.TYPE_ADD_CONTACT));
                     Collections.sort(contactList);
                     subscriber.onNext(contactList);
                     subscriber.onCompleted();
@@ -253,132 +219,15 @@ public class ContactsFragment extends Fragment implements Observer,
     }
 
     /**
-     * 监听联系人数据的更新 - 更改Adapter的数据源
-     *
-     * @param o
-     * @param data
-     */
-    @Override
-    public void update(java.util.Observable o, Object data) {
-        Log.e(TAG, "Observer" + data.toString());
-        System.out.println("Observer" + data.toString());
-    }
-
-    /**
-     * item点击
-     *
-     * @param pos
-     * @param contact
-     */
-    @Override
-    public void onItemClick(int pos, Contact contact) {
-        Toast.makeText(getContext(), "点击position：" + pos, Toast.LENGTH_SHORT).show();
-        itemFunction(pos, contact);
-    }
-
-    /**
-     * item 长按
-     *
-     * @param pos
-     */
-    @Override
-    public void onLongClick(int pos) {
-
-    }
-
-    /**
-     * 固定头item的跳转
-     *
-     * @param pos
-     * @param contact
-     */
-    void itemFunction(int pos, Contact contact) {
-        Intent intent;
-        FamilyInfo info;
-        switch (pos) {
-            case 0:
-                intent = new Intent(getActivity(), GlobalSearchActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                startActivity(intent);
-                break;
-            case 1: //组织架构
-                if (familyList.size() > 0) {
-                    if (skincode.equals("101")) {//101 彩生活
-                        for (int i = 0; i < familyList.size(); i++) {
-                            if (familyList.get(i).name.equals("彩生活服务集团")) {
-                                info = new FamilyInfo();
-                                info.id = familyList.get(i).id;
-                                info.type = "org";
-                                info.name = familyList.get(i).name;
-                                intent = new Intent(mActivity, HomeContactOrgActivity.class);
-                                intent.putExtra(HomeContactOrgActivity.FAMILY_INFO, info);
-                                startActivity(intent);
-                            }
-                        }
-                    } else {
-                        info = new FamilyInfo();
-                        info.id = familyList.get(0).id;
-                        info.type = "org";
-                        info.name = familyList.get(0).name;
-                        intent = new Intent(mActivity, HomeContactOrgActivity.class);
-                        intent.putExtra(HomeContactOrgActivity.FAMILY_INFO, info);
-                        startActivity(intent);
-                    }
-
-                } else {
-                    if (StringUtils.isNotEmpty(orgId) && StringUtils.isNotEmpty(orgName)) {
-                        info = new FamilyInfo();
-                        info.id = orgId;
-                        info.type = "org";
-                        info.name = orgName;
-                        intent = new Intent(mActivity, HomeContactOrgActivity.class);
-                        intent.putExtra(HomeContactOrgActivity.FAMILY_INFO, info);
-                        startActivity(intent);
-                    } else {
-                        ToastFactory.showToast(mActivity, "正在获取组织架构，请稍后...");
-                    }
-                }
-                break;
-            case 2: //部门
-                info = new FamilyInfo();
-                info.id = UserInfo.orgId;
-                info.type = "org";
-                info.name = UserInfo.familyName;
-                intent = new Intent(mActivity, HomeContactOrgActivity.class);
-                intent.putExtra(HomeContactOrgActivity.FAMILY_INFO, info);
-                startActivity(intent);
-                break;
-            case 3: //手机通讯录
-                if (ContextCompat.checkSelfPermission(mActivity, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
-                    //申请权限
-                    ActivityCompat.requestPermissions(mActivity, new String[]{Manifest.permission.READ_CONTACTS}, REQUESTPERMISSION);
-                    ToastFactory.showToast(mActivity, "请允许权限");
-                } else {
-                    startActivity(new Intent(mActivity, ContactsActivity.class));
-                }
-                break;
-            case 4:
-                startActivity(new Intent(getContext(), GroupListActivity.class));
-                break;
-            case 5:
-                break;
-            default: //item
-                Contact item = contactList.get(pos).data;
-                Intent i = new Intent(mActivity, EmployeeDataActivity.class);
-                i.putExtra(EmployeeDataActivity.CONTACTS_ID, item.getUsername());
-                startActivityForResult(i, ISTREAD);
-                break;
-        }
-    }
-    // ---------end
-
-    /**
      * 初始化
      */
     private void initView() {
         skincode = Tools.getStringValue(mActivity, Contants.storage.SKINCODE);
         orgName = Tools.getStringValue(mActivity, Contants.storage.ORGNAME);
         orgId = Tools.getStringValue(mActivity, Contants.storage.ORGID);
+
+        //读取本地缓存列表
+        getCacheList();
 
         adapter.setNetworkRequestListener(new ContactAdapter.NetRelativeRequestListener() {
             @Override
@@ -423,8 +272,6 @@ public class ContactsFragment extends Fragment implements Observer,
                 HttpTools.httpGet(Contants.URl.URL_ICETEST, "/orgms/org/batch", config, params);
             }
         });
-        //读取本地缓存列表
-        getCacheList();
 
         Date dt = new Date();
         Long time = dt.getTime();
@@ -449,13 +296,6 @@ public class ContactsFragment extends Fragment implements Observer,
      * 获取首页缓存列表
      */
     private void getCacheList() {
-
-        RequestConfig config = new RequestConfig(mActivity, PullRefreshListView.HTTP_FRESH_CODE);
-        config.handler = msgHand.getHandler();
-        RequestParams params = new RequestParams();
-        params.put("uid", UserInfo.employeeAccount);
-        HttpTools.httpGet(Contants.URl.URL_ICETEST, "/phonebook/frequentContacts", config, params);
-
         LinkManListCache = Tools.getLinkManList(mActivity);
         if (StringUtils.isNotEmpty(LinkManListCache)) {
             JSONArray jsonString = HttpTools.getContentJsonArray(LinkManListCache);
@@ -467,6 +307,8 @@ public class ContactsFragment extends Fragment implements Observer,
                 }
                 getPinyinList(data);
             }
+        } else {
+            modifyContactsList();
         }
     }
 
@@ -521,43 +363,123 @@ public class ContactsFragment extends Fragment implements Observer,
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        // TODO Auto-generated method stub
-        super.onAttach(activity);
-        mActivity = (MainActivity1) activity;
-    }
-
-    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == ISTREAD) {
-            //pullListView.performLoading();
+
+        }
+    }
+
+    /**
+     * item点击
+     *
+     * @param pos
+     * @param contact
+     */
+    @Override
+    public void onItemClick(int pos, Contact contact) {
+        Toast.makeText(this, "点击position：" + pos, Toast.LENGTH_SHORT).show();
+        itemFunction(pos, contact);
+    }
+
+    /**
+     * item 长按
+     *
+     * @param pos
+     */
+    @Override
+    public void onLongClick(int pos) {
+
+    }
+
+    /**
+     * 固定头item的跳转
+     *
+     * @param pos
+     * @param contact
+     */
+    void itemFunction(int pos, Contact contact) {
+        Intent intent;
+        FamilyInfo info;
+        switch (pos) {
+            case 0:
+                intent = new Intent(this, GlobalSearchActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(intent);
+                break;
+            case 1: //组织架构
+                if (familyList.size() > 0) {
+                    if (skincode.equals("101")) {//101 彩生活
+                        for (int i = 0; i < familyList.size(); i++) {
+                            if (familyList.get(i).name.equals("彩生活服务集团")) {
+                                info = new FamilyInfo();
+                                info.id = familyList.get(i).id;
+                                info.type = "org";
+                                info.name = familyList.get(i).name;
+                                intent = new Intent(mActivity, HomeContactOrgActivity.class);
+                                intent.putExtra(HomeContactOrgActivity.FAMILY_INFO, info);
+                                startActivity(intent);
+                            }
+                        }
+                    } else {
+                        info = new FamilyInfo();
+                        info.id = familyList.get(0).id;
+                        info.type = "org";
+                        info.name = familyList.get(0).name;
+                        intent = new Intent(mActivity, HomeContactOrgActivity.class);
+                        intent.putExtra(HomeContactOrgActivity.FAMILY_INFO, info);
+                        startActivity(intent);
+                    }
+
+                } else {
+                    if (StringUtils.isNotEmpty(orgId) && StringUtils.isNotEmpty(orgName)) {
+                        info = new FamilyInfo();
+                        info.id = orgId;
+                        info.type = "org";
+                        info.name = orgName;
+                        intent = new Intent(mActivity, HomeContactOrgActivity.class);
+                        intent.putExtra(HomeContactOrgActivity.FAMILY_INFO, info);
+                        startActivity(intent);
+                    } else {
+                        ToastFactory.showToast(mActivity, "正在获取组织架构，请稍后...");
+                    }
+                }
+                break;
+            case 2: //部门
+                info = new FamilyInfo();
+                info.id = UserInfo.orgId;
+                info.type = "org";
+                info.name = UserInfo.familyName;
+                intent = new Intent(mActivity, HomeContactOrgActivity.class);
+                intent.putExtra(HomeContactOrgActivity.FAMILY_INFO, info);
+                startActivity(intent);
+                break;
+            case 3:
+                break;
+            default: //item
+
+                break;
         }
     }
 
     @Override
     public void onRequestStart(Message msg, String hintString) {
-        Log.e(TAG, "onRequestStart");
+
     }
 
     @Override
     public void onSuccess(Message msg, String jsonString, String hintString) {
-        Log.e(TAG, "onSuccess" + jsonString);
-
         JSONArray json = HttpTools.getContentJsonArray(jsonString);
         if (json != null) {
             Tools.saveLinkManList(mActivity, jsonString);
             LinkManListCache = jsonString;
             ResponseData data = HttpTools.getResponseContent(json);
-            if (json.length() > 0) {
-                //rlNulllinkman.setVisibility(View.GONE);
-            }
             getPinyinList(data);
         }
     }
 
     @Override
     public void onFail(Message msg, String hintString) {
-        Log.e(TAG, "onFail");
+
     }
 }

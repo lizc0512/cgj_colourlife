@@ -12,6 +12,9 @@ import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.tg.coloursteward.MyBrowserActivity;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.info.AdvInfo;
@@ -135,12 +138,18 @@ public class AdvPagerAdapter extends PagerAdapter implements OnClickListener{
 		if(item.advResId > 0){
 			v.setImageResource(item.advResId);
 		}else{
-			VolleyUtils.getImage(con,
+			Glide.with(con).load(item.imgUrl)
+					.apply(new RequestOptions()
+							.override(1000, 500)
+							.diskCacheStrategy(DiskCacheStrategy.RESOURCE))
+					.into(v);
+
+			/*VolleyUtils.getImage(con,
 					item.imgUrl, 
 					v, 
 					1000, 
 					500, 
-					R.color.default_bg);
+					R.color.default_bg);*/
 		}
 		container.addView(v);
 		return v;

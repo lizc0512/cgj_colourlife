@@ -6,6 +6,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.ShowImageActivity;
 import com.tg.coloursteward.base.BaseActivity;
@@ -75,11 +78,11 @@ public class ImageViewGroup extends RelativeLayout implements OnClickListener, R
 		super(context);
 		initView(context,null);
 	}
-	
+
 	private void deleteFile(File file){
 		file.delete();
 	}
-	
+
 	private void deleteFile(String filePath){
 		if(TextUtils.isEmpty(filePath)){
 			return;
@@ -89,7 +92,7 @@ public class ImageViewGroup extends RelativeLayout implements OnClickListener, R
 			file.delete();
 		}
 	}
-	
+
 	private void deleteAll(){
 		if(dirPath == null){
 			return;
@@ -119,7 +122,7 @@ public class ImageViewGroup extends RelativeLayout implements OnClickListener, R
 			}
 		}
 	}
-	
+
 	private void initView(Context context,AttributeSet set){
 		mContext = context;
 		baseActivity = (BaseActivity)context;
@@ -137,14 +140,14 @@ public class ImageViewGroup extends RelativeLayout implements OnClickListener, R
 			ta.recycle();
 		}
 	}
-	
+
 	public void setAddable(boolean param){
 		if(isAddable != param){
 			isAddable = param;
 			initView();
 		}
 	}
-	
+
 	private void initView(){
 		if(isAddable){
 			if(data == null){
@@ -176,7 +179,7 @@ public class ImageViewGroup extends RelativeLayout implements OnClickListener, R
 			}
 		}
 	}
-	
+
 	public void setImageUrls(String[] urls){
 		if(urls == null || urls.length == 0){
 			setVisibility(View.GONE);
@@ -192,9 +195,9 @@ public class ImageViewGroup extends RelativeLayout implements OnClickListener, R
 			params.url = urls[i];
 			data.add(params);
 		}
-		setImageParams(data);	
+		setImageParams(data);
 	}
-	
+
 	public void setImageParams(ArrayList<ImageParams> list){
 		data = list;
 		if(data == null || data.size() == 0){
@@ -210,11 +213,11 @@ public class ImageViewGroup extends RelativeLayout implements OnClickListener, R
 			freshImageSrc(i);
 		}
 	}
-	
+
 	public ArrayList<ImageParams> getImageParams(){
 		return data;
 	}
-	
+
 	public void freshImageSrc(int i){
 		if(i < 0 || i >= data.size()){
 			return;
@@ -233,15 +236,21 @@ public class ImageViewGroup extends RelativeLayout implements OnClickListener, R
 				imgView.setImageResource(R.color.default_bg);
 			}
 		}else if(!TextUtils.isEmpty(params.url)){
-			VolleyUtils.getImage(mContext, 
-					params.url, imgView, 
-					imgWidth, imgWidth, 
-					R.color.default_bg);
+			Glide.with(mContext).load(params.url)
+					.apply(new RequestOptions()
+                            .override(imgWidth, imgWidth)
+							.diskCacheStrategy(DiskCacheStrategy.RESOURCE))
+					.into(imgView);
+
+            /*VolleyUtils.getImage(mContext,
+                    params.url, imgView,
+                    imgWidth, imgWidth,
+                    R.color.default_bg);*/
 		}else{
 			imgView.setImageResource(R.color.default_bg);
 		}
 	}
-	
+
 	public void setColumnCount(int count){
 		if(columnNumber != count){
 			columnNumber = count;
@@ -251,7 +260,7 @@ public class ImageViewGroup extends RelativeLayout implements OnClickListener, R
 			}
 		}
 	}
-	
+
 	private void initImageViewDimen(){
 		imgWidth = (mWidth - spacing * (columnNumber+1))/ columnNumber;
 	}
@@ -265,9 +274,9 @@ public class ImageViewGroup extends RelativeLayout implements OnClickListener, R
 			lp.height = imgWidth;
 			image.setLayoutParams(lp);
 		}
-		
+
 	}
-	
+
 	public void setImageViews(int count){
 		if(count < 0){
 			removeAllViews();
@@ -285,13 +294,13 @@ public class ImageViewGroup extends RelativeLayout implements OnClickListener, R
 		}
 		requestLayout();
 	}
-	
+
 	private void addImageFrom(int index,int count){
 		for(int i = index; i < index + count; i ++){
 			addImageView(i);
 		}
 	}
-	
+
 	private void removeImageFrom(int index){
 		int count = getChildCount();
 		for(int i = index; i < count; i ++){
@@ -299,7 +308,7 @@ public class ImageViewGroup extends RelativeLayout implements OnClickListener, R
 			removeImageView(i);
 		}
 	}
-	
+
 	public void removeImageView(int index){
 		View child = getImageView(index);
 		if(child != null){
@@ -307,17 +316,17 @@ public class ImageViewGroup extends RelativeLayout implements OnClickListener, R
 			childCount = getChildCount();
 		}
 	}
-	
+
 	public ImageView getImageView(int index){
 		int id= index +1;
 		ImageView child = (ImageView)findViewById(id);
 		return child;
 	}
-	
+
 	public void addImageView(){
 		addImageView(-1);
 	}
-	
+
 	public void addImageView(int index){
 		if(index < 0 || index >= getChildCount()){
 			addAtLast();
@@ -325,7 +334,7 @@ public class ImageViewGroup extends RelativeLayout implements OnClickListener, R
 		}
 		insertAt(index);
 	}
-	
+
 	public void insertAt(int index){
 		int count = getChildCount();
 		int offSet = index - count;
@@ -340,7 +349,7 @@ public class ImageViewGroup extends RelativeLayout implements OnClickListener, R
 			}
 		}
 	}
-	
+
 	public void insertAt(int index,ImageParams params){
 		if(data == null){
 			data = new ArrayList<ImageParams>();
@@ -359,9 +368,9 @@ public class ImageViewGroup extends RelativeLayout implements OnClickListener, R
 				layoutImageView(i);
 			}
 		}
-		
+
 	}
-	
+
 	/**
 	 * id++
 	 * @param index
@@ -376,15 +385,15 @@ public class ImageViewGroup extends RelativeLayout implements OnClickListener, R
 			}
 		}
 	}
-	
+
 	private void addAtLast(){
 		addAtIndex(getChildCount());
 	}
-	
+
 	public boolean canAdd(){
 		return data.size() <= maxCount;
 	}
-	
+
 	public void layoutImageView(int index){
 		ImageView imgView = getImageView(index);
 		if(imgView == null){
@@ -415,7 +424,7 @@ public class ImageViewGroup extends RelativeLayout implements OnClickListener, R
 		}
 		imgView.setLayoutParams(lp);
 	}
-	
+
 	private void addAtIndex(int index){
 		ImageView imgView;
 		LayoutParams lp;
@@ -440,7 +449,7 @@ public class ImageViewGroup extends RelativeLayout implements OnClickListener, R
 		addView(imgView, lp);
 		childCount = getChildCount();
 	}
-	
+
 	public void setOnItemClickListener(OnImageItemClickListener l){
 		itemClickListener = l;
 	}
@@ -464,7 +473,7 @@ public class ImageViewGroup extends RelativeLayout implements OnClickListener, R
 			itemClickListener.onItemClick(this, v, v.getId() - 1);
 		}
 	}
-	
+
 	private void selectLocalImage(){
 		Intent intent = new Intent(baseActivity,ShowImageActivity.class);
 		intent.putExtra(ShowImageActivity.KEY_IS_SELECT, false);
@@ -472,7 +481,7 @@ public class ImageViewGroup extends RelativeLayout implements OnClickListener, R
 		intent.putExtra(ShowImageActivity.KEY_PATH_LIST,getPathList());
 		baseActivity.startActivityForResult(intent, DELETE_PHOTO);
 	}
-	
+
 	private void selectNetImage(){
 		Intent intent = new Intent(baseActivity,ShowImageActivity.class);
 		intent.putExtra(ShowImageActivity.KEY_IS_SELECT, true);
@@ -480,7 +489,7 @@ public class ImageViewGroup extends RelativeLayout implements OnClickListener, R
 		intent.putExtra(ShowImageActivity.KEY_URL_LIST,getUrlList());
 		baseActivity.startActivity(intent);
 	}
-	
+
 	private ArrayList<String> getUrlList(){
 		ArrayList<String> listPath = new ArrayList<String>();
 		for(ImageParams imgParam: data){
@@ -490,7 +499,7 @@ public class ImageViewGroup extends RelativeLayout implements OnClickListener, R
 		}
 		return listPath;
 	}
-	
+
 	private ArrayList<String> getPathList(){
 		ArrayList<String> listPath = new ArrayList<String>();
 		for(ImageParams imgParam: data){
@@ -500,11 +509,11 @@ public class ImageViewGroup extends RelativeLayout implements OnClickListener, R
 		}
 		return listPath;
 	}
-	
+
 	public interface OnImageItemClickListener{
 		public void onItemClick(ImageViewGroup imageGroup, View v, int position);
 	}
-	
+
 	private void deleteImages(ArrayList<String> paths){
 		if(paths == null || paths.size() == 0){
 			return;
@@ -526,7 +535,7 @@ public class ImageViewGroup extends RelativeLayout implements OnClickListener, R
 			}
 		}
 	}
-	
+
 	public String getPostUrls(){
 		if(data.size() <= 1){
 			return null;
@@ -545,7 +554,7 @@ public class ImageViewGroup extends RelativeLayout implements OnClickListener, R
 		}
 		return strBuilder.toString();
 	}
-	
+
 	public ArrayList<ImageParams> getPostImageParam(){
 		if(data == null || data.size() <= 1){
 			return null;
@@ -554,7 +563,7 @@ public class ImageViewGroup extends RelativeLayout implements OnClickListener, R
 		ImageParams param;
 		for(int i = 0 ; i < data.size(); i ++){
 			param = data.get(i);
-			if(!TextUtils.isEmpty(param.path) && 
+			if(!TextUtils.isEmpty(param.path) &&
 					TextUtils.isEmpty(param.url)){
 				param.position = i;
 				list.add(param);
@@ -562,7 +571,7 @@ public class ImageViewGroup extends RelativeLayout implements OnClickListener, R
 		}
 		return list;
 	}
-	
+
 	@Override
 	public void onResult(int requestCode, int resultCode, Intent data) {
 		// TODO Auto-generated method stub
@@ -602,7 +611,7 @@ public class ImageViewGroup extends RelativeLayout implements OnClickListener, R
 					param.path = cropPath;
 					insertAt(clickPosition, param);
 				}
-				
+
 			} else {
 				if (data != null && data.getExtras() != null) {
 					Bitmap btm = data.getExtras().getParcelable("data");
@@ -633,7 +642,7 @@ public class ImageViewGroup extends RelativeLayout implements OnClickListener, R
 		}
 		}
 	}
-	
+
 	AlertDialog photoDialog;
 	public void showPhotoSelector(){
 		if (photoDialog == null) {
@@ -677,7 +686,7 @@ public class ImageViewGroup extends RelativeLayout implements OnClickListener, R
 		}
 		photoDialog.show();
 	}
-	
+
 	protected void getImageFromAlbum() {
 		Intent intent = new Intent(Intent.ACTION_PICK);
 		intent.setType("image/*");// 相片类型
@@ -716,14 +725,14 @@ public class ImageViewGroup extends RelativeLayout implements OnClickListener, R
 					File.separator+PHOTO_NAME;
 			Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 			// 指定调用相机拍照后照片的储存路径
-			//intent.putExtra(MediaStore.Images.Media.ORIENTATION, 0); 
+			//intent.putExtra(MediaStore.Images.Media.ORIENTATION, 0);
 			intent.putExtra(MediaStore.EXTRA_OUTPUT,
 					Uri.fromFile(new File(TAKE_PHOTO_PATH)));
 			baseActivity.startActivityForResult(intent,
 					PIC_PHOTO_BY_CAMERA);
 		}
 	}
-	
+
 
 	public void recycleBitmap(Bitmap btm) {
 		if (btm != null && !btm.isRecycled()) {

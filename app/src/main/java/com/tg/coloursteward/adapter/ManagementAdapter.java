@@ -9,13 +9,16 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.MyBaseAdapter;
 import com.tg.coloursteward.info.GridViewInfo;
 import com.tg.coloursteward.net.image.VolleyUtils;
 
 public class ManagementAdapter extends MyBaseAdapter<GridViewInfo> {
-	
+
 	private ArrayList<GridViewInfo> list;
 	private LayoutInflater inflater;
 	private GridViewInfo item;
@@ -42,7 +45,14 @@ public class ManagementAdapter extends MyBaseAdapter<GridViewInfo> {
 			}else{
 				icon = item.icon;
 			}
-			VolleyUtils.getImage(context,icon,ivIcon);
+
+            Glide.with(context).load(icon)
+                    .apply(new RequestOptions()
+                            .error(R.drawable.zhanwei)
+                            .diskCacheStrategy(DiskCacheStrategy.RESOURCE))
+                    .into(ivIcon);
+
+			//VolleyUtils.getImage(context,icon,ivIcon);
 		}else {
 			ivIcon.setImageResource(R.drawable.zhanwei);
 		}

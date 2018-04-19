@@ -6,6 +6,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.MyBaseAdapter;
 import com.tg.coloursteward.info.FindHomeListInfo;
@@ -39,7 +42,13 @@ public class HomeHomeListAdapter extends MyBaseAdapter<FindHomeListInfo>{
 		MyTextView tvdepartmentJob = (MyTextView) convertView.findViewById(R.id.tv_department_job);
 		tvName.setText(item.comefrom);
 		tvdepartmentJob.setText(item.title);
-		VolleyUtils.getImage(context, item.icon,rivHead,R.drawable.moren_geren);
+
+		Glide.with(context).load(item.icon)
+				.apply(new RequestOptions()
+						.error(R.drawable.moren_geren)
+						.diskCacheStrategy(DiskCacheStrategy.RESOURCE))
+				.into(rivHead);
+		//VolleyUtils.getImage(context, item.icon,rivHead,R.drawable.moren_geren);
 		return convertView;
 	}
 }

@@ -24,7 +24,7 @@
         android:layout_centerInParent="true"
         android:text="选择联系人"
         android:textColor="@color/white"
-        android:textSize="21sp" />
+        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/tv_right_sure"

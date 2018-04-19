@@ -1,6 +1,7 @@
 package com.youmai.hxsdk.adapter;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.media.MediaPlayer;
@@ -69,9 +70,9 @@ import jp.wasabeef.glide.transformations.MaskTransformation;
  * Created by colin on 2018/3/23.
  * im message adapter
  */
-public class IMListAdapter extends RecyclerView.Adapter {
+public class IMGroupAdapter extends RecyclerView.Adapter {
 
-    private static final String TAG = IMListAdapter.class.getSimpleName();
+    private static final String TAG = IMGroupAdapter.class.getSimpleName();
 
     private static final int IMG_LEFT = 0;  //图片左
 
@@ -115,7 +116,7 @@ public class IMListAdapter extends RecyclerView.Adapter {
     private OnClickMoreListener moreListener;
     private UIHandler mHandler;
 
-    public IMListAdapter(Activity act, RecyclerView recyclerView, String dstUuid) {
+    public IMGroupAdapter(Activity act, RecyclerView recyclerView, String dstUuid) {
         mAct = act;
         mHandler = new UIHandler(this);
 
@@ -1183,15 +1184,15 @@ public class IMListAdapter extends RecyclerView.Adapter {
 
 
     private static class UIHandler extends Handler {
-        private final WeakReference<IMListAdapter> mTarget;
+        private final WeakReference<IMGroupAdapter> mTarget;
 
-        UIHandler(IMListAdapter target) {
+        UIHandler(IMGroupAdapter target) {
             mTarget = new WeakReference<>(target);
         }
 
         @Override
         public void handleMessage(Message msg) {
-            final IMListAdapter adapter = mTarget.get();
+            final IMGroupAdapter adapter = mTarget.get();
 
             switch (msg.what) {
                 case HANDLER_REFRESH_PROGREE:

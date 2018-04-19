@@ -529,7 +529,7 @@ public class LocationActivity extends SdkBaseActivity implements
                     long msgId = ack.getMsgId();
                     final CacheMsgBean newMsgBean;
                     if (dstUuid.equals(HuxinSdkManager.instance().getUuid())) {
-                        newMsgBean = HuxinSdkManager.instance().getCacheMsgFromDBById(cacheMsgBean.getId());
+                        newMsgBean = CacheMsgHelper.instance().getCacheMsgFromDBById(mContext, cacheMsgBean.getId());
                     } else {
                         newMsgBean = cacheMsgBean;
                     }
@@ -562,8 +562,8 @@ public class LocationActivity extends SdkBaseActivity implements
             }
         };
 
-        HuxinSdkManager.instance().sendLocation(userId,
-                longitude, latitude, zoomLevel, address, callback);
+        HuxinSdkManager.instance().sendLocation(userId, longitude, latitude, zoomLevel, address,
+                false, callback);
         finish();
     }
 

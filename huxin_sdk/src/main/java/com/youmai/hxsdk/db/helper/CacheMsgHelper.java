@@ -319,4 +319,18 @@ public class CacheMsgHelper {
     }
 
 
+    /**
+     * 获取消息
+     *
+     * @param id
+     * @return
+     */
+
+    public CacheMsgBean getCacheMsgFromDBById(Context context, long id) {
+        CacheMsgBeanDao cacheMsgBeanDao = GreenDBIMManager.instance(context).getCacheMsgDao();
+        CacheMsgBean msgBean = cacheMsgBeanDao.queryBuilder().where(CacheMsgBeanDao.Properties.Id.eq(id)).unique();
+        return msgBean;
+    }
+
+
 }

@@ -39,7 +39,7 @@ public class PhotoPreViewActivity extends SdkPhotoActivity implements View.OnCli
             if (!file.exists()) {
                 return;
             }
-            HuxinSdkManager.instance().postPicture(mDstUuid, "", mImagePath, false);
+            HuxinSdkManager.instance().postPicture(mDstUuid, "", mImagePath, false, false);
         }
     }
 

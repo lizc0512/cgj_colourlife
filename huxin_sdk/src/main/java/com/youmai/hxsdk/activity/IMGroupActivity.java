@@ -42,16 +42,16 @@ import android.widget.Toast;
 
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.R;
-import com.youmai.hxsdk.adapter.IMListAdapter;
+import com.youmai.hxsdk.adapter.IMGroupAdapter;
 import com.youmai.hxsdk.config.FileConfig;
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
+import com.youmai.hxsdk.db.helper.CacheMsgHelper;
 import com.youmai.hxsdk.entity.CallInfo;
 import com.youmai.hxsdk.im.IMHelper;
 import com.youmai.hxsdk.im.IMMsgCallback;
 import com.youmai.hxsdk.im.IMMsgManager;
 import com.youmai.hxsdk.im.cache.CacheMsgEmotion;
 import com.youmai.hxsdk.im.cache.CacheMsgFile;
-import com.youmai.hxsdk.db.helper.CacheMsgHelper;
 import com.youmai.hxsdk.im.cache.CacheMsgImage;
 import com.youmai.hxsdk.im.cache.CacheMsgMap;
 import com.youmai.hxsdk.im.cache.CacheMsgTxt;
@@ -103,13 +103,13 @@ import static android.support.v7.widget.RecyclerView.SCROLL_STATE_SETTLING;
  * Date:    2016-11-07 10:31
  * Description:  im 界面
  */
-public class IMConnectionActivity extends SdkBaseActivity implements
+public class IMGroupActivity extends SdkBaseActivity implements
         IMMsgCallback, InputMessageLay.KeyBoardBarViewListener,
         PickerRefreshUIListener {
     /*
      * Const.
      */
-    public static final String TAG = IMConnectionActivity.class.getSimpleName();
+    public static final String TAG = IMGroupActivity.class.getSimpleName();
 
     //srsm add @20170214
     public static final String DST_NAME = "DST_NAME";
@@ -139,7 +139,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
     public InputMessageLay keyboardLay;
 
     //Data.
-    private IMListAdapter imListAdapter;
+    private IMGroupAdapter iMGroupAdapter;
 
     private TextView tvTitle;
     private ImageView ivMore;
@@ -190,16 +190,16 @@ public class IMConnectionActivity extends SdkBaseActivity implements
                     } else if (pro == -1) {
                         //下载失败
                         Toast.makeText(context, "下载失败，请重新尝试", Toast.LENGTH_SHORT).show();
-                        imListAdapter.refreshItemUI(fileQueue.getMid(), fileQueue.getPro());//不用查数据库
+                        iMGroupAdapter.refreshItemUI(fileQueue.getMid(), fileQueue.getPro());//不用查数据库
                     } else {
-                        imListAdapter.refreshItemUI(fileQueue.getMid(), fileQueue.getPro());//不用查数据库
+                        iMGroupAdapter.refreshItemUI(fileQueue.getMid(), fileQueue.getPro());//不用查数据库
                     }
                 }
             } else if (SendMsgService.ACTION_SEND_MSG.equals(action)) {
                 //消息发送的通知
                 SendMsg sendMsg = intent.getParcelableExtra("data");
                 CacheMsgBean cacheMsgBean = sendMsg.getMsg();
-                imListAdapter.refreshItemUI(cacheMsgBean);
+                iMGroupAdapter.refreshItemUI(cacheMsgBean);
 
                 if (!isPauseOut && TextUtils.equals(sendMsg.getFrom(), SendMsgService.FROM_IM)) {
                     String type = intent.hasExtra("type") ? intent.getStringExtra("type") : null;
@@ -212,7 +212,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
                 }
             } else if (SendMsgService.ACTION_UPDATE_MSG.equals(intent.getAction())) {
                 CacheMsgBean cacheMsgBean = intent.getParcelableExtra("CacheMsgBean");
-                List<CacheMsgBean> cacheMsgBeanList = imListAdapter.getmImBeanList();
+                List<CacheMsgBean> cacheMsgBeanList = iMGroupAdapter.getmImBeanList();
                 int size = cacheMsgBeanList.size();
                 for (int i = 0; i < size; i++) {
                     CacheMsgBean oriMsgBean = cacheMsgBeanList.get(i);
@@ -232,15 +232,15 @@ public class IMConnectionActivity extends SdkBaseActivity implements
 
 
     private static class NormalHandler extends Handler {
-        private final WeakReference<IMConnectionActivity> mTarget;
+        private final WeakReference<IMGroupActivity> mTarget;
 
-        NormalHandler(IMConnectionActivity target) {
+        NormalHandler(IMGroupActivity target) {
             mTarget = new WeakReference<>(target);
         }
 
         @Override
         public void handleMessage(Message msg) {
-            IMConnectionActivity act = mTarget.get();
+            IMGroupActivity act = mTarget.get();
             switch (msg.what) {
                 case MSG_GET_CONTACT_ID:
                     break;
@@ -254,7 +254,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.hx_fragment_im_main);
+        setContentView(R.layout.hx_activity_im_group);
         mContext = this;
 
         mHandler = new NormalHandler(this);
@@ -398,8 +398,8 @@ public class IMConnectionActivity extends SdkBaseActivity implements
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             //拦截适配器里更多状态,恢复原始消息状态
-            if (imListAdapter != null && imListAdapter.isShowSelect) {
-                imListAdapter.cancelMoreStat();
+            if (iMGroupAdapter != null && iMGroupAdapter.isShowSelect) {
+                iMGroupAdapter.cancelMoreStat();
                 setRightUi(false);
                 return true;
             }
@@ -418,7 +418,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
     public void onStop() {
         super.onStop();
         MediaManager.release();
-        imListAdapter.onStop();
+        iMGroupAdapter.onStop();
     }
 
     @Override
@@ -455,8 +455,8 @@ public class IMConnectionActivity extends SdkBaseActivity implements
             tvBack.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (imListAdapter != null && imListAdapter.isShowSelect) {
-                        imListAdapter.cancelMoreStat();
+                    if (iMGroupAdapter != null && iMGroupAdapter.isShowSelect) {
+                        iMGroupAdapter.cancelMoreStat();
                         setRightUi(false);
                         return;
                     }
@@ -487,7 +487,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
         ivGroup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(IMConnectionActivity.this, ChatDetailsActivity.class));
+                startActivity(new Intent(IMGroupActivity.this, ChatDetailsActivity.class));
             }
         });
 
@@ -516,8 +516,8 @@ public class IMConnectionActivity extends SdkBaseActivity implements
                     case SCROLL_STATE_IDLE:
                         if (!isSmoothBottom) {
                             isSmoothBottom = true;
-                            if (imListAdapter.mThemeIndex != -1) {
-                                imListAdapter.notifyItemChanged(imListAdapter.mThemeIndex);
+                            if (iMGroupAdapter.mThemeIndex != -1) {
+                                iMGroupAdapter.notifyItemChanged(iMGroupAdapter.mThemeIndex);
                             }
                         }
                         break;
@@ -533,8 +533,8 @@ public class IMConnectionActivity extends SdkBaseActivity implements
         manager = new LinearLayoutManagerWithSmoothScroller(this, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(manager);
 
-        imListAdapter = new IMListAdapter(this, recyclerView, dstUuid);
-        imListAdapter.setMoreListener(new IMListAdapter.OnClickMoreListener() {
+        iMGroupAdapter = new IMGroupAdapter(this, recyclerView, dstUuid);
+        iMGroupAdapter.setMoreListener(new IMGroupAdapter.OnClickMoreListener() {
             @Override
             public void showMore(boolean isShow) {
                 setRightUi(isShow);
@@ -550,15 +550,15 @@ public class IMConnectionActivity extends SdkBaseActivity implements
                 }
             }
         });
-        recyclerView.setAdapter(imListAdapter);
+        recyclerView.setAdapter(iMGroupAdapter);
 
         if (mScrollPosition != 0) {
-            recyclerView.scrollToPosition(imListAdapter.getItemPosition(mScrollPosition));
+            recyclerView.scrollToPosition(iMGroupAdapter.getItemPosition(mScrollPosition));
         } else {
-            recyclerView.scrollToPosition(imListAdapter.getItemCount() - 1); // scroll to bottom
-            imListAdapter.focusBottom(false, 30);//scrollToPosition在item超长时，不能滑到最底，这里补救
+            recyclerView.scrollToPosition(iMGroupAdapter.getItemCount() - 1); // scroll to bottom
+            iMGroupAdapter.focusBottom(false, 30);//scrollToPosition在item超长时，不能滑到最底，这里补救
         }
-        imListAdapter.setListener(new IMListAdapter.OnListener() {
+        iMGroupAdapter.setListener(new IMGroupAdapter.OnListener() {
             @Override
             public void smoothScroll(final int position, long delayMillis, final boolean isScrollerTop) {
                 isSmoothBottom = false;
@@ -699,7 +699,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
             cacheMsgBean.setMsgType(CacheMsgBean.SEND_EMOTION).setJsonBodyObj(new CacheMsgEmotion().setEmotion(content, refContent));
         }
 
-        imListAdapter.addAndRefreshUI(cacheMsgBean);
+        iMGroupAdapter.addAndRefreshUI(cacheMsgBean);
         sendMsg(cacheMsgBean);
     }
 
@@ -723,7 +723,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
                         .setAddress(address)
                         .setImgUrl(url));
 
-        imListAdapter.addAndRefreshUI(cacheMsgBean);
+        iMGroupAdapter.addAndRefreshUI(cacheMsgBean);
         sendMsg(cacheMsgBean);
     }
 
@@ -741,7 +741,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
         cacheMsgBean.setMsgType(CacheMsgBean.SEND_VOICE)
                 .setJsonBodyObj(new CacheMsgVoice().setVoiceTime(seconds + "").setVoicePath(filePath));
 
-        imListAdapter.addAndRefreshUI(cacheMsgBean);
+        iMGroupAdapter.addAndRefreshUI(cacheMsgBean);
         sendMsg(cacheMsgBean);
     }
 
@@ -757,7 +757,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
                         .setFilePath(path)
                         .setOriginalType(isOriginal ? CacheMsgImage.SEND_IS_ORI : CacheMsgImage.SEND_NOT_ORI));
 
-        imListAdapter.addAndRefreshUI(cacheMsgBean);
+        iMGroupAdapter.addAndRefreshUI(cacheMsgBean);
         sendMsg(cacheMsgBean);
     }
 
@@ -776,7 +776,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
                         .setFileName(file.getName())
                         .setFileRes(IMHelper.getFileImgRes(file.getName(), false)));
 
-        imListAdapter.addAndRefreshUI(cacheMsgBean);
+        iMGroupAdapter.addAndRefreshUI(cacheMsgBean);
         sendMsg(cacheMsgBean);
     }
 
@@ -791,7 +791,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
                         .setFramePath(framePath)
                         .setTime(millisecond));
 
-        imListAdapter.addAndRefreshUI(cacheMsgBean);
+        iMGroupAdapter.addAndRefreshUI(cacheMsgBean);
         sendMsg(cacheMsgBean);
     }
 
@@ -926,7 +926,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
             }
         } else if (requestCode == REQUEST_CODE_FORWAED && resultCode == 200) {
             //批量转发后的回调
-            imListAdapter.cancelMoreStat();
+            iMGroupAdapter.cancelMoreStat();
 
             setRightUi(false);
         }
@@ -991,7 +991,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
         //刷新界面
         if (!isFinishing()) {
             if (cacheMsgBean.getSenderUserId().equals(dstUuid))
-                imListAdapter.refreshIncomingMsgUI(cacheMsgBean);
+                iMGroupAdapter.refreshIncomingMsgUI(cacheMsgBean);
         }
     }
 
@@ -1009,7 +1009,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
             CacheMsgVideo cacheMsgVideo = (CacheMsgVideo) cacheMsgBean.getJsonBodyObj();
             cacheMsgBean.setJsonBodyObj(cacheMsgVideo);
             cacheMsgBean.setProgress(fileQueue.getPro());
-            imListAdapter.refreshItemUI(cacheMsgBean);
+            iMGroupAdapter.refreshItemUI(cacheMsgBean);
         }
     }
 
@@ -1027,7 +1027,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
                 recyclerView.post(new Runnable() {
                     @Override
                     public void run() {
-                        imListAdapter.focusBottom(false);
+                        iMGroupAdapter.focusBottom(false);
                     }
                 });
             }
@@ -1041,7 +1041,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
                             mHandler.postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
-                                    imListAdapter.focusBottom(false);
+                                    iMGroupAdapter.focusBottom(false);
                                 }
                             }, 300);
                         }
@@ -1053,7 +1053,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
                             mHandler.postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
-                                    imListAdapter.focusBottom(false);
+                                    iMGroupAdapter.focusBottom(false);
                                 }
                             }, 300);
                         }
@@ -1099,7 +1099,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
 
     @Override
     public void onScroll() {
-        imListAdapter.focusBottom(false);
+        iMGroupAdapter.focusBottom(false);
     }
 
     /**
@@ -1137,7 +1137,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
 
     @Override
     public void onMoreForward() {
-        TreeMap<Integer, CacheMsgBean> selectMsg = imListAdapter.getSelectMsg();
+        TreeMap<Integer, CacheMsgBean> selectMsg = iMGroupAdapter.getSelectMsg();
         ArrayList<CacheMsgBean> msgList = new ArrayList<>();
         for (Object o : selectMsg.entrySet()) {
             Map.Entry entry = (Map.Entry) o;

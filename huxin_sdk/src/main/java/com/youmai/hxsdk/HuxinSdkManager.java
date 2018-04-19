@@ -533,22 +533,12 @@ public class HuxinSdkManager {
      * @param
      */
     public void getUploadFileToken(IPostListener callback) {
-
         String url = AppConfig.GET_UPLOAD_FILE_TOKEN;
 
-        String imei = DeviceUtils.getIMEI(mContext);
-        String phoneNum = getPhoneNum();
-        int uid = getUserId();
-        String sid = getSession();
+        String uuid = getUuid();
 
         ContentValues params = new ContentValues();
-        params.put("msisdn", phoneNum);
-        params.put("uid", uid);// 海外登录去除号码验证，只保留数字验证参数issms=3
-        params.put("sid", sid); //保存
-        params.put("termid", imei); //动态
-        params.put("sign", AppConfig.appSign(phoneNum, imei));// 发行的渠道
-        params.put("v", "5");
-        params.put("ps", "-4202-8980600-");
+        params.put("uid", uuid);
         HttpConnector.httpPost(url, params, callback);
     }
 
@@ -581,9 +571,10 @@ public class HuxinSdkManager {
      * 发送文字
      *
      * @param destUuid
+     * @param isGroup  是否为群组消息
      * @param content
      */
-    public void sendText(String destUuid, String content, ReceiveListener callback) {
+    public void sendText(String destUuid, String content, boolean isGroup, ReceiveListener callback) {
         YouMaiMsg.MsgData.Builder msgData = YouMaiMsg.MsgData.newBuilder();
         msgData.setSrcUserId(getUuid());
         msgData.setSrcAvatar(getHeadUrl());
@@ -601,7 +592,12 @@ public class HuxinSdkManager {
         builder.setData(msgData);
         YouMaiMsg.ChatMsg chatMsg = builder.build();
 
-        sendProto(chatMsg, YouMaiBasic.COMMANDID.CID_CHAT_BUDDY_VALUE, callback);
+        if (isGroup) {
+            sendProto(chatMsg, YouMaiBasic.COMMANDID.CID_CHAT_GROUP_VALUE, callback);
+        } else {
+            sendProto(chatMsg, YouMaiBasic.COMMANDID.CID_CHAT_BUDDY_VALUE, callback);
+        }
+
     }
 
 
@@ -613,10 +609,11 @@ public class HuxinSdkManager {
      * @param latitude
      * @param scale
      * @param label
+     * @param isGroup   是否为群组消息
      * @param callback
      */
     public void sendLocation(String destUuid, double longitude, double latitude,
-                             int scale, String label, ReceiveListener callback) {
+                             int scale, String label, boolean isGroup, ReceiveListener callback) {
 
         YouMaiMsg.MsgData.Builder msgData = YouMaiMsg.MsgData.newBuilder();
         msgData.setSrcUserId(getUuid());
@@ -638,7 +635,11 @@ public class HuxinSdkManager {
         builder.setData(msgData);
         YouMaiMsg.ChatMsg chatMsg = builder.build();
 
-        sendProto(chatMsg, YouMaiBasic.COMMANDID.CID_CHAT_BUDDY_VALUE, callback);
+        if (isGroup) {
+            sendProto(chatMsg, YouMaiBasic.COMMANDID.CID_CHAT_GROUP_VALUE, callback);
+        } else {
+            sendProto(chatMsg, YouMaiBasic.COMMANDID.CID_CHAT_BUDDY_VALUE, callback);
+        }
     }
 
 
@@ -648,9 +649,11 @@ public class HuxinSdkManager {
      * @param destUuid
      * @param fileId
      * @param quality
+     * @param isGroup  是否为群组消息
      * @param callback
      */
-    public void sendPicture(String destUuid, String fileId, String quality, ReceiveListener callback) {
+    public void sendPicture(String destUuid, String fileId, String quality,
+                            boolean isGroup, ReceiveListener callback) {
         YouMaiMsg.MsgData.Builder msgData = YouMaiMsg.MsgData.newBuilder();
         msgData.setSrcUserId(getUuid());
         msgData.setSrcAvatar(getHeadUrl());
@@ -669,7 +672,11 @@ public class HuxinSdkManager {
         builder.setData(msgData);
         YouMaiMsg.ChatMsg chatMsg = builder.build();
 
-        sendProto(chatMsg, YouMaiBasic.COMMANDID.CID_CHAT_BUDDY_VALUE, callback);
+        if (isGroup) {
+            sendProto(chatMsg, YouMaiBasic.COMMANDID.CID_CHAT_GROUP_VALUE, callback);
+        } else {
+            sendProto(chatMsg, YouMaiBasic.COMMANDID.CID_CHAT_BUDDY_VALUE, callback);
+        }
     }
 
 
@@ -678,9 +685,11 @@ public class HuxinSdkManager {
      *
      * @param destUuid
      * @param fileId
+     * @param isGroup  是否为群组消息
      * @param callback
      */
-    public void sendAudio(String destUuid, String fileId, String secondsTime, String sourcePhone, String forwardCount, ReceiveListener callback) {
+    public void sendAudio(String destUuid, String fileId, String secondsTime, String sourcePhone,
+                          String forwardCount, boolean isGroup, ReceiveListener callback) {
         YouMaiMsg.MsgData.Builder msgData = YouMaiMsg.MsgData.newBuilder();
         msgData.setSrcUserId(getUuid());
         msgData.setSrcAvatar(getHeadUrl());
@@ -701,7 +710,11 @@ public class HuxinSdkManager {
         builder.setData(msgData);
         YouMaiMsg.ChatMsg chatMsg = builder.build();
 
-        sendProto(chatMsg, YouMaiBasic.COMMANDID.CID_CHAT_BUDDY_VALUE, callback);
+        if (isGroup) {
+            sendProto(chatMsg, YouMaiBasic.COMMANDID.CID_CHAT_GROUP_VALUE, callback);
+        } else {
+            sendProto(chatMsg, YouMaiBasic.COMMANDID.CID_CHAT_BUDDY_VALUE, callback);
+        }
 
 
     }
@@ -712,9 +725,11 @@ public class HuxinSdkManager {
      *
      * @param destUuid
      * @param fileId
+     * @param isGroup  是否为群组消息
      * @param callback
      */
-    public void sendVideo(String destUuid, String fileId, String frameId, String name, String size, String time, ReceiveListener callback) {
+    public void sendVideo(String destUuid, String fileId, String frameId, String name, String size,
+                          String time, boolean isGroup, ReceiveListener callback) {
         YouMaiMsg.MsgData.Builder msgData = YouMaiMsg.MsgData.newBuilder();
         msgData.setSrcUserId(getUuid());
         msgData.setSrcAvatar(getHeadUrl());
@@ -732,7 +747,11 @@ public class HuxinSdkManager {
         builder.setData(msgData);
         YouMaiMsg.ChatMsg chatMsg = builder.build();
 
-        sendProto(chatMsg, YouMaiBasic.COMMANDID.CID_CHAT_BUDDY_VALUE, callback);
+        if (isGroup) {
+            sendProto(chatMsg, YouMaiBasic.COMMANDID.CID_CHAT_GROUP_VALUE, callback);
+        } else {
+            sendProto(chatMsg, YouMaiBasic.COMMANDID.CID_CHAT_BUDDY_VALUE, callback);
+        }
     }
 
     /**
@@ -740,10 +759,12 @@ public class HuxinSdkManager {
      *
      * @param destUuid
      * @param fileId
+     * @param isGroup  是否为群组消息
      * @param callback
      */
     public void sendFile(String destUuid, String fileId,
-                         String fileName, String fileSize, ReceiveListener callback) {
+                         String fileName, String fileSize,
+                         boolean isGroup, ReceiveListener callback) {
         YouMaiMsg.MsgData.Builder msgData = YouMaiMsg.MsgData.newBuilder();
         msgData.setSrcUserId(getUuid());
         msgData.setSrcAvatar(getHeadUrl());
@@ -761,41 +782,11 @@ public class HuxinSdkManager {
         builder.setData(msgData);
         YouMaiMsg.ChatMsg chatMsg = builder.build();
 
-        sendProto(chatMsg, YouMaiBasic.COMMANDID.CID_CHAT_BUDDY_VALUE, callback);
-    }
-
-
-    /**
-     * tcp发送url
-     *
-     * @param destUuid
-     * @param url
-     * @param title
-     * @param description
-     * @param callback
-     */
-    public void sendUrl(String destUuid, String url, String title,
-                        String description, ReceiveListener callback) {
-        YouMaiMsg.MsgData.Builder msgData = YouMaiMsg.MsgData.newBuilder();
-        msgData.setSrcUserId(getUuid());
-        msgData.setSrcAvatar(getHeadUrl());
-        msgData.setSrcSex(getSex());
-        msgData.setSrcRealname(getRealName());
-        msgData.setSrcMobile(getPhoneNum());
-        msgData.setDestUserId(destUuid);
-        msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_FILE);
-
-        IMContentUtil imContentUtil = new IMContentUtil();
-        imContentUtil.appendUrl(url);
-        imContentUtil.appendTitle(title);
-        imContentUtil.appendDescribe(description);
-        msgData.setMsgContent(imContentUtil.serializeToString());
-
-        YouMaiMsg.ChatMsg.Builder builder = YouMaiMsg.ChatMsg.newBuilder();
-        builder.setData(msgData);
-        YouMaiMsg.ChatMsg chatMsg = builder.build();
-
-        sendProto(chatMsg, YouMaiBasic.COMMANDID.CID_CHAT_BUDDY_VALUE, callback);
+        if (isGroup) {
+            sendProto(chatMsg, YouMaiBasic.COMMANDID.CID_CHAT_GROUP_VALUE, callback);
+        } else {
+            sendProto(chatMsg, YouMaiBasic.COMMANDID.CID_CHAT_BUDDY_VALUE, callback);
+        }
     }
 
 
@@ -804,7 +795,8 @@ public class HuxinSdkManager {
      *
      * @param callback
      */
-    public void createGroup(ReceiveListener callback, String groupName, List<YouMaiGroup.MemberItem> list) {
+    public void createGroup(ReceiveListener callback, String groupName,
+                            List<YouMaiGroup.GroupMemberItem> list) {
         YouMaiGroup.GroupCreateReq.Builder builder = YouMaiGroup.GroupCreateReq.newBuilder();
         builder.setUserId(getUuid());
         builder.setGroupName(groupName);
@@ -1035,7 +1027,8 @@ public class HuxinSdkManager {
      * @param secondTimes
      * @return
      */
-    public void postAudio(final String uuid, final File file, final String secondTimes) {
+    public void postAudio(final String uuid, final File file, final String secondTimes,
+                          final boolean isGroup) {
 
         postFileToQiNiu(file, "2", new OnFileListener() {
             @Override
@@ -1061,7 +1054,7 @@ public class HuxinSdkManager {
                         }
                     }
                 };
-                sendAudio(uuid, fileId, secondTimes, getPhoneNum(), "0", receiveListener);
+                sendAudio(uuid, fileId, secondTimes, getPhoneNum(), "0", isGroup, receiveListener);
             }
 
             @Override
@@ -1083,10 +1076,10 @@ public class HuxinSdkManager {
      * @return
      */
     public void postFile(final String dstUuid, final String path,
-                         final String fileName, final String fileSize) {
+                         final String fileName, final String fileSize, final boolean isGroup) {
         File file = new File(path);
         if (file.exists()) {
-            postFile(dstUuid, file, fileName, fileSize);
+            postFile(dstUuid, file, fileName, fileSize, isGroup);
         }
 
     }
@@ -1101,7 +1094,7 @@ public class HuxinSdkManager {
      * @return
      */
     public void postFile(final String dstUuid, final File file,
-                         final String fileName, final String fileSize) {
+                         final String fileName, final String fileSize, final boolean isGroup) {
         postFileToQiNiu(file, "2", new OnFileListener() {
             @Override
             public void onProgress(double progress) {
@@ -1127,7 +1120,7 @@ public class HuxinSdkManager {
 
                     }
                 };
-                sendFile(dstUuid, fileId, fileName, fileSize, receiveListener);
+                sendFile(dstUuid, fileId, fileName, fileSize, isGroup, receiveListener);
             }
 
             @Override
@@ -1144,10 +1137,9 @@ public class HuxinSdkManager {
      * @param compressPath (压缩后图片文件,发送完删除)
      * @param originalPath 地图片的原始路径(原图)
      */
-    public void postPicture(final String dstUuid,
-                            final String compressPath,
-                            final String originalPath,
-                            final boolean isOriginal) {
+    public void postPicture(final String dstUuid, final String compressPath,
+                            final String originalPath, final boolean isOriginal,
+                            final boolean isGroup) {
 
         File file;
         if (isOriginal) {
@@ -1181,7 +1173,7 @@ public class HuxinSdkManager {
                     }
                 };
 
-                sendPicture(dstUuid, fileId, isOriginal ? "original" : "thumbnail", receiveListener);
+                sendPicture(dstUuid, fileId, isOriginal ? "original" : "thumbnail", isGroup, receiveListener);
             }
 
             @Override
@@ -1191,19 +1183,6 @@ public class HuxinSdkManager {
         });
     }
 
-
-    /**
-     * 获取消息
-     *
-     * @param id
-     * @return
-     */
-
-    public CacheMsgBean getCacheMsgFromDBById(long id) {
-        CacheMsgBeanDao cacheMsgBeanDao = GreenDBIMManager.instance(mContext).getCacheMsgDao();
-        CacheMsgBean msgBean = cacheMsgBeanDao.queryBuilder().where(CacheMsgBeanDao.Properties.Id.eq(id)).unique();
-        return msgBean;
-    }
 
     /**
      * bind service callback

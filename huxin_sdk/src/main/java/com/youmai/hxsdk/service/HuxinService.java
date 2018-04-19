@@ -102,15 +102,6 @@ public class HuxinService extends Service {
      * activity和service通信接口
      */
     public class HuxinServiceBinder extends Binder {
-        /**
-         * 发送socket协议
-         *
-         * @param msg      消息体
-         * @param callback 回调
-         */
-        public void sendProto(GeneratedMessage msg, ReceiveListener callback) {
-            mClient.sendProto(msg, callback);
-        }
 
         /**
          * 发送socket协议
@@ -343,7 +334,6 @@ public class HuxinService extends Service {
                 @Override
                 public void connectSuccess() {
                     tcpLogin(uuid, ColorsConfig.ColorLifeAppId);
-                    //test();
                 }
             };
             mClient.connect(callback);
@@ -428,38 +418,8 @@ public class HuxinService extends Service {
                 }
             }
         };
-        mClient.sendProto(login, callback);
+        mClient.sendProto(login, YouMaiBasic.COMMANDID.USER_LOGIN_VALUE, callback);
     }
 
 
-    private void test() {
-
-        YouMaiBuddy.IMGetOrgReq.Builder builder = YouMaiBuddy.IMGetOrgReq.newBuilder();
-        builder.setOrgId(ColorsConfig.ColorLifeAppId);
-
-        YouMaiBuddy.IMGetOrgReq orgReq = builder.build();
-
-        ReceiveListener callback = new ReceiveListener() {
-            @Override
-            public void OnRec(PduBase pduBase) {
-                try {
-                    YouMaiBuddy.IMGetOrgRsp rsp = YouMaiBuddy.IMGetOrgRsp.parseFrom(pduBase.body);
-                    List<YouMaiBuddy.OrgInfo> list = rsp.getOrgListList();
-
-                    for (YouMaiBuddy.OrgInfo item : list) {
-                        String test1 = item.getAvator();
-                        String test2 = item.getName();
-                        String test3 = item.getOrgId();
-                        String test4 = item.getUsername();
-                        int test5 = item.getType();
-
-                    }
-
-                } catch (InvalidProtocolBufferException e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-        mClient.sendProto(orgReq, YouMaiBasic.COMMANDID.CID_ORG_LIST_REQ_VALUE, callback);
-    }
 }

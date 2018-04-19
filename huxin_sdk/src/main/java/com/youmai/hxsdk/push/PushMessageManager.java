@@ -1,22 +1,15 @@
 package com.youmai.hxsdk.push;
 
 import android.content.Context;
-import android.os.Handler;
-import android.os.Looper;
-import android.telephony.TelephonyManager;
-import android.text.TextUtils;
 import android.util.Log;
 
 import com.youmai.hxsdk.im.IMChat;
 import com.youmai.hxsdk.im.IMMsgManager;
 import com.youmai.hxsdk.proto.YouMaiMsg;
 import com.youmai.hxsdk.push.utils.PushJsonUtils;
-import com.youmai.hxsdk.config.AppConfig;
 import com.youmai.hxsdk.socket.IMContentType;
 import com.youmai.hxsdk.socket.IMContentUtil;
 
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * 收到推送消息，对弹屏判断
@@ -45,74 +38,9 @@ public class PushMessageManager {
 
         IMChat msg = new IMChat(message);
 
-        //服务已经被拉起，消息在默认接收器会被处理，内容不全如目标号码为空也会导致其它问题   IMMsgManager.getInstance().parseCharMsg(msg);
-
         final String phone = PushJsonUtils.getValue(message, String.valueOf(IMContentType.CONTENT_PHONE));//对方手机号
-        try {
-            //获得相应的系统服务
-            TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-            switch (tm.getCallState()) {
-                case TelephonyManager.CALL_STATE_IDLE:  //无状态   进入IM界面
-                    //TODO 无状态
-                    Log.e("TcpClient", "push message:" + message);
-//                    Intent intent = new Intent(context, IMConnectionActivity.class);
-//                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                    intent.putExtra(IMConnectFragment.DST_PHONE, phone);
-//                    context.startActivity(intent);
-                    IMMsgManager.instance().notifyMsg(msg, true);
-                    break;
-                case TelephonyManager.CALL_STATE_RINGING:   //被叫响铃状态    需要修改为所有消息均需展示在弹屏上（图片、位置、表情、文件）
-
-                    TimerTask task = new TimerTask() {
-
-                        @Override
-                        public void run() {
-                            String msgType = PushJsonUtils.getValue(message, String.valueOf(IMContentType.CONTEXT_TEXT_TYPE));//消息类型
-                            switch (isType(msgType)) {
-                                case 1:
-                                    break;
-                                case 2:
-                                    pictureType(message);//图片
-                                    break;
-                                case 3:
-                                    locationType(message);//地图
-                                    break;
-                                case 4:
-                                    break;
-                            }
-                        }
-                    };
-                    Timer timer = new Timer();
-                    timer.schedule(task, 2000);//延迟300ms触发，要读取监听通话的状态
-                    break;
-                case TelephonyManager.CALL_STATE_OFFHOOK:   //被叫接通状态    需要继续展示弹屏，消息展示在弹屏上面
-                    TimerTask task2 = new TimerTask() {
-
-                        @Override
-                        public void run() {
-                            String msgType2 = PushJsonUtils.getValue(message, String.valueOf(IMContentType.CONTEXT_TEXT_TYPE));//消息类型
-                            Log.w("push", "msgType2:" + msgType2);
-                            switch (isType(msgType2)) {
-                                case 1:
-                                    break;
-                                case 2:
-                                    pictureType(message);//图片
-                                    break;
-                                case 3:
-                                    locationType(message);//地图
-                                    break;
-                                case 4:
-                                    break;
-                            }
-                        }
-                    };
-                    Timer timer2 = new Timer();
-                    timer2.schedule(task2, 2000);//延迟300ms触发，要读取监听通话的状态
-                    break;
-            }
-        } catch (Exception e) {
-            Log.w("push", "获取状态异常");
-        }
+        //服务已经被拉起，消息在默认接收器会被处理，内容不全如目标号码为空也会导致其它问题   IMMsgManager.getInstance().parseCharMsg(msg);
+        IMMsgManager.instance().notifyMsg(msg, true, false);
     }
 
     /**

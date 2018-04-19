@@ -152,16 +152,6 @@ public class TcpClient extends PduUtil implements Runnable {
         }
     }
 
-    /**
-     * 发送协议接口
-     *
-     * @param msg      消息体
-     * @param callback 回调
-     */
-    public void sendProto(GeneratedMessage msg, ReceiveListener callback) {
-        sendProto(msg, -1, callback);
-    }
-
 
     /**
      * 发送协议接口
@@ -173,11 +163,7 @@ public class TcpClient extends PduUtil implements Runnable {
         PduBase pduBase = new PduBase();
         int seq_num = getSeqNum();
 
-        if (commandId == -1) {
-            pduBase.command_id = getActCode(msg.getClass().getSimpleName().toUpperCase());
-        } else {
-            pduBase.command_id = commandId;
-        }
+        pduBase.command_id = commandId;
 
         String uuid = HuxinSdkManager.instance().getUuid();
         if (TextUtils.isEmpty(uuid)) {
@@ -307,10 +293,6 @@ public class TcpClient extends PduUtil implements Runnable {
         }
     }
 
-    private int getActCode(String className) {
-        return YouMaiBasic.COMMANDID.valueOf(className).getNumber();
-    }
-
 
     @Override
     public void OnRec(final PduBase pduBase) {
@@ -395,7 +377,7 @@ public class TcpClient extends PduUtil implements Runnable {
 
         YouMaiBasic.Heart_Beat.Builder heart_builder = YouMaiBasic.Heart_Beat.newBuilder();
         YouMaiBasic.Heart_Beat heart = heart_builder.build();
-        sendProto(heart, new ReceiveListener() {
+        sendProto(heart, YouMaiBasic.COMMANDID.HEART_BEAT_VALUE, new ReceiveListener() {
             @Override
             public void OnRec(PduBase pduBase) {
                 Log.v(TAG, "heart ack success");

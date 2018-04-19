@@ -37,6 +37,7 @@ import com.youmai.hxsdk.im.cache.CacheMsgVoice;
 import com.youmai.hxsdk.module.groupchat.ChatDetailsActivity;
 import com.youmai.hxsdk.proto.YouMaiBasic;
 import com.youmai.hxsdk.proto.YouMaiBulletin;
+import com.youmai.hxsdk.proto.YouMaiGroup;
 import com.youmai.hxsdk.proto.YouMaiMsg;
 import com.youmai.hxsdk.proto.YouMaiUser;
 import com.youmai.hxsdk.socket.NotifyListener;
@@ -162,6 +163,60 @@ public class IMMsgManager {
 
 
     /**
+     * 群组操作
+     */
+    private NotifyListener mGroupOptionNotify = new NotifyListener(
+            YouMaiBasic.COMMANDID.CID_GROUP_OPT_NOTIFY_VALUE) {
+        @Override
+        public void OnRec(byte[] data) {
+            try {
+                YouMaiGroup.GroupOptNotify notify = YouMaiGroup.GroupOptNotify.parseFrom(data);
+
+
+            } catch (InvalidProtocolBufferException e) {
+                e.printStackTrace();
+            }
+        }
+    };
+
+
+    /**
+     * 添加删除群组成员
+     */
+    private NotifyListener mGroupChangeNotify = new NotifyListener(
+            YouMaiBasic.COMMANDID.CID_GROUP_CHANGE_MEMBER_NOTIFY_VALUE) {
+        @Override
+        public void OnRec(byte[] data) {
+            try {
+                YouMaiGroup.GroupMemberChangeNotify notify = YouMaiGroup.GroupMemberChangeNotify.parseFrom(data);
+                notify.getMemberListList();
+
+            } catch (InvalidProtocolBufferException e) {
+                e.printStackTrace();
+            }
+        }
+    };
+
+
+    /**
+     * 群资料修改通知
+     */
+    private NotifyListener mGroupInfoModifyNotify = new NotifyListener(
+            YouMaiBasic.COMMANDID.CID_GROUP_INFO_MODIFY__NOTIFY_VALUE) {
+        @Override
+        public void OnRec(byte[] data) {
+            try {
+                YouMaiGroup.IMGroupInfoModifyNotify notify = YouMaiGroup.IMGroupInfoModifyNotify.parseFrom(data);
+
+
+            } catch (InvalidProtocolBufferException e) {
+                e.printStackTrace();
+            }
+        }
+    };
+
+
+    /**
      * 公告默认监听器
      */
     private final NotifyListener OnRecvBulletin = new NotifyListener(
@@ -229,6 +284,9 @@ public class IMMsgManager {
     public void addChatListener() {
         HuxinSdkManager.instance().setNotifyListener(mNotifyListener);
         HuxinSdkManager.instance().setNotifyListener(mGroupListener);
+        HuxinSdkManager.instance().setNotifyListener(mGroupOptionNotify);
+        HuxinSdkManager.instance().setNotifyListener(mGroupChangeNotify);
+        HuxinSdkManager.instance().setNotifyListener(mGroupInfoModifyNotify);
         HuxinSdkManager.instance().setNotifyListener(OnRecvBulletin);
         HuxinSdkManager.instance().setNotifyListener(onDeviceKickedNotify);
     }
@@ -239,6 +297,9 @@ public class IMMsgManager {
     public void removeChatListener() {
         HuxinSdkManager.instance().clearNotifyListener(mNotifyListener);
         HuxinSdkManager.instance().clearNotifyListener(mGroupListener);
+        HuxinSdkManager.instance().clearNotifyListener(mGroupOptionNotify);
+        HuxinSdkManager.instance().clearNotifyListener(mGroupChangeNotify);
+        HuxinSdkManager.instance().clearNotifyListener(mGroupInfoModifyNotify);
         HuxinSdkManager.instance().clearNotifyListener(OnRecvBulletin);
         HuxinSdkManager.instance().clearNotifyListener(onDeviceKickedNotify);
     }

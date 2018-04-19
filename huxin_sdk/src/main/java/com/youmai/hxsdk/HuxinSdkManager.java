@@ -43,6 +43,7 @@ import com.youmai.hxsdk.im.IMMsgManager;
 import com.youmai.hxsdk.interfaces.OnFileListener;
 import com.youmai.hxsdk.proto.YouMaiBasic;
 import com.youmai.hxsdk.proto.YouMaiBuddy;
+import com.youmai.hxsdk.proto.YouMaiGroup;
 import com.youmai.hxsdk.proto.YouMaiMsg;
 import com.youmai.hxsdk.push.MorePushManager;
 import com.youmai.hxsdk.service.HuxinService;
@@ -414,22 +415,6 @@ public class HuxinSdkManager {
     }
 
 
-    public void waitBindingProto(final GeneratedMessage msg, final ReceiveListener callback) {
-        init(mContext, new InitListener() {
-            @Override
-            public void success() {
-                huxinService.sendProto(msg, callback);
-            }
-
-
-            @Override
-            public void fail() {
-                String log = "bind server fail!";
-                LogFile.inStance().toFile(log);
-            }
-        });
-    }
-
     public void waitBindingProto(final GeneratedMessage msg, final int commandId, final ReceiveListener callback) {
         init(mContext, new InitListener() {
             @Override
@@ -462,24 +447,6 @@ public class HuxinSdkManager {
         });
     }
 
-    /**
-     * 发送socket协议
-     *
-     * @param msg      消息体
-     * @param callback 回调
-     */
-    public void sendProto(final GeneratedMessage msg, final ReceiveListener callback) {
-        if (mContext != null) {
-            if (binded == BIND_STATUS.BINDED) {
-                huxinService.sendProto(msg, callback);
-            } else {
-                waitBindingProto(msg, callback);
-            }
-        } else {
-            throw new IllegalStateException("huxin sdk no init");
-        }
-
-    }
 
     /**
      * 发送socket协议
@@ -833,6 +800,169 @@ public class HuxinSdkManager {
 
 
     /**
+     * 创建群组聊天
+     *
+     * @param callback
+     */
+    public void createGroup(ReceiveListener callback) {
+        YouMaiGroup.GroupCreateReq.Builder builder = YouMaiGroup.GroupCreateReq.newBuilder();
+        builder.setUserId(getUuid());
+        //builder.addAllMemberList();
+
+
+        YouMaiGroup.GroupCreateReq group = builder.build();
+
+        sendProto(group, YouMaiBasic.COMMANDID.CID_GROUP_CREATE_REQ_VALUE, callback);
+    }
+
+
+    /**
+     * 删除群组
+     *
+     * @param groupId
+     * @param callback
+     */
+    public void delGroup(int groupId, ReceiveListener callback) {
+        YouMaiGroup.GroupDissolveReq.Builder builder = YouMaiGroup.GroupDissolveReq.newBuilder();
+        builder.setUserId(getUuid());
+        builder.setGroupId(groupId);
+
+
+        YouMaiGroup.GroupDissolveReq group = builder.build();
+
+        sendProto(group, YouMaiBasic.COMMANDID.CID_GROUP_DISSOLVE_REQ_VALUE, callback);
+    }
+
+
+    /**
+     * 添加群组成员
+     *
+     * @param callback
+     */
+    public void addGroupMember(ReceiveListener callback) {
+        YouMaiGroup.GroupMemberChangeReq.Builder builder = YouMaiGroup.GroupMemberChangeReq.newBuilder();
+        builder.setUserId(getUuid());
+        //builder.addAllMemberList();
+
+
+        YouMaiGroup.GroupMemberChangeReq group = builder.build();
+
+        sendProto(group, YouMaiBasic.COMMANDID.CID_GROUP_CHANGE_MEMBER_REQ_VALUE, callback);
+    }
+
+
+    /**
+     * 添加群组成员
+     *
+     * @param callback
+     */
+    public void delGroupMember(YouMaiGroup.GroupMemberOptType type, ReceiveListener callback) {
+        YouMaiGroup.GroupMemberChangeReq.Builder builder = YouMaiGroup.GroupMemberChangeReq.newBuilder();
+        builder.setUserId(getUuid());
+        builder.setType(type);
+        //builder.addAllMemberList();
+
+
+        YouMaiGroup.GroupMemberChangeReq group = builder.build();
+
+        sendProto(group, YouMaiBasic.COMMANDID.CID_GROUP_CHANGE_MEMBER_REQ_VALUE, callback);
+    }
+
+
+    /**
+     * 请求群列表
+     *
+     * @param callback
+     */
+    public void reqGroupList(ReceiveListener callback) {
+        YouMaiGroup.GroupListReq.Builder builder = YouMaiGroup.GroupListReq.newBuilder();
+        builder.setUserId(getUuid());
+
+
+        YouMaiGroup.GroupListReq group = builder.build();
+
+        sendProto(group, YouMaiBasic.COMMANDID.CID_GROUP_LIST_REQ_VALUE, callback);
+    }
+
+
+    /**
+     * 获取群成员列表
+     *
+     * @param callback
+     */
+    public void reqGroupMember(ReceiveListener callback) {
+        YouMaiGroup.GroupMemberReq.Builder builder = YouMaiGroup.GroupMemberReq.newBuilder();
+        builder.setUserId(getUuid());
+
+
+        YouMaiGroup.GroupMemberReq group = builder.build();
+
+        sendProto(group, YouMaiBasic.COMMANDID.CID_GROUP_MEMBER_REQ_VALUE, callback);
+    }
+
+
+    /**
+     * 获取群资料
+     *
+     * @param callback
+     */
+    public void reqGroupInfo(int groupId, ReceiveListener callback) {
+        YouMaiGroup.GroupInfoReq.Builder builder = YouMaiGroup.GroupInfoReq.newBuilder();
+        builder.setUserId(getUuid());
+        builder.setGroupId(groupId);
+
+        YouMaiGroup.GroupInfoReq group = builder.build();
+
+        sendProto(group, YouMaiBasic.COMMANDID.CID_GROUP_INFO_REQ_VALUE, callback);
+    }
+
+//    // 群资料修改
+//    message GroupInfoModifyReq{
+//        //cmd id:			CID_GROUP_INFO_MODIFY_REQ
+//        optional string user_id = 1;
+//        optional uint32 group_id = 2;
+//        optional string group_name = 3;
+//        optional string group_avatar = 4;
+//        optional string topic        =5;    //主题
+//
+//    }
+
+    /**
+     * 获取群资料
+     *
+     * @param groupId
+     * @param groupName
+     * @param groupAvatar
+     * @param callback
+     */
+    public void reqGroupInfoModify(int groupId, String groupName, String groupAvatar, ReceiveListener callback) {
+        YouMaiGroup.GroupInfoModifyReq.Builder builder = YouMaiGroup.GroupInfoModifyReq.newBuilder();
+        builder.setUserId(getUuid());
+        builder.setGroupId(groupId);
+        builder.setGroupName(groupName);
+        builder.setGroupAvatar(groupAvatar);
+
+        YouMaiGroup.GroupInfoModifyReq group = builder.build();
+
+        sendProto(group, YouMaiBasic.COMMANDID.CID_GROUP_INFO_MODIFY_REQ_VALUE, callback);
+    }
+
+
+    /**
+     * 拉取组织结构
+     *
+     * @return
+     */
+    public void getOrgInfo(String groupId, ReceiveListener callback) {
+        YouMaiBuddy.IMGetOrgReq defaultInstance = YouMaiBuddy.IMGetOrgReq.getDefaultInstance();
+        YouMaiBuddy.IMGetOrgReq.Builder builder = defaultInstance.toBuilder();
+        builder.setOrgId(groupId);
+        YouMaiBuddy.IMGetOrgReq orgReq = builder.build();
+        sendProto(orgReq, YouMaiBasic.COMMANDID.CID_ORG_LIST_REQ_VALUE, callback);
+    }
+
+
+    /**
      * 发送图片
      *
      * @param path
@@ -1079,22 +1209,6 @@ public class HuxinSdkManager {
         });
     }
 
-    /**
-     * 拉取组织结构
-     *
-     * @return
-     */
-    public void sendOrgInfo(String groupId, ReceiveListener callback) {
-        YouMaiBuddy.IMGetOrgReq defaultInstance = YouMaiBuddy.IMGetOrgReq.getDefaultInstance();
-        YouMaiBuddy.IMGetOrgReq.Builder builder1 = defaultInstance.toBuilder();
-        builder1.setOrgId(groupId);
-        YouMaiBuddy.IMGetOrgReq build = builder1.build();
-
-        //YouMaiBuddy.IMGetOrgReq.Builder builder = YouMaiBuddy.IMGetOrgReq.newBuilder();
-        //builder.setOrgId(groupId);
-        //YouMaiBuddy.IMGetOrgReq orgReq = builder.build();
-        sendProto(build, YouMaiBasic.COMMANDID.CID_ORG_LIST_REQ_VALUE, callback);
-    }
 
     /**
      * 获取消息

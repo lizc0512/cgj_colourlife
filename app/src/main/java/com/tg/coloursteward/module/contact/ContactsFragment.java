@@ -286,6 +286,11 @@ public class ContactsFragment extends Fragment implements Observer,
 
     }
 
+    @Override
+    public void collectCount(int count) {
+        //不处理业务
+    }
+
     /**
      * 固定头item的跳转
      *
@@ -450,11 +455,7 @@ public class ContactsFragment extends Fragment implements Observer,
      */
     private void getCacheList() {
 
-        RequestConfig config = new RequestConfig(mActivity, PullRefreshListView.HTTP_FRESH_CODE);
-        config.handler = msgHand.getHandler();
-        RequestParams params = new RequestParams();
-        params.put("uid", UserInfo.employeeAccount);
-        HttpTools.httpGet(Contants.URl.URL_ICETEST, "/phonebook/frequentContacts", config, params);
+        modifyContactsList();
 
         LinkManListCache = Tools.getLinkManList(mActivity);
         if (StringUtils.isNotEmpty(LinkManListCache)) {
@@ -537,12 +538,12 @@ public class ContactsFragment extends Fragment implements Observer,
 
     @Override
     public void onRequestStart(Message msg, String hintString) {
-        Log.e(TAG, "onRequestStart");
+        Log.d(TAG, "onRequestStart");
     }
 
     @Override
     public void onSuccess(Message msg, String jsonString, String hintString) {
-        Log.e(TAG, "onSuccess" + jsonString);
+        Log.d(TAG, "onSuccess" + jsonString);
 
         JSONArray json = HttpTools.getContentJsonArray(jsonString);
         if (json != null) {
@@ -558,6 +559,6 @@ public class ContactsFragment extends Fragment implements Observer,
 
     @Override
     public void onFail(Message msg, String hintString) {
-        Log.e(TAG, "onFail");
+        Log.d(TAG, "onFail");
     }
 }

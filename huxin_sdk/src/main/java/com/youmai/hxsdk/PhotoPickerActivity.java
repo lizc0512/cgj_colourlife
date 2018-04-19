@@ -312,7 +312,8 @@ public class PhotoPickerActivity extends SdkBaseActivity implements PhotoAdapter
         // im使用
         boolean isUserByIM = getIntent().getBooleanExtra("is_user_by_im", false);
         if (!isUserByIM) {
-            HuxinSdkManager.instance().postPicture(dstUuid, imagePath, imagePath, true);
+            HuxinSdkManager.instance().postPicture(dstUuid, imagePath, imagePath,
+                    true, false);
             if (Build.MODEL != null && Build.MODEL.startsWith("OPPO R9m")) {
                 new Handler().postDelayed(new Runnable() {
                     @Override

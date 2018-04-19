@@ -1346,24 +1346,6 @@ public final class YouMaiGroup {
          * </pre>
          */
         int getMemberRole();
-
-        /**
-         * <code>optional bool is_delete = 4;</code>
-         * <p>
-         * <pre>
-         * 是否删除标志
-         * </pre>
-         */
-        boolean hasIsDelete();
-
-        /**
-         * <code>optional bool is_delete = 4;</code>
-         * <p>
-         * <pre>
-         * 是否删除标志
-         * </pre>
-         */
-        boolean getIsDelete();
     }
 
     /**
@@ -1439,11 +1421,6 @@ public final class YouMaiGroup {
                         case 24: {
                             bitField0_ |= 0x00000004;
                             memberRole_ = input.readUInt32();
-                            break;
-                        }
-                        case 32: {
-                            bitField0_ |= 0x00000008;
-                            isDelete_ = input.readBool();
                             break;
                         }
                     }
@@ -1602,36 +1579,10 @@ public final class YouMaiGroup {
             return memberRole_;
         }
 
-        public static final int IS_DELETE_FIELD_NUMBER = 4;
-        private boolean isDelete_;
-
-        /**
-         * <code>optional bool is_delete = 4;</code>
-         * <p>
-         * <pre>
-         * 是否删除标志
-         * </pre>
-         */
-        public boolean hasIsDelete() {
-            return ((bitField0_ & 0x00000008) == 0x00000008);
-        }
-
-        /**
-         * <code>optional bool is_delete = 4;</code>
-         * <p>
-         * <pre>
-         * 是否删除标志
-         * </pre>
-         */
-        public boolean getIsDelete() {
-            return isDelete_;
-        }
-
         private void initFields() {
             memberId_ = "";
             memberName_ = "";
             memberRole_ = 0;
-            isDelete_ = false;
         }
 
         private byte memoizedIsInitialized = -1;
@@ -1657,9 +1608,6 @@ public final class YouMaiGroup {
             if (((bitField0_ & 0x00000004) == 0x00000004)) {
                 output.writeUInt32(3, memberRole_);
             }
-            if (((bitField0_ & 0x00000008) == 0x00000008)) {
-                output.writeBool(4, isDelete_);
-            }
             getUnknownFields().writeTo(output);
         }
 
@@ -1681,10 +1629,6 @@ public final class YouMaiGroup {
             if (((bitField0_ & 0x00000004) == 0x00000004)) {
                 size += com.google.protobuf.CodedOutputStream
                         .computeUInt32Size(3, memberRole_);
-            }
-            if (((bitField0_ & 0x00000008) == 0x00000008)) {
-                size += com.google.protobuf.CodedOutputStream
-                        .computeBoolSize(4, isDelete_);
             }
             size += getUnknownFields().getSerializedSize();
             memoizedSerializedSize = size;
@@ -1831,8 +1775,6 @@ public final class YouMaiGroup {
                 bitField0_ = (bitField0_ & ~0x00000002);
                 memberRole_ = 0;
                 bitField0_ = (bitField0_ & ~0x00000004);
-                isDelete_ = false;
-                bitField0_ = (bitField0_ & ~0x00000008);
                 return this;
             }
 
@@ -1873,10 +1815,6 @@ public final class YouMaiGroup {
                     to_bitField0_ |= 0x00000004;
                 }
                 result.memberRole_ = memberRole_;
-                if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
-                    to_bitField0_ |= 0x00000008;
-                }
-                result.isDelete_ = isDelete_;
                 result.bitField0_ = to_bitField0_;
                 onBuilt();
                 return result;
@@ -1905,9 +1843,6 @@ public final class YouMaiGroup {
                 }
                 if (other.hasMemberRole()) {
                     setMemberRole(other.getMemberRole());
-                }
-                if (other.hasIsDelete()) {
-                    setIsDelete(other.getIsDelete());
                 }
                 this.mergeUnknownFields(other.getUnknownFields());
                 return this;
@@ -2153,58 +2088,6 @@ public final class YouMaiGroup {
                 return this;
             }
 
-            private boolean isDelete_;
-
-            /**
-             * <code>optional bool is_delete = 4;</code>
-             * <p>
-             * <pre>
-             * 是否删除标志
-             * </pre>
-             */
-            public boolean hasIsDelete() {
-                return ((bitField0_ & 0x00000008) == 0x00000008);
-            }
-
-            /**
-             * <code>optional bool is_delete = 4;</code>
-             * <p>
-             * <pre>
-             * 是否删除标志
-             * </pre>
-             */
-            public boolean getIsDelete() {
-                return isDelete_;
-            }
-
-            /**
-             * <code>optional bool is_delete = 4;</code>
-             * <p>
-             * <pre>
-             * 是否删除标志
-             * </pre>
-             */
-            public Builder setIsDelete(boolean value) {
-                bitField0_ |= 0x00000008;
-                isDelete_ = value;
-                onChanged();
-                return this;
-            }
-
-            /**
-             * <code>optional bool is_delete = 4;</code>
-             * <p>
-             * <pre>
-             * 是否删除标志
-             * </pre>
-             */
-            public Builder clearIsDelete() {
-                bitField0_ = (bitField0_ & ~0x00000008);
-                isDelete_ = false;
-                onChanged();
-                return this;
-            }
-
             // @@protoc_insertion_point(builder_scope:GroupMemberItem)
         }
 
@@ -2325,24 +2208,6 @@ public final class YouMaiGroup {
         long getInfoUpdateTime();
 
         /**
-         * <code>optional uint64 member_update_time = 7;</code>
-         * <p>
-         * <pre>
-         * 群成员最新的更新时间戳
-         * </pre>
-         */
-        boolean hasMemberUpdateTime();
-
-        /**
-         * <code>optional uint64 member_update_time = 7;</code>
-         * <p>
-         * <pre>
-         * 群成员最新的更新时间戳
-         * </pre>
-         */
-        long getMemberUpdateTime();
-
-        /**
          * <code>optional uint32 group_member_count = 8;</code>
          * <p>
          * <pre>
@@ -2359,24 +2224,6 @@ public final class YouMaiGroup {
          * </pre>
          */
         int getGroupMemberCount();
-
-        /**
-         * <code>optional uint32 flag = 9;</code>
-         * <p>
-         * <pre>
-         * 群标志(0:新增群，1：删除群  2：群资料修改  3：群成员修改)
-         * </pre>
-         */
-        boolean hasFlag();
-
-        /**
-         * <code>optional uint32 flag = 9;</code>
-         * <p>
-         * <pre>
-         * 群标志(0:新增群，1：删除群  2：群资料修改  3：群成员修改)
-         * </pre>
-         */
-        int getFlag();
 
         /**
          * <code>optional uint32 fixtop_priority = 10;</code>
@@ -2507,28 +2354,18 @@ public final class YouMaiGroup {
                             infoUpdateTime_ = input.readUInt64();
                             break;
                         }
-                        case 56: {
-                            bitField0_ |= 0x00000040;
-                            memberUpdateTime_ = input.readUInt64();
-                            break;
-                        }
                         case 64: {
-                            bitField0_ |= 0x00000080;
+                            bitField0_ |= 0x00000040;
                             groupMemberCount_ = input.readUInt32();
                             break;
                         }
-                        case 72: {
-                            bitField0_ |= 0x00000100;
-                            flag_ = input.readUInt32();
-                            break;
-                        }
                         case 80: {
-                            bitField0_ |= 0x00000200;
+                            bitField0_ |= 0x00000080;
                             fixtopPriority_ = input.readUInt32();
                             break;
                         }
                         case 88: {
-                            bitField0_ |= 0x00000400;
+                            bitField0_ |= 0x00000100;
                             notDisturb_ = input.readBool();
                             break;
                         }
@@ -2807,31 +2644,6 @@ public final class YouMaiGroup {
             return infoUpdateTime_;
         }
 
-        public static final int MEMBER_UPDATE_TIME_FIELD_NUMBER = 7;
-        private long memberUpdateTime_;
-
-        /**
-         * <code>optional uint64 member_update_time = 7;</code>
-         * <p>
-         * <pre>
-         * 群成员最新的更新时间戳
-         * </pre>
-         */
-        public boolean hasMemberUpdateTime() {
-            return ((bitField0_ & 0x00000040) == 0x00000040);
-        }
-
-        /**
-         * <code>optional uint64 member_update_time = 7;</code>
-         * <p>
-         * <pre>
-         * 群成员最新的更新时间戳
-         * </pre>
-         */
-        public long getMemberUpdateTime() {
-            return memberUpdateTime_;
-        }
-
         public static final int GROUP_MEMBER_COUNT_FIELD_NUMBER = 8;
         private int groupMemberCount_;
 
@@ -2843,7 +2655,7 @@ public final class YouMaiGroup {
          * </pre>
          */
         public boolean hasGroupMemberCount() {
-            return ((bitField0_ & 0x00000080) == 0x00000080);
+            return ((bitField0_ & 0x00000040) == 0x00000040);
         }
 
         /**
@@ -2857,31 +2669,6 @@ public final class YouMaiGroup {
             return groupMemberCount_;
         }
 
-        public static final int FLAG_FIELD_NUMBER = 9;
-        private int flag_;
-
-        /**
-         * <code>optional uint32 flag = 9;</code>
-         * <p>
-         * <pre>
-         * 群标志(0:新增群，1：删除群  2：群资料修改  3：群成员修改)
-         * </pre>
-         */
-        public boolean hasFlag() {
-            return ((bitField0_ & 0x00000100) == 0x00000100);
-        }
-
-        /**
-         * <code>optional uint32 flag = 9;</code>
-         * <p>
-         * <pre>
-         * 群标志(0:新增群，1：删除群  2：群资料修改  3：群成员修改)
-         * </pre>
-         */
-        public int getFlag() {
-            return flag_;
-        }
-
         public static final int FIXTOP_PRIORITY_FIELD_NUMBER = 10;
         private int fixtopPriority_;
 
@@ -2893,7 +2680,7 @@ public final class YouMaiGroup {
          * </pre>
          */
         public boolean hasFixtopPriority() {
-            return ((bitField0_ & 0x00000200) == 0x00000200);
+            return ((bitField0_ & 0x00000080) == 0x00000080);
         }
 
         /**
@@ -2918,7 +2705,7 @@ public final class YouMaiGroup {
          * </pre>
          */
         public boolean hasNotDisturb() {
-            return ((bitField0_ & 0x00000400) == 0x00000400);
+            return ((bitField0_ & 0x00000100) == 0x00000100);
         }
 
         /**
@@ -2939,9 +2726,7 @@ public final class YouMaiGroup {
             groupAvatar_ = "";
             topic_ = "";
             infoUpdateTime_ = 0L;
-            memberUpdateTime_ = 0L;
             groupMemberCount_ = 0;
-            flag_ = 0;
             fixtopPriority_ = 0;
             notDisturb_ = false;
         }
@@ -2979,18 +2764,12 @@ public final class YouMaiGroup {
                 output.writeUInt64(6, infoUpdateTime_);
             }
             if (((bitField0_ & 0x00000040) == 0x00000040)) {
-                output.writeUInt64(7, memberUpdateTime_);
-            }
-            if (((bitField0_ & 0x00000080) == 0x00000080)) {
                 output.writeUInt32(8, groupMemberCount_);
             }
-            if (((bitField0_ & 0x00000100) == 0x00000100)) {
-                output.writeUInt32(9, flag_);
-            }
-            if (((bitField0_ & 0x00000200) == 0x00000200)) {
+            if (((bitField0_ & 0x00000080) == 0x00000080)) {
                 output.writeUInt32(10, fixtopPriority_);
             }
-            if (((bitField0_ & 0x00000400) == 0x00000400)) {
+            if (((bitField0_ & 0x00000100) == 0x00000100)) {
                 output.writeBool(11, notDisturb_);
             }
             getUnknownFields().writeTo(output);
@@ -3029,21 +2808,13 @@ public final class YouMaiGroup {
             }
             if (((bitField0_ & 0x00000040) == 0x00000040)) {
                 size += com.google.protobuf.CodedOutputStream
-                        .computeUInt64Size(7, memberUpdateTime_);
+                        .computeUInt32Size(8, groupMemberCount_);
             }
             if (((bitField0_ & 0x00000080) == 0x00000080)) {
                 size += com.google.protobuf.CodedOutputStream
-                        .computeUInt32Size(8, groupMemberCount_);
-            }
-            if (((bitField0_ & 0x00000100) == 0x00000100)) {
-                size += com.google.protobuf.CodedOutputStream
-                        .computeUInt32Size(9, flag_);
-            }
-            if (((bitField0_ & 0x00000200) == 0x00000200)) {
-                size += com.google.protobuf.CodedOutputStream
                         .computeUInt32Size(10, fixtopPriority_);
             }
-            if (((bitField0_ & 0x00000400) == 0x00000400)) {
+            if (((bitField0_ & 0x00000100) == 0x00000100)) {
                 size += com.google.protobuf.CodedOutputStream
                         .computeBoolSize(11, notDisturb_);
             }
@@ -3198,16 +2969,12 @@ public final class YouMaiGroup {
                 bitField0_ = (bitField0_ & ~0x00000010);
                 infoUpdateTime_ = 0L;
                 bitField0_ = (bitField0_ & ~0x00000020);
-                memberUpdateTime_ = 0L;
-                bitField0_ = (bitField0_ & ~0x00000040);
                 groupMemberCount_ = 0;
-                bitField0_ = (bitField0_ & ~0x00000080);
-                flag_ = 0;
-                bitField0_ = (bitField0_ & ~0x00000100);
+                bitField0_ = (bitField0_ & ~0x00000040);
                 fixtopPriority_ = 0;
-                bitField0_ = (bitField0_ & ~0x00000200);
+                bitField0_ = (bitField0_ & ~0x00000080);
                 notDisturb_ = false;
-                bitField0_ = (bitField0_ & ~0x00000400);
+                bitField0_ = (bitField0_ & ~0x00000100);
                 return this;
             }
 
@@ -3263,21 +3030,13 @@ public final class YouMaiGroup {
                 if (((from_bitField0_ & 0x00000040) == 0x00000040)) {
                     to_bitField0_ |= 0x00000040;
                 }
-                result.memberUpdateTime_ = memberUpdateTime_;
+                result.groupMemberCount_ = groupMemberCount_;
                 if (((from_bitField0_ & 0x00000080) == 0x00000080)) {
                     to_bitField0_ |= 0x00000080;
                 }
-                result.groupMemberCount_ = groupMemberCount_;
+                result.fixtopPriority_ = fixtopPriority_;
                 if (((from_bitField0_ & 0x00000100) == 0x00000100)) {
                     to_bitField0_ |= 0x00000100;
-                }
-                result.flag_ = flag_;
-                if (((from_bitField0_ & 0x00000200) == 0x00000200)) {
-                    to_bitField0_ |= 0x00000200;
-                }
-                result.fixtopPriority_ = fixtopPriority_;
-                if (((from_bitField0_ & 0x00000400) == 0x00000400)) {
-                    to_bitField0_ |= 0x00000400;
                 }
                 result.notDisturb_ = notDisturb_;
                 result.bitField0_ = to_bitField0_;
@@ -3322,14 +3081,8 @@ public final class YouMaiGroup {
                 if (other.hasInfoUpdateTime()) {
                     setInfoUpdateTime(other.getInfoUpdateTime());
                 }
-                if (other.hasMemberUpdateTime()) {
-                    setMemberUpdateTime(other.getMemberUpdateTime());
-                }
                 if (other.hasGroupMemberCount()) {
                     setGroupMemberCount(other.getGroupMemberCount());
-                }
-                if (other.hasFlag()) {
-                    setFlag(other.getFlag());
                 }
                 if (other.hasFixtopPriority()) {
                     setFixtopPriority(other.getFixtopPriority());
@@ -3805,58 +3558,6 @@ public final class YouMaiGroup {
                 return this;
             }
 
-            private long memberUpdateTime_;
-
-            /**
-             * <code>optional uint64 member_update_time = 7;</code>
-             * <p>
-             * <pre>
-             * 群成员最新的更新时间戳
-             * </pre>
-             */
-            public boolean hasMemberUpdateTime() {
-                return ((bitField0_ & 0x00000040) == 0x00000040);
-            }
-
-            /**
-             * <code>optional uint64 member_update_time = 7;</code>
-             * <p>
-             * <pre>
-             * 群成员最新的更新时间戳
-             * </pre>
-             */
-            public long getMemberUpdateTime() {
-                return memberUpdateTime_;
-            }
-
-            /**
-             * <code>optional uint64 member_update_time = 7;</code>
-             * <p>
-             * <pre>
-             * 群成员最新的更新时间戳
-             * </pre>
-             */
-            public Builder setMemberUpdateTime(long value) {
-                bitField0_ |= 0x00000040;
-                memberUpdateTime_ = value;
-                onChanged();
-                return this;
-            }
-
-            /**
-             * <code>optional uint64 member_update_time = 7;</code>
-             * <p>
-             * <pre>
-             * 群成员最新的更新时间戳
-             * </pre>
-             */
-            public Builder clearMemberUpdateTime() {
-                bitField0_ = (bitField0_ & ~0x00000040);
-                memberUpdateTime_ = 0L;
-                onChanged();
-                return this;
-            }
-
             private int groupMemberCount_;
 
             /**
@@ -3867,7 +3568,7 @@ public final class YouMaiGroup {
              * </pre>
              */
             public boolean hasGroupMemberCount() {
-                return ((bitField0_ & 0x00000080) == 0x00000080);
+                return ((bitField0_ & 0x00000040) == 0x00000040);
             }
 
             /**
@@ -3889,7 +3590,7 @@ public final class YouMaiGroup {
              * </pre>
              */
             public Builder setGroupMemberCount(int value) {
-                bitField0_ |= 0x00000080;
+                bitField0_ |= 0x00000040;
                 groupMemberCount_ = value;
                 onChanged();
                 return this;
@@ -3903,60 +3604,8 @@ public final class YouMaiGroup {
              * </pre>
              */
             public Builder clearGroupMemberCount() {
-                bitField0_ = (bitField0_ & ~0x00000080);
+                bitField0_ = (bitField0_ & ~0x00000040);
                 groupMemberCount_ = 0;
-                onChanged();
-                return this;
-            }
-
-            private int flag_;
-
-            /**
-             * <code>optional uint32 flag = 9;</code>
-             * <p>
-             * <pre>
-             * 群标志(0:新增群，1：删除群  2：群资料修改  3：群成员修改)
-             * </pre>
-             */
-            public boolean hasFlag() {
-                return ((bitField0_ & 0x00000100) == 0x00000100);
-            }
-
-            /**
-             * <code>optional uint32 flag = 9;</code>
-             * <p>
-             * <pre>
-             * 群标志(0:新增群，1：删除群  2：群资料修改  3：群成员修改)
-             * </pre>
-             */
-            public int getFlag() {
-                return flag_;
-            }
-
-            /**
-             * <code>optional uint32 flag = 9;</code>
-             * <p>
-             * <pre>
-             * 群标志(0:新增群，1：删除群  2：群资料修改  3：群成员修改)
-             * </pre>
-             */
-            public Builder setFlag(int value) {
-                bitField0_ |= 0x00000100;
-                flag_ = value;
-                onChanged();
-                return this;
-            }
-
-            /**
-             * <code>optional uint32 flag = 9;</code>
-             * <p>
-             * <pre>
-             * 群标志(0:新增群，1：删除群  2：群资料修改  3：群成员修改)
-             * </pre>
-             */
-            public Builder clearFlag() {
-                bitField0_ = (bitField0_ & ~0x00000100);
-                flag_ = 0;
                 onChanged();
                 return this;
             }
@@ -3971,7 +3620,7 @@ public final class YouMaiGroup {
              * </pre>
              */
             public boolean hasFixtopPriority() {
-                return ((bitField0_ & 0x00000200) == 0x00000200);
+                return ((bitField0_ & 0x00000080) == 0x00000080);
             }
 
             /**
@@ -3993,7 +3642,7 @@ public final class YouMaiGroup {
              * </pre>
              */
             public Builder setFixtopPriority(int value) {
-                bitField0_ |= 0x00000200;
+                bitField0_ |= 0x00000080;
                 fixtopPriority_ = value;
                 onChanged();
                 return this;
@@ -4007,7 +3656,7 @@ public final class YouMaiGroup {
              * </pre>
              */
             public Builder clearFixtopPriority() {
-                bitField0_ = (bitField0_ & ~0x00000200);
+                bitField0_ = (bitField0_ & ~0x00000080);
                 fixtopPriority_ = 0;
                 onChanged();
                 return this;
@@ -4023,7 +3672,7 @@ public final class YouMaiGroup {
              * </pre>
              */
             public boolean hasNotDisturb() {
-                return ((bitField0_ & 0x00000400) == 0x00000400);
+                return ((bitField0_ & 0x00000100) == 0x00000100);
             }
 
             /**
@@ -4045,7 +3694,7 @@ public final class YouMaiGroup {
              * </pre>
              */
             public Builder setNotDisturb(boolean value) {
-                bitField0_ |= 0x00000400;
+                bitField0_ |= 0x00000100;
                 notDisturb_ = value;
                 onChanged();
                 return this;
@@ -4059,7 +3708,7 @@ public final class YouMaiGroup {
              * </pre>
              */
             public Builder clearNotDisturb() {
-                bitField0_ = (bitField0_ & ~0x00000400);
+                bitField0_ = (bitField0_ & ~0x00000100);
                 notDisturb_ = false;
                 onChanged();
                 return this;
@@ -4109,26 +3758,26 @@ public final class YouMaiGroup {
         getUserIdBytes();
 
         /**
-         * <code>repeated .MemberItem member_list = 2;</code>
+         * <code>repeated .GroupMemberItem member_list = 2;</code>
          * <p>
          * <pre>
          * 邀请添加用户
          * </pre>
          */
-        java.util.List<YouMaiGroup.MemberItem>
+        java.util.List<YouMaiGroup.GroupMemberItem>
         getMemberListList();
 
         /**
-         * <code>repeated .MemberItem member_list = 2;</code>
+         * <code>repeated .GroupMemberItem member_list = 2;</code>
          * <p>
          * <pre>
          * 邀请添加用户
          * </pre>
          */
-        YouMaiGroup.MemberItem getMemberList(int index);
+        YouMaiGroup.GroupMemberItem getMemberList(int index);
 
         /**
-         * <code>repeated .MemberItem member_list = 2;</code>
+         * <code>repeated .GroupMemberItem member_list = 2;</code>
          * <p>
          * <pre>
          * 邀请添加用户
@@ -4137,23 +3786,23 @@ public final class YouMaiGroup {
         int getMemberListCount();
 
         /**
-         * <code>repeated .MemberItem member_list = 2;</code>
+         * <code>repeated .GroupMemberItem member_list = 2;</code>
          * <p>
          * <pre>
          * 邀请添加用户
          * </pre>
          */
-        java.util.List<? extends YouMaiGroup.MemberItemOrBuilder>
+        java.util.List<? extends YouMaiGroup.GroupMemberItemOrBuilder>
         getMemberListOrBuilderList();
 
         /**
-         * <code>repeated .MemberItem member_list = 2;</code>
+         * <code>repeated .GroupMemberItem member_list = 2;</code>
          * <p>
          * <pre>
          * 邀请添加用户
          * </pre>
          */
-        YouMaiGroup.MemberItemOrBuilder getMemberListOrBuilder(
+        YouMaiGroup.GroupMemberItemOrBuilder getMemberListOrBuilder(
                 int index);
 
         /**
@@ -4283,10 +3932,10 @@ public final class YouMaiGroup {
                         }
                         case 18: {
                             if (!((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
-                                memberList_ = new java.util.ArrayList<YouMaiGroup.MemberItem>();
+                                memberList_ = new java.util.ArrayList<YouMaiGroup.GroupMemberItem>();
                                 mutable_bitField0_ |= 0x00000002;
                             }
-                            memberList_.add(input.readMessage(YouMaiGroup.MemberItem.PARSER, extensionRegistry));
+                            memberList_.add(input.readMessage(YouMaiGroup.GroupMemberItem.PARSER, extensionRegistry));
                             break;
                         }
                         case 26: {
@@ -4409,33 +4058,33 @@ public final class YouMaiGroup {
         }
 
         public static final int MEMBER_LIST_FIELD_NUMBER = 2;
-        private java.util.List<YouMaiGroup.MemberItem> memberList_;
+        private java.util.List<YouMaiGroup.GroupMemberItem> memberList_;
 
         /**
-         * <code>repeated .MemberItem member_list = 2;</code>
+         * <code>repeated .GroupMemberItem member_list = 2;</code>
          * <p>
          * <pre>
          * 邀请添加用户
          * </pre>
          */
-        public java.util.List<YouMaiGroup.MemberItem> getMemberListList() {
+        public java.util.List<YouMaiGroup.GroupMemberItem> getMemberListList() {
             return memberList_;
         }
 
         /**
-         * <code>repeated .MemberItem member_list = 2;</code>
+         * <code>repeated .GroupMemberItem member_list = 2;</code>
          * <p>
          * <pre>
          * 邀请添加用户
          * </pre>
          */
-        public java.util.List<? extends YouMaiGroup.MemberItemOrBuilder>
+        public java.util.List<? extends YouMaiGroup.GroupMemberItemOrBuilder>
         getMemberListOrBuilderList() {
             return memberList_;
         }
 
         /**
-         * <code>repeated .MemberItem member_list = 2;</code>
+         * <code>repeated .GroupMemberItem member_list = 2;</code>
          * <p>
          * <pre>
          * 邀请添加用户
@@ -4446,24 +4095,24 @@ public final class YouMaiGroup {
         }
 
         /**
-         * <code>repeated .MemberItem member_list = 2;</code>
+         * <code>repeated .GroupMemberItem member_list = 2;</code>
          * <p>
          * <pre>
          * 邀请添加用户
          * </pre>
          */
-        public YouMaiGroup.MemberItem getMemberList(int index) {
+        public YouMaiGroup.GroupMemberItem getMemberList(int index) {
             return memberList_.get(index);
         }
 
         /**
-         * <code>repeated .MemberItem member_list = 2;</code>
+         * <code>repeated .GroupMemberItem member_list = 2;</code>
          * <p>
          * <pre>
          * 邀请添加用户
          * </pre>
          */
-        public YouMaiGroup.MemberItemOrBuilder getMemberListOrBuilder(
+        public YouMaiGroup.GroupMemberItemOrBuilder getMemberListOrBuilder(
                 int index) {
             return memberList_.get(index);
         }
@@ -5085,27 +4734,27 @@ public final class YouMaiGroup {
                 return this;
             }
 
-            private java.util.List<YouMaiGroup.MemberItem> memberList_ =
+            private java.util.List<YouMaiGroup.GroupMemberItem> memberList_ =
                     java.util.Collections.emptyList();
 
             private void ensureMemberListIsMutable() {
                 if (!((bitField0_ & 0x00000002) == 0x00000002)) {
-                    memberList_ = new java.util.ArrayList<YouMaiGroup.MemberItem>(memberList_);
+                    memberList_ = new java.util.ArrayList<YouMaiGroup.GroupMemberItem>(memberList_);
                     bitField0_ |= 0x00000002;
                 }
             }
 
             private com.google.protobuf.RepeatedFieldBuilder<
-                    YouMaiGroup.MemberItem, YouMaiGroup.MemberItem.Builder, YouMaiGroup.MemberItemOrBuilder> memberListBuilder_;
+                    YouMaiGroup.GroupMemberItem, YouMaiGroup.GroupMemberItem.Builder, YouMaiGroup.GroupMemberItemOrBuilder> memberListBuilder_;
 
             /**
-             * <code>repeated .MemberItem member_list = 2;</code>
+             * <code>repeated .GroupMemberItem member_list = 2;</code>
              * <p>
              * <pre>
              * 邀请添加用户
              * </pre>
              */
-            public java.util.List<YouMaiGroup.MemberItem> getMemberListList() {
+            public java.util.List<YouMaiGroup.GroupMemberItem> getMemberListList() {
                 if (memberListBuilder_ == null) {
                     return java.util.Collections.unmodifiableList(memberList_);
                 } else {
@@ -5114,7 +4763,7 @@ public final class YouMaiGroup {
             }
 
             /**
-             * <code>repeated .MemberItem member_list = 2;</code>
+             * <code>repeated .GroupMemberItem member_list = 2;</code>
              * <p>
              * <pre>
              * 邀请添加用户
@@ -5129,13 +4778,13 @@ public final class YouMaiGroup {
             }
 
             /**
-             * <code>repeated .MemberItem member_list = 2;</code>
+             * <code>repeated .GroupMemberItem member_list = 2;</code>
              * <p>
              * <pre>
              * 邀请添加用户
              * </pre>
              */
-            public YouMaiGroup.MemberItem getMemberList(int index) {
+            public YouMaiGroup.GroupMemberItem getMemberList(int index) {
                 if (memberListBuilder_ == null) {
                     return memberList_.get(index);
                 } else {
@@ -5144,14 +4793,14 @@ public final class YouMaiGroup {
             }
 
             /**
-             * <code>repeated .MemberItem member_list = 2;</code>
+             * <code>repeated .GroupMemberItem member_list = 2;</code>
              * <p>
              * <pre>
              * 邀请添加用户
              * </pre>
              */
             public Builder setMemberList(
-                    int index, YouMaiGroup.MemberItem value) {
+                    int index, YouMaiGroup.GroupMemberItem value) {
                 if (memberListBuilder_ == null) {
                     if (value == null) {
                         throw new NullPointerException();
@@ -5166,14 +4815,14 @@ public final class YouMaiGroup {
             }
 
             /**
-             * <code>repeated .MemberItem member_list = 2;</code>
+             * <code>repeated .GroupMemberItem member_list = 2;</code>
              * <p>
              * <pre>
              * 邀请添加用户
              * </pre>
              */
             public Builder setMemberList(
-                    int index, YouMaiGroup.MemberItem.Builder builderForValue) {
+                    int index, YouMaiGroup.GroupMemberItem.Builder builderForValue) {
                 if (memberListBuilder_ == null) {
                     ensureMemberListIsMutable();
                     memberList_.set(index, builderForValue.build());
@@ -5185,13 +4834,13 @@ public final class YouMaiGroup {
             }
 
             /**
-             * <code>repeated .MemberItem member_list = 2;</code>
+             * <code>repeated .GroupMemberItem member_list = 2;</code>
              * <p>
              * <pre>
              * 邀请添加用户
              * </pre>
              */
-            public Builder addMemberList(YouMaiGroup.MemberItem value) {
+            public Builder addMemberList(YouMaiGroup.GroupMemberItem value) {
                 if (memberListBuilder_ == null) {
                     if (value == null) {
                         throw new NullPointerException();
@@ -5206,14 +4855,14 @@ public final class YouMaiGroup {
             }
 
             /**
-             * <code>repeated .MemberItem member_list = 2;</code>
+             * <code>repeated .GroupMemberItem member_list = 2;</code>
              * <p>
              * <pre>
              * 邀请添加用户
              * </pre>
              */
             public Builder addMemberList(
-                    int index, YouMaiGroup.MemberItem value) {
+                    int index, YouMaiGroup.GroupMemberItem value) {
                 if (memberListBuilder_ == null) {
                     if (value == null) {
                         throw new NullPointerException();
@@ -5228,14 +4877,14 @@ public final class YouMaiGroup {
             }
 
             /**
-             * <code>repeated .MemberItem member_list = 2;</code>
+             * <code>repeated .GroupMemberItem member_list = 2;</code>
              * <p>
              * <pre>
              * 邀请添加用户
              * </pre>
              */
             public Builder addMemberList(
-                    YouMaiGroup.MemberItem.Builder builderForValue) {
+                    YouMaiGroup.GroupMemberItem.Builder builderForValue) {
                 if (memberListBuilder_ == null) {
                     ensureMemberListIsMutable();
                     memberList_.add(builderForValue.build());
@@ -5247,14 +4896,14 @@ public final class YouMaiGroup {
             }
 
             /**
-             * <code>repeated .MemberItem member_list = 2;</code>
+             * <code>repeated .GroupMemberItem member_list = 2;</code>
              * <p>
              * <pre>
              * 邀请添加用户
              * </pre>
              */
             public Builder addMemberList(
-                    int index, YouMaiGroup.MemberItem.Builder builderForValue) {
+                    int index, YouMaiGroup.GroupMemberItem.Builder builderForValue) {
                 if (memberListBuilder_ == null) {
                     ensureMemberListIsMutable();
                     memberList_.add(index, builderForValue.build());
@@ -5266,14 +4915,14 @@ public final class YouMaiGroup {
             }
 
             /**
-             * <code>repeated .MemberItem member_list = 2;</code>
+             * <code>repeated .GroupMemberItem member_list = 2;</code>
              * <p>
              * <pre>
              * 邀请添加用户
              * </pre>
              */
             public Builder addAllMemberList(
-                    Iterable<? extends YouMaiGroup.MemberItem> values) {
+                    Iterable<? extends YouMaiGroup.GroupMemberItem> values) {
                 if (memberListBuilder_ == null) {
                     ensureMemberListIsMutable();
                     com.google.protobuf.AbstractMessageLite.Builder.addAll(
@@ -5286,7 +4935,7 @@ public final class YouMaiGroup {
             }
 
             /**
-             * <code>repeated .MemberItem member_list = 2;</code>
+             * <code>repeated .GroupMemberItem member_list = 2;</code>
              * <p>
              * <pre>
              * 邀请添加用户
@@ -5304,7 +4953,7 @@ public final class YouMaiGroup {
             }
 
             /**
-             * <code>repeated .MemberItem member_list = 2;</code>
+             * <code>repeated .GroupMemberItem member_list = 2;</code>
              * <p>
              * <pre>
              * 邀请添加用户
@@ -5322,25 +4971,25 @@ public final class YouMaiGroup {
             }
 
             /**
-             * <code>repeated .MemberItem member_list = 2;</code>
+             * <code>repeated .GroupMemberItem member_list = 2;</code>
              * <p>
              * <pre>
              * 邀请添加用户
              * </pre>
              */
-            public YouMaiGroup.MemberItem.Builder getMemberListBuilder(
+            public YouMaiGroup.GroupMemberItem.Builder getMemberListBuilder(
                     int index) {
                 return getMemberListFieldBuilder().getBuilder(index);
             }
 
             /**
-             * <code>repeated .MemberItem member_list = 2;</code>
+             * <code>repeated .GroupMemberItem member_list = 2;</code>
              * <p>
              * <pre>
              * 邀请添加用户
              * </pre>
              */
-            public YouMaiGroup.MemberItemOrBuilder getMemberListOrBuilder(
+            public YouMaiGroup.GroupMemberItemOrBuilder getMemberListOrBuilder(
                     int index) {
                 if (memberListBuilder_ == null) {
                     return memberList_.get(index);
@@ -5350,13 +4999,13 @@ public final class YouMaiGroup {
             }
 
             /**
-             * <code>repeated .MemberItem member_list = 2;</code>
+             * <code>repeated .GroupMemberItem member_list = 2;</code>
              * <p>
              * <pre>
              * 邀请添加用户
              * </pre>
              */
-            public java.util.List<? extends YouMaiGroup.MemberItemOrBuilder>
+            public java.util.List<? extends YouMaiGroup.GroupMemberItemOrBuilder>
             getMemberListOrBuilderList() {
                 if (memberListBuilder_ != null) {
                     return memberListBuilder_.getMessageOrBuilderList();
@@ -5366,48 +5015,48 @@ public final class YouMaiGroup {
             }
 
             /**
-             * <code>repeated .MemberItem member_list = 2;</code>
+             * <code>repeated .GroupMemberItem member_list = 2;</code>
              * <p>
              * <pre>
              * 邀请添加用户
              * </pre>
              */
-            public YouMaiGroup.MemberItem.Builder addMemberListBuilder() {
+            public YouMaiGroup.GroupMemberItem.Builder addMemberListBuilder() {
                 return getMemberListFieldBuilder().addBuilder(
-                        YouMaiGroup.MemberItem.getDefaultInstance());
+                        YouMaiGroup.GroupMemberItem.getDefaultInstance());
             }
 
             /**
-             * <code>repeated .MemberItem member_list = 2;</code>
+             * <code>repeated .GroupMemberItem member_list = 2;</code>
              * <p>
              * <pre>
              * 邀请添加用户
              * </pre>
              */
-            public YouMaiGroup.MemberItem.Builder addMemberListBuilder(
+            public YouMaiGroup.GroupMemberItem.Builder addMemberListBuilder(
                     int index) {
                 return getMemberListFieldBuilder().addBuilder(
-                        index, YouMaiGroup.MemberItem.getDefaultInstance());
+                        index, YouMaiGroup.GroupMemberItem.getDefaultInstance());
             }
 
             /**
-             * <code>repeated .MemberItem member_list = 2;</code>
+             * <code>repeated .GroupMemberItem member_list = 2;</code>
              * <p>
              * <pre>
              * 邀请添加用户
              * </pre>
              */
-            public java.util.List<YouMaiGroup.MemberItem.Builder>
+            public java.util.List<YouMaiGroup.GroupMemberItem.Builder>
             getMemberListBuilderList() {
                 return getMemberListFieldBuilder().getBuilderList();
             }
 
             private com.google.protobuf.RepeatedFieldBuilder<
-                    YouMaiGroup.MemberItem, YouMaiGroup.MemberItem.Builder, YouMaiGroup.MemberItemOrBuilder>
+                    YouMaiGroup.GroupMemberItem, YouMaiGroup.GroupMemberItem.Builder, YouMaiGroup.GroupMemberItemOrBuilder>
             getMemberListFieldBuilder() {
                 if (memberListBuilder_ == null) {
                     memberListBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
-                            YouMaiGroup.MemberItem, YouMaiGroup.MemberItem.Builder, YouMaiGroup.MemberItemOrBuilder>(
+                            YouMaiGroup.GroupMemberItem, YouMaiGroup.GroupMemberItem.Builder, YouMaiGroup.GroupMemberItemOrBuilder>(
                             memberList_,
                             ((bitField0_ & 0x00000002) == 0x00000002),
                             getParentForChildren(),
@@ -5749,26 +5398,26 @@ public final class YouMaiGroup {
         getUserIdBytes();
 
         /**
-         * <code>repeated .MemberItem member_list = 3;</code>
+         * <code>repeated .GroupMemberItem member_list = 3;</code>
          * <p>
          * <pre>
          * 成功添加用户
          * </pre>
          */
-        java.util.List<YouMaiGroup.MemberItem>
+        java.util.List<YouMaiGroup.GroupMemberItem>
         getMemberListList();
 
         /**
-         * <code>repeated .MemberItem member_list = 3;</code>
+         * <code>repeated .GroupMemberItem member_list = 3;</code>
          * <p>
          * <pre>
          * 成功添加用户
          * </pre>
          */
-        YouMaiGroup.MemberItem getMemberList(int index);
+        YouMaiGroup.GroupMemberItem getMemberList(int index);
 
         /**
-         * <code>repeated .MemberItem member_list = 3;</code>
+         * <code>repeated .GroupMemberItem member_list = 3;</code>
          * <p>
          * <pre>
          * 成功添加用户
@@ -5777,23 +5426,23 @@ public final class YouMaiGroup {
         int getMemberListCount();
 
         /**
-         * <code>repeated .MemberItem member_list = 3;</code>
+         * <code>repeated .GroupMemberItem member_list = 3;</code>
          * <p>
          * <pre>
          * 成功添加用户
          * </pre>
          */
-        java.util.List<? extends YouMaiGroup.MemberItemOrBuilder>
+        java.util.List<? extends YouMaiGroup.GroupMemberItemOrBuilder>
         getMemberListOrBuilderList();
 
         /**
-         * <code>repeated .MemberItem member_list = 3;</code>
+         * <code>repeated .GroupMemberItem member_list = 3;</code>
          * <p>
          * <pre>
          * 成功添加用户
          * </pre>
          */
-        YouMaiGroup.MemberItemOrBuilder getMemberListOrBuilder(
+        YouMaiGroup.GroupMemberItemOrBuilder getMemberListOrBuilder(
                 int index);
 
         /**
@@ -5888,10 +5537,10 @@ public final class YouMaiGroup {
                         }
                         case 26: {
                             if (!((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
-                                memberList_ = new java.util.ArrayList<YouMaiGroup.MemberItem>();
+                                memberList_ = new java.util.ArrayList<YouMaiGroup.GroupMemberItem>();
                                 mutable_bitField0_ |= 0x00000004;
                             }
-                            memberList_.add(input.readMessage(YouMaiGroup.MemberItem.PARSER, extensionRegistry));
+                            memberList_.add(input.readMessage(YouMaiGroup.GroupMemberItem.PARSER, extensionRegistry));
                             break;
                         }
                         case 32: {
@@ -6037,33 +5686,33 @@ public final class YouMaiGroup {
         }
 
         public static final int MEMBER_LIST_FIELD_NUMBER = 3;
-        private java.util.List<YouMaiGroup.MemberItem> memberList_;
+        private java.util.List<YouMaiGroup.GroupMemberItem> memberList_;
 
         /**
-         * <code>repeated .MemberItem member_list = 3;</code>
+         * <code>repeated .GroupMemberItem member_list = 3;</code>
          * <p>
          * <pre>
          * 成功添加用户
          * </pre>
          */
-        public java.util.List<YouMaiGroup.MemberItem> getMemberListList() {
+        public java.util.List<YouMaiGroup.GroupMemberItem> getMemberListList() {
             return memberList_;
         }
 
         /**
-         * <code>repeated .MemberItem member_list = 3;</code>
+         * <code>repeated .GroupMemberItem member_list = 3;</code>
          * <p>
          * <pre>
          * 成功添加用户
          * </pre>
          */
-        public java.util.List<? extends YouMaiGroup.MemberItemOrBuilder>
+        public java.util.List<? extends YouMaiGroup.GroupMemberItemOrBuilder>
         getMemberListOrBuilderList() {
             return memberList_;
         }
 
         /**
-         * <code>repeated .MemberItem member_list = 3;</code>
+         * <code>repeated .GroupMemberItem member_list = 3;</code>
          * <p>
          * <pre>
          * 成功添加用户
@@ -6074,24 +5723,24 @@ public final class YouMaiGroup {
         }
 
         /**
-         * <code>repeated .MemberItem member_list = 3;</code>
+         * <code>repeated .GroupMemberItem member_list = 3;</code>
          * <p>
          * <pre>
          * 成功添加用户
          * </pre>
          */
-        public YouMaiGroup.MemberItem getMemberList(int index) {
+        public YouMaiGroup.GroupMemberItem getMemberList(int index) {
             return memberList_.get(index);
         }
 
         /**
-         * <code>repeated .MemberItem member_list = 3;</code>
+         * <code>repeated .GroupMemberItem member_list = 3;</code>
          * <p>
          * <pre>
          * 成功添加用户
          * </pre>
          */
-        public YouMaiGroup.MemberItemOrBuilder getMemberListOrBuilder(
+        public YouMaiGroup.GroupMemberItemOrBuilder getMemberListOrBuilder(
                 int index) {
             return memberList_.get(index);
         }
@@ -6646,27 +6295,27 @@ public final class YouMaiGroup {
                 return this;
             }
 
-            private java.util.List<YouMaiGroup.MemberItem> memberList_ =
+            private java.util.List<YouMaiGroup.GroupMemberItem> memberList_ =
                     java.util.Collections.emptyList();
 
             private void ensureMemberListIsMutable() {
                 if (!((bitField0_ & 0x00000004) == 0x00000004)) {
-                    memberList_ = new java.util.ArrayList<YouMaiGroup.MemberItem>(memberList_);
+                    memberList_ = new java.util.ArrayList<YouMaiGroup.GroupMemberItem>(memberList_);
                     bitField0_ |= 0x00000004;
                 }
             }
 
             private com.google.protobuf.RepeatedFieldBuilder<
-                    YouMaiGroup.MemberItem, YouMaiGroup.MemberItem.Builder, YouMaiGroup.MemberItemOrBuilder> memberListBuilder_;
+                    YouMaiGroup.GroupMemberItem, YouMaiGroup.GroupMemberItem.Builder, YouMaiGroup.GroupMemberItemOrBuilder> memberListBuilder_;
 
             /**
-             * <code>repeated .MemberItem member_list = 3;</code>
+             * <code>repeated .GroupMemberItem member_list = 3;</code>
              * <p>
              * <pre>
              * 成功添加用户
              * </pre>
              */
-            public java.util.List<YouMaiGroup.MemberItem> getMemberListList() {
+            public java.util.List<YouMaiGroup.GroupMemberItem> getMemberListList() {
                 if (memberListBuilder_ == null) {
                     return java.util.Collections.unmodifiableList(memberList_);
                 } else {
@@ -6675,7 +6324,7 @@ public final class YouMaiGroup {
             }
 
             /**
-             * <code>repeated .MemberItem member_list = 3;</code>
+             * <code>repeated .GroupMemberItem member_list = 3;</code>
              * <p>
              * <pre>
              * 成功添加用户
@@ -6690,13 +6339,13 @@ public final class YouMaiGroup {
             }
 
             /**
-             * <code>repeated .MemberItem member_list = 3;</code>
+             * <code>repeated .GroupMemberItem member_list = 3;</code>
              * <p>
              * <pre>
              * 成功添加用户
              * </pre>
              */
-            public YouMaiGroup.MemberItem getMemberList(int index) {
+            public YouMaiGroup.GroupMemberItem getMemberList(int index) {
                 if (memberListBuilder_ == null) {
                     return memberList_.get(index);
                 } else {
@@ -6705,14 +6354,14 @@ public final class YouMaiGroup {
             }
 
             /**
-             * <code>repeated .MemberItem member_list = 3;</code>
+             * <code>repeated .GroupMemberItem member_list = 3;</code>
              * <p>
              * <pre>
              * 成功添加用户
              * </pre>
              */
             public Builder setMemberList(
-                    int index, YouMaiGroup.MemberItem value) {
+                    int index, YouMaiGroup.GroupMemberItem value) {
                 if (memberListBuilder_ == null) {
                     if (value == null) {
                         throw new NullPointerException();
@@ -6727,14 +6376,14 @@ public final class YouMaiGroup {
             }
 
             /**
-             * <code>repeated .MemberItem member_list = 3;</code>
+             * <code>repeated .GroupMemberItem member_list = 3;</code>
              * <p>
              * <pre>
              * 成功添加用户
              * </pre>
              */
             public Builder setMemberList(
-                    int index, YouMaiGroup.MemberItem.Builder builderForValue) {
+                    int index, YouMaiGroup.GroupMemberItem.Builder builderForValue) {
                 if (memberListBuilder_ == null) {
                     ensureMemberListIsMutable();
                     memberList_.set(index, builderForValue.build());
@@ -6746,13 +6395,13 @@ public final class YouMaiGroup {
             }
 
             /**
-             * <code>repeated .MemberItem member_list = 3;</code>
+             * <code>repeated .GroupMemberItem member_list = 3;</code>
              * <p>
              * <pre>
              * 成功添加用户
              * </pre>
              */
-            public Builder addMemberList(YouMaiGroup.MemberItem value) {
+            public Builder addMemberList(YouMaiGroup.GroupMemberItem value) {
                 if (memberListBuilder_ == null) {
                     if (value == null) {
                         throw new NullPointerException();
@@ -6767,14 +6416,14 @@ public final class YouMaiGroup {
             }
 
             /**
-             * <code>repeated .MemberItem member_list = 3;</code>
+             * <code>repeated .GroupMemberItem member_list = 3;</code>
              * <p>
              * <pre>
              * 成功添加用户
              * </pre>
              */
             public Builder addMemberList(
-                    int index, YouMaiGroup.MemberItem value) {
+                    int index, YouMaiGroup.GroupMemberItem value) {
                 if (memberListBuilder_ == null) {
                     if (value == null) {
                         throw new NullPointerException();
@@ -6789,14 +6438,14 @@ public final class YouMaiGroup {
             }
 
             /**
-             * <code>repeated .MemberItem member_list = 3;</code>
+             * <code>repeated .GroupMemberItem member_list = 3;</code>
              * <p>
              * <pre>
              * 成功添加用户
              * </pre>
              */
             public Builder addMemberList(
-                    YouMaiGroup.MemberItem.Builder builderForValue) {
+                    YouMaiGroup.GroupMemberItem.Builder builderForValue) {
                 if (memberListBuilder_ == null) {
                     ensureMemberListIsMutable();
                     memberList_.add(builderForValue.build());
@@ -6808,14 +6457,14 @@ public final class YouMaiGroup {
             }
 
             /**
-             * <code>repeated .MemberItem member_list = 3;</code>
+             * <code>repeated .GroupMemberItem member_list = 3;</code>
              * <p>
              * <pre>
              * 成功添加用户
              * </pre>
              */
             public Builder addMemberList(
-                    int index, YouMaiGroup.MemberItem.Builder builderForValue) {
+                    int index, YouMaiGroup.GroupMemberItem.Builder builderForValue) {
                 if (memberListBuilder_ == null) {
                     ensureMemberListIsMutable();
                     memberList_.add(index, builderForValue.build());
@@ -6827,14 +6476,14 @@ public final class YouMaiGroup {
             }
 
             /**
-             * <code>repeated .MemberItem member_list = 3;</code>
+             * <code>repeated .GroupMemberItem member_list = 3;</code>
              * <p>
              * <pre>
              * 成功添加用户
              * </pre>
              */
             public Builder addAllMemberList(
-                    Iterable<? extends YouMaiGroup.MemberItem> values) {
+                    Iterable<? extends YouMaiGroup.GroupMemberItem> values) {
                 if (memberListBuilder_ == null) {
                     ensureMemberListIsMutable();
                     com.google.protobuf.AbstractMessageLite.Builder.addAll(
@@ -6847,7 +6496,7 @@ public final class YouMaiGroup {
             }
 
             /**
-             * <code>repeated .MemberItem member_list = 3;</code>
+             * <code>repeated .GroupMemberItem member_list = 3;</code>
              * <p>
              * <pre>
              * 成功添加用户
@@ -6865,7 +6514,7 @@ public final class YouMaiGroup {
             }
 
             /**
-             * <code>repeated .MemberItem member_list = 3;</code>
+             * <code>repeated .GroupMemberItem member_list = 3;</code>
              * <p>
              * <pre>
              * 成功添加用户
@@ -6883,25 +6532,25 @@ public final class YouMaiGroup {
             }
 
             /**
-             * <code>repeated .MemberItem member_list = 3;</code>
+             * <code>repeated .GroupMemberItem member_list = 3;</code>
              * <p>
              * <pre>
              * 成功添加用户
              * </pre>
              */
-            public YouMaiGroup.MemberItem.Builder getMemberListBuilder(
+            public YouMaiGroup.GroupMemberItem.Builder getMemberListBuilder(
                     int index) {
                 return getMemberListFieldBuilder().getBuilder(index);
             }
 
             /**
-             * <code>repeated .MemberItem member_list = 3;</code>
+             * <code>repeated .GroupMemberItem member_list = 3;</code>
              * <p>
              * <pre>
              * 成功添加用户
              * </pre>
              */
-            public YouMaiGroup.MemberItemOrBuilder getMemberListOrBuilder(
+            public YouMaiGroup.GroupMemberItemOrBuilder getMemberListOrBuilder(
                     int index) {
                 if (memberListBuilder_ == null) {
                     return memberList_.get(index);
@@ -6911,13 +6560,13 @@ public final class YouMaiGroup {
             }
 
             /**
-             * <code>repeated .MemberItem member_list = 3;</code>
+             * <code>repeated .GroupMemberItem member_list = 3;</code>
              * <p>
              * <pre>
              * 成功添加用户
              * </pre>
              */
-            public java.util.List<? extends YouMaiGroup.MemberItemOrBuilder>
+            public java.util.List<? extends YouMaiGroup.GroupMemberItemOrBuilder>
             getMemberListOrBuilderList() {
                 if (memberListBuilder_ != null) {
                     return memberListBuilder_.getMessageOrBuilderList();
@@ -6927,48 +6576,48 @@ public final class YouMaiGroup {
             }
 
             /**
-             * <code>repeated .MemberItem member_list = 3;</code>
+             * <code>repeated .GroupMemberItem member_list = 3;</code>
              * <p>
              * <pre>
              * 成功添加用户
              * </pre>
              */
-            public YouMaiGroup.MemberItem.Builder addMemberListBuilder() {
+            public YouMaiGroup.GroupMemberItem.Builder addMemberListBuilder() {
                 return getMemberListFieldBuilder().addBuilder(
-                        YouMaiGroup.MemberItem.getDefaultInstance());
+                        YouMaiGroup.GroupMemberItem.getDefaultInstance());
             }
 
             /**
-             * <code>repeated .MemberItem member_list = 3;</code>
+             * <code>repeated .GroupMemberItem member_list = 3;</code>
              * <p>
              * <pre>
              * 成功添加用户
              * </pre>
              */
-            public YouMaiGroup.MemberItem.Builder addMemberListBuilder(
+            public YouMaiGroup.GroupMemberItem.Builder addMemberListBuilder(
                     int index) {
                 return getMemberListFieldBuilder().addBuilder(
-                        index, YouMaiGroup.MemberItem.getDefaultInstance());
+                        index, YouMaiGroup.GroupMemberItem.getDefaultInstance());
             }
 
             /**
-             * <code>repeated .MemberItem member_list = 3;</code>
+             * <code>repeated .GroupMemberItem member_list = 3;</code>
              * <p>
              * <pre>
              * 成功添加用户
              * </pre>
              */
-            public java.util.List<YouMaiGroup.MemberItem.Builder>
+            public java.util.List<YouMaiGroup.GroupMemberItem.Builder>
             getMemberListBuilderList() {
                 return getMemberListFieldBuilder().getBuilderList();
             }
 
             private com.google.protobuf.RepeatedFieldBuilder<
-                    YouMaiGroup.MemberItem, YouMaiGroup.MemberItem.Builder, YouMaiGroup.MemberItemOrBuilder>
+                    YouMaiGroup.GroupMemberItem, YouMaiGroup.GroupMemberItem.Builder, YouMaiGroup.GroupMemberItemOrBuilder>
             getMemberListFieldBuilder() {
                 if (memberListBuilder_ == null) {
                     memberListBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
-                            YouMaiGroup.MemberItem, YouMaiGroup.MemberItem.Builder, YouMaiGroup.MemberItemOrBuilder>(
+                            YouMaiGroup.GroupMemberItem, YouMaiGroup.GroupMemberItem.Builder, YouMaiGroup.GroupMemberItemOrBuilder>(
                             memberList_,
                             ((bitField0_ & 0x00000004) == 0x00000004),
                             getParentForChildren(),
@@ -8287,7 +7936,7 @@ public final class YouMaiGroup {
             com.google.protobuf.MessageOrBuilder {
 
         /**
-         * <code>required uint32 opt_type = 1;</code>
+         * <code>optional uint32 opt_type = 1;</code>
          * <p>
          * <pre>
          * cmd id:			CID_GROUP_OPT_NOTIFY
@@ -8296,7 +7945,7 @@ public final class YouMaiGroup {
         boolean hasOptType();
 
         /**
-         * <code>required uint32 opt_type = 1;</code>
+         * <code>optional uint32 opt_type = 1;</code>
          * <p>
          * <pre>
          * cmd id:			CID_GROUP_OPT_NOTIFY
@@ -8305,19 +7954,14 @@ public final class YouMaiGroup {
         int getOptType();
 
         /**
-         * <code>required .GroupItem group_item_info = 2;</code>
+         * <code>optional uint32 group_id = 2;</code>
          */
-        boolean hasGroupItemInfo();
+        boolean hasGroupId();
 
         /**
-         * <code>required .GroupItem group_item_info = 2;</code>
+         * <code>optional uint32 group_id = 2;</code>
          */
-        YouMaiGroup.GroupItem getGroupItemInfo();
-
-        /**
-         * <code>required .GroupItem group_item_info = 2;</code>
-         */
-        YouMaiGroup.GroupItemOrBuilder getGroupItemInfoOrBuilder();
+        int getGroupId();
     }
 
     /**
@@ -8387,17 +8031,9 @@ public final class YouMaiGroup {
                             optType_ = input.readUInt32();
                             break;
                         }
-                        case 18: {
-                            YouMaiGroup.GroupItem.Builder subBuilder = null;
-                            if (((bitField0_ & 0x00000002) == 0x00000002)) {
-                                subBuilder = groupItemInfo_.toBuilder();
-                            }
-                            groupItemInfo_ = input.readMessage(YouMaiGroup.GroupItem.PARSER, extensionRegistry);
-                            if (subBuilder != null) {
-                                subBuilder.mergeFrom(groupItemInfo_);
-                                groupItemInfo_ = subBuilder.buildPartial();
-                            }
+                        case 16: {
                             bitField0_ |= 0x00000002;
+                            groupId_ = input.readUInt32();
                             break;
                         }
                     }
@@ -8445,7 +8081,7 @@ public final class YouMaiGroup {
         private int optType_;
 
         /**
-         * <code>required uint32 opt_type = 1;</code>
+         * <code>optional uint32 opt_type = 1;</code>
          * <p>
          * <pre>
          * cmd id:			CID_GROUP_OPT_NOTIFY
@@ -8456,7 +8092,7 @@ public final class YouMaiGroup {
         }
 
         /**
-         * <code>required uint32 opt_type = 1;</code>
+         * <code>optional uint32 opt_type = 1;</code>
          * <p>
          * <pre>
          * cmd id:			CID_GROUP_OPT_NOTIFY
@@ -8466,33 +8102,26 @@ public final class YouMaiGroup {
             return optType_;
         }
 
-        public static final int GROUP_ITEM_INFO_FIELD_NUMBER = 2;
-        private YouMaiGroup.GroupItem groupItemInfo_;
+        public static final int GROUP_ID_FIELD_NUMBER = 2;
+        private int groupId_;
 
         /**
-         * <code>required .GroupItem group_item_info = 2;</code>
+         * <code>optional uint32 group_id = 2;</code>
          */
-        public boolean hasGroupItemInfo() {
+        public boolean hasGroupId() {
             return ((bitField0_ & 0x00000002) == 0x00000002);
         }
 
         /**
-         * <code>required .GroupItem group_item_info = 2;</code>
+         * <code>optional uint32 group_id = 2;</code>
          */
-        public YouMaiGroup.GroupItem getGroupItemInfo() {
-            return groupItemInfo_;
-        }
-
-        /**
-         * <code>required .GroupItem group_item_info = 2;</code>
-         */
-        public YouMaiGroup.GroupItemOrBuilder getGroupItemInfoOrBuilder() {
-            return groupItemInfo_;
+        public int getGroupId() {
+            return groupId_;
         }
 
         private void initFields() {
             optType_ = 0;
-            groupItemInfo_ = YouMaiGroup.GroupItem.getDefaultInstance();
+            groupId_ = 0;
         }
 
         private byte memoizedIsInitialized = -1;
@@ -8502,14 +8131,6 @@ public final class YouMaiGroup {
             if (isInitialized == 1) return true;
             if (isInitialized == 0) return false;
 
-            if (!hasOptType()) {
-                memoizedIsInitialized = 0;
-                return false;
-            }
-            if (!hasGroupItemInfo()) {
-                memoizedIsInitialized = 0;
-                return false;
-            }
             memoizedIsInitialized = 1;
             return true;
         }
@@ -8521,7 +8142,7 @@ public final class YouMaiGroup {
                 output.writeUInt32(1, optType_);
             }
             if (((bitField0_ & 0x00000002) == 0x00000002)) {
-                output.writeMessage(2, groupItemInfo_);
+                output.writeUInt32(2, groupId_);
             }
             getUnknownFields().writeTo(output);
         }
@@ -8539,7 +8160,7 @@ public final class YouMaiGroup {
             }
             if (((bitField0_ & 0x00000002) == 0x00000002)) {
                 size += com.google.protobuf.CodedOutputStream
-                        .computeMessageSize(2, groupItemInfo_);
+                        .computeUInt32Size(2, groupId_);
             }
             size += getUnknownFields().getSerializedSize();
             memoizedSerializedSize = size;
@@ -8675,7 +8296,6 @@ public final class YouMaiGroup {
 
             private void maybeForceBuilderInitialization() {
                 if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
-                    getGroupItemInfoFieldBuilder();
                 }
             }
 
@@ -8687,11 +8307,7 @@ public final class YouMaiGroup {
                 super.clear();
                 optType_ = 0;
                 bitField0_ = (bitField0_ & ~0x00000001);
-                if (groupItemInfoBuilder_ == null) {
-                    groupItemInfo_ = YouMaiGroup.GroupItem.getDefaultInstance();
-                } else {
-                    groupItemInfoBuilder_.clear();
-                }
+                groupId_ = 0;
                 bitField0_ = (bitField0_ & ~0x00000002);
                 return this;
             }
@@ -8728,11 +8344,7 @@ public final class YouMaiGroup {
                 if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
                     to_bitField0_ |= 0x00000002;
                 }
-                if (groupItemInfoBuilder_ == null) {
-                    result.groupItemInfo_ = groupItemInfo_;
-                } else {
-                    result.groupItemInfo_ = groupItemInfoBuilder_.build();
-                }
+                result.groupId_ = groupId_;
                 result.bitField0_ = to_bitField0_;
                 onBuilt();
                 return result;
@@ -8752,22 +8364,14 @@ public final class YouMaiGroup {
                 if (other.hasOptType()) {
                     setOptType(other.getOptType());
                 }
-                if (other.hasGroupItemInfo()) {
-                    mergeGroupItemInfo(other.getGroupItemInfo());
+                if (other.hasGroupId()) {
+                    setGroupId(other.getGroupId());
                 }
                 this.mergeUnknownFields(other.getUnknownFields());
                 return this;
             }
 
             public final boolean isInitialized() {
-                if (!hasOptType()) {
-
-                    return false;
-                }
-                if (!hasGroupItemInfo()) {
-
-                    return false;
-                }
                 return true;
             }
 
@@ -8794,7 +8398,7 @@ public final class YouMaiGroup {
             private int optType_;
 
             /**
-             * <code>required uint32 opt_type = 1;</code>
+             * <code>optional uint32 opt_type = 1;</code>
              * <p>
              * <pre>
              * cmd id:			CID_GROUP_OPT_NOTIFY
@@ -8805,7 +8409,7 @@ public final class YouMaiGroup {
             }
 
             /**
-             * <code>required uint32 opt_type = 1;</code>
+             * <code>optional uint32 opt_type = 1;</code>
              * <p>
              * <pre>
              * cmd id:			CID_GROUP_OPT_NOTIFY
@@ -8816,7 +8420,7 @@ public final class YouMaiGroup {
             }
 
             /**
-             * <code>required uint32 opt_type = 1;</code>
+             * <code>optional uint32 opt_type = 1;</code>
              * <p>
              * <pre>
              * cmd id:			CID_GROUP_OPT_NOTIFY
@@ -8830,7 +8434,7 @@ public final class YouMaiGroup {
             }
 
             /**
-             * <code>required uint32 opt_type = 1;</code>
+             * <code>optional uint32 opt_type = 1;</code>
              * <p>
              * <pre>
              * cmd id:			CID_GROUP_OPT_NOTIFY
@@ -8843,129 +8447,40 @@ public final class YouMaiGroup {
                 return this;
             }
 
-            private YouMaiGroup.GroupItem groupItemInfo_ = YouMaiGroup.GroupItem.getDefaultInstance();
-            private com.google.protobuf.SingleFieldBuilder<
-                    YouMaiGroup.GroupItem, YouMaiGroup.GroupItem.Builder, YouMaiGroup.GroupItemOrBuilder> groupItemInfoBuilder_;
+            private int groupId_;
 
             /**
-             * <code>required .GroupItem group_item_info = 2;</code>
+             * <code>optional uint32 group_id = 2;</code>
              */
-            public boolean hasGroupItemInfo() {
+            public boolean hasGroupId() {
                 return ((bitField0_ & 0x00000002) == 0x00000002);
             }
 
             /**
-             * <code>required .GroupItem group_item_info = 2;</code>
+             * <code>optional uint32 group_id = 2;</code>
              */
-            public YouMaiGroup.GroupItem getGroupItemInfo() {
-                if (groupItemInfoBuilder_ == null) {
-                    return groupItemInfo_;
-                } else {
-                    return groupItemInfoBuilder_.getMessage();
-                }
+            public int getGroupId() {
+                return groupId_;
             }
 
             /**
-             * <code>required .GroupItem group_item_info = 2;</code>
+             * <code>optional uint32 group_id = 2;</code>
              */
-            public Builder setGroupItemInfo(YouMaiGroup.GroupItem value) {
-                if (groupItemInfoBuilder_ == null) {
-                    if (value == null) {
-                        throw new NullPointerException();
-                    }
-                    groupItemInfo_ = value;
-                    onChanged();
-                } else {
-                    groupItemInfoBuilder_.setMessage(value);
-                }
+            public Builder setGroupId(int value) {
                 bitField0_ |= 0x00000002;
-                return this;
-            }
-
-            /**
-             * <code>required .GroupItem group_item_info = 2;</code>
-             */
-            public Builder setGroupItemInfo(
-                    YouMaiGroup.GroupItem.Builder builderForValue) {
-                if (groupItemInfoBuilder_ == null) {
-                    groupItemInfo_ = builderForValue.build();
-                    onChanged();
-                } else {
-                    groupItemInfoBuilder_.setMessage(builderForValue.build());
-                }
-                bitField0_ |= 0x00000002;
-                return this;
-            }
-
-            /**
-             * <code>required .GroupItem group_item_info = 2;</code>
-             */
-            public Builder mergeGroupItemInfo(YouMaiGroup.GroupItem value) {
-                if (groupItemInfoBuilder_ == null) {
-                    if (((bitField0_ & 0x00000002) == 0x00000002) &&
-                            groupItemInfo_ != YouMaiGroup.GroupItem.getDefaultInstance()) {
-                        groupItemInfo_ =
-                                YouMaiGroup.GroupItem.newBuilder(groupItemInfo_).mergeFrom(value).buildPartial();
-                    } else {
-                        groupItemInfo_ = value;
-                    }
-                    onChanged();
-                } else {
-                    groupItemInfoBuilder_.mergeFrom(value);
-                }
-                bitField0_ |= 0x00000002;
-                return this;
-            }
-
-            /**
-             * <code>required .GroupItem group_item_info = 2;</code>
-             */
-            public Builder clearGroupItemInfo() {
-                if (groupItemInfoBuilder_ == null) {
-                    groupItemInfo_ = YouMaiGroup.GroupItem.getDefaultInstance();
-                    onChanged();
-                } else {
-                    groupItemInfoBuilder_.clear();
-                }
-                bitField0_ = (bitField0_ & ~0x00000002);
-                return this;
-            }
-
-            /**
-             * <code>required .GroupItem group_item_info = 2;</code>
-             */
-            public YouMaiGroup.GroupItem.Builder getGroupItemInfoBuilder() {
-                bitField0_ |= 0x00000002;
+                groupId_ = value;
                 onChanged();
-                return getGroupItemInfoFieldBuilder().getBuilder();
+                return this;
             }
 
             /**
-             * <code>required .GroupItem group_item_info = 2;</code>
+             * <code>optional uint32 group_id = 2;</code>
              */
-            public YouMaiGroup.GroupItemOrBuilder getGroupItemInfoOrBuilder() {
-                if (groupItemInfoBuilder_ != null) {
-                    return groupItemInfoBuilder_.getMessageOrBuilder();
-                } else {
-                    return groupItemInfo_;
-                }
-            }
-
-            /**
-             * <code>required .GroupItem group_item_info = 2;</code>
-             */
-            private com.google.protobuf.SingleFieldBuilder<
-                    YouMaiGroup.GroupItem, YouMaiGroup.GroupItem.Builder, YouMaiGroup.GroupItemOrBuilder>
-            getGroupItemInfoFieldBuilder() {
-                if (groupItemInfoBuilder_ == null) {
-                    groupItemInfoBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-                            YouMaiGroup.GroupItem, YouMaiGroup.GroupItem.Builder, YouMaiGroup.GroupItemOrBuilder>(
-                            getGroupItemInfo(),
-                            getParentForChildren(),
-                            isClean());
-                    groupItemInfo_ = null;
-                }
-                return groupItemInfoBuilder_;
+            public Builder clearGroupId() {
+                bitField0_ = (bitField0_ & ~0x00000002);
+                groupId_ = 0;
+                onChanged();
+                return this;
             }
 
             // @@protoc_insertion_point(builder_scope:GroupOptNotify)
@@ -10177,6 +9692,16 @@ public final class YouMaiGroup {
         YouMaiGroup.GroupMemberOptType getType();
 
         /**
+         * <code>optional uint64 update_time = 4;</code>
+         */
+        boolean hasUpdateTime();
+
+        /**
+         * <code>optional uint64 update_time = 4;</code>
+         */
+        long getUpdateTime();
+
+        /**
          * <code>optional .ResultCode result = 10;</code>
          */
         boolean hasResult();
@@ -10273,13 +9798,18 @@ public final class YouMaiGroup {
                             }
                             break;
                         }
+                        case 32: {
+                            bitField0_ |= 0x00000004;
+                            updateTime_ = input.readUInt64();
+                            break;
+                        }
                         case 80: {
                             int rawValue = input.readEnum();
                             YouMaiBasic.ResultCode value = YouMaiBasic.ResultCode.valueOf(rawValue);
                             if (value == null) {
                                 unknownFields.mergeVarintField(10, rawValue);
                             } else {
-                                bitField0_ |= 0x00000004;
+                                bitField0_ |= 0x00000008;
                                 result_ = value;
                             }
                             break;
@@ -10402,6 +9932,23 @@ public final class YouMaiGroup {
             return type_;
         }
 
+        public static final int UPDATE_TIME_FIELD_NUMBER = 4;
+        private long updateTime_;
+
+        /**
+         * <code>optional uint64 update_time = 4;</code>
+         */
+        public boolean hasUpdateTime() {
+            return ((bitField0_ & 0x00000004) == 0x00000004);
+        }
+
+        /**
+         * <code>optional uint64 update_time = 4;</code>
+         */
+        public long getUpdateTime() {
+            return updateTime_;
+        }
+
         public static final int RESULT_FIELD_NUMBER = 10;
         private YouMaiBasic.ResultCode result_;
 
@@ -10409,7 +9956,7 @@ public final class YouMaiGroup {
          * <code>optional .ResultCode result = 10;</code>
          */
         public boolean hasResult() {
-            return ((bitField0_ & 0x00000004) == 0x00000004);
+            return ((bitField0_ & 0x00000008) == 0x00000008);
         }
 
         /**
@@ -10423,6 +9970,7 @@ public final class YouMaiGroup {
             groupId_ = 0;
             memberList_ = java.util.Collections.emptyList();
             type_ = YouMaiGroup.GroupMemberOptType.GROUP_MEMBER_OPT_ADD;
+            updateTime_ = 0L;
             result_ = YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
         }
 
@@ -10450,6 +9998,9 @@ public final class YouMaiGroup {
                 output.writeEnum(3, type_.getNumber());
             }
             if (((bitField0_ & 0x00000004) == 0x00000004)) {
+                output.writeUInt64(4, updateTime_);
+            }
+            if (((bitField0_ & 0x00000008) == 0x00000008)) {
                 output.writeEnum(10, result_.getNumber());
             }
             getUnknownFields().writeTo(output);
@@ -10475,6 +10026,10 @@ public final class YouMaiGroup {
                         .computeEnumSize(3, type_.getNumber());
             }
             if (((bitField0_ & 0x00000004) == 0x00000004)) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeUInt64Size(4, updateTime_);
+            }
+            if (((bitField0_ & 0x00000008) == 0x00000008)) {
                 size += com.google.protobuf.CodedOutputStream
                         .computeEnumSize(10, result_.getNumber());
             }
@@ -10632,8 +10187,10 @@ public final class YouMaiGroup {
                 }
                 type_ = YouMaiGroup.GroupMemberOptType.GROUP_MEMBER_OPT_ADD;
                 bitField0_ = (bitField0_ & ~0x00000004);
-                result_ = YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
+                updateTime_ = 0L;
                 bitField0_ = (bitField0_ & ~0x00000008);
+                result_ = YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
+                bitField0_ = (bitField0_ & ~0x00000010);
                 return this;
             }
 
@@ -10681,6 +10238,10 @@ public final class YouMaiGroup {
                 result.type_ = type_;
                 if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
                     to_bitField0_ |= 0x00000004;
+                }
+                result.updateTime_ = updateTime_;
+                if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
+                    to_bitField0_ |= 0x00000008;
                 }
                 result.result_ = result_;
                 result.bitField0_ = to_bitField0_;
@@ -10730,6 +10291,9 @@ public final class YouMaiGroup {
                 }
                 if (other.hasType()) {
                     setType(other.getType());
+                }
+                if (other.hasUpdateTime()) {
+                    setUpdateTime(other.getUpdateTime());
                 }
                 if (other.hasResult()) {
                     setResult(other.getResult());
@@ -11097,13 +10661,49 @@ public final class YouMaiGroup {
                 return this;
             }
 
+            private long updateTime_;
+
+            /**
+             * <code>optional uint64 update_time = 4;</code>
+             */
+            public boolean hasUpdateTime() {
+                return ((bitField0_ & 0x00000008) == 0x00000008);
+            }
+
+            /**
+             * <code>optional uint64 update_time = 4;</code>
+             */
+            public long getUpdateTime() {
+                return updateTime_;
+            }
+
+            /**
+             * <code>optional uint64 update_time = 4;</code>
+             */
+            public Builder setUpdateTime(long value) {
+                bitField0_ |= 0x00000008;
+                updateTime_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional uint64 update_time = 4;</code>
+             */
+            public Builder clearUpdateTime() {
+                bitField0_ = (bitField0_ & ~0x00000008);
+                updateTime_ = 0L;
+                onChanged();
+                return this;
+            }
+
             private YouMaiBasic.ResultCode result_ = YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
 
             /**
              * <code>optional .ResultCode result = 10;</code>
              */
             public boolean hasResult() {
-                return ((bitField0_ & 0x00000008) == 0x00000008);
+                return ((bitField0_ & 0x00000010) == 0x00000010);
             }
 
             /**
@@ -11120,7 +10720,7 @@ public final class YouMaiGroup {
                 if (value == null) {
                     throw new NullPointerException();
                 }
-                bitField0_ |= 0x00000008;
+                bitField0_ |= 0x00000010;
                 result_ = value;
                 onChanged();
                 return this;
@@ -11130,7 +10730,7 @@ public final class YouMaiGroup {
              * <code>optional .ResultCode result = 10;</code>
              */
             public Builder clearResult() {
-                bitField0_ = (bitField0_ & ~0x00000008);
+                bitField0_ = (bitField0_ & ~0x00000010);
                 result_ = YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
                 onChanged();
                 return this;
@@ -11206,6 +10806,16 @@ public final class YouMaiGroup {
          * <code>optional .GroupMemberOptType type = 3;</code>
          */
         YouMaiGroup.GroupMemberOptType getType();
+
+        /**
+         * <code>optional uint64 update_time = 4;</code>
+         */
+        boolean hasUpdateTime();
+
+        /**
+         * <code>optional uint64 update_time = 4;</code>
+         */
+        long getUpdateTime();
     }
 
     /**
@@ -11288,6 +10898,11 @@ public final class YouMaiGroup {
                                 bitField0_ |= 0x00000002;
                                 type_ = value;
                             }
+                            break;
+                        }
+                        case 32: {
+                            bitField0_ |= 0x00000004;
+                            updateTime_ = input.readUInt64();
                             break;
                         }
                     }
@@ -11416,10 +11031,28 @@ public final class YouMaiGroup {
             return type_;
         }
 
+        public static final int UPDATE_TIME_FIELD_NUMBER = 4;
+        private long updateTime_;
+
+        /**
+         * <code>optional uint64 update_time = 4;</code>
+         */
+        public boolean hasUpdateTime() {
+            return ((bitField0_ & 0x00000004) == 0x00000004);
+        }
+
+        /**
+         * <code>optional uint64 update_time = 4;</code>
+         */
+        public long getUpdateTime() {
+            return updateTime_;
+        }
+
         private void initFields() {
             groupId_ = 0;
             memberList_ = java.util.Collections.emptyList();
             type_ = YouMaiGroup.GroupMemberOptType.GROUP_MEMBER_OPT_ADD;
+            updateTime_ = 0L;
         }
 
         private byte memoizedIsInitialized = -1;
@@ -11445,6 +11078,9 @@ public final class YouMaiGroup {
             if (((bitField0_ & 0x00000002) == 0x00000002)) {
                 output.writeEnum(3, type_.getNumber());
             }
+            if (((bitField0_ & 0x00000004) == 0x00000004)) {
+                output.writeUInt64(4, updateTime_);
+            }
             getUnknownFields().writeTo(output);
         }
 
@@ -11466,6 +11102,10 @@ public final class YouMaiGroup {
             if (((bitField0_ & 0x00000002) == 0x00000002)) {
                 size += com.google.protobuf.CodedOutputStream
                         .computeEnumSize(3, type_.getNumber());
+            }
+            if (((bitField0_ & 0x00000004) == 0x00000004)) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeUInt64Size(4, updateTime_);
             }
             size += getUnknownFields().getSerializedSize();
             memoizedSerializedSize = size;
@@ -11617,6 +11257,8 @@ public final class YouMaiGroup {
                 }
                 type_ = YouMaiGroup.GroupMemberOptType.GROUP_MEMBER_OPT_ADD;
                 bitField0_ = (bitField0_ & ~0x00000004);
+                updateTime_ = 0L;
+                bitField0_ = (bitField0_ & ~0x00000008);
                 return this;
             }
 
@@ -11662,6 +11304,10 @@ public final class YouMaiGroup {
                     to_bitField0_ |= 0x00000002;
                 }
                 result.type_ = type_;
+                if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
+                    to_bitField0_ |= 0x00000004;
+                }
+                result.updateTime_ = updateTime_;
                 result.bitField0_ = to_bitField0_;
                 onBuilt();
                 return result;
@@ -11709,6 +11355,9 @@ public final class YouMaiGroup {
                 }
                 if (other.hasType()) {
                     setType(other.getType());
+                }
+                if (other.hasUpdateTime()) {
+                    setUpdateTime(other.getUpdateTime());
                 }
                 this.mergeUnknownFields(other.getUnknownFields());
                 return this;
@@ -12085,6 +11734,42 @@ public final class YouMaiGroup {
             public Builder clearType() {
                 bitField0_ = (bitField0_ & ~0x00000004);
                 type_ = YouMaiGroup.GroupMemberOptType.GROUP_MEMBER_OPT_ADD;
+                onChanged();
+                return this;
+            }
+
+            private long updateTime_;
+
+            /**
+             * <code>optional uint64 update_time = 4;</code>
+             */
+            public boolean hasUpdateTime() {
+                return ((bitField0_ & 0x00000008) == 0x00000008);
+            }
+
+            /**
+             * <code>optional uint64 update_time = 4;</code>
+             */
+            public long getUpdateTime() {
+                return updateTime_;
+            }
+
+            /**
+             * <code>optional uint64 update_time = 4;</code>
+             */
+            public Builder setUpdateTime(long value) {
+                bitField0_ |= 0x00000008;
+                updateTime_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional uint64 update_time = 4;</code>
+             */
+            public Builder clearUpdateTime() {
+                bitField0_ = (bitField0_ & ~0x00000008);
+                updateTime_ = 0L;
                 onChanged();
                 return this;
             }
@@ -13231,6 +12916,33 @@ public final class YouMaiGroup {
                 int index);
 
         /**
+         * <code>repeated uint32 latest_group_id_list = 2;</code>
+         * <p>
+         * <pre>
+         * 没有变更的群
+         * </pre>
+         */
+        java.util.List<Integer> getLatestGroupIdListList();
+
+        /**
+         * <code>repeated uint32 latest_group_id_list = 2;</code>
+         * <p>
+         * <pre>
+         * 没有变更的群
+         * </pre>
+         */
+        int getLatestGroupIdListCount();
+
+        /**
+         * <code>repeated uint32 latest_group_id_list = 2;</code>
+         * <p>
+         * <pre>
+         * 没有变更的群
+         * </pre>
+         */
+        int getLatestGroupIdList(int index);
+
+        /**
          * <code>optional .ResultCode result = 10;</code>
          */
         boolean hasResult();
@@ -13307,6 +13019,27 @@ public final class YouMaiGroup {
                             groupInfoList_.add(input.readMessage(YouMaiGroup.GroupInfo.PARSER, extensionRegistry));
                             break;
                         }
+                        case 16: {
+                            if (!((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
+                                latestGroupIdList_ = new java.util.ArrayList<Integer>();
+                                mutable_bitField0_ |= 0x00000002;
+                            }
+                            latestGroupIdList_.add(input.readUInt32());
+                            break;
+                        }
+                        case 18: {
+                            int length = input.readRawVarint32();
+                            int limit = input.pushLimit(length);
+                            if (!((mutable_bitField0_ & 0x00000002) == 0x00000002) && input.getBytesUntilLimit() > 0) {
+                                latestGroupIdList_ = new java.util.ArrayList<Integer>();
+                                mutable_bitField0_ |= 0x00000002;
+                            }
+                            while (input.getBytesUntilLimit() > 0) {
+                                latestGroupIdList_.add(input.readUInt32());
+                            }
+                            input.popLimit(limit);
+                            break;
+                        }
                         case 80: {
                             int rawValue = input.readEnum();
                             YouMaiBasic.ResultCode value = YouMaiBasic.ResultCode.valueOf(rawValue);
@@ -13328,6 +13061,9 @@ public final class YouMaiGroup {
             } finally {
                 if (((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
                     groupInfoList_ = java.util.Collections.unmodifiableList(groupInfoList_);
+                }
+                if (((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
+                    latestGroupIdList_ = java.util.Collections.unmodifiableList(latestGroupIdList_);
                 }
                 this.unknownFields = unknownFields.build();
                 makeExtensionsImmutable();
@@ -13422,6 +13158,43 @@ public final class YouMaiGroup {
             return groupInfoList_.get(index);
         }
 
+        public static final int LATEST_GROUP_ID_LIST_FIELD_NUMBER = 2;
+        private java.util.List<Integer> latestGroupIdList_;
+
+        /**
+         * <code>repeated uint32 latest_group_id_list = 2;</code>
+         * <p>
+         * <pre>
+         * 没有变更的群
+         * </pre>
+         */
+        public java.util.List<Integer>
+        getLatestGroupIdListList() {
+            return latestGroupIdList_;
+        }
+
+        /**
+         * <code>repeated uint32 latest_group_id_list = 2;</code>
+         * <p>
+         * <pre>
+         * 没有变更的群
+         * </pre>
+         */
+        public int getLatestGroupIdListCount() {
+            return latestGroupIdList_.size();
+        }
+
+        /**
+         * <code>repeated uint32 latest_group_id_list = 2;</code>
+         * <p>
+         * <pre>
+         * 没有变更的群
+         * </pre>
+         */
+        public int getLatestGroupIdList(int index) {
+            return latestGroupIdList_.get(index);
+        }
+
         public static final int RESULT_FIELD_NUMBER = 10;
         private YouMaiBasic.ResultCode result_;
 
@@ -13441,6 +13214,7 @@ public final class YouMaiGroup {
 
         private void initFields() {
             groupInfoList_ = java.util.Collections.emptyList();
+            latestGroupIdList_ = java.util.Collections.emptyList();
             result_ = YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
         }
 
@@ -13461,6 +13235,9 @@ public final class YouMaiGroup {
             for (int i = 0; i < groupInfoList_.size(); i++) {
                 output.writeMessage(1, groupInfoList_.get(i));
             }
+            for (int i = 0; i < latestGroupIdList_.size(); i++) {
+                output.writeUInt32(2, latestGroupIdList_.get(i));
+            }
             if (((bitField0_ & 0x00000001) == 0x00000001)) {
                 output.writeEnum(10, result_.getNumber());
             }
@@ -13477,6 +13254,15 @@ public final class YouMaiGroup {
             for (int i = 0; i < groupInfoList_.size(); i++) {
                 size += com.google.protobuf.CodedOutputStream
                         .computeMessageSize(1, groupInfoList_.get(i));
+            }
+            {
+                int dataSize = 0;
+                for (int i = 0; i < latestGroupIdList_.size(); i++) {
+                    dataSize += com.google.protobuf.CodedOutputStream
+                            .computeUInt32SizeNoTag(latestGroupIdList_.get(i));
+                }
+                size += dataSize;
+                size += 1 * getLatestGroupIdListList().size();
             }
             if (((bitField0_ & 0x00000001) == 0x00000001)) {
                 size += com.google.protobuf.CodedOutputStream
@@ -13628,8 +13414,10 @@ public final class YouMaiGroup {
                 } else {
                     groupInfoListBuilder_.clear();
                 }
-                result_ = YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
+                latestGroupIdList_ = java.util.Collections.emptyList();
                 bitField0_ = (bitField0_ & ~0x00000002);
+                result_ = YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
+                bitField0_ = (bitField0_ & ~0x00000004);
                 return this;
             }
 
@@ -13667,7 +13455,12 @@ public final class YouMaiGroup {
                 } else {
                     result.groupInfoList_ = groupInfoListBuilder_.build();
                 }
-                if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+                if (((bitField0_ & 0x00000002) == 0x00000002)) {
+                    latestGroupIdList_ = java.util.Collections.unmodifiableList(latestGroupIdList_);
+                    bitField0_ = (bitField0_ & ~0x00000002);
+                }
+                result.latestGroupIdList_ = latestGroupIdList_;
+                if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
                     to_bitField0_ |= 0x00000001;
                 }
                 result.result_ = result_;
@@ -13712,6 +13505,16 @@ public final class YouMaiGroup {
                             groupInfoListBuilder_.addAllMessages(other.groupInfoList_);
                         }
                     }
+                }
+                if (!other.latestGroupIdList_.isEmpty()) {
+                    if (latestGroupIdList_.isEmpty()) {
+                        latestGroupIdList_ = other.latestGroupIdList_;
+                        bitField0_ = (bitField0_ & ~0x00000002);
+                    } else {
+                        ensureLatestGroupIdListIsMutable();
+                        latestGroupIdList_.addAll(other.latestGroupIdList_);
+                    }
+                    onChanged();
                 }
                 if (other.hasResult()) {
                     setResult(other.getResult());
@@ -14076,13 +13879,115 @@ public final class YouMaiGroup {
                 return groupInfoListBuilder_;
             }
 
+            private java.util.List<Integer> latestGroupIdList_ = java.util.Collections.emptyList();
+
+            private void ensureLatestGroupIdListIsMutable() {
+                if (!((bitField0_ & 0x00000002) == 0x00000002)) {
+                    latestGroupIdList_ = new java.util.ArrayList<Integer>(latestGroupIdList_);
+                    bitField0_ |= 0x00000002;
+                }
+            }
+
+            /**
+             * <code>repeated uint32 latest_group_id_list = 2;</code>
+             * <p>
+             * <pre>
+             * 没有变更的群
+             * </pre>
+             */
+            public java.util.List<Integer>
+            getLatestGroupIdListList() {
+                return java.util.Collections.unmodifiableList(latestGroupIdList_);
+            }
+
+            /**
+             * <code>repeated uint32 latest_group_id_list = 2;</code>
+             * <p>
+             * <pre>
+             * 没有变更的群
+             * </pre>
+             */
+            public int getLatestGroupIdListCount() {
+                return latestGroupIdList_.size();
+            }
+
+            /**
+             * <code>repeated uint32 latest_group_id_list = 2;</code>
+             * <p>
+             * <pre>
+             * 没有变更的群
+             * </pre>
+             */
+            public int getLatestGroupIdList(int index) {
+                return latestGroupIdList_.get(index);
+            }
+
+            /**
+             * <code>repeated uint32 latest_group_id_list = 2;</code>
+             * <p>
+             * <pre>
+             * 没有变更的群
+             * </pre>
+             */
+            public Builder setLatestGroupIdList(
+                    int index, int value) {
+                ensureLatestGroupIdListIsMutable();
+                latestGroupIdList_.set(index, value);
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>repeated uint32 latest_group_id_list = 2;</code>
+             * <p>
+             * <pre>
+             * 没有变更的群
+             * </pre>
+             */
+            public Builder addLatestGroupIdList(int value) {
+                ensureLatestGroupIdListIsMutable();
+                latestGroupIdList_.add(value);
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>repeated uint32 latest_group_id_list = 2;</code>
+             * <p>
+             * <pre>
+             * 没有变更的群
+             * </pre>
+             */
+            public Builder addAllLatestGroupIdList(
+                    Iterable<? extends Integer> values) {
+                ensureLatestGroupIdListIsMutable();
+                com.google.protobuf.AbstractMessageLite.Builder.addAll(
+                        values, latestGroupIdList_);
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>repeated uint32 latest_group_id_list = 2;</code>
+             * <p>
+             * <pre>
+             * 没有变更的群
+             * </pre>
+             */
+            public Builder clearLatestGroupIdList() {
+                latestGroupIdList_ = java.util.Collections.emptyList();
+                bitField0_ = (bitField0_ & ~0x00000002);
+                onChanged();
+                return this;
+            }
+
             private YouMaiBasic.ResultCode result_ = YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
 
             /**
              * <code>optional .ResultCode result = 10;</code>
              */
             public boolean hasResult() {
-                return ((bitField0_ & 0x00000002) == 0x00000002);
+                return ((bitField0_ & 0x00000004) == 0x00000004);
             }
 
             /**
@@ -14099,7 +14004,7 @@ public final class YouMaiGroup {
                 if (value == null) {
                     throw new NullPointerException();
                 }
-                bitField0_ |= 0x00000002;
+                bitField0_ |= 0x00000004;
                 result_ = value;
                 onChanged();
                 return this;
@@ -14109,7 +14014,7 @@ public final class YouMaiGroup {
              * <code>optional .ResultCode result = 10;</code>
              */
             public Builder clearResult() {
-                bitField0_ = (bitField0_ & ~0x00000002);
+                bitField0_ = (bitField0_ & ~0x00000004);
                 result_ = YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
                 onChanged();
                 return this;
@@ -16672,6 +16577,34 @@ public final class YouMaiGroup {
          * </pre>
          */
         YouMaiGroup.GroupInfoOrBuilder getGroupInfoOrBuilder();
+
+        /**
+         * <code>optional bool update = 2;</code>
+         * <p>
+         * <pre>
+         * (true:update  ,false: no update)
+         * </pre>
+         */
+        boolean hasUpdate();
+
+        /**
+         * <code>optional bool update = 2;</code>
+         * <p>
+         * <pre>
+         * (true:update  ,false: no update)
+         * </pre>
+         */
+        boolean getUpdate();
+
+        /**
+         * <code>optional .ResultCode result = 10;</code>
+         */
+        boolean hasResult();
+
+        /**
+         * <code>optional .ResultCode result = 10;</code>
+         */
+        YouMaiBasic.ResultCode getResult();
     }
 
     /**
@@ -16743,6 +16676,22 @@ public final class YouMaiGroup {
                                 groupInfo_ = subBuilder.buildPartial();
                             }
                             bitField0_ |= 0x00000001;
+                            break;
+                        }
+                        case 16: {
+                            bitField0_ |= 0x00000002;
+                            update_ = input.readBool();
+                            break;
+                        }
+                        case 80: {
+                            int rawValue = input.readEnum();
+                            YouMaiBasic.ResultCode value = YouMaiBasic.ResultCode.valueOf(rawValue);
+                            if (value == null) {
+                                unknownFields.mergeVarintField(10, rawValue);
+                            } else {
+                                bitField0_ |= 0x00000004;
+                                result_ = value;
+                            }
                             break;
                         }
                     }
@@ -16822,8 +16771,52 @@ public final class YouMaiGroup {
             return groupInfo_;
         }
 
+        public static final int UPDATE_FIELD_NUMBER = 2;
+        private boolean update_;
+
+        /**
+         * <code>optional bool update = 2;</code>
+         * <p>
+         * <pre>
+         * (true:update  ,false: no update)
+         * </pre>
+         */
+        public boolean hasUpdate() {
+            return ((bitField0_ & 0x00000002) == 0x00000002);
+        }
+
+        /**
+         * <code>optional bool update = 2;</code>
+         * <p>
+         * <pre>
+         * (true:update  ,false: no update)
+         * </pre>
+         */
+        public boolean getUpdate() {
+            return update_;
+        }
+
+        public static final int RESULT_FIELD_NUMBER = 10;
+        private YouMaiBasic.ResultCode result_;
+
+        /**
+         * <code>optional .ResultCode result = 10;</code>
+         */
+        public boolean hasResult() {
+            return ((bitField0_ & 0x00000004) == 0x00000004);
+        }
+
+        /**
+         * <code>optional .ResultCode result = 10;</code>
+         */
+        public YouMaiBasic.ResultCode getResult() {
+            return result_;
+        }
+
         private void initFields() {
             groupInfo_ = YouMaiGroup.GroupInfo.getDefaultInstance();
+            update_ = false;
+            result_ = YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
         }
 
         private byte memoizedIsInitialized = -1;
@@ -16843,6 +16836,12 @@ public final class YouMaiGroup {
             if (((bitField0_ & 0x00000001) == 0x00000001)) {
                 output.writeMessage(1, groupInfo_);
             }
+            if (((bitField0_ & 0x00000002) == 0x00000002)) {
+                output.writeBool(2, update_);
+            }
+            if (((bitField0_ & 0x00000004) == 0x00000004)) {
+                output.writeEnum(10, result_.getNumber());
+            }
             getUnknownFields().writeTo(output);
         }
 
@@ -16856,6 +16855,14 @@ public final class YouMaiGroup {
             if (((bitField0_ & 0x00000001) == 0x00000001)) {
                 size += com.google.protobuf.CodedOutputStream
                         .computeMessageSize(1, groupInfo_);
+            }
+            if (((bitField0_ & 0x00000002) == 0x00000002)) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeBoolSize(2, update_);
+            }
+            if (((bitField0_ & 0x00000004) == 0x00000004)) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeEnumSize(10, result_.getNumber());
             }
             size += getUnknownFields().getSerializedSize();
             memoizedSerializedSize = size;
@@ -17003,6 +17010,10 @@ public final class YouMaiGroup {
                     groupInfoBuilder_.clear();
                 }
                 bitField0_ = (bitField0_ & ~0x00000001);
+                update_ = false;
+                bitField0_ = (bitField0_ & ~0x00000002);
+                result_ = YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
+                bitField0_ = (bitField0_ & ~0x00000004);
                 return this;
             }
 
@@ -17039,6 +17050,14 @@ public final class YouMaiGroup {
                 } else {
                     result.groupInfo_ = groupInfoBuilder_.build();
                 }
+                if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+                    to_bitField0_ |= 0x00000002;
+                }
+                result.update_ = update_;
+                if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+                    to_bitField0_ |= 0x00000004;
+                }
+                result.result_ = result_;
                 result.bitField0_ = to_bitField0_;
                 onBuilt();
                 return result;
@@ -17057,6 +17076,12 @@ public final class YouMaiGroup {
                 if (other == YouMaiGroup.GroupInfoRsp.getDefaultInstance()) return this;
                 if (other.hasGroupInfo()) {
                     mergeGroupInfo(other.getGroupInfo());
+                }
+                if (other.hasUpdate()) {
+                    setUpdate(other.getUpdate());
+                }
+                if (other.hasResult()) {
+                    setResult(other.getResult());
                 }
                 this.mergeUnknownFields(other.getUnknownFields());
                 return this;
@@ -17245,6 +17270,97 @@ public final class YouMaiGroup {
                     groupInfo_ = null;
                 }
                 return groupInfoBuilder_;
+            }
+
+            private boolean update_;
+
+            /**
+             * <code>optional bool update = 2;</code>
+             * <p>
+             * <pre>
+             * (true:update  ,false: no update)
+             * </pre>
+             */
+            public boolean hasUpdate() {
+                return ((bitField0_ & 0x00000002) == 0x00000002);
+            }
+
+            /**
+             * <code>optional bool update = 2;</code>
+             * <p>
+             * <pre>
+             * (true:update  ,false: no update)
+             * </pre>
+             */
+            public boolean getUpdate() {
+                return update_;
+            }
+
+            /**
+             * <code>optional bool update = 2;</code>
+             * <p>
+             * <pre>
+             * (true:update  ,false: no update)
+             * </pre>
+             */
+            public Builder setUpdate(boolean value) {
+                bitField0_ |= 0x00000002;
+                update_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional bool update = 2;</code>
+             * <p>
+             * <pre>
+             * (true:update  ,false: no update)
+             * </pre>
+             */
+            public Builder clearUpdate() {
+                bitField0_ = (bitField0_ & ~0x00000002);
+                update_ = false;
+                onChanged();
+                return this;
+            }
+
+            private YouMaiBasic.ResultCode result_ = YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
+
+            /**
+             * <code>optional .ResultCode result = 10;</code>
+             */
+            public boolean hasResult() {
+                return ((bitField0_ & 0x00000004) == 0x00000004);
+            }
+
+            /**
+             * <code>optional .ResultCode result = 10;</code>
+             */
+            public YouMaiBasic.ResultCode getResult() {
+                return result_;
+            }
+
+            /**
+             * <code>optional .ResultCode result = 10;</code>
+             */
+            public Builder setResult(YouMaiBasic.ResultCode value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000004;
+                result_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional .ResultCode result = 10;</code>
+             */
+            public Builder clearResult() {
+                bitField0_ = (bitField0_ & ~0x00000004);
+                result_ = YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
+                onChanged();
+                return this;
             }
 
             // @@protoc_insertion_point(builder_scope:GroupInfoRsp)
@@ -20018,66 +20134,67 @@ public final class YouMaiGroup {
                         "ouMai.Basic.proto\"\035\n\nMemberItem\022\017\n\007user_" +
                         "id\030\001 \001(\t\"S\n\tGroupItem\022\020\n\010group_id\030\001 \001(\r\022" +
                         "\030\n\020info_update_time\030\002 \001(\004\022\032\n\022member_upda" +
-                        "te_time\030\003 \001(\004\"a\n\017GroupMemberItem\022\021\n\tmemb" +
+                        "te_time\030\003 \001(\004\"N\n\017GroupMemberItem\022\021\n\tmemb" +
                         "er_id\030\001 \001(\t\022\023\n\013member_name\030\002 \001(\t\022\023\n\013memb" +
-                        "er_role\030\003 \001(\r\022\021\n\tis_delete\030\004 \001(\010\"\366\001\n\tGro" +
-                        "upInfo\022\020\n\010group_id\030\001 \001(\r\022\022\n\ngroup_name\030\002" +
-                        " \001(\t\022\020\n\010owner_id\030\003 \001(\t\022\024\n\014group_avatar\030\004" +
-                        " \001(\t\022\r\n\005topic\030\005 \001(\t\022\030\n\020info_update_time\030",
-                "\006 \001(\004\022\032\n\022member_update_time\030\007 \001(\004\022\032\n\022gro" +
-                        "up_member_count\030\010 \001(\r\022\014\n\004flag\030\t \001(\r\022\027\n\017f" +
-                        "ixtop_priority\030\n \001(\r\022\023\n\013not_disturb\030\013 \001(" +
-                        "\010\"\214\001\n\016GroupCreateReq\022\017\n\007user_id\030\001 \001(\t\0220\n" +
-                        "\013member_list\030\002 \003(\0132\033.Mem" +
-                        "berItem\022\022\n\ngroup_name\030\003 \001(\t\022\024\n\014group_ava" +
-                        "tar\030\004 \001(\t\022\r\n\005topic\030\005 \001(\t\"\247\001\n\016GroupCreate" +
-                        "Rsp\022\020\n\010group_id\030\001 \001(\r\022\017\n\007user_id\030\002 \001(\t\0220" +
-                        "\n\013member_list\030\003 \003(\0132\033.Me" +
-                        "mberItem\022\023\n\013update_time\030\004 \001(\004\022+\n\006result\030",
-                "\n \001(\0162\033.ResultCode\"5\n\020Gr" +
-                        "oupDissolveReq\022\017\n\007user_id\030\001 \001(\t\022\020\n\010group" +
-                        "_id\030\002 \001(\r\"Q\n\020GroupDissolveRsp\022\020\n\010group_i" +
-                        "d\030\001 \001(\r\022+\n\006result\030\n \001(\0162\033.com.proto.basi" +
-                        "c.ResultCode\"W\n\016GroupOptNotify\022\020\n\010opt_ty" +
-                        "pe\030\001 \002(\r\0223\n\017group_item_info\030\002 \002(\0132\032.com." +
-                        "proto.group.GroupItem\"\236\001\n\024GroupMemberCha" +
-                        "ngeReq\022\017\n\007user_id\030\001 \001(\t\022\020\n\010group_id\030\002 \001(" +
-                        "\r\0220\n\013member_list\030\003 \003(\0132\033.com.proto.group" +
-                        ".MemberItem\0221\n\004type\030\004 \001(\0162#.com.proto.gr",
-                "oup.GroupMemberOptType\"\272\001\n\024GroupMemberCh" +
-                        "angeRsp\022\020\n\010group_id\030\001 \001(\r\0220\n\013member_list" +
-                        "\030\002 \003(\0132\033.MemberItem\0221\n\004t" +
-                        "ype\030\003 \001(\0162#.GroupMemberO" +
-                        "ptType\022+\n\006result\030\n \001(\0162\033.com.proto.basic" +
-                        ".ResultCode\"\220\001\n\027GroupMemberChangeNotify\022" +
-                        "\020\n\010group_id\030\001 \001(\r\0220\n\013member_list\030\002 \003(\0132\033" +
-                        ".MemberItem\0221\n\004type\030\003 \001(" +
-                        "\0162#.GroupMemberOptType\"T" +
-                        "\n\014GroupListReq\022\017\n\007user_id\030\001 \001(\t\0223\n\017group",
-                "_item_list\030\002 \003(\0132\032.Group" +
-                        "Item\"p\n\014GroupListRsp\0223\n\017group_info_list\030" +
-                        "\001 \003(\0132\032.GroupInfo\022+\n\006res" +
-                        "ult\030\n \001(\0162\033.ResultCode\"H" +
-                        "\n\016GroupMemberReq\022\020\n\010group_id\030\001 \001(\r\022\017\n\007us" +
-                        "er_id\030\002 \001(\t\022\023\n\013update_time\030\003 \001(\004\"\233\001\n\016Gro" +
-                        "upMemberRsp\022\020\n\010group_id\030\001 \001(\r\0225\n\013member_" +
-                        "list\030\002 \003(\0132 .GroupMember" +
-                        "Item\022\023\n\013update_time\030\003 \001(\004\022+\n\006result\030\n \001(" +
-                        "\0162\033.ResultCode\"F\n\014GroupI",
-                "nfoReq\022\017\n\007user_id\030\001 \001(\t\022\020\n\010group_id\030\002 \001(" +
-                        "\r\022\023\n\013update_time\030\003 \001(\004\">\n\014GroupInfoRsp\022." +
-                        "\n\ngroup_info\030\001 \001(\0132\032.Gro" +
-                        "upInfo\"p\n\022GroupInfoModifyReq\022\017\n\007user_id\030" +
-                        "\001 \001(\t\022\020\n\010group_id\030\002 \001(\r\022\022\n\ngroup_name\030\003 " +
+                        "er_role\030\003 \001(\r\"\314\001\n\tGroupInfo\022\020\n\010group_id\030" +
+                        "\001 \001(\r\022\022\n\ngroup_name\030\002 \001(\t\022\020\n\010owner_id\030\003 " +
                         "\001(\t\022\024\n\014group_avatar\030\004 \001(\t\022\r\n\005topic\030\005 \001(\t" +
-                        "\"\203\001\n\022GroupInfoModifyRsp\022+\n\006result\030\001 \001(\0162" +
-                        "\033.ResultCode\022\020\n\010group_id" +
-                        "\030\002 \001(\r\022.\n\ngroup_info\030\003 \001(\0132\032.com.proto.g" +
-                        "roup.GroupInfo\"[\n\027IMGroupInfoModifyNotif",
-                "y\022\020\n\010group_id\030\001 \001(\r\022.\n\ngroup_info\030\002 \001(\0132" +
-                        "\032.GroupInfo*H\n\022GroupMemb" +
-                        "erOptType\022\030\n\024GROUP_MEMBER_OPT_ADD\020\001\022\030\n\024G" +
-                        "ROUP_MEMBER_OPT_DEL\020\002"
+                        "\022\030\n\020info_update_time\030\006 \001(\004\022\032\n\022group_memb",
+                "er_count\030\010 \001(\r\022\027\n\017fixtop_priority\030\n \001(\r\022" +
+                        "\023\n\013not_disturb\030\013 \001(\010\"\221\001\n\016GroupCreateReq\022" +
+                        "\017\n\007user_id\030\001 \001(\t\0225\n\013member_list\030\002 \003(\0132 ." +
+                        "GroupMemberItem\022\022\n\ngroup" +
+                        "_name\030\003 \001(\t\022\024\n\014group_avatar\030\004 \001(\t\022\r\n\005top" +
+                        "ic\030\005 \001(\t\"\254\001\n\016GroupCreateRsp\022\020\n\010group_id\030" +
+                        "\001 \001(\r\022\017\n\007user_id\030\002 \001(\t\0225\n\013member_list\030\003 " +
+                        "\003(\0132 .GroupMemberItem\022\023\n" +
+                        "\013update_time\030\004 \001(\004\022+\n\006result\030\n \001(\0162\033.com" +
+                        ".proto.basic.ResultCode\"5\n\020GroupDissolve",
+                "Req\022\017\n\007user_id\030\001 \001(\t\022\020\n\010group_id\030\002 \001(\r\"Q" +
+                        "\n\020GroupDissolveRsp\022\020\n\010group_id\030\001 \001(\r\022+\n\006" +
+                        "result\030\n \001(\0162\033.ResultCod" +
+                        "e\"4\n\016GroupOptNotify\022\020\n\010opt_type\030\001 \001(\r\022\020\n" +
+                        "\010group_id\030\002 \001(\r\"\236\001\n\024GroupMemberChangeReq" +
+                        "\022\017\n\007user_id\030\001 \001(\t\022\020\n\010group_id\030\002 \001(\r\0220\n\013m" +
+                        "ember_list\030\003 \003(\0132\033.Membe" +
+                        "rItem\0221\n\004type\030\004 \001(\0162#.Gr" +
+                        "oupMemberOptType\"\317\001\n\024GroupMemberChangeRs" +
+                        "p\022\020\n\010group_id\030\001 \001(\r\0220\n\013member_list\030\002 \003(\013",
+                "2\033.MemberItem\0221\n\004type\030\003 " +
+                        "\001(\0162#.GroupMemberOptType" +
+                        "\022\023\n\013update_time\030\004 \001(\004\022+\n\006result\030\n \001(\0162\033." +
+                        "ResultCode\"\245\001\n\027GroupMemb" +
+                        "erChangeNotify\022\020\n\010group_id\030\001 \001(\r\0220\n\013memb" +
+                        "er_list\030\002 \003(\0132\033.MemberIt" +
+                        "em\0221\n\004type\030\003 \001(\0162#.Group" +
+                        "MemberOptType\022\023\n\013update_time\030\004 \001(\004\"T\n\014Gr" +
+                        "oupListReq\022\017\n\007user_id\030\001 \001(\t\0223\n\017group_ite" +
+                        "m_list\030\002 \003(\0132\032.GroupItem",
+                "\"\216\001\n\014GroupListRsp\0223\n\017group_info_list\030\001 \003" +
+                        "(\0132\032.GroupInfo\022\034\n\024latest" +
+                        "_group_id_list\030\002 \003(\r\022+\n\006result\030\n \001(\0162\033.c" +
+                        "om.proto.basic.ResultCode\"H\n\016GroupMember" +
+                        "Req\022\020\n\010group_id\030\001 \001(\r\022\017\n\007user_id\030\002 \001(\t\022\023" +
+                        "\n\013update_time\030\003 \001(\004\"\233\001\n\016GroupMemberRsp\022\020" +
+                        "\n\010group_id\030\001 \001(\r\0225\n\013member_list\030\002 \003(\0132 ." +
+                        "GroupMemberItem\022\023\n\013updat" +
+                        "e_time\030\003 \001(\004\022+\n\006result\030\n \001(\0162\033.com.proto" +
+                        ".basic.ResultCode\"F\n\014GroupInfoReq\022\017\n\007use",
+                "r_id\030\001 \001(\t\022\020\n\010group_id\030\002 \001(\r\022\023\n\013update_t" +
+                        "ime\030\003 \001(\004\"{\n\014GroupInfoRsp\022.\n\ngroup_info\030" +
+                        "\001 \001(\0132\032.GroupInfo\022\016\n\006upd" +
+                        "ate\030\002 \001(\010\022+\n\006result\030\n \001(\0162\033.com.proto.ba" +
+                        "sic.ResultCode\"p\n\022GroupInfoModifyReq\022\017\n\007" +
+                        "user_id\030\001 \001(\t\022\020\n\010group_id\030\002 \001(\r\022\022\n\ngroup" +
+                        "_name\030\003 \001(\t\022\024\n\014group_avatar\030\004 \001(\t\022\r\n\005top" +
+                        "ic\030\005 \001(\t\"\203\001\n\022GroupInfoModifyRsp\022+\n\006resul" +
+                        "t\030\001 \001(\0162\033.ResultCode\022\020\n\010" +
+                        "group_id\030\002 \001(\r\022.\n\ngroup_info\030\003 \001(\0132\032.com",
+                ".proto.group.GroupInfo\"[\n\027IMGroupInfoMod" +
+                        "ifyNotify\022\020\n\010group_id\030\001 \001(\r\022.\n\ngroup_inf" +
+                        "o\030\002 \001(\0132\032.GroupInfo*H\n\022G" +
+                        "roupMemberOptType\022\030\n\024GROUP_MEMBER_OPT_AD" +
+                        "D\020\001\022\030\n\024GROUP_MEMBER_OPT_DEL\020\002"
         };
         com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
                 new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -20109,13 +20226,13 @@ public final class YouMaiGroup {
         internal_static_com_proto_group_GroupMemberItem_fieldAccessorTable = new
                 com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_proto_group_GroupMemberItem_descriptor,
-                new String[]{"MemberId", "MemberName", "MemberRole", "IsDelete",});
+                new String[]{"MemberId", "MemberName", "MemberRole",});
         internal_static_com_proto_group_GroupInfo_descriptor =
                 getDescriptor().getMessageTypes().get(3);
         internal_static_com_proto_group_GroupInfo_fieldAccessorTable = new
                 com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_proto_group_GroupInfo_descriptor,
-                new String[]{"GroupId", "GroupName", "OwnerId", "GroupAvatar", "Topic", "InfoUpdateTime", "MemberUpdateTime", "GroupMemberCount", "Flag", "FixtopPriority", "NotDisturb",});
+                new String[]{"GroupId", "GroupName", "OwnerId", "GroupAvatar", "Topic", "InfoUpdateTime", "GroupMemberCount", "FixtopPriority", "NotDisturb",});
         internal_static_com_proto_group_GroupCreateReq_descriptor =
                 getDescriptor().getMessageTypes().get(4);
         internal_static_com_proto_group_GroupCreateReq_fieldAccessorTable = new
@@ -20145,7 +20262,7 @@ public final class YouMaiGroup {
         internal_static_com_proto_group_GroupOptNotify_fieldAccessorTable = new
                 com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_proto_group_GroupOptNotify_descriptor,
-                new String[]{"OptType", "GroupItemInfo",});
+                new String[]{"OptType", "GroupId",});
         internal_static_com_proto_group_GroupMemberChangeReq_descriptor =
                 getDescriptor().getMessageTypes().get(9);
         internal_static_com_proto_group_GroupMemberChangeReq_fieldAccessorTable = new
@@ -20157,13 +20274,13 @@ public final class YouMaiGroup {
         internal_static_com_proto_group_GroupMemberChangeRsp_fieldAccessorTable = new
                 com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_proto_group_GroupMemberChangeRsp_descriptor,
-                new String[]{"GroupId", "MemberList", "Type", "Result",});
+                new String[]{"GroupId", "MemberList", "Type", "UpdateTime", "Result",});
         internal_static_com_proto_group_GroupMemberChangeNotify_descriptor =
                 getDescriptor().getMessageTypes().get(11);
         internal_static_com_proto_group_GroupMemberChangeNotify_fieldAccessorTable = new
                 com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_proto_group_GroupMemberChangeNotify_descriptor,
-                new String[]{"GroupId", "MemberList", "Type",});
+                new String[]{"GroupId", "MemberList", "Type", "UpdateTime",});
         internal_static_com_proto_group_GroupListReq_descriptor =
                 getDescriptor().getMessageTypes().get(12);
         internal_static_com_proto_group_GroupListReq_fieldAccessorTable = new
@@ -20175,7 +20292,7 @@ public final class YouMaiGroup {
         internal_static_com_proto_group_GroupListRsp_fieldAccessorTable = new
                 com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_proto_group_GroupListRsp_descriptor,
-                new String[]{"GroupInfoList", "Result",});
+                new String[]{"GroupInfoList", "LatestGroupIdList", "Result",});
         internal_static_com_proto_group_GroupMemberReq_descriptor =
                 getDescriptor().getMessageTypes().get(14);
         internal_static_com_proto_group_GroupMemberReq_fieldAccessorTable = new
@@ -20199,7 +20316,7 @@ public final class YouMaiGroup {
         internal_static_com_proto_group_GroupInfoRsp_fieldAccessorTable = new
                 com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_proto_group_GroupInfoRsp_descriptor,
-                new String[]{"GroupInfo",});
+                new String[]{"GroupInfo", "Update", "Result",});
         internal_static_com_proto_group_GroupInfoModifyReq_descriptor =
                 getDescriptor().getMessageTypes().get(18);
         internal_static_com_proto_group_GroupInfoModifyReq_fieldAccessorTable = new

@@ -37,6 +37,7 @@ import com.youmai.hxsdk.config.AppConfig;
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
 import com.youmai.hxsdk.dialog.HxMediaStoreDialog;
 import com.youmai.hxsdk.im.cache.CacheMsgImage;
+import com.youmai.hxsdk.service.SendMsgService;
 import com.youmai.hxsdk.utils.AppUtils;
 import com.youmai.hxsdk.utils.QiniuUrl;
 import com.youmai.hxsdk.utils.ToastUtil;
@@ -135,7 +136,7 @@ public class PictureIndicatorActivity extends AppCompatActivity {
                             .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.RESOURCE))
                             .into(imageView);
                     // TODO: 2017/11/3 刷新list为已下载原图
-                    localBroadcastManager.sendBroadcast(new Intent("update_CacheMsgBean").putExtra("CacheMsgBean", item));
+                    localBroadcastManager.sendBroadcast(new Intent(SendMsgService.ACTION_UPDATE_MSG).putExtra("CacheMsgBean", item));
                 }
             });
             original.setVisibility(View.GONE);

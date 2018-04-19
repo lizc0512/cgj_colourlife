@@ -40,8 +40,6 @@ public class CopeTextView extends AppCompatTextView {
     public float mRawX;
     public float mRawY;
 
-    WeakReference<IMListAdapter> adapterRef;
-
     public CopeTextView(Context context) {
         super(context);
     }
@@ -73,18 +71,10 @@ public class CopeTextView extends AppCompatTextView {
         }
     }
 
-    public void setAdapter(IMListAdapter adapter) {
-        this.adapterRef = new WeakReference<>(adapter);
-    }
-
     private void init() {
-
         setOnLongClickListener(new OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                if (adapterRef.get().isShowSelect) {
-                    return true;
-                }
                 if (canShow) {
                     mIsLongClick = true;
                     List<TipBean> tips;

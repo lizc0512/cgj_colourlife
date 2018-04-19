@@ -179,8 +179,8 @@ public class WrapSendFileActivity extends FragmentActivity implements PickerRefr
      * @param file
      */
     public void handleSendFile(final File file) {
-        HuxinSdkManager.instance().postFile(dstUuid, file,
-                file.getName(), file.length() + "");
+        HuxinSdkManager.instance().postFile(dstUuid, file, file.getName(),
+                file.length() + "", false);
         finish();
     }
 

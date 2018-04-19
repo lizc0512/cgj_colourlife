@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.youmai.hxsdk.view.chat.InputMessageLay xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/keyboard_lay"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/im_bg">
+
+    <LinearLayout
+        android:id="@+id/rl"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <!--标题栏-->
+        <include layout="@layout/hx_activity_header_title" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
+
+</com.youmai.hxsdk.view.chat.InputMessageLay>

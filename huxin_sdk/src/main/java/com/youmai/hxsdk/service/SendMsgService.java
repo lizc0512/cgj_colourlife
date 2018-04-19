@@ -51,6 +51,12 @@ public class SendMsgService extends IntentService {
 
     public static final int SEND_MSG_END = 200;//该消息的发送流程结束
 
+    public static final String ACTION_DOWNLOAD_VIDEO = "download.service.video";
+    public static final String ACTION_SEND_MSG = "service.send.msg";
+    public static final String ACTION_UPDATE_MSG = "service.update.msg";
+
+    boolean isGroup;
+
 
     public SendMsgService() {
         super("SendMsgService");
@@ -142,7 +148,7 @@ public class SendMsgService extends IntentService {
         bean.setMsgStatus(flag);
 
         CacheMsgHelper.instance().insertOrUpdate(appContext, bean);
-        Intent intent = new Intent("service.send.msg");
+        Intent intent = new Intent(ACTION_SEND_MSG);
         intent.putExtra("data", msg);
         if (type != null) {
             intent.putExtra("type", type);
@@ -164,7 +170,7 @@ public class SendMsgService extends IntentService {
         final String dstUuid = msgBean.getMsg().getReceiverUserId();
         final String content = contentTemp;
 
-        HuxinSdkManager.instance().sendText(dstUuid, content, new ReceiveListener() {
+        HuxinSdkManager.instance().sendText(dstUuid, content, isGroup, new ReceiveListener() {
             @Override
             public void OnRec(PduBase pduBase) {
                 //tcp会有消息缓存，在无网络状态下会执行onError()，一旦联网后，又继续尝试发送，就会执行OnRec()
@@ -232,7 +238,7 @@ public class SendMsgService extends IntentService {
             }
         };
 
-        HuxinSdkManager.instance().sendLocation(dstUuid, longitude, latitude, scale, address, callback);
+        HuxinSdkManager.instance().sendLocation(dstUuid, longitude, latitude, scale, address, isGroup, callback);
     }
 
     //发送语音(先上传文件，再发送消息)
@@ -447,7 +453,8 @@ public class SendMsgService extends IntentService {
                 }
             }
         };
-        HuxinSdkManager.instance().sendAudio(dstUuid, fileId, secondTimes, sourcePhone, forwardCount, receiveListener);
+        HuxinSdkManager.instance().sendAudio(dstUuid, fileId, secondTimes, sourcePhone,
+                forwardCount, isGroup, receiveListener);
     }
 
     //图片    2、发送消息
@@ -484,7 +491,8 @@ public class SendMsgService extends IntentService {
                 updateUI(msgBean, CacheMsgBean.SEND_FAILED);
             }
         };
-        HuxinSdkManager.instance().sendPicture(dstUuid, fileId, isOriginal ? "original" : "thumbnail", receiveListener);
+        HuxinSdkManager.instance().sendPicture(dstUuid, fileId,
+                isOriginal ? "original" : "thumbnail", isGroup, receiveListener);
     }
 
     //文件    2、发送消息
@@ -516,7 +524,8 @@ public class SendMsgService extends IntentService {
             }
         };
         if (!"-1".equals(fileId)) {
-            HuxinSdkManager.instance().sendFile(dstUuid, fileId, fileName, fileSize, receiveListener);
+            HuxinSdkManager.instance().sendFile(dstUuid, fileId, fileName, fileSize,
+                    isGroup, receiveListener);
         }
     }
 
@@ -558,7 +567,8 @@ public class SendMsgService extends IntentService {
                 updateUI(msgBean, CacheMsgBean.SEND_FAILED, null, SEND_MSG_END);
             }
         };
-        HuxinSdkManager.instance().sendVideo(dstUuid, fileId, frameId, name, size, time + "", receiveListener);
+        HuxinSdkManager.instance().sendVideo(dstUuid, fileId, frameId, name, size,
+                time + "", isGroup, receiveListener);
     }
 
 }

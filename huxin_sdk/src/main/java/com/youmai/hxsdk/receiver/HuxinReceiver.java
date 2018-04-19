@@ -56,27 +56,6 @@ public class HuxinReceiver extends BroadcastReceiver {
             in.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             in.setAction(HuxinService.BOOT_SERVICE);
             context.startService(in);//启动服务
-        } else if (action.equals(Telephony.Sms.Intents.SMS_RECEIVED_ACTION)) {
-            Bundle bundle = intent.getExtras();
-
-        } else if (intent.getAction().equals(Intent.ACTION_PACKAGE_ADDED)) {
-            String packageName = intent.getData().getSchemeSpecificPart();
-
-            IPostListener listener = new IPostListener() {
-                @Override
-                public void httpReqResult(String response) {
-                    try {
-                        JSONObject jsonObject = new JSONObject(response);
-                        if (jsonObject.optString("s").equals("1")) {
-                            // TODO: 2017/6/16 success
-                        }
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            };
-
         }
     }
 

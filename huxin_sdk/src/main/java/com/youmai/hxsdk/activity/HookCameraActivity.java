@@ -82,7 +82,7 @@ public class HookCameraActivity extends SdkBaseActivity {
             public void captureSuccess(Bitmap bitmap) {
                 String path = FileUtil.saveBitmap("HCamera", bitmap); //获取图片bitmap
                 if (mState == JCameraView.BUTTON_STATE_ONLY_CAPTURE) {
-                    HuxinSdkManager.instance().postPicture(mUuid, path, path, false);
+                    HuxinSdkManager.instance().postPicture(mUuid, path, path, false,false);
                 } else {
                     Intent intent = new Intent();
                     intent.putExtra("filePath", path);

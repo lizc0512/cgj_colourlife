@@ -795,8 +795,8 @@ public class HuxinSdkManager {
      *
      * @param callback
      */
-    public void createGroup(ReceiveListener callback, String groupName,
-                            List<YouMaiGroup.GroupMemberItem> list) {
+    public void createGroup(String groupName, List<YouMaiGroup.GroupMemberItem> list,
+                            ReceiveListener callback) {
         YouMaiGroup.GroupCreateReq.Builder builder = YouMaiGroup.GroupCreateReq.newBuilder();
         builder.setUserId(getUuid());
         builder.setGroupName(groupName);

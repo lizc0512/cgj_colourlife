@@ -10,6 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
+import com.google.protobuf.InvalidProtocolBufferException;
 import com.tg.coloursteward.HomeContactOrgActivity;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.constant.Contants;
@@ -30,11 +31,16 @@ import com.tg.coloursteward.serice.AuthAppService;
 import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.PullRefreshListView;
+import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.activity.SdkBaseActivity;
 import com.youmai.hxsdk.db.bean.Contact;
 import com.youmai.hxsdk.entity.cn.CNPinyin;
 import com.youmai.hxsdk.entity.cn.CNPinyinFactory;
+import com.youmai.hxsdk.proto.YouMaiBasic;
+import com.youmai.hxsdk.proto.YouMaiGroup;
 import com.youmai.hxsdk.router.APath;
+import com.youmai.hxsdk.socket.PduBase;
+import com.youmai.hxsdk.socket.ReceiveListener;
 import com.youmai.hxsdk.utils.ListUtils;
 
 import org.json.JSONArray;
@@ -46,6 +52,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -149,7 +156,44 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
         tv_Sure.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(mContext, "创建群", Toast.LENGTH_SHORT).show();
+                Map<Integer, Contact> data = adapter.getCacheMap();
+                if (data != null && !data.isEmpty()) {
+                    List<YouMaiGroup.GroupMemberItem> list = new ArrayList<>();
+
+                    YouMaiGroup.GroupMemberItem.Builder self = YouMaiGroup.GroupMemberItem.newBuilder();
+                    self.setMemberId(HuxinSdkManager.instance().getUuid());
+                    self.setMemberName(HuxinSdkManager.instance().getRealName());
+                    self.setMemberRole(0);
+                    list.add(self.build());
+
+                    for (Map.Entry<Integer, Contact> entry : data.entrySet()) {
+                        Contact item = entry.getValue();
+                        YouMaiGroup.GroupMemberItem.Builder builder = YouMaiGroup.GroupMemberItem.newBuilder();
+                        builder.setMemberId(item.getOrgID());  //TODO change uuid
+                        builder.setMemberName(item.getRealname());
+                        builder.setMemberRole(2);
+                        list.add(builder.build());
+                    }
+
+                    String groupName = String.format(getString(R.string.group_default_name), list.size());
+                    HuxinSdkManager.instance().createGroup(groupName, list, new ReceiveListener() {
+                        @Override
+                        public void OnRec(PduBase pduBase) {
+                            try {
+                                YouMaiGroup.GroupCreateRsp ack = YouMaiGroup.GroupCreateRsp.parseFrom(pduBase.body);
+                                if (ack.getResult() == YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS) {
+                                    List<YouMaiGroup.GroupMemberItem> list = ack.getMemberListList();
+
+                                    Toast.makeText(mContext, "创建群成功", Toast.LENGTH_SHORT).show();
+                                }
+                            } catch (InvalidProtocolBufferException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+
+                }
+
             }
         });
         tv_Cancel.setOnClickListener(new View.OnClickListener() {

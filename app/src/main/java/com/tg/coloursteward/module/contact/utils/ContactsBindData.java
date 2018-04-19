@@ -1,25 +1,17 @@
 package com.tg.coloursteward.module.contact.utils;
 
 import android.content.Context;
-import android.util.SparseArray;
-import com.tg.coloursteward.net.HttpTools;
+
 import com.tg.coloursteward.net.ResponseData;
-import com.tg.coloursteward.util.StringUtils;
-import com.tg.coloursteward.util.Tools;
 import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.db.bean.Contact;
 import com.youmai.hxsdk.entity.cn.CN;
-import com.youmai.hxsdk.entity.cn.DuoYinZi;
-import com.youmai.hxsdk.entity.cn.SearchContactBean;
 import com.youmai.hxsdk.entity.cn.pinyin.Pinyin;
-import com.youmai.smallvideorecord.utils.Log;
-
-import org.json.JSONArray;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Observable;
+
 /**
  * 作者：create by YW
  * 日期：2018.03.21 17:30

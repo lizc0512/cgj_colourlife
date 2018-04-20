@@ -17,7 +17,7 @@ import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.module.meassage.MessageAdapter;
 import com.tg.coloursteward.module.search.GlobalSearchActivity;
 import com.youmai.hxsdk.HuxinSdkManager;
-import com.youmai.hxsdk.activity.IMConnectionActivity;
+import com.youmai.hxsdk.activity.IMGroupActivity;
 import com.youmai.hxsdk.db.bean.GroupInfoBean;
 import com.youmai.hxsdk.db.helper.GroupInfoHelper;
 import com.youmai.hxsdk.proto.YouMaiGroup;
@@ -102,21 +102,20 @@ public class GroupListActivity extends BaseActivity {
             @Override
             public void onItemClick(GroupInfoBean bean, int position) {
                 if (position == 0) {
-                    Intent intent = new Intent(GroupListActivity.this, GlobalSearchActivity.class);
+                    Intent intent = new Intent(mContext, GlobalSearchActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                     startActivity(intent);
-                    return;
+                } else {
+                    Intent intent = new Intent(mContext, IMGroupActivity.class);
+                    startActivity(intent);
                 }
-                Intent intent = new Intent();
-                intent.setClass(GroupListActivity.this, IMConnectionActivity.class);
-                startActivity(intent);
             }
         });
 
         mAdapter.setOnLongItemClickListener(new GroupListAdapter.OnItemLongClickListener() {
             @Override
             public void onItemLongClick(View view, int position) {
-                ToastUtil.showToast(GroupListActivity.this, "删除成功：" + position);
+                ToastUtil.showToast(mContext, "删除成功：" + position);
                 GroupInfoBean group = mAdapter.getMessageList().get(position);
                 mAdapter.deleteMessage(position);
                 //去掉未读消息计数

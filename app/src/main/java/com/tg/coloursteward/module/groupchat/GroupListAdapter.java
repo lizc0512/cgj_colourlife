@@ -100,7 +100,7 @@ public class GroupListAdapter extends RecyclerView.Adapter {
         if (holder instanceof GroupViewSearchItem) {
             GroupViewSearchItem viewHeader = (GroupViewSearchItem) holder;
             viewHeader.header_item.setTag(position);
-            viewHeader.header_item.setOnClickListener(new View.OnClickListener() {
+            viewHeader.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (mOnItemClickListener != null) {
@@ -111,7 +111,17 @@ public class GroupListAdapter extends RecyclerView.Adapter {
         } else {
             int currPos = position - getHeaderCount(); //实际的位置
             GroupViewHolder itemView = (GroupViewHolder) holder;
-            itemView.message_name.setText(mGroupList.get(currPos).getGroup_name());
+
+            final GroupInfoBean ben = mGroupList.get(currPos);
+            itemView.message_name.setText(ben.getGroup_name());
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mOnItemClickListener != null) {
+                        mOnItemClickListener.onItemClick(ben, position);
+                    }
+                }
+            });
         }
     }
 

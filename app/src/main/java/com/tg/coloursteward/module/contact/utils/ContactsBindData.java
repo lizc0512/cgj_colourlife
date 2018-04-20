@@ -68,6 +68,7 @@ public class ContactsBindData extends Observable {
             contact.setJobName(data.getString(i, "jobName"));
             contact.setOrgName(data.getString(i, "orgName"));
             contact.setOrgID(data.getString(i, "orgID"));
+            contact.setUuid(data.getString(i, "contactsId"));
 
             StringBuffer pinyin = new StringBuffer();
             StringBuffer ch = new StringBuffer();

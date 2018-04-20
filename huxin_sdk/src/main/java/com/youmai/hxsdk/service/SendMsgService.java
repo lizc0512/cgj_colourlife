@@ -79,6 +79,9 @@ public class SendMsgService extends IntentService {
         if (intent.hasExtra(KEY_DATA)) {
             CacheMsgBean msgData = intent.getParcelableExtra(KEY_DATA);
             String msgDataFrom = intent.getStringExtra(KEY_DATA_FROM);//消息从哪里发起
+
+            isGroup = intent.getBooleanExtra("isGroup", false);
+
             SendMsg sendMsg = new SendMsg(msgData, msgDataFrom);
             sendMsg(sendMsg);
         }

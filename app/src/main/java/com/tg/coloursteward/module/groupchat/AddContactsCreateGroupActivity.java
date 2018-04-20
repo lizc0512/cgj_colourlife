@@ -169,7 +169,7 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
                     for (Map.Entry<Integer, Contact> entry : data.entrySet()) {
                         Contact item = entry.getValue();
                         YouMaiGroup.GroupMemberItem.Builder builder = YouMaiGroup.GroupMemberItem.newBuilder();
-                        builder.setMemberId(item.getOrgID());  //TODO change uuid
+                        builder.setMemberId(item.getUuid());
                         builder.setMemberName(item.getRealname());
                         builder.setMemberRole(2);
                         list.add(builder.build());

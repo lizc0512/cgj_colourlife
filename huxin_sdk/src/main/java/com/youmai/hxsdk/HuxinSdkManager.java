@@ -534,11 +534,10 @@ public class HuxinSdkManager {
      */
     public void getUploadFileToken(IPostListener callback) {
         String url = AppConfig.GET_UPLOAD_FILE_TOKEN;
-
         String uuid = getUuid();
 
         ContentValues params = new ContentValues();
-        params.put("uid", uuid);
+        params.put("userId", uuid);
         HttpConnector.httpPost(url, params, callback);
     }
 

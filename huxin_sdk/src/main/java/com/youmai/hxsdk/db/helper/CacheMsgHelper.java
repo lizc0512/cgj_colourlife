@@ -49,8 +49,7 @@ public class CacheMsgHelper {
             cacheMsgBeanDao.update(cacheMsgBean);
         } else {
             cacheMsgBean.setId(null); // FIXME: 2017/4/14 新增消息主键置空再插入表 ID从1自增
-            long id = cacheMsgBeanDao.insert(cacheMsgBean);
-            cacheMsgBean.setId(id);
+            cacheMsgBeanDao.insert(cacheMsgBean);
         }
     }
 

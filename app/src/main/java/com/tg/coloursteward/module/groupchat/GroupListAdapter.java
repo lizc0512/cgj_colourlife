@@ -14,6 +14,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.tg.coloursteward.R;
+import com.youmai.hxsdk.db.bean.GroupInfoBean;
 
 import java.util.List;
 
@@ -28,23 +29,25 @@ public class GroupListAdapter extends RecyclerView.Adapter {
 
     public static final int ADAPTER_TYPE_HEADER = 1;
     public static final int ADAPTER_TYPE_NORMAL = 2;
+
     private final int HEADER_COUNT = 1;
     private final int ITEM_NORMAL = 2;
+
     private int mAdapterType = ADAPTER_TYPE_NORMAL;
 
     private Context mContext;
-    private List<Group> mGroupList;
+    private List<GroupInfoBean> mGroupList;
 
     public GroupListAdapter(Context context) {
         this.mContext = context;
     }
 
-    public void setGroupList(List<Group> list) {
+    public void setGroupList(List<GroupInfoBean> list) {
         this.mGroupList = list;
         notifyDataSetChanged();
     }
 
-    public List<Group> getMessageList() {
+    public List<GroupInfoBean> getMessageList() {
         return mGroupList;
     }
 
@@ -53,13 +56,36 @@ public class GroupListAdapter extends RecyclerView.Adapter {
         notifyDataSetChanged();
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        if (mAdapterType == ADAPTER_TYPE_NORMAL) {
+            return ITEM_NORMAL;
+        } else {
+            if (position >= 0 && position < getHeaderCount()) {
+                return HEADER_COUNT;
+            } else {
+                return ITEM_NORMAL;
+            }
+        }
+    }
+
+
+    @Override
+    public int getItemCount() {
+        int count = mGroupList == null ? 0 : mGroupList.size();
+        if (mAdapterType == ADAPTER_TYPE_HEADER) {
+            return count + HEADER_COUNT;
+        }
+        return count;
+    }
+
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(mContext);
 
         if (viewType == ITEM_NORMAL) {
-            View view = inflater.inflate(R.layout.message_item_layout, parent, false);
+            View view = inflater.inflate(R.layout.group_item_layout, parent, false);
             GroupViewHolder viewItem = new GroupViewHolder(view);
             return viewItem;
         } else {
@@ -74,7 +100,7 @@ public class GroupListAdapter extends RecyclerView.Adapter {
         if (holder instanceof GroupViewSearchItem) {
             GroupViewSearchItem viewHeader = (GroupViewSearchItem) holder;
             viewHeader.header_item.setTag(position);
-            viewHeader.header_item.setOnClickListener(new View.OnClickListener() {
+            viewHeader.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (mOnItemClickListener != null) {
@@ -85,17 +111,20 @@ public class GroupListAdapter extends RecyclerView.Adapter {
         } else {
             int currPos = position - getHeaderCount(); //实际的位置
             GroupViewHolder itemView = (GroupViewHolder) holder;
+
+            final GroupInfoBean ben = mGroupList.get(currPos);
+            itemView.message_name.setText(ben.getGroup_name());
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mOnItemClickListener != null) {
+                        mOnItemClickListener.onItemClick(ben, position);
+                    }
+                }
+            });
         }
     }
 
-    @Override
-    public int getItemCount() {
-        int count = mGroupList.size();
-        if (mAdapterType == ADAPTER_TYPE_HEADER) {
-            return count + HEADER_COUNT;
-        }
-        return count;
-    }
 
     public int getHeaderCount() {
         if (mAdapterType == ADAPTER_TYPE_HEADER) {
@@ -115,7 +144,7 @@ public class GroupListAdapter extends RecyclerView.Adapter {
 
     protected class GroupViewHolder extends RecyclerView.ViewHolder {
         ImageView message_icon, message_callBtn;
-        TextView message_name, message_type, message_time;
+        TextView message_name, message_time;
         RelativeLayout message_item;
 
         public GroupViewHolder(View itemView) {
@@ -124,7 +153,6 @@ public class GroupListAdapter extends RecyclerView.Adapter {
             message_icon = (ImageView) itemView.findViewById(R.id.message_icon);
             message_callBtn = (ImageView) itemView.findViewById(R.id.message_call_btn);
             message_name = (TextView) itemView.findViewById(R.id.message_name);
-            message_type = (TextView) itemView.findViewById(R.id.message_type);
             message_time = (TextView) itemView.findViewById(R.id.message_time);
         }
     }
@@ -145,7 +173,7 @@ public class GroupListAdapter extends RecyclerView.Adapter {
     }
 
     public interface OnItemClickListener {
-        void onItemClick(Group bean, int position);
+        void onItemClick(GroupInfoBean bean, int position);
     }
 
     public interface OnItemLongClickListener {

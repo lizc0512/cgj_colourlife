@@ -160,7 +160,7 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
         } else {
             adapter.setMap(mTotalMap);
         }
-
+        hideSoftKey();
     }
 
     private ModifyContactsReceiver mModifyContactsReceiver;
@@ -299,10 +299,14 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
             public void onClick(View v) {
                 hide();
 
-                InputMethodManager manager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                manager.hideSoftInputFromWindow(editText.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                hideSoftKey();
             }
         });
+    }
+
+    void hideSoftKey() {
+        InputMethodManager manager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        manager.hideSoftInputFromWindow(editText.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
     }
 
     private void setListener() {

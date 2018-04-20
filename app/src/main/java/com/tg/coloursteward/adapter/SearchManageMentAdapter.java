@@ -7,6 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.MyBaseAdapter;
 import com.tg.coloursteward.info.GridViewInfo;
@@ -37,7 +40,13 @@ public class SearchManageMentAdapter  extends MyBaseAdapter<GridViewInfo> {
         RoundImageView rivHead = (RoundImageView) convertView.findViewById(R.id.riv_head);
         TextView tvName = (TextView) convertView.findViewById(R.id.tv_name);
         tvName.setText(item.name);
-        VolleyUtils.getImage(context, item.icon,rivHead,R.drawable.moren_geren);
+
+        Glide.with(context).load(item.icon)
+                .apply(new RequestOptions()
+                        .error(R.drawable.moren_geren)
+                        .diskCacheStrategy(DiskCacheStrategy.RESOURCE))
+                .into(rivHead);
+        //VolleyUtils.getImage(context, item.icon,rivHead,R.drawable.moren_geren);
         return convertView;
     }
 }

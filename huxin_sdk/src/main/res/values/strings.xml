@@ -133,4 +133,9 @@
 
     <!-- 收藏 -->
     <string name="collect_voice_second">%02d\"</string>
+
+
+    <!-- 群聊 -->
+    <string name="group_default_name">群聊(%01d)"</string>
+
 </resources>

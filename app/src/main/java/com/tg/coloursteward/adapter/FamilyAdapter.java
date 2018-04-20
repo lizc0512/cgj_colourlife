@@ -11,6 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.MyBaseAdapter;
 import com.tg.coloursteward.info.FamilyInfo;
@@ -46,7 +49,14 @@ public class FamilyAdapter extends MyBaseAdapter<FamilyInfo>{
 		}else if(list.get(position).type.equals("user")){
 			rivHead.setVisibility(View.VISIBLE);
 			rivHead.setCircleShape();
-			VolleyUtils.getImage(context, item.avatar,rivHead,R.drawable.moren_geren);
+
+			Glide.with(context).load(item.avatar)
+					.apply(new RequestOptions()
+							.error(R.drawable.moren_geren)
+							.diskCacheStrategy(DiskCacheStrategy.RESOURCE))
+					.into(rivHead);
+			//VolleyUtils.getImage(context, item.avatar,rivHead,R.drawable.moren_geren);
+
 		}
 		//根据position获取分类的首字母的Char ascii值
 		int section = getSectionForPosition(position);

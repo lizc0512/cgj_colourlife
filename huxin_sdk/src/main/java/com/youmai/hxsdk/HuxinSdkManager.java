@@ -795,14 +795,12 @@ public class HuxinSdkManager {
      *
      * @param callback
      */
-    public void createGroup(ReceiveListener callback, String groupName,
-                            List<YouMaiGroup.GroupMemberItem> list) {
+    public void createGroup(String groupName, List<YouMaiGroup.GroupMemberItem> list,
+                            ReceiveListener callback) {
         YouMaiGroup.GroupCreateReq.Builder builder = YouMaiGroup.GroupCreateReq.newBuilder();
         builder.setUserId(getUuid());
         builder.setGroupName(groupName);
         builder.addAllMemberList(list);
-
-
         YouMaiGroup.GroupCreateReq group = builder.build();
 
         sendProto(group, YouMaiBasic.COMMANDID.CID_GROUP_CREATE_REQ_VALUE, callback);
@@ -819,8 +817,6 @@ public class HuxinSdkManager {
         YouMaiGroup.GroupDissolveReq.Builder builder = YouMaiGroup.GroupDissolveReq.newBuilder();
         builder.setUserId(getUuid());
         builder.setGroupId(groupId);
-
-
         YouMaiGroup.GroupDissolveReq group = builder.build();
 
         sendProto(group, YouMaiBasic.COMMANDID.CID_GROUP_DISSOLVE_REQ_VALUE, callback);
@@ -841,8 +837,6 @@ public class HuxinSdkManager {
         builder.setType(type);
         builder.setUserId(getUuid());
         builder.addAllMemberList(list);
-
-
         YouMaiGroup.GroupMemberChangeReq group = builder.build();
 
         sendProto(group, YouMaiBasic.COMMANDID.CID_GROUP_CHANGE_MEMBER_REQ_VALUE, callback);

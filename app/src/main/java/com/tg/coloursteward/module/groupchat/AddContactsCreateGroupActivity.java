@@ -1,11 +1,21 @@
 package com.tg.coloursteward.module.groupchat;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Message;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,11 +26,11 @@ import com.tg.coloursteward.R;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.info.FamilyInfo;
 import com.tg.coloursteward.info.UserInfo;
-import com.tg.coloursteward.module.contact.adapter.ContactAdapter;
 import com.tg.coloursteward.module.contact.stickyheader.StickyHeaderDecoration;
 import com.tg.coloursteward.module.contact.utils.ContactsBindData;
 import com.tg.coloursteward.module.contact.widget.CharIndexView;
-import com.tg.coloursteward.module.search.GlobalSearchActivity;
+import com.tg.coloursteward.module.groupchat.addcontact.AddContactBySearchFragment;
+import com.tg.coloursteward.module.search.SearchEditText;
 import com.tg.coloursteward.net.GetTwoRecordListener;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.MessageHandler;
@@ -50,9 +60,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -67,26 +77,29 @@ import rx.schedulers.Schedulers;
  */
 @Route(path = APath.GROUP_CREATE_ADD_CONTACT)
 public class AddContactsCreateGroupActivity extends SdkBaseActivity
-        implements MessageHandler.ResponseListener, ContactAdapter.ItemEventListener {
+        implements MessageHandler.ResponseListener, SearchContactAdapter.ItemEventListener {
+
+    private static final String TAG_SEARCH_CONTACT_FRAGMENT = "search_contact_fragment";
 
     private AddContactsCreateGroupActivity mActivity;
     private static final int ISTREAD = 1;
     private AuthAppService authAppService;
     private String accessToken;
     private String skincode;
-    private String orgName;
-    private String orgId;
-    private final int REQUESTPERMISSION = 110;
     private String LinkManListCache;
-    private ArrayList<FamilyInfo> familyList = new ArrayList<FamilyInfo>(); //组织架构人
+    private ArrayList<FamilyInfo> familyList = new ArrayList<>(); //组织架构人
 
+    private FrameLayout fl_container;
     private RecyclerView rv_main;
-    private ContactAdapter adapter;
+    private SearchContactAdapter adapter;
 
     private CharIndexView iv_main;
     private TextView tv_index;
     private TextView tv_Cancel;
     private TextView tv_Sure;
+
+    private SearchEditText editText;
+    private TextView search_cancel;
 
     private MessageHandler msgHand;
 
@@ -94,6 +107,73 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
     private LinearLayoutManager manager;
     private Subscription subscription;
     private ContactsBindData bindData;
+
+    private AddContactBySearchFragment searchGroupFragment;
+
+    public static final String BROADCAST_FILTER = "com.tg.coloursteward.searchcontact";
+    public static final String ACTION = "contact_action";
+    public static final String ADAPTER_CONTACT = "adapter";
+    public static final String SEARCH_CONTACT = "search";
+    public static final String DEPART_CONTACT = "department";
+
+    private Map<String, Contact> mTotalMap = new HashMap<>();
+
+    static class ModifyContactsReceiver extends BroadcastReceiver {
+        AddContactsCreateGroupActivity mActivity;
+
+        public ModifyContactsReceiver(AddContactsCreateGroupActivity activity) {
+            mActivity = activity;
+        }
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.e("YW", "收藏联系人有更新的信息到达......");
+            String action = intent.getStringExtra(ACTION);
+            if (action.equals(ADAPTER_CONTACT)) {
+                Contact bean = intent.getParcelableExtra("bean");
+                mActivity.updateCacheMap(bean, false);
+            } else if (action.equals(SEARCH_CONTACT)) {
+                Contact bean = intent.getParcelableExtra("bean");
+                mActivity.hide();
+                mActivity.updateCacheMap(bean, true);
+                Log.e("YW", "收藏联系人有更新的信息到达......" + bean.toString());
+            } else if (action.equals(DEPART_CONTACT)) {
+
+            }
+        }
+    }
+
+    void updateCacheMap(Contact contact, boolean is) {
+        //Map<Integer, Contact> cacheMap = adapter.getCacheMap();
+        if (mTotalMap.containsKey(contact.getUuid())) {
+            mTotalMap.remove(contact.getUuid());
+            //cacheMap.remove(contact.getUuid());
+        } else {
+            mTotalMap.put(contact.getUuid(), contact);
+        }
+        Log.e("YW", "map size: " + mTotalMap.size());
+
+        tv_Sure.setText("完成(" + mTotalMap.size() + ")");
+
+        if (is) {
+            adapter.setCacheMap(mTotalMap);
+        } else {
+            adapter.setMap(mTotalMap);
+        }
+
+    }
+
+    private ModifyContactsReceiver mModifyContactsReceiver;
+
+    void registerReceiver() {
+        mModifyContactsReceiver = new ModifyContactsReceiver(this);
+        IntentFilter intentFilter = new IntentFilter(BROADCAST_FILTER);
+        LocalBroadcastManager.getInstance(this).registerReceiver(mModifyContactsReceiver, intentFilter);
+    }
+
+    void unRegisterReceiver() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mModifyContactsReceiver);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -104,6 +184,7 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
 
     @Override
     public void onDestroy() {
+        unRegisterReceiver();
         if (null != subscription) {
             subscription.unsubscribe();
         }
@@ -119,6 +200,11 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
                 cacheMap = null;
             }
         }
+
+        if (null != mTotalMap) {
+            mTotalMap.clear();
+            mTotalMap = null;
+        }
         super.onDestroy();
     }
 
@@ -127,11 +213,13 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
         if (!ListUtils.isEmpty(contactList)) {
             contactList.clear();
         }
+        registerReceiver();
 
         //标题
         tv_Cancel = findViewById(R.id.tv_left_cancel);
         tv_Sure = findViewById(R.id.tv_right_sure);
 
+        fl_container = findViewById(R.id.fl_search_container);
         rv_main = findViewById(R.id.rv_main);
         iv_main = findViewById(R.id.iv_main);
         tv_index = findViewById(R.id.tv_index);
@@ -139,7 +227,7 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
         manager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         rv_main.setLayoutManager(manager);
 
-        adapter = new ContactAdapter(this, contactList, adapter.mIndexForCollect, this);
+        adapter = new SearchContactAdapter(this, contactList, adapter.mIndexForCollect, this);
         rv_main.setAdapter(adapter);
         rv_main.addItemDecoration(new StickyHeaderDecoration(adapter));
 
@@ -148,15 +236,80 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
         msgHand = new MessageHandler(this);
         msgHand.setResponseListener(this);
 
+        searchGroupFragment = new AddContactBySearchFragment();
+
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.add(R.id.fl_search_container, searchGroupFragment, TAG_SEARCH_CONTACT_FRAGMENT);
+        transaction.hide(searchGroupFragment);
+        transaction.commitAllowingStateLoss();
+
         initView();
+        initEdit();
         setListener();
+    }
+
+    void hide() {
+        if (!searchGroupFragment.isHidden()) {
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.hide(searchGroupFragment);
+            searchGroupFragment.hide();
+            transaction.commitAllowingStateLoss();
+        } else {
+            editText.setText("");
+            editText.clearFocus();
+            return;
+        }
+
+        editText.setText("");
+        editText.clearFocus();
+    }
+
+    void initEdit() {
+        editText = findViewById(R.id.global_search_bar);
+        search_cancel = findViewById(R.id.search_bar_cancel);
+
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (searchGroupFragment.isHidden() && !StringUtils.isEmpty(s.toString())) {
+                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                    transaction.show(searchGroupFragment);
+                    searchGroupFragment.add(s.toString());
+                    transaction.commit();
+                } else {
+                    searchGroupFragment.add(s.toString());
+                }
+                searchGroupFragment.setMap(mTotalMap);
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        search_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hide();
+
+                InputMethodManager manager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                manager.hideSoftInputFromWindow(editText.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+            }
+        });
     }
 
     private void setListener() {
         tv_Sure.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Map<Integer, Contact> data = adapter.getCacheMap();
+                Map<String, Contact> data = mTotalMap;
                 if (data != null && !data.isEmpty()) {
                     List<YouMaiGroup.GroupMemberItem> list = new ArrayList<>();
 
@@ -166,7 +319,7 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
                     self.setMemberRole(0);
                     list.add(self.build());
 
-                    for (Map.Entry<Integer, Contact> entry : data.entrySet()) {
+                    for (Map.Entry<String, Contact> entry : data.entrySet()) {
                         Contact item = entry.getValue();
                         YouMaiGroup.GroupMemberItem.Builder builder = YouMaiGroup.GroupMemberItem.newBuilder();
                         builder.setMemberId(item.getUuid());
@@ -232,8 +385,8 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
             public void call(Subscriber<? super List<CNPinyin<Contact>>> subscriber) {
                 if (!subscriber.isUnsubscribed()) {
                     //子线程查数据库，返回List<Contacts>
-                    List<CNPinyin<Contact>> contactList = CNPinyinFactory.createCNPinyinList(
-                            bindData.contactList(mActivity, data, ContactsBindData.TYPE_ADD_CONTACT));
+                    List<Contact> contacts = bindData.contactList(mActivity, data, ContactsBindData.TYPE_ADD_CONTACT_NO_HEADER);
+                    List<CNPinyin<Contact>> contactList = CNPinyinFactory.createCNPinyinList(contacts);
                     Collections.sort(contactList);
                     subscriber.onNext(contactList);
                     subscriber.onCompleted();
@@ -266,13 +419,11 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
      */
     private void initView() {
         skincode = Tools.getStringValue(mActivity, Contants.storage.SKINCODE);
-        orgName = Tools.getStringValue(mActivity, Contants.storage.ORGNAME);
-        orgId = Tools.getStringValue(mActivity, Contants.storage.ORGID);
 
         //读取本地缓存列表
         getCacheList();
 
-        adapter.setNetworkRequestListener(new ContactAdapter.NetRelativeRequestListener() {
+        adapter.setNetworkRequestListener(new SearchContactAdapter.NetRelativeRequestListener() {
             @Override
             public void onSuccess(Message msg, String response) {
                 JSONArray jsonString = HttpTools.getContentJsonArray(response);
@@ -437,7 +588,7 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
 
     @Override
     public void collectCount(int count) {
-        tv_Sure.setText("完成(" + count + ")");
+        //tv_Sure.setText("完成(" + count + ")");
     }
 
     /**
@@ -451,11 +602,6 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
         FamilyInfo info;
         switch (pos) {
             case 0:
-                intent = new Intent(this, GlobalSearchActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                startActivity(intent);
-                break;
-            case 1: //部门
                 info = new FamilyInfo();
                 info.id = UserInfo.orgId;
                 info.type = "org";
@@ -464,8 +610,9 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
                 intent.putExtra(HomeContactOrgActivity.FAMILY_INFO, info);
                 startActivity(intent);
                 break;
+            case 1:
+                break;
             default: //item
-
                 break;
         }
     }
@@ -490,4 +637,5 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
     public void onFail(Message msg, String hintString) {
 
     }
+
 }

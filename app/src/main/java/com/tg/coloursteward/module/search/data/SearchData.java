@@ -97,6 +97,7 @@ public class SearchData implements MessageHandler.ResponseListener {
             SearchContactBean contact = new SearchContactBean();
             contact.setIconUrl(data.getString(i, "avatar"));
             contact.setUsername(data.getString(i, "username"));
+            contact.setUuid(data.getString(i, "contactsId"));
             contact.setDisplayName(hanzi);
             contact.setWholePinyin(pinyin.toString());
             contact.setSimplepinyin(ch.toString());

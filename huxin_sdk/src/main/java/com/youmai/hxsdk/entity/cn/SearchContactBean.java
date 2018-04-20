@@ -38,6 +38,7 @@ public class SearchContactBean implements Comparable<SearchContactBean>, Parcela
     private List<String> indexPinyin;
 
     //联系人 信息
+    private String uuid;
     private String username; //收藏联系人查询员工详情使用
 
     //app 应用信息
@@ -65,6 +66,7 @@ public class SearchContactBean implements Comparable<SearchContactBean>, Parcela
         this.mDuoYinzi = bean.getDuoYinzi();
         this.wholePinYinFindIndex = bean.getWholePinYinFindIndex();
         this.indexPinyin = bean.indexPinyin;
+        this.uuid = bean.getUuid();
         this.username = bean.getUsername();
         this.oauthType = bean.getOauthType();
         this.developerCode = bean.getDeveloperCode();
@@ -91,6 +93,7 @@ public class SearchContactBean implements Comparable<SearchContactBean>, Parcela
         wholePinYinFindIndex = in.createIntArray();
         nextSearchContactBean = in.readParcelable(SearchContactBean.class.getClassLoader());
         indexPinyin = in.createStringArrayList();
+        uuid = in.readString();
         username = in.readString();
         oauthType = in.readString();
         developerCode = in.readString();
@@ -271,6 +274,14 @@ public class SearchContactBean implements Comparable<SearchContactBean>, Parcela
         this.clientCode = clientCode;
     }
 
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+
     @Override
     public String toString() {
         return "SearchContactBean{" +
@@ -321,6 +332,7 @@ public class SearchContactBean implements Comparable<SearchContactBean>, Parcela
         dest.writeParcelable(mDuoYinzi, flags);
         dest.writeIntArray(wholePinYinFindIndex);
         dest.writeParcelable(nextSearchContactBean, flags);
+        dest.writeString(uuid);
         dest.writeString(username);
         dest.writeString(oauthType);
         dest.writeString(developerCode);

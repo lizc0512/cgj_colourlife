@@ -1,5 +1,8 @@
 package com.youmai.hxsdk.db.bean;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.youmai.hxsdk.entity.cn.CN;
 
 import org.greenrobot.greendao.annotation.Entity;
@@ -10,7 +13,7 @@ import org.greenrobot.greendao.annotation.Id;
  * Created by YW on 2018/4/11.
  */
 @Entity
-public class Contact implements CN {
+public class Contact implements CN, Parcelable {
 
     @Id
     private Long id; //主键id
@@ -67,6 +70,43 @@ public class Contact implements CN {
     @Generated(hash = 672515148)
     public Contact() {
     }
+
+    protected Contact(Parcel in) {
+        if (in.readByte() == 0) {
+            id = null;
+        } else {
+            id = in.readLong();
+        }
+        uuid = in.readString();
+        uid = in.readString();
+        mobile = in.readString();
+        realname = in.readString();
+        avatar = in.readString();
+        sex = in.readString();
+        email = in.readString();
+        isFavorite = in.readString();
+        jobName = in.readString();
+        landline = in.readString();
+        orgID = in.readString();
+        orgName = in.readString();
+        username = in.readString();
+        sign = in.readString();
+        is_hx = in.readByte() != 0;
+        pinyin = in.readString();
+        simplePinyin = in.readString();
+    }
+
+    public static final Creator<Contact> CREATOR = new Creator<Contact>() {
+        @Override
+        public Contact createFromParcel(Parcel in) {
+            return new Contact(in);
+        }
+
+        @Override
+        public Contact[] newArray(int size) {
+            return new Contact[size];
+        }
+    };
 
     @Override
     public String chinese() {
@@ -217,4 +257,35 @@ public class Contact implements CN {
         this.simplePinyin = simplePinyin;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        if (id == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeLong(id);
+        }
+        dest.writeString(uuid);
+        dest.writeString(uid);
+        dest.writeString(mobile);
+        dest.writeString(realname);
+        dest.writeString(avatar);
+        dest.writeString(sex);
+        dest.writeString(email);
+        dest.writeString(isFavorite);
+        dest.writeString(jobName);
+        dest.writeString(landline);
+        dest.writeString(orgID);
+        dest.writeString(orgName);
+        dest.writeString(username);
+        dest.writeString(sign);
+        dest.writeByte((byte) (is_hx ? 1 : 0));
+        dest.writeString(pinyin);
+        dest.writeString(simplePinyin);
+    }
 }

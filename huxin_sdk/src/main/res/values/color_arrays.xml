@@ -19,7 +19,7 @@
 
     <string-array name="names_add_contact2">
         <item>↑##@@**2 我的部门</item>
-        <!--<item>↑##@@**5 收藏联系人</item>-->
+        <item>↑##@@**5 收藏联系人</item>
     </string-array>
 
 </resources>

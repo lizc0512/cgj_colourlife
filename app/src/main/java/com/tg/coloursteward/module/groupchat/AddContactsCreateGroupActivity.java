@@ -26,9 +26,11 @@ import com.tg.coloursteward.R;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.info.FamilyInfo;
 import com.tg.coloursteward.info.UserInfo;
+import com.tg.coloursteward.module.contact.ContactsFragment;
 import com.tg.coloursteward.module.contact.stickyheader.StickyHeaderDecoration;
 import com.tg.coloursteward.module.contact.utils.ContactsBindData;
 import com.tg.coloursteward.module.contact.widget.CharIndexView;
+import com.tg.coloursteward.module.groupchat.addcontact.AddContactByDepartmentFragment;
 import com.tg.coloursteward.module.groupchat.addcontact.AddContactBySearchFragment;
 import com.tg.coloursteward.module.search.SearchEditText;
 import com.tg.coloursteward.net.GetTwoRecordListener;
@@ -80,6 +82,7 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
         implements MessageHandler.ResponseListener, SearchContactAdapter.ItemEventListener {
 
     private static final String TAG_SEARCH_CONTACT_FRAGMENT = "search_contact_fragment";
+    private static final String TAG_DEPART_CONTACT_FRAGMENT = "depart_contact_fragment";
 
     private AddContactsCreateGroupActivity mActivity;
     private static final int ISTREAD = 1;
@@ -109,6 +112,7 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
     private ContactsBindData bindData;
 
     private AddContactBySearchFragment searchGroupFragment;
+    private AddContactByDepartmentFragment departmentFragment;
 
     public static final String BROADCAST_FILTER = "com.tg.coloursteward.searchcontact";
     public static final String ACTION = "contact_action";
@@ -138,20 +142,19 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
                 mActivity.updateCacheMap(bean, true);
                 Log.e("YW", "收藏联系人有更新的信息到达......" + bean.toString());
             } else if (action.equals(DEPART_CONTACT)) {
-
+                Contact bean = intent.getParcelableExtra("bean");
+                mActivity.updateCacheMap(bean, true);
             }
         }
     }
 
     void updateCacheMap(Contact contact, boolean is) {
-        //Map<Integer, Contact> cacheMap = adapter.getCacheMap();
         if (mTotalMap.containsKey(contact.getUuid())) {
             mTotalMap.remove(contact.getUuid());
-            //cacheMap.remove(contact.getUuid());
         } else {
             mTotalMap.put(contact.getUuid(), contact);
         }
-        Log.e("YW", "map size: " + mTotalMap.size());
+        Log.d("YW", "map size: " + mTotalMap.size());
 
         tv_Sure.setText("完成(" + mTotalMap.size() + ")");
 
@@ -160,7 +163,7 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
         } else {
             adapter.setMap(mTotalMap);
         }
-
+        hideSoftKey();
     }
 
     private ModifyContactsReceiver mModifyContactsReceiver;
@@ -197,7 +200,6 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
             Map<Integer, Contact> cacheMap = adapter.getCacheMap();
             if (null != cacheMap) {
                 cacheMap.clear();
-                cacheMap = null;
             }
         }
 
@@ -237,10 +239,15 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
         msgHand.setResponseListener(this);
 
         searchGroupFragment = new AddContactBySearchFragment();
+        departmentFragment = new AddContactByDepartmentFragment();
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.add(R.id.fl_search_container, searchGroupFragment, TAG_SEARCH_CONTACT_FRAGMENT);
         transaction.hide(searchGroupFragment);
+
+        transaction.add(R.id.fl_depart_container, departmentFragment, TAG_DEPART_CONTACT_FRAGMENT);
+        transaction.hide(departmentFragment);
+
         transaction.commitAllowingStateLoss();
 
         initView();
@@ -253,13 +260,8 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.hide(searchGroupFragment);
             searchGroupFragment.hide();
-            transaction.commitAllowingStateLoss();
-        } else {
-            editText.setText("");
-            editText.clearFocus();
-            return;
+            transaction.commit();
         }
-
         editText.setText("");
         editText.clearFocus();
     }
@@ -271,7 +273,6 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
         editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
@@ -285,12 +286,10 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
                     searchGroupFragment.add(s.toString());
                 }
                 searchGroupFragment.setMap(mTotalMap);
-
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-
             }
         });
 
@@ -299,10 +298,14 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
             public void onClick(View v) {
                 hide();
 
-                InputMethodManager manager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                manager.hideSoftInputFromWindow(editText.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                hideSoftKey();
             }
         });
+    }
+
+    void hideSoftKey() {
+        InputMethodManager manager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        manager.hideSoftInputFromWindow(editText.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
     }
 
     private void setListener() {
@@ -598,17 +601,12 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
      * @param contact
      */
     void itemFunction(int pos, Contact contact) {
-        Intent intent;
-        FamilyInfo info;
         switch (pos) {
             case 0:
-                info = new FamilyInfo();
-                info.id = UserInfo.orgId;
-                info.type = "org";
-                info.name = UserInfo.familyName;
-                intent = new Intent(mActivity, HomeContactOrgActivity.class);
-                intent.putExtra(HomeContactOrgActivity.FAMILY_INFO, info);
-                startActivity(intent);
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                transaction.show(departmentFragment);
+                transaction.commit();
+                departmentFragment.setMap(mTotalMap);
                 break;
             case 1:
                 break;

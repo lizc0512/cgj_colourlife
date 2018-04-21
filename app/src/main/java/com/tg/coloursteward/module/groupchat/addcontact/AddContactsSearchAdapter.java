@@ -150,7 +150,6 @@ public class AddContactsSearchAdapter<T> extends RecyclerView.Adapter<RecyclerVi
                         (mContext.getString(R.string.hx_common_more_message_list_info), count));
             } else {
 
-                searchItemHolder.search_info.setText(model.getPhoneNum());
                 String queryString = model.getSearchKey();
                 int highlightColor = ContextCompat.getColor(mContext, R.color.hxs_color_green3);
                 switch (model.getSearchType()) {

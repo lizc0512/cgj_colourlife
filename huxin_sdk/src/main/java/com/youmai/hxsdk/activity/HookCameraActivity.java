@@ -11,8 +11,19 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.google.protobuf.InvalidProtocolBufferException;
+import com.qiniu.android.storage.UpProgressHandler;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.R;
+import com.youmai.hxsdk.db.bean.CacheMsgBean;
+import com.youmai.hxsdk.db.helper.CacheMsgHelper;
+import com.youmai.hxsdk.im.cache.CacheMsgImage;
+import com.youmai.hxsdk.proto.YouMaiBasic;
+import com.youmai.hxsdk.proto.YouMaiMsg;
+import com.youmai.hxsdk.service.sendmsg.PostFile;
+import com.youmai.hxsdk.service.sendmsg.QiniuUtils;
+import com.youmai.hxsdk.socket.PduBase;
+import com.youmai.hxsdk.socket.ReceiveListener;
 import com.youmai.hxsdk.view.camera.JCameraView;
 import com.youmai.hxsdk.view.camera.listener.ClickListener;
 import com.youmai.hxsdk.view.camera.listener.ErrorListener;
@@ -28,11 +39,12 @@ import java.io.File;
  * 描述：
  */
 public class HookCameraActivity extends SdkBaseActivity {
+    private static final String TAG = HookCameraActivity.class.getName();
 
     public static final String CAMERA_TYPE = "camera_type";
     public static final String TARGET_UUID = "target_uuid";
     private JCameraView jCameraView;
-    private String mUuid;
+    private String dstUuid;
     private int mState;
 
     @Override
@@ -43,7 +55,7 @@ public class HookCameraActivity extends SdkBaseActivity {
         setContentView(R.layout.activity_camera);
 
         mState = getIntent().getIntExtra(CAMERA_TYPE, JCameraView.BUTTON_STATE_BOTH);
-        mUuid = getIntent().getStringExtra(TARGET_UUID);
+        dstUuid = getIntent().getStringExtra(TARGET_UUID);
 
         jCameraView = (JCameraView) findViewById(R.id.jcameraview);
         //设置视频保存路径
@@ -82,7 +94,7 @@ public class HookCameraActivity extends SdkBaseActivity {
             public void captureSuccess(Bitmap bitmap) {
                 String path = FileUtil.saveBitmap("HCamera", bitmap); //获取图片bitmap
                 if (mState == JCameraView.BUTTON_STATE_ONLY_CAPTURE) {
-                    HuxinSdkManager.instance().postPicture(mUuid, path, path, false,false);
+                    uploadFile(path);
                 } else {
                     Intent intent = new Intent();
                     intent.putExtra("filePath", path);
@@ -162,4 +174,70 @@ public class HookCameraActivity extends SdkBaseActivity {
         jCameraView.onPause();
     }
 
+
+    private void uploadFile(final String path) {
+        UpProgressHandler upProgressHandler = new UpProgressHandler() {
+            @Override
+            public void progress(String key, double percent) {
+                Log.v(TAG, "percent=" + (percent * 100));
+            }
+        };
+
+        final CacheMsgBean cacheMsgBean = new CacheMsgBean()
+                .setMsgTime(System.currentTimeMillis())
+                .setMsgStatus(CacheMsgBean.SEND_GOING)
+                .setSenderUserId(HuxinSdkManager.instance().getUuid())
+                .setReceiverUserId(dstUuid)
+                .setTargetName(dstUuid)
+                .setTargetUuid(dstUuid);
+
+        cacheMsgBean.setMsgType(CacheMsgBean.SEND_IMAGE)
+                .setJsonBodyObj(new CacheMsgImage()
+                        .setFilePath(path)
+                        .setOriginalType(CacheMsgImage.SEND_NOT_ORI));
+
+        PostFile postFile = new PostFile() {
+            @Override
+            public void success(final String fileId, final String desPhone) {
+                //已上传七牛，但仍未送达到用户，处于发送状态
+                CacheMsgImage msgBody = (CacheMsgImage) cacheMsgBean.getJsonBodyObj();
+                msgBody.setFid(fileId);
+                cacheMsgBean.setJsonBodyObj(msgBody);
+
+                HuxinSdkManager.instance().sendPicture(dstUuid, fileId, "thumbnail", new ReceiveListener() {
+                    @Override
+                    public void OnRec(PduBase pduBase) {
+                        try {
+                            final YouMaiMsg.ChatMsg_Ack ack = YouMaiMsg.ChatMsg_Ack.parseFrom(pduBase.body);
+                            //long msgId = ack.getMsgId();
+                            if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_OK) {
+                                cacheMsgBean.setMsgStatus(CacheMsgBean.SEND_SUCCEED);
+                            } else {
+                                cacheMsgBean.setMsgStatus(CacheMsgBean.SEND_FAILED);
+                            }
+                            CacheMsgHelper.instance().insertOrUpdate(mContext, cacheMsgBean);
+
+                        } catch (InvalidProtocolBufferException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+
+            }
+
+            @Override
+            public void fail(String msg) {
+                CacheMsgImage msgBody = (CacheMsgImage) cacheMsgBean.getJsonBodyObj();
+                msgBody.setFid("-2");
+                cacheMsgBean.setJsonBodyObj(msgBody);
+
+                cacheMsgBean.setMsgStatus(CacheMsgBean.SEND_FAILED);
+                CacheMsgHelper.instance().insertOrUpdate(mContext, cacheMsgBean);
+
+            }
+        };
+
+        QiniuUtils qiniuUtils = new QiniuUtils();
+        qiniuUtils.postFileToQiNiu(path, dstUuid, upProgressHandler, postFile);
+    }
 }

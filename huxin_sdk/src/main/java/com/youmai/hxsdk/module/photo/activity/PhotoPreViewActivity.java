@@ -1,6 +1,7 @@
 package com.youmai.hxsdk.module.photo.activity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -8,8 +9,19 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.protobuf.InvalidProtocolBufferException;
+import com.qiniu.android.storage.UpProgressHandler;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.R;
+import com.youmai.hxsdk.db.bean.CacheMsgBean;
+import com.youmai.hxsdk.db.helper.CacheMsgHelper;
+import com.youmai.hxsdk.im.cache.CacheMsgImage;
+import com.youmai.hxsdk.proto.YouMaiBasic;
+import com.youmai.hxsdk.proto.YouMaiMsg;
+import com.youmai.hxsdk.service.sendmsg.PostFile;
+import com.youmai.hxsdk.service.sendmsg.QiniuUtils;
+import com.youmai.hxsdk.socket.PduBase;
+import com.youmai.hxsdk.socket.ReceiveListener;
 
 import java.io.File;
 
@@ -25,7 +37,7 @@ public class PhotoPreViewActivity extends SdkPhotoActivity implements View.OnCli
     public static final String URL = "file_url";
     public static final String DST_UUID = "dst_uuid";
 
-    private String mImagePath, mDstUuid;
+    private String mImagePath, dstUuid;
 
     ImageView mPhotoPreview;
 
@@ -39,7 +51,7 @@ public class PhotoPreViewActivity extends SdkPhotoActivity implements View.OnCli
             if (!file.exists()) {
                 return;
             }
-            HuxinSdkManager.instance().postPicture(mDstUuid, "", mImagePath, false, false);
+            uploadFile(mImagePath);
         }
     }
 
@@ -76,7 +88,7 @@ public class PhotoPreViewActivity extends SdkPhotoActivity implements View.OnCli
     @Override
     public void initData() {
         mImagePath = getIntent().getStringExtra(URL);
-        mDstUuid = getIntent().getStringExtra(DST_UUID);
+        dstUuid = getIntent().getStringExtra(DST_UUID);
     }
 
     private void bindViews() {
@@ -99,6 +111,73 @@ public class PhotoPreViewActivity extends SdkPhotoActivity implements View.OnCli
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+
+    private void uploadFile(final String path) {
+        UpProgressHandler upProgressHandler = new UpProgressHandler() {
+            @Override
+            public void progress(String key, double percent) {
+                Log.v(TAG, "percent=" + (percent * 100));
+            }
+        };
+
+        final CacheMsgBean cacheMsgBean = new CacheMsgBean()
+                .setMsgTime(System.currentTimeMillis())
+                .setMsgStatus(CacheMsgBean.SEND_GOING)
+                .setSenderUserId(HuxinSdkManager.instance().getUuid())
+                .setReceiverUserId(dstUuid)
+                .setTargetName(dstUuid)
+                .setTargetUuid(dstUuid);
+
+        cacheMsgBean.setMsgType(CacheMsgBean.SEND_IMAGE)
+                .setJsonBodyObj(new CacheMsgImage()
+                        .setFilePath(path)
+                        .setOriginalType(CacheMsgImage.SEND_NOT_ORI));
+
+        PostFile postFile = new PostFile() {
+            @Override
+            public void success(final String fileId, final String desPhone) {
+                //已上传七牛，但仍未送达到用户，处于发送状态
+                CacheMsgImage msgBody = (CacheMsgImage) cacheMsgBean.getJsonBodyObj();
+                msgBody.setFid(fileId);
+                cacheMsgBean.setJsonBodyObj(msgBody);
+
+                HuxinSdkManager.instance().sendPicture(dstUuid, fileId, "thumbnail", new ReceiveListener() {
+                    @Override
+                    public void OnRec(PduBase pduBase) {
+                        try {
+                            final YouMaiMsg.ChatMsg_Ack ack = YouMaiMsg.ChatMsg_Ack.parseFrom(pduBase.body);
+                            //long msgId = ack.getMsgId();
+                            if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_OK) {
+                                cacheMsgBean.setMsgStatus(CacheMsgBean.SEND_SUCCEED);
+                            } else {
+                                cacheMsgBean.setMsgStatus(CacheMsgBean.SEND_FAILED);
+                            }
+                            CacheMsgHelper.instance().insertOrUpdate(mContext, cacheMsgBean);
+
+                        } catch (InvalidProtocolBufferException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+
+            }
+
+            @Override
+            public void fail(String msg) {
+                CacheMsgImage msgBody = (CacheMsgImage) cacheMsgBean.getJsonBodyObj();
+                msgBody.setFid("-2");
+                cacheMsgBean.setJsonBodyObj(msgBody);
+
+                cacheMsgBean.setMsgStatus(CacheMsgBean.SEND_FAILED);
+                CacheMsgHelper.instance().insertOrUpdate(mContext, cacheMsgBean);
+
+            }
+        };
+
+        QiniuUtils qiniuUtils = new QiniuUtils();
+        qiniuUtils.postFileToQiNiu(path, dstUuid, upProgressHandler, postFile);
     }
 
 }

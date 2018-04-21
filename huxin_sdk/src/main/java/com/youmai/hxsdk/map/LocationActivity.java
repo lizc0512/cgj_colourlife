@@ -563,7 +563,7 @@ public class LocationActivity extends SdkBaseActivity implements
         };
 
         HuxinSdkManager.instance().sendLocation(userId, longitude, latitude, zoomLevel, address,
-                false, callback);
+                 callback);
         finish();
     }
 

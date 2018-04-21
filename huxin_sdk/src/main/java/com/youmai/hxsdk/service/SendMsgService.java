@@ -171,9 +171,11 @@ public class SendMsgService extends IntentService {
             contentTemp = msgBody.getEmotionContent();
         }
         final String dstUuid = msgBean.getMsg().getReceiverUserId();
+        final int groupId = msgBean.getMsg().getGroupId();
         final String content = contentTemp;
 
-        HuxinSdkManager.instance().sendText(dstUuid, content, isGroup, new ReceiveListener() {
+
+        ReceiveListener listener = new ReceiveListener() {
             @Override
             public void OnRec(PduBase pduBase) {
                 //tcp会有消息缓存，在无网络状态下会执行onError()，一旦联网后，又继续尝试发送，就会执行OnRec()
@@ -197,8 +199,15 @@ public class SendMsgService extends IntentService {
             public void onError(int errCode) {
                 updateUI(msgBean, CacheMsgBean.SEND_FAILED, null, SEND_MSG_END);
             }
+        };
 
-        });
+        if (isGroup) {
+            HuxinSdkManager.instance().sendTextInGroup(groupId, content, listener);
+        } else {
+            HuxinSdkManager.instance().sendText(dstUuid, content, listener);
+        }
+
+
     }
 
     //发送位置
@@ -212,6 +221,7 @@ public class SendMsgService extends IntentService {
         final String address = msgBody.getAddress();
 
         final String dstUuid = msgBean.getMsg().getReceiverUserId();
+        final int groupId = msgBean.getMsg().getGroupId();
 
         ReceiveListener callback = new ReceiveListener() {
             @Override
@@ -241,7 +251,14 @@ public class SendMsgService extends IntentService {
             }
         };
 
-        HuxinSdkManager.instance().sendLocation(dstUuid, longitude, latitude, scale, address, isGroup, callback);
+
+        if (isGroup) {
+            HuxinSdkManager.instance().sendLocationInGroup(groupId, longitude, latitude, scale, address, callback);
+        } else {
+            HuxinSdkManager.instance().sendLocation(dstUuid, longitude, latitude, scale, address, callback);
+        }
+
+
     }
 
     //发送语音(先上传文件，再发送消息)
@@ -434,6 +451,7 @@ public class SendMsgService extends IntentService {
         final String sourcePhone = msgBody.getSourcePhone();
         final String forwardCount = msgBody.getForwardCount() + "";
         final String dstUuid = msgBean.getMsg().getReceiverUserId();
+        final int groupId = msgBean.getMsg().getGroupId();
 
         ReceiveListener receiveListener = new ReceiveListener() {
             @Override
@@ -456,8 +474,17 @@ public class SendMsgService extends IntentService {
                 }
             }
         };
-        HuxinSdkManager.instance().sendAudio(dstUuid, fileId, secondTimes, sourcePhone,
-                forwardCount, isGroup, receiveListener);
+
+
+        if (isGroup) {
+            HuxinSdkManager.instance().sendAudioInGroup(groupId, fileId, secondTimes, sourcePhone,
+                    forwardCount, receiveListener);
+        } else {
+            HuxinSdkManager.instance().sendAudio(dstUuid, fileId, secondTimes, sourcePhone,
+                    forwardCount, receiveListener);
+        }
+
+
     }
 
     //图片    2、发送消息
@@ -467,6 +494,8 @@ public class SendMsgService extends IntentService {
         boolean isOriginal = msgBody.getOriginalType() == CacheMsgImage.SEND_IS_ORI;
 
         final String dstUuid = msgBean.getMsg().getReceiverUserId();
+        final int groupId = msgBean.getMsg().getGroupId();
+
         ReceiveListener receiveListener = new ReceiveListener() {
             @Override
             public void OnRec(PduBase pduBase) {
@@ -494,8 +523,17 @@ public class SendMsgService extends IntentService {
                 updateUI(msgBean, CacheMsgBean.SEND_FAILED);
             }
         };
-        HuxinSdkManager.instance().sendPicture(dstUuid, fileId,
-                isOriginal ? "original" : "thumbnail", isGroup, receiveListener);
+
+
+        if (isGroup) {
+            HuxinSdkManager.instance().sendPictureInGroup(groupId, fileId,
+                    isOriginal ? "original" : "thumbnail", receiveListener);
+        } else {
+            HuxinSdkManager.instance().sendPicture(dstUuid, fileId,
+                    isOriginal ? "original" : "thumbnail", receiveListener);
+        }
+
+
     }
 
     //文件    2、发送消息
@@ -506,6 +544,7 @@ public class SendMsgService extends IntentService {
         final String fileName = msgBody.getFileName();
         final String fileSize = msgBody.getFileSize() + "";
         final String dstUuid = msgBean.getMsg().getReceiverUserId();
+        final int groupId = msgBean.getMsg().getGroupId();
 
         ReceiveListener receiveListener = new ReceiveListener() {
             @Override
@@ -527,8 +566,13 @@ public class SendMsgService extends IntentService {
             }
         };
         if (!"-1".equals(fileId)) {
-            HuxinSdkManager.instance().sendFile(dstUuid, fileId, fileName, fileSize,
-                    isGroup, receiveListener);
+            if (isGroup) {
+                HuxinSdkManager.instance().sendFileInGroup(groupId, fileId, fileName, fileSize,
+                        receiveListener);
+            } else {
+                HuxinSdkManager.instance().sendFile(dstUuid, fileId, fileName, fileSize,
+                        receiveListener);
+            }
         }
     }
 
@@ -542,6 +586,7 @@ public class SendMsgService extends IntentService {
         final long time = cacheMsgVideo.getTime();
 
         final String dstUuid = msgBean.getMsg().getReceiverUserId();
+        final int groupId = msgBean.getMsg().getGroupId();
 
         ReceiveListener receiveListener = new ReceiveListener() {
             @Override
@@ -570,8 +615,15 @@ public class SendMsgService extends IntentService {
                 updateUI(msgBean, CacheMsgBean.SEND_FAILED, null, SEND_MSG_END);
             }
         };
-        HuxinSdkManager.instance().sendVideo(dstUuid, fileId, frameId, name, size,
-                time + "", isGroup, receiveListener);
+
+        if (isGroup) {
+            HuxinSdkManager.instance().sendVideoInGroup(groupId, fileId, frameId, name, size,
+                    time + "", receiveListener);
+        } else {
+            HuxinSdkManager.instance().sendVideo(dstUuid, fileId, frameId, name, size,
+                    time + "", receiveListener);
+        }
+
     }
 
 }

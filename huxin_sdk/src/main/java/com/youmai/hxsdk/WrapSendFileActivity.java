@@ -1,17 +1,29 @@
 package com.youmai.hxsdk;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.protobuf.InvalidProtocolBufferException;
+import com.qiniu.android.storage.UpProgressHandler;
+import com.youmai.hxsdk.db.bean.CacheMsgBean;
+import com.youmai.hxsdk.db.helper.CacheMsgHelper;
 import com.youmai.hxsdk.im.IMHelper;
+import com.youmai.hxsdk.im.cache.CacheMsgImage;
 import com.youmai.hxsdk.module.filemanager.PickerManager;
 import com.youmai.hxsdk.module.filemanager.interfaces.PickerRefreshUIListener;
 import com.youmai.hxsdk.module.filemanager.activity.FileManagerActivity;
 import com.youmai.hxsdk.picker.FilePickerBuilder;
 import com.youmai.hxsdk.module.filemanager.constant.FilePickerConst;
+import com.youmai.hxsdk.proto.YouMaiBasic;
+import com.youmai.hxsdk.proto.YouMaiMsg;
+import com.youmai.hxsdk.service.sendmsg.PostFile;
+import com.youmai.hxsdk.service.sendmsg.QiniuUtils;
+import com.youmai.hxsdk.socket.PduBase;
+import com.youmai.hxsdk.socket.ReceiveListener;
 import com.youmai.hxsdk.utils.CommonUtils;
 import com.youmai.hxsdk.utils.ToastUtil;
 
@@ -26,10 +38,13 @@ import static com.youmai.hxsdk.activity.IMConnectionActivity.MAX_SENDER_FILE;
  */
 
 public class WrapSendFileActivity extends FragmentActivity implements PickerRefreshUIListener {
+    private static final String TAG = WrapSendFileActivity.class.getName();
+
     public static final int TYPE_PIC = 0;
     public static final int TYPE_FILE = 1;
 
     private String dstUuid;
+    private Context mContext;
 
     private ArrayList<String> docPaths = new ArrayList<>();
     private ArrayList<String> photoPaths = new ArrayList<>();
@@ -39,7 +54,7 @@ public class WrapSendFileActivity extends FragmentActivity implements PickerRefr
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        mContext = this;
         dstUuid = getIntent().getStringExtra("dstPhone");
         type = getIntent().getIntExtra("type", TYPE_PIC);
 
@@ -179,8 +194,7 @@ public class WrapSendFileActivity extends FragmentActivity implements PickerRefr
      * @param file
      */
     public void handleSendFile(final File file) {
-        HuxinSdkManager.instance().postFile(dstUuid, file, file.getName(),
-                file.length() + "", false);
+        uploadFile(file.getPath());
         finish();
     }
 
@@ -209,5 +223,72 @@ public class WrapSendFileActivity extends FragmentActivity implements PickerRefr
                 Toast.makeText(getApplicationContext(), "文件不存在!!!", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+
+    private void uploadFile(final String path) {
+        UpProgressHandler upProgressHandler = new UpProgressHandler() {
+            @Override
+            public void progress(String key, double percent) {
+                Log.v(TAG, "percent=" + (percent * 100));
+            }
+        };
+
+        final CacheMsgBean cacheMsgBean = new CacheMsgBean()
+                .setMsgTime(System.currentTimeMillis())
+                .setMsgStatus(CacheMsgBean.SEND_GOING)
+                .setSenderUserId(HuxinSdkManager.instance().getUuid())
+                .setReceiverUserId(dstUuid)
+                .setTargetName(dstUuid)
+                .setTargetUuid(dstUuid);
+
+        cacheMsgBean.setMsgType(CacheMsgBean.SEND_IMAGE)
+                .setJsonBodyObj(new CacheMsgImage()
+                        .setFilePath(path)
+                        .setOriginalType(CacheMsgImage.SEND_NOT_ORI));
+
+        PostFile postFile = new PostFile() {
+            @Override
+            public void success(final String fileId, final String desPhone) {
+                //已上传七牛，但仍未送达到用户，处于发送状态
+                CacheMsgImage msgBody = (CacheMsgImage) cacheMsgBean.getJsonBodyObj();
+                msgBody.setFid(fileId);
+                cacheMsgBean.setJsonBodyObj(msgBody);
+
+                HuxinSdkManager.instance().sendPicture(dstUuid, fileId, "thumbnail", new ReceiveListener() {
+                    @Override
+                    public void OnRec(PduBase pduBase) {
+                        try {
+                            final YouMaiMsg.ChatMsg_Ack ack = YouMaiMsg.ChatMsg_Ack.parseFrom(pduBase.body);
+                            //long msgId = ack.getMsgId();
+                            if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_OK) {
+                                cacheMsgBean.setMsgStatus(CacheMsgBean.SEND_SUCCEED);
+                            } else {
+                                cacheMsgBean.setMsgStatus(CacheMsgBean.SEND_FAILED);
+                            }
+                            CacheMsgHelper.instance().insertOrUpdate(mContext, cacheMsgBean);
+
+                        } catch (InvalidProtocolBufferException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+
+            }
+
+            @Override
+            public void fail(String msg) {
+                CacheMsgImage msgBody = (CacheMsgImage) cacheMsgBean.getJsonBodyObj();
+                msgBody.setFid("-2");
+                cacheMsgBean.setJsonBodyObj(msgBody);
+
+                cacheMsgBean.setMsgStatus(CacheMsgBean.SEND_FAILED);
+                CacheMsgHelper.instance().insertOrUpdate(mContext, cacheMsgBean);
+
+            }
+        };
+
+        QiniuUtils qiniuUtils = new QiniuUtils();
+        qiniuUtils.postFileToQiNiu(path, dstUuid, upProgressHandler, postFile);
     }
 }

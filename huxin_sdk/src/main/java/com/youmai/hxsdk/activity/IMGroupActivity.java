@@ -146,7 +146,7 @@ public class IMGroupActivity extends SdkBaseActivity implements
     private ImageView ivGroup; //建群
 
     private String dstNickName;  //目标昵称
-    private String dstUuid;      //目标UUID
+    private String groupId;      //目标groupId
     private String dstPhone;      //目标手机号
 
     private boolean isPauseOut = false;
@@ -183,7 +183,7 @@ public class IMGroupActivity extends SdkBaseActivity implements
                 FileQueue fileQueue = intent.getParcelableExtra("data");
                 String phone = fileQueue.getPhone();
                 int pro = fileQueue.getPro();
-                if (TextUtils.equals(dstUuid, phone)) {
+                if (TextUtils.equals(groupId, phone)) {
                     if (pro == 100) {
                         //下载完成,刷新ui
                         refreshFinishVideo(fileQueue);
@@ -262,12 +262,8 @@ public class IMGroupActivity extends SdkBaseActivity implements
         Intent fromIntent = getIntent();
 
         dstNickName = fromIntent.getStringExtra(DST_NAME);
-        dstUuid = fromIntent.getStringExtra(DST_UUID);
+        groupId = fromIntent.getStringExtra(DST_UUID);
         dstPhone = fromIntent.getStringExtra(DST_PHONE);
-
-        if (StringUtils.isEmpty(dstUuid)) {
-            dstUuid = HuxinSdkManager.instance().getUuid();
-        }
 
         mScrollPosition = fromIntent.getLongExtra(EXTRA_SCROLL_POSITION, 0);
 
@@ -305,12 +301,12 @@ public class IMGroupActivity extends SdkBaseActivity implements
 
 
         PickerManager.getInstance().setRefreshUIListener(this);
-        IMMsgManager.instance().removeBadge(dstUuid);
+        IMMsgManager.instance().removeBadge(groupId);
     }
 
     public void handleIntent(Intent intent) {
         dstNickName = intent.getStringExtra(DST_NAME);
-        dstUuid = intent.getStringExtra(DST_UUID);
+        groupId = intent.getStringExtra(DST_UUID);
 
         if (!TextUtils.isEmpty(dstNickName)) {
             tvTitle.setText(dstNickName);
@@ -533,7 +529,7 @@ public class IMGroupActivity extends SdkBaseActivity implements
         manager = new LinearLayoutManagerWithSmoothScroller(this, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(manager);
 
-        iMGroupAdapter = new IMGroupAdapter(this, recyclerView, dstUuid);
+        iMGroupAdapter = new IMGroupAdapter(this, recyclerView, groupId);
         iMGroupAdapter.setMoreListener(new IMGroupAdapter.OnClickMoreListener() {
             @Override
             public void showMore(boolean isShow) {
@@ -589,7 +585,7 @@ public class IMGroupActivity extends SdkBaseActivity implements
             public void deleteMsgCallback(int type) {
                 if (!isFinishing()) {
                     Intent intent = new Intent();
-                    intent.putExtra("updatePhone", dstUuid);
+                    intent.putExtra("updatePhone", groupId);
                     intent.putExtra("isDeleteMsgType", type);
                     setResult(Activity.RESULT_OK, intent);
                 }
@@ -665,7 +661,7 @@ public class IMGroupActivity extends SdkBaseActivity implements
         docPaths.clear();
         PickerManager.getInstance().addDocTypes();
         Intent intent = new Intent(this, FileManagerActivity.class);
-        intent.putExtra("dstUuid", dstUuid);
+        intent.putExtra("dstUuid", groupId);
         startActivity(intent);
     }
 
@@ -684,9 +680,9 @@ public class IMGroupActivity extends SdkBaseActivity implements
                 .setMsgTime(System.currentTimeMillis())
                 .setMsgStatus(CacheMsgBean.SEND_GOING)
                 .setSenderUserId(HuxinSdkManager.instance().getUuid())
-                .setReceiverUserId(dstUuid)
+                .setReceiverUserId(groupId)
                 .setTargetName(dstNickName)
-                .setTargetUuid(dstUuid);
+                .setTargetUuid(groupId);
     }
 
     /**
@@ -836,7 +832,7 @@ public class IMGroupActivity extends SdkBaseActivity implements
     private void sendLocation() {
         Intent intent = new Intent();
         intent.putExtra(LocationActivity.FROM_TO_IM, true);
-        intent.putExtra(LocationActivity.DST_UUID, dstUuid);
+        intent.putExtra(LocationActivity.DST_UUID, groupId);
         intent.setClass(this, LocationActivity.class);
         startActivityForResult(intent, REQUEST_CODE_LOCATION);
     }
@@ -991,7 +987,7 @@ public class IMGroupActivity extends SdkBaseActivity implements
     public void onCallback(CacheMsgBean cacheMsgBean) {
         //刷新界面
         if (!isFinishing()) {
-            if (cacheMsgBean.getSenderUserId().equals(dstUuid))
+            if (cacheMsgBean.getSenderUserId().equals(groupId))
                 iMGroupAdapter.refreshIncomingMsgUI(cacheMsgBean);
         }
     }

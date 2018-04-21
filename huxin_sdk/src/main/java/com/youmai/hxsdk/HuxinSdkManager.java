@@ -581,10 +581,9 @@ public class HuxinSdkManager {
      * 发送文字
      *
      * @param destUuid
-     * @param isGroup  是否为群组消息
      * @param content
      */
-    public void sendText(String destUuid, String content, boolean isGroup, ReceiveListener callback) {
+    public void sendText(String destUuid, String content, ReceiveListener callback) {
         YouMaiMsg.MsgData.Builder msgData = YouMaiMsg.MsgData.newBuilder();
         msgData.setSrcUserId(getUuid());
         msgData.setSrcAvatar(getHeadUrl());
@@ -602,11 +601,9 @@ public class HuxinSdkManager {
         builder.setData(msgData);
         YouMaiMsg.ChatMsg chatMsg = builder.build();
 
-        if (isGroup) {
-            sendProto(chatMsg, YouMaiBasic.COMMANDID.CID_CHAT_GROUP_VALUE, callback);
-        } else {
-            sendProto(chatMsg, YouMaiBasic.COMMANDID.CID_CHAT_BUDDY_VALUE, callback);
-        }
+
+        sendProto(chatMsg, YouMaiBasic.COMMANDID.CID_CHAT_BUDDY_VALUE, callback);
+
 
     }
 
@@ -619,11 +616,10 @@ public class HuxinSdkManager {
      * @param latitude
      * @param scale
      * @param label
-     * @param isGroup   是否为群组消息
      * @param callback
      */
     public void sendLocation(String destUuid, double longitude, double latitude,
-                             int scale, String label, boolean isGroup, ReceiveListener callback) {
+                             int scale, String label, ReceiveListener callback) {
 
         YouMaiMsg.MsgData.Builder msgData = YouMaiMsg.MsgData.newBuilder();
         msgData.setSrcUserId(getUuid());
@@ -645,11 +641,9 @@ public class HuxinSdkManager {
         builder.setData(msgData);
         YouMaiMsg.ChatMsg chatMsg = builder.build();
 
-        if (isGroup) {
-            sendProto(chatMsg, YouMaiBasic.COMMANDID.CID_CHAT_GROUP_VALUE, callback);
-        } else {
-            sendProto(chatMsg, YouMaiBasic.COMMANDID.CID_CHAT_BUDDY_VALUE, callback);
-        }
+
+        sendProto(chatMsg, YouMaiBasic.COMMANDID.CID_CHAT_BUDDY_VALUE, callback);
+
     }
 
 
@@ -659,11 +653,10 @@ public class HuxinSdkManager {
      * @param destUuid
      * @param fileId
      * @param quality
-     * @param isGroup  是否为群组消息
      * @param callback
      */
     public void sendPicture(String destUuid, String fileId, String quality,
-                            boolean isGroup, ReceiveListener callback) {
+                            ReceiveListener callback) {
         YouMaiMsg.MsgData.Builder msgData = YouMaiMsg.MsgData.newBuilder();
         msgData.setSrcUserId(getUuid());
         msgData.setSrcAvatar(getHeadUrl());
@@ -682,11 +675,9 @@ public class HuxinSdkManager {
         builder.setData(msgData);
         YouMaiMsg.ChatMsg chatMsg = builder.build();
 
-        if (isGroup) {
-            sendProto(chatMsg, YouMaiBasic.COMMANDID.CID_CHAT_GROUP_VALUE, callback);
-        } else {
-            sendProto(chatMsg, YouMaiBasic.COMMANDID.CID_CHAT_BUDDY_VALUE, callback);
-        }
+
+        sendProto(chatMsg, YouMaiBasic.COMMANDID.CID_CHAT_BUDDY_VALUE, callback);
+
     }
 
 
@@ -695,11 +686,10 @@ public class HuxinSdkManager {
      *
      * @param destUuid
      * @param fileId
-     * @param isGroup  是否为群组消息
      * @param callback
      */
     public void sendAudio(String destUuid, String fileId, String secondsTime, String sourcePhone,
-                          String forwardCount, boolean isGroup, ReceiveListener callback) {
+                          String forwardCount, ReceiveListener callback) {
         YouMaiMsg.MsgData.Builder msgData = YouMaiMsg.MsgData.newBuilder();
         msgData.setSrcUserId(getUuid());
         msgData.setSrcAvatar(getHeadUrl());
@@ -720,11 +710,8 @@ public class HuxinSdkManager {
         builder.setData(msgData);
         YouMaiMsg.ChatMsg chatMsg = builder.build();
 
-        if (isGroup) {
-            sendProto(chatMsg, YouMaiBasic.COMMANDID.CID_CHAT_GROUP_VALUE, callback);
-        } else {
-            sendProto(chatMsg, YouMaiBasic.COMMANDID.CID_CHAT_BUDDY_VALUE, callback);
-        }
+
+        sendProto(chatMsg, YouMaiBasic.COMMANDID.CID_CHAT_BUDDY_VALUE, callback);
 
 
     }
@@ -735,11 +722,10 @@ public class HuxinSdkManager {
      *
      * @param destUuid
      * @param fileId
-     * @param isGroup  是否为群组消息
      * @param callback
      */
     public void sendVideo(String destUuid, String fileId, String frameId, String name, String size,
-                          String time, boolean isGroup, ReceiveListener callback) {
+                          String time, ReceiveListener callback) {
         YouMaiMsg.MsgData.Builder msgData = YouMaiMsg.MsgData.newBuilder();
         msgData.setSrcUserId(getUuid());
         msgData.setSrcAvatar(getHeadUrl());
@@ -757,11 +743,9 @@ public class HuxinSdkManager {
         builder.setData(msgData);
         YouMaiMsg.ChatMsg chatMsg = builder.build();
 
-        if (isGroup) {
-            sendProto(chatMsg, YouMaiBasic.COMMANDID.CID_CHAT_GROUP_VALUE, callback);
-        } else {
-            sendProto(chatMsg, YouMaiBasic.COMMANDID.CID_CHAT_BUDDY_VALUE, callback);
-        }
+
+        sendProto(chatMsg, YouMaiBasic.COMMANDID.CID_CHAT_BUDDY_VALUE, callback);
+
     }
 
     /**
@@ -769,12 +753,11 @@ public class HuxinSdkManager {
      *
      * @param destUuid
      * @param fileId
-     * @param isGroup  是否为群组消息
      * @param callback
      */
     public void sendFile(String destUuid, String fileId,
                          String fileName, String fileSize,
-                         boolean isGroup, ReceiveListener callback) {
+                         ReceiveListener callback) {
         YouMaiMsg.MsgData.Builder msgData = YouMaiMsg.MsgData.newBuilder();
         msgData.setSrcUserId(getUuid());
         msgData.setSrcAvatar(getHeadUrl());
@@ -792,11 +775,9 @@ public class HuxinSdkManager {
         builder.setData(msgData);
         YouMaiMsg.ChatMsg chatMsg = builder.build();
 
-        if (isGroup) {
-            sendProto(chatMsg, YouMaiBasic.COMMANDID.CID_CHAT_GROUP_VALUE, callback);
-        } else {
-            sendProto(chatMsg, YouMaiBasic.COMMANDID.CID_CHAT_BUDDY_VALUE, callback);
-        }
+
+        sendProto(chatMsg, YouMaiBasic.COMMANDID.CID_CHAT_BUDDY_VALUE, callback);
+
     }
 
 
@@ -941,251 +922,195 @@ public class HuxinSdkManager {
 
 
     /**
-     * 发送图片
+     * 发送文字
      *
-     * @param path
-     * @param listener
-     * @return
+     * @param groupId
+     * @param content
      */
-    public void postFileToQiNiu(String path, String type, OnFileListener listener) {
-        File file = new File(path);
-        if (file.exists()) {
-            postFileToQiNiu(file, type, listener);
-        }
-    }
+    public void sendTextInGroup(int groupId, String content, ReceiveListener callback) {
+        YouMaiMsg.MsgData.Builder msgData = YouMaiMsg.MsgData.newBuilder();
+        msgData.setSrcUserId(getUuid());
+        msgData.setSrcAvatar(getHeadUrl());
+        msgData.setSrcSex(getSex());
+        msgData.setSrcRealname(getRealName());
+        msgData.setSrcMobile(getPhoneNum());
+        msgData.setGroupId(groupId);
+        msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_TEXT);
 
-    /**
-     * 发送图片
-     *
-     * @param file
-     * @param listener
-     * @return
-     */
-    public void postFileToQiNiu(final File file, final String type, final OnFileListener listener) {
+        IMContentUtil imContentUtil = new IMContentUtil();
+        imContentUtil.appendText(content);
+        msgData.setMsgContent(imContentUtil.serializeToString());
 
-        final UpProgressHandler progressHandler = new UpProgressHandler() {
-            @Override
-            public void progress(String key, double percent) {
-                if (null != listener) {
-                    listener.onProgress(percent);
-                }
-            }
-        };
+        YouMaiMsg.ChatMsg.Builder builder = YouMaiMsg.ChatMsg.newBuilder();
+        builder.setData(msgData);
+        YouMaiMsg.ChatMsg chatMsg = builder.build();
 
-        IPostListener callback = new IPostListener() {
-            @Override
-            public void httpReqResult(String response) {
-                FileToken resp = GsonUtil.parse(response, FileToken.class);
-                if (resp == null) {
-                    return;
-                }
-                if (resp.isSucess()) {
-                    String fidKey = resp.getD().getFid();
-                    String token = resp.getD().getUpToken();
-                    UpCompletionHandler completionHandler = new UpCompletionHandler() {
-                        @Override
-                        public void complete(String key, ResponseInfo info, JSONObject response) {
-                            if (response == null) {
-                                if (null != listener) {
-                                    listener.onFail("上传文件失败");
-                                }
-                                return;
-                            }
-                            UploadFile resp = GsonUtil.parse(response.toString(), UploadFile.class);
-                            if (resp != null && resp.isSucess()) {
-                                String fileId = resp.getD().getFileid();
-                                listener.onSuccess(fileId);
-                            } else {
-                                if (null != listener) {
-                                    listener.onFail(resp.getM());
-                                }
-                            }
+        sendProto(chatMsg, YouMaiBasic.COMMANDID.CID_CHAT_GROUP_VALUE, callback);
 
-                        }
-                    };
-
-                    Map<String, String> params = new HashMap<>();
-                    params.put("x:type", type);
-                    params.put("x:msisdn", "18664992691");
-                    UploadOptions options = new UploadOptions(params, null, false, progressHandler, null);
-
-                    uploadManager.put(file, fidKey, token, completionHandler, options);
-
-                } else {
-                    String log = resp.getM();
-                    if (null != listener) {
-                        listener.onFail(log);
-                    }
-                }
-            }
-        };
-        getUploadFileToken(callback);
     }
 
 
     /**
-     * 发送音频.
+     * 发送位置
      *
-     * @param uuid
-     * @param file
-     * @param secondTimes
-     * @return
+     * @param groupId
+     * @param longitude
+     * @param latitude
+     * @param scale
+     * @param label
+     * @param callback
      */
-    public void postAudio(final String uuid, final File file, final String secondTimes,
-                          final boolean isGroup) {
+    public void sendLocationInGroup(int groupId, double longitude, double latitude,
+                                    int scale, String label, ReceiveListener callback) {
 
-        postFileToQiNiu(file, "2", new OnFileListener() {
-            @Override
-            public void onProgress(double progress) {
-                LogUtils.v(Constant.SDK_UI_TAG, "uploading percent = " + progress);
-            }
+        YouMaiMsg.MsgData.Builder msgData = YouMaiMsg.MsgData.newBuilder();
+        msgData.setSrcUserId(getUuid());
+        msgData.setSrcAvatar(getHeadUrl());
+        msgData.setSrcSex(getSex());
+        msgData.setSrcRealname(getRealName());
+        msgData.setSrcMobile(getPhoneNum());
+        msgData.setGroupId(groupId);
+        msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_LOCATION);
 
-            @Override
-            public void onSuccess(String fileId) {
-                ReceiveListener receiveListener = new ReceiveListener() {
-                    @Override
-                    public void OnRec(PduBase pduBase) {
-                        try {
-                            YouMaiMsg.ChatMsg_Ack ack = YouMaiMsg.ChatMsg_Ack.parseFrom(pduBase.body);
-                            //long msgId = ack.getMsgId();
-                            if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_OK) {
-                                Toast.makeText(mContext, "发送语音成功", Toast.LENGTH_SHORT).show();
-                            } else {
-                                Toast.makeText(mContext, "发送语音失败", Toast.LENGTH_SHORT).show();
-                            }
-                        } catch (InvalidProtocolBufferException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                };
-                sendAudio(uuid, fileId, secondTimes, getPhoneNum(), "0", isGroup, receiveListener);
-            }
+        IMContentUtil imContentUtil = new IMContentUtil();
+        imContentUtil.appendLongitude(longitude + "");
+        imContentUtil.appendLaitude(latitude + "");
+        imContentUtil.appendScale(scale + "");
+        imContentUtil.appendLabel(label);
+        msgData.setMsgContent(imContentUtil.serializeToString());
 
-            @Override
-            public void onFail(String msg) {
-                Toast.makeText(mContext, "语音上传失败", Toast.LENGTH_SHORT).show();
-            }
-        });
+        YouMaiMsg.ChatMsg.Builder builder = YouMaiMsg.ChatMsg.newBuilder();
+        builder.setData(msgData);
+        YouMaiMsg.ChatMsg chatMsg = builder.build();
+
+        sendProto(chatMsg, YouMaiBasic.COMMANDID.CID_CHAT_GROUP_VALUE, callback);
+    }
 
 
+    /**
+     * tcp发送图片
+     *
+     * @param groupId
+     * @param fileId
+     * @param quality
+     * @param callback
+     */
+    public void sendPictureInGroup(int groupId, String fileId, String quality,
+                                   ReceiveListener callback) {
+        YouMaiMsg.MsgData.Builder msgData = YouMaiMsg.MsgData.newBuilder();
+        msgData.setSrcUserId(getUuid());
+        msgData.setSrcAvatar(getHeadUrl());
+        msgData.setSrcSex(getSex());
+        msgData.setSrcRealname(getRealName());
+        msgData.setSrcMobile(getPhoneNum());
+        msgData.setGroupId(groupId);
+        msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_IMAGE);
+
+        IMContentUtil imContentUtil = new IMContentUtil();
+        imContentUtil.appendPictureId(fileId);
+        imContentUtil.appendDescribe(quality); // 是否原图
+        msgData.setMsgContent(imContentUtil.serializeToString());
+
+        YouMaiMsg.ChatMsg.Builder builder = YouMaiMsg.ChatMsg.newBuilder();
+        builder.setData(msgData);
+        YouMaiMsg.ChatMsg chatMsg = builder.build();
+
+        sendProto(chatMsg, YouMaiBasic.COMMANDID.CID_CHAT_GROUP_VALUE, callback);
+    }
+
+
+    /**
+     * tcp 发送音频
+     *
+     * @param groupId
+     * @param fileId
+     * @param callback
+     */
+    public void sendAudioInGroup(int groupId, String fileId, String secondsTime, String sourcePhone,
+                                 String forwardCount, ReceiveListener callback) {
+        YouMaiMsg.MsgData.Builder msgData = YouMaiMsg.MsgData.newBuilder();
+        msgData.setSrcUserId(getUuid());
+        msgData.setSrcAvatar(getHeadUrl());
+        msgData.setSrcSex(getSex());
+        msgData.setSrcRealname(getRealName());
+        msgData.setSrcMobile(getPhoneNum());
+        msgData.setGroupId(groupId);
+        msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_IMAGE);
+
+        IMContentUtil imContentUtil = new IMContentUtil();
+        imContentUtil.appendAudioId(fileId);
+        imContentUtil.appendBarTime(secondsTime);
+        imContentUtil.appendSourcePhone(sourcePhone);
+        imContentUtil.appendForwardCount(forwardCount);
+        msgData.setMsgContent(imContentUtil.serializeToString());
+
+        YouMaiMsg.ChatMsg.Builder builder = YouMaiMsg.ChatMsg.newBuilder();
+        builder.setData(msgData);
+        YouMaiMsg.ChatMsg chatMsg = builder.build();
+
+        sendProto(chatMsg, YouMaiBasic.COMMANDID.CID_CHAT_GROUP_VALUE, callback);
+
+    }
+
+
+    /**
+     * tcp发送视频
+     *
+     * @param groupId
+     * @param fileId
+     * @param callback
+     */
+    public void sendVideoInGroup(int groupId, String fileId, String frameId, String name, String size,
+                                 String time, ReceiveListener callback) {
+        YouMaiMsg.MsgData.Builder msgData = YouMaiMsg.MsgData.newBuilder();
+        msgData.setSrcUserId(getUuid());
+        msgData.setSrcAvatar(getHeadUrl());
+        msgData.setSrcSex(getSex());
+        msgData.setSrcRealname(getRealName());
+        msgData.setSrcMobile(getPhoneNum());
+        msgData.setGroupId(groupId);
+        msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_VIDEO);
+
+        IMContentUtil imContentUtil = new IMContentUtil();
+        imContentUtil.addVideo(fileId, frameId, name, size, time);//body的内容
+        msgData.setMsgContent(imContentUtil.serializeToString());
+
+        YouMaiMsg.ChatMsg.Builder builder = YouMaiMsg.ChatMsg.newBuilder();
+        builder.setData(msgData);
+        YouMaiMsg.ChatMsg chatMsg = builder.build();
+
+        sendProto(chatMsg, YouMaiBasic.COMMANDID.CID_CHAT_GROUP_VALUE, callback);
     }
 
     /**
-     * 发送文件.
+     * tcp发送视频
      *
-     * @param dstUuid
-     * @param path
-     * @param fileName
-     * @param fileSize
-     * @return
+     * @param groupId
+     * @param fileId
+     * @param callback
      */
-    public void postFile(final String dstUuid, final String path,
-                         final String fileName, final String fileSize, final boolean isGroup) {
-        File file = new File(path);
-        if (file.exists()) {
-            postFile(dstUuid, file, fileName, fileSize, isGroup);
-        }
+    public void sendFileInGroup(int groupId, String fileId, String fileName, String fileSize,
+                                ReceiveListener callback) {
+        YouMaiMsg.MsgData.Builder msgData = YouMaiMsg.MsgData.newBuilder();
+        msgData.setSrcUserId(getUuid());
+        msgData.setSrcAvatar(getHeadUrl());
+        msgData.setSrcSex(getSex());
+        msgData.setSrcRealname(getRealName());
+        msgData.setSrcMobile(getPhoneNum());
+        msgData.setGroupId(groupId);
+        msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_FILE);
 
+        IMContentUtil imContentUtil = new IMContentUtil();
+        imContentUtil.appendBigFileId(fileId, fileName, fileSize);
+        msgData.setMsgContent(imContentUtil.serializeToString());
+
+        YouMaiMsg.ChatMsg.Builder builder = YouMaiMsg.ChatMsg.newBuilder();
+        builder.setData(msgData);
+        YouMaiMsg.ChatMsg chatMsg = builder.build();
+
+        sendProto(chatMsg, YouMaiBasic.COMMANDID.CID_CHAT_GROUP_VALUE, callback);
     }
 
-    /**
-     * 发送文件.
-     *
-     * @param dstUuid
-     * @param file
-     * @param fileName
-     * @param fileSize
-     * @return
-     */
-    public void postFile(final String dstUuid, final File file,
-                         final String fileName, final String fileSize, final boolean isGroup) {
-        postFileToQiNiu(file, "2", new OnFileListener() {
-            @Override
-            public void onProgress(double progress) {
-                LogUtils.v(Constant.SDK_UI_TAG, "uploading percent = " + progress);
-            }
-
-            @Override
-            public void onSuccess(String fileId) {
-                ReceiveListener receiveListener = new ReceiveListener() {
-                    @Override
-                    public void OnRec(PduBase pduBase) {
-                        try {
-                            YouMaiMsg.ChatMsg_Ack ack = YouMaiMsg.ChatMsg_Ack.parseFrom(pduBase.body);
-                            //long msgId = ack.getMsgId();
-                            if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_OK) {
-                                Toast.makeText(mContext, "发送文件成功", Toast.LENGTH_SHORT).show();
-                            } else {
-                                Toast.makeText(mContext, "发送文件失败", Toast.LENGTH_SHORT).show();
-                            }
-                        } catch (InvalidProtocolBufferException e) {
-                            e.printStackTrace();
-                        }
-
-                    }
-                };
-                sendFile(dstUuid, fileId, fileName, fileSize, isGroup, receiveListener);
-            }
-
-            @Override
-            public void onFail(String msg) {
-                Toast.makeText(mContext, "上传文件失败", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    /**
-     * 发送图片
-     *
-     * @param dstUuid
-     * @param compressPath (压缩后图片文件,发送完删除)
-     * @param originalPath 地图片的原始路径(原图)
-     */
-    public void postPicture(final String dstUuid, final String compressPath,
-                            final String originalPath, final boolean isOriginal,
-                            final boolean isGroup) {
-
-        File file;
-        if (isOriginal) {
-            file = new File(originalPath);
-        } else {
-            file = new File(compressPath);
-        }
-
-        postFileToQiNiu(file, "2", new OnFileListener() {
-            @Override
-            public void onProgress(double progress) {
-                LogUtils.v(Constant.SDK_UI_TAG, "uploading percent = " + progress);
-            }
-
-            @Override
-            public void onSuccess(String fileId) {
-                ReceiveListener receiveListener = new ReceiveListener() {
-                    @Override
-                    public void OnRec(PduBase pduBase) {
-                        try {
-                            YouMaiMsg.ChatMsg_Ack ack = YouMaiMsg.ChatMsg_Ack.parseFrom(pduBase.body);
-                            //long msgId = ack.getMsgId();
-                            if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_OK) {
-                                Toast.makeText(mContext, "发送图片成功", Toast.LENGTH_SHORT).show();
-                            } else {
-                                Toast.makeText(mContext, "发送图片失败", Toast.LENGTH_SHORT).show();
-                            }
-                        } catch (InvalidProtocolBufferException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                };
-
-                sendPicture(dstUuid, fileId, isOriginal ? "original" : "thumbnail", isGroup, receiveListener);
-            }
-
-            @Override
-            public void onFail(String msg) {
-                Toast.makeText(mContext, "上传图片失败", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
 
 
     /**

@@ -18,9 +18,7 @@ import com.youmai.hxsdk.router.APath;
 import com.youmai.hxsdk.utils.GlideRoundTransform;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 作者：create by YW
@@ -44,8 +42,6 @@ public class ChatDetailsActivity extends SdkBaseActivity {
     private String avatar;
     private String realname;
 
-    Map<String, Contact> groupMap = new HashMap<>();
-
     List<Contact> groupList = new ArrayList<>();
 
     @Override
@@ -60,8 +56,8 @@ public class ChatDetailsActivity extends SdkBaseActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (null != groupMap) {
-            groupMap.clear();
+        if (null != groupList) {
+            groupList.clear();
         }
     }
 
@@ -101,14 +97,12 @@ public class ChatDetailsActivity extends SdkBaseActivity {
         contact.setUuid(uuid);
         contact.setRealname(realname);
         contact.setAvatar(avatar);
-        groupMap.put(uuid, contact);
         groupList.add(contact);
 
 //        String uid = HuxinSdkManager.instance().getUuid();
 //        contact.setRealname(HuxinSdkManager.instance().getUuid());
 //        contact.setRealname(HuxinSdkManager.instance().getHeadUrl());
 //        contact.setRealname(HuxinSdkManager.instance().getRealName());
-//        groupMap.put(uid, contact);
 //        groupList.add(contact);
 
     }
@@ -126,10 +120,6 @@ public class ChatDetailsActivity extends SdkBaseActivity {
                 ARouter.getInstance().build(APath.GROUP_CREATE_ADD_CONTACT)
                         .withParcelableArrayList(GROUP_LIST, (ArrayList<? extends Parcelable>) groupList)
                         .navigation(ChatDetailsActivity.this);
-//                Intent intent = new Intent();
-//                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-//                intent.setClass(ChatDetailsActivity.this, AddContactsCreateGroupActivity.class);
-//                startActivity(intent);
             }
         });
     }

@@ -5,6 +5,8 @@ import android.content.ContentValues;
 
 import com.youmai.hxsdk.utils.AppUtils;
 
+import java.util.Map;
+
 public class ColorsConfig {
 
     public static final String ColorLifeAppId_test = "739ca86c-ea5d-4dad-b8ae-f5277942d281";
@@ -44,4 +46,11 @@ public class ColorsConfig {
     }
 
 
+    public static void commonParams(Map<String, Object> params) {
+        //long ts = 1521095132;
+        long ts = System.currentTimeMillis() / 1000;
+        params.put("ts", ts);
+        params.put("appID", getAppID());
+        params.put("sign", sign(ts));
+    }
 }

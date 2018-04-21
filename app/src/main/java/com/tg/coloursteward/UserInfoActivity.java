@@ -5,11 +5,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.tg.coloursteward.MainActivity;
-import com.tg.coloursteward.R;
-import com.tg.coloursteward.UserInfoActivity;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.info.UserInfo;
@@ -70,7 +69,7 @@ public class UserInfoActivity extends BaseActivity implements ItemClickListener,
     private ImageView ivIcon;// 头像
     private RelativeLayout rlIcon;
     private String imageName;
-    protected ImageLoader imageLoader = ImageLoader.getInstance();
+    //protected ImageLoader imageLoader = ImageLoader.getInstance();
     String crop_path = Environment.getExternalStorageDirectory()
             + "/colorholder/";
 
@@ -143,9 +142,16 @@ public class UserInfoActivity extends BaseActivity implements ItemClickListener,
         list3.add(config);
         messageView3.setData(list3);
 
-        imageLoader.clearMemoryCache();
-        imageLoader.clearDiskCache();
-        imageLoader.displayImage(Contants.URl.HEAD_ICON_URL + "avatar?uid=" + UserInfo.employeeAccount, ivIcon, options);
+        //imageLoader.clearMemoryCache();
+        //imageLoader.clearDiskCache();
+        //imageLoader.displayImage(Contants.URl.HEAD_ICON_URL + "avatar?uid=" + UserInfo.employeeAccount, ivIcon, options);
+
+        String url = Contants.URl.HEAD_ICON_URL + "avatar?uid=" + UserInfo.employeeAccount;
+        Glide.with(this).load(url)
+                .apply(new RequestOptions()
+                        .diskCacheStrategy(DiskCacheStrategy.RESOURCE))
+                .into(ivIcon);
+
         messageView1.freshView(0);
     }
 

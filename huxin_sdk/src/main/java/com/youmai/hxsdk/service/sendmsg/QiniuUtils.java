@@ -85,7 +85,7 @@ public class QiniuUtils {
                     String token = resp.getD().getUpToken();
                     Map<String, String> params = new HashMap<>();
                     params.put("x:type", "2");
-                    params.put("x:msisdn", HuxinSdkManager.instance().getUuid());
+                    params.put("x:msisdn", "18664992691");
                     UploadOptions options = new UploadOptions(params, null,
                             false, progressHandler,
                             new UpCancellationSignal() {

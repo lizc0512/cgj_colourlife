@@ -43,6 +43,8 @@ public class SearchContactAdapter extends RecyclerView.Adapter<RecyclerView.View
     public static final int mIndexForContact = 5;
 
     private Map<Integer, Contact> mCacheMap;
+    private Map<String, Contact> mTotalMap = new HashMap<>();
+    private Map<String, Contact> groupMap = new HashMap<>();
 
     private Context mContext;
     private int mCollectIndex = 5;
@@ -67,14 +69,19 @@ public class SearchContactAdapter extends RecyclerView.Adapter<RecyclerView.View
         return mCacheMap;
     }
 
-    Map<String, Contact> totalMap = new HashMap<>();
+    //刷Adapter
     public void setCacheMap(Map<String, Contact> map) {
-        this.totalMap = map;
+        this.mTotalMap = map;
         notifyDataSetChanged();
     }
 
+    //不刷Adapter
     public void setMap(Map<String, Contact> map) {
-        this.totalMap = map;
+        this.mTotalMap = map;
+    }
+
+    public void setGroupMap(Map<String, Contact> map) {
+        this.groupMap = map;
     }
 
     @Override
@@ -113,6 +120,14 @@ public class SearchContactAdapter extends RecyclerView.Adapter<RecyclerView.View
                 int icon = defaultIcon(position);
                 ((ContactHolder) holder).iv_header.setImageResource(icon);
                 ((ContactHolder) holder).cb_collect.setVisibility(View.GONE);
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (null != itemEventListener) {
+                            itemEventListener.onItemClick(position, contact);
+                        }
+                    }
+                });
             } else {
                 if (null != mCacheMap) {
                     if (mCollectIndex == mIndexForCollect) {
@@ -121,19 +136,15 @@ public class SearchContactAdapter extends RecyclerView.Adapter<RecyclerView.View
                         ((ContactHolder) holder).cb_collect.setVisibility(View.GONE);
                     }
 
-                    Log.d("YW", "position: " + position + "\tsize：" + mCacheMap.size() + "\t" +
-                            (mCacheMap.get(position) != null ? mCacheMap.get(position).toString() : "空"));
-
-                    /*if (mCacheMap.get(position) != null) {
-                        ((ContactHolder) holder).cb_collect.setChecked(true);
+                    if (null != groupMap && null != groupMap.get(contact.getUuid())) {
+                        ((ContactHolder) holder).cb_collect.setButtonDrawable(R.drawable.contact_select_def);
                     } else {
-                        ((ContactHolder) holder).cb_collect.setChecked(false);
-                    }*/
-
-                    if (totalMap.get(contact.getUuid()) != null) {
-                        ((ContactHolder) holder).cb_collect.setChecked(true);
-                    } else {
-                        ((ContactHolder) holder).cb_collect.setChecked(false);
+                        ((ContactHolder) holder).cb_collect.setButtonDrawable(R.drawable.contacts_select_selector);
+                        if (mTotalMap.get(contact.getUuid()) != null) {
+                            ((ContactHolder) holder).cb_collect.setChecked(true);
+                        } else {
+                            ((ContactHolder) holder).cb_collect.setChecked(false);
+                        }
                     }
                 }
 
@@ -151,32 +162,33 @@ public class SearchContactAdapter extends RecyclerView.Adapter<RecyclerView.View
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-            }
 
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (null != itemEventListener) {
-                        itemEventListener.onItemClick(position, contact);
-                    }
-                    if (position > mCollectIndex && null != mCacheMap) {
-                        if (((ContactHolder) holder).cb_collect.isChecked()) {
-                            mCacheMap.remove(position);
-                            ((ContactHolder) holder).cb_collect.setChecked(false);
-                        } else {
-                            mCacheMap.put(position, contact);
-                            ((ContactHolder) holder).cb_collect.setChecked(true);
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (position > mCollectIndex && null != mCacheMap) {
+                            if (null != groupMap && null != groupMap.get(contact.getUuid())) {
+                                return;
+                            }
+                            if (((ContactHolder) holder).cb_collect.isChecked()) {
+                                mCacheMap.remove(position);
+                                ((ContactHolder) holder).cb_collect.setChecked(false);
+                            } else {
+                                mCacheMap.put(position, contact);
+                                ((ContactHolder) holder).cb_collect.setChecked(true);
+                            }
+                            Intent intent = new Intent(AddContactsCreateGroupActivity.BROADCAST_FILTER);
+                            intent.putExtra(AddContactsCreateGroupActivity.ACTION, AddContactsCreateGroupActivity.ADAPTER_CONTACT);
+                            intent.putExtra("bean", contact);
+                            LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
+                            if (null != itemEventListener) {
+                                itemEventListener.onItemClick(position, contact);
+                                itemEventListener.collectCount(mCacheMap.size());
+                            }
                         }
-                        Intent intent = new Intent(AddContactsCreateGroupActivity.BROADCAST_FILTER);
-                        intent.putExtra(AddContactsCreateGroupActivity.ACTION, AddContactsCreateGroupActivity.ADAPTER_CONTACT);
-                        intent.putExtra("bean", contact);
-                        LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
-                        if (null != itemEventListener) {
-                            itemEventListener.collectCount(mCacheMap.size());
-                        }
                     }
-                }
-            });
+                });
+            }
 
             if (contact.getRealname().startsWith("↑##@@**") && position <= mCollectIndex) {
                 ((ContactHolder) holder).tv_name.setText(contact.getRealname().substring(9));
@@ -236,7 +248,7 @@ public class SearchContactAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         public HeaderHolder(View itemView) {
             super(itemView);
-            tv_header = (TextView) itemView.findViewById(R.id.tv_header);
+            tv_header = itemView.findViewById(R.id.tv_header);
         }
     }
 
@@ -245,7 +257,7 @@ public class SearchContactAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         public CollectHolder(View itemView) {
             super(itemView);
-            tv_name = (TextView) itemView.findViewById(R.id.tv_name);
+            tv_name = itemView.findViewById(R.id.tv_name);
         }
     }
 
@@ -256,8 +268,8 @@ public class SearchContactAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         public ContactHolder(View itemView) {
             super(itemView);
-            iv_header = (ImageView) itemView.findViewById(R.id.iv_header);
-            tv_name = (TextView) itemView.findViewById(R.id.tv_name);
+            iv_header = itemView.findViewById(R.id.iv_header);
+            tv_name = itemView.findViewById(R.id.tv_name);
             cb_collect = itemView.findViewById(R.id.cb_collect);
         }
     }

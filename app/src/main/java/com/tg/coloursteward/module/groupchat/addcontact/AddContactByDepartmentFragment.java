@@ -119,6 +119,10 @@ public class AddContactByDepartmentFragment extends Fragment
         }
     }
 
+    public void setGroupMap(Map<String, Contact> map) {
+        mAdapter.setGroupMap(map);
+    }
+
     @Override
     public void onRequestStart(Message msg, String hintString) {
 

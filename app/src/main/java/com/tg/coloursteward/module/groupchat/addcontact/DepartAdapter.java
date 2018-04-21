@@ -36,6 +36,7 @@ public class DepartAdapter extends RecyclerView.Adapter {
     private Context mContext;
     private List<Contact> mDataList;
     private Map<String, Contact> mTotalMap = new HashMap<>();
+    private Map<String, Contact> groupMap = new HashMap<>();
 
     public DepartAdapter(Context context) {
         this.mContext = context;
@@ -54,6 +55,10 @@ public class DepartAdapter extends RecyclerView.Adapter {
     public void setCacheMap(Map<String, Contact> map) {
         mTotalMap = map;
         notifyDataSetChanged();
+    }
+
+    public void setGroupMap(Map<String, Contact> map) {
+        this.groupMap = map;
     }
 
     @Override
@@ -75,10 +80,15 @@ public class DepartAdapter extends RecyclerView.Adapter {
         final Contact contact = mDataList.get(position);
         searchItemHolder.search_name.setText(contact.getRealname());
 
-        if (mTotalMap.get(contact.getUuid()) != null) {
-            searchItemHolder.cb_collect.setChecked(true);
+        if (null != groupMap && null != groupMap.get(contact.getUuid())) {
+            searchItemHolder.cb_collect.setButtonDrawable(com.youmai.hxsdk.R.drawable.contact_select_def);
         } else {
-            searchItemHolder.cb_collect.setChecked(false);
+            searchItemHolder.cb_collect.setButtonDrawable(com.youmai.hxsdk.R.drawable.contacts_select_selector);
+            if (mTotalMap.get(contact.getUuid()) != null) {
+                searchItemHolder.cb_collect.setChecked(true);
+            } else {
+                searchItemHolder.cb_collect.setChecked(false);
+            }
         }
 
         try {
@@ -100,6 +110,9 @@ public class DepartAdapter extends RecyclerView.Adapter {
             @Override
             public void onClick(View v) {
                 if (null != mTotalMap) {
+                    if (null != groupMap && null != groupMap.get(contact.getUuid())) {
+                        return;
+                    }
                     if (mTotalMap.get(contact.getUuid()) != null) {
                         searchItemHolder.cb_collect.setChecked(false);
                     } else {
@@ -109,7 +122,6 @@ public class DepartAdapter extends RecyclerView.Adapter {
                     intent.putExtra(AddContactsCreateGroupActivity.ACTION, AddContactsCreateGroupActivity.DEPART_CONTACT);
                     intent.putExtra("bean", contact);
                     LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
-
                 }
             }
         });

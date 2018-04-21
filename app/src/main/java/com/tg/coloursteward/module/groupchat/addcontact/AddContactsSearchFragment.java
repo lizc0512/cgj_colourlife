@@ -154,9 +154,11 @@ public class AddContactsSearchFragment<T extends Parcelable> extends SearchFragm
         this.mListener = listener;
     }
 
-    Map<String, Contact> totalMap = new HashMap<>();
     public void setMap(Map<String, Contact> map) {
-        totalMap = map;
-        mSearchAdapter.setCacheMap(totalMap);
+        mSearchAdapter.setCacheMap(map);
+    }
+
+    public void setGroupMap(Map<String, Contact> map) {
+        mSearchAdapter.setGroupMap(map);
     }
 }

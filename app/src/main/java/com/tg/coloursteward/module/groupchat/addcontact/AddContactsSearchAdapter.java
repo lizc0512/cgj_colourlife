@@ -107,6 +107,11 @@ public class AddContactsSearchAdapter<T> extends RecyclerView.Adapter<RecyclerVi
         totalMap = map;
     }
 
+    Map<String, Contact> groupMap = new HashMap<>();
+    public void setGroupMap(Map<String, Contact> map) {
+        groupMap = map;
+    }
+
     public void setArrayList(ArrayList<T> arrayList) {
         this.mDataList = arrayList;
         notifyDataSetChanged();
@@ -136,7 +141,7 @@ public class AddContactsSearchAdapter<T> extends RecyclerView.Adapter<RecyclerVi
         if (holder instanceof AddContactsSearchAdapter.SearchItem) {
 
             SearchItem searchItemHolder = (SearchItem) holder;
-            SearchContactBean model = (SearchContactBean) mDataList.get(finalPosition);
+            final SearchContactBean model = (SearchContactBean) mDataList.get(finalPosition);
             searchItemHolder.search_name.setText(model.getDisplayName());
 
             if ((mItemInnerType == AddContactsSearchAdapter.ITEM_INNER_MORE) && (model.getNextBean() != null)) {
@@ -181,18 +186,13 @@ public class AddContactsSearchAdapter<T> extends RecyclerView.Adapter<RecyclerVi
                         SpannableStringBuilder builder = new SpannableStringBuilder(displayName);
 
                         List<Integer> integers = PinYinUtils.match2(displayName, queryString);
-                        Log.e("YW", "i begin");
+                        Log.d("YW", "i begin");
                         int start = 0;
                         int end = 0;
 
                         if (!ListUtils.isEmpty(integers)) {
                             start = integers.get(0);
                             end = integers.get(integers.size() - 1);
-                        }
-
-                        Log.e("YW", "start: " + start + "\tend: " + end);
-                        for (Integer i : integers) {
-                            Log.e("YW", "i: " + i);
                         }
 
                         builder.setSpan(new ForegroundColorSpan(highlightColor),
@@ -214,22 +214,32 @@ public class AddContactsSearchAdapter<T> extends RecyclerView.Adapter<RecyclerVi
                 }
             }
 
-            if (totalMap.get(model.getUuid()) != null) {
-                searchItemHolder.cb_collect.setChecked(true);
+//            if (totalMap.get(model.getUuid()) != null) {
+//                searchItemHolder.cb_collect.setChecked(true);
+//            } else {
+//                searchItemHolder.cb_collect.setChecked(false);
+//            }
+
+            if (null != groupMap && null != groupMap.get(model.getUuid())) {
+                searchItemHolder.cb_collect.setButtonDrawable(R.drawable.contact_select_def);
             } else {
-                searchItemHolder.cb_collect.setChecked(false);
+                searchItemHolder.cb_collect.setButtonDrawable(R.drawable.contacts_select_selector);
+                if (totalMap.get(model.getUuid()) != null) {
+                    searchItemHolder.cb_collect.setChecked(true);
+                } else {
+                    searchItemHolder.cb_collect.setChecked(false);
+                }
             }
 
-            RequestOptions options = new RequestOptions();
-            options.diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-                    .centerCrop()
-                    .override(60, 60)
-                    .transform(new GlideRoundTransform(mContext))
-                    .placeholder(R.drawable.contacts_common_default_user_bg)
-                    .error(R.drawable.contacts_common_default_user_bg);
             Glide.with(mContext)
                     .load(model.getIconUrl())
-                    .apply(options)
+                    .apply(new RequestOptions()
+                            .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+                            .centerCrop()
+                            .override(60, 60)
+                            .transform(new GlideRoundTransform(mContext))
+                            .placeholder(R.drawable.color_default_header)
+                            .error(R.drawable.color_default_header))
                     .into(searchItemHolder.search_icon);
 
             searchItemHolder.search_item.setTag(finalPosition);

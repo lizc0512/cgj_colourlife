@@ -21,12 +21,10 @@ import android.widget.Toast;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.google.protobuf.InvalidProtocolBufferException;
-import com.tg.coloursteward.HomeContactOrgActivity;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.info.FamilyInfo;
 import com.tg.coloursteward.info.UserInfo;
-import com.tg.coloursteward.module.contact.ContactsFragment;
 import com.tg.coloursteward.module.contact.stickyheader.StickyHeaderDecoration;
 import com.tg.coloursteward.module.contact.utils.ContactsBindData;
 import com.tg.coloursteward.module.contact.widget.CharIndexView;
@@ -81,6 +79,7 @@ import rx.schedulers.Schedulers;
 public class AddContactsCreateGroupActivity extends SdkBaseActivity
         implements MessageHandler.ResponseListener, SearchContactAdapter.ItemEventListener {
 
+    public static final String GROUP_LIST = "GROUP_LIST";
     private static final String TAG_SEARCH_CONTACT_FRAGMENT = "search_contact_fragment";
     private static final String TAG_DEPART_CONTACT_FRAGMENT = "depart_contact_fragment";
 
@@ -111,6 +110,8 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
     private Subscription subscription;
     private ContactsBindData bindData;
 
+    private ArrayList<Contact> mContactList;
+
     private AddContactBySearchFragment searchGroupFragment;
     private AddContactByDepartmentFragment departmentFragment;
 
@@ -139,7 +140,7 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
             } else if (action.equals(SEARCH_CONTACT)) {
                 Contact bean = intent.getParcelableExtra("bean");
                 mActivity.hide();
-                mActivity.updateCacheMap(bean, true);
+                mActivity.updateCacheMap(bean, true, false);
                 Log.e("YW", "收藏联系人有更新的信息到达......" + bean.toString());
             } else if (action.equals(DEPART_CONTACT)) {
                 Contact bean = intent.getParcelableExtra("bean");
@@ -148,8 +149,12 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
         }
     }
 
-    void updateCacheMap(Contact contact, boolean is) {
-        if (mTotalMap.containsKey(contact.getUuid())) {
+    void updateCacheMap(Contact contact, boolean isFreshAdapter) {
+        updateCacheMap(contact, isFreshAdapter, true);
+    }
+
+    void updateCacheMap(Contact contact, boolean isFreshAdapter, boolean type) {
+        if (mTotalMap.containsKey(contact.getUuid()) && type) {
             mTotalMap.remove(contact.getUuid());
         } else {
             mTotalMap.put(contact.getUuid(), contact);
@@ -158,7 +163,7 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
 
         tv_Sure.setText("完成(" + mTotalMap.size() + ")");
 
-        if (is) {
+        if (isFreshAdapter) {
             adapter.setCacheMap(mTotalMap);
         } else {
             adapter.setMap(mTotalMap);
@@ -217,6 +222,11 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
         }
         registerReceiver();
 
+        mContactList = getIntent().getParcelableArrayListExtra(GROUP_LIST);
+        if (!ListUtils.isEmpty(mContactList)) {
+            initGroupMap();
+        }
+
         //标题
         tv_Cancel = findViewById(R.id.tv_left_cancel);
         tv_Sure = findViewById(R.id.tv_right_sure);
@@ -232,6 +242,8 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
         adapter = new SearchContactAdapter(this, contactList, adapter.mIndexForCollect, this);
         rv_main.setAdapter(adapter);
         rv_main.addItemDecoration(new StickyHeaderDecoration(adapter));
+
+        adapter.setGroupMap(mGroupMap);
 
         bindData = ContactsBindData.init();
 
@@ -253,6 +265,15 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
         initView();
         initEdit();
         setListener();
+    }
+
+    Map<String, Contact> mGroupMap = new HashMap<>();
+
+    void initGroupMap() {
+        for (Contact contact : mContactList) {
+            mGroupMap.put(contact.getUuid(), contact);
+            mTotalMap.put(contact.getUuid(), contact);
+        }
     }
 
     void hide() {
@@ -286,6 +307,7 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
                     searchGroupFragment.add(s.toString());
                 }
                 searchGroupFragment.setMap(mTotalMap);
+                searchGroupFragment.setGroupMap(mGroupMap);
             }
 
             @Override
@@ -606,6 +628,7 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 transaction.show(departmentFragment);
                 transaction.commit();
+                departmentFragment.setGroupMap(mGroupMap);
                 departmentFragment.setMap(mTotalMap);
                 break;
             case 1:

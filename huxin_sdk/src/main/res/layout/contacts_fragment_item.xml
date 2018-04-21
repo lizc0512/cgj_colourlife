@@ -7,13 +7,11 @@
 
     <CheckBox
         android:id="@+id/cb_collect"
-        android:layout_width="30dp"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_centerVertical="true"
         android:layout_marginLeft="10dp"
-        android:paddingTop="20dp"
-        android:drawableTop="@drawable/contacts_select_selector"
-        android:button="@null"
+        android:button="@drawable/contacts_select_selector"
         android:clickable="false"
         android:visibility="gone" />
 

@@ -105,4 +105,8 @@ public class AddContactBySearchFragment extends Fragment {
         mSearchFragment.setMap(map);
     }
 
+    public void setGroupMap(Map<String, Contact> map) {
+        mSearchFragment.setGroupMap(map);
+    }
+
 }

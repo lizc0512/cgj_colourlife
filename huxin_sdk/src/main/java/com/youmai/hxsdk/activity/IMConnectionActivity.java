@@ -472,8 +472,9 @@ public class IMConnectionActivity extends SdkBaseActivity implements
             public void onClick(View v) {
                 Intent intent = new Intent();
                 intent.setClass(IMConnectionActivity.this, ChatDetailsActivity.class);
-                intent.putExtra(DST_NAME, dstNickName);
-                intent.putExtra(ChatDetailsActivity.USER_AVATAR, dstAvatar);
+                intent.putExtra(ChatDetailsActivity.DS_NAME, dstNickName);
+                intent.putExtra(ChatDetailsActivity.DS_USER_AVATAR, dstAvatar);
+                intent.putExtra(ChatDetailsActivity.DS_UUID, dstUuid);
                 startActivity(intent);
             }
         });

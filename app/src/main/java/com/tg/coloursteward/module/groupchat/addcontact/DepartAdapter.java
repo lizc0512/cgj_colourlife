@@ -128,10 +128,10 @@ public class DepartAdapter extends RecyclerView.Adapter {
 
         public SearchItem(View itemView) {
             super(itemView);
-            cb_collect = itemView.findViewById(com.youmai.hxsdk.R.id.cb_collect);
-            search_icon = itemView.findViewById(com.youmai.hxsdk.R.id.global_search_icon);
-            search_name = itemView.findViewById(com.youmai.hxsdk.R.id.global_search_name);
-            search_item = itemView.findViewById(com.youmai.hxsdk.R.id.global_search_item);
+            cb_collect = itemView.findViewById(R.id.cb_collect);
+            search_icon = itemView.findViewById(R.id.global_search_icon);
+            search_name = itemView.findViewById(R.id.global_search_name);
+            search_item = itemView.findViewById(R.id.global_search_item);
         }
     }
 

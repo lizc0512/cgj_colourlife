@@ -90,6 +90,38 @@ public class CacheMsgHelper {
      * 查询与某人的聊天历史记录
      *
      * @param context
+     * @param groupId
+     * @param setRead 是否将未读消息置为已读消息
+     * @return
+     */
+    public List<CacheMsgBean> toQueryCacheMsgListAndSetRead(Context context, int groupId, boolean setRead) {
+        CacheMsgBeanDao cacheMsgBeanDao = GreenDBIMManager.instance(context).getCacheMsgDao();
+        QueryBuilder<CacheMsgBean> qb = cacheMsgBeanDao.queryBuilder();
+
+        List<CacheMsgBean> list = qb.where(CacheMsgBeanDao.Properties.GroupId.eq(groupId))
+                .orderAsc(CacheMsgBeanDao.Properties.MsgTime).list();
+
+        if (setRead) {
+            List<CacheMsgBean> unReadList = new ArrayList<>();
+            for (CacheMsgBean checkBean : list) {
+                if (checkBean.getMsgStatus() == CacheMsgBean.RECEIVE_UNREAD) {
+                    checkBean.setMsgStatus(CacheMsgBean.RECEIVE_READ);
+                    unReadList.add(checkBean);
+                }
+            }
+            if (unReadList.size() > 0) {
+                CacheMsgHelper.instance().updateList(context, unReadList);
+            }
+        }
+
+        return list;
+    }
+
+
+    /**
+     * 查询与某人的聊天历史记录
+     *
+     * @param context
      * @param desUuid
      * @return
      */
@@ -233,6 +265,28 @@ public class CacheMsgHelper {
                 .orderAsc(CacheMsgBeanDao.Properties.Id).list();
     }
 
+
+    /**
+     * 备注：IMMsgManager
+     * 按 id升序查询
+     * id>? and ((receiver_phone=? and sender_phone=?) or (sender_phone=? and receiver_phone=?))
+     *
+     * @param statIndex
+     * @param groupId
+     * @param selfUuid
+     * @return
+     */
+    public List<CacheMsgBean> toQueryOrAscById(Context context, long statIndex, int groupId, String selfUuid) {
+        QueryBuilder<CacheMsgBean> qb = GreenDBIMManager.instance(context).getCacheMsgDao().queryBuilder();
+
+        WhereCondition condition = qb.and(CacheMsgBeanDao.Properties.GroupId.eq(groupId),
+                CacheMsgBeanDao.Properties.ReceiverUserId.eq(selfUuid),
+                CacheMsgBeanDao.Properties.Id.gt(statIndex));
+
+        return qb.where(condition).orderAsc(CacheMsgBeanDao.Properties.Id).list();
+    }
+
+
     /**
      * 备注：IMListAdapter
      *
@@ -279,6 +333,30 @@ public class CacheMsgHelper {
 
         return list;
     }
+
+
+    public List<CacheMsgBean> getCacheMsgBeanListFromStartIndex(Context context, long startIndex,
+                                                                int groupId, boolean setRead) {
+        String selfUuid = HuxinSdkManager.instance().getUuid();
+        List<CacheMsgBean> list =
+                CacheMsgHelper.instance().toQueryOrAscById(context, startIndex, groupId, selfUuid);
+
+        if (setRead) {
+            List<CacheMsgBean> unReadList = new ArrayList<>();
+            for (CacheMsgBean checkBean : list) {
+                if (checkBean.getMsgStatus() == CacheMsgBean.RECEIVE_UNREAD) {
+                    checkBean.setMsgStatus(CacheMsgBean.RECEIVE_READ);
+                    unReadList.add(checkBean);
+                }
+            }
+            if (unReadList.size() > 0) {
+                CacheMsgHelper.instance().updateList(context, unReadList);
+            }
+        }
+
+        return list;
+    }
+
 
     public int getUnreadCacheMsgBeanListCount(final Context context, String dstUuid) {
         CacheMsgBeanDao cacheMsgBeanDao = GreenDBIMManager.instance(context).getCacheMsgDao();

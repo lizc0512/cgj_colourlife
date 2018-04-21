@@ -1004,31 +1004,6 @@ public class IMListAdapter extends RecyclerView.Adapter {
     }
 
 
-    public void loadAfterList() {
-        long startId = -1;
-        if (getItemCount() > 0) {
-            startId = mImBeanList.get(getItemCount() - 1).getId();
-        }
-
-        List<CacheMsgBean> unReadList = CacheMsgHelper.instance().getCacheMsgBeanListFromStartIndex(
-                mAct, startId, mDstUuid, true);
-
-        if (unReadList.size() > 0) {
-            if (getItemCount() > 0) {
-                CacheMsgBean lastMsgBean = mImBeanList.get(getItemCount() - 1);
-                List<CacheMsgBean> lastListBean = CacheMsgHelper.instance().toQueryDescById(mAct, lastMsgBean.getId());
-
-                if (lastListBean.size() > 0) {
-                    //重新处理最后一条的沟通卡状态
-                    mImBeanList.set(getItemCount() - 1, lastListBean.get(0));
-                }
-                notifyItemChanged(getItemCount() - 1);
-            }
-            mImBeanList.addAll(unReadList);
-            focusBottom(false);
-        }
-    }
-
     //发送消息的刷新
     public void addAndRefreshUI(CacheMsgBean cacheMsgBean) {
         //add to db

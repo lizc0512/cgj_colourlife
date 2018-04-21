@@ -51,7 +51,6 @@ public class SendMsgService extends IntentService {
 
     public static final int SEND_MSG_END = 200;//该消息的发送流程结束
 
-    public static final String ACTION_DOWNLOAD_VIDEO = "download.service.video";
     public static final String ACTION_SEND_MSG = "service.send.msg";
     public static final String ACTION_UPDATE_MSG = "service.update.msg";
 

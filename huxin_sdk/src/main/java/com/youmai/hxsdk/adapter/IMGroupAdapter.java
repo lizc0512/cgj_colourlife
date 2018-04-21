@@ -103,7 +103,7 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
 
     private Activity mAct;
     private RecyclerView mRecyclerView;
-    private String mDstUuid;
+    private int mGroupId;
     private List<CacheMsgBean> mImBeanList;
     public int mThemeIndex = -1;
 
@@ -116,15 +116,15 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
     private OnClickMoreListener moreListener;
     private UIHandler mHandler;
 
-    public IMGroupAdapter(Activity act, RecyclerView recyclerView, String dstUuid) {
+    public IMGroupAdapter(Activity act, RecyclerView recyclerView, int groupId) {
         mAct = act;
         mHandler = new UIHandler(this);
 
         mRecyclerView = recyclerView;
-        mDstUuid = dstUuid;
+        mGroupId = groupId;
         //srsm add
 
-        mImBeanList = CacheMsgHelper.instance().toQueryCacheMsgListAndSetRead(mAct, dstUuid, true);
+        mImBeanList = CacheMsgHelper.instance().toQueryCacheMsgListAndSetRead(mAct, groupId, true);
 
         mRecyclerView.getItemAnimator().setChangeDuration(0);
         mRecyclerView.getItemAnimator().setAddDuration(0);
@@ -1004,31 +1004,6 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
         }
     }
 
-
-    public void loadAfterList() {
-        long startId = -1;
-        if (getItemCount() > 0) {
-            startId = mImBeanList.get(getItemCount() - 1).getId();
-        }
-
-        List<CacheMsgBean> unReadList = CacheMsgHelper.instance().getCacheMsgBeanListFromStartIndex(
-                mAct, startId, mDstUuid, true);
-
-        if (unReadList.size() > 0) {
-            if (getItemCount() > 0) {
-                CacheMsgBean lastMsgBean = mImBeanList.get(getItemCount() - 1);
-                List<CacheMsgBean> lastListBean = CacheMsgHelper.instance().toQueryDescById(mAct, lastMsgBean.getId());
-
-                if (lastListBean.size() > 0) {
-                    //重新处理最后一条的沟通卡状态
-                    mImBeanList.set(getItemCount() - 1, lastListBean.get(0));
-                }
-                notifyItemChanged(getItemCount() - 1);
-            }
-            mImBeanList.addAll(unReadList);
-            focusBottom(false);
-        }
-    }
 
     //发送消息的刷新
     public void addAndRefreshUI(CacheMsgBean cacheMsgBean) {

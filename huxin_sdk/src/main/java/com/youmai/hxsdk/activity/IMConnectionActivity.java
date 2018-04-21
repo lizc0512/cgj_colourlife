@@ -180,24 +180,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            if (SendMsgService.ACTION_DOWNLOAD_VIDEO.equals(action)) {
-                //视频下载的通知
-                FileQueue fileQueue = intent.getParcelableExtra("data");
-                String phone = fileQueue.getPhone();
-                int pro = fileQueue.getPro();
-                if (TextUtils.equals(dstUuid, phone)) {
-                    if (pro == 100) {
-                        //下载完成,刷新ui
-                        refreshFinishVideo(fileQueue);
-                    } else if (pro == -1) {
-                        //下载失败
-                        Toast.makeText(context, "下载失败，请重新尝试", Toast.LENGTH_SHORT).show();
-                        imListAdapter.refreshItemUI(fileQueue.getMid(), fileQueue.getPro());//不用查数据库
-                    } else {
-                        imListAdapter.refreshItemUI(fileQueue.getMid(), fileQueue.getPro());//不用查数据库
-                    }
-                }
-            } else if (SendMsgService.ACTION_SEND_MSG.equals(action)) {
+            if (SendMsgService.ACTION_SEND_MSG.equals(action)) {
                 //消息发送的通知
                 SendMsg sendMsg = intent.getParcelableExtra("data");
                 CacheMsgBean cacheMsgBean = sendMsg.getMsg();
@@ -205,9 +188,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
 
                 if (!isPauseOut && TextUtils.equals(sendMsg.getFrom(), SendMsgService.FROM_IM)) {
                     String type = intent.hasExtra("type") ? intent.getStringExtra("type") : null;
-                    if (TextUtils.equals(type, SendMsgService.NOT_NETWORK)) {
-                    } else if (TextUtils.equals(type, SendMsgService.NOT_HUXIN_USER)) {
-                    } else if (TextUtils.equals(type, SendMsgService.NOT_TCP_CONNECT)) {
+                    if (TextUtils.equals(type, SendMsgService.NOT_TCP_CONNECT)) {
                         //tcp尚未连接
                         showTcpTipDialog();
                     }
@@ -279,7 +260,6 @@ public class IMConnectionActivity extends SdkBaseActivity implements
         mLocalMsgReceiver = new LocalMsgReceiver();
 
         IntentFilter filter = new IntentFilter();
-        filter.addAction(SendMsgService.ACTION_DOWNLOAD_VIDEO);
         filter.addAction(SendMsgService.ACTION_SEND_MSG);
         filter.addAction(SendMsgService.ACTION_UPDATE_MSG);
         localBroadcastManager.registerReceiver(mLocalMsgReceiver, filter);
@@ -596,7 +576,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
             public void deleteMsgCallback(int type) {
                 if (!isFinishing()) {
                     Intent intent = new Intent();
-                    intent.putExtra("updatePhone", dstUuid);
+                    intent.putExtra("dstUuid", dstUuid);
                     intent.putExtra("isDeleteMsgType", type);
                     setResult(Activity.RESULT_OK, intent);
                 }

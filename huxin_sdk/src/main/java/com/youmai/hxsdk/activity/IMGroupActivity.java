@@ -145,9 +145,8 @@ public class IMGroupActivity extends SdkBaseActivity implements
     private ImageView ivMore;
     private ImageView ivGroup; //建群
 
-    private String dstNickName;  //目标昵称
-    private String groupId;      //目标groupId
-    private String dstPhone;      //目标手机号
+    private String groupName;  //群组名称
+    private int groupId;      //群组ID
 
     private boolean isPauseOut = false;
     private boolean isOpenEmotion = false;
@@ -178,24 +177,7 @@ public class IMGroupActivity extends SdkBaseActivity implements
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            if (SendMsgService.ACTION_DOWNLOAD_VIDEO.equals(action)) {
-                //视频下载的通知
-                FileQueue fileQueue = intent.getParcelableExtra("data");
-                String phone = fileQueue.getPhone();
-                int pro = fileQueue.getPro();
-                if (TextUtils.equals(groupId, phone)) {
-                    if (pro == 100) {
-                        //下载完成,刷新ui
-                        refreshFinishVideo(fileQueue);
-                    } else if (pro == -1) {
-                        //下载失败
-                        Toast.makeText(context, "下载失败，请重新尝试", Toast.LENGTH_SHORT).show();
-                        iMGroupAdapter.refreshItemUI(fileQueue.getMid(), fileQueue.getPro());//不用查数据库
-                    } else {
-                        iMGroupAdapter.refreshItemUI(fileQueue.getMid(), fileQueue.getPro());//不用查数据库
-                    }
-                }
-            } else if (SendMsgService.ACTION_SEND_MSG.equals(action)) {
+            if (SendMsgService.ACTION_SEND_MSG.equals(action)) {
                 //消息发送的通知
                 SendMsg sendMsg = intent.getParcelableExtra("data");
                 CacheMsgBean cacheMsgBean = sendMsg.getMsg();
@@ -203,9 +185,7 @@ public class IMGroupActivity extends SdkBaseActivity implements
 
                 if (!isPauseOut && TextUtils.equals(sendMsg.getFrom(), SendMsgService.FROM_IM)) {
                     String type = intent.hasExtra("type") ? intent.getStringExtra("type") : null;
-                    if (TextUtils.equals(type, SendMsgService.NOT_NETWORK)) {
-                    } else if (TextUtils.equals(type, SendMsgService.NOT_HUXIN_USER)) {
-                    } else if (TextUtils.equals(type, SendMsgService.NOT_TCP_CONNECT)) {
+                    if (TextUtils.equals(type, SendMsgService.NOT_TCP_CONNECT)) {
                         //tcp尚未连接
                         showTcpTipDialog();
                     }
@@ -261,9 +241,8 @@ public class IMGroupActivity extends SdkBaseActivity implements
 
         Intent fromIntent = getIntent();
 
-        dstNickName = fromIntent.getStringExtra(DST_NAME);
-        groupId = fromIntent.getStringExtra(DST_UUID);
-        dstPhone = fromIntent.getStringExtra(DST_PHONE);
+        groupName = fromIntent.getStringExtra(DST_NAME);
+        groupId = fromIntent.getIntExtra(DST_UUID, 0);
 
         mScrollPosition = fromIntent.getLongExtra(EXTRA_SCROLL_POSITION, 0);
 
@@ -272,7 +251,6 @@ public class IMGroupActivity extends SdkBaseActivity implements
         mLocalMsgReceiver = new LocalMsgReceiver();
 
         IntentFilter filter = new IntentFilter();
-        filter.addAction(SendMsgService.ACTION_DOWNLOAD_VIDEO);
         filter.addAction(SendMsgService.ACTION_SEND_MSG);
         filter.addAction(SendMsgService.ACTION_UPDATE_MSG);
         localBroadcastManager.registerReceiver(mLocalMsgReceiver, filter);
@@ -301,15 +279,15 @@ public class IMGroupActivity extends SdkBaseActivity implements
 
 
         PickerManager.getInstance().setRefreshUIListener(this);
-        IMMsgManager.instance().removeBadge(groupId);
+        IMMsgManager.instance().removeBadge(groupId + "");
     }
 
     public void handleIntent(Intent intent) {
-        dstNickName = intent.getStringExtra(DST_NAME);
-        groupId = intent.getStringExtra(DST_UUID);
+        groupName = intent.getStringExtra(DST_NAME);
+        groupId = intent.getIntExtra(DST_UUID, 0);
 
-        if (!TextUtils.isEmpty(dstNickName)) {
-            tvTitle.setText(dstNickName);
+        if (!TextUtils.isEmpty(groupName)) {
+            tvTitle.setText(groupName);
         }
     }
 
@@ -442,7 +420,7 @@ public class IMGroupActivity extends SdkBaseActivity implements
 
     private void initView() {
         tvTitle = (TextView) findViewById(R.id.tv_title);
-        tvTitle.setText(dstNickName);
+        tvTitle.setText(groupName);
 
         TextView tvBack = (TextView) findViewById(R.id.tv_back);
         if (tvBack != null) {
@@ -585,7 +563,7 @@ public class IMGroupActivity extends SdkBaseActivity implements
             public void deleteMsgCallback(int type) {
                 if (!isFinishing()) {
                     Intent intent = new Intent();
-                    intent.putExtra("updatePhone", groupId);
+                    intent.putExtra("groupId", groupId);
                     intent.putExtra("isDeleteMsgType", type);
                     setResult(Activity.RESULT_OK, intent);
                 }
@@ -661,7 +639,7 @@ public class IMGroupActivity extends SdkBaseActivity implements
         docPaths.clear();
         PickerManager.getInstance().addDocTypes();
         Intent intent = new Intent(this, FileManagerActivity.class);
-        intent.putExtra("dstUuid", groupId);
+        intent.putExtra("groupId", groupId);
         startActivity(intent);
     }
 
@@ -680,9 +658,9 @@ public class IMGroupActivity extends SdkBaseActivity implements
                 .setMsgTime(System.currentTimeMillis())
                 .setMsgStatus(CacheMsgBean.SEND_GOING)
                 .setSenderUserId(HuxinSdkManager.instance().getUuid())
-                .setReceiverUserId(groupId)
-                .setTargetName(dstNickName)
-                .setTargetUuid(groupId);
+                .setGroupId(groupId)
+                .setTargetName(groupName)
+                .setTargetUuid(groupId + "");
     }
 
     /**

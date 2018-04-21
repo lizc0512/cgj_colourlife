@@ -107,6 +107,7 @@ public class GroupListActivity extends BaseActivity {
                     startActivity(intent);
                 } else {
                     Intent intent = new Intent(mContext, IMGroupActivity.class);
+                    intent.putExtra(IMGroupActivity.DST_NAME, bean.getGroup_name());
                     startActivity(intent);
                 }
             }
@@ -124,6 +125,20 @@ public class GroupListActivity extends BaseActivity {
 
     }
 
+
+    private Long findEntityId(int groupId, List<GroupInfoBean> cacheList) {
+        Long id = null;
+        if (cacheList != null && cacheList.size() > 0) {
+            for (GroupInfoBean item : cacheList) {
+                if (item.getGroup_id() == groupId) {
+                    id = item.getId();
+                    break;
+                }
+            }
+
+        }
+        return id;
+    }
 
     private void initData() {
         final List<GroupInfoBean> cacheList = GroupInfoHelper.instance().toQueryGroupList(this);
@@ -151,6 +166,8 @@ public class GroupListActivity extends BaseActivity {
                     if (changeList != null && changeList.size() > 0) {
                         for (YouMaiGroup.GroupInfo item : changeList) {
                             GroupInfoBean bean = new GroupInfoBean();
+
+                            bean.setId(findEntityId(item.getGroupId(), cacheList));
                             bean.setGroup_id(item.getGroupId());
                             bean.setGroup_name(item.getGroupName());
                             bean.setOwner_id(item.getOwnerId());
@@ -161,6 +178,7 @@ public class GroupListActivity extends BaseActivity {
                             bean.setFixtop_priority(item.getFixtopPriority());
                             bean.setNot_disturb(item.getNotDisturb());
                             mGroupList.add(bean);
+
                         }
                         GroupInfoHelper.instance().insertOrUpdate(mContext, mGroupList);
                     }

@@ -85,7 +85,10 @@ public class AppConfig {
     /**
      * http post 文件前，获取文件token
      */
-    public static final String GET_UPLOAD_FILE_TOKEN = getShowHost() + "jhuxin-openapi/qy/fileUpload/upToken";
+    //public static final String GET_UPLOAD_FILE_TOKEN = getShowHost() + "jhuxin-openapi/qy/fileUpload/upToken";
+    //public static final String GET_UPLOAD_FILE_TOKEN = "http://192.168.0.66:8989/czyim-openapi/qy/fileUpload//upToken";
+    public static final String GET_UPLOAD_FILE_TOKEN = "http://api.ihuxin.net/jhuxin-openapi/qy/fileUpload/upToken";
+
 
     /***
      * sign 签名

@@ -534,10 +534,21 @@ public class HuxinSdkManager {
      */
     public void getUploadFileToken(IPostListener callback) {
         String url = AppConfig.GET_UPLOAD_FILE_TOKEN;
-        String uuid = getUuid();
+
+        String imei = "358695075682679";
+        String phoneNum = "18664992691";
+        int uid = 907;
+        String sid = "f713e697f32b1242d7b78d4c63dc1ef5";
 
         ContentValues params = new ContentValues();
-        params.put("userId", uuid);
+        params.put("msisdn", phoneNum);
+        params.put("uid", uid);// 海外登录去除号码验证，只保留数字验证参数issms=3
+        params.put("sid", sid); //保存
+        params.put("termid", imei); //动态
+        params.put("sign", AppConfig.appSign(phoneNum, imei));// 发行的渠道
+        params.put("v", "5");
+        params.put("ps", "-4202-8980600-");
+
         HttpConnector.httpPost(url, params, callback);
     }
 
@@ -995,7 +1006,7 @@ public class HuxinSdkManager {
 
                     Map<String, String> params = new HashMap<>();
                     params.put("x:type", type);
-                    params.put("x:msisdn", getPhoneNum());
+                    params.put("x:msisdn", "18664992691");
                     UploadOptions options = new UploadOptions(params, null, false, progressHandler, null);
 
                     uploadManager.put(file, fidKey, token, completionHandler, options);

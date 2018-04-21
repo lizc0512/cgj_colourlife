@@ -57,6 +57,9 @@ public class AddContactsSearchAdapter<T> extends RecyclerView.Adapter<RecyclerVi
     private String mHeadTitle;
     private String mTailTitle;
 
+    private Map<String, Contact> totalMap = new HashMap<>();
+    private Map<String, Contact> groupMap = new HashMap<>();
+
     public AddContactsSearchAdapter(Context context) {
         mContext = context;
     }
@@ -102,12 +105,10 @@ public class AddContactsSearchAdapter<T> extends RecyclerView.Adapter<RecyclerVi
         return mDataList;
     }
 
-    Map<String, Contact> totalMap = new HashMap<>();
     public void setCacheMap(Map<String, Contact> map) {
         totalMap = map;
     }
 
-    Map<String, Contact> groupMap = new HashMap<>();
     public void setGroupMap(Map<String, Contact> map) {
         groupMap = map;
     }

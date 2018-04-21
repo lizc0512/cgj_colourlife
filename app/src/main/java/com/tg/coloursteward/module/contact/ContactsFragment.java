@@ -78,8 +78,7 @@ import com.youmai.hxsdk.utils.ListUtils;
  * 日期：2018.04.03 11:59
  * 描述：
  */
-public class ContactsFragment extends Fragment implements Observer,
-        ResponseListener, ItemEventListener {
+public class ContactsFragment extends Fragment implements ResponseListener, ItemEventListener {
 
     private static final String TAG = ContactsFragment.class.getName();
 
@@ -168,7 +167,6 @@ public class ContactsFragment extends Fragment implements Observer,
         rv_main.addItemDecoration(new StickyHeaderDecoration(adapter));
 
         bindData = ContactsBindData.init();
-        bindData.addObserver(this);
 
         msgHand = new MessageHandler(getActivity());
         msgHand.setResponseListener(this);
@@ -184,10 +182,13 @@ public class ContactsFragment extends Fragment implements Observer,
             subscription.unsubscribe();
         }
         if (null != bindData) {
-            bindData.deleteObserver(this);
+            bindData.onDestroy();
         }
         if (!ListUtils.isEmpty(contactList)) {
             contactList.clear();
+        }
+        if (!ListUtils.isEmpty(familyList)) {
+            familyList.clear();
         }
         super.onDestroy();
     }
@@ -253,18 +254,6 @@ public class ContactsFragment extends Fragment implements Observer,
     }
 
     /**
-     * 监听联系人数据的更新 - 更改Adapter的数据源
-     *
-     * @param o
-     * @param data
-     */
-    @Override
-    public void update(java.util.Observable o, Object data) {
-        Log.e(TAG, "Observer" + data.toString());
-        System.out.println("Observer" + data.toString());
-    }
-
-    /**
      * item点击
      *
      * @param pos
@@ -272,7 +261,6 @@ public class ContactsFragment extends Fragment implements Observer,
      */
     @Override
     public void onItemClick(int pos, Contact contact) {
-        Toast.makeText(getContext(), "点击position：" + pos, Toast.LENGTH_SHORT).show();
         itemFunction(pos, contact);
     }
 

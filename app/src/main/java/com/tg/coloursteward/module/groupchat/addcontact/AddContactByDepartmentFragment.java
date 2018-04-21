@@ -112,15 +112,12 @@ public class AddContactByDepartmentFragment extends Fragment
         HttpTools.httpGet(Contants.URl.URL_ICETEST, "/phonebook/childDatas",config, params);
     }
 
-    public void setMap(Map<String, Contact> map) {
-        mAdapter.setCacheMap(map);
+    public void setMap(Map<String, Contact> totalMap, Map<String, Contact> groupMap) {
+        mAdapter.setCacheMap(totalMap);
+        mAdapter.setGroupMap(groupMap);
         if (ListUtils.isEmpty(mAdapter.getDataList())) {
             loadDataForNet();
         }
-    }
-
-    public void setGroupMap(Map<String, Contact> map) {
-        mAdapter.setGroupMap(map);
     }
 
     @Override

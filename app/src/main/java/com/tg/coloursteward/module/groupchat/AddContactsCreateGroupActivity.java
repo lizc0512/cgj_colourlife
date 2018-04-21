@@ -80,8 +80,17 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
         implements MessageHandler.ResponseListener, SearchContactAdapter.ItemEventListener {
 
     public static final String GROUP_LIST = "GROUP_LIST";
+
+    //fragment
     private static final String TAG_SEARCH_CONTACT_FRAGMENT = "search_contact_fragment";
     private static final String TAG_DEPART_CONTACT_FRAGMENT = "depart_contact_fragment";
+
+    //广播
+    public static final String BROADCAST_FILTER = "com.tg.coloursteward.searchcontact";
+    public static final String ACTION = "contact_action";
+    public static final String ADAPTER_CONTACT = "adapter";
+    public static final String SEARCH_CONTACT = "search";
+    public static final String DEPART_CONTACT = "department";
 
     private AddContactsCreateGroupActivity mActivity;
     private static final int ISTREAD = 1;
@@ -110,16 +119,11 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
     private Subscription subscription;
     private ContactsBindData bindData;
 
-    private ArrayList<Contact> mContactList;
+    private Map<String, Contact> mGroupMap = new HashMap<>();
+    private ArrayList<Contact> mContactList; //群组成员列表
 
     private AddContactBySearchFragment searchGroupFragment;
     private AddContactByDepartmentFragment departmentFragment;
-
-    public static final String BROADCAST_FILTER = "com.tg.coloursteward.searchcontact";
-    public static final String ACTION = "contact_action";
-    public static final String ADAPTER_CONTACT = "adapter";
-    public static final String SEARCH_CONTACT = "search";
-    public static final String DEPART_CONTACT = "department";
 
     private Map<String, Contact> mTotalMap = new HashMap<>();
 
@@ -196,8 +200,6 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
         if (null != subscription) {
             subscription.unsubscribe();
         }
-        if (null != bindData) {
-        }
         if (!ListUtils.isEmpty(contactList)) {
             contactList.clear();
         }
@@ -207,9 +209,16 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
                 cacheMap.clear();
             }
         }
-
+        if (!ListUtils.isEmpty(mContactList)) {
+            mContactList.clear();
+            mContactList = null;
+        }
         if (null != mTotalMap) {
             mTotalMap.clear();
+            mTotalMap = null;
+        }
+        if (null != mGroupMap) {
+            mGroupMap.clear();
             mTotalMap = null;
         }
         super.onDestroy();
@@ -267,8 +276,6 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
         setListener();
     }
 
-    Map<String, Contact> mGroupMap = new HashMap<>();
-
     void initGroupMap() {
         for (Contact contact : mContactList) {
             mGroupMap.put(contact.getUuid(), contact);
@@ -306,8 +313,7 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
                 } else {
                     searchGroupFragment.add(s.toString());
                 }
-                searchGroupFragment.setMap(mTotalMap);
-                searchGroupFragment.setGroupMap(mGroupMap);
+                searchGroupFragment.setMap(mTotalMap, mGroupMap);
             }
 
             @Override
@@ -628,8 +634,7 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 transaction.show(departmentFragment);
                 transaction.commit();
-                departmentFragment.setGroupMap(mGroupMap);
-                departmentFragment.setMap(mTotalMap);
+                departmentFragment.setMap(mTotalMap, mGroupMap);
                 break;
             case 1:
                 break;

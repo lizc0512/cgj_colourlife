@@ -101,12 +101,8 @@ public class AddContactBySearchFragment extends Fragment {
         transaction.commit();
     }
 
-    public void setMap(Map<String, Contact> map) {
-        mSearchFragment.setMap(map);
-    }
-
-    public void setGroupMap(Map<String, Contact> map) {
-        mSearchFragment.setGroupMap(map);
+    public void setMap(Map<String, Contact> totalMap, Map<String, Contact> groupMap) {
+        mSearchFragment.setMap(totalMap, groupMap);
     }
 
 }

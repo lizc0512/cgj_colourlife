@@ -29,7 +29,7 @@ import java.util.Map;
 /**
  * 作者：create by YW
  * 日期：2018.04.20 18:03
- * 描述：
+ * 描述：搜索 - 我的部门
  */
 public class DepartAdapter extends RecyclerView.Adapter {
 

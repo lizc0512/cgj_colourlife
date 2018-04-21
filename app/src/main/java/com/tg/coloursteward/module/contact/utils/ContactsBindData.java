@@ -38,6 +38,10 @@ public class ContactsBindData extends Observable {
         return instance;
     }
 
+    public void onDestroy() {
+        instance = null;
+    }
+
     public void initData(List<? extends CN> data) {
         setChanged();
         notifyObservers(null);

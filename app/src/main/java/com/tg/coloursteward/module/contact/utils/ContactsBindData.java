@@ -21,6 +21,7 @@ public class ContactsBindData extends Observable {
 
     public static final int TYPE_HOME = 0x01;
     public static final int TYPE_ADD_CONTACT = 0x02;
+    public static final int TYPE_ADD_CONTACT_NO_HEADER = 0x03;
 
     private static ContactsBindData instance;
 
@@ -48,6 +49,11 @@ public class ContactsBindData extends Observable {
 
         if (type == TYPE_HOME) {
             String[] names = context.getResources().getStringArray(R.array.names_collect_contact); //获取
+            for (int i = 0; i < names.length; i++) {
+                contactList.add(addHeadItem(names[i]));
+            }
+        } if (type == TYPE_ADD_CONTACT_NO_HEADER) {
+            String[] names = context.getResources().getStringArray(R.array.names_add_contact2); //获取
             for (int i = 0; i < names.length; i++) {
                 contactList.add(addHeadItem(names[i]));
             }

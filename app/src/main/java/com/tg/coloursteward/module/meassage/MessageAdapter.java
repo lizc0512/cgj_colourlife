@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.tg.coloursteward.R;
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
+import com.youmai.hxsdk.im.IMMsgManager;
 import com.youmai.hxsdk.im.cache.CacheMsgTxt;
 import com.youmai.hxsdk.view.chat.emoticon.utils.EmoticonHandler;
 import com.youmai.hxsdk.view.chat.utils.Utils;
@@ -196,6 +197,17 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     itemView.message_type.setText(mContext.getString(R.string.message_type));
             }
 
+            //沟通列表
+            int unreadCount = IMMsgManager.instance().getBadeCount(model.getTargetUuid());
+            if (unreadCount > 0) {
+                itemView.message_status.setBadgeNumber(unreadCount);
+                itemView.message_status.setGravityOffset(0.5f, 0.5f, true);
+                itemView.message_status.setBadgePadding(1.0f, true);
+                itemView.message_status.setVisibility(View.VISIBLE);
+            } else {
+                itemView.message_status.setVisibility(View.GONE);
+            }
+
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -264,13 +276,6 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             }
         }
         notifyDataSetChanged();
-    }
-
-    /**
-     * 未读消息icon
-     */
-    private void setUnreadIcon(QBadgeView message_status, boolean show) {
-
     }
 
     public int getHeaderCount() {

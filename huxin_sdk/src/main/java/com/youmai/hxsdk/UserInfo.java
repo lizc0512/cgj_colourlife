@@ -1,267 +1,179 @@
 package com.youmai.hxsdk;
 
+
 import android.content.Context;
+import android.text.TextUtils;
 
-import com.youmai.hxsdk.config.FileConfig;
-import com.youmai.hxsdk.utils.StringUtils;
+import com.youmai.hxsdk.utils.AppUtils;
+import com.youmai.hxsdk.utils.GsonUtil;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.Properties;
+import org.json.JSONObject;
 
 /**
  * Created by colin on 2017/2/12.
  */
 
 public class UserInfo {
+    private String uuid;   //用户UUID
+    private String phoneNum;   //用户电话号码
+    private String realName;   //用户名称
+    private String sex;   //用户性别
+    private String avatar;   //用户头像
+    private String accessToken;   //用户token
+    private String userName;   //用户token
 
-    private static final String CONFIG_FILE = "userInfo.properties";
-
-    private static final String SESSION = "sessionId";  //用户session
-    private static final String PHONE_NUM = "phoneNum";  //用户手机号
-    private static final String USER_ID = "userId";  //tcp user Id
-    private static final String CALL_FLOAT_VIEW = "call_float_view";  //通话弹屏
-    private static final String CALL_END_SRCEEN = "call_end_srceen";  //通话后屏
-
-    private File mFile;
-
-    /**
-     * 用户信息
-     */
-    private String mSession;
-    private int userId;
-    private String phoneNum;
-
-    private boolean isCallFloatView;
-    private boolean isCallEndSrceen;
+    private boolean isChange;
 
 
     public UserInfo() {
-        String path = FileConfig.getUserPaths();
-        mFile = new File(path, CONFIG_FILE);
-        if (!mFile.exists()) {
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        try {
+            if (!this.uuid.equals(uuid)) {
+                isChange = true;
+            }
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+        this.uuid = uuid;
+    }
+
+    public String getPhoneNum() {
+        return phoneNum;
+    }
+
+    public void setPhoneNum(String phoneNum) {
+        try {
+            if (!this.phoneNum.equals(phoneNum)) {
+                isChange = true;
+            }
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+        this.phoneNum = phoneNum;
+    }
+
+    public String getRealName() {
+        return realName;
+    }
+
+    public void setRealName(String realName) {
+        try {
+            if (!this.realName.equals(realName)) {
+                isChange = true;
+            }
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+        this.realName = realName;
+    }
+
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        try {
+            if (!this.sex.equals(sex)) {
+                isChange = true;
+            }
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+        this.sex = sex;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        try {
+            if (!this.avatar.equals(avatar)) {
+                isChange = true;
+            }
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+        this.avatar = avatar;
+    }
+
+    public String getAccessToken() {
+        return accessToken;
+    }
+
+    public void setAccessToken(String accessToken) {
+        try {
+            if (!this.accessToken.equals(accessToken)) {
+                isChange = true;
+            }
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+        this.accessToken = accessToken;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        try {
+            if (!this.userName.equals(userName)) {
+                isChange = true;
+            }
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+
+        this.userName = userName;
+    }
+
+    public void saveJson(Context context) {
+        if (context != null && isChange) {
+            String json = GsonUtil.format(this);
+            AppUtils.setStringSharedPreferences(context, "userInfo", json);
+        }
+    }
+
+
+    public void fromJson(Context context) {
+        String json = AppUtils.getStringSharedPreferences(context, "userInfo", "");
+        if (!TextUtils.isEmpty(json)) {
             try {
-                mFile.createNewFile();
+                JSONObject jsonObject = new JSONObject(json);
+
+                uuid = jsonObject.optString("uuid");
+                phoneNum = jsonObject.optString("phoneNum");
+                realName = jsonObject.optString("realName");
+                sex = jsonObject.optString("sex");
+                avatar = jsonObject.optString("avatar");
+                accessToken = jsonObject.optString("accessToken");
+                userName = jsonObject.optString("userName");
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
 
-        initUserInfo();
     }
 
+    public void clear(Context context) {
+        uuid = null;
+        phoneNum = null;
+        realName = null;
+        sex = null;
+        avatar = null;
+        accessToken = null;
+        userName = null;
 
-    public void setSession(String session) {
-        this.mSession = session;
-        writeUserInfo(SESSION, session);
-    }
-
-    public String getSession() {
-        if (StringUtils.isEmpty(mSession)) {
-            mSession = readUserInfo(SESSION);
-        }
-        return mSession;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
-        writeUserInfo(USER_ID, userId + "");
-
-    }
-
-    public int getUserId() {
-        if (userId != 0) {
-            String idStr = readUserInfo(USER_ID);
-            try {
-                userId = Integer.parseInt(idStr);
-            } catch (NumberFormatException e) {
-                userId = 0;
-            }
-        }
-        return userId;
-    }
-
-    public void setPhoneNum(String phoneNum) {
-        this.phoneNum = phoneNum;
-        writeUserInfo(PHONE_NUM, phoneNum);
-    }
-
-
-    public String getPhoneNum() {
-        if (StringUtils.isEmpty(phoneNum)) {
-            phoneNum = readUserInfo(PHONE_NUM);
-        }
-        return phoneNum;
-    }
-
-    /**
-     * 获取通话中弹屏开关
-     * true 打开
-     * false 关闭
-     *
-     * @return
-     */
-    public boolean isCallFloatView() {
-        String boolStr = readUserInfo(CALL_FLOAT_VIEW);
-        if (boolStr != null) {
-            isCallFloatView = Boolean.parseBoolean(boolStr);
-        } else {
-            isCallFloatView = true;
-        }
-        return isCallFloatView;
-    }
-
-
-    /**
-     * 设置通话中弹屏开关
-     * true 打开
-     * false 关闭
-     *
-     * @return
-     */
-    public void setCallFloatView(boolean callFloatView) {
-        isCallFloatView = callFloatView;
-        writeUserInfo(CALL_FLOAT_VIEW, callFloatView + "");
-    }
-
-
-    /**
-     * 获取通话后弹屏开关
-     * true 打开
-     * false 关闭
-     *
-     * @return
-     */
-    public boolean isCallEndSrceen() {
-        String boolStr = readUserInfo(CALL_END_SRCEEN);
-        if (boolStr != null) {
-            isCallEndSrceen = Boolean.parseBoolean(boolStr);
-        } else {
-            isCallEndSrceen = true;
-        }
-        return isCallEndSrceen;
-    }
-
-    /**
-     * 设置通话后弹屏开关
-     * true 打开
-     * false 关闭
-     *
-     * @return
-     */
-    public void setCallEndSrceen(boolean callEndSrceen) {
-        isCallEndSrceen = callEndSrceen;
-        writeUserInfo(CALL_END_SRCEEN, callEndSrceen + "");
-    }
-
-    
-    public void clearUserData(Context context) {
-        setUserId(0);
-        setSession("");
-        setPhoneNum("");
-    }
-
-
-    private void writeUserInfo(String key, String value) {
-        //保存属性到 config.properties文件
-        InputStream in = null;
-        OutputStream os = null;
-        try {
-            in = new FileInputStream(mFile);
-            Properties props = new Properties();
-            props.load(in);
-            in.close();
-
-            os = new FileOutputStream(mFile);
-            props.setProperty(key, value);
-            props.store(os, null);
-            os.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (in != null) {
-                try {
-                    in.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            if (os != null) {
-                try {
-                    os.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+        if (context != null) {
+            AppUtils.setStringSharedPreferences(context, "userInfo", null);
         }
     }
-
-
-    private String readUserInfo(String key) {
-        String res = "";
-        InputStream is = null;
-        try {
-            is = new FileInputStream(mFile);
-
-            Properties props = new Properties();
-            props.load(is);
-
-            res = props.getProperty(key);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (is != null) {
-                try {
-                    is.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        return res;
-    }
-
-
-    private void initUserInfo() {
-        InputStream is = null;
-        try {
-            is = new FileInputStream(mFile);
-
-            Properties props = new Properties();
-            props.load(is);
-
-            String idStr = props.getProperty(USER_ID);
-            try {
-                userId = Integer.parseInt(idStr);
-            } catch (NumberFormatException e) {
-                userId = 0;
-            }
-            mSession = props.getProperty(SESSION);
-            if (mSession == null) {
-                mSession = "";
-            }
-            phoneNum = props.getProperty(PHONE_NUM);
-            if (phoneNum == null) {
-                phoneNum = "";
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (is != null) {
-                try {
-                    is.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
-
-
 }

@@ -605,13 +605,13 @@ public class Tools {
 		int sort = data.getInt("sort");
 
 		String avatar = Contants.URl.HEAD_ICON_URL + "avatar?uid=" + employeeAccount;
-
 		HuxinSdkManager.instance().setUuid(uuid);
 		HuxinSdkManager.instance().setHeadUrl(avatar);
 		HuxinSdkManager.instance().setRealName(realName);
 		HuxinSdkManager.instance().setPhoneNum(mobile);
 		HuxinSdkManager.instance().setSex(sex);
 		HuxinSdkManager.instance().setUserName(employeeAccount);
+		HuxinSdkManager.instance().saveUserInfo();
 
 
 		Tools.saveUserName(Tools.mContext, UserInfo.employeeAccount);

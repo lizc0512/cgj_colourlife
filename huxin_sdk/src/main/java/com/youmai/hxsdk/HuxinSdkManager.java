@@ -21,16 +21,11 @@ import android.widget.Toast;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.google.protobuf.GeneratedMessage;
 import com.youmai.hxsdk.config.AppConfig;
-import com.youmai.hxsdk.config.ColorsConfig;
-import com.youmai.hxsdk.config.FileConfig;
 import com.youmai.hxsdk.db.manager.GreenDBIMManager;
 import com.youmai.hxsdk.entity.IpConfig;
-import com.youmai.hxsdk.entity.UploadResult;
-import com.youmai.hxsdk.http.DownloadListener;
 import com.youmai.hxsdk.http.HttpConnector;
 import com.youmai.hxsdk.http.IGetListener;
 import com.youmai.hxsdk.http.IPostListener;
-import com.youmai.hxsdk.http.OkHttpConnector;
 import com.youmai.hxsdk.im.IMMsgManager;
 import com.youmai.hxsdk.proto.YouMaiBasic;
 import com.youmai.hxsdk.proto.YouMaiBuddy;
@@ -48,13 +43,9 @@ import com.youmai.hxsdk.utils.LogFile;
 import com.youmai.hxsdk.utils.StringUtils;
 import com.youmai.hxsdk.view.chat.utils.EmotionInit;
 
-
-import java.io.File;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by colin on 2016/7/15.
@@ -83,14 +74,6 @@ public class HuxinSdkManager {
 
     private StackAct mStackAct;
     private UserInfo mUserInfo;
-
-    private String mUuid;   //用户UUID
-    private String mPhoneNum;   //用户电话号码
-    private String mRealName;   //用户名称
-    private String mSex;   //用户性别
-    private String mHeadUrl;   //用户头像
-    private String accessToken;   //用户token
-    private String userName;   //用户token
 
     /**
      * SDK初始化结果监听器
@@ -165,6 +148,7 @@ public class HuxinSdkManager {
         mContext = context.getApplicationContext();
         GreenDBIMManager.instance(mContext);
         IMMsgManager.instance().init(mContext);
+        mUserInfo.fromJson(mContext);
 
         initARouter();
         MorePushManager.register(mContext);//注册送服务
@@ -229,116 +213,73 @@ public class HuxinSdkManager {
 
     }
 
-    public void setSession(String session) {
-        mUserInfo.setSession(session);
-        AppUtils.setStringSharedPreferences(mContext, "MySessionId_sdk", session);
-    }
 
-    public String getSession() {
-        String session = mUserInfo.getSession();
-        if (StringUtils.isEmpty(session) && mContext != null) {
-            session = AppUtils.getStringSharedPreferences(mContext, "MySessionId_sdk", "");
-            if (!StringUtils.isEmpty(session)) {
-                mUserInfo.setSession(session);
-            }
-        }
-        return session;
-    }
-
-
-    public void setUserId(int userId) {
-        mUserInfo.setUserId(userId);
-        AppUtils.setIntSharedPreferences(mContext, "uid_sdk", userId);
-
-    }
-
-    public int getUserId() {
-        int userId = mUserInfo.getUserId();
-        if (userId == 0 && mContext != null) {
-            userId = AppUtils.getIntSharedPreferences(mContext, "uid_sdk", 0);
-            if (userId != 0) {
-                mUserInfo.setUserId(userId);
-            }
-        }
-        return userId;
+    public void saveUserInfo() {
+        mUserInfo.saveJson(mContext);
     }
 
 
     public void setUuid(String uuid) {
-        if (!TextUtils.isEmpty(uuid)) {
-            mUuid = uuid;
-            String saveId = AppUtils.getStringSharedPreferences(mContext, "color_uuid", "");
-            if (TextUtils.isEmpty(saveId) || !saveId.equals(uuid)) {
-                AppUtils.setStringSharedPreferences(mContext, "color_uuid", uuid);
-                socketLogin(uuid);
-            }
-        }
+        mUserInfo.setUuid(uuid);
     }
 
 
     public String getUuid() {
-        if (TextUtils.isEmpty(mUuid)) {
-            mUuid = AppUtils.getStringSharedPreferences(mContext, "color_uuid", "");
-        }
-        return mUuid;
-
+        return mUserInfo.getUuid();
     }
 
 
     public String getPhoneNum() {
-        return mPhoneNum;
+        return mUserInfo.getPhoneNum();
     }
 
     public void setPhoneNum(String phoneNum) {
-        this.mPhoneNum = phoneNum;
+        mUserInfo.setPhoneNum(phoneNum);
     }
 
     public String getRealName() {
-        return mRealName;
+        return mUserInfo.getRealName();
     }
 
     public void setRealName(String realName) {
-        this.mRealName = realName;
+        mUserInfo.setRealName(realName);
     }
 
     public String getSex() {
-        return mSex;
+        return mUserInfo.getSex();
     }
 
     public void setSex(String sex) {
-        this.mSex = sex;
+        mUserInfo.setSex(sex);
     }
 
     public String getHeadUrl() {
-        return mHeadUrl;
+        return mUserInfo.getAvatar();
     }
 
     public void setHeadUrl(String url) {
-        this.mHeadUrl = url;
+        mUserInfo.setAvatar(url);
     }
 
     public String getAccessToken() {
-        return accessToken;
+        return mUserInfo.getAccessToken();
     }
 
     public void setAccessToken(String accessToken) {
-        this.accessToken = accessToken;
+        mUserInfo.setAccessToken(accessToken);
     }
 
     public String getUserName() {
-        return userName;
+        return mUserInfo.getUserName();
     }
 
     public void setUserName(String userName) {
-        this.userName = userName;
+        mUserInfo.setUserName(userName);
     }
 
     public void clearUserData() {
         close();
-        mUserInfo.clearUserData(mContext);
-        AppUtils.setIntSharedPreferences(mContext, "uid_sdk", 0);
-        AppUtils.setStringSharedPreferences(mContext, "MySessionId_sdk", "");
-        AppUtils.setStringSharedPreferences(mContext, "myPhone_sdk", "");
+        mUserInfo.clear(mContext);
 
         MorePushManager.unregister(mContext);//反注册送服务
         SPDataUtil.setUserInfoJson(mContext, "");// FIXME: 2017/3/20
@@ -1105,7 +1046,6 @@ public class HuxinSdkManager {
 
         sendProto(chatMsg, YouMaiBasic.COMMANDID.CID_CHAT_GROUP_VALUE, callback);
     }
-
 
 
     /**

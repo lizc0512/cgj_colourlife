@@ -103,7 +103,7 @@ public class PictureIndicatorActivity extends AppCompatActivity {
             String url = cacheImage.getFilePath();
             if (item.isRightUI()) {
                 if (TextUtils.isEmpty(url)) {
-                    url = AppConfig.getImageUrl(mContext, fid);
+                    url = AppConfig.getImageUrl(fid);
                 }
             } else {
                 if (!TextUtils.isEmpty(fid)) {
@@ -112,7 +112,7 @@ public class PictureIndicatorActivity extends AppCompatActivity {
                             url = QiniuUrl.getThumbImageUrl(mContext, fid, QiniuUrl.SCALE);
                             break;
                         default:
-                            url = AppConfig.getImageUrl(mContext, fid);
+                            url = AppConfig.getImageUrl(fid);
                             break;
 
                     }
@@ -130,7 +130,7 @@ public class PictureIndicatorActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     original.setVisibility(View.GONE);
-                    String url = AppConfig.getImageUrl(mContext, fid);
+                    String url = AppConfig.getImageUrl(fid);
                     Glide.with(mContext)
                             .load(url)
                             .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.RESOURCE))
@@ -166,7 +166,7 @@ public class PictureIndicatorActivity extends AppCompatActivity {
                                         String fid = cacheImage.getFid();
                                         String path;
                                         if (!TextUtils.isEmpty(fid)) {
-                                            path = AppConfig.getImageUrl(mContext, fid);
+                                            path = AppConfig.getImageUrl(fid);
                                         } else {
                                             path = cacheImage.getFilePath();
                                         }
@@ -219,7 +219,7 @@ public class PictureIndicatorActivity extends AppCompatActivity {
                 String fid = cacheImage.getFid();
                 String path;
                 if (!TextUtils.isEmpty(fid)) {
-                    path = AppConfig.getImageUrl(mContext, fid);
+                    path = AppConfig.getImageUrl(fid);
                 } else {
                     path = cacheImage.getFilePath();
                 }

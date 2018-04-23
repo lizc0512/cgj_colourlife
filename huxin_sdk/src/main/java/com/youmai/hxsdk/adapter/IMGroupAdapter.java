@@ -337,7 +337,7 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
                 leftUrl = QiniuUrl.getThumbImageUrl(mAct, cacheMsgImage.getFid(), QiniuUrl.SCALE);
                 break;
             default:
-                leftUrl = AppConfig.getImageUrl(mAct, cacheMsgImage.getFid());
+                leftUrl = AppConfig.getImageUrl(cacheMsgImage.getFid());
                 break;
         }
         final File imgFile = new File(cacheMsgImage.getFilePath());
@@ -367,7 +367,7 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
                         final CacheMsgImage cacheImage = (CacheMsgImage) item.getJsonBodyObj();
                         String fid = cacheImage.getFid();
                         if (!TextUtils.isEmpty(fid)) {
-                            if (finalLeftUrl.equals(AppConfig.getImageUrl(mAct, fid))
+                            if (finalLeftUrl.equals(AppConfig.getImageUrl(fid))
                                     || finalLeftUrl.equals(QiniuUrl.getThumbImageUrl(mAct, fid, QiniuUrl.SCALE))) {
                                 index = beanList.indexOf(item);
                             }
@@ -404,11 +404,11 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
         final String videoPath = cacheMsgVideo.getVideoPath();//本地视频
         final String framePath = cacheMsgVideo.getFramePath();//本地视频首帧
         final long time = cacheMsgVideo.getTime();//视频时长(毫秒)
-        final String videoUrl = AppConfig.getImageUrl(mAct, cacheMsgVideo.getVideoId());    //上传视频Url
-        String leftUrl = AppConfig.getImageUrl(mAct, cacheMsgVideo.getFrameId());     //上传视频首帧Url
+        final String videoUrl = AppConfig.getImageUrl(cacheMsgVideo.getVideoId());    //上传视频Url
+        String leftUrl = AppConfig.getImageUrl(cacheMsgVideo.getFrameId());     //上传视频首帧Url
         String rightUrl = framePath;
         if (rightUrl == null || !new File(rightUrl).exists()) {
-            rightUrl = AppConfig.getImageUrl(mAct, cacheMsgVideo.getFrameId());
+            rightUrl = AppConfig.getImageUrl(cacheMsgVideo.getFrameId());
         }
 
         videoViewHolder.timeText.setText(TimeUtils.getTimeFromMillisecond(time));

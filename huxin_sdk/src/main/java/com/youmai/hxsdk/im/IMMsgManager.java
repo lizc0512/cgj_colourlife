@@ -404,7 +404,7 @@ public class IMMsgManager {
         } else if (im.getMsgType() == YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_AUDIO_VALUE) { //音频
 
             String fid = im.getContent().getAudio().getAudioId();
-            String url = AppConfig.DOWNLOAD_IMAGE + fid;
+            String url = AppConfig.getImageUrl(fid);
             String seconds = im.getContent().getAudio().getBarTime();
             String sourcePhone = im.getContent().getAudio().getSourcePhone();
             int forwardCount;
@@ -434,7 +434,7 @@ public class IMMsgManager {
                     .setJsonBodyObj(new CacheMsgFile()
                             .setFid(fid)
                             .setFileName(fileName)
-                            .setFileUrl(AppConfig.getImageUrl(mContext, fid))
+                            .setFileUrl(AppConfig.getImageUrl(fid))
                             .setFileRes(IMHelper.getFileImgRes(fileName, false))
                             .setFileSize(Long.parseLong(fileSize)));
 

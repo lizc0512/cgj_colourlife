@@ -13,11 +13,6 @@ public class AppConfig {
     public static String staticMapKey = "76ca0c2476c8739d4c85473929c126ec";
 
     /**
-     * 谷歌提供的静态地图的KEY
-     */
-    public static String googleMapKey = "AIzaSyDkE2Y0XXL2zmRZMlPnJft2xenYDkoBJ5M";
-
-    /**
      * 七牛 SecretKey
      */
     //public static String QiNiuSecretKey = "gcb2e34zD2velqZvz-IQG9Mw6VjetY__3wWcytd_";
@@ -63,11 +58,6 @@ public class AppConfig {
     }
 
 
-    /**
-     * 图片文件下载地址
-     */
-    public static final String DOWNLOAD_IMAGE = getDownloadHost();
-
 
     /**
      * http post 文件前，获取文件token
@@ -81,6 +71,11 @@ public class AppConfig {
      * ICE文件上传地址
      */
     public static final String UPLOAD_FILE_ICE = "http://120.25.148.153:30020/v1/pcUploadFile";
+
+    /**
+     * ICE文件下载地址
+     */
+    public static final String ICE_LOAD_PATH = "http://120.25.148.153:30020/v1/down/";
 
     /***
      * sign 签名
@@ -101,9 +96,9 @@ public class AppConfig {
      * @param fid
      * @return
      */
-    public static String getImageUrl(Context context, String fid) {
+    public static String getImageUrl(String fid) {
         if (QINIU_ENABLE) {
-            return DOWNLOAD_IMAGE + fid;
+            return getDownloadHost() + fid;
         } else {
             return ColorsConfig.loadUrl(fid);
         }

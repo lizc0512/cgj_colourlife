@@ -46,7 +46,7 @@ public class VideoUtils {
      */
     public void loadVideo(final String urlFid, final VideoView videoView, final boolean isTip) {
 
-        final String filePath = AppConfig.getImageUrl(mContext, urlFid);
+        final String filePath = AppConfig.getImageUrl(urlFid);
         final String absolutePath = FileConfig.getVideoDownLoadPath();
         String hasFile = AbFileUtil.hasFilePath(filePath /*+ ".mp4"*/, absolutePath);
 

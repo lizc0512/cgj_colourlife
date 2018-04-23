@@ -55,7 +55,7 @@ public class ColorsConfig {
     }
 
     public static String loadUrl(String fileId) {
-        String url = "http://120.25.148.153:30020/v1/down/";
+        String url = AppConfig.ICE_LOAD_PATH;
         String appId = "colourlife";
         String fileToken = "LOCKW3v23#2";
         long ts = System.currentTimeMillis();

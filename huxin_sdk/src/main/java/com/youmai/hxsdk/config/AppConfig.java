@@ -28,14 +28,13 @@ public class AppConfig {
      */
     public static final String SHARED_PREFERENCES = "sdk_app";
 
+    public static final boolean QINIU_ENABLE = false;
+
 
     /**
      * HuXin 服务器连接配置
      */
     public final static int LAUNCH_MODE = 1; //0 本地测试,开发版        1服务器测试,测试版           2正式平台,正式版
-
-
-    private final static String SHOW_HOST[] = new String[]{"http://192.168.0.42:8989/", "http://test2.jweb.huxin.biz/", "http://api.ihuxin.net/"};
 
     private final static String SOCKET_URL[] = new String[]{"http://192.168.0.42:8000/", "http://test2.im.huxin.biz:8000/", "http://im.ihuxin.net:8000/"};
 
@@ -47,14 +46,9 @@ public class AppConfig {
     //private final static int SOCKET_PORT[] = new int[]{8003, 9951, 9951};//8886
     private final static int SOCKET_PORT[] = new int[]{8003, 6602, 6602};
 
-    public static String getShowHost() {
-        return SHOW_HOST[LAUNCH_MODE];
-    }
-
     public static String getSocketUrl() {
         return SOCKET_URL[LAUNCH_MODE];
     }
-
 
     public static String getSocketHost() {
         return SOCKET_HOST[LAUNCH_MODE];
@@ -83,6 +77,11 @@ public class AppConfig {
     public static final String GET_UPLOAD_FILE_TOKEN = "http://api.ihuxin.net/jhuxin-openapi/qy/fileUpload/upToken";
 
 
+    /**
+     * ICE文件上传地址
+     */
+    public static final String UPLOAD_FILE_ICE = "http://120.25.148.153:30020/v1/pcUploadFile";
+
     /***
      * sign 签名
      *
@@ -97,48 +96,17 @@ public class AppConfig {
 
 
     /**
-     * 根据用户头像下载地址
-     *
-     * @return
-     */
-    public static String getHeaderUrl(Context context, String phone) {
-        return DOWNLOAD_IMAGE + phone
-                + "&t=" + System.currentTimeMillis();
-    }
-
-    /**
-     * 获取用户头像下载地址
-     *
-     * @param w
-     * @param h
-     * @param phone
-     * @return
-     */
-    public static String getThumbHeaderUrl(Context context, int w, int h, String phone) {
-        return DOWNLOAD_IMAGE + phone
-                + "&imageView2/0/w/" + w + "/h/" + h +
-                "&t=" + System.currentTimeMillis();
-    }
-
-    /**
-     * 获取用户头像下载地址 后台已拼接好 V=1
-     *
-     * @param w
-     * @param h
-     * @return
-     */
-    public static String getVHeaderUrl(String userUrl, int w, int h) {
-        return userUrl + "&imageView2/0/w/" + w + "/h/" + h;
-    }
-
-    /**
      * 获取图片下载地址
      *
      * @param fid
      * @return
      */
     public static String getImageUrl(Context context, String fid) {
-        return DOWNLOAD_IMAGE + fid;
+        if (QINIU_ENABLE) {
+            return DOWNLOAD_IMAGE + fid;
+        } else {
+            return ColorsConfig.loadUrl(fid);
+        }
     }
 
 

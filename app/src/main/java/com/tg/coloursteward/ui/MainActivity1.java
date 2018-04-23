@@ -51,6 +51,7 @@ import com.tg.coloursteward.util.AuthTimeUtils;
 import com.tg.coloursteward.util.ExampleUtil;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.dialog.ToastFactory;
+import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.push.MorePushManager;
 
 import org.json.JSONArray;
@@ -610,6 +611,8 @@ public class MainActivity1 extends AppCompatActivity implements MessageHandler.R
                             String expireTime = content.getString("expire");
                             Tools.saveStringValue(mContext, Contants.storage.APPAUTH_1, accessToken);
                             Tools.saveStringValue(mContext, Contants.storage.APPAUTHTIME_1, expireTime);
+
+                            HuxinSdkManager.instance().setAccessToken(accessToken);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

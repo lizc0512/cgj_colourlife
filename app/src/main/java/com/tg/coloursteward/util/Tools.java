@@ -604,11 +604,15 @@ public class Tools {
 		int Jobonline = data.getInt("Jobonline");
 		int sort = data.getInt("sort");
 
+		String avatar = Contants.URl.HEAD_ICON_URL + "avatar?uid=" + employeeAccount;
+
 		HuxinSdkManager.instance().setUuid(uuid);
-		HuxinSdkManager.instance().setHeadUrl(headUrl);
+		HuxinSdkManager.instance().setHeadUrl(avatar);
 		HuxinSdkManager.instance().setRealName(realName);
 		HuxinSdkManager.instance().setPhoneNum(mobile);
 		HuxinSdkManager.instance().setSex(sex);
+		HuxinSdkManager.instance().setUserName(employeeAccount);
+
 
 		Tools.saveUserName(Tools.mContext, UserInfo.employeeAccount);
 		

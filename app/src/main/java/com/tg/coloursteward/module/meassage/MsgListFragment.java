@@ -27,6 +27,7 @@ import com.tg.coloursteward.R;
 import com.tg.coloursteward.module.search.GlobalSearchActivity;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.activity.IMConnectionActivity;
+import com.youmai.hxsdk.activity.IMGroupActivity;
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
 import com.youmai.hxsdk.im.IMMsgCallback;
 import com.youmai.hxsdk.im.IMMsgManager;
@@ -337,7 +338,15 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
                     return;
                 }
                 Intent intent = new Intent();
-                intent.setClass(getActivity(), IMConnectionActivity.class);
+
+                int groupId = bean.getGroupId();
+
+                if (groupId > 0) {
+                    intent.setClass(getActivity(), IMGroupActivity.class);
+                } else {
+                    intent.setClass(getActivity(), IMConnectionActivity.class);
+                }
+
                 intent.putExtra(IMConnectionActivity.DST_UUID, bean.getTargetUuid());
                 intent.putExtra(IMConnectionActivity.DST_NAME, bean.getDisplayName());
                 startActivityForResult(intent, INTENT_REQUEST_FOR_UPDATE_UI);

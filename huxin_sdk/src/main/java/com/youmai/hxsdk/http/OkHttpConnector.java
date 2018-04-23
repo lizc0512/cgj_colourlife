@@ -115,6 +115,20 @@ public class OkHttpConnector {
         task.execute(url);
     }
 
+
+    /**
+     * 多表单混合提交
+     *
+     * @param url
+     * @param params
+     * @param request
+     */
+    public static void httpPostMultipart(String url, Map<String, Object> params,
+                                         IPostListener request) {
+        httpPostMultipart(url, null, params, request);
+    }
+
+
     /**
      * 多表单混合提交
      *

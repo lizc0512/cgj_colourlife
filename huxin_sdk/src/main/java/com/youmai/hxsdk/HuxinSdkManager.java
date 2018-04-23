@@ -20,27 +20,18 @@ import android.widget.Toast;
 
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.google.protobuf.GeneratedMessage;
-import com.google.protobuf.InvalidProtocolBufferException;
-import com.qiniu.android.common.AutoZone;
-import com.qiniu.android.http.ResponseInfo;
-import com.qiniu.android.storage.Configuration;
-import com.qiniu.android.storage.UpCompletionHandler;
-import com.qiniu.android.storage.UpProgressHandler;
-import com.qiniu.android.storage.UploadManager;
-import com.qiniu.android.storage.UploadOptions;
 import com.youmai.hxsdk.config.AppConfig;
-import com.youmai.hxsdk.config.Constant;
-import com.youmai.hxsdk.db.bean.CacheMsgBean;
-import com.youmai.hxsdk.db.dao.CacheMsgBeanDao;
+import com.youmai.hxsdk.config.ColorsConfig;
+import com.youmai.hxsdk.config.FileConfig;
 import com.youmai.hxsdk.db.manager.GreenDBIMManager;
-import com.youmai.hxsdk.entity.FileToken;
 import com.youmai.hxsdk.entity.IpConfig;
-import com.youmai.hxsdk.entity.UploadFile;
+import com.youmai.hxsdk.entity.UploadResult;
+import com.youmai.hxsdk.http.DownloadListener;
 import com.youmai.hxsdk.http.HttpConnector;
 import com.youmai.hxsdk.http.IGetListener;
 import com.youmai.hxsdk.http.IPostListener;
+import com.youmai.hxsdk.http.OkHttpConnector;
 import com.youmai.hxsdk.im.IMMsgManager;
-import com.youmai.hxsdk.interfaces.OnFileListener;
 import com.youmai.hxsdk.proto.YouMaiBasic;
 import com.youmai.hxsdk.proto.YouMaiBuddy;
 import com.youmai.hxsdk.proto.YouMaiGroup;
@@ -49,18 +40,14 @@ import com.youmai.hxsdk.push.MorePushManager;
 import com.youmai.hxsdk.service.HuxinService;
 import com.youmai.hxsdk.socket.IMContentUtil;
 import com.youmai.hxsdk.socket.NotifyListener;
-import com.youmai.hxsdk.socket.PduBase;
 import com.youmai.hxsdk.socket.ReceiveListener;
 import com.youmai.hxsdk.sp.SPDataUtil;
 import com.youmai.hxsdk.utils.AppUtils;
-import com.youmai.hxsdk.utils.DeviceUtils;
 import com.youmai.hxsdk.utils.GsonUtil;
 import com.youmai.hxsdk.utils.LogFile;
-import com.youmai.hxsdk.utils.LogUtils;
 import com.youmai.hxsdk.utils.StringUtils;
 import com.youmai.hxsdk.view.chat.utils.EmotionInit;
 
-import org.json.JSONObject;
 
 import java.io.File;
 import java.net.InetSocketAddress;
@@ -91,7 +78,6 @@ public class HuxinSdkManager {
     private Context mContext;
 
     private List<InitListener> mInitListenerList;
-    private UploadManager uploadManager;
 
     private ProcessHandler mProcessHandler;
 
@@ -103,6 +89,8 @@ public class HuxinSdkManager {
     private String mRealName;   //用户名称
     private String mSex;   //用户性别
     private String mHeadUrl;   //用户头像
+    private String accessToken;   //用户token
+    private String userName;   //用户token
 
     /**
      * SDK初始化结果监听器
@@ -118,13 +106,6 @@ public class HuxinSdkManager {
      * 私有构造函数
      */
     private HuxinSdkManager() {
-        Configuration qiNiuConfig = new Configuration.Builder()
-                .connectTimeout(10)           // 链接超时。默认10秒
-                .useHttps(true)               // 是否使用https上传域名
-                .responseTimeout(30)          // 服务器响应超时。默认30秒
-                .zone(AutoZone.autoZone)        // 设置区域，指定不同区域的上传域名、备用域名、备用IP。
-                .build();
-        uploadManager = new UploadManager(qiNiuConfig);
         mStackAct = StackAct.instance();
         mUserInfo = new UserInfo();
         mInitListenerList = new ArrayList<>();
@@ -334,6 +315,22 @@ public class HuxinSdkManager {
 
     public void setHeadUrl(String url) {
         this.mHeadUrl = url;
+    }
+
+    public String getAccessToken() {
+        return accessToken;
+    }
+
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public void clearUserData() {

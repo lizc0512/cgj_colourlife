@@ -94,6 +94,21 @@ public class HttpConnector {
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, url);
     }
 
+
+    /**
+     * 多表单混合提交
+     *
+     * @param url
+     * @param params
+     * @param files
+     * @param request
+     */
+    public static void httpPostMultipart(String url, ContentValues params,
+                                         Map<String, File> files, IPostListener request) {
+        httpPostMultipart(url, null, params, files, request);
+    }
+
+
     /**
      * 多表单混合提交
      *

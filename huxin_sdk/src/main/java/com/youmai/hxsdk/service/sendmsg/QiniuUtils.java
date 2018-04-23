@@ -2,16 +2,22 @@ package com.youmai.hxsdk.service.sendmsg;
 
 import android.util.Log;
 
+import com.qiniu.android.common.AutoZone;
 import com.qiniu.android.http.ResponseInfo;
+import com.qiniu.android.storage.Configuration;
 import com.qiniu.android.storage.UpCancellationSignal;
 import com.qiniu.android.storage.UpCompletionHandler;
 import com.qiniu.android.storage.UpProgressHandler;
 import com.qiniu.android.storage.UploadManager;
 import com.qiniu.android.storage.UploadOptions;
 import com.youmai.hxsdk.HuxinSdkManager;
+import com.youmai.hxsdk.config.AppConfig;
+import com.youmai.hxsdk.config.ColorsConfig;
 import com.youmai.hxsdk.entity.FileToken;
 import com.youmai.hxsdk.entity.UploadFile;
+import com.youmai.hxsdk.entity.UploadResult;
 import com.youmai.hxsdk.http.IPostListener;
+import com.youmai.hxsdk.http.OkHttpConnector;
 import com.youmai.hxsdk.utils.GsonUtil;
 
 import org.json.JSONObject;
@@ -33,7 +39,13 @@ public class QiniuUtils {
     private UploadManager uploadManager;
 
     public QiniuUtils() {
-        uploadManager = new UploadManager();
+        Configuration qiNiuConfig = new Configuration.Builder()
+                .connectTimeout(10)           // 链接超时。默认10秒
+                .useHttps(true)               // 是否使用https上传域名
+                .responseTimeout(30)          // 服务器响应超时。默认30秒
+                .zone(AutoZone.autoZone)        // 设置区域，指定不同区域的上传域名、备用域名、备用IP。
+                .build();
+        uploadManager = new UploadManager(qiNiuConfig);
     }
 
     public void setCancelled(boolean cancelled) {
@@ -70,64 +82,111 @@ public class QiniuUtils {
     public void postFileToQiNiu(final File file, final String desPhone,
                                 final UpProgressHandler progressHandler,
                                 final PostFile postFile) {
-        IPostListener callback = new IPostListener() {
-            @Override
-            public void httpReqResult(String response) {
-                FileToken resp = GsonUtil.parse(response, FileToken.class);
-                if (resp == null) {
-                    if (null != postFile) {
-                        postFile.fail("get token  fail");
-                    }
-                    return;
-                }
-                if (resp.isSucess()) {
-                    String fidKey = resp.getD().getFid();
-                    String token = resp.getD().getUpToken();
-                    Map<String, String> params = new HashMap<>();
-                    params.put("x:type", "2");
-                    params.put("x:msisdn", "18664992691");
-                    UploadOptions options = new UploadOptions(params, null,
-                            false, progressHandler,
-                            new UpCancellationSignal() {
-                                @Override
-                                public boolean isCancelled() {
-                                    return isCancelled;
-                                }
-                            });
-                    UpCompletionHandler completionHandler = new UpCompletionHandler() {
-                        @Override
-                        public void complete(String key, ResponseInfo info, JSONObject response) {
-                            if (response != null) {
-                                UploadFile resp = GsonUtil.parse(response.toString(), UploadFile.class);
-                                if (resp == null) {
-                                    if (null != postFile) {
-                                        postFile.fail("upload file to qiniu fail");
-                                    }
-                                    return;
-                                }
-                                if (resp.isSucess()) {
-                                    String fileId = resp.getD().getFileid();
-                                    if (null != postFile) {
-                                        postFile.success(fileId, desPhone);
-                                    }
-                                }
-                            } else {
-                                //快速连发图片会得到上一条response null
-                                //info:{ResponseInfo---error:cancelled by user}
-                                postFile.fail("response is null cause of cancelled by user");
-                            }
+        if (AppConfig.QINIU_ENABLE) {
 
+            IPostListener callback = new IPostListener() {
+                @Override
+                public void httpReqResult(String response) {
+                    FileToken resp = GsonUtil.parse(response, FileToken.class);
+                    if (resp == null) {
+                        if (null != postFile) {
+                            postFile.fail("get token  fail");
                         }
-                    };
-                    uploadManager.put(file, fidKey, token, completionHandler, options);
-                } else {
-                    postFile.fail("response is null cause of cancelled by user");
-                    String log = resp.getM();
-                    Log.e(TAG, log);
-                }
-            }
+                        return;
+                    }
+                    if (resp.isSucess()) {
+                        String fidKey = resp.getD().getFid();
+                        String token = resp.getD().getUpToken();
+                        Map<String, String> params = new HashMap<>();
+                        params.put("x:type", "2");
+                        params.put("x:msisdn", "18664992691");
+                        UploadOptions options = new UploadOptions(params, null,
+                                false, progressHandler,
+                                new UpCancellationSignal() {
+                                    @Override
+                                    public boolean isCancelled() {
+                                        return isCancelled;
+                                    }
+                                });
+                        UpCompletionHandler completionHandler = new UpCompletionHandler() {
+                            @Override
+                            public void complete(String key, ResponseInfo info, JSONObject response) {
+                                if (response != null) {
+                                    UploadFile resp = GsonUtil.parse(response.toString(), UploadFile.class);
+                                    if (resp == null) {
+                                        if (null != postFile) {
+                                            postFile.fail("upload file to qiniu fail");
+                                        }
+                                        return;
+                                    }
+                                    if (resp.isSucess()) {
+                                        String fileId = resp.getD().getFileid();
+                                        if (null != postFile) {
+                                            postFile.success(fileId, desPhone);
+                                        }
+                                    }
+                                } else {
+                                    //快速连发图片会得到上一条response null
+                                    //info:{ResponseInfo---error:cancelled by user}
+                                    postFile.fail("response is null cause of cancelled by user");
+                                }
 
-        };
-        HuxinSdkManager.instance().getUploadFileToken(callback);
+                            }
+                        };
+                        uploadManager.put(file, fidKey, token, completionHandler, options);
+                    } else {
+                        postFile.fail("response is null cause of cancelled by user");
+                        String log = resp.getM();
+                        Log.e(TAG, log);
+                    }
+                }
+
+            };
+            HuxinSdkManager.instance().getUploadFileToken(callback);
+
+
+        } else {
+            postFileToICE(file, desPhone, postFile);
+        }
+
+
+    }
+
+
+    private void postFileToICE(File file, final String desPhone, final PostFile postFile) {
+        String url = AppConfig.UPLOAD_FILE_ICE;
+
+        String fileUploadAccount = HuxinSdkManager.instance().getUserName();
+        String accessToken = HuxinSdkManager.instance().getAccessToken();
+        String fileUploadAppName = "彩管家";
+
+
+        if (file.exists()) {
+            Map<String, Object> params = new HashMap<>();
+            params.put("access_token", accessToken);
+            params.put("fileLength", file.length());
+            params.put("fileName", file.getName());
+            params.put("fileUploadAccount", fileUploadAccount);
+            params.put("fileUploadAppName", fileUploadAppName);
+            params.put("file", file);
+
+            ColorsConfig.commonParams(params);
+
+            OkHttpConnector.httpPostMultipart(url, params, new IPostListener() {
+                @Override
+                public void httpReqResult(String response) {
+                    UploadResult result = GsonUtil.parse(response, UploadResult.class);
+                    if (result != null && result.isSuceess()) {
+                        String fileId = result.getContent();
+                        if (postFile != null) {
+                            postFile.success(fileId, desPhone);
+                        }
+                    } else {
+                        postFile.fail("上传文件出错");
+                    }
+                }
+            });
+
+        }
     }
 }

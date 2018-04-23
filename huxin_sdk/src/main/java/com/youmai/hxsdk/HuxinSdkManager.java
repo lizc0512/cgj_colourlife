@@ -284,8 +284,6 @@ public class HuxinSdkManager {
 
 
     public void setUuid(String uuid) {
-        uuid = "739ca86c-ea5d-4dad-b8ae-f5277942d281";  //TODO  for test
-
         if (!TextUtils.isEmpty(uuid)) {
             mUuid = uuid;
             String saveId = AppUtils.getStringSharedPreferences(mContext, "color_uuid", "");

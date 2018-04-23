@@ -32,7 +32,7 @@ public class AppConfig {
     /**
      * HuXin 服务器连接配置
      */
-    public final static int LAUNCH_MODE = 2; //0 本地测试,开发版        1服务器测试,测试版           2正式平台,正式版
+    public final static int LAUNCH_MODE = 1; //0 本地测试,开发版        1服务器测试,测试版           2正式平台,正式版
 
 
     private final static String SHOW_HOST[] = new String[]{"http://192.168.0.42:8989/", "http://test2.jweb.huxin.biz/", "http://api.ihuxin.net/"};
@@ -65,7 +65,7 @@ public class AppConfig {
     }
 
     public static String getDownloadHost() {
-        return DOWNLOAD_HOST[LAUNCH_MODE];
+        return DOWNLOAD_HOST[2];
     }
 
 

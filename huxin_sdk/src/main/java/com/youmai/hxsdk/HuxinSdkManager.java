@@ -861,14 +861,15 @@ public class HuxinSdkManager {
      * 发送文字
      *
      * @param groupId
+     * @param groupName
      * @param content
      */
-    public void sendTextInGroup(int groupId, String content, ReceiveListener callback) {
+    public void sendTextInGroup(int groupId, String groupName, String content, ReceiveListener callback) {
         YouMaiMsg.MsgData.Builder msgData = YouMaiMsg.MsgData.newBuilder();
         msgData.setSrcUserId(getUuid());
         msgData.setSrcAvatar(getHeadUrl());
         msgData.setSrcSex(getSex());
-        msgData.setSrcRealname(getRealName());
+        msgData.setSrcRealname(groupName);
         msgData.setSrcMobile(getPhoneNum());
         msgData.setGroupId(groupId);
         msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_TEXT);
@@ -890,20 +891,21 @@ public class HuxinSdkManager {
      * 发送位置
      *
      * @param groupId
+     * @param groupName
      * @param longitude
      * @param latitude
      * @param scale
      * @param label
      * @param callback
      */
-    public void sendLocationInGroup(int groupId, double longitude, double latitude,
+    public void sendLocationInGroup(int groupId, String groupName, double longitude, double latitude,
                                     int scale, String label, ReceiveListener callback) {
 
         YouMaiMsg.MsgData.Builder msgData = YouMaiMsg.MsgData.newBuilder();
         msgData.setSrcUserId(getUuid());
         msgData.setSrcAvatar(getHeadUrl());
         msgData.setSrcSex(getSex());
-        msgData.setSrcRealname(getRealName());
+        msgData.setSrcRealname(groupName);
         msgData.setSrcMobile(getPhoneNum());
         msgData.setGroupId(groupId);
         msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_LOCATION);
@@ -927,17 +929,18 @@ public class HuxinSdkManager {
      * tcp发送图片
      *
      * @param groupId
+     * @param groupName
      * @param fileId
      * @param quality
      * @param callback
      */
-    public void sendPictureInGroup(int groupId, String fileId, String quality,
+    public void sendPictureInGroup(int groupId, String groupName, String fileId, String quality,
                                    ReceiveListener callback) {
         YouMaiMsg.MsgData.Builder msgData = YouMaiMsg.MsgData.newBuilder();
         msgData.setSrcUserId(getUuid());
         msgData.setSrcAvatar(getHeadUrl());
         msgData.setSrcSex(getSex());
-        msgData.setSrcRealname(getRealName());
+        msgData.setSrcRealname(groupName);
         msgData.setSrcMobile(getPhoneNum());
         msgData.setGroupId(groupId);
         msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_IMAGE);
@@ -959,16 +962,17 @@ public class HuxinSdkManager {
      * tcp 发送音频
      *
      * @param groupId
+     * @param groupName
      * @param fileId
      * @param callback
      */
-    public void sendAudioInGroup(int groupId, String fileId, String secondsTime, String sourcePhone,
+    public void sendAudioInGroup(int groupId, String groupName, String fileId, String secondsTime, String sourcePhone,
                                  String forwardCount, ReceiveListener callback) {
         YouMaiMsg.MsgData.Builder msgData = YouMaiMsg.MsgData.newBuilder();
         msgData.setSrcUserId(getUuid());
         msgData.setSrcAvatar(getHeadUrl());
         msgData.setSrcSex(getSex());
-        msgData.setSrcRealname(getRealName());
+        msgData.setSrcRealname(groupName);
         msgData.setSrcMobile(getPhoneNum());
         msgData.setGroupId(groupId);
         msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_IMAGE);
@@ -993,16 +997,17 @@ public class HuxinSdkManager {
      * tcp发送视频
      *
      * @param groupId
+     * @param groupName
      * @param fileId
      * @param callback
      */
-    public void sendVideoInGroup(int groupId, String fileId, String frameId, String name, String size,
+    public void sendVideoInGroup(int groupId, String groupName, String fileId, String frameId, String name, String size,
                                  String time, ReceiveListener callback) {
         YouMaiMsg.MsgData.Builder msgData = YouMaiMsg.MsgData.newBuilder();
         msgData.setSrcUserId(getUuid());
         msgData.setSrcAvatar(getHeadUrl());
         msgData.setSrcSex(getSex());
-        msgData.setSrcRealname(getRealName());
+        msgData.setSrcRealname(groupName);
         msgData.setSrcMobile(getPhoneNum());
         msgData.setGroupId(groupId);
         msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_VIDEO);
@@ -1022,16 +1027,17 @@ public class HuxinSdkManager {
      * tcp发送视频
      *
      * @param groupId
+     * @param groupName
      * @param fileId
      * @param callback
      */
-    public void sendFileInGroup(int groupId, String fileId, String fileName, String fileSize,
+    public void sendFileInGroup(int groupId, String groupName, String fileId, String fileName, String fileSize,
                                 ReceiveListener callback) {
         YouMaiMsg.MsgData.Builder msgData = YouMaiMsg.MsgData.newBuilder();
         msgData.setSrcUserId(getUuid());
         msgData.setSrcAvatar(getHeadUrl());
         msgData.setSrcSex(getSex());
-        msgData.setSrcRealname(getRealName());
+        msgData.setSrcRealname(groupName);
         msgData.setSrcMobile(getPhoneNum());
         msgData.setGroupId(groupId);
         msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_FILE);

@@ -648,6 +648,7 @@ public class IMGroupActivity extends SdkBaseActivity implements
     private void sendMsg(CacheMsgBean msg) {
         Intent intent = new Intent(this, SendMsgService.class);
         intent.putExtra("isGroup", true);
+        intent.putExtra("groupName", groupName);
         intent.putExtra("data", msg);
         intent.putExtra("data_from", SendMsgService.FROM_IM);
         startService(intent);

@@ -55,7 +55,7 @@ public class SendMsgService extends IntentService {
     public static final String ACTION_UPDATE_MSG = "service.update.msg";
 
     boolean isGroup;
-
+    String groupName;
 
     public SendMsgService() {
         super("SendMsgService");
@@ -80,6 +80,7 @@ public class SendMsgService extends IntentService {
             String msgDataFrom = intent.getStringExtra(KEY_DATA_FROM);//消息从哪里发起
 
             isGroup = intent.getBooleanExtra("isGroup", false);
+            groupName = intent.getStringExtra("groupName");
 
             SendMsg sendMsg = new SendMsg(msgData, msgDataFrom);
             sendMsg(sendMsg);
@@ -201,7 +202,7 @@ public class SendMsgService extends IntentService {
         };
 
         if (isGroup) {
-            HuxinSdkManager.instance().sendTextInGroup(groupId, content, listener);
+            HuxinSdkManager.instance().sendTextInGroup(groupId, groupName, content, listener);
         } else {
             HuxinSdkManager.instance().sendText(dstUuid, content, listener);
         }
@@ -252,7 +253,7 @@ public class SendMsgService extends IntentService {
 
 
         if (isGroup) {
-            HuxinSdkManager.instance().sendLocationInGroup(groupId, longitude, latitude, scale, address, callback);
+            HuxinSdkManager.instance().sendLocationInGroup(groupId, groupName, longitude, latitude, scale, address, callback);
         } else {
             HuxinSdkManager.instance().sendLocation(dstUuid, longitude, latitude, scale, address, callback);
         }
@@ -476,7 +477,7 @@ public class SendMsgService extends IntentService {
 
 
         if (isGroup) {
-            HuxinSdkManager.instance().sendAudioInGroup(groupId, fileId, secondTimes, sourcePhone,
+            HuxinSdkManager.instance().sendAudioInGroup(groupId, groupName, fileId, secondTimes, sourcePhone,
                     forwardCount, receiveListener);
         } else {
             HuxinSdkManager.instance().sendAudio(dstUuid, fileId, secondTimes, sourcePhone,
@@ -525,7 +526,7 @@ public class SendMsgService extends IntentService {
 
 
         if (isGroup) {
-            HuxinSdkManager.instance().sendPictureInGroup(groupId, fileId,
+            HuxinSdkManager.instance().sendPictureInGroup(groupId, groupName, fileId,
                     isOriginal ? "original" : "thumbnail", receiveListener);
         } else {
             HuxinSdkManager.instance().sendPicture(dstUuid, fileId,
@@ -566,7 +567,7 @@ public class SendMsgService extends IntentService {
         };
         if (!"-1".equals(fileId)) {
             if (isGroup) {
-                HuxinSdkManager.instance().sendFileInGroup(groupId, fileId, fileName, fileSize,
+                HuxinSdkManager.instance().sendFileInGroup(groupId, groupName, fileId, fileName, fileSize,
                         receiveListener);
             } else {
                 HuxinSdkManager.instance().sendFile(dstUuid, fileId, fileName, fileSize,
@@ -616,7 +617,7 @@ public class SendMsgService extends IntentService {
         };
 
         if (isGroup) {
-            HuxinSdkManager.instance().sendVideoInGroup(groupId, fileId, frameId, name, size,
+            HuxinSdkManager.instance().sendVideoInGroup(groupId, groupName, fileId, frameId, name, size,
                     time + "", receiveListener);
         } else {
             HuxinSdkManager.instance().sendVideo(dstUuid, fileId, frameId, name, size,

@@ -75,7 +75,7 @@ public class IMMsgManager {
 
     private Class<?> mainClass;
 
-    private String targetPhone;
+    private String mTargetId;
 
 
     private IMMsgManager() {
@@ -314,26 +314,35 @@ public class IMMsgManager {
     }
 
     public void notifyMsg(IMChat msg, boolean isFormPush, boolean isGroup) {
-        String srcUuid = msg.getImChat().getSrcUserId();
+        String targetId;
+        if (isGroup) {
+            targetId = msg.getImChat().getGroupId() + "";
+        } else {
+            targetId = msg.getImChat().getSrcUserId();
+
+        }
+
+        String desName = msg.getImChat().getSrcRealname();
         String newMsgTip = mContext.getString(R.string.hx_hook_strategy_msg);
+
         if (msg.getMsgType() == YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_TEXT_VALUE) {  //文字
             ContentText text = msg.getContent().getText();
             String content = text.getContent();
             if (content.startsWith("/")) { //自定义表情
-                notifyMsg(mContext, srcUuid, newMsgTip + mContext.getString(R.string.hx_hook_strategy_msg_emoji), isFormPush, isGroup);
+                notifyMsg(mContext, targetId, desName, newMsgTip + mContext.getString(R.string.hx_hook_strategy_msg_emoji), isFormPush, isGroup);
             } else {  //文字
-                notifyMsg(mContext, srcUuid, content, isFormPush, isGroup);
+                notifyMsg(mContext, targetId, desName, content, isFormPush, isGroup);
             }
         } else if (msg.getMsgType() == YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_IMAGE_VALUE) { //图片
-            notifyMsg(mContext, srcUuid, newMsgTip + mContext.getString(R.string.hx_hook_strategy_msg_pic), isFormPush, isGroup);
+            notifyMsg(mContext, targetId, desName, newMsgTip + mContext.getString(R.string.hx_hook_strategy_msg_pic), isFormPush, isGroup);
         } else if (msg.getMsgType() == YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_VIDEO_VALUE) { //视频
-            notifyMsg(mContext, srcUuid, newMsgTip + mContext.getString(R.string.hx_hook_strategy_msg_tv), isFormPush, isGroup);
+            notifyMsg(mContext, targetId, desName, newMsgTip + mContext.getString(R.string.hx_hook_strategy_msg_tv), isFormPush, isGroup);
         } else if (msg.getMsgType() == YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_LOCATION_VALUE) { //定位
-            notifyMsg(mContext, srcUuid, newMsgTip + mContext.getString(R.string.hx_hook_strategy_msg_map), isFormPush, isGroup);
+            notifyMsg(mContext, targetId, desName, newMsgTip + mContext.getString(R.string.hx_hook_strategy_msg_map), isFormPush, isGroup);
         } else if (msg.getMsgType() == YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_AUDIO_VALUE) { //音频
-            notifyMsg(mContext, srcUuid, newMsgTip + mContext.getString(R.string.hx_hook_strategy_msg_voice), isFormPush, isGroup);
+            notifyMsg(mContext, targetId, desName, newMsgTip + mContext.getString(R.string.hx_hook_strategy_msg_voice), isFormPush, isGroup);
         } else if (msg.getMsgType() == YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_FILE_VALUE) { //文件
-            notifyMsg(mContext, srcUuid, newMsgTip + mContext.getString(R.string.hx_hook_strategy_msg_file), isFormPush, isGroup);
+            notifyMsg(mContext, targetId, desName, newMsgTip + mContext.getString(R.string.hx_hook_strategy_msg_file), isFormPush, isGroup);
         }
     }
 
@@ -521,14 +530,20 @@ public class IMMsgManager {
         }
     }
 
-    private void notifyMsg(Context context, String srcUuid, String content,
+    private void notifyMsg(Context context, String targetId, String disName, String content,
                            boolean isFormPush, boolean isGroup) {
-        /*if (AppUtils.isTopActiviy(mContext, IMConnectionActivity.class.getName())
-                && !TextUtils.isEmpty(targetPhone)
-                && targetPhone.equals(srcPhone)) {
+        if (!isGroup && AppUtils.isTopActiviy(mContext, IMConnectionActivity.class.getName())
+                && !TextUtils.isEmpty(mTargetId)
+                && mTargetId.equals(targetId)) {
             return;
-        }*/
-        int notifyID = srcUuid.hashCode();
+        } else if (isGroup && AppUtils.isTopActiviy(mContext, IMGroupActivity.class.getName())
+                && !TextUtils.isEmpty(mTargetId)
+                && mTargetId.equals(targetId)) {
+            return;
+        }
+
+
+        int notifyID = targetId.hashCode();
         NotificationCompat.Builder builder;
         if (Build.VERSION.SDK_INT >= 26) {
             builder = new NotificationCompat.Builder(context, "im_chat");
@@ -550,12 +565,19 @@ public class IMMsgManager {
         Intent resultIntent;
         if (isGroup) {
             resultIntent = new Intent(context, IMGroupActivity.class);
+            try {
+                int groupId = Integer.parseInt(targetId);
+                resultIntent.putExtra(IMGroupActivity.DST_UUID, groupId);
+                resultIntent.putExtra(IMGroupActivity.DST_NAME, disName);
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            }
         } else {
             resultIntent = new Intent(context, IMConnectionActivity.class);
+            resultIntent.putExtra(IMConnectionActivity.DST_UUID, targetId);
+            resultIntent.putExtra(IMConnectionActivity.DST_NAME, disName);
         }
 
-        resultIntent.putExtra(IMConnectionActivity.DST_UUID, srcUuid);
-        //resultIntent.putExtra(IMConnectionActivity.DST_NAME, HuxinSdkManager.instance().getContactName(srcPhone));
         // The stack builder object will contain an artificial back stack for the
         // started Activity.
         // This ensures that navigating backward from the Activity leads out of
@@ -584,7 +606,7 @@ public class IMMsgManager {
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
         boolean isNotBadge = CallInfo.IsCalling()
-                || (AppUtils.isTopActiviy(mContext, "com.youmai.hxsdk.activity.IMConnectionActivity") && targetPhone.equals(srcUuid));
+                || (AppUtils.isTopActiviy(mContext, IMConnectionActivity.class.getName()) && mTargetId.equals(targetId));
 
         if (isNotBadge) {
             //for 隐藏不该收到的通知,会崩 小米手机必须设置small icon
@@ -594,10 +616,10 @@ public class IMMsgManager {
         } else {
             // mId allows you to update the notification later on.
             notificationManager.notify(notifyID, builder.build());
-            addNotifyCount(srcUuid, notifyID);   //添加通知栏消息
+            addNotifyCount(targetId, notifyID);   //添加通知栏消息
 
             if (!isFormPush) {
-                addBadge(srcUuid);   //添加桌面圆点
+                addBadge(targetId);   //添加桌面圆点
             }
         }
     }
@@ -631,7 +653,7 @@ public class IMMsgManager {
     }
 
     public void removeBadge(String dstPhone) {
-        targetPhone = dstPhone;
+        mTargetId = dstPhone;
         Integer value = badgeCount.get(dstPhone);
 
         if (value != null) {

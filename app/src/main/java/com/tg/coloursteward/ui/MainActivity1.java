@@ -3,6 +3,7 @@ package com.tg.coloursteward.ui;
 import android.Manifest;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -22,15 +23,20 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
+import com.tg.coloursteward.InviteRegisterActivity;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.application.CityPropertyApplication;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.fragment.FragmentManagement;
 import com.tg.coloursteward.fragment.FragmentMine;
+import com.tg.coloursteward.info.GridViewInfo;
 import com.tg.coloursteward.info.HomeDeskTopInfo;
 import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.log.Logger;
@@ -50,8 +56,12 @@ import com.tg.coloursteward.updateapk.UpdateManager;
 import com.tg.coloursteward.util.AuthTimeUtils;
 import com.tg.coloursteward.util.ExampleUtil;
 import com.tg.coloursteward.util.Tools;
+import com.tg.coloursteward.view.PopWindowView;
 import com.tg.coloursteward.view.dialog.ToastFactory;
 import com.youmai.hxsdk.HuxinSdkManager;
+import com.youmai.hxsdk.config.ColorsConfig;
+import com.youmai.hxsdk.http.IPostListener;
+import com.youmai.hxsdk.http.OkHttpConnector;
 import com.youmai.hxsdk.push.MorePushManager;
 
 import org.json.JSONArray;
@@ -59,6 +69,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -71,7 +82,7 @@ import cn.jpush.android.api.TagAliasCallback;
  * Created by colin on 2018/3/15.
  */
 
-public class MainActivity1 extends AppCompatActivity implements MessageHandler.ResponseListener {
+public class MainActivity1 extends AppCompatActivity implements MessageHandler.ResponseListener, View.OnClickListener {
 
     private static final String TAG = MainActivity1.class.getSimpleName();
 
@@ -90,10 +101,9 @@ public class MainActivity1 extends AppCompatActivity implements MessageHandler.R
 
     private final int REQUESTPERMISSION = 110;
 
-    private ImageView img_left;
+    private ImageView img_scan;
     private TextView tv_title;
-    private ImageView img_right1;
-    private ImageView img_right2;
+    private ImageView img_add;
 
     private ViewPager mViewPager;
     private BottomNavigationViewEx navigation;
@@ -168,6 +178,8 @@ public class MainActivity1 extends AppCompatActivity implements MessageHandler.R
         initPush();
 
         initProto();
+
+        reqSearchList();
 
         MorePushManager.connect(this);
     }
@@ -346,11 +358,12 @@ public class MainActivity1 extends AppCompatActivity implements MessageHandler.R
     }
 
     private void initView() {
-        img_left = (ImageView) findViewById(R.id.img_left);
+        img_scan = (ImageView) findViewById(R.id.img_scan);
         tv_title = (TextView) findViewById(R.id.tv_title);
+        img_add = (ImageView) findViewById(R.id.img_add);
 
-        img_right1 = (ImageView) findViewById(R.id.img_right1);
-        img_right2 = (ImageView) findViewById(R.id.img_right2);
+        img_scan.setOnClickListener(this);
+        img_add.setOnClickListener(this);
 
         mViewPager = (ViewPager) findViewById(R.id.view_pager);
         navigation = (BottomNavigationViewEx) findViewById(R.id.navigation);
@@ -759,6 +772,89 @@ public class MainActivity1 extends AppCompatActivity implements MessageHandler.R
 
     };
 
+
+    private ArrayList<GridViewInfo> gridlistAdd = new ArrayList<>();
+
+
+    private void reqSearchList() {
+        String url = Contants.URl.URL_ICETEST + "/newoa/rights/list";
+        String pwd = Tools.getPassWord(this);
+
+        ContentValues params = new ContentValues();
+        params.put("user_name", UserInfo.employeeAccount);
+        params.put("password", pwd);
+        params.put("resource", "app");
+        params.put("cate_id", 0);
+        ColorsConfig.commonParams(params);
+
+        OkHttpConnector.httpPost(url, params, new IPostListener() {
+            @Override
+            public void httpReqResult(String response) {
+                String jsonString = HttpTools.getContentString(response);
+                if (jsonString != null) {
+                    ResponseData app_list = HttpTools.getResponseKey(jsonString, "app_list");
+                    if (app_list.length > 0) {
+                        Tools.saveCommonInfo(mContext, response);
+                        JSONArray jsonArray = app_list.getJSONArray(0, "list");
+                        ResponseData data = HttpTools.getResponseKeyJSONArray(jsonArray);
+                        gridlistAdd = new ArrayList<>();
+                        GridViewInfo item;
+                        for (int i = 0; i < data.length; i++) {
+                            try {
+                                item = new GridViewInfo();
+                                item.name = data.getString(i, "name");
+                                item.oauthType = data.getString(i, "oauthType");
+                                item.developerCode = data.getString(i, "app_code");
+                                item.clientCode = data.getString(i, "app_code");
+                                item.sso = data.getString(i, "url");
+                                JSONObject icon = data.getJSONObject(i, "icon");
+                                if (icon != null || icon.length() > 0) {
+                                    item.icon = icon.getString("android");
+                                }
+                                gridlistAdd.add(item);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    private void lightoff() {
+        WindowManager.LayoutParams lp = getWindow().getAttributes();
+        lp.alpha = 0.3f;
+        getWindow().setAttributes(lp);
+    }
+
+    class PopupDismissListener implements PopupWindow.OnDismissListener {
+
+        @Override
+        public void onDismiss() {
+            WindowManager.LayoutParams lp = getWindow().getAttributes();
+            lp.alpha = 1.0f;
+            getWindow().setAttributes(lp);
+        }
+
+    }
+
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        switch (id) {
+            case R.id.img_scan:
+                startActivity(new Intent(this, InviteRegisterActivity.class));
+                break;
+            case R.id.img_add:
+                PopWindowView popWindowView = new PopWindowView(this, gridlistAdd);
+                popWindowView.setOnDismissListener(new PopupDismissListener());
+                popWindowView.showPopupWindow(img_add);
+                lightoff();
+                break;
+
+        }
+    }
 
     private static class NormalHandler extends android.os.Handler {
         private final WeakReference<MainActivity1> mTarget;

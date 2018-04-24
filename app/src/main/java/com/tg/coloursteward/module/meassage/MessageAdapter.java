@@ -21,10 +21,13 @@ import com.tg.coloursteward.util.StringUtils;
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
 import com.youmai.hxsdk.im.IMMsgManager;
 import com.youmai.hxsdk.im.cache.CacheMsgTxt;
+import com.youmai.hxsdk.utils.TimeUtils;
 import com.youmai.hxsdk.view.chat.emoticon.utils.EmoticonHandler;
 import com.youmai.hxsdk.view.chat.utils.Utils;
 
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -158,7 +161,18 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             if (model.getPushMsg() != null) {
 
                 String comefrom = model.getPushMsg().getComefrom();
-                itemView.message_time.setText(model.getPushMsg().getHomePushTime());
+                String pushTime = model.getPushMsg().getHomePushTime();
+                try {
+                    Calendar calendar = TimeUtils.parseDate(pushTime, TimeUtils.DEFAULT_DATE_FORMAT);
+                    long millis = calendar.getTimeInMillis();
+
+                    String time = TimeFormatUtil.convertTimeMillli(mContext, millis);
+                    itemView.message_time.setText(time);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+
                 itemView.message_name.setText(comefrom);
                 itemView.message_type.setText(model.getPushMsg().getTitle());
 

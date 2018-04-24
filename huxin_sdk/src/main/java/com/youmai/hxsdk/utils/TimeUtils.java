@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.youmai.hxsdk.R;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -59,6 +60,20 @@ public class TimeUtils {
         return getTime(timeInMillis, DATE_FORMAT_DATE);
     }
 
+    /**
+     * 日期格式中解析日历
+     *
+     * @param str
+     * @param sdf
+     * @return
+     * @throws ParseException
+     */
+    public static Calendar parseDate(String str, SimpleDateFormat sdf) throws ParseException {
+        Date date = sdf.parse(str);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        return calendar;
+    }
 
     /**
      * get current time in milliseconds

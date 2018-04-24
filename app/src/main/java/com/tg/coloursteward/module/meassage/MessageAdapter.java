@@ -21,6 +21,7 @@ import com.tg.coloursteward.util.StringUtils;
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
 import com.youmai.hxsdk.im.IMMsgManager;
 import com.youmai.hxsdk.im.cache.CacheMsgTxt;
+import com.youmai.hxsdk.utils.GlideRoundTransform;
 import com.youmai.hxsdk.utils.TimeUtils;
 import com.youmai.hxsdk.view.chat.emoticon.utils.EmoticonHandler;
 import com.youmai.hxsdk.view.chat.utils.Utils;
@@ -87,6 +88,15 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public List<ExCacheMsgBean> getMessageList() {
         return messageList;
     }
+
+    public void addHeadItem(ExCacheMsgBean item) {
+        if (messageList != null) {
+            messageList.add(0, item);
+            notifyItemInserted(0);
+            //notifyItemChanged(0);
+        }
+    }
+
 
     public void setMessageList(List<ExCacheMsgBean> messageList) {
         this.messageList = messageList;
@@ -249,7 +259,9 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 String avatar = model.getSenderAvatar();
                 Glide.with(mContext).load(avatar)
                         .apply(new RequestOptions()
-                                .placeholder(R.drawable.message_common_default_user_bg)
+                                .transform(new GlideRoundTransform(mContext))
+                                .placeholder(com.youmai.hxsdk.R.drawable.color_default_header)
+                                .error(com.youmai.hxsdk.R.drawable.color_default_header)
                                 .diskCacheStrategy(DiskCacheStrategy.RESOURCE))
                         .into(itemView.message_icon);
             }

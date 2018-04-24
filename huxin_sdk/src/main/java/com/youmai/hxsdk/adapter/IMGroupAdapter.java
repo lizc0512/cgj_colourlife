@@ -48,6 +48,7 @@ import com.youmai.hxsdk.module.videoplayer.VideoPlayerActivity;
 import com.youmai.hxsdk.module.videoplayer.bean.VideoDetailInfo;
 import com.youmai.hxsdk.proto.YouMaiMsg;
 import com.youmai.hxsdk.service.SendMsgService;
+import com.youmai.hxsdk.utils.GlideRoundTransform;
 import com.youmai.hxsdk.utils.QiniuUrl;
 import com.youmai.hxsdk.utils.TimeUtils;
 import com.youmai.hxsdk.view.LinearLayoutManagerWithSmoothScroller;
@@ -946,8 +947,9 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
 
         Glide.with(mAct).load(avatar)
                 .apply(new RequestOptions()
-                        .placeholder(R.drawable.hx_index_head01)
-                        .error(R.drawable.hx_index_head01)
+                        .transform(new GlideRoundTransform(mAct))
+                        .placeholder(R.drawable.color_default_header)
+                        .error(R.drawable.color_default_header)
                         .diskCacheStrategy(DiskCacheStrategy.RESOURCE))
                 .into(baseViewHolder.senderIV);
     }

@@ -1330,7 +1330,23 @@ public final class YouMaiGroup {
         getMemberNameBytes();
 
         /**
-         * <code>optional uint32 member_role = 3;</code>
+         * <code>optional string user_name = 3;</code>
+         */
+        boolean hasUserName();
+
+        /**
+         * <code>optional string user_name = 3;</code>
+         */
+        String getUserName();
+
+        /**
+         * <code>optional string user_name = 3;</code>
+         */
+        com.google.protobuf.ByteString
+        getUserNameBytes();
+
+        /**
+         * <code>optional uint32 member_role = 4;</code>
          * <p>
          * <pre>
          * 群成员角色(0-群主，1-管理员，2-普通成员)
@@ -1339,7 +1355,7 @@ public final class YouMaiGroup {
         boolean hasMemberRole();
 
         /**
-         * <code>optional uint32 member_role = 3;</code>
+         * <code>optional uint32 member_role = 4;</code>
          * <p>
          * <pre>
          * 群成员角色(0-群主，1-管理员，2-普通成员)
@@ -1418,8 +1434,14 @@ public final class YouMaiGroup {
                             memberName_ = bs;
                             break;
                         }
-                        case 24: {
+                        case 26: {
+                            com.google.protobuf.ByteString bs = input.readBytes();
                             bitField0_ |= 0x00000004;
+                            userName_ = bs;
+                            break;
+                        }
+                        case 32: {
+                            bitField0_ |= 0x00000008;
                             memberRole_ = input.readUInt32();
                             break;
                         }
@@ -1554,22 +1576,67 @@ public final class YouMaiGroup {
             }
         }
 
-        public static final int MEMBER_ROLE_FIELD_NUMBER = 3;
+        public static final int USER_NAME_FIELD_NUMBER = 3;
+        private Object userName_;
+
+        /**
+         * <code>optional string user_name = 3;</code>
+         */
+        public boolean hasUserName() {
+            return ((bitField0_ & 0x00000004) == 0x00000004);
+        }
+
+        /**
+         * <code>optional string user_name = 3;</code>
+         */
+        public String getUserName() {
+            Object ref = userName_;
+            if (ref instanceof String) {
+                return (String) ref;
+            } else {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                String s = bs.toStringUtf8();
+                if (bs.isValidUtf8()) {
+                    userName_ = s;
+                }
+                return s;
+            }
+        }
+
+        /**
+         * <code>optional string user_name = 3;</code>
+         */
+        public com.google.protobuf.ByteString
+        getUserNameBytes() {
+            Object ref = userName_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (String) ref);
+                userName_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
+        public static final int MEMBER_ROLE_FIELD_NUMBER = 4;
         private int memberRole_;
 
         /**
-         * <code>optional uint32 member_role = 3;</code>
+         * <code>optional uint32 member_role = 4;</code>
          * <p>
          * <pre>
          * 群成员角色(0-群主，1-管理员，2-普通成员)
          * </pre>
          */
         public boolean hasMemberRole() {
-            return ((bitField0_ & 0x00000004) == 0x00000004);
+            return ((bitField0_ & 0x00000008) == 0x00000008);
         }
 
         /**
-         * <code>optional uint32 member_role = 3;</code>
+         * <code>optional uint32 member_role = 4;</code>
          * <p>
          * <pre>
          * 群成员角色(0-群主，1-管理员，2-普通成员)
@@ -1582,6 +1649,7 @@ public final class YouMaiGroup {
         private void initFields() {
             memberId_ = "";
             memberName_ = "";
+            userName_ = "";
             memberRole_ = 0;
         }
 
@@ -1606,7 +1674,10 @@ public final class YouMaiGroup {
                 output.writeBytes(2, getMemberNameBytes());
             }
             if (((bitField0_ & 0x00000004) == 0x00000004)) {
-                output.writeUInt32(3, memberRole_);
+                output.writeBytes(3, getUserNameBytes());
+            }
+            if (((bitField0_ & 0x00000008) == 0x00000008)) {
+                output.writeUInt32(4, memberRole_);
             }
             getUnknownFields().writeTo(output);
         }
@@ -1628,7 +1699,11 @@ public final class YouMaiGroup {
             }
             if (((bitField0_ & 0x00000004) == 0x00000004)) {
                 size += com.google.protobuf.CodedOutputStream
-                        .computeUInt32Size(3, memberRole_);
+                        .computeBytesSize(3, getUserNameBytes());
+            }
+            if (((bitField0_ & 0x00000008) == 0x00000008)) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeUInt32Size(4, memberRole_);
             }
             size += getUnknownFields().getSerializedSize();
             memoizedSerializedSize = size;
@@ -1773,8 +1848,10 @@ public final class YouMaiGroup {
                 bitField0_ = (bitField0_ & ~0x00000001);
                 memberName_ = "";
                 bitField0_ = (bitField0_ & ~0x00000002);
-                memberRole_ = 0;
+                userName_ = "";
                 bitField0_ = (bitField0_ & ~0x00000004);
+                memberRole_ = 0;
+                bitField0_ = (bitField0_ & ~0x00000008);
                 return this;
             }
 
@@ -1814,6 +1891,10 @@ public final class YouMaiGroup {
                 if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
                     to_bitField0_ |= 0x00000004;
                 }
+                result.userName_ = userName_;
+                if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
+                    to_bitField0_ |= 0x00000008;
+                }
                 result.memberRole_ = memberRole_;
                 result.bitField0_ = to_bitField0_;
                 onBuilt();
@@ -1839,6 +1920,11 @@ public final class YouMaiGroup {
                 if (other.hasMemberName()) {
                     bitField0_ |= 0x00000002;
                     memberName_ = other.memberName_;
+                    onChanged();
+                }
+                if (other.hasUserName()) {
+                    bitField0_ |= 0x00000004;
+                    userName_ = other.userName_;
                     onChanged();
                 }
                 if (other.hasMemberRole()) {
@@ -2036,21 +2122,103 @@ public final class YouMaiGroup {
                 return this;
             }
 
+            private Object userName_ = "";
+
+            /**
+             * <code>optional string user_name = 3;</code>
+             */
+            public boolean hasUserName() {
+                return ((bitField0_ & 0x00000004) == 0x00000004);
+            }
+
+            /**
+             * <code>optional string user_name = 3;</code>
+             */
+            public String getUserName() {
+                Object ref = userName_;
+                if (!(ref instanceof String)) {
+                    com.google.protobuf.ByteString bs =
+                            (com.google.protobuf.ByteString) ref;
+                    String s = bs.toStringUtf8();
+                    if (bs.isValidUtf8()) {
+                        userName_ = s;
+                    }
+                    return s;
+                } else {
+                    return (String) ref;
+                }
+            }
+
+            /**
+             * <code>optional string user_name = 3;</code>
+             */
+            public com.google.protobuf.ByteString
+            getUserNameBytes() {
+                Object ref = userName_;
+                if (ref instanceof String) {
+                    com.google.protobuf.ByteString b =
+                            com.google.protobuf.ByteString.copyFromUtf8(
+                                    (String) ref);
+                    userName_ = b;
+                    return b;
+                } else {
+                    return (com.google.protobuf.ByteString) ref;
+                }
+            }
+
+            /**
+             * <code>optional string user_name = 3;</code>
+             */
+            public Builder setUserName(
+                    String value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000004;
+                userName_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string user_name = 3;</code>
+             */
+            public Builder clearUserName() {
+                bitField0_ = (bitField0_ & ~0x00000004);
+                userName_ = getDefaultInstance().getUserName();
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string user_name = 3;</code>
+             */
+            public Builder setUserNameBytes(
+                    com.google.protobuf.ByteString value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000004;
+                userName_ = value;
+                onChanged();
+                return this;
+            }
+
             private int memberRole_;
 
             /**
-             * <code>optional uint32 member_role = 3;</code>
+             * <code>optional uint32 member_role = 4;</code>
              * <p>
              * <pre>
              * 群成员角色(0-群主，1-管理员，2-普通成员)
              * </pre>
              */
             public boolean hasMemberRole() {
-                return ((bitField0_ & 0x00000004) == 0x00000004);
+                return ((bitField0_ & 0x00000008) == 0x00000008);
             }
 
             /**
-             * <code>optional uint32 member_role = 3;</code>
+             * <code>optional uint32 member_role = 4;</code>
              * <p>
              * <pre>
              * 群成员角色(0-群主，1-管理员，2-普通成员)
@@ -2061,28 +2229,28 @@ public final class YouMaiGroup {
             }
 
             /**
-             * <code>optional uint32 member_role = 3;</code>
+             * <code>optional uint32 member_role = 4;</code>
              * <p>
              * <pre>
              * 群成员角色(0-群主，1-管理员，2-普通成员)
              * </pre>
              */
             public Builder setMemberRole(int value) {
-                bitField0_ |= 0x00000004;
+                bitField0_ |= 0x00000008;
                 memberRole_ = value;
                 onChanged();
                 return this;
             }
 
             /**
-             * <code>optional uint32 member_role = 3;</code>
+             * <code>optional uint32 member_role = 4;</code>
              * <p>
              * <pre>
              * 群成员角色(0-群主，1-管理员，2-普通成员)
              * </pre>
              */
             public Builder clearMemberRole() {
-                bitField0_ = (bitField0_ & ~0x00000004);
+                bitField0_ = (bitField0_ & ~0x00000008);
                 memberRole_ = 0;
                 onChanged();
                 return this;
@@ -5456,14 +5624,14 @@ public final class YouMaiGroup {
         long getUpdateTime();
 
         /**
-         * <code>optional .ResultCode result = 10;</code>
+         * <code>optional .com.proto.basic.ResultCode result = 10;</code>
          */
         boolean hasResult();
 
         /**
-         * <code>optional .ResultCode result = 10;</code>
+         * <code>optional .com.proto.basic.ResultCode result = 10;</code>
          */
-        YouMaiBasic.ResultCode getResult();
+        com.proto.basic.YouMaiBasic.ResultCode getResult();
     }
 
     /**
@@ -5550,7 +5718,7 @@ public final class YouMaiGroup {
                         }
                         case 80: {
                             int rawValue = input.readEnum();
-                            YouMaiBasic.ResultCode value = YouMaiBasic.ResultCode.valueOf(rawValue);
+                            com.proto.basic.YouMaiBasic.ResultCode value = com.proto.basic.YouMaiBasic.ResultCode.valueOf(rawValue);
                             if (value == null) {
                                 unknownFields.mergeVarintField(10, rawValue);
                             } else {
@@ -5763,19 +5931,19 @@ public final class YouMaiGroup {
         }
 
         public static final int RESULT_FIELD_NUMBER = 10;
-        private YouMaiBasic.ResultCode result_;
+        private com.proto.basic.YouMaiBasic.ResultCode result_;
 
         /**
-         * <code>optional .ResultCode result = 10;</code>
+         * <code>optional .com.proto.basic.ResultCode result = 10;</code>
          */
         public boolean hasResult() {
             return ((bitField0_ & 0x00000008) == 0x00000008);
         }
 
         /**
-         * <code>optional .ResultCode result = 10;</code>
+         * <code>optional .com.proto.basic.ResultCode result = 10;</code>
          */
-        public YouMaiBasic.ResultCode getResult() {
+        public com.proto.basic.YouMaiBasic.ResultCode getResult() {
             return result_;
         }
 
@@ -5784,7 +5952,7 @@ public final class YouMaiGroup {
             userId_ = "";
             memberList_ = java.util.Collections.emptyList();
             updateTime_ = 0L;
-            result_ = YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
+            result_ = com.proto.basic.YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
         }
 
         private byte memoizedIsInitialized = -1;
@@ -5998,7 +6166,7 @@ public final class YouMaiGroup {
                 }
                 updateTime_ = 0L;
                 bitField0_ = (bitField0_ & ~0x00000008);
-                result_ = YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
+                result_ = com.proto.basic.YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
                 bitField0_ = (bitField0_ & ~0x00000010);
                 return this;
             }
@@ -6663,26 +6831,26 @@ public final class YouMaiGroup {
                 return this;
             }
 
-            private YouMaiBasic.ResultCode result_ = YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
+            private com.proto.basic.YouMaiBasic.ResultCode result_ = com.proto.basic.YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
 
             /**
-             * <code>optional .ResultCode result = 10;</code>
+             * <code>optional .com.proto.basic.ResultCode result = 10;</code>
              */
             public boolean hasResult() {
                 return ((bitField0_ & 0x00000010) == 0x00000010);
             }
 
             /**
-             * <code>optional .ResultCode result = 10;</code>
+             * <code>optional .com.proto.basic.ResultCode result = 10;</code>
              */
-            public YouMaiBasic.ResultCode getResult() {
+            public com.proto.basic.YouMaiBasic.ResultCode getResult() {
                 return result_;
             }
 
             /**
-             * <code>optional .ResultCode result = 10;</code>
+             * <code>optional .com.proto.basic.ResultCode result = 10;</code>
              */
-            public Builder setResult(YouMaiBasic.ResultCode value) {
+            public Builder setResult(com.proto.basic.YouMaiBasic.ResultCode value) {
                 if (value == null) {
                     throw new NullPointerException();
                 }
@@ -6693,11 +6861,11 @@ public final class YouMaiGroup {
             }
 
             /**
-             * <code>optional .ResultCode result = 10;</code>
+             * <code>optional .com.proto.basic.ResultCode result = 10;</code>
              */
             public Builder clearResult() {
                 bitField0_ = (bitField0_ & ~0x00000010);
-                result_ = YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
+                result_ = com.proto.basic.YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
                 onChanged();
                 return this;
             }
@@ -7390,14 +7558,14 @@ public final class YouMaiGroup {
         int getGroupId();
 
         /**
-         * <code>optional .ResultCode result = 10;</code>
+         * <code>optional .com.proto.basic.ResultCode result = 10;</code>
          */
         boolean hasResult();
 
         /**
-         * <code>optional .ResultCode result = 10;</code>
+         * <code>optional .com.proto.basic.ResultCode result = 10;</code>
          */
-        YouMaiBasic.ResultCode getResult();
+        com.proto.basic.YouMaiBasic.ResultCode getResult();
     }
 
     /**
@@ -7465,7 +7633,7 @@ public final class YouMaiGroup {
                         }
                         case 80: {
                             int rawValue = input.readEnum();
-                            YouMaiBasic.ResultCode value = YouMaiBasic.ResultCode.valueOf(rawValue);
+                            com.proto.basic.YouMaiBasic.ResultCode value = com.proto.basic.YouMaiBasic.ResultCode.valueOf(rawValue);
                             if (value == null) {
                                 unknownFields.mergeVarintField(10, rawValue);
                             } else {
@@ -7541,25 +7709,25 @@ public final class YouMaiGroup {
         }
 
         public static final int RESULT_FIELD_NUMBER = 10;
-        private YouMaiBasic.ResultCode result_;
+        private com.proto.basic.YouMaiBasic.ResultCode result_;
 
         /**
-         * <code>optional .ResultCode result = 10;</code>
+         * <code>optional .com.proto.basic.ResultCode result = 10;</code>
          */
         public boolean hasResult() {
             return ((bitField0_ & 0x00000002) == 0x00000002);
         }
 
         /**
-         * <code>optional .ResultCode result = 10;</code>
+         * <code>optional .com.proto.basic.ResultCode result = 10;</code>
          */
-        public YouMaiBasic.ResultCode getResult() {
+        public com.proto.basic.YouMaiBasic.ResultCode getResult() {
             return result_;
         }
 
         private void initFields() {
             groupId_ = 0;
-            result_ = YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
+            result_ = com.proto.basic.YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
         }
 
         private byte memoizedIsInitialized = -1;
@@ -7741,7 +7909,7 @@ public final class YouMaiGroup {
                 super.clear();
                 groupId_ = 0;
                 bitField0_ = (bitField0_ & ~0x00000001);
-                result_ = YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
+                result_ = com.proto.basic.YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
                 bitField0_ = (bitField0_ & ~0x00000002);
                 return this;
             }
@@ -7881,26 +8049,26 @@ public final class YouMaiGroup {
                 return this;
             }
 
-            private YouMaiBasic.ResultCode result_ = YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
+            private com.proto.basic.YouMaiBasic.ResultCode result_ = com.proto.basic.YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
 
             /**
-             * <code>optional .ResultCode result = 10;</code>
+             * <code>optional .com.proto.basic.ResultCode result = 10;</code>
              */
             public boolean hasResult() {
                 return ((bitField0_ & 0x00000002) == 0x00000002);
             }
 
             /**
-             * <code>optional .ResultCode result = 10;</code>
+             * <code>optional .com.proto.basic.ResultCode result = 10;</code>
              */
-            public YouMaiBasic.ResultCode getResult() {
+            public com.proto.basic.YouMaiBasic.ResultCode getResult() {
                 return result_;
             }
 
             /**
-             * <code>optional .ResultCode result = 10;</code>
+             * <code>optional .com.proto.basic.ResultCode result = 10;</code>
              */
-            public Builder setResult(YouMaiBasic.ResultCode value) {
+            public Builder setResult(com.proto.basic.YouMaiBasic.ResultCode value) {
                 if (value == null) {
                     throw new NullPointerException();
                 }
@@ -7911,11 +8079,11 @@ public final class YouMaiGroup {
             }
 
             /**
-             * <code>optional .ResultCode result = 10;</code>
+             * <code>optional .com.proto.basic.ResultCode result = 10;</code>
              */
             public Builder clearResult() {
                 bitField0_ = (bitField0_ & ~0x00000002);
-                result_ = YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
+                result_ = com.proto.basic.YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
                 onChanged();
                 return this;
             }
@@ -9702,14 +9870,14 @@ public final class YouMaiGroup {
         long getUpdateTime();
 
         /**
-         * <code>optional .ResultCode result = 10;</code>
+         * <code>optional .com.proto.basic.ResultCode result = 10;</code>
          */
         boolean hasResult();
 
         /**
-         * <code>optional .ResultCode result = 10;</code>
+         * <code>optional .com.proto.basic.ResultCode result = 10;</code>
          */
-        YouMaiBasic.ResultCode getResult();
+        com.proto.basic.YouMaiBasic.ResultCode getResult();
     }
 
     /**
@@ -9805,7 +9973,7 @@ public final class YouMaiGroup {
                         }
                         case 80: {
                             int rawValue = input.readEnum();
-                            YouMaiBasic.ResultCode value = YouMaiBasic.ResultCode.valueOf(rawValue);
+                            com.proto.basic.YouMaiBasic.ResultCode value = com.proto.basic.YouMaiBasic.ResultCode.valueOf(rawValue);
                             if (value == null) {
                                 unknownFields.mergeVarintField(10, rawValue);
                             } else {
@@ -9950,19 +10118,19 @@ public final class YouMaiGroup {
         }
 
         public static final int RESULT_FIELD_NUMBER = 10;
-        private YouMaiBasic.ResultCode result_;
+        private com.proto.basic.YouMaiBasic.ResultCode result_;
 
         /**
-         * <code>optional .ResultCode result = 10;</code>
+         * <code>optional .com.proto.basic.ResultCode result = 10;</code>
          */
         public boolean hasResult() {
             return ((bitField0_ & 0x00000008) == 0x00000008);
         }
 
         /**
-         * <code>optional .ResultCode result = 10;</code>
+         * <code>optional .com.proto.basic.ResultCode result = 10;</code>
          */
-        public YouMaiBasic.ResultCode getResult() {
+        public com.proto.basic.YouMaiBasic.ResultCode getResult() {
             return result_;
         }
 
@@ -9971,7 +10139,7 @@ public final class YouMaiGroup {
             memberList_ = java.util.Collections.emptyList();
             type_ = YouMaiGroup.GroupMemberOptType.GROUP_MEMBER_OPT_ADD;
             updateTime_ = 0L;
-            result_ = YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
+            result_ = com.proto.basic.YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
         }
 
         private byte memoizedIsInitialized = -1;
@@ -10189,7 +10357,7 @@ public final class YouMaiGroup {
                 bitField0_ = (bitField0_ & ~0x00000004);
                 updateTime_ = 0L;
                 bitField0_ = (bitField0_ & ~0x00000008);
-                result_ = YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
+                result_ = com.proto.basic.YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
                 bitField0_ = (bitField0_ & ~0x00000010);
                 return this;
             }
@@ -10697,26 +10865,26 @@ public final class YouMaiGroup {
                 return this;
             }
 
-            private YouMaiBasic.ResultCode result_ = YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
+            private com.proto.basic.YouMaiBasic.ResultCode result_ = com.proto.basic.YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
 
             /**
-             * <code>optional .ResultCode result = 10;</code>
+             * <code>optional .com.proto.basic.ResultCode result = 10;</code>
              */
             public boolean hasResult() {
                 return ((bitField0_ & 0x00000010) == 0x00000010);
             }
 
             /**
-             * <code>optional .ResultCode result = 10;</code>
+             * <code>optional .com.proto.basic.ResultCode result = 10;</code>
              */
-            public YouMaiBasic.ResultCode getResult() {
+            public com.proto.basic.YouMaiBasic.ResultCode getResult() {
                 return result_;
             }
 
             /**
-             * <code>optional .ResultCode result = 10;</code>
+             * <code>optional .com.proto.basic.ResultCode result = 10;</code>
              */
-            public Builder setResult(YouMaiBasic.ResultCode value) {
+            public Builder setResult(com.proto.basic.YouMaiBasic.ResultCode value) {
                 if (value == null) {
                     throw new NullPointerException();
                 }
@@ -10727,11 +10895,11 @@ public final class YouMaiGroup {
             }
 
             /**
-             * <code>optional .ResultCode result = 10;</code>
+             * <code>optional .com.proto.basic.ResultCode result = 10;</code>
              */
             public Builder clearResult() {
                 bitField0_ = (bitField0_ & ~0x00000010);
-                result_ = YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
+                result_ = com.proto.basic.YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
                 onChanged();
                 return this;
             }
@@ -12943,14 +13111,14 @@ public final class YouMaiGroup {
         int getLatestGroupIdList(int index);
 
         /**
-         * <code>optional .ResultCode result = 10;</code>
+         * <code>optional .com.proto.basic.ResultCode result = 10;</code>
          */
         boolean hasResult();
 
         /**
-         * <code>optional .ResultCode result = 10;</code>
+         * <code>optional .com.proto.basic.ResultCode result = 10;</code>
          */
-        YouMaiBasic.ResultCode getResult();
+        com.proto.basic.YouMaiBasic.ResultCode getResult();
     }
 
     /**
@@ -13042,7 +13210,7 @@ public final class YouMaiGroup {
                         }
                         case 80: {
                             int rawValue = input.readEnum();
-                            YouMaiBasic.ResultCode value = YouMaiBasic.ResultCode.valueOf(rawValue);
+                            com.proto.basic.YouMaiBasic.ResultCode value = com.proto.basic.YouMaiBasic.ResultCode.valueOf(rawValue);
                             if (value == null) {
                                 unknownFields.mergeVarintField(10, rawValue);
                             } else {
@@ -13196,26 +13364,26 @@ public final class YouMaiGroup {
         }
 
         public static final int RESULT_FIELD_NUMBER = 10;
-        private YouMaiBasic.ResultCode result_;
+        private com.proto.basic.YouMaiBasic.ResultCode result_;
 
         /**
-         * <code>optional .ResultCode result = 10;</code>
+         * <code>optional .com.proto.basic.ResultCode result = 10;</code>
          */
         public boolean hasResult() {
             return ((bitField0_ & 0x00000001) == 0x00000001);
         }
 
         /**
-         * <code>optional .ResultCode result = 10;</code>
+         * <code>optional .com.proto.basic.ResultCode result = 10;</code>
          */
-        public YouMaiBasic.ResultCode getResult() {
+        public com.proto.basic.YouMaiBasic.ResultCode getResult() {
             return result_;
         }
 
         private void initFields() {
             groupInfoList_ = java.util.Collections.emptyList();
             latestGroupIdList_ = java.util.Collections.emptyList();
-            result_ = YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
+            result_ = com.proto.basic.YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
         }
 
         private byte memoizedIsInitialized = -1;
@@ -13416,7 +13584,7 @@ public final class YouMaiGroup {
                 }
                 latestGroupIdList_ = java.util.Collections.emptyList();
                 bitField0_ = (bitField0_ & ~0x00000002);
-                result_ = YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
+                result_ = com.proto.basic.YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
                 bitField0_ = (bitField0_ & ~0x00000004);
                 return this;
             }
@@ -13981,26 +14149,26 @@ public final class YouMaiGroup {
                 return this;
             }
 
-            private YouMaiBasic.ResultCode result_ = YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
+            private com.proto.basic.YouMaiBasic.ResultCode result_ = com.proto.basic.YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
 
             /**
-             * <code>optional .ResultCode result = 10;</code>
+             * <code>optional .com.proto.basic.ResultCode result = 10;</code>
              */
             public boolean hasResult() {
                 return ((bitField0_ & 0x00000004) == 0x00000004);
             }
 
             /**
-             * <code>optional .ResultCode result = 10;</code>
+             * <code>optional .com.proto.basic.ResultCode result = 10;</code>
              */
-            public YouMaiBasic.ResultCode getResult() {
+            public com.proto.basic.YouMaiBasic.ResultCode getResult() {
                 return result_;
             }
 
             /**
-             * <code>optional .ResultCode result = 10;</code>
+             * <code>optional .com.proto.basic.ResultCode result = 10;</code>
              */
-            public Builder setResult(YouMaiBasic.ResultCode value) {
+            public Builder setResult(com.proto.basic.YouMaiBasic.ResultCode value) {
                 if (value == null) {
                     throw new NullPointerException();
                 }
@@ -14011,11 +14179,11 @@ public final class YouMaiGroup {
             }
 
             /**
-             * <code>optional .ResultCode result = 10;</code>
+             * <code>optional .com.proto.basic.ResultCode result = 10;</code>
              */
             public Builder clearResult() {
                 bitField0_ = (bitField0_ & ~0x00000004);
-                result_ = YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
+                result_ = com.proto.basic.YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
                 onChanged();
                 return this;
             }
@@ -14823,14 +14991,14 @@ public final class YouMaiGroup {
         long getUpdateTime();
 
         /**
-         * <code>optional .ResultCode result = 10;</code>
+         * <code>optional .com.proto.basic.ResultCode result = 10;</code>
          */
         boolean hasResult();
 
         /**
-         * <code>optional .ResultCode result = 10;</code>
+         * <code>optional .com.proto.basic.ResultCode result = 10;</code>
          */
-        YouMaiBasic.ResultCode getResult();
+        com.proto.basic.YouMaiBasic.ResultCode getResult();
     }
 
     /**
@@ -14911,7 +15079,7 @@ public final class YouMaiGroup {
                         }
                         case 80: {
                             int rawValue = input.readEnum();
-                            YouMaiBasic.ResultCode value = YouMaiBasic.ResultCode.valueOf(rawValue);
+                            com.proto.basic.YouMaiBasic.ResultCode value = com.proto.basic.YouMaiBasic.ResultCode.valueOf(rawValue);
                             if (value == null) {
                                 unknownFields.mergeVarintField(10, rawValue);
                             } else {
@@ -15047,19 +15215,19 @@ public final class YouMaiGroup {
         }
 
         public static final int RESULT_FIELD_NUMBER = 10;
-        private YouMaiBasic.ResultCode result_;
+        private com.proto.basic.YouMaiBasic.ResultCode result_;
 
         /**
-         * <code>optional .ResultCode result = 10;</code>
+         * <code>optional .com.proto.basic.ResultCode result = 10;</code>
          */
         public boolean hasResult() {
             return ((bitField0_ & 0x00000004) == 0x00000004);
         }
 
         /**
-         * <code>optional .ResultCode result = 10;</code>
+         * <code>optional .com.proto.basic.ResultCode result = 10;</code>
          */
-        public YouMaiBasic.ResultCode getResult() {
+        public com.proto.basic.YouMaiBasic.ResultCode getResult() {
             return result_;
         }
 
@@ -15067,7 +15235,7 @@ public final class YouMaiGroup {
             groupId_ = 0;
             memberList_ = java.util.Collections.emptyList();
             updateTime_ = 0L;
-            result_ = YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
+            result_ = com.proto.basic.YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
         }
 
         private byte memoizedIsInitialized = -1;
@@ -15272,7 +15440,7 @@ public final class YouMaiGroup {
                 }
                 updateTime_ = 0L;
                 bitField0_ = (bitField0_ & ~0x00000004);
-                result_ = YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
+                result_ = com.proto.basic.YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
                 bitField0_ = (bitField0_ & ~0x00000008);
                 return this;
             }
@@ -15750,26 +15918,26 @@ public final class YouMaiGroup {
                 return this;
             }
 
-            private YouMaiBasic.ResultCode result_ = YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
+            private com.proto.basic.YouMaiBasic.ResultCode result_ = com.proto.basic.YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
 
             /**
-             * <code>optional .ResultCode result = 10;</code>
+             * <code>optional .com.proto.basic.ResultCode result = 10;</code>
              */
             public boolean hasResult() {
                 return ((bitField0_ & 0x00000008) == 0x00000008);
             }
 
             /**
-             * <code>optional .ResultCode result = 10;</code>
+             * <code>optional .com.proto.basic.ResultCode result = 10;</code>
              */
-            public YouMaiBasic.ResultCode getResult() {
+            public com.proto.basic.YouMaiBasic.ResultCode getResult() {
                 return result_;
             }
 
             /**
-             * <code>optional .ResultCode result = 10;</code>
+             * <code>optional .com.proto.basic.ResultCode result = 10;</code>
              */
-            public Builder setResult(YouMaiBasic.ResultCode value) {
+            public Builder setResult(com.proto.basic.YouMaiBasic.ResultCode value) {
                 if (value == null) {
                     throw new NullPointerException();
                 }
@@ -15780,11 +15948,11 @@ public final class YouMaiGroup {
             }
 
             /**
-             * <code>optional .ResultCode result = 10;</code>
+             * <code>optional .com.proto.basic.ResultCode result = 10;</code>
              */
             public Builder clearResult() {
                 bitField0_ = (bitField0_ & ~0x00000008);
-                result_ = YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
+                result_ = com.proto.basic.YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
                 onChanged();
                 return this;
             }
@@ -16597,14 +16765,14 @@ public final class YouMaiGroup {
         boolean getUpdate();
 
         /**
-         * <code>optional .ResultCode result = 10;</code>
+         * <code>optional .com.proto.basic.ResultCode result = 10;</code>
          */
         boolean hasResult();
 
         /**
-         * <code>optional .ResultCode result = 10;</code>
+         * <code>optional .com.proto.basic.ResultCode result = 10;</code>
          */
-        YouMaiBasic.ResultCode getResult();
+        com.proto.basic.YouMaiBasic.ResultCode getResult();
     }
 
     /**
@@ -16685,7 +16853,7 @@ public final class YouMaiGroup {
                         }
                         case 80: {
                             int rawValue = input.readEnum();
-                            YouMaiBasic.ResultCode value = YouMaiBasic.ResultCode.valueOf(rawValue);
+                            com.proto.basic.YouMaiBasic.ResultCode value = com.proto.basic.YouMaiBasic.ResultCode.valueOf(rawValue);
                             if (value == null) {
                                 unknownFields.mergeVarintField(10, rawValue);
                             } else {
@@ -16797,26 +16965,26 @@ public final class YouMaiGroup {
         }
 
         public static final int RESULT_FIELD_NUMBER = 10;
-        private YouMaiBasic.ResultCode result_;
+        private com.proto.basic.YouMaiBasic.ResultCode result_;
 
         /**
-         * <code>optional .ResultCode result = 10;</code>
+         * <code>optional .com.proto.basic.ResultCode result = 10;</code>
          */
         public boolean hasResult() {
             return ((bitField0_ & 0x00000004) == 0x00000004);
         }
 
         /**
-         * <code>optional .ResultCode result = 10;</code>
+         * <code>optional .com.proto.basic.ResultCode result = 10;</code>
          */
-        public YouMaiBasic.ResultCode getResult() {
+        public com.proto.basic.YouMaiBasic.ResultCode getResult() {
             return result_;
         }
 
         private void initFields() {
             groupInfo_ = YouMaiGroup.GroupInfo.getDefaultInstance();
             update_ = false;
-            result_ = YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
+            result_ = com.proto.basic.YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
         }
 
         private byte memoizedIsInitialized = -1;
@@ -17012,7 +17180,7 @@ public final class YouMaiGroup {
                 bitField0_ = (bitField0_ & ~0x00000001);
                 update_ = false;
                 bitField0_ = (bitField0_ & ~0x00000002);
-                result_ = YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
+                result_ = com.proto.basic.YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
                 bitField0_ = (bitField0_ & ~0x00000004);
                 return this;
             }
@@ -17324,26 +17492,26 @@ public final class YouMaiGroup {
                 return this;
             }
 
-            private YouMaiBasic.ResultCode result_ = YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
+            private com.proto.basic.YouMaiBasic.ResultCode result_ = com.proto.basic.YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
 
             /**
-             * <code>optional .ResultCode result = 10;</code>
+             * <code>optional .com.proto.basic.ResultCode result = 10;</code>
              */
             public boolean hasResult() {
                 return ((bitField0_ & 0x00000004) == 0x00000004);
             }
 
             /**
-             * <code>optional .ResultCode result = 10;</code>
+             * <code>optional .com.proto.basic.ResultCode result = 10;</code>
              */
-            public YouMaiBasic.ResultCode getResult() {
+            public com.proto.basic.YouMaiBasic.ResultCode getResult() {
                 return result_;
             }
 
             /**
-             * <code>optional .ResultCode result = 10;</code>
+             * <code>optional .com.proto.basic.ResultCode result = 10;</code>
              */
-            public Builder setResult(YouMaiBasic.ResultCode value) {
+            public Builder setResult(com.proto.basic.YouMaiBasic.ResultCode value) {
                 if (value == null) {
                     throw new NullPointerException();
                 }
@@ -17354,11 +17522,11 @@ public final class YouMaiGroup {
             }
 
             /**
-             * <code>optional .ResultCode result = 10;</code>
+             * <code>optional .com.proto.basic.ResultCode result = 10;</code>
              */
             public Builder clearResult() {
                 bitField0_ = (bitField0_ & ~0x00000004);
-                result_ = YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
+                result_ = com.proto.basic.YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
                 onChanged();
                 return this;
             }
@@ -18593,7 +18761,7 @@ public final class YouMaiGroup {
             com.google.protobuf.MessageOrBuilder {
 
         /**
-         * <code>optional .ResultCode result = 1;</code>
+         * <code>optional .com.proto.basic.ResultCode result = 1;</code>
          * <p>
          * <pre>
          * cmd id:			CID_GROUP_INFO_MODIFY_RSP
@@ -18602,13 +18770,13 @@ public final class YouMaiGroup {
         boolean hasResult();
 
         /**
-         * <code>optional .ResultCode result = 1;</code>
+         * <code>optional .com.proto.basic.ResultCode result = 1;</code>
          * <p>
          * <pre>
          * cmd id:			CID_GROUP_INFO_MODIFY_RSP
          * </pre>
          */
-        YouMaiBasic.ResultCode getResult();
+        com.proto.basic.YouMaiBasic.ResultCode getResult();
 
         /**
          * <code>optional uint32 group_id = 2;</code>
@@ -18701,7 +18869,7 @@ public final class YouMaiGroup {
                         }
                         case 8: {
                             int rawValue = input.readEnum();
-                            YouMaiBasic.ResultCode value = YouMaiBasic.ResultCode.valueOf(rawValue);
+                            com.proto.basic.YouMaiBasic.ResultCode value = com.proto.basic.YouMaiBasic.ResultCode.valueOf(rawValue);
                             if (value == null) {
                                 unknownFields.mergeVarintField(1, rawValue);
                             } else {
@@ -18770,10 +18938,10 @@ public final class YouMaiGroup {
 
         private int bitField0_;
         public static final int RESULT_FIELD_NUMBER = 1;
-        private YouMaiBasic.ResultCode result_;
+        private com.proto.basic.YouMaiBasic.ResultCode result_;
 
         /**
-         * <code>optional .ResultCode result = 1;</code>
+         * <code>optional .com.proto.basic.ResultCode result = 1;</code>
          * <p>
          * <pre>
          * cmd id:			CID_GROUP_INFO_MODIFY_RSP
@@ -18784,13 +18952,13 @@ public final class YouMaiGroup {
         }
 
         /**
-         * <code>optional .ResultCode result = 1;</code>
+         * <code>optional .com.proto.basic.ResultCode result = 1;</code>
          * <p>
          * <pre>
          * cmd id:			CID_GROUP_INFO_MODIFY_RSP
          * </pre>
          */
-        public YouMaiBasic.ResultCode getResult() {
+        public com.proto.basic.YouMaiBasic.ResultCode getResult() {
             return result_;
         }
 
@@ -18836,7 +19004,7 @@ public final class YouMaiGroup {
         }
 
         private void initFields() {
-            result_ = YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
+            result_ = com.proto.basic.YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
             groupId_ = 0;
             groupInfo_ = YouMaiGroup.GroupInfo.getDefaultInstance();
         }
@@ -19031,7 +19199,7 @@ public final class YouMaiGroup {
 
             public Builder clear() {
                 super.clear();
-                result_ = YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
+                result_ = com.proto.basic.YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
                 bitField0_ = (bitField0_ & ~0x00000001);
                 groupId_ = 0;
                 bitField0_ = (bitField0_ & ~0x00000002);
@@ -19138,10 +19306,10 @@ public final class YouMaiGroup {
 
             private int bitField0_;
 
-            private YouMaiBasic.ResultCode result_ = YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
+            private com.proto.basic.YouMaiBasic.ResultCode result_ = com.proto.basic.YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
 
             /**
-             * <code>optional .ResultCode result = 1;</code>
+             * <code>optional .com.proto.basic.ResultCode result = 1;</code>
              * <p>
              * <pre>
              * cmd id:			CID_GROUP_INFO_MODIFY_RSP
@@ -19152,24 +19320,24 @@ public final class YouMaiGroup {
             }
 
             /**
-             * <code>optional .ResultCode result = 1;</code>
+             * <code>optional .com.proto.basic.ResultCode result = 1;</code>
              * <p>
              * <pre>
              * cmd id:			CID_GROUP_INFO_MODIFY_RSP
              * </pre>
              */
-            public YouMaiBasic.ResultCode getResult() {
+            public com.proto.basic.YouMaiBasic.ResultCode getResult() {
                 return result_;
             }
 
             /**
-             * <code>optional .ResultCode result = 1;</code>
+             * <code>optional .com.proto.basic.ResultCode result = 1;</code>
              * <p>
              * <pre>
              * cmd id:			CID_GROUP_INFO_MODIFY_RSP
              * </pre>
              */
-            public Builder setResult(YouMaiBasic.ResultCode value) {
+            public Builder setResult(com.proto.basic.YouMaiBasic.ResultCode value) {
                 if (value == null) {
                     throw new NullPointerException();
                 }
@@ -19180,7 +19348,7 @@ public final class YouMaiGroup {
             }
 
             /**
-             * <code>optional .ResultCode result = 1;</code>
+             * <code>optional .com.proto.basic.ResultCode result = 1;</code>
              * <p>
              * <pre>
              * cmd id:			CID_GROUP_INFO_MODIFY_RSP
@@ -19188,7 +19356,7 @@ public final class YouMaiGroup {
              */
             public Builder clearResult() {
                 bitField0_ = (bitField0_ & ~0x00000001);
-                result_ = YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
+                result_ = com.proto.basic.YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
                 onChanged();
                 return this;
             }
@@ -20134,67 +20302,68 @@ public final class YouMaiGroup {
                         "ouMai.Basic.proto\"\035\n\nMemberItem\022\017\n\007user_" +
                         "id\030\001 \001(\t\"S\n\tGroupItem\022\020\n\010group_id\030\001 \001(\r\022" +
                         "\030\n\020info_update_time\030\002 \001(\004\022\032\n\022member_upda" +
-                        "te_time\030\003 \001(\004\"N\n\017GroupMemberItem\022\021\n\tmemb" +
-                        "er_id\030\001 \001(\t\022\023\n\013member_name\030\002 \001(\t\022\023\n\013memb" +
-                        "er_role\030\003 \001(\r\"\314\001\n\tGroupInfo\022\020\n\010group_id\030" +
-                        "\001 \001(\r\022\022\n\ngroup_name\030\002 \001(\t\022\020\n\010owner_id\030\003 " +
-                        "\001(\t\022\024\n\014group_avatar\030\004 \001(\t\022\r\n\005topic\030\005 \001(\t" +
-                        "\022\030\n\020info_update_time\030\006 \001(\004\022\032\n\022group_memb",
-                "er_count\030\010 \001(\r\022\027\n\017fixtop_priority\030\n \001(\r\022" +
-                        "\023\n\013not_disturb\030\013 \001(\010\"\221\001\n\016GroupCreateReq\022" +
-                        "\017\n\007user_id\030\001 \001(\t\0225\n\013member_list\030\002 \003(\0132 ." +
-                        "GroupMemberItem\022\022\n\ngroup" +
-                        "_name\030\003 \001(\t\022\024\n\014group_avatar\030\004 \001(\t\022\r\n\005top" +
-                        "ic\030\005 \001(\t\"\254\001\n\016GroupCreateRsp\022\020\n\010group_id\030" +
-                        "\001 \001(\r\022\017\n\007user_id\030\002 \001(\t\0225\n\013member_list\030\003 " +
-                        "\003(\0132 .GroupMemberItem\022\023\n" +
-                        "\013update_time\030\004 \001(\004\022+\n\006result\030\n \001(\0162\033.com" +
-                        ".proto.basic.ResultCode\"5\n\020GroupDissolve",
-                "Req\022\017\n\007user_id\030\001 \001(\t\022\020\n\010group_id\030\002 \001(\r\"Q" +
-                        "\n\020GroupDissolveRsp\022\020\n\010group_id\030\001 \001(\r\022+\n\006" +
-                        "result\030\n \001(\0162\033.ResultCod" +
-                        "e\"4\n\016GroupOptNotify\022\020\n\010opt_type\030\001 \001(\r\022\020\n" +
-                        "\010group_id\030\002 \001(\r\"\236\001\n\024GroupMemberChangeReq" +
-                        "\022\017\n\007user_id\030\001 \001(\t\022\020\n\010group_id\030\002 \001(\r\0220\n\013m" +
-                        "ember_list\030\003 \003(\0132\033.Membe" +
-                        "rItem\0221\n\004type\030\004 \001(\0162#.Gr" +
-                        "oupMemberOptType\"\317\001\n\024GroupMemberChangeRs" +
-                        "p\022\020\n\010group_id\030\001 \001(\r\0220\n\013member_list\030\002 \003(\013",
-                "2\033.MemberItem\0221\n\004type\030\003 " +
-                        "\001(\0162#.GroupMemberOptType" +
-                        "\022\023\n\013update_time\030\004 \001(\004\022+\n\006result\030\n \001(\0162\033." +
-                        "ResultCode\"\245\001\n\027GroupMemb" +
-                        "erChangeNotify\022\020\n\010group_id\030\001 \001(\r\0220\n\013memb" +
-                        "er_list\030\002 \003(\0132\033.MemberIt" +
-                        "em\0221\n\004type\030\003 \001(\0162#.Group" +
-                        "MemberOptType\022\023\n\013update_time\030\004 \001(\004\"T\n\014Gr" +
-                        "oupListReq\022\017\n\007user_id\030\001 \001(\t\0223\n\017group_ite" +
-                        "m_list\030\002 \003(\0132\032.GroupItem",
-                "\"\216\001\n\014GroupListRsp\0223\n\017group_info_list\030\001 \003" +
-                        "(\0132\032.GroupInfo\022\034\n\024latest" +
-                        "_group_id_list\030\002 \003(\r\022+\n\006result\030\n \001(\0162\033.c" +
-                        "om.proto.basic.ResultCode\"H\n\016GroupMember" +
-                        "Req\022\020\n\010group_id\030\001 \001(\r\022\017\n\007user_id\030\002 \001(\t\022\023" +
-                        "\n\013update_time\030\003 \001(\004\"\233\001\n\016GroupMemberRsp\022\020" +
-                        "\n\010group_id\030\001 \001(\r\0225\n\013member_list\030\002 \003(\0132 ." +
-                        "GroupMemberItem\022\023\n\013updat" +
-                        "e_time\030\003 \001(\004\022+\n\006result\030\n \001(\0162\033.com.proto" +
-                        ".basic.ResultCode\"F\n\014GroupInfoReq\022\017\n\007use",
-                "r_id\030\001 \001(\t\022\020\n\010group_id\030\002 \001(\r\022\023\n\013update_t" +
-                        "ime\030\003 \001(\004\"{\n\014GroupInfoRsp\022.\n\ngroup_info\030" +
-                        "\001 \001(\0132\032.GroupInfo\022\016\n\006upd" +
-                        "ate\030\002 \001(\010\022+\n\006result\030\n \001(\0162\033.com.proto.ba" +
-                        "sic.ResultCode\"p\n\022GroupInfoModifyReq\022\017\n\007" +
-                        "user_id\030\001 \001(\t\022\020\n\010group_id\030\002 \001(\r\022\022\n\ngroup" +
-                        "_name\030\003 \001(\t\022\024\n\014group_avatar\030\004 \001(\t\022\r\n\005top" +
-                        "ic\030\005 \001(\t\"\203\001\n\022GroupInfoModifyRsp\022+\n\006resul" +
-                        "t\030\001 \001(\0162\033.ResultCode\022\020\n\010" +
-                        "group_id\030\002 \001(\r\022.\n\ngroup_info\030\003 \001(\0132\032.com",
-                ".proto.group.GroupInfo\"[\n\027IMGroupInfoMod" +
-                        "ifyNotify\022\020\n\010group_id\030\001 \001(\r\022.\n\ngroup_inf" +
-                        "o\030\002 \001(\0132\032.GroupInfo*H\n\022G" +
-                        "roupMemberOptType\022\030\n\024GROUP_MEMBER_OPT_AD" +
-                        "D\020\001\022\030\n\024GROUP_MEMBER_OPT_DEL\020\002"
+                        "te_time\030\003 \001(\004\"a\n\017GroupMemberItem\022\021\n\tmemb" +
+                        "er_id\030\001 \001(\t\022\023\n\013member_name\030\002 \001(\t\022\021\n\tuser" +
+                        "_name\030\003 \001(\t\022\023\n\013member_role\030\004 \001(\r\"\314\001\n\tGro" +
+                        "upInfo\022\020\n\010group_id\030\001 \001(\r\022\022\n\ngroup_name\030\002" +
+                        " \001(\t\022\020\n\010owner_id\030\003 \001(\t\022\024\n\014group_avatar\030\004" +
+                        " \001(\t\022\r\n\005topic\030\005 \001(\t\022\030\n\020info_update_time\030",
+                "\006 \001(\004\022\032\n\022group_member_count\030\010 \001(\r\022\027\n\017fix" +
+                        "top_priority\030\n \001(\r\022\023\n\013not_disturb\030\013 \001(\010\"" +
+                        "\221\001\n\016GroupCreateReq\022\017\n\007user_id\030\001 \001(\t\0225\n\013m" +
+                        "ember_list\030\002 \003(\0132 .Group" +
+                        "MemberItem\022\022\n\ngroup_name\030\003 \001(\t\022\024\n\014group_" +
+                        "avatar\030\004 \001(\t\022\r\n\005topic\030\005 \001(\t\"\254\001\n\016GroupCre" +
+                        "ateRsp\022\020\n\010group_id\030\001 \001(\r\022\017\n\007user_id\030\002 \001(" +
+                        "\t\0225\n\013member_list\030\003 \003(\0132 .com.proto.group" +
+                        ".GroupMemberItem\022\023\n\013update_time\030\004 \001(\004\022+\n" +
+                        "\006result\030\n \001(\0162\033.com.proto.basic.ResultCo",
+                "de\"5\n\020GroupDissolveReq\022\017\n\007user_id\030\001 \001(\t\022" +
+                        "\020\n\010group_id\030\002 \001(\r\"Q\n\020GroupDissolveRsp\022\020\n" +
+                        "\010group_id\030\001 \001(\r\022+\n\006result\030\n \001(\0162\033.com.pr" +
+                        "oto.basic.ResultCode\"4\n\016GroupOptNotify\022\020" +
+                        "\n\010opt_type\030\001 \001(\r\022\020\n\010group_id\030\002 \001(\r\"\236\001\n\024G" +
+                        "roupMemberChangeReq\022\017\n\007user_id\030\001 \001(\t\022\020\n\010" +
+                        "group_id\030\002 \001(\r\0220\n\013member_list\030\003 \003(\0132\033.co" +
+                        "m.proto.group.MemberItem\0221\n\004type\030\004 \001(\0162#" +
+                        ".GroupMemberOptType\"\317\001\n\024" +
+                        "GroupMemberChangeRsp\022\020\n\010group_id\030\001 \001(\r\0220",
+                "\n\013member_list\030\002 \003(\0132\033.Me" +
+                        "mberItem\0221\n\004type\030\003 \001(\0162#.com.proto.group" +
+                        ".GroupMemberOptType\022\023\n\013update_time\030\004 \001(\004" +
+                        "\022+\n\006result\030\n \001(\0162\033.com.proto.basic.Resul" +
+                        "tCode\"\245\001\n\027GroupMemberChangeNotify\022\020\n\010gro" +
+                        "up_id\030\001 \001(\r\0220\n\013member_list\030\002 \003(\0132\033.com.p" +
+                        "roto.group.MemberItem\0221\n\004type\030\003 \001(\0162#.co" +
+                        "m.proto.group.GroupMemberOptType\022\023\n\013upda" +
+                        "te_time\030\004 \001(\004\"T\n\014GroupListReq\022\017\n\007user_id" +
+                        "\030\001 \001(\t\0223\n\017group_item_list\030\002 \003(\0132\032.com.pr",
+                "oto.group.GroupItem\"\216\001\n\014GroupListRsp\0223\n\017" +
+                        "group_info_list\030\001 \003(\0132\032." +
+                        "GroupInfo\022\034\n\024latest_group_id_list\030\002 \003(\r\022" +
+                        "+\n\006result\030\n \001(\0162\033.com.proto.basic.Result" +
+                        "Code\"H\n\016GroupMemberReq\022\020\n\010group_id\030\001 \001(\r" +
+                        "\022\017\n\007user_id\030\002 \001(\t\022\023\n\013update_time\030\003 \001(\004\"\233" +
+                        "\001\n\016GroupMemberRsp\022\020\n\010group_id\030\001 \001(\r\0225\n\013m" +
+                        "ember_list\030\002 \003(\0132 .Group" +
+                        "MemberItem\022\023\n\013update_time\030\003 \001(\004\022+\n\006resul" +
+                        "t\030\n \001(\0162\033.com.proto.basic.ResultCode\"F\n\014",
+                "GroupInfoReq\022\017\n\007user_id\030\001 \001(\t\022\020\n\010group_i" +
+                        "d\030\002 \001(\r\022\023\n\013update_time\030\003 \001(\004\"{\n\014GroupInf" +
+                        "oRsp\022.\n\ngroup_info\030\001 \001(\0132\032.com.proto.gro" +
+                        "up.GroupInfo\022\016\n\006update\030\002 \001(\010\022+\n\006result\030\n" +
+                        " \001(\0162\033.com.proto.basic.ResultCode\"p\n\022Gro" +
+                        "upInfoModifyReq\022\017\n\007user_id\030\001 \001(\t\022\020\n\010grou" +
+                        "p_id\030\002 \001(\r\022\022\n\ngroup_name\030\003 \001(\t\022\024\n\014group_" +
+                        "avatar\030\004 \001(\t\022\r\n\005topic\030\005 \001(\t\"\203\001\n\022GroupInf" +
+                        "oModifyRsp\022+\n\006result\030\001 \001(\0162\033.com.proto.b" +
+                        "asic.ResultCode\022\020\n\010group_id\030\002 \001(\r\022.\n\ngro",
+                "up_info\030\003 \001(\0132\032.GroupInf" +
+                        "o\"[\n\027IMGroupInfoModifyNotify\022\020\n\010group_id" +
+                        "\030\001 \001(\r\022.\n\ngroup_info\030\002 \001(\0132\032.com.proto.g" +
+                        "roup.GroupInfo*H\n\022GroupMemberOptType\022\030\n\024" +
+                        "GROUP_MEMBER_OPT_ADD\020\001\022\030\n\024GROUP_MEMBER_O" +
+                        "PT_DEL\020\002"
         };
         com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
                 new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -20207,7 +20376,7 @@ public final class YouMaiGroup {
         com.google.protobuf.Descriptors.FileDescriptor
                 .internalBuildGeneratedFileFrom(descriptorData,
                         new com.google.protobuf.Descriptors.FileDescriptor[]{
-                                YouMaiBasic.getDescriptor(),
+                                com.proto.basic.YouMaiBasic.getDescriptor(),
                         }, assigner);
         internal_static_com_proto_group_MemberItem_descriptor =
                 getDescriptor().getMessageTypes().get(0);
@@ -20226,7 +20395,7 @@ public final class YouMaiGroup {
         internal_static_com_proto_group_GroupMemberItem_fieldAccessorTable = new
                 com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_proto_group_GroupMemberItem_descriptor,
-                new String[]{"MemberId", "MemberName", "MemberRole",});
+                new String[]{"MemberId", "MemberName", "UserName", "MemberRole",});
         internal_static_com_proto_group_GroupInfo_descriptor =
                 getDescriptor().getMessageTypes().get(3);
         internal_static_com_proto_group_GroupInfo_fieldAccessorTable = new
@@ -20335,7 +20504,7 @@ public final class YouMaiGroup {
                 com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_proto_group_IMGroupInfoModifyNotify_descriptor,
                 new String[]{"GroupId", "GroupInfo",});
-        YouMaiBasic.getDescriptor();
+        com.proto.basic.YouMaiBasic.getDescriptor();
     }
 
     // @@protoc_insertion_point(outer_class_scope)

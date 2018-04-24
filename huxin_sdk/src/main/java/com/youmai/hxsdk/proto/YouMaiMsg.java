@@ -1594,42 +1594,32 @@ public final class YouMaiMsg {
         YouMaiMsg.MsgProperty getMsgProperty();
 
         /**
-         * <code>repeated string force_push_ids_list = 12;</code>
+         * <code>optional string force_push_ids_list = 12;</code>
          * <p>
          * <pre>
          * 群组消息强制推送列表(被&#64;对象id列表)
          * </pre>
          */
-        com.google.protobuf.ProtocolStringList
-        getForcePushIdsListList();
+        boolean hasForcePushIdsList();
 
         /**
-         * <code>repeated string force_push_ids_list = 12;</code>
+         * <code>optional string force_push_ids_list = 12;</code>
          * <p>
          * <pre>
          * 群组消息强制推送列表(被&#64;对象id列表)
          * </pre>
          */
-        int getForcePushIdsListCount();
+        String getForcePushIdsList();
 
         /**
-         * <code>repeated string force_push_ids_list = 12;</code>
-         * <p>
-         * <pre>
-         * 群组消息强制推送列表(被&#64;对象id列表)
-         * </pre>
-         */
-        String getForcePushIdsList(int index);
-
-        /**
-         * <code>repeated string force_push_ids_list = 12;</code>
+         * <code>optional string force_push_ids_list = 12;</code>
          * <p>
          * <pre>
          * 群组消息强制推送列表(被&#64;对象id列表)
          * </pre>
          */
         com.google.protobuf.ByteString
-        getForcePushIdsListBytes(int index);
+        getForcePushIdsListBytes();
 
         /**
          * <code>optional string src_realname = 13;</code>
@@ -1844,34 +1834,31 @@ public final class YouMaiMsg {
                         }
                         case 98: {
                             com.google.protobuf.ByteString bs = input.readBytes();
-                            if (!((mutable_bitField0_ & 0x00000800) == 0x00000800)) {
-                                forcePushIdsList_ = new com.google.protobuf.LazyStringArrayList();
-                                mutable_bitField0_ |= 0x00000800;
-                            }
-                            forcePushIdsList_.add(bs);
+                            bitField0_ |= 0x00000800;
+                            forcePushIdsList_ = bs;
                             break;
                         }
                         case 106: {
                             com.google.protobuf.ByteString bs = input.readBytes();
-                            bitField0_ |= 0x00000800;
+                            bitField0_ |= 0x00001000;
                             srcRealname_ = bs;
                             break;
                         }
                         case 114: {
                             com.google.protobuf.ByteString bs = input.readBytes();
-                            bitField0_ |= 0x00001000;
+                            bitField0_ |= 0x00002000;
                             srcAvatar_ = bs;
                             break;
                         }
                         case 122: {
                             com.google.protobuf.ByteString bs = input.readBytes();
-                            bitField0_ |= 0x00002000;
+                            bitField0_ |= 0x00004000;
                             srcMobile_ = bs;
                             break;
                         }
                         case 130: {
                             com.google.protobuf.ByteString bs = input.readBytes();
-                            bitField0_ |= 0x00004000;
+                            bitField0_ |= 0x00008000;
                             srcSex_ = bs;
                             break;
                         }
@@ -1883,9 +1870,6 @@ public final class YouMaiMsg {
                 throw new com.google.protobuf.InvalidProtocolBufferException(
                         e.getMessage()).setUnfinishedMessage(this);
             } finally {
-                if (((mutable_bitField0_ & 0x00000800) == 0x00000800)) {
-                    forcePushIdsList_ = forcePushIdsList_.getUnmodifiableView();
-                }
                 this.unknownFields = unknownFields.build();
                 makeExtensionsImmutable();
             }
@@ -2294,52 +2278,60 @@ public final class YouMaiMsg {
         }
 
         public static final int FORCE_PUSH_IDS_LIST_FIELD_NUMBER = 12;
-        private com.google.protobuf.LazyStringList forcePushIdsList_;
+        private Object forcePushIdsList_;
 
         /**
-         * <code>repeated string force_push_ids_list = 12;</code>
+         * <code>optional string force_push_ids_list = 12;</code>
          * <p>
          * <pre>
          * 群组消息强制推送列表(被&#64;对象id列表)
          * </pre>
          */
-        public com.google.protobuf.ProtocolStringList
-        getForcePushIdsListList() {
-            return forcePushIdsList_;
+        public boolean hasForcePushIdsList() {
+            return ((bitField0_ & 0x00000800) == 0x00000800);
         }
 
         /**
-         * <code>repeated string force_push_ids_list = 12;</code>
+         * <code>optional string force_push_ids_list = 12;</code>
          * <p>
          * <pre>
          * 群组消息强制推送列表(被&#64;对象id列表)
          * </pre>
          */
-        public int getForcePushIdsListCount() {
-            return forcePushIdsList_.size();
+        public String getForcePushIdsList() {
+            Object ref = forcePushIdsList_;
+            if (ref instanceof String) {
+                return (String) ref;
+            } else {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                String s = bs.toStringUtf8();
+                if (bs.isValidUtf8()) {
+                    forcePushIdsList_ = s;
+                }
+                return s;
+            }
         }
 
         /**
-         * <code>repeated string force_push_ids_list = 12;</code>
-         * <p>
-         * <pre>
-         * 群组消息强制推送列表(被&#64;对象id列表)
-         * </pre>
-         */
-        public String getForcePushIdsList(int index) {
-            return forcePushIdsList_.get(index);
-        }
-
-        /**
-         * <code>repeated string force_push_ids_list = 12;</code>
+         * <code>optional string force_push_ids_list = 12;</code>
          * <p>
          * <pre>
          * 群组消息强制推送列表(被&#64;对象id列表)
          * </pre>
          */
         public com.google.protobuf.ByteString
-        getForcePushIdsListBytes(int index) {
-            return forcePushIdsList_.getByteString(index);
+        getForcePushIdsListBytes() {
+            Object ref = forcePushIdsList_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (String) ref);
+                forcePushIdsList_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
         }
 
         public static final int SRC_REALNAME_FIELD_NUMBER = 13;
@@ -2349,7 +2341,7 @@ public final class YouMaiMsg {
          * <code>optional string src_realname = 13;</code>
          */
         public boolean hasSrcRealname() {
-            return ((bitField0_ & 0x00000800) == 0x00000800);
+            return ((bitField0_ & 0x00001000) == 0x00001000);
         }
 
         /**
@@ -2394,7 +2386,7 @@ public final class YouMaiMsg {
          * <code>optional string src_avatar = 14;</code>
          */
         public boolean hasSrcAvatar() {
-            return ((bitField0_ & 0x00001000) == 0x00001000);
+            return ((bitField0_ & 0x00002000) == 0x00002000);
         }
 
         /**
@@ -2439,7 +2431,7 @@ public final class YouMaiMsg {
          * <code>optional string src_mobile = 15;</code>
          */
         public boolean hasSrcMobile() {
-            return ((bitField0_ & 0x00002000) == 0x00002000);
+            return ((bitField0_ & 0x00004000) == 0x00004000);
         }
 
         /**
@@ -2484,7 +2476,7 @@ public final class YouMaiMsg {
          * <code>optional string src_sex = 16;</code>
          */
         public boolean hasSrcSex() {
-            return ((bitField0_ & 0x00004000) == 0x00004000);
+            return ((bitField0_ & 0x00008000) == 0x00008000);
         }
 
         /**
@@ -2534,7 +2526,7 @@ public final class YouMaiMsg {
             msgFont_ = YouMaiMsg.MsgFont.getDefaultInstance();
             msgStatus_ = 0;
             msgProperty_ = YouMaiMsg.MsgProperty.MSG_PTOPERTY_NONE;
-            forcePushIdsList_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+            forcePushIdsList_ = "";
             srcRealname_ = "";
             srcAvatar_ = "";
             srcMobile_ = "";
@@ -2588,19 +2580,19 @@ public final class YouMaiMsg {
             if (((bitField0_ & 0x00000400) == 0x00000400)) {
                 output.writeEnum(11, msgProperty_.getNumber());
             }
-            for (int i = 0; i < forcePushIdsList_.size(); i++) {
-                output.writeBytes(12, forcePushIdsList_.getByteString(i));
-            }
             if (((bitField0_ & 0x00000800) == 0x00000800)) {
-                output.writeBytes(13, getSrcRealnameBytes());
+                output.writeBytes(12, getForcePushIdsListBytes());
             }
             if (((bitField0_ & 0x00001000) == 0x00001000)) {
-                output.writeBytes(14, getSrcAvatarBytes());
+                output.writeBytes(13, getSrcRealnameBytes());
             }
             if (((bitField0_ & 0x00002000) == 0x00002000)) {
-                output.writeBytes(15, getSrcMobileBytes());
+                output.writeBytes(14, getSrcAvatarBytes());
             }
             if (((bitField0_ & 0x00004000) == 0x00004000)) {
+                output.writeBytes(15, getSrcMobileBytes());
+            }
+            if (((bitField0_ & 0x00008000) == 0x00008000)) {
                 output.writeBytes(16, getSrcSexBytes());
             }
             getUnknownFields().writeTo(output);
@@ -2657,28 +2649,23 @@ public final class YouMaiMsg {
                 size += com.google.protobuf.CodedOutputStream
                         .computeEnumSize(11, msgProperty_.getNumber());
             }
-            {
-                int dataSize = 0;
-                for (int i = 0; i < forcePushIdsList_.size(); i++) {
-                    dataSize += com.google.protobuf.CodedOutputStream
-                            .computeBytesSizeNoTag(forcePushIdsList_.getByteString(i));
-                }
-                size += dataSize;
-                size += 1 * getForcePushIdsListList().size();
-            }
             if (((bitField0_ & 0x00000800) == 0x00000800)) {
                 size += com.google.protobuf.CodedOutputStream
-                        .computeBytesSize(13, getSrcRealnameBytes());
+                        .computeBytesSize(12, getForcePushIdsListBytes());
             }
             if (((bitField0_ & 0x00001000) == 0x00001000)) {
                 size += com.google.protobuf.CodedOutputStream
-                        .computeBytesSize(14, getSrcAvatarBytes());
+                        .computeBytesSize(13, getSrcRealnameBytes());
             }
             if (((bitField0_ & 0x00002000) == 0x00002000)) {
                 size += com.google.protobuf.CodedOutputStream
-                        .computeBytesSize(15, getSrcMobileBytes());
+                        .computeBytesSize(14, getSrcAvatarBytes());
             }
             if (((bitField0_ & 0x00004000) == 0x00004000)) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeBytesSize(15, getSrcMobileBytes());
+            }
+            if (((bitField0_ & 0x00008000) == 0x00008000)) {
                 size += com.google.protobuf.CodedOutputStream
                         .computeBytesSize(16, getSrcSexBytes());
             }
@@ -2852,7 +2839,7 @@ public final class YouMaiMsg {
                 bitField0_ = (bitField0_ & ~0x00000200);
                 msgProperty_ = YouMaiMsg.MsgProperty.MSG_PTOPERTY_NONE;
                 bitField0_ = (bitField0_ & ~0x00000400);
-                forcePushIdsList_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+                forcePushIdsList_ = "";
                 bitField0_ = (bitField0_ & ~0x00000800);
                 srcRealname_ = "";
                 bitField0_ = (bitField0_ & ~0x00001000);
@@ -2938,25 +2925,24 @@ public final class YouMaiMsg {
                     to_bitField0_ |= 0x00000400;
                 }
                 result.msgProperty_ = msgProperty_;
-                if (((bitField0_ & 0x00000800) == 0x00000800)) {
-                    forcePushIdsList_ = forcePushIdsList_.getUnmodifiableView();
-                    bitField0_ = (bitField0_ & ~0x00000800);
+                if (((from_bitField0_ & 0x00000800) == 0x00000800)) {
+                    to_bitField0_ |= 0x00000800;
                 }
                 result.forcePushIdsList_ = forcePushIdsList_;
                 if (((from_bitField0_ & 0x00001000) == 0x00001000)) {
-                    to_bitField0_ |= 0x00000800;
+                    to_bitField0_ |= 0x00001000;
                 }
                 result.srcRealname_ = srcRealname_;
                 if (((from_bitField0_ & 0x00002000) == 0x00002000)) {
-                    to_bitField0_ |= 0x00001000;
+                    to_bitField0_ |= 0x00002000;
                 }
                 result.srcAvatar_ = srcAvatar_;
                 if (((from_bitField0_ & 0x00004000) == 0x00004000)) {
-                    to_bitField0_ |= 0x00002000;
+                    to_bitField0_ |= 0x00004000;
                 }
                 result.srcMobile_ = srcMobile_;
                 if (((from_bitField0_ & 0x00008000) == 0x00008000)) {
-                    to_bitField0_ |= 0x00004000;
+                    to_bitField0_ |= 0x00008000;
                 }
                 result.srcSex_ = srcSex_;
                 result.bitField0_ = to_bitField0_;
@@ -3014,14 +3000,9 @@ public final class YouMaiMsg {
                 if (other.hasMsgProperty()) {
                     setMsgProperty(other.getMsgProperty());
                 }
-                if (!other.forcePushIdsList_.isEmpty()) {
-                    if (forcePushIdsList_.isEmpty()) {
-                        forcePushIdsList_ = other.forcePushIdsList_;
-                        bitField0_ = (bitField0_ & ~0x00000800);
-                    } else {
-                        ensureForcePushIdsListIsMutable();
-                        forcePushIdsList_.addAll(other.forcePushIdsList_);
-                    }
+                if (other.hasForcePushIdsList()) {
+                    bitField0_ |= 0x00000800;
+                    forcePushIdsList_ = other.forcePushIdsList_;
                     onChanged();
                 }
                 if (other.hasSrcRealname()) {
@@ -3908,141 +3889,108 @@ public final class YouMaiMsg {
                 return this;
             }
 
-            private com.google.protobuf.LazyStringList forcePushIdsList_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+            private Object forcePushIdsList_ = "";
 
-            private void ensureForcePushIdsListIsMutable() {
-                if (!((bitField0_ & 0x00000800) == 0x00000800)) {
-                    forcePushIdsList_ = new com.google.protobuf.LazyStringArrayList(forcePushIdsList_);
-                    bitField0_ |= 0x00000800;
+            /**
+             * <code>optional string force_push_ids_list = 12;</code>
+             * <p>
+             * <pre>
+             * 群组消息强制推送列表(被&#64;对象id列表)
+             * </pre>
+             */
+            public boolean hasForcePushIdsList() {
+                return ((bitField0_ & 0x00000800) == 0x00000800);
+            }
+
+            /**
+             * <code>optional string force_push_ids_list = 12;</code>
+             * <p>
+             * <pre>
+             * 群组消息强制推送列表(被&#64;对象id列表)
+             * </pre>
+             */
+            public String getForcePushIdsList() {
+                Object ref = forcePushIdsList_;
+                if (!(ref instanceof String)) {
+                    com.google.protobuf.ByteString bs =
+                            (com.google.protobuf.ByteString) ref;
+                    String s = bs.toStringUtf8();
+                    if (bs.isValidUtf8()) {
+                        forcePushIdsList_ = s;
+                    }
+                    return s;
+                } else {
+                    return (String) ref;
                 }
             }
 
             /**
-             * <code>repeated string force_push_ids_list = 12;</code>
-             * <p>
-             * <pre>
-             * 群组消息强制推送列表(被&#64;对象id列表)
-             * </pre>
-             */
-            public com.google.protobuf.ProtocolStringList
-            getForcePushIdsListList() {
-                return forcePushIdsList_.getUnmodifiableView();
-            }
-
-            /**
-             * <code>repeated string force_push_ids_list = 12;</code>
-             * <p>
-             * <pre>
-             * 群组消息强制推送列表(被&#64;对象id列表)
-             * </pre>
-             */
-            public int getForcePushIdsListCount() {
-                return forcePushIdsList_.size();
-            }
-
-            /**
-             * <code>repeated string force_push_ids_list = 12;</code>
-             * <p>
-             * <pre>
-             * 群组消息强制推送列表(被&#64;对象id列表)
-             * </pre>
-             */
-            public String getForcePushIdsList(int index) {
-                return forcePushIdsList_.get(index);
-            }
-
-            /**
-             * <code>repeated string force_push_ids_list = 12;</code>
+             * <code>optional string force_push_ids_list = 12;</code>
              * <p>
              * <pre>
              * 群组消息强制推送列表(被&#64;对象id列表)
              * </pre>
              */
             public com.google.protobuf.ByteString
-            getForcePushIdsListBytes(int index) {
-                return forcePushIdsList_.getByteString(index);
+            getForcePushIdsListBytes() {
+                Object ref = forcePushIdsList_;
+                if (ref instanceof String) {
+                    com.google.protobuf.ByteString b =
+                            com.google.protobuf.ByteString.copyFromUtf8(
+                                    (String) ref);
+                    forcePushIdsList_ = b;
+                    return b;
+                } else {
+                    return (com.google.protobuf.ByteString) ref;
+                }
             }
 
             /**
-             * <code>repeated string force_push_ids_list = 12;</code>
+             * <code>optional string force_push_ids_list = 12;</code>
              * <p>
              * <pre>
              * 群组消息强制推送列表(被&#64;对象id列表)
              * </pre>
              */
             public Builder setForcePushIdsList(
-                    int index, String value) {
-                if (value == null) {
-                    throw new NullPointerException();
-                }
-                ensureForcePushIdsListIsMutable();
-                forcePushIdsList_.set(index, value);
-                onChanged();
-                return this;
-            }
-
-            /**
-             * <code>repeated string force_push_ids_list = 12;</code>
-             * <p>
-             * <pre>
-             * 群组消息强制推送列表(被&#64;对象id列表)
-             * </pre>
-             */
-            public Builder addForcePushIdsList(
                     String value) {
                 if (value == null) {
                     throw new NullPointerException();
                 }
-                ensureForcePushIdsListIsMutable();
-                forcePushIdsList_.add(value);
+                bitField0_ |= 0x00000800;
+                forcePushIdsList_ = value;
                 onChanged();
                 return this;
             }
 
             /**
-             * <code>repeated string force_push_ids_list = 12;</code>
-             * <p>
-             * <pre>
-             * 群组消息强制推送列表(被&#64;对象id列表)
-             * </pre>
-             */
-            public Builder addAllForcePushIdsList(
-                    Iterable<String> values) {
-                ensureForcePushIdsListIsMutable();
-                com.google.protobuf.AbstractMessageLite.Builder.addAll(
-                        values, forcePushIdsList_);
-                onChanged();
-                return this;
-            }
-
-            /**
-             * <code>repeated string force_push_ids_list = 12;</code>
+             * <code>optional string force_push_ids_list = 12;</code>
              * <p>
              * <pre>
              * 群组消息强制推送列表(被&#64;对象id列表)
              * </pre>
              */
             public Builder clearForcePushIdsList() {
-                forcePushIdsList_ = com.google.protobuf.LazyStringArrayList.EMPTY;
                 bitField0_ = (bitField0_ & ~0x00000800);
+                forcePushIdsList_ = getDefaultInstance().getForcePushIdsList();
                 onChanged();
                 return this;
             }
 
             /**
-             * <code>repeated string force_push_ids_list = 12;</code>
+             * <code>optional string force_push_ids_list = 12;</code>
              * <p>
              * <pre>
              * 群组消息强制推送列表(被&#64;对象id列表)
              * </pre>
              */
-            public Builder addForcePushIdsListBytes(
+            public Builder setForcePushIdsListBytes(
                     com.google.protobuf.ByteString value) {
                 if (value == null) {
                     throw new NullPointerException();
                 }
-                ensureForcePushIdsListIsMutable();
-                forcePushIdsList_.add(value);
+                bitField0_ |= 0x00000800;
+                forcePushIdsList_ = value;
                 onChanged();
                 return this;
             }
@@ -4955,32 +4903,19 @@ public final class YouMaiMsg {
             com.google.protobuf.MessageOrBuilder {
 
         /**
-         * <code>repeated .MsgData offline_msg_list = 1;</code>
+         * <code>optional .MsgData offline_msg_list = 1;</code>
          */
-        java.util.List<YouMaiMsg.MsgData>
-        getOfflineMsgListList();
+        boolean hasOfflineMsgList();
 
         /**
-         * <code>repeated .MsgData offline_msg_list = 1;</code>
+         * <code>optional .MsgData offline_msg_list = 1;</code>
          */
-        YouMaiMsg.MsgData getOfflineMsgList(int index);
+        YouMaiMsg.MsgData getOfflineMsgList();
 
         /**
-         * <code>repeated .MsgData offline_msg_list = 1;</code>
+         * <code>optional .MsgData offline_msg_list = 1;</code>
          */
-        int getOfflineMsgListCount();
-
-        /**
-         * <code>repeated .MsgData offline_msg_list = 1;</code>
-         */
-        java.util.List<? extends YouMaiMsg.MsgDataOrBuilder>
-        getOfflineMsgListOrBuilderList();
-
-        /**
-         * <code>repeated .MsgData offline_msg_list = 1;</code>
-         */
-        YouMaiMsg.MsgDataOrBuilder getOfflineMsgListOrBuilder(
-                int index);
+        YouMaiMsg.MsgDataOrBuilder getOfflineMsgListOrBuilder();
     }
 
     /**
@@ -5042,11 +4977,16 @@ public final class YouMaiMsg {
                             break;
                         }
                         case 10: {
-                            if (!((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
-                                offlineMsgList_ = new java.util.ArrayList<YouMaiMsg.MsgData>();
-                                mutable_bitField0_ |= 0x00000001;
+                            YouMaiMsg.MsgData.Builder subBuilder = null;
+                            if (((bitField0_ & 0x00000001) == 0x00000001)) {
+                                subBuilder = offlineMsgList_.toBuilder();
                             }
-                            offlineMsgList_.add(input.readMessage(YouMaiMsg.MsgData.PARSER, extensionRegistry));
+                            offlineMsgList_ = input.readMessage(YouMaiMsg.MsgData.PARSER, extensionRegistry);
+                            if (subBuilder != null) {
+                                subBuilder.mergeFrom(offlineMsgList_);
+                                offlineMsgList_ = subBuilder.buildPartial();
+                            }
+                            bitField0_ |= 0x00000001;
                             break;
                         }
                     }
@@ -5057,9 +4997,6 @@ public final class YouMaiMsg {
                 throw new com.google.protobuf.InvalidProtocolBufferException(
                         e.getMessage()).setUnfinishedMessage(this);
             } finally {
-                if (((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
-                    offlineMsgList_ = java.util.Collections.unmodifiableList(offlineMsgList_);
-                }
                 this.unknownFields = unknownFields.build();
                 makeExtensionsImmutable();
             }
@@ -5092,48 +5029,33 @@ public final class YouMaiMsg {
             return PARSER;
         }
 
+        private int bitField0_;
         public static final int OFFLINE_MSG_LIST_FIELD_NUMBER = 1;
-        private java.util.List<YouMaiMsg.MsgData> offlineMsgList_;
+        private YouMaiMsg.MsgData offlineMsgList_;
 
         /**
-         * <code>repeated .MsgData offline_msg_list = 1;</code>
+         * <code>optional .MsgData offline_msg_list = 1;</code>
          */
-        public java.util.List<YouMaiMsg.MsgData> getOfflineMsgListList() {
+        public boolean hasOfflineMsgList() {
+            return ((bitField0_ & 0x00000001) == 0x00000001);
+        }
+
+        /**
+         * <code>optional .MsgData offline_msg_list = 1;</code>
+         */
+        public YouMaiMsg.MsgData getOfflineMsgList() {
             return offlineMsgList_;
         }
 
         /**
-         * <code>repeated .MsgData offline_msg_list = 1;</code>
+         * <code>optional .MsgData offline_msg_list = 1;</code>
          */
-        public java.util.List<? extends YouMaiMsg.MsgDataOrBuilder>
-        getOfflineMsgListOrBuilderList() {
+        public YouMaiMsg.MsgDataOrBuilder getOfflineMsgListOrBuilder() {
             return offlineMsgList_;
-        }
-
-        /**
-         * <code>repeated .MsgData offline_msg_list = 1;</code>
-         */
-        public int getOfflineMsgListCount() {
-            return offlineMsgList_.size();
-        }
-
-        /**
-         * <code>repeated .MsgData offline_msg_list = 1;</code>
-         */
-        public YouMaiMsg.MsgData getOfflineMsgList(int index) {
-            return offlineMsgList_.get(index);
-        }
-
-        /**
-         * <code>repeated .MsgData offline_msg_list = 1;</code>
-         */
-        public YouMaiMsg.MsgDataOrBuilder getOfflineMsgListOrBuilder(
-                int index) {
-            return offlineMsgList_.get(index);
         }
 
         private void initFields() {
-            offlineMsgList_ = java.util.Collections.emptyList();
+            offlineMsgList_ = YouMaiMsg.MsgData.getDefaultInstance();
         }
 
         private byte memoizedIsInitialized = -1;
@@ -5150,8 +5072,8 @@ public final class YouMaiMsg {
         public void writeTo(com.google.protobuf.CodedOutputStream output)
                 throws java.io.IOException {
             getSerializedSize();
-            for (int i = 0; i < offlineMsgList_.size(); i++) {
-                output.writeMessage(1, offlineMsgList_.get(i));
+            if (((bitField0_ & 0x00000001) == 0x00000001)) {
+                output.writeMessage(1, offlineMsgList_);
             }
             getUnknownFields().writeTo(output);
         }
@@ -5163,9 +5085,9 @@ public final class YouMaiMsg {
             if (size != -1) return size;
 
             size = 0;
-            for (int i = 0; i < offlineMsgList_.size(); i++) {
+            if (((bitField0_ & 0x00000001) == 0x00000001)) {
                 size += com.google.protobuf.CodedOutputStream
-                        .computeMessageSize(1, offlineMsgList_.get(i));
+                        .computeMessageSize(1, offlineMsgList_);
             }
             size += getUnknownFields().getSerializedSize();
             memoizedSerializedSize = size;
@@ -5308,11 +5230,11 @@ public final class YouMaiMsg {
             public Builder clear() {
                 super.clear();
                 if (offlineMsgListBuilder_ == null) {
-                    offlineMsgList_ = java.util.Collections.emptyList();
-                    bitField0_ = (bitField0_ & ~0x00000001);
+                    offlineMsgList_ = YouMaiMsg.MsgData.getDefaultInstance();
                 } else {
                     offlineMsgListBuilder_.clear();
                 }
+                bitField0_ = (bitField0_ & ~0x00000001);
                 return this;
             }
 
@@ -5340,15 +5262,16 @@ public final class YouMaiMsg {
             public YouMaiMsg.OfflineMsgNotify buildPartial() {
                 YouMaiMsg.OfflineMsgNotify result = new YouMaiMsg.OfflineMsgNotify(this);
                 int from_bitField0_ = bitField0_;
+                int to_bitField0_ = 0;
+                if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+                    to_bitField0_ |= 0x00000001;
+                }
                 if (offlineMsgListBuilder_ == null) {
-                    if (((bitField0_ & 0x00000001) == 0x00000001)) {
-                        offlineMsgList_ = java.util.Collections.unmodifiableList(offlineMsgList_);
-                        bitField0_ = (bitField0_ & ~0x00000001);
-                    }
                     result.offlineMsgList_ = offlineMsgList_;
                 } else {
                     result.offlineMsgList_ = offlineMsgListBuilder_.build();
                 }
+                result.bitField0_ = to_bitField0_;
                 onBuilt();
                 return result;
             }
@@ -5364,31 +5287,8 @@ public final class YouMaiMsg {
 
             public Builder mergeFrom(YouMaiMsg.OfflineMsgNotify other) {
                 if (other == YouMaiMsg.OfflineMsgNotify.getDefaultInstance()) return this;
-                if (offlineMsgListBuilder_ == null) {
-                    if (!other.offlineMsgList_.isEmpty()) {
-                        if (offlineMsgList_.isEmpty()) {
-                            offlineMsgList_ = other.offlineMsgList_;
-                            bitField0_ = (bitField0_ & ~0x00000001);
-                        } else {
-                            ensureOfflineMsgListIsMutable();
-                            offlineMsgList_.addAll(other.offlineMsgList_);
-                        }
-                        onChanged();
-                    }
-                } else {
-                    if (!other.offlineMsgList_.isEmpty()) {
-                        if (offlineMsgListBuilder_.isEmpty()) {
-                            offlineMsgListBuilder_.dispose();
-                            offlineMsgListBuilder_ = null;
-                            offlineMsgList_ = other.offlineMsgList_;
-                            bitField0_ = (bitField0_ & ~0x00000001);
-                            offlineMsgListBuilder_ =
-                                    com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
-                                            getOfflineMsgListFieldBuilder() : null;
-                        } else {
-                            offlineMsgListBuilder_.addAllMessages(other.offlineMsgList_);
-                        }
-                    }
+                if (other.hasOfflineMsgList()) {
+                    mergeOfflineMsgList(other.getOfflineMsgList());
                 }
                 this.mergeUnknownFields(other.getUnknownFields());
                 return this;
@@ -5418,259 +5318,124 @@ public final class YouMaiMsg {
 
             private int bitField0_;
 
-            private java.util.List<YouMaiMsg.MsgData> offlineMsgList_ =
-                    java.util.Collections.emptyList();
-
-            private void ensureOfflineMsgListIsMutable() {
-                if (!((bitField0_ & 0x00000001) == 0x00000001)) {
-                    offlineMsgList_ = new java.util.ArrayList<YouMaiMsg.MsgData>(offlineMsgList_);
-                    bitField0_ |= 0x00000001;
-                }
-            }
-
-            private com.google.protobuf.RepeatedFieldBuilder<
+            private YouMaiMsg.MsgData offlineMsgList_ = YouMaiMsg.MsgData.getDefaultInstance();
+            private com.google.protobuf.SingleFieldBuilder<
                     YouMaiMsg.MsgData, YouMaiMsg.MsgData.Builder, YouMaiMsg.MsgDataOrBuilder> offlineMsgListBuilder_;
 
             /**
-             * <code>repeated .MsgData offline_msg_list = 1;</code>
+             * <code>optional .MsgData offline_msg_list = 1;</code>
              */
-            public java.util.List<YouMaiMsg.MsgData> getOfflineMsgListList() {
+            public boolean hasOfflineMsgList() {
+                return ((bitField0_ & 0x00000001) == 0x00000001);
+            }
+
+            /**
+             * <code>optional .MsgData offline_msg_list = 1;</code>
+             */
+            public YouMaiMsg.MsgData getOfflineMsgList() {
                 if (offlineMsgListBuilder_ == null) {
-                    return java.util.Collections.unmodifiableList(offlineMsgList_);
+                    return offlineMsgList_;
                 } else {
-                    return offlineMsgListBuilder_.getMessageList();
+                    return offlineMsgListBuilder_.getMessage();
                 }
             }
 
             /**
-             * <code>repeated .MsgData offline_msg_list = 1;</code>
+             * <code>optional .MsgData offline_msg_list = 1;</code>
              */
-            public int getOfflineMsgListCount() {
+            public Builder setOfflineMsgList(YouMaiMsg.MsgData value) {
                 if (offlineMsgListBuilder_ == null) {
-                    return offlineMsgList_.size();
+                    if (value == null) {
+                        throw new NullPointerException();
+                    }
+                    offlineMsgList_ = value;
+                    onChanged();
                 } else {
-                    return offlineMsgListBuilder_.getCount();
+                    offlineMsgListBuilder_.setMessage(value);
                 }
+                bitField0_ |= 0x00000001;
+                return this;
             }
 
             /**
-             * <code>repeated .MsgData offline_msg_list = 1;</code>
-             */
-            public YouMaiMsg.MsgData getOfflineMsgList(int index) {
-                if (offlineMsgListBuilder_ == null) {
-                    return offlineMsgList_.get(index);
-                } else {
-                    return offlineMsgListBuilder_.getMessage(index);
-                }
-            }
-
-            /**
-             * <code>repeated .MsgData offline_msg_list = 1;</code>
+             * <code>optional .MsgData offline_msg_list = 1;</code>
              */
             public Builder setOfflineMsgList(
-                    int index, YouMaiMsg.MsgData value) {
-                if (offlineMsgListBuilder_ == null) {
-                    if (value == null) {
-                        throw new NullPointerException();
-                    }
-                    ensureOfflineMsgListIsMutable();
-                    offlineMsgList_.set(index, value);
-                    onChanged();
-                } else {
-                    offlineMsgListBuilder_.setMessage(index, value);
-                }
-                return this;
-            }
-
-            /**
-             * <code>repeated .MsgData offline_msg_list = 1;</code>
-             */
-            public Builder setOfflineMsgList(
-                    int index, YouMaiMsg.MsgData.Builder builderForValue) {
-                if (offlineMsgListBuilder_ == null) {
-                    ensureOfflineMsgListIsMutable();
-                    offlineMsgList_.set(index, builderForValue.build());
-                    onChanged();
-                } else {
-                    offlineMsgListBuilder_.setMessage(index, builderForValue.build());
-                }
-                return this;
-            }
-
-            /**
-             * <code>repeated .MsgData offline_msg_list = 1;</code>
-             */
-            public Builder addOfflineMsgList(YouMaiMsg.MsgData value) {
-                if (offlineMsgListBuilder_ == null) {
-                    if (value == null) {
-                        throw new NullPointerException();
-                    }
-                    ensureOfflineMsgListIsMutable();
-                    offlineMsgList_.add(value);
-                    onChanged();
-                } else {
-                    offlineMsgListBuilder_.addMessage(value);
-                }
-                return this;
-            }
-
-            /**
-             * <code>repeated .MsgData offline_msg_list = 1;</code>
-             */
-            public Builder addOfflineMsgList(
-                    int index, YouMaiMsg.MsgData value) {
-                if (offlineMsgListBuilder_ == null) {
-                    if (value == null) {
-                        throw new NullPointerException();
-                    }
-                    ensureOfflineMsgListIsMutable();
-                    offlineMsgList_.add(index, value);
-                    onChanged();
-                } else {
-                    offlineMsgListBuilder_.addMessage(index, value);
-                }
-                return this;
-            }
-
-            /**
-             * <code>repeated .MsgData offline_msg_list = 1;</code>
-             */
-            public Builder addOfflineMsgList(
                     YouMaiMsg.MsgData.Builder builderForValue) {
                 if (offlineMsgListBuilder_ == null) {
-                    ensureOfflineMsgListIsMutable();
-                    offlineMsgList_.add(builderForValue.build());
+                    offlineMsgList_ = builderForValue.build();
                     onChanged();
                 } else {
-                    offlineMsgListBuilder_.addMessage(builderForValue.build());
+                    offlineMsgListBuilder_.setMessage(builderForValue.build());
                 }
+                bitField0_ |= 0x00000001;
                 return this;
             }
 
             /**
-             * <code>repeated .MsgData offline_msg_list = 1;</code>
+             * <code>optional .MsgData offline_msg_list = 1;</code>
              */
-            public Builder addOfflineMsgList(
-                    int index, YouMaiMsg.MsgData.Builder builderForValue) {
+            public Builder mergeOfflineMsgList(YouMaiMsg.MsgData value) {
                 if (offlineMsgListBuilder_ == null) {
-                    ensureOfflineMsgListIsMutable();
-                    offlineMsgList_.add(index, builderForValue.build());
+                    if (((bitField0_ & 0x00000001) == 0x00000001) &&
+                            offlineMsgList_ != YouMaiMsg.MsgData.getDefaultInstance()) {
+                        offlineMsgList_ =
+                                YouMaiMsg.MsgData.newBuilder(offlineMsgList_).mergeFrom(value).buildPartial();
+                    } else {
+                        offlineMsgList_ = value;
+                    }
                     onChanged();
                 } else {
-                    offlineMsgListBuilder_.addMessage(index, builderForValue.build());
+                    offlineMsgListBuilder_.mergeFrom(value);
                 }
+                bitField0_ |= 0x00000001;
                 return this;
             }
 
             /**
-             * <code>repeated .MsgData offline_msg_list = 1;</code>
-             */
-            public Builder addAllOfflineMsgList(
-                    Iterable<? extends YouMaiMsg.MsgData> values) {
-                if (offlineMsgListBuilder_ == null) {
-                    ensureOfflineMsgListIsMutable();
-                    com.google.protobuf.AbstractMessageLite.Builder.addAll(
-                            values, offlineMsgList_);
-                    onChanged();
-                } else {
-                    offlineMsgListBuilder_.addAllMessages(values);
-                }
-                return this;
-            }
-
-            /**
-             * <code>repeated .MsgData offline_msg_list = 1;</code>
+             * <code>optional .MsgData offline_msg_list = 1;</code>
              */
             public Builder clearOfflineMsgList() {
                 if (offlineMsgListBuilder_ == null) {
-                    offlineMsgList_ = java.util.Collections.emptyList();
-                    bitField0_ = (bitField0_ & ~0x00000001);
+                    offlineMsgList_ = YouMaiMsg.MsgData.getDefaultInstance();
                     onChanged();
                 } else {
                     offlineMsgListBuilder_.clear();
                 }
+                bitField0_ = (bitField0_ & ~0x00000001);
                 return this;
             }
 
             /**
-             * <code>repeated .MsgData offline_msg_list = 1;</code>
+             * <code>optional .MsgData offline_msg_list = 1;</code>
              */
-            public Builder removeOfflineMsgList(int index) {
-                if (offlineMsgListBuilder_ == null) {
-                    ensureOfflineMsgListIsMutable();
-                    offlineMsgList_.remove(index);
-                    onChanged();
-                } else {
-                    offlineMsgListBuilder_.remove(index);
-                }
-                return this;
+            public YouMaiMsg.MsgData.Builder getOfflineMsgListBuilder() {
+                bitField0_ |= 0x00000001;
+                onChanged();
+                return getOfflineMsgListFieldBuilder().getBuilder();
             }
 
             /**
-             * <code>repeated .MsgData offline_msg_list = 1;</code>
+             * <code>optional .MsgData offline_msg_list = 1;</code>
              */
-            public YouMaiMsg.MsgData.Builder getOfflineMsgListBuilder(
-                    int index) {
-                return getOfflineMsgListFieldBuilder().getBuilder(index);
-            }
-
-            /**
-             * <code>repeated .MsgData offline_msg_list = 1;</code>
-             */
-            public YouMaiMsg.MsgDataOrBuilder getOfflineMsgListOrBuilder(
-                    int index) {
-                if (offlineMsgListBuilder_ == null) {
-                    return offlineMsgList_.get(index);
-                } else {
-                    return offlineMsgListBuilder_.getMessageOrBuilder(index);
-                }
-            }
-
-            /**
-             * <code>repeated .MsgData offline_msg_list = 1;</code>
-             */
-            public java.util.List<? extends YouMaiMsg.MsgDataOrBuilder>
-            getOfflineMsgListOrBuilderList() {
+            public YouMaiMsg.MsgDataOrBuilder getOfflineMsgListOrBuilder() {
                 if (offlineMsgListBuilder_ != null) {
-                    return offlineMsgListBuilder_.getMessageOrBuilderList();
+                    return offlineMsgListBuilder_.getMessageOrBuilder();
                 } else {
-                    return java.util.Collections.unmodifiableList(offlineMsgList_);
+                    return offlineMsgList_;
                 }
             }
 
             /**
-             * <code>repeated .MsgData offline_msg_list = 1;</code>
+             * <code>optional .MsgData offline_msg_list = 1;</code>
              */
-            public YouMaiMsg.MsgData.Builder addOfflineMsgListBuilder() {
-                return getOfflineMsgListFieldBuilder().addBuilder(
-                        YouMaiMsg.MsgData.getDefaultInstance());
-            }
-
-            /**
-             * <code>repeated .MsgData offline_msg_list = 1;</code>
-             */
-            public YouMaiMsg.MsgData.Builder addOfflineMsgListBuilder(
-                    int index) {
-                return getOfflineMsgListFieldBuilder().addBuilder(
-                        index, YouMaiMsg.MsgData.getDefaultInstance());
-            }
-
-            /**
-             * <code>repeated .MsgData offline_msg_list = 1;</code>
-             */
-            public java.util.List<YouMaiMsg.MsgData.Builder>
-            getOfflineMsgListBuilderList() {
-                return getOfflineMsgListFieldBuilder().getBuilderList();
-            }
-
-            private com.google.protobuf.RepeatedFieldBuilder<
+            private com.google.protobuf.SingleFieldBuilder<
                     YouMaiMsg.MsgData, YouMaiMsg.MsgData.Builder, YouMaiMsg.MsgDataOrBuilder>
             getOfflineMsgListFieldBuilder() {
                 if (offlineMsgListBuilder_ == null) {
-                    offlineMsgListBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
+                    offlineMsgListBuilder_ = new com.google.protobuf.SingleFieldBuilder<
                             YouMaiMsg.MsgData, YouMaiMsg.MsgData.Builder, YouMaiMsg.MsgDataOrBuilder>(
-                            offlineMsgList_,
-                            ((bitField0_ & 0x00000001) == 0x00000001),
+                            getOfflineMsgList(),
                             getParentForChildren(),
                             isClean());
                     offlineMsgList_ = null;
@@ -6521,19 +6286,14 @@ public final class YouMaiMsg {
             com.google.protobuf.MessageOrBuilder {
 
         /**
-         * <code>repeated int64 msg_id_list = 1;</code>
+         * <code>optional int64 msg_id_list = 1;</code>
          */
-        java.util.List<Long> getMsgIdListList();
+        boolean hasMsgIdList();
 
         /**
-         * <code>repeated int64 msg_id_list = 1;</code>
+         * <code>optional int64 msg_id_list = 1;</code>
          */
-        int getMsgIdListCount();
-
-        /**
-         * <code>repeated int64 msg_id_list = 1;</code>
-         */
-        long getMsgIdList(int index);
+        long getMsgIdList();
     }
 
     /**
@@ -6595,24 +6355,8 @@ public final class YouMaiMsg {
                             break;
                         }
                         case 8: {
-                            if (!((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
-                                msgIdList_ = new java.util.ArrayList<Long>();
-                                mutable_bitField0_ |= 0x00000001;
-                            }
-                            msgIdList_.add(input.readInt64());
-                            break;
-                        }
-                        case 10: {
-                            int length = input.readRawVarint32();
-                            int limit = input.pushLimit(length);
-                            if (!((mutable_bitField0_ & 0x00000001) == 0x00000001) && input.getBytesUntilLimit() > 0) {
-                                msgIdList_ = new java.util.ArrayList<Long>();
-                                mutable_bitField0_ |= 0x00000001;
-                            }
-                            while (input.getBytesUntilLimit() > 0) {
-                                msgIdList_.add(input.readInt64());
-                            }
-                            input.popLimit(limit);
+                            bitField0_ |= 0x00000001;
+                            msgIdList_ = input.readInt64();
                             break;
                         }
                     }
@@ -6623,9 +6367,6 @@ public final class YouMaiMsg {
                 throw new com.google.protobuf.InvalidProtocolBufferException(
                         e.getMessage()).setUnfinishedMessage(this);
             } finally {
-                if (((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
-                    msgIdList_ = java.util.Collections.unmodifiableList(msgIdList_);
-                }
                 this.unknownFields = unknownFields.build();
                 makeExtensionsImmutable();
             }
@@ -6658,33 +6399,26 @@ public final class YouMaiMsg {
             return PARSER;
         }
 
+        private int bitField0_;
         public static final int MSG_ID_LIST_FIELD_NUMBER = 1;
-        private java.util.List<Long> msgIdList_;
+        private long msgIdList_;
 
         /**
-         * <code>repeated int64 msg_id_list = 1;</code>
+         * <code>optional int64 msg_id_list = 1;</code>
          */
-        public java.util.List<Long>
-        getMsgIdListList() {
+        public boolean hasMsgIdList() {
+            return ((bitField0_ & 0x00000001) == 0x00000001);
+        }
+
+        /**
+         * <code>optional int64 msg_id_list = 1;</code>
+         */
+        public long getMsgIdList() {
             return msgIdList_;
         }
 
-        /**
-         * <code>repeated int64 msg_id_list = 1;</code>
-         */
-        public int getMsgIdListCount() {
-            return msgIdList_.size();
-        }
-
-        /**
-         * <code>repeated int64 msg_id_list = 1;</code>
-         */
-        public long getMsgIdList(int index) {
-            return msgIdList_.get(index);
-        }
-
         private void initFields() {
-            msgIdList_ = java.util.Collections.emptyList();
+            msgIdList_ = 0L;
         }
 
         private byte memoizedIsInitialized = -1;
@@ -6701,8 +6435,8 @@ public final class YouMaiMsg {
         public void writeTo(com.google.protobuf.CodedOutputStream output)
                 throws java.io.IOException {
             getSerializedSize();
-            for (int i = 0; i < msgIdList_.size(); i++) {
-                output.writeInt64(1, msgIdList_.get(i));
+            if (((bitField0_ & 0x00000001) == 0x00000001)) {
+                output.writeInt64(1, msgIdList_);
             }
             getUnknownFields().writeTo(output);
         }
@@ -6714,14 +6448,9 @@ public final class YouMaiMsg {
             if (size != -1) return size;
 
             size = 0;
-            {
-                int dataSize = 0;
-                for (int i = 0; i < msgIdList_.size(); i++) {
-                    dataSize += com.google.protobuf.CodedOutputStream
-                            .computeInt64SizeNoTag(msgIdList_.get(i));
-                }
-                size += dataSize;
-                size += 1 * getMsgIdListList().size();
+            if (((bitField0_ & 0x00000001) == 0x00000001)) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeInt64Size(1, msgIdList_);
             }
             size += getUnknownFields().getSerializedSize();
             memoizedSerializedSize = size;
@@ -6862,7 +6591,7 @@ public final class YouMaiMsg {
 
             public Builder clear() {
                 super.clear();
-                msgIdList_ = java.util.Collections.emptyList();
+                msgIdList_ = 0L;
                 bitField0_ = (bitField0_ & ~0x00000001);
                 return this;
             }
@@ -6891,11 +6620,12 @@ public final class YouMaiMsg {
             public YouMaiMsg.OfflineMsgAck buildPartial() {
                 YouMaiMsg.OfflineMsgAck result = new YouMaiMsg.OfflineMsgAck(this);
                 int from_bitField0_ = bitField0_;
-                if (((bitField0_ & 0x00000001) == 0x00000001)) {
-                    msgIdList_ = java.util.Collections.unmodifiableList(msgIdList_);
-                    bitField0_ = (bitField0_ & ~0x00000001);
+                int to_bitField0_ = 0;
+                if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+                    to_bitField0_ |= 0x00000001;
                 }
                 result.msgIdList_ = msgIdList_;
+                result.bitField0_ = to_bitField0_;
                 onBuilt();
                 return result;
             }
@@ -6911,15 +6641,8 @@ public final class YouMaiMsg {
 
             public Builder mergeFrom(YouMaiMsg.OfflineMsgAck other) {
                 if (other == YouMaiMsg.OfflineMsgAck.getDefaultInstance()) return this;
-                if (!other.msgIdList_.isEmpty()) {
-                    if (msgIdList_.isEmpty()) {
-                        msgIdList_ = other.msgIdList_;
-                        bitField0_ = (bitField0_ & ~0x00000001);
-                    } else {
-                        ensureMsgIdListIsMutable();
-                        msgIdList_.addAll(other.msgIdList_);
-                    }
-                    onChanged();
+                if (other.hasMsgIdList()) {
+                    setMsgIdList(other.getMsgIdList());
                 }
                 this.mergeUnknownFields(other.getUnknownFields());
                 return this;
@@ -6949,76 +6672,38 @@ public final class YouMaiMsg {
 
             private int bitField0_;
 
-            private java.util.List<Long> msgIdList_ = java.util.Collections.emptyList();
+            private long msgIdList_;
 
-            private void ensureMsgIdListIsMutable() {
-                if (!((bitField0_ & 0x00000001) == 0x00000001)) {
-                    msgIdList_ = new java.util.ArrayList<Long>(msgIdList_);
-                    bitField0_ |= 0x00000001;
-                }
+            /**
+             * <code>optional int64 msg_id_list = 1;</code>
+             */
+            public boolean hasMsgIdList() {
+                return ((bitField0_ & 0x00000001) == 0x00000001);
             }
 
             /**
-             * <code>repeated int64 msg_id_list = 1;</code>
+             * <code>optional int64 msg_id_list = 1;</code>
              */
-            public java.util.List<Long>
-            getMsgIdListList() {
-                return java.util.Collections.unmodifiableList(msgIdList_);
+            public long getMsgIdList() {
+                return msgIdList_;
             }
 
             /**
-             * <code>repeated int64 msg_id_list = 1;</code>
+             * <code>optional int64 msg_id_list = 1;</code>
              */
-            public int getMsgIdListCount() {
-                return msgIdList_.size();
-            }
-
-            /**
-             * <code>repeated int64 msg_id_list = 1;</code>
-             */
-            public long getMsgIdList(int index) {
-                return msgIdList_.get(index);
-            }
-
-            /**
-             * <code>repeated int64 msg_id_list = 1;</code>
-             */
-            public Builder setMsgIdList(
-                    int index, long value) {
-                ensureMsgIdListIsMutable();
-                msgIdList_.set(index, value);
+            public Builder setMsgIdList(long value) {
+                bitField0_ |= 0x00000001;
+                msgIdList_ = value;
                 onChanged();
                 return this;
             }
 
             /**
-             * <code>repeated int64 msg_id_list = 1;</code>
-             */
-            public Builder addMsgIdList(long value) {
-                ensureMsgIdListIsMutable();
-                msgIdList_.add(value);
-                onChanged();
-                return this;
-            }
-
-            /**
-             * <code>repeated int64 msg_id_list = 1;</code>
-             */
-            public Builder addAllMsgIdList(
-                    Iterable<? extends Long> values) {
-                ensureMsgIdListIsMutable();
-                com.google.protobuf.AbstractMessageLite.Builder.addAll(
-                        values, msgIdList_);
-                onChanged();
-                return this;
-            }
-
-            /**
-             * <code>repeated int64 msg_id_list = 1;</code>
+             * <code>optional int64 msg_id_list = 1;</code>
              */
             public Builder clearMsgIdList() {
-                msgIdList_ = java.util.Collections.emptyList();
                 bitField0_ = (bitField0_ & ~0x00000001);
+                msgIdList_ = 0L;
                 onChanged();
                 return this;
             }
@@ -7039,26 +6724,20 @@ public final class YouMaiMsg {
             com.google.protobuf.MessageOrBuilder {
 
         /**
-         * <code>repeated string user_id = 1;</code>
+         * <code>optional string user_id = 1;</code>
          */
-        com.google.protobuf.ProtocolStringList
-        getUserIdList();
+        boolean hasUserId();
 
         /**
-         * <code>repeated string user_id = 1;</code>
+         * <code>optional string user_id = 1;</code>
          */
-        int getUserIdCount();
+        String getUserId();
 
         /**
-         * <code>repeated string user_id = 1;</code>
-         */
-        String getUserId(int index);
-
-        /**
-         * <code>repeated string user_id = 1;</code>
+         * <code>optional string user_id = 1;</code>
          */
         com.google.protobuf.ByteString
-        getUserIdBytes(int index);
+        getUserIdBytes();
 
         /**
          * <code>optional .ChatMsg data = 2;</code>
@@ -7150,16 +6829,13 @@ public final class YouMaiMsg {
                         }
                         case 10: {
                             com.google.protobuf.ByteString bs = input.readBytes();
-                            if (!((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
-                                userId_ = new com.google.protobuf.LazyStringArrayList();
-                                mutable_bitField0_ |= 0x00000001;
-                            }
-                            userId_.add(bs);
+                            bitField0_ |= 0x00000001;
+                            userId_ = bs;
                             break;
                         }
                         case 18: {
                             YouMaiMsg.ChatMsg.Builder subBuilder = null;
-                            if (((bitField0_ & 0x00000001) == 0x00000001)) {
+                            if (((bitField0_ & 0x00000002) == 0x00000002)) {
                                 subBuilder = data_.toBuilder();
                             }
                             data_ = input.readMessage(YouMaiMsg.ChatMsg.PARSER, extensionRegistry);
@@ -7167,11 +6843,11 @@ public final class YouMaiMsg {
                                 subBuilder.mergeFrom(data_);
                                 data_ = subBuilder.buildPartial();
                             }
-                            bitField0_ |= 0x00000001;
+                            bitField0_ |= 0x00000002;
                             break;
                         }
                         case 24: {
-                            bitField0_ |= 0x00000002;
+                            bitField0_ |= 0x00000004;
                             msgId_ = input.readInt64();
                             break;
                         }
@@ -7183,9 +6859,6 @@ public final class YouMaiMsg {
                 throw new com.google.protobuf.InvalidProtocolBufferException(
                         e.getMessage()).setUnfinishedMessage(this);
             } finally {
-                if (((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
-                    userId_ = userId_.getUnmodifiableView();
-                }
                 this.unknownFields = unknownFields.build();
                 makeExtensionsImmutable();
             }
@@ -7220,36 +6893,48 @@ public final class YouMaiMsg {
 
         private int bitField0_;
         public static final int USER_ID_FIELD_NUMBER = 1;
-        private com.google.protobuf.LazyStringList userId_;
+        private Object userId_;
 
         /**
-         * <code>repeated string user_id = 1;</code>
+         * <code>optional string user_id = 1;</code>
          */
-        public com.google.protobuf.ProtocolStringList
-        getUserIdList() {
-            return userId_;
+        public boolean hasUserId() {
+            return ((bitField0_ & 0x00000001) == 0x00000001);
         }
 
         /**
-         * <code>repeated string user_id = 1;</code>
+         * <code>optional string user_id = 1;</code>
          */
-        public int getUserIdCount() {
-            return userId_.size();
+        public String getUserId() {
+            Object ref = userId_;
+            if (ref instanceof String) {
+                return (String) ref;
+            } else {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                String s = bs.toStringUtf8();
+                if (bs.isValidUtf8()) {
+                    userId_ = s;
+                }
+                return s;
+            }
         }
 
         /**
-         * <code>repeated string user_id = 1;</code>
-         */
-        public String getUserId(int index) {
-            return userId_.get(index);
-        }
-
-        /**
-         * <code>repeated string user_id = 1;</code>
+         * <code>optional string user_id = 1;</code>
          */
         public com.google.protobuf.ByteString
-        getUserIdBytes(int index) {
-            return userId_.getByteString(index);
+        getUserIdBytes() {
+            Object ref = userId_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (String) ref);
+                userId_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
         }
 
         public static final int DATA_FIELD_NUMBER = 2;
@@ -7259,7 +6944,7 @@ public final class YouMaiMsg {
          * <code>optional .ChatMsg data = 2;</code>
          */
         public boolean hasData() {
-            return ((bitField0_ & 0x00000001) == 0x00000001);
+            return ((bitField0_ & 0x00000002) == 0x00000002);
         }
 
         /**
@@ -7283,7 +6968,7 @@ public final class YouMaiMsg {
          * <code>optional int64 msg_id = 3;</code>
          */
         public boolean hasMsgId() {
-            return ((bitField0_ & 0x00000002) == 0x00000002);
+            return ((bitField0_ & 0x00000004) == 0x00000004);
         }
 
         /**
@@ -7294,7 +6979,7 @@ public final class YouMaiMsg {
         }
 
         private void initFields() {
-            userId_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+            userId_ = "";
             data_ = YouMaiMsg.ChatMsg.getDefaultInstance();
             msgId_ = 0L;
         }
@@ -7313,13 +6998,13 @@ public final class YouMaiMsg {
         public void writeTo(com.google.protobuf.CodedOutputStream output)
                 throws java.io.IOException {
             getSerializedSize();
-            for (int i = 0; i < userId_.size(); i++) {
-                output.writeBytes(1, userId_.getByteString(i));
-            }
             if (((bitField0_ & 0x00000001) == 0x00000001)) {
-                output.writeMessage(2, data_);
+                output.writeBytes(1, getUserIdBytes());
             }
             if (((bitField0_ & 0x00000002) == 0x00000002)) {
+                output.writeMessage(2, data_);
+            }
+            if (((bitField0_ & 0x00000004) == 0x00000004)) {
                 output.writeInt64(3, msgId_);
             }
             getUnknownFields().writeTo(output);
@@ -7332,20 +7017,15 @@ public final class YouMaiMsg {
             if (size != -1) return size;
 
             size = 0;
-            {
-                int dataSize = 0;
-                for (int i = 0; i < userId_.size(); i++) {
-                    dataSize += com.google.protobuf.CodedOutputStream
-                            .computeBytesSizeNoTag(userId_.getByteString(i));
-                }
-                size += dataSize;
-                size += 1 * getUserIdList().size();
-            }
             if (((bitField0_ & 0x00000001) == 0x00000001)) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeBytesSize(1, getUserIdBytes());
+            }
+            if (((bitField0_ & 0x00000002) == 0x00000002)) {
                 size += com.google.protobuf.CodedOutputStream
                         .computeMessageSize(2, data_);
             }
-            if (((bitField0_ & 0x00000002) == 0x00000002)) {
+            if (((bitField0_ & 0x00000004) == 0x00000004)) {
                 size += com.google.protobuf.CodedOutputStream
                         .computeInt64Size(3, msgId_);
             }
@@ -7493,7 +7173,7 @@ public final class YouMaiMsg {
 
             public Builder clear() {
                 super.clear();
-                userId_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+                userId_ = "";
                 bitField0_ = (bitField0_ & ~0x00000001);
                 if (dataBuilder_ == null) {
                     data_ = YouMaiMsg.ChatMsg.getDefaultInstance();
@@ -7531,13 +7211,12 @@ public final class YouMaiMsg {
                 YouMaiMsg.S2SChatMsg result = new YouMaiMsg.S2SChatMsg(this);
                 int from_bitField0_ = bitField0_;
                 int to_bitField0_ = 0;
-                if (((bitField0_ & 0x00000001) == 0x00000001)) {
-                    userId_ = userId_.getUnmodifiableView();
-                    bitField0_ = (bitField0_ & ~0x00000001);
+                if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+                    to_bitField0_ |= 0x00000001;
                 }
                 result.userId_ = userId_;
                 if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
-                    to_bitField0_ |= 0x00000001;
+                    to_bitField0_ |= 0x00000002;
                 }
                 if (dataBuilder_ == null) {
                     result.data_ = data_;
@@ -7545,7 +7224,7 @@ public final class YouMaiMsg {
                     result.data_ = dataBuilder_.build();
                 }
                 if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
-                    to_bitField0_ |= 0x00000002;
+                    to_bitField0_ |= 0x00000004;
                 }
                 result.msgId_ = msgId_;
                 result.bitField0_ = to_bitField0_;
@@ -7564,14 +7243,9 @@ public final class YouMaiMsg {
 
             public Builder mergeFrom(YouMaiMsg.S2SChatMsg other) {
                 if (other == YouMaiMsg.S2SChatMsg.getDefaultInstance()) return this;
-                if (!other.userId_.isEmpty()) {
-                    if (userId_.isEmpty()) {
-                        userId_ = other.userId_;
-                        bitField0_ = (bitField0_ & ~0x00000001);
-                    } else {
-                        ensureUserIdIsMutable();
-                        userId_.addAll(other.userId_);
-                    }
+                if (other.hasUserId()) {
+                    bitField0_ |= 0x00000001;
+                    userId_ = other.userId_;
                     onChanged();
                 }
                 if (other.hasData()) {
@@ -7608,105 +7282,84 @@ public final class YouMaiMsg {
 
             private int bitField0_;
 
-            private com.google.protobuf.LazyStringList userId_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+            private Object userId_ = "";
 
-            private void ensureUserIdIsMutable() {
-                if (!((bitField0_ & 0x00000001) == 0x00000001)) {
-                    userId_ = new com.google.protobuf.LazyStringArrayList(userId_);
-                    bitField0_ |= 0x00000001;
+            /**
+             * <code>optional string user_id = 1;</code>
+             */
+            public boolean hasUserId() {
+                return ((bitField0_ & 0x00000001) == 0x00000001);
+            }
+
+            /**
+             * <code>optional string user_id = 1;</code>
+             */
+            public String getUserId() {
+                Object ref = userId_;
+                if (!(ref instanceof String)) {
+                    com.google.protobuf.ByteString bs =
+                            (com.google.protobuf.ByteString) ref;
+                    String s = bs.toStringUtf8();
+                    if (bs.isValidUtf8()) {
+                        userId_ = s;
+                    }
+                    return s;
+                } else {
+                    return (String) ref;
                 }
             }
 
             /**
-             * <code>repeated string user_id = 1;</code>
-             */
-            public com.google.protobuf.ProtocolStringList
-            getUserIdList() {
-                return userId_.getUnmodifiableView();
-            }
-
-            /**
-             * <code>repeated string user_id = 1;</code>
-             */
-            public int getUserIdCount() {
-                return userId_.size();
-            }
-
-            /**
-             * <code>repeated string user_id = 1;</code>
-             */
-            public String getUserId(int index) {
-                return userId_.get(index);
-            }
-
-            /**
-             * <code>repeated string user_id = 1;</code>
+             * <code>optional string user_id = 1;</code>
              */
             public com.google.protobuf.ByteString
-            getUserIdBytes(int index) {
-                return userId_.getByteString(index);
+            getUserIdBytes() {
+                Object ref = userId_;
+                if (ref instanceof String) {
+                    com.google.protobuf.ByteString b =
+                            com.google.protobuf.ByteString.copyFromUtf8(
+                                    (String) ref);
+                    userId_ = b;
+                    return b;
+                } else {
+                    return (com.google.protobuf.ByteString) ref;
+                }
             }
 
             /**
-             * <code>repeated string user_id = 1;</code>
+             * <code>optional string user_id = 1;</code>
              */
             public Builder setUserId(
-                    int index, String value) {
-                if (value == null) {
-                    throw new NullPointerException();
-                }
-                ensureUserIdIsMutable();
-                userId_.set(index, value);
-                onChanged();
-                return this;
-            }
-
-            /**
-             * <code>repeated string user_id = 1;</code>
-             */
-            public Builder addUserId(
                     String value) {
                 if (value == null) {
                     throw new NullPointerException();
                 }
-                ensureUserIdIsMutable();
-                userId_.add(value);
+                bitField0_ |= 0x00000001;
+                userId_ = value;
                 onChanged();
                 return this;
             }
 
             /**
-             * <code>repeated string user_id = 1;</code>
-             */
-            public Builder addAllUserId(
-                    Iterable<String> values) {
-                ensureUserIdIsMutable();
-                com.google.protobuf.AbstractMessageLite.Builder.addAll(
-                        values, userId_);
-                onChanged();
-                return this;
-            }
-
-            /**
-             * <code>repeated string user_id = 1;</code>
+             * <code>optional string user_id = 1;</code>
              */
             public Builder clearUserId() {
-                userId_ = com.google.protobuf.LazyStringArrayList.EMPTY;
                 bitField0_ = (bitField0_ & ~0x00000001);
+                userId_ = getDefaultInstance().getUserId();
                 onChanged();
                 return this;
             }
 
             /**
-             * <code>repeated string user_id = 1;</code>
+             * <code>optional string user_id = 1;</code>
              */
-            public Builder addUserIdBytes(
+            public Builder setUserIdBytes(
                     com.google.protobuf.ByteString value) {
                 if (value == null) {
                     throw new NullPointerException();
                 }
-                ensureUserIdIsMutable();
-                userId_.add(value);
+                bitField0_ |= 0x00000001;
+                userId_ = value;
                 onChanged();
                 return this;
             }
@@ -7941,17 +7594,17 @@ public final class YouMaiMsg {
                         "g.IM_CONTENT_TYPE\022(\n\010msg_font\030\t \001(\0132\026.co",
                 "m.proto.msg.MsgFont\022\022\n\nmsg_status\030\n \001(\r\022" +
                         "0\n\014msg_property\030\013 \001(\0162\032.Ms" +
-                        "gProperty\022\033\n\023force_push_ids_list\030\014 \003(\t\022\024" +
+                        "gProperty\022\033\n\023force_push_ids_list\030\014 \001(\t\022\024" +
                         "\n\014src_realname\030\r \001(\t\022\022\n\nsrc_avatar\030\016 \001(\t" +
                         "\022\022\n\nsrc_mobile\030\017 \001(\t\022\017\n\007src_sex\030\020 \001(\t\"/\n" +
                         "\007ChatMsg\022$\n\004data\030\001 \001(\0132\026.M" +
                         "sgData\"D\n\020OfflineMsgNotify\0220\n\020offline_ms" +
-                        "g_list\030\001 \003(\0132\026.MsgData\"w\n\013" +
+                        "g_list\030\001 \001(\0132\026.MsgData\"w\n\013" +
                         "ChatMsg_Ack\022\017\n\007user_id\030\001 \001(\t\022\016\n\006msg_id\030\002" +
                         " \001(\003\022-\n\010errer_no\030\003 \001(\0162\033.com.proto.basic",
                 ".ERRNO_CODE\022\030\n\020is_target_online\030\024 \001(\010\"$\n" +
-                        "\rOfflineMsgAck\022\023\n\013msg_id_list\030\001 \003(\003\"S\n\nS" +
-                        "2SChatMsg\022\017\n\007user_id\030\001 \003(\t\022$\n\004data\030\002 \001(\013" +
+                        "\rOfflineMsgAck\022\023\n\013msg_id_list\030\001 \001(\003\"S\n\nS" +
+                        "2SChatMsg\022\017\n\007user_id\030\001 \001(\t\022$\n\004data\030\002 \001(\013" +
                         "2\026.ChatMsg\022\016\n\006msg_id\030\003 \001(\003" +
                         "*\305\003\n\017IM_CONTENT_TYPE\022\030\n\024IM_CONTENT_TYPE_" +
                         "TEXT\020\000\022!\n\035IM_CONTENT_TYPE_SHORT_MESSAGE\020" +

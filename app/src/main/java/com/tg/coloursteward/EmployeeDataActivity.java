@@ -224,7 +224,7 @@ public class EmployeeDataActivity extends BaseActivity {
 
                 CacheEmployeeHelper.instance().insertOrUpdate(this, item);
 
-                tvName.setText(item.getRealname() + "(" + item.getUsername() + ")");
+                tvName.setText(item.getRealname());
                 if (item.getJobName().contains("(")) {
                     int i = item.getJobName().indexOf("(");
                     item.setJobName(item.getJobName().substring(0, i));
@@ -269,8 +269,8 @@ public class EmployeeDataActivity extends BaseActivity {
 
                 //添加按钮
                 info = new EmployeePhoneInfo();
-                // info.phone = item.id;  //to do
                 info.tag = "ID";
+                info.phone = item.getUsername();
                 mPhoneList.add(info);
 
                 if (mlListView.getFooterViewsCount() > 0) {

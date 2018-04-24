@@ -335,21 +335,20 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
                     Intent intent = new Intent(getActivity(), GlobalSearchActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                     startActivity(intent);
-                    return;
-                }
-                Intent intent = new Intent();
-
-                int groupId = bean.getGroupId();
-
-                if (groupId > 0) {
-                    intent.setClass(getActivity(), IMGroupActivity.class);
                 } else {
-                    intent.setClass(getActivity(), IMConnectionActivity.class);
-                }
+                    Intent intent = new Intent();
+                    int groupId = bean.getGroupId();
+                    if (groupId > 0) {
+                        intent.setClass(getActivity(), IMGroupActivity.class);
+                    } else {
+                        intent.setClass(getActivity(), IMConnectionActivity.class);
+                    }
+                    intent.putExtra(IMConnectionActivity.DST_UUID, bean.getTargetUuid());
+                    intent.putExtra(IMConnectionActivity.DST_NAME, bean.getDisplayName());
+                    startActivityForResult(intent, INTENT_REQUEST_FOR_UPDATE_UI);
 
-                intent.putExtra(IMConnectionActivity.DST_UUID, bean.getTargetUuid());
-                intent.putExtra(IMConnectionActivity.DST_NAME, bean.getDisplayName());
-                startActivityForResult(intent, INTENT_REQUEST_FOR_UPDATE_UI);
+                    IMMsgManager.instance().removeBadge(bean.getTargetUuid());
+                }
             }
         });
 

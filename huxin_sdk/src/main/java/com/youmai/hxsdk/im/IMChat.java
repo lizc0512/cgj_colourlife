@@ -21,12 +21,12 @@ public class IMChat {
     private YouMaiMsg.MsgData mImChat;
     private CacheMsgBean mMsgBean;
 
-    public IMChat(YouMaiMsg.MsgData imChat) {
+    public IMChat(YouMaiMsg.MsgData imChat, boolean isGroup) {
         mImChat = imChat;
         mJsonBody = imChat.getMsgContent();
         mMsgType = imChat.getContentType().getNumber();
         mContent = new MsgContent(mMsgType, mJsonBody);
-        updateCacheBean(imChat);
+        updateCacheBean(imChat, isGroup);
     }
 
     public IMChat(String pushMsg) {
@@ -39,14 +39,13 @@ public class IMChat {
     }
 
 
-    private void updateCacheBean(YouMaiMsg.MsgData imChat) {
+    private void updateCacheBean(YouMaiMsg.MsgData imChat, boolean isGroup) {
         mMsgBean = new CacheMsgBean();
         mMsgBean.setSenderUserId(imChat.getSrcUserId())
                 .setSenderSex(imChat.getSrcSex())
                 .setSenderMobile(imChat.getSrcMobile())
                 .setSenderAvatar(imChat.getSrcAvatar())
                 .setSenderRealName(imChat.getSrcRealname())
-                .setTargetUuid(imChat.getSrcUserId())
                 .setTargetName(imChat.getSrcRealname())
                 .setReceiverUserId(imChat.getDestUserId())
                 .setGroupId(imChat.getGroupId())
@@ -54,6 +53,13 @@ public class IMChat {
                 .setMsgStatus(CacheMsgBean.RECEIVE_UNREAD)
                 .setMsgId(imChat.getMsgId())
                 .setContentJsonBody(imChat.getMsgContent());
+
+        if (isGroup) {
+            mMsgBean.setTargetUuid(imChat.getGroupId() + "");
+        } else {
+            mMsgBean.setTargetUuid(imChat.getSrcUserId());
+        }
+
     }
 
 

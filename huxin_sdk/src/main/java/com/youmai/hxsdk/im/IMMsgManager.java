@@ -132,7 +132,7 @@ public class IMMsgManager {
                 YouMaiMsg.MsgData imChat = notify.getData();
                 HuxinSdkManager.instance().sendMsgReply(imChat.getMsgId());
 
-                IMChat im = new IMChat(imChat);
+                IMChat im = new IMChat(imChat, false);
                 parseCharMsg(im);
                 notifyMsg(im, false, false);
 
@@ -151,7 +151,7 @@ public class IMMsgManager {
                 YouMaiMsg.MsgData imChat = notify.getData();
                 HuxinSdkManager.instance().sendMsgReply(imChat.getMsgId());
 
-                IMChat im = new IMChat(imChat);
+                IMChat im = new IMChat(imChat, true);
                 parseCharMsg(im);
                 notifyMsg(im, false, true);
 

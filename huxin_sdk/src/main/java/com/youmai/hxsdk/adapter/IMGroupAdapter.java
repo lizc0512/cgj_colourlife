@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.IMFilePreviewActivity;
 import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.activity.CropMapActivity;
@@ -215,6 +216,8 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        onBindCommon((BaseViewHolder) holder, position);
+
         if (holder instanceof ImgViewHolder) { //图片
             onBindPic((ImgViewHolder) holder, position);
         } else if (holder instanceof TxtViewHolder) {  //文字
@@ -931,6 +934,23 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
         }
     }
 
+    private void onBindCommon(final BaseViewHolder baseViewHolder, final int position) {
+        CacheMsgBean ben = mImBeanList.get(position);
+        String avatar;
+        //头像
+        if (ben.isRightUI()) {  //自己的头像
+            avatar = HuxinSdkManager.instance().getHeadUrl();
+        } else {
+            avatar = ben.getSenderAvatar();
+        }
+
+        Glide.with(mAct).load(avatar)
+                .apply(new RequestOptions()
+                        .placeholder(R.drawable.hx_index_head01)
+                        .error(R.drawable.hx_index_head01)
+                        .diskCacheStrategy(DiskCacheStrategy.RESOURCE))
+                .into(baseViewHolder.senderIV);
+    }
 
     /**
      * 删除单条消息

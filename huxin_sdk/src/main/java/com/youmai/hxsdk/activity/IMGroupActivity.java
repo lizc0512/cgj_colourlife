@@ -457,7 +457,7 @@ public class IMGroupActivity extends SdkBaseActivity implements
             });
         }
 
-        ivGroup = (ImageView) findViewById(R.id.iv_group_img);
+        ivGroup = (ImageView) findViewById(R.id.iv_group_detail);
         ivGroup.setVisibility(View.VISIBLE);
         ivGroup.setOnClickListener(new View.OnClickListener() {
             @Override

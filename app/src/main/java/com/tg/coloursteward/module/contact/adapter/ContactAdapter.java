@@ -130,7 +130,7 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                             .apply(new RequestOptions()
                                     .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                                     .centerCrop()
-                                    .override(120, 120)
+                                    .override(60, 60)
                                     .transform(new GlideRoundTransform(mContext))
                                     .placeholder(R.drawable.color_default_header)
                                     .error(R.drawable.color_default_header))

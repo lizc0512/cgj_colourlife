@@ -1,30 +1,28 @@
-package com.youmai.hxsdk.module.groupchat;
+package com.tg.coloursteward.module.groupchat.details;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.google.protobuf.InvalidProtocolBufferException;
+import com.tg.coloursteward.EmployeeDataActivity;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.activity.SdkBaseActivity;
-import com.youmai.hxsdk.adapter.DividerItemDecoration;
 import com.youmai.hxsdk.adapter.PaddingItemDecoration;
 import com.youmai.hxsdk.db.bean.Contact;
-import com.youmai.hxsdk.db.bean.GroupInfoBean;
-import com.youmai.hxsdk.db.helper.GroupInfoHelper;
 import com.youmai.hxsdk.proto.YouMaiGroup;
 import com.youmai.hxsdk.router.APath;
 import com.youmai.hxsdk.socket.PduBase;
 import com.youmai.hxsdk.socket.ReceiveListener;
-import com.youmai.hxsdk.view.refresh.HeaderSpanSizeLookup;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +32,8 @@ import java.util.List;
  * 日期：2018.04.23 17:32
  * 描述：群聊详情
  */
-public class ChatGroupDetailsActivity extends SdkBaseActivity {
+@Route(path = APath.GROUP_DELETE_CONTACT)
+public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDetailAdapter.ItemEventListener {
 
     public static final String GROUP_LIST = "GROUP_LIST";
     public static final String DS_NAME = "DS_NAME";
@@ -86,18 +85,15 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity {
 
         mTvTitle.setText("聊天详情");
 
-        mAdapter = new GroupDetailAdapter(this);
+        mAdapter = new GroupDetailAdapter(this, this);
         GridLayoutManager manager = new GridLayoutManager(this, 5);
-
         mGridView.addItemDecoration(new PaddingItemDecoration(5));
         mGridView.setLayoutManager(manager);
         mGridView.setAdapter(mAdapter);
     }
 
     void createGroupMap() {
-
         mGroupId = getIntent().getIntExtra("groupId", -1);
-
         HuxinSdkManager.instance().reqGroupMember(mGroupId, new ReceiveListener() {
             @Override
             public void OnRec(PduBase pduBase) {
@@ -108,7 +104,14 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity {
                     if (groupList.size() > 0) {
                         groupList.clear();
                     }
+
+                    boolean isGroupOwner = false;
                     for (YouMaiGroup.GroupMemberItem item : memberListList) {
+                        if (item.getUserName().equals(HuxinSdkManager.instance().getUserName())) {
+                            if (item.getMemberRole() == 0) {
+                                isGroupOwner = true;
+                            }
+                        }
                         Contact contact = new Contact();
                         contact.setRealname(item.getMemberName());
                         contact.setUsername(item.getUserName());
@@ -116,6 +119,22 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity {
                         contact.setMemberRole(item.getMemberRole());
                         groupList.add(contact);
                     }
+
+                    if (isGroupOwner) {
+                        Contact contact1 = new Contact();
+                        contact1.setRealname("+");
+                        groupList.add(contact1);
+                        Contact contact2 = new Contact();
+                        contact2.setRealname("-");
+                        groupList.add(contact2);
+                        mAdapter.setType(2);
+                    } else {
+                        Contact contact = new Contact();
+                        contact.setRealname("+");
+                        groupList.add(contact);
+                        mAdapter.setType(1);
+                    }
+
                     mAdapter.setDataList(groupList);
                 } catch (InvalidProtocolBufferException e) {
                     e.printStackTrace();
@@ -132,11 +151,22 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity {
                 finish();
             }
         });
-
-//        ARouter.getInstance().build(APath.GROUP_CREATE_ADD_CONTACT)
-//                .withParcelableArrayList(GROUP_LIST, (ArrayList<? extends Parcelable>) groupList)
-//                .navigation(ChatGroupDetailsActivity.this);
     }
 
 
+    @Override
+    public void onItemClick(int pos, Contact contact) {
+        String realname = contact.getRealname();
+        if (realname.equals("+")) {
+            ARouter.getInstance().build(APath.GROUP_CREATE_ADD_CONTACT)
+                    .withParcelableArrayList(GROUP_LIST, (ArrayList<? extends Parcelable>) groupList)
+                    .navigation(ChatGroupDetailsActivity.this);
+        } else if (realname.equals("-")) {
+            Toast.makeText(this, "删除", Toast.LENGTH_SHORT).show();
+        } else {
+            Intent i = new Intent(this, EmployeeDataActivity.class);
+            i.putExtra(EmployeeDataActivity.CONTACTS_ID, contact.getUsername());
+            startActivity(i);
+        }
+    }
 }

@@ -46,6 +46,7 @@ import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.adapter.IMGroupAdapter;
 import com.youmai.hxsdk.config.FileConfig;
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
+import com.youmai.hxsdk.db.bean.GroupInfoBean;
 import com.youmai.hxsdk.db.helper.CacheMsgHelper;
 import com.youmai.hxsdk.entity.CallInfo;
 import com.youmai.hxsdk.im.IMHelper;
@@ -113,6 +114,7 @@ public class IMGroupActivity extends SdkBaseActivity implements
     public static final String TAG = IMGroupActivity.class.getSimpleName();
 
     //srsm add @20170214
+    public static final String GROUP_INFO = "GROUP_INFO";
     public static final String DST_NAME = "DST_NAME";
     public static final String DST_UUID = "DST_UUID";
     public static final String DST_PHONE = "DST_PHONE";
@@ -148,26 +150,22 @@ public class IMGroupActivity extends SdkBaseActivity implements
 
     private String groupName;  //群组名称
     private int groupId;      //群组ID
+    private int groupMemberCount; //群组成员数量
 
     private boolean isPauseOut = false;
     private boolean isOpenEmotion = false;
 
     private boolean isSmoothBottom = true;//是否滑动完成
     private boolean canSliding = true;//是否正可以滑动最底
-
     private long mScrollPosition;
 
-
     private LocalBroadcastManager localBroadcastManager;
-
     private LocalMsgReceiver mLocalMsgReceiver;
 
     private Context mContext;
-
     private boolean isOriginal = false;
 
     private NormalHandler mHandler;
-
 
     /**
      * 消息广播
@@ -207,10 +205,8 @@ public class IMGroupActivity extends SdkBaseActivity implements
                     }
                 }
             }
-
         }
     }
-
 
     private static class NormalHandler extends Handler {
         private final WeakReference<IMGroupActivity> mTarget;
@@ -231,7 +227,7 @@ public class IMGroupActivity extends SdkBaseActivity implements
         }
     }
 
-
+    GroupInfoBean mGroupInfo;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -241,9 +237,10 @@ public class IMGroupActivity extends SdkBaseActivity implements
         mHandler = new NormalHandler(this);
 
         Intent fromIntent = getIntent();
-
         groupName = fromIntent.getStringExtra(DST_NAME);
         groupId = fromIntent.getIntExtra(DST_UUID, 0);
+
+        mGroupInfo = fromIntent.getParcelableExtra(GROUP_INFO);
 
         mScrollPosition = fromIntent.getLongExtra(EXTRA_SCROLL_POSITION, 0);
 

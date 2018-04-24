@@ -109,6 +109,7 @@ public class GroupListActivity extends BaseActivity {
                     Intent intent = new Intent(mContext, IMGroupActivity.class);
                     intent.putExtra(IMGroupActivity.DST_NAME, bean.getGroup_name());
                     intent.putExtra(IMGroupActivity.DST_UUID, bean.getGroup_id());
+                    intent.putExtra(IMGroupActivity.GROUP_INFO, bean);
                     startActivity(intent);
                 }
             }

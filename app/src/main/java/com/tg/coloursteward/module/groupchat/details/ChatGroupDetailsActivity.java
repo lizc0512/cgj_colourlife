@@ -23,6 +23,7 @@ import com.youmai.hxsdk.proto.YouMaiGroup;
 import com.youmai.hxsdk.router.APath;
 import com.youmai.hxsdk.socket.PduBase;
 import com.youmai.hxsdk.socket.ReceiveListener;
+import com.youmai.hxsdk.utils.ListUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,6 +54,7 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
     private GroupDetailAdapter mAdapter;
 
     private List<Contact> groupList = new ArrayList<>();
+    private List<Contact> groupList2 = new ArrayList<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -68,6 +70,9 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
         super.onDestroy();
         if (null != groupList) {
             groupList.clear();
+        }
+        if (null != groupList2) {
+            groupList2.clear();
         }
     }
 
@@ -153,13 +158,21 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
         });
     }
 
-
     @Override
     public void onItemClick(int pos, Contact contact) {
         String realname = contact.getRealname();
+        if (!ListUtils.isEmpty(groupList2)) {
+            groupList2.clear();
+        }
         if (realname.equals("+")) {
+            for (Contact con: groupList) {
+                if (con.getRealname().equals("+") || con.getRealname().equals("-")) {
+                    continue;
+                }
+                groupList2.add(con);
+            }
             ARouter.getInstance().build(APath.GROUP_CREATE_ADD_CONTACT)
-                    .withParcelableArrayList(GROUP_LIST, (ArrayList<? extends Parcelable>) groupList)
+                    .withParcelableArrayList(GROUP_LIST, (ArrayList<? extends Parcelable>) groupList2)
                     .navigation(ChatGroupDetailsActivity.this);
         } else if (realname.equals("-")) {
             Toast.makeText(this, "删除", Toast.LENGTH_SHORT).show();

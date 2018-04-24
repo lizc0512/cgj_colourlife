@@ -34,7 +34,7 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         StickyHeaderAdapter<ContactAdapter.HeaderHolder>, MessageHandler.ResponseListener {
 
     enum TYPE {
-        SEARCH, COLLECT, DEFAULT
+        SEARCH, HEADER, COLLECT, DEFAULT
     }
 
     public static final int mIndexForCollect = 2;
@@ -77,6 +77,8 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             type = TYPE.SEARCH.ordinal();
         } else if (position == mCollectIndex) {
             type = TYPE.COLLECT.ordinal();
+        } else if (position > 0 && position < mCollectIndex) {
+            type = TYPE.HEADER.ordinal();
         } else {
             type = TYPE.DEFAULT.ordinal();
         }
@@ -88,6 +90,9 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         if (viewType == TYPE.SEARCH.ordinal()) {
             return new SearchHolder(LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.global_list_item_header_search, parent, false));
+        } else if (viewType == TYPE.HEADER.ordinal()) {
+            return new ContactHolder(LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.contacts_fragment_item, parent, false));
         } else if (viewType == TYPE.COLLECT.ordinal()) {
             return new CollectHolder(LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.collect_fragment_item, parent, false));
@@ -102,25 +107,26 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         final Contact contact = cnPinyinList.get(position).data;
 
         if (holder instanceof ContactHolder) {
+            final ContactHolder contactHolder = (ContactHolder) holder;
             if (position > 0 && position < mCollectIndex) {
                 int icon = defaultIcon(position);
-                ((ContactHolder) holder).iv_header.setImageResource(icon);
-                ((ContactHolder) holder).cb_collect.setVisibility(View.GONE);
+                contactHolder.iv_header.setImageResource(icon);
+                contactHolder.cb_collect.setVisibility(View.GONE);
             } else {
                 if (null != mCacheMap) {
                     if (mCollectIndex == mIndexForCollect) {
-                        ((ContactHolder) holder).cb_collect.setVisibility(View.VISIBLE);
+                        contactHolder.cb_collect.setVisibility(View.VISIBLE);
                     } else {
-                        ((ContactHolder) holder).cb_collect.setVisibility(View.GONE);
+                        contactHolder.cb_collect.setVisibility(View.GONE);
                     }
 
                     Log.d("YW", "position: " + position + "\tsize：" + mCacheMap.size() + "\t" +
                             (mCacheMap.get(position) != null ? mCacheMap.get(position).toString() : "空"));
 
                     if (mCacheMap.get(position) != null) {
-                        ((ContactHolder) holder).cb_collect.setChecked(true);
+                        contactHolder.cb_collect.setChecked(true);
                     } else {
-                        ((ContactHolder) holder).cb_collect.setChecked(false);
+                        contactHolder.cb_collect.setChecked(false);
                     }
                 }
 
@@ -134,7 +140,7 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                                     .transform(new GlideRoundTransform(mContext))
                                     .placeholder(R.drawable.color_default_header)
                                     .error(R.drawable.color_default_header))
-                            .into(((ContactHolder) holder).iv_header);
+                            .into(contactHolder.iv_header);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -147,12 +153,12 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                         itemEventListener.onItemClick(position, contact);
                     }
                     if (null != mCacheMap) {
-                        if (((ContactHolder) holder).cb_collect.isChecked()) {
+                        if (contactHolder.cb_collect.isChecked()) {
                             mCacheMap.remove(position);
-                            ((ContactHolder) holder).cb_collect.setChecked(false);
+                            contactHolder.cb_collect.setChecked(false);
                         } else {
                             mCacheMap.put(position, contact);
-                            ((ContactHolder) holder).cb_collect.setChecked(true);
+                            contactHolder.cb_collect.setChecked(true);
                         }
                         if (null != itemEventListener) {
                             itemEventListener.collectCount(mCacheMap.size());
@@ -162,9 +168,9 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             });
 
             if (contact.getRealname().startsWith("↑##@@**") && position <= mCollectIndex) {
-                ((ContactHolder) holder).tv_name.setText(contact.getRealname().substring(9));
+                contactHolder.tv_name.setText(contact.getRealname().substring(9));
             } else {
-                ((ContactHolder) holder).tv_name.setText(contact.getRealname());
+                contactHolder.tv_name.setText(contact.getRealname());
             }
 
         } else if (holder instanceof CollectHolder) {

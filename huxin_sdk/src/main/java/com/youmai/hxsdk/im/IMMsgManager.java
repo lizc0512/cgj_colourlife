@@ -134,7 +134,7 @@ public class IMMsgManager {
 
                 IMChat im = new IMChat(imChat);
                 parseCharMsg(im);
-                notifyMsg(im, false, true);
+                notifyMsg(im, false, false);
 
             } catch (InvalidProtocolBufferException e) {
                 e.printStackTrace();
@@ -319,7 +319,6 @@ public class IMMsgManager {
             targetId = msg.getImChat().getGroupId() + "";
         } else {
             targetId = msg.getImChat().getSrcUserId();
-
         }
 
         String desName = msg.getImChat().getSrcRealname();

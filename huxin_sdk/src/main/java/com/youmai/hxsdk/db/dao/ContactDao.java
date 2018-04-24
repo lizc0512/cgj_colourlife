@@ -38,10 +38,11 @@ public class ContactDao extends AbstractDao<Contact, Long> {
         public final static Property OrgID = new Property(11, String.class, "orgID", false, "ORG_ID");
         public final static Property OrgName = new Property(12, String.class, "orgName", false, "ORG_NAME");
         public final static Property Username = new Property(13, String.class, "username", false, "USERNAME");
-        public final static Property Sign = new Property(14, String.class, "sign", false, "SIGN");
-        public final static Property Is_hx = new Property(15, boolean.class, "is_hx", false, "IS_HX");
-        public final static Property Pinyin = new Property(16, String.class, "pinyin", false, "PINYIN");
-        public final static Property SimplePinyin = new Property(17, String.class, "simplePinyin", false, "SIMPLE_PINYIN");
+        public final static Property MemberRole = new Property(14, int.class, "memberRole", false, "MEMBER_ROLE");
+        public final static Property Sign = new Property(15, String.class, "sign", false, "SIGN");
+        public final static Property Is_hx = new Property(16, boolean.class, "is_hx", false, "IS_HX");
+        public final static Property Pinyin = new Property(17, String.class, "pinyin", false, "PINYIN");
+        public final static Property SimplePinyin = new Property(18, String.class, "simplePinyin", false, "SIMPLE_PINYIN");
     }
 
 
@@ -71,10 +72,11 @@ public class ContactDao extends AbstractDao<Contact, Long> {
                 "\"ORG_ID\" TEXT," + // 11: orgID
                 "\"ORG_NAME\" TEXT," + // 12: orgName
                 "\"USERNAME\" TEXT," + // 13: username
-                "\"SIGN\" TEXT," + // 14: sign
-                "\"IS_HX\" INTEGER NOT NULL ," + // 15: is_hx
-                "\"PINYIN\" TEXT," + // 16: pinyin
-                "\"SIMPLE_PINYIN\" TEXT);"); // 17: simplePinyin
+                "\"MEMBER_ROLE\" INTEGER NOT NULL ," + // 14: memberRole
+                "\"SIGN\" TEXT," + // 15: sign
+                "\"IS_HX\" INTEGER NOT NULL ," + // 16: is_hx
+                "\"PINYIN\" TEXT," + // 17: pinyin
+                "\"SIMPLE_PINYIN\" TEXT);"); // 18: simplePinyin
     }
 
     /** Drops the underlying database table. */
@@ -156,21 +158,22 @@ public class ContactDao extends AbstractDao<Contact, Long> {
         if (username != null) {
             stmt.bindString(14, username);
         }
+        stmt.bindLong(15, entity.getMemberRole());
  
         String sign = entity.getSign();
         if (sign != null) {
-            stmt.bindString(15, sign);
+            stmt.bindString(16, sign);
         }
-        stmt.bindLong(16, entity.getIs_hx() ? 1L: 0L);
+        stmt.bindLong(17, entity.getIs_hx() ? 1L: 0L);
  
         String pinyin = entity.getPinyin();
         if (pinyin != null) {
-            stmt.bindString(17, pinyin);
+            stmt.bindString(18, pinyin);
         }
  
         String simplePinyin = entity.getSimplePinyin();
         if (simplePinyin != null) {
-            stmt.bindString(18, simplePinyin);
+            stmt.bindString(19, simplePinyin);
         }
     }
 
@@ -247,21 +250,22 @@ public class ContactDao extends AbstractDao<Contact, Long> {
         if (username != null) {
             stmt.bindString(14, username);
         }
+        stmt.bindLong(15, entity.getMemberRole());
  
         String sign = entity.getSign();
         if (sign != null) {
-            stmt.bindString(15, sign);
+            stmt.bindString(16, sign);
         }
-        stmt.bindLong(16, entity.getIs_hx() ? 1L: 0L);
+        stmt.bindLong(17, entity.getIs_hx() ? 1L: 0L);
  
         String pinyin = entity.getPinyin();
         if (pinyin != null) {
-            stmt.bindString(17, pinyin);
+            stmt.bindString(18, pinyin);
         }
  
         String simplePinyin = entity.getSimplePinyin();
         if (simplePinyin != null) {
-            stmt.bindString(18, simplePinyin);
+            stmt.bindString(19, simplePinyin);
         }
     }
 
@@ -287,10 +291,11 @@ public class ContactDao extends AbstractDao<Contact, Long> {
             cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11), // orgID
             cursor.isNull(offset + 12) ? null : cursor.getString(offset + 12), // orgName
             cursor.isNull(offset + 13) ? null : cursor.getString(offset + 13), // username
-            cursor.isNull(offset + 14) ? null : cursor.getString(offset + 14), // sign
-            cursor.getShort(offset + 15) != 0, // is_hx
-            cursor.isNull(offset + 16) ? null : cursor.getString(offset + 16), // pinyin
-            cursor.isNull(offset + 17) ? null : cursor.getString(offset + 17) // simplePinyin
+            cursor.getInt(offset + 14), // memberRole
+            cursor.isNull(offset + 15) ? null : cursor.getString(offset + 15), // sign
+            cursor.getShort(offset + 16) != 0, // is_hx
+            cursor.isNull(offset + 17) ? null : cursor.getString(offset + 17), // pinyin
+            cursor.isNull(offset + 18) ? null : cursor.getString(offset + 18) // simplePinyin
         );
         return entity;
     }
@@ -311,10 +316,11 @@ public class ContactDao extends AbstractDao<Contact, Long> {
         entity.setOrgID(cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11));
         entity.setOrgName(cursor.isNull(offset + 12) ? null : cursor.getString(offset + 12));
         entity.setUsername(cursor.isNull(offset + 13) ? null : cursor.getString(offset + 13));
-        entity.setSign(cursor.isNull(offset + 14) ? null : cursor.getString(offset + 14));
-        entity.setIs_hx(cursor.getShort(offset + 15) != 0);
-        entity.setPinyin(cursor.isNull(offset + 16) ? null : cursor.getString(offset + 16));
-        entity.setSimplePinyin(cursor.isNull(offset + 17) ? null : cursor.getString(offset + 17));
+        entity.setMemberRole(cursor.getInt(offset + 14));
+        entity.setSign(cursor.isNull(offset + 15) ? null : cursor.getString(offset + 15));
+        entity.setIs_hx(cursor.getShort(offset + 16) != 0);
+        entity.setPinyin(cursor.isNull(offset + 17) ? null : cursor.getString(offset + 17));
+        entity.setSimplePinyin(cursor.isNull(offset + 18) ? null : cursor.getString(offset + 18));
      }
     
     @Override

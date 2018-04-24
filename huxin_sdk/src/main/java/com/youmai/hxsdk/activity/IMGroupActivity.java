@@ -40,6 +40,7 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.adapter.IMGroupAdapter;
@@ -63,11 +64,10 @@ import com.youmai.hxsdk.module.filemanager.PickerManager;
 import com.youmai.hxsdk.module.filemanager.activity.FileManagerActivity;
 import com.youmai.hxsdk.module.filemanager.constant.FilePickerConst;
 import com.youmai.hxsdk.module.filemanager.interfaces.PickerRefreshUIListener;
-import com.youmai.hxsdk.module.groupchat.ChatDetailsActivity;
-import com.youmai.hxsdk.module.groupchat.ChatGroupDetailsActivity;
 import com.youmai.hxsdk.module.movierecord.MediaStoreUtils;
 import com.youmai.hxsdk.module.picker.PhotoPickerManager;
 import com.youmai.hxsdk.module.picker.PhotoPreviewActivity;
+import com.youmai.hxsdk.router.APath;
 import com.youmai.hxsdk.service.SendMsgService;
 import com.youmai.hxsdk.service.download.bean.FileQueue;
 import com.youmai.hxsdk.service.sendmsg.SendMsg;
@@ -457,15 +457,14 @@ public class IMGroupActivity extends SdkBaseActivity implements
             });
         }
 
-        ivGroup = (ImageView) findViewById(R.id.iv_group_img);
+        ivGroup = (ImageView) findViewById(R.id.iv_group_detail);
         ivGroup.setVisibility(View.VISIBLE);
         ivGroup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setClass(IMGroupActivity.this, ChatGroupDetailsActivity.class);
-                intent.putExtra("groupId", groupId);
-                startActivity(intent);
+                ARouter.getInstance().build(APath.GROUP_DELETE_CONTACT)
+                        .withInt("groupId", groupId)
+                        .navigation(IMGroupActivity.this);
             }
         });
 

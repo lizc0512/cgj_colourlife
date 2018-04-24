@@ -22,4 +22,5 @@ public class APath {
      * 添加群组分组
      */
     public static final String GROUP_CREATE_ADD_CONTACT = "/group/addcontact";
+    public static final String GROUP_DELETE_CONTACT = "/group/details";
 }

@@ -98,15 +98,17 @@
         android:tint="@color/tint_color_add_group_selector"
         android:visibility="gone" />
 
+
     <ImageView
+        android:id="@+id/iv_group_detail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="2dp"
-        android:layout_marginRight="2dp"
-        android:layout_toLeftOf="@id/tv_title_more_img"
+        android:layout_marginRight="8dp"
+        android:clickable="true"
         android:padding="6dp"
-        android:src="@drawable/im_title_call_icon"
+        android:src="@drawable/hx_group_chat_detail_selector"
         android:visibility="gone" />
 
     <View

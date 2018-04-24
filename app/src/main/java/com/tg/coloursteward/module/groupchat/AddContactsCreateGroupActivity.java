@@ -136,18 +136,14 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.e("YW", "收藏联系人有更新的信息到达......");
             String action = intent.getStringExtra(ACTION);
+            Contact bean = intent.getParcelableExtra("bean");
             if (action.equals(ADAPTER_CONTACT)) {
-                Contact bean = intent.getParcelableExtra("bean");
                 mActivity.updateCacheMap(bean, false);
             } else if (action.equals(SEARCH_CONTACT)) {
-                Contact bean = intent.getParcelableExtra("bean");
                 mActivity.hide();
                 mActivity.updateCacheMap(bean, true, false);
-                Log.e("YW", "收藏联系人有更新的信息到达......" + bean.toString());
             } else if (action.equals(DEPART_CONTACT)) {
-                Contact bean = intent.getParcelableExtra("bean");
                 mActivity.updateCacheMap(bean, true);
             }
         }

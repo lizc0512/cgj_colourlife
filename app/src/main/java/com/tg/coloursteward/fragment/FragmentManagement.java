@@ -1,5 +1,8 @@
 package com.tg.coloursteward.fragment;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,9 +13,14 @@ import org.json.JSONObject;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.tg.coloursteward.AccountActivity;
+import com.tg.coloursteward.DataShowActivity;
 import com.tg.coloursteward.DoorActivity;
+import com.tg.coloursteward.HomeContactSearchActivity;
+import com.tg.coloursteward.InviteRegisterActivity;
 import com.tg.coloursteward.PublicAccountActivity;
 import com.tg.coloursteward.R;
+import com.tg.coloursteward.RedpacketsBonusMainActivity;
 import com.tg.coloursteward.adapter.ManagementAdapter;
 import com.tg.coloursteward.MyBrowserActivity;
 import com.tg.coloursteward.constant.Contants;
@@ -27,12 +35,16 @@ import com.tg.coloursteward.net.RequestConfig;
 import com.tg.coloursteward.net.RequestParams;
 import com.tg.coloursteward.net.ResponseData;
 import com.tg.coloursteward.util.AuthTimeUtils;
+import com.tg.coloursteward.util.DateUtils;
 import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.Tools;
+import com.tg.coloursteward.view.HomeRelativeLayout;
 import com.tg.coloursteward.view.ManageMentLinearlayout;
 import com.tg.coloursteward.view.ManageMentLinearlayout.NetworkRequestListener;
 import com.tg.coloursteward.view.MyGridView;
 import com.tg.coloursteward.view.MyGridView.NetGridViewRequestListener;
+import com.tg.coloursteward.view.PopWindowView;
+import com.tg.coloursteward.view.RotateProgress;
 import com.tg.coloursteward.view.dialog.ToastFactory;
 import com.youmai.hxsdk.http.IPostListener;
 import com.youmai.hxsdk.http.OkHttpConnector;
@@ -54,12 +66,14 @@ import android.os.Bundle;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
+import android.text.format.Time;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 /**
@@ -84,6 +98,100 @@ public class FragmentManagement extends Fragment {
     private String commonjsonStr, elsejsonStr;
 
     private Banner banner;
+
+    private ManageMentLinearlayout magLinearLayoutArea;
+    private ManageMentLinearlayout magLinearLayoutStock;
+    private ManageMentLinearlayout magLinearLayoutTicket;
+    private ManageMentLinearlayout magLinearLayoutCommunity;
+    private ManageMentLinearlayout magLinearLayoutPerformance;
+    private ManageMentLinearlayout magLinearLayoutAccount;
+    private RelativeLayout rlArea;
+    private RelativeLayout rlStock;
+    private RelativeLayout rlTicket;
+    private RelativeLayout rlCommunity;
+    private RelativeLayout rlPerformance;
+    private RelativeLayout rlAccount;
+    private RotateProgress progressBarArea;
+    private RotateProgress progressBarStock;
+    private RotateProgress progressBarTicket;
+    private RotateProgress progressBarCommunity;
+    private RotateProgress progressBarPerformance;
+    private RotateProgress progressBarAccount;
+    private TextView tvArea, tvStock, tvTicket, tvCommunity, tvPerformance, tvAccount, tvLogo;
+
+    private String area, stock, ticket, community, performance, account;
+
+    private String homeListCache;
+    private String AreaStr;
+    private String StockStr;
+    private String TicketStr;
+    private String CommunityStr;
+    private String PerformanceStr;
+    private String AccountStr;
+    private String key;
+    private String secret;
+
+    private SingleClickListener titleListener = new SingleClickListener() {
+        @Override
+        public void onSingleClick(View v) {
+            switch (v.getId()) {
+                case R.id.ll_area://在管面积(数据看板)
+                    //startActivity(new Intent(mActivity, MapDetailActivity.class));
+                    intent = new Intent(mActivity, DataShowActivity.class);
+                    intent.putExtra(DataShowActivity.BRANCH, UserInfo.orgId);
+                    startActivity(intent);
+                    break;
+                case R.id.ll_stock://集团股票
+                    String addr = "http://image.sinajs.cn/newchart/hk_stock/min/01778.gif?"
+                            + DateUtils.phpToString(DateUtils.getCurrentDate() + "",
+                            DateUtils.DATE_FORMAT_DB);
+                    intent = new Intent(mActivity, MyBrowserActivity.class);
+                    intent.putExtra(MyBrowserActivity.KEY_URL, addr);
+                    startActivity(intent);
+                    break;
+                case R.id.ll_ticket://我的饭票
+                    startActivity(new Intent(mActivity, RedpacketsBonusMainActivity.class));
+                    break;
+                case R.id.ll_community://在管小区(数据看板)
+                    //startActivity(new Intent(mActivity, MapDetailActivity.class));
+                    intent = new Intent(mActivity, DataShowActivity.class);
+                    intent.putExtra(DataShowActivity.BRANCH, UserInfo.orgId);
+                    startActivity(intent);
+                    break;
+                case R.id.ll_performance://绩效评分
+                    startActivity(new Intent(mActivity, RedpacketsBonusMainActivity.class));
+                    break;
+                case R.id.ll_account://即时分账
+                    startActivity(new Intent(mActivity, AccountActivity.class));
+                    //startActivity(new Intent(mActivity, PublicAccountActivity.class));
+                    break;
+                case R.id.rl_saoyisao://扫一扫
+                    startActivity(new Intent(mActivity, InviteRegisterActivity.class));
+                    break;
+                case R.id.rl_add://添加
+                    /**
+                     * 弹出框
+                     */
+                    //PopWindowView  popWindowView = new PopWindowView(mActivity,gridlistAdd);
+                    //popWindowView.setOnDismissListener(new FragmentDeskTop.poponDismissListener());
+                    //popWindowView.showPopupWindow(mView.findViewById(R.id.rl_add));
+                    //lightoff();
+                    break;
+                case R.id.rl_search://搜索框
+                    startActivity(new Intent(mActivity, HomeContactSearchActivity.class));
+                    break;
+                case R.id.rl_logo://
+				/*FamilyInfo info = new FamilyInfo();
+				info.id = UserInfo.orgId;
+				info.type = "org";
+				info.name = UserInfo.familyName;
+				intent = new Intent(mActivity,HomeContactOrgActivity.class);
+				intent.putExtra(HomeContactOrgActivity.FAMILY_INFO, info);
+				startActivity(intent);*/
+                    break;
+            }
+        }
+    };
 
     private SingleClickListener singleListener = new SingleClickListener() {
 
@@ -121,11 +229,514 @@ public class FragmentManagement extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_management_layout, container, false);
+        addHead();
         initView();
+        initListener();
+
         requestData();
+        requestData2();
         return mView;
     }
 
+    private void addHead() {
+        /**
+         * 头部
+         */
+        magLinearLayoutArea = (ManageMentLinearlayout) mView.findViewById(R.id.ll_area);//在管面积
+        magLinearLayoutStock = (ManageMentLinearlayout) mView.findViewById(R.id.ll_stock);//集团股票
+        magLinearLayoutTicket = (ManageMentLinearlayout) mView.findViewById(R.id.ll_ticket);//我的饭票
+        magLinearLayoutCommunity = (ManageMentLinearlayout) mView.findViewById(R.id.ll_community);//在管小区
+        magLinearLayoutPerformance = (ManageMentLinearlayout) mView.findViewById(R.id.ll_performance);//绩效评分
+        magLinearLayoutAccount = (ManageMentLinearlayout) mView.findViewById(R.id.ll_account);//即时分账
+        /**
+         * 加载隐藏布局控件
+         */
+        rlArea = (RelativeLayout) mView.findViewById(R.id.rl_area);//在管面积
+        rlStock = (RelativeLayout) mView.findViewById(R.id.rl_stock);//集团股票
+        rlTicket = (RelativeLayout) mView.findViewById(R.id.rl_ticket);//我的饭票
+        rlCommunity = (RelativeLayout) mView.findViewById(R.id.rl_community);//在管小区
+        rlPerformance = (RelativeLayout) mView.findViewById(R.id.rl_performance);//绩效评分
+        rlAccount = (RelativeLayout) mView.findViewById(R.id.rl_account);//即时分账
+        /**
+         * 头部6个按钮加载旋转圈
+         */
+        progressBarArea = (RotateProgress) mView.findViewById(R.id.progressBar_area);//在管面积
+        progressBarStock = (RotateProgress) mView.findViewById(R.id.progressBar_stock);//集团股票
+        progressBarTicket = (RotateProgress) mView.findViewById(R.id.progressBar_ticket);//我的饭票
+        progressBarCommunity = (RotateProgress) mView.findViewById(R.id.progressBar_community);//在管小区
+        progressBarPerformance = (RotateProgress) mView.findViewById(R.id.progressBar_performance);//绩效评分
+        progressBarAccount = (RotateProgress) mView.findViewById(R.id.progressBar_account);//即时分账
+        /**
+         * 头部6个textView控件(展示数据)
+         */
+        tvArea = (TextView) mView.findViewById(R.id.tv_area);//在管面积
+        tvStock = (TextView) mView.findViewById(R.id.tv_stock);//集团股票
+        tvTicket = (TextView) mView.findViewById(R.id.tv_ticket);//我的饭票
+        tvCommunity = (TextView) mView.findViewById(R.id.tv_community);//在管小区
+        tvPerformance = (TextView) mView.findViewById(R.id.tv_performance);//绩效评分
+        tvAccount = (TextView) mView.findViewById(R.id.tv_account);//即时分账
+        AreaStr = Tools.getStringValue(mActivity, Contants.storage.AREAHOME);
+        StockStr = Tools.getStringValue(mActivity, Contants.storage.STOCKHOME);
+        TicketStr = Tools.getStringValue(mActivity, Contants.storage.TICKETHOME);
+        CommunityStr = Tools.getStringValue(mActivity, Contants.storage.COMMUNITYHOME);
+        PerformanceStr = Tools.getStringValue(mActivity, Contants.storage.PERFORMANCEHOME);
+        AccountStr = Tools.getStringValue(mActivity, Contants.storage.ACCOUNTHOME);
+        //在管面积
+        if (StringUtils.isNotEmpty(AreaStr)) {
+            progressBarArea.setVisibility(View.GONE);
+            rlArea.setVisibility(View.VISIBLE);
+            DecimalFormat decimalFomat = new DecimalFormat(".00");//构造方法的字符格式这里如果小数不足2位,会以0补足.
+            String p = decimalFomat.format(Float.valueOf(AreaStr) / 10000);
+            tvArea.setText(p);
+        } else {
+            progressBarArea.setVisibility(View.VISIBLE);
+            rlArea.setVisibility(View.GONE);
+        }
+        //集团股票
+        if (StringUtils.isNotEmpty(StockStr)) {
+            progressBarStock.setVisibility(View.GONE);
+            rlStock.setVisibility(View.VISIBLE);
+            tvStock.setText(StockStr);
+        } else {
+            progressBarStock.setVisibility(View.VISIBLE);
+            rlStock.setVisibility(View.GONE);
+        }
+        //我的饭票
+        if (StringUtils.isNotEmpty(TicketStr)) {
+            progressBarTicket.setVisibility(View.GONE);
+            rlTicket.setVisibility(View.VISIBLE);
+            tvTicket.setText(TicketStr);
+        } else {
+            progressBarTicket.setVisibility(View.VISIBLE);
+            rlTicket.setVisibility(View.GONE);
+        }
+        //在管小区
+        if (StringUtils.isNotEmpty(CommunityStr)) {
+            progressBarCommunity.setVisibility(View.GONE);
+            rlCommunity.setVisibility(View.VISIBLE);
+            tvCommunity.setText(CommunityStr);
+        } else {
+            progressBarCommunity.setVisibility(View.VISIBLE);
+            rlCommunity.setVisibility(View.GONE);
+        }
+        //绩效评分
+        if (StringUtils.isNotEmpty(PerformanceStr)) {
+            progressBarPerformance.setVisibility(View.GONE);
+            rlPerformance.setVisibility(View.VISIBLE);
+            tvPerformance.setText(PerformanceStr);
+        } else {
+            progressBarPerformance.setVisibility(View.VISIBLE);
+            rlPerformance.setVisibility(View.GONE);
+        }
+        //即时分账
+        if (StringUtils.isNotEmpty(AccountStr)) {
+            progressBarAccount.setVisibility(View.GONE);
+            rlAccount.setVisibility(View.VISIBLE);
+            tvAccount.setText(AccountStr);
+        } else {
+            progressBarAccount.setVisibility(View.VISIBLE);
+            rlAccount.setVisibility(View.GONE);
+        }
+        /**
+         * 按钮点击事件
+         */
+        magLinearLayoutArea.setOnClickListener(titleListener);
+        magLinearLayoutStock.setOnClickListener(titleListener);
+        magLinearLayoutTicket.setOnClickListener(titleListener);
+        magLinearLayoutCommunity.setOnClickListener(titleListener);
+        magLinearLayoutPerformance.setOnClickListener(titleListener);
+        magLinearLayoutAccount.setOnClickListener(titleListener);
+    }
+
+
+    /**
+     * 初始化
+     */
+    private void initListener() {
+        /**
+         * 在管面积
+         */
+        magLinearLayoutArea.setNetworkRequestListener(new NetworkRequestListener() {
+
+            @Override
+            public void onSuccess(ManageMentLinearlayout magLearLayout, Message msg, String response) {
+                int code = HttpTools.getCode(response);
+                progressBarArea.setVisibility(View.GONE);
+                rlArea.setVisibility(View.VISIBLE);
+                if (code == 0) {
+                    JSONArray jsonArray = HttpTools.getContentJsonArray(response);
+                    ResponseData data = HttpTools.getResponseContent(jsonArray);
+                    if (data.length > 0) {
+                        area = data.getString("const_area");
+                        if (StringUtils.isNotEmpty(area)) {
+                            Tools.saveStringValue(mActivity, Contants.storage.AREAHOME, area);
+                            DecimalFormat decimalFomat = new DecimalFormat(".00");//构造方法的字符格式这里如果小数不足2位,会以0补足.
+                            String p = decimalFomat.format(Float.valueOf(area) / 10000);
+                            tvArea.setText(p);
+                        }
+                    }
+                } else {
+                    Tools.saveStringValue(mActivity, Contants.storage.AREAHOME, "0");
+                    tvArea.setText("0");
+                }
+
+            }
+
+            @Override
+            public void onFail(ManageMentLinearlayout magLearLayout, Message msg, String hintString) {
+                progressBarArea.setVisibility(View.GONE);
+                rlArea.setVisibility(View.VISIBLE);
+                if (StringUtils.isNotEmpty(AreaStr)) {
+                    DecimalFormat decimalFomat = new DecimalFormat(".00");//构造方法的字符格式这里如果小数不足2位,会以0补足.
+                    String p = decimalFomat.format(Float.valueOf(AreaStr) / 10000);
+                    tvArea.setText(p);
+                } else {
+                    tvArea.setText("0");
+                }
+            }
+
+            @Override
+            public void onRequest(MessageHandler msgHand) {
+                RequestConfig config = new RequestConfig(mActivity, 0);
+                config.handler = msgHand.getHandler();
+                RequestParams params = new RequestParams();
+                params.put("id", "9959f117-df60-4d1b-a354-776c20ffb8c7");
+                HttpTools.httpGet(Contants.URl.URL_ICETEST, "/resource/statistics", config, params);
+            }
+        });
+        /**
+         * 集团股票
+         */
+        magLinearLayoutStock.setNetworkRequestListener(new NetworkRequestListener() {
+
+            @Override
+            public void onSuccess(ManageMentLinearlayout magLearLayout, Message msg, String response) {
+                int code = HttpTools.getCode(response);
+                progressBarStock.setVisibility(View.GONE);
+                rlStock.setVisibility(View.VISIBLE);
+                if (code == 0) {
+                    JSONObject jsonObject = HttpTools.getContentJSONObject(response);
+                    try {
+                        stock = jsonObject.getString("currentPrice");
+                        Tools.saveStringValue(mActivity, Contants.storage.STOCKHOME, stock);
+                        if (stock != null || stock.length() > 0) {
+                            tvStock.setText(stock);
+                        }
+                    } catch (JSONException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                } else {
+                    Tools.saveStringValue(mActivity, Contants.storage.STOCKHOME, "0");
+                    if (StringUtils.isNotEmpty(StockStr)) {
+                        tvStock.setText(StockStr);
+                    } else {
+                        tvStock.setText("0");
+                    }
+                }
+            }
+
+            @Override
+            public void onFail(ManageMentLinearlayout magLearLayout, Message msg, String hintString) {
+                progressBarStock.setVisibility(View.GONE);
+                rlStock.setVisibility(View.VISIBLE);
+                if (StringUtils.isNotEmpty(StockStr)) {
+                    tvStock.setText(StockStr);
+                } else {
+                    tvStock.setText("0");
+                }
+            }
+
+            @Override
+            public void onRequest(MessageHandler msgHand) {
+                try {
+                    RequestConfig config = new RequestConfig(mActivity, 0);
+                    config.handler = msgHand.getHandler();
+                    RequestParams params = new RequestParams();
+                    String stock = URLEncoder.encode("彩生活", "UTF-8");
+                    params.put("stock", stock);
+                    HttpTools.httpGet(Contants.URl.URL_ICETEST, "/stock", config, params);
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        /**
+         * 我的饭票
+         */
+        magLinearLayoutTicket.setNetworkRequestListener(new NetworkRequestListener() {
+
+            @Override
+            public void onSuccess(ManageMentLinearlayout magLearLayout, Message msg, String response) {
+                int code = HttpTools.getCode(response);
+                String message = HttpTools.getMessageString(response);
+                if (code == 0) {
+                    progressBarTicket.setVisibility(View.GONE);
+                    rlTicket.setVisibility(View.VISIBLE);
+                    JSONObject jsonObject = HttpTools.getContentJSONObject(response);
+                    if (jsonObject != null) {
+                        try {
+                            String ticket = jsonObject.getString("balance");
+                            Tools.saveStringValue(mActivity, Contants.storage.TICKETHOME, ticket);
+                            if (ticket != null || ticket.length() > 0) {
+                                tvTicket.setText(ticket);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                } else {
+                    Tools.saveStringValue(mActivity, Contants.storage.TICKETHOME, "0");
+                    if (StringUtils.isNotEmpty(TicketStr)) {
+                        tvTicket.setText(TicketStr);
+                    } else {
+                        tvTicket.setText("0");
+                    }
+                }
+            }
+
+            @Override
+            public void onFail(ManageMentLinearlayout magLearLayout, Message msg, String hintString) {
+                progressBarTicket.setVisibility(View.GONE);
+                rlTicket.setVisibility(View.VISIBLE);
+                if (StringUtils.isNotEmpty(TicketStr)) {
+                    tvTicket.setText(TicketStr);
+                } else {
+                    tvTicket.setText("0");
+                }
+            }
+
+            @Override
+            public void onRequest(MessageHandler msgHand) {
+                RequestConfig config = new RequestConfig(mActivity, 0);
+                config.handler = msgHand.getHandler();
+                RequestParams params = new RequestParams();
+                params.put("key", key);
+                params.put("secret", secret);
+                HttpTools.httpGet(Contants.URl.URL_ICETEST, "/hongbao/getHBUserList", config, params);
+            }
+        });
+        /**
+         * 在管小区
+         */
+        magLinearLayoutCommunity.setNetworkRequestListener(new NetworkRequestListener() {
+
+            @Override
+            public void onSuccess(ManageMentLinearlayout magLearLayout, Message msg, String response) {
+                int code = HttpTools.getCode(response);
+                progressBarCommunity.setVisibility(View.GONE);
+                rlCommunity.setVisibility(View.VISIBLE);
+                if (code == 0) {
+                    JSONArray jsonArray = HttpTools.getContentJsonArray(response);
+                    ResponseData data = HttpTools.getResponseContent(jsonArray);
+                    if (data.length > 0) {
+                        community = data.getString(0, "smallarea_num");
+                        if (StringUtils.isNotEmpty(community)) {
+                            Tools.saveStringValue(mActivity, Contants.storage.COMMUNITYHOME, community);
+                            tvCommunity.setText((community));
+                        }
+                    }
+                } else {
+                    Tools.saveStringValue(mActivity, Contants.storage.COMMUNITYHOME, "0");
+                    if (StringUtils.isNotEmpty(CommunityStr)) {
+                        tvCommunity.setText(CommunityStr);
+                    } else {
+                        tvCommunity.setText("0");
+                    }
+                }
+
+            }
+
+            @Override
+            public void onFail(ManageMentLinearlayout magLearLayout, Message msg, String hintString) {
+                progressBarCommunity.setVisibility(View.GONE);
+                rlCommunity.setVisibility(View.VISIBLE);
+                if (StringUtils.isNotEmpty(CommunityStr)) {
+                    tvCommunity.setText(CommunityStr);
+                } else {
+                    tvCommunity.setText("0");
+                }
+            }
+
+            @Override
+            public void onRequest(MessageHandler msgHand) {
+                RequestConfig config = new RequestConfig(mActivity, 0);
+                config.handler = msgHand.getHandler();
+                RequestParams params = new RequestParams();
+                params.put("id", "9959f117-df60-4d1b-a354-776c20ffb8c7");
+                HttpTools.httpGet(Contants.URl.URL_ICETEST, "/resource/statistics", config, params);
+            }
+        });
+        /**
+         * 绩效评分
+         */
+        magLinearLayoutPerformance.setNetworkRequestListener(new NetworkRequestListener() {
+
+            @Override
+            public void onSuccess(ManageMentLinearlayout magLearLayout, Message msg, String response) {
+                int code = HttpTools.getCode(response);
+                String message = HttpTools.getMessageString(response);
+                progressBarPerformance.setVisibility(View.GONE);
+                rlPerformance.setVisibility(View.VISIBLE);
+                if (code == 0) {
+                    JSONObject jsonObject = HttpTools.getContentJSONObject(response);
+                    try {
+                        performance = jsonObject.getString("percent");
+                        Tools.saveStringValue(mActivity, Contants.storage.PERFORMANCEHOME, performance);
+                        if (performance != null || performance.length() > 0) {
+                            tvPerformance.setText(performance);
+                        }
+                    } catch (JSONException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                } else {
+                    Tools.saveStringValue(mActivity, Contants.storage.PERFORMANCEHOME, "无");
+                    if (StringUtils.isNotEmpty(PerformanceStr)) {
+                        tvPerformance.setText(PerformanceStr);
+                    } else {
+                        tvPerformance.setText("无");
+                    }
+                }
+
+            }
+
+            @Override
+            public void onFail(ManageMentLinearlayout magLearLayout, Message msg, String hintString) {
+                progressBarPerformance.setVisibility(View.GONE);
+                rlPerformance.setVisibility(View.VISIBLE);
+                if (StringUtils.isNotEmpty(PerformanceStr)) {
+                    tvPerformance.setText(PerformanceStr);
+                } else {
+                    tvPerformance.setText("无");
+                }
+            }
+
+            @Override
+            public void onRequest(MessageHandler msgHand) {
+                Time time = new Time();
+                time.setToNow();
+                int year = time.year;
+                int month = time.month + 1;
+                RequestConfig config = new RequestConfig(mActivity, 0);
+                config.handler = msgHand.getHandler();
+                RequestParams params = new RequestParams();
+                params.put("oauser", UserInfo.employeeAccount);
+                params.put("year", year);
+                params.put("month", month);
+                HttpTools.httpGet(Contants.URl.URL_ICETEST, "/oa/jxfen", config, params);
+            }
+        });
+        /*
+         * 即时分账
+         */
+        magLinearLayoutAccount.setNetworkRequestListener(new NetworkRequestListener() {
+
+            @Override
+            public void onSuccess(ManageMentLinearlayout magLearLayout, Message msg, String response) {
+                int code = HttpTools.getCode(response);
+                String message = HttpTools.getMessageString(response);
+                progressBarAccount.setVisibility(View.GONE);
+                rlAccount.setVisibility(View.VISIBLE);
+                if (code == 0) {
+                    JSONObject jsonObject = HttpTools.getContentJSONObject(response);
+                    try {
+                        account = jsonObject.getString("total_balance");
+                        Tools.saveStringValue(mActivity, Contants.storage.ACCOUNTHOME, account);
+                        if (account != null || account.length() > 0) {
+                            tvAccount.setText(account);
+                        }
+                    } catch (JSONException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                } else {
+                    Tools.saveStringValue(mActivity, Contants.storage.ACCOUNTHOME, "0");
+                    if (StringUtils.isNotEmpty(AccountStr)) {
+                        tvAccount.setText(AccountStr);
+                    } else {
+                        tvAccount.setText("0");
+                    }
+                }
+
+            }
+
+            @Override
+            public void onFail(ManageMentLinearlayout magLearLayout, Message msg, String hintString) {
+                progressBarAccount.setVisibility(View.GONE);
+                rlAccount.setVisibility(View.VISIBLE);
+                Tools.saveStringValue(mActivity, Contants.storage.ACCOUNTHOME, "0");
+                if (StringUtils.isNotEmpty(AccountStr)) {
+                    tvAccount.setText(AccountStr);
+                } else {
+                    tvAccount.setText("0");
+                }
+            }
+
+            @Override
+            public void onRequest(MessageHandler msgHand) {
+                RequestConfig config = new RequestConfig(mActivity, 0);
+                config.handler = msgHand.getHandler();
+                RequestParams params = new RequestParams();
+                params.put("access_token", "1521ac83521b8063e7a9a49dc22e79b0");
+                params.put("target_type", "2");
+                params.put("target", UserInfo.employeeAccount);
+                HttpTools.httpGet(Contants.URl.URL_ICETEST, "/splitdivide/api/account", config, params);
+            }
+        });
+    }
+
+
+    /**
+     * 加载数据
+     */
+    private void requestData2() {
+        //rlAdd.loaddingData();
+        magLinearLayoutArea.postDelayed(new Runnable() {//在管面积
+
+            @Override
+            public void run() {
+                magLinearLayoutArea.loaddingData();
+            }
+        }, 500);
+        magLinearLayoutStock.postDelayed(new Runnable() {//集团股票
+
+            @Override
+            public void run() {
+                magLinearLayoutStock.loaddingData();
+            }
+        }, 1000);
+        magLinearLayoutTicket.postDelayed(new Runnable() {//我的饭票
+
+            @Override
+            public void run() {
+                key = Tools.getStringValue(mActivity, Contants.EMPLOYEE_LOGIN.key);
+                secret = Tools.getStringValue(mActivity, Contants.EMPLOYEE_LOGIN.secret);
+                magLinearLayoutTicket.loaddingData();
+            }
+        }, 1500);
+        magLinearLayoutCommunity.postDelayed(new Runnable() {//在管小区
+
+            @Override
+            public void run() {
+                magLinearLayoutCommunity.loaddingData();
+            }
+        }, 2000);
+        magLinearLayoutPerformance.postDelayed(new Runnable() {//绩效评分
+
+            @Override
+            public void run() {
+                magLinearLayoutPerformance.loaddingData();
+            }
+        }, 2500);
+        magLinearLayoutAccount.postDelayed(new Runnable() {//即时分账
+
+            @Override
+            public void run() {
+                magLinearLayoutAccount.loaddingData();
+            }
+        }, 3000);
+    }
 
     /**
      * 初始化控件

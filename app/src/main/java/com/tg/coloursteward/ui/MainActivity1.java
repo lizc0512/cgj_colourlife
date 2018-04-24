@@ -803,7 +803,6 @@ public class MainActivity1 extends AppCompatActivity implements MessageHandler.R
                     break;
                 case 1:
                     ft = new ContactsFragment();
-                    //ft = (Fragment) ARouter.getInstance().build(APath.CONTACT_GROUP).navigation();
                     break;
                 case 2:
                     ft = new FragmentManagement();

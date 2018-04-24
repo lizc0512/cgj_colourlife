@@ -31,6 +31,7 @@ public class Contact implements CN, Parcelable {
     private String orgID;
     private String orgName;
     private String username = ""; //拼音的姓 与 名的首字母
+    private int memberRole; //群成员角色
 
     private String sign;     //个性签名
     private boolean is_hx;   //true/false
@@ -39,36 +40,6 @@ public class Contact implements CN, Parcelable {
 
     public Contact(String name) {
         this.realname = name;
-    }
-
-    @Generated(hash = 514003334)
-    public Contact(Long id, String uuid, String uid, String mobile, String realname,
-            String avatar, String sex, String email, String isFavorite,
-            String jobName, String landline, String orgID, String orgName,
-            String username, String sign, boolean is_hx, String pinyin,
-            String simplePinyin) {
-        this.id = id;
-        this.uuid = uuid;
-        this.uid = uid;
-        this.mobile = mobile;
-        this.realname = realname;
-        this.avatar = avatar;
-        this.sex = sex;
-        this.email = email;
-        this.isFavorite = isFavorite;
-        this.jobName = jobName;
-        this.landline = landline;
-        this.orgID = orgID;
-        this.orgName = orgName;
-        this.username = username;
-        this.sign = sign;
-        this.is_hx = is_hx;
-        this.pinyin = pinyin;
-        this.simplePinyin = simplePinyin;
-    }
-
-    @Generated(hash = 672515148)
-    public Contact() {
     }
 
     protected Contact(Parcel in) {
@@ -90,10 +61,42 @@ public class Contact implements CN, Parcelable {
         orgID = in.readString();
         orgName = in.readString();
         username = in.readString();
+        memberRole = in.readInt();
         sign = in.readString();
         is_hx = in.readByte() != 0;
         pinyin = in.readString();
         simplePinyin = in.readString();
+    }
+
+    @Generated(hash = 929869407)
+    public Contact(Long id, String uuid, String uid, String mobile, String realname,
+            String avatar, String sex, String email, String isFavorite,
+            String jobName, String landline, String orgID, String orgName,
+            String username, int memberRole, String sign, boolean is_hx,
+            String pinyin, String simplePinyin) {
+        this.id = id;
+        this.uuid = uuid;
+        this.uid = uid;
+        this.mobile = mobile;
+        this.realname = realname;
+        this.avatar = avatar;
+        this.sex = sex;
+        this.email = email;
+        this.isFavorite = isFavorite;
+        this.jobName = jobName;
+        this.landline = landline;
+        this.orgID = orgID;
+        this.orgName = orgName;
+        this.username = username;
+        this.memberRole = memberRole;
+        this.sign = sign;
+        this.is_hx = is_hx;
+        this.pinyin = pinyin;
+        this.simplePinyin = simplePinyin;
+    }
+
+    @Generated(hash = 672515148)
+    public Contact() {
     }
 
     public static final Creator<Contact> CREATOR = new Creator<Contact>() {
@@ -217,6 +220,14 @@ public class Contact implements CN, Parcelable {
         this.orgName = orgName;
     }
 
+    public int getMemberRole() {
+        return memberRole;
+    }
+
+    public void setMemberRole(int memberRole) {
+        this.memberRole = memberRole;
+    }
+
     public String getUsername() {
         return this.username;
     }
@@ -283,6 +294,7 @@ public class Contact implements CN, Parcelable {
         dest.writeString(orgID);
         dest.writeString(orgName);
         dest.writeString(username);
+        dest.writeInt(memberRole);
         dest.writeString(sign);
         dest.writeByte((byte) (is_hx ? 1 : 0));
         dest.writeString(pinyin);

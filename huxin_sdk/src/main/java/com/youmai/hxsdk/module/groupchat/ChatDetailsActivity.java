@@ -23,7 +23,7 @@ import java.util.List;
 /**
  * 作者：create by YW
  * 日期：2018.04.18 16:36
- * 描述：
+ * 描述：单聊详情
  */
 public class ChatDetailsActivity extends SdkBaseActivity {
 
@@ -83,7 +83,7 @@ public class ChatDetailsActivity extends SdkBaseActivity {
                 .apply(new RequestOptions()
                         .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                         .centerCrop()
-                        .override(120, 120)
+                        .override(60, 60)
                         .transform(new GlideRoundTransform(mContext))
                         .error(R.drawable.color_default_header))
                 .into(mSelfHeader);

@@ -64,6 +64,7 @@ import com.youmai.hxsdk.module.filemanager.activity.FileManagerActivity;
 import com.youmai.hxsdk.module.filemanager.constant.FilePickerConst;
 import com.youmai.hxsdk.module.filemanager.interfaces.PickerRefreshUIListener;
 import com.youmai.hxsdk.module.groupchat.ChatDetailsActivity;
+import com.youmai.hxsdk.module.groupchat.ChatGroupDetailsActivity;
 import com.youmai.hxsdk.module.movierecord.MediaStoreUtils;
 import com.youmai.hxsdk.module.picker.PhotoPickerManager;
 import com.youmai.hxsdk.module.picker.PhotoPreviewActivity;
@@ -461,7 +462,10 @@ public class IMGroupActivity extends SdkBaseActivity implements
         ivGroup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(IMGroupActivity.this, ChatDetailsActivity.class));
+                Intent intent = new Intent();
+                intent.setClass(IMGroupActivity.this, ChatGroupDetailsActivity.class);
+                intent.putExtra("groupId", groupId);
+                startActivity(intent);
             }
         });
 

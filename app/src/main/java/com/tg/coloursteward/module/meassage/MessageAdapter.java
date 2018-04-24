@@ -47,12 +47,10 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private int mAdapterType = ADAPTER_TYPE_NORMAL;
 
     private boolean mShowRightIcon = true;
-    private boolean mShowUnread = true;
 
     private Context mContext;
     private int pageType;
     private List<ExCacheMsgBean> messageList = new ArrayList();
-    private int mUpdateCount = 0;
 
     private OnItemClickListener mOnItemClickListener;
     private OnItemLongClickListener mOnLongItemClickListener;
@@ -77,10 +75,6 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     public void setShowRightIcon(boolean show) {
         this.mShowRightIcon = show;
-    }
-
-    public void setShowUnread(boolean show) {
-        this.mShowUnread = show;
     }
 
     public List<ExCacheMsgBean> getMessageList() {

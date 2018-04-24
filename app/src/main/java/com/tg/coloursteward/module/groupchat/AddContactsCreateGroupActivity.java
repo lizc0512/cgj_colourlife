@@ -347,6 +347,7 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
                     YouMaiGroup.GroupMemberItem.Builder self = YouMaiGroup.GroupMemberItem.newBuilder();
                     self.setMemberId(HuxinSdkManager.instance().getUuid());
                     self.setMemberName(HuxinSdkManager.instance().getRealName());
+                    self.setUserName(HuxinSdkManager.instance().getUserName());
                     self.setMemberRole(0);
                     list.add(self.build());
 
@@ -355,6 +356,7 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
                         YouMaiGroup.GroupMemberItem.Builder builder = YouMaiGroup.GroupMemberItem.newBuilder();
                         builder.setMemberId(item.getUuid());
                         builder.setMemberName(item.getRealname());
+                        builder.setUserName(item.getUsername());
                         builder.setMemberRole(2);
                         list.add(builder.build());
                     }

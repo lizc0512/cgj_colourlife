@@ -20,9 +20,9 @@ public class PaddingItemDecoration extends RecyclerView.ItemDecoration {
                                RecyclerView.State state) {
         super.getItemOffsets(outRect, view, parent, state);
         outRect.left = mSpace;
-        //outRect.top = mSpace;
+        outRect.top = mSpace;
         outRect.right = mSpace;
-        //outRect.bottom = mSpace;
+        outRect.bottom = mSpace;
     }
 }
 

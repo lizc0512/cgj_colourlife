@@ -966,7 +966,7 @@ public class IMGroupActivity extends SdkBaseActivity implements
     public void onCallback(CacheMsgBean cacheMsgBean) {
         //刷新界面
         if (!isFinishing()) {
-            if (cacheMsgBean.getSenderUserId().equals(groupId))
+            if (cacheMsgBean.getGroupId() == groupId)
                 iMGroupAdapter.refreshIncomingMsgUI(cacheMsgBean);
         }
     }

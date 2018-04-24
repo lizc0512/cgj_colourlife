@@ -13,7 +13,11 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.tg.coloursteward.R;
+import com.tg.coloursteward.util.StringUtils;
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
 import com.youmai.hxsdk.im.IMMsgManager;
 import com.youmai.hxsdk.im.cache.CacheMsgTxt;
@@ -151,56 +155,91 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             final ExCacheMsgBean model = messageList.get(currPos);
 
             itemView.message_item.setTag(position);
-            itemView.message_time.setText(TimeFormatUtil.convertTimeMillli(mContext, model.getMsgTime()));
-            itemView.message_name.setText(model.getDisplayName());
+            if (model.getPushMsg() != null) {
 
-            switch (model.getMsgType()) {
-                case CacheMsgBean.SEND_EMOTION:
-                case CacheMsgBean.RECEIVE_EMOTION:
-                    itemView.message_type.setText(mContext.getString(R.string.message_type_1));
-                    break;
-                case CacheMsgBean.SEND_TEXT:
-                case CacheMsgBean.RECEIVE_TEXT:
-                    CacheMsgTxt textM = (CacheMsgTxt) model.getJsonBodyObj();
-                    SpannableString msgSpan = new SpannableString(textM.getMsgTxt());
-                    msgSpan = EmoticonHandler.getInstance(mContext.getApplicationContext()).getTextFace(
-                            textM.getMsgTxt(), msgSpan, 0, Utils.getFontSize(itemView.message_type.getTextSize()));
-                    itemView.message_type.setText(msgSpan);
-                    break;
-                case CacheMsgBean.SEND_IMAGE:
-                case CacheMsgBean.RECEIVE_IMAGE:
-                    itemView.message_type.setText(mContext.getString(R.string.message_type_3));
-                    break;
-                case CacheMsgBean.SEND_LOCATION:
-                case CacheMsgBean.RECEIVE_LOCATION:
-                    itemView.message_type.setText(mContext.getString(R.string.message_type_4));
-                    break;
-                case CacheMsgBean.SEND_VIDEO:
-                case CacheMsgBean.RECEIVE_VIDEO:
-                    itemView.message_type.setText(mContext.getString(R.string.message_type_5));
-                    break;
-                case CacheMsgBean.SEND_VOICE:
-                case CacheMsgBean.RECEIVE_VOICE:
-                    itemView.message_type.setText(mContext.getString(R.string.message_type_sounds));
-                    break;
-                case CacheMsgBean.SEND_FILE:
-                case CacheMsgBean.RECEIVE_FILE:
-                    itemView.message_type.setText(mContext.getString(R.string.message_type_file));
-                    break;
-                default:
-                    itemView.message_type.setText(mContext.getString(R.string.message_type));
-            }
+                String comefrom = model.getPushMsg().getComefrom();
+                itemView.message_time.setText(model.getPushMsg().getHomePushTime());
+                itemView.message_name.setText(comefrom);
+                itemView.message_type.setText(model.getPushMsg().getTitle());
 
-            //沟通列表
-            int unreadCount = IMMsgManager.instance().getBadeCount(model.getTargetUuid());
-            if (unreadCount > 0) {
-                itemView.message_status.setBadgeNumber(unreadCount);
-                itemView.message_status.setGravityOffset(0.5f, 0.5f, true);
-                itemView.message_status.setBadgePadding(1.0f, true);
-                itemView.message_status.setVisibility(View.VISIBLE);
+                if (comefrom.equals("审批")) {//审批
+                    itemView.message_icon.setImageResource(R.drawable.sp);
+                } else if (comefrom.equals("邮件")) {//邮件
+                    itemView.message_icon.setImageResource(R.drawable.yj);
+                } else if (comefrom.equals("蜜蜂协同")) {//蜜蜂协同
+                    itemView.message_icon.setImageResource(R.drawable.case_home);
+                } else if (comefrom.equals("通知") || comefrom.equals("公告") || comefrom.equals("通知公告")) {//公告通知
+                    itemView.message_icon.setImageResource(R.drawable.ggtz);
+                } else {
+                    String url = model.getPushMsg().getICON();
+                    if (StringUtils.isNotEmpty(url)) {
+                        Glide.with(mContext).load(url)
+                                .apply(new RequestOptions()
+                                        .diskCacheStrategy(DiskCacheStrategy.RESOURCE))
+                                .into(itemView.message_icon);
+                    }
+                }
+
             } else {
-                itemView.message_status.setVisibility(View.GONE);
+                itemView.message_time.setText(TimeFormatUtil.convertTimeMillli(mContext, model.getMsgTime()));
+                itemView.message_name.setText(model.getDisplayName());
+
+                switch (model.getMsgType()) {
+                    case CacheMsgBean.SEND_EMOTION:
+                    case CacheMsgBean.RECEIVE_EMOTION:
+                        itemView.message_type.setText(mContext.getString(R.string.message_type_1));
+                        break;
+                    case CacheMsgBean.SEND_TEXT:
+                    case CacheMsgBean.RECEIVE_TEXT:
+                        CacheMsgTxt textM = (CacheMsgTxt) model.getJsonBodyObj();
+                        SpannableString msgSpan = new SpannableString(textM.getMsgTxt());
+                        msgSpan = EmoticonHandler.getInstance(mContext.getApplicationContext()).getTextFace(
+                                textM.getMsgTxt(), msgSpan, 0, Utils.getFontSize(itemView.message_type.getTextSize()));
+                        itemView.message_type.setText(msgSpan);
+                        break;
+                    case CacheMsgBean.SEND_IMAGE:
+                    case CacheMsgBean.RECEIVE_IMAGE:
+                        itemView.message_type.setText(mContext.getString(R.string.message_type_3));
+                        break;
+                    case CacheMsgBean.SEND_LOCATION:
+                    case CacheMsgBean.RECEIVE_LOCATION:
+                        itemView.message_type.setText(mContext.getString(R.string.message_type_4));
+                        break;
+                    case CacheMsgBean.SEND_VIDEO:
+                    case CacheMsgBean.RECEIVE_VIDEO:
+                        itemView.message_type.setText(mContext.getString(R.string.message_type_5));
+                        break;
+                    case CacheMsgBean.SEND_VOICE:
+                    case CacheMsgBean.RECEIVE_VOICE:
+                        itemView.message_type.setText(mContext.getString(R.string.message_type_sounds));
+                        break;
+                    case CacheMsgBean.SEND_FILE:
+                    case CacheMsgBean.RECEIVE_FILE:
+                        itemView.message_type.setText(mContext.getString(R.string.message_type_file));
+                        break;
+                    default:
+                        itemView.message_type.setText(mContext.getString(R.string.message_type));
+                }
+
+                //沟通列表
+                int unreadCount = IMMsgManager.instance().getBadeCount(model.getTargetUuid());
+                if (unreadCount > 0) {
+                    itemView.message_status.setBadgeNumber(unreadCount);
+                    itemView.message_status.setGravityOffset(0.5f, 0.5f, true);
+                    itemView.message_status.setBadgePadding(1.0f, true);
+                    itemView.message_status.setVisibility(View.VISIBLE);
+                } else {
+                    itemView.message_status.setVisibility(View.GONE);
+                }
+
+                String avatar = model.getSenderAvatar();
+                Glide.with(mContext).load(avatar)
+                        .apply(new RequestOptions()
+                                .placeholder(R.drawable.message_common_default_user_bg)
+                                .diskCacheStrategy(DiskCacheStrategy.RESOURCE))
+                        .into(itemView.message_icon);
             }
+
 
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

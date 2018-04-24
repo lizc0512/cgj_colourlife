@@ -24,7 +24,7 @@ import com.tg.coloursteward.RedpacketsBonusMainActivity;
 import com.tg.coloursteward.adapter.ManagementAdapter;
 import com.tg.coloursteward.MyBrowserActivity;
 import com.tg.coloursteward.constant.Contants;
-import com.tg.coloursteward.entity.advConfig;
+import com.tg.coloursteward.entity.AdvConfig;
 import com.tg.coloursteward.info.AdvInfo;
 import com.tg.coloursteward.info.GridViewInfo;
 import com.tg.coloursteward.info.UserInfo;
@@ -38,12 +38,10 @@ import com.tg.coloursteward.util.AuthTimeUtils;
 import com.tg.coloursteward.util.DateUtils;
 import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.Tools;
-import com.tg.coloursteward.view.HomeRelativeLayout;
 import com.tg.coloursteward.view.ManageMentLinearlayout;
 import com.tg.coloursteward.view.ManageMentLinearlayout.NetworkRequestListener;
 import com.tg.coloursteward.view.MyGridView;
 import com.tg.coloursteward.view.MyGridView.NetGridViewRequestListener;
-import com.tg.coloursteward.view.PopWindowView;
 import com.tg.coloursteward.view.RotateProgress;
 import com.tg.coloursteward.view.dialog.ToastFactory;
 import com.youmai.hxsdk.http.IPostListener;
@@ -1293,16 +1291,16 @@ public class FragmentManagement extends Fragment {
         OkHttpConnector.httpPost(url, params, new IPostListener() {
             @Override
             public void httpReqResult(String response) {
-                advConfig bean = GsonUtil.parse(response, advConfig.class);
-                if (bean != null && bean.isSuceess()) {
+                AdvConfig bean = GsonUtil.parse(response, AdvConfig.class);
+                if (bean != null && bean.isSuccess()) {
 
                     final List<String> images = new ArrayList<>();
                     final List<String> titles = new ArrayList<>();
                     final List<String> urls = new ArrayList<>();
 
-                    List<advConfig.ContentBean.ListBean._$100301Bean> list = bean.getContent().getList().get_$100301();
+                    List<AdvConfig.ContentBean.ListBean._$100301Bean> list = bean.getContent().getList().get_$100301();
                     if (!ListUtils.isEmpty(list)) {
-                        for (advConfig.ContentBean.ListBean._$100301Bean item : list) {
+                        for (AdvConfig.ContentBean.ListBean._$100301Bean item : list) {
                             images.add(item.getImg_path());
                             titles.add(item.getName());
                             urls.add(item.getUrl());

@@ -9,7 +9,7 @@ import java.util.List;
  * Created by colin on 2018/3/21.
  */
 
-public class advConfig {
+public class AdvConfig {
 
     /**
      * code : 0
@@ -23,7 +23,7 @@ public class advConfig {
     private ContentBean content;
     private String contentEncrypt;
 
-    public boolean isSuceess() {
+    public boolean isSuccess() {
         return code == 0;
     }
 

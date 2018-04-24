@@ -11,6 +11,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import com.tg.coloursteward.adapter.DeskTopItemAdapter;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.constant.Contants;
+import com.tg.coloursteward.entity.MsgConfig;
 import com.tg.coloursteward.info.HomeDeskTopInfo;
 import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.inter.OnItemDeleteListener;
@@ -42,7 +43,7 @@ public class DeskTopActivity extends BaseActivity implements OnItemClickListener
 	public static final String DESKTOP_POSTION="desktop_postion";
 	private PullRefreshListView pullListView;
 	private DeskTopItemAdapter adapter;
-	private HomeDeskTopInfo item;
+	private MsgConfig.ContentBean.DataBean item;
 	private HomeService homeService;
 	private Intent intent;
 	private int deletePosition;
@@ -55,15 +56,15 @@ public class DeskTopActivity extends BaseActivity implements OnItemClickListener
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		intent  = getIntent();
-		if(intent != null){
-			item=(HomeDeskTopInfo) intent.getSerializableExtra(DESKTOP_WEIAPPCODE);
-			homePosition = intent.getIntExtra(DESKTOP_POSTION,-1);
+		if(intent != null) {
+			item = intent.getParcelableExtra(DESKTOP_WEIAPPCODE);
+			homePosition = intent.getIntExtra(DESKTOP_POSTION, -1);
 		}
 		if(item == null){
 			ToastFactory.showToast(DeskTopActivity.this, "参数错误");
 			finish();
 		}
-		headView.setTitle(item.comefrom);
+		headView.setTitle(item.getComefrom());
 		initView();
 	}
 	
@@ -133,7 +134,7 @@ public class DeskTopActivity extends BaseActivity implements OnItemClickListener
 				config.handler = hand;
 				RequestParams params = new RequestParams();
 				params.put("username", UserInfo.employeeAccount);
-				params.put("client_code",item.client_code);
+				params.put("client_code",item.getClient_code());
 				params.put("showType", 1);
 				params.put("page", pageIndex);
 				params.put("pagesize", PullRefreshListViewFind.PAGER_SIZE);
@@ -149,7 +150,7 @@ public class DeskTopActivity extends BaseActivity implements OnItemClickListener
 				RequestParams params = new RequestParams();
 				params.put("username", UserInfo.employeeAccount);
 				params.put("showType", 1);
-				params.put("client_code",item.client_code);
+				params.put("client_code",item.getClient_code());
 				params.put("page", 1);
 				params.put("pagesize", PullRefreshListViewFind.PAGER_SIZE);
 				params.put("corp_id", Tools.getStringValue(DeskTopActivity.this, Contants.storage.CORPID));

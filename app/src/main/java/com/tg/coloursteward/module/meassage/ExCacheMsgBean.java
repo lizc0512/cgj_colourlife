@@ -1,5 +1,6 @@
 package com.tg.coloursteward.module.meassage;
 
+import com.tg.coloursteward.entity.MsgConfig;
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
 
 /**
@@ -11,8 +12,14 @@ public class ExCacheMsgBean extends CacheMsgBean {
     private String simplepinyin;//简拼
     private String displayName;//姓名
 
+    private MsgConfig.ContentBean.DataBean pushMsg;
+
     private int contactId;//通讯id  没有在通讯录内显示0
     private boolean mIsMultiNumber = false;//多号码识别
+
+    public ExCacheMsgBean(MsgConfig.ContentBean.DataBean pushMsg) {
+        this.pushMsg = pushMsg;
+    }
 
     public ExCacheMsgBean(CacheMsgBean bean) {
         super(bean);
@@ -58,6 +65,14 @@ public class ExCacheMsgBean extends CacheMsgBean {
 
     public void setContactId(int contactId) {
         this.contactId = contactId;
+    }
+
+    public MsgConfig.ContentBean.DataBean getPushMsg() {
+        return pushMsg;
+    }
+
+    public void setPushMsg(MsgConfig.ContentBean.DataBean pushMsg) {
+        this.pushMsg = pushMsg;
     }
 
     @Override

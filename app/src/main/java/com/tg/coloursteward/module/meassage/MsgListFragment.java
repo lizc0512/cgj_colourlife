@@ -2,6 +2,7 @@ package com.tg.coloursteward.module.meassage;
 
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -23,15 +24,25 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
+import com.tg.coloursteward.DeskTopActivity;
 import com.tg.coloursteward.R;
+import com.tg.coloursteward.constant.Contants;
+import com.tg.coloursteward.entity.MsgConfig;
+import com.tg.coloursteward.info.HomeDeskTopInfo;
+import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.module.search.GlobalSearchActivity;
+import com.tg.coloursteward.util.Tools;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.activity.IMConnectionActivity;
 import com.youmai.hxsdk.activity.IMGroupActivity;
+import com.youmai.hxsdk.config.ColorsConfig;
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
+import com.youmai.hxsdk.http.IGetListener;
+import com.youmai.hxsdk.http.OkHttpConnector;
 import com.youmai.hxsdk.im.IMMsgCallback;
 import com.youmai.hxsdk.im.IMMsgManager;
 import com.youmai.hxsdk.db.helper.CacheMsgHelper;
+import com.youmai.hxsdk.utils.GsonUtil;
 import com.youmai.hxsdk.utils.ToastUtil;
 import com.youmai.hxsdk.view.refresh.OnRecyclerScrollListener;
 
@@ -188,6 +199,8 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
         initView(view);
 
         initMessageList();
+
+        test();
     }
 
     @Override
@@ -214,50 +227,7 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (INTENT_REQUEST_FOR_UPDATE_UI == requestCode) {
-//            Log.e(TAG, "onActivityResult");
-//            if (data != null) { //刷新未读标记
-//                String upPhone = data.getStringExtra("updatePhone");
-//                if (TextUtils.isEmpty(upPhone)) {
-//                    return;
-//                }
-//
-//                //呼信小助手处理 start
-//                if (upPhone.equals(HUXIN_ASSISTANT_NUMBER)) {
-//                    mHuxinAssistant.setVisibility(View.GONE);
-//                    return;
-//                }
-//                //呼信小助手处理 end
-//
-//                int deleteType = data.getIntExtra("isDeleteMsgType", 0);
-//                int index = 0;
-//                int count = messageList.size();
-//                for (index = 0; index < count; index++) {
-//                    ExCacheMsgBean cacheMsgBean = messageList.get(index);
-//                    if (cacheMsgBean.getPhone().equals(upPhone)) {
-//                        //聊天界面删除记录的情况
-//                        if (0 != deleteType) {
-//                            List<CacheMsgBean> lastMsg = CacheMsgHelper.instance(getActivity()).toQueryLastMsgByPhone(upPhone);
-//                            if (lastMsg == null || lastMsg.size() <= 0) {
-//                                messageList.remove(index);
-//                                mMessageAdapter.notifyItemRemoved(index + mMessageAdapter.getHeaderCount() + adjSize);
-//                                return;
-//                            }
-//                            CacheMsgBean newMsgBean = lastMsg.get(0);
-//                            cacheMsgBean.setMsgTime(newMsgBean.getMsgTime());
-//                            cacheMsgBean.setContentJsonBody(newMsgBean.getContentJsonBody());
-//                            cacheMsgBean.setMsgType(newMsgBean.getMsgType());
-//                            break;
-//                        } else {
-//                            // 设为已读
-//                            messageList.get(index).setIs_read(CacheMsgBean.MSG_READ_STATUS);
-//                            break;
-//                        }
-//                    }
-//                }
-//                if (index >= 0 && index < (count - 1)) {
-//                    mMessageAdapter.notifyDataSetChanged();//notifyItemChanged(index + mMessageAdapter.getHeaderCount() + adjSize);
-//                }
-//            }
+
         } else if (INTENT_REQUEST_PERMISSION == requestCode) {
             //从开启权限页面返回 从新拉去数据
         }
@@ -337,17 +307,25 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
                     startActivity(intent);
                 } else {
                     Intent intent = new Intent();
-                    int groupId = bean.getGroupId();
-                    if (groupId > 0) {
-                        intent.setClass(getActivity(), IMGroupActivity.class);
-                    } else {
-                        intent.setClass(getActivity(), IMConnectionActivity.class);
-                    }
-                    intent.putExtra(IMConnectionActivity.DST_UUID, bean.getTargetUuid());
-                    intent.putExtra(IMConnectionActivity.DST_NAME, bean.getDisplayName());
-                    startActivityForResult(intent, INTENT_REQUEST_FOR_UPDATE_UI);
 
-                    IMMsgManager.instance().removeBadge(bean.getTargetUuid());
+                    if (bean.getPushMsg() != null) {
+                        intent.setClass(getActivity(), DeskTopActivity.class);
+                        intent.putExtra(DeskTopActivity.DESKTOP_WEIAPPCODE, bean.getPushMsg());
+                        startActivity(intent);
+                    } else {
+                        int groupId = bean.getGroupId();
+                        if (groupId > 0) {
+                            intent.setClass(getActivity(), IMGroupActivity.class);
+                        } else {
+                            intent.setClass(getActivity(), IMConnectionActivity.class);
+                        }
+                        intent.putExtra(IMConnectionActivity.DST_UUID, bean.getTargetUuid());
+                        intent.putExtra(IMConnectionActivity.DST_NAME, bean.getDisplayName());
+                        startActivityForResult(intent, INTENT_REQUEST_FOR_UPDATE_UI);
+
+                        IMMsgManager.instance().removeBadge(bean.getTargetUuid());
+                    }
+
                 }
             }
         });
@@ -366,6 +344,35 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
 
         registerBroadcast();
     }
+
+
+    private void test() {
+        String url = Contants.URl.URL_ICETEST + "/push2/homepush/gethomePushBybox";
+
+        ContentValues params = new ContentValues();
+        params.put("username", UserInfo.employeeAccount);
+        params.put("corp_id", Tools.getStringValue(getContext(), Contants.storage.CORPID));
+
+        ColorsConfig.commonParams(params);
+
+        OkHttpConnector.httpGet(url, params, new IGetListener() {
+            @Override
+            public void httpReqResult(String response) {
+                MsgConfig config = GsonUtil.parse(response, MsgConfig.class);
+                if (config != null && config.isSuccess() && isAdded()) {
+                    List<MsgConfig.ContentBean.DataBean> list = config.getContent().getData();
+                    if (list != null && list.size() > 0) {
+                        for (MsgConfig.ContentBean.DataBean item : list) {
+                            ExCacheMsgBean bean = new ExCacheMsgBean(item);
+                            messageList.add(0, bean);
+                            mMessageAdapter.setMessageList(messageList);
+                        }
+                    }
+                }
+            }
+        });
+    }
+
 
     private void registerBroadcast() {
         //注册广播接收器来接收  通讯录改变的广播
@@ -482,7 +489,7 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
                 }
             }
             messageList.removeAll(oldList);
-            messageList.addAll(0, data);
+            messageList.addAll(data);
             mMessageAdapter.notifyDataSetChanged();
         }
     }

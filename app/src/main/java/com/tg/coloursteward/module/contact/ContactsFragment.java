@@ -21,10 +21,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.tg.coloursteward.ContactsActivity;
-import com.tg.coloursteward.EmployeeDataActivity;
 import com.tg.coloursteward.HomeContactOrgActivity;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.constant.Contants;
@@ -36,7 +34,6 @@ import com.tg.coloursteward.module.contact.stickyheader.StickyHeaderDecoration;
 import com.tg.coloursteward.module.contact.widget.CharIndexView;
 import com.tg.coloursteward.module.groupchat.GroupListActivity;
 import com.tg.coloursteward.module.search.GlobalSearchActivity;
-import com.tg.coloursteward.module.search.data.SearchData;
 import com.tg.coloursteward.net.GetTwoRecordListener;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.MessageHandler;
@@ -49,6 +46,7 @@ import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.PullRefreshListView;
 import com.tg.coloursteward.view.dialog.ToastFactory;
+import com.youmai.hxsdk.activity.IMConnectionActivity;
 import com.youmai.hxsdk.db.bean.Contact;
 import com.youmai.hxsdk.entity.cn.CNPinyin;
 import com.youmai.hxsdk.entity.cn.CNPinyinFactory;
@@ -357,9 +355,15 @@ public class ContactsFragment extends Fragment implements ResponseListener, Item
                 break;
             default: //item
                 Contact item = contactList.get(pos).data;
-                Intent i = new Intent(mActivity, EmployeeDataActivity.class);
-                i.putExtra(EmployeeDataActivity.CONTACTS_ID, item.getUsername());
-                startActivityForResult(i, ISTREAD);
+                //Intent i = new Intent(mActivity, EmployeeDataActivity.class);
+                //i.putExtra(EmployeeDataActivity.CONTACTS_ID, item.getUsername());
+                //startActivityForResult(i, ISTREAD);
+                Intent i = new Intent(mActivity, IMConnectionActivity.class);
+                i.putExtra(IMConnectionActivity.DST_UUID, item.getUid());
+                i.putExtra(IMConnectionActivity.DST_NAME, item.getRealname());
+                i.putExtra(IMConnectionActivity.DST_AVATAR, item.getAvatar());
+                i.putExtra(IMConnectionActivity.DST_PHONE, item.getMobile());
+                startActivity(i);
                 break;
         }
     }

@@ -115,7 +115,6 @@ public class WebViewActivity extends SdkBaseActivity {
                 if (url.startsWith(HTTP_PARM) || url.startsWith(HTTPS_PARM)) {
                     return false;  //默认调用浏览器，打开新链接
                 }
-                setFloatView(false);
                 Intent intent = new Intent();
                 if (url.startsWith(TEL_PARM)) {
                     intent.setAction("android.intent.action.CALL");
@@ -184,7 +183,6 @@ public class WebViewActivity extends SdkBaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        setFloatView(true);
     }
 
     @Override

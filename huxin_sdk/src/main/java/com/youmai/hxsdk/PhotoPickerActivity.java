@@ -393,8 +393,6 @@ public class PhotoPickerActivity extends SdkBaseActivity implements PhotoAdapter
                 mTmpFile = new File(FileConfig.getPicDownLoadPath(), System.currentTimeMillis() + ".jpg");
                 cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(mTmpFile));
                 startActivityForResult(cameraIntent, REQUEST_CAMERA);
-
-                setFloatView(false);
             } else {
                 Toast.makeText(getApplicationContext(), "没找到摄像头", Toast.LENGTH_SHORT).show();
             }
@@ -437,8 +435,6 @@ public class PhotoPickerActivity extends SdkBaseActivity implements PhotoAdapter
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         // 相机拍照完成后，返回图片路径
         if (requestCode == REQUEST_CAMERA) {
-            setFloatView(true);
-
             if (resultCode == Activity.RESULT_OK) {
                 if (mTmpFile != null) {
                     returnData(mTmpFile.getAbsolutePath(), true);

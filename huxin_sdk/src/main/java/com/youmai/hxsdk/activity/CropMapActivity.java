@@ -51,7 +51,6 @@ public class CropMapActivity extends SdkBaseActivity {
         iv_navigate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {//导航
-                setFloatView(false);
                 mMapViewUtil.toDaoHang(latitude, longitude);
             }
         });

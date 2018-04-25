@@ -23,6 +23,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -62,6 +63,7 @@ import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.config.ColorsConfig;
 import com.youmai.hxsdk.http.IPostListener;
 import com.youmai.hxsdk.http.OkHttpConnector;
+import com.youmai.hxsdk.im.IMMsgManager;
 import com.youmai.hxsdk.push.MorePushManager;
 
 import org.json.JSONArray;
@@ -76,6 +78,7 @@ import java.util.Set;
 
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.api.TagAliasCallback;
+import q.rorbin.badgeview.QBadgeView;
 
 
 /**
@@ -108,6 +111,7 @@ public class MainActivity1 extends AppCompatActivity implements MessageHandler.R
     private ViewPager mViewPager;
     private BottomNavigationViewEx navigation;
     //private TabLayout mTabLayout;
+    private QBadgeView badgeView;
 
     private TabFragmentPagerAdapter mAdapter;
     private FragmentManager fragmentManager;
@@ -238,6 +242,14 @@ public class MainActivity1 extends AppCompatActivity implements MessageHandler.R
     @Override
     protected void onResume() {
         super.onResume();
+        //沟通列表
+        int unreadCount = IMMsgManager.instance().getAllBadgeCount();
+        if (unreadCount > 0) {
+            badgeView.setBadgeNumber(unreadCount);
+        } else {
+            badgeView.hide(true);
+        }
+
     }
 
 
@@ -367,6 +379,15 @@ public class MainActivity1 extends AppCompatActivity implements MessageHandler.R
 
         mViewPager = (ViewPager) findViewById(R.id.view_pager);
         navigation = (BottomNavigationViewEx) findViewById(R.id.navigation);
+        badgeView = new QBadgeView(mContext);
+
+        badgeView.bindTarget(navigation.getBottomNavigationItemView(0));
+        badgeView.setBadgeGravity(Gravity.TOP | Gravity.END);
+        badgeView.setBadgeTextSize(10f, true);
+        badgeView.setBadgeBackgroundColor(ContextCompat.getColor(mContext, R.color.hx_color_red_tag));
+        badgeView.setShowShadow(false);
+        badgeView.hide(false);
+
 
         //mTabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
 

@@ -15,6 +15,7 @@ import cn.jpush.android.api.JPushInterface;
 
 import com.alibaba.android.arouter.launcher.ARouter;
 //import com.facebook.stetho.Stetho;
+import com.facebook.stetho.Stetho;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -39,7 +40,7 @@ public class CityPropertyApplication extends Application {
         HuxinSdkManager.instance().init(this);
         instance = this;
 
-        //Stetho.initializeWithDefaults(this);
+        Stetho.initializeWithDefaults(this);
 
         JPushInterface.setDebugMode(true);    // 设置开启日志,发布时请关闭日志
         JPushInterface.init(this);            // 初始化 JPush

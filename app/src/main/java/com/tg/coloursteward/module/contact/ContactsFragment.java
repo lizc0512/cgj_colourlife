@@ -359,7 +359,7 @@ public class ContactsFragment extends Fragment implements ResponseListener, Item
                 //i.putExtra(EmployeeDataActivity.CONTACTS_ID, item.getUsername());
                 //startActivityForResult(i, ISTREAD);
                 Intent i = new Intent(mActivity, IMConnectionActivity.class);
-                i.putExtra(IMConnectionActivity.DST_UUID, item.getUid());
+                i.putExtra(IMConnectionActivity.DST_UUID, item.getUuid());
                 i.putExtra(IMConnectionActivity.DST_NAME, item.getRealname());
                 i.putExtra(IMConnectionActivity.DST_AVATAR, item.getAvatar());
                 i.putExtra(IMConnectionActivity.DST_PHONE, item.getMobile());

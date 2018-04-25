@@ -42,10 +42,14 @@ import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.PullRefreshListView;
 import com.youmai.hxsdk.HuxinSdkManager;
+import com.youmai.hxsdk.activity.IMConnectionActivity;
+import com.youmai.hxsdk.activity.IMGroupActivity;
 import com.youmai.hxsdk.activity.SdkBaseActivity;
 import com.youmai.hxsdk.db.bean.Contact;
+import com.youmai.hxsdk.db.bean.GroupInfoBean;
 import com.youmai.hxsdk.entity.cn.CNPinyin;
 import com.youmai.hxsdk.entity.cn.CNPinyinFactory;
+import com.youmai.hxsdk.module.groupchat.ChatDetailsActivity;
 import com.youmai.hxsdk.proto.YouMaiBasic;
 import com.youmai.hxsdk.proto.YouMaiGroup;
 import com.youmai.hxsdk.router.APath;
@@ -358,15 +362,33 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
                     }
 
                     //String groupName = String.format(getString(R.string.group_default_name), list.size());
-                    HuxinSdkManager.instance().createGroup("群聊", list, new ReceiveListener() {
+                    final String groupName = "群聊";
+                    HuxinSdkManager.instance().createGroup(groupName, list, new ReceiveListener() {
                         @Override
                         public void OnRec(PduBase pduBase) {
                             try {
                                 YouMaiGroup.GroupCreateRsp ack = YouMaiGroup.GroupCreateRsp.parseFrom(pduBase.body);
                                 if (ack.getResult() == YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS) {
                                     List<YouMaiGroup.GroupMemberItem> list = ack.getMemberListList();
+                                    int groupId = ack.getGroupId();
+                                    GroupInfoBean groupInfo = new GroupInfoBean();
+                                    groupInfo.setGroup_id(groupId);
+                                    groupInfo.setGroup_name(groupName);
+                                    groupInfo.setGroup_member_count(list.size());
+
+                                    Intent intent = new Intent(mContext, IMGroupActivity.class);
+                                    intent.putExtra(IMGroupActivity.DST_NAME, groupName);
+                                    intent.putExtra(IMGroupActivity.DST_UUID, groupId);
+                                    intent.putExtra(IMGroupActivity.GROUP_INFO, groupInfo);
+
+                                    startActivity(intent);
 
                                     Toast.makeText(mContext, "创建群成功", Toast.LENGTH_SHORT).show();
+
+
+                                    finish();
+                                    HuxinSdkManager.instance().getStackAct().finishActivity(IMConnectionActivity.class);
+                                    HuxinSdkManager.instance().getStackAct().finishActivity(ChatDetailsActivity.class);
                                 }
                             } catch (InvalidProtocolBufferException e) {
                                 e.printStackTrace();

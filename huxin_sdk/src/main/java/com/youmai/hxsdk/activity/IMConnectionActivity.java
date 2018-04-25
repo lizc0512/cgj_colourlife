@@ -268,6 +268,8 @@ public class IMConnectionActivity extends SdkBaseActivity implements
         initData();
         IMMsgManager.instance().setImMsgCallback(this);
 
+        HuxinSdkManager.instance().getStackAct().addActivity(this);
+
     }
 
     @Override
@@ -423,7 +425,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
         startService(intent);
 
         PhotoPickerManager.getInstance().clearMap();
-
+        HuxinSdkManager.instance().getStackAct().removeActivity(this);
     }
 
 

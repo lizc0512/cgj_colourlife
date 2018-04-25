@@ -11,6 +11,7 @@ import com.alibaba.android.arouter.launcher.ARouter;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.activity.SdkBaseActivity;
 import com.youmai.hxsdk.db.bean.Contact;
@@ -51,6 +52,8 @@ public class ChatDetailsActivity extends SdkBaseActivity {
 
         initView();
         setOnClickListener();
+
+        HuxinSdkManager.instance().getStackAct().addActivity(this);
     }
 
     @Override
@@ -59,6 +62,8 @@ public class ChatDetailsActivity extends SdkBaseActivity {
         if (null != groupList) {
             groupList.clear();
         }
+
+        HuxinSdkManager.instance().getStackAct().removeActivity(this);
     }
 
     private void initView() {

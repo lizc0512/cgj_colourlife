@@ -96,10 +96,16 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
         mRlClearChatRecords = findViewById(R.id.rl_clear_chat_records);
         mTvExitGroup = findViewById(R.id.tv_exit_group);
 
-        String title = String.format(getString(R.string.group_default_title),
-                "聊天详情", mGroupInfo.getGroup_member_count());
-        mTvTitle.setText(title);
-        mTvGroupName.setText(mGroupInfo.getGroup_name());
+
+        if (mGroupInfo != null) {
+            String title = String.format(getString(R.string.group_default_title),
+                    "聊天详情", mGroupInfo.getGroup_member_count());
+            mTvTitle.setText(title);
+            mTvGroupName.setText(mGroupInfo.getGroup_name());
+        } else {
+            mTvTitle.setText("聊天详情");
+        }
+
 
         mAdapter = new GroupDetailAdapter(this, this);
         GridLayoutManager manager = new GridLayoutManager(this, 5);
@@ -110,8 +116,8 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
 
     void createGroupMap() {
         mGroupInfo = getIntent().getParcelableExtra(IMGroupActivity.GROUP_INFO);
-        //mGroupId = getIntent().getIntExtra("groupId", -1);
-        HuxinSdkManager.instance().reqGroupMember(mGroupInfo.getGroup_id(), new ReceiveListener() {
+        mGroupId = getIntent().getIntExtra("groupId", -1);
+        HuxinSdkManager.instance().reqGroupMember(mGroupId, new ReceiveListener() {
             @Override
             public void OnRec(PduBase pduBase) {
                 try {

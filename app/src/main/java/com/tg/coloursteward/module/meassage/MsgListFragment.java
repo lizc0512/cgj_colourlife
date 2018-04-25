@@ -200,7 +200,7 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
 
         initMessageList();
 
-        test();
+        reqPushMsg();
     }
 
     @Override
@@ -346,7 +346,7 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
     }
 
 
-    private void test() {
+    private void reqPushMsg() {
         String url = Contants.URl.URL_ICETEST + "/push2/homepush/gethomePushBybox";
 
         ContentValues params = new ContentValues();
@@ -485,16 +485,15 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
             List<ExCacheMsgBean> oldList = new ArrayList<>();
             for (int newIndex = newSize - 1; newIndex >= 0; newIndex--) {
                 for (int i = 0; i < messageList.size(); i++) {
-                    String targetPhone = data.get(newIndex).getTargetUuid();
-                    if (!TextUtils.isEmpty(targetPhone) && targetPhone.equals(messageList.get(i).getTargetUuid())) {
+                    String targetUuid = data.get(newIndex).getTargetUuid();
+                    if (!TextUtils.isEmpty(targetUuid) && targetUuid.equals(messageList.get(i).getTargetUuid())) {
                         oldList.add(messageList.get(i));
                         break;
                     }
                 }
             }
             messageList.removeAll(oldList);
-            messageList.addAll(data);
-            mMessageAdapter.notifyDataSetChanged();
+            mMessageAdapter.addMessageList(data);
         }
     }
 

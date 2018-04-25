@@ -169,6 +169,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
             itemView.message_item.setTag(position);
             if (model.getPushMsg() != null) {
+                itemView.message_status.hide(false);
 
                 String comefrom = model.getPushMsg().getComefrom();
                 String pushTime = model.getPushMsg().getHomePushTime();

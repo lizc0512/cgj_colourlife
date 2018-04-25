@@ -136,7 +136,6 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                             .apply(new RequestOptions()
                                     .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                                     .centerCrop()
-                                    .override(60, 60)
                                     .transform(new GlideRoundTransform(mContext))
                                     .placeholder(R.drawable.color_default_header)
                                     .error(R.drawable.color_default_header))
@@ -269,7 +268,9 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     public interface ItemEventListener {
         void onItemClick(int pos, Contact contact);
+
         void onLongClick(int pos);
+
         void collectCount(int count);
     }
 

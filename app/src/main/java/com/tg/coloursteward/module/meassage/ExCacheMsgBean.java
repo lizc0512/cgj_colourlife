@@ -8,21 +8,37 @@ import com.youmai.hxsdk.db.bean.CacheMsgBean;
  */
 
 public class ExCacheMsgBean extends CacheMsgBean {
+    private int uiType;
+    private MsgConfig.ContentBean.DataBean pushMsg;
+
     private String pinyin; // 姓名拼音
     private String simplepinyin;//简拼
     private String displayName;//姓名
 
-    private MsgConfig.ContentBean.DataBean pushMsg;
 
     private int contactId;//通讯id  没有在通讯录内显示0
     private boolean mIsMultiNumber = false;//多号码识别
 
+    public ExCacheMsgBean() {
+        uiType = MessageAdapter.ADAPTER_TYPE_SERACH;
+    }
+
     public ExCacheMsgBean(MsgConfig.ContentBean.DataBean pushMsg) {
         this.pushMsg = pushMsg;
+        uiType = MessageAdapter.ADAPTER_TYPE_PUSHMSG;
     }
 
     public ExCacheMsgBean(CacheMsgBean bean) {
         super(bean);
+        uiType = MessageAdapter.ADAPTER_TYPE_NORMAL;
+    }
+
+    public int getUiType() {
+        return uiType;
+    }
+
+    public void setUiType(int uiType) {
+        this.uiType = uiType;
     }
 
     public boolean isMultiNumber() {
@@ -75,20 +91,4 @@ public class ExCacheMsgBean extends CacheMsgBean {
         this.pushMsg = pushMsg;
     }
 
-    @Override
-    public String toString() {
-        return "ExCacheMsgBean{" +
-                "pinyin='" + pinyin + '\'' +
-                ", simplepinyin='" + simplepinyin + '\'' +
-                ", displayName='" + displayName + '\'' +
-                ", contactId=" + contactId +
-                ", msgId=" + getMsgId() +
-                ", msgType=" + getMsgType() +
-                ", msgStatus=" + getMsgStatus() +
-                ", msgTime=" + getMsgTime() +
-                ", targetUuid='" + getTargetUuid() + '\'' +
-                ", contentJsonBody='" + getContentJsonBody() + '\'' +
-                ", mIsMultiNumber=" + mIsMultiNumber +
-                '}';
-    }
 }

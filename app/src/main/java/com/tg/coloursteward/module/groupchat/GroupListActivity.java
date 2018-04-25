@@ -78,7 +78,7 @@ public class GroupListActivity extends BaseActivity {
         mLinearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         mRefreshRecyclerView.setLayoutManager(mLinearLayoutManager);
         mAdapter = new GroupListAdapter(this);
-        mAdapter.setAdapterType(MessageAdapter.ADAPTER_TYPE_HEADER);
+        mAdapter.setAdapterType(GroupListAdapter.ADAPTER_TYPE_HEADER);
         tv_no_group = findViewById(R.id.tv_no_group);
         mRefreshRecyclerView.setAdapter(mAdapter);
         mRefreshRecyclerView.setLoadingListener(new XRecyclerView.LoadingListener() {

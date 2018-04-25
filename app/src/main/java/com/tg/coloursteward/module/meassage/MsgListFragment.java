@@ -90,7 +90,6 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
     private int adjSize = 1;
     /*********此处从XRecyclerView源码 onBindViewHolder得知，POSITION被修改，不知原因*******/
     private MessageAdapter mMessageAdapter;
-    private List<ExCacheMsgBean> messageList;
 
     private ProgressDialog mProgressDialog;
     private Handler mHandler;
@@ -273,8 +272,6 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
         mLinearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         mRefreshRecyclerView.setLayoutManager(mLinearLayoutManager);
         mMessageAdapter = new MessageAdapter(getActivity());
-        mMessageAdapter.setAdapterType(MessageAdapter.ADAPTER_TYPE_HEADER);
-        mMessageAdapter.setShowRightIcon(false);
         mEmptyView = (LinearLayout) rootView.findViewById(R.id.message_empty_view);
         mRefreshRecyclerView.setAdapter(mMessageAdapter);
         mRefreshRecyclerView.setLoadingListener(new XRecyclerView.LoadingListener() {
@@ -293,7 +290,6 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
         });
         mRefreshRecyclerView.setLoadingMoreEnabled(false);
         mRefreshRecyclerView.setArrowImageView(R.drawable.rv_loading);
-        messageList = new ArrayList<>();
         mSearchEmptyView = (LinearLayout) rootView.findViewById(R.id.message_search_empty_view);
 
         mMessageAdapter.registerAdapterDataObserver(mEmptyRecyclerViewDataObserver);
@@ -301,47 +297,45 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
         mMessageAdapter.setOnItemClickListener(new MessageAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(ExCacheMsgBean bean, int position) {
-                if (position == 0) {
+                if (bean.getUiType() == MessageAdapter.ADAPTER_TYPE_SERACH) {
                     Intent intent = new Intent(getActivity(), GlobalSearchActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                     startActivity(intent);
+                } else if (bean.getUiType() == MessageAdapter.ADAPTER_TYPE_PUSHMSG) {
+                    Intent intent = new Intent(getActivity(), DeskTopActivity.class);
+                    intent.putExtra(DeskTopActivity.DESKTOP_WEIAPPCODE, bean.getPushMsg());
+                    startActivity(intent);
                 } else {
                     Intent intent = new Intent();
-
-                    if (bean.getPushMsg() != null) {
-                        intent.setClass(getActivity(), DeskTopActivity.class);
-                        intent.putExtra(DeskTopActivity.DESKTOP_WEIAPPCODE, bean.getPushMsg());
-                        startActivity(intent);
+                    int groupId = bean.getGroupId();
+                    if (groupId > 0) {
+                        intent.setClass(getActivity(), IMGroupActivity.class);
+                        intent.putExtra(IMGroupActivity.DST_UUID, groupId);
+                        intent.putExtra(IMGroupActivity.DST_NAME, bean.getDisplayName());
                     } else {
-                        int groupId = bean.getGroupId();
-                        if (groupId > 0) {
-                            intent.setClass(getActivity(), IMGroupActivity.class);
-                            intent.putExtra(IMGroupActivity.DST_UUID, groupId);
-                            intent.putExtra(IMGroupActivity.DST_NAME, bean.getDisplayName());
-                        } else {
-                            intent.setClass(getActivity(), IMConnectionActivity.class);
-                            intent.putExtra(IMConnectionActivity.DST_UUID, bean.getTargetUuid());
-                            intent.putExtra(IMConnectionActivity.DST_NAME, bean.getDisplayName());
-                        }
-
-                        startActivityForResult(intent, INTENT_REQUEST_FOR_UPDATE_UI);
-
-                        IMMsgManager.instance().removeBadge(bean.getTargetUuid());
+                        intent.setClass(getActivity(), IMConnectionActivity.class);
+                        intent.putExtra(IMConnectionActivity.DST_UUID, bean.getTargetUuid());
+                        intent.putExtra(IMConnectionActivity.DST_NAME, bean.getDisplayName());
                     }
 
+                    startActivityForResult(intent, INTENT_REQUEST_FOR_UPDATE_UI);
+
+                    IMMsgManager.instance().removeBadge(bean.getTargetUuid());
                 }
             }
         });
 
         mMessageAdapter.setOnLongItemClickListener(new MessageAdapter.OnItemLongClickListener() {
             @Override
-            public void onItemLongClick(View view, int position) {
-                ToastUtil.showToast(getContext(), "删除成功：" + position);
-                ExCacheMsgBean cacheMsgBean = mMessageAdapter.getMessageList().get(position);
-                mMessageAdapter.deleteMessage(position);
-                CacheMsgHelper.instance().deleteAllMsg(getActivity(), cacheMsgBean.getTargetUuid());
-                //去掉未读消息计数
-                IMMsgManager.instance().removeBadge(cacheMsgBean.getTargetUuid());
+            public void onItemLongClick(ExCacheMsgBean bean, int position) {
+                if (bean.getUiType() != MessageAdapter.ADAPTER_TYPE_SERACH) {
+                    ToastUtil.showToast(getContext(), "删除成功：" + position);
+                    ExCacheMsgBean cacheMsgBean = mMessageAdapter.getMessageList().get(position);
+                    mMessageAdapter.deleteMessage(position);
+                    CacheMsgHelper.instance().deleteAllMsg(getActivity(), cacheMsgBean.getTargetUuid());
+                    //去掉未读消息计数
+                    IMMsgManager.instance().removeBadge(cacheMsgBean.getTargetUuid());
+                }
             }
         });
 
@@ -479,10 +473,10 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
         if (data.isEmpty()) {
             return;
         }
-        if (messageList.isEmpty()) {
-            messageList.addAll(data);
-            mMessageAdapter.setMessageList(messageList);
+        List<ExCacheMsgBean> messageList = mMessageAdapter.getMessageList();
 
+        if (messageList.size() == 1) {
+            mMessageAdapter.addMessageList(data);
         } else {
             int newSize = data.size();
             List<ExCacheMsgBean> oldList = new ArrayList<>();
@@ -495,10 +489,7 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
                     }
                 }
             }
-            messageList.removeAll(oldList);
-            messageList.addAll(data);
-            mMessageAdapter.notifyDataSetChanged();
-            //mMessageAdapter.addMessageList(data);
+            mMessageAdapter.changeMessageList(oldList, data);
         }
     }
 
@@ -565,7 +556,7 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
             int count = mMessageAdapter.getItemCount();
 
             //正常状态
-            if (count == mMessageAdapter.getHeaderCount()) {
+            if (count == 1) {
                 mEmptyView.setVisibility(View.VISIBLE);
                 mRefreshRecyclerView.setVisibility(View.VISIBLE);
             } else {

@@ -774,10 +774,11 @@ public class HuxinSdkManager {
      */
     public void changeGroupMember(YouMaiGroup.GroupMemberOptType type,
                                   List<YouMaiGroup.GroupMemberItem> list,
-                                  ReceiveListener callback) {
+                                  int groupId, ReceiveListener callback) {
         YouMaiGroup.GroupMemberChangeReq.Builder builder = YouMaiGroup.GroupMemberChangeReq.newBuilder();
         builder.setType(type);
         builder.setUserId(getUuid());
+        builder.setGroupId(groupId);
         builder.addAllMemberList(list);
         YouMaiGroup.GroupMemberChangeReq group = builder.build();
 

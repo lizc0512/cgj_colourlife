@@ -27,8 +27,6 @@ import java.util.List;
  */
 public class GroupDetailAdapter extends RecyclerView.Adapter {
 
-    final String HEAD_ICON_URL = Contants.URl.HEAD_ICON_URL; //头像
-
     enum TYPE {
         ADD_DELETE, DEFAULT
     }
@@ -97,9 +95,8 @@ public class GroupDetailAdapter extends RecyclerView.Adapter {
             ItemHolder itemHolder = (ItemHolder) holder;
             itemHolder.tv_name.setText(contact.getRealname());
 
-            String str = HEAD_ICON_URL + "avatar?uid=" + contact.getUsername();
             Glide.with(mContext)
-                    .load(str)
+                    .load(contact.getAvatar())
                     .apply(new RequestOptions()
                             .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                             .centerCrop()

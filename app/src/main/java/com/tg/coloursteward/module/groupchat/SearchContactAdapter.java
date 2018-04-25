@@ -136,6 +136,18 @@ public class SearchContactAdapter extends RecyclerView.Adapter<RecyclerView.View
                         ((ContactHolder) holder).cb_collect.setVisibility(View.GONE);
                     }
 
+                    Log.e("YW", "realname: " + contact.getRealname());
+
+
+                    Log.e("YW", "contact.getUuid(): " + contact.getUuid() + "\tcheck: " + (groupMap.get(contact.getUuid()) == null ?
+                            "null" : groupMap.get(contact.getUuid()).getUuid()));
+
+                    for (Map.Entry<String, Contact> entry: groupMap.entrySet()) {
+                        Contact item = entry.getValue();
+
+                        Log.e("YW", "迭代: " + item.getUuid());
+                    }
+
                     if (null != groupMap && null != groupMap.get(contact.getUuid())) {
                         ((ContactHolder) holder).cb_collect.setButtonDrawable(R.drawable.contact_select_def);
                     } else {

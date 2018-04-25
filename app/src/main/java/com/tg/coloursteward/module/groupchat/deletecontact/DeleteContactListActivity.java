@@ -1,6 +1,7 @@
 package com.tg.coloursteward.module.groupchat.deletecontact;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -25,7 +26,6 @@ import com.youmai.hxsdk.utils.ListUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -35,6 +35,8 @@ import java.util.Map;
  * 描述：删除群聊列表
  */
 public class DeleteContactListActivity extends BaseActivity {
+
+    public static final String DELETE_GROUP_ID = "DELETE_GROUP_ID";
 
     private Context mContext;
     private RecyclerView mRefreshRecyclerView;
@@ -47,6 +49,7 @@ public class DeleteContactListActivity extends BaseActivity {
     private ArrayList<Contact> mContactList; //群组成员列表
     private Map<String, Contact> mTotalMap = new HashMap<>();
     private EmptyRecyclerViewDataObserver mEmptyRvDataObserver = new EmptyRecyclerViewDataObserver();
+    private int mGroupId = -1;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -78,6 +81,7 @@ public class DeleteContactListActivity extends BaseActivity {
 
     private void initView() {
         mContactList = getIntent().getParcelableArrayListExtra(ChatGroupDetailsActivity.GROUP_LIST);
+        mGroupId = getIntent().getIntExtra(DELETE_GROUP_ID, -1);
         //标题
         mTvTitle = findViewById(R.id.tv_title);
         mTvCancel = findViewById(R.id.tv_left_cancel);
@@ -110,7 +114,7 @@ public class DeleteContactListActivity extends BaseActivity {
             public void onClick(View v) {
                 List<YouMaiGroup.GroupMemberItem> list = new ArrayList<>();
                 //删除成员
-                for (Map.Entry<String, Contact> entry: mTotalMap.entrySet()) {
+                for (Map.Entry<String, Contact> entry : mTotalMap.entrySet()) {
                     Contact item = entry.getValue();
                     YouMaiGroup.GroupMemberItem.Builder builder = YouMaiGroup.GroupMemberItem.newBuilder();
                     builder.setMemberId(item.getUuid());
@@ -127,19 +131,25 @@ public class DeleteContactListActivity extends BaseActivity {
                             if (ack.getResult() == YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS) {
                                 Toast.makeText(DeleteContactListActivity.this, "删除成员", Toast.LENGTH_SHORT).show();
 
-                                for (Map.Entry<String, Contact> entry: mTotalMap.entrySet()) {
+                                ArrayList<Contact> list = new ArrayList<>();
+                                for (Map.Entry<String, Contact> entry : mTotalMap.entrySet()) {
                                     Contact item = entry.getValue();
-                                    String uuid = item.getUuid();
-                                    Iterator<Contact> iterator = mContactList.iterator();
-                                    while (iterator.hasNext()) {
-                                        Contact contact = iterator.next();
-                                        if (contact.getUuid().equals(uuid)) {
-                                            iterator.remove();
-                                        }
-                                    }
+//                                    String uuid = item.getUuid();
+//                                    Iterator<Contact> iterator = mContactList.iterator();
+//                                    while (iterator.hasNext()) {
+//                                        Contact contact = iterator.next();
+//                                        if (contact.getUuid().equals(uuid)) {
+//                                            iterator.remove();
+//                                        }
+//                                    }
+                                    list.add(item);
                                 }
-                                mAdapter.setGroupList(mContactList);
+//                                mAdapter.setGroupList(mContactList);
                                 mTotalMap.clear();
+                                Intent intent = new Intent();
+                                intent.putParcelableArrayListExtra(ChatGroupDetailsActivity.UPDATE_GROUP_LIST, list);
+                                setResult(ChatGroupDetailsActivity.RESULT_CODE, intent);
+                                finish();
                             }
                         } catch (InvalidProtocolBufferException e) {
                             e.printStackTrace();
@@ -147,9 +157,14 @@ public class DeleteContactListActivity extends BaseActivity {
                     }
                 };
 
+                if (mGroupId == -1) {
+                    Toast.makeText(mContext, "删除失败", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 HuxinSdkManager.instance().changeGroupMember(
                         YouMaiGroup.GroupMemberOptType.GROUP_MEMBER_OPT_DEL,
-                        list, listener);
+                        list, mGroupId, listener);
             }
         });
         mTvCancel.setOnClickListener(new View.OnClickListener() {

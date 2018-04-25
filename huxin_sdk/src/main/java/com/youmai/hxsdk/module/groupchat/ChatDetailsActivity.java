@@ -104,11 +104,12 @@ public class ChatDetailsActivity extends SdkBaseActivity {
         contact.setAvatar(avatar);
         groupList.add(contact);
 
-//        String uid = HuxinSdkManager.instance().getUuid();
-//        contact.setRealname(HuxinSdkManager.instance().getUuid());
-//        contact.setRealname(HuxinSdkManager.instance().getHeadUrl());
-//        contact.setRealname(HuxinSdkManager.instance().getRealName());
-//        groupList.add(contact);
+        Contact self = new Contact();
+        self.setUuid(HuxinSdkManager.instance().getUuid());
+        self.setAvatar(HuxinSdkManager.instance().getHeadUrl());
+        self.setRealname(HuxinSdkManager.instance().getRealName());
+        //self.setUsername(HuxinSdkManager.instance().getUserName());
+        groupList.add(self);
 
     }
 
@@ -124,6 +125,7 @@ public class ChatDetailsActivity extends SdkBaseActivity {
             public void onClick(View v) {
                 ARouter.getInstance().build(APath.GROUP_CREATE_ADD_CONTACT)
                         .withParcelableArrayList(GROUP_LIST, (ArrayList<? extends Parcelable>) groupList)
+                        .withInt("DETAIL_TYPE", 1)
                         .navigation(ChatDetailsActivity.this);
             }
         });

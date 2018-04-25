@@ -135,7 +135,7 @@
                 android:background="@color/hxs_color_white"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
-                android:visibility="visible">
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="wrap_content"

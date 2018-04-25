@@ -20,31 +20,21 @@ public class SdkBaseActivity extends AppCompatActivity {
     private static final String TAG = "SdkBaseActivity";
 
     public static final String FROM_PUSH = "from_Push";
-    public static final String SHOW_FLOAT_VIEW = "show_float_view";
 
     private boolean fromPush = false;
-    private boolean isFloatView = true;
 
     public Context mContext;
 
     public View popAttachView;
 
-    protected boolean isHookEmo = false;//如果是挂机界面置为true,不接收表情
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().addFlags(
-                //TODO 去掉锁屏标志，避免锁屏跳闪  2017-11-13
-//                WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
-                WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
-
         mContext = this;
         popAttachView = getWindow().getDecorView();
 
         fromPush = getIntent().getBooleanExtra(FROM_PUSH, false);
-        isFloatView = getIntent().getBooleanExtra(SHOW_FLOAT_VIEW, true);
 
     }
 
@@ -84,21 +74,16 @@ public class SdkBaseActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
 
-        boolean isMainActRunning = AppUtils.isTopActiviy(this, "com.youmai.huxin.app.activity.MainAct");
-        if (!isMainActRunning && fromPush && !CallInfo.IsCalling()) {
+        /*boolean isMainActRunning = AppUtils.isTopActiviy(this, "com.tg.coloursteward.ui.MainActivity1");
+        if (!isMainActRunning && fromPush) {
             Intent intent = new Intent();
-            intent.setClassName(this, "com.youmai.huxin.app.activity.MainAct");
+            intent.setClassName(this, "com.tg.coloursteward.ui.MainActivity1");
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
-        }
+        }*/
 
         super.onBackPressed();
-    }
-
-
-    public void setFloatView(boolean floatView) {
-        isFloatView = floatView;
     }
 
 }

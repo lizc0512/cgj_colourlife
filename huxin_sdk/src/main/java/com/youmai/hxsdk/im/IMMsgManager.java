@@ -73,8 +73,6 @@ public class IMMsgManager {
 
     private static IMMsgManager instance = null;
 
-    private Class<?> mainClass;
-
     private String mTargetId;
 
 
@@ -99,9 +97,6 @@ public class IMMsgManager {
         this.mContext = context.getApplicationContext();
     }
 
-    public void setMainClass(Class<?> mainClass) {
-        this.mainClass = mainClass;
-    }
 
     public void setImMsgCallback(IMMsgCallback imMsgCallback) {
         if (!imMsgCallbackList.contains(imMsgCallback)) {
@@ -584,15 +579,9 @@ public class IMMsgManager {
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
         // Adds the back stack for the Intent (but not the Intent itself)
 
-        if (mainClass != null) {
-            stackBuilder.addNextIntentWithParentStack(new Intent(context, mainClass));
-        } else {
-            if (isGroup) {
-                stackBuilder.addParentStack(IMGroupActivity.class);
-            } else {
-                stackBuilder.addParentStack(IMConnectionActivity.class);
-            }
-        }
+        Intent intent = new Intent();
+        intent.setClassName(context, "com.tg.coloursteward.ui.MainActivity1");
+        stackBuilder.addNextIntentWithParentStack(intent);
 
         // Adds the Intent that starts the Activity to the top of the stack
         stackBuilder.addNextIntent(resultIntent);

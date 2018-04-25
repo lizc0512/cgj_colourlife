@@ -318,7 +318,12 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         } else {
             int i;
             for (i = 0; i < messageList.size(); i++) {
-                if (messageList.get(i).getTargetUuid().equals(uuid)) {
+                ExCacheMsgBean item = messageList.get(i);
+                if (item.getPushMsg() != null) {
+                    continue;
+                }
+
+                if (item.getTargetUuid().equals(uuid)) {
                     if (i == 0) {
                         messageList.set(0, msgBean);
                     } else {

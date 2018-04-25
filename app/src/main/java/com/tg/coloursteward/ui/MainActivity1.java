@@ -242,14 +242,7 @@ public class MainActivity1 extends AppCompatActivity implements MessageHandler.R
     @Override
     protected void onResume() {
         super.onResume();
-        //沟通列表
-        int unreadCount = IMMsgManager.instance().getAllBadgeCount();
-        if (unreadCount > 0) {
-            badgeView.setBadgeNumber(unreadCount);
-        } else {
-            badgeView.hide(true);
-        }
-
+        refreshUnReadCount();
     }
 
 
@@ -265,6 +258,15 @@ public class MainActivity1 extends AppCompatActivity implements MessageHandler.R
         unregisterReceiver(freshReceiver);
     }
 
+
+    public void refreshUnReadCount() {
+        int unreadCount = IMMsgManager.instance().getAllBadgeCount();
+        if (unreadCount > 0) {
+            badgeView.setBadgeNumber(unreadCount);
+        } else {
+            badgeView.hide(true);
+        }
+    }
 
     private void initTitle() {
 
@@ -379,12 +381,14 @@ public class MainActivity1 extends AppCompatActivity implements MessageHandler.R
 
         mViewPager = (ViewPager) findViewById(R.id.view_pager);
         navigation = (BottomNavigationViewEx) findViewById(R.id.navigation);
-        badgeView = new QBadgeView(mContext);
 
+        badgeView = new QBadgeView(mContext);
         badgeView.bindTarget(navigation.getBottomNavigationItemView(0));
         badgeView.setBadgeGravity(Gravity.TOP | Gravity.END);
         badgeView.setBadgeTextSize(10f, true);
         badgeView.setBadgeBackgroundColor(ContextCompat.getColor(mContext, R.color.hx_color_red_tag));
+        badgeView.setGravityOffset(25, 2, true);
+        badgeView.setBadgePadding(5, true);
         badgeView.setShowShadow(false);
         badgeView.hide(false);
 

@@ -128,8 +128,8 @@ public class IMMsgManager {
                 HuxinSdkManager.instance().sendMsgReply(imChat.getMsgId());
 
                 IMChat im = new IMChat(imChat, false);
-                parseCharMsg(im);
                 notifyMsg(im, false, false);
+                parseCharMsg(im);
 
             } catch (InvalidProtocolBufferException e) {
                 e.printStackTrace();
@@ -147,8 +147,8 @@ public class IMMsgManager {
                 HuxinSdkManager.instance().sendMsgReply(imChat.getMsgId());
 
                 IMChat im = new IMChat(imChat, true);
-                parseCharMsg(im);
                 notifyMsg(im, false, true);
+                parseCharMsg(im);
 
             } catch (InvalidProtocolBufferException e) {
                 e.printStackTrace();
@@ -508,17 +508,17 @@ public class IMMsgManager {
 
     private Map<String, Integer> notifyCount = new HashMap<>();
 
-    private void addNotifyCount(String srcPhone, int notifyId) {
-        Integer id = notifyCount.get(srcPhone);
+    private void addNotifyCount(String targetId, int notifyId) {
+        Integer id = notifyCount.get(targetId);
         if (id == null) {
-            notifyCount.put(srcPhone, notifyId);
+            notifyCount.put(targetId, notifyId);
         }
     }
 
-    private void removeNotifyCount(String srcPhone) {
+    private void removeNotifyCount(String targetId) {
         NotificationManager notificationManager = (NotificationManager) mContext
                 .getSystemService(Context.NOTIFICATION_SERVICE);
-        Integer id = notifyCount.get(srcPhone);
+        Integer id = notifyCount.get(targetId);
         if (id != null) {
             notificationManager.cancel(id);
         }
@@ -614,12 +614,12 @@ public class IMMsgManager {
 
     private Map<String, Integer> badgeCount = new HashMap<>();
 
-    public void addBadge(String dstPhone) {
-        Integer value = badgeCount.get(dstPhone);
+    public void addBadge(String targetId) {
+        Integer value = badgeCount.get(targetId);
         if (value == null) {
-            badgeCount.put(dstPhone, 1);
+            badgeCount.put(targetId, 1);
         } else {
-            badgeCount.put(dstPhone, value + 1);
+            badgeCount.put(targetId, value + 1);
         }
 
         String badge = BadgeUtil.mapToJson(badgeCount);

@@ -28,9 +28,9 @@ import com.tg.coloursteward.DeskTopActivity;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.entity.MsgConfig;
-import com.tg.coloursteward.info.HomeDeskTopInfo;
 import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.module.search.GlobalSearchActivity;
+import com.tg.coloursteward.ui.MainActivity1;
 import com.tg.coloursteward.util.Tools;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.activity.IMConnectionActivity;
@@ -443,6 +443,11 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
             ExCacheMsgBean bean = new ExCacheMsgBean(imComingMsg);
             bean.setDisplayName(imComingMsg.getTargetName());
             mMessageAdapter.addTop(bean);
+
+            if (getActivity() instanceof MainActivity1) {
+                MainActivity1 act = (MainActivity1) getActivity();
+                act.refreshUnReadCount();
+            }
         }
     }
 

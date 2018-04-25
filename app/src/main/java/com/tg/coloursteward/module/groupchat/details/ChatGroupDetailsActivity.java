@@ -16,9 +16,11 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import com.tg.coloursteward.EmployeeDataActivity;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.R;
+import com.youmai.hxsdk.activity.IMGroupActivity;
 import com.youmai.hxsdk.activity.SdkBaseActivity;
 import com.youmai.hxsdk.adapter.PaddingItemDecoration;
 import com.youmai.hxsdk.db.bean.Contact;
+import com.youmai.hxsdk.db.bean.GroupInfoBean;
 import com.youmai.hxsdk.proto.YouMaiGroup;
 import com.youmai.hxsdk.router.APath;
 import com.youmai.hxsdk.socket.PduBase;
@@ -37,9 +39,10 @@ import java.util.List;
 public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDetailAdapter.ItemEventListener {
 
     public static final String GROUP_LIST = "GROUP_LIST";
-    public static final String DS_NAME = "DS_NAME";
-    public static final String DS_USER_AVATAR = "DS_USER_AVATAR";
-    public static final String DS_UUID = "DS_UUID";
+
+//    public static final String DS_NAME = "DS_NAME";
+//    public static final String DS_USER_AVATAR = "DS_USER_AVATAR";
+//    public static final String DS_UUID = "DS_UUID";
 
     private int mGroupId;
 
@@ -50,11 +53,14 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
     private RelativeLayout mRlGroupManage;
     private RelativeLayout mRlClearChatRecords;
     private TextView mTvExitGroup;
+    private TextView mTvGroupName;
 
     private GroupDetailAdapter mAdapter;
 
     private List<Contact> groupList = new ArrayList<>();
     private List<Contact> groupList2 = new ArrayList<>();
+
+    private GroupInfoBean mGroupInfo;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -83,12 +89,16 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
         mTvTitle = findViewById(R.id.tv_title);
         mGridView = findViewById(R.id.rv_grid_list);
         mRlGroupName = findViewById(R.id.rl_group_name);
+        mTvGroupName = findViewById(R.id.tv_group_name);
         mRlGroupNotice = findViewById(R.id.rl_group_notice);
         mRlGroupManage = findViewById(R.id.rl_group_manage);
         mRlClearChatRecords = findViewById(R.id.rl_clear_chat_records);
         mTvExitGroup = findViewById(R.id.tv_exit_group);
 
-        mTvTitle.setText("聊天详情");
+        String title = String.format(getString(R.string.group_default_title),
+                "聊天详情", mGroupInfo.getGroup_member_count());
+        mTvTitle.setText(title);
+        mTvGroupName.setText(mGroupInfo.getGroup_name());
 
         mAdapter = new GroupDetailAdapter(this, this);
         GridLayoutManager manager = new GridLayoutManager(this, 5);
@@ -98,8 +108,9 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
     }
 
     void createGroupMap() {
-        mGroupId = getIntent().getIntExtra("groupId", -1);
-        HuxinSdkManager.instance().reqGroupMember(mGroupId, new ReceiveListener() {
+        mGroupInfo = getIntent().getParcelableExtra(IMGroupActivity.GROUP_INFO);
+        //mGroupId = getIntent().getIntExtra("groupId", -1);
+        HuxinSdkManager.instance().reqGroupMember(mGroupInfo.getGroup_id(), new ReceiveListener() {
             @Override
             public void OnRec(PduBase pduBase) {
                 try {

@@ -137,5 +137,6 @@
 
     <!-- 群聊 -->
     <string name="group_default_name">群聊(%01d)"</string>
+    <string name="group_default_title">%s(%01d)"</string>
 
 </resources>

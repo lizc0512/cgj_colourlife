@@ -41,6 +41,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.android.arouter.launcher.ARouter;
+import com.google.protobuf.InvalidProtocolBufferException;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.adapter.IMGroupAdapter;
@@ -68,10 +69,13 @@ import com.youmai.hxsdk.module.filemanager.interfaces.PickerRefreshUIListener;
 import com.youmai.hxsdk.module.movierecord.MediaStoreUtils;
 import com.youmai.hxsdk.module.picker.PhotoPickerManager;
 import com.youmai.hxsdk.module.picker.PhotoPreviewActivity;
+import com.youmai.hxsdk.proto.YouMaiGroup;
 import com.youmai.hxsdk.router.APath;
 import com.youmai.hxsdk.service.SendMsgService;
 import com.youmai.hxsdk.service.download.bean.FileQueue;
 import com.youmai.hxsdk.service.sendmsg.SendMsg;
+import com.youmai.hxsdk.socket.PduBase;
+import com.youmai.hxsdk.socket.ReceiveListener;
 import com.youmai.hxsdk.utils.AbFileUtil;
 import com.youmai.hxsdk.utils.AppUtils;
 import com.youmai.hxsdk.utils.CommonUtils;
@@ -148,6 +152,7 @@ public class IMGroupActivity extends SdkBaseActivity implements
     private ImageView ivMore;
     private ImageView ivGroup; //建群
 
+    private GroupInfoBean mGroupInfo; //群组实体
     private String groupName;  //群组名称
     private int groupId;      //群组ID
     private int groupMemberCount; //群组成员数量
@@ -227,7 +232,6 @@ public class IMGroupActivity extends SdkBaseActivity implements
         }
     }
 
-    GroupInfoBean mGroupInfo;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -239,7 +243,6 @@ public class IMGroupActivity extends SdkBaseActivity implements
         Intent fromIntent = getIntent();
         groupName = fromIntent.getStringExtra(DST_NAME);
         groupId = fromIntent.getIntExtra(DST_UUID, 0);
-
         mGroupInfo = fromIntent.getParcelableExtra(GROUP_INFO);
 
         mScrollPosition = fromIntent.getLongExtra(EXTRA_SCROLL_POSITION, 0);
@@ -257,6 +260,36 @@ public class IMGroupActivity extends SdkBaseActivity implements
         initData();
         IMMsgManager.instance().setImMsgCallback(this);
 
+        if (null == mGroupInfo) {
+            queryGroupInfo(groupId);
+        } else {
+            updateGroupUI(mGroupInfo);
+        }
+
+    }
+
+    private void queryGroupInfo(final int groupId) {
+        HuxinSdkManager.instance().reqGroupInfo(groupId, new ReceiveListener() {
+            @Override
+            public void OnRec(PduBase pduBase) {
+                try {
+                    YouMaiGroup.GroupInfoRsp rsp = YouMaiGroup.GroupInfoRsp.parseFrom(pduBase.body);
+                    YouMaiGroup.GroupInfo groupInfo = rsp.getGroupInfo();
+                    mGroupInfo = new GroupInfoBean();
+                    mGroupInfo.setGroup_avatar(groupInfo.getGroupAvatar());
+                    mGroupInfo.setGroup_member_count(groupInfo.getGroupMemberCount());
+                    mGroupInfo.setGroup_id(groupId);
+                    mGroupInfo.setGroup_name(groupName);
+                    updateGroupUI(mGroupInfo);
+                } catch (InvalidProtocolBufferException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    void updateGroupUI(GroupInfoBean groupInfo) {
+        tvTitle.setText(groupInfo.getGroup_name() + "(" + groupInfo.getGroup_member_count() + ")");
     }
 
     @Override
@@ -461,6 +494,7 @@ public class IMGroupActivity extends SdkBaseActivity implements
             public void onClick(View v) {
                 ARouter.getInstance().build(APath.GROUP_DELETE_CONTACT)
                         .withInt("groupId", groupId)
+                        .withParcelable(GROUP_INFO, mGroupInfo)
                         .navigation(IMGroupActivity.this);
             }
         });

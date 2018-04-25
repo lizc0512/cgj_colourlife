@@ -357,8 +357,8 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
                         list.add(builder.build());
                     }
 
-                    String groupName = String.format(getString(R.string.group_default_name), list.size());
-                    HuxinSdkManager.instance().createGroup(groupName, list, new ReceiveListener() {
+                    //String groupName = String.format(getString(R.string.group_default_name), list.size());
+                    HuxinSdkManager.instance().createGroup("群聊", list, new ReceiveListener() {
                         @Override
                         public void OnRec(PduBase pduBase) {
                             try {

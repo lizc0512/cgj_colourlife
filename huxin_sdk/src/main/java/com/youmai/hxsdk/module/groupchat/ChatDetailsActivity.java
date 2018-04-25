@@ -89,7 +89,7 @@ public class ChatDetailsActivity extends SdkBaseActivity {
                         .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                         .centerCrop()
                         .override(60, 60)
-                        .transform(new GlideRoundTransform(mContext))
+                        .transform(new GlideRoundTransform())
                         .error(R.drawable.color_default_header))
                 .into(mSelfHeader);
 

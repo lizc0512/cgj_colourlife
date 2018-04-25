@@ -23,12 +23,10 @@ public class GlideRoundTransform extends BitmapTransformation {
 
     private static final int default_radius = 10;
 
-    public GlideRoundTransform(Context context) {
-        this(context, default_radius);
+    public GlideRoundTransform() {
     }
 
-    public GlideRoundTransform(Context context, int roundPx) {
-        super(context);
+    public GlideRoundTransform(int roundPx) {
         radius = roundPx;
     }
 

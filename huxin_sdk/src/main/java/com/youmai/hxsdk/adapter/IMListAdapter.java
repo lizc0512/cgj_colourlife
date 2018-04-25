@@ -948,7 +948,7 @@ public class IMListAdapter extends RecyclerView.Adapter {
 
         Glide.with(mAct).load(avatar)
                 .apply(new RequestOptions()
-                        .transform(new GlideRoundTransform(mAct))
+                        .transform(new GlideRoundTransform())
                         .placeholder(R.drawable.color_default_header)
                         .error(R.drawable.color_default_header)
                         .diskCacheStrategy(DiskCacheStrategy.RESOURCE))

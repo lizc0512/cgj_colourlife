@@ -32,14 +32,14 @@ import java.util.List;
  * Created by srsm on 17/3/2.
  */
 public class GlobalSearchAdapter<T> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    
+
     public static final int ADAPTER_TYPE_NORMAL = 1;
     public static final int ADAPTER_TYPE_MORE = 2;
     public static final int ADAPTER_TYPE_TITLE = 3;
 
     public static final int ITEM_INNER_NORMAL = 10;
     public static final int ITEM_INNER_MORE = 11;
-    
+
     private final int ITEM_TYPE_HEAD = 1;
     private final int ITEM_TYPE_TAIL = 2;
     private final int ITEM_TYPE_NORMAL = 3;
@@ -89,7 +89,7 @@ public class GlobalSearchAdapter<T> extends RecyclerView.Adapter<RecyclerView.Vi
     public void setItemInnerType(int innerType) {
         this.mItemInnerType = innerType;
     }
-    
+
     public void setArrayList(ArrayList<T> arrayList, String query) {
         this.mDataList = arrayList;
         this.mQueryString = query;
@@ -208,16 +208,15 @@ public class GlobalSearchAdapter<T> extends RecyclerView.Adapter<RecyclerView.Vi
                 }
             }
 
-            RequestOptions options = new RequestOptions();
-            options.diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-                    .centerCrop()
-                    .override(60, 60)
-                    .transform(new GlideRoundTransform(mContext))
-                    .placeholder(R.drawable.contacts_common_default_user_bg)
-                    .error(R.drawable.contacts_common_default_user_bg);
             Glide.with(mContext)
                     .load(model.getIconUrl())
-                    .apply(options)
+                    .apply(new RequestOptions()
+                            .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+                            .centerCrop()
+                            .override(60, 60)
+                            .transform(new GlideRoundTransform())
+                            .placeholder(R.drawable.contacts_common_default_user_bg)
+                            .error(R.drawable.contacts_common_default_user_bg))
                     .into(searchItemHolder.search_icon);
 
             searchItemHolder.search_item.setTag(finalPosition);

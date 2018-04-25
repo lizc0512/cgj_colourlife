@@ -155,7 +155,7 @@ public class SearchContactAdapter extends RecyclerView.Adapter<RecyclerView.View
                                     .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                                     .centerCrop()
                                     .override(120, 120)
-                                    .transform(new GlideRoundTransform(mContext))
+                                    .transform(new GlideRoundTransform())
                                     .placeholder(R.drawable.color_default_header)
                                     .error(R.drawable.color_default_header))
                             .into(((ContactHolder) holder).iv_header);
@@ -276,7 +276,9 @@ public class SearchContactAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     public interface ItemEventListener {
         void onItemClick(int pos, Contact contact);
+
         void onLongClick(int pos);
+
         void collectCount(int count);
     }
 

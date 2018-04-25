@@ -136,7 +136,7 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                             .apply(new RequestOptions()
                                     .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                                     .centerCrop()
-                                    .transform(new GlideRoundTransform(mContext))
+                                    .transform(new GlideRoundTransform())
                                     .placeholder(R.drawable.color_default_header)
                                     .error(R.drawable.color_default_header))
                             .into(contactHolder.iv_header);

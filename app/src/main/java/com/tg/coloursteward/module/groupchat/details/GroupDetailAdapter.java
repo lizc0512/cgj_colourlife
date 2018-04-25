@@ -104,7 +104,7 @@ public class GroupDetailAdapter extends RecyclerView.Adapter {
                             .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                             .centerCrop()
                             .override(120, 120)
-                            .transform(new GlideRoundTransform(mContext))
+                            .transform(new GlideRoundTransform())
                             .placeholder(R.drawable.color_default_header)
                             .error(R.drawable.color_default_header))
                     .into(itemHolder.iv_header);

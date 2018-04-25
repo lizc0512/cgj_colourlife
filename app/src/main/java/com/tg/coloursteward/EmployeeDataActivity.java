@@ -238,7 +238,7 @@ public class EmployeeDataActivity extends BaseActivity {
                                     .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                                     .override(120, 120)
                                     .centerCrop()
-                                    .transform(new GlideRoundTransform(this))
+                                    .transform(new GlideRoundTransform())
                                     .placeholder(R.drawable.default_header)
                                     .error(R.drawable.default_header))
                             .into(ivHead);

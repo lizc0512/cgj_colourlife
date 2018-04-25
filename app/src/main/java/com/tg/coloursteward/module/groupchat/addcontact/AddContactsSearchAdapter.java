@@ -238,7 +238,7 @@ public class AddContactsSearchAdapter<T> extends RecyclerView.Adapter<RecyclerVi
                             .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                             .centerCrop()
                             .override(60, 60)
-                            .transform(new GlideRoundTransform(mContext))
+                            .transform(new GlideRoundTransform())
                             .placeholder(R.drawable.color_default_header)
                             .error(R.drawable.color_default_header))
                     .into(searchItemHolder.search_icon);

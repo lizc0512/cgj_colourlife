@@ -259,7 +259,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 String avatar = model.getSenderAvatar();
                 Glide.with(mContext).load(avatar)
                         .apply(new RequestOptions()
-                                .transform(new GlideRoundTransform(mContext))
+                                .transform(new GlideRoundTransform())
                                 .placeholder(com.youmai.hxsdk.R.drawable.color_default_header)
                                 .error(com.youmai.hxsdk.R.drawable.color_default_header)
                                 .diskCacheStrategy(DiskCacheStrategy.RESOURCE))

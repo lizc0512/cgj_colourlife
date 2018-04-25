@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.tg.coloursteward.DownloadManagerActivity;
@@ -30,6 +33,7 @@ import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.MessageArrowView;
 import com.tg.coloursteward.view.MessageArrowView.ItemClickListener;
 import com.tg.coloursteward.view.dialog.ToastFactory;
+import com.youmai.hxsdk.utils.GlideRoundTransform;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -172,9 +176,17 @@ public class FragmentMine extends Fragment implements ItemClickListener, Respons
 
     public void initData() {
         String str = Contants.URl.HEAD_ICON_URL + "avatar?uid=" + UserInfo.employeeAccount;
-        imageLoader.clearMemoryCache();
-        imageLoader.clearDiskCache();
-        imageLoader.displayImage(str, imgHead, options);
+        //imageLoader.clearMemoryCache();
+        //imageLoader.clearDiskCache();
+        //imageLoader.displayImage(str, imgHead, options);
+
+        Glide.with(this)
+                .load(str)
+                .apply(new RequestOptions()
+                        .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+                        .centerCrop()
+                        .transform(new GlideRoundTransform()))
+                .into(imgHead);
     }
 
     @Override

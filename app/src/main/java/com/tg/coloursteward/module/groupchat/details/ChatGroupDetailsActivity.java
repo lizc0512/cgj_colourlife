@@ -8,12 +8,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.tg.coloursteward.EmployeeDataActivity;
+import com.tg.coloursteward.module.groupchat.deletecontact.DeleteContactListActivity;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.activity.IMGroupActivity;
@@ -59,6 +59,7 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
 
     private List<Contact> groupList = new ArrayList<>();
     private List<Contact> groupList2 = new ArrayList<>();
+    private List<Contact> groupList3 = new ArrayList<>();
 
     private GroupInfoBean mGroupInfo;
 
@@ -120,6 +121,12 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
                     if (groupList.size() > 0) {
                         groupList.clear();
                     }
+                    if (!ListUtils.isEmpty(groupList2)) {
+                        groupList2.clear();
+                    }
+                    if (!ListUtils.isEmpty(groupList3)) {
+                        groupList3.clear();
+                    }
 
                     boolean isGroupOwner = false;
                     for (YouMaiGroup.GroupMemberItem item : memberListList) {
@@ -134,6 +141,10 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
                         contact.setUuid(item.getMemberId());
                         contact.setMemberRole(item.getMemberRole());
                         groupList.add(contact);
+                        groupList2.add(contact);
+                        if (item.getMemberRole() != 0) {
+                            groupList3.add(contact);
+                        }
                     }
 
                     if (isGroupOwner) {
@@ -172,21 +183,23 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
     @Override
     public void onItemClick(int pos, Contact contact) {
         String realname = contact.getRealname();
-        if (!ListUtils.isEmpty(groupList2)) {
-            groupList2.clear();
-        }
+//        if (!ListUtils.isEmpty(groupList2)) {
+//            groupList2.clear();
+//        }
+//        for (Contact con: groupList) {
+//            if (con.getRealname().equals("+") || con.getRealname().equals("-")) {
+//                continue;
+//            }
+//            groupList2.add(con);
+//        }
         if (realname.equals("+")) {
-            for (Contact con: groupList) {
-                if (con.getRealname().equals("+") || con.getRealname().equals("-")) {
-                    continue;
-                }
-                groupList2.add(con);
-            }
             ARouter.getInstance().build(APath.GROUP_CREATE_ADD_CONTACT)
                     .withParcelableArrayList(GROUP_LIST, (ArrayList<? extends Parcelable>) groupList2)
                     .navigation(ChatGroupDetailsActivity.this);
         } else if (realname.equals("-")) {
-            Toast.makeText(this, "删除", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(this, DeleteContactListActivity.class);
+            intent.putParcelableArrayListExtra(GROUP_LIST, (ArrayList<? extends Parcelable>) groupList3);
+            startActivity(intent);
         } else {
             Intent i = new Intent(this, EmployeeDataActivity.class);
             i.putExtra(EmployeeDataActivity.CONTACTS_ID, contact.getUsername());

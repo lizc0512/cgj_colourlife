@@ -513,6 +513,8 @@
             android:screenOrientation="portrait"
             android:theme="@style/HxSdkTheme"/>
 
+        <activity android:name=".module.groupchat.deletecontact.DeleteContactListActivity" />
+
     </application>
 
 </manifest>

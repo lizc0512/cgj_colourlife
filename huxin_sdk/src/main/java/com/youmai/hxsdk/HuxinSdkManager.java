@@ -758,7 +758,7 @@ public class HuxinSdkManager {
      * @param callback
      */
     public void changeGroupMember(YouMaiGroup.GroupMemberOptType type,
-                                  List<YouMaiGroup.MemberItem> list,
+                                  List<YouMaiGroup.GroupMemberItem> list,
                                   ReceiveListener callback) {
         YouMaiGroup.GroupMemberChangeReq.Builder builder = YouMaiGroup.GroupMemberChangeReq.newBuilder();
         builder.setType(type);

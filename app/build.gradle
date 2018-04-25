@@ -75,6 +75,11 @@ android {
             } else {
                 outputFileName = "彩管家4.0_${defaultConfig.versionName}_${defaultConfig.versionCode}_debug.apk"
             }
+
+            variant.assemble.doLast {
+                copyBuildApk()
+            }
+
         }
     }
 
@@ -105,4 +110,14 @@ dependencies {
     implementation "com.android.support:exifinterface:${SUPPORT_VERSION}"
 
     annotationProcessor 'com.alibaba:arouter-compiler:1.1.4'
+}
+
+
+def copyBuildApk() {
+    copy {
+        from("${buildDir}/outputs/apk/release") {
+            include "*.apk"
+        }
+        into '../dist'
+    }
 }

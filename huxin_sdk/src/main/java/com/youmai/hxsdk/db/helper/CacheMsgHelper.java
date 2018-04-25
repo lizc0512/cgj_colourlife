@@ -67,7 +67,7 @@ public class CacheMsgHelper {
         QueryBuilder<CacheMsgBean> qb = cacheMsgBeanDao.queryBuilder();
 
         List<CacheMsgBean> list = qb.where(CacheMsgBeanDao.Properties.TargetUuid.eq(dstUuid))
-                .orderAsc(CacheMsgBeanDao.Properties.MsgTime).list();
+                .orderAsc(CacheMsgBeanDao.Properties.Id).list();
 
         if (setRead) {
             List<CacheMsgBean> unReadList = new ArrayList<>();
@@ -101,7 +101,7 @@ public class CacheMsgHelper {
         QueryBuilder<CacheMsgBean> qb = cacheMsgBeanDao.queryBuilder();
 
         List<CacheMsgBean> list = qb.where(CacheMsgBeanDao.Properties.GroupId.eq(groupId))
-                .orderAsc(CacheMsgBeanDao.Properties.MsgTime).list();
+                .orderAsc(CacheMsgBeanDao.Properties.Id).list();
 
         if (setRead) {
             List<CacheMsgBean> unReadList = new ArrayList<>();
@@ -365,7 +365,7 @@ public class CacheMsgHelper {
         QueryBuilder<CacheMsgBean> qb = cacheMsgBeanDao.queryBuilder();
 
         List<CacheMsgBean> list = qb.where(CacheMsgBeanDao.Properties.TargetUuid.eq(dstUuid))
-                .orderDesc(CacheMsgBeanDao.Properties.MsgTime).list();
+                .orderDesc(CacheMsgBeanDao.Properties.Id).list();
 
 
         List<CacheMsgBean> unReadList = new ArrayList<>();

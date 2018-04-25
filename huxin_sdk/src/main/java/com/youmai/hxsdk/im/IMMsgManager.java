@@ -593,8 +593,11 @@ public class IMMsgManager {
         NotificationManager notificationManager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        boolean isNotBadge = CallInfo.IsCalling()
-                || (AppUtils.isTopActiviy(mContext, IMConnectionActivity.class.getName()) && mTargetId.equals(targetId));
+
+        boolean isNotBadge = AppUtils.isTopActiviy(mContext, IMConnectionActivity.class.getName())
+                || AppUtils.isTopActiviy(mContext, IMGroupActivity.class.getName());
+
+        isNotBadge = isNotBadge && mTargetId.equals(targetId);
 
         if (isNotBadge) {
             //for 隐藏不该收到的通知,会崩 小米手机必须设置small icon
@@ -640,14 +643,14 @@ public class IMMsgManager {
         return "badge-" + HuxinSdkManager.instance().getUuid();
     }
 
-    public void removeBadge(String dstPhone) {
-        mTargetId = dstPhone;
-        Integer value = badgeCount.get(dstPhone);
+    public void removeBadge(String targetId) {
+        mTargetId = targetId;
+        Integer value = badgeCount.get(targetId);
 
         if (value != null) {
             int sum = getAllBadgeCount();
 
-            badgeCount.remove(dstPhone);
+            badgeCount.remove(targetId);
             int res = sum - value;
             if (res >= 1) {
                 ShortcutBadger.applyCount(mContext, res); //for 1.1.4+
@@ -659,12 +662,12 @@ public class IMMsgManager {
             AppUtils.setStringSharedPreferences(mContext, getBadgeSharedPreferenceKey(), badge);
         }
 
-        removeNotifyCount(dstPhone);
+        removeNotifyCount(targetId);
     }
 
 
-    public int getBadeCount(String dstPhone) {
-        Integer value = badgeCount.get(dstPhone);
+    public int getBadeCount(String targetId) {
+        Integer value = badgeCount.get(targetId);
         if (value != null) {
             return value;
         } else {

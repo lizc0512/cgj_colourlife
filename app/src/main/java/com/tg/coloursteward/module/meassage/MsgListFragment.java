@@ -316,11 +316,14 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
                         int groupId = bean.getGroupId();
                         if (groupId > 0) {
                             intent.setClass(getActivity(), IMGroupActivity.class);
+                            intent.putExtra(IMGroupActivity.DST_UUID, groupId);
+                            intent.putExtra(IMGroupActivity.DST_NAME, bean.getDisplayName());
                         } else {
                             intent.setClass(getActivity(), IMConnectionActivity.class);
+                            intent.putExtra(IMConnectionActivity.DST_UUID, bean.getTargetUuid());
+                            intent.putExtra(IMConnectionActivity.DST_NAME, bean.getDisplayName());
                         }
-                        intent.putExtra(IMConnectionActivity.DST_UUID, bean.getTargetUuid());
-                        intent.putExtra(IMConnectionActivity.DST_NAME, bean.getDisplayName());
+
                         startActivityForResult(intent, INTENT_REQUEST_FOR_UPDATE_UI);
 
                         IMMsgManager.instance().removeBadge(bean.getTargetUuid());
@@ -493,7 +496,9 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
                 }
             }
             messageList.removeAll(oldList);
-            mMessageAdapter.addMessageList(data);
+            messageList.addAll(data);
+            mMessageAdapter.notifyDataSetChanged();
+            //mMessageAdapter.addMessageList(data);
         }
     }
 

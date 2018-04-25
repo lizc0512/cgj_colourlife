@@ -537,6 +537,7 @@ public class HuxinSdkManager {
         msgData.setSrcMobile(getPhoneNum());
         msgData.setDestUserId(destUuid);
         msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_TEXT);
+        msgData.setSessionType(YouMaiMsg.SessionType.SESSION_TYPE_SINGLE);
 
         IMContentUtil imContentUtil = new IMContentUtil();
         imContentUtil.appendText(content);
@@ -574,6 +575,7 @@ public class HuxinSdkManager {
         msgData.setSrcMobile(getPhoneNum());
         msgData.setDestUserId(destUuid);
         msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_LOCATION);
+        msgData.setSessionType(YouMaiMsg.SessionType.SESSION_TYPE_SINGLE);
 
         IMContentUtil imContentUtil = new IMContentUtil();
         imContentUtil.appendLongitude(longitude + "");
@@ -610,6 +612,7 @@ public class HuxinSdkManager {
         msgData.setSrcMobile(getPhoneNum());
         msgData.setDestUserId(destUuid);
         msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_IMAGE);
+        msgData.setSessionType(YouMaiMsg.SessionType.SESSION_TYPE_SINGLE);
 
         IMContentUtil imContentUtil = new IMContentUtil();
         imContentUtil.appendPictureId(fileId);
@@ -643,6 +646,7 @@ public class HuxinSdkManager {
         msgData.setSrcMobile(getPhoneNum());
         msgData.setDestUserId(destUuid);
         msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_IMAGE);
+        msgData.setSessionType(YouMaiMsg.SessionType.SESSION_TYPE_SINGLE);
 
         IMContentUtil imContentUtil = new IMContentUtil();
         imContentUtil.appendAudioId(fileId);
@@ -679,6 +683,7 @@ public class HuxinSdkManager {
         msgData.setSrcMobile(getPhoneNum());
         msgData.setDestUserId(destUuid);
         msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_VIDEO);
+        msgData.setSessionType(YouMaiMsg.SessionType.SESSION_TYPE_SINGLE);
 
         IMContentUtil imContentUtil = new IMContentUtil();
         imContentUtil.addVideo(fileId, frameId, name, size, time);//body的内容
@@ -711,6 +716,7 @@ public class HuxinSdkManager {
         msgData.setSrcMobile(getPhoneNum());
         msgData.setDestUserId(destUuid);
         msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_FILE);
+        msgData.setSessionType(YouMaiMsg.SessionType.SESSION_TYPE_SINGLE);
 
         IMContentUtil imContentUtil = new IMContentUtil();
         imContentUtil.appendBigFileId(fileId, fileName, fileSize);
@@ -882,6 +888,7 @@ public class HuxinSdkManager {
         msgData.setSrcMobile(getPhoneNum());
         msgData.setGroupId(groupId);
         msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_TEXT);
+        msgData.setSessionType(YouMaiMsg.SessionType.SESSION_TYPE_MULTICHAT);
 
         IMContentUtil imContentUtil = new IMContentUtil();
         imContentUtil.appendText(content);
@@ -918,6 +925,7 @@ public class HuxinSdkManager {
         msgData.setSrcMobile(getPhoneNum());
         msgData.setGroupId(groupId);
         msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_LOCATION);
+        msgData.setSessionType(YouMaiMsg.SessionType.SESSION_TYPE_MULTICHAT);
 
         IMContentUtil imContentUtil = new IMContentUtil();
         imContentUtil.appendLongitude(longitude + "");
@@ -953,6 +961,7 @@ public class HuxinSdkManager {
         msgData.setSrcMobile(getPhoneNum());
         msgData.setGroupId(groupId);
         msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_IMAGE);
+        msgData.setSessionType(YouMaiMsg.SessionType.SESSION_TYPE_MULTICHAT);
 
         IMContentUtil imContentUtil = new IMContentUtil();
         imContentUtil.appendPictureId(fileId);
@@ -985,6 +994,7 @@ public class HuxinSdkManager {
         msgData.setSrcMobile(getPhoneNum());
         msgData.setGroupId(groupId);
         msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_IMAGE);
+        msgData.setSessionType(YouMaiMsg.SessionType.SESSION_TYPE_MULTICHAT);
 
         IMContentUtil imContentUtil = new IMContentUtil();
         imContentUtil.appendAudioId(fileId);
@@ -1020,6 +1030,7 @@ public class HuxinSdkManager {
         msgData.setSrcMobile(getPhoneNum());
         msgData.setGroupId(groupId);
         msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_VIDEO);
+        msgData.setSessionType(YouMaiMsg.SessionType.SESSION_TYPE_MULTICHAT);
 
         IMContentUtil imContentUtil = new IMContentUtil();
         imContentUtil.addVideo(fileId, frameId, name, size, time);//body的内容
@@ -1050,6 +1061,7 @@ public class HuxinSdkManager {
         msgData.setSrcMobile(getPhoneNum());
         msgData.setGroupId(groupId);
         msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_FILE);
+        msgData.setSessionType(YouMaiMsg.SessionType.SESSION_TYPE_MULTICHAT);
 
         IMContentUtil imContentUtil = new IMContentUtil();
         imContentUtil.appendBigFileId(fileId, fileName, fileSize);

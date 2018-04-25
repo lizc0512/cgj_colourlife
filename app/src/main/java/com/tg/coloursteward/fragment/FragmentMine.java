@@ -66,7 +66,7 @@ public class FragmentMine extends Fragment implements ItemClickListener, Respons
     private ImageView imgHead;
     private TextView tvRealName, tvJob;
     private RelativeLayout rlUserInfo;
-    private DisplayImageOptions options;
+    //private DisplayImageOptions options;
     private AlertDialog dialog;
     private MessageHandler msgHandler;
     protected ImageLoader imageLoader = ImageLoader.getInstance();
@@ -157,13 +157,13 @@ public class FragmentMine extends Fragment implements ItemClickListener, Respons
     }
 
     private void initOptions() {
-        options = new DisplayImageOptions.Builder()
+        /*options = new DisplayImageOptions.Builder()
                 .showImageOnLoading(R.drawable.placeholder2)
                 .showImageForEmptyUri(R.drawable.placeholder2)
                 .showImageOnFail(R.drawable.placeholder2).cacheInMemory(true)
                 .cacheOnDisc(true).considerExifParams(true)
                 // .displayer(new RoundedBitmapDisplayer(20))
-                .build();
+                .build();*/
     }
 
     /**

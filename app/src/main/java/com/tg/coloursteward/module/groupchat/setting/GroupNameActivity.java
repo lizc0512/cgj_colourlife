@@ -2,6 +2,7 @@ package com.tg.coloursteward.module.groupchat.setting;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.tg.coloursteward.R;
+import com.tg.coloursteward.module.groupchat.details.ChatGroupDetailsActivity;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.proto.YouMaiBasic;
 import com.youmai.hxsdk.proto.YouMaiGroup;
@@ -80,11 +82,10 @@ public class GroupNameActivity extends Activity {
             @Override
             public void onClick(View v) {
 
-                String groupName = et_user_name.getText().toString().trim();
+                final String groupName = et_user_name.getText().toString().trim();
                 InputMethodManager manager = (InputMethodManager) GroupNameActivity.this
                         .getSystemService(Context.INPUT_METHOD_SERVICE);
                 manager.hideSoftInputFromWindow(et_user_name.getWindowToken(), 0);
-
 
                 if (StringUtils.isEmpty(groupName)) {
                     return;
@@ -96,9 +97,11 @@ public class GroupNameActivity extends Activity {
                         try {
                             YouMaiGroup.GroupInfoModifyRsp ack = YouMaiGroup.GroupInfoModifyRsp.parseFrom(pduBase.body);
                             if (ack.getResult() == YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS) {
-
+                                Intent intent = new Intent();
+                                intent.putExtra(GROUP_NAME, groupName);
+                                setResult(ChatGroupDetailsActivity.RESULT_CODE, intent);
+                                finish();
                             }
-
                         } catch (InvalidProtocolBufferException e) {
                             e.printStackTrace();
                         }
@@ -121,11 +124,11 @@ public class GroupNameActivity extends Activity {
 
             @Override
             public void afterTextChanged(Editable s) {
-//                if (TextUtils.isEmpty(s.toString())) {
-//                    iv_user_delete.setVisibility(View.GONE);
-//                } else {
-//                    iv_user_delete.setVisibility(View.VISIBLE);
-//                }
+                /*if (TextUtils.isEmpty(s.toString())) {
+                    iv_user_delete.setVisibility(View.GONE);
+                } else {
+                    iv_user_delete.setVisibility(View.VISIBLE);
+                }*/
             }
         });
 
@@ -135,15 +138,6 @@ public class GroupNameActivity extends Activity {
                 et_user_name.setText("");
             }
         });
-    }
-
-    private void saveUserInfo(final String contentJson) {
-
-        if (!CommonUtils.isNetworkAvailable(this)) {
-            return;
-        }
-
-
     }
 
 }

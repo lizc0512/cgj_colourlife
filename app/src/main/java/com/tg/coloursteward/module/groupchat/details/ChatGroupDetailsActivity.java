@@ -16,6 +16,7 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import com.tg.coloursteward.EmployeeDataActivity;
 import com.tg.coloursteward.module.groupchat.AddContactsCreateGroupActivity;
 import com.tg.coloursteward.module.groupchat.deletecontact.DeleteContactListActivity;
+import com.tg.coloursteward.module.groupchat.setting.GroupManageActivity;
 import com.tg.coloursteward.module.groupchat.setting.GroupNameActivity;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.R;
@@ -48,9 +49,10 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
     public static final String GROUP_LIST = "GROUP_LIST";
     public static final String UPDATE_GROUP_LIST = "UPDATE_GROUP_LIST";
 
-    private static final int REQUEST_CODE_ADD = 100;
-    private static final int REQUEST_CODE_DELETE = 200;
-    public static final int RESULT_CODE = 300;
+    private static final int REQUEST_CODE_ADD = 101;
+    private static final int REQUEST_CODE_DELETE = 102;
+    private static final int REQUEST_CODE_MODIFY_NAME = 103;
+    public static final int RESULT_CODE = 201;
 
     private int mGroupId;
     private boolean isGroupOwner = false;  //是否群主
@@ -150,12 +152,11 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
                             groupList3.clear();
                         }
 
-
                         for (YouMaiGroup.GroupMemberItem item : memberListList) {
-
                             if (item.getMemberId().equals(HuxinSdkManager.instance().getUuid())) {
                                 if (item.getMemberRole() == 0) {
                                     isGroupOwner = true;
+                                    mRlGroupManage.setVisibility(View.VISIBLE);
                                 }
                             }
 
@@ -221,6 +222,17 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
                 intent.putExtra(GroupNameActivity.GROUP_NAME, mTvGroupName.getText().equals("未命名") ? "" : mTvGroupName.getText());
                 intent.putExtra(GroupNameActivity.GROUP_ID, mGroupId);
                 intent.setClass(ChatGroupDetailsActivity.this, GroupNameActivity.class);
+                startActivityForResult(intent, REQUEST_CODE_MODIFY_NAME);
+            }
+        });
+
+        mRlGroupManage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.putExtra(GroupNameActivity.GROUP_NAME, mTvGroupName.getText().equals("未命名") ? "" : mTvGroupName.getText());
+                intent.putExtra(GroupNameActivity.GROUP_ID, mGroupId);
+                intent.setClass(ChatGroupDetailsActivity.this, GroupManageActivity.class);
                 startActivity(intent);
             }
         });
@@ -276,15 +288,6 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
     @Override
     public void onItemClick(int pos, Contact contact) {
         String realname = contact.getRealname();
-//        if (!ListUtils.isEmpty(groupList2)) {
-//            groupList2.clear();
-//        }
-//        for (Contact con: groupList) {
-//            if (con.getRealname().equals("+") || con.getRealname().equals("-")) {
-//                continue;
-//            }
-//            groupList2.add(con);
-//        }
         if (realname.equals("+")) {
             ARouter.getInstance().build(APath.GROUP_CREATE_ADD_CONTACT)
                     .withParcelableArrayList(GROUP_LIST, (ArrayList<? extends Parcelable>) groupList2)
@@ -307,23 +310,13 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_CODE) {
-            List<Contact> updateList = data.getParcelableArrayListExtra(UPDATE_GROUP_LIST);
             if (requestCode == REQUEST_CODE_ADD) {
-//                groupList.addAll(updateList);
-//                groupList3.addAll(updateList);
                 createGroupMap();
             } else if (requestCode == REQUEST_CODE_DELETE) {
                 createGroupMap();
-//                for (Contact contact : updateList) {
-//                    String uuid = contact.getUuid();
-//                    Iterator<Contact> iterator = groupList.iterator();
-//                    while (iterator.hasNext()) {
-//                        Contact con = iterator.next();
-//                        if (con.getUuid().equals(uuid)) {
-//                            iterator.remove();
-//                        }
-//                    }
-//                }
+            } else if (requestCode == REQUEST_CODE_MODIFY_NAME) {
+                String groupName = data.getStringExtra(GroupNameActivity.GROUP_NAME);
+                mTvGroupName.setText(groupName);
             }
         }
     }

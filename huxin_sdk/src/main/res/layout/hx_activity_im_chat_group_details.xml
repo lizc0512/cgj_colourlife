@@ -37,7 +37,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginTop="10dp"
-                android:background="@color/hxs_color_white"
+                android:background="@drawable/hxb_list_item_selector"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp">
 
@@ -75,7 +75,7 @@
                 android:id="@+id/rl_group_notice"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:background="@color/hxs_color_white"
+                android:background="@drawable/hxb_list_item_selector"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
                 android:visibility="gone">
@@ -109,7 +109,7 @@
                 android:id="@+id/rl_group_manage"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:background="@color/hxs_color_white"
+                android:background="@drawable/hxb_list_item_selector"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
                 android:visibility="gone">
@@ -136,7 +136,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginTop="10dp"
-                android:background="@color/hxs_color_white"
+                android:background="@drawable/hxb_list_item_selector"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
                 android:visibility="gone">
@@ -196,7 +196,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginTop="10dp"
-                android:background="@color/hxs_color_white"
+                android:background="@drawable/hxb_list_item_selector"
                 android:gravity="center_vertical"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp">

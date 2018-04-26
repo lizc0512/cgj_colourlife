@@ -405,11 +405,42 @@ public class CacheMsgHelper {
      * @return
      */
 
-    public CacheMsgBean getCacheMsgFromDBById(Context context, long id) {
+    public CacheMsgBean getCacheMsgById(Context context, long id) {
         CacheMsgBeanDao cacheMsgBeanDao = GreenDBIMManager.instance(context).getCacheMsgDao();
         CacheMsgBean msgBean = cacheMsgBeanDao.queryBuilder().where(CacheMsgBeanDao.Properties.Id.eq(id)).unique();
         return msgBean;
     }
 
+
+    /**
+     * 通过群ID获取所有的聊天数据
+     *
+     * @param groupId
+     * @return
+     */
+
+    public List<CacheMsgBean> getCacheMsgGroupId(Context context, int groupId) {
+        CacheMsgBeanDao cacheMsgBeanDao = GreenDBIMManager.instance(context).getCacheMsgDao();
+        return cacheMsgBeanDao.queryBuilder()
+                .where(CacheMsgBeanDao.Properties.GroupId.eq(groupId))
+                .orderDesc(CacheMsgBeanDao.Properties.Id)
+                .list();
+    }
+
+
+    /**
+     * 通过群ID删除所有群聊天数据
+     *
+     * @param groupId
+     * @return
+     */
+
+    public void delCacheMsgGroupId(Context context, int groupId) {
+        CacheMsgBeanDao cacheMsgBeanDao = GreenDBIMManager.instance(context).getCacheMsgDao();
+        QueryBuilder<CacheMsgBean> qb = cacheMsgBeanDao.queryBuilder();
+        DeleteQuery<CacheMsgBean> dq = qb.where(CacheMsgBeanDao.Properties.GroupId.eq(groupId))
+                .buildDelete();
+        dq.executeDeleteWithoutDetachingEntities();
+    }
 
 }

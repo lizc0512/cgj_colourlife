@@ -210,7 +210,17 @@ public class IMMsgManager {
         public void OnRec(byte[] data) {
             try {
                 YouMaiGroup.GroupMemberChangeNotify notify = YouMaiGroup.GroupMemberChangeNotify.parseFrom(data);
-                notify.getMemberListList();
+                int groupId = notify.getGroupId();
+                List<YouMaiGroup.GroupMemberItem> list = notify.getMemberListList();
+                YouMaiGroup.GroupMemberOptType type = notify.getType();
+                if (type == YouMaiGroup.GroupMemberOptType.GROUP_MEMBER_OPT_DEL) {
+                    for (YouMaiGroup.GroupMemberItem item : list) {
+                        if (item.getMemberId().equals(HuxinSdkManager.instance().getUuid())) {
+                            CacheMsgHelper.instance().delCacheMsgGroupId(mContext, groupId);
+                            break;
+                        }
+                    }
+                }
 
             } catch (InvalidProtocolBufferException e) {
                 e.printStackTrace();

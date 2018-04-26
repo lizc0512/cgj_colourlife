@@ -220,7 +220,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             }
 
             if (model.getGroupId() > 0) {
-                itemView.message_icon.setImageResource(R.drawable.color_default_header);
+                itemView.message_icon.setImageResource(R.drawable.contacts_groupchat);
             } else {
                 String avatar = model.getTargetAvatar();
                 Glide.with(mContext).load(avatar)

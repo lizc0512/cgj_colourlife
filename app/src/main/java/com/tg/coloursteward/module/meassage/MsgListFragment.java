@@ -6,6 +6,8 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -22,6 +24,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
+import android.widget.TextView;
 
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.tg.coloursteward.DeskTopActivity;
@@ -80,7 +84,7 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
     private final int NEW_MESSAGE_UPDATE = 11;
     private final int NEW_MESSAGE_SET_TOP = 12;
     private final int NEW_MESSAGE_PROCESS = 13;
-    private List<CacheMsgBean> mIncomingMsgList = new ArrayList<>();
+    //private List<CacheMsgBean> mIncomingMsgList = new ArrayList<>();
     // incoming new message end
 
     boolean isTipWindowShow = true;
@@ -327,19 +331,48 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
 
         mMessageAdapter.setOnLongItemClickListener(new MessageAdapter.OnItemLongClickListener() {
             @Override
-            public void onItemLongClick(ExCacheMsgBean bean, int position) {
-                if (bean.getUiType() != MessageAdapter.ADAPTER_TYPE_SERACH) {
-                    ToastUtil.showToast(getContext(), "删除成功：" + position);
-                    ExCacheMsgBean cacheMsgBean = mMessageAdapter.getMessageList().get(position);
-                    mMessageAdapter.deleteMessage(position);
-                    CacheMsgHelper.instance().deleteAllMsg(getActivity(), cacheMsgBean.getTargetUuid());
-                    //去掉未读消息计数
-                    IMMsgManager.instance().removeBadge(cacheMsgBean.getTargetUuid());
-                }
+            public void onItemLongClick(View v, ExCacheMsgBean bean, int position) {
+                delPopUp(v, bean, position);
             }
         });
 
         registerBroadcast();
+    }
+
+    PopupWindow popupWindow;
+
+    private void delPopUp(View v, final ExCacheMsgBean bean, final int position) {
+        LayoutInflater layoutInflater = (LayoutInflater) getContext()
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View view = layoutInflater.inflate(com.youmai.hxsdk.R.layout.hx_im_del_lay, null);
+        if (popupWindow == null) {
+            popupWindow = new PopupWindow(view, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            popupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        }
+
+        popupWindow.setFocusable(true);
+        popupWindow.setOutsideTouchable(true);
+        popupWindow.showAsDropDown(v, 400, 0);
+        TextView tv_del = (TextView) view.findViewById(R.id.tv_del);
+
+        tv_del.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                delMsgChat(bean, position);
+                popupWindow.dismiss();
+            }
+        });
+    }
+
+    public void delMsgChat(ExCacheMsgBean bean, int position) {
+        if (bean.getUiType() != MessageAdapter.ADAPTER_TYPE_SERACH) {
+            ToastUtil.showToast(getContext(), "删除成功：" + position);
+            ExCacheMsgBean cacheMsgBean = mMessageAdapter.getMessageList().get(position);
+            mMessageAdapter.deleteMessage(position);
+            CacheMsgHelper.instance().deleteAllMsg(getActivity(), cacheMsgBean.getTargetUuid());
+            //去掉未读消息计数
+            IMMsgManager.instance().removeBadge(cacheMsgBean.getTargetUuid());
+        }
     }
 
 
@@ -435,8 +468,7 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
      */
     @Override
     public void onCallback(CacheMsgBean imComingMsg) {
-        if (imComingMsg != null & mIncomingMsgList != null) {
-            mIncomingMsgList.add(imComingMsg);
+        if (imComingMsg != null) {
             ExCacheMsgBean bean = new ExCacheMsgBean(imComingMsg);
             bean.setDisplayName(imComingMsg.getTargetName());
             mMessageAdapter.addTop(bean);

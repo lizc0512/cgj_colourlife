@@ -30,7 +30,6 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import q.rorbin.badgeview.QBadgeView;
@@ -220,14 +219,19 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 itemView.message_status.setVisibility(View.GONE);
             }
 
-            String avatar = model.getSenderAvatar();
-            Glide.with(mContext).load(avatar)
-                    .apply(new RequestOptions()
-                            .transform(new GlideRoundTransform())
-                            .placeholder(com.youmai.hxsdk.R.drawable.color_default_header)
-                            .error(com.youmai.hxsdk.R.drawable.color_default_header)
-                            .diskCacheStrategy(DiskCacheStrategy.RESOURCE))
-                    .into(itemView.message_icon);
+            if (model.getGroupId() > 0) {
+                itemView.message_icon.setImageResource(R.drawable.contacts_groupchat);
+            } else {
+                String avatar = model.getTargetAvatar();
+                Glide.with(mContext).load(avatar)
+                        .apply(new RequestOptions()
+                                .transform(new GlideRoundTransform())
+                                .placeholder(R.drawable.color_default_header)
+                                .error(R.drawable.color_default_header)
+                                .diskCacheStrategy(DiskCacheStrategy.RESOURCE))
+                        .into(itemView.message_icon);
+            }
+
         }
 
 
@@ -244,7 +248,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             @Override
             public boolean onLongClick(View v) {
                 if (mOnLongItemClickListener != null) {
-                    mOnLongItemClickListener.onItemLongClick(model, position);
+                    mOnLongItemClickListener.onItemLongClick(v, model, position);
                 }
                 return true;
             }
@@ -269,15 +273,15 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             if (item.getUiType() != MessageAdapter.ADAPTER_TYPE_NORMAL) {
                 continue;
             }
-
             if (item.getTargetUuid().equals(uuid)) {
                 messageList.remove(item);
-                messageList.add(1, msgBean);
-                Comparator comp = new SortComparator();
-                Collections.sort(messageList.subList(0, messageList.size()), comp);
                 break;
             }
         }
+
+        messageList.add(1, msgBean);
+        SortComparator comp = new SortComparator();
+        Collections.sort(messageList.subList(1, messageList.size()), comp);
 
         notifyDataSetChanged();
     }
@@ -297,7 +301,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     public interface OnItemLongClickListener {
-        void onItemLongClick(ExCacheMsgBean bean, int position);
+        void onItemLongClick(View v, ExCacheMsgBean bean, int position);
     }
 
     public class MsgItemSearch extends RecyclerView.ViewHolder {

@@ -71,6 +71,7 @@ public class CacheMsgBean implements Parcelable {
 
     private String targetName; //沟通对方的姓名
     private String targetUuid; //沟通列表查询的关键字段：eg:去重, 筛选时间最近的一条
+    private String targetAvatar; //沟通对方的头像
     private int msgStatus;  //消息发送状态
     private int progress;//保存下载进度
 
@@ -94,6 +95,7 @@ public class CacheMsgBean implements Parcelable {
         this.groupId = bean.getGroupId();  //标识群组id
         this.targetName = bean.getTargetName(); //沟通对方的姓名
         this.targetUuid = bean.getTargetUuid();
+        this.targetAvatar = bean.getTargetAvatar();//沟通对方的头像
         this.msgStatus = bean.getMsgStatus();
         this.progress = bean.getProgress();
     }
@@ -284,6 +286,16 @@ public class CacheMsgBean implements Parcelable {
         return this;
     }
 
+
+    public String getTargetAvatar() {
+        return targetAvatar;
+    }
+
+    public CacheMsgBean setTargetAvatar(String targetAvatar) {
+        this.targetAvatar = targetAvatar;
+        return this;
+    }
+
     public int getMsgStatus() {
         return msgStatus;
     }
@@ -324,11 +336,11 @@ public class CacheMsgBean implements Parcelable {
     }
 
 
-    @Generated(hash = 1932543152)
+    @Generated(hash = 1062192854)
     public CacheMsgBean(Long id, Long msgId, int msgType, long msgTime, String senderUserId,
                         String senderMobile, String senderSex, String senderRealName, String senderAvatar,
                         String receiverUserId, String contentJsonBody, int groupId, String targetName,
-                        String targetUuid, int msgStatus, int progress) {
+                        String targetUuid, String targetAvatar, int msgStatus, int progress) {
         this.id = id;
         this.msgId = msgId;
         this.msgType = msgType;
@@ -343,6 +355,7 @@ public class CacheMsgBean implements Parcelable {
         this.groupId = groupId;
         this.targetName = targetName;
         this.targetUuid = targetUuid;
+        this.targetAvatar = targetAvatar;
         this.msgStatus = msgStatus;
         this.progress = progress;
     }
@@ -369,6 +382,7 @@ public class CacheMsgBean implements Parcelable {
         dest.writeInt(this.groupId);
         dest.writeString(this.targetName);
         dest.writeString(this.targetUuid);
+        dest.writeString(this.targetAvatar);
         dest.writeInt(this.msgStatus);
         dest.writeInt(this.progress);
     }
@@ -388,6 +402,7 @@ public class CacheMsgBean implements Parcelable {
         this.groupId = in.readInt();
         this.targetName = in.readString();
         this.targetUuid = in.readString();
+        this.targetAvatar = in.readString();
         this.msgStatus = in.readInt();
         this.progress = in.readInt();
     }

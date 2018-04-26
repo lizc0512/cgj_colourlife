@@ -943,7 +943,7 @@ public class IMListAdapter extends RecyclerView.Adapter {
         if (ben.isRightUI()) {  //自己的头像
             avatar = HuxinSdkManager.instance().getHeadUrl();
         } else {
-            avatar = ben.getSenderAvatar();
+            avatar = ben.getTargetAvatar();
         }
 
         Glide.with(mAct).load(avatar)

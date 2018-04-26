@@ -46,10 +46,10 @@ public class MsgAsyncTaskLoader extends AsyncTaskLoader<List<ExCacheMsgBean>> {
 
     @Override
     public void deliverResult(List<ExCacheMsgBean> data) {
+        super.deliverResult(data);
         //锁屏后界面不在，loader被暂停
         if (!isStarted()) {
         }
-        super.deliverResult(data);
     }
 
     private List<ExCacheMsgBean> getCacheMsgFromDBDesc() {

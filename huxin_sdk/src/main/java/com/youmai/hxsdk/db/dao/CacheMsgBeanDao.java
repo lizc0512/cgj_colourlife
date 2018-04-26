@@ -38,8 +38,9 @@ public class CacheMsgBeanDao extends AbstractDao<CacheMsgBean, Long> {
         public final static Property GroupId = new Property(11, int.class, "groupId", false, "GROUP_ID");
         public final static Property TargetName = new Property(12, String.class, "targetName", false, "TARGET_NAME");
         public final static Property TargetUuid = new Property(13, String.class, "targetUuid", false, "TARGET_UUID");
-        public final static Property MsgStatus = new Property(14, int.class, "msgStatus", false, "MSG_STATUS");
-        public final static Property Progress = new Property(15, int.class, "progress", false, "PROGRESS");
+        public final static Property TargetAvatar = new Property(14, String.class, "targetAvatar", false, "TARGET_AVATAR");
+        public final static Property MsgStatus = new Property(15, int.class, "msgStatus", false, "MSG_STATUS");
+        public final static Property Progress = new Property(16, int.class, "progress", false, "PROGRESS");
     }
 
 
@@ -69,8 +70,9 @@ public class CacheMsgBeanDao extends AbstractDao<CacheMsgBean, Long> {
                 "\"GROUP_ID\" INTEGER NOT NULL ," + // 11: groupId
                 "\"TARGET_NAME\" TEXT," + // 12: targetName
                 "\"TARGET_UUID\" TEXT," + // 13: targetUuid
-                "\"MSG_STATUS\" INTEGER NOT NULL ," + // 14: msgStatus
-                "\"PROGRESS\" INTEGER NOT NULL );"); // 15: progress
+                "\"TARGET_AVATAR\" TEXT," + // 14: targetAvatar
+                "\"MSG_STATUS\" INTEGER NOT NULL ," + // 15: msgStatus
+                "\"PROGRESS\" INTEGER NOT NULL );"); // 16: progress
     }
 
     /** Drops the underlying database table. */
@@ -140,8 +142,13 @@ public class CacheMsgBeanDao extends AbstractDao<CacheMsgBean, Long> {
         if (targetUuid != null) {
             stmt.bindString(14, targetUuid);
         }
-        stmt.bindLong(15, entity.getMsgStatus());
-        stmt.bindLong(16, entity.getProgress());
+ 
+        String targetAvatar = entity.getTargetAvatar();
+        if (targetAvatar != null) {
+            stmt.bindString(15, targetAvatar);
+        }
+        stmt.bindLong(16, entity.getMsgStatus());
+        stmt.bindLong(17, entity.getProgress());
     }
 
     @Override
@@ -205,8 +212,13 @@ public class CacheMsgBeanDao extends AbstractDao<CacheMsgBean, Long> {
         if (targetUuid != null) {
             stmt.bindString(14, targetUuid);
         }
-        stmt.bindLong(15, entity.getMsgStatus());
-        stmt.bindLong(16, entity.getProgress());
+ 
+        String targetAvatar = entity.getTargetAvatar();
+        if (targetAvatar != null) {
+            stmt.bindString(15, targetAvatar);
+        }
+        stmt.bindLong(16, entity.getMsgStatus());
+        stmt.bindLong(17, entity.getProgress());
     }
 
     @Override
@@ -231,8 +243,9 @@ public class CacheMsgBeanDao extends AbstractDao<CacheMsgBean, Long> {
             cursor.getInt(offset + 11), // groupId
             cursor.isNull(offset + 12) ? null : cursor.getString(offset + 12), // targetName
             cursor.isNull(offset + 13) ? null : cursor.getString(offset + 13), // targetUuid
-            cursor.getInt(offset + 14), // msgStatus
-            cursor.getInt(offset + 15) // progress
+            cursor.isNull(offset + 14) ? null : cursor.getString(offset + 14), // targetAvatar
+            cursor.getInt(offset + 15), // msgStatus
+            cursor.getInt(offset + 16) // progress
         );
         return entity;
     }
@@ -253,8 +266,9 @@ public class CacheMsgBeanDao extends AbstractDao<CacheMsgBean, Long> {
         entity.setGroupId(cursor.getInt(offset + 11));
         entity.setTargetName(cursor.isNull(offset + 12) ? null : cursor.getString(offset + 12));
         entity.setTargetUuid(cursor.isNull(offset + 13) ? null : cursor.getString(offset + 13));
-        entity.setMsgStatus(cursor.getInt(offset + 14));
-        entity.setProgress(cursor.getInt(offset + 15));
+        entity.setTargetAvatar(cursor.isNull(offset + 14) ? null : cursor.getString(offset + 14));
+        entity.setMsgStatus(cursor.getInt(offset + 15));
+        entity.setProgress(cursor.getInt(offset + 16));
      }
     
     @Override

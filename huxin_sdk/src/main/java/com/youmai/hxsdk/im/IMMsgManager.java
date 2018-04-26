@@ -52,6 +52,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import me.leolin.shortcutbadger.ShortcutBadger;
 
@@ -75,10 +76,13 @@ public class IMMsgManager {
 
     private String mTargetId;
 
+    private LinkedBlockingQueue<Long> msgList;
+
 
     private IMMsgManager() {
         imMsgCallbackList = new ArrayList<>();
         pushMsgNotifyIdList = new ArrayList<>();
+        msgList = new LinkedBlockingQueue<>();
     }
 
     public synchronized static IMMsgManager instance() {
@@ -125,6 +129,17 @@ public class IMMsgManager {
             try {
                 YouMaiMsg.ChatMsg notify = YouMaiMsg.ChatMsg.parseFrom(data);
                 YouMaiMsg.MsgData imChat = notify.getData();
+                long msgId = imChat.getMsgId();
+                if (msgList.contains(msgId)) {
+                    Log.e(TAG, "接收到重复消息");
+                    return;
+                } else {
+                    msgList.offer(msgId);
+                    if (msgList.size() > 50) {
+                        msgList.poll();
+                    }
+                }
+
                 HuxinSdkManager.instance().sendMsgReply(imChat.getMsgId());
 
                 IMChat im = new IMChat(imChat, false);
@@ -144,6 +159,17 @@ public class IMMsgManager {
             try {
                 YouMaiMsg.ChatMsg notify = YouMaiMsg.ChatMsg.parseFrom(data);
                 YouMaiMsg.MsgData imChat = notify.getData();
+                long msgId = imChat.getMsgId();
+                if (msgList.contains(msgId)) {
+                    Log.e(TAG, "接收到重复消息");
+                    return;
+                } else {
+                    msgList.offer(msgId);
+                    if (msgList.size() > 50) {
+                        msgList.poll();
+                    }
+                }
+
                 HuxinSdkManager.instance().sendMsgReply(imChat.getMsgId());
 
                 IMChat im = new IMChat(imChat, true);

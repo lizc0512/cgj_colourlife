@@ -244,7 +244,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             @Override
             public boolean onLongClick(View v) {
                 if (mOnLongItemClickListener != null) {
-                    mOnLongItemClickListener.onItemLongClick(model, position);
+                    mOnLongItemClickListener.onItemLongClick(v, model, position);
                 }
                 return true;
             }
@@ -269,15 +269,15 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             if (item.getUiType() != MessageAdapter.ADAPTER_TYPE_NORMAL) {
                 continue;
             }
-
             if (item.getTargetUuid().equals(uuid)) {
                 messageList.remove(item);
-                messageList.add(1, msgBean);
-                Comparator comp = new SortComparator();
-                Collections.sort(messageList.subList(0, messageList.size()), comp);
                 break;
             }
         }
+
+        messageList.add(1, msgBean);
+        SortComparator comp = new SortComparator();
+        Collections.sort(messageList.subList(1, messageList.size()), comp);
 
         notifyDataSetChanged();
     }
@@ -297,7 +297,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     public interface OnItemLongClickListener {
-        void onItemLongClick(ExCacheMsgBean bean, int position);
+        void onItemLongClick(View v, ExCacheMsgBean bean, int position);
     }
 
     public class MsgItemSearch extends RecyclerView.ViewHolder {

@@ -192,7 +192,10 @@ public class IMMsgManager {
         public void OnRec(byte[] data) {
             try {
                 YouMaiGroup.GroupOptNotify notify = YouMaiGroup.GroupOptNotify.parseFrom(data);
-
+                int groupId = notify.getGroupId();
+                if (notify.getOptType() == 0) {  //解散群
+                    CacheMsgHelper.instance().delCacheMsgGroupId(mContext, groupId);
+                }
 
             } catch (InvalidProtocolBufferException e) {
                 e.printStackTrace();

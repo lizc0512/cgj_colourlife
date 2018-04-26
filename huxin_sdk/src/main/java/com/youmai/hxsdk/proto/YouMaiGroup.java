@@ -17122,6 +17122,34 @@ public final class YouMaiGroup {
          */
         com.google.protobuf.ByteString
         getTopicBytes();
+
+        /**
+         * <code>optional string owner_id = 6;</code>
+         * <p>
+         * <pre>
+         * 群主转让
+         * </pre>
+         */
+        boolean hasOwnerId();
+
+        /**
+         * <code>optional string owner_id = 6;</code>
+         * <p>
+         * <pre>
+         * 群主转让
+         * </pre>
+         */
+        String getOwnerId();
+
+        /**
+         * <code>optional string owner_id = 6;</code>
+         * <p>
+         * <pre>
+         * 群主转让
+         * </pre>
+         */
+        com.google.protobuf.ByteString
+        getOwnerIdBytes();
     }
 
     /**
@@ -17213,6 +17241,12 @@ public final class YouMaiGroup {
                             com.google.protobuf.ByteString bs = input.readBytes();
                             bitField0_ |= 0x00000010;
                             topic_ = bs;
+                            break;
+                        }
+                        case 50: {
+                            com.google.protobuf.ByteString bs = input.readBytes();
+                            bitField0_ |= 0x00000020;
+                            ownerId_ = bs;
                             break;
                         }
                     }
@@ -17477,12 +17511,70 @@ public final class YouMaiGroup {
             }
         }
 
+        public static final int OWNER_ID_FIELD_NUMBER = 6;
+        private Object ownerId_;
+
+        /**
+         * <code>optional string owner_id = 6;</code>
+         * <p>
+         * <pre>
+         * 群主转让
+         * </pre>
+         */
+        public boolean hasOwnerId() {
+            return ((bitField0_ & 0x00000020) == 0x00000020);
+        }
+
+        /**
+         * <code>optional string owner_id = 6;</code>
+         * <p>
+         * <pre>
+         * 群主转让
+         * </pre>
+         */
+        public String getOwnerId() {
+            Object ref = ownerId_;
+            if (ref instanceof String) {
+                return (String) ref;
+            } else {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                String s = bs.toStringUtf8();
+                if (bs.isValidUtf8()) {
+                    ownerId_ = s;
+                }
+                return s;
+            }
+        }
+
+        /**
+         * <code>optional string owner_id = 6;</code>
+         * <p>
+         * <pre>
+         * 群主转让
+         * </pre>
+         */
+        public com.google.protobuf.ByteString
+        getOwnerIdBytes() {
+            Object ref = ownerId_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (String) ref);
+                ownerId_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
         private void initFields() {
             userId_ = "";
             groupId_ = 0;
             groupName_ = "";
             groupAvatar_ = "";
             topic_ = "";
+            ownerId_ = "";
         }
 
         private byte memoizedIsInitialized = -1;
@@ -17514,6 +17606,9 @@ public final class YouMaiGroup {
             if (((bitField0_ & 0x00000010) == 0x00000010)) {
                 output.writeBytes(5, getTopicBytes());
             }
+            if (((bitField0_ & 0x00000020) == 0x00000020)) {
+                output.writeBytes(6, getOwnerIdBytes());
+            }
             getUnknownFields().writeTo(output);
         }
 
@@ -17543,6 +17638,10 @@ public final class YouMaiGroup {
             if (((bitField0_ & 0x00000010) == 0x00000010)) {
                 size += com.google.protobuf.CodedOutputStream
                         .computeBytesSize(5, getTopicBytes());
+            }
+            if (((bitField0_ & 0x00000020) == 0x00000020)) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeBytesSize(6, getOwnerIdBytes());
             }
             size += getUnknownFields().getSerializedSize();
             memoizedSerializedSize = size;
@@ -17697,6 +17796,8 @@ public final class YouMaiGroup {
                 bitField0_ = (bitField0_ & ~0x00000008);
                 topic_ = "";
                 bitField0_ = (bitField0_ & ~0x00000010);
+                ownerId_ = "";
+                bitField0_ = (bitField0_ & ~0x00000020);
                 return this;
             }
 
@@ -17745,6 +17846,10 @@ public final class YouMaiGroup {
                     to_bitField0_ |= 0x00000010;
                 }
                 result.topic_ = topic_;
+                if (((from_bitField0_ & 0x00000020) == 0x00000020)) {
+                    to_bitField0_ |= 0x00000020;
+                }
+                result.ownerId_ = ownerId_;
                 result.bitField0_ = to_bitField0_;
                 onBuilt();
                 return result;
@@ -17782,6 +17887,11 @@ public final class YouMaiGroup {
                 if (other.hasTopic()) {
                     bitField0_ |= 0x00000010;
                     topic_ = other.topic_;
+                    onChanged();
+                }
+                if (other.hasOwnerId()) {
+                    bitField0_ |= 0x00000020;
+                    ownerId_ = other.ownerId_;
                     onChanged();
                 }
                 this.mergeUnknownFields(other.getUnknownFields());
@@ -18220,6 +18330,112 @@ public final class YouMaiGroup {
                 }
                 bitField0_ |= 0x00000010;
                 topic_ = value;
+                onChanged();
+                return this;
+            }
+
+            private Object ownerId_ = "";
+
+            /**
+             * <code>optional string owner_id = 6;</code>
+             * <p>
+             * <pre>
+             * 群主转让
+             * </pre>
+             */
+            public boolean hasOwnerId() {
+                return ((bitField0_ & 0x00000020) == 0x00000020);
+            }
+
+            /**
+             * <code>optional string owner_id = 6;</code>
+             * <p>
+             * <pre>
+             * 群主转让
+             * </pre>
+             */
+            public String getOwnerId() {
+                Object ref = ownerId_;
+                if (!(ref instanceof String)) {
+                    com.google.protobuf.ByteString bs =
+                            (com.google.protobuf.ByteString) ref;
+                    String s = bs.toStringUtf8();
+                    if (bs.isValidUtf8()) {
+                        ownerId_ = s;
+                    }
+                    return s;
+                } else {
+                    return (String) ref;
+                }
+            }
+
+            /**
+             * <code>optional string owner_id = 6;</code>
+             * <p>
+             * <pre>
+             * 群主转让
+             * </pre>
+             */
+            public com.google.protobuf.ByteString
+            getOwnerIdBytes() {
+                Object ref = ownerId_;
+                if (ref instanceof String) {
+                    com.google.protobuf.ByteString b =
+                            com.google.protobuf.ByteString.copyFromUtf8(
+                                    (String) ref);
+                    ownerId_ = b;
+                    return b;
+                } else {
+                    return (com.google.protobuf.ByteString) ref;
+                }
+            }
+
+            /**
+             * <code>optional string owner_id = 6;</code>
+             * <p>
+             * <pre>
+             * 群主转让
+             * </pre>
+             */
+            public Builder setOwnerId(
+                    String value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000020;
+                ownerId_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string owner_id = 6;</code>
+             * <p>
+             * <pre>
+             * 群主转让
+             * </pre>
+             */
+            public Builder clearOwnerId() {
+                bitField0_ = (bitField0_ & ~0x00000020);
+                ownerId_ = getDefaultInstance().getOwnerId();
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string owner_id = 6;</code>
+             * <p>
+             * <pre>
+             * 群主转让
+             * </pre>
+             */
+            public Builder setOwnerIdBytes(
+                    com.google.protobuf.ByteString value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000020;
+                ownerId_ = value;
                 onChanged();
                 return this;
             }
@@ -19826,17 +20042,18 @@ public final class YouMaiGroup {
                         "e_time\030\003 \001(\004\"{\n\014GroupInfoRsp\022.\n\ngroup_in" +
                         "fo\030\001 \001(\0132\032.GroupInfo\022\016\n\006" +
                         "update\030\002 \001(\010\022+\n\006result\030\n \001(\0162\033.com.proto" +
-                        ".basic.ResultCode\"p\n\022GroupInfoModifyReq\022" +
-                        "\017\n\007user_id\030\001 \001(\t\022\020\n\010group_id\030\002 \001(\r\022\022\n\ngr" +
-                        "oup_name\030\003 \001(\t\022\024\n\014group_avatar\030\004 \001(\t\022\r\n\005" +
-                        "topic\030\005 \001(\t\"\203\001\n\022GroupInfoModifyRsp\022+\n\006re" +
-                        "sult\030\001 \001(\0162\033.ResultCode\022" +
-                        "\020\n\010group_id\030\002 \001(\r\022.\n\ngroup_info\030\003 \001(\0132\032.",
-                "GroupInfo\"[\n\027IMGroupInfo" +
-                        "ModifyNotify\022\020\n\010group_id\030\001 \001(\r\022.\n\ngroup_" +
-                        "info\030\002 \001(\0132\032.GroupInfo*H" +
-                        "\n\022GroupMemberOptType\022\030\n\024GROUP_MEMBER_OPT" +
-                        "_ADD\020\001\022\030\n\024GROUP_MEMBER_OPT_DEL\020\002"
+                        ".basic.ResultCode\"\202\001\n\022GroupInfoModifyReq" +
+                        "\022\017\n\007user_id\030\001 \001(\t\022\020\n\010group_id\030\002 \001(\r\022\022\n\ng" +
+                        "roup_name\030\003 \001(\t\022\024\n\014group_avatar\030\004 \001(\t\022\r\n" +
+                        "\005topic\030\005 \001(\t\022\020\n\010owner_id\030\006 \001(\t\"\203\001\n\022Group" +
+                        "InfoModifyRsp\022+\n\006result\030\001 \001(\0162\033.com.prot" +
+                        "o.basic.ResultCode\022\020\n\010group_id\030\002 \001(\r\022.\n\n",
+                "group_info\030\003 \001(\0132\032.Group" +
+                        "Info\"[\n\027IMGroupInfoModifyNotify\022\020\n\010group" +
+                        "_id\030\001 \001(\r\022.\n\ngroup_info\030\002 \001(\0132\032.com.prot" +
+                        "o.group.GroupInfo*H\n\022GroupMemberOptType\022" +
+                        "\030\n\024GROUP_MEMBER_OPT_ADD\020\001\022\030\n\024GROUP_MEMBE" +
+                        "R_OPT_DEL\020\002"
         };
         com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
                 new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -19958,7 +20175,7 @@ public final class YouMaiGroup {
         internal_static_com_proto_group_GroupInfoModifyReq_fieldAccessorTable = new
                 com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_proto_group_GroupInfoModifyReq_descriptor,
-                new String[]{"UserId", "GroupId", "GroupName", "GroupAvatar", "Topic",});
+                new String[]{"UserId", "GroupId", "GroupName", "GroupAvatar", "Topic", "OwnerId",});
         internal_static_com_proto_group_GroupInfoModifyRsp_descriptor =
                 getDescriptor().getMessageTypes().get(18);
         internal_static_com_proto_group_GroupInfoModifyRsp_fieldAccessorTable = new

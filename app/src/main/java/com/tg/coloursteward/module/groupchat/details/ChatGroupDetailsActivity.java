@@ -25,6 +25,8 @@ import com.youmai.hxsdk.adapter.PaddingItemDecoration;
 import com.youmai.hxsdk.config.ColorsConfig;
 import com.youmai.hxsdk.db.bean.Contact;
 import com.youmai.hxsdk.db.bean.GroupInfoBean;
+import com.youmai.hxsdk.db.helper.CacheMsgHelper;
+import com.youmai.hxsdk.im.IMMsgManager;
 import com.youmai.hxsdk.proto.YouMaiBasic;
 import com.youmai.hxsdk.proto.YouMaiGroup;
 import com.youmai.hxsdk.router.APath;
@@ -216,9 +218,18 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
-                intent.putExtra("name", mTvGroupName.getText().equals("未命名") ? "" : mTvGroupName.getText());
+                intent.putExtra(GroupNameActivity.GROUP_NAME, mTvGroupName.getText().equals("未命名") ? "" : mTvGroupName.getText());
+                intent.putExtra(GroupNameActivity.GROUP_ID, mGroupId);
                 intent.setClass(ChatGroupDetailsActivity.this, GroupNameActivity.class);
                 startActivity(intent);
+            }
+        });
+
+        mRlClearChatRecords.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CacheMsgHelper.instance().deleteAllMsg(ChatGroupDetailsActivity.this, mGroupId + "");
+                IMMsgManager.instance().removeBadge(mGroupId + ""); //去掉未读消息计数
             }
         });
     }

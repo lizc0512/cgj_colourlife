@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -12,7 +11,13 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.protobuf.InvalidProtocolBufferException;
 import com.tg.coloursteward.R;
+import com.youmai.hxsdk.HuxinSdkManager;
+import com.youmai.hxsdk.proto.YouMaiBasic;
+import com.youmai.hxsdk.proto.YouMaiGroup;
+import com.youmai.hxsdk.socket.PduBase;
+import com.youmai.hxsdk.socket.ReceiveListener;
 import com.youmai.hxsdk.utils.CommonUtils;
 import com.youmai.hxsdk.utils.StringUtils;
 
@@ -23,11 +28,15 @@ import com.youmai.hxsdk.utils.StringUtils;
  */
 public class GroupNameActivity extends Activity {
 
+    public static final String GROUP_ID = "groupId";
+    public static final String GROUP_NAME = "groupName";
+
     private TextView tv_back, tv_title, tv_title_right;
     private EditText et_user_name;
     private ImageView iv_user_delete;
 
     private String name;
+    private int groupId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,12 +54,11 @@ public class GroupNameActivity extends Activity {
         tv_title_right = (TextView) findViewById(R.id.tv_right_sure);
         et_user_name = (EditText) findViewById(R.id.et_user_name);
         iv_user_delete = (ImageView) findViewById(R.id.iv_user_delete);
-
     }
 
     private void initData() {
-
-        name = getIntent().getStringExtra("name");
+        groupId = getIntent().getIntExtra(GROUP_ID, -1);
+        name = getIntent().getStringExtra(GROUP_NAME);
         tv_title.setText("修改群名称");
         if (!StringUtils.isEmpty(name)) {
             et_user_name.setText(name);
@@ -72,12 +80,33 @@ public class GroupNameActivity extends Activity {
             @Override
             public void onClick(View v) {
 
-                String content = et_user_name.getText().toString().trim();
+                String groupName = et_user_name.getText().toString().trim();
                 InputMethodManager manager = (InputMethodManager) GroupNameActivity.this
                         .getSystemService(Context.INPUT_METHOD_SERVICE);
                 manager.hideSoftInputFromWindow(et_user_name.getWindowToken(), 0);
 
 
+                if (StringUtils.isEmpty(groupName)) {
+                    return;
+                }
+
+                ReceiveListener receiveListener = new ReceiveListener() {
+                    @Override
+                    public void OnRec(PduBase pduBase) {
+                        try {
+                            YouMaiGroup.GroupInfoModifyRsp ack = YouMaiGroup.GroupInfoModifyRsp.parseFrom(pduBase.body);
+                            if (ack.getResult() == YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS) {
+
+                            }
+
+                        } catch (InvalidProtocolBufferException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                };
+
+                HuxinSdkManager.instance().reqModifyGroupInfo(
+                        groupId, groupName, "", receiveListener);
             }
         });
 
@@ -92,11 +121,11 @@ public class GroupNameActivity extends Activity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (TextUtils.isEmpty(s.toString())) {
-                    iv_user_delete.setVisibility(View.GONE);
-                } else {
-                    iv_user_delete.setVisibility(View.VISIBLE);
-                }
+//                if (TextUtils.isEmpty(s.toString())) {
+//                    iv_user_delete.setVisibility(View.GONE);
+//                } else {
+//                    iv_user_delete.setVisibility(View.VISIBLE);
+//                }
             }
         });
 

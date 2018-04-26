@@ -19,13 +19,13 @@
         <LinearLayout
             android:id="@+id/item_chat_more_photo"
             android:layout_width="0dp"
-            android:layout_height="96dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical">
 
             <ImageView
-                android:layout_width="64dp"
-                android:layout_height="64dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal|center_vertical"
                 android:layout_marginTop="0dp"
                 android:src="@drawable/hx_im_bar_more_photo" />
@@ -43,13 +43,13 @@
         <LinearLayout
             android:id="@+id/item_chat_more_camera"
             android:layout_width="0dp"
-            android:layout_height="96dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical">
 
             <ImageView
-                android:layout_width="64dp"
-                android:layout_height="64dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal|center_vertical"
                 android:layout_marginTop="0dp"
                 android:src="@drawable/hx_im_bar_more_camera" />
@@ -67,13 +67,13 @@
         <LinearLayout
             android:id="@+id/item_chat_more_location"
             android:layout_width="0dp"
-            android:layout_height="96dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical">
 
             <ImageView
-                android:layout_width="64dp"
-                android:layout_height="64dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal|center_vertical"
                 android:layout_marginTop="0dp"
                 android:src="@drawable/hx_im_bar_more_location" />
@@ -91,13 +91,13 @@
         <LinearLayout
             android:id="@+id/item_chat_more_file"
             android:layout_width="0dp"
-            android:layout_height="96dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical">
 
             <ImageView
-                android:layout_width="64dp"
-                android:layout_height="64dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal|center_vertical"
                 android:layout_marginTop="0dp"
                 android:src="@drawable/hx_im_bar_more_file" />
@@ -116,6 +116,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
         android:orientation="horizontal"
         android:paddingBottom="4dp"
         android:paddingTop="8dp"
@@ -125,16 +126,16 @@
         <LinearLayout
             android:id="@+id/item_chat_more_card"
             android:layout_width="0dp"
-            android:layout_height="96dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical">
 
             <ImageView
-                android:layout_width="64dp"
-                android:layout_height="64dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal|center_vertical"
                 android:layout_marginTop="0dp"
-                android:src="@drawable/hx_im_bar_more_card" />
+                android:src="@drawable/hx_im_bar_more" />
 
             <TextView
                 android:layout_width="wrap_content"

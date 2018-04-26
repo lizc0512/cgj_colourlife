@@ -314,6 +314,18 @@ public class CacheMsgHelper {
     }
 
 
+    /**
+     * 备注：IMMsgManager
+     * 单条更新
+     *
+     * @param bean
+     */
+    public void updateList(Context context, CacheMsgBean bean) {
+        CacheMsgBeanDao cacheMsgBeanDao = GreenDBIMManager.instance(context).getCacheMsgDao();
+        cacheMsgBeanDao.update(bean);
+    }
+
+
     public List<CacheMsgBean> getCacheMsgBeanListFromStartIndex(Context context, long startIndex,
                                                                 String dstUuid, boolean setRead) {
         String selfUuid = HuxinSdkManager.instance().getUuid();

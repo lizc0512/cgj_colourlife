@@ -30,7 +30,6 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import q.rorbin.badgeview.QBadgeView;
@@ -220,14 +219,19 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 itemView.message_status.setVisibility(View.GONE);
             }
 
-            String avatar = model.getSenderAvatar();
-            Glide.with(mContext).load(avatar)
-                    .apply(new RequestOptions()
-                            .transform(new GlideRoundTransform())
-                            .placeholder(com.youmai.hxsdk.R.drawable.color_default_header)
-                            .error(com.youmai.hxsdk.R.drawable.color_default_header)
-                            .diskCacheStrategy(DiskCacheStrategy.RESOURCE))
-                    .into(itemView.message_icon);
+            if (model.getGroupId() > 0) {
+                itemView.message_icon.setImageResource(R.drawable.color_default_header);
+            } else {
+                String avatar = model.getSenderAvatar();
+                Glide.with(mContext).load(avatar)
+                        .apply(new RequestOptions()
+                                .transform(new GlideRoundTransform())
+                                .placeholder(R.drawable.color_default_header)
+                                .error(R.drawable.color_default_header)
+                                .diskCacheStrategy(DiskCacheStrategy.RESOURCE))
+                        .into(itemView.message_icon);
+            }
+
         }
 
 

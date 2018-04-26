@@ -26,6 +26,10 @@ import java.io.File;
 public class CameraActivity extends AppCompatActivity {
     private JCameraView jCameraView;
 
+    public static final int RESULT_CODE_IMAGE = 101;
+    public static final int RESULT_CODE_VIDEO = 102;
+    public static final int RESULT_CODE_ERROR = 103;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,7 +49,7 @@ public class CameraActivity extends AppCompatActivity {
                 //错误监听
                 Log.i("CJT", "camera error");
                 Intent intent = new Intent();
-                setResult(IMConnectionActivity.RESULT_CODE_ERROR, intent);
+                setResult(RESULT_CODE_ERROR, intent);
                 finish();
             }
 
@@ -62,7 +66,7 @@ public class CameraActivity extends AppCompatActivity {
                 String path = FileUtil.saveBitmap("HCamera", bitmap);
                 Intent intent = new Intent();
                 intent.putExtra("filePath", path);
-                setResult(IMConnectionActivity.RESULT_CODE_IMAGE, intent);
+                setResult(RESULT_CODE_IMAGE, intent);
                 finish();
             }
 
@@ -75,7 +79,7 @@ public class CameraActivity extends AppCompatActivity {
                 intent.putExtra("framePath", path);
                 intent.putExtra("filePath", url);
                 intent.putExtra("millisecond", millisecond);
-                setResult(IMConnectionActivity.RESULT_CODE_VIDEO, intent);
+                setResult(RESULT_CODE_VIDEO, intent);
                 finish();
             }
         });

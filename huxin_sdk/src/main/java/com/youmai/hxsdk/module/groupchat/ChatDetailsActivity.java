@@ -98,19 +98,17 @@ public class ChatDetailsActivity extends SdkBaseActivity {
     }
 
     void createGroupMap() {
+        Contact self = new Contact();
+        self.setUuid(HuxinSdkManager.instance().getUuid());
+        self.setAvatar(HuxinSdkManager.instance().getHeadUrl());
+        self.setRealname(HuxinSdkManager.instance().getRealName());
+        groupList.add(self);
+
         Contact contact = new Contact();
         contact.setUuid(uuid);
         contact.setRealname(realname);
         contact.setAvatar(avatar);
         groupList.add(contact);
-
-        Contact self = new Contact();
-        self.setUuid(HuxinSdkManager.instance().getUuid());
-        self.setAvatar(HuxinSdkManager.instance().getHeadUrl());
-        self.setRealname(HuxinSdkManager.instance().getRealName());
-        //self.setUsername(HuxinSdkManager.instance().getUserName());
-        groupList.add(self);
-
     }
 
     void setOnClickListener() {

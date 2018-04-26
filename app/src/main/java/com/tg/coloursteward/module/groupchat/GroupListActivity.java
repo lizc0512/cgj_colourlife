@@ -51,6 +51,11 @@ public class GroupListActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         mContext = this;
         initView();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         initData();
     }
 
@@ -137,7 +142,6 @@ public class GroupListActivity extends BaseActivity {
                     break;
                 }
             }
-
         }
         return id;
     }

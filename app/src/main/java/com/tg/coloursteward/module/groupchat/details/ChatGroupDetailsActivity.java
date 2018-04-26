@@ -16,6 +16,7 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import com.tg.coloursteward.EmployeeDataActivity;
 import com.tg.coloursteward.module.groupchat.AddContactsCreateGroupActivity;
 import com.tg.coloursteward.module.groupchat.deletecontact.DeleteContactListActivity;
+import com.tg.coloursteward.module.groupchat.setting.GroupNameActivity;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.activity.IMGroupActivity;
@@ -48,11 +49,8 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
     private static final int REQUEST_CODE_DELETE = 200;
     public static final int RESULT_CODE = 300;
 
-//    public static final String DS_NAME = "DS_NAME";
-//    public static final String DS_USER_AVATAR = "DS_USER_AVATAR";
-//    public static final String DS_UUID = "DS_UUID";
-
     private int mGroupId;
+    private boolean isGroupOwner = false;  //是否群主
 
     private TextView mTvBack, mTvTitle;
     private RecyclerView mGridView;
@@ -89,6 +87,7 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
         if (null != groupList2) {
             groupList2.clear();
         }
+        isGroupOwner = false;
     }
 
     void initView() {
@@ -142,7 +141,7 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
                             groupList3.clear();
                         }
 
-                        boolean isGroupOwner = false;
+
                         for (YouMaiGroup.GroupMemberItem item : memberListList) {
 
                             if (item.getMemberId().equals(HuxinSdkManager.instance().getUuid())) {
@@ -162,6 +161,10 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
                                 groupList3.add(contact);
                             }
                         }
+
+                        String title = String.format(getString(R.string.group_default_title),
+                                "聊天详情", groupList.size());
+                        mTvTitle.setText(title);
 
                         if (isGroupOwner) {
                             Contact contact1 = new Contact();
@@ -198,9 +201,58 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
         mTvExitGroup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(mContext, "删除并退出", Toast.LENGTH_SHORT).show();
+                exitAndDeleteGroup();
             }
         });
+
+        mRlGroupName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.putExtra("name", mTvGroupName.getText().equals("未命名") ? "" : mTvGroupName.getText());
+                intent.setClass(ChatGroupDetailsActivity.this, GroupNameActivity.class);
+                startActivity(intent);
+            }
+        });
+    }
+
+    void exitAndDeleteGroup() {
+        if (!isGroupOwner) {
+            updateGroup(2);
+        } else {
+            Toast.makeText(mContext, "群主暂时不能退群", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    void updateGroup(int role) {
+        List<YouMaiGroup.GroupMemberItem> list = new ArrayList<>();
+        //删除成员
+        YouMaiGroup.GroupMemberItem.Builder builder = YouMaiGroup.GroupMemberItem.newBuilder();
+        builder.setMemberId(HuxinSdkManager.instance().getUuid());
+        builder.setMemberName(HuxinSdkManager.instance().getRealName());
+        builder.setUserName(HuxinSdkManager.instance().getUserName());
+        builder.setMemberRole(role);
+        list.add(builder.build());
+
+        ReceiveListener listener = new ReceiveListener() {
+            @Override
+            public void OnRec(PduBase pduBase) {
+                try {
+                    YouMaiGroup.GroupMemberChangeRsp ack = YouMaiGroup.GroupMemberChangeRsp.parseFrom(pduBase.body);
+                    if (ack.getResult() == YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS) {
+                        Toast.makeText(ChatGroupDetailsActivity.this, "退出成功", Toast.LENGTH_SHORT).show();
+                        finish();
+                        HuxinSdkManager.instance().getStackAct().finishActivity(IMGroupActivity.class);
+                    }
+                } catch (InvalidProtocolBufferException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        HuxinSdkManager.instance().changeGroupMember(
+                YouMaiGroup.GroupMemberOptType.GROUP_MEMBER_OPT_DEL,
+                list, mGroupId, listener);
     }
 
     @Override

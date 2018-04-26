@@ -170,11 +170,7 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
         }
         Log.d("YW", "map size: " + mTotalMap.size());
 
-        if (mDetailType == 1) {
-            tv_Sure.setText("完成(" + (mTotalMap.size() - mContactList.size()) + ")");
-        } else {
-            tv_Sure.setText("完成(" + mTotalMap.size() + ")");
-        }
+        tv_Sure.setText("完成(" + mTotalMap.size() + ")");
 
         if (isFreshAdapter) {
             adapter.setCacheMap(mTotalMap);
@@ -289,9 +285,9 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
     void initGroupMap() {
         for (Contact contact : mContactList) {
             mGroupMap.put(contact.getUuid(), contact);
-            if (mDetailType == 1) {
-                mTotalMap.put(contact.getUuid(), contact);
-            }
+            //if (mDetailType == 1) {
+            //mTotalMap.put(contact.getUuid(), contact);
+            //}
         }
     }
 
@@ -393,22 +389,21 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
         if (data != null && !data.isEmpty()) {
             List<YouMaiGroup.GroupMemberItem> list = new ArrayList<>();
 
-            for (Map.Entry<String, Contact> entry : data.entrySet()) {
-                Contact item = entry.getValue();
-                YouMaiGroup.GroupMemberItem.Builder builder = YouMaiGroup.GroupMemberItem.newBuilder();
-                builder.setMemberId(item.getUuid());
-                builder.setMemberName(item.getRealname());
-                builder.setUserName(item.getAvatar() == null ? "" : item.getAvatar());
-                if (HuxinSdkManager.instance().getUuid().equals(item.getUuid())) {
-                    builder.setMemberRole(0);
-                } else {
-                    builder.setMemberRole(2);
+            StringBuffer sb = new StringBuffer();
+            for (Contact contact : mContactList) {
+                list.add(insertBuilder(contact).build());
+                if (!HuxinSdkManager.instance().getUuid().equals(contact.getUuid())) {
+                    sb.append(contact.getRealname() + "、");
                 }
-                list.add(builder.build());
             }
 
-            //String groupName = String.format(getString(R.string.group_default_name), list.size());
-            final String groupName = "群聊";
+            for (Map.Entry<String, Contact> entry : data.entrySet()) {
+                Contact item = entry.getValue();
+                list.add(insertBuilder(item).build());
+                sb.append(item.getRealname() + "、");
+            }
+
+            final String groupName = sb.deleteCharAt(sb.length() - 1).toString();
             HuxinSdkManager.instance().createGroup(groupName, list, new ReceiveListener() {
                 @Override
                 public void OnRec(PduBase pduBase) {
@@ -444,10 +439,23 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
         }
     }
 
+    YouMaiGroup.GroupMemberItem.Builder insertBuilder(Contact item) {
+        YouMaiGroup.GroupMemberItem.Builder builder = YouMaiGroup.GroupMemberItem.newBuilder();
+        builder.setMemberId(item.getUuid());
+        builder.setMemberName(item.getRealname());
+        builder.setUserName(item.getUsername());
+        if (HuxinSdkManager.instance().getUuid().equals(item.getUuid())) {
+            builder.setMemberRole(0);
+        } else {
+            builder.setMemberRole(2);
+        }
+        return builder;
+    }
+
     void updateGroup() {
         List<YouMaiGroup.GroupMemberItem> list = new ArrayList<>();
         //删除成员
-        for (Map.Entry<String, Contact> entry: mTotalMap.entrySet()) {
+        for (Map.Entry<String, Contact> entry : mTotalMap.entrySet()) {
             Contact item = entry.getValue();
             YouMaiGroup.GroupMemberItem.Builder builder = YouMaiGroup.GroupMemberItem.newBuilder();
             builder.setMemberId(item.getUuid());
@@ -466,7 +474,7 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
                         Toast.makeText(AddContactsCreateGroupActivity.this, "添加成员", Toast.LENGTH_SHORT).show();
 
                         ArrayList<Contact> list = new ArrayList<>();
-                        for (Map.Entry<String, Contact> entry: mTotalMap.entrySet()) {
+                        for (Map.Entry<String, Contact> entry : mTotalMap.entrySet()) {
                             Contact item = entry.getValue();
                             list.add(item);
                         }

@@ -238,6 +238,8 @@ public class IMGroupActivity extends SdkBaseActivity implements
         setContentView(R.layout.hx_activity_im_group);
         mContext = this;
 
+        HuxinSdkManager.instance().getStackAct().addActivity(this);
+
         mHandler = new NormalHandler(this);
 
         Intent fromIntent = getIntent();
@@ -445,6 +447,7 @@ public class IMGroupActivity extends SdkBaseActivity implements
         startService(intent);
 
         PhotoPickerManager.getInstance().clearMap();
+        HuxinSdkManager.instance().getStackAct().removeActivity(this);
 
     }
 

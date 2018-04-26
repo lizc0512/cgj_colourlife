@@ -20,5 +20,6 @@
     <color name="color_bg1">#F5F5F5</color>
     <color name="color_group_bg">#e2e2e2</color>
     <color name="color_group_bg2">#e4e4e4</color>
+    <color name="color_group_hint">#36adfd</color>
 
 </resources>

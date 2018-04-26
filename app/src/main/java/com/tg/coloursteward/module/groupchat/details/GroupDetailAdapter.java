@@ -27,6 +27,8 @@ import java.util.List;
  */
 public class GroupDetailAdapter extends RecyclerView.Adapter {
 
+    final String HEAD_ICON_URL = Contants.URl.HEAD_ICON_URL; //头像
+
     enum TYPE {
         ADD_DELETE, DEFAULT
     }

@@ -222,7 +222,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             if (model.getGroupId() > 0) {
                 itemView.message_icon.setImageResource(R.drawable.color_default_header);
             } else {
-                String avatar = model.getSenderAvatar();
+                String avatar = model.getTargetAvatar();
                 Glide.with(mContext).load(avatar)
                         .apply(new RequestOptions()
                                 .transform(new GlideRoundTransform())

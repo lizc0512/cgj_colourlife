@@ -673,6 +673,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
                 .setSenderUserId(HuxinSdkManager.instance().getUuid())
                 .setReceiverUserId(dstUuid)
                 .setTargetName(dstNickName)
+                .setTargetAvatar(dstAvatar)
                 .setTargetUuid(dstUuid);
     }
 

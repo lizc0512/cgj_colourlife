@@ -32,6 +32,7 @@ public class ChatDetailsActivity extends SdkBaseActivity {
     public static final String DS_NAME = "DS_NAME";
     public static final String DS_USER_AVATAR = "DS_USER_AVATAR";
     public static final String DS_UUID = "DS_UUID";
+    public static final String DS_USERNAME = "DS_USERNAME";
 
     private TextView mTvBack, mTvTitle;
     private ImageView mSelfHeader;
@@ -42,6 +43,7 @@ public class ChatDetailsActivity extends SdkBaseActivity {
     private String uuid;
     private String avatar;
     private String realname;
+    private String username;
 
     List<Contact> groupList = new ArrayList<>();
 
@@ -71,6 +73,7 @@ public class ChatDetailsActivity extends SdkBaseActivity {
         realname = getIntent().getStringExtra(DS_NAME);
         avatar = getIntent().getStringExtra(DS_USER_AVATAR);
         uuid = getIntent().getStringExtra(DS_UUID);
+        username = getIntent().getStringExtra(DS_USERNAME);
 
         mTvBack = findViewById(R.id.tv_back);
         mTvTitle = findViewById(R.id.tv_title);
@@ -99,16 +102,21 @@ public class ChatDetailsActivity extends SdkBaseActivity {
 
     void createGroupMap() {
         Contact self = new Contact();
-        self.setUuid(HuxinSdkManager.instance().getUuid());
+        String selfUid = HuxinSdkManager.instance().getUuid();
+        self.setUuid(selfUid);
         self.setAvatar(HuxinSdkManager.instance().getHeadUrl());
         self.setRealname(HuxinSdkManager.instance().getRealName());
+        self.setUsername(HuxinSdkManager.instance().getUserName());
         groupList.add(self);
 
-        Contact contact = new Contact();
-        contact.setUuid(uuid);
-        contact.setRealname(realname);
-        contact.setAvatar(avatar);
-        groupList.add(contact);
+        if (!selfUid.equals(uuid)) {
+            Contact contact = new Contact();
+            contact.setUuid(this.uuid);
+            contact.setRealname(realname);
+            contact.setAvatar(avatar);
+            contact.setUsername(username);
+            groupList.add(contact);
+        }
     }
 
     void setOnClickListener() {

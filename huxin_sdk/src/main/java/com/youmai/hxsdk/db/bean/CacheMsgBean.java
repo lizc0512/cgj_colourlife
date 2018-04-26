@@ -72,6 +72,7 @@ public class CacheMsgBean implements Parcelable {
     private String targetName; //沟通对方的姓名
     private String targetUuid; //沟通列表查询的关键字段：eg:去重, 筛选时间最近的一条
     private String targetAvatar; //沟通对方的头像
+    private String targetUserName; //用于拉取用户详情与拼接头像
     private int msgStatus;  //消息发送状态
     private int progress;//保存下载进度
 
@@ -94,8 +95,9 @@ public class CacheMsgBean implements Parcelable {
 
         this.groupId = bean.getGroupId();  //标识群组id
         this.targetName = bean.getTargetName(); //沟通对方的姓名
-        this.targetUuid = bean.getTargetUuid();
+        this.targetUserName = bean.getTargetUserName();
         this.targetAvatar = bean.getTargetAvatar();//沟通对方的头像
+        this.targetUuid = bean.getTargetUuid();
         this.msgStatus = bean.getMsgStatus();
         this.progress = bean.getProgress();
     }
@@ -314,6 +316,15 @@ public class CacheMsgBean implements Parcelable {
         return this;
     }
 
+    public String getTargetUserName() {
+        return targetUserName;
+    }
+
+    public CacheMsgBean setTargetUserName(String targetUserName) {
+        this.targetUserName = targetUserName;
+        return this;
+    }
+
     public int getProgress() {
         return progress;
     }
@@ -333,31 +344,6 @@ public class CacheMsgBean implements Parcelable {
     }
 
     public CacheMsgBean() {
-    }
-
-
-    @Generated(hash = 1062192854)
-    public CacheMsgBean(Long id, Long msgId, int msgType, long msgTime, String senderUserId,
-                        String senderMobile, String senderSex, String senderRealName, String senderAvatar,
-                        String receiverUserId, String contentJsonBody, int groupId, String targetName,
-                        String targetUuid, String targetAvatar, int msgStatus, int progress) {
-        this.id = id;
-        this.msgId = msgId;
-        this.msgType = msgType;
-        this.msgTime = msgTime;
-        this.senderUserId = senderUserId;
-        this.senderMobile = senderMobile;
-        this.senderSex = senderSex;
-        this.senderRealName = senderRealName;
-        this.senderAvatar = senderAvatar;
-        this.receiverUserId = receiverUserId;
-        this.contentJsonBody = contentJsonBody;
-        this.groupId = groupId;
-        this.targetName = targetName;
-        this.targetUuid = targetUuid;
-        this.targetAvatar = targetAvatar;
-        this.msgStatus = msgStatus;
-        this.progress = progress;
     }
 
 
@@ -381,6 +367,7 @@ public class CacheMsgBean implements Parcelable {
         dest.writeString(this.contentJsonBody);
         dest.writeInt(this.groupId);
         dest.writeString(this.targetName);
+        dest.writeString(this.targetUserName);
         dest.writeString(this.targetUuid);
         dest.writeString(this.targetAvatar);
         dest.writeInt(this.msgStatus);
@@ -401,10 +388,37 @@ public class CacheMsgBean implements Parcelable {
         this.contentJsonBody = in.readString();
         this.groupId = in.readInt();
         this.targetName = in.readString();
+        this.targetUserName = in.readString();
         this.targetUuid = in.readString();
         this.targetAvatar = in.readString();
         this.msgStatus = in.readInt();
         this.progress = in.readInt();
+    }
+
+    @Generated(hash = 249328713)
+    public CacheMsgBean(Long id, Long msgId, int msgType, long msgTime, String senderUserId,
+            String senderMobile, String senderSex, String senderRealName, String senderAvatar,
+            String receiverUserId, String contentJsonBody, int groupId, String targetName,
+            String targetUuid, String targetAvatar, String targetUserName, int msgStatus,
+            int progress) {
+        this.id = id;
+        this.msgId = msgId;
+        this.msgType = msgType;
+        this.msgTime = msgTime;
+        this.senderUserId = senderUserId;
+        this.senderMobile = senderMobile;
+        this.senderSex = senderSex;
+        this.senderRealName = senderRealName;
+        this.senderAvatar = senderAvatar;
+        this.receiverUserId = receiverUserId;
+        this.contentJsonBody = contentJsonBody;
+        this.groupId = groupId;
+        this.targetName = targetName;
+        this.targetUuid = targetUuid;
+        this.targetAvatar = targetAvatar;
+        this.targetUserName = targetUserName;
+        this.msgStatus = msgStatus;
+        this.progress = progress;
     }
 
     public static final Creator<CacheMsgBean> CREATOR = new Creator<CacheMsgBean>() {

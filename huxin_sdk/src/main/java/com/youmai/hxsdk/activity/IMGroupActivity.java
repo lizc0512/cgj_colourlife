@@ -45,6 +45,7 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.adapter.IMGroupAdapter;
+import com.youmai.hxsdk.config.ColorsConfig;
 import com.youmai.hxsdk.config.FileConfig;
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
 import com.youmai.hxsdk.db.bean.GroupInfoBean;
@@ -289,7 +290,12 @@ public class IMGroupActivity extends SdkBaseActivity implements
     }
 
     void updateGroupUI(GroupInfoBean groupInfo) {
-        tvTitle.setText(groupInfo.getGroup_name() + "(" + groupInfo.getGroup_member_count() + ")");
+        boolean contains = groupName.contains(ColorsConfig.GROUP_DEFAULT_NAME);
+        if (contains) {
+            tvTitle.setText("群聊" + "(" + groupInfo.getGroup_member_count() + ")");
+        } else {
+            tvTitle.setText(groupName + "(" + groupInfo.getGroup_member_count() + ")");
+        }
     }
 
     @Override
@@ -318,7 +324,7 @@ public class IMGroupActivity extends SdkBaseActivity implements
         groupId = intent.getIntExtra(DST_UUID, 0);
 
         if (!TextUtils.isEmpty(groupName)) {
-            tvTitle.setText(groupName);
+            initTitle();
         }
     }
 
@@ -449,11 +455,18 @@ public class IMGroupActivity extends SdkBaseActivity implements
 
     }
 
+    void initTitle() {
+        boolean contains = groupName.contains(ColorsConfig.GROUP_DEFAULT_NAME);
+        if (contains) {
+            tvTitle.setText("群聊");
+        } else {
+            tvTitle.setText(groupName);
+        }
+    }
 
     private void initView() {
         tvTitle = (TextView) findViewById(R.id.tv_title);
-        tvTitle.setText(groupName);
-
+        initTitle();
         TextView tvBack = (TextView) findViewById(R.id.tv_back);
         if (tvBack != null) {
             //tvBack.setVisibility(View.GONE);

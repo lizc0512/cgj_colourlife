@@ -127,6 +127,7 @@ public class EmployeeDataActivity extends BaseActivity {
                     Intent intent = new Intent();
                     intent.setClass(EmployeeDataActivity.this, IMConnectionActivity.class);
                     intent.putExtra(IMConnectionActivity.DST_UUID, item.getUid());
+                    intent.putExtra(IMConnectionActivity.DST_USERNAME, item.getUsername());
                     intent.putExtra(IMConnectionActivity.DST_NAME, item.getRealname());
                     intent.putExtra(IMConnectionActivity.DST_AVATAR, item.getAvatar());
                     //intent.putExtra(IMConnectionActivity.DST_PHONE, mobile);

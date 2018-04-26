@@ -311,6 +311,7 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
                     startActivity(intent);
                 } else {
                     Intent intent = new Intent();
+                    intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                     int groupId = bean.getGroupId();
                     if (groupId > 0) {
                         intent.setClass(getActivity(), IMGroupActivity.class);
@@ -320,6 +321,7 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
                         intent.setClass(getActivity(), IMConnectionActivity.class);
                         intent.putExtra(IMConnectionActivity.DST_UUID, bean.getTargetUuid());
                         intent.putExtra(IMConnectionActivity.DST_NAME, bean.getDisplayName());
+                        intent.putExtra(IMConnectionActivity.DST_USERNAME, bean.getTargetUserName());
                     }
 
                     startActivityForResult(intent, INTENT_REQUEST_FOR_UPDATE_UI);

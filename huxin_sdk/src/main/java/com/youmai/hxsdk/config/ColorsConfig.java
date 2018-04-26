@@ -9,6 +9,8 @@ import java.util.Map;
 
 public class ColorsConfig {
 
+    public static final String GROUP_DEFAULT_NAME = "GroupName:GOURP@#$%^&*()"; //默认群组名的前缀
+
     public static final String ColorLifeAppId_test = "739ca86c-ea5d-4dad-b8ae-f5277942d281";
     public static final String ColorLifeAppId = "9959f117-df60-4d1b-a354-776c20ffb8c7";  //彩生活服务集团
     public static final String ColorLifeAppName = "彩生活服务集团";  //彩生活服务集团

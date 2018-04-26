@@ -116,6 +116,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
     public static final String DST_UUID = "DST_UUID";
     public static final String DST_PHONE = "DST_PHONE";
     public static final String DST_AVATAR = "DST_AVATAR";
+    public static final String DST_USERNAME = "DST_USERNAME";
     public static final String EXTRA_SCROLL_POSITION = "EXTRA_SCROLL_POSITION";
 
     private static final int REQUEST_CODE_PICTURE = 200;
@@ -148,6 +149,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
     private String dstUuid;      //目标UUID
     private String dstPhone;      //目标手机号
     private String dstAvatar;     //目标的头像
+    private String dstUserName;   //目标的username
 
     private boolean isPauseOut = false;
     private boolean isOpenEmotion = false;
@@ -246,6 +248,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
         dstUuid = fromIntent.getStringExtra(DST_UUID);
         dstPhone = fromIntent.getStringExtra(DST_PHONE);
         dstAvatar = fromIntent.getStringExtra(DST_AVATAR);
+        dstUserName = fromIntent.getStringExtra(DST_USERNAME);
 
         if (StringUtils.isEmpty(dstUuid)) {
             dstUuid = HuxinSdkManager.instance().getUuid();
@@ -475,6 +478,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
                 intent.putExtra(ChatDetailsActivity.DS_NAME, dstNickName);
                 intent.putExtra(ChatDetailsActivity.DS_USER_AVATAR, dstAvatar);
                 intent.putExtra(ChatDetailsActivity.DS_UUID, dstUuid);
+                intent.putExtra(ChatDetailsActivity.DS_USERNAME, dstUserName);
                 startActivity(intent);
             }
         });
@@ -673,6 +677,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
                 .setSenderUserId(HuxinSdkManager.instance().getUuid())
                 .setReceiverUserId(dstUuid)
                 .setTargetName(dstNickName)
+                .setTargetUserName(dstUserName)
                 .setTargetAvatar(dstAvatar)
                 .setTargetUuid(dstUuid);
     }

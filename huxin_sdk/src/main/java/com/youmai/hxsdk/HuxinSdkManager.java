@@ -536,6 +536,7 @@ public class HuxinSdkManager {
         msgData.setSrcRealname(getRealName());
         msgData.setSrcMobile(getPhoneNum());
         msgData.setDestUserId(destUuid);
+        msgData.setSrcUserName(getUserName());
         msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_TEXT);
         msgData.setSessionType(YouMaiMsg.SessionType.SESSION_TYPE_SINGLE);
 
@@ -572,6 +573,7 @@ public class HuxinSdkManager {
         msgData.setSrcAvatar(getHeadUrl());
         msgData.setSrcSex(getSex());
         msgData.setSrcRealname(getRealName());
+        msgData.setSrcUserName(getUserName());
         msgData.setSrcMobile(getPhoneNum());
         msgData.setDestUserId(destUuid);
         msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_LOCATION);
@@ -609,6 +611,7 @@ public class HuxinSdkManager {
         msgData.setSrcAvatar(getHeadUrl());
         msgData.setSrcSex(getSex());
         msgData.setSrcRealname(getRealName());
+        msgData.setSrcUserName(getUserName());
         msgData.setSrcMobile(getPhoneNum());
         msgData.setDestUserId(destUuid);
         msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_IMAGE);
@@ -643,6 +646,7 @@ public class HuxinSdkManager {
         msgData.setSrcAvatar(getHeadUrl());
         msgData.setSrcSex(getSex());
         msgData.setSrcRealname(getRealName());
+        msgData.setSrcUserName(getUserName());
         msgData.setSrcMobile(getPhoneNum());
         msgData.setDestUserId(destUuid);
         msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_IMAGE);
@@ -680,6 +684,7 @@ public class HuxinSdkManager {
         msgData.setSrcAvatar(getHeadUrl());
         msgData.setSrcSex(getSex());
         msgData.setSrcRealname(getRealName());
+        msgData.setSrcUserName(getUserName());
         msgData.setSrcMobile(getPhoneNum());
         msgData.setDestUserId(destUuid);
         msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_VIDEO);
@@ -713,6 +718,7 @@ public class HuxinSdkManager {
         msgData.setSrcAvatar(getHeadUrl());
         msgData.setSrcSex(getSex());
         msgData.setSrcRealname(getRealName());
+        msgData.setSrcUserName(getUserName());
         msgData.setSrcMobile(getPhoneNum());
         msgData.setDestUserId(destUuid);
         msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_FILE);

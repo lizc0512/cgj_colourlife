@@ -14,6 +14,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.tg.coloursteward.R;
+import com.tg.coloursteward.module.groupchat.details.ChatGroupDetailsActivity;
+import com.youmai.hxsdk.config.ColorsConfig;
 import com.youmai.hxsdk.db.bean.GroupInfoBean;
 
 import java.util.List;
@@ -113,6 +115,14 @@ public class GroupListAdapter extends RecyclerView.Adapter {
             GroupViewHolder itemView = (GroupViewHolder) holder;
 
             final GroupInfoBean ben = mGroupList.get(currPos);
+
+            String displayName = ben.getGroup_name();
+            boolean contains = displayName.contains(ColorsConfig.GROUP_DEFAULT_NAME);
+            if (contains) {
+                displayName = displayName.replace(ColorsConfig.GROUP_DEFAULT_NAME, "");
+            }
+            itemView.message_name.setText(displayName);
+
             itemView.message_name.setText(ben.getGroup_name());
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

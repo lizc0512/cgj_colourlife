@@ -22,6 +22,7 @@ import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.activity.IMGroupActivity;
 import com.youmai.hxsdk.activity.SdkBaseActivity;
 import com.youmai.hxsdk.adapter.PaddingItemDecoration;
+import com.youmai.hxsdk.config.ColorsConfig;
 import com.youmai.hxsdk.db.bean.Contact;
 import com.youmai.hxsdk.db.bean.GroupInfoBean;
 import com.youmai.hxsdk.proto.YouMaiBasic;
@@ -108,7 +109,13 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
             String title = String.format(getString(R.string.group_default_title),
                     "聊天详情", mGroupInfo.getGroup_member_count());
             mTvTitle.setText(title);
-            mTvGroupName.setText(mGroupInfo.getGroup_name());
+
+            String group_name = mGroupInfo.getGroup_name();
+            if (group_name.contains(ColorsConfig.GROUP_DEFAULT_NAME)) {
+                mTvGroupName.setText("未命名");
+            } else {
+                mTvGroupName.setText(mGroupInfo.getGroup_name());
+            }
         } else {
             mTvTitle.setText("聊天详情");
         }
@@ -152,7 +159,7 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
 
                             Contact contact = new Contact();
                             contact.setRealname(item.getMemberName());
-                            contact.setAvatar(item.getUserName());
+                            contact.setUsername(item.getUserName());
                             contact.setUuid(item.getMemberId());
                             contact.setMemberRole(item.getMemberRole());
                             groupList.add(contact);

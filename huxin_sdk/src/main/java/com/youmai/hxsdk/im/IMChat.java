@@ -47,6 +47,7 @@ public class IMChat {
                 .setSenderAvatar(imChat.getSrcAvatar())
                 .setSenderRealName(imChat.getSrcRealname())
                 .setTargetName(imChat.getSrcRealname())
+                .setTargetUserName(imChat.getSrcUserName())
                 .setTargetAvatar(imChat.getSrcAvatar())
                 .setReceiverUserId(imChat.getDestUserId())
                 .setGroupId(imChat.getGroupId())

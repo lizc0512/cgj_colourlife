@@ -17,7 +17,9 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.tg.coloursteward.R;
+import com.tg.coloursteward.module.groupchat.details.ChatGroupDetailsActivity;
 import com.tg.coloursteward.util.StringUtils;
+import com.youmai.hxsdk.config.ColorsConfig;
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
 import com.youmai.hxsdk.im.IMMsgManager;
 import com.youmai.hxsdk.im.cache.CacheMsgTxt;
@@ -169,7 +171,13 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             final MsgItemChat itemView = (MsgItemChat) holder;
             itemView.message_item.setTag(position);
             itemView.message_time.setText(TimeFormatUtil.convertTimeMillli(mContext, model.getMsgTime()));
-            itemView.message_name.setText(model.getDisplayName());
+
+            String displayName = model.getDisplayName();
+            boolean contains = displayName.contains(ColorsConfig.GROUP_DEFAULT_NAME);
+            if (contains) {
+                displayName = displayName.replace(ColorsConfig.GROUP_DEFAULT_NAME, "");
+            }
+            itemView.message_name.setText(displayName);
 
             switch (model.getMsgType()) {
                 case CacheMsgBean.SEND_EMOTION:

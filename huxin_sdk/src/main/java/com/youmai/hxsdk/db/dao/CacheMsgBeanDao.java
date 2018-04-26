@@ -39,8 +39,9 @@ public class CacheMsgBeanDao extends AbstractDao<CacheMsgBean, Long> {
         public final static Property TargetName = new Property(12, String.class, "targetName", false, "TARGET_NAME");
         public final static Property TargetUuid = new Property(13, String.class, "targetUuid", false, "TARGET_UUID");
         public final static Property TargetAvatar = new Property(14, String.class, "targetAvatar", false, "TARGET_AVATAR");
-        public final static Property MsgStatus = new Property(15, int.class, "msgStatus", false, "MSG_STATUS");
-        public final static Property Progress = new Property(16, int.class, "progress", false, "PROGRESS");
+        public final static Property TargetUserName = new Property(15, String.class, "targetUserName", false, "TARGET_USER_NAME");
+        public final static Property MsgStatus = new Property(16, int.class, "msgStatus", false, "MSG_STATUS");
+        public final static Property Progress = new Property(17, int.class, "progress", false, "PROGRESS");
     }
 
 
@@ -71,8 +72,9 @@ public class CacheMsgBeanDao extends AbstractDao<CacheMsgBean, Long> {
                 "\"TARGET_NAME\" TEXT," + // 12: targetName
                 "\"TARGET_UUID\" TEXT," + // 13: targetUuid
                 "\"TARGET_AVATAR\" TEXT," + // 14: targetAvatar
-                "\"MSG_STATUS\" INTEGER NOT NULL ," + // 15: msgStatus
-                "\"PROGRESS\" INTEGER NOT NULL );"); // 16: progress
+                "\"TARGET_USER_NAME\" TEXT," + // 15: targetUserName
+                "\"MSG_STATUS\" INTEGER NOT NULL ," + // 16: msgStatus
+                "\"PROGRESS\" INTEGER NOT NULL );"); // 17: progress
     }
 
     /** Drops the underlying database table. */
@@ -147,8 +149,13 @@ public class CacheMsgBeanDao extends AbstractDao<CacheMsgBean, Long> {
         if (targetAvatar != null) {
             stmt.bindString(15, targetAvatar);
         }
-        stmt.bindLong(16, entity.getMsgStatus());
-        stmt.bindLong(17, entity.getProgress());
+ 
+        String targetUserName = entity.getTargetUserName();
+        if (targetUserName != null) {
+            stmt.bindString(16, targetUserName);
+        }
+        stmt.bindLong(17, entity.getMsgStatus());
+        stmt.bindLong(18, entity.getProgress());
     }
 
     @Override
@@ -217,8 +224,13 @@ public class CacheMsgBeanDao extends AbstractDao<CacheMsgBean, Long> {
         if (targetAvatar != null) {
             stmt.bindString(15, targetAvatar);
         }
-        stmt.bindLong(16, entity.getMsgStatus());
-        stmt.bindLong(17, entity.getProgress());
+ 
+        String targetUserName = entity.getTargetUserName();
+        if (targetUserName != null) {
+            stmt.bindString(16, targetUserName);
+        }
+        stmt.bindLong(17, entity.getMsgStatus());
+        stmt.bindLong(18, entity.getProgress());
     }
 
     @Override
@@ -244,8 +256,9 @@ public class CacheMsgBeanDao extends AbstractDao<CacheMsgBean, Long> {
             cursor.isNull(offset + 12) ? null : cursor.getString(offset + 12), // targetName
             cursor.isNull(offset + 13) ? null : cursor.getString(offset + 13), // targetUuid
             cursor.isNull(offset + 14) ? null : cursor.getString(offset + 14), // targetAvatar
-            cursor.getInt(offset + 15), // msgStatus
-            cursor.getInt(offset + 16) // progress
+            cursor.isNull(offset + 15) ? null : cursor.getString(offset + 15), // targetUserName
+            cursor.getInt(offset + 16), // msgStatus
+            cursor.getInt(offset + 17) // progress
         );
         return entity;
     }
@@ -267,8 +280,9 @@ public class CacheMsgBeanDao extends AbstractDao<CacheMsgBean, Long> {
         entity.setTargetName(cursor.isNull(offset + 12) ? null : cursor.getString(offset + 12));
         entity.setTargetUuid(cursor.isNull(offset + 13) ? null : cursor.getString(offset + 13));
         entity.setTargetAvatar(cursor.isNull(offset + 14) ? null : cursor.getString(offset + 14));
-        entity.setMsgStatus(cursor.getInt(offset + 15));
-        entity.setProgress(cursor.getInt(offset + 16));
+        entity.setTargetUserName(cursor.isNull(offset + 15) ? null : cursor.getString(offset + 15));
+        entity.setMsgStatus(cursor.getInt(offset + 16));
+        entity.setProgress(cursor.getInt(offset + 17));
      }
     
     @Override

@@ -46,6 +46,7 @@ import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.activity.IMConnectionActivity;
 import com.youmai.hxsdk.activity.IMGroupActivity;
 import com.youmai.hxsdk.activity.SdkBaseActivity;
+import com.youmai.hxsdk.config.ColorsConfig;
 import com.youmai.hxsdk.db.bean.Contact;
 import com.youmai.hxsdk.db.bean.GroupInfoBean;
 import com.youmai.hxsdk.entity.cn.CNPinyin;
@@ -389,10 +390,12 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
         if (data != null && !data.isEmpty()) {
             List<YouMaiGroup.GroupMemberItem> list = new ArrayList<>();
 
-            StringBuffer sb = new StringBuffer();
+            StringBuffer sb = new StringBuffer(ColorsConfig.GROUP_DEFAULT_NAME);
+            int count = 0;
             for (Contact contact : mContactList) {
                 list.add(insertBuilder(contact).build());
                 if (!HuxinSdkManager.instance().getUuid().equals(contact.getUuid())) {
+                    count++;
                     sb.append(contact.getRealname() + "、");
                 }
             }
@@ -400,7 +403,10 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
             for (Map.Entry<String, Contact> entry : data.entrySet()) {
                 Contact item = entry.getValue();
                 list.add(insertBuilder(item).build());
-                sb.append(item.getRealname() + "、");
+                if (count < 3) {
+                    count++;
+                    sb.append(item.getRealname() + "、");
+                }
             }
 
             final String groupName = sb.deleteCharAt(sb.length() - 1).toString();

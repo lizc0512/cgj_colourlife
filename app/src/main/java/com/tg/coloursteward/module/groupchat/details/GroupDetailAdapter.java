@@ -16,6 +16,7 @@ import com.tg.coloursteward.constant.Contants;
 import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.db.bean.Contact;
 import com.youmai.hxsdk.utils.GlideRoundTransform;
+import com.youmai.hxsdk.utils.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -97,8 +98,13 @@ public class GroupDetailAdapter extends RecyclerView.Adapter {
             ItemHolder itemHolder = (ItemHolder) holder;
             itemHolder.tv_name.setText(contact.getRealname());
 
+            String url = contact.getAvatar();
+            if (StringUtils.isEmpty(url)) {
+                url = HEAD_ICON_URL + "avatar?uid=" + contact.getUsername();
+            }
+
             Glide.with(mContext)
-                    .load(contact.getAvatar())
+                    .load(url)
                     .apply(new RequestOptions()
                             .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                             .centerCrop()

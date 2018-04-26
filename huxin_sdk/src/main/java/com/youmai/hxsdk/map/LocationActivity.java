@@ -48,15 +48,7 @@ import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.activity.SdkBaseActivity;
 import com.youmai.hxsdk.adapter.DividerItemDecoration;
-import com.youmai.hxsdk.db.bean.CacheMsgBean;
 import com.youmai.hxsdk.config.AppConfig;
-import com.youmai.hxsdk.db.helper.CacheMsgHelper;
-import com.youmai.hxsdk.im.cache.CacheMsgMap;
-import com.youmai.hxsdk.proto.YouMaiBasic;
-import com.youmai.hxsdk.proto.YouMaiMsg;
-import com.youmai.hxsdk.socket.PduBase;
-import com.youmai.hxsdk.socket.ReceiveListener;
-import com.youmai.hxsdk.utils.LogFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -214,13 +206,7 @@ public class LocationActivity extends SdkBaseActivity implements
             public void onClick(View v) {
                 if (adapter != null) {
                     PoiItem poiItem = adapter.getSelectPoiItem();
-                    boolean isUserByIm = getIntent().getBooleanExtra(FROM_TO_IM, false);
-                    if (!isUserByIm) {
-                        sendMarkerLocation(poiItem);
-                    } else {
-                        handle4Im(poiItem);
-                    }
-
+                    handle4Im(poiItem);
                 }
             }
         });
@@ -465,107 +451,6 @@ public class LocationActivity extends SdkBaseActivity implements
         finish();
     }
 
-
-    /**
-     * 发送marker的位置信息
-     */
-    public void sendMarkerLocation(PoiItem poiItem) {
-
-        double longitude = 0;
-        double latitude = 0;
-        String address = "";
-
-        if (poiItem != null) {
-            LatLonPoint point = poiItem.getLatLonPoint();
-            longitude = point.getLongitude();
-            latitude = point.getLatitude();
-            address = poiItem.getTitle() + ":" + poiItem.getSnippet();
-        } else if (marker != null) {
-            longitude = marker.getPosition().longitude;// 经度
-            latitude = marker.getPosition().latitude;// 纬度
-            address = marker.getTitle();// 地址
-        }
-
-        final int zoomLevel = (int) aMap.getCameraPosition().zoom;
-
-        //http://restapi.amap.com/v3/staticmap?location=113.481485,39.990464&zoom=10&size=750*300&markers=mid,,A:116.481485,39.990464&key=ee95e52bf08006f63fd29bcfbcf21df0
-        final String url = "http://restapi.amap.com/v3/staticmap?location="
-                + longitude + "," + latitude + "&zoom=" + zoomLevel
-                + "&size=600*400&traffic=1&markers=mid,0xff0000,A:" + longitude
-                + "," + latitude + "&key=" + AppConfig.staticMapKey;
-
-        final String userId = HuxinSdkManager.instance().getUuid();
-
-        /*************IM*************/
-
-        //todo_k: 地图
-        final CacheMsgBean cacheMsgBean = new CacheMsgBean()
-                .setMsgTime(System.currentTimeMillis())
-                .setMsgStatus(CacheMsgBean.SEND_GOING)
-                .setSenderUserId(userId)
-                .setReceiverUserId(dstUuid)
-                .setMsgType(CacheMsgBean.SEND_LOCATION)
-                .setJsonBodyObj(new CacheMsgMap()
-                        .setLatitude(latitude)
-                        .setLongitude(longitude)
-                        .setScale(zoomLevel)
-                        .setAddress(address)
-                        .setImgUrl(url));
-
-        //add to db
-        CacheMsgHelper.instance().insertOrUpdate(this, cacheMsgBean);
-
-
-        final double finalLongitude = longitude;
-        final double finalLatitude = latitude;
-        final String finalAddress = address;
-
-        final String content = longitude + "," + latitude;
-        ReceiveListener callback = new ReceiveListener() {
-            @Override
-            public void OnRec(PduBase pduBase) {
-                try {
-                    YouMaiMsg.ChatMsg_Ack ack = YouMaiMsg.ChatMsg_Ack.parseFrom(pduBase.body);
-                    long msgId = ack.getMsgId();
-                    final CacheMsgBean newMsgBean;
-                    if (dstUuid.equals(HuxinSdkManager.instance().getUuid())) {
-                        newMsgBean = CacheMsgHelper.instance().getCacheMsgFromDBById(mContext, cacheMsgBean.getId());
-                    } else {
-                        newMsgBean = cacheMsgBean;
-                    }
-
-                    newMsgBean.setMsgId(msgId);
-
-                    if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_OK) {
-                        newMsgBean.setMsgStatus(CacheMsgBean.SEND_SUCCEED);
-                        //add to db
-                        CacheMsgHelper.instance().insertOrUpdate(mContext, newMsgBean);
-
-
-                    } else {
-                        String log = "ErrerNo:" + ack.getErrerNo();
-                        //Toast.makeText(mContext, log, Toast.LENGTH_SHORT).show();
-                        LogFile.inStance().toFile(log);
-                    }
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onError(int errCode) {
-                super.onError(errCode);
-                cacheMsgBean.setMsgStatus(CacheMsgBean.SEND_FAILED);
-                //add to db
-                CacheMsgHelper.instance().insertOrUpdate(mContext, cacheMsgBean);
-            }
-        };
-
-        HuxinSdkManager.instance().sendLocation(userId, longitude, latitude, zoomLevel, address,
-                 callback);
-        finish();
-    }
 
     /**
      * 搜索附近

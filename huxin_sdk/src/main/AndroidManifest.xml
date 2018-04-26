@@ -121,17 +121,7 @@
         <!-- *************************************-->
 
         <activity
-            android:name="com.youmai.hxsdk.WrapSendFileActivity"
-            android:launchMode="singleInstance"
-            android:theme="@style/HxMsgTheme" />
-
-        <activity
             android:name="com.youmai.hxsdk.map.LocationActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/HxSdkTheme" />
-
-        <activity
-            android:name="com.youmai.hxsdk.PhotoPickerActivity"
             android:screenOrientation="portrait"
             android:theme="@style/HxSdkTheme" />
 
@@ -209,11 +199,6 @@
             android:screenOrientation="portrait" />
 
         <activity
-            android:name="com.youmai.hxsdk.WrapIMFilePreviewActivity"
-            android:configChanges="keyboardHidden|orientation"
-            android:screenOrientation="portrait" />
-
-        <activity
             android:name="com.youmai.hxsdk.module.picker.PhotoPreviewActivity"
             android:screenOrientation="portrait" />
 
@@ -271,11 +256,6 @@
         <!--视频播放-->
         <activity
             android:name=".module.videoplayer.VideoPlayerActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/HxSdkTheme" />
-
-        <activity
-            android:name=".activity.HookCameraActivity"
             android:screenOrientation="portrait"
             android:theme="@style/HxSdkTheme" />
 

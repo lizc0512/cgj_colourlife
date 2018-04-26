@@ -4,48 +4,22 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 
-import java.lang.ref.WeakReference;
-
 public abstract class SingleClickListener implements View.OnClickListener {
+
     public static final int RESTORE_CLICKT_EVENT_CODE = 1;
     private boolean needShield = false;
 
     public abstract void onSingleClick(View v);
 
-    private ClickHandler hand;
-
-    {
-        hand = new ClickHandler(this);
-    }
-
-//    private Handler hand = new Handler() {
-//        @Override
-//        public void handleMessage(Message msg) {
-//            super.handleMessage(msg);
-//            if (msg.what == RESTORE_CLICKT_EVENT_CODE) {
-//                needShield = false;
-//            }
-//        }
-//    };
-
-    private static class ClickHandler extends Handler {
-        WeakReference<SingleClickListener> weakReference;
-
-        public ClickHandler(SingleClickListener listener) {
-            weakReference = new WeakReference<>(listener);
-        }
-
+    private Handler hand = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            if (null == weakReference || null == weakReference.get()) {
-                return;
-            }
-            SingleClickListener singleClick = weakReference.get();
+            super.handleMessage(msg);
             if (msg.what == RESTORE_CLICKT_EVENT_CODE) {
-                singleClick.needShield = false;
+                needShield = false;
             }
         }
-    }
+    };
 
     @Override
     public void onClick(View v) {

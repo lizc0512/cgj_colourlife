@@ -858,6 +858,7 @@ public class HuxinSdkManager {
         builder.setGroupId(groupId);
         builder.setGroupName(groupName);
         builder.setGroupAvatar(groupAvatar);
+//        builder.setOwnerId("");
 
         YouMaiGroup.GroupInfoModifyReq group = builder.build();
 

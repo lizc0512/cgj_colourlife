@@ -5,6 +5,8 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 
+import com.youmai.hxsdk.R;
+
 /**
  * Created by colin on 2017/3/27.
  */
@@ -34,8 +36,9 @@ public class ForegroundEnablingService extends Service {
     private static final int NOTIFICATION_ID = 10;
 
     private static void startForeground(Service service) {
-        Notification notification = new Notification.Builder(service).getNotification();
-        service.startForeground(NOTIFICATION_ID, notification);
+        Notification.Builder builder = new Notification.Builder(service);
+        builder.setSmallIcon(R.drawable.img_msg);
+        service.startForeground(NOTIFICATION_ID, builder.build());
     }
 
     @Override

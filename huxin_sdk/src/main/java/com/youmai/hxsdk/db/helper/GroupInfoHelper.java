@@ -5,6 +5,7 @@ import android.content.Context;
 import com.youmai.hxsdk.db.bean.GroupInfoBean;
 import com.youmai.hxsdk.db.dao.GroupInfoBeanDao;
 import com.youmai.hxsdk.db.manager.GreenDBIMManager;
+import com.youmai.hxsdk.utils.ListUtils;
 
 import org.greenrobot.greendao.query.QueryBuilder;
 
@@ -58,5 +59,30 @@ public class GroupInfoHelper {
             dao.insertOrReplaceInTx(list);
         }
     }
+
+    /**
+     * 按照groupId 查询
+     *
+     * @param context
+     */
+    public GroupInfoBean toQueryByGroupId(Context context, int groupId) {
+        GroupInfoBeanDao dao = GreenDBIMManager.instance(context).getGroupInfoDao();
+        List<GroupInfoBean> list = dao.queryBuilder().where(GroupInfoBeanDao.Properties.Group_id.eq(groupId)).list();
+        if (!ListUtils.isEmpty(list)) {
+            return list.get(0);
+        }
+        return null;
+    }
+
+    /**
+     * 更新
+     * @param context
+     * @param bean
+     */
+    public void toUpdateByGroupId(Context context, GroupInfoBean bean) {
+        GroupInfoBeanDao dao = GreenDBIMManager.instance(context).getGroupInfoDao();
+        dao.insertOrReplace(bean);
+    }
+
 
 }

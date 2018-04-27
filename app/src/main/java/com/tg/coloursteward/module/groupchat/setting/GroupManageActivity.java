@@ -107,6 +107,8 @@ public class GroupManageActivity extends SdkBaseActivity {
                                 Intent intent = new Intent();
                                 setResult(ChatGroupDetailsActivity.RESULT_CODE, intent);
                                 finish();
+                            } else {
+                                Toast.makeText(mContext, "群主管理权转让失败", Toast.LENGTH_SHORT).show();
                             }
                         } catch (InvalidProtocolBufferException e) {
                             e.printStackTrace();

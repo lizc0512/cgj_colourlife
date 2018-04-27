@@ -10,7 +10,9 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.tg.coloursteward.R;
@@ -20,30 +22,32 @@ import com.youmai.hxsdk.proto.YouMaiBasic;
 import com.youmai.hxsdk.proto.YouMaiGroup;
 import com.youmai.hxsdk.socket.PduBase;
 import com.youmai.hxsdk.socket.ReceiveListener;
-import com.youmai.hxsdk.utils.CommonUtils;
 import com.youmai.hxsdk.utils.StringUtils;
 
 /**
  * 作者：create by YW
  * 日期：2018.04.26 17:05
- * 描述: 群名设置
+ * 描述: 群公告设置
  */
-public class GroupNameActivity extends Activity {
+public class GroupNoticeActivity extends Activity {
 
     public static final String GROUP_ID = "groupId";
-    public static final String GROUP_NAME = "groupName";
+    public static final String GROUP_NOTICE = "groupNotice";
+    public static final String IS_GROUP_OWNER = "IS_GROUP_OWNER";
 
     private TextView tv_back, tv_title, tv_title_right;
-    private EditText et_user_name;
-    private ImageView iv_user_delete;
+    private EditText et_owner_notice;
+    private TextView tv_not_owner;
+    private LinearLayout ll_tip;
 
-    private String name;
+    private String notice;
     private int groupId;
+    private boolean is_owner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.group_name_setting);
+        setContentView(R.layout.group_notice_setting);
 
         initView();
         initData();
@@ -51,21 +55,36 @@ public class GroupNameActivity extends Activity {
     }
 
     private void initView() {
-        tv_back = (TextView) findViewById(R.id.tv_left_cancel);
-        tv_title = (TextView) findViewById(R.id.tv_title);
-        tv_title_right = (TextView) findViewById(R.id.tv_right_sure);
-        et_user_name = (EditText) findViewById(R.id.et_user_name);
-        iv_user_delete = (ImageView) findViewById(R.id.iv_user_delete);
+        tv_back = findViewById(R.id.tv_left_cancel);
+        tv_title = findViewById(R.id.tv_title);
+        tv_title_right = findViewById(R.id.tv_right_sure);
+        et_owner_notice = findViewById(R.id.et_user_notice);
+        tv_not_owner = findViewById(R.id.tv_default);
+
+        ll_tip = findViewById(R.id.ll_not_owner_tip);
     }
 
     private void initData() {
         groupId = getIntent().getIntExtra(GROUP_ID, -1);
-        name = getIntent().getStringExtra(GROUP_NAME);
-        tv_title.setText("修改群名称");
-        if (!StringUtils.isEmpty(name)) {
-            et_user_name.setText(name);
+        notice = getIntent().getStringExtra(GROUP_NOTICE);
+        is_owner = getIntent().getBooleanExtra(IS_GROUP_OWNER, false);
+        tv_title.setText("群公告");
+        if (is_owner) {
+            ll_tip.setVisibility(View.GONE);
+            tv_not_owner.setVisibility(View.GONE);
+            et_owner_notice.setVisibility(View.VISIBLE);
+            tv_title_right.setVisibility(View.VISIBLE);
+        } else {
+            et_owner_notice.setVisibility(View.GONE);
+            tv_title_right.setVisibility(View.GONE);
+            tv_not_owner.setVisibility(View.VISIBLE);
+            ll_tip.setVisibility(View.VISIBLE);
         }
-        et_user_name.setSelection(et_user_name.getText().length());
+        if (!StringUtils.isEmpty(notice)) {
+            tv_not_owner.setText(notice);
+            et_owner_notice.setText(notice);
+        }
+        et_owner_notice.setSelection(et_owner_notice.getText().length());
 
     }
 
@@ -82,12 +101,12 @@ public class GroupNameActivity extends Activity {
             @Override
             public void onClick(View v) {
 
-                final String groupName = et_user_name.getText().toString().trim();
-                InputMethodManager manager = (InputMethodManager) GroupNameActivity.this
+                final String groupNotice = et_owner_notice.getText().toString().trim();
+                InputMethodManager manager = (InputMethodManager) GroupNoticeActivity.this
                         .getSystemService(Context.INPUT_METHOD_SERVICE);
-                manager.hideSoftInputFromWindow(et_user_name.getWindowToken(), 0);
+                manager.hideSoftInputFromWindow(et_owner_notice.getWindowToken(), 0);
 
-                if (StringUtils.isEmpty(groupName)) {
+                if (StringUtils.isEmpty(groupNotice)) {
                     return;
                 }
 
@@ -98,7 +117,7 @@ public class GroupNameActivity extends Activity {
                             YouMaiGroup.GroupInfoModifyRsp ack = YouMaiGroup.GroupInfoModifyRsp.parseFrom(pduBase.body);
                             if (ack.getResult() == YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS) {
                                 Intent intent = new Intent();
-                                intent.putExtra(GROUP_NAME, groupName);
+                                intent.putExtra(GROUP_NOTICE, groupNotice);
                                 setResult(ChatGroupDetailsActivity.RESULT_CODE, intent);
                                 finish();
                             }
@@ -109,33 +128,7 @@ public class GroupNameActivity extends Activity {
                 };
 
                 HuxinSdkManager.instance().reqModifyGroupInfo(
-                        groupId, groupName, "", "", receiveListener);
-            }
-        });
-
-        et_user_name.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                /*if (TextUtils.isEmpty(s.toString())) {
-                    iv_user_delete.setVisibility(View.GONE);
-                } else {
-                    iv_user_delete.setVisibility(View.VISIBLE);
-                }*/
-            }
-        });
-
-        iv_user_delete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                et_user_name.setText("");
+                        groupId, "", groupNotice, "", receiveListener);
             }
         });
     }

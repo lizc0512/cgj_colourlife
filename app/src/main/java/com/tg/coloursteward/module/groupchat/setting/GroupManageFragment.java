@@ -39,7 +39,7 @@ public class GroupManageFragment extends Fragment implements GroupTransAdapter.I
 
     private static final String TAG = ContactsFragment.class.getName();
 
-    private RecyclerView rv_main;
+       private RecyclerView rv_main;
     private GroupTransAdapter adapter;
 
     private CharIndexView iv_main;

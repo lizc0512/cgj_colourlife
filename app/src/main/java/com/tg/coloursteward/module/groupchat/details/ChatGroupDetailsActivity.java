@@ -18,6 +18,7 @@ import com.tg.coloursteward.module.groupchat.AddContactsCreateGroupActivity;
 import com.tg.coloursteward.module.groupchat.deletecontact.DeleteContactListActivity;
 import com.tg.coloursteward.module.groupchat.setting.GroupManageActivity;
 import com.tg.coloursteward.module.groupchat.setting.GroupNameActivity;
+import com.tg.coloursteward.module.groupchat.setting.GroupNoticeActivity;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.activity.IMGroupActivity;
@@ -34,6 +35,7 @@ import com.youmai.hxsdk.router.APath;
 import com.youmai.hxsdk.socket.PduBase;
 import com.youmai.hxsdk.socket.ReceiveListener;
 import com.youmai.hxsdk.utils.ListUtils;
+import com.youmai.hxsdk.utils.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,6 +54,7 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
     private static final int REQUEST_CODE_ADD = 101;
     private static final int REQUEST_CODE_DELETE = 102;
     private static final int REQUEST_CODE_MODIFY_NAME = 103;
+    private static final int REQUEST_CODE_MODIFY_NOTICE_TOPIC = 104;
     public static final int RESULT_CODE = 201;
 
     private int mGroupId;
@@ -65,6 +68,7 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
     private RelativeLayout mRlClearChatRecords;
     private TextView mTvExitGroup;
     private TextView mTvGroupName;
+    private TextView mtvNoticeContent;
 
     private GroupDetailAdapter mAdapter;
 
@@ -107,6 +111,7 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
         mRlGroupManage = findViewById(R.id.rl_group_manage);
         mRlClearChatRecords = findViewById(R.id.rl_clear_chat_records);
         mTvExitGroup = findViewById(R.id.tv_exit_group);
+        mtvNoticeContent = findViewById(R.id.tv_notice_content);
 
 
         if (mGroupInfo != null) {
@@ -118,7 +123,14 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
             if (group_name.contains(ColorsConfig.GROUP_DEFAULT_NAME)) {
                 mTvGroupName.setText("未命名");
             } else {
-                mTvGroupName.setText(mGroupInfo.getGroup_name());
+                mTvGroupName.setText(group_name);
+            }
+
+            String group_topic = mGroupInfo.getTopic();
+            if (StringUtils.isEmpty(group_topic)) {
+                mtvNoticeContent.setText("未命名");
+            } else {
+                mtvNoticeContent.setText(group_topic);
             }
         } else {
             mTvTitle.setText("聊天详情");
@@ -230,11 +242,37 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
-                intent.putExtra(GroupNameActivity.GROUP_NAME, mTvGroupName.getText().equals("未命名") ? "" : mTvGroupName.getText());
-                intent.putExtra(GroupNameActivity.GROUP_ID, mGroupId);
+                intent.putExtra(GroupManageActivity.GROUP_NAME, mTvGroupName.getText().equals("未命名") ? "" : mTvGroupName.getText());
+                intent.putExtra(GroupManageActivity.GROUP_ID, mGroupId);
                 intent.putParcelableArrayListExtra(GroupManageActivity.GROUP_LIST, (ArrayList<? extends Parcelable>) groupList3);
                 intent.setClass(ChatGroupDetailsActivity.this, GroupManageActivity.class);
                 startActivity(intent);
+            }
+        });
+
+        mRlGroupNotice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boolean isNotNotice = mtvNoticeContent.getText().equals("未设置");
+                if (isGroupOwner) {
+                    Intent intent = new Intent();
+                    intent.putExtra(GroupNoticeActivity.GROUP_NOTICE, isNotNotice ? "" : mtvNoticeContent.getText());
+                    intent.putExtra(GroupNoticeActivity.GROUP_ID, mGroupId);
+                    intent.putExtra(GroupNoticeActivity.IS_GROUP_OWNER, true);
+                    intent.setClass(ChatGroupDetailsActivity.this, GroupNoticeActivity.class);
+                    startActivityForResult(intent, REQUEST_CODE_MODIFY_NOTICE_TOPIC);
+                } else {
+                    if (isNotNotice) {
+                        Toast.makeText(mContext, "只有群主才能修改群公告", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Intent intent = new Intent();
+                        intent.putExtra(GroupNoticeActivity.GROUP_NOTICE, isNotNotice ? "" : mtvNoticeContent.getText());
+                        intent.putExtra(GroupNoticeActivity.GROUP_ID, mGroupId);
+                        intent.putExtra(GroupNoticeActivity.IS_GROUP_OWNER, false);
+                        intent.setClass(ChatGroupDetailsActivity.this, GroupNoticeActivity.class);
+                        startActivityForResult(intent, REQUEST_CODE_MODIFY_NOTICE_TOPIC);
+                    }
+                }
             }
         });
 
@@ -318,6 +356,9 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
             } else if (requestCode == REQUEST_CODE_MODIFY_NAME) {
                 String groupName = data.getStringExtra(GroupNameActivity.GROUP_NAME);
                 mTvGroupName.setText(groupName);
+            } else if (requestCode == REQUEST_CODE_MODIFY_NOTICE_TOPIC) {
+                String groupNotice = data.getStringExtra(GroupNoticeActivity.GROUP_NOTICE);
+                mtvNoticeContent.setText(groupNotice);
             }
         }
     }

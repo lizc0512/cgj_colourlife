@@ -573,7 +573,7 @@ public class IMMsgManager {
         }
     }
 
-    private void notifyMsg(Context context, String targetId, String disName, String content,
+    private void notifyMsg(Context context, String targetId, String desName, String content,
                            boolean isFormPush, boolean isGroup) {
         if (!isGroup && AppUtils.isTopActiviy(mContext, IMConnectionActivity.class.getName())
                 && !TextUtils.isEmpty(mTargetId)
@@ -613,7 +613,7 @@ public class IMMsgManager {
         }
 
         builder.setSmallIcon(getNotificationIcon())
-                .setContentTitle(context.getString(R.string.from) + HuxinSdkManager.instance().getRealName())
+                .setContentTitle(context.getString(R.string.from) + desName)
                 .setContentText(content)
                 .setTicker(content)
                 .setDefaults(Notification.DEFAULT_ALL)
@@ -627,14 +627,14 @@ public class IMMsgManager {
             try {
                 int groupId = Integer.parseInt(targetId);
                 resultIntent.putExtra(IMGroupActivity.DST_UUID, groupId);
-                resultIntent.putExtra(IMGroupActivity.DST_NAME, disName);
+                resultIntent.putExtra(IMGroupActivity.DST_NAME, desName);
             } catch (NumberFormatException e) {
                 e.printStackTrace();
             }
         } else {
             resultIntent = new Intent(context, IMConnectionActivity.class);
             resultIntent.putExtra(IMConnectionActivity.DST_UUID, targetId);
-            resultIntent.putExtra(IMConnectionActivity.DST_NAME, disName);
+            resultIntent.putExtra(IMConnectionActivity.DST_NAME, desName);
         }
 
         // The stack builder object will contain an artificial back stack for the

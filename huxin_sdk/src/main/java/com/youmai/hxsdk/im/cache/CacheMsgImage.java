@@ -19,9 +19,10 @@ public class CacheMsgImage implements Parcelable, JsonFormat<CacheMsgImage> {
     public static final int SEND_IS_ORI_RECV_IS_ORI = 2; // 发送原图接收原图
     public static final int SEND_IS_ORI_RECV_NOT_ORI = 3; // 发送原图接收非原图
     public static final int SEND_NOT_ORI_RECV_NOT_ORI = 4; // 发送非原图接收非原图
-    public String fid;
-    public String filePath;
-    public int originalType;
+
+    private String fid;
+    private String filePath;
+    private int originalType;
 
 
     @Override

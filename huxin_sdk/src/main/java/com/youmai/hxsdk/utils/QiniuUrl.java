@@ -26,28 +26,16 @@ public class QiniuUrl {
         return String.format(Locale.CHINA, imageUrl + "?imageMogr2/thumbnail/%d", size);
     }
 
-    /**
-     * 获取缩略图的下载地址
-     * 按百分比缩放
-     * ?imageMogr2/thumbnail/!50p
-     *
-     * @param scale 缩放比例：%
-     */
-    public static String getThumbImageUrl(String imageUrl, int scale) {
-        return String.format(Locale.CHINA, imageUrl + "?imageMogr2/thumbnail/!%dp", scale);
-    }
 
     /**
      * 获取缩略图的下载地址
      * 按百分比缩放
      * &imageMogr2/thumbnail/!50p
      *
-     * @param context
      * @param fid
      * @param scale
      */
-    public static String getThumbImageUrl(Context context, String fid, int scale) {
-        return AppConfig.getImageUrl(fid)
-                + String.format(Locale.CHINA, "&imageMogr2/thumbnail/!%dp", scale);
+    public static String getThumbImageUrl(String fid, int scale) {
+        return AppConfig.getImageUrl(fid) + String.format(Locale.CHINA, "&imageMogr2/thumbnail/!%dp", scale);
     }
 }

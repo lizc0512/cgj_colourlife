@@ -42,6 +42,7 @@ import com.youmai.hxsdk.utils.AppUtils;
 import com.youmai.hxsdk.utils.QiniuUrl;
 import com.youmai.hxsdk.utils.ToastUtil;
 
+import java.io.File;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -86,8 +87,7 @@ public class PictureIndicatorActivity extends AppCompatActivity {
 
     private void initView() {
         //String[] array = getIntent().getStringArrayExtra("image");
-        int index = getIntent().getIntExtra("index", 0);
-        mPosition = index;
+        mPosition = getIntent().getIntExtra("index", 0);
 
         //final List<String> list = Arrays.asList(array);
         beanList = getIntent().getParcelableArrayListExtra("beanList");
@@ -99,49 +99,67 @@ public class PictureIndicatorActivity extends AppCompatActivity {
         LayoutInflater mInflater = getLayoutInflater();
         for (final CacheMsgBean item : beanList) {
             final CacheMsgImage cacheImage = (CacheMsgImage) item.getJsonBodyObj();
-            final String fid = cacheImage.getFid();
-            String url = cacheImage.getFilePath();
-            if (item.isRightUI()) {
-                if (TextUtils.isEmpty(url)) {
-                    url = AppConfig.getImageUrl(fid);
-                }
-            } else {
-                if (!TextUtils.isEmpty(fid)) {
-                    switch (cacheImage.getOriginalType()) {
-                        case CacheMsgImage.SEND_IS_ORI_RECV_NOT_ORI:
-                            url = QiniuUrl.getThumbImageUrl(mContext, fid, QiniuUrl.SCALE);
-                            break;
-                        default:
-                            url = AppConfig.getImageUrl(fid);
-                            break;
 
-                    }
+            final String fid = cacheImage.getFid();
+            String filePath = cacheImage.getFilePath();
+
+            String url = "";
+
+            //使用网络地址
+            if (!TextUtils.isEmpty(fid)) {
+                switch (cacheImage.getOriginalType()) {
+                    case CacheMsgImage.SEND_IS_ORI_RECV_NOT_ORI:
+                        url = QiniuUrl.getThumbImageUrl(fid, QiniuUrl.SCALE);
+                        break;
+                    default:
+                        url = AppConfig.getImageUrl(fid);
+                        break;
+
                 }
             }
+
+            //如果本地存在
+            if (item.isRightUI()) {
+                if (!TextUtils.isEmpty(filePath)
+                        && new File(filePath).exists()) {
+                    url = filePath;
+                }
+            }
+
             View view = mInflater.inflate(R.layout.item_picture, null);
+
             final PhotoView imageView = (PhotoView) view.findViewById(R.id.img_content);
             Glide.with(this)
                     .load(url)
-                    .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.RESOURCE))
+                    .apply(new RequestOptions()
+                            .diskCacheStrategy(DiskCacheStrategy.RESOURCE))
                     .into(imageView);
 
             final TextView original = (TextView) view.findViewById(R.id.tv_download_original);
+
             original.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     original.setVisibility(View.GONE);
                     String url = AppConfig.getImageUrl(fid);
+
                     Glide.with(mContext)
                             .load(url)
-                            .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.RESOURCE))
+                            .apply(new RequestOptions()
+                                    .diskCacheStrategy(DiskCacheStrategy.RESOURCE))
                             .into(imageView);
-                    // TODO: 2017/11/3 刷新list为已下载原图
-                    localBroadcastManager.sendBroadcast(new Intent(SendMsgService.ACTION_UPDATE_MSG).putExtra("CacheMsgBean", item));
+                    //2017/11/3 刷新list为已下载原图
+                    Intent intent = new Intent(SendMsgService.ACTION_UPDATE_MSG);
+                    intent.putExtra("CacheMsgBean", item);
+                    localBroadcastManager.sendBroadcast(intent);
                 }
             });
-            original.setVisibility(View.GONE);
-            if (!TextUtils.isEmpty(fid) && (cacheImage.getOriginalType() == CacheMsgImage.SEND_IS_ORI_RECV_NOT_ORI)) {
+
+            if (!TextUtils.isEmpty(fid)
+                    && (cacheImage.getOriginalType() == CacheMsgImage.SEND_IS_ORI_RECV_NOT_ORI)) {
                 original.setVisibility(View.VISIBLE);
+            } else {
+                original.setVisibility(View.GONE);
             }
             listView.add(view);
 
@@ -192,7 +210,7 @@ public class PictureIndicatorActivity extends AppCompatActivity {
 
         PagerIndicatorAdapter adapter = new PagerIndicatorAdapter(this, listView);
         viewPager.setAdapter(adapter);
-        viewPager.setCurrentItem(index);
+        viewPager.setCurrentItem(mPosition);
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override

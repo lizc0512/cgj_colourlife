@@ -337,13 +337,12 @@ public class IMListAdapter extends RecyclerView.Adapter {
         String leftUrl;
         switch (cacheMsgImage.getOriginalType()) {
             case CacheMsgImage.SEND_IS_ORI_RECV_NOT_ORI:
-                leftUrl = QiniuUrl.getThumbImageUrl(mAct, cacheMsgImage.getFid(), QiniuUrl.SCALE);
+                leftUrl = QiniuUrl.getThumbImageUrl(cacheMsgImage.getFid(), QiniuUrl.SCALE);
                 break;
             default:
                 leftUrl = AppConfig.getImageUrl(cacheMsgImage.getFid());
                 break;
         }
-        final File imgFile = new File(cacheMsgImage.getFilePath());
         String rightUrl = TextUtils.isEmpty(cacheMsgImage.getFilePath()) ? leftUrl : cacheMsgImage.getFilePath();
 
         showSendStart(imgViewHolder, cacheMsgBean.getMsgStatus(), cacheMsgBean, position);
@@ -357,41 +356,21 @@ public class IMListAdapter extends RecyclerView.Adapter {
                         .transform(new MaskTransformation(cacheMsgBean.isRightUI() ? R.drawable.hx_im_voice_bg_right : R.drawable.hx_im_voice_bg_left)))
                 .into(imgViewHolder.senderImg);
 
-        final String finalLeftUrl = leftUrl;
         imgViewHolder.imgBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int index = 0;
                 ArrayList<CacheMsgBean> beanList = new ArrayList<>();
                 for (CacheMsgBean item : mImBeanList) {
                     if (CacheMsgBean.SEND_IMAGE == item.getMsgType()
                             || CacheMsgBean.RECEIVE_IMAGE == item.getMsgType()) { //图片
                         beanList.add(item);
-                        final CacheMsgImage cacheImage = (CacheMsgImage) item.getJsonBodyObj();
-                        String fid = cacheImage.getFid();
-                        if (!TextUtils.isEmpty(fid)) {
-                            if (finalLeftUrl.equals(AppConfig.getImageUrl(fid))
-                                    || finalLeftUrl.equals(QiniuUrl.getThumbImageUrl(mAct, fid, QiniuUrl.SCALE))) {
-                                index = beanList.indexOf(item);
-                            }
-                        } else {
-                            if (imgFile.getAbsolutePath().equals(cacheImage.getFilePath())) {
-                                index = beanList.indexOf(item);
-                            }
-                        }
                     }
                 }
-
+                int index = beanList.indexOf(cacheMsgBean);
                 Intent intent = new Intent(mAct, PictureIndicatorActivity.class);
-                //intent.putExtra("image", array);
                 intent.putExtra("index", index);
                 intent.putParcelableArrayListExtra("beanList", beanList);
-                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT_WATCH) {
-                    mAct.startActivity(intent);
-                } else {
-                    mAct.startActivity(intent);
-                }
-
+                mAct.startActivity(intent);
             }
         });
     }

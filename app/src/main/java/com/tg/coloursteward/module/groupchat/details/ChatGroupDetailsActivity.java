@@ -55,6 +55,7 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
     private static final int REQUEST_CODE_DELETE = 102;
     private static final int REQUEST_CODE_MODIFY_NAME = 103;
     private static final int REQUEST_CODE_MODIFY_NOTICE_TOPIC = 104;
+    private static final int REQUEST_CODE_TRANS_OWNER = 105;
     public static final int RESULT_CODE = 201;
 
     private int mGroupId;
@@ -242,11 +243,10 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
-                intent.putExtra(GroupManageActivity.GROUP_NAME, mTvGroupName.getText().equals("未命名") ? "" : mTvGroupName.getText());
                 intent.putExtra(GroupManageActivity.GROUP_ID, mGroupId);
                 intent.putParcelableArrayListExtra(GroupManageActivity.GROUP_LIST, (ArrayList<? extends Parcelable>) groupList3);
                 intent.setClass(ChatGroupDetailsActivity.this, GroupManageActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, REQUEST_CODE_TRANS_OWNER);
             }
         });
 
@@ -290,6 +290,7 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
             updateGroup(2);
         } else {
             Toast.makeText(mContext, "群主暂时不能退群", Toast.LENGTH_SHORT).show();
+
         }
     }
 
@@ -359,6 +360,9 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
             } else if (requestCode == REQUEST_CODE_MODIFY_NOTICE_TOPIC) {
                 String groupNotice = data.getStringExtra(GroupNoticeActivity.GROUP_NOTICE);
                 mtvNoticeContent.setText(groupNotice);
+            } else if (requestCode == REQUEST_CODE_TRANS_OWNER) {
+                isGroupOwner = false;
+                createGroupMap();
             }
         }
     }

@@ -1,14 +1,24 @@
 package com.tg.coloursteward.module.groupchat.setting;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.protobuf.InvalidProtocolBufferException;
 import com.tg.coloursteward.R;
+import com.tg.coloursteward.module.groupchat.details.ChatGroupDetailsActivity;
+import com.tg.coloursteward.util.StringUtils;
+import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.activity.SdkBaseActivity;
 import com.youmai.hxsdk.db.bean.Contact;
+import com.youmai.hxsdk.proto.YouMaiBasic;
+import com.youmai.hxsdk.proto.YouMaiGroup;
+import com.youmai.hxsdk.socket.PduBase;
+import com.youmai.hxsdk.socket.ReceiveListener;
 
 import java.util.List;
 
@@ -85,7 +95,29 @@ public class GroupManageActivity extends SdkBaseActivity {
         tv_title_right.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (StringUtils.isEmpty(groupManageFragment.getOwnerId())) {
+                    return;
+                }
+                ReceiveListener receiveListener = new ReceiveListener() {
+                    @Override
+                    public void OnRec(PduBase pduBase) {
+                        try {
+                            YouMaiGroup.GroupInfoModifyRsp ack = YouMaiGroup.GroupInfoModifyRsp.parseFrom(pduBase.body);
+                            if (ack.getResult() == YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS) {
+                                Intent intent = new Intent();
+                                setResult(ChatGroupDetailsActivity.RESULT_CODE, intent);
+                                finish();
+                            }
+                        } catch (InvalidProtocolBufferException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                };
 
+                HuxinSdkManager.instance().reqModifyGroupInfo(
+                        groupId, groupManageFragment.getOwnerId(),
+                        "", "", "",
+                        YouMaiGroup.GroupInfoModifyType.MODIFY_OWNER, receiveListener);
             }
         });
 

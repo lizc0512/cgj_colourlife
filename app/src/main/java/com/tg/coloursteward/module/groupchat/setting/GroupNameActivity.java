@@ -109,7 +109,9 @@ public class GroupNameActivity extends Activity {
                 };
 
                 HuxinSdkManager.instance().reqModifyGroupInfo(
-                        groupId, groupName, "", "", receiveListener);
+                        groupId, "", groupName,
+                        "", "",
+                        YouMaiGroup.GroupInfoModifyType.MODIFY_NAME, receiveListener);
             }
         });
 

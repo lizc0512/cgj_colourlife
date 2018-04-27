@@ -885,9 +885,10 @@ public class HuxinSdkManager {
      * @param groupAvatar
      * @param callback
      */
-    public void reqModifyGroupInfo(int groupId, String groupName,
+    public void reqModifyGroupInfo(int groupId, String ownerId, String groupName,
                                    String groupTopic,
                                    String groupAvatar,
+                                   YouMaiGroup.GroupInfoModifyType type,
                                    ReceiveListener callback) {
         YouMaiGroup.GroupInfoModifyReq.Builder builder = YouMaiGroup.GroupInfoModifyReq.newBuilder();
         builder.setUserId(getUuid());
@@ -895,8 +896,10 @@ public class HuxinSdkManager {
         builder.setGroupName(groupName);
         builder.setGroupAvatar(groupAvatar);
         builder.setTopic(groupTopic);
-//        builder.setOwnerId("");
-
+        if (!StringUtils.isEmpty(ownerId)) {
+            builder.setOwnerId(ownerId);
+        }
+        builder.setType(type);
         YouMaiGroup.GroupInfoModifyReq group = builder.build();
 
         sendProto(group, YouMaiBasic.COMMANDID.CID_GROUP_INFO_MODIFY_REQ_VALUE, callback);

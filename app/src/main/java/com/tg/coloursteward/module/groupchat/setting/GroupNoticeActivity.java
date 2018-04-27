@@ -128,7 +128,9 @@ public class GroupNoticeActivity extends Activity {
                 };
 
                 HuxinSdkManager.instance().reqModifyGroupInfo(
-                        groupId, "", groupNotice, "", receiveListener);
+                        groupId, "" ,"",
+                        groupNotice, "",
+                        YouMaiGroup.GroupInfoModifyType.MODIFY_TOPIC, receiveListener);
             }
         });
     }

@@ -49,6 +49,8 @@ public class GroupManageFragment extends Fragment implements GroupTransAdapter.I
     private LinearLayoutManager manager;
     private Subscription subscription;
 
+    private String ownerId = "";
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_contacts_layout, container, false);
@@ -153,6 +155,10 @@ public class GroupManageFragment extends Fragment implements GroupTransAdapter.I
                 });
     }
 
+    public String getOwnerId() {
+        return ownerId;
+    }
+
     /**
      * item点击
      *
@@ -162,6 +168,7 @@ public class GroupManageFragment extends Fragment implements GroupTransAdapter.I
     @Override
     public void onItemClick(int pos, Contact contact) {
         adapter.setSelected(pos);
+        ownerId = contact.getUuid();
     }
 
     @Override

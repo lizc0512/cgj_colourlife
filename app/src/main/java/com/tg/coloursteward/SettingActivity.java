@@ -24,10 +24,8 @@ import com.tg.coloursteward.view.MessageArrowView;
 import com.tg.coloursteward.view.MessageArrowView.ItemClickListener;
 import com.tg.coloursteward.view.dialog.DialogFactory;
 import com.tg.coloursteward.view.dialog.ToastFactory;
-//import com.youmai.hxsdk.HuxinSdkManager;
+import com.youmai.hxsdk.HuxinSdkManager;
 
-import android.*;
-import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Message;
@@ -35,7 +33,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.LinearLayout;
@@ -95,6 +92,7 @@ public class SettingActivity extends BaseActivity implements ItemClickListener {
 						//清空缓存
 						SharedPreferencesTools.clearCache(SettingActivity.this);
 						CityPropertyApplication.gotoLoginActivity(SettingActivity.this);
+						HuxinSdkManager.instance().clearUserData();
 					}
 				}, null, "确定要退出账号吗", null, null);
 				

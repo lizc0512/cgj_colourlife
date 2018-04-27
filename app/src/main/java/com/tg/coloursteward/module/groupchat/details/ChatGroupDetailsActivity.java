@@ -232,7 +232,7 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
                 Intent intent = new Intent();
                 intent.putExtra(GroupNameActivity.GROUP_NAME, mTvGroupName.getText().equals("未命名") ? "" : mTvGroupName.getText());
                 intent.putExtra(GroupNameActivity.GROUP_ID, mGroupId);
-                intent.putParcelableArrayListExtra("list", (ArrayList<? extends Parcelable>) groupList3);
+                intent.putParcelableArrayListExtra(GroupManageActivity.GROUP_LIST, (ArrayList<? extends Parcelable>) groupList3);
                 intent.setClass(ChatGroupDetailsActivity.this, GroupManageActivity.class);
                 startActivity(intent);
             }

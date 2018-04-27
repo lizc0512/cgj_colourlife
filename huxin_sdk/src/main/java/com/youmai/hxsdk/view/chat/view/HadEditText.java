@@ -27,6 +27,13 @@ public class HadEditText extends AppCompatEditText {
     }
 
     @Override
+    public boolean performClick() {
+        // do what you want
+        return true;
+    }
+
+
+    @Override
     protected void onTextChanged(CharSequence arg0, int start, int lengthBefore, int after) {
         super.onTextChanged(arg0, start, lengthBefore, after);
         if (onTextChangedInterface != null) {

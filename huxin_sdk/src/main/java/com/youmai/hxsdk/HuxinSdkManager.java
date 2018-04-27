@@ -682,7 +682,7 @@ public class HuxinSdkManager {
         msgData.setSrcUserName(getUserName());
         msgData.setSrcMobile(getPhoneNum());
         msgData.setDestUserId(destUuid);
-        msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_IMAGE);
+        msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_AUDIO);
         msgData.setSessionType(YouMaiMsg.SessionType.SESSION_TYPE_SINGLE);
 
         IMContentUtil imContentUtil = new IMContentUtil();
@@ -1041,7 +1041,7 @@ public class HuxinSdkManager {
         msgData.setSrcRealname(groupName);
         msgData.setSrcMobile(getPhoneNum());
         msgData.setGroupId(groupId);
-        msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_IMAGE);
+        msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_AUDIO);
         msgData.setSessionType(YouMaiMsg.SessionType.SESSION_TYPE_MULTICHAT);
 
         IMContentUtil imContentUtil = new IMContentUtil();

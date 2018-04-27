@@ -155,7 +155,8 @@ public class IMGroupActivity extends SdkBaseActivity implements
     private int groupId;      //群组ID
     private int groupMemberCount; //群组成员数量
 
-    private boolean isPauseOut = false;
+    private boolean isPause = false;
+    private boolean isMsgReceive = false;
     private boolean isOpenEmotion = false;
 
     private boolean isSmoothBottom = true;//是否滑动完成
@@ -185,7 +186,7 @@ public class IMGroupActivity extends SdkBaseActivity implements
                 CacheMsgBean cacheMsgBean = sendMsg.getMsg();
                 iMGroupAdapter.refreshItemUI(cacheMsgBean);
 
-                if (!isPauseOut && TextUtils.equals(sendMsg.getFrom(), SendMsgService.FROM_IM)) {
+                if (!isPause && TextUtils.equals(sendMsg.getFrom(), SendMsgService.FROM_IM)) {
                     String type = intent.hasExtra("type") ? intent.getStringExtra("type") : null;
                     if (TextUtils.equals(type, SendMsgService.NOT_TCP_CONNECT)) {
                         //tcp尚未连接
@@ -208,8 +209,10 @@ public class IMGroupActivity extends SdkBaseActivity implements
                     }
                 }
             }
+
         }
     }
+
 
     private static class NormalHandler extends Handler {
         private final WeakReference<IMGroupActivity> mTarget;
@@ -230,13 +233,12 @@ public class IMGroupActivity extends SdkBaseActivity implements
         }
     }
 
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.hx_activity_im_group);
         mContext = this;
-
-        HuxinSdkManager.instance().getStackAct().addActivity(this);
 
         mHandler = new NormalHandler(this);
 
@@ -259,6 +261,8 @@ public class IMGroupActivity extends SdkBaseActivity implements
         initView();
         initData();
         IMMsgManager.instance().setImMsgCallback(this);
+
+        HuxinSdkManager.instance().getStackAct().addActivity(this);
 
         if (null == mGroupInfo) {
             queryGroupInfo(groupId);
@@ -307,16 +311,25 @@ public class IMGroupActivity extends SdkBaseActivity implements
     @Override
     public void onResume() {
         super.onResume();
-        //srsm add start
-        IMMsgManager.instance().setImMsgCallback(this);
-        //srsm add end
-
         MediaManager.resume();
-        isPauseOut = false;
-
 
         PickerManager.getInstance().setRefreshUIListener(this);
         IMMsgManager.instance().removeBadge(groupId + "");
+
+        if (isPause && isMsgReceive) {
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (mScrollPosition != 0) {
+                        recyclerView.scrollToPosition(iMGroupAdapter.getItemPosition(mScrollPosition));
+                    } else {
+                        iMGroupAdapter.focusBottom(true);
+                    }
+                    mScrollPosition = 0;
+                }
+            }, 100);
+        }
+        isPause = false;
     }
 
     public void handleIntent(Intent intent) {
@@ -340,9 +353,8 @@ public class IMGroupActivity extends SdkBaseActivity implements
             keyboardLay.setMoreState(true);
         }
         MediaManager.pause();
-        isPauseOut = true;
-        //srsm add
-        IMMsgManager.instance().removeImMsgCallback(this);
+
+        isPause = true;
     }
 
     @Override
@@ -446,12 +458,14 @@ public class IMGroupActivity extends SdkBaseActivity implements
         intent.putExtra("flag", false);
         startService(intent);
 
+        //srsm add
+        IMMsgManager.instance().removeImMsgCallback(this);
+
         PhotoPickerManager.getInstance().clearMap();
         HuxinSdkManager.instance().getStackAct().removeActivity(this);
-
     }
 
-    void initTitle() {
+    private void initTitle() {
         boolean contains = groupName.contains(ColorsConfig.GROUP_DEFAULT_NAME);
         if (contains) {
             tvTitle.setText("群聊");
@@ -1015,8 +1029,10 @@ public class IMGroupActivity extends SdkBaseActivity implements
         //刷新界面
         if (!isFinishing()) {
             if (cacheMsgBean.getGroupId() == groupId
-                    && cacheMsgBean.getGroupId() > 0)
+                    && cacheMsgBean.getGroupId() > 0) {
                 iMGroupAdapter.refreshIncomingMsgUI(cacheMsgBean);
+                isMsgReceive = true;
+            }
         }
     }
 

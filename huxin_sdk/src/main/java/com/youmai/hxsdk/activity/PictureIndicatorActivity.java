@@ -23,6 +23,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -194,11 +195,14 @@ public class PictureIndicatorActivity extends AppCompatActivity {
 
                                 @Override
                                 public void onSendtoFriend() {
-                                    Intent intent = new Intent();
+
+                                    Toast.makeText(mContext, "暂未开发", Toast.LENGTH_SHORT).show();
+
+                                    /*Intent intent = new Intent();
                                     intent.setAction("com.youmai.huxin.recent");
                                     intent.putExtra("type", "forward_msg");
                                     intent.putExtra("data", item);
-                                    startActivityForResult(intent, 300);
+                                    startActivityForResult(intent, 300);*/
                                 }
                             };
                     hxDialog.setHxMediaStoreDialog(callback);

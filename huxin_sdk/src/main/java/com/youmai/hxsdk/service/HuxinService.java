@@ -25,13 +25,10 @@ import android.widget.Toast;
 import com.google.protobuf.GeneratedMessage;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.youmai.hxsdk.HuxinSdkManager;
-import com.youmai.hxsdk.ProtocolCallBack;
 import com.youmai.hxsdk.config.AppConfig;
 import com.youmai.hxsdk.config.ColorsConfig;
-import com.youmai.hxsdk.entity.RespBaseBean;
 import com.youmai.hxsdk.im.IMMsgManager;
 import com.youmai.hxsdk.proto.YouMaiBasic;
-import com.youmai.hxsdk.proto.YouMaiBuddy;
 import com.youmai.hxsdk.proto.YouMaiLogin;
 import com.youmai.hxsdk.receiver.HuxinReceiver;
 import com.youmai.hxsdk.socket.NotifyListener;
@@ -44,7 +41,6 @@ import com.youmai.hxsdk.utils.LogFile;
 import com.youmai.hxsdk.utils.StringUtils;
 
 import java.net.InetSocketAddress;
-import java.util.List;
 
 
 public class HuxinService extends Service {
@@ -204,10 +200,10 @@ public class HuxinService extends Service {
                 // DO WHATEVER YOU NEED TO DO HERE
             } else if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
                 // AND DO WHATEVER YOU NEED TO DO HERE
-                /*if (mClient != null && mClient.isConnect()) {
+                if (mClient.isConnect()) {
                     mClient.close();
                 }
-                mClient.connect();*/
+                mClient.connect();
             }
         }
 

@@ -864,8 +864,7 @@ public class IMGroupActivity extends SdkBaseActivity implements
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == PhotoPreviewActivity.REQUEST_CODE_PHOTO
-                && resultCode == Activity.RESULT_OK) { //图片
+        if (requestCode == PhotoPreviewActivity.REQUEST_CODE_PHOTO) { //图片
             ArrayList<String> photoPaths = new ArrayList<>();
             if (data == null) {
                 isOriginal = PhotoPickerManager.getInstance().isOriginal();

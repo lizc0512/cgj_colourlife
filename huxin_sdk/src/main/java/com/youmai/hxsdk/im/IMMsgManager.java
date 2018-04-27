@@ -23,7 +23,6 @@ import com.youmai.hxsdk.chat.ContentLocation;
 import com.youmai.hxsdk.chat.ContentText;
 import com.youmai.hxsdk.config.AppConfig;
 import com.youmai.hxsdk.config.FileConfig;
-import com.youmai.hxsdk.entity.CallInfo;
 import com.youmai.hxsdk.entity.RespBaseBean;
 import com.youmai.hxsdk.http.DownloadListener;
 import com.youmai.hxsdk.http.FileAsyncTaskDownload;

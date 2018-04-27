@@ -1,14 +1,9 @@
 package com.youmai.hxsdk.activity;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.WindowManager;
-
-import com.youmai.hxsdk.entity.CallInfo;
-import com.youmai.hxsdk.utils.AppUtils;
 
 /**
  * 作者：create by YW

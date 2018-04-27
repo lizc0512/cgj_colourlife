@@ -45,7 +45,6 @@ import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.adapter.IMListAdapter;
 import com.youmai.hxsdk.config.FileConfig;
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
-import com.youmai.hxsdk.entity.CallInfo;
 import com.youmai.hxsdk.im.IMHelper;
 import com.youmai.hxsdk.im.IMMsgCallback;
 import com.youmai.hxsdk.im.IMMsgManager;
@@ -319,9 +318,6 @@ public class IMConnectionActivity extends SdkBaseActivity implements
         //srsm add
         IMMsgManager.instance().removeImMsgCallback(this);
 
-        if (CallInfo.IsCalling()) {
-            finish();
-        }
     }
 
     @Override

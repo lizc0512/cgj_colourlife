@@ -50,7 +50,6 @@ import com.youmai.hxsdk.config.FileConfig;
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
 import com.youmai.hxsdk.db.bean.GroupInfoBean;
 import com.youmai.hxsdk.db.helper.CacheMsgHelper;
-import com.youmai.hxsdk.entity.CallInfo;
 import com.youmai.hxsdk.im.IMHelper;
 import com.youmai.hxsdk.im.IMMsgCallback;
 import com.youmai.hxsdk.im.IMMsgManager;
@@ -343,10 +342,6 @@ public class IMGroupActivity extends SdkBaseActivity implements
         isPauseOut = true;
         //srsm add
         IMMsgManager.instance().removeImMsgCallback(this);
-
-        if (CallInfo.IsCalling()) {
-            finish();
-        }
     }
 
     @Override

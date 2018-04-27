@@ -16,8 +16,6 @@ import org.greenrobot.greendao.database.Database;
  */
 public class HMROpenHelper extends DaoMaster.DevOpenHelper {
 
-    private String dBName;
-
     /**
      * 初始化一个AbSDDBHelper.
      *
@@ -26,7 +24,6 @@ public class HMROpenHelper extends DaoMaster.DevOpenHelper {
      */
     public HMROpenHelper(Context context, String name) {
         super(context, name);
-        this.dBName = name;
     }
 
     /**

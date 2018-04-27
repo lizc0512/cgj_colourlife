@@ -169,9 +169,16 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
         } else {
             mTotalMap.put(contact.getUuid(), contact);
         }
-        Log.d("YW", "map size: " + mTotalMap.size());
 
-        tv_Sure.setText("完成(" + mTotalMap.size() + ")");
+        int count = mTotalMap.size();
+        Log.d("YW", "map size: " + count);
+
+        if (count > 0) {
+            tv_Sure.setEnabled(true);
+        } else {
+            tv_Sure.setEnabled(false);
+        }
+        tv_Sure.setText("完成(" + count + ")");
 
         if (isFreshAdapter) {
             adapter.setCacheMap(mTotalMap);
@@ -247,6 +254,8 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
         //标题
         tv_Cancel = findViewById(R.id.tv_left_cancel);
         tv_Sure = findViewById(R.id.tv_right_sure);
+        tv_Sure.setText("完成(" + 0 + ")");
+        tv_Sure.setEnabled(false);
 
         rv_main = findViewById(R.id.rv_main);
         iv_main = findViewById(R.id.iv_main);

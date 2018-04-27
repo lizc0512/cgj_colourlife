@@ -100,7 +100,7 @@ public class ChatDetailsActivity extends SdkBaseActivity {
 
     }
 
-    void createGroupMap() {
+    private void createGroupMap() {
         Contact self = new Contact();
         String selfUid = HuxinSdkManager.instance().getUuid();
         self.setUuid(selfUid);
@@ -119,7 +119,7 @@ public class ChatDetailsActivity extends SdkBaseActivity {
         }
     }
 
-    void setOnClickListener() {
+    private void setOnClickListener() {
         mTvBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -3,6 +3,7 @@ package com.tg.coloursteward.module.groupchat.details;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.Toast;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
+import com.google.gson.Gson;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.tg.coloursteward.EmployeeDataActivity;
 import com.tg.coloursteward.module.groupchat.AddContactsCreateGroupActivity;
@@ -29,6 +31,7 @@ import com.youmai.hxsdk.db.bean.Contact;
 import com.youmai.hxsdk.db.bean.GroupInfoBean;
 import com.youmai.hxsdk.db.helper.CacheMsgHelper;
 import com.youmai.hxsdk.db.helper.GroupInfoHelper;
+import com.youmai.hxsdk.entity.GroupAndMember;
 import com.youmai.hxsdk.im.IMMsgManager;
 import com.youmai.hxsdk.proto.YouMaiBasic;
 import com.youmai.hxsdk.proto.YouMaiGroup;
@@ -38,13 +41,12 @@ import com.youmai.hxsdk.socket.ReceiveListener;
 import com.youmai.hxsdk.utils.ListUtils;
 import com.youmai.hxsdk.utils.StringUtils;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 作者：create by YW
@@ -56,6 +58,8 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
 
     public static final String GROUP_LIST = "GROUP_LIST";
     public static final String UPDATE_GROUP_LIST = "UPDATE_GROUP_LIST";
+    public static final String GROUP_ID = "groupId";
+    public static final String GROUP_INFO = "GroupInfo";
 
     private static final int REQUEST_CODE_ADD = 101;
     private static final int REQUEST_CODE_DELETE = 102;
@@ -66,6 +70,7 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
 
     private int mGroupId;
     private boolean isGroupOwner = false;  //是否群主
+    private boolean isUpdate = false;  //是否更新过群信息
 
     private TextView mTvBack, mTvTitle;
     private RecyclerView mGridView;
@@ -107,17 +112,24 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
             groupList3.clear();
         }
         isGroupOwner = false;
+        if (isUpdate) {
+            Intent intent = new Intent(IMGroupActivity.UPDATE_GROUP_INFO);
+            intent.putExtra(GROUP_INFO, mGroupInfo);
+            LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+        }
+        isUpdate = false;
     }
 
     void initView() {
         mGroupInfo = getIntent().getParcelableExtra(IMGroupActivity.GROUP_INFO);
-        mGroupId = getIntent().getIntExtra("groupId", -1);
+        mGroupId = getIntent().getIntExtra(GROUP_ID, -1);
 
+        if (null == mGroupInfo) {
+            mGroupInfo = new GroupInfoBean();
+            mGroupInfo.setGroup_id(mGroupId);
+        }
         GroupInfoBean groupInfo = GroupInfoHelper.instance().toQueryByGroupId(this, mGroupId);
         if (null != groupInfo) {
-            if (null == mGroupInfo) {
-                mGroupInfo = new GroupInfoBean();
-            }
             mGroupInfo.setId(groupInfo.getId());
             mGroupInfo.setGroup_id(mGroupId);
             mGroupInfo.setGroup_name(groupInfo.getGroup_name());
@@ -200,9 +212,6 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
                                     isGroupOwner = true;
                                     mRlGroupManage.setVisibility(View.VISIBLE);
                                 }
-                            } else {
-                                isGroupOwner = false;
-                                mRlGroupManage.setVisibility(View.GONE);
                             }
 
                             Contact contact = new Contact();
@@ -226,25 +235,7 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
                         mTvTitle.setText(title);
 
                         if (!ListUtils.isEmpty(groupList)) {
-                            GroupInfoBean bean  = new GroupInfoBean();
-                            bean.setGroup_id(mGroupId);
-                            if (null != mGroupInfo) {
-                                bean.setId(mGroupInfo.getId());
-                                bean.setGroup_name(mGroupInfo.getGroup_name());
-                                bean.setTopic(mGroupInfo.getTopic());
-                                bean.setGroup_avatar(mGroupInfo.getGroup_avatar());
-                                bean.setGroup_member_count(groupList.size());
-                                bean.setOwner_id(mGroupInfo.getOwner_id());
-                                bean.setInfo_update_time(mGroupInfo.getInfo_update_time());
-                                bean.setMember_update_time(mGroupInfo.getMember_update_time());
-                                bean.setFixtop_priority(mGroupInfo.getFixtop_priority());
-                                bean.setNot_disturb(mGroupInfo.getNot_disturb());
-                                Map<String, List<YouMaiGroup.GroupMemberItem>> map = new HashMap<>();
-                                map.put(mGroupId + "", memberListList);
-                                JSONObject jsonObject = new JSONObject(map);
-                                bean.setGroupMemberJson(jsonObject.toString());
-                                GroupInfoHelper.instance().toUpdateByGroupId(ChatGroupDetailsActivity.this, bean);
-                            }
+                            updateDb(memberListList);
                         }
 
                         if (isGroupOwner) {
@@ -265,13 +256,46 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
                         String groupMemberJson = mGroupInfo.getGroupMemberJson();
                         if (!StringUtils.isEmpty(groupMemberJson)) {
                             try {
-                                JSONObject jsonObject = new JSONObject(groupMemberJson);
+                                if (groupList.size() > 0) {
+                                    groupList.clear();
+                                }
+                                if (!ListUtils.isEmpty(groupList2)) {
+                                    groupList2.clear();
+                                }
+                                if (!ListUtils.isEmpty(groupList3)) {
+                                    groupList3.clear();
+                                }
+                                JSONArray jsonArray = new JSONArray(groupMemberJson);
+                                for (int i = 0; i < jsonArray.length(); i++) {
+                                    JSONObject jsonObject = new JSONObject(groupMemberJson);
 
+
+//                                    if (item.getMemberId().equals(HuxinSdkManager.instance().getUuid())) {
+//                                        if (item.getMemberRole() == 0) {
+//                                            isGroupOwner = true;
+//                                            mRlGroupManage.setVisibility(View.VISIBLE);
+//                                        }
+//                                    }
+//
+//                                    Contact contact = new Contact();
+//                                    contact.setRealname(item.getMemberName());
+//                                    contact.setUsername(item.getUserName());
+//                                    contact.setUuid(item.getMemberId());
+//                                    contact.setMemberRole(item.getMemberRole());
+//                                    if (contact.getMemberRole() == 0) {
+//                                        groupList.add(0, contact);
+//                                    } else {
+//                                        groupList.add(contact);
+//                                    }
+//                                    groupList2.add(contact);
+//                                    if (item.getMemberRole() != 0) {
+//                                        groupList3.add(contact);
+//                                    }
+                                }
 
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
-
                         }
                     }
 
@@ -454,13 +478,73 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
             } else if (requestCode == REQUEST_CODE_MODIFY_NAME) {
                 String groupName = data.getStringExtra(GroupNameActivity.GROUP_NAME);
                 mTvGroupName.setText(groupName);
+                updateDb2(1, groupName);
             } else if (requestCode == REQUEST_CODE_MODIFY_NOTICE_TOPIC) {
                 String groupNotice = data.getStringExtra(GroupNoticeActivity.GROUP_NOTICE);
                 mtvNoticeContent.setText(groupNotice);
+                updateDb2(2, groupNotice);
             } else if (requestCode == REQUEST_CODE_TRANS_OWNER) {
                 isGroupOwner = false;
                 createGroupMap();
             }
+            isUpdate = true;
+        }
+    }
+
+    void updateDb(List<YouMaiGroup.GroupMemberItem> memberListList) {
+        GroupInfoBean bean = new GroupInfoBean();
+        bean.setGroup_id(mGroupId);
+        if (null != mGroupInfo) {
+            bean.setId(mGroupInfo.getId());
+            bean.setGroup_name(mGroupInfo.getGroup_name());
+            bean.setTopic(mGroupInfo.getTopic());
+            bean.setGroup_avatar(mGroupInfo.getGroup_avatar());
+            bean.setGroup_member_count(groupList2.size());
+            bean.setOwner_id(mGroupInfo.getOwner_id());
+            bean.setInfo_update_time(mGroupInfo.getInfo_update_time());
+            bean.setMember_update_time(mGroupInfo.getMember_update_time());
+            bean.setFixtop_priority(mGroupInfo.getFixtop_priority());
+            bean.setNot_disturb(mGroupInfo.getNot_disturb());
+
+            List<GroupAndMember> list = new ArrayList<>();
+            for (YouMaiGroup.GroupMemberItem item : memberListList) {
+                GroupAndMember member = new GroupAndMember();
+                member.setMember_id(item.getMemberId());
+                member.setMember_name(item.getMemberName());
+                member.setMember_role(item.getMemberRole());
+                member.setUser_name(item.getUserName());
+                list.add(member);
+            }
+
+            bean.setGroupMemberJson(new Gson().toJson(list));
+            GroupInfoHelper.instance().toUpdateByGroupId(ChatGroupDetailsActivity.this, bean);
+        }
+    }
+
+    void updateDb2(int type, String content) {
+        GroupInfoBean bean = new GroupInfoBean();
+        bean.setGroup_id(mGroupId);
+        if (null != mGroupInfo) {
+            bean.setId(mGroupInfo.getId());
+            switch (type) {
+                case 1:
+                    bean.setGroup_name(content);
+                    bean.setTopic(mGroupInfo.getTopic());
+                    break;
+                case 2:
+                    bean.setGroup_name(mGroupInfo.getGroup_name());
+                    bean.setTopic(content);
+                    break;
+            }
+            bean.setGroup_avatar(mGroupInfo.getGroup_avatar());
+            bean.setGroup_member_count(mGroupInfo.getGroup_member_count());
+            bean.setOwner_id(mGroupInfo.getOwner_id());
+            bean.setInfo_update_time(mGroupInfo.getInfo_update_time());
+            bean.setMember_update_time(mGroupInfo.getMember_update_time());
+            bean.setFixtop_priority(mGroupInfo.getFixtop_priority());
+            bean.setNot_disturb(mGroupInfo.getNot_disturb());
+            bean.setGroupMemberJson(mGroupInfo.getGroupMemberJson());
+            GroupInfoHelper.instance().toUpdateByGroupId(ChatGroupDetailsActivity.this, bean);
         }
     }
 }

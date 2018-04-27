@@ -1,10 +1,12 @@
 package com.youmai.hxsdk.im;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
@@ -583,24 +585,40 @@ public class IMMsgManager {
             return;
         }
 
+        NotificationManager notificationManager =
+                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
         int notifyID = targetId.hashCode();
+
         NotificationCompat.Builder builder;
+
         if (Build.VERSION.SDK_INT >= 26) {
-            builder = new NotificationCompat.Builder(context, "im_chat");
+            String CHANNEL_ID = "im_chat";
+            CharSequence name = "im_channel";
+            String Description = "im message notify";
+
+            builder = new NotificationCompat.Builder(context, CHANNEL_ID);
+
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(Description);
+            channel.enableLights(true);
+            channel.setLightColor(Color.GREEN);
+            channel.enableVibration(true);
+            channel.setShowBadge(false);
+            notificationManager.createNotificationChannel(channel);
+
         } else {
             builder = new NotificationCompat.Builder(context);
         }
 
         builder.setSmallIcon(getNotificationIcon())
-                //.setContentTitle(context.getString(R.string.from) + HuxinSdkManager.instance().getContactName(srcPhone))
+                .setContentTitle(context.getString(R.string.from) + HuxinSdkManager.instance().getRealName())
                 .setContentText(content)
                 .setTicker(content)
-                //.setDefaults(Notification.DEFAULT_LIGHTS)
+                .setDefaults(Notification.DEFAULT_ALL)
                 //.setColor(Color.GREEN)
                 .setAutoCancel(true);
-
-        builder.setDefaults(Notification.DEFAULT_SOUND);
 
         // Creates an explicit intent for an Activity in your app
         Intent resultIntent;
@@ -636,9 +654,6 @@ public class IMMsgManager {
                 PendingIntent.FLAG_UPDATE_CURRENT);
 
         builder.setContentIntent(resultPendingIntent);
-
-        NotificationManager notificationManager =
-                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
 
         boolean isNotBadge = AppUtils.isTopActiviy(mContext, IMConnectionActivity.class.getName())

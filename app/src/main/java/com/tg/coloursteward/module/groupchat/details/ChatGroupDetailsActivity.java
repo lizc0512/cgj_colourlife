@@ -38,6 +38,7 @@ import com.youmai.hxsdk.socket.ReceiveListener;
 import com.youmai.hxsdk.utils.ListUtils;
 import com.youmai.hxsdk.utils.StringUtils;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -109,6 +110,27 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
     }
 
     void initView() {
+        mGroupInfo = getIntent().getParcelableExtra(IMGroupActivity.GROUP_INFO);
+        mGroupId = getIntent().getIntExtra("groupId", -1);
+
+        GroupInfoBean groupInfo = GroupInfoHelper.instance().toQueryByGroupId(this, mGroupId);
+        if (null != groupInfo) {
+            if (null == mGroupInfo) {
+                mGroupInfo = new GroupInfoBean();
+            }
+            mGroupInfo.setId(groupInfo.getId());
+            mGroupInfo.setGroup_id(mGroupId);
+            mGroupInfo.setGroup_name(groupInfo.getGroup_name());
+            mGroupInfo.setTopic(groupInfo.getTopic());
+            mGroupInfo.setGroup_avatar(groupInfo.getGroup_avatar());
+            mGroupInfo.setGroup_member_count(groupInfo.getGroup_member_count());
+            mGroupInfo.setOwner_id(groupInfo.getOwner_id());
+            mGroupInfo.setInfo_update_time(groupInfo.getInfo_update_time());
+            mGroupInfo.setMember_update_time(groupInfo.getMember_update_time());
+            mGroupInfo.setFixtop_priority(groupInfo.getFixtop_priority());
+            mGroupInfo.setNot_disturb(groupInfo.getNot_disturb());
+            mGroupInfo.setGroupMemberJson(groupInfo.getGroupMemberJson());
+        }
         createGroupMap();
 
         mTvBack = findViewById(R.id.tv_back);
@@ -153,9 +175,7 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
     }
 
     void createGroupMap() {
-        mGroupInfo = getIntent().getParcelableExtra(IMGroupActivity.GROUP_INFO);
-        mGroupId = getIntent().getIntExtra("groupId", -1);
-        mGroupInfo = GroupInfoHelper.instance().toQueryByGroupId(this, mGroupId);
+
         HuxinSdkManager.instance().reqGroupMember(mGroupId, new ReceiveListener() {
             @Override
             public void OnRec(PduBase pduBase) {
@@ -240,6 +260,18 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
                             contact.setRealname("+");
                             groupList.add(contact);
                             mAdapter.setType(1);
+                        }
+                    } else {
+                        String groupMemberJson = mGroupInfo.getGroupMemberJson();
+                        if (!StringUtils.isEmpty(groupMemberJson)) {
+                            try {
+                                JSONObject jsonObject = new JSONObject(groupMemberJson);
+
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
                         }
                     }
 

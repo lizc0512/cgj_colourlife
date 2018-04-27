@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,12 +33,16 @@ public class GroupNoticeActivity extends Activity {
 
     public static final String GROUP_ID = "groupId";
     public static final String GROUP_NOTICE = "groupNotice";
+    public static final String IS_GROUP_OWNER = "IS_GROUP_OWNER";
 
     private TextView tv_back, tv_title, tv_title_right;
-    private EditText et_user_notice;
+    private EditText et_owner_notice;
+    private TextView tv_not_owner;
+    private LinearLayout ll_tip;
 
     private String notice;
     private int groupId;
+    private boolean is_owner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,20 +55,36 @@ public class GroupNoticeActivity extends Activity {
     }
 
     private void initView() {
-        tv_back = (TextView) findViewById(R.id.tv_left_cancel);
-        tv_title = (TextView) findViewById(R.id.tv_title);
-        tv_title_right = (TextView) findViewById(R.id.tv_right_sure);
-        et_user_notice = (EditText) findViewById(R.id.et_user_notice);
+        tv_back = findViewById(R.id.tv_left_cancel);
+        tv_title = findViewById(R.id.tv_title);
+        tv_title_right = findViewById(R.id.tv_right_sure);
+        et_owner_notice = findViewById(R.id.et_user_notice);
+        tv_not_owner = findViewById(R.id.tv_default);
+
+        ll_tip = findViewById(R.id.ll_not_owner_tip);
     }
 
     private void initData() {
         groupId = getIntent().getIntExtra(GROUP_ID, -1);
         notice = getIntent().getStringExtra(GROUP_NOTICE);
+        is_owner = getIntent().getBooleanExtra(IS_GROUP_OWNER, false);
         tv_title.setText("群公告");
-        if (!StringUtils.isEmpty(notice)) {
-            et_user_notice.setText(notice);
+        if (is_owner) {
+            ll_tip.setVisibility(View.GONE);
+            tv_not_owner.setVisibility(View.GONE);
+            et_owner_notice.setVisibility(View.VISIBLE);
+            tv_title_right.setVisibility(View.VISIBLE);
+        } else {
+            et_owner_notice.setVisibility(View.GONE);
+            tv_title_right.setVisibility(View.GONE);
+            tv_not_owner.setVisibility(View.VISIBLE);
+            ll_tip.setVisibility(View.VISIBLE);
         }
-        et_user_notice.setSelection(et_user_notice.getText().length());
+        if (!StringUtils.isEmpty(notice)) {
+            tv_not_owner.setText(notice);
+            et_owner_notice.setText(notice);
+        }
+        et_owner_notice.setSelection(et_owner_notice.getText().length());
 
     }
 
@@ -80,19 +101,14 @@ public class GroupNoticeActivity extends Activity {
             @Override
             public void onClick(View v) {
 
-                final String groupNotice = et_user_notice.getText().toString().trim();
+                final String groupNotice = et_owner_notice.getText().toString().trim();
                 InputMethodManager manager = (InputMethodManager) GroupNoticeActivity.this
                         .getSystemService(Context.INPUT_METHOD_SERVICE);
-                manager.hideSoftInputFromWindow(et_user_notice.getWindowToken(), 0);
+                manager.hideSoftInputFromWindow(et_owner_notice.getWindowToken(), 0);
 
                 if (StringUtils.isEmpty(groupNotice)) {
                     return;
                 }
-
-                Intent intent = new Intent();
-                intent.putExtra(GROUP_NOTICE, groupNotice);
-                setResult(ChatGroupDetailsActivity.RESULT_CODE, intent);
-                finish();
 
                 ReceiveListener receiveListener = new ReceiveListener() {
                     @Override

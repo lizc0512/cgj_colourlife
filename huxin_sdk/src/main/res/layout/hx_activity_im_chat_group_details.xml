@@ -56,11 +56,11 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:drawablePadding="10dp"
-                    android:gravity="right"
+                    android:drawableRight="@drawable/hx_global_search_next"
                     android:ellipsize="end"
                     android:ems="15"
+                    android:gravity="right"
                     android:singleLine="true"
-                    android:drawableRight="@drawable/hx_global_search_next"
                     android:text="未命名" />
 
                 <View
@@ -90,16 +90,16 @@
 
                 <TextView
                     android:id="@+id/tv_notice_content"
-                    android:layout_width="wrap_content"
+                    android:layout_width="250dp"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:drawablePadding="10dp"
-                    android:gravity="right"
-                    android:ellipsize="end"
-                    android:ems="18"
-                    android:singleLine="true"
                     android:drawableRight="@drawable/hx_global_search_next"
+                    android:ellipsize="end"
+                    android:ems="16"
+                    android:gravity="right"
+                    android:singleLine="true"
                     android:text="未设置" />
 
                 <View

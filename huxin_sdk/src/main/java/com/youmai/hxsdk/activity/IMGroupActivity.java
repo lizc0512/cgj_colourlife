@@ -280,6 +280,7 @@ public class IMGroupActivity extends SdkBaseActivity implements
                     mGroupInfo.setGroup_member_count(groupInfo.getGroupMemberCount());
                     mGroupInfo.setGroup_id(groupId);
                     mGroupInfo.setGroup_name(groupName);
+                    mGroupInfo.setTopic(groupInfo.getTopic());
                     updateGroupUI(mGroupInfo);
                 } catch (InvalidProtocolBufferException e) {
                     e.printStackTrace();

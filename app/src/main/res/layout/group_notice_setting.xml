@@ -15,29 +15,38 @@
         <TextView
             android:id="@+id/tv_default"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:gravity="left|top"
+            android:lineSpacingExtra="2dp"
+            android:maxLength="500"
+            android:padding="16dp"
+            android:textColor="@color/color_theme_main"
+            android:textSize="16sp" />
 
         <EditText
             android:id="@+id/et_user_notice"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@null"
-            android:maxLength="300"
             android:gravity="left|top"
-            android:padding="20dp"
+            android:lineSpacingExtra="2dp"
+            android:maxLength="500"
+            android:padding="16dp"
             android:textColor="@color/color_theme_main"
             android:textCursorDrawable="@drawable/edit_cursor_shape"
-            android:textSize="15sp" />
+            android:textSize="16sp" />
 
     </RelativeLayout>
 
     <LinearLayout
+        android:id="@+id/ll_not_owner_tip"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
         android:layout_marginTop="30dp"
         android:gravity="center"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="gone">
 
         <View
             android:layout_width="40dp"

@@ -50,6 +50,7 @@ import com.youmai.hxsdk.config.FileConfig;
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
 import com.youmai.hxsdk.db.bean.GroupInfoBean;
 import com.youmai.hxsdk.db.helper.CacheMsgHelper;
+import com.youmai.hxsdk.db.helper.GroupInfoHelper;
 import com.youmai.hxsdk.im.IMHelper;
 import com.youmai.hxsdk.im.IMMsgCallback;
 import com.youmai.hxsdk.im.IMMsgManager;
@@ -123,6 +124,7 @@ public class IMGroupActivity extends SdkBaseActivity implements
     public static final String DST_UUID = "DST_UUID";
     public static final String DST_PHONE = "DST_PHONE";
     public static final String EXTRA_SCROLL_POSITION = "EXTRA_SCROLL_POSITION";
+    public static final String UPDATE_GROUP_INFO = "UPDATE_GROUP_INFO"; //群信息改变的广播
 
     private static final int REQUEST_CODE_PICTURE = 200;
     private static final int REQUEST_CODE_LOCATION = 201;
@@ -208,6 +210,10 @@ public class IMGroupActivity extends SdkBaseActivity implements
                         break;
                     }
                 }
+            } else if (UPDATE_GROUP_INFO.equals(action)) {
+                GroupInfoBean group = GroupInfoHelper.instance().toQueryByGroupId(IMGroupActivity.this, groupId);
+                mGroupInfo = group;
+                updateGroupUI(mGroupInfo);
             }
 
         }
@@ -256,6 +262,7 @@ public class IMGroupActivity extends SdkBaseActivity implements
         IntentFilter filter = new IntentFilter();
         filter.addAction(SendMsgService.ACTION_SEND_MSG);
         filter.addAction(SendMsgService.ACTION_UPDATE_MSG);
+        filter.addAction(UPDATE_GROUP_INFO);
         localBroadcastManager.registerReceiver(mLocalMsgReceiver, filter);
 
         initView();

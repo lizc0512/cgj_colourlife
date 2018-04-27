@@ -78,7 +78,7 @@
                 android:background="@drawable/hxb_list_item_selector"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
-                android:visibility="gone">
+                android:visibility="visible">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -89,11 +89,16 @@
                     android:textSize="15sp" />
 
                 <TextView
+                    android:id="@+id/tv_notice_content"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:drawablePadding="10dp"
+                    android:gravity="right"
+                    android:ellipsize="end"
+                    android:ems="18"
+                    android:singleLine="true"
                     android:drawableRight="@drawable/hx_global_search_next"
                     android:text="未设置" />
 

@@ -11,6 +11,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.tg.coloursteward.R;
@@ -20,30 +21,28 @@ import com.youmai.hxsdk.proto.YouMaiBasic;
 import com.youmai.hxsdk.proto.YouMaiGroup;
 import com.youmai.hxsdk.socket.PduBase;
 import com.youmai.hxsdk.socket.ReceiveListener;
-import com.youmai.hxsdk.utils.CommonUtils;
 import com.youmai.hxsdk.utils.StringUtils;
 
 /**
  * 作者：create by YW
  * 日期：2018.04.26 17:05
- * 描述: 群名设置
+ * 描述: 群公告设置
  */
-public class GroupNameActivity extends Activity {
+public class GroupNoticeActivity extends Activity {
 
     public static final String GROUP_ID = "groupId";
-    public static final String GROUP_NAME = "groupName";
+    public static final String GROUP_NOTICE = "groupNotice";
 
     private TextView tv_back, tv_title, tv_title_right;
-    private EditText et_user_name;
-    private ImageView iv_user_delete;
+    private EditText et_user_notice;
 
-    private String name;
+    private String notice;
     private int groupId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.group_name_setting);
+        setContentView(R.layout.group_notice_setting);
 
         initView();
         initData();
@@ -54,18 +53,17 @@ public class GroupNameActivity extends Activity {
         tv_back = (TextView) findViewById(R.id.tv_left_cancel);
         tv_title = (TextView) findViewById(R.id.tv_title);
         tv_title_right = (TextView) findViewById(R.id.tv_right_sure);
-        et_user_name = (EditText) findViewById(R.id.et_user_name);
-        iv_user_delete = (ImageView) findViewById(R.id.iv_user_delete);
+        et_user_notice = (EditText) findViewById(R.id.et_user_notice);
     }
 
     private void initData() {
         groupId = getIntent().getIntExtra(GROUP_ID, -1);
-        name = getIntent().getStringExtra(GROUP_NAME);
-        tv_title.setText("修改群名称");
-        if (!StringUtils.isEmpty(name)) {
-            et_user_name.setText(name);
+        notice = getIntent().getStringExtra(GROUP_NOTICE);
+        tv_title.setText("群公告");
+        if (!StringUtils.isEmpty(notice)) {
+            et_user_notice.setText(notice);
         }
-        et_user_name.setSelection(et_user_name.getText().length());
+        et_user_notice.setSelection(et_user_notice.getText().length());
 
     }
 
@@ -82,14 +80,19 @@ public class GroupNameActivity extends Activity {
             @Override
             public void onClick(View v) {
 
-                final String groupName = et_user_name.getText().toString().trim();
-                InputMethodManager manager = (InputMethodManager) GroupNameActivity.this
+                final String groupNotice = et_user_notice.getText().toString().trim();
+                InputMethodManager manager = (InputMethodManager) GroupNoticeActivity.this
                         .getSystemService(Context.INPUT_METHOD_SERVICE);
-                manager.hideSoftInputFromWindow(et_user_name.getWindowToken(), 0);
+                manager.hideSoftInputFromWindow(et_user_notice.getWindowToken(), 0);
 
-                if (StringUtils.isEmpty(groupName)) {
+                if (StringUtils.isEmpty(groupNotice)) {
                     return;
                 }
+
+                Intent intent = new Intent();
+                intent.putExtra(GROUP_NOTICE, groupNotice);
+                setResult(ChatGroupDetailsActivity.RESULT_CODE, intent);
+                finish();
 
                 ReceiveListener receiveListener = new ReceiveListener() {
                     @Override
@@ -98,7 +101,7 @@ public class GroupNameActivity extends Activity {
                             YouMaiGroup.GroupInfoModifyRsp ack = YouMaiGroup.GroupInfoModifyRsp.parseFrom(pduBase.body);
                             if (ack.getResult() == YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS) {
                                 Intent intent = new Intent();
-                                intent.putExtra(GROUP_NAME, groupName);
+                                intent.putExtra(GROUP_NOTICE, groupNotice);
                                 setResult(ChatGroupDetailsActivity.RESULT_CODE, intent);
                                 finish();
                             }
@@ -109,33 +112,7 @@ public class GroupNameActivity extends Activity {
                 };
 
                 HuxinSdkManager.instance().reqModifyGroupInfo(
-                        groupId, groupName, "", "", receiveListener);
-            }
-        });
-
-        et_user_name.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                /*if (TextUtils.isEmpty(s.toString())) {
-                    iv_user_delete.setVisibility(View.GONE);
-                } else {
-                    iv_user_delete.setVisibility(View.VISIBLE);
-                }*/
-            }
-        });
-
-        iv_user_delete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                et_user_name.setText("");
+                        groupId, "", groupNotice, "", receiveListener);
             }
         });
     }

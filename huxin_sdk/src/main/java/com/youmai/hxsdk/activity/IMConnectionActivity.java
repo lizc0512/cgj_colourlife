@@ -984,7 +984,8 @@ public class IMConnectionActivity extends SdkBaseActivity implements
     public void onCallback(CacheMsgBean cacheMsgBean) {
         //刷新界面
         if (!isFinishing()) {
-            if (cacheMsgBean.getSenderUserId().equals(dstUuid))
+            if (cacheMsgBean.getSenderUserId().equals(dstUuid)
+                    && cacheMsgBean.getGroupId() == 0)
                 imListAdapter.refreshIncomingMsgUI(cacheMsgBean);
         }
     }

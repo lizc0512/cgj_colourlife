@@ -123,7 +123,6 @@ public class GroupListAdapter extends RecyclerView.Adapter {
             }
             itemView.message_name.setText(displayName);
 
-            itemView.message_name.setText(ben.getGroup_name());
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

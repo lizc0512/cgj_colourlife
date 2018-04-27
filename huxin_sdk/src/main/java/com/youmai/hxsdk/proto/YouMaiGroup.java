@@ -100,6 +100,115 @@ public final class YouMaiGroup {
         // @@protoc_insertion_point(enum_scope:GroupMemberOptType)
     }
 
+    /**
+     * Protobuf enum {@code GroupInfoModifyType}
+     */
+    public enum GroupInfoModifyType
+            implements com.google.protobuf.ProtocolMessageEnum {
+        /**
+         * <code>MODIFY_NAME = 1;</code>
+         */
+        MODIFY_NAME(0, 1),
+        /**
+         * <code>MODIFY_AVATAR = 2;</code>
+         */
+        MODIFY_AVATAR(1, 2),
+        /**
+         * <code>MODIFY_TOPIC = 3;</code>
+         */
+        MODIFY_TOPIC(2, 3),
+        /**
+         * <code>MODIFY_OWNER = 4;</code>
+         */
+        MODIFY_OWNER(3, 4),;
+
+        /**
+         * <code>MODIFY_NAME = 1;</code>
+         */
+        public static final int MODIFY_NAME_VALUE = 1;
+        /**
+         * <code>MODIFY_AVATAR = 2;</code>
+         */
+        public static final int MODIFY_AVATAR_VALUE = 2;
+        /**
+         * <code>MODIFY_TOPIC = 3;</code>
+         */
+        public static final int MODIFY_TOPIC_VALUE = 3;
+        /**
+         * <code>MODIFY_OWNER = 4;</code>
+         */
+        public static final int MODIFY_OWNER_VALUE = 4;
+
+
+        public final int getNumber() {
+            return value;
+        }
+
+        public static GroupInfoModifyType valueOf(int value) {
+            switch (value) {
+                case 1:
+                    return MODIFY_NAME;
+                case 2:
+                    return MODIFY_AVATAR;
+                case 3:
+                    return MODIFY_TOPIC;
+                case 4:
+                    return MODIFY_OWNER;
+                default:
+                    return null;
+            }
+        }
+
+        public static com.google.protobuf.Internal.EnumLiteMap<GroupInfoModifyType>
+        internalGetValueMap() {
+            return internalValueMap;
+        }
+
+        private static com.google.protobuf.Internal.EnumLiteMap<GroupInfoModifyType>
+                internalValueMap =
+                new com.google.protobuf.Internal.EnumLiteMap<GroupInfoModifyType>() {
+                    public GroupInfoModifyType findValueByNumber(int number) {
+                        return GroupInfoModifyType.valueOf(number);
+                    }
+                };
+
+        public final com.google.protobuf.Descriptors.EnumValueDescriptor
+        getValueDescriptor() {
+            return getDescriptor().getValues().get(index);
+        }
+
+        public final com.google.protobuf.Descriptors.EnumDescriptor
+        getDescriptorForType() {
+            return getDescriptor();
+        }
+
+        public static final com.google.protobuf.Descriptors.EnumDescriptor
+        getDescriptor() {
+            return YouMaiGroup.getDescriptor().getEnumTypes().get(1);
+        }
+
+        private static final GroupInfoModifyType[] VALUES = values();
+
+        public static GroupInfoModifyType valueOf(
+                com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
+            if (desc.getType() != getDescriptor()) {
+                throw new IllegalArgumentException(
+                        "EnumValueDescriptor is not for this type.");
+            }
+            return VALUES[desc.getIndex()];
+        }
+
+        private final int index;
+        private final int value;
+
+        private GroupInfoModifyType(int index, int value) {
+            this.index = index;
+            this.value = value;
+        }
+
+        // @@protoc_insertion_point(enum_scope:GroupInfoModifyType)
+    }
+
     public interface GroupItemOrBuilder extends
             // @@protoc_insertion_point(interface_extends:GroupItem)
             com.google.protobuf.MessageOrBuilder {
@@ -17150,6 +17259,16 @@ public final class YouMaiGroup {
          */
         com.google.protobuf.ByteString
         getOwnerIdBytes();
+
+        /**
+         * <code>optional .GroupInfoModifyType type = 7;</code>
+         */
+        boolean hasType();
+
+        /**
+         * <code>optional .GroupInfoModifyType type = 7;</code>
+         */
+        YouMaiGroup.GroupInfoModifyType getType();
     }
 
     /**
@@ -17247,6 +17366,17 @@ public final class YouMaiGroup {
                             com.google.protobuf.ByteString bs = input.readBytes();
                             bitField0_ |= 0x00000020;
                             ownerId_ = bs;
+                            break;
+                        }
+                        case 56: {
+                            int rawValue = input.readEnum();
+                            YouMaiGroup.GroupInfoModifyType value = YouMaiGroup.GroupInfoModifyType.valueOf(rawValue);
+                            if (value == null) {
+                                unknownFields.mergeVarintField(7, rawValue);
+                            } else {
+                                bitField0_ |= 0x00000040;
+                                type_ = value;
+                            }
                             break;
                         }
                     }
@@ -17568,6 +17698,23 @@ public final class YouMaiGroup {
             }
         }
 
+        public static final int TYPE_FIELD_NUMBER = 7;
+        private YouMaiGroup.GroupInfoModifyType type_;
+
+        /**
+         * <code>optional .GroupInfoModifyType type = 7;</code>
+         */
+        public boolean hasType() {
+            return ((bitField0_ & 0x00000040) == 0x00000040);
+        }
+
+        /**
+         * <code>optional .GroupInfoModifyType type = 7;</code>
+         */
+        public YouMaiGroup.GroupInfoModifyType getType() {
+            return type_;
+        }
+
         private void initFields() {
             userId_ = "";
             groupId_ = 0;
@@ -17575,6 +17722,7 @@ public final class YouMaiGroup {
             groupAvatar_ = "";
             topic_ = "";
             ownerId_ = "";
+            type_ = YouMaiGroup.GroupInfoModifyType.MODIFY_NAME;
         }
 
         private byte memoizedIsInitialized = -1;
@@ -17609,6 +17757,9 @@ public final class YouMaiGroup {
             if (((bitField0_ & 0x00000020) == 0x00000020)) {
                 output.writeBytes(6, getOwnerIdBytes());
             }
+            if (((bitField0_ & 0x00000040) == 0x00000040)) {
+                output.writeEnum(7, type_.getNumber());
+            }
             getUnknownFields().writeTo(output);
         }
 
@@ -17642,6 +17793,10 @@ public final class YouMaiGroup {
             if (((bitField0_ & 0x00000020) == 0x00000020)) {
                 size += com.google.protobuf.CodedOutputStream
                         .computeBytesSize(6, getOwnerIdBytes());
+            }
+            if (((bitField0_ & 0x00000040) == 0x00000040)) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeEnumSize(7, type_.getNumber());
             }
             size += getUnknownFields().getSerializedSize();
             memoizedSerializedSize = size;
@@ -17798,6 +17953,8 @@ public final class YouMaiGroup {
                 bitField0_ = (bitField0_ & ~0x00000010);
                 ownerId_ = "";
                 bitField0_ = (bitField0_ & ~0x00000020);
+                type_ = YouMaiGroup.GroupInfoModifyType.MODIFY_NAME;
+                bitField0_ = (bitField0_ & ~0x00000040);
                 return this;
             }
 
@@ -17850,6 +18007,10 @@ public final class YouMaiGroup {
                     to_bitField0_ |= 0x00000020;
                 }
                 result.ownerId_ = ownerId_;
+                if (((from_bitField0_ & 0x00000040) == 0x00000040)) {
+                    to_bitField0_ |= 0x00000040;
+                }
+                result.type_ = type_;
                 result.bitField0_ = to_bitField0_;
                 onBuilt();
                 return result;
@@ -17893,6 +18054,9 @@ public final class YouMaiGroup {
                     bitField0_ |= 0x00000020;
                     ownerId_ = other.ownerId_;
                     onChanged();
+                }
+                if (other.hasType()) {
+                    setType(other.getType());
                 }
                 this.mergeUnknownFields(other.getUnknownFields());
                 return this;
@@ -18440,6 +18604,45 @@ public final class YouMaiGroup {
                 return this;
             }
 
+            private YouMaiGroup.GroupInfoModifyType type_ = YouMaiGroup.GroupInfoModifyType.MODIFY_NAME;
+
+            /**
+             * <code>optional .GroupInfoModifyType type = 7;</code>
+             */
+            public boolean hasType() {
+                return ((bitField0_ & 0x00000040) == 0x00000040);
+            }
+
+            /**
+             * <code>optional .GroupInfoModifyType type = 7;</code>
+             */
+            public YouMaiGroup.GroupInfoModifyType getType() {
+                return type_;
+            }
+
+            /**
+             * <code>optional .GroupInfoModifyType type = 7;</code>
+             */
+            public Builder setType(YouMaiGroup.GroupInfoModifyType value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000040;
+                type_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional .GroupInfoModifyType type = 7;</code>
+             */
+            public Builder clearType() {
+                bitField0_ = (bitField0_ & ~0x00000040);
+                type_ = YouMaiGroup.GroupInfoModifyType.MODIFY_NAME;
+                onChanged();
+                return this;
+            }
+
             // @@protoc_insertion_point(builder_scope:GroupInfoModifyReq)
         }
 
@@ -18504,7 +18707,7 @@ public final class YouMaiGroup {
      * <p>
      * <pre>
      * 群资料修改返回
-     * + 增加返回群组ID bob 2016.08.22
+     * + 增加返回群组ID
      * </pre>
      */
     public static final class GroupInfoModifyRsp extends
@@ -18852,7 +19055,7 @@ public final class YouMaiGroup {
          * <p>
          * <pre>
          * 群资料修改返回
-         * + 增加返回群组ID bob 2016.08.22
+         * + 增加返回群组ID
          * </pre>
          */
         public static final class Builder extends
@@ -20042,18 +20245,21 @@ public final class YouMaiGroup {
                         "e_time\030\003 \001(\004\"{\n\014GroupInfoRsp\022.\n\ngroup_in" +
                         "fo\030\001 \001(\0132\032.GroupInfo\022\016\n\006" +
                         "update\030\002 \001(\010\022+\n\006result\030\n \001(\0162\033.com.proto" +
-                        ".basic.ResultCode\"\202\001\n\022GroupInfoModifyReq" +
+                        ".basic.ResultCode\"\266\001\n\022GroupInfoModifyReq" +
                         "\022\017\n\007user_id\030\001 \001(\t\022\020\n\010group_id\030\002 \001(\r\022\022\n\ng" +
                         "roup_name\030\003 \001(\t\022\024\n\014group_avatar\030\004 \001(\t\022\r\n" +
-                        "\005topic\030\005 \001(\t\022\020\n\010owner_id\030\006 \001(\t\"\203\001\n\022Group" +
-                        "InfoModifyRsp\022+\n\006result\030\001 \001(\0162\033.com.prot" +
-                        "o.basic.ResultCode\022\020\n\010group_id\030\002 \001(\r\022.\n\n",
-                "group_info\030\003 \001(\0132\032.Group" +
-                        "Info\"[\n\027IMGroupInfoModifyNotify\022\020\n\010group" +
-                        "_id\030\001 \001(\r\022.\n\ngroup_info\030\002 \001(\0132\032.com.prot" +
-                        "o.group.GroupInfo*H\n\022GroupMemberOptType\022" +
-                        "\030\n\024GROUP_MEMBER_OPT_ADD\020\001\022\030\n\024GROUP_MEMBE" +
-                        "R_OPT_DEL\020\002"
+                        "\005topic\030\005 \001(\t\022\020\n\010owner_id\030\006 \001(\t\0222\n\004type\030\007" +
+                        " \001(\0162$.GroupInfoModifyTy" +
+                        "pe\"\203\001\n\022GroupInfoModifyRsp\022+\n\006result\030\001 \001(",
+                "\0162\033.ResultCode\022\020\n\010group_" +
+                        "id\030\002 \001(\r\022.\n\ngroup_info\030\003 \001(\0132\032.com.proto" +
+                        ".group.GroupInfo\"[\n\027IMGroupInfoModifyNot" +
+                        "ify\022\020\n\010group_id\030\001 \001(\r\022.\n\ngroup_info\030\002 \001(" +
+                        "\0132\032.GroupInfo*H\n\022GroupMe" +
+                        "mberOptType\022\030\n\024GROUP_MEMBER_OPT_ADD\020\001\022\030\n" +
+                        "\024GROUP_MEMBER_OPT_DEL\020\002*]\n\023GroupInfoModi" +
+                        "fyType\022\017\n\013MODIFY_NAME\020\001\022\021\n\rMODIFY_AVATAR" +
+                        "\020\002\022\020\n\014MODIFY_TOPIC\020\003\022\020\n\014MODIFY_OWNER\020\004"
         };
         com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
                 new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -20175,7 +20381,7 @@ public final class YouMaiGroup {
         internal_static_com_proto_group_GroupInfoModifyReq_fieldAccessorTable = new
                 com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_proto_group_GroupInfoModifyReq_descriptor,
-                new String[]{"UserId", "GroupId", "GroupName", "GroupAvatar", "Topic", "OwnerId",});
+                new String[]{"UserId", "GroupId", "GroupName", "GroupAvatar", "Topic", "OwnerId", "Type",});
         internal_static_com_proto_group_GroupInfoModifyRsp_descriptor =
                 getDescriptor().getMessageTypes().get(18);
         internal_static_com_proto_group_GroupInfoModifyRsp_fieldAccessorTable = new

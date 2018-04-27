@@ -55,11 +55,17 @@
     <color name="hx_pickerview_bgColor_overlay">#60000000</color>
 
     <!--透明度 (0 - 100) %-->
-    <!--透明度 (0 - 100) %-->
+    <color name="hxs_color_trans_zero">#00000000</color>
+    <color name="hxs_color_trans_one">#19000000</color>
+    <color name="hxs_color_trans_two">#33000000</color>
     <color name="hxs_color_trans_three">#4C000000</color>
+    <color name="hxs_color_trans_four">#66000000</color>
     <color name="hxs_color_trans_five">#7F000000</color>
     <color name="hxs_color_trans_six">#99000000</color>
     <color name="hxs_color_trans_seven">#B2000000</color>
+    <color name="hxs_color_trans_eight">#CC000000</color>
+    <color name="hxs_color_trans_nine">#E5000000</color>
+    <color name="hxs_color_trans_ten">#FF000000</color>
 
     <!--wheelView-->
     <color name="color_transparent">#00000000</color>

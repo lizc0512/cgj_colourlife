@@ -23,6 +23,7 @@ import com.google.protobuf.GeneratedMessage;
 import com.youmai.hxsdk.config.AppConfig;
 import com.youmai.hxsdk.db.manager.GreenDBIMManager;
 import com.youmai.hxsdk.entity.IpConfig;
+import com.youmai.hxsdk.entity.RespBaseBean;
 import com.youmai.hxsdk.http.HttpConnector;
 import com.youmai.hxsdk.http.IGetListener;
 import com.youmai.hxsdk.http.IPostListener;
@@ -149,6 +150,14 @@ public class HuxinSdkManager {
         GreenDBIMManager.instance(mContext);
         IMMsgManager.instance().init(mContext);
         mUserInfo.fromJson(mContext);
+
+        RespBaseBean.setProtocolCallBack(new ProtocolCallBack() {
+            @Override
+            public void sessionExpire() {
+                reLogin();
+            }
+        });
+
 
         initARouter();
         MorePushManager.register(mContext);//注册送服务
@@ -307,6 +316,30 @@ public class HuxinSdkManager {
             res = true;
         }
         return res;
+    }
+
+
+    private void initAppForMainProcess(Context context) {
+        String processName = AppUtils.getProcessName(context, android.os.Process.myPid());
+        Log.e("colin", "processName:" + processName);
+        if (processName != null) {
+            boolean defaultProcess = processName.equals(context.getPackageName());
+            if (defaultProcess) {
+                HuxinSdkManager.instance().init(context);
+            }
+        }
+    }
+
+
+    /**
+     * 重新登录
+     */
+    private void reLogin() {
+        Intent intent = new Intent(mContext, LoginPromptActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+                | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        mContext.startActivity(intent);
     }
 
 

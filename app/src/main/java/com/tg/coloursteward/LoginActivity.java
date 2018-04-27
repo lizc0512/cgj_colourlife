@@ -106,6 +106,12 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         Intent getintent = getIntent();
+
+        boolean loginOut = getintent.getBooleanExtra("login_out", false);
+        if (loginOut) {
+            SharedPreferencesTools.clearUserId(this);
+        }
+
         extras = getintent.getStringExtra(MainActivity.KEY_EXTRAS);
         contentLayout = findViewById(R.id.login_content);
         editUser = (EditText) findViewById(R.id.edit_user);

@@ -534,6 +534,25 @@ public class AppUtils {
 
 
     /**
+     * @return null may be returned if the specified process not found
+     */
+    public static String getProcessName(Context cxt, int pid) {
+        ActivityManager am = (ActivityManager) cxt.getSystemService(Context.ACTIVITY_SERVICE);
+
+        List<ActivityManager.RunningAppProcessInfo> runningApps = am.getRunningAppProcesses();
+        if (runningApps == null) {
+            return null;
+        }
+        for (ActivityManager.RunningAppProcessInfo procInfo : runningApps) {
+            if (procInfo.pid == pid) {
+                return procInfo.processName;
+            }
+        }
+        return null;
+    }
+
+
+    /**
      * 判断系统指定服务是否在运行
      *
      * @param mContext
@@ -1059,7 +1078,7 @@ public class AppUtils {
         return m.find();
     }
 
-    
+
 
     /**
      * 检查是否重复按键

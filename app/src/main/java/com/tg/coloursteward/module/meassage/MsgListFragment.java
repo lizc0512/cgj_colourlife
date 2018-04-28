@@ -335,9 +335,9 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
 
         mMessageAdapter.setOnLongItemClickListener(new MessageAdapter.OnItemLongClickListener() {
             @Override
-            public void onItemLongClick(View v, ExCacheMsgBean bean, int position) {
+            public void onItemLongClick(View v, ExCacheMsgBean bean) {
                 if (bean.getUiType() != MessageAdapter.ADAPTER_TYPE_SEARCH) {
-                    delPopUp(v, bean, position);
+                    delPopUp(v, bean);
                 }
             }
         });
@@ -347,7 +347,7 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
 
     PopupWindow popupWindow;
 
-    private void delPopUp(View v, final ExCacheMsgBean bean, final int position) {
+    private void delPopUp(View v, final ExCacheMsgBean bean) {
         LayoutInflater layoutInflater = (LayoutInflater) getContext()
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = layoutInflater.inflate(com.youmai.hxsdk.R.layout.hx_im_del_lay, null);
@@ -364,18 +364,17 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
         tv_del.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                delMsgChat(bean, position);
+                delMsgChat(bean);
                 popupWindow.dismiss();
             }
         });
     }
 
-    public void delMsgChat(ExCacheMsgBean bean, int position) {
-        ToastUtil.showToast(getContext(), "删除成功：" + position);
-        mMessageAdapter.deleteMessage(position);
+    public void delMsgChat(ExCacheMsgBean bean) {
         CacheMsgHelper.instance().deleteAllMsg(getActivity(), bean.getTargetUuid());
         //去掉未读消息计数
         IMMsgManager.instance().removeBadge(bean.getTargetUuid());
+        mMessageAdapter.deleteMessage(bean);
     }
 
 

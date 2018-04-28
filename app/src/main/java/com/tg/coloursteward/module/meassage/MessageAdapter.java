@@ -111,8 +111,8 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
 
-    public void deleteMessage(int pos) {
-        messageList.remove(pos);
+    public void deleteMessage(ExCacheMsgBean bean) {
+        messageList.remove(bean);
         notifyDataSetChanged();
         //notifyItemRemoved(pos + getHeaderCount());
     }
@@ -355,7 +355,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             @Override
             public boolean onLongClick(View v) {
                 if (mOnLongItemClickListener != null) {
-                    mOnLongItemClickListener.onItemLongClick(v, model, position);
+                    mOnLongItemClickListener.onItemLongClick(v, model);
                 }
                 return true;
             }
@@ -409,7 +409,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     public interface OnItemLongClickListener {
-        void onItemLongClick(View v, ExCacheMsgBean bean, int position);
+        void onItemLongClick(View v, ExCacheMsgBean bean);
     }
 
     public class MsgItemSearch extends RecyclerView.ViewHolder {

@@ -59,7 +59,7 @@ public class LoginPromptActivity extends AppCompatActivity implements View.OnCli
         if (id == R.id.tv_cancel) {
             HuxinSdkManager.instance().getStackAct().finishAllActivity();
 
-            HuxinSdkManager.instance().clearUserData();//清楚用户信息
+            HuxinSdkManager.instance().loginOut();//清楚用户信息
             Intent intent = new Intent();
             intent.setClassName(this, "com.tg.coloursteward.LoginActivity");
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

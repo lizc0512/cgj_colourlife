@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.google.protobuf.GeneratedMessage;
 import com.youmai.hxsdk.config.AppConfig;
+import com.youmai.hxsdk.db.helper.CacheMsgHelper;
 import com.youmai.hxsdk.db.manager.GreenDBIMManager;
 import com.youmai.hxsdk.entity.IpConfig;
 import com.youmai.hxsdk.entity.RespBaseBean;
@@ -295,13 +296,11 @@ public class HuxinSdkManager {
         mUserInfo.setUserName(userName);
     }
 
-    public void clearUserData() {
-        close();
-        mUserInfo.clear(mContext);
 
-        MorePushManager.unregister(mContext);//反注册送服务
-        SPDataUtil.setUserInfoJson(mContext, "");// FIXME: 2017/3/20
-        IMMsgManager.instance().clearShortcutBadger();
+    public void loginOut() {
+        if (mContext != null && binded == BIND_STATUS.BINDED) {
+            clearUserData();
+        }
     }
 
 
@@ -393,7 +392,18 @@ public class HuxinSdkManager {
     }
 
 
-    public void waitBindingProto(final GeneratedMessage msg, final int commandId, final ReceiveListener callback) {
+    private void clearUserData() {
+        close();
+        mUserInfo.clear(mContext);
+        CacheMsgHelper.instance().deleteAll(mContext);
+
+        MorePushManager.unregister(mContext);//反注册送服务
+        SPDataUtil.setUserInfoJson(mContext, "");// FIXME: 2017/3/20
+        IMMsgManager.instance().clearShortcutBadger();
+    }
+
+
+    private void waitBindingProto(final GeneratedMessage msg, final int commandId, final ReceiveListener callback) {
         init(mContext, new InitListener() {
             @Override
             public void success() {
@@ -410,7 +420,7 @@ public class HuxinSdkManager {
     }
 
 
-    public void waitBindingNotify(final NotifyListener listener) {
+    private void waitBindingNotify(final NotifyListener listener) {
         init(mContext, new InitListener() {
             @Override
             public void success() {
@@ -433,7 +443,7 @@ public class HuxinSdkManager {
      * @param commandId 命令码
      * @param callback  回调
      */
-    public void sendProto(final GeneratedMessage msg, final int commandId, final ReceiveListener callback) {
+    private void sendProto(final GeneratedMessage msg, final int commandId, final ReceiveListener callback) {
         if (mContext != null) {
             if (binded == BIND_STATUS.BINDED) {
                 huxinService.sendProto(msg, commandId, callback);
@@ -463,13 +473,6 @@ public class HuxinSdkManager {
     public void clearNotifyListener(NotifyListener listener) {
         if (mContext != null && binded == BIND_STATUS.BINDED) {
             huxinService.clearNotifyListener(listener);
-        }
-    }
-
-
-    public void loginOut() {
-        if (mContext != null && binded == BIND_STATUS.BINDED) {
-            clearUserData();
         }
     }
 

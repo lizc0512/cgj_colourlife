@@ -92,7 +92,7 @@ public class SettingActivity extends BaseActivity implements ItemClickListener {
 						//清空缓存
 						SharedPreferencesTools.clearCache(SettingActivity.this);
 						CityPropertyApplication.gotoLoginActivity(SettingActivity.this);
-						HuxinSdkManager.instance().clearUserData();
+						HuxinSdkManager.instance().loginOut();
 					}
 				}, null, "确定要退出账号吗", null, null);
 				

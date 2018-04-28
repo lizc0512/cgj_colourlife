@@ -20,7 +20,7 @@ public class ExCacheMsgBean extends CacheMsgBean {
     private boolean mIsMultiNumber = false;//多号码识别
 
     public ExCacheMsgBean() {
-        uiType = MessageAdapter.ADAPTER_TYPE_SERACH;
+        uiType = MessageAdapter.ADAPTER_TYPE_SEARCH;
     }
 
     public ExCacheMsgBean(MsgConfig.ContentBean.DataBean pushMsg) {
@@ -30,7 +30,12 @@ public class ExCacheMsgBean extends CacheMsgBean {
 
     public ExCacheMsgBean(CacheMsgBean bean) {
         super(bean);
-        uiType = MessageAdapter.ADAPTER_TYPE_NORMAL;
+        if (bean.getGroupId() > 0) {
+            uiType = MessageAdapter.ADAPTER_TYPE_GROUP;
+        } else {
+            uiType = MessageAdapter.ADAPTER_TYPE_SINGLE;
+        }
+
     }
 
     public int getUiType() {

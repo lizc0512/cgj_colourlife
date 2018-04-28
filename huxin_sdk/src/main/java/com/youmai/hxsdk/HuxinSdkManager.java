@@ -940,6 +940,7 @@ public class HuxinSdkManager {
         msgData.setSrcRealname(getRealName());
         msgData.setSrcMobile(getPhoneNum());
         msgData.setGroupId(groupId);
+        msgData.setDestUserId(groupName);   //通过单聊destUserId通道传递群名
         msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_TEXT);
         msgData.setSessionType(YouMaiMsg.SessionType.SESSION_TYPE_MULTICHAT);
 
@@ -978,6 +979,7 @@ public class HuxinSdkManager {
         msgData.setSrcRealname(getRealName());
         msgData.setSrcMobile(getPhoneNum());
         msgData.setGroupId(groupId);
+        msgData.setDestUserId(groupName);   //通过单聊destUserId通道传递群名
         msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_LOCATION);
         msgData.setSessionType(YouMaiMsg.SessionType.SESSION_TYPE_MULTICHAT);
 
@@ -1015,6 +1017,7 @@ public class HuxinSdkManager {
         msgData.setSrcRealname(getRealName());
         msgData.setSrcMobile(getPhoneNum());
         msgData.setGroupId(groupId);
+        msgData.setDestUserId(groupName);   //通过单聊destUserId通道传递群名
         msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_IMAGE);
         msgData.setSessionType(YouMaiMsg.SessionType.SESSION_TYPE_MULTICHAT);
 
@@ -1049,6 +1052,7 @@ public class HuxinSdkManager {
         msgData.setSrcRealname(getRealName());
         msgData.setSrcMobile(getPhoneNum());
         msgData.setGroupId(groupId);
+        msgData.setDestUserId(groupName);   //通过单聊destUserId通道传递群名
         msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_AUDIO);
         msgData.setSessionType(YouMaiMsg.SessionType.SESSION_TYPE_MULTICHAT);
 
@@ -1086,6 +1090,7 @@ public class HuxinSdkManager {
         msgData.setSrcRealname(getRealName());
         msgData.setSrcMobile(getPhoneNum());
         msgData.setGroupId(groupId);
+        msgData.setDestUserId(groupName);   //通过单聊destUserId通道传递群名
         msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_VIDEO);
         msgData.setSessionType(YouMaiMsg.SessionType.SESSION_TYPE_MULTICHAT);
 
@@ -1118,6 +1123,7 @@ public class HuxinSdkManager {
         msgData.setSrcRealname(getRealName());
         msgData.setSrcMobile(getPhoneNum());
         msgData.setGroupId(groupId);
+        msgData.setDestUserId(groupName);   //通过单聊destUserId通道传递群名
         msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_FILE);
         msgData.setSessionType(YouMaiMsg.SessionType.SESSION_TYPE_MULTICHAT);
 

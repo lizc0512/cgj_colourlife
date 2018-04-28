@@ -7,7 +7,6 @@ import com.youmai.hxsdk.db.dao.DaoMaster;
 import com.youmai.hxsdk.db.dao.DaoSession;
 import com.youmai.hxsdk.db.dao.EmployeeBeanDao;
 import com.youmai.hxsdk.db.dao.GroupInfoBeanDao;
-import com.youmai.hxsdk.db.helper.HMROpenHelper;
 
 import org.greenrobot.greendao.database.Database;
 import org.greenrobot.greendao.query.QueryBuilder;

@@ -301,7 +301,7 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
         mMessageAdapter.setOnItemClickListener(new MessageAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(ExCacheMsgBean bean, int position) {
-                if (bean.getUiType() == MessageAdapter.ADAPTER_TYPE_SERACH) {
+                if (bean.getUiType() == MessageAdapter.ADAPTER_TYPE_SEARCH) {
                     Intent intent = new Intent(getActivity(), GlobalSearchActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                     startActivity(intent);
@@ -309,24 +309,28 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
                     Intent intent = new Intent(getActivity(), DeskTopActivity.class);
                     intent.putExtra(DeskTopActivity.DESKTOP_WEIAPPCODE, bean.getPushMsg());
                     startActivity(intent);
-                } else {
-                    Intent intent = new Intent();
+                } else if (bean.getUiType() == MessageAdapter.ADAPTER_TYPE_SINGLE) {
+
+                    Intent intent = new Intent(getActivity(), IMConnectionActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                    int groupId = bean.getGroupId();
-                    if (groupId > 0) {
-                        intent.setClass(getActivity(), IMGroupActivity.class);
-                        intent.putExtra(IMGroupActivity.DST_UUID, groupId);
-                        intent.putExtra(IMGroupActivity.DST_NAME, bean.getDisplayName());
-                    } else {
-                        intent.setClass(getActivity(), IMConnectionActivity.class);
-                        intent.putExtra(IMConnectionActivity.DST_UUID, bean.getTargetUuid());
-                        intent.putExtra(IMConnectionActivity.DST_NAME, bean.getDisplayName());
-                        intent.putExtra(IMConnectionActivity.DST_USERNAME, bean.getTargetUserName());
-                    }
+                    intent.putExtra(IMConnectionActivity.DST_UUID, bean.getTargetUuid());
+                    intent.putExtra(IMConnectionActivity.DST_NAME, bean.getDisplayName());
+                    intent.putExtra(IMConnectionActivity.DST_USERNAME, bean.getTargetUserName());
 
                     startActivityForResult(intent, INTENT_REQUEST_FOR_UPDATE_UI);
-
                     IMMsgManager.instance().removeBadge(bean.getTargetUuid());
+
+                } else if (bean.getUiType() == MessageAdapter.ADAPTER_TYPE_GROUP) {
+
+                    Intent intent = new Intent(getActivity(), IMGroupActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    int groupId = bean.getGroupId();
+                    intent.putExtra(IMGroupActivity.DST_UUID, groupId);
+                    intent.putExtra(IMGroupActivity.DST_NAME, bean.getDisplayName());
+
+                    startActivityForResult(intent, INTENT_REQUEST_FOR_UPDATE_UI);
+                    IMMsgManager.instance().removeBadge(bean.getTargetUuid());
+
                 }
             }
         });
@@ -367,7 +371,7 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
     }
 
     public void delMsgChat(ExCacheMsgBean bean, int position) {
-        if (bean.getUiType() != MessageAdapter.ADAPTER_TYPE_SERACH) {
+        if (bean.getUiType() != MessageAdapter.ADAPTER_TYPE_SEARCH) {
             ToastUtil.showToast(getContext(), "删除成功：" + position);
             ExCacheMsgBean cacheMsgBean = mMessageAdapter.getMessageList().get(position);
             mMessageAdapter.deleteMessage(position);

@@ -1,14 +1,28 @@
 package com.youmai.hxsdk.db.helper;
 
 import android.content.Context;
+import android.text.TextUtils;
+import android.view.View;
 
+import com.google.gson.Gson;
+import com.google.protobuf.InvalidProtocolBufferException;
+import com.youmai.hxsdk.HuxinSdkManager;
+import com.youmai.hxsdk.R;
+import com.youmai.hxsdk.db.bean.Contact;
 import com.youmai.hxsdk.db.bean.GroupInfoBean;
 import com.youmai.hxsdk.db.dao.GroupInfoBeanDao;
 import com.youmai.hxsdk.db.manager.GreenDBIMManager;
+import com.youmai.hxsdk.entity.GroupAndMember;
+import com.youmai.hxsdk.proto.YouMaiBasic;
+import com.youmai.hxsdk.proto.YouMaiGroup;
+import com.youmai.hxsdk.socket.PduBase;
+import com.youmai.hxsdk.socket.ReceiveListener;
+import com.youmai.hxsdk.utils.GsonUtil;
 import com.youmai.hxsdk.utils.ListUtils;
 
 import org.greenrobot.greendao.query.QueryBuilder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -76,6 +90,7 @@ public class GroupInfoHelper {
 
     /**
      * 更新
+     *
      * @param context
      * @param bean
      */
@@ -84,5 +99,91 @@ public class GroupInfoHelper {
         dao.insertOrReplace(bean);
     }
 
+
+    /**
+     * 按照groupId 查询
+     *
+     * @param context
+     */
+    public void toQueryByGroupId(final Context context, int groupId, final OnResultCallBack callBack) {
+        GroupInfoBeanDao dao = GreenDBIMManager.instance(context).getGroupInfoDao();
+        List<GroupInfoBean> list = dao.queryBuilder().where(GroupInfoBeanDao.Properties.Group_id.eq(groupId)).list();
+        if (!ListUtils.isEmpty(list)) {
+            final GroupInfoBean groupInfoBean = list.get(0);
+            String json = groupInfoBean.getGroupMemberJson();
+            if (!TextUtils.isEmpty(json)) {
+                List<GroupAndMember> members = GsonUtil.parseToArray(json, GroupAndMember[].class);
+                if (callBack != null && !ListUtils.isEmpty(members)) {
+                    callBack.onMembers(members);
+                }
+            } else {
+                HuxinSdkManager.instance().reqGroupMember(groupId, new ReceiveListener() {
+                    @Override
+                    public void OnRec(PduBase pduBase) {
+                        try {
+                            YouMaiGroup.GroupMemberRsp ack = YouMaiGroup.GroupMemberRsp.parseFrom(pduBase.body);
+                            if (ack.getResult() == YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS) {
+                                GroupInfoBean bean = updateGroupInfo(groupInfoBean, ack, callBack);
+                                GroupInfoHelper.instance().toUpdateByGroupId(context, bean);
+                            }
+
+                        } catch (InvalidProtocolBufferException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            }
+        } else {
+            HuxinSdkManager.instance().reqGroupMember(groupId, new ReceiveListener() {
+                @Override
+                public void OnRec(PduBase pduBase) {
+                    try {
+                        YouMaiGroup.GroupMemberRsp ack = YouMaiGroup.GroupMemberRsp.parseFrom(pduBase.body);
+                        if (ack.getResult() == YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS) {
+                            GroupInfoBean bean = updateGroupInfo(null, ack, callBack);
+                            GroupInfoHelper.instance().toUpdateByGroupId(context, bean);
+                        }
+
+                    } catch (InvalidProtocolBufferException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
+
+
+    }
+
+    private GroupInfoBean updateGroupInfo(GroupInfoBean bean, YouMaiGroup.GroupMemberRsp ack,
+                                          OnResultCallBack callBack) {
+        List<YouMaiGroup.GroupMemberItem> memberListList = ack.getMemberListList();
+        if (bean == null) {
+            bean = new GroupInfoBean();
+            bean.setGroup_id(ack.getGroupId());
+        }
+
+        List<GroupAndMember> list = new ArrayList<>();
+        for (YouMaiGroup.GroupMemberItem item : memberListList) {
+            GroupAndMember member = new GroupAndMember();
+            member.setMember_id(item.getMemberId());
+            member.setMember_name(item.getMemberName());
+            member.setMember_role(item.getMemberRole());
+            member.setUser_name(item.getUserName());
+            list.add(member);
+        }
+        bean.setGroupMemberJson(GsonUtil.format(list));
+
+
+        if (callBack != null && !ListUtils.isEmpty(list)) {
+            callBack.onMembers(list);
+        }
+        return bean;
+
+    }
+
+
+    public interface OnResultCallBack {
+        void onMembers(List<GroupAndMember> list);
+    }
 
 }

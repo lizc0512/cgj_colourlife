@@ -38,7 +38,8 @@ import com.youmai.hxsdk.proto.YouMaiGroup;
 import com.youmai.hxsdk.router.APath;
 import com.youmai.hxsdk.socket.PduBase;
 import com.youmai.hxsdk.socket.ReceiveListener;
-import com.youmai.hxsdk.utils.CommonUtils;
+import com.youmai.hxsdk.utils.AppUtils;
+import com.youmai.hxsdk.utils.GsonUtil;
 import com.youmai.hxsdk.utils.ListUtils;
 import com.youmai.hxsdk.utils.StringUtils;
 
@@ -121,7 +122,7 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
         isUpdate = false;
     }
 
-    void initView() {
+    private void initView() {
         mGroupInfo = getIntent().getParcelableExtra(IMGroupActivity.GROUP_INFO);
         mGroupId = getIntent().getIntExtra(GROUP_ID, -1);
 
@@ -162,7 +163,7 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
         mGridView.setLayoutManager(manager);
         mGridView.setAdapter(mAdapter);
 
-        createGroupMap();
+        reqGroupMembers();
 
         if (mGroupInfo != null) {
             String title = String.format(getString(R.string.group_default_title),
@@ -187,9 +188,8 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
         }
     }
 
-    void createGroupMap() {
-
-        if (!CommonUtils.isNetworkAvailable(this)) {
+    private void reqGroupMembers() {
+        if (!AppUtils.isNetworkConnected(this)) {
             String groupMemberJson = mGroupInfo.getGroupMemberJson();
             if (!StringUtils.isEmpty(groupMemberJson)) {
                 try {
@@ -305,7 +305,7 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
                         mTvTitle.setText(title);
 
                         if (!ListUtils.isEmpty(groupList)) {
-                            updateDb(memberListList);
+                            updateGroupInfo(memberListList);
                         }
 
                         if (isGroupOwner) {
@@ -497,26 +497,26 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_CODE) {
             if (requestCode == REQUEST_CODE_ADD) {
-                createGroupMap();
+                reqGroupMembers();
             } else if (requestCode == REQUEST_CODE_DELETE) {
-                createGroupMap();
+                reqGroupMembers();
             } else if (requestCode == REQUEST_CODE_MODIFY_NAME) {
                 String groupName = data.getStringExtra(GroupNameActivity.GROUP_NAME);
                 mTvGroupName.setText(groupName);
-                updateDb2(1, groupName);
+                updateGroupInfo(1, groupName);
             } else if (requestCode == REQUEST_CODE_MODIFY_NOTICE_TOPIC) {
                 String groupNotice = data.getStringExtra(GroupNoticeActivity.GROUP_NOTICE);
                 mtvNoticeContent.setText(groupNotice);
-                updateDb2(2, groupNotice);
+                updateGroupInfo(2, groupNotice);
             } else if (requestCode == REQUEST_CODE_TRANS_OWNER) {
                 isGroupOwner = false;
-                createGroupMap();
+                reqGroupMembers();
             }
             isUpdate = true;
         }
     }
 
-    void updateDb(List<YouMaiGroup.GroupMemberItem> memberListList) {
+    private void updateGroupInfo(List<YouMaiGroup.GroupMemberItem> memberListList) {
         GroupInfoBean bean = new GroupInfoBean();
         bean.setGroup_id(mGroupId);
         if (null != mGroupInfo) {
@@ -541,12 +541,12 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
                 list.add(member);
             }
 
-            bean.setGroupMemberJson(new Gson().toJson(list));
-            GroupInfoHelper.instance().toUpdateByGroupId(ChatGroupDetailsActivity.this, bean);
+            bean.setGroupMemberJson(GsonUtil.format(list));
+            GroupInfoHelper.instance().toUpdateByGroupId(this, bean);
         }
     }
 
-    void updateDb2(int type, String content) {
+    private void updateGroupInfo(int type, String content) {
         GroupInfoBean bean = new GroupInfoBean();
         bean.setGroup_id(mGroupId);
         if (null != mGroupInfo) {
@@ -569,7 +569,7 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
             bean.setFixtop_priority(mGroupInfo.getFixtop_priority());
             bean.setNot_disturb(mGroupInfo.getNot_disturb());
             bean.setGroupMemberJson(mGroupInfo.getGroupMemberJson());
-            GroupInfoHelper.instance().toUpdateByGroupId(ChatGroupDetailsActivity.this, bean);
+            GroupInfoHelper.instance().toUpdateByGroupId(this, bean);
         }
     }
 }

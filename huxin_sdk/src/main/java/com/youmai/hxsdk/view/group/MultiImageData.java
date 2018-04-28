@@ -1,4 +1,4 @@
-package com.youmai.hxsdk.view.TeamHead;
+package com.youmai.hxsdk.view.group;
 
 import android.graphics.Bitmap;
 

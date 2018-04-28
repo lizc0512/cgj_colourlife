@@ -1,5 +1,6 @@
 package com.youmai.hxsdk.im;
 
+import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.chat.MsgContent;
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
 import com.youmai.hxsdk.proto.YouMaiMsg;
@@ -46,10 +47,10 @@ public class IMChat {
                 .setSenderMobile(imChat.getSrcMobile())
                 .setSenderAvatar(imChat.getSrcAvatar())
                 .setSenderRealName(imChat.getSrcRealname())
-                .setTargetName(imChat.getSrcRealname())
+
                 .setTargetUserName(imChat.getSrcUserName())
                 .setTargetAvatar(imChat.getSrcAvatar())
-                .setReceiverUserId(imChat.getDestUserId())
+
                 .setGroupId(imChat.getGroupId())
                 .setMsgTime(System.currentTimeMillis())
                 .setMsgStatus(CacheMsgBean.RECEIVE_UNREAD)
@@ -58,8 +59,12 @@ public class IMChat {
 
         if (isGroup) {
             mMsgBean.setTargetUuid(imChat.getGroupId() + "");
+            mMsgBean.setReceiverUserId(HuxinSdkManager.instance().getUuid());
+            mMsgBean.setTargetName(imChat.getDestUserId());
         } else {
             mMsgBean.setTargetUuid(imChat.getSrcUserId());
+            mMsgBean.setReceiverUserId(imChat.getDestUserId());
+            mMsgBean.setTargetName(imChat.getSrcRealname());
         }
 
     }

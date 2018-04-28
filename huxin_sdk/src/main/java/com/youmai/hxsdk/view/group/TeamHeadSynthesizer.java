@@ -1,4 +1,4 @@
-package com.youmai.hxsdk.view.TeamHead;
+package com.youmai.hxsdk.view.group;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -35,7 +35,7 @@ public class TeamHeadSynthesizer implements Synthesizer {
     private ImageView imageView;
     private int bgColor = Color.GRAY;
     private boolean loadOk;//加载完毕
-    private int mGap = 6; //宫格间距
+    private int mGap = 2; //宫格间距
 
 
     public TeamHeadSynthesizer(Context mContext) {

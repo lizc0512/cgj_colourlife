@@ -5,6 +5,7 @@ import com.google.gson.reflect.TypeToken;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -54,6 +55,11 @@ public class GsonUtil {
             e.printStackTrace();
         }
         return list;
+    }
+
+    public static <T> List<T> parseToArray(String s, Class<T[]> clazz) {
+        T[] arr = new Gson().fromJson(s, clazz);
+        return Arrays.asList(arr); //or return Arrays.asList(new Gson().fromJson(s, clazz)); for a one-liner
     }
 
 

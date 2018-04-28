@@ -1,4 +1,4 @@
-package com.youmai.hxsdk.view.TeamHead;
+package com.youmai.hxsdk.view.group;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -23,9 +23,9 @@ public class TeamHeadView extends AppCompatImageView {
      */
     private TeamHeadSynthesizer teamHeadSynthesizer;
     private int imageSize = 100;
-    private int synthesizedBg = Color.GRAY;
-    private int defaultImageResId = R.drawable.color_default_header;
-    private int imageGap = 6;
+    private int synthesizedBg = Color.LTGRAY;
+    private int defaultImageResId = R.drawable.contacts_groupchat;
+    private int imageGap = 2;
 
     public TeamHeadView(Context context) {
         super(context);

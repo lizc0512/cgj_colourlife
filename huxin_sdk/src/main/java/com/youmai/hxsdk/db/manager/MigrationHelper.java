@@ -1,4 +1,4 @@
-package com.youmai.hxsdk.db.helper;
+package com.youmai.hxsdk.db.manager;
 
 import android.database.Cursor;
 import android.support.annotation.NonNull;

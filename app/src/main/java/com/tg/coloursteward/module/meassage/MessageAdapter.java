@@ -17,16 +17,20 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.tg.coloursteward.R;
-import com.tg.coloursteward.module.groupchat.details.ChatGroupDetailsActivity;
+import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.util.StringUtils;
 import com.youmai.hxsdk.config.ColorsConfig;
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
+import com.youmai.hxsdk.db.helper.GroupInfoHelper;
+import com.youmai.hxsdk.entity.GroupAndMember;
 import com.youmai.hxsdk.im.IMMsgManager;
 import com.youmai.hxsdk.im.cache.CacheMsgTxt;
 import com.youmai.hxsdk.utils.GlideRoundTransform;
+import com.youmai.hxsdk.utils.ListUtils;
 import com.youmai.hxsdk.utils.TimeUtils;
 import com.youmai.hxsdk.view.chat.emoticon.utils.EmoticonHandler;
 import com.youmai.hxsdk.view.chat.utils.Utils;
+import com.youmai.hxsdk.view.group.TeamHeadView;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -44,9 +48,10 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     private final String TAG = "MessageAdapter";
 
-    public static final int ADAPTER_TYPE_SERACH = 1;  //搜索
+    public static final int ADAPTER_TYPE_SEARCH = 1;  //搜索
     public static final int ADAPTER_TYPE_PUSHMSG = 2; //ICE push msg
-    public static final int ADAPTER_TYPE_NORMAL = 3;  //消息
+    public static final int ADAPTER_TYPE_SINGLE = 3;  //单聊消息
+    public static final int ADAPTER_TYPE_GROUP = 4;  //群聊消息
 
 
     private Context mContext;
@@ -110,14 +115,20 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(mContext);
-        if (viewType == ADAPTER_TYPE_SERACH) {
+        if (viewType == ADAPTER_TYPE_SEARCH) {
             View view = inflater.inflate(R.layout.message_list_item_header_search, parent, false);
             return new MsgItemSearch(view);
         } else if (viewType == ADAPTER_TYPE_PUSHMSG) {
-            View view = inflater.inflate(R.layout.message_item_layout, parent, false);
+            View view = inflater.inflate(R.layout.single_message_item_layout, parent, false);
             return new MsgItemPush(view);
+        } else if (viewType == ADAPTER_TYPE_SINGLE) {
+            View view = inflater.inflate(R.layout.single_message_item_layout, parent, false);
+            return new MsgItemChat(view);
+        } else if (viewType == ADAPTER_TYPE_GROUP) {
+            View view = inflater.inflate(R.layout.group_message_item_layout, parent, false);
+            return new MsgItemGroup(view);
         } else {
-            View view = inflater.inflate(R.layout.message_item_layout, parent, false);
+            View view = inflater.inflate(R.layout.single_message_item_layout, parent, false);
             return new MsgItemChat(view);
         }
     }
@@ -227,8 +238,26 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 itemView.message_status.setVisibility(View.GONE);
             }
 
-            if (model.getGroupId() > 0) {
+            int groupId = model.getGroupId();
+
+            if (groupId > 0) {
                 itemView.message_icon.setImageResource(R.drawable.contacts_groupchat);
+
+                GroupInfoHelper.OnResultCallBack callBack = new GroupInfoHelper.OnResultCallBack() {
+                    @Override
+                    public void onMembers(List<GroupAndMember> list) {
+                        if (!ListUtils.isEmpty(list)) {
+                            List<String> headUrl = new ArrayList<>();
+                            for (GroupAndMember item : list) {
+                                String avatar = Contants.URl.HEAD_ICON_URL + "avatar?uid=" + item.getUser_name();
+                                headUrl.add(avatar);
+                            }
+                        }
+                    }
+                };
+
+                GroupInfoHelper.instance().toQueryByGroupId(mContext, groupId, callBack);
+
             } else {
                 String avatar = model.getTargetAvatar();
                 Glide.with(mContext).load(avatar)
@@ -240,6 +269,84 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                         .into(itemView.message_icon);
             }
 
+        } else if (holder instanceof MsgItemGroup) {
+            final MsgItemGroup itemView = (MsgItemGroup) holder;
+            itemView.message_item.setTag(position);
+            itemView.message_time.setText(TimeFormatUtil.convertTimeMillli(mContext, model.getMsgTime()));
+
+            String displayName = model.getDisplayName();
+            boolean contains = displayName.contains(ColorsConfig.GROUP_DEFAULT_NAME);
+            if (contains) {
+                displayName = displayName.replace(ColorsConfig.GROUP_DEFAULT_NAME, "");
+            }
+            itemView.message_name.setText(displayName);
+
+            switch (model.getMsgType()) {
+                case CacheMsgBean.SEND_EMOTION:
+                case CacheMsgBean.RECEIVE_EMOTION:
+                    itemView.message_type.setText(mContext.getString(R.string.message_type_1));
+                    break;
+                case CacheMsgBean.SEND_TEXT:
+                case CacheMsgBean.RECEIVE_TEXT:
+                    CacheMsgTxt textM = (CacheMsgTxt) model.getJsonBodyObj();
+                    SpannableString msgSpan = new SpannableString(textM.getMsgTxt());
+                    msgSpan = EmoticonHandler.getInstance(mContext.getApplicationContext()).getTextFace(
+                            textM.getMsgTxt(), msgSpan, 0, Utils.getFontSize(itemView.message_type.getTextSize()));
+                    itemView.message_type.setText(msgSpan);
+                    break;
+                case CacheMsgBean.SEND_IMAGE:
+                case CacheMsgBean.RECEIVE_IMAGE:
+                    itemView.message_type.setText(mContext.getString(R.string.message_type_3));
+                    break;
+                case CacheMsgBean.SEND_LOCATION:
+                case CacheMsgBean.RECEIVE_LOCATION:
+                    itemView.message_type.setText(mContext.getString(R.string.message_type_4));
+                    break;
+                case CacheMsgBean.SEND_VIDEO:
+                case CacheMsgBean.RECEIVE_VIDEO:
+                    itemView.message_type.setText(mContext.getString(R.string.message_type_5));
+                    break;
+                case CacheMsgBean.SEND_VOICE:
+                case CacheMsgBean.RECEIVE_VOICE:
+                    itemView.message_type.setText(mContext.getString(R.string.message_type_sounds));
+                    break;
+                case CacheMsgBean.SEND_FILE:
+                case CacheMsgBean.RECEIVE_FILE:
+                    itemView.message_type.setText(mContext.getString(R.string.message_type_file));
+                    break;
+                default:
+                    itemView.message_type.setText(mContext.getString(R.string.message_type));
+            }
+
+            //沟通列表
+            int unreadCount = IMMsgManager.instance().getBadeCount(model.getTargetUuid());
+            if (unreadCount > 0) {
+                itemView.message_status.setBadgeNumber(unreadCount);
+                itemView.message_status.setGravityOffset(0.5f, 0.5f, true);
+                itemView.message_status.setBadgePadding(1.0f, true);
+                itemView.message_status.setVisibility(View.VISIBLE);
+            } else {
+                itemView.message_status.setVisibility(View.GONE);
+            }
+
+            int groupId = model.getGroupId();
+            GroupInfoHelper.OnResultCallBack callBack = new GroupInfoHelper.OnResultCallBack() {
+                @Override
+                public void onMembers(List<GroupAndMember> list) {
+                    if (!ListUtils.isEmpty(list)) {
+                        List<String> headUrl = new ArrayList<>();
+                        for (GroupAndMember item : list) {
+                            String avatar = Contants.URl.HEAD_ICON_URL + "avatar?uid=" + item.getUser_name();
+                            headUrl.add(avatar);
+                        }
+
+                        itemView.message_icon.displayImage(headUrl);
+                        itemView.message_icon.load();
+                    }
+                }
+            };
+
+            GroupInfoHelper.instance().toQueryByGroupId(mContext, groupId, callBack);
         }
 
 
@@ -278,7 +385,8 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         String uuid = msgBean.getTargetUuid();
         for (int i = 0; i < messageList.size(); i++) {
             ExCacheMsgBean item = messageList.get(i);
-            if (item.getUiType() != MessageAdapter.ADAPTER_TYPE_NORMAL) {
+            if (item.getUiType() == MessageAdapter.ADAPTER_TYPE_SEARCH
+                    || item.getUiType() == MessageAdapter.ADAPTER_TYPE_PUSHMSG) {
                 continue;
             }
             if (item.getTargetUuid().equals(uuid)) {
@@ -356,6 +464,30 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             super(itemView);
             message_item = (RelativeLayout) itemView.findViewById(R.id.message_itme);
             message_icon = (ImageView) itemView.findViewById(R.id.message_icon);
+            message_callBtn = (ImageView) itemView.findViewById(R.id.message_call_btn);
+            message_name = (TextView) itemView.findViewById(R.id.message_name);
+            message_type = (TextView) itemView.findViewById(R.id.message_type);
+            message_time = (TextView) itemView.findViewById(R.id.message_time);
+            message_status = new QBadgeView(mContext);
+            message_status.bindTarget(message_icon);
+            message_status.setBadgeGravity(Gravity.TOP | Gravity.END);
+            message_status.setBadgeTextSize(10f, true);
+            message_status.setBadgeBackgroundColor(ContextCompat.getColor(mContext, R.color.hx_color_red_tag));
+            message_status.setShowShadow(false);
+        }
+    }
+
+    protected class MsgItemGroup extends RecyclerView.ViewHolder {
+        TeamHeadView message_icon;
+        ImageView message_callBtn;
+        TextView message_name, message_type, message_time;
+        QBadgeView message_status;
+        RelativeLayout message_item;
+
+        public MsgItemGroup(View itemView) {
+            super(itemView);
+            message_item = (RelativeLayout) itemView.findViewById(R.id.message_itme);
+            message_icon = (TeamHeadView) itemView.findViewById(R.id.message_icon);
             message_callBtn = (ImageView) itemView.findViewById(R.id.message_call_btn);
             message_name = (TextView) itemView.findViewById(R.id.message_name);
             message_type = (TextView) itemView.findViewById(R.id.message_type);

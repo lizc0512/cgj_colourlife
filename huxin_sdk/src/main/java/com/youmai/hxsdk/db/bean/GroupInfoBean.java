@@ -25,30 +25,11 @@ public class GroupInfoBean implements Parcelable {
     private boolean not_disturb;    //免打扰
     private String groupMemberJson; //群成员列表
 
-    protected GroupInfoBean(Parcel in) {
-        if (in.readByte() == 0) {
-            id = null;
-        } else {
-            id = in.readLong();
-        }
-        group_id = in.readInt();
-        info_update_time = in.readLong();
-        member_update_time = in.readLong();
-        group_name = in.readString();
-        owner_id = in.readString();
-        group_avatar = in.readString();
-        topic = in.readString();
-        group_member_count = in.readInt();
-        fixtop_priority = in.readInt();
-        not_disturb = in.readByte() != 0;
-        groupMemberJson = in.readString();
-    }
-
     @Generated(hash = 45031851)
     public GroupInfoBean(Long id, int group_id, long info_update_time,
-            long member_update_time, String group_name, String owner_id, String group_avatar,
-            String topic, int group_member_count, int fixtop_priority, boolean not_disturb,
-            String groupMemberJson) {
+                         long member_update_time, String group_name, String owner_id, String group_avatar,
+                         String topic, int group_member_count, int fixtop_priority, boolean not_disturb,
+                         String groupMemberJson) {
         this.id = id;
         this.group_id = group_id;
         this.info_update_time = info_update_time;
@@ -66,18 +47,6 @@ public class GroupInfoBean implements Parcelable {
     @Generated(hash = 1490267550)
     public GroupInfoBean() {
     }
-
-    public static final Creator<GroupInfoBean> CREATOR = new Creator<GroupInfoBean>() {
-        @Override
-        public GroupInfoBean createFromParcel(Parcel in) {
-            return new GroupInfoBean(in);
-        }
-
-        @Override
-        public GroupInfoBean[] newArray(int size) {
-            return new GroupInfoBean[size];
-        }
-    };
 
     public Long getId() {
         return this.id;
@@ -182,22 +151,44 @@ public class GroupInfoBean implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        if (id == null) {
-            dest.writeByte((byte) 0);
-        } else {
-            dest.writeByte((byte) 1);
-            dest.writeLong(id);
-        }
-        dest.writeInt(group_id);
-        dest.writeLong(info_update_time);
-        dest.writeLong(member_update_time);
-        dest.writeString(group_name);
-        dest.writeString(owner_id);
-        dest.writeString(group_avatar);
-        dest.writeString(topic);
-        dest.writeInt(group_member_count);
-        dest.writeInt(fixtop_priority);
-        dest.writeByte((byte) (not_disturb ? 1 : 0));
-        dest.writeString(groupMemberJson);
+        dest.writeValue(this.id);
+        dest.writeInt(this.group_id);
+        dest.writeLong(this.info_update_time);
+        dest.writeLong(this.member_update_time);
+        dest.writeString(this.group_name);
+        dest.writeString(this.owner_id);
+        dest.writeString(this.group_avatar);
+        dest.writeString(this.topic);
+        dest.writeInt(this.group_member_count);
+        dest.writeInt(this.fixtop_priority);
+        dest.writeByte(this.not_disturb ? (byte) 1 : (byte) 0);
+        dest.writeString(this.groupMemberJson);
     }
+
+    protected GroupInfoBean(Parcel in) {
+        this.id = (Long) in.readValue(Long.class.getClassLoader());
+        this.group_id = in.readInt();
+        this.info_update_time = in.readLong();
+        this.member_update_time = in.readLong();
+        this.group_name = in.readString();
+        this.owner_id = in.readString();
+        this.group_avatar = in.readString();
+        this.topic = in.readString();
+        this.group_member_count = in.readInt();
+        this.fixtop_priority = in.readInt();
+        this.not_disturb = in.readByte() != 0;
+        this.groupMemberJson = in.readString();
+    }
+
+    public static final Creator<GroupInfoBean> CREATOR = new Creator<GroupInfoBean>() {
+        @Override
+        public GroupInfoBean createFromParcel(Parcel source) {
+            return new GroupInfoBean(source);
+        }
+
+        @Override
+        public GroupInfoBean[] newArray(int size) {
+            return new GroupInfoBean[size];
+        }
+    };
 }

@@ -338,7 +338,9 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
         mMessageAdapter.setOnLongItemClickListener(new MessageAdapter.OnItemLongClickListener() {
             @Override
             public void onItemLongClick(View v, ExCacheMsgBean bean, int position) {
-                delPopUp(v, bean, position);
+                if (bean.getUiType() != MessageAdapter.ADAPTER_TYPE_SEARCH) {
+                    delPopUp(v, bean, position);
+                }
             }
         });
 
@@ -371,14 +373,11 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
     }
 
     public void delMsgChat(ExCacheMsgBean bean, int position) {
-        if (bean.getUiType() != MessageAdapter.ADAPTER_TYPE_SEARCH) {
-            ToastUtil.showToast(getContext(), "删除成功：" + position);
-            ExCacheMsgBean cacheMsgBean = mMessageAdapter.getMessageList().get(position);
-            mMessageAdapter.deleteMessage(position);
-            CacheMsgHelper.instance().deleteAllMsg(getActivity(), cacheMsgBean.getTargetUuid());
-            //去掉未读消息计数
-            IMMsgManager.instance().removeBadge(cacheMsgBean.getTargetUuid());
-        }
+        ToastUtil.showToast(getContext(), "删除成功：" + position);
+        mMessageAdapter.deleteMessage(position);
+        CacheMsgHelper.instance().deleteAllMsg(getActivity(), bean.getTargetUuid());
+        //去掉未读消息计数
+        IMMsgManager.instance().removeBadge(bean.getTargetUuid());
     }
 
 

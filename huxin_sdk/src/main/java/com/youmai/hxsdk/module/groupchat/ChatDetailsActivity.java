@@ -1,7 +1,9 @@
 package com.youmai.hxsdk.module.groupchat;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -13,8 +15,11 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.R;
+import com.youmai.hxsdk.activity.IMConnectionActivity;
 import com.youmai.hxsdk.activity.SdkBaseActivity;
 import com.youmai.hxsdk.db.bean.Contact;
+import com.youmai.hxsdk.db.helper.CacheMsgHelper;
+import com.youmai.hxsdk.im.IMMsgManager;
 import com.youmai.hxsdk.router.APath;
 import com.youmai.hxsdk.utils.GlideRoundTransform;
 
@@ -44,6 +49,7 @@ public class ChatDetailsActivity extends SdkBaseActivity {
     private String avatar;
     private String realname;
     private String username;
+    private boolean isClearUp;
 
     List<Contact> groupList = new ArrayList<>();
 
@@ -135,6 +141,39 @@ public class ChatDetailsActivity extends SdkBaseActivity {
                         .navigation(ChatDetailsActivity.this);
             }
         });
+
+        mClearRecords.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+
+                builder.setMessage("确定要删除当前所有的聊天记录吗")
+                        .setPositiveButton("清除",
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        CacheMsgHelper.instance().deleteAllMsg(mContext, uuid);
+                                        IMMsgManager.instance().removeBadge(uuid);
+                                        isClearUp = true;
+                                    }
+                                })
+                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        });
+                builder.show();
+            }
+        });
     }
 
+
+    @Override
+    public void onBackPressed() {
+        if (isClearUp) {
+            setResult(IMConnectionActivity.RESULT_CODE_CLEAN);
+        }
+        finish();
+    }
 }

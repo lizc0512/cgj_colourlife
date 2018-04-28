@@ -133,8 +133,14 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
         mRecyclerView.getItemAnimator().setMoveDuration(0);
     }
 
-    public List<CacheMsgBean> getmImBeanList() {
+    public List<CacheMsgBean> getMsgBeanList() {
         return mImBeanList;
+    }
+
+
+    public void clearMsg() {
+        mImBeanList = CacheMsgHelper.instance().toQueryCacheMsgListAndSetRead(mAct, mGroupId, true);
+        notifyDataSetChanged();
     }
 
     public TreeMap<Integer, CacheMsgBean> getSelectMsg() {

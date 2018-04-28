@@ -124,11 +124,14 @@ public class IMConnectionActivity extends SdkBaseActivity implements
     public static final int REQUEST_CODE_CARD = 203;
     public static final int REQUEST_CODE_FORWAED = 204;
     public static final int REQUEST_REMIND_CODE = 205;
+    public static final int REQUEST_CODE_DETAIL = 206;
 
 
     private static final int MSG_GET_CONTACT_ID = 300;
 
     private final int GET_PERMISSION_REQUEST = 400; //权限申请自定义码
+
+    public static final int RESULT_CODE_CLEAN = 501;
 
     public static final long MAX_SENDER_FILE = 50 * 1024 * 1024;
 
@@ -190,7 +193,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
                 }
             } else if (SendMsgService.ACTION_UPDATE_MSG.equals(intent.getAction())) {
                 CacheMsgBean cacheMsgBean = intent.getParcelableExtra("CacheMsgBean");
-                List<CacheMsgBean> cacheMsgBeanList = imListAdapter.getmImBeanList();
+                List<CacheMsgBean> cacheMsgBeanList = imListAdapter.getMsgBeanList();
                 int size = cacheMsgBeanList.size();
                 for (int i = 0; i < size; i++) {
                     CacheMsgBean oriMsgBean = cacheMsgBeanList.get(i);
@@ -481,7 +484,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
                 intent.putExtra(ChatDetailsActivity.DS_USER_AVATAR, dstAvatar);
                 intent.putExtra(ChatDetailsActivity.DS_UUID, dstUuid);
                 intent.putExtra(ChatDetailsActivity.DS_USERNAME, dstUserName);
-                startActivity(intent);
+                startActivityForResult(intent, REQUEST_CODE_DETAIL);
             }
         });
 
@@ -934,6 +937,11 @@ public class IMConnectionActivity extends SdkBaseActivity implements
             imListAdapter.cancelMoreStat();
 
             setRightUi(false);
+        } else if (requestCode == REQUEST_CODE_DETAIL) {
+            if (resultCode == RESULT_CODE_CLEAN) {
+                imListAdapter.clearMsg();
+            }
+
         }
     }
 

@@ -1,11 +1,14 @@
 package com.tg.coloursteward.module.groupchat.details;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -13,7 +16,6 @@ import android.widget.Toast;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
-import com.google.gson.Gson;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.tg.coloursteward.EmployeeDataActivity;
 import com.tg.coloursteward.module.groupchat.AddContactsCreateGroupActivity;
@@ -91,6 +93,8 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
     private List<Contact> groupList3 = new ArrayList<>();
 
     private GroupInfoBean mGroupInfo;
+
+    private boolean isClearUp;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -171,7 +175,8 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
             mTvTitle.setText(title);
 
             String group_name = mGroupInfo.getGroup_name();
-            if (group_name.contains(ColorsConfig.GROUP_DEFAULT_NAME)) {
+            if (TextUtils.isEmpty(group_name)
+                    || group_name.contains(ColorsConfig.GROUP_DEFAULT_NAME)) {
                 mTvGroupName.setText("未命名");
             } else {
                 mTvGroupName.setText(group_name);
@@ -398,8 +403,25 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
         mRlClearChatRecords.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CacheMsgHelper.instance().deleteAllMsg(ChatGroupDetailsActivity.this, mGroupId + "");
-                IMMsgManager.instance().removeBadge(mGroupId + ""); //去掉未读消息计数
+                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+
+                builder.setMessage("确定要删除当前所有的聊天记录吗")
+                        .setPositiveButton("清除",
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        CacheMsgHelper.instance().deleteAllMsg(mContext, mGroupId + "");
+                                        IMMsgManager.instance().removeBadge(mGroupId + "");
+                                        isClearUp = true;
+                                    }
+                                })
+                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        });
+                builder.show();
             }
         });
     }
@@ -571,5 +593,13 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
             bean.setGroupMemberJson(mGroupInfo.getGroupMemberJson());
             GroupInfoHelper.instance().toUpdateByGroupId(this, bean);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (isClearUp) {
+            setResult(IMGroupActivity.RESULT_CODE_CLEAN);
+        }
+        finish();
     }
 }

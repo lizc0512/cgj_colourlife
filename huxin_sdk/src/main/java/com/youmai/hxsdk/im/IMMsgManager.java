@@ -20,6 +20,7 @@ import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.activity.IMConnectionActivity;
 import com.youmai.hxsdk.activity.IMGroupActivity;
 import com.youmai.hxsdk.chat.ContentVideo;
+import com.youmai.hxsdk.config.ColorsConfig;
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
 import com.youmai.hxsdk.chat.ContentLocation;
 import com.youmai.hxsdk.chat.ContentText;
@@ -366,6 +367,11 @@ public class IMMsgManager {
         }
 
         String desName = msg.getImChat().getSrcRealname();
+        boolean contains = desName.contains(ColorsConfig.GROUP_DEFAULT_NAME);
+        if (contains) {
+            desName = desName.replace(ColorsConfig.GROUP_DEFAULT_NAME, "");
+        }
+
         String newMsgTip = mContext.getString(R.string.hx_hook_strategy_msg);
 
         if (msg.getMsgType() == YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_TEXT_VALUE) {  //文字

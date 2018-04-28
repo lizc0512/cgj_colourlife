@@ -24,7 +24,7 @@ public class TeamHeadView extends AppCompatImageView {
     private TeamHeadSynthesizer teamHeadSynthesizer;
     private int imageSize = 100;
     private int synthesizedBg = Color.LTGRAY;
-    private int defaultImageResId = R.drawable.contacts_groupchat;
+    private int defaultImageResId = R.drawable.color_default_header;
     private int imageGap = 2;
 
     public TeamHeadView(Context context) {

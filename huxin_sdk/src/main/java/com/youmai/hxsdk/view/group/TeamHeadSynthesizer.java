@@ -283,16 +283,14 @@ public class TeamHeadSynthesizer implements Synthesizer {
             @Override
             public void run() {
                 //缓存文件不存在，需要加载读取
-                boolean loadSuccess = asyncLoadImageList();
-                if (loadSuccess) {
-                    final Bitmap bitmap = synthesizeImageList();
-                    imageView.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            imageView.setImageBitmap(bitmap);
-                        }
-                    });
-                }
+                asyncLoadImageList();
+                final Bitmap bitmap = synthesizeImageList();
+                imageView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        imageView.setImageBitmap(bitmap);
+                    }
+                });
             }
         }.start();
     }
@@ -326,7 +324,7 @@ public class TeamHeadSynthesizer implements Synthesizer {
     }
 
 
-   public interface GenBitmapCallback {
+    public interface GenBitmapCallback {
         void onCall(Bitmap bitmap);
     }
 

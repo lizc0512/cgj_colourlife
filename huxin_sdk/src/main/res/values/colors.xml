@@ -25,7 +25,7 @@
     <color name="crop_selector_focused">#77000000</color>
 
     <!-- 字体 -->
-    <color name="hxs_color_white">#ffffff</color>
+    <color name="hxs_color_white">#f3f3f3</color>
     <color name="hxs_color_black1">#333333</color>
     <color name="hxs_color_gray1">#999999</color>
     <color name="hxs_color_gray7">#e6e6e6</color>

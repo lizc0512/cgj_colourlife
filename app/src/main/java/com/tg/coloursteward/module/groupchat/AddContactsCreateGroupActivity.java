@@ -118,7 +118,6 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
     private TextView tv_Sure;
 
     private SearchEditText editText;
-    private TextView search_cancel;
 
     private MessageHandler msgHand;
 
@@ -301,12 +300,15 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
         }
     }
 
-    void hide() {
+    private void hide() {
+        hideSoftKey();
         if (!searchGroupFragment.isHidden()) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.hide(searchGroupFragment);
             searchGroupFragment.hide();
             transaction.commit();
+        } else {
+            finish();
         }
         editText.setText("");
         editText.clearFocus();
@@ -314,8 +316,6 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
 
     void initEdit() {
         editText = findViewById(R.id.global_search_bar);
-        search_cancel = findViewById(R.id.search_bar_cancel);
-
         editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -339,14 +339,6 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
             }
         });
 
-        search_cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                hide();
-
-                hideSoftKey();
-            }
-        });
     }
 
     void hideSoftKey() {
@@ -368,7 +360,7 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
         tv_Cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                hide();
             }
         });
         iv_main.setOnCharIndexChangedListener(new CharIndexView.OnCharIndexChangedListener() {

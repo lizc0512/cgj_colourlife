@@ -82,7 +82,7 @@ public class GroupListActivity extends BaseActivity {
         mLinearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         mRefreshRecyclerView.setLayoutManager(mLinearLayoutManager);
         mAdapter = new GroupListAdapter(this);
-        mAdapter.setAdapterType(GroupListAdapter.ADAPTER_TYPE_HEADER);
+        //mAdapter.setAdapterType(GroupListAdapter.ADAPTER_TYPE_HEADER);  //todo //暂时去掉群组搜索
         tv_no_group = findViewById(R.id.tv_no_group);
         mRefreshRecyclerView.setAdapter(mAdapter);
         mRefreshRecyclerView.setLoadingListener(new XRecyclerView.LoadingListener() {

@@ -6,17 +6,18 @@
     android:background="@color/base_color"
     android:focusable="true"
     android:focusableInTouchMode="true"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <include layout="@layout/group_header_title" />
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/search_parent"
-        android:layout_below="@+id/title"
         android:layout_width="match_parent"
-        android:layout_height="46dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/title"
         android:background="@color/white"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:padding="5dp">
 
         <TextView
             android:id="@+id/search_bar_back"
@@ -31,28 +32,14 @@
             android:textSize="15sp"
             android:visibility="gone" />
 
-        <TextView
-            android:id="@+id/search_bar_cancel"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="16dp"
-            android:gravity="center_vertical"
-            android:text="取消"
-            android:textColor="@color/color_theme_main"
-            android:textSize="15sp" />
-
 
         <com.tg.coloursteward.module.search.SearchEditText
             android:id="@+id/global_search_bar"
             android:layout_width="match_parent"
             android:layout_height="32dp"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="16dp"
+            android:layout_marginLeft="12dp"
             android:layout_marginRight="12dp"
-            android:layout_toLeftOf="@id/search_bar_cancel"
-            android:layout_toRightOf="@id/search_bar_back"
             android:background="@drawable/global_contacts_search_bg"
             android:drawablePadding="12dp"
             android:hint="搜索"
@@ -61,12 +48,12 @@
             android:paddingRight="8dp"
             android:textColorHint="@color/hxb_subtitle_color"
             android:textSize="15sp" />
-    </RelativeLayout>
+    </LinearLayout>
 
     <RelativeLayout
-        android:layout_below="@+id/search_parent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@+id/search_parent"
         android:layout_marginTop="5dp">
 
         <android.support.v7.widget.RecyclerView

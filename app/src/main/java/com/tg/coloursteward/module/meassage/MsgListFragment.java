@@ -507,6 +507,7 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
     public void onLoadFinished(Loader<List<ExCacheMsgBean>> loader, List<ExCacheMsgBean> data) {
         Log.d(TAG, "onLoadFinished" + data.toString());
         if (data.isEmpty()) {
+            mEmptyView.setVisibility(View.VISIBLE);
             return;
         }
         List<ExCacheMsgBean> messageList = mMessageAdapter.getMessageList();

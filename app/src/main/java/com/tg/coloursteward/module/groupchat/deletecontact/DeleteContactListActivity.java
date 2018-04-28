@@ -120,6 +120,7 @@ public class DeleteContactListActivity extends BaseActivity {
                     builder.setMemberId(item.getUuid());
                     builder.setMemberName(item.getRealname());
                     builder.setUserName(item.getUsername());
+                    builder.setMemberRole(item.getMemberRole());
                     list.add(builder.build());
                 }
 

@@ -321,7 +321,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 itemView.message_status.setVisibility(View.GONE);
             }
 
-            int groupId = model.getGroupId();
+            /*int groupId = model.getGroupId();
             GroupInfoHelper.OnResultCallBack callBack = new GroupInfoHelper.OnResultCallBack() {
                 @Override
                 public void onMembers(List<GroupAndMember> list) {
@@ -338,7 +338,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 }
             };
 
-            GroupInfoHelper.instance().toQueryByGroupId(mContext, groupId, callBack);
+            GroupInfoHelper.instance().toQueryByGroupId(mContext, groupId, callBack);*/
         }
 
 

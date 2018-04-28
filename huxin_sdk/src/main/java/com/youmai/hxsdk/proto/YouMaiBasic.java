@@ -3669,7 +3669,15 @@ public final class YouMaiBasic {
         /**
          * <code>RESULT_CODE_FAIL = 2;</code>
          */
-        RESULT_CODE_FAIL(1, 2),;
+        RESULT_CODE_FAIL(1, 2),
+        /**
+         * <code>RESULT_CODE_NOT_FIND = 3;</code>
+         */
+        RESULT_CODE_NOT_FIND(2, 3),
+        /**
+         * <code>RESULT_CODE_PARAMETER_ERROR = 4;</code>
+         */
+        RESULT_CODE_PARAMETER_ERROR(3, 4),;
 
         /**
          * <code>RESULT_CODE_SUCCESS = 1;</code>
@@ -3679,6 +3687,14 @@ public final class YouMaiBasic {
          * <code>RESULT_CODE_FAIL = 2;</code>
          */
         public static final int RESULT_CODE_FAIL_VALUE = 2;
+        /**
+         * <code>RESULT_CODE_NOT_FIND = 3;</code>
+         */
+        public static final int RESULT_CODE_NOT_FIND_VALUE = 3;
+        /**
+         * <code>RESULT_CODE_PARAMETER_ERROR = 4;</code>
+         */
+        public static final int RESULT_CODE_PARAMETER_ERROR_VALUE = 4;
 
 
         public final int getNumber() {
@@ -3691,6 +3707,10 @@ public final class YouMaiBasic {
                     return RESULT_CODE_SUCCESS;
                 case 2:
                     return RESULT_CODE_FAIL;
+                case 3:
+                    return RESULT_CODE_NOT_FIND;
+                case 4:
+                    return RESULT_CODE_PARAMETER_ERROR;
                 default:
                     return null;
             }
@@ -4753,11 +4773,12 @@ public final class YouMaiBasic {
                         "\020\000\022\034\n\030USER_SHOW_STATUS_DISABLE\020\001\022\033\n\027USER" +
                         "_SHOW_STATUS_FROZEN\020\002*Q\n\tUserState\022\025\n\021US" +
                         "ER_STATE_ONLINE\020\000\022\026\n\022USER_STATE_OFFLINE\020" +
-                        "\001\022\025\n\021USER_STATE_LOGOUT\020\003*;\n\nResultCode\022\027",
+                        "\001\022\025\n\021USER_STATE_LOGOUT\020\003*v\n\nResultCode\022\027",
                 "\n\023RESULT_CODE_SUCCESS\020\001\022\024\n\020RESULT_CODE_F" +
-                        "AIL\020\002*K\n\nIM_CHANNEL\022\026\n\022IM_CHANNEL_DEFAUL" +
-                        "T\020\000\022\022\n\016IM_CHANNEL_SMS\020\001\022\021\n\rIM_CHANNEL_QQ" +
-                        "\020\002"
+                        "AIL\020\002\022\030\n\024RESULT_CODE_NOT_FIND\020\003\022\037\n\033RESUL" +
+                        "T_CODE_PARAMETER_ERROR\020\004*K\n\nIM_CHANNEL\022\026" +
+                        "\n\022IM_CHANNEL_DEFAULT\020\000\022\022\n\016IM_CHANNEL_SMS" +
+                        "\020\001\022\021\n\rIM_CHANNEL_QQ\020\002"
         };
         com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
                 new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {

@@ -2,9 +2,7 @@ package com.tg.coloursteward.module.groupchat;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,13 +12,17 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.tg.coloursteward.R;
-import com.tg.coloursteward.module.groupchat.details.ChatGroupDetailsActivity;
+import com.tg.coloursteward.constant.Contants;
 import com.youmai.hxsdk.config.ColorsConfig;
 import com.youmai.hxsdk.db.bean.GroupInfoBean;
+import com.youmai.hxsdk.db.helper.GroupInfoHelper;
+import com.youmai.hxsdk.entity.GroupAndMember;
+import com.youmai.hxsdk.utils.ListUtils;
+import com.youmai.hxsdk.view.group.TeamHeadView;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import q.rorbin.badgeview.QBadgeView;
 
 /**
  * 作者：create by YW
@@ -112,7 +114,7 @@ public class GroupListAdapter extends RecyclerView.Adapter {
             });
         } else {
             int currPos = position - getHeaderCount(); //实际的位置
-            GroupViewHolder itemView = (GroupViewHolder) holder;
+            final GroupViewHolder itemView = (GroupViewHolder) holder;
 
             final GroupInfoBean ben = mGroupList.get(currPos);
 
@@ -122,6 +124,25 @@ public class GroupListAdapter extends RecyclerView.Adapter {
                 displayName = displayName.replace(ColorsConfig.GROUP_DEFAULT_NAME, "");
             }
             itemView.message_name.setText(displayName);
+
+            int groupId = ben.getGroup_id();
+            GroupInfoHelper.OnResultCallBack callBack = new GroupInfoHelper.OnResultCallBack() {
+                @Override
+                public void onMembers(List<GroupAndMember> list) {
+                    if (!ListUtils.isEmpty(list)) {
+                        List<String> headUrl = new ArrayList<>();
+                        for (GroupAndMember item : list) {
+                            String avatar = Contants.URl.HEAD_ICON_URL + "avatar?uid=" + item.getUser_name();
+                            headUrl.add(avatar);
+                        }
+
+                        itemView.message_icon.displayImage(headUrl);
+                        itemView.message_icon.load();
+                    }
+                }
+            };
+
+            GroupInfoHelper.instance().toQueryByGroupId(mContext, groupId, callBack);
 
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -152,14 +173,15 @@ public class GroupListAdapter extends RecyclerView.Adapter {
     }
 
     protected class GroupViewHolder extends RecyclerView.ViewHolder {
-        ImageView message_icon, message_callBtn;
+        TeamHeadView message_icon;
+        ImageView message_callBtn;
         TextView message_name, message_time;
         RelativeLayout message_item;
 
         public GroupViewHolder(View itemView) {
             super(itemView);
             message_item = (RelativeLayout) itemView.findViewById(R.id.message_itme);
-            message_icon = (ImageView) itemView.findViewById(R.id.message_icon);
+            message_icon = (TeamHeadView) itemView.findViewById(R.id.message_icon);
             message_callBtn = (ImageView) itemView.findViewById(R.id.message_call_btn);
             message_name = (TextView) itemView.findViewById(R.id.message_name);
             message_time = (TextView) itemView.findViewById(R.id.message_time);

@@ -14,7 +14,6 @@ import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.jcodecraeer.xrecyclerview.progressindicator.AVLoadingIndicatorView;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.BaseActivity;
-import com.tg.coloursteward.module.meassage.MessageAdapter;
 import com.tg.coloursteward.module.search.GlobalSearchActivity;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.activity.IMGroupActivity;
@@ -155,7 +154,6 @@ public class GroupListActivity extends BaseActivity {
                 YouMaiGroup.GroupItem.Builder builder = YouMaiGroup.GroupItem.newBuilder();
                 builder.setGroupId(item.getGroup_id());
                 builder.setInfoUpdateTime(item.getInfo_update_time());
-                builder.setMemberUpdateTime(item.getMember_update_time());
                 list.add(builder.build());
             }
         }

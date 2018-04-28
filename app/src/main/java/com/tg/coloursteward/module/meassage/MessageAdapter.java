@@ -238,36 +238,14 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 itemView.message_status.setVisibility(View.GONE);
             }
 
-            int groupId = model.getGroupId();
-
-            if (groupId > 0) {
-                itemView.message_icon.setImageResource(R.drawable.contacts_groupchat);
-
-                GroupInfoHelper.OnResultCallBack callBack = new GroupInfoHelper.OnResultCallBack() {
-                    @Override
-                    public void onMembers(List<GroupAndMember> list) {
-                        if (!ListUtils.isEmpty(list)) {
-                            List<String> headUrl = new ArrayList<>();
-                            for (GroupAndMember item : list) {
-                                String avatar = Contants.URl.HEAD_ICON_URL + "avatar?uid=" + item.getUser_name();
-                                headUrl.add(avatar);
-                            }
-                        }
-                    }
-                };
-
-                GroupInfoHelper.instance().toQueryByGroupId(mContext, groupId, callBack);
-
-            } else {
-                String avatar = model.getTargetAvatar();
-                Glide.with(mContext).load(avatar)
-                        .apply(new RequestOptions()
-                                .transform(new GlideRoundTransform())
-                                .placeholder(R.drawable.color_default_header)
-                                .error(R.drawable.color_default_header)
-                                .diskCacheStrategy(DiskCacheStrategy.RESOURCE))
-                        .into(itemView.message_icon);
-            }
+            String avatar = model.getTargetAvatar();
+            Glide.with(mContext).load(avatar)
+                    .apply(new RequestOptions()
+                            .transform(new GlideRoundTransform())
+                            .placeholder(R.drawable.color_default_header)
+                            .error(R.drawable.color_default_header)
+                            .diskCacheStrategy(DiskCacheStrategy.RESOURCE))
+                    .into(itemView.message_icon);
 
         } else if (holder instanceof MsgItemGroup) {
             final MsgItemGroup itemView = (MsgItemGroup) holder;

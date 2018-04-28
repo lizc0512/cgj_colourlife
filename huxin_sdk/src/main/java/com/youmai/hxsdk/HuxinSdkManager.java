@@ -566,6 +566,7 @@ public class HuxinSdkManager {
         msgData.setSrcUserId(getUuid());
         msgData.setSrcAvatar(getHeadUrl());
         msgData.setSrcSex(getSex());
+        msgData.setSrcUserName(getUserName());
         msgData.setSrcRealname(getRealName());
         msgData.setSrcMobile(getPhoneNum());
         msgData.setDestUserId(destUuid);
@@ -605,8 +606,8 @@ public class HuxinSdkManager {
         msgData.setSrcUserId(getUuid());
         msgData.setSrcAvatar(getHeadUrl());
         msgData.setSrcSex(getSex());
-        msgData.setSrcRealname(getRealName());
         msgData.setSrcUserName(getUserName());
+        msgData.setSrcRealname(getRealName());
         msgData.setSrcMobile(getPhoneNum());
         msgData.setDestUserId(destUuid);
         msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_LOCATION);
@@ -643,8 +644,8 @@ public class HuxinSdkManager {
         msgData.setSrcUserId(getUuid());
         msgData.setSrcAvatar(getHeadUrl());
         msgData.setSrcSex(getSex());
-        msgData.setSrcRealname(getRealName());
         msgData.setSrcUserName(getUserName());
+        msgData.setSrcRealname(getRealName());
         msgData.setSrcMobile(getPhoneNum());
         msgData.setDestUserId(destUuid);
         msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_IMAGE);
@@ -678,8 +679,8 @@ public class HuxinSdkManager {
         msgData.setSrcUserId(getUuid());
         msgData.setSrcAvatar(getHeadUrl());
         msgData.setSrcSex(getSex());
-        msgData.setSrcRealname(getRealName());
         msgData.setSrcUserName(getUserName());
+        msgData.setSrcRealname(getRealName());
         msgData.setSrcMobile(getPhoneNum());
         msgData.setDestUserId(destUuid);
         msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_AUDIO);
@@ -716,8 +717,8 @@ public class HuxinSdkManager {
         msgData.setSrcUserId(getUuid());
         msgData.setSrcAvatar(getHeadUrl());
         msgData.setSrcSex(getSex());
-        msgData.setSrcRealname(getRealName());
         msgData.setSrcUserName(getUserName());
+        msgData.setSrcRealname(getRealName());
         msgData.setSrcMobile(getPhoneNum());
         msgData.setDestUserId(destUuid);
         msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_VIDEO);
@@ -750,8 +751,8 @@ public class HuxinSdkManager {
         msgData.setSrcUserId(getUuid());
         msgData.setSrcAvatar(getHeadUrl());
         msgData.setSrcSex(getSex());
-        msgData.setSrcRealname(getRealName());
         msgData.setSrcUserName(getUserName());
+        msgData.setSrcRealname(getRealName());
         msgData.setSrcMobile(getPhoneNum());
         msgData.setDestUserId(destUuid);
         msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_FILE);
@@ -932,7 +933,8 @@ public class HuxinSdkManager {
         msgData.setSrcUserId(getUuid());
         msgData.setSrcAvatar(getHeadUrl());
         msgData.setSrcSex(getSex());
-        msgData.setSrcRealname(groupName);
+        msgData.setSrcUserName(getUserName());
+        msgData.setSrcRealname(getRealName());
         msgData.setSrcMobile(getPhoneNum());
         msgData.setGroupId(groupId);
         msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_TEXT);
@@ -969,7 +971,8 @@ public class HuxinSdkManager {
         msgData.setSrcUserId(getUuid());
         msgData.setSrcAvatar(getHeadUrl());
         msgData.setSrcSex(getSex());
-        msgData.setSrcRealname(groupName);
+        msgData.setSrcUserName(getUserName());
+        msgData.setSrcRealname(getRealName());
         msgData.setSrcMobile(getPhoneNum());
         msgData.setGroupId(groupId);
         msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_LOCATION);
@@ -1005,7 +1008,8 @@ public class HuxinSdkManager {
         msgData.setSrcUserId(getUuid());
         msgData.setSrcAvatar(getHeadUrl());
         msgData.setSrcSex(getSex());
-        msgData.setSrcRealname(groupName);
+        msgData.setSrcUserName(getUserName());
+        msgData.setSrcRealname(getRealName());
         msgData.setSrcMobile(getPhoneNum());
         msgData.setGroupId(groupId);
         msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_IMAGE);
@@ -1038,7 +1042,8 @@ public class HuxinSdkManager {
         msgData.setSrcUserId(getUuid());
         msgData.setSrcAvatar(getHeadUrl());
         msgData.setSrcSex(getSex());
-        msgData.setSrcRealname(groupName);
+        msgData.setSrcUserName(getUserName());
+        msgData.setSrcRealname(getRealName());
         msgData.setSrcMobile(getPhoneNum());
         msgData.setGroupId(groupId);
         msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_AUDIO);
@@ -1074,7 +1079,8 @@ public class HuxinSdkManager {
         msgData.setSrcUserId(getUuid());
         msgData.setSrcAvatar(getHeadUrl());
         msgData.setSrcSex(getSex());
-        msgData.setSrcRealname(groupName);
+        msgData.setSrcUserName(getUserName());
+        msgData.setSrcRealname(getRealName());
         msgData.setSrcMobile(getPhoneNum());
         msgData.setGroupId(groupId);
         msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_VIDEO);
@@ -1105,7 +1111,8 @@ public class HuxinSdkManager {
         msgData.setSrcUserId(getUuid());
         msgData.setSrcAvatar(getHeadUrl());
         msgData.setSrcSex(getSex());
-        msgData.setSrcRealname(groupName);
+        msgData.setSrcUserName(getUserName());
+        msgData.setSrcRealname(getRealName());
         msgData.setSrcMobile(getPhoneNum());
         msgData.setGroupId(groupId);
         msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_FILE);

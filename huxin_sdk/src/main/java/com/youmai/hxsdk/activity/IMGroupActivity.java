@@ -724,6 +724,11 @@ public class IMGroupActivity extends SdkBaseActivity implements
                 .setMsgTime(System.currentTimeMillis())
                 .setMsgStatus(CacheMsgBean.SEND_GOING)
                 .setSenderUserId(HuxinSdkManager.instance().getUuid())
+                .setSenderRealName(HuxinSdkManager.instance().getRealName())
+                .setSenderAvatar(HuxinSdkManager.instance().getHeadUrl())
+                .setSenderMobile(HuxinSdkManager.instance().getPhoneNum())
+                .setSenderSex(HuxinSdkManager.instance().getSex())
+                .setSenderUserName(HuxinSdkManager.instance().getUserName())
                 .setGroupId(groupId)
                 .setTargetName(groupName)
                 .setTargetUuid(groupId + "");

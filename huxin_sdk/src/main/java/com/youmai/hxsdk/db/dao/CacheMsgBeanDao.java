@@ -33,15 +33,16 @@ public class CacheMsgBeanDao extends AbstractDao<CacheMsgBean, Long> {
         public final static Property SenderSex = new Property(6, String.class, "senderSex", false, "SENDER_SEX");
         public final static Property SenderRealName = new Property(7, String.class, "senderRealName", false, "SENDER_REAL_NAME");
         public final static Property SenderAvatar = new Property(8, String.class, "senderAvatar", false, "SENDER_AVATAR");
-        public final static Property ReceiverUserId = new Property(9, String.class, "receiverUserId", false, "RECEIVER_USER_ID");
-        public final static Property ContentJsonBody = new Property(10, String.class, "contentJsonBody", false, "CONTENT_JSON_BODY");
-        public final static Property GroupId = new Property(11, int.class, "groupId", false, "GROUP_ID");
-        public final static Property TargetName = new Property(12, String.class, "targetName", false, "TARGET_NAME");
-        public final static Property TargetUuid = new Property(13, String.class, "targetUuid", false, "TARGET_UUID");
-        public final static Property TargetAvatar = new Property(14, String.class, "targetAvatar", false, "TARGET_AVATAR");
-        public final static Property TargetUserName = new Property(15, String.class, "targetUserName", false, "TARGET_USER_NAME");
-        public final static Property MsgStatus = new Property(16, int.class, "msgStatus", false, "MSG_STATUS");
-        public final static Property Progress = new Property(17, int.class, "progress", false, "PROGRESS");
+        public final static Property SenderUserName = new Property(9, String.class, "senderUserName", false, "SENDER_USER_NAME");
+        public final static Property ReceiverUserId = new Property(10, String.class, "receiverUserId", false, "RECEIVER_USER_ID");
+        public final static Property ContentJsonBody = new Property(11, String.class, "contentJsonBody", false, "CONTENT_JSON_BODY");
+        public final static Property GroupId = new Property(12, int.class, "groupId", false, "GROUP_ID");
+        public final static Property TargetName = new Property(13, String.class, "targetName", false, "TARGET_NAME");
+        public final static Property TargetUuid = new Property(14, String.class, "targetUuid", false, "TARGET_UUID");
+        public final static Property TargetAvatar = new Property(15, String.class, "targetAvatar", false, "TARGET_AVATAR");
+        public final static Property TargetUserName = new Property(16, String.class, "targetUserName", false, "TARGET_USER_NAME");
+        public final static Property MsgStatus = new Property(17, int.class, "msgStatus", false, "MSG_STATUS");
+        public final static Property Progress = new Property(18, int.class, "progress", false, "PROGRESS");
     }
 
 
@@ -66,15 +67,16 @@ public class CacheMsgBeanDao extends AbstractDao<CacheMsgBean, Long> {
                 "\"SENDER_SEX\" TEXT," + // 6: senderSex
                 "\"SENDER_REAL_NAME\" TEXT," + // 7: senderRealName
                 "\"SENDER_AVATAR\" TEXT," + // 8: senderAvatar
-                "\"RECEIVER_USER_ID\" TEXT," + // 9: receiverUserId
-                "\"CONTENT_JSON_BODY\" TEXT," + // 10: contentJsonBody
-                "\"GROUP_ID\" INTEGER NOT NULL ," + // 11: groupId
-                "\"TARGET_NAME\" TEXT," + // 12: targetName
-                "\"TARGET_UUID\" TEXT," + // 13: targetUuid
-                "\"TARGET_AVATAR\" TEXT," + // 14: targetAvatar
-                "\"TARGET_USER_NAME\" TEXT," + // 15: targetUserName
-                "\"MSG_STATUS\" INTEGER NOT NULL ," + // 16: msgStatus
-                "\"PROGRESS\" INTEGER NOT NULL );"); // 17: progress
+                "\"SENDER_USER_NAME\" TEXT," + // 9: senderUserName
+                "\"RECEIVER_USER_ID\" TEXT," + // 10: receiverUserId
+                "\"CONTENT_JSON_BODY\" TEXT," + // 11: contentJsonBody
+                "\"GROUP_ID\" INTEGER NOT NULL ," + // 12: groupId
+                "\"TARGET_NAME\" TEXT," + // 13: targetName
+                "\"TARGET_UUID\" TEXT," + // 14: targetUuid
+                "\"TARGET_AVATAR\" TEXT," + // 15: targetAvatar
+                "\"TARGET_USER_NAME\" TEXT," + // 16: targetUserName
+                "\"MSG_STATUS\" INTEGER NOT NULL ," + // 17: msgStatus
+                "\"PROGRESS\" INTEGER NOT NULL );"); // 18: progress
     }
 
     /** Drops the underlying database table. */
@@ -124,38 +126,43 @@ public class CacheMsgBeanDao extends AbstractDao<CacheMsgBean, Long> {
             stmt.bindString(9, senderAvatar);
         }
  
+        String senderUserName = entity.getSenderUserName();
+        if (senderUserName != null) {
+            stmt.bindString(10, senderUserName);
+        }
+ 
         String receiverUserId = entity.getReceiverUserId();
         if (receiverUserId != null) {
-            stmt.bindString(10, receiverUserId);
+            stmt.bindString(11, receiverUserId);
         }
  
         String contentJsonBody = entity.getContentJsonBody();
         if (contentJsonBody != null) {
-            stmt.bindString(11, contentJsonBody);
+            stmt.bindString(12, contentJsonBody);
         }
-        stmt.bindLong(12, entity.getGroupId());
+        stmt.bindLong(13, entity.getGroupId());
  
         String targetName = entity.getTargetName();
         if (targetName != null) {
-            stmt.bindString(13, targetName);
+            stmt.bindString(14, targetName);
         }
  
         String targetUuid = entity.getTargetUuid();
         if (targetUuid != null) {
-            stmt.bindString(14, targetUuid);
+            stmt.bindString(15, targetUuid);
         }
  
         String targetAvatar = entity.getTargetAvatar();
         if (targetAvatar != null) {
-            stmt.bindString(15, targetAvatar);
+            stmt.bindString(16, targetAvatar);
         }
  
         String targetUserName = entity.getTargetUserName();
         if (targetUserName != null) {
-            stmt.bindString(16, targetUserName);
+            stmt.bindString(17, targetUserName);
         }
-        stmt.bindLong(17, entity.getMsgStatus());
-        stmt.bindLong(18, entity.getProgress());
+        stmt.bindLong(18, entity.getMsgStatus());
+        stmt.bindLong(19, entity.getProgress());
     }
 
     @Override
@@ -199,38 +206,43 @@ public class CacheMsgBeanDao extends AbstractDao<CacheMsgBean, Long> {
             stmt.bindString(9, senderAvatar);
         }
  
+        String senderUserName = entity.getSenderUserName();
+        if (senderUserName != null) {
+            stmt.bindString(10, senderUserName);
+        }
+ 
         String receiverUserId = entity.getReceiverUserId();
         if (receiverUserId != null) {
-            stmt.bindString(10, receiverUserId);
+            stmt.bindString(11, receiverUserId);
         }
  
         String contentJsonBody = entity.getContentJsonBody();
         if (contentJsonBody != null) {
-            stmt.bindString(11, contentJsonBody);
+            stmt.bindString(12, contentJsonBody);
         }
-        stmt.bindLong(12, entity.getGroupId());
+        stmt.bindLong(13, entity.getGroupId());
  
         String targetName = entity.getTargetName();
         if (targetName != null) {
-            stmt.bindString(13, targetName);
+            stmt.bindString(14, targetName);
         }
  
         String targetUuid = entity.getTargetUuid();
         if (targetUuid != null) {
-            stmt.bindString(14, targetUuid);
+            stmt.bindString(15, targetUuid);
         }
  
         String targetAvatar = entity.getTargetAvatar();
         if (targetAvatar != null) {
-            stmt.bindString(15, targetAvatar);
+            stmt.bindString(16, targetAvatar);
         }
  
         String targetUserName = entity.getTargetUserName();
         if (targetUserName != null) {
-            stmt.bindString(16, targetUserName);
+            stmt.bindString(17, targetUserName);
         }
-        stmt.bindLong(17, entity.getMsgStatus());
-        stmt.bindLong(18, entity.getProgress());
+        stmt.bindLong(18, entity.getMsgStatus());
+        stmt.bindLong(19, entity.getProgress());
     }
 
     @Override
@@ -250,15 +262,16 @@ public class CacheMsgBeanDao extends AbstractDao<CacheMsgBean, Long> {
             cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6), // senderSex
             cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7), // senderRealName
             cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8), // senderAvatar
-            cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9), // receiverUserId
-            cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10), // contentJsonBody
-            cursor.getInt(offset + 11), // groupId
-            cursor.isNull(offset + 12) ? null : cursor.getString(offset + 12), // targetName
-            cursor.isNull(offset + 13) ? null : cursor.getString(offset + 13), // targetUuid
-            cursor.isNull(offset + 14) ? null : cursor.getString(offset + 14), // targetAvatar
-            cursor.isNull(offset + 15) ? null : cursor.getString(offset + 15), // targetUserName
-            cursor.getInt(offset + 16), // msgStatus
-            cursor.getInt(offset + 17) // progress
+            cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9), // senderUserName
+            cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10), // receiverUserId
+            cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11), // contentJsonBody
+            cursor.getInt(offset + 12), // groupId
+            cursor.isNull(offset + 13) ? null : cursor.getString(offset + 13), // targetName
+            cursor.isNull(offset + 14) ? null : cursor.getString(offset + 14), // targetUuid
+            cursor.isNull(offset + 15) ? null : cursor.getString(offset + 15), // targetAvatar
+            cursor.isNull(offset + 16) ? null : cursor.getString(offset + 16), // targetUserName
+            cursor.getInt(offset + 17), // msgStatus
+            cursor.getInt(offset + 18) // progress
         );
         return entity;
     }
@@ -274,15 +287,16 @@ public class CacheMsgBeanDao extends AbstractDao<CacheMsgBean, Long> {
         entity.setSenderSex(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
         entity.setSenderRealName(cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7));
         entity.setSenderAvatar(cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8));
-        entity.setReceiverUserId(cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9));
-        entity.setContentJsonBody(cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10));
-        entity.setGroupId(cursor.getInt(offset + 11));
-        entity.setTargetName(cursor.isNull(offset + 12) ? null : cursor.getString(offset + 12));
-        entity.setTargetUuid(cursor.isNull(offset + 13) ? null : cursor.getString(offset + 13));
-        entity.setTargetAvatar(cursor.isNull(offset + 14) ? null : cursor.getString(offset + 14));
-        entity.setTargetUserName(cursor.isNull(offset + 15) ? null : cursor.getString(offset + 15));
-        entity.setMsgStatus(cursor.getInt(offset + 16));
-        entity.setProgress(cursor.getInt(offset + 17));
+        entity.setSenderUserName(cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9));
+        entity.setReceiverUserId(cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10));
+        entity.setContentJsonBody(cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11));
+        entity.setGroupId(cursor.getInt(offset + 12));
+        entity.setTargetName(cursor.isNull(offset + 13) ? null : cursor.getString(offset + 13));
+        entity.setTargetUuid(cursor.isNull(offset + 14) ? null : cursor.getString(offset + 14));
+        entity.setTargetAvatar(cursor.isNull(offset + 15) ? null : cursor.getString(offset + 15));
+        entity.setTargetUserName(cursor.isNull(offset + 16) ? null : cursor.getString(offset + 16));
+        entity.setMsgStatus(cursor.getInt(offset + 17));
+        entity.setProgress(cursor.getInt(offset + 18));
      }
     
     @Override

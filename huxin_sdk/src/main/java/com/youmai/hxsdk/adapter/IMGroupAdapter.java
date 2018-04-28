@@ -157,20 +157,28 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
         RecyclerView.ViewHolder holder = null;
         switch (viewType) {
             case IMG_LEFT:
-                view = inflater.inflate(R.layout.hx_fragment_im_left_img_item, parent, false);
+                view = inflater.inflate(R.layout.hx_group_im_left_img_item, parent, false);
                 holder = new ImgViewHolder(view);
                 break;
             case MAP_LEFT:
-                view = inflater.inflate(R.layout.hx_fragment_im_left_map_item, parent, false);
+                view = inflater.inflate(R.layout.hx_group_im_left_map_item, parent, false);
                 holder = new MapViewHolder(view);
                 break;
             case VOICE_LEFT:
-                view = inflater.inflate(R.layout.hx_fragment_im_left_voice_item, parent, false);
+                view = inflater.inflate(R.layout.hx_group_im_left_voice_item, parent, false);
                 holder = new VoiceViewHolder(view);
                 break;
             case TXT_LEFT:
-                view = inflater.inflate(R.layout.hx_fragment_im_left_txt_item, parent, false);
+                view = inflater.inflate(R.layout.hx_group_im_left_txt_item, parent, false);
                 holder = new TxtViewHolder(view);
+                break;
+            case FILE_LEFT:
+                view = inflater.inflate(R.layout.hx_group_im_left_file_item, parent, false);
+                holder = new FileViewHolder(view);
+                break;
+            case VIDEO_LEFT:
+                view = inflater.inflate(R.layout.hx_group_im_left_video_item, parent, false);
+                holder = new VideoViewHolder(view);
                 break;
             case IMG_RIGHT:
                 view = inflater.inflate(R.layout.hx_fragment_im_right_img_item, parent, false);
@@ -191,14 +199,6 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
             case FILE_RIGHT:
                 view = inflater.inflate(R.layout.hx_fragment_im_right_file_item, parent, false);
                 holder = new FileViewHolder(view);
-                break;
-            case FILE_LEFT:
-                view = inflater.inflate(R.layout.hx_fragment_im_left_file_item, parent, false);
-                holder = new FileViewHolder(view);
-                break;
-            case VIDEO_LEFT:
-                view = inflater.inflate(R.layout.hx_fragment_im_left_video_item, parent, false);
-                holder = new VideoViewHolder(view);
                 break;
             case VIDEO_RIGHT:
                 view = inflater.inflate(R.layout.hx_fragment_im_right_video_item, parent, false);
@@ -301,7 +301,14 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
 
         showSendStart(holder, cacheMsgBean.getMsgStatus(), cacheMsgBean, position);
 
-        if (cacheMsgBean.isRightUI()) {
+        final boolean isRight = cacheMsgBean.isRightUI();
+        if (!isRight) {
+            if (holder.tv_name != null) {
+                holder.tv_name.setText(cacheMsgBean.getSenderRealName());
+            }
+        }
+
+        if (isRight) {
             if (cacheMsgBean.getMsgType() == CacheMsgBean.SEND_SUCCEED) {
                 holder.fileSizeTV.setVisibility(View.VISIBLE);
                 holder.filePbar.setVisibility(View.GONE);
@@ -349,8 +356,15 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
 
         showMsgTime(position, imgViewHolder.senderDateTV, cacheMsgBean.getMsgTime());
 
+        boolean isRight = cacheMsgBean.isRightUI();
+        if (!isRight) {
+            if (imgViewHolder.tv_name != null) {
+                imgViewHolder.tv_name.setText(cacheMsgBean.getSenderRealName());
+            }
+        }
+
         Glide.with(mAct)
-                .load(cacheMsgBean.isRightUI() ? rightUrl : leftUrl)
+                .load(isRight ? rightUrl : leftUrl)
                 .apply(new RequestOptions()
                         .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                         .transform(new MaskTransformation(cacheMsgBean.isRightUI() ? R.drawable.hx_im_voice_bg_right : R.drawable.hx_im_voice_bg_left)))
@@ -397,8 +411,15 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
 
         showMsgTime(position, videoViewHolder.senderDateTV, cacheMsgBean.getMsgTime());
 
+        final boolean isRight = cacheMsgBean.isRightUI();
+        if (!isRight) {
+            if (videoViewHolder.tv_name != null) {
+                videoViewHolder.tv_name.setText(cacheMsgBean.getSenderRealName());
+            }
+        }
+
         Glide.with(mAct)
-                .load(cacheMsgBean.isRightUI() ? rightUrl : leftUrl)
+                .load(isRight ? rightUrl : leftUrl)
                 .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.RESOURCE).placeholder(R.drawable.hx_im_default_img)
                         .transform(new MaskTransformation(cacheMsgBean.isRightUI() ? R.drawable.hx_im_voice_bg_right : R.drawable.hx_im_voice_bg_left)))
                 .into(videoViewHolder.videoImg);
@@ -513,6 +534,13 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
 
         showMsgTime(position, txtViewHolder.senderDateTV, cacheMsgBean.getMsgTime());
 
+        boolean isRight = cacheMsgBean.isRightUI();
+        if (!isRight) {
+            if (txtViewHolder.tv_name != null) {
+                txtViewHolder.tv_name.setText(cacheMsgBean.getSenderRealName());
+            }
+        }
+
         if (txtContent != null) {
             SpannableString msgSpan = new SpannableString(txtContent);
             msgSpan = EmoticonHandler.getInstance(mAct).getTextFace(txtContent, msgSpan, 0,
@@ -613,6 +641,13 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
 
         showMsgTime(position, mapViewHolder.senderDateTV, cacheMsgBean.getMsgTime());
 
+        final boolean isRight = cacheMsgBean.isRightUI();
+        if (!isRight) {
+            if (mapViewHolder.tv_name != null) {
+                mapViewHolder.tv_name.setText(cacheMsgBean.getSenderRealName());
+            }
+        }
+
         Glide.with(mAct)
                 .load(mapUrl)
                 .apply(new RequestOptions()
@@ -659,6 +694,13 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
 
         showMsgTime(position, voiceViewHolder.senderDateTV, cacheMsgBean.getMsgTime());
 
+        final boolean isRight = cacheMsgBean.isRightUI();
+        if (!isRight) {
+            if (voiceViewHolder.tv_name != null) {
+                voiceViewHolder.tv_name.setText(cacheMsgBean.getSenderRealName());
+            }
+        }
+
         if (voiceViewHolder.readIV != null) {
             if (cacheMsgVoice.isHasLoad()) { //到达
                 voiceViewHolder.readIV.setVisibility(View.INVISIBLE);
@@ -672,8 +714,6 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
         voiceViewHolder.voiceBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final boolean isRightUi = cacheMsgBean.isRightUI();
-
                 if (voicePlayAnim != null && voicePlayAnim.isRunning()) {
                     voicePlayAnim.stop();
                     if (mPlayVoiceIV != null) {
@@ -704,7 +744,7 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
                 mPlayVoicePosition = position;
                 mPlayVoiceIV = voiceViewHolder.voiceIV;
 
-                if (!isRightUi) {
+                if (!isRight) {
                     if (!cacheMsgVoice.isHasLoad()) {
                         //add to db
                         cacheMsgVoice.setHasLoad(true);
@@ -714,7 +754,7 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
                     voiceViewHolder.readIV.setVisibility(View.INVISIBLE);
                 }
 
-                voiceViewHolder.voiceIV.setImageResource(isRightUi ? R.drawable.hx_im_voice_right_anim : R.drawable.hx_im_voice_left_anim);
+                voiceViewHolder.voiceIV.setImageResource(isRight ? R.drawable.hx_im_voice_right_anim : R.drawable.hx_im_voice_left_anim);
                 voicePlayAnim = (AnimationDrawable) voiceViewHolder.voiceIV.getDrawable();
                 voicePlayAnim.start();
 
@@ -730,7 +770,7 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
                     @Override
                     public void onCompletion(MediaPlayer mp) {
                         voicePlayAnim.stop();
-                        voiceViewHolder.voiceIV.setImageResource(isRightUi ? R.drawable.hx_im_right_anim_v3 : R.drawable.hx_im_left_anim_v3);
+                        voiceViewHolder.voiceIV.setImageResource(isRight ? R.drawable.hx_im_right_anim_v3 : R.drawable.hx_im_left_anim_v3);
                     }
                 });
             }
@@ -962,10 +1002,10 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
         TextView senderDateTV;
         ImageView senderIV;
         View itemBtn;
+        View contentLay;
         ProgressBar progressBar;
         ImageView smsImg;
-        View contentLay;
-
+        TextView tv_name;
 
         BaseViewHolder(View itemView) {
             super(itemView);
@@ -976,6 +1016,7 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
             contentLay = itemView.findViewById(R.id.img_content_lay);// 中间背景
             progressBar = (ProgressBar) itemView.findViewById(R.id.pbar);
             smsImg = (ImageView) itemView.findViewById(R.id.im_sms_img);
+            tv_name = (TextView) itemView.findViewById(R.id.tv_name);
         }
     }
 

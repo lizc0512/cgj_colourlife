@@ -90,6 +90,20 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
 
+    public void changeMessageList(List<ExCacheMsgBean> newList) {
+        List<ExCacheMsgBean> oldList = new ArrayList<>();
+        for (ExCacheMsgBean item : messageList) {
+            if (item.getUiType() == MessageAdapter.ADAPTER_TYPE_SINGLE
+                    || item.getUiType() == MessageAdapter.ADAPTER_TYPE_GROUP) {
+                oldList.add(item);
+            }
+        }
+        messageList.removeAll(oldList);
+        messageList.addAll(newList);
+        notifyDataSetChanged();
+    }
+
+
     public void changeMessageList(List<ExCacheMsgBean> oldList, List<ExCacheMsgBean> newList) {
         messageList.removeAll(oldList);
         messageList.addAll(newList);

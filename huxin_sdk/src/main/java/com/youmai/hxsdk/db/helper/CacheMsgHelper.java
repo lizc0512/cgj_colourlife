@@ -174,7 +174,7 @@ public class CacheMsgHelper {
         CacheMsgBeanDao cacheMsgBeanDao = GreenDBIMManager.instance(context).getCacheMsgDao();
         QueryBuilder<CacheMsgBean> qb = cacheMsgBeanDao.queryBuilder();
         DeleteQuery<CacheMsgBean> dq = qb.where(CacheMsgBeanDao.Properties.TargetUuid.eq(dstUuid))
-                .orderAsc(CacheMsgBeanDao.Properties.Id).buildDelete();
+                .buildDelete();
         dq.executeDeleteWithoutDetachingEntities();
     }
 

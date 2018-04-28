@@ -3,9 +3,11 @@ package com.youmai.hxsdk.db.helper;
 import android.content.Context;
 
 import com.youmai.hxsdk.HuxinSdkManager;
+import com.youmai.hxsdk.config.ColorsConfig;
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
 import com.youmai.hxsdk.db.dao.CacheMsgBeanDao;
 import com.youmai.hxsdk.db.manager.GreenDBIMManager;
+import com.youmai.hxsdk.im.cache.CacheMsgTxt;
 
 import org.greenrobot.greendao.query.DeleteQuery;
 import org.greenrobot.greendao.query.QueryBuilder;
@@ -115,6 +117,18 @@ public class CacheMsgHelper {
                 CacheMsgHelper.instance().updateList(context, unReadList);
             }
         }
+
+        for (CacheMsgBean item : list) {
+            if (item.getMsgType() == CacheMsgBean.SEND_TEXT) {
+                CacheMsgTxt cacheMsgTxt = (CacheMsgTxt) item.getJsonBodyObj();
+                String txtContent = cacheMsgTxt.getMsgTxt();
+                if (txtContent.equals(ColorsConfig.GROUP_EMPTY_MSG)) {
+                    list.remove(item);
+                    break;
+                }
+            }
+        }
+
 
         return list;
     }
@@ -322,7 +336,11 @@ public class CacheMsgHelper {
      */
     public void updateList(Context context, CacheMsgBean bean) {
         CacheMsgBeanDao cacheMsgBeanDao = GreenDBIMManager.instance(context).getCacheMsgDao();
-        cacheMsgBeanDao.update(bean);
+        if (bean.getId() == null) {
+            cacheMsgBeanDao.insert(bean);
+        } else {
+            cacheMsgBeanDao.update(bean);
+        }
     }
 
 

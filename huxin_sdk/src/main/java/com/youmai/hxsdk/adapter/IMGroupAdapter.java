@@ -855,7 +855,7 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemCount() {
-        return mImBeanList.size();
+        return mImBeanList == null ? 0 : mImBeanList.size();
     }
 
 

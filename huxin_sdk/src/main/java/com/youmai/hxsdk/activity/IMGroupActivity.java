@@ -441,6 +441,12 @@ public class IMGroupActivity extends SdkBaseActivity implements
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        if (iMGroupAdapter.getItemCount() == 0) {
+            CacheMsgBean cacheMsgBean = getBaseMsg();
+            cacheMsgBean.setMsgType(CacheMsgBean.SEND_TEXT)
+                    .setJsonBodyObj(new CacheMsgTxt().setMsgTxt(ColorsConfig.GROUP_EMPTY_MSG));
+            CacheMsgHelper.instance().updateList(mContext, cacheMsgBean);
+        }
     }
 
     @Override
@@ -1005,7 +1011,7 @@ public class IMGroupActivity extends SdkBaseActivity implements
                         public void onClick(DialogInterface arg0,
                                             int arg1) {
                             arg0.dismiss();
-                            finish();
+                            onBackPressed();
                         }
                     });
 

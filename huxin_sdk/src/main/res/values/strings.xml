@@ -136,6 +136,8 @@
     <string name="hx_im_check_original_img">查看原图</string>
 
 
+    <string name="hxm_no_record_yet">暂无消息</string>
+
     <!-- 收藏 -->
     <string name="collect_voice_second">%02d\"</string>
 

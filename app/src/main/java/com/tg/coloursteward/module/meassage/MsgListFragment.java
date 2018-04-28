@@ -102,7 +102,6 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
 
     // 空页面 start
     private LinearLayout mEmptyView;
-    private LinearLayout mSearchEmptyView;
     private EmptyRecyclerViewDataObserver mEmptyRecyclerViewDataObserver = new EmptyRecyclerViewDataObserver();
     // 空页面 end
 
@@ -294,7 +293,6 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
         });
         mRefreshRecyclerView.setLoadingMoreEnabled(false);
         mRefreshRecyclerView.setArrowImageView(R.drawable.rv_loading);
-        mSearchEmptyView = (LinearLayout) rootView.findViewById(R.id.message_search_empty_view);
 
         mMessageAdapter.registerAdapterDataObserver(mEmptyRecyclerViewDataObserver);
 
@@ -401,6 +399,8 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
                             ExCacheMsgBean bean = new ExCacheMsgBean(item);
                             mMessageAdapter.addHeadItem(bean);
                         }
+                    } else {
+                        checkIfEmpty();
                     }
                 }
             }
@@ -517,6 +517,7 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
         } else {
             mMessageAdapter.changeMessageList(data);
         }
+        checkIfEmpty();
     }
 
     @Override
@@ -580,17 +581,12 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
         Log.e(TAG, "onSaveInstanceState--showGuide");
         if (mMessageAdapter != null) {
             int count = mMessageAdapter.getItemCount();
-
             //正常状态
             if (count == 1) {
                 mEmptyView.setVisibility(View.VISIBLE);
-                mRefreshRecyclerView.setVisibility(View.VISIBLE);
             } else {
                 mEmptyView.setVisibility(View.GONE);
-                mRefreshRecyclerView.setVisibility(View.VISIBLE);
             }
-            mSearchEmptyView.setVisibility(View.GONE);
-
         }
     }
 

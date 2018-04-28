@@ -1,110 +1,36 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:focusable="true"
-    android:focusableInTouchMode="true">
+    android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/huxin_assistant"
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:background="#ffffcc00"
-        android:gravity="center"
-        android:padding="5dp"
-        android:text="有消息"
-        android:textColor="@android:color/white"
-        android:textSize="12sp"
-        android:visibility="gone" />
-
-    <com.jcodecraeer.xrecyclerview.XRecyclerView
-        android:id="@+id/message_refresh_recycler"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/tv_title"
-        android:layout_marginTop="1px" />
-
-    <TextView
-        android:id="@+id/tv_remind"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignRight="@id/message_refresh_recycler"
-        android:layout_alignTop="@id/message_refresh_recycler"
-        android:layout_marginRight="8dp"
-        android:background="@drawable/hx_rep_award_finish"
-        android:gravity="center"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
-        android:paddingTop="5dp"
-        android:text="5条提醒通知"
-        android:textColor="@color/hx_color_white"
-        android:textSize="16sp"
-        android:visibility="gone" />
-
-    <LinearLayout
-        android:id="@+id/message_search_empty_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center_horizontal"
-        android:paddingTop="120dp"
-        android:visibility="gone">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-             />
-
-        <!--<TextView-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_marginLeft="8dp"-->
-            <!--android:text="@string/hxm_no_find_contacts" />-->
-
-    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/message_empty_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/message_titlebar"
         android:gravity="center"
         android:orientation="vertical"
         android:visibility="gone">
 
-        <!--<ImageView-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_marginBottom="58dp"-->
-            <!--android:src="@mipmap/hx_message_empty_bg" />-->
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/hx_message_empty_bg" />
 
-        <!--<TextView-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_marginBottom="14dp"-->
-            <!--android:text="@string/hxm_no_record_yet"-->
-            <!--android:textColor="@color/hxb_color_gray1"-->
-            <!--android:textSize="16sp" />-->
-
-        <!--<TextView-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_marginBottom="23dp"-->
-            <!--android:text="@string/hxm_no_contacts_yet2"-->
-            <!--android:textColor="@color/hxb_color_gray1"-->
-            <!--android:textSize="12sp" />-->
-
-        <!--<TextView-->
-            <!--android:id="@+id/message_open_record"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:background="@drawable/hxb_contacts_toset_bg"-->
-            <!--android:paddingBottom="10dp"-->
-            <!--android:paddingLeft="24dp"-->
-            <!--android:paddingRight="24dp"-->
-            <!--android:paddingTop="10dp"-->
-            <!--android:text="@string/hxm_no_contacts_toset"-->
-            <!--android:textColor="@color/hxb_color_green3" />-->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/hxm_no_record_yet"
+            android:textColor="@color/hxs_color_gray"
+            android:textSize="16sp" />
 
     </LinearLayout>
+
+
+    <com.jcodecraeer.xrecyclerview.XRecyclerView
+        android:id="@+id/message_refresh_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="1px" />
 
 </RelativeLayout>

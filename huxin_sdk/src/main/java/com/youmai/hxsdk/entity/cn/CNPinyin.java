@@ -2,7 +2,7 @@ package com.youmai.hxsdk.entity.cn;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import com.youmai.hxsdk.db.bean.Contact;
+import com.youmai.hxsdk.db.bean.ContactBean;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,12 +21,12 @@ public class CNPinyin <T extends CN> implements Parcelable, Comparable<CNPinyin<
     private List<String> headerFilter = new ArrayList<>();
 
     {
-        headerFilter.add(new Contact("↑##@@**0 搜索").chinese());
-        headerFilter.add(new Contact("↑##@@**1 组织架构").chinese());
-        headerFilter.add(new Contact("↑##@@**2 我的部门").chinese());
-        headerFilter.add(new Contact("↑##@@**3 手机联系人").chinese());
-        headerFilter.add(new Contact("↑##@@**4 群聊").chinese());
-        headerFilter.add(new Contact("↑##@@**5 收藏联系人").chinese());
+        headerFilter.add(new ContactBean("↑##@@**0 搜索").chinese());
+        headerFilter.add(new ContactBean("↑##@@**1 组织架构").chinese());
+        headerFilter.add(new ContactBean("↑##@@**2 我的部门").chinese());
+        headerFilter.add(new ContactBean("↑##@@**3 手机联系人").chinese());
+        headerFilter.add(new ContactBean("↑##@@**4 群聊").chinese());
+        headerFilter.add(new ContactBean("↑##@@**5 收藏联系人").chinese());
 
         for (char ch: CHARS) {
             characters.add(ch);

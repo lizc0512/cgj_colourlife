@@ -17,7 +17,7 @@ import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.activity.IMConnectionActivity;
 import com.youmai.hxsdk.activity.SdkBaseActivity;
-import com.youmai.hxsdk.db.bean.Contact;
+import com.youmai.hxsdk.db.bean.ContactBean;
 import com.youmai.hxsdk.db.helper.CacheMsgHelper;
 import com.youmai.hxsdk.im.IMMsgManager;
 import com.youmai.hxsdk.router.APath;
@@ -51,7 +51,7 @@ public class ChatDetailsActivity extends SdkBaseActivity {
     private String username;
     private boolean isClearUp;
 
-    List<Contact> groupList = new ArrayList<>();
+    List<ContactBean> groupList = new ArrayList<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -107,7 +107,7 @@ public class ChatDetailsActivity extends SdkBaseActivity {
     }
 
     private void createGroupMap() {
-        Contact self = new Contact();
+        ContactBean self = new ContactBean();
         String selfUid = HuxinSdkManager.instance().getUuid();
         self.setUuid(selfUid);
         self.setAvatar(HuxinSdkManager.instance().getHeadUrl());
@@ -116,7 +116,7 @@ public class ChatDetailsActivity extends SdkBaseActivity {
         groupList.add(self);
 
         if (!selfUid.equals(uuid)) {
-            Contact contact = new Contact();
+            ContactBean contact = new ContactBean();
             contact.setUuid(this.uuid);
             contact.setRealname(realname);
             contact.setAvatar(avatar);

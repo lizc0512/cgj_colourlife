@@ -18,7 +18,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.module.groupchat.AddContactsCreateGroupActivity;
-import com.youmai.hxsdk.db.bean.Contact;
+import com.youmai.hxsdk.db.bean.ContactBean;
 import com.youmai.hxsdk.utils.GlideRoundTransform;
 
 import java.util.ArrayList;
@@ -34,30 +34,30 @@ import java.util.Map;
 public class DepartAdapter extends RecyclerView.Adapter {
 
     private Context mContext;
-    private List<Contact> mDataList;
-    private Map<String, Contact> mTotalMap = new HashMap<>();
-    private Map<String, Contact> groupMap = new HashMap<>();
+    private List<ContactBean> mDataList;
+    private Map<String, ContactBean> mTotalMap = new HashMap<>();
+    private Map<String, ContactBean> groupMap = new HashMap<>();
 
     public DepartAdapter(Context context) {
         this.mContext = context;
         mDataList = new ArrayList<>();
     }
 
-    public void setDataList(List<Contact> dataList) {
+    public void setDataList(List<ContactBean> dataList) {
         this.mDataList = dataList;
         notifyDataSetChanged();
     }
 
-    public List<Contact> getDataList() {
+    public List<ContactBean> getDataList() {
         return mDataList;
     }
 
-    public void setCacheMap(Map<String, Contact> map) {
+    public void setCacheMap(Map<String, ContactBean> map) {
         mTotalMap = map;
         notifyDataSetChanged();
     }
 
-    public void setGroupMap(Map<String, Contact> map) {
+    public void setGroupMap(Map<String, ContactBean> map) {
         this.groupMap = map;
     }
 
@@ -77,7 +77,7 @@ public class DepartAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         final SearchItem searchItemHolder = (SearchItem) holder;
-        final Contact contact = mDataList.get(position);
+        final ContactBean contact = mDataList.get(position);
         searchItemHolder.search_name.setText(contact.getRealname());
 
         if (null != groupMap && null != groupMap.get(contact.getUuid())) {

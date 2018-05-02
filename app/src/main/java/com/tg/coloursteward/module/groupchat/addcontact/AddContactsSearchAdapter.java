@@ -20,7 +20,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.tg.coloursteward.module.contact.utils.PinYinUtils;
 import com.youmai.hxsdk.R;
-import com.youmai.hxsdk.db.bean.Contact;
+import com.youmai.hxsdk.db.bean.ContactBean;
 import com.youmai.hxsdk.entity.cn.SearchContactBean;
 import com.youmai.hxsdk.utils.GlideRoundTransform;
 import com.youmai.hxsdk.utils.ListUtils;
@@ -57,8 +57,8 @@ public class AddContactsSearchAdapter<T> extends RecyclerView.Adapter<RecyclerVi
     private String mHeadTitle;
     private String mTailTitle;
 
-    private Map<String, Contact> totalMap = new HashMap<>();
-    private Map<String, Contact> groupMap = new HashMap<>();
+    private Map<String, ContactBean> totalMap = new HashMap<>();
+    private Map<String, ContactBean> groupMap = new HashMap<>();
 
     public AddContactsSearchAdapter(Context context) {
         mContext = context;
@@ -105,11 +105,11 @@ public class AddContactsSearchAdapter<T> extends RecyclerView.Adapter<RecyclerVi
         return mDataList;
     }
 
-    public void setCacheMap(Map<String, Contact> map) {
+    public void setCacheMap(Map<String, ContactBean> map) {
         totalMap = map;
     }
 
-    public void setGroupMap(Map<String, Contact> map) {
+    public void setGroupMap(Map<String, ContactBean> map) {
         groupMap = map;
     }
 

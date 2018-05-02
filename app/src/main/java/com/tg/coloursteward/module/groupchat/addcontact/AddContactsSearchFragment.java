@@ -21,11 +21,10 @@ import com.tg.coloursteward.module.search.GlobalSearchAdapter;
 import com.tg.coloursteward.module.search.GlobalSearchLoader;
 import com.tg.coloursteward.module.search.SearchFragment;
 import com.youmai.hxsdk.R;
-import com.youmai.hxsdk.db.bean.Contact;
+import com.youmai.hxsdk.db.bean.ContactBean;
 import com.youmai.hxsdk.entity.cn.SearchContactBean;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -119,7 +118,7 @@ public class AddContactsSearchFragment<T extends Parcelable> extends SearchFragm
     public void onItemClick(Object item) {
         Toast.makeText(getContext(), "onItemClick", Toast.LENGTH_SHORT).show();
         SearchContactBean bean = (SearchContactBean) item;
-        Contact contact = new Contact();
+        ContactBean contact = new ContactBean();
         contact.setUsername(bean.getUsername());
         contact.setRealname(bean.getDisplayName());
         contact.setPinyin(bean.getWholePinyin());
@@ -147,14 +146,14 @@ public class AddContactsSearchFragment<T extends Parcelable> extends SearchFragm
     private SelectItemListener mListener;
 
     public interface SelectItemListener {
-        void onSelect(Contact contact);
+        void onSelect(ContactBean contact);
     }
 
     public void setOnSelectItemListener(SelectItemListener listener) {
         this.mListener = listener;
     }
 
-    public void setMap(Map<String, Contact> totalMap, Map<String, Contact> groupMap) {
+    public void setMap(Map<String, ContactBean> totalMap, Map<String, ContactBean> groupMap) {
         mSearchAdapter.setCacheMap(totalMap);
         mSearchAdapter.setGroupMap(groupMap);
     }

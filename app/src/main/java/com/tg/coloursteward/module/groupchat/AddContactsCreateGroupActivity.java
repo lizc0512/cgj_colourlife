@@ -15,7 +15,6 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,7 +46,7 @@ import com.youmai.hxsdk.activity.IMConnectionActivity;
 import com.youmai.hxsdk.activity.IMGroupActivity;
 import com.youmai.hxsdk.activity.SdkBaseActivity;
 import com.youmai.hxsdk.config.ColorsConfig;
-import com.youmai.hxsdk.db.bean.Contact;
+import com.youmai.hxsdk.db.bean.ContactBean;
 import com.youmai.hxsdk.db.bean.GroupInfoBean;
 import com.youmai.hxsdk.entity.cn.CNPinyin;
 import com.youmai.hxsdk.entity.cn.CNPinyinFactory;
@@ -67,7 +66,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -121,20 +119,20 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
 
     private MessageHandler msgHand;
 
-    private ArrayList<CNPinyin<Contact>> contactList = new ArrayList<>();
+    private ArrayList<CNPinyin<ContactBean>> contactList = new ArrayList<>();
     private LinearLayoutManager manager;
     private Subscription subscription;
     private ContactsBindData bindData;
 
-    private Map<String, Contact> mGroupMap = new HashMap<>();
-    private ArrayList<Contact> mContactList; //群组成员列表
+    private Map<String, ContactBean> mGroupMap = new HashMap<>();
+    private ArrayList<ContactBean> mContactList; //群组成员列表
     private int mDetailType; //详情的类型 1：单聊  2：群聊
     private int mGroupId; //群Id
 
     private AddContactBySearchFragment searchGroupFragment;
     private AddContactByDepartmentFragment departmentFragment;
 
-    private Map<String, Contact> mTotalMap = new HashMap<>();
+    private Map<String, ContactBean> mTotalMap = new HashMap<>();
 
     static class ModifyContactsReceiver extends BroadcastReceiver {
         AddContactsCreateGroupActivity mActivity;
@@ -146,7 +144,7 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getStringExtra(ACTION);
-            Contact bean = intent.getParcelableExtra("bean");
+            ContactBean bean = intent.getParcelableExtra("bean");
             if (action.equals(ADAPTER_CONTACT)) {
                 mActivity.updateCacheMap(bean, false);
             } else if (action.equals(SEARCH_CONTACT)) {
@@ -158,11 +156,11 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
         }
     }
 
-    void updateCacheMap(Contact contact, boolean isFreshAdapter) {
+    void updateCacheMap(ContactBean contact, boolean isFreshAdapter) {
         updateCacheMap(contact, isFreshAdapter, true);
     }
 
-    void updateCacheMap(Contact contact, boolean isFreshAdapter, boolean type) {
+    void updateCacheMap(ContactBean contact, boolean isFreshAdapter, boolean type) {
         if (mTotalMap.containsKey(contact.getUuid()) && type) {
             mTotalMap.remove(contact.getUuid());
         } else {
@@ -216,7 +214,7 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
             contactList.clear();
         }
         if (null != adapter) {
-            Map<Integer, Contact> cacheMap = adapter.getCacheMap();
+            Map<Integer, ContactBean> cacheMap = adapter.getCacheMap();
             if (null != cacheMap) {
                 cacheMap.clear();
             }
@@ -292,7 +290,7 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
     }
 
     void initGroupMap() {
-        for (Contact contact : mContactList) {
+        for (ContactBean contact : mContactList) {
             mGroupMap.put(contact.getUuid(), contact);
             //if (mDetailType == 1) {
             //mTotalMap.put(contact.getUuid(), contact);
@@ -387,13 +385,13 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
     }
 
     void createGroup() {
-        Map<String, Contact> data = mTotalMap;
+        Map<String, ContactBean> data = mTotalMap;
         if (data != null && !data.isEmpty()) {
             List<YouMaiGroup.GroupMemberItem> list = new ArrayList<>();
 
             StringBuffer sb = new StringBuffer(ColorsConfig.GROUP_DEFAULT_NAME);
             int count = 0;
-            for (Contact contact : mContactList) {
+            for (ContactBean contact : mContactList) {
                 list.add(insertBuilder(contact).build());
                 if (!HuxinSdkManager.instance().getUuid().equals(contact.getUuid())) {
                     count++;
@@ -401,8 +399,8 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
                 }
             }
 
-            for (Map.Entry<String, Contact> entry : data.entrySet()) {
-                Contact item = entry.getValue();
+            for (Map.Entry<String, ContactBean> entry : data.entrySet()) {
+                ContactBean item = entry.getValue();
                 list.add(insertBuilder(item).build());
                 if (count < 3) {
                     count++;
@@ -446,7 +444,7 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
         }
     }
 
-    YouMaiGroup.GroupMemberItem.Builder insertBuilder(Contact item) {
+    YouMaiGroup.GroupMemberItem.Builder insertBuilder(ContactBean item) {
         YouMaiGroup.GroupMemberItem.Builder builder = YouMaiGroup.GroupMemberItem.newBuilder();
         builder.setMemberId(item.getUuid());
         builder.setMemberName(item.getRealname());
@@ -462,8 +460,8 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
     void updateGroup() {
         List<YouMaiGroup.GroupMemberItem> list = new ArrayList<>();
         //删除成员
-        for (Map.Entry<String, Contact> entry : mTotalMap.entrySet()) {
-            Contact item = entry.getValue();
+        for (Map.Entry<String, ContactBean> entry : mTotalMap.entrySet()) {
+            ContactBean item = entry.getValue();
             YouMaiGroup.GroupMemberItem.Builder builder = YouMaiGroup.GroupMemberItem.newBuilder();
             builder.setMemberId(item.getUuid());
             builder.setMemberName(item.getRealname());
@@ -480,9 +478,9 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
                     if (ack.getResult() == YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS) {
                         Toast.makeText(AddContactsCreateGroupActivity.this, "添加成员", Toast.LENGTH_SHORT).show();
 
-                        ArrayList<Contact> list = new ArrayList<>();
-                        for (Map.Entry<String, Contact> entry : mTotalMap.entrySet()) {
-                            Contact item = entry.getValue();
+                        ArrayList<ContactBean> list = new ArrayList<>();
+                        for (Map.Entry<String, ContactBean> entry : mTotalMap.entrySet()) {
+                            ContactBean item = entry.getValue();
                             list.add(item);
                         }
                         mTotalMap.clear();
@@ -504,20 +502,20 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
 
     private void getPinyinList(final ResponseData data) {
 
-        subscription = Observable.create(new Observable.OnSubscribe<List<CNPinyin<Contact>>>() {
+        subscription = Observable.create(new Observable.OnSubscribe<List<CNPinyin<ContactBean>>>() {
             @Override
-            public void call(Subscriber<? super List<CNPinyin<Contact>>> subscriber) {
+            public void call(Subscriber<? super List<CNPinyin<ContactBean>>> subscriber) {
                 if (!subscriber.isUnsubscribed()) {
                     //子线程查数据库，返回List<Contacts>
-                    List<Contact> contacts = bindData.contactList(mActivity, data, ContactsBindData.TYPE_ADD_CONTACT_NO_HEADER);
-                    List<CNPinyin<Contact>> contactList = CNPinyinFactory.createCNPinyinList(contacts);
+                    List<ContactBean> contacts = bindData.contactList(mActivity, data, ContactsBindData.TYPE_ADD_CONTACT_NO_HEADER);
+                    List<CNPinyin<ContactBean>> contactList = CNPinyinFactory.createCNPinyinList(contacts);
                     Collections.sort(contactList);
                     subscriber.onNext(contactList);
                     subscriber.onCompleted();
                 }
             }
         }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<List<CNPinyin<Contact>>>() {
+                .subscribe(new Subscriber<List<CNPinyin<ContactBean>>>() {
                     @Override
                     public void onCompleted() {
                     }
@@ -527,7 +525,7 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
                     }
 
                     @Override
-                    public void onNext(List<CNPinyin<Contact>> cnPinyins) {
+                    public void onNext(List<CNPinyin<ContactBean>> cnPinyins) {
                         if (!ListUtils.isEmpty(contactList)) {
                             contactList.clear();
                         }
@@ -695,7 +693,7 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
      * @param contact
      */
     @Override
-    public void onItemClick(int pos, Contact contact) {
+    public void onItemClick(int pos, ContactBean contact) {
         Toast.makeText(this, "点击position：" + pos, Toast.LENGTH_SHORT).show();
         itemFunction(pos, contact);
     }
@@ -721,7 +719,7 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
      * @param pos
      * @param contact
      */
-    void itemFunction(int pos, Contact contact) {
+    void itemFunction(int pos, ContactBean contact) {
         switch (pos) {
             case 0:
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();

@@ -19,7 +19,7 @@ import com.tg.coloursteward.module.contact.stickyheader.StickyHeaderAdapter;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.MessageHandler;
 import com.youmai.hxsdk.R;
-import com.youmai.hxsdk.db.bean.Contact;
+import com.youmai.hxsdk.db.bean.ContactBean;
 import com.youmai.hxsdk.entity.cn.CNPinyin;
 import com.youmai.hxsdk.utils.GlideRoundTransform;
 
@@ -40,14 +40,14 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public static final int mIndexForCollect = 2;
     public static final int mIndexForContact = 5;
 
-    private Map<Integer, Contact> mCacheMap;
+    private Map<Integer, ContactBean> mCacheMap;
 
     private Context mContext;
     private int mCollectIndex = 5;
     private ItemEventListener itemEventListener;
-    private final List<CNPinyin<Contact>> cnPinyinList;
+    private final List<CNPinyin<ContactBean>> cnPinyinList;
 
-    public ContactAdapter(Context context, List<CNPinyin<Contact>> cnPinyinList, int collectIndex, ItemEventListener listener) {
+    public ContactAdapter(Context context, List<CNPinyin<ContactBean>> cnPinyinList, int collectIndex, ItemEventListener listener) {
         this.mContext = context.getApplicationContext();
         this.cnPinyinList = cnPinyinList;
         this.mCollectIndex = collectIndex;
@@ -61,7 +61,7 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         msgHandler.setResponseListener(this);
     }
 
-    public Map<Integer, Contact> getCacheMap() {
+    public Map<Integer, ContactBean> getCacheMap() {
         return mCacheMap;
     }
 
@@ -104,7 +104,7 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
-        final Contact contact = cnPinyinList.get(position).data;
+        final ContactBean contact = cnPinyinList.get(position).data;
 
         if (holder instanceof ContactHolder) {
             final ContactHolder contactHolder = (ContactHolder) holder;
@@ -209,7 +209,7 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public boolean specialIndex(int childAdapterPosition) {
-        CNPinyin<Contact> contactCNPinyin = cnPinyinList.get(childAdapterPosition);
+        CNPinyin<ContactBean> contactCNPinyin = cnPinyinList.get(childAdapterPosition);
         return contactCNPinyin.getHeaderFilter().contains(contactCNPinyin.data.getRealname());
     }
 
@@ -267,7 +267,7 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     public interface ItemEventListener {
-        void onItemClick(int pos, Contact contact);
+        void onItemClick(int pos, ContactBean contact);
 
         void onLongClick(int pos);
 

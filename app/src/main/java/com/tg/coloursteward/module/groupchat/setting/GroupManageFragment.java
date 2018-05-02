@@ -15,7 +15,7 @@ import com.tg.coloursteward.R;
 import com.tg.coloursteward.module.contact.ContactsFragment;
 import com.tg.coloursteward.module.contact.stickyheader.StickyHeaderDecoration;
 import com.tg.coloursteward.module.contact.widget.CharIndexView;
-import com.youmai.hxsdk.db.bean.Contact;
+import com.youmai.hxsdk.db.bean.ContactBean;
 import com.youmai.hxsdk.entity.cn.CNPinyin;
 import com.youmai.hxsdk.entity.cn.CNPinyinFactory;
 import com.youmai.hxsdk.utils.ListUtils;
@@ -45,7 +45,7 @@ public class GroupManageFragment extends Fragment implements GroupTransAdapter.I
     private CharIndexView iv_main;
     private TextView tv_index;
 
-    private ArrayList<CNPinyin<Contact>> contactList = new ArrayList<>();
+    private ArrayList<CNPinyin<ContactBean>> contactList = new ArrayList<>();
     private LinearLayoutManager manager;
     private Subscription subscription;
 
@@ -78,7 +78,7 @@ public class GroupManageFragment extends Fragment implements GroupTransAdapter.I
 
     }
 
-    public void setList(List<Contact> list) {
+    public void setList(List<ContactBean> list) {
         getPinyinList(list);
     }
 
@@ -117,24 +117,24 @@ public class GroupManageFragment extends Fragment implements GroupTransAdapter.I
         });
     }
 
-    private void getPinyinList(final List<Contact> data) {
+    private void getPinyinList(final List<ContactBean> data) {
 
-        subscription = Observable.create(new Observable.OnSubscribe<List<CNPinyin<Contact>>>() {
+        subscription = Observable.create(new Observable.OnSubscribe<List<CNPinyin<ContactBean>>>() {
             @Override
-            public void call(Subscriber<? super List<CNPinyin<Contact>>> subscriber) {
-                Contact contact = new Contact();
+            public void call(Subscriber<? super List<CNPinyin<ContactBean>>> subscriber) {
+                ContactBean contact = new ContactBean();
                 contact.setRealname("↑##@@**0 搜索");
                 data.add(contact);
                 if (!subscriber.isUnsubscribed()) {
                     //子线程查数据库，返回List<Contacts>
-                    List<CNPinyin<Contact>> contactList = CNPinyinFactory.createCNPinyinList(data);
+                    List<CNPinyin<ContactBean>> contactList = CNPinyinFactory.createCNPinyinList(data);
                     Collections.sort(contactList);
                     subscriber.onNext(contactList);
                     subscriber.onCompleted();
                 }
             }
         }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<List<CNPinyin<Contact>>>() {
+                .subscribe(new Subscriber<List<CNPinyin<ContactBean>>>() {
                     @Override
                     public void onCompleted() {
                     }
@@ -144,7 +144,7 @@ public class GroupManageFragment extends Fragment implements GroupTransAdapter.I
                     }
 
                     @Override
-                    public void onNext(List<CNPinyin<Contact>> cnPinyins) {
+                    public void onNext(List<CNPinyin<ContactBean>> cnPinyins) {
                         if (!ListUtils.isEmpty(contactList)) {
                             contactList.clear();
                         }
@@ -166,7 +166,7 @@ public class GroupManageFragment extends Fragment implements GroupTransAdapter.I
      * @param contact
      */
     @Override
-    public void onItemClick(int pos, Contact contact) {
+    public void onItemClick(int pos, ContactBean contact) {
         adapter.setSelected(pos);
         ownerId = contact.getUuid();
     }

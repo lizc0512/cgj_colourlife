@@ -21,7 +21,7 @@ import com.tg.coloursteward.module.contact.stickyheader.StickyHeaderAdapter;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.MessageHandler;
 import com.youmai.hxsdk.R;
-import com.youmai.hxsdk.db.bean.Contact;
+import com.youmai.hxsdk.db.bean.ContactBean;
 import com.youmai.hxsdk.entity.cn.CNPinyin;
 import com.youmai.hxsdk.utils.GlideRoundTransform;
 
@@ -42,16 +42,16 @@ public class SearchContactAdapter extends RecyclerView.Adapter<RecyclerView.View
     public static final int mIndexForCollect = 1;
     public static final int mIndexForContact = 5;
 
-    private Map<Integer, Contact> mCacheMap;
-    private Map<String, Contact> mTotalMap = new HashMap<>();
-    private Map<String, Contact> groupMap = new HashMap<>();
+    private Map<Integer, ContactBean> mCacheMap;
+    private Map<String, ContactBean> mTotalMap = new HashMap<>();
+    private Map<String, ContactBean> groupMap = new HashMap<>();
 
     private Context mContext;
     private int mCollectIndex = 5;
     private ItemEventListener itemEventListener;
-    private final List<CNPinyin<Contact>> cnPinyinList;
+    private final List<CNPinyin<ContactBean>> cnPinyinList;
 
-    public SearchContactAdapter(Context context, List<CNPinyin<Contact>> cnPinyinList, int collectIndex, ItemEventListener listener) {
+    public SearchContactAdapter(Context context, List<CNPinyin<ContactBean>> cnPinyinList, int collectIndex, ItemEventListener listener) {
         this.mContext = context.getApplicationContext();
         this.cnPinyinList = cnPinyinList;
         this.mCollectIndex = collectIndex;
@@ -65,22 +65,22 @@ public class SearchContactAdapter extends RecyclerView.Adapter<RecyclerView.View
         msgHandler.setResponseListener(this);
     }
 
-    public Map<Integer, Contact> getCacheMap() {
+    public Map<Integer, ContactBean> getCacheMap() {
         return mCacheMap;
     }
 
     //刷Adapter
-    public void setCacheMap(Map<String, Contact> map) {
+    public void setCacheMap(Map<String, ContactBean> map) {
         this.mTotalMap = map;
         notifyDataSetChanged();
     }
 
     //不刷Adapter
-    public void setMap(Map<String, Contact> map) {
+    public void setMap(Map<String, ContactBean> map) {
         this.mTotalMap = map;
     }
 
-    public void setGroupMap(Map<String, Contact> map) {
+    public void setGroupMap(Map<String, ContactBean> map) {
         this.groupMap = map;
     }
 
@@ -113,7 +113,7 @@ public class SearchContactAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
-        final Contact contact = cnPinyinList.get(position).data;
+        final ContactBean contact = cnPinyinList.get(position).data;
 
         if (holder instanceof ContactHolder) {
             if (position >= 0 && position < mCollectIndex) {
@@ -142,8 +142,8 @@ public class SearchContactAdapter extends RecyclerView.Adapter<RecyclerView.View
                     Log.e("YW", "contact.getUuid(): " + contact.getUuid() + "\tcheck: " + (groupMap.get(contact.getUuid()) == null ?
                             "null" : groupMap.get(contact.getUuid()).getUuid()));
 
-                    for (Map.Entry<String, Contact> entry: groupMap.entrySet()) {
-                        Contact item = entry.getValue();
+                    for (Map.Entry<String, ContactBean> entry: groupMap.entrySet()) {
+                        ContactBean item = entry.getValue();
 
                         Log.e("YW", "迭代: " + item.getUuid());
                     }
@@ -235,7 +235,7 @@ public class SearchContactAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     @Override
     public boolean specialIndex(int childAdapterPosition) {
-        CNPinyin<Contact> contactCNPinyin = cnPinyinList.get(childAdapterPosition);
+        CNPinyin<ContactBean> contactCNPinyin = cnPinyinList.get(childAdapterPosition);
         return contactCNPinyin.getHeaderFilter().contains(contactCNPinyin.data.getRealname());
     }
 
@@ -287,7 +287,7 @@ public class SearchContactAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     public interface ItemEventListener {
-        void onItemClick(int pos, Contact contact);
+        void onItemClick(int pos, ContactBean contact);
 
         void onLongClick(int pos);
 

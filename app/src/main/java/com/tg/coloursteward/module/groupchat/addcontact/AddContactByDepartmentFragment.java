@@ -22,7 +22,7 @@ import com.tg.coloursteward.net.RequestConfig;
 import com.tg.coloursteward.net.RequestParams;
 import com.tg.coloursteward.net.ResponseData;
 import com.tg.coloursteward.view.PullRefreshListView;
-import com.youmai.hxsdk.db.bean.Contact;
+import com.youmai.hxsdk.db.bean.ContactBean;
 import com.youmai.hxsdk.utils.ListUtils;
 
 import org.json.JSONArray;
@@ -112,7 +112,7 @@ public class AddContactByDepartmentFragment extends Fragment
         HttpTools.httpGet(Contants.URl.URL_ICETEST, "/phonebook/childDatas",config, params);
     }
 
-    public void setMap(Map<String, Contact> totalMap, Map<String, Contact> groupMap) {
+    public void setMap(Map<String, ContactBean> totalMap, Map<String, ContactBean> groupMap) {
         mAdapter.setCacheMap(totalMap);
         mAdapter.setGroupMap(groupMap);
         if (ListUtils.isEmpty(mAdapter.getDataList())) {
@@ -130,10 +130,10 @@ public class AddContactByDepartmentFragment extends Fragment
         JSONArray jsonString = HttpTools.getContentJsonArray(response);
         if (jsonString != null) {
             ResponseData data = HttpTools.getResponseContent(jsonString);
-            List<Contact> mList = new ArrayList<>();
-            Contact item;
+            List<ContactBean> mList = new ArrayList<>();
+            ContactBean item;
             for (int i = 0; i < data.length; i++) {
-                item = new Contact();
+                item = new ContactBean();
                 //item.type = data.getString(i, "type");
                 item.setUsername(data.getString(i, "username"));
                 item.setAvatar(data.getString(i, "avatar"));

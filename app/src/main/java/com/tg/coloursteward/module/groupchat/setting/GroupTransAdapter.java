@@ -14,7 +14,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.tg.coloursteward.module.contact.stickyheader.StickyHeaderAdapter;
 import com.youmai.hxsdk.R;
-import com.youmai.hxsdk.db.bean.Contact;
+import com.youmai.hxsdk.db.bean.ContactBean;
 import com.youmai.hxsdk.entity.cn.CNPinyin;
 import com.youmai.hxsdk.utils.GlideRoundTransform;
 
@@ -35,11 +35,11 @@ public class GroupTransAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private Context mContext;
     private int mCollectIndex = 0;
     private ItemEventListener itemEventListener;
-    private final List<CNPinyin<Contact>> cnPinyinList;
+    private final List<CNPinyin<ContactBean>> cnPinyinList;
 
-    private Map<String, Contact> mSelectMap = new HashMap<>();
+    private Map<String, ContactBean> mSelectMap = new HashMap<>();
 
-    public GroupTransAdapter(Context context, List<CNPinyin<Contact>> cnPinyinList, ItemEventListener listener) {
+    public GroupTransAdapter(Context context, List<CNPinyin<ContactBean>> cnPinyinList, ItemEventListener listener) {
         this.mContext = context.getApplicationContext();
         this.cnPinyinList = cnPinyinList;
         this.itemEventListener = listener;
@@ -81,7 +81,7 @@ public class GroupTransAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
-        final Contact contact = cnPinyinList.get(position).data;
+        final ContactBean contact = cnPinyinList.get(position).data;
 
         if (holder instanceof ContactHolder) {
             final ContactHolder contactHolder = (ContactHolder) holder;
@@ -145,7 +145,7 @@ public class GroupTransAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public boolean specialIndex(int childAdapterPosition) {
-        CNPinyin<Contact> contactCNPinyin = cnPinyinList.get(childAdapterPosition);
+        CNPinyin<ContactBean> contactCNPinyin = cnPinyinList.get(childAdapterPosition);
         return contactCNPinyin.getHeaderFilter().contains(contactCNPinyin.data.getRealname());
     }
 
@@ -194,7 +194,7 @@ public class GroupTransAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     public interface ItemEventListener {
-        void onItemClick(int pos, Contact contact);
+        void onItemClick(int pos, ContactBean contact);
     }
 
 }

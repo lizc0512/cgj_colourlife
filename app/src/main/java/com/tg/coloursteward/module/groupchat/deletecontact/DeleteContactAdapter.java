@@ -15,7 +15,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.constant.Contants;
-import com.youmai.hxsdk.db.bean.Contact;
+import com.youmai.hxsdk.db.bean.ContactBean;
 import com.youmai.hxsdk.utils.GlideRoundTransform;
 
 import java.util.HashMap;
@@ -32,15 +32,15 @@ public class DeleteContactAdapter extends RecyclerView.Adapter {
     final String HEAD_ICON_URL = Contants.URl.HEAD_ICON_URL; //头像
 
     private Context mContext;
-    private List<Contact> mGroupList;
+    private List<ContactBean> mGroupList;
 
-    private Map<String, Contact> mGroupMap = new HashMap<>();
+    private Map<String, ContactBean> mGroupMap = new HashMap<>();
 
     public DeleteContactAdapter(Context context) {
         this.mContext = context;
     }
 
-    public void setGroupList(List<Contact> list) {
+    public void setGroupList(List<ContactBean> list) {
         this.mGroupList = list;
         notifyDataSetChanged();
     }
@@ -50,7 +50,7 @@ public class DeleteContactAdapter extends RecyclerView.Adapter {
         notifyDataSetChanged();
     }
 
-    public void setGroupMap(Map<String, Contact> map) {
+    public void setGroupMap(Map<String, ContactBean> map) {
         this.mGroupMap = map;
     }
 
@@ -76,7 +76,7 @@ public class DeleteContactAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
 
         final GroupViewHolder itemHolder = (GroupViewHolder) holder;
-        final Contact contact = mGroupList.get(position);
+        final ContactBean contact = mGroupList.get(position);
 
         itemHolder.tv_name.setText(contact.getRealname());
         itemHolder.cb_collect.setButtonDrawable(R.drawable.contacts_select_selector);
@@ -145,7 +145,7 @@ public class DeleteContactAdapter extends RecyclerView.Adapter {
     }
 
     public interface OnItemClickListener {
-        void onItemClick(int position, Contact bean);
+        void onItemClick(int position, ContactBean bean);
     }
 
 }

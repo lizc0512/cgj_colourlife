@@ -29,7 +29,7 @@ import com.youmai.hxsdk.activity.IMGroupActivity;
 import com.youmai.hxsdk.activity.SdkBaseActivity;
 import com.youmai.hxsdk.adapter.PaddingItemDecoration;
 import com.youmai.hxsdk.config.ColorsConfig;
-import com.youmai.hxsdk.db.bean.Contact;
+import com.youmai.hxsdk.db.bean.ContactBean;
 import com.youmai.hxsdk.db.bean.GroupInfoBean;
 import com.youmai.hxsdk.db.helper.CacheMsgHelper;
 import com.youmai.hxsdk.db.helper.GroupInfoHelper;
@@ -88,9 +88,9 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
 
     private GroupDetailAdapter mAdapter;
 
-    private List<Contact> groupList = new ArrayList<>();
-    private List<Contact> groupList2 = new ArrayList<>();
-    private List<Contact> groupList3 = new ArrayList<>();
+    private List<ContactBean> groupList = new ArrayList<>();
+    private List<ContactBean> groupList2 = new ArrayList<>();
+    private List<ContactBean> groupList3 = new ArrayList<>();
 
     private GroupInfoBean mGroupInfo;
 
@@ -222,7 +222,7 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
                             }
                         }
 
-                        Contact contact = new Contact();
+                        ContactBean contact = new ContactBean();
                         contact.setRealname(member_name);
                         contact.setUsername(user_name);
                         contact.setUuid(member_id);
@@ -243,15 +243,15 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
                     mTvTitle.setText(title);
 
                     if (isGroupOwner) {
-                        Contact contact1 = new Contact();
+                        ContactBean contact1 = new ContactBean();
                         contact1.setRealname("+");
                         groupList.add(contact1);
-                        Contact contact2 = new Contact();
+                        ContactBean contact2 = new ContactBean();
                         contact2.setRealname("-");
                         groupList.add(contact2);
                         mAdapter.setType(2);
                     } else {
-                        Contact contact = new Contact();
+                        ContactBean contact = new ContactBean();
                         contact.setRealname("+");
                         groupList.add(contact);
                         mAdapter.setType(1);
@@ -289,7 +289,7 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
                                 }
                             }
 
-                            Contact contact = new Contact();
+                            ContactBean contact = new ContactBean();
                             contact.setRealname(item.getMemberName());
                             contact.setUsername(item.getUserName());
                             contact.setUuid(item.getMemberId());
@@ -314,15 +314,15 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
                         }
 
                         if (isGroupOwner) {
-                            Contact contact1 = new Contact();
+                            ContactBean contact1 = new ContactBean();
                             contact1.setRealname("+");
                             groupList.add(contact1);
-                            Contact contact2 = new Contact();
+                            ContactBean contact2 = new ContactBean();
                             contact2.setRealname("-");
                             groupList.add(contact2);
                             mAdapter.setType(2);
                         } else {
-                            Contact contact = new Contact();
+                            ContactBean contact = new ContactBean();
                             contact.setRealname("+");
                             groupList.add(contact);
                             mAdapter.setType(1);
@@ -450,7 +450,7 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
             }
         };
 
-        Contact contact = groupList3.get(0);
+        ContactBean contact = groupList3.get(0);
         String ownerId = contact.getUuid();
         if (StringUtils.isEmpty(ownerId)) {
             return;
@@ -497,7 +497,7 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
     }
 
     @Override
-    public void onItemClick(int pos, Contact contact) {
+    public void onItemClick(int pos, ContactBean contact) {
         String realname = contact.getRealname();
         if (realname.equals("+")) {
             ARouter.getInstance().build(APath.GROUP_CREATE_ADD_CONTACT)

@@ -14,7 +14,7 @@ import com.tg.coloursteward.module.groupchat.details.ChatGroupDetailsActivity;
 import com.tg.coloursteward.util.StringUtils;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.activity.SdkBaseActivity;
-import com.youmai.hxsdk.db.bean.Contact;
+import com.youmai.hxsdk.db.bean.ContactBean;
 import com.youmai.hxsdk.proto.YouMaiBasic;
 import com.youmai.hxsdk.proto.YouMaiGroup;
 import com.youmai.hxsdk.socket.PduBase;
@@ -53,7 +53,7 @@ public class GroupManageActivity extends SdkBaseActivity {
     }
 
     private void initView() {
-        List<Contact> list = getIntent().getParcelableArrayListExtra(GROUP_LIST);
+        List<ContactBean> list = getIntent().getParcelableArrayListExtra(GROUP_LIST);
 
         tv_back = findViewById(R.id.tv_left_cancel);
         tv_title = findViewById(R.id.tv_title);

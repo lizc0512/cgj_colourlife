@@ -14,7 +14,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.tg.coloursteward.constant.Contants;
 import com.youmai.hxsdk.R;
-import com.youmai.hxsdk.db.bean.Contact;
+import com.youmai.hxsdk.db.bean.ContactBean;
 import com.youmai.hxsdk.utils.GlideRoundTransform;
 import com.youmai.hxsdk.utils.StringUtils;
 
@@ -35,7 +35,7 @@ public class GroupDetailAdapter extends RecyclerView.Adapter {
     }
 
     private Context mContext;
-    private List<Contact> mDataList = new ArrayList<>();
+    private List<ContactBean> mDataList = new ArrayList<>();
     private LayoutInflater mLayoutInflater;
     private ItemEventListener itemEventListener;
     private int mType = 1; //1: 不是群主  2：是群主
@@ -93,7 +93,7 @@ public class GroupDetailAdapter extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
-        final Contact contact = mDataList.get(position);
+        final ContactBean contact = mDataList.get(position);
         if (holder instanceof ItemHolder) {
             ItemHolder itemHolder = (ItemHolder) holder;
             itemHolder.tv_name.setText(contact.getRealname());
@@ -154,6 +154,6 @@ public class GroupDetailAdapter extends RecyclerView.Adapter {
     }
 
     public interface ItemEventListener {
-        void onItemClick(int pos, Contact contact);
+        void onItemClick(int pos, ContactBean contact);
     }
 }

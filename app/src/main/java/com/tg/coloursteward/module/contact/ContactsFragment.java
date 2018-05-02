@@ -47,7 +47,7 @@ import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.PullRefreshListView;
 import com.tg.coloursteward.view.dialog.ToastFactory;
 import com.youmai.hxsdk.activity.IMConnectionActivity;
-import com.youmai.hxsdk.db.bean.Contact;
+import com.youmai.hxsdk.db.bean.ContactBean;
 import com.youmai.hxsdk.entity.cn.CNPinyin;
 import com.youmai.hxsdk.entity.cn.CNPinyinFactory;
 
@@ -96,7 +96,7 @@ public class ContactsFragment extends Fragment implements ResponseListener, Item
     private CharIndexView iv_main;
     private TextView tv_index;
 
-    private ArrayList<CNPinyin<Contact>> contactList = new ArrayList<>();
+    private ArrayList<CNPinyin<ContactBean>> contactList = new ArrayList<>();
     private LinearLayoutManager manager;
     private Subscription subscription;
     private ContactsBindData bindData;
@@ -216,12 +216,12 @@ public class ContactsFragment extends Fragment implements ResponseListener, Item
 
     private void getPinyinList(final ResponseData data) {
 
-        subscription = Observable.create(new Observable.OnSubscribe<List<CNPinyin<Contact>>>() {
+        subscription = Observable.create(new Observable.OnSubscribe<List<CNPinyin<ContactBean>>>() {
             @Override
-            public void call(Subscriber<? super List<CNPinyin<Contact>>> subscriber) {
+            public void call(Subscriber<? super List<CNPinyin<ContactBean>>> subscriber) {
                 if (!subscriber.isUnsubscribed()) {
                     //子线程查数据库，返回List<Contacts>
-                    List<CNPinyin<Contact>> contactList = CNPinyinFactory.createCNPinyinList(
+                    List<CNPinyin<ContactBean>> contactList = CNPinyinFactory.createCNPinyinList(
                             bindData.contactList(getContext(), data, ContactsBindData.TYPE_HOME));
                     Collections.sort(contactList);
                     subscriber.onNext(contactList);
@@ -229,7 +229,7 @@ public class ContactsFragment extends Fragment implements ResponseListener, Item
                 }
             }
         }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<List<CNPinyin<Contact>>>() {
+                .subscribe(new Subscriber<List<CNPinyin<ContactBean>>>() {
                     @Override
                     public void onCompleted() {
                     }
@@ -239,7 +239,7 @@ public class ContactsFragment extends Fragment implements ResponseListener, Item
                     }
 
                     @Override
-                    public void onNext(List<CNPinyin<Contact>> cnPinyins) {
+                    public void onNext(List<CNPinyin<ContactBean>> cnPinyins) {
                         if (!ListUtils.isEmpty(contactList)) {
                             contactList.clear();
                         }
@@ -257,7 +257,7 @@ public class ContactsFragment extends Fragment implements ResponseListener, Item
      * @param contact
      */
     @Override
-    public void onItemClick(int pos, Contact contact) {
+    public void onItemClick(int pos, ContactBean contact) {
         itemFunction(pos, contact);
     }
 
@@ -282,7 +282,7 @@ public class ContactsFragment extends Fragment implements ResponseListener, Item
      * @param pos
      * @param contact
      */
-    void itemFunction(int pos, Contact contact) {
+    void itemFunction(int pos, ContactBean contact) {
         Intent intent;
         FamilyInfo info;
         switch (pos) {
@@ -353,7 +353,7 @@ public class ContactsFragment extends Fragment implements ResponseListener, Item
             case 5:
                 break;
             default: //item
-                Contact item = contactList.get(pos).data;
+                ContactBean item = contactList.get(pos).data;
                 //Intent i = new Intent(mActivity, EmployeeDataActivity.class);
                 //i.putExtra(EmployeeDataActivity.CONTACTS_ID, item.getUsername());
                 //startActivityForResult(i, ISTREAD);

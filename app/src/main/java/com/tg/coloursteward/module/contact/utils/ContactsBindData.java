@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.tg.coloursteward.net.ResponseData;
 import com.youmai.hxsdk.R;
-import com.youmai.hxsdk.db.bean.Contact;
+import com.youmai.hxsdk.db.bean.ContactBean;
 import com.youmai.hxsdk.entity.cn.CN;
 import com.youmai.hxsdk.entity.cn.pinyin.Pinyin;
 
@@ -47,9 +47,9 @@ public class ContactsBindData extends Observable {
         notifyObservers(null);
     }
 
-    public List<Contact> contactList(Context context, ResponseData data, int type) {
-        List<Contact> contactList = new ArrayList<>();
-        Contact contact;
+    public List<ContactBean> contactList(Context context, ResponseData data, int type) {
+        List<ContactBean> contactList = new ArrayList<>();
+        ContactBean contact;
 
         if (type == TYPE_HOME) {
             String[] names = context.getResources().getStringArray(R.array.names_collect_contact); //获取
@@ -69,7 +69,7 @@ public class ContactsBindData extends Observable {
         }
         for (int i = 0; i < data.length; i++) {
 
-            contact = new Contact();
+            contact = new ContactBean();
             String hanzi = data.getString(i, "realname");
             contact.setRealname(hanzi);
             contact.setUsername(data.getString(i, "username"));
@@ -96,8 +96,8 @@ public class ContactsBindData extends Observable {
         return contactList;
     }
 
-    Contact addHeadItem(String hanzi) {
-        Contact contact = new Contact();
+    ContactBean addHeadItem(String hanzi) {
+        ContactBean contact = new ContactBean();
         StringBuffer pinyin = new StringBuffer();
         StringBuffer ch = new StringBuffer();
         List<String> chStr = new ArrayList<>(); //每个汉字的 拼音集合

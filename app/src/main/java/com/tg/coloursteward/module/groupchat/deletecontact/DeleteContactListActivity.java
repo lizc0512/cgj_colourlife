@@ -17,7 +17,7 @@ import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.module.groupchat.details.ChatGroupDetailsActivity;
 import com.tg.coloursteward.module.search.SearchEditText;
 import com.youmai.hxsdk.HuxinSdkManager;
-import com.youmai.hxsdk.db.bean.Contact;
+import com.youmai.hxsdk.db.bean.ContactBean;
 import com.youmai.hxsdk.proto.YouMaiBasic;
 import com.youmai.hxsdk.proto.YouMaiGroup;
 import com.youmai.hxsdk.socket.PduBase;
@@ -46,8 +46,8 @@ public class DeleteContactListActivity extends BaseActivity {
     private SearchEditText mSearchBar;
     private DeleteContactAdapter mAdapter;
 
-    private ArrayList<Contact> mContactList; //群组成员列表
-    private Map<String, Contact> mTotalMap = new HashMap<>();
+    private ArrayList<ContactBean> mContactList; //群组成员列表
+    private Map<String, ContactBean> mTotalMap = new HashMap<>();
     private EmptyRecyclerViewDataObserver mEmptyRvDataObserver = new EmptyRecyclerViewDataObserver();
     private int mGroupId = -1;
 
@@ -114,8 +114,8 @@ public class DeleteContactListActivity extends BaseActivity {
             public void onClick(View v) {
                 List<YouMaiGroup.GroupMemberItem> list = new ArrayList<>();
                 //删除成员
-                for (Map.Entry<String, Contact> entry : mTotalMap.entrySet()) {
-                    Contact item = entry.getValue();
+                for (Map.Entry<String, ContactBean> entry : mTotalMap.entrySet()) {
+                    ContactBean item = entry.getValue();
                     YouMaiGroup.GroupMemberItem.Builder builder = YouMaiGroup.GroupMemberItem.newBuilder();
                     builder.setMemberId(item.getUuid());
                     builder.setMemberName(item.getRealname());
@@ -132,13 +132,13 @@ public class DeleteContactListActivity extends BaseActivity {
                             if (ack.getResult() == YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS) {
                                 Toast.makeText(DeleteContactListActivity.this, "删除成员", Toast.LENGTH_SHORT).show();
 
-                                ArrayList<Contact> list = new ArrayList<>();
-                                for (Map.Entry<String, Contact> entry : mTotalMap.entrySet()) {
-                                    Contact item = entry.getValue();
+                                ArrayList<ContactBean> list = new ArrayList<>();
+                                for (Map.Entry<String, ContactBean> entry : mTotalMap.entrySet()) {
+                                    ContactBean item = entry.getValue();
 //                                    String uuid = item.getUuid();
-//                                    Iterator<Contact> iterator = mContactList.iterator();
+//                                    Iterator<ContactBean> iterator = mContactList.iterator();
 //                                    while (iterator.hasNext()) {
-//                                        Contact contact = iterator.next();
+//                                        ContactBean contact = iterator.next();
 //                                        if (contact.getUuid().equals(uuid)) {
 //                                            iterator.remove();
 //                                        }
@@ -177,14 +177,14 @@ public class DeleteContactListActivity extends BaseActivity {
 
         mAdapter.setOnItemClickListener(new DeleteContactAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(int position, Contact bean) {
+            public void onItemClick(int position, ContactBean bean) {
                 updateCacheMap(bean);
             }
         });
 
     }
 
-    void updateCacheMap(Contact contact) {
+    void updateCacheMap(ContactBean contact) {
         Log.d("YW", "map size: " + mTotalMap.size());
         mTvSure.setText("完成(" + mTotalMap.size() + ")");
         hideSoftKey();

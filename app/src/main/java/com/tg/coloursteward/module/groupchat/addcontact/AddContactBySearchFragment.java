@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.module.search.SearchFragment;
 import com.tg.coloursteward.module.search.data.SearchData;
-import com.youmai.hxsdk.db.bean.Contact;
+import com.youmai.hxsdk.db.bean.ContactBean;
 
 import java.util.Map;
 
@@ -50,7 +50,7 @@ public class AddContactBySearchFragment extends Fragment {
         
         mSearchFragment.setOnSelectItemListener(new AddContactsSearchFragment.SelectItemListener() {
             @Override
-            public void onSelect(Contact contact) {
+            public void onSelect(ContactBean contact) {
                 //隐藏fragment
                 FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
                 transaction.hide(mSearchFragment);
@@ -101,7 +101,7 @@ public class AddContactBySearchFragment extends Fragment {
         transaction.commit();
     }
 
-    public void setMap(Map<String, Contact> totalMap, Map<String, Contact> groupMap) {
+    public void setMap(Map<String, ContactBean> totalMap, Map<String, ContactBean> groupMap) {
         mSearchFragment.setMap(totalMap, groupMap);
     }
 

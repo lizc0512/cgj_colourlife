@@ -2,13 +2,9 @@ package com.youmai.hxsdk.db.helper;
 
 import android.content.Context;
 import android.text.TextUtils;
-import android.view.View;
 
-import com.google.gson.Gson;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.youmai.hxsdk.HuxinSdkManager;
-import com.youmai.hxsdk.R;
-import com.youmai.hxsdk.db.bean.Contact;
 import com.youmai.hxsdk.db.bean.GroupInfoBean;
 import com.youmai.hxsdk.db.dao.GroupInfoBeanDao;
 import com.youmai.hxsdk.db.manager.GreenDBIMManager;

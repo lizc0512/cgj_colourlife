@@ -13,7 +13,7 @@ import org.greenrobot.greendao.annotation.Id;
  * Created by YW on 2018/4/11.
  */
 @Entity
-public class Contact implements CN, Parcelable {
+public class ContactBean implements CN, Parcelable {
 
     @Id
     private Long id; //主键id
@@ -38,11 +38,11 @@ public class Contact implements CN, Parcelable {
     private String pinyin = "#"; //姓名拼音
     private String simplePinyin;//简拼
 
-    public Contact(String name) {
+    public ContactBean(String name) {
         this.realname = name;
     }
 
-    protected Contact(Parcel in) {
+    protected ContactBean(Parcel in) {
         if (in.readByte() == 0) {
             id = null;
         } else {
@@ -68,12 +68,12 @@ public class Contact implements CN, Parcelable {
         simplePinyin = in.readString();
     }
 
-    @Generated(hash = 929869407)
-    public Contact(Long id, String uuid, String uid, String mobile, String realname,
-            String avatar, String sex, String email, String isFavorite,
-            String jobName, String landline, String orgID, String orgName,
-            String username, int memberRole, String sign, boolean is_hx,
-            String pinyin, String simplePinyin) {
+    @Generated(hash = 1240240285)
+    public ContactBean(Long id, String uuid, String uid, String mobile,
+            String realname, String avatar, String sex, String email,
+            String isFavorite, String jobName, String landline, String orgID,
+            String orgName, String username, int memberRole, String sign,
+            boolean is_hx, String pinyin, String simplePinyin) {
         this.id = id;
         this.uuid = uuid;
         this.uid = uid;
@@ -95,19 +95,21 @@ public class Contact implements CN, Parcelable {
         this.simplePinyin = simplePinyin;
     }
 
-    @Generated(hash = 672515148)
-    public Contact() {
+    @Generated(hash = 1283900925)
+    public ContactBean() {
     }
 
-    public static final Creator<Contact> CREATOR = new Creator<Contact>() {
+    
+
+    public static final Creator<ContactBean> CREATOR = new Creator<ContactBean>() {
         @Override
-        public Contact createFromParcel(Parcel in) {
-            return new Contact(in);
+        public ContactBean createFromParcel(Parcel in) {
+            return new ContactBean(in);
         }
 
         @Override
-        public Contact[] newArray(int size) {
-            return new Contact[size];
+        public ContactBean[] newArray(int size) {
+            return new ContactBean[size];
         }
     };
 

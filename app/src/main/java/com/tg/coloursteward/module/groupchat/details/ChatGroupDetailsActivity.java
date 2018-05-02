@@ -410,7 +410,7 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
                                 new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        CacheMsgHelper.instance().deleteAllMsg(mContext, mGroupId + "");
+                                        CacheMsgHelper.instance().deleteAllMsgAndSaveEntry(mContext, mGroupId + "");
                                         IMMsgManager.instance().removeBadge(mGroupId + "");
                                         isClearUp = true;
                                     }

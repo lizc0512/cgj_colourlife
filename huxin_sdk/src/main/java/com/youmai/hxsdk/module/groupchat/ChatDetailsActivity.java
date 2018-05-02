@@ -152,7 +152,7 @@ public class ChatDetailsActivity extends SdkBaseActivity {
                                 new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        CacheMsgHelper.instance().deleteAllMsg(mContext, uuid);
+                                        CacheMsgHelper.instance().deleteAllMsgAndSaveEntry(mContext, uuid);
                                         IMMsgManager.instance().removeBadge(uuid);
                                         isClearUp = true;
                                     }

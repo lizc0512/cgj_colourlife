@@ -84,6 +84,24 @@ public class CacheMsgHelper {
             if (unReadList.size() > 0) {
                 CacheMsgHelper.instance().updateList(context, unReadList);
             }
+
+
+            List<CacheMsgBean> emptyMsg = new ArrayList<>();
+
+            for (CacheMsgBean item : list) {
+                if (item.getMsgType() == CacheMsgBean.SEND_TEXT) {
+                    CacheMsgTxt cacheMsgTxt = (CacheMsgTxt) item.getJsonBodyObj();
+                    String txtContent = cacheMsgTxt.getMsgTxt();
+                    if (txtContent.equals(ColorsConfig.GROUP_EMPTY_MSG)) {
+                        emptyMsg.add(item);
+                    }
+                }
+            }
+
+            if (emptyMsg.size() > 0) {
+                list.removeAll(emptyMsg);
+            }
+
         }
 
         return list;
@@ -195,6 +213,35 @@ public class CacheMsgHelper {
         DeleteQuery<CacheMsgBean> dq = qb.where(CacheMsgBeanDao.Properties.TargetUuid.eq(dstUuid))
                 .buildDelete();
         dq.executeDeleteWithoutDetachingEntities();
+    }
+
+
+    /**
+     * 删除某个人的所有消息记录并插入一条空的消息记录已保存聊天历史
+     *
+     * @param dstUuid
+     * @return
+     */
+    public void deleteAllMsgAndSaveEntry(Context context, String dstUuid) {
+        CacheMsgBeanDao cacheMsgBeanDao = GreenDBIMManager.instance(context).getCacheMsgDao();
+        QueryBuilder<CacheMsgBean> qb = cacheMsgBeanDao.queryBuilder();
+        List<CacheMsgBean> list = qb.where(CacheMsgBeanDao.Properties.TargetUuid.eq(dstUuid))
+                .orderAsc(CacheMsgBeanDao.Properties.Id).list();
+        CacheMsgBean saveEmptyMsg = null;
+        if (list != null && list.size() > 0) {
+            saveEmptyMsg = list.get(0);
+            saveEmptyMsg.setId(null);
+            saveEmptyMsg.setMsgType(CacheMsgBean.SEND_TEXT)
+                    .setJsonBodyObj(new CacheMsgTxt().setMsgTxt(ColorsConfig.GROUP_EMPTY_MSG));
+        }
+
+        DeleteQuery<CacheMsgBean> dq = qb.where(CacheMsgBeanDao.Properties.TargetUuid.eq(dstUuid))
+                .buildDelete();
+        dq.executeDeleteWithoutDetachingEntities();
+
+        if (saveEmptyMsg != null) {
+            cacheMsgBeanDao.insert(saveEmptyMsg);
+        }
     }
 
 

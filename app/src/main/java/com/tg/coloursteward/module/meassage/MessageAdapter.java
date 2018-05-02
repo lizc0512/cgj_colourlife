@@ -322,7 +322,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             int unreadCount = IMMsgManager.instance().getBadeCount(model.getTargetUuid());
             if (unreadCount > 0) {
                 itemView.message_status.setBadgeNumber(unreadCount);
-                itemView.message_status.setGravityOffset(0.5f, 0.5f, true);
+                itemView.message_status.setGravityOffset(0f, 0f, true);
                 itemView.message_status.setBadgePadding(1.0f, true);
                 itemView.message_status.setVisibility(View.VISIBLE);
             } else {
@@ -459,17 +459,19 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         TextView message_name, message_type, message_time;
         QBadgeView message_status;
         RelativeLayout message_item;
+        RelativeLayout icon_layout;
 
         public MsgItemChat(View itemView) {
             super(itemView);
             message_item = (RelativeLayout) itemView.findViewById(R.id.message_itme);
+            icon_layout = (RelativeLayout) itemView.findViewById(R.id.icon_layout);
             message_icon = (ImageView) itemView.findViewById(R.id.message_icon);
             message_callBtn = (ImageView) itemView.findViewById(R.id.message_call_btn);
             message_name = (TextView) itemView.findViewById(R.id.message_name);
             message_type = (TextView) itemView.findViewById(R.id.message_type);
             message_time = (TextView) itemView.findViewById(R.id.message_time);
             message_status = new QBadgeView(mContext);
-            message_status.bindTarget(message_icon);
+            message_status.bindTarget(icon_layout);
             message_status.setBadgeGravity(Gravity.TOP | Gravity.END);
             message_status.setBadgeTextSize(10f, true);
             message_status.setBadgeBackgroundColor(ContextCompat.getColor(mContext, R.color.hx_color_red_tag));
@@ -483,17 +485,19 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         TextView message_name, message_type, message_time;
         QBadgeView message_status;
         RelativeLayout message_item;
+        RelativeLayout icon_layout;
 
         public MsgItemGroup(View itemView) {
             super(itemView);
             message_item = (RelativeLayout) itemView.findViewById(R.id.message_itme);
+            icon_layout = (RelativeLayout) itemView.findViewById(R.id.icon_layout);
             message_icon = (TeamHeadView) itemView.findViewById(R.id.message_icon);
             message_callBtn = (ImageView) itemView.findViewById(R.id.message_call_btn);
             message_name = (TextView) itemView.findViewById(R.id.message_name);
             message_type = (TextView) itemView.findViewById(R.id.message_type);
             message_time = (TextView) itemView.findViewById(R.id.message_time);
             message_status = new QBadgeView(mContext);
-            message_status.bindTarget(message_icon);
+            message_status.bindTarget(icon_layout);
             message_status.setBadgeGravity(Gravity.TOP | Gravity.END);
             message_status.setBadgeTextSize(10f, true);
             message_status.setBadgeBackgroundColor(ContextCompat.getColor(mContext, R.color.hx_color_red_tag));

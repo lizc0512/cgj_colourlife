@@ -59,7 +59,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.Observer;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -358,10 +357,13 @@ public class ContactsFragment extends Fragment implements ResponseListener, Item
                 //Intent i = new Intent(mActivity, EmployeeDataActivity.class);
                 //i.putExtra(EmployeeDataActivity.CONTACTS_ID, item.getUsername());
                 //startActivityForResult(i, ISTREAD);
+
+                String avatar = Contants.URl.HEAD_ICON_URL + "avatar?uid=" + item.getUsername();
+
                 Intent i = new Intent(mActivity, IMConnectionActivity.class);
                 i.putExtra(IMConnectionActivity.DST_UUID, item.getUuid());
                 i.putExtra(IMConnectionActivity.DST_NAME, item.getRealname());
-                i.putExtra(IMConnectionActivity.DST_AVATAR, item.getAvatar());
+                i.putExtra(IMConnectionActivity.DST_AVATAR, avatar);
                 i.putExtra(IMConnectionActivity.DST_USERNAME, item.getUsername());
                 i.putExtra(IMConnectionActivity.DST_PHONE, item.getMobile());
                 startActivity(i);

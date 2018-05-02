@@ -111,10 +111,15 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
 
-    public void deleteMessage(ExCacheMsgBean bean) {
-        messageList.remove(bean);
+    public void deleteMessage(String targetUuid) {
+        for (ExCacheMsgBean item : messageList) {
+            if (item.getTargetUuid() != null
+                    && item.getTargetUuid().equals(targetUuid)) {
+                messageList.remove(item);
+                break;
+            }
+        }
         notifyDataSetChanged();
-        //notifyItemRemoved(pos + getHeaderCount());
     }
 
 

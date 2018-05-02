@@ -371,10 +371,12 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
     }
 
     public void delMsgChat(ExCacheMsgBean bean) {
-        CacheMsgHelper.instance().deleteAllMsg(getActivity(), bean.getTargetUuid());
+        String targetUuid = bean.getTargetUuid();
+
+        CacheMsgHelper.instance().deleteAllMsg(getActivity(), targetUuid);
         //去掉未读消息计数
-        IMMsgManager.instance().removeBadge(bean.getTargetUuid());
-        mMessageAdapter.deleteMessage(bean);
+        IMMsgManager.instance().removeBadge(targetUuid);
+        mMessageAdapter.deleteMessage(targetUuid);
     }
 
 

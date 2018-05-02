@@ -257,10 +257,13 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 itemView.message_status.setVisibility(View.GONE);
             }
 
+            int size = mContext.getResources().getDimensionPixelOffset(R.dimen.card_head);
+
             String avatar = model.getTargetAvatar();
             Glide.with(mContext).load(avatar)
                     .apply(new RequestOptions()
                             .transform(new GlideRoundTransform())
+                            .override(size, size)
                             .placeholder(R.drawable.color_default_header)
                             .error(R.drawable.color_default_header)
                             .diskCacheStrategy(DiskCacheStrategy.RESOURCE))

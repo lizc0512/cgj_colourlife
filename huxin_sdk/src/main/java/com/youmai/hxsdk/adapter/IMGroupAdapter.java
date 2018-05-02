@@ -970,9 +970,11 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
             avatar = ben.getTargetAvatar();
         }
 
+        int size = mAct.getResources().getDimensionPixelOffset(R.dimen.card_head);
         Glide.with(mAct).load(avatar)
                 .apply(new RequestOptions()
                         .transform(new GlideRoundTransform())
+                        .override(size, size)
                         .placeholder(R.drawable.color_default_header)
                         .error(R.drawable.color_default_header)
                         .diskCacheStrategy(DiskCacheStrategy.RESOURCE))

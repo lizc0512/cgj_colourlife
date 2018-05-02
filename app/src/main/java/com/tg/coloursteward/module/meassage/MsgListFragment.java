@@ -47,11 +47,9 @@ import com.youmai.hxsdk.im.IMMsgCallback;
 import com.youmai.hxsdk.im.IMMsgManager;
 import com.youmai.hxsdk.db.helper.CacheMsgHelper;
 import com.youmai.hxsdk.utils.GsonUtil;
-import com.youmai.hxsdk.utils.ToastUtil;
 import com.youmai.hxsdk.view.refresh.OnRecyclerScrollListener;
 
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -350,7 +348,7 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
     private void delPopUp(View v, final ExCacheMsgBean bean) {
         LayoutInflater layoutInflater = (LayoutInflater) getContext()
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = layoutInflater.inflate(com.youmai.hxsdk.R.layout.hx_im_del_lay, null);
+        View view = layoutInflater.inflate(R.layout.hx_im_del_lay, null);
         if (popupWindow == null) {
             popupWindow = new PopupWindow(view, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             popupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));

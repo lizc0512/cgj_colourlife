@@ -125,7 +125,7 @@ public class GroupListAdapter extends RecyclerView.Adapter {
             }
             itemView.message_name.setText(displayName);
 
-            int groupId = ben.getGroup_id();
+            /*int groupId = ben.getGroup_id();
             GroupInfoHelper.OnResultCallBack callBack = new GroupInfoHelper.OnResultCallBack() {
                 @Override
                 public void onMembers(List<GroupAndMember> list) {
@@ -142,7 +142,7 @@ public class GroupListAdapter extends RecyclerView.Adapter {
                 }
             };
 
-            GroupInfoHelper.instance().toQueryByGroupId(mContext, groupId, callBack);
+            GroupInfoHelper.instance().toQueryByGroupId(mContext, groupId, callBack);*/
 
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

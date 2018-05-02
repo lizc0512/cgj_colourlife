@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:background="@drawable/shape_rectangle_gray_stroke"
     android:orientation="vertical"
-    android:padding="10dp">
+    android:padding="15dp">
 
     <TextView
         android:id="@+id/tv_del"

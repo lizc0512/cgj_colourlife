@@ -104,8 +104,8 @@ public class GroupListActivity extends BaseActivity {
 
         mAdapter.setOnItemClickListener(new GroupListAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(GroupInfoBean bean, int position) {
-                if (position == 0) {
+            public void onItemClick(GroupInfoBean bean) {
+                if (bean == null) {
                     Intent intent = new Intent(mContext, GlobalSearchActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                     startActivity(intent);

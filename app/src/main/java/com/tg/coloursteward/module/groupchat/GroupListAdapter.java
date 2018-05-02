@@ -108,7 +108,7 @@ public class GroupListAdapter extends RecyclerView.Adapter {
                 @Override
                 public void onClick(View v) {
                     if (mOnItemClickListener != null) {
-                        mOnItemClickListener.onItemClick(null, position);
+                        mOnItemClickListener.onItemClick(null);
                     }
                 }
             });
@@ -148,7 +148,11 @@ public class GroupListAdapter extends RecyclerView.Adapter {
                 @Override
                 public void onClick(View v) {
                     if (mOnItemClickListener != null) {
-                        mOnItemClickListener.onItemClick(ben, position);
+                        if (getHeaderCount() == HEADER_COUNT) {
+                            mOnItemClickListener.onItemClick(null);
+                        } else {
+                            mOnItemClickListener.onItemClick(ben);
+                        }
                     }
                 }
             });
@@ -204,7 +208,7 @@ public class GroupListAdapter extends RecyclerView.Adapter {
     }
 
     public interface OnItemClickListener {
-        void onItemClick(GroupInfoBean bean, int position);
+        void onItemClick(GroupInfoBean bean);
     }
 
     public interface OnItemLongClickListener {

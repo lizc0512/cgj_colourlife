@@ -118,15 +118,20 @@ public class CacheMsgHelper {
             }
         }
 
+        List<CacheMsgBean> emptyMsg = new ArrayList<>();
+
         for (CacheMsgBean item : list) {
             if (item.getMsgType() == CacheMsgBean.SEND_TEXT) {
                 CacheMsgTxt cacheMsgTxt = (CacheMsgTxt) item.getJsonBodyObj();
                 String txtContent = cacheMsgTxt.getMsgTxt();
                 if (txtContent.equals(ColorsConfig.GROUP_EMPTY_MSG)) {
-                    list.remove(item);
-                    break;
+                    emptyMsg.add(item);
                 }
             }
+        }
+
+        if (emptyMsg.size() > 0) {
+            list.removeAll(emptyMsg);
         }
 
 

@@ -129,7 +129,7 @@ public class ChatDetailsActivity extends SdkBaseActivity {
         mTvBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                onBackPressed();
             }
         });
         mAddMore.setOnClickListener(new View.OnClickListener() {

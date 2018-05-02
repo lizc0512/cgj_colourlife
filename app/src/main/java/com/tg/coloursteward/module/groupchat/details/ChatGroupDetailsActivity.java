@@ -342,7 +342,7 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
         mTvBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                onBackPressed();
             }
         });
         mTvExitGroup.setOnClickListener(new View.OnClickListener() {

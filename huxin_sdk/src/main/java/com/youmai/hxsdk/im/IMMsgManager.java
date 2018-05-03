@@ -218,13 +218,39 @@ public class IMMsgManager {
                 int groupId = notify.getGroupId();
                 List<YouMaiGroup.GroupMemberItem> list = notify.getMemberListList();
                 YouMaiGroup.GroupMemberOptType type = notify.getType();
+
+                StringBuilder sb = new StringBuilder();
                 if (type == YouMaiGroup.GroupMemberOptType.GROUP_MEMBER_OPT_DEL) {
-                    for (YouMaiGroup.GroupMemberItem item : list) {
+                    for (int i = 0; i < list.size(); i++) {
+                        YouMaiGroup.GroupMemberItem item = list.get(i);
                         if (item.getMemberId().equals(HuxinSdkManager.instance().getUuid())) {
                             CacheMsgHelper.instance().delCacheMsgGroupId(mContext, groupId);
-                            break;
+                        }
+                        sb.append('"').append(item.getMemberName()).append('"');
+                        if (i < list.size() - 1) {
+                            sb.append('、');
                         }
                     }
+                    sb.append("移出了群");
+                    CacheMsgBean bean = getMemberChangedMsgBean(groupId, sb.toString());
+
+                    CacheMsgHelper.instance().insertOrUpdate(mContext, bean);
+                    handlerIMMsgCallback(bean);
+                } else if (type == YouMaiGroup.GroupMemberOptType.GROUP_MEMBER_OPT_ADD) {
+                    for (int i = 0; i < list.size(); i++) {
+                        YouMaiGroup.GroupMemberItem item = list.get(i);
+                        if (item.getMemberId().equals(HuxinSdkManager.instance().getUuid())) {
+                            CacheMsgHelper.instance().delCacheMsgGroupId(mContext, groupId);
+                        }
+                        sb.append('"').append(item.getMemberName()).append('"');
+                        if (i < list.size() - 1) {
+                            sb.append('、');
+                        }
+                    }
+                    sb.append("加入了群");
+                    CacheMsgBean bean = getMemberChangedMsgBean(groupId, sb.toString());
+                    CacheMsgHelper.instance().insertOrUpdate(mContext, bean);
+                    handlerIMMsgCallback(bean);
                 }
 
             } catch (InvalidProtocolBufferException e) {
@@ -833,5 +859,14 @@ public class IMMsgManager {
         return res;
     }
 
+
+    private CacheMsgBean getMemberChangedMsgBean(int groupId, String content) {
+        return new CacheMsgBean()
+                .setMsgTime(System.currentTimeMillis())
+                .setMsgType(CacheMsgBean.GROUP_MEMBER_CHANGED)
+                .setMemberChanged(content)
+                .setGroupId(groupId)
+                .setTargetUuid(groupId + "");
+    }
 
 }

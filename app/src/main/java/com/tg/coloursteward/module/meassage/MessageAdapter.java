@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -275,8 +276,8 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             itemView.message_time.setText(TimeFormatUtil.convertTimeMillli(mContext, model.getMsgTime()));
 
             String displayName = model.getDisplayName();
-            boolean contains = displayName.contains(ColorsConfig.GROUP_DEFAULT_NAME);
-            if (contains) {
+            if (!TextUtils.isEmpty(displayName)
+                    && displayName.contains(ColorsConfig.GROUP_DEFAULT_NAME)) {
                 displayName = displayName.replace(ColorsConfig.GROUP_DEFAULT_NAME, "");
             }
             itemView.message_name.setText(displayName);

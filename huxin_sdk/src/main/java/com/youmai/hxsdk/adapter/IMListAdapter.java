@@ -75,29 +75,19 @@ public class IMListAdapter extends RecyclerView.Adapter {
 
     private static final String TAG = IMListAdapter.class.getSimpleName();
 
-    private static final int IMG_LEFT = 0;  //图片左
+    private static final int TXT_LEFT = 1; //文字左
+    private static final int IMG_LEFT = 2;  //图片左
+    private static final int MAP_LEFT = 3; //地图左
+    private static final int VOICE_LEFT = 4; //声音左
+    private static final int VIDEO_LEFT = 5;//视频左
+    private static final int FILE_LEFT = 6; //文件左
 
-    private static final int MAP_LEFT = 2; //地图左
-
-    private static final int VOICE_LEFT = 3; //声音左
-
-    private static final int TXT_LEFT = 4; //文字左
-
-    private static final int IMG_RIGHT = 5; //图片右
-
-    private static final int MAP_RIGHT = 7; //地图右
-
-    private static final int VOICE_RIGHT = 8; //声音右
-
-    private static final int TXT_RIGHT = 9; //文字右
-
-    private static final int FILE_LEFT = 10; //文件左
-
-    private static final int FILE_RIGHT = 11;//文件右
-
-    private static final int VIDEO_LEFT = 20;//视频左
-
-    private static final int VIDEO_RIGHT = 21;//视频右
+    private static final int TXT_RIGHT = 11; //文字右
+    private static final int IMG_RIGHT = 12; //图片右
+    private static final int MAP_RIGHT = 13; //地图右
+    private static final int VIDEO_RIGHT = 14;//视频右
+    private static final int VOICE_RIGHT = 15; //声音右
+    private static final int FILE_RIGHT = 16;//文件右
 
 
     private static final int HANDLER_REFRESH_PROGREE = 0;
@@ -248,7 +238,6 @@ public class IMListAdapter extends RecyclerView.Adapter {
                 oriType = TXT_RIGHT;
                 break;
             case CacheMsgBean.RECEIVE_TEXT:
-            case 0:
                 oriType = TXT_LEFT;
                 break;
             case CacheMsgBean.SEND_VOICE:

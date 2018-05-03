@@ -42,6 +42,8 @@ public class CacheMsgBean implements Parcelable {
     public static final int RECEIVE_FILE = 106;
     public static final int RECEIVE_EMOTION = 107;
 
+    public static final int GROUP_MEMBER_CHANGED = 1001;
+
 
     public static final int SEND_DRAFT = 0;      //草稿
     public static final int SEND_GOING = 1;//正在发送
@@ -76,6 +78,8 @@ public class CacheMsgBean implements Parcelable {
     private String targetUserName; //用于拉取用户详情与拼接头像
     private int msgStatus;  //消息发送状态
     private int progress;//保存下载进度
+
+    private String memberChanged; //群组成员变化提示
 
 
     public CacheMsgBean(CacheMsgBean bean) {
@@ -354,16 +358,24 @@ public class CacheMsgBean implements Parcelable {
         this.id = id;
     }
 
-    public CacheMsgBean() {
+
+    public String getMemberChanged() {
+        return this.memberChanged;
     }
 
 
-    @Generated(hash = 749884387)
+    public CacheMsgBean setMemberChanged(String memberChanged) {
+        this.memberChanged = memberChanged;
+        return this;
+    }
+
+
+    @Generated(hash = 392728222)
     public CacheMsgBean(Long id, Long msgId, int msgType, long msgTime, String senderUserId,
                         String senderMobile, String senderSex, String senderRealName, String senderAvatar,
                         String senderUserName, String receiverUserId, String contentJsonBody, int groupId,
                         String targetName, String targetUuid, String targetAvatar, String targetUserName,
-                        int msgStatus, int progress) {
+                        int msgStatus, int progress, String memberChanged) {
         this.id = id;
         this.msgId = msgId;
         this.msgType = msgType;
@@ -383,8 +395,13 @@ public class CacheMsgBean implements Parcelable {
         this.targetUserName = targetUserName;
         this.msgStatus = msgStatus;
         this.progress = progress;
+        this.memberChanged = memberChanged;
     }
 
+
+    @Generated(hash = 107805209)
+    public CacheMsgBean() {
+    }
 
     @Override
     public int describeContents() {
@@ -412,6 +429,7 @@ public class CacheMsgBean implements Parcelable {
         dest.writeString(this.targetUserName);
         dest.writeInt(this.msgStatus);
         dest.writeInt(this.progress);
+        dest.writeString(this.memberChanged);
     }
 
     protected CacheMsgBean(Parcel in) {
@@ -434,6 +452,7 @@ public class CacheMsgBean implements Parcelable {
         this.targetUserName = in.readString();
         this.msgStatus = in.readInt();
         this.progress = in.readInt();
+        this.memberChanged = in.readString();
     }
 
     public static final Creator<CacheMsgBean> CREATOR = new Creator<CacheMsgBean>() {

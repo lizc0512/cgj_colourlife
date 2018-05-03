@@ -75,30 +75,21 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
 
     private static final String TAG = IMGroupAdapter.class.getSimpleName();
 
-    private static final int IMG_LEFT = 0;  //图片左
+    private static final int TXT_LEFT = 1; //文字左
+    private static final int IMG_LEFT = 2;  //图片左
+    private static final int MAP_LEFT = 3; //地图左
+    private static final int VOICE_LEFT = 4; //声音左
+    private static final int VIDEO_LEFT = 5;//视频左
+    private static final int FILE_LEFT = 6; //文件左
 
-    private static final int MAP_LEFT = 2; //地图左
+    private static final int TXT_RIGHT = 11; //文字右
+    private static final int IMG_RIGHT = 12; //图片右
+    private static final int MAP_RIGHT = 13; //地图右
+    private static final int VIDEO_RIGHT = 14;//视频右
+    private static final int VOICE_RIGHT = 15; //声音右
+    private static final int FILE_RIGHT = 16;//文件右
 
-    private static final int VOICE_LEFT = 3; //声音左
-
-    private static final int TXT_LEFT = 4; //文字左
-
-    private static final int IMG_RIGHT = 5; //图片右
-
-    private static final int MAP_RIGHT = 7; //地图右
-
-    private static final int VOICE_RIGHT = 8; //声音右
-
-    private static final int TXT_RIGHT = 9; //文字右
-
-    private static final int FILE_LEFT = 10; //文件左
-
-    private static final int FILE_RIGHT = 11;//文件右
-
-    private static final int VIDEO_LEFT = 20;//视频左
-
-    private static final int VIDEO_RIGHT = 21;//视频右
-
+    private static final int MEMBER_CHANGED = 101;//群成员修改
 
     private static final int HANDLER_REFRESH_PROGREE = 0;
 
@@ -210,13 +201,15 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
                 view = inflater.inflate(R.layout.hx_fragment_im_right_video_item, parent, false);
                 holder = new VideoViewHolder(view);
                 break;
+            case MEMBER_CHANGED:
+                view = inflater.inflate(R.layout.hx_group_im_member_change_item, parent, false);
+                holder = new MemberChangedViewHolder(view);
+                break;
             default:
                 //默认视图，用于解析错误的消息
                 view = inflater.inflate(R.layout.hx_fragment_im_left_txt_item, parent, false);
                 holder = new BaseViewHolder(view);
         }
-        BaseViewHolder baseViewHolder = (BaseViewHolder) holder;
-        baseViewHolder.mItemViewType = viewType;
         return holder;
     }
 
@@ -237,7 +230,11 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
             onBindFile((FileViewHolder) holder, position);
         } else if (holder instanceof VideoViewHolder) {//视频
             onBindVideo((VideoViewHolder) holder, position);
+        } else if (holder instanceof MemberChangedViewHolder) {//群成员变动
+            onBindMemberChanged((MemberChangedViewHolder) holder, position);
         }
+
+
     }
 
     @Override
@@ -249,7 +246,6 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
                 oriType = TXT_RIGHT;
                 break;
             case CacheMsgBean.RECEIVE_TEXT:
-            case 0:
                 oriType = TXT_LEFT;
                 break;
             case CacheMsgBean.SEND_VOICE:
@@ -281,6 +277,9 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
                 break;
             case CacheMsgBean.RECEIVE_VIDEO:
                 oriType = VIDEO_LEFT;
+                break;
+            case CacheMsgBean.GROUP_MEMBER_CHANGED:
+                oriType = MEMBER_CHANGED;
                 break;
         }
         return oriType;
@@ -470,6 +469,17 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
             }
         });
     }
+
+
+    /**
+     * 视频数据
+     */
+    private void onBindMemberChanged(final MemberChangedViewHolder holder, final int position) {
+        final CacheMsgBean cacheMsgBean = mImBeanList.get(position);
+        String content = cacheMsgBean.getMemberChanged();
+        holder.tv_member_changed.setText(content);
+    }
+
 
     private void downVideo(final int position, String path, final CacheMsgBean cacheMsgBean) {
         FileAsyncTaskDownload load = new FileAsyncTaskDownload(new DownloadListener() {
@@ -960,6 +970,17 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
         }
     }
 
+
+    class MemberChangedViewHolder extends BaseViewHolder {
+        TextView tv_member_changed;
+
+        MemberChangedViewHolder(View itemView) {
+            super(itemView);
+            tv_member_changed = (TextView) itemView.findViewById(R.id.tv_member_changed);
+        }
+    }
+
+
     private void onBindCommon(final BaseViewHolder baseViewHolder, final int position) {
         CacheMsgBean ben = mImBeanList.get(position);
         String avatar;
@@ -971,14 +992,16 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
         }
 
         int size = mAct.getResources().getDimensionPixelOffset(R.dimen.card_head);
-        Glide.with(mAct).load(avatar)
-                .apply(new RequestOptions()
-                        .transform(new GlideRoundTransform())
-                        .override(size, size)
-                        .placeholder(R.drawable.color_default_header)
-                        .error(R.drawable.color_default_header)
-                        .diskCacheStrategy(DiskCacheStrategy.RESOURCE))
-                .into(baseViewHolder.senderIV);
+        if (baseViewHolder.senderIV != null) {
+            Glide.with(mAct).load(avatar)
+                    .apply(new RequestOptions()
+                            .transform(new GlideRoundTransform())
+                            .override(size, size)
+                            .placeholder(R.drawable.color_default_header)
+                            .error(R.drawable.color_default_header)
+                            .diskCacheStrategy(DiskCacheStrategy.RESOURCE))
+                    .into(baseViewHolder.senderIV);
+        }
     }
 
     /**
@@ -1006,7 +1029,6 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
 
 
     class BaseViewHolder extends RecyclerView.ViewHolder {
-        int mItemViewType;
         TextView senderDateTV;
         ImageView senderIV;
         View itemBtn;

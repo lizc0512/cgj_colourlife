@@ -1879,7 +1879,7 @@ public final class YouMaiGroup {
         long getInfoUpdateTime();
 
         /**
-         * <code>optional uint32 group_member_count = 8;</code>
+         * <code>optional uint32 group_member_count = 7;</code>
          * <p>
          * <pre>
          * 群成员数
@@ -1888,49 +1888,13 @@ public final class YouMaiGroup {
         boolean hasGroupMemberCount();
 
         /**
-         * <code>optional uint32 group_member_count = 8;</code>
+         * <code>optional uint32 group_member_count = 7;</code>
          * <p>
          * <pre>
          * 群成员数
          * </pre>
          */
         int getGroupMemberCount();
-
-        /**
-         * <code>optional uint32 fixtop_priority = 10;</code>
-         * <p>
-         * <pre>
-         * 非置顶为0，置顶次序依据值大小排序
-         * </pre>
-         */
-        boolean hasFixtopPriority();
-
-        /**
-         * <code>optional uint32 fixtop_priority = 10;</code>
-         * <p>
-         * <pre>
-         * 非置顶为0，置顶次序依据值大小排序
-         * </pre>
-         */
-        int getFixtopPriority();
-
-        /**
-         * <code>optional bool not_disturb = 11;</code>
-         * <p>
-         * <pre>
-         * 免打扰
-         * </pre>
-         */
-        boolean hasNotDisturb();
-
-        /**
-         * <code>optional bool not_disturb = 11;</code>
-         * <p>
-         * <pre>
-         * 免打扰
-         * </pre>
-         */
-        boolean getNotDisturb();
     }
 
     /**
@@ -2025,19 +1989,9 @@ public final class YouMaiGroup {
                             infoUpdateTime_ = input.readUInt64();
                             break;
                         }
-                        case 64: {
+                        case 56: {
                             bitField0_ |= 0x00000040;
                             groupMemberCount_ = input.readUInt32();
-                            break;
-                        }
-                        case 80: {
-                            bitField0_ |= 0x00000080;
-                            fixtopPriority_ = input.readUInt32();
-                            break;
-                        }
-                        case 88: {
-                            bitField0_ |= 0x00000100;
-                            notDisturb_ = input.readBool();
                             break;
                         }
                     }
@@ -2315,11 +2269,11 @@ public final class YouMaiGroup {
             return infoUpdateTime_;
         }
 
-        public static final int GROUP_MEMBER_COUNT_FIELD_NUMBER = 8;
+        public static final int GROUP_MEMBER_COUNT_FIELD_NUMBER = 7;
         private int groupMemberCount_;
 
         /**
-         * <code>optional uint32 group_member_count = 8;</code>
+         * <code>optional uint32 group_member_count = 7;</code>
          * <p>
          * <pre>
          * 群成员数
@@ -2330,7 +2284,7 @@ public final class YouMaiGroup {
         }
 
         /**
-         * <code>optional uint32 group_member_count = 8;</code>
+         * <code>optional uint32 group_member_count = 7;</code>
          * <p>
          * <pre>
          * 群成员数
@@ -2338,56 +2292,6 @@ public final class YouMaiGroup {
          */
         public int getGroupMemberCount() {
             return groupMemberCount_;
-        }
-
-        public static final int FIXTOP_PRIORITY_FIELD_NUMBER = 10;
-        private int fixtopPriority_;
-
-        /**
-         * <code>optional uint32 fixtop_priority = 10;</code>
-         * <p>
-         * <pre>
-         * 非置顶为0，置顶次序依据值大小排序
-         * </pre>
-         */
-        public boolean hasFixtopPriority() {
-            return ((bitField0_ & 0x00000080) == 0x00000080);
-        }
-
-        /**
-         * <code>optional uint32 fixtop_priority = 10;</code>
-         * <p>
-         * <pre>
-         * 非置顶为0，置顶次序依据值大小排序
-         * </pre>
-         */
-        public int getFixtopPriority() {
-            return fixtopPriority_;
-        }
-
-        public static final int NOT_DISTURB_FIELD_NUMBER = 11;
-        private boolean notDisturb_;
-
-        /**
-         * <code>optional bool not_disturb = 11;</code>
-         * <p>
-         * <pre>
-         * 免打扰
-         * </pre>
-         */
-        public boolean hasNotDisturb() {
-            return ((bitField0_ & 0x00000100) == 0x00000100);
-        }
-
-        /**
-         * <code>optional bool not_disturb = 11;</code>
-         * <p>
-         * <pre>
-         * 免打扰
-         * </pre>
-         */
-        public boolean getNotDisturb() {
-            return notDisturb_;
         }
 
         private void initFields() {
@@ -2398,8 +2302,6 @@ public final class YouMaiGroup {
             topic_ = "";
             infoUpdateTime_ = 0L;
             groupMemberCount_ = 0;
-            fixtopPriority_ = 0;
-            notDisturb_ = false;
         }
 
         private byte memoizedIsInitialized = -1;
@@ -2439,13 +2341,7 @@ public final class YouMaiGroup {
                 output.writeUInt64(6, infoUpdateTime_);
             }
             if (((bitField0_ & 0x00000040) == 0x00000040)) {
-                output.writeUInt32(8, groupMemberCount_);
-            }
-            if (((bitField0_ & 0x00000080) == 0x00000080)) {
-                output.writeUInt32(10, fixtopPriority_);
-            }
-            if (((bitField0_ & 0x00000100) == 0x00000100)) {
-                output.writeBool(11, notDisturb_);
+                output.writeUInt32(7, groupMemberCount_);
             }
             getUnknownFields().writeTo(output);
         }
@@ -2483,15 +2379,7 @@ public final class YouMaiGroup {
             }
             if (((bitField0_ & 0x00000040) == 0x00000040)) {
                 size += com.google.protobuf.CodedOutputStream
-                        .computeUInt32Size(8, groupMemberCount_);
-            }
-            if (((bitField0_ & 0x00000080) == 0x00000080)) {
-                size += com.google.protobuf.CodedOutputStream
-                        .computeUInt32Size(10, fixtopPriority_);
-            }
-            if (((bitField0_ & 0x00000100) == 0x00000100)) {
-                size += com.google.protobuf.CodedOutputStream
-                        .computeBoolSize(11, notDisturb_);
+                        .computeUInt32Size(7, groupMemberCount_);
             }
             size += getUnknownFields().getSerializedSize();
             memoizedSerializedSize = size;
@@ -2646,10 +2534,6 @@ public final class YouMaiGroup {
                 bitField0_ = (bitField0_ & ~0x00000020);
                 groupMemberCount_ = 0;
                 bitField0_ = (bitField0_ & ~0x00000040);
-                fixtopPriority_ = 0;
-                bitField0_ = (bitField0_ & ~0x00000080);
-                notDisturb_ = false;
-                bitField0_ = (bitField0_ & ~0x00000100);
                 return this;
             }
 
@@ -2706,14 +2590,6 @@ public final class YouMaiGroup {
                     to_bitField0_ |= 0x00000040;
                 }
                 result.groupMemberCount_ = groupMemberCount_;
-                if (((from_bitField0_ & 0x00000080) == 0x00000080)) {
-                    to_bitField0_ |= 0x00000080;
-                }
-                result.fixtopPriority_ = fixtopPriority_;
-                if (((from_bitField0_ & 0x00000100) == 0x00000100)) {
-                    to_bitField0_ |= 0x00000100;
-                }
-                result.notDisturb_ = notDisturb_;
                 result.bitField0_ = to_bitField0_;
                 onBuilt();
                 return result;
@@ -2758,12 +2634,6 @@ public final class YouMaiGroup {
                 }
                 if (other.hasGroupMemberCount()) {
                     setGroupMemberCount(other.getGroupMemberCount());
-                }
-                if (other.hasFixtopPriority()) {
-                    setFixtopPriority(other.getFixtopPriority());
-                }
-                if (other.hasNotDisturb()) {
-                    setNotDisturb(other.getNotDisturb());
                 }
                 this.mergeUnknownFields(other.getUnknownFields());
                 return this;
@@ -3240,7 +3110,7 @@ public final class YouMaiGroup {
             private int groupMemberCount_;
 
             /**
-             * <code>optional uint32 group_member_count = 8;</code>
+             * <code>optional uint32 group_member_count = 7;</code>
              * <p>
              * <pre>
              * 群成员数
@@ -3251,7 +3121,7 @@ public final class YouMaiGroup {
             }
 
             /**
-             * <code>optional uint32 group_member_count = 8;</code>
+             * <code>optional uint32 group_member_count = 7;</code>
              * <p>
              * <pre>
              * 群成员数
@@ -3262,7 +3132,7 @@ public final class YouMaiGroup {
             }
 
             /**
-             * <code>optional uint32 group_member_count = 8;</code>
+             * <code>optional uint32 group_member_count = 7;</code>
              * <p>
              * <pre>
              * 群成员数
@@ -3276,7 +3146,7 @@ public final class YouMaiGroup {
             }
 
             /**
-             * <code>optional uint32 group_member_count = 8;</code>
+             * <code>optional uint32 group_member_count = 7;</code>
              * <p>
              * <pre>
              * 群成员数
@@ -3285,110 +3155,6 @@ public final class YouMaiGroup {
             public Builder clearGroupMemberCount() {
                 bitField0_ = (bitField0_ & ~0x00000040);
                 groupMemberCount_ = 0;
-                onChanged();
-                return this;
-            }
-
-            private int fixtopPriority_;
-
-            /**
-             * <code>optional uint32 fixtop_priority = 10;</code>
-             * <p>
-             * <pre>
-             * 非置顶为0，置顶次序依据值大小排序
-             * </pre>
-             */
-            public boolean hasFixtopPriority() {
-                return ((bitField0_ & 0x00000080) == 0x00000080);
-            }
-
-            /**
-             * <code>optional uint32 fixtop_priority = 10;</code>
-             * <p>
-             * <pre>
-             * 非置顶为0，置顶次序依据值大小排序
-             * </pre>
-             */
-            public int getFixtopPriority() {
-                return fixtopPriority_;
-            }
-
-            /**
-             * <code>optional uint32 fixtop_priority = 10;</code>
-             * <p>
-             * <pre>
-             * 非置顶为0，置顶次序依据值大小排序
-             * </pre>
-             */
-            public Builder setFixtopPriority(int value) {
-                bitField0_ |= 0x00000080;
-                fixtopPriority_ = value;
-                onChanged();
-                return this;
-            }
-
-            /**
-             * <code>optional uint32 fixtop_priority = 10;</code>
-             * <p>
-             * <pre>
-             * 非置顶为0，置顶次序依据值大小排序
-             * </pre>
-             */
-            public Builder clearFixtopPriority() {
-                bitField0_ = (bitField0_ & ~0x00000080);
-                fixtopPriority_ = 0;
-                onChanged();
-                return this;
-            }
-
-            private boolean notDisturb_;
-
-            /**
-             * <code>optional bool not_disturb = 11;</code>
-             * <p>
-             * <pre>
-             * 免打扰
-             * </pre>
-             */
-            public boolean hasNotDisturb() {
-                return ((bitField0_ & 0x00000100) == 0x00000100);
-            }
-
-            /**
-             * <code>optional bool not_disturb = 11;</code>
-             * <p>
-             * <pre>
-             * 免打扰
-             * </pre>
-             */
-            public boolean getNotDisturb() {
-                return notDisturb_;
-            }
-
-            /**
-             * <code>optional bool not_disturb = 11;</code>
-             * <p>
-             * <pre>
-             * 免打扰
-             * </pre>
-             */
-            public Builder setNotDisturb(boolean value) {
-                bitField0_ |= 0x00000100;
-                notDisturb_ = value;
-                onChanged();
-                return this;
-            }
-
-            /**
-             * <code>optional bool not_disturb = 11;</code>
-             * <p>
-             * <pre>
-             * 免打扰
-             * </pre>
-             */
-            public Builder clearNotDisturb() {
-                bitField0_ = (bitField0_ & ~0x00000100);
-                notDisturb_ = false;
                 onChanged();
                 return this;
             }
@@ -16495,7 +16261,7 @@ public final class YouMaiGroup {
             com.google.protobuf.MessageOrBuilder {
 
         /**
-         * <code>required .GroupInfo group_info = 1;</code>
+         * <code>optional .GroupInfo group_info = 1;</code>
          * <p>
          * <pre>
          * cmd id:			CID_GROUP_INFO_REQ
@@ -16504,7 +16270,7 @@ public final class YouMaiGroup {
         boolean hasGroupInfo();
 
         /**
-         * <code>required .GroupInfo group_info = 1;</code>
+         * <code>optional .GroupInfo group_info = 1;</code>
          * <p>
          * <pre>
          * cmd id:			CID_GROUP_INFO_REQ
@@ -16513,7 +16279,7 @@ public final class YouMaiGroup {
         YouMaiGroup.GroupInfo getGroupInfo();
 
         /**
-         * <code>required .GroupInfo group_info = 1;</code>
+         * <code>optional .GroupInfo group_info = 1;</code>
          * <p>
          * <pre>
          * cmd id:			CID_GROUP_INFO_REQ
@@ -16682,7 +16448,7 @@ public final class YouMaiGroup {
         private YouMaiGroup.GroupInfo groupInfo_;
 
         /**
-         * <code>required .GroupInfo group_info = 1;</code>
+         * <code>optional .GroupInfo group_info = 1;</code>
          * <p>
          * <pre>
          * cmd id:			CID_GROUP_INFO_REQ
@@ -16693,7 +16459,7 @@ public final class YouMaiGroup {
         }
 
         /**
-         * <code>required .GroupInfo group_info = 1;</code>
+         * <code>optional .GroupInfo group_info = 1;</code>
          * <p>
          * <pre>
          * cmd id:			CID_GROUP_INFO_REQ
@@ -16704,7 +16470,7 @@ public final class YouMaiGroup {
         }
 
         /**
-         * <code>required .GroupInfo group_info = 1;</code>
+         * <code>optional .GroupInfo group_info = 1;</code>
          * <p>
          * <pre>
          * cmd id:			CID_GROUP_INFO_REQ
@@ -16769,13 +16535,11 @@ public final class YouMaiGroup {
             if (isInitialized == 1) return true;
             if (isInitialized == 0) return false;
 
-            if (!hasGroupInfo()) {
-                memoizedIsInitialized = 0;
-                return false;
-            }
-            if (!getGroupInfo().isInitialized()) {
-                memoizedIsInitialized = 0;
-                return false;
+            if (hasGroupInfo()) {
+                if (!getGroupInfo().isInitialized()) {
+                    memoizedIsInitialized = 0;
+                    return false;
+                }
             }
             memoizedIsInitialized = 1;
             return true;
@@ -17039,13 +16803,11 @@ public final class YouMaiGroup {
             }
 
             public final boolean isInitialized() {
-                if (!hasGroupInfo()) {
+                if (hasGroupInfo()) {
+                    if (!getGroupInfo().isInitialized()) {
 
-                    return false;
-                }
-                if (!getGroupInfo().isInitialized()) {
-
-                    return false;
+                        return false;
+                    }
                 }
                 return true;
             }
@@ -17075,7 +16837,7 @@ public final class YouMaiGroup {
                     YouMaiGroup.GroupInfo, YouMaiGroup.GroupInfo.Builder, YouMaiGroup.GroupInfoOrBuilder> groupInfoBuilder_;
 
             /**
-             * <code>required .GroupInfo group_info = 1;</code>
+             * <code>optional .GroupInfo group_info = 1;</code>
              * <p>
              * <pre>
              * cmd id:			CID_GROUP_INFO_REQ
@@ -17086,7 +16848,7 @@ public final class YouMaiGroup {
             }
 
             /**
-             * <code>required .GroupInfo group_info = 1;</code>
+             * <code>optional .GroupInfo group_info = 1;</code>
              * <p>
              * <pre>
              * cmd id:			CID_GROUP_INFO_REQ
@@ -17101,7 +16863,7 @@ public final class YouMaiGroup {
             }
 
             /**
-             * <code>required .GroupInfo group_info = 1;</code>
+             * <code>optional .GroupInfo group_info = 1;</code>
              * <p>
              * <pre>
              * cmd id:			CID_GROUP_INFO_REQ
@@ -17122,7 +16884,7 @@ public final class YouMaiGroup {
             }
 
             /**
-             * <code>required .GroupInfo group_info = 1;</code>
+             * <code>optional .GroupInfo group_info = 1;</code>
              * <p>
              * <pre>
              * cmd id:			CID_GROUP_INFO_REQ
@@ -17141,7 +16903,7 @@ public final class YouMaiGroup {
             }
 
             /**
-             * <code>required .GroupInfo group_info = 1;</code>
+             * <code>optional .GroupInfo group_info = 1;</code>
              * <p>
              * <pre>
              * cmd id:			CID_GROUP_INFO_REQ
@@ -17165,7 +16927,7 @@ public final class YouMaiGroup {
             }
 
             /**
-             * <code>required .GroupInfo group_info = 1;</code>
+             * <code>optional .GroupInfo group_info = 1;</code>
              * <p>
              * <pre>
              * cmd id:			CID_GROUP_INFO_REQ
@@ -17183,7 +16945,7 @@ public final class YouMaiGroup {
             }
 
             /**
-             * <code>required .GroupInfo group_info = 1;</code>
+             * <code>optional .GroupInfo group_info = 1;</code>
              * <p>
              * <pre>
              * cmd id:			CID_GROUP_INFO_REQ
@@ -17196,7 +16958,7 @@ public final class YouMaiGroup {
             }
 
             /**
-             * <code>required .GroupInfo group_info = 1;</code>
+             * <code>optional .GroupInfo group_info = 1;</code>
              * <p>
              * <pre>
              * cmd id:			CID_GROUP_INFO_REQ
@@ -17211,7 +16973,7 @@ public final class YouMaiGroup {
             }
 
             /**
-             * <code>required .GroupInfo group_info = 1;</code>
+             * <code>optional .GroupInfo group_info = 1;</code>
              * <p>
              * <pre>
              * cmd id:			CID_GROUP_INFO_REQ
@@ -20895,73 +20657,72 @@ public final class YouMaiGroup {
                         "id\030\001 \002(\r\022\030\n\020info_update_time\030\002 \001(\004\"a\n\017Gr" +
                         "oupMemberItem\022\021\n\tmember_id\030\001 \002(\t\022\023\n\013memb" +
                         "er_name\030\002 \001(\t\022\021\n\tuser_name\030\003 \002(\t\022\023\n\013memb" +
-                        "er_role\030\004 \002(\r\"\314\001\n\tGroupInfo\022\020\n\010group_id\030" +
+                        "er_role\030\004 \002(\r\"\236\001\n\tGroupInfo\022\020\n\010group_id\030" +
                         "\001 \002(\r\022\022\n\ngroup_name\030\002 \001(\t\022\020\n\010owner_id\030\003 " +
                         "\001(\t\022\024\n\014group_avatar\030\004 \001(\t\022\r\n\005topic\030\005 \001(\t" +
                         "\022\030\n\020info_update_time\030\006 \001(\004\022\032\n\022group_memb" +
-                        "er_count\030\010 \001(\r\022\027\n\017fixtop_priority\030\n \001(\r\022",
-                "\023\n\013not_disturb\030\013 \001(\010\"\221\001\n\016GroupCreateReq\022" +
-                        "\017\n\007user_id\030\001 \002(\t\0225\n\013member_list\030\002 \003(\0132 ." +
-                        "GroupMemberItem\022\022\n\ngroup" +
-                        "_name\030\003 \001(\t\022\024\n\014group_avatar\030\004 \001(\t\022\r\n\005top" +
-                        "ic\030\005 \001(\t\"\254\001\n\016GroupCreateRsp\022\020\n\010group_id\030" +
-                        "\001 \002(\r\022\017\n\007user_id\030\002 \001(\t\0225\n\013member_list\030\003 " +
-                        "\003(\0132 .GroupMemberItem\022\023\n" +
-                        "\013update_time\030\004 \001(\004\022+\n\006result\030\n \001(\0162\033.com" +
-                        ".proto.basic.ResultCode\"5\n\020GroupDissolve" +
-                        "Req\022\017\n\007user_id\030\001 \002(\t\022\020\n\010group_id\030\002 \002(\r\"Q",
-                "\n\020GroupDissolveRsp\022\020\n\010group_id\030\001 \002(\r\022+\n\006" +
-                        "result\030\n \001(\0162\033.ResultCod" +
-                        "e\"4\n\016GroupOptNotify\022\020\n\010opt_type\030\001 \002(\r\022\020\n" +
-                        "\010group_id\030\002 \002(\r\"\243\001\n\024GroupMemberChangeReq" +
-                        "\022\017\n\007user_id\030\001 \002(\t\022\020\n\010group_id\030\002 \002(\r\0225\n\013m" +
-                        "ember_list\030\003 \003(\0132 .Group" +
-                        "MemberItem\0221\n\004type\030\004 \002(\0162#.com.proto.gro" +
-                        "up.GroupMemberOptType\"\324\001\n\024GroupMemberCha" +
-                        "ngeRsp\022\020\n\010group_id\030\001 \002(\r\0225\n\013member_list\030" +
-                        "\002 \003(\0132 .GroupMemberItem\022",
-                "1\n\004type\030\003 \002(\0162#.GroupMem" +
-                        "berOptType\022\023\n\013update_time\030\004 \001(\004\022+\n\006resul" +
-                        "t\030\n \001(\0162\033.ResultCode\"\252\001\n" +
-                        "\027GroupMemberChangeNotify\022\020\n\010group_id\030\001 \002" +
-                        "(\r\0225\n\013member_list\030\002 \003(\0132 .com.proto.grou" +
-                        "p.GroupMemberItem\0221\n\004type\030\003 \002(\0162#.com.pr" +
-                        "oto.group.GroupMemberOptType\022\023\n\013update_t" +
-                        "ime\030\004 \001(\004\"T\n\014GroupListReq\022\017\n\007user_id\030\001 \002" +
-                        "(\t\0223\n\017group_item_list\030\002 \003(\0132\032.com.proto." +
-                        "group.GroupItem\"\216\001\n\014GroupListRsp\0223\n\017grou",
-                "p_info_list\030\001 \003(\0132\032.Grou" +
-                        "pInfo\022\034\n\024latest_group_id_list\030\002 \003(\r\022+\n\006r" +
-                        "esult\030\n \001(\0162\033.ResultCode" +
-                        "\"H\n\016GroupMemberReq\022\020\n\010group_id\030\001 \002(\r\022\017\n\007" +
-                        "user_id\030\002 \002(\t\022\023\n\013update_time\030\003 \001(\004\"\233\001\n\016G" +
-                        "roupMemberRsp\022\020\n\010group_id\030\001 \002(\r\0225\n\013membe" +
-                        "r_list\030\002 \003(\0132 .GroupMemb" +
-                        "erItem\022\023\n\013update_time\030\003 \001(\004\022+\n\006result\030\n " +
-                        "\002(\0162\033.ResultCode\"F\n\014Grou" +
-                        "pInfoReq\022\017\n\007user_id\030\001 \002(\t\022\020\n\010group_id\030\002 ",
-                "\002(\r\022\023\n\013update_time\030\003 \001(\004\"{\n\014GroupInfoRsp" +
-                        "\022.\n\ngroup_info\030\001 \002(\0132\032.G" +
-                        "roupInfo\022\016\n\006update\030\002 \001(\010\022+\n\006result\030\n \001(\016" +
-                        "2\033.ResultCode\"\266\001\n\022GroupI" +
-                        "nfoModifyReq\022\017\n\007user_id\030\001 \002(\t\022\020\n\010group_i" +
-                        "d\030\002 \002(\r\022\022\n\ngroup_name\030\003 \001(\t\022\024\n\014group_ava" +
-                        "tar\030\004 \001(\t\022\r\n\005topic\030\005 \001(\t\022\020\n\010owner_id\030\006 \001" +
-                        "(\t\0222\n\004type\030\007 \002(\0162$.Group" +
-                        "InfoModifyType\"\267\001\n\022GroupInfoModifyRsp\022+\n" +
-                        "\006result\030\001 \001(\0162\033.ResultCo",
-                "de\022\020\n\010group_id\030\002 \002(\r\022.\n\ngroup_info\030\003 \001(\013" +
-                        "2\032.GroupInfo\0222\n\004type\030\004 \002" +
-                        "(\0162$.GroupInfoModifyType" +
-                        "\"\240\001\n\027IMGroupInfoModifyNotify\022\020\n\010group_id" +
-                        "\030\001 \002(\r\022.\n\ngroup_info\030\002 \002(\0132\032.com.proto.g" +
-                        "roup.GroupInfo\022\017\n\007user_id\030\003 \002(\t\0222\n\004type\030" +
-                        "\004 \002(\0162$.GroupInfoModifyT" +
-                        "ype*H\n\022GroupMemberOptType\022\030\n\024GROUP_MEMBE" +
-                        "R_OPT_ADD\020\001\022\030\n\024GROUP_MEMBER_OPT_DEL\020\002*]\n" +
-                        "\023GroupInfoModifyType\022\017\n\013MODIFY_NAME\020\001\022\021\n",
-                "\rMODIFY_AVATAR\020\002\022\020\n\014MODIFY_TOPIC\020\003\022\020\n\014MO" +
-                        "DIFY_OWNER\020\004"
+                        "er_count\030\007 \001(\r\"\221\001\n\016GroupCreateReq\022\017\n\007use",
+                "r_id\030\001 \002(\t\0225\n\013member_list\030\002 \003(\0132 .com.pr" +
+                        "oto.group.GroupMemberItem\022\022\n\ngroup_name\030" +
+                        "\003 \001(\t\022\024\n\014group_avatar\030\004 \001(\t\022\r\n\005topic\030\005 \001" +
+                        "(\t\"\254\001\n\016GroupCreateRsp\022\020\n\010group_id\030\001 \002(\r\022" +
+                        "\017\n\007user_id\030\002 \001(\t\0225\n\013member_list\030\003 \003(\0132 ." +
+                        "GroupMemberItem\022\023\n\013updat" +
+                        "e_time\030\004 \001(\004\022+\n\006result\030\n \001(\0162\033.com.proto" +
+                        ".basic.ResultCode\"5\n\020GroupDissolveReq\022\017\n" +
+                        "\007user_id\030\001 \002(\t\022\020\n\010group_id\030\002 \002(\r\"Q\n\020Grou" +
+                        "pDissolveRsp\022\020\n\010group_id\030\001 \002(\r\022+\n\006result",
+                "\030\n \001(\0162\033.ResultCode\"4\n\016G" +
+                        "roupOptNotify\022\020\n\010opt_type\030\001 \002(\r\022\020\n\010group" +
+                        "_id\030\002 \002(\r\"\243\001\n\024GroupMemberChangeReq\022\017\n\007us" +
+                        "er_id\030\001 \002(\t\022\020\n\010group_id\030\002 \002(\r\0225\n\013member_" +
+                        "list\030\003 \003(\0132 .GroupMember" +
+                        "Item\0221\n\004type\030\004 \002(\0162#.Gro" +
+                        "upMemberOptType\"\324\001\n\024GroupMemberChangeRsp" +
+                        "\022\020\n\010group_id\030\001 \002(\r\0225\n\013member_list\030\002 \003(\0132" +
+                        " .GroupMemberItem\0221\n\004typ" +
+                        "e\030\003 \002(\0162#.GroupMemberOpt",
+                "Type\022\023\n\013update_time\030\004 \001(\004\022+\n\006result\030\n \001(" +
+                        "\0162\033.ResultCode\"\252\001\n\027Group" +
+                        "MemberChangeNotify\022\020\n\010group_id\030\001 \002(\r\0225\n\013" +
+                        "member_list\030\002 \003(\0132 .Grou" +
+                        "pMemberItem\0221\n\004type\030\003 \002(\0162#.com.proto.gr" +
+                        "oup.GroupMemberOptType\022\023\n\013update_time\030\004 " +
+                        "\001(\004\"T\n\014GroupListReq\022\017\n\007user_id\030\001 \002(\t\0223\n\017" +
+                        "group_item_list\030\002 \003(\0132\032." +
+                        "GroupItem\"\216\001\n\014GroupListRsp\0223\n\017group_info" +
+                        "_list\030\001 \003(\0132\032.GroupInfo\022",
+                "\034\n\024latest_group_id_list\030\002 \003(\r\022+\n\006result\030" +
+                        "\n \001(\0162\033.ResultCode\"H\n\016Gr" +
+                        "oupMemberReq\022\020\n\010group_id\030\001 \002(\r\022\017\n\007user_i" +
+                        "d\030\002 \002(\t\022\023\n\013update_time\030\003 \001(\004\"\233\001\n\016GroupMe" +
+                        "mberRsp\022\020\n\010group_id\030\001 \002(\r\0225\n\013member_list" +
+                        "\030\002 \003(\0132 .GroupMemberItem" +
+                        "\022\023\n\013update_time\030\003 \001(\004\022+\n\006result\030\n \002(\0162\033." +
+                        "ResultCode\"F\n\014GroupInfoR" +
+                        "eq\022\017\n\007user_id\030\001 \002(\t\022\020\n\010group_id\030\002 \002(\r\022\023\n" +
+                        "\013update_time\030\003 \001(\004\"{\n\014GroupInfoRsp\022.\n\ngr",
+                "oup_info\030\001 \001(\0132\032.GroupIn" +
+                        "fo\022\016\n\006update\030\002 \001(\010\022+\n\006result\030\n \001(\0162\033.com" +
+                        ".proto.basic.ResultCode\"\266\001\n\022GroupInfoMod" +
+                        "ifyReq\022\017\n\007user_id\030\001 \002(\t\022\020\n\010group_id\030\002 \002(" +
+                        "\r\022\022\n\ngroup_name\030\003 \001(\t\022\024\n\014group_avatar\030\004 " +
+                        "\001(\t\022\r\n\005topic\030\005 \001(\t\022\020\n\010owner_id\030\006 \001(\t\0222\n\004" +
+                        "type\030\007 \002(\0162$.GroupInfoMo" +
+                        "difyType\"\267\001\n\022GroupInfoModifyRsp\022+\n\006resul" +
+                        "t\030\001 \001(\0162\033.ResultCode\022\020\n\010" +
+                        "group_id\030\002 \002(\r\022.\n\ngroup_info\030\003 \001(\0132\032.com",
+                ".proto.group.GroupInfo\0222\n\004type\030\004 \002(\0162$.c" +
+                        "om.proto.group.GroupInfoModifyType\"\240\001\n\027I" +
+                        "MGroupInfoModifyNotify\022\020\n\010group_id\030\001 \002(\r" +
+                        "\022.\n\ngroup_info\030\002 \002(\0132\032.G" +
+                        "roupInfo\022\017\n\007user_id\030\003 \002(\t\0222\n\004type\030\004 \002(\0162" +
+                        "$.GroupInfoModifyType*H\n" +
+                        "\022GroupMemberOptType\022\030\n\024GROUP_MEMBER_OPT_" +
+                        "ADD\020\001\022\030\n\024GROUP_MEMBER_OPT_DEL\020\002*]\n\023Group" +
+                        "InfoModifyType\022\017\n\013MODIFY_NAME\020\001\022\021\n\rMODIF" +
+                        "Y_AVATAR\020\002\022\020\n\014MODIFY_TOPIC\020\003\022\020\n\014MODIFY_O",
+                "WNER\020\004"
         };
         com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
                 new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -20993,7 +20754,7 @@ public final class YouMaiGroup {
         internal_static_com_proto_group_GroupInfo_fieldAccessorTable = new
                 com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_proto_group_GroupInfo_descriptor,
-                new String[]{"GroupId", "GroupName", "OwnerId", "GroupAvatar", "Topic", "InfoUpdateTime", "GroupMemberCount", "FixtopPriority", "NotDisturb",});
+                new String[]{"GroupId", "GroupName", "OwnerId", "GroupAvatar", "Topic", "InfoUpdateTime", "GroupMemberCount",});
         internal_static_com_proto_group_GroupCreateReq_descriptor =
                 getDescriptor().getMessageTypes().get(3);
         internal_static_com_proto_group_GroupCreateReq_fieldAccessorTable = new

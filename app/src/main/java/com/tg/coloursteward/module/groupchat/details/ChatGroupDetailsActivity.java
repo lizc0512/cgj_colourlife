@@ -145,8 +145,6 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
             mGroupInfo.setOwner_id(groupInfo.getOwner_id());
             mGroupInfo.setInfo_update_time(groupInfo.getInfo_update_time());
             mGroupInfo.setMember_update_time(groupInfo.getMember_update_time());
-            mGroupInfo.setFixtop_priority(groupInfo.getFixtop_priority());
-            mGroupInfo.setNot_disturb(groupInfo.getNot_disturb());
             mGroupInfo.setGroupMemberJson(groupInfo.getGroupMemberJson());
         }
 
@@ -553,8 +551,6 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
             bean.setOwner_id(mGroupInfo.getOwner_id());
             bean.setInfo_update_time(mGroupInfo.getInfo_update_time());
             bean.setMember_update_time(mGroupInfo.getMember_update_time());
-            bean.setFixtop_priority(mGroupInfo.getFixtop_priority());
-            bean.setNot_disturb(mGroupInfo.getNot_disturb());
 
             List<GroupAndMember> list = new ArrayList<>();
             for (YouMaiGroup.GroupMemberItem item : memberListList) {
@@ -591,8 +587,6 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
             bean.setOwner_id(mGroupInfo.getOwner_id());
             bean.setInfo_update_time(mGroupInfo.getInfo_update_time());
             bean.setMember_update_time(mGroupInfo.getMember_update_time());
-            bean.setFixtop_priority(mGroupInfo.getFixtop_priority());
-            bean.setNot_disturb(mGroupInfo.getNot_disturb());
             bean.setGroupMemberJson(mGroupInfo.getGroupMemberJson());
             GroupInfoHelper.instance().toUpdateByGroupId(this, bean);
         }

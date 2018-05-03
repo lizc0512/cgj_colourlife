@@ -421,15 +421,7 @@ public final class YouMaiMsg {
          * 多人会话
          * </pre>
          */
-        SESSION_TYPE_MULTICHAT(1, 2),
-        /**
-         * <code>SESSION_TYPE_ORGGROUP = 3;</code>
-         * <p>
-         * <pre>
-         * 组织架构群
-         * </pre>
-         */
-        SESSION_TYPE_ORGGROUP(2, 3),;
+        SESSION_TYPE_MULTICHAT(1, 2),;
 
         /**
          * <code>SESSION_TYPE_SINGLE = 1;</code>
@@ -447,14 +439,6 @@ public final class YouMaiMsg {
          * </pre>
          */
         public static final int SESSION_TYPE_MULTICHAT_VALUE = 2;
-        /**
-         * <code>SESSION_TYPE_ORGGROUP = 3;</code>
-         * <p>
-         * <pre>
-         * 组织架构群
-         * </pre>
-         */
-        public static final int SESSION_TYPE_ORGGROUP_VALUE = 3;
 
 
         public final int getNumber() {
@@ -467,8 +451,6 @@ public final class YouMaiMsg {
                     return SESSION_TYPE_SINGLE;
                 case 2:
                     return SESSION_TYPE_MULTICHAT;
-                case 3:
-                    return SESSION_TYPE_ORGGROUP;
                 default:
                     return null;
             }
@@ -7789,9 +7771,9 @@ public final class YouMaiMsg {
                         "\210\001\n\013MsgProperty\022\025\n\021MSG_PTOPERTY_NONE\020\001\022\030" +
                         "\n\024MSG_PROPERTY_RECEIPT\020\002\022\027\n\023MSG_PROPERTY" +
                         "_URGENT\020\003\022\026\n\022MSG_PROPERTY_QUOTE\020\004\022\027\n\023MSG" +
-                        "_PROPERTY_RECALL\020\005*]\n\013SessionType\022\027\n\023SES",
+                        "_PROPERTY_RECALL\020\005*B\n\013SessionType\022\027\n\023SES",
                 "SION_TYPE_SINGLE\020\001\022\032\n\026SESSION_TYPE_MULTI" +
-                        "CHAT\020\002\022\031\n\025SESSION_TYPE_ORGGROUP\020\003"
+                        "CHAT\020\002"
         };
         com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
                 new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {

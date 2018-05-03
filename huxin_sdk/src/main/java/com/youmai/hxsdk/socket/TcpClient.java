@@ -177,7 +177,7 @@ public class TcpClient extends PduUtil implements Runnable {
         pduBase.body = msg.toByteArray();
 
 
-        Log.v(TAG, "sendProto userId:" + pduBase.user_id);
+        Log.v(TAG, "sendProto userId:" + uuid);
         Log.v(TAG, "sendProto seq_num:" + seq_num);
         Log.v(TAG, "sendProto command_id:" + pduBase.command_id);
 

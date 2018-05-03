@@ -21,32 +21,9 @@ public class GroupInfoBean implements Parcelable {
     private String group_avatar; //头像
     private String topic;
     private int group_member_count;//群成员数
-    private int fixtop_priority;    //非置顶为0，置顶次序依据值大小排序
-    private boolean not_disturb;    //免打扰
     private String groupMemberJson; //群成员列表
 
-    @Generated(hash = 45031851)
-    public GroupInfoBean(Long id, int group_id, long info_update_time,
-                         long member_update_time, String group_name, String owner_id, String group_avatar,
-                         String topic, int group_member_count, int fixtop_priority, boolean not_disturb,
-                         String groupMemberJson) {
-        this.id = id;
-        this.group_id = group_id;
-        this.info_update_time = info_update_time;
-        this.member_update_time = member_update_time;
-        this.group_name = group_name;
-        this.owner_id = owner_id;
-        this.group_avatar = group_avatar;
-        this.topic = topic;
-        this.group_member_count = group_member_count;
-        this.fixtop_priority = fixtop_priority;
-        this.not_disturb = not_disturb;
-        this.groupMemberJson = groupMemberJson;
-    }
-
-    @Generated(hash = 1490267550)
-    public GroupInfoBean() {
-    }
+    
 
     public Long getId() {
         return this.id;
@@ -120,22 +97,6 @@ public class GroupInfoBean implements Parcelable {
         this.group_member_count = group_member_count;
     }
 
-    public int getFixtop_priority() {
-        return this.fixtop_priority;
-    }
-
-    public void setFixtop_priority(int fixtop_priority) {
-        this.fixtop_priority = fixtop_priority;
-    }
-
-    public boolean getNot_disturb() {
-        return this.not_disturb;
-    }
-
-    public void setNot_disturb(boolean not_disturb) {
-        this.not_disturb = not_disturb;
-    }
-
     public String getGroupMemberJson() {
         return groupMemberJson;
     }
@@ -160,8 +121,6 @@ public class GroupInfoBean implements Parcelable {
         dest.writeString(this.group_avatar);
         dest.writeString(this.topic);
         dest.writeInt(this.group_member_count);
-        dest.writeInt(this.fixtop_priority);
-        dest.writeByte(this.not_disturb ? (byte) 1 : (byte) 0);
         dest.writeString(this.groupMemberJson);
     }
 
@@ -175,9 +134,27 @@ public class GroupInfoBean implements Parcelable {
         this.group_avatar = in.readString();
         this.topic = in.readString();
         this.group_member_count = in.readInt();
-        this.fixtop_priority = in.readInt();
-        this.not_disturb = in.readByte() != 0;
         this.groupMemberJson = in.readString();
+    }
+
+    @Generated(hash = 170294389)
+    public GroupInfoBean(Long id, int group_id, long info_update_time,
+            long member_update_time, String group_name, String owner_id, String group_avatar,
+            String topic, int group_member_count, String groupMemberJson) {
+        this.id = id;
+        this.group_id = group_id;
+        this.info_update_time = info_update_time;
+        this.member_update_time = member_update_time;
+        this.group_name = group_name;
+        this.owner_id = owner_id;
+        this.group_avatar = group_avatar;
+        this.topic = topic;
+        this.group_member_count = group_member_count;
+        this.groupMemberJson = groupMemberJson;
+    }
+
+    @Generated(hash = 1490267550)
+    public GroupInfoBean() {
     }
 
     public static final Creator<GroupInfoBean> CREATOR = new Creator<GroupInfoBean>() {

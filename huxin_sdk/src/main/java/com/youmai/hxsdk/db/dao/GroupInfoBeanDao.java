@@ -33,9 +33,7 @@ public class GroupInfoBeanDao extends AbstractDao<GroupInfoBean, Long> {
         public final static Property Group_avatar = new Property(6, String.class, "group_avatar", false, "GROUP_AVATAR");
         public final static Property Topic = new Property(7, String.class, "topic", false, "TOPIC");
         public final static Property Group_member_count = new Property(8, int.class, "group_member_count", false, "GROUP_MEMBER_COUNT");
-        public final static Property Fixtop_priority = new Property(9, int.class, "fixtop_priority", false, "FIXTOP_PRIORITY");
-        public final static Property Not_disturb = new Property(10, boolean.class, "not_disturb", false, "NOT_DISTURB");
-        public final static Property GroupMemberJson = new Property(11, String.class, "groupMemberJson", false, "GROUP_MEMBER_JSON");
+        public final static Property GroupMemberJson = new Property(9, String.class, "groupMemberJson", false, "GROUP_MEMBER_JSON");
     }
 
 
@@ -60,9 +58,7 @@ public class GroupInfoBeanDao extends AbstractDao<GroupInfoBean, Long> {
                 "\"GROUP_AVATAR\" TEXT," + // 6: group_avatar
                 "\"TOPIC\" TEXT," + // 7: topic
                 "\"GROUP_MEMBER_COUNT\" INTEGER NOT NULL ," + // 8: group_member_count
-                "\"FIXTOP_PRIORITY\" INTEGER NOT NULL ," + // 9: fixtop_priority
-                "\"NOT_DISTURB\" INTEGER NOT NULL ," + // 10: not_disturb
-                "\"GROUP_MEMBER_JSON\" TEXT);"); // 11: groupMemberJson
+                "\"GROUP_MEMBER_JSON\" TEXT);"); // 9: groupMemberJson
     }
 
     /** Drops the underlying database table. */
@@ -103,12 +99,10 @@ public class GroupInfoBeanDao extends AbstractDao<GroupInfoBean, Long> {
             stmt.bindString(8, topic);
         }
         stmt.bindLong(9, entity.getGroup_member_count());
-        stmt.bindLong(10, entity.getFixtop_priority());
-        stmt.bindLong(11, entity.getNot_disturb() ? 1L: 0L);
  
         String groupMemberJson = entity.getGroupMemberJson();
         if (groupMemberJson != null) {
-            stmt.bindString(12, groupMemberJson);
+            stmt.bindString(10, groupMemberJson);
         }
     }
 
@@ -144,12 +138,10 @@ public class GroupInfoBeanDao extends AbstractDao<GroupInfoBean, Long> {
             stmt.bindString(8, topic);
         }
         stmt.bindLong(9, entity.getGroup_member_count());
-        stmt.bindLong(10, entity.getFixtop_priority());
-        stmt.bindLong(11, entity.getNot_disturb() ? 1L: 0L);
  
         String groupMemberJson = entity.getGroupMemberJson();
         if (groupMemberJson != null) {
-            stmt.bindString(12, groupMemberJson);
+            stmt.bindString(10, groupMemberJson);
         }
     }
 
@@ -170,9 +162,7 @@ public class GroupInfoBeanDao extends AbstractDao<GroupInfoBean, Long> {
             cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6), // group_avatar
             cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7), // topic
             cursor.getInt(offset + 8), // group_member_count
-            cursor.getInt(offset + 9), // fixtop_priority
-            cursor.getShort(offset + 10) != 0, // not_disturb
-            cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11) // groupMemberJson
+            cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9) // groupMemberJson
         );
         return entity;
     }
@@ -188,9 +178,7 @@ public class GroupInfoBeanDao extends AbstractDao<GroupInfoBean, Long> {
         entity.setGroup_avatar(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
         entity.setTopic(cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7));
         entity.setGroup_member_count(cursor.getInt(offset + 8));
-        entity.setFixtop_priority(cursor.getInt(offset + 9));
-        entity.setNot_disturb(cursor.getShort(offset + 10) != 0);
-        entity.setGroupMemberJson(cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11));
+        entity.setGroupMemberJson(cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9));
      }
     
     @Override

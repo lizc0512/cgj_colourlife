@@ -179,8 +179,6 @@ public class GroupListActivity extends BaseActivity {
                             bean.setTopic(item.getTopic());
                             bean.setInfo_update_time(item.getInfoUpdateTime());
                             bean.setGroup_member_count(item.getGroupMemberCount());
-                            bean.setFixtop_priority(item.getFixtopPriority());
-                            bean.setNot_disturb(item.getNotDisturb());
                             mGroupList.add(bean);
 
                         }

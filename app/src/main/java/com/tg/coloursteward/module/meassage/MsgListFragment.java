@@ -344,34 +344,32 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
         registerBroadcast();
     }
 
-    PopupWindow popupWindow;
 
-    private void delPopUp(View v, final ExCacheMsgBean bean) {
+    private void delPopUp(View v, ExCacheMsgBean bean) {
         LayoutInflater layoutInflater = (LayoutInflater) getContext()
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = layoutInflater.inflate(R.layout.hx_im_del_lay, null);
-        if (popupWindow == null) {
-            popupWindow = new PopupWindow(view, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            popupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        }
+        final PopupWindow popupWindow = new PopupWindow(view,
+                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        popupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
         popupWindow.setFocusable(true);
         popupWindow.setOutsideTouchable(true);
         popupWindow.showAsDropDown(v, 400, 0);
         TextView tv_del = (TextView) view.findViewById(R.id.tv_del);
 
+        final String targetUuid = bean.getTargetUuid();
+
         tv_del.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                delMsgChat(bean);
+                delMsgChat(targetUuid);
                 popupWindow.dismiss();
             }
         });
     }
 
-    public void delMsgChat(ExCacheMsgBean bean) {
-        String targetUuid = bean.getTargetUuid();
-
+    public void delMsgChat(String targetUuid) {
         CacheMsgHelper.instance().deleteAllMsg(getActivity(), targetUuid);
         //去掉未读消息计数
         IMMsgManager.instance().removeBadge(targetUuid);

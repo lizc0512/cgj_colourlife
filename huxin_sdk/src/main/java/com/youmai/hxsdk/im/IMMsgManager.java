@@ -244,14 +244,18 @@ public class IMMsgManager {
             try {
                 YouMaiGroup.IMGroupInfoModifyNotify notify = YouMaiGroup.IMGroupInfoModifyNotify.parseFrom(data);
                 int groupId = notify.getGroupId();
-                YouMaiGroup.GroupInfo groupInfo = notify.getGroupInfo();
+                //String uuid = notify.getUserId();
+                YouMaiGroup.GroupInfoModifyType type = notify.getType();
 
-                List<CacheMsgBean> list = CacheMsgHelper.instance().getCacheMsgGroupId(mContext, groupId);
-                if (list != null && list.size() > 0) {
-                    CacheMsgBean bean = list.get(0);
-                    String groupName = groupInfo.getGroupName();
-                    bean.setTargetName(groupName);
-                    CacheMsgHelper.instance().updateList(mContext, bean);
+                if (type == YouMaiGroup.GroupInfoModifyType.MODIFY_NAME) {
+                    YouMaiGroup.GroupInfo groupInfo = notify.getGroupInfo();
+                    List<CacheMsgBean> list = CacheMsgHelper.instance().getCacheMsgGroupId(mContext, groupId);
+                    if (list != null && list.size() > 0) {
+                        CacheMsgBean bean = list.get(0);
+                        String groupName = groupInfo.getGroupName();
+                        bean.setTargetName(groupName);
+                        CacheMsgHelper.instance().updateList(mContext, bean);
+                    }
                 }
 
             } catch (InvalidProtocolBufferException e) {

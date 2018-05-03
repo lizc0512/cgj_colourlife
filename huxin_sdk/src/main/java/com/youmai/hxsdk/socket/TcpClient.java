@@ -237,7 +237,6 @@ public class TcpClient extends PduUtil implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            mRemoteAddress = null;
             socketChannel = null;
             mSender = null;
             heartBeatScheduled = null;

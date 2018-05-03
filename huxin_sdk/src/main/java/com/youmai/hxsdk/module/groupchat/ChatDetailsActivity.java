@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.bumptech.glide.Glide;
@@ -155,6 +156,7 @@ public class ChatDetailsActivity extends SdkBaseActivity {
                                         CacheMsgHelper.instance().deleteAllMsgAndSaveEntry(mContext, uuid);
                                         IMMsgManager.instance().removeBadge(uuid);
                                         isClearUp = true;
+                                        Toast.makeText(mContext, "当前聊天记录删除成功", Toast.LENGTH_SHORT).show();
                                     }
                                 })
                         .setNegativeButton("取消", new DialogInterface.OnClickListener() {

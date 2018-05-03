@@ -312,6 +312,7 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
                     intent.putExtra(IMConnectionActivity.DST_UUID, bean.getTargetUuid());
                     intent.putExtra(IMConnectionActivity.DST_NAME, bean.getDisplayName());
                     intent.putExtra(IMConnectionActivity.DST_USERNAME, bean.getTargetUserName());
+                    intent.putExtra(IMConnectionActivity.DST_AVATAR, bean.getTargetAvatar());
 
                     startActivityForResult(intent, INTENT_REQUEST_FOR_UPDATE_UI);
                     IMMsgManager.instance().removeBadge(bean.getTargetUuid());
@@ -398,9 +399,10 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
                             ExCacheMsgBean bean = new ExCacheMsgBean(item);
                             mMessageAdapter.addHeadItem(bean);
                         }
-                    } else {
-                        checkIfEmpty();
                     }
+
+                    checkIfEmpty();
+
                 }
             }
         });

@@ -11,6 +11,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.tg.coloursteward.R;
@@ -20,7 +21,6 @@ import com.youmai.hxsdk.proto.YouMaiBasic;
 import com.youmai.hxsdk.proto.YouMaiGroup;
 import com.youmai.hxsdk.socket.PduBase;
 import com.youmai.hxsdk.socket.ReceiveListener;
-import com.youmai.hxsdk.utils.CommonUtils;
 import com.youmai.hxsdk.utils.StringUtils;
 
 /**
@@ -97,6 +97,7 @@ public class GroupNameActivity extends Activity {
                         try {
                             YouMaiGroup.GroupInfoModifyRsp ack = YouMaiGroup.GroupInfoModifyRsp.parseFrom(pduBase.body);
                             if (ack.getResult() == YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS) {
+                                Toast.makeText(GroupNameActivity.this, "修改群名称成功", Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent();
                                 intent.putExtra(GROUP_NAME, groupName);
                                 setResult(ChatGroupDetailsActivity.RESULT_CODE, intent);

@@ -336,7 +336,7 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
 
     }
 
-    void setOnClickListener() {
+    private void setOnClickListener() {
         mTvBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -411,6 +411,7 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
                                         CacheMsgHelper.instance().deleteAllMsgAndSaveEntry(mContext, mGroupId + "");
                                         IMMsgManager.instance().removeBadge(mGroupId + "");
                                         isClearUp = true;
+                                        Toast.makeText(mContext, "当前聊天记录删除成功", Toast.LENGTH_SHORT).show();
                                     }
                                 })
                         .setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -424,7 +425,7 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
         });
     }
 
-    void exitAndDeleteGroup() {
+    private void exitAndDeleteGroup() {
         if (!isGroupOwner) {
             deleteGroup(2);
         } else {
@@ -433,7 +434,7 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
         }
     }
 
-    void transOwner() {
+    private void transOwner() {
         ReceiveListener receiveListener = new ReceiveListener() {
             @Override
             public void OnRec(PduBase pduBase) {
@@ -460,7 +461,7 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
                 YouMaiGroup.GroupInfoModifyType.MODIFY_OWNER, receiveListener);
     }
 
-    void deleteGroup(int role) {
+    private void deleteGroup(int role) {
         List<YouMaiGroup.GroupMemberItem> list = new ArrayList<>();
         //删除成员
         YouMaiGroup.GroupMemberItem.Builder builder = YouMaiGroup.GroupMemberItem.newBuilder();

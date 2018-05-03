@@ -116,6 +116,7 @@ public class GroupNoticeActivity extends Activity {
                         try {
                             YouMaiGroup.GroupInfoModifyRsp ack = YouMaiGroup.GroupInfoModifyRsp.parseFrom(pduBase.body);
                             if (ack.getResult() == YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS) {
+                                Toast.makeText(GroupNoticeActivity.this, "修改群名称成功", Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent();
                                 intent.putExtra(GROUP_NOTICE, groupNotice);
                                 setResult(ChatGroupDetailsActivity.RESULT_CODE, intent);
@@ -128,7 +129,7 @@ public class GroupNoticeActivity extends Activity {
                 };
 
                 HuxinSdkManager.instance().reqModifyGroupInfo(
-                        groupId, "" ,"",
+                        groupId, "", "",
                         groupNotice, "",
                         YouMaiGroup.GroupInfoModifyType.MODIFY_TOPIC, receiveListener);
             }

@@ -10,7 +10,9 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -82,6 +84,9 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
     private RelativeLayout mRlGroupNotice;
     private RelativeLayout mRlGroupManage;
     private RelativeLayout mRlClearChatRecords;
+
+    private Switch switch_notify;
+
     private TextView mTvExitGroup;
     private TextView mTvGroupName;
     private TextView mtvNoticeContent;
@@ -158,6 +163,18 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
         mRlClearChatRecords = findViewById(R.id.rl_clear_chat_records);
         mTvExitGroup = findViewById(R.id.tv_exit_group);
         mtvNoticeContent = findViewById(R.id.tv_notice_content);
+        switch_notify = findViewById(R.id.switch_notify);
+        switch_notify.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    AppUtils.setBooleanSharedPreferences(mContext, "notify" + mGroupId, true);
+                } else {
+                    AppUtils.setBooleanSharedPreferences(mContext, "notify" + mGroupId, false);
+                }
+            }
+        });
+
 
         mAdapter = new GroupDetailAdapter(this, this);
         GridLayoutManager manager = new GridLayoutManager(this, 5);

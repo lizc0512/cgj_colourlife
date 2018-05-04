@@ -707,7 +707,11 @@ public class IMMsgManager {
         } else {
             // mId allows you to update the notification later on.
             //处理瞬间大量收到IM消息
-            if (System.currentTimeMillis() - notifyTime > 2000) {
+
+            boolean isClosed = AppUtils.getBooleanSharedPreferences(mContext, "notify" + targetId, false);
+
+            if (System.currentTimeMillis() - notifyTime > 2000
+                    && !isClosed) {
                 notificationManager.notify(notifyID, builder.build());
             }
 

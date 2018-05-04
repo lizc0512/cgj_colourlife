@@ -609,6 +609,8 @@ public class IMMsgManager {
         }
     }
 
+    private long notifyTime;
+
     private void notifyMsg(Context context, String targetId, String desName, String content,
                            boolean isFormPush, boolean isGroup) {
         if (!isGroup && AppUtils.isTopActiviy(mContext, IMConnectionActivity.class.getName())
@@ -704,12 +706,18 @@ public class IMMsgManager {
             notificationManager.notify(notifyID, builderShark.build());*/
         } else {
             // mId allows you to update the notification later on.
-            notificationManager.notify(notifyID, builder.build());
+            //处理瞬间大量收到IM消息
+            if (System.currentTimeMillis() - notifyTime > 2000) {
+                notificationManager.notify(notifyID, builder.build());
+            }
+
             addNotifyCount(targetId, notifyID);   //添加通知栏消息
 
             if (!isFormPush) {
                 addBadge(targetId);   //添加桌面圆点
             }
+
+            notifyTime = System.currentTimeMillis();
         }
     }
 

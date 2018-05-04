@@ -3,6 +3,7 @@ package com.tg.coloursteward.adapter;
 import android.content.Context;
 import android.media.Image;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import com.tg.coloursteward.base.MyBaseAdapter;
 import com.tg.coloursteward.info.FamilyInfo;
 import com.tg.coloursteward.net.MessageHandler;
 import com.tg.coloursteward.view.MyGridView;
+import com.tg.coloursteward.view.dialog.ToastFactory;
 
 import java.util.ArrayList;
 
@@ -24,7 +26,7 @@ public class BranchAdapter extends MyBaseAdapter<FamilyInfo>{
 	private FamilyInfo item;
 	private Context context;
     public interface NetBranchRequestListener {
-        public void onNext(FamilyInfo info);
+        void onNext(FamilyInfo info);
     }
     private NetBranchRequestListener requestListener;
 	public BranchAdapter(Context con, ArrayList<FamilyInfo> list) {
@@ -47,7 +49,12 @@ public class BranchAdapter extends MyBaseAdapter<FamilyInfo>{
             @Override
             public void onClick(View v) {
 				FamilyInfo info = list.get(position);
-                requestListener.onNext(info);
+				if(item.orgType.equals("彩生活集团") || item.orgType.equals("大区")|| item.orgType.equals("事业部")){
+					requestListener.onNext(info);
+				}else {
+					ToastFactory.showToast(context,"已经是最后一级了!");
+				}
+
             }
         });
 		return convertView;

@@ -39,7 +39,9 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-
+/**
+ * Dialog工具类
+ */
 public class DialogFactory implements ResultCallBack{
 	public static final int PIC_PHOTO_BY_ALBUM = Integer.MAX_VALUE;
 	public static final int PIC_PHOTO_BY_CAMERA = PIC_PHOTO_BY_ALBUM -1;

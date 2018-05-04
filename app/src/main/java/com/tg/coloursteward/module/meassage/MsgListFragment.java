@@ -18,7 +18,6 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,7 +33,7 @@ import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.entity.MsgConfig;
 import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.module.search.GlobalSearchActivity;
-import com.tg.coloursteward.ui.MainActivity1;
+import com.tg.coloursteward.module.MainActivity1;
 import com.tg.coloursteward.util.Tools;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.activity.IMConnectionActivity;
@@ -398,9 +397,6 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
                             mMessageAdapter.addHeadItem(bean);
                         }
                     }
-
-                    checkIfEmpty();
-
                 }
             }
         });

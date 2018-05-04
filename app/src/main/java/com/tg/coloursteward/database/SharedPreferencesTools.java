@@ -98,7 +98,7 @@ public class SharedPreferencesTools {
 		Tools.saveStringValue(con,Contants.storage.TICKETHOME,"0");//我的饭票（首页）
 		Tools.saveStringValue(con,Contants.storage.COMMUNITYHOME,"0");//在管小区
 		Tools.saveStringValue(con,Contants.storage.PERFORMANCEHOME,"无");//绩效评分
-		Tools.saveStringValue(con,Contants.storage.ACCOUNTHOME,"0");//即时分成
+		Tools.saveStringValue(con,Contants.storage.ACCOUNTHOME,"0");//即时分配
 		Tools.saveStringValue(con,Contants.storage.SKINCODE,"");//皮肤包
 		Tools.saveStringValue(con,Contants.storage.APPAUTH,"");//多租户应用token
 		Tools.saveStringValue(con,Contants.storage.APPAUTHTIME,"");//多租户应用time
@@ -109,6 +109,7 @@ public class SharedPreferencesTools {
 		Tools.saveStringValue(con,Contants.EMPLOYEE_LOGIN.key,"");//key
 		Tools.saveStringValue(con,Contants.EMPLOYEE_LOGIN.secret,"");//secret
 		Tools.saveStringValue(con,Contants.MAP.ADDRESS,"");//定位地址保存
+		Tools.saveStringValue(con,Contants.storage.PUBLIC_LIST,"");//对公账户搜索历史列表
 		Tools.saveLinkManList(con,"");//收藏联系人
 		Tools.setBooleanValue(con,Contants.storage.ALIAS,false);
 		Tools.setBooleanValue(con,Contants.storage.Tags,false);

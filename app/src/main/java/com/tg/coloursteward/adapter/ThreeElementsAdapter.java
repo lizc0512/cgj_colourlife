@@ -13,6 +13,9 @@ import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.MyBaseAdapter;
 import com.tg.coloursteward.info.ThreeElementsInfo;
 
+/**
+ * 三个元素adapter  左图片  上文字  下文字
+ */
 public class ThreeElementsAdapter extends MyBaseAdapter<ThreeElementsInfo>{
 	private ArrayList<ThreeElementsInfo> list;
 	private LayoutInflater inflater;

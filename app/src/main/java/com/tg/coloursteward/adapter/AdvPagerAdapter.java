@@ -1,10 +1,12 @@
 package com.tg.coloursteward.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -17,8 +19,11 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.tg.coloursteward.MyBrowserActivity;
 import com.tg.coloursteward.R;
+import com.tg.coloursteward.base.BaseActivity;
+import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.info.AdvInfo;
 import com.tg.coloursteward.net.image.VolleyUtils;
+import com.tg.coloursteward.util.AuthTimeUtils;
 
 import java.util.ArrayList;
 
@@ -26,6 +31,7 @@ public class AdvPagerAdapter extends PagerAdapter implements OnClickListener{
 	private ArrayList<AdvInfo> list;
 	private ArrayList<ImageView> tempList = new ArrayList<ImageView>();
 	private Context con;
+	private Activity mActivity ;
 	private AdvInfo item;
 	protected boolean needCycle = false;
 	public AdvPagerAdapter(){
@@ -33,6 +39,7 @@ public class AdvPagerAdapter extends PagerAdapter implements OnClickListener{
 	}
 	
 	public AdvPagerAdapter(ArrayList<AdvInfo> l, Context c, boolean cycle) {
+		mActivity = (Activity) c;
 		needCycle = cycle;
 		list = l;
 		con = c;
@@ -194,9 +201,11 @@ public class AdvPagerAdapter extends PagerAdapter implements OnClickListener{
 			if(TextUtils.isEmpty(url)){
 				return;
 			}
-		Intent intent = new Intent(con,MyBrowserActivity.class);
+		AuthTimeUtils mAuthTimeUtils = new AuthTimeUtils();
+		mAuthTimeUtils.IsAuthTime(mActivity, url, "case", "1", "case","");
+		/*Intent intent = new Intent(con,MyBrowserActivity.class);
 		intent.putExtra(MyBrowserActivity.KEY_URL, url);
-		con.startActivity(intent);
+		con.startActivity(intent);*/
 		
 	}
 }

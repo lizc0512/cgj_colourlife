@@ -254,10 +254,10 @@ public class SlideSelectorView extends LinearLayout implements OnClickListener{
 		cancelListener = l;
 	}
 	public interface OnCompleteListener{
-		public void onComplete(SlideItemObj item1, SlideItemObj item2);
+		void onComplete(SlideItemObj item1, SlideItemObj item2);
 	}
 	
 	public interface OnCancelListener{
-		public void onCancel();
+		void onCancel();
 	}
 }

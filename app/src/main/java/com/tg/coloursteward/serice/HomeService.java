@@ -63,7 +63,7 @@ public class HomeService {
 		}
 	}
 	/**
-	 * 获取用户应用权限（Oauth2）
+	 * 获取用户应用权限（Oauth2）  access_token
 	 */
 	public void getAuth2(String developerCode,final GetTwoRecordListener<String, String> listener) {
 		String username = UserInfo.employeeAccount;

@@ -27,7 +27,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 /**
- * 我的饭票(提现与转账)
+ * 我的饭票(点击提现与转账进来的)
  * @author Administrator
  *
  */
@@ -219,7 +219,7 @@ public class RedpacketsMainActivity extends BaseActivity {
 									intent.putExtra(Contants.PARAMETER.MOBILE,mobile);
 									intent.putExtra("id", id);
 									startActivity(intent);
-								} else {
+								} else {//未绑定彩之云账户
 									aDialogCallback = new ADialogCallback() {
 										@Override
 										public void callback() {
@@ -301,6 +301,14 @@ public class RedpacketsMainActivity extends BaseActivity {
 	protected void onResume() {
 		super.onResume();
 		pageInfoList.clear();
+		/**
+		 * 需要及时调用adapter.notifyDataSetChanged()，会导致ListView没有数据而抛java.lang.IllegalStateException这个异常。
+		 */
+		if (adapter!=null){
+			adapter.notifyDataSetChanged();
+		}
+
+
 		String key = Tools.getStringValue(this,Contants.EMPLOYEE_LOGIN.key);
         String secret = Tools.getStringValue(this,Contants.EMPLOYEE_LOGIN.secret);
         getBalance(key, secret);

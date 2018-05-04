@@ -56,6 +56,6 @@ public class PullListView extends ListView{
 	}
 
 	public interface ListViewTouchListener{
-		public boolean  onListViewTouchEvent(MotionEvent ev);
+		boolean  onListViewTouchEvent(MotionEvent ev);
 	}
 }

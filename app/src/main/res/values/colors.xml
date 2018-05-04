@@ -12,6 +12,7 @@
     <color name="text_color1">#999999</color>
     <color name="text_color2">#666666</color>
     <color name="text_color3">#333333</color>
+    <color name="text_color4">#777777</color>
     <color name="home_fill">#2E363F</color>
     <color name="white">#FFFFFF</color>
     <color name="base_color">#f5f5f5</color>
@@ -28,25 +29,25 @@
     <color name="result_view">#b0000000</color>
     <color name="possible_result_points">#c0ffff00</color>
     <color name="red">#f35833</color>
-    <color name="text_1">#b3b3b3</color>
-    <color name="text_2">#9fa8b7</color>
-    <color name="text_3">#919699</color>
-    <color name="text_4">#142833</color>
-    <color name="text_5">#a6ffffff</color>
+	<color name="text_1">#b3b3b3</color>
+	<color name="text_2">#9fa8b7</color>
+	<color name="text_3">#919699</color>
+	<color name="text_4">#142833</color>
+	<color name="text_5">#a6ffffff</color>
     <color name="text_7">#475b66</color>
-    <color name="text_8">#b3ffffff</color>
-    <color name="text_9">#475b66</color>
-    <color name="text_10">#2e363f</color>
-    <color name="text_11">#010101</color>
-    <color name="home_name">#919699</color>
-    <!-- 卡卡兔 表单文字字体颜色 -->
+	<color name="text_8">#b3ffffff</color>
+	<color name="text_9">#475b66</color>
+	<color name="text_10">#2e363f</color>
+	<color name="text_11">#010101</color>
+	<color name="home_name">#919699</color>
+	  <!-- 卡卡兔 表单文字字体颜色 -->
     <color name="form_text">#848484</color>
     <!-- 表单编辑框文字字体颜色 -->
     <color name="form_edit">#313131</color>
     <color name="app_bg">#f6f6f6</color>
     <color name="gray_background_1">#10000000</color>
     <color name="home_tab_txt_sel_color">#53c0ff</color>
-    <!-- 绿色 -->
+     <!-- 绿色 -->
     <color name="green">#008000</color>
     <color name="details">#828282</color>
     <color name="ticket_residue">#eeb026</color>
@@ -64,36 +65,45 @@
     <color name="effect_money">#ff5f39</color>
     <color name="effect_score">#4a4a4a</color>
     <color name="transfer_hint">#959595</color>
-    <color name="divider">#19000000</color>
-    <color name="tixian_money">#030303</color>
+     <color name="divider">#19000000</color>
+     <color name="tixian_money">#030303</color>
     <!-- 灰色 -->
     <color name="gray">#808080</color>
     <color name="home_btn">#80ffffff</color>
     <color name="home_details">#b3ffffff</color>
     <color name="home_line">#43a8e8</color>
-    <!-- 统一黄色字体颜色 -->
+     <!-- 统一黄色字体颜色 -->
     <color name="text_color_yellow">#ff7e00</color>
-    <!-- 浅蓝色 -->
+     <!-- 浅蓝色 -->
     <color name="lightblue">#359FEF</color>
-    <!-- 亮灰色 -->
+     <!-- 亮灰色 -->
     <color name="lightgray">#D3D3D3</color>
     <!-- 黑色 -->
     <color name="black">#000000</color>
-    <!-- 亮绿色 -->
+     <!-- 亮绿色 -->
     <color name="lightgreen">#90EE90</color>
-    <!-- 亮灰色 -->
+     <!-- 亮灰色 -->
     <color name="lightgrey">#D3D3D3</color>
-    <!-- 所有listview cell 下面线条颜色 -->
+     <!-- 所有listview cell 下面线条颜色 -->
     <color name="global_list_item_seperator">#DBDBDC</color>
-    <!-- 授权选择小区 分割线 -->
+     <!-- 授权选择小区 分割线 -->
     <color name="community_list_item_seperator">#aaaaaa</color>
     <color name="community_selector_tag_unsel">#cbcbcd</color>
-    <!-- 60%透明黑色 -->
+     <!-- 60%透明黑色 -->
     <color name="transparent20_black">#20000000</color>
-    <!-- 统一tab颜色紫色 -->
+     <!-- 统一tab颜色紫色 -->
     <color name="home_tab_txt_color">#787C7F</color>
     <color name="radio_bg_noselected">#dddddd</color>
     <color name="radio_bg_selected">#38adff</color>
     <color name="account_gray_bg">#cccccc</color>
     <color name="account_public_text">#f17351</color>
+    <color name="pay_base_color">#fafafa</color>
+    <color name="succeed_state">#208e5d</color>
+    <color name="fail_state">#cf2d0d</color>
+    <color name="public_account_in">#e22638</color>
+    <color name="public_account_out">#117501</color>
+    <color name="theme_color">#2b2b2b</color>
+
+    <color name="canlendar_text_color">#323232</color>
+    <color name="data_tenant_bg">#BBBDBA</color>
 </resources>

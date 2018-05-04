@@ -35,7 +35,7 @@ public class DoorControlAdapter extends BeeBaseAdapter {
         holder.txt_open_time = (TextView) cellView.findViewById(R.id.txt_open_time);
         holder.txt_community_name = (TextView) cellView.findViewById(R.id.txt_community_name);
 
-        return (BeeCellHolder) holder;
+        return holder;
     }
 
     @Override

@@ -24,4 +24,10 @@ public class MapDataResp implements Serializable{
 	public String guardStatus;// 门禁在线情况
 	public String barrierStatus;// 格美特道闸系统在线情况
 	public String join_smallarea_num;// 上线小区
+	public String dateTime; //当前查询费用日期
+
+	public String launchArea;//上线面积
+	public String offlineArea;//下线面积
+	public String to_be_deliveredArea;//待交付面积
+	public String title;//租户列表标题
 }

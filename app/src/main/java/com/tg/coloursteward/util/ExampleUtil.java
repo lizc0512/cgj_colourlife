@@ -30,9 +30,7 @@ public class ExampleUtil {
             return true;
         if (s.length() == 0)
             return true;
-        if (s.trim().length() == 0)
-            return true;
-        return false;
+        return s.trim().length() == 0;
     }
     
     // 校验Tag Alias 只能是数字,英文字母和中文

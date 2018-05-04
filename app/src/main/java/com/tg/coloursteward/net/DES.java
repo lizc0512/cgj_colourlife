@@ -21,7 +21,8 @@ public class DES {
 	public static final String APP_ID = "ICEXCGJ0-5F89-4E17-BC44-7A0DB101B245";
 	public static final String TOKEN = "AXPHrD48LRa8xYVkgV4c";
 	public static final String APP_UUID = "33f09c7ca5e6491fbcdfd363cf58851e";
-	public static final String APP_KEY = "ZrmOyoAMgIdzKbHCHKwJ";
+	public static final String APP_KEY = "01a2b3c4d5e6f7a8b9c0";
+	public static final String APP_SECRET = "1a2b3c4d5e6f7a8b9c0d1a2b3c4d5e6f";
 	/**
 	 * 3DES解密
 	 * @param message

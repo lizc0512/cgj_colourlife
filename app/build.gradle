@@ -96,6 +96,11 @@ dependencies {
     implementation fileTree(include: '*.jar', dir: 'libs')
     implementation project(':huxin_sdk')
 
+    implementation(name: 'gt3geetest_sdk', ext: 'aar')
+    implementation 'com.networkbench.newlens.agent.android:nbs.newlens.agent:2.7.0'
+    implementation 'org.litepal.android:core:1.3.0'
+    implementation 'com.githang:status-bar-compat:0.7'
+
     implementation 'com.loopj.android:android-async-http:1.4.6'
     implementation 'com.github.ittianyu:BottomNavigationViewEx:1.2.4'
     implementation 'com.youth.banner:banner:1.4.9'    //banner公告

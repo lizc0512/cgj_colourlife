@@ -6,12 +6,11 @@
     android:layout_height="match_parent"
     tools:context="com.tg.coloursteward.PublicAccountActivity">
 
-    <ListView
+    <com.tg.coloursteward.view.PullRefreshListView
         android:id="@+id/lv_public_account"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:listSelector="@android:color/transparent"
-        />
+        android:listSelector="@android:color/transparent" />
 
     <RelativeLayout
         android:id="@+id/rl_kong"

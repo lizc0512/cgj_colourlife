@@ -18,7 +18,7 @@ import com.tg.coloursteward.info.GridViewInfo;
 import com.tg.coloursteward.net.image.VolleyUtils;
 
 public class ManagementAdapter extends MyBaseAdapter<GridViewInfo> {
-
+	
 	private ArrayList<GridViewInfo> list;
 	private LayoutInflater inflater;
 	private GridViewInfo item;

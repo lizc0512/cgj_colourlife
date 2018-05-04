@@ -8,7 +8,6 @@ public class LinkManInfo implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 9010720151484471205L;
-	public String id ="";
 	public String  username ="";
 	public String realname ="";
 	public String sex ="";
@@ -21,6 +20,5 @@ public class LinkManInfo implements Serializable{
 	public String orgName ="";
 	public int eid ;
 	public int iscontacts ;
-	public String uid ;
 
 }

@@ -36,8 +36,9 @@ public class AppAuthService implements MessageHandler.ResponseListener {
 		this.listener = listener;
 		try {
 			String appkey =DES.APP_KEY;
+			String app_secret =DES.APP_SECRET;
 			String timestamp = HttpTools.getTime();
-			String signature = MD5.getMd5Value(appkey+timestamp+"m6AHElkzVBHltuzrjADZIhZTT6W1hTa4").toLowerCase();
+			String signature = MD5.getMd5Value(appkey+timestamp+app_secret).toLowerCase();
 			RequestConfig config = new RequestConfig(context,0);
 			config.handler = msgHand.getHandler();
 			RequestParams params = new RequestParams();

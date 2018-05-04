@@ -88,9 +88,6 @@ public class PinyinComparator implements Comparator<Object> {
 	}
 	
 	public boolean isZiMu(char ch){
-		if(ch>= 'A' &&  ch <= 'Z' || ch >='a'&& ch <= 'z' ){
-			return true;
-		}
-		return false;
-	}
+        return ch >= 'A' && ch <= 'Z' || ch >= 'a' && ch <= 'z';
+    }
 }

@@ -30,7 +30,7 @@ public class DoorApplyAdapter extends BeeBaseAdapter {
         holder.txt_status = (TextView) cellView.findViewById(R.id.txt_status);
         holder.txt_date = (TextView) cellView.findViewById(R.id.txt_date);
         holder.txt_name=(TextView)cellView.findViewById(R.id.txt_name);
-        return (BeeCellHolder) holder;
+        return holder;
     }
 
     @Override

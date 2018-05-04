@@ -435,7 +435,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:text="即时分成"
+                        android:text="即时分配"
                         android:textColor="@color/white"
                         android:textSize="15sp" />
 

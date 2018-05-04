@@ -23,6 +23,9 @@ import com.tg.coloursteward.util.Tools;
 
 import java.util.ArrayList;
 
+/**
+ * 轮播图控件
+ */
 public class AdvertisementPager extends FrameLayout implements OnPageChangeListener,
 OnClickListener{
 	public static final int MSG_NEXT_PAGE = 0x111;

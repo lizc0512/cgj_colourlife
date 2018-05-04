@@ -10,9 +10,12 @@ public class PublicAccountInfo implements Serializable{
     private static final long serialVersionUID = -2462152150862382924L;
     public String title;
     public String ano;
-    public float money;
+    public String bno;
+    public String money;
     public String typeName;
     public String pano;
     public String name;
     public String pid;
+    public int atid;
+    public int adminLevel;
 }

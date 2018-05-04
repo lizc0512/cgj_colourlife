@@ -5,6 +5,6 @@ import android.os.Environment;
 public interface CommonConstants {
 
 	/** 文件缓存目录 */
-	public static final String SDPATH = Environment.getExternalStorageDirectory() + "/friendcircle/";
-	public static final String SDPATH_IMAGE = SDPATH + "image/";
+    String SDPATH = Environment.getExternalStorageDirectory() + "/friendcircle/";
+	String SDPATH_IMAGE = SDPATH + "image/";
 }

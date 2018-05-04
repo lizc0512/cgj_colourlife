@@ -37,6 +37,7 @@ import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.database.SharedPreferencesTools;
 import com.tg.coloursteward.info.CommunityResp;
 import com.tg.coloursteward.info.OffLineDoorOpenLogResp;
+import com.tg.coloursteward.info.PublicAccountInfo;
 import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.info.door.DoorFixedResp;
 import com.tg.coloursteward.info.door.DoorOpenLogResp;
@@ -262,12 +263,7 @@ public class Tools {
 				boolean isBackground = process.importance != RunningAppProcessInfo.IMPORTANCE_FOREGROUND && 
 						process.importance != RunningAppProcessInfo.IMPORTANCE_VISIBLE;
 				boolean isLockedState = keyguardManager.inKeyguardRestrictedInputMode();
-				if (isBackground || isLockedState){
-					return true;
-				}
-				else {
-					return false;
-				}
+                return isBackground || isLockedState;
 			}
 		}
 		return false;
@@ -567,7 +563,6 @@ public class Tools {
 		if(uuid == null){
 			return false;
 		}
-
 		String employeeAccount = data.getString("employeeAccount");
 		String realName = data.getString("realname");
 		String password = data.getString("password");
@@ -1056,12 +1051,9 @@ public class Tools {
 		if(TextUtils.isEmpty(name)){
 			return false;
 		}
-		if(name.startsWith("北京") || name.startsWith("天津")||
-				name.startsWith("上海")|| name.startsWith("重庆")){
-			return true;
-		}
-		return false;
-	}
+        return name.startsWith("北京") || name.startsWith("天津") ||
+                name.startsWith("上海") || name.startsWith("重庆");
+    }
 	
       
 	/**
@@ -1316,7 +1308,7 @@ public class Tools {
 		return editor.commit();
 	}
 
-	public static boolean getBooleanValue(Context context, String key) {
+	public static Boolean getBooleanValue(Context context, String key) {
 
 		if (context == null) {
 			return false;
@@ -1357,7 +1349,49 @@ public class Tools {
     	getSysShare(con).edit().
     	putString("home_list", time).commit();
     }
-/**
+	/**
+	 * 保存对公账户列表
+	 *
+	 * @param context
+	 * @param data
+	 * @return 是否保存成功
+	 */
+	public static boolean savePublicAccountEntity(Context context,
+													  List<PublicAccountInfo> data) {
+
+		Gson gson = new Gson();
+
+		getSysShare(context).edit().
+				putString("public_account_list",  gson.toJson(data)).commit();
+		return true;
+
+	}
+
+	/**
+	 * 获取对公账户列表
+	 *
+	 * @param context
+	 * @return 记住实体
+	 */
+	public static List<PublicAccountInfo> getPublicAccountEntity(Context context) {
+
+		String valueString = getSysShare(context).getString("public_account_list", "");
+		if (StringUtils.isEmpty(valueString)) {
+			return null;
+		}
+
+		Type type = new TypeToken<List<PublicAccountInfo>>() {
+		}.getType();
+
+		Gson gson = new Gson();
+
+		List<PublicAccountInfo> entity = gson.fromJson(valueString, type);
+
+		return entity;
+
+	}
+
+	/**
 	 * 保存收藏联系人列表
 	 * @param con
 	 * @return
@@ -1747,8 +1781,8 @@ public class Tools {
 		} catch (NameNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		};
-		if(packageInfo != null){
+		}
+        if(packageInfo != null){
 			return packageInfo.signatures[0].toCharsString();
 		}
     	  return null;
@@ -2126,20 +2160,14 @@ public class Tools {
 	public static boolean isNumeric(String str) {
 		Pattern pattern = Pattern.compile("[0-9|.]*");
 		Matcher isNum = pattern.matcher(str);
-		if (!isNum.matches()) {
-			return false;
-		}
-		return true;
-	}
+        return isNum.matches();
+    }
 	// 数字是否两位小数
 		public static boolean point2(String str) {
 			Pattern pattern = Pattern.compile("[0-9]*(.[0-9]{0,2})?");
 			Matcher ispoint2 = pattern.matcher(str);
-			if (!ispoint2.matches()) {
-				return false;
-			}
-			return true;
-		}
+            return ispoint2.matches();
+        }
 		
 		/**
 		 * 将dip或dp值转换为px值，保证尺寸大小不变

@@ -42,9 +42,10 @@ public class AuthAppService implements MessageHandler.ResponseListener {
 			return;
 		}
 		try {
-			String app_uuid =DES.APP_UUID;
+			String app_uuid =DES.APP_ID;
+			String app_secret =DES.TOKEN;
 			String timestamp = HttpTools.getTime();
-			String signature = MD5.getMd5Value(app_uuid+timestamp+"48a8c06966fb40e3b1c55c95692be1d8").toLowerCase();
+			String signature = MD5.getMd5Value(app_uuid+timestamp+app_secret).toLowerCase();
 			RequestConfig config = new RequestConfig(context,0);
 			config.handler = msgHand.getHandler();
 			RequestParams params = new RequestParams();

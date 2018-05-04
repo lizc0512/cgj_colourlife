@@ -4,6 +4,9 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
+/**
+ * 滑动选择项
+ */
 public class SlideItemObj implements Parcelable{
 	public String name = "";
 	public String id = "";
@@ -46,9 +49,6 @@ public class SlideItemObj implements Parcelable{
 	
 	public boolean equals(Object o) {
 		SlideItemObj obj = (SlideItemObj)o;
-		if(obj != null && obj.id == this.id){
-			return true;
-		}
-		return false;
-	}
+        return obj != null && obj.id == this.id;
+    }
 }

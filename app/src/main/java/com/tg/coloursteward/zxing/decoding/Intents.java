@@ -151,6 +151,9 @@ public final class Intents {
     }
   }
 
+    /**
+     * wifi连接
+     */
   public static final class WifiConnect {
 	    /**
 	     * Internal intent used to trigger connection to a wi-fi network.

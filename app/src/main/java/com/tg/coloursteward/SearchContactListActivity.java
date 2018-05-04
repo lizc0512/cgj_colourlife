@@ -53,6 +53,7 @@ public class SearchContactListActivity extends BaseActivity implements AdapterVi
         pullListView = (PullRefreshListView) findViewById(R.id.pull_listview);
         adapter = new HomeContactSearchAdapter(SearchContactListActivity.this, contactDatas);
         pullListView.setAdapter(adapter);
+        pullListView.setEnableMoreButton(false);
         pullListView.setOnItemClickListener(this);
         pullListView.setOnLoadingListener(new OnLoadingListener<PullRefreshListView>() {
             @Override

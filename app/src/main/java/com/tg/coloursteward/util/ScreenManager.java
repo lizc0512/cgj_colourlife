@@ -21,19 +21,11 @@ public class ScreenManager {
 	}
 
 	public boolean hasActivity() {
-		if (activityStack != null && activityStack.size() > 0) {
-			return true;
-		} else {
-			return false;
-		}
+        return activityStack != null && activityStack.size() > 0;
 	}
 
 	public boolean isTop() {
-		if (activityStack == null || activityStack.size() == 1) {
-			return true;
-		} else {
-			return false;
-		}
+        return activityStack == null || activityStack.size() == 1;
 	}
 
 	public void removeActivity(Activity activity) {

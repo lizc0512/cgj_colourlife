@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.json.JSONObject;
 
+import com.tg.coloursteward.AccountExchangeRecordActivity;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.MyBaseAdapter;
 import com.tg.coloursteward.inter.OnLoadingListener;
@@ -46,6 +47,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+/**
+ * 下拉刷新view
+ */
 public class PullRefreshListView extends LinearLayout implements OnClickListener,ListViewTouchListener, ResponseListener{
 	public static final int[] NOTHING = new int[] { 0 };
 	public static final int HTTP_FRESH_CODE = 1000;
@@ -129,8 +133,8 @@ public class PullRefreshListView extends LinearLayout implements OnClickListener
 	private boolean enableMoreButton = true;
 	private int minPageSize;
 	public interface NetPullRefreshOnScroll{
-		public void refreshOnScroll(AbsListView view, int firstVisibleItem,
-                                    int visibleItemCount, int totalItemCount);
+		void refreshOnScroll(AbsListView view, int firstVisibleItem,
+                             int visibleItemCount, int totalItemCount);
 	}
 	private NetPullRefreshOnScroll netPullRefreshOnScroll;
 	private Handler hand = new Handler(){
@@ -332,11 +336,8 @@ public class PullRefreshListView extends LinearLayout implements OnClickListener
 		}
 		long lastMillis = Tools.dateString2Millis(oldFreshTime);
 		long currentMllis = Tools.getCurrentMillis();
-		if(currentMllis - lastMillis > REFRESH_SECONDS){
-			return true;
-		}
-		return false;
-	}
+        return currentMllis - lastMillis > REFRESH_SECONDS;
+    }
 	
 	public void performLoading(){
 		if(state == STATE_IDLE){
@@ -748,11 +749,8 @@ public class PullRefreshListView extends LinearLayout implements OnClickListener
     }
 
 	public boolean canScrollUp(){
-		if(state == STATE_LOADING  || getLocationY() == top){
-			return true;
-		}
-		return false;		
-	}
+        return state == STATE_LOADING || getLocationY() == top;
+    }
 	
 	public int getState(){
 		return state;
@@ -806,7 +804,7 @@ public class PullRefreshListView extends LinearLayout implements OnClickListener
 						float x = getDistance(getLocationY() - bottom);
 						temp = (int)(getLocationY()+x*distance);
 					}else{
-						temp = (int)(getLocationY()+distance);
+						temp = getLocationY()+distance;
 					}
 					if(temp <= top){
 						temp = top;
@@ -876,12 +874,25 @@ public class PullRefreshListView extends LinearLayout implements OnClickListener
 		int size = 0;
 		String contentString = HttpTools.getContentString(jsonString);
 		if(contentString != null){
+			ResponseData data = HttpTools.getResponseData(contentString);
 			ResponseData data1 = HttpTools.getResponseKey(contentString, "receive");
 			ResponseData data2 = HttpTools.getResponseKey(contentString, "expend");
+			ResponseData data3 = HttpTools.getResponseKey(contentString, "list");
+			/**
+			 * 即时分配记录
+			 */
+			String result = AccountExchangeRecordActivity.getResultString(contentString);
+			ResponseData dataResult = HttpTools.getResponseData(result);
 			if(data1.length > 0 ){
 				 size = data1.length;
 			}else if(data2.length > 0){
 				 size = data2.length;
+			}else  if(data3.length > 0){
+				size = data3.length;
+			}else if(data.length > 0){
+				size =data.length;
+			}else if(dataResult.length > 0){
+				size = dataResult.length;
 			}else{
 				size = HttpTools.getContentCount(jsonString);
 			}

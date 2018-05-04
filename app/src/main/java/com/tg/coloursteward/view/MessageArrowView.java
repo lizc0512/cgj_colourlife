@@ -303,6 +303,6 @@ public class MessageArrowView extends LinearLayout {
 	}
 	
 	public interface ItemClickListener{
-		public void onItemClick(MessageArrowView mv, View v, int position);
+		void onItemClick(MessageArrowView mv, View v, int position);
 	}
 }

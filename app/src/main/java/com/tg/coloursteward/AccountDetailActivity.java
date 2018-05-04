@@ -40,7 +40,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 /**
- * 即时分成明细
+ * 即时分配明细
  */
 public class AccountDetailActivity extends BaseActivity implements RadioGroup.OnCheckedChangeListener, ViewPager.OnPageChangeListener {
     public  final static String TOTAL_ACCOUNT = "totalAccount";
@@ -309,6 +309,6 @@ public class AccountDetailActivity extends BaseActivity implements RadioGroup.On
 
     @Override
     public String getHeadTitle() {
-        return "即时分成明细";
+        return "即时分配明细";
     }
 }

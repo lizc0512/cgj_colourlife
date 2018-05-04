@@ -86,8 +86,9 @@ public class CameraView extends LinearLayout implements OnClickListener{
 		STATE_CAMERA,
 		STATE_PHOTO,
 		STATE_SELECT
-	};
-	private STATE state = STATE.STATE_CAMERA;
+	}
+
+    private STATE state = STATE.STATE_CAMERA;
 	public CameraView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs);
 		init(context,attrs);

@@ -12,9 +12,9 @@ import android.widget.RelativeLayout;
 
 public class HomeRelativeLayout extends RelativeLayout implements ResponseListener{
 	public interface NetRelativeRequestListener {
-		public void onRequest(MessageHandler msgHand);
+		void onRequest(MessageHandler msgHand);
 
-		public void onSuccess(HomeRelativeLayout magLearLayout, Message msg, String response);
+		void onSuccess(HomeRelativeLayout magLearLayout, Message msg, String response);
 	}
 	private NetRelativeRequestListener requestListener;
 	private boolean isLoadding = false;

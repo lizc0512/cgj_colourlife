@@ -9,6 +9,7 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.constant.Contants;
+import com.tg.coloursteward.info.PublicAccountInfo;
 import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.RequestConfig;
@@ -84,7 +85,8 @@ public class RedpacketsBonusMainActivity extends BaseActivity {
 			startActivity(new Intent(this, BonusRecordPersonalActivity.class));
 			break;
 		case R.id.rl_ticket_details:// 饭票明细
-			startActivity(new Intent(this, RedpacketsRecordActivity.class));
+			submit();
+			//startActivity(new Intent(this, RedpacketsRecordActivity.class));
 			break;
 		case R.id.rl_submit:// 转账提现
 			startActivity(new Intent(this, RedpacketsMainActivity.class));
@@ -92,6 +94,17 @@ public class RedpacketsBonusMainActivity extends BaseActivity {
 		}
 		return super.handClickEvent(v);
 	}
+
+	/**
+	 * 请求OA金融平台数据
+	 */
+	private void submit() {
+		RequestParams params = new RequestParams();
+		params.put("oa_username", UserInfo.employeeAccount);
+		HttpTools.httpGet(Contants.URl.URL_ICETEST,"/newczy/employee/getFinanceByOa",
+				new RequestConfig(this, HttpTools.GET_USER_INFO,"获取员工金融信息"), params);
+	}
+
 	/**
 	 * 初始化控件
 	 */
@@ -145,7 +158,25 @@ public class RedpacketsBonusMainActivity extends BaseActivity {
 		super.onSuccess(msg, jsonString, hintString);
 		int code = HttpTools.getCode(jsonString);
 		String message = HttpTools.getMessageString(jsonString);
-		if(msg.arg1 == HttpTools.SET_EMPLOYEE_INFO){
+		if(msg.arg1 ==HttpTools.GET_USER_INFO){//请求金融平台数据
+			if(code == 0){
+				JSONObject content = HttpTools.getContentJSONObject(jsonString);
+				try {
+					String cano = content.getString("cano");
+					String pano = content.getString("pano");
+					String cno = content.getString("cno");
+					Intent intent = new Intent(RedpacketsBonusMainActivity.this, RedpacketsDetailsActivity.class);
+					intent.putExtra(RedpacketsDetailsActivity.PUBLICACCOUNT_CANO,cano);
+					intent.putExtra(RedpacketsDetailsActivity.PUBLICACCOUNT_PANO,pano);
+					intent.putExtra(RedpacketsDetailsActivity.PUBLICACCOUNT_CNO,cno);
+					startActivity(intent);
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+			}else {
+				ToastFactory.showToast(RedpacketsBonusMainActivity.this,message);
+			}
+		}else if(msg.arg1 == HttpTools.SET_EMPLOYEE_INFO){
 			if(code == 0){
 				JSONObject content = HttpTools.getContentJSONObject(jsonString);
 				if(content != null){

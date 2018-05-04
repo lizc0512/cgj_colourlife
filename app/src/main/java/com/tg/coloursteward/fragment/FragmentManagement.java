@@ -34,6 +34,7 @@ import com.tg.coloursteward.net.MessageHandler;
 import com.tg.coloursteward.net.RequestConfig;
 import com.tg.coloursteward.net.RequestParams;
 import com.tg.coloursteward.net.ResponseData;
+import com.tg.coloursteward.serice.HomeService;
 import com.tg.coloursteward.util.AuthTimeUtils;
 import com.tg.coloursteward.util.DateUtils;
 import com.tg.coloursteward.util.StringUtils;
@@ -65,6 +66,7 @@ import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.text.format.Time;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -75,14 +77,16 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 /**
- * 微物管
+ * 微物管       工作（彩管家4.0）
  *
  * @author Administrator
  */
 public class FragmentManagement extends Fragment {
+    private static final String TAG = "FragmentManagement";
     private Activity mActivity;
     private View mView;
     private Intent intent;
+    private HomeService homeService;
     private MyGridView mGridView1, mGridView2;
     private ManagementAdapter adapter1, adapter2;
     private ManageMentLinearlayout magLinearLayoutMail;
@@ -91,6 +95,7 @@ public class FragmentManagement extends Fragment {
     private ManageMentLinearlayout magLinearLayoutSign;
     private TextView tvMail, tvExamineNum;
     private String mail, examineNum;
+    private String access_token;//获取未读审批前拿到的access_token
     private ArrayList<GridViewInfo> gridlist1 = new ArrayList<GridViewInfo>();
     private ArrayList<GridViewInfo> gridlist2 = new ArrayList<GridViewInfo>();
     private String commonjsonStr, elsejsonStr;
@@ -201,22 +206,39 @@ public class FragmentManagement extends Fragment {
             String clientCode = null;
             AuthTimeUtils mAuthTimeUtils;
             switch (v.getId()) {
-                case R.id.ll_mail://邮件
+                case R.id.ll_mail://未读邮件
                     mAuthTimeUtils = new AuthTimeUtils();
                     mAuthTimeUtils.IsAuthTime(mActivity, Contants.Html5.YJ, "xyj", "1", "xyj", "");
                     break;
-                case R.id.ll_examineNum://审批
-                    mAuthTimeUtils = new AuthTimeUtils();
-                    mAuthTimeUtils.IsAuthTime(mActivity, Contants.Html5.SP, "sp", "0", "sp", "");
+                case R.id.ll_examineNum://待我审批
+                    /**
+                     * 判断是中住还是通用
+                     */
+                    String skin_code = Tools.getStringValue(mActivity, Contants.storage.SKINCODE);
+                    Log.e(TAG, "onSingleClick: skin_code" + skin_code);
+                    if (skin_code.equals("102")) {//中住
+                        mAuthTimeUtils = new AuthTimeUtils();
+                        mAuthTimeUtils.IsAuthTime(mActivity, Contants.Html5.SP1, "sp", "0", "sp", "");
+                    } else {
+                        mAuthTimeUtils = new AuthTimeUtils();
+//				mAuthTimeUtils.IsAuthTime(mActivity,Contants.Html5.SP, "sp", "0", "sp","");
+                        mAuthTimeUtils.IsAuthTime(mActivity, Contants.Html5.SP, "tlmyapps", "1", "tlmyapps", "");
+
+                    }
                     break;
                 case R.id.ll_leave://请假
                     intent = new Intent(mActivity, MyBrowserActivity.class);
+                    String access_token = Tools.getAccess_token(mActivity);
                     intent.putExtra(MyBrowserActivity.KEY_URL, Contants.URl.URL_H5_LEAVE + "username=" + UserInfo.employeeAccount);
+//                    intent.putExtra(MyBrowserActivity.KEY_URL, Contants.URl.URL_H5_LEAVE + "username=" + UserInfo.employeeAccount + "&access_token=" + access_token);
                     startActivity(intent);
                     break;
                 case R.id.ll_sign://签到
+
                     mAuthTimeUtils = new AuthTimeUtils();
                     mAuthTimeUtils.IsAuthTime(mActivity, Contants.Html5.QIANDAO, "qiandao", "1", "qiandao", "");
+//                    intent = new Intent(mActivity, SignInActivity.class);
+//                    startActivity(intent);
                     break;
             }
         }
@@ -226,13 +248,14 @@ public class FragmentManagement extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        // TODO Auto-generated method stub
         mView = inflater.inflate(R.layout.fragment_management_layout, container, false);
         addHead();
         initView();
-        initListener();
-
         requestData();
         requestData2();
+        initListener();
+
         return mView;
     }
 
@@ -743,9 +766,10 @@ public class FragmentManagement extends Fragment {
         magLinearLayoutMail = (ManageMentLinearlayout) mView.findViewById(R.id.ll_mail);
         magLinearLayoutExamineNum = (ManageMentLinearlayout) mView.findViewById(R.id.ll_examineNum);
         magLinearLayoutLeave = (ManageMentLinearlayout) mView.findViewById(R.id.ll_leave);
-        magLinearLayoutSign = (ManageMentLinearlayout) mView.findViewById(R.id.ll_sign);
+        magLinearLayoutSign = (ManageMentLinearlayout) mView.findViewById(R.id.ll_sign);//签到
         tvMail = (TextView) mView.findViewById(R.id.tv_mail);
         tvExamineNum = (TextView) mView.findViewById(R.id.tv_examineNum);
+        tvExamineNum.setText(account);
         mGridView1 = (MyGridView) mView.findViewById(R.id.gridview1);
         mGridView2 = (MyGridView) mView.findViewById(R.id.gridview2);
         banner = (Banner) mView.findViewById(R.id.banner);
@@ -772,7 +796,7 @@ public class FragmentManagement extends Fragment {
                             JSONObject jsonObject1 = jsonObject.getJSONObject("data");
                             if (jsonObject1 != null) {
                                 mail = jsonObject1.getString("recipientsum");
-                                if (mail != null || mail.length() > 0) {
+                                if (mail != null) {
                                     tvMail.setText(mail);
                                 }
                             }
@@ -797,49 +821,110 @@ public class FragmentManagement extends Fragment {
                 config.handler = msgHand.getHandler();
                 RequestParams params = new RequestParams();
                 params.put("uid", UserInfo.employeeAccount);
+//                params.put("uid", "xuanhu");
                 HttpTools.httpGet(Contants.URl.URL_ICETEST, "/newmail/mail/getmailsumbyuid", config, params);
             }
         });
         /**
          * 未读审批
          */
-        magLinearLayoutExamineNum.setNetworkRequestListener(new NetworkRequestListener() {
+        String skin_code = Tools.getStringValue(mActivity, Contants.storage.SKINCODE);
+        if (skin_code.equals("102")) {//中住
+            magLinearLayoutExamineNum.setNetworkRequestListener(new NetworkRequestListener() {
 
-            @Override
-            public void onSuccess(ManageMentLinearlayout magLearLayout, Message msg, String response) {
-                int code = HttpTools.getCode(response);
-                if (code == 0) {
-                    JSONObject jsonObject = HttpTools.getContentJSONObject(response);
-                    try {
-                        if (jsonObject != null) {
-                            examineNum = jsonObject.getString("number");
-                            if (examineNum != null || examineNum.length() > 0) {
-                                tvExamineNum.setText(examineNum);
+                @Override
+                public void onSuccess(ManageMentLinearlayout magLearLayout, Message msg, String response) {
+                    int code = HttpTools.getCode(response);
+                    if (code == 0) {
+                        JSONObject jsonObject = HttpTools.getContentJSONObject(response);
+                        try {
+                            if (jsonObject != null) {
+                                examineNum = jsonObject.getString("number");
+                                Log.e(TAG, "onSuccess:examineNum " + examineNum);
+//                                if (examineNum != null || examineNum.length() > 0) {
+                                if (examineNum != null) {
+                                    tvExamineNum.setText(examineNum);
+                                }
                             }
+                        } catch (JSONException e) {
+//                        // TODO Auto-generated catch block
+                            e.printStackTrace();
                         }
-                    } catch (JSONException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
+                    } else {
+                        tvExamineNum.setText("0");
                     }
-                } else {
-                    tvExamineNum.setText("0");
                 }
-            }
 
-            @Override
-            public void onFail(ManageMentLinearlayout magLearLayout, Message msg, String hintString) {
-                ToastFactory.showToast(mActivity, hintString);
-            }
+                @Override
+                public void onFail(ManageMentLinearlayout magLearLayout, Message msg, String hintString) {
+                    ToastFactory.showToast(mActivity, hintString);
+                }
 
-            @Override
-            public void onRequest(MessageHandler msgHand) {
-                RequestConfig config = new RequestConfig(mActivity, 0);
-                config.handler = msgHand.getHandler();
-                RequestParams params = new RequestParams();
-                params.put("username", UserInfo.employeeAccount);
-                HttpTools.httpGet(Contants.URl.URL_ICETEST, "/oa/examineNum", config, params);
-            }
-        });
+                @Override
+                public void onRequest(MessageHandler msgHand) {
+                    RequestConfig config = new RequestConfig(mActivity, 0);
+                    config.handler = msgHand.getHandler();
+                    RequestParams params = new RequestParams();
+                    params.put("username", UserInfo.employeeAccount);
+                    HttpTools.httpGet(Contants.URl.URL_ICETEST, "/oa/examineNum", config, params);
+                }
+            });
+        } else {
+
+//            tvExamineNum.setText((Integer.parseInt(examine1.trim()) + Integer.parseInt(examine2.trim()))+"");
+/*            magLinearLayoutExamineNum.setNetworkRequestListener(new NetworkRequestListener() {
+
+                @Override
+                public void onSuccess(ManageMentLinearlayout magLearLayout, Message msg, String response) {
+                    int code = HttpTools.getCode(response);
+                    if (code == 0) {
+//                    JSONObject jsonObject = HttpTools.getContentJSONObject(response);
+                        String contentString = HttpTools.getContentString(response);
+                        if (contentString != null) {
+                            tvExamineNum.setText(contentString);
+                        }
+//                    try {
+//                        if (jsonObject != null) {
+//                            examineNum = jsonObject.getString("content");
+//                            if (examineNum != null || examineNum.length() > 0) {
+//                                tvExamineNum.setText(examineNum);
+//                            }
+//                        }
+//                    } catch (JSONException e) {
+//                        // TODO Auto-generated catch block
+//                        e.printStackTrace();
+//                    }
+                    } else {
+                        tvExamineNum.setText("0");
+                    }
+                }
+
+                @Override
+                public void onFail(ManageMentLinearlayout magLearLayout, Message msg, String hintString) {
+                    ToastFactory.showToast(mActivity, hintString);
+                }
+
+                @Override
+                public void onRequest(MessageHandler msgHand) {
+                    RequestConfig config = new RequestConfig(mActivity, 0);
+                    config.handler = msgHand.getHandler();
+                    RequestParams params = new RequestParams();
+//				params.put("username", UserInfo.employeeAccount);
+//                String access_token = SharedPreferencesTools.getSysMapStringValue(mainactivity, "access_token");
+                    String access_token = Tools.getAccess_token(mActivity);
+                    params.put("applicationId", "11e7-8d55-9c8815e6-8d1c-edfa8b3b5e37");
+                    params.put("userId", UserInfo.uid);
+                    params.put("access_token", access_token);
+//				HttpTools.httpGet(Contants.URl.URL_ICETEST, "/oa/examineNum",config, params);
+                    HttpTools.httpGet(Contants.URl.URL_ICETEST, "/BPM/runtime/users/flows/pending/amount", config, params);
+                }
+            });*/
+        }
+
+
+        /**
+         * 常用应用与其他应用中只要是 “扫码开门”  “对公账户” 都触发该点击事件
+         */
         mGridView1.setOnItemClickListener(new OnItemClickListener() {
 
             @Override
@@ -851,6 +936,9 @@ public class FragmentManagement extends Fragment {
                 } else if (info.clientCode.equals("dgzh")) {//对公账户
                     startActivity(new Intent(mActivity, PublicAccountActivity.class));
                 } else {
+                    /**
+                     * 其他点击事件拼接HTML5
+                     */
                     if (info.sso != "") {
                         AuthTimeUtils mAuthTimeUtils = new AuthTimeUtils();
                         mAuthTimeUtils.IsAuthTime(mActivity, info.sso, info.clientCode, info.oauthType, info.developerCode, "");
@@ -868,6 +956,7 @@ public class FragmentManagement extends Fragment {
                 if (jsonString != null) {
                     ResponseData app_list = HttpTools.getResponseKey(jsonString, "app_list");
                     if (app_list.length > 0) {
+//                        存储在本地
                         Tools.saveCommonInfo(mActivity, response);
                         JSONArray jsonArray = app_list.getJSONArray(0, "list");
                         ResponseData data = HttpTools.getResponseKeyJSONArray(jsonArray);
@@ -936,6 +1025,9 @@ public class FragmentManagement extends Fragment {
             }
         });
 
+        /**
+         * 常用应用与其他应用中只要是“扫码开门” “对公账户” 都触发该点击事件
+         */
         mGridView2.setOnItemClickListener(new OnItemClickListener() {
 
             @Override
@@ -947,7 +1039,10 @@ public class FragmentManagement extends Fragment {
                 } else if (info.clientCode.equals("dgzh")) {//对公账户
                     startActivity(new Intent(mActivity, PublicAccountActivity.class));
                 } else {
-                    if (info.sso != "") {
+                    /**
+                     * 其他点击事件拼接HTML5
+                     */
+                    if (!info.sso.equals("")) {
                         AuthTimeUtils mAuthTimeUtils = new AuthTimeUtils();
                         mAuthTimeUtils.IsAuthTime(mActivity, info.sso, info.clientCode, info.oauthType, info.developerCode, "");
                     }
@@ -1246,6 +1341,7 @@ public class FragmentManagement extends Fragment {
 
     @Override
     public void onAttach(Activity activity) {
+        // TODO Auto-generated method stub
         super.onAttach(activity);
         mActivity = activity;
     }

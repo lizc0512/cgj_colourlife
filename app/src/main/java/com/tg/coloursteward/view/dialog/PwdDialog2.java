@@ -418,7 +418,7 @@ public class PwdDialog2 extends Dialog implements ResponseListener {
 	}
 
 	public interface ADialogCallback {
-		public void callback();
+		void callback();
 	}
 
 	/**

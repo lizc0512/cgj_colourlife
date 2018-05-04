@@ -106,14 +106,14 @@ public class SettingActivity extends BaseActivity implements ItemClickListener {
 		list.add(viewConfig);
 		viewConfig = new ViewConfig("清空首页消息列表", "", true);
 		list.add(viewConfig);
-		viewConfig = new ViewConfig("通话设置", "", true);
-		list.add(viewConfig);
+		/*viewConfig = new ViewConfig("通话设置", "", true);
+		list.add(viewConfig);*/
 		mineInfoZone.setData(list);
 	}
 
 	// 检测版本更新
 	private void getVersion() {
-		RequestConfig config = new RequestConfig(this, HttpTools.GET_VERSION_INFO,"检测更新");
+		RequestConfig config = new RequestConfig(this, HttpTools.GET_VERSION_INFO,"检查更新");
 		RequestParams params = new RequestParams();
 		String version = UpdateManager.getVersionName(SettingActivity.this);
 		params.put("version",version);

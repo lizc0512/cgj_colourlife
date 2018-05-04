@@ -127,11 +127,11 @@ public class PullRefreshListViewFind extends LinearLayout implements OnClickList
 	private int minPageSize;
 	private int distance;
 	public interface NetPullRefreshOnScroll{
-		public void refreshOnScroll(AbsListView view, int firstVisibleItem,
-                                    int visibleItemCount, int totalItemCount);
+		void refreshOnScroll(AbsListView view, int firstVisibleItem,
+                             int visibleItemCount, int totalItemCount);
 	}
 	public interface  NetOnItemLongClickListener{
-	    public void setOnItemLongClickListener(AdapterView<?> arg0, View arg1, int position, long arg3);
+	    void setOnItemLongClickListener(AdapterView<?> arg0, View arg1, int position, long arg3);
 	}
 	private NetPullRefreshOnScroll netPullRefreshOnScroll;
 	private NetOnItemLongClickListener onItemLongClickListener;
@@ -334,11 +334,8 @@ public class PullRefreshListViewFind extends LinearLayout implements OnClickList
 		}
 		long lastMillis = Tools.dateString2Millis(oldFreshTime);
 		long currentMllis = Tools.getCurrentMillis();
-		if(currentMllis - lastMillis > REFRESH_SECONDS){
-			return true;
-		}
-		return false;
-	}
+        return currentMllis - lastMillis > REFRESH_SECONDS;
+    }
 	
 	public void performLoading(){
 		if(state == STATE_IDLE){
@@ -780,11 +777,8 @@ public class PullRefreshListViewFind extends LinearLayout implements OnClickList
     }
 
 	public boolean canScrollUp(){
-		if(state == STATE_LOADING  || getLocationY() == top){
-			return true;
-		}
-		return false;		
-	}
+        return state == STATE_LOADING || getLocationY() == top;
+    }
 	
 	public int getState(){
 		return state;
@@ -839,7 +833,7 @@ public class PullRefreshListViewFind extends LinearLayout implements OnClickList
 						float x = getDistance(getLocationY() - bottom);
 						temp = (int)(getLocationY()+x*distance);
 					}else{
-						temp = (int)(getLocationY()+distance);
+						temp = getLocationY()+distance;
 					}
 					if(temp <= top){
 						temp = top;

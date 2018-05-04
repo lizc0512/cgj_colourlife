@@ -7,6 +7,7 @@
     tools:context=".GiftTicketSecondActivity" >
 
     <com.tg.coloursteward.view.RoundImageView
+        android:id="@+id/riv_head_avatar"
         android:layout_width="@dimen/margin_66"
         android:layout_height="@dimen/margin_66"
         android:layout_gravity="center_horizontal"
@@ -82,7 +83,7 @@
         android:paddingBottom="@dimen/margin_15"
         android:paddingLeft="@dimen/margin_18"
         android:paddingRight="@dimen/margin_18"
-        android:paddingTop="@dimen/margin_15" >
+        android:paddingTop="@dimen/margin_15">
 
         <TextView
             style="@style/hint_13"
@@ -92,7 +93,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content">
 
             <ImageView
                 android:id="@+id/img"
@@ -131,7 +132,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content">
 
             <EditText
                 android:id="@+id/edt_send_message"

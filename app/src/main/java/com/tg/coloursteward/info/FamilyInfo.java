@@ -14,4 +14,5 @@ public class FamilyInfo implements Serializable {
 	public String username ="";
 	public String avatar ="";
 	public String sortLetters ="";//显示数据拼音的首字母
+	public String orgType ="";//自定义orgType（数据看板处可用，其余无效）
 }

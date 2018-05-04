@@ -1,7 +1,9 @@
 package com.tg.coloursteward;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -11,12 +13,15 @@ import com.tg.coloursteward.adapter.ThreeElementsAdapter;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.info.HistoryTransferInfo;
+import com.tg.coloursteward.info.RedpacketsInfo;
 import com.tg.coloursteward.info.ThreeElementsInfo;
 import com.tg.coloursteward.inter.OnLoadingListener;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.RequestConfig;
 import com.tg.coloursteward.net.RequestParams;
 import com.tg.coloursteward.net.ResponseData;
+import com.tg.coloursteward.updateapk.UpdateManager;
+import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.PullRefreshListView;
 import com.tg.coloursteward.view.dialog.ToastFactory;
@@ -42,6 +47,7 @@ import android.widget.TextView;
  *
  */
 public class RedpacketsShareMainActivity extends BaseActivity {
+	private static final String TAG = "RedpacketsShareMainActi";
 	/**
 	 * 同事OA账号或手机号码
 	 */
@@ -110,17 +116,23 @@ public class RedpacketsShareMainActivity extends BaseActivity {
 	private String secret;
 	private Intent intent;
 	private int OA;
-	
+	final ArrayList<RedpacketsInfo> list = new ArrayList<RedpacketsInfo>();
 	private ArrayList<HistoryTransferInfo> pageInfoList = new ArrayList<HistoryTransferInfo>();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		getPopup(false);
 		transferTo = getIntent().getStringExtra("colleague");
+		colleagueInfo = getIntent().getStringExtra(Contants.PARAMETER.OA);
 		balance = getIntent().getDoubleExtra(Contants.PARAMETER.BALANCE, 0.00);
 		key = Tools.getStringValue(this,Contants.EMPLOYEE_LOGIN.key);
         secret = Tools.getStringValue(this,Contants.EMPLOYEE_LOGIN.secret);
 		initView();
+		if(StringUtils.isNotEmpty(colleagueInfo)){
+			edtColleagueInfo.setText(colleagueInfo);
+			check();
+		}
 	}
 	@Override
 	protected boolean handClickEvent(View v) {
@@ -163,13 +175,13 @@ public class RedpacketsShareMainActivity extends BaseActivity {
 
 			@Override
 			public void afterTextChanged(Editable s) {
-				if (s.length() == 11 && Tools.isNumeric(s.toString())) {
+				/*if (s.length() == 11 && Tools.isNumeric(s.toString())) {
 					// 通过手机号或者OA账号读取同事信息
 					getEmployeeInfo(edtColleagueInfo.getText().toString());
 					OA = 0;
 				} else if (View.VISIBLE == lloaInfo.getVisibility()) {
 					lloaInfo.setVisibility(View.GONE);
-				}
+				}*/
 			}
 		});
 		pullListView = (PullRefreshListView) findViewById(R.id.pull_listview);
@@ -191,6 +203,7 @@ public class RedpacketsShareMainActivity extends BaseActivity {
 				intent.putExtra(Contants.PARAMETER.MOBILE,info.receiverMobile);
 				intent.putExtra(Contants.PARAMETER.USERID,info.receiver_id);
 				startActivity(intent);
+//				finish();
 			}
 		});
 		pullListView.setOnLoadingListener(new OnLoadingListener<PullRefreshListView>() {
@@ -254,20 +267,25 @@ public class RedpacketsShareMainActivity extends BaseActivity {
 	
 	/**
 	 * 根据输入手机号获oa账号搜索
-	 * @param string
-	 * @param i
+	 * @param username
 	 */
-	private  void getEmployeeInfo(String string) {
-		String username = edtColleagueInfo.getText().toString();
+	private  void getEmployeeInfo(String username) {
+		/**
+		 * 获取版本号
+		 */
+		String versionShort = UpdateManager.getVersionName(this);
 		String key = Tools.getStringValue(this,Contants.EMPLOYEE_LOGIN.key);
         String secret = Tools.getStringValue(this,Contants.EMPLOYEE_LOGIN.secret);
-		RequestConfig config = new RequestConfig(RedpacketsShareMainActivity.this, HttpTools.GET_EMPLOYEE_INFO,"搜索");
+		Log.e(TAG, "getEmployeeInfo:key   "+key );
+		Log.e(TAG, "getEmployeeInfo:secret   "+secret );
+		RequestConfig config = new RequestConfig(RedpacketsShareMainActivity.this, HttpTools.GET_EMPLOYEE_INFO,"查询");
 		RequestParams params = new RequestParams();
 		params.put("username", username);
+		params.put("version", versionShort);
 		params.put("key", key);
 		params.put("secret",secret);
 		HttpTools.httpPost(Contants.URl.URL_ICETEST, "/hongbao/getEmployeeInfo", config, params);
-		
+//		这个接口改造过
 	}
 	@Override
 	public void onSuccess(Message msg, String jsonString, String hintString) {
@@ -275,7 +293,53 @@ public class RedpacketsShareMainActivity extends BaseActivity {
 		super.onSuccess(msg, jsonString, hintString);
 		int code = HttpTools.getCode(jsonString);
 		String message = HttpTools.getMessageString(jsonString);
-		if(code == 0){
+		if (code == 0) {
+			JSONArray content = HttpTools.getContentJsonArray(jsonString);
+			if(content != null){
+				ResponseData data = HttpTools.getResponseContent(content);
+				if(data.length >0){
+					RedpacketsInfo info ;
+					for(int i = 0; i < data.length; i++) {
+						info = new RedpacketsInfo();
+						info.receiver_id = data.getString(i,"id");
+						info.receiverName = data.getString(i,"name");
+						info.receiverOA = data.getString(i,"username");
+						info.receiverMobile = data.getString(i,"mobile");
+						list.add(info);
+					}
+				}
+			}
+			if(list.size() > 0){
+				if(list.size() == 1){
+					intent = new Intent(RedpacketsShareMainActivity.this,RedpacketsTransferMainActivity.class);
+					intent.putExtra(Contants.PARAMETER.TRANSFERTO,"colleague");
+					intent.putExtra(Contants.PARAMETER.BALANCE,balance);
+					intent.putExtra("name",list.get(0).receiverName);
+					intent.putExtra("username",list.get(0).receiverOA);
+					intent.putExtra(Contants.PARAMETER.MOBILE, list.get(0).receiverMobile);
+					intent.putExtra(Contants.PARAMETER.USERID,list.get(0).receiver_id);
+					startActivity(intent);
+					list.clear();
+
+//					finish();
+				}else {
+					intent = new Intent(RedpacketsShareMainActivity.this,RedpacketsAccountListActivity.class);
+					intent.putExtra(Contants.PARAMETER.BALANCE,balance);
+					//intent.putExtra(RedpacketsAccountListActivity.REDPACKETS_LIST,list);
+					Bundle bundleObject = new Bundle();
+					bundleObject.putSerializable(RedpacketsAccountListActivity.REDPACKETS_LIST, list);
+					intent.putExtras(bundleObject);
+					startActivity(intent);
+					list.clear();
+//					finish();
+				}
+			}else {
+				ToastFactory.showToast(RedpacketsShareMainActivity.this, "你输入的账号有误！");
+			}
+		} else {
+			ToastFactory.showToast(RedpacketsShareMainActivity.this, message);
+		}
+		/*if(code == 0){
 			JSONObject content = HttpTools.getContentJSONObject(jsonString);
 			if(content != null){
 				try {
@@ -312,7 +376,7 @@ public class RedpacketsShareMainActivity extends BaseActivity {
 		}else{
 			ToastFactory.showToast(RedpacketsShareMainActivity.this,message);
 		}
-		
+		*/
 	}
 	
 	/**
@@ -323,7 +387,8 @@ public class RedpacketsShareMainActivity extends BaseActivity {
 			ToastFactory.showToast(this, "请输入同事信息");
 			return;
 		}
-		if (View.VISIBLE == lloaInfo.getVisibility()) {
+		getEmployeeInfo(edtColleagueInfo.getText().toString());
+		/*if (View.VISIBLE == lloaInfo.getVisibility()) {
 			intent = new Intent(RedpacketsShareMainActivity.this,RedpacketsTransferMainActivity.class);
 			intent.putExtra(Contants.PARAMETER.TRANSFERTO,"colleague");
 			intent.putExtra(Contants.PARAMETER.BALANCE,balance);
@@ -337,7 +402,7 @@ public class RedpacketsShareMainActivity extends BaseActivity {
 			// 通过手机号或者OA账号读取同事信息
 			getEmployeeInfo(edtColleagueInfo.getText().toString());
 			OA = 1;
-		}
+		}*/
 	}
 
 	@Override

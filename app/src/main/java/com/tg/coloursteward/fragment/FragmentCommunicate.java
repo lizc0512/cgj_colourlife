@@ -228,6 +228,9 @@ public class FragmentCommunicate extends Fragment implements OnItemClickListener
 				RequestParams params = new RequestParams();
 				params.put("token",accessToken);
 				params.put("parentId", "0");//0：取根目录
+				params.put("familyTypeId", "0");
+				params.put("type", "0");
+				params.put("status", "0");
 				params.put("corpId", Tools.getStringValue(mActivity,Contants.storage.CORPID));
 				HttpTools.httpGet(Contants.URl.URL_ICETEST, "/orgms/org/batch",config, params);
 			}

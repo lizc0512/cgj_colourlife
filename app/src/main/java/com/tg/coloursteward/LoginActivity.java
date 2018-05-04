@@ -1,16 +1,18 @@
 package com.tg.coloursteward;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.geetest.gt3unbindsdk.Bind.GT3GeetestBindListener;
+import com.geetest.gt3unbindsdk.Bind.GT3GeetestUtilsBind;
 import com.tg.coloursteward.application.CityPropertyApplication;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.database.SharedPreferencesTools;
-import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.log.Logger;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.MD5;
@@ -18,22 +20,18 @@ import com.tg.coloursteward.net.RequestConfig;
 import com.tg.coloursteward.net.RequestParams;
 import com.tg.coloursteward.net.ResponseData;
 import com.tg.coloursteward.object.ImageParams;
-import com.tg.coloursteward.ui.MainActivity1;
-import com.tg.coloursteward.util.NetWorkUtils;
+import com.tg.coloursteward.module.MainActivity1;
 import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.dialog.ToastFactory;
-//import com.youmai.hxsdk.HuxinSdkManager;
 
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Message;
-import android.provider.Settings;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
@@ -43,6 +41,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import com.networkbench.agent.impl.NBSAppAgent;
 
 /**
  * 登录页面
@@ -50,6 +49,10 @@ import android.support.v4.content.ContextCompat;
  * @author Administrator
  */
 public class LoginActivity extends BaseActivity implements AnimationListener {
+    private static final String TAG = "LoginActivity";
+    private static final String captchaURL = "http://www.geetest.com/demo/gt/register-click";
+    // 设置二次验证的URL，需替换成自己的服务器URL
+    private static final String validateURL = "http://www.geetest.com/demo/gt/validate-click";
     private EditText editUser;
     private EditText editPassword;
     private ImageView ivClose;
@@ -62,6 +65,7 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
     private String corpId;
     private String password;
     private String extras;
+    private GT3GeetestUtilsBind gt3GeetestUtils;
 
     @Override
     public View getContentView() {
@@ -87,7 +91,18 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
                     ActivityCompat.requestPermissions(this,
                             new String[]{android.Manifest.permission.READ_PHONE_STATE}, Activity.RESULT_FIRST_USER);
                 } else {
-                    login();// 登录
+                    newPhone = editUser.getText().toString();
+                    if (newPhone.length() <= 0) {
+                        ToastFactory.showToast(this, "请输入账号");
+                        return false;
+                    }
+                    password  = editPassword.getText().toString();
+                    if (password.length() < 6) {
+                        ToastFactory.showToast(this, "请输入不少于6位的密码");
+                        return false;
+                    }
+                    loginGt();// 登录
+                   // login();
                 }
                 break;
         case R.id.forget_pwd:
@@ -104,6 +119,7 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
+        NBSAppAgent.setLicenseKey("bbf07e0ce0b04fab93c46e4c57494e47").withLocationServiceEnabled(true).start(this.getApplicationContext());
         setContentView(R.layout.activity_login);
         Intent getintent = getIntent();
 
@@ -127,6 +143,11 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
        // editUser.setText(Tools.getUserName(this));
         showStartPager();
         CheckPermission();
+        /**
+         * 初始化
+         * 务必放在onCreate方法里面执行
+         */
+        gt3GeetestUtils = new GT3GeetestUtilsBind(LoginActivity.this);
 }
 
     private void CheckPermission() {
@@ -215,19 +236,158 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
     }
 
     /**
+     * 极验验证码
+     */
+    private void loginGt(){
+        gt3GeetestUtils.getGeetest(LoginActivity.this, captchaURL, validateURL, null, new GT3GeetestBindListener() {
+            /**
+             * num 1 点击验证码的关闭按钮来关闭验证码
+             * num 2 点击屏幕关闭验证码
+             * num 3 点击返回键关闭验证码
+             */
+            @Override
+            public void gt3CloseDialog(int  num) {
+            }
+
+
+            /**
+             * 验证码加载准备完成
+             * 此时弹出验证码
+             */
+            @Override
+            public void gt3DialogReady() {
+            }
+
+
+            /**
+             * 拿到第一个url（API1）返回的数据
+             */
+            @Override
+            public void gt3FirstResult(JSONObject jsonObject) {
+            }
+
+
+            /**
+             * 往API1请求中添加参数
+             * 添加数据为Map集合
+             * 添加的数据以get形式提交
+             */
+            @Override
+            public Map<String, String> gt3CaptchaApi1() {
+                Map<String, String> map = new HashMap<String, String>();
+                return map;
+            }
+
+            /**
+             * 设置是否自定义第二次验证ture为是 默认为false(不自定义)
+             * 如果为false这边的的完成走gt3GetDialogResult(String result)
+             * 如果为true这边的的完成走gt3GetDialogResult(boolean a, String result)
+             * result为二次验证所需要的数据
+             */
+            @Override
+            public boolean gt3SetIsCustom() {
+                return false;
+            }
+
+            /**
+             * 拿到二次验证需要的数据
+             */
+            @Override
+            public void gt3GetDialogResult(String result) {
+            }
+
+
+            /**
+             * 自定义二次验证，当gtSetIsCustom为ture时执行这里面的代码
+             */
+            @Override
+            public void gt3GetDialogResult(boolean status, String result) {
+                if (status) {
+                    /**
+                     *  利用异步进行解析这result进行二次验证，结果成功后调用gt3GeetestUtils.gt3TestFinish()方法调用成功后的动画，然后在gt3DialogSuccess执行成功之后的结果
+                     * //                JSONObject res_json = new JSONObject(result);
+                     //
+                     //                Map<String, String> validateParams = new HashMap<>();
+                     //
+                     //                validateParams.put("geetest_challenge", res_json.getString("geetest_challenge"));
+                     //
+                     //                validateParams.put("geetest_validate", res_json.getString("geetest_validate"));
+                     //
+                     //                validateParams.put("geetest_seccode", res_json.getString("geetest_seccode"));
+                     //  二次验证成功调用 gt3GeetestUtils.gt3TestFinish();
+                     //  二次验证失败调用 gt3GeetestUtils.gt3TestClose();
+                     */
+                }
+            }
+
+
+            /**
+             * 需要做验证统计的可以打印此处的JSON数据
+             * JSON数据包含了极验每一步的运行状态和结果
+             */
+            @Override
+            public void gt3GeetestStatisticsJson(JSONObject jsonObject) {
+            }
+
+            /**
+             * 往二次验证里面put数据
+             * put类型是map类型
+             * 注意map的键名不能是以下三个：geetest_challenge，geetest_validate，geetest_seccode
+             */
+            @Override
+            public Map<String, String> gt3SecondResult() {
+                Map<String, String> map = new HashMap<String, String>();
+              //  map.put("testkey","12315");
+                return map;
+
+            }
+
+            /**
+             * 二次验证完成的回调
+             * result为验证后的数据
+             * 根据二次验证返回的数据判断此次验证是否成功
+             * 二次验证成功调用 gt3GeetestUtils.gt3TestFinish();
+             * 二次验证失败调用 gt3GeetestUtils.gt3TestClose();
+             */
+            @Override
+            public void gt3DialogSuccessResult(String result) {
+                if(!TextUtils.isEmpty(result)) {
+                    try {
+                        JSONObject jobj = new JSONObject(result);
+                        String sta = jobj.getString("status");
+                        if ("success".equals(sta)) {
+                            gt3GeetestUtils.gt3TestFinish();
+                            login();
+                        } else {
+                            gt3GeetestUtils.gt3TestClose();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }else
+                {
+                    gt3GeetestUtils.gt3TestClose();
+                }
+            }
+            /**
+             * 验证过程错误
+             * 返回的错误码为判断错误类型的依据
+             */
+
+            @Override
+            public void gt3DialogOnError(String error) {
+                Log.i("dsd","gt3DialogOnError");
+                gt3GeetestUtils.cancelAllTask();
+            }
+        });
+        //设置是否可以点击屏幕边缘关闭验证码
+        gt3GeetestUtils.setDialogTouch(true);
+    }
+    /**
      * 登录
      */
     public void login() {
-        newPhone = editUser.getText().toString();
-        if (newPhone.length() <= 0) {
-            ToastFactory.showToast(this, "请输入账号");
-            return;
-        }
-        password  = editPassword.getText().toString();
-        if (password.length() < 6) {
-            ToastFactory.showToast(this, "请输入不少于6位的密码");
-            return;
-        }
+
         try {
             String passwordMD5 = MD5.getMd5Value(password).toLowerCase();
             Log.d("TAG", "passwordMD5=" + passwordMD5);
@@ -262,6 +422,7 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
         config.hintString = "加载个人信息";
         RequestParams params = new RequestParams();
         params.put("uid", accountUuid);
+        Log.e(TAG, "getUserInfo: "+accountUuid );
         HttpTools.httpGet(Contants.URl.URL_ICETEST,"/account", config, params);
     }
 

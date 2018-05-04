@@ -27,31 +27,8 @@ public class EmployeeBean implements Parcelable {
     private String orgID;
     private String orgName;
     private String username; //拼音的姓 与 名的首字母
+    private String enterprise_cornet;
 
-
-    @Generated(hash = 1303988984)
-    public EmployeeBean(Long id, String uid, String mobile, String realname,
-                        String avatar, String sex, String email, String isFavorite,
-                        String jobName, String landline, String orgID, String orgName,
-                        String username) {
-        this.id = id;
-        this.uid = uid;
-        this.mobile = mobile;
-        this.realname = realname;
-        this.avatar = avatar;
-        this.sex = sex;
-        this.email = email;
-        this.isFavorite = isFavorite;
-        this.jobName = jobName;
-        this.landline = landline;
-        this.orgID = orgID;
-        this.orgName = orgName;
-        this.username = username;
-    }
-
-    @Generated(hash = 1600622815)
-    public EmployeeBean() {
-    }
 
 
     public String getUid() {
@@ -180,6 +157,14 @@ public class EmployeeBean implements Parcelable {
         dest.writeString(this.username);
     }
 
+    public String getEnterprise_cornet() {
+        return this.enterprise_cornet;
+    }
+
+    public void setEnterprise_cornet(String enterprise_cornet) {
+        this.enterprise_cornet = enterprise_cornet;
+    }
+
     protected EmployeeBean(Parcel in) {
         this.id = (Long) in.readValue(Long.class.getClassLoader());
         this.uid = in.readString();
@@ -194,6 +179,30 @@ public class EmployeeBean implements Parcelable {
         this.orgID = in.readString();
         this.orgName = in.readString();
         this.username = in.readString();
+    }
+
+    @Generated(hash = 1539865870)
+    public EmployeeBean(Long id, String uid, String mobile, String realname, String avatar, String sex,
+            String email, String isFavorite, String jobName, String landline, String orgID, String orgName,
+            String username, String enterprise_cornet) {
+        this.id = id;
+        this.uid = uid;
+        this.mobile = mobile;
+        this.realname = realname;
+        this.avatar = avatar;
+        this.sex = sex;
+        this.email = email;
+        this.isFavorite = isFavorite;
+        this.jobName = jobName;
+        this.landline = landline;
+        this.orgID = orgID;
+        this.orgName = orgName;
+        this.username = username;
+        this.enterprise_cornet = enterprise_cornet;
+    }
+
+    @Generated(hash = 1600622815)
+    public EmployeeBean() {
     }
 
     public static final Parcelable.Creator<EmployeeBean> CREATOR = new Parcelable.Creator<EmployeeBean>() {

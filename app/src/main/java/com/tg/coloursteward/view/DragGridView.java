@@ -320,13 +320,10 @@ public class DragGridView extends GridView{
 		if(x < leftOffset || x > leftOffset + dragView.getWidth()){
 			return false;
 		}
-		
-		if(y < topOffset || y > topOffset + dragView.getHeight()){
-			return false;
-		}
-		
-		return true;
-	}
+
+        return !(y < topOffset || y > topOffset + dragView.getHeight());
+
+    }
 	
 	
 

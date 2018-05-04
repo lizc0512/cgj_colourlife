@@ -117,7 +117,7 @@ public class RepairsPulbicActivity extends BaseActivity {
 	public void onRequestStart(Message msg, String hintString) {
 		// TODO Auto-generated method stub
 		if(msg.arg1 == HttpTools.POST_IMAG){
-			ImageParams param = (ImageParams)msg.getData().getParcelable(HttpTools.KEY_IMAGE_PARAMS);
+			ImageParams param = msg.getData().getParcelable(HttpTools.KEY_IMAGE_PARAMS);
 			DialogFactory.getInstance().showTransitionDialog(this, 
 					"正在上传图片... "+(param.position+1)+"/"+(imgGroup.getImageParams().size()-1), 
 					this.toString(), HttpTools.POST_IMAG);
@@ -131,7 +131,7 @@ public class RepairsPulbicActivity extends BaseActivity {
 		if(msg.arg1 == HttpTools.POST_IMAG){
 			Bundle bundle = msg.getData();
 			if(bundle != null){
-				ImageParams param = (ImageParams)bundle.getParcelable(HttpTools.KEY_IMAGE_PARAMS);
+				ImageParams param = bundle.getParcelable(HttpTools.KEY_IMAGE_PARAMS);
 				int position = param.position;
 				imgGroup.getImageParams().get(position).url = Contants.URl.URL_ICETEST+HttpTools.getFileNameString(jsonString);
 				boolean isLast = bundle.getBoolean(HttpTools.KEY_IS_LAST, false);

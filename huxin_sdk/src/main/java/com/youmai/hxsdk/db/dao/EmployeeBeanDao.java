@@ -37,6 +37,7 @@ public class EmployeeBeanDao extends AbstractDao<EmployeeBean, Long> {
         public final static Property OrgID = new Property(10, String.class, "orgID", false, "ORG_ID");
         public final static Property OrgName = new Property(11, String.class, "orgName", false, "ORG_NAME");
         public final static Property Username = new Property(12, String.class, "username", false, "USERNAME");
+        public final static Property Enterprise_cornet = new Property(13, String.class, "enterprise_cornet", false, "ENTERPRISE_CORNET");
     }
 
 
@@ -64,7 +65,8 @@ public class EmployeeBeanDao extends AbstractDao<EmployeeBean, Long> {
                 "\"LANDLINE\" TEXT," + // 9: landline
                 "\"ORG_ID\" TEXT," + // 10: orgID
                 "\"ORG_NAME\" TEXT," + // 11: orgName
-                "\"USERNAME\" TEXT);"); // 12: username
+                "\"USERNAME\" TEXT," + // 12: username
+                "\"ENTERPRISE_CORNET\" TEXT);"); // 13: enterprise_cornet
     }
 
     /** Drops the underlying database table. */
@@ -141,6 +143,11 @@ public class EmployeeBeanDao extends AbstractDao<EmployeeBean, Long> {
         if (username != null) {
             stmt.bindString(13, username);
         }
+ 
+        String enterprise_cornet = entity.getEnterprise_cornet();
+        if (enterprise_cornet != null) {
+            stmt.bindString(14, enterprise_cornet);
+        }
     }
 
     @Override
@@ -211,6 +218,11 @@ public class EmployeeBeanDao extends AbstractDao<EmployeeBean, Long> {
         if (username != null) {
             stmt.bindString(13, username);
         }
+ 
+        String enterprise_cornet = entity.getEnterprise_cornet();
+        if (enterprise_cornet != null) {
+            stmt.bindString(14, enterprise_cornet);
+        }
     }
 
     @Override
@@ -233,7 +245,8 @@ public class EmployeeBeanDao extends AbstractDao<EmployeeBean, Long> {
             cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9), // landline
             cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10), // orgID
             cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11), // orgName
-            cursor.isNull(offset + 12) ? null : cursor.getString(offset + 12) // username
+            cursor.isNull(offset + 12) ? null : cursor.getString(offset + 12), // username
+            cursor.isNull(offset + 13) ? null : cursor.getString(offset + 13) // enterprise_cornet
         );
         return entity;
     }
@@ -253,6 +266,7 @@ public class EmployeeBeanDao extends AbstractDao<EmployeeBean, Long> {
         entity.setOrgID(cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10));
         entity.setOrgName(cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11));
         entity.setUsername(cursor.isNull(offset + 12) ? null : cursor.getString(offset + 12));
+        entity.setEnterprise_cornet(cursor.isNull(offset + 13) ? null : cursor.getString(offset + 13));
      }
     
     @Override

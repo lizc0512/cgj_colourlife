@@ -12,13 +12,19 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.LinearLayout;
 
+/**
+ * 管理页的layout
+ */
 public class ManageMentLinearlayout extends LinearLayout implements ResponseListener{
+	/**
+	 * 回调接口
+	 */
 	public interface NetworkRequestListener {
-		public void onRequest(MessageHandler msgHand);
-
-		public void onSuccess(ManageMentLinearlayout magLearLayout, Message msg, String response);
-		public void onFail(ManageMentLinearlayout magLearLayout,Message msg, String hintString);
+		void onRequest(MessageHandler msgHand);
+		void onSuccess(ManageMentLinearlayout magLearLayout, Message msg, String response);
+		void onFail(ManageMentLinearlayout magLearLayout, Message msg, String hintString);
 	}
+
 	private NetworkRequestListener requestListener;
 	private boolean isLoadding = false;
 	private MessageHandler msgHandler;

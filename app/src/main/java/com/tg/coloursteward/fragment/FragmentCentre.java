@@ -93,7 +93,8 @@ public class FragmentCentre extends Fragment implements AdapterView.OnItemClickL
                     break;
                 case R.id.ll_door://工作审批
                     mAuthTimeUtils  = new AuthTimeUtils();
-                    mAuthTimeUtils.IsAuthTime(mActivity,Contants.Html5.SP, "sp", "0", "sp","");
+                    mAuthTimeUtils.IsAuthTime(mActivity,Contants.Html5.SP1, "sp", "0", "sp","");
+//                    mAuthTimeUtils.IsAuthTime(mActivity,Contants.Html5.SP, "tlmyapps", "1", "tlmyapps","");
                     break;
                 case R.id.ll_complaint://蜜蜂协同
                     mAuthTimeUtils  = new AuthTimeUtils();

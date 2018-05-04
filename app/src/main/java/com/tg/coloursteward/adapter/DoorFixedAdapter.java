@@ -51,7 +51,7 @@ public class DoorFixedAdapter extends BeeBaseAdapter{
                         RelativeLayout.LayoutParams.FILL_PARENT,
                         screenWidth * 140 / 480));
 
-        return (BeeCellHolder) holder;
+        return holder;
     }
 
 

@@ -14,11 +14,15 @@ import android.widget.GridView;
  * @Description:解决在scrollview中只显示第一行数据的问题
  * @author http://blog.csdn.net/finddreams
  */
+
+/**
+ * 自定义GridView
+ */
 public class MyGridView extends GridView implements ResponseListener {
     public interface NetGridViewRequestListener {
-        public void onRequest(MessageHandler msgHand);
+        void onRequest(MessageHandler msgHand);
 
-        public void onSuccess(MyGridView gridView, Message msg, String response);
+        void onSuccess(MyGridView gridView, Message msg, String response);
     }
     private NetGridViewRequestListener requestListener;
     private boolean isLoadding = false;

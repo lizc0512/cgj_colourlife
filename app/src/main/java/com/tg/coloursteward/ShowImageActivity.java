@@ -50,8 +50,8 @@ public class ShowImageActivity extends BaseActivity implements OnItemSelectedLis
 	private int currentIndex = 0;
 	private ArrayList<String> urlList;
 	private ArrayList<String> pathList;
-	private ArrayList<String> deletePathList = new ArrayList<String>();;
-	private int picResId = -1;
+	private ArrayList<String> deletePathList = new ArrayList<String>();
+    private int picResId = -1;
 	public static int screenWidth;
 	public static int screenHeight;
 	private GalleryAdapter mAdapter;

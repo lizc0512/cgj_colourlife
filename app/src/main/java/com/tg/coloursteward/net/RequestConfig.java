@@ -40,8 +40,8 @@ public class RequestConfig {
 		tag = activity.toString();
 		Class<?> clazs = activity.getClass();
 		try {
-			Method method = clazs.getMethod("getHandler",new  Class[ 0 ]);
-			handler = (Handler)method.invoke(activity, new  Object[]{});
+			Method method = clazs.getMethod("getHandler");
+			handler = (Handler)method.invoke(activity);
 		} catch (NoSuchMethodException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -63,7 +63,8 @@ public class PopWindowView extends PopupWindow{
         	@Override  
         	public void onClick(View arg0) {
 				AuthTimeUtils mAuthTimeUtils  = new AuthTimeUtils();
-				mAuthTimeUtils.IsAuthTime(context,Contants.Html5.SP, "sp", "0", "sp","");
+//				mAuthTimeUtils.IsAuthTime(context,Contants.Html5.SP, "sp", "0", "sp","");
+				mAuthTimeUtils.IsAuthTime(context,Contants.Html5.SP, "tlmyapps", "1", "tlmyapps","");
         		PopWindowView.this.dismiss();
         	}  
         });  

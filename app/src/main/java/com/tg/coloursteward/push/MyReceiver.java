@@ -78,10 +78,10 @@ public class MyReceiver extends BroadcastReceiver {
            /* if (!isApplicationBroughtToBackground(aContext)) {
                 try {
                     JSONObject extraJson = new JSONObject(extras);
-                    Intent intent2 = new Intent(aContext, MainActivity1.class);
+                    Intent intent2 = new Intent(aContext, MainActivity.class);
                     if (StringUtils.isNotEmpty(extras)) {
                         if (null != extraJson && extraJson.length() > 0) {
-                            intent2.putExtra(MainActivity1.KEY_EXTRAS, extras);
+                            intent2.putExtra(MainActivity.KEY_EXTRAS, extras);
                         }
                     }
                     intent2.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP );
@@ -144,7 +144,7 @@ public class MyReceiver extends BroadcastReceiver {
 		Log.e(TAG, "processCustomMessage content_type" + content_type);
 		Log.e(TAG, "processCustomMessage message" + message);
         String extras = bundle.getString(JPushInterface.EXTRA_EXTRA);
-		Log.e(TAG, "processCustomMessage extras" + extras);
+		Log.e(TAG, "processCustomMessage extras" + extras);//消息内容详情
         if("sys_upgrade".equals(content_type))
         {
             //系统维护中

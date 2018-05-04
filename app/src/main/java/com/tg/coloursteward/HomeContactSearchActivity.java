@@ -91,9 +91,9 @@ public class HomeContactSearchActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		getPopup(true);
 		setContentView(R.layout.activity_home_contact_search);
-		contactDatas = new ArrayList<FindContactInfo>();
-		homelistDatas = new ArrayList<FindHomeListInfo>();
-		managementDatas = new ArrayList<GridViewInfo>();
+		contactDatas = new ArrayList<FindContactInfo>();//消息
+		homelistDatas = new ArrayList<FindHomeListInfo>();//联系人
+		managementDatas = new ArrayList<GridViewInfo>();//应用
 		initView();
 	}
 
@@ -306,7 +306,7 @@ public class HomeContactSearchActivity extends BaseActivity {
         TextView tvFoot = (TextView) footView.findViewById(R.id.tv_head_foot);
         tvFoot.setText("查看更多应用");
 		listview_manage.addHeaderView(headView);
-		listview_manage.addFooterView(footView);
+		//listview_manage.addFooterView(footView);
         headView.measure(0, 0);
 		managementheadheight=headView.getMeasuredHeight();
         footView.measure(0, 0);
@@ -399,7 +399,7 @@ public class HomeContactSearchActivity extends BaseActivity {
 		if (jsonelse != null) {
 			ResponseData app_list = HttpTools.getResponseKey(jsonelse,"app_list");
 			if (app_list.length > 0) {
-				JSONArray jsonArray = app_list.getJSONArray(0,"list");
+				JSONArray jsonArray = app_list.getJSONArray(1,"list");
 				ResponseData data = HttpTools.getResponseKeyJSONArray(jsonArray);
 				List<GridViewInfo> gridlist2 = new ArrayList<GridViewInfo>();
 				GridViewInfo item = null;

@@ -7,6 +7,10 @@ import java.util.Calendar;
 import java.util.Date;
 
 import android.util.Log;
+
+/**
+ * 时间转化工具
+ */
 public class DateUtils {
 	private static final String TAG = DateUtils.class.getSimpleName();
 
@@ -31,7 +35,7 @@ public class DateUtils {
 	 * 格式化日期
 	 * 
 	 * @param date
-	 * @param formate
+	 * @param format
 	 *            默认格式为：yyyy-MM-dd HH:mm:ss
 	 * @return String
 	 */
@@ -198,6 +202,28 @@ public class DateUtils {
 
 		return dateTime;
 
+	}
+	/**
+	 * 获取某个月的最大日期
+	 */
+	public static int getMonthMaxDay(int year, int month) {
+		int[] maxDays = new int[]{0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+		if ((year % 400 == 0) || (year % 4 == 0 && year % 100 != 0))   //是闰年，2月为29天
+			maxDays[2]++;
+		return maxDays[month];
+	}
+
+	/**
+	 * 获取指定日期的星期
+	 */
+	public static String getWeek(int year, int month, int day) {
+		String[] weekStr = {"日", "一", "二", "三", "四", "五", "六"};
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(Calendar.YEAR, year);
+		calendar.set(Calendar.MONTH, month - 1);
+		calendar.set(Calendar.DATE, day);
+		int week = calendar.get(Calendar.DAY_OF_WEEK);
+		return "星期" + weekStr[week - 1];
 	}
 
 }

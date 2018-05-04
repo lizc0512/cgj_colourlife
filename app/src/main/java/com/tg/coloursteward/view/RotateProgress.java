@@ -15,6 +15,9 @@ import android.os.Message;
 import android.util.AttributeSet;
 import android.view.View;
 
+/**
+ * 加载旋转圈圈
+ */
 public class RotateProgress extends View{
 	public static final int MSG_DRAW = 1;
 	private int speed = 100;

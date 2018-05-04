@@ -21,6 +21,9 @@ import android.view.View.OnClickListener;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+/**
+ * 转账页面
+ */
 public class RedpacketsWithdrawFinishedActivity extends BaseActivity {
 
 	/**

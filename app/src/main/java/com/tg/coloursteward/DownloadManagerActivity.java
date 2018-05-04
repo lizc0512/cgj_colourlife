@@ -181,9 +181,9 @@ public class DownloadManagerActivity extends BaseActivity {
 			long u = p.t;
 			return t < u ? -1 : t == u ? 0 : 1;
 		}
-	};
+	}
 
-	private int dp2px(int dp) {
+    private int dp2px(int dp) {
 		return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp,
 				getResources().getDisplayMetrics());
 	}

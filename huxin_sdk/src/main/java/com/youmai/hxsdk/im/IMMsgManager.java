@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -225,6 +226,11 @@ public class IMMsgManager {
                         YouMaiGroup.GroupMemberItem item = list.get(i);
                         if (item.getMemberId().equals(HuxinSdkManager.instance().getUuid())) {
                             CacheMsgHelper.instance().delCacheMsgGroupId(mContext, groupId);
+
+                            Intent intent = new Intent(IMGroupActivity.UPDATE_GROUP_REMOVE);
+                            intent.putExtra("groupId", groupId);
+                            LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
+
                         }
                         sb.append('"').append(item.getMemberName()).append('"');
                         if (i < list.size() - 1) {

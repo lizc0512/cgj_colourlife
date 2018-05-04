@@ -124,7 +124,9 @@ public class IMGroupActivity extends SdkBaseActivity implements
     public static final String DST_UUID = "DST_UUID";
     public static final String DST_PHONE = "DST_PHONE";
     public static final String EXTRA_SCROLL_POSITION = "EXTRA_SCROLL_POSITION";
+
     public static final String UPDATE_GROUP_INFO = "UPDATE_GROUP_INFO"; //群信息改变的广播
+    public static final String UPDATE_GROUP_REMOVE = "UPDATE_GROUP_REMOVE"; //群信息改变的广播
 
     private static final int REQUEST_CODE_PICTURE = 200;
     private static final int REQUEST_CODE_LOCATION = 201;
@@ -217,6 +219,11 @@ public class IMGroupActivity extends SdkBaseActivity implements
                 GroupInfoBean group = GroupInfoHelper.instance().toQueryByGroupId(IMGroupActivity.this, groupId);
                 mGroupInfo = group;
                 updateGroupUI(mGroupInfo);
+            } else if (UPDATE_GROUP_REMOVE.equals(action)) {
+                int id = intent.getIntExtra("groupId", 0);
+                if (id == groupId) {
+                    finish();
+                }
             }
 
         }

@@ -166,7 +166,6 @@ public class FragmentManagement extends Fragment {
                     break;
                 case R.id.ll_account://即时分账
                     startActivity(new Intent(mActivity, AccountActivity.class));
-                    //startActivity(new Intent(mActivity, PublicAccountActivity.class));
                     break;
                 case R.id.rl_saoyisao://扫一扫
                     startActivity(new Intent(mActivity, InviteRegisterActivity.class));

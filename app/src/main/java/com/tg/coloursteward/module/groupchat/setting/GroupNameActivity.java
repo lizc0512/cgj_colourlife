@@ -88,6 +88,11 @@ public class GroupNameActivity extends Activity {
                 manager.hideSoftInputFromWindow(et_user_name.getWindowToken(), 0);
 
                 if (StringUtils.isEmpty(groupName)) {
+                    Toast.makeText(GroupNameActivity.this, "请输入群名称", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (groupName.equals(name)) {
+                    Toast.makeText(GroupNameActivity.this, "未修改群名称", Toast.LENGTH_SHORT).show();
                     return;
                 }
 

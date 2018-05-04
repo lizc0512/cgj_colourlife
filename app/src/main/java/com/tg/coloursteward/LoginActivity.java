@@ -86,11 +86,11 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
         // TODO Auto-generated method stub
         switch (v.getId()) {
             case R.id.submit:
-                if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_PHONE_STATE)
-                        != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(this,
-                            new String[]{android.Manifest.permission.READ_PHONE_STATE}, Activity.RESULT_FIRST_USER);
-                } else {
+//                if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_PHONE_STATE)
+//                        != PackageManager.PERMISSION_GRANTED) {
+//                    ActivityCompat.requestPermissions(this,
+//                            new String[]{android.Manifest.permission.READ_PHONE_STATE}, Activity.RESULT_FIRST_USER);
+//                } else {
                     newPhone = editUser.getText().toString();
                     if (newPhone.length() <= 0) {
                         ToastFactory.showToast(this, "请输入账号");
@@ -103,7 +103,7 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
                     }
                     loginGt();// 登录
                    // login();
-                }
+//                }
                 break;
         case R.id.forget_pwd:
 			forgetPassword();// 忘记密码
@@ -554,7 +554,7 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
     public void onRequestPermissionsResult(int requestCode,
                                            String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
+        /*switch (requestCode) {
             case Activity.RESULT_FIRST_USER: {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -566,7 +566,7 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
                 login();
                 break;
             }
-        }
+        }*/
     }
 }
 

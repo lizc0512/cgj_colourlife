@@ -69,10 +69,10 @@ public class SdkBaseActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
 
-        /*boolean isMainActRunning = AppUtils.isTopActiviy(this, "com.tg.coloursteward.ui.MainActivity1");
+        /*boolean isMainActRunning = AppUtils.isTopActiviy(this, "com.tg.coloursteward.module.MainActivity1");
         if (!isMainActRunning && fromPush) {
             Intent intent = new Intent();
-            intent.setClassName(this, "com.tg.coloursteward.ui.MainActivity1");
+            intent.setClassName(this, "com.tg.coloursteward.module.ui.MainActivity1");
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);

@@ -396,6 +396,7 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
                             ExCacheMsgBean bean = new ExCacheMsgBean(item);
                             mMessageAdapter.addHeadItem(bean);
                         }
+                        mEmptyView.setVisibility(View.GONE);
                     }
                 }
             }
@@ -503,7 +504,6 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
     public void onLoadFinished(Loader<List<ExCacheMsgBean>> loader, List<ExCacheMsgBean> data) {
         Log.d(TAG, "onLoadFinished" + data.toString());
         if (data.isEmpty()) {
-            mEmptyView.setVisibility(View.VISIBLE);
             return;
         }
         List<ExCacheMsgBean> messageList = mMessageAdapter.getMessageList();
@@ -513,7 +513,7 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
         } else {
             mMessageAdapter.changeMessageList(data);
         }
-        checkIfEmpty();
+        mEmptyView.setVisibility(View.GONE);
     }
 
     @Override

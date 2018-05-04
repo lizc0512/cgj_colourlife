@@ -681,7 +681,7 @@ public class IMMsgManager {
         // Adds the back stack for the Intent (but not the Intent itself)
 
         Intent intent = new Intent();
-        intent.setClassName(context, "com.tg.coloursteward.ui.MainActivity1");
+        intent.setClassName(context, "com.tg.coloursteward.module.MainActivity1");
         stackBuilder.addNextIntentWithParentStack(intent);
 
         // Adds the Intent that starts the Activity to the top of the stack

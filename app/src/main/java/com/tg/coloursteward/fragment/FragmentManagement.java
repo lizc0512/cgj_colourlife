@@ -769,7 +769,6 @@ public class FragmentManagement extends Fragment {
         magLinearLayoutSign = (ManageMentLinearlayout) mView.findViewById(R.id.ll_sign);//签到
         tvMail = (TextView) mView.findViewById(R.id.tv_mail);
         tvExamineNum = (TextView) mView.findViewById(R.id.tv_examineNum);
-        tvExamineNum.setText(account);
         mGridView1 = (MyGridView) mView.findViewById(R.id.gridview1);
         mGridView2 = (MyGridView) mView.findViewById(R.id.gridview2);
         banner = (Banner) mView.findViewById(R.id.banner);

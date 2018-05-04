@@ -513,11 +513,22 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateUnspecified|adjustPan" />
 
-        <activity android:name=".module.groupchat.details.ChatGroupDetailsActivity"
+        <activity
+            android:name=".module.groupchat.details.ChatGroupDetailsActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/HxSdkTheme"/>
+            android:theme="@style/HxSdkTheme" />
 
         <activity android:name=".module.groupchat.deletecontact.DeleteContactListActivity" />
+
+        <activity
+            android:name=".module.groupchat.setting.GroupNameActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/HxSdkTheme" />
+
+        <activity
+            android:name=".module.groupchat.setting.GroupManageActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/HxSdkTheme" />
 
 
         <activity android:name=".RedpacketsAccountListActivity" />

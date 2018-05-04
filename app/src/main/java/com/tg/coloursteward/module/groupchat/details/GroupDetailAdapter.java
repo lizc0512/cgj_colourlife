@@ -103,12 +103,13 @@ public class GroupDetailAdapter extends RecyclerView.Adapter {
                 url = HEAD_ICON_URL + "avatar?uid=" + contact.getUsername();
             }
 
+            int size = mContext.getResources().getDimensionPixelOffset(R.dimen.card_head);
             Glide.with(mContext)
                     .load(url)
                     .apply(new RequestOptions()
                             .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                             .centerCrop()
-                            .override(120, 120)
+                            .override(size, size)
                             .transform(new GlideRoundTransform())
                             .placeholder(R.drawable.color_default_header)
                             .error(R.drawable.color_default_header))

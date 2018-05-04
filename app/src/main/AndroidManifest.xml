@@ -505,6 +505,21 @@
         <activity android:name=".PublicAccountActivity" />
         <activity android:name=".ForgetPasswordActivity" />
         <activity android:name=".ForgetPasswordVerifyActivity" />
+
+        <activity android:name=".module.groupchat.GroupListActivity" />
+
+        <activity
+            android:name=".module.groupchat.AddContactsCreateGroupActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateUnspecified|adjustPan" />
+
+        <activity android:name=".module.groupchat.details.ChatGroupDetailsActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/HxSdkTheme"/>
+
+        <activity android:name=".module.groupchat.deletecontact.DeleteContactListActivity" />
+
+
         <activity android:name=".RedpacketsAccountListActivity" />
         <activity android:name=".AccountDetailNewActivity" />
         <activity android:name=".AccountExchangeRecordActivity" />

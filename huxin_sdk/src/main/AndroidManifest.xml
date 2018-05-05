@@ -181,21 +181,22 @@
             android:theme="@style/HxMsgTheme" />
 
         <!--IM消息-->
-        <!-- <activity
-             android:name="com.youmai.hxsdk.activity.IMConnectionActivity"
-             android:configChanges="keyboardHidden|orientation"
-             android:launchMode="singleTop"
-             android:screenOrientation="portrait"
-             android:theme="@style/HxSdkNewTheme"
-             android:windowSoftInputMode="adjustResize|stateHidden" />-->
+        <activity
+            android:name="com.youmai.hxsdk.activity.IMConnectionActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/HxSdkNewTheme"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
 
-        <!-- <activity
-             android:name="com.youmai.hxsdk.activity.IMGroupActivity"
-             android:configChanges="keyboardHidden|orientation"
-             android:launchMode="singleTop"
-             android:screenOrientation="portrait"
-             android:theme="@style/HxSdkNewTheme"
-             android:windowSoftInputMode="adjustResize|stateHidden" />-->
+
+        <activity
+            android:name="com.youmai.hxsdk.activity.IMGroupActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/HxSdkNewTheme"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
 
 
         <!--IM文件预览、下载打开-->
@@ -272,9 +273,10 @@
             android:theme="@style/HxSdkTheme" />
 
         <!--聊天群相关的界面-->
-        <activity android:name=".module.groupchat.ChatDetailsActivity"
+        <activity
+            android:name="com.youmai.hxsdk.module.groupchat.ChatDetailsActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/HxSdkTheme"/>
+            android:theme="@style/HxSdkTheme" />
 
         <receiver
             android:name="com.youmai.hxsdk.receiver.HuxinReceiver"

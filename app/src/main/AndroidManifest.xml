@@ -66,47 +66,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".module.MainActivity1"
             android:screenOrientation="portrait"
             android:theme="@style/BaseAppTheme"
-            android:windowSoftInputMode="stateUnspecified|adjustPan">
-            <!--<intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>-->
-        </activity>
-
-        <activity
-            android:name="com.youmai.hxsdk.activity.IMConnectionActivity"
-            android:configChanges="keyboardHidden|orientation"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:theme="@style/HxSdkNewTheme"
-            android:windowSoftInputMode="adjustResize|stateHidden">
-            <!--<intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>-->
-        </activity>
-
-
-        <activity
-            android:name="com.youmai.hxsdk.activity.IMGroupActivity"
-            android:configChanges="keyboardHidden|orientation"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:theme="@style/HxSdkNewTheme"
-            android:windowSoftInputMode="adjustResize|stateHidden">
-            <!--<intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>-->
-        </activity>
-
+            android:windowSoftInputMode="stateUnspecified|adjustPan" />
 
         <activity
             android:name=".MainActivity"
@@ -115,6 +80,7 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
+
         <!-- 弹出提现新消息页面 -->
         <activity android:name=".AlertActivity" />
         <!-- 投诉页面 -->
@@ -529,6 +495,17 @@
             android:name=".module.groupchat.setting.GroupManageActivity"
             android:screenOrientation="portrait"
             android:theme="@style/HxSdkTheme" />
+
+        <activity
+            android:name=".module.groupchat.setting.GroupNoticeActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/HxSdkTheme" />
+
+        <!--搜索-->
+        <activity
+            android:name=".module.search.GlobalSearchActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
 
 
         <activity android:name=".RedpacketsAccountListActivity" />

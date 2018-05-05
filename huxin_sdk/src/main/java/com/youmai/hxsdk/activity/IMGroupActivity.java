@@ -70,6 +70,7 @@ import com.youmai.hxsdk.module.filemanager.interfaces.PickerRefreshUIListener;
 import com.youmai.hxsdk.module.movierecord.MediaStoreUtils;
 import com.youmai.hxsdk.module.picker.PhotoPickerManager;
 import com.youmai.hxsdk.module.picker.PhotoPreviewActivity;
+import com.youmai.hxsdk.proto.YouMaiBasic;
 import com.youmai.hxsdk.proto.YouMaiGroup;
 import com.youmai.hxsdk.router.APath;
 import com.youmai.hxsdk.service.SendMsgService;
@@ -234,18 +235,15 @@ public class IMGroupActivity extends SdkBaseActivity implements
             } else if (UPDATE_GROUP_REMOVE.equals(action) || UPDATE_GROUP_ADD.equals(action)) {
                 int id = intent.getIntExtra("groupId", 0);
                 ArrayList<String> changeList = intent.getStringArrayListExtra("changeList");
-                boolean isUpdate = true;
                 if (id == groupId) {
                     for (String item : changeList) {
                         if (item.equals(HuxinSdkManager.instance().getUuid())) {
-                            isUpdate = false;
-                            finish();
+                            //isRemove = true;
+                            //finish();
                             break;
                         }
                     }
-                    if (isUpdate) {
-                        queryGroupInfo(id);
-                    }
+                    queryGroupInfo(id);
                 }
             }
 
@@ -306,11 +304,11 @@ public class IMGroupActivity extends SdkBaseActivity implements
 
         HuxinSdkManager.instance().getStackAct().addActivity(this);
 
-        if (null == mGroupInfo) {
-            queryGroupInfo(groupId);
-        } else {
+        if (mGroupInfo != null) {
             updateGroupUI(mGroupInfo);
         }
+
+        queryGroupInfo(groupId);
 
     }
 
@@ -320,14 +318,19 @@ public class IMGroupActivity extends SdkBaseActivity implements
             public void OnRec(PduBase pduBase) {
                 try {
                     YouMaiGroup.GroupInfoRsp rsp = YouMaiGroup.GroupInfoRsp.parseFrom(pduBase.body);
-                    YouMaiGroup.GroupInfo groupInfo = rsp.getGroupInfo();
-                    mGroupInfo = new GroupInfoBean();
-                    mGroupInfo.setGroup_avatar(groupInfo.getGroupAvatar());
-                    mGroupInfo.setGroup_member_count(groupInfo.getGroupMemberCount());
-                    mGroupInfo.setGroup_id(groupId);
-                    mGroupInfo.setGroup_name(groupName);
-                    mGroupInfo.setTopic(groupInfo.getTopic());
-                    updateGroupUI(mGroupInfo);
+
+                    if (rsp.getResult() == YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS) {
+                        YouMaiGroup.GroupInfo groupInfo = rsp.getGroupInfo();
+                        mGroupInfo = new GroupInfoBean();
+                        mGroupInfo.setGroup_avatar(groupInfo.getGroupAvatar());
+                        mGroupInfo.setGroup_member_count(groupInfo.getGroupMemberCount());
+                        mGroupInfo.setGroup_id(groupId);
+                        mGroupInfo.setGroup_name(groupName);
+                        mGroupInfo.setTopic(groupInfo.getTopic());
+                        updateGroupUI(mGroupInfo);
+                    }
+
+
                 } catch (InvalidProtocolBufferException e) {
                     e.printStackTrace();
                 }

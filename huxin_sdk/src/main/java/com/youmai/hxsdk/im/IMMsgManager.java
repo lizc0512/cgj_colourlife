@@ -233,9 +233,10 @@ public class IMMsgManager {
                         String uuid = item.getMemberId();
                         changeList.add(uuid);
 
-                        if (uuid.equals(HuxinSdkManager.instance().getUuid())) {
+                        //自己被移除 不删除消息入口
+                        /*if (uuid.equals(HuxinSdkManager.instance().getUuid())) {
                             CacheMsgHelper.instance().delCacheMsgGroupId(mContext, groupId);
-                        }
+                        }*/
                         sb.append('"').append(item.getMemberName()).append('"');
                         if (i < list.size() - 1) {
                             sb.append('、');

@@ -148,7 +148,6 @@ public class HuxinSdkManager {
      */
     public void init(final Context context, InitListener listener) {
         mContext = context.getApplicationContext();
-        GreenDBIMManager.instance(mContext);
         IMMsgManager.instance().init(mContext);
         mUserInfo.fromJson(mContext);
 
@@ -240,6 +239,8 @@ public class HuxinSdkManager {
             //socketLogin(uuid);   //for test
         }
         mUserInfo.setUuid(uuid);
+
+        GreenDBIMManager.instance(mContext).initUuid(uuid);
     }
 
 
@@ -395,11 +396,11 @@ public class HuxinSdkManager {
     private void clearUserData() {
         close();
         mUserInfo.clear(mContext);
-        CacheMsgHelper.instance().deleteAll(mContext);
+        //CacheMsgHelper.instance().deleteAll(mContext);
+        //IMMsgManager.instance().clearShortcutBadger();
 
         MorePushManager.unregister(mContext);//反注册送服务
         SPDataUtil.setUserInfoJson(mContext, "");// FIXME: 2017/3/20
-        IMMsgManager.instance().clearShortcutBadger();
     }
 
 

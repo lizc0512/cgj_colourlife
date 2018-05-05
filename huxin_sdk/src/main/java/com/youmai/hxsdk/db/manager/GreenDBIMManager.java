@@ -1,6 +1,7 @@
 package com.youmai.hxsdk.db.manager;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.youmai.hxsdk.db.dao.CacheMsgBeanDao;
 import com.youmai.hxsdk.db.dao.DaoMaster;
@@ -19,12 +20,13 @@ import org.greenrobot.greendao.query.QueryBuilder;
 public class GreenDBIMManager {
 
     // 数据库名
-    private static final String DBNAME = "hx_im";
+    private static final String DB_NAME = "hx_im_";
 
     private static GreenDBIMManager instance = null;
 
     private Context mContext;
     private DaoSession mDaoSession;
+    private String mUuid;
 
     public static GreenDBIMManager instance(Context context) {
         if (instance == null) {
@@ -33,15 +35,24 @@ public class GreenDBIMManager {
         return instance;
     }
 
+
     private GreenDBIMManager(Context context) {
         mContext = context.getApplicationContext();
-        initDBDao();
     }
 
-    private void initDBDao() {
+    public void initUuid(String uuid) {
+        if (TextUtils.isEmpty(mUuid) || !mUuid.equals(uuid)) {
+            String dbName = DB_NAME + uuid + ".db";
+            initDBDao(dbName);
+            mUuid = uuid;
+        }
+    }
+
+
+    private void initDBDao(String dbName) {
         try {
             if (mDaoSession == null) {
-                HMROpenHelper helper = new HMROpenHelper(mContext, DBNAME + ".db");
+                HMROpenHelper helper = new HMROpenHelper(mContext, dbName);
                 Database db = helper.getWritableDb();
                 mDaoSession = new DaoMaster(db).newSession();
                 QueryBuilder.LOG_SQL = true;
@@ -54,17 +65,14 @@ public class GreenDBIMManager {
 
 
     public CacheMsgBeanDao getCacheMsgDao() {
-        initDBDao();
         return mDaoSession.getCacheMsgBeanDao();
     }
 
     public EmployeeBeanDao getCacheEmployeeDao() {
-        initDBDao();
         return mDaoSession.getEmployeeBeanDao();
     }
 
     public GroupInfoBeanDao getGroupInfoDao() {
-        initDBDao();
         return mDaoSession.getGroupInfoBeanDao();
     }
 

@@ -127,6 +127,7 @@ public class IMGroupActivity extends SdkBaseActivity implements
 
     public static final String UPDATE_GROUP_INFO = "UPDATE_GROUP_INFO"; //群信息改变的广播
     public static final String UPDATE_GROUP_REMOVE = "UPDATE_GROUP_REMOVE"; //群信息改变的广播
+    public static final String UPDATE_GROUP_ADD = "UPDATE_GROUP_ADD"; //群信息改变的广播
 
     private static final int REQUEST_CODE_PICTURE = 200;
     private static final int REQUEST_CODE_LOCATION = 201;
@@ -216,13 +217,23 @@ public class IMGroupActivity extends SdkBaseActivity implements
                     }
                 }
             } else if (UPDATE_GROUP_INFO.equals(action)) {
-                GroupInfoBean group = GroupInfoHelper.instance().toQueryByGroupId(IMGroupActivity.this, groupId);
-                mGroupInfo = group;
+                mGroupInfo = GroupInfoHelper.instance().toQueryByGroupId(IMGroupActivity.this, groupId);
                 updateGroupUI(mGroupInfo);
-            } else if (UPDATE_GROUP_REMOVE.equals(action)) {
+            } else if (UPDATE_GROUP_REMOVE.equals(action) || UPDATE_GROUP_ADD.equals(action)) {
                 int id = intent.getIntExtra("groupId", 0);
+                ArrayList<String> changeList = intent.getStringArrayListExtra("changeList");
+                boolean isUpdate = true;
                 if (id == groupId) {
-                    finish();
+                    for (String item : changeList) {
+                        if (item.equals(HuxinSdkManager.instance().getUuid())) {
+                            isUpdate = false;
+                            finish();
+                            break;
+                        }
+                    }
+                    if (isUpdate) {
+                        queryGroupInfo(id);
+                    }
                 }
             }
 
@@ -273,6 +284,8 @@ public class IMGroupActivity extends SdkBaseActivity implements
         filter.addAction(SendMsgService.ACTION_SEND_MSG);
         filter.addAction(SendMsgService.ACTION_UPDATE_MSG);
         filter.addAction(UPDATE_GROUP_INFO);
+        filter.addAction(UPDATE_GROUP_REMOVE);
+        filter.addAction(UPDATE_GROUP_ADD);
         localBroadcastManager.registerReceiver(mLocalMsgReceiver, filter);
 
         initView();
@@ -311,8 +324,8 @@ public class IMGroupActivity extends SdkBaseActivity implements
     }
 
     void updateGroupUI(GroupInfoBean groupInfo) {
-        boolean contains = groupName.contains(ColorsConfig.GROUP_DEFAULT_NAME);
-        if (contains) {
+        if (TextUtils.isEmpty(groupName)
+                || groupName.contains(ColorsConfig.GROUP_DEFAULT_NAME)) {
             tvTitle.setText("群聊" + "(" + groupInfo.getGroup_member_count() + ")");
         } else {
             tvTitle.setText(groupName + "(" + groupInfo.getGroup_member_count() + ")");
@@ -489,8 +502,8 @@ public class IMGroupActivity extends SdkBaseActivity implements
     }
 
     private void initTitle() {
-        boolean contains = groupName.contains(ColorsConfig.GROUP_DEFAULT_NAME);
-        if (contains) {
+        if (TextUtils.isEmpty(groupName)
+                || groupName.contains(ColorsConfig.GROUP_DEFAULT_NAME)) {
             tvTitle.setText("群聊");
         } else {
             tvTitle.setText(groupName);

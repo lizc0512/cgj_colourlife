@@ -46,6 +46,7 @@ import com.youmai.hxsdk.proto.YouMaiUser;
 import com.youmai.hxsdk.socket.NotifyListener;
 import com.youmai.hxsdk.utils.AppUtils;
 import com.youmai.hxsdk.utils.BadgeUtil;
+import com.youmai.hxsdk.utils.ListUtils;
 import com.youmai.hxsdk.utils.LogFile;
 
 import org.json.JSONException;
@@ -220,17 +221,16 @@ public class IMMsgManager {
                 List<YouMaiGroup.GroupMemberItem> list = notify.getMemberListList();
                 YouMaiGroup.GroupMemberOptType type = notify.getType();
 
+                ArrayList<String> changeList = new ArrayList<>();
                 StringBuilder sb = new StringBuilder();
                 if (type == YouMaiGroup.GroupMemberOptType.GROUP_MEMBER_OPT_DEL) {
                     for (int i = 0; i < list.size(); i++) {
                         YouMaiGroup.GroupMemberItem item = list.get(i);
-                        if (item.getMemberId().equals(HuxinSdkManager.instance().getUuid())) {
+                        String uuid = item.getMemberId();
+                        changeList.add(uuid);
+
+                        if (uuid.equals(HuxinSdkManager.instance().getUuid())) {
                             CacheMsgHelper.instance().delCacheMsgGroupId(mContext, groupId);
-
-                            Intent intent = new Intent(IMGroupActivity.UPDATE_GROUP_REMOVE);
-                            intent.putExtra("groupId", groupId);
-                            LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
-
                         }
                         sb.append('"').append(item.getMemberName()).append('"');
                         if (i < list.size() - 1) {
@@ -240,14 +240,25 @@ public class IMMsgManager {
                     sb.append("移出了群");
                     CacheMsgBean bean = getMemberChangedMsgBean(groupId, sb.toString());
 
-                    CacheMsgHelper.instance().insertOrUpdate(mContext, bean);
+                    List<CacheMsgBean> msgList = CacheMsgHelper.instance().toQueryCacheMsgList(mContext, groupId + "");
+                    if (!ListUtils.isEmpty(msgList)) {
+                        CacheMsgBean lastMsg = msgList.get(msgList.size() - 1);
+                        bean.setTargetName(lastMsg.getTargetName());
+                        CacheMsgHelper.instance().insertOrUpdate(mContext, bean);
+                    }
+
                     handlerIMMsgCallback(bean);
+
+                    Intent intent = new Intent(IMGroupActivity.UPDATE_GROUP_REMOVE);
+                    intent.putExtra("groupId", groupId);
+                    intent.putExtra("changeList", changeList);
+                    LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
+
                 } else if (type == YouMaiGroup.GroupMemberOptType.GROUP_MEMBER_OPT_ADD) {
                     for (int i = 0; i < list.size(); i++) {
                         YouMaiGroup.GroupMemberItem item = list.get(i);
-                        if (item.getMemberId().equals(HuxinSdkManager.instance().getUuid())) {
-                            CacheMsgHelper.instance().delCacheMsgGroupId(mContext, groupId);
-                        }
+                        String uuid = item.getMemberId();
+                        changeList.add(uuid);
                         sb.append('"').append(item.getMemberName()).append('"');
                         if (i < list.size() - 1) {
                             sb.append('、');
@@ -255,8 +266,20 @@ public class IMMsgManager {
                     }
                     sb.append("加入了群");
                     CacheMsgBean bean = getMemberChangedMsgBean(groupId, sb.toString());
-                    CacheMsgHelper.instance().insertOrUpdate(mContext, bean);
+
+                    List<CacheMsgBean> msgList = CacheMsgHelper.instance().toQueryCacheMsgList(mContext, groupId + "");
+                    if (!ListUtils.isEmpty(msgList)) {
+                        CacheMsgBean lastMsg = msgList.get(msgList.size() - 1);
+                        bean.setTargetName(lastMsg.getTargetName());
+                        CacheMsgHelper.instance().insertOrUpdate(mContext, bean);
+                    }
+
                     handlerIMMsgCallback(bean);
+
+                    Intent intent = new Intent(IMGroupActivity.UPDATE_GROUP_ADD);
+                    intent.putExtra("groupId", groupId);
+                    intent.putExtra("changeList", changeList);
+                    LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
                 }
 
             } catch (InvalidProtocolBufferException e) {

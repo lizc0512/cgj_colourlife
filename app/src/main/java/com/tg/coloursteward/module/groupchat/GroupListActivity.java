@@ -185,15 +185,10 @@ public class GroupListActivity extends BaseActivity {
                         GroupInfoHelper.instance().insertOrUpdate(mContext, mGroupList);
                     }
 
-                    List<Integer> noChangeList = ack.getLatestGroupIdListList();
-                    if (noChangeList != null && noChangeList.size() > 0
-                            && cacheList != null && cacheList.size() > 0) {
-                        for (Integer item : noChangeList) {
-                            for (GroupInfoBean info : cacheList) {
-                                if (info.getGroup_id() == item) {
-                                    mGroupList.add(info);
-                                }
-                            }
+                    List<Integer> delList = ack.getDeleteGroupIdListList();
+                    if (delList != null && delList.size() > 0) {
+                        for (Integer item : delList) {
+                            GroupInfoHelper.instance().delGroupInfo(mContext, item);
                         }
                     }
 

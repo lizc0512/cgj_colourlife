@@ -16,6 +16,7 @@ import com.youmai.hxsdk.socket.ReceiveListener;
 import com.youmai.hxsdk.utils.GsonUtil;
 import com.youmai.hxsdk.utils.ListUtils;
 
+import org.greenrobot.greendao.query.DeleteQuery;
 import org.greenrobot.greendao.query.QueryBuilder;
 
 import java.util.ArrayList;
@@ -54,6 +55,21 @@ public class GroupInfoHelper {
         GroupInfoBeanDao dao = GreenDBIMManager.instance(context).getGroupInfoDao();
         QueryBuilder<GroupInfoBean> qb = dao.queryBuilder();
         return qb.list();
+    }
+
+
+    /**
+     * 删除某个人的所有消息记录
+     *
+     * @param groupId
+     * @return
+     */
+    public void delGroupInfo(Context context, int groupId) {
+        GroupInfoBeanDao dao = GreenDBIMManager.instance(context).getGroupInfoDao();
+        QueryBuilder<GroupInfoBean> qb = dao.queryBuilder();
+        DeleteQuery<GroupInfoBean> dq = qb.where(GroupInfoBeanDao.Properties.Group_id.eq(groupId))
+                .buildDelete();
+        dq.executeDeleteWithoutDetachingEntities();
     }
 
 
@@ -103,7 +119,8 @@ public class GroupInfoHelper {
      */
     public void toQueryByGroupId(final Context context, int groupId, final OnResultCallBack callBack) {
         GroupInfoBeanDao dao = GreenDBIMManager.instance(context).getGroupInfoDao();
-        List<GroupInfoBean> list = dao.queryBuilder().where(GroupInfoBeanDao.Properties.Group_id.eq(groupId)).list();
+        List<GroupInfoBean> list = dao.queryBuilder().where(GroupInfoBeanDao.Properties.Group_id.eq(groupId))
+                .orderDesc(GroupInfoBeanDao.Properties.Id).list();
         if (!ListUtils.isEmpty(list)) {
             final GroupInfoBean groupInfoBean = list.get(0);
             String json = groupInfoBean.getGroupMemberJson();

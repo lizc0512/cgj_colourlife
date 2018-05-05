@@ -60,7 +60,7 @@ public class IMChat {
         if (isGroup) {
             mMsgBean.setTargetUuid(imChat.getGroupId() + "");
             mMsgBean.setReceiverUserId(HuxinSdkManager.instance().getUuid());
-            mMsgBean.setTargetName(imChat.getDestUserId());
+            mMsgBean.setTargetName(imChat.getGroupName());
         } else {
             mMsgBean.setTargetUuid(imChat.getSrcUserId());
             mMsgBean.setReceiverUserId(imChat.getDestUserId());

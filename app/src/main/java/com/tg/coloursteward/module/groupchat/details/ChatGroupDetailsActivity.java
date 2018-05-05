@@ -1,7 +1,10 @@
 package com.tg.coloursteward.module.groupchat.details;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.content.LocalBroadcastManager;
@@ -65,7 +68,6 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
     public static final String GROUP_LIST = "GROUP_LIST";
     public static final String UPDATE_GROUP_LIST = "UPDATE_GROUP_LIST";
     public static final String GROUP_ID = "groupId";
-    public static final String GROUP_INFO = "GroupInfo";
 
     private static final int REQUEST_CODE_ADD = 101;
     private static final int REQUEST_CODE_DELETE = 102;
@@ -76,7 +78,6 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
 
     private int mGroupId;
     private boolean isGroupOwner = false;  //是否群主
-    private boolean isUpdate = false;  //是否更新过群信息
 
     private TextView mTvBack, mTvTitle;
     private RecyclerView mGridView;
@@ -101,10 +102,49 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
 
     private boolean isClearUp;
 
+    private LocalBroadcastManager localBroadcastManager;
+    private LocalMsgReceiver mLocalMsgReceiver;
+
+    /**
+     * 消息广播
+     * 下载视频文件本地广播接收器
+     */
+    private class LocalMsgReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (IMMsgManager.UPDATE_GROUP_INFO.equals(action)) {
+                GroupInfoBean info = intent.getParcelableExtra("GroupInfo");
+                String topic = info.getTopic();
+                String groupName = info.getGroup_name();
+
+                if (!TextUtils.isEmpty(topic)) {
+                    mGroupInfo.setTopic(topic);
+                }
+
+                if (!TextUtils.isEmpty(groupName)) {
+                    mGroupInfo.setGroup_name(groupName);
+                }
+
+                setGroupInfo(mGroupInfo);
+            }
+
+        }
+    }
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.hx_activity_im_chat_group_details);
+
+        localBroadcastManager = LocalBroadcastManager.getInstance(this);
+        mLocalMsgReceiver = new LocalMsgReceiver();
+
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(IMMsgManager.UPDATE_GROUP_INFO);
+        localBroadcastManager.registerReceiver(mLocalMsgReceiver, filter);
 
         initView();
         setOnClickListener();
@@ -113,6 +153,10 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
     @Override
     public void onDestroy() {
         super.onDestroy();
+
+        localBroadcastManager.unregisterReceiver(mLocalMsgReceiver);
+        localBroadcastManager = null;
+
         if (null != groupList) {
             groupList.clear();
         }
@@ -123,12 +167,6 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
             groupList3.clear();
         }
         isGroupOwner = false;
-        if (isUpdate) {
-            Intent intent = new Intent(IMGroupActivity.UPDATE_GROUP_INFO);
-            intent.putExtra(GROUP_INFO, mGroupInfo);
-            LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
-        }
-        isUpdate = false;
     }
 
     private void initView() {
@@ -136,22 +174,9 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
         mGroupId = getIntent().getIntExtra(GROUP_ID, -1);
 
         if (null == mGroupInfo) {
-            mGroupInfo = new GroupInfoBean();
-            mGroupInfo.setGroup_id(mGroupId);
+            mGroupInfo = GroupInfoHelper.instance().toQueryByGroupId(this, mGroupId);
         }
-        GroupInfoBean groupInfo = GroupInfoHelper.instance().toQueryByGroupId(this, mGroupId);
-        if (null != groupInfo) {
-            mGroupInfo.setId(groupInfo.getId());
-            mGroupInfo.setGroup_id(mGroupId);
-            mGroupInfo.setGroup_name(groupInfo.getGroup_name());
-            mGroupInfo.setTopic(groupInfo.getTopic());
-            mGroupInfo.setGroup_avatar(groupInfo.getGroup_avatar());
-            mGroupInfo.setGroup_member_count(groupInfo.getGroup_member_count());
-            mGroupInfo.setOwner_id(groupInfo.getOwner_id());
-            mGroupInfo.setInfo_update_time(groupInfo.getInfo_update_time());
-            mGroupInfo.setMember_update_time(groupInfo.getMember_update_time());
-            mGroupInfo.setGroupMemberJson(groupInfo.getGroupMemberJson());
-        }
+
 
         mTvBack = findViewById(R.id.tv_back);
         mTvTitle = findViewById(R.id.tv_title);
@@ -184,12 +209,16 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
 
         reqGroupMembers();
 
-        if (mGroupInfo != null) {
+        setGroupInfo(mGroupInfo);
+    }
+
+    private void setGroupInfo(GroupInfoBean info) {
+        if (info != null) {
             String title = String.format(getString(R.string.group_default_title),
-                    "聊天详情", mGroupInfo.getGroup_member_count());
+                    "聊天详情", info.getGroup_member_count());
             mTvTitle.setText(title);
 
-            String group_name = mGroupInfo.getGroup_name();
+            String group_name = info.getGroup_name();
             if (TextUtils.isEmpty(group_name)
                     || group_name.contains(ColorsConfig.GROUP_DEFAULT_NAME)) {
                 mTvGroupName.setText("未命名");
@@ -197,7 +226,7 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
                 mTvGroupName.setText(group_name);
             }
 
-            String group_topic = mGroupInfo.getTopic();
+            String group_topic = info.getTopic();
             if (StringUtils.isEmpty(group_topic)) {
                 mtvNoticeContent.setText("未设置");
             } else {
@@ -553,7 +582,6 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
                 isGroupOwner = false;
                 reqGroupMembers();
             }
-            isUpdate = true;
         }
     }
 
@@ -586,28 +614,20 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
     }
 
     private void updateGroupInfo(int type, String content) {
-        GroupInfoBean bean = new GroupInfoBean();
-        bean.setGroup_id(mGroupId);
-        if (null != mGroupInfo) {
-            bean.setId(mGroupInfo.getId());
-            switch (type) {
-                case 1:
-                    bean.setGroup_name(content);
-                    bean.setTopic(mGroupInfo.getTopic());
-                    break;
-                case 2:
-                    bean.setGroup_name(mGroupInfo.getGroup_name());
-                    bean.setTopic(content);
-                    break;
-            }
-            bean.setGroup_avatar(mGroupInfo.getGroup_avatar());
-            bean.setGroup_member_count(mGroupInfo.getGroup_member_count());
-            bean.setOwner_id(mGroupInfo.getOwner_id());
-            bean.setInfo_update_time(mGroupInfo.getInfo_update_time());
-            bean.setMember_update_time(mGroupInfo.getMember_update_time());
-            bean.setGroupMemberJson(mGroupInfo.getGroupMemberJson());
-            GroupInfoHelper.instance().toUpdateByGroupId(this, bean);
+        switch (type) {
+            case 1:
+                mGroupInfo.setGroup_name(content);
+                break;
+            case 2:
+                mGroupInfo.setTopic(content);
+                break;
         }
+
+        Intent intent = new Intent(IMGroupActivity.UPDATE_GROUP_INFO);
+        intent.putExtra("GroupInfo", mGroupInfo);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+
+        GroupInfoHelper.instance().toUpdateByGroupId(this, mGroupInfo);
     }
 
     @Override

@@ -1682,6 +1682,22 @@ public final class YouMaiMsg {
          */
         com.google.protobuf.ByteString
         getSrcUserNameBytes();
+
+        /**
+         * <code>optional string group_name = 18;</code>
+         */
+        boolean hasGroupName();
+
+        /**
+         * <code>optional string group_name = 18;</code>
+         */
+        String getGroupName();
+
+        /**
+         * <code>optional string group_name = 18;</code>
+         */
+        com.google.protobuf.ByteString
+        getGroupNameBytes();
     }
 
     /**
@@ -1864,6 +1880,12 @@ public final class YouMaiMsg {
                             com.google.protobuf.ByteString bs = input.readBytes();
                             bitField0_ |= 0x00010000;
                             srcUserName_ = bs;
+                            break;
+                        }
+                        case 146: {
+                            com.google.protobuf.ByteString bs = input.readBytes();
+                            bitField0_ |= 0x00020000;
+                            groupName_ = bs;
                             break;
                         }
                     }
@@ -2563,6 +2585,51 @@ public final class YouMaiMsg {
             }
         }
 
+        public static final int GROUP_NAME_FIELD_NUMBER = 18;
+        private Object groupName_;
+
+        /**
+         * <code>optional string group_name = 18;</code>
+         */
+        public boolean hasGroupName() {
+            return ((bitField0_ & 0x00020000) == 0x00020000);
+        }
+
+        /**
+         * <code>optional string group_name = 18;</code>
+         */
+        public String getGroupName() {
+            Object ref = groupName_;
+            if (ref instanceof String) {
+                return (String) ref;
+            } else {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                String s = bs.toStringUtf8();
+                if (bs.isValidUtf8()) {
+                    groupName_ = s;
+                }
+                return s;
+            }
+        }
+
+        /**
+         * <code>optional string group_name = 18;</code>
+         */
+        public com.google.protobuf.ByteString
+        getGroupNameBytes() {
+            Object ref = groupName_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (String) ref);
+                groupName_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
         private void initFields() {
             msgId_ = 0L;
             srcUserId_ = "";
@@ -2581,6 +2648,7 @@ public final class YouMaiMsg {
             srcMobile_ = "";
             srcSex_ = "";
             srcUserName_ = "";
+            groupName_ = "";
         }
 
         private byte memoizedIsInitialized = -1;
@@ -2647,6 +2715,9 @@ public final class YouMaiMsg {
             }
             if (((bitField0_ & 0x00010000) == 0x00010000)) {
                 output.writeBytes(17, getSrcUserNameBytes());
+            }
+            if (((bitField0_ & 0x00020000) == 0x00020000)) {
+                output.writeBytes(18, getGroupNameBytes());
             }
             getUnknownFields().writeTo(output);
         }
@@ -2725,6 +2796,10 @@ public final class YouMaiMsg {
             if (((bitField0_ & 0x00010000) == 0x00010000)) {
                 size += com.google.protobuf.CodedOutputStream
                         .computeBytesSize(17, getSrcUserNameBytes());
+            }
+            if (((bitField0_ & 0x00020000) == 0x00020000)) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeBytesSize(18, getGroupNameBytes());
             }
             size += getUnknownFields().getSerializedSize();
             memoizedSerializedSize = size;
@@ -2908,6 +2983,8 @@ public final class YouMaiMsg {
                 bitField0_ = (bitField0_ & ~0x00008000);
                 srcUserName_ = "";
                 bitField0_ = (bitField0_ & ~0x00010000);
+                groupName_ = "";
+                bitField0_ = (bitField0_ & ~0x00020000);
                 return this;
             }
 
@@ -3008,6 +3085,10 @@ public final class YouMaiMsg {
                     to_bitField0_ |= 0x00010000;
                 }
                 result.srcUserName_ = srcUserName_;
+                if (((from_bitField0_ & 0x00020000) == 0x00020000)) {
+                    to_bitField0_ |= 0x00020000;
+                }
+                result.groupName_ = groupName_;
                 result.bitField0_ = to_bitField0_;
                 onBuilt();
                 return result;
@@ -3091,6 +3172,11 @@ public final class YouMaiMsg {
                 if (other.hasSrcUserName()) {
                     bitField0_ |= 0x00010000;
                     srcUserName_ = other.srcUserName_;
+                    onChanged();
+                }
+                if (other.hasGroupName()) {
+                    bitField0_ |= 0x00020000;
+                    groupName_ = other.groupName_;
                     onChanged();
                 }
                 this.mergeUnknownFields(other.getUnknownFields());
@@ -4469,6 +4555,88 @@ public final class YouMaiMsg {
                 }
                 bitField0_ |= 0x00010000;
                 srcUserName_ = value;
+                onChanged();
+                return this;
+            }
+
+            private Object groupName_ = "";
+
+            /**
+             * <code>optional string group_name = 18;</code>
+             */
+            public boolean hasGroupName() {
+                return ((bitField0_ & 0x00020000) == 0x00020000);
+            }
+
+            /**
+             * <code>optional string group_name = 18;</code>
+             */
+            public String getGroupName() {
+                Object ref = groupName_;
+                if (!(ref instanceof String)) {
+                    com.google.protobuf.ByteString bs =
+                            (com.google.protobuf.ByteString) ref;
+                    String s = bs.toStringUtf8();
+                    if (bs.isValidUtf8()) {
+                        groupName_ = s;
+                    }
+                    return s;
+                } else {
+                    return (String) ref;
+                }
+            }
+
+            /**
+             * <code>optional string group_name = 18;</code>
+             */
+            public com.google.protobuf.ByteString
+            getGroupNameBytes() {
+                Object ref = groupName_;
+                if (ref instanceof String) {
+                    com.google.protobuf.ByteString b =
+                            com.google.protobuf.ByteString.copyFromUtf8(
+                                    (String) ref);
+                    groupName_ = b;
+                    return b;
+                } else {
+                    return (com.google.protobuf.ByteString) ref;
+                }
+            }
+
+            /**
+             * <code>optional string group_name = 18;</code>
+             */
+            public Builder setGroupName(
+                    String value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00020000;
+                groupName_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string group_name = 18;</code>
+             */
+            public Builder clearGroupName() {
+                bitField0_ = (bitField0_ & ~0x00020000);
+                groupName_ = getDefaultInstance().getGroupName();
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string group_name = 18;</code>
+             */
+            public Builder setGroupNameBytes(
+                    com.google.protobuf.ByteString value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00020000;
+                groupName_ = value;
                 onChanged();
                 return this;
             }
@@ -7735,7 +7903,7 @@ public final class YouMaiMsg {
                 "\n\020YouMai.Msg.proto\022\rcom.proto.msg\032\022YouMa" +
                         "i.Basic.proto\"W\n\007MsgFont\022\021\n\tfont_name\030\001 " +
                         "\001(\t\022\021\n\tfont_size\030\002 \001(\r\022\022\n\nfont_color\030\003 \001" +
-                        "(\r\022\022\n\nfont_style\030\004 \001(\r\"\333\003\n\007MsgData\022\016\n\006ms" +
+                        "(\r\022\022\n\nfont_style\030\004 \001(\r\"\357\003\n\007MsgData\022\016\n\006ms" +
                         "g_id\030\001 \001(\003\022\023\n\013src_user_id\030\002 \001(\t\022\024\n\014dest_" +
                         "user_id\030\003 \001(\t\022\020\n\010group_id\030\004 \001(\r\0220\n\014sessi" +
                         "on_type\030\005 \001(\0162\032.SessionTyp" +
@@ -7747,33 +7915,33 @@ public final class YouMaiMsg {
                         "gProperty\022\033\n\023force_push_ids_list\030\014 \001(\t\022\024" +
                         "\n\014src_realname\030\r \001(\t\022\022\n\nsrc_avatar\030\016 \001(\t" +
                         "\022\022\n\nsrc_mobile\030\017 \001(\t\022\017\n\007src_sex\030\020 \001(\t\022\025\n" +
-                        "\rsrc_user_name\030\021 \001(\t\"/\n\007ChatMsg\022$\n\004data\030" +
-                        "\001 \001(\0132\026.MsgData\"D\n\020Offline" +
-                        "MsgNotify\0220\n\020offline_msg_list\030\001 \001(\0132\026.co" +
-                        "m.proto.msg.MsgData\"w\n\013ChatMsg_Ack\022\017\n\007us" +
-                        "er_id\030\001 \001(\t\022\016\n\006msg_id\030\002 \001(\003\022-\n\010errer_no\030",
-                "\003 \001(\0162\033.ERRNO_CODE\022\030\n\020is" +
-                        "_target_online\030\024 \001(\010\"$\n\rOfflineMsgAck\022\023\n" +
-                        "\013msg_id_list\030\001 \001(\003\"S\n\nS2SChatMsg\022\017\n\007user" +
-                        "_id\030\001 \001(\t\022$\n\004data\030\002 \001(\0132\026." +
-                        "ChatMsg\022\016\n\006msg_id\030\003 \001(\003*\305\003\n\017IM_CONTENT_T" +
-                        "YPE\022\030\n\024IM_CONTENT_TYPE_TEXT\020\000\022!\n\035IM_CONT" +
-                        "ENT_TYPE_SHORT_MESSAGE\020\001\022\034\n\030IM_CONTENT_T" +
-                        "YPE_CONTACTS\020\002\022!\n\035IM_CONTENT_TYPE_RECOMM" +
-                        "END_APP\020\003\022\036\n\032IM_CONTENT_TYPE_NO_DISTURB\020" +
-                        "\004\022!\n\035IM_CONTENT_TYPE_LOCATIONSHARE\020\005\022\031\n\025",
-                "IM_CONTENT_TYPE_IMAGE\020\006\022\026\n\022IM_CONTENT_TY" +
-                        "PE_AT\020\007\022\027\n\023IM_CONTENT_TYPE_URL\020\010\022\031\n\025IM_C" +
-                        "ONTENT_TYPE_AUDIO\020\t\022\031\n\025IM_CONTENT_TYPE_V" +
-                        "IDEO\020\n\022\034\n\030IM_CONTENT_TYPE_LOCATION\020\013\022\030\n\024" +
-                        "IM_CONTENT_TYPE_FILE\020\014\022\033\n\027IM_CONTENT_TYP" +
-                        "E_BIZCARD\020\r\022\032\n\026IM_CONTENT_TYPE_KAQUAN\020\016*" +
-                        "\210\001\n\013MsgProperty\022\025\n\021MSG_PTOPERTY_NONE\020\001\022\030" +
-                        "\n\024MSG_PROPERTY_RECEIPT\020\002\022\027\n\023MSG_PROPERTY" +
-                        "_URGENT\020\003\022\026\n\022MSG_PROPERTY_QUOTE\020\004\022\027\n\023MSG" +
-                        "_PROPERTY_RECALL\020\005*B\n\013SessionType\022\027\n\023SES",
-                "SION_TYPE_SINGLE\020\001\022\032\n\026SESSION_TYPE_MULTI" +
-                        "CHAT\020\002"
+                        "\rsrc_user_name\030\021 \001(\t\022\022\n\ngroup_name\030\022 \001(\t" +
+                        "\"/\n\007ChatMsg\022$\n\004data\030\001 \001(\0132\026.com.proto.ms" +
+                        "g.MsgData\"D\n\020OfflineMsgNotify\0220\n\020offline" +
+                        "_msg_list\030\001 \001(\0132\026.MsgData\"" +
+                        "w\n\013ChatMsg_Ack\022\017\n\007user_id\030\001 \001(\t\022\016\n\006msg_i",
+                "d\030\002 \001(\003\022-\n\010errer_no\030\003 \001(\0162\033.com.proto.ba" +
+                        "sic.ERRNO_CODE\022\030\n\020is_target_online\030\024 \001(\010" +
+                        "\"$\n\rOfflineMsgAck\022\023\n\013msg_id_list\030\001 \001(\003\"S" +
+                        "\n\nS2SChatMsg\022\017\n\007user_id\030\001 \001(\t\022$\n\004data\030\002 " +
+                        "\001(\0132\026.ChatMsg\022\016\n\006msg_id\030\003 " +
+                        "\001(\003*\305\003\n\017IM_CONTENT_TYPE\022\030\n\024IM_CONTENT_TY" +
+                        "PE_TEXT\020\000\022!\n\035IM_CONTENT_TYPE_SHORT_MESSA" +
+                        "GE\020\001\022\034\n\030IM_CONTENT_TYPE_CONTACTS\020\002\022!\n\035IM" +
+                        "_CONTENT_TYPE_RECOMMEND_APP\020\003\022\036\n\032IM_CONT" +
+                        "ENT_TYPE_NO_DISTURB\020\004\022!\n\035IM_CONTENT_TYPE",
+                "_LOCATIONSHARE\020\005\022\031\n\025IM_CONTENT_TYPE_IMAG" +
+                        "E\020\006\022\026\n\022IM_CONTENT_TYPE_AT\020\007\022\027\n\023IM_CONTEN" +
+                        "T_TYPE_URL\020\010\022\031\n\025IM_CONTENT_TYPE_AUDIO\020\t\022" +
+                        "\031\n\025IM_CONTENT_TYPE_VIDEO\020\n\022\034\n\030IM_CONTENT" +
+                        "_TYPE_LOCATION\020\013\022\030\n\024IM_CONTENT_TYPE_FILE" +
+                        "\020\014\022\033\n\027IM_CONTENT_TYPE_BIZCARD\020\r\022\032\n\026IM_CO" +
+                        "NTENT_TYPE_KAQUAN\020\016*\210\001\n\013MsgProperty\022\025\n\021M" +
+                        "SG_PTOPERTY_NONE\020\001\022\030\n\024MSG_PROPERTY_RECEI" +
+                        "PT\020\002\022\027\n\023MSG_PROPERTY_URGENT\020\003\022\026\n\022MSG_PRO" +
+                        "PERTY_QUOTE\020\004\022\027\n\023MSG_PROPERTY_RECALL\020\005*B",
+                "\n\013SessionType\022\027\n\023SESSION_TYPE_SINGLE\020\001\022\032" +
+                        "\n\026SESSION_TYPE_MULTICHAT\020\002"
         };
         com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
                 new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -7799,7 +7967,7 @@ public final class YouMaiMsg {
         internal_static_com_proto_msg_MsgData_fieldAccessorTable = new
                 com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_proto_msg_MsgData_descriptor,
-                new String[]{"MsgId", "SrcUserId", "DestUserId", "GroupId", "SessionType", "CreateTime", "MsgContent", "ContentType", "MsgFont", "MsgStatus", "MsgProperty", "ForcePushIdsList", "SrcRealname", "SrcAvatar", "SrcMobile", "SrcSex", "SrcUserName",});
+                new String[]{"MsgId", "SrcUserId", "DestUserId", "GroupId", "SessionType", "CreateTime", "MsgContent", "ContentType", "MsgFont", "MsgStatus", "MsgProperty", "ForcePushIdsList", "SrcRealname", "SrcAvatar", "SrcMobile", "SrcSex", "SrcUserName", "GroupName",});
         internal_static_com_proto_msg_ChatMsg_descriptor =
                 getDescriptor().getMessageTypes().get(2);
         internal_static_com_proto_msg_ChatMsg_fieldAccessorTable = new

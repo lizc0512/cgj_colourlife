@@ -93,7 +93,10 @@ public class GroupInfoHelper {
      */
     public GroupInfoBean toQueryByGroupId(Context context, int groupId) {
         GroupInfoBeanDao dao = GreenDBIMManager.instance(context).getGroupInfoDao();
-        List<GroupInfoBean> list = dao.queryBuilder().where(GroupInfoBeanDao.Properties.Group_id.eq(groupId)).list();
+        List<GroupInfoBean> list = dao.queryBuilder()
+                .where(GroupInfoBeanDao.Properties.Group_id.eq(groupId))
+                .orderDesc(GroupInfoBeanDao.Properties.Id)
+                .list();
         if (!ListUtils.isEmpty(list)) {
             return list.get(0);
         }

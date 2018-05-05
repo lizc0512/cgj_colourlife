@@ -116,7 +116,7 @@ public class GroupNoticeActivity extends Activity {
                         try {
                             YouMaiGroup.GroupInfoModifyRsp ack = YouMaiGroup.GroupInfoModifyRsp.parseFrom(pduBase.body);
                             if (ack.getResult() == YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS) {
-                                Toast.makeText(GroupNoticeActivity.this, "修改群名称成功", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(GroupNoticeActivity.this, "修改群公告成功", Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent();
                                 intent.putExtra(GROUP_NOTICE, groupNotice);
                                 setResult(ChatGroupDetailsActivity.RESULT_CODE, intent);

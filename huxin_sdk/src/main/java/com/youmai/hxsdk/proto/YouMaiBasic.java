@@ -2820,7 +2820,11 @@ public final class YouMaiBasic {
         /**
          * <code>ERRNO_CODE_LOCATIONSHARE_NOT_INSIDE_TASK = 1302;</code>
          */
-        ERRNO_CODE_LOCATIONSHARE_NOT_INSIDE_TASK(47, 1302),;
+        ERRNO_CODE_LOCATIONSHARE_NOT_INSIDE_TASK(47, 1302),
+        /**
+         * <code>ERRNO_CODE_USER_NOT_IN_GROUP = 1303;</code>
+         */
+        ERRNO_CODE_USER_NOT_IN_GROUP(48, 1303),;
 
         /**
          * <code>ERRNO_CODE_OK = 0;</code>
@@ -3173,6 +3177,10 @@ public final class YouMaiBasic {
          * <code>ERRNO_CODE_LOCATIONSHARE_NOT_INSIDE_TASK = 1302;</code>
          */
         public static final int ERRNO_CODE_LOCATIONSHARE_NOT_INSIDE_TASK_VALUE = 1302;
+        /**
+         * <code>ERRNO_CODE_USER_NOT_IN_GROUP = 1303;</code>
+         */
+        public static final int ERRNO_CODE_USER_NOT_IN_GROUP_VALUE = 1303;
 
 
         public final int getNumber() {
@@ -3277,6 +3285,8 @@ public final class YouMaiBasic {
                     return ERRNO_CODE_LOCATIONSHARE_TASK_NOT_EXIST;
                 case 1302:
                     return ERRNO_CODE_LOCATIONSHARE_NOT_INSIDE_TASK;
+                case 1303:
+                    return ERRNO_CODE_USER_NOT_IN_GROUP;
                 default:
                     return null;
             }
@@ -4725,7 +4735,7 @@ public final class YouMaiBasic {
                         "ONTACT_COLLECTION_REQ\020\241\344\001\022 \n\032CID_CONTACT" +
                         "_COLLECTION_RSP\020\242\344\001*X\n\tUSER_TYPE\022\025\n\021USER",
                 "_TYPE_UNKNOWN\020\000\022\026\n\022USER_TYPE_PERSONAL\020\001\022" +
-                        "\034\n\030USER_TYPE_PUBLIC_ACCOUNT\020\002*\262\014\n\nERRNO_" +
+                        "\034\n\030USER_TYPE_PUBLIC_ACCOUNT\020\002*\325\014\n\nERRNO_" +
                         "CODE\022\021\n\rERRNO_CODE_OK\020\000\022\026\n\022ERRNO_CODE_DE" +
                         "FAULT\020\002\022$\n ERRNO_CODE_LOGIN_IN_OTHER_DEV" +
                         "ICE\020d\022\032\n\026ERRNO_CODE_NO_PROTOCOL\020e\022\036\n\032ERR" +
@@ -4765,20 +4775,21 @@ public final class YouMaiBasic {
                         "ODE_INVALID_IM_CHAT_EMPTY_BODY_NOT_ALLOW" +
                         "ED\020\262\t\022,\n\'ERRNO_CODE_LOCATIONSHARE_TASK_N",
                 "OT_EXIST\020\225\n\022-\n(ERRNO_CODE_LOCATIONSHARE_" +
-                        "NOT_INSIDE_TASK\020\226\n*\204\001\n\013Device_Type\022\025\n\021De" +
-                        "viceType_IPhone\020\001\022\026\n\022DeviceType_Android\020" +
-                        "\002\022\023\n\017DeviceType_IPad\020\003\022\031\n\025DeviceType_And" +
-                        "roidPad\020\004\022\026\n\022DeviceType_UNKNOWN\020\005*j\n\020USE" +
-                        "R_SHOW_STATUS\022\033\n\027USER_SHOW_STATUS_NORMAL" +
-                        "\020\000\022\034\n\030USER_SHOW_STATUS_DISABLE\020\001\022\033\n\027USER" +
-                        "_SHOW_STATUS_FROZEN\020\002*Q\n\tUserState\022\025\n\021US" +
-                        "ER_STATE_ONLINE\020\000\022\026\n\022USER_STATE_OFFLINE\020" +
-                        "\001\022\025\n\021USER_STATE_LOGOUT\020\003*v\n\nResultCode\022\027",
-                "\n\023RESULT_CODE_SUCCESS\020\001\022\024\n\020RESULT_CODE_F" +
-                        "AIL\020\002\022\030\n\024RESULT_CODE_NOT_FIND\020\003\022\037\n\033RESUL" +
-                        "T_CODE_PARAMETER_ERROR\020\004*K\n\nIM_CHANNEL\022\026" +
-                        "\n\022IM_CHANNEL_DEFAULT\020\000\022\022\n\016IM_CHANNEL_SMS" +
-                        "\020\001\022\021\n\rIM_CHANNEL_QQ\020\002"
+                        "NOT_INSIDE_TASK\020\226\n\022!\n\034ERRNO_CODE_USER_NO" +
+                        "T_IN_GROUP\020\227\n*\204\001\n\013Device_Type\022\025\n\021DeviceT" +
+                        "ype_IPhone\020\001\022\026\n\022DeviceType_Android\020\002\022\023\n\017" +
+                        "DeviceType_IPad\020\003\022\031\n\025DeviceType_AndroidP" +
+                        "ad\020\004\022\026\n\022DeviceType_UNKNOWN\020\005*j\n\020USER_SHO" +
+                        "W_STATUS\022\033\n\027USER_SHOW_STATUS_NORMAL\020\000\022\034\n" +
+                        "\030USER_SHOW_STATUS_DISABLE\020\001\022\033\n\027USER_SHOW" +
+                        "_STATUS_FROZEN\020\002*Q\n\tUserState\022\025\n\021USER_ST" +
+                        "ATE_ONLINE\020\000\022\026\n\022USER_STATE_OFFLINE\020\001\022\025\n\021",
+                "USER_STATE_LOGOUT\020\003*v\n\nResultCode\022\027\n\023RES" +
+                        "ULT_CODE_SUCCESS\020\001\022\024\n\020RESULT_CODE_FAIL\020\002" +
+                        "\022\030\n\024RESULT_CODE_NOT_FIND\020\003\022\037\n\033RESULT_COD" +
+                        "E_PARAMETER_ERROR\020\004*K\n\nIM_CHANNEL\022\026\n\022IM_" +
+                        "CHANNEL_DEFAULT\020\000\022\022\n\016IM_CHANNEL_SMS\020\001\022\021\n" +
+                        "\rIM_CHANNEL_QQ\020\002"
         };
         com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
                 new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {

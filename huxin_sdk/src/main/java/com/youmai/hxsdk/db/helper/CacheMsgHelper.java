@@ -8,6 +8,7 @@ import com.youmai.hxsdk.db.bean.CacheMsgBean;
 import com.youmai.hxsdk.db.dao.CacheMsgBeanDao;
 import com.youmai.hxsdk.db.manager.GreenDBIMManager;
 import com.youmai.hxsdk.im.cache.CacheMsgTxt;
+import com.youmai.hxsdk.utils.ListUtils;
 
 import org.greenrobot.greendao.query.DeleteQuery;
 import org.greenrobot.greendao.query.QueryBuilder;
@@ -500,13 +501,16 @@ public class CacheMsgHelper {
      * @param groupId
      * @return
      */
-
-    public List<CacheMsgBean> getCacheMsgGroupId(Context context, int groupId) {
+    public CacheMsgBean toQueryCacheMsgGroupId(Context context, int groupId) {
         CacheMsgBeanDao cacheMsgBeanDao = GreenDBIMManager.instance(context).getCacheMsgDao();
-        return cacheMsgBeanDao.queryBuilder()
+        List<CacheMsgBean> list = cacheMsgBeanDao.queryBuilder()
                 .where(CacheMsgBeanDao.Properties.GroupId.eq(groupId))
                 .orderDesc(CacheMsgBeanDao.Properties.Id)
                 .list();
+        if (!ListUtils.isEmpty(list)) {
+            return list.get(0);
+        }
+        return null;
     }
 
 

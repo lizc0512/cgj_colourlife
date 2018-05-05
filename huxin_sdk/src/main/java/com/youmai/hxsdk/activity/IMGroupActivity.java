@@ -217,8 +217,20 @@ public class IMGroupActivity extends SdkBaseActivity implements
                     }
                 }
             } else if (UPDATE_GROUP_INFO.equals(action)) {
-                mGroupInfo = GroupInfoHelper.instance().toQueryByGroupId(IMGroupActivity.this, groupId);
+                GroupInfoBean info = intent.getParcelableExtra("GroupInfo");
+                String topic = info.getTopic();
+                String groupName = info.getGroup_name();
+
+                if (!TextUtils.isEmpty(topic)) {
+                    mGroupInfo.setTopic(topic);
+                }
+
+                if (!TextUtils.isEmpty(groupName)) {
+                    mGroupInfo.setGroup_name(groupName);
+                }
+
                 updateGroupUI(mGroupInfo);
+
             } else if (UPDATE_GROUP_REMOVE.equals(action) || UPDATE_GROUP_ADD.equals(action)) {
                 int id = intent.getIntExtra("groupId", 0);
                 ArrayList<String> changeList = intent.getStringArrayListExtra("changeList");

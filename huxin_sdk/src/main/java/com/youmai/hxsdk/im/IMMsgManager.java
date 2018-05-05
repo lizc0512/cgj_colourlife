@@ -27,6 +27,8 @@ import com.youmai.hxsdk.chat.ContentLocation;
 import com.youmai.hxsdk.chat.ContentText;
 import com.youmai.hxsdk.config.AppConfig;
 import com.youmai.hxsdk.config.FileConfig;
+import com.youmai.hxsdk.db.bean.GroupInfoBean;
+import com.youmai.hxsdk.db.helper.GroupInfoHelper;
 import com.youmai.hxsdk.entity.RespBaseBean;
 import com.youmai.hxsdk.http.DownloadListener;
 import com.youmai.hxsdk.http.FileAsyncTaskDownload;
@@ -69,6 +71,8 @@ import me.leolin.shortcutbadger.ShortcutBadger;
 public class IMMsgManager {
 
     private static final String TAG = IMMsgManager.class.getSimpleName();
+
+    public static final String UPDATE_GROUP_INFO = "UPDATE_GROUP_INFO"; //群信息改变的广播
 
     private Context mContext;
 
@@ -304,13 +308,39 @@ public class IMMsgManager {
 
                 if (type == YouMaiGroup.GroupInfoModifyType.MODIFY_NAME) {
                     YouMaiGroup.GroupInfo groupInfo = notify.getGroupInfo();
-                    List<CacheMsgBean> list = CacheMsgHelper.instance().getCacheMsgGroupId(mContext, groupId);
-                    if (list != null && list.size() > 0) {
-                        CacheMsgBean bean = list.get(0);
-                        String groupName = groupInfo.getGroupName();
+                    CacheMsgBean bean = CacheMsgHelper.instance().toQueryCacheMsgGroupId(mContext, groupId);
+                    String groupName = groupInfo.getGroupName();
+                    if (bean != null) {
                         bean.setTargetName(groupName);
                         CacheMsgHelper.instance().updateList(mContext, bean);
                     }
+
+                    GroupInfoBean info = GroupInfoHelper.instance().toQueryByGroupId(mContext, groupId);
+                    if (info == null) {
+                        info = new GroupInfoBean();
+                    }
+                    info.setGroup_name(groupName);
+                    GroupInfoHelper.instance().toUpdateByGroupId(mContext, info);
+
+                    Intent intent = new Intent(UPDATE_GROUP_INFO);
+                    intent.putExtra("GroupInfo", info);
+                    LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
+
+                } else if (type == YouMaiGroup.GroupInfoModifyType.MODIFY_TOPIC) {
+                    YouMaiGroup.GroupInfo groupInfo = notify.getGroupInfo();
+                    String topic = groupInfo.getTopic();
+
+                    GroupInfoBean info = GroupInfoHelper.instance().toQueryByGroupId(mContext, groupId);
+                    if (info == null) {
+                        info = new GroupInfoBean();
+                    }
+
+                    info.setTopic(topic);
+                    GroupInfoHelper.instance().toUpdateByGroupId(mContext, info);
+
+                    Intent intent = new Intent(UPDATE_GROUP_INFO);
+                    intent.putExtra("GroupInfo", info);
+                    LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
                 }
 
             } catch (InvalidProtocolBufferException e) {

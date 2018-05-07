@@ -70,8 +70,7 @@
         <activity
             android:name=".module.MainActivity1"
             android:screenOrientation="portrait"
-            android:theme="@style/BaseAppTheme"
-            android:windowSoftInputMode="stateUnspecified|adjustPan" />
+            android:theme="@style/AppTheme" />
 
         <activity
             android:name=".MainActivity"

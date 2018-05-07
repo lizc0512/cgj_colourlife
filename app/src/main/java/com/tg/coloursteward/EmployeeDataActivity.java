@@ -425,23 +425,14 @@ public class EmployeeDataActivity extends BaseActivity {
                 mAuthTimeUtils.IsAuthTime(EmployeeDataActivity.this, Contants.Html5.YJ, "xyj", "1", "xyj", "");
                 break;
             case R.id.ll_sendsms:// 发送短信
-                String mobiles = PhoneList.get(0).phone;
-                if (Tools.checkTelephoneNumber(mobiles)) {
-                    //Intent intent1 = new Intent(Intent.ACTION_SENDTO,Uri.parse("smsto:" + mobiles));
-                    //startActivity(intent1);
+                Intent intent = new Intent(this, IMConnectionActivity.class);
+                intent.putExtra(IMConnectionActivity.DST_UUID, item.getUid());
+                intent.putExtra(IMConnectionActivity.DST_USERNAME, item.getUsername());
+                intent.putExtra(IMConnectionActivity.DST_NAME, item.getRealname());
+                intent.putExtra(IMConnectionActivity.DST_AVATAR, item.getAvatar());
+                //intent.putExtra(IMConnectionActivity.DST_PHONE, mobile);
+                startActivity(intent);
 
-                    Intent intent = new Intent();
-                    intent.setClass(EmployeeDataActivity.this, IMConnectionActivity.class);
-                    intent.putExtra(IMConnectionActivity.DST_UUID, item.getUid());
-                    intent.putExtra(IMConnectionActivity.DST_USERNAME, item.getUsername());
-                    intent.putExtra(IMConnectionActivity.DST_NAME, item.getRealname());
-                    intent.putExtra(IMConnectionActivity.DST_AVATAR, item.getAvatar());
-                    //intent.putExtra(IMConnectionActivity.DST_PHONE, mobile);
-                    startActivity(intent);
-
-                } else {
-                    ToastFactory.showToast(EmployeeDataActivity.this, "手机号有误，无法发送");
-                }
                 break;
             case R.id.ll_redpackets:// 转账
                 if (balance <= 0) {

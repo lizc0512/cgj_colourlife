@@ -1,32 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="@color/white"
-    android:orientation="horizontal" >
+    android:orientation="horizontal">
 
     <com.tg.coloursteward.view.ManageMentLinearlayout
         android:id="@+id/ll_mail"
         android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_weight="1"
         android:background="@drawable/arrow_item_selector"
         android:clickable="true"
         android:gravity="center"
         android:orientation="vertical"
         android:paddingBottom="16dp"
-        android:paddingTop="15dp" >
+        android:paddingTop="15dp">
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <FrameLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:background="@drawable/cycle_beijing" >
+                android:background="@drawable/cycle_beijing">
 
                 <TextView
                     android:id="@+id/tv_mail"
@@ -58,25 +58,25 @@
     <com.tg.coloursteward.view.ManageMentLinearlayout
         android:id="@+id/ll_examineNum"
         android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_weight="1"
         android:background="@drawable/arrow_item_selector"
         android:clickable="true"
         android:gravity="center"
         android:orientation="vertical"
         android:paddingBottom="16dp"
-        android:paddingTop="15dp" >
+        android:paddingTop="15dp">
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <FrameLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:background="@drawable/cycle_beijing" >
+                android:background="@drawable/cycle_beijing">
 
                 <TextView
                     android:id="@+id/tv_examineNum"
@@ -108,26 +108,25 @@
     <com.tg.coloursteward.view.ManageMentLinearlayout
         android:id="@+id/ll_leave"
         android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_weight="1"
         android:background="@drawable/arrow_item_selector"
         android:clickable="true"
         android:gravity="center"
         android:orientation="vertical"
         android:paddingBottom="16dp"
-        android:paddingTop="15dp" >
+        android:paddingTop="15dp">
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <FrameLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:background="@drawable/leave" >
-            </FrameLayout>
+                android:background="@drawable/leave"></FrameLayout>
 
             <TextView
                 style="@style/hint_15"
@@ -149,25 +148,25 @@
     <com.tg.coloursteward.view.ManageMentLinearlayout
         android:id="@+id/ll_sign"
         android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_weight="1"
         android:background="@drawable/arrow_item_selector"
         android:clickable="true"
         android:gravity="center"
         android:orientation="vertical"
         android:paddingBottom="16dp"
-        android:paddingTop="15dp" >
+        android:paddingTop="15dp">
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <FrameLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:background="@drawable/work_sign" >
+                android:background="@drawable/work_sign">
 
             </FrameLayout>
 

@@ -1,127 +1,122 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scrollView"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/base_color"
-    android:orientation="vertical" >
+    android:layout_height="wrap_content">
 
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:background="@color/base_color"
+        android:orientation="vertical">
+
+        <com.youth.banner.Banner xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/banner"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:visibility="gone"
+            app:indicator_drawable_selected="@drawable/ad_dot_h"
+            app:indicator_drawable_unselected="@drawable/ad_dot" />
+
+        <include layout="@layout/color_title" />
+
+        <include layout="@layout/fragment_work_item_1" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/margin_10"
+            android:background="@color/base_color" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
             android:orientation="vertical">
-
-            <com.youth.banner.Banner xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/banner"
-                android:layout_width="match_parent"
-                android:layout_height="150dp"
-                android:visibility="gone"
-                app:indicator_drawable_selected="@drawable/ad_dot_h"
-                app:indicator_drawable_unselected="@drawable/ad_dot" />
-
-            <include layout="@layout/color_title" />
-
-            <include layout="@layout/fragment_work_item_1" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/margin_10"
-                android:background="@color/base_color" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:orientation="vertical" >
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/white" >
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="15dp"
-                        android:text="常用应用"
-                        android:textColor="@color/black"
-                        android:textSize="15sp"
-                        android:layout_alignParentTop="true"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentStart="true" />
-                </RelativeLayout>
-
-                <include layout="@layout/line_horizontal_02" />
-
-                <com.tg.coloursteward.view.MyGridView
-                    android:id="@+id/gridview1"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:horizontalSpacing="0.0dip"
-                    android:listSelector="@null"
-                    android:numColumns="4"
-                    android:scrollbars="none"
-                    android:stretchMode="columnWidth"
-                    android:verticalSpacing="0.0dip" />
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/margin_10"
-                android:background="@color/base_color" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:orientation="vertical" >
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/white" >
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="15dp"
-                        android:text="其他应用"
-                        android:textColor="@color/black"
-                        android:textSize="15sp"  />
-                </RelativeLayout>
-
-                <include layout="@layout/line_horizontal_02" />
-
-                <com.tg.coloursteward.view.MyGridView
-                    android:id="@+id/gridview2"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:horizontalSpacing="0.0dip"
-                    android:listSelector="@null"
-                    android:numColumns="4"
-                    android:scrollbars="none"
-                    android:stretchMode="columnWidth"
-                    android:verticalSpacing="0.0dip" />
-            </LinearLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="@dimen/margin_20"
-                android:background="@color/base_color"
-                android:paddingTop="@dimen/margin_20" >
+                android:layout_height="wrap_content"
+                android:background="@color/white">
 
                 <TextView
-                    style="@style/hint_15"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:text="把社区服务做到家" />
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:padding="15dp"
+                    android:text="常用应用"
+                    android:textColor="@color/black"
+                    android:textSize="15sp" />
             </RelativeLayout>
-        </LinearLayout>
-    </ScrollView>
 
-</LinearLayout>
+            <include layout="@layout/line_horizontal_02" />
+
+            <com.tg.coloursteward.view.MyGridView
+                android:id="@+id/gridview1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:horizontalSpacing="0.0dip"
+                android:listSelector="@null"
+                android:numColumns="4"
+                android:scrollbars="none"
+                android:stretchMode="columnWidth"
+                android:verticalSpacing="0.0dip" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/margin_10"
+            android:background="@color/base_color" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="15dp"
+                    android:text="其他应用"
+                    android:textColor="@color/black"
+                    android:textSize="15sp" />
+            </RelativeLayout>
+
+            <include layout="@layout/line_horizontal_02" />
+
+            <com.tg.coloursteward.view.MyGridView
+                android:id="@+id/gridview2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:horizontalSpacing="0.0dip"
+                android:listSelector="@null"
+                android:numColumns="4"
+                android:scrollbars="none"
+                android:stretchMode="columnWidth"
+                android:verticalSpacing="0.0dip" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_20"
+            android:background="@color/base_color"
+            android:paddingTop="@dimen/margin_20">
+
+            <TextView
+                style="@style/hint_15"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:text="把社区服务做到家" />
+        </RelativeLayout>
+    </LinearLayout>
+</ScrollView>
+

@@ -133,7 +133,7 @@ public class IMFilePreviewActivity extends SdkBaseActivity {
 
         boolean isFileExist = new File(FileConfig.getBigFileDownLoadPath(), cacheMsgFile.getFileName()).exists();
         if ((cacheMsgBean.getMsgType() == CacheMsgBean.RECEIVE_FILE && !cacheMsgBean.isRightUI()&& isFileExist)
-                || (cacheMsgBean.getMsgType() == CacheMsgBean.RECEIVE_FILE && cacheMsgBean.isRightUI())) {
+                || (cacheMsgBean.getMsgType() == CacheMsgBean.SEND_FILE && cacheMsgBean.isRightUI())) {
             isOpenFile = true;
             ll_progress_parent.setVisibility(View.GONE);
             tv_open_file.setVisibility(View.VISIBLE);

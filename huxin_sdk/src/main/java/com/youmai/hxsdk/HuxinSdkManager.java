@@ -763,7 +763,7 @@ public class HuxinSdkManager {
 
         IMContentUtil imContentUtil = new IMContentUtil();
         imContentUtil.appendBigFileId(fileId, fileName, fileSize);
-        msgData.setMsgContent(imContentUtil.serializeToString());
+        msgData.setMsgContent(imContentUtil.serializeBigFileToString());
 
         YouMaiMsg.ChatMsg.Builder builder = YouMaiMsg.ChatMsg.newBuilder();
         builder.setData(msgData);

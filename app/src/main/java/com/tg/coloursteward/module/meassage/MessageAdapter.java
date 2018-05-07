@@ -18,16 +18,13 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.tg.coloursteward.R;
-import com.tg.coloursteward.constant.Contants;
+import com.tg.coloursteward.entity.MsgConfig;
 import com.tg.coloursteward.util.StringUtils;
 import com.youmai.hxsdk.config.ColorsConfig;
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
-import com.youmai.hxsdk.db.helper.GroupInfoHelper;
-import com.youmai.hxsdk.entity.GroupAndMember;
 import com.youmai.hxsdk.im.IMMsgManager;
 import com.youmai.hxsdk.im.cache.CacheMsgTxt;
 import com.youmai.hxsdk.utils.GlideRoundTransform;
-import com.youmai.hxsdk.utils.ListUtils;
 import com.youmai.hxsdk.utils.TimeUtils;
 import com.youmai.hxsdk.view.chat.emoticon.utils.EmoticonHandler;
 import com.youmai.hxsdk.view.chat.utils.Utils;
@@ -64,7 +61,42 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public MessageAdapter(Context context) {
         mContext = context;
         messageList = new ArrayList<>();
-        messageList.add(new ExCacheMsgBean());
+        init(messageList);
+    }
+
+
+    private void init(List<ExCacheMsgBean> list) {
+
+        MsgConfig.ContentBean.DataBean item1 = new MsgConfig.ContentBean.DataBean();
+        item1.setComefrom("审批");
+        item1.setTitle("暂无新消息");
+        item1.setOwner_name("暂无");
+        item1.setClient_code("sp");
+
+        MsgConfig.ContentBean.DataBean item2 = new MsgConfig.ContentBean.DataBean();
+        item2.setComefrom("公告通知");
+        item2.setTitle("暂无新消息");
+        item2.setOwner_name("暂无");
+        item2.setClient_code("ggtz");
+
+        MsgConfig.ContentBean.DataBean item3 = new MsgConfig.ContentBean.DataBean();
+        item3.setComefrom("邮件");
+        item3.setTitle("暂无新消息");
+        item3.setOwner_name("暂无");
+        item3.setClient_code("yj");
+
+        MsgConfig.ContentBean.DataBean item4 = new MsgConfig.ContentBean.DataBean();
+        item4.setComefrom("蜜蜂协同");
+        item4.setTitle("暂无新消息");
+        item4.setOwner_name("暂无");
+        item4.setClient_code("case");
+
+        list.add(new ExCacheMsgBean());
+        list.add(new ExCacheMsgBean(item1));
+        list.add(new ExCacheMsgBean(item2));
+        list.add(new ExCacheMsgBean(item3));
+        list.add(new ExCacheMsgBean(item4));
+
     }
 
 
@@ -72,10 +104,25 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         return messageList;
     }
 
-    public void addHeadItem(ExCacheMsgBean item) {
-        if (messageList.size() > 0) {
-            messageList.add(1, item);
-            notifyDataSetChanged();
+    public void addPushMsgItem(ExCacheMsgBean msgBean) {
+        if (msgBean.getUiType() == MessageAdapter.ADAPTER_TYPE_PUSHMSG) {
+            MsgConfig.ContentBean.DataBean bean = msgBean.getPushMsg();
+            String comefrom = bean.getComefrom();
+
+            ExCacheMsgBean item = null;
+            for (int i = 0; i < messageList.size(); i++) {
+                item = messageList.get(i);
+                if (item.getUiType() == MessageAdapter.ADAPTER_TYPE_PUSHMSG
+                        && item.getPushMsg().getComefrom().equals(comefrom)) {
+                    break;
+                }
+            }
+            if (item != null) {
+                boolean isChanged = Collections.replaceAll(messageList, item, msgBean);
+                if (isChanged) {
+                    notifyDataSetChanged();
+                }
+            }
         }
     }
 
@@ -139,7 +186,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             View view = inflater.inflate(R.layout.message_list_item_header_search, parent, false);
             return new MsgItemSearch(view);
         } else if (viewType == ADAPTER_TYPE_PUSHMSG) {
-            View view = inflater.inflate(R.layout.single_message_item_layout, parent, false);
+            View view = inflater.inflate(R.layout.push_message_item_layout, parent, false);
             return new MsgItemPush(view);
         } else if (viewType == ADAPTER_TYPE_SINGLE) {
             View view = inflater.inflate(R.layout.single_message_item_layout, parent, false);
@@ -167,17 +214,26 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
             String comefrom = model.getPushMsg().getComefrom();
             String pushTime = model.getPushMsg().getHomePushTime();
-            try {
-                Calendar calendar = TimeUtils.parseDate(pushTime, TimeUtils.DEFAULT_DATE_FORMAT);
-                long millis = calendar.getTimeInMillis();
+            String owner_name = model.getPushMsg().getOwner_name();
+            if (!TextUtils.isEmpty(pushTime)) {
+                try {
+                    Calendar calendar = TimeUtils.parseDate(pushTime, TimeUtils.DEFAULT_DATE_FORMAT);
+                    long millis = calendar.getTimeInMillis();
 
-                String time = TimeFormatUtil.convertTimeMillli(mContext, millis);
-                itemView.message_time.setText(time);
-            } catch (ParseException e) {
-                e.printStackTrace();
+                    String time = TimeFormatUtil.convertTimeMillli(mContext, millis);
+                    itemView.message_time.setText(time);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
             }
 
             itemView.message_name.setText(comefrom);
+
+            if (!TextUtils.isEmpty(owner_name)) {
+                String format = mContext.getResources().getString(R.string.group_item_info);
+                itemView.message_info.setText(String.format(format, owner_name));
+            }
+
             itemView.message_type.setText(model.getPushMsg().getTitle());
 
             if (comefrom.equals("审批")) {//审批
@@ -186,7 +242,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 itemView.message_icon.setImageResource(R.drawable.yj);
             } else if (comefrom.equals("蜜蜂协同")) {//蜜蜂协同
                 itemView.message_icon.setImageResource(R.drawable.case_home);
-            } else if (comefrom.equals("通知") || comefrom.equals("公告") || comefrom.equals("通知公告")) {//公告通知
+            } else if (comefrom.equals("通知") || comefrom.equals("公告") || comefrom.equals("公告通知")) {//公告通知
                 itemView.message_icon.setImageResource(R.drawable.ggtz);
             } else {
                 String url = model.getPushMsg().getICON();
@@ -436,7 +492,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     protected class MsgItemPush extends RecyclerView.ViewHolder {
         ImageView message_icon, message_callBtn;
-        TextView message_name, message_type, message_time;
+        TextView message_name, message_info, message_type, message_time;
         QBadgeView message_status;
         RelativeLayout message_item;
 
@@ -447,6 +503,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             message_callBtn = (ImageView) itemView.findViewById(R.id.message_call_btn);
             message_name = (TextView) itemView.findViewById(R.id.message_name);
             message_type = (TextView) itemView.findViewById(R.id.message_type);
+            message_info = (TextView) itemView.findViewById(R.id.message_info);
             message_time = (TextView) itemView.findViewById(R.id.message_time);
             message_status = new QBadgeView(mContext);
             message_status.bindTarget(message_icon);

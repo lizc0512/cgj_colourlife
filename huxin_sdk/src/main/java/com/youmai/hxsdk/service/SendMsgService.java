@@ -11,6 +11,7 @@ import android.util.Log;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.qiniu.android.storage.UpProgressHandler;
 import com.youmai.hxsdk.HuxinSdkManager;
+import com.youmai.hxsdk.config.ColorsConfig;
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
 import com.youmai.hxsdk.im.cache.CacheMsgEmotion;
 import com.youmai.hxsdk.im.cache.CacheMsgFile;
@@ -81,6 +82,9 @@ public class SendMsgService extends IntentService {
 
             isGroup = intent.getBooleanExtra("isGroup", false);
             groupName = intent.getStringExtra("groupName");
+            if (groupName == null) {
+                groupName = ColorsConfig.GROUP_DEFAULT_NAME;
+            }
 
             SendMsg sendMsg = new SendMsg(msgData, msgDataFrom);
             sendMsg(sendMsg);

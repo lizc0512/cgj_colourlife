@@ -334,7 +334,8 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
         mMessageAdapter.setOnLongItemClickListener(new MessageAdapter.OnItemLongClickListener() {
             @Override
             public void onItemLongClick(View v, ExCacheMsgBean bean) {
-                if (bean.getUiType() != MessageAdapter.ADAPTER_TYPE_SEARCH) {
+                if (bean.getUiType() == MessageAdapter.ADAPTER_TYPE_SINGLE
+                        || bean.getUiType() == MessageAdapter.ADAPTER_TYPE_GROUP) {
                     delPopUp(v, bean);
                 }
             }
@@ -394,7 +395,7 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
                     if (list != null && list.size() > 0) {
                         for (MsgConfig.ContentBean.DataBean item : list) {
                             ExCacheMsgBean bean = new ExCacheMsgBean(item);
-                            mMessageAdapter.addHeadItem(bean);
+                            mMessageAdapter.addPushMsgItem(bean);
                         }
                         mEmptyView.setVisibility(View.GONE);
                     }

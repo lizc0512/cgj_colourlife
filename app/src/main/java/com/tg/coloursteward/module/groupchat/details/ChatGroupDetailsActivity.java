@@ -482,7 +482,6 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
         if (!isGroupOwner) {
             deleteGroup(2);
         } else {
-            Toast.makeText(mContext, "群主暂时不能退群", Toast.LENGTH_SHORT).show();
             transOwner();
         }
     }

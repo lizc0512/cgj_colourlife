@@ -144,6 +144,7 @@ public class IMGroupActivity extends SdkBaseActivity implements
     private final int GET_PERMISSION_REQUEST = 400; //权限申请自定义码
 
     public static final int RESULT_CODE_CLEAN = 501;
+    public static final int MOTIFY_GOUPINFO = 502;
 
     public static final long MAX_SENDER_FILE = 50 * 1024 * 1024;
 
@@ -1026,6 +1027,9 @@ public class IMGroupActivity extends SdkBaseActivity implements
         } else if (requestCode == REQUEST_CODE_DETAIL) {
             if (resultCode == RESULT_CODE_CLEAN) {
                 iMGroupAdapter.clearMsg();
+            } else if (resultCode == MOTIFY_GOUPINFO) {
+                GroupInfoBean info = data.getParcelableExtra("GroupInfo");
+                updateGroupUI(info);
             }
 
         }

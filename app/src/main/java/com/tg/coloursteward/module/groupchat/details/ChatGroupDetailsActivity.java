@@ -34,6 +34,7 @@ import com.youmai.hxsdk.activity.IMGroupActivity;
 import com.youmai.hxsdk.activity.SdkBaseActivity;
 import com.youmai.hxsdk.adapter.PaddingItemDecoration;
 import com.youmai.hxsdk.config.ColorsConfig;
+import com.youmai.hxsdk.db.bean.CacheMsgBean;
 import com.youmai.hxsdk.db.bean.ContactBean;
 import com.youmai.hxsdk.db.bean.GroupInfoBean;
 import com.youmai.hxsdk.db.helper.CacheMsgHelper;
@@ -76,6 +77,11 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
     private static final int REQUEST_CODE_TRANS_OWNER = 105;
     public static final int RESULT_CODE = 201;
 
+
+    private static final int MODIFIY_GROUPNAME = 1;
+    private static final int MODIFIY_GROUPTOPIC = 2;
+
+
     private int mGroupId;
     private boolean isGroupOwner = false;  //是否群主
 
@@ -101,6 +107,7 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
     private GroupInfoBean mGroupInfo;
 
     private boolean isClearUp;
+    private boolean isMotifyGropInfo;
 
     private LocalBroadcastManager localBroadcastManager;
     private LocalMsgReceiver mLocalMsgReceiver;
@@ -114,7 +121,7 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            if (IMMsgManager.UPDATE_GROUP_INFO.equals(action)) {
+            if (IMGroupActivity.UPDATE_GROUP_INFO.equals(action)) {
                 GroupInfoBean info = intent.getParcelableExtra("GroupInfo");
                 String topic = info.getTopic();
                 String groupName = info.getGroup_name();
@@ -143,7 +150,7 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
         mLocalMsgReceiver = new LocalMsgReceiver();
 
         IntentFilter filter = new IntentFilter();
-        filter.addAction(IMMsgManager.UPDATE_GROUP_INFO);
+        filter.addAction(IMGroupActivity.UPDATE_GROUP_INFO);
         localBroadcastManager.registerReceiver(mLocalMsgReceiver, filter);
 
         initView();
@@ -573,11 +580,11 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
             } else if (requestCode == REQUEST_CODE_MODIFY_NAME) {
                 String groupName = data.getStringExtra(GroupNameActivity.GROUP_NAME);
                 mTvGroupName.setText(groupName);
-                updateGroupInfo(1, groupName);
+                updateGroupInfo(MODIFIY_GROUPNAME, groupName);
             } else if (requestCode == REQUEST_CODE_MODIFY_NOTICE_TOPIC) {
                 String groupNotice = data.getStringExtra(GroupNoticeActivity.GROUP_NOTICE);
                 mtvNoticeContent.setText(groupNotice);
-                updateGroupInfo(2, groupNotice);
+                updateGroupInfo(MODIFIY_GROUPTOPIC, groupNotice);
             } else if (requestCode == REQUEST_CODE_TRANS_OWNER) {
                 isGroupOwner = false;
                 reqGroupMembers();
@@ -615,25 +622,42 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
 
     private void updateGroupInfo(int type, String content) {
         switch (type) {
-            case 1:
+            case MODIFIY_GROUPNAME:
                 mGroupInfo.setGroup_name(content);
+                CacheMsgBean bean = CacheMsgHelper.instance().toQueryCacheMsgGroupId(mContext, mGroupId);
+                if (bean != null) {
+                    bean.setTargetName(content);
+                    CacheMsgHelper.instance().updateList(mContext, bean);
+                }
+
+                GroupInfoBean info = GroupInfoHelper.instance().toQueryByGroupId(mContext, mGroupId);
+                if (info == null) {
+                    info = new GroupInfoBean();
+                }
+                info.setGroup_name(content);
+                GroupInfoHelper.instance().toUpdateByGroupId(mContext, info);
+
+                isMotifyGropInfo = true;
+
                 break;
-            case 2:
+            case MODIFIY_GROUPTOPIC:
                 mGroupInfo.setTopic(content);
                 break;
         }
 
-        Intent intent = new Intent(IMGroupActivity.UPDATE_GROUP_INFO);
-        intent.putExtra("GroupInfo", mGroupInfo);
-        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
 
-        GroupInfoHelper.instance().toUpdateByGroupId(this, mGroupInfo);
     }
 
     @Override
     public void onBackPressed() {
         if (isClearUp) {
             setResult(IMGroupActivity.RESULT_CODE_CLEAN);
+        }
+
+        if (isMotifyGropInfo) {
+            Intent intent = new Intent();
+            intent.putExtra("GroupInfo", mGroupInfo);
+            setResult(IMGroupActivity.MOTIFY_GOUPINFO, intent);
         }
         finish();
     }

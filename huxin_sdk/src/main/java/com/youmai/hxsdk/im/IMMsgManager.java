@@ -72,8 +72,6 @@ public class IMMsgManager {
 
     private static final String TAG = IMMsgManager.class.getSimpleName();
 
-    public static final String UPDATE_GROUP_INFO = "UPDATE_GROUP_INFO"; //群信息改变的广播
-
     private Context mContext;
 
     private List<IMMsgCallback> imMsgCallbackList;
@@ -323,7 +321,7 @@ public class IMMsgManager {
                     info.setGroup_name(groupName);
                     GroupInfoHelper.instance().toUpdateByGroupId(mContext, info);
 
-                    Intent intent = new Intent(UPDATE_GROUP_INFO);
+                    Intent intent = new Intent(IMGroupActivity.UPDATE_GROUP_INFO);
                     intent.putExtra("GroupInfo", info);
                     LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
 
@@ -339,7 +337,7 @@ public class IMMsgManager {
                     info.setTopic(topic);
                     GroupInfoHelper.instance().toUpdateByGroupId(mContext, info);
 
-                    Intent intent = new Intent(UPDATE_GROUP_INFO);
+                    Intent intent = new Intent(IMGroupActivity.UPDATE_GROUP_INFO);
                     intent.putExtra("GroupInfo", info);
                     LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
                 }

@@ -23,7 +23,7 @@
             android:textColor="@color/hxs_color_white"
             android:textSize="15sp"
             android:visibility="gone" />
-        
+
         <TextView
             android:id="@+id/global_search_bar_cancel"
             android:layout_width="wrap_content"
@@ -49,9 +49,10 @@
             android:background="@drawable/global_contacts_search_bg"
             android:drawablePadding="12dp"
             android:hint="搜索"
-            android:maxLines="1"
+            android:imeOptions="actionSearch"
             android:paddingLeft="4dp"
             android:paddingRight="8dp"
+            android:singleLine="true"
             android:textColorHint="@color/hxb_subtitle_color"
             android:textSize="15sp" />
     </RelativeLayout>

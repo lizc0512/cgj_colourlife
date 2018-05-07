@@ -1,9 +1,13 @@
 package com.tg.coloursteward.module.search;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
 import com.tg.coloursteward.module.search.app.AppsSearchFragment;
@@ -79,6 +83,16 @@ public class GlobalSearchActivity extends AppCompatActivity implements View.OnCl
                 transaction.commit();
             }
         });
+        mSearchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    hideSoftKeyboard();
+                    return true;
+                }
+                return false;
+            }
+        });
 
         mBtnBack = (TextView) findViewById(R.id.global_search_bar_cancel);
         mBtnBack.setOnClickListener(this);
@@ -129,6 +143,11 @@ public class GlobalSearchActivity extends AppCompatActivity implements View.OnCl
             }
             transaction.commit();
         }
+    }
+
+    private void hideSoftKeyboard() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(mSearchEditText.getWindowToken(), 0);
     }
 
 }

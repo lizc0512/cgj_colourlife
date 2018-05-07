@@ -340,11 +340,12 @@ public class IMGroupActivity extends SdkBaseActivity implements
     }
 
     void updateGroupUI(GroupInfoBean groupInfo) {
-        if (TextUtils.isEmpty(groupName)
-                || groupName.contains(ColorsConfig.GROUP_DEFAULT_NAME)) {
+        String name = groupInfo.getGroup_name();
+        if (TextUtils.isEmpty(name)
+                || name.contains(ColorsConfig.GROUP_DEFAULT_NAME)) {
             tvTitle.setText("群聊" + "(" + groupInfo.getGroup_member_count() + ")");
         } else {
-            tvTitle.setText(groupName + "(" + groupInfo.getGroup_member_count() + ")");
+            tvTitle.setText(name + "(" + groupInfo.getGroup_member_count() + ")");
         }
     }
 

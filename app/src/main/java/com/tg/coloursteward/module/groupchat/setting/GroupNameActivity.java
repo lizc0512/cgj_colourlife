@@ -52,6 +52,8 @@ public class GroupNameActivity extends Activity {
 
     private void initView() {
         tv_back = (TextView) findViewById(R.id.tv_left_cancel);
+        tv_back.setText(R.string.hx_back);
+
         tv_title = (TextView) findViewById(R.id.tv_title);
         tv_title_right = (TextView) findViewById(R.id.tv_right_sure);
         et_user_name = (EditText) findViewById(R.id.et_user_name);

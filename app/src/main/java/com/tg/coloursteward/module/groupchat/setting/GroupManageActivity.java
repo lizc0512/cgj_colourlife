@@ -56,6 +56,8 @@ public class GroupManageActivity extends SdkBaseActivity {
         List<ContactBean> list = getIntent().getParcelableArrayListExtra(GROUP_LIST);
 
         tv_back = findViewById(R.id.tv_left_cancel);
+        tv_back.setText(R.string.hx_back);
+
         tv_title = findViewById(R.id.tv_title);
         tv_title_right = findViewById(R.id.tv_right_sure);
         tv_title_right.setVisibility(View.GONE);

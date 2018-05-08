@@ -771,9 +771,10 @@ public class FragmentManagement extends Fragment {
         mGridView1 = (MyGridView) mView.findViewById(R.id.gridview1);
         mGridView2 = (MyGridView) mView.findViewById(R.id.gridview2);
         banner = (Banner) mView.findViewById(R.id.banner);
+        getAdInfo();
 
         outLocalData();
-        getAdInfo();
+
 
         magLinearLayoutLeave.setOnClickListener(singleListener);// 请假
         magLinearLayoutSign.setOnClickListener(singleListener);// 签到

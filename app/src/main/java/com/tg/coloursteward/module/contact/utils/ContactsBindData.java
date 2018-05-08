@@ -80,10 +80,9 @@ public class ContactsBindData extends Observable {
             contact.setOrgID(data.getString(i, "orgID"));
             contact.setUuid(data.getString(i, "contactsId"));
 
-            StringBuffer pinyin = new StringBuffer();
-            StringBuffer ch = new StringBuffer();
+            StringBuilder pinyin = new StringBuilder();
+            StringBuilder ch = new StringBuilder();
             for (int j = 0; j < hanzi.length(); j++) {
-                System.out.println("i: " + hanzi.charAt(j));
                 pinyin.append(Pinyin.toPinyin(hanzi.charAt(j)).toUpperCase());
                 ch.append(Pinyin.toPinyin(hanzi.charAt(j)).substring(0, 1));
             }
@@ -102,7 +101,6 @@ public class ContactsBindData extends Observable {
         StringBuffer ch = new StringBuffer();
         List<String> chStr = new ArrayList<>(); //每个汉字的 拼音集合
         for (int j = 0; j < hanzi.length(); j++) {
-            System.out.println("yw-i: " + hanzi.charAt(j));
             pinyin.append(Pinyin.toPinyin(hanzi.charAt(j)).toUpperCase());
             ch.append(Pinyin.toPinyin(hanzi.charAt(j)).substring(0, 1));
             chStr.add(Pinyin.toPinyin(hanzi.charAt(j)));

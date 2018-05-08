@@ -3,6 +3,7 @@ package com.tg.coloursteward.module.groupchat;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -51,14 +52,15 @@ public class SearchContactAdapter extends RecyclerView.Adapter<RecyclerView.View
     private ItemEventListener itemEventListener;
     private final List<CNPinyin<ContactBean>> cnPinyinList;
 
-    public SearchContactAdapter(Context context, List<CNPinyin<ContactBean>> cnPinyinList, int collectIndex, ItemEventListener listener) {
+    public SearchContactAdapter(Context context, List<CNPinyin<ContactBean>> cnPinyinList,
+                                int collectIndex, ItemEventListener listener) {
         this.mContext = context.getApplicationContext();
         this.cnPinyinList = cnPinyinList;
         this.mCollectIndex = collectIndex;
         this.itemEventListener = listener;
 
         if (mCollectIndex == mIndexForCollect) {
-            mCacheMap = new HashMap(cnPinyinList.size());
+            mCacheMap = new HashMap<>(cnPinyinList.size());
         }
 
         msgHandler = new MessageHandler(context);
@@ -101,7 +103,7 @@ public class SearchContactAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == TYPE.COLLECT.ordinal()) {
             return new CollectHolder(LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.collect_fragment_item, parent, false));

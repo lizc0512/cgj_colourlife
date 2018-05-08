@@ -343,34 +343,32 @@ public class IMGroupActivity extends SdkBaseActivity implements
             public void OnRec(PduBase pduBase) {
                 try {
                     YouMaiGroup.GroupInfoRsp rsp = YouMaiGroup.GroupInfoRsp.parseFrom(pduBase.body);
-
                     if (rsp.getResult() == YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS) {
-                        YouMaiGroup.GroupInfo groupInfo = rsp.getGroupInfo();
-                        mGroupInfo = new GroupInfoBean();
-                        mGroupInfo.setGroup_avatar(groupInfo.getGroupAvatar());
-                        mGroupInfo.setGroup_member_count(groupInfo.getGroupMemberCount());
-                        mGroupInfo.setGroup_id(groupInfo.getGroupId());
-                        mGroupInfo.setGroup_name(groupInfo.getGroupName());
-                        mGroupInfo.setTopic(groupInfo.getTopic());
-                        mGroupInfo.setInfo_update_time(groupInfo.getInfoUpdateTime());
+                        if (rsp.getUpdate()) {
+                            YouMaiGroup.GroupInfo groupInfo = rsp.getGroupInfo();
+                            mGroupInfo = new GroupInfoBean();
+                            mGroupInfo.setGroup_avatar(groupInfo.getGroupAvatar());
+                            mGroupInfo.setGroup_member_count(groupInfo.getGroupMemberCount());
+                            mGroupInfo.setGroup_id(groupInfo.getGroupId());
+                            mGroupInfo.setGroup_name(groupInfo.getGroupName());
+                            mGroupInfo.setTopic(groupInfo.getTopic());
+                            mGroupInfo.setInfo_update_time(groupInfo.getInfoUpdateTime());
 
-                        if (bean != null) {
-                            bean.setGroup_avatar(groupInfo.getGroupAvatar());
-                            bean.setGroup_member_count(groupInfo.getGroupMemberCount());
-                            bean.setGroup_id(groupInfo.getGroupId());
-                            bean.setGroup_name(groupInfo.getGroupName());
-                            bean.setTopic(groupInfo.getTopic());
-                            bean.setInfo_update_time(groupInfo.getInfoUpdateTime());
+                            if (bean != null) {
+                                bean.setGroup_avatar(groupInfo.getGroupAvatar());
+                                bean.setGroup_member_count(groupInfo.getGroupMemberCount());
+                                bean.setGroup_id(groupInfo.getGroupId());
+                                bean.setGroup_name(groupInfo.getGroupName());
+                                bean.setTopic(groupInfo.getTopic());
+                                bean.setInfo_update_time(groupInfo.getInfoUpdateTime());
 
-                            GroupInfoHelper.instance().insertOrUpdate(mContext, bean);
-                        } else {
-                            GroupInfoHelper.instance().insertOrUpdate(mContext, mGroupInfo);
+                                GroupInfoHelper.instance().insertOrUpdate(mContext, bean);
+                            } else {
+                                GroupInfoHelper.instance().insertOrUpdate(mContext, mGroupInfo);
+                            }
+                            updateGroupUI(mGroupInfo);
                         }
-
-                        updateGroupUI(mGroupInfo);
                     }
-
-
                 } catch (InvalidProtocolBufferException e) {
                     e.printStackTrace();
                 }

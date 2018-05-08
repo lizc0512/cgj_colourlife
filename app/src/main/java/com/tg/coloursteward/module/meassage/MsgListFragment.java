@@ -397,7 +397,6 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
                             ExCacheMsgBean bean = new ExCacheMsgBean(item);
                             mMessageAdapter.addPushMsgItem(bean);
                         }
-                        mEmptyView.setVisibility(View.GONE);
                     }
                 }
             }
@@ -514,7 +513,6 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
         } else {
             mMessageAdapter.changeMessageList(data);
         }
-        mEmptyView.setVisibility(View.GONE);
     }
 
     @Override
@@ -575,7 +573,7 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
     }
 
     private void checkIfEmpty() {
-        Log.e(TAG, "onSaveInstanceState--showGuide");
+        /*Log.e(TAG, "onSaveInstanceState--showGuide");
         if (mMessageAdapter != null) {
             int count = mMessageAdapter.getItemCount();
             //正常状态
@@ -584,7 +582,7 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
             } else {
                 mEmptyView.setVisibility(View.GONE);
             }
-        }
+        }*/
     }
 
 }

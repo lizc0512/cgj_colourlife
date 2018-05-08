@@ -869,11 +869,11 @@ public class HuxinSdkManager {
      *
      * @param callback
      */
-    public void reqGroupInfo(int groupId, ReceiveListener callback) {
+    public void reqGroupInfo(int groupId, long updateTime, ReceiveListener callback) {
         YouMaiGroup.GroupInfoReq.Builder builder = YouMaiGroup.GroupInfoReq.newBuilder();
         builder.setUserId(getUuid());
         builder.setGroupId(groupId);
-        builder.setUpdateTime(System.currentTimeMillis());
+        builder.setUpdateTime(updateTime);
 
         YouMaiGroup.GroupInfoReq group = builder.build();
 

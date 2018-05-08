@@ -613,7 +613,7 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
             }
 
             bean.setGroupMemberJson(GsonUtil.format(list));
-            GroupInfoHelper.instance().toUpdateByGroupId(this, bean);
+            GroupInfoHelper.instance().insertOrUpdate(this, bean);
         }
     }
 
@@ -632,7 +632,7 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
                     info = new GroupInfoBean();
                 }
                 info.setGroup_name(content);
-                GroupInfoHelper.instance().toUpdateByGroupId(mContext, info);
+                GroupInfoHelper.instance().insertOrUpdate(mContext, info);
 
                 isMotifyGropInfo = true;
 

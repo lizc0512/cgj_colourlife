@@ -233,7 +233,7 @@ public class IMGroupActivity extends SdkBaseActivity implements
 
                 updateGroupUI(mGroupInfo);
 
-            } else if (UPDATE_GROUP_REMOVE.equals(action) || UPDATE_GROUP_ADD.equals(action)) {
+            } else if (UPDATE_GROUP_REMOVE.equals(action)) {
                 int id = intent.getIntExtra("groupId", 0);
                 ArrayList<String> changeList = intent.getStringArrayListExtra("changeList");
                 if (id == groupId) {
@@ -244,6 +244,23 @@ public class IMGroupActivity extends SdkBaseActivity implements
                             break;
                         }
                     }
+
+                    /*int count = mGroupInfo.getGroup_member_count();
+                    count = count - changeList.size();
+                    mGroupInfo.setGroup_member_count(count);
+                    updateGroupUI(mGroupInfo);*/
+
+                    queryGroupInfo(id);
+                }
+            } else if (UPDATE_GROUP_ADD.equals(action)) {
+                int id = intent.getIntExtra("groupId", 0);
+                ArrayList<String> changeList = intent.getStringArrayListExtra("changeList");
+                if (id == groupId) {
+                    /*int count = mGroupInfo.getGroup_member_count();
+                    count = count + changeList.size();
+                    mGroupInfo.setGroup_member_count(count);
+                    updateGroupUI(mGroupInfo);*/
+
                     queryGroupInfo(id);
                 }
             }
@@ -313,8 +330,15 @@ public class IMGroupActivity extends SdkBaseActivity implements
 
     }
 
-    private void queryGroupInfo(final int groupId) {
-        HuxinSdkManager.instance().reqGroupInfo(groupId, new ReceiveListener() {
+    private void queryGroupInfo(int groupId) {
+
+        long updateTime = 0;
+        final GroupInfoBean bean = GroupInfoHelper.instance().toQueryGroupById(this, groupId);
+        if (bean != null) {
+            updateTime = bean.getInfo_update_time();
+        }
+
+        HuxinSdkManager.instance().reqGroupInfo(groupId, updateTime, new ReceiveListener() {
             @Override
             public void OnRec(PduBase pduBase) {
                 try {
@@ -325,9 +349,24 @@ public class IMGroupActivity extends SdkBaseActivity implements
                         mGroupInfo = new GroupInfoBean();
                         mGroupInfo.setGroup_avatar(groupInfo.getGroupAvatar());
                         mGroupInfo.setGroup_member_count(groupInfo.getGroupMemberCount());
-                        mGroupInfo.setGroup_id(groupId);
-                        mGroupInfo.setGroup_name(groupName);
+                        mGroupInfo.setGroup_id(groupInfo.getGroupId());
+                        mGroupInfo.setGroup_name(groupInfo.getGroupName());
                         mGroupInfo.setTopic(groupInfo.getTopic());
+                        mGroupInfo.setInfo_update_time(groupInfo.getInfoUpdateTime());
+
+                        if (bean != null) {
+                            bean.setGroup_avatar(groupInfo.getGroupAvatar());
+                            bean.setGroup_member_count(groupInfo.getGroupMemberCount());
+                            bean.setGroup_id(groupInfo.getGroupId());
+                            bean.setGroup_name(groupInfo.getGroupName());
+                            bean.setTopic(groupInfo.getTopic());
+                            bean.setInfo_update_time(groupInfo.getInfoUpdateTime());
+
+                            GroupInfoHelper.instance().insertOrUpdate(mContext, bean);
+                        } else {
+                            GroupInfoHelper.instance().insertOrUpdate(mContext, mGroupInfo);
+                        }
+
                         updateGroupUI(mGroupInfo);
                     }
 

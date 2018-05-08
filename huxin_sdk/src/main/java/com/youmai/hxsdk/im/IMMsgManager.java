@@ -319,7 +319,7 @@ public class IMMsgManager {
                         info = new GroupInfoBean();
                     }
                     info.setGroup_name(groupName);
-                    GroupInfoHelper.instance().toUpdateByGroupId(mContext, info);
+                    GroupInfoHelper.instance().insertOrUpdate(mContext, info);
 
                     Intent intent = new Intent(IMGroupActivity.UPDATE_GROUP_INFO);
                     intent.putExtra("GroupInfo", info);
@@ -335,7 +335,7 @@ public class IMMsgManager {
                     }
 
                     info.setTopic(topic);
-                    GroupInfoHelper.instance().toUpdateByGroupId(mContext, info);
+                    GroupInfoHelper.instance().insertOrUpdate(mContext, info);
 
                     Intent intent = new Intent(IMGroupActivity.UPDATE_GROUP_INFO);
                     intent.putExtra("GroupInfo", info);

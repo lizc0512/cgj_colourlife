@@ -46,7 +46,7 @@ public class GroupInfoHelper {
 
 
     /**
-     * 查询与某人的聊天历史记录
+     * 查询所有群组的群信息和群成员信息
      *
      * @param context
      * @return
@@ -55,6 +55,25 @@ public class GroupInfoHelper {
         GroupInfoBeanDao dao = GreenDBIMManager.instance(context).getGroupInfoDao();
         QueryBuilder<GroupInfoBean> qb = dao.queryBuilder();
         return qb.list();
+    }
+
+
+    /**
+     * 查询某个群组的群信息和成员信息
+     *
+     * @param context
+     * @return
+     */
+    public GroupInfoBean toQueryGroupById(Context context, int groupId) {
+        GroupInfoBean bean = null;
+        GroupInfoBeanDao dao = GreenDBIMManager.instance(context).getGroupInfoDao();
+        QueryBuilder<GroupInfoBean> qb = dao.queryBuilder();
+        List<GroupInfoBean> list = qb.where(GroupInfoBeanDao.Properties.Group_id.eq(groupId))
+                .orderDesc(GroupInfoBeanDao.Properties.Id).list();
+        if (list != null && list.size() > 0) {
+            bean = list.get(0);
+        }
+        return bean;
     }
 
 
@@ -86,6 +105,19 @@ public class GroupInfoHelper {
         }
     }
 
+
+    /**
+     * 更新
+     *
+     * @param context
+     * @param bean
+     */
+    public void insertOrUpdate(Context context, GroupInfoBean bean) {
+        GroupInfoBeanDao dao = GreenDBIMManager.instance(context).getGroupInfoDao();
+        dao.insertOrReplace(bean);
+    }
+
+
     /**
      * 按照groupId 查询
      *
@@ -103,16 +135,6 @@ public class GroupInfoHelper {
         return null;
     }
 
-    /**
-     * 更新
-     *
-     * @param context
-     * @param bean
-     */
-    public void toUpdateByGroupId(Context context, GroupInfoBean bean) {
-        GroupInfoBeanDao dao = GreenDBIMManager.instance(context).getGroupInfoDao();
-        dao.insertOrReplace(bean);
-    }
 
 
     /**
@@ -140,7 +162,7 @@ public class GroupInfoHelper {
                             YouMaiGroup.GroupMemberRsp ack = YouMaiGroup.GroupMemberRsp.parseFrom(pduBase.body);
                             if (ack.getResult() == YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS) {
                                 GroupInfoBean bean = updateGroupInfo(groupInfoBean, ack, callBack);
-                                GroupInfoHelper.instance().toUpdateByGroupId(context, bean);
+                                GroupInfoHelper.instance().insertOrUpdate(context, bean);
                             }
 
                         } catch (InvalidProtocolBufferException e) {
@@ -157,7 +179,7 @@ public class GroupInfoHelper {
                         YouMaiGroup.GroupMemberRsp ack = YouMaiGroup.GroupMemberRsp.parseFrom(pduBase.body);
                         if (ack.getResult() == YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS) {
                             GroupInfoBean bean = updateGroupInfo(null, ack, callBack);
-                            GroupInfoHelper.instance().toUpdateByGroupId(context, bean);
+                            GroupInfoHelper.instance().insertOrUpdate(context, bean);
                         }
 
                     } catch (InvalidProtocolBufferException e) {

@@ -985,6 +985,9 @@ public class IMGroupActivity extends SdkBaseActivity implements
                 photoPaths.addAll(data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_MEDIA));
             }
             PhotoPickerManager.getInstance().clear();
+            if (photoPaths.size() == 0) {
+                return;
+            }
 
             String path = photoPaths.get(0);
             if (path.toLowerCase().endsWith(".mp4") || path.toLowerCase().endsWith(".rmvb")

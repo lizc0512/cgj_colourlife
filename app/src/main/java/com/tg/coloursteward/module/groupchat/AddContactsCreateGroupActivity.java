@@ -134,7 +134,9 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
 
     private Map<String, ContactBean> mTotalMap = new HashMap<>();
 
-    static class ModifyContactsReceiver extends BroadcastReceiver {
+    private ModifyContactsReceiver mModifyContactsReceiver;
+
+    private static class ModifyContactsReceiver extends BroadcastReceiver {
         AddContactsCreateGroupActivity mActivity;
 
         public ModifyContactsReceiver(AddContactsCreateGroupActivity activity) {
@@ -156,11 +158,11 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
         }
     }
 
-    void updateCacheMap(ContactBean contact, boolean isFreshAdapter) {
+    private void updateCacheMap(ContactBean contact, boolean isFreshAdapter) {
         updateCacheMap(contact, isFreshAdapter, true);
     }
 
-    void updateCacheMap(ContactBean contact, boolean isFreshAdapter, boolean type) {
+    private void updateCacheMap(ContactBean contact, boolean isFreshAdapter, boolean type) {
         if (mTotalMap.containsKey(contact.getUuid()) && type) {
             mTotalMap.remove(contact.getUuid());
         } else {
@@ -185,15 +187,14 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
         hideSoftKey();
     }
 
-    private ModifyContactsReceiver mModifyContactsReceiver;
 
-    void registerReceiver() {
+    private void registerReceiver() {
         mModifyContactsReceiver = new ModifyContactsReceiver(this);
         IntentFilter intentFilter = new IntentFilter(BROADCAST_FILTER);
         LocalBroadcastManager.getInstance(this).registerReceiver(mModifyContactsReceiver, intentFilter);
     }
 
-    void unRegisterReceiver() {
+    private void unRegisterReceiver() {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mModifyContactsReceiver);
     }
 
@@ -201,40 +202,6 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_contacts_layout);
-        init();
-    }
-
-    @Override
-    public void onDestroy() {
-        unRegisterReceiver();
-        if (null != subscription) {
-            subscription.unsubscribe();
-        }
-        if (!ListUtils.isEmpty(contactList)) {
-            contactList.clear();
-        }
-        if (null != adapter) {
-            Map<Integer, ContactBean> cacheMap = adapter.getCacheMap();
-            if (null != cacheMap) {
-                cacheMap.clear();
-            }
-        }
-        if (!ListUtils.isEmpty(mContactList)) {
-            mContactList.clear();
-            mContactList = null;
-        }
-        if (null != mTotalMap) {
-            mTotalMap.clear();
-            mTotalMap = null;
-        }
-        if (null != mGroupMap) {
-            mGroupMap.clear();
-            mTotalMap = null;
-        }
-        super.onDestroy();
-    }
-
-    private void init() {
         mActivity = this;
         if (!ListUtils.isEmpty(contactList)) {
             contactList.clear();
@@ -289,6 +256,37 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
         setListener();
     }
 
+    @Override
+    public void onDestroy() {
+        unRegisterReceiver();
+        if (null != subscription) {
+            subscription.unsubscribe();
+        }
+        if (!ListUtils.isEmpty(contactList)) {
+            contactList.clear();
+        }
+        if (null != adapter) {
+            Map<Integer, ContactBean> cacheMap = adapter.getCacheMap();
+            if (null != cacheMap) {
+                cacheMap.clear();
+            }
+        }
+        if (!ListUtils.isEmpty(mContactList)) {
+            mContactList.clear();
+            mContactList = null;
+        }
+        if (null != mTotalMap) {
+            mTotalMap.clear();
+            mTotalMap = null;
+        }
+        if (null != mGroupMap) {
+            mGroupMap.clear();
+            mTotalMap = null;
+        }
+        super.onDestroy();
+    }
+
+
     void initGroupMap() {
         for (ContactBean contact : mContactList) {
             mGroupMap.put(contact.getUuid(), contact);
@@ -312,7 +310,7 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
         editText.clearFocus();
     }
 
-    void initEdit() {
+    private void initEdit() {
         editText = findViewById(R.id.global_search_bar);
         editText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -327,7 +325,14 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
                     searchGroupFragment.add(s.toString());
                     transaction.commit();
                 } else {
-                    searchGroupFragment.add(s.toString());
+                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                    if (!searchGroupFragment.isHidden()) {
+                        transaction.hide(searchGroupFragment);
+                    }
+                    if (!departmentFragment.isHidden()) {
+                        transaction.hide(departmentFragment);
+                    }
+                    transaction.commit();
                 }
                 searchGroupFragment.setMap(mTotalMap, mGroupMap);
             }
@@ -339,7 +344,7 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
 
     }
 
-    void hideSoftKey() {
+    private void hideSoftKey() {
         InputMethodManager manager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         manager.hideSoftInputFromWindow(editText.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
     }
@@ -384,7 +389,7 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
         });
     }
 
-    void createGroup() {
+    private void createGroup() {
         Map<String, ContactBean> data = mTotalMap;
         if (data != null && !data.isEmpty()) {
             List<YouMaiGroup.GroupMemberItem> list = new ArrayList<>();
@@ -444,7 +449,7 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
         }
     }
 
-    YouMaiGroup.GroupMemberItem.Builder insertBuilder(ContactBean item) {
+    private YouMaiGroup.GroupMemberItem.Builder insertBuilder(ContactBean item) {
         YouMaiGroup.GroupMemberItem.Builder builder = YouMaiGroup.GroupMemberItem.newBuilder();
         builder.setMemberId(item.getUuid());
         builder.setMemberName(item.getRealname());
@@ -457,7 +462,7 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
         return builder;
     }
 
-    void updateGroup() {
+    private void updateGroup() {
         List<YouMaiGroup.GroupMemberItem> list = new ArrayList<>();
         //删除成员
         for (Map.Entry<String, ContactBean> entry : mTotalMap.entrySet()) {
@@ -628,7 +633,7 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
         }
     }
 
-    void modifyContactsList() {
+    private void modifyContactsList() {
         RequestConfig config = new RequestConfig(mActivity, PullRefreshListView.HTTP_FRESH_CODE);
         config.handler = msgHand.getHandler();
         RequestParams params = new RequestParams();
@@ -719,7 +724,7 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
      * @param pos
      * @param contact
      */
-    void itemFunction(int pos, ContactBean contact) {
+    private void itemFunction(int pos, ContactBean contact) {
         switch (pos) {
             case 0:
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();

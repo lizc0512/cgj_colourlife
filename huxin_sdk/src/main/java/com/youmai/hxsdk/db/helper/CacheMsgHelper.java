@@ -51,7 +51,7 @@ public class CacheMsgHelper {
         if (cacheMsgBean.getId() != null && cacheMsgBean.getId() != -1L) {
             cacheMsgBeanDao.update(cacheMsgBean);
         } else {
-            cacheMsgBean.setId(null); // FIXME: 2017/4/14 新增消息主键置空再插入表 ID从1自增
+            cacheMsgBean.setId(null);
             cacheMsgBeanDao.insert(cacheMsgBean);
         }
     }

@@ -16,6 +16,11 @@
         style="@style/im_content_card_style"
         android:gravity="right">
 
+        <include
+            layout="@layout/hx_im_send_status_lay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
 
         <Space
             android:layout_width="0dp"

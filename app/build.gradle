@@ -71,9 +71,9 @@ android {
     applicationVariants.all { variant ->
         variant.outputs.all {
             if (variant.buildType.name == "release") {
-                outputFileName = "彩管家4.0_${defaultConfig.versionName}.apk"
+                outputFileName = "彩管家_v${defaultConfig.versionName}_${getPackageInfo(variant)}_${releaseTime()}.apk"
             } else {
-                outputFileName = "彩管家4.0_${defaultConfig.versionName}_${defaultConfig.versionCode}_debug.apk"
+                outputFileName = "彩管家4.0_${defaultConfig.versionName}_${getPackageInfo(variant)}_${releaseTime()}_debug.apk"
             }
 
             variant.assemble.doLast {
@@ -120,6 +120,9 @@ dependencies {
     annotationProcessor 'com.alibaba:arouter-compiler:1.1.4'
 }
 
+project.afterEvaluate {
+    handleBuildTag()
+}
 
 def copyBuildApk() {
     copy {
@@ -128,4 +131,47 @@ def copyBuildApk() {
         }
         into '../dist'
     }
+}
+
+
+def handleBuildTag() {
+    def launch = getLaunchMode()
+    if (launch != null) {
+        def appCfgFilePath = "../huxin_sdk/src/main/java/com/youmai/hxsdk/config/AppConfig.java"
+        def appCfgRegexStr = "private\\s+final\\s+static\\s+int\\s+LAUNCH_MODE\\s+=\\s+[01];"
+        def appCfgReplaceStr = "private final static int LAUNCH_MODE = " + launch + ";"
+        handleReplaceSrc project, appCfgRegexStr, appCfgReplaceStr, appCfgFilePath
+    }
+}
+
+
+def getLaunchMode() {
+    if (project.hasProperty('launch_mode')) {
+        return project.getProperties().getAt('launch_mode')
+    } else {
+        return 1      //default 正式环境
+    }
+}
+
+def getPackageInfo(variant) {
+    def launch = getLaunchMode()
+
+    if (launch == "0") {
+        return "test_youmai"
+    } else if (launch == "1") {
+        return "test_color"
+    } else if (launch == "2") {
+        return "rel"
+    }
+}
+
+
+def static handleReplaceSrc(project, regexStr, replaceStr, filePath) {
+    def srcFile = project.file filePath
+    def newReplaceStr = srcFile.text.replaceAll regexStr, replaceStr
+    srcFile.write newReplaceStr, "UTF-8"
+}
+
+def static releaseTime() {
+    return new Date().format("MMdd_HHmm")
 }

@@ -405,10 +405,10 @@ public class HuxinService extends Service {
                 try {
                     YouMaiLogin.User_Login_Ack ack = YouMaiLogin.User_Login_Ack.parseFrom(pduBase.body);
                     if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_OK) {
-                        Toast.makeText(mContext, "socket登录成功", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(mContext, "socket登录成功", Toast.LENGTH_SHORT).show();
                         mClient.setLogin(true);
                     } else {
-                        Toast.makeText(mContext, "socket登录失败", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(mContext, "socket登录失败", Toast.LENGTH_SHORT).show();
                         mClient.setLogin(false);
                     }
                 } catch (InvalidProtocolBufferException e) {

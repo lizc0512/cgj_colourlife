@@ -206,20 +206,6 @@ public class FileConfig {
         return fileDir.getAbsolutePath();
     }
 
-
-    /**
-     * 用户账号文件路径
-     */
-    public static String getUserPaths() {
-        String path = Environment.getExternalStorageDirectory().getPath()
-                + UserPaths + AppConfig.LAUNCH_MODE;
-        File fileDir = new File(path);
-        if (!fileDir.exists()) {
-            fileDir.mkdirs();
-        }
-        return fileDir.getAbsolutePath();
-    }
-
     /**
      * 本手机用户头像图片下载路径
      *

@@ -223,12 +223,6 @@ public class HuxinSdkManager {
 
     public void setUuid(String uuid) {
         if (TextUtils.isEmpty(getUuid()) && !TextUtils.isEmpty(uuid)) {
-
-            /*String ip = AppConfig.getSocketHost();  //for test
-            int port = AppConfig.getSocketPort();   //for test
-            InetSocketAddress isa = new InetSocketAddress(ip, port);
-            connectTcp(uuid, isa);*/
-
             socketLogin(uuid);
         }
         mUserInfo.setUuid(uuid);

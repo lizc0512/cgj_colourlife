@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.Parcelable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
@@ -20,6 +21,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
@@ -28,6 +30,7 @@ import com.youmai.hxsdk.IMFilePreviewActivity;
 import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.activity.CropMapActivity;
 import com.youmai.hxsdk.activity.IMConnectionActivity;
+import com.youmai.hxsdk.activity.IMGroupActivity;
 import com.youmai.hxsdk.activity.PictureIndicatorActivity;
 import com.youmai.hxsdk.config.AppConfig;
 import com.youmai.hxsdk.config.FileConfig;
@@ -47,6 +50,7 @@ import com.youmai.hxsdk.module.remind.SetRemindActivity;
 import com.youmai.hxsdk.module.videoplayer.VideoPlayerActivity;
 import com.youmai.hxsdk.module.videoplayer.bean.VideoDetailInfo;
 import com.youmai.hxsdk.proto.YouMaiMsg;
+import com.youmai.hxsdk.router.APath;
 import com.youmai.hxsdk.service.SendMsgService;
 import com.youmai.hxsdk.utils.GlideRoundTransform;
 import com.youmai.hxsdk.utils.QiniuUrl;
@@ -910,7 +914,7 @@ public class IMListAdapter extends RecyclerView.Adapter {
 
 
     private void onBindCommon(final BaseViewHolder baseViewHolder, final int position) {
-        CacheMsgBean ben = mImBeanList.get(position);
+        final CacheMsgBean ben = mImBeanList.get(position);
         String avatar;
         //头像
         if (ben.isRightUI()) {  //自己的头像
@@ -918,6 +922,22 @@ public class IMListAdapter extends RecyclerView.Adapter {
         } else {
             avatar = ben.getTargetAvatar();
         }
+
+
+        baseViewHolder.senderIV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (ben.isRightUI()) {  //自己的头像
+                    ARouter.getInstance().build(APath.USER_INFO_ACT)
+                            .navigation(mAct);
+                } else {
+                    ARouter.getInstance().build(APath.EMPLOYEE_DATA_ACT)
+                            .withString("contacts_id", ben.getTargetUserName())
+                            .navigation(mAct);
+
+                }
+            }
+        });
 
         int size = mAct.getResources().getDimensionPixelOffset(R.dimen.card_head);
         Glide.with(mAct).load(avatar)

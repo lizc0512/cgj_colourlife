@@ -6,6 +6,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
@@ -33,6 +34,7 @@ import com.tg.coloursteward.view.dialog.ToastFactory;
 import com.youmai.hxsdk.activity.IMConnectionActivity;
 import com.youmai.hxsdk.db.bean.EmployeeBean;
 import com.youmai.hxsdk.db.helper.CacheEmployeeHelper;
+import com.youmai.hxsdk.router.APath;
 import com.youmai.hxsdk.utils.GlideRoundTransform;
 
 import android.content.Intent;
@@ -59,6 +61,7 @@ import android.widget.TextView;
  *
  * @author Administrator
  */
+@Route(path = APath.EMPLOYEE_DATA_ACT)
 public class EmployeeDataActivity extends BaseActivity {
     public final static String CONTACTS_ID = "contacts_id";
     public final static String CONTACTS_CHECKED = "isChecked";

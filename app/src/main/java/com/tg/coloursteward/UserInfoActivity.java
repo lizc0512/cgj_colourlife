@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
@@ -31,6 +32,7 @@ import com.tg.coloursteward.view.MessageArrowView.ItemClickListener;
 import com.tg.coloursteward.view.dialog.DialogFactory;
 import com.tg.coloursteward.view.dialog.ToastFactory;
 import com.tg.coloursteward.view.spinnerwheel.SlideSelectorView.OnCompleteListener;
+import com.youmai.hxsdk.router.APath;
 
 import android.app.Activity;
 import android.graphics.BitmapFactory;
@@ -54,6 +56,7 @@ import android.widget.ImageView.ScaleType;
 /**
  * 个人中心
  */
+@Route(path = APath.USER_INFO_ACT)
 public class UserInfoActivity extends BaseActivity implements ItemClickListener, OnClickListener {
 	private static final int IMAGE_REQUEST_CODE = 0;
 	private static final int RESULT_REQUEST_CODE = 2;

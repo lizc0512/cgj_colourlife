@@ -23,4 +23,14 @@ public class APath {
      */
     public static final String GROUP_CREATE_ADD_CONTACT = "/group/addcontact";
     public static final String GROUP_DELETE_CONTACT = "/group/details";
+
+    /**
+     * 个人资料
+     */
+
+    public static final String USER_INFO_ACT = "/color/userInfo";
+    /**
+     * 员工名片
+     */
+    public static final String EMPLOYEE_DATA_ACT = "/color/employee";
 }

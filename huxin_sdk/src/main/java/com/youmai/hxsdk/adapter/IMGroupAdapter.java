@@ -20,6 +20,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
@@ -47,6 +48,7 @@ import com.youmai.hxsdk.module.remind.SetRemindActivity;
 import com.youmai.hxsdk.module.videoplayer.VideoPlayerActivity;
 import com.youmai.hxsdk.module.videoplayer.bean.VideoDetailInfo;
 import com.youmai.hxsdk.proto.YouMaiMsg;
+import com.youmai.hxsdk.router.APath;
 import com.youmai.hxsdk.service.SendMsgService;
 import com.youmai.hxsdk.utils.GlideRoundTransform;
 import com.youmai.hxsdk.utils.QiniuUrl;
@@ -982,7 +984,7 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
 
 
     private void onBindCommon(final BaseViewHolder baseViewHolder, final int position) {
-        CacheMsgBean ben = mImBeanList.get(position);
+        final CacheMsgBean ben = mImBeanList.get(position);
         String avatar;
         //头像
         if (ben.isRightUI()) {  //自己的头像
@@ -990,6 +992,21 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
         } else {
             avatar = ben.getTargetAvatar();
         }
+
+        baseViewHolder.senderIV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (ben.isRightUI()) {  //自己的头像
+                    ARouter.getInstance().build(APath.USER_INFO_ACT)
+                            .navigation(mAct);
+                } else {
+                    ARouter.getInstance().build(APath.EMPLOYEE_DATA_ACT)
+                            .withString("contacts_id", ben.getTargetUserName())
+                            .navigation(mAct);
+
+                }
+            }
+        });
 
         int size = mAct.getResources().getDimensionPixelOffset(R.dimen.card_head);
         if (baseViewHolder.senderIV != null) {

@@ -993,21 +993,6 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
             avatar = ben.getTargetAvatar();
         }
 
-        baseViewHolder.senderIV.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (ben.isRightUI()) {  //自己的头像
-                    ARouter.getInstance().build(APath.USER_INFO_ACT)
-                            .navigation(mAct);
-                } else {
-                    ARouter.getInstance().build(APath.EMPLOYEE_DATA_ACT)
-                            .withString("contacts_id", ben.getTargetUserName())
-                            .navigation(mAct);
-
-                }
-            }
-        });
-
         int size = mAct.getResources().getDimensionPixelOffset(R.dimen.card_head);
         if (baseViewHolder.senderIV != null) {
             Glide.with(mAct).load(avatar)
@@ -1018,6 +1003,21 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
                             .error(R.drawable.color_default_header)
                             .diskCacheStrategy(DiskCacheStrategy.RESOURCE))
                     .into(baseViewHolder.senderIV);
+
+            baseViewHolder.senderIV.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (ben.isRightUI()) {  //自己的头像
+                        ARouter.getInstance().build(APath.USER_INFO_ACT)
+                                .navigation(mAct);
+                    } else {
+                        ARouter.getInstance().build(APath.EMPLOYEE_DATA_ACT)
+                                .withString("contacts_id", ben.getTargetUserName())
+                                .navigation(mAct);
+
+                    }
+                }
+            });
         }
     }
 

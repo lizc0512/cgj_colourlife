@@ -149,6 +149,7 @@ public class HuxinSdkManager {
         mContext = context.getApplicationContext();
         IMMsgManager.instance().init(mContext);
         mUserInfo.fromJson(mContext);
+        GreenDBIMManager.instance(mContext);
 
         RespBaseBean.setProtocolCallBack(new ProtocolCallBack() {
             @Override

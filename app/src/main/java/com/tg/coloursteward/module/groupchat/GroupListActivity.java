@@ -50,12 +50,12 @@ public class GroupListActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         mContext = this;
         initView();
+        initData();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        initData();
     }
 
     @Override
@@ -165,9 +165,8 @@ public class GroupListActivity extends BaseActivity {
                     YouMaiGroup.GroupListRsp ack = YouMaiGroup.GroupListRsp.parseFrom(pduBase.body);
                     List<YouMaiGroup.GroupInfo> changeList = ack.getGroupInfoListList();
 
-                    mGroupList = new ArrayList<>();
-
-                    if (changeList != null && changeList.size() > 0) {
+                    List<GroupInfoBean> list = new ArrayList<>();
+                    if (!ListUtils.isEmpty(changeList)) {
                         for (YouMaiGroup.GroupInfo item : changeList) {
                             GroupInfoBean bean = new GroupInfoBean();
 
@@ -179,17 +178,23 @@ public class GroupListActivity extends BaseActivity {
                             bean.setTopic(item.getTopic());
                             bean.setInfo_update_time(item.getInfoUpdateTime());
                             bean.setGroup_member_count(item.getGroupMemberCount());
-                            mGroupList.add(bean);
-
+                            list.add(bean);
                         }
-                        GroupInfoHelper.instance().insertOrUpdate(mContext, mGroupList);
+
+                        GroupInfoHelper.instance().insertOrUpdate(mContext, list);
                     }
 
                     List<Integer> delList = ack.getDeleteGroupIdListList();
-                    if (delList != null && delList.size() > 0) {
+                    if (!ListUtils.isEmpty(delList)) {
                         for (Integer item : delList) {
                             GroupInfoHelper.instance().delGroupInfo(mContext, item);
                         }
+                    }
+
+                    if (ListUtils.isEmpty(changeList) && ListUtils.isEmpty(delList)) {
+                        mGroupList = cacheList;
+                    } else {
+                        mGroupList = GroupInfoHelper.instance().toQueryGroupList(mContext);
                     }
 
                     mAdapter.setGroupList(mGroupList);

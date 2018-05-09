@@ -99,11 +99,6 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     }
 
-
-    public List<ExCacheMsgBean> getMessageList() {
-        return messageList;
-    }
-
     public void addPushMsgItem(ExCacheMsgBean msgBean) {
         if (msgBean.getUiType() == MessageAdapter.ADAPTER_TYPE_PUSHMSG) {
             MsgConfig.ContentBean.DataBean bean = msgBean.getPushMsg();
@@ -126,15 +121,25 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
     }
 
-
-    public void addMessageList(List<ExCacheMsgBean> messageList) {
-        int from = this.messageList.size();
-        this.messageList.addAll(messageList);
-        if (from == 0) {
-            notifyDataSetChanged();
-        } else {
-            notifyItemRangeChanged(from, messageList.size());
+    public void addTop(ExCacheMsgBean msgBean) {
+        String uuid = msgBean.getTargetUuid();
+        for (int i = 0; i < messageList.size(); i++) {
+            ExCacheMsgBean item = messageList.get(i);
+            if (item.getUiType() == MessageAdapter.ADAPTER_TYPE_SEARCH
+                    || item.getUiType() == MessageAdapter.ADAPTER_TYPE_PUSHMSG) {
+                continue;
+            }
+            if (item.getTargetUuid().equals(uuid)) {
+                messageList.remove(item);
+                break;
+            }
         }
+
+        messageList.add(5, msgBean);
+        SortComparator comp = new SortComparator();
+        Collections.sort(messageList.subList(5, messageList.size()), comp);
+
+        notifyDataSetChanged();
     }
 
 
@@ -146,13 +151,6 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 oldList.add(item);
             }
         }
-        messageList.removeAll(oldList);
-        messageList.addAll(newList);
-        notifyDataSetChanged();
-    }
-
-
-    public void changeMessageList(List<ExCacheMsgBean> oldList, List<ExCacheMsgBean> newList) {
         messageList.removeAll(oldList);
         messageList.addAll(newList);
         notifyDataSetChanged();
@@ -439,27 +437,6 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     @Override
     public int getItemViewType(int position) {
         return messageList.get(position).getUiType();
-    }
-
-    public void addTop(ExCacheMsgBean msgBean) {
-        String uuid = msgBean.getTargetUuid();
-        for (int i = 0; i < messageList.size(); i++) {
-            ExCacheMsgBean item = messageList.get(i);
-            if (item.getUiType() == MessageAdapter.ADAPTER_TYPE_SEARCH
-                    || item.getUiType() == MessageAdapter.ADAPTER_TYPE_PUSHMSG) {
-                continue;
-            }
-            if (item.getTargetUuid().equals(uuid)) {
-                messageList.remove(item);
-                break;
-            }
-        }
-
-        messageList.add(1, msgBean);
-        SortComparator comp = new SortComparator();
-        Collections.sort(messageList.subList(1, messageList.size()), comp);
-
-        notifyDataSetChanged();
     }
 
 

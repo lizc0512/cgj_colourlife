@@ -45,7 +45,7 @@ public class GroupTransAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         this.itemEventListener = listener;
     }
 
-    private int selectPos;
+    private int selectPos = -1;
 
     public void setSelected(int position) {
         this.selectPos = position;
@@ -59,24 +59,27 @@ public class GroupTransAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public int getItemViewType(int position) {
-        int type;
+        /*int type;
         if (position == 0) {
             type = TYPE.SEARCH.ordinal();
         } else {
             type = TYPE.DEFAULT.ordinal();
-        }
+        }*/
+        int type = TYPE.DEFAULT.ordinal();
         return type;
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (viewType == TYPE.SEARCH.ordinal()) {
+        /*if (viewType == TYPE.SEARCH.ordinal()) {
             return new SearchHolder(LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.global_list_item_header_search, parent, false));
         } else {
             return new ContactHolder(LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.group_contact_item, parent, false));
-        }
+        }*/
+        return new ContactHolder(LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.group_contact_item, parent, false));
     }
 
     @Override
@@ -86,12 +89,14 @@ public class GroupTransAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         if (holder instanceof ContactHolder) {
             final ContactHolder contactHolder = (ContactHolder) holder;
             try {
+                int size = mContext.getResources().getDimensionPixelOffset(R.dimen.card_head);
                 Glide.with(mContext)
                         .load(contact.getAvatar())
                         .apply(new RequestOptions()
                                 .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                                 .centerCrop()
                                 .transform(new GlideRoundTransform())
+                                .override(size, size)
                                 .placeholder(R.drawable.color_default_header)
                                 .error(R.drawable.color_default_header))
                         .into(contactHolder.iv_header);
@@ -99,7 +104,7 @@ public class GroupTransAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 e.printStackTrace();
             }
 
-            if(selectPos == position){
+            if (selectPos == position) {
                 contactHolder.cb_collect.setChecked(true);
             } else {
                 contactHolder.cb_collect.setChecked(false);

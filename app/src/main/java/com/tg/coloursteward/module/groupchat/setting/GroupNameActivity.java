@@ -109,6 +109,8 @@ public class GroupNameActivity extends Activity {
                                 intent.putExtra(GROUP_NAME, groupName);
                                 setResult(ChatGroupDetailsActivity.RESULT_CODE, intent);
                                 finish();
+                            } else if (ack.getResult() == YouMaiBasic.ResultCode.RESULT_CODE_NOT_FIND) {
+                                Toast.makeText(GroupNameActivity.this, "你已退出此群", Toast.LENGTH_SHORT).show();
                             }
                         } catch (InvalidProtocolBufferException e) {
                             e.printStackTrace();

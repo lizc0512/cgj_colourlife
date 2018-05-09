@@ -23,6 +23,7 @@ import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.tg.coloursteward.EmployeeDataActivity;
+import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.module.groupchat.AddContactsCreateGroupActivity;
 import com.tg.coloursteward.module.groupchat.deletecontact.DeleteContactListActivity;
 import com.tg.coloursteward.module.groupchat.setting.GroupManageActivity;
@@ -345,6 +346,8 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
                             contact.setUsername(item.getUserName());
                             contact.setUuid(item.getMemberId());
                             contact.setMemberRole(item.getMemberRole());
+                            String avatar = Contants.URl.HEAD_ICON_URL + "avatar?uid=" + item.getUserName();
+                            contact.setAvatar(avatar);
                             if (contact.getMemberRole() == 0) {
                                 groupList.add(0, contact);
                             } else {
@@ -585,6 +588,9 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
             } else if (requestCode == REQUEST_CODE_TRANS_OWNER) {
                 isGroupOwner = false;
                 reqGroupMembers();
+                mRlGroupManage.setVisibility(View.GONE);
+                //mAdapter.setType(1);
+                //mAdapter.notifyDataSetChanged();
             }
         }
     }

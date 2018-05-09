@@ -4,12 +4,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -56,6 +53,7 @@ public class GroupNoticeActivity extends Activity {
 
     private void initView() {
         tv_back = findViewById(R.id.tv_left_cancel);
+        tv_back.setText("返回");
         tv_title = findViewById(R.id.tv_title);
         tv_title_right = findViewById(R.id.tv_right_sure);
         et_owner_notice = findViewById(R.id.et_user_notice);
@@ -121,6 +119,8 @@ public class GroupNoticeActivity extends Activity {
                                 intent.putExtra(GROUP_NOTICE, groupNotice);
                                 setResult(ChatGroupDetailsActivity.RESULT_CODE, intent);
                                 finish();
+                            } else if (ack.getResult() == YouMaiBasic.ResultCode.RESULT_CODE_NOT_FIND) {
+                                Toast.makeText(GroupNoticeActivity.this, "你已退出此群", Toast.LENGTH_SHORT).show();
                             }
                         } catch (InvalidProtocolBufferException e) {
                             e.printStackTrace();

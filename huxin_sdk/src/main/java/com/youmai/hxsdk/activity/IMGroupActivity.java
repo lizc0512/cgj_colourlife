@@ -223,11 +223,11 @@ public class IMGroupActivity extends SdkBaseActivity implements
                 String topic = info.getTopic();
                 String groupName = info.getGroup_name();
 
-                if (!TextUtils.isEmpty(topic)) {
+                if (!TextUtils.isEmpty(topic) && mGroupInfo != null) {
                     mGroupInfo.setTopic(topic);
                 }
 
-                if (!TextUtils.isEmpty(groupName)) {
+                if (!TextUtils.isEmpty(groupName) && mGroupInfo != null) {
                     mGroupInfo.setGroup_name(groupName);
                 }
 

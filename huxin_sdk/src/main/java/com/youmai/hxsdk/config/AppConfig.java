@@ -29,17 +29,13 @@ public class AppConfig {
     /**
      * HuXin 服务器连接配置
      */
-    public final static int LAUNCH_MODE = 1; //0 本地测试,开发版        1服务器测试,测试版           2正式平台,正式版
+    public final static int LAUNCH_MODE = 0; //0 本地测试,开发版        1服务器测试,测试版           2正式平台,正式版
 
-    private final static String SOCKET_URL[] = new String[]{"http://192.168.0.42:8000/", "http://test2.im.huxin.biz:8000/", "http://im.ihuxin.net:8000/"};
+    private final static String SOCKET_URL[] = new String[]{"http://120.24.37.50:8088/", "http://core.im.test.colourlife.com/", "http://im.ihuxin.net:8000/"};
 
-    //private final static String SOCKET_HOST[] = new String[]{"192.168.0.42", "120.24.37.50", "120.77.1.224"};
-    private final static String SOCKET_HOST[] = new String[]{"192.168.0.42", "120.24.37.50", "192.168.0.16"};
+    private final static String SOCKET_HOST[] = new String[]{"120.24.37.50", "120.24.37.50", "192.168.0.16"};
 
-    private final static String DOWNLOAD_HOST[] = new String[]{"http://test2.file.huxin.biz/", "http://test2.file.huxin.biz/", "http://file.ihuxin.net/"};
-
-    //private final static int SOCKET_PORT[] = new int[]{8003, 9951, 9951};//8886
-    private final static int SOCKET_PORT[] = new int[]{8003, 6602, 6602};
+    private final static int SOCKET_PORT[] = new int[]{6602, 6602, 6602};
 
     public static String getSocketUrl() {
         return SOCKET_URL[LAUNCH_MODE];
@@ -53,19 +49,13 @@ public class AppConfig {
         return SOCKET_PORT[LAUNCH_MODE];
     }
 
-    public static String getDownloadHost() {
-        return DOWNLOAD_HOST[2];
-    }
-
-
 
     /**
      * http post 文件前，获取文件token
      */
-    //public static final String GET_UPLOAD_FILE_TOKEN = getShowHost() + "jhuxin-openapi/qy/fileUpload/upToken";
-    //public static final String GET_UPLOAD_FILE_TOKEN = "http://192.168.0.66:8989/czyim-openapi/qy/fileUpload//upToken";
     public static final String GET_UPLOAD_FILE_TOKEN = "http://api.ihuxin.net/jhuxin-openapi/qy/fileUpload/upToken";
 
+    private static final String DOWNLOAD_FILE_PATH = "http://file.ihuxin.net/";
 
     /**
      * ICE文件上传地址
@@ -98,7 +88,7 @@ public class AppConfig {
      */
     public static String getImageUrl(String fid) {
         if (QINIU_ENABLE) {
-            return getDownloadHost() + fid;
+            return DOWNLOAD_FILE_PATH + fid;
         } else {
             return ColorsConfig.loadUrl(fid);
         }

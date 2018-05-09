@@ -17,10 +17,11 @@
 
     <ImageView
         android:id="@+id/iv_header"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_toRightOf="@+id/cb_collect"
-        android:padding="10dp" />
+        android:layout_width="@dimen/card_head"
+        android:layout_height="@dimen/card_head"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="5dp"
+        android:layout_toRightOf="@+id/cb_collect" />
 
     <TextView
         android:id="@+id/tv_name"

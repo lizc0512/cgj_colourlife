@@ -122,9 +122,9 @@ public class GroupManageFragment extends Fragment implements GroupTransAdapter.I
         subscription = Observable.create(new Observable.OnSubscribe<List<CNPinyin<ContactBean>>>() {
             @Override
             public void call(Subscriber<? super List<CNPinyin<ContactBean>>> subscriber) {
-                ContactBean contact = new ContactBean();
+                /*ContactBean contact = new ContactBean();
                 contact.setRealname("↑##@@**0 搜索");
-                data.add(contact);
+                data.add(contact);*/
                 if (!subscriber.isUnsubscribed()) {
                     //子线程查数据库，返回List<Contacts>
                     List<CNPinyin<ContactBean>> contactList = CNPinyinFactory.createCNPinyinList(data);

@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,6 +46,7 @@ public class DeleteContactListActivity extends BaseActivity {
     private TextView mTvSure;
     private SearchEditText mSearchBar;
     private DeleteContactAdapter mAdapter;
+    private RelativeLayout search_parent;
 
     private ArrayList<ContactBean> mContactList; //群组成员列表
     private Map<String, ContactBean> mTotalMap = new HashMap<>();
@@ -86,6 +88,9 @@ public class DeleteContactListActivity extends BaseActivity {
         mTvTitle = findViewById(R.id.tv_title);
         mTvCancel = findViewById(R.id.tv_left_cancel);
         mTvSure = findViewById(R.id.tv_right_sure);
+
+        search_parent = findViewById(R.id.search_parent);
+        search_parent.setVisibility(View.GONE);
 
         //搜索
         mSearchBar = findViewById(R.id.contact_search_bar);

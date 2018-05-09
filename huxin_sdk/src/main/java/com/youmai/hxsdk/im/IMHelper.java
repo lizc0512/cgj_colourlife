@@ -4,6 +4,7 @@ package com.youmai.hxsdk.im;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.text.TextUtils;
 
 
 import com.youmai.hxsdk.R;
@@ -99,12 +100,13 @@ public class IMHelper {
      * @return
      */
     public static String getPreFixName(String path) {
-        File file = new File(path);
-        String fileName = file.getName();
-        if (fileName.lastIndexOf(".") != -1) {
-            return path.substring(path.lastIndexOf(".") + 1);
-        } else {
-            return "";
+        if (!TextUtils.isEmpty(path)) {
+            File file = new File(path);
+            String fileName = file.getName();
+            if (fileName.lastIndexOf(".") != -1) {
+                return path.substring(path.lastIndexOf(".") + 1);
+            }
         }
+        return "";
     }
 }

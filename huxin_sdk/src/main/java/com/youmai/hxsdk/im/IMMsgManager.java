@@ -317,7 +317,9 @@ public class IMMsgManager {
                     GroupInfoBean info = GroupInfoHelper.instance().toQueryByGroupId(mContext, groupId);
                     if (info == null) {
                         info = new GroupInfoBean();
+                        info.setGroup_id(groupId);
                     }
+
                     info.setGroup_name(groupName);
                     GroupInfoHelper.instance().insertOrUpdate(mContext, info);
 

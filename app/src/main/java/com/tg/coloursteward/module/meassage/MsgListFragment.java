@@ -506,13 +506,7 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
         if (data.isEmpty()) {
             return;
         }
-        List<ExCacheMsgBean> messageList = mMessageAdapter.getMessageList();
-
-        if (messageList.size() == 1) {
-            mMessageAdapter.addMessageList(data);
-        } else {
-            mMessageAdapter.changeMessageList(data);
-        }
+        mMessageAdapter.changeMessageList(data);
     }
 
     @Override

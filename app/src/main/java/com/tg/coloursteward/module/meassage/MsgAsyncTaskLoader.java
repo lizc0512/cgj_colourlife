@@ -2,9 +2,12 @@ package com.tg.coloursteward.module.meassage;
 
 import android.content.Context;
 import android.support.v4.content.AsyncTaskLoader;
+import android.text.TextUtils;
 
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
+import com.youmai.hxsdk.db.bean.GroupInfoBean;
 import com.youmai.hxsdk.db.helper.CacheMsgHelper;
+import com.youmai.hxsdk.db.helper.GroupInfoHelper;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -61,7 +64,23 @@ public class MsgAsyncTaskLoader extends AsyncTaskLoader<List<ExCacheMsgBean>> {
         List<ExCacheMsgBean> tempList = new ArrayList<>();
         for (CacheMsgBean bean : msgBeanList) {
             ExCacheMsgBean exBean = new ExCacheMsgBean(bean);
-            exBean.setDisplayName(bean.getTargetName());
+
+            String targetName = bean.getTargetName();
+            int groupId = bean.getGroupId();
+
+            if (TextUtils.isEmpty(targetName) && groupId > 0) {
+                List<GroupInfoBean> list = GroupInfoHelper.instance().toQueryListByGroupId(mContext, groupId);
+                for (GroupInfoBean item : list) {
+                    String groupName = item.getGroup_name();
+                    if (!TextUtils.isEmpty(groupName)) {
+                        exBean.setDisplayName(groupName);
+                        break;
+                    }
+                }
+            } else {
+                exBean.setDisplayName(targetName);
+            }
+
             tempList.add(exBean);
         }
 

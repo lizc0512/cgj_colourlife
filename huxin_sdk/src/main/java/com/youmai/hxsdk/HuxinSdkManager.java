@@ -224,10 +224,9 @@ public class HuxinSdkManager {
     public void setUuid(String uuid) {
         if (TextUtils.isEmpty(getUuid()) && !TextUtils.isEmpty(uuid)) {
             socketLogin(uuid);
+            GreenDBIMManager.instance(mContext).initUuid(uuid);
+            mUserInfo.setUuid(uuid);
         }
-        mUserInfo.setUuid(uuid);
-
-        GreenDBIMManager.instance(mContext).initUuid(uuid);
     }
 
 

@@ -136,6 +136,21 @@ public class GroupInfoHelper {
     }
 
 
+    /**
+     * 按照groupId 查询
+     *
+     * @param context
+     */
+    public List<GroupInfoBean> toQueryListByGroupId(Context context, int groupId) {
+        GroupInfoBeanDao dao = GreenDBIMManager.instance(context).getGroupInfoDao();
+        List<GroupInfoBean> list = dao.queryBuilder()
+                .where(GroupInfoBeanDao.Properties.Group_id.eq(groupId))
+                .orderDesc(GroupInfoBeanDao.Properties.Id)
+                .list();
+
+        return list;
+    }
+
 
     /**
      * 按照groupId 查询

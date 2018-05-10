@@ -179,6 +179,9 @@ public class SendMsgService extends IntentService {
         final int groupId = msgBean.getMsg().getGroupId();
         final String content = contentTemp;
 
+        if (TextUtils.isEmpty(dstUuid)) {
+            return;
+        }
 
         ReceiveListener listener = new ReceiveListener() {
             @Override
@@ -227,6 +230,10 @@ public class SendMsgService extends IntentService {
 
         final String dstUuid = msgBean.getMsg().getReceiverUserId();
         final int groupId = msgBean.getMsg().getGroupId();
+
+        if (TextUtils.isEmpty(dstUuid)) {
+            return;
+        }
 
         ReceiveListener callback = new ReceiveListener() {
             @Override
@@ -458,6 +465,10 @@ public class SendMsgService extends IntentService {
         final String dstUuid = msgBean.getMsg().getReceiverUserId();
         final int groupId = msgBean.getMsg().getGroupId();
 
+        if (TextUtils.isEmpty(dstUuid)) {
+            return;
+        }
+
         ReceiveListener receiveListener = new ReceiveListener() {
             @Override
             public void OnRec(PduBase pduBase) {
@@ -498,6 +509,10 @@ public class SendMsgService extends IntentService {
 
         final String dstUuid = msgBean.getMsg().getReceiverUserId();
         final int groupId = msgBean.getMsg().getGroupId();
+
+        if (TextUtils.isEmpty(dstUuid)) {
+            return;
+        }
 
         ReceiveListener receiveListener = new ReceiveListener() {
             @Override
@@ -546,6 +561,9 @@ public class SendMsgService extends IntentService {
         final String fileSize = msgBody.getFileSize() + "";
         final String dstUuid = msgBean.getMsg().getReceiverUserId();
         final int groupId = msgBean.getMsg().getGroupId();
+        if (TextUtils.isEmpty(dstUuid)) {
+            return;
+        }
 
         ReceiveListener receiveListener = new ReceiveListener() {
             @Override
@@ -588,6 +606,9 @@ public class SendMsgService extends IntentService {
 
         final String dstUuid = msgBean.getMsg().getReceiverUserId();
         final int groupId = msgBean.getMsg().getGroupId();
+        if (TextUtils.isEmpty(dstUuid)) {
+            return;
+        }
 
         ReceiveListener receiveListener = new ReceiveListener() {
             @Override

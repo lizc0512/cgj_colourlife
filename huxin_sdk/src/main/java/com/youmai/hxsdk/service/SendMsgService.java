@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.qiniu.android.storage.UpProgressHandler;
@@ -324,6 +325,7 @@ public class SendMsgService extends IntentService {
 
             @Override
             public void fail(String msg) {
+                Toast.makeText(appContext, msg, Toast.LENGTH_SHORT).show();
                 if (msgType == CacheMsgBean.SEND_FILE) {
                     CacheMsgFile msgBody = (CacheMsgFile) msgBean.getMsg().getJsonBodyObj();
                     msgBody.setFid("-2");
@@ -410,6 +412,7 @@ public class SendMsgService extends IntentService {
 
             @Override
             public void fail(String msg) {
+                Toast.makeText(appContext, msg, Toast.LENGTH_SHORT).show();
                 CacheMsgVideo msgBody = (CacheMsgVideo) msgBean.getMsg().getJsonBodyObj();
                 if (steps == 1) {
                     msgBody.setFrameId("-2");

@@ -182,7 +182,7 @@ public class QiniuUtils {
                             postFile.success(fileId, desPhone);
                         }
                     } else {
-                        postFile.fail("上传文件出错");
+                        postFile.fail("上传文件服务器出错!!!");
                     }
                 }
             });

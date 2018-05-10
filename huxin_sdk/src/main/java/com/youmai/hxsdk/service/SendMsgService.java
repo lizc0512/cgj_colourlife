@@ -179,7 +179,7 @@ public class SendMsgService extends IntentService {
         final int groupId = msgBean.getMsg().getGroupId();
         final String content = contentTemp;
 
-        if (TextUtils.isEmpty(dstUuid)) {
+        if (TextUtils.isEmpty(dstUuid) && groupId == 0) {
             return;
         }
 
@@ -231,7 +231,7 @@ public class SendMsgService extends IntentService {
         final String dstUuid = msgBean.getMsg().getReceiverUserId();
         final int groupId = msgBean.getMsg().getGroupId();
 
-        if (TextUtils.isEmpty(dstUuid)) {
+        if (TextUtils.isEmpty(dstUuid) && groupId == 0) {
             return;
         }
 
@@ -465,7 +465,7 @@ public class SendMsgService extends IntentService {
         final String dstUuid = msgBean.getMsg().getReceiverUserId();
         final int groupId = msgBean.getMsg().getGroupId();
 
-        if (TextUtils.isEmpty(dstUuid)) {
+        if (TextUtils.isEmpty(dstUuid) && groupId == 0) {
             return;
         }
 
@@ -510,7 +510,7 @@ public class SendMsgService extends IntentService {
         final String dstUuid = msgBean.getMsg().getReceiverUserId();
         final int groupId = msgBean.getMsg().getGroupId();
 
-        if (TextUtils.isEmpty(dstUuid)) {
+        if (TextUtils.isEmpty(dstUuid) && groupId == 0) {
             return;
         }
 
@@ -561,7 +561,7 @@ public class SendMsgService extends IntentService {
         final String fileSize = msgBody.getFileSize() + "";
         final String dstUuid = msgBean.getMsg().getReceiverUserId();
         final int groupId = msgBean.getMsg().getGroupId();
-        if (TextUtils.isEmpty(dstUuid)) {
+        if (TextUtils.isEmpty(dstUuid) && groupId == 0) {
             return;
         }
 
@@ -606,7 +606,7 @@ public class SendMsgService extends IntentService {
 
         final String dstUuid = msgBean.getMsg().getReceiverUserId();
         final int groupId = msgBean.getMsg().getGroupId();
-        if (TextUtils.isEmpty(dstUuid)) {
+        if (TextUtils.isEmpty(dstUuid) && groupId == 0) {
             return;
         }
 

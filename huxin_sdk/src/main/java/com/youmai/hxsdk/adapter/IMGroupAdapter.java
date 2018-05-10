@@ -581,62 +581,6 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
                     }
                 }
             });
-            txtViewHolder.senderTV.setOnClickLis(new CopeTextView.OnCopeListener() {
-                @Override
-                public void copeText() {
-                    Toast.makeText(mAct, R.string.hx_im_card_cope_tip, Toast.LENGTH_SHORT).show();
-                }
-
-                @Override
-                public void forwardText(CharSequence s) {
-                    //点击转发事件
-                    int status = mImBeanList.get(position).getMsgType();
-                    if (status == CacheMsgBean.SEND_SUCCEED
-                            || status == CacheMsgBean.SEND_FAILED
-                            || status == CacheMsgBean.RECEIVE_READ) {
-                        Intent intent = new Intent();
-                        intent.setAction("com.youmai.huxin.recent");
-                        intent.putExtra("type", "forward_msg");
-                        intent.putExtra("data", mImBeanList.get(position));
-                        mAct.startActivityForResult(intent, 300);
-                    } else {
-                        Toast.makeText(mAct, "转发失败", Toast.LENGTH_SHORT).show();
-                    }
-                }
-
-                @Override
-                public void collect() {
-                    //收藏操作
-                }
-
-                @Override
-                public void read() {
-
-                }
-
-                @Override
-                public void remind() {
-                    if (cacheMsgBean.getMsgId() == null) {
-                        Toast.makeText(mAct, "消息没发送成功，不能设置提醒", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    Intent intent = new Intent(mAct, SetRemindActivity.class);
-                    intent.putExtra(SetRemindActivity.CACHE_MSG_BEAN, cacheMsgBean);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                    mAct.startActivityForResult(intent, IMConnectionActivity.REQUEST_REMIND_CODE);
-                }
-
-                @Override
-                public void delete() {
-                    //删除消息的操作
-                    deleteMsg(cacheMsgBean, position, true);
-                }
-
-                @Override
-                public void more() {
-                    moreAction(position);
-                }
-            });
         }
     }
 

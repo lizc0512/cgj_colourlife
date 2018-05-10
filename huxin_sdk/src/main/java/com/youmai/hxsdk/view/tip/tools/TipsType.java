@@ -39,12 +39,8 @@ public class TipsType {
     //对方文本
     public static List<TipBean> getTextType() {
         List<TipBean> beanList = new ArrayList<>();
-        beanList.add(new TipBean("更多", TIP_MORE));
         beanList.add(new TipBean("删除", TIP_DELETE));
-        beanList.add(new TipBean("提醒", TIP_REMIND));
-        beanList.add(new TipBean("收藏", TIP_COLLECT));
         beanList.add(new TipBean("转发", TIP_FORWARD));
-        beanList.add(new TipBean("朗读", TIP_READ));
         beanList.add(new TipBean("复制", TIP_COPY));
         return beanList;
     }
@@ -52,10 +48,7 @@ public class TipsType {
     //己方文本
     public static List<TipBean> getMyselfTextType() {
         List<TipBean> beanList = new ArrayList<>();
-        beanList.add(new TipBean("更多", TIP_MORE));
         beanList.add(new TipBean("删除", TIP_DELETE));
-        beanList.add(new TipBean("提醒", TIP_REMIND));
-        beanList.add(new TipBean("收藏", TIP_COLLECT));
         beanList.add(new TipBean("转发", TIP_FORWARD));
         beanList.add(new TipBean("复制", TIP_COPY));
         return beanList;

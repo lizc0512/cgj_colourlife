@@ -16,6 +16,7 @@ import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.info.UserInfo;
+import com.tg.coloursteward.module.groupchat.AddContactsCreateGroupActivity;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.MessageHandler;
 import com.tg.coloursteward.net.RequestConfig;
@@ -23,7 +24,6 @@ import com.tg.coloursteward.net.RequestParams;
 import com.tg.coloursteward.net.ResponseData;
 import com.tg.coloursteward.view.PullRefreshListView;
 import com.youmai.hxsdk.db.bean.ContactBean;
-import com.youmai.hxsdk.utils.ListUtils;
 
 import org.json.JSONArray;
 
@@ -44,8 +44,6 @@ public class AddContactByDepartmentFragment extends Fragment
     private TextView mTvTitle;
     private DepartAdapter mAdapter;
     private MessageHandler msgHand;
-
-    private String mId;
 
     @Override
     public void onClick(View v) {
@@ -98,26 +96,37 @@ public class AddContactByDepartmentFragment extends Fragment
         msgHand.setResponseListener(this);
 
         mTvTitle.setText(UserInfo.familyName);
-        mId = UserInfo.orgId;
+
+        mAdapter.setCallback(new DepartAdapter.ItemEventListener() {
+            @Override
+            public void onItemClick(int pos, ContactBean contact) {
+                String id = contact.getUuid();
+                String orgName = contact.getRealname();
+                if (getActivity() instanceof AddContactsCreateGroupActivity) {
+                    AddContactsCreateGroupActivity act = (AddContactsCreateGroupActivity) getActivity();
+                    setMap(id, orgName, act.getTotalMap(), act.getGroupMap());
+                }
+            }
+        });
+
     }
 
 
-    public void loadDataForNet() {
+    private void loadDataForNet(String orgId) {
         RequestConfig config = new RequestConfig(getActivity(), PullRefreshListView.HTTP_FRESH_CODE);
         config.handler = msgHand.getHandler();
         RequestParams params = new RequestParams();
-        if(!mId.equals("-1")){
-            params.put("orgID", mId);
-        }
-        HttpTools.httpGet(Contants.URl.URL_ICETEST, "/phonebook/childDatas",config, params);
+        params.put("orgID", orgId);
+        HttpTools.httpGet(Contants.URl.URL_ICETEST, "/phonebook/childDatas", config, params);
     }
 
-    public void setMap(Map<String, ContactBean> totalMap, Map<String, ContactBean> groupMap) {
+    public void setMap(String orgId, String orgName, Map<String, ContactBean> totalMap,
+                       Map<String, ContactBean> groupMap) {
         mAdapter.setCacheMap(totalMap);
         mAdapter.setGroupMap(groupMap);
-        if (ListUtils.isEmpty(mAdapter.getDataList())) {
-            loadDataForNet();
-        }
+
+        mTvTitle.setText(orgName);
+        loadDataForNet(orgId);
     }
 
     @Override
@@ -134,11 +143,11 @@ public class AddContactByDepartmentFragment extends Fragment
             ContactBean item;
             for (int i = 0; i < data.length; i++) {
                 item = new ContactBean();
-                //item.type = data.getString(i, "type");
                 item.setUsername(data.getString(i, "username"));
                 item.setAvatar(data.getString(i, "avatar"));
                 item.setRealname(data.getString(i, "name"));
                 item.setUuid(data.getString(i, "id"));
+                item.setOrgType(data.getString(i, "type"));
                 mList.add(item);
             }
             mAdapter.setDataList(mList);

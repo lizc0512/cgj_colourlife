@@ -43,6 +43,8 @@ public class ContactBeanDao extends AbstractDao<ContactBean, Long> {
         public final static Property Is_hx = new Property(16, boolean.class, "is_hx", false, "IS_HX");
         public final static Property Pinyin = new Property(17, String.class, "pinyin", false, "PINYIN");
         public final static Property SimplePinyin = new Property(18, String.class, "simplePinyin", false, "SIMPLE_PINYIN");
+        public final static Property OrgType = new Property(19, String.class, "orgType", false, "ORG_TYPE");
+        public final static Property UiType = new Property(20, int.class, "uiType", false, "UI_TYPE");
     }
 
 
@@ -76,7 +78,9 @@ public class ContactBeanDao extends AbstractDao<ContactBean, Long> {
                 "\"SIGN\" TEXT," + // 15: sign
                 "\"IS_HX\" INTEGER NOT NULL ," + // 16: is_hx
                 "\"PINYIN\" TEXT," + // 17: pinyin
-                "\"SIMPLE_PINYIN\" TEXT);"); // 18: simplePinyin
+                "\"SIMPLE_PINYIN\" TEXT," + // 18: simplePinyin
+                "\"ORG_TYPE\" TEXT," + // 19: orgType
+                "\"UI_TYPE\" INTEGER NOT NULL );"); // 20: uiType
     }
 
     /** Drops the underlying database table. */
@@ -175,6 +179,12 @@ public class ContactBeanDao extends AbstractDao<ContactBean, Long> {
         if (simplePinyin != null) {
             stmt.bindString(19, simplePinyin);
         }
+ 
+        String orgType = entity.getOrgType();
+        if (orgType != null) {
+            stmt.bindString(20, orgType);
+        }
+        stmt.bindLong(21, entity.getUiType());
     }
 
     @Override
@@ -267,6 +277,12 @@ public class ContactBeanDao extends AbstractDao<ContactBean, Long> {
         if (simplePinyin != null) {
             stmt.bindString(19, simplePinyin);
         }
+ 
+        String orgType = entity.getOrgType();
+        if (orgType != null) {
+            stmt.bindString(20, orgType);
+        }
+        stmt.bindLong(21, entity.getUiType());
     }
 
     @Override
@@ -295,7 +311,9 @@ public class ContactBeanDao extends AbstractDao<ContactBean, Long> {
             cursor.isNull(offset + 15) ? null : cursor.getString(offset + 15), // sign
             cursor.getShort(offset + 16) != 0, // is_hx
             cursor.isNull(offset + 17) ? null : cursor.getString(offset + 17), // pinyin
-            cursor.isNull(offset + 18) ? null : cursor.getString(offset + 18) // simplePinyin
+            cursor.isNull(offset + 18) ? null : cursor.getString(offset + 18), // simplePinyin
+            cursor.isNull(offset + 19) ? null : cursor.getString(offset + 19), // orgType
+            cursor.getInt(offset + 20) // uiType
         );
         return entity;
     }
@@ -321,6 +339,8 @@ public class ContactBeanDao extends AbstractDao<ContactBean, Long> {
         entity.setIs_hx(cursor.getShort(offset + 16) != 0);
         entity.setPinyin(cursor.isNull(offset + 17) ? null : cursor.getString(offset + 17));
         entity.setSimplePinyin(cursor.isNull(offset + 18) ? null : cursor.getString(offset + 18));
+        entity.setOrgType(cursor.isNull(offset + 19) ? null : cursor.getString(offset + 19));
+        entity.setUiType(cursor.getInt(offset + 20));
      }
     
     @Override

@@ -48,7 +48,7 @@ public class GreenDBIMManager {
     }
 
     public void initUuid(String uuid) {
-        if (!mUuid.equals(uuid)) {
+        if (TextUtils.isEmpty(mUuid) || !mUuid.equals(uuid)) {
             mUuid = uuid;
             String dbName = DB_NAME + uuid + ".db";
             genDBDao(dbName);

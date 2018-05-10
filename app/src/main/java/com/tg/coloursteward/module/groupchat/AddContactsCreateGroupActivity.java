@@ -512,7 +512,7 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
             public void call(Subscriber<? super List<CNPinyin<ContactBean>>> subscriber) {
                 if (!subscriber.isUnsubscribed()) {
                     //子线程查数据库，返回List<Contacts>
-                    List<ContactBean> contacts = bindData.contactList(mActivity, data, ContactsBindData.TYPE_ADD_CONTACT_NO_HEADER);
+                    List<ContactBean> contacts = bindData.contactList(mActivity, data, ContactsBindData.TYPE_GROUP_ADD);
                     List<CNPinyin<ContactBean>> contactList = CNPinyinFactory.createCNPinyinList(contacts);
                     Collections.sort(contactList);
                     subscriber.onNext(contactList);
@@ -699,7 +699,7 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
      */
     @Override
     public void onItemClick(int pos, ContactBean contact) {
-        Toast.makeText(this, "点击position：" + pos, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "点击position：" + pos, Toast.LENGTH_SHORT).show();
         itemFunction(pos, contact);
     }
 
@@ -718,6 +718,15 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
         //tv_Sure.setText("完成(" + count + ")");
     }
 
+
+    public Map<String, ContactBean> getTotalMap() {
+        return mTotalMap;
+    }
+
+    public Map<String, ContactBean> getGroupMap() {
+        return mGroupMap;
+    }
+
     /**
      * 固定头item的跳转
      *
@@ -725,17 +734,20 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
      * @param contact
      */
     private void itemFunction(int pos, ContactBean contact) {
-        switch (pos) {
-            case 0:
-                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                transaction.show(departmentFragment);
-                transaction.commit();
-                departmentFragment.setMap(mTotalMap, mGroupMap);
-                break;
-            case 1:
-                break;
-            default: //item
-                break;
+
+        int type = contact.getUiType();
+
+        if (type == SearchContactAdapter.TYPE.ORGANIZATION_TYPE.ordinal()) {
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.show(departmentFragment);
+            transaction.commit();
+            departmentFragment.setMap(ColorsConfig.ColorLifeAppId, ColorsConfig.ColorLifeAppName,
+                    mTotalMap, mGroupMap);
+        } else if (type == SearchContactAdapter.TYPE.DEPARTMENT_TYPE.ordinal()) {
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.show(departmentFragment);
+            transaction.commit();
+            departmentFragment.setMap(UserInfo.orgId, UserInfo.familyName, mTotalMap, mGroupMap);
         }
     }
 

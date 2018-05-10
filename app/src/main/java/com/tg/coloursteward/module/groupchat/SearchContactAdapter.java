@@ -36,8 +36,8 @@ import java.util.Map;
 public class SearchContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements
         StickyHeaderAdapter<SearchContactAdapter.HeaderHolder>, MessageHandler.ResponseListener {
 
-    enum TYPE {
-        SEARCH, COLLECT, DEFAULT
+    public enum TYPE {
+        ORGANIZATION_TYPE, DEPARTMENT_TYPE, COLLECT_TYPE, CONTACT_TYPE
     }
 
     public static final int mIndexForCollect = 1;
@@ -48,7 +48,7 @@ public class SearchContactAdapter extends RecyclerView.Adapter<RecyclerView.View
     private Map<String, ContactBean> groupMap = new HashMap<>();
 
     private Context mContext;
-    private int mCollectIndex = 5;
+    private int mCollectIndex = 6;
     private ItemEventListener itemEventListener;
     private final List<CNPinyin<ContactBean>> cnPinyinList;
 
@@ -93,18 +93,19 @@ public class SearchContactAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     @Override
     public int getItemViewType(int position) {
-        int type;
-        if (position == mCollectIndex) {
-            type = TYPE.COLLECT.ordinal();
-        } else {
-            type = TYPE.DEFAULT.ordinal();
-        }
-        return type;
+        ContactBean contact = cnPinyinList.get(position).data;
+        return contact.getUiType();
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        if (viewType == TYPE.COLLECT.ordinal()) {
+        if (viewType == TYPE.ORGANIZATION_TYPE.ordinal()) {
+            return new OrganizeHolder(LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.contacts_fragment_item, parent, false));
+        } else if (viewType == TYPE.DEPARTMENT_TYPE.ordinal()) {
+            return new DepartHolder(LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.contacts_fragment_item, parent, false));
+        } else if (viewType == TYPE.COLLECT_TYPE.ordinal()) {
             return new CollectHolder(LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.collect_fragment_item, parent, false));
         } else {
@@ -117,114 +118,83 @@ public class SearchContactAdapter extends RecyclerView.Adapter<RecyclerView.View
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         final ContactBean contact = cnPinyinList.get(position).data;
 
-        if (holder instanceof ContactHolder) {
-            if (position >= 0 && position < mCollectIndex) {
-                int icon = defaultIcon(position);
-                ((ContactHolder) holder).iv_header.setImageResource(icon);
-                ((ContactHolder) holder).cb_collect.setVisibility(View.GONE);
-                holder.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (null != itemEventListener) {
-                            itemEventListener.onItemClick(position, contact);
-                        }
-                    }
-                });
-            } else {
-                if (null != mCacheMap) {
-                    if (mCollectIndex == mIndexForCollect) {
-                        ((ContactHolder) holder).cb_collect.setVisibility(View.VISIBLE);
-                    } else {
-                        ((ContactHolder) holder).cb_collect.setVisibility(View.GONE);
-                    }
+        if (holder instanceof OrganizeHolder) {
+            ((OrganizeHolder) holder).tv_name.setText(contact.getRealname().substring(9));
 
-                    Log.e("YW", "realname: " + contact.getRealname());
+            int icon = defaultIcon(2);
+            ((OrganizeHolder) holder).iv_header.setImageResource(icon);
+            ((OrganizeHolder) holder).cb_collect.setVisibility(View.GONE);
+        } else if (holder instanceof DepartHolder) {
+            ((DepartHolder) holder).tv_name.setText(contact.getRealname().substring(9));
 
-
-                    Log.e("YW", "contact.getUuid(): " + contact.getUuid() + "\tcheck: " + (groupMap.get(contact.getUuid()) == null ?
-                            "null" : groupMap.get(contact.getUuid()).getUuid()));
-
-                    for (Map.Entry<String, ContactBean> entry: groupMap.entrySet()) {
-                        ContactBean item = entry.getValue();
-
-                        Log.e("YW", "迭代: " + item.getUuid());
-                    }
-
-                    if (null != groupMap && null != groupMap.get(contact.getUuid())) {
-                        ((ContactHolder) holder).cb_collect.setButtonDrawable(R.drawable.contact_select_def);
-                    } else {
-                        ((ContactHolder) holder).cb_collect.setButtonDrawable(R.drawable.contacts_select_selector);
-                        if (mTotalMap.get(contact.getUuid()) != null) {
-                            ((ContactHolder) holder).cb_collect.setChecked(true);
-                        } else {
-                            ((ContactHolder) holder).cb_collect.setChecked(false);
-                        }
-                    }
-                }
-
-                try {
-                    Glide.with(mContext)
-                            .load(contact.getAvatar())
-                            .apply(new RequestOptions()
-                                    .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-                                    .centerCrop()
-                                    .override(120, 120)
-                                    .transform(new GlideRoundTransform())
-                                    .placeholder(R.drawable.color_default_header)
-                                    .error(R.drawable.color_default_header))
-                            .into(((ContactHolder) holder).iv_header);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                holder.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (position > mCollectIndex && null != mCacheMap) {
-                            if (null != groupMap && null != groupMap.get(contact.getUuid())) {
-                                return;
-                            }
-                            if (((ContactHolder) holder).cb_collect.isChecked()) {
-                                mCacheMap.remove(position);
-                                ((ContactHolder) holder).cb_collect.setChecked(false);
-                            } else {
-                                mCacheMap.put(position, contact);
-                                ((ContactHolder) holder).cb_collect.setChecked(true);
-                            }
-                            Intent intent = new Intent(AddContactsCreateGroupActivity.BROADCAST_FILTER);
-                            intent.putExtra(AddContactsCreateGroupActivity.ACTION, AddContactsCreateGroupActivity.ADAPTER_CONTACT);
-                            intent.putExtra("bean", contact);
-                            LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
-                            if (null != itemEventListener) {
-                                itemEventListener.onItemClick(position, contact);
-                                itemEventListener.collectCount(mCacheMap.size());
-                            }
-                        }
-                    }
-                });
-            }
-
-            if (contact.getRealname().startsWith("↑##@@**") && position <= mCollectIndex) {
-                ((ContactHolder) holder).tv_name.setText(contact.getRealname().substring(9));
-            } else {
-                ((ContactHolder) holder).tv_name.setText(contact.getRealname());
-            }
+            int icon = defaultIcon(1);
+            ((DepartHolder) holder).iv_header.setImageResource(icon);
+            ((DepartHolder) holder).cb_collect.setVisibility(View.GONE);
 
         } else if (holder instanceof CollectHolder) {
-            ((CollectHolder) holder).itemView.setBackgroundColor(0xF5F5F5);
+            ((CollectHolder) holder).tv_name.setText(contact.getRealname().substring(9));
+        } else if (holder instanceof ContactHolder) {
+            ((ContactHolder) holder).tv_name.setText(contact.getRealname());
+
+            ((ContactHolder) holder).cb_collect.setVisibility(View.VISIBLE);
+
+            if (null != groupMap && null != groupMap.get(contact.getUuid())) {
+                ((ContactHolder) holder).cb_collect.setButtonDrawable(R.drawable.contact_select_def);
+            } else {
+                ((ContactHolder) holder).cb_collect.setButtonDrawable(R.drawable.contacts_select_selector);
+                if (mTotalMap.get(contact.getUuid()) != null) {
+                    ((ContactHolder) holder).cb_collect.setChecked(true);
+                } else {
+                    ((ContactHolder) holder).cb_collect.setChecked(false);
+                }
+            }
+
+            int size = mContext.getResources().getDimensionPixelOffset(R.dimen.card_head);
+            try {
+                Glide.with(mContext)
+                        .load(contact.getAvatar())
+                        .apply(new RequestOptions()
+                                .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+                                .centerCrop()
+                                .override(size, size)
+                                .transform(new GlideRoundTransform())
+                                .placeholder(R.drawable.color_default_header)
+                                .error(R.drawable.color_default_header))
+                        .into(((ContactHolder) holder).iv_header);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
-        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onLongClick(View v) {
-                if (null != itemEventListener) {
-                    Toast.makeText(mContext, "长按position：" + position, Toast.LENGTH_SHORT).show();
-                    itemEventListener.onLongClick(position);
+            public void onClick(View v) {
+                if (contact.getUiType() == SearchContactAdapter.TYPE.ORGANIZATION_TYPE.ordinal()
+                        || contact.getUiType() == SearchContactAdapter.TYPE.DEPARTMENT_TYPE.ordinal()) {
+                    if (null != itemEventListener) {
+                        itemEventListener.onItemClick(position, contact);
+                    }
+                } else if (contact.getUiType() == SearchContactAdapter.TYPE.CONTACT_TYPE.ordinal()) {
+                    if (((ContactHolder) holder).cb_collect.isChecked()) {
+                        mCacheMap.remove(position);
+                        ((ContactHolder) holder).cb_collect.setChecked(false);
+                    } else {
+                        mCacheMap.put(position, contact);
+                        ((ContactHolder) holder).cb_collect.setChecked(true);
+                    }
+                    Intent intent = new Intent(AddContactsCreateGroupActivity.BROADCAST_FILTER);
+                    intent.putExtra(AddContactsCreateGroupActivity.ACTION, AddContactsCreateGroupActivity.ADAPTER_CONTACT);
+                    intent.putExtra("bean", contact);
+                    LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
+                    if (null != itemEventListener) {
+                        itemEventListener.onItemClick(position, contact);
+                        itemEventListener.collectCount(mCacheMap.size());
+                    }
                 }
-                return true;
             }
         });
     }
+
 
     @Override
     public long getHeaderId(int childAdapterPosition) {
@@ -266,6 +236,33 @@ public class SearchContactAdapter extends RecyclerView.Adapter<RecyclerView.View
         }
     }
 
+    public class OrganizeHolder extends RecyclerView.ViewHolder {
+        private ImageView iv_header;
+        private TextView tv_name;
+        private CheckBox cb_collect;
+
+        public OrganizeHolder(View itemView) {
+            super(itemView);
+            iv_header = itemView.findViewById(R.id.iv_header);
+            tv_name = itemView.findViewById(R.id.tv_name);
+            cb_collect = itemView.findViewById(R.id.cb_collect);
+        }
+    }
+
+    public class DepartHolder extends RecyclerView.ViewHolder {
+        private ImageView iv_header;
+        private TextView tv_name;
+        private CheckBox cb_collect;
+
+        public DepartHolder(View itemView) {
+            super(itemView);
+            iv_header = itemView.findViewById(R.id.iv_header);
+            tv_name = itemView.findViewById(R.id.tv_name);
+            cb_collect = itemView.findViewById(R.id.cb_collect);
+        }
+    }
+
+
     public class CollectHolder extends RecyclerView.ViewHolder {
         private TextView tv_name;
 
@@ -306,11 +303,10 @@ public class SearchContactAdapter extends RecyclerView.Adapter<RecyclerView.View
         int icon = -1;
         switch (position) {
             case 1:
-                icon = R.drawable.contacts_org;
-                break;
-            case 0:
-            case 2:
                 icon = R.drawable.contacts_department;
+                break;
+            case 2:
+                icon = R.drawable.contacts_org;
                 break;
             case 3:
                 icon = R.drawable.contacts_phone_list;
@@ -324,9 +320,9 @@ public class SearchContactAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     //--------------------------------------------------------------
     public interface NetRelativeRequestListener {
-        public void onRequest(MessageHandler msgHand);
+        void onRequest(MessageHandler msgHand);
 
-        public void onSuccess(Message msg, String response);
+        void onSuccess(Message msg, String response);
     }
 
     private NetRelativeRequestListener requestListener;

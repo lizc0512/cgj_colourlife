@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--通讯录头数据-->
-    <string-array name="names_collect_contact">
+    <string-array name="names_home">
         <item>↑##@@**0 搜索</item>
         <item>↑##@@**1 组织架构</item>
         <item>↑##@@**2 我的部门</item>
@@ -10,14 +10,8 @@
         <item>↑##@@**5 收藏联系人</item>
     </string-array>
 
-    <string-array name="names_add_contact">
-        <item>↑##@@**0 搜索</item>
-        <!--<item>↑##@@**1 组织架构</item>-->
-        <item>↑##@@**2 我的部门</item>
-        <item>↑##@@**5 收藏联系人</item>
-    </string-array>
-
-    <string-array name="names_add_contact2">
+    <string-array name="names_group_add">
+        <item>↑##@@**1 组织架构</item>
         <item>↑##@@**2 我的部门</item>
         <item>↑##@@**5 收藏联系人</item>
     </string-array>

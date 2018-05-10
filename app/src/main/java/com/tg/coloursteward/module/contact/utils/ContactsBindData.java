@@ -2,6 +2,7 @@ package com.tg.coloursteward.module.contact.utils;
 
 import android.content.Context;
 
+import com.tg.coloursteward.module.groupchat.SearchContactAdapter;
 import com.tg.coloursteward.net.ResponseData;
 import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.db.bean.ContactBean;
@@ -20,8 +21,7 @@ import java.util.Observable;
 public class ContactsBindData extends Observable {
 
     public static final int TYPE_HOME = 0x01;
-    public static final int TYPE_ADD_CONTACT = 0x02;
-    public static final int TYPE_ADD_CONTACT_NO_HEADER = 0x03;
+    public static final int TYPE_GROUP_ADD = 0x02;
 
     private static ContactsBindData instance;
 
@@ -50,22 +50,28 @@ public class ContactsBindData extends Observable {
     public List<ContactBean> contactList(Context context, ResponseData data, int type) {
         List<ContactBean> contactList = new ArrayList<>();
         ContactBean contact;
-
+        String[] names;
         if (type == TYPE_HOME) {
-            String[] names = context.getResources().getStringArray(R.array.names_collect_contact); //获取
-            for (int i = 0; i < names.length; i++) {
-                contactList.add(addHeadItem(names[i]));
+            names = context.getResources().getStringArray(R.array.names_home); //获取
+        } else if (type == TYPE_GROUP_ADD) {
+            names = context.getResources().getStringArray(R.array.names_group_add); //获取
+        } else {
+            names = context.getResources().getStringArray(R.array.names_home); //获取
+        }
+
+        for (int i = 0; i < names.length; i++) {
+            String content = names[i];
+            ContactBean bean = addHeadItem(content);
+            if (content.contains("组织架构")) {
+                bean.setUiType(SearchContactAdapter.TYPE.ORGANIZATION_TYPE.ordinal());
+            } else if (content.contains("我的部门")) {
+                bean.setUiType(SearchContactAdapter.TYPE.DEPARTMENT_TYPE.ordinal());
+            } else if (content.contains("收藏联系人")) {
+                bean.setUiType(SearchContactAdapter.TYPE.COLLECT_TYPE.ordinal());
+            } else {
+                bean.setUiType(SearchContactAdapter.TYPE.CONTACT_TYPE.ordinal());
             }
-        } if (type == TYPE_ADD_CONTACT_NO_HEADER) {
-            String[] names = context.getResources().getStringArray(R.array.names_add_contact2); //获取
-            for (int i = 0; i < names.length; i++) {
-                contactList.add(addHeadItem(names[i]));
-            }
-        } else if (type == TYPE_ADD_CONTACT) {
-            String[] names = context.getResources().getStringArray(R.array.names_add_contact); //获取
-            for (int i = 0; i < names.length; i++) {
-                contactList.add(addHeadItem(names[i]));
-            }
+            contactList.add(bean);
         }
         for (int i = 0; i < data.length; i++) {
 
@@ -90,6 +96,7 @@ public class ContactsBindData extends Observable {
             contact.setIs_hx(true);
             contact.setPinyin(pinyin.toString());
             contact.setSimplePinyin(ch.toString());
+            contact.setUiType(SearchContactAdapter.TYPE.CONTACT_TYPE.ordinal());
             contactList.add(contact);
         }
         return contactList;

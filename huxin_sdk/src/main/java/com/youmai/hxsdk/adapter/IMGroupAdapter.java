@@ -294,8 +294,9 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
         final CacheMsgBean cacheMsgBean = mImBeanList.get(position);
         final CacheMsgFile cacheMsgFile = (CacheMsgFile) cacheMsgBean.getJsonBodyObj();
 
+        int resId = IMHelper.getFileImgRes(cacheMsgFile.getFileName(), false);
         Glide.with(mAct)
-                .load(cacheMsgFile.getFileRes())
+                .load(resId)
                 .apply(new RequestOptions()
                         .diskCacheStrategy(DiskCacheStrategy.RESOURCE))
                 .into(holder.fileIV);

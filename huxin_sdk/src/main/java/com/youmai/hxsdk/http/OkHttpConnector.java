@@ -150,12 +150,18 @@ public class OkHttpConnector {
      * 下载文件
      *
      * @param url
+     * @param md5
+     * @param filePath
+     * @param fileName
      * @param listener
      */
-    public static void httpDownload(String url, String md5, DownloadListener listener) {
+    public static void httpDownload(String url, String md5, String filePath,
+                                    String fileName, DownloadListener listener) {
 
         HttpDownLoadFileAsyncTask task = new HttpDownLoadFileAsyncTask(listener);
         task.setMd5(md5);
+        task.setFilePath(filePath);
+        task.setFileName(fileName);
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, url);
     }
 
@@ -566,6 +572,8 @@ public class OkHttpConnector {
 
         private DownloadListener mProgressListener;
         private String md5;//下载文件的md5
+        private String filePath;
+        private String fileName;
 
         private HttpDownLoadFileAsyncTask(DownloadListener listener) {
             mProgressListener = listener;
@@ -573,6 +581,14 @@ public class OkHttpConnector {
 
         private void setMd5(String md5) {
             this.md5 = md5;
+        }
+
+        public void setFilePath(String filePath) {
+            this.filePath = filePath;
+        }
+
+        public void setFileName(String fileName) {
+            this.fileName = fileName;
         }
 
         @Override
@@ -584,8 +600,13 @@ public class OkHttpConnector {
 
             Log.v(TAG, "okhttp download url:" + url);
 
-            final String fileName = AppUtils.md5(url);
-            final File file = new File(FileConfig.getFileDownLoadPath(), fileName);
+            if (TextUtils.isEmpty(fileName)) {
+                fileName = AppUtils.md5(url);
+            }
+            if (TextUtils.isEmpty(filePath)) {
+                filePath = FileConfig.getFileDownLoadPath();
+            }
+            final File file = new File(filePath, fileName);
             File tmpFile;
             if (file.exists()) {
                 return file.getPath();

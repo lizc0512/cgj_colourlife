@@ -336,18 +336,6 @@
             android:name="Mob-AppSecret"
             android:value="0e45336a2e68ead59bb90df01be1c619" />
 
-
-        <provider
-            android:name="android.support.v4.content.FileProvider"
-            android:authorities="com.tg.coloursteward.fileProvider"
-            android:exported="false"
-            android:grantUriPermissions="true"
-            tools:replace="android:authorities">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"
-                tools:replace="android:resource" />
-        </provider>
         <!-- 极光推送 -->
         <!-- Rich push 核心功能 since 2.0.6 -->
         <activity

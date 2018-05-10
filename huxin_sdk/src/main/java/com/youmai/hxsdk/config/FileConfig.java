@@ -7,13 +7,13 @@ import java.io.File;
 public class FileConfig {
 
     public static final String HuXinPath = "/HuXin";
-    public static final String FilePaths = HuXinPath + "/Apk/";
+    public static final String ApkPaths = HuXinPath + "/Apk/";
     public static final String PicPaths = HuXinPath + "/Pic/";
     public static final String VideoPaths = HuXinPath + "/Video/";
     public static final String LogPaths = HuXinPath + "/Log/";
     public static final String CrashPaths = HuXinPath + "/Crash/";
     public static final String AudioPaths = HuXinPath + "/Audio/";
-    public static final String BigFilePaths = HuXinPath + "/File/";
+    public static final String FilePaths = HuXinPath + "/File/";
     public static final String SDKPaths = HuXinPath + "/Sdk/";
     public static final String InfoPaths = HuXinPath + "/Info/";
     public static final String VcardPaths = HuXinPath + "/vcard/";
@@ -55,7 +55,7 @@ public class FileConfig {
     }
 
     /**
-     * Apk下载路径
+     * 文件下载路径
      *
      * @return
      * @author
@@ -63,6 +63,22 @@ public class FileConfig {
      */
     public static String getFileDownLoadPath() {
         String path = Environment.getExternalStorageDirectory().getPath() + FilePaths;
+        File fileDir = new File(path);
+        if (!fileDir.exists()) {
+            fileDir.mkdirs();
+        }
+        return fileDir.getAbsolutePath();
+    }
+
+    /**
+     * Apk下载路径
+     *
+     * @return
+     * @author
+     * @date 2017年1月17日
+     */
+    public static String getApkDownLoadPath() {
+        String path = Environment.getExternalStorageDirectory().getPath() + ApkPaths;
         File fileDir = new File(path);
         if (!fileDir.exists()) {
             fileDir.mkdirs();
@@ -99,19 +115,6 @@ public class FileConfig {
         return fileDir.getAbsolutePath();
     }
 
-    /**
-     * 获取IM聊天文件路径
-     *
-     * @return
-     */
-    public static String getBigFileDownLoadPath() {
-        String path = Environment.getExternalStorageDirectory().getPath() + BigFilePaths;
-        File fileDir = new File(path);
-        if (!fileDir.exists()) {
-            fileDir.mkdirs();
-        }
-        return fileDir.getAbsolutePath();
-    }
 
 
     /**

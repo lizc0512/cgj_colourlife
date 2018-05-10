@@ -8,7 +8,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.Parcelable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
@@ -19,7 +18,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.bumptech.glide.Glide;
@@ -29,15 +27,13 @@ import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.IMFilePreviewActivity;
 import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.activity.CropMapActivity;
-import com.youmai.hxsdk.activity.IMConnectionActivity;
-import com.youmai.hxsdk.activity.IMGroupActivity;
 import com.youmai.hxsdk.activity.PictureIndicatorActivity;
 import com.youmai.hxsdk.config.AppConfig;
 import com.youmai.hxsdk.config.FileConfig;
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
 import com.youmai.hxsdk.db.helper.CacheMsgHelper;
 import com.youmai.hxsdk.http.DownloadListener;
-import com.youmai.hxsdk.http.FileAsyncTaskDownload;
+import com.youmai.hxsdk.http.OkHttpConnector;
 import com.youmai.hxsdk.im.IMHelper;
 import com.youmai.hxsdk.im.cache.CacheMsgFile;
 import com.youmai.hxsdk.im.cache.CacheMsgImage;
@@ -46,7 +42,6 @@ import com.youmai.hxsdk.im.cache.CacheMsgTxt;
 import com.youmai.hxsdk.im.cache.CacheMsgVideo;
 import com.youmai.hxsdk.im.cache.CacheMsgVoice;
 import com.youmai.hxsdk.im.voice.manager.MediaManager;
-import com.youmai.hxsdk.module.remind.SetRemindActivity;
 import com.youmai.hxsdk.module.videoplayer.VideoPlayerActivity;
 import com.youmai.hxsdk.module.videoplayer.bean.VideoDetailInfo;
 import com.youmai.hxsdk.proto.YouMaiMsg;
@@ -443,7 +438,10 @@ public class IMListAdapter extends RecyclerView.Adapter {
     }
 
     private void downVideo(final int position, String path, final CacheMsgBean cacheMsgBean) {
-        FileAsyncTaskDownload load = new FileAsyncTaskDownload(new DownloadListener() {
+        String filePath = FileConfig.getVideoDownLoadPath();
+        String fileName = "video_" + System.currentTimeMillis() + ".jv";
+
+        OkHttpConnector.httpDownload(path, null, filePath, fileName, new DownloadListener() {
             @Override
             public void onProgress(int cur, int total) {
                 if (cacheMsgBean.getJsonBodyObj() instanceof CacheMsgVideo) {
@@ -488,10 +486,7 @@ public class IMListAdapter extends RecyclerView.Adapter {
                     }
                 }
             }
-        }, "video_" + System.currentTimeMillis() + ".jv");
-        load.setDownloadpath(FileConfig.getBigFileDownLoadPath());
-
-        load.execute(path);
+        });
     }
 
 
@@ -711,14 +706,22 @@ public class IMListAdapter extends RecyclerView.Adapter {
     //根据flag显示发送状态 0:发送成功  -1:正在发送  2:短信发送  4:发送错误  5:文本播放语音 6:提醒状态
     private void showSendStart(final BaseViewHolder viewHolder, int flag, final CacheMsgBean bean, final int position) {
 
-        if (viewHolder.progressBar != null) {
-            if (flag == CacheMsgBean.SEND_SUCCEED
-                    || flag == CacheMsgBean.RECEIVE_READ) {
-                //显示到达状态
-                viewHolder.progressBar.setVisibility(View.INVISIBLE);
-            } else if (flag == CacheMsgBean.SEND_FAILED) {
-                //显示发送失败状态
+        if (flag == CacheMsgBean.SEND_SUCCEED
+                || flag == CacheMsgBean.RECEIVE_READ) {
+            //显示到达状态
+            if (viewHolder.progressBar != null) {
                 viewHolder.progressBar.setVisibility(View.GONE);
+            }
+            if (viewHolder.smsImg != null) {
+                viewHolder.smsImg.setVisibility(View.GONE);
+                viewHolder.smsImg.setOnClickListener(null);
+            }
+        } else if (flag == CacheMsgBean.SEND_FAILED) {
+            //显示发送失败状态
+            if (viewHolder.progressBar != null) {
+                viewHolder.progressBar.setVisibility(View.GONE);
+            }
+            if (viewHolder.smsImg != null) {
                 viewHolder.smsImg.setVisibility(View.VISIBLE);
                 viewHolder.smsImg.setImageResource(R.drawable.hx_im_send_error2_icon);
                 viewHolder.smsImg.setOnClickListener(new View.OnClickListener() {
@@ -733,11 +736,21 @@ public class IMListAdapter extends RecyclerView.Adapter {
                         mAct.startService(intent);
                     }
                 });
-            } else {
-                //正在发送状态
+            }
+
+
+        } else {
+            //正在发送状态
+            if (viewHolder.progressBar != null) {
                 viewHolder.progressBar.setVisibility(View.VISIBLE);
             }
+
+            if (viewHolder.smsImg != null) {
+                viewHolder.smsImg.setVisibility(View.GONE);
+                viewHolder.smsImg.setOnClickListener(null);
+            }
         }
+
     }
 
     void updateSendStatus(CacheMsgBean cacheMsgBean, int position) {

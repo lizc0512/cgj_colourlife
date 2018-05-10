@@ -3,6 +3,7 @@ package com.youmai.hxsdk;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.content.FileProvider;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -14,19 +15,11 @@ import com.youmai.hxsdk.activity.SdkBaseActivity;
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
 import com.youmai.hxsdk.config.FileConfig;
 import com.youmai.hxsdk.http.DownloadListener;
-import com.youmai.hxsdk.http.FileAsyncTaskDownload;
+import com.youmai.hxsdk.http.OkHttpConnector;
 import com.youmai.hxsdk.im.IMHelper;
 import com.youmai.hxsdk.im.cache.CacheMsgFile;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.RandomAccessFile;
-import java.net.HttpURLConnection;
-import java.net.URL;
 
 /**
  * 作者：create by YW
@@ -54,24 +47,6 @@ public class IMFilePreviewActivity extends SdkBaseActivity {
     private boolean isExit = false;//是否关闭线程
 
     private String totalSize;//文件总大小
-
-//    private Handler downloadHandler = new Handler() {
-//        @Override
-//        public void handleMessage(Message msg) {
-//
-//            /*switch (msg.arg1) {
-//                case MSG_UPDATE: //更新进度
-//                    LogUtils.e(Constant.SDK_UI_TAG, "currentProgress = " + currentProgress + " ; length = " + length);
-//                    if (currentProgress == length) {
-//                        SystemClock.sleep(500);
-//                        ll_progress_parent.setVisibility(View.GONE);
-//                        tv_open_file.setVisibility(View.VISIBLE);
-//                        isOpenFile = true;
-//                    }
-//                    break;
-//            }*/
-//        }
-//    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -131,8 +106,8 @@ public class IMFilePreviewActivity extends SdkBaseActivity {
             return;
         }
 
-        boolean isFileExist = new File(FileConfig.getBigFileDownLoadPath(), cacheMsgFile.getFileName()).exists();
-        if ((cacheMsgBean.getMsgType() == CacheMsgBean.RECEIVE_FILE && !cacheMsgBean.isRightUI()&& isFileExist)
+        boolean isFileExist = new File(FileConfig.getFileDownLoadPath(), cacheMsgFile.getFileName()).exists();
+        if ((cacheMsgBean.getMsgType() == CacheMsgBean.RECEIVE_FILE && !cacheMsgBean.isRightUI() && isFileExist)
                 || (cacheMsgBean.getMsgType() == CacheMsgBean.SEND_FILE && cacheMsgBean.isRightUI())) {
             isOpenFile = true;
             ll_progress_parent.setVisibility(View.GONE);
@@ -165,7 +140,7 @@ public class IMFilePreviewActivity extends SdkBaseActivity {
             public void onClick(View v) {
                 if (isOpenFile) {
                     if (!cacheMsgBean.isRightUI()) {
-                        openFile(new File(FileConfig.getBigFileDownLoadPath(), cacheMsgFile.getFileName()));
+                        openFile(new File(FileConfig.getFileDownLoadPath(), cacheMsgFile.getFileName()));
                     } else {
                         openFile(new File(cacheMsgFile.getFilePath()));
                     }
@@ -176,306 +151,36 @@ public class IMFilePreviewActivity extends SdkBaseActivity {
         });
     }
 
-    private void breakDownload(String path, String fileName) {
-        FileAsyncTaskDownload load = new FileAsyncTaskDownload(new DownloadListener() {
-            @Override
-            public void onProgress(int cur, int total) {
-                pb_progress_bar.setProgress(cur);
-                pb_progress_bar.setMax(total);
-                downloadingProgressText.setText(String.format(getString(R.string.hx_sdk_downloading2), IMHelper.convertFileSize(cur), IMHelper.convertFileSize(total)));
-            }
+    private void breakDownload(String url, String fileName) {
+        OkHttpConnector.httpDownload(url, null, null,
+                fileName, new DownloadListener() {
+                    @Override
+                    public void onProgress(int cur, int total) {
+                        pb_progress_bar.setProgress(cur);
+                        pb_progress_bar.setMax(total);
+                        String progress = String.format(getString(R.string.hx_sdk_downloading2),
+                                IMHelper.convertFileSize(cur),
+                                IMHelper.convertFileSize(total));
+                        downloadingProgressText.setText(progress);
+                    }
 
-            @Override
-            public void onFail(String err) {
-                isOpenFile = false;
-                tv_open_file.setVisibility(View.VISIBLE);
-                tv_open_file.setText("重新下载");
-            }
+                    @Override
+                    public void onFail(String err) {
+                        isOpenFile = false;
+                        tv_open_file.setVisibility(View.VISIBLE);
+                        tv_open_file.setText("重新下载");
+                    }
 
-            @Override
-            public void onSuccess(String path) {
-                ll_progress_parent.setVisibility(View.GONE);
-                tv_open_file.setText(R.string.hx_sdk_open_other_app);
-                tv_open_file.setVisibility(View.VISIBLE);
-                isOpenFile = true;
-            }
-        }, fileName);
-        load.setDownloadpath(FileConfig.getBigFileDownLoadPath());
-
-        load.execute(path);
+                    @Override
+                    public void onSuccess(String path) {
+                        ll_progress_parent.setVisibility(View.GONE);
+                        tv_open_file.setText(R.string.hx_sdk_open_other_app);
+                        tv_open_file.setVisibility(View.VISIBLE);
+                        isOpenFile = true;
+                    }
+                });
     }
 
-    private final static int THREAD_COUNT = 1;
-    private int finishedThread = 0;
-    private int length = 0;
-    private int mCurrentProgress;//当前进度
-
-    private class DownLoadThread implements Runnable {
-        int startIndex;
-        int endIndex;
-        int threadId;
-        private String mDownloadUrl;
-        private String mFileName;
-
-        public DownLoadThread(int startIndex, int endIndex, int threadId, String downloadUrl, String name) {
-            this.startIndex = startIndex;
-            this.endIndex = endIndex;
-            this.threadId = threadId;
-            this.mDownloadUrl = downloadUrl;
-            this.mFileName = name;
-        }
-
-        @Override
-        public void run() {
-            HttpURLConnection conn = null;
-            RandomAccessFile raf = null;
-            File progressFile = null;
-            try {
-                progressFile = new File(FileConfig.getBigFileDownLoadPath(), mFileName + "-" + threadId + ".txt");
-                //判断进度临时文件是否存在
-                if (progressFile.exists()) {
-                    FileInputStream fis = null;
-                    try {
-                        fis = new FileInputStream(progressFile);
-                        BufferedReader br = new BufferedReader(new InputStreamReader(fis));
-                        //从进度临时文件中读取出上一次下载的总进度，然后与原本的开始位置相加，得到新的开始位置
-                        int lastProgress = Integer.parseInt(br.readLine());
-                        startIndex += lastProgress;
-
-                        //把上次下载的进度显示至进度条
-                        mCurrentProgress += lastProgress;
-                        pb_progress_bar.setProgress(mCurrentProgress);
-
-                        //downloadHandler.sendEmptyMessage(1);//发送消息，让主线程刷新UI进度
-
-                    } catch (Exception e) {
-                        if (null != progressFile && progressFile.exists()) {
-                            progressFile.delete();
-                        }
-                        e.printStackTrace();
-                    } finally {
-                        if (null != fis) {
-                            fis.close();
-                        }
-                    }
-                }
-
-                URL url = new URL(mDownloadUrl);
-                conn = (HttpURLConnection) url.openConnection();
-                conn.setRequestMethod("GET");
-                conn.setConnectTimeout(10 * 1000);
-                conn.setReadTimeout(10 * 1000);
-                //设置本次http请求所请求的数据的区间
-                conn.setRequestProperty("Range", "bytes=" + startIndex + "-" + endIndex);
-
-                if (conn.getResponseCode() == 206) {
-                    //流里此时只有1/threadCount原文件的数据
-                    InputStream is = conn.getInputStream();
-                    byte[] buf = new byte[1024 * 2];
-                    int len = -1;
-                    int total = 0;
-                    //拿到临时文件的输出流
-                    File file = new File(FileConfig.getBigFileDownLoadPath(), mFileName + ".tmp");
-                    raf = new RandomAccessFile(file, "rwd");
-                    //把文件的写入位置移动至startIndex
-                    raf.seek(startIndex);
-                    while ((len = is.read(buf)) != -1 && !isExit) {
-
-                        raf.write(buf, 0, len);//每次读取流里数据之后，同步把数据写入临时文件
-                        total += len;
-
-                        //每次读取流里数据之后，把本次读取的数据的长度显示至进度条
-                        mCurrentProgress += len;
-                        pb_progress_bar.setProgress(mCurrentProgress);
-
-                        //downloadHandler.sendEmptyMessage(1);//发送消息，让主线程刷新UI进度
-                        //LogUtils.e(Constant.SDK_UI_TAG, "file progress : " + mCurrentProgress);
-
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                downloadingProgressText.setText(String.format(getString(R.string.hx_sdk_downloading2), IMHelper.convertFileSize(mCurrentProgress), totalSize));
-                            }
-                        });
-
-                        //生成一个专门用来记录下载进度的临时文件
-                        RandomAccessFile progressRaf = new RandomAccessFile(progressFile, "rwd");
-                        //每次读取流里数据之后，同步把当前线程下载的总进度写入进度临时文件中
-                        progressRaf.write((total + "").getBytes());
-                        progressRaf.close();
-                    }
-
-                    //LogUtils.e(Constant.SDK_UI_TAG, "线程" + threadId + "下载完毕--------------YW参上！");
-
-                    finishedThread++;
-                    synchronized (mDownloadUrl) {
-                        if (finishedThread == THREAD_COUNT && !isExit) {
-                            for (int i = 0; i < THREAD_COUNT; i++) {
-                                File f = new File(FileConfig.getBigFileDownLoadPath(), mFileName + "-" + i + ".txt");
-                                f.delete();
-                                if (i == THREAD_COUNT - 1) {
-                                    file.renameTo(new File(FileConfig.getBigFileDownLoadPath(), mFileName));
-                                    IMFilePreviewActivity.this.runOnUiThread(new Runnable() { //刷UI
-                                        @Override
-                                        public void run() {
-                                            ll_progress_parent.setVisibility(View.GONE);
-                                            tv_open_file.setVisibility(View.VISIBLE);
-                                            isOpenFile = true;
-                                        }
-                                    });
-                                }
-                            }
-                            finishedThread = 0;
-                        }
-                    }
-                } else {
-                    if (null != progressFile && progressFile.exists()) {
-                        progressFile.delete();
-                    }
-                }
-            } catch (Exception e) {
-                if (null != progressFile && progressFile.exists()) {
-                    progressFile.delete();
-                }
-                e.printStackTrace();
-            } finally {
-                if (null != raf) {
-                    try {
-                        raf.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                if (null != conn) {
-                    conn.disconnect();
-                }
-            }
-        }
-    }
-
-//    public class DownloadFile implements Runnable {
-//
-//        private String mDownloadUrl;
-//        private String mFileName;
-//
-//        public DownloadFile(String downloadUrl, String name) {
-//            this.mDownloadUrl = downloadUrl;
-//            this.mFileName = name;
-//        }
-//
-//        @Override
-//        public void run() {
-//            HttpURLConnection conn = null;
-//            File file = null;
-//            File tmpFile = null;
-//            InputStream is = null;
-//            OutputStream os = null;
-//            int mFileTotalLength = 0;
-//            Message msg;
-//            try {
-//                URL url = new URL(mDownloadUrl);
-//                conn = (HttpURLConnection) url.openConnection();
-//                conn.setConnectTimeout(30 * 1000);
-//                conn.setReadTimeout(30 * 1000);
-//                conn.setRequestMethod("GET");
-//
-//                file = new File(FileConfig.getBigFileDownLoadPath(), mFileName);
-//                if (!file.exists()) {
-//                    String downLoadFileTmpName = mFileName + ".tmp"; // 设置下载的临时文件名
-//                    tmpFile = new File(FileConfig.getBigFileDownLoadPath(), downLoadFileTmpName);
-//                } else {
-//                    return;
-//                }
-//
-//                long startPosition = tmpFile.length(); // 已下载的文件长度
-//                String start = "bytes=" + startPosition + "-";
-//
-//                conn.setRequestProperty("RANGE", start); //支持断点续传
-//                conn.connect();
-//
-//                // this will be useful so that you can show a typical 0-100% progress bar
-//                mFileTotalLength = conn.getContentLength(); // -1
-//                // download the file
-//                is = new BufferedInputStream(conn.getInputStream());
-//                os = new FileOutputStream(tmpFile);
-//
-//                byte data[] = new byte[1024 * 4];
-//                long currentTotalSize = startPosition;
-//                int readSize = -1;
-//
-//
-//                final long finalCurrentTotalSize1 = currentTotalSize;
-//                runOnUiThread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        tv_download_progress.setText(IMHelper.convertFileSize(finalCurrentTotalSize1));
-//                    }
-//                });
-//
-//                while ((readSize = is.read(data)) != -1) {
-//
-//                    os.write(data, 0, readSize);
-//                    currentTotalSize += readSize;
-//
-//                    // publishing the progress....
-//                    long startTime = System.currentTimeMillis();
-//                    do {
-//                        msg = downloadHandler.obtainMessage();
-//                        msg.arg1 = MSG_UPDATE;
-//                        msg.arg2 = (int) currentTotalSize;
-//                        msg.what = (int) (currentTotalSize * 100 / mFileTotalLength);
-//                        LogUtils.e(Constant.SDK_UI_TAG, "file progress : " + (currentTotalSize * 100 / mFileTotalLength));
-//                        downloadHandler.sendMessage(msg);
-//
-//                        final long finalCurrentTotalSize = currentTotalSize;
-//                        runOnUiThread(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                tv_download_progress.setText(IMHelper.convertFileSize(finalCurrentTotalSize));
-//                            }
-//                        });
-//
-//                    } while (System.currentTimeMillis() - startTime > 300);
-//
-//                    os.flush();
-//                }
-//
-//            } catch (IOException e) {
-//                if (tmpFile.exists()) {
-//                    tmpFile.delete();
-//                }
-//                e.printStackTrace();
-//            } finally {
-//                if (is != null) {
-//                    try {
-//                        is.close();
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//                if (os != null) {
-//                    try {
-//                        os.close();
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//                if (conn != null) {
-//                    conn.disconnect();
-//                }
-//
-//                try {
-//                    if (tmpFile.length() != mFileTotalLength) {
-//                        return;
-//                    }
-//                    tmpFile.renameTo(file);
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }
-//    }
 
     /**
      * 打开文件
@@ -483,29 +188,23 @@ public class IMFilePreviewActivity extends SdkBaseActivity {
      * @param file
      */
     private void openFile(File file) {
-
-//        Intent intent = new Intent();
-//        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-//        //设置intent的Action属性
-//        intent.setAction(Intent.ACTION_VIEW);
-//        //获取文件file的MIME类型
-//        String type = getMIMEType(file);
-//        //设置intent的data和Type属性。
-//        intent.setDataAndType(Uri.fromFile(file), type);
-//        //跳转
-//        startActivity(intent);
-
         try {
             Intent intent = new Intent();
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             //设置intent的Action属性
             intent.setAction(Intent.ACTION_VIEW);
             //获取文件file的MIME类型
             String type = getMIMEType(file);
+
+            //Uri uri = Uri.fromFile(file);
+            //targetSdkVersion >= 24
+            Uri uri = FileProvider.getUriForFile(this,
+                    getPackageName() + ".filepicker.provider",
+                    file);
             //设置intent的data和Type属性。
-            intent.setDataAndType(Uri.fromFile(file), type);
+            intent.setDataAndType(uri, type);
             //跳转
             startActivity(intent);
         } catch (Exception e) {

@@ -66,7 +66,7 @@ public class FileCacheManager {
      */
     public static boolean clearApkCache() {
         try {
-            File file = new File(FileConfig.getFileDownLoadPath());
+            File file = new File(FileConfig.getApkDownLoadPath());
             if (deleteFile(file)) {
                 LogUtils.i(TAG, "文件删除成功");
                 return true;
@@ -127,7 +127,7 @@ public class FileCacheManager {
      */
     public static boolean clearBigFileCache() {
         try {
-            File file = new File(FileConfig.getBigFileDownLoadPath());
+            File file = new File(FileConfig.getFileDownLoadPath());
             if (deleteFile(file)) {
                 LogUtils.i(TAG, "文件删除成功");
                 return true;
@@ -207,7 +207,7 @@ public class FileCacheManager {
         long size2 = getFolderSize(new File(FileConfig.getVideoDownLoadPath()));
         long size3 = getFolderSize(new File(FileConfig.getPicDownLoadPath()));
         long size4 = getFolderSize(new File(FileConfig.getAudioDownLoadPath()));
-        long size5 = getFolderSize(new File(FileConfig.getBigFileDownLoadPath()));
+        long size5 = getFolderSize(new File(FileConfig.getFileDownLoadPath()));
 
         long total = size + size2 + size3 + size4 + size5;
         sizeStr = getFormatSize(total);

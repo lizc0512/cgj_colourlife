@@ -66,6 +66,8 @@ public class MsgAsyncTaskLoader extends AsyncTaskLoader<List<ExCacheMsgBean>> {
             ExCacheMsgBean exBean = new ExCacheMsgBean(bean);
 
             String targetName = bean.getTargetName();
+            String targetAvatar = bean.getTargetAvatar();
+            String targetUuid = bean.getTargetUuid();
             int groupId = bean.getGroupId();
 
             if (TextUtils.isEmpty(targetName) && groupId > 0) {
@@ -79,6 +81,19 @@ public class MsgAsyncTaskLoader extends AsyncTaskLoader<List<ExCacheMsgBean>> {
                 }
             } else {
                 exBean.setDisplayName(targetName);
+            }
+
+            if (TextUtils.isEmpty(targetAvatar)
+                    && groupId == 0
+                    && !TextUtils.isEmpty(targetUuid)) {
+                List<CacheMsgBean> list = CacheMsgHelper.instance().toQueryCacheMsgList(mContext, targetUuid);
+                for (CacheMsgBean item : list) {
+                    String avatar = item.getSenderAvatar();
+                    if (!TextUtils.isEmpty(avatar)) {
+                        exBean.setTargetAvatar(avatar);
+                        break;
+                    }
+                }
             }
 
             tempList.add(exBean);

@@ -20,6 +20,11 @@
 
         <include layout="@layout/color_title" />
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/base_color" />
+
         <include layout="@layout/fragment_work_item_1" />
 
         <View

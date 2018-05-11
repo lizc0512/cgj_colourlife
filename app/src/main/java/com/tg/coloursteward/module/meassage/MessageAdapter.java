@@ -24,6 +24,7 @@ import com.youmai.hxsdk.config.ColorsConfig;
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
 import com.youmai.hxsdk.im.IMMsgManager;
 import com.youmai.hxsdk.im.cache.CacheMsgTxt;
+import com.youmai.hxsdk.utils.AppUtils;
 import com.youmai.hxsdk.utils.GlideRoundTransform;
 import com.youmai.hxsdk.utils.TimeUtils;
 import com.youmai.hxsdk.view.chat.emoticon.utils.EmoticonHandler;
@@ -67,35 +68,73 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     private void init(List<ExCacheMsgBean> list) {
 
+        long curTime = System.currentTimeMillis();
+
+        long xt = AppUtils.getLongSharedPreferences(mContext, "case", 0);
+        long yj = AppUtils.getLongSharedPreferences(mContext, "yj", 0);
+        long ggtz = AppUtils.getLongSharedPreferences(mContext, "ggtz", 0);
+        long sp = AppUtils.getLongSharedPreferences(mContext, "sp", 0);
+
         MsgConfig.ContentBean.DataBean item1 = new MsgConfig.ContentBean.DataBean();
-        item1.setComefrom("审批");
+        item1.setComefrom("蜜蜂协同");
         item1.setTitle("暂无新消息");
         item1.setOwner_name("暂无");
-        item1.setClient_code("sp");
+        item1.setClient_code("case");
+        ExCacheMsgBean bean1 = new ExCacheMsgBean(item1);
+        if (xt == 0) {
+            bean1.setMsgTime(curTime);
+            AppUtils.setLongSharedPreferences(mContext, "case", curTime);
+            curTime++;
+        } else {
+            bean1.setMsgTime(xt);
+        }
 
         MsgConfig.ContentBean.DataBean item2 = new MsgConfig.ContentBean.DataBean();
-        item2.setComefrom("公告通知");
+        item2.setComefrom("邮件");
         item2.setTitle("暂无新消息");
         item2.setOwner_name("暂无");
-        item2.setClient_code("ggtz");
+        item2.setClient_code("yj");
+        ExCacheMsgBean bean2 = new ExCacheMsgBean(item2);
+        if (yj == 0) {
+            bean2.setMsgTime(curTime);
+            AppUtils.setLongSharedPreferences(mContext, "yj", curTime);
+            curTime++;
+        } else {
+            bean2.setMsgTime(yj);
+        }
 
         MsgConfig.ContentBean.DataBean item3 = new MsgConfig.ContentBean.DataBean();
-        item3.setComefrom("邮件");
+        item3.setComefrom("公告通知");
         item3.setTitle("暂无新消息");
         item3.setOwner_name("暂无");
-        item3.setClient_code("yj");
+        item3.setClient_code("ggtz");
+        ExCacheMsgBean bean3 = new ExCacheMsgBean(item3);
+        if (ggtz == 0) {
+            bean2.setMsgTime(curTime);
+            AppUtils.setLongSharedPreferences(mContext, "ggtz", curTime);
+            curTime++;
+        } else {
+            bean3.setMsgTime(ggtz);
+        }
 
         MsgConfig.ContentBean.DataBean item4 = new MsgConfig.ContentBean.DataBean();
-        item4.setComefrom("蜜蜂协同");
+        item4.setComefrom("审批");
         item4.setTitle("暂无新消息");
         item4.setOwner_name("暂无");
-        item4.setClient_code("case");
+        item4.setClient_code("sp");
+        ExCacheMsgBean bean4 = new ExCacheMsgBean(item4);
+        if (sp == 0) {
+            bean2.setMsgTime(curTime);
+            AppUtils.setLongSharedPreferences(mContext, "sp", curTime);
+        } else {
+            bean4.setMsgTime(sp);
+        }
 
         list.add(new ExCacheMsgBean());
-        list.add(new ExCacheMsgBean(item1));
-        list.add(new ExCacheMsgBean(item2));
-        list.add(new ExCacheMsgBean(item3));
-        list.add(new ExCacheMsgBean(item4));
+        list.add(bean1);
+        list.add(bean2);
+        list.add(bean3);
+        list.add(bean4);
 
     }
 
@@ -135,9 +174,9 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             }
         }
 
-        messageList.add(5, msgBean);
+        messageList.add(1, msgBean);
         SortComparator comp = new SortComparator();
-        Collections.sort(messageList.subList(5, messageList.size()), comp);
+        Collections.sort(messageList.subList(1, messageList.size()), comp);
 
         notifyDataSetChanged();
     }
@@ -153,6 +192,9 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
         messageList.removeAll(oldList);
         messageList.addAll(newList);
+
+        SortComparator comp = new SortComparator();
+        Collections.sort(messageList.subList(1, messageList.size()), comp);
         notifyDataSetChanged();
     }
 

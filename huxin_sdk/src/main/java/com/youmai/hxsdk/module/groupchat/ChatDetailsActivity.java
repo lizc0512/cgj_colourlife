@@ -168,6 +168,15 @@ public class ChatDetailsActivity extends SdkBaseActivity {
                 builder.show();
             }
         });
+
+        mSelfHeader.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ARouter.getInstance().build(APath.EMPLOYEE_DATA_ACT)
+                        .withString("contacts_id", username)
+                        .navigation(mContext);
+            }
+        });
     }
 
 

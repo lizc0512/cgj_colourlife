@@ -4,7 +4,6 @@
     android:layout_height="48dp"
     android:background="@color/color_theme_main">
 
-    <!--android:text="@string/hx_back"-->
     <TextView
         android:id="@+id/tv_back"
         android:layout_width="wrap_content"
@@ -41,7 +40,6 @@
         android:layout_centerVertical="true"
         android:clickable="true"
         android:ellipsize="end"
-        android:foreground="?selectableItemBackground"
         android:gravity="center"
         android:maxLines="1"
         android:paddingRight="10dp"
@@ -85,38 +83,5 @@
         android:src="@drawable/im_title_more_icon"
         android:visibility="gone" />
 
-    <ImageView
-        android:id="@+id/iv_group_img"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:layout_marginRight="8dp"
-        android:clickable="true"
-        android:padding="6dp"
-        android:src="@drawable/tint_src_add_group_selector"
-        android:tint="@color/tint_color_add_group_selector"
-        android:visibility="gone" />
-
-
-    <ImageView
-        android:id="@+id/iv_group_detail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:layout_marginRight="8dp"
-        android:clickable="true"
-        android:padding="6dp"
-        android:src="@drawable/hx_group_chat_detail_selector"
-        android:visibility="gone" />
-
-    <View
-        android:id="@+id/header_title_line"
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:layout_alignParentBottom="true"
-        android:background="#e6e6e6"
-        android:visibility="gone" />
 
 </RelativeLayout>

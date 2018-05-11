@@ -611,8 +611,9 @@ public class IMGroupActivity extends SdkBaseActivity implements
             });
         }
 
-        ivGroup = (ImageView) findViewById(R.id.iv_group_detail);
+        ivGroup = (ImageView) findViewById(R.id.img_right);
         ivGroup.setVisibility(View.VISIBLE);
+        ivGroup.setImageResource(R.drawable.hx_group_chat_detail_selector);
         ivGroup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

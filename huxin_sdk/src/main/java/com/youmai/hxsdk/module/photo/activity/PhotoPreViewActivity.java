@@ -93,7 +93,6 @@ public class PhotoPreViewActivity extends SdkPhotoActivity implements View.OnCli
 
     private void bindViews() {
         findViewById(R.id.tv_back).setOnClickListener(this);
-        findViewById(R.id.header_title_line).setVisibility(View.GONE);
         TextView title = (TextView) findViewById(R.id.tv_title);
         title.setText("选择图片");
         TextView tv_title_right = (TextView) findViewById(R.id.tv_title_right);

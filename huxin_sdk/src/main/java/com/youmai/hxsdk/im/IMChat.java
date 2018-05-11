@@ -51,20 +51,21 @@ public class IMChat {
                 .setTargetUserName(imChat.getSrcUserName())
                 .setTargetAvatar(imChat.getSrcAvatar())
 
-                .setGroupId(imChat.getGroupId())
-                .setMsgTime(System.currentTimeMillis())
+                //.setMsgTime(System.currentTimeMillis())
+                .setMsgTime(imChat.getCreateTime())
                 .setMsgStatus(CacheMsgBean.RECEIVE_UNREAD)
                 .setMsgId(imChat.getMsgId())
                 .setContentJsonBody(imChat.getMsgContent());
 
         if (isGroup) {
-            mMsgBean.setTargetUuid(imChat.getGroupId() + "");
-            mMsgBean.setReceiverUserId(HuxinSdkManager.instance().getUuid());
-            mMsgBean.setTargetName(imChat.getGroupName());
+            mMsgBean.setGroupId(imChat.getGroupId())
+                    .setTargetUuid(imChat.getGroupId() + "")
+                    .setReceiverUserId(HuxinSdkManager.instance().getUuid())
+                    .setTargetName(imChat.getGroupName());
         } else {
-            mMsgBean.setTargetUuid(imChat.getSrcUserId());
-            mMsgBean.setReceiverUserId(imChat.getDestUserId());
-            mMsgBean.setTargetName(imChat.getSrcRealname());
+            mMsgBean.setTargetUuid(imChat.getSrcUserId())
+                    .setReceiverUserId(imChat.getDestUserId())
+                    .setTargetName(imChat.getSrcRealname());
         }
 
     }

@@ -79,7 +79,6 @@ public class FileClassifyActivity extends SdkHomeActivity implements View.OnClic
     @Override
     public void initView() {
         findViewById(R.id.tv_back).setOnClickListener(this);
-        findViewById(R.id.header_title_line).setVisibility(View.GONE);
         TextView title = (TextView) findViewById(R.id.tv_title);
         title.setText(txt_title);
 

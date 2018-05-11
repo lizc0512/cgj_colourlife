@@ -219,7 +219,6 @@ public class FileManagerActivity extends SdkHomeActivity implements View.OnClick
     @Override
     public void initView() {
         findViewById(R.id.tv_back).setOnClickListener(this);
-        findViewById(R.id.header_title_line).setVisibility(View.GONE);
         TextView title = (TextView) findViewById(R.id.tv_title);
         title.setText(getString(R.string.hx_file_manager_select_03));
 

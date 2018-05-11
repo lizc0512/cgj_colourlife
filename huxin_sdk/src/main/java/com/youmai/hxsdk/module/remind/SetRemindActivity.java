@@ -177,7 +177,6 @@ public class SetRemindActivity extends SdkBaseActivity implements View.OnClickLi
 
     private void initTitleBar() {
         findViewById(R.id.tv_back).setOnClickListener(this);
-        findViewById(R.id.header_title_line).setVisibility(View.GONE);
         TextView title = (TextView) findViewById(R.id.tv_title);
         title.setText("设置提醒");
         tv_finish = (TextView) findViewById(R.id.tv_title_right);

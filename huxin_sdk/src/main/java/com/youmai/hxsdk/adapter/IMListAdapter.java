@@ -530,6 +530,40 @@ public class IMListAdapter extends RecyclerView.Adapter {
                     }
                 }
             });
+            txtViewHolder.senderTV.setOnClickLis(new CopeTextView.OnCopeListener() {
+                @Override
+                public void copeText() {
+                }
+
+                @Override
+                public void forwardText(CharSequence s) {
+
+                }
+
+                @Override
+                public void collect() {
+                }
+
+                @Override
+                public void read() {
+
+                }
+
+                @Override
+                public void remind() {
+
+                }
+
+                @Override
+                public void delete() {
+                    //删除消息的操作
+                    deleteMsg(cacheMsgBean, position, true);
+                }
+
+                @Override
+                public void more() {
+                }
+            });
         }
     }
 
@@ -926,6 +960,7 @@ public class IMListAdapter extends RecyclerView.Adapter {
             listener.deleteMsgCallback(type);
         }
 
+        CacheMsgHelper.instance().deleteOneMsg(mAct, cacheMsgBean.getId());
         //删除本地
         mImBeanList.remove(cacheMsgBean);
         if (refreshUI) {

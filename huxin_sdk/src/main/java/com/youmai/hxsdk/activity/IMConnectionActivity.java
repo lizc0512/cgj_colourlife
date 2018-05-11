@@ -235,7 +235,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.hx_fragment_im_main);
+        setContentView(R.layout.hx_activity_im_single);
         mContext = this;
 
         mHandler = new NormalHandler(this);
@@ -473,8 +473,9 @@ public class IMConnectionActivity extends SdkBaseActivity implements
             });
         }
 
-        ivGroup = (ImageView) findViewById(R.id.iv_group_img);
+        ivGroup = (ImageView) findViewById(R.id.img_right);
         ivGroup.setVisibility(View.VISIBLE);
+        ivGroup.setImageResource(R.drawable.tint_src_add_group_selector);
         ivGroup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -858,7 +859,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
                 photoPaths.addAll(data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_MEDIA));
             }
             PhotoPickerManager.getInstance().clear();
-            if(photoPaths.size()==0){
+            if (photoPaths.size() == 0) {
                 return;
             }
 

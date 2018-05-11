@@ -155,7 +155,6 @@ public class PhotoActivity extends SdkPhotoActivity implements PhotoAdapter.Phot
                 onBackPressed();
             }
         });
-        findViewById(R.id.header_title_line).setVisibility(View.GONE);
         TextView title = (TextView) findViewById(R.id.tv_title);
         title.setText("相册");
 

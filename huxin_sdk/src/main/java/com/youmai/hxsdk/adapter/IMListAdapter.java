@@ -297,7 +297,7 @@ public class IMListAdapter extends RecyclerView.Adapter {
         showSendStart(holder, cacheMsgBean.getMsgStatus(), cacheMsgBean, position);
 
         if (cacheMsgBean.isRightUI()) {
-            if (cacheMsgBean.getMsgType() == CacheMsgBean.SEND_SUCCEED) {
+            if (cacheMsgBean.getMsgStatus() == CacheMsgBean.SEND_SUCCEED) {
                 holder.fileSizeTV.setVisibility(View.VISIBLE);
                 holder.filePbar.setVisibility(View.GONE);
             } else {

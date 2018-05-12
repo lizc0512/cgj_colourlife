@@ -322,7 +322,7 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
         }
 
         if (isRight) {
-            if (cacheMsgBean.getMsgType() == CacheMsgBean.SEND_SUCCEED) {
+            if (cacheMsgBean.getMsgStatus() == CacheMsgBean.SEND_SUCCEED) {
                 holder.fileSizeTV.setVisibility(View.VISIBLE);
                 holder.filePbar.setVisibility(View.GONE);
             } else {

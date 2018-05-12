@@ -883,6 +883,7 @@ public class HuxinSdkManager {
                                    ReceiveListener callback) {
         YouMaiGroup.GroupInfoModifyReq.Builder builder = YouMaiGroup.GroupInfoModifyReq.newBuilder();
         builder.setUserId(getUuid());
+        builder.setMemberName(getRealName());
         builder.setGroupId(groupId);
         builder.setGroupName(groupName);
         builder.setGroupAvatar(groupAvatar);

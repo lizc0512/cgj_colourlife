@@ -211,6 +211,11 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
 
+    public List<ExCacheMsgBean> getMsgList() {
+        return messageList;
+    }
+
+
     public ExCacheMsgBean getTop() {
         if (messageList.size() > 0) {
             return messageList.get(0);
@@ -413,6 +418,9 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     break;
                 case CacheMsgBean.GROUP_MEMBER_CHANGED:
                     itemView.message_type.setText(mContext.getString(R.string.message_type_member_changed));
+                    break;
+                case CacheMsgBean.GROUP_NAME_CHANGED:
+                    itemView.message_type.setText(mContext.getString(R.string.message_type_name_changed));
                     break;
                 default:
                     itemView.message_type.setText(mContext.getString(R.string.message_type));

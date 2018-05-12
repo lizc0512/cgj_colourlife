@@ -4,10 +4,10 @@
     android:layout_height="wrap_content"
     android:background="@color/color_theme_main"
     android:gravity="center_vertical"
-    android:paddingBottom="6dp"
+    android:paddingBottom="3dp"
     android:paddingLeft="15dp"
     android:paddingRight="15dp"
-    android:paddingTop="6dp">
+    android:paddingTop="3dp">
 
     <TextView
         android:id="@+id/tv_back"
@@ -42,7 +42,7 @@
             android:id="@+id/tv_title_more_img"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="5dp"
+            android:padding="8dp"
             android:src="@drawable/im_title_more_icon"
             android:visibility="gone" />
 
@@ -51,7 +51,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
-            android:padding="5dp"
+            android:padding="8dp"
             android:src="@drawable/tint_src_add_group_selector"
             android:visibility="gone" />
     </LinearLayout>

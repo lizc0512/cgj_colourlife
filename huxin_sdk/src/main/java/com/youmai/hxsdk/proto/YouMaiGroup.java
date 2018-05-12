@@ -17234,6 +17234,22 @@ public final class YouMaiGroup {
          * <code>required .GroupInfoModifyType type = 7;</code>
          */
         YouMaiGroup.GroupInfoModifyType getType();
+
+        /**
+         * <code>optional string member_name = 8;</code>
+         */
+        boolean hasMemberName();
+
+        /**
+         * <code>optional string member_name = 8;</code>
+         */
+        String getMemberName();
+
+        /**
+         * <code>optional string member_name = 8;</code>
+         */
+        com.google.protobuf.ByteString
+        getMemberNameBytes();
     }
 
     /**
@@ -17342,6 +17358,12 @@ public final class YouMaiGroup {
                                 bitField0_ |= 0x00000040;
                                 type_ = value;
                             }
+                            break;
+                        }
+                        case 66: {
+                            com.google.protobuf.ByteString bs = input.readBytes();
+                            bitField0_ |= 0x00000080;
+                            memberName_ = bs;
                             break;
                         }
                     }
@@ -17680,6 +17702,51 @@ public final class YouMaiGroup {
             return type_;
         }
 
+        public static final int MEMBER_NAME_FIELD_NUMBER = 8;
+        private Object memberName_;
+
+        /**
+         * <code>optional string member_name = 8;</code>
+         */
+        public boolean hasMemberName() {
+            return ((bitField0_ & 0x00000080) == 0x00000080);
+        }
+
+        /**
+         * <code>optional string member_name = 8;</code>
+         */
+        public String getMemberName() {
+            Object ref = memberName_;
+            if (ref instanceof String) {
+                return (String) ref;
+            } else {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                String s = bs.toStringUtf8();
+                if (bs.isValidUtf8()) {
+                    memberName_ = s;
+                }
+                return s;
+            }
+        }
+
+        /**
+         * <code>optional string member_name = 8;</code>
+         */
+        public com.google.protobuf.ByteString
+        getMemberNameBytes() {
+            Object ref = memberName_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (String) ref);
+                memberName_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
         private void initFields() {
             userId_ = "";
             groupId_ = 0;
@@ -17688,6 +17755,7 @@ public final class YouMaiGroup {
             topic_ = "";
             ownerId_ = "";
             type_ = YouMaiGroup.GroupInfoModifyType.MODIFY_NAME;
+            memberName_ = "";
         }
 
         private byte memoizedIsInitialized = -1;
@@ -17737,6 +17805,9 @@ public final class YouMaiGroup {
             if (((bitField0_ & 0x00000040) == 0x00000040)) {
                 output.writeEnum(7, type_.getNumber());
             }
+            if (((bitField0_ & 0x00000080) == 0x00000080)) {
+                output.writeBytes(8, getMemberNameBytes());
+            }
             getUnknownFields().writeTo(output);
         }
 
@@ -17774,6 +17845,10 @@ public final class YouMaiGroup {
             if (((bitField0_ & 0x00000040) == 0x00000040)) {
                 size += com.google.protobuf.CodedOutputStream
                         .computeEnumSize(7, type_.getNumber());
+            }
+            if (((bitField0_ & 0x00000080) == 0x00000080)) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeBytesSize(8, getMemberNameBytes());
             }
             size += getUnknownFields().getSerializedSize();
             memoizedSerializedSize = size;
@@ -17932,6 +18007,8 @@ public final class YouMaiGroup {
                 bitField0_ = (bitField0_ & ~0x00000020);
                 type_ = YouMaiGroup.GroupInfoModifyType.MODIFY_NAME;
                 bitField0_ = (bitField0_ & ~0x00000040);
+                memberName_ = "";
+                bitField0_ = (bitField0_ & ~0x00000080);
                 return this;
             }
 
@@ -17988,6 +18065,10 @@ public final class YouMaiGroup {
                     to_bitField0_ |= 0x00000040;
                 }
                 result.type_ = type_;
+                if (((from_bitField0_ & 0x00000080) == 0x00000080)) {
+                    to_bitField0_ |= 0x00000080;
+                }
+                result.memberName_ = memberName_;
                 result.bitField0_ = to_bitField0_;
                 onBuilt();
                 return result;
@@ -18034,6 +18115,11 @@ public final class YouMaiGroup {
                 }
                 if (other.hasType()) {
                     setType(other.getType());
+                }
+                if (other.hasMemberName()) {
+                    bitField0_ |= 0x00000080;
+                    memberName_ = other.memberName_;
+                    onChanged();
                 }
                 this.mergeUnknownFields(other.getUnknownFields());
                 return this;
@@ -18632,6 +18718,88 @@ public final class YouMaiGroup {
                 return this;
             }
 
+            private Object memberName_ = "";
+
+            /**
+             * <code>optional string member_name = 8;</code>
+             */
+            public boolean hasMemberName() {
+                return ((bitField0_ & 0x00000080) == 0x00000080);
+            }
+
+            /**
+             * <code>optional string member_name = 8;</code>
+             */
+            public String getMemberName() {
+                Object ref = memberName_;
+                if (!(ref instanceof String)) {
+                    com.google.protobuf.ByteString bs =
+                            (com.google.protobuf.ByteString) ref;
+                    String s = bs.toStringUtf8();
+                    if (bs.isValidUtf8()) {
+                        memberName_ = s;
+                    }
+                    return s;
+                } else {
+                    return (String) ref;
+                }
+            }
+
+            /**
+             * <code>optional string member_name = 8;</code>
+             */
+            public com.google.protobuf.ByteString
+            getMemberNameBytes() {
+                Object ref = memberName_;
+                if (ref instanceof String) {
+                    com.google.protobuf.ByteString b =
+                            com.google.protobuf.ByteString.copyFromUtf8(
+                                    (String) ref);
+                    memberName_ = b;
+                    return b;
+                } else {
+                    return (com.google.protobuf.ByteString) ref;
+                }
+            }
+
+            /**
+             * <code>optional string member_name = 8;</code>
+             */
+            public Builder setMemberName(
+                    String value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000080;
+                memberName_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string member_name = 8;</code>
+             */
+            public Builder clearMemberName() {
+                bitField0_ = (bitField0_ & ~0x00000080);
+                memberName_ = getDefaultInstance().getMemberName();
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string member_name = 8;</code>
+             */
+            public Builder setMemberNameBytes(
+                    com.google.protobuf.ByteString value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000080;
+                memberName_ = value;
+                onChanged();
+                return this;
+            }
+
             // @@protoc_insertion_point(builder_scope:GroupInfoModifyReq)
         }
 
@@ -18699,6 +18867,22 @@ public final class YouMaiGroup {
          * <code>required .GroupInfoModifyType type = 4;</code>
          */
         YouMaiGroup.GroupInfoModifyType getType();
+
+        /**
+         * <code>optional string member_name = 8;</code>
+         */
+        boolean hasMemberName();
+
+        /**
+         * <code>optional string member_name = 8;</code>
+         */
+        String getMemberName();
+
+        /**
+         * <code>optional string member_name = 8;</code>
+         */
+        com.google.protobuf.ByteString
+        getMemberNameBytes();
     }
 
     /**
@@ -18802,6 +18986,12 @@ public final class YouMaiGroup {
                                 bitField0_ |= 0x00000008;
                                 type_ = value;
                             }
+                            break;
+                        }
+                        case 66: {
+                            com.google.protobuf.ByteString bs = input.readBytes();
+                            bitField0_ |= 0x00000010;
+                            memberName_ = bs;
                             break;
                         }
                     }
@@ -18928,11 +19118,57 @@ public final class YouMaiGroup {
             return type_;
         }
 
+        public static final int MEMBER_NAME_FIELD_NUMBER = 8;
+        private Object memberName_;
+
+        /**
+         * <code>optional string member_name = 8;</code>
+         */
+        public boolean hasMemberName() {
+            return ((bitField0_ & 0x00000010) == 0x00000010);
+        }
+
+        /**
+         * <code>optional string member_name = 8;</code>
+         */
+        public String getMemberName() {
+            Object ref = memberName_;
+            if (ref instanceof String) {
+                return (String) ref;
+            } else {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                String s = bs.toStringUtf8();
+                if (bs.isValidUtf8()) {
+                    memberName_ = s;
+                }
+                return s;
+            }
+        }
+
+        /**
+         * <code>optional string member_name = 8;</code>
+         */
+        public com.google.protobuf.ByteString
+        getMemberNameBytes() {
+            Object ref = memberName_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (String) ref);
+                memberName_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
         private void initFields() {
             result_ = YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
             groupId_ = 0;
             groupInfo_ = YouMaiGroup.GroupInfo.getDefaultInstance();
             type_ = YouMaiGroup.GroupInfoModifyType.MODIFY_NAME;
+            memberName_ = "";
         }
 
         private byte memoizedIsInitialized = -1;
@@ -18975,6 +19211,9 @@ public final class YouMaiGroup {
             if (((bitField0_ & 0x00000008) == 0x00000008)) {
                 output.writeEnum(4, type_.getNumber());
             }
+            if (((bitField0_ & 0x00000010) == 0x00000010)) {
+                output.writeBytes(8, getMemberNameBytes());
+            }
             getUnknownFields().writeTo(output);
         }
 
@@ -19000,6 +19239,10 @@ public final class YouMaiGroup {
             if (((bitField0_ & 0x00000008) == 0x00000008)) {
                 size += com.google.protobuf.CodedOutputStream
                         .computeEnumSize(4, type_.getNumber());
+            }
+            if (((bitField0_ & 0x00000010) == 0x00000010)) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeBytesSize(8, getMemberNameBytes());
             }
             size += getUnknownFields().getSerializedSize();
             memoizedSerializedSize = size;
@@ -19158,6 +19401,8 @@ public final class YouMaiGroup {
                 bitField0_ = (bitField0_ & ~0x00000004);
                 type_ = YouMaiGroup.GroupInfoModifyType.MODIFY_NAME;
                 bitField0_ = (bitField0_ & ~0x00000008);
+                memberName_ = "";
+                bitField0_ = (bitField0_ & ~0x00000010);
                 return this;
             }
 
@@ -19206,6 +19451,10 @@ public final class YouMaiGroup {
                     to_bitField0_ |= 0x00000008;
                 }
                 result.type_ = type_;
+                if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
+                    to_bitField0_ |= 0x00000010;
+                }
+                result.memberName_ = memberName_;
                 result.bitField0_ = to_bitField0_;
                 onBuilt();
                 return result;
@@ -19233,6 +19482,11 @@ public final class YouMaiGroup {
                 }
                 if (other.hasType()) {
                     setType(other.getType());
+                }
+                if (other.hasMemberName()) {
+                    bitField0_ |= 0x00000010;
+                    memberName_ = other.memberName_;
+                    onChanged();
                 }
                 this.mergeUnknownFields(other.getUnknownFields());
                 return this;
@@ -19531,6 +19785,88 @@ public final class YouMaiGroup {
                 return this;
             }
 
+            private Object memberName_ = "";
+
+            /**
+             * <code>optional string member_name = 8;</code>
+             */
+            public boolean hasMemberName() {
+                return ((bitField0_ & 0x00000010) == 0x00000010);
+            }
+
+            /**
+             * <code>optional string member_name = 8;</code>
+             */
+            public String getMemberName() {
+                Object ref = memberName_;
+                if (!(ref instanceof String)) {
+                    com.google.protobuf.ByteString bs =
+                            (com.google.protobuf.ByteString) ref;
+                    String s = bs.toStringUtf8();
+                    if (bs.isValidUtf8()) {
+                        memberName_ = s;
+                    }
+                    return s;
+                } else {
+                    return (String) ref;
+                }
+            }
+
+            /**
+             * <code>optional string member_name = 8;</code>
+             */
+            public com.google.protobuf.ByteString
+            getMemberNameBytes() {
+                Object ref = memberName_;
+                if (ref instanceof String) {
+                    com.google.protobuf.ByteString b =
+                            com.google.protobuf.ByteString.copyFromUtf8(
+                                    (String) ref);
+                    memberName_ = b;
+                    return b;
+                } else {
+                    return (com.google.protobuf.ByteString) ref;
+                }
+            }
+
+            /**
+             * <code>optional string member_name = 8;</code>
+             */
+            public Builder setMemberName(
+                    String value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000010;
+                memberName_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string member_name = 8;</code>
+             */
+            public Builder clearMemberName() {
+                bitField0_ = (bitField0_ & ~0x00000010);
+                memberName_ = getDefaultInstance().getMemberName();
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string member_name = 8;</code>
+             */
+            public Builder setMemberNameBytes(
+                    com.google.protobuf.ByteString value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000010;
+                memberName_ = value;
+                onChanged();
+                return this;
+            }
+
             // @@protoc_insertion_point(builder_scope:GroupInfoModifyRsp)
         }
 
@@ -19580,6 +19916,50 @@ public final class YouMaiGroup {
          * <code>required .GroupInfoModifyType type = 3;</code>
          */
         YouMaiGroup.GroupInfoModifyType getType();
+
+        /**
+         * <code>optional string user_id = 4;</code>
+         * <p>
+         * <pre>
+         * 谁修改
+         * </pre>
+         */
+        boolean hasUserId();
+
+        /**
+         * <code>optional string user_id = 4;</code>
+         * <p>
+         * <pre>
+         * 谁修改
+         * </pre>
+         */
+        String getUserId();
+
+        /**
+         * <code>optional string user_id = 4;</code>
+         * <p>
+         * <pre>
+         * 谁修改
+         * </pre>
+         */
+        com.google.protobuf.ByteString
+        getUserIdBytes();
+
+        /**
+         * <code>optional string member_name = 8;</code>
+         */
+        boolean hasMemberName();
+
+        /**
+         * <code>optional string member_name = 8;</code>
+         */
+        String getMemberName();
+
+        /**
+         * <code>optional string member_name = 8;</code>
+         */
+        com.google.protobuf.ByteString
+        getMemberNameBytes();
     }
 
     /**
@@ -19671,6 +20051,18 @@ public final class YouMaiGroup {
                                 bitField0_ |= 0x00000004;
                                 type_ = value;
                             }
+                            break;
+                        }
+                        case 34: {
+                            com.google.protobuf.ByteString bs = input.readBytes();
+                            bitField0_ |= 0x00000008;
+                            userId_ = bs;
+                            break;
+                        }
+                        case 66: {
+                            com.google.protobuf.ByteString bs = input.readBytes();
+                            bitField0_ |= 0x00000010;
+                            memberName_ = bs;
                             break;
                         }
                     }
@@ -19772,10 +20164,114 @@ public final class YouMaiGroup {
             return type_;
         }
 
+        public static final int USER_ID_FIELD_NUMBER = 4;
+        private Object userId_;
+
+        /**
+         * <code>optional string user_id = 4;</code>
+         * <p>
+         * <pre>
+         * 谁修改
+         * </pre>
+         */
+        public boolean hasUserId() {
+            return ((bitField0_ & 0x00000008) == 0x00000008);
+        }
+
+        /**
+         * <code>optional string user_id = 4;</code>
+         * <p>
+         * <pre>
+         * 谁修改
+         * </pre>
+         */
+        public String getUserId() {
+            Object ref = userId_;
+            if (ref instanceof String) {
+                return (String) ref;
+            } else {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                String s = bs.toStringUtf8();
+                if (bs.isValidUtf8()) {
+                    userId_ = s;
+                }
+                return s;
+            }
+        }
+
+        /**
+         * <code>optional string user_id = 4;</code>
+         * <p>
+         * <pre>
+         * 谁修改
+         * </pre>
+         */
+        public com.google.protobuf.ByteString
+        getUserIdBytes() {
+            Object ref = userId_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (String) ref);
+                userId_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
+        public static final int MEMBER_NAME_FIELD_NUMBER = 8;
+        private Object memberName_;
+
+        /**
+         * <code>optional string member_name = 8;</code>
+         */
+        public boolean hasMemberName() {
+            return ((bitField0_ & 0x00000010) == 0x00000010);
+        }
+
+        /**
+         * <code>optional string member_name = 8;</code>
+         */
+        public String getMemberName() {
+            Object ref = memberName_;
+            if (ref instanceof String) {
+                return (String) ref;
+            } else {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                String s = bs.toStringUtf8();
+                if (bs.isValidUtf8()) {
+                    memberName_ = s;
+                }
+                return s;
+            }
+        }
+
+        /**
+         * <code>optional string member_name = 8;</code>
+         */
+        public com.google.protobuf.ByteString
+        getMemberNameBytes() {
+            Object ref = memberName_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (String) ref);
+                memberName_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
         private void initFields() {
             groupId_ = 0;
             groupInfo_ = YouMaiGroup.GroupInfo.getDefaultInstance();
             type_ = YouMaiGroup.GroupInfoModifyType.MODIFY_NAME;
+            userId_ = "";
+            memberName_ = "";
         }
 
         private byte memoizedIsInitialized = -1;
@@ -19817,6 +20313,12 @@ public final class YouMaiGroup {
             if (((bitField0_ & 0x00000004) == 0x00000004)) {
                 output.writeEnum(3, type_.getNumber());
             }
+            if (((bitField0_ & 0x00000008) == 0x00000008)) {
+                output.writeBytes(4, getUserIdBytes());
+            }
+            if (((bitField0_ & 0x00000010) == 0x00000010)) {
+                output.writeBytes(8, getMemberNameBytes());
+            }
             getUnknownFields().writeTo(output);
         }
 
@@ -19838,6 +20340,14 @@ public final class YouMaiGroup {
             if (((bitField0_ & 0x00000004) == 0x00000004)) {
                 size += com.google.protobuf.CodedOutputStream
                         .computeEnumSize(3, type_.getNumber());
+            }
+            if (((bitField0_ & 0x00000008) == 0x00000008)) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeBytesSize(4, getUserIdBytes());
+            }
+            if (((bitField0_ & 0x00000010) == 0x00000010)) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeBytesSize(8, getMemberNameBytes());
             }
             size += getUnknownFields().getSerializedSize();
             memoizedSerializedSize = size;
@@ -19993,6 +20503,10 @@ public final class YouMaiGroup {
                 bitField0_ = (bitField0_ & ~0x00000002);
                 type_ = YouMaiGroup.GroupInfoModifyType.MODIFY_NAME;
                 bitField0_ = (bitField0_ & ~0x00000004);
+                userId_ = "";
+                bitField0_ = (bitField0_ & ~0x00000008);
+                memberName_ = "";
+                bitField0_ = (bitField0_ & ~0x00000010);
                 return this;
             }
 
@@ -20037,6 +20551,14 @@ public final class YouMaiGroup {
                     to_bitField0_ |= 0x00000004;
                 }
                 result.type_ = type_;
+                if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
+                    to_bitField0_ |= 0x00000008;
+                }
+                result.userId_ = userId_;
+                if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
+                    to_bitField0_ |= 0x00000010;
+                }
+                result.memberName_ = memberName_;
                 result.bitField0_ = to_bitField0_;
                 onBuilt();
                 return result;
@@ -20061,6 +20583,16 @@ public final class YouMaiGroup {
                 }
                 if (other.hasType()) {
                     setType(other.getType());
+                }
+                if (other.hasUserId()) {
+                    bitField0_ |= 0x00000008;
+                    userId_ = other.userId_;
+                    onChanged();
+                }
+                if (other.hasMemberName()) {
+                    bitField0_ |= 0x00000010;
+                    memberName_ = other.memberName_;
+                    onChanged();
                 }
                 this.mergeUnknownFields(other.getUnknownFields());
                 return this;
@@ -20306,6 +20838,194 @@ public final class YouMaiGroup {
                 return this;
             }
 
+            private Object userId_ = "";
+
+            /**
+             * <code>optional string user_id = 4;</code>
+             * <p>
+             * <pre>
+             * 谁修改
+             * </pre>
+             */
+            public boolean hasUserId() {
+                return ((bitField0_ & 0x00000008) == 0x00000008);
+            }
+
+            /**
+             * <code>optional string user_id = 4;</code>
+             * <p>
+             * <pre>
+             * 谁修改
+             * </pre>
+             */
+            public String getUserId() {
+                Object ref = userId_;
+                if (!(ref instanceof String)) {
+                    com.google.protobuf.ByteString bs =
+                            (com.google.protobuf.ByteString) ref;
+                    String s = bs.toStringUtf8();
+                    if (bs.isValidUtf8()) {
+                        userId_ = s;
+                    }
+                    return s;
+                } else {
+                    return (String) ref;
+                }
+            }
+
+            /**
+             * <code>optional string user_id = 4;</code>
+             * <p>
+             * <pre>
+             * 谁修改
+             * </pre>
+             */
+            public com.google.protobuf.ByteString
+            getUserIdBytes() {
+                Object ref = userId_;
+                if (ref instanceof String) {
+                    com.google.protobuf.ByteString b =
+                            com.google.protobuf.ByteString.copyFromUtf8(
+                                    (String) ref);
+                    userId_ = b;
+                    return b;
+                } else {
+                    return (com.google.protobuf.ByteString) ref;
+                }
+            }
+
+            /**
+             * <code>optional string user_id = 4;</code>
+             * <p>
+             * <pre>
+             * 谁修改
+             * </pre>
+             */
+            public Builder setUserId(
+                    String value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000008;
+                userId_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string user_id = 4;</code>
+             * <p>
+             * <pre>
+             * 谁修改
+             * </pre>
+             */
+            public Builder clearUserId() {
+                bitField0_ = (bitField0_ & ~0x00000008);
+                userId_ = getDefaultInstance().getUserId();
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string user_id = 4;</code>
+             * <p>
+             * <pre>
+             * 谁修改
+             * </pre>
+             */
+            public Builder setUserIdBytes(
+                    com.google.protobuf.ByteString value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000008;
+                userId_ = value;
+                onChanged();
+                return this;
+            }
+
+            private Object memberName_ = "";
+
+            /**
+             * <code>optional string member_name = 8;</code>
+             */
+            public boolean hasMemberName() {
+                return ((bitField0_ & 0x00000010) == 0x00000010);
+            }
+
+            /**
+             * <code>optional string member_name = 8;</code>
+             */
+            public String getMemberName() {
+                Object ref = memberName_;
+                if (!(ref instanceof String)) {
+                    com.google.protobuf.ByteString bs =
+                            (com.google.protobuf.ByteString) ref;
+                    String s = bs.toStringUtf8();
+                    if (bs.isValidUtf8()) {
+                        memberName_ = s;
+                    }
+                    return s;
+                } else {
+                    return (String) ref;
+                }
+            }
+
+            /**
+             * <code>optional string member_name = 8;</code>
+             */
+            public com.google.protobuf.ByteString
+            getMemberNameBytes() {
+                Object ref = memberName_;
+                if (ref instanceof String) {
+                    com.google.protobuf.ByteString b =
+                            com.google.protobuf.ByteString.copyFromUtf8(
+                                    (String) ref);
+                    memberName_ = b;
+                    return b;
+                } else {
+                    return (com.google.protobuf.ByteString) ref;
+                }
+            }
+
+            /**
+             * <code>optional string member_name = 8;</code>
+             */
+            public Builder setMemberName(
+                    String value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000010;
+                memberName_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string member_name = 8;</code>
+             */
+            public Builder clearMemberName() {
+                bitField0_ = (bitField0_ & ~0x00000010);
+                memberName_ = getDefaultInstance().getMemberName();
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string member_name = 8;</code>
+             */
+            public Builder setMemberNameBytes(
+                    com.google.protobuf.ByteString value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000010;
+                memberName_ = value;
+                onChanged();
+                return this;
+            }
+
             // @@protoc_insertion_point(builder_scope:IMGroupInfoModifyNotify)
         }
 
@@ -20480,23 +21200,25 @@ public final class YouMaiGroup {
                         "\013update_time\030\003 \001(\004\"{\n\014GroupInfoRsp\022.\n\ngr",
                 "oup_info\030\001 \001(\0132\032.GroupIn" +
                         "fo\022\016\n\006update\030\002 \001(\010\022+\n\006result\030\n \001(\0162\033.com" +
-                        ".proto.basic.ResultCode\"\266\001\n\022GroupInfoMod" +
+                        ".proto.basic.ResultCode\"\313\001\n\022GroupInfoMod" +
                         "ifyReq\022\017\n\007user_id\030\001 \002(\t\022\020\n\010group_id\030\002 \002(" +
                         "\r\022\022\n\ngroup_name\030\003 \001(\t\022\024\n\014group_avatar\030\004 " +
                         "\001(\t\022\r\n\005topic\030\005 \001(\t\022\020\n\010owner_id\030\006 \001(\t\0222\n\004" +
                         "type\030\007 \002(\0162$.GroupInfoMo" +
-                        "difyType\"\267\001\n\022GroupInfoModifyRsp\022+\n\006resul" +
-                        "t\030\001 \001(\0162\033.ResultCode\022\020\n\010" +
-                        "group_id\030\002 \002(\r\022.\n\ngroup_info\030\003 \001(\0132\032.com",
-                ".proto.group.GroupInfo\0222\n\004type\030\004 \002(\0162$.c" +
-                        "om.proto.group.GroupInfoModifyType\"\217\001\n\027I" +
-                        "MGroupInfoModifyNotify\022\020\n\010group_id\030\001 \002(\r" +
-                        "\022.\n\ngroup_info\030\002 \002(\0132\032.G" +
-                        "roupInfo\0222\n\004type\030\003 \002(\0162$.com.proto.group" +
-                        ".GroupInfoModifyType*H\n\022GroupMemberOptTy" +
+                        "difyType\022\023\n\013member_name\030\010 \001(\t\"\314\001\n\022GroupI" +
+                        "nfoModifyRsp\022+\n\006result\030\001 \001(\0162\033.com.proto" +
+                        ".basic.ResultCode\022\020\n\010group_id\030\002 \002(\r\022.\n\ng",
+                "roup_info\030\003 \001(\0132\032.GroupI" +
+                        "nfo\0222\n\004type\030\004 \002(\0162$.Grou" +
+                        "pInfoModifyType\022\023\n\013member_name\030\010 \001(\t\"\265\001\n" +
+                        "\027IMGroupInfoModifyNotify\022\020\n\010group_id\030\001 \002" +
+                        "(\r\022.\n\ngroup_info\030\002 \002(\0132\032.com.proto.group" +
+                        ".GroupInfo\0222\n\004type\030\003 \002(\0162$.com.proto.gro" +
+                        "up.GroupInfoModifyType\022\017\n\007user_id\030\004 \001(\t\022" +
+                        "\023\n\013member_name\030\010 \001(\t*H\n\022GroupMemberOptTy" +
                         "pe\022\030\n\024GROUP_MEMBER_OPT_ADD\020\001\022\030\n\024GROUP_ME" +
-                        "MBER_OPT_DEL\020\002*]\n\023GroupInfoModifyType\022\017\n" +
-                        "\013MODIFY_NAME\020\001\022\021\n\rMODIFY_AVATAR\020\002\022\020\n\014MOD" +
+                        "MBER_OPT_DEL\020\002*]\n\023GroupInfoModifyType\022\017\n",
+                "\013MODIFY_NAME\020\001\022\021\n\rMODIFY_AVATAR\020\002\022\020\n\014MOD" +
                         "IFY_TOPIC\020\003\022\020\n\014MODIFY_OWNER\020\004"
         };
         com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
@@ -20619,19 +21341,19 @@ public final class YouMaiGroup {
         internal_static_com_proto_group_GroupInfoModifyReq_fieldAccessorTable = new
                 com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_proto_group_GroupInfoModifyReq_descriptor,
-                new String[]{"UserId", "GroupId", "GroupName", "GroupAvatar", "Topic", "OwnerId", "Type",});
+                new String[]{"UserId", "GroupId", "GroupName", "GroupAvatar", "Topic", "OwnerId", "Type", "MemberName",});
         internal_static_com_proto_group_GroupInfoModifyRsp_descriptor =
                 getDescriptor().getMessageTypes().get(18);
         internal_static_com_proto_group_GroupInfoModifyRsp_fieldAccessorTable = new
                 com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_proto_group_GroupInfoModifyRsp_descriptor,
-                new String[]{"Result", "GroupId", "GroupInfo", "Type",});
+                new String[]{"Result", "GroupId", "GroupInfo", "Type", "MemberName",});
         internal_static_com_proto_group_IMGroupInfoModifyNotify_descriptor =
                 getDescriptor().getMessageTypes().get(19);
         internal_static_com_proto_group_IMGroupInfoModifyNotify_fieldAccessorTable = new
                 com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_proto_group_IMGroupInfoModifyNotify_descriptor,
-                new String[]{"GroupId", "GroupInfo", "Type",});
+                new String[]{"GroupId", "GroupInfo", "Type", "UserId", "MemberName",});
         YouMaiBasic.getDescriptor();
     }
 

@@ -89,6 +89,7 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
     private static final int FILE_RIGHT = 16;//文件右
 
     private static final int MEMBER_CHANGED = 101;//群成员修改
+    private static final int NAME_CHANGED = 102;//群名修改
 
     private static final int HANDLER_REFRESH_PROGREE = 0;
 
@@ -204,6 +205,10 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
                 view = inflater.inflate(R.layout.hx_group_im_member_change_item, parent, false);
                 holder = new MemberChangedViewHolder(view);
                 break;
+            case NAME_CHANGED:
+                view = inflater.inflate(R.layout.hx_group_im_member_change_item, parent, false);
+                holder = new MemberChangedViewHolder(view);
+                break;
             default:
                 //默认视图，用于解析错误的消息
                 view = inflater.inflate(R.layout.hx_fragment_im_left_txt_item, parent, false);
@@ -279,6 +284,9 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
                 break;
             case CacheMsgBean.GROUP_MEMBER_CHANGED:
                 oriType = MEMBER_CHANGED;
+                break;
+            case CacheMsgBean.GROUP_NAME_CHANGED:
+                oriType = NAME_CHANGED;
                 break;
         }
         return oriType;

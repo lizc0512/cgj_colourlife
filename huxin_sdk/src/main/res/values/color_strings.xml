@@ -10,6 +10,7 @@
     <string name="message_type_sounds">[语音]</string>
     <string name="message_type_file">[文件]</string>
     <string name="message_type_member_changed">[成员变更]</string>
+    <string name="message_type_name_changed">[群名变更]</string>
 
     <string name="message_time_yesterday">昨天</string>
     <string name="message_time_before_yesterday">前天</string>

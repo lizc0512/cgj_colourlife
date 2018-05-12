@@ -12,6 +12,45 @@
         android:orientation="vertical">
 
         <RelativeLayout
+            android:id="@+id/rl_add_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_10"
+                android:layout_marginRight="@dimen/margin_10">
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:paddingBottom="16dp"
+                    android:paddingTop="13dp">
+
+                    <ImageView
+                        android:id="@+id/img_group"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/ic_group" />
+
+                    <TextView
+                        style="@style/black_16"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="@dimen/margin_10"
+                        android:layout_toRightOf="@id/img_group"
+                        android:text="发起群聊" />
+                </RelativeLayout>
+            </RelativeLayout>
+        </RelativeLayout>
+
+        <include layout="@layout/line_horizontal_02" />
+
+        <RelativeLayout
             android:id="@+id/rl_mail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">

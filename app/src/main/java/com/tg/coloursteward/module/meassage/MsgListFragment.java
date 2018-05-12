@@ -49,6 +49,7 @@ import com.youmai.hxsdk.utils.GsonUtil;
 import com.youmai.hxsdk.view.refresh.OnRecyclerScrollListener;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -96,6 +97,9 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
     private Handler mHandler;
     // 换号登录需要去判断改变
     private LinearLayoutManager mLinearLayoutManager;
+
+    private List<Integer> unReadListPosition = new ArrayList<>();
+    private int curPostion;
 
     // 空页面 start
     private LinearLayout mEmptyView;
@@ -478,6 +482,7 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
                 MainActivity1 act = (MainActivity1) getActivity();
                 act.refreshUnReadCount();
             }
+            initUnreadList();
         }
     }
 
@@ -507,6 +512,7 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
             return;
         }
         mMessageAdapter.changeMessageList(data);
+        initUnreadList();
     }
 
     @Override
@@ -579,4 +585,26 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
         }*/
     }
 
+
+    private void initUnreadList() {
+        List<ExCacheMsgBean> list = mMessageAdapter.getMsgList();
+
+        for (int i = 0; i < list.size(); i++) {
+            ExCacheMsgBean item = list.get(i);
+            int count = IMMsgManager.instance().getBadeCount(item.getTargetUuid());
+            if (count > 0 && !unReadListPosition.contains(count)) {
+                unReadListPosition.add(i);
+            }
+        }
+    }
+
+    public void scrollToNextUnRead() {
+        if (curPostion < unReadListPosition.size()) {
+            int index = unReadListPosition.get(curPostion) + 1;
+            mLinearLayoutManager.scrollToPositionWithOffset(index, 0);
+            curPostion++;
+        } else {
+            curPostion = 0;
+        }
+    }
 }

@@ -15,6 +15,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -24,6 +26,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -65,6 +68,7 @@ import com.youmai.hxsdk.http.IPostListener;
 import com.youmai.hxsdk.http.OkHttpConnector;
 import com.youmai.hxsdk.im.IMMsgManager;
 import com.youmai.hxsdk.push.MorePushManager;
+import com.youmai.hxsdk.utils.AppUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -420,6 +424,19 @@ public class MainActivity1 extends AppCompatActivity implements MessageHandler.R
         navigation.enableItemShiftingMode(false); //取消文字
         navigation.enableAnimation(false);  //取消选中动画
         navigation.setupWithViewPager(mViewPager);
+
+        navigation.setOnNavigationItemReselectedListener(
+                new BottomNavigationView.OnNavigationItemReselectedListener() {
+                    @Override
+                    public void onNavigationItemReselected(@NonNull MenuItem item) {
+                        if (AppUtils.isRepeatClick()) {
+                            if (mAdapter.getItem(0) instanceof MsgListFragment) {
+                                MsgListFragment fragment = (MsgListFragment) mAdapter.instantiateItem(mViewPager, 0);
+                                fragment.scrollToNextUnRead();
+                            }
+                        }
+                    }
+                });
 
         mViewPager.setCurrentItem(0);
         mViewPager.setOffscreenPageLimit(3);

@@ -304,6 +304,7 @@ public class IMMsgManager {
                 int groupId = notify.getGroupId();
                 //String uuid = notify.getUserId();
                 YouMaiGroup.GroupInfoModifyType type = notify.getType();
+                String memberName = notify.getMemberName();
 
                 if (type == YouMaiGroup.GroupInfoModifyType.MODIFY_NAME) {
                     YouMaiGroup.GroupInfo groupInfo = notify.getGroupInfo();
@@ -322,6 +323,22 @@ public class IMMsgManager {
 
                     info.setGroup_name(groupName);
                     GroupInfoHelper.instance().insertOrUpdate(mContext, info);
+
+                    StringBuilder sb = new StringBuilder();
+                    sb.append(memberName).append(" 修改群名为");
+                    sb.append('"').append(groupName).append('"');
+
+                    CacheMsgBean msgBean = getGroupNameChangedMsgBean(groupId, sb.toString());
+
+                    List<CacheMsgBean> msgList = CacheMsgHelper.instance().toQueryCacheMsgList(mContext, groupId + "");
+                    if (!ListUtils.isEmpty(msgList)) {
+                        CacheMsgBean lastMsg = msgList.get(msgList.size() - 1);
+                        msgBean.setTargetName(lastMsg.getTargetName());
+                        CacheMsgHelper.instance().insertOrUpdate(mContext, msgBean);
+                    }
+
+                    handlerIMMsgCallback(msgBean);
+
 
                     Intent intent = new Intent(IMGroupActivity.UPDATE_GROUP_INFO);
                     intent.putExtra("GroupInfo", info);
@@ -940,5 +957,15 @@ public class IMMsgManager {
                 .setGroupId(groupId)
                 .setTargetUuid(groupId + "");
     }
+
+    private CacheMsgBean getGroupNameChangedMsgBean(int groupId, String content) {
+        return new CacheMsgBean()
+                .setMsgTime(System.currentTimeMillis())
+                .setMsgType(CacheMsgBean.GROUP_NAME_CHANGED)
+                .setMemberChanged(content)
+                .setGroupId(groupId)
+                .setTargetUuid(groupId + "");
+    }
+
 
 }

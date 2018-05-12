@@ -396,11 +396,13 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
 
             StringBuffer sb = new StringBuffer(ColorsConfig.GROUP_DEFAULT_NAME);
             int count = 0;
-            for (ContactBean contact : mContactList) {
-                list.add(insertBuilder(contact).build());
-                if (!HuxinSdkManager.instance().getUuid().equals(contact.getUuid())) {
-                    count++;
-                    sb.append(contact.getRealname() + "、");
+            if (!ListUtils.isEmpty(mContactList)) {
+                for (ContactBean contact : mContactList) {
+                    list.add(insertBuilder(contact).build());
+                    if (!HuxinSdkManager.instance().getUuid().equals(contact.getUuid())) {
+                        count++;
+                        sb.append(contact.getRealname() + "、");
+                    }
                 }
             }
 

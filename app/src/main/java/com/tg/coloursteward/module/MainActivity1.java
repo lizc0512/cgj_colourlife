@@ -266,7 +266,12 @@ public class MainActivity1 extends AppCompatActivity implements MessageHandler.R
     public void refreshUnReadCount() {
         int unreadCount = IMMsgManager.instance().getAllBadgeCount();
         if (unreadCount > 0) {
-            badgeView.setBadgeNumber(unreadCount);
+            if (unreadCount > 99) {
+                badgeView.setBadgeText("...");
+            } else {
+                badgeView.setBadgeNumber(unreadCount);
+            }
+
         } else {
             badgeView.hide(true);
         }

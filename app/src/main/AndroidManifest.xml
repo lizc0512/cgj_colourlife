@@ -79,7 +79,6 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
-
         <!-- 弹出提现新消息页面 -->
         <activity android:name=".AlertActivity" />
         <!-- 投诉页面 -->
@@ -459,6 +458,7 @@
         <activity android:name=".ForgetPasswordActivity" />
         <activity android:name=".ForgetPasswordVerifyActivity" />
 
+        <!-- 呼信 start -->
         <activity android:name=".module.groupchat.GroupListActivity" />
 
         <activity
@@ -494,6 +494,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
 
+        <!-- 呼信 end -->
 
         <activity android:name=".RedpacketsAccountListActivity" />
         <activity android:name=".AccountDetailNewActivity" />

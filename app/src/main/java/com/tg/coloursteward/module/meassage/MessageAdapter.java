@@ -353,7 +353,11 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             //沟通列表
             int unreadCount = IMMsgManager.instance().getBadeCount(model.getTargetUuid());
             if (unreadCount > 0) {
-                itemView.message_status.setBadgeNumber(unreadCount);
+                if (unreadCount > 99) {
+                    itemView.message_status.setBadgeText("...");
+                } else {
+                    itemView.message_status.setBadgeNumber(unreadCount);
+                }
                 itemView.message_status.setGravityOffset(0.5f, 0.5f, true);
                 itemView.message_status.setBadgePadding(1.0f, true);
                 itemView.message_status.setVisibility(View.VISIBLE);
@@ -431,7 +435,11 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             //沟通列表
             int unreadCount = IMMsgManager.instance().getBadeCount(model.getTargetUuid());
             if (unreadCount > 0) {
-                itemView.message_status.setBadgeNumber(unreadCount);
+                if (unreadCount > 99) {
+                    itemView.message_status.setBadgeText("...");
+                } else {
+                    itemView.message_status.setBadgeNumber(unreadCount);
+                }
                 itemView.message_status.setGravityOffset(0f, 0f, true);
                 itemView.message_status.setBadgePadding(1.0f, true);
                 itemView.message_status.setVisibility(View.VISIBLE);

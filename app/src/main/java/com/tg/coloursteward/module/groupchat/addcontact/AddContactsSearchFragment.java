@@ -42,7 +42,8 @@ public class AddContactsSearchFragment<T extends Parcelable> extends SearchFragm
     private RecyclerView mRecyclerView;
     private AddContactsSearchAdapter mSearchAdapter;
 
-    public AddContactsSearchFragment() {}
+    public AddContactsSearchFragment() {
+    }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -116,7 +117,7 @@ public class AddContactsSearchFragment<T extends Parcelable> extends SearchFragm
 
     @Override
     public void onItemClick(Object item) {
-        Toast.makeText(getContext(), "onItemClick", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getContext(), "onItemClick", Toast.LENGTH_SHORT).show();
         SearchContactBean bean = (SearchContactBean) item;
         ContactBean contact = new ContactBean();
         contact.setUsername(bean.getUsername());

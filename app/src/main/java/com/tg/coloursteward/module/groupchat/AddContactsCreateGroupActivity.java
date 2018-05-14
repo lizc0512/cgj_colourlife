@@ -150,8 +150,8 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
             if (action.equals(ADAPTER_CONTACT)) {
                 mActivity.updateCacheMap(bean, false);
             } else if (action.equals(SEARCH_CONTACT)) {
-                mActivity.hide();
-                mActivity.updateCacheMap(bean, true, false);
+                //mActivity.hide();
+                mActivity.updateCacheMap(bean, true);
             } else if (action.equals(DEPART_CONTACT)) {
                 mActivity.updateCacheMap(bean, true);
             }
@@ -159,11 +159,7 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
     }
 
     private void updateCacheMap(ContactBean contact, boolean isFreshAdapter) {
-        updateCacheMap(contact, isFreshAdapter, true);
-    }
-
-    private void updateCacheMap(ContactBean contact, boolean isFreshAdapter, boolean type) {
-        if (mTotalMap.containsKey(contact.getUuid()) && type) {
+        if (mTotalMap.containsKey(contact.getUuid())) {
             mTotalMap.remove(contact.getUuid());
         } else {
             mTotalMap.put(contact.getUuid(), contact);
@@ -217,6 +213,7 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
 
         //标题
         tv_Cancel = findViewById(R.id.tv_left_cancel);
+        tv_Cancel.setText(R.string.hx_back);
         tv_Sure = findViewById(R.id.tv_right_sure);
         tv_Sure.setText("完成(" + 0 + ")");
         tv_Sure.setEnabled(false);

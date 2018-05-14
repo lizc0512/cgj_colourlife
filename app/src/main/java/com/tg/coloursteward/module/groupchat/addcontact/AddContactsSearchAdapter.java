@@ -141,7 +141,7 @@ public class AddContactsSearchAdapter<T> extends RecyclerView.Adapter<RecyclerVi
         }
         if (holder instanceof AddContactsSearchAdapter.SearchItem) {
 
-            SearchItem searchItemHolder = (SearchItem) holder;
+            final SearchItem searchItemHolder = (SearchItem) holder;
             final SearchContactBean model = (SearchContactBean) mDataList.get(finalPosition);
             searchItemHolder.search_name.setText(model.getDisplayName());
 
@@ -249,6 +249,14 @@ public class AddContactsSearchAdapter<T> extends RecyclerView.Adapter<RecyclerVi
                 public void onClick(View v) {
                     int finalPosition = (Integer) v.getTag();
                     T contacts = mDataList.get(finalPosition);
+
+                    boolean isChecked = searchItemHolder.cb_collect.isChecked();
+                    if (isChecked) {
+                        searchItemHolder.cb_collect.setChecked(false);
+                    } else {
+                        searchItemHolder.cb_collect.setChecked(true);
+                    }
+
                     if (mOnGlobalSearchAdapterListener != null) {
                         mOnGlobalSearchAdapterListener.onItemClick(contacts);
                     }

@@ -52,9 +52,9 @@ public class AddContactBySearchFragment extends Fragment {
             @Override
             public void onSelect(ContactBean contact) {
                 //隐藏fragment
-                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                /*FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
                 transaction.hide(mSearchFragment);
-                transaction.commitAllowingStateLoss();
+                transaction.commitAllowingStateLoss();*/
             }
         });
 

@@ -154,6 +154,8 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             if (item != null) {
                 boolean isChanged = Collections.replaceAll(messageList, item, msgBean);
                 if (isChanged) {
+                    SortComparator comp = new SortComparator();
+                    Collections.sort(messageList.subList(1, messageList.size()), comp);
                     notifyDataSetChanged();
                 }
             }

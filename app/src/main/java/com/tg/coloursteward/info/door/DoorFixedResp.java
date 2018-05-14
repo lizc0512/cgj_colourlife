@@ -3,6 +3,7 @@ package com.tg.coloursteward.info.door;
 import java.io.Serializable;
 
 /**
+ * 门禁实体信息
  * Created by chengyun on 2016/6/24.
  */
 public class DoorFixedResp implements Serializable {

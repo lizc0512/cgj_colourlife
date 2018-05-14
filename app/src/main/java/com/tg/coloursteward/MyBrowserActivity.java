@@ -430,6 +430,7 @@ public class MyBrowserActivity extends Activity implements OnClickListener, AMap
 
     /**
      * H5调用原生
+     * 并不是在主线程执行
      *
      * @author Administrator
      */

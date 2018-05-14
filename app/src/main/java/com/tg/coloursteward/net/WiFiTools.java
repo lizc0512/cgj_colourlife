@@ -9,7 +9,7 @@ import android.util.Log;
 
 import static android.content.Context.WIFI_SERVICE;
 
-/**
+/**WIFI处理工具类
  * Created by prince70 on 2018/3/29.
  */
 

@@ -35,6 +35,9 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+/**
+ * 门禁授权申请
+ */
 public class DoorAuthorizationApproveActivity extends BaseActivity {
 
     private TextView tv_time,//申请时间
@@ -59,63 +62,64 @@ public class DoorAuthorizationApproveActivity extends BaseActivity {
     private CommunityResp communityResp;
     // 保存小区选中状态 哪一个小区被选中
     private int whichCommunitySel = 0;
-	private String czyid;
+    private String czyid;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		prepareView();
-		getIntentData();
-		prepareDate();
-	}
-	
-	@Override
-	protected boolean handClickEvent(View v) {
-		 switch (v.getId()) {
-         case R.id.btn_hour:
-             usertype = "4";
-             setChooseBtnSelector(1);
-             break;
-         case R.id.btn_one_day:
-             usertype = "3";
-             setChooseBtnSelector(2);
-             break;
-         case R.id.btn_seven_days:
-             usertype = "2";
-             setChooseBtnSelector(3);
-             break;
-         case R.id.btn_years:
-             usertype = "5";
-             setChooseBtnSelector(4);
-             break;
-         case R.id.btn_permanent:
-             usertype = "1";
-             setChooseBtnSelector(5);
-             break;
-         case R.id.btn_pass:
-             if (refuse) {
-                 //通过
-                 approve("1");
-             } else {
-                 //再次授权
-                 authorize();
-             }
-             break;
-         //拒绝
-         case R.id.btn_refuse:
-             approve("2");
-             break;
-         case R.id.tv_community:
-             if (communityList.size() > 1) {
-                 selectCommunity();
-             }
-             break;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        prepareView();
+        getIntentData();
+        prepareDate();
+    }
+
+    @Override
+    protected boolean handClickEvent(View v) {
+        switch (v.getId()) {
+            case R.id.btn_hour:
+                usertype = "4";
+                setChooseBtnSelector(1);
+                break;
+            case R.id.btn_one_day:
+                usertype = "3";
+                setChooseBtnSelector(2);
+                break;
+            case R.id.btn_seven_days:
+                usertype = "2";
+                setChooseBtnSelector(3);
+                break;
+            case R.id.btn_years:
+                usertype = "5";
+                setChooseBtnSelector(4);
+                break;
+            case R.id.btn_permanent:
+                usertype = "1";
+                setChooseBtnSelector(5);
+                break;
+            case R.id.btn_pass:
+                if (refuse) {
+                    //通过
+                    approve("1");
+                } else {
+                    //再次授权
+                    authorize();
+                }
+                break;
+            //拒绝
+            case R.id.btn_refuse:
+                approve("2");
+                break;
+            case R.id.tv_community:
+                if (communityList.size() > 1) {
+                    selectCommunity();
+                }
+                break;
 
 
-     }
-		return super.handClickEvent(v);
-	}
-	  /**
+        }
+        return super.handClickEvent(v);
+    }
+
+    /**
      * 获取Intent传过来的数据
      */
     private void getIntentData() {
@@ -130,7 +134,7 @@ public class DoorAuthorizationApproveActivity extends BaseActivity {
     }
 
     private void prepareView() {
-        
+
         tv_time = (TextView) findViewById(R.id.tv_time);
         tv_memo = (TextView) findViewById(R.id.tv_memo);
         tv_community = (TextView) findViewById(R.id.tv_community);
@@ -177,6 +181,7 @@ public class DoorAuthorizationApproveActivity extends BaseActivity {
             tv_community.setText(communityResp.getName());
         }
     }
+
     /**
      * 批复
      *
@@ -195,7 +200,7 @@ public class DoorAuthorizationApproveActivity extends BaseActivity {
         if (communityResp != null) {
             bid = communityResp.getBid();
         } else {
-        	ToastFactory.showToast(DoorAuthorizationApproveActivity.this, "请选择小区");
+            ToastFactory.showToast(DoorAuthorizationApproveActivity.this, "请选择小区");
             return;
         }
         long currentTime = System.currentTimeMillis() / 1000;
@@ -237,23 +242,23 @@ public class DoorAuthorizationApproveActivity extends BaseActivity {
         }
         // 备注
         String memo = "0";
-        RequestConfig config = new RequestConfig(this,HttpTools.POST_APPLY_INFO);
-		RequestParams params = new RequestParams();
-		 params.put("customer_id", czyid);
-         params.put("applyid", id);
-         params.put("bid", bid);
-         params.put("approve", approve);
-         params.put("autype", autype);
-         params.put("usertype", usertype);
-         params.put("granttype", granttype);
-         if (!"1".equals(usertype))
-         {
-             params.put("starttime", starttime);
-             params.put("stoptime", stoptime);
-         }
-         params.put("memo", memo);
-		HttpTools.httpPost(Contants.URl.URL_ICETEST,"/newczy/wetown/ApplyApprove", config, params);
+        RequestConfig config = new RequestConfig(this, HttpTools.POST_APPLY_INFO);
+        RequestParams params = new RequestParams();
+        params.put("customer_id", czyid);
+        params.put("applyid", id);
+        params.put("bid", bid);
+        params.put("approve", approve);
+        params.put("autype", autype);
+        params.put("usertype", usertype);
+        params.put("granttype", granttype);
+        if (!"1".equals(usertype)) {
+            params.put("starttime", starttime);
+            params.put("stoptime", stoptime);
+        }
+        params.put("memo", memo);
+        HttpTools.httpPost(Contants.URl.URL_ICETEST, "/newczy/wetown/ApplyApprove", config, params);
     }
+
     /**
      * 再次授权
      *
@@ -271,7 +276,7 @@ public class DoorAuthorizationApproveActivity extends BaseActivity {
         if (communityResp != null) {
             bid = communityResp.getBid();
         } else {
-        		ToastFactory.showToast(DoorAuthorizationApproveActivity.this,"请选择小");
+            ToastFactory.showToast(DoorAuthorizationApproveActivity.this, "请选择小");
             return;
         }
         long currentTime = System.currentTimeMillis() / 1000;
@@ -313,21 +318,20 @@ public class DoorAuthorizationApproveActivity extends BaseActivity {
 
         // 备注
         String memo = "";
-        RequestConfig config = new RequestConfig(this,HttpTools.POST_AUTOR_INFO);
-		RequestParams params = new RequestParams();
-		   params.put("customer_id", czyid);
-           params.put("toid", toid);
-           params.put("bid", bid);
-           params.put("usertype", usertype);
-           params.put("granttype", granttype);
-           params.put("autype", autype);
-           if (!"1".equals(usertype))
-           {
-               params.put("starttime", starttime);
-               params.put("stoptime", stoptime);
-           }
-		params.put("memo", memo);
-		HttpTools.httpPost(Contants.URl.URL_ICETEST,"/newczy/wetown/AuthorizationAuthorize4mobile", config, params);
+        RequestConfig config = new RequestConfig(this, HttpTools.POST_AUTOR_INFO);
+        RequestParams params = new RequestParams();
+        params.put("customer_id", czyid);
+        params.put("toid", toid);
+        params.put("bid", bid);
+        params.put("usertype", usertype);
+        params.put("granttype", granttype);
+        params.put("autype", autype);
+        if (!"1".equals(usertype)) {
+            params.put("starttime", starttime);
+            params.put("stoptime", stoptime);
+        }
+        params.put("memo", memo);
+        HttpTools.httpPost(Contants.URl.URL_ICETEST, "/newczy/wetown/AuthorizationAuthorize4mobile", config, params);
     }
 
     /**
@@ -357,6 +361,7 @@ public class DoorAuthorizationApproveActivity extends BaseActivity {
                 break;
         }
     }
+
     /**
      * 选择小区弹窗
      */
@@ -428,52 +433,53 @@ public class DoorAuthorizationApproveActivity extends BaseActivity {
         }
     }
 
-	@Override
-	public void onSuccess(Message msg, String jsonString, String hintString) {
-		// TODO Auto-generated method stub
-		super.onSuccess(msg, jsonString, hintString);
-		String message = HttpTools.getMessageString(jsonString);
-		if(msg.arg1 == HttpTools.POST_APPLY_INFO){//
-			try {
-				JSONObject response = new JSONObject(jsonString);
-				String result = response.get("result").toString();
-				String reason = response.get("reason").toString();
-				if ("0".equals(result)) {
-					setResult(RESULT_OK);
-					finish();
-				}else {
-					ToastFactory.showToast(DoorAuthorizationApproveActivity.this, message);
-				}
-				} catch (JSONException e) {
-					e.printStackTrace();
-				}
-		}else{
-			try {
-				JSONObject response = new JSONObject(jsonString);
-				String result = response.get("result").toString();
-				String reason = response.get("reason").toString();
-				if ("0".equals(result)) {
-					 setResult(RESULT_OK);
-					 finish();
-				}else {
-					ToastFactory.showToast(DoorAuthorizationApproveActivity.this, message);
-				}
-				} catch (JSONException e) {
-					e.printStackTrace();
-				}
-		}
-	}
-	@Override
-	public View getContentView() {
-		// TODO Auto-generated method stub
-		return getLayoutInflater().inflate(R.layout.activity_door_authorization_approve, null);
-	}
+    @Override
+    public void onSuccess(Message msg, String jsonString, String hintString) {
+        // TODO Auto-generated method stub
+        super.onSuccess(msg, jsonString, hintString);
+        String message = HttpTools.getMessageString(jsonString);
+        if (msg.arg1 == HttpTools.POST_APPLY_INFO) {//
+            try {
+                JSONObject response = new JSONObject(jsonString);
+                String result = response.get("result").toString();
+                String reason = response.get("reason").toString();
+                if ("0".equals(result)) {
+                    setResult(RESULT_OK);
+                    finish();
+                } else {
+                    ToastFactory.showToast(DoorAuthorizationApproveActivity.this, message);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        } else {
+            try {
+                JSONObject response = new JSONObject(jsonString);
+                String result = response.get("result").toString();
+                String reason = response.get("reason").toString();
+                if ("0".equals(result)) {
+                    setResult(RESULT_OK);
+                    finish();
+                } else {
+                    ToastFactory.showToast(DoorAuthorizationApproveActivity.this, message);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
-	@Override
-	public String getHeadTitle() {
-		// TODO Auto-generated method stub
-		return "授权";
-	}
+    @Override
+    public View getContentView() {
+        // TODO Auto-generated method stub
+        return getLayoutInflater().inflate(R.layout.activity_door_authorization_approve, null);
+    }
+
+    @Override
+    public String getHeadTitle() {
+        // TODO Auto-generated method stub
+        return "授权";
+    }
 
 
 }

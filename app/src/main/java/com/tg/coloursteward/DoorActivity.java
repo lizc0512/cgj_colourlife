@@ -47,7 +47,9 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-
+/**
+ * 门禁  已去除
+ */
 public class DoorActivity extends BaseActivity {
 	public static int INTENT_SCAN = 1;
  	public static int INTENT_UPDATEFIXEDDOOR = 2;//编辑常用门禁

@@ -85,6 +85,9 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 
+/**
+ * 主页面
+ */
 public class MainActivity extends FragmentActivity implements ResponseListener, OnTabChangeListener, AMapLocationListener, LocationSource {
     private static final String TAG = "JPush";
     public static final String ACTION_FRESH_USERINFO = "com.tg.coloursteward.ACTION_FRESH_USERINFO";
@@ -932,6 +935,7 @@ public class MainActivity extends FragmentActivity implements ResponseListener, 
 
     /**
      * 还有未读消息则设置  红点
+     *
      * @param resId
      * @param tab
      * @return

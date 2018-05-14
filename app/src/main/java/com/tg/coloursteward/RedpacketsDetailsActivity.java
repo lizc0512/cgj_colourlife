@@ -39,6 +39,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Date;
 
+/**
+ * 饭票交易明细
+ */
 public class RedpacketsDetailsActivity extends BaseActivity {
     private static final String TAG = "RedpacketsDetailsActivi";
     public final static String PUBLICACCOUNT_CANO = "cano";
@@ -293,6 +296,6 @@ public class RedpacketsDetailsActivity extends BaseActivity {
        /* headView.setRightText("筛选");
         headView.setRightTextColor(getResources().getColor(R.color.white));
         headView.setListenerRight(singleListener);*/
-        return "兑换明细";
+        return "饭票交易明细";
     }
 }

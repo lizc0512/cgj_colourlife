@@ -146,6 +146,7 @@ public class PublicAccountTransferToColleagueActivity extends BaseActivity {
 
     private void initView() {
         accessToken_1 = Tools.getStringValue(PublicAccountTransferToColleagueActivity.this, Contants.storage.APPAUTH_1);
+        Log.e(TAG, "initView:鉴权1.0 "+accessToken_1 );
         imgHead = (RoundImageView) findViewById(R.id.rig_head);
         imgHead.setCircleShape();
         tvTicket = (TextView) findViewById(R.id.tv_ticket);

@@ -2,6 +2,7 @@ package com.youmai.hxsdk.entity.cn;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+
 import com.youmai.hxsdk.db.bean.ContactBean;
 
 import java.util.ArrayList;
@@ -12,7 +13,7 @@ import static com.youmai.hxsdk.entity.cn.CNPinyinFactory.PRE_CHAR;
 /**
  * Created by you on 2017/9/7.
  */
-public class CNPinyin <T extends CN> implements Parcelable, Comparable<CNPinyin<T>> {
+public class CNPinyin<T extends CN> implements Parcelable, Comparable<CNPinyin<T>> {
 
     private char[] CHARS = {'↑', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K',
             'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
@@ -28,7 +29,7 @@ public class CNPinyin <T extends CN> implements Parcelable, Comparable<CNPinyin<
         headerFilter.add(new ContactBean("↑##@@**4 群聊").chinese());
         headerFilter.add(new ContactBean("↑##@@**5 收藏联系人").chinese());
 
-        for (char ch: CHARS) {
+        for (char ch : CHARS) {
             characters.add(ch);
         }
     }

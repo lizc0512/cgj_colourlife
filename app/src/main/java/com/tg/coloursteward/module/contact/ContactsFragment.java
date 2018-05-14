@@ -159,7 +159,7 @@ public class ContactsFragment extends Fragment implements ResponseListener, Item
         manager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         rv_main.setLayoutManager(manager);
 
-        adapter = new ContactAdapter(getContext(), contactList, adapter.mIndexForContact, this);
+        adapter = new ContactAdapter(getContext(), contactList, ContactAdapter.mIndexForContact, this);
         rv_main.setAdapter(adapter);
         rv_main.addItemDecoration(new StickyHeaderDecoration(adapter));
 
@@ -280,9 +280,9 @@ public class ContactsFragment extends Fragment implements ResponseListener, Item
      * 固定头item的跳转
      *
      * @param pos
-     * @param contact
+     * @param item
      */
-    void itemFunction(int pos, ContactBean contact) {
+    private void itemFunction(int pos, ContactBean item) {
         Intent intent;
         FamilyInfo info;
         switch (pos) {
@@ -329,7 +329,7 @@ public class ContactsFragment extends Fragment implements ResponseListener, Item
                     }
                 }
                 break;
-            case 2: //部门
+            case 2: //我的部门
                 info = new FamilyInfo();
                 info.id = UserInfo.orgId;
                 info.type = "org";
@@ -338,7 +338,7 @@ public class ContactsFragment extends Fragment implements ResponseListener, Item
                 intent.putExtra(HomeContactOrgActivity.FAMILY_INFO, info);
                 startActivity(intent);
                 break;
-            case 3: //手机通讯录
+            case 3: //手机联系人
                 if (ContextCompat.checkSelfPermission(mActivity, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
                     //申请权限
                     ActivityCompat.requestPermissions(mActivity, new String[]{Manifest.permission.READ_CONTACTS}, REQUESTPERMISSION);
@@ -347,13 +347,10 @@ public class ContactsFragment extends Fragment implements ResponseListener, Item
                     startActivity(new Intent(mActivity, ContactsActivity.class));
                 }
                 break;
-            case 4:
+            case 4: //群聊
                 startActivity(new Intent(getContext(), GroupListActivity.class));
                 break;
-            case 5:
-                break;
             default: //item
-                ContactBean item = contactList.get(pos).data;
                 //Intent i = new Intent(mActivity, EmployeeDataActivity.class);
                 //i.putExtra(EmployeeDataActivity.CONTACTS_ID, item.getUsername());
                 //startActivityForResult(i, ISTREAD);

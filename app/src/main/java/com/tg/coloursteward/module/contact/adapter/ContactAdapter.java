@@ -3,14 +3,12 @@ package com.tg.coloursteward.module.contact.adapter;
 import android.content.Context;
 import android.os.Message;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -23,9 +21,7 @@ import com.youmai.hxsdk.db.bean.ContactBean;
 import com.youmai.hxsdk.entity.cn.CNPinyin;
 import com.youmai.hxsdk.utils.GlideRoundTransform;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by yw on 2018/4/13.
@@ -34,16 +30,13 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         StickyHeaderAdapter<ContactAdapter.HeaderHolder>, MessageHandler.ResponseListener {
 
     enum TYPE {
-        SEARCH, HEADER, COLLECT, DEFAULT
+        SEARCH, HEADER, DEFAULT
     }
 
-    public static final int mIndexForCollect = 2;
-    public static final int mIndexForContact = 5;
-
-    private Map<Integer, ContactBean> mCacheMap;
+    public static final int mIndexForContact = 5;  //搜索 //组织架构 //我的部门 //手机联系人 //群聊
 
     private Context mContext;
-    private int mCollectIndex = 5;
+    private int mCollectIndex;
     private ItemEventListener itemEventListener;
     private final List<CNPinyin<ContactBean>> cnPinyinList;
 
@@ -53,17 +46,10 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         this.mCollectIndex = collectIndex;
         this.itemEventListener = listener;
 
-        if (mCollectIndex == mIndexForCollect) {
-            mCacheMap = new HashMap(cnPinyinList.size());
-        }
-
         msgHandler = new MessageHandler(context);
         msgHandler.setResponseListener(this);
     }
 
-    public Map<Integer, ContactBean> getCacheMap() {
-        return mCacheMap;
-    }
 
     @Override
     public int getItemCount() {
@@ -75,8 +61,6 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         int type;
         if (position == 0) {
             type = TYPE.SEARCH.ordinal();
-        } else if (position == mCollectIndex) {
-            type = TYPE.COLLECT.ordinal();
         } else if (position > 0 && position < mCollectIndex) {
             type = TYPE.HEADER.ordinal();
         } else {
@@ -93,9 +77,6 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         } else if (viewType == TYPE.HEADER.ordinal()) {
             return new ContactHolder(LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.contacts_fragment_item, parent, false));
-        } else if (viewType == TYPE.COLLECT.ordinal()) {
-            return new CollectHolder(LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.collect_fragment_item, parent, false));
         } else {
             return new ContactHolder(LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.contacts_fragment_item, parent, false));
@@ -113,23 +94,7 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 contactHolder.iv_header.setImageResource(icon);
                 contactHolder.cb_collect.setVisibility(View.GONE);
             } else {
-                if (null != mCacheMap) {
-                    if (mCollectIndex == mIndexForCollect) {
-                        contactHolder.cb_collect.setVisibility(View.VISIBLE);
-                    } else {
-                        contactHolder.cb_collect.setVisibility(View.GONE);
-                    }
-
-                    Log.d("YW", "position: " + position + "\tsize：" + mCacheMap.size() + "\t" +
-                            (mCacheMap.get(position) != null ? mCacheMap.get(position).toString() : "空"));
-
-                    if (mCacheMap.get(position) != null) {
-                        contactHolder.cb_collect.setChecked(true);
-                    } else {
-                        contactHolder.cb_collect.setChecked(false);
-                    }
-                }
-
+                contactHolder.cb_collect.setVisibility(View.GONE);
                 try {
                     Glide.with(mContext)
                             .load(contact.getAvatar())
@@ -151,18 +116,6 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     if (null != itemEventListener) {
                         itemEventListener.onItemClick(position, contact);
                     }
-                    if (null != mCacheMap) {
-                        if (contactHolder.cb_collect.isChecked()) {
-                            mCacheMap.remove(position);
-                            contactHolder.cb_collect.setChecked(false);
-                        } else {
-                            mCacheMap.put(position, contact);
-                            contactHolder.cb_collect.setChecked(true);
-                        }
-                        if (null != itemEventListener) {
-                            itemEventListener.collectCount(mCacheMap.size());
-                        }
-                    }
                 }
             });
 
@@ -172,9 +125,8 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 contactHolder.tv_name.setText(contact.getRealname());
             }
 
-        } else if (holder instanceof CollectHolder) {
-            ((CollectHolder) holder).itemView.setBackgroundColor(0xF5F5F5);
-        } else if (holder instanceof SearchHolder) {
+        }
+        if (holder instanceof SearchHolder) {
             //搜索框不处理
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -190,7 +142,7 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             @Override
             public boolean onLongClick(View v) {
                 if (null != itemEventListener) {
-                    Toast.makeText(mContext, "长按position：" + position, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(mContext, "长按position：" + position, Toast.LENGTH_SHORT).show();
                     itemEventListener.onLongClick(position);
                 }
                 return true;
@@ -244,14 +196,6 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
     }
 
-    public class CollectHolder extends RecyclerView.ViewHolder {
-        private TextView tv_name;
-
-        public CollectHolder(View itemView) {
-            super(itemView);
-            tv_name = (TextView) itemView.findViewById(R.id.tv_name);
-        }
-    }
 
     public class ContactHolder extends RecyclerView.ViewHolder {
         private ImageView iv_header;
@@ -301,9 +245,9 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     //--------------------------------------------------------------
     public interface NetRelativeRequestListener {
-        public void onRequest(MessageHandler msgHand);
+        void onRequest(MessageHandler msgHand);
 
-        public void onSuccess(Message msg, String response);
+        void onSuccess(Message msg, String response);
     }
 
     private NetRelativeRequestListener requestListener;
@@ -325,13 +269,10 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public void onRequestStart(Message msg, String hintString) {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
     public void onSuccess(Message msg, String jsonString, String hintString) {
-        // TODO Auto-generated method stub
         int code = HttpTools.getCode(jsonString);
         if (code == 0) {
             if (requestListener != null) {
@@ -343,7 +284,7 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public void onFail(Message msg, String hintString) {
-        // TODO Auto-generated method stub
+
     }
 
 }

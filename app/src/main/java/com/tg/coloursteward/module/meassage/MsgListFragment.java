@@ -401,6 +401,7 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
                             ExCacheMsgBean bean = new ExCacheMsgBean(item);
                             mMessageAdapter.addPushMsgItem(bean);
                         }
+                        initUnreadList();
                     }
                 }
             }
@@ -588,11 +589,11 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
 
     private void initUnreadList() {
         List<ExCacheMsgBean> list = mMessageAdapter.getMsgList();
-
+        unReadListPosition.clear();
         for (int i = 0; i < list.size(); i++) {
             ExCacheMsgBean item = list.get(i);
             int count = IMMsgManager.instance().getBadeCount(item.getTargetUuid());
-            if (count > 0 && !unReadListPosition.contains(count)) {
+            if (count > 0 && !unReadListPosition.contains(i)) {
                 unReadListPosition.add(i);
             }
         }

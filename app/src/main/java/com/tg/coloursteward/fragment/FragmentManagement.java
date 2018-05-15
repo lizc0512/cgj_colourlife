@@ -1,9 +1,11 @@
 package com.tg.coloursteward.fragment;
 
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -29,12 +31,13 @@ import com.tg.coloursteward.info.AdvInfo;
 import com.tg.coloursteward.info.GridViewInfo;
 import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.inter.SingleClickListener;
+import com.tg.coloursteward.net.GetTwoRecordListener;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.MessageHandler;
 import com.tg.coloursteward.net.RequestConfig;
 import com.tg.coloursteward.net.RequestParams;
 import com.tg.coloursteward.net.ResponseData;
-import com.tg.coloursteward.serice.HomeService;
+import com.tg.coloursteward.serice.AuthAppService;
 import com.tg.coloursteward.util.AuthTimeUtils;
 import com.tg.coloursteward.util.DateUtils;
 import com.tg.coloursteward.util.StringUtils;
@@ -86,7 +89,6 @@ public class FragmentManagement extends Fragment {
     private Activity mActivity;
     private View mView;
     private Intent intent;
-    private HomeService homeService;
     private MyGridView mGridView1, mGridView2;
     private ManagementAdapter adapter1, adapter2;
     private ManageMentLinearlayout magLinearLayoutMail;
@@ -95,7 +97,12 @@ public class FragmentManagement extends Fragment {
     private ManageMentLinearlayout magLinearLayoutSign;
     private TextView tvMail, tvExamineNum;
     private String mail, examineNum;
-    private String access_token;//获取未读审批前拿到的access_token
+
+    private String corpUuid;
+    private AuthAppService authAppService;
+    private String accessToken;
+    private String accessToken_1;
+
     private ArrayList<GridViewInfo> gridlist1 = new ArrayList<GridViewInfo>();
     private ArrayList<GridViewInfo> gridlist2 = new ArrayList<GridViewInfo>();
     private String commonjsonStr, elsejsonStr;
@@ -124,7 +131,6 @@ public class FragmentManagement extends Fragment {
 
     private String area, stock, ticket, community, performance, account;
 
-    private String homeListCache;
     private String AreaStr;
     private String StockStr;
     private String TicketStr;
@@ -325,7 +331,8 @@ public class FragmentManagement extends Fragment {
         if (StringUtils.isNotEmpty(TicketStr)) {
             progressBarTicket.setVisibility(View.GONE);
             rlTicket.setVisibility(View.VISIBLE);
-            tvTicket.setText(TicketStr);
+            DecimalFormat df = new DecimalFormat("0.00");
+            tvTicket.setText(df.format(Double.parseDouble(TicketStr)));
         } else {
             progressBarTicket.setVisibility(View.VISIBLE);
             rlTicket.setVisibility(View.GONE);
@@ -352,7 +359,8 @@ public class FragmentManagement extends Fragment {
         if (StringUtils.isNotEmpty(AccountStr)) {
             progressBarAccount.setVisibility(View.GONE);
             rlAccount.setVisibility(View.VISIBLE);
-            tvAccount.setText(AccountStr);
+            DecimalFormat df = new DecimalFormat("0.00");
+            tvAccount.setText(df.format(Double.parseDouble(AccountStr)));
         } else {
             progressBarAccount.setVisibility(View.VISIBLE);
             rlAccount.setVisibility(View.GONE);
@@ -374,7 +382,7 @@ public class FragmentManagement extends Fragment {
      */
     private void initListener() {
         /**
-         * 在管面积
+         * 在管面积（上线面积）
          */
         magLinearLayoutArea.setNetworkRequestListener(new NetworkRequestListener() {
 
@@ -384,15 +392,34 @@ public class FragmentManagement extends Fragment {
                 progressBarArea.setVisibility(View.GONE);
                 rlArea.setVisibility(View.VISIBLE);
                 if (code == 0) {
-                    JSONArray jsonArray = HttpTools.getContentJsonArray(response);
-                    ResponseData data = HttpTools.getResponseContent(jsonArray);
-                    if (data.length > 0) {
-                        area = data.getString("const_area");
-                        if (StringUtils.isNotEmpty(area)) {
-                            Tools.saveStringValue(mActivity, Contants.storage.AREAHOME, area);
-                            DecimalFormat decimalFomat = new DecimalFormat(".00");//构造方法的字符格式这里如果小数不足2位,会以0补足.
-                            String p = decimalFomat.format(Float.valueOf(area) / 10000);
-                            tvArea.setText(p);
+                    JSONObject jsonObject = HttpTools.getContentJSONObject(response);
+                    if (jsonObject.length() > 0) {
+                        try {
+                            String coveredArea1 = jsonObject.getString("coveredArea");
+                            String contractArea = jsonObject.getString("contractArea");
+                            String delivered = jsonObject.getString("delivered");
+                            JSONObject js = jsonObject.getJSONObject("撤场数据");
+                            String coveredArea2 = js.getString("coveredArea");
+                            double aa = Double.parseDouble(coveredArea1);//在管面积
+                            double bb = Double.parseDouble(contractArea);//合同面积
+                            double cc = Double.parseDouble(delivered);//已交付合同面积
+                            double dd = Double.parseDouble(coveredArea2);//撤场面积
+                            BigDecimal a = new BigDecimal(aa);
+                            BigDecimal b = new BigDecimal(bb);
+                            BigDecimal c = new BigDecimal(cc);
+                            BigDecimal d = new BigDecimal(dd);
+                            BigDecimal ad = a.add(d);
+                            BigDecimal bc = b.subtract(c);
+                            BigDecimal total = ad.add(bc);
+                            area = String.valueOf(total);
+                            if (StringUtils.isNotEmpty(area)) {
+                                Tools.saveStringValue(mActivity, Contants.storage.AREAHOME, area);
+                                DecimalFormat decimalFomat = new DecimalFormat(".00");//构造方法的字符格式这里如果小数不足2位,会以0补足.
+                                String p = decimalFomat.format(Float.valueOf(area) / 10000);
+                                tvArea.setText(p);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
                     }
                 } else {
@@ -420,8 +447,15 @@ public class FragmentManagement extends Fragment {
                 RequestConfig config = new RequestConfig(mActivity, 0);
                 config.handler = msgHand.getHandler();
                 RequestParams params = new RequestParams();
-                params.put("id", "9959f117-df60-4d1b-a354-776c20ffb8c7");
-                HttpTools.httpGet(Contants.URl.URL_ICETEST, "/resource/statistics", config, params);
+                params.put("token", accessToken);
+                if (corpUuid.equals("a8c58297436f433787725a94f780a3c9")) {//彩生活的租户id
+                    params.put("isAll", 1);
+                    params.put("orgUuid", 0);
+                } else {
+                    params.put("corpId", corpUuid);
+                    params.put("orgUuid", "9959f117-df60-4d1b-a354-776c20ffb8c7");
+                }
+                HttpTools.httpGet(Contants.URl.URL_ICETEST, "/resourcems/community/statistics", config, params);
             }
         });
         /**
@@ -498,8 +532,9 @@ public class FragmentManagement extends Fragment {
                         try {
                             String ticket = jsonObject.getString("balance");
                             Tools.saveStringValue(mActivity, Contants.storage.TICKETHOME, ticket);
-                            if (ticket != null || ticket.length() > 0) {
-                                tvTicket.setText(ticket);
+                            if (ticket != null) {
+                                DecimalFormat df = new DecimalFormat("0.00");
+                                tvTicket.setText(df.format(Double.parseDouble(ticket)));
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -508,7 +543,8 @@ public class FragmentManagement extends Fragment {
                 } else {
                     Tools.saveStringValue(mActivity, Contants.storage.TICKETHOME, "0");
                     if (StringUtils.isNotEmpty(TicketStr)) {
-                        tvTicket.setText(TicketStr);
+                        DecimalFormat df = new DecimalFormat("0.00");
+                        tvTicket.setText(df.format(Double.parseDouble(TicketStr)));
                     } else {
                         tvTicket.setText("0");
                     }
@@ -520,7 +556,8 @@ public class FragmentManagement extends Fragment {
                 progressBarTicket.setVisibility(View.GONE);
                 rlTicket.setVisibility(View.VISIBLE);
                 if (StringUtils.isNotEmpty(TicketStr)) {
-                    tvTicket.setText(TicketStr);
+                    DecimalFormat df = new DecimalFormat("0.00");
+                    tvTicket.setText(df.format(Double.parseDouble(TicketStr)));
                 } else {
                     tvTicket.setText("0");
                 }
@@ -537,7 +574,7 @@ public class FragmentManagement extends Fragment {
             }
         });
         /**
-         * 在管小区
+         * 在管小区（上线小区）
          */
         magLinearLayoutCommunity.setNetworkRequestListener(new NetworkRequestListener() {
 
@@ -547,13 +584,16 @@ public class FragmentManagement extends Fragment {
                 progressBarCommunity.setVisibility(View.GONE);
                 rlCommunity.setVisibility(View.VISIBLE);
                 if (code == 0) {
-                    JSONArray jsonArray = HttpTools.getContentJsonArray(response);
-                    ResponseData data = HttpTools.getResponseContent(jsonArray);
-                    if (data.length > 0) {
-                        community = data.getString(0, "smallarea_num");
-                        if (StringUtils.isNotEmpty(community)) {
-                            Tools.saveStringValue(mActivity, Contants.storage.COMMUNITYHOME, community);
-                            tvCommunity.setText((community));
+                    JSONObject jsonObject = HttpTools.getContentJSONObject(response);
+                    if (jsonObject.length() > 0) {
+                        try {
+                            community = jsonObject.getString("count");
+                            if (StringUtils.isNotEmpty(community)) {
+                                Tools.saveStringValue(mActivity, Contants.storage.COMMUNITYHOME, community);
+                                tvCommunity.setText((community));
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
                     }
                 } else {
@@ -583,8 +623,15 @@ public class FragmentManagement extends Fragment {
                 RequestConfig config = new RequestConfig(mActivity, 0);
                 config.handler = msgHand.getHandler();
                 RequestParams params = new RequestParams();
-                params.put("id", "9959f117-df60-4d1b-a354-776c20ffb8c7");
-                HttpTools.httpGet(Contants.URl.URL_ICETEST, "/resource/statistics", config, params);
+                params.put("token", accessToken);
+                if (corpUuid.equals("a8c58297436f433787725a94f780a3c9")) {
+                    params.put("isAll", 1);
+                    params.put("orgUuid", 0);
+                } else {
+                    params.put("corpId", corpUuid);
+                    params.put("orgUuid", "9959f117-df60-4d1b-a354-776c20ffb8c7");
+                }
+                HttpTools.httpGet(Contants.URl.URL_ICETEST, "/resourcems/community/statistics", config, params);
             }
         });
         /**
@@ -647,8 +694,8 @@ public class FragmentManagement extends Fragment {
                 HttpTools.httpGet(Contants.URl.URL_ICETEST, "/oa/jxfen", config, params);
             }
         });
-        /*
-         * 即时分账
+        /**
+         * 即时分配
          */
         magLinearLayoutAccount.setNetworkRequestListener(new NetworkRequestListener() {
 
@@ -664,18 +711,20 @@ public class FragmentManagement extends Fragment {
                         account = jsonObject.getString("total_balance");
                         Tools.saveStringValue(mActivity, Contants.storage.ACCOUNTHOME, account);
                         if (account != null || account.length() > 0) {
-                            tvAccount.setText(account);
+                            DecimalFormat df = new DecimalFormat("0.00");
+                            tvAccount.setText(df.format(Double.parseDouble(account)));
                         }
                     } catch (JSONException e) {
                         // TODO Auto-generated catch block
                         e.printStackTrace();
                     }
                 } else {
-                    Tools.saveStringValue(mActivity, Contants.storage.ACCOUNTHOME, "0");
+                    Tools.saveStringValue(mActivity, Contants.storage.ACCOUNTHOME, "0.00");
                     if (StringUtils.isNotEmpty(AccountStr)) {
-                        tvAccount.setText(AccountStr);
+                        DecimalFormat df = new DecimalFormat("0.00");
+                        tvAccount.setText(df.format(Double.parseDouble(AccountStr)));
                     } else {
-                        tvAccount.setText("0");
+                        tvAccount.setText("0.00");
                     }
                 }
 
@@ -687,9 +736,10 @@ public class FragmentManagement extends Fragment {
                 rlAccount.setVisibility(View.VISIBLE);
                 Tools.saveStringValue(mActivity, Contants.storage.ACCOUNTHOME, "0");
                 if (StringUtils.isNotEmpty(AccountStr)) {
-                    tvAccount.setText(AccountStr);
+                    DecimalFormat df = new DecimalFormat("0.00");
+                    tvAccount.setText(df.format(Double.parseDouble(AccountStr)));
                 } else {
-                    tvAccount.setText("0");
+                    tvAccount.setText("0.00");
                 }
             }
 
@@ -698,10 +748,10 @@ public class FragmentManagement extends Fragment {
                 RequestConfig config = new RequestConfig(mActivity, 0);
                 config.handler = msgHand.getHandler();
                 RequestParams params = new RequestParams();
-                params.put("access_token", "1521ac83521b8063e7a9a49dc22e79b0");
-                params.put("target_type", "2");
-                params.put("target", UserInfo.employeeAccount);
-                HttpTools.httpGet(Contants.URl.URL_ICETEST, "/splitdivide/api/account", config, params);
+                params.put("access_token", accessToken);
+                params.put("split_type", "2");
+                params.put("split_target", UserInfo.employeeAccount);
+                HttpTools.httpGet(Contants.URl.URL_ICETEST, "/split/api/account", config, params);
             }
         });
     }
@@ -711,14 +761,6 @@ public class FragmentManagement extends Fragment {
      * 加载数据
      */
     private void requestData2() {
-        //rlAdd.loaddingData();
-        magLinearLayoutArea.postDelayed(new Runnable() {//在管面积
-
-            @Override
-            public void run() {
-                magLinearLayoutArea.loaddingData();
-            }
-        }, 500);
         magLinearLayoutStock.postDelayed(new Runnable() {//集团股票
 
             @Override
@@ -730,18 +772,16 @@ public class FragmentManagement extends Fragment {
 
             @Override
             public void run() {
-                key = Tools.getStringValue(mActivity, Contants.EMPLOYEE_LOGIN.key);
-                secret = Tools.getStringValue(mActivity, Contants.EMPLOYEE_LOGIN.secret);
                 magLinearLayoutTicket.loaddingData();
             }
         }, 1500);
-        magLinearLayoutCommunity.postDelayed(new Runnable() {//在管小区
+		/*magLinearLayoutCommunity.postDelayed(new Runnable() {//在管小区
 
-            @Override
-            public void run() {
-                magLinearLayoutCommunity.loaddingData();
-            }
-        }, 2000);
+			@Override
+			public void run() {
+				magLinearLayoutCommunity.loaddingData();
+			}
+		}, 2000);*/
         magLinearLayoutPerformance.postDelayed(new Runnable() {//绩效评分
 
             @Override
@@ -1288,28 +1328,103 @@ public class FragmentManagement extends Fragment {
     }
 
     public void requestData() {
-        magLinearLayoutMail.loaddingData();
-        magLinearLayoutExamineNum.postDelayed(new Runnable() {
+        corpUuid = Tools.getStringValue(mActivity, Contants.storage.CORPID);
+        key = Tools.getStringValue(mActivity, Contants.EMPLOYEE_LOGIN.key);
+        secret = Tools.getStringValue(mActivity, Contants.EMPLOYEE_LOGIN.secret);
+
+        Date dt = new Date();
+        Long time = dt.getTime();
+        String expireTime = Tools.getStringValue(mActivity, Contants.storage.APPAUTHTIME);
+        String expireTime_1 = Tools.getStringValue(mActivity, Contants.storage.APPAUTHTIME_1);
+        accessToken = Tools.getStringValue(mActivity, Contants.storage.APPAUTH);
+        accessToken_1 = Tools.getStringValue(mActivity, Contants.storage.APPAUTH_1);
+        Log.e(TAG, "requestData: accessToken" + accessToken);
+        Log.e(TAG, "requestData: accessToken_1" + accessToken_1);
+        if (StringUtils.isNotEmpty(expireTime)) {
+            if (Long.parseLong(expireTime) <= time) {//token过期
+                getAuthAppInfo();
+            } else {
+                freshData();//刷新在管面积与小区
+                freshAccount();//刷新即时分配
+            }
+        } else {
+            getAuthAppInfo();
+        }
+    }
+
+    /**
+     * 获取token（2.0）
+     * sectet
+     */
+    private void getAuthAppInfo() {
+        if (authAppService == null) {
+            authAppService = new AuthAppService(mActivity);
+        }
+        authAppService.getAppAuth(new GetTwoRecordListener<String, String>() {
+            @Override
+            public void onFinish(String jsonString, String data2, String data3) {
+                int code = HttpTools.getCode(jsonString);
+                if (code == 0) {
+                    JSONObject content = HttpTools.getContentJSONObject(jsonString);
+                    if (content.length() > 0) {
+                        try {
+                            accessToken = content.getString("accessToken");
+                            String expireTime = content.getString("expireTime");
+                            Tools.saveStringValue(mActivity, Contants.storage.APPAUTH, accessToken);
+                            Tools.saveStringValue(mActivity, Contants.storage.APPAUTHTIME, expireTime);
+                            freshData();//刷新在管面积与小区
+                            freshAccount();//刷新即时分配
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+
+                }
+            }
+
+            @Override
+            public void onFailed(String Message) {
+
+            }
+        });
+    }
+
+
+    /**
+     * 刷新饭票
+     */
+    public void freshUI() {
+        key = Tools.getStringValue(mActivity, Contants.EMPLOYEE_LOGIN.key);
+        secret = Tools.getStringValue(mActivity, Contants.EMPLOYEE_LOGIN.secret);
+        magLinearLayoutTicket.loaddingData();
+    }
+
+    /**
+     * 刷新即时分成
+     */
+    public void freshAccount() {
+        magLinearLayoutAccount.loaddingData();
+    }
+
+    /**
+     * 刷新在管面积与小区
+     */
+    public void freshData() {
+        magLinearLayoutArea.postDelayed(new Runnable() {//在管面积
 
             @Override
             public void run() {
-                magLinearLayoutExamineNum.loaddingData();
+                magLinearLayoutArea.loaddingData();
             }
         }, 500);
-        mGridView1.postDelayed(new Runnable() {
+        magLinearLayoutCommunity.postDelayed(new Runnable() {//在管小区
 
             @Override
             public void run() {
-                mGridView1.loaddingData();
+                magLinearLayoutCommunity.loaddingData();
             }
-        }, 1000);
-        mGridView2.postDelayed(new Runnable() {
-
-            @Override
-            public void run() {
-                mGridView2.loaddingData();
-            }
-        }, 1500);
+        }, 2000);
     }
 
     @Override

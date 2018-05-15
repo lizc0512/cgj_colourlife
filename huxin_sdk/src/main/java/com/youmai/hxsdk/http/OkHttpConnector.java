@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 
+import com.facebook.stetho.okhttp3.StethoInterceptor;
 import com.youmai.hxsdk.config.FileConfig;
 import com.youmai.hxsdk.utils.AppUtils;
 
@@ -37,7 +38,11 @@ import okio.Source;
 public class OkHttpConnector {
     private static final String TAG = OkHttpConnector.class.getSimpleName();
 
-    private static final OkHttpClient client = new OkHttpClient();
+    //private static final OkHttpClient client = new OkHttpClient.Builder().build();
+    private static final OkHttpClient client = new OkHttpClient.Builder()
+            .addNetworkInterceptor(new StethoInterceptor())  //添加拦截器
+            .build();
+
     private static final MediaType JSON
             = MediaType.parse("application/json; charset=utf-8");
 

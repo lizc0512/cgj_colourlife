@@ -21,6 +21,6 @@
 
     <string name="message">消息</string>
     <string name="contact">联系人</string>
-    <string name="job">小程序</string>
+    <string name="job">微服务</string>
     <string name="mine">我的</string>
 </resources>

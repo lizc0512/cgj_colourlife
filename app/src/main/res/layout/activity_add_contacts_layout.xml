@@ -15,9 +15,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/title"
-        android:background="@color/white"
+        android:background="@color/hx_background_color"
         android:orientation="horizontal"
-        android:padding="5dp">
+        android:padding="10dp">
 
         <TextView
             android:id="@+id/search_bar_back"
@@ -38,14 +38,10 @@
             android:layout_width="match_parent"
             android:layout_height="32dp"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="12dp"
-            android:layout_marginRight="12dp"
-            android:background="@drawable/global_contacts_search_bg"
+            android:background="@drawable/command_contacts_search_bg"
             android:drawablePadding="12dp"
             android:hint="搜索"
             android:maxLines="1"
-            android:paddingLeft="4dp"
-            android:paddingRight="8dp"
             android:textColorHint="@color/hxb_subtitle_color"
             android:textSize="15sp" />
     </LinearLayout>
@@ -53,8 +49,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/search_parent"
-        android:layout_marginTop="5dp">
+        android:layout_below="@+id/search_parent">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rv_main"

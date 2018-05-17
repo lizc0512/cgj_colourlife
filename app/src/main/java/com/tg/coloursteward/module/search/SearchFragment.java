@@ -1,6 +1,8 @@
 package com.tg.coloursteward.module.search;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Log;
@@ -15,20 +17,18 @@ import com.youmai.hxsdk.R;
  */
 public class SearchFragment extends Fragment {
     private static final String TAG = SearchFragment.class.getSimpleName();
-    private OnLoadFinishListener mOnLoadFinishListener;
     private String mQueryString = "";
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.global_search_fragment, null, false);
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
     }
 
     public final String getQueryString() {
@@ -38,7 +38,6 @@ public class SearchFragment extends Fragment {
     public void setQueryString(String queryString) {
         if (!TextUtils.equals(mQueryString, queryString)) {
             mQueryString = queryString;
-
             reloadData();
         }
     }
@@ -47,18 +46,5 @@ public class SearchFragment extends Fragment {
         Log.d(TAG, "reloadData");
     }
 
-    public OnLoadFinishListener getOnLoadFinishListener() {
-        return mOnLoadFinishListener;
-    }
-
-    public void setOnLoadFinishListener(OnLoadFinishListener listener) {
-        mOnLoadFinishListener = listener;
-    }
-
-    public interface OnLoadFinishListener {
-        void onFinishCallback(boolean finish, String query);
-
-        void onWhoShowMoreCallback(String fragmentTag);
-    }
 
 }

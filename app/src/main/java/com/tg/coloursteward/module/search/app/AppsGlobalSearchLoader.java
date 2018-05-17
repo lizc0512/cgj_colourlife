@@ -1,12 +1,14 @@
 package com.tg.coloursteward.module.search.app;
 
-import android.app.Activity;
 import android.content.Context;
+import android.support.v4.content.AsyncTaskLoader;
+import android.text.TextUtils;
 import android.util.Log;
 
-import com.tg.coloursteward.module.search.GlobalSearchLoader;
+import com.tg.coloursteward.info.FamilyInfo;
 import com.tg.coloursteward.module.search.data.SearchData;
 import com.youmai.hxsdk.entity.cn.SearchContactBean;
+import com.youmai.hxsdk.utils.ListUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,28 +16,46 @@ import java.util.List;
 /**
  * Created by srsm on 2018/4/17.
  */
-public class AppsGlobalSearchLoader<T> extends GlobalSearchLoader<SearchContactBean> {
+public class AppsGlobalSearchLoader extends AsyncTaskLoader {
     private final String TAG = AppsGlobalSearchLoader.class.getSimpleName();
-    private Activity mContext;
 
-    public AppsGlobalSearchLoader(Activity context) {
+    private List<FamilyInfo> contactList;
+    private String mQuery;
+
+
+    public AppsGlobalSearchLoader(Context context) {
         super(context);
-        mContext = context;
     }
 
+    public AppsGlobalSearchLoader(Context context, List<FamilyInfo> list) {
+        super(context);
+        contactList = list;
+    }
+
+
+    public void setQuery(String str) {
+        this.mQuery = str;
+    }
+
+
     @Override
-    public ArrayList<SearchContactBean> fullLoadInBackground() {
-        if (mQuery == null || mQuery.isEmpty()) {
-            return null;
+    public List<SearchContactBean> loadInBackground() {
+        List<SearchContactBean> resList = new ArrayList<>();
+        List<SearchContactBean> allList;
+        if (ListUtils.isEmpty(contactList)) {
+            allList = SearchData.instance().searchContactsList(contactList);
+        } else {
+            allList = SearchData.instance().searchContactsList(getContext());
         }
 
-        ArrayList<SearchContactBean> searchContactBeenList = new ArrayList<>();
+        if (TextUtils.isEmpty(mQuery)) {
+            return allList;
+        }
+
         String finalQuery = mQuery;
         String queryUpper = mQuery.toUpperCase();
 
-        List<SearchContactBean> appsList = SearchData.peekInstance().searchCacheAppsList(mContext);
-
-        for (SearchContactBean bean : appsList) {
+        for (SearchContactBean bean : allList) {
             int searchType = SearchContactBean.SEARCH_TYPE_NONE;
             //全拼搜索
             int[] findResult = new int[2];
@@ -52,7 +72,7 @@ public class AppsGlobalSearchLoader<T> extends GlobalSearchLoader<SearchContactB
                 for (String pinyin : indexPinyin) {
                     boolean b = pinyin.startsWith(queryUpper);//每个汉字拼音
                     boolean c = queryUpper.startsWith(pinyin);
-                    Log.e("YW", "pinyin: " + pinyin);
+                    Log.v(TAG, "pinyin: " + pinyin);
                     if (b || c) {
                         searchType = SearchContactBean.SEARCH_TYPE_WHOLE_SPECL;
                         break;
@@ -60,32 +80,24 @@ public class AppsGlobalSearchLoader<T> extends GlobalSearchLoader<SearchContactB
                 }
                 finalQuery = queryUpper;
 
-                //去匹配中文名的
-                Log.e("YW", "i: getWholePinyin");
-
             } else if (bean.getDuoYinzi().find(queryUpper, findResult)) {
                 searchType = SearchContactBean.SEARCH_TYPE_WHOLE_SPECL;
                 finalQuery = queryUpper;
                 bean.setWholePinYinFindIndex(findResult);
             }
 
+
             if (searchType != SearchContactBean.SEARCH_TYPE_NONE) {
                 bean.setSearchKey(finalQuery);
                 bean.setSearchType(searchType);
 
                 //通讯录显示时不拷贝下一级，节省数据
-                SearchContactBean newbean = new SearchContactBean(bean, false);
-                searchContactBeenList.add(newbean);
+                SearchContactBean searchBean = new SearchContactBean(bean, false);
+                resList.add(searchBean);
             }
         }
-
-        postPreLoad(searchContactBeenList);
-        return searchContactBeenList;
+        return resList;
     }
 
-    @Override
-    public ArrayList<SearchContactBean> reloadInBackground() {
-        return fullLoadInBackground();
-    }
 
 }

@@ -13,10 +13,10 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.tg.coloursteward.R;
 import com.tg.coloursteward.module.contact.stickyheader.StickyHeaderAdapter;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.MessageHandler;
-import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.db.bean.ContactBean;
 import com.youmai.hxsdk.entity.cn.CNPinyin;
 import com.youmai.hxsdk.utils.GlideRoundTransform;
@@ -73,7 +73,7 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == TYPE.SEARCH.ordinal()) {
             return new SearchHolder(LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.global_list_item_header_search, parent, false));
+                    .inflate(R.layout.message_list_item_header_search, parent, false));
         } else if (viewType == TYPE.HEADER.ordinal()) {
             return new ContactHolder(LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.contacts_fragment_item, parent, false));

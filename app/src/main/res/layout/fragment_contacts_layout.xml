@@ -22,8 +22,8 @@
             android:layout_width="24dp"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
-            android:layout_marginBottom="35dp"
-            android:layout_marginTop="35dp"
+            android:layout_marginBottom="45dp"
+            android:layout_marginTop="45dp"
             app:charTextColor="#000000"
             app:indexTextColor="@color/hx_main_color"
             app:indexTextSize="13sp" />

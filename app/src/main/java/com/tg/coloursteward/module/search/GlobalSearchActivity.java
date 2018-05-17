@@ -10,8 +10,6 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
-import com.tg.coloursteward.module.search.app.AppsSearchFragment;
-import com.tg.coloursteward.module.search.data.SearchData;
 import com.youmai.hxsdk.R;
 
 /**
@@ -19,12 +17,8 @@ import com.youmai.hxsdk.R;
  */
 public class GlobalSearchActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private static final String TAG_SEARCH_CONTACTS_FRAGMENT = "search_contacts_fragment";
-    private static final String TAG_SEARCH_APPS_FRAGMENT = "search_apps_fragment";
-
     private ContactsSearchFragment mContactsSearchFragment;
-    private AppsSearchFragment mAppsSearchFragment;
-    private SearchFragment.OnLoadFinishListener mLoadFinishListener;
+    //private AppsSearchFragment mAppsSearchFragment;
 
     private SearchEditText mSearchEditText;
     private TextView mBtnBackMain;
@@ -34,25 +28,17 @@ public class GlobalSearchActivity extends AppCompatActivity implements View.OnCl
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.global_activity_search);
-        SearchData.init(this).initApps(2);
         initView();
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         mContactsSearchFragment = new ContactsSearchFragment();
-        mContactsSearchFragment.setOnLoadFinishListener(mLoadFinishListener);
-        transaction.add(R.id.contacts_search_container, mContactsSearchFragment, TAG_SEARCH_CONTACTS_FRAGMENT);
-
-        mAppsSearchFragment = new AppsSearchFragment();
-        mAppsSearchFragment.setOnLoadFinishListener(mLoadFinishListener);
-        transaction.add(R.id.apps_search_container, mAppsSearchFragment, TAG_SEARCH_APPS_FRAGMENT);
-
+        transaction.replace(R.id.contacts_search_container, mContactsSearchFragment, ContactsSearchFragment.TAG);
         transaction.commitAllowingStateLoss();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        SearchData.peekInstance().onDestroy();
     }
 
     private void initView() {
@@ -73,13 +59,13 @@ public class GlobalSearchActivity extends AppCompatActivity implements View.OnCl
                     mContactsSearchFragment.setQueryString(queryStr);
                     mContactsSearchFragment.reset();
                 }
-                if (mAppsSearchFragment != null) {
+                /*if (mAppsSearchFragment != null) {
                     if (mAppsSearchFragment.isHidden()) {
                         transaction.show(mAppsSearchFragment);
                     }
                     mAppsSearchFragment.setQueryString(queryStr);
                     mAppsSearchFragment.reset();
-                }
+                }*/
                 transaction.commit();
             }
         });
@@ -96,30 +82,6 @@ public class GlobalSearchActivity extends AppCompatActivity implements View.OnCl
 
         mBtnBack = (TextView) findViewById(R.id.global_search_bar_cancel);
         mBtnBack.setOnClickListener(this);
-
-        mLoadFinishListener = new SearchFragment.OnLoadFinishListener() {
-            @Override
-            public void onFinishCallback(boolean finish, String query) {
-                // 多个回调，有先后...
-                synchronized (this) {
-
-                }
-            }
-
-            @Override
-            public void onWhoShowMoreCallback(String fragmentTag) {
-                mBtnBackMain.setVisibility(View.VISIBLE);
-                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-
-                if (fragmentTag.equals(TAG_SEARCH_CONTACTS_FRAGMENT)) {
-                    transaction.hide(mAppsSearchFragment);
-                } else {
-                    transaction.hide(mContactsSearchFragment);
-                }
-
-                transaction.commitAllowingStateLoss();
-            }
-        };
     }
 
     @Override
@@ -134,12 +96,6 @@ public class GlobalSearchActivity extends AppCompatActivity implements View.OnCl
                     transaction.show(mContactsSearchFragment);
                 }
                 mContactsSearchFragment.reset();
-            }
-            if (mAppsSearchFragment != null) {
-                if (mAppsSearchFragment.isHidden()) {
-                    transaction.show(mAppsSearchFragment);
-                }
-                mAppsSearchFragment.reset();
             }
             transaction.commit();
         }

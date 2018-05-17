@@ -1,16 +1,11 @@
 package com.tg.coloursteward.module.search.data;
 
-import android.app.Activity;
 import android.content.Context;
-import android.os.Message;
 import android.util.SparseArray;
-import com.tg.coloursteward.constant.Contants;
-import com.tg.coloursteward.info.UserInfo;
+
+import com.tg.coloursteward.info.FamilyInfo;
 import com.tg.coloursteward.module.contact.utils.PinYinUtils;
 import com.tg.coloursteward.net.HttpTools;
-import com.tg.coloursteward.net.MessageHandler;
-import com.tg.coloursteward.net.RequestConfig;
-import com.tg.coloursteward.net.RequestParams;
 import com.tg.coloursteward.net.ResponseData;
 import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.Tools;
@@ -33,41 +28,24 @@ import java.util.List;
  * 日期：2018.03.21 17:30
  * 描述：搜索数据
  */
-public class SearchData implements MessageHandler.ResponseListener {
+public class SearchData {
 
     private static final String TAG = "YW";
 
     private static SearchData instance;
-    private Activity mActivity;
-    private MessageHandler msgHandler;
 
-    public static SearchData init(Activity context) {
-        synchronized (SearchData.class) {
-            if (null == instance) {
-                instance = new SearchData(context);
-            }
-            return instance;
+
+    public static SearchData instance() {
+        if (null == instance) {
+            instance = new SearchData();
         }
-    }
-
-    private SearchData(Activity context) {
-        this.mActivity = context;
-        msgHandler = new MessageHandler(mActivity);
-        msgHandler.setResponseListener(this);
-    }
-
-    public static SearchData peekInstance() {
         return instance;
     }
 
-    public void onDestroy() {
-        instance = null;
-        mActivity = null;
-        msgHandler = null;
-    }
 
     /**
      * 搜索联系人
+     *
      * @param context
      * @return
      */
@@ -83,12 +61,11 @@ public class SearchData implements MessageHandler.ResponseListener {
 
         List<SearchContactBean> contactList = new ArrayList<>();
         for (int i = 0; i < data.length; i++) {
-            String hanzi = data.getString(i,"realname");
-            StringBuffer ch = new StringBuffer();
-            StringBuffer pinyin = new StringBuffer();
+            String hanzi = data.getString(i, "realname");
+            StringBuilder ch = new StringBuilder();
+            StringBuilder pinyin = new StringBuilder();
             List<String> chStr = new ArrayList<>(); //每个汉字的 拼音集合
             for (int j = 0; j < hanzi.length(); j++) {
-                System.out.println("yw-i: " + hanzi.charAt(j));
                 pinyin.append(Pinyin.toPinyin(hanzi.charAt(j)).toUpperCase());
                 ch.append(Pinyin.toPinyin(hanzi.charAt(j)).substring(0, 1));
                 chStr.add(Pinyin.toPinyin(hanzi.charAt(j)));
@@ -115,7 +92,7 @@ public class SearchData implements MessageHandler.ResponseListener {
 
     /*****************************************************
 
-    /**
+     /**
      * 搜索应用
      * @return
      */
@@ -146,11 +123,10 @@ public class SearchData implements MessageHandler.ResponseListener {
             appsBean = new SearchContactBean();
             String hanzi = data.getString(i, "name");
 
-            StringBuffer ch = new StringBuffer();
-            StringBuffer pinyin = new StringBuffer();
+            StringBuilder ch = new StringBuilder();
+            StringBuilder pinyin = new StringBuilder();
             List<String> chStr = new ArrayList<>(); //每个汉字的 拼音集合
             for (int j = 0; j < hanzi.length(); j++) {
-                System.out.println("yw-i: " + hanzi.charAt(j));
                 pinyin.append(Pinyin.toPinyin(hanzi.charAt(j)).toUpperCase());
                 ch.append(Pinyin.toPinyin(hanzi.charAt(j)).substring(0, 1));
                 chStr.add(Pinyin.toPinyin(hanzi.charAt(j)));
@@ -184,78 +160,41 @@ public class SearchData implements MessageHandler.ResponseListener {
         return mAppsList;
     }
 
-    public void initApps(int type) {
-        switch (type) {
-            case 1:
-                String commonName = Tools.getCommonName(mActivity);
-                cacheApps(commonName);
-                break;
-            case 2:
-            default:
-                String pwd = Tools.getPassWord(mActivity);
-                RequestConfig config = new RequestConfig(mActivity, 0);
-                config.handler = msgHandler.getHandler();
-                RequestParams params = new RequestParams();
-                params.put("user_name", UserInfo.employeeAccount);
-                params.put("password", pwd);
-                params.put("resource", "app");
-                params.put("cate_id", 0);
-                HttpTools.httpPost(Contants.URl.URL_ICETEST, "/newoa/rights/list", config, params);
-                break;
-        }
-    }
 
-    void cacheApps(String cacheData) {
-        if (StringUtils.isEmpty(cacheData)) {
-            initApps(2);
-        } else {
-            searchForCacheApps(cacheData);
-        }
-    }
+    /**
+     * 搜索联系人
+     *
+     * @param list
+     * @return
+     */
+    public List<SearchContactBean> searchContactsList(List<FamilyInfo> list) {
+        List<SearchContactBean> contactList = new ArrayList<>();
+        for (FamilyInfo item : list) {
+            String hanzi = item.name;
+            StringBuilder ch = new StringBuilder();
+            StringBuilder pinyin = new StringBuilder();
+            List<String> chStr = new ArrayList<>(); //每个汉字的 拼音集合
 
-    void searchForNetAppsList(String jsonString) {
-        String json = HttpTools.getContentString(jsonString);
-        if (json != null) {
-            ResponseData app_list = HttpTools.getResponseKey(json, "app_list");
-            if (app_list.length > 0) {
-                Tools.saveElseInfo(mActivity, json);
-                Tools.saveCommonInfo(mActivity, json);
-                JSONArray commonArray = app_list.getJSONArray(0, "list");
-                JSONArray otherArray = app_list.getJSONArray(1, "list");
-                ResponseData commonData = HttpTools.getResponseKeyJSONArray(commonArray);
-                ResponseData otherData = HttpTools.getResponseKeyJSONArray(otherArray);
-
-                searchAppsList(commonData);
-                searchAppsList(otherData);
+            for (int j = 0; j < hanzi.length(); j++) {
+                pinyin.append(Pinyin.toPinyin(hanzi.charAt(j)).toUpperCase());
+                ch.append(Pinyin.toPinyin(hanzi.charAt(j)).substring(0, 1));
+                chStr.add(Pinyin.toPinyin(hanzi.charAt(j)));
             }
+
+            SearchContactBean contact = new SearchContactBean();
+            contact.setIconUrl(item.avatar);
+            contact.setUsername(item.username);
+            contact.setUuid(item.id);
+            contact.setDisplayName(hanzi);
+            contact.setWholePinyin(pinyin.toString());
+            contact.setSimplepinyin(ch.toString());
+            contact.setIndexPinyin(chStr);
+
+            DuoYinZi duoYinZi = PinYinUtils.HanziToPinYin(hanzi);
+            contact.setDuoYinzi(duoYinZi);
+
+            contactList.add(contact);
         }
-    }
-
-    void searchForCacheApps(String cacheData) {
-        ResponseData app_list = HttpTools.getResponseKey(cacheData, "app_list");
-        if (app_list.length > 0) {
-            JSONArray commonArray = app_list.getJSONArray(0, "list");
-            JSONArray otherArray = app_list.getJSONArray(1, "list");
-            ResponseData commonData = HttpTools.getResponseKeyJSONArray(commonArray);
-            ResponseData otherData = HttpTools.getResponseKeyJSONArray(otherArray);
-            searchAppsList(commonData);
-            searchAppsList(otherData);
-        }
-    }
-
-    @Override
-    public void onRequestStart(Message msg, String hintString) {
-        Log.e(TAG, "onRequestStart");
-    }
-
-    @Override
-    public void onSuccess(Message msg, String jsonString, String hintString) {
-        Log.e(TAG, "onSuccess");
-        searchForNetAppsList(jsonString);
-    }
-
-    @Override
-    public void onFail(Message msg, String hintString) {
-        Log.e(TAG, "onFail");
+        return contactList;
     }
 }

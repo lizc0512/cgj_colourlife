@@ -10,8 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.tg.coloursteward.R;
-import com.tg.coloursteward.module.search.SearchFragment;
-import com.tg.coloursteward.module.search.data.SearchData;
 import com.youmai.hxsdk.db.bean.ContactBean;
 
 import java.util.Map;
@@ -26,7 +24,6 @@ public class AddContactBySearchFragment extends Fragment {
     private static final String TAG_SEARCH_CONTACTS_FRAGMENT = "search_contacts_fragment";
 
     private AddContactsSearchFragment mSearchFragment;
-    private SearchFragment.OnLoadFinishListener mLoadFinishListener;
 
     @Nullable
     @Override
@@ -38,16 +35,14 @@ public class AddContactBySearchFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        SearchData.init(getActivity()).initApps(2);
         initView();
 
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         mSearchFragment = new AddContactsSearchFragment();
-        mSearchFragment.setOnLoadFinishListener(mLoadFinishListener);
         transaction.add(R.id.contacts_search_container, mSearchFragment, TAG_SEARCH_CONTACTS_FRAGMENT);
 
         transaction.commitAllowingStateLoss();
-        
+
         mSearchFragment.setOnSelectItemListener(new AddContactsSearchFragment.SelectItemListener() {
             @Override
             public void onSelect(ContactBean contact) {
@@ -61,21 +56,6 @@ public class AddContactBySearchFragment extends Fragment {
     }
 
     private void initView() {
-        mLoadFinishListener = new SearchFragment.OnLoadFinishListener() {
-            @Override
-            public void onFinishCallback(boolean finish, String query) {
-                // 多个回调，有先后...
-                synchronized (this) {
-                }
-            }
-
-            @Override
-            public void onWhoShowMoreCallback(String fragmentTag) {
-                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                transaction.hide(mSearchFragment);
-                transaction.commitAllowingStateLoss();
-            }
-        };
     }
 
     public void add(String queryStr) {

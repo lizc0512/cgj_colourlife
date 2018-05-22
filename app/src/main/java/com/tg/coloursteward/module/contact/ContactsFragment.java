@@ -79,7 +79,7 @@ public class ContactsFragment extends Fragment implements ResponseListener, Item
 
     private static final String TAG = ContactsFragment.class.getName();
 
-    private MainActivity1 mActivity;
+    private Activity mActivity;
     private static final int ISTREAD = 1;
     private AuthAppService authAppService;
     private String accessToken;
@@ -517,7 +517,7 @@ public class ContactsFragment extends Fragment implements ResponseListener, Item
     public void onAttach(Activity activity) {
         // TODO Auto-generated method stub
         super.onAttach(activity);
-        mActivity = (MainActivity1) activity;
+        mActivity = activity;
     }
 
     @Override

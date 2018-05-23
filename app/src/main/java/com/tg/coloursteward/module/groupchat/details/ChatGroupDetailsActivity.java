@@ -197,6 +197,13 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
         mTvExitGroup = findViewById(R.id.tv_exit_group);
         mtvNoticeContent = findViewById(R.id.tv_notice_content);
         switch_notify = findViewById(R.id.switch_notify);
+        boolean isClosed = AppUtils.getBooleanSharedPreferences(mContext, "notify" + mGroupId, false);
+        if (isClosed) {
+            switch_notify.setChecked(true);
+        } else {
+            switch_notify.setChecked(false);
+        }
+
         switch_notify.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

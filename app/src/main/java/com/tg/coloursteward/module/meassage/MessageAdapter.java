@@ -428,6 +428,9 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 case CacheMsgBean.GROUP_NAME_CHANGED:
                     itemView.message_type.setText(mContext.getString(R.string.message_type_name_changed));
                     break;
+                case CacheMsgBean.GROUP_TRANSFER_OWNER:
+                    itemView.message_type.setText(mContext.getString(R.string.message_type_owner_changed));
+                    break;
                 default:
                     itemView.message_type.setText(mContext.getString(R.string.message_type));
             }

@@ -90,6 +90,7 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
 
     private static final int MEMBER_CHANGED = 101;//群成员修改
     private static final int NAME_CHANGED = 102;//群名修改
+    private static final int OWNER_CHANGED = 103;//群主转让
 
     private static final int HANDLER_REFRESH_PROGREE = 0;
 
@@ -203,11 +204,15 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
                 break;
             case MEMBER_CHANGED:
                 view = inflater.inflate(R.layout.hx_group_im_member_change_item, parent, false);
-                holder = new MemberChangedViewHolder(view);
+                holder = new GroupChangedViewHolder(view);
                 break;
             case NAME_CHANGED:
                 view = inflater.inflate(R.layout.hx_group_im_member_change_item, parent, false);
-                holder = new MemberChangedViewHolder(view);
+                holder = new GroupChangedViewHolder(view);
+                break;
+            case OWNER_CHANGED:
+                view = inflater.inflate(R.layout.hx_group_im_member_change_item, parent, false);
+                holder = new GroupChangedViewHolder(view);
                 break;
             default:
                 //默认视图，用于解析错误的消息
@@ -234,8 +239,8 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
             onBindFile((FileViewHolder) holder, position);
         } else if (holder instanceof VideoViewHolder) {//视频
             onBindVideo((VideoViewHolder) holder, position);
-        } else if (holder instanceof MemberChangedViewHolder) {//群成员变动
-            onBindMemberChanged((MemberChangedViewHolder) holder, position);
+        } else if (holder instanceof GroupChangedViewHolder) {//群成员变动
+            onBindGroupChanged((GroupChangedViewHolder) holder, position);
         }
 
 
@@ -287,6 +292,9 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
                 break;
             case CacheMsgBean.GROUP_NAME_CHANGED:
                 oriType = NAME_CHANGED;
+                break;
+            case CacheMsgBean.GROUP_TRANSFER_OWNER:
+                oriType = OWNER_CHANGED;
                 break;
         }
         return oriType;
@@ -482,10 +490,10 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
     /**
      * 视频数据
      */
-    private void onBindMemberChanged(final MemberChangedViewHolder holder, final int position) {
+    private void onBindGroupChanged(final GroupChangedViewHolder holder, final int position) {
         final CacheMsgBean cacheMsgBean = mImBeanList.get(position);
         String content = cacheMsgBean.getMemberChanged();
-        holder.tv_member_changed.setText(content);
+        holder.tv_group_changed.setText(content);
     }
 
 
@@ -941,12 +949,12 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
     }
 
 
-    class MemberChangedViewHolder extends BaseViewHolder {
-        TextView tv_member_changed;
+    class GroupChangedViewHolder extends BaseViewHolder {
+        TextView tv_group_changed;
 
-        MemberChangedViewHolder(View itemView) {
+        GroupChangedViewHolder(View itemView) {
             super(itemView);
-            tv_member_changed = (TextView) itemView.findViewById(R.id.tv_member_changed);
+            tv_group_changed = (TextView) itemView.findViewById(R.id.tv_group_changed);
         }
     }
 

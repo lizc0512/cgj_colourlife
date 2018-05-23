@@ -120,6 +120,7 @@ public class GroupManageActivity extends SdkBaseActivity {
 
                 HuxinSdkManager.instance().reqModifyGroupInfo(
                         groupId, groupManageFragment.getOwnerId(),
+                        groupManageFragment.getOwnerName(),
                         "", "", "",
                         YouMaiGroup.GroupInfoModifyType.MODIFY_OWNER, receiveListener);
             }

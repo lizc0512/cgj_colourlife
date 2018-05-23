@@ -119,7 +119,7 @@ public class GroupNameActivity extends Activity {
                 };
 
                 HuxinSdkManager.instance().reqModifyGroupInfo(
-                        groupId, "", groupName,
+                        groupId, "", "", groupName,
                         "", "",
                         YouMaiGroup.GroupInfoModifyType.MODIFY_NAME, receiveListener);
             }

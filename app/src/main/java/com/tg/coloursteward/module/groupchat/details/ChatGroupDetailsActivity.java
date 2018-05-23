@@ -511,7 +511,7 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
         }
 
         HuxinSdkManager.instance().reqModifyGroupInfo(
-                mGroupId, ownerId,
+                mGroupId, ownerId, "",
                 "", "", "",
                 YouMaiGroup.GroupInfoModifyType.MODIFY_OWNER, receiveListener);
     }

@@ -876,14 +876,15 @@ public class HuxinSdkManager {
      * @param groupAvatar
      * @param callback
      */
-    public void reqModifyGroupInfo(int groupId, String ownerId, String groupName,
+    public void reqModifyGroupInfo(int groupId, String ownerId, String ownerName, String groupName,
                                    String groupTopic,
                                    String groupAvatar,
                                    YouMaiGroup.GroupInfoModifyType type,
                                    ReceiveListener callback) {
         YouMaiGroup.GroupInfoModifyReq.Builder builder = YouMaiGroup.GroupInfoModifyReq.newBuilder();
         builder.setUserId(getUuid());
-        builder.setMemberName(getRealName());
+        builder.setSrcOwnerName(getRealName());
+        builder.setDstOwnerName(ownerName);
         builder.setGroupId(groupId);
         builder.setGroupName(groupName);
         builder.setGroupAvatar(groupAvatar);

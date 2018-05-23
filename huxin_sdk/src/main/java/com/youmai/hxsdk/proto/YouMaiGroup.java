@@ -209,6 +209,99 @@ public final class YouMaiGroup {
         // @@protoc_insertion_point(enum_scope:GroupInfoModifyType)
     }
 
+    /**
+     * Protobuf enum {@code GroupSetType}
+     * <p>
+     * <pre>
+     * 个性群设置
+     * </pre>
+     */
+    public enum GroupSetType
+            implements com.google.protobuf.ProtocolMessageEnum {
+        /**
+         * <code>TYPE_NOT_DISTURB = 1;</code>
+         */
+        TYPE_NOT_DISTURB(0, 1),
+        /**
+         * <code>TYPE_INVITE_PERMISSION = 2;</code>
+         */
+        TYPE_INVITE_PERMISSION(1, 2),;
+
+        /**
+         * <code>TYPE_NOT_DISTURB = 1;</code>
+         */
+        public static final int TYPE_NOT_DISTURB_VALUE = 1;
+        /**
+         * <code>TYPE_INVITE_PERMISSION = 2;</code>
+         */
+        public static final int TYPE_INVITE_PERMISSION_VALUE = 2;
+
+
+        public final int getNumber() {
+            return value;
+        }
+
+        public static GroupSetType valueOf(int value) {
+            switch (value) {
+                case 1:
+                    return TYPE_NOT_DISTURB;
+                case 2:
+                    return TYPE_INVITE_PERMISSION;
+                default:
+                    return null;
+            }
+        }
+
+        public static com.google.protobuf.Internal.EnumLiteMap<GroupSetType>
+        internalGetValueMap() {
+            return internalValueMap;
+        }
+
+        private static com.google.protobuf.Internal.EnumLiteMap<GroupSetType>
+                internalValueMap =
+                new com.google.protobuf.Internal.EnumLiteMap<GroupSetType>() {
+                    public GroupSetType findValueByNumber(int number) {
+                        return GroupSetType.valueOf(number);
+                    }
+                };
+
+        public final com.google.protobuf.Descriptors.EnumValueDescriptor
+        getValueDescriptor() {
+            return getDescriptor().getValues().get(index);
+        }
+
+        public final com.google.protobuf.Descriptors.EnumDescriptor
+        getDescriptorForType() {
+            return getDescriptor();
+        }
+
+        public static final com.google.protobuf.Descriptors.EnumDescriptor
+        getDescriptor() {
+            return YouMaiGroup.getDescriptor().getEnumTypes().get(2);
+        }
+
+        private static final GroupSetType[] VALUES = values();
+
+        public static GroupSetType valueOf(
+                com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
+            if (desc.getType() != getDescriptor()) {
+                throw new IllegalArgumentException(
+                        "EnumValueDescriptor is not for this type.");
+            }
+            return VALUES[desc.getIndex()];
+        }
+
+        private final int index;
+        private final int value;
+
+        private GroupSetType(int index, int value) {
+            this.index = index;
+            this.value = value;
+        }
+
+        // @@protoc_insertion_point(enum_scope:GroupSetType)
+    }
+
     public interface GroupItemOrBuilder extends
             // @@protoc_insertion_point(interface_extends:GroupItem)
             com.google.protobuf.MessageOrBuilder {
@@ -1895,6 +1988,16 @@ public final class YouMaiGroup {
          * </pre>
          */
         int getGroupMemberCount();
+
+        /**
+         * <code>optional bool invite_permission = 8;</code>
+         */
+        boolean hasInvitePermission();
+
+        /**
+         * <code>optional bool invite_permission = 8;</code>
+         */
+        boolean getInvitePermission();
     }
 
     /**
@@ -1992,6 +2095,11 @@ public final class YouMaiGroup {
                         case 56: {
                             bitField0_ |= 0x00000040;
                             groupMemberCount_ = input.readUInt32();
+                            break;
+                        }
+                        case 64: {
+                            bitField0_ |= 0x00000080;
+                            invitePermission_ = input.readBool();
                             break;
                         }
                     }
@@ -2294,6 +2402,23 @@ public final class YouMaiGroup {
             return groupMemberCount_;
         }
 
+        public static final int INVITE_PERMISSION_FIELD_NUMBER = 8;
+        private boolean invitePermission_;
+
+        /**
+         * <code>optional bool invite_permission = 8;</code>
+         */
+        public boolean hasInvitePermission() {
+            return ((bitField0_ & 0x00000080) == 0x00000080);
+        }
+
+        /**
+         * <code>optional bool invite_permission = 8;</code>
+         */
+        public boolean getInvitePermission() {
+            return invitePermission_;
+        }
+
         private void initFields() {
             groupId_ = 0;
             groupName_ = "";
@@ -2302,6 +2427,7 @@ public final class YouMaiGroup {
             topic_ = "";
             infoUpdateTime_ = 0L;
             groupMemberCount_ = 0;
+            invitePermission_ = false;
         }
 
         private byte memoizedIsInitialized = -1;
@@ -2343,6 +2469,9 @@ public final class YouMaiGroup {
             if (((bitField0_ & 0x00000040) == 0x00000040)) {
                 output.writeUInt32(7, groupMemberCount_);
             }
+            if (((bitField0_ & 0x00000080) == 0x00000080)) {
+                output.writeBool(8, invitePermission_);
+            }
             getUnknownFields().writeTo(output);
         }
 
@@ -2380,6 +2509,10 @@ public final class YouMaiGroup {
             if (((bitField0_ & 0x00000040) == 0x00000040)) {
                 size += com.google.protobuf.CodedOutputStream
                         .computeUInt32Size(7, groupMemberCount_);
+            }
+            if (((bitField0_ & 0x00000080) == 0x00000080)) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeBoolSize(8, invitePermission_);
             }
             size += getUnknownFields().getSerializedSize();
             memoizedSerializedSize = size;
@@ -2534,6 +2667,8 @@ public final class YouMaiGroup {
                 bitField0_ = (bitField0_ & ~0x00000020);
                 groupMemberCount_ = 0;
                 bitField0_ = (bitField0_ & ~0x00000040);
+                invitePermission_ = false;
+                bitField0_ = (bitField0_ & ~0x00000080);
                 return this;
             }
 
@@ -2590,6 +2725,10 @@ public final class YouMaiGroup {
                     to_bitField0_ |= 0x00000040;
                 }
                 result.groupMemberCount_ = groupMemberCount_;
+                if (((from_bitField0_ & 0x00000080) == 0x00000080)) {
+                    to_bitField0_ |= 0x00000080;
+                }
+                result.invitePermission_ = invitePermission_;
                 result.bitField0_ = to_bitField0_;
                 onBuilt();
                 return result;
@@ -2634,6 +2773,9 @@ public final class YouMaiGroup {
                 }
                 if (other.hasGroupMemberCount()) {
                     setGroupMemberCount(other.getGroupMemberCount());
+                }
+                if (other.hasInvitePermission()) {
+                    setInvitePermission(other.getInvitePermission());
                 }
                 this.mergeUnknownFields(other.getUnknownFields());
                 return this;
@@ -3155,6 +3297,42 @@ public final class YouMaiGroup {
             public Builder clearGroupMemberCount() {
                 bitField0_ = (bitField0_ & ~0x00000040);
                 groupMemberCount_ = 0;
+                onChanged();
+                return this;
+            }
+
+            private boolean invitePermission_;
+
+            /**
+             * <code>optional bool invite_permission = 8;</code>
+             */
+            public boolean hasInvitePermission() {
+                return ((bitField0_ & 0x00000080) == 0x00000080);
+            }
+
+            /**
+             * <code>optional bool invite_permission = 8;</code>
+             */
+            public boolean getInvitePermission() {
+                return invitePermission_;
+            }
+
+            /**
+             * <code>optional bool invite_permission = 8;</code>
+             */
+            public Builder setInvitePermission(boolean value) {
+                bitField0_ |= 0x00000080;
+                invitePermission_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional bool invite_permission = 8;</code>
+             */
+            public Builder clearInvitePermission() {
+                bitField0_ = (bitField0_ & ~0x00000080);
+                invitePermission_ = false;
                 onChanged();
                 return this;
             }
@@ -8098,6 +8276,38 @@ public final class YouMaiGroup {
          * <code>required .GroupMemberOptType type = 4;</code>
          */
         YouMaiGroup.GroupMemberOptType getType();
+
+        /**
+         * <code>optional string remark = 5;</code>
+         */
+        boolean hasRemark();
+
+        /**
+         * <code>optional string remark = 5;</code>
+         */
+        String getRemark();
+
+        /**
+         * <code>optional string remark = 5;</code>
+         */
+        com.google.protobuf.ByteString
+        getRemarkBytes();
+
+        /**
+         * <code>optional string member_name = 6;</code>
+         */
+        boolean hasMemberName();
+
+        /**
+         * <code>optional string member_name = 6;</code>
+         */
+        String getMemberName();
+
+        /**
+         * <code>optional string member_name = 6;</code>
+         */
+        com.google.protobuf.ByteString
+        getMemberNameBytes();
     }
 
     /**
@@ -8190,6 +8400,18 @@ public final class YouMaiGroup {
                                 bitField0_ |= 0x00000004;
                                 type_ = value;
                             }
+                            break;
+                        }
+                        case 42: {
+                            com.google.protobuf.ByteString bs = input.readBytes();
+                            bitField0_ |= 0x00000008;
+                            remark_ = bs;
+                            break;
+                        }
+                        case 50: {
+                            com.google.protobuf.ByteString bs = input.readBytes();
+                            bitField0_ |= 0x00000010;
+                            memberName_ = bs;
                             break;
                         }
                     }
@@ -8367,11 +8589,103 @@ public final class YouMaiGroup {
             return type_;
         }
 
+        public static final int REMARK_FIELD_NUMBER = 5;
+        private Object remark_;
+
+        /**
+         * <code>optional string remark = 5;</code>
+         */
+        public boolean hasRemark() {
+            return ((bitField0_ & 0x00000008) == 0x00000008);
+        }
+
+        /**
+         * <code>optional string remark = 5;</code>
+         */
+        public String getRemark() {
+            Object ref = remark_;
+            if (ref instanceof String) {
+                return (String) ref;
+            } else {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                String s = bs.toStringUtf8();
+                if (bs.isValidUtf8()) {
+                    remark_ = s;
+                }
+                return s;
+            }
+        }
+
+        /**
+         * <code>optional string remark = 5;</code>
+         */
+        public com.google.protobuf.ByteString
+        getRemarkBytes() {
+            Object ref = remark_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (String) ref);
+                remark_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
+        public static final int MEMBER_NAME_FIELD_NUMBER = 6;
+        private Object memberName_;
+
+        /**
+         * <code>optional string member_name = 6;</code>
+         */
+        public boolean hasMemberName() {
+            return ((bitField0_ & 0x00000010) == 0x00000010);
+        }
+
+        /**
+         * <code>optional string member_name = 6;</code>
+         */
+        public String getMemberName() {
+            Object ref = memberName_;
+            if (ref instanceof String) {
+                return (String) ref;
+            } else {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                String s = bs.toStringUtf8();
+                if (bs.isValidUtf8()) {
+                    memberName_ = s;
+                }
+                return s;
+            }
+        }
+
+        /**
+         * <code>optional string member_name = 6;</code>
+         */
+        public com.google.protobuf.ByteString
+        getMemberNameBytes() {
+            Object ref = memberName_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (String) ref);
+                memberName_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
         private void initFields() {
             userId_ = "";
             groupId_ = 0;
             memberList_ = java.util.Collections.emptyList();
             type_ = YouMaiGroup.GroupMemberOptType.GROUP_MEMBER_OPT_ADD;
+            remark_ = "";
+            memberName_ = "";
         }
 
         private byte memoizedIsInitialized = -1;
@@ -8418,6 +8732,12 @@ public final class YouMaiGroup {
             if (((bitField0_ & 0x00000004) == 0x00000004)) {
                 output.writeEnum(4, type_.getNumber());
             }
+            if (((bitField0_ & 0x00000008) == 0x00000008)) {
+                output.writeBytes(5, getRemarkBytes());
+            }
+            if (((bitField0_ & 0x00000010) == 0x00000010)) {
+                output.writeBytes(6, getMemberNameBytes());
+            }
             getUnknownFields().writeTo(output);
         }
 
@@ -8443,6 +8763,14 @@ public final class YouMaiGroup {
             if (((bitField0_ & 0x00000004) == 0x00000004)) {
                 size += com.google.protobuf.CodedOutputStream
                         .computeEnumSize(4, type_.getNumber());
+            }
+            if (((bitField0_ & 0x00000008) == 0x00000008)) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeBytesSize(5, getRemarkBytes());
+            }
+            if (((bitField0_ & 0x00000010) == 0x00000010)) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeBytesSize(6, getMemberNameBytes());
             }
             size += getUnknownFields().getSerializedSize();
             memoizedSerializedSize = size;
@@ -8600,6 +8928,10 @@ public final class YouMaiGroup {
                 }
                 type_ = YouMaiGroup.GroupMemberOptType.GROUP_MEMBER_OPT_ADD;
                 bitField0_ = (bitField0_ & ~0x00000008);
+                remark_ = "";
+                bitField0_ = (bitField0_ & ~0x00000010);
+                memberName_ = "";
+                bitField0_ = (bitField0_ & ~0x00000020);
                 return this;
             }
 
@@ -8649,6 +8981,14 @@ public final class YouMaiGroup {
                     to_bitField0_ |= 0x00000004;
                 }
                 result.type_ = type_;
+                if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
+                    to_bitField0_ |= 0x00000008;
+                }
+                result.remark_ = remark_;
+                if (((from_bitField0_ & 0x00000020) == 0x00000020)) {
+                    to_bitField0_ |= 0x00000010;
+                }
+                result.memberName_ = memberName_;
                 result.bitField0_ = to_bitField0_;
                 onBuilt();
                 return result;
@@ -8701,6 +9041,16 @@ public final class YouMaiGroup {
                 }
                 if (other.hasType()) {
                     setType(other.getType());
+                }
+                if (other.hasRemark()) {
+                    bitField0_ |= 0x00000010;
+                    remark_ = other.remark_;
+                    onChanged();
+                }
+                if (other.hasMemberName()) {
+                    bitField0_ |= 0x00000020;
+                    memberName_ = other.memberName_;
+                    onChanged();
                 }
                 this.mergeUnknownFields(other.getUnknownFields());
                 return this;
@@ -9189,6 +9539,170 @@ public final class YouMaiGroup {
                 return this;
             }
 
+            private Object remark_ = "";
+
+            /**
+             * <code>optional string remark = 5;</code>
+             */
+            public boolean hasRemark() {
+                return ((bitField0_ & 0x00000010) == 0x00000010);
+            }
+
+            /**
+             * <code>optional string remark = 5;</code>
+             */
+            public String getRemark() {
+                Object ref = remark_;
+                if (!(ref instanceof String)) {
+                    com.google.protobuf.ByteString bs =
+                            (com.google.protobuf.ByteString) ref;
+                    String s = bs.toStringUtf8();
+                    if (bs.isValidUtf8()) {
+                        remark_ = s;
+                    }
+                    return s;
+                } else {
+                    return (String) ref;
+                }
+            }
+
+            /**
+             * <code>optional string remark = 5;</code>
+             */
+            public com.google.protobuf.ByteString
+            getRemarkBytes() {
+                Object ref = remark_;
+                if (ref instanceof String) {
+                    com.google.protobuf.ByteString b =
+                            com.google.protobuf.ByteString.copyFromUtf8(
+                                    (String) ref);
+                    remark_ = b;
+                    return b;
+                } else {
+                    return (com.google.protobuf.ByteString) ref;
+                }
+            }
+
+            /**
+             * <code>optional string remark = 5;</code>
+             */
+            public Builder setRemark(
+                    String value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000010;
+                remark_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string remark = 5;</code>
+             */
+            public Builder clearRemark() {
+                bitField0_ = (bitField0_ & ~0x00000010);
+                remark_ = getDefaultInstance().getRemark();
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string remark = 5;</code>
+             */
+            public Builder setRemarkBytes(
+                    com.google.protobuf.ByteString value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000010;
+                remark_ = value;
+                onChanged();
+                return this;
+            }
+
+            private Object memberName_ = "";
+
+            /**
+             * <code>optional string member_name = 6;</code>
+             */
+            public boolean hasMemberName() {
+                return ((bitField0_ & 0x00000020) == 0x00000020);
+            }
+
+            /**
+             * <code>optional string member_name = 6;</code>
+             */
+            public String getMemberName() {
+                Object ref = memberName_;
+                if (!(ref instanceof String)) {
+                    com.google.protobuf.ByteString bs =
+                            (com.google.protobuf.ByteString) ref;
+                    String s = bs.toStringUtf8();
+                    if (bs.isValidUtf8()) {
+                        memberName_ = s;
+                    }
+                    return s;
+                } else {
+                    return (String) ref;
+                }
+            }
+
+            /**
+             * <code>optional string member_name = 6;</code>
+             */
+            public com.google.protobuf.ByteString
+            getMemberNameBytes() {
+                Object ref = memberName_;
+                if (ref instanceof String) {
+                    com.google.protobuf.ByteString b =
+                            com.google.protobuf.ByteString.copyFromUtf8(
+                                    (String) ref);
+                    memberName_ = b;
+                    return b;
+                } else {
+                    return (com.google.protobuf.ByteString) ref;
+                }
+            }
+
+            /**
+             * <code>optional string member_name = 6;</code>
+             */
+            public Builder setMemberName(
+                    String value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000020;
+                memberName_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string member_name = 6;</code>
+             */
+            public Builder clearMemberName() {
+                bitField0_ = (bitField0_ & ~0x00000020);
+                memberName_ = getDefaultInstance().getMemberName();
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string member_name = 6;</code>
+             */
+            public Builder setMemberNameBytes(
+                    com.google.protobuf.ByteString value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000020;
+                memberName_ = value;
+                onChanged();
+                return this;
+            }
+
             // @@protoc_insertion_point(builder_scope:GroupMemberChangeReq)
         }
 
@@ -9198,6 +9712,3210 @@ public final class YouMaiGroup {
         }
 
         // @@protoc_insertion_point(class_scope:GroupMemberChangeReq)
+    }
+
+    public interface GroupMemberChangeTransferReqOrBuilder extends
+            // @@protoc_insertion_point(interface_extends:GroupMemberChangeTransferReq)
+            com.google.protobuf.MessageOrBuilder {
+
+        /**
+         * <code>required string src_user_id = 1;</code>
+         * <p>
+         * <pre>
+         * cmd id:	 CID_GROUP_CHANGE_MEMBER_TRANSFER_REQ
+         * </pre>
+         */
+        boolean hasSrcUserId();
+
+        /**
+         * <code>required string src_user_id = 1;</code>
+         * <p>
+         * <pre>
+         * cmd id:	 CID_GROUP_CHANGE_MEMBER_TRANSFER_REQ
+         * </pre>
+         */
+        String getSrcUserId();
+
+        /**
+         * <code>required string src_user_id = 1;</code>
+         * <p>
+         * <pre>
+         * cmd id:	 CID_GROUP_CHANGE_MEMBER_TRANSFER_REQ
+         * </pre>
+         */
+        com.google.protobuf.ByteString
+        getSrcUserIdBytes();
+
+        /**
+         * <code>required uint32 group_id = 3;</code>
+         */
+        boolean hasGroupId();
+
+        /**
+         * <code>required uint32 group_id = 3;</code>
+         */
+        int getGroupId();
+
+        /**
+         * <code>required string dst_user_id = 4;</code>
+         */
+        boolean hasDstUserId();
+
+        /**
+         * <code>required string dst_user_id = 4;</code>
+         */
+        String getDstUserId();
+
+        /**
+         * <code>required string dst_user_id = 4;</code>
+         */
+        com.google.protobuf.ByteString
+        getDstUserIdBytes();
+
+        /**
+         * <code>repeated .GroupMemberItem member_list = 5;</code>
+         */
+        java.util.List<YouMaiGroup.GroupMemberItem>
+        getMemberListList();
+
+        /**
+         * <code>repeated .GroupMemberItem member_list = 5;</code>
+         */
+        YouMaiGroup.GroupMemberItem getMemberList(int index);
+
+        /**
+         * <code>repeated .GroupMemberItem member_list = 5;</code>
+         */
+        int getMemberListCount();
+
+        /**
+         * <code>repeated .GroupMemberItem member_list = 5;</code>
+         */
+        java.util.List<? extends YouMaiGroup.GroupMemberItemOrBuilder>
+        getMemberListOrBuilderList();
+
+        /**
+         * <code>repeated .GroupMemberItem member_list = 5;</code>
+         */
+        YouMaiGroup.GroupMemberItemOrBuilder getMemberListOrBuilder(
+                int index);
+
+        /**
+         * <code>required .GroupMemberOptType type = 6;</code>
+         */
+        boolean hasType();
+
+        /**
+         * <code>required .GroupMemberOptType type = 6;</code>
+         */
+        YouMaiGroup.GroupMemberOptType getType();
+
+        /**
+         * <code>optional string remark = 7;</code>
+         */
+        boolean hasRemark();
+
+        /**
+         * <code>optional string remark = 7;</code>
+         */
+        String getRemark();
+
+        /**
+         * <code>optional string remark = 7;</code>
+         */
+        com.google.protobuf.ByteString
+        getRemarkBytes();
+
+        /**
+         * <code>optional string src_member_name = 8;</code>
+         */
+        boolean hasSrcMemberName();
+
+        /**
+         * <code>optional string src_member_name = 8;</code>
+         */
+        String getSrcMemberName();
+
+        /**
+         * <code>optional string src_member_name = 8;</code>
+         */
+        com.google.protobuf.ByteString
+        getSrcMemberNameBytes();
+    }
+
+    /**
+     * Protobuf type {@code GroupMemberChangeTransferReq}
+     */
+    public static final class GroupMemberChangeTransferReq extends
+            com.google.protobuf.GeneratedMessage implements
+            // @@protoc_insertion_point(message_implements:GroupMemberChangeTransferReq)
+            GroupMemberChangeTransferReqOrBuilder {
+        // Use GroupMemberChangeTransferReq.newBuilder() to construct.
+        private GroupMemberChangeTransferReq(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+            super(builder);
+            this.unknownFields = builder.getUnknownFields();
+        }
+
+        private GroupMemberChangeTransferReq(boolean noInit) {
+            this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance();
+        }
+
+        private static final GroupMemberChangeTransferReq defaultInstance;
+
+        public static GroupMemberChangeTransferReq getDefaultInstance() {
+            return defaultInstance;
+        }
+
+        public GroupMemberChangeTransferReq getDefaultInstanceForType() {
+            return defaultInstance;
+        }
+
+        private final com.google.protobuf.UnknownFieldSet unknownFields;
+
+        @Override
+        public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+            return this.unknownFields;
+        }
+
+        private GroupMemberChangeTransferReq(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            initFields();
+            int mutable_bitField0_ = 0;
+            com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+                    com.google.protobuf.UnknownFieldSet.newBuilder();
+            try {
+                boolean done = false;
+                while (!done) {
+                    int tag = input.readTag();
+                    switch (tag) {
+                        case 0:
+                            done = true;
+                            break;
+                        default: {
+                            if (!parseUnknownField(input, unknownFields,
+                                    extensionRegistry, tag)) {
+                                done = true;
+                            }
+                            break;
+                        }
+                        case 10: {
+                            com.google.protobuf.ByteString bs = input.readBytes();
+                            bitField0_ |= 0x00000001;
+                            srcUserId_ = bs;
+                            break;
+                        }
+                        case 24: {
+                            bitField0_ |= 0x00000002;
+                            groupId_ = input.readUInt32();
+                            break;
+                        }
+                        case 34: {
+                            com.google.protobuf.ByteString bs = input.readBytes();
+                            bitField0_ |= 0x00000004;
+                            dstUserId_ = bs;
+                            break;
+                        }
+                        case 42: {
+                            if (!((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
+                                memberList_ = new java.util.ArrayList<YouMaiGroup.GroupMemberItem>();
+                                mutable_bitField0_ |= 0x00000008;
+                            }
+                            memberList_.add(input.readMessage(YouMaiGroup.GroupMemberItem.PARSER, extensionRegistry));
+                            break;
+                        }
+                        case 48: {
+                            int rawValue = input.readEnum();
+                            YouMaiGroup.GroupMemberOptType value = YouMaiGroup.GroupMemberOptType.valueOf(rawValue);
+                            if (value == null) {
+                                unknownFields.mergeVarintField(6, rawValue);
+                            } else {
+                                bitField0_ |= 0x00000008;
+                                type_ = value;
+                            }
+                            break;
+                        }
+                        case 58: {
+                            com.google.protobuf.ByteString bs = input.readBytes();
+                            bitField0_ |= 0x00000010;
+                            remark_ = bs;
+                            break;
+                        }
+                        case 66: {
+                            com.google.protobuf.ByteString bs = input.readBytes();
+                            bitField0_ |= 0x00000020;
+                            srcMemberName_ = bs;
+                            break;
+                        }
+                    }
+                }
+            } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+                throw e.setUnfinishedMessage(this);
+            } catch (java.io.IOException e) {
+                throw new com.google.protobuf.InvalidProtocolBufferException(
+                        e.getMessage()).setUnfinishedMessage(this);
+            } finally {
+                if (((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
+                    memberList_ = java.util.Collections.unmodifiableList(memberList_);
+                }
+                this.unknownFields = unknownFields.build();
+                makeExtensionsImmutable();
+            }
+        }
+
+        public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+            return YouMaiGroup.internal_static_com_proto_group_GroupMemberChangeTransferReq_descriptor;
+        }
+
+        protected FieldAccessorTable
+        internalGetFieldAccessorTable() {
+            return YouMaiGroup.internal_static_com_proto_group_GroupMemberChangeTransferReq_fieldAccessorTable
+                    .ensureFieldAccessorsInitialized(
+                            YouMaiGroup.GroupMemberChangeTransferReq.class, YouMaiGroup.GroupMemberChangeTransferReq.Builder.class);
+        }
+
+        public static com.google.protobuf.Parser<GroupMemberChangeTransferReq> PARSER =
+                new com.google.protobuf.AbstractParser<GroupMemberChangeTransferReq>() {
+                    public GroupMemberChangeTransferReq parsePartialFrom(
+                            com.google.protobuf.CodedInputStream input,
+                            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                            throws com.google.protobuf.InvalidProtocolBufferException {
+                        return new GroupMemberChangeTransferReq(input, extensionRegistry);
+                    }
+                };
+
+        @Override
+        public com.google.protobuf.Parser<GroupMemberChangeTransferReq> getParserForType() {
+            return PARSER;
+        }
+
+        private int bitField0_;
+        public static final int SRC_USER_ID_FIELD_NUMBER = 1;
+        private Object srcUserId_;
+
+        /**
+         * <code>required string src_user_id = 1;</code>
+         * <p>
+         * <pre>
+         * cmd id:	 CID_GROUP_CHANGE_MEMBER_TRANSFER_REQ
+         * </pre>
+         */
+        public boolean hasSrcUserId() {
+            return ((bitField0_ & 0x00000001) == 0x00000001);
+        }
+
+        /**
+         * <code>required string src_user_id = 1;</code>
+         * <p>
+         * <pre>
+         * cmd id:	 CID_GROUP_CHANGE_MEMBER_TRANSFER_REQ
+         * </pre>
+         */
+        public String getSrcUserId() {
+            Object ref = srcUserId_;
+            if (ref instanceof String) {
+                return (String) ref;
+            } else {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                String s = bs.toStringUtf8();
+                if (bs.isValidUtf8()) {
+                    srcUserId_ = s;
+                }
+                return s;
+            }
+        }
+
+        /**
+         * <code>required string src_user_id = 1;</code>
+         * <p>
+         * <pre>
+         * cmd id:	 CID_GROUP_CHANGE_MEMBER_TRANSFER_REQ
+         * </pre>
+         */
+        public com.google.protobuf.ByteString
+        getSrcUserIdBytes() {
+            Object ref = srcUserId_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (String) ref);
+                srcUserId_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
+        public static final int GROUP_ID_FIELD_NUMBER = 3;
+        private int groupId_;
+
+        /**
+         * <code>required uint32 group_id = 3;</code>
+         */
+        public boolean hasGroupId() {
+            return ((bitField0_ & 0x00000002) == 0x00000002);
+        }
+
+        /**
+         * <code>required uint32 group_id = 3;</code>
+         */
+        public int getGroupId() {
+            return groupId_;
+        }
+
+        public static final int DST_USER_ID_FIELD_NUMBER = 4;
+        private Object dstUserId_;
+
+        /**
+         * <code>required string dst_user_id = 4;</code>
+         */
+        public boolean hasDstUserId() {
+            return ((bitField0_ & 0x00000004) == 0x00000004);
+        }
+
+        /**
+         * <code>required string dst_user_id = 4;</code>
+         */
+        public String getDstUserId() {
+            Object ref = dstUserId_;
+            if (ref instanceof String) {
+                return (String) ref;
+            } else {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                String s = bs.toStringUtf8();
+                if (bs.isValidUtf8()) {
+                    dstUserId_ = s;
+                }
+                return s;
+            }
+        }
+
+        /**
+         * <code>required string dst_user_id = 4;</code>
+         */
+        public com.google.protobuf.ByteString
+        getDstUserIdBytes() {
+            Object ref = dstUserId_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (String) ref);
+                dstUserId_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
+        public static final int MEMBER_LIST_FIELD_NUMBER = 5;
+        private java.util.List<YouMaiGroup.GroupMemberItem> memberList_;
+
+        /**
+         * <code>repeated .GroupMemberItem member_list = 5;</code>
+         */
+        public java.util.List<YouMaiGroup.GroupMemberItem> getMemberListList() {
+            return memberList_;
+        }
+
+        /**
+         * <code>repeated .GroupMemberItem member_list = 5;</code>
+         */
+        public java.util.List<? extends YouMaiGroup.GroupMemberItemOrBuilder>
+        getMemberListOrBuilderList() {
+            return memberList_;
+        }
+
+        /**
+         * <code>repeated .GroupMemberItem member_list = 5;</code>
+         */
+        public int getMemberListCount() {
+            return memberList_.size();
+        }
+
+        /**
+         * <code>repeated .GroupMemberItem member_list = 5;</code>
+         */
+        public YouMaiGroup.GroupMemberItem getMemberList(int index) {
+            return memberList_.get(index);
+        }
+
+        /**
+         * <code>repeated .GroupMemberItem member_list = 5;</code>
+         */
+        public YouMaiGroup.GroupMemberItemOrBuilder getMemberListOrBuilder(
+                int index) {
+            return memberList_.get(index);
+        }
+
+        public static final int TYPE_FIELD_NUMBER = 6;
+        private YouMaiGroup.GroupMemberOptType type_;
+
+        /**
+         * <code>required .GroupMemberOptType type = 6;</code>
+         */
+        public boolean hasType() {
+            return ((bitField0_ & 0x00000008) == 0x00000008);
+        }
+
+        /**
+         * <code>required .GroupMemberOptType type = 6;</code>
+         */
+        public YouMaiGroup.GroupMemberOptType getType() {
+            return type_;
+        }
+
+        public static final int REMARK_FIELD_NUMBER = 7;
+        private Object remark_;
+
+        /**
+         * <code>optional string remark = 7;</code>
+         */
+        public boolean hasRemark() {
+            return ((bitField0_ & 0x00000010) == 0x00000010);
+        }
+
+        /**
+         * <code>optional string remark = 7;</code>
+         */
+        public String getRemark() {
+            Object ref = remark_;
+            if (ref instanceof String) {
+                return (String) ref;
+            } else {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                String s = bs.toStringUtf8();
+                if (bs.isValidUtf8()) {
+                    remark_ = s;
+                }
+                return s;
+            }
+        }
+
+        /**
+         * <code>optional string remark = 7;</code>
+         */
+        public com.google.protobuf.ByteString
+        getRemarkBytes() {
+            Object ref = remark_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (String) ref);
+                remark_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
+        public static final int SRC_MEMBER_NAME_FIELD_NUMBER = 8;
+        private Object srcMemberName_;
+
+        /**
+         * <code>optional string src_member_name = 8;</code>
+         */
+        public boolean hasSrcMemberName() {
+            return ((bitField0_ & 0x00000020) == 0x00000020);
+        }
+
+        /**
+         * <code>optional string src_member_name = 8;</code>
+         */
+        public String getSrcMemberName() {
+            Object ref = srcMemberName_;
+            if (ref instanceof String) {
+                return (String) ref;
+            } else {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                String s = bs.toStringUtf8();
+                if (bs.isValidUtf8()) {
+                    srcMemberName_ = s;
+                }
+                return s;
+            }
+        }
+
+        /**
+         * <code>optional string src_member_name = 8;</code>
+         */
+        public com.google.protobuf.ByteString
+        getSrcMemberNameBytes() {
+            Object ref = srcMemberName_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (String) ref);
+                srcMemberName_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
+        private void initFields() {
+            srcUserId_ = "";
+            groupId_ = 0;
+            dstUserId_ = "";
+            memberList_ = java.util.Collections.emptyList();
+            type_ = YouMaiGroup.GroupMemberOptType.GROUP_MEMBER_OPT_ADD;
+            remark_ = "";
+            srcMemberName_ = "";
+        }
+
+        private byte memoizedIsInitialized = -1;
+
+        public final boolean isInitialized() {
+            byte isInitialized = memoizedIsInitialized;
+            if (isInitialized == 1) return true;
+            if (isInitialized == 0) return false;
+
+            if (!hasSrcUserId()) {
+                memoizedIsInitialized = 0;
+                return false;
+            }
+            if (!hasGroupId()) {
+                memoizedIsInitialized = 0;
+                return false;
+            }
+            if (!hasDstUserId()) {
+                memoizedIsInitialized = 0;
+                return false;
+            }
+            if (!hasType()) {
+                memoizedIsInitialized = 0;
+                return false;
+            }
+            for (int i = 0; i < getMemberListCount(); i++) {
+                if (!getMemberList(i).isInitialized()) {
+                    memoizedIsInitialized = 0;
+                    return false;
+                }
+            }
+            memoizedIsInitialized = 1;
+            return true;
+        }
+
+        public void writeTo(com.google.protobuf.CodedOutputStream output)
+                throws java.io.IOException {
+            getSerializedSize();
+            if (((bitField0_ & 0x00000001) == 0x00000001)) {
+                output.writeBytes(1, getSrcUserIdBytes());
+            }
+            if (((bitField0_ & 0x00000002) == 0x00000002)) {
+                output.writeUInt32(3, groupId_);
+            }
+            if (((bitField0_ & 0x00000004) == 0x00000004)) {
+                output.writeBytes(4, getDstUserIdBytes());
+            }
+            for (int i = 0; i < memberList_.size(); i++) {
+                output.writeMessage(5, memberList_.get(i));
+            }
+            if (((bitField0_ & 0x00000008) == 0x00000008)) {
+                output.writeEnum(6, type_.getNumber());
+            }
+            if (((bitField0_ & 0x00000010) == 0x00000010)) {
+                output.writeBytes(7, getRemarkBytes());
+            }
+            if (((bitField0_ & 0x00000020) == 0x00000020)) {
+                output.writeBytes(8, getSrcMemberNameBytes());
+            }
+            getUnknownFields().writeTo(output);
+        }
+
+        private int memoizedSerializedSize = -1;
+
+        public int getSerializedSize() {
+            int size = memoizedSerializedSize;
+            if (size != -1) return size;
+
+            size = 0;
+            if (((bitField0_ & 0x00000001) == 0x00000001)) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeBytesSize(1, getSrcUserIdBytes());
+            }
+            if (((bitField0_ & 0x00000002) == 0x00000002)) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeUInt32Size(3, groupId_);
+            }
+            if (((bitField0_ & 0x00000004) == 0x00000004)) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeBytesSize(4, getDstUserIdBytes());
+            }
+            for (int i = 0; i < memberList_.size(); i++) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeMessageSize(5, memberList_.get(i));
+            }
+            if (((bitField0_ & 0x00000008) == 0x00000008)) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeEnumSize(6, type_.getNumber());
+            }
+            if (((bitField0_ & 0x00000010) == 0x00000010)) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeBytesSize(7, getRemarkBytes());
+            }
+            if (((bitField0_ & 0x00000020) == 0x00000020)) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeBytesSize(8, getSrcMemberNameBytes());
+            }
+            size += getUnknownFields().getSerializedSize();
+            memoizedSerializedSize = size;
+            return size;
+        }
+
+        private static final long serialVersionUID = 0L;
+
+        @Override
+        protected Object writeReplace()
+                throws java.io.ObjectStreamException {
+            return super.writeReplace();
+        }
+
+        public static YouMaiGroup.GroupMemberChangeTransferReq parseFrom(
+                com.google.protobuf.ByteString data)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data);
+        }
+
+        public static YouMaiGroup.GroupMemberChangeTransferReq parseFrom(
+                com.google.protobuf.ByteString data,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data, extensionRegistry);
+        }
+
+        public static YouMaiGroup.GroupMemberChangeTransferReq parseFrom(byte[] data)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data);
+        }
+
+        public static YouMaiGroup.GroupMemberChangeTransferReq parseFrom(
+                byte[] data,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data, extensionRegistry);
+        }
+
+        public static YouMaiGroup.GroupMemberChangeTransferReq parseFrom(java.io.InputStream input)
+                throws java.io.IOException {
+            return PARSER.parseFrom(input);
+        }
+
+        public static YouMaiGroup.GroupMemberChangeTransferReq parseFrom(
+                java.io.InputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            return PARSER.parseFrom(input, extensionRegistry);
+        }
+
+        public static YouMaiGroup.GroupMemberChangeTransferReq parseDelimitedFrom(java.io.InputStream input)
+                throws java.io.IOException {
+            return PARSER.parseDelimitedFrom(input);
+        }
+
+        public static YouMaiGroup.GroupMemberChangeTransferReq parseDelimitedFrom(
+                java.io.InputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            return PARSER.parseDelimitedFrom(input, extensionRegistry);
+        }
+
+        public static YouMaiGroup.GroupMemberChangeTransferReq parseFrom(
+                com.google.protobuf.CodedInputStream input)
+                throws java.io.IOException {
+            return PARSER.parseFrom(input);
+        }
+
+        public static YouMaiGroup.GroupMemberChangeTransferReq parseFrom(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            return PARSER.parseFrom(input, extensionRegistry);
+        }
+
+        public static Builder newBuilder() {
+            return Builder.create();
+        }
+
+        public Builder newBuilderForType() {
+            return newBuilder();
+        }
+
+        public static Builder newBuilder(YouMaiGroup.GroupMemberChangeTransferReq prototype) {
+            return newBuilder().mergeFrom(prototype);
+        }
+
+        public Builder toBuilder() {
+            return newBuilder(this);
+        }
+
+        @Override
+        protected Builder newBuilderForType(
+                BuilderParent parent) {
+            Builder builder = new Builder(parent);
+            return builder;
+        }
+
+        /**
+         * Protobuf type {@code GroupMemberChangeTransferReq}
+         */
+        public static final class Builder extends
+                com.google.protobuf.GeneratedMessage.Builder<Builder> implements
+                // @@protoc_insertion_point(builder_implements:GroupMemberChangeTransferReq)
+                YouMaiGroup.GroupMemberChangeTransferReqOrBuilder {
+            public static final com.google.protobuf.Descriptors.Descriptor
+            getDescriptor() {
+                return YouMaiGroup.internal_static_com_proto_group_GroupMemberChangeTransferReq_descriptor;
+            }
+
+            protected FieldAccessorTable
+            internalGetFieldAccessorTable() {
+                return YouMaiGroup.internal_static_com_proto_group_GroupMemberChangeTransferReq_fieldAccessorTable
+                        .ensureFieldAccessorsInitialized(
+                                YouMaiGroup.GroupMemberChangeTransferReq.class, YouMaiGroup.GroupMemberChangeTransferReq.Builder.class);
+            }
+
+            // Construct using YouMaiGroup.GroupMemberChangeTransferReq.newBuilder()
+            private Builder() {
+                maybeForceBuilderInitialization();
+            }
+
+            private Builder(
+                    BuilderParent parent) {
+                super(parent);
+                maybeForceBuilderInitialization();
+            }
+
+            private void maybeForceBuilderInitialization() {
+                if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+                    getMemberListFieldBuilder();
+                }
+            }
+
+            private static Builder create() {
+                return new Builder();
+            }
+
+            public Builder clear() {
+                super.clear();
+                srcUserId_ = "";
+                bitField0_ = (bitField0_ & ~0x00000001);
+                groupId_ = 0;
+                bitField0_ = (bitField0_ & ~0x00000002);
+                dstUserId_ = "";
+                bitField0_ = (bitField0_ & ~0x00000004);
+                if (memberListBuilder_ == null) {
+                    memberList_ = java.util.Collections.emptyList();
+                    bitField0_ = (bitField0_ & ~0x00000008);
+                } else {
+                    memberListBuilder_.clear();
+                }
+                type_ = YouMaiGroup.GroupMemberOptType.GROUP_MEMBER_OPT_ADD;
+                bitField0_ = (bitField0_ & ~0x00000010);
+                remark_ = "";
+                bitField0_ = (bitField0_ & ~0x00000020);
+                srcMemberName_ = "";
+                bitField0_ = (bitField0_ & ~0x00000040);
+                return this;
+            }
+
+            public Builder clone() {
+                return create().mergeFrom(buildPartial());
+            }
+
+            public com.google.protobuf.Descriptors.Descriptor
+            getDescriptorForType() {
+                return YouMaiGroup.internal_static_com_proto_group_GroupMemberChangeTransferReq_descriptor;
+            }
+
+            public YouMaiGroup.GroupMemberChangeTransferReq getDefaultInstanceForType() {
+                return YouMaiGroup.GroupMemberChangeTransferReq.getDefaultInstance();
+            }
+
+            public YouMaiGroup.GroupMemberChangeTransferReq build() {
+                YouMaiGroup.GroupMemberChangeTransferReq result = buildPartial();
+                if (!result.isInitialized()) {
+                    throw newUninitializedMessageException(result);
+                }
+                return result;
+            }
+
+            public YouMaiGroup.GroupMemberChangeTransferReq buildPartial() {
+                YouMaiGroup.GroupMemberChangeTransferReq result = new YouMaiGroup.GroupMemberChangeTransferReq(this);
+                int from_bitField0_ = bitField0_;
+                int to_bitField0_ = 0;
+                if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+                    to_bitField0_ |= 0x00000001;
+                }
+                result.srcUserId_ = srcUserId_;
+                if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+                    to_bitField0_ |= 0x00000002;
+                }
+                result.groupId_ = groupId_;
+                if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+                    to_bitField0_ |= 0x00000004;
+                }
+                result.dstUserId_ = dstUserId_;
+                if (memberListBuilder_ == null) {
+                    if (((bitField0_ & 0x00000008) == 0x00000008)) {
+                        memberList_ = java.util.Collections.unmodifiableList(memberList_);
+                        bitField0_ = (bitField0_ & ~0x00000008);
+                    }
+                    result.memberList_ = memberList_;
+                } else {
+                    result.memberList_ = memberListBuilder_.build();
+                }
+                if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
+                    to_bitField0_ |= 0x00000008;
+                }
+                result.type_ = type_;
+                if (((from_bitField0_ & 0x00000020) == 0x00000020)) {
+                    to_bitField0_ |= 0x00000010;
+                }
+                result.remark_ = remark_;
+                if (((from_bitField0_ & 0x00000040) == 0x00000040)) {
+                    to_bitField0_ |= 0x00000020;
+                }
+                result.srcMemberName_ = srcMemberName_;
+                result.bitField0_ = to_bitField0_;
+                onBuilt();
+                return result;
+            }
+
+            public Builder mergeFrom(com.google.protobuf.Message other) {
+                if (other instanceof YouMaiGroup.GroupMemberChangeTransferReq) {
+                    return mergeFrom((YouMaiGroup.GroupMemberChangeTransferReq) other);
+                } else {
+                    super.mergeFrom(other);
+                    return this;
+                }
+            }
+
+            public Builder mergeFrom(YouMaiGroup.GroupMemberChangeTransferReq other) {
+                if (other == YouMaiGroup.GroupMemberChangeTransferReq.getDefaultInstance())
+                    return this;
+                if (other.hasSrcUserId()) {
+                    bitField0_ |= 0x00000001;
+                    srcUserId_ = other.srcUserId_;
+                    onChanged();
+                }
+                if (other.hasGroupId()) {
+                    setGroupId(other.getGroupId());
+                }
+                if (other.hasDstUserId()) {
+                    bitField0_ |= 0x00000004;
+                    dstUserId_ = other.dstUserId_;
+                    onChanged();
+                }
+                if (memberListBuilder_ == null) {
+                    if (!other.memberList_.isEmpty()) {
+                        if (memberList_.isEmpty()) {
+                            memberList_ = other.memberList_;
+                            bitField0_ = (bitField0_ & ~0x00000008);
+                        } else {
+                            ensureMemberListIsMutable();
+                            memberList_.addAll(other.memberList_);
+                        }
+                        onChanged();
+                    }
+                } else {
+                    if (!other.memberList_.isEmpty()) {
+                        if (memberListBuilder_.isEmpty()) {
+                            memberListBuilder_.dispose();
+                            memberListBuilder_ = null;
+                            memberList_ = other.memberList_;
+                            bitField0_ = (bitField0_ & ~0x00000008);
+                            memberListBuilder_ =
+                                    com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
+                                            getMemberListFieldBuilder() : null;
+                        } else {
+                            memberListBuilder_.addAllMessages(other.memberList_);
+                        }
+                    }
+                }
+                if (other.hasType()) {
+                    setType(other.getType());
+                }
+                if (other.hasRemark()) {
+                    bitField0_ |= 0x00000020;
+                    remark_ = other.remark_;
+                    onChanged();
+                }
+                if (other.hasSrcMemberName()) {
+                    bitField0_ |= 0x00000040;
+                    srcMemberName_ = other.srcMemberName_;
+                    onChanged();
+                }
+                this.mergeUnknownFields(other.getUnknownFields());
+                return this;
+            }
+
+            public final boolean isInitialized() {
+                if (!hasSrcUserId()) {
+
+                    return false;
+                }
+                if (!hasGroupId()) {
+
+                    return false;
+                }
+                if (!hasDstUserId()) {
+
+                    return false;
+                }
+                if (!hasType()) {
+
+                    return false;
+                }
+                for (int i = 0; i < getMemberListCount(); i++) {
+                    if (!getMemberList(i).isInitialized()) {
+
+                        return false;
+                    }
+                }
+                return true;
+            }
+
+            public Builder mergeFrom(
+                    com.google.protobuf.CodedInputStream input,
+                    com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                    throws java.io.IOException {
+                YouMaiGroup.GroupMemberChangeTransferReq parsedMessage = null;
+                try {
+                    parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+                } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+                    parsedMessage = (YouMaiGroup.GroupMemberChangeTransferReq) e.getUnfinishedMessage();
+                    throw e;
+                } finally {
+                    if (parsedMessage != null) {
+                        mergeFrom(parsedMessage);
+                    }
+                }
+                return this;
+            }
+
+            private int bitField0_;
+
+            private Object srcUserId_ = "";
+
+            /**
+             * <code>required string src_user_id = 1;</code>
+             * <p>
+             * <pre>
+             * cmd id:	 CID_GROUP_CHANGE_MEMBER_TRANSFER_REQ
+             * </pre>
+             */
+            public boolean hasSrcUserId() {
+                return ((bitField0_ & 0x00000001) == 0x00000001);
+            }
+
+            /**
+             * <code>required string src_user_id = 1;</code>
+             * <p>
+             * <pre>
+             * cmd id:	 CID_GROUP_CHANGE_MEMBER_TRANSFER_REQ
+             * </pre>
+             */
+            public String getSrcUserId() {
+                Object ref = srcUserId_;
+                if (!(ref instanceof String)) {
+                    com.google.protobuf.ByteString bs =
+                            (com.google.protobuf.ByteString) ref;
+                    String s = bs.toStringUtf8();
+                    if (bs.isValidUtf8()) {
+                        srcUserId_ = s;
+                    }
+                    return s;
+                } else {
+                    return (String) ref;
+                }
+            }
+
+            /**
+             * <code>required string src_user_id = 1;</code>
+             * <p>
+             * <pre>
+             * cmd id:	 CID_GROUP_CHANGE_MEMBER_TRANSFER_REQ
+             * </pre>
+             */
+            public com.google.protobuf.ByteString
+            getSrcUserIdBytes() {
+                Object ref = srcUserId_;
+                if (ref instanceof String) {
+                    com.google.protobuf.ByteString b =
+                            com.google.protobuf.ByteString.copyFromUtf8(
+                                    (String) ref);
+                    srcUserId_ = b;
+                    return b;
+                } else {
+                    return (com.google.protobuf.ByteString) ref;
+                }
+            }
+
+            /**
+             * <code>required string src_user_id = 1;</code>
+             * <p>
+             * <pre>
+             * cmd id:	 CID_GROUP_CHANGE_MEMBER_TRANSFER_REQ
+             * </pre>
+             */
+            public Builder setSrcUserId(
+                    String value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000001;
+                srcUserId_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>required string src_user_id = 1;</code>
+             * <p>
+             * <pre>
+             * cmd id:	 CID_GROUP_CHANGE_MEMBER_TRANSFER_REQ
+             * </pre>
+             */
+            public Builder clearSrcUserId() {
+                bitField0_ = (bitField0_ & ~0x00000001);
+                srcUserId_ = getDefaultInstance().getSrcUserId();
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>required string src_user_id = 1;</code>
+             * <p>
+             * <pre>
+             * cmd id:	 CID_GROUP_CHANGE_MEMBER_TRANSFER_REQ
+             * </pre>
+             */
+            public Builder setSrcUserIdBytes(
+                    com.google.protobuf.ByteString value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000001;
+                srcUserId_ = value;
+                onChanged();
+                return this;
+            }
+
+            private int groupId_;
+
+            /**
+             * <code>required uint32 group_id = 3;</code>
+             */
+            public boolean hasGroupId() {
+                return ((bitField0_ & 0x00000002) == 0x00000002);
+            }
+
+            /**
+             * <code>required uint32 group_id = 3;</code>
+             */
+            public int getGroupId() {
+                return groupId_;
+            }
+
+            /**
+             * <code>required uint32 group_id = 3;</code>
+             */
+            public Builder setGroupId(int value) {
+                bitField0_ |= 0x00000002;
+                groupId_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>required uint32 group_id = 3;</code>
+             */
+            public Builder clearGroupId() {
+                bitField0_ = (bitField0_ & ~0x00000002);
+                groupId_ = 0;
+                onChanged();
+                return this;
+            }
+
+            private Object dstUserId_ = "";
+
+            /**
+             * <code>required string dst_user_id = 4;</code>
+             */
+            public boolean hasDstUserId() {
+                return ((bitField0_ & 0x00000004) == 0x00000004);
+            }
+
+            /**
+             * <code>required string dst_user_id = 4;</code>
+             */
+            public String getDstUserId() {
+                Object ref = dstUserId_;
+                if (!(ref instanceof String)) {
+                    com.google.protobuf.ByteString bs =
+                            (com.google.protobuf.ByteString) ref;
+                    String s = bs.toStringUtf8();
+                    if (bs.isValidUtf8()) {
+                        dstUserId_ = s;
+                    }
+                    return s;
+                } else {
+                    return (String) ref;
+                }
+            }
+
+            /**
+             * <code>required string dst_user_id = 4;</code>
+             */
+            public com.google.protobuf.ByteString
+            getDstUserIdBytes() {
+                Object ref = dstUserId_;
+                if (ref instanceof String) {
+                    com.google.protobuf.ByteString b =
+                            com.google.protobuf.ByteString.copyFromUtf8(
+                                    (String) ref);
+                    dstUserId_ = b;
+                    return b;
+                } else {
+                    return (com.google.protobuf.ByteString) ref;
+                }
+            }
+
+            /**
+             * <code>required string dst_user_id = 4;</code>
+             */
+            public Builder setDstUserId(
+                    String value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000004;
+                dstUserId_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>required string dst_user_id = 4;</code>
+             */
+            public Builder clearDstUserId() {
+                bitField0_ = (bitField0_ & ~0x00000004);
+                dstUserId_ = getDefaultInstance().getDstUserId();
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>required string dst_user_id = 4;</code>
+             */
+            public Builder setDstUserIdBytes(
+                    com.google.protobuf.ByteString value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000004;
+                dstUserId_ = value;
+                onChanged();
+                return this;
+            }
+
+            private java.util.List<YouMaiGroup.GroupMemberItem> memberList_ =
+                    java.util.Collections.emptyList();
+
+            private void ensureMemberListIsMutable() {
+                if (!((bitField0_ & 0x00000008) == 0x00000008)) {
+                    memberList_ = new java.util.ArrayList<YouMaiGroup.GroupMemberItem>(memberList_);
+                    bitField0_ |= 0x00000008;
+                }
+            }
+
+            private com.google.protobuf.RepeatedFieldBuilder<
+                    YouMaiGroup.GroupMemberItem, YouMaiGroup.GroupMemberItem.Builder, YouMaiGroup.GroupMemberItemOrBuilder> memberListBuilder_;
+
+            /**
+             * <code>repeated .GroupMemberItem member_list = 5;</code>
+             */
+            public java.util.List<YouMaiGroup.GroupMemberItem> getMemberListList() {
+                if (memberListBuilder_ == null) {
+                    return java.util.Collections.unmodifiableList(memberList_);
+                } else {
+                    return memberListBuilder_.getMessageList();
+                }
+            }
+
+            /**
+             * <code>repeated .GroupMemberItem member_list = 5;</code>
+             */
+            public int getMemberListCount() {
+                if (memberListBuilder_ == null) {
+                    return memberList_.size();
+                } else {
+                    return memberListBuilder_.getCount();
+                }
+            }
+
+            /**
+             * <code>repeated .GroupMemberItem member_list = 5;</code>
+             */
+            public YouMaiGroup.GroupMemberItem getMemberList(int index) {
+                if (memberListBuilder_ == null) {
+                    return memberList_.get(index);
+                } else {
+                    return memberListBuilder_.getMessage(index);
+                }
+            }
+
+            /**
+             * <code>repeated .GroupMemberItem member_list = 5;</code>
+             */
+            public Builder setMemberList(
+                    int index, YouMaiGroup.GroupMemberItem value) {
+                if (memberListBuilder_ == null) {
+                    if (value == null) {
+                        throw new NullPointerException();
+                    }
+                    ensureMemberListIsMutable();
+                    memberList_.set(index, value);
+                    onChanged();
+                } else {
+                    memberListBuilder_.setMessage(index, value);
+                }
+                return this;
+            }
+
+            /**
+             * <code>repeated .GroupMemberItem member_list = 5;</code>
+             */
+            public Builder setMemberList(
+                    int index, YouMaiGroup.GroupMemberItem.Builder builderForValue) {
+                if (memberListBuilder_ == null) {
+                    ensureMemberListIsMutable();
+                    memberList_.set(index, builderForValue.build());
+                    onChanged();
+                } else {
+                    memberListBuilder_.setMessage(index, builderForValue.build());
+                }
+                return this;
+            }
+
+            /**
+             * <code>repeated .GroupMemberItem member_list = 5;</code>
+             */
+            public Builder addMemberList(YouMaiGroup.GroupMemberItem value) {
+                if (memberListBuilder_ == null) {
+                    if (value == null) {
+                        throw new NullPointerException();
+                    }
+                    ensureMemberListIsMutable();
+                    memberList_.add(value);
+                    onChanged();
+                } else {
+                    memberListBuilder_.addMessage(value);
+                }
+                return this;
+            }
+
+            /**
+             * <code>repeated .GroupMemberItem member_list = 5;</code>
+             */
+            public Builder addMemberList(
+                    int index, YouMaiGroup.GroupMemberItem value) {
+                if (memberListBuilder_ == null) {
+                    if (value == null) {
+                        throw new NullPointerException();
+                    }
+                    ensureMemberListIsMutable();
+                    memberList_.add(index, value);
+                    onChanged();
+                } else {
+                    memberListBuilder_.addMessage(index, value);
+                }
+                return this;
+            }
+
+            /**
+             * <code>repeated .GroupMemberItem member_list = 5;</code>
+             */
+            public Builder addMemberList(
+                    YouMaiGroup.GroupMemberItem.Builder builderForValue) {
+                if (memberListBuilder_ == null) {
+                    ensureMemberListIsMutable();
+                    memberList_.add(builderForValue.build());
+                    onChanged();
+                } else {
+                    memberListBuilder_.addMessage(builderForValue.build());
+                }
+                return this;
+            }
+
+            /**
+             * <code>repeated .GroupMemberItem member_list = 5;</code>
+             */
+            public Builder addMemberList(
+                    int index, YouMaiGroup.GroupMemberItem.Builder builderForValue) {
+                if (memberListBuilder_ == null) {
+                    ensureMemberListIsMutable();
+                    memberList_.add(index, builderForValue.build());
+                    onChanged();
+                } else {
+                    memberListBuilder_.addMessage(index, builderForValue.build());
+                }
+                return this;
+            }
+
+            /**
+             * <code>repeated .GroupMemberItem member_list = 5;</code>
+             */
+            public Builder addAllMemberList(
+                    Iterable<? extends YouMaiGroup.GroupMemberItem> values) {
+                if (memberListBuilder_ == null) {
+                    ensureMemberListIsMutable();
+                    com.google.protobuf.AbstractMessageLite.Builder.addAll(
+                            values, memberList_);
+                    onChanged();
+                } else {
+                    memberListBuilder_.addAllMessages(values);
+                }
+                return this;
+            }
+
+            /**
+             * <code>repeated .GroupMemberItem member_list = 5;</code>
+             */
+            public Builder clearMemberList() {
+                if (memberListBuilder_ == null) {
+                    memberList_ = java.util.Collections.emptyList();
+                    bitField0_ = (bitField0_ & ~0x00000008);
+                    onChanged();
+                } else {
+                    memberListBuilder_.clear();
+                }
+                return this;
+            }
+
+            /**
+             * <code>repeated .GroupMemberItem member_list = 5;</code>
+             */
+            public Builder removeMemberList(int index) {
+                if (memberListBuilder_ == null) {
+                    ensureMemberListIsMutable();
+                    memberList_.remove(index);
+                    onChanged();
+                } else {
+                    memberListBuilder_.remove(index);
+                }
+                return this;
+            }
+
+            /**
+             * <code>repeated .GroupMemberItem member_list = 5;</code>
+             */
+            public YouMaiGroup.GroupMemberItem.Builder getMemberListBuilder(
+                    int index) {
+                return getMemberListFieldBuilder().getBuilder(index);
+            }
+
+            /**
+             * <code>repeated .GroupMemberItem member_list = 5;</code>
+             */
+            public YouMaiGroup.GroupMemberItemOrBuilder getMemberListOrBuilder(
+                    int index) {
+                if (memberListBuilder_ == null) {
+                    return memberList_.get(index);
+                } else {
+                    return memberListBuilder_.getMessageOrBuilder(index);
+                }
+            }
+
+            /**
+             * <code>repeated .GroupMemberItem member_list = 5;</code>
+             */
+            public java.util.List<? extends YouMaiGroup.GroupMemberItemOrBuilder>
+            getMemberListOrBuilderList() {
+                if (memberListBuilder_ != null) {
+                    return memberListBuilder_.getMessageOrBuilderList();
+                } else {
+                    return java.util.Collections.unmodifiableList(memberList_);
+                }
+            }
+
+            /**
+             * <code>repeated .GroupMemberItem member_list = 5;</code>
+             */
+            public YouMaiGroup.GroupMemberItem.Builder addMemberListBuilder() {
+                return getMemberListFieldBuilder().addBuilder(
+                        YouMaiGroup.GroupMemberItem.getDefaultInstance());
+            }
+
+            /**
+             * <code>repeated .GroupMemberItem member_list = 5;</code>
+             */
+            public YouMaiGroup.GroupMemberItem.Builder addMemberListBuilder(
+                    int index) {
+                return getMemberListFieldBuilder().addBuilder(
+                        index, YouMaiGroup.GroupMemberItem.getDefaultInstance());
+            }
+
+            /**
+             * <code>repeated .GroupMemberItem member_list = 5;</code>
+             */
+            public java.util.List<YouMaiGroup.GroupMemberItem.Builder>
+            getMemberListBuilderList() {
+                return getMemberListFieldBuilder().getBuilderList();
+            }
+
+            private com.google.protobuf.RepeatedFieldBuilder<
+                    YouMaiGroup.GroupMemberItem, YouMaiGroup.GroupMemberItem.Builder, YouMaiGroup.GroupMemberItemOrBuilder>
+            getMemberListFieldBuilder() {
+                if (memberListBuilder_ == null) {
+                    memberListBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
+                            YouMaiGroup.GroupMemberItem, YouMaiGroup.GroupMemberItem.Builder, YouMaiGroup.GroupMemberItemOrBuilder>(
+                            memberList_,
+                            ((bitField0_ & 0x00000008) == 0x00000008),
+                            getParentForChildren(),
+                            isClean());
+                    memberList_ = null;
+                }
+                return memberListBuilder_;
+            }
+
+            private YouMaiGroup.GroupMemberOptType type_ = YouMaiGroup.GroupMemberOptType.GROUP_MEMBER_OPT_ADD;
+
+            /**
+             * <code>required .GroupMemberOptType type = 6;</code>
+             */
+            public boolean hasType() {
+                return ((bitField0_ & 0x00000010) == 0x00000010);
+            }
+
+            /**
+             * <code>required .GroupMemberOptType type = 6;</code>
+             */
+            public YouMaiGroup.GroupMemberOptType getType() {
+                return type_;
+            }
+
+            /**
+             * <code>required .GroupMemberOptType type = 6;</code>
+             */
+            public Builder setType(YouMaiGroup.GroupMemberOptType value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000010;
+                type_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>required .GroupMemberOptType type = 6;</code>
+             */
+            public Builder clearType() {
+                bitField0_ = (bitField0_ & ~0x00000010);
+                type_ = YouMaiGroup.GroupMemberOptType.GROUP_MEMBER_OPT_ADD;
+                onChanged();
+                return this;
+            }
+
+            private Object remark_ = "";
+
+            /**
+             * <code>optional string remark = 7;</code>
+             */
+            public boolean hasRemark() {
+                return ((bitField0_ & 0x00000020) == 0x00000020);
+            }
+
+            /**
+             * <code>optional string remark = 7;</code>
+             */
+            public String getRemark() {
+                Object ref = remark_;
+                if (!(ref instanceof String)) {
+                    com.google.protobuf.ByteString bs =
+                            (com.google.protobuf.ByteString) ref;
+                    String s = bs.toStringUtf8();
+                    if (bs.isValidUtf8()) {
+                        remark_ = s;
+                    }
+                    return s;
+                } else {
+                    return (String) ref;
+                }
+            }
+
+            /**
+             * <code>optional string remark = 7;</code>
+             */
+            public com.google.protobuf.ByteString
+            getRemarkBytes() {
+                Object ref = remark_;
+                if (ref instanceof String) {
+                    com.google.protobuf.ByteString b =
+                            com.google.protobuf.ByteString.copyFromUtf8(
+                                    (String) ref);
+                    remark_ = b;
+                    return b;
+                } else {
+                    return (com.google.protobuf.ByteString) ref;
+                }
+            }
+
+            /**
+             * <code>optional string remark = 7;</code>
+             */
+            public Builder setRemark(
+                    String value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000020;
+                remark_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string remark = 7;</code>
+             */
+            public Builder clearRemark() {
+                bitField0_ = (bitField0_ & ~0x00000020);
+                remark_ = getDefaultInstance().getRemark();
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string remark = 7;</code>
+             */
+            public Builder setRemarkBytes(
+                    com.google.protobuf.ByteString value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000020;
+                remark_ = value;
+                onChanged();
+                return this;
+            }
+
+            private Object srcMemberName_ = "";
+
+            /**
+             * <code>optional string src_member_name = 8;</code>
+             */
+            public boolean hasSrcMemberName() {
+                return ((bitField0_ & 0x00000040) == 0x00000040);
+            }
+
+            /**
+             * <code>optional string src_member_name = 8;</code>
+             */
+            public String getSrcMemberName() {
+                Object ref = srcMemberName_;
+                if (!(ref instanceof String)) {
+                    com.google.protobuf.ByteString bs =
+                            (com.google.protobuf.ByteString) ref;
+                    String s = bs.toStringUtf8();
+                    if (bs.isValidUtf8()) {
+                        srcMemberName_ = s;
+                    }
+                    return s;
+                } else {
+                    return (String) ref;
+                }
+            }
+
+            /**
+             * <code>optional string src_member_name = 8;</code>
+             */
+            public com.google.protobuf.ByteString
+            getSrcMemberNameBytes() {
+                Object ref = srcMemberName_;
+                if (ref instanceof String) {
+                    com.google.protobuf.ByteString b =
+                            com.google.protobuf.ByteString.copyFromUtf8(
+                                    (String) ref);
+                    srcMemberName_ = b;
+                    return b;
+                } else {
+                    return (com.google.protobuf.ByteString) ref;
+                }
+            }
+
+            /**
+             * <code>optional string src_member_name = 8;</code>
+             */
+            public Builder setSrcMemberName(
+                    String value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000040;
+                srcMemberName_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string src_member_name = 8;</code>
+             */
+            public Builder clearSrcMemberName() {
+                bitField0_ = (bitField0_ & ~0x00000040);
+                srcMemberName_ = getDefaultInstance().getSrcMemberName();
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string src_member_name = 8;</code>
+             */
+            public Builder setSrcMemberNameBytes(
+                    com.google.protobuf.ByteString value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000040;
+                srcMemberName_ = value;
+                onChanged();
+                return this;
+            }
+
+            // @@protoc_insertion_point(builder_scope:GroupMemberChangeTransferReq)
+        }
+
+        static {
+            defaultInstance = new GroupMemberChangeTransferReq(true);
+            defaultInstance.initFields();
+        }
+
+        // @@protoc_insertion_point(class_scope:GroupMemberChangeTransferReq)
+    }
+
+    public interface GroupMemberChangeTransferRspOrBuilder extends
+            // @@protoc_insertion_point(interface_extends:GroupMemberChangeTransferRsp)
+            com.google.protobuf.MessageOrBuilder {
+
+        /**
+         * <code>required string src_user_id = 1;</code>
+         * <p>
+         * <pre>
+         * cmd id:	 CID_GROUP_CHANGE_MEMBER_TRANSFER_RSP
+         * </pre>
+         */
+        boolean hasSrcUserId();
+
+        /**
+         * <code>required string src_user_id = 1;</code>
+         * <p>
+         * <pre>
+         * cmd id:	 CID_GROUP_CHANGE_MEMBER_TRANSFER_RSP
+         * </pre>
+         */
+        String getSrcUserId();
+
+        /**
+         * <code>required string src_user_id = 1;</code>
+         * <p>
+         * <pre>
+         * cmd id:	 CID_GROUP_CHANGE_MEMBER_TRANSFER_RSP
+         * </pre>
+         */
+        com.google.protobuf.ByteString
+        getSrcUserIdBytes();
+
+        /**
+         * <code>required uint32 group_id = 2;</code>
+         */
+        boolean hasGroupId();
+
+        /**
+         * <code>required uint32 group_id = 2;</code>
+         */
+        int getGroupId();
+
+        /**
+         * <code>required string dst_user_id = 3;</code>
+         */
+        boolean hasDstUserId();
+
+        /**
+         * <code>required string dst_user_id = 3;</code>
+         */
+        String getDstUserId();
+
+        /**
+         * <code>required string dst_user_id = 3;</code>
+         */
+        com.google.protobuf.ByteString
+        getDstUserIdBytes();
+
+        /**
+         * <code>repeated .GroupMemberItem member_list = 4;</code>
+         */
+        java.util.List<YouMaiGroup.GroupMemberItem>
+        getMemberListList();
+
+        /**
+         * <code>repeated .GroupMemberItem member_list = 4;</code>
+         */
+        YouMaiGroup.GroupMemberItem getMemberList(int index);
+
+        /**
+         * <code>repeated .GroupMemberItem member_list = 4;</code>
+         */
+        int getMemberListCount();
+
+        /**
+         * <code>repeated .GroupMemberItem member_list = 4;</code>
+         */
+        java.util.List<? extends YouMaiGroup.GroupMemberItemOrBuilder>
+        getMemberListOrBuilderList();
+
+        /**
+         * <code>repeated .GroupMemberItem member_list = 4;</code>
+         */
+        YouMaiGroup.GroupMemberItemOrBuilder getMemberListOrBuilder(
+                int index);
+
+        /**
+         * <code>required .GroupMemberOptType type = 5;</code>
+         */
+        boolean hasType();
+
+        /**
+         * <code>required .GroupMemberOptType type = 5;</code>
+         */
+        YouMaiGroup.GroupMemberOptType getType();
+
+        /**
+         * <code>optional string dst_member_name = 6;</code>
+         */
+        boolean hasDstMemberName();
+
+        /**
+         * <code>optional string dst_member_name = 6;</code>
+         */
+        String getDstMemberName();
+
+        /**
+         * <code>optional string dst_member_name = 6;</code>
+         */
+        com.google.protobuf.ByteString
+        getDstMemberNameBytes();
+    }
+
+    /**
+     * Protobuf type {@code GroupMemberChangeTransferRsp}
+     */
+    public static final class GroupMemberChangeTransferRsp extends
+            com.google.protobuf.GeneratedMessage implements
+            // @@protoc_insertion_point(message_implements:GroupMemberChangeTransferRsp)
+            GroupMemberChangeTransferRspOrBuilder {
+        // Use GroupMemberChangeTransferRsp.newBuilder() to construct.
+        private GroupMemberChangeTransferRsp(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+            super(builder);
+            this.unknownFields = builder.getUnknownFields();
+        }
+
+        private GroupMemberChangeTransferRsp(boolean noInit) {
+            this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance();
+        }
+
+        private static final GroupMemberChangeTransferRsp defaultInstance;
+
+        public static GroupMemberChangeTransferRsp getDefaultInstance() {
+            return defaultInstance;
+        }
+
+        public GroupMemberChangeTransferRsp getDefaultInstanceForType() {
+            return defaultInstance;
+        }
+
+        private final com.google.protobuf.UnknownFieldSet unknownFields;
+
+        @Override
+        public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+            return this.unknownFields;
+        }
+
+        private GroupMemberChangeTransferRsp(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            initFields();
+            int mutable_bitField0_ = 0;
+            com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+                    com.google.protobuf.UnknownFieldSet.newBuilder();
+            try {
+                boolean done = false;
+                while (!done) {
+                    int tag = input.readTag();
+                    switch (tag) {
+                        case 0:
+                            done = true;
+                            break;
+                        default: {
+                            if (!parseUnknownField(input, unknownFields,
+                                    extensionRegistry, tag)) {
+                                done = true;
+                            }
+                            break;
+                        }
+                        case 10: {
+                            com.google.protobuf.ByteString bs = input.readBytes();
+                            bitField0_ |= 0x00000001;
+                            srcUserId_ = bs;
+                            break;
+                        }
+                        case 16: {
+                            bitField0_ |= 0x00000002;
+                            groupId_ = input.readUInt32();
+                            break;
+                        }
+                        case 26: {
+                            com.google.protobuf.ByteString bs = input.readBytes();
+                            bitField0_ |= 0x00000004;
+                            dstUserId_ = bs;
+                            break;
+                        }
+                        case 34: {
+                            if (!((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
+                                memberList_ = new java.util.ArrayList<YouMaiGroup.GroupMemberItem>();
+                                mutable_bitField0_ |= 0x00000008;
+                            }
+                            memberList_.add(input.readMessage(YouMaiGroup.GroupMemberItem.PARSER, extensionRegistry));
+                            break;
+                        }
+                        case 40: {
+                            int rawValue = input.readEnum();
+                            YouMaiGroup.GroupMemberOptType value = YouMaiGroup.GroupMemberOptType.valueOf(rawValue);
+                            if (value == null) {
+                                unknownFields.mergeVarintField(5, rawValue);
+                            } else {
+                                bitField0_ |= 0x00000008;
+                                type_ = value;
+                            }
+                            break;
+                        }
+                        case 50: {
+                            com.google.protobuf.ByteString bs = input.readBytes();
+                            bitField0_ |= 0x00000010;
+                            dstMemberName_ = bs;
+                            break;
+                        }
+                    }
+                }
+            } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+                throw e.setUnfinishedMessage(this);
+            } catch (java.io.IOException e) {
+                throw new com.google.protobuf.InvalidProtocolBufferException(
+                        e.getMessage()).setUnfinishedMessage(this);
+            } finally {
+                if (((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
+                    memberList_ = java.util.Collections.unmodifiableList(memberList_);
+                }
+                this.unknownFields = unknownFields.build();
+                makeExtensionsImmutable();
+            }
+        }
+
+        public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+            return YouMaiGroup.internal_static_com_proto_group_GroupMemberChangeTransferRsp_descriptor;
+        }
+
+        protected FieldAccessorTable
+        internalGetFieldAccessorTable() {
+            return YouMaiGroup.internal_static_com_proto_group_GroupMemberChangeTransferRsp_fieldAccessorTable
+                    .ensureFieldAccessorsInitialized(
+                            YouMaiGroup.GroupMemberChangeTransferRsp.class, YouMaiGroup.GroupMemberChangeTransferRsp.Builder.class);
+        }
+
+        public static com.google.protobuf.Parser<GroupMemberChangeTransferRsp> PARSER =
+                new com.google.protobuf.AbstractParser<GroupMemberChangeTransferRsp>() {
+                    public GroupMemberChangeTransferRsp parsePartialFrom(
+                            com.google.protobuf.CodedInputStream input,
+                            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                            throws com.google.protobuf.InvalidProtocolBufferException {
+                        return new GroupMemberChangeTransferRsp(input, extensionRegistry);
+                    }
+                };
+
+        @Override
+        public com.google.protobuf.Parser<GroupMemberChangeTransferRsp> getParserForType() {
+            return PARSER;
+        }
+
+        private int bitField0_;
+        public static final int SRC_USER_ID_FIELD_NUMBER = 1;
+        private Object srcUserId_;
+
+        /**
+         * <code>required string src_user_id = 1;</code>
+         * <p>
+         * <pre>
+         * cmd id:	 CID_GROUP_CHANGE_MEMBER_TRANSFER_RSP
+         * </pre>
+         */
+        public boolean hasSrcUserId() {
+            return ((bitField0_ & 0x00000001) == 0x00000001);
+        }
+
+        /**
+         * <code>required string src_user_id = 1;</code>
+         * <p>
+         * <pre>
+         * cmd id:	 CID_GROUP_CHANGE_MEMBER_TRANSFER_RSP
+         * </pre>
+         */
+        public String getSrcUserId() {
+            Object ref = srcUserId_;
+            if (ref instanceof String) {
+                return (String) ref;
+            } else {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                String s = bs.toStringUtf8();
+                if (bs.isValidUtf8()) {
+                    srcUserId_ = s;
+                }
+                return s;
+            }
+        }
+
+        /**
+         * <code>required string src_user_id = 1;</code>
+         * <p>
+         * <pre>
+         * cmd id:	 CID_GROUP_CHANGE_MEMBER_TRANSFER_RSP
+         * </pre>
+         */
+        public com.google.protobuf.ByteString
+        getSrcUserIdBytes() {
+            Object ref = srcUserId_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (String) ref);
+                srcUserId_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
+        public static final int GROUP_ID_FIELD_NUMBER = 2;
+        private int groupId_;
+
+        /**
+         * <code>required uint32 group_id = 2;</code>
+         */
+        public boolean hasGroupId() {
+            return ((bitField0_ & 0x00000002) == 0x00000002);
+        }
+
+        /**
+         * <code>required uint32 group_id = 2;</code>
+         */
+        public int getGroupId() {
+            return groupId_;
+        }
+
+        public static final int DST_USER_ID_FIELD_NUMBER = 3;
+        private Object dstUserId_;
+
+        /**
+         * <code>required string dst_user_id = 3;</code>
+         */
+        public boolean hasDstUserId() {
+            return ((bitField0_ & 0x00000004) == 0x00000004);
+        }
+
+        /**
+         * <code>required string dst_user_id = 3;</code>
+         */
+        public String getDstUserId() {
+            Object ref = dstUserId_;
+            if (ref instanceof String) {
+                return (String) ref;
+            } else {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                String s = bs.toStringUtf8();
+                if (bs.isValidUtf8()) {
+                    dstUserId_ = s;
+                }
+                return s;
+            }
+        }
+
+        /**
+         * <code>required string dst_user_id = 3;</code>
+         */
+        public com.google.protobuf.ByteString
+        getDstUserIdBytes() {
+            Object ref = dstUserId_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (String) ref);
+                dstUserId_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
+        public static final int MEMBER_LIST_FIELD_NUMBER = 4;
+        private java.util.List<YouMaiGroup.GroupMemberItem> memberList_;
+
+        /**
+         * <code>repeated .GroupMemberItem member_list = 4;</code>
+         */
+        public java.util.List<YouMaiGroup.GroupMemberItem> getMemberListList() {
+            return memberList_;
+        }
+
+        /**
+         * <code>repeated .GroupMemberItem member_list = 4;</code>
+         */
+        public java.util.List<? extends YouMaiGroup.GroupMemberItemOrBuilder>
+        getMemberListOrBuilderList() {
+            return memberList_;
+        }
+
+        /**
+         * <code>repeated .GroupMemberItem member_list = 4;</code>
+         */
+        public int getMemberListCount() {
+            return memberList_.size();
+        }
+
+        /**
+         * <code>repeated .GroupMemberItem member_list = 4;</code>
+         */
+        public YouMaiGroup.GroupMemberItem getMemberList(int index) {
+            return memberList_.get(index);
+        }
+
+        /**
+         * <code>repeated .GroupMemberItem member_list = 4;</code>
+         */
+        public YouMaiGroup.GroupMemberItemOrBuilder getMemberListOrBuilder(
+                int index) {
+            return memberList_.get(index);
+        }
+
+        public static final int TYPE_FIELD_NUMBER = 5;
+        private YouMaiGroup.GroupMemberOptType type_;
+
+        /**
+         * <code>required .GroupMemberOptType type = 5;</code>
+         */
+        public boolean hasType() {
+            return ((bitField0_ & 0x00000008) == 0x00000008);
+        }
+
+        /**
+         * <code>required .GroupMemberOptType type = 5;</code>
+         */
+        public YouMaiGroup.GroupMemberOptType getType() {
+            return type_;
+        }
+
+        public static final int DST_MEMBER_NAME_FIELD_NUMBER = 6;
+        private Object dstMemberName_;
+
+        /**
+         * <code>optional string dst_member_name = 6;</code>
+         */
+        public boolean hasDstMemberName() {
+            return ((bitField0_ & 0x00000010) == 0x00000010);
+        }
+
+        /**
+         * <code>optional string dst_member_name = 6;</code>
+         */
+        public String getDstMemberName() {
+            Object ref = dstMemberName_;
+            if (ref instanceof String) {
+                return (String) ref;
+            } else {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                String s = bs.toStringUtf8();
+                if (bs.isValidUtf8()) {
+                    dstMemberName_ = s;
+                }
+                return s;
+            }
+        }
+
+        /**
+         * <code>optional string dst_member_name = 6;</code>
+         */
+        public com.google.protobuf.ByteString
+        getDstMemberNameBytes() {
+            Object ref = dstMemberName_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (String) ref);
+                dstMemberName_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
+        private void initFields() {
+            srcUserId_ = "";
+            groupId_ = 0;
+            dstUserId_ = "";
+            memberList_ = java.util.Collections.emptyList();
+            type_ = YouMaiGroup.GroupMemberOptType.GROUP_MEMBER_OPT_ADD;
+            dstMemberName_ = "";
+        }
+
+        private byte memoizedIsInitialized = -1;
+
+        public final boolean isInitialized() {
+            byte isInitialized = memoizedIsInitialized;
+            if (isInitialized == 1) return true;
+            if (isInitialized == 0) return false;
+
+            if (!hasSrcUserId()) {
+                memoizedIsInitialized = 0;
+                return false;
+            }
+            if (!hasGroupId()) {
+                memoizedIsInitialized = 0;
+                return false;
+            }
+            if (!hasDstUserId()) {
+                memoizedIsInitialized = 0;
+                return false;
+            }
+            if (!hasType()) {
+                memoizedIsInitialized = 0;
+                return false;
+            }
+            for (int i = 0; i < getMemberListCount(); i++) {
+                if (!getMemberList(i).isInitialized()) {
+                    memoizedIsInitialized = 0;
+                    return false;
+                }
+            }
+            memoizedIsInitialized = 1;
+            return true;
+        }
+
+        public void writeTo(com.google.protobuf.CodedOutputStream output)
+                throws java.io.IOException {
+            getSerializedSize();
+            if (((bitField0_ & 0x00000001) == 0x00000001)) {
+                output.writeBytes(1, getSrcUserIdBytes());
+            }
+            if (((bitField0_ & 0x00000002) == 0x00000002)) {
+                output.writeUInt32(2, groupId_);
+            }
+            if (((bitField0_ & 0x00000004) == 0x00000004)) {
+                output.writeBytes(3, getDstUserIdBytes());
+            }
+            for (int i = 0; i < memberList_.size(); i++) {
+                output.writeMessage(4, memberList_.get(i));
+            }
+            if (((bitField0_ & 0x00000008) == 0x00000008)) {
+                output.writeEnum(5, type_.getNumber());
+            }
+            if (((bitField0_ & 0x00000010) == 0x00000010)) {
+                output.writeBytes(6, getDstMemberNameBytes());
+            }
+            getUnknownFields().writeTo(output);
+        }
+
+        private int memoizedSerializedSize = -1;
+
+        public int getSerializedSize() {
+            int size = memoizedSerializedSize;
+            if (size != -1) return size;
+
+            size = 0;
+            if (((bitField0_ & 0x00000001) == 0x00000001)) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeBytesSize(1, getSrcUserIdBytes());
+            }
+            if (((bitField0_ & 0x00000002) == 0x00000002)) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeUInt32Size(2, groupId_);
+            }
+            if (((bitField0_ & 0x00000004) == 0x00000004)) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeBytesSize(3, getDstUserIdBytes());
+            }
+            for (int i = 0; i < memberList_.size(); i++) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeMessageSize(4, memberList_.get(i));
+            }
+            if (((bitField0_ & 0x00000008) == 0x00000008)) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeEnumSize(5, type_.getNumber());
+            }
+            if (((bitField0_ & 0x00000010) == 0x00000010)) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeBytesSize(6, getDstMemberNameBytes());
+            }
+            size += getUnknownFields().getSerializedSize();
+            memoizedSerializedSize = size;
+            return size;
+        }
+
+        private static final long serialVersionUID = 0L;
+
+        @Override
+        protected Object writeReplace()
+                throws java.io.ObjectStreamException {
+            return super.writeReplace();
+        }
+
+        public static YouMaiGroup.GroupMemberChangeTransferRsp parseFrom(
+                com.google.protobuf.ByteString data)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data);
+        }
+
+        public static YouMaiGroup.GroupMemberChangeTransferRsp parseFrom(
+                com.google.protobuf.ByteString data,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data, extensionRegistry);
+        }
+
+        public static YouMaiGroup.GroupMemberChangeTransferRsp parseFrom(byte[] data)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data);
+        }
+
+        public static YouMaiGroup.GroupMemberChangeTransferRsp parseFrom(
+                byte[] data,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data, extensionRegistry);
+        }
+
+        public static YouMaiGroup.GroupMemberChangeTransferRsp parseFrom(java.io.InputStream input)
+                throws java.io.IOException {
+            return PARSER.parseFrom(input);
+        }
+
+        public static YouMaiGroup.GroupMemberChangeTransferRsp parseFrom(
+                java.io.InputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            return PARSER.parseFrom(input, extensionRegistry);
+        }
+
+        public static YouMaiGroup.GroupMemberChangeTransferRsp parseDelimitedFrom(java.io.InputStream input)
+                throws java.io.IOException {
+            return PARSER.parseDelimitedFrom(input);
+        }
+
+        public static YouMaiGroup.GroupMemberChangeTransferRsp parseDelimitedFrom(
+                java.io.InputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            return PARSER.parseDelimitedFrom(input, extensionRegistry);
+        }
+
+        public static YouMaiGroup.GroupMemberChangeTransferRsp parseFrom(
+                com.google.protobuf.CodedInputStream input)
+                throws java.io.IOException {
+            return PARSER.parseFrom(input);
+        }
+
+        public static YouMaiGroup.GroupMemberChangeTransferRsp parseFrom(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            return PARSER.parseFrom(input, extensionRegistry);
+        }
+
+        public static Builder newBuilder() {
+            return Builder.create();
+        }
+
+        public Builder newBuilderForType() {
+            return newBuilder();
+        }
+
+        public static Builder newBuilder(YouMaiGroup.GroupMemberChangeTransferRsp prototype) {
+            return newBuilder().mergeFrom(prototype);
+        }
+
+        public Builder toBuilder() {
+            return newBuilder(this);
+        }
+
+        @Override
+        protected Builder newBuilderForType(
+                BuilderParent parent) {
+            Builder builder = new Builder(parent);
+            return builder;
+        }
+
+        /**
+         * Protobuf type {@code GroupMemberChangeTransferRsp}
+         */
+        public static final class Builder extends
+                com.google.protobuf.GeneratedMessage.Builder<Builder> implements
+                // @@protoc_insertion_point(builder_implements:GroupMemberChangeTransferRsp)
+                YouMaiGroup.GroupMemberChangeTransferRspOrBuilder {
+            public static final com.google.protobuf.Descriptors.Descriptor
+            getDescriptor() {
+                return YouMaiGroup.internal_static_com_proto_group_GroupMemberChangeTransferRsp_descriptor;
+            }
+
+            protected FieldAccessorTable
+            internalGetFieldAccessorTable() {
+                return YouMaiGroup.internal_static_com_proto_group_GroupMemberChangeTransferRsp_fieldAccessorTable
+                        .ensureFieldAccessorsInitialized(
+                                YouMaiGroup.GroupMemberChangeTransferRsp.class, YouMaiGroup.GroupMemberChangeTransferRsp.Builder.class);
+            }
+
+            // Construct using YouMaiGroup.GroupMemberChangeTransferRsp.newBuilder()
+            private Builder() {
+                maybeForceBuilderInitialization();
+            }
+
+            private Builder(
+                    BuilderParent parent) {
+                super(parent);
+                maybeForceBuilderInitialization();
+            }
+
+            private void maybeForceBuilderInitialization() {
+                if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+                    getMemberListFieldBuilder();
+                }
+            }
+
+            private static Builder create() {
+                return new Builder();
+            }
+
+            public Builder clear() {
+                super.clear();
+                srcUserId_ = "";
+                bitField0_ = (bitField0_ & ~0x00000001);
+                groupId_ = 0;
+                bitField0_ = (bitField0_ & ~0x00000002);
+                dstUserId_ = "";
+                bitField0_ = (bitField0_ & ~0x00000004);
+                if (memberListBuilder_ == null) {
+                    memberList_ = java.util.Collections.emptyList();
+                    bitField0_ = (bitField0_ & ~0x00000008);
+                } else {
+                    memberListBuilder_.clear();
+                }
+                type_ = YouMaiGroup.GroupMemberOptType.GROUP_MEMBER_OPT_ADD;
+                bitField0_ = (bitField0_ & ~0x00000010);
+                dstMemberName_ = "";
+                bitField0_ = (bitField0_ & ~0x00000020);
+                return this;
+            }
+
+            public Builder clone() {
+                return create().mergeFrom(buildPartial());
+            }
+
+            public com.google.protobuf.Descriptors.Descriptor
+            getDescriptorForType() {
+                return YouMaiGroup.internal_static_com_proto_group_GroupMemberChangeTransferRsp_descriptor;
+            }
+
+            public YouMaiGroup.GroupMemberChangeTransferRsp getDefaultInstanceForType() {
+                return YouMaiGroup.GroupMemberChangeTransferRsp.getDefaultInstance();
+            }
+
+            public YouMaiGroup.GroupMemberChangeTransferRsp build() {
+                YouMaiGroup.GroupMemberChangeTransferRsp result = buildPartial();
+                if (!result.isInitialized()) {
+                    throw newUninitializedMessageException(result);
+                }
+                return result;
+            }
+
+            public YouMaiGroup.GroupMemberChangeTransferRsp buildPartial() {
+                YouMaiGroup.GroupMemberChangeTransferRsp result = new YouMaiGroup.GroupMemberChangeTransferRsp(this);
+                int from_bitField0_ = bitField0_;
+                int to_bitField0_ = 0;
+                if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+                    to_bitField0_ |= 0x00000001;
+                }
+                result.srcUserId_ = srcUserId_;
+                if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+                    to_bitField0_ |= 0x00000002;
+                }
+                result.groupId_ = groupId_;
+                if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+                    to_bitField0_ |= 0x00000004;
+                }
+                result.dstUserId_ = dstUserId_;
+                if (memberListBuilder_ == null) {
+                    if (((bitField0_ & 0x00000008) == 0x00000008)) {
+                        memberList_ = java.util.Collections.unmodifiableList(memberList_);
+                        bitField0_ = (bitField0_ & ~0x00000008);
+                    }
+                    result.memberList_ = memberList_;
+                } else {
+                    result.memberList_ = memberListBuilder_.build();
+                }
+                if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
+                    to_bitField0_ |= 0x00000008;
+                }
+                result.type_ = type_;
+                if (((from_bitField0_ & 0x00000020) == 0x00000020)) {
+                    to_bitField0_ |= 0x00000010;
+                }
+                result.dstMemberName_ = dstMemberName_;
+                result.bitField0_ = to_bitField0_;
+                onBuilt();
+                return result;
+            }
+
+            public Builder mergeFrom(com.google.protobuf.Message other) {
+                if (other instanceof YouMaiGroup.GroupMemberChangeTransferRsp) {
+                    return mergeFrom((YouMaiGroup.GroupMemberChangeTransferRsp) other);
+                } else {
+                    super.mergeFrom(other);
+                    return this;
+                }
+            }
+
+            public Builder mergeFrom(YouMaiGroup.GroupMemberChangeTransferRsp other) {
+                if (other == YouMaiGroup.GroupMemberChangeTransferRsp.getDefaultInstance())
+                    return this;
+                if (other.hasSrcUserId()) {
+                    bitField0_ |= 0x00000001;
+                    srcUserId_ = other.srcUserId_;
+                    onChanged();
+                }
+                if (other.hasGroupId()) {
+                    setGroupId(other.getGroupId());
+                }
+                if (other.hasDstUserId()) {
+                    bitField0_ |= 0x00000004;
+                    dstUserId_ = other.dstUserId_;
+                    onChanged();
+                }
+                if (memberListBuilder_ == null) {
+                    if (!other.memberList_.isEmpty()) {
+                        if (memberList_.isEmpty()) {
+                            memberList_ = other.memberList_;
+                            bitField0_ = (bitField0_ & ~0x00000008);
+                        } else {
+                            ensureMemberListIsMutable();
+                            memberList_.addAll(other.memberList_);
+                        }
+                        onChanged();
+                    }
+                } else {
+                    if (!other.memberList_.isEmpty()) {
+                        if (memberListBuilder_.isEmpty()) {
+                            memberListBuilder_.dispose();
+                            memberListBuilder_ = null;
+                            memberList_ = other.memberList_;
+                            bitField0_ = (bitField0_ & ~0x00000008);
+                            memberListBuilder_ =
+                                    com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
+                                            getMemberListFieldBuilder() : null;
+                        } else {
+                            memberListBuilder_.addAllMessages(other.memberList_);
+                        }
+                    }
+                }
+                if (other.hasType()) {
+                    setType(other.getType());
+                }
+                if (other.hasDstMemberName()) {
+                    bitField0_ |= 0x00000020;
+                    dstMemberName_ = other.dstMemberName_;
+                    onChanged();
+                }
+                this.mergeUnknownFields(other.getUnknownFields());
+                return this;
+            }
+
+            public final boolean isInitialized() {
+                if (!hasSrcUserId()) {
+
+                    return false;
+                }
+                if (!hasGroupId()) {
+
+                    return false;
+                }
+                if (!hasDstUserId()) {
+
+                    return false;
+                }
+                if (!hasType()) {
+
+                    return false;
+                }
+                for (int i = 0; i < getMemberListCount(); i++) {
+                    if (!getMemberList(i).isInitialized()) {
+
+                        return false;
+                    }
+                }
+                return true;
+            }
+
+            public Builder mergeFrom(
+                    com.google.protobuf.CodedInputStream input,
+                    com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                    throws java.io.IOException {
+                YouMaiGroup.GroupMemberChangeTransferRsp parsedMessage = null;
+                try {
+                    parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+                } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+                    parsedMessage = (YouMaiGroup.GroupMemberChangeTransferRsp) e.getUnfinishedMessage();
+                    throw e;
+                } finally {
+                    if (parsedMessage != null) {
+                        mergeFrom(parsedMessage);
+                    }
+                }
+                return this;
+            }
+
+            private int bitField0_;
+
+            private Object srcUserId_ = "";
+
+            /**
+             * <code>required string src_user_id = 1;</code>
+             * <p>
+             * <pre>
+             * cmd id:	 CID_GROUP_CHANGE_MEMBER_TRANSFER_RSP
+             * </pre>
+             */
+            public boolean hasSrcUserId() {
+                return ((bitField0_ & 0x00000001) == 0x00000001);
+            }
+
+            /**
+             * <code>required string src_user_id = 1;</code>
+             * <p>
+             * <pre>
+             * cmd id:	 CID_GROUP_CHANGE_MEMBER_TRANSFER_RSP
+             * </pre>
+             */
+            public String getSrcUserId() {
+                Object ref = srcUserId_;
+                if (!(ref instanceof String)) {
+                    com.google.protobuf.ByteString bs =
+                            (com.google.protobuf.ByteString) ref;
+                    String s = bs.toStringUtf8();
+                    if (bs.isValidUtf8()) {
+                        srcUserId_ = s;
+                    }
+                    return s;
+                } else {
+                    return (String) ref;
+                }
+            }
+
+            /**
+             * <code>required string src_user_id = 1;</code>
+             * <p>
+             * <pre>
+             * cmd id:	 CID_GROUP_CHANGE_MEMBER_TRANSFER_RSP
+             * </pre>
+             */
+            public com.google.protobuf.ByteString
+            getSrcUserIdBytes() {
+                Object ref = srcUserId_;
+                if (ref instanceof String) {
+                    com.google.protobuf.ByteString b =
+                            com.google.protobuf.ByteString.copyFromUtf8(
+                                    (String) ref);
+                    srcUserId_ = b;
+                    return b;
+                } else {
+                    return (com.google.protobuf.ByteString) ref;
+                }
+            }
+
+            /**
+             * <code>required string src_user_id = 1;</code>
+             * <p>
+             * <pre>
+             * cmd id:	 CID_GROUP_CHANGE_MEMBER_TRANSFER_RSP
+             * </pre>
+             */
+            public Builder setSrcUserId(
+                    String value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000001;
+                srcUserId_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>required string src_user_id = 1;</code>
+             * <p>
+             * <pre>
+             * cmd id:	 CID_GROUP_CHANGE_MEMBER_TRANSFER_RSP
+             * </pre>
+             */
+            public Builder clearSrcUserId() {
+                bitField0_ = (bitField0_ & ~0x00000001);
+                srcUserId_ = getDefaultInstance().getSrcUserId();
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>required string src_user_id = 1;</code>
+             * <p>
+             * <pre>
+             * cmd id:	 CID_GROUP_CHANGE_MEMBER_TRANSFER_RSP
+             * </pre>
+             */
+            public Builder setSrcUserIdBytes(
+                    com.google.protobuf.ByteString value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000001;
+                srcUserId_ = value;
+                onChanged();
+                return this;
+            }
+
+            private int groupId_;
+
+            /**
+             * <code>required uint32 group_id = 2;</code>
+             */
+            public boolean hasGroupId() {
+                return ((bitField0_ & 0x00000002) == 0x00000002);
+            }
+
+            /**
+             * <code>required uint32 group_id = 2;</code>
+             */
+            public int getGroupId() {
+                return groupId_;
+            }
+
+            /**
+             * <code>required uint32 group_id = 2;</code>
+             */
+            public Builder setGroupId(int value) {
+                bitField0_ |= 0x00000002;
+                groupId_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>required uint32 group_id = 2;</code>
+             */
+            public Builder clearGroupId() {
+                bitField0_ = (bitField0_ & ~0x00000002);
+                groupId_ = 0;
+                onChanged();
+                return this;
+            }
+
+            private Object dstUserId_ = "";
+
+            /**
+             * <code>required string dst_user_id = 3;</code>
+             */
+            public boolean hasDstUserId() {
+                return ((bitField0_ & 0x00000004) == 0x00000004);
+            }
+
+            /**
+             * <code>required string dst_user_id = 3;</code>
+             */
+            public String getDstUserId() {
+                Object ref = dstUserId_;
+                if (!(ref instanceof String)) {
+                    com.google.protobuf.ByteString bs =
+                            (com.google.protobuf.ByteString) ref;
+                    String s = bs.toStringUtf8();
+                    if (bs.isValidUtf8()) {
+                        dstUserId_ = s;
+                    }
+                    return s;
+                } else {
+                    return (String) ref;
+                }
+            }
+
+            /**
+             * <code>required string dst_user_id = 3;</code>
+             */
+            public com.google.protobuf.ByteString
+            getDstUserIdBytes() {
+                Object ref = dstUserId_;
+                if (ref instanceof String) {
+                    com.google.protobuf.ByteString b =
+                            com.google.protobuf.ByteString.copyFromUtf8(
+                                    (String) ref);
+                    dstUserId_ = b;
+                    return b;
+                } else {
+                    return (com.google.protobuf.ByteString) ref;
+                }
+            }
+
+            /**
+             * <code>required string dst_user_id = 3;</code>
+             */
+            public Builder setDstUserId(
+                    String value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000004;
+                dstUserId_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>required string dst_user_id = 3;</code>
+             */
+            public Builder clearDstUserId() {
+                bitField0_ = (bitField0_ & ~0x00000004);
+                dstUserId_ = getDefaultInstance().getDstUserId();
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>required string dst_user_id = 3;</code>
+             */
+            public Builder setDstUserIdBytes(
+                    com.google.protobuf.ByteString value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000004;
+                dstUserId_ = value;
+                onChanged();
+                return this;
+            }
+
+            private java.util.List<YouMaiGroup.GroupMemberItem> memberList_ =
+                    java.util.Collections.emptyList();
+
+            private void ensureMemberListIsMutable() {
+                if (!((bitField0_ & 0x00000008) == 0x00000008)) {
+                    memberList_ = new java.util.ArrayList<YouMaiGroup.GroupMemberItem>(memberList_);
+                    bitField0_ |= 0x00000008;
+                }
+            }
+
+            private com.google.protobuf.RepeatedFieldBuilder<
+                    YouMaiGroup.GroupMemberItem, YouMaiGroup.GroupMemberItem.Builder, YouMaiGroup.GroupMemberItemOrBuilder> memberListBuilder_;
+
+            /**
+             * <code>repeated .GroupMemberItem member_list = 4;</code>
+             */
+            public java.util.List<YouMaiGroup.GroupMemberItem> getMemberListList() {
+                if (memberListBuilder_ == null) {
+                    return java.util.Collections.unmodifiableList(memberList_);
+                } else {
+                    return memberListBuilder_.getMessageList();
+                }
+            }
+
+            /**
+             * <code>repeated .GroupMemberItem member_list = 4;</code>
+             */
+            public int getMemberListCount() {
+                if (memberListBuilder_ == null) {
+                    return memberList_.size();
+                } else {
+                    return memberListBuilder_.getCount();
+                }
+            }
+
+            /**
+             * <code>repeated .GroupMemberItem member_list = 4;</code>
+             */
+            public YouMaiGroup.GroupMemberItem getMemberList(int index) {
+                if (memberListBuilder_ == null) {
+                    return memberList_.get(index);
+                } else {
+                    return memberListBuilder_.getMessage(index);
+                }
+            }
+
+            /**
+             * <code>repeated .GroupMemberItem member_list = 4;</code>
+             */
+            public Builder setMemberList(
+                    int index, YouMaiGroup.GroupMemberItem value) {
+                if (memberListBuilder_ == null) {
+                    if (value == null) {
+                        throw new NullPointerException();
+                    }
+                    ensureMemberListIsMutable();
+                    memberList_.set(index, value);
+                    onChanged();
+                } else {
+                    memberListBuilder_.setMessage(index, value);
+                }
+                return this;
+            }
+
+            /**
+             * <code>repeated .GroupMemberItem member_list = 4;</code>
+             */
+            public Builder setMemberList(
+                    int index, YouMaiGroup.GroupMemberItem.Builder builderForValue) {
+                if (memberListBuilder_ == null) {
+                    ensureMemberListIsMutable();
+                    memberList_.set(index, builderForValue.build());
+                    onChanged();
+                } else {
+                    memberListBuilder_.setMessage(index, builderForValue.build());
+                }
+                return this;
+            }
+
+            /**
+             * <code>repeated .GroupMemberItem member_list = 4;</code>
+             */
+            public Builder addMemberList(YouMaiGroup.GroupMemberItem value) {
+                if (memberListBuilder_ == null) {
+                    if (value == null) {
+                        throw new NullPointerException();
+                    }
+                    ensureMemberListIsMutable();
+                    memberList_.add(value);
+                    onChanged();
+                } else {
+                    memberListBuilder_.addMessage(value);
+                }
+                return this;
+            }
+
+            /**
+             * <code>repeated .GroupMemberItem member_list = 4;</code>
+             */
+            public Builder addMemberList(
+                    int index, YouMaiGroup.GroupMemberItem value) {
+                if (memberListBuilder_ == null) {
+                    if (value == null) {
+                        throw new NullPointerException();
+                    }
+                    ensureMemberListIsMutable();
+                    memberList_.add(index, value);
+                    onChanged();
+                } else {
+                    memberListBuilder_.addMessage(index, value);
+                }
+                return this;
+            }
+
+            /**
+             * <code>repeated .GroupMemberItem member_list = 4;</code>
+             */
+            public Builder addMemberList(
+                    YouMaiGroup.GroupMemberItem.Builder builderForValue) {
+                if (memberListBuilder_ == null) {
+                    ensureMemberListIsMutable();
+                    memberList_.add(builderForValue.build());
+                    onChanged();
+                } else {
+                    memberListBuilder_.addMessage(builderForValue.build());
+                }
+                return this;
+            }
+
+            /**
+             * <code>repeated .GroupMemberItem member_list = 4;</code>
+             */
+            public Builder addMemberList(
+                    int index, YouMaiGroup.GroupMemberItem.Builder builderForValue) {
+                if (memberListBuilder_ == null) {
+                    ensureMemberListIsMutable();
+                    memberList_.add(index, builderForValue.build());
+                    onChanged();
+                } else {
+                    memberListBuilder_.addMessage(index, builderForValue.build());
+                }
+                return this;
+            }
+
+            /**
+             * <code>repeated .GroupMemberItem member_list = 4;</code>
+             */
+            public Builder addAllMemberList(
+                    Iterable<? extends YouMaiGroup.GroupMemberItem> values) {
+                if (memberListBuilder_ == null) {
+                    ensureMemberListIsMutable();
+                    com.google.protobuf.AbstractMessageLite.Builder.addAll(
+                            values, memberList_);
+                    onChanged();
+                } else {
+                    memberListBuilder_.addAllMessages(values);
+                }
+                return this;
+            }
+
+            /**
+             * <code>repeated .GroupMemberItem member_list = 4;</code>
+             */
+            public Builder clearMemberList() {
+                if (memberListBuilder_ == null) {
+                    memberList_ = java.util.Collections.emptyList();
+                    bitField0_ = (bitField0_ & ~0x00000008);
+                    onChanged();
+                } else {
+                    memberListBuilder_.clear();
+                }
+                return this;
+            }
+
+            /**
+             * <code>repeated .GroupMemberItem member_list = 4;</code>
+             */
+            public Builder removeMemberList(int index) {
+                if (memberListBuilder_ == null) {
+                    ensureMemberListIsMutable();
+                    memberList_.remove(index);
+                    onChanged();
+                } else {
+                    memberListBuilder_.remove(index);
+                }
+                return this;
+            }
+
+            /**
+             * <code>repeated .GroupMemberItem member_list = 4;</code>
+             */
+            public YouMaiGroup.GroupMemberItem.Builder getMemberListBuilder(
+                    int index) {
+                return getMemberListFieldBuilder().getBuilder(index);
+            }
+
+            /**
+             * <code>repeated .GroupMemberItem member_list = 4;</code>
+             */
+            public YouMaiGroup.GroupMemberItemOrBuilder getMemberListOrBuilder(
+                    int index) {
+                if (memberListBuilder_ == null) {
+                    return memberList_.get(index);
+                } else {
+                    return memberListBuilder_.getMessageOrBuilder(index);
+                }
+            }
+
+            /**
+             * <code>repeated .GroupMemberItem member_list = 4;</code>
+             */
+            public java.util.List<? extends YouMaiGroup.GroupMemberItemOrBuilder>
+            getMemberListOrBuilderList() {
+                if (memberListBuilder_ != null) {
+                    return memberListBuilder_.getMessageOrBuilderList();
+                } else {
+                    return java.util.Collections.unmodifiableList(memberList_);
+                }
+            }
+
+            /**
+             * <code>repeated .GroupMemberItem member_list = 4;</code>
+             */
+            public YouMaiGroup.GroupMemberItem.Builder addMemberListBuilder() {
+                return getMemberListFieldBuilder().addBuilder(
+                        YouMaiGroup.GroupMemberItem.getDefaultInstance());
+            }
+
+            /**
+             * <code>repeated .GroupMemberItem member_list = 4;</code>
+             */
+            public YouMaiGroup.GroupMemberItem.Builder addMemberListBuilder(
+                    int index) {
+                return getMemberListFieldBuilder().addBuilder(
+                        index, YouMaiGroup.GroupMemberItem.getDefaultInstance());
+            }
+
+            /**
+             * <code>repeated .GroupMemberItem member_list = 4;</code>
+             */
+            public java.util.List<YouMaiGroup.GroupMemberItem.Builder>
+            getMemberListBuilderList() {
+                return getMemberListFieldBuilder().getBuilderList();
+            }
+
+            private com.google.protobuf.RepeatedFieldBuilder<
+                    YouMaiGroup.GroupMemberItem, YouMaiGroup.GroupMemberItem.Builder, YouMaiGroup.GroupMemberItemOrBuilder>
+            getMemberListFieldBuilder() {
+                if (memberListBuilder_ == null) {
+                    memberListBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
+                            YouMaiGroup.GroupMemberItem, YouMaiGroup.GroupMemberItem.Builder, YouMaiGroup.GroupMemberItemOrBuilder>(
+                            memberList_,
+                            ((bitField0_ & 0x00000008) == 0x00000008),
+                            getParentForChildren(),
+                            isClean());
+                    memberList_ = null;
+                }
+                return memberListBuilder_;
+            }
+
+            private YouMaiGroup.GroupMemberOptType type_ = YouMaiGroup.GroupMemberOptType.GROUP_MEMBER_OPT_ADD;
+
+            /**
+             * <code>required .GroupMemberOptType type = 5;</code>
+             */
+            public boolean hasType() {
+                return ((bitField0_ & 0x00000010) == 0x00000010);
+            }
+
+            /**
+             * <code>required .GroupMemberOptType type = 5;</code>
+             */
+            public YouMaiGroup.GroupMemberOptType getType() {
+                return type_;
+            }
+
+            /**
+             * <code>required .GroupMemberOptType type = 5;</code>
+             */
+            public Builder setType(YouMaiGroup.GroupMemberOptType value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000010;
+                type_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>required .GroupMemberOptType type = 5;</code>
+             */
+            public Builder clearType() {
+                bitField0_ = (bitField0_ & ~0x00000010);
+                type_ = YouMaiGroup.GroupMemberOptType.GROUP_MEMBER_OPT_ADD;
+                onChanged();
+                return this;
+            }
+
+            private Object dstMemberName_ = "";
+
+            /**
+             * <code>optional string dst_member_name = 6;</code>
+             */
+            public boolean hasDstMemberName() {
+                return ((bitField0_ & 0x00000020) == 0x00000020);
+            }
+
+            /**
+             * <code>optional string dst_member_name = 6;</code>
+             */
+            public String getDstMemberName() {
+                Object ref = dstMemberName_;
+                if (!(ref instanceof String)) {
+                    com.google.protobuf.ByteString bs =
+                            (com.google.protobuf.ByteString) ref;
+                    String s = bs.toStringUtf8();
+                    if (bs.isValidUtf8()) {
+                        dstMemberName_ = s;
+                    }
+                    return s;
+                } else {
+                    return (String) ref;
+                }
+            }
+
+            /**
+             * <code>optional string dst_member_name = 6;</code>
+             */
+            public com.google.protobuf.ByteString
+            getDstMemberNameBytes() {
+                Object ref = dstMemberName_;
+                if (ref instanceof String) {
+                    com.google.protobuf.ByteString b =
+                            com.google.protobuf.ByteString.copyFromUtf8(
+                                    (String) ref);
+                    dstMemberName_ = b;
+                    return b;
+                } else {
+                    return (com.google.protobuf.ByteString) ref;
+                }
+            }
+
+            /**
+             * <code>optional string dst_member_name = 6;</code>
+             */
+            public Builder setDstMemberName(
+                    String value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000020;
+                dstMemberName_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string dst_member_name = 6;</code>
+             */
+            public Builder clearDstMemberName() {
+                bitField0_ = (bitField0_ & ~0x00000020);
+                dstMemberName_ = getDefaultInstance().getDstMemberName();
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string dst_member_name = 6;</code>
+             */
+            public Builder setDstMemberNameBytes(
+                    com.google.protobuf.ByteString value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000020;
+                dstMemberName_ = value;
+                onChanged();
+                return this;
+            }
+
+            // @@protoc_insertion_point(builder_scope:GroupMemberChangeTransferRsp)
+        }
+
+        static {
+            defaultInstance = new GroupMemberChangeTransferRsp(true);
+            defaultInstance.initFields();
+        }
+
+        // @@protoc_insertion_point(class_scope:GroupMemberChangeTransferRsp)
     }
 
     public interface GroupMemberChangeRspOrBuilder extends
@@ -9261,6 +12979,38 @@ public final class YouMaiGroup {
          * <code>optional uint64 update_time = 4;</code>
          */
         long getUpdateTime();
+
+        /**
+         * <code>optional string user_id = 5;</code>
+         */
+        boolean hasUserId();
+
+        /**
+         * <code>optional string user_id = 5;</code>
+         */
+        String getUserId();
+
+        /**
+         * <code>optional string user_id = 5;</code>
+         */
+        com.google.protobuf.ByteString
+        getUserIdBytes();
+
+        /**
+         * <code>optional string member_name = 6;</code>
+         */
+        boolean hasMemberName();
+
+        /**
+         * <code>optional string member_name = 6;</code>
+         */
+        String getMemberName();
+
+        /**
+         * <code>optional string member_name = 6;</code>
+         */
+        com.google.protobuf.ByteString
+        getMemberNameBytes();
 
         /**
          * <code>optional .ResultCode result = 10;</code>
@@ -9364,13 +13114,25 @@ public final class YouMaiGroup {
                             updateTime_ = input.readUInt64();
                             break;
                         }
+                        case 42: {
+                            com.google.protobuf.ByteString bs = input.readBytes();
+                            bitField0_ |= 0x00000008;
+                            userId_ = bs;
+                            break;
+                        }
+                        case 50: {
+                            com.google.protobuf.ByteString bs = input.readBytes();
+                            bitField0_ |= 0x00000010;
+                            memberName_ = bs;
+                            break;
+                        }
                         case 80: {
                             int rawValue = input.readEnum();
                             YouMaiBasic.ResultCode value = YouMaiBasic.ResultCode.valueOf(rawValue);
                             if (value == null) {
                                 unknownFields.mergeVarintField(10, rawValue);
                             } else {
-                                bitField0_ |= 0x00000008;
+                                bitField0_ |= 0x00000020;
                                 result_ = value;
                             }
                             break;
@@ -9510,6 +13272,96 @@ public final class YouMaiGroup {
             return updateTime_;
         }
 
+        public static final int USER_ID_FIELD_NUMBER = 5;
+        private Object userId_;
+
+        /**
+         * <code>optional string user_id = 5;</code>
+         */
+        public boolean hasUserId() {
+            return ((bitField0_ & 0x00000008) == 0x00000008);
+        }
+
+        /**
+         * <code>optional string user_id = 5;</code>
+         */
+        public String getUserId() {
+            Object ref = userId_;
+            if (ref instanceof String) {
+                return (String) ref;
+            } else {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                String s = bs.toStringUtf8();
+                if (bs.isValidUtf8()) {
+                    userId_ = s;
+                }
+                return s;
+            }
+        }
+
+        /**
+         * <code>optional string user_id = 5;</code>
+         */
+        public com.google.protobuf.ByteString
+        getUserIdBytes() {
+            Object ref = userId_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (String) ref);
+                userId_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
+        public static final int MEMBER_NAME_FIELD_NUMBER = 6;
+        private Object memberName_;
+
+        /**
+         * <code>optional string member_name = 6;</code>
+         */
+        public boolean hasMemberName() {
+            return ((bitField0_ & 0x00000010) == 0x00000010);
+        }
+
+        /**
+         * <code>optional string member_name = 6;</code>
+         */
+        public String getMemberName() {
+            Object ref = memberName_;
+            if (ref instanceof String) {
+                return (String) ref;
+            } else {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                String s = bs.toStringUtf8();
+                if (bs.isValidUtf8()) {
+                    memberName_ = s;
+                }
+                return s;
+            }
+        }
+
+        /**
+         * <code>optional string member_name = 6;</code>
+         */
+        public com.google.protobuf.ByteString
+        getMemberNameBytes() {
+            Object ref = memberName_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (String) ref);
+                memberName_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
         public static final int RESULT_FIELD_NUMBER = 10;
         private YouMaiBasic.ResultCode result_;
 
@@ -9517,7 +13369,7 @@ public final class YouMaiGroup {
          * <code>optional .ResultCode result = 10;</code>
          */
         public boolean hasResult() {
-            return ((bitField0_ & 0x00000008) == 0x00000008);
+            return ((bitField0_ & 0x00000020) == 0x00000020);
         }
 
         /**
@@ -9532,6 +13384,8 @@ public final class YouMaiGroup {
             memberList_ = java.util.Collections.emptyList();
             type_ = YouMaiGroup.GroupMemberOptType.GROUP_MEMBER_OPT_ADD;
             updateTime_ = 0L;
+            userId_ = "";
+            memberName_ = "";
             result_ = YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
         }
 
@@ -9576,6 +13430,12 @@ public final class YouMaiGroup {
                 output.writeUInt64(4, updateTime_);
             }
             if (((bitField0_ & 0x00000008) == 0x00000008)) {
+                output.writeBytes(5, getUserIdBytes());
+            }
+            if (((bitField0_ & 0x00000010) == 0x00000010)) {
+                output.writeBytes(6, getMemberNameBytes());
+            }
+            if (((bitField0_ & 0x00000020) == 0x00000020)) {
                 output.writeEnum(10, result_.getNumber());
             }
             getUnknownFields().writeTo(output);
@@ -9605,6 +13465,14 @@ public final class YouMaiGroup {
                         .computeUInt64Size(4, updateTime_);
             }
             if (((bitField0_ & 0x00000008) == 0x00000008)) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeBytesSize(5, getUserIdBytes());
+            }
+            if (((bitField0_ & 0x00000010) == 0x00000010)) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeBytesSize(6, getMemberNameBytes());
+            }
+            if (((bitField0_ & 0x00000020) == 0x00000020)) {
                 size += com.google.protobuf.CodedOutputStream
                         .computeEnumSize(10, result_.getNumber());
             }
@@ -9764,8 +13632,12 @@ public final class YouMaiGroup {
                 bitField0_ = (bitField0_ & ~0x00000004);
                 updateTime_ = 0L;
                 bitField0_ = (bitField0_ & ~0x00000008);
-                result_ = YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
+                userId_ = "";
                 bitField0_ = (bitField0_ & ~0x00000010);
+                memberName_ = "";
+                bitField0_ = (bitField0_ & ~0x00000020);
+                result_ = YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
+                bitField0_ = (bitField0_ & ~0x00000040);
                 return this;
             }
 
@@ -9818,6 +13690,14 @@ public final class YouMaiGroup {
                 if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
                     to_bitField0_ |= 0x00000008;
                 }
+                result.userId_ = userId_;
+                if (((from_bitField0_ & 0x00000020) == 0x00000020)) {
+                    to_bitField0_ |= 0x00000010;
+                }
+                result.memberName_ = memberName_;
+                if (((from_bitField0_ & 0x00000040) == 0x00000040)) {
+                    to_bitField0_ |= 0x00000020;
+                }
                 result.result_ = result_;
                 result.bitField0_ = to_bitField0_;
                 onBuilt();
@@ -9869,6 +13749,16 @@ public final class YouMaiGroup {
                 }
                 if (other.hasUpdateTime()) {
                     setUpdateTime(other.getUpdateTime());
+                }
+                if (other.hasUserId()) {
+                    bitField0_ |= 0x00000010;
+                    userId_ = other.userId_;
+                    onChanged();
+                }
+                if (other.hasMemberName()) {
+                    bitField0_ |= 0x00000020;
+                    memberName_ = other.memberName_;
+                    onChanged();
                 }
                 if (other.hasResult()) {
                     setResult(other.getResult());
@@ -10286,13 +14176,177 @@ public final class YouMaiGroup {
                 return this;
             }
 
+            private Object userId_ = "";
+
+            /**
+             * <code>optional string user_id = 5;</code>
+             */
+            public boolean hasUserId() {
+                return ((bitField0_ & 0x00000010) == 0x00000010);
+            }
+
+            /**
+             * <code>optional string user_id = 5;</code>
+             */
+            public String getUserId() {
+                Object ref = userId_;
+                if (!(ref instanceof String)) {
+                    com.google.protobuf.ByteString bs =
+                            (com.google.protobuf.ByteString) ref;
+                    String s = bs.toStringUtf8();
+                    if (bs.isValidUtf8()) {
+                        userId_ = s;
+                    }
+                    return s;
+                } else {
+                    return (String) ref;
+                }
+            }
+
+            /**
+             * <code>optional string user_id = 5;</code>
+             */
+            public com.google.protobuf.ByteString
+            getUserIdBytes() {
+                Object ref = userId_;
+                if (ref instanceof String) {
+                    com.google.protobuf.ByteString b =
+                            com.google.protobuf.ByteString.copyFromUtf8(
+                                    (String) ref);
+                    userId_ = b;
+                    return b;
+                } else {
+                    return (com.google.protobuf.ByteString) ref;
+                }
+            }
+
+            /**
+             * <code>optional string user_id = 5;</code>
+             */
+            public Builder setUserId(
+                    String value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000010;
+                userId_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string user_id = 5;</code>
+             */
+            public Builder clearUserId() {
+                bitField0_ = (bitField0_ & ~0x00000010);
+                userId_ = getDefaultInstance().getUserId();
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string user_id = 5;</code>
+             */
+            public Builder setUserIdBytes(
+                    com.google.protobuf.ByteString value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000010;
+                userId_ = value;
+                onChanged();
+                return this;
+            }
+
+            private Object memberName_ = "";
+
+            /**
+             * <code>optional string member_name = 6;</code>
+             */
+            public boolean hasMemberName() {
+                return ((bitField0_ & 0x00000020) == 0x00000020);
+            }
+
+            /**
+             * <code>optional string member_name = 6;</code>
+             */
+            public String getMemberName() {
+                Object ref = memberName_;
+                if (!(ref instanceof String)) {
+                    com.google.protobuf.ByteString bs =
+                            (com.google.protobuf.ByteString) ref;
+                    String s = bs.toStringUtf8();
+                    if (bs.isValidUtf8()) {
+                        memberName_ = s;
+                    }
+                    return s;
+                } else {
+                    return (String) ref;
+                }
+            }
+
+            /**
+             * <code>optional string member_name = 6;</code>
+             */
+            public com.google.protobuf.ByteString
+            getMemberNameBytes() {
+                Object ref = memberName_;
+                if (ref instanceof String) {
+                    com.google.protobuf.ByteString b =
+                            com.google.protobuf.ByteString.copyFromUtf8(
+                                    (String) ref);
+                    memberName_ = b;
+                    return b;
+                } else {
+                    return (com.google.protobuf.ByteString) ref;
+                }
+            }
+
+            /**
+             * <code>optional string member_name = 6;</code>
+             */
+            public Builder setMemberName(
+                    String value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000020;
+                memberName_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string member_name = 6;</code>
+             */
+            public Builder clearMemberName() {
+                bitField0_ = (bitField0_ & ~0x00000020);
+                memberName_ = getDefaultInstance().getMemberName();
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string member_name = 6;</code>
+             */
+            public Builder setMemberNameBytes(
+                    com.google.protobuf.ByteString value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000020;
+                memberName_ = value;
+                onChanged();
+                return this;
+            }
+
             private YouMaiBasic.ResultCode result_ = YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
 
             /**
              * <code>optional .ResultCode result = 10;</code>
              */
             public boolean hasResult() {
-                return ((bitField0_ & 0x00000010) == 0x00000010);
+                return ((bitField0_ & 0x00000040) == 0x00000040);
             }
 
             /**
@@ -10309,7 +14363,7 @@ public final class YouMaiGroup {
                 if (value == null) {
                     throw new NullPointerException();
                 }
-                bitField0_ |= 0x00000010;
+                bitField0_ |= 0x00000040;
                 result_ = value;
                 onChanged();
                 return this;
@@ -10319,7 +14373,7 @@ public final class YouMaiGroup {
              * <code>optional .ResultCode result = 10;</code>
              */
             public Builder clearResult() {
-                bitField0_ = (bitField0_ & ~0x00000010);
+                bitField0_ = (bitField0_ & ~0x00000040);
                 result_ = YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
                 onChanged();
                 return this;
@@ -10405,6 +14459,22 @@ public final class YouMaiGroup {
          * <code>optional uint64 update_time = 4;</code>
          */
         long getUpdateTime();
+
+        /**
+         * <code>optional string member_name = 5;</code>
+         */
+        boolean hasMemberName();
+
+        /**
+         * <code>optional string member_name = 5;</code>
+         */
+        String getMemberName();
+
+        /**
+         * <code>optional string member_name = 5;</code>
+         */
+        com.google.protobuf.ByteString
+        getMemberNameBytes();
     }
 
     /**
@@ -10492,6 +14562,12 @@ public final class YouMaiGroup {
                         case 32: {
                             bitField0_ |= 0x00000004;
                             updateTime_ = input.readUInt64();
+                            break;
+                        }
+                        case 42: {
+                            com.google.protobuf.ByteString bs = input.readBytes();
+                            bitField0_ |= 0x00000008;
+                            memberName_ = bs;
                             break;
                         }
                     }
@@ -10637,11 +14713,57 @@ public final class YouMaiGroup {
             return updateTime_;
         }
 
+        public static final int MEMBER_NAME_FIELD_NUMBER = 5;
+        private Object memberName_;
+
+        /**
+         * <code>optional string member_name = 5;</code>
+         */
+        public boolean hasMemberName() {
+            return ((bitField0_ & 0x00000008) == 0x00000008);
+        }
+
+        /**
+         * <code>optional string member_name = 5;</code>
+         */
+        public String getMemberName() {
+            Object ref = memberName_;
+            if (ref instanceof String) {
+                return (String) ref;
+            } else {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                String s = bs.toStringUtf8();
+                if (bs.isValidUtf8()) {
+                    memberName_ = s;
+                }
+                return s;
+            }
+        }
+
+        /**
+         * <code>optional string member_name = 5;</code>
+         */
+        public com.google.protobuf.ByteString
+        getMemberNameBytes() {
+            Object ref = memberName_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (String) ref);
+                memberName_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
         private void initFields() {
             groupId_ = 0;
             memberList_ = java.util.Collections.emptyList();
             type_ = YouMaiGroup.GroupMemberOptType.GROUP_MEMBER_OPT_ADD;
             updateTime_ = 0L;
+            memberName_ = "";
         }
 
         private byte memoizedIsInitialized = -1;
@@ -10684,6 +14806,9 @@ public final class YouMaiGroup {
             if (((bitField0_ & 0x00000004) == 0x00000004)) {
                 output.writeUInt64(4, updateTime_);
             }
+            if (((bitField0_ & 0x00000008) == 0x00000008)) {
+                output.writeBytes(5, getMemberNameBytes());
+            }
             getUnknownFields().writeTo(output);
         }
 
@@ -10709,6 +14834,10 @@ public final class YouMaiGroup {
             if (((bitField0_ & 0x00000004) == 0x00000004)) {
                 size += com.google.protobuf.CodedOutputStream
                         .computeUInt64Size(4, updateTime_);
+            }
+            if (((bitField0_ & 0x00000008) == 0x00000008)) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeBytesSize(5, getMemberNameBytes());
             }
             size += getUnknownFields().getSerializedSize();
             memoizedSerializedSize = size;
@@ -10862,6 +14991,8 @@ public final class YouMaiGroup {
                 bitField0_ = (bitField0_ & ~0x00000004);
                 updateTime_ = 0L;
                 bitField0_ = (bitField0_ & ~0x00000008);
+                memberName_ = "";
+                bitField0_ = (bitField0_ & ~0x00000010);
                 return this;
             }
 
@@ -10911,6 +15042,10 @@ public final class YouMaiGroup {
                     to_bitField0_ |= 0x00000004;
                 }
                 result.updateTime_ = updateTime_;
+                if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
+                    to_bitField0_ |= 0x00000008;
+                }
+                result.memberName_ = memberName_;
                 result.bitField0_ = to_bitField0_;
                 onBuilt();
                 return result;
@@ -10961,6 +15096,11 @@ public final class YouMaiGroup {
                 }
                 if (other.hasUpdateTime()) {
                     setUpdateTime(other.getUpdateTime());
+                }
+                if (other.hasMemberName()) {
+                    bitField0_ |= 0x00000010;
+                    memberName_ = other.memberName_;
+                    onChanged();
                 }
                 this.mergeUnknownFields(other.getUnknownFields());
                 return this;
@@ -11387,6 +15527,88 @@ public final class YouMaiGroup {
             public Builder clearUpdateTime() {
                 bitField0_ = (bitField0_ & ~0x00000008);
                 updateTime_ = 0L;
+                onChanged();
+                return this;
+            }
+
+            private Object memberName_ = "";
+
+            /**
+             * <code>optional string member_name = 5;</code>
+             */
+            public boolean hasMemberName() {
+                return ((bitField0_ & 0x00000010) == 0x00000010);
+            }
+
+            /**
+             * <code>optional string member_name = 5;</code>
+             */
+            public String getMemberName() {
+                Object ref = memberName_;
+                if (!(ref instanceof String)) {
+                    com.google.protobuf.ByteString bs =
+                            (com.google.protobuf.ByteString) ref;
+                    String s = bs.toStringUtf8();
+                    if (bs.isValidUtf8()) {
+                        memberName_ = s;
+                    }
+                    return s;
+                } else {
+                    return (String) ref;
+                }
+            }
+
+            /**
+             * <code>optional string member_name = 5;</code>
+             */
+            public com.google.protobuf.ByteString
+            getMemberNameBytes() {
+                Object ref = memberName_;
+                if (ref instanceof String) {
+                    com.google.protobuf.ByteString b =
+                            com.google.protobuf.ByteString.copyFromUtf8(
+                                    (String) ref);
+                    memberName_ = b;
+                    return b;
+                } else {
+                    return (com.google.protobuf.ByteString) ref;
+                }
+            }
+
+            /**
+             * <code>optional string member_name = 5;</code>
+             */
+            public Builder setMemberName(
+                    String value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000010;
+                memberName_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string member_name = 5;</code>
+             */
+            public Builder clearMemberName() {
+                bitField0_ = (bitField0_ & ~0x00000010);
+                memberName_ = getDefaultInstance().getMemberName();
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string member_name = 5;</code>
+             */
+            public Builder setMemberNameBytes(
+                    com.google.protobuf.ByteString value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000010;
+                memberName_ = value;
                 onChanged();
                 return this;
             }
@@ -17236,20 +21458,36 @@ public final class YouMaiGroup {
         YouMaiGroup.GroupInfoModifyType getType();
 
         /**
-         * <code>required string member_name = 8;</code>
+         * <code>required string src_owner_name = 8;</code>
          */
-        boolean hasMemberName();
+        boolean hasSrcOwnerName();
 
         /**
-         * <code>required string member_name = 8;</code>
+         * <code>required string src_owner_name = 8;</code>
          */
-        String getMemberName();
+        String getSrcOwnerName();
 
         /**
-         * <code>required string member_name = 8;</code>
+         * <code>required string src_owner_name = 8;</code>
          */
         com.google.protobuf.ByteString
-        getMemberNameBytes();
+        getSrcOwnerNameBytes();
+
+        /**
+         * <code>optional string dst_owner_name = 9;</code>
+         */
+        boolean hasDstOwnerName();
+
+        /**
+         * <code>optional string dst_owner_name = 9;</code>
+         */
+        String getDstOwnerName();
+
+        /**
+         * <code>optional string dst_owner_name = 9;</code>
+         */
+        com.google.protobuf.ByteString
+        getDstOwnerNameBytes();
     }
 
     /**
@@ -17363,7 +21601,13 @@ public final class YouMaiGroup {
                         case 66: {
                             com.google.protobuf.ByteString bs = input.readBytes();
                             bitField0_ |= 0x00000080;
-                            memberName_ = bs;
+                            srcOwnerName_ = bs;
+                            break;
+                        }
+                        case 74: {
+                            com.google.protobuf.ByteString bs = input.readBytes();
+                            bitField0_ |= 0x00000100;
+                            dstOwnerName_ = bs;
                             break;
                         }
                     }
@@ -17702,21 +21946,21 @@ public final class YouMaiGroup {
             return type_;
         }
 
-        public static final int MEMBER_NAME_FIELD_NUMBER = 8;
-        private Object memberName_;
+        public static final int SRC_OWNER_NAME_FIELD_NUMBER = 8;
+        private Object srcOwnerName_;
 
         /**
-         * <code>required string member_name = 8;</code>
+         * <code>required string src_owner_name = 8;</code>
          */
-        public boolean hasMemberName() {
+        public boolean hasSrcOwnerName() {
             return ((bitField0_ & 0x00000080) == 0x00000080);
         }
 
         /**
-         * <code>required string member_name = 8;</code>
+         * <code>required string src_owner_name = 8;</code>
          */
-        public String getMemberName() {
-            Object ref = memberName_;
+        public String getSrcOwnerName() {
+            Object ref = srcOwnerName_;
             if (ref instanceof String) {
                 return (String) ref;
             } else {
@@ -17724,23 +21968,68 @@ public final class YouMaiGroup {
                         (com.google.protobuf.ByteString) ref;
                 String s = bs.toStringUtf8();
                 if (bs.isValidUtf8()) {
-                    memberName_ = s;
+                    srcOwnerName_ = s;
                 }
                 return s;
             }
         }
 
         /**
-         * <code>required string member_name = 8;</code>
+         * <code>required string src_owner_name = 8;</code>
          */
         public com.google.protobuf.ByteString
-        getMemberNameBytes() {
-            Object ref = memberName_;
+        getSrcOwnerNameBytes() {
+            Object ref = srcOwnerName_;
             if (ref instanceof String) {
                 com.google.protobuf.ByteString b =
                         com.google.protobuf.ByteString.copyFromUtf8(
                                 (String) ref);
-                memberName_ = b;
+                srcOwnerName_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
+        public static final int DST_OWNER_NAME_FIELD_NUMBER = 9;
+        private Object dstOwnerName_;
+
+        /**
+         * <code>optional string dst_owner_name = 9;</code>
+         */
+        public boolean hasDstOwnerName() {
+            return ((bitField0_ & 0x00000100) == 0x00000100);
+        }
+
+        /**
+         * <code>optional string dst_owner_name = 9;</code>
+         */
+        public String getDstOwnerName() {
+            Object ref = dstOwnerName_;
+            if (ref instanceof String) {
+                return (String) ref;
+            } else {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                String s = bs.toStringUtf8();
+                if (bs.isValidUtf8()) {
+                    dstOwnerName_ = s;
+                }
+                return s;
+            }
+        }
+
+        /**
+         * <code>optional string dst_owner_name = 9;</code>
+         */
+        public com.google.protobuf.ByteString
+        getDstOwnerNameBytes() {
+            Object ref = dstOwnerName_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (String) ref);
+                dstOwnerName_ = b;
                 return b;
             } else {
                 return (com.google.protobuf.ByteString) ref;
@@ -17755,7 +22044,8 @@ public final class YouMaiGroup {
             topic_ = "";
             ownerId_ = "";
             type_ = YouMaiGroup.GroupInfoModifyType.MODIFY_NAME;
-            memberName_ = "";
+            srcOwnerName_ = "";
+            dstOwnerName_ = "";
         }
 
         private byte memoizedIsInitialized = -1;
@@ -17777,7 +22067,7 @@ public final class YouMaiGroup {
                 memoizedIsInitialized = 0;
                 return false;
             }
-            if (!hasMemberName()) {
+            if (!hasSrcOwnerName()) {
                 memoizedIsInitialized = 0;
                 return false;
             }
@@ -17810,7 +22100,10 @@ public final class YouMaiGroup {
                 output.writeEnum(7, type_.getNumber());
             }
             if (((bitField0_ & 0x00000080) == 0x00000080)) {
-                output.writeBytes(8, getMemberNameBytes());
+                output.writeBytes(8, getSrcOwnerNameBytes());
+            }
+            if (((bitField0_ & 0x00000100) == 0x00000100)) {
+                output.writeBytes(9, getDstOwnerNameBytes());
             }
             getUnknownFields().writeTo(output);
         }
@@ -17852,7 +22145,11 @@ public final class YouMaiGroup {
             }
             if (((bitField0_ & 0x00000080) == 0x00000080)) {
                 size += com.google.protobuf.CodedOutputStream
-                        .computeBytesSize(8, getMemberNameBytes());
+                        .computeBytesSize(8, getSrcOwnerNameBytes());
+            }
+            if (((bitField0_ & 0x00000100) == 0x00000100)) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeBytesSize(9, getDstOwnerNameBytes());
             }
             size += getUnknownFields().getSerializedSize();
             memoizedSerializedSize = size;
@@ -18011,8 +22308,10 @@ public final class YouMaiGroup {
                 bitField0_ = (bitField0_ & ~0x00000020);
                 type_ = YouMaiGroup.GroupInfoModifyType.MODIFY_NAME;
                 bitField0_ = (bitField0_ & ~0x00000040);
-                memberName_ = "";
+                srcOwnerName_ = "";
                 bitField0_ = (bitField0_ & ~0x00000080);
+                dstOwnerName_ = "";
+                bitField0_ = (bitField0_ & ~0x00000100);
                 return this;
             }
 
@@ -18072,7 +22371,11 @@ public final class YouMaiGroup {
                 if (((from_bitField0_ & 0x00000080) == 0x00000080)) {
                     to_bitField0_ |= 0x00000080;
                 }
-                result.memberName_ = memberName_;
+                result.srcOwnerName_ = srcOwnerName_;
+                if (((from_bitField0_ & 0x00000100) == 0x00000100)) {
+                    to_bitField0_ |= 0x00000100;
+                }
+                result.dstOwnerName_ = dstOwnerName_;
                 result.bitField0_ = to_bitField0_;
                 onBuilt();
                 return result;
@@ -18120,9 +22423,14 @@ public final class YouMaiGroup {
                 if (other.hasType()) {
                     setType(other.getType());
                 }
-                if (other.hasMemberName()) {
+                if (other.hasSrcOwnerName()) {
                     bitField0_ |= 0x00000080;
-                    memberName_ = other.memberName_;
+                    srcOwnerName_ = other.srcOwnerName_;
+                    onChanged();
+                }
+                if (other.hasDstOwnerName()) {
+                    bitField0_ |= 0x00000100;
+                    dstOwnerName_ = other.dstOwnerName_;
                     onChanged();
                 }
                 this.mergeUnknownFields(other.getUnknownFields());
@@ -18142,7 +22450,7 @@ public final class YouMaiGroup {
 
                     return false;
                 }
-                if (!hasMemberName()) {
+                if (!hasSrcOwnerName()) {
 
                     return false;
                 }
@@ -18726,26 +23034,26 @@ public final class YouMaiGroup {
                 return this;
             }
 
-            private Object memberName_ = "";
+            private Object srcOwnerName_ = "";
 
             /**
-             * <code>required string member_name = 8;</code>
+             * <code>required string src_owner_name = 8;</code>
              */
-            public boolean hasMemberName() {
+            public boolean hasSrcOwnerName() {
                 return ((bitField0_ & 0x00000080) == 0x00000080);
             }
 
             /**
-             * <code>required string member_name = 8;</code>
+             * <code>required string src_owner_name = 8;</code>
              */
-            public String getMemberName() {
-                Object ref = memberName_;
+            public String getSrcOwnerName() {
+                Object ref = srcOwnerName_;
                 if (!(ref instanceof String)) {
                     com.google.protobuf.ByteString bs =
                             (com.google.protobuf.ByteString) ref;
                     String s = bs.toStringUtf8();
                     if (bs.isValidUtf8()) {
-                        memberName_ = s;
+                        srcOwnerName_ = s;
                     }
                     return s;
                 } else {
@@ -18754,16 +23062,16 @@ public final class YouMaiGroup {
             }
 
             /**
-             * <code>required string member_name = 8;</code>
+             * <code>required string src_owner_name = 8;</code>
              */
             public com.google.protobuf.ByteString
-            getMemberNameBytes() {
-                Object ref = memberName_;
+            getSrcOwnerNameBytes() {
+                Object ref = srcOwnerName_;
                 if (ref instanceof String) {
                     com.google.protobuf.ByteString b =
                             com.google.protobuf.ByteString.copyFromUtf8(
                                     (String) ref);
-                    memberName_ = b;
+                    srcOwnerName_ = b;
                     return b;
                 } else {
                     return (com.google.protobuf.ByteString) ref;
@@ -18771,39 +23079,121 @@ public final class YouMaiGroup {
             }
 
             /**
-             * <code>required string member_name = 8;</code>
+             * <code>required string src_owner_name = 8;</code>
              */
-            public Builder setMemberName(
+            public Builder setSrcOwnerName(
                     String value) {
                 if (value == null) {
                     throw new NullPointerException();
                 }
                 bitField0_ |= 0x00000080;
-                memberName_ = value;
+                srcOwnerName_ = value;
                 onChanged();
                 return this;
             }
 
             /**
-             * <code>required string member_name = 8;</code>
+             * <code>required string src_owner_name = 8;</code>
              */
-            public Builder clearMemberName() {
+            public Builder clearSrcOwnerName() {
                 bitField0_ = (bitField0_ & ~0x00000080);
-                memberName_ = getDefaultInstance().getMemberName();
+                srcOwnerName_ = getDefaultInstance().getSrcOwnerName();
                 onChanged();
                 return this;
             }
 
             /**
-             * <code>required string member_name = 8;</code>
+             * <code>required string src_owner_name = 8;</code>
              */
-            public Builder setMemberNameBytes(
+            public Builder setSrcOwnerNameBytes(
                     com.google.protobuf.ByteString value) {
                 if (value == null) {
                     throw new NullPointerException();
                 }
                 bitField0_ |= 0x00000080;
-                memberName_ = value;
+                srcOwnerName_ = value;
+                onChanged();
+                return this;
+            }
+
+            private Object dstOwnerName_ = "";
+
+            /**
+             * <code>optional string dst_owner_name = 9;</code>
+             */
+            public boolean hasDstOwnerName() {
+                return ((bitField0_ & 0x00000100) == 0x00000100);
+            }
+
+            /**
+             * <code>optional string dst_owner_name = 9;</code>
+             */
+            public String getDstOwnerName() {
+                Object ref = dstOwnerName_;
+                if (!(ref instanceof String)) {
+                    com.google.protobuf.ByteString bs =
+                            (com.google.protobuf.ByteString) ref;
+                    String s = bs.toStringUtf8();
+                    if (bs.isValidUtf8()) {
+                        dstOwnerName_ = s;
+                    }
+                    return s;
+                } else {
+                    return (String) ref;
+                }
+            }
+
+            /**
+             * <code>optional string dst_owner_name = 9;</code>
+             */
+            public com.google.protobuf.ByteString
+            getDstOwnerNameBytes() {
+                Object ref = dstOwnerName_;
+                if (ref instanceof String) {
+                    com.google.protobuf.ByteString b =
+                            com.google.protobuf.ByteString.copyFromUtf8(
+                                    (String) ref);
+                    dstOwnerName_ = b;
+                    return b;
+                } else {
+                    return (com.google.protobuf.ByteString) ref;
+                }
+            }
+
+            /**
+             * <code>optional string dst_owner_name = 9;</code>
+             */
+            public Builder setDstOwnerName(
+                    String value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000100;
+                dstOwnerName_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string dst_owner_name = 9;</code>
+             */
+            public Builder clearDstOwnerName() {
+                bitField0_ = (bitField0_ & ~0x00000100);
+                dstOwnerName_ = getDefaultInstance().getDstOwnerName();
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string dst_owner_name = 9;</code>
+             */
+            public Builder setDstOwnerNameBytes(
+                    com.google.protobuf.ByteString value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000100;
+                dstOwnerName_ = value;
                 onChanged();
                 return this;
             }
@@ -18877,20 +23267,36 @@ public final class YouMaiGroup {
         YouMaiGroup.GroupInfoModifyType getType();
 
         /**
-         * <code>required string member_name = 8;</code>
+         * <code>required string src_owner_name = 8;</code>
          */
-        boolean hasMemberName();
+        boolean hasSrcOwnerName();
 
         /**
-         * <code>required string member_name = 8;</code>
+         * <code>required string src_owner_name = 8;</code>
          */
-        String getMemberName();
+        String getSrcOwnerName();
 
         /**
-         * <code>required string member_name = 8;</code>
+         * <code>required string src_owner_name = 8;</code>
          */
         com.google.protobuf.ByteString
-        getMemberNameBytes();
+        getSrcOwnerNameBytes();
+
+        /**
+         * <code>optional string dst_owner_name = 9;</code>
+         */
+        boolean hasDstOwnerName();
+
+        /**
+         * <code>optional string dst_owner_name = 9;</code>
+         */
+        String getDstOwnerName();
+
+        /**
+         * <code>optional string dst_owner_name = 9;</code>
+         */
+        com.google.protobuf.ByteString
+        getDstOwnerNameBytes();
     }
 
     /**
@@ -18999,7 +23405,13 @@ public final class YouMaiGroup {
                         case 66: {
                             com.google.protobuf.ByteString bs = input.readBytes();
                             bitField0_ |= 0x00000010;
-                            memberName_ = bs;
+                            srcOwnerName_ = bs;
+                            break;
+                        }
+                        case 74: {
+                            com.google.protobuf.ByteString bs = input.readBytes();
+                            bitField0_ |= 0x00000020;
+                            dstOwnerName_ = bs;
                             break;
                         }
                     }
@@ -19126,21 +23538,21 @@ public final class YouMaiGroup {
             return type_;
         }
 
-        public static final int MEMBER_NAME_FIELD_NUMBER = 8;
-        private Object memberName_;
+        public static final int SRC_OWNER_NAME_FIELD_NUMBER = 8;
+        private Object srcOwnerName_;
 
         /**
-         * <code>required string member_name = 8;</code>
+         * <code>required string src_owner_name = 8;</code>
          */
-        public boolean hasMemberName() {
+        public boolean hasSrcOwnerName() {
             return ((bitField0_ & 0x00000010) == 0x00000010);
         }
 
         /**
-         * <code>required string member_name = 8;</code>
+         * <code>required string src_owner_name = 8;</code>
          */
-        public String getMemberName() {
-            Object ref = memberName_;
+        public String getSrcOwnerName() {
+            Object ref = srcOwnerName_;
             if (ref instanceof String) {
                 return (String) ref;
             } else {
@@ -19148,23 +23560,68 @@ public final class YouMaiGroup {
                         (com.google.protobuf.ByteString) ref;
                 String s = bs.toStringUtf8();
                 if (bs.isValidUtf8()) {
-                    memberName_ = s;
+                    srcOwnerName_ = s;
                 }
                 return s;
             }
         }
 
         /**
-         * <code>required string member_name = 8;</code>
+         * <code>required string src_owner_name = 8;</code>
          */
         public com.google.protobuf.ByteString
-        getMemberNameBytes() {
-            Object ref = memberName_;
+        getSrcOwnerNameBytes() {
+            Object ref = srcOwnerName_;
             if (ref instanceof String) {
                 com.google.protobuf.ByteString b =
                         com.google.protobuf.ByteString.copyFromUtf8(
                                 (String) ref);
-                memberName_ = b;
+                srcOwnerName_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
+        public static final int DST_OWNER_NAME_FIELD_NUMBER = 9;
+        private Object dstOwnerName_;
+
+        /**
+         * <code>optional string dst_owner_name = 9;</code>
+         */
+        public boolean hasDstOwnerName() {
+            return ((bitField0_ & 0x00000020) == 0x00000020);
+        }
+
+        /**
+         * <code>optional string dst_owner_name = 9;</code>
+         */
+        public String getDstOwnerName() {
+            Object ref = dstOwnerName_;
+            if (ref instanceof String) {
+                return (String) ref;
+            } else {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                String s = bs.toStringUtf8();
+                if (bs.isValidUtf8()) {
+                    dstOwnerName_ = s;
+                }
+                return s;
+            }
+        }
+
+        /**
+         * <code>optional string dst_owner_name = 9;</code>
+         */
+        public com.google.protobuf.ByteString
+        getDstOwnerNameBytes() {
+            Object ref = dstOwnerName_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (String) ref);
+                dstOwnerName_ = b;
                 return b;
             } else {
                 return (com.google.protobuf.ByteString) ref;
@@ -19176,7 +23633,8 @@ public final class YouMaiGroup {
             groupId_ = 0;
             groupInfo_ = YouMaiGroup.GroupInfo.getDefaultInstance();
             type_ = YouMaiGroup.GroupInfoModifyType.MODIFY_NAME;
-            memberName_ = "";
+            srcOwnerName_ = "";
+            dstOwnerName_ = "";
         }
 
         private byte memoizedIsInitialized = -1;
@@ -19194,7 +23652,7 @@ public final class YouMaiGroup {
                 memoizedIsInitialized = 0;
                 return false;
             }
-            if (!hasMemberName()) {
+            if (!hasSrcOwnerName()) {
                 memoizedIsInitialized = 0;
                 return false;
             }
@@ -19224,7 +23682,10 @@ public final class YouMaiGroup {
                 output.writeEnum(4, type_.getNumber());
             }
             if (((bitField0_ & 0x00000010) == 0x00000010)) {
-                output.writeBytes(8, getMemberNameBytes());
+                output.writeBytes(8, getSrcOwnerNameBytes());
+            }
+            if (((bitField0_ & 0x00000020) == 0x00000020)) {
+                output.writeBytes(9, getDstOwnerNameBytes());
             }
             getUnknownFields().writeTo(output);
         }
@@ -19254,7 +23715,11 @@ public final class YouMaiGroup {
             }
             if (((bitField0_ & 0x00000010) == 0x00000010)) {
                 size += com.google.protobuf.CodedOutputStream
-                        .computeBytesSize(8, getMemberNameBytes());
+                        .computeBytesSize(8, getSrcOwnerNameBytes());
+            }
+            if (((bitField0_ & 0x00000020) == 0x00000020)) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeBytesSize(9, getDstOwnerNameBytes());
             }
             size += getUnknownFields().getSerializedSize();
             memoizedSerializedSize = size;
@@ -19413,8 +23878,10 @@ public final class YouMaiGroup {
                 bitField0_ = (bitField0_ & ~0x00000004);
                 type_ = YouMaiGroup.GroupInfoModifyType.MODIFY_NAME;
                 bitField0_ = (bitField0_ & ~0x00000008);
-                memberName_ = "";
+                srcOwnerName_ = "";
                 bitField0_ = (bitField0_ & ~0x00000010);
+                dstOwnerName_ = "";
+                bitField0_ = (bitField0_ & ~0x00000020);
                 return this;
             }
 
@@ -19466,7 +23933,11 @@ public final class YouMaiGroup {
                 if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
                     to_bitField0_ |= 0x00000010;
                 }
-                result.memberName_ = memberName_;
+                result.srcOwnerName_ = srcOwnerName_;
+                if (((from_bitField0_ & 0x00000020) == 0x00000020)) {
+                    to_bitField0_ |= 0x00000020;
+                }
+                result.dstOwnerName_ = dstOwnerName_;
                 result.bitField0_ = to_bitField0_;
                 onBuilt();
                 return result;
@@ -19495,9 +23966,14 @@ public final class YouMaiGroup {
                 if (other.hasType()) {
                     setType(other.getType());
                 }
-                if (other.hasMemberName()) {
+                if (other.hasSrcOwnerName()) {
                     bitField0_ |= 0x00000010;
-                    memberName_ = other.memberName_;
+                    srcOwnerName_ = other.srcOwnerName_;
+                    onChanged();
+                }
+                if (other.hasDstOwnerName()) {
+                    bitField0_ |= 0x00000020;
+                    dstOwnerName_ = other.dstOwnerName_;
                     onChanged();
                 }
                 this.mergeUnknownFields(other.getUnknownFields());
@@ -19513,7 +23989,7 @@ public final class YouMaiGroup {
 
                     return false;
                 }
-                if (!hasMemberName()) {
+                if (!hasSrcOwnerName()) {
 
                     return false;
                 }
@@ -19801,26 +24277,26 @@ public final class YouMaiGroup {
                 return this;
             }
 
-            private Object memberName_ = "";
+            private Object srcOwnerName_ = "";
 
             /**
-             * <code>required string member_name = 8;</code>
+             * <code>required string src_owner_name = 8;</code>
              */
-            public boolean hasMemberName() {
+            public boolean hasSrcOwnerName() {
                 return ((bitField0_ & 0x00000010) == 0x00000010);
             }
 
             /**
-             * <code>required string member_name = 8;</code>
+             * <code>required string src_owner_name = 8;</code>
              */
-            public String getMemberName() {
-                Object ref = memberName_;
+            public String getSrcOwnerName() {
+                Object ref = srcOwnerName_;
                 if (!(ref instanceof String)) {
                     com.google.protobuf.ByteString bs =
                             (com.google.protobuf.ByteString) ref;
                     String s = bs.toStringUtf8();
                     if (bs.isValidUtf8()) {
-                        memberName_ = s;
+                        srcOwnerName_ = s;
                     }
                     return s;
                 } else {
@@ -19829,16 +24305,16 @@ public final class YouMaiGroup {
             }
 
             /**
-             * <code>required string member_name = 8;</code>
+             * <code>required string src_owner_name = 8;</code>
              */
             public com.google.protobuf.ByteString
-            getMemberNameBytes() {
-                Object ref = memberName_;
+            getSrcOwnerNameBytes() {
+                Object ref = srcOwnerName_;
                 if (ref instanceof String) {
                     com.google.protobuf.ByteString b =
                             com.google.protobuf.ByteString.copyFromUtf8(
                                     (String) ref);
-                    memberName_ = b;
+                    srcOwnerName_ = b;
                     return b;
                 } else {
                     return (com.google.protobuf.ByteString) ref;
@@ -19846,39 +24322,121 @@ public final class YouMaiGroup {
             }
 
             /**
-             * <code>required string member_name = 8;</code>
+             * <code>required string src_owner_name = 8;</code>
              */
-            public Builder setMemberName(
+            public Builder setSrcOwnerName(
                     String value) {
                 if (value == null) {
                     throw new NullPointerException();
                 }
                 bitField0_ |= 0x00000010;
-                memberName_ = value;
+                srcOwnerName_ = value;
                 onChanged();
                 return this;
             }
 
             /**
-             * <code>required string member_name = 8;</code>
+             * <code>required string src_owner_name = 8;</code>
              */
-            public Builder clearMemberName() {
+            public Builder clearSrcOwnerName() {
                 bitField0_ = (bitField0_ & ~0x00000010);
-                memberName_ = getDefaultInstance().getMemberName();
+                srcOwnerName_ = getDefaultInstance().getSrcOwnerName();
                 onChanged();
                 return this;
             }
 
             /**
-             * <code>required string member_name = 8;</code>
+             * <code>required string src_owner_name = 8;</code>
              */
-            public Builder setMemberNameBytes(
+            public Builder setSrcOwnerNameBytes(
                     com.google.protobuf.ByteString value) {
                 if (value == null) {
                     throw new NullPointerException();
                 }
                 bitField0_ |= 0x00000010;
-                memberName_ = value;
+                srcOwnerName_ = value;
+                onChanged();
+                return this;
+            }
+
+            private Object dstOwnerName_ = "";
+
+            /**
+             * <code>optional string dst_owner_name = 9;</code>
+             */
+            public boolean hasDstOwnerName() {
+                return ((bitField0_ & 0x00000020) == 0x00000020);
+            }
+
+            /**
+             * <code>optional string dst_owner_name = 9;</code>
+             */
+            public String getDstOwnerName() {
+                Object ref = dstOwnerName_;
+                if (!(ref instanceof String)) {
+                    com.google.protobuf.ByteString bs =
+                            (com.google.protobuf.ByteString) ref;
+                    String s = bs.toStringUtf8();
+                    if (bs.isValidUtf8()) {
+                        dstOwnerName_ = s;
+                    }
+                    return s;
+                } else {
+                    return (String) ref;
+                }
+            }
+
+            /**
+             * <code>optional string dst_owner_name = 9;</code>
+             */
+            public com.google.protobuf.ByteString
+            getDstOwnerNameBytes() {
+                Object ref = dstOwnerName_;
+                if (ref instanceof String) {
+                    com.google.protobuf.ByteString b =
+                            com.google.protobuf.ByteString.copyFromUtf8(
+                                    (String) ref);
+                    dstOwnerName_ = b;
+                    return b;
+                } else {
+                    return (com.google.protobuf.ByteString) ref;
+                }
+            }
+
+            /**
+             * <code>optional string dst_owner_name = 9;</code>
+             */
+            public Builder setDstOwnerName(
+                    String value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000020;
+                dstOwnerName_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string dst_owner_name = 9;</code>
+             */
+            public Builder clearDstOwnerName() {
+                bitField0_ = (bitField0_ & ~0x00000020);
+                dstOwnerName_ = getDefaultInstance().getDstOwnerName();
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string dst_owner_name = 9;</code>
+             */
+            public Builder setDstOwnerNameBytes(
+                    com.google.protobuf.ByteString value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000020;
+                dstOwnerName_ = value;
                 onChanged();
                 return this;
             }
@@ -19962,20 +24520,36 @@ public final class YouMaiGroup {
         getUserIdBytes();
 
         /**
-         * <code>required string member_name = 8;</code>
+         * <code>required string src_owner_name = 8;</code>
          */
-        boolean hasMemberName();
+        boolean hasSrcOwnerName();
 
         /**
-         * <code>required string member_name = 8;</code>
+         * <code>required string src_owner_name = 8;</code>
          */
-        String getMemberName();
+        String getSrcOwnerName();
 
         /**
-         * <code>required string member_name = 8;</code>
+         * <code>required string src_owner_name = 8;</code>
          */
         com.google.protobuf.ByteString
-        getMemberNameBytes();
+        getSrcOwnerNameBytes();
+
+        /**
+         * <code>optional string dst_owner_name = 9;</code>
+         */
+        boolean hasDstOwnerName();
+
+        /**
+         * <code>optional string dst_owner_name = 9;</code>
+         */
+        String getDstOwnerName();
+
+        /**
+         * <code>optional string dst_owner_name = 9;</code>
+         */
+        com.google.protobuf.ByteString
+        getDstOwnerNameBytes();
     }
 
     /**
@@ -20078,7 +24652,13 @@ public final class YouMaiGroup {
                         case 66: {
                             com.google.protobuf.ByteString bs = input.readBytes();
                             bitField0_ |= 0x00000010;
-                            memberName_ = bs;
+                            srcOwnerName_ = bs;
+                            break;
+                        }
+                        case 74: {
+                            com.google.protobuf.ByteString bs = input.readBytes();
+                            bitField0_ |= 0x00000020;
+                            dstOwnerName_ = bs;
                             break;
                         }
                     }
@@ -20237,21 +24817,21 @@ public final class YouMaiGroup {
             }
         }
 
-        public static final int MEMBER_NAME_FIELD_NUMBER = 8;
-        private Object memberName_;
+        public static final int SRC_OWNER_NAME_FIELD_NUMBER = 8;
+        private Object srcOwnerName_;
 
         /**
-         * <code>required string member_name = 8;</code>
+         * <code>required string src_owner_name = 8;</code>
          */
-        public boolean hasMemberName() {
+        public boolean hasSrcOwnerName() {
             return ((bitField0_ & 0x00000010) == 0x00000010);
         }
 
         /**
-         * <code>required string member_name = 8;</code>
+         * <code>required string src_owner_name = 8;</code>
          */
-        public String getMemberName() {
-            Object ref = memberName_;
+        public String getSrcOwnerName() {
+            Object ref = srcOwnerName_;
             if (ref instanceof String) {
                 return (String) ref;
             } else {
@@ -20259,23 +24839,68 @@ public final class YouMaiGroup {
                         (com.google.protobuf.ByteString) ref;
                 String s = bs.toStringUtf8();
                 if (bs.isValidUtf8()) {
-                    memberName_ = s;
+                    srcOwnerName_ = s;
                 }
                 return s;
             }
         }
 
         /**
-         * <code>required string member_name = 8;</code>
+         * <code>required string src_owner_name = 8;</code>
          */
         public com.google.protobuf.ByteString
-        getMemberNameBytes() {
-            Object ref = memberName_;
+        getSrcOwnerNameBytes() {
+            Object ref = srcOwnerName_;
             if (ref instanceof String) {
                 com.google.protobuf.ByteString b =
                         com.google.protobuf.ByteString.copyFromUtf8(
                                 (String) ref);
-                memberName_ = b;
+                srcOwnerName_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
+        public static final int DST_OWNER_NAME_FIELD_NUMBER = 9;
+        private Object dstOwnerName_;
+
+        /**
+         * <code>optional string dst_owner_name = 9;</code>
+         */
+        public boolean hasDstOwnerName() {
+            return ((bitField0_ & 0x00000020) == 0x00000020);
+        }
+
+        /**
+         * <code>optional string dst_owner_name = 9;</code>
+         */
+        public String getDstOwnerName() {
+            Object ref = dstOwnerName_;
+            if (ref instanceof String) {
+                return (String) ref;
+            } else {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                String s = bs.toStringUtf8();
+                if (bs.isValidUtf8()) {
+                    dstOwnerName_ = s;
+                }
+                return s;
+            }
+        }
+
+        /**
+         * <code>optional string dst_owner_name = 9;</code>
+         */
+        public com.google.protobuf.ByteString
+        getDstOwnerNameBytes() {
+            Object ref = dstOwnerName_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (String) ref);
+                dstOwnerName_ = b;
                 return b;
             } else {
                 return (com.google.protobuf.ByteString) ref;
@@ -20287,7 +24912,8 @@ public final class YouMaiGroup {
             groupInfo_ = YouMaiGroup.GroupInfo.getDefaultInstance();
             type_ = YouMaiGroup.GroupInfoModifyType.MODIFY_NAME;
             userId_ = "";
-            memberName_ = "";
+            srcOwnerName_ = "";
+            dstOwnerName_ = "";
         }
 
         private byte memoizedIsInitialized = -1;
@@ -20309,7 +24935,7 @@ public final class YouMaiGroup {
                 memoizedIsInitialized = 0;
                 return false;
             }
-            if (!hasMemberName()) {
+            if (!hasSrcOwnerName()) {
                 memoizedIsInitialized = 0;
                 return false;
             }
@@ -20337,7 +24963,10 @@ public final class YouMaiGroup {
                 output.writeBytes(4, getUserIdBytes());
             }
             if (((bitField0_ & 0x00000010) == 0x00000010)) {
-                output.writeBytes(8, getMemberNameBytes());
+                output.writeBytes(8, getSrcOwnerNameBytes());
+            }
+            if (((bitField0_ & 0x00000020) == 0x00000020)) {
+                output.writeBytes(9, getDstOwnerNameBytes());
             }
             getUnknownFields().writeTo(output);
         }
@@ -20367,7 +24996,11 @@ public final class YouMaiGroup {
             }
             if (((bitField0_ & 0x00000010) == 0x00000010)) {
                 size += com.google.protobuf.CodedOutputStream
-                        .computeBytesSize(8, getMemberNameBytes());
+                        .computeBytesSize(8, getSrcOwnerNameBytes());
+            }
+            if (((bitField0_ & 0x00000020) == 0x00000020)) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeBytesSize(9, getDstOwnerNameBytes());
             }
             size += getUnknownFields().getSerializedSize();
             memoizedSerializedSize = size;
@@ -20525,8 +25158,10 @@ public final class YouMaiGroup {
                 bitField0_ = (bitField0_ & ~0x00000004);
                 userId_ = "";
                 bitField0_ = (bitField0_ & ~0x00000008);
-                memberName_ = "";
+                srcOwnerName_ = "";
                 bitField0_ = (bitField0_ & ~0x00000010);
+                dstOwnerName_ = "";
+                bitField0_ = (bitField0_ & ~0x00000020);
                 return this;
             }
 
@@ -20578,7 +25213,11 @@ public final class YouMaiGroup {
                 if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
                     to_bitField0_ |= 0x00000010;
                 }
-                result.memberName_ = memberName_;
+                result.srcOwnerName_ = srcOwnerName_;
+                if (((from_bitField0_ & 0x00000020) == 0x00000020)) {
+                    to_bitField0_ |= 0x00000020;
+                }
+                result.dstOwnerName_ = dstOwnerName_;
                 result.bitField0_ = to_bitField0_;
                 onBuilt();
                 return result;
@@ -20609,9 +25248,14 @@ public final class YouMaiGroup {
                     userId_ = other.userId_;
                     onChanged();
                 }
-                if (other.hasMemberName()) {
+                if (other.hasSrcOwnerName()) {
                     bitField0_ |= 0x00000010;
-                    memberName_ = other.memberName_;
+                    srcOwnerName_ = other.srcOwnerName_;
+                    onChanged();
+                }
+                if (other.hasDstOwnerName()) {
+                    bitField0_ |= 0x00000020;
+                    dstOwnerName_ = other.dstOwnerName_;
                     onChanged();
                 }
                 this.mergeUnknownFields(other.getUnknownFields());
@@ -20631,7 +25275,7 @@ public final class YouMaiGroup {
 
                     return false;
                 }
-                if (!hasMemberName()) {
+                if (!hasSrcOwnerName()) {
 
                     return false;
                 }
@@ -20968,26 +25612,26 @@ public final class YouMaiGroup {
                 return this;
             }
 
-            private Object memberName_ = "";
+            private Object srcOwnerName_ = "";
 
             /**
-             * <code>required string member_name = 8;</code>
+             * <code>required string src_owner_name = 8;</code>
              */
-            public boolean hasMemberName() {
+            public boolean hasSrcOwnerName() {
                 return ((bitField0_ & 0x00000010) == 0x00000010);
             }
 
             /**
-             * <code>required string member_name = 8;</code>
+             * <code>required string src_owner_name = 8;</code>
              */
-            public String getMemberName() {
-                Object ref = memberName_;
+            public String getSrcOwnerName() {
+                Object ref = srcOwnerName_;
                 if (!(ref instanceof String)) {
                     com.google.protobuf.ByteString bs =
                             (com.google.protobuf.ByteString) ref;
                     String s = bs.toStringUtf8();
                     if (bs.isValidUtf8()) {
-                        memberName_ = s;
+                        srcOwnerName_ = s;
                     }
                     return s;
                 } else {
@@ -20996,16 +25640,16 @@ public final class YouMaiGroup {
             }
 
             /**
-             * <code>required string member_name = 8;</code>
+             * <code>required string src_owner_name = 8;</code>
              */
             public com.google.protobuf.ByteString
-            getMemberNameBytes() {
-                Object ref = memberName_;
+            getSrcOwnerNameBytes() {
+                Object ref = srcOwnerName_;
                 if (ref instanceof String) {
                     com.google.protobuf.ByteString b =
                             com.google.protobuf.ByteString.copyFromUtf8(
                                     (String) ref);
-                    memberName_ = b;
+                    srcOwnerName_ = b;
                     return b;
                 } else {
                     return (com.google.protobuf.ByteString) ref;
@@ -21013,39 +25657,121 @@ public final class YouMaiGroup {
             }
 
             /**
-             * <code>required string member_name = 8;</code>
+             * <code>required string src_owner_name = 8;</code>
              */
-            public Builder setMemberName(
+            public Builder setSrcOwnerName(
                     String value) {
                 if (value == null) {
                     throw new NullPointerException();
                 }
                 bitField0_ |= 0x00000010;
-                memberName_ = value;
+                srcOwnerName_ = value;
                 onChanged();
                 return this;
             }
 
             /**
-             * <code>required string member_name = 8;</code>
+             * <code>required string src_owner_name = 8;</code>
              */
-            public Builder clearMemberName() {
+            public Builder clearSrcOwnerName() {
                 bitField0_ = (bitField0_ & ~0x00000010);
-                memberName_ = getDefaultInstance().getMemberName();
+                srcOwnerName_ = getDefaultInstance().getSrcOwnerName();
                 onChanged();
                 return this;
             }
 
             /**
-             * <code>required string member_name = 8;</code>
+             * <code>required string src_owner_name = 8;</code>
              */
-            public Builder setMemberNameBytes(
+            public Builder setSrcOwnerNameBytes(
                     com.google.protobuf.ByteString value) {
                 if (value == null) {
                     throw new NullPointerException();
                 }
                 bitField0_ |= 0x00000010;
-                memberName_ = value;
+                srcOwnerName_ = value;
+                onChanged();
+                return this;
+            }
+
+            private Object dstOwnerName_ = "";
+
+            /**
+             * <code>optional string dst_owner_name = 9;</code>
+             */
+            public boolean hasDstOwnerName() {
+                return ((bitField0_ & 0x00000020) == 0x00000020);
+            }
+
+            /**
+             * <code>optional string dst_owner_name = 9;</code>
+             */
+            public String getDstOwnerName() {
+                Object ref = dstOwnerName_;
+                if (!(ref instanceof String)) {
+                    com.google.protobuf.ByteString bs =
+                            (com.google.protobuf.ByteString) ref;
+                    String s = bs.toStringUtf8();
+                    if (bs.isValidUtf8()) {
+                        dstOwnerName_ = s;
+                    }
+                    return s;
+                } else {
+                    return (String) ref;
+                }
+            }
+
+            /**
+             * <code>optional string dst_owner_name = 9;</code>
+             */
+            public com.google.protobuf.ByteString
+            getDstOwnerNameBytes() {
+                Object ref = dstOwnerName_;
+                if (ref instanceof String) {
+                    com.google.protobuf.ByteString b =
+                            com.google.protobuf.ByteString.copyFromUtf8(
+                                    (String) ref);
+                    dstOwnerName_ = b;
+                    return b;
+                } else {
+                    return (com.google.protobuf.ByteString) ref;
+                }
+            }
+
+            /**
+             * <code>optional string dst_owner_name = 9;</code>
+             */
+            public Builder setDstOwnerName(
+                    String value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000020;
+                dstOwnerName_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string dst_owner_name = 9;</code>
+             */
+            public Builder clearDstOwnerName() {
+                bitField0_ = (bitField0_ & ~0x00000020);
+                dstOwnerName_ = getDefaultInstance().getDstOwnerName();
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string dst_owner_name = 9;</code>
+             */
+            public Builder setDstOwnerNameBytes(
+                    com.google.protobuf.ByteString value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000020;
+                dstOwnerName_ = value;
                 onChanged();
                 return this;
             }
@@ -21059,6 +25785,1880 @@ public final class YouMaiGroup {
         }
 
         // @@protoc_insertion_point(class_scope:IMGroupInfoModifyNotify)
+    }
+
+    public interface IMGroupSetReqOrBuilder extends
+            // @@protoc_insertion_point(interface_extends:IMGroupSetReq)
+            com.google.protobuf.MessageOrBuilder {
+
+        /**
+         * <code>required uint32 group_id = 1;</code>
+         */
+        boolean hasGroupId();
+
+        /**
+         * <code>required uint32 group_id = 1;</code>
+         */
+        int getGroupId();
+
+        /**
+         * <code>required string user_id = 2;</code>
+         */
+        boolean hasUserId();
+
+        /**
+         * <code>required string user_id = 2;</code>
+         */
+        String getUserId();
+
+        /**
+         * <code>required string user_id = 2;</code>
+         */
+        com.google.protobuf.ByteString
+        getUserIdBytes();
+
+        /**
+         * <code>required .GroupSetType type = 3;</code>
+         */
+        boolean hasType();
+
+        /**
+         * <code>required .GroupSetType type = 3;</code>
+         */
+        YouMaiGroup.GroupSetType getType();
+
+        /**
+         * <code>optional bool not_disturb = 4;</code>
+         * <p>
+         * <pre>
+         * (true:can't recv msg,false:can recv msg)
+         * </pre>
+         */
+        boolean hasNotDisturb();
+
+        /**
+         * <code>optional bool not_disturb = 4;</code>
+         * <p>
+         * <pre>
+         * (true:can't recv msg,false:can recv msg)
+         * </pre>
+         */
+        boolean getNotDisturb();
+
+        /**
+         * <code>optional bool invite_permission = 5;</code>
+         * <p>
+         * <pre>
+         * (true:need owner permission)
+         * </pre>
+         */
+        boolean hasInvitePermission();
+
+        /**
+         * <code>optional bool invite_permission = 5;</code>
+         * <p>
+         * <pre>
+         * (true:need owner permission)
+         * </pre>
+         */
+        boolean getInvitePermission();
+    }
+
+    /**
+     * Protobuf type {@code IMGroupSetReq}
+     * <p>
+     * <pre>
+     * cmd id:			CID_GROUP_SET_REQ
+     * </pre>
+     */
+    public static final class IMGroupSetReq extends
+            com.google.protobuf.GeneratedMessage implements
+            // @@protoc_insertion_point(message_implements:IMGroupSetReq)
+            IMGroupSetReqOrBuilder {
+        // Use IMGroupSetReq.newBuilder() to construct.
+        private IMGroupSetReq(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+            super(builder);
+            this.unknownFields = builder.getUnknownFields();
+        }
+
+        private IMGroupSetReq(boolean noInit) {
+            this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance();
+        }
+
+        private static final IMGroupSetReq defaultInstance;
+
+        public static IMGroupSetReq getDefaultInstance() {
+            return defaultInstance;
+        }
+
+        public IMGroupSetReq getDefaultInstanceForType() {
+            return defaultInstance;
+        }
+
+        private final com.google.protobuf.UnknownFieldSet unknownFields;
+
+        @Override
+        public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+            return this.unknownFields;
+        }
+
+        private IMGroupSetReq(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            initFields();
+            int mutable_bitField0_ = 0;
+            com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+                    com.google.protobuf.UnknownFieldSet.newBuilder();
+            try {
+                boolean done = false;
+                while (!done) {
+                    int tag = input.readTag();
+                    switch (tag) {
+                        case 0:
+                            done = true;
+                            break;
+                        default: {
+                            if (!parseUnknownField(input, unknownFields,
+                                    extensionRegistry, tag)) {
+                                done = true;
+                            }
+                            break;
+                        }
+                        case 8: {
+                            bitField0_ |= 0x00000001;
+                            groupId_ = input.readUInt32();
+                            break;
+                        }
+                        case 18: {
+                            com.google.protobuf.ByteString bs = input.readBytes();
+                            bitField0_ |= 0x00000002;
+                            userId_ = bs;
+                            break;
+                        }
+                        case 24: {
+                            int rawValue = input.readEnum();
+                            YouMaiGroup.GroupSetType value = YouMaiGroup.GroupSetType.valueOf(rawValue);
+                            if (value == null) {
+                                unknownFields.mergeVarintField(3, rawValue);
+                            } else {
+                                bitField0_ |= 0x00000004;
+                                type_ = value;
+                            }
+                            break;
+                        }
+                        case 32: {
+                            bitField0_ |= 0x00000008;
+                            notDisturb_ = input.readBool();
+                            break;
+                        }
+                        case 40: {
+                            bitField0_ |= 0x00000010;
+                            invitePermission_ = input.readBool();
+                            break;
+                        }
+                    }
+                }
+            } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+                throw e.setUnfinishedMessage(this);
+            } catch (java.io.IOException e) {
+                throw new com.google.protobuf.InvalidProtocolBufferException(
+                        e.getMessage()).setUnfinishedMessage(this);
+            } finally {
+                this.unknownFields = unknownFields.build();
+                makeExtensionsImmutable();
+            }
+        }
+
+        public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+            return YouMaiGroup.internal_static_com_proto_group_IMGroupSetReq_descriptor;
+        }
+
+        protected FieldAccessorTable
+        internalGetFieldAccessorTable() {
+            return YouMaiGroup.internal_static_com_proto_group_IMGroupSetReq_fieldAccessorTable
+                    .ensureFieldAccessorsInitialized(
+                            YouMaiGroup.IMGroupSetReq.class, YouMaiGroup.IMGroupSetReq.Builder.class);
+        }
+
+        public static com.google.protobuf.Parser<IMGroupSetReq> PARSER =
+                new com.google.protobuf.AbstractParser<IMGroupSetReq>() {
+                    public IMGroupSetReq parsePartialFrom(
+                            com.google.protobuf.CodedInputStream input,
+                            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                            throws com.google.protobuf.InvalidProtocolBufferException {
+                        return new IMGroupSetReq(input, extensionRegistry);
+                    }
+                };
+
+        @Override
+        public com.google.protobuf.Parser<IMGroupSetReq> getParserForType() {
+            return PARSER;
+        }
+
+        private int bitField0_;
+        public static final int GROUP_ID_FIELD_NUMBER = 1;
+        private int groupId_;
+
+        /**
+         * <code>required uint32 group_id = 1;</code>
+         */
+        public boolean hasGroupId() {
+            return ((bitField0_ & 0x00000001) == 0x00000001);
+        }
+
+        /**
+         * <code>required uint32 group_id = 1;</code>
+         */
+        public int getGroupId() {
+            return groupId_;
+        }
+
+        public static final int USER_ID_FIELD_NUMBER = 2;
+        private Object userId_;
+
+        /**
+         * <code>required string user_id = 2;</code>
+         */
+        public boolean hasUserId() {
+            return ((bitField0_ & 0x00000002) == 0x00000002);
+        }
+
+        /**
+         * <code>required string user_id = 2;</code>
+         */
+        public String getUserId() {
+            Object ref = userId_;
+            if (ref instanceof String) {
+                return (String) ref;
+            } else {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                String s = bs.toStringUtf8();
+                if (bs.isValidUtf8()) {
+                    userId_ = s;
+                }
+                return s;
+            }
+        }
+
+        /**
+         * <code>required string user_id = 2;</code>
+         */
+        public com.google.protobuf.ByteString
+        getUserIdBytes() {
+            Object ref = userId_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (String) ref);
+                userId_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
+        public static final int TYPE_FIELD_NUMBER = 3;
+        private YouMaiGroup.GroupSetType type_;
+
+        /**
+         * <code>required .GroupSetType type = 3;</code>
+         */
+        public boolean hasType() {
+            return ((bitField0_ & 0x00000004) == 0x00000004);
+        }
+
+        /**
+         * <code>required .GroupSetType type = 3;</code>
+         */
+        public YouMaiGroup.GroupSetType getType() {
+            return type_;
+        }
+
+        public static final int NOT_DISTURB_FIELD_NUMBER = 4;
+        private boolean notDisturb_;
+
+        /**
+         * <code>optional bool not_disturb = 4;</code>
+         * <p>
+         * <pre>
+         * (true:can't recv msg,false:can recv msg)
+         * </pre>
+         */
+        public boolean hasNotDisturb() {
+            return ((bitField0_ & 0x00000008) == 0x00000008);
+        }
+
+        /**
+         * <code>optional bool not_disturb = 4;</code>
+         * <p>
+         * <pre>
+         * (true:can't recv msg,false:can recv msg)
+         * </pre>
+         */
+        public boolean getNotDisturb() {
+            return notDisturb_;
+        }
+
+        public static final int INVITE_PERMISSION_FIELD_NUMBER = 5;
+        private boolean invitePermission_;
+
+        /**
+         * <code>optional bool invite_permission = 5;</code>
+         * <p>
+         * <pre>
+         * (true:need owner permission)
+         * </pre>
+         */
+        public boolean hasInvitePermission() {
+            return ((bitField0_ & 0x00000010) == 0x00000010);
+        }
+
+        /**
+         * <code>optional bool invite_permission = 5;</code>
+         * <p>
+         * <pre>
+         * (true:need owner permission)
+         * </pre>
+         */
+        public boolean getInvitePermission() {
+            return invitePermission_;
+        }
+
+        private void initFields() {
+            groupId_ = 0;
+            userId_ = "";
+            type_ = YouMaiGroup.GroupSetType.TYPE_NOT_DISTURB;
+            notDisturb_ = false;
+            invitePermission_ = false;
+        }
+
+        private byte memoizedIsInitialized = -1;
+
+        public final boolean isInitialized() {
+            byte isInitialized = memoizedIsInitialized;
+            if (isInitialized == 1) return true;
+            if (isInitialized == 0) return false;
+
+            if (!hasGroupId()) {
+                memoizedIsInitialized = 0;
+                return false;
+            }
+            if (!hasUserId()) {
+                memoizedIsInitialized = 0;
+                return false;
+            }
+            if (!hasType()) {
+                memoizedIsInitialized = 0;
+                return false;
+            }
+            memoizedIsInitialized = 1;
+            return true;
+        }
+
+        public void writeTo(com.google.protobuf.CodedOutputStream output)
+                throws java.io.IOException {
+            getSerializedSize();
+            if (((bitField0_ & 0x00000001) == 0x00000001)) {
+                output.writeUInt32(1, groupId_);
+            }
+            if (((bitField0_ & 0x00000002) == 0x00000002)) {
+                output.writeBytes(2, getUserIdBytes());
+            }
+            if (((bitField0_ & 0x00000004) == 0x00000004)) {
+                output.writeEnum(3, type_.getNumber());
+            }
+            if (((bitField0_ & 0x00000008) == 0x00000008)) {
+                output.writeBool(4, notDisturb_);
+            }
+            if (((bitField0_ & 0x00000010) == 0x00000010)) {
+                output.writeBool(5, invitePermission_);
+            }
+            getUnknownFields().writeTo(output);
+        }
+
+        private int memoizedSerializedSize = -1;
+
+        public int getSerializedSize() {
+            int size = memoizedSerializedSize;
+            if (size != -1) return size;
+
+            size = 0;
+            if (((bitField0_ & 0x00000001) == 0x00000001)) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeUInt32Size(1, groupId_);
+            }
+            if (((bitField0_ & 0x00000002) == 0x00000002)) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeBytesSize(2, getUserIdBytes());
+            }
+            if (((bitField0_ & 0x00000004) == 0x00000004)) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeEnumSize(3, type_.getNumber());
+            }
+            if (((bitField0_ & 0x00000008) == 0x00000008)) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeBoolSize(4, notDisturb_);
+            }
+            if (((bitField0_ & 0x00000010) == 0x00000010)) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeBoolSize(5, invitePermission_);
+            }
+            size += getUnknownFields().getSerializedSize();
+            memoizedSerializedSize = size;
+            return size;
+        }
+
+        private static final long serialVersionUID = 0L;
+
+        @Override
+        protected Object writeReplace()
+                throws java.io.ObjectStreamException {
+            return super.writeReplace();
+        }
+
+        public static YouMaiGroup.IMGroupSetReq parseFrom(
+                com.google.protobuf.ByteString data)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data);
+        }
+
+        public static YouMaiGroup.IMGroupSetReq parseFrom(
+                com.google.protobuf.ByteString data,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data, extensionRegistry);
+        }
+
+        public static YouMaiGroup.IMGroupSetReq parseFrom(byte[] data)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data);
+        }
+
+        public static YouMaiGroup.IMGroupSetReq parseFrom(
+                byte[] data,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data, extensionRegistry);
+        }
+
+        public static YouMaiGroup.IMGroupSetReq parseFrom(java.io.InputStream input)
+                throws java.io.IOException {
+            return PARSER.parseFrom(input);
+        }
+
+        public static YouMaiGroup.IMGroupSetReq parseFrom(
+                java.io.InputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            return PARSER.parseFrom(input, extensionRegistry);
+        }
+
+        public static YouMaiGroup.IMGroupSetReq parseDelimitedFrom(java.io.InputStream input)
+                throws java.io.IOException {
+            return PARSER.parseDelimitedFrom(input);
+        }
+
+        public static YouMaiGroup.IMGroupSetReq parseDelimitedFrom(
+                java.io.InputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            return PARSER.parseDelimitedFrom(input, extensionRegistry);
+        }
+
+        public static YouMaiGroup.IMGroupSetReq parseFrom(
+                com.google.protobuf.CodedInputStream input)
+                throws java.io.IOException {
+            return PARSER.parseFrom(input);
+        }
+
+        public static YouMaiGroup.IMGroupSetReq parseFrom(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            return PARSER.parseFrom(input, extensionRegistry);
+        }
+
+        public static Builder newBuilder() {
+            return Builder.create();
+        }
+
+        public Builder newBuilderForType() {
+            return newBuilder();
+        }
+
+        public static Builder newBuilder(YouMaiGroup.IMGroupSetReq prototype) {
+            return newBuilder().mergeFrom(prototype);
+        }
+
+        public Builder toBuilder() {
+            return newBuilder(this);
+        }
+
+        @Override
+        protected Builder newBuilderForType(
+                BuilderParent parent) {
+            Builder builder = new Builder(parent);
+            return builder;
+        }
+
+        /**
+         * Protobuf type {@code IMGroupSetReq}
+         * <p>
+         * <pre>
+         * cmd id:			CID_GROUP_SET_REQ
+         * </pre>
+         */
+        public static final class Builder extends
+                com.google.protobuf.GeneratedMessage.Builder<Builder> implements
+                // @@protoc_insertion_point(builder_implements:IMGroupSetReq)
+                YouMaiGroup.IMGroupSetReqOrBuilder {
+            public static final com.google.protobuf.Descriptors.Descriptor
+            getDescriptor() {
+                return YouMaiGroup.internal_static_com_proto_group_IMGroupSetReq_descriptor;
+            }
+
+            protected FieldAccessorTable
+            internalGetFieldAccessorTable() {
+                return YouMaiGroup.internal_static_com_proto_group_IMGroupSetReq_fieldAccessorTable
+                        .ensureFieldAccessorsInitialized(
+                                YouMaiGroup.IMGroupSetReq.class, YouMaiGroup.IMGroupSetReq.Builder.class);
+            }
+
+            // Construct using YouMaiGroup.IMGroupSetReq.newBuilder()
+            private Builder() {
+                maybeForceBuilderInitialization();
+            }
+
+            private Builder(
+                    BuilderParent parent) {
+                super(parent);
+                maybeForceBuilderInitialization();
+            }
+
+            private void maybeForceBuilderInitialization() {
+                if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+                }
+            }
+
+            private static Builder create() {
+                return new Builder();
+            }
+
+            public Builder clear() {
+                super.clear();
+                groupId_ = 0;
+                bitField0_ = (bitField0_ & ~0x00000001);
+                userId_ = "";
+                bitField0_ = (bitField0_ & ~0x00000002);
+                type_ = YouMaiGroup.GroupSetType.TYPE_NOT_DISTURB;
+                bitField0_ = (bitField0_ & ~0x00000004);
+                notDisturb_ = false;
+                bitField0_ = (bitField0_ & ~0x00000008);
+                invitePermission_ = false;
+                bitField0_ = (bitField0_ & ~0x00000010);
+                return this;
+            }
+
+            public Builder clone() {
+                return create().mergeFrom(buildPartial());
+            }
+
+            public com.google.protobuf.Descriptors.Descriptor
+            getDescriptorForType() {
+                return YouMaiGroup.internal_static_com_proto_group_IMGroupSetReq_descriptor;
+            }
+
+            public YouMaiGroup.IMGroupSetReq getDefaultInstanceForType() {
+                return YouMaiGroup.IMGroupSetReq.getDefaultInstance();
+            }
+
+            public YouMaiGroup.IMGroupSetReq build() {
+                YouMaiGroup.IMGroupSetReq result = buildPartial();
+                if (!result.isInitialized()) {
+                    throw newUninitializedMessageException(result);
+                }
+                return result;
+            }
+
+            public YouMaiGroup.IMGroupSetReq buildPartial() {
+                YouMaiGroup.IMGroupSetReq result = new YouMaiGroup.IMGroupSetReq(this);
+                int from_bitField0_ = bitField0_;
+                int to_bitField0_ = 0;
+                if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+                    to_bitField0_ |= 0x00000001;
+                }
+                result.groupId_ = groupId_;
+                if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+                    to_bitField0_ |= 0x00000002;
+                }
+                result.userId_ = userId_;
+                if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+                    to_bitField0_ |= 0x00000004;
+                }
+                result.type_ = type_;
+                if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
+                    to_bitField0_ |= 0x00000008;
+                }
+                result.notDisturb_ = notDisturb_;
+                if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
+                    to_bitField0_ |= 0x00000010;
+                }
+                result.invitePermission_ = invitePermission_;
+                result.bitField0_ = to_bitField0_;
+                onBuilt();
+                return result;
+            }
+
+            public Builder mergeFrom(com.google.protobuf.Message other) {
+                if (other instanceof YouMaiGroup.IMGroupSetReq) {
+                    return mergeFrom((YouMaiGroup.IMGroupSetReq) other);
+                } else {
+                    super.mergeFrom(other);
+                    return this;
+                }
+            }
+
+            public Builder mergeFrom(YouMaiGroup.IMGroupSetReq other) {
+                if (other == YouMaiGroup.IMGroupSetReq.getDefaultInstance()) return this;
+                if (other.hasGroupId()) {
+                    setGroupId(other.getGroupId());
+                }
+                if (other.hasUserId()) {
+                    bitField0_ |= 0x00000002;
+                    userId_ = other.userId_;
+                    onChanged();
+                }
+                if (other.hasType()) {
+                    setType(other.getType());
+                }
+                if (other.hasNotDisturb()) {
+                    setNotDisturb(other.getNotDisturb());
+                }
+                if (other.hasInvitePermission()) {
+                    setInvitePermission(other.getInvitePermission());
+                }
+                this.mergeUnknownFields(other.getUnknownFields());
+                return this;
+            }
+
+            public final boolean isInitialized() {
+                if (!hasGroupId()) {
+
+                    return false;
+                }
+                if (!hasUserId()) {
+
+                    return false;
+                }
+                if (!hasType()) {
+
+                    return false;
+                }
+                return true;
+            }
+
+            public Builder mergeFrom(
+                    com.google.protobuf.CodedInputStream input,
+                    com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                    throws java.io.IOException {
+                YouMaiGroup.IMGroupSetReq parsedMessage = null;
+                try {
+                    parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+                } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+                    parsedMessage = (YouMaiGroup.IMGroupSetReq) e.getUnfinishedMessage();
+                    throw e;
+                } finally {
+                    if (parsedMessage != null) {
+                        mergeFrom(parsedMessage);
+                    }
+                }
+                return this;
+            }
+
+            private int bitField0_;
+
+            private int groupId_;
+
+            /**
+             * <code>required uint32 group_id = 1;</code>
+             */
+            public boolean hasGroupId() {
+                return ((bitField0_ & 0x00000001) == 0x00000001);
+            }
+
+            /**
+             * <code>required uint32 group_id = 1;</code>
+             */
+            public int getGroupId() {
+                return groupId_;
+            }
+
+            /**
+             * <code>required uint32 group_id = 1;</code>
+             */
+            public Builder setGroupId(int value) {
+                bitField0_ |= 0x00000001;
+                groupId_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>required uint32 group_id = 1;</code>
+             */
+            public Builder clearGroupId() {
+                bitField0_ = (bitField0_ & ~0x00000001);
+                groupId_ = 0;
+                onChanged();
+                return this;
+            }
+
+            private Object userId_ = "";
+
+            /**
+             * <code>required string user_id = 2;</code>
+             */
+            public boolean hasUserId() {
+                return ((bitField0_ & 0x00000002) == 0x00000002);
+            }
+
+            /**
+             * <code>required string user_id = 2;</code>
+             */
+            public String getUserId() {
+                Object ref = userId_;
+                if (!(ref instanceof String)) {
+                    com.google.protobuf.ByteString bs =
+                            (com.google.protobuf.ByteString) ref;
+                    String s = bs.toStringUtf8();
+                    if (bs.isValidUtf8()) {
+                        userId_ = s;
+                    }
+                    return s;
+                } else {
+                    return (String) ref;
+                }
+            }
+
+            /**
+             * <code>required string user_id = 2;</code>
+             */
+            public com.google.protobuf.ByteString
+            getUserIdBytes() {
+                Object ref = userId_;
+                if (ref instanceof String) {
+                    com.google.protobuf.ByteString b =
+                            com.google.protobuf.ByteString.copyFromUtf8(
+                                    (String) ref);
+                    userId_ = b;
+                    return b;
+                } else {
+                    return (com.google.protobuf.ByteString) ref;
+                }
+            }
+
+            /**
+             * <code>required string user_id = 2;</code>
+             */
+            public Builder setUserId(
+                    String value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000002;
+                userId_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>required string user_id = 2;</code>
+             */
+            public Builder clearUserId() {
+                bitField0_ = (bitField0_ & ~0x00000002);
+                userId_ = getDefaultInstance().getUserId();
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>required string user_id = 2;</code>
+             */
+            public Builder setUserIdBytes(
+                    com.google.protobuf.ByteString value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000002;
+                userId_ = value;
+                onChanged();
+                return this;
+            }
+
+            private YouMaiGroup.GroupSetType type_ = YouMaiGroup.GroupSetType.TYPE_NOT_DISTURB;
+
+            /**
+             * <code>required .GroupSetType type = 3;</code>
+             */
+            public boolean hasType() {
+                return ((bitField0_ & 0x00000004) == 0x00000004);
+            }
+
+            /**
+             * <code>required .GroupSetType type = 3;</code>
+             */
+            public YouMaiGroup.GroupSetType getType() {
+                return type_;
+            }
+
+            /**
+             * <code>required .GroupSetType type = 3;</code>
+             */
+            public Builder setType(YouMaiGroup.GroupSetType value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000004;
+                type_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>required .GroupSetType type = 3;</code>
+             */
+            public Builder clearType() {
+                bitField0_ = (bitField0_ & ~0x00000004);
+                type_ = YouMaiGroup.GroupSetType.TYPE_NOT_DISTURB;
+                onChanged();
+                return this;
+            }
+
+            private boolean notDisturb_;
+
+            /**
+             * <code>optional bool not_disturb = 4;</code>
+             * <p>
+             * <pre>
+             * (true:can't recv msg,false:can recv msg)
+             * </pre>
+             */
+            public boolean hasNotDisturb() {
+                return ((bitField0_ & 0x00000008) == 0x00000008);
+            }
+
+            /**
+             * <code>optional bool not_disturb = 4;</code>
+             * <p>
+             * <pre>
+             * (true:can't recv msg,false:can recv msg)
+             * </pre>
+             */
+            public boolean getNotDisturb() {
+                return notDisturb_;
+            }
+
+            /**
+             * <code>optional bool not_disturb = 4;</code>
+             * <p>
+             * <pre>
+             * (true:can't recv msg,false:can recv msg)
+             * </pre>
+             */
+            public Builder setNotDisturb(boolean value) {
+                bitField0_ |= 0x00000008;
+                notDisturb_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional bool not_disturb = 4;</code>
+             * <p>
+             * <pre>
+             * (true:can't recv msg,false:can recv msg)
+             * </pre>
+             */
+            public Builder clearNotDisturb() {
+                bitField0_ = (bitField0_ & ~0x00000008);
+                notDisturb_ = false;
+                onChanged();
+                return this;
+            }
+
+            private boolean invitePermission_;
+
+            /**
+             * <code>optional bool invite_permission = 5;</code>
+             * <p>
+             * <pre>
+             * (true:need owner permission)
+             * </pre>
+             */
+            public boolean hasInvitePermission() {
+                return ((bitField0_ & 0x00000010) == 0x00000010);
+            }
+
+            /**
+             * <code>optional bool invite_permission = 5;</code>
+             * <p>
+             * <pre>
+             * (true:need owner permission)
+             * </pre>
+             */
+            public boolean getInvitePermission() {
+                return invitePermission_;
+            }
+
+            /**
+             * <code>optional bool invite_permission = 5;</code>
+             * <p>
+             * <pre>
+             * (true:need owner permission)
+             * </pre>
+             */
+            public Builder setInvitePermission(boolean value) {
+                bitField0_ |= 0x00000010;
+                invitePermission_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional bool invite_permission = 5;</code>
+             * <p>
+             * <pre>
+             * (true:need owner permission)
+             * </pre>
+             */
+            public Builder clearInvitePermission() {
+                bitField0_ = (bitField0_ & ~0x00000010);
+                invitePermission_ = false;
+                onChanged();
+                return this;
+            }
+
+            // @@protoc_insertion_point(builder_scope:IMGroupSetReq)
+        }
+
+        static {
+            defaultInstance = new IMGroupSetReq(true);
+            defaultInstance.initFields();
+        }
+
+        // @@protoc_insertion_point(class_scope:IMGroupSetReq)
+    }
+
+    public interface IMGroupSetRspOrBuilder extends
+            // @@protoc_insertion_point(interface_extends:IMGroupSetRsp)
+            com.google.protobuf.MessageOrBuilder {
+
+        /**
+         * <code>required uint32 group_id = 1;</code>
+         * <p>
+         * <pre>
+         * cmd id:			CID_GROUP_SET_RSP
+         * </pre>
+         */
+        boolean hasGroupId();
+
+        /**
+         * <code>required uint32 group_id = 1;</code>
+         * <p>
+         * <pre>
+         * cmd id:			CID_GROUP_SET_RSP
+         * </pre>
+         */
+        int getGroupId();
+
+        /**
+         * <code>required .GroupSetType type = 2;</code>
+         */
+        boolean hasType();
+
+        /**
+         * <code>required .GroupSetType type = 2;</code>
+         */
+        YouMaiGroup.GroupSetType getType();
+
+        /**
+         * <code>optional bool not_disturb = 3;</code>
+         * <p>
+         * <pre>
+         * (true:can't recv msg,false:can recv msg)
+         * </pre>
+         */
+        boolean hasNotDisturb();
+
+        /**
+         * <code>optional bool not_disturb = 3;</code>
+         * <p>
+         * <pre>
+         * (true:can't recv msg,false:can recv msg)
+         * </pre>
+         */
+        boolean getNotDisturb();
+
+        /**
+         * <code>optional bool invite_permission = 4;</code>
+         * <p>
+         * <pre>
+         * (true:need owner permission)
+         * </pre>
+         */
+        boolean hasInvitePermission();
+
+        /**
+         * <code>optional bool invite_permission = 4;</code>
+         * <p>
+         * <pre>
+         * (true:need owner permission)
+         * </pre>
+         */
+        boolean getInvitePermission();
+
+        /**
+         * <code>optional .ResultCode result = 10;</code>
+         */
+        boolean hasResult();
+
+        /**
+         * <code>optional .ResultCode result = 10;</code>
+         */
+        YouMaiBasic.ResultCode getResult();
+    }
+
+    /**
+     * Protobuf type {@code IMGroupSetRsp}
+     */
+    public static final class IMGroupSetRsp extends
+            com.google.protobuf.GeneratedMessage implements
+            // @@protoc_insertion_point(message_implements:IMGroupSetRsp)
+            IMGroupSetRspOrBuilder {
+        // Use IMGroupSetRsp.newBuilder() to construct.
+        private IMGroupSetRsp(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+            super(builder);
+            this.unknownFields = builder.getUnknownFields();
+        }
+
+        private IMGroupSetRsp(boolean noInit) {
+            this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance();
+        }
+
+        private static final IMGroupSetRsp defaultInstance;
+
+        public static IMGroupSetRsp getDefaultInstance() {
+            return defaultInstance;
+        }
+
+        public IMGroupSetRsp getDefaultInstanceForType() {
+            return defaultInstance;
+        }
+
+        private final com.google.protobuf.UnknownFieldSet unknownFields;
+
+        @Override
+        public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+            return this.unknownFields;
+        }
+
+        private IMGroupSetRsp(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            initFields();
+            int mutable_bitField0_ = 0;
+            com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+                    com.google.protobuf.UnknownFieldSet.newBuilder();
+            try {
+                boolean done = false;
+                while (!done) {
+                    int tag = input.readTag();
+                    switch (tag) {
+                        case 0:
+                            done = true;
+                            break;
+                        default: {
+                            if (!parseUnknownField(input, unknownFields,
+                                    extensionRegistry, tag)) {
+                                done = true;
+                            }
+                            break;
+                        }
+                        case 8: {
+                            bitField0_ |= 0x00000001;
+                            groupId_ = input.readUInt32();
+                            break;
+                        }
+                        case 16: {
+                            int rawValue = input.readEnum();
+                            YouMaiGroup.GroupSetType value = YouMaiGroup.GroupSetType.valueOf(rawValue);
+                            if (value == null) {
+                                unknownFields.mergeVarintField(2, rawValue);
+                            } else {
+                                bitField0_ |= 0x00000002;
+                                type_ = value;
+                            }
+                            break;
+                        }
+                        case 24: {
+                            bitField0_ |= 0x00000004;
+                            notDisturb_ = input.readBool();
+                            break;
+                        }
+                        case 32: {
+                            bitField0_ |= 0x00000008;
+                            invitePermission_ = input.readBool();
+                            break;
+                        }
+                        case 80: {
+                            int rawValue = input.readEnum();
+                            YouMaiBasic.ResultCode value = YouMaiBasic.ResultCode.valueOf(rawValue);
+                            if (value == null) {
+                                unknownFields.mergeVarintField(10, rawValue);
+                            } else {
+                                bitField0_ |= 0x00000010;
+                                result_ = value;
+                            }
+                            break;
+                        }
+                    }
+                }
+            } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+                throw e.setUnfinishedMessage(this);
+            } catch (java.io.IOException e) {
+                throw new com.google.protobuf.InvalidProtocolBufferException(
+                        e.getMessage()).setUnfinishedMessage(this);
+            } finally {
+                this.unknownFields = unknownFields.build();
+                makeExtensionsImmutable();
+            }
+        }
+
+        public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+            return YouMaiGroup.internal_static_com_proto_group_IMGroupSetRsp_descriptor;
+        }
+
+        protected FieldAccessorTable
+        internalGetFieldAccessorTable() {
+            return YouMaiGroup.internal_static_com_proto_group_IMGroupSetRsp_fieldAccessorTable
+                    .ensureFieldAccessorsInitialized(
+                            YouMaiGroup.IMGroupSetRsp.class, YouMaiGroup.IMGroupSetRsp.Builder.class);
+        }
+
+        public static com.google.protobuf.Parser<IMGroupSetRsp> PARSER =
+                new com.google.protobuf.AbstractParser<IMGroupSetRsp>() {
+                    public IMGroupSetRsp parsePartialFrom(
+                            com.google.protobuf.CodedInputStream input,
+                            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                            throws com.google.protobuf.InvalidProtocolBufferException {
+                        return new IMGroupSetRsp(input, extensionRegistry);
+                    }
+                };
+
+        @Override
+        public com.google.protobuf.Parser<IMGroupSetRsp> getParserForType() {
+            return PARSER;
+        }
+
+        private int bitField0_;
+        public static final int GROUP_ID_FIELD_NUMBER = 1;
+        private int groupId_;
+
+        /**
+         * <code>required uint32 group_id = 1;</code>
+         * <p>
+         * <pre>
+         * cmd id:			CID_GROUP_SET_RSP
+         * </pre>
+         */
+        public boolean hasGroupId() {
+            return ((bitField0_ & 0x00000001) == 0x00000001);
+        }
+
+        /**
+         * <code>required uint32 group_id = 1;</code>
+         * <p>
+         * <pre>
+         * cmd id:			CID_GROUP_SET_RSP
+         * </pre>
+         */
+        public int getGroupId() {
+            return groupId_;
+        }
+
+        public static final int TYPE_FIELD_NUMBER = 2;
+        private YouMaiGroup.GroupSetType type_;
+
+        /**
+         * <code>required .GroupSetType type = 2;</code>
+         */
+        public boolean hasType() {
+            return ((bitField0_ & 0x00000002) == 0x00000002);
+        }
+
+        /**
+         * <code>required .GroupSetType type = 2;</code>
+         */
+        public YouMaiGroup.GroupSetType getType() {
+            return type_;
+        }
+
+        public static final int NOT_DISTURB_FIELD_NUMBER = 3;
+        private boolean notDisturb_;
+
+        /**
+         * <code>optional bool not_disturb = 3;</code>
+         * <p>
+         * <pre>
+         * (true:can't recv msg,false:can recv msg)
+         * </pre>
+         */
+        public boolean hasNotDisturb() {
+            return ((bitField0_ & 0x00000004) == 0x00000004);
+        }
+
+        /**
+         * <code>optional bool not_disturb = 3;</code>
+         * <p>
+         * <pre>
+         * (true:can't recv msg,false:can recv msg)
+         * </pre>
+         */
+        public boolean getNotDisturb() {
+            return notDisturb_;
+        }
+
+        public static final int INVITE_PERMISSION_FIELD_NUMBER = 4;
+        private boolean invitePermission_;
+
+        /**
+         * <code>optional bool invite_permission = 4;</code>
+         * <p>
+         * <pre>
+         * (true:need owner permission)
+         * </pre>
+         */
+        public boolean hasInvitePermission() {
+            return ((bitField0_ & 0x00000008) == 0x00000008);
+        }
+
+        /**
+         * <code>optional bool invite_permission = 4;</code>
+         * <p>
+         * <pre>
+         * (true:need owner permission)
+         * </pre>
+         */
+        public boolean getInvitePermission() {
+            return invitePermission_;
+        }
+
+        public static final int RESULT_FIELD_NUMBER = 10;
+        private YouMaiBasic.ResultCode result_;
+
+        /**
+         * <code>optional .ResultCode result = 10;</code>
+         */
+        public boolean hasResult() {
+            return ((bitField0_ & 0x00000010) == 0x00000010);
+        }
+
+        /**
+         * <code>optional .ResultCode result = 10;</code>
+         */
+        public YouMaiBasic.ResultCode getResult() {
+            return result_;
+        }
+
+        private void initFields() {
+            groupId_ = 0;
+            type_ = YouMaiGroup.GroupSetType.TYPE_NOT_DISTURB;
+            notDisturb_ = false;
+            invitePermission_ = false;
+            result_ = YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
+        }
+
+        private byte memoizedIsInitialized = -1;
+
+        public final boolean isInitialized() {
+            byte isInitialized = memoizedIsInitialized;
+            if (isInitialized == 1) return true;
+            if (isInitialized == 0) return false;
+
+            if (!hasGroupId()) {
+                memoizedIsInitialized = 0;
+                return false;
+            }
+            if (!hasType()) {
+                memoizedIsInitialized = 0;
+                return false;
+            }
+            memoizedIsInitialized = 1;
+            return true;
+        }
+
+        public void writeTo(com.google.protobuf.CodedOutputStream output)
+                throws java.io.IOException {
+            getSerializedSize();
+            if (((bitField0_ & 0x00000001) == 0x00000001)) {
+                output.writeUInt32(1, groupId_);
+            }
+            if (((bitField0_ & 0x00000002) == 0x00000002)) {
+                output.writeEnum(2, type_.getNumber());
+            }
+            if (((bitField0_ & 0x00000004) == 0x00000004)) {
+                output.writeBool(3, notDisturb_);
+            }
+            if (((bitField0_ & 0x00000008) == 0x00000008)) {
+                output.writeBool(4, invitePermission_);
+            }
+            if (((bitField0_ & 0x00000010) == 0x00000010)) {
+                output.writeEnum(10, result_.getNumber());
+            }
+            getUnknownFields().writeTo(output);
+        }
+
+        private int memoizedSerializedSize = -1;
+
+        public int getSerializedSize() {
+            int size = memoizedSerializedSize;
+            if (size != -1) return size;
+
+            size = 0;
+            if (((bitField0_ & 0x00000001) == 0x00000001)) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeUInt32Size(1, groupId_);
+            }
+            if (((bitField0_ & 0x00000002) == 0x00000002)) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeEnumSize(2, type_.getNumber());
+            }
+            if (((bitField0_ & 0x00000004) == 0x00000004)) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeBoolSize(3, notDisturb_);
+            }
+            if (((bitField0_ & 0x00000008) == 0x00000008)) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeBoolSize(4, invitePermission_);
+            }
+            if (((bitField0_ & 0x00000010) == 0x00000010)) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeEnumSize(10, result_.getNumber());
+            }
+            size += getUnknownFields().getSerializedSize();
+            memoizedSerializedSize = size;
+            return size;
+        }
+
+        private static final long serialVersionUID = 0L;
+
+        @Override
+        protected Object writeReplace()
+                throws java.io.ObjectStreamException {
+            return super.writeReplace();
+        }
+
+        public static YouMaiGroup.IMGroupSetRsp parseFrom(
+                com.google.protobuf.ByteString data)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data);
+        }
+
+        public static YouMaiGroup.IMGroupSetRsp parseFrom(
+                com.google.protobuf.ByteString data,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data, extensionRegistry);
+        }
+
+        public static YouMaiGroup.IMGroupSetRsp parseFrom(byte[] data)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data);
+        }
+
+        public static YouMaiGroup.IMGroupSetRsp parseFrom(
+                byte[] data,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data, extensionRegistry);
+        }
+
+        public static YouMaiGroup.IMGroupSetRsp parseFrom(java.io.InputStream input)
+                throws java.io.IOException {
+            return PARSER.parseFrom(input);
+        }
+
+        public static YouMaiGroup.IMGroupSetRsp parseFrom(
+                java.io.InputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            return PARSER.parseFrom(input, extensionRegistry);
+        }
+
+        public static YouMaiGroup.IMGroupSetRsp parseDelimitedFrom(java.io.InputStream input)
+                throws java.io.IOException {
+            return PARSER.parseDelimitedFrom(input);
+        }
+
+        public static YouMaiGroup.IMGroupSetRsp parseDelimitedFrom(
+                java.io.InputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            return PARSER.parseDelimitedFrom(input, extensionRegistry);
+        }
+
+        public static YouMaiGroup.IMGroupSetRsp parseFrom(
+                com.google.protobuf.CodedInputStream input)
+                throws java.io.IOException {
+            return PARSER.parseFrom(input);
+        }
+
+        public static YouMaiGroup.IMGroupSetRsp parseFrom(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            return PARSER.parseFrom(input, extensionRegistry);
+        }
+
+        public static Builder newBuilder() {
+            return Builder.create();
+        }
+
+        public Builder newBuilderForType() {
+            return newBuilder();
+        }
+
+        public static Builder newBuilder(YouMaiGroup.IMGroupSetRsp prototype) {
+            return newBuilder().mergeFrom(prototype);
+        }
+
+        public Builder toBuilder() {
+            return newBuilder(this);
+        }
+
+        @Override
+        protected Builder newBuilderForType(
+                BuilderParent parent) {
+            Builder builder = new Builder(parent);
+            return builder;
+        }
+
+        /**
+         * Protobuf type {@code IMGroupSetRsp}
+         */
+        public static final class Builder extends
+                com.google.protobuf.GeneratedMessage.Builder<Builder> implements
+                // @@protoc_insertion_point(builder_implements:IMGroupSetRsp)
+                YouMaiGroup.IMGroupSetRspOrBuilder {
+            public static final com.google.protobuf.Descriptors.Descriptor
+            getDescriptor() {
+                return YouMaiGroup.internal_static_com_proto_group_IMGroupSetRsp_descriptor;
+            }
+
+            protected FieldAccessorTable
+            internalGetFieldAccessorTable() {
+                return YouMaiGroup.internal_static_com_proto_group_IMGroupSetRsp_fieldAccessorTable
+                        .ensureFieldAccessorsInitialized(
+                                YouMaiGroup.IMGroupSetRsp.class, YouMaiGroup.IMGroupSetRsp.Builder.class);
+            }
+
+            // Construct using YouMaiGroup.IMGroupSetRsp.newBuilder()
+            private Builder() {
+                maybeForceBuilderInitialization();
+            }
+
+            private Builder(
+                    BuilderParent parent) {
+                super(parent);
+                maybeForceBuilderInitialization();
+            }
+
+            private void maybeForceBuilderInitialization() {
+                if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+                }
+            }
+
+            private static Builder create() {
+                return new Builder();
+            }
+
+            public Builder clear() {
+                super.clear();
+                groupId_ = 0;
+                bitField0_ = (bitField0_ & ~0x00000001);
+                type_ = YouMaiGroup.GroupSetType.TYPE_NOT_DISTURB;
+                bitField0_ = (bitField0_ & ~0x00000002);
+                notDisturb_ = false;
+                bitField0_ = (bitField0_ & ~0x00000004);
+                invitePermission_ = false;
+                bitField0_ = (bitField0_ & ~0x00000008);
+                result_ = YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
+                bitField0_ = (bitField0_ & ~0x00000010);
+                return this;
+            }
+
+            public Builder clone() {
+                return create().mergeFrom(buildPartial());
+            }
+
+            public com.google.protobuf.Descriptors.Descriptor
+            getDescriptorForType() {
+                return YouMaiGroup.internal_static_com_proto_group_IMGroupSetRsp_descriptor;
+            }
+
+            public YouMaiGroup.IMGroupSetRsp getDefaultInstanceForType() {
+                return YouMaiGroup.IMGroupSetRsp.getDefaultInstance();
+            }
+
+            public YouMaiGroup.IMGroupSetRsp build() {
+                YouMaiGroup.IMGroupSetRsp result = buildPartial();
+                if (!result.isInitialized()) {
+                    throw newUninitializedMessageException(result);
+                }
+                return result;
+            }
+
+            public YouMaiGroup.IMGroupSetRsp buildPartial() {
+                YouMaiGroup.IMGroupSetRsp result = new YouMaiGroup.IMGroupSetRsp(this);
+                int from_bitField0_ = bitField0_;
+                int to_bitField0_ = 0;
+                if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+                    to_bitField0_ |= 0x00000001;
+                }
+                result.groupId_ = groupId_;
+                if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+                    to_bitField0_ |= 0x00000002;
+                }
+                result.type_ = type_;
+                if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+                    to_bitField0_ |= 0x00000004;
+                }
+                result.notDisturb_ = notDisturb_;
+                if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
+                    to_bitField0_ |= 0x00000008;
+                }
+                result.invitePermission_ = invitePermission_;
+                if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
+                    to_bitField0_ |= 0x00000010;
+                }
+                result.result_ = result_;
+                result.bitField0_ = to_bitField0_;
+                onBuilt();
+                return result;
+            }
+
+            public Builder mergeFrom(com.google.protobuf.Message other) {
+                if (other instanceof YouMaiGroup.IMGroupSetRsp) {
+                    return mergeFrom((YouMaiGroup.IMGroupSetRsp) other);
+                } else {
+                    super.mergeFrom(other);
+                    return this;
+                }
+            }
+
+            public Builder mergeFrom(YouMaiGroup.IMGroupSetRsp other) {
+                if (other == YouMaiGroup.IMGroupSetRsp.getDefaultInstance()) return this;
+                if (other.hasGroupId()) {
+                    setGroupId(other.getGroupId());
+                }
+                if (other.hasType()) {
+                    setType(other.getType());
+                }
+                if (other.hasNotDisturb()) {
+                    setNotDisturb(other.getNotDisturb());
+                }
+                if (other.hasInvitePermission()) {
+                    setInvitePermission(other.getInvitePermission());
+                }
+                if (other.hasResult()) {
+                    setResult(other.getResult());
+                }
+                this.mergeUnknownFields(other.getUnknownFields());
+                return this;
+            }
+
+            public final boolean isInitialized() {
+                if (!hasGroupId()) {
+
+                    return false;
+                }
+                if (!hasType()) {
+
+                    return false;
+                }
+                return true;
+            }
+
+            public Builder mergeFrom(
+                    com.google.protobuf.CodedInputStream input,
+                    com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                    throws java.io.IOException {
+                YouMaiGroup.IMGroupSetRsp parsedMessage = null;
+                try {
+                    parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+                } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+                    parsedMessage = (YouMaiGroup.IMGroupSetRsp) e.getUnfinishedMessage();
+                    throw e;
+                } finally {
+                    if (parsedMessage != null) {
+                        mergeFrom(parsedMessage);
+                    }
+                }
+                return this;
+            }
+
+            private int bitField0_;
+
+            private int groupId_;
+
+            /**
+             * <code>required uint32 group_id = 1;</code>
+             * <p>
+             * <pre>
+             * cmd id:			CID_GROUP_SET_RSP
+             * </pre>
+             */
+            public boolean hasGroupId() {
+                return ((bitField0_ & 0x00000001) == 0x00000001);
+            }
+
+            /**
+             * <code>required uint32 group_id = 1;</code>
+             * <p>
+             * <pre>
+             * cmd id:			CID_GROUP_SET_RSP
+             * </pre>
+             */
+            public int getGroupId() {
+                return groupId_;
+            }
+
+            /**
+             * <code>required uint32 group_id = 1;</code>
+             * <p>
+             * <pre>
+             * cmd id:			CID_GROUP_SET_RSP
+             * </pre>
+             */
+            public Builder setGroupId(int value) {
+                bitField0_ |= 0x00000001;
+                groupId_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>required uint32 group_id = 1;</code>
+             * <p>
+             * <pre>
+             * cmd id:			CID_GROUP_SET_RSP
+             * </pre>
+             */
+            public Builder clearGroupId() {
+                bitField0_ = (bitField0_ & ~0x00000001);
+                groupId_ = 0;
+                onChanged();
+                return this;
+            }
+
+            private YouMaiGroup.GroupSetType type_ = YouMaiGroup.GroupSetType.TYPE_NOT_DISTURB;
+
+            /**
+             * <code>required .GroupSetType type = 2;</code>
+             */
+            public boolean hasType() {
+                return ((bitField0_ & 0x00000002) == 0x00000002);
+            }
+
+            /**
+             * <code>required .GroupSetType type = 2;</code>
+             */
+            public YouMaiGroup.GroupSetType getType() {
+                return type_;
+            }
+
+            /**
+             * <code>required .GroupSetType type = 2;</code>
+             */
+            public Builder setType(YouMaiGroup.GroupSetType value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000002;
+                type_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>required .GroupSetType type = 2;</code>
+             */
+            public Builder clearType() {
+                bitField0_ = (bitField0_ & ~0x00000002);
+                type_ = YouMaiGroup.GroupSetType.TYPE_NOT_DISTURB;
+                onChanged();
+                return this;
+            }
+
+            private boolean notDisturb_;
+
+            /**
+             * <code>optional bool not_disturb = 3;</code>
+             * <p>
+             * <pre>
+             * (true:can't recv msg,false:can recv msg)
+             * </pre>
+             */
+            public boolean hasNotDisturb() {
+                return ((bitField0_ & 0x00000004) == 0x00000004);
+            }
+
+            /**
+             * <code>optional bool not_disturb = 3;</code>
+             * <p>
+             * <pre>
+             * (true:can't recv msg,false:can recv msg)
+             * </pre>
+             */
+            public boolean getNotDisturb() {
+                return notDisturb_;
+            }
+
+            /**
+             * <code>optional bool not_disturb = 3;</code>
+             * <p>
+             * <pre>
+             * (true:can't recv msg,false:can recv msg)
+             * </pre>
+             */
+            public Builder setNotDisturb(boolean value) {
+                bitField0_ |= 0x00000004;
+                notDisturb_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional bool not_disturb = 3;</code>
+             * <p>
+             * <pre>
+             * (true:can't recv msg,false:can recv msg)
+             * </pre>
+             */
+            public Builder clearNotDisturb() {
+                bitField0_ = (bitField0_ & ~0x00000004);
+                notDisturb_ = false;
+                onChanged();
+                return this;
+            }
+
+            private boolean invitePermission_;
+
+            /**
+             * <code>optional bool invite_permission = 4;</code>
+             * <p>
+             * <pre>
+             * (true:need owner permission)
+             * </pre>
+             */
+            public boolean hasInvitePermission() {
+                return ((bitField0_ & 0x00000008) == 0x00000008);
+            }
+
+            /**
+             * <code>optional bool invite_permission = 4;</code>
+             * <p>
+             * <pre>
+             * (true:need owner permission)
+             * </pre>
+             */
+            public boolean getInvitePermission() {
+                return invitePermission_;
+            }
+
+            /**
+             * <code>optional bool invite_permission = 4;</code>
+             * <p>
+             * <pre>
+             * (true:need owner permission)
+             * </pre>
+             */
+            public Builder setInvitePermission(boolean value) {
+                bitField0_ |= 0x00000008;
+                invitePermission_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional bool invite_permission = 4;</code>
+             * <p>
+             * <pre>
+             * (true:need owner permission)
+             * </pre>
+             */
+            public Builder clearInvitePermission() {
+                bitField0_ = (bitField0_ & ~0x00000008);
+                invitePermission_ = false;
+                onChanged();
+                return this;
+            }
+
+            private YouMaiBasic.ResultCode result_ = YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
+
+            /**
+             * <code>optional .ResultCode result = 10;</code>
+             */
+            public boolean hasResult() {
+                return ((bitField0_ & 0x00000010) == 0x00000010);
+            }
+
+            /**
+             * <code>optional .ResultCode result = 10;</code>
+             */
+            public YouMaiBasic.ResultCode getResult() {
+                return result_;
+            }
+
+            /**
+             * <code>optional .ResultCode result = 10;</code>
+             */
+            public Builder setResult(YouMaiBasic.ResultCode value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000010;
+                result_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional .ResultCode result = 10;</code>
+             */
+            public Builder clearResult() {
+                bitField0_ = (bitField0_ & ~0x00000010);
+                result_ = YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
+                onChanged();
+                return this;
+            }
+
+            // @@protoc_insertion_point(builder_scope:IMGroupSetRsp)
+        }
+
+        static {
+            defaultInstance = new IMGroupSetRsp(true);
+            defaultInstance.initFields();
+        }
+
+        // @@protoc_insertion_point(class_scope:IMGroupSetRsp)
     }
 
     private static final com.google.protobuf.Descriptors.Descriptor
@@ -21106,6 +27706,16 @@ public final class YouMaiGroup {
     private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
             internal_static_com_proto_group_GroupMemberChangeReq_fieldAccessorTable;
+    private static final com.google.protobuf.Descriptors.Descriptor
+            internal_static_com_proto_group_GroupMemberChangeTransferReq_descriptor;
+    private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+            internal_static_com_proto_group_GroupMemberChangeTransferReq_fieldAccessorTable;
+    private static final com.google.protobuf.Descriptors.Descriptor
+            internal_static_com_proto_group_GroupMemberChangeTransferRsp_descriptor;
+    private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+            internal_static_com_proto_group_GroupMemberChangeTransferRsp_fieldAccessorTable;
     private static final com.google.protobuf.Descriptors.Descriptor
             internal_static_com_proto_group_GroupMemberChangeRsp_descriptor;
     private static
@@ -21161,6 +27771,16 @@ public final class YouMaiGroup {
     private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
             internal_static_com_proto_group_IMGroupInfoModifyNotify_fieldAccessorTable;
+    private static final com.google.protobuf.Descriptors.Descriptor
+            internal_static_com_proto_group_IMGroupSetReq_descriptor;
+    private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+            internal_static_com_proto_group_IMGroupSetReq_fieldAccessorTable;
+    private static final com.google.protobuf.Descriptors.Descriptor
+            internal_static_com_proto_group_IMGroupSetRsp_descriptor;
+    private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+            internal_static_com_proto_group_IMGroupSetRsp_fieldAccessorTable;
 
     public static com.google.protobuf.Descriptors.FileDescriptor
     getDescriptor() {
@@ -21177,73 +27797,100 @@ public final class YouMaiGroup {
                         "id\030\001 \002(\r\022\030\n\020info_update_time\030\002 \001(\004\"a\n\017Gr" +
                         "oupMemberItem\022\021\n\tmember_id\030\001 \002(\t\022\023\n\013memb" +
                         "er_name\030\002 \001(\t\022\021\n\tuser_name\030\003 \002(\t\022\023\n\013memb" +
-                        "er_role\030\004 \002(\r\"\236\001\n\tGroupInfo\022\020\n\010group_id\030" +
+                        "er_role\030\004 \002(\r\"\271\001\n\tGroupInfo\022\020\n\010group_id\030" +
                         "\001 \002(\r\022\022\n\ngroup_name\030\002 \001(\t\022\020\n\010owner_id\030\003 " +
                         "\001(\t\022\024\n\014group_avatar\030\004 \001(\t\022\r\n\005topic\030\005 \001(\t" +
                         "\022\030\n\020info_update_time\030\006 \001(\004\022\032\n\022group_memb" +
-                        "er_count\030\007 \001(\r\"\221\001\n\016GroupCreateReq\022\017\n\007use",
-                "r_id\030\001 \002(\t\0225\n\013member_list\030\002 \003(\0132 .com.pr" +
-                        "oto.group.GroupMemberItem\022\022\n\ngroup_name\030" +
-                        "\003 \001(\t\022\024\n\014group_avatar\030\004 \001(\t\022\r\n\005topic\030\005 \001" +
-                        "(\t\"\254\001\n\016GroupCreateRsp\022\020\n\010group_id\030\001 \002(\r\022" +
-                        "\017\n\007user_id\030\002 \001(\t\0225\n\013member_list\030\003 \003(\0132 ." +
-                        "GroupMemberItem\022\023\n\013updat" +
-                        "e_time\030\004 \001(\004\022+\n\006result\030\n \001(\0162\033.com.proto" +
-                        ".basic.ResultCode\"5\n\020GroupDissolveReq\022\017\n" +
-                        "\007user_id\030\001 \002(\t\022\020\n\010group_id\030\002 \002(\r\"Q\n\020Grou" +
-                        "pDissolveRsp\022\020\n\010group_id\030\001 \002(\r\022+\n\006result",
-                "\030\n \001(\0162\033.ResultCode\"4\n\016G" +
-                        "roupOptNotify\022\020\n\010opt_type\030\001 \002(\r\022\020\n\010group" +
-                        "_id\030\002 \002(\r\"\243\001\n\024GroupMemberChangeReq\022\017\n\007us" +
-                        "er_id\030\001 \002(\t\022\020\n\010group_id\030\002 \002(\r\0225\n\013member_" +
-                        "list\030\003 \003(\0132 .GroupMember" +
-                        "Item\0221\n\004type\030\004 \002(\0162#.Gro" +
-                        "upMemberOptType\"\324\001\n\024GroupMemberChangeRsp" +
-                        "\022\020\n\010group_id\030\001 \002(\r\0225\n\013member_list\030\002 \003(\0132" +
-                        " .GroupMemberItem\0221\n\004typ" +
-                        "e\030\003 \002(\0162#.GroupMemberOpt",
-                "Type\022\023\n\013update_time\030\004 \001(\004\022+\n\006result\030\n \001(" +
-                        "\0162\033.ResultCode\"\252\001\n\027Group" +
-                        "MemberChangeNotify\022\020\n\010group_id\030\001 \002(\r\0225\n\013" +
-                        "member_list\030\002 \003(\0132 .Grou" +
-                        "pMemberItem\0221\n\004type\030\003 \002(\0162#.com.proto.gr" +
-                        "oup.GroupMemberOptType\022\023\n\013update_time\030\004 " +
-                        "\001(\004\"T\n\014GroupListReq\022\017\n\007user_id\030\001 \002(\t\0223\n\017" +
-                        "group_item_list\030\002 \003(\0132\032." +
-                        "GroupItem\"\216\001\n\014GroupListRsp\0223\n\017group_info" +
-                        "_list\030\001 \003(\0132\032.GroupInfo\022",
-                "\034\n\024delete_group_id_list\030\002 \003(\r\022+\n\006result\030" +
-                        "\n \001(\0162\033.ResultCode\"H\n\016Gr" +
-                        "oupMemberReq\022\020\n\010group_id\030\001 \002(\r\022\017\n\007user_i" +
-                        "d\030\002 \002(\t\022\023\n\013update_time\030\003 \001(\004\"\233\001\n\016GroupMe" +
-                        "mberRsp\022\020\n\010group_id\030\001 \002(\r\0225\n\013member_list" +
-                        "\030\002 \003(\0132 .GroupMemberItem" +
-                        "\022\023\n\013update_time\030\003 \001(\004\022+\n\006result\030\n \002(\0162\033." +
-                        "ResultCode\"F\n\014GroupInfoR" +
-                        "eq\022\017\n\007user_id\030\001 \002(\t\022\020\n\010group_id\030\002 \002(\r\022\023\n" +
-                        "\013update_time\030\003 \001(\004\"{\n\014GroupInfoRsp\022.\n\ngr",
-                "oup_info\030\001 \001(\0132\032.GroupIn" +
-                        "fo\022\016\n\006update\030\002 \001(\010\022+\n\006result\030\n \001(\0162\033.com" +
-                        ".proto.basic.ResultCode\"\313\001\n\022GroupInfoMod" +
-                        "ifyReq\022\017\n\007user_id\030\001 \002(\t\022\020\n\010group_id\030\002 \002(" +
-                        "\r\022\022\n\ngroup_name\030\003 \001(\t\022\024\n\014group_avatar\030\004 " +
-                        "\001(\t\022\r\n\005topic\030\005 \001(\t\022\020\n\010owner_id\030\006 \001(\t\0222\n\004" +
-                        "type\030\007 \002(\0162$.GroupInfoMo" +
-                        "difyType\022\023\n\013member_name\030\010 \002(\t\"\314\001\n\022GroupI" +
-                        "nfoModifyRsp\022+\n\006result\030\001 \001(\0162\033.com.proto" +
-                        ".basic.ResultCode\022\020\n\010group_id\030\002 \002(\r\022.\n\ng",
-                "roup_info\030\003 \001(\0132\032.GroupI" +
-                        "nfo\0222\n\004type\030\004 \002(\0162$.Grou" +
-                        "pInfoModifyType\022\023\n\013member_name\030\010 \002(\t\"\265\001\n" +
-                        "\027IMGroupInfoModifyNotify\022\020\n\010group_id\030\001 \002" +
-                        "(\r\022.\n\ngroup_info\030\002 \002(\0132\032.com.proto.group" +
-                        ".GroupInfo\0222\n\004type\030\003 \002(\0162$.com.proto.gro" +
-                        "up.GroupInfoModifyType\022\017\n\007user_id\030\004 \001(\t\022" +
-                        "\023\n\013member_name\030\010 \002(\t*H\n\022GroupMemberOptTy" +
-                        "pe\022\030\n\024GROUP_MEMBER_OPT_ADD\020\001\022\030\n\024GROUP_ME" +
-                        "MBER_OPT_DEL\020\002*]\n\023GroupInfoModifyType\022\017\n",
-                "\013MODIFY_NAME\020\001\022\021\n\rMODIFY_AVATAR\020\002\022\020\n\014MOD" +
-                        "IFY_TOPIC\020\003\022\020\n\014MODIFY_OWNER\020\004"
+                        "er_count\030\007 \001(\r\022\031\n\021invite_permission\030\010 \001(",
+                "\010\"\221\001\n\016GroupCreateReq\022\017\n\007user_id\030\001 \002(\t\0225\n" +
+                        "\013member_list\030\002 \003(\0132 .Gro" +
+                        "upMemberItem\022\022\n\ngroup_name\030\003 \001(\t\022\024\n\014grou" +
+                        "p_avatar\030\004 \001(\t\022\r\n\005topic\030\005 \001(\t\"\254\001\n\016GroupC" +
+                        "reateRsp\022\020\n\010group_id\030\001 \002(\r\022\017\n\007user_id\030\002 " +
+                        "\001(\t\0225\n\013member_list\030\003 \003(\0132 .com.proto.gro" +
+                        "up.GroupMemberItem\022\023\n\013update_time\030\004 \001(\004\022" +
+                        "+\n\006result\030\n \001(\0162\033.Result" +
+                        "Code\"5\n\020GroupDissolveReq\022\017\n\007user_id\030\001 \002(" +
+                        "\t\022\020\n\010group_id\030\002 \002(\r\"Q\n\020GroupDissolveRsp\022",
+                "\020\n\010group_id\030\001 \002(\r\022+\n\006result\030\n \001(\0162\033.com." +
+                        "proto.basic.ResultCode\"4\n\016GroupOptNotify" +
+                        "\022\020\n\010opt_type\030\001 \002(\r\022\020\n\010group_id\030\002 \002(\r\"\310\001\n" +
+                        "\024GroupMemberChangeReq\022\017\n\007user_id\030\001 \002(\t\022\020" +
+                        "\n\010group_id\030\002 \002(\r\0225\n\013member_list\030\003 \003(\0132 ." +
+                        "GroupMemberItem\0221\n\004type\030" +
+                        "\004 \002(\0162#.GroupMemberOptTy" +
+                        "pe\022\016\n\006remark\030\005 \001(\t\022\023\n\013member_name\030\006 \001(\t\"" +
+                        "\355\001\n\034GroupMemberChangeTransferReq\022\023\n\013src_" +
+                        "user_id\030\001 \002(\t\022\020\n\010group_id\030\003 \002(\r\022\023\n\013dst_u",
+                "ser_id\030\004 \002(\t\0225\n\013member_list\030\005 \003(\0132 .com." +
+                        "proto.group.GroupMemberItem\0221\n\004type\030\006 \002(" +
+                        "\0162#.GroupMemberOptType\022\016" +
+                        "\n\006remark\030\007 \001(\t\022\027\n\017src_member_name\030\010 \001(\t\"" +
+                        "\335\001\n\034GroupMemberChangeTransferRsp\022\023\n\013src_" +
+                        "user_id\030\001 \002(\t\022\020\n\010group_id\030\002 \002(\r\022\023\n\013dst_u" +
+                        "ser_id\030\003 \002(\t\0225\n\013member_list\030\004 \003(\0132 .com." +
+                        "proto.group.GroupMemberItem\0221\n\004type\030\005 \002(" +
+                        "\0162#.GroupMemberOptType\022\027" +
+                        "\n\017dst_member_name\030\006 \001(\t\"\372\001\n\024GroupMemberC",
+                "hangeRsp\022\020\n\010group_id\030\001 \002(\r\0225\n\013member_lis" +
+                        "t\030\002 \003(\0132 .GroupMemberIte" +
+                        "m\0221\n\004type\030\003 \002(\0162#.GroupM" +
+                        "emberOptType\022\023\n\013update_time\030\004 \001(\004\022\017\n\007use" +
+                        "r_id\030\005 \001(\t\022\023\n\013member_name\030\006 \001(\t\022+\n\006resul" +
+                        "t\030\n \001(\0162\033.ResultCode\"\277\001\n" +
+                        "\027GroupMemberChangeNotify\022\020\n\010group_id\030\001 \002" +
+                        "(\r\0225\n\013member_list\030\002 \003(\0132 .com.proto.grou" +
+                        "p.GroupMemberItem\0221\n\004type\030\003 \002(\0162#.com.pr" +
+                        "oto.group.GroupMemberOptType\022\023\n\013update_t",
+                "ime\030\004 \001(\004\022\023\n\013member_name\030\005 \001(\t\"T\n\014GroupL" +
+                        "istReq\022\017\n\007user_id\030\001 \002(\t\0223\n\017group_item_li" +
+                        "st\030\002 \003(\0132\032.GroupItem\"\216\001\n" +
+                        "\014GroupListRsp\0223\n\017group_info_list\030\001 \003(\0132\032" +
+                        ".GroupInfo\022\034\n\024delete_gro" +
+                        "up_id_list\030\002 \003(\r\022+\n\006result\030\n \001(\0162\033.com.p" +
+                        "roto.basic.ResultCode\"H\n\016GroupMemberReq\022" +
+                        "\020\n\010group_id\030\001 \002(\r\022\017\n\007user_id\030\002 \002(\t\022\023\n\013up" +
+                        "date_time\030\003 \001(\004\"\233\001\n\016GroupMemberRsp\022\020\n\010gr" +
+                        "oup_id\030\001 \002(\r\0225\n\013member_list\030\002 \003(\0132 .com.",
+                "proto.group.GroupMemberItem\022\023\n\013update_ti" +
+                        "me\030\003 \001(\004\022+\n\006result\030\n \002(\0162\033.com.proto.bas" +
+                        "ic.ResultCode\"F\n\014GroupInfoReq\022\017\n\007user_id" +
+                        "\030\001 \002(\t\022\020\n\010group_id\030\002 \002(\r\022\023\n\013update_time\030" +
+                        "\003 \001(\004\"{\n\014GroupInfoRsp\022.\n\ngroup_info\030\001 \001(" +
+                        "\0132\032.GroupInfo\022\016\n\006update\030" +
+                        "\002 \001(\010\022+\n\006result\030\n \001(\0162\033." +
+                        "ResultCode\"\346\001\n\022GroupInfoModifyReq\022\017\n\007use" +
+                        "r_id\030\001 \002(\t\022\020\n\010group_id\030\002 \002(\r\022\022\n\ngroup_na" +
+                        "me\030\003 \001(\t\022\024\n\014group_avatar\030\004 \001(\t\022\r\n\005topic\030",
+                "\005 \001(\t\022\020\n\010owner_id\030\006 \001(\t\0222\n\004type\030\007 \002(\0162$." +
+                        "GroupInfoModifyType\022\026\n\016s" +
+                        "rc_owner_name\030\010 \002(\t\022\026\n\016dst_owner_name\030\t " +
+                        "\001(\t\"\347\001\n\022GroupInfoModifyRsp\022+\n\006result\030\001 \001" +
+                        "(\0162\033.ResultCode\022\020\n\010group" +
+                        "_id\030\002 \002(\r\022.\n\ngroup_info\030\003 \001(\0132\032.com.prot" +
+                        "o.group.GroupInfo\0222\n\004type\030\004 \002(\0162$.com.pr" +
+                        "oto.group.GroupInfoModifyType\022\026\n\016src_own" +
+                        "er_name\030\010 \002(\t\022\026\n\016dst_owner_name\030\t \001(\t\"\320\001" +
+                        "\n\027IMGroupInfoModifyNotify\022\020\n\010group_id\030\001 ",
+                "\002(\r\022.\n\ngroup_info\030\002 \002(\0132\032.com.proto.grou" +
+                        "p.GroupInfo\0222\n\004type\030\003 \002(\0162$.com.proto.gr" +
+                        "oup.GroupInfoModifyType\022\017\n\007user_id\030\004 \001(\t" +
+                        "\022\026\n\016src_owner_name\030\010 \002(\t\022\026\n\016dst_owner_na" +
+                        "me\030\t \001(\t\"\217\001\n\rIMGroupSetReq\022\020\n\010group_id\030\001" +
+                        " \002(\r\022\017\n\007user_id\030\002 \002(\t\022+\n\004type\030\003 \002(\0162\035.co" +
+                        "m.proto.group.GroupSetType\022\023\n\013not_distur" +
+                        "b\030\004 \001(\010\022\031\n\021invite_permission\030\005 \001(\010\"\253\001\n\rI" +
+                        "MGroupSetRsp\022\020\n\010group_id\030\001 \002(\r\022+\n\004type\030\002" +
+                        " \002(\0162\035.GroupSetType\022\023\n\013n",
+                "ot_disturb\030\003 \001(\010\022\031\n\021invite_permission\030\004 " +
+                        "\001(\010\022+\n\006result\030\n \001(\0162\033.Re" +
+                        "sultCode*H\n\022GroupMemberOptType\022\030\n\024GROUP_" +
+                        "MEMBER_OPT_ADD\020\001\022\030\n\024GROUP_MEMBER_OPT_DEL" +
+                        "\020\002*]\n\023GroupInfoModifyType\022\017\n\013MODIFY_NAME" +
+                        "\020\001\022\021\n\rMODIFY_AVATAR\020\002\022\020\n\014MODIFY_TOPIC\020\003\022" +
+                        "\020\n\014MODIFY_OWNER\020\004*@\n\014GroupSetType\022\024\n\020TYP" +
+                        "E_NOT_DISTURB\020\001\022\032\n\026TYPE_INVITE_PERMISSIO" +
+                        "N\020\002"
         };
         com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
                 new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -21275,7 +27922,7 @@ public final class YouMaiGroup {
         internal_static_com_proto_group_GroupInfo_fieldAccessorTable = new
                 com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_proto_group_GroupInfo_descriptor,
-                new String[]{"GroupId", "GroupName", "OwnerId", "GroupAvatar", "Topic", "InfoUpdateTime", "GroupMemberCount",});
+                new String[]{"GroupId", "GroupName", "OwnerId", "GroupAvatar", "Topic", "InfoUpdateTime", "GroupMemberCount", "InvitePermission",});
         internal_static_com_proto_group_GroupCreateReq_descriptor =
                 getDescriptor().getMessageTypes().get(3);
         internal_static_com_proto_group_GroupCreateReq_fieldAccessorTable = new
@@ -21311,73 +27958,97 @@ public final class YouMaiGroup {
         internal_static_com_proto_group_GroupMemberChangeReq_fieldAccessorTable = new
                 com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_proto_group_GroupMemberChangeReq_descriptor,
-                new String[]{"UserId", "GroupId", "MemberList", "Type",});
-        internal_static_com_proto_group_GroupMemberChangeRsp_descriptor =
+                new String[]{"UserId", "GroupId", "MemberList", "Type", "Remark", "MemberName",});
+        internal_static_com_proto_group_GroupMemberChangeTransferReq_descriptor =
                 getDescriptor().getMessageTypes().get(9);
+        internal_static_com_proto_group_GroupMemberChangeTransferReq_fieldAccessorTable = new
+                com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+                internal_static_com_proto_group_GroupMemberChangeTransferReq_descriptor,
+                new String[]{"SrcUserId", "GroupId", "DstUserId", "MemberList", "Type", "Remark", "SrcMemberName",});
+        internal_static_com_proto_group_GroupMemberChangeTransferRsp_descriptor =
+                getDescriptor().getMessageTypes().get(10);
+        internal_static_com_proto_group_GroupMemberChangeTransferRsp_fieldAccessorTable = new
+                com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+                internal_static_com_proto_group_GroupMemberChangeTransferRsp_descriptor,
+                new String[]{"SrcUserId", "GroupId", "DstUserId", "MemberList", "Type", "DstMemberName",});
+        internal_static_com_proto_group_GroupMemberChangeRsp_descriptor =
+                getDescriptor().getMessageTypes().get(11);
         internal_static_com_proto_group_GroupMemberChangeRsp_fieldAccessorTable = new
                 com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_proto_group_GroupMemberChangeRsp_descriptor,
-                new String[]{"GroupId", "MemberList", "Type", "UpdateTime", "Result",});
+                new String[]{"GroupId", "MemberList", "Type", "UpdateTime", "UserId", "MemberName", "Result",});
         internal_static_com_proto_group_GroupMemberChangeNotify_descriptor =
-                getDescriptor().getMessageTypes().get(10);
+                getDescriptor().getMessageTypes().get(12);
         internal_static_com_proto_group_GroupMemberChangeNotify_fieldAccessorTable = new
                 com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_proto_group_GroupMemberChangeNotify_descriptor,
-                new String[]{"GroupId", "MemberList", "Type", "UpdateTime",});
+                new String[]{"GroupId", "MemberList", "Type", "UpdateTime", "MemberName",});
         internal_static_com_proto_group_GroupListReq_descriptor =
-                getDescriptor().getMessageTypes().get(11);
+                getDescriptor().getMessageTypes().get(13);
         internal_static_com_proto_group_GroupListReq_fieldAccessorTable = new
                 com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_proto_group_GroupListReq_descriptor,
                 new String[]{"UserId", "GroupItemList",});
         internal_static_com_proto_group_GroupListRsp_descriptor =
-                getDescriptor().getMessageTypes().get(12);
+                getDescriptor().getMessageTypes().get(14);
         internal_static_com_proto_group_GroupListRsp_fieldAccessorTable = new
                 com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_proto_group_GroupListRsp_descriptor,
                 new String[]{"GroupInfoList", "DeleteGroupIdList", "Result",});
         internal_static_com_proto_group_GroupMemberReq_descriptor =
-                getDescriptor().getMessageTypes().get(13);
+                getDescriptor().getMessageTypes().get(15);
         internal_static_com_proto_group_GroupMemberReq_fieldAccessorTable = new
                 com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_proto_group_GroupMemberReq_descriptor,
                 new String[]{"GroupId", "UserId", "UpdateTime",});
         internal_static_com_proto_group_GroupMemberRsp_descriptor =
-                getDescriptor().getMessageTypes().get(14);
+                getDescriptor().getMessageTypes().get(16);
         internal_static_com_proto_group_GroupMemberRsp_fieldAccessorTable = new
                 com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_proto_group_GroupMemberRsp_descriptor,
                 new String[]{"GroupId", "MemberList", "UpdateTime", "Result",});
         internal_static_com_proto_group_GroupInfoReq_descriptor =
-                getDescriptor().getMessageTypes().get(15);
+                getDescriptor().getMessageTypes().get(17);
         internal_static_com_proto_group_GroupInfoReq_fieldAccessorTable = new
                 com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_proto_group_GroupInfoReq_descriptor,
                 new String[]{"UserId", "GroupId", "UpdateTime",});
         internal_static_com_proto_group_GroupInfoRsp_descriptor =
-                getDescriptor().getMessageTypes().get(16);
+                getDescriptor().getMessageTypes().get(18);
         internal_static_com_proto_group_GroupInfoRsp_fieldAccessorTable = new
                 com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_proto_group_GroupInfoRsp_descriptor,
                 new String[]{"GroupInfo", "Update", "Result",});
         internal_static_com_proto_group_GroupInfoModifyReq_descriptor =
-                getDescriptor().getMessageTypes().get(17);
+                getDescriptor().getMessageTypes().get(19);
         internal_static_com_proto_group_GroupInfoModifyReq_fieldAccessorTable = new
                 com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_proto_group_GroupInfoModifyReq_descriptor,
-                new String[]{"UserId", "GroupId", "GroupName", "GroupAvatar", "Topic", "OwnerId", "Type", "MemberName",});
+                new String[]{"UserId", "GroupId", "GroupName", "GroupAvatar", "Topic", "OwnerId", "Type", "SrcOwnerName", "DstOwnerName",});
         internal_static_com_proto_group_GroupInfoModifyRsp_descriptor =
-                getDescriptor().getMessageTypes().get(18);
+                getDescriptor().getMessageTypes().get(20);
         internal_static_com_proto_group_GroupInfoModifyRsp_fieldAccessorTable = new
                 com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_proto_group_GroupInfoModifyRsp_descriptor,
-                new String[]{"Result", "GroupId", "GroupInfo", "Type", "MemberName",});
+                new String[]{"Result", "GroupId", "GroupInfo", "Type", "SrcOwnerName", "DstOwnerName",});
         internal_static_com_proto_group_IMGroupInfoModifyNotify_descriptor =
-                getDescriptor().getMessageTypes().get(19);
+                getDescriptor().getMessageTypes().get(21);
         internal_static_com_proto_group_IMGroupInfoModifyNotify_fieldAccessorTable = new
                 com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_proto_group_IMGroupInfoModifyNotify_descriptor,
-                new String[]{"GroupId", "GroupInfo", "Type", "UserId", "MemberName",});
+                new String[]{"GroupId", "GroupInfo", "Type", "UserId", "SrcOwnerName", "DstOwnerName",});
+        internal_static_com_proto_group_IMGroupSetReq_descriptor =
+                getDescriptor().getMessageTypes().get(22);
+        internal_static_com_proto_group_IMGroupSetReq_fieldAccessorTable = new
+                com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+                internal_static_com_proto_group_IMGroupSetReq_descriptor,
+                new String[]{"GroupId", "UserId", "Type", "NotDisturb", "InvitePermission",});
+        internal_static_com_proto_group_IMGroupSetRsp_descriptor =
+                getDescriptor().getMessageTypes().get(23);
+        internal_static_com_proto_group_IMGroupSetRsp_fieldAccessorTable = new
+                com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+                internal_static_com_proto_group_IMGroupSetRsp_descriptor,
+                new String[]{"GroupId", "Type", "NotDisturb", "InvitePermission", "Result",});
         YouMaiBasic.getDescriptor();
     }
 

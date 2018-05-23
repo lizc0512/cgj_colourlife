@@ -39,7 +39,7 @@ public class GroupManageFragment extends Fragment implements GroupTransAdapter.I
 
     private static final String TAG = ContactsFragment.class.getName();
 
-       private RecyclerView rv_main;
+    private RecyclerView rv_main;
     private GroupTransAdapter adapter;
 
     private CharIndexView iv_main;
@@ -50,6 +50,7 @@ public class GroupManageFragment extends Fragment implements GroupTransAdapter.I
     private Subscription subscription;
 
     private String ownerId = "";
+    private String ownerName = "";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -159,6 +160,10 @@ public class GroupManageFragment extends Fragment implements GroupTransAdapter.I
         return ownerId;
     }
 
+    public String getOwnerName() {
+        return ownerName;
+    }
+
     /**
      * item点击
      *
@@ -169,6 +174,7 @@ public class GroupManageFragment extends Fragment implements GroupTransAdapter.I
     public void onItemClick(int pos, ContactBean contact) {
         adapter.setSelected(pos);
         ownerId = contact.getUuid();
+        ownerName = contact.getRealname();
     }
 
     @Override

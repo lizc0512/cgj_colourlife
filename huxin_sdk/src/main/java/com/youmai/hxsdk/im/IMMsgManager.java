@@ -304,7 +304,7 @@ public class IMMsgManager {
                 int groupId = notify.getGroupId();
                 //String uuid = notify.getUserId();
                 YouMaiGroup.GroupInfoModifyType type = notify.getType();
-                String memberName = notify.getMemberName();
+                String memberName = notify.getSrcOwnerName();
 
                 if (type == YouMaiGroup.GroupInfoModifyType.MODIFY_NAME) {
                     YouMaiGroup.GroupInfo groupInfo = notify.getGroupInfo();
@@ -359,6 +359,25 @@ public class IMMsgManager {
                     Intent intent = new Intent(IMGroupActivity.UPDATE_GROUP_INFO);
                     intent.putExtra("GroupInfo", info);
                     LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
+                } else if (type == YouMaiGroup.GroupInfoModifyType.MODIFY_OWNER) {
+
+                    String srcName = notify.getSrcOwnerName();
+                    String dstName = notify.getDstOwnerName();
+
+                    StringBuilder sb = new StringBuilder();
+                    sb.append(srcName).append(" 将群主转让给 ").append(dstName);
+
+                    CacheMsgBean msgBean = getGroupOwnerChangedMsgBean(groupId, sb.toString());
+
+
+                    List<CacheMsgBean> msgList = CacheMsgHelper.instance().toQueryCacheMsgList(mContext, groupId + "");
+                    if (!ListUtils.isEmpty(msgList)) {
+                        CacheMsgBean lastMsg = msgList.get(msgList.size() - 1);
+                        msgBean.setTargetName(lastMsg.getTargetName());
+                        CacheMsgHelper.instance().insertOrUpdate(mContext, msgBean);
+                    }
+
+                    handlerIMMsgCallback(msgBean);
                 }
 
             } catch (InvalidProtocolBufferException e) {
@@ -962,6 +981,16 @@ public class IMMsgManager {
         return new CacheMsgBean()
                 .setMsgTime(System.currentTimeMillis())
                 .setMsgType(CacheMsgBean.GROUP_NAME_CHANGED)
+                .setMemberChanged(content)
+                .setGroupId(groupId)
+                .setTargetUuid(groupId + "");
+    }
+
+
+    private CacheMsgBean getGroupOwnerChangedMsgBean(int groupId, String content) {
+        return new CacheMsgBean()
+                .setMsgTime(System.currentTimeMillis())
+                .setMsgType(CacheMsgBean.GROUP_TRANSFER_OWNER)
                 .setMemberChanged(content)
                 .setGroupId(groupId)
                 .setTargetUuid(groupId + "");

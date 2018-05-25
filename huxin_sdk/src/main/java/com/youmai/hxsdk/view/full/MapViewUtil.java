@@ -265,7 +265,7 @@ public class MapViewUtil implements LocationSource, AMapLocationListener, AMap.O
         if (latLng != null) {
             MarkerOptions markerOption = new MarkerOptions();
             markerOption.position(latLng);
-            markerOption.title("我在这里与你通话");
+            markerOption.title("我在这里");
             markerOption.draggable(true);
             markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(
                     mContext.getResources(), R.drawable.hx_icon_location)));

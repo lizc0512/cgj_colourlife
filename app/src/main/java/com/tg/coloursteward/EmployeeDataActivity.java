@@ -123,121 +123,119 @@ public class EmployeeDataActivity extends BaseActivity {
         ivHead = (ImageView) findViewById(R.id.iv_head);
         //ivHead.setCircleShape();
         ivSex = (ImageView) findViewById(R.id.iv_sex);
-        tvName = (TextView) findViewById(R.id.tv_name);
-        tvJob = (TextView) findViewById(R.id.tv_job);
-        tvBranch = (TextView) findViewById(R.id.tv_branch);
-        mlListView = (ListView) findViewById(R.id.lv_employee_phone);
-        ivClose = (ImageView) findViewById(R.id.iv_close);
-        ivClose.setOnClickListener(new OnClickListener() {
+		tvName=(TextView) findViewById(R.id.tv_name);
+		tvJob=(TextView) findViewById(R.id.tv_job);
+		tvBranch=(TextView) findViewById(R.id.tv_branch);
+		mlListView=(ListView) findViewById(R.id.lv_employee_phone);
+		ivClose = (ImageView) findViewById(R.id.iv_close);
+		ivClose.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				finish();
+			}
+		});
+		/**
+		 * 获取饭票
+		 */
+		String jsonStr = Tools.getStringValue(EmployeeDataActivity.this,Contants.storage.TICKET);//饭票页面缓存
+		String TicketStr = Tools.getStringValue(EmployeeDataActivity.this, Contants.storage.TICKETHOME);//首页缓存
+		if(StringUtils.isNotEmpty(TicketStr)){//首页
+			balance = Double.parseDouble(TicketStr);
+		}else if(StringUtils.isNotEmpty(jsonStr)){//饭票页面
+			JSONObject jsonObject = HttpTools.getContentJSONObject(jsonStr);
+			if(jsonObject != null ){
+				try {
+					balance = jsonObject.getDouble("balance");
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		mlListView.setOnItemClickListener(new OnItemClickListener() {
 
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-        /**
-         * 获取饭票
-         */
-        String jsonStr = Tools.getStringValue(EmployeeDataActivity.this, Contants.storage.TICKET);//饭票页面缓存
-        String TicketStr = Tools.getStringValue(EmployeeDataActivity.this, Contants.storage.TICKETHOME);//首页缓存
-        if (StringUtils.isNotEmpty(TicketStr)) {//首页
-            balance = Double.parseDouble(TicketStr);
-        } else if (StringUtils.isNotEmpty(jsonStr)) {//饭票页面
-            JSONObject jsonObject = HttpTools.getContentJSONObject(jsonStr);
-            if (jsonObject != null) {
-                try {
-                    balance = jsonObject.getDouble("balance");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        mlListView.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
+				String phone = PhoneList.get(position).phone;
+				if(TextUtils.isEmpty(phone)){
+					ToastFactory.showToast(EmployeeDataActivity.this, "暂无联系电话");
+					return;
+				}
+				Tools.call(EmployeeDataActivity.this, phone);	
+			}
+		});
+		
+		llSendSms=(LinearLayout) findViewById(R.id.ll_sendsms);
+		magLinearLayout=(ManageMentLinearlayout) findViewById(R.id.ll_sendemail);
+		llRedpackets=(ManageMentLinearlayout) findViewById(R.id.ll_redpackets);
+		llSendSms.setOnClickListener(singleListener);
+		magLinearLayout.setOnClickListener(singleListener);
+		llRedpackets.setOnClickListener(singleListener);
+		cbCollect=(CheckBox) findViewById(R.id.cb_collect);
+		/**
+		 * 邮件
+		 */
+		magLinearLayout.setNetworkRequestListener(new NetworkRequestListener() {
+			
+			@Override
+			public void onSuccess(ManageMentLinearlayout magLearLayout, Message msg,
+					String response) {
+				String  jsonString = HttpTools.getContentString(response);
+				if (jsonString != null) {
+					ResponseData app_list = HttpTools.getResponseKey(jsonString,"app_list");
+					if (app_list.length > 0) {
+						JSONArray jsonArray = app_list.getJSONArray(0,"list");
+						ResponseData data = HttpTools.getResponseKeyJSONArray(jsonArray);
+						gridlist1 = new ArrayList<GridViewInfo>();
+						GridViewInfo item = null;
+							for (int i = 0; i < data.length; i++) {
+								try {
+									item = new GridViewInfo();
+									item.name = data.getString(i, "name");
+									item.oauthType = data.getString(i, "oauthType");
+									item.developerCode = data.getString(i, "app_code");
+									item.clientCode = data.getString(i, "app_code");
+									item.sso = data.getString(i,"url");
+									JSONObject icon = data.getJSONObject(i,"icon");
+									if(icon != null || icon.length() > 0){
+										item.icon = icon.getString("android");
+									}
+									gridlist1.add(item);
+								} catch (JSONException e) {
+									e.printStackTrace();
+								}
+							}
+					}
+				}
+						
+	}
+			@Override
+			public void onFail(ManageMentLinearlayout magLearLayout, Message msg, String hintString) {
+				ToastFactory.showToast(EmployeeDataActivity.this,hintString);
+			}
+			@Override
+			public void onRequest(MessageHandler msgHand) {
+				String pwd = Tools.getPassWord(EmployeeDataActivity.this);
+				RequestConfig config = new RequestConfig(EmployeeDataActivity.this, 0);
+				config.handler = msgHand.getHandler();
+				RequestParams params = new RequestParams();
+				params.put("user_name", UserInfo.employeeAccount);
+				params.put("password", pwd);
+				params.put("resource", "app");
+				params.put("cate_id", 0);
+				HttpTools.httpPost(Contants.URl.URL_ICETEST, "/newoa/rights/list",config, params);
+			}
+		});
+	}
 
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String phone = PhoneList.get(position).phone;
-                if (TextUtils.isEmpty(phone)) {
-                    ToastFactory.showToast(EmployeeDataActivity.this, "暂无联系电话");
-                    return;
-                }
-                Tools.call(EmployeeDataActivity.this, phone);
-            }
-        });
-
-        llSendSms = (LinearLayout) findViewById(R.id.ll_sendsms);
-        magLinearLayout = (ManageMentLinearlayout) findViewById(R.id.ll_sendemail);
-        llRedpackets = (ManageMentLinearlayout) findViewById(R.id.ll_redpackets);
-        llSendSms.setOnClickListener(singleListener);
-        magLinearLayout.setOnClickListener(singleListener);
-        llRedpackets.setOnClickListener(singleListener);
-        cbCollect = (CheckBox) findViewById(R.id.cb_collect);
-        /**
-         * 邮件
-         */
-        magLinearLayout.setNetworkRequestListener(new NetworkRequestListener() {
-
-            @Override
-            public void onSuccess(ManageMentLinearlayout magLearLayout, Message msg,
-                                  String response) {
-                String jsonString = HttpTools.getContentString(response);
-                if (jsonString != null) {
-                    ResponseData app_list = HttpTools.getResponseKey(jsonString, "app_list");
-                    if (app_list.length > 0) {
-                        JSONArray jsonArray = app_list.getJSONArray(0, "list");
-                        ResponseData data = HttpTools.getResponseKeyJSONArray(jsonArray);
-                        gridlist1 = new ArrayList<GridViewInfo>();
-                        GridViewInfo item = null;
-                        for (int i = 0; i < data.length; i++) {
-                            try {
-                                item = new GridViewInfo();
-                                item.name = data.getString(i, "name");
-                                item.oauthType = data.getString(i, "oauthType");
-                                item.developerCode = data.getString(i, "app_code");
-                                item.clientCode = data.getString(i, "app_code");
-                                item.sso = data.getString(i, "url");
-                                JSONObject icon = data.getJSONObject(i, "icon");
-                                if (icon != null || icon.length() > 0) {
-                                    item.icon = icon.getString("android");
-                                }
-                                gridlist1.add(item);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                }
-
-            }
-
-            @Override
-            public void onFail(ManageMentLinearlayout magLearLayout, Message msg, String hintString) {
-                ToastFactory.showToast(EmployeeDataActivity.this, hintString);
-            }
-
-            @Override
-            public void onRequest(MessageHandler msgHand) {
-                String pwd = Tools.getPassWord(EmployeeDataActivity.this);
-                RequestConfig config = new RequestConfig(EmployeeDataActivity.this, 0);
-                config.handler = msgHand.getHandler();
-                RequestParams params = new RequestParams();
-                params.put("user_name", UserInfo.employeeAccount);
-                params.put("password", pwd);
-                params.put("resource", "app");
-                params.put("cate_id", 0);
-                HttpTools.httpPost(Contants.URl.URL_ICETEST, "/newoa/rights/list", config, params);
-            }
-        });
-    }
-
-    @Override
-    public void onSuccess(Message msg, String jsonString, String hintString) {
-        super.onSuccess(msg, jsonString, hintString);
-        int code = HttpTools.getCode(jsonString);
-        if (msg.arg1 == HttpTools.GET_EMPLOYEE_INFO) {
-            String response = HttpTools.getContentString(jsonString);
-            if (jsonString != null) {
-                ResponseData data = HttpTools.getResponseContentObject(response);
+	@Override
+	public void onSuccess(Message msg, String jsonString, String hintString) {
+		super.onSuccess(msg, jsonString, hintString);
+		int code = HttpTools.getCode(jsonString);
+		if (msg.arg1 == HttpTools.GET_EMPLOYEE_INFO) {
+			String response = HttpTools.getContentString(jsonString);
+			if (jsonString != null) {
+				ResponseData data = HttpTools.getResponseContentObject(response);
                 item = new EmployeeBean();
                 item.setIsFavorite(data.getString("isFavorite"));
                 item.setUid(data.getString("uid"));
@@ -342,73 +340,73 @@ public class EmployeeDataActivity extends BaseActivity {
 
                 tvCornet.setText(item.getEnterprise_cornet());
                 tvSection.setText(item.getOrgName());
-                mlListView.addFooterView(footView);
-                adapter = new EmployeePhoneAdapter(this, PhoneList);
-                mlListView.setAdapter(adapter);
-            }
-        } else if (msg.arg1 == HttpTools.SET_EMPLOYEE_INFO) {
-            if (code == 0) {
-                ToastFactory.showToast(EmployeeDataActivity.this, "添加收藏成功");
-            }
-        } else if (msg.arg1 == HttpTools.DELETE_EMPLOYEE_INFO) {
-            if (code == 0) {
-                ToastFactory.showToast(EmployeeDataActivity.this, "取消收藏成功");
-            }
-        } else if (msg.arg1 == HttpTools.POST_SETPWD_INFO) {//判断有无密码
-            if (code == 0) {
-                JSONObject content = HttpTools.getContentJSONObject(jsonString);
-                if (content != null) {
-                    String state;
-                    try {
-                        state = content.getString("state");
-                        switch (0) {
-                            case 0:// 给同事发饭票
-                                if (state != null) {
-                                    if ("hasPwd".equals(state)) { // 已设置密码
-                                        intent = new Intent(EmployeeDataActivity.this, RedpacketsShareMainActivity.class);
-                                        intent.putExtra(Contants.PARAMETER.BALANCE, balance);
+				mlListView.addFooterView(footView);
+				adapter= new EmployeePhoneAdapter(this, PhoneList);
+				mlListView.setAdapter(adapter);
+			}
+		}else if(msg.arg1 == HttpTools.SET_EMPLOYEE_INFO){
+			if(code == 0){
+				ToastFactory.showToast(EmployeeDataActivity.this, "添加收藏成功");
+			}
+		}else if(msg.arg1 == HttpTools.DELETE_EMPLOYEE_INFO){
+			if(code == 0){
+				ToastFactory.showToast(EmployeeDataActivity.this, "取消收藏成功");
+			}
+		}else if(msg.arg1 == HttpTools.POST_SETPWD_INFO){//判断有无密码
+			if(code == 0){
+				JSONObject content = HttpTools.getContentJSONObject(jsonString);
+				if(content != null){
+					String state;
+					try {
+						state = content.getString("state");
+						switch (0) {
+							case 0:// 给同事发饭票
+								if (state != null) {
+									if ("hasPwd".equals(state)) { // 已设置密码
+										intent = new Intent(EmployeeDataActivity.this,RedpacketsShareMainActivity.class);
+										intent.putExtra(Contants.PARAMETER.BALANCE,balance);
                                         intent.putExtra(Contants.PARAMETER.OA, item.getUsername());
-                                        intent.putExtra(Contants.PARAMETER.TRANSFERTO, "colleague");
-                                        startActivity(intent);
-                                    } else {
-                                        aDialogCallback = new PwdDialog2.ADialogCallback() {
-                                            @Override
-                                            public void callback() {
-                                                intent = new Intent(EmployeeDataActivity.this, RedpacketsShareMainActivity.class);
-                                                intent.putExtra(Contants.PARAMETER.BALANCE, balance);
+										intent.putExtra(Contants.PARAMETER.TRANSFERTO,"colleague");
+										startActivity(intent);
+									} else {
+										aDialogCallback = new PwdDialog2.ADialogCallback() {
+											@Override
+											public void callback() {
+												intent = new Intent(EmployeeDataActivity.this,RedpacketsShareMainActivity.class);
+												intent.putExtra(Contants.PARAMETER.BALANCE,balance);
                                                 intent.putExtra(Contants.PARAMETER.OA, item.getUsername());
-                                                intent.putExtra(Contants.PARAMETER.TRANSFERTO, "colleague");
-                                                startActivity(intent);
-                                            }
-                                        };
-                                        aDialog = new PwdDialog2(
-                                                EmployeeDataActivity.this,
-                                                R.style.choice_dialog, state,
-                                                aDialogCallback);
-                                        aDialog.show();
-                                    }
-                                } else {
-                                    //	ToastFactory.showToast(RedpacketsMainActivity.this, "网络异常");
-                                }
-                                break;
-                        }
-                    } catch (JSONException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }
-    }
+												intent.putExtra(Contants.PARAMETER.TRANSFERTO,"colleague");
+												startActivity(intent);
+											}
+										};
+										aDialog = new PwdDialog2(
+												EmployeeDataActivity.this,
+												R.style.choice_dialog, state,
+												aDialogCallback);
+										aDialog.show();
+									}
+								} else {
+									//	ToastFactory.showToast(RedpacketsMainActivity.this, "网络异常");
+								}
+								break;
+						}
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+	}
 
-    @Override
-    protected boolean handClickEvent(View v) {
-        String url = null;
-        String oauthType = null;
-        String developerCode = null;
-        String clientCode = null;
-        switch (v.getId()) {
-            case R.id.ll_sendemail:// 发送邮件
+	@Override
+	protected boolean handClickEvent(View v) {
+		String url = null ;
+		String oauthType = null;
+		String developerCode = null;
+		String clientCode = null;
+		switch (v.getId()) {
+		case R.id.ll_sendemail:// 发送邮件
 			/*if(gridlist1.size() > 0 ){
 				for (int i = 0; i < gridlist1.size(); i++) {
 					if(gridlist1.get(i).name.equals("新邮件")){
@@ -437,65 +435,62 @@ public class EmployeeDataActivity extends BaseActivity {
                 startActivity(intent);
 
                 break;
-            case R.id.ll_redpackets:// 转账
-                if (balance <= 0) {
-                    ToastFactory.showToast(EmployeeDataActivity.this, "饭票余额不足，不能发饭票");
-                } else {
-                    // 判断有无密码及卡
-                    isSetPwd(0);
-                }
-                break;
-        }
-        return super.handClickEvent(v);
-    }
+		case R.id.ll_redpackets:// 转账
+			if (balance <= 0) {
+				ToastFactory.showToast(EmployeeDataActivity.this,"饭票余额不足，不能发饭票");
+			}else {
+				// 判断有无密码及卡
+				isSetPwd(0);
+			}
+			break;
+		}
+		return super.handClickEvent(v);
+	}
+	/**
+	 * 点击事件判断有误密码以卡
+	 * @param position
+	 */
+	private void isSetPwd(int position){
+		String key = Tools.getStringValue(this,Contants.EMPLOYEE_LOGIN.key);
+		String secret = Tools.getStringValue(this,Contants.EMPLOYEE_LOGIN.secret);
+		RequestConfig config = new RequestConfig(this, HttpTools.POST_SETPWD_INFO);
+		RequestParams params = new RequestParams();
+		params.put("position", position);
+		params.put("key", key);
+		params.put("secret",secret);
+		HttpTools.httpPost(Contants.URl.URL_CPMOBILE,"/1.0/caiRedPaket/isSetPwd",config, params);
+	}
+	/**
+	 * 添加常用联系人
+	 */
+	private void submit() {
+		RequestConfig config = new RequestConfig(this,HttpTools.SET_EMPLOYEE_INFO,"添加常用联系人");
+		RequestParams params = new RequestParams();
+		params.put("uid", UserInfo.employeeAccount);
+		params.put("contactsID",contactsID);
+		HttpTools.httpPost(Contants.URl.URL_ICETEST, "/phonebook/favoriteContacts",config, params);
+	}
+	
+	/**
+	 * 删除常用联系人
+	 */
+	private void delete() {
+		RequestConfig config = new RequestConfig(this,HttpTools.DELETE_EMPLOYEE_INFO,"删除常用联系人");
+		RequestParams params = new RequestParams();
+		params.put("uid", UserInfo.employeeAccount);
+		params.put("contactsID",contactsID);
+		HttpTools.httpDelete(Contants.URl.URL_ICETEST,"/phonebook/favoriteContacts",config, params);
+	}
 
-    /**
-     * 点击事件判断有误密码以卡
-     *
-     * @param position
-     */
-    private void isSetPwd(int position) {
-        String key = Tools.getStringValue(this, Contants.EMPLOYEE_LOGIN.key);
-        String secret = Tools.getStringValue(this, Contants.EMPLOYEE_LOGIN.secret);
-        RequestConfig config = new RequestConfig(this, HttpTools.POST_SETPWD_INFO);
-        RequestParams params = new RequestParams();
-        params.put("position", position);
-        params.put("key", key);
-        params.put("secret", secret);
-        HttpTools.httpPost(Contants.URl.URL_ICETEST, "/hongbao/isSetPwd", config, params);
-    }
+	@Override
+	public View getContentView() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-    /**
-     * 添加常用联系人
-     */
-    private void submit() {
-        RequestConfig config = new RequestConfig(this, HttpTools.SET_EMPLOYEE_INFO, "添加常用联系人");
-        RequestParams params = new RequestParams();
-        params.put("uid", UserInfo.employeeAccount);
-        params.put("contactsID", contactsID);
-        HttpTools.httpPost(Contants.URl.URL_ICETEST, "/phonebook/favoriteContacts", config, params);
-    }
-
-    /**
-     * 删除常用联系人
-     */
-    private void delete() {
-        RequestConfig config = new RequestConfig(this, HttpTools.DELETE_EMPLOYEE_INFO, "删除常用联系人");
-        RequestParams params = new RequestParams();
-        params.put("uid", UserInfo.employeeAccount);
-        params.put("contactsID", contactsID);
-        HttpTools.httpDelete(Contants.URl.URL_ICETEST, "/phonebook/favoriteContacts", config, params);
-    }
-
-    @Override
-    public View getContentView() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public String getHeadTitle() {
-        // TODO Auto-generated method stub
-        return null;
-    }
+	@Override
+	public String getHeadTitle() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

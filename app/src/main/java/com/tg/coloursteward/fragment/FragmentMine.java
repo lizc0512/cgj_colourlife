@@ -43,6 +43,7 @@ import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,13 +60,14 @@ import android.widget.TextView;
  *
  */
 public class FragmentMine extends Fragment implements ItemClickListener, ResponseListener{
+	private static final String TAG = "FragmentMine";
 	private View mView;
-        private Activity mActivity;
+    private Activity mActivity;
 	private HomeService homeService;
 	private ImageView imgHead;
 	private TextView tvRealName,tvJob;
 	private RelativeLayout rlUserInfo;
-        //private DisplayImageOptions options;
+    //private DisplayImageOptions options;
 	private AlertDialog dialog;
 	private MessageHandler msgHandler;
 	protected ImageLoader imageLoader = ImageLoader.getInstance();
@@ -337,6 +339,7 @@ public class FragmentMine extends Fragment implements ItemClickListener, Respons
 			if(code == 0 ){
 				clearPayPwd();
 			}else{
+				Log.e(TAG, "onSuccess:hintString "+ hintString);
 				ToastFactory.showToast(mActivity, hintString);
 			}
 		}else{
@@ -344,8 +347,9 @@ public class FragmentMine extends Fragment implements ItemClickListener, Respons
 			if(code == 0 ){
 				if(jsonObject != null){
 					try {
-						String message = jsonObject.getString("message");
-						ToastFactory.showToast(mActivity, message);
+						String message = jsonObject.getString("message");//密码清空成功  支付密码已经清空过了！
+						Log.e(TAG, "onSuccess:message "+message );
+						ToastFactory.showToast(mActivity, message+",请到我的饭票页面重新设置");
 					} catch (JSONException e) {
 						e.printStackTrace();
 					}

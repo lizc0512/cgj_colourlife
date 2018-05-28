@@ -55,13 +55,13 @@ public class AccountExchangeRecordAdapter extends MyBaseAdapter<AccountExchangeR
         }
 
         if(item.state == 1){//状态1未处理2成功3失败
-            tvState.setText("未处理");
-            tvState.setTextColor(context.getResources().getColor(R.color.text_color1));
+            tvState.setText("状态:未处理");
+            tvState.setTextColor(context.getResources().getColor(R.color.fail_state));
         }else if(item.state == 2){
-            tvState.setText("成功");
+            tvState.setText("状态:成功");
             tvState.setTextColor(context.getResources().getColor(R.color.succeed_state));
         }else{
-            tvState.setText("失败");
+            tvState.setText("状态:失败");
             tvState.setTextColor(context.getResources().getColor(R.color.fail_state));
         }
         return convertView;

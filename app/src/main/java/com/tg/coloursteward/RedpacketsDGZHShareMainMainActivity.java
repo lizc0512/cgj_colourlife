@@ -267,7 +267,7 @@ public class RedpacketsDGZHShareMainMainActivity extends BaseActivity {
                 params.put("secret", secret);
                 params.put("page", pageIndex);
                 params.put("pagesize", PullRefreshListView.PAGER_SIZE);
-                HttpTools.httpGet(Contants.URl.URL_ICETEST, "/hongbao/carryList", config, params);
+                HttpTools.httpGet(Contants.URl.URL_CPMOBILE, "/1.0/caiRedPaket/carryList", config, params);
 
             }
 
@@ -280,7 +280,7 @@ public class RedpacketsDGZHShareMainMainActivity extends BaseActivity {
                 params.put("secret", secret);
                 params.put("page", 1);
                 params.put("pagesize", PullRefreshListView.PAGER_SIZE);
-                HttpTools.httpGet(Contants.URl.URL_ICETEST, "/hongbao/carryList", config, params);
+                HttpTools.httpGet(Contants.URl.URL_CPMOBILE, "/1.0/caiRedPaket/carryList", config, params);
             }
         });
         pullListView.performLoading();
@@ -306,7 +306,7 @@ public class RedpacketsDGZHShareMainMainActivity extends BaseActivity {
         params.put("version", versionShort);
         params.put("key", key);
         params.put("secret", secret);
-        HttpTools.httpPost(Contants.URl.URL_ICETEST, "/hongbao/getEmployeeInfo", config, params);
+        HttpTools.httpPost(Contants.URl.URL_CPMOBILE, "/1.0/caiRedPaket/getEmployeeInfo", config, params);
 
     }
 

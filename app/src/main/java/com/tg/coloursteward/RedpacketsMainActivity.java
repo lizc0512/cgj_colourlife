@@ -60,7 +60,7 @@ public class RedpacketsMainActivity extends BaseActivity {
 		RequestParams params = new RequestParams();
 		params.put("key", key);
 		params.put("secret",secret);
-		HttpTools.httpGet(Contants.URl.URL_ICETEST,"/hongbao/getBalance",config, params);
+		HttpTools.httpGet(Contants.URl.URL_CPMOBILE,"/1.0/caiRedPaket/getBalance",config, params);
 	}
 	/**
 	 * 初始化控件
@@ -120,7 +120,7 @@ public class RedpacketsMainActivity extends BaseActivity {
 		params.put("position", position);
 		params.put("key", key);
 		params.put("secret",secret);
-		HttpTools.httpPost(Contants.URl.URL_ICETEST,"/hongbao/isSetPwd",config, params);
+		HttpTools.httpPost(Contants.URl.URL_CPMOBILE,"/1.0/caiRedPaket/isSetPwd",config, params);
 	}
 	@Override
 	public void onSuccess(Message msg, String jsonString, String hintString) {

@@ -21,6 +21,9 @@ public interface Contants {
          */
         //final String URL_ICETEST="http://iceapi.colourlife.com:8081/v1";//1.0
         String URL_ICETEST = "https://openapi.colourlife.com/v1";//2.0
+
+        String URL_CPMOBILE = "http://cpmobile.colourlife.com";
+
 //     String URL_ICETEST="http://avatar.ice.colourlife.com/v1";//2.0
         /**
          * 测试地址
@@ -46,6 +49,7 @@ public interface Contants {
     interface EMPLOYEE_LOGIN {
         String key = "EmployeeLogin_key";
         String secret = "EmployeeLogin_secret";
+        String diff = "EmployeeLogin_diff";
     }
 
     interface LOGO {

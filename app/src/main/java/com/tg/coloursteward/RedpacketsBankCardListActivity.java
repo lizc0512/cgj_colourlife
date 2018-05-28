@@ -119,7 +119,7 @@ public class RedpacketsBankCardListActivity extends BaseActivity {
 		params.put("secret", secret);
 		params.put("page", 1);
 		params.put("pagesize", Integer.MAX_VALUE);
-		HttpTools.httpGet(Contants.URl.URL_ICETEST, "/hongbao/bindBankList", config, params);
+		HttpTools.httpGet(Contants.URl.URL_CPMOBILE, "/1.0/caiRedPaket/bindBankList", config, params);
 	}
 	/**
 	 * 删除绑定银行卡
@@ -130,7 +130,7 @@ public class RedpacketsBankCardListActivity extends BaseActivity {
 		params.put("key", key);
 		params.put("secret", secret);
 		params.put("id",bankCardId);
-		HttpTools.httpDelete(Contants.URl.URL_ICETEST, "/hongbao/bankDelete/"+bankCardId, config, params);
+		HttpTools.httpDelete(Contants.URl.URL_CPMOBILE, "/1.0/caiRedPaket/bankDelete/"+bankCardId, config, params);
 	}
 
 	@Override

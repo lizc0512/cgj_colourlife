@@ -1,19 +1,35 @@
 package com.tg.coloursteward;
 
 
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-
-import cn.jpush.android.api.JPushInterface;
-import cn.jpush.android.api.TagAliasCallback;
+import android.Manifest;
+import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.ImageView;
+import android.widget.TabHost;
+import android.widget.TabHost.OnTabChangeListener;
+import android.widget.TextView;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
@@ -23,7 +39,6 @@ import com.amap.api.maps2d.LocationSource;
 import com.githang.statusbar.StatusBarCompat;
 import com.tg.coloursteward.application.CityPropertyApplication;
 import com.tg.coloursteward.constant.Contants;
-import com.tg.coloursteward.database.SharedPreferencesTools;
 import com.tg.coloursteward.fragment.FragmentCentre;
 import com.tg.coloursteward.fragment.FragmentCommunicate;
 import com.tg.coloursteward.fragment.FragmentDeskTop;
@@ -37,10 +52,10 @@ import com.tg.coloursteward.log.Logger;
 import com.tg.coloursteward.net.GetTwoRecordListener;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.MessageHandler;
+import com.tg.coloursteward.net.MessageHandler.ResponseListener;
 import com.tg.coloursteward.net.RequestConfig;
 import com.tg.coloursteward.net.RequestParams;
 import com.tg.coloursteward.net.ResponseData;
-import com.tg.coloursteward.net.MessageHandler.ResponseListener;
 import com.tg.coloursteward.serice.AppAuthService;
 import com.tg.coloursteward.serice.AuthAppService;
 import com.tg.coloursteward.serice.HomeService;
@@ -56,34 +71,17 @@ import com.tg.coloursteward.util.Utils;
 import com.tg.coloursteward.view.dialog.DialogFactory;
 import com.tg.coloursteward.view.dialog.ToastFactory;
 
-import android.Manifest;
-import android.net.Uri;
-import android.os.Build;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.provider.Settings;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.ImageView;
-import android.widget.TabHost;
-import android.widget.TextView;
-import android.widget.TabHost.OnTabChangeListener;
-import android.app.Activity;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+
+import cn.jpush.android.api.JPushInterface;
+import cn.jpush.android.api.TagAliasCallback;
 
 /**
  * 主页面
@@ -120,10 +118,6 @@ public class MainActivity extends FragmentActivity implements ResponseListener, 
     private ArrayList<AdvInfo> listadv = new ArrayList<AdvInfo>();
     private LocationSource.OnLocationChangedListener mListener;
     private int skin_code = 101;//  101 彩生活  100 通用  102 中住
-
-    private String examineNum;
-    private String examine1;
-    private String examine2;
 
 
     private BroadcastReceiver freshReceiver = new BroadcastReceiver() {
@@ -345,6 +339,7 @@ public class MainActivity extends FragmentActivity implements ResponseListener, 
         RequestConfig config = new RequestConfig(this, HttpTools.GET_USER_INFO, null);
         RequestParams params = new RequestParams();
         params.put("uid", UserInfo.uid);
+        Log.e(TAG, "getUserInfo: uid" + UserInfo.uid);
         HttpTools.httpGet(Contants.URl.URL_ICETEST, "/account", config, params);
     }
 
@@ -382,6 +377,7 @@ public class MainActivity extends FragmentActivity implements ResponseListener, 
         params.put("access_token", "1521ac83521b8063e7a9a49dc22e79b0");
         params.put("target_type", "2");
         params.put("target", UserInfo.employeeAccount);
+        Log.e(TAG, "getAccountInfo: target" + UserInfo.employeeAccount);
         HttpTools.httpGet(Contants.URl.URL_ICETEST, "/splitdivide/api/account", config, params);
     }
 
@@ -427,16 +423,29 @@ public class MainActivity extends FragmentActivity implements ResponseListener, 
     }
 
     /**
-     * 获取key
-     * sectet
+     * 调用登录的接口
      */
     public void getEmployeeInfo() {
-        String pwd = Tools.getPassWord(this);
-        RequestConfig config = new RequestConfig(this, HttpTools.SET_EMPLOYEE_INFO, null);
-        RequestParams params = new RequestParams();
-        params.put("username", UserInfo.employeeAccount);
-        params.put("password", pwd);
-        HttpTools.httpPost(Contants.URl.URL_ICETEST, "/czywg/employee/login", config, params);
+
+        String key = Tools.getStringValue(this, Contants.EMPLOYEE_LOGIN.key);
+        String secret = Tools.getStringValue(this, Contants.EMPLOYEE_LOGIN.secret);
+        if (TextUtils.isEmpty(key) || TextUtils.isEmpty(secret)) {
+            getKeyAndSecret();
+        } else {
+            String pwd = Tools.getPassWord(this);
+            RequestConfig config = new RequestConfig(this, HttpTools.SET_EMPLOYEE_INFO, null);
+            RequestParams params = new RequestParams();
+            params.put("username", UserInfo.employeeAccount);
+            params.put("password", pwd);
+            params.put("key", key);
+            params.put("secret", secret);
+            HttpTools.httpPost(Contants.URl.URL_CPMOBILE, "/1.0/employee/login", config, params);
+        }
+    }
+
+    private void getKeyAndSecret() {
+        RequestConfig config = new RequestConfig(this, HttpTools.GET_KEYSECERT, null);
+        HttpTools.httpPost(Contants.URl.URL_CPMOBILE, "/1.0/auth", config, null);
     }
 
     /**
@@ -621,47 +630,13 @@ public class MainActivity extends FragmentActivity implements ResponseListener, 
             sendBroadcast(new Intent(ACTION_FRESH_USERINFO));
             hand.removeCallbacks(getUserInfoRunnable);
             hand.postDelayed(getUserInfoRunnable, 10 * 60 * 1000);
-//        } else if (msg.arg1 == HttpTools.GET_ACCESS_TOKEN) {
-//
-//            if (code == 0) {
-//                JSONObject jsonObject = HttpTools.getContentJSONObject(jsonString);
-//                if (jsonObject != null) {
-//                    try {
-//                        String access_token = jsonObject.getString("access_token");
-//                        Log.e(TAG, "onSuccess: access_token" + access_token);
-//                        if (!access_token.equals("")) {
-//                            SharedPreferencesTools.saveSysMap(this, "access_token", access_token);
-//                        }
-//                    } catch (JSONException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//            } else {
-//                ToastFactory.showToast(this, "请求不成功" + code);
-//                Log.e(TAG, "请求失败: "+message );
-//            }
-//        } else if (msg.arg1 == HttpTools.SET_EMPLOYEE_INFO) {
-            if (code == 0) {
-                JSONObject content = HttpTools.getContentJSONObject(jsonString);
-                if (content != null) {
-                    try {
-                        String key = content.getString("key");
-                        String secret = content.getString("secret");
-                        //保存key  secret
-                        Tools.saveStringValue(MainActivity.this, Contants.EMPLOYEE_LOGIN.key, key);
-                        Tools.saveStringValue(MainActivity.this, Contants.EMPLOYEE_LOGIN.secret, secret);
-                        if (skin_code == 101) {//彩生活
-                            sendBroadcast(new Intent(ACTION_TICKET_INFO));
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            } else {
-                //保存key  sectet
-                Tools.saveStringValue(MainActivity.this, Contants.EMPLOYEE_LOGIN.key, "");
-                Tools.saveStringValue(MainActivity.this, Contants.EMPLOYEE_LOGIN.secret, "");
+            getEmployeeInfo();
+            if (skin_code == 101) {//彩生活
+                sendBroadcast(new Intent(ACTION_TICKET_INFO));
             }
+        } else if (msg.arg1 == HttpTools.SET_EMPLOYEE_INFO) {
+            //用户登录后
+
         } else if (msg.arg1 == HttpTools.POST_DELETE_INFO) {//删除首页消息
             if (code == 0) {
                 ToastFactory.showToast(MainActivity.this, message);
@@ -728,6 +703,8 @@ public class MainActivity extends FragmentActivity implements ResponseListener, 
 
             }
         } else if (msg.arg1 == HttpTools.GET_ACCOUNT_INFO) {//即时分配
+            Log.e(TAG, "onSuccess:code " + code);
+            Log.e(TAG, "onSuccess: message" + message);
             if (code == 0) {
                 JSONObject jsonObject = HttpTools.getContentJSONObject(jsonString);
                 try {
@@ -900,6 +877,21 @@ public class MainActivity extends FragmentActivity implements ResponseListener, 
                 String contentString = HttpTools.getContentString(jsonString);
                 Log.e(TAG, "onSuccess:contentString " + contentString);//0
                 Tools.saveStringValue(this, "examine2", contentString);
+            }
+        } else if (msg.arg1 == HttpTools.GET_KEYSECERT) {
+            if (code == 0) {
+                try {
+                    String contentString = HttpTools.getContentString(jsonString);
+                    JSONObject sonJon = new JSONObject(contentString);
+                    String key = sonJon.optString("key");
+                    String secret = sonJon.optString("secret");
+                    //保存key  secret
+                    Tools.saveStringValue(MainActivity.this, Contants.EMPLOYEE_LOGIN.key, key);
+                    Tools.saveStringValue(MainActivity.this, Contants.EMPLOYEE_LOGIN.secret, secret);
+                    getEmployeeInfo();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }

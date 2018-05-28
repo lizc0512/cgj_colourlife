@@ -54,7 +54,8 @@ public class PullRefreshListView extends LinearLayout implements OnClickListener
 	public static final int[] NOTHING = new int[] { 0 };
 	public static final int HTTP_FRESH_CODE = 1000;
 	public static final int HTTP_MORE_CODE = 2000;
-	public static final int PAGER_SIZE = 8;
+//	public static final int PAGER_SIZE = 8;
+	public static final int PAGER_SIZE = 20;
 	public static final int REFRESH_SECONDS = 5 * 60 * 1000;
 	private static final int FLAG_UP = 0;
 	private static final int FLAG_DOWN = 1;

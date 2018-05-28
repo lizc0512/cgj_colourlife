@@ -154,7 +154,7 @@ public class RedpacketsContactsActivity extends BaseActivity {
 		params.put("phone",contactArray+"");
 		params.put("key", key);
 		params.put("secret",secret);
-		HttpTools.httpPost(Contants.URl.URL_ICETEST, "/hongbao/checkSendPacket", config, params);
+		HttpTools.httpPost(Contants.URl.URL_CPMOBILE, "/1.0/caiRedPaket/checkSendPacket", config, params);
 		return mSortList;
 	}
 	

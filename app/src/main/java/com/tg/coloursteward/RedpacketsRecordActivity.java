@@ -121,7 +121,7 @@ public class RedpacketsRecordActivity extends BaseActivity implements OnCheckedC
 						params.put("secret",secret);
 						params.put("page", pagerIndex);
 						params.put("pagesize", PullRefreshListView.PAGER_SIZE);
-						HttpTools.httpGet(Contants.URl.URL_ICETEST, "/hongbao/redPacketReceive",config, params);
+						HttpTools.httpGet(Contants.URl.URL_CPMOBILE, "/1.0/caiRedPaket/redPacketReceive",config, params);
 					}
 					
 					@Override
@@ -134,7 +134,7 @@ public class RedpacketsRecordActivity extends BaseActivity implements OnCheckedC
 						params.put("secret",secret);
 						params.put("page", 1);
 						params.put("pagesize", PullRefreshListView.PAGER_SIZE);
-						HttpTools.httpGet(Contants.URl.URL_ICETEST, "/hongbao/redPacketReceive",config, params);
+						HttpTools.httpGet(Contants.URl.URL_CPMOBILE, "/1.0/caiRedPaket/redPacketReceive",config, params);
 					}
 				});
 		/**
@@ -204,7 +204,7 @@ public class RedpacketsRecordActivity extends BaseActivity implements OnCheckedC
 						params.put("secret",secret);
 						params.put("page", pagerIndex);
 						params.put("pagesize", PullRefreshListView.PAGER_SIZE);
-						HttpTools.httpGet(Contants.URl.URL_ICETEST, "/hongbao/redPacketExpend",config, params);
+						HttpTools.httpGet(Contants.URl.URL_CPMOBILE, "/1.0/caiRedPaket/redPacketExpend",config, params);
 					}
 					
 					@Override
@@ -217,7 +217,7 @@ public class RedpacketsRecordActivity extends BaseActivity implements OnCheckedC
 						params.put("secret",secret);
 						params.put("page", 1);
 						params.put("pagesize", PullRefreshListView.PAGER_SIZE);
-						HttpTools.httpGet(Contants.URl.URL_ICETEST, "/hongbao/redPacketExpend",config, params);
+						HttpTools.httpGet(Contants.URl.URL_CPMOBILE, "/1.0/caiRedPaket/redPacketExpend",config, params);
 					}
 				});
 		

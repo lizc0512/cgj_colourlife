@@ -1,27 +1,32 @@
 package com.tg.coloursteward.fragment;
 
-import java.io.UnsupportedEncodingException;
-import java.math.BigDecimal;
-import java.net.URLEncoder;
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Date;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.support.v4.app.Fragment;
+import android.text.format.Time;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.tg.coloursteward.AccountActivity;
 import com.tg.coloursteward.DataShowActivity;
 import com.tg.coloursteward.DeskTopActivity;
-import com.tg.coloursteward.DoorActivity;
 import com.tg.coloursteward.HomeContactSearchActivity;
 import com.tg.coloursteward.InviteRegisterActivity;
 import com.tg.coloursteward.MainActivity;
 import com.tg.coloursteward.MyBrowserActivity;
-import com.tg.coloursteward.PublicAccountActivity;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.RedpacketsBonusMainActivity;
 import com.tg.coloursteward.adapter.HomeDeskTopAdapter;
@@ -38,44 +43,32 @@ import com.tg.coloursteward.net.RequestConfig;
 import com.tg.coloursteward.net.RequestParams;
 import com.tg.coloursteward.net.ResponseData;
 import com.tg.coloursteward.net.image.VolleyUtils;
-import com.tg.coloursteward.serice.AppAuthService;
 import com.tg.coloursteward.serice.AuthAppService;
 import com.tg.coloursteward.serice.HomeService;
 import com.tg.coloursteward.util.DateUtils;
 import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.HomeRelativeLayout;
+import com.tg.coloursteward.view.HomeRelativeLayout.NetRelativeRequestListener;
 import com.tg.coloursteward.view.ManageMentLinearlayout;
+import com.tg.coloursteward.view.ManageMentLinearlayout.NetworkRequestListener;
 import com.tg.coloursteward.view.PopWindowView;
 import com.tg.coloursteward.view.PullRefreshListViewFind;
-import com.tg.coloursteward.view.PullRefreshListViewFind.NetOnItemLongClickListener;
-import com.tg.coloursteward.view.PullRefreshListViewFind.NetPullRefreshOnScroll;
 import com.tg.coloursteward.view.RotateProgress;
 import com.tg.coloursteward.view.RoundImageView;
-import com.tg.coloursteward.view.ManageMentLinearlayout.NetworkRequestListener;
-import com.tg.coloursteward.view.HomeRelativeLayout.NetRelativeRequestListener;
-import com.tg.coloursteward.view.dialog.ToastFactory;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.support.v4.app.Fragment;
-import android.text.format.Time;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
-import android.widget.LinearLayout;
-import android.widget.PopupWindow;
-import android.widget.TextView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.RelativeLayout;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
+import java.net.URLEncoder;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * 首页（定制版）彩生活
@@ -268,8 +261,8 @@ public class FragmentDeskTop extends Fragment implements OnItemClickListener {
                 }
             }
         }, 1500);
-		/*magLinearLayoutCommunity.postDelayed(new Runnable() {//在管小区
-			
+        /*magLinearLayoutCommunity.postDelayed(new Runnable() {//在管小区
+
 			@Override
 			public void run() {
 				magLinearLayoutCommunity.loaddingData();
@@ -297,6 +290,8 @@ public class FragmentDeskTop extends Fragment implements OnItemClickListener {
     public void freshUI() {
         key = Tools.getStringValue(mActivity, Contants.EMPLOYEE_LOGIN.key);
         secret = Tools.getStringValue(mActivity, Contants.EMPLOYEE_LOGIN.secret);
+        Log.e(TAG, "freshUI: key" + key);
+        Log.e(TAG, "freshUI: secret" + secret);
         magLinearLayoutTicket.loaddingData();
     }
 
@@ -644,7 +639,11 @@ public class FragmentDeskTop extends Fragment implements OnItemClickListener {
         if (StringUtils.isNotEmpty(PerformanceStr)) {
             progressBarPerformance.setVisibility(View.GONE);
             rlPerformance.setVisibility(View.VISIBLE);
-            tvPerformance.setText(PerformanceStr);
+            if (!"无".equals(PerformanceStr)) {
+                tvPerformance.setText(PerformanceStr);
+            } else {
+                tvPerformance.setText("0.00");
+            }
         } else {
             progressBarPerformance.setVisibility(View.VISIBLE);
             rlPerformance.setVisibility(View.GONE);
@@ -919,7 +918,7 @@ public class FragmentDeskTop extends Fragment implements OnItemClickListener {
                 RequestParams params = new RequestParams();
                 params.put("key", key);
                 params.put("secret", secret);
-                HttpTools.httpGet(Contants.URl.URL_ICETEST, "/hongbao/getHBUserList", config, params);
+                HttpTools.httpGet(Contants.URl.URL_CPMOBILE, "/1.0/caiRedPaket/getHBUserList", config, params);
             }
         });
         /**
@@ -1007,11 +1006,11 @@ public class FragmentDeskTop extends Fragment implements OnItemClickListener {
                         e.printStackTrace();
                     }
                 } else {
-                    Tools.saveStringValue(mActivity, Contants.storage.PERFORMANCEHOME, "无");
-                    if (StringUtils.isNotEmpty(PerformanceStr)) {
+                    Tools.saveStringValue(mActivity, Contants.storage.PERFORMANCEHOME, "0.00");
+                    if (StringUtils.isNotEmpty(PerformanceStr) && !"无".equals(PerformanceStr)){
                         tvPerformance.setText(PerformanceStr);
                     } else {
-                        tvPerformance.setText("无");
+                        tvPerformance.setText("0.00");
                     }
                 }
 
@@ -1019,12 +1018,13 @@ public class FragmentDeskTop extends Fragment implements OnItemClickListener {
 
             @Override
             public void onFail(ManageMentLinearlayout magLearLayout, Message msg, String hintString) {
+                Tools.saveStringValue(mActivity, Contants.storage.PERFORMANCEHOME, "0.00");
                 progressBarPerformance.setVisibility(View.GONE);
                 rlPerformance.setVisibility(View.VISIBLE);
-                if (StringUtils.isNotEmpty(PerformanceStr)) {
+                if (StringUtils.isNotEmpty(PerformanceStr) && !"无".equals(PerformanceStr)) {
                     tvPerformance.setText(PerformanceStr);
                 } else {
-                    tvPerformance.setText("无");
+                    tvPerformance.setText("0.00");
                 }
             }
 
@@ -1083,12 +1083,13 @@ public class FragmentDeskTop extends Fragment implements OnItemClickListener {
             public void onFail(ManageMentLinearlayout magLearLayout, Message msg, String hintString) {
                 progressBarAccount.setVisibility(View.GONE);
                 rlAccount.setVisibility(View.VISIBLE);
-                Tools.saveStringValue(mActivity, Contants.storage.ACCOUNTHOME, "0");
+                Tools.saveStringValue(mActivity, Contants.storage.ACCOUNTHOME, "0.00");
                 if (StringUtils.isNotEmpty(AccountStr)) {
                     DecimalFormat df = new DecimalFormat("0.00");
                     tvAccount.setText(df.format(Double.parseDouble(AccountStr)));
                 } else {
                     tvAccount.setText("0.00");
+
                 }
             }
 
@@ -1107,6 +1108,23 @@ public class FragmentDeskTop extends Fragment implements OnItemClickListener {
 
     public void initData() {
         VolleyUtils.getImage(getActivity(), UserInfo.headUrl, ivHead, size, size, R.drawable.moren_geren);
+    }
+
+    private void updateBalance() {
+        TicketStr = Tools.getStringValue(mActivity, Contants.storage.TICKETHOME);
+        AccountStr = Tools.getStringValue(mActivity, Contants.storage.ACCOUNTHOME);
+        if (StringUtils.isNotEmpty(TicketStr)) {
+            DecimalFormat df = new DecimalFormat("0.00");
+            tvTicket.setText(df.format(Double.parseDouble(TicketStr)));
+        } else {
+            tvTicket.setText("0");
+        }
+        if (StringUtils.isNotEmpty(AccountStr)) {
+            DecimalFormat df = new DecimalFormat("0.00");
+            tvAccount.setText(df.format(Double.parseDouble(AccountStr)));
+        } else {
+            tvAccount.setText("0.00");
+        }
     }
 
     /**
@@ -1185,6 +1203,7 @@ public class FragmentDeskTop extends Fragment implements OnItemClickListener {
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
         }
+        updateBalance();
     }
 
     @Override

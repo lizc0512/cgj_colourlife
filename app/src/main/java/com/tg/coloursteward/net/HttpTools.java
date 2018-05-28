@@ -1,35 +1,5 @@
 package com.tg.coloursteward.net;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.io.UnsupportedEncodingException;
-import java.io.Writer;
-import java.net.SocketTimeoutException;
-import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.conn.ConnectTimeoutException;
-import org.apache.http.entity.mime.MultipartEntity;
-import org.apache.http.entity.mime.content.FileBody;
-import org.apache.http.entity.mime.content.StringBody;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.CoreConnectionPNames;
-import org.apache.http.util.EntityUtils;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
@@ -38,7 +8,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.SparseArray;
 
 import com.android.volley.AuthFailureError;
@@ -58,10 +27,44 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.tg.coloursteward.application.CityPropertyApplication;
+import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.log.Logger;
 import com.tg.coloursteward.object.ImageParams;
 import com.tg.coloursteward.util.Tools;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.ConnectTimeoutException;
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.entity.mime.content.StringBody;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.CoreConnectionPNames;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONTokener;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
+import java.io.Writer;
+import java.net.SocketTimeoutException;
+import java.net.URLDecoder;
+import java.security.MessageDigest;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
+import static com.tg.coloursteward.constant.Contants.URl.URL_CPMOBILE;
 
 public class HttpTools {
     public static final String DIFFERENCE = "difference";
@@ -181,6 +184,10 @@ public class HttpTools {
     public static final int GET_FINACE_BYOA_MULTI = BASE_CODE++;
     public static final int GET_EXAMINE1 = BASE_CODE++;
     public static final int GET_EXAMINE2 = BASE_CODE++;
+    public static final int GET_FINANCEBYOA = BASE_CODE++;
+
+
+    public static final int GET_KEYSECERT = -10000;
 
     private static RequestQueue mQueue;
     private static HttpClient postClient = null;
@@ -223,16 +230,27 @@ public class HttpTools {
                         }
                         Logger.logd("[ " + URL_NAME + " ]response = " + response);
                         String decryptStr = "";
-                        if (rqtConfig.decrypt) {
+                        if (URL_NAME.startsWith(URL_CPMOBILE)) {
                             try {
-                                decryptStr = URLDecoder.decode(
-                                        DES.Decrypt(response), "UTF-8");
-                            } catch (Exception e) {
-                                // TODO Auto-generated catch block
+                                JSONObject jsonObject = new JSONObject();
+                                jsonObject.put(FIELD_CODE, 0);
+                                jsonObject.put(FIELD_CONTENT, response);
+                                jsonObject.put(FIELD_MESSAGE, "success");
+                                decryptStr = jsonObject.toString();
+                            } catch (JSONException e) {
                                 e.printStackTrace();
                             }
                         } else {
-                            decryptStr = response;
+                            if (rqtConfig.decrypt) {
+                                try {
+                                    decryptStr = URLDecoder.decode(DES.Decrypt(response), "UTF-8");
+                                } catch (Exception e) {
+                                    // TODO Auto-generated catch block
+                                    e.printStackTrace();
+                                }
+                            } else {
+                                decryptStr = response;
+                            }
                         }
                         if (rqtConfig.handler != null) {
                             Bundle bundle = new Bundle();
@@ -301,22 +319,26 @@ public class HttpTools {
         }) {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
-                String sign = "";
-                String ts = getTime();
-                try {
-                    sign = getSign(ts);
-                } catch (Exception e1) {
-                    // TODO Auto-generated catch block
-                    e1.printStackTrace();
+                if (URL_NAME.startsWith(Contants.URl.URL_CPMOBILE)) {
+                    return param;
+                } else {
+                    String sign = "";
+                    String ts = getTime();
+                    try {
+                        sign = getSign(ts);
+                    } catch (Exception e1) {
+                        // TODO Auto-generated catch block
+                        e1.printStackTrace();
+                    }
+                    HashMap<String, String> map = new HashMap<String, String>();
+                    map.put("appID", DES.APP_ID);
+                    map.put("sign", sign);
+                    map.put("ts", ts);
+                    HashMap<String, String> mapsum = new HashMap<String, String>();
+                    mapsum.putAll(map);
+                    mapsum.putAll(param);
+                    return mapsum;
                 }
-                HashMap<String, String> map = new HashMap<String, String>();
-                map.put("appID", DES.APP_ID);
-                map.put("sign", sign);
-                map.put("ts", ts);
-                HashMap<String, String> mapsum = new HashMap<String, String>();
-                mapsum.putAll(map);
-                mapsum.putAll(param);
-                return mapsum;
             }
         };
         if (rqtConfig.tag != null) {
@@ -366,11 +388,9 @@ public class HttpTools {
      * Get请求数据
      *
      * @param URL
-     * @param apiName
      * @param rqtConfig
-     * @param params
      */
-    public static void get(final String URL, int method, final String apiName, final RequestConfig rqtConfig, RequestParams params) {
+    public static void get(final String URL, int method, final RequestConfig rqtConfig) {
 
         StringRequest requestStr = new StringRequest(method, URL,
                 new Listener<String>() {
@@ -382,15 +402,27 @@ public class HttpTools {
                             return;
                         }
                         String decryptStr = "";
-                        if (rqtConfig.decrypt) {
+                        if (URL.startsWith(URL_CPMOBILE)) {
                             try {
-                                decryptStr = URLDecoder.decode(DES.Decrypt(response), "UTF-8");
-                            } catch (Exception e) {
-                                // TODO Auto-generated catch block
+                                JSONObject jsonObject = new JSONObject();
+                                jsonObject.put(FIELD_CODE, 0);
+                                jsonObject.put(FIELD_CONTENT, response);
+                                jsonObject.put(FIELD_MESSAGE, "success");
+                                decryptStr = jsonObject.toString();
+                            } catch (JSONException e) {
                                 e.printStackTrace();
                             }
                         } else {
-                            decryptStr = response;
+                            if (rqtConfig.decrypt) {
+                                try {
+                                    decryptStr = URLDecoder.decode(DES.Decrypt(response), "UTF-8");
+                                } catch (Exception e) {
+                                    // TODO Auto-generated catch block
+                                    e.printStackTrace();
+                                }
+                            } else {
+                                decryptStr = response;
+                            }
                         }
                         if (rqtConfig.handler != null) {
                             Bundle bundle = new Bundle();
@@ -447,7 +479,6 @@ public class HttpTools {
                 PrintWriter printWriter = new PrintWriter(info);
                 error.printStackTrace(printWriter);
                 Logger.errord(info.toString());
-
                 if (rqtConfig.handler != null) {
                     Bundle bundle = new Bundle();
                     bundle.putString(KEY_HINT_STRING, errorStr);
@@ -722,13 +753,17 @@ public class HttpTools {
             paramsStr = params.toHashMap();
         }
         try {
-            url = URL + GetUrl(URL, apiName, paramsStr);
+            if (URL.startsWith(Contants.URl.URL_CPMOBILE)) {
+                url = URL + getCombileUrl(apiName, paramsStr);
+            } else {
+                url = URL + GetUrl(URL, apiName, paramsStr);
+            }
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
             return;
         }
-        get(url, Method.GET, apiName, rqtConfig, params);
+        get(url, Method.GET, rqtConfig);
     }
 
     /**
@@ -748,13 +783,17 @@ public class HttpTools {
             paramsStr = params.toHashMap();
         }
         try {
-            url = URL + apiName;
+            if (URL.startsWith(Contants.URl.URL_CPMOBILE)) {
+                url = URL + getCombileUrl(apiName, paramsStr);
+            } else {
+                url = URL + GetUrl(URL, apiName, paramsStr);
+            }
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
             return;
         }
-        get(url, Method.GET, apiName, rqtConfig, params);
+        get(url, Method.GET, rqtConfig);
     }
 
     /**
@@ -773,13 +812,120 @@ public class HttpTools {
             paramsStr = params.toHashMap();
         }
         try {
-            url = URL + GetUrl(URL, apiName, paramsStr);
+            if (URL.startsWith(Contants.URl.URL_CPMOBILE)) {
+                url = URL + getCombileUrl(apiName, paramsStr);
+            } else {
+                url = URL + GetUrl(URL, apiName, paramsStr);
+            }
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
             return;
         }
-        get(url, Method.DELETE, apiName, rqtConfig, params);
+        get(url, Method.DELETE, rqtConfig);
+    }
+
+    /***请求Combile的get加密***/
+    private static String getCombileUrl(String urlString, Map<String, Object> paramsMap) {
+        String version = "1.0.0";
+        String sign = null;
+        Map<String, String> stringMap = getStringMap(paramsMap);
+        String keyValue = stringMap.get("key");
+        String secretValue = stringMap.get("secret");
+        stringMap.remove("key");
+        stringMap.remove("secret");
+        long diff = 0;
+        String ts = System.currentTimeMillis() / 1000 + diff + "";
+        String valueStr;
+        String secretString = getMapToString(stringMap);
+        if (TextUtils.isEmpty(secretString)) {
+            sign = urlString + "?" + "key=" + keyValue + "&ts=" + ts + "&ve=" + version + "&secret=" + secretValue;
+            valueStr = urlString + "?" + "key=" + keyValue;
+        } else {//有参数时
+            sign = urlString + secretString + "&key=" + keyValue + "&ts=" + ts + "&ve=" + version + "&secret=" + secretValue;
+            valueStr = urlString + secretString + "&key=" + keyValue;
+        }
+        valueStr = valueStr + "&ts=" + (System.currentTimeMillis() / 1000 + diff)
+                + "&ve=" + version + "&sign=" + setMD5(sign);
+        valueStr = valueStr.replaceAll(" ", "\\+");
+        return valueStr;
+    }
+
+    public static Map<String, String> getStringMap(Map<String, Object> paramsMap) {
+        Iterator<String> it = paramsMap.keySet().iterator();
+        Map<String, String> stringMap = new HashMap<>();
+        while (it.hasNext()) {
+            String key = it.next();
+            String value = String.valueOf(paramsMap.get(key));
+            stringMap.put(key, value);
+        }
+        return stringMap;
+    }
+
+
+    /***请求Combile的post加密***/
+    private static String postCombileMD5(String urlString, Map<String, String> paramsMap) {
+        String version = "1.0.0";
+        String keyValue = paramsMap.get("key");
+        String secretValue = paramsMap.get("secret");
+        long diff = 0;
+        String ts = System.currentTimeMillis() / 1000 + diff + "";
+        String sign = urlString + "?" + "key=" + keyValue + "&ts=" + ts + "&ve=" + version + "&secret=" + secretValue;
+        String valueStr;
+        valueStr = urlString + "?" + "key=" + keyValue;
+        valueStr = valueStr + "&ts=" + (System.currentTimeMillis() / 1000 + diff)
+                + "&ve=" + version + "&sign=" + setMD5(sign);
+        return valueStr;
+    }
+
+    public static String getMapToString(Map<String, String> paramsMap) {
+        if (null == paramsMap || paramsMap.size() == 0) {
+            return "";
+        } else {
+            Iterator<String> it = paramsMap.keySet().iterator();
+            StringBuffer sb = null;
+            while (it.hasNext()) {
+                String key = it.next();
+                String value = String.valueOf(paramsMap.get(key));
+                if (sb == null) {
+                    sb = new StringBuffer();
+                    sb.append("?");
+                } else {
+                    sb.append("&");
+                }
+                sb.append(key);
+                sb.append("=");
+                sb.append(value);
+            }
+            if (null == sb) {
+                return "";
+            } else {
+                return sb.toString();
+            }
+        }
+    }
+
+
+    /***md5加密***/
+    public static String setMD5(String string) {
+        MessageDigest md5;
+        StringBuilder sb = new StringBuilder();
+        try {
+            md5 = MessageDigest.getInstance("MD5");
+            md5.update(string.getBytes("UTF-8"));
+            byte[] b = md5.digest();
+            for (byte aB : b) {
+                int temp = 0xFF & aB;
+                String s = Integer.toHexString(temp);
+                if (temp <= 0x0F) {
+                    s = "0" + s;
+                }
+                sb.append(s);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return sb.toString();
     }
 
     /**
@@ -797,7 +943,19 @@ public class HttpTools {
         } else {
             paramsStr = requestParams.toHashMapString();
         }
-        post(URL + apiName, Method.POST, rqtConfig, paramsStr);
+        if (URL.startsWith(Contants.URl.URL_CPMOBILE)) {
+            if (apiName.equals("/1.0/auth")) {
+                post(URL + apiName, Method.POST, rqtConfig, paramsStr);
+            } else {
+                String url = URL + postCombileMD5(apiName, paramsStr);
+                paramsStr.remove("key");
+                paramsStr.remove("secret");
+                post(url, Method.POST, rqtConfig, paramsStr);
+            }
+        } else {
+            post(URL + apiName, Method.POST, rqtConfig, paramsStr);
+        }
+
     }
 
     /**
@@ -928,8 +1086,15 @@ public class HttpTools {
         }
         if (jsonObj.isNull(FIELD_CONTENT)) {
             return null;
+        } else {
+            JSONObject jsonObject = null;
+            try {
+                jsonObject = new JSONObject(getContentString(jsonString));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return jsonObject;
         }
-        return jsonObj.optJSONObject(FIELD_CONTENT);
     }
 
     /**
@@ -1000,8 +1165,16 @@ public class HttpTools {
         }
         if (jsonObj.isNull(FIELD_CONTENT)) {
             return null;
+        } else {
+            JSONArray jsonArray = null;
+            try {
+                jsonArray = new JSONArray(getContentString(jsonString));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return jsonArray;
         }
-        return jsonObj.optJSONArray(FIELD_CONTENT);
+
     }
 
     /**

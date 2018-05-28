@@ -1,18 +1,30 @@
 package com.tg.coloursteward;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import android.app.Activity;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.os.Bundle;
+import android.os.Message;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
+import android.util.Log;
+import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
+import android.view.animation.AnimationUtils;
+import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.geetest.gt3unbindsdk.Bind.GT3GeetestBindListener;
 import com.geetest.gt3unbindsdk.Bind.GT3GeetestUtilsBind;
+import com.networkbench.agent.impl.NBSAppAgent;
 import com.tg.coloursteward.application.CityPropertyApplication;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.database.SharedPreferencesTools;
+import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.log.Logger;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.MD5;
@@ -25,23 +37,12 @@ import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.dialog.ToastFactory;
 
-import android.os.Bundle;
-import android.os.Message;
-import android.app.Activity;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.text.TextUtils;
-import android.util.Log;
-import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.view.animation.Animation.AnimationListener;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import com.networkbench.agent.impl.NBSAppAgent;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 登录页面
@@ -366,8 +367,7 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                }else
-                {
+                } else {
                     gt3GeetestUtils.gt3TestClose();
                 }
             }
@@ -414,6 +414,11 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
         RequestConfig config = new RequestConfig(this, HttpTools.GET_SKIN_INFO);
         config.hintString = "获取皮肤包";
         HttpTools.httpPost(Contants.URl.URL_ICETEST, "/newoa/config/skin", config, params);
+    }
+    private void getKeyAndSecret() {
+        RequestConfig config = new RequestConfig(this, HttpTools.GET_KEYSECERT);
+        config.hintString = "获取key";
+        HttpTools.httpPost(Contants.URl.URL_CPMOBILE, "/1.0/auth", config, null);
     }
 
     /**
@@ -506,12 +511,43 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
         }else if(msg.arg1 == HttpTools.GET_USER_INFO){
             if(code == 0){
                 Tools.loadUserInfo(data,jsonString);
-                getSkin(corpId);
+                getKeyAndSecret();
             }else{
                 ToastFactory.showToast(LoginActivity.this,"加载个人信息失败，请重新登录");
             }
 
+        } else if (msg.arg1 == HttpTools.GET_KEYSECERT) {
+            if (code == 0) {
+                try {
+                    JSONObject sonJon = new JSONObject(jsonObject);
+                    String key = sonJon.optString("key");
+                    String secret = sonJon.optString("secret");
+                    Tools.saveStringValue(LoginActivity.this, Contants.EMPLOYEE_LOGIN.key, key);
+                    Tools.saveStringValue(LoginActivity.this, Contants.EMPLOYEE_LOGIN.secret, secret);
+                    getEmployeeInfo(key, secret);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                ToastFactory.showToast(LoginActivity.this, "登录失败，请重新登录");
+            }
+        } else if (msg.arg1 == HttpTools.SET_EMPLOYEE_INFO) {
+            getSkin(corpId);
         }
+    }
+
+    /**
+     * 调用登录的接口
+     */
+    public void getEmployeeInfo(String key, String secret) {
+        String pwd = Tools.getPassWord(this);
+        RequestConfig config = new RequestConfig(this, HttpTools.SET_EMPLOYEE_INFO, null);
+        RequestParams params = new RequestParams();
+        params.put("username", UserInfo.employeeAccount);
+        params.put("password", pwd);
+        params.put("key", key);
+        params.put("secret", secret);
+        HttpTools.httpPost(Contants.URl.URL_CPMOBILE, "/1.0/employee/login", config, params);
     }
 
     @Override

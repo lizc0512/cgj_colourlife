@@ -3,16 +3,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/app_bg"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <RelativeLayout
         android:id="@+id/rl_bank_card_info"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@color/white"
-        android:onClick="onClick" 
-        android:paddingTop="@dimen/margin_18"
-        android:paddingBottom="@dimen/margin_18">
+        android:onClick="onClick"
+        android:paddingBottom="@dimen/margin_18"
+        android:paddingTop="@dimen/margin_18">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -20,7 +20,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/margin_18"
             android:gravity="left"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/tv_cardholder"
@@ -51,7 +51,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
-            android:gravity="right" >
+            android:gravity="right">
 
             <ImageView
                 android:layout_width="10dp"
@@ -71,11 +71,11 @@
         android:paddingBottom="@dimen/margin_5"
         android:paddingLeft="@dimen/margin_18"
         android:paddingRight="@dimen/margin_18"
-        android:paddingTop="@dimen/margin_15" >
+        android:paddingTop="@dimen/margin_15">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content">
 
             <ImageView
                 android:id="@+id/img"
@@ -102,6 +102,15 @@
                 android:paddingTop="@dimen/margin_10"
                 android:singleLine="true" />
 
+            <TextView
+                android:id="@+id/tv_withdraw_cash"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:text="全部提现"
+                android:textColor="@color/blue" />
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
@@ -115,14 +124,14 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white" >
+            android:background="@color/white">
 
             <RelativeLayout
                 android:id="@+id/rl_actual_receive"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/margin_10"
-                android:layout_marginTop="15dp" >
+                android:layout_marginTop="15dp">
 
                 <TextView
                     android:id="@+id/tv_actual_receive_amount_title"
@@ -173,7 +182,7 @@
         android:layout_marginRight="@dimen/margin_20"
         android:layout_marginTop="@dimen/margin_10"
         android:background="@drawable/btn_blue"
-        android:onClick="onClick" >
+        android:onClick="onClick">
 
         <TextView
             android:id="@+id/tv_withdraw"

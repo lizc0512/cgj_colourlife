@@ -50,6 +50,8 @@ public class AccountActivity extends BaseActivity {
     private RelativeLayout rlNextBalance;
     private RelativeLayout rlNextdgzh;
 
+    private String mDept;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -112,7 +114,8 @@ public class AccountActivity extends BaseActivity {
                 startActivity(new Intent(AccountActivity.this, PublicAccountActivity.class));
             }
         });
-        tvRealName.setText(UserInfo.realname);
+        tvRealName.setText(UserInfo.realname + "(" + UserInfo.jobName + ")");
+//        tvRealName.setText(UserInfo.realname);
 
 //        本地及时分配金额
         String jsonStr = Tools.getStringValue(AccountActivity.this, Contants.storage.ACCOUNT);

@@ -238,7 +238,7 @@ public class RedpacketsWithdrawFinishedActivity extends BaseActivity {
 			params.put("note", transferNote);
 			params.put("key", key);
 			params.put("secret",secret);
-			HttpTools.httpPost(Contants.URl.URL_ICETEST, "/hongbao/carryOrderCreate", config, params);
+			HttpTools.httpPost(Contants.URl.URL_CPMOBILE, "/1.0/caiRedPaket/carryOrderCreate", config, params);
 		} else if ("bank".equals(transferTo)) {
 			// 提现
 			params.put("card_holder", cardHolder);
@@ -251,7 +251,7 @@ public class RedpacketsWithdrawFinishedActivity extends BaseActivity {
 			params.put("note", transferNote);
 			params.put("key", key);
 			params.put("secret",secret);
-			HttpTools.httpPost(Contants.URl.URL_ICETEST, "/hongbao/orderCreate", config, params);
+			HttpTools.httpPost(Contants.URl.URL_CPMOBILE, "/1.0/caiRedPaket/orderCreate", config, params);
 		} else {
 			ToastFactory.showToast(this, "错误");
 			finish();

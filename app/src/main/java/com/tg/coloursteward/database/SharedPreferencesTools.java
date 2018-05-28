@@ -97,7 +97,8 @@ public class SharedPreferencesTools {
 		Tools.saveStringValue(con,Contants.storage.STOCKHOME,"0");//集团股票
 		Tools.saveStringValue(con,Contants.storage.TICKETHOME,"0");//我的饭票（首页）
 		Tools.saveStringValue(con,Contants.storage.COMMUNITYHOME,"0");//在管小区
-		Tools.saveStringValue(con,Contants.storage.PERFORMANCEHOME,"无");//绩效评分
+//		Tools.saveStringValue(con,Contants.storage.PERFORMANCEHOME,"无");//绩效评分
+		Tools.saveStringValue(con,Contants.storage.PERFORMANCEHOME,"0.00");//绩效评分
 		Tools.saveStringValue(con,Contants.storage.ACCOUNTHOME,"0");//即时分配
 		Tools.saveStringValue(con,Contants.storage.SKINCODE,"");//皮肤包
 		Tools.saveStringValue(con,Contants.storage.APPAUTH,"");//多租户应用token

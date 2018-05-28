@@ -148,7 +148,8 @@ public class RedpacketsDetailsActivity extends BaseActivity {
                 params.put("ano", cano);
                 params.put("pano", pano);
                 // params.put("ispay",ispay);
-                params.put("skip", (pagerIndex - 1) * 8);
+//                params.put("skip", (pagerIndex - 1) * 8);
+                params.put("skip", (pagerIndex - 1) * 20);
                 params.put("limit", PullRefreshListView.PAGER_SIZE);
                 HttpTools.httpPost(Contants.URl.URL_ICETEST, "/jrpt/transaction/list", config, params);
             }

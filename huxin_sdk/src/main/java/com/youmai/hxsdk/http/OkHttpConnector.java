@@ -88,6 +88,40 @@ public class OkHttpConnector {
     }
 
 
+    public static String doGet(ContentValues headers, String url, ContentValues params) {
+        String res;
+        try {
+            if (params != null && params.size() > 0) {
+                url = url + "?" + getParams(params, true);
+            }
+
+            Request.Builder builder = new Request.Builder();
+            if (headers != null && headers.size() > 0) {
+                for (Map.Entry<String, Object> entry : headers.valueSet()) {
+                    String key = entry.getKey(); // name
+                    String value = entry.getValue().toString(); // value
+                    Log.v(TAG, "okhttp Header:" + key + "=" + value);
+                    builder.addHeader(key, value);
+                }
+            }
+
+            Log.v(TAG, "okhttp get url:" + url);
+
+            Request request = builder.url(url).build();
+
+            Response response = client.newCall(request).execute();
+            if (response.isSuccessful() && response.body() != null) {
+                res = response.body().string();
+            } else {
+                res = response.toString();
+            }
+        } catch (IOException e) {
+            res = null;
+        }
+        return res;
+    }
+
+
     public static void httpPost(ContentValues header, String url,
                                 IPostListener request) {
         httpPost(url, null, header, null, request);

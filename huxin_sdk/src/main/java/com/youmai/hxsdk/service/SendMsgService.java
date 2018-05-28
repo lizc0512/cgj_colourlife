@@ -3,6 +3,7 @@ package com.youmai.hxsdk.service;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
@@ -58,6 +59,9 @@ public class SendMsgService extends IntentService {
 
     boolean isGroup;
     String groupName;
+
+    String imgWidth;
+    String imgHeight;
 
     public SendMsgService() {
         super("SendMsgService");
@@ -278,6 +282,14 @@ public class SendMsgService extends IntentService {
 
     //发送图片(先上传文件，再发送消息)
     private void sendPic(final SendMsg msgBean) {
+        CacheMsgImage msgBody = (CacheMsgImage) msgBean.getMsg().getJsonBodyObj();
+        String path = msgBody.getFilePath();
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(path, options); // 此时返回的bitmap为null
+
+        imgWidth = options.outWidth + "";
+        imgHeight = options.outHeight + "";
         uploadFile(msgBean);
     }
 
@@ -540,12 +552,13 @@ public class SendMsgService extends IntentService {
             }
         };
 
-
         if (isGroup) {
             HuxinSdkManager.instance().sendPictureInGroup(groupId, groupName, fileId,
+                    imgWidth, imgHeight,
                     isOriginal ? "original" : "thumbnail", receiveListener);
         } else {
             HuxinSdkManager.instance().sendPicture(dstUuid, fileId,
+                    imgWidth, imgHeight,
                     isOriginal ? "original" : "thumbnail", receiveListener);
         }
 

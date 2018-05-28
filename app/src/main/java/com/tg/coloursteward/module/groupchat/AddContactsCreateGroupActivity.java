@@ -346,15 +346,20 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
         manager.hideSoftInputFromWindow(editText.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
     }
 
+
+    public void done() {
+        if (mDetailType == 1) {
+            createGroup();
+        } else if (mDetailType == 2) {
+            updateGroup();
+        }
+    }
+
     private void setListener() {
         tv_Sure.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mDetailType == 1) {
-                    createGroup();
-                } else if (mDetailType == 2) {
-                    updateGroup();
-                }
+                done();
             }
         });
         tv_Cancel.setOnClickListener(new View.OnClickListener() {

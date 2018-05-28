@@ -625,11 +625,13 @@ public class HuxinSdkManager {
      *
      * @param destUuid
      * @param fileId
+     * @param imgWidth
+     * @param imgHeight
      * @param quality
      * @param callback
      */
-    public void sendPicture(String destUuid, String fileId, String quality,
-                            ReceiveListener callback) {
+    public void sendPicture(String destUuid, String fileId, String imgWidth, String imgHeight,
+                            String quality, ReceiveListener callback) {
         YouMaiMsg.MsgData.Builder msgData = YouMaiMsg.MsgData.newBuilder();
         msgData.setSrcUserId(getUuid());
         msgData.setSrcAvatar(getHeadUrl());
@@ -643,6 +645,8 @@ public class HuxinSdkManager {
 
         IMContentUtil imContentUtil = new IMContentUtil();
         imContentUtil.appendPictureId(fileId);
+        imContentUtil.appendImgWidth(imgWidth);
+        imContentUtil.appendImgHeight(imgHeight);
         imContentUtil.appendDescribe(quality); // 是否原图
         msgData.setMsgContent(imContentUtil.serializeToString());
 
@@ -681,7 +685,7 @@ public class HuxinSdkManager {
         imContentUtil.appendBarTime(secondsTime);
         imContentUtil.appendSourcePhone(sourcePhone);
         imContentUtil.appendForwardCount(forwardCount);
-        msgData.setMsgContent(imContentUtil.serializeToString());
+        msgData.setMsgContent(imContentUtil.serializeImageToString());
 
         YouMaiMsg.ChatMsg.Builder builder = YouMaiMsg.ChatMsg.newBuilder();
         builder.setData(msgData);
@@ -993,10 +997,13 @@ public class HuxinSdkManager {
      * @param groupId
      * @param groupName
      * @param fileId
+     * @param imgWidth
+     * @param imgHeight
      * @param quality
      * @param callback
      */
-    public void sendPictureInGroup(int groupId, String groupName, String fileId, String quality,
+    public void sendPictureInGroup(int groupId, String groupName, String fileId,
+                                   String imgWidth, String imgHeight, String quality,
                                    ReceiveListener callback) {
         YouMaiMsg.MsgData.Builder msgData = YouMaiMsg.MsgData.newBuilder();
         msgData.setSrcUserId(getUuid());
@@ -1013,7 +1020,10 @@ public class HuxinSdkManager {
         IMContentUtil imContentUtil = new IMContentUtil();
         imContentUtil.appendPictureId(fileId);
         imContentUtil.appendDescribe(quality); // 是否原图
-        msgData.setMsgContent(imContentUtil.serializeToString());
+        imContentUtil.appendImgWidth(imgWidth);
+        imContentUtil.appendImgHeight(imgHeight);
+
+        msgData.setMsgContent(imContentUtil.serializeImageToString());
 
         YouMaiMsg.ChatMsg.Builder builder = YouMaiMsg.ChatMsg.newBuilder();
         builder.setData(msgData);

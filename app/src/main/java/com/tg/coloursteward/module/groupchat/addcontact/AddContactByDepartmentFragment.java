@@ -1,12 +1,18 @@
 package com.tg.coloursteward.module.groupchat.addcontact;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,23 +45,74 @@ import java.util.Map;
 public class AddContactByDepartmentFragment extends Fragment
         implements MessageHandler.ResponseListener, View.OnClickListener {
 
+    //广播
+    private static final String BROADCAST_FILTER = "com.tg.coloursteward.searchcontact";
+    private static final String ACTION = "contact_action";
+    private static final String ADAPTER_CONTACT = "adapter";
+    private static final String SEARCH_CONTACT = "search";
+    private static final String DEPART_CONTACT = "department";
+
     private XRecyclerView mXRecyclerView;
     private TextView mTvBack;
     private TextView mTvTitle;
+    private TextView mTvSure;
     private DepartAdapter mAdapter;
     private MessageHandler msgHand;
+
+
+    private ModifyContactsReceiver mModifyContactsReceiver;
+
+    private class ModifyContactsReceiver extends BroadcastReceiver {
+
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getStringExtra(ACTION);
+            ContactBean bean = intent.getParcelableExtra("bean");
+            if (action.equals(ADAPTER_CONTACT)) {
+                updateCacheMap(bean);
+            } else if (action.equals(SEARCH_CONTACT)) {
+                //mActivity.hide();
+                updateCacheMap(bean);
+            } else if (action.equals(DEPART_CONTACT)) {
+                updateCacheMap(bean);
+            }
+        }
+    }
+
+    private void registerReceiver() {
+        mModifyContactsReceiver = new ModifyContactsReceiver();
+        IntentFilter intentFilter = new IntentFilter(BROADCAST_FILTER);
+        LocalBroadcastManager.getInstance(getContext()).registerReceiver(mModifyContactsReceiver, intentFilter);
+    }
+
+    private void unRegisterReceiver() {
+        LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(mModifyContactsReceiver);
+    }
+
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.tv_left_back:
+            case R.id.tv_left_cancel:
                 FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
                 transaction.hide(this);
                 transaction.commit();
                 break;
+            case R.id.tv_right_sure:
+                if (getActivity() instanceof AddContactsCreateGroupActivity) {
+                    AddContactsCreateGroupActivity act = (AddContactsCreateGroupActivity) getActivity();
+                    act.done();
+                }
+                break;
         }
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        registerReceiver();
+    }
 
     @Nullable
     @Override
@@ -68,9 +125,12 @@ public class AddContactByDepartmentFragment extends Fragment
         super.onViewCreated(view, savedInstanceState);
 
         mXRecyclerView = view.findViewById(R.id.depart_xrv);
-        mTvBack = view.findViewById(R.id.tv_left_back);
+        mTvBack = view.findViewById(R.id.tv_left_cancel);
         mTvTitle = view.findViewById(R.id.tv_title);
+        mTvSure = view.findViewById(R.id.tv_right_sure);
+
         mTvBack.setOnClickListener(this);
+        mTvSure.setOnClickListener(this);
 
         mAdapter = new DepartAdapter(getContext());
 
@@ -111,6 +171,11 @@ public class AddContactByDepartmentFragment extends Fragment
 
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        unRegisterReceiver();
+    }
 
     private void loadDataForNet(String orgId) {
         RequestConfig config = new RequestConfig(getActivity(), PullRefreshListView.HTTP_FRESH_CODE);
@@ -128,6 +193,27 @@ public class AddContactByDepartmentFragment extends Fragment
         mTvTitle.setText(orgName);
         loadDataForNet(orgId);
     }
+
+
+    private void updateCacheMap(ContactBean contact) {
+        if (getActivity() instanceof AddContactsCreateGroupActivity) {
+            AddContactsCreateGroupActivity act = (AddContactsCreateGroupActivity) getActivity();
+            Map<String, ContactBean> mTotalMap = act.getTotalMap();
+
+            int count = mTotalMap.size();
+            Log.d("YW", "map size: " + count);
+
+            if (count > 0) {
+                mTvSure.setEnabled(true);
+            } else {
+                mTvSure.setEnabled(false);
+            }
+            mTvSure.setText("完成(" + count + ")");
+        }
+
+
+    }
+
 
     @Override
     public void onRequestStart(Message msg, String hintString) {

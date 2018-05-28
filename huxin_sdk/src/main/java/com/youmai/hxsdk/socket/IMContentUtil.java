@@ -94,6 +94,26 @@ public class IMContentUtil {
         return arr.toString();
     }
 
+
+    public String serializeImageToString() {
+        JSONArray arr = new JSONArray();
+        try {
+            for (int i = 0; i < contentList.size(); i++) {
+                IMContentItem item = contentList.get(i);
+                JSONObject obj = new JSONObject();
+                obj.put(item.itemType.toString(), item.item);
+                obj.put(IMContentType.CONTEXT_IMAGE_W.toString(), item.imageWidth);
+                obj.put(IMContentType.CONTEXT_IMAGE_H.toString(), item.imageHeight);
+                arr.put(obj);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return arr.toString();
+    }
+
+
     private void addItem(IMContentType _type, String _item) {
         IMContentItem item = new IMContentItem();
         item.item = _item;
@@ -172,6 +192,15 @@ public class IMContentUtil {
     public void appendDescribe(String _desrcibe) {
         addItem(IMContentType.CONTEXT_DESCRIBE, _desrcibe);
     }
+
+    public void appendImgWidth(String imgWidth) {
+        addItem(IMContentType.CONTEXT_IMAGE_W, imgWidth);
+    }
+
+    public void appendImgHeight(String imgHeight) {
+        addItem(IMContentType.CONTEXT_IMAGE_H, imgHeight);
+    }
+
 
     public void appendLongitude(String _longitude) {
         addItem(IMContentType.CONTEXT_LONGITUDE, _longitude);

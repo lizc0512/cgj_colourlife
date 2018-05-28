@@ -13,4 +13,7 @@ public class IMContentItem {
     String item;
     String fileName;
     String fileSize;
+
+    String imageWidth;
+    String imageHeight;
 }

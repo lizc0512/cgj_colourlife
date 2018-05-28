@@ -1,5 +1,6 @@
 package com.youmai.hxsdk.module.photo.activity;
 
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -134,6 +135,14 @@ public class PhotoPreViewActivity extends SdkPhotoActivity implements View.OnCli
                         .setFilePath(path)
                         .setOriginalType(CacheMsgImage.SEND_NOT_ORI));
 
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(path, options); // 此时返回的bitmap为null
+
+        final String imgWidth = options.outWidth + "";
+        final String imgHeight = options.outHeight + "";
+
+
         PostFile postFile = new PostFile() {
             @Override
             public void success(final String fileId, final String desPhone) {
@@ -142,24 +151,25 @@ public class PhotoPreViewActivity extends SdkPhotoActivity implements View.OnCli
                 msgBody.setFid(fileId);
                 cacheMsgBean.setJsonBodyObj(msgBody);
 
-                HuxinSdkManager.instance().sendPicture(dstUuid, fileId, "thumbnail", new ReceiveListener() {
-                    @Override
-                    public void OnRec(PduBase pduBase) {
-                        try {
-                            final YouMaiMsg.ChatMsg_Ack ack = YouMaiMsg.ChatMsg_Ack.parseFrom(pduBase.body);
-                            //long msgId = ack.getMsgId();
-                            if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_OK) {
-                                cacheMsgBean.setMsgStatus(CacheMsgBean.SEND_SUCCEED);
-                            } else {
-                                cacheMsgBean.setMsgStatus(CacheMsgBean.SEND_FAILED);
-                            }
-                            CacheMsgHelper.instance().insertOrUpdate(mContext, cacheMsgBean);
+                HuxinSdkManager.instance().sendPicture(dstUuid, fileId,
+                        imgWidth, imgHeight, "thumbnail", new ReceiveListener() {
+                            @Override
+                            public void OnRec(PduBase pduBase) {
+                                try {
+                                    final YouMaiMsg.ChatMsg_Ack ack = YouMaiMsg.ChatMsg_Ack.parseFrom(pduBase.body);
+                                    //long msgId = ack.getMsgId();
+                                    if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_OK) {
+                                        cacheMsgBean.setMsgStatus(CacheMsgBean.SEND_SUCCEED);
+                                    } else {
+                                        cacheMsgBean.setMsgStatus(CacheMsgBean.SEND_FAILED);
+                                    }
+                                    CacheMsgHelper.instance().insertOrUpdate(mContext, cacheMsgBean);
 
-                        } catch (InvalidProtocolBufferException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
+                                } catch (InvalidProtocolBufferException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
 
             }
 

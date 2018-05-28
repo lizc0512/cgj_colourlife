@@ -261,6 +261,9 @@ public class FragmentManagement extends Fragment {
         requestData2();
         initListener();
 
+        magLinearLayoutMail.loaddingData();
+        mGridView2.loaddingData();
+        magLinearLayoutExamineNum.loaddingData();
         return mView;
     }
 
@@ -1430,14 +1433,6 @@ public class FragmentManagement extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        magLinearLayoutMail.loaddingData();
-        magLinearLayoutExamineNum.postDelayed(new Runnable() {
-
-            @Override
-            public void run() {
-                magLinearLayoutExamineNum.loaddingData();
-            }
-        }, 500);
     }
 
     @Override

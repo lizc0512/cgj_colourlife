@@ -1,14 +1,23 @@
 package com.tg.coloursteward.module.search;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.support.v4.content.AsyncTaskLoader;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.info.FamilyInfo;
+import com.tg.coloursteward.info.FindContactInfo;
 import com.tg.coloursteward.module.search.data.SearchData;
+import com.tg.coloursteward.net.HttpTools;
+import com.tg.coloursteward.net.ResponseData;
+import com.youmai.hxsdk.config.ColorsConfig;
 import com.youmai.hxsdk.entity.cn.SearchContactBean;
+import com.youmai.hxsdk.http.OkHttpConnector;
 import com.youmai.hxsdk.utils.ListUtils;
+
+import org.json.JSONArray;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,6 +62,11 @@ public class ContactsSearchLoader extends AsyncTaskLoader {
 
         if (TextUtils.isEmpty(mQuery)) {
             return allList;
+        } else {
+            List<SearchContactBean> tempList = searchIce(mQuery);
+            if (!ListUtils.isEmpty(tempList)) {
+                allList.addAll(tempList);
+            }
         }
 
         String finalQuery = mQuery;
@@ -101,4 +115,52 @@ public class ContactsSearchLoader extends AsyncTaskLoader {
         }
         return resList;
     }
+
+
+    private List<SearchContactBean> searchIce(String key) {
+        String url = Contants.URl.URL_ICETEST + "/phonebook/search";
+        ContentValues params = new ContentValues();
+        params.put("keyword", key);
+        ColorsConfig.commonParams(params);
+
+        String response = OkHttpConnector.doGet(null, url, params);
+        int code = HttpTools.getCode(response);
+        if (code == 0) {
+            List<FindContactInfo> list1 = new ArrayList<>();
+            JSONArray jsonArray = HttpTools.getContentJsonArray(response);
+            if (jsonArray != null) {
+                ResponseData data = HttpTools.getResponseContent(jsonArray);
+                if (data.length > 0) {
+                    FindContactInfo info;
+                    if (data.length >= 3) {
+                        for (int i = 0; i < 3; i++) {
+                            info = new FindContactInfo();
+                            info.username = data.getString(i, "username");
+                            info.realname = data.getString(i, "realname");
+                            info.avatar = data.getString(i, "avatar");
+                            info.org_name = data.getString(i, "org_name");
+                            info.job_name = data.getString(i, "job_name");
+                            list1.add(info);
+                        }
+                    } else {
+                        for (int i = 0; i < data.length; i++) {
+                            info = new FindContactInfo();
+                            info.username = data.getString(i, "username");
+                            info.realname = data.getString(i, "realname");
+                            info.avatar = data.getString(i, "avatar");
+                            info.org_name = data.getString(i, "org_name");
+                            info.job_name = data.getString(i, "job_name");
+                            list1.add(info);
+                        }
+                    }
+
+                }
+            }
+            return SearchData.instance().searchIceList(list1);
+        }
+
+        return null;
+    }
+
+
 }

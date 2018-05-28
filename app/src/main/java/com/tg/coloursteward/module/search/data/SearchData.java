@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.SparseArray;
 
 import com.tg.coloursteward.info.FamilyInfo;
+import com.tg.coloursteward.info.FindContactInfo;
 import com.tg.coloursteward.module.contact.utils.PinYinUtils;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.ResponseData;
@@ -185,6 +186,43 @@ public class SearchData {
             contact.setIconUrl(item.avatar);
             contact.setUsername(item.username);
             contact.setUuid(item.id);
+            contact.setDisplayName(hanzi);
+            contact.setWholePinyin(pinyin.toString());
+            contact.setSimplepinyin(ch.toString());
+            contact.setIndexPinyin(chStr);
+
+            DuoYinZi duoYinZi = PinYinUtils.HanziToPinYin(hanzi);
+            contact.setDuoYinzi(duoYinZi);
+
+            contactList.add(contact);
+        }
+        return contactList;
+    }
+
+
+    /**
+     * 搜索联系人
+     *
+     * @param list
+     * @return
+     */
+    public List<SearchContactBean> searchIceList(List<FindContactInfo> list) {
+        List<SearchContactBean> contactList = new ArrayList<>();
+        for (FindContactInfo item : list) {
+            String hanzi = item.realname;
+            StringBuilder ch = new StringBuilder();
+            StringBuilder pinyin = new StringBuilder();
+            List<String> chStr = new ArrayList<>(); //每个汉字的 拼音集合
+
+            for (int j = 0; j < hanzi.length(); j++) {
+                pinyin.append(Pinyin.toPinyin(hanzi.charAt(j)).toUpperCase());
+                ch.append(Pinyin.toPinyin(hanzi.charAt(j)).substring(0, 1));
+                chStr.add(Pinyin.toPinyin(hanzi.charAt(j)));
+            }
+
+            SearchContactBean contact = new SearchContactBean();
+            contact.setIconUrl(item.avatar);
+            contact.setUsername(item.username);
             contact.setDisplayName(hanzi);
             contact.setWholePinyin(pinyin.toString());
             contact.setSimplepinyin(ch.toString());

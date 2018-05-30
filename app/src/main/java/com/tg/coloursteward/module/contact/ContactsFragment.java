@@ -16,11 +16,13 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.tg.coloursteward.ContactsActivity;
 import com.tg.coloursteward.HomeContactOrgActivity;
@@ -356,6 +358,11 @@ public class ContactsFragment extends Fragment implements ResponseListener, Item
                 //startActivityForResult(i, ISTREAD);
 
                 String avatar = Contants.URl.HEAD_ICON_URL + "avatar?uid=" + item.getUsername();
+
+                if (TextUtils.isEmpty(item.getUuid())) {
+                    Toast.makeText(mActivity, item.getRealname() + "的uuid为空，无法进行IM聊天", Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
                 Intent i = new Intent(mActivity, IMConnectionActivity.class);
                 i.putExtra(IMConnectionActivity.DST_UUID, item.getUuid());

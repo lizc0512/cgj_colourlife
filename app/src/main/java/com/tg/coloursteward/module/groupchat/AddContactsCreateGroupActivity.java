@@ -11,6 +11,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
@@ -471,6 +472,12 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
         //删除成员
         for (Map.Entry<String, ContactBean> entry : mTotalMap.entrySet()) {
             ContactBean item = entry.getValue();
+
+            if (TextUtils.isEmpty(item.getUuid())) {
+                Toast.makeText(this, item.getRealname() + "的uuid为空，无法创建群", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             YouMaiGroup.GroupMemberItem.Builder builder = YouMaiGroup.GroupMemberItem.newBuilder();
             builder.setMemberId(item.getUuid());
             builder.setMemberName(item.getRealname());

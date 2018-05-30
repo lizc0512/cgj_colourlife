@@ -1,6 +1,8 @@
 package com.tg.coloursteward.module.contact.utils;
 
 import android.content.Context;
+import android.text.TextUtils;
+import android.widget.Toast;
 
 import com.tg.coloursteward.module.groupchat.SearchContactAdapter;
 import com.tg.coloursteward.net.ResponseData;
@@ -84,6 +86,12 @@ public class ContactsBindData extends Observable {
             contact.setJobName(data.getString(i, "jobName"));
             contact.setOrgName(data.getString(i, "orgName"));
             contact.setOrgID(data.getString(i, "orgID"));
+
+            String uuid = data.getString(i, "contactsId");
+            if (TextUtils.isEmpty(uuid)) {
+                Toast.makeText(context, "收藏联系人接口错误" + hanzi + "的uuid为空", Toast.LENGTH_SHORT).show();
+            }
+
             contact.setUuid(data.getString(i, "contactsId"));
 
             StringBuilder pinyin = new StringBuilder();

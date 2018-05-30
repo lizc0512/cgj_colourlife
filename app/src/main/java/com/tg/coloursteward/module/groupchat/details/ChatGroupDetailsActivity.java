@@ -94,6 +94,7 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
     private RelativeLayout mRlClearChatRecords;
 
     private Switch switch_notify;
+    private Switch switch_top;
 
     private TextView mTvExitGroup;
     private TextView mTvGroupName;
@@ -214,6 +215,27 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
                 }
             }
         });
+
+
+        switch_top = findViewById(R.id.switch_top);
+        boolean isTop = AppUtils.getBooleanSharedPreferences(mContext, "top" + mGroupId, false);
+        if (isTop) {
+            switch_top.setChecked(true);
+        } else {
+            switch_top.setChecked(false);
+        }
+
+        switch_top.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    AppUtils.setBooleanSharedPreferences(mContext, "top" + mGroupId, true);
+                } else {
+                    AppUtils.setBooleanSharedPreferences(mContext, "top" + mGroupId, false);
+                }
+            }
+        });
+
 
 
         mAdapter = new GroupDetailAdapter(this, this);

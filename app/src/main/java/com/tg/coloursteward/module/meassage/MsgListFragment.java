@@ -45,6 +45,7 @@ import com.youmai.hxsdk.http.OkHttpConnector;
 import com.youmai.hxsdk.im.IMMsgCallback;
 import com.youmai.hxsdk.im.IMMsgManager;
 import com.youmai.hxsdk.db.helper.CacheMsgHelper;
+import com.youmai.hxsdk.utils.AppUtils;
 import com.youmai.hxsdk.utils.GsonUtil;
 import com.youmai.hxsdk.view.refresh.OnRecyclerScrollListener;
 
@@ -476,6 +477,13 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
     public void onCallback(CacheMsgBean imComingMsg) {
         if (imComingMsg != null) {
             ExCacheMsgBean bean = new ExCacheMsgBean(imComingMsg);
+
+            String targetId = bean.getTargetUuid();
+            boolean isTop = AppUtils.getBooleanSharedPreferences(getContext(), "top" + targetId, false);
+            if (isTop) {
+                bean.setTop(true);
+            }
+
             bean.setDisplayName(imComingMsg.getTargetName());
             mMessageAdapter.addTop(bean);
 

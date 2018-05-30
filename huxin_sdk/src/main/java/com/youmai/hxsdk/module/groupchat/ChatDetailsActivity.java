@@ -5,8 +5,10 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,6 +24,7 @@ import com.youmai.hxsdk.db.bean.ContactBean;
 import com.youmai.hxsdk.db.helper.CacheMsgHelper;
 import com.youmai.hxsdk.im.IMMsgManager;
 import com.youmai.hxsdk.router.APath;
+import com.youmai.hxsdk.utils.AppUtils;
 import com.youmai.hxsdk.utils.GlideRoundTransform;
 
 import java.util.ArrayList;
@@ -45,6 +48,9 @@ public class ChatDetailsActivity extends SdkBaseActivity {
     private TextView mSelfName;
     private ImageView mAddMore;
     private RelativeLayout mClearRecords;
+
+    private Switch switch_notify;
+    private Switch switch_top;
 
     private String uuid;
     private String avatar;
@@ -92,6 +98,46 @@ public class ChatDetailsActivity extends SdkBaseActivity {
 
         mTvTitle.setText("聊天详情");
         mSelfName.setText(realname);
+
+        switch_notify = findViewById(R.id.switch_notify);
+        boolean isClosed = AppUtils.getBooleanSharedPreferences(mContext, "notify" + uuid, false);
+        if (isClosed) {
+            switch_notify.setChecked(true);
+        } else {
+            switch_notify.setChecked(false);
+        }
+
+        switch_notify.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    AppUtils.setBooleanSharedPreferences(mContext, "notify" + uuid, true);
+                } else {
+                    AppUtils.setBooleanSharedPreferences(mContext, "notify" + uuid, false);
+                }
+            }
+        });
+
+
+        switch_top = findViewById(R.id.switch_top);
+        boolean isTop = AppUtils.getBooleanSharedPreferences(mContext, "top" + uuid, false);
+        if (isTop) {
+            switch_top.setChecked(true);
+        } else {
+            switch_top.setChecked(false);
+        }
+
+        switch_top.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    AppUtils.setBooleanSharedPreferences(mContext, "top" + uuid, true);
+                } else {
+                    AppUtils.setBooleanSharedPreferences(mContext, "top" + uuid, false);
+                }
+            }
+        });
+
 
         Glide.with(mContext)
                 .load(avatar)

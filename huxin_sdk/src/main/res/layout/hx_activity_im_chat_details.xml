@@ -78,10 +78,80 @@
 
     </RelativeLayout>
 
+
+    <RelativeLayout
+        android:id="@+id/rl_group_top"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/hxb_list_item_selector"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:visibility="visible">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="消息置顶"
+            android:textColor="@color/color_theme_main"
+            android:textSize="15sp" />
+
+        <Switch
+            android:id="@+id/switch_top"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:theme="@style/HxBaseSdkTheme" />
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_alignParentBottom="true"
+            android:background="@color/color_group_bg2" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_group_notify"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/hxb_list_item_selector"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:visibility="visible">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="消息免打扰"
+            android:textColor="@color/color_theme_main"
+            android:textSize="15sp" />
+
+        <Switch
+            android:id="@+id/switch_notify"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:theme="@style/HxBaseSdkTheme" />
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_alignParentBottom="true"
+            android:background="@color/color_group_bg2" />
+
+    </RelativeLayout>
+
     <RelativeLayout
         android:id="@+id/rl_clear_chat_records"
         android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:layout_marginTop="10dp"
         android:background="@drawable/hxb_list_item_selector"
         android:gravity="center_vertical"
         android:paddingLeft="16dp"

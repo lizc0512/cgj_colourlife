@@ -15,6 +15,7 @@ import com.youmai.hxsdk.im.cache.JsonFormat;
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.annotation.Transient;
 
 /**
  * Author:  Kevin Feng
@@ -83,6 +84,8 @@ public class CacheMsgBean implements Parcelable {
 
     private String memberChanged; //群组成员变化提示
 
+    @Transient
+    private boolean isTop;
 
     public CacheMsgBean(CacheMsgBean bean) {
         this.id = bean.getId();
@@ -108,6 +111,7 @@ public class CacheMsgBean implements Parcelable {
         this.targetUuid = bean.getTargetUuid();
         this.msgStatus = bean.getMsgStatus();
         this.progress = bean.getProgress();
+        this.memberChanged = bean.getMemberChanged();
     }
 
 
@@ -371,6 +375,70 @@ public class CacheMsgBean implements Parcelable {
         return this;
     }
 
+    public boolean isTop() {
+        return isTop;
+    }
+
+    public CacheMsgBean setTop(boolean top) {
+        isTop = top;
+        return this;
+    }
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeValue(this.id);
+        dest.writeValue(this.msgId);
+        dest.writeInt(this.msgType);
+        dest.writeLong(this.msgTime);
+        dest.writeString(this.senderUserId);
+        dest.writeString(this.senderMobile);
+        dest.writeString(this.senderSex);
+        dest.writeString(this.senderRealName);
+        dest.writeString(this.senderAvatar);
+        dest.writeString(this.senderUserName);
+        dest.writeString(this.receiverUserId);
+        dest.writeString(this.contentJsonBody);
+        dest.writeInt(this.groupId);
+        dest.writeString(this.targetName);
+        dest.writeString(this.targetUuid);
+        dest.writeString(this.targetAvatar);
+        dest.writeString(this.targetUserName);
+        dest.writeInt(this.msgStatus);
+        dest.writeInt(this.progress);
+        dest.writeString(this.memberChanged);
+        dest.writeByte(this.isTop ? (byte) 1 : (byte) 0);
+    }
+
+    protected CacheMsgBean(Parcel in) {
+        this.id = (Long) in.readValue(Long.class.getClassLoader());
+        this.msgId = (Long) in.readValue(Long.class.getClassLoader());
+        this.msgType = in.readInt();
+        this.msgTime = in.readLong();
+        this.senderUserId = in.readString();
+        this.senderMobile = in.readString();
+        this.senderSex = in.readString();
+        this.senderRealName = in.readString();
+        this.senderAvatar = in.readString();
+        this.senderUserName = in.readString();
+        this.receiverUserId = in.readString();
+        this.contentJsonBody = in.readString();
+        this.groupId = in.readInt();
+        this.targetName = in.readString();
+        this.targetUuid = in.readString();
+        this.targetAvatar = in.readString();
+        this.targetUserName = in.readString();
+        this.msgStatus = in.readInt();
+        this.progress = in.readInt();
+        this.memberChanged = in.readString();
+        this.isTop = in.readByte() != 0;
+    }
+
 
     @Generated(hash = 392728222)
     public CacheMsgBean(Long id, Long msgId, int msgType, long msgTime, String senderUserId,
@@ -403,58 +471,6 @@ public class CacheMsgBean implements Parcelable {
 
     @Generated(hash = 107805209)
     public CacheMsgBean() {
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeValue(this.id);
-        dest.writeValue(this.msgId);
-        dest.writeInt(this.msgType);
-        dest.writeLong(this.msgTime);
-        dest.writeString(this.senderUserId);
-        dest.writeString(this.senderMobile);
-        dest.writeString(this.senderSex);
-        dest.writeString(this.senderRealName);
-        dest.writeString(this.senderAvatar);
-        dest.writeString(this.senderUserName);
-        dest.writeString(this.receiverUserId);
-        dest.writeString(this.contentJsonBody);
-        dest.writeInt(this.groupId);
-        dest.writeString(this.targetName);
-        dest.writeString(this.targetUuid);
-        dest.writeString(this.targetAvatar);
-        dest.writeString(this.targetUserName);
-        dest.writeInt(this.msgStatus);
-        dest.writeInt(this.progress);
-        dest.writeString(this.memberChanged);
-    }
-
-    protected CacheMsgBean(Parcel in) {
-        this.id = (Long) in.readValue(Long.class.getClassLoader());
-        this.msgId = (Long) in.readValue(Long.class.getClassLoader());
-        this.msgType = in.readInt();
-        this.msgTime = in.readLong();
-        this.senderUserId = in.readString();
-        this.senderMobile = in.readString();
-        this.senderSex = in.readString();
-        this.senderRealName = in.readString();
-        this.senderAvatar = in.readString();
-        this.senderUserName = in.readString();
-        this.receiverUserId = in.readString();
-        this.contentJsonBody = in.readString();
-        this.groupId = in.readInt();
-        this.targetName = in.readString();
-        this.targetUuid = in.readString();
-        this.targetAvatar = in.readString();
-        this.targetUserName = in.readString();
-        this.msgStatus = in.readInt();
-        this.progress = in.readInt();
-        this.memberChanged = in.readString();
     }
 
     public static final Creator<CacheMsgBean> CREATOR = new Creator<CacheMsgBean>() {

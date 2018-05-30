@@ -165,4 +165,18 @@ public class AnimatorUtils {
         set.setStartDelay(duration / 2);
         set2.start();
     }
+
+
+    /**
+     * 旋转
+     *
+     * @param view
+     */
+    public static void rotationY(View view, long duration, AnimatorListenerAdapter listener) {
+        ObjectAnimator ra = ObjectAnimator.ofFloat(view, "rotationY", 0f, 360f);
+        ra.setDuration(duration);
+        ra.addListener(listener);
+        ra.start();
+    }
+
 }

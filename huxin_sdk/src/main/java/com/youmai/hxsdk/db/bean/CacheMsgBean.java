@@ -34,6 +34,7 @@ public class CacheMsgBean implements Parcelable {
     public static final int SEND_LOCATION = 5;
     public static final int SEND_FILE = 6;
     public static final int SEND_EMOTION = 7;
+    public static final int SEND_REDPACKAGE = 8;
 
     public static final int RECEIVE_TEXT = 101;
     public static final int RECEIVE_IMAGE = 102;
@@ -42,6 +43,7 @@ public class CacheMsgBean implements Parcelable {
     public static final int RECEIVE_LOCATION = 105;
     public static final int RECEIVE_FILE = 106;
     public static final int RECEIVE_EMOTION = 107;
+    public static final int RECEIVE_REDPACKAGE = 108;
 
     public static final int GROUP_MEMBER_CHANGED = 1001;
     public static final int GROUP_NAME_CHANGED = 1002;

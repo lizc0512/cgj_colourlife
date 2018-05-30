@@ -1273,7 +1273,7 @@ public class IMGroupActivity extends SdkBaseActivity implements
             sendLocation();
         } else if (type == InputMessageLay.TYPE_FILE) {
             showFileChooser();
-        } else if (type == InputMessageLay.TYPE_CARD) {
+        } else if (type == InputMessageLay.TYPE_RED_PACKET) {
             //分享名片
             /*try {
                 Intent intent = new Intent();

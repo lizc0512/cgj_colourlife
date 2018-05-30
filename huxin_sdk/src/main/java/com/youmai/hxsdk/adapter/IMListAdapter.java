@@ -13,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -56,6 +57,9 @@ import com.youmai.hxsdk.view.chat.utils.Utils;
 import com.youmai.hxsdk.view.progressbar.CircleProgressView;
 import com.youmai.hxsdk.view.text.CopeTextView;
 import com.youmai.hxsdk.view.tip.TipView;
+import com.youmai.hxsdk.view.tip.bean.TipBean;
+import com.youmai.hxsdk.view.tip.listener.ItemListener;
+import com.youmai.hxsdk.view.tip.tools.TipsType;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -80,6 +84,7 @@ public class IMListAdapter extends RecyclerView.Adapter {
     private static final int VOICE_LEFT = 4; //声音左
     private static final int VIDEO_LEFT = 5;//视频左
     private static final int FILE_LEFT = 6; //文件左
+    private static final int RED_PACKAGE_LEFT = 7; //红包左
 
     private static final int TXT_RIGHT = 11; //文字右
     private static final int IMG_RIGHT = 12; //图片右
@@ -87,6 +92,7 @@ public class IMListAdapter extends RecyclerView.Adapter {
     private static final int VIDEO_RIGHT = 14;//视频右
     private static final int VOICE_RIGHT = 15; //声音右
     private static final int FILE_RIGHT = 16;//文件右
+    private static final int RED_PACKAGE_RIGHT = 17; //红包右
 
 
     private static final int HANDLER_REFRESH_PROGREE = 0;
@@ -150,44 +156,44 @@ public class IMListAdapter extends RecyclerView.Adapter {
         View view;
         RecyclerView.ViewHolder holder = null;
         switch (viewType) {
+            case TXT_LEFT:
+                view = inflater.inflate(R.layout.hx_fragment_im_left_txt_item, parent, false);
+                holder = new TxtViewHolder(view);
+                break;
+            case TXT_RIGHT:
+                view = inflater.inflate(R.layout.hx_fragment_im_right_txt_item, parent, false);
+                holder = new TxtViewHolder(view);
+                break;
             case IMG_LEFT:
                 view = inflater.inflate(R.layout.hx_fragment_im_left_img_item, parent, false);
+                holder = new ImgViewHolder(view);
+                break;
+            case IMG_RIGHT:
+                view = inflater.inflate(R.layout.hx_fragment_im_right_img_item, parent, false);
                 holder = new ImgViewHolder(view);
                 break;
             case MAP_LEFT:
                 view = inflater.inflate(R.layout.hx_fragment_im_left_map_item, parent, false);
                 holder = new MapViewHolder(view);
                 break;
-            case VOICE_LEFT:
-                view = inflater.inflate(R.layout.hx_fragment_im_left_voice_item, parent, false);
-                holder = new VoiceViewHolder(view);
-                break;
-            case TXT_LEFT:
-                view = inflater.inflate(R.layout.hx_fragment_im_left_txt_item, parent, false);
-                holder = new TxtViewHolder(view);
-                break;
-            case IMG_RIGHT:
-                view = inflater.inflate(R.layout.hx_fragment_im_right_img_item, parent, false);
-                holder = new ImgViewHolder(view);
-                break;
             case MAP_RIGHT:
                 view = inflater.inflate(R.layout.hx_fragment_im_right_map_item, parent, false);
                 holder = new MapViewHolder(view);
+                break;
+            case VOICE_LEFT:
+                view = inflater.inflate(R.layout.hx_fragment_im_left_voice_item, parent, false);
+                holder = new VoiceViewHolder(view);
                 break;
             case VOICE_RIGHT:
                 view = inflater.inflate(R.layout.hx_fragment_im_right_voice_item, parent, false);
                 holder = new VoiceViewHolder(view);
                 break;
-            case TXT_RIGHT:
-                view = inflater.inflate(R.layout.hx_fragment_im_right_txt_item, parent, false);
-                holder = new TxtViewHolder(view);
+            case FILE_LEFT:
+                view = inflater.inflate(R.layout.hx_fragment_im_left_file_item, parent, false);
+                holder = new FileViewHolder(view);
                 break;
             case FILE_RIGHT:
                 view = inflater.inflate(R.layout.hx_fragment_im_right_file_item, parent, false);
-                holder = new FileViewHolder(view);
-                break;
-            case FILE_LEFT:
-                view = inflater.inflate(R.layout.hx_fragment_im_left_file_item, parent, false);
                 holder = new FileViewHolder(view);
                 break;
             case VIDEO_LEFT:
@@ -198,13 +204,19 @@ public class IMListAdapter extends RecyclerView.Adapter {
                 view = inflater.inflate(R.layout.hx_fragment_im_right_video_item, parent, false);
                 holder = new VideoViewHolder(view);
                 break;
+            /*case RED_PACKAGE_LEFT:
+                view = inflater.inflate(R.layout.hx_fragment_im_left_red_package_item, parent, false);
+                holder = new RedPackageHolder(view);
+                break;
+            case RED_PACKAGE_RIGHT:
+                view = inflater.inflate(R.layout.hx_fragment_im_right_red_package_item, parent, false);
+                holder = new RedPackageHolder(view);
+                break;*/
             default:
                 //默认视图，用于解析错误的消息
                 view = inflater.inflate(R.layout.hx_fragment_im_left_txt_item, parent, false);
                 holder = new BaseViewHolder(view);
         }
-        BaseViewHolder baseViewHolder = (BaseViewHolder) holder;
-        baseViewHolder.mItemViewType = viewType;
         return holder;
     }
 
@@ -225,7 +237,9 @@ public class IMListAdapter extends RecyclerView.Adapter {
             onBindFile((FileViewHolder) holder, position);
         } else if (holder instanceof VideoViewHolder) {//视频
             onBindVideo((VideoViewHolder) holder, position);
-        }
+        } /*else if (holder instanceof RedPackageHolder) {//红包
+            onBindRedPackage((VideoViewHolder) holder, position);
+        }*/
     }
 
     @Override
@@ -269,6 +283,13 @@ public class IMListAdapter extends RecyclerView.Adapter {
             case CacheMsgBean.RECEIVE_VIDEO:
                 oriType = VIDEO_LEFT;
                 break;
+            /*case CacheMsgBean.SEND_REDPACKAGE:
+                oriType = RED_PACKAGE_RIGHT;
+                break;
+            case CacheMsgBean.RECEIVE_REDPACKAGE:
+                oriType = RED_PACKAGE_LEFT;
+                break;*/
+
         }
         return oriType;
     }
@@ -295,8 +316,8 @@ public class IMListAdapter extends RecyclerView.Adapter {
         holder.fileSizeTV.setText(IMHelper.convertFileSize(cacheMsgFile.getFileSize()));
 
         showSendStart(holder, cacheMsgBean.getMsgStatus(), cacheMsgBean, position);
-
-        if (cacheMsgBean.isRightUI()) {
+        final boolean isRight = cacheMsgBean.isRightUI();
+        if (isRight) {
             if (cacheMsgBean.getMsgStatus() == CacheMsgBean.SEND_SUCCEED) {
                 holder.fileSizeTV.setVisibility(View.VISIBLE);
                 holder.filePbar.setVisibility(View.GONE);
@@ -344,8 +365,9 @@ public class IMListAdapter extends RecyclerView.Adapter {
 
         showMsgTime(position, imgViewHolder.senderDateTV, cacheMsgBean.getMsgTime());
 
+        boolean isRight = cacheMsgBean.isRightUI();
         Glide.with(mAct)
-                .load(cacheMsgBean.isRightUI() ? rightUrl : leftUrl)
+                .load(isRight ? rightUrl : leftUrl)
                 .apply(new RequestOptions()
                         .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                         .transform(new MaskTransformation(cacheMsgBean.isRightUI() ? R.drawable.hx_im_voice_bg_right : R.drawable.hx_im_voice_bg_left)))
@@ -374,6 +396,77 @@ public class IMListAdapter extends RecyclerView.Adapter {
      * 视频数据
      */
     private void onBindVideo(final VideoViewHolder videoViewHolder, final int position) {
+        final CacheMsgBean cacheMsgBean = mImBeanList.get(position);
+        final CacheMsgVideo cacheMsgVideo = (CacheMsgVideo) cacheMsgBean.getJsonBodyObj();
+        showSendStart(videoViewHolder, cacheMsgBean.getMsgStatus(), cacheMsgBean, position);
+
+        final String videoPath = cacheMsgVideo.getVideoPath();//本地视频
+        final String framePath = cacheMsgVideo.getFramePath();//本地视频首帧
+        final long time = cacheMsgVideo.getTime();//视频时长(毫秒)
+        final String videoUrl = AppConfig.getImageUrl(cacheMsgVideo.getVideoId());    //上传视频Url
+        String leftUrl = AppConfig.getImageUrl(cacheMsgVideo.getFrameId());     //上传视频首帧Url
+        String rightUrl = framePath;
+        if (rightUrl == null || !new File(rightUrl).exists()) {
+            rightUrl = AppConfig.getImageUrl(cacheMsgVideo.getFrameId());
+        }
+
+        videoViewHolder.timeText.setText(TimeUtils.getTimeFromMillisecond(time));
+
+        showMsgTime(position, videoViewHolder.senderDateTV, cacheMsgBean.getMsgTime());
+
+        final boolean isRight = cacheMsgBean.isRightUI();
+        Glide.with(mAct)
+                .load(isRight ? rightUrl : leftUrl)
+                .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.RESOURCE).placeholder(R.drawable.hx_im_default_img)
+                        .transform(new MaskTransformation(cacheMsgBean.isRightUI() ? R.drawable.hx_im_voice_bg_right : R.drawable.hx_im_voice_bg_left)))
+                .into(videoViewHolder.videoImg);
+
+        if (TextUtils.isEmpty(videoPath) && cacheMsgBean.getProgress() != 0) {
+            videoViewHolder.videoPlayImg.setVisibility(View.GONE);
+            videoViewHolder.videoCircleProgressView.setVisibility(View.VISIBLE);
+            videoViewHolder.videoCircleProgressView.setProgress(cacheMsgBean.getProgress());
+            videoViewHolder.videoImg.setEnabled(false);
+        } else if (TextUtils.isEmpty(videoPath) && cacheMsgBean.getProgress() == -1) {
+            //下载失败的显示
+            videoViewHolder.videoPlayImg.setVisibility(View.VISIBLE);
+            videoViewHolder.videoCircleProgressView.setVisibility(View.GONE);
+            videoViewHolder.lay.setEnabled(true);
+        } else {
+            videoViewHolder.videoPlayImg.setVisibility(View.VISIBLE);
+            videoViewHolder.videoCircleProgressView.setVisibility(View.GONE);
+            videoViewHolder.lay.setEnabled(true);
+        }
+        videoViewHolder.lay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (TextUtils.isEmpty(videoPath)) {
+                    downVideo(position, videoUrl, cacheMsgBean);
+                } else {
+                    File videoFile = new File(videoPath);
+                    if (videoFile.exists()) {
+                        VideoDetailInfo info = new VideoDetailInfo();
+                        info.setVideoPath(cacheMsgBean.isRightUI() ? videoPath : videoPath); //视频路径
+                        Intent intent = new Intent(mAct, VideoPlayerActivity.class);
+                        intent.putExtra("info", info);
+                        mAct.startActivity(intent);
+                    } else {
+                        //文件被删掉，重新下载
+                        cacheMsgVideo.setVideoPath("");
+                        cacheMsgBean.setJsonBodyObj(cacheMsgVideo);
+                        cacheMsgBean.setProgress(0);
+                        CacheMsgHelper.instance().insertOrUpdate(mAct, cacheMsgBean);
+                        downVideo(position, videoUrl, cacheMsgBean);
+                    }
+                }
+            }
+        });
+    }
+
+
+    /**
+     * 红包
+     */
+    private void onBindRedPackage(final VideoViewHolder videoViewHolder, final int position) {
         final CacheMsgBean cacheMsgBean = mImBeanList.get(position);
         final CacheMsgVideo cacheMsgVideo = (CacheMsgVideo) cacheMsgBean.getJsonBodyObj();
         showSendStart(videoViewHolder, cacheMsgBean.getMsgStatus(), cacheMsgBean, position);
@@ -539,7 +632,11 @@ public class IMListAdapter extends RecyclerView.Adapter {
 
                 @Override
                 public void forwardText(CharSequence s) {
-
+                    /*ARouter.getInstance()
+                            .build(APath.MSG_FORWARD)
+                            .withString("type", "forward_msg")
+                            .withParcelable("data", mImBeanList.get(position))
+                            .navigation(mAct, 300);*/
                 }
 
                 @Override
@@ -624,6 +721,10 @@ public class IMListAdapter extends RecyclerView.Adapter {
 
     private TipView voiceTip;
 
+    TipView tipView;
+    public float mRawX;
+    public float mRawY;
+
     private void onBindVoice(final VoiceViewHolder voiceViewHolder, final int position) {
         final CacheMsgBean cacheMsgBean = mImBeanList.get(position);
         final CacheMsgVoice cacheMsgVoice = (CacheMsgVoice) cacheMsgBean.getJsonBodyObj();
@@ -634,6 +735,7 @@ public class IMListAdapter extends RecyclerView.Adapter {
 
         showMsgTime(position, voiceViewHolder.senderDateTV, cacheMsgBean.getMsgTime());
 
+        final boolean isRight = cacheMsgBean.isRightUI();
         if (voiceViewHolder.readIV != null) {
             if (cacheMsgVoice.isHasLoad()) { //到达
                 voiceViewHolder.readIV.setVisibility(View.INVISIBLE);
@@ -647,8 +749,6 @@ public class IMListAdapter extends RecyclerView.Adapter {
         voiceViewHolder.voiceBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final boolean isRightUi = cacheMsgBean.isRightUI();
-
                 if (voicePlayAnim != null && voicePlayAnim.isRunning()) {
                     voicePlayAnim.stop();
                     if (mPlayVoiceIV != null) {
@@ -679,7 +779,7 @@ public class IMListAdapter extends RecyclerView.Adapter {
                 mPlayVoicePosition = position;
                 mPlayVoiceIV = voiceViewHolder.voiceIV;
 
-                if (!isRightUi) {
+                if (!isRight) {
                     if (!cacheMsgVoice.isHasLoad()) {
                         //add to db
                         cacheMsgVoice.setHasLoad(true);
@@ -689,7 +789,7 @@ public class IMListAdapter extends RecyclerView.Adapter {
                     voiceViewHolder.readIV.setVisibility(View.INVISIBLE);
                 }
 
-                voiceViewHolder.voiceIV.setImageResource(isRightUi ? R.drawable.hx_im_voice_right_anim : R.drawable.hx_im_voice_left_anim);
+                voiceViewHolder.voiceIV.setImageResource(isRight ? R.drawable.hx_im_voice_right_anim : R.drawable.hx_im_voice_left_anim);
                 voicePlayAnim = (AnimationDrawable) voiceViewHolder.voiceIV.getDrawable();
                 voicePlayAnim.start();
 
@@ -705,7 +805,7 @@ public class IMListAdapter extends RecyclerView.Adapter {
                     @Override
                     public void onCompletion(MediaPlayer mp) {
                         voicePlayAnim.stop();
-                        voiceViewHolder.voiceIV.setImageResource(isRightUi ? R.drawable.hx_im_right_anim_v3 : R.drawable.hx_im_left_anim_v3);
+                        voiceViewHolder.voiceIV.setImageResource(isRight ? R.drawable.hx_im_right_anim_v3 : R.drawable.hx_im_left_anim_v3);
                     }
                 });
             }
@@ -802,7 +902,7 @@ public class IMListAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemCount() {
-        return mImBeanList.size();
+        return mImBeanList == null ? 0 : mImBeanList.size();
     }
 
 
@@ -907,42 +1007,141 @@ public class IMListAdapter extends RecyclerView.Adapter {
         }
     }
 
+    /*private class RedPackageHolder extends BaseViewHolder {
+
+        View lay;
+        ImageView img_red_package;
+        TextView tv_red_title;
+        TextView tv_red_status;
+
+        public RedPackageHolder(View itemView) {
+            super(itemView);
+            lay = itemView.findViewById(R.id.item_btn);
+            img_red_package = (ImageView) itemView.findViewById(R.id.img_red_package);
+            tv_red_title = (TextView) itemView.findViewById(R.id.tv_red_title);
+            tv_red_status = (TextView) itemView.findViewById(R.id.tv_red_status);
+        }
+    }*/
+
 
     private void onBindCommon(final BaseViewHolder baseViewHolder, final int position) {
-        final CacheMsgBean ben = mImBeanList.get(position);
+        final CacheMsgBean bean = mImBeanList.get(position);
+
         String avatar;
         //头像
-        if (ben.isRightUI()) {  //自己的头像
+        if (bean.isRightUI()) {  //自己的头像
             avatar = HuxinSdkManager.instance().getHeadUrl();
         } else {
-            avatar = ben.getTargetAvatar();
+            avatar = bean.getTargetAvatar();
+        }
+        int size = mAct.getResources().getDimensionPixelOffset(R.dimen.card_head);
+        if (baseViewHolder.senderIV != null) {
+            Glide.with(mAct).load(avatar)
+                    .apply(new RequestOptions()
+                            .transform(new GlideRoundTransform())
+                            .override(size, size)
+                            .placeholder(R.drawable.color_default_header)
+                            .error(R.drawable.color_default_header)
+                            .diskCacheStrategy(DiskCacheStrategy.RESOURCE))
+                    .into(baseViewHolder.senderIV);
+
+            baseViewHolder.senderIV.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (bean.isRightUI()) {  //自己的头像
+                        ARouter.getInstance().build(APath.USER_INFO_ACT)
+                                .navigation(mAct);
+                    } else {
+                        ARouter.getInstance().build(APath.EMPLOYEE_DATA_ACT)
+                                .withString("contacts_id", bean.getTargetUserName())
+                                .navigation(mAct);
+
+                    }
+                }
+            });
         }
 
 
-        baseViewHolder.senderIV.setOnClickListener(new View.OnClickListener() {
+        //删除消息
+        //TxTViewHolder类型另外处理，TextView添加autoLink属性后会拦截ViewGroup的事件分发,删除消息的提示窗放到CopeTextView里处理
+        baseViewHolder.itemBtn.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View v) {
-                if (ben.isRightUI()) {  //自己的头像
-                    ARouter.getInstance().build(APath.USER_INFO_ACT)
-                            .navigation(mAct);
-                } else {
-                    ARouter.getInstance().build(APath.EMPLOYEE_DATA_ACT)
-                            .withString("contacts_id", ben.getTargetUserName())
-                            .navigation(mAct);
-
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    mRawX = event.getRawX();
+                    mRawY = event.getRawY();
                 }
+                return false;
             }
         });
 
-        int size = mAct.getResources().getDimensionPixelOffset(R.dimen.card_head);
-        Glide.with(mAct).load(avatar)
-                .apply(new RequestOptions()
-                        .transform(new GlideRoundTransform())
-                        .override(size, size)
-                        .placeholder(R.drawable.color_default_header)
-                        .error(R.drawable.color_default_header)
-                        .diskCacheStrategy(DiskCacheStrategy.RESOURCE))
-                .into(baseViewHolder.senderIV);
+        baseViewHolder.itemBtn.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                List<TipBean> tips = null;
+                if (baseViewHolder instanceof VoiceViewHolder) {
+                    tips = TipsType.getVoiceType();
+                } else if (baseViewHolder instanceof ImgViewHolder
+                        || baseViewHolder instanceof VideoViewHolder
+                        || baseViewHolder instanceof MapViewHolder
+                        || baseViewHolder instanceof FileViewHolder) {
+                    tips = TipsType.getOtherType();
+                }
+                if (tips != null) {
+                    tipView = new TipView(mAct, tips, mRawX, mRawY);
+                    tipView.setListener(new ItemListener() {
+                        @Override
+                        public void delete() {
+                            deleteMsg(bean, position, true);
+                        }
+
+                        @Override
+                        public void copy() {
+                        }
+
+                        @Override
+                        public void collect() {
+                            //收藏操作
+                        }
+
+                        @Override
+                        public void forward() {
+                            //转发操作
+                            /*ARouter.getInstance()
+                                    .build(APath.MSG_FORWARD)
+                                    .withString("type", "forward_msg")
+                                    .withParcelable("data", bean)
+                                    .navigation(mAct, 300);*/
+
+                        }
+
+                        @Override
+                        public void read() {
+
+                        }
+
+                        @Override
+                        public void remind() {
+                        }
+
+                        @Override
+                        public void turnText() {
+                        }
+
+                        @Override
+                        public void more() {
+                            moreAction(position);
+                        }
+
+                        @Override
+                        public void emoKeep() {
+                        }
+                    });
+                    tipView.show(view);
+                }
+                return true;
+            }
+        });
     }
 
 
@@ -972,14 +1171,12 @@ public class IMListAdapter extends RecyclerView.Adapter {
 
 
     class BaseViewHolder extends RecyclerView.ViewHolder {
-        int mItemViewType;
         TextView senderDateTV;
         ImageView senderIV;
         View itemBtn;
+        View contentLay;
         ProgressBar progressBar;
         ImageView smsImg;
-        View contentLay;
-
 
         BaseViewHolder(View itemView) {
             super(itemView);

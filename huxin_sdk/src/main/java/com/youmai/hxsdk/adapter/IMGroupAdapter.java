@@ -13,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -56,6 +57,9 @@ import com.youmai.hxsdk.view.chat.utils.Utils;
 import com.youmai.hxsdk.view.progressbar.CircleProgressView;
 import com.youmai.hxsdk.view.text.CopeTextView;
 import com.youmai.hxsdk.view.tip.TipView;
+import com.youmai.hxsdk.view.tip.bean.TipBean;
+import com.youmai.hxsdk.view.tip.listener.ItemListener;
+import com.youmai.hxsdk.view.tip.tools.TipsType;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -80,6 +84,7 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
     private static final int VOICE_LEFT = 4; //声音左
     private static final int VIDEO_LEFT = 5;//视频左
     private static final int FILE_LEFT = 6; //文件左
+    private static final int RED_PACKAGE_LEFT = 7; //红包左
 
     private static final int TXT_RIGHT = 11; //文字右
     private static final int IMG_RIGHT = 12; //图片右
@@ -87,6 +92,7 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
     private static final int VIDEO_RIGHT = 14;//视频右
     private static final int VOICE_RIGHT = 15; //声音右
     private static final int FILE_RIGHT = 16;//文件右
+    private static final int RED_PACKAGE_RIGHT = 17; //红包右
 
     private static final int MEMBER_CHANGED = 101;//群成员修改
     private static final int NAME_CHANGED = 102;//群名修改
@@ -129,7 +135,6 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
         return mImBeanList;
     }
 
-
     public void clearMsg() {
         mImBeanList = CacheMsgHelper.instance().toQueryCacheMsgListAndSetRead(mAct, mGroupId, true);
         notifyDataSetChanged();
@@ -154,54 +159,62 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
         View view;
         RecyclerView.ViewHolder holder = null;
         switch (viewType) {
+            case TXT_LEFT:
+                view = inflater.inflate(R.layout.hx_group_im_left_txt_item, parent, false);
+                holder = new TxtViewHolder(view);
+                break;
+            case TXT_RIGHT:
+                view = inflater.inflate(R.layout.hx_fragment_im_right_txt_item, parent, false);
+                holder = new TxtViewHolder(view);
+                break;
             case IMG_LEFT:
                 view = inflater.inflate(R.layout.hx_group_im_left_img_item, parent, false);
+                holder = new ImgViewHolder(view);
+                break;
+            case IMG_RIGHT:
+                view = inflater.inflate(R.layout.hx_fragment_im_right_img_item, parent, false);
                 holder = new ImgViewHolder(view);
                 break;
             case MAP_LEFT:
                 view = inflater.inflate(R.layout.hx_group_im_left_map_item, parent, false);
                 holder = new MapViewHolder(view);
                 break;
+            case MAP_RIGHT:
+                view = inflater.inflate(R.layout.hx_fragment_im_right_map_item, parent, false);
+                holder = new MapViewHolder(view);
+                break;
             case VOICE_LEFT:
                 view = inflater.inflate(R.layout.hx_group_im_left_voice_item, parent, false);
                 holder = new VoiceViewHolder(view);
                 break;
-            case TXT_LEFT:
-                view = inflater.inflate(R.layout.hx_group_im_left_txt_item, parent, false);
-                holder = new TxtViewHolder(view);
+            case VOICE_RIGHT:
+                view = inflater.inflate(R.layout.hx_fragment_im_right_voice_item, parent, false);
+                holder = new VoiceViewHolder(view);
                 break;
             case FILE_LEFT:
                 view = inflater.inflate(R.layout.hx_group_im_left_file_item, parent, false);
+                holder = new FileViewHolder(view);
+                break;
+            case FILE_RIGHT:
+                view = inflater.inflate(R.layout.hx_fragment_im_right_file_item, parent, false);
                 holder = new FileViewHolder(view);
                 break;
             case VIDEO_LEFT:
                 view = inflater.inflate(R.layout.hx_group_im_left_video_item, parent, false);
                 holder = new VideoViewHolder(view);
                 break;
-            case IMG_RIGHT:
-                view = inflater.inflate(R.layout.hx_fragment_im_right_img_item, parent, false);
-                holder = new ImgViewHolder(view);
-                break;
-            case MAP_RIGHT:
-                view = inflater.inflate(R.layout.hx_fragment_im_right_map_item, parent, false);
-                holder = new MapViewHolder(view);
-                break;
-            case VOICE_RIGHT:
-                view = inflater.inflate(R.layout.hx_fragment_im_right_voice_item, parent, false);
-                holder = new VoiceViewHolder(view);
-                break;
-            case TXT_RIGHT:
-                view = inflater.inflate(R.layout.hx_fragment_im_right_txt_item, parent, false);
-                holder = new TxtViewHolder(view);
-                break;
-            case FILE_RIGHT:
-                view = inflater.inflate(R.layout.hx_fragment_im_right_file_item, parent, false);
-                holder = new FileViewHolder(view);
-                break;
             case VIDEO_RIGHT:
                 view = inflater.inflate(R.layout.hx_fragment_im_right_video_item, parent, false);
                 holder = new VideoViewHolder(view);
                 break;
+            /*case RED_PACKAGE_LEFT:
+                view = inflater.inflate(R.layout.hx_fragment_im_left_red_package_item, parent, false);
+                holder = new RedPackageHolder(view);
+                break;
+            case RED_PACKAGE_RIGHT:
+                view = inflater.inflate(R.layout.hx_fragment_im_right_red_package_item, parent, false);
+                holder = new RedPackageHolder(view);
+                break;*/
             case MEMBER_CHANGED:
                 view = inflater.inflate(R.layout.hx_group_im_member_change_item, parent, false);
                 holder = new GroupChangedViewHolder(view);
@@ -239,11 +252,13 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
             onBindFile((FileViewHolder) holder, position);
         } else if (holder instanceof VideoViewHolder) {//视频
             onBindVideo((VideoViewHolder) holder, position);
+        } /*else if (holder instanceof RedPackageHolder) {//红包
+            onBindRedPackage((RedPackageHolder) holder, position);
+        } */else if (holder instanceof GroupChangedViewHolder) {//群成员变动
+            onBindGroupChanged((GroupChangedViewHolder) holder, position);
         } else if (holder instanceof GroupChangedViewHolder) {//群成员变动
             onBindGroupChanged((GroupChangedViewHolder) holder, position);
         }
-
-
     }
 
     @Override
@@ -287,6 +302,12 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
             case CacheMsgBean.RECEIVE_VIDEO:
                 oriType = VIDEO_LEFT;
                 break;
+            /*case CacheMsgBean.SEND_REDPACKAGE:
+                oriType = RED_PACKAGE_RIGHT;
+                break;
+            case CacheMsgBean.RECEIVE_REDPACKAGE:
+                oriType = RED_PACKAGE_LEFT;
+                break;*/
             case CacheMsgBean.GROUP_MEMBER_CHANGED:
                 oriType = MEMBER_CHANGED;
                 break;
@@ -311,6 +332,7 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
         final CacheMsgFile cacheMsgFile = (CacheMsgFile) cacheMsgBean.getJsonBodyObj();
 
         int resId = IMHelper.getFileImgRes(cacheMsgFile.getFileName(), false);
+
         Glide.with(mAct)
                 .load(resId)
                 .apply(new RequestOptions()
@@ -321,7 +343,6 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
         holder.fileSizeTV.setText(IMHelper.convertFileSize(cacheMsgFile.getFileSize()));
 
         showSendStart(holder, cacheMsgBean.getMsgStatus(), cacheMsgBean, position);
-
         final boolean isRight = cacheMsgBean.isRightUI();
         if (!isRight) {
             if (holder.tv_name != null) {
@@ -488,7 +509,76 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
 
 
     /**
-     * 视频数据
+     * 红包
+     */
+    /*private void onBindRedPackage(final RedPackageHolder videoViewHolder, final int position) {
+        final CacheMsgBean cacheMsgBean = mImBeanList.get(position);
+        final CacheMsgVideo cacheMsgVideo = (CacheMsgVideo) cacheMsgBean.getJsonBodyObj();
+        showSendStart(videoViewHolder, cacheMsgBean.getMsgStatus(), cacheMsgBean, position);
+
+        final String videoPath = cacheMsgVideo.getVideoPath();//本地视频
+        final String framePath = cacheMsgVideo.getFramePath();//本地视频首帧
+        final long time = cacheMsgVideo.getTime();//视频时长(毫秒)
+        final String videoUrl = AppConfig.getImageUrl(cacheMsgVideo.getVideoId());    //上传视频Url
+        String leftUrl = AppConfig.getImageUrl(cacheMsgVideo.getFrameId());     //上传视频首帧Url
+        String rightUrl = framePath;
+        if (rightUrl == null || !new File(rightUrl).exists()) {
+            rightUrl = AppConfig.getImageUrl(cacheMsgVideo.getFrameId());
+        }
+
+        *//*videoViewHolder.timeText.setText(TimeUtils.getTimeFromMillisecond(time));
+
+        showMsgTime(position, videoViewHolder.senderDateTV, cacheMsgBean.getMsgTime());
+
+        Glide.with(mAct)
+                .load(cacheMsgBean.isRightUI() ? rightUrl : leftUrl)
+                .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.RESOURCE).placeholder(R.drawable.hx_im_default_img)
+                        .transform(new MaskTransformation(cacheMsgBean.isRightUI() ? R.drawable.hx_im_voice_bg_right : R.drawable.hx_im_voice_bg_left)))
+                .into(videoViewHolder.videoImg);
+
+        if (TextUtils.isEmpty(videoPath) && cacheMsgBean.getProgress() != 0) {
+            videoViewHolder.videoPlayImg.setVisibility(View.GONE);
+            videoViewHolder.videoCircleProgressView.setVisibility(View.VISIBLE);
+            videoViewHolder.videoCircleProgressView.setProgress(cacheMsgBean.getProgress());
+            videoViewHolder.videoImg.setEnabled(false);
+        } else if (TextUtils.isEmpty(videoPath) && cacheMsgBean.getProgress() == -1) {
+            //下载失败的显示
+            videoViewHolder.videoPlayImg.setVisibility(View.VISIBLE);
+            videoViewHolder.videoCircleProgressView.setVisibility(View.GONE);
+            videoViewHolder.lay.setEnabled(true);
+        } else {
+            videoViewHolder.videoPlayImg.setVisibility(View.VISIBLE);
+            videoViewHolder.videoCircleProgressView.setVisibility(View.GONE);
+            videoViewHolder.lay.setEnabled(true);
+        }
+        videoViewHolder.lay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (TextUtils.isEmpty(videoPath)) {
+                    downVideo(position, videoUrl, cacheMsgBean);
+                } else {
+                    File videoFile = new File(videoPath);
+                    if (videoFile.exists()) {
+                        VideoDetailInfo info = new VideoDetailInfo();
+                        info.setVideoPath(cacheMsgBean.isRightUI() ? videoPath : videoPath); //视频路径
+                        Intent intent = new Intent(mAct, VideoPlayerActivity.class);
+                        intent.putExtra("info", info);
+                        mAct.startActivity(intent);
+                    } else {
+                        //文件被删掉，重新下载
+                        cacheMsgVideo.setVideoPath("");
+                        cacheMsgBean.setJsonBodyObj(cacheMsgVideo);
+                        cacheMsgBean.setProgress(0);
+                        CacheMsgHelper.instance().insertOrUpdate(mAct, cacheMsgBean);
+                        downVideo(position, videoUrl, cacheMsgBean);
+                    }
+                }
+            }
+        });*//*
+    }*/
+
+    /**
+     * 群成员变更
      */
     private void onBindGroupChanged(final GroupChangedViewHolder holder, final int position) {
         final CacheMsgBean cacheMsgBean = mImBeanList.get(position);
@@ -597,6 +687,44 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
                     }
                 }
             });
+            txtViewHolder.senderTV.setOnClickLis(new CopeTextView.OnCopeListener() {
+                @Override
+                public void copeText() {
+                }
+
+                @Override
+                public void forwardText(CharSequence s) {
+                    /*ARouter.getInstance()
+                            .build(APath.MSG_FORWARD)
+                            .withString("type", "forward_msg")
+                            .withParcelable("data", mImBeanList.get(position))
+                            .navigation(mAct, 300);*/
+                }
+
+                @Override
+                public void collect() {
+                }
+
+                @Override
+                public void read() {
+
+                }
+
+                @Override
+                public void remind() {
+
+                }
+
+                @Override
+                public void delete() {
+                    //删除消息的操作
+                    deleteMsg(cacheMsgBean, position, true);
+                }
+
+                @Override
+                public void more() {
+                }
+            });
         }
     }
 
@@ -661,6 +789,10 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
     private ImageView mPlayVoiceIV;
 
     private TipView voiceTip;
+
+    TipView tipView;
+    public float mRawX;
+    public float mRawY;
 
     private void onBindVoice(final VoiceViewHolder voiceViewHolder, final int position) {
         final CacheMsgBean cacheMsgBean = mImBeanList.get(position);
@@ -950,6 +1082,22 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
         }
     }
 
+    /*private class RedPackageHolder extends BaseViewHolder {
+
+        View lay;
+        ImageView img_red_package;
+        TextView tv_red_title;
+        TextView tv_red_status;
+
+        public RedPackageHolder(View itemView) {
+            super(itemView);
+            lay = itemView.findViewById(R.id.item_btn);
+            img_red_package = (ImageView) itemView.findViewById(R.id.img_red_package);
+            tv_red_title = (TextView) itemView.findViewById(R.id.tv_red_title);
+            tv_red_status = (TextView) itemView.findViewById(R.id.tv_red_status);
+        }
+    }*/
+
 
     class GroupChangedViewHolder extends BaseViewHolder {
         TextView tv_group_changed;
@@ -960,17 +1108,16 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
         }
     }
 
-
     private void onBindCommon(final BaseViewHolder baseViewHolder, final int position) {
-        final CacheMsgBean ben = mImBeanList.get(position);
+        final CacheMsgBean bean = mImBeanList.get(position);
+
         String avatar;
         //头像
-        if (ben.isRightUI()) {  //自己的头像
+        if (bean.isRightUI()) {  //自己的头像
             avatar = HuxinSdkManager.instance().getHeadUrl();
         } else {
-            avatar = ben.getTargetAvatar();
+            avatar = bean.getTargetAvatar();
         }
-
         int size = mAct.getResources().getDimensionPixelOffset(R.dimen.card_head);
         if (baseViewHolder.senderIV != null) {
             Glide.with(mAct).load(avatar)
@@ -985,19 +1132,104 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
             baseViewHolder.senderIV.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (ben.isRightUI()) {  //自己的头像
+                    if (bean.isRightUI()) {  //自己的头像
                         ARouter.getInstance().build(APath.USER_INFO_ACT)
                                 .navigation(mAct);
                     } else {
                         ARouter.getInstance().build(APath.EMPLOYEE_DATA_ACT)
-                                .withString("contacts_id", ben.getTargetUserName())
+                                .withString("contacts_id", bean.getTargetUserName())
                                 .navigation(mAct);
 
                     }
                 }
             });
         }
+
+        if (baseViewHolder.itemBtn != null) {
+            //删除消息
+            //TxTViewHolder类型另外处理，TextView添加autoLink属性后会拦截ViewGroup的事件分发,删除消息的提示窗放到CopeTextView里处理
+            baseViewHolder.itemBtn.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                        mRawX = event.getRawX();
+                        mRawY = event.getRawY();
+                    }
+                    return false;
+                }
+            });
+
+            baseViewHolder.itemBtn.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    List<TipBean> tips = null;
+                    if (baseViewHolder instanceof VoiceViewHolder) {
+                        tips = TipsType.getVoiceType();
+                    } else if (baseViewHolder instanceof ImgViewHolder
+                            || baseViewHolder instanceof VideoViewHolder
+                            || baseViewHolder instanceof MapViewHolder
+                            || baseViewHolder instanceof FileViewHolder) {
+                        tips = TipsType.getOtherType();
+                    }
+                    if (tips != null) {
+                        tipView = new TipView(mAct, tips, mRawX, mRawY);
+                        tipView.setListener(new ItemListener() {
+                            @Override
+                            public void delete() {
+                                deleteMsg(bean, position, true);
+                            }
+
+                            @Override
+                            public void copy() {
+                            }
+
+                            @Override
+                            public void collect() {
+                                //收藏操作
+                            }
+
+                            @Override
+                            public void forward() {
+                                //转发操作
+                                /*ARouter.getInstance()
+                                        .build(APath.MSG_FORWARD)
+                                        .withString("type", "forward_msg")
+                                        .withParcelable("data", bean)
+                                        .navigation(mAct, 300);*/
+
+                            }
+
+                            @Override
+                            public void read() {
+
+                            }
+
+                            @Override
+                            public void remind() {
+                            }
+
+                            @Override
+                            public void turnText() {
+                            }
+
+                            @Override
+                            public void more() {
+                                moreAction(position);
+                            }
+
+                            @Override
+                            public void emoKeep() {
+                            }
+                        });
+                        tipView.show(view);
+                    }
+                    return true;
+                }
+            });
+        }
+
     }
+
 
     /**
      * 删除单条消息
@@ -1015,6 +1247,7 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
             listener.deleteMsgCallback(type);
         }
 
+        CacheMsgHelper.instance().deleteOneMsg(mAct, cacheMsgBean.getId());
         //删除本地
         mImBeanList.remove(cacheMsgBean);
         if (refreshUI) {

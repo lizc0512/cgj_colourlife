@@ -70,7 +70,7 @@ public class InputMessageLay extends AutoHeightLayout implements View.OnClickLis
     public static final int TYPE_CAMERA = 2;
     public static final int TYPE_LOCATION = 3;
     public static final int TYPE_FILE = 4;
-    public static final int TYPE_CARD = 5;
+    public static final int TYPE_RED_PACKET = 5;
 
     private static final int VOICE_TIME = 60;//录音时长,默认60秒
     private static final int VOICE_LAST_TIME = 10;//录音剩余时长,默认10秒
@@ -883,7 +883,7 @@ public class InputMessageLay extends AutoHeightLayout implements View.OnClickLis
 
                 if (mKeyBoardBarViewListener != null) {
                     //分享名片
-                    mKeyBoardBarViewListener.onKeyBoardMore(TYPE_CARD);
+                    mKeyBoardBarViewListener.onKeyBoardMore(TYPE_RED_PACKET);
                 }
             }
         });

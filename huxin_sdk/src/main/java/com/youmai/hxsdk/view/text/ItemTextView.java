@@ -86,13 +86,7 @@ public class ItemTextView extends CopeTextView {
                 }
                 if (canShow) {
                     mIsLongClick = true;
-                    List<TipBean> tips;
-
-                    if (position == 0) {
-                        tips = TipsType.getLShareType();
-                    } else {
-                        tips = TipsType.getLShareType(); //自己的
-                    }
+                    List<TipBean> tips = TipsType.getTextType();
                     tipView = new TipView(mContext, tips, mRawX, mRawY);
                     tipView.setListener(new ItemListener() {
                         @Override

@@ -17,7 +17,8 @@
         android:layout_below="@+id/title"
         android:background="@color/hx_background_color"
         android:orientation="horizontal"
-        android:padding="10dp">
+        android:padding="10dp"
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/search_bar_back"

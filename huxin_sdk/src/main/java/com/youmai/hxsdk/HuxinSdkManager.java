@@ -275,6 +275,24 @@ public class HuxinSdkManager {
         mUserInfo.setAccessToken(accessToken);
     }
 
+    public String getExpireTime() {
+        return mUserInfo.getExpireTime();
+    }
+
+    public void setExpireTime(String expireTime) {
+        mUserInfo.setExpireTime(expireTime);
+    }
+
+
+    public String getAppTs() {
+        return mUserInfo.getAppTs();
+    }
+
+    public void setAppTs(String appTs) {
+        mUserInfo.setAppTs(appTs);
+    }
+
+
     public String getUserName() {
         return mUserInfo.getUserName();
     }

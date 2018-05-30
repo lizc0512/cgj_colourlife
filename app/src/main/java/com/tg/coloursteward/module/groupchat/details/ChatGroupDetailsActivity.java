@@ -399,6 +399,31 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
 
     }
 
+    private void exitGroupDialog(Context context) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+
+        builder.setMessage("确定退出此群吗?");
+
+        builder.setPositiveButton(context.getString(R.string.hx_confirm),
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        exitAndDeleteGroup();
+                        arg0.dismiss();
+                    }
+                });
+
+        builder.setNegativeButton(context.getString(R.string.hx_cancel),
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        arg0.dismiss();
+                    }
+                });
+        builder.show();
+    }
+
+
     private void setOnClickListener() {
         mTvBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -409,7 +434,7 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
         mTvExitGroup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                exitAndDeleteGroup();
+                exitGroupDialog(mContext);
             }
         });
 

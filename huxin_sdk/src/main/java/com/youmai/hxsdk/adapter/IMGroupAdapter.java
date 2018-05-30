@@ -505,7 +505,9 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
             @Override
             public void onProgress(int cur, int total) {
                 if (cacheMsgBean.getJsonBodyObj() instanceof CacheMsgVideo) {
-                    cacheMsgBean.setProgress(cur * 100 / total);
+
+                    int progress = (int) (cur * 1.0f / total * 100);
+                    cacheMsgBean.setProgress(progress);
 
                     Message msg = mHandler.obtainMessage(HANDLER_REFRESH_PROGREE);
                     Bundle bundle = new Bundle();

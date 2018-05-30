@@ -36,6 +36,7 @@ import com.tg.coloursteward.module.MainActivity1;
 import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.dialog.ToastFactory;
+import com.youmai.hxsdk.HuxinSdkManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -485,6 +486,8 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
                     SharedPreferences.Editor sharedata = CityPropertyApplication.getInstance().getSharedPreferences("APP_TS", 0).edit();
                     sharedata.putLong(HttpTools.DIFFERENCE, Long.parseLong(difference));
                     sharedata.commit();
+
+                    HuxinSdkManager.instance().setAppTs(difference);
                 }
             }
         } else if (msg.arg1 == HttpTools.GET_SKIN_INFO) {//获取皮肤包

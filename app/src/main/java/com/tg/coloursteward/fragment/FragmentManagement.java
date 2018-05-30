@@ -1335,10 +1335,10 @@ public class FragmentManagement extends Fragment {
         key = Tools.getStringValue(mActivity, Contants.EMPLOYEE_LOGIN.key);
         secret = Tools.getStringValue(mActivity, Contants.EMPLOYEE_LOGIN.secret);
 
-        Date dt = new Date();
-        Long time = dt.getTime();
+        long time = System.currentTimeMillis() / 1000;
         String expireTime = Tools.getStringValue(mActivity, Contants.storage.APPAUTHTIME);
-        String expireTime_1 = Tools.getStringValue(mActivity, Contants.storage.APPAUTHTIME_1);
+        //String expireTime_1 = Tools.getStringValue(mActivity, Contants.storage.APPAUTHTIME_1);
+
         accessToken = Tools.getStringValue(mActivity, Contants.storage.APPAUTH);
         accessToken_1 = Tools.getStringValue(mActivity, Contants.storage.APPAUTH_1);
         Log.e(TAG, "requestData: accessToken" + accessToken);

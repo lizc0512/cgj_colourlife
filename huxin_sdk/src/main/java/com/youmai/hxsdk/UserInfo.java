@@ -20,6 +20,8 @@ public class UserInfo {
     private String sex;   //用户性别
     private String avatar;   //用户头像
     private String accessToken;   //用户token
+    private String expireTime;   //token过期时间 单位秒
+    private String appTs;
     private String userName;   //用户token
 
     private boolean isChange;
@@ -118,6 +120,37 @@ public class UserInfo {
         this.accessToken = accessToken;
     }
 
+    public String getExpireTime() {
+        return expireTime;
+    }
+
+    public void setExpireTime(String expireTime) {
+        try {
+            if (!this.expireTime.equals(expireTime)) {
+                isChange = true;
+            }
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+        this.expireTime = expireTime;
+    }
+
+    public String getAppTs() {
+        return appTs;
+    }
+
+    public void setAppTs(String appTs) {
+        try {
+            if (!this.appTs.equals(appTs)) {
+                isChange = true;
+            }
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+
+        this.appTs = appTs;
+    }
+
     public String getUserName() {
         return userName;
     }
@@ -154,6 +187,8 @@ public class UserInfo {
                 sex = jsonObject.optString("sex");
                 avatar = jsonObject.optString("avatar");
                 accessToken = jsonObject.optString("accessToken");
+                expireTime = jsonObject.optString("expireTime");
+                appTs = jsonObject.optString("appTs");
                 userName = jsonObject.optString("userName");
 
             } catch (Exception e) {
@@ -170,6 +205,8 @@ public class UserInfo {
         sex = null;
         avatar = null;
         accessToken = null;
+        expireTime = null;
+        appTs = null;
         userName = null;
 
         if (context != null) {

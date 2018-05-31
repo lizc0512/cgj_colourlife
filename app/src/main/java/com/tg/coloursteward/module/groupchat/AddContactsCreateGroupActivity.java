@@ -445,6 +445,8 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
                             finish();
                             HuxinSdkManager.instance().getStackAct().finishActivity(IMConnectionActivity.class);
                             HuxinSdkManager.instance().getStackAct().finishActivity(ChatDetailsActivity.class);
+                        } else {
+                            Toast.makeText(mContext, "创建群失败", Toast.LENGTH_SHORT).show();
                         }
                     } catch (InvalidProtocolBufferException e) {
                         e.printStackTrace();

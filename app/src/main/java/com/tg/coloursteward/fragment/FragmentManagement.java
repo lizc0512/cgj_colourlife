@@ -949,8 +949,11 @@ public class FragmentManagement extends Fragment {
                         public void httpReqResult(String response) {
                             OaConfig config = GsonUtil.parse(response, OaConfig.class);
                             if (config != null && config.isSuccess() && isAdded()) {
-                                count = count + config.getContent().getNumber();
-                                tvExamineNum.setText(String.valueOf(count));
+                                OaConfig.ContentBean bean = config.getContent();
+                                if (bean != null) {
+                                    count = count + bean.getNumber();
+                                    tvExamineNum.setText(String.valueOf(count));
+                                }
                             }
                         }
                     });

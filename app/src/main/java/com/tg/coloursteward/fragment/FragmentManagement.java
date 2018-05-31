@@ -1050,6 +1050,7 @@ public class FragmentManagement extends Fragment {
                 }
                 adapter1 = new ManagementAdapter(mActivity, gridlist1);
                 mGridView1.setAdapter(adapter1);
+                mGridView1.setExpanded(true);
             }
 
             @Override
@@ -1152,6 +1153,7 @@ public class FragmentManagement extends Fragment {
                 }
                 adapter2 = new ManagementAdapter(mActivity, gridlist2);
                 mGridView2.setAdapter(adapter2);
+                mGridView2.setExpanded(true);
             }
 
             @Override

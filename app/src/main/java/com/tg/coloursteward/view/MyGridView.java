@@ -20,6 +20,9 @@ import android.widget.GridView;
  * 自定义GridView
  */
 public class MyGridView extends GridView implements ResponseListener {
+
+    boolean expanded = false;
+
     public interface NetGridViewRequestListener {
         void onRequest(MessageHandler msgHand);
 
@@ -46,6 +49,14 @@ public class MyGridView extends GridView implements ResponseListener {
         initView(context);
     }
 
+    public boolean isExpanded() {
+        return expanded;
+    }
+
+    public void setExpanded(boolean expanded) {
+        this.expanded = expanded;
+    }
+
     private void initView(Context con) {
         mActivity = (Activity) con;
         msgHandler = new MessageHandler(con);
@@ -67,14 +78,19 @@ public class MyGridView extends GridView implements ResponseListener {
 
     @Override
     public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        // Calculate entire height by providing a very large height hint.
-        // View.MEASURED_SIZE_MASK represents the largest height possible.
-        int expandSpec = MeasureSpec.makeMeasureSpec(MEASURED_SIZE_MASK,
-                MeasureSpec.AT_MOST);
-        super.onMeasure(widthMeasureSpec, expandSpec);
+        // HACK! TAKE THAT ANDROID!
+        if (isExpanded()) {
+            // Calculate entire height by providing a very large height hint.
+            // View.MEASURED_SIZE_MASK represents the largest height possible.
+            int expandSpec = MeasureSpec.makeMeasureSpec(MEASURED_SIZE_MASK,
+                    MeasureSpec.AT_MOST);
+            super.onMeasure(widthMeasureSpec, expandSpec);
 
-        ViewGroup.LayoutParams params = getLayoutParams();
-        params.height = getMeasuredHeight();
+            ViewGroup.LayoutParams params = getLayoutParams();
+            params.height = getMeasuredHeight();
+        } else {
+            super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        }
     }
 
     @Override

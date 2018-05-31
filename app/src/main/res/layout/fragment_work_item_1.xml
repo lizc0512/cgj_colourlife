@@ -126,7 +126,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:background="@drawable/leave"></FrameLayout>
+                android:background="@drawable/leave" />
 
             <TextView
                 style="@style/hint_15"

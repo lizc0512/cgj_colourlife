@@ -21,7 +21,7 @@ import android.widget.GridView;
  */
 public class MyGridView extends GridView implements ResponseListener {
 
-    boolean expanded = false;
+    boolean expanded = true;
 
     public interface NetGridViewRequestListener {
         void onRequest(MessageHandler msgHand);
@@ -55,6 +55,7 @@ public class MyGridView extends GridView implements ResponseListener {
 
     public void setExpanded(boolean expanded) {
         this.expanded = expanded;
+        requestLayout();
     }
 
     private void initView(Context con) {

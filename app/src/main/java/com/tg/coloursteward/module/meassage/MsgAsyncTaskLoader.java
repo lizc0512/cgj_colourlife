@@ -8,6 +8,7 @@ import com.youmai.hxsdk.db.bean.CacheMsgBean;
 import com.youmai.hxsdk.db.bean.GroupInfoBean;
 import com.youmai.hxsdk.db.helper.CacheMsgHelper;
 import com.youmai.hxsdk.db.helper.GroupInfoHelper;
+import com.youmai.hxsdk.utils.AppUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -69,6 +70,18 @@ public class MsgAsyncTaskLoader extends AsyncTaskLoader<List<ExCacheMsgBean>> {
             String targetAvatar = bean.getTargetAvatar();
             String targetUuid = bean.getTargetUuid();
             int groupId = bean.getGroupId();
+
+            String targetKey;
+            if (groupId > 0) {
+                targetKey = "top" + groupId;
+            } else {
+                targetKey = "top" + targetUuid;
+            }
+
+            boolean isTop = AppUtils.getBooleanSharedPreferences(mContext, targetKey, false);
+            if (isTop) {
+                exBean.setTop(true);
+            }
 
             if (TextUtils.isEmpty(targetName) && groupId > 0) {
                 List<GroupInfoBean> list = GroupInfoHelper.instance().toQueryListByGroupId(mContext, groupId);

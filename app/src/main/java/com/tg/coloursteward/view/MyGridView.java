@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Message;
 import android.util.AttributeSet;
+import android.view.ViewGroup;
 import android.widget.GridView;
 
 /**
@@ -24,6 +25,7 @@ public class MyGridView extends GridView implements ResponseListener {
 
         void onSuccess(MyGridView gridView, Message msg, String response);
     }
+
     private NetGridViewRequestListener requestListener;
     private boolean isLoadding = false;
     private MessageHandler msgHandler;
@@ -65,9 +67,14 @@ public class MyGridView extends GridView implements ResponseListener {
 
     @Override
     public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int expandSpec = MeasureSpec.makeMeasureSpec(Integer.MAX_VALUE >> 2,
+        // Calculate entire height by providing a very large height hint.
+        // View.MEASURED_SIZE_MASK represents the largest height possible.
+        int expandSpec = MeasureSpec.makeMeasureSpec(MEASURED_SIZE_MASK,
                 MeasureSpec.AT_MOST);
         super.onMeasure(widthMeasureSpec, expandSpec);
+
+        ViewGroup.LayoutParams params = getLayoutParams();
+        params.height = getMeasuredHeight();
     }
 
     @Override
@@ -85,7 +92,7 @@ public class MyGridView extends GridView implements ResponseListener {
                 requestListener.onSuccess(this, msg, jsonString);
             }
         }
-        isLoadding= false;
+        isLoadding = false;
     }
 
     @Override

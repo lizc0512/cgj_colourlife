@@ -912,30 +912,15 @@ public class FragmentManagement extends Fragment {
                 }
             });
         } else {
-
-//            tvExamineNum.setText((Integer.parseInt(examine1.trim()) + Integer.parseInt(examine2.trim()))+"");
-/*            magLinearLayoutExamineNum.setNetworkRequestListener(new NetworkRequestListener() {
-
+            magLinearLayoutExamineNum.setNetworkRequestListener(new NetworkRequestListener() {
                 @Override
                 public void onSuccess(ManageMentLinearlayout magLearLayout, Message msg, String response) {
                     int code = HttpTools.getCode(response);
                     if (code == 0) {
-//                    JSONObject jsonObject = HttpTools.getContentJSONObject(response);
                         String contentString = HttpTools.getContentString(response);
                         if (contentString != null) {
                             tvExamineNum.setText(contentString);
                         }
-//                    try {
-//                        if (jsonObject != null) {
-//                            examineNum = jsonObject.getString("content");
-//                            if (examineNum != null || examineNum.length() > 0) {
-//                                tvExamineNum.setText(examineNum);
-//                            }
-//                        }
-//                    } catch (JSONException e) {
-//                        // TODO Auto-generated catch block
-//                        e.printStackTrace();
-//                    }
                     } else {
                         tvExamineNum.setText("0");
                     }
@@ -951,16 +936,13 @@ public class FragmentManagement extends Fragment {
                     RequestConfig config = new RequestConfig(mActivity, 0);
                     config.handler = msgHand.getHandler();
                     RequestParams params = new RequestParams();
-//				params.put("username", UserInfo.employeeAccount);
-//                String access_token = SharedPreferencesTools.getSysMapStringValue(mainactivity, "access_token");
                     String access_token = Tools.getAccess_token(mActivity);
                     params.put("applicationId", "11e7-8d55-9c8815e6-8d1c-edfa8b3b5e37");
                     params.put("userId", UserInfo.uid);
                     params.put("access_token", access_token);
-//				HttpTools.httpGet(Contants.URl.URL_ICETEST, "/oa/examineNum",config, params);
                     HttpTools.httpGet(Contants.URl.URL_ICETEST, "/BPM/runtime/users/flows/pending/amount", config, params);
                 }
-            });*/
+            });
         }
 
 

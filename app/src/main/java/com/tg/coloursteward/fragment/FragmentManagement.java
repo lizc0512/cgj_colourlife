@@ -27,6 +27,7 @@ import com.tg.coloursteward.adapter.ManagementAdapter;
 import com.tg.coloursteward.MyBrowserActivity;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.entity.AdvConfig;
+import com.tg.coloursteward.entity.OaConfig;
 import com.tg.coloursteward.info.AdvInfo;
 import com.tg.coloursteward.info.GridViewInfo;
 import com.tg.coloursteward.info.UserInfo;
@@ -48,6 +49,7 @@ import com.tg.coloursteward.view.MyGridView;
 import com.tg.coloursteward.view.MyGridView.NetGridViewRequestListener;
 import com.tg.coloursteward.view.RotateProgress;
 import com.tg.coloursteward.view.dialog.ToastFactory;
+import com.youmai.hxsdk.http.IGetListener;
 import com.youmai.hxsdk.http.IPostListener;
 import com.youmai.hxsdk.http.OkHttpConnector;
 import com.youmai.hxsdk.config.ColorsConfig;
@@ -139,6 +141,7 @@ public class FragmentManagement extends Fragment {
     private String AccountStr;
     private String key;
     private String secret;
+    private int count;
 
     private SingleClickListener titleListener = new SingleClickListener() {
         @Override
@@ -912,35 +915,45 @@ public class FragmentManagement extends Fragment {
                 }
             });
         } else {
-            magLinearLayoutExamineNum.setNetworkRequestListener(new NetworkRequestListener() {
+
+            String url = Contants.URl.URL_ICETEST + "/BPM/runtime/users/flows/pending/amount";
+            ContentValues params = new ContentValues();
+            String access_token = Tools.getAccess_token(mActivity);
+            params.put("applicationId", "11e7-8d55-9c8815e6-8d1c-edfa8b3b5e37");
+            params.put("userId", UserInfo.uid);
+            params.put("access_token", access_token);
+            ColorsConfig.commonParams(params);
+            OkHttpConnector.httpGet(url, params, new IGetListener() {
                 @Override
-                public void onSuccess(ManageMentLinearlayout magLearLayout, Message msg, String response) {
+                public void httpReqResult(String response) {
                     int code = HttpTools.getCode(response);
                     if (code == 0) {
                         String contentString = HttpTools.getContentString(response);
-                        if (contentString != null) {
+                        if (!TextUtils.isEmpty(contentString)) {
                             tvExamineNum.setText(contentString);
+                            try {
+                                count = Integer.parseInt(contentString);
+                            } catch (NumberFormatException e) {
+                                e.printStackTrace();
+                            }
                         }
-                    } else {
-                        tvExamineNum.setText("0");
                     }
-                }
 
-                @Override
-                public void onFail(ManageMentLinearlayout magLearLayout, Message msg, String hintString) {
-                    ToastFactory.showToast(mActivity, hintString);
-                }
+                    String oaUrl = Contants.URl.URL_ICETEST + "/oa/examineNum";
+                    ContentValues params = new ContentValues();
+                    params.put("username", UserInfo.employeeAccount);
+                    ColorsConfig.commonParams(params);
 
-                @Override
-                public void onRequest(MessageHandler msgHand) {
-                    RequestConfig config = new RequestConfig(mActivity, 0);
-                    config.handler = msgHand.getHandler();
-                    RequestParams params = new RequestParams();
-                    String access_token = Tools.getAccess_token(mActivity);
-                    params.put("applicationId", "11e7-8d55-9c8815e6-8d1c-edfa8b3b5e37");
-                    params.put("userId", UserInfo.uid);
-                    params.put("access_token", access_token);
-                    HttpTools.httpGet(Contants.URl.URL_ICETEST, "/BPM/runtime/users/flows/pending/amount", config, params);
+                    OkHttpConnector.httpGet(oaUrl, params, new IGetListener() {
+                        @Override
+                        public void httpReqResult(String response) {
+                            OaConfig config = GsonUtil.parse(response, OaConfig.class);
+                            if (config != null && config.isSuccess() && isAdded()) {
+                                count = count + config.getContent().getNumber();
+                                tvExamineNum.setText(String.valueOf(count));
+                            }
+                        }
+                    });
                 }
             });
         }

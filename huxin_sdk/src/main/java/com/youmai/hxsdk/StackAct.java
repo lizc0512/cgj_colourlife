@@ -64,7 +64,7 @@ public class StackAct {
             mActivityStack.remove(activity);
         }
     }
-    
+
     /**
      * 结束指定的Activity
      */
@@ -131,8 +131,8 @@ public class StackAct {
 
     /**
      * 结束所有Activity
-     *
-     * type = 1 除了HookStrategyActivity、MainAct、IMConnectionActivity
+     * <p>
+     * type = 1 除了HookStrategyActivity、MainAct、IMConnectionActivity、IMGroupActivity
      * type = other 除了HookStrategyActivity、MainAct
      */
     public synchronized void finishAll(int type) {
@@ -140,13 +140,14 @@ public class StackAct {
             for (int i = 0, size = mActivityStack.size(); i < size; i++) {
                 if (null != mActivityStack.get(i)) {
                     if (mActivityStack.get(i).toString().contains("com.youmai.hxsdk.activity.HookStrategyActivity")
-                        || mActivityStack.get(i).toString().contains("com.youmai.huxin.app.activity.MainAct")) {
+                            || mActivityStack.get(i).toString().contains("com.youmai.huxin.app.activity.MainAct")) {
                         continue;
                     }
                     if (type == 0x0001) {
                         if (mActivityStack.get(i).toString().contains("com.youmai.hxsdk.activity.HookStrategyActivity")
                                 || mActivityStack.get(i).toString().contains("com.youmai.huxin.app.activity.MainAct")
-                                || mActivityStack.get(i).toString().contains("com.youmai.hxsdk.activity.IMConnectionActivity")) {
+                                || mActivityStack.get(i).toString().contains("com.youmai.hxsdk.activity.IMConnectionActivity")
+                                || mActivityStack.get(i).toString().contains("com.youmai.hxsdk.activity.IMGroupActivity")) {
                             continue;
                         }
                     }

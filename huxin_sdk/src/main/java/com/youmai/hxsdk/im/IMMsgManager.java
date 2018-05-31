@@ -613,6 +613,13 @@ public class IMMsgManager {
             String fileName = im.getContent().getFile().getFileName();
             String fileSize = im.getContent().getFile().getFileSize();
 
+            long size = 0;
+            try {
+                size = Long.parseLong(fileSize);
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            }
+
             //todo_k: 文件
             cacheMsgBean.setMsgType(CacheMsgBean.RECEIVE_FILE)
                     .setJsonBodyObj(new CacheMsgFile()
@@ -620,7 +627,7 @@ public class IMMsgManager {
                             .setFileName(fileName)
                             .setFileUrl(AppConfig.getImageUrl(fid))
                             .setFileRes(IMHelper.getFileImgRes(fileName, false))
-                            .setFileSize(Long.parseLong(fileSize)));
+                            .setFileSize(size));
 
             //add to db
             CacheMsgHelper.instance().insertOrUpdate(mContext, cacheMsgBean);

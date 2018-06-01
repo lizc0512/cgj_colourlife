@@ -256,7 +256,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         final ExCacheMsgBean model = messageList.get(position);
         if (holder instanceof MsgItemSearch) {
             MsgItemSearch viewHeader = (MsgItemSearch) holder;
@@ -286,6 +286,12 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             if (!TextUtils.isEmpty(owner_name)) {
                 String format = mContext.getResources().getString(R.string.group_item_info);
                 itemView.message_info.setText(String.format(format, owner_name));
+            }
+
+            if (model.getPushMsg().getNotread() > 0) {
+                itemView.message_status.setBadgeNumber(-1);
+            } else {
+                itemView.message_status.setBadgeNumber(0);
             }
 
             itemView.message_type.setText(model.getPushMsg().getTitle());
@@ -485,6 +491,11 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (holder instanceof MsgItemPush) {
+                    MsgItemPush itemView = (MsgItemPush) holder;
+                    itemView.message_status.setBadgeNumber(0);
+                }
+
                 if (mOnItemClickListener != null) {
                     mOnItemClickListener.onItemClick(model, position);
                 }

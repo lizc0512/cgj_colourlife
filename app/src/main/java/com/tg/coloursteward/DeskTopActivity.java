@@ -165,11 +165,11 @@ public class DeskTopActivity extends BaseActivity implements OnItemClickListener
 	 */
 	private  void readMsg(int Position){
 		readPosition = Position;
-		/*RequestConfig config = new RequestConfig(this, HttpTools.SET_MSG_READ);
+		RequestConfig config = new RequestConfig(this, HttpTools.SET_MSG_READ);
 		RequestParams params = new RequestParams();
 		params.put("client_code",list.get(Position).client_code);
-		params.put("uid",UserInfo.employeeAccount);
-		HttpTools.httpPut(Contants.URl.URL_ICETEST, "/push2/homepush/readhomePush",config, params);*/
+		params.put("username",UserInfo.employeeAccount);
+		HttpTools.httpPut(Contants.URl.URL_ICETEST, "/push2/homepush/readhomePush",config, params);
 		list.get(readPosition).notread = 1;
 		adapter.notifyDataSetChanged();
 	}

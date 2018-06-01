@@ -104,7 +104,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
 
         MsgConfig.ContentBean.DataBean item3 = new MsgConfig.ContentBean.DataBean();
-        item3.setComefrom("公告通知");
+        item3.setComefrom("公告");
         item3.setTitle("暂无新消息");
         item3.setOwner_name("暂无");
         item3.setClient_code("ggtz");
@@ -145,9 +145,11 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
             ExCacheMsgBean item = null;
             for (int i = 0; i < messageList.size(); i++) {
-                item = messageList.get(i);
-                if (item.getUiType() == MessageAdapter.ADAPTER_TYPE_PUSHMSG
-                        && item.getPushMsg().getComefrom().equals(comefrom)) {
+                ExCacheMsgBean index = messageList.get(i);
+
+                if (index.getUiType() == MessageAdapter.ADAPTER_TYPE_PUSHMSG
+                        && comefrom.equals(index.getPushMsg().getComefrom())) {
+                    item = index;
                     break;
                 }
             }
@@ -158,6 +160,11 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     Collections.sort(messageList.subList(1, messageList.size()), comp);
                     notifyDataSetChanged();
                 }
+            } else {
+                messageList.add(1, msgBean);
+                SortComparator comp = new SortComparator();
+                Collections.sort(messageList.subList(1, messageList.size()), comp);
+                notifyDataSetChanged();
             }
         }
     }
@@ -283,19 +290,21 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
             itemView.message_type.setText(model.getPushMsg().getTitle());
 
-            if (comefrom.equals("审批")) {//审批
+            if (comefrom.contains("审批")) {//审批
                 itemView.message_icon.setImageResource(R.drawable.sp);
-            } else if (comefrom.equals("邮件")) {//邮件
+            } else if (comefrom.contains("邮件")) {//邮件
                 itemView.message_icon.setImageResource(R.drawable.yj);
-            } else if (comefrom.equals("蜜蜂协同")) {//蜜蜂协同
+            } else if (comefrom.contains("蜜蜂协同")) {//蜜蜂协同
                 itemView.message_icon.setImageResource(R.drawable.case_home);
-            } else if (comefrom.equals("通知") || comefrom.equals("公告") || comefrom.equals("公告通知")) {//公告通知
+            } else if (comefrom.contains("通知") || comefrom.contains("公告")) {//公告通知
                 itemView.message_icon.setImageResource(R.drawable.ggtz);
             } else {
                 String url = model.getPushMsg().getICON();
                 if (StringUtils.isNotEmpty(url)) {
                     Glide.with(mContext).load(url)
                             .apply(new RequestOptions()
+                                    .error(R.drawable.default_header)
+                                    .placeholder(R.drawable.default_header)
                                     .diskCacheStrategy(DiskCacheStrategy.RESOURCE))
                             .into(itemView.message_icon);
                 }

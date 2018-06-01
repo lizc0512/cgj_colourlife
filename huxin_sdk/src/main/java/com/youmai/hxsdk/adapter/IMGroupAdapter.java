@@ -944,6 +944,7 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
                         bean.setMsgStatus(CacheMsgBean.SEND_GOING);
                         updateSendStatus(bean, position);
                         Intent intent = new Intent(mAct, SendMsgService.class);
+                        intent.putExtra("isGroup", true);
                         intent.putExtra("data", bean);
                         intent.putExtra("data_from", SendMsgService.FROM_IM);
                         mAct.startService(intent);

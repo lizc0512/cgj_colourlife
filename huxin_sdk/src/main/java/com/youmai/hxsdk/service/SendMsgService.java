@@ -574,7 +574,12 @@ public class SendMsgService extends IntentService {
         final String fileSize = msgBody.getFileSize() + "";
         final String dstUuid = msgBean.getMsg().getReceiverUserId();
         final int groupId = msgBean.getMsg().getGroupId();
-        if (TextUtils.isEmpty(dstUuid) && groupId == 0) {
+
+        if (!TextUtils.isEmpty(dstUuid) && groupId == 0) {
+            isGroup = false;
+        } else if (TextUtils.isEmpty(dstUuid) && groupId > 0) {
+            isGroup = true;
+        } else if (TextUtils.isEmpty(dstUuid) && groupId == 0) {
             return;
         }
 

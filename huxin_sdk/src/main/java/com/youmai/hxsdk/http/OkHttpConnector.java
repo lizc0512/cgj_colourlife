@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.FormBody;
 import okhttp3.MediaType;
@@ -40,6 +41,7 @@ public class OkHttpConnector {
 
     //private static final OkHttpClient client = new OkHttpClient.Builder().build();
     private static final OkHttpClient client = new OkHttpClient.Builder()
+            .connectTimeout(30, TimeUnit.SECONDS)
             .addNetworkInterceptor(new StethoInterceptor())  //添加拦截器
             .build();
 

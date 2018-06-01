@@ -141,14 +141,14 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public void addPushMsgItem(ExCacheMsgBean msgBean) {
         if (msgBean.getUiType() == MessageAdapter.ADAPTER_TYPE_PUSHMSG) {
             MsgConfig.ContentBean.DataBean bean = msgBean.getPushMsg();
-            String comefrom = bean.getComefrom();
+            String clientCode = bean.getClient_code();
 
             ExCacheMsgBean item = null;
             for (int i = 0; i < messageList.size(); i++) {
                 ExCacheMsgBean index = messageList.get(i);
 
                 if (index.getUiType() == MessageAdapter.ADAPTER_TYPE_PUSHMSG
-                        && comefrom.equals(index.getPushMsg().getComefrom())) {
+                        && clientCode.equals(index.getPushMsg().getClient_code())) {
                     item = index;
                     break;
                 }
@@ -290,13 +290,15 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
             itemView.message_type.setText(model.getPushMsg().getTitle());
 
-            if (comefrom.contains("审批")) {//审批
+            String clientCode = model.getPushMsg().getClient_code();
+
+            if (clientCode.contains("sp")) {//审批
                 itemView.message_icon.setImageResource(R.drawable.sp);
-            } else if (comefrom.contains("邮件")) {//邮件
+            } else if (clientCode.contains("yj")) {//邮件
                 itemView.message_icon.setImageResource(R.drawable.yj);
-            } else if (comefrom.contains("蜜蜂协同")) {//蜜蜂协同
+            } else if (clientCode.contains("case")) {//蜜蜂协同
                 itemView.message_icon.setImageResource(R.drawable.case_home);
-            } else if (comefrom.contains("通知") || comefrom.contains("公告")) {//公告通知
+            } else if (clientCode.contains("ggtz")) {//公告通知
                 itemView.message_icon.setImageResource(R.drawable.ggtz);
             } else {
                 String url = model.getPushMsg().getICON();

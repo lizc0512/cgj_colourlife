@@ -59,7 +59,7 @@ public abstract class AbstractWheelAdapter implements com.tg.coloursteward.view.
             datasetObservers.remove(observer);
         }
     }
-    
+
     /**
      * Notifies observers about data changing
      */

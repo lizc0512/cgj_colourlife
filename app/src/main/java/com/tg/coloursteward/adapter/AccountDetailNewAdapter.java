@@ -44,30 +44,35 @@ public class AccountDetailNewAdapter extends MyBaseAdapter<AccountDetailNewInfo>
         item = list.get(position);
         RelativeLayout rlDetails = (RelativeLayout) convertView.findViewById(R.id.rl_details);
         RelativeLayout rlExchange = (RelativeLayout) convertView.findViewById(R.id.rl_exchange);
-       // TextView tvTime = (TextView) convertView.findViewById(R.id.tv_time);
+        // TextView tvTime = (TextView) convertView.findViewById(R.id.tv_time);
         TextView tvName = (TextView) convertView.findViewById(R.id.tv_name);
         TextView tvMoney = (TextView) convertView.findViewById(R.id.tv_money);
         rlDetails.setOnClickListener(new View.OnClickListener() {//详情
             @Override
             public void onClick(View v) {
-                intent = new Intent(context,AccountExchangeDetailActivity.class);
-                intent.putExtra(AccountExchangeDetailActivity.ACCOUNT,list.get(position).split_money);
-                intent.putExtra(AccountExchangeDetailActivity.GENERAL_UUID,list.get(position).general_uuid);
+                intent = new Intent(context, AccountExchangeDetailActivity.class);
+                intent.putExtra(AccountExchangeDetailActivity.ACCOUNT, list.get(position).split_money);
+                intent.putExtra(AccountExchangeDetailActivity.GENERAL_UUID, list.get(position).general_uuid);
                 context.startActivity(intent);
             }
         });
         rlExchange.setOnClickListener(new View.OnClickListener() {//兑换
             @Override
             public void onClick(View v) {
-                intent = new Intent(context,AccountExchangeActivity.class);
-                intent.putExtra(AccountExchangeActivity.ACCOUNT_DETAIL_NEW_INFO,list.get(position));
+                intent = new Intent(context, AccountExchangeActivity.class);
+                intent.putExtra(AccountExchangeActivity.ACCOUNT_DETAIL_NEW_INFO, list.get(position));
                 context.startActivity(intent);
             }
         });
-       // tvTime.setText(item.time_at);
-        tvName.setText("应用:"+item.general_name);
+        // tvTime.setText(item.time_at);
+        tvName.setText("应用:" + item.general_name);
         DecimalFormat df = new DecimalFormat("0.00");
-        tvMoney.setText("+"+df.format(Double.parseDouble(item.split_money)));
+        Double money = Double.parseDouble(item.split_money);
+        if (money > 0) {
+            tvMoney.setText("+" + df.format(money));
+        } else {
+            tvMoney.setText("" + df.format(money));
+        }
         return convertView;
     }
 

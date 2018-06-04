@@ -9,8 +9,8 @@ android {
         applicationId "com.tg.coloursteward"
         minSdkVersion MIN_SDK_VERSION as int
         targetSdkVersion TARGET_SDK_VERSION as int
-        versionCode 30
-        versionName "4.1.00"
+        versionCode 35
+        versionName "4.1.1"
         // Enabling multidex support.
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -33,7 +33,11 @@ android {
             keyPassword '123456'
         }
     }
-
+    sourceSets{
+        main{
+            jniLibs.srcDirs=['libs']
+        }
+    }
     buildTypes {
         release {
             minifyEnabled false

@@ -123,7 +123,7 @@ public class TcpClient extends PduUtil implements Runnable {
     /**
      * 连接socket
      */
-    public void connect() {
+    private void connect() {
         connect(null);
     }
 

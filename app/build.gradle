@@ -135,7 +135,7 @@ def handleBuildTag() {
     def launch = getLaunchMode()
     if (launch != null) {
         def appCfgFilePath = "../huxin_sdk/src/main/java/com/youmai/hxsdk/config/AppConfig.java"
-        def appCfgRegexStr = "private\\s+final\\s+static\\s+int\\s+LAUNCH_MODE\\s+=\\s+[01];"
+        def appCfgRegexStr = "private\\s+final\\s+static\\s+int\\s+LAUNCH_MODE\\s+=\\s+[012];"
         def appCfgReplaceStr = "private final static int LAUNCH_MODE = " + launch + ";"
         handleReplaceSrc project, appCfgRegexStr, appCfgReplaceStr, appCfgFilePath
     }

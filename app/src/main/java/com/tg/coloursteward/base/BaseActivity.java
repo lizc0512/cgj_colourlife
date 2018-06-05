@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import cn.jpush.android.api.JPushInterface;
 
+import com.bugtags.library.Bugtags;
 import com.githang.statusbar.StatusBarCompat;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.application.CityPropertyApplication;
@@ -31,7 +32,7 @@ import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
-import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.FrameLayout;
@@ -257,6 +258,7 @@ public abstract class BaseActivity extends Activity implements ResponseListener 
         // TODO Auto-generated method stub
         super.onResume();
         JPushInterface.onResume(this);
+        Bugtags.onResume(this);
     }
 
     @Override
@@ -264,6 +266,13 @@ public abstract class BaseActivity extends Activity implements ResponseListener 
         // TODO Auto-generated method stub
         super.onPause();
         JPushInterface.onPause(this);
+        Bugtags.onPause(this);
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        Bugtags.onDispatchTouchEvent(this, ev);
+        return super.dispatchTouchEvent(ev);
     }
 
     @Override

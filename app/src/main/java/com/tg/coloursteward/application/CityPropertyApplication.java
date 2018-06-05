@@ -1,9 +1,6 @@
 package com.tg.coloursteward.application;
 
 
-import java.util.LinkedList;
-import java.util.List;
-
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
@@ -11,26 +8,29 @@ import android.content.Intent;
 import android.support.multidex.MultiDex;
 import android.util.Log;
 
-import cn.jpush.android.api.JPushInterface;
-
-import com.alibaba.android.arouter.launcher.ARouter;
+import com.bugtags.library.Bugtags;
+import com.bugtags.library.BugtagsOptions;
 import com.facebook.stetho.Stetho;
 import com.networkbench.agent.impl.NBSAppAgent;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
+import com.tencent.smtt.sdk.QbSdk;
 import com.tg.coloursteward.LoginActivity;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.database.SharedPreferencesTools;
 import com.tg.coloursteward.log.Logger;
 import com.tg.coloursteward.net.ResponseData;
 import com.tg.coloursteward.util.Tools;
-import com.tencent.smtt.sdk.QbSdk;
-import com.youmai.hxsdk.BuildConfig;
 import com.youmai.hxsdk.HuxinSdkManager;
 
 import org.litepal.LitePalApplication;
+
+import java.util.LinkedList;
+import java.util.List;
+
+import cn.jpush.android.api.JPushInterface;
 
 public class CityPropertyApplication extends Application {
     private List<Activity> mList = new LinkedList<Activity>();
@@ -45,6 +45,18 @@ public class CityPropertyApplication extends Application {
 
         NBSAppAgent.setLicenseKey("bbf07e0ce0b04fab93c46e4c57494e47").withLocationServiceEnabled(true).startInApplication(this.getApplicationContext());
         NBSAppAgent.setLicenseKey("bbf07e0ce0b04fab93c46e4c57494e47").start(this.getApplicationContext());
+        BugtagsOptions options = new BugtagsOptions.Builder().
+                trackingLocation(false).//是否获取位置，默认 true
+                trackingCrashLog(true).//是否收集crash，默认 true
+                trackingConsoleLog(true).//是否收集console log，默认 true
+                trackingUserSteps(true).//是否收集用户操作步骤，默认 true
+                trackingNetworkURLFilter("(.*)").//自定义网络请求跟踪的 url 规则，默认 null
+                build();
+        //测试bugtags
+        //Bugtags.start("6605fa27f0bb6e68a631ea1c57845b45", this, Bugtags.BTGInvocationEventBubble);
+        //正式bugtags
+        Bugtags.start("d9d2866de6066fd414d792324bddbb6b", this, Bugtags.BTGInvocationEventNone);
+
         instance = this;
         HuxinSdkManager.instance().init(this);
 

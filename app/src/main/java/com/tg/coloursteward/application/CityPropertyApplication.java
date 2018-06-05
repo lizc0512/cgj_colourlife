@@ -19,6 +19,7 @@ import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.tencent.smtt.sdk.QbSdk;
 import com.tg.coloursteward.LoginActivity;
 import com.tg.coloursteward.R;
+import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.database.SharedPreferencesTools;
 import com.tg.coloursteward.log.Logger;
 import com.tg.coloursteward.net.ResponseData;
@@ -52,10 +53,7 @@ public class CityPropertyApplication extends Application {
                 trackingUserSteps(true).//是否收集用户操作步骤，默认 true
                 trackingNetworkURLFilter("(.*)").//自定义网络请求跟踪的 url 规则，默认 null
                 build();
-        //测试bugtags
-        //Bugtags.start("6605fa27f0bb6e68a631ea1c57845b45", this, Bugtags.BTGInvocationEventBubble);
-        //正式bugtags
-        Bugtags.start("d9d2866de6066fd414d792324bddbb6b", this, Bugtags.BTGInvocationEventNone);
+        Bugtags.start(Contants.URl.bugtags, this, Bugtags.BTGInvocationEventNone);
 
         instance = this;
         HuxinSdkManager.instance().init(this);

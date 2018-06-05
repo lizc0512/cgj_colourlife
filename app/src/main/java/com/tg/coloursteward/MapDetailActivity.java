@@ -831,7 +831,8 @@ public class MapDetailActivity extends Activity implements  OnClickListener,
             	DialogFactory.getInstance().showDialog(MapDetailActivity.this, new OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						String url = Contants.URl.SeaHealthApkUrl;
+//						String url = Contants.URl.SeaHealthApkUrl;
+						String url = null;
 						Uri uri = Uri.parse(url);
                         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                         startActivity(intent);

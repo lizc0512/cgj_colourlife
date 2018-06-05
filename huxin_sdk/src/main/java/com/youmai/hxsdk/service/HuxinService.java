@@ -200,11 +200,8 @@ public class HuxinService extends Service {
                 // DO WHATEVER YOU NEED TO DO HERE
             } else if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
                 // AND DO WHATEVER YOU NEED TO DO HERE
-                /*if (mClient.isConnect()) {
-                    mClient.close();
-                }*/
-                if (mClient.isIdle()) {
-                    mClient.connect();
+                if (mClient != null) {
+                    mClient.reConnect();
                 }
             }
         }

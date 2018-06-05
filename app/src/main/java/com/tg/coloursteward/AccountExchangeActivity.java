@@ -1,6 +1,7 @@
 package com.tg.coloursteward;
 
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
@@ -82,6 +83,8 @@ public class AccountExchangeActivity extends BaseActivity {
         msgHandler.setResponseListener(this);
     }
 
+    private boolean isClick = true;
+
     @Override
     protected boolean handClickEvent(View v) {
         switch (v.getId()) {
@@ -102,7 +105,11 @@ public class AccountExchangeActivity extends BaseActivity {
                     ToastFactory.showToast(AccountExchangeActivity.this, "兑换金额不能大于额度");
                     return false;
                 }
-                isSetPwd(0);
+                if (isClick) {
+                    isClick = false;
+                    isSetPwd(0);
+                }
+
                 break;
         }
 
@@ -292,17 +299,25 @@ public class AccountExchangeActivity extends BaseActivity {
                             }
                         };
 //                        if (aDialog == null) {
-                            aDialog = new PwdDialog2(
-                                    AccountExchangeActivity.this,
-                                    R.style.choice_dialog, state,
-                                    aDialogCallback);
-                            aDialog.show();
+                        aDialog = new PwdDialog2(
+                                AccountExchangeActivity.this,
+                                R.style.choice_dialog, state,
+                                aDialogCallback);
+                        aDialog.show();
 //                        }
+                        aDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                            @Override
+                            public void onDismiss(DialogInterface dialog) {
+                                isClick = true;
+                            }
+                        });
 
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
+            } else {
+                isClick = true;
             }
         } else if (msg.arg1 == HttpTools.GET_FINANCEBYOA) {
             if (code == 0) {

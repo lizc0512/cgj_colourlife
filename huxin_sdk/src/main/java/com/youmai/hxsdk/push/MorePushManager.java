@@ -38,7 +38,7 @@ public class MorePushManager {
      * 注册时使用
      */
     public static void register(Context context) {
-        try {
+        /*try {
             PushPhoneUtils.ModelType brand = PushPhoneUtils.getBrand();
             switch (brand) {
                 case meizu:
@@ -59,7 +59,7 @@ public class MorePushManager {
             }
         } catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
 

@@ -201,7 +201,7 @@ public class IMFilePreviewActivity extends SdkBaseActivity {
             //Uri uri = Uri.fromFile(file);
             //targetSdkVersion >= 24
             Uri uri = FileProvider.getUriForFile(this,
-                    getPackageName() + ".filepicker.provider",
+                    getPackageName() + ".fileProvider",
                     file);
             //设置intent的data和Type属性。
             intent.setDataAndType(uri, type);

@@ -31,7 +31,6 @@ import com.youmai.hxsdk.proto.YouMaiBasic;
 import com.youmai.hxsdk.proto.YouMaiBuddy;
 import com.youmai.hxsdk.proto.YouMaiGroup;
 import com.youmai.hxsdk.proto.YouMaiMsg;
-import com.youmai.hxsdk.push.MorePushManager;
 import com.youmai.hxsdk.service.HuxinService;
 import com.youmai.hxsdk.socket.IMContentUtil;
 import com.youmai.hxsdk.socket.NotifyListener;
@@ -159,7 +158,7 @@ public class HuxinSdkManager {
 
 
         initARouter();
-        MorePushManager.register(mContext);//注册送服务
+        //MorePushManager.register(mContext);//注册送服务
 
         if (listener != null) {
             mInitListenerList.add(listener);
@@ -403,7 +402,7 @@ public class HuxinSdkManager {
         //CacheMsgHelper.instance().deleteAll(mContext);
         //IMMsgManager.instance().clearShortcutBadger();
 
-        MorePushManager.unregister(mContext);//反注册送服务
+        //MorePushManager.unregister(mContext);//反注册送服务
         SPDataUtil.setUserInfoJson(mContext, "");// FIXME: 2017/3/20
     }
 

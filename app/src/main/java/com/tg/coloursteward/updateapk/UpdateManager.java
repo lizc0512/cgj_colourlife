@@ -361,7 +361,7 @@ public class UpdateManager {
 	        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M)
 	        {
                 i.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                Uri contentUri = FileProvider.getUriForFile(mContext, BuildConfig.APPLICATION_ID + ".filepicker.provider", updateFile);
+                Uri contentUri = FileProvider.getUriForFile(mContext, BuildConfig.APPLICATION_ID + ".fileProvider", updateFile);
                 i.setDataAndType(contentUri, "application/vnd.android.package-archive");
 	        } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.M)
 	        {

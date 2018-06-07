@@ -4,7 +4,6 @@ import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.chat.MsgContent;
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
 import com.youmai.hxsdk.proto.YouMaiMsg;
-import com.youmai.hxsdk.push.utils.PushJsonUtils;
 import com.youmai.hxsdk.socket.IMContentType;
 
 /**
@@ -31,12 +30,12 @@ public class IMChat {
     }
 
     public IMChat(String pushMsg) {
-        String srcPhone = PushJsonUtils.getValue(pushMsg, String.valueOf(IMContentType.CONTENT_PHONE));//对方手机号
+        /*String srcPhone = PushJsonUtils.getValue(pushMsg, String.valueOf(IMContentType.CONTENT_PHONE));//对方手机号
         String type = PushJsonUtils.getValue(pushMsg, String.valueOf(IMContentType.CONTEXT_TEXT_TYPE));//对方手机号
 
         mMsgType = Integer.parseInt(type);
         mJsonBody = pushMsg;
-        mContent = new MsgContent(mMsgType, mJsonBody);
+        mContent = new MsgContent(mMsgType, mJsonBody);*/
     }
 
 

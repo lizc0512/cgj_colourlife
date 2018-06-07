@@ -67,7 +67,6 @@ import com.youmai.hxsdk.config.ColorsConfig;
 import com.youmai.hxsdk.http.IPostListener;
 import com.youmai.hxsdk.http.OkHttpConnector;
 import com.youmai.hxsdk.im.IMMsgManager;
-import com.youmai.hxsdk.push.MorePushManager;
 import com.youmai.hxsdk.utils.AppUtils;
 
 import org.json.JSONArray;
@@ -189,7 +188,7 @@ public class MainActivity1 extends AppCompatActivity implements MessageHandler.R
 
         reqSearchList();
 
-        MorePushManager.connect(this);
+        //MorePushManager.connect(this);
     }
 
 

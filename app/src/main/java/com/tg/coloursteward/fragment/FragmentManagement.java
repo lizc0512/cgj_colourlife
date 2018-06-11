@@ -266,6 +266,7 @@ public class FragmentManagement extends Fragment {
 
         magLinearLayoutMail.loaddingData();
         mGridView2.loaddingData();
+        mGridView1.loaddingData();
         magLinearLayoutExamineNum.loaddingData();
         return mView;
     }

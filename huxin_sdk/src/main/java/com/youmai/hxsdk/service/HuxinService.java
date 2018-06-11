@@ -20,7 +20,6 @@ import android.os.Message;
 import android.os.SystemClock;
 import android.text.TextUtils;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.protobuf.GeneratedMessage;
 import com.google.protobuf.InvalidProtocolBufferException;
@@ -231,8 +230,11 @@ public class HuxinService extends Service {
         mScreenReceiver = new ScreenReceiver();
         registerReceiver(mScreenReceiver, filter);
 
-        if (startService(new Intent(this, ForegroundEnablingService.class)) == null)
-            throw new RuntimeException("Couldn't find " + ForegroundEnablingService.class.getSimpleName());
+        if (android.os.Build.VERSION.SDK_INT <= android.os.Build.VERSION_CODES.N) {
+            if (startService(new Intent(this, ForegroundEnablingService.class)) == null) {
+                throw new RuntimeException("Couldn't find " + ForegroundEnablingService.class.getSimpleName());
+            }
+        }
 
         createTcp();
 

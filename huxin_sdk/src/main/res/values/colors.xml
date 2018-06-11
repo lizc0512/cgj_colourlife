@@ -132,4 +132,7 @@
     <color name="hxs_mr_color_green">#52d02c</color>
     <color name="hxs_mr_color_red">#ed563d</color>
 
+    <color name="notification_color">#115788</color>
+
+
 </resources>

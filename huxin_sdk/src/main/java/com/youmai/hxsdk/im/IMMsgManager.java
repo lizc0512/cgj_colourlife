@@ -753,13 +753,19 @@ public class IMMsgManager {
             builder = new NotificationCompat.Builder(context);
         }
 
-        builder.setSmallIcon(getNotificationIcon())
-                .setContentTitle(context.getString(R.string.from) + desName)
+        builder.setContentTitle(context.getString(R.string.from) + desName)
                 .setContentText(content)
                 .setTicker(content)
                 .setDefaults(Notification.DEFAULT_ALL)
                 //.setColor(Color.GREEN)
                 .setAutoCancel(true);
+
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            builder.setSmallIcon(R.drawable.img_msg);
+            builder.setColor(mContext.getResources().getColor(R.color.notification_color));
+        } else {
+            builder.setSmallIcon(R.drawable.hx_ic_launcher);
+        }
 
         // Creates an explicit intent for an Activity in your app
         Intent resultIntent;
@@ -929,12 +935,6 @@ public class IMMsgManager {
             }
         }
         pushMsgNotifyIdList.clear();
-    }
-
-
-    private int getNotificationIcon() {
-        boolean useWhiteIcon = (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP);
-        return useWhiteIcon ? R.drawable.img_msg : R.drawable.hx_ic_launcher;
     }
 
 

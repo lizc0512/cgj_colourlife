@@ -81,13 +81,37 @@ public final class YouMaiMsg {
          */
         IM_CONTENT_TYPE_KAQUAN(14, 14),
         /**
-         * <code>IM_CONTENT_TYPE_RED_ENVELOPE = 15;</code>
+         * <code>IM_CONTENT_TYPE_NULL = 15;</code>
+         * <p>
+         * <pre>
+         * 空消息 清空聊天记录时 插入空消息 好显示入口
+         * </pre>
+         */
+        IM_CONTENT_TYPE_NULL(15, 15),
+        /**
+         * <code>IM_CONTENT_TYPE_NOTICE = 16;</code>
+         * <p>
+         * <pre>
+         * 通知类消息  入群出群等通知
+         * </pre>
+         */
+        IM_CONTENT_TYPE_NOTICE(16, 16),
+        /**
+         * <code>IM_CONTENT_TYPE_DEFAULT = 17;</code>
+         * <p>
+         * <pre>
+         * 彩管家默认的4种消息类型
+         * </pre>
+         */
+        IM_CONTENT_TYPE_DEFAULT(17, 17),
+        /**
+         * <code>IM_CONTENT_TYPE_RED_ENVELOPE = 18;</code>
          * <p>
          * <pre>
          * 红包
          * </pre>
          */
-        IM_CONTENT_TYPE_RED_ENVELOPE(15, 15),;
+        IM_CONTENT_TYPE_RED_ENVELOPE(18, 18),;
 
         /**
          * <code>IM_CONTENT_TYPE_TEXT = 0;</code>
@@ -150,13 +174,37 @@ public final class YouMaiMsg {
          */
         public static final int IM_CONTENT_TYPE_KAQUAN_VALUE = 14;
         /**
-         * <code>IM_CONTENT_TYPE_RED_ENVELOPE = 15;</code>
+         * <code>IM_CONTENT_TYPE_NULL = 15;</code>
+         * <p>
+         * <pre>
+         * 空消息 清空聊天记录时 插入空消息 好显示入口
+         * </pre>
+         */
+        public static final int IM_CONTENT_TYPE_NULL_VALUE = 15;
+        /**
+         * <code>IM_CONTENT_TYPE_NOTICE = 16;</code>
+         * <p>
+         * <pre>
+         * 通知类消息  入群出群等通知
+         * </pre>
+         */
+        public static final int IM_CONTENT_TYPE_NOTICE_VALUE = 16;
+        /**
+         * <code>IM_CONTENT_TYPE_DEFAULT = 17;</code>
+         * <p>
+         * <pre>
+         * 彩管家默认的4种消息类型
+         * </pre>
+         */
+        public static final int IM_CONTENT_TYPE_DEFAULT_VALUE = 17;
+        /**
+         * <code>IM_CONTENT_TYPE_RED_ENVELOPE = 18;</code>
          * <p>
          * <pre>
          * 红包
          * </pre>
          */
-        public static final int IM_CONTENT_TYPE_RED_ENVELOPE_VALUE = 15;
+        public static final int IM_CONTENT_TYPE_RED_ENVELOPE_VALUE = 18;
 
 
         public final int getNumber() {
@@ -196,6 +244,12 @@ public final class YouMaiMsg {
                 case 14:
                     return IM_CONTENT_TYPE_KAQUAN;
                 case 15:
+                    return IM_CONTENT_TYPE_NULL;
+                case 16:
+                    return IM_CONTENT_TYPE_NOTICE;
+                case 17:
+                    return IM_CONTENT_TYPE_DEFAULT;
+                case 18:
                     return IM_CONTENT_TYPE_RED_ENVELOPE;
                 default:
                     return null;
@@ -9438,7 +9492,7 @@ public final class YouMaiMsg {
                         "\006cmd_id\030\002 \001(\005\022\016\n\006msg_id\030\003 \001(\003\"-\n\nPushMsg" +
                         "Ack\022\017\n\007user_id\030\001 \001(\t\022\016\n\006msg_id\030\002 \001(\003\"B\n\n" +
                         "S2SPushMsg\022\017\n\007user_id\030\001 \003(\t\022#\n\003msg\030\002 \001(\013" +
-                        "2\026.PushMsg*\347\003\n\017IM_CONTENT_" +
+                        "2\026.PushMsg*\272\004\n\017IM_CONTENT_" +
                         "TYPE\022\030\n\024IM_CONTENT_TYPE_TEXT\020\000\022!\n\035IM_CON" +
                         "TENT_TYPE_SHORT_MESSAGE\020\001\022\034\n\030IM_CONTENT_" +
                         "TYPE_CONTACTS\020\002\022!\n\035IM_CONTENT_TYPE_RECOM",
@@ -9450,13 +9504,15 @@ public final class YouMaiMsg {
                         "VIDEO\020\n\022\034\n\030IM_CONTENT_TYPE_LOCATION\020\013\022\030\n" +
                         "\024IM_CONTENT_TYPE_FILE\020\014\022\033\n\027IM_CONTENT_TY" +
                         "PE_BIZCARD\020\r\022\032\n\026IM_CONTENT_TYPE_KAQUAN\020\016" +
-                        "\022 \n\034IM_CONTENT_TYPE_RED_ENVELOPE\020\017*\210\001\n\013M" +
-                        "sgProperty\022\025\n\021MSG_PTOPERTY_NONE\020\001\022\030\n\024MSG",
-                "_PROPERTY_RECEIPT\020\002\022\027\n\023MSG_PROPERTY_URGE" +
-                        "NT\020\003\022\026\n\022MSG_PROPERTY_QUOTE\020\004\022\027\n\023MSG_PROP" +
-                        "ERTY_RECALL\020\005*]\n\013SessionType\022\027\n\023SESSION_" +
-                        "TYPE_SINGLE\020\001\022\032\n\026SESSION_TYPE_MULTICHAT\020" +
-                        "\002\022\031\n\025SESSION_TYPE_ORGGROUP\020\003"
+                        "\022\030\n\024IM_CONTENT_TYPE_NULL\020\017\022\032\n\026IM_CONTENT" +
+                        "_TYPE_NOTICE\020\020\022\033\n\027IM_CONTENT_TYPE_DEFAUL",
+                "T\020\021\022 \n\034IM_CONTENT_TYPE_RED_ENVELOPE\020\022*\210\001" +
+                        "\n\013MsgProperty\022\025\n\021MSG_PTOPERTY_NONE\020\001\022\030\n\024" +
+                        "MSG_PROPERTY_RECEIPT\020\002\022\027\n\023MSG_PROPERTY_U" +
+                        "RGENT\020\003\022\026\n\022MSG_PROPERTY_QUOTE\020\004\022\027\n\023MSG_P" +
+                        "ROPERTY_RECALL\020\005*]\n\013SessionType\022\027\n\023SESSI" +
+                        "ON_TYPE_SINGLE\020\001\022\032\n\026SESSION_TYPE_MULTICH" +
+                        "AT\020\002\022\031\n\025SESSION_TYPE_ORGGROUP\020\003"
         };
         com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
                 new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {

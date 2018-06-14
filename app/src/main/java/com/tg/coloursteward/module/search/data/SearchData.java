@@ -5,7 +5,6 @@ import android.util.SparseArray;
 
 import com.tg.coloursteward.info.FamilyInfo;
 import com.tg.coloursteward.info.FindContactInfo;
-import com.tg.coloursteward.module.contact.utils.PinYinUtils;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.ResponseData;
 import com.tg.coloursteward.util.StringUtils;
@@ -14,6 +13,7 @@ import com.youmai.hxsdk.entity.cn.DuoYinZi;
 import com.youmai.hxsdk.entity.cn.SearchContactBean;
 import com.youmai.hxsdk.entity.cn.pinyin.Pinyin;
 import com.youmai.hxsdk.utils.ListUtils;
+import com.youmai.hxsdk.utils.PinYinUtils;
 import com.youmai.smallvideorecord.utils.Log;
 
 import org.json.JSONArray;

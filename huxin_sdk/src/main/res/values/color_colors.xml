@@ -23,4 +23,15 @@
     <color name="color_group_hint">#36adfd</color>
     <color name="color_group_text">#999999</color>
 
+
+    <color name="app_colorPrimary">#2e363f</color>
+    <color name="app_colorPrimaryDark">#2e363f</color>
+    <color name="app_colorAccent">#2e363f</color>
+
+    <color name="red_package_colorPrimary">#fcc800</color>
+    <color name="red_package_colorPrimaryDark">#fcc800</color>
+    <color name="red_package_colorAccent">#ff7531</color>
+
+    <color name="color_pay_password_divide">#c0c4c7</color>
+
 </resources>

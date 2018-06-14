@@ -20,6 +20,7 @@ import com.youmai.hxsdk.ProtocolCallBack;
 import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.activity.IMConnectionActivity;
 import com.youmai.hxsdk.activity.IMGroupActivity;
+import com.youmai.hxsdk.chat.ContentRedPackage;
 import com.youmai.hxsdk.chat.ContentVideo;
 import com.youmai.hxsdk.config.ColorsConfig;
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
@@ -37,6 +38,7 @@ import com.youmai.hxsdk.im.cache.CacheMsgFile;
 import com.youmai.hxsdk.db.helper.CacheMsgHelper;
 import com.youmai.hxsdk.im.cache.CacheMsgImage;
 import com.youmai.hxsdk.im.cache.CacheMsgMap;
+import com.youmai.hxsdk.im.cache.CacheMsgRedPackage;
 import com.youmai.hxsdk.im.cache.CacheMsgTxt;
 import com.youmai.hxsdk.im.cache.CacheMsgVideo;
 import com.youmai.hxsdk.im.cache.CacheMsgVoice;
@@ -647,6 +649,15 @@ public class IMMsgManager {
                     .setSize(contentVideo.getSize())
                     .setTime(time);
             cacheMsgBean.setMsgType(CacheMsgBean.RECEIVE_VIDEO).setJsonBodyObj(cacheMsgVideo);
+            CacheMsgHelper.instance().insertOrUpdate(mContext, cacheMsgBean);
+            handlerIMMsgCallback(cacheMsgBean);
+        } else if (im.getMsgType() == YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_RED_ENVELOPE_VALUE) {//红包
+            ContentRedPackage redPackage = im.getContent().getRedPackage();//获取解析jsonBoby的内容
+
+            CacheMsgRedPackage cacheMsgRedPackage = new CacheMsgRedPackage();
+            cacheMsgRedPackage.setValue(redPackage.getValue());
+
+            cacheMsgBean.setMsgType(CacheMsgBean.RECEIVE_REDPACKAGE).setJsonBodyObj(cacheMsgRedPackage);
             CacheMsgHelper.instance().insertOrUpdate(mContext, cacheMsgBean);
             handlerIMMsgCallback(cacheMsgBean);
         }

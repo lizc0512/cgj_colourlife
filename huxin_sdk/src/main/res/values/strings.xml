@@ -114,6 +114,7 @@
     <string name="hx_im_chat_more_camera">拍摄</string>
     <string name="hx_im_chat_more_location">位置</string>
     <string name="hx_im_chat_more_file">文件</string>
+    <string name="hx_im_chat_red_package">彩利是</string>
     <string name="hx_im_chat_more_func">更多</string>
 
     <string name="hx_im_send_img_count">发送(%1$d/%2$d)</string>
@@ -146,5 +147,9 @@
     <string name="group_default_name">群聊(%01d)"</string>
     <string name="group_default_title">%s(%01d)"</string>
     <string name="group_item_info">[%s]"</string>
+
+
+    <string name="hx_dev_you_mai">正在使用有麦开发服务器</string>
+    <string name="hx_color_test">正在使用彩生活测试服务器</string>
 
 </resources>

@@ -44,6 +44,7 @@ public class CacheMsgBeanDao extends AbstractDao<CacheMsgBean, Long> {
         public final static Property MsgStatus = new Property(17, int.class, "msgStatus", false, "MSG_STATUS");
         public final static Property Progress = new Property(18, int.class, "progress", false, "PROGRESS");
         public final static Property MemberChanged = new Property(19, String.class, "memberChanged", false, "MEMBER_CHANGED");
+        public final static Property IsAtMe = new Property(20, Boolean.class, "isAtMe", false, "IS_AT_ME");
     }
 
 
@@ -78,7 +79,8 @@ public class CacheMsgBeanDao extends AbstractDao<CacheMsgBean, Long> {
                 "\"TARGET_USER_NAME\" TEXT," + // 16: targetUserName
                 "\"MSG_STATUS\" INTEGER NOT NULL ," + // 17: msgStatus
                 "\"PROGRESS\" INTEGER NOT NULL ," + // 18: progress
-                "\"MEMBER_CHANGED\" TEXT);"); // 19: memberChanged
+                "\"MEMBER_CHANGED\" TEXT," + // 19: memberChanged
+                "\"IS_AT_ME\" INTEGER);"); // 20: isAtMe
     }
 
     /** Drops the underlying database table. */
@@ -170,6 +172,11 @@ public class CacheMsgBeanDao extends AbstractDao<CacheMsgBean, Long> {
         if (memberChanged != null) {
             stmt.bindString(20, memberChanged);
         }
+ 
+        Boolean isAtMe = entity.getIsAtMe();
+        if (isAtMe != null) {
+            stmt.bindLong(21, isAtMe ? 1L: 0L);
+        }
     }
 
     @Override
@@ -255,6 +262,11 @@ public class CacheMsgBeanDao extends AbstractDao<CacheMsgBean, Long> {
         if (memberChanged != null) {
             stmt.bindString(20, memberChanged);
         }
+ 
+        Boolean isAtMe = entity.getIsAtMe();
+        if (isAtMe != null) {
+            stmt.bindLong(21, isAtMe ? 1L: 0L);
+        }
     }
 
     @Override
@@ -284,7 +296,8 @@ public class CacheMsgBeanDao extends AbstractDao<CacheMsgBean, Long> {
             cursor.isNull(offset + 16) ? null : cursor.getString(offset + 16), // targetUserName
             cursor.getInt(offset + 17), // msgStatus
             cursor.getInt(offset + 18), // progress
-            cursor.isNull(offset + 19) ? null : cursor.getString(offset + 19) // memberChanged
+            cursor.isNull(offset + 19) ? null : cursor.getString(offset + 19), // memberChanged
+            cursor.isNull(offset + 20) ? null : cursor.getShort(offset + 20) != 0 // isAtMe
         );
         return entity;
     }
@@ -311,6 +324,7 @@ public class CacheMsgBeanDao extends AbstractDao<CacheMsgBean, Long> {
         entity.setMsgStatus(cursor.getInt(offset + 17));
         entity.setProgress(cursor.getInt(offset + 18));
         entity.setMemberChanged(cursor.isNull(offset + 19) ? null : cursor.getString(offset + 19));
+        entity.setIsAtMe(cursor.isNull(offset + 20) ? null : cursor.getShort(offset + 20) != 0);
      }
     
     @Override

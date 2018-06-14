@@ -53,6 +53,7 @@ import com.youmai.hxsdk.im.cache.CacheMsgFile;
 import com.youmai.hxsdk.db.helper.CacheMsgHelper;
 import com.youmai.hxsdk.im.cache.CacheMsgImage;
 import com.youmai.hxsdk.im.cache.CacheMsgMap;
+import com.youmai.hxsdk.im.cache.CacheMsgRedPackage;
 import com.youmai.hxsdk.im.cache.CacheMsgTxt;
 import com.youmai.hxsdk.im.cache.CacheMsgVideo;
 import com.youmai.hxsdk.im.cache.CacheMsgVoice;
@@ -125,7 +126,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
     public static final int REQUEST_CODE_FORWAED = 204;
     public static final int REQUEST_REMIND_CODE = 205;
     public static final int REQUEST_CODE_DETAIL = 206;
-
+    public static final int REQUEST_CODE_RED_PACKET = 207;
 
     private static final int MSG_GET_CONTACT_ID = 300;
 
@@ -540,12 +541,6 @@ public class IMConnectionActivity extends SdkBaseActivity implements
 
             @Override
             public void hasSelectMsg(boolean selected) {
-                if (selected) {
-                    keyboardLay.changeMoreAction(true);
-                } else {
-                    //置灰
-                    keyboardLay.changeMoreAction(false);
-                }
             }
         });
         recyclerView.setAdapter(imListAdapter);
@@ -801,6 +796,23 @@ public class IMConnectionActivity extends SdkBaseActivity implements
     }
 
 
+    /**
+     * 发送红包
+     */
+    public void sendRedPackage(Intent data) {
+        final String value = data.getStringExtra("value");
+        final String redTitle = data.getStringExtra("redTitle");
+
+        CacheMsgBean cacheMsgBean = getBaseMsg();
+        cacheMsgBean.setMsgType(CacheMsgBean.SEND_REDPACKAGE)
+                .setJsonBodyObj(new CacheMsgRedPackage()
+                        .setValue(value)
+                        .setRedTitle(redTitle));
+
+        imListAdapter.addAndRefreshUI(cacheMsgBean);
+        sendMsg(cacheMsgBean);
+    }
+
     //拍照
     private void useCamera() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -844,6 +856,20 @@ public class IMConnectionActivity extends SdkBaseActivity implements
         intent.setClass(this, LocationActivity.class);
         startActivityForResult(intent, REQUEST_CODE_LOCATION);
     }
+
+
+    /**
+     * 发红包
+     */
+    private void sendRedPacket() {
+        Intent intent = new Intent(this, RedPacketActivity.class);
+        intent.putExtra(RedPacketActivity.FROM_GROUP, false);
+        intent.putExtra(RedPacketActivity.TARGET_ID, dstUuid);
+        intent.putExtra(RedPacketActivity.TARGET_NAME, dstNickName);
+        intent.putExtra(RedPacketActivity.TARGET_AVATAR, dstAvatar);
+        startActivityForResult(intent, REQUEST_CODE_RED_PACKET);
+    }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -946,6 +972,10 @@ public class IMConnectionActivity extends SdkBaseActivity implements
                 imListAdapter.clearMsg();
             }
 
+        } else if (requestCode == REQUEST_CODE_RED_PACKET
+                && resultCode == Activity.RESULT_OK) {  //红包
+            // send red
+            sendRedPackage(data);
         }
     }
 
@@ -1122,6 +1152,11 @@ public class IMConnectionActivity extends SdkBaseActivity implements
         imListAdapter.focusBottom(false);
     }
 
+
+    @Override
+    public void onGroupAt() {
+    }
+
     /**
      * 输入框点击更多菜单的点击事件
      */
@@ -1136,17 +1171,8 @@ public class IMConnectionActivity extends SdkBaseActivity implements
         } else if (type == InputMessageLay.TYPE_FILE) {
             showFileChooser();
         } else if (type == InputMessageLay.TYPE_RED_PACKET) {
-            //分享名片
-            /*try {
-                Intent intent = new Intent();
-                intent.setAction("com.youmai.huxin.select.card");
-                intent.putExtra("disName", tvTitle.getText().toString());
-                intent.putExtra("targetPhone", targetPhone);
-                startActivityForResult(intent, REQUEST_CODE_CARD);
-            } catch (Exception e) {
-                Toast.makeText(mContext, "tan90", Toast.LENGTH_SHORT).show();
-            }*/
-            Toast.makeText(mContext, "添加更多", Toast.LENGTH_SHORT).show();
+            //发送红包
+            sendRedPacket();
         }
 
     }
@@ -1314,7 +1340,6 @@ public class IMConnectionActivity extends SdkBaseActivity implements
      */
     private void setRightUi(boolean isShow) {
         ivMore.setVisibility(isShow ? View.GONE : View.VISIBLE);
-        keyboardLay.changeMoreLay(isShow);
     }
 
 

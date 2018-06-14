@@ -1,10 +1,11 @@
 package com.youmai.hxsdk.im;
 
+import com.google.protobuf.ProtocolStringList;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.chat.MsgContent;
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
 import com.youmai.hxsdk.proto.YouMaiMsg;
-import com.youmai.hxsdk.socket.IMContentType;
+import com.youmai.hxsdk.utils.ListUtils;
 
 /**
  * 作者：create by YW
@@ -57,9 +58,16 @@ public class IMChat {
                 .setContentJsonBody(imChat.getMsgContent());
 
         if (isGroup) {
+
+            String uuid = HuxinSdkManager.instance().getUuid();
+            ProtocolStringList atList = imChat.getForcePushIdsListList();
+            if (!ListUtils.isEmpty(atList) && atList.contains(uuid)) {
+                mMsgBean.setIsAtMe(true);
+            }
+
             mMsgBean.setGroupId(imChat.getGroupId())
                     .setTargetUuid(imChat.getGroupId() + "")
-                    .setReceiverUserId(HuxinSdkManager.instance().getUuid())
+                    .setReceiverUserId(uuid)
                     .setTargetName(imChat.getGroupName());
         } else {
             mMsgBean.setTargetUuid(imChat.getSrcUserId())

@@ -525,6 +525,11 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
                     JSONObject sonJon = new JSONObject(jsonObject);
                     String key = sonJon.optString("key");
                     String secret = sonJon.optString("secret");
+
+                    HuxinSdkManager.instance().setKey(key);
+                    HuxinSdkManager.instance().setSecret(secret);
+                    HuxinSdkManager.instance().saveUserInfo();
+
                     Tools.saveStringValue(LoginActivity.this, Contants.EMPLOYEE_LOGIN.key, key);
                     Tools.saveStringValue(LoginActivity.this, Contants.EMPLOYEE_LOGIN.secret, secret);
                     getEmployeeInfo(key, secret);

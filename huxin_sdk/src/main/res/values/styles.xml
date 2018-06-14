@@ -2,6 +2,21 @@
 
     <style name="HxSdkTheme" parent="HxColorBaseTheme" />
 
+
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+
+
+
+
     <!-- Base application theme. -->
     <style name="HxBaseSdkTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
@@ -17,6 +32,25 @@
         <item name="colorAccent">@color/color_theme_main</item>
         <item name="android:windowBackground">@color/hx_window_background</item>
     </style>
+
+    <style name="HxRadPackageTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/red_package_colorPrimary</item>
+        <item name="colorPrimaryDark">@color/red_package_colorPrimaryDark</item>
+        <item name="colorAccent">@color/red_package_colorAccent</item>
+        <item name="android:windowBackground">@color/hx_window_background</item>
+    </style>
+
+
+    <style name="HxGroupAtTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/app_colorPrimaryDark</item>
+        <item name="colorPrimaryDark">@color/app_colorPrimaryDark</item>
+        <item name="colorAccent">@color/hx_color_white</item>
+        <item name="android:windowBackground">@color/hx_window_background</item>
+
+        <item name="android:textColorPrimary">@color/hx_color_white</item>
+        <item name="android:textColorHint">@color/gray</item>
+    </style>
+
 
     <style name="HxMsgTheme" parent="HxSdkTheme">
         <item name="android:windowBackground">@android:color/transparent</item>
@@ -211,5 +245,36 @@
     </style>
 
     <!--弹屏表情动画-->
+
+
+    <style name="InputTextView">
+        <item name="android:textColor">#000000</item>
+        <item name="android:gravity">center</item>
+        <item name="android:inputType">textPassword</item>
+        <item name="android:textSize">24sp</item>
+    </style>
+
+    <!--dialog的样式-->
+    <style name="red_packet_dialog" parent="@android:style/Theme.Dialog">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:backgroundDimAmount">0.6</item>
+    </style>
+
+    <style name="Theme.BlueTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/hx_main_color</item>
+        <item name="colorPrimaryDark">@color/hx_status_color</item>
+        <item name="colorAccent">@color/hx_main_color</item>
+        <item name="colorControlNormal">@color/hx_main_color</item>
+        <item name="colorControlActivated">@color/hx_main_color</item>
+        <item name="colorControlHighlight">@color/hx_main_color</item>
+        <item name="colorSwitchThumbNormal">@color/hx_main_color</item>
+    </style>
+
 
 </resources>

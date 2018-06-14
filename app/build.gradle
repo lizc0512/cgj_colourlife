@@ -9,8 +9,8 @@ android {
         applicationId "com.tg.coloursteward"
         minSdkVersion MIN_SDK_VERSION as int
         targetSdkVersion TARGET_SDK_VERSION as int
-        versionCode 30
-        versionName "4.1.0"
+        versionCode 40
+        versionName "4.2.0"
         // Enabling multidex support.
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -153,8 +153,8 @@ def handleBuildTag() {
     def launch = getLaunchMode()
     if (launch != null) {
         def appCfgFilePath = "../huxin_sdk/src/main/java/com/youmai/hxsdk/config/AppConfig.java"
-        def appCfgRegexStr = "private\\s+final\\s+static\\s+int\\s+LAUNCH_MODE\\s+=\\s+[012];"
-        def appCfgReplaceStr = "private final static int LAUNCH_MODE = " + launch + ";"
+        def appCfgRegexStr = "public\\s+final\\s+static\\s+int\\s+LAUNCH_MODE\\s+=\\s+[012];"
+        def appCfgReplaceStr = "public final static int LAUNCH_MODE = " + launch + ";"
         handleReplaceSrc project, appCfgRegexStr, appCfgReplaceStr, appCfgFilePath
     }
 }

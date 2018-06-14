@@ -40,7 +40,7 @@ public class TipsType {
     public static List<TipBean> getTextType() {
         List<TipBean> beanList = new ArrayList<>();
         beanList.add(new TipBean("删除", TIP_DELETE));
-        //beanList.add(new TipBean("转发", TIP_FORWARD));
+        beanList.add(new TipBean("转发", TIP_FORWARD));
         beanList.add(new TipBean("复制", TIP_COPY));
         return beanList;
     }
@@ -49,7 +49,7 @@ public class TipsType {
     public static List<TipBean> getMyselfTextType() {
         List<TipBean> beanList = new ArrayList<>();
         beanList.add(new TipBean("删除", TIP_DELETE));
-        //beanList.add(new TipBean("转发", TIP_FORWARD));
+        beanList.add(new TipBean("转发", TIP_FORWARD));
         beanList.add(new TipBean("复制", TIP_COPY));
         return beanList;
     }
@@ -59,7 +59,7 @@ public class TipsType {
         List<TipBean> beanList = new ArrayList<>();
         beanList.add(new TipBean("更多", TIP_MORE));
         beanList.add(new TipBean("删除", TIP_DELETE));
-        //beanList.add(new TipBean("转发", TIP_FORWARD));
+        beanList.add(new TipBean("转发", TIP_FORWARD));
         return beanList;
     }
 
@@ -67,7 +67,7 @@ public class TipsType {
     public static List<TipBean> getRecEmotionType() {
         List<TipBean> beanList = new ArrayList<>();
         beanList.add(new TipBean("删除", TIP_DELETE));
-        //beanList.add(new TipBean("转发", TIP_FORWARD));
+        beanList.add(new TipBean("转发", TIP_FORWARD));
         return beanList;
     }
 
@@ -75,7 +75,7 @@ public class TipsType {
     public static List<TipBean> getVoiceType() {
         List<TipBean> beanList = new ArrayList<>();
         beanList.add(new TipBean("删除", TIP_DELETE));
-        //beanList.add(new TipBean("转发", TIP_FORWARD));
+        beanList.add(new TipBean("转发", TIP_FORWARD));
         return beanList;
     }
 
@@ -93,7 +93,7 @@ public class TipsType {
     public static List<TipBean> getOtherType() {
         List<TipBean> beanList = new ArrayList<>();
         beanList.add(new TipBean("删除", TIP_DELETE));
-        //beanList.add(new TipBean("转发", TIP_FORWARD));
+        beanList.add(new TipBean("转发", TIP_FORWARD));
         return beanList;
     }
 

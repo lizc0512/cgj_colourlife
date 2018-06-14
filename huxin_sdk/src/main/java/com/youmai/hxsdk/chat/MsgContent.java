@@ -17,6 +17,7 @@ public class MsgContent implements Parcelable {
     private ContentVideo mVideo;
     private ContentLocation mLocation;
     private ContentFile mFile;
+    private ContentRedPackage mRedPackage;
 
 
     public MsgContent(int type, String json) {
@@ -41,6 +42,9 @@ public class MsgContent implements Parcelable {
                 break;
             case YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_FILE_VALUE:
                 mFile = new ContentFile(parser);
+                break;
+            case YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_RED_ENVELOPE_VALUE:
+                mRedPackage = new ContentRedPackage(parser);
                 break;
             default:
                 break;
@@ -72,6 +76,10 @@ public class MsgContent implements Parcelable {
         return mFile;
     }
 
+    public ContentRedPackage getRedPackage() {
+        return mRedPackage;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -85,6 +93,7 @@ public class MsgContent implements Parcelable {
         dest.writeParcelable(this.mVideo, flags);
         dest.writeParcelable(this.mLocation, flags);
         dest.writeParcelable(this.mFile, flags);
+        dest.writeParcelable(this.mRedPackage, flags);
     }
 
     protected MsgContent(Parcel in) {
@@ -94,6 +103,7 @@ public class MsgContent implements Parcelable {
         this.mVideo = in.readParcelable(ContentVideo.class.getClassLoader());
         this.mLocation = in.readParcelable(ContentLocation.class.getClassLoader());
         this.mFile = in.readParcelable(ContentFile.class.getClassLoader());
+        this.mRedPackage = in.readParcelable(ContentRedPackage.class.getClassLoader());
     }
 
     public static final Creator<MsgContent> CREATOR = new Creator<MsgContent>() {

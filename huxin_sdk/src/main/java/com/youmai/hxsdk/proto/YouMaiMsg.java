@@ -79,7 +79,15 @@ public final class YouMaiMsg {
         /**
          * <code>IM_CONTENT_TYPE_KAQUAN = 14;</code>
          */
-        IM_CONTENT_TYPE_KAQUAN(14, 14),;
+        IM_CONTENT_TYPE_KAQUAN(14, 14),
+        /**
+         * <code>IM_CONTENT_TYPE_RED_ENVELOPE = 15;</code>
+         * <p>
+         * <pre>
+         * 红包
+         * </pre>
+         */
+        IM_CONTENT_TYPE_RED_ENVELOPE(15, 15),;
 
         /**
          * <code>IM_CONTENT_TYPE_TEXT = 0;</code>
@@ -141,6 +149,14 @@ public final class YouMaiMsg {
          * <code>IM_CONTENT_TYPE_KAQUAN = 14;</code>
          */
         public static final int IM_CONTENT_TYPE_KAQUAN_VALUE = 14;
+        /**
+         * <code>IM_CONTENT_TYPE_RED_ENVELOPE = 15;</code>
+         * <p>
+         * <pre>
+         * 红包
+         * </pre>
+         */
+        public static final int IM_CONTENT_TYPE_RED_ENVELOPE_VALUE = 15;
 
 
         public final int getNumber() {
@@ -179,6 +195,8 @@ public final class YouMaiMsg {
                     return IM_CONTENT_TYPE_BIZCARD;
                 case 14:
                     return IM_CONTENT_TYPE_KAQUAN;
+                case 15:
+                    return IM_CONTENT_TYPE_RED_ENVELOPE;
                 default:
                     return null;
             }
@@ -7253,81 +7271,93 @@ public final class YouMaiMsg {
         // @@protoc_insertion_point(class_scope:OfflineMsgAck)
     }
 
-    public interface S2SCommonMsgOrBuilder extends
-            // @@protoc_insertion_point(interface_extends:S2SCommonMsg)
+    public interface PushMsgOrBuilder extends
+            // @@protoc_insertion_point(interface_extends:PushMsg)
             com.google.protobuf.MessageOrBuilder {
 
         /**
-         * <code>repeated string user_id = 1;</code>
-         */
-        com.google.protobuf.ProtocolStringList
-        getUserIdList();
-
-        /**
-         * <code>repeated string user_id = 1;</code>
-         */
-        int getUserIdCount();
-
-        /**
-         * <code>repeated string user_id = 1;</code>
-         */
-        String getUserId(int index);
-
-        /**
-         * <code>repeated string user_id = 1;</code>
-         */
-        com.google.protobuf.ByteString
-        getUserIdBytes(int index);
-
-        /**
-         * <code>optional bytes data = 2;</code>
+         * <code>optional bytes data = 1;</code>
+         * <p>
+         * <pre>
+         * 具体pb实体
+         * </pre>
          */
         boolean hasData();
 
         /**
-         * <code>optional bytes data = 2;</code>
+         * <code>optional bytes data = 1;</code>
+         * <p>
+         * <pre>
+         * 具体pb实体
+         * </pre>
          */
         com.google.protobuf.ByteString getData();
 
         /**
+         * <code>optional int32 cmd_id = 2;</code>
+         * <p>
+         * <pre>
+         * pb对应的cmd_id
+         * </pre>
+         */
+        boolean hasCmdId();
+
+        /**
+         * <code>optional int32 cmd_id = 2;</code>
+         * <p>
+         * <pre>
+         * pb对应的cmd_id
+         * </pre>
+         */
+        int getCmdId();
+
+        /**
          * <code>optional int64 msg_id = 3;</code>
+         * <p>
+         * <pre>
+         * 仅用于ack确认
+         * </pre>
          */
         boolean hasMsgId();
 
         /**
          * <code>optional int64 msg_id = 3;</code>
+         * <p>
+         * <pre>
+         * 仅用于ack确认
+         * </pre>
          */
         long getMsgId();
     }
 
     /**
-     * Protobuf type {@code S2SCommonMsg}
+     * Protobuf type {@code PushMsg}
      * <p>
      * <pre>
-     * 以下服务端用，客户端不用理睬
+     * 服务端消息推送协议
      * </pre>
      */
-    public static final class S2SCommonMsg extends
+    public static final class PushMsg extends
             com.google.protobuf.GeneratedMessage implements
-            // @@protoc_insertion_point(message_implements:S2SCommonMsg)
-            S2SCommonMsgOrBuilder {
-        // Use S2SCommonMsg.newBuilder() to construct.
-        private S2SCommonMsg(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+            // @@protoc_insertion_point(message_implements:PushMsg)
+            PushMsgOrBuilder {
+        // Use PushMsg.newBuilder() to construct.
+        private PushMsg(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
             super(builder);
             this.unknownFields = builder.getUnknownFields();
         }
 
-        private S2SCommonMsg(boolean noInit) {
+        private PushMsg(boolean noInit) {
             this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance();
         }
 
-        private static final S2SCommonMsg defaultInstance;
+        private static final PushMsg defaultInstance;
 
-        public static S2SCommonMsg getDefaultInstance() {
+        public static PushMsg getDefaultInstance() {
             return defaultInstance;
         }
 
-        public S2SCommonMsg getDefaultInstanceForType() {
+        public PushMsg getDefaultInstanceForType() {
             return defaultInstance;
         }
 
@@ -7339,7 +7369,7 @@ public final class YouMaiMsg {
             return this.unknownFields;
         }
 
-        private S2SCommonMsg(
+        private PushMsg(
                 com.google.protobuf.CodedInputStream input,
                 com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws com.google.protobuf.InvalidProtocolBufferException {
@@ -7363,21 +7393,17 @@ public final class YouMaiMsg {
                             break;
                         }
                         case 10: {
-                            com.google.protobuf.ByteString bs = input.readBytes();
-                            if (!((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
-                                userId_ = new com.google.protobuf.LazyStringArrayList();
-                                mutable_bitField0_ |= 0x00000001;
-                            }
-                            userId_.add(bs);
-                            break;
-                        }
-                        case 18: {
                             bitField0_ |= 0x00000001;
                             data_ = input.readBytes();
                             break;
                         }
-                        case 24: {
+                        case 16: {
                             bitField0_ |= 0x00000002;
+                            cmdId_ = input.readInt32();
+                            break;
+                        }
+                        case 24: {
+                            bitField0_ |= 0x00000004;
                             msgId_ = input.readInt64();
                             break;
                         }
@@ -7389,9 +7415,6 @@ public final class YouMaiMsg {
                 throw new com.google.protobuf.InvalidProtocolBufferException(
                         e.getMessage()).setUnfinishedMessage(this);
             } finally {
-                if (((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
-                    userId_ = userId_.getUnmodifiableView();
-                }
                 this.unknownFields = unknownFields.build();
                 makeExtensionsImmutable();
             }
@@ -7399,709 +7422,28 @@ public final class YouMaiMsg {
 
         public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-            return YouMaiMsg.internal_static_com_proto_msg_S2SCommonMsg_descriptor;
+            return YouMaiMsg.internal_static_com_proto_msg_PushMsg_descriptor;
         }
 
         protected FieldAccessorTable
         internalGetFieldAccessorTable() {
-            return YouMaiMsg.internal_static_com_proto_msg_S2SCommonMsg_fieldAccessorTable
+            return YouMaiMsg.internal_static_com_proto_msg_PushMsg_fieldAccessorTable
                     .ensureFieldAccessorsInitialized(
-                            YouMaiMsg.S2SCommonMsg.class, YouMaiMsg.S2SCommonMsg.Builder.class);
+                            YouMaiMsg.PushMsg.class, YouMaiMsg.PushMsg.Builder.class);
         }
 
-        public static com.google.protobuf.Parser<S2SCommonMsg> PARSER =
-                new com.google.protobuf.AbstractParser<S2SCommonMsg>() {
-                    public S2SCommonMsg parsePartialFrom(
+        public static com.google.protobuf.Parser<PushMsg> PARSER =
+                new com.google.protobuf.AbstractParser<PushMsg>() {
+                    public PushMsg parsePartialFrom(
                             com.google.protobuf.CodedInputStream input,
                             com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                             throws com.google.protobuf.InvalidProtocolBufferException {
-                        return new S2SCommonMsg(input, extensionRegistry);
+                        return new PushMsg(input, extensionRegistry);
                     }
                 };
 
         @Override
-        public com.google.protobuf.Parser<S2SCommonMsg> getParserForType() {
-            return PARSER;
-        }
-
-        private int bitField0_;
-        public static final int USER_ID_FIELD_NUMBER = 1;
-        private com.google.protobuf.LazyStringList userId_;
-
-        /**
-         * <code>repeated string user_id = 1;</code>
-         */
-        public com.google.protobuf.ProtocolStringList
-        getUserIdList() {
-            return userId_;
-        }
-
-        /**
-         * <code>repeated string user_id = 1;</code>
-         */
-        public int getUserIdCount() {
-            return userId_.size();
-        }
-
-        /**
-         * <code>repeated string user_id = 1;</code>
-         */
-        public String getUserId(int index) {
-            return userId_.get(index);
-        }
-
-        /**
-         * <code>repeated string user_id = 1;</code>
-         */
-        public com.google.protobuf.ByteString
-        getUserIdBytes(int index) {
-            return userId_.getByteString(index);
-        }
-
-        public static final int DATA_FIELD_NUMBER = 2;
-        private com.google.protobuf.ByteString data_;
-
-        /**
-         * <code>optional bytes data = 2;</code>
-         */
-        public boolean hasData() {
-            return ((bitField0_ & 0x00000001) == 0x00000001);
-        }
-
-        /**
-         * <code>optional bytes data = 2;</code>
-         */
-        public com.google.protobuf.ByteString getData() {
-            return data_;
-        }
-
-        public static final int MSG_ID_FIELD_NUMBER = 3;
-        private long msgId_;
-
-        /**
-         * <code>optional int64 msg_id = 3;</code>
-         */
-        public boolean hasMsgId() {
-            return ((bitField0_ & 0x00000002) == 0x00000002);
-        }
-
-        /**
-         * <code>optional int64 msg_id = 3;</code>
-         */
-        public long getMsgId() {
-            return msgId_;
-        }
-
-        private void initFields() {
-            userId_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-            data_ = com.google.protobuf.ByteString.EMPTY;
-            msgId_ = 0L;
-        }
-
-        private byte memoizedIsInitialized = -1;
-
-        public final boolean isInitialized() {
-            byte isInitialized = memoizedIsInitialized;
-            if (isInitialized == 1) return true;
-            if (isInitialized == 0) return false;
-
-            memoizedIsInitialized = 1;
-            return true;
-        }
-
-        public void writeTo(com.google.protobuf.CodedOutputStream output)
-                throws java.io.IOException {
-            getSerializedSize();
-            for (int i = 0; i < userId_.size(); i++) {
-                output.writeBytes(1, userId_.getByteString(i));
-            }
-            if (((bitField0_ & 0x00000001) == 0x00000001)) {
-                output.writeBytes(2, data_);
-            }
-            if (((bitField0_ & 0x00000002) == 0x00000002)) {
-                output.writeInt64(3, msgId_);
-            }
-            getUnknownFields().writeTo(output);
-        }
-
-        private int memoizedSerializedSize = -1;
-
-        public int getSerializedSize() {
-            int size = memoizedSerializedSize;
-            if (size != -1) return size;
-
-            size = 0;
-            {
-                int dataSize = 0;
-                for (int i = 0; i < userId_.size(); i++) {
-                    dataSize += com.google.protobuf.CodedOutputStream
-                            .computeBytesSizeNoTag(userId_.getByteString(i));
-                }
-                size += dataSize;
-                size += 1 * getUserIdList().size();
-            }
-            if (((bitField0_ & 0x00000001) == 0x00000001)) {
-                size += com.google.protobuf.CodedOutputStream
-                        .computeBytesSize(2, data_);
-            }
-            if (((bitField0_ & 0x00000002) == 0x00000002)) {
-                size += com.google.protobuf.CodedOutputStream
-                        .computeInt64Size(3, msgId_);
-            }
-            size += getUnknownFields().getSerializedSize();
-            memoizedSerializedSize = size;
-            return size;
-        }
-
-        private static final long serialVersionUID = 0L;
-
-        @Override
-        protected Object writeReplace()
-                throws java.io.ObjectStreamException {
-            return super.writeReplace();
-        }
-
-        public static YouMaiMsg.S2SCommonMsg parseFrom(
-                com.google.protobuf.ByteString data)
-                throws com.google.protobuf.InvalidProtocolBufferException {
-            return PARSER.parseFrom(data);
-        }
-
-        public static YouMaiMsg.S2SCommonMsg parseFrom(
-                com.google.protobuf.ByteString data,
-                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-                throws com.google.protobuf.InvalidProtocolBufferException {
-            return PARSER.parseFrom(data, extensionRegistry);
-        }
-
-        public static YouMaiMsg.S2SCommonMsg parseFrom(byte[] data)
-                throws com.google.protobuf.InvalidProtocolBufferException {
-            return PARSER.parseFrom(data);
-        }
-
-        public static YouMaiMsg.S2SCommonMsg parseFrom(
-                byte[] data,
-                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-                throws com.google.protobuf.InvalidProtocolBufferException {
-            return PARSER.parseFrom(data, extensionRegistry);
-        }
-
-        public static YouMaiMsg.S2SCommonMsg parseFrom(java.io.InputStream input)
-                throws java.io.IOException {
-            return PARSER.parseFrom(input);
-        }
-
-        public static YouMaiMsg.S2SCommonMsg parseFrom(
-                java.io.InputStream input,
-                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-                throws java.io.IOException {
-            return PARSER.parseFrom(input, extensionRegistry);
-        }
-
-        public static YouMaiMsg.S2SCommonMsg parseDelimitedFrom(java.io.InputStream input)
-                throws java.io.IOException {
-            return PARSER.parseDelimitedFrom(input);
-        }
-
-        public static YouMaiMsg.S2SCommonMsg parseDelimitedFrom(
-                java.io.InputStream input,
-                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-                throws java.io.IOException {
-            return PARSER.parseDelimitedFrom(input, extensionRegistry);
-        }
-
-        public static YouMaiMsg.S2SCommonMsg parseFrom(
-                com.google.protobuf.CodedInputStream input)
-                throws java.io.IOException {
-            return PARSER.parseFrom(input);
-        }
-
-        public static YouMaiMsg.S2SCommonMsg parseFrom(
-                com.google.protobuf.CodedInputStream input,
-                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-                throws java.io.IOException {
-            return PARSER.parseFrom(input, extensionRegistry);
-        }
-
-        public static Builder newBuilder() {
-            return Builder.create();
-        }
-
-        public Builder newBuilderForType() {
-            return newBuilder();
-        }
-
-        public static Builder newBuilder(YouMaiMsg.S2SCommonMsg prototype) {
-            return newBuilder().mergeFrom(prototype);
-        }
-
-        public Builder toBuilder() {
-            return newBuilder(this);
-        }
-
-        @Override
-        protected Builder newBuilderForType(
-                BuilderParent parent) {
-            Builder builder = new Builder(parent);
-            return builder;
-        }
-
-        /**
-         * Protobuf type {@code S2SCommonMsg}
-         * <p>
-         * <pre>
-         * 以下服务端用，客户端不用理睬
-         * </pre>
-         */
-        public static final class Builder extends
-                com.google.protobuf.GeneratedMessage.Builder<Builder> implements
-                // @@protoc_insertion_point(builder_implements:S2SCommonMsg)
-                YouMaiMsg.S2SCommonMsgOrBuilder {
-            public static final com.google.protobuf.Descriptors.Descriptor
-            getDescriptor() {
-                return YouMaiMsg.internal_static_com_proto_msg_S2SCommonMsg_descriptor;
-            }
-
-            protected FieldAccessorTable
-            internalGetFieldAccessorTable() {
-                return YouMaiMsg.internal_static_com_proto_msg_S2SCommonMsg_fieldAccessorTable
-                        .ensureFieldAccessorsInitialized(
-                                YouMaiMsg.S2SCommonMsg.class, YouMaiMsg.S2SCommonMsg.Builder.class);
-            }
-
-            // Construct using YouMaiMsg.S2SCommonMsg.newBuilder()
-            private Builder() {
-                maybeForceBuilderInitialization();
-            }
-
-            private Builder(
-                    BuilderParent parent) {
-                super(parent);
-                maybeForceBuilderInitialization();
-            }
-
-            private void maybeForceBuilderInitialization() {
-                if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
-                }
-            }
-
-            private static Builder create() {
-                return new Builder();
-            }
-
-            public Builder clear() {
-                super.clear();
-                userId_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-                bitField0_ = (bitField0_ & ~0x00000001);
-                data_ = com.google.protobuf.ByteString.EMPTY;
-                bitField0_ = (bitField0_ & ~0x00000002);
-                msgId_ = 0L;
-                bitField0_ = (bitField0_ & ~0x00000004);
-                return this;
-            }
-
-            public Builder clone() {
-                return create().mergeFrom(buildPartial());
-            }
-
-            public com.google.protobuf.Descriptors.Descriptor
-            getDescriptorForType() {
-                return YouMaiMsg.internal_static_com_proto_msg_S2SCommonMsg_descriptor;
-            }
-
-            public YouMaiMsg.S2SCommonMsg getDefaultInstanceForType() {
-                return YouMaiMsg.S2SCommonMsg.getDefaultInstance();
-            }
-
-            public YouMaiMsg.S2SCommonMsg build() {
-                YouMaiMsg.S2SCommonMsg result = buildPartial();
-                if (!result.isInitialized()) {
-                    throw newUninitializedMessageException(result);
-                }
-                return result;
-            }
-
-            public YouMaiMsg.S2SCommonMsg buildPartial() {
-                YouMaiMsg.S2SCommonMsg result = new YouMaiMsg.S2SCommonMsg(this);
-                int from_bitField0_ = bitField0_;
-                int to_bitField0_ = 0;
-                if (((bitField0_ & 0x00000001) == 0x00000001)) {
-                    userId_ = userId_.getUnmodifiableView();
-                    bitField0_ = (bitField0_ & ~0x00000001);
-                }
-                result.userId_ = userId_;
-                if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
-                    to_bitField0_ |= 0x00000001;
-                }
-                result.data_ = data_;
-                if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
-                    to_bitField0_ |= 0x00000002;
-                }
-                result.msgId_ = msgId_;
-                result.bitField0_ = to_bitField0_;
-                onBuilt();
-                return result;
-            }
-
-            public Builder mergeFrom(com.google.protobuf.Message other) {
-                if (other instanceof YouMaiMsg.S2SCommonMsg) {
-                    return mergeFrom((YouMaiMsg.S2SCommonMsg) other);
-                } else {
-                    super.mergeFrom(other);
-                    return this;
-                }
-            }
-
-            public Builder mergeFrom(YouMaiMsg.S2SCommonMsg other) {
-                if (other == YouMaiMsg.S2SCommonMsg.getDefaultInstance()) return this;
-                if (!other.userId_.isEmpty()) {
-                    if (userId_.isEmpty()) {
-                        userId_ = other.userId_;
-                        bitField0_ = (bitField0_ & ~0x00000001);
-                    } else {
-                        ensureUserIdIsMutable();
-                        userId_.addAll(other.userId_);
-                    }
-                    onChanged();
-                }
-                if (other.hasData()) {
-                    setData(other.getData());
-                }
-                if (other.hasMsgId()) {
-                    setMsgId(other.getMsgId());
-                }
-                this.mergeUnknownFields(other.getUnknownFields());
-                return this;
-            }
-
-            public final boolean isInitialized() {
-                return true;
-            }
-
-            public Builder mergeFrom(
-                    com.google.protobuf.CodedInputStream input,
-                    com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-                    throws java.io.IOException {
-                YouMaiMsg.S2SCommonMsg parsedMessage = null;
-                try {
-                    parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-                } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-                    parsedMessage = (YouMaiMsg.S2SCommonMsg) e.getUnfinishedMessage();
-                    throw e;
-                } finally {
-                    if (parsedMessage != null) {
-                        mergeFrom(parsedMessage);
-                    }
-                }
-                return this;
-            }
-
-            private int bitField0_;
-
-            private com.google.protobuf.LazyStringList userId_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-
-            private void ensureUserIdIsMutable() {
-                if (!((bitField0_ & 0x00000001) == 0x00000001)) {
-                    userId_ = new com.google.protobuf.LazyStringArrayList(userId_);
-                    bitField0_ |= 0x00000001;
-                }
-            }
-
-            /**
-             * <code>repeated string user_id = 1;</code>
-             */
-            public com.google.protobuf.ProtocolStringList
-            getUserIdList() {
-                return userId_.getUnmodifiableView();
-            }
-
-            /**
-             * <code>repeated string user_id = 1;</code>
-             */
-            public int getUserIdCount() {
-                return userId_.size();
-            }
-
-            /**
-             * <code>repeated string user_id = 1;</code>
-             */
-            public String getUserId(int index) {
-                return userId_.get(index);
-            }
-
-            /**
-             * <code>repeated string user_id = 1;</code>
-             */
-            public com.google.protobuf.ByteString
-            getUserIdBytes(int index) {
-                return userId_.getByteString(index);
-            }
-
-            /**
-             * <code>repeated string user_id = 1;</code>
-             */
-            public Builder setUserId(
-                    int index, String value) {
-                if (value == null) {
-                    throw new NullPointerException();
-                }
-                ensureUserIdIsMutable();
-                userId_.set(index, value);
-                onChanged();
-                return this;
-            }
-
-            /**
-             * <code>repeated string user_id = 1;</code>
-             */
-            public Builder addUserId(
-                    String value) {
-                if (value == null) {
-                    throw new NullPointerException();
-                }
-                ensureUserIdIsMutable();
-                userId_.add(value);
-                onChanged();
-                return this;
-            }
-
-            /**
-             * <code>repeated string user_id = 1;</code>
-             */
-            public Builder addAllUserId(
-                    Iterable<String> values) {
-                ensureUserIdIsMutable();
-                com.google.protobuf.AbstractMessageLite.Builder.addAll(
-                        values, userId_);
-                onChanged();
-                return this;
-            }
-
-            /**
-             * <code>repeated string user_id = 1;</code>
-             */
-            public Builder clearUserId() {
-                userId_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-                bitField0_ = (bitField0_ & ~0x00000001);
-                onChanged();
-                return this;
-            }
-
-            /**
-             * <code>repeated string user_id = 1;</code>
-             */
-            public Builder addUserIdBytes(
-                    com.google.protobuf.ByteString value) {
-                if (value == null) {
-                    throw new NullPointerException();
-                }
-                ensureUserIdIsMutable();
-                userId_.add(value);
-                onChanged();
-                return this;
-            }
-
-            private com.google.protobuf.ByteString data_ = com.google.protobuf.ByteString.EMPTY;
-
-            /**
-             * <code>optional bytes data = 2;</code>
-             */
-            public boolean hasData() {
-                return ((bitField0_ & 0x00000002) == 0x00000002);
-            }
-
-            /**
-             * <code>optional bytes data = 2;</code>
-             */
-            public com.google.protobuf.ByteString getData() {
-                return data_;
-            }
-
-            /**
-             * <code>optional bytes data = 2;</code>
-             */
-            public Builder setData(com.google.protobuf.ByteString value) {
-                if (value == null) {
-                    throw new NullPointerException();
-                }
-                bitField0_ |= 0x00000002;
-                data_ = value;
-                onChanged();
-                return this;
-            }
-
-            /**
-             * <code>optional bytes data = 2;</code>
-             */
-            public Builder clearData() {
-                bitField0_ = (bitField0_ & ~0x00000002);
-                data_ = getDefaultInstance().getData();
-                onChanged();
-                return this;
-            }
-
-            private long msgId_;
-
-            /**
-             * <code>optional int64 msg_id = 3;</code>
-             */
-            public boolean hasMsgId() {
-                return ((bitField0_ & 0x00000004) == 0x00000004);
-            }
-
-            /**
-             * <code>optional int64 msg_id = 3;</code>
-             */
-            public long getMsgId() {
-                return msgId_;
-            }
-
-            /**
-             * <code>optional int64 msg_id = 3;</code>
-             */
-            public Builder setMsgId(long value) {
-                bitField0_ |= 0x00000004;
-                msgId_ = value;
-                onChanged();
-                return this;
-            }
-
-            /**
-             * <code>optional int64 msg_id = 3;</code>
-             */
-            public Builder clearMsgId() {
-                bitField0_ = (bitField0_ & ~0x00000004);
-                msgId_ = 0L;
-                onChanged();
-                return this;
-            }
-
-            // @@protoc_insertion_point(builder_scope:S2SCommonMsg)
-        }
-
-        static {
-            defaultInstance = new S2SCommonMsg(true);
-            defaultInstance.initFields();
-        }
-
-        // @@protoc_insertion_point(class_scope:S2SCommonMsg)
-    }
-
-    public interface CommonMsgOrBuilder extends
-            // @@protoc_insertion_point(interface_extends:CommonMsg)
-            com.google.protobuf.MessageOrBuilder {
-
-        /**
-         * <code>optional bytes data = 1;</code>
-         */
-        boolean hasData();
-
-        /**
-         * <code>optional bytes data = 1;</code>
-         */
-        com.google.protobuf.ByteString getData();
-    }
-
-    /**
-     * Protobuf type {@code CommonMsg}
-     */
-    public static final class CommonMsg extends
-            com.google.protobuf.GeneratedMessage implements
-            // @@protoc_insertion_point(message_implements:CommonMsg)
-            CommonMsgOrBuilder {
-        // Use CommonMsg.newBuilder() to construct.
-        private CommonMsg(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
-            super(builder);
-            this.unknownFields = builder.getUnknownFields();
-        }
-
-        private CommonMsg(boolean noInit) {
-            this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance();
-        }
-
-        private static final CommonMsg defaultInstance;
-
-        public static CommonMsg getDefaultInstance() {
-            return defaultInstance;
-        }
-
-        public CommonMsg getDefaultInstanceForType() {
-            return defaultInstance;
-        }
-
-        private final com.google.protobuf.UnknownFieldSet unknownFields;
-
-        @Override
-        public final com.google.protobuf.UnknownFieldSet
-        getUnknownFields() {
-            return this.unknownFields;
-        }
-
-        private CommonMsg(
-                com.google.protobuf.CodedInputStream input,
-                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-                throws com.google.protobuf.InvalidProtocolBufferException {
-            initFields();
-            int mutable_bitField0_ = 0;
-            com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-                    com.google.protobuf.UnknownFieldSet.newBuilder();
-            try {
-                boolean done = false;
-                while (!done) {
-                    int tag = input.readTag();
-                    switch (tag) {
-                        case 0:
-                            done = true;
-                            break;
-                        default: {
-                            if (!parseUnknownField(input, unknownFields,
-                                    extensionRegistry, tag)) {
-                                done = true;
-                            }
-                            break;
-                        }
-                        case 10: {
-                            bitField0_ |= 0x00000001;
-                            data_ = input.readBytes();
-                            break;
-                        }
-                    }
-                }
-            } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-                throw e.setUnfinishedMessage(this);
-            } catch (java.io.IOException e) {
-                throw new com.google.protobuf.InvalidProtocolBufferException(
-                        e.getMessage()).setUnfinishedMessage(this);
-            } finally {
-                this.unknownFields = unknownFields.build();
-                makeExtensionsImmutable();
-            }
-        }
-
-        public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-            return YouMaiMsg.internal_static_com_proto_msg_CommonMsg_descriptor;
-        }
-
-        protected FieldAccessorTable
-        internalGetFieldAccessorTable() {
-            return YouMaiMsg.internal_static_com_proto_msg_CommonMsg_fieldAccessorTable
-                    .ensureFieldAccessorsInitialized(
-                            YouMaiMsg.CommonMsg.class, YouMaiMsg.CommonMsg.Builder.class);
-        }
-
-        public static com.google.protobuf.Parser<CommonMsg> PARSER =
-                new com.google.protobuf.AbstractParser<CommonMsg>() {
-                    public CommonMsg parsePartialFrom(
-                            com.google.protobuf.CodedInputStream input,
-                            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-                            throws com.google.protobuf.InvalidProtocolBufferException {
-                        return new CommonMsg(input, extensionRegistry);
-                    }
-                };
-
-        @Override
-        public com.google.protobuf.Parser<CommonMsg> getParserForType() {
+        public com.google.protobuf.Parser<PushMsg> getParserForType() {
             return PARSER;
         }
 
@@ -8111,6 +7453,10 @@ public final class YouMaiMsg {
 
         /**
          * <code>optional bytes data = 1;</code>
+         * <p>
+         * <pre>
+         * 具体pb实体
+         * </pre>
          */
         public boolean hasData() {
             return ((bitField0_ & 0x00000001) == 0x00000001);
@@ -8118,13 +7464,69 @@ public final class YouMaiMsg {
 
         /**
          * <code>optional bytes data = 1;</code>
+         * <p>
+         * <pre>
+         * 具体pb实体
+         * </pre>
          */
         public com.google.protobuf.ByteString getData() {
             return data_;
         }
 
+        public static final int CMD_ID_FIELD_NUMBER = 2;
+        private int cmdId_;
+
+        /**
+         * <code>optional int32 cmd_id = 2;</code>
+         * <p>
+         * <pre>
+         * pb对应的cmd_id
+         * </pre>
+         */
+        public boolean hasCmdId() {
+            return ((bitField0_ & 0x00000002) == 0x00000002);
+        }
+
+        /**
+         * <code>optional int32 cmd_id = 2;</code>
+         * <p>
+         * <pre>
+         * pb对应的cmd_id
+         * </pre>
+         */
+        public int getCmdId() {
+            return cmdId_;
+        }
+
+        public static final int MSG_ID_FIELD_NUMBER = 3;
+        private long msgId_;
+
+        /**
+         * <code>optional int64 msg_id = 3;</code>
+         * <p>
+         * <pre>
+         * 仅用于ack确认
+         * </pre>
+         */
+        public boolean hasMsgId() {
+            return ((bitField0_ & 0x00000004) == 0x00000004);
+        }
+
+        /**
+         * <code>optional int64 msg_id = 3;</code>
+         * <p>
+         * <pre>
+         * 仅用于ack确认
+         * </pre>
+         */
+        public long getMsgId() {
+            return msgId_;
+        }
+
         private void initFields() {
             data_ = com.google.protobuf.ByteString.EMPTY;
+            cmdId_ = 0;
+            msgId_ = 0L;
         }
 
         private byte memoizedIsInitialized = -1;
@@ -8144,6 +7546,12 @@ public final class YouMaiMsg {
             if (((bitField0_ & 0x00000001) == 0x00000001)) {
                 output.writeBytes(1, data_);
             }
+            if (((bitField0_ & 0x00000002) == 0x00000002)) {
+                output.writeInt32(2, cmdId_);
+            }
+            if (((bitField0_ & 0x00000004) == 0x00000004)) {
+                output.writeInt64(3, msgId_);
+            }
             getUnknownFields().writeTo(output);
         }
 
@@ -8158,6 +7566,14 @@ public final class YouMaiMsg {
                 size += com.google.protobuf.CodedOutputStream
                         .computeBytesSize(1, data_);
             }
+            if (((bitField0_ & 0x00000002) == 0x00000002)) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeInt32Size(2, cmdId_);
+            }
+            if (((bitField0_ & 0x00000004) == 0x00000004)) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeInt64Size(3, msgId_);
+            }
             size += getUnknownFields().getSerializedSize();
             memoizedSerializedSize = size;
             return size;
@@ -8171,62 +7587,62 @@ public final class YouMaiMsg {
             return super.writeReplace();
         }
 
-        public static YouMaiMsg.CommonMsg parseFrom(
+        public static YouMaiMsg.PushMsg parseFrom(
                 com.google.protobuf.ByteString data)
                 throws com.google.protobuf.InvalidProtocolBufferException {
             return PARSER.parseFrom(data);
         }
 
-        public static YouMaiMsg.CommonMsg parseFrom(
+        public static YouMaiMsg.PushMsg parseFrom(
                 com.google.protobuf.ByteString data,
                 com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws com.google.protobuf.InvalidProtocolBufferException {
             return PARSER.parseFrom(data, extensionRegistry);
         }
 
-        public static YouMaiMsg.CommonMsg parseFrom(byte[] data)
+        public static YouMaiMsg.PushMsg parseFrom(byte[] data)
                 throws com.google.protobuf.InvalidProtocolBufferException {
             return PARSER.parseFrom(data);
         }
 
-        public static YouMaiMsg.CommonMsg parseFrom(
+        public static YouMaiMsg.PushMsg parseFrom(
                 byte[] data,
                 com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws com.google.protobuf.InvalidProtocolBufferException {
             return PARSER.parseFrom(data, extensionRegistry);
         }
 
-        public static YouMaiMsg.CommonMsg parseFrom(java.io.InputStream input)
+        public static YouMaiMsg.PushMsg parseFrom(java.io.InputStream input)
                 throws java.io.IOException {
             return PARSER.parseFrom(input);
         }
 
-        public static YouMaiMsg.CommonMsg parseFrom(
+        public static YouMaiMsg.PushMsg parseFrom(
                 java.io.InputStream input,
                 com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws java.io.IOException {
             return PARSER.parseFrom(input, extensionRegistry);
         }
 
-        public static YouMaiMsg.CommonMsg parseDelimitedFrom(java.io.InputStream input)
+        public static YouMaiMsg.PushMsg parseDelimitedFrom(java.io.InputStream input)
                 throws java.io.IOException {
             return PARSER.parseDelimitedFrom(input);
         }
 
-        public static YouMaiMsg.CommonMsg parseDelimitedFrom(
+        public static YouMaiMsg.PushMsg parseDelimitedFrom(
                 java.io.InputStream input,
                 com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws java.io.IOException {
             return PARSER.parseDelimitedFrom(input, extensionRegistry);
         }
 
-        public static YouMaiMsg.CommonMsg parseFrom(
+        public static YouMaiMsg.PushMsg parseFrom(
                 com.google.protobuf.CodedInputStream input)
                 throws java.io.IOException {
             return PARSER.parseFrom(input);
         }
 
-        public static YouMaiMsg.CommonMsg parseFrom(
+        public static YouMaiMsg.PushMsg parseFrom(
                 com.google.protobuf.CodedInputStream input,
                 com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws java.io.IOException {
@@ -8241,7 +7657,7 @@ public final class YouMaiMsg {
             return newBuilder();
         }
 
-        public static Builder newBuilder(YouMaiMsg.CommonMsg prototype) {
+        public static Builder newBuilder(YouMaiMsg.PushMsg prototype) {
             return newBuilder().mergeFrom(prototype);
         }
 
@@ -8257,25 +7673,29 @@ public final class YouMaiMsg {
         }
 
         /**
-         * Protobuf type {@code CommonMsg}
+         * Protobuf type {@code PushMsg}
+         * <p>
+         * <pre>
+         * 服务端消息推送协议
+         * </pre>
          */
         public static final class Builder extends
                 com.google.protobuf.GeneratedMessage.Builder<Builder> implements
-                // @@protoc_insertion_point(builder_implements:CommonMsg)
-                YouMaiMsg.CommonMsgOrBuilder {
+                // @@protoc_insertion_point(builder_implements:PushMsg)
+                YouMaiMsg.PushMsgOrBuilder {
             public static final com.google.protobuf.Descriptors.Descriptor
             getDescriptor() {
-                return YouMaiMsg.internal_static_com_proto_msg_CommonMsg_descriptor;
+                return YouMaiMsg.internal_static_com_proto_msg_PushMsg_descriptor;
             }
 
             protected FieldAccessorTable
             internalGetFieldAccessorTable() {
-                return YouMaiMsg.internal_static_com_proto_msg_CommonMsg_fieldAccessorTable
+                return YouMaiMsg.internal_static_com_proto_msg_PushMsg_fieldAccessorTable
                         .ensureFieldAccessorsInitialized(
-                                YouMaiMsg.CommonMsg.class, YouMaiMsg.CommonMsg.Builder.class);
+                                YouMaiMsg.PushMsg.class, YouMaiMsg.PushMsg.Builder.class);
             }
 
-            // Construct using YouMaiMsg.CommonMsg.newBuilder()
+            // Construct using YouMaiMsg.PushMsg.newBuilder()
             private Builder() {
                 maybeForceBuilderInitialization();
             }
@@ -8299,6 +7719,10 @@ public final class YouMaiMsg {
                 super.clear();
                 data_ = com.google.protobuf.ByteString.EMPTY;
                 bitField0_ = (bitField0_ & ~0x00000001);
+                cmdId_ = 0;
+                bitField0_ = (bitField0_ & ~0x00000002);
+                msgId_ = 0L;
+                bitField0_ = (bitField0_ & ~0x00000004);
                 return this;
             }
 
@@ -8308,47 +7732,61 @@ public final class YouMaiMsg {
 
             public com.google.protobuf.Descriptors.Descriptor
             getDescriptorForType() {
-                return YouMaiMsg.internal_static_com_proto_msg_CommonMsg_descriptor;
+                return YouMaiMsg.internal_static_com_proto_msg_PushMsg_descriptor;
             }
 
-            public YouMaiMsg.CommonMsg getDefaultInstanceForType() {
-                return YouMaiMsg.CommonMsg.getDefaultInstance();
+            public YouMaiMsg.PushMsg getDefaultInstanceForType() {
+                return YouMaiMsg.PushMsg.getDefaultInstance();
             }
 
-            public YouMaiMsg.CommonMsg build() {
-                YouMaiMsg.CommonMsg result = buildPartial();
+            public YouMaiMsg.PushMsg build() {
+                YouMaiMsg.PushMsg result = buildPartial();
                 if (!result.isInitialized()) {
                     throw newUninitializedMessageException(result);
                 }
                 return result;
             }
 
-            public YouMaiMsg.CommonMsg buildPartial() {
-                YouMaiMsg.CommonMsg result = new YouMaiMsg.CommonMsg(this);
+            public YouMaiMsg.PushMsg buildPartial() {
+                YouMaiMsg.PushMsg result = new YouMaiMsg.PushMsg(this);
                 int from_bitField0_ = bitField0_;
                 int to_bitField0_ = 0;
                 if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
                     to_bitField0_ |= 0x00000001;
                 }
                 result.data_ = data_;
+                if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+                    to_bitField0_ |= 0x00000002;
+                }
+                result.cmdId_ = cmdId_;
+                if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+                    to_bitField0_ |= 0x00000004;
+                }
+                result.msgId_ = msgId_;
                 result.bitField0_ = to_bitField0_;
                 onBuilt();
                 return result;
             }
 
             public Builder mergeFrom(com.google.protobuf.Message other) {
-                if (other instanceof YouMaiMsg.CommonMsg) {
-                    return mergeFrom((YouMaiMsg.CommonMsg) other);
+                if (other instanceof YouMaiMsg.PushMsg) {
+                    return mergeFrom((YouMaiMsg.PushMsg) other);
                 } else {
                     super.mergeFrom(other);
                     return this;
                 }
             }
 
-            public Builder mergeFrom(YouMaiMsg.CommonMsg other) {
-                if (other == YouMaiMsg.CommonMsg.getDefaultInstance()) return this;
+            public Builder mergeFrom(YouMaiMsg.PushMsg other) {
+                if (other == YouMaiMsg.PushMsg.getDefaultInstance()) return this;
                 if (other.hasData()) {
                     setData(other.getData());
+                }
+                if (other.hasCmdId()) {
+                    setCmdId(other.getCmdId());
+                }
+                if (other.hasMsgId()) {
+                    setMsgId(other.getMsgId());
                 }
                 this.mergeUnknownFields(other.getUnknownFields());
                 return this;
@@ -8362,11 +7800,11 @@ public final class YouMaiMsg {
                     com.google.protobuf.CodedInputStream input,
                     com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                     throws java.io.IOException {
-                YouMaiMsg.CommonMsg parsedMessage = null;
+                YouMaiMsg.PushMsg parsedMessage = null;
                 try {
                     parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
                 } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-                    parsedMessage = (YouMaiMsg.CommonMsg) e.getUnfinishedMessage();
+                    parsedMessage = (YouMaiMsg.PushMsg) e.getUnfinishedMessage();
                     throw e;
                 } finally {
                     if (parsedMessage != null) {
@@ -8382,6 +7820,10 @@ public final class YouMaiMsg {
 
             /**
              * <code>optional bytes data = 1;</code>
+             * <p>
+             * <pre>
+             * 具体pb实体
+             * </pre>
              */
             public boolean hasData() {
                 return ((bitField0_ & 0x00000001) == 0x00000001);
@@ -8389,6 +7831,10 @@ public final class YouMaiMsg {
 
             /**
              * <code>optional bytes data = 1;</code>
+             * <p>
+             * <pre>
+             * 具体pb实体
+             * </pre>
              */
             public com.google.protobuf.ByteString getData() {
                 return data_;
@@ -8396,6 +7842,10 @@ public final class YouMaiMsg {
 
             /**
              * <code>optional bytes data = 1;</code>
+             * <p>
+             * <pre>
+             * 具体pb实体
+             * </pre>
              */
             public Builder setData(com.google.protobuf.ByteString value) {
                 if (value == null) {
@@ -8409,6 +7859,10 @@ public final class YouMaiMsg {
 
             /**
              * <code>optional bytes data = 1;</code>
+             * <p>
+             * <pre>
+             * 具体pb实体
+             * </pre>
              */
             public Builder clearData() {
                 bitField0_ = (bitField0_ & ~0x00000001);
@@ -8417,19 +7871,123 @@ public final class YouMaiMsg {
                 return this;
             }
 
-            // @@protoc_insertion_point(builder_scope:CommonMsg)
+            private int cmdId_;
+
+            /**
+             * <code>optional int32 cmd_id = 2;</code>
+             * <p>
+             * <pre>
+             * pb对应的cmd_id
+             * </pre>
+             */
+            public boolean hasCmdId() {
+                return ((bitField0_ & 0x00000002) == 0x00000002);
+            }
+
+            /**
+             * <code>optional int32 cmd_id = 2;</code>
+             * <p>
+             * <pre>
+             * pb对应的cmd_id
+             * </pre>
+             */
+            public int getCmdId() {
+                return cmdId_;
+            }
+
+            /**
+             * <code>optional int32 cmd_id = 2;</code>
+             * <p>
+             * <pre>
+             * pb对应的cmd_id
+             * </pre>
+             */
+            public Builder setCmdId(int value) {
+                bitField0_ |= 0x00000002;
+                cmdId_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional int32 cmd_id = 2;</code>
+             * <p>
+             * <pre>
+             * pb对应的cmd_id
+             * </pre>
+             */
+            public Builder clearCmdId() {
+                bitField0_ = (bitField0_ & ~0x00000002);
+                cmdId_ = 0;
+                onChanged();
+                return this;
+            }
+
+            private long msgId_;
+
+            /**
+             * <code>optional int64 msg_id = 3;</code>
+             * <p>
+             * <pre>
+             * 仅用于ack确认
+             * </pre>
+             */
+            public boolean hasMsgId() {
+                return ((bitField0_ & 0x00000004) == 0x00000004);
+            }
+
+            /**
+             * <code>optional int64 msg_id = 3;</code>
+             * <p>
+             * <pre>
+             * 仅用于ack确认
+             * </pre>
+             */
+            public long getMsgId() {
+                return msgId_;
+            }
+
+            /**
+             * <code>optional int64 msg_id = 3;</code>
+             * <p>
+             * <pre>
+             * 仅用于ack确认
+             * </pre>
+             */
+            public Builder setMsgId(long value) {
+                bitField0_ |= 0x00000004;
+                msgId_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional int64 msg_id = 3;</code>
+             * <p>
+             * <pre>
+             * 仅用于ack确认
+             * </pre>
+             */
+            public Builder clearMsgId() {
+                bitField0_ = (bitField0_ & ~0x00000004);
+                msgId_ = 0L;
+                onChanged();
+                return this;
+            }
+
+            // @@protoc_insertion_point(builder_scope:PushMsg)
         }
 
         static {
-            defaultInstance = new CommonMsg(true);
+            defaultInstance = new PushMsg(true);
             defaultInstance.initFields();
         }
 
-        // @@protoc_insertion_point(class_scope:CommonMsg)
+        // @@protoc_insertion_point(class_scope:PushMsg)
     }
 
-    public interface CommonMsgAckOrBuilder extends
-            // @@protoc_insertion_point(interface_extends:CommonMsgAck)
+    public interface PushMsgAckOrBuilder extends
+            // @@protoc_insertion_point(interface_extends:PushMsgAck)
             com.google.protobuf.MessageOrBuilder {
 
         /**
@@ -8460,29 +8018,29 @@ public final class YouMaiMsg {
     }
 
     /**
-     * Protobuf type {@code CommonMsgAck}
+     * Protobuf type {@code PushMsgAck}
      */
-    public static final class CommonMsgAck extends
+    public static final class PushMsgAck extends
             com.google.protobuf.GeneratedMessage implements
-            // @@protoc_insertion_point(message_implements:CommonMsgAck)
-            CommonMsgAckOrBuilder {
-        // Use CommonMsgAck.newBuilder() to construct.
-        private CommonMsgAck(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+            // @@protoc_insertion_point(message_implements:PushMsgAck)
+            PushMsgAckOrBuilder {
+        // Use PushMsgAck.newBuilder() to construct.
+        private PushMsgAck(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
             super(builder);
             this.unknownFields = builder.getUnknownFields();
         }
 
-        private CommonMsgAck(boolean noInit) {
+        private PushMsgAck(boolean noInit) {
             this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance();
         }
 
-        private static final CommonMsgAck defaultInstance;
+        private static final PushMsgAck defaultInstance;
 
-        public static CommonMsgAck getDefaultInstance() {
+        public static PushMsgAck getDefaultInstance() {
             return defaultInstance;
         }
 
-        public CommonMsgAck getDefaultInstanceForType() {
+        public PushMsgAck getDefaultInstanceForType() {
             return defaultInstance;
         }
 
@@ -8494,7 +8052,7 @@ public final class YouMaiMsg {
             return this.unknownFields;
         }
 
-        private CommonMsgAck(
+        private PushMsgAck(
                 com.google.protobuf.CodedInputStream input,
                 com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws com.google.protobuf.InvalidProtocolBufferException {
@@ -8543,28 +8101,28 @@ public final class YouMaiMsg {
 
         public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-            return YouMaiMsg.internal_static_com_proto_msg_CommonMsgAck_descriptor;
+            return YouMaiMsg.internal_static_com_proto_msg_PushMsgAck_descriptor;
         }
 
         protected FieldAccessorTable
         internalGetFieldAccessorTable() {
-            return YouMaiMsg.internal_static_com_proto_msg_CommonMsgAck_fieldAccessorTable
+            return YouMaiMsg.internal_static_com_proto_msg_PushMsgAck_fieldAccessorTable
                     .ensureFieldAccessorsInitialized(
-                            YouMaiMsg.CommonMsgAck.class, YouMaiMsg.CommonMsgAck.Builder.class);
+                            YouMaiMsg.PushMsgAck.class, YouMaiMsg.PushMsgAck.Builder.class);
         }
 
-        public static com.google.protobuf.Parser<CommonMsgAck> PARSER =
-                new com.google.protobuf.AbstractParser<CommonMsgAck>() {
-                    public CommonMsgAck parsePartialFrom(
+        public static com.google.protobuf.Parser<PushMsgAck> PARSER =
+                new com.google.protobuf.AbstractParser<PushMsgAck>() {
+                    public PushMsgAck parsePartialFrom(
                             com.google.protobuf.CodedInputStream input,
                             com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                             throws com.google.protobuf.InvalidProtocolBufferException {
-                        return new CommonMsgAck(input, extensionRegistry);
+                        return new PushMsgAck(input, extensionRegistry);
                     }
                 };
 
         @Override
-        public com.google.protobuf.Parser<CommonMsgAck> getParserForType() {
+        public com.google.protobuf.Parser<PushMsgAck> getParserForType() {
             return PARSER;
         }
 
@@ -8687,62 +8245,62 @@ public final class YouMaiMsg {
             return super.writeReplace();
         }
 
-        public static YouMaiMsg.CommonMsgAck parseFrom(
+        public static YouMaiMsg.PushMsgAck parseFrom(
                 com.google.protobuf.ByteString data)
                 throws com.google.protobuf.InvalidProtocolBufferException {
             return PARSER.parseFrom(data);
         }
 
-        public static YouMaiMsg.CommonMsgAck parseFrom(
+        public static YouMaiMsg.PushMsgAck parseFrom(
                 com.google.protobuf.ByteString data,
                 com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws com.google.protobuf.InvalidProtocolBufferException {
             return PARSER.parseFrom(data, extensionRegistry);
         }
 
-        public static YouMaiMsg.CommonMsgAck parseFrom(byte[] data)
+        public static YouMaiMsg.PushMsgAck parseFrom(byte[] data)
                 throws com.google.protobuf.InvalidProtocolBufferException {
             return PARSER.parseFrom(data);
         }
 
-        public static YouMaiMsg.CommonMsgAck parseFrom(
+        public static YouMaiMsg.PushMsgAck parseFrom(
                 byte[] data,
                 com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws com.google.protobuf.InvalidProtocolBufferException {
             return PARSER.parseFrom(data, extensionRegistry);
         }
 
-        public static YouMaiMsg.CommonMsgAck parseFrom(java.io.InputStream input)
+        public static YouMaiMsg.PushMsgAck parseFrom(java.io.InputStream input)
                 throws java.io.IOException {
             return PARSER.parseFrom(input);
         }
 
-        public static YouMaiMsg.CommonMsgAck parseFrom(
+        public static YouMaiMsg.PushMsgAck parseFrom(
                 java.io.InputStream input,
                 com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws java.io.IOException {
             return PARSER.parseFrom(input, extensionRegistry);
         }
 
-        public static YouMaiMsg.CommonMsgAck parseDelimitedFrom(java.io.InputStream input)
+        public static YouMaiMsg.PushMsgAck parseDelimitedFrom(java.io.InputStream input)
                 throws java.io.IOException {
             return PARSER.parseDelimitedFrom(input);
         }
 
-        public static YouMaiMsg.CommonMsgAck parseDelimitedFrom(
+        public static YouMaiMsg.PushMsgAck parseDelimitedFrom(
                 java.io.InputStream input,
                 com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws java.io.IOException {
             return PARSER.parseDelimitedFrom(input, extensionRegistry);
         }
 
-        public static YouMaiMsg.CommonMsgAck parseFrom(
+        public static YouMaiMsg.PushMsgAck parseFrom(
                 com.google.protobuf.CodedInputStream input)
                 throws java.io.IOException {
             return PARSER.parseFrom(input);
         }
 
-        public static YouMaiMsg.CommonMsgAck parseFrom(
+        public static YouMaiMsg.PushMsgAck parseFrom(
                 com.google.protobuf.CodedInputStream input,
                 com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws java.io.IOException {
@@ -8757,7 +8315,7 @@ public final class YouMaiMsg {
             return newBuilder();
         }
 
-        public static Builder newBuilder(YouMaiMsg.CommonMsgAck prototype) {
+        public static Builder newBuilder(YouMaiMsg.PushMsgAck prototype) {
             return newBuilder().mergeFrom(prototype);
         }
 
@@ -8773,25 +8331,25 @@ public final class YouMaiMsg {
         }
 
         /**
-         * Protobuf type {@code CommonMsgAck}
+         * Protobuf type {@code PushMsgAck}
          */
         public static final class Builder extends
                 com.google.protobuf.GeneratedMessage.Builder<Builder> implements
-                // @@protoc_insertion_point(builder_implements:CommonMsgAck)
-                YouMaiMsg.CommonMsgAckOrBuilder {
+                // @@protoc_insertion_point(builder_implements:PushMsgAck)
+                YouMaiMsg.PushMsgAckOrBuilder {
             public static final com.google.protobuf.Descriptors.Descriptor
             getDescriptor() {
-                return YouMaiMsg.internal_static_com_proto_msg_CommonMsgAck_descriptor;
+                return YouMaiMsg.internal_static_com_proto_msg_PushMsgAck_descriptor;
             }
 
             protected FieldAccessorTable
             internalGetFieldAccessorTable() {
-                return YouMaiMsg.internal_static_com_proto_msg_CommonMsgAck_fieldAccessorTable
+                return YouMaiMsg.internal_static_com_proto_msg_PushMsgAck_fieldAccessorTable
                         .ensureFieldAccessorsInitialized(
-                                YouMaiMsg.CommonMsgAck.class, YouMaiMsg.CommonMsgAck.Builder.class);
+                                YouMaiMsg.PushMsgAck.class, YouMaiMsg.PushMsgAck.Builder.class);
             }
 
-            // Construct using YouMaiMsg.CommonMsgAck.newBuilder()
+            // Construct using YouMaiMsg.PushMsgAck.newBuilder()
             private Builder() {
                 maybeForceBuilderInitialization();
             }
@@ -8826,23 +8384,23 @@ public final class YouMaiMsg {
 
             public com.google.protobuf.Descriptors.Descriptor
             getDescriptorForType() {
-                return YouMaiMsg.internal_static_com_proto_msg_CommonMsgAck_descriptor;
+                return YouMaiMsg.internal_static_com_proto_msg_PushMsgAck_descriptor;
             }
 
-            public YouMaiMsg.CommonMsgAck getDefaultInstanceForType() {
-                return YouMaiMsg.CommonMsgAck.getDefaultInstance();
+            public YouMaiMsg.PushMsgAck getDefaultInstanceForType() {
+                return YouMaiMsg.PushMsgAck.getDefaultInstance();
             }
 
-            public YouMaiMsg.CommonMsgAck build() {
-                YouMaiMsg.CommonMsgAck result = buildPartial();
+            public YouMaiMsg.PushMsgAck build() {
+                YouMaiMsg.PushMsgAck result = buildPartial();
                 if (!result.isInitialized()) {
                     throw newUninitializedMessageException(result);
                 }
                 return result;
             }
 
-            public YouMaiMsg.CommonMsgAck buildPartial() {
-                YouMaiMsg.CommonMsgAck result = new YouMaiMsg.CommonMsgAck(this);
+            public YouMaiMsg.PushMsgAck buildPartial() {
+                YouMaiMsg.PushMsgAck result = new YouMaiMsg.PushMsgAck(this);
                 int from_bitField0_ = bitField0_;
                 int to_bitField0_ = 0;
                 if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
@@ -8859,16 +8417,16 @@ public final class YouMaiMsg {
             }
 
             public Builder mergeFrom(com.google.protobuf.Message other) {
-                if (other instanceof YouMaiMsg.CommonMsgAck) {
-                    return mergeFrom((YouMaiMsg.CommonMsgAck) other);
+                if (other instanceof YouMaiMsg.PushMsgAck) {
+                    return mergeFrom((YouMaiMsg.PushMsgAck) other);
                 } else {
                     super.mergeFrom(other);
                     return this;
                 }
             }
 
-            public Builder mergeFrom(YouMaiMsg.CommonMsgAck other) {
-                if (other == YouMaiMsg.CommonMsgAck.getDefaultInstance()) return this;
+            public Builder mergeFrom(YouMaiMsg.PushMsgAck other) {
+                if (other == YouMaiMsg.PushMsgAck.getDefaultInstance()) return this;
                 if (other.hasUserId()) {
                     bitField0_ |= 0x00000001;
                     userId_ = other.userId_;
@@ -8889,11 +8447,11 @@ public final class YouMaiMsg {
                     com.google.protobuf.CodedInputStream input,
                     com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                     throws java.io.IOException {
-                YouMaiMsg.CommonMsgAck parsedMessage = null;
+                YouMaiMsg.PushMsgAck parsedMessage = null;
                 try {
                     parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
                 } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-                    parsedMessage = (YouMaiMsg.CommonMsgAck) e.getUnfinishedMessage();
+                    parsedMessage = (YouMaiMsg.PushMsgAck) e.getUnfinishedMessage();
                     throw e;
                 } finally {
                     if (parsedMessage != null) {
@@ -9023,15 +8581,779 @@ public final class YouMaiMsg {
                 return this;
             }
 
-            // @@protoc_insertion_point(builder_scope:CommonMsgAck)
+            // @@protoc_insertion_point(builder_scope:PushMsgAck)
         }
 
         static {
-            defaultInstance = new CommonMsgAck(true);
+            defaultInstance = new PushMsgAck(true);
             defaultInstance.initFields();
         }
 
-        // @@protoc_insertion_point(class_scope:CommonMsgAck)
+        // @@protoc_insertion_point(class_scope:PushMsgAck)
+    }
+
+    public interface S2SPushMsgOrBuilder extends
+            // @@protoc_insertion_point(interface_extends:S2SPushMsg)
+            com.google.protobuf.MessageOrBuilder {
+
+        /**
+         * <code>repeated string user_id = 1;</code>
+         */
+        com.google.protobuf.ProtocolStringList
+        getUserIdList();
+
+        /**
+         * <code>repeated string user_id = 1;</code>
+         */
+        int getUserIdCount();
+
+        /**
+         * <code>repeated string user_id = 1;</code>
+         */
+        String getUserId(int index);
+
+        /**
+         * <code>repeated string user_id = 1;</code>
+         */
+        com.google.protobuf.ByteString
+        getUserIdBytes(int index);
+
+        /**
+         * <code>optional .PushMsg msg = 2;</code>
+         */
+        boolean hasMsg();
+
+        /**
+         * <code>optional .PushMsg msg = 2;</code>
+         */
+        YouMaiMsg.PushMsg getMsg();
+
+        /**
+         * <code>optional .PushMsg msg = 2;</code>
+         */
+        YouMaiMsg.PushMsgOrBuilder getMsgOrBuilder();
+    }
+
+    /**
+     * Protobuf type {@code S2SPushMsg}
+     * <p>
+     * <pre>
+     * 以下服务端用，客户端不用理睬
+     * </pre>
+     */
+    public static final class S2SPushMsg extends
+            com.google.protobuf.GeneratedMessage implements
+            // @@protoc_insertion_point(message_implements:S2SPushMsg)
+            S2SPushMsgOrBuilder {
+        // Use S2SPushMsg.newBuilder() to construct.
+        private S2SPushMsg(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+            super(builder);
+            this.unknownFields = builder.getUnknownFields();
+        }
+
+        private S2SPushMsg(boolean noInit) {
+            this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance();
+        }
+
+        private static final S2SPushMsg defaultInstance;
+
+        public static S2SPushMsg getDefaultInstance() {
+            return defaultInstance;
+        }
+
+        public S2SPushMsg getDefaultInstanceForType() {
+            return defaultInstance;
+        }
+
+        private final com.google.protobuf.UnknownFieldSet unknownFields;
+
+        @Override
+        public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+            return this.unknownFields;
+        }
+
+        private S2SPushMsg(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            initFields();
+            int mutable_bitField0_ = 0;
+            com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+                    com.google.protobuf.UnknownFieldSet.newBuilder();
+            try {
+                boolean done = false;
+                while (!done) {
+                    int tag = input.readTag();
+                    switch (tag) {
+                        case 0:
+                            done = true;
+                            break;
+                        default: {
+                            if (!parseUnknownField(input, unknownFields,
+                                    extensionRegistry, tag)) {
+                                done = true;
+                            }
+                            break;
+                        }
+                        case 10: {
+                            com.google.protobuf.ByteString bs = input.readBytes();
+                            if (!((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+                                userId_ = new com.google.protobuf.LazyStringArrayList();
+                                mutable_bitField0_ |= 0x00000001;
+                            }
+                            userId_.add(bs);
+                            break;
+                        }
+                        case 18: {
+                            YouMaiMsg.PushMsg.Builder subBuilder = null;
+                            if (((bitField0_ & 0x00000001) == 0x00000001)) {
+                                subBuilder = msg_.toBuilder();
+                            }
+                            msg_ = input.readMessage(YouMaiMsg.PushMsg.PARSER, extensionRegistry);
+                            if (subBuilder != null) {
+                                subBuilder.mergeFrom(msg_);
+                                msg_ = subBuilder.buildPartial();
+                            }
+                            bitField0_ |= 0x00000001;
+                            break;
+                        }
+                    }
+                }
+            } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+                throw e.setUnfinishedMessage(this);
+            } catch (java.io.IOException e) {
+                throw new com.google.protobuf.InvalidProtocolBufferException(
+                        e.getMessage()).setUnfinishedMessage(this);
+            } finally {
+                if (((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+                    userId_ = userId_.getUnmodifiableView();
+                }
+                this.unknownFields = unknownFields.build();
+                makeExtensionsImmutable();
+            }
+        }
+
+        public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+            return YouMaiMsg.internal_static_com_proto_msg_S2SPushMsg_descriptor;
+        }
+
+        protected FieldAccessorTable
+        internalGetFieldAccessorTable() {
+            return YouMaiMsg.internal_static_com_proto_msg_S2SPushMsg_fieldAccessorTable
+                    .ensureFieldAccessorsInitialized(
+                            YouMaiMsg.S2SPushMsg.class, YouMaiMsg.S2SPushMsg.Builder.class);
+        }
+
+        public static com.google.protobuf.Parser<S2SPushMsg> PARSER =
+                new com.google.protobuf.AbstractParser<S2SPushMsg>() {
+                    public S2SPushMsg parsePartialFrom(
+                            com.google.protobuf.CodedInputStream input,
+                            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                            throws com.google.protobuf.InvalidProtocolBufferException {
+                        return new S2SPushMsg(input, extensionRegistry);
+                    }
+                };
+
+        @Override
+        public com.google.protobuf.Parser<S2SPushMsg> getParserForType() {
+            return PARSER;
+        }
+
+        private int bitField0_;
+        public static final int USER_ID_FIELD_NUMBER = 1;
+        private com.google.protobuf.LazyStringList userId_;
+
+        /**
+         * <code>repeated string user_id = 1;</code>
+         */
+        public com.google.protobuf.ProtocolStringList
+        getUserIdList() {
+            return userId_;
+        }
+
+        /**
+         * <code>repeated string user_id = 1;</code>
+         */
+        public int getUserIdCount() {
+            return userId_.size();
+        }
+
+        /**
+         * <code>repeated string user_id = 1;</code>
+         */
+        public String getUserId(int index) {
+            return userId_.get(index);
+        }
+
+        /**
+         * <code>repeated string user_id = 1;</code>
+         */
+        public com.google.protobuf.ByteString
+        getUserIdBytes(int index) {
+            return userId_.getByteString(index);
+        }
+
+        public static final int MSG_FIELD_NUMBER = 2;
+        private YouMaiMsg.PushMsg msg_;
+
+        /**
+         * <code>optional .PushMsg msg = 2;</code>
+         */
+        public boolean hasMsg() {
+            return ((bitField0_ & 0x00000001) == 0x00000001);
+        }
+
+        /**
+         * <code>optional .PushMsg msg = 2;</code>
+         */
+        public YouMaiMsg.PushMsg getMsg() {
+            return msg_;
+        }
+
+        /**
+         * <code>optional .PushMsg msg = 2;</code>
+         */
+        public YouMaiMsg.PushMsgOrBuilder getMsgOrBuilder() {
+            return msg_;
+        }
+
+        private void initFields() {
+            userId_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+            msg_ = YouMaiMsg.PushMsg.getDefaultInstance();
+        }
+
+        private byte memoizedIsInitialized = -1;
+
+        public final boolean isInitialized() {
+            byte isInitialized = memoizedIsInitialized;
+            if (isInitialized == 1) return true;
+            if (isInitialized == 0) return false;
+
+            memoizedIsInitialized = 1;
+            return true;
+        }
+
+        public void writeTo(com.google.protobuf.CodedOutputStream output)
+                throws java.io.IOException {
+            getSerializedSize();
+            for (int i = 0; i < userId_.size(); i++) {
+                output.writeBytes(1, userId_.getByteString(i));
+            }
+            if (((bitField0_ & 0x00000001) == 0x00000001)) {
+                output.writeMessage(2, msg_);
+            }
+            getUnknownFields().writeTo(output);
+        }
+
+        private int memoizedSerializedSize = -1;
+
+        public int getSerializedSize() {
+            int size = memoizedSerializedSize;
+            if (size != -1) return size;
+
+            size = 0;
+            {
+                int dataSize = 0;
+                for (int i = 0; i < userId_.size(); i++) {
+                    dataSize += com.google.protobuf.CodedOutputStream
+                            .computeBytesSizeNoTag(userId_.getByteString(i));
+                }
+                size += dataSize;
+                size += 1 * getUserIdList().size();
+            }
+            if (((bitField0_ & 0x00000001) == 0x00000001)) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeMessageSize(2, msg_);
+            }
+            size += getUnknownFields().getSerializedSize();
+            memoizedSerializedSize = size;
+            return size;
+        }
+
+        private static final long serialVersionUID = 0L;
+
+        @Override
+        protected Object writeReplace()
+                throws java.io.ObjectStreamException {
+            return super.writeReplace();
+        }
+
+        public static YouMaiMsg.S2SPushMsg parseFrom(
+                com.google.protobuf.ByteString data)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data);
+        }
+
+        public static YouMaiMsg.S2SPushMsg parseFrom(
+                com.google.protobuf.ByteString data,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data, extensionRegistry);
+        }
+
+        public static YouMaiMsg.S2SPushMsg parseFrom(byte[] data)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data);
+        }
+
+        public static YouMaiMsg.S2SPushMsg parseFrom(
+                byte[] data,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data, extensionRegistry);
+        }
+
+        public static YouMaiMsg.S2SPushMsg parseFrom(java.io.InputStream input)
+                throws java.io.IOException {
+            return PARSER.parseFrom(input);
+        }
+
+        public static YouMaiMsg.S2SPushMsg parseFrom(
+                java.io.InputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            return PARSER.parseFrom(input, extensionRegistry);
+        }
+
+        public static YouMaiMsg.S2SPushMsg parseDelimitedFrom(java.io.InputStream input)
+                throws java.io.IOException {
+            return PARSER.parseDelimitedFrom(input);
+        }
+
+        public static YouMaiMsg.S2SPushMsg parseDelimitedFrom(
+                java.io.InputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            return PARSER.parseDelimitedFrom(input, extensionRegistry);
+        }
+
+        public static YouMaiMsg.S2SPushMsg parseFrom(
+                com.google.protobuf.CodedInputStream input)
+                throws java.io.IOException {
+            return PARSER.parseFrom(input);
+        }
+
+        public static YouMaiMsg.S2SPushMsg parseFrom(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            return PARSER.parseFrom(input, extensionRegistry);
+        }
+
+        public static Builder newBuilder() {
+            return Builder.create();
+        }
+
+        public Builder newBuilderForType() {
+            return newBuilder();
+        }
+
+        public static Builder newBuilder(YouMaiMsg.S2SPushMsg prototype) {
+            return newBuilder().mergeFrom(prototype);
+        }
+
+        public Builder toBuilder() {
+            return newBuilder(this);
+        }
+
+        @Override
+        protected Builder newBuilderForType(
+                BuilderParent parent) {
+            Builder builder = new Builder(parent);
+            return builder;
+        }
+
+        /**
+         * Protobuf type {@code S2SPushMsg}
+         * <p>
+         * <pre>
+         * 以下服务端用，客户端不用理睬
+         * </pre>
+         */
+        public static final class Builder extends
+                com.google.protobuf.GeneratedMessage.Builder<Builder> implements
+                // @@protoc_insertion_point(builder_implements:S2SPushMsg)
+                YouMaiMsg.S2SPushMsgOrBuilder {
+            public static final com.google.protobuf.Descriptors.Descriptor
+            getDescriptor() {
+                return YouMaiMsg.internal_static_com_proto_msg_S2SPushMsg_descriptor;
+            }
+
+            protected FieldAccessorTable
+            internalGetFieldAccessorTable() {
+                return YouMaiMsg.internal_static_com_proto_msg_S2SPushMsg_fieldAccessorTable
+                        .ensureFieldAccessorsInitialized(
+                                YouMaiMsg.S2SPushMsg.class, YouMaiMsg.S2SPushMsg.Builder.class);
+            }
+
+            // Construct using YouMaiMsg.S2SPushMsg.newBuilder()
+            private Builder() {
+                maybeForceBuilderInitialization();
+            }
+
+            private Builder(
+                    BuilderParent parent) {
+                super(parent);
+                maybeForceBuilderInitialization();
+            }
+
+            private void maybeForceBuilderInitialization() {
+                if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+                    getMsgFieldBuilder();
+                }
+            }
+
+            private static Builder create() {
+                return new Builder();
+            }
+
+            public Builder clear() {
+                super.clear();
+                userId_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+                bitField0_ = (bitField0_ & ~0x00000001);
+                if (msgBuilder_ == null) {
+                    msg_ = YouMaiMsg.PushMsg.getDefaultInstance();
+                } else {
+                    msgBuilder_.clear();
+                }
+                bitField0_ = (bitField0_ & ~0x00000002);
+                return this;
+            }
+
+            public Builder clone() {
+                return create().mergeFrom(buildPartial());
+            }
+
+            public com.google.protobuf.Descriptors.Descriptor
+            getDescriptorForType() {
+                return YouMaiMsg.internal_static_com_proto_msg_S2SPushMsg_descriptor;
+            }
+
+            public YouMaiMsg.S2SPushMsg getDefaultInstanceForType() {
+                return YouMaiMsg.S2SPushMsg.getDefaultInstance();
+            }
+
+            public YouMaiMsg.S2SPushMsg build() {
+                YouMaiMsg.S2SPushMsg result = buildPartial();
+                if (!result.isInitialized()) {
+                    throw newUninitializedMessageException(result);
+                }
+                return result;
+            }
+
+            public YouMaiMsg.S2SPushMsg buildPartial() {
+                YouMaiMsg.S2SPushMsg result = new YouMaiMsg.S2SPushMsg(this);
+                int from_bitField0_ = bitField0_;
+                int to_bitField0_ = 0;
+                if (((bitField0_ & 0x00000001) == 0x00000001)) {
+                    userId_ = userId_.getUnmodifiableView();
+                    bitField0_ = (bitField0_ & ~0x00000001);
+                }
+                result.userId_ = userId_;
+                if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+                    to_bitField0_ |= 0x00000001;
+                }
+                if (msgBuilder_ == null) {
+                    result.msg_ = msg_;
+                } else {
+                    result.msg_ = msgBuilder_.build();
+                }
+                result.bitField0_ = to_bitField0_;
+                onBuilt();
+                return result;
+            }
+
+            public Builder mergeFrom(com.google.protobuf.Message other) {
+                if (other instanceof YouMaiMsg.S2SPushMsg) {
+                    return mergeFrom((YouMaiMsg.S2SPushMsg) other);
+                } else {
+                    super.mergeFrom(other);
+                    return this;
+                }
+            }
+
+            public Builder mergeFrom(YouMaiMsg.S2SPushMsg other) {
+                if (other == YouMaiMsg.S2SPushMsg.getDefaultInstance()) return this;
+                if (!other.userId_.isEmpty()) {
+                    if (userId_.isEmpty()) {
+                        userId_ = other.userId_;
+                        bitField0_ = (bitField0_ & ~0x00000001);
+                    } else {
+                        ensureUserIdIsMutable();
+                        userId_.addAll(other.userId_);
+                    }
+                    onChanged();
+                }
+                if (other.hasMsg()) {
+                    mergeMsg(other.getMsg());
+                }
+                this.mergeUnknownFields(other.getUnknownFields());
+                return this;
+            }
+
+            public final boolean isInitialized() {
+                return true;
+            }
+
+            public Builder mergeFrom(
+                    com.google.protobuf.CodedInputStream input,
+                    com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                    throws java.io.IOException {
+                YouMaiMsg.S2SPushMsg parsedMessage = null;
+                try {
+                    parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+                } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+                    parsedMessage = (YouMaiMsg.S2SPushMsg) e.getUnfinishedMessage();
+                    throw e;
+                } finally {
+                    if (parsedMessage != null) {
+                        mergeFrom(parsedMessage);
+                    }
+                }
+                return this;
+            }
+
+            private int bitField0_;
+
+            private com.google.protobuf.LazyStringList userId_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+
+            private void ensureUserIdIsMutable() {
+                if (!((bitField0_ & 0x00000001) == 0x00000001)) {
+                    userId_ = new com.google.protobuf.LazyStringArrayList(userId_);
+                    bitField0_ |= 0x00000001;
+                }
+            }
+
+            /**
+             * <code>repeated string user_id = 1;</code>
+             */
+            public com.google.protobuf.ProtocolStringList
+            getUserIdList() {
+                return userId_.getUnmodifiableView();
+            }
+
+            /**
+             * <code>repeated string user_id = 1;</code>
+             */
+            public int getUserIdCount() {
+                return userId_.size();
+            }
+
+            /**
+             * <code>repeated string user_id = 1;</code>
+             */
+            public String getUserId(int index) {
+                return userId_.get(index);
+            }
+
+            /**
+             * <code>repeated string user_id = 1;</code>
+             */
+            public com.google.protobuf.ByteString
+            getUserIdBytes(int index) {
+                return userId_.getByteString(index);
+            }
+
+            /**
+             * <code>repeated string user_id = 1;</code>
+             */
+            public Builder setUserId(
+                    int index, String value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                ensureUserIdIsMutable();
+                userId_.set(index, value);
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>repeated string user_id = 1;</code>
+             */
+            public Builder addUserId(
+                    String value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                ensureUserIdIsMutable();
+                userId_.add(value);
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>repeated string user_id = 1;</code>
+             */
+            public Builder addAllUserId(
+                    Iterable<String> values) {
+                ensureUserIdIsMutable();
+                com.google.protobuf.AbstractMessageLite.Builder.addAll(
+                        values, userId_);
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>repeated string user_id = 1;</code>
+             */
+            public Builder clearUserId() {
+                userId_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+                bitField0_ = (bitField0_ & ~0x00000001);
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>repeated string user_id = 1;</code>
+             */
+            public Builder addUserIdBytes(
+                    com.google.protobuf.ByteString value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                ensureUserIdIsMutable();
+                userId_.add(value);
+                onChanged();
+                return this;
+            }
+
+            private YouMaiMsg.PushMsg msg_ = YouMaiMsg.PushMsg.getDefaultInstance();
+            private com.google.protobuf.SingleFieldBuilder<
+                    YouMaiMsg.PushMsg, YouMaiMsg.PushMsg.Builder, YouMaiMsg.PushMsgOrBuilder> msgBuilder_;
+
+            /**
+             * <code>optional .PushMsg msg = 2;</code>
+             */
+            public boolean hasMsg() {
+                return ((bitField0_ & 0x00000002) == 0x00000002);
+            }
+
+            /**
+             * <code>optional .PushMsg msg = 2;</code>
+             */
+            public YouMaiMsg.PushMsg getMsg() {
+                if (msgBuilder_ == null) {
+                    return msg_;
+                } else {
+                    return msgBuilder_.getMessage();
+                }
+            }
+
+            /**
+             * <code>optional .PushMsg msg = 2;</code>
+             */
+            public Builder setMsg(YouMaiMsg.PushMsg value) {
+                if (msgBuilder_ == null) {
+                    if (value == null) {
+                        throw new NullPointerException();
+                    }
+                    msg_ = value;
+                    onChanged();
+                } else {
+                    msgBuilder_.setMessage(value);
+                }
+                bitField0_ |= 0x00000002;
+                return this;
+            }
+
+            /**
+             * <code>optional .PushMsg msg = 2;</code>
+             */
+            public Builder setMsg(
+                    YouMaiMsg.PushMsg.Builder builderForValue) {
+                if (msgBuilder_ == null) {
+                    msg_ = builderForValue.build();
+                    onChanged();
+                } else {
+                    msgBuilder_.setMessage(builderForValue.build());
+                }
+                bitField0_ |= 0x00000002;
+                return this;
+            }
+
+            /**
+             * <code>optional .PushMsg msg = 2;</code>
+             */
+            public Builder mergeMsg(YouMaiMsg.PushMsg value) {
+                if (msgBuilder_ == null) {
+                    if (((bitField0_ & 0x00000002) == 0x00000002) &&
+                            msg_ != YouMaiMsg.PushMsg.getDefaultInstance()) {
+                        msg_ =
+                                YouMaiMsg.PushMsg.newBuilder(msg_).mergeFrom(value).buildPartial();
+                    } else {
+                        msg_ = value;
+                    }
+                    onChanged();
+                } else {
+                    msgBuilder_.mergeFrom(value);
+                }
+                bitField0_ |= 0x00000002;
+                return this;
+            }
+
+            /**
+             * <code>optional .PushMsg msg = 2;</code>
+             */
+            public Builder clearMsg() {
+                if (msgBuilder_ == null) {
+                    msg_ = YouMaiMsg.PushMsg.getDefaultInstance();
+                    onChanged();
+                } else {
+                    msgBuilder_.clear();
+                }
+                bitField0_ = (bitField0_ & ~0x00000002);
+                return this;
+            }
+
+            /**
+             * <code>optional .PushMsg msg = 2;</code>
+             */
+            public YouMaiMsg.PushMsg.Builder getMsgBuilder() {
+                bitField0_ |= 0x00000002;
+                onChanged();
+                return getMsgFieldBuilder().getBuilder();
+            }
+
+            /**
+             * <code>optional .PushMsg msg = 2;</code>
+             */
+            public YouMaiMsg.PushMsgOrBuilder getMsgOrBuilder() {
+                if (msgBuilder_ != null) {
+                    return msgBuilder_.getMessageOrBuilder();
+                } else {
+                    return msg_;
+                }
+            }
+
+            /**
+             * <code>optional .PushMsg msg = 2;</code>
+             */
+            private com.google.protobuf.SingleFieldBuilder<
+                    YouMaiMsg.PushMsg, YouMaiMsg.PushMsg.Builder, YouMaiMsg.PushMsgOrBuilder>
+            getMsgFieldBuilder() {
+                if (msgBuilder_ == null) {
+                    msgBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+                            YouMaiMsg.PushMsg, YouMaiMsg.PushMsg.Builder, YouMaiMsg.PushMsgOrBuilder>(
+                            getMsg(),
+                            getParentForChildren(),
+                            isClean());
+                    msg_ = null;
+                }
+                return msgBuilder_;
+            }
+
+            // @@protoc_insertion_point(builder_scope:S2SPushMsg)
+        }
+
+        static {
+            defaultInstance = new S2SPushMsg(true);
+            defaultInstance.initFields();
+        }
+
+        // @@protoc_insertion_point(class_scope:S2SPushMsg)
     }
 
     private static final com.google.protobuf.Descriptors.Descriptor
@@ -9065,20 +9387,20 @@ public final class YouMaiMsg {
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
             internal_static_com_proto_msg_OfflineMsgAck_fieldAccessorTable;
     private static final com.google.protobuf.Descriptors.Descriptor
-            internal_static_com_proto_msg_S2SCommonMsg_descriptor;
+            internal_static_com_proto_msg_PushMsg_descriptor;
     private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
-            internal_static_com_proto_msg_S2SCommonMsg_fieldAccessorTable;
+            internal_static_com_proto_msg_PushMsg_fieldAccessorTable;
     private static final com.google.protobuf.Descriptors.Descriptor
-            internal_static_com_proto_msg_CommonMsg_descriptor;
+            internal_static_com_proto_msg_PushMsgAck_descriptor;
     private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
-            internal_static_com_proto_msg_CommonMsg_fieldAccessorTable;
+            internal_static_com_proto_msg_PushMsgAck_fieldAccessorTable;
     private static final com.google.protobuf.Descriptors.Descriptor
-            internal_static_com_proto_msg_CommonMsgAck_descriptor;
+            internal_static_com_proto_msg_S2SPushMsg_descriptor;
     private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
-            internal_static_com_proto_msg_CommonMsgAck_fieldAccessorTable;
+            internal_static_com_proto_msg_S2SPushMsg_fieldAccessorTable;
 
     public static com.google.protobuf.Descriptors.FileDescriptor
     getDescriptor() {
@@ -9112,28 +9434,29 @@ public final class YouMaiMsg {
                         "]\n\013ChatMsg_Ack\022\017\n\007user_id\030\001 \001(\t\022\016\n\006msg_i",
                 "d\030\002 \001(\003\022-\n\010errer_no\030\003 \001(\0162\033.com.proto.ba" +
                         "sic.ERRNO_CODE\"$\n\rOfflineMsgAck\022\023\n\013msg_i" +
-                        "d_list\030\001 \003(\003\"=\n\014S2SCommonMsg\022\017\n\007user_id\030" +
-                        "\001 \003(\t\022\014\n\004data\030\002 \001(\014\022\016\n\006msg_id\030\003 \001(\003\"\031\n\tC" +
-                        "ommonMsg\022\014\n\004data\030\001 \001(\014\"/\n\014CommonMsgAck\022\017" +
-                        "\n\007user_id\030\001 \001(\t\022\016\n\006msg_id\030\002 \001(\003*\305\003\n\017IM_C" +
-                        "ONTENT_TYPE\022\030\n\024IM_CONTENT_TYPE_TEXT\020\000\022!\n" +
-                        "\035IM_CONTENT_TYPE_SHORT_MESSAGE\020\001\022\034\n\030IM_C" +
-                        "ONTENT_TYPE_CONTACTS\020\002\022!\n\035IM_CONTENT_TYP" +
-                        "E_RECOMMEND_APP\020\003\022\036\n\032IM_CONTENT_TYPE_NO_",
-                "DISTURB\020\004\022!\n\035IM_CONTENT_TYPE_LOCATIONSHA" +
-                        "RE\020\005\022\031\n\025IM_CONTENT_TYPE_IMAGE\020\006\022\026\n\022IM_CO" +
-                        "NTENT_TYPE_AT\020\007\022\027\n\023IM_CONTENT_TYPE_URL\020\010" +
-                        "\022\031\n\025IM_CONTENT_TYPE_AUDIO\020\t\022\031\n\025IM_CONTEN" +
-                        "T_TYPE_VIDEO\020\n\022\034\n\030IM_CONTENT_TYPE_LOCATI" +
-                        "ON\020\013\022\030\n\024IM_CONTENT_TYPE_FILE\020\014\022\033\n\027IM_CON" +
-                        "TENT_TYPE_BIZCARD\020\r\022\032\n\026IM_CONTENT_TYPE_K" +
-                        "AQUAN\020\016*\210\001\n\013MsgProperty\022\025\n\021MSG_PTOPERTY_" +
-                        "NONE\020\001\022\030\n\024MSG_PROPERTY_RECEIPT\020\002\022\027\n\023MSG_" +
-                        "PROPERTY_URGENT\020\003\022\026\n\022MSG_PROPERTY_QUOTE\020",
-                "\004\022\027\n\023MSG_PROPERTY_RECALL\020\005*]\n\013SessionTyp" +
-                        "e\022\027\n\023SESSION_TYPE_SINGLE\020\001\022\032\n\026SESSION_TY" +
-                        "PE_MULTICHAT\020\002\022\031\n\025SESSION_TYPE_ORGGROUP\020" +
-                        "\003"
+                        "d_list\030\001 \003(\003\"7\n\007PushMsg\022\014\n\004data\030\001 \001(\014\022\016\n" +
+                        "\006cmd_id\030\002 \001(\005\022\016\n\006msg_id\030\003 \001(\003\"-\n\nPushMsg" +
+                        "Ack\022\017\n\007user_id\030\001 \001(\t\022\016\n\006msg_id\030\002 \001(\003\"B\n\n" +
+                        "S2SPushMsg\022\017\n\007user_id\030\001 \003(\t\022#\n\003msg\030\002 \001(\013" +
+                        "2\026.PushMsg*\347\003\n\017IM_CONTENT_" +
+                        "TYPE\022\030\n\024IM_CONTENT_TYPE_TEXT\020\000\022!\n\035IM_CON" +
+                        "TENT_TYPE_SHORT_MESSAGE\020\001\022\034\n\030IM_CONTENT_" +
+                        "TYPE_CONTACTS\020\002\022!\n\035IM_CONTENT_TYPE_RECOM",
+                "MEND_APP\020\003\022\036\n\032IM_CONTENT_TYPE_NO_DISTURB" +
+                        "\020\004\022!\n\035IM_CONTENT_TYPE_LOCATIONSHARE\020\005\022\031\n" +
+                        "\025IM_CONTENT_TYPE_IMAGE\020\006\022\026\n\022IM_CONTENT_T" +
+                        "YPE_AT\020\007\022\027\n\023IM_CONTENT_TYPE_URL\020\010\022\031\n\025IM_" +
+                        "CONTENT_TYPE_AUDIO\020\t\022\031\n\025IM_CONTENT_TYPE_" +
+                        "VIDEO\020\n\022\034\n\030IM_CONTENT_TYPE_LOCATION\020\013\022\030\n" +
+                        "\024IM_CONTENT_TYPE_FILE\020\014\022\033\n\027IM_CONTENT_TY" +
+                        "PE_BIZCARD\020\r\022\032\n\026IM_CONTENT_TYPE_KAQUAN\020\016" +
+                        "\022 \n\034IM_CONTENT_TYPE_RED_ENVELOPE\020\017*\210\001\n\013M" +
+                        "sgProperty\022\025\n\021MSG_PTOPERTY_NONE\020\001\022\030\n\024MSG",
+                "_PROPERTY_RECEIPT\020\002\022\027\n\023MSG_PROPERTY_URGE" +
+                        "NT\020\003\022\026\n\022MSG_PROPERTY_QUOTE\020\004\022\027\n\023MSG_PROP" +
+                        "ERTY_RECALL\020\005*]\n\013SessionType\022\027\n\023SESSION_" +
+                        "TYPE_SINGLE\020\001\022\032\n\026SESSION_TYPE_MULTICHAT\020" +
+                        "\002\022\031\n\025SESSION_TYPE_ORGGROUP\020\003"
         };
         com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
                 new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -9184,24 +9507,24 @@ public final class YouMaiMsg {
                 com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_proto_msg_OfflineMsgAck_descriptor,
                 new String[]{"MsgIdList",});
-        internal_static_com_proto_msg_S2SCommonMsg_descriptor =
+        internal_static_com_proto_msg_PushMsg_descriptor =
                 getDescriptor().getMessageTypes().get(6);
-        internal_static_com_proto_msg_S2SCommonMsg_fieldAccessorTable = new
+        internal_static_com_proto_msg_PushMsg_fieldAccessorTable = new
                 com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-                internal_static_com_proto_msg_S2SCommonMsg_descriptor,
-                new String[]{"UserId", "Data", "MsgId",});
-        internal_static_com_proto_msg_CommonMsg_descriptor =
+                internal_static_com_proto_msg_PushMsg_descriptor,
+                new String[]{"Data", "CmdId", "MsgId",});
+        internal_static_com_proto_msg_PushMsgAck_descriptor =
                 getDescriptor().getMessageTypes().get(7);
-        internal_static_com_proto_msg_CommonMsg_fieldAccessorTable = new
+        internal_static_com_proto_msg_PushMsgAck_fieldAccessorTable = new
                 com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-                internal_static_com_proto_msg_CommonMsg_descriptor,
-                new String[]{"Data",});
-        internal_static_com_proto_msg_CommonMsgAck_descriptor =
-                getDescriptor().getMessageTypes().get(8);
-        internal_static_com_proto_msg_CommonMsgAck_fieldAccessorTable = new
-                com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-                internal_static_com_proto_msg_CommonMsgAck_descriptor,
+                internal_static_com_proto_msg_PushMsgAck_descriptor,
                 new String[]{"UserId", "MsgId",});
+        internal_static_com_proto_msg_S2SPushMsg_descriptor =
+                getDescriptor().getMessageTypes().get(8);
+        internal_static_com_proto_msg_S2SPushMsg_fieldAccessorTable = new
+                com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+                internal_static_com_proto_msg_S2SPushMsg_descriptor,
+                new String[]{"UserId", "Msg",});
         YouMaiBasic.getDescriptor();
     }
 

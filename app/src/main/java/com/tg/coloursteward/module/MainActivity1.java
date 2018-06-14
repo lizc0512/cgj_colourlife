@@ -307,6 +307,10 @@ public class MainActivity1 extends AppCompatActivity implements MessageHandler.R
                         //保存key  sectet
                         Tools.saveStringValue(this, Contants.EMPLOYEE_LOGIN.key, key);
                         Tools.saveStringValue(this, Contants.EMPLOYEE_LOGIN.secret, secret);
+
+                        HuxinSdkManager.instance().setKey(key);
+                        HuxinSdkManager.instance().setSecret(secret);
+                        HuxinSdkManager.instance().saveUserInfo();
                         if (skin_code == 101) {//彩生活
                             sendBroadcast(new Intent(ACTION_TICKET_INFO));
                         }

@@ -51,7 +51,7 @@
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="8dp"
                     android:background="@null"
-                    android:maxLength="1500"
+                    android:maxLength="3000"
                     android:padding="4dp"
                     android:textColor="@color/hx_im_recording_text"
                     android:textSize="@dimen/card_font_size_small" />

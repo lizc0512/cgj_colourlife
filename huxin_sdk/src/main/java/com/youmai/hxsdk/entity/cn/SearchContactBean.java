@@ -76,42 +76,6 @@ public class SearchContactBean implements Comparable<SearchContactBean>, Parcela
         }
     }
 
-    protected SearchContactBean(Parcel in) {
-        contactId = in.readInt();
-        displayName = in.readString();
-        phoneNum = in.readString();
-        wholePinyin = in.readString();
-        wholeT9 = in.readString();
-        simplepinyin = in.readString();
-        simplepT9 = in.readString();
-        iconUrl = in.readString();
-        info = in.readString();
-        infoId = in.readLong();
-        searchKey = in.readString();
-        searchType = in.readInt();
-        mDuoYinzi = in.readParcelable(DuoYinZi.class.getClassLoader());
-        wholePinYinFindIndex = in.createIntArray();
-        nextSearchContactBean = in.readParcelable(SearchContactBean.class.getClassLoader());
-        indexPinyin = in.createStringArrayList();
-        uuid = in.readString();
-        username = in.readString();
-        oauthType = in.readString();
-        developerCode = in.readString();
-        clientCode = in.readString();
-    }
-
-    public static final Creator<SearchContactBean> CREATOR = new Creator<SearchContactBean>() {
-        @Override
-        public SearchContactBean createFromParcel(Parcel in) {
-            return new SearchContactBean(in);
-        }
-
-        @Override
-        public SearchContactBean[] newArray(int size) {
-            return new SearchContactBean[size];
-        }
-    };
-
     public long getInfoId() {
         return infoId;
     }
@@ -317,26 +281,62 @@ public class SearchContactBean implements Comparable<SearchContactBean>, Parcela
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(contactId);
-        dest.writeString(displayName);
-        dest.writeString(phoneNum);
-        dest.writeString(wholePinyin);
-        dest.writeString(wholeT9);
-        dest.writeString(simplepinyin);
-        dest.writeString(simplepT9);
-        dest.writeString(iconUrl);
-        dest.writeString(info);
-        dest.writeLong(infoId);
-        dest.writeString(searchKey);
-        dest.writeInt(searchType);
-        dest.writeParcelable(mDuoYinzi, flags);
-        dest.writeIntArray(wholePinYinFindIndex);
-        dest.writeParcelable(nextSearchContactBean, flags);
-        dest.writeString(uuid);
-        dest.writeString(username);
-        dest.writeString(oauthType);
-        dest.writeString(developerCode);
-        dest.writeString(clientCode);
+        dest.writeInt(this.contactId);
+        dest.writeString(this.displayName);
+        dest.writeString(this.phoneNum);
+        dest.writeString(this.wholePinyin);
+        dest.writeString(this.wholeT9);
+        dest.writeString(this.simplepinyin);
+        dest.writeString(this.simplepT9);
+        dest.writeString(this.iconUrl);
+        dest.writeString(this.info);
+        dest.writeLong(this.infoId);
+        dest.writeString(this.searchKey);
+        dest.writeInt(this.searchType);
+        dest.writeParcelable(this.mDuoYinzi, flags);
+        dest.writeIntArray(this.wholePinYinFindIndex);
+        dest.writeParcelable(this.nextSearchContactBean, flags);
+        dest.writeStringList(this.indexPinyin);
+        dest.writeString(this.uuid);
+        dest.writeString(this.username);
+        dest.writeString(this.oauthType);
+        dest.writeString(this.developerCode);
+        dest.writeString(this.clientCode);
     }
 
+    protected SearchContactBean(Parcel in) {
+        this.contactId = in.readInt();
+        this.displayName = in.readString();
+        this.phoneNum = in.readString();
+        this.wholePinyin = in.readString();
+        this.wholeT9 = in.readString();
+        this.simplepinyin = in.readString();
+        this.simplepT9 = in.readString();
+        this.iconUrl = in.readString();
+        this.info = in.readString();
+        this.infoId = in.readLong();
+        this.searchKey = in.readString();
+        this.searchType = in.readInt();
+        this.mDuoYinzi = in.readParcelable(DuoYinZi.class.getClassLoader());
+        this.wholePinYinFindIndex = in.createIntArray();
+        this.nextSearchContactBean = in.readParcelable(SearchContactBean.class.getClassLoader());
+        this.indexPinyin = in.createStringArrayList();
+        this.uuid = in.readString();
+        this.username = in.readString();
+        this.oauthType = in.readString();
+        this.developerCode = in.readString();
+        this.clientCode = in.readString();
+    }
+
+    public static final Creator<SearchContactBean> CREATOR = new Creator<SearchContactBean>() {
+        @Override
+        public SearchContactBean createFromParcel(Parcel source) {
+            return new SearchContactBean(source);
+        }
+
+        @Override
+        public SearchContactBean[] newArray(int size) {
+            return new SearchContactBean[size];
+        }
+    };
 }

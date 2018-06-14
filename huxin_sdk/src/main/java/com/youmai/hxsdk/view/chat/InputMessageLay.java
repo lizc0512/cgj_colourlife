@@ -399,9 +399,11 @@ public class InputMessageLay extends AutoHeightLayout implements View.OnClickLis
                     } else {
                         sendBtn.setImageResource(R.drawable.hx_im_bar_send);
                     }
-                }
-                // -> 发送
-                else {
+                } else if (str.endsWith("@")) {
+                    if (mKeyBoardBarViewListener != null) {
+                        mKeyBoardBarViewListener.onGroupAt();
+                    }
+                } else {// -> 发送
                     if (mIsMultimediaVisibility) {
                         sendBtn.setVisibility(VISIBLE);
                         moreImg.setVisibility(GONE);
@@ -435,6 +437,16 @@ public class InputMessageLay extends AutoHeightLayout implements View.OnClickLis
             msgLay.setBackgroundResource(R.drawable.hx_im_bar_chat_bg);
         }
     }
+
+
+    public void addEditText(String name) {
+        String msg = msgEdit.getText().toString().trim();
+        if (!msg.contains(name)) {
+            msg = msg + name;
+            msgEdit.setText(msg);
+        }
+    }
+
 
     /**
      * 设置更多工具的状态
@@ -997,6 +1009,8 @@ public class InputMessageLay extends AutoHeightLayout implements View.OnClickLis
          * 点击退出驾驶模式
          */
         void onDrivingExit();
+
+        void onGroupAt();
 
         void onScroll();
 

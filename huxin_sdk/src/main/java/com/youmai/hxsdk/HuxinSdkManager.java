@@ -13,13 +13,16 @@ import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.google.protobuf.GeneratedMessage;
 import com.youmai.hxsdk.config.AppConfig;
+import com.youmai.hxsdk.config.ColorsConfig;
 import com.youmai.hxsdk.db.manager.GreenDBIMManager;
 import com.youmai.hxsdk.entity.IpConfig;
 import com.youmai.hxsdk.entity.RespBaseBean;
@@ -38,13 +41,17 @@ import com.youmai.hxsdk.socket.ReceiveListener;
 import com.youmai.hxsdk.sp.SPDataUtil;
 import com.youmai.hxsdk.utils.AppUtils;
 import com.youmai.hxsdk.utils.GsonUtil;
+import com.youmai.hxsdk.utils.ListUtils;
 import com.youmai.hxsdk.utils.LogFile;
 import com.youmai.hxsdk.utils.StringUtils;
 import com.youmai.hxsdk.view.chat.utils.EmotionInit;
 
 import java.net.InetSocketAddress;
+import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by colin on 2016/7/15.
@@ -189,6 +196,12 @@ public class HuxinSdkManager {
 
 
     private void initWork(Context context) {
+        if (AppConfig.LAUNCH_MODE == 0) {
+            Toast.makeText(mContext, mContext.getString(R.string.hx_dev_you_mai), Toast.LENGTH_SHORT).show();
+        } else if (AppConfig.LAUNCH_MODE == 1) {
+            Toast.makeText(mContext, mContext.getString(R.string.hx_color_test), Toast.LENGTH_SHORT).show();
+        }
+
         EmotionInit.init(context.getApplicationContext());     //表情初始化
         //initEmo();
 
@@ -300,6 +313,22 @@ public class HuxinSdkManager {
         mUserInfo.setUserName(userName);
     }
 
+
+    public String getKey() {
+        return mUserInfo.getKey();
+    }
+
+    public void setKey(String key) {
+        mUserInfo.setKey(key);
+    }
+
+    public String getSecret() {
+        return mUserInfo.getSecret();
+    }
+
+    public void setSecret(String secret) {
+        mUserInfo.setSecret(secret);
+    }
 
     public void loginOut() {
         if (mContext != null && binded == BIND_STATUS.BINDED) {
@@ -539,6 +568,37 @@ public class HuxinSdkManager {
 
 
     /**
+     * 红包接口签名方法
+     *
+     * @param params
+     * @return
+     */
+    public static String redPackageSign(@NonNull ContentValues params) {
+        List<String> list = new ArrayList<>();
+        try {
+            for (Map.Entry<String, Object> entry : params.valueSet()) {
+                String key = entry.getKey(); // name
+                String value = entry.getValue().toString(); // value
+                list.add(key + "=" + URLEncoder.encode(value, "UTF-8"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        Collections.sort(list);
+
+        StringBuilder sb = new StringBuilder();
+        for (String str : list) {
+            sb.append(str).append("&");
+        }
+        sb.append("secret=" + ColorsConfig.SECRET);
+
+        return AppUtils.md5(sb.toString()).toUpperCase();
+
+    }
+
+
+    /**
      * 用户tcp协议重登录，仅仅用于测试
      *
      * @param uuid
@@ -702,7 +762,7 @@ public class HuxinSdkManager {
         imContentUtil.appendBarTime(secondsTime);
         imContentUtil.appendSourcePhone(sourcePhone);
         imContentUtil.appendForwardCount(forwardCount);
-        msgData.setMsgContent(imContentUtil.serializeImageToString());
+        msgData.setMsgContent(imContentUtil.serializeToString());
 
         YouMaiMsg.ChatMsg.Builder builder = YouMaiMsg.ChatMsg.newBuilder();
         builder.setData(msgData);
@@ -771,7 +831,7 @@ public class HuxinSdkManager {
 
         IMContentUtil imContentUtil = new IMContentUtil();
         imContentUtil.appendBigFileId(fileId, fileName, fileSize);
-        msgData.setMsgContent(imContentUtil.serializeBigFileToString());
+        msgData.setMsgContent(imContentUtil.serializeToString());
 
         YouMaiMsg.ChatMsg.Builder builder = YouMaiMsg.ChatMsg.newBuilder();
         builder.setData(msgData);
@@ -782,6 +842,39 @@ public class HuxinSdkManager {
 
     }
 
+
+    /**
+     * 打开个人红包
+     *
+     * @param destUuid
+     * @param value
+     * @param callback
+     */
+    public void openRedPackage(String destUuid, String value, String title,
+                               ReceiveListener callback) {
+        YouMaiMsg.MsgData.Builder msgData = YouMaiMsg.MsgData.newBuilder();
+        msgData.setSrcUserId(getUuid());
+        msgData.setSrcAvatar(getHeadUrl());
+        msgData.setSrcSex(getSex());
+        msgData.setSrcUserName(getUserName());
+        msgData.setSrcRealname(getRealName());
+        msgData.setSrcMobile(getPhoneNum());
+        msgData.setDestUserId(destUuid);
+        msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_RED_ENVELOPE);
+        msgData.setSessionType(YouMaiMsg.SessionType.SESSION_TYPE_SINGLE);
+
+        IMContentUtil imContentUtil = new IMContentUtil();
+        imContentUtil.appendRedPackageValue(value);
+        imContentUtil.appendRedPackageTitle(title);
+
+        msgData.setMsgContent(imContentUtil.serializeToString());
+
+        YouMaiMsg.ChatMsg.Builder builder = YouMaiMsg.ChatMsg.newBuilder();
+        builder.setData(msgData);
+        YouMaiMsg.ChatMsg chatMsg = builder.build();
+
+        sendProto(chatMsg, YouMaiBasic.COMMANDID.CID_CHAT_BUDDY_VALUE, callback);
+    }
 
     /**
      * 创建群组
@@ -941,7 +1034,8 @@ public class HuxinSdkManager {
      * @param groupName
      * @param content
      */
-    public void sendTextInGroup(int groupId, String groupName, String content, ReceiveListener callback) {
+    public void sendTextInGroup(int groupId, String groupName, String content,
+                                ArrayList<String> atList, ReceiveListener callback) {
         YouMaiMsg.MsgData.Builder msgData = YouMaiMsg.MsgData.newBuilder();
         msgData.setSrcUserId(getUuid());
         msgData.setSrcAvatar(getHeadUrl());
@@ -951,6 +1045,13 @@ public class HuxinSdkManager {
         msgData.setSrcMobile(getPhoneNum());
         msgData.setGroupId(groupId);
         msgData.setGroupName(groupName);
+
+        if (!ListUtils.isEmpty(atList)) {
+            for (String item : atList) {
+                msgData.addForcePushIdsList(item);
+            }
+        }
+
         msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_TEXT);
         msgData.setSessionType(YouMaiMsg.SessionType.SESSION_TYPE_MULTICHAT);
 
@@ -1040,7 +1141,7 @@ public class HuxinSdkManager {
         imContentUtil.appendImgWidth(imgWidth);
         imContentUtil.appendImgHeight(imgHeight);
 
-        msgData.setMsgContent(imContentUtil.serializeImageToString());
+        msgData.setMsgContent(imContentUtil.serializeToString());
 
         YouMaiMsg.ChatMsg.Builder builder = YouMaiMsg.ChatMsg.newBuilder();
         builder.setData(msgData);
@@ -1145,13 +1246,248 @@ public class HuxinSdkManager {
 
         IMContentUtil imContentUtil = new IMContentUtil();
         imContentUtil.appendBigFileId(fileId, fileName, fileSize);
-        msgData.setMsgContent(imContentUtil.serializeBigFileToString());
+        msgData.setMsgContent(imContentUtil.serializeToString());
 
         YouMaiMsg.ChatMsg.Builder builder = YouMaiMsg.ChatMsg.newBuilder();
         builder.setData(msgData);
         YouMaiMsg.ChatMsg chatMsg = builder.build();
 
         sendProto(chatMsg, YouMaiBasic.COMMANDID.CID_CHAT_GROUP_VALUE, callback);
+    }
+
+
+    /**
+     * 打开群红包
+     *
+     * @param destUuid
+     * @param value
+     * @param callback
+     */
+    public void openRedPackageInGroup(String destUuid, String value, ReceiveListener callback) {
+        YouMaiMsg.MsgData.Builder msgData = YouMaiMsg.MsgData.newBuilder();
+        msgData.setSrcUserId(getUuid());
+        msgData.setSrcAvatar(getHeadUrl());
+        msgData.setSrcSex(getSex());
+        msgData.setSrcUserName(getUserName());
+        msgData.setSrcRealname(getRealName());
+        msgData.setSrcMobile(getPhoneNum());
+        msgData.setDestUserId(destUuid);
+        msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_RED_ENVELOPE);
+        msgData.setSessionType(YouMaiMsg.SessionType.SESSION_TYPE_ORGGROUP);
+
+        IMContentUtil imContentUtil = new IMContentUtil();
+        imContentUtil.appendRedPackageValue(value);
+
+        msgData.setMsgContent(imContentUtil.serializeToString());
+
+        YouMaiMsg.ChatMsg.Builder builder = YouMaiMsg.ChatMsg.newBuilder();
+        builder.setData(msgData);
+        YouMaiMsg.ChatMsg chatMsg = builder.build();
+
+        sendProto(chatMsg, YouMaiBasic.COMMANDID.CID_CHAT_GROUP_VALUE, callback);
+    }
+
+    public void reqRedPackageShareConfig(IGetListener listener) {
+        String url = ColorsConfig.LISHI_SHARECONFIG;
+        ContentValues params = new ContentValues();
+        ColorsConfig.commonParams(params);
+
+        HttpConnector.httpGet(url, params, listener);
+
+    }
+
+
+    public void reqRedPackageStandardConfig(IGetListener listener) {
+        String url = ColorsConfig.LISHI_STANDARDCONFIG;
+        ContentValues params = new ContentValues();
+        ColorsConfig.commonParams(params);
+        HttpConnector.httpGet(url, params, listener);
+    }
+
+
+    public void reqRedPackageList(IGetListener listener) {
+        String url = ColorsConfig.LISHI_LIST;
+        ContentValues params = new ContentValues();
+
+        String uuid = getUuid();
+        String appID = ColorsConfig.getAppID();
+        String nonce_str = "123456";
+
+        params.put("user_uuid", uuid);
+        params.put("appID", appID);
+        params.put("nonce_str", nonce_str);
+
+        String signature = redPackageSign(params);
+
+        params.put("signature", signature);
+
+        ColorsConfig.commonParams(params);
+
+        HttpConnector.httpGet(url, params, listener);
+    }
+
+
+    public void reqSendSingleRedPackage(int moneySingle, String blessing, String pano,
+                                        String transPassword, IGetListener listener) {
+        String url = ColorsConfig.LISHI_SEND;
+        ContentValues params = new ContentValues();
+
+        String uuid = getUuid();
+        String nickname = getRealName();
+        String mobile = getPhoneNum();
+        String head_img_url = getHeadUrl();
+        String appID = ColorsConfig.getAppID();
+        String nonce_str = "123456";
+
+        params.put("user_uuid", uuid);
+        params.put("nickname", nickname);
+        params.put("mobile", mobile);
+        params.put("head_img_url", head_img_url);
+        params.put("lsType", 1);
+        params.put("numberTotal", 1);
+        params.put("moneySingle", moneySingle);
+        params.put("blessing", blessing);
+        params.put("pano", pano);
+        params.put("transPassword", transPassword);
+        params.put("appID", appID);
+        params.put("nonce_str", nonce_str);
+
+        String signature = redPackageSign(params);
+
+        params.put("signature", signature);
+
+        ColorsConfig.commonParams(params);
+
+        HttpConnector.httpGet(url, params, listener);
+    }
+
+    public void reqSendGroupRedPackage(int numberTotal, int moneyTotal,
+                                       String blessing, String pano, String transPassword,
+                                       IGetListener listener) {
+        String url = ColorsConfig.LISHI_SEND;
+        ContentValues params = new ContentValues();
+
+        String uuid = getUuid();
+        String nickname = getRealName();
+        String mobile = getPhoneNum();
+        String head_img_url = getHeadUrl();
+        String appID = ColorsConfig.getAppID();
+        String nonce_str = "123456";
+
+        params.put("user_uuid", uuid);
+        params.put("nickname", nickname);
+        params.put("mobile", mobile);
+        params.put("head_img_url", head_img_url);
+        params.put("lsType", 2);
+        params.put("numberTotal", numberTotal);
+        params.put("moneyTotal", moneyTotal);
+        params.put("blessing", blessing);
+        params.put("pano", pano);
+        params.put("transPassword", transPassword);
+        params.put("appID", appID);
+        params.put("nonce_str", nonce_str);
+
+        String signature = redPackageSign(params);
+
+        params.put("signature", signature);
+
+        ColorsConfig.commonParams(params);
+
+        HttpConnector.httpGet(url, params, listener);
+    }
+
+
+    public void openRedPackage(String lishiUuid, IGetListener listener) {
+        String url = ColorsConfig.LISHI_OPEN;
+        ContentValues params = new ContentValues();
+
+        String uuid = getUuid();
+        String appID = ColorsConfig.getAppID();
+        String nonce_str = "123456";
+
+        params.put("lishiUuid", lishiUuid);
+        params.put("user_uuid", uuid);
+        params.put("appID", appID);
+        params.put("nonce_str", nonce_str);
+
+        String signature = redPackageSign(params);
+
+        params.put("signature", signature);
+
+        ColorsConfig.commonParams(params);
+
+        HttpConnector.httpGet(url, params, listener);
+    }
+
+    public void grabRedPackage(String lishiUuid, IGetListener listener) {
+        String url = ColorsConfig.LISHI_GRAB;
+        ContentValues params = new ContentValues();
+
+        String uuid = getUuid();
+        String nickname = getRealName();
+        String mobile = getPhoneNum();
+        String head_img_url = getHeadUrl();
+        String appID = ColorsConfig.getAppID();
+        String nonce_str = "123456";
+
+        params.put("lishiUuid", lishiUuid);
+        params.put("user_uuid", uuid);
+        params.put("nickname", nickname);
+        params.put("mobile", mobile);
+        params.put("head_img_url", head_img_url);
+        params.put("appID", appID);
+        params.put("nonce_str", nonce_str);
+
+        String signature = redPackageSign(params);
+
+        params.put("signature", signature);
+
+        ColorsConfig.commonParams(params);
+
+        HttpConnector.httpGet(url, params, listener);
+    }
+
+
+    public void redPackageDetail(String lishiUuid, IGetListener listener) {
+        String url = ColorsConfig.LISHI_DETAIL;
+        ContentValues params = new ContentValues();
+
+        String uuid = getUuid();
+        String appID = ColorsConfig.getAppID();
+        String nonce_str = "123456";
+
+        params.put("lishiUuid", lishiUuid);
+        params.put("user_uuid", uuid);
+        params.put("appID", appID);
+        params.put("nonce_str", nonce_str);
+
+        String signature = redPackageSign(params);
+
+        params.put("signature", signature);
+
+        ColorsConfig.commonParams(params);
+
+        HttpConnector.httpGet(url, params, listener);
+    }
+
+    /**
+     * 验证支付密码
+     */
+    public void checkPayPwd(String password, IGetListener listener) {
+        String nameSpace = ColorsConfig.CHECK_PAYPWD;
+
+        String url = ColorsConfig.CP_MOBILE_HOST + nameSpace;
+        long ts = System.currentTimeMillis() / 1000;
+
+        ContentValues params = new ContentValues();
+        params.put("password", password);
+        params.put("key", getKey());
+        params.put("secret", getSecret());
+        params.put("ve", "1.0.0");
+        params.put("ts", ts);
+        ColorsConfig.cpMobileSign(params, nameSpace);
+
+        HttpConnector.httpGet(url, params, listener);
     }
 
 

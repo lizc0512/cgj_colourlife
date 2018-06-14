@@ -33,4 +33,9 @@ public class APath {
      * 员工名片
      */
     public static final String EMPLOYEE_DATA_ACT = "/color/employee";
+
+    /**
+     * 消息转发
+     */
+    public static final String MSG_FORWARD = "/module/forward"; //转发
 }

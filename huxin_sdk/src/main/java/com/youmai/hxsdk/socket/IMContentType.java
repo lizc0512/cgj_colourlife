@@ -40,6 +40,9 @@ public enum IMContentType {
     CONTENT_FILE_SIZE,
 
     CONTEXT_IMAGE_W,   //图片宽
-    CONTEXT_IMAGE_H    //图片高
+    CONTEXT_IMAGE_H,    //图片高
+
+    CONTEXT_RED_PACKAGE,    //红包金额 单位分
+    CONTEXT_RED_TITLE,    //红包标题
 
 }

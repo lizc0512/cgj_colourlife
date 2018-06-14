@@ -16,13 +16,16 @@ import org.json.JSONObject;
 public class UserInfo {
     private String uuid;   //用户UUID
     private String phoneNum;   //用户电话号码
-    private String realName;   //用户名称
+    private String realName;   //用户名称，对应OA真实姓名
     private String sex;   //用户性别
     private String avatar;   //用户头像
     private String accessToken;   //用户token
     private String expireTime;   //token过期时间 单位秒
     private String appTs;
-    private String userName;   //用户token
+    private String userName;   //用户名，OA账号
+
+    private String key;
+    private String secret;
 
     private boolean isChange;
 
@@ -167,6 +170,39 @@ public class UserInfo {
         this.userName = userName;
     }
 
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        try {
+            if (!this.key.equals(key)) {
+                isChange = true;
+            }
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+
+        this.key = key;
+    }
+
+    public String getSecret() {
+        return secret;
+    }
+
+    public void setSecret(String secret) {
+        try {
+            if (!this.secret.equals(secret)) {
+                isChange = true;
+            }
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+
+        this.secret = secret;
+    }
+
     public void saveJson(Context context) {
         if (context != null && isChange) {
             String json = GsonUtil.format(this);
@@ -190,7 +226,8 @@ public class UserInfo {
                 expireTime = jsonObject.optString("expireTime");
                 appTs = jsonObject.optString("appTs");
                 userName = jsonObject.optString("userName");
-
+                key = jsonObject.optString("key");
+                secret = jsonObject.optString("secret");
             } catch (Exception e) {
                 e.printStackTrace();
             }

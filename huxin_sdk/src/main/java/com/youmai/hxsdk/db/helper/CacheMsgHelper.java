@@ -127,10 +127,17 @@ public class CacheMsgHelper {
         if (setRead) {
             List<CacheMsgBean> unReadList = new ArrayList<>();
             for (CacheMsgBean checkBean : list) {
-                if (checkBean.getMsgStatus() == CacheMsgBean.RECEIVE_UNREAD) {
+                if (checkBean.getMsgStatus() == CacheMsgBean.SEND_GOING) {
+                    checkBean.setMsgStatus(CacheMsgBean.SEND_FAILED);
+                } else if (checkBean.getMsgStatus() == CacheMsgBean.RECEIVE_UNREAD) {
                     checkBean.setMsgStatus(CacheMsgBean.RECEIVE_READ);
-                    unReadList.add(checkBean);
                 }
+
+                if(checkBean.getIsAtMe()){
+                    checkBean.setIsAtMe(false);
+                }
+
+                unReadList.add(checkBean);
             }
             if (unReadList.size() > 0) {
                 CacheMsgHelper.instance().updateList(context, unReadList);

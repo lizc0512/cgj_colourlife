@@ -14,4 +14,11 @@
         <item>↑##@@**2 我的部门</item>
     </string-array>
 
+
+
+    <string-array name="red_title">
+        <item>我收到的</item>
+        <item>我发出的</item>
+    </string-array>
+
 </resources>

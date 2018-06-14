@@ -28,6 +28,7 @@ import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.IMFilePreviewActivity;
 import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.activity.CropMapActivity;
+import com.youmai.hxsdk.activity.IMGroupActivity;
 import com.youmai.hxsdk.activity.PictureIndicatorActivity;
 import com.youmai.hxsdk.config.AppConfig;
 import com.youmai.hxsdk.config.FileConfig;
@@ -98,7 +99,7 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
     private static final int NAME_CHANGED = 102;//群名修改
     private static final int OWNER_CHANGED = 103;//群主转让
 
-    private static final int HANDLER_REFRESH_PROGREE = 0;
+    private static final int HANDLER_REFRESH_PROGRESS = 0;
 
     private Activity mAct;
     private RecyclerView mRecyclerView;
@@ -207,14 +208,14 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
                 view = inflater.inflate(R.layout.hx_fragment_im_right_video_item, parent, false);
                 holder = new VideoViewHolder(view);
                 break;
-            /*case RED_PACKAGE_LEFT:
+            case RED_PACKAGE_LEFT:
                 view = inflater.inflate(R.layout.hx_fragment_im_left_red_package_item, parent, false);
                 holder = new RedPackageHolder(view);
                 break;
             case RED_PACKAGE_RIGHT:
                 view = inflater.inflate(R.layout.hx_fragment_im_right_red_package_item, parent, false);
                 holder = new RedPackageHolder(view);
-                break;*/
+                break;
             case MEMBER_CHANGED:
                 view = inflater.inflate(R.layout.hx_group_im_member_change_item, parent, false);
                 holder = new GroupChangedViewHolder(view);
@@ -252,9 +253,9 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
             onBindFile((FileViewHolder) holder, position);
         } else if (holder instanceof VideoViewHolder) {//视频
             onBindVideo((VideoViewHolder) holder, position);
-        } /*else if (holder instanceof RedPackageHolder) {//红包
+        } else if (holder instanceof RedPackageHolder) {//红包
             onBindRedPackage((RedPackageHolder) holder, position);
-        } */else if (holder instanceof GroupChangedViewHolder) {//群成员变动
+        } else if (holder instanceof GroupChangedViewHolder) {//群成员变动
             onBindGroupChanged((GroupChangedViewHolder) holder, position);
         } else if (holder instanceof GroupChangedViewHolder) {//群成员变动
             onBindGroupChanged((GroupChangedViewHolder) holder, position);
@@ -302,12 +303,12 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
             case CacheMsgBean.RECEIVE_VIDEO:
                 oriType = VIDEO_LEFT;
                 break;
-            /*case CacheMsgBean.SEND_REDPACKAGE:
+            case CacheMsgBean.SEND_REDPACKAGE:
                 oriType = RED_PACKAGE_RIGHT;
                 break;
             case CacheMsgBean.RECEIVE_REDPACKAGE:
                 oriType = RED_PACKAGE_LEFT;
-                break;*/
+                break;
             case CacheMsgBean.GROUP_MEMBER_CHANGED:
                 oriType = MEMBER_CHANGED;
                 break;
@@ -511,7 +512,7 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
     /**
      * 红包
      */
-    /*private void onBindRedPackage(final RedPackageHolder videoViewHolder, final int position) {
+    private void onBindRedPackage(final RedPackageHolder videoViewHolder, final int position) {
         final CacheMsgBean cacheMsgBean = mImBeanList.get(position);
         final CacheMsgVideo cacheMsgVideo = (CacheMsgVideo) cacheMsgBean.getJsonBodyObj();
         showSendStart(videoViewHolder, cacheMsgBean.getMsgStatus(), cacheMsgBean, position);
@@ -526,7 +527,7 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
             rightUrl = AppConfig.getImageUrl(cacheMsgVideo.getFrameId());
         }
 
-        *//*videoViewHolder.timeText.setText(TimeUtils.getTimeFromMillisecond(time));
+        /*videoViewHolder.timeText.setText(TimeUtils.getTimeFromMillisecond(time));
 
         showMsgTime(position, videoViewHolder.senderDateTV, cacheMsgBean.getMsgTime());
 
@@ -574,8 +575,8 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
                     }
                 }
             }
-        });*//*
-    }*/
+        });*/
+    }
 
     /**
      * 群成员变更
@@ -599,7 +600,7 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
                     int progress = (int) (cur * 1.0f / total * 100);
                     cacheMsgBean.setProgress(progress);
 
-                    Message msg = mHandler.obtainMessage(HANDLER_REFRESH_PROGREE);
+                    Message msg = mHandler.obtainMessage(HANDLER_REFRESH_PROGRESS);
                     Bundle bundle = new Bundle();
                     bundle.putParcelable("item", cacheMsgBean);
                     msg.setData(bundle);
@@ -673,18 +674,7 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
             txtViewHolder.senderTV.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (MediaManager.isPlaying()) {
-                        MediaManager.release();
-                        //关闭本身的语音状态
-                        if (voicePlayAnim != null && voicePlayAnim.isRunning()) {
-                            voicePlayAnim.stop();
-                        }
-                        CacheMsgBean cacheMsgBean1 = mImBeanList.get(mPlayVoicePosition);
-                        cacheMsgBean1.setMsgStatus(CacheMsgBean.SEND_SUCCEED);
-                        CacheMsgHelper.instance().insertOrUpdate(mAct, cacheMsgBean1);
-                        mImBeanList.set(mPlayVoicePosition, cacheMsgBean1);
-                        notifyItemChanged(mPlayVoicePosition);
-                    }
+
                 }
             });
             txtViewHolder.senderTV.setOnClickLis(new CopeTextView.OnCopeListener() {
@@ -694,11 +684,11 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
 
                 @Override
                 public void forwardText(CharSequence s) {
-                    /*ARouter.getInstance()
+                    ARouter.getInstance()
                             .build(APath.MSG_FORWARD)
                             .withString("type", "forward_msg")
-                            .withParcelable("data", mImBeanList.get(position))
-                            .navigation(mAct, 300);*/
+                            .withParcelable("data", cacheMsgBean)
+                            .navigation(mAct, 300);
                 }
 
                 @Override
@@ -1083,7 +1073,7 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
         }
     }
 
-    /*private class RedPackageHolder extends BaseViewHolder {
+    private class RedPackageHolder extends BaseViewHolder {
 
         View lay;
         ImageView img_red_package;
@@ -1097,7 +1087,7 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
             tv_red_title = (TextView) itemView.findViewById(R.id.tv_red_title);
             tv_red_status = (TextView) itemView.findViewById(R.id.tv_red_status);
         }
-    }*/
+    }
 
 
     class GroupChangedViewHolder extends BaseViewHolder {
@@ -1142,6 +1132,18 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
                                 .navigation(mAct);
 
                     }
+                }
+            });
+
+            baseViewHolder.senderIV.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    if (mAct instanceof IMGroupActivity) {
+                        IMGroupActivity act = (IMGroupActivity) mAct;
+                        act.addAtName(bean.getSenderRealName());
+                        act.addAtUuid(bean.getSenderUserId());
+                    }
+                    return true;
                 }
             });
         }
@@ -1192,11 +1194,11 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
                             @Override
                             public void forward() {
                                 //转发操作
-                                /*ARouter.getInstance()
+                                ARouter.getInstance()
                                         .build(APath.MSG_FORWARD)
                                         .withString("type", "forward_msg")
                                         .withParcelable("data", bean)
-                                        .navigation(mAct, 300);*/
+                                        .navigation(mAct, 300);
 
                             }
 
@@ -1470,7 +1472,7 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
             final IMGroupAdapter adapter = mTarget.get();
 
             switch (msg.what) {
-                case HANDLER_REFRESH_PROGREE:
+                case HANDLER_REFRESH_PROGRESS:
                     Bundle bundle = msg.getData();
                     CacheMsgBean cacheMsgBean = bundle.getParcelable("item");
                     adapter.refreshItemUI(cacheMsgBean);

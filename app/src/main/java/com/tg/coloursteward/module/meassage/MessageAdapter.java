@@ -3,8 +3,11 @@ package com.tg.coloursteward.module.meassage;
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -406,10 +409,18 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             }
             itemView.message_name.setText(displayName);
 
+            String keyword = "";
+            if (model.getIsAtMe()) {
+                keyword = "[有人@我]";
+            }
+
+
             switch (model.getMsgType()) {
                 case CacheMsgBean.SEND_EMOTION:
                 case CacheMsgBean.RECEIVE_EMOTION:
-                    itemView.message_type.setText(mContext.getString(R.string.message_type_1));
+                    String context = keyword + mContext.getString(R.string.message_type_1);
+                    itemView.message_type.setText(context);
+                    setAtText(keyword, context, itemView.message_type);
                     break;
                 case CacheMsgBean.SEND_TEXT:
                 case CacheMsgBean.RECEIVE_TEXT:
@@ -417,7 +428,11 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     SpannableString msgSpan = new SpannableString(textM.getMsgTxt());
                     msgSpan = EmoticonHandler.getInstance(mContext.getApplicationContext()).getTextFace(
                             textM.getMsgTxt(), msgSpan, 0, Utils.getFontSize(itemView.message_type.getTextSize()));
-                    itemView.message_type.setText(msgSpan);
+
+                    String content = keyword + msgSpan;
+                    itemView.message_type.setText(content);
+                    setAtText(keyword, content, itemView.message_type);
+
                     break;
                 case CacheMsgBean.SEND_IMAGE:
                 case CacheMsgBean.RECEIVE_IMAGE:
@@ -447,6 +462,10 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     break;
                 case CacheMsgBean.GROUP_TRANSFER_OWNER:
                     itemView.message_type.setText(mContext.getString(R.string.message_type_owner_changed));
+                    break;
+                case CacheMsgBean.SEND_REDPACKAGE:
+                case CacheMsgBean.RECEIVE_REDPACKAGE:
+                    itemView.message_type.setText(mContext.getString(R.string.message_red_package));
                     break;
                 default:
                     itemView.message_type.setText(mContext.getString(R.string.message_type));
@@ -522,6 +541,25 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     @Override
     public int getItemViewType(int position) {
         return messageList.get(position).getUiType();
+    }
+
+
+    private void setAtText(String keyword, String content, TextView view) {
+        if (TextUtils.isEmpty(keyword) || TextUtils.isEmpty(content)) {
+            view.setText(content);
+        } else {
+            int start = content.indexOf(keyword);
+            if (start == -1) {
+                view.setText(content);
+            } else {
+                int length = keyword.length();
+                SpannableStringBuilder style = new SpannableStringBuilder(content);
+                style.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mContext, com.youmai.hxsdk.R.color.hx_color_red_tag)),
+                        start, start + length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                view.setText(style);
+            }
+        }
+
     }
 
 

@@ -143,6 +143,31 @@
             android:windowSoftInputMode="adjustResize|stateHidden" />
 
 
+        <activity
+            android:name="com.youmai.hxsdk.activity.GroupAtSelectActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"
+            android:theme="@style/HxGroupAtTheme"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+
+        <activity
+            android:name="com.youmai.hxsdk.activity.RedPacketActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"
+            android:theme="@style/HxSdkNewTheme"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+
+        <activity
+            android:name="com.youmai.hxsdk.activity.RedPacketDetailActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/HxSdkNewTheme" />
+
+        <activity
+            android:name="com.youmai.hxsdk.activity.RedPacketHistoryActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/HxRadPackageTheme" />
+
+
         <!--IM文件预览、下载打开-->
         <activity
             android:name="com.youmai.hxsdk.IMFilePreviewActivity"

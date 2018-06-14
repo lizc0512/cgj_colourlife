@@ -714,7 +714,7 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
         if (isMotifyGropInfo) {
             Intent intent = new Intent();
             intent.putExtra("GroupInfo", mGroupInfo);
-            setResult(IMGroupActivity.MOTIFY_GOUPINFO, intent);
+            setResult(IMGroupActivity.MOTIFY_GROUPINFO, intent);
         }
         finish();
     }

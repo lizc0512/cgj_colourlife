@@ -32,6 +32,8 @@ import com.youmai.hxsdk.socket.PduBase;
 import com.youmai.hxsdk.socket.ReceiveListener;
 import com.youmai.hxsdk.utils.AppUtils;
 
+import java.util.ArrayList;
+
 
 /**
  * 发送消息的服务
@@ -59,6 +61,7 @@ public class SendMsgService extends IntentService {
 
     boolean isGroup;
     String groupName;
+    ArrayList<String> atList;
 
     String imgWidth;
     String imgHeight;
@@ -87,6 +90,8 @@ public class SendMsgService extends IntentService {
 
             isGroup = intent.getBooleanExtra("isGroup", false);
             groupName = intent.getStringExtra("groupName");
+            atList = intent.getStringArrayListExtra("atList");
+
             if (groupName == null) {
                 groupName = ColorsConfig.GROUP_DEFAULT_NAME;
             }
@@ -214,7 +219,7 @@ public class SendMsgService extends IntentService {
         };
 
         if (isGroup) {
-            HuxinSdkManager.instance().sendTextInGroup(groupId, groupName, content, listener);
+            HuxinSdkManager.instance().sendTextInGroup(groupId, groupName, content, atList, listener);
         } else {
             HuxinSdkManager.instance().sendText(dstUuid, content, listener);
         }

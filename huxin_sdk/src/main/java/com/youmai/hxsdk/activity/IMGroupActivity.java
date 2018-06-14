@@ -48,9 +48,11 @@ import com.youmai.hxsdk.adapter.IMGroupAdapter;
 import com.youmai.hxsdk.config.ColorsConfig;
 import com.youmai.hxsdk.config.FileConfig;
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
+import com.youmai.hxsdk.db.bean.ContactBean;
 import com.youmai.hxsdk.db.bean.GroupInfoBean;
 import com.youmai.hxsdk.db.helper.CacheMsgHelper;
 import com.youmai.hxsdk.db.helper.GroupInfoHelper;
+import com.youmai.hxsdk.entity.cn.SearchContactBean;
 import com.youmai.hxsdk.im.IMHelper;
 import com.youmai.hxsdk.im.IMMsgCallback;
 import com.youmai.hxsdk.im.IMMsgManager;
@@ -121,6 +123,9 @@ public class IMGroupActivity extends SdkBaseActivity implements
 
     //srsm add @20170214
     public static final String GROUP_INFO = "GROUP_INFO";
+    public static final String GROUP_ID = "groupId";
+    public static final String GROUP_MEMBER = "GROUP_MEMBER";
+
     public static final String DST_NAME = "DST_NAME";
     public static final String DST_UUID = "DST_UUID";
     public static final String DST_PHONE = "DST_PHONE";
@@ -137,14 +142,15 @@ public class IMGroupActivity extends SdkBaseActivity implements
     public static final int REQUEST_CODE_FORWAED = 204;
     public static final int REQUEST_REMIND_CODE = 205;
     public static final int REQUEST_CODE_DETAIL = 206;
-
+    public static final int REQUEST_CODE_RED_PACKET = 207;
+    public static final int REQUEST_CODE_GROUP_AT = 208;
 
     private static final int MSG_GET_CONTACT_ID = 300;
 
     private final int GET_PERMISSION_REQUEST = 400; //权限申请自定义码
 
     public static final int RESULT_CODE_CLEAN = 501;
-    public static final int MOTIFY_GOUPINFO = 502;
+    public static final int MOTIFY_GROUPINFO = 502;
 
     public static final long MAX_SENDER_FILE = 50 * 1024 * 1024;
 
@@ -163,7 +169,6 @@ public class IMGroupActivity extends SdkBaseActivity implements
     private GroupInfoBean mGroupInfo; //群组实体
     private String groupName;  //群组名称
     private int groupId;      //群组ID
-    private int groupMemberCount; //群组成员数量
 
     private boolean isPause = false;
     private boolean isMsgReceive = false;
@@ -180,6 +185,9 @@ public class IMGroupActivity extends SdkBaseActivity implements
     private boolean isOriginal = false;
 
     private NormalHandler mHandler;
+
+    private ArrayList<ContactBean> groupList = new ArrayList<>();
+    private ArrayList<String> atList = new ArrayList<>();
 
     /**
      * 消息广播
@@ -241,7 +249,7 @@ public class IMGroupActivity extends SdkBaseActivity implements
 
 
             } else if (UPDATE_GROUP_REMOVE.equals(action)) {
-                int id = intent.getIntExtra("groupId", 0);
+                int id = intent.getIntExtra(GROUP_ID, 0);
                 ArrayList<String> changeList = intent.getStringArrayListExtra("changeList");
                 if (id == groupId) {
                     for (String item : changeList) {
@@ -260,7 +268,7 @@ public class IMGroupActivity extends SdkBaseActivity implements
                     queryGroupInfo(id);
                 }
             } else if (UPDATE_GROUP_ADD.equals(action)) {
-                int id = intent.getIntExtra("groupId", 0);
+                int id = intent.getIntExtra(GROUP_ID, 0);
                 ArrayList<String> changeList = intent.getStringArrayListExtra("changeList");
                 if (id == groupId) {
                     /*int count = mGroupInfo.getGroup_member_count();
@@ -334,6 +342,8 @@ public class IMGroupActivity extends SdkBaseActivity implements
         }
 
         queryGroupInfo(groupId);
+
+        reqGroupMembers(groupId);
 
     }
 
@@ -618,7 +628,7 @@ public class IMGroupActivity extends SdkBaseActivity implements
             @Override
             public void onClick(View v) {
                 ARouter.getInstance().build(APath.GROUP_DELETE_CONTACT)
-                        .withInt("groupId", groupId)
+                        .withInt(GROUP_ID, groupId)
                         .withParcelable(GROUP_INFO, mGroupInfo)
                         .navigation(IMGroupActivity.this, REQUEST_CODE_DETAIL);
             }
@@ -675,12 +685,7 @@ public class IMGroupActivity extends SdkBaseActivity implements
 
             @Override
             public void hasSelectMsg(boolean selected) {
-                if (selected) {
-                    keyboardLay.changeMoreAction(true);
-                } else {
-                    //置灰
-                    keyboardLay.changeMoreAction(false);
-                }
+
             }
         });
         recyclerView.setAdapter(iMGroupAdapter);
@@ -722,7 +727,7 @@ public class IMGroupActivity extends SdkBaseActivity implements
             public void deleteMsgCallback(int type) {
                 if (!isFinishing()) {
                     Intent intent = new Intent();
-                    intent.putExtra("groupId", groupId);
+                    intent.putExtra(GROUP_ID, groupId);
                     intent.putExtra("isDeleteMsgType", type);
                     setResult(Activity.RESULT_OK, intent);
                 }
@@ -798,7 +803,7 @@ public class IMGroupActivity extends SdkBaseActivity implements
         docPaths.clear();
         PickerManager.getInstance().addDocTypes();
         Intent intent = new Intent(this, FileManagerActivity.class);
-        intent.putExtra("groupId", groupId);
+        intent.putExtra(GROUP_ID, groupId);
         startActivity(intent);
     }
 
@@ -809,6 +814,7 @@ public class IMGroupActivity extends SdkBaseActivity implements
         intent.putExtra("isGroup", true);
         intent.putExtra("groupName", groupName);
         intent.putExtra("data", msg);
+        intent.putStringArrayListExtra("atList", atList);
         intent.putExtra("data_from", SendMsgService.FROM_IM);
         startService(intent);
     }
@@ -980,6 +986,18 @@ public class IMGroupActivity extends SdkBaseActivity implements
         startActivityForResult(intent, REQUEST_CODE_LOCATION);
     }
 
+
+    /**
+     * 发红包
+     */
+    private void sendRedPacket() {
+        Intent intent = new Intent(this, RedPacketActivity.class);
+        intent.putExtra(RedPacketActivity.FROM_GROUP, true);
+        intent.putExtra(RedPacketActivity.TARGET_ID, groupId);
+        startActivityForResult(intent, REQUEST_CODE_RED_PACKET);
+    }
+
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -1079,11 +1097,35 @@ public class IMGroupActivity extends SdkBaseActivity implements
         } else if (requestCode == REQUEST_CODE_DETAIL) {
             if (resultCode == RESULT_CODE_CLEAN) {
                 iMGroupAdapter.clearMsg();
-            } else if (resultCode == MOTIFY_GOUPINFO) {
+            } else if (resultCode == MOTIFY_GROUPINFO) {
                 GroupInfoBean info = data.getParcelableExtra("GroupInfo");
                 updateGroupUI(info);
             }
 
+        } else if (requestCode == REQUEST_CODE_RED_PACKET
+                && resultCode == Activity.RESULT_OK) {
+
+
+        } else if (requestCode == REQUEST_CODE_GROUP_AT
+                && resultCode == Activity.RESULT_OK) {
+            SearchContactBean contact = data.getParcelableExtra("contact");
+            String name = contact.getDisplayName();
+            String uuid = contact.getUuid();
+            keyboardLay.addEditText(name);
+            addAtUuid(uuid);
+
+        }
+    }
+
+
+    public void addAtName(String name) {
+        keyboardLay.addEditText("@" + name);
+    }
+
+
+    public void addAtUuid(String uuid) {
+        if (!atList.contains(uuid)) {
+            atList.add(uuid);
         }
     }
 
@@ -1260,6 +1302,16 @@ public class IMGroupActivity extends SdkBaseActivity implements
         iMGroupAdapter.focusBottom(false);
     }
 
+
+    @Override
+    public void onGroupAt() {
+        Intent intent = new Intent(this, GroupAtSelectActivity.class);
+        intent.putExtra(GROUP_ID, groupId);
+        intent.putExtra(GROUP_INFO, mGroupInfo);
+        intent.putParcelableArrayListExtra(GROUP_MEMBER, groupList);
+        startActivityForResult(intent, REQUEST_CODE_GROUP_AT);
+    }
+
     /**
      * 输入框点击更多菜单的点击事件
      */
@@ -1274,17 +1326,8 @@ public class IMGroupActivity extends SdkBaseActivity implements
         } else if (type == InputMessageLay.TYPE_FILE) {
             showFileChooser();
         } else if (type == InputMessageLay.TYPE_RED_PACKET) {
-            //分享名片
-            /*try {
-                Intent intent = new Intent();
-                intent.setAction("com.youmai.huxin.select.card");
-                intent.putExtra("disName", tvTitle.getText().toString());
-                intent.putExtra("targetPhone", targetPhone);
-                startActivityForResult(intent, REQUEST_CODE_CARD);
-            } catch (Exception e) {
-                Toast.makeText(mContext, "tan90", Toast.LENGTH_SHORT).show();
-            }*/
-            Toast.makeText(mContext, "添加更多", Toast.LENGTH_SHORT).show();
+            //发送红包
+            sendRedPacket();
         }
 
     }
@@ -1452,8 +1495,35 @@ public class IMGroupActivity extends SdkBaseActivity implements
      */
     private void setRightUi(boolean isShow) {
         ivMore.setVisibility(isShow ? View.GONE : View.VISIBLE);
-        keyboardLay.changeMoreLay(isShow);
     }
 
+
+    private void reqGroupMembers(int groupId) {
+        HuxinSdkManager.instance().reqGroupMember(groupId, new ReceiveListener() {
+            @Override
+            public void OnRec(PduBase pduBase) {
+                try {
+                    YouMaiGroup.GroupMemberRsp ack = YouMaiGroup.GroupMemberRsp.parseFrom(pduBase.body);
+                    if (ack.getResult() == YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS) {
+                        List<YouMaiGroup.GroupMemberItem> memberListList = ack.getMemberListList();
+
+                        for (YouMaiGroup.GroupMemberItem item : memberListList) {
+                            ContactBean contact = new ContactBean();
+                            contact.setRealname(item.getMemberName());
+                            contact.setUsername(item.getUserName());
+                            contact.setUuid(item.getMemberId());
+                            contact.setMemberRole(item.getMemberRole());
+                            String avatar = ColorsConfig.HEAD_ICON_URL + "avatar?uid=" + item.getUserName();
+                            contact.setAvatar(avatar);
+                            groupList.add(contact);
+                        }
+                    }
+                } catch (InvalidProtocolBufferException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+    }
 
 }

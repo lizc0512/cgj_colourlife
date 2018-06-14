@@ -18,12 +18,12 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
-import com.tg.coloursteward.module.contact.utils.PinYinUtils;
 import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.db.bean.ContactBean;
 import com.youmai.hxsdk.entity.cn.SearchContactBean;
 import com.youmai.hxsdk.utils.GlideRoundTransform;
 import com.youmai.hxsdk.utils.ListUtils;
+import com.youmai.hxsdk.utils.PinYinUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;

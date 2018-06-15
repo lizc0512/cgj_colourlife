@@ -133,10 +133,6 @@ public class CacheMsgHelper {
                     checkBean.setMsgStatus(CacheMsgBean.RECEIVE_READ);
                 }
 
-                if(checkBean.getIsAtMe()){
-                    checkBean.setIsAtMe(false);
-                }
-
                 unReadList.add(checkBean);
             }
             if (unReadList.size() > 0) {

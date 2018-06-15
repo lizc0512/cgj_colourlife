@@ -1157,6 +1157,11 @@ public class IMConnectionActivity extends SdkBaseActivity implements
     public void onGroupAt() {
     }
 
+    @Override
+    public void onGroupAtDel() {
+
+    }
+
     /**
      * 输入框点击更多菜单的点击事件
      */

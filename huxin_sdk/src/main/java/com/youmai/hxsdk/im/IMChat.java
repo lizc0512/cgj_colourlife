@@ -62,7 +62,7 @@ public class IMChat {
             String uuid = HuxinSdkManager.instance().getUuid();
             ProtocolStringList atList = imChat.getForcePushIdsListList();
             if (!ListUtils.isEmpty(atList) && atList.contains(uuid)) {
-                mMsgBean.setIsAtMe(true);
+                IMMsgManager.instance().addMeInGroup(imChat.getGroupId());
             }
 
             mMsgBean.setGroupId(imChat.getGroupId())

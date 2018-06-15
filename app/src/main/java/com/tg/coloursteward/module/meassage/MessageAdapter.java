@@ -410,7 +410,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             itemView.message_name.setText(displayName);
 
             String keyword = "";
-            if (model.getIsAtMe()) {
+            if (IMMsgManager.instance().isMeInGroup(model.getGroupId())) {
                 keyword = "[有人@我]";
             }
 

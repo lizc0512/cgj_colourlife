@@ -1015,4 +1015,25 @@ public class IMMsgManager {
     }
 
 
+    public boolean isMeInGroup(int groupId) {
+        String temp = AppUtils.getStringSharedPreferences(mContext, "atList", "");
+        return temp.contains("@" + groupId);
+    }
+
+
+    public void addMeInGroup(int groupId) {
+        String temp = AppUtils.getStringSharedPreferences(mContext, "atList", "");
+        if (!temp.contains("@" + groupId)) {
+            temp += "@" + groupId;
+            AppUtils.setStringSharedPreferences(mContext, "atList", temp);
+        }
+    }
+
+
+    public void removeMeInGroup(int groupId) {
+        String temp = AppUtils.getStringSharedPreferences(mContext, "atList", "");
+        temp = temp.replaceAll("@" + groupId, "");
+        AppUtils.setStringSharedPreferences(mContext, "atList", temp);
+    }
+
 }

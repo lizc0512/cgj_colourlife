@@ -390,7 +390,7 @@ public class InputMessageLay extends AutoHeightLayout implements View.OnClickLis
         });
         msgEdit.setOnTextChangedInterface(new HadEditText.OnTextChangedInterface() {
             @Override
-            public void onTextChanged(CharSequence arg0) {
+            public void onTextChanged(CharSequence arg0, boolean isAt) {
                 String str = arg0.toString();
                 if (TextUtils.isEmpty(str)) {
                     if (mIsMultimediaVisibility) {
@@ -400,8 +400,14 @@ public class InputMessageLay extends AutoHeightLayout implements View.OnClickLis
                         sendBtn.setImageResource(R.drawable.hx_im_bar_send);
                     }
                 } else if (str.endsWith("@")) {
-                    if (mKeyBoardBarViewListener != null) {
-                        mKeyBoardBarViewListener.onGroupAt();
+                    if (isAt) {
+                        if (mKeyBoardBarViewListener != null) {
+                            mKeyBoardBarViewListener.onGroupAt();
+                        }
+                    } else {
+                        if (mKeyBoardBarViewListener != null) {
+                            mKeyBoardBarViewListener.onGroupAtDel();
+                        }
                     }
                 } else {// -> 发送
                     if (mIsMultimediaVisibility) {
@@ -1011,6 +1017,8 @@ public class InputMessageLay extends AutoHeightLayout implements View.OnClickLis
         void onDrivingExit();
 
         void onGroupAt();
+
+        void onGroupAtDel();
 
         void onScroll();
 

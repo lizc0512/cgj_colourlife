@@ -36,15 +36,20 @@ public class HadEditText extends AppCompatEditText {
     @Override
     protected void onTextChanged(CharSequence arg0, int start, int lengthBefore, int after) {
         super.onTextChanged(arg0, start, lengthBefore, after);
+        boolean isAdd = false;
+        if (lengthBefore == 0 && after > 0) {
+            isAdd = true;
+        }
+
         if (onTextChangedInterface != null) {
-            onTextChangedInterface.onTextChanged(arg0);
+            onTextChangedInterface.onTextChanged(arg0, isAdd);
         }
         String content = arg0.subSequence(0, start + after).toString();
         EmoticonHandler.getInstance(mContext).setTextFace(content, getText(), start, Utils.getFontSize(getTextSize()));
     }
 
     public interface OnTextChangedInterface {
-        void onTextChanged(CharSequence argo);
+        void onTextChanged(CharSequence argo, boolean isAdd);
     }
 
     OnTextChangedInterface onTextChangedInterface;

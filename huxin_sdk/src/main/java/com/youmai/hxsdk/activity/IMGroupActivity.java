@@ -52,6 +52,7 @@ import com.youmai.hxsdk.db.bean.ContactBean;
 import com.youmai.hxsdk.db.bean.GroupInfoBean;
 import com.youmai.hxsdk.db.helper.CacheMsgHelper;
 import com.youmai.hxsdk.db.helper.GroupInfoHelper;
+import com.youmai.hxsdk.entity.GroupAtItem;
 import com.youmai.hxsdk.entity.cn.SearchContactBean;
 import com.youmai.hxsdk.im.IMHelper;
 import com.youmai.hxsdk.im.IMMsgCallback;
@@ -187,7 +188,7 @@ public class IMGroupActivity extends SdkBaseActivity implements
     private NormalHandler mHandler;
 
     private ArrayList<ContactBean> groupList = new ArrayList<>();
-    private ArrayList<String> atList = new ArrayList<>();
+    private ArrayList<GroupAtItem> atList = new ArrayList<>();
 
     /**
      * 消息广播
@@ -814,7 +815,7 @@ public class IMGroupActivity extends SdkBaseActivity implements
         intent.putExtra("isGroup", true);
         intent.putExtra("groupName", groupName);
         intent.putExtra("data", msg);
-        intent.putStringArrayListExtra("atList", atList);
+        intent.putParcelableArrayListExtra("atList", atList);
         intent.putExtra("data_from", SendMsgService.FROM_IM);
         startService(intent);
     }
@@ -843,6 +844,19 @@ public class IMGroupActivity extends SdkBaseActivity implements
             cacheMsgBean.setMsgType(CacheMsgBean.SEND_TEXT).setJsonBodyObj(new CacheMsgTxt().setMsgTxt(content));
         } else {
             cacheMsgBean.setMsgType(CacheMsgBean.SEND_EMOTION).setJsonBodyObj(new CacheMsgEmotion().setEmotion(content, refContent));
+        }
+
+        boolean isDel = false;
+        ArrayList<GroupAtItem> tempList = new ArrayList<>();
+        for (GroupAtItem item : atList) {
+            if (!content.contains(item.getNickName())) {
+                tempList.add(item);
+                isDel = true;
+            }
+        }
+
+        if(isDel){
+            atList.removeAll(tempList);
         }
 
         iMGroupAdapter.addAndRefreshUI(cacheMsgBean);
@@ -1112,7 +1126,9 @@ public class IMGroupActivity extends SdkBaseActivity implements
             String name = contact.getDisplayName();
             String uuid = contact.getUuid();
             keyboardLay.addEditText(name);
-            addAtUuid(uuid);
+
+            GroupAtItem item = new GroupAtItem(name, uuid);
+            addAtUuid(item);
 
         }
     }
@@ -1123,10 +1139,17 @@ public class IMGroupActivity extends SdkBaseActivity implements
     }
 
 
-    public void addAtUuid(String uuid) {
+    public void addAtUuid(GroupAtItem uuid) {
         if (!atList.contains(uuid)) {
             atList.add(uuid);
         }
+    }
+
+    public void removeAtUuid() {
+        /*int size = atList.size();
+        if (size > 0) {
+            atList.remove(size - 1);
+        }*/
     }
 
 
@@ -1310,6 +1333,11 @@ public class IMGroupActivity extends SdkBaseActivity implements
         intent.putExtra(GROUP_INFO, mGroupInfo);
         intent.putParcelableArrayListExtra(GROUP_MEMBER, groupList);
         startActivityForResult(intent, REQUEST_CODE_GROUP_AT);
+    }
+
+    @Override
+    public void onGroupAtDel() {
+        removeAtUuid();
     }
 
     /**

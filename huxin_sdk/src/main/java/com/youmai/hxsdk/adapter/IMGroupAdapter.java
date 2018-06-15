@@ -34,6 +34,7 @@ import com.youmai.hxsdk.config.AppConfig;
 import com.youmai.hxsdk.config.FileConfig;
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
 import com.youmai.hxsdk.db.helper.CacheMsgHelper;
+import com.youmai.hxsdk.entity.GroupAtItem;
 import com.youmai.hxsdk.http.DownloadListener;
 import com.youmai.hxsdk.http.OkHttpConnector;
 import com.youmai.hxsdk.im.IMHelper;
@@ -1140,8 +1141,12 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
                 public boolean onLongClick(View v) {
                     if (mAct instanceof IMGroupActivity) {
                         IMGroupActivity act = (IMGroupActivity) mAct;
-                        act.addAtName(bean.getSenderRealName());
-                        act.addAtUuid(bean.getSenderUserId());
+
+                        String nickName = bean.getSenderRealName();
+                        String uuid = bean.getSenderUserId();
+
+                        act.addAtName(nickName);
+                        act.addAtUuid(new GroupAtItem(nickName, uuid));
                     }
                     return true;
                 }

@@ -185,62 +185,23 @@ public class RedPacketActivity extends AppCompatActivity implements View.OnClick
             dialog.setOnFinishInput(new HxPayPasswordDialog.OnPasswordInputFinish() {
                 @Override
                 public void inputFinish() {
-                    if (true) {
-                        dialog.dismiss();
-
-                        if (true) {
-
-
-                        } else {
-                            HxRedPacketDialog redPacketDialog = new HxRedPacketDialog(RedPacketActivity.this);
-                            redPacketDialog.setOnRedPacketListener(new HxRedPacketDialog.OnRedPacketListener() {
-                                @Override
-                                public void onCloseClick() {
-
-                                }
-
-                                @Override
-                                public void onOpenClick() {
-
-                                }
-                            });
-                            redPacketDialog.show();
-
-                            String remark = et_msg.getText().toString().trim();
-                            if (TextUtils.isEmpty(remark)) {
-                                remark = et_msg.getHint().toString().trim();
-                            }
-
-                            HxRedPacketDialog.RedPacketEntity entity = new HxRedPacketDialog
-                                    .RedPacketEntity(name, avatar, remark);
-                            redPacketDialog.setData(entity);
-                        }
-
-
-                    } else {
-                        HxPayErrorDialog errorDialog = new HxPayErrorDialog(RedPacketActivity.this);
-                        errorDialog.setPayErrorCallback(new HxPayErrorDialog.PayErrorCallback() {
-                            @Override
-                            public void onForget() {
-
-                            }
-
-                            @Override
-                            public void onTryAgain() {
-
-                            }
-                        });
-                        errorDialog.show();
+                    dialog.dismiss();
+                    Intent intent = new Intent();
+                    String remark = et_msg.getText().toString().trim();
+                    if (TextUtils.isEmpty(remark)) {
+                        remark = et_msg.getHint().toString().trim();
                     }
-
-
+                    intent.putExtra("value", et_money.getText().toString().trim());
+                    intent.putExtra("redTitle", remark);
+                    setResult(Activity.RESULT_OK, intent);
+                    finish();
                 }
             });
             dialog.show();
         } else if (id == R.id.tv_back) {
             onBackPressed();
         } else if (id == R.id.tv_right) {
-            HuxinSdkManager.instance().checkPayPwd("666666", new IGetListener() {
+            /*HuxinSdkManager.instance().checkPayPwd("666666", new IGetListener() {
                 @Override
                 public void httpReqResult(String response) {
                     try {
@@ -253,8 +214,8 @@ public class RedPacketActivity extends AppCompatActivity implements View.OnClick
 
                     }
                 }
-            });
-            //startActivity(new Intent(this, RedPacketHistoryActivity.class));
+            });*/
+            startActivity(new Intent(this, RedPacketHistoryActivity.class));
         }
     }
 

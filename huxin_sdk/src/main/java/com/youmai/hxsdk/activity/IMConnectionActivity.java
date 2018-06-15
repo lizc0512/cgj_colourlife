@@ -671,7 +671,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
         startService(intent);
     }
 
-    private CacheMsgBean getBaseMsg() {
+    public CacheMsgBean getBaseMsg() {
         return new CacheMsgBean()
                 .setMsgTime(System.currentTimeMillis())
                 .setMsgStatus(CacheMsgBean.SEND_GOING)
@@ -868,6 +868,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
         intent.putExtra(RedPacketActivity.TARGET_NAME, dstNickName);
         intent.putExtra(RedPacketActivity.TARGET_AVATAR, dstAvatar);
         startActivityForResult(intent, REQUEST_CODE_RED_PACKET);
+
     }
 
 

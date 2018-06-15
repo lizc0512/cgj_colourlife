@@ -135,6 +135,8 @@ public class SendMsgService extends IntentService {
                 sendVideo(msg);
             } else if (type == CacheMsgBean.SEND_REDPACKAGE) {//视频
                 sendRedPackage(msg);
+            } else if (type == CacheMsgBean.OPEN_REDPACKET) {//视频
+                openRedPackage(msg);
             }
         } else {
             //无网络
@@ -366,6 +368,59 @@ public class SendMsgService extends IntentService {
             HuxinSdkManager.instance().sendRedPackageInGroup(groupId, value, redTitle, listener);
         } else {
             HuxinSdkManager.instance().sendRedPackage(dstUuid, value, redTitle, listener);
+        }
+
+
+    }
+
+
+    private void openRedPackage(final SendMsg msgBean) {
+        CacheMsgRedPackage msgBody = (CacheMsgRedPackage) msgBean.getMsg().getJsonBodyObj();
+        final String dstUuid = msgBean.getMsg().getReceiverUserId();
+        final int groupId = msgBean.getMsg().getGroupId();
+        String value = msgBody.getValue();
+        String redTitle = msgBody.getRedTitle();
+
+        if (TextUtils.isEmpty(dstUuid) && groupId == 0) {
+            return;
+        }
+
+        ReceiveListener listener = new ReceiveListener() {
+            @Override
+            public void OnRec(PduBase pduBase) {
+                //tcp会有消息缓存，在无网络状态下会执行onError()，一旦联网后，又继续尝试发送，就会执行OnRec()
+                try {
+                    final YouMaiMsg.ChatMsg_Ack ack = YouMaiMsg.ChatMsg_Ack.parseFrom(pduBase.body);
+                    final long msgId = ack.getMsgId();
+                    msgBean.getMsg().setMsgId(msgId);
+
+                    if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_OK) {
+                        updateUI(msgBean, CacheMsgBean.SEND_SUCCEED, null, SEND_MSG_END);
+                    } else {
+                        updateUI(msgBean, CacheMsgBean.SEND_FAILED, null, SEND_MSG_END);
+                    }
+                } catch (InvalidProtocolBufferException e) {
+                    e.printStackTrace();
+                    updateUI(msgBean, CacheMsgBean.SEND_FAILED, null, SEND_MSG_END);
+                }
+            }
+
+            @Override
+            public void onError(int errCode) {
+                updateUI(msgBean, CacheMsgBean.SEND_FAILED, null, SEND_MSG_END);
+            }
+        };
+
+        if (isGroup) {
+            ArrayList<String> ats = new ArrayList<>();
+            if (!ListUtils.isEmpty(atList)) {
+                for (GroupAtItem item : atList) {
+                    ats.add(item.getUuid());
+                }
+            }
+            HuxinSdkManager.instance().openRedPackageInGroup(groupId, value, redTitle, listener);
+        } else {
+            HuxinSdkManager.instance().openRedPackage(dstUuid, value, redTitle, listener);
         }
 
 

@@ -15,7 +15,7 @@ import org.json.JSONObject;
  */
 public class CacheMsgRedPackage implements Parcelable, JsonFormat<CacheMsgRedPackage> {
 
-
+    private long msgId;
     private String value;
     private String redTitle;
 
@@ -40,6 +40,15 @@ public class CacheMsgRedPackage implements Parcelable, JsonFormat<CacheMsgRedPac
         return this;
     }
 
+    public long getMsgId() {
+        return msgId;
+    }
+
+    public CacheMsgRedPackage setMsgId(long msgId) {
+        this.msgId = msgId;
+        return this;
+    }
+
     @Override
     public String toJson() {
         return GsonUtil.format(this);
@@ -51,6 +60,7 @@ public class CacheMsgRedPackage implements Parcelable, JsonFormat<CacheMsgRedPac
             JSONObject jsonObject = new JSONObject(jsonStr);
             value = jsonObject.optString("value");
             redTitle = jsonObject.optString("redTitle");
+            msgId = jsonObject.optLong("msgId");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -65,11 +75,13 @@ public class CacheMsgRedPackage implements Parcelable, JsonFormat<CacheMsgRedPac
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(this.msgId);
         dest.writeString(this.value);
         dest.writeString(this.redTitle);
     }
 
     protected CacheMsgRedPackage(Parcel in) {
+        this.msgId = in.readLong();
         this.value = in.readString();
         this.redTitle = in.readString();
     }

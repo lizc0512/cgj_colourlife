@@ -27,10 +27,16 @@ public class RedPacketDetailActivity extends AppCompatActivity implements View.O
 
     public static final String TAG = RedPacketDetailActivity.class.getSimpleName();
 
+    public static final String OPEN_TYPE = "openType";
+
     public static final String AVATAR = "avatar";
     public static final String NICKNAME = "nickName";
     public static final String VALUE = "value";
     public static final String REDTITLE = "redTitle";
+
+
+    public static final int SINGLE_PACKET = 0;
+    public static final int GROUP_PACKET = 1;
 
     private TextView tv_back;
     private TextView tv_title;
@@ -50,11 +56,16 @@ public class RedPacketDetailActivity extends AppCompatActivity implements View.O
     private String value;
     private String title;
 
+    private int openType;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.hx_activity_red_packet_detail);
+
+        openType = getIntent().getIntExtra(OPEN_TYPE, SINGLE_PACKET);
+
+
         avatar = getIntent().getStringExtra(AVATAR);
         name = getIntent().getStringExtra(NICKNAME);
         value = getIntent().getStringExtra(VALUE);
@@ -115,6 +126,10 @@ public class RedPacketDetailActivity extends AppCompatActivity implements View.O
         recycler_view.addItemDecoration(new DividerItemDecoration(this, LinearLayout.VERTICAL));
         recycler_view.setLayoutManager(new LinearLayoutManager(this));
         recycler_view.setAdapter(adapter);
+
+        if (openType == SINGLE_PACKET) {
+            recycler_view.setVisibility(View.GONE);
+        }
 
     }
 

@@ -105,13 +105,21 @@ public final class YouMaiMsg {
          */
         IM_CONTENT_TYPE_DEFAULT(17, 17),
         /**
-         * <code>IM_CONTENT_TYPE_RED_ENVELOPE = 18;</code>
+         * <code>IM_CONTENT_TYPE_SEND_RED_ENVELOPE = 18;</code>
          * <p>
          * <pre>
-         * 红包
+         * 发送红包
          * </pre>
          */
-        IM_CONTENT_TYPE_RED_ENVELOPE(18, 18),;
+        IM_CONTENT_TYPE_SEND_RED_ENVELOPE(18, 18),
+        /**
+         * <code>IM_CONTENT_TYPE_GET_RED_ENVELOPE = 19;</code>
+         * <p>
+         * <pre>
+         * 领取红包
+         * </pre>
+         */
+        IM_CONTENT_TYPE_GET_RED_ENVELOPE(19, 19),;
 
         /**
          * <code>IM_CONTENT_TYPE_TEXT = 0;</code>
@@ -198,13 +206,21 @@ public final class YouMaiMsg {
          */
         public static final int IM_CONTENT_TYPE_DEFAULT_VALUE = 17;
         /**
-         * <code>IM_CONTENT_TYPE_RED_ENVELOPE = 18;</code>
+         * <code>IM_CONTENT_TYPE_SEND_RED_ENVELOPE = 18;</code>
          * <p>
          * <pre>
-         * 红包
+         * 发送红包
          * </pre>
          */
-        public static final int IM_CONTENT_TYPE_RED_ENVELOPE_VALUE = 18;
+        public static final int IM_CONTENT_TYPE_SEND_RED_ENVELOPE_VALUE = 18;
+        /**
+         * <code>IM_CONTENT_TYPE_GET_RED_ENVELOPE = 19;</code>
+         * <p>
+         * <pre>
+         * 领取红包
+         * </pre>
+         */
+        public static final int IM_CONTENT_TYPE_GET_RED_ENVELOPE_VALUE = 19;
 
 
         public final int getNumber() {
@@ -250,7 +266,9 @@ public final class YouMaiMsg {
                 case 17:
                     return IM_CONTENT_TYPE_DEFAULT;
                 case 18:
-                    return IM_CONTENT_TYPE_RED_ENVELOPE;
+                    return IM_CONTENT_TYPE_SEND_RED_ENVELOPE;
+                case 19:
+                    return IM_CONTENT_TYPE_GET_RED_ENVELOPE;
                 default:
                     return null;
             }
@@ -9492,7 +9510,7 @@ public final class YouMaiMsg {
                         "\006cmd_id\030\002 \001(\005\022\016\n\006msg_id\030\003 \001(\003\"-\n\nPushMsg" +
                         "Ack\022\017\n\007user_id\030\001 \001(\t\022\016\n\006msg_id\030\002 \001(\003\"B\n\n" +
                         "S2SPushMsg\022\017\n\007user_id\030\001 \003(\t\022#\n\003msg\030\002 \001(\013" +
-                        "2\026.PushMsg*\272\004\n\017IM_CONTENT_" +
+                        "2\026.PushMsg*\345\004\n\017IM_CONTENT_" +
                         "TYPE\022\030\n\024IM_CONTENT_TYPE_TEXT\020\000\022!\n\035IM_CON" +
                         "TENT_TYPE_SHORT_MESSAGE\020\001\022\034\n\030IM_CONTENT_" +
                         "TYPE_CONTACTS\020\002\022!\n\035IM_CONTENT_TYPE_RECOM",
@@ -9506,13 +9524,14 @@ public final class YouMaiMsg {
                         "PE_BIZCARD\020\r\022\032\n\026IM_CONTENT_TYPE_KAQUAN\020\016" +
                         "\022\030\n\024IM_CONTENT_TYPE_NULL\020\017\022\032\n\026IM_CONTENT" +
                         "_TYPE_NOTICE\020\020\022\033\n\027IM_CONTENT_TYPE_DEFAUL",
-                "T\020\021\022 \n\034IM_CONTENT_TYPE_RED_ENVELOPE\020\022*\210\001" +
-                        "\n\013MsgProperty\022\025\n\021MSG_PTOPERTY_NONE\020\001\022\030\n\024" +
-                        "MSG_PROPERTY_RECEIPT\020\002\022\027\n\023MSG_PROPERTY_U" +
-                        "RGENT\020\003\022\026\n\022MSG_PROPERTY_QUOTE\020\004\022\027\n\023MSG_P" +
-                        "ROPERTY_RECALL\020\005*]\n\013SessionType\022\027\n\023SESSI" +
-                        "ON_TYPE_SINGLE\020\001\022\032\n\026SESSION_TYPE_MULTICH" +
-                        "AT\020\002\022\031\n\025SESSION_TYPE_ORGGROUP\020\003"
+                "T\020\021\022%\n!IM_CONTENT_TYPE_SEND_RED_ENVELOPE" +
+                        "\020\022\022$\n IM_CONTENT_TYPE_GET_RED_ENVELOPE\020\023" +
+                        "*\210\001\n\013MsgProperty\022\025\n\021MSG_PTOPERTY_NONE\020\001\022" +
+                        "\030\n\024MSG_PROPERTY_RECEIPT\020\002\022\027\n\023MSG_PROPERT" +
+                        "Y_URGENT\020\003\022\026\n\022MSG_PROPERTY_QUOTE\020\004\022\027\n\023MS" +
+                        "G_PROPERTY_RECALL\020\005*]\n\013SessionType\022\027\n\023SE" +
+                        "SSION_TYPE_SINGLE\020\001\022\032\n\026SESSION_TYPE_MULT" +
+                        "ICHAT\020\002\022\031\n\025SESSION_TYPE_ORGGROUP\020\003"
         };
         com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
                 new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {

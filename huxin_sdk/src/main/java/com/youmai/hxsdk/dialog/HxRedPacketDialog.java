@@ -115,11 +115,14 @@ public class HxRedPacketDialog extends Dialog implements View.OnClickListener {
     }
 
 
-    public void startAnim() {
+    private void startAnim() {
         AnimatorUtils.rotationY(mIvOpen, 1500, new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation, boolean isReverse) {
                 super.onAnimationEnd(animation);
+                if (mListener != null) {
+                    mListener.onOpenClick();
+                }
             }
 
             @Override

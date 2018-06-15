@@ -651,11 +651,12 @@ public class IMMsgManager {
             cacheMsgBean.setMsgType(CacheMsgBean.RECEIVE_VIDEO).setJsonBodyObj(cacheMsgVideo);
             CacheMsgHelper.instance().insertOrUpdate(mContext, cacheMsgBean);
             handlerIMMsgCallback(cacheMsgBean);
-        } else if (im.getMsgType() == YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_RED_ENVELOPE_VALUE) {//红包
+        } else if (im.getMsgType() == YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_SEND_RED_ENVELOPE_VALUE) {//红包
             ContentRedPackage redPackage = im.getContent().getRedPackage();//获取解析jsonBoby的内容
 
             CacheMsgRedPackage cacheMsgRedPackage = new CacheMsgRedPackage();
             cacheMsgRedPackage.setValue(redPackage.getValue());
+            cacheMsgRedPackage.setRedTitle(redPackage.getTitle());
 
             cacheMsgBean.setMsgType(CacheMsgBean.RECEIVE_REDPACKAGE).setJsonBodyObj(cacheMsgRedPackage);
             CacheMsgHelper.instance().insertOrUpdate(mContext, cacheMsgBean);

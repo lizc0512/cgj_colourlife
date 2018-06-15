@@ -366,6 +366,10 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 case CacheMsgBean.RECEIVE_FILE:
                     itemView.message_type.setText(mContext.getString(R.string.message_type_file));
                     break;
+                case CacheMsgBean.SEND_REDPACKAGE:
+                case CacheMsgBean.RECEIVE_REDPACKAGE:
+                    itemView.message_type.setText(mContext.getString(R.string.message_red_package));
+                    break;
                 default:
                     itemView.message_type.setText(mContext.getString(R.string.message_type));
             }

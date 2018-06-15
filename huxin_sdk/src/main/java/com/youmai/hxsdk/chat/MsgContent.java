@@ -43,7 +43,7 @@ public class MsgContent implements Parcelable {
             case YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_FILE_VALUE:
                 mFile = new ContentFile(parser);
                 break;
-            case YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_RED_ENVELOPE_VALUE:
+            case YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_SEND_RED_ENVELOPE_VALUE:
                 mRedPackage = new ContentRedPackage(parser);
                 break;
             default:

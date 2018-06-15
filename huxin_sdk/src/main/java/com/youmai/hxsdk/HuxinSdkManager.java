@@ -844,7 +844,7 @@ public class HuxinSdkManager {
 
 
     /**
-     * 打开个人红包
+     * 发送个人红包
      *
      * @param destUuid
      * @param value
@@ -860,7 +860,7 @@ public class HuxinSdkManager {
         msgData.setSrcRealname(getRealName());
         msgData.setSrcMobile(getPhoneNum());
         msgData.setDestUserId(destUuid);
-        msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_RED_ENVELOPE);
+        msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_SEND_RED_ENVELOPE);
         msgData.setSessionType(YouMaiMsg.SessionType.SESSION_TYPE_SINGLE);
 
         IMContentUtil imContentUtil = new IMContentUtil();
@@ -875,6 +875,41 @@ public class HuxinSdkManager {
 
         sendProto(chatMsg, YouMaiBasic.COMMANDID.CID_CHAT_BUDDY_VALUE, callback);
     }
+
+
+    /**
+     * 打开个人红包
+     *
+     * @param destUuid
+     * @param value
+     * @param callback
+     */
+    public void openRedPackage(String destUuid, String value, String title,
+                               ReceiveListener callback) {
+        YouMaiMsg.MsgData.Builder msgData = YouMaiMsg.MsgData.newBuilder();
+        msgData.setSrcUserId(getUuid());
+        msgData.setSrcAvatar(getHeadUrl());
+        msgData.setSrcSex(getSex());
+        msgData.setSrcUserName(getUserName());
+        msgData.setSrcRealname(getRealName());
+        msgData.setSrcMobile(getPhoneNum());
+        msgData.setDestUserId(destUuid);
+        msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_GET_RED_ENVELOPE);
+        msgData.setSessionType(YouMaiMsg.SessionType.SESSION_TYPE_SINGLE);
+
+        IMContentUtil imContentUtil = new IMContentUtil();
+        imContentUtil.appendRedPackageValue(value);
+        imContentUtil.appendRedPackageTitle(title);
+
+        msgData.setMsgContent(imContentUtil.serializeToString());
+
+        YouMaiMsg.ChatMsg.Builder builder = YouMaiMsg.ChatMsg.newBuilder();
+        builder.setData(msgData);
+        YouMaiMsg.ChatMsg chatMsg = builder.build();
+
+        sendProto(chatMsg, YouMaiBasic.COMMANDID.CID_CHAT_BUDDY_VALUE, callback);
+    }
+
 
     /**
      * 创建群组
@@ -1257,7 +1292,7 @@ public class HuxinSdkManager {
 
 
     /**
-     * 打开群红包
+     * 发送群红包
      *
      * @param groupId
      * @param value
@@ -1272,7 +1307,40 @@ public class HuxinSdkManager {
         msgData.setSrcRealname(getRealName());
         msgData.setSrcMobile(getPhoneNum());
         msgData.setGroupId(groupId);
-        msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_RED_ENVELOPE);
+        msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_SEND_RED_ENVELOPE);
+        msgData.setSessionType(YouMaiMsg.SessionType.SESSION_TYPE_ORGGROUP);
+
+        IMContentUtil imContentUtil = new IMContentUtil();
+        imContentUtil.appendRedPackageValue(value);
+        imContentUtil.appendRedPackageTitle(title);
+
+        msgData.setMsgContent(imContentUtil.serializeToString());
+
+        YouMaiMsg.ChatMsg.Builder builder = YouMaiMsg.ChatMsg.newBuilder();
+        builder.setData(msgData);
+        YouMaiMsg.ChatMsg chatMsg = builder.build();
+
+        sendProto(chatMsg, YouMaiBasic.COMMANDID.CID_CHAT_GROUP_VALUE, callback);
+    }
+
+
+    /**
+     * 打开群红包
+     *
+     * @param groupId
+     * @param value
+     * @param callback
+     */
+    public void openRedPackageInGroup(int groupId, String value, String title, ReceiveListener callback) {
+        YouMaiMsg.MsgData.Builder msgData = YouMaiMsg.MsgData.newBuilder();
+        msgData.setSrcUserId(getUuid());
+        msgData.setSrcAvatar(getHeadUrl());
+        msgData.setSrcSex(getSex());
+        msgData.setSrcUserName(getUserName());
+        msgData.setSrcRealname(getRealName());
+        msgData.setSrcMobile(getPhoneNum());
+        msgData.setGroupId(groupId);
+        msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_GET_RED_ENVELOPE);
         msgData.setSessionType(YouMaiMsg.SessionType.SESSION_TYPE_ORGGROUP);
 
         IMContentUtil imContentUtil = new IMContentUtil();

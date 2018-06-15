@@ -24,12 +24,10 @@ public class ContentAudio implements Parcelable {
         while ((type = parser.hasNext()) != null) {
             switch (type) {
                 case CONTEXT_AUDIO_ID:
-                    String text = parser.readNext();
-                    audioId = text;
+                    audioId = parser.readNext();
                     break;
                 case CONTEXT_BAR_TIME:
-                    String bar = parser.readNext();
-                    barTime = bar;
+                    barTime = parser.readNext();
                     break;
                 case CONTEXT_SOURCE_PHONE:
                     sourcePhone = parser.readNext();

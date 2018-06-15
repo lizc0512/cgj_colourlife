@@ -24,20 +24,17 @@ public class BeginLocation implements Parcelable {
         while ((type = parser.hasNext()) != null) {
             switch (type) {
                 case CONTEXT_LONGITUDE:
-                    String longi = parser.readNext();
-                    longitudeStr = longi;
+                    longitudeStr = parser.readNext();
                     break;
                 case CONTEXT_LAITUDE:
-                    String lati = parser.readNext();
-                    latitudeStr = lati;
+                    latitudeStr = parser.readNext();
                     break;
                 case CONTEXT_ANSWER_REJECT:
                     String aj = parser.readNext();
                     answerOrReject = !aj.equals("0");
                     break;
                 case CONTEXT_LOC_ANSWER:
-                    String loc = parser.readNext();
-                    location = loc;
+                    location = parser.readNext();
                     break;
                 default:
                     parser.readNext();
@@ -82,7 +79,9 @@ public class BeginLocation implements Parcelable {
         dest.writeByte((byte) (answerOrReject ? 1 : 0));
     }
 
-    /**上面是android 序列号传送对象*/
+    /**
+     * 上面是android 序列号传送对象
+     */
 
     public String getLongitudeStr() {
         return longitudeStr;

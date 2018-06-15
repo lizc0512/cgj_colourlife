@@ -23,19 +23,15 @@ public class ContentUrl implements Parcelable {
         while ((type = parser.hasNext()) != null) {
             switch (type) {
                 case CONTENT_URL:
-                    String url = parser.readNext();
-                    urlStr = url;
+                    urlStr = parser.readNext();
                     break;
                 case CONTEXT_TITLE:
-                    String title = parser.readNext();
-                    titleStr = title;
+                    titleStr = parser.readNext();
                 case CONTEXT_DESCRIBE:
-                    String des = parser.readNext();
-                    descStr = des;
+                    descStr = parser.readNext();
                     break;
                 case CONTEXT_BAR_TIME:
-                    String bar = parser.readNext();
-                    barTime = bar;
+                    barTime = parser.readNext();
                 default:
                     parser.readNext();
                     break;

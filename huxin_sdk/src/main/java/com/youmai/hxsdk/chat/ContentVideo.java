@@ -25,19 +25,19 @@ public class ContentVideo implements Parcelable {
         while ((type = parser.hasNext()) != null) {
             switch (type) {
                 case CONTEXT_VIDEO_ID:
-                    this.videoId = parser.readNext();
+                    videoId = parser.readNext();
                     break;
                 case CONTEXT_PICTURE_ID:
-                    this.frameId = parser.readNext();
+                    frameId = parser.readNext();
                     break;
                 case CONTEXT_BAR_TIME:
-                    this.barTime = parser.readNext();
+                    barTime = parser.readNext();
                     break;
                 case CONTENT_FILE_NAME:
-                    this.name = parser.readNext();
+                    name = parser.readNext();
                     break;
                 case CONTENT_FILE_SIZE:
-                    this.size = parser.readNext();
+                    size = parser.readNext();
                     break;
                 default:
                     parser.readNext();

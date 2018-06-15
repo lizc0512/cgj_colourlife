@@ -26,22 +26,17 @@ public class ContentLocation implements Parcelable {
         while ((type = parser.hasNext()) != null) {
             switch (type) {
                 case CONTEXT_LONGITUDE:
-                    String longi = parser.readNext();
-                    longitudeStr = longi;
+                    longitudeStr = parser.readNext();
                     break;
                 case CONTEXT_LAITUDE:
-                    String lati = parser.readNext();
-                    latitudeStr = lati;
+                    latitudeStr = parser.readNext();
                 case CONTEXT_SCALE:
-                    String scale = parser.readNext();
-                    scaleStr = scale;
+                    scaleStr = parser.readNext();
                     break;
                 case CONTEXT_LABEL:
-                    String lable = parser.readNext();
-                    labelStr = lable;
+                    labelStr = parser.readNext();
                 case CONTEXT_BAR_TIME:
-                    String bar = parser.readNext();
-                    barTime = bar;
+                    barTime = parser.readNext();
                 default:
                     parser.readNext();
                     break;

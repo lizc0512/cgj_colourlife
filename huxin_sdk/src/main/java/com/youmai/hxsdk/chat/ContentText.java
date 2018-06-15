@@ -29,12 +29,10 @@ public class ContentText implements Parcelable {
         while ((type = parser.hasNext()) != null) {
             switch (type) {
                 case CONTENT_TEXT:
-                    String text = parser.readNext();
-                    content = text;
+                    content = parser.readNext();
                     break;
                 case CONTEXT_BAR_TIME:
-                    String bar = parser.readNext();
-                    barTime = bar;
+                    barTime = parser.readNext();
                 default:
                     parser.readNext();
                     break;

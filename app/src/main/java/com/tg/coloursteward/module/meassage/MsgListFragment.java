@@ -326,7 +326,7 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
                     Intent intent = new Intent(getActivity(), IMGroupActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                     int groupId = bean.getGroupId();
-                    IMMsgManager.instance().removeMeInGroup(groupId);
+
                     intent.putExtra(IMGroupActivity.DST_UUID, groupId);
                     intent.putExtra(IMGroupActivity.DST_NAME, bean.getDisplayName());
 

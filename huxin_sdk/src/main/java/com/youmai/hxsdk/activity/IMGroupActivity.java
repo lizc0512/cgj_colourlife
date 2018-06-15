@@ -574,6 +574,7 @@ public class IMGroupActivity extends SdkBaseActivity implements
 
         PhotoPickerManager.getInstance().clearMap();
         HuxinSdkManager.instance().getStackAct().removeActivity(this);
+        IMMsgManager.instance().removeMeInGroup(groupId);
     }
 
     private void initTitle() {

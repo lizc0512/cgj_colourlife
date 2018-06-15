@@ -30,10 +30,12 @@ import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.activity.CropMapActivity;
 import com.youmai.hxsdk.activity.IMGroupActivity;
 import com.youmai.hxsdk.activity.PictureIndicatorActivity;
+import com.youmai.hxsdk.activity.RedPacketDetailActivity;
 import com.youmai.hxsdk.config.AppConfig;
 import com.youmai.hxsdk.config.FileConfig;
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
 import com.youmai.hxsdk.db.helper.CacheMsgHelper;
+import com.youmai.hxsdk.dialog.HxRedPacketDialog;
 import com.youmai.hxsdk.entity.GroupAtItem;
 import com.youmai.hxsdk.http.DownloadListener;
 import com.youmai.hxsdk.http.OkHttpConnector;
@@ -41,6 +43,7 @@ import com.youmai.hxsdk.im.IMHelper;
 import com.youmai.hxsdk.im.cache.CacheMsgFile;
 import com.youmai.hxsdk.im.cache.CacheMsgImage;
 import com.youmai.hxsdk.im.cache.CacheMsgMap;
+import com.youmai.hxsdk.im.cache.CacheMsgRedPackage;
 import com.youmai.hxsdk.im.cache.CacheMsgTxt;
 import com.youmai.hxsdk.im.cache.CacheMsgVideo;
 import com.youmai.hxsdk.im.cache.CacheMsgVoice;
@@ -513,70 +516,34 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
     /**
      * 红包
      */
-    private void onBindRedPackage(final RedPackageHolder videoViewHolder, final int position) {
+    private void onBindRedPackage(final RedPackageHolder redPackageHolder, final int position) {
         final CacheMsgBean cacheMsgBean = mImBeanList.get(position);
-        final CacheMsgVideo cacheMsgVideo = (CacheMsgVideo) cacheMsgBean.getJsonBodyObj();
-        showSendStart(videoViewHolder, cacheMsgBean.getMsgStatus(), cacheMsgBean, position);
+        final CacheMsgRedPackage redPackage = (CacheMsgRedPackage) cacheMsgBean.getJsonBodyObj();
+        showSendStart(redPackageHolder, cacheMsgBean.getMsgStatus(), cacheMsgBean, position);
 
-        final String videoPath = cacheMsgVideo.getVideoPath();//本地视频
-        final String framePath = cacheMsgVideo.getFramePath();//本地视频首帧
-        final long time = cacheMsgVideo.getTime();//视频时长(毫秒)
-        final String videoUrl = AppConfig.getImageUrl(cacheMsgVideo.getVideoId());    //上传视频Url
-        String leftUrl = AppConfig.getImageUrl(cacheMsgVideo.getFrameId());     //上传视频首帧Url
-        String rightUrl = framePath;
-        if (rightUrl == null || !new File(rightUrl).exists()) {
-            rightUrl = AppConfig.getImageUrl(cacheMsgVideo.getFrameId());
-        }
+        final String value = redPackage.getValue();
+        final String name = cacheMsgBean.getSenderRealName();
+        final String avatar = cacheMsgBean.getSenderAvatar();
+        final String title = redPackage.getRedTitle();
 
-        /*videoViewHolder.timeText.setText(TimeUtils.getTimeFromMillisecond(time));
 
-        showMsgTime(position, videoViewHolder.senderDateTV, cacheMsgBean.getMsgTime());
+        showMsgTime(position, redPackageHolder.senderDateTV, cacheMsgBean.getMsgTime());
+        ImageView img_red_package = redPackageHolder.img_red_package;
+        TextView tv_red_title = redPackageHolder.tv_red_title;
+        TextView tv_red_status = redPackageHolder.tv_red_status;
 
-        Glide.with(mAct)
-                .load(cacheMsgBean.isRightUI() ? rightUrl : leftUrl)
-                .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.RESOURCE).placeholder(R.drawable.hx_im_default_img)
-                        .transform(new MaskTransformation(cacheMsgBean.isRightUI() ? R.drawable.hx_im_voice_bg_right : R.drawable.hx_im_voice_bg_left)))
-                .into(videoViewHolder.videoImg);
 
-        if (TextUtils.isEmpty(videoPath) && cacheMsgBean.getProgress() != 0) {
-            videoViewHolder.videoPlayImg.setVisibility(View.GONE);
-            videoViewHolder.videoCircleProgressView.setVisibility(View.VISIBLE);
-            videoViewHolder.videoCircleProgressView.setProgress(cacheMsgBean.getProgress());
-            videoViewHolder.videoImg.setEnabled(false);
-        } else if (TextUtils.isEmpty(videoPath) && cacheMsgBean.getProgress() == -1) {
-            //下载失败的显示
-            videoViewHolder.videoPlayImg.setVisibility(View.VISIBLE);
-            videoViewHolder.videoCircleProgressView.setVisibility(View.GONE);
-            videoViewHolder.lay.setEnabled(true);
-        } else {
-            videoViewHolder.videoPlayImg.setVisibility(View.VISIBLE);
-            videoViewHolder.videoCircleProgressView.setVisibility(View.GONE);
-            videoViewHolder.lay.setEnabled(true);
-        }
-        videoViewHolder.lay.setOnClickListener(new View.OnClickListener() {
+        redPackageHolder.lay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (TextUtils.isEmpty(videoPath)) {
-                    downVideo(position, videoUrl, cacheMsgBean);
+                if (cacheMsgBean.isRightUI()) {  //自己
+                    Intent intent = new Intent(mAct, RedPacketDetailActivity.class);
+                    mAct.startActivity(intent);
                 } else {
-                    File videoFile = new File(videoPath);
-                    if (videoFile.exists()) {
-                        VideoDetailInfo info = new VideoDetailInfo();
-                        info.setVideoPath(cacheMsgBean.isRightUI() ? videoPath : videoPath); //视频路径
-                        Intent intent = new Intent(mAct, VideoPlayerActivity.class);
-                        intent.putExtra("info", info);
-                        mAct.startActivity(intent);
-                    } else {
-                        //文件被删掉，重新下载
-                        cacheMsgVideo.setVideoPath("");
-                        cacheMsgBean.setJsonBodyObj(cacheMsgVideo);
-                        cacheMsgBean.setProgress(0);
-                        CacheMsgHelper.instance().insertOrUpdate(mAct, cacheMsgBean);
-                        downVideo(position, videoUrl, cacheMsgBean);
-                    }
+                    openRedPackage(name, avatar, title);
                 }
             }
-        });*/
+        });
     }
 
     /**
@@ -586,6 +553,27 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
         final CacheMsgBean cacheMsgBean = mImBeanList.get(position);
         String content = cacheMsgBean.getMemberChanged();
         holder.tv_group_changed.setText(content);
+    }
+
+
+    private void openRedPackage(String name, String avatar, String title) {
+        HxRedPacketDialog redPacketDialog = new HxRedPacketDialog(mAct);
+        redPacketDialog.setOnRedPacketListener(new HxRedPacketDialog.OnRedPacketListener() {
+            @Override
+            public void onCloseClick() {
+
+            }
+
+            @Override
+            public void onOpenClick() {
+
+            }
+        });
+        redPacketDialog.show();
+
+        HxRedPacketDialog.RedPacketEntity entity = new HxRedPacketDialog
+                .RedPacketEntity(name, avatar, title);
+        redPacketDialog.setData(entity);
     }
 
 

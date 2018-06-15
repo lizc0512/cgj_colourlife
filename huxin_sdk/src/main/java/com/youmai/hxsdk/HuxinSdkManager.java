@@ -850,7 +850,7 @@ public class HuxinSdkManager {
      * @param value
      * @param callback
      */
-    public void openRedPackage(String destUuid, String value, String title,
+    public void sendRedPackage(String destUuid, String value, String title,
                                ReceiveListener callback) {
         YouMaiMsg.MsgData.Builder msgData = YouMaiMsg.MsgData.newBuilder();
         msgData.setSrcUserId(getUuid());
@@ -1259,11 +1259,11 @@ public class HuxinSdkManager {
     /**
      * 打开群红包
      *
-     * @param destUuid
+     * @param groupId
      * @param value
      * @param callback
      */
-    public void openRedPackageInGroup(String destUuid, String value, ReceiveListener callback) {
+    public void sendRedPackageInGroup(int groupId, String value, String title, ReceiveListener callback) {
         YouMaiMsg.MsgData.Builder msgData = YouMaiMsg.MsgData.newBuilder();
         msgData.setSrcUserId(getUuid());
         msgData.setSrcAvatar(getHeadUrl());
@@ -1271,12 +1271,13 @@ public class HuxinSdkManager {
         msgData.setSrcUserName(getUserName());
         msgData.setSrcRealname(getRealName());
         msgData.setSrcMobile(getPhoneNum());
-        msgData.setDestUserId(destUuid);
+        msgData.setGroupId(groupId);
         msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_RED_ENVELOPE);
         msgData.setSessionType(YouMaiMsg.SessionType.SESSION_TYPE_ORGGROUP);
 
         IMContentUtil imContentUtil = new IMContentUtil();
         imContentUtil.appendRedPackageValue(value);
+        imContentUtil.appendRedPackageTitle(title);
 
         msgData.setMsgContent(imContentUtil.serializeToString());
 

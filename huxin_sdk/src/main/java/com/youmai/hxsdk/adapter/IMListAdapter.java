@@ -30,6 +30,7 @@ import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.activity.CropMapActivity;
 import com.youmai.hxsdk.activity.PictureIndicatorActivity;
 import com.youmai.hxsdk.activity.RedPacketActivity;
+import com.youmai.hxsdk.activity.RedPacketDetailActivity;
 import com.youmai.hxsdk.config.AppConfig;
 import com.youmai.hxsdk.config.FileConfig;
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
@@ -489,7 +490,16 @@ public class IMListAdapter extends RecyclerView.Adapter {
         redPackageHolder.lay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openRedPackage(name, avatar, title);
+                if (cacheMsgBean.isRightUI()) {  //自己
+                    Intent intent = new Intent(mAct, RedPacketDetailActivity.class);
+                    intent.putExtra(RedPacketDetailActivity.AVATAR, avatar);
+                    intent.putExtra(RedPacketDetailActivity.NICKNAME, name);
+                    intent.putExtra(RedPacketDetailActivity.VALUE, value);
+                    intent.putExtra(RedPacketDetailActivity.REDTITLE, title);
+                    mAct.startActivity(intent);
+                } else {
+                    openRedPackage(name, avatar, title);
+                }
             }
         });
     }

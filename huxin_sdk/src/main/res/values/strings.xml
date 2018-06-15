@@ -152,4 +152,8 @@
     <string name="hx_dev_you_mai">正在使用有麦开发服务器</string>
     <string name="hx_color_test">正在使用彩生活测试服务器</string>
 
+    <!-- 红包 -->
+    <string name="red_packet_back">未领取的红包，将于24小时后发起退款</string>
+
+
 </resources>

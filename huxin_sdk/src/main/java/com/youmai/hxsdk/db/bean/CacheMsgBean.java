@@ -193,6 +193,9 @@ public class CacheMsgBean implements Parcelable {
             case SEND_VIDEO:
                 res = true;
                 break;
+            case SEND_REDPACKAGE:
+                res = true;
+                break;
         }
         return res;
     }

@@ -21,6 +21,7 @@ import com.youmai.hxsdk.im.cache.CacheMsgFile;
 import com.youmai.hxsdk.db.helper.CacheMsgHelper;
 import com.youmai.hxsdk.im.cache.CacheMsgImage;
 import com.youmai.hxsdk.im.cache.CacheMsgMap;
+import com.youmai.hxsdk.im.cache.CacheMsgRedPackage;
 import com.youmai.hxsdk.im.cache.CacheMsgTxt;
 import com.youmai.hxsdk.im.cache.CacheMsgVideo;
 import com.youmai.hxsdk.im.cache.CacheMsgVoice;
@@ -132,6 +133,8 @@ public class SendMsgService extends IntentService {
                 sendFile(msg);
             } else if (type == CacheMsgBean.SEND_VIDEO) {//视频
                 sendVideo(msg);
+            } else if (type == CacheMsgBean.SEND_REDPACKAGE) {//视频
+                sendRedPackage(msg);
             }
         } else {
             //无网络
@@ -315,6 +318,59 @@ public class SendMsgService extends IntentService {
     private void sendVideo(final SendMsg msgBean) {
         uploadVideo(msgBean, 1);
     }
+
+    private void sendRedPackage(final SendMsg msgBean) {
+        CacheMsgRedPackage msgBody = (CacheMsgRedPackage) msgBean.getMsg().getJsonBodyObj();
+        final String dstUuid = msgBean.getMsg().getReceiverUserId();
+        final int groupId = msgBean.getMsg().getGroupId();
+        String value = msgBody.getValue();
+        String redTitle = msgBody.getRedTitle();
+
+        if (TextUtils.isEmpty(dstUuid) && groupId == 0) {
+            return;
+        }
+
+        ReceiveListener listener = new ReceiveListener() {
+            @Override
+            public void OnRec(PduBase pduBase) {
+                //tcp会有消息缓存，在无网络状态下会执行onError()，一旦联网后，又继续尝试发送，就会执行OnRec()
+                try {
+                    final YouMaiMsg.ChatMsg_Ack ack = YouMaiMsg.ChatMsg_Ack.parseFrom(pduBase.body);
+                    final long msgId = ack.getMsgId();
+                    msgBean.getMsg().setMsgId(msgId);
+
+                    if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_OK) {
+                        updateUI(msgBean, CacheMsgBean.SEND_SUCCEED, null, SEND_MSG_END);
+                    } else {
+                        updateUI(msgBean, CacheMsgBean.SEND_FAILED, null, SEND_MSG_END);
+                    }
+                } catch (InvalidProtocolBufferException e) {
+                    e.printStackTrace();
+                    updateUI(msgBean, CacheMsgBean.SEND_FAILED, null, SEND_MSG_END);
+                }
+            }
+
+            @Override
+            public void onError(int errCode) {
+                updateUI(msgBean, CacheMsgBean.SEND_FAILED, null, SEND_MSG_END);
+            }
+        };
+
+        if (isGroup) {
+            ArrayList<String> ats = new ArrayList<>();
+            if (!ListUtils.isEmpty(atList)) {
+                for (GroupAtItem item : atList) {
+                    ats.add(item.getUuid());
+                }
+            }
+            HuxinSdkManager.instance().sendRedPackageInGroup(groupId, value, redTitle, listener);
+        } else {
+            HuxinSdkManager.instance().sendRedPackage(dstUuid, value, redTitle, listener);
+        }
+
+
+    }
+
 
     /**
      * 语音、图片或文件    1、上传七牛

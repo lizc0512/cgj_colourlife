@@ -7,17 +7,21 @@ import com.youmai.hxsdk.utils.GsonUtil;
 
 import org.json.JSONObject;
 
-/**
- * Author:  Kevin Feng
- * Email:   597415099@qq.com
- * Date:    2016-12-06 14:59
- * Description: 地图
- */
+
 public class CacheMsgRedPackage implements Parcelable, JsonFormat<CacheMsgRedPackage> {
+
+
+    public static final String RED_PACKET_REVIEW = "查看利是";
+    public static final String RED_PACKET_IS_OPEN_GROUP = "利是已被领完";
+    public static final String RED_PACKET_IS_OPEN_SINGLE = "利是已领取";
+    public static final String RED_PACKET_OVERDUE = "利是已过期";
+    public static final String RED_PACKET_RECEIVE = "领取利是";
+
 
     private long msgId;
     private String value;
     private String redTitle;
+    private String redStatus;
 
     public CacheMsgRedPackage() {
     }
@@ -49,6 +53,15 @@ public class CacheMsgRedPackage implements Parcelable, JsonFormat<CacheMsgRedPac
         return this;
     }
 
+    public String getRedStatus() {
+        return redStatus;
+    }
+
+    public CacheMsgRedPackage setRedStatus(String redStatus) {
+        this.redStatus = redStatus;
+        return this;
+    }
+
     @Override
     public String toJson() {
         return GsonUtil.format(this);
@@ -61,6 +74,7 @@ public class CacheMsgRedPackage implements Parcelable, JsonFormat<CacheMsgRedPac
             value = jsonObject.optString("value");
             redTitle = jsonObject.optString("redTitle");
             msgId = jsonObject.optLong("msgId");
+            redStatus = jsonObject.optString("redStatus");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -78,12 +92,14 @@ public class CacheMsgRedPackage implements Parcelable, JsonFormat<CacheMsgRedPac
         dest.writeLong(this.msgId);
         dest.writeString(this.value);
         dest.writeString(this.redTitle);
+        dest.writeString(this.redStatus);
     }
 
     protected CacheMsgRedPackage(Parcel in) {
         this.msgId = in.readLong();
         this.value = in.readString();
         this.redTitle = in.readString();
+        this.redStatus = in.readString();
     }
 
     public static final Creator<CacheMsgRedPackage> CREATOR = new Creator<CacheMsgRedPackage>() {

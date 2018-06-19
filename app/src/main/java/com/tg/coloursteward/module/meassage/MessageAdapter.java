@@ -368,6 +368,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     break;
                 case CacheMsgBean.SEND_REDPACKAGE:
                 case CacheMsgBean.RECEIVE_REDPACKAGE:
+                case CacheMsgBean.OPEN_REDPACKET:
                     itemView.message_type.setText(mContext.getString(R.string.message_red_package));
                     break;
                 default:
@@ -469,6 +470,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     break;
                 case CacheMsgBean.SEND_REDPACKAGE:
                 case CacheMsgBean.RECEIVE_REDPACKAGE:
+                case CacheMsgBean.OPEN_REDPACKET:
                     itemView.message_type.setText(mContext.getString(R.string.message_red_package));
                     break;
                 default:

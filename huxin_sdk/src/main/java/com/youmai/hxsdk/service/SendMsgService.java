@@ -49,6 +49,7 @@ public class SendMsgService extends IntentService {
 
     private static Context appContext;
 
+    public static final String KEY_ID = "id";
     public static final String KEY_DATA = "data";
     public static final String KEY_DATA_FROM = "data_from";
     public static final String FROM_IM = "IM";
@@ -62,6 +63,7 @@ public class SendMsgService extends IntentService {
     public static final String ACTION_SEND_MSG = "service.send.msg";
     public static final String ACTION_UPDATE_MSG = "service.update.msg";
 
+    long id;
     boolean isGroup;
     String groupName;
     ArrayList<GroupAtItem> atList;
@@ -91,6 +93,7 @@ public class SendMsgService extends IntentService {
             CacheMsgBean msgData = intent.getParcelableExtra(KEY_DATA);
             String msgDataFrom = intent.getStringExtra(KEY_DATA_FROM);//消息从哪里发起
 
+            id = intent.getLongExtra(KEY_ID, 0);
             isGroup = intent.getBooleanExtra("isGroup", false);
             groupName = intent.getStringExtra("groupName");
             atList = intent.getParcelableArrayListExtra("atList");
@@ -133,9 +136,9 @@ public class SendMsgService extends IntentService {
                 sendFile(msg);
             } else if (type == CacheMsgBean.SEND_VIDEO) {//视频
                 sendVideo(msg);
-            } else if (type == CacheMsgBean.SEND_REDPACKAGE) {//视频
+            } else if (type == CacheMsgBean.SEND_REDPACKAGE) {//发红包
                 sendRedPackage(msg);
-            } else if (type == CacheMsgBean.OPEN_REDPACKET) {//视频
+            } else if (type == CacheMsgBean.OPEN_REDPACKET) {//打开红包
                 openRedPackage(msg);
             }
         } else {

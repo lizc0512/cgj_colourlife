@@ -311,6 +311,7 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
                 oriType = RED_PACKAGE_RIGHT;
                 break;
             case CacheMsgBean.RECEIVE_REDPACKAGE:
+            case CacheMsgBean.OPEN_REDPACKET:
                 oriType = RED_PACKAGE_LEFT;
                 break;
             case CacheMsgBean.GROUP_MEMBER_CHANGED:

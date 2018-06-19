@@ -806,6 +806,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
         CacheMsgBean cacheMsgBean = getBaseMsg();
         cacheMsgBean.setMsgType(CacheMsgBean.SEND_REDPACKAGE)
                 .setJsonBodyObj(new CacheMsgRedPackage()
+                        .setRedStatus(CacheMsgRedPackage.RED_PACKET_REVIEW)
                         .setValue(value)
                         .setRedTitle(redTitle));
 

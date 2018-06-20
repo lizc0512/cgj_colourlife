@@ -520,6 +520,8 @@ public class IMMsgManager {
             notifyMsg(mContext, targetId, desName, newMsgTip + mContext.getString(R.string.hx_hook_strategy_msg_voice), isFormPush, isGroup);
         } else if (msg.getMsgType() == YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_FILE_VALUE) { //文件
             notifyMsg(mContext, targetId, desName, newMsgTip + mContext.getString(R.string.hx_hook_strategy_msg_file), isFormPush, isGroup);
+        } else if (msg.getMsgType() == YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_SEND_RED_ENVELOPE_VALUE) { //红包
+            notifyMsg(mContext, targetId, desName, newMsgTip + mContext.getString(R.string.hx_hook_strategy_msg_packet), isFormPush, isGroup);
         }
     }
 

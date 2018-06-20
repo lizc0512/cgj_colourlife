@@ -27,6 +27,7 @@
     <string name="hx_hook_strategy_msg_voice">【语音】</string>
     <string name="hx_hook_strategy_msg_tv">【视频】</string>
     <string name="hx_hook_strategy_msg_file">【文件】</string>
+    <string name="hx_hook_strategy_msg_packet">【红包】</string>
     <string name="hx_hook_strategy_msg">您有1条未读消息</string>
     <string name="hx_hook_strategy_hour">小时</string>
     <string name="hx_hook_strategy_minute">分</string>

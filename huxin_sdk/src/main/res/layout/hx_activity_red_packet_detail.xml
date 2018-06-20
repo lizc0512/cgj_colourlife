@@ -47,7 +47,7 @@
         android:layout_gravity="center_horizontal"
         android:padding="10dp"
         android:text="已存入我的饭票 可直接使用"
-        android:textColor="@color/hx_color_red_tag" />
+        android:textColor="@color/hxs_color_blue" />
 
 
     <TextView

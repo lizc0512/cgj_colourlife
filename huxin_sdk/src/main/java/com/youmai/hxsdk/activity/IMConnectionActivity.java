@@ -541,6 +541,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
 
             @Override
             public void hasSelectMsg(boolean selected) {
+
             }
         });
         recyclerView.setAdapter(imListAdapter);
@@ -802,12 +803,14 @@ public class IMConnectionActivity extends SdkBaseActivity implements
     public void sendRedPackage(Intent data) {
         final String value = data.getStringExtra("value");
         final String redTitle = data.getStringExtra("redTitle");
+        final String redUuid = data.getStringExtra("redUuid");
 
         CacheMsgBean cacheMsgBean = getBaseMsg();
         cacheMsgBean.setMsgType(CacheMsgBean.SEND_REDPACKAGE)
                 .setJsonBodyObj(new CacheMsgRedPackage()
                         .setRedStatus(CacheMsgRedPackage.RED_PACKET_REVIEW)
                         .setValue(value)
+                        .setRedUuid(redUuid)
                         .setRedTitle(redTitle));
 
         imListAdapter.addAndRefreshUI(cacheMsgBean);
@@ -996,7 +999,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
                         public void onClick(DialogInterface arg0,
                                             int arg1) {
                             arg0.dismiss();
-                            finish();
+                            onBackPressed();
                         }
                     });
 

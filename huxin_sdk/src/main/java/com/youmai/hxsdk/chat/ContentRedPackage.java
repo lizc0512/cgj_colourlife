@@ -14,7 +14,7 @@ public class ContentRedPackage implements Parcelable {
 
     private String value;
     private String title;
-    private String url;
+    private String uuid;
 
 
     public ContentRedPackage(IMContentUtil parser) {
@@ -28,8 +28,8 @@ public class ContentRedPackage implements Parcelable {
                 case CONTEXT_RED_TITLE:
                     title = parser.readNext();
                     break;
-                case CONTEXT_RED_URL:
-                    url = parser.readNext();
+                case CONTEXT_RED_UUID:
+                    uuid = parser.readNext();
                     break;
                 default:
                     parser.readNext();
@@ -48,8 +48,8 @@ public class ContentRedPackage implements Parcelable {
         return title;
     }
 
-    public String getUrl() {
-        return url;
+    public String getUuid() {
+        return uuid;
     }
 
     @Override
@@ -61,13 +61,13 @@ public class ContentRedPackage implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.value);
         dest.writeString(this.title);
-        dest.writeString(this.url);
+        dest.writeString(this.uuid);
     }
 
     protected ContentRedPackage(Parcel in) {
         this.value = in.readString();
         this.title = in.readString();
-        this.url = in.readString();
+        this.uuid = in.readString();
     }
 
     public static final Creator<ContentRedPackage> CREATOR = new Creator<ContentRedPackage>() {

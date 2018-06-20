@@ -22,6 +22,7 @@ public class CacheMsgRedPackage implements Parcelable, JsonFormat<CacheMsgRedPac
     private String value;
     private String redTitle;
     private String redStatus;
+    private String redUuid;
 
     public CacheMsgRedPackage() {
     }
@@ -62,6 +63,15 @@ public class CacheMsgRedPackage implements Parcelable, JsonFormat<CacheMsgRedPac
         return this;
     }
 
+    public String getRedUuid() {
+        return redUuid;
+    }
+
+    public CacheMsgRedPackage setRedUuid(String redUuid) {
+        this.redUuid = redUuid;
+        return this;
+    }
+
     @Override
     public String toJson() {
         return GsonUtil.format(this);
@@ -75,6 +85,7 @@ public class CacheMsgRedPackage implements Parcelable, JsonFormat<CacheMsgRedPac
             redTitle = jsonObject.optString("redTitle");
             msgId = jsonObject.optLong("msgId");
             redStatus = jsonObject.optString("redStatus");
+            redUuid = jsonObject.optString("redUuid");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -93,6 +104,7 @@ public class CacheMsgRedPackage implements Parcelable, JsonFormat<CacheMsgRedPac
         dest.writeString(this.value);
         dest.writeString(this.redTitle);
         dest.writeString(this.redStatus);
+        dest.writeString(this.redUuid);
     }
 
     protected CacheMsgRedPackage(Parcel in) {
@@ -100,6 +112,7 @@ public class CacheMsgRedPackage implements Parcelable, JsonFormat<CacheMsgRedPac
         this.value = in.readString();
         this.redTitle = in.readString();
         this.redStatus = in.readString();
+        this.redUuid = in.readString();
     }
 
     public static final Creator<CacheMsgRedPackage> CREATOR = new Creator<CacheMsgRedPackage>() {

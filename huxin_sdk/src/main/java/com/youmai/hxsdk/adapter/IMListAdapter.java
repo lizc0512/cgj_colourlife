@@ -474,7 +474,7 @@ public class IMListAdapter extends RecyclerView.Adapter {
      */
     private void onBindRedPackage(final RedPackageHolder redPackageHolder, final int position) {
         final CacheMsgBean bean = mImBeanList.get(position);
-        final Long msgId = bean.getMsgId();
+        //final Long msgId = bean.getMsgId();
 
         final CacheMsgRedPackage redPackage = (CacheMsgRedPackage) bean.getJsonBodyObj();
         showSendStart(redPackageHolder, bean.getMsgStatus(), bean, position);
@@ -485,6 +485,7 @@ public class IMListAdapter extends RecyclerView.Adapter {
         final String value = redPackage.getValue();
         final String title = redPackage.getRedTitle();
         final String redStatus = redPackage.getRedStatus();
+        final String redUuid = redPackage.getRedUuid();
 
         showMsgTime(position, redPackageHolder.senderDateTV, bean.getMsgTime());
 
@@ -497,38 +498,56 @@ public class IMListAdapter extends RecyclerView.Adapter {
         tv_red_title.setText(title);
         tv_red_status.setText(redStatus);
 
-
+        boolean isOpen;
         if (redStatus.equals(CacheMsgRedPackage.RED_PACKET_IS_OPEN_SINGLE)
                 || redStatus.equals(CacheMsgRedPackage.RED_PACKET_OVERDUE)) {
             img_red_package.setImageResource(R.drawable.ic_open_red_package);
             view.setBackgroundResource(R.drawable.hx_red_package_disable);
+            isOpen = true;
         } else {
             img_red_package.setImageResource(R.drawable.ic_send_red_package);
             view.setBackgroundResource(R.drawable.hx_red_package_enable);
+            isOpen = false;
         }
 
-
+        final boolean open = isOpen;
         redPackageHolder.lay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (bean.isRightUI()) {  //自己
                     Intent intent = new Intent(mAct, RedPacketDetailActivity.class);
+                    intent.putExtra(RedPacketDetailActivity.OPEN_TYPE, RedPacketDetailActivity.SINGLE_PACKET);
                     intent.putExtra(RedPacketDetailActivity.AVATAR, avatar);
                     intent.putExtra(RedPacketDetailActivity.NICKNAME, name);
                     intent.putExtra(RedPacketDetailActivity.VALUE, value);
                     intent.putExtra(RedPacketDetailActivity.REDTITLE, title);
+                    intent.putExtra(RedPacketDetailActivity.REDUUID, redUuid);
                     mAct.startActivity(intent);
                 } else {
-                    openRedPackage(bean, msgId, name, value, avatar, title);
+                    if (open) {
+                        Intent in = new Intent(mAct, RedPacketDetailActivity.class);
+                        in.putExtra(RedPacketDetailActivity.OPEN_TYPE, RedPacketDetailActivity.SINGLE_PACKET);
+                        in.putExtra(RedPacketDetailActivity.AVATAR, avatar);
+                        in.putExtra(RedPacketDetailActivity.NICKNAME, name);
+                        in.putExtra(RedPacketDetailActivity.VALUE, value);
+                        in.putExtra(RedPacketDetailActivity.REDTITLE, title);
+                        in.putExtra(RedPacketDetailActivity.REDUUID, redUuid);
+                        in.putExtra(RedPacketDetailActivity.MSGBEAN, bean);
+
+                        mAct.startActivity(in);
+                    } else {
+                        openRedPackage(bean, redUuid, name, value, avatar, title);
+                    }
                 }
             }
         });
     }
 
 
-    private void openRedPackage(final CacheMsgBean uiBean, final long msgId, final String name, final String value,
+    private void openRedPackage(final CacheMsgBean uiBean, final String redUuid,
+                                final String name, final String value,
                                 final String avatar, final String title) {
-        HxRedPacketDialog redPacketDialog = new HxRedPacketDialog(mAct);
+        final HxRedPacketDialog redPacketDialog = new HxRedPacketDialog(mAct);
         redPacketDialog.setOnRedPacketListener(new HxRedPacketDialog.OnRedPacketListener() {
             @Override
             public void onCloseClick() {
@@ -538,27 +557,18 @@ public class IMListAdapter extends RecyclerView.Adapter {
             @Override
             public void onOpenClick() {
 
-                final CacheMsgRedPackage redPackage = (CacheMsgRedPackage) uiBean.getJsonBodyObj();
-                redPackage.setRedStatus(CacheMsgRedPackage.RED_PACKET_IS_OPEN_SINGLE);
-                uiBean.setJsonBodyObj(redPackage);
-
-                long id = uiBean.getId();
-                uiBean.setMsgType(CacheMsgBean.OPEN_REDPACKET);
-
-                Intent intent = new Intent(mAct, SendMsgService.class);
-                intent.putExtra("id", id);
-                intent.putExtra("data", uiBean);
-                intent.putExtra("data_from", SendMsgService.FROM_IM);
-                mAct.startService(intent);
-
                 Intent in = new Intent(mAct, RedPacketDetailActivity.class);
                 in.putExtra(RedPacketDetailActivity.OPEN_TYPE, RedPacketDetailActivity.SINGLE_PACKET);
                 in.putExtra(RedPacketDetailActivity.AVATAR, avatar);
                 in.putExtra(RedPacketDetailActivity.NICKNAME, name);
                 in.putExtra(RedPacketDetailActivity.VALUE, value);
                 in.putExtra(RedPacketDetailActivity.REDTITLE, title);
+                in.putExtra(RedPacketDetailActivity.REDUUID, redUuid);
+                in.putExtra(RedPacketDetailActivity.MSGBEAN, uiBean);
 
                 mAct.startActivity(in);
+
+                redPacketDialog.dismiss();
 
             }
         });
@@ -648,18 +658,7 @@ public class IMListAdapter extends RecyclerView.Adapter {
             txtViewHolder.senderTV.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (MediaManager.isPlaying()) {
-                        MediaManager.release();
-                        //关闭本身的语音状态
-                        if (voicePlayAnim != null && voicePlayAnim.isRunning()) {
-                            voicePlayAnim.stop();
-                        }
-                        CacheMsgBean cacheMsgBean1 = mImBeanList.get(mPlayVoicePosition);
-                        cacheMsgBean1.setMsgStatus(CacheMsgBean.SEND_SUCCEED);
-                        CacheMsgHelper.instance().insertOrUpdate(mAct, cacheMsgBean1);
-                        mImBeanList.set(mPlayVoicePosition, cacheMsgBean1);
-                        notifyItemChanged(mPlayVoicePosition);
-                    }
+
                 }
             });
             txtViewHolder.senderTV.setOnClickLis(new CopeTextView.OnCopeListener() {
@@ -672,7 +671,7 @@ public class IMListAdapter extends RecyclerView.Adapter {
                     ARouter.getInstance()
                             .build(APath.MSG_FORWARD)
                             .withString("type", "forward_msg")
-                            .withParcelable("data", mImBeanList.get(position))
+                            .withParcelable("data", cacheMsgBean)
                             .navigation(mAct, 300);
                 }
 

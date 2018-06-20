@@ -167,6 +167,11 @@ public class IMContentUtil {
     }
 
 
+    public void appendRedPackageUuid(String redUuid) {
+        addItem(IMContentType.CONTEXT_RED_UUID, redUuid);
+    }
+
+
     public void addVideo(String videoId, String frameId, String name, String size, String time) {
         appendVideoId(videoId);
         appendPictureId(frameId);

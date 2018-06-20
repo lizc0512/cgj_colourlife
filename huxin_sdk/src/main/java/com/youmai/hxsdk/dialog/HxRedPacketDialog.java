@@ -48,6 +48,7 @@ public class HxRedPacketDialog extends Dialog implements View.OnClickListener {
     private TextView mTvName;
     private TextView mTvMsg;
     private ImageView mIvOpen;
+    private long duration = 1500;
 
     private OnRedPacketListener mListener;
 
@@ -116,7 +117,7 @@ public class HxRedPacketDialog extends Dialog implements View.OnClickListener {
 
 
     private void startAnim() {
-        AnimatorUtils.rotationY(mIvOpen, 1500, new Animator.AnimatorListener() {
+        AnimatorUtils.rotationY(mIvOpen, duration, new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animation) {
 
@@ -147,5 +148,9 @@ public class HxRedPacketDialog extends Dialog implements View.OnClickListener {
 
     public void setOnRedPacketListener(OnRedPacketListener listener) {
         mListener = listener;
+    }
+
+    public void setDuration(long duration) {
+        this.duration = duration;
     }
 }

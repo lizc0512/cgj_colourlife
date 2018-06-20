@@ -61,6 +61,7 @@ import com.youmai.hxsdk.im.cache.CacheMsgEmotion;
 import com.youmai.hxsdk.im.cache.CacheMsgFile;
 import com.youmai.hxsdk.im.cache.CacheMsgImage;
 import com.youmai.hxsdk.im.cache.CacheMsgMap;
+import com.youmai.hxsdk.im.cache.CacheMsgRedPackage;
 import com.youmai.hxsdk.im.cache.CacheMsgTxt;
 import com.youmai.hxsdk.im.cache.CacheMsgVideo;
 import com.youmai.hxsdk.im.cache.CacheMsgVoice;
@@ -856,7 +857,7 @@ public class IMGroupActivity extends SdkBaseActivity implements
             }
         }
 
-        if(isDel){
+        if (isDel) {
             atList.removeAll(tempList);
         }
 
@@ -957,6 +958,26 @@ public class IMGroupActivity extends SdkBaseActivity implements
     }
 
 
+    /**
+     * 发送红包
+     */
+    public void sendRedPackage(Intent data) {
+        final String value = data.getStringExtra("value");
+        final String redTitle = data.getStringExtra("redTitle");
+        final String redUuid = data.getStringExtra("redUuid");
+
+        CacheMsgBean cacheMsgBean = getBaseMsg();
+        cacheMsgBean.setMsgType(CacheMsgBean.SEND_REDPACKAGE)
+                .setJsonBodyObj(new CacheMsgRedPackage()
+                        .setRedStatus(CacheMsgRedPackage.RED_PACKET_REVIEW)
+                        .setValue(value)
+                        .setRedUuid(redUuid)
+                        .setRedTitle(redTitle));
+
+        iMGroupAdapter.addAndRefreshUI(cacheMsgBean);
+        sendMsg(cacheMsgBean);
+    }
+
     //拍照
     private void useCamera() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -1006,10 +1027,10 @@ public class IMGroupActivity extends SdkBaseActivity implements
      * 发红包
      */
     private void sendRedPacket() {
-        Intent intent = new Intent(this, RedPacketActivity.class);
-        intent.putExtra(RedPacketActivity.FROM_GROUP, true);
-        intent.putExtra(RedPacketActivity.TARGET_ID, groupId);
+        Intent intent = new Intent(this, RedPacketInGroupActivity.class);
+        intent.putExtra(RedPacketInGroupActivity.TARGET_ID, groupId);
         startActivityForResult(intent, REQUEST_CODE_RED_PACKET);
+
     }
 
 
@@ -1118,8 +1139,9 @@ public class IMGroupActivity extends SdkBaseActivity implements
             }
 
         } else if (requestCode == REQUEST_CODE_RED_PACKET
-                && resultCode == Activity.RESULT_OK) {
-
+                && resultCode == Activity.RESULT_OK) {  //红包
+            // send red
+            sendRedPackage(data);
 
         } else if (requestCode == REQUEST_CODE_GROUP_AT
                 && resultCode == Activity.RESULT_OK) {

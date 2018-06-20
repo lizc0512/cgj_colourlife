@@ -847,10 +847,11 @@ public class HuxinSdkManager {
      * 发送个人红包
      *
      * @param destUuid
+     * @param redUuid
      * @param value
      * @param callback
      */
-    public void sendRedPackage(String destUuid, String value, String title,
+    public void sendRedPackage(String destUuid, String redUuid, String value, String title,
                                ReceiveListener callback) {
         YouMaiMsg.MsgData.Builder msgData = YouMaiMsg.MsgData.newBuilder();
         msgData.setSrcUserId(getUuid());
@@ -866,6 +867,7 @@ public class HuxinSdkManager {
         IMContentUtil imContentUtil = new IMContentUtil();
         imContentUtil.appendRedPackageValue(value);
         imContentUtil.appendRedPackageTitle(title);
+        imContentUtil.appendRedPackageUuid(redUuid);
 
         msgData.setMsgContent(imContentUtil.serializeToString());
 
@@ -1295,10 +1297,11 @@ public class HuxinSdkManager {
      * 发送群红包
      *
      * @param groupId
+     * @param redUuid
      * @param value
      * @param callback
      */
-    public void sendRedPackageInGroup(int groupId, String value, String title, ReceiveListener callback) {
+    public void sendRedPackageInGroup(int groupId, String redUuid, String value, String title, ReceiveListener callback) {
         YouMaiMsg.MsgData.Builder msgData = YouMaiMsg.MsgData.newBuilder();
         msgData.setSrcUserId(getUuid());
         msgData.setSrcAvatar(getHeadUrl());
@@ -1313,6 +1316,7 @@ public class HuxinSdkManager {
         IMContentUtil imContentUtil = new IMContentUtil();
         imContentUtil.appendRedPackageValue(value);
         imContentUtil.appendRedPackageTitle(title);
+        imContentUtil.appendRedPackageUuid(redUuid);
 
         msgData.setMsgContent(imContentUtil.serializeToString());
 
@@ -1396,7 +1400,7 @@ public class HuxinSdkManager {
     }
 
 
-    public void reqSendSingleRedPackage(int moneySingle, String blessing, String pano,
+    public void reqSendSingleRedPackage(double moneySingle, String blessing, String pano,
                                         String transPassword, IGetListener listener) {
         String url = ColorsConfig.LISHI_SEND;
         ContentValues params = new ContentValues();
@@ -1430,7 +1434,7 @@ public class HuxinSdkManager {
         HttpConnector.httpGet(url, params, listener);
     }
 
-    public void reqSendGroupRedPackage(int numberTotal, int moneyTotal,
+    public void reqSendGroupRedPackage(double moneyTotal, int numberTotal,
                                        String blessing, String pano, String transPassword,
                                        IGetListener listener) {
         String url = ColorsConfig.LISHI_SEND;

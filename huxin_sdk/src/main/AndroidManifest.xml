@@ -158,6 +158,13 @@
             android:windowSoftInputMode="stateHidden|adjustResize" />
 
         <activity
+            android:name="com.youmai.hxsdk.activity.RedPacketInGroupActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"
+            android:theme="@style/HxSdkNewTheme"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+
+        <activity
             android:name="com.youmai.hxsdk.activity.RedPacketDetailActivity"
             android:screenOrientation="portrait"
             android:theme="@style/HxSdkNewTheme" />

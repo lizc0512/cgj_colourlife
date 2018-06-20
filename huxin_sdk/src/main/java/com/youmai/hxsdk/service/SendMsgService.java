@@ -330,6 +330,7 @@ public class SendMsgService extends IntentService {
         final int groupId = msgBean.getMsg().getGroupId();
         String value = msgBody.getValue();
         String redTitle = msgBody.getRedTitle();
+        String redUuid = msgBody.getRedUuid();
 
         if (TextUtils.isEmpty(dstUuid) && groupId == 0) {
             return;
@@ -368,9 +369,9 @@ public class SendMsgService extends IntentService {
                     ats.add(item.getUuid());
                 }
             }
-            HuxinSdkManager.instance().sendRedPackageInGroup(groupId, value, redTitle, listener);
+            HuxinSdkManager.instance().sendRedPackageInGroup(groupId, redUuid, value, redTitle, listener);
         } else {
-            HuxinSdkManager.instance().sendRedPackage(dstUuid, value, redTitle, listener);
+            HuxinSdkManager.instance().sendRedPackage(dstUuid, redUuid, value, redTitle, listener);
         }
 
 

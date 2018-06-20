@@ -1,5 +1,7 @@
 package com.youmai.hxsdk.activity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -14,9 +16,17 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.adapter.RedStatusAdapter;
+import com.youmai.hxsdk.db.bean.CacheMsgBean;
+import com.youmai.hxsdk.entity.red.GrabRedPacketResult;
+import com.youmai.hxsdk.entity.red.OpenRedPacketResult;
+import com.youmai.hxsdk.http.IGetListener;
+import com.youmai.hxsdk.im.cache.CacheMsgRedPackage;
+import com.youmai.hxsdk.service.SendMsgService;
 import com.youmai.hxsdk.utils.GlideRoundTransform;
+import com.youmai.hxsdk.utils.GsonUtil;
 
 /**
  * 作者：create by YW
@@ -33,10 +43,14 @@ public class RedPacketDetailActivity extends AppCompatActivity implements View.O
     public static final String NICKNAME = "nickName";
     public static final String VALUE = "value";
     public static final String REDTITLE = "redTitle";
+    public static final String REDUUID = "redUuid";
+    public static final String MSGBEAN = "msgBean";
 
 
     public static final int SINGLE_PACKET = 0;
     public static final int GROUP_PACKET = 1;
+
+    private Context mContext;
 
     private TextView tv_back;
     private TextView tv_title;
@@ -55,6 +69,8 @@ public class RedPacketDetailActivity extends AppCompatActivity implements View.O
     private String name;
     private String value;
     private String title;
+    private String redUuid;
+    private CacheMsgBean uiBean;
 
     private int openType;
 
@@ -62,7 +78,7 @@ public class RedPacketDetailActivity extends AppCompatActivity implements View.O
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.hx_activity_red_packet_detail);
-
+        mContext = this;
         openType = getIntent().getIntExtra(OPEN_TYPE, SINGLE_PACKET);
 
 
@@ -70,6 +86,8 @@ public class RedPacketDetailActivity extends AppCompatActivity implements View.O
         name = getIntent().getStringExtra(NICKNAME);
         value = getIntent().getStringExtra(VALUE);
         title = getIntent().getStringExtra(REDTITLE);
+        redUuid = getIntent().getStringExtra(REDUUID);
+        uiBean = getIntent().getParcelableExtra(MSGBEAN);
 
         initView();
         loadRedPacket();
@@ -112,11 +130,11 @@ public class RedPacketDetailActivity extends AppCompatActivity implements View.O
 
 
         tv_money = (TextView) findViewById(R.id.tv_money);
-        tv_money.setText(value);
+        tv_money.setText(value + " f");
 
         tv_info = (TextView) findViewById(R.id.tv_info);
-        tv_info.setText(R.string.red_packet_back);
-        tv_info.setTextColor(ContextCompat.getColor(this, R.color.gray));
+        //tv_info.setText(R.string.red_packet_back);
+        //tv_info.setTextColor(ContextCompat.getColor(this, R.color.gray));
 
         tv_status = (TextView) findViewById(R.id.tv_status);
 
@@ -128,6 +146,7 @@ public class RedPacketDetailActivity extends AppCompatActivity implements View.O
         recycler_view.setAdapter(adapter);
 
         if (openType == SINGLE_PACKET) {
+            tv_status.setVisibility(View.GONE);
             recycler_view.setVisibility(View.GONE);
         }
 
@@ -135,7 +154,50 @@ public class RedPacketDetailActivity extends AppCompatActivity implements View.O
 
 
     private void loadRedPacket() {
+        HuxinSdkManager.instance().openRedPackage(redUuid, new IGetListener() {
+            @Override
+            public void httpReqResult(String response) {
+                OpenRedPacketResult bean = GsonUtil.parse(response, OpenRedPacketResult.class);
+                if (bean != null && bean.isSuccess()) {
+                    int status = bean.getContent().getStatus();  //利是状态：-1已过期 ,0未拆开 ,1未领完 ,2已撤回 ,3已退款 ,4已领完
+                    int canOpen = bean.getContent().getCanOpen();
+                    int isGrabbed = bean.getContent().getIsGrabbed();
 
+                    if (status == 0 || status == 1) {
+
+                        if (canOpen == 1 && isGrabbed == 0) {
+                            HuxinSdkManager.instance().grabRedPackage(redUuid, new IGetListener() {
+                                @Override
+                                public void httpReqResult(String response) {
+                                    GrabRedPacketResult bean = GsonUtil.parse(response, GrabRedPacketResult.class);
+                                    if (bean != null && bean.isSuccess()) {
+                                        double moneyDraw = bean.getContent().getMoneyDraw();
+                                        tv_money.setText(moneyDraw + "");
+
+
+                                        final CacheMsgRedPackage redPackage = (CacheMsgRedPackage) uiBean.getJsonBodyObj();
+                                        redPackage.setRedStatus(CacheMsgRedPackage.RED_PACKET_IS_OPEN_SINGLE);
+                                        uiBean.setJsonBodyObj(redPackage);
+
+
+                                        long id = uiBean.getId();
+                                        uiBean.setMsgType(CacheMsgBean.OPEN_REDPACKET);
+
+                                        Intent intent = new Intent(mContext, SendMsgService.class);
+                                        intent.putExtra("id", id);
+                                        intent.putExtra("data", uiBean);
+                                        intent.putExtra("data_from", SendMsgService.FROM_IM);
+                                        startService(intent);
+
+
+                                    }
+                                }
+                            });
+                        }
+                    }
+                }
+            }
+        });
     }
 
 

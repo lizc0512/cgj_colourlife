@@ -103,7 +103,7 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
     private static final int NAME_CHANGED = 102;//群名修改
     private static final int OWNER_CHANGED = 103;//群主转让
 
-    private static final int HANDLER_REFRESH_PROGRESS = 0;
+    private static final int HANDLER_REFRESH_PROGREE = 0;
 
     private Activity mAct;
     private RecyclerView mRecyclerView;
@@ -259,8 +259,6 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
             onBindVideo((VideoViewHolder) holder, position);
         } else if (holder instanceof RedPackageHolder) {//红包
             onBindRedPackage((RedPackageHolder) holder, position);
-        } else if (holder instanceof GroupChangedViewHolder) {//群成员变动
-            onBindGroupChanged((GroupChangedViewHolder) holder, position);
         } else if (holder instanceof GroupChangedViewHolder) {//群成员变动
             onBindGroupChanged((GroupChangedViewHolder) holder, position);
         }
@@ -518,47 +516,81 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
      * 红包
      */
     private void onBindRedPackage(final RedPackageHolder redPackageHolder, final int position) {
-        final CacheMsgBean cacheMsgBean = mImBeanList.get(position);
-        final CacheMsgRedPackage redPackage = (CacheMsgRedPackage) cacheMsgBean.getJsonBodyObj();
-        showSendStart(redPackageHolder, cacheMsgBean.getMsgStatus(), cacheMsgBean, position);
+        final CacheMsgBean bean = mImBeanList.get(position);
+        //final Long msgId = bean.getMsgId();
+
+        final CacheMsgRedPackage redPackage = (CacheMsgRedPackage) bean.getJsonBodyObj();
+        showSendStart(redPackageHolder, bean.getMsgStatus(), bean, position);
+
+        final String name = bean.getSenderRealName();
+        final String avatar = bean.getSenderAvatar();
 
         final String value = redPackage.getValue();
-        final String name = cacheMsgBean.getSenderRealName();
-        final String avatar = cacheMsgBean.getSenderAvatar();
         final String title = redPackage.getRedTitle();
+        final String redStatus = redPackage.getRedStatus();
+        final String redUuid = redPackage.getRedUuid();
 
+        showMsgTime(position, redPackageHolder.senderDateTV, bean.getMsgTime());
 
-        showMsgTime(position, redPackageHolder.senderDateTV, cacheMsgBean.getMsgTime());
         ImageView img_red_package = redPackageHolder.img_red_package;
         TextView tv_red_title = redPackageHolder.tv_red_title;
         TextView tv_red_status = redPackageHolder.tv_red_status;
 
+        View view = redPackageHolder.lay;
 
+        tv_red_title.setText(title);
+        tv_red_status.setText(redStatus);
+
+        boolean isOpen;
+        if (redStatus.equals(CacheMsgRedPackage.RED_PACKET_IS_OPEN_SINGLE)
+                || redStatus.equals(CacheMsgRedPackage.RED_PACKET_OVERDUE)) {
+            img_red_package.setImageResource(R.drawable.ic_open_red_package);
+            view.setBackgroundResource(R.drawable.hx_red_package_disable);
+            isOpen = true;
+        } else {
+            img_red_package.setImageResource(R.drawable.ic_send_red_package);
+            view.setBackgroundResource(R.drawable.hx_red_package_enable);
+            isOpen = false;
+        }
+
+        final boolean open = isOpen;
         redPackageHolder.lay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (cacheMsgBean.isRightUI()) {  //自己
+                if (bean.isRightUI()) {  //自己
                     Intent intent = new Intent(mAct, RedPacketDetailActivity.class);
+                    intent.putExtra(RedPacketDetailActivity.OPEN_TYPE, RedPacketDetailActivity.SINGLE_PACKET);
+                    intent.putExtra(RedPacketDetailActivity.AVATAR, avatar);
+                    intent.putExtra(RedPacketDetailActivity.NICKNAME, name);
+                    intent.putExtra(RedPacketDetailActivity.VALUE, value);
+                    intent.putExtra(RedPacketDetailActivity.REDTITLE, title);
+                    intent.putExtra(RedPacketDetailActivity.REDUUID, redUuid);
                     mAct.startActivity(intent);
                 } else {
-                    openRedPackage(name, avatar, title);
+                    if (open) {
+                        Intent in = new Intent(mAct, RedPacketDetailActivity.class);
+                        in.putExtra(RedPacketDetailActivity.OPEN_TYPE, RedPacketDetailActivity.GROUP_PACKET);
+                        in.putExtra(RedPacketDetailActivity.AVATAR, avatar);
+                        in.putExtra(RedPacketDetailActivity.NICKNAME, name);
+                        in.putExtra(RedPacketDetailActivity.VALUE, value);
+                        in.putExtra(RedPacketDetailActivity.REDTITLE, title);
+                        in.putExtra(RedPacketDetailActivity.REDUUID, redUuid);
+                        in.putExtra(RedPacketDetailActivity.MSGBEAN, bean);
+
+                        mAct.startActivity(in);
+                    } else {
+                        openRedPackage(bean, redUuid, name, value, avatar, title);
+                    }
                 }
             }
         });
     }
 
-    /**
-     * 群成员变更
-     */
-    private void onBindGroupChanged(final GroupChangedViewHolder holder, final int position) {
-        final CacheMsgBean cacheMsgBean = mImBeanList.get(position);
-        String content = cacheMsgBean.getMemberChanged();
-        holder.tv_group_changed.setText(content);
-    }
 
-
-    private void openRedPackage(String name, String avatar, String title) {
-        HxRedPacketDialog redPacketDialog = new HxRedPacketDialog(mAct);
+    private void openRedPackage(final CacheMsgBean uiBean, final String redUuid,
+                                final String name, final String value,
+                                final String avatar, final String title) {
+        final HxRedPacketDialog redPacketDialog = new HxRedPacketDialog(mAct);
         redPacketDialog.setOnRedPacketListener(new HxRedPacketDialog.OnRedPacketListener() {
             @Override
             public void onCloseClick() {
@@ -568,6 +600,19 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
             @Override
             public void onOpenClick() {
 
+                Intent in = new Intent(mAct, RedPacketDetailActivity.class);
+                in.putExtra(RedPacketDetailActivity.OPEN_TYPE, RedPacketDetailActivity.GROUP_PACKET);
+                in.putExtra(RedPacketDetailActivity.AVATAR, avatar);
+                in.putExtra(RedPacketDetailActivity.NICKNAME, name);
+                in.putExtra(RedPacketDetailActivity.VALUE, value);
+                in.putExtra(RedPacketDetailActivity.REDTITLE, title);
+                in.putExtra(RedPacketDetailActivity.REDUUID, redUuid);
+                in.putExtra(RedPacketDetailActivity.MSGBEAN, uiBean);
+
+                mAct.startActivity(in);
+
+                redPacketDialog.dismiss();
+
             }
         });
         redPacketDialog.show();
@@ -575,6 +620,15 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
         HxRedPacketDialog.RedPacketEntity entity = new HxRedPacketDialog
                 .RedPacketEntity(name, avatar, title);
         redPacketDialog.setData(entity);
+    }
+
+    /**
+     * 群成员变更
+     */
+    private void onBindGroupChanged(final GroupChangedViewHolder holder, final int position) {
+        final CacheMsgBean cacheMsgBean = mImBeanList.get(position);
+        String content = cacheMsgBean.getMemberChanged();
+        holder.tv_group_changed.setText(content);
     }
 
 
@@ -590,7 +644,7 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
                     int progress = (int) (cur * 1.0f / total * 100);
                     cacheMsgBean.setProgress(progress);
 
-                    Message msg = mHandler.obtainMessage(HANDLER_REFRESH_PROGRESS);
+                    Message msg = mHandler.obtainMessage(HANDLER_REFRESH_PROGREE);
                     Bundle bundle = new Bundle();
                     bundle.putParcelable("item", cacheMsgBean);
                     msg.setData(bundle);
@@ -1466,7 +1520,7 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
             final IMGroupAdapter adapter = mTarget.get();
 
             switch (msg.what) {
-                case HANDLER_REFRESH_PROGRESS:
+                case HANDLER_REFRESH_PROGREE:
                     Bundle bundle = msg.getData();
                     CacheMsgBean cacheMsgBean = bundle.getParcelable("item");
                     adapter.refreshItemUI(cacheMsgBean);

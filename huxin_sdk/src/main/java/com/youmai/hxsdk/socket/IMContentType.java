@@ -44,7 +44,7 @@ public enum IMContentType {
 
     CONTEXT_RED_PACKAGE,    //红包金额 单位分
     CONTEXT_RED_TITLE,    //红包标题
-    CONTEXT_RED_URL,    //红包url
+    CONTEXT_RED_UUID,    //红包url
     CONTEXT_RED_RECEIVE_NAME,//红包领取者姓名
     CONTEXT_RED_RECEIVE_DONE,//该红包是否被领完
 

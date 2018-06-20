@@ -44,6 +44,8 @@
                 android:layout_alignTop="@id/img_red_package"
                 android:layout_marginLeft="5dp"
                 android:layout_toRightOf="@id/img_red_package"
+                android:ems="9"
+                android:singleLine="true"
                 android:text="恭喜发财，大吉大利"
                 android:textColor="@color/hx_color_white"
                 android:textSize="18sp" />

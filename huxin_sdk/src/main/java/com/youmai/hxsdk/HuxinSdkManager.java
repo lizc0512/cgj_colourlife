@@ -1311,7 +1311,7 @@ public class HuxinSdkManager {
         msgData.setSrcMobile(getPhoneNum());
         msgData.setGroupId(groupId);
         msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_SEND_RED_ENVELOPE);
-        msgData.setSessionType(YouMaiMsg.SessionType.SESSION_TYPE_ORGGROUP);
+        msgData.setSessionType(YouMaiMsg.SessionType.SESSION_TYPE_MULTICHAT);
 
         IMContentUtil imContentUtil = new IMContentUtil();
         imContentUtil.appendRedPackageValue(value);
@@ -1345,7 +1345,7 @@ public class HuxinSdkManager {
         msgData.setSrcMobile(getPhoneNum());
         msgData.setGroupId(groupId);
         msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_GET_RED_ENVELOPE);
-        msgData.setSessionType(YouMaiMsg.SessionType.SESSION_TYPE_ORGGROUP);
+        msgData.setSessionType(YouMaiMsg.SessionType.SESSION_TYPE_MULTICHAT);
 
         IMContentUtil imContentUtil = new IMContentUtil();
         imContentUtil.appendRedPackageValue(value);

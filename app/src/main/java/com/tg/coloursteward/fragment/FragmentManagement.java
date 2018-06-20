@@ -775,13 +775,7 @@ public class FragmentManagement extends Fragment {
                 magLinearLayoutStock.loaddingData();
             }
         }, 1000);
-        magLinearLayoutTicket.postDelayed(new Runnable() {//我的饭票
 
-            @Override
-            public void run() {
-                magLinearLayoutTicket.loaddingData();
-            }
-        }, 1500);
 		/*magLinearLayoutCommunity.postDelayed(new Runnable() {//在管小区
 
 			@Override
@@ -1434,6 +1428,12 @@ public class FragmentManagement extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        magLinearLayoutTicket.postDelayed(new Runnable() {//我的饭票
+            @Override
+            public void run() {
+                magLinearLayoutTicket.loaddingData();
+            }
+        }, 1500);
     }
 
     @Override

@@ -105,7 +105,7 @@ public class RedPacketDetailActivity extends AppCompatActivity implements View.O
         tv_back.setOnClickListener(this);
 
         tv_title = (TextView) findViewById(R.id.tv_title);
-        tv_title.setText("红包详情");
+        tv_title.setText("利是详情");
 
         tv_right = (TextView) findViewById(R.id.tv_right);
         tv_right.setText("红包记录");
@@ -130,7 +130,10 @@ public class RedPacketDetailActivity extends AppCompatActivity implements View.O
 
 
         tv_money = (TextView) findViewById(R.id.tv_money);
-        tv_money.setText(value + " f");
+
+        String format = getResources().getString(R.string.red_packet_unit);
+
+        tv_money.setText(String.format(format, value));
 
         tv_info = (TextView) findViewById(R.id.tv_info);
         //tv_info.setText(R.string.red_packet_back);
@@ -196,8 +199,18 @@ public class RedPacketDetailActivity extends AppCompatActivity implements View.O
                         }
                     }
                 }
+
+
+                HuxinSdkManager.instance().redPackageDetail(redUuid, new IGetListener() {
+                    @Override
+                    public void httpReqResult(String response) {
+                        String test = response;
+                    }
+                });
             }
         });
+
+
     }
 
 

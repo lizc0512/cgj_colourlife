@@ -249,7 +249,7 @@ public class RedPacketActivity extends AppCompatActivity implements View.OnClick
                             if (bean != null && bean.isSuccess()) {
                                 String redUuid = bean.getContent().getLishiUuid();
                                 Intent intent = new Intent();
-                                intent.putExtra("value", et_money.getText().toString().trim());
+                                intent.putExtra("value", String.valueOf(money));
                                 intent.putExtra("redTitle", title);
                                 intent.putExtra("redUuid", redUuid);
                                 setResult(Activity.RESULT_OK, intent);

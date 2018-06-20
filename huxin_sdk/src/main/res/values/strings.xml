@@ -159,5 +159,6 @@
     <string name="red_packet_is_open_single">利是已领取</string>
     <string name="red_packet_overdue">利是已过期</string>
     <string name="red_packet_receive">领取利是</string>
+    <string name="red_packet_unit">%1$s f"</string>
 
 </resources>

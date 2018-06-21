@@ -15,7 +15,8 @@ import android.widget.TextView;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.entity.red.RedPacketHistoryDetail;
-import com.youmai.hxsdk.fragment.RedPackageHistoryFragment;
+import com.youmai.hxsdk.fragment.PacketReceiveHistoryFragment;
+import com.youmai.hxsdk.fragment.PacketSendHistoryFragment;
 import com.youmai.hxsdk.http.IGetListener;
 import com.youmai.hxsdk.utils.GsonUtil;
 
@@ -151,10 +152,10 @@ public class RedPacketHistoryActivity extends AppCompatActivity implements View.
 
             switch (arg0) {
                 case 0:
-                    ft = new RedPackageHistoryFragment();
+                    ft = new PacketSendHistoryFragment();
                     break;
                 case 1:
-                    ft = new RedPackageHistoryFragment();
+                    ft = new PacketReceiveHistoryFragment();
                     break;
                 default:
                     break;

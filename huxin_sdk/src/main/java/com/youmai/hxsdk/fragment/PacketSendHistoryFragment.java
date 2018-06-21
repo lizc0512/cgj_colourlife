@@ -2,7 +2,6 @@
 package com.youmai.hxsdk.fragment;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
@@ -23,8 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class RedPackageHistoryFragment extends Fragment {
-    private static final String TAG = RedPackageHistoryFragment.class.getSimpleName();
+public class PacketSendHistoryFragment extends Fragment {
+    private static final String TAG = PacketSendHistoryFragment.class.getSimpleName();
 
 
     private XRecyclerView mRecyclerView;

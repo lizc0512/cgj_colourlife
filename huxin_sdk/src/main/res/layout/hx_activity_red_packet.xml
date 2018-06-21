@@ -6,7 +6,7 @@
     android:background="#f5f5f5"
     android:orientation="vertical">
 
-    <include layout="@layout/hx_common_header_title" />
+    <include layout="@layout/hx_red_package_header_title" />
 
     <TextView
         android:id="@+id/tv_error"

@@ -29,7 +29,6 @@ public class PacketReceiveHistoryFragment extends Fragment {
     private XRecyclerView mRecyclerView;
     private RedPackageRecordAdapter mAdapter;
 
-    private ArrayList<String> listData;
     private int page = 1;
 
     @Override
@@ -74,12 +73,6 @@ public class PacketReceiveHistoryFragment extends Fragment {
                 reqDate();
             }
         });
-
-        listData = new ArrayList<>();
-        for (int i = 0; i < 25; i++) {
-            listData.add("item" + i);
-        }
-
 
         mRecyclerView.setAdapter(mAdapter);
     }

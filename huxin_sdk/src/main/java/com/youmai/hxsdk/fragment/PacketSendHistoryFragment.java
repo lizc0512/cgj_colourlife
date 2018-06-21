@@ -18,7 +18,6 @@ import com.youmai.hxsdk.http.IGetListener;
 import com.youmai.hxsdk.utils.GsonUtil;
 import com.youmai.hxsdk.utils.ListUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -29,7 +28,6 @@ public class PacketSendHistoryFragment extends Fragment {
     private XRecyclerView mRecyclerView;
     private RedPackageRecordAdapter mAdapter;
 
-    private ArrayList<String> listData;
     private int page = 1;
 
     @Override
@@ -74,12 +72,6 @@ public class PacketSendHistoryFragment extends Fragment {
                 reqDate();
             }
         });
-
-        listData = new ArrayList<>();
-        for (int i = 0; i < 25; i++) {
-            listData.add("item" + i);
-        }
-
 
         mRecyclerView.setAdapter(mAdapter);
     }

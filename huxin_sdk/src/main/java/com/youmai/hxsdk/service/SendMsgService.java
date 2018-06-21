@@ -382,6 +382,7 @@ public class SendMsgService extends IntentService {
         CacheMsgRedPackage msgBody = (CacheMsgRedPackage) msgBean.getMsg().getJsonBodyObj();
         final String dstUuid = msgBean.getMsg().getReceiverUserId();
         final int groupId = msgBean.getMsg().getGroupId();
+        final String sendUuid = msgBean.getMsg().getSenderUserId();
         String value = msgBody.getValue();
         String redTitle = msgBody.getRedTitle();
 
@@ -422,9 +423,9 @@ public class SendMsgService extends IntentService {
                     ats.add(item.getUuid());
                 }
             }
-            HuxinSdkManager.instance().openRedPackageInGroup(groupId, value, redTitle, listener);
+            HuxinSdkManager.instance().openRedPackageInGroup(groupId, sendUuid, value, redTitle, listener);
         } else {
-            HuxinSdkManager.instance().openRedPackage(dstUuid, value, redTitle, listener);
+            HuxinSdkManager.instance().openRedPackage(sendUuid, value, redTitle, listener);
         }
 
 

@@ -171,6 +171,14 @@ public class IMContentUtil {
         addItem(IMContentType.CONTEXT_RED_UUID, redUuid);
     }
 
+    public void appendRedPackageReceiveName(String receiveName) {
+        addItem(IMContentType.CONTEXT_RED_RECEIVE_NAME, receiveName);
+    }
+
+    public void appendRedPackageDone(String done) {
+        addItem(IMContentType.CONTEXT_RED_RECEIVE_DONE, done);
+    }
+
 
     public void addVideo(String videoId, String frameId, String name, String size, String time) {
         appendVideoId(videoId);

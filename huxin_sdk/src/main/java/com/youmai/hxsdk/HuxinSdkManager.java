@@ -900,9 +900,10 @@ public class HuxinSdkManager {
         msgData.setSessionType(YouMaiMsg.SessionType.SESSION_TYPE_SINGLE);
 
         IMContentUtil imContentUtil = new IMContentUtil();
-        imContentUtil.appendRedPackageValue(value);
-        imContentUtil.appendRedPackageTitle(title);
+        //imContentUtil.appendRedPackageValue(value);
+        //imContentUtil.appendRedPackageTitle(title);
         imContentUtil.appendRedPackageReceiveName(getRealName());
+        imContentUtil.appendRedPackageDone("1");
 
         msgData.setMsgContent(imContentUtil.serializeToString());
 
@@ -1350,9 +1351,10 @@ public class HuxinSdkManager {
         msgData.setSessionType(YouMaiMsg.SessionType.SESSION_TYPE_MULTICHAT);
 
         IMContentUtil imContentUtil = new IMContentUtil();
-        imContentUtil.appendRedPackageValue(value);
-        imContentUtil.appendRedPackageTitle(title);
+        //imContentUtil.appendRedPackageValue(value);
+        //imContentUtil.appendRedPackageTitle(title);
         imContentUtil.appendRedPackageReceiveName(getRealName());
+        imContentUtil.appendRedPackageDone("1");
 
         msgData.setMsgContent(imContentUtil.serializeToString());
 

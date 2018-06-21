@@ -390,6 +390,10 @@ public class SendMsgService extends IntentService {
             return;
         }
 
+        if (groupId > 0) {
+            isGroup = true;
+        }
+
         ReceiveListener listener = new ReceiveListener() {
             @Override
             public void OnRec(PduBase pduBase) {

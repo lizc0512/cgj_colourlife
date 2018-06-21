@@ -12,8 +12,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.R;
+import com.youmai.hxsdk.entity.red.RedPacketHistoryDetail;
 import com.youmai.hxsdk.fragment.RedPackageHistoryFragment;
+import com.youmai.hxsdk.http.IGetListener;
+import com.youmai.hxsdk.utils.GsonUtil;
 
 /**
  * 作者：create by YW
@@ -83,6 +87,25 @@ public class RedPacketHistoryActivity extends AppCompatActivity implements View.
 
 
     private void loadRedPacket() {
+        HuxinSdkManager.instance().redSendPacketDetail("201806", new IGetListener() {
+            @Override
+            public void httpReqResult(String response) {
+                RedPacketHistoryDetail bean = GsonUtil.parse(response, RedPacketHistoryDetail.class);
+                if (bean != null && bean.isSuccess()) {
+
+                }
+            }
+        });
+
+        HuxinSdkManager.instance().redReceivePacketDetail("201806", new IGetListener() {
+            @Override
+            public void httpReqResult(String response) {
+                RedPacketHistoryDetail bean = GsonUtil.parse(response, RedPacketHistoryDetail.class);
+                if (bean != null && bean.isSuccess()) {
+
+                }
+            }
+        });
 
     }
 

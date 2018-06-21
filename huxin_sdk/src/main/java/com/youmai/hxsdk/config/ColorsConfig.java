@@ -39,7 +39,10 @@ public class ColorsConfig {
     public static final String LISHI_OPEN = getIceHost() + "clsfwopenapi/lishi/open";
     public static final String LISHI_GRAB = getIceHost() + "clsfwopenapi/lishi/grab";
     public static final String LISHI_DETAIL = getIceHost() + "clsfwopenapi/lishi/detail";
-
+    public static final String LISHI_SEND_DETAIL = getIceHost() + "clsfwopenapi/lishi/history/send/profile";
+    public static final String LISHI_RECEIVE_DETAIL = getIceHost() + "clsfwopenapi/lishi/history/receive/profile";
+    public static final String LISHI_SEND_LIST = getIceHost() + "clsfwopenapi/lishi/history/send/list";
+    public static final String LISHI_RECEIVE_LIST = getIceHost() + "clsfwopenapi/lishi/history/receive /list";
 
     public static final String CP_MOBILE_HOST = "http://cpmobile.colourlife.com";
     public static final String CHECK_PAYPWD = "/1.0/caiRedPaket/checkPayPwd";

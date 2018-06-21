@@ -11,21 +11,25 @@ import android.widget.TextView;
 
 
 import com.youmai.hxsdk.R;
+import com.youmai.hxsdk.entity.red.SendRedPacketList;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
 public class RedPackageRecordAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private Context mContext;
-    private List<String> mList;
+    private List<SendRedPacketList.ContentBean> mList;
 
     public RedPackageRecordAdapter(Context context) {
         mContext = context;
+        mList = new ArrayList<>();
     }
 
-    public void setList(List<String> list) {
-        mList = list;
+
+    public void setList(List<SendRedPacketList.ContentBean> list) {
+        mList.addAll(list);
         notifyDataSetChanged();
     }
 
@@ -47,7 +51,7 @@ public class RedPackageRecordAdapter extends RecyclerView.Adapter<RecyclerView.V
     // 数据绑定
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
-        final String item = mList.get(position);
+        final SendRedPacketList.ContentBean item = mList.get(position);
 
         ImageView img_head = ((TextViewHolder) viewHolder).img_head;
         TextView tv_name = ((TextViewHolder) viewHolder).tv_name;

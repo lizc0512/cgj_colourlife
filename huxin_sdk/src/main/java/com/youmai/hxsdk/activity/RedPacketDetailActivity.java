@@ -22,11 +22,14 @@ import com.youmai.hxsdk.adapter.RedStatusAdapter;
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
 import com.youmai.hxsdk.entity.red.GrabRedPacketResult;
 import com.youmai.hxsdk.entity.red.OpenRedPacketResult;
+import com.youmai.hxsdk.entity.red.RedPackageDetail;
 import com.youmai.hxsdk.http.IGetListener;
 import com.youmai.hxsdk.im.cache.CacheMsgRedPackage;
 import com.youmai.hxsdk.service.SendMsgService;
 import com.youmai.hxsdk.utils.GlideRoundTransform;
 import com.youmai.hxsdk.utils.GsonUtil;
+
+import java.util.List;
 
 /**
  * 作者：create by YW
@@ -64,6 +67,7 @@ public class RedPacketDetailActivity extends AppCompatActivity implements View.O
     private TextView tv_info;
     private TextView tv_status;
     private RecyclerView recycler_view;
+    private RedStatusAdapter adapter;
 
     private String avatar;
     private String name;
@@ -109,6 +113,7 @@ public class RedPacketDetailActivity extends AppCompatActivity implements View.O
 
         tv_right = (TextView) findViewById(R.id.tv_right);
         tv_right.setText("红包记录");
+        tv_right.setOnClickListener(this);
 
         img_head = (ImageView) findViewById(R.id.img_head);
         int size = getResources().getDimensionPixelOffset(R.dimen.red_head);
@@ -142,7 +147,7 @@ public class RedPacketDetailActivity extends AppCompatActivity implements View.O
         tv_status = (TextView) findViewById(R.id.tv_status);
 
         recycler_view = (RecyclerView) findViewById(R.id.recycler_view);
-        RedStatusAdapter adapter = new RedStatusAdapter(this);
+        adapter = new RedStatusAdapter(this);
 
         recycler_view.addItemDecoration(new DividerItemDecoration(this, LinearLayout.VERTICAL));
         recycler_view.setLayoutManager(new LinearLayoutManager(this));
@@ -204,7 +209,16 @@ public class RedPacketDetailActivity extends AppCompatActivity implements View.O
                 HuxinSdkManager.instance().redPackageDetail(redUuid, new IGetListener() {
                     @Override
                     public void httpReqResult(String response) {
-                        String test = response;
+                        RedPackageDetail bean = GsonUtil.parse(response, RedPackageDetail.class);
+                        if (bean != null && bean.isSuccess()) {
+                            List<RedPackageDetail.ContentBean.PacketListBean> list = bean.getContent().getPacketList();
+                            adapter.setList(list);
+
+                            int total = bean.getContent().getNumberTotal();
+                            int draw = bean.getContent().getNumberDraw();
+
+                            tv_status.setText("领取" + draw + "/" + total);
+                        }
                     }
                 });
             }
@@ -219,6 +233,8 @@ public class RedPacketDetailActivity extends AppCompatActivity implements View.O
         int id = v.getId();
         if (id == R.id.tv_back) {
             onBackPressed();
+        } else if (id == R.id.tv_right) {
+            startActivity(new Intent(this, RedPacketHistoryActivity.class));
         }
     }
 }

@@ -8,8 +8,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.youmai.hxsdk.R;
-import com.youmai.hxsdk.entity.RedStatusItem;
+import com.youmai.hxsdk.entity.red.RedPackageDetail;
+import com.youmai.hxsdk.utils.GlideRoundTransform;
 
 import java.util.List;
 
@@ -17,13 +21,13 @@ import java.util.List;
 public class RedStatusAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private Context mContext;
-    private List<RedStatusItem> mList;
+    private List<RedPackageDetail.ContentBean.PacketListBean> mList;
 
     public RedStatusAdapter(Context context) {
         mContext = context;
     }
 
-    public void setList(List<RedStatusItem> list) {
+    public void setList(List<RedPackageDetail.ContentBean.PacketListBean> list) {
         mList = list;
         notifyDataSetChanged();
     }
@@ -46,13 +50,34 @@ public class RedStatusAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     // 数据绑定
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
-        RedStatusItem item = mList.get(position);
+        RedPackageDetail.ContentBean.PacketListBean item = mList.get(position);
 
         ImageView img_head = ((TextViewHolder) viewHolder).img_head;
         TextView tv_name = ((TextViewHolder) viewHolder).tv_name;
         TextView tv_time = ((TextViewHolder) viewHolder).tv_time;
         TextView tv_money = ((TextViewHolder) viewHolder).tv_money;
 
+        boolean isBest = item.getIsBest() == 1;
+        double money = item.getReceiveMoney();
+        String name = item.getReceiverNickname();
+        String url = item.getReceiverHeadImgUrl();
+        String time = item.getReceiveTime();
+
+        int size = mContext.getResources().getDimensionPixelOffset(R.dimen.card_head);
+        Glide.with(mContext)
+                .load(url)
+                .apply(new RequestOptions()
+                        .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+                        .transform(new GlideRoundTransform())
+                        .override(size, size)
+                        .placeholder(R.drawable.color_default_header)
+                        .error(R.drawable.color_default_header))
+                .into(img_head);
+        tv_name.setText(name);
+        tv_time.setText(time);
+
+        String format = mContext.getResources().getString(R.string.red_packet_unit);
+        tv_money.setText(String.format(format, String.valueOf(money)));
 
     }
 

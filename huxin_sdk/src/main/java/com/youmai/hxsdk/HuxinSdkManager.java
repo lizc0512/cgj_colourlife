@@ -1543,6 +1543,98 @@ public class HuxinSdkManager {
         HttpConnector.httpGet(url, params, listener);
     }
 
+
+    public void redSendPacketDetail(String month, IGetListener listener) {
+        String url = ColorsConfig.LISHI_SEND_DETAIL;
+        ContentValues params = new ContentValues();
+
+        String uuid = getUuid();
+        String appID = ColorsConfig.getAppID();
+        String nonce_str = "123456";
+
+        params.put("user_uuid", uuid);
+        params.put("month", month);
+        params.put("appID", appID);
+        params.put("nonce_str", nonce_str);
+
+        String signature = redPackageSign(params);
+
+        params.put("signature", signature);
+
+        ColorsConfig.commonParams(params);
+
+        HttpConnector.httpGet(url, params, listener);
+    }
+
+    public void redReceivePacketDetail(String month, IGetListener listener) {
+        String url = ColorsConfig.LISHI_RECEIVE_DETAIL;
+        ContentValues params = new ContentValues();
+
+        String uuid = getUuid();
+        String appID = ColorsConfig.getAppID();
+        String nonce_str = "123456";
+
+        params.put("user_uuid", uuid);
+        params.put("month", month);
+        params.put("appID", appID);
+        params.put("nonce_str", nonce_str);
+
+        String signature = redPackageSign(params);
+
+        params.put("signature", signature);
+
+        ColorsConfig.commonParams(params);
+
+        HttpConnector.httpGet(url, params, listener);
+    }
+
+    public void redSendPacketList(String month, int page, IGetListener listener) {
+        String url = ColorsConfig.LISHI_SEND_LIST;
+        ContentValues params = new ContentValues();
+
+        String uuid = getUuid();
+        String appID = ColorsConfig.getAppID();
+        String nonce_str = "123456";
+
+        params.put("user_uuid", uuid);
+        params.put("month", month);
+        params.put("page", page);
+        params.put("appID", appID);
+        params.put("nonce_str", nonce_str);
+
+        String signature = redPackageSign(params);
+
+        params.put("signature", signature);
+
+        ColorsConfig.commonParams(params);
+
+        HttpConnector.httpGet(url, params, listener);
+    }
+
+    public void redReceivePacketList(String month, int page, IGetListener listener) {
+        String url = ColorsConfig.LISHI_RECEIVE_LIST;
+        ContentValues params = new ContentValues();
+
+        String uuid = getUuid();
+        String appID = ColorsConfig.getAppID();
+        String nonce_str = "123456";
+
+        params.put("user_uuid", uuid);
+        params.put("month", month);
+        params.put("page", page);
+        params.put("appID", appID);
+        params.put("nonce_str", nonce_str);
+
+        String signature = redPackageSign(params);
+
+        params.put("signature", signature);
+
+        ColorsConfig.commonParams(params);
+
+        HttpConnector.httpGet(url, params, listener);
+    }
+
+
     /**
      * 验证支付密码
      */

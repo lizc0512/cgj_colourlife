@@ -867,7 +867,6 @@ public class IMConnectionActivity extends SdkBaseActivity implements
      */
     private void sendRedPacket() {
         Intent intent = new Intent(this, RedPacketActivity.class);
-        intent.putExtra(RedPacketActivity.FROM_GROUP, false);
         intent.putExtra(RedPacketActivity.TARGET_ID, dstUuid);
         intent.putExtra(RedPacketActivity.TARGET_NAME, dstNickName);
         intent.putExtra(RedPacketActivity.TARGET_AVATAR, dstAvatar);

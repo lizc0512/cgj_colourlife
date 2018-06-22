@@ -1029,6 +1029,7 @@ public class IMGroupActivity extends SdkBaseActivity implements
     private void sendRedPacket() {
         Intent intent = new Intent(this, RedPacketInGroupActivity.class);
         intent.putExtra(RedPacketInGroupActivity.TARGET_ID, groupId);
+        intent.putExtra(GROUP_INFO, mGroupInfo);
         startActivityForResult(intent, REQUEST_CODE_RED_PACKET);
 
     }

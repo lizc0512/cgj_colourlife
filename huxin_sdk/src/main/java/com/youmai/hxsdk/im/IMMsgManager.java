@@ -505,6 +505,9 @@ public class IMMsgManager {
         if (msg.getMsgType() == YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_TEXT_VALUE) {  //文字
             ContentText text = msg.getContent().getText();
             String content = text.getContent();
+            if (content == null) {
+                return;
+            }
             if (content.startsWith("/")) { //自定义表情
                 notifyMsg(mContext, targetId, desName, newMsgTip + mContext.getString(R.string.hx_hook_strategy_msg_emoji), isFormPush, isGroup);
             } else {  //文字

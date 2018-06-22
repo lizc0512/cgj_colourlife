@@ -38,11 +38,11 @@ public class StandardRedPackage {
         /**
          * blessing : 大吉大利，今晚吃鸡！
          * orderDesc : 1.彩利是的支付使用的是彩饭票<br/>
-         * 2.可在”彩利是-利是明细“中查看领取情况<br/>
-         * 3.若发送至微信过程中有问题，可前往”彩利是-利是明细“点击”发送不成功？“继续发给微信好友<br/>
-         * 4.未被抢光的饭票将会在24小时后退回“我的饭票”
-         * fixedConfig : {"lsType":1,"moneyMax":2000,"moneyMin":1,"numberMax":100,"numberMin":1}
-         * randomConfig : {"lsType":2,"moneyMax":2000,"moneyMin":1,"numberMax":100,"numberMin":1}
+         2.可在”彩利是-利是明细“中查看领取情况<br/>
+         3.若发送至微信过程中有问题，可前往”彩利是-利是明细“点击”发送不成功？“继续发给微信好友<br/>
+         4.未被抢光的饭票将会在24小时后退回“我的饭票”
+         * fixedConfig : {"lsType":1,"moneyMax":2000,"moneyMin":0.1,"numberMax":100,"numberMin":1}
+         * randomConfig : {"lsType":2,"moneyMax":2000,"moneyMin":0.1,"numberMax":100,"numberMin":1}
          */
 
         private String blessing;
@@ -86,14 +86,14 @@ public class StandardRedPackage {
             /**
              * lsType : 1
              * moneyMax : 2000
-             * moneyMin : 1
+             * moneyMin : 0.1
              * numberMax : 100
              * numberMin : 1
              */
 
             private int lsType;
-            private int moneyMax;
-            private int moneyMin;
+            private double moneyMax;
+            private double moneyMin;
             private int numberMax;
             private int numberMin;
 
@@ -105,19 +105,19 @@ public class StandardRedPackage {
                 this.lsType = lsType;
             }
 
-            public int getMoneyMax() {
+            public double getMoneyMax() {
                 return moneyMax;
             }
 
-            public void setMoneyMax(int moneyMax) {
+            public void setMoneyMax(double moneyMax) {
                 this.moneyMax = moneyMax;
             }
 
-            public int getMoneyMin() {
+            public double getMoneyMin() {
                 return moneyMin;
             }
 
-            public void setMoneyMin(int moneyMin) {
+            public void setMoneyMin(double moneyMin) {
                 this.moneyMin = moneyMin;
             }
 
@@ -142,14 +142,14 @@ public class StandardRedPackage {
             /**
              * lsType : 2
              * moneyMax : 2000
-             * moneyMin : 1
+             * moneyMin : 0.1
              * numberMax : 100
              * numberMin : 1
              */
 
             private int lsType;
             private int moneyMax;
-            private int moneyMin;
+            private double moneyMin;
             private int numberMax;
             private int numberMin;
 
@@ -169,11 +169,11 @@ public class StandardRedPackage {
                 this.moneyMax = moneyMax;
             }
 
-            public int getMoneyMin() {
+            public double getMoneyMin() {
                 return moneyMin;
             }
 
-            public void setMoneyMin(int moneyMin) {
+            public void setMoneyMin(double moneyMin) {
                 this.moneyMin = moneyMin;
             }
 

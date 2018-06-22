@@ -9,7 +9,6 @@ import android.support.v7.widget.AppCompatEditText;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -20,19 +19,17 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.R;
-import com.youmai.hxsdk.dialog.HxPayErrorDialog;
 import com.youmai.hxsdk.dialog.HxPayPasswordDialog;
-import com.youmai.hxsdk.dialog.HxRedPacketDialog;
 import com.youmai.hxsdk.entity.red.RedPackageList;
 import com.youmai.hxsdk.entity.red.SendRedPacketResult;
-import com.youmai.hxsdk.entity.red.ShareRedPackage;
 import com.youmai.hxsdk.entity.red.StandardRedPackage;
 import com.youmai.hxsdk.http.IGetListener;
 import com.youmai.hxsdk.utils.GlideRoundTransform;
 import com.youmai.hxsdk.utils.GsonUtil;
+import com.youmai.hxsdk.utils.ListUtils;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+
+import java.util.List;
 
 /**
  * 作者：create by YW
@@ -43,7 +40,6 @@ public class RedPacketActivity extends AppCompatActivity implements View.OnClick
 
     public static final String TAG = RedPacketActivity.class.getSimpleName();
 
-    public static final String FROM_GROUP = "from_group";
     public static final String TARGET_ID = "target_id";
     public static final String TARGET_NAME = "target_name";
     public static final String TARGET_AVATAR = "target_avatar";
@@ -70,10 +66,9 @@ public class RedPacketActivity extends AppCompatActivity implements View.OnClick
     private double moneyMax;
     private double money;
     private String pano;
-    private boolean isGroup;
 
     private StandardRedPackage.ContentBean.FixedConfigBean fixedConfig;
-    private StandardRedPackage.ContentBean.RandomConfigBean randomConfig;
+    //private StandardRedPackage.ContentBean.RandomConfigBean randomConfig;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -81,13 +76,11 @@ public class RedPacketActivity extends AppCompatActivity implements View.OnClick
         setContentView(R.layout.hx_activity_red_packet);
         mContext = this;
 
-        isGroup = getIntent().getBooleanExtra(FROM_GROUP, false);
         uuid = getIntent().getStringExtra(TARGET_ID);
         name = getIntent().getStringExtra(TARGET_NAME);
         avatar = getIntent().getStringExtra(TARGET_AVATAR);
 
         initView();
-        initClick();
         loadRedPacket();
     }
 
@@ -139,21 +132,24 @@ public class RedPacketActivity extends AppCompatActivity implements View.OnClick
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 try {
-                    money = Double.parseDouble(s.toString());
-                    if (money > fixedConfig.getMoneyMax()) {
+                    double value = Double.parseDouble(s.toString());
+
+                    if (value > fixedConfig.getMoneyMax()) {
                         Toast.makeText(mContext, "超过利是最大金额限制，请重新设置", Toast.LENGTH_SHORT).show();
                         return;
                     }
 
-                    if (money < fixedConfig.getMoneyMin()) {
+                    if (value < fixedConfig.getMoneyMin()) {
                         Toast.makeText(mContext, "小于利是最小金额限制，请重新设置", Toast.LENGTH_SHORT).show();
                         return;
                     }
 
-                    if (money > moneyMax) {
+                    if (value > moneyMax) {
                         Toast.makeText(mContext, "超过了您的利是余额，请重新设置", Toast.LENGTH_SHORT).show();
                         return;
                     }
+
+                    money = value;
 
 
                 } catch (Exception e) {
@@ -161,8 +157,8 @@ public class RedPacketActivity extends AppCompatActivity implements View.OnClick
                 }
 
 
-                String content = "f  " + s.toString();
-                tv_money.setText(content);
+                String format = getResources().getString(R.string.red_packet_unit1);
+                tv_money.setText(String.format(format, s.toString()));
             }
 
             @Override
@@ -177,22 +173,19 @@ public class RedPacketActivity extends AppCompatActivity implements View.OnClick
     }
 
 
-    private void initClick() {
-
-    }
-
-
     private void loadRedPacket() {
         HuxinSdkManager.instance().reqRedPackageStandardConfig(new IGetListener() {
             @Override
             public void httpReqResult(String response) {
                 StandardRedPackage bean = GsonUtil.parse(response, StandardRedPackage.class);
-
-                if (bean != null && bean.isSuccess()) {
-                    fixedConfig = bean.getContent().getFixedConfig();
-                    randomConfig = bean.getContent().getRandomConfig();
+                if (bean != null) {
+                    if (bean.isSuccess()) {
+                        fixedConfig = bean.getContent().getFixedConfig();
+                        //randomConfig = bean.getContent().getRandomConfig();
+                    } else {
+                        Toast.makeText(mContext, bean.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
                 }
-
             }
         });
 
@@ -200,20 +193,40 @@ public class RedPacketActivity extends AppCompatActivity implements View.OnClick
             @Override
             public void httpReqResult(String response) {
                 RedPackageList bean = GsonUtil.parse(response, RedPackageList.class);
+                if (bean != null) {
+                    if (bean.isSuccess()) {
+                        List<RedPackageList.ContentBean> list = bean.getContent();
 
-                if (bean != null && bean.isSuccess()) {
+                        RedPackageList.ContentBean contentBean = null;
 
-                    pano = bean.getContent().get(0).getPano();
+                        if (!ListUtils.isEmpty(list)) {
+                            for (RedPackageList.ContentBean item : list) {
+                                if (item.getName().equals("彩管家全国饭票")) {
+                                    contentBean = item;
+                                    break;
+                                }
+                            }
+                        }
 
-                    String balance = bean.getContent().get(0).getBalance();
-                    tv_value.setText(balance);
+                        if (contentBean != null) {
+                            pano = contentBean.getPano();
+                            String balance = contentBean.getBalance();
 
-                    try {
-                        moneyMax = Double.parseDouble(balance);
-                    } catch (NumberFormatException e) {
-                        e.printStackTrace();
+                            String format = getResources().getString(R.string.red_packet_unit2);
+                            tv_value.setText(String.format(format, balance));
+
+
+                            try {
+                                moneyMax = Double.parseDouble(balance);
+                            } catch (NumberFormatException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+
+                    } else {
+                        Toast.makeText(mContext, bean.getMessage(), Toast.LENGTH_SHORT).show();
                     }
-
                 }
             }
         });
@@ -242,19 +255,32 @@ public class RedPacketActivity extends AppCompatActivity implements View.OnClick
 
                     final String title = remark;
 
+                    if (pano == null) {
+                        Toast.makeText(mContext, "查询饭票数据发生错误", Toast.LENGTH_SHORT).show();
+                        return;
+                    } else if (money == 0) {
+                        Toast.makeText(mContext, "请正确添加利是金额", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
                     HuxinSdkManager.instance().reqSendSingleRedPackage(money, title, pano, password, new IGetListener() {
                         @Override
                         public void httpReqResult(String response) {
                             SendRedPacketResult bean = GsonUtil.parse(response, SendRedPacketResult.class);
-                            if (bean != null && bean.isSuccess()) {
-                                String redUuid = bean.getContent().getLishiUuid();
-                                Intent intent = new Intent();
-                                intent.putExtra("value", String.valueOf(money));
-                                intent.putExtra("redTitle", title);
-                                intent.putExtra("redUuid", redUuid);
-                                setResult(Activity.RESULT_OK, intent);
-                                finish();
+                            if (bean != null) {
+                                if (bean.isSuccess()) {
+                                    String redUuid = bean.getContent().getLishiUuid();
+                                    Intent intent = new Intent();
+                                    intent.putExtra("value", String.valueOf(money));
+                                    intent.putExtra("redTitle", title);
+                                    intent.putExtra("redUuid", redUuid);
+                                    setResult(Activity.RESULT_OK, intent);
+                                    finish();
+                                } else {
+                                    Toast.makeText(mContext, bean.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
                             }
+
                         }
                     });
 
@@ -265,60 +291,7 @@ public class RedPacketActivity extends AppCompatActivity implements View.OnClick
         } else if (id == R.id.tv_back) {
             onBackPressed();
         } else if (id == R.id.tv_right) {
-            /*HuxinSdkManager.instance().checkPayPwd("666666", new IGetListener() {
-                @Override
-                public void httpReqResult(String response) {
-                    try {
-                        JSONObject jsonObject = new JSONObject(response);
-                        String result = jsonObject.optString("state");
-                        if (result.equals("ok")) {
-
-                        }
-                    } catch (JSONException e) {
-
-                    }
-                }
-            });*/
             startActivity(new Intent(this, RedPacketHistoryActivity.class));
         }
-    }
-
-
-    private void test() {
-        HuxinSdkManager.instance().reqRedPackageShareConfig(new IGetListener() {
-            @Override
-            public void httpReqResult(String response) {
-                ShareRedPackage bean = GsonUtil.parse(response, ShareRedPackage.class);
-
-                if (bean != null && bean.isSuccess()) {
-                    Intent intent = new Intent();
-                    String remark = et_msg.getText().toString().trim();
-                    if (TextUtils.isEmpty(remark)) {
-                        remark = et_msg.getHint().toString().trim();
-                    }
-
-                    /*intent.putExtra("value", et_money.getText().toString().trim());
-                    intent.putExtra("redTitle", remark);
-                    setResult(Activity.RESULT_OK, intent);
-                    finish();*/
-                }
-
-            }
-        });
-
-
-        HuxinSdkManager.instance().reqSendSingleRedPackage(20, "大吉大利", "", "123456", new IGetListener() {
-            @Override
-            public void httpReqResult(String response) {
-
-            }
-        });
-
-        HuxinSdkManager.instance().checkPayPwd("666666", new IGetListener() {
-            @Override
-            public void httpReqResult(String response) {
-                String test = response;
-            }
-        });
     }
 }

@@ -3,7 +3,6 @@
     <style name="HxSdkTheme" parent="HxColorBaseTheme" />
 
 
-
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
@@ -12,9 +11,6 @@
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
-
-
-
 
 
     <!-- Base application theme. -->
@@ -194,7 +190,7 @@
         <item name="android:paddingRight">6dp</item>
         <item name="android:textSize">@dimen/card_font_size_msmall</item>
         <item name="android:textColor">#FFFFFF</item>
-        <item name="android:background">@drawable/hx_im_date_bg_shape</item>
+        <item name="android:background">@drawable/bg_shape_gray</item>
         <item name="android:minWidth">46dp</item>
         <item name="android:minHeight">16dp</item>
         <item name="android:layout_gravity">center_horizontal</item>

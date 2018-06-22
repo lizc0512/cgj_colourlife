@@ -16,6 +16,7 @@ public class CacheMsgRedPackage implements Parcelable, JsonFormat<CacheMsgRedPac
     public static final String RED_PACKET_IS_OPEN_SINGLE = "利是已领取";
     public static final String RED_PACKET_OVERDUE = "利是已过期";
     public static final String RED_PACKET_RECEIVE = "领取利是";
+    public static final String RED_PACKET_OPENED = "利是被领取";
 
 
     private long msgId;
@@ -23,6 +24,9 @@ public class CacheMsgRedPackage implements Parcelable, JsonFormat<CacheMsgRedPac
     private String redTitle;
     private String redStatus;
     private String redUuid;
+    private String receiveName;
+    private String receiveDone;
+
 
     public CacheMsgRedPackage() {
     }
@@ -72,6 +76,23 @@ public class CacheMsgRedPackage implements Parcelable, JsonFormat<CacheMsgRedPac
         return this;
     }
 
+
+    public String getReceiveName() {
+        return receiveName;
+    }
+
+    public void setReceiveName(String receiveName) {
+        this.receiveName = receiveName;
+    }
+
+    public String getReceiveDone() {
+        return receiveDone;
+    }
+
+    public void setReceiveDone(String receiveDone) {
+        this.receiveDone = receiveDone;
+    }
+
     @Override
     public String toJson() {
         return GsonUtil.format(this);
@@ -86,6 +107,8 @@ public class CacheMsgRedPackage implements Parcelable, JsonFormat<CacheMsgRedPac
             msgId = jsonObject.optLong("msgId");
             redStatus = jsonObject.optString("redStatus");
             redUuid = jsonObject.optString("redUuid");
+            receiveName = jsonObject.optString("receiveName");
+            receiveDone = jsonObject.optString("receiveDone");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -105,6 +128,8 @@ public class CacheMsgRedPackage implements Parcelable, JsonFormat<CacheMsgRedPac
         dest.writeString(this.redTitle);
         dest.writeString(this.redStatus);
         dest.writeString(this.redUuid);
+        dest.writeString(this.receiveName);
+        dest.writeString(this.receiveDone);
     }
 
     protected CacheMsgRedPackage(Parcel in) {
@@ -113,6 +138,8 @@ public class CacheMsgRedPackage implements Parcelable, JsonFormat<CacheMsgRedPac
         this.redTitle = in.readString();
         this.redStatus = in.readString();
         this.redUuid = in.readString();
+        this.receiveName = in.readString();
+        this.receiveDone = in.readString();
     }
 
     public static final Creator<CacheMsgRedPackage> CREATOR = new Creator<CacheMsgRedPackage>() {

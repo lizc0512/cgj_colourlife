@@ -8,10 +8,14 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -28,9 +32,7 @@ import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.IMFilePreviewActivity;
 import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.activity.CropMapActivity;
-import com.youmai.hxsdk.activity.IMConnectionActivity;
 import com.youmai.hxsdk.activity.PictureIndicatorActivity;
-import com.youmai.hxsdk.activity.RedPacketActivity;
 import com.youmai.hxsdk.activity.RedPacketDetailActivity;
 import com.youmai.hxsdk.config.AppConfig;
 import com.youmai.hxsdk.config.FileConfig;
@@ -99,6 +101,7 @@ public class IMListAdapter extends RecyclerView.Adapter {
     private static final int FILE_RIGHT = 16;//文件右
     private static final int RED_PACKAGE_RIGHT = 17; //红包右
 
+    private static final int RED_PACKET_OPENED = 104;//红包被打开
 
     private static final int HANDLER_REFRESH_PROGREE = 0;
 
@@ -217,6 +220,10 @@ public class IMListAdapter extends RecyclerView.Adapter {
                 view = inflater.inflate(R.layout.hx_fragment_im_right_red_package_item, parent, false);
                 holder = new RedPackageHolder(view);
                 break;
+            case RED_PACKET_OPENED:
+                view = inflater.inflate(R.layout.hx_red_packet_opened_item, parent, false);
+                holder = new RedPacketOpenedViewHolder(view);
+                break;
             default:
                 //默认视图，用于解析错误的消息
                 view = inflater.inflate(R.layout.hx_fragment_im_left_txt_item, parent, false);
@@ -244,6 +251,8 @@ public class IMListAdapter extends RecyclerView.Adapter {
             onBindVideo((VideoViewHolder) holder, position);
         } else if (holder instanceof RedPackageHolder) {//红包
             onBindRedPackage((RedPackageHolder) holder, position);
+        } else if (holder instanceof RedPacketOpenedViewHolder) {//红包被领取
+            onBindRedPacketOpened((RedPacketOpenedViewHolder) holder, position);
         }
     }
 
@@ -295,7 +304,9 @@ public class IMListAdapter extends RecyclerView.Adapter {
             case CacheMsgBean.OPEN_REDPACKET:
                 oriType = RED_PACKAGE_LEFT;
                 break;
-
+            case CacheMsgBean.RECEIVE_PACKET_OPENED:
+                oriType = RED_PACKET_OPENED;
+                break;
         }
         return oriType;
     }
@@ -578,6 +589,28 @@ public class IMListAdapter extends RecyclerView.Adapter {
                 .RedPacketEntity(name, avatar, title);
         redPacketDialog.setData(entity);
     }
+
+    /**
+     * 红包被领取
+     */
+    private void onBindRedPacketOpened(final RedPacketOpenedViewHolder holder, final int position) {
+        final CacheMsgBean bean = mImBeanList.get(position);
+        final CacheMsgRedPackage redPackage = (CacheMsgRedPackage) bean.getJsonBodyObj();
+        String name = redPackage.getReceiveName();
+        if (!TextUtils.isEmpty(name)) {
+            String content = name + "领取了你的利是";
+            String keyword = "利是";
+
+            int start = content.indexOf(keyword);
+
+            int length = keyword.length();
+            SpannableStringBuilder style = new SpannableStringBuilder(content);
+            style.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mAct, R.color.hx_color_red_packet)),
+                    start, start + length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            holder.tv_red_open.setText(style);
+        }
+    }
+
 
     private void downVideo(final int position, String path, final CacheMsgBean cacheMsgBean) {
         String filePath = FileConfig.getVideoDownLoadPath();
@@ -1060,6 +1093,15 @@ public class IMListAdapter extends RecyclerView.Adapter {
     }
 
 
+    class RedPacketOpenedViewHolder extends BaseViewHolder {
+        TextView tv_red_open;
+
+        RedPacketOpenedViewHolder(View itemView) {
+            super(itemView);
+            tv_red_open = (TextView) itemView.findViewById(R.id.tv_red_packet_opened);
+        }
+    }
+
     private void onBindCommon(final BaseViewHolder baseViewHolder, final int position) {
         final CacheMsgBean bean = mImBeanList.get(position);
 
@@ -1097,87 +1139,89 @@ public class IMListAdapter extends RecyclerView.Adapter {
             });
         }
 
-
-        //删除消息
-        //TxTViewHolder类型另外处理，TextView添加autoLink属性后会拦截ViewGroup的事件分发,删除消息的提示窗放到CopeTextView里处理
-        baseViewHolder.itemBtn.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    mRawX = event.getRawX();
-                    mRawY = event.getRawY();
+        if (baseViewHolder.itemBtn != null) {
+            //删除消息
+            //TxTViewHolder类型另外处理，TextView添加autoLink属性后会拦截ViewGroup的事件分发,删除消息的提示窗放到CopeTextView里处理
+            baseViewHolder.itemBtn.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                        mRawX = event.getRawX();
+                        mRawY = event.getRawY();
+                    }
+                    return false;
                 }
-                return false;
-            }
-        });
+            });
 
-        baseViewHolder.itemBtn.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                List<TipBean> tips = null;
-                if (baseViewHolder instanceof VoiceViewHolder) {
-                    tips = TipsType.getVoiceType();
-                } else if (baseViewHolder instanceof ImgViewHolder
-                        || baseViewHolder instanceof VideoViewHolder
-                        || baseViewHolder instanceof MapViewHolder
-                        || baseViewHolder instanceof FileViewHolder) {
-                    tips = TipsType.getOtherType();
+            baseViewHolder.itemBtn.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    List<TipBean> tips = null;
+                    if (baseViewHolder instanceof VoiceViewHolder) {
+                        tips = TipsType.getVoiceType();
+                    } else if (baseViewHolder instanceof ImgViewHolder
+                            || baseViewHolder instanceof VideoViewHolder
+                            || baseViewHolder instanceof MapViewHolder
+                            || baseViewHolder instanceof FileViewHolder) {
+                        tips = TipsType.getOtherType();
+                    }
+                    if (tips != null) {
+                        tipView = new TipView(mAct, tips, mRawX, mRawY);
+                        tipView.setListener(new ItemListener() {
+                            @Override
+                            public void delete() {
+                                deleteMsg(bean, position, true);
+                            }
+
+                            @Override
+                            public void copy() {
+                            }
+
+                            @Override
+                            public void collect() {
+                                //收藏操作
+                            }
+
+                            @Override
+                            public void forward() {
+                                //转发操作
+                                ARouter.getInstance()
+                                        .build(APath.MSG_FORWARD)
+                                        .withString("type", "forward_msg")
+                                        .withParcelable("data", bean)
+                                        .navigation(mAct, 300);
+
+                            }
+
+                            @Override
+                            public void read() {
+
+                            }
+
+                            @Override
+                            public void remind() {
+                            }
+
+                            @Override
+                            public void turnText() {
+                            }
+
+                            @Override
+                            public void more() {
+                                moreAction(position);
+                            }
+
+                            @Override
+                            public void emoKeep() {
+                            }
+                        });
+                        tipView.show(view);
+                    }
+                    return true;
                 }
-                if (tips != null) {
-                    tipView = new TipView(mAct, tips, mRawX, mRawY);
-                    tipView.setListener(new ItemListener() {
-                        @Override
-                        public void delete() {
-                            deleteMsg(bean, position, true);
-                        }
+            });
+        }
 
-                        @Override
-                        public void copy() {
-                        }
-
-                        @Override
-                        public void collect() {
-                            //收藏操作
-                        }
-
-                        @Override
-                        public void forward() {
-                            //转发操作
-                            ARouter.getInstance()
-                                    .build(APath.MSG_FORWARD)
-                                    .withString("type", "forward_msg")
-                                    .withParcelable("data", bean)
-                                    .navigation(mAct, 300);
-
-                        }
-
-                        @Override
-                        public void read() {
-
-                        }
-
-                        @Override
-                        public void remind() {
-                        }
-
-                        @Override
-                        public void turnText() {
-                        }
-
-                        @Override
-                        public void more() {
-                            moreAction(position);
-                        }
-
-                        @Override
-                        public void emoKeep() {
-                        }
-                    });
-                    tipView.show(view);
-                }
-                return true;
-            }
-        });
     }
 
 

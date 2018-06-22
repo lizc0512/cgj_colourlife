@@ -18,6 +18,7 @@
     <color name="hx_color_green">#45af08</color>
     <color name="hx_color_orange2">#ffde00</color>
     <color name="hx_color_red_tag">#f90404</color>
+    <color name="hx_color_red_packet">#fe6519</color>
     <!--crop-->
     <color name="crop_button_bar">#f3f3f3</color>
     <color name="crop_button_text">#666666</color>

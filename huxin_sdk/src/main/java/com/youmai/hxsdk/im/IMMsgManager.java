@@ -667,6 +667,24 @@ public class IMMsgManager {
             cacheMsgBean.setMsgType(CacheMsgBean.RECEIVE_REDPACKAGE).setJsonBodyObj(cacheMsgRedPackage);
             CacheMsgHelper.instance().insertOrUpdate(mContext, cacheMsgBean);
             handlerIMMsgCallback(cacheMsgBean);
+        } else if (im.getMsgType() == YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_GET_RED_ENVELOPE_VALUE) {//红包被打开
+            ContentRedPackage redPackage = im.getContent().getRedPackage();//获取解析jsonBoby的内容
+
+            CacheMsgRedPackage cacheMsgRedPackage = new CacheMsgRedPackage();
+
+
+            //cacheMsgRedPackage.setValue(redPackage.getValue());
+            //cacheMsgRedPackage.setRedTitle(redPackage.getTitle());
+            //cacheMsgRedPackage.setRedUuid(redPackage.getUuid());
+
+            cacheMsgRedPackage.setRedStatus(CacheMsgRedPackage.RED_PACKET_OPENED);
+            cacheMsgRedPackage.setReceiveName(redPackage.getReceiveName());
+            cacheMsgRedPackage.setReceiveDone(redPackage.getReceiveDone());
+            cacheMsgRedPackage.setMsgId(im.getImChat().getMsgId());
+
+            cacheMsgBean.setMsgType(CacheMsgBean.RECEIVE_PACKET_OPENED).setJsonBodyObj(cacheMsgRedPackage);
+            CacheMsgHelper.instance().insertOrUpdate(mContext, cacheMsgBean);
+            handlerIMMsgCallback(cacheMsgBean);
         }
     }
 

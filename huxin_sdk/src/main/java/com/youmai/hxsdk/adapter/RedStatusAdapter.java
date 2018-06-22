@@ -76,7 +76,7 @@ public class RedStatusAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         tv_name.setText(name);
         tv_time.setText(time);
 
-        String format = mContext.getResources().getString(R.string.red_packet_unit1);
+        String format = mContext.getResources().getString(R.string.red_packet_unit2);
         tv_money.setText(String.format(format, String.valueOf(money)));
 
     }

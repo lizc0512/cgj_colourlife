@@ -12,7 +12,7 @@ public class CacheMsgRedPackage implements Parcelable, JsonFormat<CacheMsgRedPac
 
 
     public static final String RED_PACKET_REVIEW = "查看利是";
-    public static final String RED_PACKET_IS_OPEN_GROUP = "利是已被领完";
+    public static final String RED_PACKET_IS_OPEN_GROUP = "利是已领完";
     public static final String RED_PACKET_IS_OPEN_SINGLE = "利是已领取";
     public static final String RED_PACKET_OVERDUE = "利是已过期";
     public static final String RED_PACKET_RECEIVE = "领取利是";
@@ -26,6 +26,11 @@ public class CacheMsgRedPackage implements Parcelable, JsonFormat<CacheMsgRedPac
     private String redUuid;
     private String receiveName;
     private String receiveDone;
+
+
+    private int status;  //利是状态：-1已过期 ,0未拆开 ,1未领完 ,2已撤回 ,3已退款 ,4已领完
+    private int canOpen; //用户是否已抢到了该利是：0否1是
+    private int isGrabbed; //是否可以开这个利是：0否1是
 
 
     public CacheMsgRedPackage() {
@@ -93,6 +98,34 @@ public class CacheMsgRedPackage implements Parcelable, JsonFormat<CacheMsgRedPac
         this.receiveDone = receiveDone;
     }
 
+
+    public int getStatus() {
+        return status;
+    }
+
+    public CacheMsgRedPackage setStatus(int status) {
+        this.status = status;
+        return this;
+    }
+
+    public int getCanOpen() {
+        return canOpen;
+    }
+
+    public CacheMsgRedPackage setCanOpen(int canOpen) {
+        this.canOpen = canOpen;
+        return this;
+    }
+
+    public int getIsGrabbed() {
+        return isGrabbed;
+    }
+
+    public CacheMsgRedPackage setIsGrabbed(int isGrabbed) {
+        this.isGrabbed = isGrabbed;
+        return this;
+    }
+
     @Override
     public String toJson() {
         return GsonUtil.format(this);
@@ -109,6 +142,11 @@ public class CacheMsgRedPackage implements Parcelable, JsonFormat<CacheMsgRedPac
             redUuid = jsonObject.optString("redUuid");
             receiveName = jsonObject.optString("receiveName");
             receiveDone = jsonObject.optString("receiveDone");
+
+            status = jsonObject.optInt("status");
+            canOpen = jsonObject.optInt("canOpen");
+            isGrabbed = jsonObject.optInt("isGrabbed");
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -130,6 +168,9 @@ public class CacheMsgRedPackage implements Parcelable, JsonFormat<CacheMsgRedPac
         dest.writeString(this.redUuid);
         dest.writeString(this.receiveName);
         dest.writeString(this.receiveDone);
+        dest.writeInt(this.status);
+        dest.writeInt(this.canOpen);
+        dest.writeInt(this.isGrabbed);
     }
 
     protected CacheMsgRedPackage(Parcel in) {
@@ -140,6 +181,9 @@ public class CacheMsgRedPackage implements Parcelable, JsonFormat<CacheMsgRedPac
         this.redUuid = in.readString();
         this.receiveName = in.readString();
         this.receiveDone = in.readString();
+        this.status = in.readInt();
+        this.canOpen = in.readInt();
+        this.isGrabbed = in.readInt();
     }
 
     public static final Creator<CacheMsgRedPackage> CREATOR = new Creator<CacheMsgRedPackage>() {

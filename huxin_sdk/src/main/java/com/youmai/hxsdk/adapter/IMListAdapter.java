@@ -1,6 +1,7 @@
 package com.youmai.hxsdk.adapter;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.media.MediaPlayer;
@@ -20,6 +21,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -39,7 +41,9 @@ import com.youmai.hxsdk.config.FileConfig;
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
 import com.youmai.hxsdk.db.helper.CacheMsgHelper;
 import com.youmai.hxsdk.dialog.HxRedPacketDialog;
+import com.youmai.hxsdk.entity.red.OpenRedPacketResult;
 import com.youmai.hxsdk.http.DownloadListener;
+import com.youmai.hxsdk.http.IGetListener;
 import com.youmai.hxsdk.http.OkHttpConnector;
 import com.youmai.hxsdk.im.IMHelper;
 import com.youmai.hxsdk.im.cache.CacheMsgFile;
@@ -56,6 +60,7 @@ import com.youmai.hxsdk.proto.YouMaiMsg;
 import com.youmai.hxsdk.router.APath;
 import com.youmai.hxsdk.service.SendMsgService;
 import com.youmai.hxsdk.utils.GlideRoundTransform;
+import com.youmai.hxsdk.utils.GsonUtil;
 import com.youmai.hxsdk.utils.QiniuUrl;
 import com.youmai.hxsdk.utils.TimeUtils;
 import com.youmai.hxsdk.view.LinearLayoutManagerWithSmoothScroller;
@@ -497,6 +502,8 @@ public class IMListAdapter extends RecyclerView.Adapter {
         final String title = redPackage.getRedTitle();
         final String redStatus = redPackage.getRedStatus();
         final String redUuid = redPackage.getRedUuid();
+        final int isGrabbed = redPackage.getIsGrabbed();
+        final int status = redPackage.getStatus();
 
         showMsgTime(position, redPackageHolder.senderDateTV, bean.getMsgTime());
 
@@ -509,86 +516,138 @@ public class IMListAdapter extends RecyclerView.Adapter {
         tv_red_title.setText(title);
         tv_red_status.setText(redStatus);
 
-        boolean isOpen;
-        if (redStatus.equals(CacheMsgRedPackage.RED_PACKET_IS_OPEN_SINGLE)
-                || redStatus.equals(CacheMsgRedPackage.RED_PACKET_OVERDUE)) {
+        if (isGrabbed == 1) {
             img_red_package.setImageResource(R.drawable.ic_open_red_package);
             view.setBackgroundResource(R.drawable.hx_red_package_disable);
-            isOpen = true;
+            tv_red_status.setText(CacheMsgRedPackage.RED_PACKET_OPENED);
         } else {
             img_red_package.setImageResource(R.drawable.ic_send_red_package);
             view.setBackgroundResource(R.drawable.hx_red_package_enable);
-            isOpen = false;
+
+            if (status == -1) {
+                tv_red_status.setText(CacheMsgRedPackage.RED_PACKET_OVERDUE);
+            } else if (status >= 2) {
+                tv_red_status.setText(CacheMsgRedPackage.RED_PACKET_IS_OPEN_GROUP);
+            } else {
+                tv_red_status.setText(CacheMsgRedPackage.RED_PACKET_RECEIVE);
+            }
         }
 
-        final boolean open = isOpen;
         redPackageHolder.lay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (bean.isRightUI()) {  //自己
-                    Intent intent = new Intent(mAct, RedPacketDetailActivity.class);
-                    intent.putExtra(RedPacketDetailActivity.OPEN_TYPE, RedPacketDetailActivity.SINGLE_PACKET);
-                    intent.putExtra(RedPacketDetailActivity.AVATAR, avatar);
-                    intent.putExtra(RedPacketDetailActivity.NICKNAME, name);
-                    intent.putExtra(RedPacketDetailActivity.VALUE, value);
-                    intent.putExtra(RedPacketDetailActivity.REDTITLE, title);
-                    intent.putExtra(RedPacketDetailActivity.REDUUID, redUuid);
-                    mAct.startActivity(intent);
+                if (isGrabbed == 1 && !TextUtils.isEmpty(value)) {
+                    Intent in = new Intent(mAct, RedPacketDetailActivity.class);
+                    in.putExtra(RedPacketDetailActivity.OPEN_TYPE, RedPacketDetailActivity.GROUP_PACKET);
+                    in.putExtra(RedPacketDetailActivity.AVATAR, avatar);
+                    in.putExtra(RedPacketDetailActivity.NICKNAME, name);
+                    in.putExtra(RedPacketDetailActivity.VALUE, value);
+                    in.putExtra(RedPacketDetailActivity.REDTITLE, title);
+                    in.putExtra(RedPacketDetailActivity.REDUUID, redUuid);
+                    in.putExtra(RedPacketDetailActivity.MSGBEAN, bean);
+                    mAct.startActivity(in);
                 } else {
-                    if (open) {
-                        Intent in = new Intent(mAct, RedPacketDetailActivity.class);
-                        in.putExtra(RedPacketDetailActivity.OPEN_TYPE, RedPacketDetailActivity.SINGLE_PACKET);
-                        in.putExtra(RedPacketDetailActivity.AVATAR, avatar);
-                        in.putExtra(RedPacketDetailActivity.NICKNAME, name);
-                        in.putExtra(RedPacketDetailActivity.VALUE, value);
-                        in.putExtra(RedPacketDetailActivity.REDTITLE, title);
-                        in.putExtra(RedPacketDetailActivity.REDUUID, redUuid);
-                        in.putExtra(RedPacketDetailActivity.MSGBEAN, bean);
-
-                        mAct.startActivity(in);
-                    } else {
-                        openRedPackage(bean, redUuid, name, value, avatar, title);
-                    }
+                    showProgress("", "正在打开红包...", -1);
+                    openRedPackage(bean, redUuid);
                 }
             }
         });
     }
 
 
-    private void openRedPackage(final CacheMsgBean uiBean, final String redUuid,
-                                final String name, final String value,
-                                final String avatar, final String title) {
-        final HxRedPacketDialog redPacketDialog = new HxRedPacketDialog(mAct);
-        redPacketDialog.setOnRedPacketListener(new HxRedPacketDialog.OnRedPacketListener() {
+    private ProgressDialog mProgressDialog;
+
+    private void showProgress(String title, String message, int theme) {
+        if (mProgressDialog == null) {
+            if (theme > 0)
+                mProgressDialog = new ProgressDialog(mAct, theme);
+            else
+                mProgressDialog = new ProgressDialog(mAct);
+            mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            mProgressDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            mProgressDialog.setCanceledOnTouchOutside(false);// 不能取消
+            mProgressDialog.setCancelable(false);
+            mProgressDialog.setIndeterminate(true);// 设置进度条是否不明确
+        }
+
+        if (!TextUtils.isEmpty(title))
+            mProgressDialog.setTitle(title);
+        mProgressDialog.setMessage(message);
+        if (!mProgressDialog.isShowing()) {
+            mProgressDialog.show();
+        }
+    }
+
+    private void hideProgress() {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.dismiss();
+        }
+    }
+
+
+    private void openRedPackage(final CacheMsgBean uiBean, final String redUuid) {
+        HuxinSdkManager.instance().openRedPackage(redUuid, new IGetListener() {
             @Override
-            public void onCloseClick() {
+            public void httpReqResult(String response) {
+                OpenRedPacketResult bean = GsonUtil.parse(response, OpenRedPacketResult.class);
+                if (bean != null && bean.isSuccess()) {
+                    int status = bean.getContent().getStatus();  //利是状态：-1已过期 ,0未拆开 ,1未领完 ,2已撤回 ,3已退款 ,4已领完
+                    int canOpen = bean.getContent().getCanOpen(); //是否可以开这个利是：0否1是
+                    int isGrabbed = bean.getContent().getIsGrabbed(); //用户是否已抢到了该利是：0否1是
 
-            }
+                    final CacheMsgRedPackage redPackage = (CacheMsgRedPackage) uiBean.getJsonBodyObj();
 
-            @Override
-            public void onOpenClick() {
+                    final String name = uiBean.getSenderRealName();
+                    final String avatar = uiBean.getSenderAvatar();
 
-                Intent in = new Intent(mAct, RedPacketDetailActivity.class);
-                in.putExtra(RedPacketDetailActivity.OPEN_TYPE, RedPacketDetailActivity.SINGLE_PACKET);
-                in.putExtra(RedPacketDetailActivity.AVATAR, avatar);
-                in.putExtra(RedPacketDetailActivity.NICKNAME, name);
-                in.putExtra(RedPacketDetailActivity.VALUE, value);
-                in.putExtra(RedPacketDetailActivity.REDTITLE, title);
-                in.putExtra(RedPacketDetailActivity.REDUUID, redUuid);
-                in.putExtra(RedPacketDetailActivity.MSGBEAN, uiBean);
+                    final String title = redPackage.getRedTitle();
 
-                mAct.startActivity(in);
+                    redPackage.setStatus(status);
+                    redPackage.setCanOpen(canOpen);
+                    redPackage.setIsGrabbed(isGrabbed);
+                    uiBean.setJsonBodyObj(redPackage);
 
-                redPacketDialog.dismiss();
+                    HxRedPacketDialog.Builder builder = new HxRedPacketDialog.Builder(mAct);
+                    builder.setUiBean(uiBean);
+                    builder.setRemark(title);
+                    builder.setRedUuid(redUuid);
+                    builder.setStatus(status);
+                    builder.setCanOpen(canOpen);
+                    builder.setIsGrabbed(isGrabbed);
+                    builder.setListener(new HxRedPacketDialog.OnRedPacketListener() {
+                        @Override
+                        public void onCloseClick() {
+                        }
 
+                        @Override
+                        public void onOpenClick(double moneyDraw) {
+                            redPackage.setIsGrabbed(1);
+                            redPackage.setValue(String.valueOf(moneyDraw));
+
+                            uiBean.setJsonBodyObj(redPackage);
+
+                            Intent in = new Intent(mAct, RedPacketDetailActivity.class);
+                            in.putExtra(RedPacketDetailActivity.OPEN_TYPE, RedPacketDetailActivity.GROUP_PACKET);
+                            in.putExtra(RedPacketDetailActivity.AVATAR, avatar);
+                            in.putExtra(RedPacketDetailActivity.NICKNAME, name);
+                            in.putExtra(RedPacketDetailActivity.VALUE, String.valueOf(moneyDraw));
+                            in.putExtra(RedPacketDetailActivity.REDTITLE, title);
+                            in.putExtra(RedPacketDetailActivity.REDUUID, redUuid);
+                            in.putExtra(RedPacketDetailActivity.MSGBEAN, uiBean);
+
+                            mAct.startActivity(in);
+                        }
+                    });
+
+                    builder.builder().show();
+                }
+
+
+                hideProgress();
             }
         });
-        redPacketDialog.show();
-
-        HxRedPacketDialog.RedPacketEntity entity = new HxRedPacketDialog
-                .RedPacketEntity(name, avatar, title);
-        redPacketDialog.setData(entity);
     }
+
 
     /**
      * 红包被领取

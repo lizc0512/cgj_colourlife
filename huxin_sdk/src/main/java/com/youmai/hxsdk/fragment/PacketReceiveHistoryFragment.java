@@ -12,13 +12,14 @@ import com.jcodecraeer.xrecyclerview.ProgressStyle;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.R;
-import com.youmai.hxsdk.adapter.RedPackageRecordAdapter;
+import com.youmai.hxsdk.adapter.ReceiveRedPackageRecordAdapter;
+import com.youmai.hxsdk.adapter.SendRedPackageRecordAdapter;
+import com.youmai.hxsdk.entity.red.ReceiveRedPacketList;
 import com.youmai.hxsdk.entity.red.SendRedPacketList;
 import com.youmai.hxsdk.http.IGetListener;
 import com.youmai.hxsdk.utils.GsonUtil;
 import com.youmai.hxsdk.utils.ListUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -27,7 +28,7 @@ public class PacketReceiveHistoryFragment extends Fragment {
 
 
     private XRecyclerView mRecyclerView;
-    private RedPackageRecordAdapter mAdapter;
+    private ReceiveRedPackageRecordAdapter mAdapter;
 
     private int page = 1;
 
@@ -52,7 +53,7 @@ public class PacketReceiveHistoryFragment extends Fragment {
     private void initView(View view) {
         mRecyclerView = view.findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mAdapter = new RedPackageRecordAdapter(getContext());
+        mAdapter = new ReceiveRedPackageRecordAdapter(getContext());
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -82,9 +83,9 @@ public class PacketReceiveHistoryFragment extends Fragment {
         HuxinSdkManager.instance().redReceivePacketList("201806", page, new IGetListener() {
             @Override
             public void httpReqResult(String response) {
-                SendRedPacketList bean = GsonUtil.parse(response, SendRedPacketList.class);
+                ReceiveRedPacketList bean = GsonUtil.parse(response, ReceiveRedPacketList.class);
                 if (bean != null && bean.isSuccess()) {
-                    List<SendRedPacketList.ContentBean> list = bean.getContent();
+                    List<ReceiveRedPacketList.ContentBean> list = bean.getContent();
                     if (ListUtils.isEmpty(list)) {
                         mRecyclerView.setLoadingMoreEnabled(false);
                     } else {

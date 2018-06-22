@@ -161,7 +161,14 @@
     <string name="red_packet_overdue">利是已过期</string>
     <string name="red_packet_receive">领取利是</string>
     <string name="red_packet_unit1">ƒ %1$s"</string>
-    <string name="red_packet_unit2">%1$s ƒ"</string>
-    <string name="group_count">%1$s 人"</string>
+    <string name="red_packet_unit2">%1$s ƒ</string>
+    <string name="group_count">%1$s 人</string>
+
+    <string name="send_red_packet_count">共发出%1$s利是包</string>
+    <string name="receive_red_packet_count">共收到%1$s利是包</string>
+    <string name="type_pin">拼手气利是</string>
+    <string name="title_pin">总金额</string>
+    <string name="type_fix">等金额利是</string>
+    <string name="title_fix">单个金额</string>
 
 </resources>

@@ -3,7 +3,9 @@ package com.youmai.hxsdk.activity;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatEditText;
 import android.text.Editable;
@@ -60,6 +62,9 @@ public class RedPacketInGroupActivity extends AppCompatActivity implements View.
 
     private AppCompatEditText et_count;
     private TextView tv_person;
+    private TextView tv_type;
+    private TextView tv_type_title;
+    private int type = 2;
 
     private int groupId;
 
@@ -117,6 +122,7 @@ public class RedPacketInGroupActivity extends AppCompatActivity implements View.
         tv_right.setText("利是记录");
         tv_right.setOnClickListener(this);
 
+
         tv_money = (TextView) findViewById(R.id.tv_money);
         et_msg = (AppCompatEditText) findViewById(R.id.et_msg);
 
@@ -130,34 +136,12 @@ public class RedPacketInGroupActivity extends AppCompatActivity implements View.
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 try {
-
-                    double value = Double.parseDouble(s.toString());
-
-                    if (value > randomConfig.getMoneyMax()) {
-                        Toast.makeText(mContext, "超过利是最大金额限制，请重新设置", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
-                    if (value < randomConfig.getMoneyMin()) {
-                        Toast.makeText(mContext, "小于利是最小金额限制，请重新设置", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
-                    if (value > moneyMax) {
-                        Toast.makeText(mContext, "超过了您的利是余额，请重新设置", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
-                    money = value;
-
-
+                    money = Double.parseDouble(s.toString());
+                    String format = getResources().getString(R.string.red_packet_unit1);
+                    tv_money.setText(String.format(format, String.valueOf(money * numberTotal)));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
-
-                String format = getResources().getString(R.string.red_packet_unit1);
-                tv_money.setText(String.format(format, s.toString()));
             }
 
             @Override
@@ -176,20 +160,10 @@ public class RedPacketInGroupActivity extends AppCompatActivity implements View.
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                int value = Integer.parseInt(s.toString());
                 try {
-                    if (value > randomConfig.getNumberMax()) {
-                        Toast.makeText(mContext, "超过利是最大数目限制，请重新设置", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
-                    if (value < randomConfig.getNumberMin()) {
-                        Toast.makeText(mContext, "小于利是最小数目限制，请重新设置", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
-                    numberTotal = value;
-
+                    numberTotal = Integer.parseInt(s.toString());
+                    String format = getResources().getString(R.string.red_packet_unit1);
+                    tv_money.setText(String.format(format, String.valueOf(money * numberTotal)));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -202,8 +176,13 @@ public class RedPacketInGroupActivity extends AppCompatActivity implements View.
         });
 
         tv_person = (TextView) findViewById(R.id.tv_person);
+        tv_type = (TextView) findViewById(R.id.tv_type);
+        tv_type_title = (TextView) findViewById(R.id.tv_type_title);
 
         findViewById(R.id.btn_commit).setOnClickListener(this);
+
+
+        tv_type.setOnClickListener(this);
 
 
     }
@@ -314,39 +293,53 @@ public class RedPacketInGroupActivity extends AppCompatActivity implements View.
 
                     final String title = remark;
 
-                    if (pano == null) {
+                    if (money > randomConfig.getMoneyMax()) {
+                        Toast.makeText(mContext, "超过利是最大金额限制，请重新设置", Toast.LENGTH_SHORT).show();
+                        return;
+                    } else if (money < randomConfig.getMoneyMin()) {
+                        Toast.makeText(mContext, "小于利是最小金额限制，请重新设置", Toast.LENGTH_SHORT).show();
+                        return;
+                    } else if (money > moneyMax) {
+                        Toast.makeText(mContext, "超过了您的利是余额，请重新设置", Toast.LENGTH_SHORT).show();
+                        return;
+                    } else if (numberTotal > randomConfig.getNumberMax()) {
+                        Toast.makeText(mContext, "超过利是最大数目限制，请重新设置", Toast.LENGTH_SHORT).show();
+                        return;
+                    } else if (numberTotal < randomConfig.getNumberMin()) {
+                        Toast.makeText(mContext, "小于利是最小数目限制，请重新设置", Toast.LENGTH_SHORT).show();
+                        return;
+                    } else if (pano == null) {
                         Toast.makeText(mContext, "查询饭票数据发生错误", Toast.LENGTH_SHORT).show();
-                        return;
-                    } else if (money == 0) {
-                        Toast.makeText(mContext, "请正确添加利是金额", Toast.LENGTH_SHORT).show();
-                        return;
-                    } else if (numberTotal == 0) {
-                        Toast.makeText(mContext, "请正确添加利是个数", Toast.LENGTH_SHORT).show();
                         return;
                     }
 
-                    HuxinSdkManager.instance().reqSendGroupRedPackage(money, numberTotal,
-                            title, pano, password,
-                            new IGetListener() {
-                                @Override
-                                public void httpReqResult(String response) {
-                                    SendRedPacketResult bean = GsonUtil.parse(response, SendRedPacketResult.class);
-                                    if (bean != null) {
-                                        if (bean.isSuccess()) {
-                                            String redUuid = bean.getContent().getLishiUuid();
-                                            Intent intent = new Intent();
-                                            intent.putExtra("value", String.valueOf(money));
-                                            intent.putExtra("redTitle", title);
-                                            intent.putExtra("redUuid", redUuid);
-                                            setResult(Activity.RESULT_OK, intent);
-                                            finish();
-                                        } else {
-                                            Toast.makeText(mContext, bean.getMessage(), Toast.LENGTH_SHORT).show();
-                                        }
-                                    }
 
+                    IGetListener listener = new IGetListener() {
+                        @Override
+                        public void httpReqResult(String response) {
+                            SendRedPacketResult bean = GsonUtil.parse(response, SendRedPacketResult.class);
+                            if (bean != null) {
+                                if (bean.isSuccess()) {
+                                    String redUuid = bean.getContent().getLishiUuid();
+                                    Intent intent = new Intent();
+                                    intent.putExtra("value", String.valueOf(money));
+                                    intent.putExtra("redTitle", title);
+                                    intent.putExtra("redUuid", redUuid);
+                                    setResult(Activity.RESULT_OK, intent);
+                                    finish();
+                                } else {
+                                    Toast.makeText(mContext, bean.getMessage(), Toast.LENGTH_SHORT).show();
                                 }
-                            });
+                            }
+                        }
+                    };
+                    if (type == 2) {
+                        HuxinSdkManager.instance().reqSendGroupRedPackageRandom(money, numberTotal,
+                                title, pano, password, listener);
+                    } else {
+                        HuxinSdkManager.instance().reqSendGroupRedPackageFix(money, numberTotal,
+                                title, pano, password, listener);
+                    }
 
 
                 }
@@ -356,6 +349,19 @@ public class RedPacketInGroupActivity extends AppCompatActivity implements View.
             onBackPressed();
         } else if (id == R.id.tv_right) {
             startActivity(new Intent(this, RedPacketHistoryActivity.class));
+        } else if (id == R.id.tv_type) {
+            if (type == 2) {
+                type = 1;
+                tv_type.setText(R.string.type_fix);
+                tv_type_title.setText(R.string.title_fix);
+                tv_type_title.setCompoundDrawables(null, null, null, null);
+            } else {
+                type = 2;
+                tv_type.setText(R.string.type_pin);
+                tv_type_title.setText(R.string.title_pin);
+                Drawable left = ContextCompat.getDrawable(this, R.drawable.ic_pin);
+                tv_type_title.setCompoundDrawablesWithIntrinsicBounds(left, null, null, null);
+            }
         }
     }
 }

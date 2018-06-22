@@ -12,7 +12,7 @@ import com.jcodecraeer.xrecyclerview.ProgressStyle;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.R;
-import com.youmai.hxsdk.adapter.RedPackageRecordAdapter;
+import com.youmai.hxsdk.adapter.SendRedPackageRecordAdapter;
 import com.youmai.hxsdk.entity.red.SendRedPacketList;
 import com.youmai.hxsdk.http.IGetListener;
 import com.youmai.hxsdk.utils.GsonUtil;
@@ -26,7 +26,7 @@ public class PacketSendHistoryFragment extends Fragment {
 
 
     private XRecyclerView mRecyclerView;
-    private RedPackageRecordAdapter mAdapter;
+    private SendRedPackageRecordAdapter mAdapter;
 
     private int page = 1;
 
@@ -51,7 +51,7 @@ public class PacketSendHistoryFragment extends Fragment {
     private void initView(View view) {
         mRecyclerView = view.findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mAdapter = new RedPackageRecordAdapter(getContext());
+        mAdapter = new SendRedPackageRecordAdapter(getContext());
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);

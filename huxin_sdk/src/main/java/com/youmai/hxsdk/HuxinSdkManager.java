@@ -1439,9 +1439,44 @@ public class HuxinSdkManager {
         HttpConnector.httpGet(url, params, listener);
     }
 
-    public void reqSendGroupRedPackage(double moneyTotal, int numberTotal,
-                                       String blessing, String pano, String transPassword,
-                                       IGetListener listener) {
+
+    public void reqSendGroupRedPackageFix(double moneySingle, int numberTotal, String blessing, String pano,
+                                          String transPassword, IGetListener listener) {
+        String url = ColorsConfig.LISHI_SEND;
+        ContentValues params = new ContentValues();
+
+        String uuid = getUuid();
+        String nickname = getRealName();
+        String mobile = getPhoneNum();
+        String head_img_url = getHeadUrl();
+        String appID = ColorsConfig.getAppID();
+        String nonce_str = "123456";
+
+        params.put("user_uuid", uuid);
+        params.put("nickname", nickname);
+        params.put("mobile", mobile);
+        params.put("head_img_url", head_img_url);
+        params.put("lsType", 1);
+        params.put("numberTotal", numberTotal);
+        params.put("moneySingle", moneySingle);
+        params.put("blessing", blessing);
+        params.put("pano", pano);
+        params.put("transPassword", transPassword);
+        params.put("appID", appID);
+        params.put("nonce_str", nonce_str);
+
+        String signature = redPackageSign(params);
+
+        params.put("signature", signature);
+
+        ColorsConfig.commonParams(params);
+
+        HttpConnector.httpGet(url, params, listener);
+    }
+
+    public void reqSendGroupRedPackageRandom(double moneyTotal, int numberTotal,
+                                             String blessing, String pano, String transPassword,
+                                             IGetListener listener) {
         String url = ColorsConfig.LISHI_SEND;
         ContentValues params = new ContentValues();
 

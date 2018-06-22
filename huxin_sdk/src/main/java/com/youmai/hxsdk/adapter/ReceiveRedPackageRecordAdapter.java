@@ -67,6 +67,11 @@ public class ReceiveRedPackageRecordAdapter extends RecyclerView.Adapter<Recycle
         String time = item.getReceiveTime();
         double money = item.getReceiveMoney();
         int type = item.getLsType();
+        if (item.getIsBest() == 1) {
+            tv_best.setVisibility(View.VISIBLE);
+        } else {
+            tv_best.setVisibility(View.INVISIBLE);
+        }
 
         int size = mContext.getResources().getDimensionPixelOffset(R.dimen.card_head);
         Glide.with(mContext).load(avatar)

@@ -170,5 +170,7 @@
     <string name="title_pin">总金额</string>
     <string name="type_fix">等金额利是</string>
     <string name="title_fix">单个金额</string>
-
+    <string name="type_single">个人利是</string>
+    <string name="red_status_done">已领完 %1$d/%2$d个</string>
+    <string name="red_status">%1$d/%2$d个</string>
 </resources>

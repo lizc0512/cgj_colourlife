@@ -59,7 +59,6 @@ public class SendRedPackageRecordAdapter extends RecyclerView.Adapter<RecyclerVi
         ImageView img_head = ((TextViewHolder) viewHolder).img_head;
         TextView tv_name = ((TextViewHolder) viewHolder).tv_name;
         TextView tv_time = ((TextViewHolder) viewHolder).tv_time;
-        ImageView img_tag = ((TextViewHolder) viewHolder).img_tag;
         TextView tv_money = ((TextViewHolder) viewHolder).tv_money;
         TextView tv_best = ((TextViewHolder) viewHolder).tv_best;
 
@@ -68,28 +67,34 @@ public class SendRedPackageRecordAdapter extends RecyclerView.Adapter<RecyclerVi
         String time = item.getTimeAllowWithdraw();
         String money = item.getMoneyDraw();
         int type = item.getLsType();
+        int status = item.getStatus();
 
-        int size = mContext.getResources().getDimensionPixelOffset(R.dimen.card_head);
-        Glide.with(mContext).load(avatar)
-                .apply(new RequestOptions()
-                        .transform(new GlideRoundTransform())
-                        .override(size, size)
-                        .placeholder(R.drawable.color_default_header)
-                        .error(R.drawable.color_default_header)
-                        .diskCacheStrategy(DiskCacheStrategy.RESOURCE))
-                .into(img_head);
+        if (type == 2) {
+            img_head.setImageResource(R.drawable.ic_random);
+            tv_name.setText(R.string.type_pin);
+        } else {
+            if (item.getMoneyTotal() > 1) {
+                img_head.setImageResource(R.drawable.ic_fix);
+                tv_name.setText(R.string.type_fix);
+            } else {
+                img_head.setImageResource(R.drawable.ic_single);
+                tv_name.setText(R.string.type_single);
+            }
+        }
 
-        tv_name.setText(sendName);
+        if (status == 4) {
+            String format = mContext.getResources().getString(R.string.red_status_done);
+            tv_best.setText(String.format(format, item.getNumberDraw(), item.getNumberTotal()));
+        } else {
+            String format = mContext.getResources().getString(R.string.red_status);
+            tv_best.setText(String.format(format, item.getNumberDraw(), item.getNumberTotal()));
+        }
+
         tv_time.setText(time);
 
         String format2 = mContext.getResources().getString(R.string.red_packet_unit2);
         tv_money.setText(String.format(format2, String.valueOf(money)));
 
-        if (type == 2) {
-            img_tag.setVisibility(View.VISIBLE);
-        } else {
-            img_tag.setVisibility(View.INVISIBLE);
-        }
 
     }
 
@@ -99,7 +104,6 @@ public class SendRedPackageRecordAdapter extends RecyclerView.Adapter<RecyclerVi
         ImageView img_head;
         TextView tv_name;
         TextView tv_time;
-        ImageView img_tag;
         TextView tv_money;
         TextView tv_best;
 
@@ -109,7 +113,6 @@ public class SendRedPackageRecordAdapter extends RecyclerView.Adapter<RecyclerVi
             img_head = (ImageView) itemView.findViewById(R.id.img_head);
             tv_name = (TextView) itemView.findViewById(R.id.tv_name);
             tv_time = (TextView) itemView.findViewById(R.id.tv_time);
-            img_tag = (ImageView) itemView.findViewById(R.id.img_tag);
             tv_money = (TextView) itemView.findViewById(R.id.tv_money);
             tv_best = (TextView) itemView.findViewById(R.id.tv_best);
         }

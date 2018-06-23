@@ -448,7 +448,7 @@ public class InputMessageLay extends AutoHeightLayout implements View.OnClickLis
     public void addEditText(String name) {
         String msg = msgEdit.getText().toString().trim();
         if (!msg.contains(name)) {
-            msg = msg + name;
+            msg = msg + name + " ";
             msgEdit.setText(msg);
         }
     }

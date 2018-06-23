@@ -1419,7 +1419,9 @@ public class HuxinSdkManager {
 
         params.put("user_uuid", uuid);
         params.put("nickname", nickname);
-        params.put("mobile", mobile);
+        if (!TextUtils.isEmpty(mobile)) {
+            params.put("mobile", mobile);
+        }
         params.put("head_img_url", head_img_url);
         params.put("lsType", 1);
         params.put("numberTotal", 1);
@@ -1454,7 +1456,9 @@ public class HuxinSdkManager {
 
         params.put("user_uuid", uuid);
         params.put("nickname", nickname);
-        params.put("mobile", mobile);
+        if (!TextUtils.isEmpty(mobile)) {
+            params.put("mobile", mobile);
+        }
         params.put("head_img_url", head_img_url);
         params.put("lsType", 1);
         params.put("numberTotal", numberTotal);
@@ -1489,7 +1493,9 @@ public class HuxinSdkManager {
 
         params.put("user_uuid", uuid);
         params.put("nickname", nickname);
-        params.put("mobile", mobile);
+        if (!TextUtils.isEmpty(mobile)) {
+            params.put("mobile", mobile);
+        }
         params.put("head_img_url", head_img_url);
         params.put("lsType", 2);
         params.put("numberTotal", numberTotal);

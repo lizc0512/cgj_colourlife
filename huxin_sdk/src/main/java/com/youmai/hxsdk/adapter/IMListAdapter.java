@@ -2,6 +2,7 @@ package com.youmai.hxsdk.adapter;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.media.MediaPlayer;
@@ -614,6 +615,7 @@ public class IMListAdapter extends RecyclerView.Adapter {
                     builder.setStatus(status);
                     builder.setCanOpen(canOpen);
                     builder.setIsGrabbed(isGrabbed);
+                    builder.setSinglePacket(true);
                     builder.setListener(new HxRedPacketDialog.OnRedPacketListener() {
                         @Override
                         public void onCloseClick() {
@@ -621,25 +623,34 @@ public class IMListAdapter extends RecyclerView.Adapter {
 
                         @Override
                         public void onOpenClick(double moneyDraw) {
-                            redPackage.setIsGrabbed(1);
-                            redPackage.setValue(String.valueOf(moneyDraw));
-
-                            uiBean.setJsonBodyObj(redPackage);
 
                             Intent in = new Intent(mAct, RedPacketDetailActivity.class);
-                            in.putExtra(RedPacketDetailActivity.OPEN_TYPE, RedPacketDetailActivity.GROUP_PACKET);
+                            in.putExtra(RedPacketDetailActivity.OPEN_TYPE, RedPacketDetailActivity.SINGLE_PACKET);
                             in.putExtra(RedPacketDetailActivity.AVATAR, avatar);
                             in.putExtra(RedPacketDetailActivity.NICKNAME, name);
                             in.putExtra(RedPacketDetailActivity.VALUE, String.valueOf(moneyDraw));
                             in.putExtra(RedPacketDetailActivity.REDTITLE, title);
                             in.putExtra(RedPacketDetailActivity.REDUUID, redUuid);
                             in.putExtra(RedPacketDetailActivity.MSGBEAN, uiBean);
-
                             mAct.startActivity(in);
+
+                            redPackage.setIsGrabbed(1);
+                            redPackage.setValue(String.valueOf(moneyDraw));
+
+                            uiBean.setJsonBodyObj(redPackage);
+                            //add to db
+                            CacheMsgHelper.instance().insertOrUpdate(mAct, uiBean);
                         }
                     });
 
-                    builder.builder().show();
+                    HxRedPacketDialog dialog = builder.builder();
+                    dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialog) {
+                            notifyDataSetChanged();
+                        }
+                    });
+                    dialog.show();
                 }
 
 

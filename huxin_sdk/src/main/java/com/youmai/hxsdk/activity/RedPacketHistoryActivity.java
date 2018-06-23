@@ -5,6 +5,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -12,6 +13,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.jzxiang.pickerview.TimePickerDialog;
+import com.jzxiang.pickerview.data.Type;
+import com.jzxiang.pickerview.listener.OnDateSetListener;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.entity.red.RedPacketHistoryDetail;
@@ -19,15 +23,18 @@ import com.youmai.hxsdk.fragment.PacketReceiveHistoryFragment;
 import com.youmai.hxsdk.fragment.PacketSendHistoryFragment;
 import com.youmai.hxsdk.http.IGetListener;
 import com.youmai.hxsdk.utils.GsonUtil;
+import com.youmai.hxsdk.utils.TimeUtils;
 
 /**
  * 作者：create by YW
  * 日期：2017.06.07 11:42
  * 描述：Red packet
  */
-public class RedPacketHistoryActivity extends AppCompatActivity implements View.OnClickListener {
+public class RedPacketHistoryActivity extends AppCompatActivity implements View.OnClickListener, OnDateSetListener {
 
     public static final String TAG = RedPacketHistoryActivity.class.getSimpleName();
+
+    private String date = "201806";
 
     private TextView tv_back;
     private TextView tv_title;
@@ -77,7 +84,7 @@ public class RedPacketHistoryActivity extends AppCompatActivity implements View.
         tv_title.setText("利是记录");
 
         tv_right = (TextView) findViewById(R.id.tv_right);
-        tv_right.setText("2018年");
+        tv_right.setText(date);
 
 
         img_head = (ImageView) findViewById(R.id.img_head);
@@ -95,12 +102,13 @@ public class RedPacketHistoryActivity extends AppCompatActivity implements View.
         tv_receive_count = (TextView) findViewById(R.id.tv_receive_count);
 
         tv_back.setOnClickListener(this);
+        tv_right.setOnClickListener(this);
 
     }
 
 
     private void loadRedPacket() {
-        HuxinSdkManager.instance().redSendPacketDetail("201806", new IGetListener() {
+        HuxinSdkManager.instance().redSendPacketDetail(date, new IGetListener() {
             @Override
             public void httpReqResult(String response) {
                 RedPacketHistoryDetail bean = GsonUtil.parse(response, RedPacketHistoryDetail.class);
@@ -112,13 +120,14 @@ public class RedPacketHistoryActivity extends AppCompatActivity implements View.
 
 
                     double total = bean.getContent().getMoneyTotal();
-                    String format2 = getResources().getString(R.string.red_packet_unit2);
-                    tv_receive_money.setText(String.format(format2, String.valueOf(total)));
+                    //String format2 = getResources().getString(R.string.red_packet_unit2);
+                    //tv_receive_money.setText(String.format(format2, String.valueOf(total)));
+                    tv_receive_money.setText(String.valueOf(total));
                 }
             }
         });
 
-        HuxinSdkManager.instance().redReceivePacketDetail("201806", new IGetListener() {
+        HuxinSdkManager.instance().redReceivePacketDetail(date, new IGetListener() {
             @Override
             public void httpReqResult(String response) {
                 RedPacketHistoryDetail bean = GsonUtil.parse(response, RedPacketHistoryDetail.class);
@@ -130,8 +139,9 @@ public class RedPacketHistoryActivity extends AppCompatActivity implements View.
 
 
                     double total = bean.getContent().getMoneyTotal();
-                    String format2 = getResources().getString(R.string.red_packet_unit2);
-                    tv_send_money.setText(String.format(format2, String.valueOf(total)));
+                    //String format2 = getResources().getString(R.string.red_packet_unit2);
+                    //tv_send_money.setText(String.format(format2, String.valueOf(total)));
+                    tv_send_money.setText(String.valueOf(total));
                 }
             }
         });
@@ -147,6 +157,36 @@ public class RedPacketHistoryActivity extends AppCompatActivity implements View.
 
     }
 
+    private void datePickerDialog() {
+        long tenDays = 10L * 1000 * 60 * 60 * 24;
+        long twoYears = 2L * 365 * 1000 * 60 * 60 * 24;
+        long curTime = System.currentTimeMillis();
+        TimePickerDialog dialog = new TimePickerDialog.Builder()
+                .setType(Type.YEAR_MONTH)
+                .setCallBack(this)
+                .setWheelItemTextSize(14)
+                .setTitleStringId("请选择日期")
+                .setCurrentMillseconds(curTime)
+                .setMinMillseconds(curTime - tenDays)
+                .setMaxMillseconds(curTime + twoYears)
+                .setThemeColor(ContextCompat.getColor(this, R.color.red_package_colorPrimary))
+                .setWheelItemTextNormalColor(ContextCompat.getColor(this, R.color.hxs_color_gray))
+                .setWheelItemTextSelectorColor(ContextCompat.getColor(this, R.color.red_package_colorAccent))
+                .build();
+        dialog.show(getSupportFragmentManager(), "year_month");
+
+    }
+
+
+    @Override
+    public void onDateSet(TimePickerDialog timePickerView, long millseconds) {
+        String time = TimeUtils.getTime(millseconds, TimeUtils.YEAR_MONTH_FORMAT);
+        if (!date.equals(time)) {
+            date = time;
+            setupViewPager();
+            loadRedPacket();
+        }
+    }
 
     @Override
     public void onClick(View v) {
@@ -154,10 +194,13 @@ public class RedPacketHistoryActivity extends AppCompatActivity implements View.
         if (id == R.id.tv_back) {
             onBackPressed();
         } else if (id == R.id.tv_right) {
-
+            datePickerDialog();
         }
     }
 
+    public String getDate() {
+        return date;
+    }
 
     private class TabFragmentPagerAdapter extends FragmentStatePagerAdapter {
 

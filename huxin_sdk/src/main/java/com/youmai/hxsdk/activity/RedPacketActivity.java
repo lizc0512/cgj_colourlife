@@ -156,9 +156,10 @@ public class RedPacketActivity extends AppCompatActivity implements View.OnClick
                     e.printStackTrace();
                 }
 
+                //String format = getResources().getString(R.string.red_packet_unit1);
+                //tv_money.setText(String.format(format, s.toString()));
 
-                String format = getResources().getString(R.string.red_packet_unit1);
-                tv_money.setText(String.format(format, s.toString()));
+                tv_money.setText(s.toString());
             }
 
             @Override
@@ -212,9 +213,9 @@ public class RedPacketActivity extends AppCompatActivity implements View.OnClick
                             pano = contentBean.getPano();
                             String balance = contentBean.getBalance();
 
-                            String format = getResources().getString(R.string.red_packet_unit2);
-                            tv_value.setText(String.format(format, balance));
-
+                            //String format = getResources().getString(R.string.red_packet_unit2);
+                            //tv_value.setText(String.format(format, balance));
+                            tv_value.setText(balance);
 
                             try {
                                 moneyMax = Double.parseDouble(balance);

@@ -136,9 +136,9 @@ public class RedPacketDetailActivity extends AppCompatActivity implements View.O
 
         tv_money = (TextView) findViewById(R.id.tv_money);
 
-        String format = getResources().getString(R.string.red_packet_unit2);
-
-        tv_money.setText(String.format(format, value));
+        //String format = getResources().getString(R.string.red_packet_unit2);
+        //tv_money.setText(String.format(format, value));
+        tv_money.setText(value);
 
         tv_info = (TextView) findViewById(R.id.tv_info);
         //tv_info.setText(R.string.red_packet_back);

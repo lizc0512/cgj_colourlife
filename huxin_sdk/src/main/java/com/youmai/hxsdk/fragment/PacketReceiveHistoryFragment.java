@@ -12,6 +12,7 @@ import com.jcodecraeer.xrecyclerview.ProgressStyle;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.R;
+import com.youmai.hxsdk.activity.RedPacketHistoryActivity;
 import com.youmai.hxsdk.adapter.ReceiveRedPackageRecordAdapter;
 import com.youmai.hxsdk.adapter.SendRedPackageRecordAdapter;
 import com.youmai.hxsdk.entity.red.ReceiveRedPacketList;
@@ -80,23 +81,27 @@ public class PacketReceiveHistoryFragment extends Fragment {
 
 
     private void reqDate() {
-        HuxinSdkManager.instance().redReceivePacketList("201806", page, new IGetListener() {
-            @Override
-            public void httpReqResult(String response) {
-                ReceiveRedPacketList bean = GsonUtil.parse(response, ReceiveRedPacketList.class);
-                if (bean != null && bean.isSuccess()) {
-                    List<ReceiveRedPacketList.ContentBean> list = bean.getContent();
-                    if (ListUtils.isEmpty(list)) {
-                        mRecyclerView.setLoadingMoreEnabled(false);
-                    } else {
-                        mAdapter.setList(list);
-                        page++;
+        if (getActivity() instanceof RedPacketHistoryActivity) {
+            RedPacketHistoryActivity act = (RedPacketHistoryActivity) getActivity();
+            String time = act.getDate();
+            HuxinSdkManager.instance().redReceivePacketList(time, page, new IGetListener() {
+                @Override
+                public void httpReqResult(String response) {
+                    ReceiveRedPacketList bean = GsonUtil.parse(response, ReceiveRedPacketList.class);
+                    if (bean != null && bean.isSuccess()) {
+                        List<ReceiveRedPacketList.ContentBean> list = bean.getContent();
+                        if (ListUtils.isEmpty(list)) {
+                            mRecyclerView.setLoadingMoreEnabled(false);
+                        } else {
+                            mAdapter.setList(list);
+                            page++;
+                        }
+                        mRecyclerView.loadMoreComplete();
                     }
-                    mRecyclerView.loadMoreComplete();
-                }
 
-            }
-        });
+                }
+            });
+        }
     }
 
 

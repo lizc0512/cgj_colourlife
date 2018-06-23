@@ -86,8 +86,9 @@ public class ReceiveRedPackageRecordAdapter extends RecyclerView.Adapter<Recycle
         tv_name.setText(sendName);
         tv_time.setText(time);
 
-        String format2 = mContext.getResources().getString(R.string.red_packet_unit2);
-        tv_money.setText(String.format(format2, String.valueOf(money)));
+        //String format2 = mContext.getResources().getString(R.string.red_packet_unit2);
+        //tv_money.setText(String.format(format2, String.valueOf(money)));
+        tv_money.setText(String.valueOf(money));
 
         if (type == 2) {
             img_tag.setVisibility(View.VISIBLE);

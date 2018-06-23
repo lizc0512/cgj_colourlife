@@ -41,14 +41,16 @@
         android:background="@drawable/shape_rectangle_corner_stroke"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingRight="10dp">
+        android:padding="5dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:padding="10dp"
-            android:text="金额" />
+            android:text="金额"
+            android:textColor="#2d363d"
+            android:textSize="18sp" />
 
         <android.support.v7.widget.AppCompatEditText
             android:id="@+id/et_money"
@@ -64,15 +66,13 @@
             android:theme="@style/Theme.BlueTheme" />
 
 
-        <TextView
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:gravity="center"
-            android:text="ƒ"
-            android:textColor="@color/hx_color_black"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+            android:padding="5dp"
+            android:src="@drawable/ic_lishi_l" />
 
     </LinearLayout>
 
@@ -100,7 +100,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginLeft="5dp"
-            android:text="8.4f"
+            android:drawableRight="@drawable/ic_lishi_m"
+            android:gravity="center"
+            android:text="8.4"
             android:textColor="#a0a0a0" />
 
     </LinearLayout>
@@ -125,7 +127,10 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_margin="20dp"
-        android:padding="10dp"
+        android:drawableLeft="@drawable/ic_lishi_l"
+        android:drawablePadding="5dp"
+        android:gravity="center"
+        android:padding="5dp"
         android:textColor="#2d363d"
         android:textSize="20sp"
         android:textStyle="bold" />

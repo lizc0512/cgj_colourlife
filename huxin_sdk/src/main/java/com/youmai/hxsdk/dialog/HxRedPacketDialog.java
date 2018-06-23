@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -31,6 +32,9 @@ import com.youmai.hxsdk.utils.GsonUtil;
  * 自定义圆角的dialog
  */
 public class HxRedPacketDialog extends Dialog implements View.OnClickListener {
+
+    private boolean isSinglePacket;
+
     private CacheMsgBean uiBean;
     private String name;
     private String avatar;
@@ -41,18 +45,24 @@ public class HxRedPacketDialog extends Dialog implements View.OnClickListener {
     private String remark;
     private ObjectAnimator anim;
 
-    int status;  //利是状态：-1已过期 ,0未拆开 ,1未领完 ,2已撤回 ,3已退款 ,4已领完
-    int canOpen; //是否可以开这个利是：0否1是
-    int isGrabbed; //用户是否已抢到了该利是：0否1是
+    private int status;  //利是状态：-1已过期 ,0未拆开 ,1未领完 ,2已撤回 ,3已退款 ,4已领完
+    private int canOpen; //是否可以开这个利是：0否1是
+    private int isGrabbed; //用户是否已抢到了该利是：0否1是
 
+    private RelativeLayout rel_packet_bg;
 
-    private ImageView mIvAvatar;
-    private TextView mTvName;
-    private TextView mTvMsg;
-    private ImageView mIvOpen;
+    private ImageView iv_avatar;
+    private ImageView iv_open;
+
+    private TextView tv_name;
+    private TextView tv_msg;
+    private TextView tv_title;
+    private TextView tv_info;
+    private TextView tv_detail;
+
 
     private double moneyDraw;
-    long startTime;
+    private long startTime;
 
     private OnRedPacketListener mListener;
 
@@ -68,9 +78,11 @@ public class HxRedPacketDialog extends Dialog implements View.OnClickListener {
         private CacheMsgBean uiBean;
         private String redUuid;
         private String remark;
-        int status;
-        int canOpen;
-        int isGrabbed;
+        private int status;
+        private int canOpen;
+        private int isGrabbed;
+        private boolean isSinglePacket;
+
         private OnRedPacketListener mListener;
 
         public HxRedPacketDialog builder() {
@@ -111,6 +123,11 @@ public class HxRedPacketDialog extends Dialog implements View.OnClickListener {
             return this;
         }
 
+        public Builder setSinglePacket(boolean singlePacket) {
+            isSinglePacket = singlePacket;
+            return this;
+        }
+
         public void setListener(OnRedPacketListener listener) {
             this.mListener = listener;
         }
@@ -125,6 +142,7 @@ public class HxRedPacketDialog extends Dialog implements View.OnClickListener {
         status = builder.status;
         canOpen = builder.canOpen;
         isGrabbed = builder.isGrabbed;
+        isSinglePacket = builder.isSinglePacket;
         mListener = builder.mListener;
 
         CacheMsgRedPackage redPackage = (CacheMsgRedPackage) uiBean.getJsonBodyObj();
@@ -140,8 +158,9 @@ public class HxRedPacketDialog extends Dialog implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dialog_red_packet);
-        initView();
         setDialogFeature();
+        initView();
+        loadRedPacket();
     }
 
     /**
@@ -158,13 +177,18 @@ public class HxRedPacketDialog extends Dialog implements View.OnClickListener {
 
 
     private void initView() {
-        findViewById(R.id.iv_close).setOnClickListener(this);
-        mIvAvatar = findViewById(R.id.iv_avatar);
-        mTvName = findViewById(R.id.tv_name);
-        mTvMsg = findViewById(R.id.tv_msg);
-        mIvOpen = findViewById(R.id.iv_open);
+        iv_avatar = findViewById(R.id.iv_avatar);
+        tv_name = findViewById(R.id.tv_name);
+        tv_msg = findViewById(R.id.tv_msg);
+        iv_open = findViewById(R.id.iv_open);
 
-        mIvOpen.setOnClickListener(this);
+        rel_packet_bg = findViewById(R.id.rel_packet_bg);
+        tv_title = findViewById(R.id.tv_title);
+        tv_info = findViewById(R.id.tv_info);
+        tv_detail = findViewById(R.id.tv_detail);
+
+        findViewById(R.id.iv_close).setOnClickListener(this);
+        iv_open.setOnClickListener(this);
 
         int size = getContext().getResources().getDimensionPixelOffset(R.dimen.red_head);
         RequestOptions options = new RequestOptions()
@@ -175,10 +199,10 @@ public class HxRedPacketDialog extends Dialog implements View.OnClickListener {
         Glide.with(getContext())
                 .load(avatar)
                 .apply(options)
-                .into(mIvAvatar);
+                .into(iv_avatar);
 
-        mTvName.setText(name);
-        mTvMsg.setText(remark);
+        tv_name.setText(name);
+        tv_msg.setText(remark);
     }
 
     @Override
@@ -187,14 +211,19 @@ public class HxRedPacketDialog extends Dialog implements View.OnClickListener {
         if (id == R.id.iv_close) {
             dismiss();
         } else if (id == R.id.iv_open) {
-            loadRedPacket(redUuid);
+            reqOpenPacket(redUuid);
+        } else if (id == R.id.tv_detail) {
+            if (mListener != null) {
+                mListener.onOpenClick(moneyDraw);
+            }
+            dismiss();
         }
     }
 
 
     private void startAnim() {
         if (anim == null) {
-            anim = ObjectAnimator.ofFloat(mIvOpen, "rotationY", 0f, 360f);
+            anim = ObjectAnimator.ofFloat(iv_open, "rotationY", 0f, 360f);
         }
         anim.setDuration(1500);
         anim.setRepeatCount(ValueAnimator.INFINITE);//无限循环
@@ -232,12 +261,48 @@ public class HxRedPacketDialog extends Dialog implements View.OnClickListener {
     }
 
 
-    private void loadRedPacket(final String redUuid) {
-        if (status == 0 || status == 1) {
-            if (canOpen == 0) {//红包不能打开
+    private void loadRedPacket() {
+        if (status == -1) { //利是状态：-1已过期 ,0未拆开 ,1未领完 ,2已撤回 ,3已退款 ,4已领完
+            tv_title.setVisibility(View.VISIBLE);
+            tv_title.setText(R.string.red_packet_overdue);
 
-            } else if (canOpen == 1) {
-                if (isGrabbed == 0) {
+            tv_info.setVisibility(View.VISIBLE);
+            tv_info.setText(R.string.red_packet_overdue_info);
+        } else if (status == 0 || status == 1) {
+            tv_title.setVisibility(View.VISIBLE);
+            tv_title.setText(R.string.red_packet_can_open);
+        } else if (status == 2) {
+            tv_title.setVisibility(View.VISIBLE);
+            tv_title.setText(R.string.red_packet_cancel);
+        } else if (status == 3) {
+            tv_title.setVisibility(View.VISIBLE);
+            tv_title.setText(R.string.red_packet_back_money);
+        } else if (status == 4) {
+            tv_title.setVisibility(View.VISIBLE);
+            tv_title.setText(R.string.red_packet_is_open_group);
+
+            rel_packet_bg.setBackgroundResource(R.drawable.red_packet_gone);
+            iv_open.setVisibility(View.GONE);
+            tv_detail.setVisibility(View.VISIBLE);
+            if (isSinglePacket) {
+                if (mListener != null) {
+                    mListener.onOpenClick(moneyDraw);
+                }
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        dismiss();
+                    }
+                }, 1000);
+            }
+        }
+
+    }
+
+    private void reqOpenPacket(final String redUuid) {
+        if (status == 0 || status == 1) {  //0未拆开 ,1未领完
+            if (canOpen == 1) {  //可以开这个利是
+                if (isGrabbed == 0) { //没有抢到了该利是
                     HuxinSdkManager.instance().grabRedPackage(redUuid, new IGetListener() {
                         @Override
                         public void httpReqResult(String response) {
@@ -262,7 +327,7 @@ public class HxRedPacketDialog extends Dialog implements View.OnClickListener {
 
                     startTime = System.currentTimeMillis();
                     startAnim();
-                } else if (isGrabbed == 1) {
+                } else if (isGrabbed == 1) {  ////抢到了该利是
                     if (mListener != null) {
                         mListener.onOpenClick(moneyDraw);
                     }

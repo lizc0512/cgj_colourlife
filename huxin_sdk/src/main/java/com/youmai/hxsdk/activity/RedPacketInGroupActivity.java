@@ -122,7 +122,6 @@ public class RedPacketInGroupActivity extends AppCompatActivity implements View.
         tv_right.setText("利是记录");
         tv_right.setOnClickListener(this);
 
-
         tv_money = (TextView) findViewById(R.id.tv_money);
         et_msg = (AppCompatEditText) findViewById(R.id.et_msg);
 
@@ -137,8 +136,15 @@ public class RedPacketInGroupActivity extends AppCompatActivity implements View.
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 try {
                     money = Double.parseDouble(s.toString());
-                    String format = getResources().getString(R.string.red_packet_unit1);
-                    tv_money.setText(String.format(format, String.valueOf(money * numberTotal)));
+                    //String format = getResources().getString(R.string.red_packet_unit1);
+                    //tv_money.setText(String.format(format, String.valueOf(money * numberTotal)));
+
+                    if (type == 2) {
+                        tv_money.setText(String.valueOf(money));
+                    } else {
+                        tv_money.setText(String.valueOf(money * numberTotal));
+                    }
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -162,8 +168,18 @@ public class RedPacketInGroupActivity extends AppCompatActivity implements View.
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 try {
                     numberTotal = Integer.parseInt(s.toString());
-                    String format = getResources().getString(R.string.red_packet_unit1);
-                    tv_money.setText(String.format(format, String.valueOf(money * numberTotal)));
+                    //String format = getResources().getString(R.string.red_packet_unit1);
+                    //tv_money.setText(String.format(format, String.valueOf(money * numberTotal)));
+
+                    tv_money.setText(String.valueOf(money * numberTotal));
+
+                    if (type == 2) {
+                        tv_money.setText(String.valueOf(money));
+                    } else {
+                        tv_money.setText(String.valueOf(money * numberTotal));
+                    }
+
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -227,9 +243,9 @@ public class RedPacketInGroupActivity extends AppCompatActivity implements View.
                             pano = contentBean.getPano();
                             String balance = contentBean.getBalance();
 
-                            String format = getResources().getString(R.string.red_packet_unit2);
-                            tv_value.setText(String.format(format, balance));
-
+                            //String format = getResources().getString(R.string.red_packet_unit2);
+                            //tv_value.setText(String.format(format, balance));
+                            tv_value.setText(balance);
 
                             try {
                                 moneyMax = Double.parseDouble(balance);
@@ -350,6 +366,7 @@ public class RedPacketInGroupActivity extends AppCompatActivity implements View.
         } else if (id == R.id.tv_right) {
             startActivity(new Intent(this, RedPacketHistoryActivity.class));
         } else if (id == R.id.tv_type) {
+            et_money.setText("");
             if (type == 2) {
                 type = 1;
                 tv_type.setText(R.string.type_fix);

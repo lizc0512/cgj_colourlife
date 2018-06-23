@@ -155,6 +155,10 @@
 
     <!-- 红包 -->
     <string name="red_packet_back">未领取的红包，将于24小时后发起退款</string>
+    <string name="red_packet_overdue_info">超过24小时则过期，不可领取</string>
+    <string name="red_packet_can_open">有一个利是在等你</string>
+    <string name="red_packet_cancel">利是已撤回</string>
+    <string name="red_packet_back_money">利是已退款</string>
     <string name="red_packet_review">查看利是</string>
     <string name="red_packet_is_open_group">利是已被领完</string>
     <string name="red_packet_is_open_single">利是已领取</string>

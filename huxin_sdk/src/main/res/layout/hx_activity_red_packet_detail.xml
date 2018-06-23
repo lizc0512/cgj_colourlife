@@ -57,8 +57,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
+                android:drawablePadding="2dp"
+                android:drawableRight="@drawable/ic_lishi_m"
                 android:padding="2dp"
-                android:text="100 f"
+                android:text="100"
                 android:textColor="#2d363d"
                 android:textSize="18sp"
                 android:textStyle="bold" />

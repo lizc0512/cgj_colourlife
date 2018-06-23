@@ -23,7 +23,9 @@
             android:id="@+id/tv_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="张三" />
+            android:text="张三"
+            android:textColor="#122634"
+            android:textSize="15sp" />
 
         <TextView
             android:id="@+id/tv_time"
@@ -38,6 +40,11 @@
         android:id="@+id/tv_money"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="100f" />
+        android:drawablePadding="2dp"
+        android:drawableRight="@drawable/ic_lishi_s"
+        android:gravity="center"
+        android:text="100"
+        android:textColor="#2d363d"
+        android:textSize="12sp" />
 
 </LinearLayout>

@@ -92,8 +92,9 @@ public class SendRedPackageRecordAdapter extends RecyclerView.Adapter<RecyclerVi
 
         tv_time.setText(time);
 
-        String format2 = mContext.getResources().getString(R.string.red_packet_unit2);
-        tv_money.setText(String.format(format2, String.valueOf(money)));
+        //String format2 = mContext.getResources().getString(R.string.red_packet_unit2);
+        //tv_money.setText(String.format(format2, String.valueOf(money)));
+        tv_money.setText(String.valueOf(money));
 
 
     }

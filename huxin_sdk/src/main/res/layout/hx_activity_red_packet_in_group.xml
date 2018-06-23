@@ -55,16 +55,13 @@
             android:textSize="16sp"
             android:theme="@style/Theme.BlueTheme" />
 
-
-        <TextView
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:gravity="center"
-            android:text="ƒ"
-            android:textColor="@color/hx_color_black"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+            android:padding="5dp"
+            android:src="@drawable/ic_lishi_l" />
 
     </LinearLayout>
 
@@ -93,7 +90,10 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginLeft="5dp"
-            android:text="8.4f" />
+            android:drawableRight="@drawable/ic_lishi_m"
+            android:gravity="center"
+            android:text="8.4"
+            android:textColor="#a0a0a0" />
 
         <View
             android:layout_width="0dp"
@@ -213,8 +213,10 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_margin="20dp"
-        android:padding="10dp"
-        android:text="f 8.9"
+        android:drawableLeft="@drawable/ic_lishi_l"
+        android:drawablePadding="5dp"
+        android:gravity="center"
+        android:padding="5dp"
         android:textColor="#2d363d"
         android:textSize="20sp"
         android:textStyle="bold" />

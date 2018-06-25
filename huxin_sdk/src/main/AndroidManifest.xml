@@ -166,6 +166,7 @@
 
         <activity
             android:name="com.youmai.hxsdk.activity.RedPacketDetailActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/HxRadPackageTheme" />
 

@@ -108,6 +108,24 @@ public class RedPacketHistoryActivity extends AppCompatActivity implements View.
 
 
     private void loadRedPacket() {
+        HuxinSdkManager.instance().redReceivePacketDetail(date, new IGetListener() {
+            @Override
+            public void httpReqResult(String response) {
+                RedPacketHistoryDetail bean = GsonUtil.parse(response, RedPacketHistoryDetail.class);
+                if (bean != null && bean.isSuccess()) {
+                    String count = bean.getContent().getNumberTotal();
+
+                    String format1 = getResources().getString(R.string.receive_red_packet_count);
+                    tv_send_count.setText(String.format(format1, count));
+
+                    double total = bean.getContent().getMoneyTotal();
+                    //String format2 = getResources().getString(R.string.red_packet_unit2);
+                    //tv_send_money.setText(String.format(format2, String.valueOf(total)));
+                    tv_send_money.setText(String.valueOf(total));
+                }
+            }
+        });
+
         HuxinSdkManager.instance().redSendPacketDetail(date, new IGetListener() {
             @Override
             public void httpReqResult(String response) {
@@ -116,8 +134,7 @@ public class RedPacketHistoryActivity extends AppCompatActivity implements View.
                     String count = bean.getContent().getNumberTotal();
 
                     String format1 = getResources().getString(R.string.send_red_packet_count);
-                    tv_send_count.setText(String.format(format1, count));
-
+                    tv_receive_count.setText(String.format(format1, count));
 
                     double total = bean.getContent().getMoneyTotal();
                     //String format2 = getResources().getString(R.string.red_packet_unit2);
@@ -127,24 +144,6 @@ public class RedPacketHistoryActivity extends AppCompatActivity implements View.
             }
         });
 
-        HuxinSdkManager.instance().redReceivePacketDetail(date, new IGetListener() {
-            @Override
-            public void httpReqResult(String response) {
-                RedPacketHistoryDetail bean = GsonUtil.parse(response, RedPacketHistoryDetail.class);
-                if (bean != null && bean.isSuccess()) {
-                    String count = bean.getContent().getNumberTotal();
-
-                    String format1 = getResources().getString(R.string.receive_red_packet_count);
-                    tv_receive_count.setText(String.format(format1, count));
-
-
-                    double total = bean.getContent().getMoneyTotal();
-                    //String format2 = getResources().getString(R.string.red_packet_unit2);
-                    //tv_send_money.setText(String.format(format2, String.valueOf(total)));
-                    tv_send_money.setText(String.valueOf(total));
-                }
-            }
-        });
 
     }
 
@@ -183,6 +182,7 @@ public class RedPacketHistoryActivity extends AppCompatActivity implements View.
         String time = TimeUtils.getTime(millseconds, TimeUtils.YEAR_MONTH_FORMAT);
         if (!date.equals(time)) {
             date = time;
+            tv_right.setText(date);
             setupViewPager();
             loadRedPacket();
         }

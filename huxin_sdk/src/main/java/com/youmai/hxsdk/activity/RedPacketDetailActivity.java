@@ -162,7 +162,7 @@ public class RedPacketDetailActivity extends AppCompatActivity implements View.O
 
 
     private void loadRedPacket() {
-        HuxinSdkManager.instance().openRedPackage(redUuid, new IGetListener() {
+        /*HuxinSdkManager.instance().openRedPackage(redUuid, new IGetListener() {
             @Override
             public void httpReqResult(String response) {
                 OpenRedPacketResult bean = GsonUtil.parse(response, OpenRedPacketResult.class);
@@ -204,23 +204,22 @@ public class RedPacketDetailActivity extends AppCompatActivity implements View.O
                         }
                     }
                 }
+            }
+        });*/
 
+        HuxinSdkManager.instance().redPackageDetail(redUuid, new IGetListener() {
+            @Override
+            public void httpReqResult(String response) {
+                RedPackageDetail bean = GsonUtil.parse(response, RedPackageDetail.class);
+                if (bean != null && bean.isSuccess()) {
+                    List<RedPackageDetail.ContentBean.PacketListBean> list = bean.getContent().getPacketList();
+                    adapter.setList(list);
 
-                HuxinSdkManager.instance().redPackageDetail(redUuid, new IGetListener() {
-                    @Override
-                    public void httpReqResult(String response) {
-                        RedPackageDetail bean = GsonUtil.parse(response, RedPackageDetail.class);
-                        if (bean != null && bean.isSuccess()) {
-                            List<RedPackageDetail.ContentBean.PacketListBean> list = bean.getContent().getPacketList();
-                            adapter.setList(list);
+                    int total = bean.getContent().getNumberTotal();
+                    int draw = bean.getContent().getNumberDraw();
 
-                            int total = bean.getContent().getNumberTotal();
-                            int draw = bean.getContent().getNumberDraw();
-
-                            tv_status.setText("领取" + draw + "/" + total);
-                        }
-                    }
-                });
+                    tv_status.setText("领取" + draw + "/" + total);
+                }
             }
         });
 

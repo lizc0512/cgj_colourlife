@@ -272,7 +272,7 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
             onBindFile((FileViewHolder) holder, position);
         } else if (holder instanceof VideoViewHolder) {//视频
             onBindVideo((VideoViewHolder) holder, position);
-        } else if (holder instanceof RedPackageHolder) {//红包
+        } else if (holder instanceof RedPackageHolder) {//发红包
             onBindRedPackage((RedPackageHolder) holder, position);
         } else if (holder instanceof RedPacketOpenedViewHolder) {//红包被领取
             onBindRedPacketOpened((RedPacketOpenedViewHolder) holder, position);
@@ -652,6 +652,7 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
                     redPackage.setStatus(status);
                     redPackage.setCanOpen(canOpen);
                     redPackage.setIsGrabbed(isGrabbed);
+                    redPackage.setRedUuid(redUuid);
                     uiBean.setJsonBodyObj(redPackage);
 
                     HxRedPacketDialog.Builder builder = new HxRedPacketDialog.Builder(mAct);
@@ -712,10 +713,18 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
     private void onBindRedPacketOpened(final RedPacketOpenedViewHolder holder, final int position) {
         final CacheMsgBean bean = mImBeanList.get(position);
         final CacheMsgRedPackage redPackage = (CacheMsgRedPackage) bean.getJsonBodyObj();
-        String name = redPackage.getReceiveName();
+
+        final String name = bean.getSenderRealName();
+        final String avatar = bean.getSenderAvatar();
+
+        final String title = redPackage.getRedTitle();
+        final String redUuid = redPackage.getRedUuid();
+        final String moneyDraw = redPackage.getValue();
+
+
         if (!TextUtils.isEmpty(name)) {
             String content = name + "领取了你的利是";
-            String keyword = "利是";
+            /*String keyword = "利是";
 
             int start = content.indexOf(keyword);
 
@@ -723,8 +732,26 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
             SpannableStringBuilder style = new SpannableStringBuilder(content);
             style.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mAct, R.color.hx_color_red_packet)),
                     start, start + length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            holder.tv_red_open.setText(style);
+            holder.tv_red_open.setText(style);*/
+
+            holder.tv_red_open.setText(content);
         }
+
+
+        holder.tv_red_packet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent in = new Intent(mAct, RedPacketDetailActivity.class);
+                in.putExtra(RedPacketDetailActivity.OPEN_TYPE, RedPacketDetailActivity.GROUP_PACKET);
+                in.putExtra(RedPacketDetailActivity.AVATAR, avatar);
+                in.putExtra(RedPacketDetailActivity.NICKNAME, name);
+                in.putExtra(RedPacketDetailActivity.VALUE, moneyDraw);
+                in.putExtra(RedPacketDetailActivity.REDTITLE, title);
+                in.putExtra(RedPacketDetailActivity.REDUUID, redUuid);
+                in.putExtra(RedPacketDetailActivity.MSGBEAN, bean);
+                mAct.startActivity(in);
+            }
+        });
     }
 
     /**
@@ -1241,10 +1268,12 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
 
     class RedPacketOpenedViewHolder extends BaseViewHolder {
         TextView tv_red_open;
+        TextView tv_red_packet;
 
         RedPacketOpenedViewHolder(View itemView) {
             super(itemView);
             tv_red_open = (TextView) itemView.findViewById(R.id.tv_red_packet_opened);
+            tv_red_packet = (TextView) itemView.findViewById(R.id.tv_red_packet);
         }
     }
 

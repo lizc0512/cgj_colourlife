@@ -349,13 +349,14 @@ public class HxRedPacketDialog extends Dialog implements View.OnClickListener {
         uiBean.setJsonBodyObj(redPackage);
 
         long id = uiBean.getId();
-        uiBean.setMsgType(CacheMsgBean.OPEN_REDPACKET);
-
-        Intent intent = new Intent(getContext(), SendMsgService.class);
-        intent.putExtra("id", id);
-        intent.putExtra("data", uiBean);
-        intent.putExtra("data_from", SendMsgService.FROM_IM);
-        getContext().startService(intent);
+        if (!uiBean.isRightUI()) {
+            uiBean.setMsgType(CacheMsgBean.OPEN_REDPACKET);
+            Intent intent = new Intent(getContext(), SendMsgService.class);
+            intent.putExtra("id", id);
+            intent.putExtra("data", uiBean);
+            intent.putExtra("data_from", SendMsgService.FROM_IM);
+            getContext().startService(intent);
+        }
     }
 
 

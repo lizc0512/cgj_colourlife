@@ -675,14 +675,12 @@ public class IMMsgManager {
 
             CacheMsgRedPackage cacheMsgRedPackage = new CacheMsgRedPackage();
 
-
-            //cacheMsgRedPackage.setValue(redPackage.getValue());
-            //cacheMsgRedPackage.setRedTitle(redPackage.getTitle());
-            //cacheMsgRedPackage.setRedUuid(redPackage.getUuid());
-
             cacheMsgRedPackage.setRedStatus(CacheMsgRedPackage.RED_PACKET_OPENED);
             cacheMsgRedPackage.setReceiveName(redPackage.getReceiveName());
             cacheMsgRedPackage.setReceiveDone(redPackage.getReceiveDone());
+            cacheMsgRedPackage.setValue(redPackage.getValue());
+            cacheMsgRedPackage.setRedTitle(redPackage.getTitle());
+            cacheMsgRedPackage.setRedUuid(redPackage.getUuid());
             cacheMsgRedPackage.setMsgId(im.getImChat().getMsgId());
 
             cacheMsgBean.setMsgType(CacheMsgBean.RECEIVE_PACKET_OPENED).setJsonBodyObj(cacheMsgRedPackage);

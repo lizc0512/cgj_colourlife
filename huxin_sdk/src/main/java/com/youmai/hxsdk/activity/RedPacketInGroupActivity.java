@@ -193,6 +193,13 @@ public class RedPacketInGroupActivity extends AppCompatActivity implements View.
 
         tv_person = (TextView) findViewById(R.id.tv_person);
         tv_type = (TextView) findViewById(R.id.tv_type);
+        if (type == 2) {
+            tv_type.setText(R.string.type_fix);
+        } else {
+            tv_type.setText(R.string.type_pin);
+        }
+
+
         tv_type_title = (TextView) findViewById(R.id.tv_type_title);
 
         findViewById(R.id.btn_commit).setOnClickListener(this);
@@ -369,12 +376,12 @@ public class RedPacketInGroupActivity extends AppCompatActivity implements View.
             et_money.setText("");
             if (type == 2) {
                 type = 1;
-                tv_type.setText(R.string.type_fix);
+                tv_type.setText(R.string.type_pin);
                 tv_type_title.setText(R.string.title_fix);
                 tv_type_title.setCompoundDrawables(null, null, null, null);
             } else {
                 type = 2;
-                tv_type.setText(R.string.type_pin);
+                tv_type.setText(R.string.type_fix);
                 tv_type_title.setText(R.string.title_pin);
                 Drawable left = ContextCompat.getDrawable(this, R.drawable.ic_pin);
                 tv_type_title.setCompoundDrawablesWithIntrinsicBounds(left, null, null, null);

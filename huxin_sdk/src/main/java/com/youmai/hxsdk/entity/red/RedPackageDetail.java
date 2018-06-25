@@ -8,7 +8,7 @@ public class RedPackageDetail {
     /**
      * code : 0
      * message : SUCC
-     * content : {"uuid":"2ac6d78b5b104dbab361dc4ee5804b0e","lsType":2,"senderUserUuid":"6726ebd8-e561-4b45-a216-8812425e6371","senderName":"刘洪浩","senderMobile":"13302476774","senderHeadImgUrl":"http://avatar.ice.colourlife.com/avatar?uid=liuhonghaohx","sendTime":"2018-06-20 22:14:31","timeAllowWithdraw":"2018-06-20 23:14:31","blessing":"大吉大利，开开心心！","moneyTotal":3,"numberTotal":3,"status":1,"moneyDraw":"1.38","numberDraw":1,"packetList":[{"receiverNickname":"陈琼瑶","receiverMobile":"186****3439","receiverHeadImgUrl":"http://avatar.ice.colourlife.com/avatar?uid=chenqiongyao","receiveTime":"2018-06-20 22:14:40","receiveMoney":1.39,"isBest":0}]}
+     * content : {"uuid":"a2372212173d4d03bc421060dbae6af1","lsType":1,"senderUserUuid":"6726ebd8-e561-4b45-a216-8812425e6371","senderName":"刘洪浩","senderMobile":"13302476774","senderHeadImgUrl":"http://avatar.ice.colourlife.com/avatar?uid=liuhonghaohx","sendTime":"2018-06-25 18:48:37","timeAllowWithdraw":"2018-06-25 19:48:37","blessing":"大吉大利，开开心心！","moneyTotal":1,"numberTotal":1,"status":4,"moneyDraw":"1.0","numberDraw":1,"selfMoneyDraw":"0","packetList":[{"receiverNickname":"陈琼瑶","receiverMobile":"186****3439","receiverHeadImgUrl":"http://avatar.ice.colourlife.com/avatar?uid=chenqiongyao","receiveTime":"2018-06-25 18:49:05","receiveMoney":1,"isBest":1}]}
      */
 
     private int code;
@@ -45,21 +45,22 @@ public class RedPackageDetail {
 
     public static class ContentBean {
         /**
-         * uuid : 2ac6d78b5b104dbab361dc4ee5804b0e
-         * lsType : 2
+         * uuid : a2372212173d4d03bc421060dbae6af1
+         * lsType : 1
          * senderUserUuid : 6726ebd8-e561-4b45-a216-8812425e6371
          * senderName : 刘洪浩
          * senderMobile : 13302476774
          * senderHeadImgUrl : http://avatar.ice.colourlife.com/avatar?uid=liuhonghaohx
-         * sendTime : 2018-06-20 22:14:31
-         * timeAllowWithdraw : 2018-06-20 23:14:31
+         * sendTime : 2018-06-25 18:48:37
+         * timeAllowWithdraw : 2018-06-25 19:48:37
          * blessing : 大吉大利，开开心心！
-         * moneyTotal : 3
-         * numberTotal : 3
-         * status : 1
-         * moneyDraw : 1.38
+         * moneyTotal : 1
+         * numberTotal : 1
+         * status : 4
+         * moneyDraw : 1.0
          * numberDraw : 1
-         * packetList : [{"receiverNickname":"陈琼瑶","receiverMobile":"186****3439","receiverHeadImgUrl":"http://avatar.ice.colourlife.com/avatar?uid=chenqiongyao","receiveTime":"2018-06-20 22:14:40","receiveMoney":1.39,"isBest":0}]
+         * selfMoneyDraw : 0
+         * packetList : [{"receiverNickname":"陈琼瑶","receiverMobile":"186****3439","receiverHeadImgUrl":"http://avatar.ice.colourlife.com/avatar?uid=chenqiongyao","receiveTime":"2018-06-25 18:49:05","receiveMoney":1,"isBest":1}]
          */
 
         private String uuid;
@@ -76,6 +77,7 @@ public class RedPackageDetail {
         private int status;
         private String moneyDraw;
         private int numberDraw;
+        private String selfMoneyDraw;
         private List<PacketListBean> packetList;
 
         public String getUuid() {
@@ -190,6 +192,14 @@ public class RedPackageDetail {
             this.numberDraw = numberDraw;
         }
 
+        public String getSelfMoneyDraw() {
+            return selfMoneyDraw;
+        }
+
+        public void setSelfMoneyDraw(String selfMoneyDraw) {
+            this.selfMoneyDraw = selfMoneyDraw;
+        }
+
         public List<PacketListBean> getPacketList() {
             return packetList;
         }
@@ -203,16 +213,16 @@ public class RedPackageDetail {
              * receiverNickname : 陈琼瑶
              * receiverMobile : 186****3439
              * receiverHeadImgUrl : http://avatar.ice.colourlife.com/avatar?uid=chenqiongyao
-             * receiveTime : 2018-06-20 22:14:40
-             * receiveMoney : 1.39
-             * isBest : 0
+             * receiveTime : 2018-06-25 18:49:05
+             * receiveMoney : 1
+             * isBest : 1
              */
 
             private String receiverNickname;
             private String receiverMobile;
             private String receiverHeadImgUrl;
             private String receiveTime;
-            private double receiveMoney;
+            private int receiveMoney;
             private int isBest;
 
             public String getReceiverNickname() {
@@ -247,11 +257,11 @@ public class RedPackageDetail {
                 this.receiveTime = receiveTime;
             }
 
-            public double getReceiveMoney() {
+            public int getReceiveMoney() {
                 return receiveMoney;
             }
 
-            public void setReceiveMoney(double receiveMoney) {
+            public void setReceiveMoney(int receiveMoney) {
                 this.receiveMoney = receiveMoney;
             }
 

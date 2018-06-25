@@ -73,7 +73,7 @@ public class SendRedPackageRecordAdapter extends RecyclerView.Adapter<RecyclerVi
             img_head.setImageResource(R.drawable.ic_random);
             tv_name.setText(R.string.type_pin);
         } else {
-            if (item.getMoneyTotal() > 1) {
+            if (item.getNumberTotal() > 1) {
                 img_head.setImageResource(R.drawable.ic_fix);
                 tv_name.setText(R.string.type_fix);
             } else {

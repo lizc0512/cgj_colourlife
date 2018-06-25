@@ -611,7 +611,7 @@ public class IMListAdapter extends RecyclerView.Adapter {
                     redPackage.setRedUuid(redUuid);
                     uiBean.setJsonBodyObj(redPackage);
 
-                    if (owner == 1 || type == 1) {
+                    if (owner == 1 && type == 1) {
                         Intent in = new Intent(mAct, RedPacketDetailActivity.class);
                         in.putExtra(RedPacketDetailActivity.OPEN_TYPE, RedPacketDetailActivity.SINGLE_PACKET);
                         in.putExtra(RedPacketDetailActivity.AVATAR, avatar);

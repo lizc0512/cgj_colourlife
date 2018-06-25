@@ -116,7 +116,7 @@ public class RedPacketDetailActivity extends AppCompatActivity implements View.O
         tv_title.setText("利是详情");
 
         tv_right = (TextView) findViewById(R.id.tv_right);
-        tv_right.setText("红包记录");
+        tv_right.setText("利是记录");
         tv_right.setOnClickListener(this);
 
         img_head = (ImageView) findViewById(R.id.img_head);
@@ -169,51 +169,6 @@ public class RedPacketDetailActivity extends AppCompatActivity implements View.O
 
 
     private void loadRedPacket() {
-        /*HuxinSdkManager.instance().openRedPackage(redUuid, new IGetListener() {
-            @Override
-            public void httpReqResult(String response) {
-                OpenRedPacketResult bean = GsonUtil.parse(response, OpenRedPacketResult.class);
-                if (bean != null && bean.isSuccess()) {
-                    int status = bean.getContent().getStatus();  //利是状态：-1已过期 ,0未拆开 ,1未领完 ,2已撤回 ,3已退款 ,4已领完
-                    int canOpen = bean.getContent().getCanOpen();
-                    int isGrabbed = bean.getContent().getIsGrabbed();
-
-                    if (status == 0 || status == 1) {
-
-                        if (canOpen == 1 && isGrabbed == 0) {
-                            HuxinSdkManager.instance().grabRedPackage(redUuid, new IGetListener() {
-                                @Override
-                                public void httpReqResult(String response) {
-                                    GrabRedPacketResult bean = GsonUtil.parse(response, GrabRedPacketResult.class);
-                                    if (bean != null && bean.isSuccess()) {
-                                        double moneyDraw = bean.getContent().getMoneyDraw();
-                                        tv_money.setText(moneyDraw + "");
-
-
-                                        final CacheMsgRedPackage redPackage = (CacheMsgRedPackage) uiBean.getJsonBodyObj();
-                                        redPackage.setRedStatus(CacheMsgRedPackage.RED_PACKET_IS_OPEN_SINGLE);
-                                        uiBean.setJsonBodyObj(redPackage);
-
-
-                                        long id = uiBean.getId();
-                                        uiBean.setMsgType(CacheMsgBean.OPEN_REDPACKET);
-
-                                        Intent intent = new Intent(mContext, SendMsgService.class);
-                                        intent.putExtra("id", id);
-                                        intent.putExtra("data", uiBean);
-                                        intent.putExtra("data_from", SendMsgService.FROM_IM);
-                                        startService(intent);
-
-
-                                    }
-                                }
-                            });
-                        }
-                    }
-                }
-            }
-        });*/
-
         HuxinSdkManager.instance().redPackageDetail(redUuid, new IGetListener() {
             @Override
             public void httpReqResult(String response) {
@@ -221,6 +176,9 @@ public class RedPacketDetailActivity extends AppCompatActivity implements View.O
                 if (bean != null && bean.isSuccess()) {
                     List<RedPackageDetail.ContentBean.PacketListBean> list = bean.getContent().getPacketList();
                     adapter.setList(list);
+
+                    String selfMoney = bean.getContent().getSelfMoneyDraw();
+                    tv_money.setText(selfMoney);
 
                     int total = bean.getContent().getNumberTotal();
                     int draw = bean.getContent().getNumberDraw();

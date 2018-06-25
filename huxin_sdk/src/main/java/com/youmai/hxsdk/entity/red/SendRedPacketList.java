@@ -7,7 +7,7 @@ public class SendRedPacketList {
     /**
      * code : 0
      * message : SUCC
-     * content : [{"uuid":"6d274413a27649a4b2337d3fd7474b0e","lsType":2,"senderUserUuid":"40f299f5-9813-4c43-942d-07cb37204c7a","senderName":"陈琼瑶","senderMobile":"18664923439","senderHeadImgUrl":"http://avatar.ice.colourlife.com/avatar?uid=chenqiongyao","sendTime":"2018-06-22 15:28:28","timeAllowWithdraw":"2018-06-22 16:28:28","blessing":"大吉大利，开开心心！","moneyTotal":2,"numberTotal":2,"status":4,"moneyDraw":"2.0","numberDraw":2},{"uuid":"741513535f9b4346a663419759eff222","lsType":2,"senderUserUuid":"40f299f5-9813-4c43-942d-07cb37204c7a","senderName":"陈琼瑶","senderMobile":"18664923439","senderHeadImgUrl":"http://avatar.ice.colourlife.com/avatar?uid=chenqiongyao","sendTime":"2018-06-22 11:35:55","timeAllowWithdraw":"2018-06-22 12:35:55","blessing":"大吉大利，开开心心！","moneyTotal":3,"numberTotal":2,"status":1,"moneyDraw":"2.27","numberDraw":1},{"uuid":"e2f312cc189249ef8c5b094d5d0af42d","lsType":1,"senderUserUuid":"40f299f5-9813-4c43-942d-07cb37204c7a","senderName":"陈琼瑶","senderMobile":"18664923439","senderHeadImgUrl":"http://avatar.ice.colourlife.com/avatar?uid=chenqiongyao","sendTime":"2018-06-22 11:11:45","timeAllowWithdraw":"2018-06-22 12:11:45","blessing":"大吉大利，开开心心！","moneyTotal":1,"numberTotal":1,"status":4,"moneyDraw":"1.0","numberDraw":1},{"uuid":"b3cabefc12804b0ab6e24dccc7ea9f43","lsType":1,"senderUserUuid":"40f299f5-9813-4c43-942d-07cb37204c7a","senderName":"陈琼瑶","senderMobile":"18664923439","senderHeadImgUrl":"http://avatar.ice.colourlife.com/avatar?uid=chenqiongyao","sendTime":"2018-06-22 11:00:43","timeAllowWithdraw":"2018-06-22 12:00:43","blessing":"大吉大利，开开心心！","moneyTotal":1,"numberTotal":1,"status":4,"moneyDraw":"1.0","numberDraw":1},{"uuid":"23d18abf78d240a1ad1ed75d69a74a49","lsType":1,"senderUserUuid":"40f299f5-9813-4c43-942d-07cb37204c7a","senderName":"陈琼瑶","senderMobile":"18664923439","senderHeadImgUrl":"http://avatar.ice.colourlife.com/avatar?uid=chenqiongyao","sendTime":"2018-06-22 10:56:32","timeAllowWithdraw":"2018-06-22 11:56:32","blessing":"大吉大利，开开心心！","moneyTotal":1,"numberTotal":1,"status":4,"moneyDraw":"1.0","numberDraw":1},{"uuid":"10184df0fa3d4f9e916ee86b1617848b","lsType":1,"senderUserUuid":"40f299f5-9813-4c43-942d-07cb37204c7a","senderName":"陈琼瑶","senderMobile":"18664923439","senderHeadImgUrl":"http://avatar.ice.colourlife.com/avatar?uid=chenqiongyao","sendTime":"2018-06-22 10:53:47","timeAllowWithdraw":"2018-06-22 11:53:47","blessing":"大吉大利，开开心心！","moneyTotal":1,"numberTotal":1,"status":4,"moneyDraw":"1.0","numberDraw":1},{"uuid":"9eec29c678f74c15b10f1360a69be7be","lsType":2,"senderUserUuid":"40f299f5-9813-4c43-942d-07cb37204c7a","senderName":"陈琼瑶","senderMobile":"18664923439","senderHeadImgUrl":"http://avatar.ice.colourlife.com/avatar?uid=chenqiongyao","sendTime":"2018-06-20 22:04:27","timeAllowWithdraw":"2018-06-20 23:04:27","blessing":"大吉大利，开开心心！","moneyTotal":3,"numberTotal":3,"status":-1,"moneyDraw":"1.39","numberDraw":2},{"uuid":"472dd07b49164beb81473b6886b3b29b","lsType":2,"senderUserUuid":"40f299f5-9813-4c43-942d-07cb37204c7a","senderName":"陈琼瑶","senderMobile":"18664923439","senderHeadImgUrl":"http://avatar.ice.colourlife.com/avatar?uid=chenqiongyao","sendTime":"2018-06-20 21:56:41","timeAllowWithdraw":"2018-06-20 22:56:41","blessing":"大吉大利，开开心心！","moneyTotal":2,"numberTotal":2,"status":-1,"moneyDraw":"0.62","numberDraw":1},{"uuid":"56d7379e21bd447fb1e21e79a94351d6","lsType":2,"senderUserUuid":"40f299f5-9813-4c43-942d-07cb37204c7a","senderName":"陈琼瑶","senderMobile":"18664923439","senderHeadImgUrl":"http://avatar.ice.colourlife.com/avatar?uid=chenqiongyao","sendTime":"2018-06-20 21:55:45","timeAllowWithdraw":"2018-06-20 22:55:45","blessing":"大吉大利，开开心心！","moneyTotal":3,"numberTotal":3,"status":-1,"moneyDraw":"0.0","numberDraw":0},{"uuid":"9832e260fe93495a99fdbc30b645cb80","lsType":1,"senderUserUuid":"40f299f5-9813-4c43-942d-07cb37204c7a","senderName":"陈琼瑶","senderMobile":"18664923439","senderHeadImgUrl":"http://avatar.ice.colourlife.com/avatar?uid=chenqiongyao","sendTime":"2018-06-20 21:52:09","timeAllowWithdraw":"2018-06-20 22:52:09","blessing":"大吉大利，开开心心！","moneyTotal":1,"numberTotal":1,"status":-1,"moneyDraw":"0.0","numberDraw":0}]
+     * content : [{"uuid":"286973b3966e4321bf536a8cdaa15df2","lsType":2,"senderUserUuid":"651fca50-42c4-4cba-aa0d-c2ada686eb84","senderName":"叶永刚","senderMobile":"18118748201","senderHeadImgUrl":"http://avatar.ice.colourlife.com/avatar?uid=yeyonggang","sendTime":"2018-06-25 18:55:47","timeAllowWithdraw":"2018-06-25 19:55:47","blessing":"HK旅途赶紧婆婆剧透具图","moneyTotal":0.5,"numberTotal":5,"status":1,"moneyDraw":"0.25","numberDraw":2},{"uuid":"89ac0ca012434923910e97676169f868","lsType":1,"senderUserUuid":"651fca50-42c4-4cba-aa0d-c2ada686eb84","senderName":"叶永刚","senderMobile":"18118748201","senderHeadImgUrl":"http://avatar.ice.colourlife.com/avatar?uid=yeyonggang","sendTime":"2018-06-25 17:21:59","timeAllowWithdraw":"2018-06-25 18:21:59","blessing":"hi儿咯7k7kpls好哦是进去你平时喜欢一个人嗖嗖嗖马坡山景区","moneyTotal":0.1,"numberTotal":1,"status":4,"moneyDraw":"0.1","numberDraw":1},{"uuid":"1e0df5c3567a47e4be0161b304b9ab04","lsType":1,"senderUserUuid":"651fca50-42c4-4cba-aa0d-c2ada686eb84","senderName":"叶永刚","senderMobile":"18118748201","senderHeadImgUrl":"http://avatar.ice.colourlife.com/avatar?uid=yeyonggang","sendTime":"2018-06-25 17:15:59","timeAllowWithdraw":"2018-06-25 18:15:59","blessing":"嗨一下人做说切转切！和密码跟你这手速宿舍破苏州雅思培训！？。，1472586690","moneyTotal":0.1,"numberTotal":1,"status":4,"moneyDraw":"0.1","numberDraw":1},{"uuid":"61bffec98b8246489f6e48411299424d","lsType":1,"senderUserUuid":"651fca50-42c4-4cba-aa0d-c2ada686eb84","senderName":"叶永刚","senderMobile":"18118748201","senderHeadImgUrl":"http://avatar.ice.colourlife.com/avatar?uid=yeyonggang","sendTime":"2018-06-25 16:18:34","timeAllowWithdraw":"2018-06-25 17:18:34","blessing":"各具特色去！呵护破几件事旅途理解拓展兔兔","moneyTotal":1,"numberTotal":1,"status":4,"moneyDraw":"1.0","numberDraw":1},{"uuid":"aeaed9af0b2641e6a741680d160cc419","lsType":2,"senderUserUuid":"651fca50-42c4-4cba-aa0d-c2ada686eb84","senderName":"叶永刚","senderMobile":"18118748201","senderHeadImgUrl":"http://avatar.ice.colourlife.com/avatar?uid=yeyonggang","sendTime":"2018-06-25 16:16:58","timeAllowWithdraw":"2018-06-25 17:16:58","blessing":"大吉大利，开开心心！","moneyTotal":1,"numberTotal":1,"status":4,"moneyDraw":"1.0","numberDraw":1},{"uuid":"1e7caf8740ce47e48dd002db4c4d7b07","lsType":2,"senderUserUuid":"651fca50-42c4-4cba-aa0d-c2ada686eb84","senderName":"叶永刚","senderMobile":"18118748201","senderHeadImgUrl":"http://avatar.ice.colourlife.com/avatar?uid=yeyonggang","sendTime":"2018-06-25 15:25:45","timeAllowWithdraw":"2018-06-25 16:25:45","blessing":"会没收人做和给你！。。，","moneyTotal":1,"numberTotal":5,"status":1,"moneyDraw":"0.52","numberDraw":2},{"uuid":"83ef9a55d87148edb4a481c5b470c1dd","lsType":1,"senderUserUuid":"651fca50-42c4-4cba-aa0d-c2ada686eb84","senderName":"叶永刚","senderHeadImgUrl":"http://avatar.ice.colourlife.com/avatar?uid=yeyonggang","sendTime":"2018-06-25 15:17:12","timeAllowWithdraw":"2018-06-25 16:17:12","blessing":"大吉大利，开开心心！","moneyTotal":500,"numberTotal":1,"status":4,"moneyDraw":"500.0","numberDraw":1},{"uuid":"8d1348f88d2841d2b09275416494a74f","lsType":1,"senderUserUuid":"651fca50-42c4-4cba-aa0d-c2ada686eb84","senderName":"叶永刚","senderHeadImgUrl":"http://avatar.ice.colourlife.com/avatar?uid=yeyonggang","sendTime":"2018-06-25 15:05:14","timeAllowWithdraw":"2018-06-25 16:05:14","blessing":"大吉大利，开开心心！","moneyTotal":0.1,"numberTotal":1,"status":0,"moneyDraw":"0.0","numberDraw":0},{"uuid":"b6e97c320ff94c96b6bf1cf0a12840a3","lsType":1,"senderUserUuid":"651fca50-42c4-4cba-aa0d-c2ada686eb84","senderName":"叶永刚","senderHeadImgUrl":"http://avatar.ice.colourlife.com/avatar?uid=yeyonggang","sendTime":"2018-06-25 15:04:46","timeAllowWithdraw":"2018-06-25 16:04:46","blessing":"看似圣彼得堡国立大学教授认为！扫激动激动一下自己去看看有没有合适","moneyTotal":0.1,"numberTotal":1,"status":0,"moneyDraw":"0.0","numberDraw":0},{"uuid":"01c28eb20ab44cf685ea4d3dbb70feae","lsType":1,"senderUserUuid":"651fca50-42c4-4cba-aa0d-c2ada686eb84","senderName":"叶永刚","senderHeadImgUrl":"http://avatar.ice.colourlife.com/avatar?uid=yeyonggang","sendTime":"2018-06-25 14:59:03","timeAllowWithdraw":"2018-06-25 15:59:03","blessing":"大吉大利，开开心心！","moneyTotal":0.1,"numberTotal":1,"status":4,"moneyDraw":"0.1","numberDraw":1}]
      */
 
     private int code;
@@ -44,19 +44,19 @@ public class SendRedPacketList {
 
     public static class ContentBean {
         /**
-         * uuid : 6d274413a27649a4b2337d3fd7474b0e
+         * uuid : 286973b3966e4321bf536a8cdaa15df2
          * lsType : 2
-         * senderUserUuid : 40f299f5-9813-4c43-942d-07cb37204c7a
-         * senderName : 陈琼瑶
-         * senderMobile : 18664923439
-         * senderHeadImgUrl : http://avatar.ice.colourlife.com/avatar?uid=chenqiongyao
-         * sendTime : 2018-06-22 15:28:28
-         * timeAllowWithdraw : 2018-06-22 16:28:28
-         * blessing : 大吉大利，开开心心！
-         * moneyTotal : 2
-         * numberTotal : 2
-         * status : 4
-         * moneyDraw : 2.0
+         * senderUserUuid : 651fca50-42c4-4cba-aa0d-c2ada686eb84
+         * senderName : 叶永刚
+         * senderMobile : 18118748201
+         * senderHeadImgUrl : http://avatar.ice.colourlife.com/avatar?uid=yeyonggang
+         * sendTime : 2018-06-25 18:55:47
+         * timeAllowWithdraw : 2018-06-25 19:55:47
+         * blessing : HK旅途赶紧婆婆剧透具图
+         * moneyTotal : 0.5
+         * numberTotal : 5
+         * status : 1
+         * moneyDraw : 0.25
          * numberDraw : 2
          */
 
@@ -69,7 +69,7 @@ public class SendRedPacketList {
         private String sendTime;
         private String timeAllowWithdraw;
         private String blessing;
-        private int moneyTotal;
+        private double moneyTotal;
         private int numberTotal;
         private int status;
         private String moneyDraw;
@@ -147,11 +147,11 @@ public class SendRedPacketList {
             this.blessing = blessing;
         }
 
-        public int getMoneyTotal() {
+        public double getMoneyTotal() {
             return moneyTotal;
         }
 
-        public void setMoneyTotal(int moneyTotal) {
+        public void setMoneyTotal(double moneyTotal) {
             this.moneyTotal = moneyTotal;
         }
 

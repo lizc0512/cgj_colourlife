@@ -883,10 +883,11 @@ public class HuxinSdkManager {
      * 打开个人红包
      *
      * @param destUuid
+     * @param redUuid
      * @param value
      * @param callback
      */
-    public void openRedPackage(String destUuid, String value, String title,
+    public void openRedPackage(String destUuid, String redUuid, String value, String title,
                                ReceiveListener callback) {
         YouMaiMsg.MsgData.Builder msgData = YouMaiMsg.MsgData.newBuilder();
         msgData.setSrcUserId(getUuid());
@@ -900,8 +901,9 @@ public class HuxinSdkManager {
         msgData.setSessionType(YouMaiMsg.SessionType.SESSION_TYPE_SINGLE);
 
         IMContentUtil imContentUtil = new IMContentUtil();
-        //imContentUtil.appendRedPackageValue(value);
-        //imContentUtil.appendRedPackageTitle(title);
+        imContentUtil.appendRedPackageValue(value);
+        imContentUtil.appendRedPackageTitle(title);
+        imContentUtil.appendRedPackageUuid(redUuid);
         imContentUtil.appendRedPackageReceiveName(getRealName());
         imContentUtil.appendRedPackageDone("1");
 
@@ -1334,10 +1336,13 @@ public class HuxinSdkManager {
      * 打开群红包
      *
      * @param groupId
+     * @param sendUuid
+     * @param redUuid
      * @param value
      * @param callback
      */
-    public void openRedPackageInGroup(int groupId, String sendUuid, String value, String title, ReceiveListener callback) {
+    public void openRedPackageInGroup(int groupId, String sendUuid, String redUuid,
+                                      String value, String title, ReceiveListener callback) {
         YouMaiMsg.MsgData.Builder msgData = YouMaiMsg.MsgData.newBuilder();
         msgData.setSrcUserId(getUuid());
         msgData.setSrcAvatar(getHeadUrl());
@@ -1351,8 +1356,9 @@ public class HuxinSdkManager {
         msgData.setSessionType(YouMaiMsg.SessionType.SESSION_TYPE_MULTICHAT);
 
         IMContentUtil imContentUtil = new IMContentUtil();
-        //imContentUtil.appendRedPackageValue(value);
-        //imContentUtil.appendRedPackageTitle(title);
+        imContentUtil.appendRedPackageValue(value);
+        imContentUtil.appendRedPackageTitle(title);
+        imContentUtil.appendRedPackageUuid(redUuid);
         imContentUtil.appendRedPackageReceiveName(getRealName());
         imContentUtil.appendRedPackageDone("1");
 

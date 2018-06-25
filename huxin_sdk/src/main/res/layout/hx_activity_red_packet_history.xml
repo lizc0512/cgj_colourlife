@@ -24,18 +24,18 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_red_receive" />
+                android:src="@drawable/ic_red_send" />
 
             <TextView
-                android:id="@+id/tv_receive_count"
+                android:id="@+id/tv_send_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:text="共收到32利是包"
+                android:text="共发出22利是包"
                 android:textColor="#989b9f" />
 
             <TextView
-                android:id="@+id/tv_receive_money"
+                android:id="@+id/tv_send_money"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
@@ -54,18 +54,18 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_red_send" />
+                android:src="@drawable/ic_red_receive" />
 
             <TextView
-                android:id="@+id/tv_send_count"
+                android:id="@+id/tv_receive_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:text="共发出22利是包"
+                android:text="共收到32利是包"
                 android:textColor="#989b9f" />
 
             <TextView
-                android:id="@+id/tv_send_money"
+                android:id="@+id/tv_receive_money"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"

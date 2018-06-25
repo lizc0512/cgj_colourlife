@@ -44,6 +44,8 @@ public class HxRedPacketDialog extends Dialog implements View.OnClickListener {
     private int redStatus;
     private String redUuid;
     private String remark;
+
+    private int type;
     private ObjectAnimator anim;
 
     private int status;  //利是状态：-1已过期 ,0未拆开 ,1未领完 ,2已撤回 ,3已退款 ,4已领完
@@ -83,6 +85,7 @@ public class HxRedPacketDialog extends Dialog implements View.OnClickListener {
         private int canOpen;
         private int isGrabbed;
         private boolean isSinglePacket;
+        private int type;
 
         private OnRedPacketListener mListener;
 
@@ -129,6 +132,11 @@ public class HxRedPacketDialog extends Dialog implements View.OnClickListener {
             return this;
         }
 
+        public Builder setType(int type) {
+            this.type = type;
+            return this;
+        }
+
         public void setListener(OnRedPacketListener listener) {
             this.mListener = listener;
         }
@@ -144,6 +152,7 @@ public class HxRedPacketDialog extends Dialog implements View.OnClickListener {
         canOpen = builder.canOpen;
         isGrabbed = builder.isGrabbed;
         isSinglePacket = builder.isSinglePacket;
+        type = builder.type;
         mListener = builder.mListener;
 
         CacheMsgRedPackage redPackage = (CacheMsgRedPackage) uiBean.getJsonBodyObj();
@@ -187,6 +196,10 @@ public class HxRedPacketDialog extends Dialog implements View.OnClickListener {
         tv_title = findViewById(R.id.tv_title);
         tv_info = findViewById(R.id.tv_info);
         tv_detail = findViewById(R.id.tv_detail);
+        tv_detail.setOnClickListener(this);
+        if (type == 2) {
+            tv_detail.setVisibility(View.VISIBLE);
+        }
 
         findViewById(R.id.iv_close).setOnClickListener(this);
         iv_open.setOnClickListener(this);
@@ -284,7 +297,6 @@ public class HxRedPacketDialog extends Dialog implements View.OnClickListener {
 
             rel_packet_bg.setBackgroundResource(R.drawable.red_packet_gone);
             iv_open.setVisibility(View.GONE);
-            tv_detail.setVisibility(View.VISIBLE);
             if (isSinglePacket) {
                 if (mListener != null) {
                     mListener.onOpenClick(moneyDraw);

@@ -2,6 +2,7 @@ package com.youmai.hxsdk.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -30,6 +31,7 @@ import com.youmai.hxsdk.utils.GlideRoundTransform;
 import com.youmai.hxsdk.utils.GsonUtil;
 
 import java.util.List;
+import java.util.Locale;
 
 /**
  * 作者：create by YW
@@ -50,6 +52,7 @@ public class RedPacketDetailActivity extends AppCompatActivity implements View.O
     public static final String MSGBEAN = "msgBean";
 
     public static final String CANOPEN = "canOpen";
+    public static final String TYPE = "type";
 
 
     public static final int SINGLE_PACKET = 0;
@@ -78,6 +81,7 @@ public class RedPacketDetailActivity extends AppCompatActivity implements View.O
     private String redUuid;
     private CacheMsgBean uiBean;
     private boolean canOpen;
+    private int type;
 
     private int openType;
 
@@ -96,6 +100,7 @@ public class RedPacketDetailActivity extends AppCompatActivity implements View.O
         redUuid = getIntent().getStringExtra(REDUUID);
         uiBean = getIntent().getParcelableExtra(MSGBEAN);
         canOpen = getIntent().getBooleanExtra(CANOPEN, true);
+        type = getIntent().getIntExtra(TYPE, 2);
 
         initView();
         loadRedPacket();
@@ -134,6 +139,11 @@ public class RedPacketDetailActivity extends AppCompatActivity implements View.O
         tv_name = (TextView) findViewById(R.id.tv_name);
         tv_name.setText(name);
 
+        if (type == 2) {
+            Drawable drawable = ContextCompat.getDrawable(mContext, R.drawable.ic_pin);
+            tv_name.setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null);
+        }
+
         tv_red_title = (TextView) findViewById(R.id.tv_red_title);
         tv_red_title.setText(title);
 
@@ -160,10 +170,10 @@ public class RedPacketDetailActivity extends AppCompatActivity implements View.O
         recycler_view.setLayoutManager(new LinearLayoutManager(this));
         recycler_view.setAdapter(adapter);
 
-        if (openType == SINGLE_PACKET) {
+        /*if (openType == SINGLE_PACKET) {
             tv_status.setVisibility(View.GONE);
             recycler_view.setVisibility(View.GONE);
-        }
+        }*/
 
     }
 
@@ -182,11 +192,14 @@ public class RedPacketDetailActivity extends AppCompatActivity implements View.O
 
                     int total = bean.getContent().getNumberTotal();
                     int draw = bean.getContent().getNumberDraw();
-                    double moneyTotal = bean.getContent().getMoneyTotal();
                     String moneyDraw = bean.getContent().getMoneyDraw();
+
+                    double moneyTotal = bean.getContent().getMoneyTotal();
+                    String moneyCount = String.format(Locale.getDefault(), "%.2f", moneyTotal);
+
                     String format = mContext.getResources().getString(R.string.red_status_detail);
 
-                    tv_status.setText(String.format(format, draw, total, moneyDraw, moneyTotal));
+                    tv_status.setText(String.format(format, draw, total, moneyDraw, moneyCount));
 
                 }
             }

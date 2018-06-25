@@ -56,12 +56,18 @@ public class RedStatusAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         TextView tv_name = ((TextViewHolder) viewHolder).tv_name;
         TextView tv_time = ((TextViewHolder) viewHolder).tv_time;
         TextView tv_money = ((TextViewHolder) viewHolder).tv_money;
+        TextView tv_best = ((TextViewHolder) viewHolder).tv_best;
 
-        boolean isBest = item.getIsBest() == 1;
         double money = item.getReceiveMoney();
         String name = item.getReceiverNickname();
         String url = item.getReceiverHeadImgUrl();
         String time = item.getReceiveTime();
+
+        if (item.getIsBest() == 1) {
+            tv_best.setVisibility(View.VISIBLE);
+        } else {
+            tv_best.setVisibility(View.INVISIBLE);
+        }
 
         int size = mContext.getResources().getDimensionPixelOffset(R.dimen.card_head);
         Glide.with(mContext)
@@ -88,6 +94,7 @@ public class RedStatusAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         TextView tv_name;
         TextView tv_time;
         TextView tv_money;
+        TextView tv_best;
 
         private TextViewHolder(View itemView) {
             super(itemView);
@@ -95,6 +102,7 @@ public class RedStatusAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             tv_name = (TextView) itemView.findViewById(R.id.tv_name);
             tv_time = (TextView) itemView.findViewById(R.id.tv_time);
             tv_money = (TextView) itemView.findViewById(R.id.tv_money);
+            tv_best = (TextView) itemView.findViewById(R.id.tv_best);
         }
 
     }

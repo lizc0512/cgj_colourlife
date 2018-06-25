@@ -659,7 +659,7 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
 
                     if (owner == 1 && type == 1) {
                         Intent in = new Intent(mAct, RedPacketDetailActivity.class);
-                        in.putExtra(RedPacketDetailActivity.OPEN_TYPE, RedPacketDetailActivity.SINGLE_PACKET);
+                        in.putExtra(RedPacketDetailActivity.OPEN_TYPE, RedPacketDetailActivity.GROUP_PACKET);
                         in.putExtra(RedPacketDetailActivity.AVATAR, avatar);
                         in.putExtra(RedPacketDetailActivity.NICKNAME, name);
                         in.putExtra(RedPacketDetailActivity.VALUE, value);
@@ -677,6 +677,7 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
                         builder.setCanOpen(canOpen);
                         builder.setIsGrabbed(isGrabbed);
                         builder.setSinglePacket(true);
+                        builder.setType(type);
                         builder.setListener(new HxRedPacketDialog.OnRedPacketListener() {
                             @Override
                             public void onCloseClick() {
@@ -686,7 +687,7 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
                             public void onOpenClick(double moneyDraw) {
 
                                 Intent in = new Intent(mAct, RedPacketDetailActivity.class);
-                                in.putExtra(RedPacketDetailActivity.OPEN_TYPE, RedPacketDetailActivity.SINGLE_PACKET);
+                                in.putExtra(RedPacketDetailActivity.OPEN_TYPE, RedPacketDetailActivity.GROUP_PACKET);
                                 in.putExtra(RedPacketDetailActivity.AVATAR, avatar);
                                 in.putExtra(RedPacketDetailActivity.NICKNAME, name);
                                 in.putExtra(RedPacketDetailActivity.VALUE, String.valueOf(moneyDraw));
@@ -694,13 +695,14 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
                                 in.putExtra(RedPacketDetailActivity.REDUUID, redUuid);
                                 in.putExtra(RedPacketDetailActivity.MSGBEAN, uiBean);
                                 mAct.startActivity(in);
+                                if (moneyDraw > 0) {
+                                    redPackage.setIsGrabbed(1);
+                                    redPackage.setValue(String.valueOf(moneyDraw));
 
-                                redPackage.setIsGrabbed(1);
-                                redPackage.setValue(String.valueOf(moneyDraw));
-
-                                uiBean.setJsonBodyObj(redPackage);
-                                //add to db
-                                CacheMsgHelper.instance().insertOrUpdate(mAct, uiBean);
+                                    uiBean.setJsonBodyObj(redPackage);
+                                    //add to db
+                                    CacheMsgHelper.instance().insertOrUpdate(mAct, uiBean);
+                                }
                             }
                         });
 

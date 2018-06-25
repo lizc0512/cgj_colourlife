@@ -177,7 +177,5 @@
     <string name="type_single">个人利是</string>
     <string name="red_status_done">已领完 %1$d/%2$d个</string>
     <string name="red_status">%1$d/%2$d个</string>
-    <string name="red_status_detail">已领取%d/%d个，共%s/%.2f</string>
-
-    //formatter.format("%4$2s %3$2s %2$2s %1$2s", "a", "b", "c", "d")
+    <string name="red_status_detail">已领取%1$d/%2$d个，共%3$s/%4$s</string>
 </resources>

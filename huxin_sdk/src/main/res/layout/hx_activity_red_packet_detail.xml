@@ -85,9 +85,11 @@
         android:id="@+id/tv_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:drawableRight="@drawable/ic_lishi_s"
+        android:gravity="center"
         android:padding="10dp"
-        android:text="领取2/5"
-        android:textColor="@color/hx_color_red_tag" />
+        android:textColor="#a0a0a0" />
 
     <View
         android:layout_width="match_parent"

@@ -641,13 +641,15 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
                     int status = bean.getContent().getStatus();  //利是状态：-1已过期 ,0未拆开 ,1未领完 ,2已撤回 ,3已退款 ,4已领完
                     int canOpen = bean.getContent().getCanOpen(); //是否可以开这个利是：0否1是
                     int isGrabbed = bean.getContent().getIsGrabbed(); //用户是否已抢到了该利是：0否1是
+                    int type = bean.getContent().getLsType();//1定额利是2拼手气利是
+                    int owner = bean.getContent().getIsSelfOwner();//是否本人的利是：0否1是
 
                     final CacheMsgRedPackage redPackage = (CacheMsgRedPackage) uiBean.getJsonBodyObj();
 
                     final String name = uiBean.getSenderRealName();
                     final String avatar = uiBean.getSenderAvatar();
-
                     final String title = redPackage.getRedTitle();
+                    final String value = redPackage.getValue();
 
                     redPackage.setStatus(status);
                     redPackage.setCanOpen(canOpen);
@@ -655,49 +657,64 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
                     redPackage.setRedUuid(redUuid);
                     uiBean.setJsonBodyObj(redPackage);
 
-                    HxRedPacketDialog.Builder builder = new HxRedPacketDialog.Builder(mAct);
-                    builder.setUiBean(uiBean);
-                    builder.setRemark(title);
-                    builder.setRedUuid(redUuid);
-                    builder.setStatus(status);
-                    builder.setCanOpen(canOpen);
-                    builder.setIsGrabbed(isGrabbed);
-                    builder.setSinglePacket(false);
-                    builder.setListener(new HxRedPacketDialog.OnRedPacketListener() {
-                        @Override
-                        public void onCloseClick() {
-                        }
+                    if (owner == 1 || type == 1) {
+                        Intent in = new Intent(mAct, RedPacketDetailActivity.class);
+                        in.putExtra(RedPacketDetailActivity.OPEN_TYPE, RedPacketDetailActivity.SINGLE_PACKET);
+                        in.putExtra(RedPacketDetailActivity.AVATAR, avatar);
+                        in.putExtra(RedPacketDetailActivity.NICKNAME, name);
+                        in.putExtra(RedPacketDetailActivity.VALUE, value);
+                        in.putExtra(RedPacketDetailActivity.REDTITLE, title);
+                        in.putExtra(RedPacketDetailActivity.REDUUID, redUuid);
+                        in.putExtra(RedPacketDetailActivity.MSGBEAN, uiBean);
+                        in.putExtra(RedPacketDetailActivity.CANOPEN, false);
+                        mAct.startActivity(in);
+                    } else {
+                        HxRedPacketDialog.Builder builder = new HxRedPacketDialog.Builder(mAct);
+                        builder.setUiBean(uiBean);
+                        builder.setRemark(title);
+                        builder.setRedUuid(redUuid);
+                        builder.setStatus(status);
+                        builder.setCanOpen(canOpen);
+                        builder.setIsGrabbed(isGrabbed);
+                        builder.setSinglePacket(true);
+                        builder.setListener(new HxRedPacketDialog.OnRedPacketListener() {
+                            @Override
+                            public void onCloseClick() {
+                            }
 
-                        @Override
-                        public void onOpenClick(double moneyDraw) {
+                            @Override
+                            public void onOpenClick(double moneyDraw) {
 
-                            Intent in = new Intent(mAct, RedPacketDetailActivity.class);
-                            in.putExtra(RedPacketDetailActivity.OPEN_TYPE, RedPacketDetailActivity.GROUP_PACKET);
-                            in.putExtra(RedPacketDetailActivity.AVATAR, avatar);
-                            in.putExtra(RedPacketDetailActivity.NICKNAME, name);
-                            in.putExtra(RedPacketDetailActivity.VALUE, String.valueOf(moneyDraw));
-                            in.putExtra(RedPacketDetailActivity.REDTITLE, title);
-                            in.putExtra(RedPacketDetailActivity.REDUUID, redUuid);
-                            in.putExtra(RedPacketDetailActivity.MSGBEAN, uiBean);
-                            mAct.startActivity(in);
+                                Intent in = new Intent(mAct, RedPacketDetailActivity.class);
+                                in.putExtra(RedPacketDetailActivity.OPEN_TYPE, RedPacketDetailActivity.SINGLE_PACKET);
+                                in.putExtra(RedPacketDetailActivity.AVATAR, avatar);
+                                in.putExtra(RedPacketDetailActivity.NICKNAME, name);
+                                in.putExtra(RedPacketDetailActivity.VALUE, String.valueOf(moneyDraw));
+                                in.putExtra(RedPacketDetailActivity.REDTITLE, title);
+                                in.putExtra(RedPacketDetailActivity.REDUUID, redUuid);
+                                in.putExtra(RedPacketDetailActivity.MSGBEAN, uiBean);
+                                mAct.startActivity(in);
 
-                            redPackage.setIsGrabbed(1);
-                            redPackage.setValue(String.valueOf(moneyDraw));
+                                redPackage.setIsGrabbed(1);
+                                redPackage.setValue(String.valueOf(moneyDraw));
 
-                            uiBean.setJsonBodyObj(redPackage);
-                            //add to db
-                            CacheMsgHelper.instance().insertOrUpdate(mAct, uiBean);
-                        }
-                    });
+                                uiBean.setJsonBodyObj(redPackage);
+                                //add to db
+                                CacheMsgHelper.instance().insertOrUpdate(mAct, uiBean);
+                            }
+                        });
 
-                    HxRedPacketDialog dialog = builder.builder();
-                    dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                        @Override
-                        public void onDismiss(DialogInterface dialog) {
-                            notifyDataSetChanged();
-                        }
-                    });
-                    dialog.show();
+                        HxRedPacketDialog dialog = builder.builder();
+                        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                            @Override
+                            public void onDismiss(DialogInterface dialog) {
+                                notifyDataSetChanged();
+                            }
+                        });
+                        dialog.show();
+
+                    }
+
                 }
 
 

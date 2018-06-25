@@ -49,6 +49,8 @@ public class RedPacketDetailActivity extends AppCompatActivity implements View.O
     public static final String REDUUID = "redUuid";
     public static final String MSGBEAN = "msgBean";
 
+    public static final String CANOPEN = "canOpen";
+
 
     public static final int SINGLE_PACKET = 0;
     public static final int GROUP_PACKET = 1;
@@ -75,6 +77,7 @@ public class RedPacketDetailActivity extends AppCompatActivity implements View.O
     private String title;
     private String redUuid;
     private CacheMsgBean uiBean;
+    private boolean canOpen;
 
     private int openType;
 
@@ -92,6 +95,7 @@ public class RedPacketDetailActivity extends AppCompatActivity implements View.O
         title = getIntent().getStringExtra(REDTITLE);
         redUuid = getIntent().getStringExtra(REDUUID);
         uiBean = getIntent().getParcelableExtra(MSGBEAN);
+        canOpen = getIntent().getBooleanExtra(CANOPEN, true);
 
         initView();
         loadRedPacket();
@@ -143,6 +147,9 @@ public class RedPacketDetailActivity extends AppCompatActivity implements View.O
         tv_info = (TextView) findViewById(R.id.tv_info);
         //tv_info.setText(R.string.red_packet_back);
         //tv_info.setTextColor(ContextCompat.getColor(this, R.color.gray));
+        if (!canOpen) {
+            tv_info.setVisibility(View.INVISIBLE);
+        }
 
         tv_status = (TextView) findViewById(R.id.tv_status);
 
@@ -217,8 +224,12 @@ public class RedPacketDetailActivity extends AppCompatActivity implements View.O
 
                     int total = bean.getContent().getNumberTotal();
                     int draw = bean.getContent().getNumberDraw();
+                    int moneyTotal = bean.getContent().getMoneyTotal();
+                    String moneyDraw = bean.getContent().getMoneyDraw();
+                    String format = mContext.getResources().getString(R.string.red_status_detail);
 
-                    tv_status.setText("领取" + draw + "/" + total);
+                    tv_status.setText(String.format(format, draw, total, moneyTotal, moneyDraw));
+
                 }
             }
         });

@@ -202,6 +202,7 @@
         android:background="@drawable/shape_rectangle_corner_stroke"
         android:gravity="center_vertical"
         android:hint="大吉大利，开开心心！"
+        android:maxLength="12"
         android:padding="10dp"
         android:textColor="@color/hx_color_black"
         android:textSize="16sp"

@@ -74,6 +74,7 @@ public class RedPacketInGroupActivity extends AppCompatActivity implements View.
     private int numberTotal;
 
     private String pano;
+    private String moneyStr;
 
     //private StandardRedPackage.ContentBean.FixedConfigBean fixedConfig;
     private StandardRedPackage.ContentBean.RandomConfigBean randomConfig;
@@ -140,9 +141,11 @@ public class RedPacketInGroupActivity extends AppCompatActivity implements View.
                     //tv_money.setText(String.format(format, String.valueOf(money * numberTotal)));
 
                     if (type == 2) {
-                        tv_money.setText(String.valueOf(money));
+                        moneyStr = String.valueOf(money);
+                        tv_money.setText(moneyStr);
                     } else {
-                        tv_money.setText(String.valueOf(money * numberTotal));
+                        moneyStr = String.valueOf(money * numberTotal);
+                        tv_money.setText(moneyStr);
                     }
 
                 } catch (Exception e) {
@@ -172,11 +175,12 @@ public class RedPacketInGroupActivity extends AppCompatActivity implements View.
                     //tv_money.setText(String.format(format, String.valueOf(money * numberTotal)));
 
                     tv_money.setText(String.valueOf(money * numberTotal));
-
                     if (type == 2) {
-                        tv_money.setText(String.valueOf(money));
+                        moneyStr = String.valueOf(money);
+                        tv_money.setText(moneyStr);
                     } else {
-                        tv_money.setText(String.valueOf(money * numberTotal));
+                        moneyStr = String.valueOf(money * numberTotal);
+                        tv_money.setText(moneyStr);
                     }
 
 
@@ -368,6 +372,7 @@ public class RedPacketInGroupActivity extends AppCompatActivity implements View.
                 }
             });
             dialog.show();
+            dialog.setMoney(moneyStr);
         } else if (id == R.id.tv_back) {
             onBackPressed();
         } else if (id == R.id.tv_right) {

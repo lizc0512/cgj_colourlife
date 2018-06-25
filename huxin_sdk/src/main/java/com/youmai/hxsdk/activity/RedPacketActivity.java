@@ -67,6 +67,8 @@ public class RedPacketActivity extends AppCompatActivity implements View.OnClick
     private double money;
     private String pano;
 
+    private String moneyStr;
+
     private StandardRedPackage.ContentBean.FixedConfigBean fixedConfig;
     //private StandardRedPackage.ContentBean.RandomConfigBean randomConfig;
 
@@ -159,7 +161,8 @@ public class RedPacketActivity extends AppCompatActivity implements View.OnClick
                 //String format = getResources().getString(R.string.red_packet_unit1);
                 //tv_money.setText(String.format(format, s.toString()));
 
-                tv_money.setText(s.toString());
+                moneyStr = s.toString();
+                tv_money.setText(moneyStr);
             }
 
             @Override
@@ -289,6 +292,7 @@ public class RedPacketActivity extends AppCompatActivity implements View.OnClick
                 }
             });
             dialog.show();
+            dialog.setMoney(moneyStr);
         } else if (id == R.id.tv_back) {
             onBackPressed();
         } else if (id == R.id.tv_right) {

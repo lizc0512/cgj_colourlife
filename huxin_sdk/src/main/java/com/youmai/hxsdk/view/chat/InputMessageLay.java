@@ -399,7 +399,7 @@ public class InputMessageLay extends AutoHeightLayout implements View.OnClickLis
                     } else {
                         sendBtn.setImageResource(R.drawable.hx_im_bar_send);
                     }
-                } else if (str.endsWith("@")) {
+                } else if (str.trim().endsWith("@")) {
                     if (isAt) {
                         if (mKeyBoardBarViewListener != null) {
                             mKeyBoardBarViewListener.onGroupAt();

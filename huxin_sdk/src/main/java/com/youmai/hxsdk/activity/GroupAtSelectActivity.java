@@ -110,6 +110,13 @@ public class GroupAtSelectActivity extends AppCompatActivity implements
         if (ListUtils.isEmpty(groupList)) {
             reqGroupMembers();
         } else {
+            for (ContactBean item : groupList) {
+                if (item.getUuid().equals(HuxinSdkManager.instance().getUuid())) {
+                    groupList.remove(item);
+                    break;
+                }
+            }
+
             getLoaderManager().initLoader(GLOBAL_SEARCH_LOADER_ID, null, callback).forceLoad();
         }
 
@@ -157,7 +164,10 @@ public class GroupAtSelectActivity extends AppCompatActivity implements
                             contact.setMemberRole(item.getMemberRole());
                             String avatar = ColorsConfig.HEAD_ICON_URL + "avatar?uid=" + item.getUserName();
                             contact.setAvatar(avatar);
-                            groupList.add(contact);
+
+                            if (!contact.getUuid().equals(HuxinSdkManager.instance().getUuid())) {
+                                groupList.add(contact);
+                            }
                         }
                         getLoaderManager().initLoader(GLOBAL_SEARCH_LOADER_ID, null, callback).forceLoad();
                     }

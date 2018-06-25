@@ -20,7 +20,7 @@ public class TimeUtils {
     public static final SimpleDateFormat DATE_FORMAT_DATE = new SimpleDateFormat(
             "yyyy-MM-dd", Locale.CHINA);
     public static final SimpleDateFormat YEAR_MONTH_FORMAT = new SimpleDateFormat(
-            "yyyy-MM", Locale.CHINA);
+            "yyyyMM", Locale.CHINA);
     public static final SimpleDateFormat MONTH_FORMAT_DATE = new SimpleDateFormat(
             "MM-dd", Locale.CHINA);
     public static final SimpleDateFormat MINUTE_FORMAT_DATE = new SimpleDateFormat(

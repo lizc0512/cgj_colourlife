@@ -31,6 +31,7 @@ import com.youmai.hxsdk.socket.ReceiveListener;
 import com.youmai.hxsdk.utils.GsonUtil;
 import com.youmai.hxsdk.utils.ListUtils;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 /**
@@ -144,7 +145,10 @@ public class RedPacketInGroupActivity extends AppCompatActivity implements View.
                         moneyStr = String.valueOf(money);
                         tv_money.setText(moneyStr);
                     } else {
-                        moneyStr = String.valueOf(money * numberTotal);
+                        double num = money * numberTotal;
+                        DecimalFormat format = new DecimalFormat("#.00");
+                        moneyStr = format.format(num);
+
                         tv_money.setText(moneyStr);
                     }
 
@@ -179,7 +183,11 @@ public class RedPacketInGroupActivity extends AppCompatActivity implements View.
                         moneyStr = String.valueOf(money);
                         tv_money.setText(moneyStr);
                     } else {
-                        moneyStr = String.valueOf(money * numberTotal);
+
+                        double num = money * numberTotal;
+                        DecimalFormat format = new DecimalFormat("#.00");
+                        moneyStr = format.format(num);
+
                         tv_money.setText(moneyStr);
                     }
 

@@ -8,7 +8,7 @@ public class RedPackageDetail {
     /**
      * code : 0
      * message : SUCC
-     * content : {"uuid":"a2372212173d4d03bc421060dbae6af1","lsType":1,"senderUserUuid":"6726ebd8-e561-4b45-a216-8812425e6371","senderName":"刘洪浩","senderMobile":"13302476774","senderHeadImgUrl":"http://avatar.ice.colourlife.com/avatar?uid=liuhonghaohx","sendTime":"2018-06-25 18:48:37","timeAllowWithdraw":"2018-06-25 19:48:37","blessing":"大吉大利，开开心心！","moneyTotal":1,"numberTotal":1,"status":4,"moneyDraw":"1.0","numberDraw":1,"selfMoneyDraw":"0","packetList":[{"receiverNickname":"陈琼瑶","receiverMobile":"186****3439","receiverHeadImgUrl":"http://avatar.ice.colourlife.com/avatar?uid=chenqiongyao","receiveTime":"2018-06-25 18:49:05","receiveMoney":1,"isBest":1}]}
+     * content : {"uuid":"7e7f2f663a404c7888e0a8613a782b6f","lsType":2,"senderUserUuid":"651fca50-42c4-4cba-aa0d-c2ada686eb84","senderName":"叶永刚","senderHeadImgUrl":"http://avatar.ice.colourlife.com/avatar?uid=yeyonggang","sendTime":"2018-06-25 20:19:52","timeAllowWithdraw":"2018-06-25 21:19:52","blessing":"大吉大利，开开心心！","moneyTotal":0.3,"numberTotal":3,"status":1,"moneyDraw":"0.16","numberDraw":1,"selfMoneyDraw":"0.16","packetList":[{"receiverNickname":"李志诚","receiverMobile":"","receiverHeadImgUrl":"http://avatar.ice.colourlife.com/avatar?uid=lizhicheng01","receiveTime":"2018-06-25 20:34:13","receiveMoney":0.16,"isBest":1}]}
      */
 
     private int code;
@@ -45,34 +45,32 @@ public class RedPackageDetail {
 
     public static class ContentBean {
         /**
-         * uuid : a2372212173d4d03bc421060dbae6af1
-         * lsType : 1
-         * senderUserUuid : 6726ebd8-e561-4b45-a216-8812425e6371
-         * senderName : 刘洪浩
-         * senderMobile : 13302476774
-         * senderHeadImgUrl : http://avatar.ice.colourlife.com/avatar?uid=liuhonghaohx
-         * sendTime : 2018-06-25 18:48:37
-         * timeAllowWithdraw : 2018-06-25 19:48:37
+         * uuid : 7e7f2f663a404c7888e0a8613a782b6f
+         * lsType : 2
+         * senderUserUuid : 651fca50-42c4-4cba-aa0d-c2ada686eb84
+         * senderName : 叶永刚
+         * senderHeadImgUrl : http://avatar.ice.colourlife.com/avatar?uid=yeyonggang
+         * sendTime : 2018-06-25 20:19:52
+         * timeAllowWithdraw : 2018-06-25 21:19:52
          * blessing : 大吉大利，开开心心！
-         * moneyTotal : 1
-         * numberTotal : 1
-         * status : 4
-         * moneyDraw : 1.0
+         * moneyTotal : 0.3
+         * numberTotal : 3
+         * status : 1
+         * moneyDraw : 0.16
          * numberDraw : 1
-         * selfMoneyDraw : 0
-         * packetList : [{"receiverNickname":"陈琼瑶","receiverMobile":"186****3439","receiverHeadImgUrl":"http://avatar.ice.colourlife.com/avatar?uid=chenqiongyao","receiveTime":"2018-06-25 18:49:05","receiveMoney":1,"isBest":1}]
+         * selfMoneyDraw : 0.16
+         * packetList : [{"receiverNickname":"李志诚","receiverMobile":"","receiverHeadImgUrl":"http://avatar.ice.colourlife.com/avatar?uid=lizhicheng01","receiveTime":"2018-06-25 20:34:13","receiveMoney":0.16,"isBest":1}]
          */
 
         private String uuid;
         private int lsType;
         private String senderUserUuid;
         private String senderName;
-        private String senderMobile;
         private String senderHeadImgUrl;
         private String sendTime;
         private String timeAllowWithdraw;
         private String blessing;
-        private int moneyTotal;
+        private double moneyTotal;
         private int numberTotal;
         private int status;
         private String moneyDraw;
@@ -112,14 +110,6 @@ public class RedPackageDetail {
             this.senderName = senderName;
         }
 
-        public String getSenderMobile() {
-            return senderMobile;
-        }
-
-        public void setSenderMobile(String senderMobile) {
-            this.senderMobile = senderMobile;
-        }
-
         public String getSenderHeadImgUrl() {
             return senderHeadImgUrl;
         }
@@ -152,11 +142,11 @@ public class RedPackageDetail {
             this.blessing = blessing;
         }
 
-        public int getMoneyTotal() {
+        public double getMoneyTotal() {
             return moneyTotal;
         }
 
-        public void setMoneyTotal(int moneyTotal) {
+        public void setMoneyTotal(double moneyTotal) {
             this.moneyTotal = moneyTotal;
         }
 
@@ -210,11 +200,11 @@ public class RedPackageDetail {
 
         public static class PacketListBean {
             /**
-             * receiverNickname : 陈琼瑶
-             * receiverMobile : 186****3439
-             * receiverHeadImgUrl : http://avatar.ice.colourlife.com/avatar?uid=chenqiongyao
-             * receiveTime : 2018-06-25 18:49:05
-             * receiveMoney : 1
+             * receiverNickname : 李志诚
+             * receiverMobile :
+             * receiverHeadImgUrl : http://avatar.ice.colourlife.com/avatar?uid=lizhicheng01
+             * receiveTime : 2018-06-25 20:34:13
+             * receiveMoney : 0.16
              * isBest : 1
              */
 
@@ -222,7 +212,7 @@ public class RedPackageDetail {
             private String receiverMobile;
             private String receiverHeadImgUrl;
             private String receiveTime;
-            private int receiveMoney;
+            private double receiveMoney;
             private int isBest;
 
             public String getReceiverNickname() {
@@ -257,11 +247,11 @@ public class RedPackageDetail {
                 this.receiveTime = receiveTime;
             }
 
-            public int getReceiveMoney() {
+            public double getReceiveMoney() {
                 return receiveMoney;
             }
 
-            public void setReceiveMoney(int receiveMoney) {
+            public void setReceiveMoney(double receiveMoney) {
                 this.receiveMoney = receiveMoney;
             }
 

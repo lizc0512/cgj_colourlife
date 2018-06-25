@@ -182,11 +182,11 @@ public class RedPacketDetailActivity extends AppCompatActivity implements View.O
 
                     int total = bean.getContent().getNumberTotal();
                     int draw = bean.getContent().getNumberDraw();
-                    int moneyTotal = bean.getContent().getMoneyTotal();
+                    double moneyTotal = bean.getContent().getMoneyTotal();
                     String moneyDraw = bean.getContent().getMoneyDraw();
                     String format = mContext.getResources().getString(R.string.red_status_detail);
 
-                    tv_status.setText(String.format(format, draw, total, moneyTotal, moneyDraw));
+                    tv_status.setText(String.format(format, draw, total, moneyDraw, moneyTotal));
 
                 }
             }

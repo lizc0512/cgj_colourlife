@@ -1558,7 +1558,9 @@ public class HuxinSdkManager {
         params.put("lishiUuid", lishiUuid);
         params.put("user_uuid", uuid);
         params.put("nickname", nickname);
-        params.put("mobile", mobile);
+        if (!TextUtils.isEmpty(mobile)) {
+            params.put("mobile", mobile);
+        }
         params.put("head_img_url", head_img_url);
         params.put("appID", appID);
         params.put("nonce_str", nonce_str);

@@ -328,6 +328,11 @@ public class RedPacketInGroupActivity extends AppCompatActivity implements View.
 
                     final String title = remark;
 
+                    if (randomConfig == null) {
+                        Toast.makeText(mContext, "利是配置接口失败，暂不支持发利是，请退出重试", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
                     if (money > randomConfig.getMoneyMax()) {
                         Toast.makeText(mContext, "超过利是最大金额限制，请重新设置", Toast.LENGTH_SHORT).show();
                         return;

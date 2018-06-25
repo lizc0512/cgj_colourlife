@@ -15,6 +15,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -307,19 +308,23 @@ public class HxRedPacketDialog extends Dialog implements View.OnClickListener {
                         @Override
                         public void httpReqResult(String response) {
                             final GrabRedPacketResult bean = GsonUtil.parse(response, GrabRedPacketResult.class);
-                            if (bean != null && bean.isSuccess()) {
-                                moneyDraw = bean.getContent().getMoneyDraw();
+                            if (bean != null) {
+                                if (bean.isSuccess()) {
+                                    moneyDraw = bean.getContent().getMoneyDraw();
 
-                                long time = System.currentTimeMillis() - startTime;
-                                if (time < 1500) {
-                                    new Handler().postDelayed(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            openPacket(bean);
-                                        }
-                                    }, 1500 - time);
+                                    long time = System.currentTimeMillis() - startTime;
+                                    if (time < 1500) {
+                                        new Handler().postDelayed(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                openPacket(bean);
+                                            }
+                                        }, 1500 - time);
+                                    } else {
+                                        openPacket(bean);
+                                    }
                                 } else {
-                                    openPacket(bean);
+                                    Toast.makeText(getContext(), bean.getMessage(), Toast.LENGTH_SHORT).show();
                                 }
                             }
                         }

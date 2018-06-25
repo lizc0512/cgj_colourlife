@@ -136,21 +136,6 @@ public class RedPacketActivity extends AppCompatActivity implements View.OnClick
                 try {
                     double value = Double.parseDouble(s.toString());
 
-                    if (value > fixedConfig.getMoneyMax()) {
-                        Toast.makeText(mContext, "超过利是最大金额限制，请重新设置", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
-                    if (value < fixedConfig.getMoneyMin()) {
-                        Toast.makeText(mContext, "小于利是最小金额限制，请重新设置", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
-                    if (value > moneyMax) {
-                        Toast.makeText(mContext, "超过了您的利是余额，请重新设置", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
                     money = value;
 
 
@@ -266,6 +251,27 @@ public class RedPacketActivity extends AppCompatActivity implements View.OnClick
                         Toast.makeText(mContext, "请正确添加利是金额", Toast.LENGTH_SHORT).show();
                         return;
                     }
+
+                    if (fixedConfig == null) {
+                        Toast.makeText(mContext, "利是配置接口失败，暂不支持发利是，请退出重试", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    if (money > fixedConfig.getMoneyMax()) {
+                        Toast.makeText(mContext, "超过利是最大金额限制，请重新设置", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    if (money < fixedConfig.getMoneyMin()) {
+                        Toast.makeText(mContext, "小于利是最小金额限制，请重新设置", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    if (money > moneyMax) {
+                        Toast.makeText(mContext, "超过了您的利是余额，请重新设置", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
 
                     HuxinSdkManager.instance().reqSendSingleRedPackage(money, title, pano, password, new IGetListener() {
                         @Override

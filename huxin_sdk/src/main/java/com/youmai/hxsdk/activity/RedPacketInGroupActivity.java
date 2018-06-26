@@ -339,7 +339,14 @@ public class RedPacketInGroupActivity extends AppCompatActivity implements View.
                             YouMaiGroup.GroupInfo groupInfo = rsp.getGroupInfo();
                             String format = getResources().getString(R.string.group_count);
                             tv_person.setText(String.format(format, String.valueOf(groupInfo.getGroupMemberCount())));
-                            tv_name.setText(groupInfo.getGroupName());
+
+                            String displayName = groupInfo.getGroupName();
+                            boolean contains = displayName.contains(ColorsConfig.GROUP_DEFAULT_NAME);
+                            if (contains) {
+                                String format1 = getResources().getString(R.string.group_default_name);
+                                tv_name.setText(String.format(format1, groupInfo.getGroupMemberCount()));
+                            }
+
 
                         }
                     }

@@ -227,6 +227,7 @@ public class RedPacketDetailActivity extends AppCompatActivity implements View.O
                                     .error(R.drawable.color_default_header)
                                     .diskCacheStrategy(DiskCacheStrategy.RESOURCE))
                             .into(img_head);
+                    tv_red_title.setText(bean.getContent().getBlessing());
                 }
             }
         });

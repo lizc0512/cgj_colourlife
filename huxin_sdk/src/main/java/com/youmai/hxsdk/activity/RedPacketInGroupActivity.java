@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.R;
+import com.youmai.hxsdk.config.ColorsConfig;
 import com.youmai.hxsdk.db.bean.GroupInfoBean;
 import com.youmai.hxsdk.dialog.HxPayPasswordDialog;
 import com.youmai.hxsdk.entity.red.RedPackageList;
@@ -97,7 +98,15 @@ public class RedPacketInGroupActivity extends AppCompatActivity implements View.
         if (groupInfo != null) {
             String format = getResources().getString(R.string.group_count);
             tv_person.setText(String.format(format, String.valueOf(groupInfo.getGroup_member_count())));
-            tv_name.setText(groupInfo.getGroup_name());
+
+            String displayName = groupInfo.getGroup_name();
+            boolean contains = displayName.contains(ColorsConfig.GROUP_DEFAULT_NAME);
+            if (contains) {
+                String format1 = getResources().getString(R.string.group_default_name);
+                tv_name.setText(String.format(format1, groupInfo.getGroup_member_count()));
+            }
+
+
         } else {
             queryGroupInfo(groupId);
         }

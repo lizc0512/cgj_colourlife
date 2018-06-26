@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:padding="5dp"
-        android:text="彩利是超过了最大金额限制!"
+        android:text="金额不足!"
         android:textColor="@color/hx_color_red_tag"
         android:visibility="invisible" />
 

@@ -193,7 +193,7 @@ public class MainActivity1 extends AppCompatActivity implements MessageHandler.R
 
 
     public void windowPermission() {
-        if (Build.VERSION.SDK_INT >= 23) {
+        /*if (Build.VERSION.SDK_INT >= 23) {
             if (!Settings.canDrawOverlays(getApplicationContext())) {
                 //启动Activity让用户授权
                 Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
@@ -207,7 +207,7 @@ public class MainActivity1 extends AppCompatActivity implements MessageHandler.R
             }
         } else {
             //执行6.0以下绘制代码
-        }
+        }*/
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)

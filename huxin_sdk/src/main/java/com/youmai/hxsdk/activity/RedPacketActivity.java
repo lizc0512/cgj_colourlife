@@ -135,9 +135,14 @@ public class RedPacketActivity extends AppCompatActivity implements View.OnClick
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 try {
                     double value = Double.parseDouble(s.toString());
-
                     money = value;
 
+                    if (money > moneyMax) {
+                        tv_error.setVisibility(View.VISIBLE);
+                        return;
+                    } else {
+                        tv_error.setVisibility(View.INVISIBLE);
+                    }
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -233,7 +238,7 @@ public class RedPacketActivity extends AppCompatActivity implements View.OnClick
             dialog.setOnFinishInput(new HxPayPasswordDialog.OnPasswordInputFinish() {
                 @Override
                 public void inputFinish() {
-                    dialog.dismiss();
+
                     String remark = et_msg.getText().toString().trim();
 
                     if (TextUtils.isEmpty(remark)) {
@@ -279,6 +284,7 @@ public class RedPacketActivity extends AppCompatActivity implements View.OnClick
                             SendRedPacketResult bean = GsonUtil.parse(response, SendRedPacketResult.class);
                             if (bean != null) {
                                 if (bean.isSuccess()) {
+                                    dialog.dismiss();
                                     String redUuid = bean.getContent().getLishiUuid();
                                     Intent intent = new Intent();
                                     intent.putExtra("value", String.valueOf(money));
@@ -286,6 +292,8 @@ public class RedPacketActivity extends AppCompatActivity implements View.OnClick
                                     intent.putExtra("redUuid", redUuid);
                                     setResult(Activity.RESULT_OK, intent);
                                     finish();
+                                } else if (bean.getCode() == 1002) {
+                                    dialog.pwError();
                                 } else {
                                     Toast.makeText(mContext, bean.getMessage(), Toast.LENGTH_SHORT).show();
                                 }

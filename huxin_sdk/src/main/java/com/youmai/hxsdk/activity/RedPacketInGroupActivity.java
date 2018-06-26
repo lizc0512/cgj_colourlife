@@ -144,10 +144,26 @@ public class RedPacketInGroupActivity extends AppCompatActivity implements View.
                     if (type == 2) {
                         moneyStr = String.valueOf(money);
                         tv_money.setText(moneyStr);
+
+                        if (money > moneyMax) {
+                            tv_error.setVisibility(View.VISIBLE);
+                            return;
+                        } else {
+                            tv_error.setVisibility(View.INVISIBLE);
+                        }
+
                     } else {
                         double num = money * numberTotal;
                         DecimalFormat format = new DecimalFormat("#.00");
                         moneyStr = format.format(num);
+
+
+                        if (num > moneyMax) {
+                            tv_error.setVisibility(View.VISIBLE);
+                            return;
+                        } else {
+                            tv_error.setVisibility(View.INVISIBLE);
+                        }
 
                         tv_money.setText(moneyStr);
                     }
@@ -182,12 +198,26 @@ public class RedPacketInGroupActivity extends AppCompatActivity implements View.
                     if (type == 2) {
                         moneyStr = String.valueOf(money);
                         tv_money.setText(moneyStr);
+
+                        if (money > moneyMax) {
+                            tv_error.setVisibility(View.VISIBLE);
+                            return;
+                        } else {
+                            tv_error.setVisibility(View.INVISIBLE);
+                        }
                     } else {
 
                         double num = money * numberTotal;
                         DecimalFormat format = new DecimalFormat("#.00");
                         moneyStr = format.format(num);
 
+
+                        if (num > moneyMax) {
+                            tv_error.setVisibility(View.VISIBLE);
+                            return;
+                        } else {
+                            tv_error.setVisibility(View.INVISIBLE);
+                        }
                         tv_money.setText(moneyStr);
                     }
 
@@ -317,7 +347,7 @@ public class RedPacketInGroupActivity extends AppCompatActivity implements View.
             dialog.setOnFinishInput(new HxPayPasswordDialog.OnPasswordInputFinish() {
                 @Override
                 public void inputFinish() {
-                    dialog.dismiss();
+
                     String remark = et_msg.getText().toString().trim();
 
                     if (TextUtils.isEmpty(remark)) {
@@ -360,6 +390,7 @@ public class RedPacketInGroupActivity extends AppCompatActivity implements View.
                             SendRedPacketResult bean = GsonUtil.parse(response, SendRedPacketResult.class);
                             if (bean != null) {
                                 if (bean.isSuccess()) {
+                                    dialog.dismiss();
                                     String redUuid = bean.getContent().getLishiUuid();
                                     Intent intent = new Intent();
                                     intent.putExtra("value", String.valueOf(money));
@@ -367,6 +398,8 @@ public class RedPacketInGroupActivity extends AppCompatActivity implements View.
                                     intent.putExtra("redUuid", redUuid);
                                     setResult(Activity.RESULT_OK, intent);
                                     finish();
+                                } else if (bean.getCode() == 1002) {
+                                    dialog.pwError();
                                 } else {
                                     Toast.makeText(mContext, bean.getMessage(), Toast.LENGTH_SHORT).show();
                                 }

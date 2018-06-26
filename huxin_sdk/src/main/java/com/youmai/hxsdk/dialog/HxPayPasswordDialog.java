@@ -21,6 +21,7 @@ public class HxPayPasswordDialog extends Dialog implements View.OnClickListener 
     private int currentIndex = -1;    //用于记录当前输入密码格位置
 
     private TextView tv_money;
+    private TextView tv_error;
     private OnPasswordInputFinish mOnPasswordInputFinish;
 
 
@@ -60,6 +61,7 @@ public class HxPayPasswordDialog extends Dialog implements View.OnClickListener 
 
     public void initView() {
         tv_money = (TextView) findViewById(R.id.tv_money);
+        tv_error = (TextView) findViewById(R.id.tv_error);
         findViewById(R.id.img_close).setOnClickListener(this);
         findViewById(R.id.tv_forget).setOnClickListener(this);
 
@@ -120,6 +122,17 @@ public class HxPayPasswordDialog extends Dialog implements View.OnClickListener 
             tv_money.setText(money);
     }
 
+    public void pwError() {
+        if (tv_error != null) {
+            tv_error.setVisibility(View.VISIBLE);
+        }
+
+        for (TextView item : tvList) {
+            item.setText("");
+        }
+        currentIndex = -1;
+    }
+
     @Override
     public void onClick(View v) {
         int id = v.getId();
@@ -163,6 +176,11 @@ public class HxPayPasswordDialog extends Dialog implements View.OnClickListener 
         if (currentIndex >= -1 && currentIndex < 5) {
             tvList[++currentIndex].setText(str);
         }
+
+        if (tv_error.getVisibility() == View.VISIBLE) {
+            tv_error.setVisibility(View.GONE);
+        }
+
     }
 
     public String getStrPassword() {

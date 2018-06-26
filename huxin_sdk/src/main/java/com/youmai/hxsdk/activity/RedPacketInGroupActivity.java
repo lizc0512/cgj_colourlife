@@ -56,6 +56,7 @@ public class RedPacketInGroupActivity extends AppCompatActivity implements View.
     private TextView tv_right;
 
     private TextView tv_value;
+    private TextView tv_name;
 
     private AppCompatEditText et_money;
     private TextView tv_money;
@@ -96,6 +97,7 @@ public class RedPacketInGroupActivity extends AppCompatActivity implements View.
         if (groupInfo != null) {
             String format = getResources().getString(R.string.group_count);
             tv_person.setText(String.format(format, String.valueOf(groupInfo.getGroup_member_count())));
+            tv_name.setText(groupInfo.getGroup_name());
         } else {
             queryGroupInfo(groupId);
         }
@@ -110,6 +112,7 @@ public class RedPacketInGroupActivity extends AppCompatActivity implements View.
 
 
     private void initView() {
+        tv_name = (TextView) findViewById(R.id.tv_name);
 
         tv_error = (TextView) findViewById(R.id.tv_error);
         tv_value = (TextView) findViewById(R.id.tv_value);
@@ -154,7 +157,7 @@ public class RedPacketInGroupActivity extends AppCompatActivity implements View.
 
                     } else {
                         double num = money * numberTotal;
-                        DecimalFormat format = new DecimalFormat("#.00");
+                        DecimalFormat format = new DecimalFormat("0.00");
                         moneyStr = format.format(num);
 
 
@@ -206,9 +209,8 @@ public class RedPacketInGroupActivity extends AppCompatActivity implements View.
                             tv_error.setVisibility(View.INVISIBLE);
                         }
                     } else {
-
                         double num = money * numberTotal;
-                        DecimalFormat format = new DecimalFormat("#.00");
+                        DecimalFormat format = new DecimalFormat("0.00");
                         moneyStr = format.format(num);
 
 
@@ -328,6 +330,7 @@ public class RedPacketInGroupActivity extends AppCompatActivity implements View.
                             YouMaiGroup.GroupInfo groupInfo = rsp.getGroupInfo();
                             String format = getResources().getString(R.string.group_count);
                             tv_person.setText(String.format(format, String.valueOf(groupInfo.getGroupMemberCount())));
+                            tv_name.setText(groupInfo.getGroupName());
 
                         }
                     }

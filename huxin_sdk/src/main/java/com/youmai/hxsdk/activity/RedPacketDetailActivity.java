@@ -147,12 +147,18 @@ public class RedPacketDetailActivity extends AppCompatActivity implements View.O
         tv_red_title = (TextView) findViewById(R.id.tv_red_title);
         tv_red_title.setText(title);
 
-
         tv_money = (TextView) findViewById(R.id.tv_money);
-
-        //String format = getResources().getString(R.string.red_packet_unit2);
-        //tv_money.setText(String.format(format, value));
         tv_money.setText(value);
+        try {
+            double money = Double.parseDouble(value);
+            if (money > 0) {
+                tv_money.setVisibility(View.VISIBLE);
+            } else {
+                tv_money.setVisibility(View.GONE);
+            }
+        } catch (Exception e) {
+
+        }
 
         tv_info = (TextView) findViewById(R.id.tv_info);
         //tv_info.setText(R.string.red_packet_back);
@@ -189,6 +195,16 @@ public class RedPacketDetailActivity extends AppCompatActivity implements View.O
 
                     String selfMoney = bean.getContent().getSelfMoneyDraw();
                     tv_money.setText(selfMoney);
+                    try {
+                        double money = Double.parseDouble(selfMoney);
+                        if (money > 0) {
+                            tv_money.setVisibility(View.VISIBLE);
+                        } else {
+                            tv_money.setVisibility(View.GONE);
+                        }
+                    } catch (Exception e) {
+
+                    }
 
                     int total = bean.getContent().getNumberTotal();
                     int draw = bean.getContent().getNumberDraw();
@@ -201,6 +217,16 @@ public class RedPacketDetailActivity extends AppCompatActivity implements View.O
 
                     tv_status.setText(String.format(format, draw, total, moneyDraw, moneyCount));
 
+                    String url = bean.getContent().getSenderHeadImgUrl();
+                    int size = getResources().getDimensionPixelOffset(R.dimen.red_head);
+                    Glide.with(mContext).load(url)
+                            .apply(new RequestOptions()
+                                    .transform(new GlideRoundTransform())
+                                    .override(size, size)
+                                    .placeholder(R.drawable.color_default_header)
+                                    .error(R.drawable.color_default_header)
+                                    .diskCacheStrategy(DiskCacheStrategy.RESOURCE))
+                            .into(img_head);
                 }
             }
         });

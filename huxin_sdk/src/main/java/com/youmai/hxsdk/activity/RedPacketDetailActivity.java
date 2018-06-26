@@ -228,6 +228,16 @@ public class RedPacketDetailActivity extends AppCompatActivity implements View.O
                                     .diskCacheStrategy(DiskCacheStrategy.RESOURCE))
                             .into(img_head);
                     tv_red_title.setText(bean.getContent().getBlessing());
+
+                    type = bean.getContent().getLsType();
+
+                    if (type == 2) {
+                        Drawable drawable = ContextCompat.getDrawable(mContext, R.drawable.ic_pin);
+                        tv_name.setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null);
+                    } else {
+                        tv_name.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+                    }
+
                 }
             }
         });

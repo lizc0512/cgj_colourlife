@@ -207,6 +207,10 @@ public class IMConnectionActivity extends SdkBaseActivity implements
                         break;
                     }
                 }
+
+            } else if (SendMsgService.ACTION_NEW_MSG.equals(intent.getAction())) {
+                CacheMsgBean cacheMsgBean = intent.getParcelableExtra("CacheNewMsg");
+                imListAdapter.refreshIncomingMsgUI(cacheMsgBean);
             }
 
         }
@@ -262,6 +266,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
         IntentFilter filter = new IntentFilter();
         filter.addAction(SendMsgService.ACTION_SEND_MSG);
         filter.addAction(SendMsgService.ACTION_UPDATE_MSG);
+        filter.addAction(SendMsgService.ACTION_NEW_MSG);
         localBroadcastManager.registerReceiver(mLocalMsgReceiver, filter);
 
         initView();

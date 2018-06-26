@@ -51,6 +51,7 @@ public class CacheMsgBean implements Parcelable {
     public static final int GROUP_MEMBER_CHANGED = 1001;
     public static final int GROUP_NAME_CHANGED = 1002;
     public static final int GROUP_TRANSFER_OWNER = 1003;
+    public static final int PACKET_OPENED_SUCCESS = 1004;
 
 
     public static final int SEND_DRAFT = 0;      //草稿
@@ -166,6 +167,7 @@ public class CacheMsgBean implements Parcelable {
             case RECEIVE_REDPACKAGE:
             case OPEN_REDPACKET:
             case RECEIVE_PACKET_OPENED:
+            case PACKET_OPENED_SUCCESS:
                 jsonBodyObj = new CacheMsgRedPackage().fromJson(contentJsonBody);
                 break;
         }

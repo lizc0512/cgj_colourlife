@@ -108,6 +108,7 @@ public class IMListAdapter extends RecyclerView.Adapter {
     private static final int RED_PACKAGE_RIGHT = 17; //红包右
 
     private static final int RED_PACKET_OPENED = 104;//红包被打开
+    private static final int OPEN_RED_PACKET_SUCCESS = 105;//我领取了红包
 
     private static final int HANDLER_REFRESH_PROGREE = 0;
 
@@ -230,6 +231,10 @@ public class IMListAdapter extends RecyclerView.Adapter {
                 view = inflater.inflate(R.layout.hx_red_packet_opened_item, parent, false);
                 holder = new RedPacketOpenedViewHolder(view);
                 break;
+            case OPEN_RED_PACKET_SUCCESS:
+                view = inflater.inflate(R.layout.hx_red_packet_opened_item, parent, false);
+                holder = new OpenRedPacketSuccessViewHolder(view);
+                break;
             default:
                 //默认视图，用于解析错误的消息
                 view = inflater.inflate(R.layout.hx_fragment_im_left_txt_item, parent, false);
@@ -259,7 +264,10 @@ public class IMListAdapter extends RecyclerView.Adapter {
             onBindRedPackage((RedPackageHolder) holder, position);
         } else if (holder instanceof RedPacketOpenedViewHolder) {//红包被领取
             onBindRedPacketOpened((RedPacketOpenedViewHolder) holder, position);
+        } else if (holder instanceof OpenRedPacketSuccessViewHolder) {//我领取了红包
+            onBindOpenRedPacketSuccess((OpenRedPacketSuccessViewHolder) holder, position);
         }
+
     }
 
     @Override
@@ -312,6 +320,9 @@ public class IMListAdapter extends RecyclerView.Adapter {
                 break;
             case CacheMsgBean.RECEIVE_PACKET_OPENED:
                 oriType = RED_PACKET_OPENED;
+                break;
+            case CacheMsgBean.PACKET_OPENED_SUCCESS:
+                oriType = OPEN_RED_PACKET_SUCCESS;
                 break;
         }
         return oriType;
@@ -631,6 +642,7 @@ public class IMListAdapter extends RecyclerView.Adapter {
                         builder.setCanOpen(canOpen);
                         builder.setIsGrabbed(isGrabbed);
                         builder.setSinglePacket(true);
+                        builder.setType(type);
                         builder.setListener(new HxRedPacketDialog.OnRedPacketListener() {
                             @Override
                             public void onCloseClick() {
@@ -648,13 +660,14 @@ public class IMListAdapter extends RecyclerView.Adapter {
                                 in.putExtra(RedPacketDetailActivity.REDUUID, redUuid);
                                 in.putExtra(RedPacketDetailActivity.MSGBEAN, uiBean);
                                 mAct.startActivity(in);
+                                if (moneyDraw > 0) {
+                                    redPackage.setIsGrabbed(1);
+                                    redPackage.setValue(String.valueOf(moneyDraw));
 
-                                redPackage.setIsGrabbed(1);
-                                redPackage.setValue(String.valueOf(moneyDraw));
-
-                                uiBean.setJsonBodyObj(redPackage);
-                                //add to db
-                                CacheMsgHelper.instance().insertOrUpdate(mAct, uiBean);
+                                    uiBean.setJsonBodyObj(redPackage);
+                                    //add to db
+                                    CacheMsgHelper.instance().insertOrUpdate(mAct, uiBean);
+                                }
                             }
                         });
 
@@ -705,6 +718,44 @@ public class IMListAdapter extends RecyclerView.Adapter {
                     start, start + length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             holder.tv_red_open.setText(style);*/
 
+            holder.tv_red_open.setText(content);
+        }
+
+
+        holder.tv_red_packet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent in = new Intent(mAct, RedPacketDetailActivity.class);
+                in.putExtra(RedPacketDetailActivity.OPEN_TYPE, RedPacketDetailActivity.GROUP_PACKET);
+                in.putExtra(RedPacketDetailActivity.AVATAR, avatar);
+                in.putExtra(RedPacketDetailActivity.NICKNAME, name);
+                in.putExtra(RedPacketDetailActivity.VALUE, moneyDraw);
+                in.putExtra(RedPacketDetailActivity.REDTITLE, title);
+                in.putExtra(RedPacketDetailActivity.REDUUID, redUuid);
+                in.putExtra(RedPacketDetailActivity.MSGBEAN, bean);
+                mAct.startActivity(in);
+            }
+        });
+    }
+
+
+    /**
+     * 红包被领取
+     */
+    private void onBindOpenRedPacketSuccess(final OpenRedPacketSuccessViewHolder holder, final int position) {
+        final CacheMsgBean bean = mImBeanList.get(position);
+        final CacheMsgRedPackage redPackage = (CacheMsgRedPackage) bean.getJsonBodyObj();
+
+        final String name = bean.getSenderRealName();
+        final String avatar = bean.getSenderAvatar();
+
+        final String title = redPackage.getRedTitle();
+        final String redUuid = redPackage.getRedUuid();
+        final String moneyDraw = redPackage.getValue();
+
+
+        if (!TextUtils.isEmpty(name)) {
+            String content = "你领取了" + name + "的";
             holder.tv_red_open.setText(content);
         }
 
@@ -1052,6 +1103,7 @@ public class IMListAdapter extends RecyclerView.Adapter {
                         bean.setMsgStatus(CacheMsgBean.SEND_GOING);
                         updateSendStatus(bean, position);
                         Intent intent = new Intent(mAct, SendMsgService.class);
+                        intent.putExtra("isGroup", false);
                         intent.putExtra("data", bean);
                         intent.putExtra("data_from", SendMsgService.FROM_IM);
                         mAct.startService(intent);
@@ -1212,6 +1264,17 @@ public class IMListAdapter extends RecyclerView.Adapter {
         TextView tv_red_packet;
 
         RedPacketOpenedViewHolder(View itemView) {
+            super(itemView);
+            tv_red_open = (TextView) itemView.findViewById(R.id.tv_red_packet_opened);
+            tv_red_packet = (TextView) itemView.findViewById(R.id.tv_red_packet);
+        }
+    }
+
+    class OpenRedPacketSuccessViewHolder extends BaseViewHolder {
+        TextView tv_red_open;
+        TextView tv_red_packet;
+
+        OpenRedPacketSuccessViewHolder(View itemView) {
             super(itemView);
             tv_red_open = (TextView) itemView.findViewById(R.id.tv_red_packet_opened);
             tv_red_packet = (TextView) itemView.findViewById(R.id.tv_red_packet);

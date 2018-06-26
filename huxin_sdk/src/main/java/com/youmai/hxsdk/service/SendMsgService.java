@@ -62,6 +62,7 @@ public class SendMsgService extends IntentService {
 
     public static final String ACTION_SEND_MSG = "service.send.msg";
     public static final String ACTION_UPDATE_MSG = "service.update.msg";
+    public static final String ACTION_NEW_MSG = "action_new_msg";
 
     long id;
     boolean isGroup;
@@ -183,6 +184,16 @@ public class SendMsgService extends IntentService {
         LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(appContext);
         localBroadcastManager.sendBroadcast(intent);
     }
+
+    private void updateUI(CacheMsgBean bean) {
+        CacheMsgHelper.instance().insertOrUpdate(appContext, bean);
+
+        Intent intent = new Intent(ACTION_NEW_MSG);
+        intent.putExtra("CacheNewMsg", bean);
+        LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(appContext);
+        localBroadcastManager.sendBroadcast(intent);
+    }
+
 
     //发送文本
     private void sendTxt(final SendMsg msgBean) {
@@ -383,9 +394,15 @@ public class SendMsgService extends IntentService {
         final String dstUuid = msgBean.getMsg().getReceiverUserId();
         final int groupId = msgBean.getMsg().getGroupId();
         final String sendUuid = msgBean.getMsg().getSenderUserId();
-        String value = msgBody.getValue();
-        String redTitle = msgBody.getRedTitle();
-        String redUuid = msgBody.getRedUuid();
+        final String value = msgBody.getValue();
+        final String redTitle = msgBody.getRedTitle();
+        final String redUuid = msgBody.getRedUuid();
+        final String sendName = msgBean.getMsg().getSenderRealName();
+        final String senderAvatar = msgBean.getMsg().getSenderAvatar();
+        final String senderMobile = msgBean.getMsg().getSenderMobile();
+        final String senderSex = msgBean.getMsg().getSenderSex();
+        final String senderUserName = msgBean.getMsg().getSenderUserName();
+        final String senderUserId = msgBean.getMsg().getSenderUserId();
 
         if (TextUtils.isEmpty(dstUuid) && groupId == 0) {
             return;
@@ -402,12 +419,43 @@ public class SendMsgService extends IntentService {
                 try {
                     final YouMaiMsg.ChatMsg_Ack ack = YouMaiMsg.ChatMsg_Ack.parseFrom(pduBase.body);
                     final long msgId = ack.getMsgId();
-                    msgBean.getMsg().setMsgId(msgId);
 
                     if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_OK) {
-                        updateUI(msgBean, CacheMsgBean.SEND_SUCCEED, null, SEND_MSG_END);
-                    } else {
-                        updateUI(msgBean, CacheMsgBean.SEND_FAILED, null, SEND_MSG_END);
+                        CacheMsgBean cacheMsgBean = new CacheMsgBean()
+                                .setMsgType(CacheMsgBean.PACKET_OPENED_SUCCESS)
+                                .setMsgTime(System.currentTimeMillis())
+                                .setMsgStatus(CacheMsgBean.SEND_SUCCEED)
+                                .setSenderUserId(sendUuid)
+                                .setSenderRealName(sendName)
+                                .setSenderAvatar(senderAvatar)
+                                .setSenderMobile(senderMobile)
+                                .setSenderSex(senderSex)
+                                .setSenderUserName(senderUserName)
+                                .setReceiverUserId(dstUuid)
+                                .setTargetName(sendName);
+
+                        if (isGroup) {
+                            cacheMsgBean.setTargetUuid(groupId + "");
+                        } else {
+                            cacheMsgBean.setTargetUuid(senderUserId);
+                        }
+
+
+                        CacheMsgRedPackage cacheMsgRedPackage = new CacheMsgRedPackage();
+
+                        cacheMsgRedPackage.setRedStatus(CacheMsgRedPackage.RED_PACKET_OPENED);
+                        cacheMsgRedPackage.setReceiveName(HuxinSdkManager.instance().getRealName());
+                        cacheMsgRedPackage.setReceiveDone("1");
+                        cacheMsgRedPackage.setValue(value);
+                        cacheMsgRedPackage.setRedTitle(redTitle);
+                        cacheMsgRedPackage.setRedUuid(redUuid);
+                        cacheMsgRedPackage.setMsgId(msgId);
+
+                        cacheMsgBean.setMsgType(CacheMsgBean.PACKET_OPENED_SUCCESS).setJsonBodyObj(cacheMsgRedPackage);
+                        CacheMsgHelper.instance().insertOrUpdate(appContext, cacheMsgBean);
+
+                        updateUI(cacheMsgBean);
+
                     }
                 } catch (InvalidProtocolBufferException e) {
                     e.printStackTrace();

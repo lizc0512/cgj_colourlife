@@ -228,6 +228,9 @@ public class IMGroupActivity extends SdkBaseActivity implements
                         break;
                     }
                 }
+            } else if (SendMsgService.ACTION_NEW_MSG.equals(intent.getAction())) {
+                CacheMsgBean cacheMsgBean = intent.getParcelableExtra("CacheNewMsg");
+                iMGroupAdapter.refreshIncomingMsgUI(cacheMsgBean);
             } else if (UPDATE_GROUP_INFO.equals(action)) {
                 GroupInfoBean info = intent.getParcelableExtra("GroupInfo");
                 String topic = info.getTopic();
@@ -328,6 +331,7 @@ public class IMGroupActivity extends SdkBaseActivity implements
         IntentFilter filter = new IntentFilter();
         filter.addAction(SendMsgService.ACTION_SEND_MSG);
         filter.addAction(SendMsgService.ACTION_UPDATE_MSG);
+        filter.addAction(SendMsgService.ACTION_NEW_MSG);
         filter.addAction(UPDATE_GROUP_INFO);
         filter.addAction(UPDATE_GROUP_REMOVE);
         filter.addAction(UPDATE_GROUP_ADD);

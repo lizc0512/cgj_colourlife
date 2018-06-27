@@ -643,6 +643,7 @@ public class IMListAdapter extends RecyclerView.Adapter {
                         builder.setIsGrabbed(isGrabbed);
                         builder.setSinglePacket(true);
                         builder.setType(type);
+                        builder.setGroup(false);
                         builder.setListener(new HxRedPacketDialog.OnRedPacketListener() {
                             @Override
                             public void onCloseClick() {

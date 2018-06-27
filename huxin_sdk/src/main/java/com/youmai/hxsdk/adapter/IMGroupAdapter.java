@@ -689,6 +689,7 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
                         builder.setIsGrabbed(isGrabbed);
                         builder.setSinglePacket(false);
                         builder.setType(type);
+                        builder.setGroup(true);
                         builder.setListener(new HxRedPacketDialog.OnRedPacketListener() {
                             @Override
                             public void onCloseClick() {

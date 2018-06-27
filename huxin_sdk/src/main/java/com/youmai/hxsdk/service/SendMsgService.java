@@ -391,25 +391,19 @@ public class SendMsgService extends IntentService {
 
     private void openRedPackage(final SendMsg msgBean) {
         CacheMsgRedPackage msgBody = (CacheMsgRedPackage) msgBean.getMsg().getJsonBodyObj();
-        final String dstUuid = msgBean.getMsg().getReceiverUserId();
-        final int groupId = msgBean.getMsg().getGroupId();
-        final String sendUuid = msgBean.getMsg().getSenderUserId();
+
         final String value = msgBody.getValue();
         final String redTitle = msgBody.getRedTitle();
         final String redUuid = msgBody.getRedUuid();
+
+        final int groupId = msgBean.getMsg().getGroupId();
+        final String sendUuid = msgBean.getMsg().getSenderUserId();
         final String sendName = msgBean.getMsg().getSenderRealName();
         final String senderAvatar = msgBean.getMsg().getSenderAvatar();
-        final String senderMobile = msgBean.getMsg().getSenderMobile();
-        final String senderSex = msgBean.getMsg().getSenderSex();
         final String senderUserName = msgBean.getMsg().getSenderUserName();
-        final String senderUserId = msgBean.getMsg().getSenderUserId();
 
-        if (TextUtils.isEmpty(dstUuid) && groupId == 0) {
+        if (TextUtils.isEmpty(sendUuid) && groupId == 0) {
             return;
-        }
-
-        if (groupId > 0) {
-            isGroup = true;
         }
 
         ReceiveListener listener = new ReceiveListener() {
@@ -422,29 +416,32 @@ public class SendMsgService extends IntentService {
 
                     if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_OK) {
                         CacheMsgBean cacheMsgBean = new CacheMsgBean()
-                                .setMsgType(CacheMsgBean.PACKET_OPENED_SUCCESS)
                                 .setMsgTime(System.currentTimeMillis())
                                 .setMsgStatus(CacheMsgBean.SEND_SUCCEED)
-                                .setSenderUserId(sendUuid)
-                                .setSenderRealName(sendName)
-                                .setSenderAvatar(senderAvatar)
-                                .setSenderMobile(senderMobile)
-                                .setSenderSex(senderSex)
-                                .setSenderUserName(senderUserName)
-                                .setReceiverUserId(dstUuid)
-                                .setTargetName(sendName);
+                                .setSenderUserId(HuxinSdkManager.instance().getUuid())
+                                .setSenderRealName(HuxinSdkManager.instance().getRealName())
+                                .setSenderAvatar(HuxinSdkManager.instance().getHeadUrl())
+                                .setSenderMobile(HuxinSdkManager.instance().getPhoneNum())
+                                .setSenderSex(HuxinSdkManager.instance().getSex())
+                                .setSenderUserName(HuxinSdkManager.instance().getUserName());
 
                         if (isGroup) {
-                            cacheMsgBean.setTargetUuid(groupId + "");
+                            cacheMsgBean.setGroupId(groupId)
+                                    .setTargetName(groupName)
+                                    .setTargetUuid(groupId + "");
                         } else {
-                            cacheMsgBean.setTargetUuid(senderUserId);
-                        }
+                            cacheMsgBean.setReceiverUserId(sendUuid)
+                                    .setTargetName(sendName)
+                                    .setTargetUserName(senderUserName)
+                                    .setTargetAvatar(senderAvatar)
+                                    .setTargetUuid(sendUuid);
 
+                        }
 
                         CacheMsgRedPackage cacheMsgRedPackage = new CacheMsgRedPackage();
 
                         cacheMsgRedPackage.setRedStatus(CacheMsgRedPackage.RED_PACKET_OPENED);
-                        cacheMsgRedPackage.setReceiveName(HuxinSdkManager.instance().getRealName());
+                        cacheMsgRedPackage.setReceiveName(sendName);
                         cacheMsgRedPackage.setReceiveDone("1");
                         cacheMsgRedPackage.setValue(value);
                         cacheMsgRedPackage.setRedTitle(redTitle);

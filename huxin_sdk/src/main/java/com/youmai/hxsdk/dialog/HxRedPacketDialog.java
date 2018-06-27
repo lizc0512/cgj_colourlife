@@ -44,6 +44,7 @@ public class HxRedPacketDialog extends Dialog implements View.OnClickListener {
     private int redStatus;
     private String redUuid;
     private String remark;
+    boolean isGroup;
 
     private int type;
     private ObjectAnimator anim;
@@ -86,6 +87,7 @@ public class HxRedPacketDialog extends Dialog implements View.OnClickListener {
         private int isGrabbed;
         private boolean isSinglePacket;
         private int type;
+        boolean isGroup;
 
         private OnRedPacketListener mListener;
 
@@ -137,6 +139,11 @@ public class HxRedPacketDialog extends Dialog implements View.OnClickListener {
             return this;
         }
 
+        public Builder setGroup(boolean group) {
+            this.isGroup = group;
+            return this;
+        }
+
         public void setListener(OnRedPacketListener listener) {
             this.mListener = listener;
         }
@@ -153,6 +160,7 @@ public class HxRedPacketDialog extends Dialog implements View.OnClickListener {
         isGrabbed = builder.isGrabbed;
         isSinglePacket = builder.isSinglePacket;
         type = builder.type;
+        isGroup = builder.isGroup;
         mListener = builder.mListener;
 
         CacheMsgRedPackage redPackage = (CacheMsgRedPackage) uiBean.getJsonBodyObj();
@@ -369,6 +377,7 @@ public class HxRedPacketDialog extends Dialog implements View.OnClickListener {
         if (!uiBean.isRightUI()) {
             uiBean.setMsgType(CacheMsgBean.OPEN_REDPACKET);
             Intent intent = new Intent(getContext(), SendMsgService.class);
+            intent.putExtra("isGroup", isGroup);
             intent.putExtra("id", id);
             intent.putExtra("data", uiBean);
             intent.putExtra("data_from", SendMsgService.FROM_IM);

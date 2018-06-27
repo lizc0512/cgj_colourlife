@@ -231,6 +231,8 @@ public class RedPacketDetailActivity extends AppCompatActivity implements View.O
 
                     type = bean.getContent().getLsType();
 
+                    String senderName = bean.getContent().getSenderName();
+                    tv_name.setText(senderName);
                     if (type == 2) {
                         Drawable drawable = ContextCompat.getDrawable(mContext, R.drawable.ic_pin);
                         tv_name.setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null);

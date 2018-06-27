@@ -65,7 +65,7 @@ public class SendRedPackageRecordAdapter extends RecyclerView.Adapter<RecyclerVi
         String avatar = item.getSenderHeadImgUrl();
         String sendName = item.getSenderName();
         String time = item.getTimeAllowWithdraw();
-        String money = item.getMoneyDraw();
+        double money = item.getMoneyTotal();
         int type = item.getLsType();
         int status = item.getStatus();
 

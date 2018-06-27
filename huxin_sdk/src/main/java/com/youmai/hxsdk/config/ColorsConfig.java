@@ -22,6 +22,7 @@ public class ColorsConfig {
 
 
     private static final String COLOR_APPID[] = new String[]{"ICEYOUMAI-EF6C-4970-9AED-4CD8E063720F", "ICECGJLS-AOVE-VNU1-Y9JV-CMP6MUH6WCT2", "ICEXCGJ0-5F89-4E17-BC44-7A0DB101B245"};
+
     private static final String COLOR_TOKEN[] = new String[]{"AXPHrD48LRa8xYVkgV4c", "H13FNtwtT7IjLmxy25IT", "AXPHrD48LRa8xYVkgV4c"};
 
     private final static String SOCKET_URL[] = new String[]{"https://openapi-test.colourlife.com/v1/", "https://openapi-test.colourlife.com/v1/", "https://openapi.colourlife.com/v1/"};

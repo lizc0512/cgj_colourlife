@@ -10,6 +10,7 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -59,6 +60,7 @@ public class RedPacketActivity extends AppCompatActivity implements View.OnClick
     private TextView tv_money;
     private AppCompatEditText et_msg;
 
+    private Button btn_commit;
     private String uuid;
     private String name;
     private String avatar;
@@ -139,8 +141,10 @@ public class RedPacketActivity extends AppCompatActivity implements View.OnClick
 
                     if (money > moneyMax) {
                         tv_error.setVisibility(View.VISIBLE);
+                        btn_commit.setEnabled(false);
                         return;
                     } else {
+                        btn_commit.setEnabled(true);
                         tv_error.setVisibility(View.INVISIBLE);
                     }
 
@@ -161,7 +165,8 @@ public class RedPacketActivity extends AppCompatActivity implements View.OnClick
             }
         });
 
-        findViewById(R.id.btn_commit).setOnClickListener(this);
+        btn_commit = (Button) findViewById(R.id.btn_commit);
+        btn_commit.setOnClickListener(this);
 
 
     }

@@ -12,6 +12,7 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -62,6 +63,8 @@ public class RedPacketInGroupActivity extends AppCompatActivity implements View.
     private AppCompatEditText et_money;
     private TextView tv_money;
     private AppCompatEditText et_msg;
+
+    private Button btn_commit;
 
     private AppCompatEditText et_count;
     private TextView tv_person;
@@ -159,8 +162,10 @@ public class RedPacketInGroupActivity extends AppCompatActivity implements View.
 
                         if (money > moneyMax) {
                             tv_error.setVisibility(View.VISIBLE);
+                            btn_commit.setEnabled(false);
                             return;
                         } else {
+                            btn_commit.setEnabled(true);
                             tv_error.setVisibility(View.INVISIBLE);
                         }
 
@@ -169,11 +174,12 @@ public class RedPacketInGroupActivity extends AppCompatActivity implements View.
                         DecimalFormat format = new DecimalFormat("0.00");
                         moneyStr = format.format(num);
 
-
                         if (num > moneyMax) {
                             tv_error.setVisibility(View.VISIBLE);
+                            btn_commit.setEnabled(false);
                             return;
                         } else {
+                            btn_commit.setEnabled(true);
                             tv_error.setVisibility(View.INVISIBLE);
                         }
 
@@ -255,7 +261,8 @@ public class RedPacketInGroupActivity extends AppCompatActivity implements View.
 
         tv_type_title = (TextView) findViewById(R.id.tv_type_title);
 
-        findViewById(R.id.btn_commit).setOnClickListener(this);
+        btn_commit = (Button) findViewById(R.id.btn_commit);
+        btn_commit.setOnClickListener(this);
 
 
         tv_type.setOnClickListener(this);

@@ -707,7 +707,7 @@ public class IMListAdapter extends RecyclerView.Adapter {
 
 
         if (!TextUtils.isEmpty(name)) {
-            String content = name + "领取了你的利是";
+            String content = name + "领取了你的";
             /*String keyword = "利是";
 
             int start = content.indexOf(keyword);

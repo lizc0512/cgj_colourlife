@@ -400,6 +400,8 @@ public class SendMsgService extends IntentService {
         final String sendUuid = msgBean.getMsg().getSenderUserId();
         final String sendName = msgBean.getMsg().getSenderRealName();
         final String senderAvatar = msgBean.getMsg().getSenderAvatar();
+        final String senderMobile = msgBean.getMsg().getSenderMobile();
+        final String senderSex = msgBean.getMsg().getSenderSex();
         final String senderUserName = msgBean.getMsg().getSenderUserName();
 
         if (TextUtils.isEmpty(sendUuid) && groupId == 0) {
@@ -418,12 +420,12 @@ public class SendMsgService extends IntentService {
                         CacheMsgBean cacheMsgBean = new CacheMsgBean()
                                 .setMsgTime(System.currentTimeMillis())
                                 .setMsgStatus(CacheMsgBean.SEND_SUCCEED)
-                                .setSenderUserId(HuxinSdkManager.instance().getUuid())
-                                .setSenderRealName(HuxinSdkManager.instance().getRealName())
-                                .setSenderAvatar(HuxinSdkManager.instance().getHeadUrl())
-                                .setSenderMobile(HuxinSdkManager.instance().getPhoneNum())
-                                .setSenderSex(HuxinSdkManager.instance().getSex())
-                                .setSenderUserName(HuxinSdkManager.instance().getUserName());
+                                .setSenderUserId(sendUuid)
+                                .setSenderRealName(sendName)
+                                .setSenderAvatar(senderAvatar)
+                                .setSenderMobile(senderMobile)
+                                .setSenderSex(senderSex)
+                                .setSenderUserName(senderUserName);
 
                         if (isGroup) {
                             cacheMsgBean.setGroupId(groupId)

@@ -591,7 +591,7 @@ public class HuxinSdkManager {
         for (String str : list) {
             sb.append(str).append("&");
         }
-        sb.append("secret=" + ColorsConfig.SECRET);
+        sb.append("secret=" + ColorsConfig.getSecret());
 
         return AppUtils.md5(sb.toString()).toUpperCase();
 

@@ -14,16 +14,17 @@ public class ColorsConfig {
 
     public static final String GROUP_DEFAULT_NAME = "GroupName:GOURP@#$%^&*()"; //默认群组名的前缀
     public static final String GROUP_EMPTY_MSG = "    "; //群组默认填充消息
-    public static final String SECRET = "IGXGh8BKPwjEtbcXD2KN";
 
     public static final String ColorLifeAppId = "9959f117-df60-4d1b-a354-776c20ffb8c7";  //彩生活服务集团
     public static final String ColorLifeAppName = "彩生活服务集团";  //彩生活服务集团
     public static final String HEAD_ICON_URL = "http://avatar.ice.colourlife.com/";//头像
 
 
-    private static final String COLOR_APPID[] = new String[]{"ICEYOUMAI-EF6C-4970-9AED-4CD8E063720F", "ICECGJLS-AOVE-VNU1-Y9JV-CMP6MUH6WCT2", "ICEXCGJ0-5F89-4E17-BC44-7A0DB101B245"};
+    private static final String SECRET[] = new String[]{"IGXGh8BKPwjEtbcXD2KN", "IGXGh8BKPwjEtbcXD2KN", "TYHpsLtHeFXYRTekJbVv"};
 
-    private static final String COLOR_TOKEN[] = new String[]{"AXPHrD48LRa8xYVkgV4c", "H13FNtwtT7IjLmxy25IT", "AXPHrD48LRa8xYVkgV4c"};
+    private static final String COLOR_APPID[] = new String[]{"ICEYOUMAI-EF6C-4970-9AED-4CD8E063720F", "ICECGJLS-AOVE-VNU1-Y9JV-CMP6MUH6WCT2", "ICECGJLS-RF9A-5NY9-EREF-3VKPI6JOVW8J"};
+
+    private static final String COLOR_TOKEN[] = new String[]{"AXPHrD48LRa8xYVkgV4c", "H13FNtwtT7IjLmxy25IT", "dKMtXVQ3fJLhWrgh9BEZ"};
 
     private final static String SOCKET_URL[] = new String[]{"https://openapi-test.colourlife.com/v1/", "https://openapi-test.colourlife.com/v1/", "https://openapi.colourlife.com/v1/"};
 
@@ -55,6 +56,10 @@ public class ColorsConfig {
 
     public static String getAppID() {
         return COLOR_APPID[AppConfig.LAUNCH_MODE];
+    }
+
+    public static String getSecret(){
+        return SECRET[AppConfig.LAUNCH_MODE];
     }
 
 

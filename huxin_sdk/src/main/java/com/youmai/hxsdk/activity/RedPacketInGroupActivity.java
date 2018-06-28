@@ -217,21 +217,24 @@ public class RedPacketInGroupActivity extends AppCompatActivity implements View.
 
                     if (money > moneyMax) {
                         tv_error.setVisibility(View.VISIBLE);
+                        btn_commit.setEnabled(false);
                         return;
                     } else {
                         tv_error.setVisibility(View.INVISIBLE);
+                        btn_commit.setEnabled(true);
                     }
                 } else {
                     double num = money * numberTotal;
                     DecimalFormat format = new DecimalFormat("0.00");
                     moneyStr = format.format(num);
 
-
                     if (num > moneyMax) {
                         tv_error.setVisibility(View.VISIBLE);
+                        btn_commit.setEnabled(false);
                         return;
                     } else {
                         tv_error.setVisibility(View.INVISIBLE);
+                        btn_commit.setEnabled(true);
                     }
                     tv_money.setText(moneyStr);
                 }
@@ -271,7 +274,6 @@ public class RedPacketInGroupActivity extends AppCompatActivity implements View.
                 StandardRedPackage bean = GsonUtil.parse(response, StandardRedPackage.class);
                 if (bean != null) {
                     if (bean.isSuccess()) {
-                        //fixedConfig = bean.getContent().getFixedConfig();
                         randomConfig = bean.getContent().getRandomConfig();
                     } else {
                         Toast.makeText(mContext, bean.getMessage(), Toast.LENGTH_SHORT).show();
@@ -302,11 +304,7 @@ public class RedPacketInGroupActivity extends AppCompatActivity implements View.
                         if (contentBean != null) {
                             pano = contentBean.getPano();
                             String balance = contentBean.getBalance();
-
-                            //String format = getResources().getString(R.string.red_packet_unit2);
-                            //tv_value.setText(String.format(format, balance));
                             tv_value.setText(balance);
-
                             try {
                                 moneyMax = Double.parseDouble(balance);
                             } catch (NumberFormatException e) {

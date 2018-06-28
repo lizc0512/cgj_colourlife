@@ -161,8 +161,6 @@ public class RedPacketActivity extends AppCompatActivity implements View.OnClick
 
         btn_commit = (Button) findViewById(R.id.btn_commit);
         btn_commit.setOnClickListener(this);
-
-
     }
 
 
@@ -174,7 +172,6 @@ public class RedPacketActivity extends AppCompatActivity implements View.OnClick
                 if (bean != null) {
                     if (bean.isSuccess()) {
                         fixedConfig = bean.getContent().getFixedConfig();
-                        //randomConfig = bean.getContent().getRandomConfig();
                     } else {
                         Toast.makeText(mContext, bean.getMessage(), Toast.LENGTH_SHORT).show();
                     }

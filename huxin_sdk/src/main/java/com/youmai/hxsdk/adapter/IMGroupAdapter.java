@@ -10,14 +10,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Spannable;
 import android.text.SpannableString;
-import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
-import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -681,8 +677,6 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
                         mAct.startActivity(in);
                     } else {
                         HxRedPacketDialog.Builder builder = new HxRedPacketDialog.Builder(mAct);
-
-
                         builder.setUiBean(uiBean);
                         builder.setRemark(title);
                         builder.setRedUuid(redUuid);
@@ -760,6 +754,7 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
         final String redUuid = redPackage.getRedUuid();
         final String moneyDraw = redPackage.getValue();
 
+        showMsgTime(position, holder.senderDateTV, bean.getMsgTime());
 
         if (!TextUtils.isEmpty(name)) {
             String content = name + "领取了你的";
@@ -808,6 +803,7 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
         final String redUuid = redPackage.getRedUuid();
         final String moneyDraw = redPackage.getValue();
 
+        showMsgTime(position, holder.senderDateTV, bean.getMsgTime());
 
         if (!TextUtils.isEmpty(name)) {
             String content = "你领取了" + name + "的";

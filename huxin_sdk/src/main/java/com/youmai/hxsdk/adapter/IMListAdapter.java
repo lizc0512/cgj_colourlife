@@ -706,6 +706,7 @@ public class IMListAdapter extends RecyclerView.Adapter {
         final String redUuid = redPackage.getRedUuid();
         final String moneyDraw = redPackage.getValue();
 
+        showMsgTime(position, holder.senderDateTV, bean.getMsgTime());
 
         if (!TextUtils.isEmpty(name)) {
             String content = name + "领取了你的";
@@ -754,6 +755,7 @@ public class IMListAdapter extends RecyclerView.Adapter {
         final String redUuid = redPackage.getRedUuid();
         final String moneyDraw = redPackage.getValue();
 
+        showMsgTime(position, holder.senderDateTV, bean.getMsgTime());
 
         if (!TextUtils.isEmpty(name)) {
             String content = "你领取了" + name + "的";

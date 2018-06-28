@@ -145,6 +145,9 @@ public class RedPacketActivity extends AppCompatActivity implements View.OnClick
                     tv_error.setVisibility(View.VISIBLE);
                     btn_commit.setEnabled(false);
                     return;
+                } else if (money == 0) {
+                    btn_commit.setEnabled(false);
+                    return;
                 } else {
                     btn_commit.setEnabled(true);
                     tv_error.setVisibility(View.INVISIBLE);
@@ -161,6 +164,7 @@ public class RedPacketActivity extends AppCompatActivity implements View.OnClick
 
         btn_commit = (Button) findViewById(R.id.btn_commit);
         btn_commit.setOnClickListener(this);
+        btn_commit.setEnabled(false);
     }
 
 

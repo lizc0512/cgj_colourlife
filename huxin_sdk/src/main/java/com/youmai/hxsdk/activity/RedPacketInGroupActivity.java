@@ -165,6 +165,9 @@ public class RedPacketInGroupActivity extends AppCompatActivity implements View.
                         tv_error.setVisibility(View.VISIBLE);
                         btn_commit.setEnabled(false);
                         return;
+                    } else if (money == 0) {
+                        btn_commit.setEnabled(false);
+                        return;
                     } else {
                         btn_commit.setEnabled(true);
                         tv_error.setVisibility(View.INVISIBLE);
@@ -219,6 +222,9 @@ public class RedPacketInGroupActivity extends AppCompatActivity implements View.
                         tv_error.setVisibility(View.VISIBLE);
                         btn_commit.setEnabled(false);
                         return;
+                    } else if (numberTotal == 0) {
+                        btn_commit.setEnabled(false);
+                        return;
                     } else {
                         tv_error.setVisibility(View.INVISIBLE);
                         btn_commit.setEnabled(true);
@@ -230,6 +236,9 @@ public class RedPacketInGroupActivity extends AppCompatActivity implements View.
 
                     if (num > moneyMax) {
                         tv_error.setVisibility(View.VISIBLE);
+                        btn_commit.setEnabled(false);
+                        return;
+                    } else if (num == 0) {
                         btn_commit.setEnabled(false);
                         return;
                     } else {
@@ -259,7 +268,7 @@ public class RedPacketInGroupActivity extends AppCompatActivity implements View.
 
         btn_commit = (Button) findViewById(R.id.btn_commit);
         btn_commit.setOnClickListener(this);
-
+        btn_commit.setEnabled(false);
 
         tv_type.setOnClickListener(this);
 

@@ -136,25 +136,19 @@ public class RedPacketActivity extends AppCompatActivity implements View.OnClick
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 try {
-                    double value = Double.parseDouble(s.toString());
-                    money = value;
-
-                    if (money > moneyMax) {
-                        tv_error.setVisibility(View.VISIBLE);
-                        btn_commit.setEnabled(false);
-                        return;
-                    } else {
-                        btn_commit.setEnabled(true);
-                        tv_error.setVisibility(View.INVISIBLE);
-                    }
-
+                    money = Double.parseDouble(s.toString());
                 } catch (Exception e) {
                     e.printStackTrace();
+                    money = 0;
                 }
-
-                //String format = getResources().getString(R.string.red_packet_unit1);
-                //tv_money.setText(String.format(format, s.toString()));
-
+                if (money > moneyMax) {
+                    tv_error.setVisibility(View.VISIBLE);
+                    btn_commit.setEnabled(false);
+                    return;
+                } else {
+                    btn_commit.setEnabled(true);
+                    tv_error.setVisibility(View.INVISIBLE);
+                }
                 moneyStr = s.toString();
                 tv_money.setText(moneyStr);
             }
@@ -210,9 +204,6 @@ public class RedPacketActivity extends AppCompatActivity implements View.OnClick
                         if (contentBean != null) {
                             pano = contentBean.getPano();
                             String balance = contentBean.getBalance();
-
-                            //String format = getResources().getString(R.string.red_packet_unit2);
-                            //tv_value.setText(String.format(format, balance));
                             tv_value.setText(balance);
 
                             try {
@@ -239,6 +230,26 @@ public class RedPacketActivity extends AppCompatActivity implements View.OnClick
         int id = v.getId();
         if (id == R.id.btn_commit) {
 
+            if (pano == null) {
+                Toast.makeText(mContext, "查询饭票数据发生错误", Toast.LENGTH_SHORT).show();
+                return;
+            } else if (fixedConfig == null) {
+                Toast.makeText(mContext, "利是配置接口失败，暂不支持发利是，请退出重试", Toast.LENGTH_SHORT).show();
+                return;
+            } else if (money == 0) {
+                Toast.makeText(mContext, "请添加利是金额", Toast.LENGTH_SHORT).show();
+                return;
+            } else if (money > fixedConfig.getMoneyMax()) {
+                Toast.makeText(mContext, "超过利是最大金额限制，请重新设置", Toast.LENGTH_SHORT).show();
+                return;
+            } else if (money < fixedConfig.getMoneyMin()) {
+                Toast.makeText(mContext, "小于利是最小金额限制，请重新设置", Toast.LENGTH_SHORT).show();
+                return;
+            } else if (money > moneyMax) {
+                Toast.makeText(mContext, "超过了您的利是余额，请重新设置", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             final HxPayPasswordDialog dialog = new HxPayPasswordDialog(this);
             dialog.setOnFinishInput(new HxPayPasswordDialog.OnPasswordInputFinish() {
                 @Override
@@ -251,37 +262,7 @@ public class RedPacketActivity extends AppCompatActivity implements View.OnClick
                     }
 
                     String password = dialog.getStrPassword();
-
                     final String title = remark;
-
-                    if (pano == null) {
-                        Toast.makeText(mContext, "查询饭票数据发生错误", Toast.LENGTH_SHORT).show();
-                        return;
-                    } else if (money == 0) {
-                        Toast.makeText(mContext, "请正确添加利是金额", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
-                    if (fixedConfig == null) {
-                        Toast.makeText(mContext, "利是配置接口失败，暂不支持发利是，请退出重试", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
-                    if (money > fixedConfig.getMoneyMax()) {
-                        Toast.makeText(mContext, "超过利是最大金额限制，请重新设置", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
-                    if (money < fixedConfig.getMoneyMin()) {
-                        Toast.makeText(mContext, "小于利是最小金额限制，请重新设置", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
-                    if (money > moneyMax) {
-                        Toast.makeText(mContext, "超过了您的利是余额，请重新设置", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
 
                     HuxinSdkManager.instance().reqSendSingleRedPackage(money, title, pano, password, new IGetListener() {
                         @Override
@@ -306,8 +287,6 @@ public class RedPacketActivity extends AppCompatActivity implements View.OnClick
 
                         }
                     });
-
-
                 }
             });
             dialog.show();

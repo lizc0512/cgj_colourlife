@@ -153,41 +153,38 @@ public class RedPacketInGroupActivity extends AppCompatActivity implements View.
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 try {
                     money = Double.parseDouble(s.toString());
-                    //String format = getResources().getString(R.string.red_packet_unit1);
-                    //tv_money.setText(String.format(format, String.valueOf(money * numberTotal)));
-
-                    if (type == 2) {
-                        moneyStr = String.valueOf(money);
-                        tv_money.setText(moneyStr);
-
-                        if (money > moneyMax) {
-                            tv_error.setVisibility(View.VISIBLE);
-                            btn_commit.setEnabled(false);
-                            return;
-                        } else {
-                            btn_commit.setEnabled(true);
-                            tv_error.setVisibility(View.INVISIBLE);
-                        }
-
-                    } else {
-                        double num = money * numberTotal;
-                        DecimalFormat format = new DecimalFormat("0.00");
-                        moneyStr = format.format(num);
-
-                        if (num > moneyMax) {
-                            tv_error.setVisibility(View.VISIBLE);
-                            btn_commit.setEnabled(false);
-                            return;
-                        } else {
-                            btn_commit.setEnabled(true);
-                            tv_error.setVisibility(View.INVISIBLE);
-                        }
-
-                        tv_money.setText(moneyStr);
-                    }
-
                 } catch (Exception e) {
                     e.printStackTrace();
+                    money = 0;
+                }
+                if (type == 2) {
+                    moneyStr = String.valueOf(money);
+                    tv_money.setText(moneyStr);
+
+                    if (money > moneyMax) {
+                        tv_error.setVisibility(View.VISIBLE);
+                        btn_commit.setEnabled(false);
+                        return;
+                    } else {
+                        btn_commit.setEnabled(true);
+                        tv_error.setVisibility(View.INVISIBLE);
+                    }
+
+                } else {
+                    double num = money * numberTotal;
+                    DecimalFormat format = new DecimalFormat("0.00");
+                    moneyStr = format.format(num);
+
+                    if (num > moneyMax) {
+                        tv_error.setVisibility(View.VISIBLE);
+                        btn_commit.setEnabled(false);
+                        return;
+                    } else {
+                        btn_commit.setEnabled(true);
+                        tv_error.setVisibility(View.INVISIBLE);
+                    }
+
+                    tv_money.setText(moneyStr);
                 }
             }
 
@@ -209,38 +206,34 @@ public class RedPacketInGroupActivity extends AppCompatActivity implements View.
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 try {
                     numberTotal = Integer.parseInt(s.toString());
-                    //String format = getResources().getString(R.string.red_packet_unit1);
-                    //tv_money.setText(String.format(format, String.valueOf(money * numberTotal)));
-
-                    tv_money.setText(String.valueOf(money * numberTotal));
-                    if (type == 2) {
-                        moneyStr = String.valueOf(money);
-                        tv_money.setText(moneyStr);
-
-                        if (money > moneyMax) {
-                            tv_error.setVisibility(View.VISIBLE);
-                            return;
-                        } else {
-                            tv_error.setVisibility(View.INVISIBLE);
-                        }
-                    } else {
-                        double num = money * numberTotal;
-                        DecimalFormat format = new DecimalFormat("0.00");
-                        moneyStr = format.format(num);
-
-
-                        if (num > moneyMax) {
-                            tv_error.setVisibility(View.VISIBLE);
-                            return;
-                        } else {
-                            tv_error.setVisibility(View.INVISIBLE);
-                        }
-                        tv_money.setText(moneyStr);
-                    }
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
+                    numberTotal = 0;
+                }
+                tv_money.setText(String.valueOf(money * numberTotal));
+                if (type == 2) {
+                    moneyStr = String.valueOf(money);
+                    tv_money.setText(moneyStr);
+
+                    if (money > moneyMax) {
+                        tv_error.setVisibility(View.VISIBLE);
+                        return;
+                    } else {
+                        tv_error.setVisibility(View.INVISIBLE);
+                    }
+                } else {
+                    double num = money * numberTotal;
+                    DecimalFormat format = new DecimalFormat("0.00");
+                    moneyStr = format.format(num);
+
+
+                    if (num > moneyMax) {
+                        tv_error.setVisibility(View.VISIBLE);
+                        return;
+                    } else {
+                        tv_error.setVisibility(View.INVISIBLE);
+                    }
+                    tv_money.setText(moneyStr);
                 }
             }
 
@@ -368,48 +361,46 @@ public class RedPacketInGroupActivity extends AppCompatActivity implements View.
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.btn_commit) {
+            if (pano == null) {
+                Toast.makeText(mContext, "查询饭票数据发生错误", Toast.LENGTH_SHORT).show();
+                return;
+            } else if (randomConfig == null) {
+                Toast.makeText(mContext, "利是配置接口失败，暂不支持发利是，请退出重试", Toast.LENGTH_SHORT).show();
+                return;
+            } else if (money == 0) {
+                Toast.makeText(mContext, "请添加利是金额", Toast.LENGTH_SHORT).show();
+                return;
+            } else if (numberTotal == 0) {
+                Toast.makeText(mContext, "请添加利是数目", Toast.LENGTH_SHORT).show();
+                return;
+            } else if (money > randomConfig.getMoneyMax()) {
+                Toast.makeText(mContext, "超过利是最大金额限制，请重新设置", Toast.LENGTH_SHORT).show();
+                return;
+            } else if (money < randomConfig.getMoneyMin()) {
+                Toast.makeText(mContext, "小于利是最小金额限制，请重新设置", Toast.LENGTH_SHORT).show();
+                return;
+            } else if (money > moneyMax) {
+                Toast.makeText(mContext, "超过了您的利是余额，请重新设置", Toast.LENGTH_SHORT).show();
+                return;
+            } else if (numberTotal > randomConfig.getNumberMax()) {
+                Toast.makeText(mContext, "超过利是最大数目限制，请重新设置", Toast.LENGTH_SHORT).show();
+                return;
+            } else if (numberTotal < randomConfig.getNumberMin()) {
+                Toast.makeText(mContext, "小于利是最小数目限制，请重新设置", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
             final HxPayPasswordDialog dialog = new HxPayPasswordDialog(this);
             dialog.setOnFinishInput(new HxPayPasswordDialog.OnPasswordInputFinish() {
                 @Override
                 public void inputFinish() {
-
                     String remark = et_msg.getText().toString().trim();
-
                     if (TextUtils.isEmpty(remark)) {
                         remark = et_msg.getHint().toString().trim();
                     }
 
                     String password = dialog.getStrPassword();
-
                     final String title = remark;
-
-                    if (randomConfig == null) {
-                        Toast.makeText(mContext, "利是配置接口失败，暂不支持发利是，请退出重试", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
-                    if (money > randomConfig.getMoneyMax()) {
-                        Toast.makeText(mContext, "超过利是最大金额限制，请重新设置", Toast.LENGTH_SHORT).show();
-                        return;
-                    } else if (money < randomConfig.getMoneyMin()) {
-                        Toast.makeText(mContext, "小于利是最小金额限制，请重新设置", Toast.LENGTH_SHORT).show();
-                        return;
-                    } else if (money > moneyMax) {
-                        Toast.makeText(mContext, "超过了您的利是余额，请重新设置", Toast.LENGTH_SHORT).show();
-                        return;
-                    } else if (numberTotal > randomConfig.getNumberMax()) {
-                        Toast.makeText(mContext, "超过利是最大数目限制，请重新设置", Toast.LENGTH_SHORT).show();
-                        return;
-                    } else if (numberTotal < randomConfig.getNumberMin()) {
-                        Toast.makeText(mContext, "小于利是最小数目限制，请重新设置", Toast.LENGTH_SHORT).show();
-                        return;
-                    } else if (pano == null) {
-                        Toast.makeText(mContext, "查询饭票数据发生错误", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
-
                     IGetListener listener = new IGetListener() {
                         @Override
                         public void httpReqResult(String response) {
@@ -439,7 +430,6 @@ public class RedPacketInGroupActivity extends AppCompatActivity implements View.
                         HuxinSdkManager.instance().reqSendGroupRedPackageFix(money, numberTotal,
                                 title, pano, password, listener);
                     }
-
 
                 }
             });

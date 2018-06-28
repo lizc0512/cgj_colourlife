@@ -750,6 +750,7 @@ public class IMMsgManager {
     }
 
     private long notifyTime;
+    private int notifyID;
 
     private void notifyMsg(Context context, String targetId, String desName, String content,
                            boolean isFormPush, boolean isGroup) {
@@ -765,8 +766,6 @@ public class IMMsgManager {
 
         NotificationManager notificationManager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-
-        int notifyID = targetId.hashCode();
 
         NotificationCompat.Builder builder;
 
@@ -853,21 +852,27 @@ public class IMMsgManager {
         } else {
             // mId allows you to update the notification later on.
             //处理瞬间大量收到IM消息
+            int tempId = targetId.hashCode();
+            long time = System.currentTimeMillis() - notifyTime;
+
+            if (time <= 2000 && notifyID == tempId) {
+                return;
+            }
 
             boolean isClosed = AppUtils.getBooleanSharedPreferences(mContext, "notify" + targetId, false);
 
-            if (System.currentTimeMillis() - notifyTime > 2000
-                    && !isClosed) {
-                notificationManager.notify(notifyID, builder.build());
+            if (time > 2000 & !isClosed) {
+                notificationManager.notify(tempId, builder.build());
+                notifyID = tempId;
+                notifyTime = System.currentTimeMillis();
             }
 
-            addNotifyCount(targetId, notifyID);   //添加通知栏消息
+            addNotifyCount(targetId, tempId);   //添加通知栏消息
 
             if (!isFormPush) {
                 addBadge(targetId);   //添加桌面圆点
             }
 
-            notifyTime = System.currentTimeMillis();
         }
     }
 

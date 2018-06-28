@@ -125,6 +125,7 @@ public class IMGroupActivity extends SdkBaseActivity implements
 
     //srsm add @20170214
     public static final String GROUP_INFO = "GROUP_INFO";
+    public static final String GROUP_NAME = "GROUP_NAME";
     public static final String GROUP_ID = "groupId";
     public static final String GROUP_MEMBER = "GROUP_MEMBER";
 
@@ -1039,6 +1040,7 @@ public class IMGroupActivity extends SdkBaseActivity implements
         Intent intent = new Intent(this, RedPacketInGroupActivity.class);
         intent.putExtra(RedPacketInGroupActivity.TARGET_ID, groupId);
         intent.putExtra(GROUP_INFO, mGroupInfo);
+        intent.putExtra(GROUP_NAME, groupName);
         startActivityForResult(intent, REQUEST_CODE_RED_PACKET);
 
     }

@@ -93,10 +93,15 @@ public class RedPacketInGroupActivity extends AppCompatActivity implements View.
 
         groupId = getIntent().getIntExtra(TARGET_ID, 0);
         GroupInfoBean groupInfo = getIntent().getParcelableExtra(IMGroupActivity.GROUP_INFO);
+        String groupName = getIntent().getStringExtra(IMGroupActivity.GROUP_NAME);
 
         initView();
 
         loadRedPacket();
+
+        if (!TextUtils.isEmpty(groupName)) {
+            tv_name.setText(groupName);
+        }
 
         if (groupInfo != null) {
             String format = getResources().getString(R.string.group_count);
@@ -107,6 +112,8 @@ public class RedPacketInGroupActivity extends AppCompatActivity implements View.
             if (contains) {
                 String format1 = getResources().getString(R.string.group_default_name);
                 tv_name.setText(String.format(format1, groupInfo.getGroup_member_count()));
+            } else {
+                tv_name.setText(String.format(displayName));
             }
 
 
@@ -352,8 +359,9 @@ public class RedPacketInGroupActivity extends AppCompatActivity implements View.
                             if (contains) {
                                 String format1 = getResources().getString(R.string.group_default_name);
                                 tv_name.setText(String.format(format1, groupInfo.getGroupMemberCount()));
+                            } else {
+                                tv_name.setText(String.format(displayName));
                             }
-
 
                         }
                     }

@@ -412,6 +412,11 @@ public class IMGroupActivity extends SdkBaseActivity implements
         }
     }
 
+
+    public String getGroupName() {
+        return groupName;
+    }
+
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);

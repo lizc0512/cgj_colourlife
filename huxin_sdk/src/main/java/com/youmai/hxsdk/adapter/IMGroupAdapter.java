@@ -681,6 +681,8 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
                         mAct.startActivity(in);
                     } else {
                         HxRedPacketDialog.Builder builder = new HxRedPacketDialog.Builder(mAct);
+
+
                         builder.setUiBean(uiBean);
                         builder.setRemark(title);
                         builder.setRedUuid(redUuid);
@@ -690,6 +692,12 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
                         builder.setSinglePacket(false);
                         builder.setType(type);
                         builder.setGroup(true);
+
+                        if (mAct instanceof IMGroupActivity) {
+                            IMGroupActivity act = (IMGroupActivity) mAct;
+                            builder.setGroupName(act.getGroupName());
+                        }
+
                         builder.setListener(new HxRedPacketDialog.OnRedPacketListener() {
                             @Override
                             public void onCloseClick() {

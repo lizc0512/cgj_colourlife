@@ -380,7 +380,7 @@ public class SendMsgService extends IntentService {
                     ats.add(item.getUuid());
                 }
             }
-            HuxinSdkManager.instance().sendRedPackageInGroup(groupId, redUuid, value, redTitle, listener);
+            HuxinSdkManager.instance().sendRedPackageInGroup(groupId, groupName, redUuid, value, redTitle, listener);
         } else {
             HuxinSdkManager.instance().sendRedPackage(dstUuid, redUuid, value, redTitle, listener);
         }

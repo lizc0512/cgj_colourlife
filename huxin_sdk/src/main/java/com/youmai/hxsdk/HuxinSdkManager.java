@@ -1305,7 +1305,7 @@ public class HuxinSdkManager {
      * @param value
      * @param callback
      */
-    public void sendRedPackageInGroup(int groupId, String redUuid, String value, String title, ReceiveListener callback) {
+    public void sendRedPackageInGroup(int groupId, String groupName, String redUuid, String value, String title, ReceiveListener callback) {
         YouMaiMsg.MsgData.Builder msgData = YouMaiMsg.MsgData.newBuilder();
         msgData.setSrcUserId(getUuid());
         msgData.setSrcAvatar(getHeadUrl());
@@ -1314,6 +1314,7 @@ public class HuxinSdkManager {
         msgData.setSrcRealname(getRealName());
         msgData.setSrcMobile(getPhoneNum());
         msgData.setGroupId(groupId);
+        msgData.setGroupName(groupName);
         msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_SEND_RED_ENVELOPE);
         msgData.setSessionType(YouMaiMsg.SessionType.SESSION_TYPE_MULTICHAT);
 

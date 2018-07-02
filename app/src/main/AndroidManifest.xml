@@ -409,6 +409,7 @@
         <activity android:name=".AccountExchangeActivity" />
         <activity android:name=".AccountExchangeDetailActivity" />
         <activity android:name=".PublicAccountDetailsActivity" />
+        <activity android:name=".GroupAccountDetailsActivity" />
         <activity android:name=".PublicAccountSearchActivity" />
         <activity android:name=".PublicAccountListActivity" />
         <activity android:name=".PublicAccountTransferActivity" />

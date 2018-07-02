@@ -1515,6 +1515,18 @@ public class Tools {
     	return getSysShare(con).getString("pwd","");
     }
     /**
+	 * 保存支付密码(加密前)
+	 * @param con
+	 */
+	public static void saveCaierPassWord(Context con,String pwd){
+		getSysShare(con).edit().
+				putString("caierpwd", pwd).commit();
+	}
+
+	public static String getCaierPassWord(Context con){
+		return getSysShare(con).getString("caierpwd","");
+	}
+    /**
      * 保存登录密码(加密后)
      * @param con
      */

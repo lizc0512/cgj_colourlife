@@ -2,7 +2,6 @@ package com.tg.coloursteward.database;
 
 import org.json.JSONObject;
 
-import com.tg.coloursteward.SettingActivity;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.ResponseData;
@@ -74,7 +73,7 @@ public class SharedPreferencesTools {
     public static void saveSysMap(Context con, String key, float result){
     	if(TextUtils.isEmpty(key)){
     		return;
-    	}
+	}
     	getSysShare(con).edit().putFloat(key, result).commit();
     }
     
@@ -114,6 +113,7 @@ public class SharedPreferencesTools {
 		Tools.saveLinkManList(con,"");//收藏联系人
 		Tools.setBooleanValue(con,Contants.storage.ALIAS,false);
 		Tools.setBooleanValue(con,Contants.storage.Tags,false);
+		Tools.saveStringValue(con, Contants.storage.JTJJB, "");//我的饭票奖金包缓存
     }
     
     public static ResponseData getUserInfo(Context con){

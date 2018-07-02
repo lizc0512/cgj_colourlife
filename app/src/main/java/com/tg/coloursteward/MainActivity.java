@@ -84,7 +84,7 @@ import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.api.TagAliasCallback;
 
 /**
- * 主页面
+ * 主页面,以前版本，暂未启用
  */
 public class MainActivity extends FragmentActivity implements ResponseListener, OnTabChangeListener, AMapLocationListener, LocationSource {
     private static final String TAG = "JPush";

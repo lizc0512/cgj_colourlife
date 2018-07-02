@@ -8,7 +8,6 @@ import org.json.JSONObject;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.tg.coloursteward.DownloadManagerActivity;
 import com.tg.coloursteward.InviteRegisterActivity;
@@ -319,7 +318,7 @@ public class FragmentMine extends Fragment implements ItemClickListener, Respons
 		config.handler = msgHandler.getHandler();
 		RequestParams params = new RequestParams();
 		params.put("oa", UserInfo.employeeAccount);
-		HttpTools.httpPost(Contants.URl.URL_ICETEST,"/czywg/employee/clearPayPwd", config, params);
+		HttpTools.httpPost(Contants.URl.URL_CPMOBILE, "/1.0/employee/clearPayPwd", config, params);
 	}
 
 	/**
@@ -342,7 +341,7 @@ public class FragmentMine extends Fragment implements ItemClickListener, Respons
 				Log.e(TAG, "onSuccess:hintString "+ hintString);
 				ToastFactory.showToast(mActivity, hintString);
 			}
-		}else{
+		}else if(msg.arg1==HttpTools.POST_CLEAR_PAYPWD){
 			JSONObject jsonObject = HttpTools.getContentJSONObject(jsonString);
 			if(code == 0 ){
 				if(jsonObject != null){

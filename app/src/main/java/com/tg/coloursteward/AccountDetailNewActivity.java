@@ -1,5 +1,6 @@
 package com.tg.coloursteward;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,35 +13,33 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.tg.coloursteward.adapter.AccountDetailNewAdapter;
-import com.tg.coloursteward.adapter.BonusRecordAdapter;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.constant.Contants;
-import com.tg.coloursteward.info.AccountDetailInfo;
 import com.tg.coloursteward.info.AccountDetailNewInfo;
 import com.tg.coloursteward.info.AppDetailsGridViewInfo;
-import com.tg.coloursteward.info.BonusRecordInfo;
-import com.tg.coloursteward.info.PunishmentEntityInfo;
 import com.tg.coloursteward.info.UserInfo;
+import com.tg.coloursteward.inter.CashierCallBack;
 import com.tg.coloursteward.inter.OnLoadingListener;
 import com.tg.coloursteward.net.GetTwoRecordListener;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.RequestConfig;
 import com.tg.coloursteward.net.RequestParams;
 import com.tg.coloursteward.net.ResponseData;
-import com.tg.coloursteward.serice.AppAuthService;
 import com.tg.coloursteward.serice.AuthAppService;
 import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.AppDetailPopWindowView;
 import com.tg.coloursteward.view.PullRefreshListView;
+import com.tg.coloursteward.view.dialog.PwdDialog2;
 import com.tg.coloursteward.view.dialog.ToastFactory;
+import com.youmai.hxsdk.utils.ToastUtil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -64,6 +63,10 @@ public class AccountDetailNewActivity extends BaseActivity implements View.OnCli
 
     private AppDetailPopWindowView popWindowView;
     private ArrayList<AppDetailsGridViewInfo> listGridView = new ArrayList<AppDetailsGridViewInfo>();
+    private PwdDialog2.ADialogCallback aDialogCallback;
+    private PwdDialog2 aDialog;
+    private int postion;
+    private String state;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +93,13 @@ public class AccountDetailNewActivity extends BaseActivity implements View.OnCli
         pullListView = (PullRefreshListView) findViewById(R.id.pull_listview);
         adapter = new AccountDetailNewAdapter(this, list);
         pullListView.setAdapter(adapter);
+        adapter.setCashierCallBack(new CashierCallBack() {
+            @Override
+            public void onclick(int position) {
+                isSetPwd(0);
+                postion = position;
+            }
+        });
         pullListView.setOnLoadingListener(new OnLoadingListener<PullRefreshListView>() {
 
             @Override
@@ -167,6 +177,22 @@ public class AccountDetailNewActivity extends BaseActivity implements View.OnCli
             getAuthAppInfo();
         }
 
+    }
+
+    /**
+     * 点击事件判断有误密码以卡
+     *
+     * @param position
+     */
+    private void isSetPwd(int position) {
+        String key = Tools.getStringValue(this, Contants.EMPLOYEE_LOGIN.key);
+        String secret = Tools.getStringValue(this, Contants.EMPLOYEE_LOGIN.secret);
+        RequestConfig config = new RequestConfig(this, HttpTools.POST_SETPWD_INFO);
+        RequestParams params = new RequestParams();
+        params.put("position", position);
+        params.put("key", key);
+        params.put("secret", secret);
+        HttpTools.httpPost(Contants.URl.URL_CPMOBILE, "/1.0/caiRedPaket/isSetPwd", config, params);
     }
 
     @Override
@@ -276,6 +302,7 @@ public class AccountDetailNewActivity extends BaseActivity implements View.OnCli
     /**
      * EventBus
      * 接收传值
+     *
      * @param event
      */
     @Subscribe
@@ -287,27 +314,28 @@ public class AccountDetailNewActivity extends BaseActivity implements View.OnCli
         /**
          * 获取数据
          */
-        if(StringUtils.isNotEmpty(expireTime)){
-            if(Long.parseLong(expireTime) * 1000 <= time) {//token过期
+        if (StringUtils.isNotEmpty(expireTime)) {
+            if (Long.parseLong(expireTime) * 1000 <= time) {//token过期
                 getAuthAppInfo();
-            }else{
+            } else {
                 pullListView.performLoading();
             }
-        }else{
+        } else {
             getAuthAppInfo();
         }
     }
+
     @Override
     public void onResume() {
         /**
          * 注册EventBus
          */
         super.onResume();
-        if (!EventBus.getDefault().isRegistered(this))
-        {
+        if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
         }
     }
+
     @Override
     public void onDestroy() {
         /**
@@ -322,7 +350,51 @@ public class AccountDetailNewActivity extends BaseActivity implements View.OnCli
         super.onSuccess(msg, jsonString, hintString);
         int code = HttpTools.getCode(jsonString);
         String message = HttpTools.getMessageString(jsonString);
-        if (msg.arg1 == HttpTools.GET_HBUSER_MONEY) {
+        if (msg.arg1 == HttpTools.POST_SETPWD_INFO) {//判断是否设置支付密码
+            if (code == 0) {
+                JSONObject content = HttpTools.getContentJSONObject(jsonString);
+                try {
+                    state = content.getString("state");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                if (content != null) {
+                    if (state.equals("hasPwd")) {
+                        Intent intent = new Intent(AccountDetailNewActivity.this, AccountExchangeActivity.class);
+                        intent.putExtra(AccountExchangeActivity.ACCOUNT_DETAIL_NEW_INFO, list.get(postion));
+                        startActivity(intent);
+                    } else {
+                        ToastUtil.showMidToast(AccountDetailNewActivity.this, "您还未设置支付密码,请设置支付密码");
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                aDialogCallback = new PwdDialog2.ADialogCallback() {
+                                    @Override
+                                    public void callback() {
+//                                judgment();
+                                        Intent intent = new Intent(AccountDetailNewActivity.this, AccountExchangeActivity.class);
+                                        intent.putExtra(AccountExchangeActivity.ACCOUNT_DETAIL_NEW_INFO, list.get(postion));
+                                        startActivity(intent);
+                                    }
+                                };
+                                aDialog = new PwdDialog2(
+                                        AccountDetailNewActivity.this,
+                                        R.style.choice_dialog, state,
+                                        aDialogCallback);
+                                aDialog.show();
+                                aDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                                    @Override
+                                    public void onDismiss(DialogInterface dialog) {
+//                                isClick = true;
+                                    }
+                                });
+                            }
+                        }, 1000);
+
+                    }
+                }
+            }
+        } else if (msg.arg1 == HttpTools.GET_HBUSER_MONEY) {
             if (code == 0) {
                 String content = HttpTools.getContentString(jsonString);
                 if (StringUtils.isNotEmpty(content)) {

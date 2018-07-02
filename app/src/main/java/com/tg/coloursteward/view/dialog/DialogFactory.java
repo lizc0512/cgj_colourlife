@@ -142,7 +142,7 @@ public class DialogFactory implements ResultCallBack{
 	/**
 	 * 得到自定义的progressDialog
 	 * 
-	 * @param context
+	 * @param activity
 	 * @param msg
 	 * @return
 	 */

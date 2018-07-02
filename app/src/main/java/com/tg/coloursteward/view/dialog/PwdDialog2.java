@@ -459,6 +459,8 @@ public class PwdDialog2 extends Dialog implements ResponseListener {
                         String state = content.getString("state");
                         if ("ok".equals(state)) {
                             callback.callback();
+                            UserInfo.cashierpassword=pwd;
+                            Tools.saveCaierPassWord(context,pwd);
                             dismiss();
                         } else {
                             ToastFactory.showToast(context, "密码错误");

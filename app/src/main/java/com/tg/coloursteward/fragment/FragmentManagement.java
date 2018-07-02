@@ -1,16 +1,24 @@
 package com.tg.coloursteward.fragment;
 
-import java.io.UnsupportedEncodingException;
-import java.math.BigDecimal;
-import java.net.URLEncoder;
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import android.app.Activity;
+import android.content.ContentValues;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.os.Bundle;
+import android.os.Message;
+import android.support.v4.app.Fragment;
+import android.text.TextUtils;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -20,13 +28,14 @@ import com.tg.coloursteward.DataShowActivity;
 import com.tg.coloursteward.DoorActivity;
 import com.tg.coloursteward.HomeContactSearchActivity;
 import com.tg.coloursteward.InviteRegisterActivity;
+import com.tg.coloursteward.MyBrowserActivity;
 import com.tg.coloursteward.PublicAccountActivity;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.RedpacketsBonusMainActivity;
 import com.tg.coloursteward.adapter.ManagementAdapter;
-import com.tg.coloursteward.MyBrowserActivity;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.entity.AdvConfig;
+import com.tg.coloursteward.entity.CaiHuiEntity;
 import com.tg.coloursteward.entity.OaConfig;
 import com.tg.coloursteward.info.AdvInfo;
 import com.tg.coloursteward.info.GridViewInfo;
@@ -49,37 +58,28 @@ import com.tg.coloursteward.view.MyGridView;
 import com.tg.coloursteward.view.MyGridView.NetGridViewRequestListener;
 import com.tg.coloursteward.view.RotateProgress;
 import com.tg.coloursteward.view.dialog.ToastFactory;
+import com.youmai.hxsdk.config.ColorsConfig;
 import com.youmai.hxsdk.http.IGetListener;
 import com.youmai.hxsdk.http.IPostListener;
 import com.youmai.hxsdk.http.OkHttpConnector;
-import com.youmai.hxsdk.config.ColorsConfig;
 import com.youmai.hxsdk.utils.GsonUtil;
+import com.tg.coloursteward.util.GsonUtils;
 import com.youmai.hxsdk.utils.ListUtils;
 import com.youth.banner.Banner;
 import com.youth.banner.BannerConfig;
 import com.youth.banner.listener.OnBannerListener;
 import com.youth.banner.loader.ImageLoader;
 
-import android.app.Activity;
-import android.content.ContentValues;
-import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.os.Bundle;
-import android.os.Message;
-import android.support.v4.app.Fragment;
-import android.text.TextUtils;
-import android.text.format.Time;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
+import java.net.URLEncoder;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 微物管       工作（彩管家4.0）
@@ -142,13 +142,13 @@ public class FragmentManagement extends Fragment {
     private String key;
     private String secret;
     private int count;
+    private CaiHuiEntity caiHuiEntity;
 
     private SingleClickListener titleListener = new SingleClickListener() {
         @Override
         public void onSingleClick(View v) {
             switch (v.getId()) {
                 case R.id.ll_area://在管面积(数据看板)
-                    //startActivity(new Intent(mActivity, MapDetailActivity.class));
                     intent = new Intent(mActivity, DataShowActivity.class);
                     intent.putExtra(DataShowActivity.BRANCH, UserInfo.orgId);
                     startActivity(intent);
@@ -165,13 +165,14 @@ public class FragmentManagement extends Fragment {
                     startActivity(new Intent(mActivity, RedpacketsBonusMainActivity.class));
                     break;
                 case R.id.ll_community://在管小区(数据看板)
-                    //startActivity(new Intent(mActivity, MapDetailActivity.class));
                     intent = new Intent(mActivity, DataShowActivity.class);
                     intent.putExtra(DataShowActivity.BRANCH, UserInfo.orgId);
                     startActivity(intent);
                     break;
                 case R.id.ll_performance://绩效评分
-                    startActivity(new Intent(mActivity, RedpacketsBonusMainActivity.class));
+                    Intent intent = new Intent(mActivity, MyBrowserActivity.class);
+                    intent.putExtra(MyBrowserActivity.KEY_URL, "http://caihui.colourlife.com/orderData/orderData.html");
+                    startActivity(intent);
                     break;
                 case R.id.ll_account://即时分账
                     startActivity(new Intent(mActivity, AccountActivity.class));
@@ -179,26 +180,8 @@ public class FragmentManagement extends Fragment {
                 case R.id.rl_saoyisao://扫一扫
                     startActivity(new Intent(mActivity, InviteRegisterActivity.class));
                     break;
-                case R.id.rl_add://添加
-                    /**
-                     * 弹出框
-                     */
-                    //PopWindowView  popWindowView = new PopWindowView(mActivity,gridlistAdd);
-                    //popWindowView.setOnDismissListener(new FragmentDeskTop.poponDismissListener());
-                    //popWindowView.showPopupWindow(mView.findViewById(R.id.rl_add));
-                    //lightoff();
-                    break;
                 case R.id.rl_search://搜索框
                     startActivity(new Intent(mActivity, HomeContactSearchActivity.class));
-                    break;
-                case R.id.rl_logo://
-				/*FamilyInfo info = new FamilyInfo();
-				info.id = UserInfo.orgId;
-				info.type = "org";
-				info.name = UserInfo.familyName;
-				intent = new Intent(mActivity,HomeContactOrgActivity.class);
-				intent.putExtra(HomeContactOrgActivity.FAMILY_INFO, info);
-				startActivity(intent);*/
                     break;
             }
         }
@@ -208,10 +191,6 @@ public class FragmentManagement extends Fragment {
 
         @Override
         public void onSingleClick(View v) {
-            String url = null;
-            String oauthType = null;
-            String developerCode = null;
-            String clientCode = null;
             AuthTimeUtils mAuthTimeUtils;
             switch (v.getId()) {
                 case R.id.ll_mail://未读邮件
@@ -242,7 +221,6 @@ public class FragmentManagement extends Fragment {
                     startActivity(intent);
                     break;
                 case R.id.ll_sign://签到
-
                     mAuthTimeUtils = new AuthTimeUtils();
                     mAuthTimeUtils.IsAuthTime(mActivity, Contants.Html5.QIANDAO, "qiandao", "1", "qiandao", "");
 //                    intent = new Intent(mActivity, SignInActivity.class);
@@ -256,7 +234,6 @@ public class FragmentManagement extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
         mView = inflater.inflate(R.layout.fragment_management_layout, container, false);
         addHead();
         initView();
@@ -279,7 +256,7 @@ public class FragmentManagement extends Fragment {
         magLinearLayoutStock = (ManageMentLinearlayout) mView.findViewById(R.id.ll_stock);//集团股票
         magLinearLayoutTicket = (ManageMentLinearlayout) mView.findViewById(R.id.ll_ticket);//我的饭票
         magLinearLayoutCommunity = (ManageMentLinearlayout) mView.findViewById(R.id.ll_community);//在管小区
-        magLinearLayoutPerformance = (ManageMentLinearlayout) mView.findViewById(R.id.ll_performance);//绩效评分
+        magLinearLayoutPerformance = (ManageMentLinearlayout) mView.findViewById(R.id.ll_performance);//彩惠战况
         magLinearLayoutAccount = (ManageMentLinearlayout) mView.findViewById(R.id.ll_account);//即时分账
         /**
          * 加载隐藏布局控件
@@ -530,7 +507,6 @@ public class FragmentManagement extends Fragment {
             @Override
             public void onSuccess(ManageMentLinearlayout magLearLayout, Message msg, String response) {
                 int code = HttpTools.getCode(response);
-                String message = HttpTools.getMessageString(response);
                 if (code == 0) {
                     progressBarTicket.setVisibility(View.GONE);
                     rlTicket.setVisibility(View.VISIBLE);
@@ -642,7 +618,7 @@ public class FragmentManagement extends Fragment {
             }
         });
         /**
-         * 绩效评分
+         * 彩惠战况
          */
         magLinearLayoutPerformance.setNetworkRequestListener(new NetworkRequestListener() {
 
@@ -653,16 +629,11 @@ public class FragmentManagement extends Fragment {
                 progressBarPerformance.setVisibility(View.GONE);
                 rlPerformance.setVisibility(View.VISIBLE);
                 if (code == 0) {
-                    JSONObject jsonObject = HttpTools.getContentJSONObject(response);
-                    try {
-                        performance = jsonObject.getString("percent");
-                        Tools.saveStringValue(mActivity, Contants.storage.PERFORMANCEHOME, performance);
-                        if (performance != null || performance.length() > 0) {
-                            tvPerformance.setText(performance);
-                        }
-                    } catch (JSONException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
+                    caiHuiEntity = GsonUtils.gsonToBean(response, CaiHuiEntity.class);
+                    performance = String.valueOf(caiHuiEntity.getContent().getCount());
+                    Tools.saveStringValue(mActivity, Contants.storage.PERFORMANCEHOME, performance);
+                    if (performance != null || performance.length() > 0) {
+                        tvPerformance.setText(performance);
                     }
                 } else {
                     Tools.saveStringValue(mActivity, Contants.storage.PERFORMANCEHOME, "无");
@@ -688,17 +659,10 @@ public class FragmentManagement extends Fragment {
 
             @Override
             public void onRequest(MessageHandler msgHand) {
-                Time time = new Time();
-                time.setToNow();
-                int year = time.year;
-                int month = time.month + 1;
                 RequestConfig config = new RequestConfig(mActivity, 0);
                 config.handler = msgHand.getHandler();
                 RequestParams params = new RequestParams();
-                params.put("oauser", UserInfo.employeeAccount);
-                params.put("year", year);
-                params.put("month", month);
-                HttpTools.httpGet(Contants.URl.URL_ICETEST, "/oa/jxfen", config, params);
+                HttpTools.httpGet(Contants.URl.URL_CAIHUI, "/backend/order/count", config, params);
             }
         });
         /**
@@ -722,7 +686,6 @@ public class FragmentManagement extends Fragment {
                             tvAccount.setText(df.format(Double.parseDouble(account)));
                         }
                     } catch (JSONException e) {
-                        // TODO Auto-generated catch block
                         e.printStackTrace();
                     }
                 } else {
@@ -775,14 +738,6 @@ public class FragmentManagement extends Fragment {
                 magLinearLayoutStock.loaddingData();
             }
         }, 1000);
-
-		/*magLinearLayoutCommunity.postDelayed(new Runnable() {//在管小区
-
-			@Override
-			public void run() {
-				magLinearLayoutCommunity.loaddingData();
-			}
-		}, 2000);*/
         magLinearLayoutPerformance.postDelayed(new Runnable() {//绩效评分
 
             @Override
@@ -881,13 +836,11 @@ public class FragmentManagement extends Fragment {
                             if (jsonObject != null) {
                                 examineNum = jsonObject.getString("number");
                                 Log.e(TAG, "onSuccess:examineNum " + examineNum);
-//                                if (examineNum != null || examineNum.length() > 0) {
                                 if (examineNum != null) {
                                     tvExamineNum.setText(examineNum);
                                 }
                             }
                         } catch (JSONException e) {
-//                        // TODO Auto-generated catch block
                             e.printStackTrace();
                         }
                     } else {
@@ -1332,12 +1285,9 @@ public class FragmentManagement extends Fragment {
 
         long time = System.currentTimeMillis() / 1000;
         String expireTime = Tools.getStringValue(mActivity, Contants.storage.APPAUTHTIME);
-        //String expireTime_1 = Tools.getStringValue(mActivity, Contants.storage.APPAUTHTIME_1);
 
         accessToken = Tools.getStringValue(mActivity, Contants.storage.APPAUTH);
         accessToken_1 = Tools.getStringValue(mActivity, Contants.storage.APPAUTH_1);
-        Log.e(TAG, "requestData: accessToken" + accessToken);
-        Log.e(TAG, "requestData: accessToken_1" + accessToken_1);
         if (StringUtils.isNotEmpty(expireTime)) {
             if (Long.parseLong(expireTime) <= time) {//token过期
                 getAuthAppInfo();
@@ -1429,11 +1379,18 @@ public class FragmentManagement extends Fragment {
     public void onResume() {
         super.onResume();
         magLinearLayoutTicket.postDelayed(new Runnable() {//我的饭票
+
             @Override
             public void run() {
                 magLinearLayoutTicket.loaddingData();
             }
         }, 1500);
+        magLinearLayoutPerformance.postDelayed(new Runnable() {//彩惠战况
+            @Override
+            public void run() {
+                magLinearLayoutPerformance.loaddingData();
+            }
+        }, 1000);
     }
 
     @Override
@@ -1451,7 +1408,6 @@ public class FragmentManagement extends Fragment {
 
     @Override
     public void onAttach(Activity activity) {
-        // TODO Auto-generated method stub
         super.onAttach(activity);
         mActivity = activity;
     }

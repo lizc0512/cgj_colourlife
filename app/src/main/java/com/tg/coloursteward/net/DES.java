@@ -18,7 +18,10 @@ import javax.crypto.spec.IvParameterSpec;
 
 public class DES {
 	public static final String KEY_STR = "71D54718B0F6FFF07CE9";
+	//正式
 	public static final String APP_ID = "ICEXCGJ0-5F89-4E17-BC44-7A0DB101B245";
+	//测试
+//	public static final String APP_ID = "ICETEST0-C631-4BA2-B262-E7C17B743701";
 	public static final String TOKEN = "AXPHrD48LRa8xYVkgV4c";
 	public static final String APP_UUID = "33f09c7ca5e6491fbcdfd363cf58851e";
 	public static final String APP_KEY = "01a2b3c4d5e6f7a8b9c0";

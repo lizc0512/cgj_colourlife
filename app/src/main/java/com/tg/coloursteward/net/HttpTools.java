@@ -13,7 +13,9 @@ import android.util.SparseArray;
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkError;
+import com.android.volley.NetworkResponse;
 import com.android.volley.NoConnectionError;
+import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.Request.Method;
 import com.android.volley.RequestQueue;
@@ -24,6 +26,7 @@ import com.android.volley.Response.Listener;
 import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.tg.coloursteward.application.CityPropertyApplication;
@@ -48,7 +51,6 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.JSONTokener;
 
 import java.io.File;
 import java.io.IOException;
@@ -95,6 +97,8 @@ public class HttpTools {
     public static final int GET_APP = BASE_CODE++;
     public static final int GET_LOGIN = BASE_CODE++;
     public static final int GET_USER_INFO = BASE_CODE++;
+    public static final int GET_USER_JJB = BASE_CODE++;
+    public static final int GET_USER_JJB_DETAIL = BASE_CODE++;
     public static final int GET_VERSION_INFO = BASE_CODE++;
     public static final int POST_DELETE_INFO = BASE_CODE++;
     public static final int SET_REPAIR_INFO = BASE_CODE++;
@@ -495,7 +499,17 @@ public class HttpTools {
                     rqtConfig.handler.sendMessage(msg);
                 }
             }
-        });
+        }) {
+            protected Response<String> parseNetworkResponse(NetworkResponse response) {
+                try {
+                    response.headers.put("HTTP.CONTENT_TYPE", "utf-8");
+                    return Response.success(new String(response.data, "UTF-8"), HttpHeaderParser.parseCacheHeaders(response));
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                    return Response.error(new ParseError(e));
+                }
+            }
+        };
         if (rqtConfig.tag != null) {
             requestStr.setTag(rqtConfig.tag);
         }

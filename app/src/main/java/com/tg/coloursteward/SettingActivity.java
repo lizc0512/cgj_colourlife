@@ -118,7 +118,7 @@ public class SettingActivity extends BaseActivity implements ItemClickListener {
 		String version = UpdateManager.getVersionName(SettingActivity.this);
 		params.put("version",version);
 		params.put("type", "android");
-		HttpTools.httpGet(Contants.URl.URL_ICETEST,"/czywg/version", config, params);
+		HttpTools.httpGet(Contants.URl.URL_CPMOBILE,"/1.0/version", config, params);
 	}
 	@Override
 	public void onSuccess(Message msg, String jsonString, String hintString) {

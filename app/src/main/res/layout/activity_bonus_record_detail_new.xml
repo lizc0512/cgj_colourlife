@@ -1,19 +1,59 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context=".BonusRecordDetailNewActivity" >
+    android:orientation="vertical"
+    tools:context=".BonusRecordDetailNewActivity">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:background="@color/color_93" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="250dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp" >
+            android:layout_height="50dp">
+
+            <TextView
+                android:id="@+id/TextView01"
+                style="@style/black_15"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:text="所属组织" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:background="@color/gray_background_1" />
+
+            <TextView
+                android:id="@+id/tv_coefficient_groupname"
+                style="@style/hint_15"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/TextView01"
+                android:layout_alignBottom="@+id/TextView01"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="20dp"
+                android:gravity="right"
+                android:text="加载中..." />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp">
 
             <TextView
                 android:id="@+id/TextView11"
@@ -47,7 +87,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp" >
+            android:layout_height="50dp">
 
             <TextView
                 android:id="@+id/TextView08"
@@ -81,7 +121,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp" >
+            android:layout_height="50dp">
 
             <TextView
                 android:id="@+id/TextView05"
@@ -115,16 +155,17 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp" >
+            android:layout_height="50dp">
 
             <TextView
+                android:id="@+id/TextView055"
                 style="@style/black_15"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="17dp"
-                android:text="本月绩效得分" />
+                android:layout_marginLeft="10dp"
+                android:text="本月集体奖金包" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -134,21 +175,111 @@
                 android:background="@color/gray_background_1" />
 
             <TextView
-                android:id="@+id/tv_jixiao_detail"
+                android:id="@+id/tv_bonus_groupbao"
+                style="@style/hint_15"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/TextView055"
+                android:layout_alignBottom="@+id/TextView055"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="20dp"
+                android:gravity="right"
+                android:text="加载中..." />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_group"
+            android:layout_width="match_parent"
+            android:layout_height="50dp">
+
+            <TextView
+                android:id="@+id/TextView_group"
+                style="@style/black_15"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="17dp"
+                android:text="本月集体扣罚" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:background="@color/gray_background_1" />
+
+            <ImageView
+                android:id="@+id/iv_next_group"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="20dp"
+                android:layout_marginRight="15dp"
+                android:src="@drawable/next" />
+
+            <TextView
+                android:id="@+id/tv_bonus_groupnum"
+                style="@style/hint_15"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/TextView_group"
+                android:layout_alignBottom="@+id/TextView_group"
+                android:layout_marginRight="10dp"
+                android:layout_toLeftOf="@id/iv_next_group"
                 android:gravity="right"
-                android:text="查看详情"
-                android:textColor="@color/bonus_detail"
-                android:textSize="15sp" />
+                android:text="加载中..." />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_persion"
+            android:layout_width="match_parent"
+            android:layout_height="50dp">
+
+            <TextView
+                android:id="@+id/TextView_persion_rewards"
+                style="@style/black_15"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="17dp"
+                android:text="本月个人扣罚" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:background="@color/gray_background_1" />
+
+            <ImageView
+                android:id="@+id/iv_next_persion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="15dp"
+                android:src="@drawable/next" />
+
+            <TextView
+                android:id="@+id/tv_bonus_persona_num"
+                style="@style/hint_15"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/TextView_persion_rewards"
+                android:layout_alignBottom="@+id/TextView_persion_rewards"
+                android:layout_marginRight="10dp"
+                android:layout_toLeftOf="@id/iv_next_persion"
+                android:gravity="right"
+                android:text="加载中..." />
+
         </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp" >
+            android:layout_height="50dp">
 
             <TextView
                 android:id="@+id/textView1"
@@ -179,6 +310,12 @@
                 android:gravity="right"
                 android:text="加载中..." />
         </RelativeLayout>
+
+
     </LinearLayout>
 
-</RelativeLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:background="@color/color_93" />
+</LinearLayout>

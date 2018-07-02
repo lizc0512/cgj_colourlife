@@ -11,6 +11,7 @@ public interface Contants {
      */
     String downloadDir = "app/download/";
 
+
     interface First {
         String IS_FIRST_TIME_STARTING = "firt_time";
     }
@@ -20,28 +21,27 @@ public interface Contants {
         /**
          * 正式地址
          */
-        //final String URL_ICETEST="http://iceapi.colourlife.com:8081/v1";//1.0
-        String URL_ICETEST = "https://openapi.colourlife.com/v1";//2.0
-        String URL_CPMOBILE = "http://cpmobile.colourlife.com";
-        String bugtags="d9d2866de6066fd414d792324bddbb6b";
-
-//     String URL_ICETEST="http://avatar.ice.colourlife.com/v1";//2.0
-
+//        String URL_ICETEST = "https://openapi.colourlife.com/v1";//2.0
+//        String URL_CPMOBILE = "http://cpmobile.colourlife.com";
+//        String URL_CAIHUI = "https://caihui.colourlife.com";
+//        String bugtags="d9d2866de6066fd414d792324bddbb6b";
+//        String PUBLIC_KEY="MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCTFnAR7ORLx0jGzf9Ux1We7yHvRi+kQXKSRmtgBjDCXQzakGm2mrb6EupCkDbUcj4BUs7S7zm/rICQuVNC9fujeJGjcNWRg0XWVtm90XpbTqfKiXzGDHI9W8aULYZ3of/JJ9lyCyjqjigyCdLBPtQ27gOuboDzQuieR2ywPHawzQIDAQAB";
+//////////////////////////////////////////////////////////////////////////////
         /**
          * 测试地址
          */
-//        String URL_ICETEST = "https://openapi-test.colourlife.com/v1";//2.0
-//        String URL_CPMOBILE = "http://cpmobile-czytest.colourlife.com";
-//        String bugtags="6605fa27f0bb6e68a631ea1c57845b45";
-
-
-//        String SeaHealthApiUrl = "http://183.136.184.209:80/api/serviceApi/userauth/gettoken";//海康api
-//        String SeaHealthApkUrl = "http://spsso.colourlife.net/login.aspx/";//海康客户端下载
-//        String CZY_BINDCUSTOMER="http://www.colourlife.com/bindCustomer";//绑定彩之云
+        String URL_ICETEST = "https://openapi-test.colourlife.com/v1";//2.0
+        String URL_CPMOBILE = "http://cpmobile-czytest.colourlife.com";
+        String URL_CAIHUI = "https://caihui.colourlife.com";
+        String bugtags = "6605fa27f0bb6e68a631ea1c57845b45";
+        String PUBLIC_KEY = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDZDqnWph9LxtD0zgtGAYTTf2jY" +
+                "eV+ni5F1o0w3Fag4OOD1YHCRUCXIsFy+iJYmuPf5vMkZrkoiJmKBfkaIzNlrJZzH" +
+                "zq+LsPQNCF86p1nLsuHbkWNvyjOEPn/CUryP2Kxme4S+eEqLIeNwp70VOaMuPmRo" +
+                "EZxMDAgvc6Z0DWsVdQIDAQAB";
+        ////////////////////////////////////////////////////////////////////////////
         String CZY_BINDCUSTOMER = "https://evisit.colourlife.com/cgj/bindcustomer/bind_account.html";//绑定彩之云
         String URL_H5_LEAVE = "http://eqd.backyard.colourlife.com/cailife/leave/index?";//请假
         String HUXIN_H5_HELP = "http://www.colourlife.com/Introduction/CgjCall";//呼信(帮助)
-        //	String HEAD_ICON_URL="http://iceapi.colourlife.com:8686/";//头像
         String HEAD_ICON_URL = "http://avatar.ice.colourlife.com/";//头像
         String Yj_Url = "http://emailsso.colourlife.net/login.aspx";//邮件
         String Sp_Url = "http://spsso.colourlife.net/login.aspx/";//审批
@@ -204,6 +204,7 @@ public interface Contants {
         String Tags = "tags";//Tags
         String ORGTYPE = "org_type";//Tags
         String PUBLIC_LIST = "public_list";//对公账户搜索历史列表
+        String JTJJB = "jtjjb";//对公账户搜索历史列表
     }
 
     interface DOWN {

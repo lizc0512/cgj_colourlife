@@ -1,36 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="@dimen/margin_18"
-    android:orientation="vertical" >
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:background="@color/color_93" />
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" 
-        android:layout_marginTop="@dimen/margin_20"
-        android:layout_marginBottom="@dimen/margin_20">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_20"
+        android:layout_marginTop="@dimen/margin_20">
 
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true" >
+            android:layout_centerVertical="true">
 
             <TextView
                 android:id="@+id/textView"
                 style="@style/black_15"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="奖金包：" />
+                android:layout_marginLeft="18dp"
+                android:text="来自：" />
+
+            <TextView
+                android:id="@+id/tv_person_name"
+                style="@style/black_15"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/textView"
+                android:text="集团总部" />
 
             <TextView
                 android:id="@+id/tv_date"
-                style="@style/hint_14"
-                android:layout_marginTop="@dimen/margin_5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/textView"
-                android:text="2017年2月" />
+                android:layout_marginLeft="18dp"
+                android:layout_marginTop="@dimen/margin_5"
+                android:textColor="@color/text_color3"
+                android:text="2017年2月"
+                android:textSize="14dp" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -39,7 +55,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="@dimen/margin_18" >
+            android:layout_marginRight="@dimen/margin_18">
 
             <TextView
                 android:id="@+id/tv_bonus_personal"
@@ -47,8 +63,8 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:text="+2124"
-                android:textColor="@color/bonus_personal"
-                android:textSize="18sp" />
+                android:textColor="@color/text_color3"
+                android:textSize="14dp" />
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -66,4 +82,4 @@
         android:layout_alignParentBottom="true"
         android:background="@color/bonus_division" />
 
-</RelativeLayout>
+</LinearLayout>

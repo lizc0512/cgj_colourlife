@@ -2,24 +2,20 @@ package com.tg.coloursteward.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.tg.coloursteward.ExchangeMethodActivity;
 import com.tg.coloursteward.PublicAccountDetailsActivity;
-import com.tg.coloursteward.PublicAccountExchangeActivity;
-import com.tg.coloursteward.PublicAccountSearchActivity;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.MyBaseAdapter;
-import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.info.PublicAccountInfo;
+import com.tg.coloursteward.inter.ExchangeCallBack;
+import com.tg.coloursteward.inter.TransferCallBack;
 import com.tg.coloursteward.util.StringUtils;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 /**
@@ -31,6 +27,16 @@ public class PublicAccountAdapter extends MyBaseAdapter<PublicAccountInfo> {
     private LayoutInflater inflater;
     private PublicAccountInfo item;
     private Context context;
+    public TransferCallBack transferCallBack;
+    public ExchangeCallBack exchangeCallBack;
+
+    public void setTransferCallBack(TransferCallBack transferCallBack) {
+        this.transferCallBack = transferCallBack;
+    }
+
+    public void setExchangeCallBack(ExchangeCallBack exchangeCallBack) {
+        this.exchangeCallBack = exchangeCallBack;
+    }
 
     public PublicAccountAdapter(Context con, ArrayList<PublicAccountInfo> list) {
         super(list);
@@ -76,8 +82,6 @@ public class PublicAccountAdapter extends MyBaseAdapter<PublicAccountInfo> {
             }
 
         }
-      /*  DecimalFormat df = new DecimalFormat("0.00");
-        tvMoney.setText(df.format((Double.parseDouble(String.valueOf(item.money)))));*/
         tvMoney.setText("" + item.money);
         if (StringUtils.isNotEmpty(item.name)) {
             tvSource.setText("来源:" + item.name);
@@ -96,36 +100,17 @@ public class PublicAccountAdapter extends MyBaseAdapter<PublicAccountInfo> {
         rlTransfer.setOnClickListener(new View.OnClickListener() {//转账
             @Override
             public void onClick(View v) {
-                PublicAccountInfo info = list.get(position);
-                Intent intent = new Intent(context, PublicAccountSearchActivity.class);
-                intent.putExtra(Contants.PARAMETER.PUBLIC_ACCOUNT, info.money);
-                intent.putExtra(Contants.PARAMETER.PAY_ATID, info.atid);
-                intent.putExtra(Contants.PARAMETER.PAY_ANO, info.ano);
-                intent.putExtra(Contants.PARAMETER.PAY_TYPE_NAME, info.typeName);
-                intent.putExtra(Contants.PARAMETER.PAY_NAME, info.title);
-                context.startActivity(intent);
+                if (transferCallBack != null) {
+                    transferCallBack.onclick(position);
+                }
             }
         });
         rlExchange.setOnClickListener(new View.OnClickListener() {//兑换
             @Override
             public void onClick(View v) {
-                PublicAccountInfo info = list.get(position);
-                Intent intent = new Intent(context, ExchangeMethodActivity.class);
-                intent.putExtra(Contants.PARAMETER.PUBLIC_ACCOUNT, info.money);
-                intent.putExtra(Contants.PARAMETER.PAY_ATID, info.atid);
-                intent.putExtra(Contants.PARAMETER.PAY_ANO, info.ano);
-                intent.putExtra(Contants.PARAMETER.PAY_TYPE_NAME, info.typeName);
-                intent.putExtra(Contants.PARAMETER.PAY_NAME, info.title);
-                context.startActivity(intent);
-
-//                PublicAccountInfo info = list.get(position);
-//                Intent intent = new Intent(context, PublicAccountExchangeActivity.class);
-//                intent.putExtra(Contants.PARAMETER.PUBLIC_ACCOUNT,info.money);
-//                intent.putExtra(Contants.PARAMETER.PAY_ATID,info.atid);
-//                intent.putExtra(Contants.PARAMETER.PAY_ANO,info.ano);
-//                intent.putExtra(Contants.PARAMETER.PAY_TYPE_NAME,info.typeName);
-//                intent.putExtra(Contants.PARAMETER.PAY_NAME,info.title);
-//                context.startActivity(intent);
+                if (exchangeCallBack != null) {
+                    exchangeCallBack.onclick(position);
+                }
             }
         });
         return convertView;

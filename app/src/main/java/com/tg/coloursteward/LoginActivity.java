@@ -26,13 +26,13 @@ import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.database.SharedPreferencesTools;
 import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.log.Logger;
+import com.tg.coloursteward.module.MainActivity1;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.MD5;
 import com.tg.coloursteward.net.RequestConfig;
 import com.tg.coloursteward.net.RequestParams;
 import com.tg.coloursteward.net.ResponseData;
 import com.tg.coloursteward.object.ImageParams;
-import com.tg.coloursteward.module.MainActivity1;
 import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.dialog.ToastFactory;
@@ -93,23 +93,23 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
 //                    ActivityCompat.requestPermissions(this,
 //                            new String[]{android.Manifest.permission.READ_PHONE_STATE}, Activity.RESULT_FIRST_USER);
 //                } else {
-                    newPhone = editUser.getText().toString();
-                    if (newPhone.length() <= 0) {
-                        ToastFactory.showToast(this, "请输入账号");
-                        return false;
-                    }
-                    password  = editPassword.getText().toString();
-                    if (password.length() < 6) {
-                        ToastFactory.showToast(this, "请输入不少于6位的密码");
-                        return false;
-                    }
-                    loginGt();// 登录
-                   // login();
+                newPhone = editUser.getText().toString();
+                if (newPhone.length() <= 0) {
+                    ToastFactory.showToast(this, "请输入账号");
+                    return false;
+                }
+                password = editPassword.getText().toString();
+                if (password.length() < 6) {
+                    ToastFactory.showToast(this, "请输入不少于6位的密码");
+                    return false;
+                }
+                loginGt();// 登录
+                // login();
 //                }
                 break;
-        case R.id.forget_pwd:
-			forgetPassword();// 忘记密码
-			break;
+            case R.id.forget_pwd:
+                forgetPassword();// 忘记密码
+                break;
             case R.id.iv_close://关闭
                 finish();
                 break;
@@ -140,9 +140,9 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
         findViewById(R.id.submit).setOnClickListener(singleListener);
         findViewById(R.id.forget_pwd).setOnClickListener(singleListener);
         RequestParams params = new RequestParams();
-        RequestConfig config = new RequestConfig(this, HttpTools.GET_TS,"");
+        RequestConfig config = new RequestConfig(this, HttpTools.GET_TS, "");
         HttpTools.httpGet(Contants.URl.URL_ICETEST, "/timestamp", config, params);
-       // editUser.setText(Tools.getUserName(this));
+        // editUser.setText(Tools.getUserName(this));
         showStartPager();
         CheckPermission();
         /**
@@ -150,10 +150,10 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
          * 务必放在onCreate方法里面执行
          */
         gt3GeetestUtils = new GT3GeetestUtilsBind(LoginActivity.this);
-}
+    }
 
     private void CheckPermission() {
-	       /* if (Build.VERSION.SDK_INT >= 23)
+           /* if (Build.VERSION.SDK_INT >= 23)
 	        {
 	            if (!Settings.canDrawOverlays(getApplicationContext()))
 	            {
@@ -242,7 +242,7 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
     /**
      * 极验验证码
      */
-    private void loginGt(){
+    private void loginGt() {
         gt3GeetestUtils.getGeetest(LoginActivity.this, captchaURL, validateURL, null, new GT3GeetestBindListener() {
             /**
              * num 1 点击验证码的关闭按钮来关闭验证码
@@ -250,7 +250,7 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
              * num 3 点击返回键关闭验证码
              */
             @Override
-            public void gt3CloseDialog(int  num) {
+            public void gt3CloseDialog(int num) {
             }
 
 
@@ -341,7 +341,7 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
             @Override
             public Map<String, String> gt3SecondResult() {
                 Map<String, String> map = new HashMap<String, String>();
-              //  map.put("testkey","12315");
+                //  map.put("testkey","12315");
                 return map;
 
             }
@@ -355,7 +355,7 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
              */
             @Override
             public void gt3DialogSuccessResult(String result) {
-                if(!TextUtils.isEmpty(result)) {
+                if (!TextUtils.isEmpty(result)) {
                     try {
                         JSONObject jobj = new JSONObject(result);
                         String sta = jobj.getString("status");
@@ -372,6 +372,7 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
                     gt3GeetestUtils.gt3TestClose();
                 }
             }
+
             /**
              * 验证过程错误
              * 返回的错误码为判断错误类型的依据
@@ -379,13 +380,14 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
 
             @Override
             public void gt3DialogOnError(String error) {
-                Log.i("dsd","gt3DialogOnError");
+                Log.i("dsd", "gt3DialogOnError");
                 gt3GeetestUtils.cancelAllTask();
             }
         });
         //设置是否可以点击屏幕边缘关闭验证码
         gt3GeetestUtils.setDialogTouch(true);
     }
+
     /**
      * 登录
      */
@@ -416,6 +418,7 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
         config.hintString = "获取皮肤包";
         HttpTools.httpPost(Contants.URl.URL_ICETEST, "/newoa/config/skin", config, params);
     }
+
     private void getKeyAndSecret() {
         RequestConfig config = new RequestConfig(this, HttpTools.GET_KEYSECERT);
         config.hintString = "获取key";
@@ -426,12 +429,12 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
      * 获取个人信息
      */
     private void getUserInfo(String accountUuid) {
-        RequestConfig config = new RequestConfig(this, HttpTools.GET_USER_INFO,null);
+        RequestConfig config = new RequestConfig(this, HttpTools.GET_USER_INFO, null);
         config.hintString = "加载个人信息";
         RequestParams params = new RequestParams();
         params.put("uid", accountUuid);
-        Log.e(TAG, "getUserInfo: "+accountUuid );
-        HttpTools.httpGet(Contants.URl.URL_ICETEST,"/account", config, params);
+        Log.e(TAG, "getUserInfo: " + accountUuid);
+        HttpTools.httpGet(Contants.URl.URL_ICETEST, "/account", config, params);
     }
 
     @Override
@@ -449,7 +452,7 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
             Logger.logd("fileName =" + params.fileName);
             Logger.logd("position =" + params.position);
         } else if (msg.arg1 == HttpTools.GET_LOGIN) {
-            if(code == 0){
+            if (code == 0) {
                 Date dt = new Date();
                 Long time = dt.getTime();
                 String date = Tools.getDateToString(time);
@@ -458,10 +461,10 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
                 try {
                     corpId = content.getString("corpId");
                     int status = content.getInt("status");
-                    if(status > 0){
-                        ToastFactory.showToast(LoginActivity.this,"账号异常，请及时联系管理员");
-                    }else{
-                        Tools.saveStringValue(LoginActivity.this, Contants.storage.CORPID,corpId);
+                    if (status > 0) {
+                        ToastFactory.showToast(LoginActivity.this, "账号异常，请及时联系管理员");
+                    } else {
+                        Tools.saveStringValue(LoginActivity.this, Contants.storage.CORPID, corpId);
                         String mobile = content.getString("mobile");
                         String accountUuid = content.getString("accountUuid");
                         if (isAllowHuxin) {
@@ -476,7 +479,7 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-            }else{
+            } else {
                 ToastFactory.showToast(LoginActivity.this, message);
             }
         } else if (msg.arg1 == HttpTools.GET_TS) {
@@ -511,12 +514,12 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
                 ToastFactory.showToast(LoginActivity.this, message);
                 SharedPreferencesTools.clearUserId(LoginActivity.this);
             }
-        }else if(msg.arg1 == HttpTools.GET_USER_INFO){
-            if(code == 0){
-                Tools.loadUserInfo(data,jsonString);
+        } else if (msg.arg1 == HttpTools.GET_USER_INFO) {
+            if (code == 0) {
+                Tools.loadUserInfo(data, jsonString);
                 getKeyAndSecret();
-            }else{
-                ToastFactory.showToast(LoginActivity.this,"加载个人信息失败，请重新登录");
+            } else {
+                ToastFactory.showToast(LoginActivity.this, "加载个人信息失败，请重新登录");
             }
 
         } else if (msg.arg1 == HttpTools.GET_KEYSECERT) {
@@ -548,11 +551,16 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
      * 调用登录的接口
      */
     public void getEmployeeInfo(String key, String secret) {
+
         String pwd = Tools.getPassWord(this);
         RequestConfig config = new RequestConfig(this, HttpTools.SET_EMPLOYEE_INFO, null);
         RequestParams params = new RequestParams();
         params.put("username", UserInfo.employeeAccount);
-        params.put("password", pwd);
+        try {
+            params.put("password", MD5.getMd5Value(pwd).toLowerCase());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         params.put("key", key);
         params.put("secret", secret);
         HttpTools.httpPost(Contants.URl.URL_CPMOBILE, "/1.0/employee/login", config, params);

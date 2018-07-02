@@ -1,7 +1,19 @@
 package com.tg.coloursteward;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.os.Message;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.constant.Contants;
@@ -12,21 +24,8 @@ import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.dialog.ToastFactory;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.os.CountDownTimer;
-import android.os.Message;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.inputmethod.EditorInfo;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * 绑定确认
@@ -259,7 +258,7 @@ public class RedpacketsBindCZYConfirmActivity extends BaseActivity {
             } else {
                 ToastFactory.showToast(RedpacketsBindCZYConfirmActivity.this, message);
             }
-        } else {
+        } else if (msg.arg1 == HttpTools.POST_BAND_CZY) {
             if (code == 0) {
                 JSONObject jsonObject = HttpTools.getContentJSONObject(jsonString);
                 String status;

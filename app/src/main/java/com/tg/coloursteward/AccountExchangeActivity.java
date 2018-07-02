@@ -26,17 +26,21 @@ import com.tg.coloursteward.net.MessageHandler;
 import com.tg.coloursteward.net.RequestConfig;
 import com.tg.coloursteward.net.RequestParams;
 import com.tg.coloursteward.serice.AuthAppService;
+import com.tg.coloursteward.util.ByteUtils;
+import com.tg.coloursteward.util.RSAUtil;
 import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.Tools;
-import com.tg.coloursteward.view.dialog.PwdDialog2;
-import com.tg.coloursteward.view.dialog.PwdDialog2.ADialogCallback;
+import com.tg.coloursteward.view.dialog.PwdDialog_getPwd;
+import com.tg.coloursteward.view.dialog.PwdDialog_getPwd.ADialogCallback;
 import com.tg.coloursteward.view.dialog.ToastFactory;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.security.PublicKey;
 import java.text.DecimalFormat;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 即时分配兑换
@@ -53,7 +57,7 @@ public class AccountExchangeActivity extends BaseActivity {
     private AuthAppService authAppService;//2.0授权
     private String money;
     private RelativeLayout rlSubmit;
-    private PwdDialog2 aDialog;
+    private PwdDialog_getPwd aDialog;
     private ADialogCallback aDialogCallback;
 
     private TextView tv_forgetPWD;
@@ -64,6 +68,8 @@ public class AccountExchangeActivity extends BaseActivity {
     private String pano = "";
     private String cano = "";
     private String atid = "";
+    private String publicEncryptedResult;
+    private String privateDecryptedResult;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,7 +89,6 @@ public class AccountExchangeActivity extends BaseActivity {
         msgHandler.setResponseListener(this);
     }
 
-    private boolean isClick = true;
 
     @Override
     protected boolean handClickEvent(View v) {
@@ -96,18 +101,14 @@ public class AccountExchangeActivity extends BaseActivity {
                 if (StringUtils.isEmpty(money)) {
                     ToastFactory.showToast(AccountExchangeActivity.this, "请先输入兑换金额");
                     return false;
-                }
-                if (Float.parseFloat(money) == 0) {
+                } else if (Float.parseFloat(money) == 0) {
                     ToastFactory.showToast(AccountExchangeActivity.this, "兑换金额不能为0");
                     return false;
-                }
-                if (Float.parseFloat(money) > Float.parseFloat(split_money)) {
+                } else if (Float.parseFloat(money) > Float.parseFloat(split_money)) {
                     ToastFactory.showToast(AccountExchangeActivity.this, "兑换金额不能大于额度");
                     return false;
-                }
-                if (isClick) {
-                    isClick = false;
-                    isSetPwd(0);
+                } else {
+                    judgment();
                 }
 
                 break;
@@ -183,7 +184,7 @@ public class AccountExchangeActivity extends BaseActivity {
         config.handler = msgHandler.getHandler();
         RequestParams params = new RequestParams();
         params.put("oa", UserInfo.employeeAccount);
-        HttpTools.httpPost(Contants.URl.URL_ICETEST, "/czywg/employee/clearPayPwd", config, params);
+        HttpTools.httpPost(Contants.URl.URL_CPMOBILE, "/1.0/employee/clearPayPwd", config, params);
     }
 
     /**
@@ -201,22 +202,6 @@ public class AccountExchangeActivity extends BaseActivity {
         HttpTools.httpGet(Contants.URl.URL_ICETEST, "/czyprovide/employee/getFinanceByOa", config, params);
     }
 
-    /**
-     * 点击事件判断有误密码以卡
-     *
-     * @param position
-     */
-    private void isSetPwd(int position) {
-        String key = Tools.getStringValue(this, Contants.EMPLOYEE_LOGIN.key);
-        String secret = Tools.getStringValue(this, Contants.EMPLOYEE_LOGIN.secret);
-        RequestConfig config = new RequestConfig(this, HttpTools.POST_SETPWD_INFO);
-        RequestParams params = new RequestParams();
-        params.put("position", position);
-        params.put("key", key);
-        params.put("secret", secret);
-        HttpTools.httpPost(Contants.URl.URL_CPMOBILE, "/1.0/caiRedPaket/isSetPwd", config, params);
-    }
-
     private void judgment() {
         String expireTime = Tools.getStringValue(AccountExchangeActivity.this, Contants.storage.APPAUTHTIME);
         Date dt = new Date();
@@ -228,16 +213,33 @@ public class AccountExchangeActivity extends BaseActivity {
             if (Long.parseLong(expireTime) * 1000 <= time) {//token过期
                 getAuthAppInfo();
             } else {
-                submit();
+                aDialogCallback = new ADialogCallback() {
+                    @Override
+                    public void callback(String pwd) {
+                        submit(pwd);
+                    }
+                };
+                aDialog = new PwdDialog_getPwd(
+                        AccountExchangeActivity.this,
+                        R.style.choice_dialog, "hasPwd",
+                        aDialogCallback);
+                aDialog.show();
+                aDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                    }
+                });
+
             }
         } else {
             getAuthAppInfo();
         }
     }
 
-    private void submit() {
+    private void submit(String pwd) {
         RequestConfig config = new RequestConfig(AccountExchangeActivity.this, HttpTools.POST_WITHDRAWALS, "提交");
         RequestParams params = new RequestParams();
+        RequestParams dataparams = new RequestParams();
         params.put("general_uuid", info.general_uuid);
         params.put("business_uuid", info.business_uuid);
         params.put("finance_pano", info.pano);
@@ -247,15 +249,41 @@ public class AccountExchangeActivity extends BaseActivity {
         params.put("split_type", 2);
         params.put("split_target", UserInfo.employeeAccount);
         params.put("access_token", accessToken);
-//        params.put("arrival_pano", "1027510cc2d51ab847ae8f192e3ae566");
-//        params.put("arrival_atid", "27");
-//        params.put("arrival_cano", "1027c29d5b5ec87f4578bf0b9309f250");
-//        params.put("arrival_account", "test");
         params.put("arrival_pano", pano);
         params.put("arrival_atid", atid);
         params.put("arrival_cano", cano);
         params.put("arrival_account", UserInfo.employeeAccount);
-        HttpTools.httpPost(Contants.URl.URL_ICETEST, "/split/api/withdrawals", config, params);
+        params.put("password", pwd);
+        String key = Tools.getStringValue(this, Contants.EMPLOYEE_LOGIN.key);
+        String secret = Tools.getStringValue(this, Contants.EMPLOYEE_LOGIN.secret);
+        params.put("key", key);
+        params.put("secret", secret);
+        String json = String.valueOf(params.toJsonObject());
+        StringBuffer stringBuffer = new StringBuffer();
+        PublicKey publicKey = null;
+        if (json.length() > 80) {
+            List<String> listinfo = ByteUtils.getStrList(json, 80);
+            for (int i = 0; i < listinfo.size(); i++) {
+                try {
+                    publicKey = RSAUtil.keyStrToPublicKey(Contants.URl.PUBLIC_KEY);
+                    String message = RSAUtil.encryptDataByPublicKey(listinfo.get(i).getBytes(), publicKey);
+                    stringBuffer.append(message + ",");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        } else {
+            try {
+                publicKey = RSAUtil.keyStrToPublicKey(Contants.URl.PUBLIC_KEY);
+                String message = RSAUtil.encryptDataByPublicKey(json.getBytes(), publicKey);
+                stringBuffer.append(message + ",");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        String data = stringBuffer.substring(0, stringBuffer.length() - 1);
+        dataparams.put("data", data);
+        HttpTools.httpPost(Contants.URl.URL_ICETEST, "/split/api/withdrawals", config, dataparams);
     }
 
     private void initView() {
@@ -285,41 +313,7 @@ public class AccountExchangeActivity extends BaseActivity {
         super.onSuccess(msg, jsonString, hintString);
         int code = HttpTools.getCode(jsonString);
         String message = HttpTools.getMessageString(jsonString);
-        if (msg.arg1 == HttpTools.POST_SETPWD_INFO) {//判断是否设置支付密码
-            if (code == 0) {
-                JSONObject content = HttpTools.getContentJSONObject(jsonString);
-                if (content != null) {
-                    String state;
-                    try {
-                        state = content.getString("state");
-                        aDialogCallback = new ADialogCallback() {
-                            @Override
-                            public void callback() {
-                                judgment();
-                            }
-                        };
-//                        if (aDialog == null) {
-                        aDialog = new PwdDialog2(
-                                AccountExchangeActivity.this,
-                                R.style.choice_dialog, state,
-                                aDialogCallback);
-                        aDialog.show();
-//                        }
-                        aDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                            @Override
-                            public void onDismiss(DialogInterface dialog) {
-                                isClick = true;
-                            }
-                        });
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            } else {
-                isClick = true;
-            }
-        } else if (msg.arg1 == HttpTools.GET_FINANCEBYOA) {
+        if (msg.arg1 == HttpTools.GET_FINANCEBYOA) {
             if (code == 0) {
                 JSONObject contentJSONObject = HttpTools.getContentJSONObject(jsonString);
                 if (contentJSONObject != null) {
@@ -358,7 +352,7 @@ public class AccountExchangeActivity extends BaseActivity {
             } else {
                 ToastFactory.showToast(this, hintString);
             }
-        } else {//兑换
+        } else if (msg.arg1 == HttpTools.POST_WITHDRAWALS) {//兑换
             if (code == 0) {
                 ToastFactory.showToast(AccountExchangeActivity.this, "申请成功，等待管理员审核，通过后请前往“我的饭票”中查看");
                 finish();
@@ -388,7 +382,7 @@ public class AccountExchangeActivity extends BaseActivity {
                             String expireTime = content.getString("expireTime");
                             Tools.saveStringValue(AccountExchangeActivity.this, Contants.storage.APPAUTH, accessToken);
                             Tools.saveStringValue(AccountExchangeActivity.this, Contants.storage.APPAUTHTIME, expireTime);
-                            submit();
+                            judgment();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

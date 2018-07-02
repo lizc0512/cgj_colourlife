@@ -4,8 +4,8 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:paddingBottom="@dimen/margin_18"
-    android:paddingTop="@dimen/margin_18" 
-    android:paddingRight="@dimen/margin_18">
+    android:paddingRight="@dimen/margin_18"
+    android:paddingTop="@dimen/margin_18">
 
     <ImageView
         android:id="@+id/img"
@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/margin_5"
         android:layout_toRightOf="@id/img"
-        android:text="IT中心集团2.3整体通过率" />
+        android:text="名称" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -30,18 +30,19 @@
         android:layout_alignLeft="@id/tv_punishment_title"
         android:layout_below="@id/tv_punishment_title"
         android:layout_marginTop="@dimen/margin_10"
-        android:layout_toRightOf="@id/img" >
+        android:layout_toRightOf="@id/img">
 
         <RelativeLayout
+            android:id="@+id/rl_yingkou"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/textview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="金额:"
-                android:textColor="@color/effect_text"
+                android:text="应扣金额:"
+                android:textColor="@color/text_color3"
                 android:textSize="12sp" />
 
             <TextView
@@ -52,34 +53,55 @@
                 android:layout_marginLeft="@dimen/margin_5"
                 android:layout_toRightOf="@id/textview"
                 android:text="45.15"
-                android:textColor="@color/effect_money"
+                android:textColor="@color/text_color3"
                 android:textSize="15sp" />
         </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/rl_yingkou"
+            android:layout_marginTop="5dp">
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/textview_really"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="实扣金额:"
+                    android:textColor="@color/text_color3"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/tv_punishment_money_really"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBaseline="@id/textview_really"
+                    android:layout_marginLeft="@dimen/margin_5"
+                    android:layout_toRightOf="@id/textview_really"
+                    android:text="45.15"
+                    android:textColor="@color/text_color3"
+                    android:textSize="15sp" />
+            </RelativeLayout>
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true" >
+            android:layout_alignParentRight="true">
 
             <TextView
-                android:id="@+id/tv_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="评分："
-                android:textColor="@color/effect_text"
-                android:textSize="12sp" />
-
-            <TextView
-                android:id="@+id/tv_punishment_data"
+                android:id="@+id/tv_punishment_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignBaseline="@id/tv_date"
                 android:layout_marginLeft="@dimen/margin_5"
                 android:layout_toRightOf="@id/tv_date"
-                android:text="45.15"
+                android:text="2018-05-01"
                 android:textColor="@color/effect_score"
                 android:textSize="15sp" />
         </RelativeLayout>
-    </RelativeLayout>
 
+    </RelativeLayout>
+    </RelativeLayout>
 </RelativeLayout>

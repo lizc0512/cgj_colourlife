@@ -1,15 +1,21 @@
 package com.tg.coloursteward;
 
-import java.text.DecimalFormat;
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.Message;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
+import android.view.View;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
+import com.bumptech.glide.Glide;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
+import com.tg.coloursteward.adapter.RedPacketBonusAdapter;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.constant.Contants;
-import com.tg.coloursteward.info.PublicAccountInfo;
+import com.tg.coloursteward.entity.RedPacketEntity;
 import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.RequestConfig;
@@ -18,14 +24,14 @@ import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.RoundImageView;
 import com.tg.coloursteward.view.dialog.ToastFactory;
+import com.tg.coloursteward.util.GsonUtils;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.os.Message;
-import android.util.Log;
-import android.view.View;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 我的饭票
@@ -33,26 +39,27 @@ import android.widget.TextView;
  * @author Administrator
  */
 public class RedpacketsBonusMainActivity extends BaseActivity {
-    private RelativeLayout rl_team_bonus_detail;//集体奖惩明细
-    private RelativeLayout rl_personal_bonus_detail;//我的奖金包明细
-    private RelativeLayout rl_ticket_details;//饭票明细
     private RelativeLayout rl_submit;//转账提现
+    private RelativeLayout rl_check_myfp;//饭票明细
     private RoundImageView rivHead;
     private TextView tvRealName;
-    private TextView tv_team_bonus_balance;//奖金红包
     private TextView tv_balance;//饭票余额
     private DisplayImageOptions options;
-    private double balance = 0.00d;
+    private double balance;
     private double teamBonus = 0.00d;
     private String mDept;
+    private RecyclerView recyclerView;
+    private RedPacketBonusAdapter redPacketBonusAdapter;
+    private RedPacketEntity redPacketEntity;
+    private List<RedPacketEntity> redPacketEntityList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getPopup(true);
         initView();
-        initOptions();
         initData();
+        serachdata();
     }
 
     /**
@@ -69,6 +76,20 @@ public class RedpacketsBonusMainActivity extends BaseActivity {
         HttpTools.httpGet(Contants.URl.URL_ICETEST, "/hongbao/getHBUserList", config, params);
     }
 
+    /**
+     * 请求集体奖金包数据
+     */
+    private void serachdata() {
+        RequestConfig config = new RequestConfig(this, HttpTools.GET_USER_JJB);
+        String corp_id = Tools.getStringValue(this, Contants.storage.CORPID);
+        RequestParams params = new RequestParams();
+        params.put("username", UserInfo.employeeAccount);
+//        params.put("user_uuid", UserInfo.uid);
+        params.put("corpid", corp_id);
+        HttpTools.httpGet(Contants.URl.URL_ICETEST, "/jxjjb/userjtjjb/list",
+                config, params);
+    }
+
     private void getEmployeeInfo() {
         String pwd = Tools.getPassWord(this);
         RequestConfig config = new RequestConfig(this, HttpTools.SET_EMPLOYEE_INFO, null);
@@ -81,15 +102,8 @@ public class RedpacketsBonusMainActivity extends BaseActivity {
     @Override
     protected boolean handClickEvent(View v) {
         switch (v.getId()) {
-            case R.id.rl_team_bonus_detail:// 集体奖惩明细
-                startActivity(new Intent(this, BonusRecordActivity.class));
-                break;
-            case R.id.rl_personal_bonus_detail:// 我的奖金包明细
-                startActivity(new Intent(this, BonusRecordPersonalActivity.class));
-                break;
-            case R.id.rl_ticket_details:// 饭票明细
+            case R.id.rl_check_myfp:// 饭票明细
                 submit();
-                //startActivity(new Intent(this, RedpacketsRecordActivity.class));
                 break;
             case R.id.rl_submit:// 转账提现
                 startActivity(new Intent(this, RedpacketsMainActivity.class));
@@ -112,17 +126,16 @@ public class RedpacketsBonusMainActivity extends BaseActivity {
      * 初始化控件
      */
     private void initView() {
+        recyclerView = findViewById(R.id.rv_redpackets_bonus);
+        rl_check_myfp = findViewById(R.id.rl_check_myfp);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setNestedScrollingEnabled(false);
         rivHead = (RoundImageView) findViewById(R.id.riv_head);
         tvRealName = (TextView) findViewById(R.id.tv_real_Name);
-        tv_team_bonus_balance = (TextView) findViewById(R.id.tv_team_bonus_balance);
         tv_balance = (TextView) findViewById(R.id.tv_balance);
-        rl_team_bonus_detail = (RelativeLayout) findViewById(R.id.rl_team_bonus_detail);
-        rl_personal_bonus_detail = (RelativeLayout) findViewById(R.id.rl_personal_bonus_detail);
-        rl_ticket_details = (RelativeLayout) findViewById(R.id.rl_ticket_details);
         rl_submit = (RelativeLayout) findViewById(R.id.rl_submit);
-        rl_team_bonus_detail.setOnClickListener(singleListener);
-        rl_personal_bonus_detail.setOnClickListener(singleListener);
-        rl_ticket_details.setOnClickListener(singleListener);
+        rl_check_myfp.setOnClickListener(singleListener);
         rl_submit.setOnClickListener(singleListener);
         String jsonStr = Tools.getStringValue(RedpacketsBonusMainActivity.this, Contants.storage.TICKET);
         if (StringUtils.isNotEmpty(jsonStr)) {
@@ -140,21 +153,39 @@ public class RedpacketsBonusMainActivity extends BaseActivity {
         }
     }
 
-    private void initOptions() {
-        options = new DisplayImageOptions.Builder()
-                .showImageOnLoading(R.drawable.placeholder2)
-                .showImageForEmptyUri(R.drawable.placeholder2)
-                .showImageOnFail(R.drawable.placeholder2).cacheInMemory(true)
-                .cacheOnDisc(true).considerExifParams(true)
-                // .displayer(new RoundedBitmapDisplayer(20))
-                .build();
-    }
 
     public void initData() {
         String str = Contants.URl.HEAD_ICON_URL + "avatar?uid=" + UserInfo.employeeAccount;
-        ImageLoader.getInstance().clearMemoryCache();
-        ImageLoader.getInstance().clearDiskCache();
-        ImageLoader.getInstance().displayImage(str, rivHead, options);
+//        GlideApp.with(RedpacketsBonusMainActivity.this).load(str)
+//                .error(R.drawable.placeholder2)
+//                .placeholder(R.drawable.placeholder2)
+//                .diskCacheStrategy(DiskCacheStrategy.ALL)
+//                .dontAnimate()
+//                .into(rivHead);
+        Glide.with(RedpacketsBonusMainActivity.this).load(str)
+                .into(rivHead);
+        String json = Tools.getStringValue(RedpacketsBonusMainActivity.this, Contants.storage.JTJJB);
+        if (!TextUtils.isEmpty(json)) {
+            setJJBData(json);
+        }
+    }
+
+    private void setJJBData(String jsonString) {
+        redPacketEntity = GsonUtils.gsonToBean(jsonString, RedPacketEntity.class);
+        if (redPacketEntity.getContent() != null) {
+            try {
+                redPacketEntityList.add(redPacketEntity);
+                if (redPacketBonusAdapter == null) {
+                    redPacketBonusAdapter = new RedPacketBonusAdapter(this, redPacketEntityList.get(0).getContent());
+                    recyclerView.setAdapter(redPacketBonusAdapter);
+                } else {
+                    redPacketBonusAdapter.setData(redPacketEntityList.get(0).getContent());
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+        }
     }
 
     @Override
@@ -180,6 +211,13 @@ public class RedpacketsBonusMainActivity extends BaseActivity {
             } else {
                 ToastFactory.showToast(RedpacketsBonusMainActivity.this, message);
             }
+        } else if (msg.arg1 == HttpTools.GET_USER_JJB) {
+            if (code == 0) {
+                Tools.saveStringValue(RedpacketsBonusMainActivity.this, Contants.storage.JTJJB, jsonString);
+                setJJBData(jsonString);
+            } else {
+                ToastFactory.showToast(RedpacketsBonusMainActivity.this, message);
+            }
         } else if (msg.arg1 == HttpTools.SET_EMPLOYEE_INFO) {
             if (code == 0) {
                 JSONObject content = HttpTools.getContentJSONObject(jsonString);
@@ -198,7 +236,7 @@ public class RedpacketsBonusMainActivity extends BaseActivity {
             } else {
                 ToastFactory.showToast(RedpacketsBonusMainActivity.this, message);
             }
-        } else {
+        } else if (msg.arg1 == HttpTools.GET_HBUSER_LIST) {
             if (code == 0) {
                 Tools.saveStringValue(RedpacketsBonusMainActivity.this, Contants.storage.TICKET, jsonString);
                 JSONObject jsonObject = HttpTools.getContentJSONObject(jsonString);
@@ -222,7 +260,6 @@ public class RedpacketsBonusMainActivity extends BaseActivity {
         DecimalFormat df = new DecimalFormat("0.00");
         tvRealName.setText(UserInfo.realname + "(" + mDept + ")");
         tv_balance.setText(df.format(balance));
-        tv_team_bonus_balance.setText(df.format(teamBonus));
     }
 
     @Override
@@ -245,13 +282,11 @@ public class RedpacketsBonusMainActivity extends BaseActivity {
 
     @Override
     public View getContentView() {
-        // TODO Auto-generated method stub
         return getLayoutInflater().inflate(R.layout.activity_redpackets_bonus_main, null);
     }
 
     @Override
     public String getHeadTitle() {
-        // TODO Auto-generated method stub
         return "我的饭票";
     }
 

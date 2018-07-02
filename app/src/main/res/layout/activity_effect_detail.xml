@@ -4,12 +4,12 @@
     android:layout_height="match_parent"
     android:background="@color/base_color"
     android:orientation="vertical"
-    tools:context=".EffectDetailActivity" >
+    tools:context=".EffectDetailActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/gray_background_1" >
+        android:background="@color/gray_background_1">
 
         <TextView
             android:id="@+id/tv_effect_date"
@@ -24,52 +24,15 @@
             android:textColor="@color/date_effect"
             android:textSize="18sp" />
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tv_effect_date"
-            android:background="@color/white"
-            android:paddingBottom="@dimen/margin_15"
-            android:paddingLeft="@dimen/margin_18"
-            android:paddingTop="@dimen/margin_15" >
-
-            <ImageView
-                android:id="@+id/imageview"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/img_effect_defen" />
-
-            <TextView
-                android:id="@+id/tv_effect_defen"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/margin_5"
-                android:layout_toRightOf="@id/imageview"
-                android:text="绩效得分：暂无数据"
-                android:textColor="@color/dark_balck"
-                android:textSize="15sp" />
-        </RelativeLayout>
     </RelativeLayout>
-
-    <include layout="@layout/line_horizontal_02" />
-
-    <ListView
-        android:id="@+id/listView1"
-        android:layout_width="match_parent"
-        android:layout_height="250dp"
-        android:background="@color/white"
-        android:divider="@color/gray_background_1"
-        android:dividerHeight="1dp" >
-    </ListView>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_10"
         android:background="@color/white"
         android:paddingBottom="@dimen/margin_15"
         android:paddingLeft="@dimen/margin_18"
-        android:paddingTop="@dimen/margin_15" >
+        android:paddingTop="@dimen/margin_15">
 
         <ImageView
             android:id="@+id/imageview1"
@@ -87,14 +50,16 @@
             android:textColor="@color/dark_balck"
             android:textSize="15sp" />
     </RelativeLayout>
-  <include layout="@layout/line_horizontal_02" />
+
+    <include layout="@layout/line_horizontal_02" />
+
     <ListView
         android:id="@+id/listView2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
         android:divider="@color/gray_background_1"
-        android:dividerHeight="1dp" >
-    </ListView>
+        android:dividerHeight="1dp"></ListView>
+
 
 </LinearLayout>

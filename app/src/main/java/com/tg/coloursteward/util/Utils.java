@@ -16,7 +16,10 @@ import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationClientOption.AMapLocationMode;
 import com.tg.coloursteward.info.GPSInfo;
 
+import android.app.Activity;
+import android.content.Context;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 
 /**
  * 辅助工具类(高德定位)
@@ -169,5 +172,27 @@ public class Utils {
 		jsonString=null;
 		jsonString = object.toString();//把JSONObject转换成json格式的字符串
 		return jsonString;
+	}
+	/** 获取屏幕的宽度 */
+	public final static int getWindowsWidth(Activity activity) {
+		DisplayMetrics dm = new DisplayMetrics();
+		activity.getWindowManager().getDefaultDisplay().getMetrics(dm);
+		return dm.widthPixels;
+	}
+
+	/**
+	 * dip转为 px
+	 */
+	public static int dip2px(Context context, float dipValue) {
+		final float scale = context.getResources().getDisplayMetrics().density;
+		return (int) (dipValue * scale + 0.5f);
+	}
+
+	/**
+	 *  px 转为 dip
+	 */
+	public static int px2dip(Context context, float pxValue) {
+		final float scale = context.getResources().getDisplayMetrics().density;
+		return (int) (pxValue / scale + 0.5f);
 	}
 }

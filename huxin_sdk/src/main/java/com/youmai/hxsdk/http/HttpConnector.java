@@ -155,7 +155,7 @@ public class HttpConnector {
             if (TextUtils.isEmpty(url)) {
                 throw new IllegalArgumentException("url is null");
             } else {
-                return doGet(url, mHeaders, mParams);
+                return doGet(mHeaders, url, mParams);
             }
         }
 
@@ -302,12 +302,12 @@ public class HttpConnector {
     /**
      * http get
      *
-     * @param path
      * @param headers
+     * @param path
      * @param urlParams
      * @return
      */
-    public static String doGet(String path, ContentValues headers, ContentValues urlParams) {
+    public static String doGet(ContentValues headers, String path, ContentValues urlParams) {
         String response = null;
         HttpURLConnection connection;
 

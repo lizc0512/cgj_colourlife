@@ -124,7 +124,7 @@ public class ContactsSearchLoader extends AsyncTaskLoader {
         params.put("keyword", key);
         ColorsConfig.commonParams(params);
 
-        String response = HttpConnector.doGet(url, null, params);
+        String response = HttpConnector.doGet(null, url, params);
         int code = HttpTools.getCode(response);
         if (code == 0) {
             List<FindContactInfo> list1 = new ArrayList<>();

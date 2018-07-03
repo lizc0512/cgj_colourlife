@@ -14,6 +14,7 @@ import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.ResponseData;
 import com.youmai.hxsdk.config.ColorsConfig;
 import com.youmai.hxsdk.entity.cn.SearchContactBean;
+import com.youmai.hxsdk.http.HttpConnector;
 import com.youmai.hxsdk.http.OkHttpConnector;
 import com.youmai.hxsdk.utils.ListUtils;
 
@@ -123,7 +124,7 @@ public class ContactsSearchLoader extends AsyncTaskLoader {
         params.put("keyword", key);
         ColorsConfig.commonParams(params);
 
-        String response = OkHttpConnector.doGet(null, url, params);
+        String response = HttpConnector.doGet(url, null, params);
         int code = HttpTools.getCode(response);
         if (code == 0) {
             List<FindContactInfo> list1 = new ArrayList<>();

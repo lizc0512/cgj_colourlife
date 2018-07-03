@@ -1540,7 +1540,7 @@ public class HuxinSdkManager {
 
         params.put("signature", signature);
 
-        ColorsConfig.commonParams(params);
+        ColorsConfig.commonYouMaiParams(params);
 
         HttpConnector.httpGet(url, params, listener);
     }
@@ -1570,7 +1570,7 @@ public class HuxinSdkManager {
 
         params.put("signature", signature);
 
-        ColorsConfig.commonParams(params);
+        ColorsConfig.commonYouMaiParams(params);
 
         HttpConnector.httpGet(url, params, listener);
     }
@@ -1593,7 +1593,7 @@ public class HuxinSdkManager {
 
         params.put("signature", signature);
 
-        ColorsConfig.commonParams(params);
+        ColorsConfig.commonYouMaiParams(params);
 
         HttpConnector.httpGet(url, params, listener);
     }
@@ -1616,7 +1616,7 @@ public class HuxinSdkManager {
 
         params.put("signature", signature);
 
-        ColorsConfig.commonParams(params);
+        ColorsConfig.commonYouMaiParams(params);
 
         HttpConnector.httpGet(url, params, listener);
     }
@@ -1638,7 +1638,7 @@ public class HuxinSdkManager {
 
         params.put("signature", signature);
 
-        ColorsConfig.commonParams(params);
+        ColorsConfig.commonYouMaiParams(params);
 
         HttpConnector.httpGet(url, params, listener);
     }
@@ -1661,7 +1661,7 @@ public class HuxinSdkManager {
 
         params.put("signature", signature);
 
-        ColorsConfig.commonParams(params);
+        ColorsConfig.commonYouMaiParams(params);
 
         HttpConnector.httpGet(url, params, listener);
     }
@@ -1684,7 +1684,7 @@ public class HuxinSdkManager {
 
         params.put("signature", signature);
 
-        ColorsConfig.commonParams(params);
+        ColorsConfig.commonYouMaiParams(params);
 
         HttpConnector.httpGet(url, params, listener);
     }

@@ -1375,7 +1375,7 @@ public class HuxinSdkManager {
     public void reqRedPackageShareConfig(IGetListener listener) {
         String url = ColorsConfig.LISHI_SHARECONFIG;
         ContentValues params = new ContentValues();
-        ColorsConfig.commonParams(params);
+        ColorsConfig.commonYouMaiParams(params);
 
         HttpConnector.httpGet(url, params, listener);
 
@@ -1385,7 +1385,7 @@ public class HuxinSdkManager {
     public void reqRedPackageStandardConfig(IGetListener listener) {
         String url = ColorsConfig.LISHI_STANDARDCONFIG;
         ContentValues params = new ContentValues();
-        ColorsConfig.commonParams(params);
+        ColorsConfig.commonYouMaiParams(params);
         HttpConnector.httpGet(url, params, listener);
     }
 
@@ -1395,7 +1395,7 @@ public class HuxinSdkManager {
         ContentValues params = new ContentValues();
 
         String uuid = getUuid();
-        String appID = ColorsConfig.getAppID();
+        String appID = ColorsConfig.getYouMaiAppID();
         String nonce_str = "123456";
 
         params.put("user_uuid", uuid);
@@ -1406,7 +1406,7 @@ public class HuxinSdkManager {
 
         params.put("signature", signature);
 
-        ColorsConfig.commonParams(params);
+        ColorsConfig.commonYouMaiParams(params);
 
         HttpConnector.httpGet(url, params, listener);
     }
@@ -1421,7 +1421,7 @@ public class HuxinSdkManager {
         String nickname = getRealName();
         String mobile = getPhoneNum();
         String head_img_url = getHeadUrl();
-        String appID = ColorsConfig.getAppID();
+        String appID = ColorsConfig.getYouMaiAppID();
         String nonce_str = "123456";
 
         params.put("user_uuid", uuid);
@@ -1443,7 +1443,7 @@ public class HuxinSdkManager {
 
         params.put("signature", signature);
 
-        ColorsConfig.commonParams(params);
+        ColorsConfig.commonYouMaiParams(params);
 
         HttpConnector.httpGet(url, params, listener);
     }
@@ -1458,7 +1458,7 @@ public class HuxinSdkManager {
         String nickname = getRealName();
         String mobile = getPhoneNum();
         String head_img_url = getHeadUrl();
-        String appID = ColorsConfig.getAppID();
+        String appID = ColorsConfig.getYouMaiAppID();
         String nonce_str = "123456";
 
         params.put("user_uuid", uuid);
@@ -1480,7 +1480,7 @@ public class HuxinSdkManager {
 
         params.put("signature", signature);
 
-        ColorsConfig.commonParams(params);
+        ColorsConfig.commonYouMaiParams(params);
 
         HttpConnector.httpGet(url, params, listener);
     }
@@ -1495,7 +1495,7 @@ public class HuxinSdkManager {
         String nickname = getRealName();
         String mobile = getPhoneNum();
         String head_img_url = getHeadUrl();
-        String appID = ColorsConfig.getAppID();
+        String appID = ColorsConfig.getYouMaiAppID();
         String nonce_str = "123456";
 
         params.put("user_uuid", uuid);
@@ -1517,7 +1517,7 @@ public class HuxinSdkManager {
 
         params.put("signature", signature);
 
-        ColorsConfig.commonParams(params);
+        ColorsConfig.commonYouMaiParams(params);
 
         HttpConnector.httpGet(url, params, listener);
     }
@@ -1528,7 +1528,7 @@ public class HuxinSdkManager {
         ContentValues params = new ContentValues();
 
         String uuid = getUuid();
-        String appID = ColorsConfig.getAppID();
+        String appID = ColorsConfig.getYouMaiAppID();
         String nonce_str = "123456";
 
         params.put("lishiUuid", lishiUuid);
@@ -1553,7 +1553,7 @@ public class HuxinSdkManager {
         String nickname = getRealName();
         String mobile = getPhoneNum();
         String head_img_url = getHeadUrl();
-        String appID = ColorsConfig.getAppID();
+        String appID = ColorsConfig.getYouMaiAppID();
         String nonce_str = "123456";
 
         params.put("lishiUuid", lishiUuid);
@@ -1581,7 +1581,7 @@ public class HuxinSdkManager {
         ContentValues params = new ContentValues();
 
         String uuid = getUuid();
-        String appID = ColorsConfig.getAppID();
+        String appID = ColorsConfig.getYouMaiAppID();
         String nonce_str = "123456";
 
         params.put("lishiUuid", lishiUuid);
@@ -1604,7 +1604,7 @@ public class HuxinSdkManager {
         ContentValues params = new ContentValues();
 
         String uuid = getUuid();
-        String appID = ColorsConfig.getAppID();
+        String appID = ColorsConfig.getYouMaiAppID();
         String nonce_str = "123456";
 
         params.put("user_uuid", uuid);
@@ -1626,7 +1626,7 @@ public class HuxinSdkManager {
         ContentValues params = new ContentValues();
 
         String uuid = getUuid();
-        String appID = ColorsConfig.getAppID();
+        String appID = ColorsConfig.getYouMaiAppID();
         String nonce_str = "123456";
 
         params.put("user_uuid", uuid);
@@ -1648,7 +1648,7 @@ public class HuxinSdkManager {
         ContentValues params = new ContentValues();
 
         String uuid = getUuid();
-        String appID = ColorsConfig.getAppID();
+        String appID = ColorsConfig.getYouMaiAppID();
         String nonce_str = "123456";
 
         params.put("user_uuid", uuid);
@@ -1671,7 +1671,7 @@ public class HuxinSdkManager {
         ContentValues params = new ContentValues();
 
         String uuid = getUuid();
-        String appID = ColorsConfig.getAppID();
+        String appID = ColorsConfig.getYouMaiAppID();
         String nonce_str = "123456";
 
         params.put("user_uuid", uuid);

@@ -141,6 +141,13 @@ public class ContactsFragment extends Fragment implements ResponseListener, Item
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mModifyContactsReceiver);
     }
 
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        bindData = ContactsBindData.init();
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_contacts_layout, container, false);
@@ -166,8 +173,6 @@ public class ContactsFragment extends Fragment implements ResponseListener, Item
         adapter = new ContactAdapter(getContext(), contactList, ContactAdapter.mIndexForContact, this);
         rv_main.setAdapter(adapter);
         rv_main.addItemDecoration(new StickyHeaderDecoration(adapter));
-
-        bindData = ContactsBindData.init();
 
         msgHand = new MessageHandler(getActivity());
         msgHand.setResponseListener(this);

@@ -203,7 +203,10 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
         if (!ListUtils.isEmpty(contactList)) {
             contactList.clear();
         }
+
         registerReceiver();
+
+        bindData = ContactsBindData.init();
 
         getHeadList();
 
@@ -233,8 +236,6 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
         rv_main.addItemDecoration(new StickyHeaderDecoration(adapter));
 
         adapter.setGroupMap(mGroupMap);
-
-        bindData = ContactsBindData.init();
 
         msgHand = new MessageHandler(this);
         msgHand.setResponseListener(this);

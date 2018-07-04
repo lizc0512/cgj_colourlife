@@ -154,6 +154,8 @@ public class ContactsFragment extends Fragment implements ResponseListener, Item
         }
         registerReceiver();
 
+        getHeadList();
+
         rv_main = view.findViewById(R.id.rv_main);
         iv_main = view.findViewById(R.id.iv_main);
         tv_index = view.findViewById(R.id.tv_index);
@@ -216,17 +218,16 @@ public class ContactsFragment extends Fragment implements ResponseListener, Item
         });
     }
 
-    private void getPinyinList(final ResponseData data) {
 
-        subscription = Observable.create(new Observable.OnSubscribe<List<CNPinyin<ContactBean>>>() {
+    private void getHeadList() {
+        Observable.create(new Observable.OnSubscribe<List<CNPinyin<ContactBean>>>() {
             @Override
             public void call(Subscriber<? super List<CNPinyin<ContactBean>>> subscriber) {
                 if (!subscriber.isUnsubscribed()) {
                     //子线程查数据库，返回List<Contacts>
-                    List<CNPinyin<ContactBean>> contactList = CNPinyinFactory.createCNPinyinList(
-                            bindData.contactList(getContext(), data, ContactsBindData.TYPE_HOME));
-                    Collections.sort(contactList);
-                    subscriber.onNext(contactList);
+                    List<ContactBean> contacts = bindData.contactList(mActivity, ContactsBindData.TYPE_HOME);
+                    List<CNPinyin<ContactBean>> list = CNPinyinFactory.createCNPinyinList(contacts);
+                    subscriber.onNext(list);
                     subscriber.onCompleted();
                 }
             }
@@ -242,9 +243,40 @@ public class ContactsFragment extends Fragment implements ResponseListener, Item
 
                     @Override
                     public void onNext(List<CNPinyin<ContactBean>> cnPinyins) {
-                        if (!ListUtils.isEmpty(contactList)) {
-                            contactList.clear();
-                        }
+                        //回调业务数据
+                        contactList.addAll(cnPinyins);
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+
+    }
+
+
+    private void getPinyinList(final ResponseData data) {
+        subscription = Observable.create(new Observable.OnSubscribe<List<CNPinyin<ContactBean>>>() {
+            @Override
+            public void call(Subscriber<? super List<CNPinyin<ContactBean>>> subscriber) {
+                if (!subscriber.isUnsubscribed()) {
+                    //子线程查数据库，返回List<Contacts>
+                    List<CNPinyin<ContactBean>> list = CNPinyinFactory.createCNPinyinList(
+                            bindData.contactList(getContext(), data));
+                    Collections.sort(list);
+                    subscriber.onNext(list);
+                    subscriber.onCompleted();
+                }
+            }
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<List<CNPinyin<ContactBean>>>() {
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                    }
+
+                    @Override
+                    public void onNext(List<CNPinyin<ContactBean>> cnPinyins) {
                         //回调业务数据
                         contactList.addAll(cnPinyins);
                         adapter.notifyDataSetChanged();

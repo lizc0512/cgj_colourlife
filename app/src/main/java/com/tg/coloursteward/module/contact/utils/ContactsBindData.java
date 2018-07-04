@@ -49,9 +49,8 @@ public class ContactsBindData extends Observable {
         notifyObservers(null);
     }
 
-    public List<ContactBean> contactList(Context context, ResponseData data, int type) {
+    public List<ContactBean> contactList(Context context, int type) {
         List<ContactBean> contactList = new ArrayList<>();
-        ContactBean contact;
         String[] names;
         if (type == TYPE_HOME) {
             names = context.getResources().getStringArray(R.array.names_home); //获取
@@ -75,6 +74,13 @@ public class ContactsBindData extends Observable {
             }
             contactList.add(bean);
         }
+        return contactList;
+    }
+
+
+    public List<ContactBean> contactList(Context context, ResponseData data) {
+        List<ContactBean> contactList = new ArrayList<>();
+        ContactBean contact;
         for (int i = 0; i < data.length; i++) {
 
             contact = new ContactBean();

@@ -205,6 +205,8 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
         }
         registerReceiver();
 
+        getHeadList();
+
         mDetailType = getIntent().getIntExtra(DETAIL_TYPE, -1);
         mGroupId = getIntent().getIntExtra(GROUP_ID, -1);
         mContactList = getIntent().getParcelableArrayListExtra(GROUP_LIST);
@@ -518,14 +520,44 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
                 list, mGroupId, listener);
     }
 
-    private void getPinyinList(final ResponseData data) {
+    private void getHeadList() {
+        Observable.create(new Observable.OnSubscribe<List<CNPinyin<ContactBean>>>() {
+            @Override
+            public void call(Subscriber<? super List<CNPinyin<ContactBean>>> subscriber) {
+                if (!subscriber.isUnsubscribed()) {
+                    //子线程查数据库，返回List<Contacts>
+                    List<ContactBean> contacts = bindData.contactList(mActivity, ContactsBindData.TYPE_GROUP_ADD);
+                    List<CNPinyin<ContactBean>> contactList = CNPinyinFactory.createCNPinyinList(contacts);
+                    subscriber.onNext(contactList);
+                    subscriber.onCompleted();
+                }
+            }
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<List<CNPinyin<ContactBean>>>() {
+                    @Override
+                    public void onCompleted() {
+                    }
 
+                    @Override
+                    public void onError(Throwable e) {
+                    }
+
+                    @Override
+                    public void onNext(List<CNPinyin<ContactBean>> cnPinyins) {
+                        //回调业务数据
+                        contactList.addAll(cnPinyins);
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+    }
+
+    private void getPinyinList(final ResponseData data) {
         subscription = Observable.create(new Observable.OnSubscribe<List<CNPinyin<ContactBean>>>() {
             @Override
             public void call(Subscriber<? super List<CNPinyin<ContactBean>>> subscriber) {
                 if (!subscriber.isUnsubscribed()) {
                     //子线程查数据库，返回List<Contacts>
-                    List<ContactBean> contacts = bindData.contactList(mActivity, data, ContactsBindData.TYPE_GROUP_ADD);
+                    List<ContactBean> contacts = bindData.contactList(mActivity, data);
                     List<CNPinyin<ContactBean>> contactList = CNPinyinFactory.createCNPinyinList(contacts);
                     Collections.sort(contactList);
                     subscriber.onNext(contactList);
@@ -544,9 +576,6 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
 
                     @Override
                     public void onNext(List<CNPinyin<ContactBean>> cnPinyins) {
-                        if (!ListUtils.isEmpty(contactList)) {
-                            contactList.clear();
-                        }
                         //回调业务数据
                         contactList.addAll(cnPinyins);
                         adapter.notifyDataSetChanged();

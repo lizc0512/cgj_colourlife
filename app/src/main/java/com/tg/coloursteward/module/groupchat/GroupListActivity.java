@@ -50,12 +50,12 @@ public class GroupListActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         mContext = this;
         initView();
-        initData();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        initData();
     }
 
     @Override

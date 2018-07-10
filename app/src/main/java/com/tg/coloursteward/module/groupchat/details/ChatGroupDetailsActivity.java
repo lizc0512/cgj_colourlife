@@ -587,6 +587,7 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
                     YouMaiGroup.GroupMemberChangeRsp ack = YouMaiGroup.GroupMemberChangeRsp.parseFrom(pduBase.body);
                     if (ack.getResult() == YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS) {
                         Toast.makeText(ChatGroupDetailsActivity.this, "退出成功", Toast.LENGTH_SHORT).show();
+                        GroupInfoHelper.instance().delGroupInfo(mContext, mGroupId);
                         CacheMsgHelper.instance().deleteAllMsg(mContext, mGroupId + ""); //退出群不删除聊天
                         finish();
                         HuxinSdkManager.instance().getStackAct().finishActivity(IMGroupActivity.class);

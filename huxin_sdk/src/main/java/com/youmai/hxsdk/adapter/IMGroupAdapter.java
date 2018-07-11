@@ -832,8 +832,11 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
      * 群成员变更
      */
     private void onBindGroupChanged(final GroupChangedViewHolder holder, final int position) {
-        final CacheMsgBean cacheMsgBean = mImBeanList.get(position);
-        String content = cacheMsgBean.getMemberChanged();
+        final CacheMsgBean bean = mImBeanList.get(position);
+
+        showMsgTime(position, holder.senderDateTV, bean.getMsgTime());
+
+        String content = bean.getMemberChanged();
         holder.tv_group_changed.setText(content);
     }
 

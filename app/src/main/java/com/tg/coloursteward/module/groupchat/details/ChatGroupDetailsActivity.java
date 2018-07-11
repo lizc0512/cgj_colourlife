@@ -81,6 +81,7 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
 
 
     private int mGroupId;
+    private String groupName;
     private boolean isGroupOwner = false;  //是否群主
 
     private TextView mTvBack, mTvTitle;
@@ -178,6 +179,8 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
     private void initView() {
         mGroupInfo = getIntent().getParcelableExtra(IMGroupActivity.GROUP_INFO);
         mGroupId = getIntent().getIntExtra(GROUP_ID, -1);
+        groupName = getIntent().getStringExtra(IMGroupActivity.GROUP_NAME);
+
 
         if (null == mGroupInfo) {
             mGroupInfo = GroupInfoHelper.instance().toQueryByGroupId(this, mGroupId);
@@ -247,9 +250,15 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
 
     private void setGroupInfo(GroupInfoBean info) {
         if (info != null) {
-            String title = String.format(getString(R.string.group_default_title),
-                    "聊天详情", info.getGroup_member_count());
-            mTvTitle.setText(title);
+            if (TextUtils.isEmpty(groupName)) {
+                String title = String.format(getString(R.string.group_default_title),
+                        "群聊", info.getGroup_member_count());
+                mTvTitle.setText(title);
+            } else if (groupName.contains(ColorsConfig.GROUP_DEFAULT_NAME)) {
+                mTvTitle.setText(groupName.replace(ColorsConfig.GROUP_DEFAULT_NAME, ""));
+            } else {
+                mTvTitle.setText(groupName + "(" + info.getGroup_member_count() + ")");
+            }
 
             String group_name = info.getGroup_name();
             if (TextUtils.isEmpty(group_name)
@@ -314,10 +323,6 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
                                 groupList3.add(contact);
                             }
                         }
-
-                        String title = String.format(getString(R.string.group_default_title),
-                                "聊天详情", groupList.size());
-                        mTvTitle.setText(title);
 
                         if (!ListUtils.isEmpty(groupList)) {
                             updateGroupInfo(memberListList);

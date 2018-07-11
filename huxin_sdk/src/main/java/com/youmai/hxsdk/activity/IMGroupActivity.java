@@ -642,6 +642,7 @@ public class IMGroupActivity extends SdkBaseActivity implements
             public void onClick(View v) {
                 ARouter.getInstance().build(APath.GROUP_DELETE_CONTACT)
                         .withInt(GROUP_ID, groupId)
+                        .withString(GROUP_NAME, groupName)
                         .withParcelable(GROUP_INFO, mGroupInfo)
                         .navigation(IMGroupActivity.this, REQUEST_CODE_DETAIL);
             }

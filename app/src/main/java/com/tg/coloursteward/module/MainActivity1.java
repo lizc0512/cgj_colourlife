@@ -38,6 +38,7 @@ import com.tg.coloursteward.InviteRegisterActivity;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.application.CityPropertyApplication;
 import com.tg.coloursteward.constant.Contants;
+import com.tg.coloursteward.database.SharedPreferencesTools;
 import com.tg.coloursteward.fragment.FragmentManagement;
 import com.tg.coloursteward.fragment.FragmentMine;
 import com.tg.coloursteward.info.GridViewInfo;
@@ -380,6 +381,21 @@ public class MainActivity1 extends AppCompatActivity implements MessageHandler.R
 
     @Override
     public void onFail(Message msg, String hintString) {
+        if(msg.arg1==HttpTools.SET_EMPLOYEE_INFO){
+            ToastFactory.showToast(this,"账号异常，请联系管理员");
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    SharedPreferencesTools.clearUserId(MainActivity1.this);
+                    //清空缓存
+                    SharedPreferencesTools.clearCache(MainActivity1.this);
+                    SharedPreferencesTools.clearAllData(MainActivity1.this);
+                    CityPropertyApplication.gotoLoginActivity(MainActivity1.this);
+                    HuxinSdkManager.instance().loginOut();
+                }
+            },1000);
+
+        }
 
     }
 
@@ -601,7 +617,7 @@ public class MainActivity1 extends AppCompatActivity implements MessageHandler.R
         RequestParams params = new RequestParams();
         params.put("username", UserInfo.employeeAccount);
         params.put("password", pwd);
-        HttpTools.httpPost(Contants.URl.URL_ICETEST, "/czywg/employee/login", config, params);
+        HttpTools.httpPost(Contants.URl.URL_CPMOBILE, "/1.0/employee/login", config, params);
     }
 
     /**

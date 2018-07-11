@@ -24,8 +24,8 @@ public class ColorsConfig {
 
 
     //彩管家 APPID TOEKN 定义
-    private static final String COLOR_APPID[] = new String[]{"ICEYOUMAI-EF6C-4970-9AED-4CD8E063720F", "ICECGJLS-AOVE-VNU1-Y9JV-CMP6MUH6WCT2", "ICEXCGJ0-5F89-4E17-BC44-7A0DB101B245"};
-    private static final String COLOR_TOKEN[] = new String[]{"AXPHrD48LRa8xYVkgV4c", "H13FNtwtT7IjLmxy25IT", "AXPHrD48LRa8xYVkgV4c"};
+    private static final String COLOR_APPID[] = new String[]{"ICEYOUMAI-EF6C-4970-9AED-4CD8E063720F", "ICEXCGJ0-5F89-4E17-BC44-7A0DB101B245", "ICEXCGJ0-5F89-4E17-BC44-7A0DB101B245"};
+    private static final String COLOR_TOKEN[] = new String[]{"AXPHrD48LRa8xYVkgV4c", "AXPHrD48LRa8xYVkgV4c", "AXPHrD48LRa8xYVkgV4c"};
 
     //有麦 APPID TOEKN 定义
     private static final String YOUMAI_APPID[] = new String[]{"ICEYOUMAI-EF6C-4970-9AED-4CD8E063720F", "ICECGJLS-AOVE-VNU1-Y9JV-CMP6MUH6WCT2", "ICECGJLS-RF9A-5NY9-EREF-3VKPI6JOVW8J"};

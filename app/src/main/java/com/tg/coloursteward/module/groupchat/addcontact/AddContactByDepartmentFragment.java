@@ -182,7 +182,7 @@ public class AddContactByDepartmentFragment extends Fragment
         config.handler = msgHand.getHandler();
         RequestParams params = new RequestParams();
         params.put("orgID", orgId);
-        HttpTools.httpGet(Contants.URl.URL_ICETEST, "/phonebook/childDatas", config, params);
+        HttpTools.httpGet(Contants.URl.URL_ICETEST, "/txl2/contacts/childDatas", config, params);
     }
 
     public void setMap(String orgId, String orgName, Map<String, ContactBean> totalMap,

@@ -142,7 +142,7 @@ public class HomeContactOrgActivity extends BaseActivity {
 				if(!id.equals("-1")){
 					params.put("orgID", id);
 				}
-				HttpTools.httpGet(Contants.URl.URL_ICETEST, "/phonebook/childDatas",config, params);
+				HttpTools.httpGet(Contants.URl.URL_ICETEST, "/txl2/contacts/childDatas",config, params);
 
 			}
 
@@ -154,7 +154,7 @@ public class HomeContactOrgActivity extends BaseActivity {
 				if(!id.equals("-1")){
 					params.put("orgID", id);
 				}
-				HttpTools.httpGet(Contants.URl.URL_ICETEST, "/phonebook/childDatas",config, params);
+				HttpTools.httpGet(Contants.URl.URL_ICETEST, "/txl2/contacts/childDatas",config, params);
 			}
 		});
 		adapter = new FamilyAdapter(this, familyList);

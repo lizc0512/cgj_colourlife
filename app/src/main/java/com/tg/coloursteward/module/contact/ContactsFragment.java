@@ -13,45 +13,44 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.tg.coloursteward.ContactsActivity;
+import com.tg.coloursteward.EmployeeDataActivity;
 import com.tg.coloursteward.HomeContactOrgActivity;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.info.FamilyInfo;
 import com.tg.coloursteward.info.UserInfo;
-import com.tg.coloursteward.module.contact.utils.ContactsBindData;
 import com.tg.coloursteward.module.contact.adapter.ContactAdapter;
+import com.tg.coloursteward.module.contact.adapter.ContactAdapter.ItemEventListener;
 import com.tg.coloursteward.module.contact.stickyheader.StickyHeaderDecoration;
+import com.tg.coloursteward.module.contact.utils.ContactsBindData;
 import com.tg.coloursteward.module.contact.widget.CharIndexView;
 import com.tg.coloursteward.module.groupchat.GroupListActivity;
 import com.tg.coloursteward.module.search.GlobalSearchActivity;
 import com.tg.coloursteward.net.GetTwoRecordListener;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.MessageHandler;
+import com.tg.coloursteward.net.MessageHandler.ResponseListener;
 import com.tg.coloursteward.net.RequestConfig;
 import com.tg.coloursteward.net.RequestParams;
 import com.tg.coloursteward.net.ResponseData;
 import com.tg.coloursteward.serice.AuthAppService;
-import com.tg.coloursteward.module.MainActivity1;
 import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.PullRefreshListView;
 import com.tg.coloursteward.view.dialog.ToastFactory;
-import com.youmai.hxsdk.activity.IMConnectionActivity;
 import com.youmai.hxsdk.db.bean.ContactBean;
 import com.youmai.hxsdk.entity.cn.CNPinyin;
 import com.youmai.hxsdk.entity.cn.CNPinyinFactory;
+import com.youmai.hxsdk.utils.ListUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -68,14 +67,10 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-import com.tg.coloursteward.net.MessageHandler.ResponseListener;
-import com.tg.coloursteward.module.contact.adapter.ContactAdapter.ItemEventListener;
-import com.youmai.hxsdk.utils.ListUtils;
-
 /**
  * 作者：create by YW
  * 日期：2018.04.03 11:59
- * 描述：
+ * 描述：联系人页面
  */
 public class ContactsFragment extends Fragment implements ResponseListener, ItemEventListener {
 
@@ -98,6 +93,7 @@ public class ContactsFragment extends Fragment implements ResponseListener, Item
     private CharIndexView iv_main;
     private TextView tv_index;
 
+    private List<CNPinyin<ContactBean>> HeadList;
     private ArrayList<CNPinyin<ContactBean>> contactList = new ArrayList<>();
     private LinearLayoutManager manager;
     private Subscription subscription;
@@ -109,6 +105,8 @@ public class ContactsFragment extends Fragment implements ResponseListener, Item
     public static final String ACTION = "action";
     public static final String INSERT_CONTACT = "insert";
     public static final String DELETE_CONTACT = "delete";
+    public ModifyContactsReceiver mModifyContactsReceiver;
+    private IntentFilter filter;
 
     static class ModifyContactsReceiver extends BroadcastReceiver {
         ContactsFragment mFragment;
@@ -129,16 +127,16 @@ public class ContactsFragment extends Fragment implements ResponseListener, Item
         }
     }
 
-    ModifyContactsReceiver mModifyContactsReceiver;
 
     void registerReceiver() {
         mModifyContactsReceiver = new ModifyContactsReceiver(this);
-        IntentFilter intentFilter = new IntentFilter(BROADCAST_INTENT_FILTER);
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mModifyContactsReceiver, intentFilter);
+        filter = new IntentFilter();
+        filter.addAction(BROADCAST_INTENT_FILTER);
+        mActivity.registerReceiver(mModifyContactsReceiver, filter);
     }
 
     void unRegisterReceiver() {
-        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mModifyContactsReceiver);
+        mActivity.unregisterReceiver(mModifyContactsReceiver);
     }
 
 
@@ -249,6 +247,7 @@ public class ContactsFragment extends Fragment implements ResponseListener, Item
                     @Override
                     public void onNext(List<CNPinyin<ContactBean>> cnPinyins) {
                         //回调业务数据
+                        HeadList = cnPinyins;
                         contactList.addAll(cnPinyins);
                         adapter.notifyDataSetChanged();
                     }
@@ -283,6 +282,8 @@ public class ContactsFragment extends Fragment implements ResponseListener, Item
                     @Override
                     public void onNext(List<CNPinyin<ContactBean>> cnPinyins) {
                         //回调业务数据
+                        contactList.clear();
+                        contactList.addAll(HeadList);
                         contactList.addAll(cnPinyins);
                         adapter.notifyDataSetChanged();
                     }
@@ -370,7 +371,7 @@ public class ContactsFragment extends Fragment implements ResponseListener, Item
                 break;
             case 2: //我的部门
                 info = new FamilyInfo();
-                info.id = UserInfo.orgId;
+                info.id = Tools.getOrgId(mActivity);
                 info.type = "org";
                 info.name = UserInfo.familyName;
                 intent = new Intent(mActivity, HomeContactOrgActivity.class);
@@ -390,28 +391,24 @@ public class ContactsFragment extends Fragment implements ResponseListener, Item
                 startActivity(new Intent(getContext(), GroupListActivity.class));
                 break;
             default: //item
-                //Intent i = new Intent(mActivity, EmployeeDataActivity.class);
-                //i.putExtra(EmployeeDataActivity.CONTACTS_ID, item.getUsername());
-                //startActivityForResult(i, ISTREAD);
-
-                String avatar = Contants.URl.HEAD_ICON_URL + "avatar?uid=" + item.getUsername();
-
-                if (TextUtils.isEmpty(item.getUuid())) {
-                    Toast.makeText(mActivity, item.getRealname() + "的uuid为空，无法进行IM聊天", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                Intent i = new Intent(mActivity, IMConnectionActivity.class);
-                i.putExtra(IMConnectionActivity.DST_UUID, item.getUuid());
-                i.putExtra(IMConnectionActivity.DST_NAME, item.getRealname());
-                i.putExtra(IMConnectionActivity.DST_AVATAR, avatar);
-                i.putExtra(IMConnectionActivity.DST_USERNAME, item.getUsername());
-                i.putExtra(IMConnectionActivity.DST_PHONE, item.getMobile());
-                startActivity(i);
+                Intent i = new Intent(mActivity, EmployeeDataActivity.class);
+                i.putExtra(EmployeeDataActivity.CONTACTS_ID, item.getUsername());
+                startActivityForResult(i, ISTREAD);
+//                String avatar = Contants.URl.HEAD_ICON_URL + "avatar?uid=" + item.getUsername();
+//                if (TextUtils.isEmpty(item.getUuid())) {
+//                    Toast.makeText(mActivity, item.getRealname() + "的uuid为空，无法进行IM聊天", Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
+//                Intent i = new Intent(mActivity, IMConnectionActivity.class);
+//                i.putExtra(IMConnectionActivity.DST_UUID, item.getUuid());
+//                i.putExtra(IMConnectionActivity.DST_NAME, item.getRealname());
+//                i.putExtra(IMConnectionActivity.DST_AVATAR, avatar);
+//                i.putExtra(IMConnectionActivity.DST_USERNAME, item.getUsername());
+//                i.putExtra(IMConnectionActivity.DST_PHONE, item.getMobile());
+//                startActivity(i);
                 break;
         }
     }
-    // ---------end
 
     /**
      * 初始化
@@ -430,7 +427,7 @@ public class ContactsFragment extends Fragment implements ResponseListener, Item
                     FamilyInfo item;
                     for (int i = 0; i < data.length; i++) {
                         item = new FamilyInfo();
-                        item.id = data.getString(i, "orgUuid");
+                        item.id = data.getString(i, "id");
                         item.name = data.getString(i, "name");
                         familyList.add(item);
                     }
@@ -458,10 +455,11 @@ public class ContactsFragment extends Fragment implements ResponseListener, Item
                 RequestConfig config = new RequestConfig(mActivity, 0);
                 config.handler = msgHand.getHandler();
                 RequestParams params = new RequestParams();
-                params.put("token", accessToken);
-                params.put("parentId", "0");//0：取根目录
+                params.put("orgID", "0");//架构UUID编号,0取顶级架构
+                params.put("familyTypeId", "0");//族谱类型ID：0组织架构
+                params.put("status", "0");//族谱类型ID：0组织架构
                 params.put("corpId", Tools.getStringValue(mActivity, Contants.storage.CORPID));
-                HttpTools.httpGet(Contants.URl.URL_ICETEST, "/orgms/org/batch", config, params);
+                HttpTools.httpGet(Contants.URl.URL_ICETEST, "/txl2/contacts/childDatas", config, params);
             }
         });
         //读取本地缓存列表
@@ -494,25 +492,38 @@ public class ContactsFragment extends Fragment implements ResponseListener, Item
         modifyContactsList();
 
         LinkManListCache = Tools.getLinkManList(mActivity);
+        JSONArray json1 = null;
         if (StringUtils.isNotEmpty(LinkManListCache)) {
-            JSONArray jsonString = HttpTools.getContentJsonArray(LinkManListCache);
-            if (jsonString != null) {
-                ResponseData data = HttpTools.getResponseContent(jsonString);
-                if (jsonString.length() > 0) {
+            try {
+                JSONObject jsonObj = new JSONObject(LinkManListCache);
+                String str = jsonObj.optString("content");
+                JSONObject jsonObj2 = new JSONObject(str);
+                json1 = jsonObj2.getJSONArray("data");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            if (json1 != null) {
+                ResponseData data = HttpTools.getResponseContent(json1);
+                if (json1.length() > 0) {
                     //有收藏联系人
-                    //rlNulllinkman.setVisibility(View.GONE);
+//                    rlNulllinkman.setVisibility(View.GONE);
                 }
                 getPinyinList(data);
             }
         }
     }
 
+    /**
+     * 查询常用联系人
+     */
     void modifyContactsList() {
         RequestConfig config = new RequestConfig(mActivity, PullRefreshListView.HTTP_FRESH_CODE);
         config.handler = msgHand.getHandler();
         RequestParams params = new RequestParams();
-        params.put("uid", UserInfo.employeeAccount);
-        HttpTools.httpGet(Contants.URl.URL_ICETEST, "/phonebook/frequentContacts", config, params);
+        params.put("owner", UserInfo.employeeAccount);
+        params.put("page", "1");
+        params.put("pagesize", "100");
+        HttpTools.httpGet(Contants.URl.URL_ICETEST, "/txl2/contacts", config, params);
     }
 
     /**
@@ -559,7 +570,6 @@ public class ContactsFragment extends Fragment implements ResponseListener, Item
 
     @Override
     public void onAttach(Activity activity) {
-        // TODO Auto-generated method stub
         super.onAttach(activity);
         mActivity = activity;
     }
@@ -574,27 +584,32 @@ public class ContactsFragment extends Fragment implements ResponseListener, Item
 
     @Override
     public void onRequestStart(Message msg, String hintString) {
-        Log.d(TAG, "onRequestStart");
     }
 
     @Override
     public void onSuccess(Message msg, String jsonString, String hintString) {
-        Log.d(TAG, "onSuccess" + jsonString);
-
-        JSONArray json = HttpTools.getContentJsonArray(jsonString);
-        if (json != null) {
+        JSONArray json1 = null;
+        try {
+            JSONObject jsonObj = new JSONObject(jsonString);
+            String str = jsonObj.optString("content");
+            JSONObject jsonObj2 = new JSONObject(str);
+            json1 = jsonObj2.getJSONArray("data");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        if (json1 != null) {
             Tools.saveLinkManList(mActivity, jsonString);
             LinkManListCache = jsonString;
-            ResponseData data = HttpTools.getResponseContent(json);
-            if (json.length() > 0) {
+            ResponseData data = HttpTools.getResponseContent(json1);
+            if (json1.length() > 0) {
                 //rlNulllinkman.setVisibility(View.GONE);
             }
             getPinyinList(data);
         }
+
     }
 
     @Override
     public void onFail(Message msg, String hintString) {
-        Log.d(TAG, "onFail");
     }
 }

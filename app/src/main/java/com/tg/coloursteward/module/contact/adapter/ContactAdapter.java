@@ -33,7 +33,7 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         SEARCH, HEADER, DEFAULT
     }
 
-    public static final int mIndexForContact = 5;  //搜索 //组织架构 //我的部门 //手机联系人 //群聊
+    public static final int mIndexForContact = 4;  //搜索 //组织架构 //我的部门 //手机联系人 //群聊
 
     private Context mContext;
     private int mCollectIndex;
@@ -89,7 +89,7 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         if (holder instanceof ContactHolder) {
             final ContactHolder contactHolder = (ContactHolder) holder;
-            if (position > 0 && position < mCollectIndex) {
+            if (position > 0 && position <= mCollectIndex) {
                 int icon = defaultIcon(position);
                 contactHolder.iv_header.setImageResource(icon);
                 contactHolder.cb_collect.setVisibility(View.GONE);

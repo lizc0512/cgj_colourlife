@@ -119,7 +119,7 @@ public class ContactsSearchLoader extends AsyncTaskLoader {
 
 
     private List<SearchContactBean> searchIce(String key) {
-        String url = Contants.URl.URL_ICETEST + "/phonebook/search";
+        String url = Contants.URl.URL_ICETEST + "/txl2/contacts/search";
         ContentValues params = new ContentValues();
         params.put("keyword", key);
         ColorsConfig.commonParams(params);
@@ -137,20 +137,20 @@ public class ContactsSearchLoader extends AsyncTaskLoader {
                         for (int i = 0; i < 3; i++) {
                             info = new FindContactInfo();
                             info.username = data.getString(i, "username");
-                            info.realname = data.getString(i, "realname");
-                            info.avatar = data.getString(i, "avatar");
-                            info.org_name = data.getString(i, "org_name");
-                            info.job_name = data.getString(i, "job_name");
+                            info.realname = data.getString(i, "name");
+                            info.avatar = data.getString(i, "http://avatar.ice.colourlife.com/avatar?uid="+data.getString(i, "username"));
+                            info.org_name = data.getString(i, "orgName");
+                            info.job_name = data.getString(i, "jobType");
                             list1.add(info);
                         }
                     } else {
                         for (int i = 0; i < data.length; i++) {
                             info = new FindContactInfo();
                             info.username = data.getString(i, "username");
-                            info.realname = data.getString(i, "realname");
-                            info.avatar = data.getString(i, "avatar");
-                            info.org_name = data.getString(i, "org_name");
-                            info.job_name = data.getString(i, "job_name");
+                            info.realname = data.getString(i, "name");
+                            info.avatar = data.getString(i, "http://avatar.ice.colourlife.com/avatar?uid="+data.getString(i, "username"));
+                            info.org_name = data.getString(i, "orgName");
+                            info.job_name = data.getString(i, "jobType");
                             list1.add(info);
                         }
                     }

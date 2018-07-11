@@ -510,13 +510,14 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
                 }
             }
         };
-
-        ContactBean contact = groupList3.get(0);
-        String ownerId = contact.getUuid();
-        if (StringUtils.isEmpty(ownerId)) {
-            return;
+        String ownerId = null;
+        if (null != groupList3 && groupList3.size() > 0) {
+            ContactBean contact = groupList3.get(0);
+            ownerId = contact.getUuid();
+            if (StringUtils.isEmpty(ownerId)) {
+                return;
+            }
         }
-
         HuxinSdkManager.instance().reqModifyGroupInfo(
                 mGroupId, ownerId, "",
                 "", "", "",

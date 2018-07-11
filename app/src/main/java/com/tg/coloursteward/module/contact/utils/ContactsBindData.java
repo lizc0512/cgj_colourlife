@@ -2,7 +2,6 @@ package com.tg.coloursteward.module.contact.utils;
 
 import android.content.Context;
 import android.text.TextUtils;
-import android.widget.Toast;
 
 import com.tg.coloursteward.module.groupchat.SearchContactAdapter;
 import com.tg.coloursteward.net.ResponseData;
@@ -84,21 +83,30 @@ public class ContactsBindData extends Observable {
         for (int i = 0; i < data.length; i++) {
 
             contact = new ContactBean();
-            String hanzi = data.getString(i, "realname");
+            String hanzi = data.getString(i, "name");//真实名字
             contact.setRealname(hanzi);
-            contact.setUsername(data.getString(i, "username"));
-            contact.setAvatar(data.getString(i, "avatar"));
-            contact.setEmail(data.getString(i, "email"));
-            contact.setJobName(data.getString(i, "jobName"));
-            contact.setOrgName(data.getString(i, "orgName"));
-            contact.setOrgID(data.getString(i, "orgID"));
+            contact.setUsername(data.getString(i, "username"));//联系人用户名
+            contact.setAvatar(data.getString(i, "icon"));//头像
+            contact.setEmail(data.getString(i, "email"));//邮箱
+            contact.setJobName(data.getString(i, "jobName"));//岗位名称
+            contact.setOrgName(data.getString(i, "orgName"));//组织架构名称
+            contact.setOrgID(data.getString(i, "orgID"));//组织架构uuid
 
             String uuid = data.getString(i, "contactsId");
-            if (TextUtils.isEmpty(uuid)) {
-                Toast.makeText(context, "收藏联系人接口错误" + hanzi + "的uuid为空", Toast.LENGTH_SHORT).show();
+            String accountUuid = data.getString(i, "accountUuid");
+            if (!TextUtils.isEmpty(uuid) || !TextUtils.isEmpty(accountUuid)) {
+                if (!TextUtils.isEmpty(uuid)) {
+                    contact.setUuid(uuid);
+                } else {
+                    contact.setUuid(accountUuid);
+                }
+            }
+            if (TextUtils.isEmpty(uuid) || TextUtils.isEmpty(accountUuid)) {
+//                Looper.prepare();
+//                Toast.makeText(context, "收藏联系人接口错误" + hanzi + "的uuid为空", Toast.LENGTH_SHORT).show();
+//                Looper.loop();// 进入loop中的循环，查看消息队列
             }
 
-            contact.setUuid(data.getString(i, "contactsId"));
 
             StringBuilder pinyin = new StringBuilder();
             StringBuilder ch = new StringBuilder();

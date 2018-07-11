@@ -8,6 +8,7 @@ import com.youmai.hxsdk.entity.cn.CN;
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
+import org.greenrobot.greendao.annotation.Transient;
 
 /**
  * Created by YW on 2018/4/11.
@@ -40,6 +41,42 @@ public class ContactBean implements CN, Parcelable {
 
     private String orgType;
     private int uiType;
+
+    //新增字段
+    @Transient
+    private String name;
+    @Transient
+    private String qq;
+
+    public String getFavoriteid() {
+        return Favoriteid;
+    }
+
+    public void setFavoriteid(String favoriteid) {
+        Favoriteid = favoriteid;
+    }
+
+    public String getAccountUuid() {
+        return accountUuid;
+    }
+
+    public void setAccountUuid(String accountUuid) {
+        this.accountUuid = accountUuid;
+    }
+
+    @Transient
+
+    private String phone_number;
+    @Transient
+    private String family;
+    @Transient
+    private String icon;
+    @Transient
+    private String Favoriteid;//企业短号
+    @Transient
+    private String accountUuid;//
+    @Transient
+    private String enterprise_cornet;//
 
     public ContactBean(String name) {
         this.realname = name;
@@ -171,6 +208,58 @@ public class ContactBean implements CN, Parcelable {
         this.username = username;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getQq() {
+        return qq;
+    }
+
+    public void setQq(String qq) {
+        this.qq = qq;
+    }
+
+    public String getPhone_number() {
+        return phone_number;
+    }
+
+    public void setPhone_number(String phone_number) {
+        this.phone_number = phone_number;
+    }
+
+    public String getFamily() {
+        return family;
+    }
+
+    public void setFamily(String family) {
+        this.family = family;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
+
+    public String getEnterprise_cornet() {
+        return enterprise_cornet;
+    }
+
+    public void setEnterprise_cornet(String enterprise_cornet) {
+        this.enterprise_cornet = enterprise_cornet;
+    }
+
+    public boolean isIs_hx() {
+        return is_hx;
+    }
+
     public String getSign() {
         return this.sign;
     }
@@ -238,6 +327,14 @@ public class ContactBean implements CN, Parcelable {
         dest.writeString(this.pinyin);
         dest.writeString(this.simplePinyin);
         dest.writeInt(this.uiType);
+        dest.writeString(this.name);
+        dest.writeString(this.qq);
+        dest.writeString(this.phone_number);
+        dest.writeString(this.family);
+        dest.writeString(this.icon);
+        dest.writeString(this.enterprise_cornet);
+        dest.writeString(this.accountUuid);
+        dest.writeString(this.Favoriteid);
     }
 
 
@@ -271,6 +368,20 @@ public class ContactBean implements CN, Parcelable {
         this.pinyin = in.readString();
         this.simplePinyin = in.readString();
         this.uiType = in.readInt();
+        this.name = in.readString();
+        this.qq = in.readString();
+        this.phone_number = in.readString();
+        this.family = in.readString();
+        this.icon = in.readString();
+        this.accountUuid = in.readString();
+        this.Favoriteid = in.readString();
+    }
+
+
+
+
+    @Generated(hash = 1283900925)
+    public ContactBean() {
     }
 
 
@@ -305,9 +416,7 @@ public class ContactBean implements CN, Parcelable {
     }
 
 
-    @Generated(hash = 1283900925)
-    public ContactBean() {
-    }
+   
 
     public static final Creator<ContactBean> CREATOR = new Creator<ContactBean>() {
         @Override

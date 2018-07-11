@@ -6,6 +6,7 @@ import android.os.Parcelable;
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.annotation.Transient;
 
 /**
  * Created by YW on 2018/4/11.
@@ -28,8 +29,38 @@ public class EmployeeBean implements Parcelable {
     private String orgName;
     private String username; //拼音的姓 与 名的首字母
     private String enterprise_cornet;
+    @Transient
+    private String qq;
+    @Transient
+    private String Favoriteid;
 
+    public String getFavoriteid() {
+        return Favoriteid;
+    }
 
+    public void setFavoriteid(String favoriteid) {
+        Favoriteid = favoriteid;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Transient
+
+    private String name;
+
+    public String getQq() {
+        return qq;
+    }
+
+    public void setQq(String qq) {
+        this.qq = qq;
+    }
 
     public String getUid() {
         return uid;

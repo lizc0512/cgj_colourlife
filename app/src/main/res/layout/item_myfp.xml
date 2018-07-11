@@ -80,7 +80,7 @@
                 android:layout_marginRight="10dp"
                 android:gravity="left"
                 android:text="0.00"
-                android:textColor="#101010"
+                android:textColor="#EA5228"
                 android:textSize="24dp" />
         </LinearLayout>
 
@@ -92,7 +92,10 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:divider="@color/line_color"
+            android:showDividers="middle"
+            android:orientation="horizontal">
 
             <RelativeLayout
                 android:id="@+id/rl_team_bonus_detail"

@@ -5,144 +5,135 @@
     android:background="@color/white"
     android:orientation="vertical">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/iv_close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="18dp"
+            android:src="@drawable/guanbi_2" />
+
+        <TextView
+            android:id="@+id/tv_title"
+            style="@style/black_18"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginBottom="@dimen/margin_10"
+            android:layout_marginTop="@dimen/margin_10"
+            android:singleLine="true"
+            android:text="登录" />
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:text="彩管家账号登录"
+        android:textColor="@color/text_1"
+        android:textSize="14sp" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:orientation="vertical">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <ImageView
-                android:id="@+id/iv_close"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="18dp"
-                android:src="@drawable/guanbi_2" />
-
-            <TextView
-                android:id="@+id/tv_title"
-                style="@style/black_18"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:layout_marginBottom="@dimen/margin_10"
-                android:layout_marginTop="@dimen/margin_10"
-                android:singleLine="true"
-                android:text="登录" />
-        </RelativeLayout>
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="25dp"
+        android:background="@drawable/shape_login_bg"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="20dp"
-            android:text="彩管家账号登录"
+            android:layout_marginRight="10dp"
+            android:paddingLeft="10dp"
+            android:text="账号"
             android:textColor="@color/text_1"
-            android:textSize="14sp" />
+            android:textSize="15sp" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <EditText
+            android:id="@+id/edit_user"
+            style="@style/black_15"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="25dp"
-            android:background="@drawable/shape_login_bg"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingBottom="5dp"
-            android:paddingTop="5dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
-                android:paddingLeft="10dp"
-                android:text="账号"
-                android:textColor="@color/text_1"
-                android:textSize="15sp" />
-
-            <EditText
-                android:id="@+id/edit_user"
-                style="@style/black_15"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@null"
-                android:hint="输入OA账号"
-                android:inputType="text"
-                android:padding="10dp"
-                android:singleLine="true"
-                android:textColorHint="@color/text_color1" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/shape_login_bg"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingBottom="5dp"
-            android:paddingTop="5dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
-                android:paddingLeft="10dp"
-                android:text="密码"
-                android:textColor="@color/text_1"
-                android:textSize="15sp" />
-
-            <EditText
-                android:id="@+id/edit_password"
-                style="@style/black_15"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@null"
-                android:hint="输入密码"
-                android:inputType="textPassword"
-                android:padding="10dp"
-                android:singleLine="true"
-                android:textColorHint="@color/text_color1" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/submit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="26dp"
-            android:background="@drawable/tijiaobaoxiu"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:padding="15dp">
-
-
-            <TextView
-                style="@style/white_16"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="立即登录" />
-        </LinearLayout>
+            android:layout_weight="1"
+            android:background="@null"
+            android:hint="输入OA账号"
+            android:inputType="text"
+            android:padding="10dp"
+            android:singleLine="true"
+            android:textColorHint="@color/text_color1" />
     </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/shape_login_bg"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:paddingLeft="10dp"
+            android:text="密码"
+            android:textColor="@color/text_1"
+            android:textSize="15sp" />
+
+        <EditText
+            android:id="@+id/edit_password"
+            style="@style/black_15"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@null"
+            android:hint="输入密码"
+            android:inputType="textPassword"
+            android:padding="10dp"
+            android:singleLine="true"
+            android:textColorHint="@color/text_color1" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/submit"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="26dp"
+        android:background="@drawable/tijiaobaoxiu"
+        android:gravity="center">
+
+
+        <TextView
+            style="@style/white_16"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="立即登录" />
+    </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/forget_pwd"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
+        android:layout_gravity="end"
         android:background="@color/white"
         android:paddingBottom="15dp"
-        android:layout_gravity="end"
         android:paddingTop="10dp">
 
         <TextView

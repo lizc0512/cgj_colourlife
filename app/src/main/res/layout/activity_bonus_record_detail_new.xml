@@ -6,10 +6,6 @@
     android:orientation="vertical"
     tools:context=".BonusRecordDetailNewActivity">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="3dp"
-        android:background="@color/color_93" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -164,7 +160,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="17dp"
                 android:text="本月集体奖金包" />
 
             <TextView
@@ -314,8 +310,4 @@
 
     </LinearLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="3dp"
-        android:background="@color/color_93" />
 </LinearLayout>

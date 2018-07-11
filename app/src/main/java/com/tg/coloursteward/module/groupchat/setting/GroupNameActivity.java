@@ -1,6 +1,7 @@
 package com.tg.coloursteward.module.groupchat.setting;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -39,11 +40,13 @@ public class GroupNameActivity extends Activity {
 
     private String name;
     private int groupId;
+    private Context mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.group_name_setting);
+        mContext = this;
 
         initView();
         initData();
@@ -98,11 +101,19 @@ public class GroupNameActivity extends Activity {
                     return;
                 }
 
+                final ProgressDialog dialog = new ProgressDialog(mContext);
+                dialog.setCanceledOnTouchOutside(false);// 不能取消
+                dialog.setTitle("正在请求修改群名称...");
+                dialog.show();
+
                 ReceiveListener receiveListener = new ReceiveListener() {
                     @Override
                     public void OnRec(PduBase pduBase) {
                         try {
                             YouMaiGroup.GroupInfoModifyRsp ack = YouMaiGroup.GroupInfoModifyRsp.parseFrom(pduBase.body);
+
+                            dialog.dismiss();
+
                             if (ack.getResult() == YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS) {
                                 Toast.makeText(GroupNameActivity.this, "修改群名称成功", Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent();

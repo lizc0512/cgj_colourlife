@@ -1,8 +1,11 @@
 package com.tg.coloursteward.module.groupchat;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -35,6 +38,9 @@ import java.util.List;
  */
 public class GroupListActivity extends BaseActivity {
 
+    public static final String GROUP_ID = "groupId";
+    public static final String GROUP_EXIT = "group.exit";
+
     private Context mContext;
     private XRecyclerView mRefreshRecyclerView;
     private GroupListAdapter mAdapter;
@@ -43,6 +49,29 @@ public class GroupListActivity extends BaseActivity {
     LinearLayout ll_group_list;
     TextView tv_no_group;
 
+    private LocalBroadcastManager localBroadcastManager;
+    private LocalMsgReceiver mLocalMsgReceiver;
+
+
+    /**
+     * 消息广播
+     */
+    private class LocalMsgReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (GROUP_EXIT.equals(action)) {
+                int groupId = intent.getIntExtra("groupId", 0);
+                if (groupId != 0) {
+                    mAdapter.exitGroupById(groupId);
+                }
+            }
+
+        }
+    }
+
+
     private EmptyRecyclerViewDataObserver mEmptyRvDataObserver = new EmptyRecyclerViewDataObserver();
 
     @Override
@@ -50,12 +79,19 @@ public class GroupListActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         mContext = this;
         initView();
+
+        localBroadcastManager = LocalBroadcastManager.getInstance(mContext);
+        mLocalMsgReceiver = new LocalMsgReceiver();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(GROUP_EXIT);
+        localBroadcastManager.registerReceiver(mLocalMsgReceiver, filter);
+
+        initData();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        initData();
     }
 
     @Override
@@ -74,6 +110,8 @@ public class GroupListActivity extends BaseActivity {
         if (null != mAdapter) {
             mAdapter.unregisterAdapterDataObserver(mEmptyRvDataObserver);
         }
+        localBroadcastManager.unregisterReceiver(mLocalMsgReceiver);
+        localBroadcastManager = null;
     }
 
     private void initView() {

@@ -51,6 +51,18 @@ public class GroupListAdapter extends RecyclerView.Adapter {
         notifyDataSetChanged();
     }
 
+
+    public void exitGroupById(int groupId) {
+        for (GroupInfoBean item : mGroupList) {
+            if (item.getGroup_id() == groupId) {
+                mGroupList.remove(item);
+                break;
+            }
+        }
+
+        notifyDataSetChanged();
+    }
+
     public List<GroupInfoBean> getMessageList() {
         return mGroupList;
     }

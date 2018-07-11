@@ -25,6 +25,7 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import com.tg.coloursteward.EmployeeDataActivity;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.module.groupchat.AddContactsCreateGroupActivity;
+import com.tg.coloursteward.module.groupchat.GroupListActivity;
 import com.tg.coloursteward.module.groupchat.deletecontact.DeleteContactListActivity;
 import com.tg.coloursteward.module.groupchat.setting.GroupManageActivity;
 import com.tg.coloursteward.module.groupchat.setting.GroupNameActivity;
@@ -535,6 +536,12 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
                     if (ack.getResult() == YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS) {
                         Toast.makeText(ChatGroupDetailsActivity.this, "退出成功", Toast.LENGTH_SHORT).show();
                         GroupInfoHelper.instance().delGroupInfo(mContext, mGroupId);
+
+                        Intent intent = new Intent(GroupListActivity.GROUP_EXIT);
+                        intent.putExtra(GroupListActivity.GROUP_ID, mGroupId);
+                        LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(mContext);
+                        localBroadcastManager.sendBroadcast(intent);
+
                         CacheMsgHelper.instance().deleteAllMsg(mContext, mGroupId + ""); //退出群不删除聊天
                         finish();
                         HuxinSdkManager.instance().getStackAct().finishActivity(IMGroupActivity.class);

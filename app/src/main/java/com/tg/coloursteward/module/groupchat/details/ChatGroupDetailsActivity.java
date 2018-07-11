@@ -52,10 +52,6 @@ import com.youmai.hxsdk.utils.GsonUtil;
 import com.youmai.hxsdk.utils.ListUtils;
 import com.youmai.hxsdk.utils.StringUtils;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -237,7 +233,6 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
         });
 
 
-
         mAdapter = new GroupDetailAdapter(this, this);
         GridLayoutManager manager = new GridLayoutManager(this, 5);
         mGridView.addItemDecoration(new PaddingItemDecoration(5));
@@ -275,75 +270,6 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
     }
 
     private void reqGroupMembers() {
-        if (!AppUtils.isNetworkConnected(this)) {
-            String groupMemberJson = mGroupInfo.getGroupMemberJson();
-            if (!StringUtils.isEmpty(groupMemberJson)) {
-                try {
-                    if (groupList.size() > 0) {
-                        groupList.clear();
-                    }
-                    if (!ListUtils.isEmpty(groupList2)) {
-                        groupList2.clear();
-                    }
-                    if (!ListUtils.isEmpty(groupList3)) {
-                        groupList3.clear();
-                    }
-                    JSONArray jsonArray = new JSONArray(groupMemberJson);
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        JSONObject jsonObject = (JSONObject) jsonArray.get(i);
-                        String member_id = jsonObject.optString("member_id");
-                        String member_name = jsonObject.optString("member_name");
-                        int member_role = jsonObject.optInt("member_role");
-                        String user_name = jsonObject.optString("user_name");
-
-                        if (member_id.equals(HuxinSdkManager.instance().getUuid())) {
-                            if (member_role == 0) {
-                                isGroupOwner = true;
-                                mRlGroupManage.setVisibility(View.VISIBLE);
-                            }
-                        }
-
-                        ContactBean contact = new ContactBean();
-                        contact.setRealname(member_name);
-                        contact.setUsername(user_name);
-                        contact.setUuid(member_id);
-                        contact.setMemberRole(member_role);
-                        if (contact.getMemberRole() == 0) {
-                            groupList.add(0, contact);
-                        } else {
-                            groupList.add(contact);
-                        }
-                        groupList2.add(contact);
-                        if (member_role != 0) {
-                            groupList3.add(contact);
-                        }
-                    }
-
-                    String title = String.format(getString(R.string.group_default_title),
-                            "聊天详情", groupList.size());
-                    mTvTitle.setText(title);
-
-                    if (isGroupOwner) {
-                        ContactBean contact1 = new ContactBean();
-                        contact1.setRealname("+");
-                        groupList.add(contact1);
-                        ContactBean contact2 = new ContactBean();
-                        contact2.setRealname("-");
-                        groupList.add(contact2);
-                        mAdapter.setType(2);
-                    } else {
-                        ContactBean contact = new ContactBean();
-                        contact.setRealname("+");
-                        groupList.add(contact);
-                        mAdapter.setType(1);
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                mAdapter.setDataList(groupList);
-            }
-        }
-
         HuxinSdkManager.instance().reqGroupMember(mGroupId, new ReceiveListener() {
             @Override
             public void OnRec(PduBase pduBase) {
@@ -413,6 +339,27 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
                     }
 
                     mAdapter.setDataList(groupList);
+
+                    if (groupList2.size() <= 1) {
+                        HuxinSdkManager.instance().delGroup(mGroupId, new ReceiveListener() {
+                            @Override
+                            public void OnRec(PduBase pduBase) {
+                                try {
+                                    YouMaiGroup.GroupDissolveRsp ack = YouMaiGroup.GroupDissolveRsp.parseFrom(pduBase.body);
+                                    if (ack.getResult() == YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS) {
+                                        CacheMsgHelper.instance().delCacheMsgGroupId(mContext, mGroupId);
+
+                                        finish();
+                                        HuxinSdkManager.instance().getStackAct().finishActivity(IMGroupActivity.class);
+                                    }
+
+                                } catch (InvalidProtocolBufferException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+                    }
+
                 } catch (InvalidProtocolBufferException e) {
                     e.printStackTrace();
                 }

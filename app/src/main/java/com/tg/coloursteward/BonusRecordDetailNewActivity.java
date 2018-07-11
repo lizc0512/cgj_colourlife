@@ -15,9 +15,10 @@ import com.tg.coloursteward.entity.BonusRecordDetailEntity;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.RequestConfig;
 import com.tg.coloursteward.net.RequestParams;
-import com.tg.coloursteward.view.dialog.ToastFactory;
 import com.tg.coloursteward.util.GsonUtils;
+import com.tg.coloursteward.view.dialog.ToastFactory;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -87,7 +88,7 @@ public class BonusRecordDetailNewActivity extends BaseActivity {
             public void onClick(View v) {
                 intent = new Intent(BonusRecordDetailNewActivity.this, EffectDetailActivity.class);
 //                intent.putExtra(EffectDetailActivity.BONUS_RECORD_INFO,(Serializable) list);
-                EffectDetailActivity.listinfo=list;
+                EffectDetailActivity.listinfo = list;
                 intent.putExtra("type", "group");
                 startActivity(intent);
             }
@@ -97,7 +98,7 @@ public class BonusRecordDetailNewActivity extends BaseActivity {
             public void onClick(View v) {
                 intent = new Intent(BonusRecordDetailNewActivity.this, EffectDetailActivity.class);
 //                intent.putExtra(EffectDetailActivity.BONUS_RECORD_INFO, (Serializable) list);
-                EffectDetailActivity.listinfo=list;
+                EffectDetailActivity.listinfo = list;
                 intent.putExtra("type", "persion");
                 startActivity(intent);
             }
@@ -128,7 +129,10 @@ public class BonusRecordDetailNewActivity extends BaseActivity {
                     DecimalFormat df = new DecimalFormat("0.00");
                     tv_coefficient_group.setText(list.get(0).getTotaljjbbase() + "");
                     tv_coefficient_personal.setText(list.get(0).getJjbbase() + "");
-                    tv_Bonus_personal.setText(df.format(list.get(0).getBaoFee()));
+                    BigDecimal a1 = new BigDecimal(Double.toString(list.get(0).getBaoFee()));
+                    BigDecimal b1 = new BigDecimal(Double.toString(list.get(0).getJjbbase()));
+                    BigDecimal result1 = a1.multiply(b1);
+                    tv_Bonus_personal.setText(df.format(result1) + "");
                     tv_bonus_groupbao.setText(df.format(list.get(0).getJtbaoFee()));
                     tv_bonus_groupnum.setText(df.format(list.get(0).getJtkkfee()));
                     double a = Double.parseDouble(df.format(list.get(0).getNormalFee()));

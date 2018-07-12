@@ -9,12 +9,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
@@ -45,10 +42,11 @@ import com.tg.coloursteward.info.GridViewInfo;
 import com.tg.coloursteward.info.HomeDeskTopInfo;
 import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.log.Logger;
-import com.tg.coloursteward.module.meassage.MsgListFragment;
 import com.tg.coloursteward.module.contact.ContactsFragment;
+import com.tg.coloursteward.module.meassage.MsgListFragment;
 import com.tg.coloursteward.net.GetTwoRecordListener;
 import com.tg.coloursteward.net.HttpTools;
+import com.tg.coloursteward.net.MD5;
 import com.tg.coloursteward.net.MessageHandler;
 import com.tg.coloursteward.net.RequestConfig;
 import com.tg.coloursteward.net.RequestParams;
@@ -308,7 +306,6 @@ public class MainActivity1 extends AppCompatActivity implements MessageHandler.R
                         //保存key  sectet
                         Tools.saveStringValue(this, Contants.EMPLOYEE_LOGIN.key, key);
                         Tools.saveStringValue(this, Contants.EMPLOYEE_LOGIN.secret, secret);
-
                         HuxinSdkManager.instance().setKey(key);
                         HuxinSdkManager.instance().setSecret(secret);
                         HuxinSdkManager.instance().saveUserInfo();
@@ -381,8 +378,8 @@ public class MainActivity1 extends AppCompatActivity implements MessageHandler.R
 
     @Override
     public void onFail(Message msg, String hintString) {
-        if(msg.arg1==HttpTools.SET_EMPLOYEE_INFO){
-            ToastFactory.showToast(this,"账号异常，请联系管理员");
+        if (msg.arg1 == HttpTools.SET_EMPLOYEE_INFO) {
+            ToastFactory.showToast(this, "账号异常，请联系管理员");
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -393,7 +390,7 @@ public class MainActivity1 extends AppCompatActivity implements MessageHandler.R
                     CityPropertyApplication.gotoLoginActivity(MainActivity1.this);
                     HuxinSdkManager.instance().loginOut();
                 }
-            },1000);
+            }, 1000);
 
         }
 
@@ -616,7 +613,15 @@ public class MainActivity1 extends AppCompatActivity implements MessageHandler.R
         RequestConfig config = new RequestConfig(this, HttpTools.SET_EMPLOYEE_INFO, null);
         RequestParams params = new RequestParams();
         params.put("username", UserInfo.employeeAccount);
-        params.put("password", pwd);
+        try {
+            params.put("password", MD5.getMd5Value(pwd).toLowerCase());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        String key = Tools.getStringValue(MainActivity1.this, Contants.EMPLOYEE_LOGIN.key);
+        String secret = Tools.getStringValue(MainActivity1.this, Contants.EMPLOYEE_LOGIN.secret);
+        params.put("key", key);
+        params.put("secret", secret);
         HttpTools.httpPost(Contants.URl.URL_CPMOBILE, "/1.0/employee/login", config, params);
     }
 

@@ -48,24 +48,7 @@ public class ContactBean implements CN, Parcelable {
     @Transient
     private String qq;
 
-    public String getFavoriteid() {
-        return Favoriteid;
-    }
-
-    public void setFavoriteid(String favoriteid) {
-        Favoriteid = favoriteid;
-    }
-
-    public String getAccountUuid() {
-        return accountUuid;
-    }
-
-    public void setAccountUuid(String accountUuid) {
-        this.accountUuid = accountUuid;
-    }
-
     @Transient
-
     private String phone_number;
     @Transient
     private String family;
@@ -300,6 +283,69 @@ public class ContactBean implements CN, Parcelable {
         this.uiType = uiType;
     }
 
+    public String getFavoriteid() {
+        return Favoriteid;
+    }
+
+    public void setFavoriteid(String favoriteid) {
+        Favoriteid = favoriteid;
+    }
+
+    public String getAccountUuid() {
+        return accountUuid;
+    }
+
+    public void setAccountUuid(String accountUuid) {
+        this.accountUuid = accountUuid;
+    }
+
+
+    public String getOrgType() {
+        return this.orgType;
+    }
+
+
+    public void setOrgType(String orgType) {
+        this.orgType = orgType;
+    }
+
+
+    @Generated(hash = 1283900925)
+    public ContactBean() {
+    }
+
+
+    @Generated(hash = 35180811)
+    public ContactBean(Long id, String uuid, String uid, String mobile,
+                       String realname, String avatar, String sex, String email,
+                       String isFavorite, String jobName, String landline, String orgID,
+                       String orgName, String username, int memberRole, String sign,
+                       boolean is_hx, String pinyin, String simplePinyin, String orgType,
+                       int uiType) {
+        this.id = id;
+        this.uuid = uuid;
+        this.uid = uid;
+        this.mobile = mobile;
+        this.realname = realname;
+        this.avatar = avatar;
+        this.sex = sex;
+        this.email = email;
+        this.isFavorite = isFavorite;
+        this.jobName = jobName;
+        this.landline = landline;
+        this.orgID = orgID;
+        this.orgName = orgName;
+        this.username = username;
+        this.memberRole = memberRole;
+        this.sign = sign;
+        this.is_hx = is_hx;
+        this.pinyin = pinyin;
+        this.simplePinyin = simplePinyin;
+        this.orgType = orgType;
+        this.uiType = uiType;
+    }
+
+
     @Override
     public int describeContents() {
         return 0;
@@ -326,25 +372,16 @@ public class ContactBean implements CN, Parcelable {
         dest.writeByte(this.is_hx ? (byte) 1 : (byte) 0);
         dest.writeString(this.pinyin);
         dest.writeString(this.simplePinyin);
+        dest.writeString(this.orgType);
         dest.writeInt(this.uiType);
         dest.writeString(this.name);
         dest.writeString(this.qq);
         dest.writeString(this.phone_number);
         dest.writeString(this.family);
         dest.writeString(this.icon);
-        dest.writeString(this.enterprise_cornet);
-        dest.writeString(this.accountUuid);
         dest.writeString(this.Favoriteid);
-    }
-
-
-    public String getOrgType() {
-        return this.orgType;
-    }
-
-
-    public void setOrgType(String orgType) {
-        this.orgType = orgType;
+        dest.writeString(this.accountUuid);
+        dest.writeString(this.enterprise_cornet);
     }
 
     protected ContactBean(Parcel in) {
@@ -367,56 +404,17 @@ public class ContactBean implements CN, Parcelable {
         this.is_hx = in.readByte() != 0;
         this.pinyin = in.readString();
         this.simplePinyin = in.readString();
+        this.orgType = in.readString();
         this.uiType = in.readInt();
         this.name = in.readString();
         this.qq = in.readString();
         this.phone_number = in.readString();
         this.family = in.readString();
         this.icon = in.readString();
-        this.accountUuid = in.readString();
         this.Favoriteid = in.readString();
+        this.accountUuid = in.readString();
+        this.enterprise_cornet = in.readString();
     }
-
-
-
-
-    @Generated(hash = 1283900925)
-    public ContactBean() {
-    }
-
-
-    @Generated(hash = 35180811)
-    public ContactBean(Long id, String uuid, String uid, String mobile,
-            String realname, String avatar, String sex, String email,
-            String isFavorite, String jobName, String landline, String orgID,
-            String orgName, String username, int memberRole, String sign,
-            boolean is_hx, String pinyin, String simplePinyin, String orgType,
-            int uiType) {
-        this.id = id;
-        this.uuid = uuid;
-        this.uid = uid;
-        this.mobile = mobile;
-        this.realname = realname;
-        this.avatar = avatar;
-        this.sex = sex;
-        this.email = email;
-        this.isFavorite = isFavorite;
-        this.jobName = jobName;
-        this.landline = landline;
-        this.orgID = orgID;
-        this.orgName = orgName;
-        this.username = username;
-        this.memberRole = memberRole;
-        this.sign = sign;
-        this.is_hx = is_hx;
-        this.pinyin = pinyin;
-        this.simplePinyin = simplePinyin;
-        this.orgType = orgType;
-        this.uiType = uiType;
-    }
-
-
-   
 
     public static final Creator<ContactBean> CREATOR = new Creator<ContactBean>() {
         @Override

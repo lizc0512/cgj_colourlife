@@ -29,29 +29,14 @@ public class EmployeeBean implements Parcelable {
     private String orgName;
     private String username; //拼音的姓 与 名的首字母
     private String enterprise_cornet;
+
     @Transient
     private String qq;
+
     @Transient
     private String Favoriteid;
 
-    public String getFavoriteid() {
-        return Favoriteid;
-    }
-
-    public void setFavoriteid(String favoriteid) {
-        Favoriteid = favoriteid;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     @Transient
-
     private String name;
 
     public String getQq() {
@@ -166,26 +151,20 @@ public class EmployeeBean implements Parcelable {
         this.id = id;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
+    public String getFavoriteid() {
+        return Favoriteid;
     }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeValue(this.id);
-        dest.writeString(this.uid);
-        dest.writeString(this.mobile);
-        dest.writeString(this.realname);
-        dest.writeString(this.avatar);
-        dest.writeString(this.sex);
-        dest.writeString(this.email);
-        dest.writeString(this.isFavorite);
-        dest.writeString(this.jobName);
-        dest.writeString(this.landline);
-        dest.writeString(this.orgID);
-        dest.writeString(this.orgName);
-        dest.writeString(this.username);
+    public void setFavoriteid(String favoriteid) {
+        Favoriteid = favoriteid;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getEnterprise_cornet() {
@@ -196,26 +175,10 @@ public class EmployeeBean implements Parcelable {
         this.enterprise_cornet = enterprise_cornet;
     }
 
-    protected EmployeeBean(Parcel in) {
-        this.id = (Long) in.readValue(Long.class.getClassLoader());
-        this.uid = in.readString();
-        this.mobile = in.readString();
-        this.realname = in.readString();
-        this.avatar = in.readString();
-        this.sex = in.readString();
-        this.email = in.readString();
-        this.isFavorite = in.readString();
-        this.jobName = in.readString();
-        this.landline = in.readString();
-        this.orgID = in.readString();
-        this.orgName = in.readString();
-        this.username = in.readString();
-    }
-
     @Generated(hash = 1539865870)
     public EmployeeBean(Long id, String uid, String mobile, String realname, String avatar, String sex,
-            String email, String isFavorite, String jobName, String landline, String orgID, String orgName,
-            String username, String enterprise_cornet) {
+                        String email, String isFavorite, String jobName, String landline, String orgID, String orgName,
+                        String username, String enterprise_cornet) {
         this.id = id;
         this.uid = uid;
         this.mobile = mobile;
@@ -236,7 +199,53 @@ public class EmployeeBean implements Parcelable {
     public EmployeeBean() {
     }
 
-    public static final Parcelable.Creator<EmployeeBean> CREATOR = new Parcelable.Creator<EmployeeBean>() {
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeValue(this.id);
+        dest.writeString(this.uid);
+        dest.writeString(this.mobile);
+        dest.writeString(this.realname);
+        dest.writeString(this.avatar);
+        dest.writeString(this.sex);
+        dest.writeString(this.email);
+        dest.writeString(this.isFavorite);
+        dest.writeString(this.jobName);
+        dest.writeString(this.landline);
+        dest.writeString(this.orgID);
+        dest.writeString(this.orgName);
+        dest.writeString(this.username);
+        dest.writeString(this.enterprise_cornet);
+        dest.writeString(this.qq);
+        dest.writeString(this.Favoriteid);
+        dest.writeString(this.name);
+    }
+
+    protected EmployeeBean(Parcel in) {
+        this.id = (Long) in.readValue(Long.class.getClassLoader());
+        this.uid = in.readString();
+        this.mobile = in.readString();
+        this.realname = in.readString();
+        this.avatar = in.readString();
+        this.sex = in.readString();
+        this.email = in.readString();
+        this.isFavorite = in.readString();
+        this.jobName = in.readString();
+        this.landline = in.readString();
+        this.orgID = in.readString();
+        this.orgName = in.readString();
+        this.username = in.readString();
+        this.enterprise_cornet = in.readString();
+        this.qq = in.readString();
+        this.Favoriteid = in.readString();
+        this.name = in.readString();
+    }
+
+    public static final Creator<EmployeeBean> CREATOR = new Creator<EmployeeBean>() {
         @Override
         public EmployeeBean createFromParcel(Parcel source) {
             return new EmployeeBean(source);

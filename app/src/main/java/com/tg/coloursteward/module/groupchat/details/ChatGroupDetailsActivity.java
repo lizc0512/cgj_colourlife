@@ -346,18 +346,25 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
 
                     mAdapter.setDataList(groupList);
 
-                    if (groupList2.size() <= 1) {
+                    if (isGroupOwner && groupList2.size() <= 1) {
                         HuxinSdkManager.instance().delGroup(mGroupId, new ReceiveListener() {
                             @Override
                             public void OnRec(PduBase pduBase) {
                                 try {
                                     YouMaiGroup.GroupDissolveRsp ack = YouMaiGroup.GroupDissolveRsp.parseFrom(pduBase.body);
                                     if (ack.getResult() == YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS) {
-                                        CacheMsgHelper.instance().delCacheMsgGroupId(mContext, mGroupId);
-
-                                        finish();
-                                        HuxinSdkManager.instance().getStackAct().finishActivity(IMGroupActivity.class);
+                                        Toast.makeText(mContext, "此群组已经被解散", Toast.LENGTH_SHORT).show();
                                     }
+
+                                    Intent intent = new Intent(GroupListActivity.GROUP_EXIT);
+                                    intent.putExtra(GroupListActivity.GROUP_ID, mGroupId);
+                                    LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(mContext);
+                                    localBroadcastManager.sendBroadcast(intent);
+
+                                    CacheMsgHelper.instance().delCacheMsgGroupId(mContext, mGroupId);
+                                    GroupInfoHelper.instance().delGroupInfo(mContext, mGroupId);
+                                    finish();
+                                    HuxinSdkManager.instance().getStackAct().finishActivity(IMGroupActivity.class);
 
                                 } catch (InvalidProtocolBufferException e) {
                                     e.printStackTrace();

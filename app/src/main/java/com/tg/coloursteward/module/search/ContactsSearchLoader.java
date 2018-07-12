@@ -66,6 +66,7 @@ public class ContactsSearchLoader extends AsyncTaskLoader {
         } else {
             List<SearchContactBean> tempList = searchIce(mQuery);
             if (!ListUtils.isEmpty(tempList)) {
+                allList.clear();
                 allList.addAll(tempList);
             }
         }

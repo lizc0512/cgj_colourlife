@@ -16,14 +16,15 @@ import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.geetest.gt3unbindsdk.Bind.GT3GeetestBindListener;
 import com.geetest.gt3unbindsdk.Bind.GT3GeetestUtilsBind;
-import com.networkbench.agent.impl.NBSAppAgent;
 import com.tg.coloursteward.application.CityPropertyApplication;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.database.SharedPreferencesTools;
+import com.tg.coloursteward.entity.AccountEntity;
 import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.log.Logger;
 import com.tg.coloursteward.module.MainActivity1;
@@ -33,10 +34,12 @@ import com.tg.coloursteward.net.RequestConfig;
 import com.tg.coloursteward.net.RequestParams;
 import com.tg.coloursteward.net.ResponseData;
 import com.tg.coloursteward.object.ImageParams;
+import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.dialog.ToastFactory;
 import com.youmai.hxsdk.HuxinSdkManager;
+import com.youmai.hxsdk.utils.ToastUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -68,6 +71,7 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
     private String password;
     private String extras;
     private GT3GeetestUtilsBind gt3GeetestUtils;
+    private RelativeLayout submit;
 
     @Override
     public View getContentView() {
@@ -85,7 +89,6 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
 
     @Override
     protected boolean handClickEvent(View v) {
-        // TODO Auto-generated method stub
         switch (v.getId()) {
             case R.id.submit:
 //                if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_PHONE_STATE)
@@ -104,7 +107,7 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
                     return false;
                 }
                 loginGt();// 登录
-                // login();
+//                 login();
 //                }
                 break;
             case R.id.forget_pwd:
@@ -121,15 +124,12 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        NBSAppAgent.setLicenseKey("bbf07e0ce0b04fab93c46e4c57494e47").withLocationServiceEnabled(true).start(this.getApplicationContext());
         setContentView(R.layout.activity_login);
         Intent getintent = getIntent();
-
         boolean loginOut = getintent.getBooleanExtra("login_out", false);
         if (loginOut) {
             SharedPreferencesTools.clearUserId(this);
         }
-
         extras = getintent.getStringExtra(MainActivity.KEY_EXTRAS);
         contentLayout = findViewById(R.id.login_content);
         editUser = (EditText) findViewById(R.id.edit_user);
@@ -137,7 +137,8 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
         editPassword = (EditText) findViewById(R.id.edit_password);
         ivClose = (ImageView) findViewById(R.id.iv_close);
         ivClose.setOnClickListener(singleListener);
-        findViewById(R.id.submit).setOnClickListener(singleListener);
+        submit=findViewById(R.id.submit);
+        submit.setOnClickListener(singleListener);
         findViewById(R.id.forget_pwd).setOnClickListener(singleListener);
         RequestParams params = new RequestParams();
         RequestConfig config = new RequestConfig(this, HttpTools.GET_TS, "");
@@ -152,9 +153,10 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
         gt3GeetestUtils = new GT3GeetestUtilsBind(LoginActivity.this);
     }
 
+
     private void CheckPermission() {
            /* if (Build.VERSION.SDK_INT >= 23)
-	        {
+            {
 	            if (!Settings.canDrawOverlays(getApplicationContext()))
 	            {
 	                //启动Activity让用户授权
@@ -406,7 +408,6 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
             config.hintString = "登录";
             HttpTools.httpPost(Contants.URl.URL_ICETEST, "/orgms/loginAccount", config, params);
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
@@ -432,7 +433,7 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
         RequestConfig config = new RequestConfig(this, HttpTools.GET_USER_INFO, null);
         config.hintString = "加载个人信息";
         RequestParams params = new RequestParams();
-        params.put("uid", accountUuid);
+        params.put("username", newPhone);
         Log.e(TAG, "getUserInfo: " + accountUuid);
         HttpTools.httpGet(Contants.URl.URL_ICETEST, "/account", config, params);
     }
@@ -516,6 +517,8 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
             }
         } else if (msg.arg1 == HttpTools.GET_USER_INFO) {
             if (code == 0) {
+                AccountEntity accountEntity = GsonUtils.gsonToBean(jsonString, AccountEntity.class);
+                Tools.saveOrgId(LoginActivity.this, accountEntity.getContent().getOrgId());
                 Tools.loadUserInfo(data, jsonString);
                 getKeyAndSecret();
             } else {
@@ -591,7 +594,6 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
 
     @Override
     public void onFail(Message msg, String hintString) {
-        // TODO Auto-generated method stub
         super.onFail(msg, hintString);
     }
 

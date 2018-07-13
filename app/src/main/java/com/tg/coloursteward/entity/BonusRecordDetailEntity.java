@@ -69,7 +69,7 @@ public class BonusRecordDetailEntity implements Serializable  {
         private String realname;
         private String user_uuid;
         private double totaljjbbase;
-        private int jjbbase;
+        private double jjbbase;
         private int year;
         private int month;
         private double jtbaoFee;
@@ -81,6 +81,14 @@ public class BonusRecordDetailEntity implements Serializable  {
         private List<DataBean> data;
         private List<JtkkBean> jtkk;
         private List<KkBean> kk;
+
+        public double getJjbbase() {
+            return jjbbase;
+        }
+
+        public void setJjbbase(double jjbbase) {
+            this.jjbbase = jjbbase;
+        }
 
         public String getUsername() {
             return username;
@@ -112,14 +120,6 @@ public class BonusRecordDetailEntity implements Serializable  {
 
         public void setTotaljjbbase(double totaljjbbase) {
             this.totaljjbbase = totaljjbbase;
-        }
-
-        public int getJjbbase() {
-            return jjbbase;
-        }
-
-        public void setJjbbase(int jjbbase) {
-            this.jjbbase = jjbbase;
         }
 
         public int getYear() {
@@ -233,7 +233,7 @@ public class BonusRecordDetailEntity implements Serializable  {
             private String anoname;
             private String ano;
             private double onebaoFee;
-            private int jjbbase;
+            private double jjbbase;
             private int normalFee;
             private int ActualFee;
             private int percent;
@@ -277,11 +277,11 @@ public class BonusRecordDetailEntity implements Serializable  {
                 this.onebaoFee = onebaoFee;
             }
 
-            public int getJjbbase() {
+            public double getJjbbase() {
                 return jjbbase;
             }
 
-            public void setJjbbase(int jjbbase) {
+            public void setJjbbase(double jjbbase) {
                 this.jjbbase = jjbbase;
             }
 

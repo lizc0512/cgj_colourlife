@@ -77,38 +77,54 @@
                         android:layout_width="@dimen/margin_66"
                         android:layout_height="@dimen/margin_66"
                         android:layout_centerHorizontal="true" />
-
-                    <RelativeLayout
-                        android:id="@+id/rl_name"
+                    <TextView
+                        android:id="@+id/tv_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/iv_head"
+                        android:text="姓名"
+                        android:layout_marginTop="86dp"
                         android:layout_centerHorizontal="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginTop="20dp">
+                        android:textColor="@color/color_theme_main"
+                        android:textSize="24sp" />
 
-                        <TextView
-                            android:id="@+id/tv_name"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="姓名"
-                            android:textColor="@color/color_theme_main"
-                            android:textSize="24sp" />
+                    <ImageView
+                        android:id="@+id/iv_sex"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@+id/tv_name"
+                        android:layout_margin="5dp"
+                        android:layout_toRightOf="@+id/tv_name" />
+                    <!--<RelativeLayout-->
+                        <!--android:id="@+id/rl_name"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_below="@id/iv_head"-->
+                        <!--android:layout_centerHorizontal="true"-->
+                        <!--android:layout_centerVertical="true"-->
+                        <!--android:layout_marginTop="20dp">-->
 
-                        <ImageView
-                            android:id="@+id/iv_sex"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignBottom="@+id/tv_name"
-                            android:layout_margin="5dp"
-                            android:layout_toRightOf="@+id/tv_name" />
+                        <!--<TextView-->
+                            <!--android:id="@+id/tv_name1"-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:text="姓名"-->
+                            <!--android:textColor="@color/color_theme_main"-->
+                            <!--android:textSize="24sp" />-->
 
-                    </RelativeLayout>
+                        <!--<ImageView-->
+                            <!--android:id="@+id/iv_sex1"-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_alignBottom="@+id/tv_name"-->
+                            <!--android:layout_margin="5dp"-->
+                            <!--android:layout_toRightOf="@+id/tv_name" />-->
+
+                    <!--</RelativeLayout>-->
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/rl_name"
+                        android:layout_below="@id/tv_name"
                         android:layout_marginTop="15dp"
                         android:orientation="horizontal">
 

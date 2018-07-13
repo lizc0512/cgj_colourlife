@@ -662,10 +662,18 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
     private void getCacheList() {
         LinkManListCache = Tools.getLinkManList(mActivity);
         if (StringUtils.isNotEmpty(LinkManListCache)) {
-            JSONArray jsonString = HttpTools.getContentJsonArray(LinkManListCache);
-            if (jsonString != null) {
-                ResponseData data = HttpTools.getResponseContent(jsonString);
-                if (jsonString.length() > 0) {
+            JSONArray json1 = null;
+            try {
+                JSONObject jsonObj = new JSONObject(LinkManListCache);
+                String str = jsonObj.optString("content");
+                JSONObject jsonObj2 = new JSONObject(str);
+                json1 = jsonObj2.getJSONArray("data");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            if (json1 != null) {
+                ResponseData data = HttpTools.getResponseContent(json1);
+                if (json1.length() > 0) {
                     //有收藏联系人
                     //rlNulllinkman.setVisibility(View.GONE);
                 }
@@ -680,8 +688,10 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
         RequestConfig config = new RequestConfig(mActivity, PullRefreshListView.HTTP_FRESH_CODE);
         config.handler = msgHand.getHandler();
         RequestParams params = new RequestParams();
-        params.put("uid", UserInfo.employeeAccount);
-        HttpTools.httpGet(Contants.URl.URL_ICETEST, "/phonebook/frequentContacts", config, params);
+        params.put("owner", UserInfo.employeeAccount);
+        params.put("page", "1");
+        params.put("pagesize", "100");
+        HttpTools.httpGet(Contants.URl.URL_ICETEST, "/txl2/contacts", config, params);
     }
 
     /**
@@ -801,11 +811,22 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
 
     @Override
     public void onSuccess(Message msg, String jsonString, String hintString) {
-        JSONArray json = HttpTools.getContentJsonArray(jsonString);
-        if (json != null) {
+        JSONArray json1 = null;
+        try {
+            JSONObject jsonObj = new JSONObject(jsonString);
+            String str = jsonObj.optString("content");
+            JSONObject jsonObj2 = new JSONObject(str);
+            json1 = jsonObj2.getJSONArray("data");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        if (json1 != null) {
             Tools.saveLinkManList(mActivity, jsonString);
             LinkManListCache = jsonString;
-            ResponseData data = HttpTools.getResponseContent(json);
+            ResponseData data = HttpTools.getResponseContent(json1);
+            if (json1.length() > 0) {
+                //rlNulllinkman.setVisibility(View.GONE);
+            }
             getPinyinList(data);
         }
     }

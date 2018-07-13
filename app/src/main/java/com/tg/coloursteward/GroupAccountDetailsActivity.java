@@ -59,7 +59,7 @@ public class GroupAccountDetailsActivity extends BaseActivity {
     private String familyUuid;
     private String useruuid;
     private String orgname;
-    private int ispay = 0;//0全部，1支付，2收款
+    private int ispay = 2;//0全部，1支付，2收款
     private GroupAccountEntity groupAccountEntity;
     private List<GroupAccountEntity.ContentBean.ListBean> listinfo = new ArrayList<>();
     private GroupAccountDetailsAdapter groupAccountDetailsAdapter;
@@ -307,7 +307,7 @@ public class GroupAccountDetailsActivity extends BaseActivity {
     @Subscribe
     public void onEvent(Object event) {
         final Message message = (Message) event;
-        ispay = message.what;
+//        ispay = message.what;
         String expireTime = Tools.getStringValue(GroupAccountDetailsActivity.this, Contants.storage.APPAUTHTIME);
         Date dt = new Date();
         Long time = dt.getTime();
@@ -393,9 +393,9 @@ public class GroupAccountDetailsActivity extends BaseActivity {
 
     @Override
     public String getHeadTitle() {
-        headView.setRightText("筛选");
-        headView.setRightTextColor(getResources().getColor(R.color.white));
-        headView.setListenerRight(singleListener);
+//        headView.setRightText("筛选");
+//        headView.setRightTextColor(getResources().getColor(R.color.white));
+//        headView.setListenerRight(singleListener);
         return "交易详情";
     }
 }

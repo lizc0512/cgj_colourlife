@@ -404,10 +404,11 @@ public class IMGroupActivity extends SdkBaseActivity implements
     void updateGroupUI(GroupInfoBean groupInfo) {
         groupName = groupInfo.getGroup_name();
         if (TextUtils.isEmpty(groupName)) {
-            groupName = ColorsConfig.GROUP_DEFAULT_NAME;
-        }
-        if (groupName.contains(ColorsConfig.GROUP_DEFAULT_NAME)) {
-            tvTitle.setText("群聊" + "(" + groupInfo.getGroup_member_count() + ")");
+            String title = String.format(getString(R.string.group_default_title),
+                    "群聊", groupInfo.getGroup_member_count());
+            tvTitle.setText(title);
+        } else if (groupName.contains(ColorsConfig.GROUP_DEFAULT_NAME)) {
+            tvTitle.setText(groupName.replace(ColorsConfig.GROUP_DEFAULT_NAME, ""));
         } else {
             tvTitle.setText(groupName + "(" + groupInfo.getGroup_member_count() + ")");
         }

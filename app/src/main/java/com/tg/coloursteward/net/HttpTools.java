@@ -189,6 +189,8 @@ public class HttpTools {
     public static final int GET_EXAMINE1 = BASE_CODE++;
     public static final int GET_EXAMINE2 = BASE_CODE++;
     public static final int GET_FINANCEBYOA = BASE_CODE++;
+    public static final int POST_OAUTH_TOKEN = BASE_CODE++;
+    public static final int POST_OAUTH_RETOKEN = BASE_CODE++;
 
 
     public static final int GET_KEYSECERT = -10000;

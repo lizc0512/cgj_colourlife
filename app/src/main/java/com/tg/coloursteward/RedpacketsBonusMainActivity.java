@@ -96,7 +96,7 @@ public class RedpacketsBonusMainActivity extends BaseActivity {
         RequestParams params = new RequestParams();
         params.put("username", UserInfo.employeeAccount);
         params.put("password", pwd);
-        HttpTools.httpPost(Contants.URl.URL_ICETEST, "/czywg/employee/login", config, params);
+        HttpTools.httpPost(Contants.URl.URL_CPMOBILE, "/1.0/employee/login", config, params);
     }
 
     @Override

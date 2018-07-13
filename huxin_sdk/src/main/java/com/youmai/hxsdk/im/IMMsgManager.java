@@ -332,12 +332,8 @@ public class IMMsgManager {
 
                     CacheMsgBean msgBean = getGroupNameChangedMsgBean(groupId, sb.toString());
 
-                    List<CacheMsgBean> msgList = CacheMsgHelper.instance().toQueryCacheMsgList(mContext, groupId + "");
-                    if (!ListUtils.isEmpty(msgList)) {
-                        CacheMsgBean lastMsg = msgList.get(msgList.size() - 1);
-                        msgBean.setTargetName(lastMsg.getTargetName());
-                        CacheMsgHelper.instance().insertOrUpdate(mContext, msgBean);
-                    }
+                    msgBean.setTargetName(groupName);
+                    CacheMsgHelper.instance().insertOrUpdate(mContext, msgBean);
 
                     handlerIMMsgCallback(msgBean);
 
@@ -365,19 +361,15 @@ public class IMMsgManager {
 
                     String srcName = notify.getSrcOwnerName();
                     String dstName = notify.getDstOwnerName();
+                    String groupName = notify.getGroupInfo().getGroupName();
 
                     StringBuilder sb = new StringBuilder();
                     sb.append(srcName).append(" 将群主转让给 ").append(dstName);
 
                     CacheMsgBean msgBean = getGroupOwnerChangedMsgBean(groupId, sb.toString());
 
-
-                    List<CacheMsgBean> msgList = CacheMsgHelper.instance().toQueryCacheMsgList(mContext, groupId + "");
-                    if (!ListUtils.isEmpty(msgList)) {
-                        CacheMsgBean lastMsg = msgList.get(msgList.size() - 1);
-                        msgBean.setTargetName(lastMsg.getTargetName());
-                        CacheMsgHelper.instance().insertOrUpdate(mContext, msgBean);
-                    }
+                    msgBean.setTargetName(groupName);
+                    CacheMsgHelper.instance().insertOrUpdate(mContext, msgBean);
 
                     handlerIMMsgCallback(msgBean);
                 }

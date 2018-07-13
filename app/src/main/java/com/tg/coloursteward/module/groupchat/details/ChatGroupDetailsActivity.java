@@ -51,7 +51,6 @@ import com.youmai.hxsdk.socket.ReceiveListener;
 import com.youmai.hxsdk.utils.AppUtils;
 import com.youmai.hxsdk.utils.GsonUtil;
 import com.youmai.hxsdk.utils.ListUtils;
-import com.youmai.hxsdk.utils.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,7 +80,6 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
 
 
     private int mGroupId;
-    private String groupName;
     private boolean isGroupOwner = false;  //是否群主
 
     private TextView mTvBack, mTvTitle;
@@ -101,10 +99,11 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
     private GroupDetailAdapter mAdapter;
 
     private List<ContactBean> groupList = new ArrayList<>();
-    private List<ContactBean> groupList2 = new ArrayList<>();
-    private List<ContactBean> groupList3 = new ArrayList<>();
+    private List<ContactBean> groupList2 = new ArrayList<>();    //添加群成员
+    private List<ContactBean> groupList3 = new ArrayList<>();    //删除群成员
 
     private GroupInfoBean mGroupInfo;
+    private String groupName;
 
     private boolean isClearUp;
     private boolean isMotifyGropInfo;
@@ -181,7 +180,6 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
         mGroupId = getIntent().getIntExtra(GROUP_ID, -1);
         groupName = getIntent().getStringExtra(IMGroupActivity.GROUP_NAME);
 
-
         if (null == mGroupInfo) {
             mGroupInfo = GroupInfoHelper.instance().toQueryByGroupId(this, mGroupId);
         }
@@ -257,7 +255,11 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
             } else if (groupName.contains(ColorsConfig.GROUP_DEFAULT_NAME)) {
                 mTvTitle.setText(groupName.replace(ColorsConfig.GROUP_DEFAULT_NAME, ""));
             } else {
-                mTvTitle.setText(groupName + "(" + info.getGroup_member_count() + ")");
+                if (groupName.length() > 6) {
+                    mTvTitle.setText(groupName.substring(0, 4) + "...(" + info.getGroup_member_count() + ")");
+                } else {
+                    mTvTitle.setText(groupName + "(" + info.getGroup_member_count() + ")");
+                }
             }
 
             String group_name = info.getGroup_name();
@@ -269,7 +271,7 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
             }
 
             String group_topic = info.getTopic();
-            if (StringUtils.isEmpty(group_topic)) {
+            if (TextUtils.isEmpty(group_topic)) {
                 mtvNoticeContent.setText("未设置");
             } else {
                 mtvNoticeContent.setText(group_topic);
@@ -345,6 +347,7 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
                     }
 
                     mAdapter.setDataList(groupList);
+
 
                     if (isGroupOwner && groupList2.size() <= 1) {
                         HuxinSdkManager.instance().delGroup(mGroupId, new ReceiveListener() {
@@ -521,7 +524,7 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
         if (null != groupList3 && groupList3.size() > 0) {
             ContactBean contact = groupList3.get(0);
             ownerId = contact.getUuid();
-            if (StringUtils.isEmpty(ownerId)) {
+            if (TextUtils.isEmpty(ownerId)) {
                 return;
             }
         }

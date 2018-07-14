@@ -1,24 +1,20 @@
 package com.tg.coloursteward;
 
-import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
-import com.tg.coloursteward.adapter.PublicAccountDetailsAdapter;
 import com.tg.coloursteward.adapter.RedpacketsDetailsAdapter;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.info.PublicAccountDetailsInfo;
-import com.tg.coloursteward.info.PublicAccountInfo;
 import com.tg.coloursteward.inter.OnLoadingListener;
 import com.tg.coloursteward.net.GetTwoRecordListener;
 import com.tg.coloursteward.net.HttpTools;
@@ -87,6 +83,9 @@ public class RedpacketsDetailsActivity extends BaseActivity {
     private void initView() {
         accessToken_1 = Tools.getStringValue(RedpacketsDetailsActivity.this, Contants.storage.APPAUTH_1);
         pullListView = (PullRefreshListView) findViewById(R.id.pull_listview);
+        if (!TextUtils.isEmpty(Tools.getFpDetails(RedpacketsDetailsActivity.this))) {
+            setData(Tools.getFpDetails(RedpacketsDetailsActivity.this));
+        }
         adapter = new RedpacketsDetailsAdapter(this, list);
         pullListView.setAdapter(adapter);
         pullListView.setDividerHeight(0);
@@ -98,40 +97,8 @@ public class RedpacketsDetailsActivity extends BaseActivity {
                 int code = HttpTools.getCode(response);
                 if (code == 0) {
                     String content = HttpTools.getContentString(response);
-                    if (StringUtils.isNotEmpty(content)) {
-                        ResponseData data = HttpTools.getResponseKey(content, "list");
-                        if (data.length > 0) {
-                            PublicAccountDetailsInfo info;
-                            for (int i = 0; i < data.length; i++) {
-                                info = new PublicAccountDetailsInfo();
-                                info.tno = data.getString(i, "tno");
-                                info.transtype = data.getString(i, "transtype");
-                                info.typeid = data.getString(i, "typeid");
-                                info.thirdno = data.getString(i, "thirdno");
-                                info.orderno = data.getString(i, "orderno");
-                                info.orgmoney = data.getString(i, "orgmoney");
-                                info.destmoney = data.getString(i, "destmoney");
-                                info.creationtime = data.getString(i, "creationtime");
-                                info.status = data.getString(i, "status");
-                                info.detail = data.getString(i, "detail");
-                                info.content = data.getString(i, "content");
-                                info.orgplatform = data.getString(i, "orgplatform");
-                                info.destplatform = data.getString(i, "destplatform");
-                                info.orgbiz = data.getString(i, "orgbiz");
-                                info.destbiz = data.getString(i, "destbiz");
-                                info.orgclient = data.getString(i, "orgclient");
-                                info.destclient = data.getString(i, "destclient");
-                                info.orgcccount = data.getString(i, "orgcccount");
-                                info.destcccount = data.getString(i, "destcccount");
-                                if (info.destcccount.equals(cano)) {
-                                    info.type = "0";
-                                } else {
-                                    info.type = "1";
-                                }
-                                list.add(info);
-                            }
-                        }
-                    }
+                    Tools.saveFpDetails(RedpacketsDetailsActivity.this, content);
+                    setData(content);
                 }
             }
 
@@ -189,6 +156,43 @@ public class RedpacketsDetailsActivity extends BaseActivity {
             getAppAuthInfo();
         }
 
+    }
+
+    private void setData(String content) {
+        if (StringUtils.isNotEmpty(content)) {
+            ResponseData data = HttpTools.getResponseKey(content, "list");
+            if (data.length > 0) {
+                PublicAccountDetailsInfo info;
+                for (int i = 0; i < data.length; i++) {
+                    info = new PublicAccountDetailsInfo();
+                    info.tno = data.getString(i, "tno");
+                    info.transtype = data.getString(i, "transtype");
+                    info.typeid = data.getString(i, "typeid");
+                    info.thirdno = data.getString(i, "thirdno");
+                    info.orderno = data.getString(i, "orderno");
+                    info.orgmoney = data.getString(i, "orgmoney");
+                    info.destmoney = data.getString(i, "destmoney");
+                    info.creationtime = data.getString(i, "creationtime");
+                    info.status = data.getString(i, "status");
+                    info.detail = data.getString(i, "detail");
+                    info.content = data.getString(i, "content");
+                    info.orgplatform = data.getString(i, "orgplatform");
+                    info.destplatform = data.getString(i, "destplatform");
+                    info.orgbiz = data.getString(i, "orgbiz");
+                    info.destbiz = data.getString(i, "destbiz");
+                    info.orgclient = data.getString(i, "orgclient");
+                    info.destclient = data.getString(i, "destclient");
+                    info.orgcccount = data.getString(i, "orgcccount");
+                    info.destcccount = data.getString(i, "destcccount");
+                    if (info.destcccount.equals(cano)) {
+                        info.type = "0";
+                    } else {
+                        info.type = "1";
+                    }
+                    list.add(info);
+                }
+            }
+        }
     }
 
     @Override

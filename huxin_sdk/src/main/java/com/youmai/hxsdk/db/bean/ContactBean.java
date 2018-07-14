@@ -55,7 +55,7 @@ public class ContactBean implements CN, Parcelable {
     @Transient
     private String icon;
     @Transient
-    private String Favoriteid;//企业短号
+    private String Favoriteid;//
     @Transient
     private String accountUuid;//
     @Transient

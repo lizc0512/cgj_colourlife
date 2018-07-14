@@ -77,7 +77,7 @@ public class SettingActivity extends BaseActivity implements ItemClickListener {
             @Override
             public void onClick(View v) {
                 /*
-				 * 版本检测更新
+                 * 版本检测更新
 				 */
                 getVersion();
             }
@@ -109,8 +109,8 @@ public class SettingActivity extends BaseActivity implements ItemClickListener {
         list.add(viewConfig);
         viewConfig = new ViewConfig("清空首页消息列表", "", true);
         list.add(viewConfig);
-		/*viewConfig = new ViewConfig("通话设置", "", true);
-		list.add(viewConfig);*/
+        /*viewConfig = new ViewConfig("通话设置", "", true);
+        list.add(viewConfig);*/
         mineInfoZone.setData(list);
     }
 
@@ -185,7 +185,7 @@ public class SettingActivity extends BaseActivity implements ItemClickListener {
         // TODO Auto-generated method stub
         if (mv == mineInfoZone) {
             if (position == 0) {// 关于app
-				startActivity(new Intent(this,AboutUsActivity.class));
+                startActivity(new Intent(this, AboutUsActivity.class));
 //				showShare();
             } else if (position == 1) {// 修改密码
                 startActivity(new Intent(this, ModifiedPasswordActivity.class));

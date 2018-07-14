@@ -1580,6 +1580,20 @@ public class Tools {
     }
 
     /**
+     * 保存饭票明细数据
+     *
+     * @param con
+     */
+    public static void saveFpDetails(Context con, String FpDetails) {
+        getSysShare(con).edit().
+                putString("FpDetails", FpDetails).commit();
+    }
+
+    public static String getFpDetails(Context con) {
+        return getSysShare(con).getString("FpDetails", "");
+    }
+
+    /**
      * 保存key
      *
      * @param con
@@ -1649,6 +1663,7 @@ public class Tools {
     public static String getRefresh_token2(Context con) {
         return getSysShare(con).getString("refresh_token2", "");
     }
+
     /**
      * 保存refresh_token获取时间
      *

@@ -91,7 +91,7 @@ public class ContactsBindData extends Observable {
             contact.setJobName(data.getString(i, "jobName"));//岗位名称
             contact.setOrgName(data.getString(i, "orgName"));//组织架构名称
             contact.setOrgID(data.getString(i, "orgID"));//组织架构uuid
-
+            contact.setFavoriteid(data.getString(i, "Favoriteid"));
             String uuid = data.getString(i, "contactsId");
             String accountUuid = data.getString(i, "accountUuid");
             if (!TextUtils.isEmpty(uuid) || !TextUtils.isEmpty(accountUuid)) {

@@ -46,6 +46,7 @@ import com.tg.coloursteward.serice.AuthAppService;
 import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.PullRefreshListView;
+import com.tg.coloursteward.view.dialog.DialogFactory;
 import com.tg.coloursteward.view.dialog.ToastFactory;
 import com.youmai.hxsdk.db.bean.ContactBean;
 import com.youmai.hxsdk.entity.cn.CNPinyin;
@@ -107,6 +108,7 @@ public class ContactsFragment extends Fragment implements ResponseListener, Item
     public static final String DELETE_CONTACT = "delete";
     public ModifyContactsReceiver mModifyContactsReceiver;
     private IntentFilter filter;
+    private int location;
 
     static class ModifyContactsReceiver extends BroadcastReceiver {
         ContactsFragment mFragment;
@@ -307,8 +309,21 @@ public class ContactsFragment extends Fragment implements ResponseListener, Item
      * @param pos
      */
     @Override
-    public void onLongClick(int pos) {
+    public void onLongClick(final int pos, final ContactBean contact) {
+        DialogFactory.getInstance().showDialog(getActivity(), new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deleteUser(pos, contact);
+            }
+        }, null, "是否删除常用联系人？", null, null);
+    }
 
+    private void deleteUser(int pos, ContactBean contact) {
+        RequestConfig config = new RequestConfig(mActivity, HttpTools.DETELE_CONTACT_LIST, "删除常用联系人");
+        config.handler = msgHand.getHandler();
+        RequestParams params = new RequestParams();
+        location = pos;
+        HttpTools.httpDelete(Contants.URl.URL_ICETEST, "/txl2/contacts/" + String.valueOf(contact.getFavoriteid()), config, params);
     }
 
     @Override
@@ -588,24 +603,35 @@ public class ContactsFragment extends Fragment implements ResponseListener, Item
 
     @Override
     public void onSuccess(Message msg, String jsonString, String hintString) {
-        JSONArray json1 = null;
-        try {
-            JSONObject jsonObj = new JSONObject(jsonString);
-            String str = jsonObj.optString("content");
-            JSONObject jsonObj2 = new JSONObject(str);
-            json1 = jsonObj2.getJSONArray("data");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        if (json1 != null) {
-            Tools.saveLinkManList(mActivity, jsonString);
-            LinkManListCache = jsonString;
-            ResponseData data = HttpTools.getResponseContent(json1);
-            if (json1.length() > 0) {
-                //rlNulllinkman.setVisibility(View.GONE);
+        int code = HttpTools.getCode(jsonString);
+        if (msg.arg1 == HttpTools.DETELE_CONTACT_LIST) {
+            if (code == 0) {
+                ToastFactory.showToast(getActivity(), "删除成功");
+                adapter.removeItem(location);
+            } else {
+                ToastFactory.showToast(getActivity(), hintString);
             }
-            getPinyinList(data);
+        } else if (msg.arg1 == PullRefreshListView.HTTP_FRESH_CODE) {
+            JSONArray json1 = null;
+            try {
+                JSONObject jsonObj = new JSONObject(jsonString);
+                String str = jsonObj.optString("content");
+                JSONObject jsonObj2 = new JSONObject(str);
+                json1 = jsonObj2.getJSONArray("data");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            if (json1 != null) {
+                Tools.saveLinkManList(mActivity, jsonString);
+                LinkManListCache = jsonString;
+                ResponseData data = HttpTools.getResponseContent(json1);
+                if (json1.length() > 0) {
+                    //rlNulllinkman.setVisibility(View.GONE);
+                }
+                getPinyinList(data);
+            }
         }
+
 
     }
 

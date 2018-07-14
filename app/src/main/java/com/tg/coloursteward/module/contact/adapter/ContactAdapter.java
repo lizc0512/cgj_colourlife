@@ -50,6 +50,11 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         msgHandler.setResponseListener(this);
     }
 
+    public void removeItem(int position){
+        cnPinyinList.remove(position);
+        notifyItemRemoved(position);
+        notifyDataSetChanged();
+    }
 
     @Override
     public int getItemCount() {
@@ -143,7 +148,7 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             public boolean onLongClick(View v) {
                 if (null != itemEventListener) {
                     //Toast.makeText(mContext, "长按position：" + position, Toast.LENGTH_SHORT).show();
-                    itemEventListener.onLongClick(position);
+                    itemEventListener.onLongClick(position,contact);
                 }
                 return true;
             }
@@ -213,7 +218,7 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public interface ItemEventListener {
         void onItemClick(int pos, ContactBean contact);
 
-        void onLongClick(int pos);
+        void onLongClick(int pos,ContactBean contact);
 
         void collectCount(int count);
     }

@@ -250,14 +250,17 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
 
     private void setGroupInfo(GroupInfoBean info) {
         if (info != null) {
-            if (TextUtils.isEmpty(groupName)) {
+            if (TextUtils.isEmpty(groupName)
+                    || groupName.contains(ColorsConfig.GROUP_DEFAULT_NAME)) {
                 String title = String.format(getString(R.string.group_default_title),
-                        "群聊", info.getGroup_member_count());
+                        "聊天详情", info.getGroup_member_count());
                 mTvTitle.setText(title);
-            } else if (groupName.contains(ColorsConfig.GROUP_DEFAULT_NAME)) {
-                mTvTitle.setText(groupName.replace(ColorsConfig.GROUP_DEFAULT_NAME, ""));
             } else {
-                mTvTitle.setText(groupName + "(" + info.getGroup_member_count() + ")");
+                if (groupName.length() > 6) {
+                    mTvTitle.setText(groupName.substring(0, 4) + "...(" + info.getGroup_member_count() + ")");
+                } else {
+                    mTvTitle.setText(groupName + "(" + info.getGroup_member_count() + ")");
+                }
             }
 
             String group_name = info.getGroup_name();

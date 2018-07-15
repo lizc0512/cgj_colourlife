@@ -15,17 +15,22 @@ import android.widget.TextView;
 import com.tg.coloursteward.adapter.AccountDetailNewAdapter;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.constant.Contants;
+import com.tg.coloursteward.entity.ExchangeEntity;
 import com.tg.coloursteward.info.AccountDetailNewInfo;
 import com.tg.coloursteward.info.AppDetailsGridViewInfo;
 import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.inter.CashierCallBack;
 import com.tg.coloursteward.inter.OnLoadingListener;
+import com.tg.coloursteward.inter.PutForwardCallBack;
+import com.tg.coloursteward.inter.SingleExchangeCallBack;
 import com.tg.coloursteward.net.GetTwoRecordListener;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.RequestConfig;
 import com.tg.coloursteward.net.RequestParams;
 import com.tg.coloursteward.net.ResponseData;
 import com.tg.coloursteward.serice.AuthAppService;
+import com.tg.coloursteward.util.GsonUtils;
+import com.tg.coloursteward.util.LinkParseUtil;
 import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.AppDetailPopWindowView;
@@ -39,7 +44,6 @@ import org.greenrobot.eventbus.Subscribe;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -63,10 +67,13 @@ public class AccountDetailNewActivity extends BaseActivity implements View.OnCli
 
     private AppDetailPopWindowView popWindowView;
     private ArrayList<AppDetailsGridViewInfo> listGridView = new ArrayList<AppDetailsGridViewInfo>();
+    private ArrayList<ExchangeEntity.DetailBean> listData = new ArrayList<>();
     private PwdDialog2.ADialogCallback aDialogCallback;
     private PwdDialog2 aDialog;
     private int postion;
     private String state;
+    private ExchangeEntity exchangeEntity;
+    private String urlFinally;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,13 +98,31 @@ public class AccountDetailNewActivity extends BaseActivity implements View.OnCli
 
         accessToken = Tools.getStringValue(AccountDetailNewActivity.this, Contants.storage.APPAUTH);
         pullListView = (PullRefreshListView) findViewById(R.id.pull_listview);
-        adapter = new AccountDetailNewAdapter(this, list);
+        adapter = new AccountDetailNewAdapter(this, listData);
         pullListView.setAdapter(adapter);
         adapter.setCashierCallBack(new CashierCallBack() {
             @Override
-            public void onclick(int position) {
+            public void onclick(int position, String url1) {
                 isSetPwd(0);
                 postion = position;
+                urlFinally = url1;
+
+            }
+        });
+        adapter.setPutForwardCallBack(new PutForwardCallBack() {
+            @Override
+            public void onclick(int position, String url2) {
+                isSetPwd(0);
+                postion = position;
+                urlFinally = url2;
+            }
+        });
+        adapter.setSingleExchangeCallBack(new SingleExchangeCallBack() {
+            @Override
+            public void onclick(int position, String url3) {
+                isSetPwd(0);
+                postion = position;
+                urlFinally = url3;
             }
         });
         pullListView.setOnLoadingListener(new OnLoadingListener<PullRefreshListView>() {
@@ -109,9 +134,11 @@ public class AccountDetailNewActivity extends BaseActivity implements View.OnCli
                 String messsage = HttpTools.getMessageString(response);
                 if (code == 0) {
                     String content = HttpTools.getContentString(response);
+                    exchangeEntity = GsonUtils.gsonToBean(content, ExchangeEntity.class);
                     if (content.length() > 0) {
                         ResponseData data = HttpTools.getResponseKey(content, "detail");
                         if (data.length > 0) {
+                            listData.addAll(exchangeEntity.getDetail());
                             AccountDetailNewInfo info;
                             for (int i = 0; i < data.length; i++) {
                                 info = new AccountDetailNewInfo();
@@ -360,9 +387,29 @@ public class AccountDetailNewActivity extends BaseActivity implements View.OnCli
                 }
                 if (content != null) {
                     if (state.equals("hasPwd")) {
-                        Intent intent = new Intent(AccountDetailNewActivity.this, AccountExchangeActivity.class);
-                        intent.putExtra(AccountExchangeActivity.ACCOUNT_DETAIL_NEW_INFO, list.get(postion));
-                        startActivity(intent);
+                        if (urlFinally.startsWith("http://") || urlFinally.startsWith("https://")) {
+                            String key = Tools.getStringValue(AccountDetailNewActivity.this, Contants.EMPLOYEE_LOGIN.key);
+                            String secret = Tools.getStringValue(AccountDetailNewActivity.this, Contants.EMPLOYEE_LOGIN.secret);
+                            String accessToken = Tools.getAccess_token(AccountDetailNewActivity.this);
+                            String str = "?";
+                            if (urlFinally.contains(str)) {//Url有问号
+                                urlFinally = urlFinally + "&username=" + UserInfo.employeeAccount + "&access_token=" + accessToken
+                                        + "&key=" + key + "&secret=" + secret;
+                            } else {//没有问号
+                                urlFinally = urlFinally + "?username=" + UserInfo.employeeAccount + "&access_token=" + accessToken
+                                        + "&key=" + key + "&secret=" + secret;
+                            }
+                            LinkParseUtil.parse(AccountDetailNewActivity.this, urlFinally, "");
+                        } else {
+                            if (urlFinally.length() > 18) {
+                                String name = urlFinally.substring(18, urlFinally.length());
+                                if (name.equals("jsfpduihuan")) {//即时分配兑换
+                                    Intent intent = new Intent(AccountDetailNewActivity.this, AccountExchangeActivity.class);
+                                    intent.putExtra(AccountExchangeActivity.ACCOUNT_DETAIL_NEW_INFO, list.get(postion));
+                                    startActivity(intent);
+                                }
+                            }
+                        }
                     } else {
                         ToastUtil.showMidToast(AccountDetailNewActivity.this, "您还未设置支付密码,请设置支付密码");
                         new Handler().postDelayed(new Runnable() {

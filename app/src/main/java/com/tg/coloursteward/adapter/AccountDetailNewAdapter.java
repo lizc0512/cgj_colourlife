@@ -11,8 +11,11 @@ import android.widget.TextView;
 import com.tg.coloursteward.AccountExchangeDetailActivity;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.MyBaseAdapter;
+import com.tg.coloursteward.entity.ExchangeEntity;
 import com.tg.coloursteward.info.AccountDetailNewInfo;
 import com.tg.coloursteward.inter.CashierCallBack;
+import com.tg.coloursteward.inter.PutForwardCallBack;
+import com.tg.coloursteward.inter.SingleExchangeCallBack;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -21,21 +24,33 @@ import java.util.ArrayList;
  * 即时分配兑换列表
  */
 
-public class AccountDetailNewAdapter extends MyBaseAdapter<AccountDetailNewInfo> {
-    private ArrayList<AccountDetailNewInfo> list;
+public class AccountDetailNewAdapter extends MyBaseAdapter<ExchangeEntity.DetailBean> {
+    private ArrayList<AccountDetailNewInfo> list2;
     private LayoutInflater inflater;
-    private AccountDetailNewInfo item;
+    private ExchangeEntity.DetailBean item;
     private Context context;
     private Intent intent;
     public CashierCallBack cashierCallBack;
+    public PutForwardCallBack putForwardCallBack;
+    public SingleExchangeCallBack singleExchangeCallBack;
+    private ArrayList<ExchangeEntity.DetailBean> listData = new ArrayList<>();
+    private String urlAddres1, urlAddres2, urlAddres3;
 
     public void setCashierCallBack(CashierCallBack cashierCallBack) {
         this.cashierCallBack = cashierCallBack;
     }
 
-    public AccountDetailNewAdapter(Context con, ArrayList<AccountDetailNewInfo> list) {
-        super(list);
-        this.list = list;
+    public void setPutForwardCallBack(PutForwardCallBack putForwardCallBack) {
+        this.putForwardCallBack = putForwardCallBack;
+    }
+
+    public void setSingleExchangeCallBack(SingleExchangeCallBack singleExchangeCallBack) {
+        this.singleExchangeCallBack = singleExchangeCallBack;
+    }
+
+    public AccountDetailNewAdapter(Context con, ArrayList<ExchangeEntity.DetailBean> listData) {
+        super(listData);
+        this.listData = listData;
         this.context = con;
         inflater = LayoutInflater.from(con);
     }
@@ -46,35 +61,93 @@ public class AccountDetailNewAdapter extends MyBaseAdapter<AccountDetailNewInfo>
             convertView = inflater.inflate(R.layout.account_list_new_item,
                     null);
         }
-        item = list.get(position);
+        item = listData.get(position);
         RelativeLayout rlDetails = (RelativeLayout) convertView.findViewById(R.id.rl_details);
-        RelativeLayout rlExchange = (RelativeLayout) convertView.findViewById(R.id.rl_exchange);
+        TextView tv_exchange = (TextView) convertView.findViewById(R.id.tv_exchange);
+        TextView tv_putforward = (TextView) convertView.findViewById(R.id.tv_putforward);
+        TextView tv_single = (TextView) convertView.findViewById(R.id.tv_single);
         TextView tvName = (TextView) convertView.findViewById(R.id.tv_name);
         TextView tvMoney = (TextView) convertView.findViewById(R.id.tv_money);
         rlDetails.setOnClickListener(new View.OnClickListener() {//详情
             @Override
             public void onClick(View v) {
                 intent = new Intent(context, AccountExchangeDetailActivity.class);
-                intent.putExtra(AccountExchangeDetailActivity.ACCOUNT, list.get(position).split_money);
-                intent.putExtra(AccountExchangeDetailActivity.GENERAL_UUID, list.get(position).general_uuid);
+                intent.putExtra(AccountExchangeDetailActivity.ACCOUNT, list.get(position).getSplit_money());
+                intent.putExtra(AccountExchangeDetailActivity.GENERAL_UUID, list.get(position).getGeneral_uuid());
                 context.startActivity(intent);
             }
         });
-        rlExchange.setOnClickListener(new View.OnClickListener() {//兑换
+        tv_exchange.setOnClickListener(new View.OnClickListener() {//兑换
             @Override
             public void onClick(View v) {
                 if (cashierCallBack != null) {
-                    cashierCallBack.onclick(position);
+                    cashierCallBack.onclick(position, urlAddres1);
                 }
             }
         });
-        tvName.setText("应用:" + item.general_name);
+        tv_putforward.setOnClickListener(new View.OnClickListener() {//提现
+            @Override
+            public void onClick(View v) {
+                if (putForwardCallBack != null) {
+                    putForwardCallBack.onclick(position, urlAddres2);
+                }
+            }
+        });
+        tv_single.setOnClickListener(new View.OnClickListener() {//单一
+            @Override
+            public void onClick(View v) {
+                if (singleExchangeCallBack != null) {
+                    singleExchangeCallBack.onclick(position, urlAddres3);
+                }
+            }
+        });
+        tvName.setText("应用:" + item.getGeneral_name());
         DecimalFormat df = new DecimalFormat("0.00");
-        Double money = Double.parseDouble(item.split_money);
+        Double money = Double.parseDouble(item.getSplit_money());
         if (money > 0) {
             tvMoney.setText("+" + df.format(money));
         } else {
             tvMoney.setText("" + df.format(money));
+        }
+        if (null != item.getAction()) {
+            if (item.getAction().size() > 0 && item.getAction().size() == 1) {
+                tv_single.setText(item.getAction().get(0).getName());
+                urlAddres3 = item.getAction().get(0).getUrl();
+                if (item.getAction().get(0).getIs_open().equals("0")) {//不可点击
+                    tv_single.setClickable(false);
+                    tv_single.setTextColor(context.getResources().getColor(R.color.line));
+                } else {
+                    tv_single.setClickable(true);
+                    tv_single.setTextColor(context.getResources().getColor(R.color.radio_bg_selected));
+                }
+                tv_single.setVisibility(View.VISIBLE);
+                tv_exchange.setVisibility(View.GONE);
+                tv_putforward.setVisibility(View.GONE);
+            } else if (item.getAction().size() > 0 && item.getAction().size() == 2) {
+                tv_exchange.setText(item.getAction().get(0).getName());
+                urlAddres1 = item.getAction().get(0).getUrl();
+                if (item.getAction().get(0).getIs_open().equals("0")) {//不可点击
+                    tv_exchange.setClickable(false);
+                    tv_exchange.setTextColor(context.getResources().getColor(R.color.line));
+                } else {
+                    tv_exchange.setClickable(true);
+                    tv_exchange.setTextColor(context.getResources().getColor(R.color.radio_bg_selected));
+                }
+                tv_putforward.setText(item.getAction().get(1).getName());
+                urlAddres2 = item.getAction().get(1).getUrl();
+                if (item.getAction().get(1).getIs_open().equals("0")) {//不可点击
+                    tv_putforward.setClickable(false);
+                    tv_putforward.setTextColor(context.getResources().getColor(R.color.line));
+                } else {
+                    tv_putforward.setClickable(true);
+                    tv_putforward.setTextColor(context.getResources().getColor(R.color.radio_bg_selected));
+                }
+                tv_exchange.setVisibility(View.VISIBLE);
+                tv_putforward.setVisibility(View.VISIBLE);
+            }
+        }else {
+            tv_single.setVisibility(View.VISIBLE);
+            urlAddres3="colourlife://type=jsfpduihuan";
         }
         return convertView;
     }

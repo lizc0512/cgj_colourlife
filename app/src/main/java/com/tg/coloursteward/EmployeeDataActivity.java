@@ -572,7 +572,6 @@ public class EmployeeDataActivity extends BaseActivity {
         params.put("phone_number", item.getMobile());
         params.put("groupId", "");//联系人组编号,默认0，常用联系人
         params.put("enterprise_cornet", item.getEnterprise_cornet());//企业短号
-        params.put("owner", UserInfo.employeeAccount);//所有者OA帐号
         HttpTools.httpPost(Contants.URl.URL_ICETEST, "/txl2/contacts", config, params);
     }
 

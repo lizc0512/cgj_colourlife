@@ -59,22 +59,50 @@
             android:layout_height="1dp"
             android:background="@color/bonus_division" />
 
-        <RelativeLayout
-            android:id="@+id/rl_exchange"
+        <LinearLayout
+            android:id="@+id/ll_twowords"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:divider="@color/line_color"
+            android:showDividers="middle"
             android:background="@color/white">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:id="@+id/tv_exchange"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
                 android:layout_marginBottom="@dimen/margin_15"
                 android:layout_marginTop="@dimen/margin_15"
                 android:text="兑换"
+                android:gravity="center"
+                android:visibility="gone"
+                android:textSize="16sp" />
+            <TextView
+                android:id="@+id/tv_single"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_15"
+                android:layout_marginTop="@dimen/margin_15"
+                android:text="兑换"
+                android:gravity="center"
+                android:visibility="gone"
                 android:textColor="@color/radio_bg_selected"
                 android:textSize="16sp" />
-        </RelativeLayout>
+            <TextView
+                android:id="@+id/tv_putforward"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_15"
+                android:layout_marginTop="@dimen/margin_15"
+                android:text="提现"
+                android:gravity="center"
+                android:visibility="gone"
+                android:textSize="16sp" />
+        </LinearLayout>
 
     </LinearLayout>
 </LinearLayout>

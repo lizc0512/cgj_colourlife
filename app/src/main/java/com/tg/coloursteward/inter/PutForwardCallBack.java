@@ -1,5 +1,5 @@
 package com.tg.coloursteward.inter;
 
-public interface CashierCallBack {
+public interface PutForwardCallBack {
     void onclick(int position,String url);
 }

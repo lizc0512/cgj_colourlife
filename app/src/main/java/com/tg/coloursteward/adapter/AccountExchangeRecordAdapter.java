@@ -1,16 +1,13 @@
 package com.tg.coloursteward.adapter;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.MyBaseAdapter;
-import com.tg.coloursteward.info.AccountDetailInfo;
 import com.tg.coloursteward.info.AccountExchangeRecordInfo;
 import com.tg.coloursteward.util.StringUtils;
 
@@ -48,19 +45,26 @@ public class AccountExchangeRecordAdapter extends MyBaseAdapter<AccountExchangeR
         tvTime.setText(item.create_at);
         tvName.setText(item.app_name);
         DecimalFormat df = new DecimalFormat("0.00");
-        if(StringUtils.isNotEmpty(item.amount)){
-            tvMoney.setText(df.format(Double.parseDouble(item.amount)));
-        }else{
-            tvMoney.setText("0.00");
+        if (item.type == 1) {
+            if (StringUtils.isNotEmpty(item.amount)) {
+                tvMoney.setText(df.format(Double.parseDouble(item.amount))+"饭票");
+            } else {
+                tvMoney.setText("0.00");
+            }
+        } else {
+            if (StringUtils.isNotEmpty(item.amount)) {
+                tvMoney.setText(df.format(Double.parseDouble(item.amount))+"元");
+            } else {
+                tvMoney.setText("0.00");
+            }
         }
-
-        if(item.state == 1){//状态1未处理2成功3失败
+        if (item.state == 1) {//状态1未处理2成功3失败
             tvState.setText("状态:未处理");
             tvState.setTextColor(context.getResources().getColor(R.color.fail_state));
-        }else if(item.state == 2){
+        } else if (item.state == 2) {
             tvState.setText("状态:成功");
             tvState.setTextColor(context.getResources().getColor(R.color.succeed_state));
-        }else{
+        } else {
             tvState.setText("状态:失败");
             tvState.setTextColor(context.getResources().getColor(R.color.fail_state));
         }

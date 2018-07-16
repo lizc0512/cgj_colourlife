@@ -97,7 +97,7 @@ public class BonusRecordEntity {
             private int month;
             private int jjbbase;
             private int normalFee;
-            private int ActualFee;
+            private double ActualFee;
             private int isrelease;
 
             public int getCalculid() {
@@ -188,11 +188,11 @@ public class BonusRecordEntity {
                 this.normalFee = normalFee;
             }
 
-            public int getActualFee() {
+            public double getActualFee() {
                 return ActualFee;
             }
 
-            public void setActualFee(int ActualFee) {
+            public void setActualFee(double ActualFee) {
                 this.ActualFee = ActualFee;
             }
 

@@ -33,8 +33,10 @@ public class BonusRecordPersonalAdapter extends MyBaseAdapter<BonusRecordEntity.
         item = list.get(position);
         TextView tv_date = (TextView) convertView.findViewById(R.id.tv_date);
         TextView tv_increase = (TextView) convertView.findViewById(R.id.tv_bonus_personal);//奖励总额
+        TextView tv_person_name = (TextView) convertView.findViewById(R.id.tv_person_name);//来自哪里
         String date = item.getYear() + "年" + item.getMonth() + "月";
         tv_date.setText(date);
+        tv_person_name.setText(item.getOrg_name());
         DecimalFormat df = new DecimalFormat("0.00");
         tv_increase.setText("+" + df.format(item.getActualFee()));
         return convertView;

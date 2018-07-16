@@ -30,7 +30,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@id/textView"
-                android:text="集团总部" />
+                android:text="" />
 
             <TextView
                 android:id="@+id/tv_date"
@@ -39,7 +39,7 @@
                 android:layout_below="@id/textView"
                 android:layout_marginLeft="18dp"
                 android:layout_marginTop="@dimen/margin_5"
-                android:text="2017年2月"
+                android:text=""
                 android:textColor="@color/text_color3"
                 android:textSize="14dp" />
         </RelativeLayout>
@@ -57,7 +57,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:text="+2124"
+                android:text=""
                 android:textColor="@color/text_color3"
                 android:textSize="14dp" />
 

@@ -44,6 +44,10 @@ public class BonusRecordPersonalActivity extends BaseActivity implements OnItemC
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Intent intent = getIntent();
+        if (intent != null) {
+            orguuid = intent.getStringExtra("orguuid");
+        }
         initView();
     }
 

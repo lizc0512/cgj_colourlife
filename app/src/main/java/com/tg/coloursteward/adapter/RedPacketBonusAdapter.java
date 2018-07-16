@@ -66,6 +66,7 @@ public class RedPacketBonusAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context.getApplicationContext(), BonusRecordPersonalActivity.class);
+                intent.putExtra("orguuid", redPacketEntityList.get(position).getOrguuid());
                 context.startActivity(intent);
             }
         });

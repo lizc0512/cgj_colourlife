@@ -8,8 +8,6 @@ import android.content.Intent;
 import android.support.multidex.MultiDex;
 import android.util.Log;
 
-import com.bugtags.library.Bugtags;
-import com.bugtags.library.BugtagsOptions;
 import com.facebook.stetho.Stetho;
 import com.networkbench.agent.impl.NBSAppAgent;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
@@ -19,7 +17,6 @@ import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.tencent.smtt.sdk.QbSdk;
 import com.tg.coloursteward.LoginActivity;
 import com.tg.coloursteward.R;
-import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.database.SharedPreferencesTools;
 import com.tg.coloursteward.log.Logger;
 import com.tg.coloursteward.net.ResponseData;
@@ -46,14 +43,6 @@ public class CityPropertyApplication extends Application {
 
         NBSAppAgent.setLicenseKey("bbf07e0ce0b04fab93c46e4c57494e47").withLocationServiceEnabled(true).startInApplication(this.getApplicationContext());
         NBSAppAgent.setLicenseKey("bbf07e0ce0b04fab93c46e4c57494e47").start(this.getApplicationContext());
-        BugtagsOptions options = new BugtagsOptions.Builder().
-                trackingLocation(false).//是否获取位置，默认 true
-                trackingCrashLog(true).//是否收集crash，默认 true
-                trackingConsoleLog(true).//是否收集console log，默认 true
-                trackingUserSteps(true).//是否收集用户操作步骤，默认 true
-                trackingNetworkURLFilter("(.*)").//自定义网络请求跟踪的 url 规则，默认 null
-                build();
-        Bugtags.start(Contants.URl.bugtags, this, Bugtags.BTGInvocationEventNone);
 
         instance = this;
         HuxinSdkManager.instance().init(this);

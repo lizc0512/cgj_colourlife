@@ -25,7 +25,6 @@ public interface Contants {
         String URL_CPMOBILE = "http://cpmobile.colourlife.com";
         String URL_CAIHUI = "https://caihui.colourlife.com";
         String URL_OAUTH2 = "https://oauth2-cgj.colourlife.com";
-        String bugtags="d9d2866de6066fd414d792324bddbb6b";
         String PUBLIC_KEY="MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCTFnAR7ORLx0jGzf9Ux1We7yHvRi+kQXKSRmtgBjDCXQzakGm2mrb6EupCkDbUcj4BUs7S7zm/rICQuVNC9fujeJGjcNWRg0XWVtm90XpbTqfKiXzGDHI9W8aULYZ3of/JJ9lyCyjqjigyCdLBPtQ27gOuboDzQuieR2ywPHawzQIDAQAB";
 //////////////////////////////////////////////////////////////////////////////
         /**
@@ -35,7 +34,6 @@ public interface Contants {
 //        String URL_CPMOBILE = "http://cpmobile-czytest.colourlife.com";
 //        String URL_CAIHUI = "https://caihui.colourlife.com";
 //        String URL_OAUTH2 = "https://oauth2-cgj-test.colourlife.com";
-//        String bugtags = "6605fa27f0bb6e68a631ea1c57845b45";
 //        String PUBLIC_KEY = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDZDqnWph9LxtD0zgtGAYTTf2jY" +
 //                "eV+ni5F1o0w3Fag4OOD1YHCRUCXIsFy+iJYmuPf5vMkZrkoiJmKBfkaIzNlrJZzH" +
 //                "zq+LsPQNCF86p1nLsuHbkWNvyjOEPn/CUryP2Kxme4S+eEqLIeNwp70VOaMuPmRo" +

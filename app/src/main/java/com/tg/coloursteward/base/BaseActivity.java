@@ -1,10 +1,22 @@
 package com.tg.coloursteward.base;
 
-import java.util.ArrayList;
+import android.app.Activity;
+import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.text.TextUtils;
+import android.view.View;
+import android.view.ViewGroup.LayoutParams;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
-import cn.jpush.android.api.JPushInterface;
-
-import com.bugtags.library.Bugtags;
 import com.githang.statusbar.StatusBarCompat;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.application.CityPropertyApplication;
@@ -16,28 +28,14 @@ import com.tg.coloursteward.net.MessageHandler.ResponseListener;
 import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.view.ActivityHeaderView;
 import com.tg.coloursteward.view.CameraView;
-import com.tg.coloursteward.view.GifImageView;
 import com.tg.coloursteward.view.CameraView.STATE;
+import com.tg.coloursteward.view.GifImageView;
 import com.tg.coloursteward.view.dialog.DialogFactory;
 import com.tg.coloursteward.view.dialog.ToastFactory;
 
-import android.content.res.Configuration;
-import android.content.res.Resources;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.app.Activity;
-import android.content.Intent;
-import android.content.pm.ActivityInfo;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
-import android.text.TextUtils;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.ViewGroup.LayoutParams;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import java.util.ArrayList;
+
+import cn.jpush.android.api.JPushInterface;
 
 public abstract class BaseActivity extends Activity implements ResponseListener {
 
@@ -258,7 +256,6 @@ public abstract class BaseActivity extends Activity implements ResponseListener 
         // TODO Auto-generated method stub
         super.onResume();
         JPushInterface.onResume(this);
-        Bugtags.onResume(this);
     }
 
     @Override
@@ -266,13 +263,6 @@ public abstract class BaseActivity extends Activity implements ResponseListener 
         // TODO Auto-generated method stub
         super.onPause();
         JPushInterface.onPause(this);
-        Bugtags.onPause(this);
-    }
-
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
-        Bugtags.onDispatchTouchEvent(this, ev);
-        return super.dispatchTouchEvent(ev);
     }
 
     @Override

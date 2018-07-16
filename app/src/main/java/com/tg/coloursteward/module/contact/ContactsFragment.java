@@ -387,6 +387,14 @@ public class ContactsFragment extends Fragment implements ResponseListener, Item
             case 2: //我的部门
                 info = new FamilyInfo();
                 info.id = Tools.getOrgId(mActivity);
+                if(!"".equals(Tools.getOrgId(mActivity))){
+                    info.id = Tools.getOrgId(mActivity);
+                }else {
+                    info.id =UserInfo.infoorgId;
+                }
+                if("".equals(info.id)){
+                    info.id =UserInfo.orgId;
+                }
                 info.type = "org";
                 info.name = UserInfo.familyName;
                 intent = new Intent(mActivity, HomeContactOrgActivity.class);

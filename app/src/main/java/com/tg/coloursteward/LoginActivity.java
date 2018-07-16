@@ -39,7 +39,6 @@ import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.dialog.ToastFactory;
 import com.youmai.hxsdk.HuxinSdkManager;
-import com.youmai.hxsdk.utils.ToastUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -137,7 +136,7 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
         editPassword = (EditText) findViewById(R.id.edit_password);
         ivClose = (ImageView) findViewById(R.id.iv_close);
         ivClose.setOnClickListener(singleListener);
-        submit=findViewById(R.id.submit);
+        submit = findViewById(R.id.submit);
         submit.setOnClickListener(singleListener);
         findViewById(R.id.forget_pwd).setOnClickListener(singleListener);
         RequestParams params = new RequestParams();
@@ -518,6 +517,7 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
         } else if (msg.arg1 == HttpTools.GET_USER_INFO) {
             if (code == 0) {
                 AccountEntity accountEntity = GsonUtils.gsonToBean(jsonString, AccountEntity.class);
+                UserInfo.infoorgId = accountEntity.getContent().getOrgId();
                 Tools.saveOrgId(LoginActivity.this, accountEntity.getContent().getOrgId());
                 Tools.loadUserInfo(data, jsonString);
                 getKeyAndSecret();

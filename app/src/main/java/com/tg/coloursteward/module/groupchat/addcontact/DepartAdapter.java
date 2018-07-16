@@ -116,6 +116,7 @@ public class DepartAdapter extends RecyclerView.Adapter {
         } else if (holder instanceof SearchItem) {
             if (null != groupMap && null != groupMap.get(contact.getUuid())) {
                 ((SearchItem) holder).cb_collect.setButtonDrawable(R.drawable.contact_select_def);
+                ((SearchItem) holder).search_name.setText(contact.getRealname());
             } else {
                 ((SearchItem) holder).search_name.setText(contact.getRealname());
                 ((SearchItem) holder).cb_collect.setButtonDrawable(R.drawable.contacts_select_selector);

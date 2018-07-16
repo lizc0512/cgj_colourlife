@@ -73,9 +73,9 @@ public class BonusRecordDetailEntity implements Serializable  {
         private int year;
         private int month;
         private double jtbaoFee;
-        private int jtkkfee;
-        private int normalFee;
-        private int ActualFee;
+        private double jtkkfee;
+        private double normalFee;
+        private double ActualFee;
         private double baoFee;
         private int s;
         private List<DataBean> data;
@@ -146,27 +146,27 @@ public class BonusRecordDetailEntity implements Serializable  {
             this.jtbaoFee = jtbaoFee;
         }
 
-        public int getJtkkfee() {
+        public double getJtkkfee() {
             return jtkkfee;
         }
 
-        public void setJtkkfee(int jtkkfee) {
+        public void setJtkkfee(double jtkkfee) {
             this.jtkkfee = jtkkfee;
         }
 
-        public int getNormalFee() {
+        public double getNormalFee() {
             return normalFee;
         }
 
-        public void setNormalFee(int normalFee) {
+        public void setNormalFee(double normalFee) {
             this.normalFee = normalFee;
         }
 
-        public int getActualFee() {
+        public double getActualFee() {
             return ActualFee;
         }
 
-        public void setActualFee(int ActualFee) {
+        public void setActualFee(double ActualFee) {
             this.ActualFee = ActualFee;
         }
 

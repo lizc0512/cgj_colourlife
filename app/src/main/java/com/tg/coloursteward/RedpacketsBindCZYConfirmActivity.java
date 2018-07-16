@@ -301,4 +301,11 @@ public class RedpacketsBindCZYConfirmActivity extends BaseActivity {
         return "";
     }
 
+    @Override
+    public void onFail(Message msg, String hintString) {
+        super.onFail(msg, hintString);
+        if (msg.arg1 == HttpTools.POST_BAND_CZY) {
+            ToastFactory.showToast(RedpacketsBindCZYConfirmActivity.this, hintString);
+        }
+    }
 }

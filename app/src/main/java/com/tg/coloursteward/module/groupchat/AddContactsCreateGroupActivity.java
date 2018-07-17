@@ -1,5 +1,6 @@
 package com.tg.coloursteward.module.groupchat;
 
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -351,7 +352,16 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
     }
 
 
+    private ProgressDialog mProgressDialog;
+
     public void done() {
+        if (mProgressDialog == null) {
+            mProgressDialog = new ProgressDialog(this);
+            mProgressDialog.setMessage("正在请求，请稍后...");
+            mProgressDialog.setCanceledOnTouchOutside(false);
+        }
+        mProgressDialog.show();
+
         if (mDetailType == 1) {
             createGroup();
         } else if (mDetailType == 2) {
@@ -451,6 +461,11 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
                         } else {
                             Toast.makeText(mContext, "创建群失败", Toast.LENGTH_SHORT).show();
                         }
+
+                        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+                            mProgressDialog.dismiss();
+                        }
+
                     } catch (InvalidProtocolBufferException e) {
                         e.printStackTrace();
                     }
@@ -509,6 +524,10 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
                         intent.putParcelableArrayListExtra(ChatGroupDetailsActivity.UPDATE_GROUP_LIST, list);
                         setResult(ChatGroupDetailsActivity.RESULT_CODE, intent);
                         finish();
+                    }
+
+                    if (mProgressDialog != null && mProgressDialog.isShowing()) {
+                        mProgressDialog.dismiss();
                     }
                 } catch (InvalidProtocolBufferException e) {
                     e.printStackTrace();

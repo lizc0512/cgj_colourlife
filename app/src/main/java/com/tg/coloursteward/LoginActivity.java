@@ -397,7 +397,7 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
         try {
             String passwordMD5 = MD5.getMd5Value(password).toLowerCase();
             Log.d("TAG", "passwordMD5=" + passwordMD5);
-            Tools.savePassWordMD5(getApplicationContext(), passwordMD5);//保存密码(加密后)
+            Tools.savePassWordMD5(getApplicationContext(), passwordMD5);//保存密码(MD5加密后)
             Tools.savePassWord(getApplicationContext(), password);//保存密码
             Tools.hideKeyboard(editUser);
             RequestParams params = new RequestParams();

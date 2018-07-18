@@ -251,16 +251,16 @@ public class FragmentMine extends Fragment implements ItemClickListener, Respons
         if (homeService == null) {
             homeService = new HomeService(getActivity());
         }
-        homeService.getAuth(clientCode, new GetTwoRecordListener<String, String>() {
+        homeService.getAuth2(clientCode, new GetTwoRecordListener<String, String>() {
 
             @Override
             public void onFinish(String openID, String accessToken, String data3) {
                 String str = "?";
                 String URL;
                 if (url.contains(str)) {//Url有问号
-                    URL = url + "&openID=" + openID + "&accessToken=" + accessToken;
+                    URL = url + "&username=" + openID + "&access_token=" + accessToken;
                 } else {
-                    URL = url + "?openID=" + openID + "&accessToken=" + accessToken;
+                    URL = url + "?username=" + openID + "&access_token=" + accessToken;
                 }
                 Intent intent = new Intent(mActivity, MyBrowserActivity.class);
                 intent.putExtra(MyBrowserActivity.KEY_URL, URL);

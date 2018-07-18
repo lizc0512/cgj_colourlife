@@ -38,7 +38,7 @@ public class GroupAccountDetailsAdapter extends MyBaseAdapter<GroupAccountEntity
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            convertView = inflater.inflate(R.layout.public_account_details_item, null);
+            convertView = inflater.inflate(R.layout.public_account_details_item_jtjjb, null);
         }
         TextView tvTime = (TextView) convertView.findViewById(R.id.tv_time);
         TextView tvDetails = (TextView) convertView.findViewById(R.id.tv_details);
@@ -50,7 +50,7 @@ public class GroupAccountDetailsAdapter extends MyBaseAdapter<GroupAccountEntity
         } else {
             tvDetails.setText("备注：转账");
         }
-        DecimalFormat df = new DecimalFormat("0.00");
+        DecimalFormat df = new DecimalFormat("0.000000");
         if (ano.equals(list.get(position).getDestcccount())) {//转入
             if (StringUtils.isNotEmpty(list.get(position).getOrgclient())) {
                 tvTno.setText("收到[" + list.get(position).getOrgplatform() + "][" + list.get(position).getOrgclient()

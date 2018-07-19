@@ -77,7 +77,7 @@ public class UserInfoEntity {
         private String email;
         private String name;
         private int gender;
-        private Object land_line;
+        private String land_line;
         private int is_deleted;
         private int status;
         private String update_ts;
@@ -141,11 +141,11 @@ public class UserInfoEntity {
             this.gender = gender;
         }
 
-        public Object getLand_line() {
+        public String getLand_line() {
             return land_line;
         }
 
-        public void setLand_line(Object land_line) {
+        public void setLand_line(String land_line) {
             this.land_line = land_line;
         }
 

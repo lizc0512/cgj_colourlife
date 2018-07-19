@@ -1663,7 +1663,19 @@ public class Tools {
     public static String getRefresh_token2(Context con) {
         return getSysShare(con).getString("refresh_token2", "");
     }
+    /**
+     * 保存refresh_token获取的用户信息
+     *
+     * @param con
+     */
+    public static void savetokenUserInfo(Context con, String tokenUserInfo) {
+        getSysShare(con).edit().
+                putString("tokenuserinfo", tokenUserInfo).commit();
+    }
 
+    public static String gettokenUserInfo(Context con) {
+        return getSysShare(con).getString("tokenuserinfo", "");
+    }
     /**
      * 保存refresh_token获取时间
      *

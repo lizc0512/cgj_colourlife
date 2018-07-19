@@ -95,6 +95,9 @@ repositories {
     flatDir {
         dirs 'libs'
     }
+    maven {
+        url "http://maven.aliyun.com/nexus/content/repositories/releases"
+    }
     google()
 }
 
@@ -110,7 +113,7 @@ dependencies {
     implementation 'cn.jiguang.sdk:jpush:3.1.3'  // JPush 3.1.1 版本。
     implementation 'cn.jiguang.sdk:jcore:1.2.1'  // JCore 1.1.9
 
-
+    implementation 'com.aliyun.ams:alicloud-android-hotfix:3.2.4'
     implementation 'com.loopj.android:android-async-http:1.4.6'
     implementation 'com.github.ittianyu:BottomNavigationViewEx:1.2.4'
     implementation 'com.youth.banner:banner:1.4.9'    //banner公告

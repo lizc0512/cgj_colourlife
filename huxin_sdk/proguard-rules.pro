@@ -202,12 +202,7 @@ public static java.lang.String TABLENAME;
 -keep class com.ut.*
 
 
-# 友盟统计分析
--keepclassmembers class * { public <init>(org.json.JSONObject); }
--keepclassmembers enum com.umeng.analytics.** {
-    public static **[] values();
-    public static ** valueOf(java.lang.String);
-}
+
 
 # for google protobuf
 -keep public class * extends com.google.protobuf.GeneratedMessage { *; }
@@ -263,7 +258,6 @@ public static java.lang.String TABLENAME;
 -keepclassmembers class com.youmai.hxsdk.HuxinSdkManager {
     public void onUmengEvent(android.content.Context, java.lang.String);
 }
-
 # AIDL
 -keep public class * extends android.os.IInterface { *; }
 

@@ -82,7 +82,7 @@ public class ChatGroupAllMembersActivity extends SdkBaseActivity {
 
         mAdapter = new GroupDetailAdapter(mContext, groupList);
         GridLayoutManager manager = new GridLayoutManager(mContext, 5);
-        recycler_view.addItemDecoration(new PaddingItemDecoration(5));
+        recycler_view.addItemDecoration(new PaddingItemDecoration(20));
         recycler_view.setLayoutManager(manager);
         recycler_view.setAdapter(mAdapter);
 

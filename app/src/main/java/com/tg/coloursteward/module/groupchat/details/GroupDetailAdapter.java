@@ -3,6 +3,7 @@ package com.tg.coloursteward.module.groupchat.details;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,11 +13,10 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.tg.coloursteward.R;
 import com.tg.coloursteward.constant.Contants;
-import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.db.bean.ContactBean;
 import com.youmai.hxsdk.utils.GlideRoundTransform;
-import com.youmai.hxsdk.utils.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,63 +30,85 @@ public class GroupDetailAdapter extends RecyclerView.Adapter {
 
     final String HEAD_ICON_URL = Contants.URl.HEAD_ICON_URL; //头像
 
-    enum TYPE {
-        ADD_DELETE, DEFAULT
+    public enum TYPE {
+        DEFAULT, ADD_MEMBER, DEL_MEMBER
     }
 
     private Context mContext;
-    private List<ContactBean> mDataList = new ArrayList<>();
-    private LayoutInflater mLayoutInflater;
-    private ItemEventListener itemEventListener;
-    private int mType = 1; //1: 不是群主  2：是群主
+    private List<ContactBean> mDataList;
 
-    public GroupDetailAdapter(Context context, ItemEventListener listener) {
-        this.mContext = context;
-        mLayoutInflater = LayoutInflater.from(context);
-        this.itemEventListener = listener;
+    private ItemEventListener itemEventListener;
+
+    /**
+     * @param context
+     * @param isGroupOwner
+     * @param listener
+     */
+    public GroupDetailAdapter(Context context, boolean isGroupOwner,
+                              ItemEventListener listener) {
+        mContext = context;
+        itemEventListener = listener;
+        mDataList = new ArrayList<>();
+
+        ContactBean add = new ContactBean();
+        add.setUiType(TYPE.ADD_MEMBER.ordinal());
+        mDataList.add(add);
+
+        if (isGroupOwner) {
+            ContactBean del = new ContactBean();
+            del.setUiType(TYPE.DEL_MEMBER.ordinal());
+            mDataList.add(del);
+        }
     }
 
-    public void setDataList(List list) {
-        this.mDataList = list;
+    public GroupDetailAdapter(Context context, List<ContactBean> list) {
+        mContext = context;
+        mDataList = new ArrayList<>();
+        mDataList.addAll(list);
+    }
+
+
+    public void addList(List<ContactBean> list) {
+        int index = 0;
+        for (int i = 0; i < mDataList.size(); i++) {
+            if (mDataList.get(i).getUiType() != 0) {
+                index = i;
+                break;
+            }
+        }
+        mDataList.addAll(index, list);
+
         notifyDataSetChanged();
     }
 
-    public void setType(int type) {
-        this.mType = type;
+
+    public void removeList(List<ContactBean> list) {
+        mDataList.removeAll(list);
+        notifyDataSetChanged();
     }
 
     @Override
     public int getItemCount() {
-        return mDataList.size() > 0 ? mDataList.size() : 0;
+        return mDataList == null ? 0 : mDataList.size();
     }
 
     @Override
     public int getItemViewType(int position) {
-        int type;
-        if (mType == 1) {
-            if (position < mDataList.size() - 1) {
-                type = TYPE.DEFAULT.ordinal();
-            } else {
-                type = TYPE.ADD_DELETE.ordinal();
-            }
-        } else {
-            if (position < mDataList.size() - 2) {
-                type = TYPE.DEFAULT.ordinal();
-            } else {
-                type = TYPE.ADD_DELETE.ordinal();
-            }
-        }
-        return type;
+        ContactBean bean = mDataList.get(position);
+        return bean.getUiType();
     }
 
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        if (viewType == TYPE.ADD_DELETE.ordinal()) {
-            View view = mLayoutInflater.inflate(R.layout.hx_im_group_add_item, parent, false);
+        if (viewType == TYPE.ADD_MEMBER.ordinal()) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.hx_im_group_add_item, parent, false);
             return new AddItemHolder(view);
+        } else if (viewType == TYPE.DEL_MEMBER.ordinal()) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.hx_im_group_del_item, parent, false);
+            return new DelItemHolder(view);
         } else {
-            View view = mLayoutInflater.inflate(R.layout.hx_im_group_item, parent, false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.hx_im_group_item, parent, false);
             return new ItemHolder(view);
         }
     }
@@ -94,12 +116,13 @@ public class GroupDetailAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
         final ContactBean contact = mDataList.get(position);
+
         if (holder instanceof ItemHolder) {
             ItemHolder itemHolder = (ItemHolder) holder;
             itemHolder.tv_name.setText(contact.getRealname());
 
             String url = contact.getAvatar();
-            if (StringUtils.isEmpty(url)) {
+            if (TextUtils.isEmpty(url)) {
                 url = HEAD_ICON_URL + "avatar?uid=" + contact.getUsername();
             }
 
@@ -114,15 +137,8 @@ public class GroupDetailAdapter extends RecyclerView.Adapter {
                             .placeholder(R.drawable.color_default_header)
                             .error(R.drawable.color_default_header))
                     .into(itemHolder.iv_header);
-        } else {
-            AddItemHolder mHolder = (AddItemHolder) holder;
-            String realname = contact.getRealname();
-            if (realname.equals("+")) {
-                mHolder.iv_more.setImageResource(R.drawable.hx_add_group_member);
-            } else if (realname.equals("-")) {
-                mHolder.iv_more.setImageResource(R.drawable.hx_delete_group_member);
-            }
         }
+
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -135,11 +151,21 @@ public class GroupDetailAdapter extends RecyclerView.Adapter {
     }
 
     private class AddItemHolder extends RecyclerView.ViewHolder {
-        private ImageView iv_more;
+        private ImageView iv_add;
 
-        public AddItemHolder(View itemView) {
+        AddItemHolder(View itemView) {
             super(itemView);
-            iv_more = itemView.findViewById(R.id.iv_add_more);
+            iv_add = itemView.findViewById(R.id.iv_add);
+        }
+    }
+
+
+    private class DelItemHolder extends RecyclerView.ViewHolder {
+        private ImageView iv_del;
+
+        DelItemHolder(View itemView) {
+            super(itemView);
+            iv_del = itemView.findViewById(R.id.iv_del);
         }
     }
 
@@ -147,7 +173,7 @@ public class GroupDetailAdapter extends RecyclerView.Adapter {
         private TextView tv_name;
         private ImageView iv_header;
 
-        public ItemHolder(View itemView) {
+        ItemHolder(View itemView) {
             super(itemView);
             tv_name = itemView.findViewById(R.id.tv_item_name);
             iv_header = itemView.findViewById(R.id.iv_item_header);

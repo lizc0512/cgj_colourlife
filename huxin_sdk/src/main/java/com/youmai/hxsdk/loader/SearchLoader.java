@@ -75,11 +75,11 @@ public class SearchLoader extends AsyncTaskLoader {
                 }
                 finalQuery = queryUpper;
 
-            } else if (bean.getDuoYinzi().find(queryUpper, findResult)) {
+            } /*else if (bean.getDuoYinzi().find(queryUpper, findResult)) {
                 searchType = SearchContactBean.SEARCH_TYPE_WHOLE_SPECL;
                 finalQuery = queryUpper;
                 bean.setWholePinYinFindIndex(findResult);
-            }
+            }*/
 
 
             if (searchType != SearchContactBean.SEARCH_TYPE_NONE) {
@@ -124,8 +124,8 @@ public class SearchLoader extends AsyncTaskLoader {
             contact.setSimplepinyin(ch.toString());
             contact.setIndexPinyin(chStr);
 
-            DuoYinZi duoYinZi = PinYinUtils.HanziToPinYin(hanzi);
-            contact.setDuoYinzi(duoYinZi);
+            //DuoYinZi duoYinZi = PinYinUtils.HanziToPinYin(hanzi);
+            //contact.setDuoYinzi(duoYinZi);
 
             contactList.add(contact);
         }

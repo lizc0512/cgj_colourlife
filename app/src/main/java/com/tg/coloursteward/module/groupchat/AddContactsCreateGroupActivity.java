@@ -32,6 +32,7 @@ import com.tg.coloursteward.module.contact.widget.CharIndexView;
 import com.tg.coloursteward.module.groupchat.addcontact.AddContactByDepartmentFragment;
 import com.tg.coloursteward.module.groupchat.addcontact.AddContactBySearchFragment;
 import com.tg.coloursteward.module.groupchat.details.ChatGroupDetailsActivity;
+import com.tg.coloursteward.module.groupchat.details.ContactBeanData;
 import com.tg.coloursteward.module.search.SearchEditText;
 import com.tg.coloursteward.net.GetTwoRecordListener;
 import com.tg.coloursteward.net.HttpTools;
@@ -213,7 +214,9 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
 
         mDetailType = getIntent().getIntExtra(DETAIL_TYPE, -1);
         mGroupId = getIntent().getIntExtra(GROUP_ID, -1);
-        mContactList = getIntent().getParcelableArrayListExtra(GROUP_LIST);
+
+        mContactList = ContactBeanData.instance().getGroupList();
+
         if (!ListUtils.isEmpty(mContactList)) {
             initGroupMap();
         }
@@ -273,10 +276,7 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
                 cacheMap.clear();
             }
         }
-        if (!ListUtils.isEmpty(mContactList)) {
-            mContactList.clear();
-            mContactList = null;
-        }
+
         if (null != mTotalMap) {
             mTotalMap.clear();
             mTotalMap = null;

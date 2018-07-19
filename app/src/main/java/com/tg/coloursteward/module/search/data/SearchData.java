@@ -81,8 +81,8 @@ public class SearchData {
             contact.setSimplepinyin(ch.toString());
             contact.setIndexPinyin(chStr);
 
-            DuoYinZi duoYinZi = PinYinUtils.HanziToPinYin(hanzi);
-            contact.setDuoYinzi(duoYinZi);
+            //DuoYinZi duoYinZi = PinYinUtils.HanziToPinYin(hanzi);
+            //contact.setDuoYinzi(duoYinZi);
 
             Log.e("YW", contact.toString());
 
@@ -151,8 +151,8 @@ public class SearchData {
             appsBean.setSimplepinyin(ch.toString());
             appsBean.setIndexPinyin(chStr);
 
-            DuoYinZi duoYinZi = PinYinUtils.HanziToPinYin(hanzi);
-            appsBean.setDuoYinzi(duoYinZi);
+            //DuoYinZi duoYinZi = PinYinUtils.HanziToPinYin(hanzi);
+            //appsBean.setDuoYinzi(duoYinZi);
 
             Log.e("YW", appsBean.toString());
 
@@ -191,8 +191,8 @@ public class SearchData {
             contact.setSimplepinyin(ch.toString());
             contact.setIndexPinyin(chStr);
 
-            DuoYinZi duoYinZi = PinYinUtils.HanziToPinYin(hanzi);
-            contact.setDuoYinzi(duoYinZi);
+            //DuoYinZi duoYinZi = PinYinUtils.HanziToPinYin(hanzi);
+            //contact.setDuoYinzi(duoYinZi);
 
             contactList.add(contact);
         }
@@ -228,8 +228,8 @@ public class SearchData {
             contact.setSimplepinyin(ch.toString());
             contact.setIndexPinyin(chStr);
 
-            DuoYinZi duoYinZi = PinYinUtils.HanziToPinYin(hanzi);
-            contact.setDuoYinzi(duoYinZi);
+            //DuoYinZi duoYinZi = PinYinUtils.HanziToPinYin(hanzi);
+            //contact.setDuoYinzi(duoYinZi);
 
             contactList.add(contact);
         }

@@ -1564,7 +1564,7 @@ public class IMGroupActivity extends SdkBaseActivity implements
 
 
     private void reqGroupMembers(int groupId) {
-        HuxinSdkManager.instance().reqGroupMember(groupId, new ReceiveListener() {
+        /*HuxinSdkManager.instance().reqGroupMember(groupId, new ReceiveListener() {
             @Override
             public void OnRec(PduBase pduBase) {
                 try {
@@ -1587,7 +1587,7 @@ public class IMGroupActivity extends SdkBaseActivity implements
                     e.printStackTrace();
                 }
             }
-        });
+        });*/
 
     }
 

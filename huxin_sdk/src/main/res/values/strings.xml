@@ -167,6 +167,7 @@
     <string name="red_packet_unit1">ƒ %1$s"</string>
     <string name="red_packet_unit2">%1$s ƒ</string>
     <string name="group_count">%1$s 人</string>
+    <string name="group_number">%1$d 人</string>
 
     <string name="send_red_packet_count">发出%1$s个利是共</string>
     <string name="receive_red_packet_count">收到%1$s个利是共</string>

@@ -11,6 +11,7 @@ import android.widget.Toast;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.module.groupchat.details.ChatGroupDetailsActivity;
+import com.tg.coloursteward.module.groupchat.details.ContactBeanData;
 import com.tg.coloursteward.util.StringUtils;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.activity.SdkBaseActivity;
@@ -20,7 +21,7 @@ import com.youmai.hxsdk.proto.YouMaiGroup;
 import com.youmai.hxsdk.socket.PduBase;
 import com.youmai.hxsdk.socket.ReceiveListener;
 
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * 作者：create by YW
@@ -53,7 +54,7 @@ public class GroupManageActivity extends SdkBaseActivity {
     }
 
     private void initView() {
-        List<ContactBean> list = getIntent().getParcelableArrayListExtra(GROUP_LIST);
+        ArrayList<ContactBean> list = ContactBeanData.instance().getDelGroupList();
 
         tv_back = findViewById(R.id.tv_left_cancel);
         tv_back.setText(R.string.hx_back);

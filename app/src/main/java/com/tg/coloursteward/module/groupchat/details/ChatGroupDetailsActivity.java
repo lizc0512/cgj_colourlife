@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
@@ -14,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -41,7 +41,6 @@ import com.youmai.hxsdk.db.bean.ContactBean;
 import com.youmai.hxsdk.db.bean.GroupInfoBean;
 import com.youmai.hxsdk.db.helper.CacheMsgHelper;
 import com.youmai.hxsdk.db.helper.GroupInfoHelper;
-import com.youmai.hxsdk.entity.GroupAndMember;
 import com.youmai.hxsdk.im.IMMsgManager;
 import com.youmai.hxsdk.proto.YouMaiBasic;
 import com.youmai.hxsdk.proto.YouMaiGroup;
@@ -49,7 +48,6 @@ import com.youmai.hxsdk.router.APath;
 import com.youmai.hxsdk.socket.PduBase;
 import com.youmai.hxsdk.socket.ReceiveListener;
 import com.youmai.hxsdk.utils.AppUtils;
-import com.youmai.hxsdk.utils.GsonUtil;
 import com.youmai.hxsdk.utils.ListUtils;
 
 import java.util.ArrayList;
@@ -95,12 +93,13 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
     private TextView mTvExitGroup;
     private TextView mTvGroupName;
     private TextView mtvNoticeContent;
+    private TextView tv_count;
+    private LinearLayout linear_next;
 
     private GroupDetailAdapter mAdapter;
 
-    private List<ContactBean> groupList = new ArrayList<>();
-    private List<ContactBean> groupList2 = new ArrayList<>();    //添加群成员
-    private List<ContactBean> groupList3 = new ArrayList<>();    //删除群成员
+    //private ArrayList<ContactBean> groupList = new ArrayList<>();
+    //private ArrayList<ContactBean> delGroupList = new ArrayList<>();  //删除群成员，不包括群主
 
     private GroupInfoBean mGroupInfo;
     private String groupName;
@@ -152,38 +151,35 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
         filter.addAction(IMGroupActivity.UPDATE_GROUP_INFO);
         localBroadcastManager.registerReceiver(mLocalMsgReceiver, filter);
 
-        initView();
-        setOnClickListener();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-
-        localBroadcastManager.unregisterReceiver(mLocalMsgReceiver);
-        localBroadcastManager = null;
-
-        if (null != groupList) {
-            groupList.clear();
-        }
-        if (null != groupList2) {
-            groupList2.clear();
-        }
-        if (null != groupList3) {
-            groupList3.clear();
-        }
-        isGroupOwner = false;
-    }
-
-    private void initView() {
         mGroupInfo = getIntent().getParcelableExtra(IMGroupActivity.GROUP_INFO);
-        mGroupId = getIntent().getIntExtra(GROUP_ID, -1);
+        mGroupId = getIntent().getIntExtra(IMGroupActivity.GROUP_ID, -1);
         groupName = getIntent().getStringExtra(IMGroupActivity.GROUP_NAME);
 
         if (null == mGroupInfo) {
             mGroupInfo = GroupInfoHelper.instance().toQueryByGroupId(this, mGroupId);
         }
 
+        initView();
+        setOnClickListener();
+
+        HuxinSdkManager.instance().getStackAct().addActivity(this);
+    }
+
+
+    private void initView() {
+        linear_next = findViewById(R.id.linear_next);
+        tv_count = findViewById(R.id.tv_count);
+        tv_count.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext, ChatGroupAllMembersActivity.class);
+                intent.putExtra(IMGroupActivity.GROUP_ID, mGroupId);
+                intent.putExtra(IMGroupActivity.GROUP_INFO, mGroupInfo);
+                intent.putExtra(IMGroupActivity.GROUP_NAME, groupName);
+
+                startActivity(intent);
+            }
+        });
 
         mTvBack = findViewById(R.id.tv_back);
         mTvTitle = findViewById(R.id.tv_title);
@@ -234,12 +230,13 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
             }
         });
 
-
-        mAdapter = new GroupDetailAdapter(this, this);
-        GridLayoutManager manager = new GridLayoutManager(this, 5);
+        mAdapter = new GroupDetailAdapter(mContext, isGroupOwner,
+                ChatGroupDetailsActivity.this);
+        GridLayoutManager manager = new GridLayoutManager(mContext, 5);
         mGridView.addItemDecoration(new PaddingItemDecoration(5));
         mGridView.setLayoutManager(manager);
         mGridView.setAdapter(mAdapter);
+
 
         reqGroupMembers();
 
@@ -289,15 +286,6 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
                     if (ack.getResult() == YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS) {
                         List<YouMaiGroup.GroupMemberItem> memberListList = ack.getMemberListList();
 
-                        if (groupList.size() > 0) {
-                            groupList.clear();
-                        }
-                        if (!ListUtils.isEmpty(groupList2)) {
-                            groupList2.clear();
-                        }
-                        if (!ListUtils.isEmpty(groupList3)) {
-                            groupList3.clear();
-                        }
 
                         for (YouMaiGroup.GroupMemberItem item : memberListList) {
                             if (item.getMemberId().equals(HuxinSdkManager.instance().getUuid())) {
@@ -315,66 +303,33 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
                             String avatar = Contants.URl.HEAD_ICON_URL + "avatar?uid=" + item.getUserName();
                             contact.setAvatar(avatar);
                             if (contact.getMemberRole() == 0) {
-                                groupList.add(0, contact);
+                                ContactBeanData.instance().addGroupListItem(0, contact);
                             } else {
-                                groupList.add(contact);
+                                ContactBeanData.instance().addGroupListItem(contact);
                             }
-                            groupList2.add(contact);
-                            if (item.getMemberRole() != 0) {
-                                groupList3.add(contact);
+
+                            if (item.getMemberRole() == 0) {
+                                ContactBeanData.instance().setGroupOwner(contact);
                             }
                         }
 
-                        if (!ListUtils.isEmpty(groupList)) {
-                            updateGroupInfo(memberListList);
-                        }
+                        ArrayList<ContactBean> groupList = ContactBeanData.instance().getGroupList();
 
-                        if (isGroupOwner) {
-                            ContactBean contact1 = new ContactBean();
-                            contact1.setRealname("+");
-                            groupList.add(contact1);
-                            ContactBean contact2 = new ContactBean();
-                            contact2.setRealname("-");
-                            groupList.add(contact2);
-                            mAdapter.setType(2);
+                        if (groupList.size() > 8) {
+
+                            String format = getResources().getString(R.string.group_number);
+                            tv_count.setText(String.format(format, groupList.size()));
+
+                            mAdapter.addList(groupList.subList(0, 7));
+                            linear_next.setVisibility(View.VISIBLE);
+
                         } else {
-                            ContactBean contact = new ContactBean();
-                            contact.setRealname("+");
-                            groupList.add(contact);
-                            mAdapter.setType(1);
+                            mAdapter.addList(groupList);
+                            linear_next.setVisibility(View.GONE);
                         }
+
+                        mAdapter.notifyDataSetChanged();
                     }
-
-                    mAdapter.setDataList(groupList);
-
-
-                    if (isGroupOwner && groupList2.size() <= 1) {
-                        HuxinSdkManager.instance().delGroup(mGroupId, new ReceiveListener() {
-                            @Override
-                            public void OnRec(PduBase pduBase) {
-                                try {
-                                    YouMaiGroup.GroupDissolveRsp ack = YouMaiGroup.GroupDissolveRsp.parseFrom(pduBase.body);
-                                    if (ack.getResult() == YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS) {
-                                        Toast.makeText(mContext, "此群组已经被解散", Toast.LENGTH_SHORT).show();
-                                    }
-
-                                    Intent intent = new Intent(GroupListActivity.GROUP_EXIT);
-                                    intent.putExtra(GroupListActivity.GROUP_ID, mGroupId);
-                                    LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(mContext);
-                                    localBroadcastManager.sendBroadcast(intent);
-
-                                    CacheMsgHelper.instance().delCacheMsgGroupId(mContext, mGroupId);
-                                    GroupInfoHelper.instance().delGroupInfo(mContext, mGroupId);
-                                    finish();
-                                    HuxinSdkManager.instance().getStackAct().finishActivity(IMGroupActivity.class);
-
-                                } catch (InvalidProtocolBufferException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        });
-                    }
-
                 } catch (InvalidProtocolBufferException e) {
                     e.printStackTrace();
                 }
@@ -392,7 +347,7 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface arg0, int arg1) {
-                        exitAndDeleteGroup();
+                        transAndExitGroup();
                         arg0.dismiss();
                     }
                 });
@@ -438,7 +393,6 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
             public void onClick(View v) {
                 Intent intent = new Intent();
                 intent.putExtra(GroupManageActivity.GROUP_ID, mGroupId);
-                intent.putParcelableArrayListExtra(GroupManageActivity.GROUP_LIST, (ArrayList<? extends Parcelable>) groupList3);
                 intent.setClass(ChatGroupDetailsActivity.this, GroupManageActivity.class);
                 startActivityForResult(intent, REQUEST_CODE_TRANS_OWNER);
             }
@@ -497,22 +451,28 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
         });
     }
 
-    private void exitAndDeleteGroup() {
-        if (!isGroupOwner) {
-            deleteGroup(2);
+    private void transAndExitGroup() {
+        ArrayList<ContactBean> groupList = ContactBeanData.instance().getGroupList();
+        if (isGroupOwner) {
+            if (groupList.size() <= 1) {
+                delGroup();
+            } else {
+                transOwner();
+            }
         } else {
-            transOwner();
+            exitGroup(2);
         }
     }
 
     private void transOwner() {
+        ArrayList<ContactBean> delGroupList = ContactBeanData.instance().getDelGroupList();
         ReceiveListener receiveListener = new ReceiveListener() {
             @Override
             public void OnRec(PduBase pduBase) {
                 try {
                     YouMaiGroup.GroupInfoModifyRsp ack = YouMaiGroup.GroupInfoModifyRsp.parseFrom(pduBase.body);
                     if (ack.getResult() == YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS) {
-                        deleteGroup(2);
+                        exitGroup(2);
                     }
                 } catch (InvalidProtocolBufferException e) {
                     e.printStackTrace();
@@ -520,8 +480,8 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
             }
         };
         String ownerId = null;
-        if (null != groupList3 && groupList3.size() > 0) {
-            ContactBean contact = groupList3.get(0);
+        if (!ListUtils.isEmpty(delGroupList)) {
+            ContactBean contact = delGroupList.get(0);
             ownerId = contact.getUuid();
             if (TextUtils.isEmpty(ownerId)) {
                 return;
@@ -533,7 +493,7 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
                 YouMaiGroup.GroupInfoModifyType.MODIFY_OWNER, receiveListener);
     }
 
-    private void deleteGroup(int role) {
+    private void exitGroup(int role) {
         List<YouMaiGroup.GroupMemberItem> list = new ArrayList<>();
         //删除成员
         YouMaiGroup.GroupMemberItem.Builder builder = YouMaiGroup.GroupMemberItem.newBuilder();
@@ -572,19 +532,46 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
                 list, mGroupId, listener);
     }
 
+
+    private void delGroup() {
+        HuxinSdkManager.instance().delGroup(mGroupId, new ReceiveListener() {
+            @Override
+            public void OnRec(PduBase pduBase) {
+                try {
+                    YouMaiGroup.GroupDissolveRsp ack = YouMaiGroup.GroupDissolveRsp.parseFrom(pduBase.body);
+                    if (ack.getResult() == YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS) {
+                        Toast.makeText(mContext, "此群组已经被解散", Toast.LENGTH_SHORT).show();
+                    }
+
+                    Intent intent = new Intent(GroupListActivity.GROUP_EXIT);
+                    intent.putExtra(GroupListActivity.GROUP_ID, mGroupId);
+                    LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(mContext);
+                    localBroadcastManager.sendBroadcast(intent);
+
+                    CacheMsgHelper.instance().delCacheMsgGroupId(mContext, mGroupId);
+                    GroupInfoHelper.instance().delGroupInfo(mContext, mGroupId);
+                    finish();
+                    HuxinSdkManager.instance().getStackAct().finishActivity(IMGroupActivity.class);
+
+                } catch (InvalidProtocolBufferException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+
     @Override
     public void onItemClick(int pos, ContactBean contact) {
-        String realname = contact.getRealname();
-        if (realname.equals("+")) {
+        int type = contact.getUiType();
+        if (type == GroupDetailAdapter.TYPE.ADD_MEMBER.ordinal()) {
             ARouter.getInstance().build(APath.GROUP_CREATE_ADD_CONTACT)
-                    .withParcelableArrayList(GROUP_LIST, (ArrayList<? extends Parcelable>) groupList2)
                     .withInt(AddContactsCreateGroupActivity.DETAIL_TYPE, 2)
                     .withInt(AddContactsCreateGroupActivity.GROUP_ID, mGroupId)
                     .navigation(ChatGroupDetailsActivity.this, REQUEST_CODE_ADD);
-        } else if (realname.equals("-")) {
+        } else if (type == GroupDetailAdapter.TYPE.DEL_MEMBER.ordinal()) {
             Intent intent = new Intent(this, DeleteContactListActivity.class);
             intent.putExtra(DeleteContactListActivity.DELETE_GROUP_ID, mGroupId);
-            intent.putParcelableArrayListExtra(GROUP_LIST, (ArrayList<? extends Parcelable>) groupList3);
             startActivityForResult(intent, REQUEST_CODE_DELETE);
         } else {
             Intent i = new Intent(this, EmployeeDataActivity.class);
@@ -598,9 +585,14 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_CODE) {
             if (requestCode == REQUEST_CODE_ADD) {
-                reqGroupMembers();
+                ArrayList<ContactBean> list = data.getParcelableArrayListExtra(UPDATE_GROUP_LIST);
+                ContactBeanData.instance().addAll(list);
+                mAdapter.addList(list);
             } else if (requestCode == REQUEST_CODE_DELETE) {
-                reqGroupMembers();
+                ArrayList<ContactBean> list = data.getParcelableArrayListExtra(UPDATE_GROUP_LIST);
+                ContactBeanData.instance().removeAll(list);
+
+                mAdapter.removeList(list);
             } else if (requestCode == REQUEST_CODE_MODIFY_NAME) {
                 String groupName = data.getStringExtra(GroupNameActivity.GROUP_NAME);
                 mTvGroupName.setText(groupName);
@@ -613,39 +605,10 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
                 isGroupOwner = false;
                 reqGroupMembers();
                 mRlGroupManage.setVisibility(View.GONE);
-                //mAdapter.setType(1);
-                //mAdapter.notifyDataSetChanged();
             }
         }
     }
 
-    private void updateGroupInfo(List<YouMaiGroup.GroupMemberItem> memberListList) {
-        GroupInfoBean bean = new GroupInfoBean();
-        bean.setGroup_id(mGroupId);
-        if (null != mGroupInfo) {
-            bean.setId(mGroupInfo.getId());
-            bean.setGroup_name(mGroupInfo.getGroup_name());
-            bean.setTopic(mGroupInfo.getTopic());
-            bean.setGroup_avatar(mGroupInfo.getGroup_avatar());
-            bean.setGroup_member_count(groupList2.size());
-            bean.setOwner_id(mGroupInfo.getOwner_id());
-            bean.setInfo_update_time(mGroupInfo.getInfo_update_time());
-            bean.setMember_update_time(mGroupInfo.getMember_update_time());
-
-            List<GroupAndMember> list = new ArrayList<>();
-            for (YouMaiGroup.GroupMemberItem item : memberListList) {
-                GroupAndMember member = new GroupAndMember();
-                member.setMember_id(item.getMemberId());
-                member.setMember_name(item.getMemberName());
-                member.setMember_role(item.getMemberRole());
-                member.setUser_name(item.getUserName());
-                list.add(member);
-            }
-
-            bean.setGroupMemberJson(GsonUtil.format(list));
-            GroupInfoHelper.instance().insertOrUpdate(this, bean);
-        }
-    }
 
     private void updateGroupInfo(int type, String content) {
         switch (type) {
@@ -688,4 +651,18 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
         }
         finish();
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        localBroadcastManager.unregisterReceiver(mLocalMsgReceiver);
+        localBroadcastManager = null;
+
+        isGroupOwner = false;
+
+        ContactBeanData.instance().clear();
+        HuxinSdkManager.instance().getStackAct().removeActivity(this);
+    }
+
 }

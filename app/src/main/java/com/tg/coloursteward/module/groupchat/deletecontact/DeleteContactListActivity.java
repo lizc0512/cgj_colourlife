@@ -16,6 +16,7 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.module.groupchat.details.ChatGroupDetailsActivity;
+import com.tg.coloursteward.module.groupchat.details.ContactBeanData;
 import com.tg.coloursteward.module.search.SearchEditText;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.db.bean.ContactBean;
@@ -82,7 +83,7 @@ public class DeleteContactListActivity extends BaseActivity {
     }
 
     private void initView() {
-        mContactList = getIntent().getParcelableArrayListExtra(ChatGroupDetailsActivity.GROUP_LIST);
+        mContactList = ContactBeanData.instance().getDelGroupList();
         mGroupId = getIntent().getIntExtra(DELETE_GROUP_ID, -1);
         //标题
         mTvTitle = findViewById(R.id.tv_title);

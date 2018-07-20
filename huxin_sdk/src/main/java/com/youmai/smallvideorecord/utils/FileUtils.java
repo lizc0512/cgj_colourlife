@@ -158,8 +158,7 @@ public class FileUtils {
     public static boolean checkFile(String path) {
         if (StringUtils.isNotEmpty(path)) {
             File f = new File(path);
-            if (f != null && f.exists() && f.canRead() && (f.isDirectory() || (f.isFile() && f.length() > 0)))
-                return true;
+            return f != null && f.exists() && f.canRead() && (f.isDirectory() || (f.isFile() && f.length() > 0));
         }
         return false;
     }

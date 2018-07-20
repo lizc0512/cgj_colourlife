@@ -88,14 +88,15 @@ public class CNPinyin<T extends CN> implements Parcelable, Comparable<CNPinyin<T
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder().append("--firstChar--").append(firstChar).append("--pinyins:");
+        StringBuilder sb = new StringBuilder();
+        sb.append("--firstChar--").append(firstChar).append("--pinyins:");
         for (String str : pinyins) {
             sb.append(str);
         }
         return sb.toString();
     }
 
-    int compareValue() {
+    private int compareValue() {
         if (!characters.contains(firstChar)) {
             return 'Z' + 1;
         }
@@ -116,8 +117,6 @@ public class CNPinyin<T extends CN> implements Parcelable, Comparable<CNPinyin<T
             String chinese1 = data.chinese();
             String chinese2 = tcnPinyin.data.chinese();
             return chinese1.compareTo(chinese2);
-        } else {
-
         }
         return compare;
     }

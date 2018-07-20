@@ -497,13 +497,13 @@ public final class YouMaiMsg {
     public enum SessionType
             implements com.google.protobuf.ProtocolMessageEnum {
         /**
-         * <code>SESSION_TYPE_SINGLE = 1;</code>
+         * <code>SESSION_TYPE_ORGBUDDY = 1;</code>
          * <p>
          * <pre>
-         * 单点
+         * 组织架构好友
          * </pre>
          */
-        SESSION_TYPE_SINGLE(0, 1),
+        SESSION_TYPE_ORGBUDDY(0, 1),
         /**
          * <code>SESSION_TYPE_MULTICHAT = 2;</code>
          * <p>
@@ -513,22 +513,30 @@ public final class YouMaiMsg {
          */
         SESSION_TYPE_MULTICHAT(1, 2),
         /**
-         * <code>SESSION_TYPE_ORGGROUP = 3;</code>
-         * <p>
-         * <pre>
-         * 组织架构群
-         * </pre>
-         */
-        SESSION_TYPE_ORGGROUP(2, 3),;
-
-        /**
-         * <code>SESSION_TYPE_SINGLE = 1;</code>
+         * <code>SESSION_TYPE_BUDDY = 3;</code>
          * <p>
          * <pre>
          * 单点
          * </pre>
          */
-        public static final int SESSION_TYPE_SINGLE_VALUE = 1;
+        SESSION_TYPE_BUDDY(2, 3),
+        /**
+         * <code>SESSION_TYPE_COMMUNITY = 4;</code>
+         * <p>
+         * <pre>
+         * 社群会话
+         * </pre>
+         */
+        SESSION_TYPE_COMMUNITY(3, 4),;
+
+        /**
+         * <code>SESSION_TYPE_ORGBUDDY = 1;</code>
+         * <p>
+         * <pre>
+         * 组织架构好友
+         * </pre>
+         */
+        public static final int SESSION_TYPE_ORGBUDDY_VALUE = 1;
         /**
          * <code>SESSION_TYPE_MULTICHAT = 2;</code>
          * <p>
@@ -538,13 +546,21 @@ public final class YouMaiMsg {
          */
         public static final int SESSION_TYPE_MULTICHAT_VALUE = 2;
         /**
-         * <code>SESSION_TYPE_ORGGROUP = 3;</code>
+         * <code>SESSION_TYPE_BUDDY = 3;</code>
          * <p>
          * <pre>
-         * 组织架构群
+         * 单点
          * </pre>
          */
-        public static final int SESSION_TYPE_ORGGROUP_VALUE = 3;
+        public static final int SESSION_TYPE_BUDDY_VALUE = 3;
+        /**
+         * <code>SESSION_TYPE_COMMUNITY = 4;</code>
+         * <p>
+         * <pre>
+         * 社群会话
+         * </pre>
+         */
+        public static final int SESSION_TYPE_COMMUNITY_VALUE = 4;
 
 
         public final int getNumber() {
@@ -554,11 +570,13 @@ public final class YouMaiMsg {
         public static SessionType valueOf(int value) {
             switch (value) {
                 case 1:
-                    return SESSION_TYPE_SINGLE;
+                    return SESSION_TYPE_ORGBUDDY;
                 case 2:
                     return SESSION_TYPE_MULTICHAT;
                 case 3:
-                    return SESSION_TYPE_ORGGROUP;
+                    return SESSION_TYPE_BUDDY;
+                case 4:
+                    return SESSION_TYPE_COMMUNITY;
                 default:
                     return null;
             }
@@ -2751,7 +2769,7 @@ public final class YouMaiMsg {
             srcUserId_ = "";
             destUserId_ = "";
             groupId_ = 0;
-            sessionType_ = YouMaiMsg.SessionType.SESSION_TYPE_SINGLE;
+            sessionType_ = YouMaiMsg.SessionType.SESSION_TYPE_ORGBUDDY;
             createTime_ = 0L;
             msgContent_ = "";
             contentType_ = YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_TEXT;
@@ -3074,7 +3092,7 @@ public final class YouMaiMsg {
                 bitField0_ = (bitField0_ & ~0x00000004);
                 groupId_ = 0;
                 bitField0_ = (bitField0_ & ~0x00000008);
-                sessionType_ = YouMaiMsg.SessionType.SESSION_TYPE_SINGLE;
+                sessionType_ = YouMaiMsg.SessionType.SESSION_TYPE_ORGBUDDY;
                 bitField0_ = (bitField0_ & ~0x00000010);
                 createTime_ = 0L;
                 bitField0_ = (bitField0_ & ~0x00000020);
@@ -3634,7 +3652,7 @@ public final class YouMaiMsg {
                 return this;
             }
 
-            private YouMaiMsg.SessionType sessionType_ = YouMaiMsg.SessionType.SESSION_TYPE_SINGLE;
+            private YouMaiMsg.SessionType sessionType_ = YouMaiMsg.SessionType.SESSION_TYPE_ORGBUDDY;
 
             /**
              * <code>optional .SessionType session_type = 5;</code>
@@ -3684,7 +3702,7 @@ public final class YouMaiMsg {
              */
             public Builder clearSessionType() {
                 bitField0_ = (bitField0_ & ~0x00000010);
-                sessionType_ = YouMaiMsg.SessionType.SESSION_TYPE_SINGLE;
+                sessionType_ = YouMaiMsg.SessionType.SESSION_TYPE_ORGBUDDY;
                 onChanged();
                 return this;
             }
@@ -8064,16 +8082,28 @@ public final class YouMaiMsg {
 
         /**
          * <code>optional string user_id = 1;</code>
+         * <p>
+         * <pre>
+         * CID_PUSH_MSG_ACK=0X5016
+         * </pre>
          */
         boolean hasUserId();
 
         /**
          * <code>optional string user_id = 1;</code>
+         * <p>
+         * <pre>
+         * CID_PUSH_MSG_ACK=0X5016
+         * </pre>
          */
         String getUserId();
 
         /**
          * <code>optional string user_id = 1;</code>
+         * <p>
+         * <pre>
+         * CID_PUSH_MSG_ACK=0X5016
+         * </pre>
          */
         com.google.protobuf.ByteString
         getUserIdBytes();
@@ -8204,6 +8234,10 @@ public final class YouMaiMsg {
 
         /**
          * <code>optional string user_id = 1;</code>
+         * <p>
+         * <pre>
+         * CID_PUSH_MSG_ACK=0X5016
+         * </pre>
          */
         public boolean hasUserId() {
             return ((bitField0_ & 0x00000001) == 0x00000001);
@@ -8211,6 +8245,10 @@ public final class YouMaiMsg {
 
         /**
          * <code>optional string user_id = 1;</code>
+         * <p>
+         * <pre>
+         * CID_PUSH_MSG_ACK=0X5016
+         * </pre>
          */
         public String getUserId() {
             Object ref = userId_;
@@ -8229,6 +8267,10 @@ public final class YouMaiMsg {
 
         /**
          * <code>optional string user_id = 1;</code>
+         * <p>
+         * <pre>
+         * CID_PUSH_MSG_ACK=0X5016
+         * </pre>
          */
         public com.google.protobuf.ByteString
         getUserIdBytes() {
@@ -8539,6 +8581,10 @@ public final class YouMaiMsg {
 
             /**
              * <code>optional string user_id = 1;</code>
+             * <p>
+             * <pre>
+             * CID_PUSH_MSG_ACK=0X5016
+             * </pre>
              */
             public boolean hasUserId() {
                 return ((bitField0_ & 0x00000001) == 0x00000001);
@@ -8546,6 +8592,10 @@ public final class YouMaiMsg {
 
             /**
              * <code>optional string user_id = 1;</code>
+             * <p>
+             * <pre>
+             * CID_PUSH_MSG_ACK=0X5016
+             * </pre>
              */
             public String getUserId() {
                 Object ref = userId_;
@@ -8564,6 +8614,10 @@ public final class YouMaiMsg {
 
             /**
              * <code>optional string user_id = 1;</code>
+             * <p>
+             * <pre>
+             * CID_PUSH_MSG_ACK=0X5016
+             * </pre>
              */
             public com.google.protobuf.ByteString
             getUserIdBytes() {
@@ -8581,6 +8635,10 @@ public final class YouMaiMsg {
 
             /**
              * <code>optional string user_id = 1;</code>
+             * <p>
+             * <pre>
+             * CID_PUSH_MSG_ACK=0X5016
+             * </pre>
              */
             public Builder setUserId(
                     String value) {
@@ -8595,6 +8653,10 @@ public final class YouMaiMsg {
 
             /**
              * <code>optional string user_id = 1;</code>
+             * <p>
+             * <pre>
+             * CID_PUSH_MSG_ACK=0X5016
+             * </pre>
              */
             public Builder clearUserId() {
                 bitField0_ = (bitField0_ & ~0x00000001);
@@ -8605,6 +8667,10 @@ public final class YouMaiMsg {
 
             /**
              * <code>optional string user_id = 1;</code>
+             * <p>
+             * <pre>
+             * CID_PUSH_MSG_ACK=0X5016
+             * </pre>
              */
             public Builder setUserIdBytes(
                     com.google.protobuf.ByteString value) {
@@ -9529,9 +9595,10 @@ public final class YouMaiMsg {
                         "*\210\001\n\013MsgProperty\022\025\n\021MSG_PTOPERTY_NONE\020\001\022" +
                         "\030\n\024MSG_PROPERTY_RECEIPT\020\002\022\027\n\023MSG_PROPERT" +
                         "Y_URGENT\020\003\022\026\n\022MSG_PROPERTY_QUOTE\020\004\022\027\n\023MS" +
-                        "G_PROPERTY_RECALL\020\005*]\n\013SessionType\022\027\n\023SE" +
-                        "SSION_TYPE_SINGLE\020\001\022\032\n\026SESSION_TYPE_MULT" +
-                        "ICHAT\020\002\022\031\n\025SESSION_TYPE_ORGGROUP\020\003"
+                        "G_PROPERTY_RECALL\020\005*x\n\013SessionType\022\031\n\025SE" +
+                        "SSION_TYPE_ORGBUDDY\020\001\022\032\n\026SESSION_TYPE_MU" +
+                        "LTICHAT\020\002\022\026\n\022SESSION_TYPE_BUDDY\020\003\022\032\n\026SES" +
+                        "SION_TYPE_COMMUNITY\020\004"
         };
         com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
                 new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {

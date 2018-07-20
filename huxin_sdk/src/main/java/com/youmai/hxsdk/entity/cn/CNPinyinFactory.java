@@ -14,7 +14,10 @@ import java.util.List;
 
 public final class CNPinyinFactory {
 
-    static final ArrayMap<Character, String> SURNAMES = new ArrayMap<>();
+    private static final ArrayMap<Character, String> SURNAMES = new ArrayMap<>();
+
+    static final char DEF_CHAR = '#';
+    static final char PRE_CHAR = '↑';
 
     static {
         SURNAMES.put('仇', "QIU");
@@ -35,11 +38,10 @@ public final class CNPinyinFactory {
         SURNAMES.put('缪', "MIAO");
     }
 
-    static final char DEF_CHAR = '#';
-    static final char PRE_CHAR = '↑';
 
     /**
      * 转换拼音, 考虑在子线程中运行
+     *
      * @param <T>
      * @param tList
      * @return
@@ -86,7 +88,6 @@ public final class CNPinyinFactory {
     }
 
     /**
-     *
      * @param c
      * @param index
      * @return
@@ -98,7 +99,7 @@ public final class CNPinyinFactory {
                 return pinyin;
             }
         }
-        String pinyin =  Pinyin.toPinyin(c);
+        String pinyin = Pinyin.toPinyin(c);
         if (pinyin == null) {
             pinyin = String.valueOf(c);
         }
@@ -107,6 +108,7 @@ public final class CNPinyinFactory {
 
     /**
      * 拼音首个字母
+     *
      * @param pinyins
      * @return
      */
@@ -124,6 +126,7 @@ public final class CNPinyinFactory {
 
     /**
      * 字符转大写
+     *
      * @param c
      * @return
      */

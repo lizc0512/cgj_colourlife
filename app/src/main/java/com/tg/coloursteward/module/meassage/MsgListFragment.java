@@ -14,8 +14,6 @@ import android.os.HandlerThread;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -30,16 +28,19 @@ import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.tg.coloursteward.DeskTopActivity;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.constant.Contants;
-import com.tg.coloursteward.entity.MsgConfig;
 import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.module.search.GlobalSearchActivity;
 import com.tg.coloursteward.module.MainActivity1;
 import com.tg.coloursteward.util.Tools;
 import com.youmai.hxsdk.HuxinSdkManager;
+import com.youmai.hxsdk.ProtoCallback;
 import com.youmai.hxsdk.activity.IMConnectionActivity;
 import com.youmai.hxsdk.activity.IMGroupActivity;
+import com.youmai.hxsdk.adapter.MessageAdapter;
 import com.youmai.hxsdk.config.ColorsConfig;
+import com.youmai.hxsdk.data.ExCacheMsgBean;
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
+import com.youmai.hxsdk.entity.MsgConfig;
 import com.youmai.hxsdk.http.IGetListener;
 import com.youmai.hxsdk.http.OkHttpConnector;
 import com.youmai.hxsdk.im.IMMsgCallback;
@@ -57,7 +58,7 @@ import java.util.List;
  * 主页-沟通
  * A simple {@link Fragment} subclass.
  */
-public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderManager.LoaderCallbacks<List<ExCacheMsgBean>> {
+public class MsgListFragment extends Fragment implements IMMsgCallback {
     //刷新未读或者开启权限都重新获取数据
     public static final int INTENT_REQUEST_FOR_UPDATE_UI = 101;
     public static final int INTENT_REQUEST_PERMISSION = 102;
@@ -153,13 +154,6 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
                 return;
             }
             switch (msg.what) {
-                //获取记录成功
-                case INSERT_CALLLOG_SUCCESS: {
-                    fragment.reloadMessageList();
-                    //刷新数据
-                    fragment.dismissProgress("成"/*getString(R.string.sync_callLog_success)*/);
-                }
-                break;
                 //获取通话记录失败 同步通讯了成功 插入数据库失败
                 case INSERT_CALLLOG_FAILED: {
                     fragment.dismissProgress("败"/*getString(R.string.sync_callLog_success_insert_failed)*/);
@@ -191,6 +185,24 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
     }
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        HuxinSdkManager.instance().chatMsgFromCache(this,
+                new ProtoCallback.CacheMsgCallBack() {
+                    @Override
+                    public void result(List<ExCacheMsgBean> data) {
+                        mMessageAdapter.changeMessageList(data);
+                        initUnreadList();
+                    }
+                });
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -201,9 +213,6 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initView(view);
-
-        initMessageList();
-
         reqPushMsg();
     }
 
@@ -453,21 +462,6 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
         }
     }
 
-    public void initMessageList() {
-        if (getLoaderManager().getLoader(LOADER_ID_GEN_MESSAGE_LIST) == null) {
-            startLoading();
-        } else {
-            getLoaderManager().restartLoader(LOADER_ID_GEN_MESSAGE_LIST, null, this);
-        }
-    }
-
-    public void reloadMessageList() {
-        if (getLoaderManager().getLoader(LOADER_ID_GEN_MESSAGE_LIST) == null) {
-            startLoading();
-        } else {
-            getLoaderManager().getLoader(LOADER_ID_GEN_MESSAGE_LIST).startLoading();
-        }
-    }
 
     /**
      * IM消息的入口回调
@@ -506,29 +500,6 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, LoaderMa
         }
     }
 
-    protected void startLoading() {
-        getLoaderManager().initLoader(LOADER_ID_GEN_MESSAGE_LIST, null, this);
-    }
-
-    @Override
-    public Loader<List<ExCacheMsgBean>> onCreateLoader(int id, Bundle args) {
-        return new MsgAsyncTaskLoader(getContext(), false);
-    }
-
-    @Override
-    public void onLoadFinished(Loader<List<ExCacheMsgBean>> loader, List<ExCacheMsgBean> data) {
-        Log.d(TAG, "onLoadFinished" + data.toString());
-        if (data.isEmpty()) {
-            return;
-        }
-        mMessageAdapter.changeMessageList(data);
-        initUnreadList();
-    }
-
-    @Override
-    public void onLoaderReset(Loader<List<ExCacheMsgBean>> loader) {
-        Log.d(TAG, "onLoaderReset");
-    }
 
     /**
      * 异步监听新消息的更新 - HandlerThread

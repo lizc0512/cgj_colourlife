@@ -3,10 +3,20 @@ package com.youmai.hxsdk.config;
 
 import android.content.ContentValues;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
+import com.youmai.hxsdk.HuxinSdkManager;
+import com.youmai.hxsdk.entity.AuthConfig;
+import com.youmai.hxsdk.entity.UploadResult;
+import com.youmai.hxsdk.http.IPostListener;
+import com.youmai.hxsdk.http.OkHttpConnector;
+import com.youmai.hxsdk.service.sendmsg.PostFile;
 import com.youmai.hxsdk.utils.AppUtils;
+import com.youmai.hxsdk.utils.GsonUtil;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -22,6 +32,20 @@ public class ColorsConfig {
 
     private static final String SECRET[] = new String[]{"IGXGh8BKPwjEtbcXD2KN", "IGXGh8BKPwjEtbcXD2KN", "TYHpsLtHeFXYRTekJbVv"};
 
+    /**
+     * 租户ID
+     */
+    private static final String CORP_UUID = "a8c58297436f433787725a94f780a3c9";
+
+    /**
+     * 文件微服务上传地址
+     */
+    private static final String ICE_UPLOAD[] = new String[]{"http://114.119.7.98:3020/v1/pcUploadFile", "http://114.119.7.98:3020/v1/pcUploadFile", "http://120.25.148.153:30020/v1/pcUploadFile"};
+
+    /**
+     * 文件微服务下载地址
+     */
+    private static final String ICE_DOWNLOAD[] = new String[]{"http://114.119.7.98:3020/v1/down/", "http://114.119.7.98:3020/v1/down/", "http://120.25.148.153:30020/v1/down/"};
 
     //彩管家 APPID TOEKN 定义
     private static final String COLOR_APPID[] = new String[]{"ICEYOUMAI-EF6C-4970-9AED-4CD8E063720F", "ICEXCGJ0-5F89-4E17-BC44-7A0DB101B245", "ICEXCGJ0-5F89-4E17-BC44-7A0DB101B245"};
@@ -34,6 +58,14 @@ public class ColorsConfig {
 
     private final static String SOCKET_URL[] = new String[]{"https://openapi-test.colourlife.com/v1/", "https://openapi-test.colourlife.com/v1/", "https://openapi.colourlife.com/v1/"};
 
+
+    private static String getIceUpload() {
+        return ICE_UPLOAD[AppConfig.LAUNCH_MODE];
+    }
+
+    private static String getIceDownload() {
+        return ICE_DOWNLOAD[AppConfig.LAUNCH_MODE];
+    }
 
     private static String getIceHost() {
         return SOCKET_URL[AppConfig.LAUNCH_MODE];
@@ -52,7 +84,16 @@ public class ColorsConfig {
     public static final String LISHI_SEND_LIST = getIceHost() + "clsfwopenapi/lishi/history/send/list";
     public static final String LISHI_RECEIVE_LIST = getIceHost() + "clsfwopenapi/lishi/history/receive/list";
 
+    private static final String ICE_AUTH = getIceHost() + "authms/auth/app";
+
+    /**
+     * 彩管家验证支付密码host
+     */
     public static final String CP_MOBILE_HOST = "http://cpmobile.colourlife.com";
+
+    /**
+     * 彩管家验证支付密码namespace
+     */
     public static final String CHECK_PAYPWD = "/1.0/caiRedPaket/checkPayPwd";
 
 
@@ -60,7 +101,7 @@ public class ColorsConfig {
         return COLOR_TOKEN[AppConfig.LAUNCH_MODE];
     }
 
-    public static String getAppID() {
+    private static String getAppID() {
         return COLOR_APPID[AppConfig.LAUNCH_MODE];
     }
 
@@ -159,6 +200,17 @@ public class ColorsConfig {
      *
      * @param params
      */
+    public static void commonParams(ContentValues params, long ts) {
+        params.put("ts", ts);
+        params.put("appID", getAppID());
+        params.put("sign", sign(ts));
+    }
+
+    /**
+     * 彩管家 appid 通用签名
+     *
+     * @param params
+     */
     public static void commonParams(ContentValues params) {
         long ts = System.currentTimeMillis() / 1000;
         params.put("ts", ts);
@@ -180,7 +232,7 @@ public class ColorsConfig {
 
 
     public static String loadUrl(String fileId) {
-        String url = AppConfig.ICE_LOAD_PATH;
+        String url = getIceDownload();
         String appId = "colourlife";
         String fileToken = "LOCKW3v23#2";
         long ts = System.currentTimeMillis();
@@ -197,4 +249,96 @@ public class ColorsConfig {
     }
 
 
+    public static void postFileToICE(final File file, final String desPhone, final PostFile postFile) {
+        String accessToken = HuxinSdkManager.instance().getAccessToken();
+        long expireTime = HuxinSdkManager.instance().getExpireTime();
+        long time = System.currentTimeMillis();
+
+        boolean isAuth = false;
+
+        if (expireTime == 0 || TextUtils.isEmpty(accessToken)) {
+            isAuth = true;
+        } else {
+            if (expireTime <= time) {//token过期
+                isAuth = true;
+            }
+        }
+
+        if (isAuth) {
+            reqAuth(new IPostListener() {
+                @Override
+                public void httpReqResult(String response) {
+                    AuthConfig bean = GsonUtil.parse(response, AuthConfig.class);
+                    if (bean != null && bean.isSuccess()) {
+
+                        String token = bean.getContent().getAccessToken();
+                        long time = bean.getContent().getExpireTime();
+
+                        HuxinSdkManager.instance().setAccessToken(token);
+                        HuxinSdkManager.instance().setExpireTime(time);
+
+                        upLoadFile(file, token, desPhone, postFile);
+                    }
+                }
+            });
+        } else {
+            upLoadFile(file, accessToken, desPhone, postFile);
+        }
+    }
+
+
+    public static void reqAuth(IPostListener listener) {
+        String url = ICE_AUTH;
+
+        String appKey = getAppID();
+        String token = getToken();
+        long ts = System.currentTimeMillis() / 1000;
+
+        ContentValues params = new ContentValues();
+
+        params.put("corp_uuid", CORP_UUID);
+        params.put("app_uuid", appKey);
+        params.put("signature", AppUtils.md5(appKey + ts + token));
+
+        params.put("timestamp", ts);
+
+        ColorsConfig.commonParams(params, ts);
+        OkHttpConnector.httpPost(url, params, listener);
+    }
+
+    private static void upLoadFile(File file, String accessToken, final String desPhone, final PostFile postFile) {
+        String url = getIceUpload();
+
+        String fileUploadAccount = HuxinSdkManager.instance().getPhoneNum();
+        String fileUploadAppName = "彩之云";
+
+        if (file.exists()) {
+            Map<String, Object> params = new HashMap<>();
+            params.put("auth_ver", "2.0");
+            params.put("access_token", accessToken);
+            params.put("fileLength", file.length());
+            params.put("fileName", file.getName());
+            params.put("fileUploadAccount", fileUploadAccount);
+            params.put("fileUploadAppName", fileUploadAppName);
+            params.put("file", file);
+
+            ColorsConfig.commonParams(params);
+
+            OkHttpConnector.httpPostMultipart(url, params, new IPostListener() {
+                @Override
+                public void httpReqResult(String response) {
+                    UploadResult result = GsonUtil.parse(response, UploadResult.class);
+                    if (result != null && result.isSuceess()) {
+                        String fileId = result.getContent();
+                        if (postFile != null) {
+                            postFile.success(fileId, desPhone);
+                        }
+                    } else {
+                        postFile.fail("上传文件服务器出错!!!");
+                    }
+                }
+            });
+
+        }
+    }
 }

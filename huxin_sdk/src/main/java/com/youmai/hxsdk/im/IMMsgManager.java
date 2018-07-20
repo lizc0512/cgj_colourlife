@@ -1,5 +1,6 @@
 package com.youmai.hxsdk.im;
 
+import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -76,6 +77,8 @@ public class IMMsgManager {
 
     private Context mContext;
 
+    private Class<Activity> homeAct;
+
     private List<IMMsgCallback> imMsgCallbackList;
 
     private List<Integer> pushMsgNotifyIdList;
@@ -85,6 +88,8 @@ public class IMMsgManager {
     private String mTargetId;
 
     private LinkedBlockingQueue<Long> msgList;
+
+    private boolean isNotify;
 
 
     private IMMsgManager() {
@@ -103,6 +108,7 @@ public class IMMsgManager {
     public void init(Context context) {
         mContext = context;
         getAllBadgeCount();
+        isNotify = AppUtils.getBooleanSharedPreferences(context, "im_notify", true);
     }
 
     public void setContext(Context context) {
@@ -122,6 +128,21 @@ public class IMMsgManager {
         }
     }
 
+
+    public void setHomeAct(Class homeAct) {
+        this.homeAct = homeAct;
+    }
+
+
+    public void setNotify(boolean notify) {
+        isNotify = notify;
+        AppUtils.setBooleanSharedPreferences(mContext, "im_notify", notify);
+    }
+
+
+    public boolean isNotify() {
+        return isNotify;
+    }
 
     /*
      *  1：有socket 连接即有消息接收，IM 就必须有mNotifyListener 这个监听器，目前有且只有这个。
@@ -150,7 +171,7 @@ public class IMMsgManager {
 
                 HuxinSdkManager.instance().sendMsgReply(imChat.getMsgId());
 
-                IMChat im = new IMChat(imChat, false);
+                IMChat im = new IMChat(imChat);
                 notifyMsg(im, false, false);
                 parseCharMsg(im);
 
@@ -180,7 +201,7 @@ public class IMMsgManager {
 
                 HuxinSdkManager.instance().sendMsgReply(imChat.getMsgId());
 
-                IMChat im = new IMChat(imChat, true);
+                IMChat im = new IMChat(imChat);
                 notifyMsg(im, false, true);
                 parseCharMsg(im);
 
@@ -247,9 +268,13 @@ public class IMMsgManager {
 
                     List<CacheMsgBean> msgList = CacheMsgHelper.instance().toQueryCacheMsgList(mContext, groupId + "");
                     if (!ListUtils.isEmpty(msgList)) {
-                        CacheMsgBean lastMsg = msgList.get(msgList.size() - 1);
-                        bean.setTargetName(lastMsg.getTargetName());
-                        CacheMsgHelper.instance().insertOrUpdate(mContext, bean);
+                        for (CacheMsgBean item : msgList) {
+                            if (!TextUtils.isEmpty(item.getTargetName())) {
+                                bean.setTargetName(item.getTargetName());
+                                CacheMsgHelper.instance().insertOrUpdate(mContext, bean);
+                                break;
+                            }
+                        }
                     }
 
                     handlerIMMsgCallback(bean);
@@ -274,9 +299,13 @@ public class IMMsgManager {
 
                     List<CacheMsgBean> msgList = CacheMsgHelper.instance().toQueryCacheMsgList(mContext, groupId + "");
                     if (!ListUtils.isEmpty(msgList)) {
-                        CacheMsgBean lastMsg = msgList.get(msgList.size() - 1);
-                        bean.setTargetName(lastMsg.getTargetName());
-                        CacheMsgHelper.instance().insertOrUpdate(mContext, bean);
+                        for (CacheMsgBean item : msgList) {
+                            if (!TextUtils.isEmpty(item.getTargetName())) {
+                                bean.setTargetName(item.getTargetName());
+                                CacheMsgHelper.instance().insertOrUpdate(mContext, bean);
+                                break;
+                            }
+                        }
                     }
 
                     handlerIMMsgCallback(bean);
@@ -819,9 +848,10 @@ public class IMMsgManager {
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
         // Adds the back stack for the Intent (but not the Intent itself)
 
-        Intent intent = new Intent();
-        intent.setClassName(context, "com.tg.coloursteward.module.MainActivity1");
-        stackBuilder.addNextIntentWithParentStack(intent);
+        if (homeAct != null) {
+            Intent intent = new Intent(context, homeAct);
+            stackBuilder.addNextIntentWithParentStack(intent);
+        }
 
         // Adds the Intent that starts the Activity to the top of the stack
         stackBuilder.addNextIntent(resultIntent);
@@ -831,9 +861,16 @@ public class IMMsgManager {
         builder.setContentIntent(resultPendingIntent);
 
 
-        boolean isNotBadge = AppUtils.isTopActiviy(mContext, IMConnectionActivity.class.getName())
+        boolean isNotBadge = !isNotify
+                || AppUtils.isTopActiviy(mContext, IMConnectionActivity.class.getName())
                 || AppUtils.isTopActiviy(mContext, IMGroupActivity.class.getName());
 
+        if (TextUtils.isEmpty(targetId)) {
+            targetId = "";
+        }
+        if (TextUtils.isEmpty(mTargetId)) {
+            mTargetId = "";
+        }
         isNotBadge = isNotBadge && mTargetId.equals(targetId);
 
         if (isNotBadge) {
@@ -894,6 +931,10 @@ public class IMMsgManager {
      */
     public String getBadgeSharedPreferenceKey() {
         return "badge-" + HuxinSdkManager.instance().getUuid();
+    }
+
+    public void removeBadge(int targetId) {
+        removeBadge(String.valueOf(targetId));
     }
 
     public void removeBadge(String targetId) {

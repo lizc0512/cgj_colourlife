@@ -18,14 +18,14 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.tg.coloursteward.R;
-import com.tg.coloursteward.module.meassage.ExCacheMsgBean;
-import com.tg.coloursteward.module.meassage.SortComparator;
-import com.tg.coloursteward.module.meassage.TimeFormatUtil;
 import com.youmai.hxsdk.config.ColorsConfig;
+import com.youmai.hxsdk.data.ExCacheMsgBean;
+import com.youmai.hxsdk.data.SortComparator;
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
 import com.youmai.hxsdk.im.IMMsgManager;
 import com.youmai.hxsdk.im.cache.CacheMsgTxt;
 import com.youmai.hxsdk.utils.GlideRoundTransform;
+import com.youmai.hxsdk.utils.TimeUtils;
 import com.youmai.hxsdk.view.chat.emoticon.utils.EmoticonHandler;
 import com.youmai.hxsdk.view.chat.utils.Utils;
 import com.youmai.hxsdk.view.group.TeamHeadView;
@@ -59,7 +59,6 @@ public class ForwardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         mContext = context;
         messageList = new ArrayList<>();
     }
-
 
 
     public void changeMessageList(List<ExCacheMsgBean> newList) {
@@ -108,7 +107,7 @@ public class ForwardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         } else if (holder instanceof MsgItemChat) {
             final MsgItemChat itemView = (MsgItemChat) holder;
             itemView.message_item.setTag(position);
-            itemView.message_time.setText(TimeFormatUtil.convertTimeMillli(mContext, model.getMsgTime()));
+            itemView.message_time.setText(TimeUtils.dateFormat(model.getMsgTime()));
 
             String displayName = model.getDisplayName();
             boolean contains = displayName.contains(ColorsConfig.GROUP_DEFAULT_NAME);
@@ -184,7 +183,7 @@ public class ForwardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         } else if (holder instanceof MsgItemGroup) {
             final MsgItemGroup itemView = (MsgItemGroup) holder;
             itemView.message_item.setTag(position);
-            itemView.message_time.setText(TimeFormatUtil.convertTimeMillli(mContext, model.getMsgTime()));
+            itemView.message_time.setText(TimeUtils.dateFormat(model.getMsgTime()));
 
             String displayName = model.getDisplayName();
             if (!TextUtils.isEmpty(displayName)

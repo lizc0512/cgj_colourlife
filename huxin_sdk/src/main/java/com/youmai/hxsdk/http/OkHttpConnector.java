@@ -543,7 +543,7 @@ public class OkHttpConnector {
                 }
 
                 @Override
-                public void writeTo(BufferedSink sink) throws IOException {
+                public void writeTo(BufferedSink sink) {
                     Source source;
                     try {
                         source = Okio.source(mFile);

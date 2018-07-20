@@ -59,9 +59,7 @@ public class MiUIUtils {
     public static boolean isHigherV8() {
         String property = getEmuiVerName();
         if (property != null) {
-            if (property.compareTo(COMPARE_VERSION) >= 0) {
-                return true;
-            }
+            return property.compareTo(COMPARE_VERSION) >= 0;
         }
         return false;
     }
@@ -70,9 +68,7 @@ public class MiUIUtils {
     public static boolean isHigherVerIncre8() {
         String property = getEmuiVerIncre();
         if (property != null) {
-            if (property.compareTo(COMPARE_VERSION_INCRE) >= 0) {
-                return true;
-            }
+            return property.compareTo(COMPARE_VERSION_INCRE) >= 0;
         }
         return false;
     }

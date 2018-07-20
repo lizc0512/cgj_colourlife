@@ -17,12 +17,14 @@ public class UserInfo {
     private String uuid;   //用户UUID
     private String phoneNum;   //用户电话号码
     private String realName;   //用户名称，对应OA真实姓名
+    private String nickName;   //用户名称，对应OA真实姓名
     private String sex;   //用户性别
     private String avatar;   //用户头像
     private String accessToken;   //用户token
-    private String expireTime;   //token过期时间 单位秒
+    private long expireTime;   //token过期时间 单位秒
     private String appTs;
     private String userName;   //用户名，OA账号
+    private String orgName;   //组织架构名称
 
     private String key;
     private String secret;
@@ -31,7 +33,23 @@ public class UserInfo {
 
 
     public UserInfo() {
+        uuid = "";   //用户UUID
+        phoneNum = "";   //用户电话号码
+        realName = "";   //用户名称，对应OA真实姓名
+        nickName = "";   //用户昵称
+        sex = "";   //用户性别
+        avatar = "";   //用户头像
+        accessToken = "";   //用户token
+        expireTime = 0;   //token过期时间 单位秒
+        appTs = "";
+        userName = "";   //用户名，OA账号
+        key = "";
+        secret = "";
+        orgName = "";
     }
+
+    
+
 
     public String getUuid() {
         return uuid;
@@ -76,6 +94,21 @@ public class UserInfo {
             e.printStackTrace();
         }
         this.realName = realName;
+    }
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        try {
+            if (!this.nickName.equals(nickName)) {
+                isChange = true;
+            }
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+        this.nickName = nickName;
     }
 
     public String getSex() {
@@ -123,13 +156,13 @@ public class UserInfo {
         this.accessToken = accessToken;
     }
 
-    public String getExpireTime() {
+    public long getExpireTime() {
         return expireTime;
     }
 
-    public void setExpireTime(String expireTime) {
+    public void setExpireTime(long expireTime) {
         try {
-            if (!this.expireTime.equals(expireTime)) {
+            if (this.expireTime != expireTime) {
                 isChange = true;
             }
         } catch (NullPointerException e) {
@@ -203,6 +236,23 @@ public class UserInfo {
         this.secret = secret;
     }
 
+
+    public String getOrgName() {
+        return orgName;
+    }
+
+    public void setOrgName(String orgName) {
+        try {
+            if (!this.orgName.equals(orgName)) {
+                isChange = true;
+            }
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+
+        this.orgName = orgName;
+    }
+
     public void saveJson(Context context) {
         if (context != null && isChange) {
             String json = GsonUtil.format(this);
@@ -220,14 +270,16 @@ public class UserInfo {
                 uuid = jsonObject.optString("uuid");
                 phoneNum = jsonObject.optString("phoneNum");
                 realName = jsonObject.optString("realName");
+                nickName = jsonObject.optString("nickName");
                 sex = jsonObject.optString("sex");
                 avatar = jsonObject.optString("avatar");
                 accessToken = jsonObject.optString("accessToken");
-                expireTime = jsonObject.optString("expireTime");
+                expireTime = jsonObject.optLong("expireTime");
                 appTs = jsonObject.optString("appTs");
                 userName = jsonObject.optString("userName");
                 key = jsonObject.optString("key");
                 secret = jsonObject.optString("secret");
+                orgName = jsonObject.optString("orgName");
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -239,12 +291,14 @@ public class UserInfo {
         uuid = null;
         phoneNum = null;
         realName = null;
+        nickName = null;
         sex = null;
         avatar = null;
         accessToken = null;
-        expireTime = null;
+        expireTime = 0;
         appTs = null;
         userName = null;
+        orgName = null;
 
         if (context != null) {
             AppUtils.setStringSharedPreferences(context, "userInfo", null);

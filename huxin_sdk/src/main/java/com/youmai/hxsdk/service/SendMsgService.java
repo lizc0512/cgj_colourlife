@@ -55,22 +55,20 @@ public class SendMsgService extends IntentService {
     public static final String FROM_IM = "IM";
 
     public static final String NOT_NETWORK = "NOT_NETWORK";
-    public static final String NOT_HUXIN_USER = "NOT_HUXIN_USER";
     public static final String NOT_TCP_CONNECT = "NOT_TCP_CONNECT";//tcp还没连接成功
-
-    public static final int SEND_MSG_END = 200;//该消息的发送流程结束
 
     public static final String ACTION_SEND_MSG = "service.send.msg";
     public static final String ACTION_UPDATE_MSG = "service.update.msg";
     public static final String ACTION_NEW_MSG = "action_new_msg";
 
-    long id;
-    boolean isGroup;
-    String groupName;
-    ArrayList<GroupAtItem> atList;
+    private long id;
+    private boolean isGroup;
+    private int groupType;
+    private String groupName;
+    private ArrayList<GroupAtItem> atList;
 
-    String imgWidth;
-    String imgHeight;
+    private String imgWidth;
+    private String imgHeight;
 
     public SendMsgService() {
         super("SendMsgService");
@@ -97,6 +95,7 @@ public class SendMsgService extends IntentService {
             id = intent.getLongExtra(KEY_ID, 0);
             isGroup = intent.getBooleanExtra("isGroup", false);
             groupName = intent.getStringExtra("groupName");
+            groupType = intent.getIntExtra("groupType", YouMaiBasic.GroupType.GROUP_TYPE_MULTICHAT_VALUE);
             atList = intent.getParcelableArrayListExtra("atList");
 
             if (groupName == null) {
@@ -156,22 +155,15 @@ public class SendMsgService extends IntentService {
         updateUI(msg, flag, null);
     }
 
-    /**
-     * 发送本地广播通知更新ui
-     */
-    private void updateUI(SendMsg msg, int flag, String type) {
-        updateUI(msg, flag, type, 0);
-    }
 
     /**
      * 发送本地广播通知更新ui
      *
      * @param msg
-     * @param flag      消息的发送状态
-     * @param type      消息类型 {NOT_NETWORK, NOT_HUXIN_USER}
-     * @param send_flag 发送结果,关系到Service是否还存在发送消息的统计
+     * @param flag 消息的发送状态
+     * @param type 消息类型 {NOT_NETWORK, NOT_HUXIN_USER}
      */
-    private void updateUI(SendMsg msg, int flag, String type, int send_flag) {
+    private void updateUI(SendMsg msg, int flag, String type) {
         CacheMsgBean bean = msg.getMsg();
         bean.setMsgStatus(flag);
 
@@ -213,31 +205,7 @@ public class SendMsgService extends IntentService {
             return;
         }
 
-        ReceiveListener listener = new ReceiveListener() {
-            @Override
-            public void OnRec(PduBase pduBase) {
-                //tcp会有消息缓存，在无网络状态下会执行onError()，一旦联网后，又继续尝试发送，就会执行OnRec()
-                try {
-                    final YouMaiMsg.ChatMsg_Ack ack = YouMaiMsg.ChatMsg_Ack.parseFrom(pduBase.body);
-                    final long msgId = ack.getMsgId();
-                    msgBean.getMsg().setMsgId(msgId);
-
-                    if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_OK) {
-                        updateUI(msgBean, CacheMsgBean.SEND_SUCCEED, null, SEND_MSG_END);
-                    } else {
-                        updateUI(msgBean, CacheMsgBean.SEND_FAILED, null, SEND_MSG_END);
-                    }
-                } catch (InvalidProtocolBufferException e) {
-                    e.printStackTrace();
-                    updateUI(msgBean, CacheMsgBean.SEND_FAILED, null, SEND_MSG_END);
-                }
-            }
-
-            @Override
-            public void onError(int errCode) {
-                updateUI(msgBean, CacheMsgBean.SEND_FAILED, null, SEND_MSG_END);
-            }
-        };
+        ReceiveListener receiveListener = getReceiveListener(msgBean);
 
         if (isGroup) {
             ArrayList<String> ats = new ArrayList<>();
@@ -246,9 +214,9 @@ public class SendMsgService extends IntentService {
                     ats.add(item.getUuid());
                 }
             }
-            HuxinSdkManager.instance().sendTextInGroup(groupId, groupName, content, ats, listener);
+            HuxinSdkManager.instance().sendTextInGroup(groupId, groupName, content, ats, receiveListener);
         } else {
-            HuxinSdkManager.instance().sendText(dstUuid, content, listener);
+            HuxinSdkManager.instance().sendText(dstUuid, content, receiveListener);
         }
 
 
@@ -271,37 +239,12 @@ public class SendMsgService extends IntentService {
             return;
         }
 
-        ReceiveListener callback = new ReceiveListener() {
-            @Override
-            public void OnRec(PduBase pduBase) {
-                try {
-                    final YouMaiMsg.ChatMsg_Ack ack = YouMaiMsg.ChatMsg_Ack.parseFrom(pduBase.body);
-                    final long msgId = ack.getMsgId();
-                    msgBean.getMsg().setMsgId(msgId);
-
-                    if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_OK) {
-                        updateUI(msgBean, CacheMsgBean.SEND_SUCCEED);
-                    } else {
-                        updateUI(msgBean, CacheMsgBean.SEND_FAILED);
-                    }
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    updateUI(msgBean, CacheMsgBean.SEND_FAILED);
-                }
-            }
-
-            @Override
-            public void onError(int errCode) {
-                updateUI(msgBean, CacheMsgBean.SEND_FAILED);
-            }
-        };
-
+        ReceiveListener receiveListener = getReceiveListener(msgBean);
 
         if (isGroup) {
-            HuxinSdkManager.instance().sendLocationInGroup(groupId, groupName, longitude, latitude, scale, address, callback);
+            HuxinSdkManager.instance().sendLocationInGroup(groupId, groupName, longitude, latitude, scale, address, receiveListener);
         } else {
-            HuxinSdkManager.instance().sendLocation(dstUuid, longitude, latitude, scale, address, callback);
+            HuxinSdkManager.instance().sendLocation(dstUuid, longitude, latitude, scale, address, receiveListener);
         }
 
 
@@ -347,31 +290,7 @@ public class SendMsgService extends IntentService {
             return;
         }
 
-        ReceiveListener listener = new ReceiveListener() {
-            @Override
-            public void OnRec(PduBase pduBase) {
-                //tcp会有消息缓存，在无网络状态下会执行onError()，一旦联网后，又继续尝试发送，就会执行OnRec()
-                try {
-                    final YouMaiMsg.ChatMsg_Ack ack = YouMaiMsg.ChatMsg_Ack.parseFrom(pduBase.body);
-                    final long msgId = ack.getMsgId();
-                    msgBean.getMsg().setMsgId(msgId);
-
-                    if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_OK) {
-                        updateUI(msgBean, CacheMsgBean.SEND_SUCCEED, null, SEND_MSG_END);
-                    } else {
-                        updateUI(msgBean, CacheMsgBean.SEND_FAILED, null, SEND_MSG_END);
-                    }
-                } catch (InvalidProtocolBufferException e) {
-                    e.printStackTrace();
-                    updateUI(msgBean, CacheMsgBean.SEND_FAILED, null, SEND_MSG_END);
-                }
-            }
-
-            @Override
-            public void onError(int errCode) {
-                updateUI(msgBean, CacheMsgBean.SEND_FAILED, null, SEND_MSG_END);
-            }
-        };
+        ReceiveListener receiveListener = getReceiveListener(msgBean);
 
         if (isGroup) {
             ArrayList<String> ats = new ArrayList<>();
@@ -380,9 +299,9 @@ public class SendMsgService extends IntentService {
                     ats.add(item.getUuid());
                 }
             }
-            HuxinSdkManager.instance().sendRedPackageInGroup(groupId, groupName, redUuid, value, redTitle, listener);
+            HuxinSdkManager.instance().sendRedPackageInGroup(groupId, groupName, redUuid, value, redTitle, receiveListener);
         } else {
-            HuxinSdkManager.instance().sendRedPackage(dstUuid, redUuid, value, redTitle, listener);
+            HuxinSdkManager.instance().sendRedPackage(dstUuid, redUuid, value, redTitle, receiveListener);
         }
 
 
@@ -458,13 +377,13 @@ public class SendMsgService extends IntentService {
                     }
                 } catch (InvalidProtocolBufferException e) {
                     e.printStackTrace();
-                    updateUI(msgBean, CacheMsgBean.SEND_FAILED, null, SEND_MSG_END);
+                    updateUI(msgBean, CacheMsgBean.SEND_FAILED);
                 }
             }
 
             @Override
             public void onError(int errCode) {
-                updateUI(msgBean, CacheMsgBean.SEND_FAILED, null, SEND_MSG_END);
+                updateUI(msgBean, CacheMsgBean.SEND_FAILED);
             }
         };
 
@@ -539,7 +458,7 @@ public class SendMsgService extends IntentService {
                     msgBody.setFid("-2");
                     msgBean.getMsg().setJsonBodyObj(msgBody);
                 }
-                updateUI(msgBean, CacheMsgBean.SEND_FAILED, null, SEND_MSG_END);
+                updateUI(msgBean, CacheMsgBean.SEND_FAILED);
             }
         };
 
@@ -620,7 +539,7 @@ public class SendMsgService extends IntentService {
                     msgBody.setVideoId("-2");
                 }
                 msgBean.getMsg().setJsonBodyObj(msgBody);
-                updateUI(msgBean, CacheMsgBean.SEND_FAILED, null, SEND_MSG_END);
+                updateUI(msgBean, CacheMsgBean.SEND_FAILED);
             }
         };
 
@@ -662,26 +581,7 @@ public class SendMsgService extends IntentService {
             return;
         }
 
-        ReceiveListener receiveListener = new ReceiveListener() {
-            @Override
-            public void OnRec(PduBase pduBase) {
-                try {
-                    final YouMaiMsg.ChatMsg_Ack ack = YouMaiMsg.ChatMsg_Ack.parseFrom(pduBase.body);
-                    long msgId = ack.getMsgId();
-                    msgBean.getMsg().setMsgId(msgId);
-
-                    if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_OK) {
-                        updateUI(msgBean, CacheMsgBean.SEND_SUCCEED, null, SEND_MSG_END);
-                    } else {
-                        updateUI(msgBean, CacheMsgBean.SEND_FAILED, null, SEND_MSG_END);
-                    }
-                } catch (InvalidProtocolBufferException e) {
-                    e.printStackTrace();
-                    updateUI(msgBean, CacheMsgBean.SEND_FAILED, null, SEND_MSG_END);
-                }
-            }
-        };
-
+        ReceiveListener receiveListener = getReceiveListener(msgBean);
 
         if (isGroup) {
             HuxinSdkManager.instance().sendAudioInGroup(groupId, groupName, fileId, secondTimes, sourcePhone,
@@ -707,31 +607,7 @@ public class SendMsgService extends IntentService {
             return;
         }
 
-        ReceiveListener receiveListener = new ReceiveListener() {
-            @Override
-            public void OnRec(PduBase pduBase) {
-                try {
-                    final YouMaiMsg.ChatMsg_Ack ack = YouMaiMsg.ChatMsg_Ack.parseFrom(pduBase.body);
-                    long msgId = ack.getMsgId();
-                    msgBean.getMsg().setMsgId(msgId);
-
-                    if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_OK) {
-                        updateUI(msgBean, CacheMsgBean.SEND_SUCCEED, null, SEND_MSG_END);
-                    } else {
-                        updateUI(msgBean, CacheMsgBean.SEND_FAILED, null, SEND_MSG_END);
-                    }
-
-                } catch (InvalidProtocolBufferException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onError(int errCode) {
-                super.onError(errCode);
-                updateUI(msgBean, CacheMsgBean.SEND_FAILED);
-            }
-        };
+        ReceiveListener receiveListener = getReceiveListener(msgBean);
 
         if (isGroup) {
             HuxinSdkManager.instance().sendPictureInGroup(groupId, groupName, fileId,
@@ -756,33 +632,12 @@ public class SendMsgService extends IntentService {
         final String dstUuid = msgBean.getMsg().getReceiverUserId();
         final int groupId = msgBean.getMsg().getGroupId();
 
-        if (!TextUtils.isEmpty(dstUuid) && groupId == 0) {
-            isGroup = false;
-        } else if (TextUtils.isEmpty(dstUuid) && groupId > 0) {
-            isGroup = true;
-        } else if (TextUtils.isEmpty(dstUuid) && groupId == 0) {
+        if (TextUtils.isEmpty(dstUuid) && groupId == 0) {
             return;
         }
 
-        ReceiveListener receiveListener = new ReceiveListener() {
-            @Override
-            public void OnRec(PduBase pduBase) {
-                try {
-                    final YouMaiMsg.ChatMsg_Ack ack = YouMaiMsg.ChatMsg_Ack.parseFrom(pduBase.body);
-                    long msgId = ack.getMsgId();
-                    msgBean.getMsg().setMsgId(msgId);
+        ReceiveListener receiveListener = getReceiveListener(msgBean);
 
-                    if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_OK) {
-                        updateUI(msgBean, CacheMsgBean.SEND_SUCCEED, null, SEND_MSG_END);
-                    } else {
-                        updateUI(msgBean, CacheMsgBean.SEND_FAILED, null, SEND_MSG_END);
-                    }
-                } catch (InvalidProtocolBufferException e) {
-                    e.printStackTrace();
-                    updateUI(msgBean, CacheMsgBean.SEND_FAILED, null, SEND_MSG_END);
-                }
-            }
-        };
         if (!"-1".equals(fileId)) {
             if (isGroup) {
                 HuxinSdkManager.instance().sendFileInGroup(groupId, groupName, fileId, fileName, fileSize,
@@ -809,31 +664,7 @@ public class SendMsgService extends IntentService {
             return;
         }
 
-        ReceiveListener receiveListener = new ReceiveListener() {
-            @Override
-            public void OnRec(PduBase pduBase) {
-                try {
-                    final YouMaiMsg.ChatMsg_Ack ack = YouMaiMsg.ChatMsg_Ack.parseFrom(pduBase.body);
-                    long msgId = ack.getMsgId();
-                    msgBean.getMsg().setMsgId(msgId);
-
-                    if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_OK) {
-                        updateUI(msgBean, CacheMsgBean.SEND_SUCCEED, null, SEND_MSG_END);
-                    } else {
-                        updateUI(msgBean, CacheMsgBean.SEND_FAILED, null, SEND_MSG_END);
-                    }
-                } catch (InvalidProtocolBufferException e) {
-                    e.printStackTrace();
-                    updateUI(msgBean, CacheMsgBean.SEND_FAILED, null, SEND_MSG_END);
-                }
-            }
-
-            @Override
-            public void onError(int errCode) {
-                super.onError(errCode);
-                updateUI(msgBean, CacheMsgBean.SEND_FAILED, null, SEND_MSG_END);
-            }
-        };
+        ReceiveListener receiveListener = getReceiveListener(msgBean);
 
         if (isGroup) {
             HuxinSdkManager.instance().sendVideoInGroup(groupId, groupName, fileId, frameId, name, size,
@@ -845,4 +676,37 @@ public class SendMsgService extends IntentService {
 
     }
 
+
+    private ReceiveListener getReceiveListener(final SendMsg msgBean) {
+        ReceiveListener receiveListener = new ReceiveListener() {
+            @Override
+            public void OnRec(PduBase pduBase) {
+                try {
+                    final YouMaiMsg.ChatMsg_Ack ack = YouMaiMsg.ChatMsg_Ack.parseFrom(pduBase.body);
+                    long msgId = ack.getMsgId();
+                    msgBean.getMsg().setMsgId(msgId);
+                    //String dstUuid = msgBean.getMsg().getTargetUuid();
+                    //String targetName = msgBean.getMsg().getTargetName();
+                    //String targetAvatar = msgBean.getMsg().getTargetAvatar();
+
+                    if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_OK) {//消息发送成功
+                        updateUI(msgBean, CacheMsgBean.SEND_SUCCEED);
+                    } else {//消息发送失败
+                        updateUI(msgBean, CacheMsgBean.SEND_FAILED);
+                    }
+                } catch (InvalidProtocolBufferException e) {
+                    e.printStackTrace();
+                    updateUI(msgBean, CacheMsgBean.SEND_FAILED);
+                }
+            }
+
+            @Override
+            public void onError(int errCode) { //消息发送超时
+                super.onError(errCode);
+                updateUI(msgBean, CacheMsgBean.SEND_FAILED);
+            }
+        };
+
+        return receiveListener;
+    }
 }

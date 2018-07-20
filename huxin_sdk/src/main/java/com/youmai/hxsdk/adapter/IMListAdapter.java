@@ -1061,7 +1061,7 @@ public class IMListAdapter extends RecyclerView.Adapter {
 
 
     private void showMsgTime(int position, TextView textView, long curTime) {
-        textView.setText(TimeUtils.getTime(curTime));
+        textView.setText(TimeUtils.dateFormat(curTime));
 
         if (position >= 1) {
             final CacheMsgBean cacheMsgBean = mImBeanList.get(position - 1);

@@ -1,6 +1,7 @@
 package com.youmai.hxsdk;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.Application;
 import android.content.ComponentName;
 import android.content.ContentValues;
@@ -14,6 +15,7 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
@@ -23,13 +25,17 @@ import com.alibaba.android.arouter.launcher.ARouter;
 import com.google.protobuf.GeneratedMessage;
 import com.youmai.hxsdk.config.AppConfig;
 import com.youmai.hxsdk.config.ColorsConfig;
+import com.youmai.hxsdk.db.helper.CacheMsgHelper;
 import com.youmai.hxsdk.db.manager.GreenDBIMManager;
 import com.youmai.hxsdk.entity.IpConfig;
 import com.youmai.hxsdk.entity.RespBaseBean;
 import com.youmai.hxsdk.http.HttpConnector;
 import com.youmai.hxsdk.http.IGetListener;
 import com.youmai.hxsdk.http.IPostListener;
+import com.youmai.hxsdk.im.IMMsgCallback;
 import com.youmai.hxsdk.im.IMMsgManager;
+import com.youmai.hxsdk.loader.ChatMsgLoader;
+import com.youmai.hxsdk.loader.ChatMsgLoaderAct;
 import com.youmai.hxsdk.proto.YouMaiBasic;
 import com.youmai.hxsdk.proto.YouMaiBuddy;
 import com.youmai.hxsdk.proto.YouMaiGroup;
@@ -38,7 +44,6 @@ import com.youmai.hxsdk.service.HuxinService;
 import com.youmai.hxsdk.socket.IMContentUtil;
 import com.youmai.hxsdk.socket.NotifyListener;
 import com.youmai.hxsdk.socket.ReceiveListener;
-import com.youmai.hxsdk.sp.SPDataUtil;
 import com.youmai.hxsdk.utils.AppUtils;
 import com.youmai.hxsdk.utils.GsonUtil;
 import com.youmai.hxsdk.utils.ListUtils;
@@ -62,6 +67,9 @@ public class HuxinSdkManager {
 
     private static final int HANDLER_THREAD_INIT_CONFIG_START = 1;
     private static final int HANDLER_THREAD_AUTO_LOGIN = 2;
+
+    private static final int LOADER_ID_GEN_MESSAGE_LIST = 11;
+
     private static HuxinSdkManager instance;
 
 
@@ -151,6 +159,14 @@ public class HuxinSdkManager {
      * @param context
      */
     public void init(final Context context, InitListener listener) {
+        String processName = AppUtils.getProcessName(context, android.os.Process.myPid());
+        if (processName != null) {
+            boolean defaultProcess = processName.equals(context.getPackageName());
+            if (!defaultProcess) {
+                return;
+            }
+        }
+
         mContext = context.getApplicationContext();
         IMMsgManager.instance().init(mContext);
         mUserInfo.fromJson(mContext);
@@ -163,9 +179,7 @@ public class HuxinSdkManager {
             }
         });
 
-
         initARouter();
-        //MorePushManager.register(mContext);//注册送服务
 
         if (listener != null) {
             mInitListenerList.add(listener);
@@ -174,11 +188,6 @@ public class HuxinSdkManager {
         if (binded == BIND_STATUS.IDLE) {
             binded = BIND_STATUS.BINDING;
             initHandler();
-
-            // Initialize the Mobile Ads SDK.
-            // MobileAds.initialize(context, AppConfig.ADMOB_APP_ID);
-
-            //autoLogin();
 
             mProcessHandler.sendEmptyMessage(HANDLER_THREAD_INIT_CONFIG_START);
 
@@ -287,11 +296,11 @@ public class HuxinSdkManager {
         mUserInfo.setAccessToken(accessToken);
     }
 
-    public String getExpireTime() {
+    public long getExpireTime() {
         return mUserInfo.getExpireTime();
     }
 
-    public void setExpireTime(String expireTime) {
+    public void setExpireTime(long expireTime) {
         mUserInfo.setExpireTime(expireTime);
     }
 
@@ -364,6 +373,58 @@ public class HuxinSdkManager {
 
 
     /**
+     * 添加实时消息接收接口
+     *
+     * @param callback
+     */
+    public void setImMsgCallback(IMMsgCallback callback) {
+        IMMsgManager.instance().setImMsgCallback(callback);
+    }
+
+    /**
+     * 移除实时消息接收接口
+     *
+     * @param callback
+     */
+    public void removeImMsgCallback(IMMsgCallback callback) {
+        IMMsgManager.instance().removeImMsgCallback(callback);
+    }
+
+
+    /**
+     * 获取本地数据库缓存消息接口
+     *
+     * @param fragment
+     * @param listener
+     */
+    public void chatMsgFromCache(Fragment fragment, ProtoCallback.CacheMsgCallBack listener) {
+        ChatMsgLoader callback = new ChatMsgLoader(fragment.getContext(), listener);
+
+        if (fragment.getLoaderManager().getLoader(LOADER_ID_GEN_MESSAGE_LIST) == null) {
+            fragment.getLoaderManager().initLoader(LOADER_ID_GEN_MESSAGE_LIST, null, callback);
+        } else {
+            fragment.getLoaderManager().restartLoader(LOADER_ID_GEN_MESSAGE_LIST, null, callback);
+        }
+    }
+
+    /**
+     * 获取本地数据库缓存消息接口
+     *
+     * @param activity
+     * @param listener
+     */
+    public void chatMsgFromCache(Activity activity, ProtoCallback.CacheMsgCallBack listener) {
+        ChatMsgLoaderAct callback = new ChatMsgLoaderAct(activity, listener);
+
+        if (activity.getLoaderManager().getLoader(LOADER_ID_GEN_MESSAGE_LIST) == null) {
+            activity.getLoaderManager().initLoader(LOADER_ID_GEN_MESSAGE_LIST, null, callback);
+        } else {
+            activity.getLoaderManager().restartLoader(LOADER_ID_GEN_MESSAGE_LIST, null, callback);
+        }
+    }
+
+
+    /**
      * 重新登录
      */
     private void reLogin() {
@@ -428,11 +489,12 @@ public class HuxinSdkManager {
     private void clearUserData() {
         close();
         mUserInfo.clear(mContext);
-        //CacheMsgHelper.instance().deleteAll(mContext);
-        //IMMsgManager.instance().clearShortcutBadger();
 
+        //CacheMsgHelper.instance().deleteAll(mContext);
         //MorePushManager.unregister(mContext);//反注册送服务
-        SPDataUtil.setUserInfoJson(mContext, "");// FIXME: 2017/3/20
+        //SPDataUtil.setUserInfoJson(mContext, "");
+
+        IMMsgManager.instance().clearShortcutBadger();
     }
 
 
@@ -623,6 +685,201 @@ public class HuxinSdkManager {
 
 
     /**
+     * 设置home activity
+     *
+     * @param homeAct
+     */
+    public void setHomeAct(Class homeAct) {
+        IMMsgManager.instance().setHomeAct(homeAct);
+    }
+
+
+    /**
+     * 设置是否关闭消息通知栏
+     *
+     * @param notify
+     */
+    public void setNotify(boolean notify) {
+        IMMsgManager.instance().setNotify(notify);
+    }
+
+    /**
+     * 是否关闭消息通知栏
+     */
+    public boolean isNotify() {
+        return IMMsgManager.instance().isNotify();
+    }
+
+
+    /**
+     * 获取好友黑名单
+     *
+     * @param uuid
+     */
+    public boolean getBuddyBlack(String uuid) {
+        return AppUtils.getBooleanSharedPreferences(mContext, "black" + uuid, false);
+    }
+
+
+    /**
+     * 设置好友黑名单
+     *
+     * @param uuid
+     */
+    public void setBuddyBlack(String uuid) {
+        AppUtils.setBooleanSharedPreferences(mContext, "black" + uuid, true);
+    }
+
+    /**
+     * 移除好友黑名单
+     *
+     * @param uuid
+     */
+    public void removeBuddyBlack(String uuid) {
+        AppUtils.setBooleanSharedPreferences(mContext, "black" + uuid, false);
+    }
+
+
+    /**
+     * 获取消息免打扰
+     *
+     * @param uuid
+     * @return
+     */
+    public boolean getNotDisturb(String uuid) {
+        return AppUtils.getBooleanSharedPreferences(mContext, "notify" + uuid, false);
+    }
+
+    /**
+     * 获取消息免打扰
+     *
+     * @param groupId
+     * @return
+     */
+    public boolean getNotDisturb(int groupId) {
+        return AppUtils.getBooleanSharedPreferences(mContext, "notify" + groupId, false);
+    }
+
+    /**
+     * 设置消息免打扰
+     *
+     * @param uuid
+     * @return
+     */
+    public void setNotDisturb(String uuid) {
+        String temp = AppUtils.getStringSharedPreferences(mContext, "notifyAll", "");
+        if (!temp.contains("#" + uuid)) {
+            temp = temp + "#" + uuid;
+            AppUtils.setStringSharedPreferences(mContext, "notifyAll", temp);
+        }
+
+        AppUtils.setBooleanSharedPreferences(mContext, "notify" + uuid, true);
+    }
+
+
+    /**
+     * 设置消息免打扰
+     *
+     * @param groupId
+     * @return
+     */
+    public void setNotDisturb(int groupId) {
+        String temp = AppUtils.getStringSharedPreferences(mContext, "notifyAll", "");
+        if (!temp.contains("#" + groupId)) {
+            temp = temp + "#" + groupId;
+            AppUtils.setStringSharedPreferences(mContext, "notifyAll", temp);
+        }
+
+        AppUtils.setBooleanSharedPreferences(mContext, "notify" + groupId, true);
+    }
+
+    /**
+     * 移除消息免打扰
+     *
+     * @param uuid
+     */
+    public void removeNotDisturb(String uuid) {
+        String temp = AppUtils.getStringSharedPreferences(mContext, "notifyAll", "");
+        temp = temp.replaceAll("@" + uuid, "");
+        AppUtils.setStringSharedPreferences(mContext, "notifyAll", temp);
+
+        AppUtils.setBooleanSharedPreferences(mContext, "notify" + uuid, false);
+    }
+
+    /**
+     * 移除消息免打扰
+     *
+     * @param groupId
+     */
+    public void removeNotDisturb(int groupId) {
+        String temp = AppUtils.getStringSharedPreferences(mContext, "notifyAll", "");
+        temp = temp.replaceAll("@" + groupId, "");
+        AppUtils.setStringSharedPreferences(mContext, "notifyAll", temp);
+
+        AppUtils.setBooleanSharedPreferences(mContext, "notify" + groupId, false);
+    }
+
+
+    /**
+     * 获取消息置顶
+     *
+     * @param uuid
+     * @return
+     */
+
+    public boolean getMsgTop(String uuid) {
+        return AppUtils.getBooleanSharedPreferences(mContext, "top" + uuid, false);
+    }
+
+    /**
+     * 获取消息置顶
+     *
+     * @param groupId
+     * @return
+     */
+    public boolean getMsgTop(int groupId) {
+        return AppUtils.getBooleanSharedPreferences(mContext, "top" + groupId, false);
+    }
+
+    /**
+     * 设置消息置顶
+     *
+     * @param uuid
+     * @return
+     */
+    public void setMsgTop(String uuid) {
+        AppUtils.setBooleanSharedPreferences(mContext, "top" + uuid, true);
+    }
+
+    /**
+     * 设置消息置顶
+     *
+     * @param groupId
+     * @return
+     */
+    public void setMsgTop(int groupId) {
+        AppUtils.setBooleanSharedPreferences(mContext, "top" + groupId, true);
+    }
+
+    /**
+     * 移除消息置顶
+     *
+     * @param uuid
+     */
+    public void removeMsgTop(String uuid) {
+        AppUtils.setBooleanSharedPreferences(mContext, "top" + uuid, false);
+    }
+
+    /**
+     * 移除消息置顶
+     *
+     * @param groupId
+     */
+    public void removeMsgTop(int groupId) {
+        AppUtils.setBooleanSharedPreferences(mContext, "top" + groupId, false);
+    }
+
+    /**
      * 发送文字
      *
      * @param destUuid
@@ -637,9 +894,8 @@ public class HuxinSdkManager {
         msgData.setSrcRealname(getRealName());
         msgData.setSrcMobile(getPhoneNum());
         msgData.setDestUserId(destUuid);
-        msgData.setSrcUserName(getUserName());
         msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_TEXT);
-        msgData.setSessionType(YouMaiMsg.SessionType.SESSION_TYPE_SINGLE);
+        msgData.setSessionType(YouMaiMsg.SessionType.SESSION_TYPE_BUDDY);
 
         IMContentUtil imContentUtil = new IMContentUtil();
         imContentUtil.appendText(content);
@@ -678,7 +934,7 @@ public class HuxinSdkManager {
         msgData.setSrcMobile(getPhoneNum());
         msgData.setDestUserId(destUuid);
         msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_LOCATION);
-        msgData.setSessionType(YouMaiMsg.SessionType.SESSION_TYPE_SINGLE);
+        msgData.setSessionType(YouMaiMsg.SessionType.SESSION_TYPE_BUDDY);
 
         IMContentUtil imContentUtil = new IMContentUtil();
         imContentUtil.appendLongitude(longitude + "");
@@ -718,7 +974,7 @@ public class HuxinSdkManager {
         msgData.setSrcMobile(getPhoneNum());
         msgData.setDestUserId(destUuid);
         msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_IMAGE);
-        msgData.setSessionType(YouMaiMsg.SessionType.SESSION_TYPE_SINGLE);
+        msgData.setSessionType(YouMaiMsg.SessionType.SESSION_TYPE_ORGBUDDY);
 
         IMContentUtil imContentUtil = new IMContentUtil();
         imContentUtil.appendPictureId(fileId);
@@ -755,7 +1011,7 @@ public class HuxinSdkManager {
         msgData.setSrcMobile(getPhoneNum());
         msgData.setDestUserId(destUuid);
         msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_AUDIO);
-        msgData.setSessionType(YouMaiMsg.SessionType.SESSION_TYPE_SINGLE);
+        msgData.setSessionType(YouMaiMsg.SessionType.SESSION_TYPE_BUDDY);
 
         IMContentUtil imContentUtil = new IMContentUtil();
         imContentUtil.appendAudioId(fileId);
@@ -793,7 +1049,7 @@ public class HuxinSdkManager {
         msgData.setSrcMobile(getPhoneNum());
         msgData.setDestUserId(destUuid);
         msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_VIDEO);
-        msgData.setSessionType(YouMaiMsg.SessionType.SESSION_TYPE_SINGLE);
+        msgData.setSessionType(YouMaiMsg.SessionType.SESSION_TYPE_BUDDY);
 
         IMContentUtil imContentUtil = new IMContentUtil();
         imContentUtil.addVideo(fileId, frameId, name, size, time);//body的内容
@@ -827,7 +1083,7 @@ public class HuxinSdkManager {
         msgData.setSrcMobile(getPhoneNum());
         msgData.setDestUserId(destUuid);
         msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_FILE);
-        msgData.setSessionType(YouMaiMsg.SessionType.SESSION_TYPE_SINGLE);
+        msgData.setSessionType(YouMaiMsg.SessionType.SESSION_TYPE_BUDDY);
 
         IMContentUtil imContentUtil = new IMContentUtil();
         imContentUtil.appendBigFileId(fileId, fileName, fileSize);
@@ -862,7 +1118,7 @@ public class HuxinSdkManager {
         msgData.setSrcMobile(getPhoneNum());
         msgData.setDestUserId(destUuid);
         msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_SEND_RED_ENVELOPE);
-        msgData.setSessionType(YouMaiMsg.SessionType.SESSION_TYPE_SINGLE);
+        msgData.setSessionType(YouMaiMsg.SessionType.SESSION_TYPE_BUDDY);
 
         IMContentUtil imContentUtil = new IMContentUtil();
         imContentUtil.appendRedPackageValue(value);
@@ -898,7 +1154,7 @@ public class HuxinSdkManager {
         msgData.setSrcMobile(getPhoneNum());
         msgData.setDestUserId(destUuid);
         msgData.setContentType(YouMaiMsg.IM_CONTENT_TYPE.IM_CONTENT_TYPE_GET_RED_ENVELOPE);
-        msgData.setSessionType(YouMaiMsg.SessionType.SESSION_TYPE_SINGLE);
+        msgData.setSessionType(YouMaiMsg.SessionType.SESSION_TYPE_BUDDY);
 
         IMContentUtil imContentUtil = new IMContentUtil();
         imContentUtil.appendRedPackageValue(value);
@@ -947,6 +1203,28 @@ public class HuxinSdkManager {
         YouMaiGroup.GroupDissolveReq group = builder.build();
 
         sendProto(group, YouMaiBasic.COMMANDID.CID_GROUP_DISSOLVE_REQ_VALUE, callback);
+    }
+
+
+    /**
+     * 删除聊天消息
+     *
+     * @param targetUuid
+     */
+    public void delMsgChat(String targetUuid) {
+        CacheMsgHelper.instance().deleteAllMsg(mContext, targetUuid);
+        //去掉未读消息计数
+        IMMsgManager.instance().removeBadge(targetUuid);
+    }
+
+
+    /**
+     * 删除群聊天消息
+     *
+     * @param groupId
+     */
+    public void delMsgChat(int groupId) {
+        delMsgChat(String.valueOf(groupId));
     }
 
 

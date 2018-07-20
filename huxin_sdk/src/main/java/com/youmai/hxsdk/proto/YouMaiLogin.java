@@ -17,75 +17,131 @@ public final class YouMaiLogin {
 
         /**
          * <code>optional string user_id = 1;</code>
+         * <p>
+         * <pre>
+         * 登录用户id
+         * </pre>
          */
         boolean hasUserId();
 
         /**
          * <code>optional string user_id = 1;</code>
+         * <p>
+         * <pre>
+         * 登录用户id
+         * </pre>
          */
         String getUserId();
 
         /**
          * <code>optional string user_id = 1;</code>
+         * <p>
+         * <pre>
+         * 登录用户id
+         * </pre>
          */
         com.google.protobuf.ByteString
         getUserIdBytes();
 
         /**
          * <code>optional string app_id = 2;</code>
+         * <p>
+         * <pre>
+         * 登录app id
+         * </pre>
          */
         boolean hasAppId();
 
         /**
          * <code>optional string app_id = 2;</code>
+         * <p>
+         * <pre>
+         * 登录app id
+         * </pre>
          */
         String getAppId();
 
         /**
          * <code>optional string app_id = 2;</code>
+         * <p>
+         * <pre>
+         * 登录app id
+         * </pre>
          */
         com.google.protobuf.ByteString
         getAppIdBytes();
 
         /**
          * <code>optional .Device_Type device_type = 3;</code>
+         * <p>
+         * <pre>
+         * 设备类型
+         * </pre>
          */
         boolean hasDeviceType();
 
         /**
          * <code>optional .Device_Type device_type = 3;</code>
+         * <p>
+         * <pre>
+         * 设备类型
+         * </pre>
          */
         YouMaiBasic.Device_Type getDeviceType();
 
         /**
          * <code>optional string device_id = 4;</code>
+         * <p>
+         * <pre>
+         * 设备id
+         * </pre>
          */
         boolean hasDeviceId();
 
         /**
          * <code>optional string device_id = 4;</code>
+         * <p>
+         * <pre>
+         * 设备id
+         * </pre>
          */
         String getDeviceId();
 
         /**
          * <code>optional string device_id = 4;</code>
+         * <p>
+         * <pre>
+         * 设备id
+         * </pre>
          */
         com.google.protobuf.ByteString
         getDeviceIdBytes();
 
         /**
          * <code>optional int32 version = 8;</code>
+         * <p>
+         * <pre>
+         * 用户使用协议版本号
+         * </pre>
          */
         boolean hasVersion();
 
         /**
          * <code>optional int32 version = 8;</code>
+         * <p>
+         * <pre>
+         * 用户使用协议版本号
+         * </pre>
          */
         int getVersion();
     }
 
     /**
      * Protobuf type {@code User_Login}
+     * <p>
+     * <pre>
+     * 登录请求
+     * </pre>
      */
     public static final class User_Login extends
             com.google.protobuf.GeneratedMessage implements
@@ -222,6 +278,10 @@ public final class YouMaiLogin {
 
         /**
          * <code>optional string user_id = 1;</code>
+         * <p>
+         * <pre>
+         * 登录用户id
+         * </pre>
          */
         public boolean hasUserId() {
             return ((bitField0_ & 0x00000001) == 0x00000001);
@@ -229,6 +289,10 @@ public final class YouMaiLogin {
 
         /**
          * <code>optional string user_id = 1;</code>
+         * <p>
+         * <pre>
+         * 登录用户id
+         * </pre>
          */
         public String getUserId() {
             Object ref = userId_;
@@ -247,6 +311,10 @@ public final class YouMaiLogin {
 
         /**
          * <code>optional string user_id = 1;</code>
+         * <p>
+         * <pre>
+         * 登录用户id
+         * </pre>
          */
         public com.google.protobuf.ByteString
         getUserIdBytes() {
@@ -267,6 +335,10 @@ public final class YouMaiLogin {
 
         /**
          * <code>optional string app_id = 2;</code>
+         * <p>
+         * <pre>
+         * 登录app id
+         * </pre>
          */
         public boolean hasAppId() {
             return ((bitField0_ & 0x00000002) == 0x00000002);
@@ -274,6 +346,10 @@ public final class YouMaiLogin {
 
         /**
          * <code>optional string app_id = 2;</code>
+         * <p>
+         * <pre>
+         * 登录app id
+         * </pre>
          */
         public String getAppId() {
             Object ref = appId_;
@@ -292,6 +368,10 @@ public final class YouMaiLogin {
 
         /**
          * <code>optional string app_id = 2;</code>
+         * <p>
+         * <pre>
+         * 登录app id
+         * </pre>
          */
         public com.google.protobuf.ByteString
         getAppIdBytes() {
@@ -312,6 +392,10 @@ public final class YouMaiLogin {
 
         /**
          * <code>optional .Device_Type device_type = 3;</code>
+         * <p>
+         * <pre>
+         * 设备类型
+         * </pre>
          */
         public boolean hasDeviceType() {
             return ((bitField0_ & 0x00000004) == 0x00000004);
@@ -319,6 +403,10 @@ public final class YouMaiLogin {
 
         /**
          * <code>optional .Device_Type device_type = 3;</code>
+         * <p>
+         * <pre>
+         * 设备类型
+         * </pre>
          */
         public YouMaiBasic.Device_Type getDeviceType() {
             return deviceType_;
@@ -329,6 +417,10 @@ public final class YouMaiLogin {
 
         /**
          * <code>optional string device_id = 4;</code>
+         * <p>
+         * <pre>
+         * 设备id
+         * </pre>
          */
         public boolean hasDeviceId() {
             return ((bitField0_ & 0x00000008) == 0x00000008);
@@ -336,6 +428,10 @@ public final class YouMaiLogin {
 
         /**
          * <code>optional string device_id = 4;</code>
+         * <p>
+         * <pre>
+         * 设备id
+         * </pre>
          */
         public String getDeviceId() {
             Object ref = deviceId_;
@@ -354,6 +450,10 @@ public final class YouMaiLogin {
 
         /**
          * <code>optional string device_id = 4;</code>
+         * <p>
+         * <pre>
+         * 设备id
+         * </pre>
          */
         public com.google.protobuf.ByteString
         getDeviceIdBytes() {
@@ -374,6 +474,10 @@ public final class YouMaiLogin {
 
         /**
          * <code>optional int32 version = 8;</code>
+         * <p>
+         * <pre>
+         * 用户使用协议版本号
+         * </pre>
          */
         public boolean hasVersion() {
             return ((bitField0_ & 0x00000010) == 0x00000010);
@@ -381,6 +485,10 @@ public final class YouMaiLogin {
 
         /**
          * <code>optional int32 version = 8;</code>
+         * <p>
+         * <pre>
+         * 用户使用协议版本号
+         * </pre>
          */
         public int getVersion() {
             return version_;
@@ -553,6 +661,10 @@ public final class YouMaiLogin {
 
         /**
          * Protobuf type {@code User_Login}
+         * <p>
+         * <pre>
+         * 登录请求
+         * </pre>
          */
         public static final class Builder extends
                 com.google.protobuf.GeneratedMessage.Builder<Builder> implements
@@ -719,6 +831,10 @@ public final class YouMaiLogin {
 
             /**
              * <code>optional string user_id = 1;</code>
+             * <p>
+             * <pre>
+             * 登录用户id
+             * </pre>
              */
             public boolean hasUserId() {
                 return ((bitField0_ & 0x00000001) == 0x00000001);
@@ -726,6 +842,10 @@ public final class YouMaiLogin {
 
             /**
              * <code>optional string user_id = 1;</code>
+             * <p>
+             * <pre>
+             * 登录用户id
+             * </pre>
              */
             public String getUserId() {
                 Object ref = userId_;
@@ -744,6 +864,10 @@ public final class YouMaiLogin {
 
             /**
              * <code>optional string user_id = 1;</code>
+             * <p>
+             * <pre>
+             * 登录用户id
+             * </pre>
              */
             public com.google.protobuf.ByteString
             getUserIdBytes() {
@@ -761,6 +885,10 @@ public final class YouMaiLogin {
 
             /**
              * <code>optional string user_id = 1;</code>
+             * <p>
+             * <pre>
+             * 登录用户id
+             * </pre>
              */
             public Builder setUserId(
                     String value) {
@@ -775,6 +903,10 @@ public final class YouMaiLogin {
 
             /**
              * <code>optional string user_id = 1;</code>
+             * <p>
+             * <pre>
+             * 登录用户id
+             * </pre>
              */
             public Builder clearUserId() {
                 bitField0_ = (bitField0_ & ~0x00000001);
@@ -785,6 +917,10 @@ public final class YouMaiLogin {
 
             /**
              * <code>optional string user_id = 1;</code>
+             * <p>
+             * <pre>
+             * 登录用户id
+             * </pre>
              */
             public Builder setUserIdBytes(
                     com.google.protobuf.ByteString value) {
@@ -801,6 +937,10 @@ public final class YouMaiLogin {
 
             /**
              * <code>optional string app_id = 2;</code>
+             * <p>
+             * <pre>
+             * 登录app id
+             * </pre>
              */
             public boolean hasAppId() {
                 return ((bitField0_ & 0x00000002) == 0x00000002);
@@ -808,6 +948,10 @@ public final class YouMaiLogin {
 
             /**
              * <code>optional string app_id = 2;</code>
+             * <p>
+             * <pre>
+             * 登录app id
+             * </pre>
              */
             public String getAppId() {
                 Object ref = appId_;
@@ -826,6 +970,10 @@ public final class YouMaiLogin {
 
             /**
              * <code>optional string app_id = 2;</code>
+             * <p>
+             * <pre>
+             * 登录app id
+             * </pre>
              */
             public com.google.protobuf.ByteString
             getAppIdBytes() {
@@ -843,6 +991,10 @@ public final class YouMaiLogin {
 
             /**
              * <code>optional string app_id = 2;</code>
+             * <p>
+             * <pre>
+             * 登录app id
+             * </pre>
              */
             public Builder setAppId(
                     String value) {
@@ -857,6 +1009,10 @@ public final class YouMaiLogin {
 
             /**
              * <code>optional string app_id = 2;</code>
+             * <p>
+             * <pre>
+             * 登录app id
+             * </pre>
              */
             public Builder clearAppId() {
                 bitField0_ = (bitField0_ & ~0x00000002);
@@ -867,6 +1023,10 @@ public final class YouMaiLogin {
 
             /**
              * <code>optional string app_id = 2;</code>
+             * <p>
+             * <pre>
+             * 登录app id
+             * </pre>
              */
             public Builder setAppIdBytes(
                     com.google.protobuf.ByteString value) {
@@ -883,6 +1043,10 @@ public final class YouMaiLogin {
 
             /**
              * <code>optional .Device_Type device_type = 3;</code>
+             * <p>
+             * <pre>
+             * 设备类型
+             * </pre>
              */
             public boolean hasDeviceType() {
                 return ((bitField0_ & 0x00000004) == 0x00000004);
@@ -890,6 +1054,10 @@ public final class YouMaiLogin {
 
             /**
              * <code>optional .Device_Type device_type = 3;</code>
+             * <p>
+             * <pre>
+             * 设备类型
+             * </pre>
              */
             public YouMaiBasic.Device_Type getDeviceType() {
                 return deviceType_;
@@ -897,6 +1065,10 @@ public final class YouMaiLogin {
 
             /**
              * <code>optional .Device_Type device_type = 3;</code>
+             * <p>
+             * <pre>
+             * 设备类型
+             * </pre>
              */
             public Builder setDeviceType(YouMaiBasic.Device_Type value) {
                 if (value == null) {
@@ -910,6 +1082,10 @@ public final class YouMaiLogin {
 
             /**
              * <code>optional .Device_Type device_type = 3;</code>
+             * <p>
+             * <pre>
+             * 设备类型
+             * </pre>
              */
             public Builder clearDeviceType() {
                 bitField0_ = (bitField0_ & ~0x00000004);
@@ -922,6 +1098,10 @@ public final class YouMaiLogin {
 
             /**
              * <code>optional string device_id = 4;</code>
+             * <p>
+             * <pre>
+             * 设备id
+             * </pre>
              */
             public boolean hasDeviceId() {
                 return ((bitField0_ & 0x00000008) == 0x00000008);
@@ -929,6 +1109,10 @@ public final class YouMaiLogin {
 
             /**
              * <code>optional string device_id = 4;</code>
+             * <p>
+             * <pre>
+             * 设备id
+             * </pre>
              */
             public String getDeviceId() {
                 Object ref = deviceId_;
@@ -947,6 +1131,10 @@ public final class YouMaiLogin {
 
             /**
              * <code>optional string device_id = 4;</code>
+             * <p>
+             * <pre>
+             * 设备id
+             * </pre>
              */
             public com.google.protobuf.ByteString
             getDeviceIdBytes() {
@@ -964,6 +1152,10 @@ public final class YouMaiLogin {
 
             /**
              * <code>optional string device_id = 4;</code>
+             * <p>
+             * <pre>
+             * 设备id
+             * </pre>
              */
             public Builder setDeviceId(
                     String value) {
@@ -978,6 +1170,10 @@ public final class YouMaiLogin {
 
             /**
              * <code>optional string device_id = 4;</code>
+             * <p>
+             * <pre>
+             * 设备id
+             * </pre>
              */
             public Builder clearDeviceId() {
                 bitField0_ = (bitField0_ & ~0x00000008);
@@ -988,6 +1184,10 @@ public final class YouMaiLogin {
 
             /**
              * <code>optional string device_id = 4;</code>
+             * <p>
+             * <pre>
+             * 设备id
+             * </pre>
              */
             public Builder setDeviceIdBytes(
                     com.google.protobuf.ByteString value) {
@@ -1004,6 +1204,10 @@ public final class YouMaiLogin {
 
             /**
              * <code>optional int32 version = 8;</code>
+             * <p>
+             * <pre>
+             * 用户使用协议版本号
+             * </pre>
              */
             public boolean hasVersion() {
                 return ((bitField0_ & 0x00000010) == 0x00000010);
@@ -1011,6 +1215,10 @@ public final class YouMaiLogin {
 
             /**
              * <code>optional int32 version = 8;</code>
+             * <p>
+             * <pre>
+             * 用户使用协议版本号
+             * </pre>
              */
             public int getVersion() {
                 return version_;
@@ -1018,6 +1226,10 @@ public final class YouMaiLogin {
 
             /**
              * <code>optional int32 version = 8;</code>
+             * <p>
+             * <pre>
+             * 用户使用协议版本号
+             * </pre>
              */
             public Builder setVersion(int value) {
                 bitField0_ |= 0x00000010;
@@ -1028,6 +1240,10 @@ public final class YouMaiLogin {
 
             /**
              * <code>optional int32 version = 8;</code>
+             * <p>
+             * <pre>
+             * 用户使用协议版本号
+             * </pre>
              */
             public Builder clearVersion() {
                 bitField0_ = (bitField0_ & ~0x00000010);
@@ -1076,6 +1292,24 @@ public final class YouMaiLogin {
          */
         com.google.protobuf.ByteString
         getErrorBytes();
+
+        /**
+         * <code>optional bool upload = 3;</code>
+         * <p>
+         * <pre>
+         * 是否上传资料
+         * </pre>
+         */
+        boolean hasUpload();
+
+        /**
+         * <code>optional bool upload = 3;</code>
+         * <p>
+         * <pre>
+         * 是否上传资料
+         * </pre>
+         */
+        boolean getUpload();
     }
 
     /**
@@ -1151,6 +1385,11 @@ public final class YouMaiLogin {
                             com.google.protobuf.ByteString bs = input.readBytes();
                             bitField0_ |= 0x00000002;
                             error_ = bs;
+                            break;
+                        }
+                        case 24: {
+                            bitField0_ |= 0x00000004;
+                            upload_ = input.readBool();
                             break;
                         }
                     }
@@ -1256,9 +1495,35 @@ public final class YouMaiLogin {
             }
         }
 
+        public static final int UPLOAD_FIELD_NUMBER = 3;
+        private boolean upload_;
+
+        /**
+         * <code>optional bool upload = 3;</code>
+         * <p>
+         * <pre>
+         * 是否上传资料
+         * </pre>
+         */
+        public boolean hasUpload() {
+            return ((bitField0_ & 0x00000004) == 0x00000004);
+        }
+
+        /**
+         * <code>optional bool upload = 3;</code>
+         * <p>
+         * <pre>
+         * 是否上传资料
+         * </pre>
+         */
+        public boolean getUpload() {
+            return upload_;
+        }
+
         private void initFields() {
             errerNo_ = YouMaiBasic.ERRNO_CODE.ERRNO_CODE_OK;
             error_ = "";
+            upload_ = false;
         }
 
         private byte memoizedIsInitialized = -1;
@@ -1281,6 +1546,9 @@ public final class YouMaiLogin {
             if (((bitField0_ & 0x00000002) == 0x00000002)) {
                 output.writeBytes(2, getErrorBytes());
             }
+            if (((bitField0_ & 0x00000004) == 0x00000004)) {
+                output.writeBool(3, upload_);
+            }
             getUnknownFields().writeTo(output);
         }
 
@@ -1298,6 +1566,10 @@ public final class YouMaiLogin {
             if (((bitField0_ & 0x00000002) == 0x00000002)) {
                 size += com.google.protobuf.CodedOutputStream
                         .computeBytesSize(2, getErrorBytes());
+            }
+            if (((bitField0_ & 0x00000004) == 0x00000004)) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeBoolSize(3, upload_);
             }
             size += getUnknownFields().getSerializedSize();
             memoizedSerializedSize = size;
@@ -1442,6 +1714,8 @@ public final class YouMaiLogin {
                 bitField0_ = (bitField0_ & ~0x00000001);
                 error_ = "";
                 bitField0_ = (bitField0_ & ~0x00000002);
+                upload_ = false;
+                bitField0_ = (bitField0_ & ~0x00000004);
                 return this;
             }
 
@@ -1478,6 +1752,10 @@ public final class YouMaiLogin {
                     to_bitField0_ |= 0x00000002;
                 }
                 result.error_ = error_;
+                if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+                    to_bitField0_ |= 0x00000004;
+                }
+                result.upload_ = upload_;
                 result.bitField0_ = to_bitField0_;
                 onBuilt();
                 return result;
@@ -1501,6 +1779,9 @@ public final class YouMaiLogin {
                     bitField0_ |= 0x00000002;
                     error_ = other.error_;
                     onChanged();
+                }
+                if (other.hasUpload()) {
+                    setUpload(other.getUpload());
                 }
                 this.mergeUnknownFields(other.getUnknownFields());
                 return this;
@@ -1651,6 +1932,58 @@ public final class YouMaiLogin {
                 return this;
             }
 
+            private boolean upload_;
+
+            /**
+             * <code>optional bool upload = 3;</code>
+             * <p>
+             * <pre>
+             * 是否上传资料
+             * </pre>
+             */
+            public boolean hasUpload() {
+                return ((bitField0_ & 0x00000004) == 0x00000004);
+            }
+
+            /**
+             * <code>optional bool upload = 3;</code>
+             * <p>
+             * <pre>
+             * 是否上传资料
+             * </pre>
+             */
+            public boolean getUpload() {
+                return upload_;
+            }
+
+            /**
+             * <code>optional bool upload = 3;</code>
+             * <p>
+             * <pre>
+             * 是否上传资料
+             * </pre>
+             */
+            public Builder setUpload(boolean value) {
+                bitField0_ |= 0x00000004;
+                upload_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional bool upload = 3;</code>
+             * <p>
+             * <pre>
+             * 是否上传资料
+             * </pre>
+             */
+            public Builder clearUpload() {
+                bitField0_ = (bitField0_ & ~0x00000004);
+                upload_ = false;
+                onChanged();
+                return this;
+            }
+
             // @@protoc_insertion_point(builder_scope:User_Login_Ack)
         }
 
@@ -1668,16 +2001,28 @@ public final class YouMaiLogin {
 
         /**
          * <code>optional string user_id = 1;</code>
+         * <p>
+         * <pre>
+         * 剔除用户
+         * </pre>
          */
         boolean hasUserId();
 
         /**
          * <code>optional string user_id = 1;</code>
+         * <p>
+         * <pre>
+         * 剔除用户
+         * </pre>
          */
         String getUserId();
 
         /**
          * <code>optional string user_id = 1;</code>
+         * <p>
+         * <pre>
+         * 剔除用户
+         * </pre>
          */
         com.google.protobuf.ByteString
         getUserIdBytes();
@@ -1721,6 +2066,10 @@ public final class YouMaiLogin {
 
     /**
      * Protobuf type {@code Multi_Device_Kicked_Notify}
+     * <p>
+     * <pre>
+     * 登录剔除协议
+     * </pre>
      */
     public static final class Multi_Device_Kicked_Notify extends
             com.google.protobuf.GeneratedMessage implements
@@ -1851,6 +2200,10 @@ public final class YouMaiLogin {
 
         /**
          * <code>optional string user_id = 1;</code>
+         * <p>
+         * <pre>
+         * 剔除用户
+         * </pre>
          */
         public boolean hasUserId() {
             return ((bitField0_ & 0x00000001) == 0x00000001);
@@ -1858,6 +2211,10 @@ public final class YouMaiLogin {
 
         /**
          * <code>optional string user_id = 1;</code>
+         * <p>
+         * <pre>
+         * 剔除用户
+         * </pre>
          */
         public String getUserId() {
             Object ref = userId_;
@@ -1876,6 +2233,10 @@ public final class YouMaiLogin {
 
         /**
          * <code>optional string user_id = 1;</code>
+         * <p>
+         * <pre>
+         * 剔除用户
+         * </pre>
          */
         public com.google.protobuf.ByteString
         getUserIdBytes() {
@@ -2129,6 +2490,10 @@ public final class YouMaiLogin {
 
         /**
          * Protobuf type {@code Multi_Device_Kicked_Notify}
+         * <p>
+         * <pre>
+         * 登录剔除协议
+         * </pre>
          */
         public static final class Builder extends
                 com.google.protobuf.GeneratedMessage.Builder<Builder> implements
@@ -2285,6 +2650,10 @@ public final class YouMaiLogin {
 
             /**
              * <code>optional string user_id = 1;</code>
+             * <p>
+             * <pre>
+             * 剔除用户
+             * </pre>
              */
             public boolean hasUserId() {
                 return ((bitField0_ & 0x00000001) == 0x00000001);
@@ -2292,6 +2661,10 @@ public final class YouMaiLogin {
 
             /**
              * <code>optional string user_id = 1;</code>
+             * <p>
+             * <pre>
+             * 剔除用户
+             * </pre>
              */
             public String getUserId() {
                 Object ref = userId_;
@@ -2310,6 +2683,10 @@ public final class YouMaiLogin {
 
             /**
              * <code>optional string user_id = 1;</code>
+             * <p>
+             * <pre>
+             * 剔除用户
+             * </pre>
              */
             public com.google.protobuf.ByteString
             getUserIdBytes() {
@@ -2327,6 +2704,10 @@ public final class YouMaiLogin {
 
             /**
              * <code>optional string user_id = 1;</code>
+             * <p>
+             * <pre>
+             * 剔除用户
+             * </pre>
              */
             public Builder setUserId(
                     String value) {
@@ -2341,6 +2722,10 @@ public final class YouMaiLogin {
 
             /**
              * <code>optional string user_id = 1;</code>
+             * <p>
+             * <pre>
+             * 剔除用户
+             * </pre>
              */
             public Builder clearUserId() {
                 bitField0_ = (bitField0_ & ~0x00000001);
@@ -2351,6 +2736,10 @@ public final class YouMaiLogin {
 
             /**
              * <code>optional string user_id = 1;</code>
+             * <p>
+             * <pre>
+             * 剔除用户
+             * </pre>
              */
             public Builder setUserIdBytes(
                     com.google.protobuf.ByteString value) {
@@ -2537,32 +2926,56 @@ public final class YouMaiLogin {
 
         /**
          * <code>optional string user_id = 1;</code>
+         * <p>
+         * <pre>
+         * 用户id
+         * </pre>
          */
         boolean hasUserId();
 
         /**
          * <code>optional string user_id = 1;</code>
+         * <p>
+         * <pre>
+         * 用户id
+         * </pre>
          */
         String getUserId();
 
         /**
          * <code>optional string user_id = 1;</code>
+         * <p>
+         * <pre>
+         * 用户id
+         * </pre>
          */
         com.google.protobuf.ByteString
         getUserIdBytes();
 
         /**
          * <code>optional string device_id = 2;</code>
+         * <p>
+         * <pre>
+         * 设备id
+         * </pre>
          */
         boolean hasDeviceId();
 
         /**
          * <code>optional string device_id = 2;</code>
+         * <p>
+         * <pre>
+         * 设备id
+         * </pre>
          */
         String getDeviceId();
 
         /**
          * <code>optional string device_id = 2;</code>
+         * <p>
+         * <pre>
+         * 设备id
+         * </pre>
          */
         com.google.protobuf.ByteString
         getDeviceIdBytes();
@@ -2570,6 +2983,10 @@ public final class YouMaiLogin {
 
     /**
      * Protobuf type {@code User_LogOff}
+     * <p>
+     * <pre>
+     * 退出登录
+     * </pre>
      */
     public static final class User_LogOff extends
             com.google.protobuf.GeneratedMessage implements
@@ -2684,6 +3101,10 @@ public final class YouMaiLogin {
 
         /**
          * <code>optional string user_id = 1;</code>
+         * <p>
+         * <pre>
+         * 用户id
+         * </pre>
          */
         public boolean hasUserId() {
             return ((bitField0_ & 0x00000001) == 0x00000001);
@@ -2691,6 +3112,10 @@ public final class YouMaiLogin {
 
         /**
          * <code>optional string user_id = 1;</code>
+         * <p>
+         * <pre>
+         * 用户id
+         * </pre>
          */
         public String getUserId() {
             Object ref = userId_;
@@ -2709,6 +3134,10 @@ public final class YouMaiLogin {
 
         /**
          * <code>optional string user_id = 1;</code>
+         * <p>
+         * <pre>
+         * 用户id
+         * </pre>
          */
         public com.google.protobuf.ByteString
         getUserIdBytes() {
@@ -2729,6 +3158,10 @@ public final class YouMaiLogin {
 
         /**
          * <code>optional string device_id = 2;</code>
+         * <p>
+         * <pre>
+         * 设备id
+         * </pre>
          */
         public boolean hasDeviceId() {
             return ((bitField0_ & 0x00000002) == 0x00000002);
@@ -2736,6 +3169,10 @@ public final class YouMaiLogin {
 
         /**
          * <code>optional string device_id = 2;</code>
+         * <p>
+         * <pre>
+         * 设备id
+         * </pre>
          */
         public String getDeviceId() {
             Object ref = deviceId_;
@@ -2754,6 +3191,10 @@ public final class YouMaiLogin {
 
         /**
          * <code>optional string device_id = 2;</code>
+         * <p>
+         * <pre>
+         * 设备id
+         * </pre>
          */
         public com.google.protobuf.ByteString
         getDeviceIdBytes() {
@@ -2912,6 +3353,10 @@ public final class YouMaiLogin {
 
         /**
          * Protobuf type {@code User_LogOff}
+         * <p>
+         * <pre>
+         * 退出登录
+         * </pre>
          */
         public static final class Builder extends
                 com.google.protobuf.GeneratedMessage.Builder<Builder> implements
@@ -3049,6 +3494,10 @@ public final class YouMaiLogin {
 
             /**
              * <code>optional string user_id = 1;</code>
+             * <p>
+             * <pre>
+             * 用户id
+             * </pre>
              */
             public boolean hasUserId() {
                 return ((bitField0_ & 0x00000001) == 0x00000001);
@@ -3056,6 +3505,10 @@ public final class YouMaiLogin {
 
             /**
              * <code>optional string user_id = 1;</code>
+             * <p>
+             * <pre>
+             * 用户id
+             * </pre>
              */
             public String getUserId() {
                 Object ref = userId_;
@@ -3074,6 +3527,10 @@ public final class YouMaiLogin {
 
             /**
              * <code>optional string user_id = 1;</code>
+             * <p>
+             * <pre>
+             * 用户id
+             * </pre>
              */
             public com.google.protobuf.ByteString
             getUserIdBytes() {
@@ -3091,6 +3548,10 @@ public final class YouMaiLogin {
 
             /**
              * <code>optional string user_id = 1;</code>
+             * <p>
+             * <pre>
+             * 用户id
+             * </pre>
              */
             public Builder setUserId(
                     String value) {
@@ -3105,6 +3566,10 @@ public final class YouMaiLogin {
 
             /**
              * <code>optional string user_id = 1;</code>
+             * <p>
+             * <pre>
+             * 用户id
+             * </pre>
              */
             public Builder clearUserId() {
                 bitField0_ = (bitField0_ & ~0x00000001);
@@ -3115,6 +3580,10 @@ public final class YouMaiLogin {
 
             /**
              * <code>optional string user_id = 1;</code>
+             * <p>
+             * <pre>
+             * 用户id
+             * </pre>
              */
             public Builder setUserIdBytes(
                     com.google.protobuf.ByteString value) {
@@ -3131,6 +3600,10 @@ public final class YouMaiLogin {
 
             /**
              * <code>optional string device_id = 2;</code>
+             * <p>
+             * <pre>
+             * 设备id
+             * </pre>
              */
             public boolean hasDeviceId() {
                 return ((bitField0_ & 0x00000002) == 0x00000002);
@@ -3138,6 +3611,10 @@ public final class YouMaiLogin {
 
             /**
              * <code>optional string device_id = 2;</code>
+             * <p>
+             * <pre>
+             * 设备id
+             * </pre>
              */
             public String getDeviceId() {
                 Object ref = deviceId_;
@@ -3156,6 +3633,10 @@ public final class YouMaiLogin {
 
             /**
              * <code>optional string device_id = 2;</code>
+             * <p>
+             * <pre>
+             * 设备id
+             * </pre>
              */
             public com.google.protobuf.ByteString
             getDeviceIdBytes() {
@@ -3173,6 +3654,10 @@ public final class YouMaiLogin {
 
             /**
              * <code>optional string device_id = 2;</code>
+             * <p>
+             * <pre>
+             * 设备id
+             * </pre>
              */
             public Builder setDeviceId(
                     String value) {
@@ -3187,6 +3672,10 @@ public final class YouMaiLogin {
 
             /**
              * <code>optional string device_id = 2;</code>
+             * <p>
+             * <pre>
+             * 设备id
+             * </pre>
              */
             public Builder clearDeviceId() {
                 bitField0_ = (bitField0_ & ~0x00000002);
@@ -3197,6 +3686,10 @@ public final class YouMaiLogin {
 
             /**
              * <code>optional string device_id = 2;</code>
+             * <p>
+             * <pre>
+             * 设备id
+             * </pre>
              */
             public Builder setDeviceIdBytes(
                     com.google.protobuf.ByteString value) {
@@ -3875,16 +4368,16 @@ public final class YouMaiLogin {
                         "ouMai.Basic.proto\"\204\001\n\nUser_Login\022\017\n\007user" +
                         "_id\030\001 \001(\t\022\016\n\006app_id\030\002 \001(\t\0221\n\013device_type" +
                         "\030\003 \001(\0162\034.Device_Type\022\021\n\t" +
-                        "device_id\030\004 \001(\t\022\017\n\007version\030\010 \001(\005\"N\n\016User" +
+                        "device_id\030\004 \001(\t\022\017\n\007version\030\010 \001(\005\"^\n\016User" +
                         "_Login_Ack\022-\n\010errer_no\030\001 \001(\0162\033.com.proto" +
-                        ".basic.ERRNO_CODE\022\r\n\005error\030\002 \001(\t\"\211\001\n\032Mul" +
-                        "ti_Device_Kicked_Notify\022\017\n\007user_id\030\001 \001(\t" +
-                        "\022\021\n\ttimestamp\030\002 \001(\005\0220\n\nnew_device\030\003 \001(\0162" +
-                        "\034.Device_Type\022\025\n\rnew_dev",
-                "ice_id\030\004 \001(\t\"1\n\013User_LogOff\022\017\n\007user_id\030\001" +
-                        " \001(\t\022\021\n\tdevice_id\030\002 \001(\t\"O\n\017User_LogOff_A" +
-                        "ck\022-\n\010errer_no\030\001 \001(\0162\033.E" +
-                        "RRNO_CODE\022\r\n\005error\030\002 \001(\t"
+                        ".basic.ERRNO_CODE\022\r\n\005error\030\002 \001(\t\022\016\n\006uplo" +
+                        "ad\030\003 \001(\010\"\211\001\n\032Multi_Device_Kicked_Notify\022" +
+                        "\017\n\007user_id\030\001 \001(\t\022\021\n\ttimestamp\030\002 \001(\005\0220\n\nn" +
+                        "ew_device\030\003 \001(\0162\034.Device",
+                "_Type\022\025\n\rnew_device_id\030\004 \001(\t\"1\n\013User_Log" +
+                        "Off\022\017\n\007user_id\030\001 \001(\t\022\021\n\tdevice_id\030\002 \001(\t\"" +
+                        "O\n\017User_LogOff_Ack\022-\n\010errer_no\030\001 \001(\0162\033.c" +
+                        "om.proto.basic.ERRNO_CODE\022\r\n\005error\030\002 \001(\t"
         };
         com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
                 new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -3910,7 +4403,7 @@ public final class YouMaiLogin {
         internal_static_com_proto_login_User_Login_Ack_fieldAccessorTable = new
                 com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_proto_login_User_Login_Ack_descriptor,
-                new String[]{"ErrerNo", "Error",});
+                new String[]{"ErrerNo", "Error", "Upload",});
         internal_static_com_proto_login_Multi_Device_Kicked_Notify_descriptor =
                 getDescriptor().getMessageTypes().get(2);
         internal_static_com_proto_login_Multi_Device_Kicked_Notify_fieldAccessorTable = new

@@ -1,18 +1,16 @@
 package com.youmai.hxsdk.entity;
 
 public class AuthConfig {
+
     /**
      * code : 0
      * message :
-     * content : {"expire":1527658965,"access_token":"510f8af37c47f8c42ac95031ba9794a6"}
-     * contentEncrypt :
+     * content : {"expireTime":1530345966546,"accessToken":"cb61cb108cd6422dbc118e290cbb3007","corpUuid":"a8c58297436f433787725a94f780a3c9","appUuid":"ICECZYIM-XE17-EZE5-TGLX-59FCF8D4PW6K","serviceUuid":""}
      */
 
     private int code;
     private String message;
     private ContentBean content;
-    private String contentEncrypt;
-
 
     public boolean isSuccess() {
         return code == 0;
@@ -42,37 +40,59 @@ public class AuthConfig {
         this.content = content;
     }
 
-    public String getContentEncrypt() {
-        return contentEncrypt;
-    }
-
-    public void setContentEncrypt(String contentEncrypt) {
-        this.contentEncrypt = contentEncrypt;
-    }
-
     public static class ContentBean {
         /**
-         * expire : 1527658965
-         * access_token : 510f8af37c47f8c42ac95031ba9794a6
+         * expireTime : 1530345966546
+         * accessToken : cb61cb108cd6422dbc118e290cbb3007
+         * corpUuid : a8c58297436f433787725a94f780a3c9
+         * appUuid : ICECZYIM-XE17-EZE5-TGLX-59FCF8D4PW6K
+         * serviceUuid :
          */
 
-        private String expire;
-        private String access_token;
+        private long expireTime;
+        private String accessToken;
+        private String corpUuid;
+        private String appUuid;
+        private String serviceUuid;
 
-        public String getExpire() {
-            return expire;
+        public long getExpireTime() {
+            return expireTime;
         }
 
-        public void setExpire(String expire) {
-            this.expire = expire;
+        public void setExpireTime(long expireTime) {
+            this.expireTime = expireTime;
         }
 
-        public String getAccess_token() {
-            return access_token;
+        public String getAccessToken() {
+            return accessToken;
         }
 
-        public void setAccess_token(String access_token) {
-            this.access_token = access_token;
+        public void setAccessToken(String accessToken) {
+            this.accessToken = accessToken;
+        }
+
+        public String getCorpUuid() {
+            return corpUuid;
+        }
+
+        public void setCorpUuid(String corpUuid) {
+            this.corpUuid = corpUuid;
+        }
+
+        public String getAppUuid() {
+            return appUuid;
+        }
+
+        public void setAppUuid(String appUuid) {
+            this.appUuid = appUuid;
+        }
+
+        public String getServiceUuid() {
+            return serviceUuid;
+        }
+
+        public void setServiceUuid(String serviceUuid) {
+            this.serviceUuid = serviceUuid;
         }
     }
 }

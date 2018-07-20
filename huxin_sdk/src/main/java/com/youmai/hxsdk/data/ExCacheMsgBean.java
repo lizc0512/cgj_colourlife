@@ -1,7 +1,8 @@
-package com.tg.coloursteward.module.meassage;
+package com.youmai.hxsdk.data;
 
-import com.tg.coloursteward.entity.MsgConfig;
+import com.youmai.hxsdk.adapter.MessageAdapter;
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
+import com.youmai.hxsdk.entity.MsgConfig;
 
 /**
  * 最新沟通联系人

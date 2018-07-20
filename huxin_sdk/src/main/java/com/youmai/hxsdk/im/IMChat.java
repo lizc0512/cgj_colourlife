@@ -4,6 +4,7 @@ import com.google.protobuf.ProtocolStringList;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.chat.MsgContent;
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
+import com.youmai.hxsdk.proto.YouMaiBasic;
 import com.youmai.hxsdk.proto.YouMaiMsg;
 import com.youmai.hxsdk.utils.ListUtils;
 
@@ -22,12 +23,12 @@ public class IMChat {
     private YouMaiMsg.MsgData mImChat;
     private CacheMsgBean mMsgBean;
 
-    public IMChat(YouMaiMsg.MsgData imChat, boolean isGroup) {
+    public IMChat(YouMaiMsg.MsgData imChat) {
         mImChat = imChat;
         mJsonBody = imChat.getMsgContent();
         mMsgType = imChat.getContentType().getNumber();
         mContent = new MsgContent(mMsgType, mJsonBody);
-        updateCacheBean(imChat, isGroup);
+        updateCacheBean(imChat);
     }
 
     public IMChat(String pushMsg) {
@@ -40,7 +41,7 @@ public class IMChat {
     }
 
 
-    private void updateCacheBean(YouMaiMsg.MsgData imChat, boolean isGroup) {
+    private void updateCacheBean(YouMaiMsg.MsgData imChat) {
         mMsgBean = new CacheMsgBean();
         mMsgBean.setSenderUserId(imChat.getSrcUserId())
                 .setSenderSex(imChat.getSrcSex())
@@ -57,7 +58,10 @@ public class IMChat {
                 .setMsgId(imChat.getMsgId())
                 .setContentJsonBody(imChat.getMsgContent());
 
-        if (isGroup) {
+
+        YouMaiMsg.SessionType type = imChat.getSessionType();
+
+        if (type == YouMaiMsg.SessionType.SESSION_TYPE_MULTICHAT) {//群组
 
             String uuid = HuxinSdkManager.instance().getUuid();
             ProtocolStringList atList = imChat.getForcePushIdsListList();
@@ -69,11 +73,26 @@ public class IMChat {
                     .setTargetUuid(imChat.getGroupId() + "")
                     .setReceiverUserId(uuid)
                     .setTargetName(imChat.getGroupName());
-        } else {
+
+        } else if (type == YouMaiMsg.SessionType.SESSION_TYPE_COMMUNITY) {//社群
+
+            String uuid = HuxinSdkManager.instance().getUuid();
+            ProtocolStringList atList = imChat.getForcePushIdsListList();
+            if (!ListUtils.isEmpty(atList) && atList.contains(uuid)) {
+                IMMsgManager.instance().addMeInGroup(imChat.getGroupId());
+            }
+
+            mMsgBean.setGroupId(imChat.getGroupId())
+                    .setTargetUuid(imChat.getGroupId() + "")
+                    .setReceiverUserId(uuid)
+                    .setTargetName(imChat.getGroupName());
+
+        } else {  //单聊
             mMsgBean.setTargetUuid(imChat.getSrcUserId())
                     .setReceiverUserId(imChat.getDestUserId())
                     .setTargetName(imChat.getSrcRealname());
         }
+
 
     }
 

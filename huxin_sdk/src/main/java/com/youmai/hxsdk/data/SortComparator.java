@@ -1,4 +1,4 @@
-package com.tg.coloursteward.module.meassage;
+package com.youmai.hxsdk.data;
 
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
 

@@ -1,6 +1,7 @@
 package com.youmai.hxsdk.module.groupchat;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v7.app.AlertDialog;
@@ -100,7 +101,7 @@ public class ChatDetailsActivity extends SdkBaseActivity {
         mSelfName.setText(realname);
 
         switch_notify = findViewById(R.id.switch_notify);
-        boolean isClosed = AppUtils.getBooleanSharedPreferences(mContext, "notify" + uuid, false);
+        boolean isClosed = HuxinSdkManager.instance().getNotDisturb(uuid);
         if (isClosed) {
             switch_notify.setChecked(true);
         } else {
@@ -111,16 +112,16 @@ public class ChatDetailsActivity extends SdkBaseActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    AppUtils.setBooleanSharedPreferences(mContext, "notify" + uuid, true);
+                    HuxinSdkManager.instance().setNotDisturb(uuid);
                 } else {
-                    AppUtils.setBooleanSharedPreferences(mContext, "notify" + uuid, false);
+                    HuxinSdkManager.instance().removeNotDisturb(uuid);
                 }
             }
         });
 
 
         switch_top = findViewById(R.id.switch_top);
-        boolean isTop = AppUtils.getBooleanSharedPreferences(mContext, "top" + uuid, false);
+        boolean isTop = HuxinSdkManager.instance().getMsgTop(uuid);
         if (isTop) {
             switch_top.setChecked(true);
         } else {
@@ -131,9 +132,9 @@ public class ChatDetailsActivity extends SdkBaseActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    AppUtils.setBooleanSharedPreferences(mContext, "top" + uuid, true);
+                    HuxinSdkManager.instance().setMsgTop(uuid);
                 } else {
-                    AppUtils.setBooleanSharedPreferences(mContext, "top" + uuid, false);
+                    HuxinSdkManager.instance().removeMsgTop(uuid);
                 }
             }
         });

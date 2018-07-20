@@ -697,7 +697,7 @@ public class MainActivity1 extends AppCompatActivity implements MessageHandler.R
                             Tools.saveStringValue(mContext, Contants.storage.APPAUTHTIME_1, expireTime);
 
                             HuxinSdkManager.instance().setAccessToken(accessToken);
-                            HuxinSdkManager.instance().setExpireTime(expireTime);
+                            HuxinSdkManager.instance().setExpireTime(Long.parseLong(expireTime));
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

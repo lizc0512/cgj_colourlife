@@ -11,7 +11,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import com.tg.coloursteward.adapter.DeskTopItemAdapter;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.constant.Contants;
-import com.tg.coloursteward.entity.MsgConfig;
 import com.tg.coloursteward.info.HomeDeskTopInfo;
 import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.inter.OnItemDeleteListener;
@@ -27,6 +26,7 @@ import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.PullRefreshListView;
 import com.tg.coloursteward.view.PullRefreshListViewFind;
 import com.tg.coloursteward.view.dialog.ToastFactory;
+import com.youmai.hxsdk.entity.MsgConfig;
 
 import org.greenrobot.eventbus.EventBus;
 

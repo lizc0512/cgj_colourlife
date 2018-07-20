@@ -199,8 +199,6 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         void onItemClick(int pos, ContactBean contact);
 
         void onLongClick(int pos, ContactBean contact);
-
-        void collectCount(int count);
     }
 
     /**

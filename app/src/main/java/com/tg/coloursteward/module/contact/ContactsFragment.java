@@ -86,7 +86,7 @@ public class ContactsFragment extends Fragment implements ResponseListener, Item
     private String orgId;
     private final int REQUESTPERMISSION = 110;
     private String LinkManListCache;
-    private ArrayList<FamilyInfo> familyList = new ArrayList<FamilyInfo>(); //组织架构人
+    private ArrayList<FamilyInfo> familyList = new ArrayList<>(); //组织架构人
 
     private RecyclerView rv_main;
     private ContactAdapter adapter;
@@ -162,6 +162,18 @@ public class ContactsFragment extends Fragment implements ResponseListener, Item
         registerReceiver();
 
         getHeadList();
+
+
+        View header_item = view.findViewById(R.id.list_item_header_search_root);
+        header_item.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), GlobalSearchActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(intent);
+            }
+        });
+
 
         rv_main = view.findViewById(R.id.rv_main);
         iv_main = view.findViewById(R.id.iv_main);
@@ -341,12 +353,7 @@ public class ContactsFragment extends Fragment implements ResponseListener, Item
         Intent intent;
         FamilyInfo info;
         switch (pos) {
-            case 0:
-                intent = new Intent(getActivity(), GlobalSearchActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                startActivity(intent);
-                break;
-            case 1: //组织架构
+            case 0: //组织架构
                 if (familyList.size() > 0) {
                     if (skincode.equals("101")) {//101 彩生活
                         for (int i = 0; i < familyList.size(); i++) {
@@ -384,16 +391,16 @@ public class ContactsFragment extends Fragment implements ResponseListener, Item
                     }
                 }
                 break;
-            case 2: //我的部门
+            case 1: //我的部门
                 info = new FamilyInfo();
                 info.id = Tools.getOrgId(mActivity);
-                if(!"".equals(Tools.getOrgId(mActivity))){
+                if (!"".equals(Tools.getOrgId(mActivity))) {
                     info.id = Tools.getOrgId(mActivity);
-                }else {
-                    info.id =UserInfo.infoorgId;
+                } else {
+                    info.id = UserInfo.infoorgId;
                 }
-                if("".equals(info.id)){
-                    info.id =UserInfo.orgId;
+                if ("".equals(info.id)) {
+                    info.id = UserInfo.orgId;
                 }
                 info.type = "org";
                 info.name = UserInfo.familyName;
@@ -401,7 +408,7 @@ public class ContactsFragment extends Fragment implements ResponseListener, Item
                 intent.putExtra(HomeContactOrgActivity.FAMILY_INFO, info);
                 startActivity(intent);
                 break;
-            case 3: //手机联系人
+            case 2: //手机联系人
                 if (ContextCompat.checkSelfPermission(mActivity, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
                     //申请权限
                     ActivityCompat.requestPermissions(mActivity, new String[]{Manifest.permission.READ_CONTACTS}, REQUESTPERMISSION);
@@ -410,7 +417,7 @@ public class ContactsFragment extends Fragment implements ResponseListener, Item
                     startActivity(new Intent(mActivity, ContactsActivity.class));
                 }
                 break;
-            case 4: //群聊
+            case 3: //群聊
                 startActivity(new Intent(getContext(), GroupListActivity.class));
                 break;
             default: //item

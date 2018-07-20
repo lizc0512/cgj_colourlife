@@ -30,7 +30,7 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         StickyHeaderAdapter<ContactAdapter.HeaderHolder>, MessageHandler.ResponseListener {
 
     enum TYPE {
-        SEARCH, HEADER, DEFAULT
+        HEADER, DEFAULT
     }
 
     public static final int mIndexForContact = 4;  //搜索 //组织架构 //我的部门 //手机联系人 //群聊
@@ -50,7 +50,7 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         msgHandler.setResponseListener(this);
     }
 
-    public void removeItem(int position){
+    public void removeItem(int position) {
         cnPinyinList.remove(position);
         notifyItemRemoved(position);
         notifyDataSetChanged();
@@ -64,9 +64,7 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     @Override
     public int getItemViewType(int position) {
         int type;
-        if (position == 0) {
-            type = TYPE.SEARCH.ordinal();
-        } else if (position > 0 && position < mCollectIndex) {
+        if (position < mCollectIndex) {
             type = TYPE.HEADER.ordinal();
         } else {
             type = TYPE.DEFAULT.ordinal();
@@ -76,10 +74,7 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (viewType == TYPE.SEARCH.ordinal()) {
-            return new SearchHolder(LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.message_list_item_header_search, parent, false));
-        } else if (viewType == TYPE.HEADER.ordinal()) {
+        if (viewType == TYPE.HEADER.ordinal()) {
             return new ContactHolder(LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.contacts_fragment_item, parent, false));
         } else {
@@ -94,7 +89,7 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         if (holder instanceof ContactHolder) {
             final ContactHolder contactHolder = (ContactHolder) holder;
-            if (position > 0 && position <= mCollectIndex) {
+            if (position < mCollectIndex) {
                 int icon = defaultIcon(position);
                 contactHolder.iv_header.setImageResource(icon);
                 contactHolder.cb_collect.setVisibility(View.GONE);
@@ -115,40 +110,30 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 }
             }
 
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (null != itemEventListener) {
-                        itemEventListener.onItemClick(position, contact);
-                    }
-                }
-            });
-
-            if (contact.getRealname().startsWith("↑##@@**") && position <= mCollectIndex) {
+            if (contact.getRealname().startsWith("↑##@@**") && position < mCollectIndex) {
                 contactHolder.tv_name.setText(contact.getRealname().substring(9));
             } else {
                 contactHolder.tv_name.setText(contact.getRealname());
             }
 
         }
-        if (holder instanceof SearchHolder) {
-            //搜索框不处理
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (null != itemEventListener) {
-                        itemEventListener.onItemClick(position, contact);
-                    }
+
+        //搜索框不处理
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (null != itemEventListener) {
+                    itemEventListener.onItemClick(position, contact);
                 }
-            });
-        }
+            }
+        });
+
 
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
                 if (null != itemEventListener) {
-                    //Toast.makeText(mContext, "长按position：" + position, Toast.LENGTH_SHORT).show();
-                    itemEventListener.onLongClick(position,contact);
+                    itemEventListener.onLongClick(position, contact);
                 }
                 return true;
             }
@@ -157,7 +142,7 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public long getHeaderId(int childAdapterPosition) {
-        if (childAdapterPosition <= mCollectIndex) {
+        if (childAdapterPosition < mCollectIndex) {
             return '↑';
         } else {
             return cnPinyinList.get(childAdapterPosition).getFirstChar();
@@ -186,11 +171,6 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 .inflate(R.layout.item_header, parent, false));
     }
 
-    public class SearchHolder extends RecyclerView.ViewHolder {
-        public SearchHolder(View itemView) {
-            super(itemView);
-        }
-    }
 
     public class HeaderHolder extends RecyclerView.ViewHolder {
         private TextView tv_header;
@@ -218,7 +198,7 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public interface ItemEventListener {
         void onItemClick(int pos, ContactBean contact);
 
-        void onLongClick(int pos,ContactBean contact);
+        void onLongClick(int pos, ContactBean contact);
 
         void collectCount(int count);
     }
@@ -232,16 +212,16 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     int defaultIcon(int position) {
         int icon = -1;
         switch (position) {
-            case 1:
+            case 0:
                 icon = R.drawable.contacts_org;
                 break;
-            case 2:
+            case 1:
                 icon = R.drawable.contacts_department;
                 break;
-            case 3:
+            case 2:
                 icon = R.drawable.contacts_phone_list;
                 break;
-            case 4:
+            case 3:
                 icon = R.drawable.contacts_groupchat;
                 break;
         }

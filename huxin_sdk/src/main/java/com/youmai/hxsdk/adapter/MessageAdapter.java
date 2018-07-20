@@ -13,7 +13,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -51,7 +50,6 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     private final String TAG = "MessageAdapter";
 
-    public static final int ADAPTER_TYPE_SEARCH = 1;  //搜索
     public static final int ADAPTER_TYPE_PUSHMSG = 2; //ICE push msg
     public static final int ADAPTER_TYPE_SINGLE = 3;  //单聊消息
     public static final int ADAPTER_TYPE_GROUP = 4;  //群聊消息
@@ -134,7 +132,6 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             bean4.setMsgTime(sp);
         }
 
-        list.add(new ExCacheMsgBean());
         list.add(bean1);
         list.add(bean2);
         list.add(bean3);
@@ -161,13 +158,13 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 boolean isChanged = Collections.replaceAll(messageList, item, msgBean);
                 if (isChanged) {
                     SortComparator comp = new SortComparator();
-                    Collections.sort(messageList.subList(1, messageList.size()), comp);
+                    Collections.sort(messageList, comp);
                     notifyDataSetChanged();
                 }
             } else {
-                messageList.add(1, msgBean);
+                messageList.add(0, msgBean);
                 SortComparator comp = new SortComparator();
-                Collections.sort(messageList.subList(1, messageList.size()), comp);
+                Collections.sort(messageList, comp);
                 notifyDataSetChanged();
             }
         }
@@ -177,8 +174,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         String uuid = msgBean.getTargetUuid();
         for (int i = 0; i < messageList.size(); i++) {
             ExCacheMsgBean item = messageList.get(i);
-            if (item.getUiType() == MessageAdapter.ADAPTER_TYPE_SEARCH
-                    || item.getUiType() == MessageAdapter.ADAPTER_TYPE_PUSHMSG) {
+            if (item.getUiType() == MessageAdapter.ADAPTER_TYPE_PUSHMSG) {
                 continue;
             }
             if (item.getTargetUuid().equals(uuid)) {
@@ -187,9 +183,9 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             }
         }
 
-        messageList.add(1, msgBean);
+        messageList.add(0, msgBean);
         SortComparator comp = new SortComparator();
-        Collections.sort(messageList.subList(1, messageList.size()), comp);
+        Collections.sort(messageList, comp);
 
         notifyDataSetChanged();
     }
@@ -207,7 +203,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         messageList.addAll(newList);
 
         SortComparator comp = new SortComparator();
-        Collections.sort(messageList.subList(1, messageList.size()), comp);
+        Collections.sort(messageList, comp);
         notifyDataSetChanged();
     }
 
@@ -240,10 +236,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(mContext);
-        if (viewType == ADAPTER_TYPE_SEARCH) {
-            View view = inflater.inflate(R.layout.message_list_item_header_search, parent, false);
-            return new MsgItemSearch(view);
-        } else if (viewType == ADAPTER_TYPE_PUSHMSG) {
+        if (viewType == ADAPTER_TYPE_PUSHMSG) {
             View view = inflater.inflate(R.layout.push_message_item_layout, parent, false);
             return new MsgItemPush(view);
         } else if (viewType == ADAPTER_TYPE_SINGLE) {
@@ -262,11 +255,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         final ExCacheMsgBean model = messageList.get(position);
-        if (holder instanceof MsgItemSearch) {
-            MsgItemSearch viewHeader = (MsgItemSearch) holder;
-            viewHeader.header_item.setTag(position);
-
-        } else if (holder instanceof MsgItemPush) {
+        if (holder instanceof MsgItemPush) {
             final MsgItemPush itemView = (MsgItemPush) holder;
             itemView.message_status.hide(false);
 
@@ -558,15 +547,6 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     public interface OnItemLongClickListener {
         void onItemLongClick(View v, ExCacheMsgBean bean);
-    }
-
-    public class MsgItemSearch extends RecyclerView.ViewHolder {
-        LinearLayout header_item;
-
-        public MsgItemSearch(View itemView) {
-            super(itemView);
-            header_item = (LinearLayout) itemView.findViewById(R.id.list_item_header_search_root);
-        }
     }
 
 

@@ -159,6 +159,11 @@ public class HuxinSdkManager {
      * @param context
      */
     public void init(final Context context, InitListener listener) {
+        mContext = context.getApplicationContext();
+        IMMsgManager.instance().init(mContext);
+        mUserInfo.fromJson(mContext);
+        GreenDBIMManager.instance(mContext);
+
         String processName = AppUtils.getProcessName(context, android.os.Process.myPid());
         if (processName != null) {
             boolean defaultProcess = processName.equals(context.getPackageName());
@@ -167,10 +172,6 @@ public class HuxinSdkManager {
             }
         }
 
-        mContext = context.getApplicationContext();
-        IMMsgManager.instance().init(mContext);
-        mUserInfo.fromJson(mContext);
-        GreenDBIMManager.instance(mContext);
 
         RespBaseBean.setProtocolCallBack(new ProtocolCallBack() {
             @Override

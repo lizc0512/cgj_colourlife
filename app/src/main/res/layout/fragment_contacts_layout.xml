@@ -8,6 +8,8 @@
     android:focusableInTouchMode="true"
     android:orientation="vertical" >
 
+    <include layout="@layout/message_list_item_header_search" />
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -23,7 +25,7 @@
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:layout_marginBottom="45dp"
-            android:layout_marginTop="45dp"
+            android:layout_marginTop="20dp"
             app:charTextColor="#000000"
             app:indexTextColor="@color/hx_main_color"
             app:indexTextSize="13sp" />

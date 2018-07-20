@@ -186,28 +186,10 @@ public class MainActivity1 extends AppCompatActivity implements MessageHandler.R
         initProto();
 
         reqSearchList();
-
-        //MorePushManager.connect(this);
     }
 
 
     public void windowPermission() {
-        /*if (Build.VERSION.SDK_INT >= 23) {
-            if (!Settings.canDrawOverlays(getApplicationContext())) {
-                //启动Activity让用户授权
-                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
-                if (intent != null) {
-                    intent.setData(Uri.parse("package:" + getPackageName()));
-                    startActivity(intent);
-                }
-                return;
-            } else {
-                //执行6.0以上绘制代码
-            }
-        } else {
-            //执行6.0以下绘制代码
-        }*/
-
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {

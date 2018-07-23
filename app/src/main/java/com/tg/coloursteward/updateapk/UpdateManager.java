@@ -86,7 +86,7 @@ public class UpdateManager {
      * @return
      */
 
-    public void checkUpdate(ApkInfo apkinfo) {
+    public void checkUpdate(ApkInfo apkinfo,Boolean isshow) {
         // 获取当前软件版本
         int versionCode = getVersionCode(mContext);
         if (apkinfo != null) {
@@ -98,6 +98,8 @@ public class UpdateManager {
             showNoticeDialog();//非强制更新
         } else if (result == -1) {
             showNoticeDialogMust();//强制更新
+        } else if (result == -2 && isshow==true) {
+            showNoticeDialog();//小版本，非强制更新
         } else {
             if (!isHome) {
                 Toast.makeText(mContext, R.string.soft_update_no, Toast.LENGTH_LONG).show();

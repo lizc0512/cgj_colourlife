@@ -165,7 +165,7 @@ public class SettingActivity extends BaseActivity implements ItemClickListener {
                             ActivityCompat.requestPermissions(SettingActivity.this, new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUESTPERMISSION);
                             ToastFactory.showToast(SettingActivity.this, "请允许权限进行下载安装");
                         } else {
-                            manager.checkUpdate(apkinfo);
+                            manager.checkUpdate(apkinfo,true);
                         }
                     }
                 } catch (JSONException e) {

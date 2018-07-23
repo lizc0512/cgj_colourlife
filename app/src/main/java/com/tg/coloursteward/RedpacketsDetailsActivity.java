@@ -25,7 +25,7 @@ import com.tg.coloursteward.serice.AppAuthService;
 import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.PublicAccountPopWindowView;
-import com.tg.coloursteward.view.PullRefreshListView;
+import com.tg.coloursteward.view.PullRefreshListViewTenSize;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -43,7 +43,8 @@ public class RedpacketsDetailsActivity extends BaseActivity {
     public final static String PUBLICACCOUNT_CANO = "cano";
     public final static String PUBLICACCOUNT_PANO = "pano";
     public final static String PUBLICACCOUNT_CNO = "cno";
-    private PullRefreshListView pullListView;
+    public final static String PAGER_SIZE = "10";
+    private PullRefreshListViewTenSize pullListView;
     private RedpacketsDetailsAdapter adapter;
     private ArrayList<PublicAccountDetailsInfo> list = new ArrayList<PublicAccountDetailsInfo>();
     private String accessToken_1;
@@ -82,17 +83,17 @@ public class RedpacketsDetailsActivity extends BaseActivity {
 
     private void initView() {
         accessToken_1 = Tools.getStringValue(RedpacketsDetailsActivity.this, Contants.storage.APPAUTH_1);
-        pullListView = (PullRefreshListView) findViewById(R.id.pull_listview);
+        pullListView = (PullRefreshListViewTenSize) findViewById(R.id.pull_listview);
         if (!TextUtils.isEmpty(Tools.getFpDetails(RedpacketsDetailsActivity.this))) {
             setData(Tools.getFpDetails(RedpacketsDetailsActivity.this));
         }
         adapter = new RedpacketsDetailsAdapter(this, list);
         pullListView.setAdapter(adapter);
         pullListView.setDividerHeight(0);
-        pullListView.setOnLoadingListener(new OnLoadingListener<PullRefreshListView>() {
+        pullListView.setOnLoadingListener(new OnLoadingListener<PullRefreshListViewTenSize>() {
 
             @Override
-            public void refreshData(PullRefreshListView t,
+            public void refreshData(PullRefreshListViewTenSize t,
                                     boolean isLoadMore, Message msg, String response) {
                 int code = HttpTools.getCode(response);
                 if (code == 0) {
@@ -103,8 +104,8 @@ public class RedpacketsDetailsActivity extends BaseActivity {
             }
 
             @Override
-            public void onLoadingMore(PullRefreshListView t, Handler hand, int pagerIndex) {
-                RequestConfig config = new RequestConfig(RedpacketsDetailsActivity.this, PullRefreshListView.HTTP_MORE_CODE);
+            public void onLoadingMore(PullRefreshListViewTenSize t, Handler hand, int pagerIndex) {
+                RequestConfig config = new RequestConfig(RedpacketsDetailsActivity.this, PullRefreshListViewTenSize.HTTP_MORE_CODE);
                 config.handler = hand;
                 RequestParams params = new RequestParams();
                 params.put("access_token", accessToken_1);
@@ -116,15 +117,15 @@ public class RedpacketsDetailsActivity extends BaseActivity {
                 params.put("pano", pano);
                 // params.put("ispay",ispay);
 //                params.put("skip", (pagerIndex - 1) * 8);
-                params.put("skip", (pagerIndex - 1) * 20);
-                params.put("limit", PullRefreshListView.PAGER_SIZE);
+                params.put("skip", (pagerIndex - 1) * 10);
+                params.put("limit", pullListView.PAGER_SIZE);
                 HttpTools.httpPost(Contants.URl.URL_ICETEST, "/jrpt/transaction/list", config, params);
             }
 
             @Override
-            public void onLoading(PullRefreshListView t, Handler hand) {
+            public void onLoading(PullRefreshListViewTenSize t, Handler hand) {
                 // TODO Auto-generated method stub
-                RequestConfig config = new RequestConfig(RedpacketsDetailsActivity.this, PullRefreshListView.HTTP_FRESH_CODE);
+                RequestConfig config = new RequestConfig(RedpacketsDetailsActivity.this, PullRefreshListViewTenSize.HTTP_FRESH_CODE);
                 config.handler = hand;
                 RequestParams params = new RequestParams();
                 params.put("access_token", accessToken_1);
@@ -136,7 +137,7 @@ public class RedpacketsDetailsActivity extends BaseActivity {
                 params.put("pano", pano);
                 // params.put("ispay",ispay);
                 params.put("skip", 0);
-                params.put("limit", PullRefreshListView.PAGER_SIZE);
+                params.put("limit", pullListView.PAGER_SIZE);
                 HttpTools.httpPost(Contants.URl.URL_ICETEST, "/jrpt/transaction/list", config, params);
             }
         });

@@ -1,4 +1,4 @@
-package com.tg.coloursteward.module.groupchat;
+package com.youmai.hxsdk.group;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -9,17 +9,15 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.jcodecraeer.xrecyclerview.progressindicator.AVLoadingIndicatorView;
-import com.tg.coloursteward.R;
-import com.tg.coloursteward.base.BaseActivity;
-import com.tg.coloursteward.module.search.GlobalSearchActivity;
 import com.youmai.hxsdk.HuxinSdkManager;
+import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.activity.IMGroupActivity;
+import com.youmai.hxsdk.activity.SdkBaseActivity;
 import com.youmai.hxsdk.db.bean.GroupInfoBean;
 import com.youmai.hxsdk.db.helper.GroupInfoHelper;
 import com.youmai.hxsdk.proto.YouMaiGroup;
@@ -36,18 +34,16 @@ import java.util.List;
  * 日期：2018.04.12 13:54
  * 描述：群聊列表
  */
-public class GroupListActivity extends BaseActivity {
+public class GroupListActivity extends SdkBaseActivity {
 
     public static final String GROUP_ID = "groupId";
     public static final String GROUP_EXIT = "group.exit";
 
-    private Context mContext;
     private XRecyclerView mRefreshRecyclerView;
     private GroupListAdapter mAdapter;
     private List<GroupInfoBean> mGroupList;
     private LinearLayoutManager mLinearLayoutManager;
-    LinearLayout ll_group_list;
-    TextView tv_no_group;
+    private  View linear_empty;
 
     private LocalBroadcastManager localBroadcastManager;
     private LocalMsgReceiver mLocalMsgReceiver;
@@ -77,7 +73,7 @@ public class GroupListActivity extends BaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mContext = this;
+        setContentView(R.layout.activity_group_list);
         initView();
 
         localBroadcastManager = LocalBroadcastManager.getInstance(mContext);
@@ -90,19 +86,10 @@ public class GroupListActivity extends BaseActivity {
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
     }
 
-    @Override
-    public View getContentView() {
-        return getLayoutInflater().inflate(R.layout.activity_group_list, null);
-    }
-
-    @Override
-    public String getHeadTitle() {
-        return "群聊";
-    }
 
     @Override
     public void onDestroy() {
@@ -115,13 +102,27 @@ public class GroupListActivity extends BaseActivity {
     }
 
     private void initView() {
-        ll_group_list = findViewById(R.id.ll_group_list);
+        linear_empty = findViewById(R.id.linear_empty);
+
+        TextView tv_back = findViewById(R.id.tv_back);
+        tv_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+        TextView tv_title = findViewById(R.id.tv_title);
+        tv_title.setText("群聊");
+
+        TextView tv_right = findViewById(R.id.tv_right);
+        tv_right.setVisibility(View.INVISIBLE);
+
+
         mRefreshRecyclerView = (XRecyclerView) findViewById(R.id.group_xrv);
         mLinearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         mRefreshRecyclerView.setLayoutManager(mLinearLayoutManager);
         mAdapter = new GroupListAdapter(this);
-        //mAdapter.setAdapterType(GroupListAdapter.ADAPTER_TYPE_HEADER);  //todo //暂时去掉群组搜索
-        tv_no_group = findViewById(R.id.tv_no_group);
+
         mRefreshRecyclerView.setAdapter(mAdapter);
         mRefreshRecyclerView.setLoadingListener(new XRecyclerView.LoadingListener() {
             @Override
@@ -137,36 +138,20 @@ public class GroupListActivity extends BaseActivity {
         });
         mRefreshRecyclerView.setLoadingMoreEnabled(false);
         mRefreshRecyclerView.setRefreshProgressStyle(AVLoadingIndicatorView.BallRotate);
-        mRefreshRecyclerView.setArrowImageView(R.drawable.rv_loading);
         mAdapter.registerAdapterDataObserver(mEmptyRvDataObserver);
 
         mAdapter.setOnItemClickListener(new GroupListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(GroupInfoBean bean) {
-                if (bean == null) {
-                    Intent intent = new Intent(mContext, GlobalSearchActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                    startActivity(intent);
-                } else {
-                    Intent intent = new Intent(mContext, IMGroupActivity.class);
-                    intent.putExtra(IMGroupActivity.DST_NAME, bean.getGroup_name());
-                    intent.putExtra(IMGroupActivity.DST_UUID, bean.getGroup_id());
-                    intent.putExtra(IMGroupActivity.GROUP_INFO, bean);
-                    startActivity(intent);
-                }
+
+                Intent intent = new Intent(mContext, IMGroupActivity.class);
+                intent.putExtra(IMGroupActivity.DST_NAME, bean.getGroup_name());
+                intent.putExtra(IMGroupActivity.DST_UUID, bean.getGroup_id());
+                intent.putExtra(IMGroupActivity.GROUP_INFO, bean);
+                startActivity(intent);
+
             }
         });
-
-        mAdapter.setOnLongItemClickListener(new GroupListAdapter.OnItemLongClickListener() {
-            @Override
-            public void onItemLongClick(View view, int position) {
-                ToastUtil.showToast(mContext, "删除成功：" + position);
-                GroupInfoBean group = mAdapter.getMessageList().get(position);
-                mAdapter.deleteMessage(position);
-                //去掉未读消息计数
-            }
-        });
-
     }
 
 
@@ -247,11 +232,11 @@ public class GroupListActivity extends BaseActivity {
 
     private void emptyList() {
         if (ListUtils.isEmpty(mGroupList)) {
-            ll_group_list.setVisibility(View.GONE);
-            tv_no_group.setVisibility(View.VISIBLE);
+            mRefreshRecyclerView.setVisibility(View.GONE);
+            linear_empty.setVisibility(View.VISIBLE);
         } else {
-            ll_group_list.setVisibility(View.VISIBLE);
-            tv_no_group.setVisibility(View.GONE);
+            mRefreshRecyclerView.setVisibility(View.VISIBLE);
+            linear_empty.setVisibility(View.GONE);
         }
     }
 

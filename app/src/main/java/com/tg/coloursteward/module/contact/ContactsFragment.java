@@ -36,7 +36,7 @@ import com.tg.coloursteward.module.contact.adapter.ContactAdapter.ItemEventListe
 import com.youmai.hxsdk.stickyheader.StickyHeaderDecoration;
 import com.tg.coloursteward.module.contact.utils.ContactsBindData;
 import com.youmai.hxsdk.widget.CharIndexView;
-import com.tg.coloursteward.module.groupchat.GroupListActivity;
+import com.youmai.hxsdk.group.GroupListActivity;
 import com.tg.coloursteward.module.search.GlobalSearchActivity;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.ResponseData;

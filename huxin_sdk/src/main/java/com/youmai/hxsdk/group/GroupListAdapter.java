@@ -1,4 +1,4 @@
-package com.tg.coloursteward.module.groupchat;
+package com.youmai.hxsdk.group;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -11,8 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.tg.coloursteward.R;
-import com.tg.coloursteward.constant.Contants;
+import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.config.ColorsConfig;
 import com.youmai.hxsdk.db.bean.GroupInfoBean;
 import com.youmai.hxsdk.db.helper.GroupInfoHelper;

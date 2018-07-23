@@ -25,7 +25,7 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import com.tg.coloursteward.EmployeeDataActivity;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.module.groupchat.AddContactsCreateGroupActivity;
-import com.tg.coloursteward.module.groupchat.GroupListActivity;
+import com.youmai.hxsdk.group.GroupListActivity;
 import com.tg.coloursteward.module.groupchat.deletecontact.DeleteContactListActivity;
 import com.tg.coloursteward.module.groupchat.setting.GroupManageActivity;
 import com.tg.coloursteward.module.groupchat.setting.GroupNameActivity;

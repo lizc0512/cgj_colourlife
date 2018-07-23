@@ -124,6 +124,12 @@
             android:screenOrientation="portrait"
             android:theme="@style/HxMsgTheme" />
 
+        <activity
+            android:name="com.youmai.hxsdk.group.GroupListActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"
+            android:theme="@style/HxMsgTheme" />
+
         <!--IM消息-->
         <activity
             android:name="com.youmai.hxsdk.activity.IMConnectionActivity"

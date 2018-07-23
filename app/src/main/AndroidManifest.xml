@@ -368,7 +368,6 @@
         <activity android:name=".ForgetPasswordVerifyActivity" />
 
         <!-- 呼信 start -->
-        <activity android:name=".module.groupchat.GroupListActivity" />
 
         <activity
             android:name=".module.groupchat.AddContactsCreateGroupActivity"

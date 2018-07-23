@@ -1,4 +1,4 @@
-package com.tg.coloursteward.module.forward;
+package com.youmai.hxsdk.forward;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,7 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
-import com.tg.coloursteward.R;
+import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.router.APath;
 
 /**

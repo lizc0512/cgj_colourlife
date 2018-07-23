@@ -1,4 +1,4 @@
-package com.tg.coloursteward.module.forward;
+package com.youmai.hxsdk.forward;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
@@ -17,7 +17,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
-import com.tg.coloursteward.R;
+import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.config.ColorsConfig;
 import com.youmai.hxsdk.data.ExCacheMsgBean;
 import com.youmai.hxsdk.data.SortComparator;

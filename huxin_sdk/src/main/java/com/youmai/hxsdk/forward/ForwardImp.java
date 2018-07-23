@@ -1,4 +1,4 @@
-package com.tg.coloursteward.module.imp;
+package com.youmai.hxsdk.forward;
 
 /**
  * 转发消息

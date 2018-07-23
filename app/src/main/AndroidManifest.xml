@@ -73,7 +73,7 @@
             android:theme="@style/AppTheme" />
 
         <activity
-            android:name=".module.forward.ForwardSelectActivity"
+            android:name="com.youmai.hxsdk.forward.ForwardSelectActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
 

@@ -1,4 +1,4 @@
-package com.tg.coloursteward.module.forward;
+package com.youmai.hxsdk.forward;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -7,21 +7,16 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.tg.coloursteward.R;
-import com.tg.coloursteward.module.imp.ForwardImp;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.ProtoCallback;
-import com.youmai.hxsdk.adapter.DividerItemDecoration;
+import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.adapter.MessageAdapter;
 import com.youmai.hxsdk.config.AppConfig;
 import com.youmai.hxsdk.data.ExCacheMsgBean;
@@ -40,7 +35,6 @@ import com.youmai.hxsdk.im.cache.CacheMsgTxt;
 import com.youmai.hxsdk.im.cache.CacheMsgVideo;
 import com.youmai.hxsdk.im.cache.CacheMsgVoice;
 import com.youmai.hxsdk.im.voice.manager.MediaManager;
-import com.youmai.hxsdk.loader.MsgAsyncTaskLoader;
 import com.youmai.hxsdk.module.videoplayer.VideoPlayerActivity;
 import com.youmai.hxsdk.module.videoplayer.bean.VideoDetailInfo;
 import com.youmai.hxsdk.service.SendMsgService;

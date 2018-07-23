@@ -1,7 +1,6 @@
 package com.tg.coloursteward.module.contact.adapter;
 
 import android.content.Context;
-import android.os.Message;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,9 +13,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.tg.coloursteward.R;
-import com.tg.coloursteward.module.contact.stickyheader.StickyHeaderAdapter;
-import com.tg.coloursteward.net.HttpTools;
-import com.tg.coloursteward.net.MessageHandler;
+import com.youmai.hxsdk.stickyheader.StickyHeaderAdapter;
 import com.youmai.hxsdk.db.bean.ContactBean;
 import com.youmai.hxsdk.entity.cn.CNPinyin;
 import com.youmai.hxsdk.utils.GlideRoundTransform;
@@ -27,7 +24,7 @@ import java.util.List;
  * Created by yw on 2018/4/13.
  */
 public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements
-        StickyHeaderAdapter<ContactAdapter.HeaderHolder>, MessageHandler.ResponseListener {
+        StickyHeaderAdapter<ContactAdapter.HeaderHolder> {
 
     enum TYPE {
         HEADER, DEFAULT
@@ -45,9 +42,6 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         this.cnPinyinList = cnPinyinList;
         this.mCollectIndex = collectIndex;
         this.itemEventListener = listener;
-
-        msgHandler = new MessageHandler(context);
-        msgHandler.setResponseListener(this);
     }
 
     public void removeItem(int position) {
@@ -226,48 +220,5 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         return icon;
     }
 
-    //--------------------------------------------------------------
-    public interface NetRelativeRequestListener {
-        void onRequest(MessageHandler msgHand);
-
-        void onSuccess(Message msg, String response);
-    }
-
-    private NetRelativeRequestListener requestListener;
-    private boolean isLoadding = false;
-    private MessageHandler msgHandler;
-
-    public void loadingData() {
-        if (!isLoadding) {
-            if (requestListener != null) {
-                isLoadding = true;
-                requestListener.onRequest(msgHandler);
-            }
-        }
-    }
-
-    public void setNetworkRequestListener(NetRelativeRequestListener l) {
-        requestListener = l;
-    }
-
-    @Override
-    public void onRequestStart(Message msg, String hintString) {
-    }
-
-    @Override
-    public void onSuccess(Message msg, String jsonString, String hintString) {
-        int code = HttpTools.getCode(jsonString);
-        if (code == 0) {
-            if (requestListener != null) {
-                requestListener.onSuccess(msg, jsonString);
-            }
-        }
-        isLoadding = false;
-    }
-
-    @Override
-    public void onFail(Message msg, String hintString) {
-
-    }
 
 }

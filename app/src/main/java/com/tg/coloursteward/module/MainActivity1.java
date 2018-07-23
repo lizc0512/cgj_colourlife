@@ -36,6 +36,7 @@ import com.tg.coloursteward.R;
 import com.tg.coloursteward.application.CityPropertyApplication;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.database.SharedPreferencesTools;
+import com.tg.coloursteward.entity.AccountEntity;
 import com.tg.coloursteward.fragment.FragmentManagement;
 import com.tg.coloursteward.fragment.FragmentMine;
 import com.tg.coloursteward.info.GridViewInfo;
@@ -58,6 +59,7 @@ import com.tg.coloursteward.updateapk.ApkInfo;
 import com.tg.coloursteward.updateapk.UpdateManager;
 import com.tg.coloursteward.util.AuthTimeUtils;
 import com.tg.coloursteward.util.ExampleUtil;
+import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.PopWindowView;
 import com.tg.coloursteward.view.dialog.ToastFactory;
@@ -272,6 +274,9 @@ public class MainActivity1 extends AppCompatActivity implements MessageHandler.R
         int code = HttpTools.getCode(jsonString);
         String message = HttpTools.getMessageString(jsonString);
         if (msg.arg1 == HttpTools.GET_USER_INFO) {
+            AccountEntity accountEntity = GsonUtils.gsonToBean(jsonString, AccountEntity.class);
+            UserInfo.infoorgId = accountEntity.getContent().getOrgId();
+            Tools.saveOrgId(MainActivity1.this, accountEntity.getContent().getOrgId());
             String response = HttpTools.getContentString(jsonString);
             ResponseData data = HttpTools.getResponseContentObject(response);
             Tools.loadUserInfo(data, jsonString);
@@ -345,7 +350,7 @@ public class MainActivity1 extends AppCompatActivity implements MessageHandler.R
                             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUESTPERMISSION);
                             ToastFactory.showToast(this, "请允许权限进行下载安装");
                         } else {
-                            manager.checkUpdate(apkinfo);
+                            manager.checkUpdate(apkinfo, false);
                         }
                     }
                 } catch (JSONException e) {
@@ -526,7 +531,7 @@ public class MainActivity1 extends AppCompatActivity implements MessageHandler.R
     private void getUserInfo() {
         RequestConfig config = new RequestConfig(this, HttpTools.GET_USER_INFO, null);
         RequestParams params = new RequestParams();
-        params.put("uid", UserInfo.uid);
+        params.put("username", UserInfo.employeeAccount);
         HttpTools.httpGet(Contants.URl.URL_ICETEST, "/account", config, params);
     }
 

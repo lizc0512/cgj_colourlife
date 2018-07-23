@@ -396,7 +396,6 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
 
         try {
             String passwordMD5 = MD5.getMd5Value(password).toLowerCase();
-            Log.d("TAG", "passwordMD5=" + passwordMD5);
             Tools.savePassWordMD5(getApplicationContext(), passwordMD5);//保存密码(MD5加密后)
             Tools.savePassWord(getApplicationContext(), password);//保存密码
             Tools.hideKeyboard(editUser);
@@ -433,7 +432,6 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
         config.hintString = "加载个人信息";
         RequestParams params = new RequestParams();
         params.put("username", newPhone);
-        Log.e(TAG, "getUserInfo: " + accountUuid);
         HttpTools.httpGet(Contants.URl.URL_ICETEST, "/account", config, params);
     }
 
@@ -461,6 +459,7 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
                 try {
                     corpId = content.getString("corpId");
                     int status = content.getInt("status");
+                    UserInfo.employeeAccount = content.getString("username");
                     if (status > 0) {
                         ToastFactory.showToast(LoginActivity.this, "账号异常，请及时联系管理员");
                     } else {
@@ -500,12 +499,6 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
                     try {
                         int skin_code = json.getInt("skin_code");
                         Tools.saveStringValue(LoginActivity.this, Contants.storage.SKINCODE, String.valueOf(skin_code));//保存皮肤包
-                        //Intent intent = new Intent(this, MainActivity.class);
-                        Intent intent = new Intent(this, MainActivity1.class);
-                        intent.putExtra(MainActivity.KEY_NEDD_FRESH, false);
-                        intent.putExtra(MainActivity.KEY_SKIN_CODE, skin_code);
-                        startActivity(intent);
-                        finish();
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -521,6 +514,7 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
                 Tools.saveOrgId(LoginActivity.this, accountEntity.getContent().getOrgId());
                 Tools.loadUserInfo(data, jsonString);
                 getKeyAndSecret();
+                getSkin(corpId);
             } else {
                 ToastFactory.showToast(LoginActivity.this, "加载个人信息失败，请重新登录");
             }
@@ -546,7 +540,20 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
                 ToastFactory.showToast(LoginActivity.this, "登录失败，请重新登录");
             }
         } else if (msg.arg1 == HttpTools.SET_EMPLOYEE_INFO) {
-            getSkin(corpId);
+            if (code == 0) {
+                JSONObject json = HttpTools.getContentJSONObject(jsonString);
+                if (json.length() > 0) {
+                    String skin_code = Tools.getStringValue(LoginActivity.this, Contants.storage.SKINCODE);//获取皮肤包
+                    Intent intent = new Intent(this, MainActivity1.class);
+                    intent.putExtra(MainActivity.KEY_NEDD_FRESH, false);
+                    intent.putExtra(MainActivity.KEY_SKIN_CODE, Integer.valueOf(skin_code));
+                    startActivity(intent);
+                    finish();
+                }
+            } else {
+                ToastFactory.showToast(LoginActivity.this, message);
+                SharedPreferencesTools.clearUserId(LoginActivity.this);
+            }
         }
     }
 

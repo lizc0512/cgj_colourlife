@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -24,6 +23,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.R;
+import com.youmai.hxsdk.activity.SdkBaseActivity;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -33,7 +33,7 @@ import java.util.ArrayList;
  * Created by colin on 2017/6/8.
  */
 
-public class PreviewVideoActivity extends AppCompatActivity {
+public class PreviewVideoActivity extends SdkBaseActivity {
 
     public static final String TAG = PreviewVideoActivity.class.getSimpleName();
     private static final int UPDATE_CURRPOSITION_DELAY_TIME = 200;
@@ -57,7 +57,7 @@ public class PreviewVideoActivity extends AppCompatActivity {
     private final int UI_EVENT_UPDATE_CURRPOSITION = 1;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.item_preview_video);

@@ -1,20 +1,23 @@
 package com.tg.coloursteward.module.contact;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.BroadcastReceiver;
+import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,27 +33,26 @@ import com.tg.coloursteward.info.FamilyInfo;
 import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.module.contact.adapter.ContactAdapter;
 import com.tg.coloursteward.module.contact.adapter.ContactAdapter.ItemEventListener;
-import com.tg.coloursteward.module.contact.stickyheader.StickyHeaderDecoration;
+import com.youmai.hxsdk.stickyheader.StickyHeaderDecoration;
 import com.tg.coloursteward.module.contact.utils.ContactsBindData;
-import com.tg.coloursteward.module.contact.widget.CharIndexView;
+import com.youmai.hxsdk.widget.CharIndexView;
 import com.tg.coloursteward.module.groupchat.GroupListActivity;
 import com.tg.coloursteward.module.search.GlobalSearchActivity;
-import com.tg.coloursteward.net.GetTwoRecordListener;
 import com.tg.coloursteward.net.HttpTools;
-import com.tg.coloursteward.net.MessageHandler;
-import com.tg.coloursteward.net.MessageHandler.ResponseListener;
-import com.tg.coloursteward.net.RequestConfig;
-import com.tg.coloursteward.net.RequestParams;
 import com.tg.coloursteward.net.ResponseData;
-import com.tg.coloursteward.serice.AuthAppService;
 import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.Tools;
-import com.tg.coloursteward.view.PullRefreshListView;
-import com.tg.coloursteward.view.dialog.DialogFactory;
 import com.tg.coloursteward.view.dialog.ToastFactory;
+import com.youmai.hxsdk.HuxinSdkManager;
+import com.youmai.hxsdk.config.ColorsConfig;
 import com.youmai.hxsdk.db.bean.ContactBean;
+import com.youmai.hxsdk.entity.AuthConfig;
 import com.youmai.hxsdk.entity.cn.CNPinyin;
 import com.youmai.hxsdk.entity.cn.CNPinyinFactory;
+import com.youmai.hxsdk.http.IGetListener;
+import com.youmai.hxsdk.http.IPostListener;
+import com.youmai.hxsdk.http.OkHttpConnector;
+import com.youmai.hxsdk.utils.GsonUtil;
 import com.youmai.hxsdk.utils.ListUtils;
 
 import org.json.JSONArray;
@@ -59,7 +61,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 import rx.Observable;
@@ -73,20 +74,19 @@ import rx.schedulers.Schedulers;
  * 日期：2018.04.03 11:59
  * 描述：联系人页面
  */
-public class ContactsFragment extends Fragment implements ResponseListener, ItemEventListener {
+public class ContactsFragment extends Fragment implements ItemEventListener {
 
     private static final String TAG = ContactsFragment.class.getName();
 
-    private Activity mActivity;
+    private Context mContext;
+
     private static final int ISTREAD = 1;
-    private AuthAppService authAppService;
-    private String accessToken;
     private String skincode;
     private String orgName;
     private String orgId;
     private final int REQUESTPERMISSION = 110;
     private String LinkManListCache;
-    private ArrayList<FamilyInfo> familyList = new ArrayList<FamilyInfo>(); //组织架构人
+    private ArrayList<FamilyInfo> familyList = new ArrayList<>(); //组织架构人
 
     private RecyclerView rv_main;
     private ContactAdapter adapter;
@@ -100,56 +100,46 @@ public class ContactsFragment extends Fragment implements ResponseListener, Item
     private Subscription subscription;
     private ContactsBindData bindData;
 
-    private MessageHandler msgHand;
-
     public static final String BROADCAST_INTENT_FILTER = "com.tg.coloursteward.contact";
     public static final String ACTION = "action";
     public static final String INSERT_CONTACT = "insert";
     public static final String DELETE_CONTACT = "delete";
     public ModifyContactsReceiver mModifyContactsReceiver;
     private IntentFilter filter;
-    private int location;
 
-    static class ModifyContactsReceiver extends BroadcastReceiver {
-        ContactsFragment mFragment;
-
-        public ModifyContactsReceiver(ContactsFragment fragment) {
-            mFragment = fragment;
-        }
+    class ModifyContactsReceiver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.e("YW", "收藏联系人有更新的信息到达......");
             String action = intent.getStringExtra(ACTION);
             if (action.equals(INSERT_CONTACT)) {
-                mFragment.modifyContactsList();
+                modifyContactsList();
             } else if (action.equals(DELETE_CONTACT)) {
-                mFragment.modifyContactsList();
+                modifyContactsList();
             }
         }
     }
 
 
-    void registerReceiver() {
-        mModifyContactsReceiver = new ModifyContactsReceiver(this);
-        filter = new IntentFilter();
-        filter.addAction(BROADCAST_INTENT_FILTER);
-        mActivity.registerReceiver(mModifyContactsReceiver, filter);
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mContext = context;
     }
-
-    void unRegisterReceiver() {
-        mActivity.unregisterReceiver(mModifyContactsReceiver);
-    }
-
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        registerReceiver();
         bindData = ContactsBindData.init();
+        skincode = Tools.getStringValue(mContext, Contants.storage.SKINCODE);
+        orgName = Tools.getStringValue(mContext, Contants.storage.ORGNAME);
+        orgId = Tools.getStringValue(mContext, Contants.storage.ORGID);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_contacts_layout, container, false);
     }
 
@@ -159,9 +149,33 @@ public class ContactsFragment extends Fragment implements ResponseListener, Item
         if (!ListUtils.isEmpty(contactList)) {
             contactList.clear();
         }
-        registerReceiver();
+
+        initView(view);
 
         getHeadList();
+        //读取本地缓存列表
+        getCacheList();
+
+        reqAuth();
+
+        setListener();
+    }
+
+
+    /**
+     * 初始化
+     */
+    private void initView(View view) {
+        View header_item = view.findViewById(R.id.list_item_header_search_root);
+        header_item.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), GlobalSearchActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(intent);
+            }
+        });
+
 
         rv_main = view.findViewById(R.id.rv_main);
         iv_main = view.findViewById(R.id.iv_main);
@@ -174,11 +188,7 @@ public class ContactsFragment extends Fragment implements ResponseListener, Item
         rv_main.setAdapter(adapter);
         rv_main.addItemDecoration(new StickyHeaderDecoration(adapter));
 
-        msgHand = new MessageHandler(getActivity());
-        msgHand.setResponseListener(this);
 
-        initView();
-        setListener();
     }
 
     @Override
@@ -230,7 +240,7 @@ public class ContactsFragment extends Fragment implements ResponseListener, Item
             public void call(Subscriber<? super List<CNPinyin<ContactBean>>> subscriber) {
                 if (!subscriber.isUnsubscribed()) {
                     //子线程查数据库，返回List<Contacts>
-                    List<ContactBean> contacts = bindData.contactList(mActivity, ContactsBindData.TYPE_HOME);
+                    List<ContactBean> contacts = bindData.contactList(mContext, ContactsBindData.TYPE_HOME);
                     List<CNPinyin<ContactBean>> list = CNPinyinFactory.createCNPinyinList(contacts);
                     subscriber.onNext(list);
                     subscriber.onCompleted();
@@ -310,25 +320,43 @@ public class ContactsFragment extends Fragment implements ResponseListener, Item
      */
     @Override
     public void onLongClick(final int pos, final ContactBean contact) {
-        DialogFactory.getInstance().showDialog(getActivity(), new View.OnClickListener() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setMessage("是否删除常用联系人？");
+        builder.setPositiveButton(getString(R.string.hx_confirm),
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        deleteUser(pos, contact);
+                        arg0.dismiss();
+                    }
+                });
+
+        builder.setNegativeButton(getString(R.string.hx_cancel),
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        arg0.dismiss();
+                    }
+                });
+        builder.show();
+
+    }
+
+    private void deleteUser(final int pos, ContactBean contact) {
+        String url = Contants.URl.URL_ICETEST + "/txl2/contacts/" + contact.getFavoriteid();
+        ContentValues params = new ContentValues();
+        ColorsConfig.commonParams(params);
+        OkHttpConnector.httpDel(url, params, new IGetListener() {
             @Override
-            public void onClick(View v) {
-                deleteUser(pos, contact);
+            public void httpReqResult(String response) {
+                int code = HttpTools.getCode(response);
+                if (code == 0) {
+                    ToastFactory.showToast(getActivity(), "删除成功");
+                    adapter.removeItem(pos);
+                }
             }
-        }, null, "是否删除常用联系人？", null, null);
-    }
+        });
 
-    private void deleteUser(int pos, ContactBean contact) {
-        RequestConfig config = new RequestConfig(mActivity, HttpTools.DETELE_CONTACT_LIST, "删除常用联系人");
-        config.handler = msgHand.getHandler();
-        RequestParams params = new RequestParams();
-        location = pos;
-        HttpTools.httpDelete(Contants.URl.URL_ICETEST, "/txl2/contacts/" + String.valueOf(contact.getFavoriteid()), config, params);
-    }
-
-    @Override
-    public void collectCount(int count) {
-        //不处理业务
     }
 
     /**
@@ -341,12 +369,7 @@ public class ContactsFragment extends Fragment implements ResponseListener, Item
         Intent intent;
         FamilyInfo info;
         switch (pos) {
-            case 0:
-                intent = new Intent(getActivity(), GlobalSearchActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                startActivity(intent);
-                break;
-            case 1: //组织架构
+            case 0: //组织架构
                 if (familyList.size() > 0) {
                     if (skincode.equals("101")) {//101 彩生活
                         for (int i = 0; i < familyList.size(); i++) {
@@ -355,7 +378,7 @@ public class ContactsFragment extends Fragment implements ResponseListener, Item
                                 info.id = familyList.get(i).id;
                                 info.type = "org";
                                 info.name = familyList.get(i).name;
-                                intent = new Intent(mActivity, HomeContactOrgActivity.class);
+                                intent = new Intent(mContext, HomeContactOrgActivity.class);
                                 intent.putExtra(HomeContactOrgActivity.FAMILY_INFO, info);
                                 startActivity(intent);
                             }
@@ -365,7 +388,7 @@ public class ContactsFragment extends Fragment implements ResponseListener, Item
                         info.id = familyList.get(0).id;
                         info.type = "org";
                         info.name = familyList.get(0).name;
-                        intent = new Intent(mActivity, HomeContactOrgActivity.class);
+                        intent = new Intent(mContext, HomeContactOrgActivity.class);
                         intent.putExtra(HomeContactOrgActivity.FAMILY_INFO, info);
                         startActivity(intent);
                     }
@@ -376,53 +399,52 @@ public class ContactsFragment extends Fragment implements ResponseListener, Item
                         info.id = orgId;
                         info.type = "org";
                         info.name = orgName;
-                        intent = new Intent(mActivity, HomeContactOrgActivity.class);
+                        intent = new Intent(mContext, HomeContactOrgActivity.class);
                         intent.putExtra(HomeContactOrgActivity.FAMILY_INFO, info);
                         startActivity(intent);
                     } else {
-                        ToastFactory.showToast(mActivity, "正在获取组织架构，请稍后...");
+                        ToastFactory.showToast(mContext, "正在获取组织架构，请稍后...");
                     }
                 }
                 break;
-            case 2: //我的部门
+            case 1: //我的部门
                 info = new FamilyInfo();
-                info.id = Tools.getOrgId(mActivity);
-                if(!"".equals(Tools.getOrgId(mActivity))){
-                    info.id = Tools.getOrgId(mActivity);
-                }else {
-                    info.id =UserInfo.infoorgId;
+                info.id = Tools.getOrgId(mContext);
+                if (!"".equals(Tools.getOrgId(mContext))) {
+                    info.id = Tools.getOrgId(mContext);
+                } else {
+                    info.id = UserInfo.infoorgId;
                 }
-                if("".equals(info.id)){
-                    info.id =UserInfo.orgId;
+                if ("".equals(info.id)) {
+                    info.id = UserInfo.orgId;
                 }
                 info.type = "org";
                 info.name = UserInfo.familyName;
-                intent = new Intent(mActivity, HomeContactOrgActivity.class);
+                intent = new Intent(mContext, HomeContactOrgActivity.class);
                 intent.putExtra(HomeContactOrgActivity.FAMILY_INFO, info);
                 startActivity(intent);
                 break;
-            case 3: //手机联系人
-                if (ContextCompat.checkSelfPermission(mActivity, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+            case 2: //手机联系人
+                if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
                     //申请权限
-                    ActivityCompat.requestPermissions(mActivity, new String[]{Manifest.permission.READ_CONTACTS}, REQUESTPERMISSION);
-                    ToastFactory.showToast(mActivity, "请允许权限");
+                    ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.READ_CONTACTS}, REQUESTPERMISSION);
                 } else {
-                    startActivity(new Intent(mActivity, ContactsActivity.class));
+                    startActivity(new Intent(mContext, ContactsActivity.class));
                 }
                 break;
-            case 4: //群聊
+            case 3: //群聊
                 startActivity(new Intent(getContext(), GroupListActivity.class));
                 break;
             default: //item
-                Intent i = new Intent(mActivity, EmployeeDataActivity.class);
+                Intent i = new Intent(mContext, EmployeeDataActivity.class);
                 i.putExtra(EmployeeDataActivity.CONTACTS_ID, item.getUsername());
                 startActivityForResult(i, ISTREAD);
 //                String avatar = Contants.URl.HEAD_ICON_URL + "avatar?uid=" + item.getUsername();
 //                if (TextUtils.isEmpty(item.getUuid())) {
-//                    Toast.makeText(mActivity, item.getRealname() + "的uuid为空，无法进行IM聊天", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(mContext, item.getRealname() + "的uuid为空，无法进行IM聊天", Toast.LENGTH_SHORT).show();
 //                    return;
 //                }
-//                Intent i = new Intent(mActivity, IMConnectionActivity.class);
+//                Intent i = new Intent(mContext, IMConnectionActivity.class);
 //                i.putExtra(IMConnectionActivity.DST_UUID, item.getUuid());
 //                i.putExtra(IMConnectionActivity.DST_NAME, item.getRealname());
 //                i.putExtra(IMConnectionActivity.DST_AVATAR, avatar);
@@ -433,17 +455,120 @@ public class ContactsFragment extends Fragment implements ResponseListener, Item
         }
     }
 
-    /**
-     * 初始化
-     */
-    private void initView() {
-        skincode = Tools.getStringValue(mActivity, Contants.storage.SKINCODE);
-        orgName = Tools.getStringValue(mActivity, Contants.storage.ORGNAME);
-        orgId = Tools.getStringValue(mActivity, Contants.storage.ORGID);
 
-        adapter.setNetworkRequestListener(new ContactAdapter.NetRelativeRequestListener() {
+    /**
+     * 获取首页缓存列表
+     */
+    private void getCacheList() {
+
+        modifyContactsList();
+
+        LinkManListCache = Tools.getLinkManList(mContext);
+        JSONArray json1 = null;
+        if (StringUtils.isNotEmpty(LinkManListCache)) {
+            try {
+                JSONObject jsonObj = new JSONObject(LinkManListCache);
+                String str = jsonObj.optString("content");
+                JSONObject jsonObj2 = new JSONObject(str);
+                json1 = jsonObj2.getJSONArray("data");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            if (json1 != null) {
+                ResponseData data = HttpTools.getResponseContent(json1);
+
+                getPinyinList(data);
+            }
+        }
+    }
+
+    /**
+     * 查询常用联系人
+     */
+    void modifyContactsList() {
+        String url = Contants.URl.URL_ICETEST + "/txl2/contacts";
+        ContentValues params = new ContentValues();
+        params.put("owner", UserInfo.employeeAccount);
+        params.put("page", "1");
+        params.put("pagesize", "100");
+        ColorsConfig.commonParams(params);
+        OkHttpConnector.httpGet(url, params, new IGetListener() {
             @Override
-            public void onSuccess(Message msg, String response) {
+            public void httpReqResult(String response) {
+                JSONArray json1 = null;
+                try {
+                    JSONObject jsonObj = new JSONObject(response);
+                    String str = jsonObj.optString("content");
+                    JSONObject jsonObj2 = new JSONObject(str);
+                    json1 = jsonObj2.getJSONArray("data");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                if (json1 != null) {
+                    Tools.saveLinkManList(mContext, response);
+                    LinkManListCache = response;
+                    ResponseData data = HttpTools.getResponseContent(json1);
+
+                    getPinyinList(data);
+                }
+            }
+        });
+    }
+
+
+    /**
+     * 开启加载数据
+     */
+    private void reqAuth() {
+        String accessToken = HuxinSdkManager.instance().getAccessToken();
+        long expireTime = HuxinSdkManager.instance().getExpireTime();
+        long time = System.currentTimeMillis();
+
+        boolean isAuth = false;
+
+        if (expireTime == 0 || TextUtils.isEmpty(accessToken)) {
+            isAuth = true;
+        } else {
+            if (expireTime <= time) {//token过期
+                isAuth = true;
+            }
+        }
+
+        if (isAuth) {
+            ColorsConfig.reqAuth(new IPostListener() {
+                @Override
+                public void httpReqResult(String response) {
+                    AuthConfig bean = GsonUtil.parse(response, AuthConfig.class);
+                    if (bean != null && bean.isSuccess()) {
+
+                        String token = bean.getContent().getAccessToken();
+                        long time = bean.getContent().getExpireTime();
+
+                        HuxinSdkManager.instance().setAccessToken(token);
+                        HuxinSdkManager.instance().setExpireTime(time);
+
+                        reqContacts();
+                    }
+                }
+            });
+        } else {
+            reqContacts();
+        }
+    }
+
+
+    private void reqContacts() {
+        String url = Contants.URl.URL_ICETEST + "/txl2/contacts/childDatas";
+        ContentValues params = new ContentValues();
+        params.put("orgID", "0");//架构UUID编号,0取顶级架构
+        params.put("familyTypeId", "0");//族谱类型ID：0组织架构
+        params.put("status", "0");//族谱类型ID：0组织架构
+        params.put("corpId", Tools.getStringValue(mContext, Contants.storage.CORPID));
+        ColorsConfig.commonParams(params);
+
+        OkHttpConnector.httpGet(url, params, new IGetListener() {
+            @Override
+            public void httpReqResult(String response) {
                 JSONArray jsonString = HttpTools.getContentJsonArray(response);
                 if (jsonString != null) {
                     ResponseData data = HttpTools.getResponseContent(jsonString);
@@ -458,192 +583,35 @@ public class ContactsFragment extends Fragment implements ResponseListener, Item
                         for (int i = 0; i < familyList.size(); i++) {
                             if (familyList.get(i).name.equals("彩生活服务集团")) {
                                 //tvOrgName.setText(familyList.get(i).name);
-                                Tools.saveStringValue(mActivity, Contants.storage.ORGNAME, familyList.get(i).name);
-                                Tools.saveStringValue(mActivity, Contants.storage.ORGID, familyList.get(i).id);
+                                Tools.saveStringValue(mContext, Contants.storage.ORGNAME, familyList.get(i).name);
+                                Tools.saveStringValue(mContext, Contants.storage.ORGID, familyList.get(i).id);
                             }
                         }
                     } else {
                         if (StringUtils.isNotEmpty(familyList.get(0).name)) {
                             //tvOrgName.setText(familyList.get(0).name);
-                            Tools.saveStringValue(mActivity, Contants.storage.ORGNAME, familyList.get(0).name);
-                            Tools.saveStringValue(mActivity, Contants.storage.ORGID, familyList.get(0).id);
+                            Tools.saveStringValue(mContext, Contants.storage.ORGNAME, familyList.get(0).name);
+                            Tools.saveStringValue(mContext, Contants.storage.ORGID, familyList.get(0).id);
                         }
                     }
 
                 }
             }
-
-            @Override
-            public void onRequest(MessageHandler msgHand) {
-                RequestConfig config = new RequestConfig(mActivity, 0);
-                config.handler = msgHand.getHandler();
-                RequestParams params = new RequestParams();
-                params.put("orgID", "0");//架构UUID编号,0取顶级架构
-                params.put("familyTypeId", "0");//族谱类型ID：0组织架构
-                params.put("status", "0");//族谱类型ID：0组织架构
-                params.put("corpId", Tools.getStringValue(mActivity, Contants.storage.CORPID));
-                HttpTools.httpGet(Contants.URl.URL_ICETEST, "/txl2/contacts/childDatas", config, params);
-            }
         });
-        //读取本地缓存列表
-        getCacheList();
-
-        Date dt = new Date();
-        Long time = dt.getTime();
-        String expireTime = Tools.getStringValue(mActivity, Contants.storage.APPAUTHTIME);
-        accessToken = Tools.getStringValue(mActivity, Contants.storage.APPAUTH);
-        /**
-         * 获取组织架构根目录
-         */
-        if (StringUtils.isNotEmpty(expireTime)) {
-            if (Long.parseLong(expireTime) <= time) {//token过期
-                getAuthAppInfo();
-            } else {
-                requestData();
-            }
-        } else {
-            getAuthAppInfo();
-        }
 
     }
 
-    /**
-     * 获取首页缓存列表
-     */
-    private void getCacheList() {
 
-        modifyContactsList();
-
-        LinkManListCache = Tools.getLinkManList(mActivity);
-        JSONArray json1 = null;
-        if (StringUtils.isNotEmpty(LinkManListCache)) {
-            try {
-                JSONObject jsonObj = new JSONObject(LinkManListCache);
-                String str = jsonObj.optString("content");
-                JSONObject jsonObj2 = new JSONObject(str);
-                json1 = jsonObj2.getJSONArray("data");
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            if (json1 != null) {
-                ResponseData data = HttpTools.getResponseContent(json1);
-                if (json1.length() > 0) {
-                    //有收藏联系人
-//                    rlNulllinkman.setVisibility(View.GONE);
-                }
-                getPinyinList(data);
-            }
-        }
+    private void registerReceiver() {
+        mModifyContactsReceiver = new ModifyContactsReceiver();
+        filter = new IntentFilter();
+        filter.addAction(BROADCAST_INTENT_FILTER);
+        requireActivity().registerReceiver(mModifyContactsReceiver, filter);
     }
 
-    /**
-     * 查询常用联系人
-     */
-    void modifyContactsList() {
-        RequestConfig config = new RequestConfig(mActivity, PullRefreshListView.HTTP_FRESH_CODE);
-        config.handler = msgHand.getHandler();
-        RequestParams params = new RequestParams();
-        params.put("owner", UserInfo.employeeAccount);
-        params.put("page", "1");
-        params.put("pagesize", "100");
-        HttpTools.httpGet(Contants.URl.URL_ICETEST, "/txl2/contacts", config, params);
+    private void unRegisterReceiver() {
+        requireActivity().unregisterReceiver(mModifyContactsReceiver);
     }
 
-    /**
-     * 获取token
-     * sectet
-     */
-    private void getAuthAppInfo() {
-        if (authAppService == null) {
-            authAppService = new AuthAppService(mActivity);
-        }
-        authAppService.getAppAuth(new GetTwoRecordListener<String, String>() {
-            @Override
-            public void onFinish(String jsonString, String data2, String data3) {
-                int code = HttpTools.getCode(jsonString);
-                if (code == 0) {
-                    JSONObject content = HttpTools.getContentJSONObject(jsonString);
-                    if (content.length() > 0) {
-                        try {
-                            accessToken = content.getString("accessToken");
-                            String expireTime = content.getString("expireTime");
-                            Tools.saveStringValue(mActivity, Contants.storage.APPAUTH, accessToken);
-                            Tools.saveStringValue(mActivity, Contants.storage.APPAUTHTIME, expireTime);
-                            requestData();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            }
 
-            @Override
-            public void onFailed(String Message) {
-
-            }
-        });
-    }
-
-    /**
-     * 开启加载数据
-     */
-    private void requestData() {
-        adapter.loadingData();
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        mActivity = activity;
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == ISTREAD) {
-            //pullListView.performLoading();
-        }
-    }
-
-    @Override
-    public void onRequestStart(Message msg, String hintString) {
-    }
-
-    @Override
-    public void onSuccess(Message msg, String jsonString, String hintString) {
-        int code = HttpTools.getCode(jsonString);
-        if (msg.arg1 == HttpTools.DETELE_CONTACT_LIST) {
-            if (code == 0) {
-                ToastFactory.showToast(getActivity(), "删除成功");
-                adapter.removeItem(location);
-            } else {
-                ToastFactory.showToast(getActivity(), hintString);
-            }
-        } else if (msg.arg1 == PullRefreshListView.HTTP_FRESH_CODE) {
-            JSONArray json1 = null;
-            try {
-                JSONObject jsonObj = new JSONObject(jsonString);
-                String str = jsonObj.optString("content");
-                JSONObject jsonObj2 = new JSONObject(str);
-                json1 = jsonObj2.getJSONArray("data");
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            if (json1 != null) {
-                Tools.saveLinkManList(mActivity, jsonString);
-                LinkManListCache = jsonString;
-                ResponseData data = HttpTools.getResponseContent(json1);
-                if (json1.length() > 0) {
-                    //rlNulllinkman.setVisibility(View.GONE);
-                }
-                getPinyinList(data);
-            }
-        }
-
-
-    }
-
-    @Override
-    public void onFail(Message msg, String hintString) {
-    }
 }

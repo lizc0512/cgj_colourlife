@@ -2,7 +2,6 @@
 <resources>
     <!--通讯录头数据-->
     <string-array name="names_home">
-        <item>↑##@@**0 搜索</item>
         <item>↑##@@**1 组织架构</item>
         <item>↑##@@**2 我的部门</item>
         <item>↑##@@**3 手机联系人</item>

@@ -1,6 +1,8 @@
 package com.youmai.hxsdk.activity;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -14,30 +16,43 @@ public class SdkBaseActivity extends AppCompatActivity {
 
     private static final String TAG = "SdkBaseActivity";
 
-    public static final String FROM_PUSH = "from_Push";
-
-    private boolean fromPush = false;
-
     public Context mContext;
-
-    public View popAttachView;
-
+    private ProgressDialog mProgressDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext = this;
-        popAttachView = getWindow().getDecorView();
+        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        }*/
+    }
 
-        fromPush = getIntent().getBooleanExtra(FROM_PUSH, false);
 
+    public void showProgressDialog() {
+        if (mProgressDialog == null) {
+            mProgressDialog = new ProgressDialog(this);
+            mProgressDialog.setMessage("正在请求，请稍后...");
+            mProgressDialog.setCanceledOnTouchOutside(false);
+        }
+
+        if (!mProgressDialog.isShowing()) {
+            mProgressDialog.show();
+        }
+
+    }
+
+
+    public void dismissProgressDialog() {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.dismiss();
+        }
     }
 
 
     @Override
     protected void onStart() {
         super.onStart();
-        //IMMsgManager.getInstance().registerChatMsg(onChatMsg);
     }
 
 
@@ -56,7 +71,6 @@ public class SdkBaseActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        //IMMsgManager.getInstance().unregisterChatMsg(onChatMsg);
     }
 
 
@@ -68,16 +82,6 @@ public class SdkBaseActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-
-        /*boolean isMainActRunning = AppUtils.isTopActiviy(this, "com.tg.coloursteward.module.MainActivity1");
-        if (!isMainActRunning && fromPush) {
-            Intent intent = new Intent();
-            intent.setClassName(this, "com.tg.coloursteward.module.ui.MainActivity1");
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
-        }*/
-
         super.onBackPressed();
     }
 

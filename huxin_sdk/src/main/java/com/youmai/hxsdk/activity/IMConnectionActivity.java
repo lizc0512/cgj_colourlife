@@ -130,7 +130,8 @@ public class IMConnectionActivity extends SdkBaseActivity implements
 
     private static final int MSG_GET_CONTACT_ID = 300;
 
-    private final int GET_PERMISSION_REQUEST = 400; //权限申请自定义码
+    private final int CAMERA_PERMISSION_REQUEST = 400; //权限申请自定义码
+    private final int RECORD_PERMISSION_REQUEST = 401; //权限申请自定义码
 
     public static final int RESULT_CODE_CLEAN = 501;
 
@@ -275,6 +276,8 @@ public class IMConnectionActivity extends SdkBaseActivity implements
 
         HuxinSdkManager.instance().getStackAct().addActivity(this);
 
+        IMMsgManager.instance().removeBadge(dstUuid);
+
     }
 
     @Override
@@ -341,7 +344,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == GET_PERMISSION_REQUEST) {
+        if (requestCode == CAMERA_PERMISSION_REQUEST) {
             boolean isGranted = true;
             for (int item : grantResults) {
                 if (item == PackageManager.PERMISSION_DENIED) {
@@ -822,6 +825,33 @@ public class IMConnectionActivity extends SdkBaseActivity implements
         sendMsg(cacheMsgBean);
     }
 
+    //录音
+    private boolean isRecordPermission() {
+        boolean res = true;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            List<String> list = new ArrayList<>(2);
+
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    != PackageManager.PERMISSION_GRANTED) {
+                list.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            }
+
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)
+                    != PackageManager.PERMISSION_GRANTED) {
+                list.add(Manifest.permission.RECORD_AUDIO);
+            }
+
+            if (list.size() > 0) {
+                String[] array = new String[list.size()];
+                list.toArray(array); // fill the array
+                ActivityCompat.requestPermissions(this, array, RECORD_PERMISSION_REQUEST);
+                res = false;
+            }
+        }
+        return res;
+    }
+
+
     //拍照
     private void useCamera() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -845,7 +875,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
             if (list.size() > 0) {
                 String[] array = new String[list.size()];
                 list.toArray(array); // fill the array
-                ActivityCompat.requestPermissions(this, array, GET_PERMISSION_REQUEST);
+                ActivityCompat.requestPermissions(this, array, CAMERA_PERMISSION_REQUEST);
             } else {
                 startActivityForResult(new Intent(this, CameraActivity.class), REQUEST_CODE_CAMERA);
             }
@@ -1192,7 +1222,8 @@ public class IMConnectionActivity extends SdkBaseActivity implements
     }
 
     @Override
-    public void onClickVoice() {
+    public boolean onClickVoice() {
+        return isRecordPermission();
     }
 
     @Override

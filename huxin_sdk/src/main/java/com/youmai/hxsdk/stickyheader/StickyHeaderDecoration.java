@@ -1,4 +1,4 @@
-package com.tg.coloursteward.module.contact.stickyheader;
+package com.youmai.hxsdk.stickyheader;
 
 import android.graphics.Canvas;
 import android.graphics.Rect;

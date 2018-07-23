@@ -1,7 +1,8 @@
-package com.tg.coloursteward.module.meassage;
+package com.youmai.hxsdk.data;
 
-import com.tg.coloursteward.entity.MsgConfig;
+import com.youmai.hxsdk.adapter.MessageAdapter;
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
+import com.youmai.hxsdk.entity.MsgConfig;
 
 /**
  * 最新沟通联系人
@@ -18,10 +19,6 @@ public class ExCacheMsgBean extends CacheMsgBean {
 
     private int contactId;//通讯id  没有在通讯录内显示0
     private boolean mIsMultiNumber = false;//多号码识别
-
-    public ExCacheMsgBean() {
-        uiType = MessageAdapter.ADAPTER_TYPE_SEARCH;
-    }
 
     public ExCacheMsgBean(MsgConfig.ContentBean.DataBean pushMsg) {
         this.pushMsg = pushMsg;

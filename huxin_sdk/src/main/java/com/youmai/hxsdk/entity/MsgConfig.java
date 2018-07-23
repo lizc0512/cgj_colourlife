@@ -1,4 +1,4 @@
-package com.tg.coloursteward.entity;
+package com.youmai.hxsdk.entity;
 
 
 import android.os.Parcel;

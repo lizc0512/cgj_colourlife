@@ -41,7 +41,7 @@ import java.util.List;
  * 日期：2017.06.07 11:42
  * 描述：Red packet
  */
-public class RedPacketInGroupActivity extends AppCompatActivity implements View.OnClickListener {
+public class RedPacketInGroupActivity extends SdkBaseActivity implements View.OnClickListener {
 
     public static final String TAG = RedPacketInGroupActivity.class.getSimpleName();
 

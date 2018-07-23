@@ -25,6 +25,12 @@ public class TimeUtils {
             "MM-dd", Locale.CHINA);
     public static final SimpleDateFormat MINUTE_FORMAT_DATE = new SimpleDateFormat(
             "yyyy-MM-dd HH:mm", Locale.CHINA);
+    public static final SimpleDateFormat HOUR_MIN = new SimpleDateFormat(
+            "HH:mm", Locale.CHINA);
+    public static final SimpleDateFormat HOUR_MIN_SECOND = new SimpleDateFormat(
+            "HH:mm:ss", Locale.CHINA);
+    public static final SimpleDateFormat YEAR_MONTH_DATE = new SimpleDateFormat(
+            "yyyy年MM月dd日", Locale.CHINA);
 
 
     private TimeUtils() {
@@ -269,4 +275,101 @@ public class TimeUtils {
         return (int) (System.currentTimeMillis() / 1000);
     }
 
+
+    /**
+     * 消息内页通讯时间显示规则：
+     * 1、时间段划分：00:00-06:00凌晨，06:00-12:00上午，12:00-18:00下午，18:00-00:00晚上
+     * 2、今天：上午10:10、下午19:20
+     * 昨天：昨天上午10:10、下午19:20
+     * 前天-7天内：星期一上午10:10、星期二下午19:20
+     * 7天前：2018年6月3日 下午16:23
+     */
+    public static String dateFormat(long timeStamp) {
+        Date date = new Date(timeStamp);  //目标时间
+
+        Calendar dstCal = Calendar.getInstance();
+        dstCal.setTime(date);
+
+        long curTimeMillis = System.currentTimeMillis();
+        Date now = new Date(curTimeMillis);  //当前时间
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(now);
+
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        Date today = calendar.getTime();// 今天的开始时间
+
+        calendar.add(Calendar.DAY_OF_MONTH, -1);
+        Date yesterday = calendar.getTime(); //昨天的开始时间
+
+        calendar.add(Calendar.DAY_OF_MONTH, -1);
+        Date twoDayBefore = calendar.getTime(); //前天的开始时间
+
+        calendar.add(Calendar.DAY_OF_MONTH, -5);
+        Date sevenDayBefore = calendar.getTime(); //7天前的开始时间
+
+        String weekStr = "";
+        if (date.after(sevenDayBefore) && date.before(twoDayBefore)) {  //前天-7天内
+            int week = dstCal.get(Calendar.DAY_OF_WEEK);
+            switch (week) {
+                case Calendar.SUNDAY:
+                    weekStr = "星期日";
+                    break;
+                case Calendar.MONDAY:
+                    weekStr = "星期一";
+                    break;
+                case Calendar.TUESDAY:
+                    weekStr = "星期二";
+                    break;
+                case Calendar.WEDNESDAY:
+                    weekStr = "星期三";
+                    break;
+                case Calendar.THURSDAY:
+                    weekStr = "星期四";
+                    break;
+                case Calendar.FRIDAY:
+                    weekStr = "星期五";
+                    break;
+                case Calendar.SATURDAY:
+                    weekStr = "星期六";
+                    break;
+            }
+
+
+        } else if (date.after(twoDayBefore) && date.before(yesterday)) {
+            weekStr = "前天";
+        } else if (date.after(yesterday) && date.before(today)) {
+            weekStr = "昨天";
+        } else if (date.after(today)) {
+            weekStr = "";
+        } else {
+            weekStr = YEAR_MONTH_DATE.format(date);
+        }
+
+        return weekStr + timeDescription(dstCal);
+    }
+
+
+    private static String timeDescription(Calendar dstCal) {
+
+        int hour = dstCal.get(Calendar.HOUR_OF_DAY);
+        String timeStr = HOUR_MIN.format(dstCal.getTime());
+
+        String dateStr;
+        if (hour >= 0 && hour < 6) {
+            dateStr = "凌晨";
+        } else if (hour >= 6 && hour < 12) {
+            dateStr = "上午";
+        } else if (hour >= 12 && hour < 18) {
+            dateStr = "下午";
+        } else if (hour >= 18 && hour < 24) {
+            dateStr = "晚上";
+        } else {
+            dateStr = "晚上";
+        }
+
+        return dateStr + timeStr;
+    }
 }

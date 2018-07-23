@@ -1,28 +1,25 @@
-package com.tg.coloursteward.module.forward;
+package com.youmai.hxsdk.forward;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.tg.coloursteward.R;
-import com.tg.coloursteward.module.imp.ForwardImp;
-import com.tg.coloursteward.module.meassage.ExCacheMsgBean;
-import com.tg.coloursteward.module.meassage.MessageAdapter;
-import com.tg.coloursteward.module.meassage.MsgAsyncTaskLoader;
 import com.youmai.hxsdk.HuxinSdkManager;
+import com.youmai.hxsdk.ProtoCallback;
+import com.youmai.hxsdk.R;
+import com.youmai.hxsdk.adapter.MessageAdapter;
 import com.youmai.hxsdk.config.AppConfig;
+import com.youmai.hxsdk.data.ExCacheMsgBean;
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
 import com.youmai.hxsdk.db.helper.CacheMsgHelper;
 import com.youmai.hxsdk.dialog.HxSendDialog;
@@ -49,8 +46,7 @@ import java.util.List;
  * 主页-沟通
  * A simple {@link Fragment} subclass.
  */
-public class ForwardFragment extends Fragment implements
-        LoaderManager.LoaderCallbacks<List<ExCacheMsgBean>>, ForwardImp {
+public class ForwardFragment extends Fragment implements ForwardImp {
     private final String TAG = ForwardFragment.class.getSimpleName();
 
     private final int LOADER_ID_GEN_MESSAGE_LIST = 100;
@@ -81,6 +77,23 @@ public class ForwardFragment extends Fragment implements
     }
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        HuxinSdkManager.instance().chatMsgFromCache(this,
+                new ProtoCallback.CacheMsgCallBack() {
+                    @Override
+                    public void result(List<ExCacheMsgBean> data) {
+                        forwardAdapter.changeMessageList(data);
+                    }
+                });
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -100,7 +113,6 @@ public class ForwardFragment extends Fragment implements
         type = intent.getStringExtra("type");
 
         initView(view);
-        initMessageList();
     }
 
 
@@ -129,39 +141,6 @@ public class ForwardFragment extends Fragment implements
                 }
             }
         });
-    }
-
-
-    public void initMessageList() {
-        if (getLoaderManager().getLoader(LOADER_ID_GEN_MESSAGE_LIST) == null) {
-            startLoading();
-        } else {
-            getLoaderManager().restartLoader(LOADER_ID_GEN_MESSAGE_LIST, null, this);
-        }
-    }
-
-
-    private void startLoading() {
-        getLoaderManager().initLoader(LOADER_ID_GEN_MESSAGE_LIST, null, this);
-    }
-
-    @Override
-    public Loader<List<ExCacheMsgBean>> onCreateLoader(int id, Bundle args) {
-        return new MsgAsyncTaskLoader(getContext(), false);
-    }
-
-    @Override
-    public void onLoadFinished(Loader<List<ExCacheMsgBean>> loader, List<ExCacheMsgBean> data) {
-        Log.d(TAG, "onLoadFinished" + data.toString());
-        if (data.isEmpty()) {
-            return;
-        }
-        forwardAdapter.changeMessageList(data);
-    }
-
-    @Override
-    public void onLoaderReset(Loader<List<ExCacheMsgBean>> loader) {
-        Log.d(TAG, "onLoaderReset");
     }
 
 

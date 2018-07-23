@@ -70,9 +70,7 @@ public class HeaderScrollHelper {
             if (layoutManager instanceof LinearLayoutManager) {
                 int firstVisibleItemPosition = ((LinearLayoutManager) layoutManager).findFirstVisibleItemPosition();
                 View childAt = recyclerView.getChildAt(0);
-                if (childAt == null || (firstVisibleItemPosition == 0 && childAt.getTop() == 0)) {
-                    return true;
-                }
+                return childAt == null || (firstVisibleItemPosition == 0 && childAt.getTop() == 0);
             }
         }
         return false;
@@ -82,9 +80,7 @@ public class HeaderScrollHelper {
         if (adapterView != null) {
             int firstVisiblePosition = adapterView.getFirstVisiblePosition();
             View childAt = adapterView.getChildAt(0);
-            if (childAt == null || (firstVisiblePosition == 0 && childAt.getTop() == 0)) {
-                return true;
-            }
+            return childAt == null || (firstVisiblePosition == 0 && childAt.getTop() == 0);
         }
         return false;
     }
@@ -133,6 +129,7 @@ public class HeaderScrollHelper {
 
     /**
      * WebView
+     *
      * @return
      */
     public boolean isVisible() {
@@ -148,7 +145,7 @@ public class HeaderScrollHelper {
         if (scrollableView == null) {
             throw new NullPointerException("scrollableView must be a instance of RecyclerView and must not be null");
         }
-        return ((RecyclerView )scrollableView).getAdapter().getItemCount() > 0;
+        return ((RecyclerView) scrollableView).getAdapter().getItemCount() > 0;
     }
 
 }

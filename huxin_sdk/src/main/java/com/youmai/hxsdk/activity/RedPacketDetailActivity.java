@@ -38,7 +38,7 @@ import java.util.Locale;
  * 日期：2017.06.07 11:42
  * 描述：Red packet
  */
-public class RedPacketDetailActivity extends AppCompatActivity implements View.OnClickListener {
+public class RedPacketDetailActivity extends SdkBaseActivity implements View.OnClickListener {
 
     public static final String TAG = RedPacketDetailActivity.class.getSimpleName();
 

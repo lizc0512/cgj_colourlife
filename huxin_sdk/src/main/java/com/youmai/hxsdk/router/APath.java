@@ -29,13 +29,35 @@ public class APath {
      */
 
     public static final String USER_INFO_ACT = "/color/userInfo";
+	
     /**
      * 员工名片
      */
     public static final String EMPLOYEE_DATA_ACT = "/color/employee";
+	
+	
+    /**
+     * 好友
+     */
+    public static final String BUDDY_FRIEND = "/color/friend";
+
+
+    /**
+     * 非好友
+     */
+    public static final String BUDDY_NOT_FRIEND = "/color/notFriend";
+
 
     /**
      * 消息转发
      */
     public static final String MSG_FORWARD = "/module/forward"; //转发
+
+
+    /**
+     * 重新登录
+     */
+    public static final String RE_LOGIN = "/login/reLogin";
+
+
 }

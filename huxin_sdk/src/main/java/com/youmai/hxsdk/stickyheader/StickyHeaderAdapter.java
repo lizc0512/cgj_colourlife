@@ -1,4 +1,4 @@
-package com.tg.coloursteward.module.contact.stickyheader;
+package com.youmai.hxsdk.stickyheader;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;

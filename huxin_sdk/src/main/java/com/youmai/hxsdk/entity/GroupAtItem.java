@@ -42,11 +42,7 @@ public class GroupAtItem implements Parcelable {
         } else {
             if (this.getClass() == obj.getClass()) {
                 GroupAtItem u = (GroupAtItem) obj;
-                if (this.getNickName().equals(u.getNickName())) {
-                    return true;
-                } else {
-                    return false;
-                }
+                return this.getNickName().equals(u.getNickName());
             } else {
                 return false;
             }

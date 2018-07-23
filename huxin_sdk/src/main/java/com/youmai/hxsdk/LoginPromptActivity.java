@@ -13,8 +13,11 @@ import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.TextView;
 
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.youmai.hxsdk.config.AppConfig;
+import com.youmai.hxsdk.router.APath;
 import com.youmai.hxsdk.service.HuxinService;
+import com.youmai.hxsdk.utils.AppUtils;
 
 import java.net.InetSocketAddress;
 
@@ -60,13 +63,13 @@ public class LoginPromptActivity extends AppCompatActivity implements View.OnCli
             HuxinSdkManager.instance().getStackAct().finishAllActivity();
 
             HuxinSdkManager.instance().loginOut();//清楚用户信息
-            Intent intent = new Intent();
-            intent.setClassName(this, "com.tg.coloursteward.LoginActivity");
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-                    | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            intent.putExtra("login_out", true);
-            startActivity(intent);
+
+            ARouter.getInstance().build(APath.RE_LOGIN)
+                    .withFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                            | Intent.FLAG_ACTIVITY_CLEAR_TOP
+                            | Intent.FLAG_ACTIVITY_SINGLE_TOP)  //添加Flag
+                    .withBoolean("login_out", true)
+                    .navigation(this);
 
             finish();
 
@@ -78,11 +81,8 @@ public class LoginPromptActivity extends AppCompatActivity implements View.OnCli
                 dialog.setMessage("正在重新登录，请稍后...");
                 dialog.show();
 
-                //String ip = AppUtils.getStringSharedPreferences(this, "IP", AppConfig.getSocketHost());
-                //int port = AppUtils.getIntSharedPreferences(this, "PORT", AppConfig.getSocketPort());
-
-                String ip = AppConfig.getSocketHost();  //for test
-                int port = AppConfig.getSocketPort();   //for test
+                String ip = AppUtils.getStringSharedPreferences(this, "IP", AppConfig.getSocketHost());
+                int port = AppUtils.getIntSharedPreferences(this, "PORT", AppConfig.getSocketPort());
 
                 InetSocketAddress isa = new InetSocketAddress(ip, port);
                 HuxinSdkManager.instance().connectTcp(uuid, isa);

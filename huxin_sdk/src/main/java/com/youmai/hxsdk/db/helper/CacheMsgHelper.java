@@ -1,6 +1,7 @@
 package com.youmai.hxsdk.db.helper;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.config.ColorsConfig;
@@ -233,10 +234,15 @@ public class CacheMsgHelper {
                 .orderAsc(CacheMsgBeanDao.Properties.Id).list();
         CacheMsgBean saveEmptyMsg = null;
         if (list != null && list.size() > 0) {
-            saveEmptyMsg = list.get(0);
-            saveEmptyMsg.setId(null);
-            saveEmptyMsg.setMsgType(CacheMsgBean.SEND_TEXT)
-                    .setJsonBodyObj(new CacheMsgTxt().setMsgTxt(ColorsConfig.GROUP_EMPTY_MSG));
+            for (CacheMsgBean item : list) {
+                if (!TextUtils.isEmpty(item.getContentJsonBody())) {
+                    saveEmptyMsg = item;
+                    saveEmptyMsg.setId(null);
+                    saveEmptyMsg.setMsgType(CacheMsgBean.SEND_TEXT)
+                            .setJsonBodyObj(new CacheMsgTxt().setMsgTxt(ColorsConfig.GROUP_EMPTY_MSG));
+                    break;
+                }
+            }
         }
 
         DeleteQuery<CacheMsgBean> dq = qb.where(CacheMsgBeanDao.Properties.TargetUuid.eq(dstUuid))

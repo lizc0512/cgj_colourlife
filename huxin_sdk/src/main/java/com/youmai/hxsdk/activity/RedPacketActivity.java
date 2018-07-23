@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.gson.JsonObject;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.dialog.HxPayPasswordDialog;
@@ -28,7 +29,11 @@ import com.youmai.hxsdk.http.IGetListener;
 import com.youmai.hxsdk.utils.GlideRoundTransform;
 import com.youmai.hxsdk.utils.GsonUtil;
 import com.youmai.hxsdk.utils.ListUtils;
+import com.youmai.hxsdk.utils.ToastUtil;
 
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.List;
 
@@ -37,7 +42,7 @@ import java.util.List;
  * 日期：2017.06.07 11:42
  * 描述：Red packet
  */
-public class RedPacketActivity extends AppCompatActivity implements View.OnClickListener {
+public class RedPacketActivity extends SdkBaseActivity implements View.OnClickListener {
 
     public static final String TAG = RedPacketActivity.class.getSimpleName();
 
@@ -218,11 +223,23 @@ public class RedPacketActivity extends AppCompatActivity implements View.OnClick
                     } else {
                         Toast.makeText(mContext, bean.getMessage(), Toast.LENGTH_SHORT).show();
                     }
+                } else {
+                    showMsg(response);
                 }
             }
         });
+    }
 
-
+    private void showMsg(String result) {
+        try {
+            JSONObject jsonObject = new JSONObject(result);
+            int code = jsonObject.optInt("code");
+            if (code != 0) {
+                ToastUtil.showBottomToast(mContext, jsonObject.optString("message"));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
 

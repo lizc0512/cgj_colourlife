@@ -52,7 +52,7 @@ import java.util.List;
  * Created by colin on 2017/6/8.
  */
 
-public class PictureIndicatorActivity extends AppCompatActivity {
+public class PictureIndicatorActivity extends SdkBaseActivity {
 
     private Context mContext;
     private int mPosition = 0;
@@ -61,11 +61,11 @@ public class PictureIndicatorActivity extends AppCompatActivity {
     private LocalBroadcastManager localBroadcastManager;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         //全屏，隐藏状态栏，导航条透明
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        /*getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getWindow();
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
@@ -76,7 +76,7 @@ public class PictureIndicatorActivity extends AppCompatActivity {
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(Color.TRANSPARENT);
             window.setNavigationBarColor(Color.TRANSPARENT);
-        }
+        }*/
 
         setContentView(R.layout.activity_picture_indicator);
         mContext = this;

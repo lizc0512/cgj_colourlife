@@ -54,15 +54,6 @@ public class AppConfig {
 
     private static final String DOWNLOAD_FILE_PATH = "http://file.ihuxin.net/";
 
-    /**
-     * ICE文件上传地址
-     */
-    public static final String UPLOAD_FILE_ICE = "http://120.25.148.153:30020/v1/pcUploadFile";
-
-    /**
-     * ICE文件下载地址
-     */
-    public static final String ICE_LOAD_PATH = "http://120.25.148.153:30020/v1/down/";
 
     /***
      * sign 签名

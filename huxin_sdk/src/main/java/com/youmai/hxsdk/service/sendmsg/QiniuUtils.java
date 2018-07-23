@@ -1,7 +1,5 @@
 package com.youmai.hxsdk.service.sendmsg;
 
-import android.content.ContentValues;
-import android.text.TextUtils;
 import android.util.Log;
 
 import com.qiniu.android.common.AutoZone;
@@ -15,13 +13,9 @@ import com.qiniu.android.storage.UploadOptions;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.config.AppConfig;
 import com.youmai.hxsdk.config.ColorsConfig;
-import com.youmai.hxsdk.entity.AuthConfig;
 import com.youmai.hxsdk.entity.FileToken;
 import com.youmai.hxsdk.entity.UploadFile;
-import com.youmai.hxsdk.entity.UploadResult;
 import com.youmai.hxsdk.http.IPostListener;
-import com.youmai.hxsdk.http.OkHttpConnector;
-import com.youmai.hxsdk.utils.AppUtils;
 import com.youmai.hxsdk.utils.GsonUtil;
 
 import org.json.JSONObject;
@@ -150,104 +144,10 @@ public class QiniuUtils {
 
 
         } else {
-            postFileToICE(file, desPhone, postFile);
+            ColorsConfig.postFileToICE(file, desPhone, postFile);
         }
 
 
     }
 
-
-    private void postFileToICE(final File file, final String desPhone, final PostFile postFile) {
-        String accessToken = HuxinSdkManager.instance().getAccessToken();
-        String expireTime = HuxinSdkManager.instance().getExpireTime();
-
-        long time = System.currentTimeMillis() / 1000;
-
-        boolean isAuth = false;
-
-        if (TextUtils.isEmpty(expireTime) || TextUtils.isEmpty(accessToken)) {
-            isAuth = true;
-        } else {
-            if (Long.parseLong(expireTime) <= time) {//token过期
-                isAuth = true;
-            }
-        }
-
-        if (isAuth) {
-            reqAuth(new IPostListener() {
-                @Override
-                public void httpReqResult(String response) {
-                    AuthConfig config = GsonUtil.parse(response, AuthConfig.class);
-                    if (config != null && config.isSuccess()) {
-                        String token = config.getContent().getAccess_token();
-                        String time = config.getContent().getExpire();
-
-                        HuxinSdkManager.instance().setAccessToken(token);
-                        HuxinSdkManager.instance().setExpireTime(time);
-                        upLoadFile(file, token, desPhone, postFile);
-                    }
-                }
-            });
-        } else {
-            upLoadFile(file, accessToken, desPhone, postFile);
-        }
-    }
-
-
-    private void reqAuth(IPostListener listener) {
-
-        String url = "https://openapi.colourlife.com/v1/jqfw/app/auth";
-        ContentValues params = new ContentValues();
-
-        String APP_KEY = "01a2b3c4d5e6f7a8b9c0";
-        String APP_SECRET = "1a2b3c4d5e6f7a8b9c0d1a2b3c4d5e6f";
-
-        String appkey = APP_KEY;
-        String app_secret = APP_SECRET;
-        String timestamp = HuxinSdkManager.instance().getAppTs();
-
-        String signature = AppUtils.md5(appkey + timestamp + app_secret).toLowerCase();
-
-        params.put("appkey", appkey);
-        params.put("signature", signature);
-        params.put("timestamp", timestamp);
-        ColorsConfig.commonParams(params);
-
-        OkHttpConnector.httpPost(url, params, listener);
-
-    }
-
-    private void upLoadFile(File file, String accessToken, final String desPhone, final PostFile postFile) {
-        String url = AppConfig.UPLOAD_FILE_ICE;
-        String fileUploadAccount = HuxinSdkManager.instance().getUserName();
-        String fileUploadAppName = "彩管家";
-
-        if (file.exists()) {
-            Map<String, Object> params = new HashMap<>();
-            params.put("access_token", accessToken);
-            params.put("fileLength", file.length());
-            params.put("fileName", file.getName());
-            params.put("fileUploadAccount", fileUploadAccount);
-            params.put("fileUploadAppName", fileUploadAppName);
-            params.put("file", file);
-
-            ColorsConfig.commonParams(params);
-
-            OkHttpConnector.httpPostMultipart(url, params, new IPostListener() {
-                @Override
-                public void httpReqResult(String response) {
-                    UploadResult result = GsonUtil.parse(response, UploadResult.class);
-                    if (result != null && result.isSuceess()) {
-                        String fileId = result.getContent();
-                        if (postFile != null) {
-                            postFile.success(fileId, desPhone);
-                        }
-                    } else {
-                        postFile.fail("上传文件服务器出错!!!");
-                    }
-                }
-            });
-
-        }
-    }
 }

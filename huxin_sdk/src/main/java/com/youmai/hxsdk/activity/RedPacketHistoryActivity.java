@@ -30,7 +30,7 @@ import com.youmai.hxsdk.utils.TimeUtils;
  * 日期：2017.06.07 11:42
  * 描述：Red packet
  */
-public class RedPacketHistoryActivity extends AppCompatActivity implements View.OnClickListener, OnDateSetListener {
+public class RedPacketHistoryActivity extends SdkBaseActivity implements View.OnClickListener, OnDateSetListener {
 
     public static final String TAG = RedPacketHistoryActivity.class.getSimpleName();
 

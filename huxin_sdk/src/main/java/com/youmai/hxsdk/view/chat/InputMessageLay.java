@@ -125,16 +125,15 @@ public class InputMessageLay extends AutoHeightLayout implements View.OnClickLis
         public boolean onTouch(View v, MotionEvent event) {
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
 
+                boolean isPermission = true;
                 if (mKeyBoardBarViewListener != null) {
-                    mKeyBoardBarViewListener.onClickVoice();
+                    isPermission = mKeyBoardBarViewListener.onClickVoice();
                 }
 
                 x = event.getX();
                 y = event.getY();
 
-                long startTime = new Date().getTime();
-
-                if (VoiceUtils.request(Manifest.permission.RECORD_AUDIO, (Activity) voiceAction.getContext(), 200)) {
+                if (isPermission) {
                     flag = VoiceUtils.getInstance().startRecord();//开始录音 判断录音权限是否打开
                     LogUtils.e("YW", "down flag: " + flag);
                     if (flag != -1) {
@@ -144,6 +143,8 @@ public class InputMessageLay extends AutoHeightLayout implements View.OnClickLis
                 } else {
                     flag = -1;
                 }
+
+
                 isCancel = false;
                 isTimeOut = false;
                 if (flag == -1) {
@@ -999,7 +1000,7 @@ public class InputMessageLay extends AutoHeightLayout implements View.OnClickLis
 
         void onKeyBoardMore(int type);
 
-        void onClickVoice();
+        boolean onClickVoice();
 
         /**
          * 点击批量的转发

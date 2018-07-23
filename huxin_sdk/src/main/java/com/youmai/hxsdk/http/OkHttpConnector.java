@@ -90,6 +90,25 @@ public class OkHttpConnector {
     }
 
 
+
+    public static void httpDel(ContentValues headers, String url,
+                               ContentValues params, IGetListener request) {
+        HttpDelAsyncTask task = new HttpDelAsyncTask(request);
+        task.setParams(params);
+        task.setHeaders(headers);
+        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, url);
+
+    }
+
+
+
+    public static void httpDel(String url, ContentValues params,
+                               IGetListener request) {
+        httpDel(null, url, params, request);
+    }
+
+
+
     public static String doGet(ContentValues headers, String url, ContentValues params) {
         String res;
         try {
@@ -543,7 +562,7 @@ public class OkHttpConnector {
                 }
 
                 @Override
-                public void writeTo(BufferedSink sink) throws IOException {
+                public void writeTo(BufferedSink sink) {
                     Source source;
                     try {
                         source = Okio.source(mFile);
@@ -725,6 +744,80 @@ public class OkHttpConnector {
             }
         }
 
+
+    }
+
+
+
+
+    private static class HttpDelAsyncTask extends
+            AsyncTask<String, Void, String> {
+
+        private IGetListener mRequest;
+        private ContentValues mParams;
+        private ContentValues mHeaders;
+
+        public HttpDelAsyncTask(IGetListener request) {
+            mRequest = request;
+        }
+
+        public void setHeaders(ContentValues headers) {
+            mHeaders = headers;
+        }
+
+
+        public void setParams(ContentValues headers) {
+            mParams = headers;
+        }
+
+
+        @Override
+        protected String doInBackground(String... params) {
+            String url = params[0];
+            if (TextUtils.isEmpty(url)) {
+                throw new IllegalArgumentException("url is null");
+            }
+
+            try {
+                if (mParams != null && mParams.size() > 0) {
+                    url = url + "?" + getParams(mParams, true);
+                }
+
+                Request.Builder builder = new Request.Builder();
+                if (mHeaders != null && mHeaders.size() > 0) {
+                    for (Map.Entry<String, Object> entry : mHeaders.valueSet()) {
+                        String key = entry.getKey(); // name
+                        String value = entry.getValue().toString(); // value
+                        Log.v(TAG, "okhttp Header:" + key + "=" + value);
+                        builder.addHeader(key, value);
+                    }
+                }
+
+                Log.v(TAG, "okhttp del url:" + url);
+
+                Request request = builder.url(url).delete().build();
+
+                Response response = client.newCall(request).execute();
+                if (response.isSuccessful() && response.body() != null) {
+                    return response.body().string();
+                } else {
+                    return response.toString();
+                }
+
+            } catch (IOException e) {
+                return e.toString();
+            }
+
+        }
+
+        @Override
+        protected void onPostExecute(String response) {
+            Log.v(TAG, "okhttp get response body:" + response);
+            if (mRequest != null) {
+                mRequest.httpReqResult(response);
+            }
+
+        }
 
     }
 

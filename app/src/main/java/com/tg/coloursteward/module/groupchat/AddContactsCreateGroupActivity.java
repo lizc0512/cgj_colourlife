@@ -28,7 +28,7 @@ import com.tg.coloursteward.info.FamilyInfo;
 import com.tg.coloursteward.info.UserInfo;
 import com.youmai.hxsdk.stickyheader.StickyHeaderDecoration;
 import com.tg.coloursteward.module.contact.utils.ContactsBindData;
-import com.youmai.hxsdk.view.widget.CharIndexView;
+import com.youmai.hxsdk.widget.CharIndexView;
 import com.tg.coloursteward.module.groupchat.addcontact.AddContactByDepartmentFragment;
 import com.tg.coloursteward.module.groupchat.addcontact.AddContactBySearchFragment;
 import com.tg.coloursteward.module.groupchat.details.ChatGroupDetailsActivity;

@@ -14,7 +14,7 @@ import android.widget.TextView;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.module.contact.ContactsFragment;
 import com.youmai.hxsdk.stickyheader.StickyHeaderDecoration;
-import com.youmai.hxsdk.view.widget.CharIndexView;
+import com.youmai.hxsdk.widget.CharIndexView;
 import com.youmai.hxsdk.db.bean.ContactBean;
 import com.youmai.hxsdk.entity.cn.CNPinyin;
 import com.youmai.hxsdk.entity.cn.CNPinyinFactory;

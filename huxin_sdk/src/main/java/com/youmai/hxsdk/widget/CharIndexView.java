@@ -1,4 +1,4 @@
-package com.youmai.hxsdk.view.widget;
+package com.youmai.hxsdk.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;

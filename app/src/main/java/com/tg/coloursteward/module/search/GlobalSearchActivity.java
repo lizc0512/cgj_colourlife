@@ -11,6 +11,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
 import com.youmai.hxsdk.R;
+import com.youmai.hxsdk.widget.SearchEditText;
 
 /**
  * Created by srsm on 2017/8/21.

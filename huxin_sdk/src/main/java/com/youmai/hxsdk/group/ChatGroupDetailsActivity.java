@@ -1,4 +1,4 @@
-package com.tg.coloursteward.module.groupchat.details;
+package com.youmai.hxsdk.group;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -22,17 +22,6 @@ import android.widget.Toast;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.google.protobuf.InvalidProtocolBufferException;
-import com.tg.coloursteward.EmployeeDataActivity;
-import com.tg.coloursteward.constant.Contants;
-import com.tg.coloursteward.module.groupchat.AddContactsCreateGroupActivity;
-import com.youmai.hxsdk.group.ChatGroupAllMembersActivity;
-import com.youmai.hxsdk.group.ContactBeanData;
-import com.youmai.hxsdk.group.GroupDetailAdapter;
-import com.youmai.hxsdk.group.GroupListActivity;
-import com.tg.coloursteward.module.groupchat.deletecontact.DeleteContactListActivity;
-import com.tg.coloursteward.module.groupchat.setting.GroupManageActivity;
-import com.tg.coloursteward.module.groupchat.setting.GroupNameActivity;
-import com.tg.coloursteward.module.groupchat.setting.GroupNoticeActivity;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.activity.IMGroupActivity;
@@ -48,6 +37,9 @@ import com.youmai.hxsdk.im.IMMsgManager;
 import com.youmai.hxsdk.proto.YouMaiBasic;
 import com.youmai.hxsdk.proto.YouMaiGroup;
 import com.youmai.hxsdk.router.APath;
+import com.youmai.hxsdk.setting.GroupManageActivity;
+import com.youmai.hxsdk.setting.GroupNameActivity;
+import com.youmai.hxsdk.setting.GroupNoticeActivity;
 import com.youmai.hxsdk.socket.PduBase;
 import com.youmai.hxsdk.socket.ReceiveListener;
 import com.youmai.hxsdk.utils.AppUtils;
@@ -303,7 +295,7 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
                             contact.setUsername(item.getUserName());
                             contact.setUuid(item.getMemberId());
                             contact.setMemberRole(item.getMemberRole());
-                            String avatar = Contants.URl.HEAD_ICON_URL + "avatar?uid=" + item.getUserName();
+                            String avatar = ColorsConfig.HEAD_ICON_URL + "avatar?uid=" + item.getUserName();
                             contact.setAvatar(avatar);
                             if (contact.getMemberRole() == 0) {
                                 ContactBeanData.instance().addGroupListItem(0, contact);
@@ -569,17 +561,17 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
         int type = contact.getUiType();
         if (type == GroupDetailAdapter.TYPE.ADD_MEMBER.ordinal()) {
             ARouter.getInstance().build(APath.GROUP_CREATE_ADD_CONTACT)
-                    .withInt(AddContactsCreateGroupActivity.DETAIL_TYPE, 2)
-                    .withInt(AddContactsCreateGroupActivity.GROUP_ID, mGroupId)
-                    .navigation(ChatGroupDetailsActivity.this, REQUEST_CODE_ADD);
+                    .withInt("DETAIL_TYPE", 2)
+                    .withInt("GROUP_ID", mGroupId)
+                    .navigation(this, REQUEST_CODE_ADD);
         } else if (type == GroupDetailAdapter.TYPE.DEL_MEMBER.ordinal()) {
             Intent intent = new Intent(this, DeleteContactListActivity.class);
             intent.putExtra(DeleteContactListActivity.DELETE_GROUP_ID, mGroupId);
             startActivityForResult(intent, REQUEST_CODE_DELETE);
         } else {
-            Intent i = new Intent(this, EmployeeDataActivity.class);
-            i.putExtra(EmployeeDataActivity.CONTACTS_ID, contact.getUsername());
-            startActivity(i);
+            ARouter.getInstance().build(APath.EMPLOYEE_DATA_ACT)
+                    .withString("contacts_id", contact.getUsername())
+                    .navigation(this);
         }
     }
 

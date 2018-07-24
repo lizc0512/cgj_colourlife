@@ -33,13 +33,16 @@ import com.tg.coloursteward.info.FamilyInfo;
 import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.module.contact.adapter.ContactAdapter;
 import com.tg.coloursteward.module.contact.adapter.ContactAdapter.ItemEventListener;
+import com.youmai.hxsdk.config.Constant;
+import com.youmai.hxsdk.entity.red.DeleteUserBean;
+import com.youmai.hxsdk.entity.red.ModifyContactsBean;
+import com.youmai.hxsdk.entity.red.ReqContactsBean;
 import com.youmai.hxsdk.stickyheader.StickyHeaderDecoration;
 import com.tg.coloursteward.module.contact.utils.ContactsBindData;
+import com.youmai.hxsdk.utils.AppUtils;
 import com.youmai.hxsdk.widget.CharIndexView;
 import com.youmai.hxsdk.group.GroupListActivity;
 import com.tg.coloursteward.module.search.GlobalSearchActivity;
-import com.tg.coloursteward.net.HttpTools;
-import com.tg.coloursteward.net.ResponseData;
 import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.dialog.ToastFactory;
@@ -54,10 +57,6 @@ import com.youmai.hxsdk.http.IPostListener;
 import com.youmai.hxsdk.http.OkHttpConnector;
 import com.youmai.hxsdk.utils.GsonUtil;
 import com.youmai.hxsdk.utils.ListUtils;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -133,7 +132,8 @@ public class ContactsFragment extends Fragment implements ItemEventListener {
         super.onCreate(savedInstanceState);
         registerReceiver();
         bindData = ContactsBindData.init();
-        skincode = Tools.getStringValue(mContext, Contants.storage.SKINCODE);
+        //skincode = Tools.getStringValue(mContext, Contants.storage.SKINCODE);
+        skincode = AppUtils.getStringSharedPreferences(mContext, Constant.SP_SKINCODE,"");
         orgName = Tools.getStringValue(mContext, Contants.storage.ORGNAME);
         orgId = Tools.getStringValue(mContext, Contants.storage.ORGID);
     }
@@ -268,7 +268,7 @@ public class ContactsFragment extends Fragment implements ItemEventListener {
     }
 
 
-    private void getPinyinList(final ResponseData data) {
+    private void getPinyinList(final List<ModifyContactsBean.ContentBean.DataBean> data) {
         subscription = Observable.create(new Observable.OnSubscribe<List<CNPinyin<ContactBean>>>() {
             @Override
             public void call(Subscriber<? super List<CNPinyin<ContactBean>>> subscriber) {
@@ -343,15 +343,16 @@ public class ContactsFragment extends Fragment implements ItemEventListener {
     }
 
     private void deleteUser(final int pos, ContactBean contact) {
-        String url = Contants.URl.URL_ICETEST + "/txl2/contacts/" + contact.getFavoriteid();
+        String url = ColorsConfig.CONTACT_DEL + contact.getFavoriteid();
+
         ContentValues params = new ContentValues();
         ColorsConfig.commonParams(params);
         OkHttpConnector.httpDel(url, params, new IGetListener() {
             @Override
             public void httpReqResult(String response) {
-                int code = HttpTools.getCode(response);
-                if (code == 0) {
-                    ToastFactory.showToast(getActivity(), "删除成功");
+                DeleteUserBean deleteUserBean = GsonUtil.parse(response, DeleteUserBean.class);
+                if (deleteUserBean != null && deleteUserBean.isSuccess()) {
+                    ToastFactory.showToast(getActivity(), deleteUserBean.getMessage());
                     adapter.removeItem(pos);
                 }
             }
@@ -461,8 +462,8 @@ public class ContactsFragment extends Fragment implements ItemEventListener {
      */
     private void getCacheList() {
 
-        modifyContactsList();
-
+        /*
+        获取本地收藏联系人
         LinkManListCache = Tools.getLinkManList(mContext);
         JSONArray json1 = null;
         if (StringUtils.isNotEmpty(LinkManListCache)) {
@@ -477,17 +478,33 @@ public class ContactsFragment extends Fragment implements ItemEventListener {
             if (json1 != null) {
                 ResponseData data = HttpTools.getResponseContent(json1);
 
-                getPinyinList(data);
+               // getPinyinList(data);
+            }
+        }
+        */
+        String json = AppUtils.getStringSharedPreferences(mContext, LIKE_CONTACTS_KEY, "");
+        if (TextUtils.isEmpty(json)) {
+            modifyContactsList();
+        } else {
+            ModifyContactsBean parse = GsonUtil.parse(json, ModifyContactsBean.class);
+            if (parse.getCode() == 0) {
+                List<ModifyContactsBean.ContentBean.DataBean> data = parse.getContent().getData();
+                if (data.size() != 0) {
+                    getPinyinList(data);
+                }
             }
         }
     }
+
+    private static String LIKE_CONTACTS_KEY = "like_man";
 
     /**
      * 查询常用联系人
      */
     void modifyContactsList() {
-        String url = Contants.URl.URL_ICETEST + "/txl2/contacts";
-        ContentValues params = new ContentValues();
+        String url = ColorsConfig.MODIFY_CONTACTS;
+
+        final ContentValues params = new ContentValues();
         params.put("owner", UserInfo.employeeAccount);
         params.put("page", "1");
         params.put("pagesize", "100");
@@ -495,21 +512,13 @@ public class ContactsFragment extends Fragment implements ItemEventListener {
         OkHttpConnector.httpGet(url, params, new IGetListener() {
             @Override
             public void httpReqResult(String response) {
-                JSONArray json1 = null;
-                try {
-                    JSONObject jsonObj = new JSONObject(response);
-                    String str = jsonObj.optString("content");
-                    JSONObject jsonObj2 = new JSONObject(str);
-                    json1 = jsonObj2.getJSONArray("data");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                if (json1 != null) {
-                    Tools.saveLinkManList(mContext, response);
-                    LinkManListCache = response;
-                    ResponseData data = HttpTools.getResponseContent(json1);
-
-                    getPinyinList(data);
+                ModifyContactsBean bean = GsonUtil.parse(response, ModifyContactsBean.class);
+                if (bean != null && bean.isSuccess()) {
+                    List<ModifyContactsBean.ContentBean.DataBean> data = bean.getContent().getData();
+                    if (data.size() != 0) {
+                        AppUtils.setStringSharedPreferences(mContext, LIKE_CONTACTS_KEY, response);
+                        getPinyinList(data);
+                    }
                 }
             }
         });
@@ -558,7 +567,8 @@ public class ContactsFragment extends Fragment implements ItemEventListener {
 
 
     private void reqContacts() {
-        String url = Contants.URl.URL_ICETEST + "/txl2/contacts/childDatas";
+        String url = ColorsConfig.REQ_CONTACTS;
+
         ContentValues params = new ContentValues();
         params.put("orgID", "0");//架构UUID编号,0取顶级架构
         params.put("familyTypeId", "0");//族谱类型ID：0组织架构
@@ -569,15 +579,15 @@ public class ContactsFragment extends Fragment implements ItemEventListener {
         OkHttpConnector.httpGet(url, params, new IGetListener() {
             @Override
             public void httpReqResult(String response) {
-                JSONArray jsonString = HttpTools.getContentJsonArray(response);
-                if (jsonString != null) {
-                    ResponseData data = HttpTools.getResponseContent(jsonString);
-                    FamilyInfo item;
-                    for (int i = 0; i < data.length; i++) {
-                        item = new FamilyInfo();
-                        item.id = data.getString(i, "id");
-                        item.name = data.getString(i, "name");
-                        familyList.add(item);
+                ReqContactsBean bean = GsonUtil.parse(response, ReqContactsBean.class);
+                if (bean != null && bean.isSuccess()) {
+                    List<ReqContactsBean.ContentBean> lists = bean.getContent();
+                    familyList.clear();
+                    for (int i = 0; i < lists.size(); i++) {
+                        FamilyInfo familyInfo = new FamilyInfo();
+                        familyInfo.id = lists.get(i).getId();
+                        familyInfo.name = lists.get(i).getName();
+                        familyList.add(familyInfo);
                     }
                     if (skincode.equals("101")) {//101 彩生活
                         for (int i = 0; i < familyList.size(); i++) {

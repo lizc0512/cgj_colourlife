@@ -1,7 +1,8 @@
-package com.tg.coloursteward.module.groupchat.setting;
+package com.youmai.hxsdk.setting;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,14 +12,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.tg.coloursteward.R;
-import com.tg.coloursteward.module.contact.ContactsFragment;
-import com.youmai.hxsdk.stickyheader.StickyHeaderDecoration;
-import com.youmai.hxsdk.widget.CharIndexView;
+import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.db.bean.ContactBean;
 import com.youmai.hxsdk.entity.cn.CNPinyin;
 import com.youmai.hxsdk.entity.cn.CNPinyinFactory;
+import com.youmai.hxsdk.stickyheader.StickyHeaderDecoration;
 import com.youmai.hxsdk.utils.ListUtils;
+import com.youmai.hxsdk.widget.CharIndexView;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -37,8 +37,6 @@ import rx.schedulers.Schedulers;
  */
 public class GroupManageFragment extends Fragment implements GroupTransAdapter.ItemEventListener {
 
-    private static final String TAG = ContactsFragment.class.getName();
-
     private RecyclerView rv_main;
     private GroupTransAdapter adapter;
 
@@ -53,7 +51,7 @@ public class GroupManageFragment extends Fragment implements GroupTransAdapter.I
     private String ownerName = "";
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_contacts_layout, container, false);
     }
 

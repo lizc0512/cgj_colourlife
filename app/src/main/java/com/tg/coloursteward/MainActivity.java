@@ -692,7 +692,7 @@ public class MainActivity extends FragmentActivity implements ResponseListener, 
                             ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUESTPERMISSION);
                             ToastFactory.showToast(MainActivity.this, "请允许权限进行下载安装");
                         } else {
-                            manager.checkUpdate(apkinfo);
+                            manager.checkUpdate(apkinfo, false);
                         }
                     }
                 } catch (JSONException e) {

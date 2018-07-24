@@ -1,4 +1,4 @@
-package com.tg.coloursteward.module.search;
+package com.youmai.hxsdk.widget;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;

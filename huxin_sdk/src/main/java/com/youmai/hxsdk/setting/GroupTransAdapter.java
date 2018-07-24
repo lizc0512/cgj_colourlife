@@ -1,4 +1,4 @@
-package com.tg.coloursteward.module.groupchat.setting;
+package com.youmai.hxsdk.setting;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -12,10 +12,10 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
-import com.youmai.hxsdk.stickyheader.StickyHeaderAdapter;
 import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.db.bean.ContactBean;
 import com.youmai.hxsdk.entity.cn.CNPinyin;
+import com.youmai.hxsdk.stickyheader.StickyHeaderAdapter;
 import com.youmai.hxsdk.utils.GlideRoundTransform;
 
 import java.util.HashMap;

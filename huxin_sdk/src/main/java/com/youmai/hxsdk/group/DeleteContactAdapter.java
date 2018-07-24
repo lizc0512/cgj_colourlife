@@ -1,4 +1,4 @@
-package com.tg.coloursteward.module.groupchat.deletecontact;
+package com.youmai.hxsdk.group;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -13,8 +13,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
-import com.tg.coloursteward.R;
-import com.tg.coloursteward.constant.Contants;
+import com.youmai.hxsdk.R;
+import com.youmai.hxsdk.config.ColorsConfig;
 import com.youmai.hxsdk.db.bean.ContactBean;
 import com.youmai.hxsdk.utils.GlideRoundTransform;
 
@@ -28,8 +28,6 @@ import java.util.Map;
  * 描述：
  */
 public class DeleteContactAdapter extends RecyclerView.Adapter {
-
-    final String HEAD_ICON_URL = Contants.URl.HEAD_ICON_URL; //头像
 
     private Context mContext;
     private List<ContactBean> mGroupList;
@@ -86,7 +84,7 @@ public class DeleteContactAdapter extends RecyclerView.Adapter {
             itemHolder.cb_collect.setChecked(false);
         }
 
-        String url = HEAD_ICON_URL + "avatar?uid=" + contact.getUsername();
+        String url = ColorsConfig.HEAD_ICON_URL + "avatar?uid=" + contact.getUsername();
         Glide.with(mContext)
                 .load(url)
                 .apply(new RequestOptions()

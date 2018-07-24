@@ -1,21 +1,21 @@
-package com.tg.coloursteward.module.groupchat.setting;
+package com.youmai.hxsdk.setting;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.protobuf.InvalidProtocolBufferException;
-import com.tg.coloursteward.R;
-import com.tg.coloursteward.module.groupchat.details.ChatGroupDetailsActivity;
-import com.tg.coloursteward.module.groupchat.details.ContactBeanData;
-import com.tg.coloursteward.util.StringUtils;
 import com.youmai.hxsdk.HuxinSdkManager;
+import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.activity.SdkBaseActivity;
 import com.youmai.hxsdk.db.bean.ContactBean;
+import com.youmai.hxsdk.group.ChatGroupDetailsActivity;
+import com.youmai.hxsdk.group.ContactBeanData;
 import com.youmai.hxsdk.proto.YouMaiBasic;
 import com.youmai.hxsdk.proto.YouMaiGroup;
 import com.youmai.hxsdk.socket.PduBase;
@@ -98,7 +98,7 @@ public class GroupManageActivity extends SdkBaseActivity {
         tv_title_right.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (StringUtils.isEmpty(groupManageFragment.getOwnerId())) {
+                if (TextUtils.isEmpty(groupManageFragment.getOwnerId())) {
                     return;
                 }
                 ReceiveListener receiveListener = new ReceiveListener() {

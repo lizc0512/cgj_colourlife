@@ -1,6 +1,5 @@
-package com.tg.coloursteward.module.groupchat.setting;
+package com.youmai.hxsdk.setting;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,9 +11,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.protobuf.InvalidProtocolBufferException;
-import com.tg.coloursteward.R;
-import com.tg.coloursteward.module.groupchat.details.ChatGroupDetailsActivity;
 import com.youmai.hxsdk.HuxinSdkManager;
+import com.youmai.hxsdk.R;
+import com.youmai.hxsdk.activity.SdkBaseActivity;
+import com.youmai.hxsdk.group.ChatGroupDetailsActivity;
 import com.youmai.hxsdk.proto.YouMaiBasic;
 import com.youmai.hxsdk.proto.YouMaiGroup;
 import com.youmai.hxsdk.socket.PduBase;
@@ -26,7 +26,7 @@ import com.youmai.hxsdk.utils.StringUtils;
  * 日期：2018.04.26 17:05
  * 描述: 群公告设置
  */
-public class GroupNoticeActivity extends Activity {
+public class GroupNoticeActivity extends SdkBaseActivity {
 
     public static final String GROUP_ID = "groupId";
     public static final String GROUP_NOTICE = "groupNotice";
@@ -42,7 +42,7 @@ public class GroupNoticeActivity extends Activity {
     private boolean is_owner;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.group_notice_setting);
 

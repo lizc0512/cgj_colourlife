@@ -124,12 +124,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/HxMsgTheme" />
 
-        <activity
-            android:name="com.youmai.hxsdk.group.GroupListActivity"
-            android:configChanges="keyboardHidden|orientation"
-            android:screenOrientation="portrait"
-            android:theme="@style/HxMsgTheme" />
-
         <!--IM消息-->
         <activity
             android:name="com.youmai.hxsdk.activity.IMConnectionActivity"
@@ -147,6 +141,55 @@
             android:screenOrientation="portrait"
             android:theme="@style/HxSdkNewTheme"
             android:windowSoftInputMode="adjustResize|stateHidden" />
+
+        <activity
+            android:name="com.youmai.hxsdk.group.GroupListActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"
+            android:theme="@style/HxSdkTheme"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+
+        <activity
+            android:name="com.youmai.hxsdk.group.ChatGroupDetailsActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"
+            android:theme="@style/HxSdkTheme"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+
+        <activity
+            android:name="com.youmai.hxsdk.group.DeleteContactListActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"
+            android:theme="@style/HxSdkTheme"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+
+        <activity
+            android:name="com.youmai.hxsdk.group.ChatGroupAllMembersActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"
+            android:theme="@style/HxSdkTheme"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+
+        <activity
+            android:name="com.youmai.hxsdk.setting.GroupNameActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"
+            android:theme="@style/HxSdkTheme"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+
+        <activity
+            android:name="com.youmai.hxsdk.setting.GroupNoticeActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"
+            android:theme="@style/HxSdkTheme"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+
+        <activity
+            android:name="com.youmai.hxsdk.setting.GroupManageActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"
+            android:theme="@style/HxSdkTheme"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
 
 
         <activity

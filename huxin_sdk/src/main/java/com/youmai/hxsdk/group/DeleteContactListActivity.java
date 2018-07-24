@@ -1,4 +1,4 @@
-package com.tg.coloursteward.module.groupchat.deletecontact;
+package com.youmai.hxsdk.group;
 
 import android.content.Context;
 import android.content.Intent;
@@ -13,18 +13,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.protobuf.InvalidProtocolBufferException;
-import com.tg.coloursteward.R;
-import com.tg.coloursteward.base.BaseActivity;
-import com.tg.coloursteward.module.groupchat.details.ChatGroupDetailsActivity;
-import com.tg.coloursteward.module.groupchat.details.ContactBeanData;
-import com.tg.coloursteward.module.search.SearchEditText;
 import com.youmai.hxsdk.HuxinSdkManager;
+import com.youmai.hxsdk.R;
+import com.youmai.hxsdk.activity.SdkBaseActivity;
 import com.youmai.hxsdk.db.bean.ContactBean;
 import com.youmai.hxsdk.proto.YouMaiBasic;
 import com.youmai.hxsdk.proto.YouMaiGroup;
 import com.youmai.hxsdk.socket.PduBase;
 import com.youmai.hxsdk.socket.ReceiveListener;
 import com.youmai.hxsdk.utils.ListUtils;
+import com.youmai.hxsdk.widget.SearchEditText;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,7 +34,7 @@ import java.util.Map;
  * 日期：2018.04.12 13:54
  * 描述：删除群聊列表
  */
-public class DeleteContactListActivity extends BaseActivity {
+public class DeleteContactListActivity extends SdkBaseActivity {
 
     public static final String DELETE_GROUP_ID = "DELETE_GROUP_ID";
 
@@ -64,15 +62,6 @@ public class DeleteContactListActivity extends BaseActivity {
         setOnClickListener();
     }
 
-    @Override
-    public View getContentView() {
-        return null;
-    }
-
-    @Override
-    public String getHeadTitle() {
-        return "";
-    }
 
     @Override
     public void onDestroy() {

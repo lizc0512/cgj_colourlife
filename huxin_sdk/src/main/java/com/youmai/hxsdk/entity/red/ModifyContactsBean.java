@@ -13,9 +13,11 @@ public class ModifyContactsBean {
     private int code;
     private String message;
     private ContentBean content;
+
     public boolean isSuccess() {
         return code == 0;
     }
+
     public int getCode() {
         return code;
     }

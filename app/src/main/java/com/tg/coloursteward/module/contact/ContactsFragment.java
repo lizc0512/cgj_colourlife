@@ -132,8 +132,7 @@ public class ContactsFragment extends Fragment implements ItemEventListener {
         super.onCreate(savedInstanceState);
         registerReceiver();
         bindData = ContactsBindData.init();
-        //skincode = Tools.getStringValue(mContext, Contants.storage.SKINCODE);
-        skincode = AppUtils.getStringSharedPreferences(mContext, Constant.SP_SKINCODE,"");
+        skincode = Tools.getStringValue(mContext, Contants.storage.SKINCODE);
         orgName = Tools.getStringValue(mContext, Contants.storage.ORGNAME);
         orgId = Tools.getStringValue(mContext, Contants.storage.ORGID);
     }
@@ -275,7 +274,7 @@ public class ContactsFragment extends Fragment implements ItemEventListener {
                 if (!subscriber.isUnsubscribed()) {
                     //子线程查数据库，返回List<Contacts>
                     List<CNPinyin<ContactBean>> list = CNPinyinFactory.createCNPinyinList(
-                            bindData.contactList(getContext(), data));
+                            bindData.contactList(data));
                     Collections.sort(list);
                     subscriber.onNext(list);
                     subscriber.onCompleted();
@@ -461,34 +460,13 @@ public class ContactsFragment extends Fragment implements ItemEventListener {
      * 获取首页缓存列表
      */
     private void getCacheList() {
-
-        /*
-        获取本地收藏联系人
-        LinkManListCache = Tools.getLinkManList(mContext);
-        JSONArray json1 = null;
-        if (StringUtils.isNotEmpty(LinkManListCache)) {
-            try {
-                JSONObject jsonObj = new JSONObject(LinkManListCache);
-                String str = jsonObj.optString("content");
-                JSONObject jsonObj2 = new JSONObject(str);
-                json1 = jsonObj2.getJSONArray("data");
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            if (json1 != null) {
-                ResponseData data = HttpTools.getResponseContent(json1);
-
-               // getPinyinList(data);
-            }
-        }
-        */
-        String json = AppUtils.getStringSharedPreferences(mContext, LIKE_CONTACTS_KEY, "");
+        String json = AppUtils.getStringSharedPreferences(mContext, "contents", "");
         if (TextUtils.isEmpty(json)) {
             modifyContactsList();
         } else {
-            ModifyContactsBean parse = GsonUtil.parse(json, ModifyContactsBean.class);
-            if (parse.getCode() == 0) {
-                List<ModifyContactsBean.ContentBean.DataBean> data = parse.getContent().getData();
+            ModifyContactsBean bean = GsonUtil.parse(json, ModifyContactsBean.class);
+            if (bean != null && bean.isSuccess()) {
+                List<ModifyContactsBean.ContentBean.DataBean> data = bean.getContent().getData();
                 if (data.size() != 0) {
                     getPinyinList(data);
                 }
@@ -496,16 +474,16 @@ public class ContactsFragment extends Fragment implements ItemEventListener {
         }
     }
 
-    private static String LIKE_CONTACTS_KEY = "like_man";
 
     /**
      * 查询常用联系人
      */
     void modifyContactsList() {
         String url = ColorsConfig.MODIFY_CONTACTS;
+        String userName = HuxinSdkManager.instance().getUserName();
 
         final ContentValues params = new ContentValues();
-        params.put("owner", UserInfo.employeeAccount);
+        params.put("owner", userName);
         params.put("page", "1");
         params.put("pagesize", "100");
         ColorsConfig.commonParams(params);
@@ -516,7 +494,7 @@ public class ContactsFragment extends Fragment implements ItemEventListener {
                 if (bean != null && bean.isSuccess()) {
                     List<ModifyContactsBean.ContentBean.DataBean> data = bean.getContent().getData();
                     if (data.size() != 0) {
-                        AppUtils.setStringSharedPreferences(mContext, LIKE_CONTACTS_KEY, response);
+                        AppUtils.setStringSharedPreferences(mContext, "contents", response);
                         getPinyinList(data);
                     }
                 }

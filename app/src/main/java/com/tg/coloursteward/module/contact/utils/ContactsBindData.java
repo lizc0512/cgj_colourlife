@@ -77,33 +77,24 @@ public class ContactsBindData extends Observable {
         return contactList;
     }
 
-    public List<ContactBean> contactList(Context context, List<ModifyContactsBean.ContentBean.DataBean> data) {
+    public List<ContactBean> contactList(List<ModifyContactsBean.ContentBean.DataBean> data) {
         List<ContactBean> contactList = new ArrayList<>();
+
         ContactBean contact;
         for (int i = 0; i < data.size(); i++) {
-
             contact = new ContactBean();
             ModifyContactsBean.ContentBean.DataBean dataBean = data.get(i);
-            // String hanzi = data.get(i, "name");//真实名字
-            String hanzi = data.get(i).getName();
-            contact.setRealname(dataBean.getName());
+
+            String hanzi = dataBean.getName();
+            contact.setRealname(hanzi);
             contact.setUsername(dataBean.getUsername());//联系人用户名
             contact.setAvatar(dataBean.getIcon());//头像
             contact.setEmail(dataBean.getEmail());//邮箱
             contact.setJobName(dataBean.getJobName());//岗位名称
-           // contact.setOrgName(data.get(i).getEnterprise_cornet());//组织架构名称
-            contact.setOrgID(dataBean.getFamily()+"");//组织架构uuid
-            contact.setFavoriteid(dataBean.getFavoriteid()+"");
+            contact.setOrgID(String.valueOf(dataBean.getFamily()));//组织架构uuid
+            contact.setFavoriteid(String.valueOf(dataBean.getFavoriteid()));
             String accountUuid = data.get(i).getAccountUuid();
-           // String uuid = data.getString(i, "accountUuid");
-            if ( !TextUtils.isEmpty(accountUuid)) {
-                    contact.setUuid(accountUuid);
-            }
-           // if (TextUtils.isEmpty(uuid) || TextUtils.isEmpty(accountUuid)) {
-//                Looper.prepare();
-//                Toast.makeText(context, "收藏联系人接口错误" + hanzi + "的uuid为空", Toast.LENGTH_SHORT).show();
-//                Looper.loop();// 进入loop中的循环，查看消息队列
-           // }
+            contact.setUuid(accountUuid);
 
 
             StringBuilder pinyin = new StringBuilder();

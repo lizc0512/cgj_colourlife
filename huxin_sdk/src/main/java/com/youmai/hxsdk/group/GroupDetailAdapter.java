@@ -1,4 +1,4 @@
-package com.tg.coloursteward.module.groupchat.details;
+package com.youmai.hxsdk.group;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -13,8 +13,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
-import com.tg.coloursteward.R;
-import com.tg.coloursteward.constant.Contants;
+import com.youmai.hxsdk.R;
+import com.youmai.hxsdk.config.ColorsConfig;
 import com.youmai.hxsdk.db.bean.ContactBean;
 import com.youmai.hxsdk.utils.GlideRoundTransform;
 
@@ -27,8 +27,6 @@ import java.util.List;
  * 描述：
  */
 public class GroupDetailAdapter extends RecyclerView.Adapter {
-
-    final String HEAD_ICON_URL = Contants.URl.HEAD_ICON_URL; //头像
 
     public enum TYPE {
         DEFAULT, ADD_MEMBER, DEL_MEMBER
@@ -123,7 +121,7 @@ public class GroupDetailAdapter extends RecyclerView.Adapter {
 
             String url = contact.getAvatar();
             if (TextUtils.isEmpty(url)) {
-                url = HEAD_ICON_URL + "avatar?uid=" + contact.getUsername();
+                url = ColorsConfig.HEAD_ICON_URL + "avatar?uid=" + contact.getUsername();
             }
 
             int size = mContext.getResources().getDimensionPixelOffset(R.dimen.card_head);

@@ -130,6 +130,12 @@
             android:screenOrientation="portrait"
             android:theme="@style/HxMsgTheme" />
 
+        <activity
+            android:name="com.youmai.hxsdk.group.ChatGroupAllMembersActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/HxSdkTheme" />
+
+
         <!--IM消息-->
         <activity
             android:name="com.youmai.hxsdk.activity.IMConnectionActivity"

@@ -16,7 +16,7 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.module.groupchat.details.ChatGroupDetailsActivity;
-import com.tg.coloursteward.module.groupchat.details.ContactBeanData;
+import com.youmai.hxsdk.group.ContactBeanData;
 import com.tg.coloursteward.module.search.SearchEditText;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.db.bean.ContactBean;

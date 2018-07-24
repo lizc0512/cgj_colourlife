@@ -1,4 +1,4 @@
-package com.tg.coloursteward.module.groupchat.details;
+package com.youmai.hxsdk.group;
 
 import com.youmai.hxsdk.db.bean.ContactBean;
 
@@ -28,7 +28,8 @@ public class ContactBeanData {
     }
 
     public ArrayList<ContactBean> getGroupList() {
-        if (!groupList.contains(groupOwner)) {
+        if (groupOwner != null
+                && !groupList.contains(groupOwner)) {
             groupList.add(groupOwner);
         }
         return groupList;

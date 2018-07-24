@@ -32,7 +32,7 @@ import com.youmai.hxsdk.widget.CharIndexView;
 import com.tg.coloursteward.module.groupchat.addcontact.AddContactByDepartmentFragment;
 import com.tg.coloursteward.module.groupchat.addcontact.AddContactBySearchFragment;
 import com.tg.coloursteward.module.groupchat.details.ChatGroupDetailsActivity;
-import com.tg.coloursteward.module.groupchat.details.ContactBeanData;
+import com.youmai.hxsdk.group.ContactBeanData;
 import com.tg.coloursteward.module.search.SearchEditText;
 import com.tg.coloursteward.net.GetTwoRecordListener;
 import com.tg.coloursteward.net.HttpTools;

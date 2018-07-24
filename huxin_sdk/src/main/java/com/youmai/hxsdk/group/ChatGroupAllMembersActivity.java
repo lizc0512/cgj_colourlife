@@ -1,4 +1,4 @@
-package com.tg.coloursteward.module.groupchat.details;
+package com.youmai.hxsdk.group;
 
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -7,7 +7,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
-import com.tg.coloursteward.R;
+import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.activity.IMGroupActivity;
 import com.youmai.hxsdk.activity.SdkBaseActivity;
@@ -68,7 +68,7 @@ public class ChatGroupAllMembersActivity extends SdkBaseActivity {
     }
 
     private void initView() {
-        mTvBack = findViewById(com.youmai.hxsdk.R.id.tv_back);
+        mTvBack = findViewById(R.id.tv_back);
         mTvBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

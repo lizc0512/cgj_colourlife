@@ -1,6 +1,7 @@
-package com.tg.coloursteward.module.contact;
+package com.youmai.hxsdk.adapter;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +13,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
-import com.tg.coloursteward.R;
+import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.stickyheader.StickyHeaderAdapter;
 import com.youmai.hxsdk.db.bean.ContactBean;
 import com.youmai.hxsdk.entity.cn.CNPinyin;
@@ -25,12 +26,6 @@ import java.util.List;
  */
 public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements
         StickyHeaderAdapter<ContactAdapter.HeaderHolder> {
-
-    enum TYPE {
-        HEADER, DEFAULT
-    }
-
-    public static final int mIndexForContact = 4;  //搜索 //组织架构 //我的部门 //手机联系人 //群聊
 
     private Context mContext;
     private int mCollectIndex;
@@ -55,30 +50,15 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         return cnPinyinList.size();
     }
 
+
     @Override
-    public int getItemViewType(int position) {
-        int type;
-        if (position < mCollectIndex) {
-            type = TYPE.HEADER.ordinal();
-        } else {
-            type = TYPE.DEFAULT.ordinal();
-        }
-        return type;
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        return new ContactHolder(LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.contacts_fragment_item, parent, false));
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (viewType == TYPE.HEADER.ordinal()) {
-            return new ContactHolder(LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.contacts_fragment_item, parent, false));
-        } else {
-            return new ContactHolder(LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.contacts_fragment_item, parent, false));
-        }
-    }
-
-    @Override
-    public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
         final ContactBean contact = cnPinyinList.get(position).data;
 
         if (holder instanceof ContactHolder) {

@@ -69,7 +69,7 @@ import rx.schedulers.Schedulers;
  * 描述：创建群
  */
 public class AddContactsCreateGroupActivity extends SdkBaseActivity
-        implements SearchContactAdapter.ItemEventListener {
+        implements SearchContactAdapter.ItemEventListener, View.OnClickListener {
 
     public static final String GROUP_LIST = "GROUP_LIST";
     public static final String DETAIL_TYPE = "DETAIL_TYPE";
@@ -102,7 +102,6 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
     private ArrayList<CNPinyin<ContactBean>> contactList = new ArrayList<>();
     private LinearLayoutManager manager;
     private Subscription subscription;
-    private ContactBeanData bindData;
 
     private Map<String, ContactBean> mGroupMap = new HashMap<>();
     private ArrayList<ContactBean> mContactList; //群组成员列表
@@ -185,8 +184,6 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
 
         registerReceiver();
 
-        bindData = ContactBeanData.init();
-
         getHeadList();
 
         mDetailType = getIntent().getIntExtra(DETAIL_TYPE, -1);
@@ -201,6 +198,7 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
         //标题
         tv_Cancel = findViewById(R.id.tv_left_cancel);
         tv_Cancel.setText(R.string.hx_back);
+
         tv_Sure = findViewById(R.id.tv_right_sure);
         tv_Sure.setText("完成(" + 0 + ")");
         tv_Sure.setEnabled(false);
@@ -236,6 +234,16 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
     }
 
     @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        if (id == R.id.tv_right_sure) {
+            done();
+        } else if (id == R.id.tv_left_cancel) {
+            hide();
+        }
+    }
+
+    @Override
     public void onDestroy() {
         unRegisterReceiver();
         if (null != subscription) {
@@ -263,25 +271,27 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
     }
 
 
-    void initGroupMap() {
+    private void initGroupMap() {
         for (ContactBean contact : mContactList) {
             mGroupMap.put(contact.getUuid(), contact);
-            //if (mDetailType == 1) {
-            //mTotalMap.put(contact.getUuid(), contact);
-            //}
         }
     }
 
     private void hide() {
         hideSoftKey();
-        if (!searchGroupFragment.isHidden()) {
+        if (searchGroupFragment.isVisible()) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.hide(searchGroupFragment);
             searchGroupFragment.hide();
             transaction.commit();
+        } else if (departmentFragment.isVisible()) {
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.hide(departmentFragment);
+            transaction.commit();
         } else {
             finish();
         }
+
         editText.setText("");
         editText.clearFocus();
     }
@@ -295,21 +305,23 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (searchGroupFragment.isHidden() && !TextUtils.isEmpty(s.toString())) {
-                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                if (TextUtils.isEmpty(s.toString())) {
+                    return;
+                }
+
+                if (departmentFragment.isVisible()) {
+                    transaction.hide(departmentFragment);
+                }
+
+                if (searchGroupFragment.isVisible()) {
+                    searchGroupFragment.add(s.toString());
+                } else {
                     transaction.show(searchGroupFragment);
                     searchGroupFragment.add(s.toString());
                     transaction.commit();
-                } else {
-                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                    if (!searchGroupFragment.isHidden()) {
-                        transaction.hide(searchGroupFragment);
-                    }
-                    if (!departmentFragment.isHidden()) {
-                        transaction.hide(departmentFragment);
-                    }
-                    transaction.commit();
                 }
+
                 searchGroupFragment.setMap(mTotalMap, mGroupMap);
             }
 
@@ -344,18 +356,8 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
     }
 
     private void setListener() {
-        tv_Sure.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                done();
-            }
-        });
-        tv_Cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                hide();
-            }
-        });
+        tv_Sure.setOnClickListener(this);
+        tv_Cancel.setOnClickListener(this);
         iv_main.setOnCharIndexChangedListener(new CharIndexView.OnCharIndexChangedListener() {
             @Override
             public void onCharIndexChanged(char currentIndex) {
@@ -520,7 +522,7 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
             public void call(Subscriber<? super List<CNPinyin<ContactBean>>> subscriber) {
                 if (!subscriber.isUnsubscribed()) {
                     //子线程查数据库，返回List<Contacts>
-                    List<ContactBean> contacts = bindData.contactList(mActivity, ContactBeanData.TYPE_GROUP_ADD);
+                    List<ContactBean> contacts = ContactBeanData.contactList(mActivity, ContactBeanData.TYPE_GROUP_ADD);
                     List<CNPinyin<ContactBean>> contactList = CNPinyinFactory.createCNPinyinList(contacts);
                     subscriber.onNext(contactList);
                     subscriber.onCompleted();
@@ -606,7 +608,7 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
                 if (!subscriber.isUnsubscribed()) {
                     //子线程查数据库，返回List<Contacts>
                     List<CNPinyin<ContactBean>> list = CNPinyinFactory.createCNPinyinList(
-                            bindData.contactList(data));
+                            ContactBeanData.contactList(data));
                     Collections.sort(list);
                     subscriber.onNext(list);
                     subscriber.onCompleted();
@@ -652,15 +654,13 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.show(departmentFragment);
             transaction.commit();
-            departmentFragment.setMap(ColorsConfig.ColorLifeAppId, ColorsConfig.ColorLifeAppName,
-                    mTotalMap, mGroupMap);
+            departmentFragment.setMap(ColorsConfig.ColorLifeAppId, mTotalMap, mGroupMap);
         } else if (type == SearchContactAdapter.TYPE.DEPARTMENT_TYPE.ordinal()) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.show(departmentFragment);
             transaction.commit();
             String orgId = HuxinSdkManager.instance().getOrgId();
-            String orgName = HuxinSdkManager.instance().getOrgName();
-            departmentFragment.setMap(orgId, orgName, mTotalMap, mGroupMap);//to do
+            departmentFragment.setMap(orgId, mTotalMap, mGroupMap);//to do
         }
     }
 

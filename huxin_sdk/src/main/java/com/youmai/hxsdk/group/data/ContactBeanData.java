@@ -4,50 +4,25 @@ import android.content.Context;
 
 import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.db.bean.ContactBean;
-import com.youmai.hxsdk.entity.cn.CN;
 import com.youmai.hxsdk.entity.cn.pinyin.Pinyin;
 import com.youmai.hxsdk.entity.red.ModifyContactsBean;
 import com.youmai.hxsdk.group.adapter.SearchContactAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Observable;
 
 /**
  * 作者：create by YW
  * 日期：2018.03.21 17:30
  * 描述：联系人数据更新
  */
-public class ContactBeanData extends Observable {
+public class ContactBeanData {
 
     public static final int TYPE_HOME = 0x01;
     public static final int TYPE_GROUP_ADD = 0x02;
 
-    private static ContactBeanData instance;
 
-    public static ContactBeanData init() {
-        synchronized (ContactBeanData.class) {
-            if (null == instance) {
-                instance = new ContactBeanData();
-            }
-            return instance;
-        }
-    }
-
-    public static ContactBeanData peekInstance() {
-        return instance;
-    }
-
-    public void onDestroy() {
-        instance = null;
-    }
-
-    public void initData(List<? extends CN> data) {
-        setChanged();
-        notifyObservers(null);
-    }
-
-    public List<ContactBean> contactList(Context context, int type) {
+    public static List<ContactBean> contactList(Context context, int type) {
         List<ContactBean> contactList = new ArrayList<>();
         String[] names;
         if (type == TYPE_HOME) {
@@ -75,7 +50,7 @@ public class ContactBeanData extends Observable {
         return contactList;
     }
 
-    public List<ContactBean> contactList(List<ModifyContactsBean.ContentBean.DataBean> data) {
+    public static List<ContactBean> contactList(List<ModifyContactsBean.ContentBean.DataBean> data) {
         List<ContactBean> contactList = new ArrayList<>();
 
         ContactBean contact;
@@ -112,7 +87,7 @@ public class ContactBeanData extends Observable {
     }
 
 
-    ContactBean addHeadItem(String hanzi) {
+    private static ContactBean addHeadItem(String hanzi) {
         ContactBean contact = new ContactBean();
         StringBuffer pinyin = new StringBuffer();
         StringBuffer ch = new StringBuffer();

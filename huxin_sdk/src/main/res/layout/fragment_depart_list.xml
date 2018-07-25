@@ -5,8 +5,6 @@
     android:background="@color/hx_color_white"
     android:orientation="vertical">
 
-    <include layout="@layout/group_header_title" />
-
     <com.jcodecraeer.xrecyclerview.XRecyclerView
         android:id="@+id/depart_xrv"
         android:layout_width="match_parent"

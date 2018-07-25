@@ -31,7 +31,8 @@ import com.tg.coloursteward.R;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.info.FamilyInfo;
 import com.tg.coloursteward.info.UserInfo;
-import com.tg.coloursteward.module.contact.ContactAdapter.ItemEventListener;
+import com.youmai.hxsdk.adapter.ContactAdapter;
+import com.youmai.hxsdk.adapter.ContactAdapter.ItemEventListener;
 import com.youmai.hxsdk.entity.red.DeleteUserBean;
 import com.youmai.hxsdk.entity.red.ModifyContactsBean;
 import com.youmai.hxsdk.entity.red.ReqContactsBean;
@@ -76,16 +77,16 @@ public class ContactsFragment extends Fragment implements ItemEventListener {
     private static final String TAG = ContactsFragment.class.getName();
 
     private Context mContext;
+    private List<ContactBean> headContacts;
 
     private static final int ISTREAD = 1;
     private String skincode;
     private String orgName;
     private String orgId;
     private final int REQUESTPERMISSION = 110;
-    private String LinkManListCache;
     private ArrayList<FamilyInfo> familyList = new ArrayList<>(); //组织架构人
 
-    private RecyclerView rv_main;
+    private RecyclerView recyclerView;
     private ContactAdapter adapter;
 
     private CharIndexView iv_main;
@@ -95,7 +96,6 @@ public class ContactsFragment extends Fragment implements ItemEventListener {
     private ArrayList<CNPinyin<ContactBean>> contactList = new ArrayList<>();
     private LinearLayoutManager manager;
     private Subscription subscription;
-    private ContactBeanData bindData;
 
     public static final String BROADCAST_INTENT_FILTER = "com.tg.coloursteward.contact";
     public static final String ACTION = "action";
@@ -129,7 +129,8 @@ public class ContactsFragment extends Fragment implements ItemEventListener {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         registerReceiver();
-        bindData = ContactBeanData.init();
+        headContacts = ContactBeanData.contactList(mContext, ContactBeanData.TYPE_HOME);
+
         skincode = Tools.getStringValue(mContext, Contants.storage.SKINCODE);
         orgName = Tools.getStringValue(mContext, Contants.storage.ORGNAME);
         orgId = Tools.getStringValue(mContext, Contants.storage.ORGID);
@@ -174,17 +175,16 @@ public class ContactsFragment extends Fragment implements ItemEventListener {
         });
 
 
-        rv_main = view.findViewById(R.id.rv_main);
+        recyclerView = view.findViewById(R.id.recycler_view);
         iv_main = view.findViewById(R.id.iv_main);
         tv_index = view.findViewById(R.id.tv_index);
 
         manager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-        rv_main.setLayoutManager(manager);
+        recyclerView.setLayoutManager(manager);
 
-        adapter = new ContactAdapter(getContext(), contactList, ContactAdapter.mIndexForContact, this);
-        rv_main.setAdapter(adapter);
-        rv_main.addItemDecoration(new StickyHeaderDecoration(adapter));
-
+        adapter = new ContactAdapter(mContext, contactList, headContacts.size(), this);
+        recyclerView.setAdapter(adapter);
+        recyclerView.addItemDecoration(new StickyHeaderDecoration(adapter));
 
     }
 
@@ -194,9 +194,7 @@ public class ContactsFragment extends Fragment implements ItemEventListener {
         if (subscription != null) {
             subscription.unsubscribe();
         }
-        if (null != bindData) {
-            bindData.onDestroy();
-        }
+
         if (!ListUtils.isEmpty(contactList)) {
             contactList.clear();
         }
@@ -237,8 +235,7 @@ public class ContactsFragment extends Fragment implements ItemEventListener {
             public void call(Subscriber<? super List<CNPinyin<ContactBean>>> subscriber) {
                 if (!subscriber.isUnsubscribed()) {
                     //子线程查数据库，返回List<Contacts>
-                    List<ContactBean> contacts = bindData.contactList(mContext, ContactBeanData.TYPE_HOME);
-                    List<CNPinyin<ContactBean>> list = CNPinyinFactory.createCNPinyinList(contacts);
+                    List<CNPinyin<ContactBean>> list = CNPinyinFactory.createCNPinyinList(headContacts);
                     subscriber.onNext(list);
                     subscriber.onCompleted();
                 }
@@ -272,7 +269,7 @@ public class ContactsFragment extends Fragment implements ItemEventListener {
                 if (!subscriber.isUnsubscribed()) {
                     //子线程查数据库，返回List<Contacts>
                     List<CNPinyin<ContactBean>> list = CNPinyinFactory.createCNPinyinList(
-                            bindData.contactList(data));
+                            ContactBeanData.contactList(data));
                     Collections.sort(list);
                     subscriber.onNext(list);
                     subscriber.onCompleted();

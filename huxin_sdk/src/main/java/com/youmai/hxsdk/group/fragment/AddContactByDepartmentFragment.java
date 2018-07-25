@@ -1,22 +1,14 @@
 package com.youmai.hxsdk.group.fragment;
 
-import android.content.BroadcastReceiver;
 import android.content.ContentValues;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.youmai.hxsdk.R;
@@ -26,7 +18,6 @@ import com.youmai.hxsdk.group.AddContactsCreateGroupActivity;
 import com.youmai.hxsdk.group.adapter.DepartAdapter;
 import com.youmai.hxsdk.http.IGetListener;
 import com.youmai.hxsdk.http.OkHttpConnector;
-import com.youmai.hxsdk.utils.ToastUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -41,73 +32,15 @@ import java.util.Map;
  * 日期：2018.04.19 18:24
  * 描述：部门联系人搜索列表
  */
-public class AddContactByDepartmentFragment extends Fragment implements View.OnClickListener {
-
-    //广播
-    private static final String BROADCAST_FILTER = "com.tg.coloursteward.searchcontact";
-    private static final String ACTION = "contact_action";
-    private static final String ADAPTER_CONTACT = "adapter";
-    private static final String SEARCH_CONTACT = "search";
-    private static final String DEPART_CONTACT = "department";
+public class AddContactByDepartmentFragment extends Fragment {
 
     private XRecyclerView mXRecyclerView;
-    private TextView mTvBack;
-    private TextView mTvTitle;
-    private TextView mTvSure;
     private DepartAdapter mAdapter;
 
-
-    private ModifyContactsReceiver mModifyContactsReceiver;
-
-    private class ModifyContactsReceiver extends BroadcastReceiver {
-
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getStringExtra(ACTION);
-            ContactBean bean = intent.getParcelableExtra("bean");
-            if (action.equals(ADAPTER_CONTACT)) {
-                updateCacheMap(bean);
-            } else if (action.equals(SEARCH_CONTACT)) {
-                //mActivity.hide();
-                updateCacheMap(bean);
-            } else if (action.equals(DEPART_CONTACT)) {
-                updateCacheMap(bean);
-            }
-        }
-    }
-
-    private void registerReceiver() {
-        mModifyContactsReceiver = new ModifyContactsReceiver();
-        IntentFilter intentFilter = new IntentFilter(BROADCAST_FILTER);
-        LocalBroadcastManager.getInstance(getContext()).registerReceiver(mModifyContactsReceiver, intentFilter);
-    }
-
-    private void unRegisterReceiver() {
-        LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(mModifyContactsReceiver);
-    }
-
-
-    @Override
-    public void onClick(View v) {
-        int id = v.getId();
-        if (id == R.id.tv_left_cancel) {
-            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-            transaction.hide(this);
-            transaction.commit();
-        } else if (id == R.id.tv_right_sure) {
-            if (getActivity() instanceof AddContactsCreateGroupActivity) {
-                AddContactsCreateGroupActivity act = (AddContactsCreateGroupActivity) getActivity();
-                act.done();
-            }
-        }
-
-    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        registerReceiver();
     }
 
     @Nullable
@@ -121,12 +54,6 @@ public class AddContactByDepartmentFragment extends Fragment implements View.OnC
         super.onViewCreated(view, savedInstanceState);
 
         mXRecyclerView = view.findViewById(R.id.depart_xrv);
-        mTvBack = view.findViewById(R.id.tv_left_cancel);
-        mTvTitle = view.findViewById(R.id.tv_title);
-        mTvSure = view.findViewById(R.id.tv_right_sure);
-
-        mTvBack.setOnClickListener(this);
-        mTvSure.setOnClickListener(this);
 
         mAdapter = new DepartAdapter(getContext());
 
@@ -147,28 +74,19 @@ public class AddContactByDepartmentFragment extends Fragment implements View.OnC
             }
         });
 
-
-        //mTvTitle.setText(UserInfo.familyName);
-
         mAdapter.setCallback(new DepartAdapter.ItemEventListener() {
             @Override
             public void onItemClick(int pos, ContactBean contact) {
                 String id = contact.getUuid();
-                String orgName = contact.getRealname();
                 if (getActivity() instanceof AddContactsCreateGroupActivity) {
                     AddContactsCreateGroupActivity act = (AddContactsCreateGroupActivity) getActivity();
-                    setMap(id, orgName, act.getTotalMap(), act.getGroupMap());
+                    setMap(id, act.getTotalMap(), act.getGroupMap());
                 }
             }
         });
 
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        unRegisterReceiver();
-    }
 
     private void loadDataForNet(String orgId) {
         String url = ColorsConfig.CONTACTS_CHILD_DATAS;
@@ -209,33 +127,20 @@ public class AddContactByDepartmentFragment extends Fragment implements View.OnC
 
     }
 
-    public void setMap(String orgId, String orgName, Map<String, ContactBean> totalMap,
+    public void setMap(String orgId, Map<String, ContactBean> totalMap,
                        Map<String, ContactBean> groupMap) {
         mAdapter.setCacheMap(totalMap);
         mAdapter.setGroupMap(groupMap);
 
-        mTvTitle.setText(orgName);
         loadDataForNet(orgId);
     }
 
 
-    private void updateCacheMap(ContactBean contact) {
-        if (getActivity() instanceof AddContactsCreateGroupActivity) {
-            AddContactsCreateGroupActivity act = (AddContactsCreateGroupActivity) getActivity();
-            Map<String, ContactBean> mTotalMap = act.getTotalMap();
-
-            int count = mTotalMap.size();
-            Log.d("YW", "map size: " + count);
-
-            if (count > 0) {
-                mTvSure.setEnabled(true);
-            } else {
-                mTvSure.setEnabled(false);
-            }
-            mTvSure.setText("完成(" + count + ")");
-        }
 
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
     }
 
 

@@ -3,7 +3,7 @@
     android:id="@+id/search_parent"
     android:layout_width="match_parent"
     android:layout_height="46dp"
-    android:background="@color/white">
+    android:background="@color/hx_color_white">
 
     <TextView
         android:id="@+id/search_bar_back"

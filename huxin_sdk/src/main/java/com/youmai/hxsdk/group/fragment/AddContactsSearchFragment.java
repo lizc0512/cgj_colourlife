@@ -67,6 +67,12 @@ public class AddContactsSearchFragment<T extends Parcelable> extends SearchFragm
         mSearchAdapter.notifyDataSetChanged();
     }
 
+
+    public void add(String queryStr) {
+        setQueryString(queryStr);
+        reset();
+    }
+
     @Override
     protected void reloadData() {
         Log.d(TAG, "reloadData");

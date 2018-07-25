@@ -26,7 +26,7 @@ import com.youmai.hxsdk.group.adapter.SearchContactAdapter;
 import com.youmai.hxsdk.group.data.GroupMembers;
 import com.youmai.hxsdk.group.data.ContactBeanData;
 import com.youmai.hxsdk.group.fragment.AddContactByDepartmentFragment;
-import com.youmai.hxsdk.group.fragment.AddContactBySearchFragment;
+import com.youmai.hxsdk.group.fragment.AddContactsSearchFragment;
 import com.youmai.hxsdk.http.IGetListener;
 import com.youmai.hxsdk.http.OkHttpConnector;
 import com.youmai.hxsdk.stickyheader.StickyHeaderDecoration;
@@ -85,11 +85,10 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
     public static final String SEARCH_CONTACT = "search";
     public static final String DEPART_CONTACT = "department";
 
-    private AddContactsCreateGroupActivity mActivity;
-    private static final int ISTREAD = 1;
-
-    private RecyclerView rv_main;
+    private RecyclerView recyclerView;
     private SearchContactAdapter adapter;
+
+    private View contactView;
 
     private CharIndexView iv_main;
     private TextView tv_index;
@@ -108,30 +107,25 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
     private int mDetailType; //详情的类型 1：单聊  2：群聊
     private int mGroupId; //群Id
 
-    private AddContactBySearchFragment searchGroupFragment;
+    private AddContactsSearchFragment searchGroupFragment;
     private AddContactByDepartmentFragment departmentFragment;
 
 
     private ModifyContactsReceiver mModifyContactsReceiver;
 
-    private static class ModifyContactsReceiver extends BroadcastReceiver {
-        AddContactsCreateGroupActivity mActivity;
+    private class ModifyContactsReceiver extends BroadcastReceiver {
 
-        public ModifyContactsReceiver(AddContactsCreateGroupActivity activity) {
-            mActivity = activity;
-        }
 
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getStringExtra(ACTION);
             ContactBean bean = intent.getParcelableExtra("bean");
             if (action.equals(ADAPTER_CONTACT)) {
-                mActivity.updateCacheMap(bean, false);
+                updateCacheMap(bean, false);
             } else if (action.equals(SEARCH_CONTACT)) {
-                //mActivity.hide();
-                mActivity.updateCacheMap(bean, true);
+                updateCacheMap(bean, true);
             } else if (action.equals(DEPART_CONTACT)) {
-                mActivity.updateCacheMap(bean, true);
+                updateCacheMap(bean, true);
             }
         }
     }
@@ -163,7 +157,7 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
 
 
     private void registerReceiver() {
-        mModifyContactsReceiver = new ModifyContactsReceiver(this);
+        mModifyContactsReceiver = new ModifyContactsReceiver();
         IntentFilter intentFilter = new IntentFilter(BROADCAST_FILTER);
         LocalBroadcastManager.getInstance(this).registerReceiver(mModifyContactsReceiver, intentFilter);
     }
@@ -176,7 +170,6 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_contacts_layout);
-        mActivity = this;
         if (!ListUtils.isEmpty(contactList)) {
             contactList.clear();
         }
@@ -211,53 +204,14 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
             mGroupMap.put(contact.getUuid(), contact);
         }
 
-        //标题
-        tv_Cancel = findViewById(R.id.tv_left_cancel);
-        tv_Cancel.setText(R.string.hx_back);
-
-        tv_Sure = findViewById(R.id.tv_right_sure);
-        tv_Sure.setText("完成(" + 0 + ")");
-        tv_Sure.setEnabled(false);
-
-        rv_main = findViewById(R.id.rv_main);
-        iv_main = findViewById(R.id.iv_main);
-        tv_index = findViewById(R.id.tv_index);
-
-        manager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        rv_main.setLayoutManager(manager);
-
-        adapter = new SearchContactAdapter(this, contactList, adapter.mIndexForCollect, this);
-        rv_main.setAdapter(adapter);
-        rv_main.addItemDecoration(new StickyHeaderDecoration(adapter));
-
-        adapter.setGroupMap(mGroupMap);
-
-        searchGroupFragment = new AddContactBySearchFragment();
-        departmentFragment = new AddContactByDepartmentFragment();
-
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.add(R.id.fl_search_container, searchGroupFragment, TAG_SEARCH_CONTACT_FRAGMENT);
-        transaction.hide(searchGroupFragment);
-
-        transaction.add(R.id.fl_depart_container, departmentFragment, TAG_DEPART_CONTACT_FRAGMENT);
-        transaction.hide(departmentFragment);
-
-        transaction.commitAllowingStateLoss();
-
         initView();
         initEdit();
         setListener();
+
+        //读取本地缓存列表
+        getCacheList();
     }
 
-    @Override
-    public void onClick(View v) {
-        int id = v.getId();
-        if (id == R.id.tv_right_sure) {
-            done();
-        } else if (id == R.id.tv_left_cancel) {
-            hide();
-        }
-    }
 
     @Override
     public void onDestroy() {
@@ -289,21 +243,25 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
 
     private void hide() {
         hideSoftKey();
+        editText.setText("");
+        editText.clearFocus();
+
         if (searchGroupFragment.isVisible()) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.hide(searchGroupFragment);
-            searchGroupFragment.hide();
             transaction.commit();
+
+            contactView.setVisibility(View.VISIBLE);
         } else if (departmentFragment.isVisible()) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.hide(departmentFragment);
             transaction.commit();
+
+            contactView.setVisibility(View.VISIBLE);
         } else {
             finish();
         }
 
-        editText.setText("");
-        editText.clearFocus();
     }
 
     private void initEdit() {
@@ -330,6 +288,7 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
                     transaction.show(searchGroupFragment);
                     searchGroupFragment.add(s.toString());
                     transaction.commit();
+                    contactView.setVisibility(View.GONE);
                 }
 
                 searchGroupFragment.setMap(mTotalMap, mGroupMap);
@@ -517,7 +476,7 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
             public void call(Subscriber<? super List<CNPinyin<ContactBean>>> subscriber) {
                 if (!subscriber.isUnsubscribed()) {
                     //子线程查数据库，返回List<Contacts>
-                    List<ContactBean> contacts = ContactBeanData.contactList(mActivity, ContactBeanData.TYPE_GROUP_ADD);
+                    List<ContactBean> contacts = ContactBeanData.contactList(mContext, ContactBeanData.TYPE_GROUP_ADD);
                     List<CNPinyin<ContactBean>> contactList = CNPinyinFactory.createCNPinyinList(contacts);
                     subscriber.onNext(contactList);
                     subscriber.onCompleted();
@@ -547,9 +506,41 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
      * 初始化
      */
     private void initView() {
+        //标题
+        tv_Cancel = findViewById(R.id.tv_left_cancel);
+        tv_Cancel.setText(R.string.hx_back);
 
-        //读取本地缓存列表
-        getCacheList();
+        tv_Sure = findViewById(R.id.tv_right_sure);
+        tv_Sure.setText("完成(" + 0 + ")");
+        tv_Sure.setEnabled(false);
+
+        contactView = findViewById(R.id.rel_contact);
+
+        recyclerView = findViewById(R.id.recycler_view);
+        iv_main = findViewById(R.id.iv_main);
+        tv_index = findViewById(R.id.tv_index);
+
+        manager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        recyclerView.setLayoutManager(manager);
+
+        adapter = new SearchContactAdapter(this, contactList, adapter.mIndexForCollect, this);
+        recyclerView.setAdapter(adapter);
+        recyclerView.addItemDecoration(new StickyHeaderDecoration(adapter));
+
+        adapter.setGroupMap(mGroupMap);
+
+        searchGroupFragment = new AddContactsSearchFragment();
+        departmentFragment = new AddContactByDepartmentFragment();
+
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.add(R.id.fl_search_container, searchGroupFragment, TAG_SEARCH_CONTACT_FRAGMENT);
+        transaction.hide(searchGroupFragment);
+
+        transaction.add(R.id.fl_depart_container, departmentFragment, TAG_DEPART_CONTACT_FRAGMENT);
+        transaction.hide(departmentFragment);
+
+        transaction.commitAllowingStateLoss();
+
     }
 
     /**
@@ -628,13 +619,6 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
                 });
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == ISTREAD) {
-
-        }
-    }
 
     /**
      * item点击
@@ -650,12 +634,16 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
             transaction.show(departmentFragment);
             transaction.commit();
             departmentFragment.setMap(ColorsConfig.ColorLifeAppId, mTotalMap, mGroupMap);
+
+            contactView.setVisibility(View.GONE);
         } else if (type == SearchContactAdapter.TYPE.DEPARTMENT_TYPE.ordinal()) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.show(departmentFragment);
             transaction.commit();
             String orgId = HuxinSdkManager.instance().getOrgId();
             departmentFragment.setMap(orgId, mTotalMap, mGroupMap);//to do
+
+            contactView.setVisibility(View.GONE);
         }
     }
 
@@ -674,6 +662,21 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
         //tv_Sure.setText("完成(" + count + ")");
     }
 
+
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        if (id == R.id.tv_right_sure) {
+            done();
+        } else if (id == R.id.tv_left_cancel) {
+            hide();
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        hide();
+    }
 
     public Map<String, ContactBean> getTotalMap() {
         return mTotalMap;

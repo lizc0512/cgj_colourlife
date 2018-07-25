@@ -37,7 +37,7 @@ import rx.schedulers.Schedulers;
  */
 public class GroupManageFragment extends Fragment implements GroupTransAdapter.ItemEventListener {
 
-    private RecyclerView rv_main;
+    private RecyclerView recyclerView;
     private GroupTransAdapter adapter;
 
     private CharIndexView iv_main;
@@ -62,16 +62,16 @@ public class GroupManageFragment extends Fragment implements GroupTransAdapter.I
             contactList.clear();
         }
 
-        rv_main = view.findViewById(R.id.rv_main);
+        recyclerView = view.findViewById(R.id.recycler_view);
         iv_main = view.findViewById(R.id.iv_main);
         tv_index = view.findViewById(R.id.tv_index);
 
         manager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-        rv_main.setLayoutManager(manager);
+        recyclerView.setLayoutManager(manager);
 
         adapter = new GroupTransAdapter(getContext(), contactList, this);
-        rv_main.setAdapter(adapter);
-        rv_main.addItemDecoration(new StickyHeaderDecoration(adapter));
+        recyclerView.setAdapter(adapter);
+        recyclerView.addItemDecoration(new StickyHeaderDecoration(adapter));
 
         setListener();
 

@@ -45,10 +45,7 @@ public class ContactsSearchLoader extends AsyncTaskLoader {
         if (TextUtils.isEmpty(mQuery)) {
             return allList;
         } else {
-            List<SearchContactBean> tempList = searchIce(mQuery);
-            if (!ListUtils.isEmpty(tempList)) {
-                allList.addAll(tempList);
-            }
+            searchIce(mQuery, allList);
         }
 
         String finalQuery = mQuery;
@@ -98,8 +95,7 @@ public class ContactsSearchLoader extends AsyncTaskLoader {
     }
 
 
-    private List<SearchContactBean> searchIce(String key) {
-        List<SearchContactBean> contactList = new ArrayList<>();
+    private void searchIce(String key, List<SearchContactBean> allList) {
 
         String url = ColorsConfig.CONTACTS_SEARCH;
         ContentValues params = new ContentValues();
@@ -123,11 +119,11 @@ public class ContactsSearchLoader extends AsyncTaskLoader {
 
                 SearchContactBean contact = new SearchContactBean();
 
+                String uuid = item.getAccountUuid();
                 String avatar = ColorsConfig.HEAD_ICON_URL + "avatar?uid=" + item.getUsername();
                 contact.setIconUrl(avatar);
-
                 contact.setUsername(item.getUsername());
-                contact.setUuid(item.getAccountUuid());
+                contact.setUuid(uuid);
                 contact.setDisplayName(hanzi);
                 contact.setWholePinyin(pinyin.toString());
                 contact.setSimplepinyin(ch.toString());
@@ -136,11 +132,19 @@ public class ContactsSearchLoader extends AsyncTaskLoader {
                 //DuoYinZi duoYinZi = PinYinUtils.HanziToPinYin(hanzi);
                 //contact.setDuoYinzi(duoYinZi);
 
-                contactList.add(contact);
+                boolean isAdd = true;
+                for (SearchContactBean local : allList) {
+                    if (local.getUuid().equals(uuid)) {
+                        isAdd = false;
+                        break;
+                    }
+                }
+                if (isAdd) {
+                    allList.add(contact);
+                }
 
             }
         }
-        return contactList;
     }
 
 

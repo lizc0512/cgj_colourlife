@@ -62,6 +62,11 @@ public class GroupMembers {
 
     public void clear() {
         groupList.clear();
+        groupOwner = null;
+    }
+
+    public void destory() {
+        groupList.clear();
         groupList = null;
         groupOwner = null;
         instance = null;

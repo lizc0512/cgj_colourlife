@@ -1,6 +1,5 @@
 package com.youmai.hxsdk.group;
 
-import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -104,14 +103,14 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
     private Subscription subscription;
 
     private Map<String, ContactBean> mGroupMap = new HashMap<>();
-    private ArrayList<ContactBean> mContactList; //群组成员列表
+    private Map<String, ContactBean> mTotalMap = new HashMap<>();
+
     private int mDetailType; //详情的类型 1：单聊  2：群聊
     private int mGroupId; //群Id
 
     private AddContactBySearchFragment searchGroupFragment;
     private AddContactByDepartmentFragment departmentFragment;
 
-    private Map<String, ContactBean> mTotalMap = new HashMap<>();
 
     private ModifyContactsReceiver mModifyContactsReceiver;
 
@@ -189,10 +188,27 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
         mDetailType = getIntent().getIntExtra(DETAIL_TYPE, -1);
         mGroupId = getIntent().getIntExtra(GROUP_ID, -1);
 
-        mContactList = GroupMembers.instance().getGroupList();
+        ArrayList<ContactBean> list = GroupMembers.instance().getGroupList();
 
-        if (!ListUtils.isEmpty(mContactList)) {
-            initGroupMap();
+        boolean isMe = false;
+        for (ContactBean item : list) {
+            if (item.getUuid().equals(HuxinSdkManager.instance().getUuid())) {
+                isMe = true;
+                break;
+            }
+        }
+        if (!isMe) {
+            ContactBean self = new ContactBean();
+            String selfUid = HuxinSdkManager.instance().getUuid();
+            self.setUuid(selfUid);
+            self.setAvatar(HuxinSdkManager.instance().getHeadUrl());
+            self.setRealname(HuxinSdkManager.instance().getRealName());
+            self.setUsername(HuxinSdkManager.instance().getUserName());
+            list.add(self);
+        }
+
+        for (ContactBean contact : list) {
+            mGroupMap.put(contact.getUuid(), contact);
         }
 
         //标题
@@ -271,12 +287,6 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
     }
 
 
-    private void initGroupMap() {
-        for (ContactBean contact : mContactList) {
-            mGroupMap.put(contact.getUuid(), contact);
-        }
-    }
-
     private void hide() {
         hideSoftKey();
         if (searchGroupFragment.isVisible()) {
@@ -338,15 +348,8 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
     }
 
 
-    private ProgressDialog mProgressDialog;
-
     public void done() {
-        if (mProgressDialog == null) {
-            mProgressDialog = new ProgressDialog(this);
-            mProgressDialog.setMessage("正在请求，请稍后...");
-            mProgressDialog.setCanceledOnTouchOutside(false);
-        }
-        mProgressDialog.show();
+        showProgressDialog();
 
         if (mDetailType == 1) {
             createGroup();
@@ -382,72 +385,66 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
     }
 
     private void createGroup() {
-        Map<String, ContactBean> data = mTotalMap;
-        if (data != null && !data.isEmpty()) {
-            List<YouMaiGroup.GroupMemberItem> list = new ArrayList<>();
+        List<YouMaiGroup.GroupMemberItem> list = new ArrayList<>();
+        StringBuffer sb = new StringBuffer(ColorsConfig.GROUP_DEFAULT_NAME);
+        int count = 0;
 
-            StringBuffer sb = new StringBuffer(ColorsConfig.GROUP_DEFAULT_NAME);
-            int count = 0;
-            if (!ListUtils.isEmpty(mContactList)) {
-                for (ContactBean contact : mContactList) {
-                    list.add(insertBuilder(contact).build());
-                    if (!HuxinSdkManager.instance().getUuid().equals(contact.getUuid())) {
-                        count++;
-                        sb.append(contact.getRealname() + "、");
-                    }
-                }
+        for (Map.Entry<String, ContactBean> entry : mGroupMap.entrySet()) {
+            ContactBean item = entry.getValue();
+            list.add(insertBuilder(item).build());
+            if (count < 3) {
+                count++;
+                sb.append(item.getRealname() + "、");
             }
-
-            for (Map.Entry<String, ContactBean> entry : data.entrySet()) {
-                ContactBean item = entry.getValue();
-                list.add(insertBuilder(item).build());
-                if (count < 3) {
-                    count++;
-                    sb.append(item.getRealname() + "、");
-                }
-            }
-
-            final String groupName = sb.deleteCharAt(sb.length() - 1).toString();
-            HuxinSdkManager.instance().createGroup(groupName, list, new ReceiveListener() {
-                @Override
-                public void OnRec(PduBase pduBase) {
-                    try {
-                        YouMaiGroup.GroupCreateRsp ack = YouMaiGroup.GroupCreateRsp.parseFrom(pduBase.body);
-                        if (ack.getResult() == YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS) {
-                            List<YouMaiGroup.GroupMemberItem> list = ack.getMemberListList();
-                            int groupId = ack.getGroupId();
-                            GroupInfoBean groupInfo = new GroupInfoBean();
-                            groupInfo.setGroup_id(groupId);
-                            groupInfo.setGroup_name(groupName);
-                            groupInfo.setGroup_member_count(list.size());
-
-                            Intent intent = new Intent(mContext, IMGroupActivity.class);
-                            intent.putExtra(IMGroupActivity.DST_NAME, groupName);
-                            intent.putExtra(IMGroupActivity.DST_UUID, groupId);
-                            intent.putExtra(IMGroupActivity.GROUP_INFO, groupInfo);
-
-                            startActivity(intent);
-
-                            Toast.makeText(mContext, "创建群成功", Toast.LENGTH_SHORT).show();
-
-
-                            finish();
-                            HuxinSdkManager.instance().getStackAct().finishActivity(IMConnectionActivity.class);
-                            HuxinSdkManager.instance().getStackAct().finishActivity(ChatDetailsActivity.class);
-                        } else {
-                            Toast.makeText(mContext, "创建群失败", Toast.LENGTH_SHORT).show();
-                        }
-
-                        if (mProgressDialog != null && mProgressDialog.isShowing()) {
-                            mProgressDialog.dismiss();
-                        }
-
-                    } catch (InvalidProtocolBufferException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
         }
+
+        for (Map.Entry<String, ContactBean> entry : mTotalMap.entrySet()) {
+            ContactBean item = entry.getValue();
+            list.add(insertBuilder(item).build());
+            if (count < 3) {
+                count++;
+                sb.append(item.getRealname() + "、");
+            }
+        }
+
+        final String groupName = sb.deleteCharAt(sb.length() - 1).toString();
+        HuxinSdkManager.instance().createGroup(groupName, list, new ReceiveListener() {
+            @Override
+            public void OnRec(PduBase pduBase) {
+                try {
+                    YouMaiGroup.GroupCreateRsp ack = YouMaiGroup.GroupCreateRsp.parseFrom(pduBase.body);
+                    if (ack.getResult() == YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS) {
+                        List<YouMaiGroup.GroupMemberItem> list = ack.getMemberListList();
+                        int groupId = ack.getGroupId();
+                        GroupInfoBean groupInfo = new GroupInfoBean();
+                        groupInfo.setGroup_id(groupId);
+                        groupInfo.setGroup_name(groupName);
+                        groupInfo.setGroup_member_count(list.size());
+
+                        Intent intent = new Intent(mContext, IMGroupActivity.class);
+                        intent.putExtra(IMGroupActivity.DST_NAME, groupName);
+                        intent.putExtra(IMGroupActivity.DST_UUID, groupId);
+                        intent.putExtra(IMGroupActivity.GROUP_INFO, groupInfo);
+
+                        startActivity(intent);
+
+                        Toast.makeText(mContext, "创建群成功", Toast.LENGTH_SHORT).show();
+
+
+                        finish();
+                        HuxinSdkManager.instance().getStackAct().finishActivity(IMConnectionActivity.class);
+                        HuxinSdkManager.instance().getStackAct().finishActivity(ChatDetailsActivity.class);
+                    } else {
+                        Toast.makeText(mContext, "创建群失败", Toast.LENGTH_SHORT).show();
+                    }
+
+                    dismissProgressDialog();
+
+                } catch (InvalidProtocolBufferException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     private YouMaiGroup.GroupMemberItem.Builder insertBuilder(ContactBean item) {
@@ -502,9 +499,7 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
                         finish();
                     }
 
-                    if (mProgressDialog != null && mProgressDialog.isShowing()) {
-                        mProgressDialog.dismiss();
-                    }
+                    dismissProgressDialog();
                 } catch (InvalidProtocolBufferException e) {
                     e.printStackTrace();
                 }

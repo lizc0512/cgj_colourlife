@@ -272,6 +272,7 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
     }
 
     private void reqGroupMembers() {
+        GroupMembers.instance().clear();
         HuxinSdkManager.instance().reqGroupMember(mGroupId, new ReceiveListener() {
             @Override
             public void OnRec(PduBase pduBase) {
@@ -655,7 +656,7 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
 
         isGroupOwner = false;
 
-        GroupMembers.instance().clear();
+        GroupMembers.instance().destory();
         HuxinSdkManager.instance().getStackAct().removeActivity(this);
     }
 

@@ -575,7 +575,7 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
     }
 
     private void modifyContactsList() {
-        String url = ColorsConfig.MODIFY_CONTACTS;
+        String url = ColorsConfig.CONTACTS_MAIN_DATAS;
         String userName = HuxinSdkManager.instance().getUserName();
 
         final ContentValues params = new ContentValues();

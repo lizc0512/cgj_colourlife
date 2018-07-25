@@ -478,7 +478,7 @@ public class ContactsFragment extends Fragment implements ItemEventListener {
      * 查询常用联系人
      */
    private void modifyContactsList() {
-        String url = ColorsConfig.MODIFY_CONTACTS;
+        String url = ColorsConfig.CONTACTS_MAIN_DATAS;
         String userName = HuxinSdkManager.instance().getUserName();
 
         final ContentValues params = new ContentValues();
@@ -544,7 +544,7 @@ public class ContactsFragment extends Fragment implements ItemEventListener {
 
 
     private void reqContacts() {
-        String url = ColorsConfig.REQ_CONTACTS;
+        String url = ColorsConfig.CONTACTS_CHILD_DATAS;
 
         ContentValues params = new ContentValues();
         params.put("orgID", "0");//架构UUID编号,0取顶级架构

@@ -87,19 +87,10 @@ public class ColorsConfig {
     private static final String ICE_AUTH = getIceHost() + "authms/auth/app";
 
 
-    //删除联系人
-    public static final String CONTACT_DEL = getIceHost() + "txl2/contacts/";
-    //查询联系人
-    public static final String MODIFY_CONTACTS = getIceHost() + "txl2/contacts";
-    //
-    public static final String REQ_CONTACTS = getIceHost() + "txl2/contacts/childDatas";
-
-
-
     /**
      * 主组织架构
      */
-    public static final String MODIFY_CONTACTS = getIceHost() + "txl2/contacts";
+    public static final String CONTACTS_MAIN_DATAS = getIceHost() + "txl2/contacts";
 
     /**
      * 子组织架构
@@ -111,13 +102,10 @@ public class ColorsConfig {
      */
     public static final String CONTACTS_SEARCH = getIceHost() + "txl2/contacts/search";
 
-    //删除联系人
+    /**
+     * 删除联系人
+     */
     public static final String CONTACT_DEL = getIceHost() + "txl2/contacts/";
-
-
-
-    //
-    public static final String REQ_CONTACTS = getIceHost() + "txl2/contacts/childDatas";
 
 
     /**

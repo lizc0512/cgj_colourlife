@@ -463,9 +463,9 @@ public class ContactsFragment extends Fragment implements ItemEventListener {
         if (TextUtils.isEmpty(json)) {
             modifyContactsList();
         } else {
-            ModifyContactsBean parse = GsonUtil.parse(json, ModifyContactsBean.class);
-            if (parse.getCode() == 0) {
-                List<ModifyContactsBean.ContentBean.DataBean> data = parse.getContent().getData();
+            ModifyContactsBean bean = GsonUtil.parse(json, ModifyContactsBean.class);
+            if (bean != null && bean.isSuccess()) {
+                List<ModifyContactsBean.ContentBean.DataBean> data = bean.getContent().getData();
                 if (data.size() != 0) {
                     getPinyinList(data);
                 }
@@ -477,7 +477,7 @@ public class ContactsFragment extends Fragment implements ItemEventListener {
     /**
      * 查询常用联系人
      */
-   private void modifyContactsList() {
+    private void modifyContactsList() {
         String url = ColorsConfig.CONTACTS_MAIN_DATAS;
         String userName = HuxinSdkManager.instance().getUserName();
 

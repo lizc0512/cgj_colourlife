@@ -220,7 +220,7 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
                 holder = new VideoViewHolder(view);
                 break;
             case RED_PACKAGE_LEFT:
-                view = inflater.inflate(R.layout.hx_fragment_im_left_red_package_item, parent, false);
+                view = inflater.inflate(R.layout.hx_group_im_left_red_package_item, parent, false);
                 holder = new RedPackageHolder(view);
                 break;
             case RED_PACKAGE_RIGHT:
@@ -559,6 +559,14 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
         final int status = redPackage.getStatus();
 
         showMsgTime(position, redPackageHolder.senderDateTV, bean.getMsgTime());
+
+        final boolean isRight = bean.isRightUI();
+        if (!isRight) {
+            if (redPackageHolder.tv_name != null) {
+                redPackageHolder.tv_name.setText(bean.getSenderRealName());
+            }
+        }
+
 
         ImageView img_red_package = redPackageHolder.img_red_package;
         TextView tv_red_title = redPackageHolder.tv_red_title;

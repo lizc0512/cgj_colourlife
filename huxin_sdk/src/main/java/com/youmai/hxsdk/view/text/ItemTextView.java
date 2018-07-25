@@ -10,7 +10,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.youmai.hxsdk.R;
-import com.youmai.hxsdk.adapter.IMListAdapter;
+import com.youmai.hxsdk.chatsingle.IMListAdapter;
 import com.youmai.hxsdk.view.tip.TipView;
 import com.youmai.hxsdk.view.tip.bean.TipBean;
 import com.youmai.hxsdk.view.tip.listener.ItemListener;

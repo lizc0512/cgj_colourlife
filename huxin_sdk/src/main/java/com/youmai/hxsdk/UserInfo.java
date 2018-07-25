@@ -24,6 +24,7 @@ public class UserInfo {
     private long expireTime;   //token过期时间 单位秒
     private String appTs;
     private String userName;   //用户名，OA账号
+    private String orgId;   //组织架构Id
     private String orgName;   //组织架构名称
 
     private String key;
@@ -45,10 +46,9 @@ public class UserInfo {
         userName = "";   //用户名，OA账号
         key = "";
         secret = "";
+        orgId = "";
         orgName = "";
     }
-
-    
 
 
     public String getUuid() {
@@ -237,6 +237,22 @@ public class UserInfo {
     }
 
 
+    public String getOrgId() {
+        return orgId;
+    }
+
+    public void setOrgId(String orgId) {
+        try {
+            if (!this.orgId.equals(orgId)) {
+                isChange = true;
+            }
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+
+        this.orgId = orgId;
+    }
+
     public String getOrgName() {
         return orgName;
     }
@@ -279,6 +295,7 @@ public class UserInfo {
                 userName = jsonObject.optString("userName");
                 key = jsonObject.optString("key");
                 secret = jsonObject.optString("secret");
+                orgId = jsonObject.optString("orgId");
                 orgName = jsonObject.optString("orgName");
             } catch (Exception e) {
                 e.printStackTrace();
@@ -298,6 +315,7 @@ public class UserInfo {
         expireTime = 0;
         appTs = null;
         userName = null;
+        orgId = null;
         orgName = null;
 
         if (context != null) {

@@ -606,6 +606,9 @@ public class Tools {
         HuxinSdkManager.instance().setPhoneNum(mobile);
         HuxinSdkManager.instance().setSex(sex);
         HuxinSdkManager.instance().setUserName(employeeAccount);
+        HuxinSdkManager.instance().setOrgId(orgId);
+        HuxinSdkManager.instance().setOrgName(familyName);
+
         HuxinSdkManager.instance().saveUserInfo();
 
 
@@ -1663,6 +1666,7 @@ public class Tools {
     public static String getRefresh_token2(Context con) {
         return getSysShare(con).getString("refresh_token2", "");
     }
+
     /**
      * 保存refresh_token获取的用户信息
      *
@@ -1676,6 +1680,7 @@ public class Tools {
     public static String gettokenUserInfo(Context con) {
         return getSysShare(con).getString("tokenuserinfo", "");
     }
+
     /**
      * 保存refresh_token获取时间
      *
@@ -2094,7 +2099,7 @@ public class Tools {
                 .substring(fName.lastIndexOf(".") + 1, fName.length())
                 .toLowerCase();
 
-		/* 依扩展名的类型决定MimeType */
+        /* 依扩展名的类型决定MimeType */
         if (end.equals("pdf")) {
             type = "application/pdf";//
         } else if (end.equals("m4a") || end.equals("mp3") || end.equals("mid")
@@ -2124,7 +2129,7 @@ public class Tools {
         if (dotIndex < 0) {
             return type;
         }
-            /* 获取文件的后缀名*/
+        /* 获取文件的后缀名*/
         String end = fName.substring(dotIndex, fName.length()).toLowerCase();
         if (end == "") return type;
         //在MIME和文件类型的匹配表中找到对应的MIME类型。

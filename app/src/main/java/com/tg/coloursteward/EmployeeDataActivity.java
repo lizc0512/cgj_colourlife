@@ -45,7 +45,7 @@ import com.tg.coloursteward.view.ManageMentLinearlayout;
 import com.tg.coloursteward.view.ManageMentLinearlayout.NetworkRequestListener;
 import com.tg.coloursteward.view.dialog.PwdDialog2;
 import com.tg.coloursteward.view.dialog.ToastFactory;
-import com.youmai.hxsdk.activity.IMConnectionActivity;
+import com.youmai.hxsdk.chatsingle.IMConnectionActivity;
 import com.youmai.hxsdk.db.bean.EmployeeBean;
 import com.youmai.hxsdk.db.helper.CacheEmployeeHelper;
 import com.youmai.hxsdk.router.APath;

@@ -340,6 +340,24 @@ public class HuxinSdkManager {
         mUserInfo.setSecret(secret);
     }
 
+
+    public String getOrgId() {
+        return mUserInfo.getOrgId();
+    }
+
+    public void setOrgId(String orgId) {
+        mUserInfo.setOrgId(orgId);
+    }
+
+    public String getOrgName() {
+        return mUserInfo.getOrgName();
+    }
+
+    public void setOrgName(String orgName) {
+        mUserInfo.setOrgName(orgName);
+    }
+
+
     public void loginOut() {
         if (mContext != null && binded == BIND_STATUS.BINDED) {
             clearUserData();

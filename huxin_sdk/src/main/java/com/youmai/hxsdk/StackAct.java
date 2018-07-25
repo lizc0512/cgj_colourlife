@@ -139,14 +139,8 @@ public class StackAct {
         try {
             for (int i = 0, size = mActivityStack.size(); i < size; i++) {
                 if (null != mActivityStack.get(i)) {
-                    if (mActivityStack.get(i).toString().contains("com.youmai.hxsdk.activity.HookStrategyActivity")
-                            || mActivityStack.get(i).toString().contains("com.youmai.huxin.app.activity.MainAct")) {
-                        continue;
-                    }
-                    if (type == 0x0001) {
-                        if (mActivityStack.get(i).toString().contains("com.youmai.hxsdk.activity.HookStrategyActivity")
-                                || mActivityStack.get(i).toString().contains("com.youmai.huxin.app.activity.MainAct")
-                                || mActivityStack.get(i).toString().contains("com.youmai.hxsdk.activity.IMConnectionActivity")
+                    if (type == 1) {
+                        if (mActivityStack.get(i).toString().contains("com.youmai.hxsdk.activity.IMConnectionActivity")
                                 || mActivityStack.get(i).toString().contains("com.youmai.hxsdk.activity.IMGroupActivity")) {
                             continue;
                         }

@@ -24,7 +24,7 @@ import com.alibaba.android.arouter.launcher.ARouter;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.R;
-import com.youmai.hxsdk.activity.IMGroupActivity;
+import com.youmai.hxsdk.chatgroup.IMGroupActivity;
 import com.youmai.hxsdk.activity.SdkBaseActivity;
 import com.youmai.hxsdk.adapter.PaddingItemDecoration;
 import com.youmai.hxsdk.config.ColorsConfig;
@@ -33,13 +33,15 @@ import com.youmai.hxsdk.db.bean.ContactBean;
 import com.youmai.hxsdk.db.bean.GroupInfoBean;
 import com.youmai.hxsdk.db.helper.CacheMsgHelper;
 import com.youmai.hxsdk.db.helper.GroupInfoHelper;
+import com.youmai.hxsdk.group.adapter.GroupDetailAdapter;
+import com.youmai.hxsdk.group.data.GroupMembers;
 import com.youmai.hxsdk.im.IMMsgManager;
 import com.youmai.hxsdk.proto.YouMaiBasic;
 import com.youmai.hxsdk.proto.YouMaiGroup;
 import com.youmai.hxsdk.router.APath;
-import com.youmai.hxsdk.setting.GroupManageActivity;
-import com.youmai.hxsdk.setting.GroupNameActivity;
-import com.youmai.hxsdk.setting.GroupNoticeActivity;
+import com.youmai.hxsdk.group.setting.GroupManageActivity;
+import com.youmai.hxsdk.group.setting.GroupNameActivity;
+import com.youmai.hxsdk.group.setting.GroupNoticeActivity;
 import com.youmai.hxsdk.socket.PduBase;
 import com.youmai.hxsdk.socket.ReceiveListener;
 import com.youmai.hxsdk.utils.AppUtils;
@@ -298,17 +300,17 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
                             String avatar = ColorsConfig.HEAD_ICON_URL + "avatar?uid=" + item.getUserName();
                             contact.setAvatar(avatar);
                             if (contact.getMemberRole() == 0) {
-                                ContactBeanData.instance().addGroupListItem(0, contact);
+                                GroupMembers.instance().addGroupListItem(0, contact);
                             } else {
-                                ContactBeanData.instance().addGroupListItem(contact);
+                                GroupMembers.instance().addGroupListItem(contact);
                             }
 
                             if (item.getMemberRole() == 0) {
-                                ContactBeanData.instance().setGroupOwner(contact);
+                                GroupMembers.instance().setGroupOwner(contact);
                             }
                         }
 
-                        ArrayList<ContactBean> groupList = ContactBeanData.instance().getGroupList();
+                        ArrayList<ContactBean> groupList = GroupMembers.instance().getGroupList();
 
                         if (groupList.size() > 8) {
 
@@ -447,7 +449,7 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
     }
 
     private void transAndExitGroup() {
-        ArrayList<ContactBean> groupList = ContactBeanData.instance().getGroupList();
+        ArrayList<ContactBean> groupList = GroupMembers.instance().getGroupList();
         if (isGroupOwner) {
             if (groupList.size() <= 1) {
                 delGroup();
@@ -460,7 +462,7 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
     }
 
     private void transOwner() {
-        ArrayList<ContactBean> delGroupList = ContactBeanData.instance().getDelGroupList();
+        ArrayList<ContactBean> delGroupList = GroupMembers.instance().getDelGroupList();
         ReceiveListener receiveListener = new ReceiveListener() {
             @Override
             public void OnRec(PduBase pduBase) {
@@ -560,14 +562,16 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
     public void onItemClick(int pos, ContactBean contact) {
         int type = contact.getUiType();
         if (type == GroupDetailAdapter.TYPE.ADD_MEMBER.ordinal()) {
-            ARouter.getInstance().build(APath.GROUP_CREATE_ADD_CONTACT)
-                    .withInt("DETAIL_TYPE", 2)
-                    .withInt("GROUP_ID", mGroupId)
-                    .navigation(this, REQUEST_CODE_ADD);
+            Intent intent = new Intent(this, AddContactsCreateGroupActivity.class);
+            intent.putExtra(AddContactsCreateGroupActivity.DETAIL_TYPE, 2);
+            intent.putExtra(AddContactsCreateGroupActivity.GROUP_ID, mGroupId);
+            startActivityForResult(intent, REQUEST_CODE_ADD);
+
         } else if (type == GroupDetailAdapter.TYPE.DEL_MEMBER.ordinal()) {
             Intent intent = new Intent(this, DeleteContactListActivity.class);
             intent.putExtra(DeleteContactListActivity.DELETE_GROUP_ID, mGroupId);
             startActivityForResult(intent, REQUEST_CODE_DELETE);
+
         } else {
             ARouter.getInstance().build(APath.EMPLOYEE_DATA_ACT)
                     .withString("contacts_id", contact.getUsername())
@@ -581,11 +585,11 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
         if (resultCode == RESULT_CODE) {
             if (requestCode == REQUEST_CODE_ADD) {
                 ArrayList<ContactBean> list = data.getParcelableArrayListExtra(UPDATE_GROUP_LIST);
-                ContactBeanData.instance().addAll(list);
+                GroupMembers.instance().addAll(list);
                 mAdapter.addList(list);
             } else if (requestCode == REQUEST_CODE_DELETE) {
                 ArrayList<ContactBean> list = data.getParcelableArrayListExtra(UPDATE_GROUP_LIST);
-                ContactBeanData.instance().removeAll(list);
+                GroupMembers.instance().removeAll(list);
 
                 mAdapter.removeList(list);
             } else if (requestCode == REQUEST_CODE_MODIFY_NAME) {
@@ -656,7 +660,7 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
 
         isGroupOwner = false;
 
-        ContactBeanData.instance().clear();
+        GroupMembers.instance().clear();
         HuxinSdkManager.instance().getStackAct().removeActivity(this);
     }
 

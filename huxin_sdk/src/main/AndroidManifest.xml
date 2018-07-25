@@ -126,7 +126,7 @@
 
         <!--IM消息-->
         <activity
-            android:name="com.youmai.hxsdk.activity.IMConnectionActivity"
+            android:name="com.youmai.hxsdk.chatsingle.IMConnectionActivity"
             android:configChanges="keyboardHidden|orientation"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
@@ -135,7 +135,7 @@
 
 
         <activity
-            android:name="com.youmai.hxsdk.activity.IMGroupActivity"
+            android:name="com.youmai.hxsdk.chatgroup.IMGroupActivity"
             android:configChanges="keyboardHidden|orientation"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
@@ -157,6 +157,13 @@
             android:windowSoftInputMode="stateHidden|adjustResize" />
 
         <activity
+            android:name="com.youmai.hxsdk.group.AddContactsCreateGroupActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"
+            android:theme="@style/HxSdkTheme"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+
+        <activity
             android:name="com.youmai.hxsdk.group.DeleteContactListActivity"
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="portrait"
@@ -171,56 +178,62 @@
             android:windowSoftInputMode="stateHidden|adjustResize" />
 
         <activity
-            android:name="com.youmai.hxsdk.setting.GroupNameActivity"
+            android:name="com.youmai.hxsdk.group.setting.GroupNameActivity"
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="portrait"
             android:theme="@style/HxSdkTheme"
             android:windowSoftInputMode="stateHidden|adjustResize" />
 
         <activity
-            android:name="com.youmai.hxsdk.setting.GroupNoticeActivity"
+            android:name="com.youmai.hxsdk.group.setting.GroupNoticeActivity"
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="portrait"
             android:theme="@style/HxSdkTheme"
             android:windowSoftInputMode="stateHidden|adjustResize" />
 
         <activity
-            android:name="com.youmai.hxsdk.setting.GroupManageActivity"
+            android:name="com.youmai.hxsdk.group.setting.GroupManageActivity"
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="portrait"
             android:theme="@style/HxSdkTheme"
             android:windowSoftInputMode="stateHidden|adjustResize" />
 
 
+        <!--搜索-->
         <activity
-            android:name="com.youmai.hxsdk.activity.GroupAtSelectActivity"
+            android:name="com.youmai.hxsdk.search.GlobalSearchActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/HxSdkTheme" />
+
+        <activity
+            android:name="com.youmai.hxsdk.chatgroup.GroupAtSelectActivity"
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="portrait"
             android:theme="@style/HxGroupAtTheme"
             android:windowSoftInputMode="stateHidden|adjustResize" />
 
         <activity
-            android:name="com.youmai.hxsdk.activity.RedPacketActivity"
+            android:name="com.youmai.hxsdk.packet.RedPacketActivity"
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="portrait"
             android:theme="@style/HxRadPackageTheme"
             android:windowSoftInputMode="stateHidden|adjustResize" />
 
         <activity
-            android:name="com.youmai.hxsdk.activity.RedPacketInGroupActivity"
+            android:name="com.youmai.hxsdk.packet.RedPacketInGroupActivity"
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="portrait"
             android:theme="@style/HxRadPackageTheme"
             android:windowSoftInputMode="stateHidden|adjustResize" />
 
         <activity
-            android:name="com.youmai.hxsdk.activity.RedPacketDetailActivity"
+            android:name="com.youmai.hxsdk.packet.RedPacketDetailActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/HxRadPackageTheme" />
 
         <activity
-            android:name="com.youmai.hxsdk.activity.RedPacketHistoryActivity"
+            android:name="com.youmai.hxsdk.packet.RedPacketHistoryActivity"
             android:screenOrientation="portrait"
             android:theme="@style/HxRadPackageTheme" />
 
@@ -289,12 +302,6 @@
         <!--视频播放-->
         <activity
             android:name=".module.videoplayer.VideoPlayerActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/HxSdkTheme" />
-
-        <!--设置提醒-->
-        <activity
-            android:name="com.youmai.hxsdk.module.remind.SetRemindActivity"
             android:screenOrientation="portrait"
             android:theme="@style/HxSdkTheme" />
 

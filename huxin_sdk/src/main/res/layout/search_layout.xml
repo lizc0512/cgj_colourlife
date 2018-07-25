@@ -30,7 +30,7 @@
         android:textColor="@color/color_theme_main"
         android:textSize="15sp" />
 
-    <com.tg.coloursteward.module.search.SearchEditText
+    <com.youmai.hxsdk.widget.SearchEditText
         android:id="@+id/contact_search_bar"
         android:layout_width="match_parent"
         android:layout_height="32dp"

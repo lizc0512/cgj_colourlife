@@ -9,13 +9,15 @@ import android.widget.TextView;
 
 import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.HuxinSdkManager;
-import com.youmai.hxsdk.activity.IMGroupActivity;
+import com.youmai.hxsdk.chatgroup.IMGroupActivity;
 import com.youmai.hxsdk.activity.SdkBaseActivity;
 import com.youmai.hxsdk.adapter.PaddingItemDecoration;
 import com.youmai.hxsdk.config.ColorsConfig;
 import com.youmai.hxsdk.db.bean.ContactBean;
 import com.youmai.hxsdk.db.bean.GroupInfoBean;
 import com.youmai.hxsdk.db.helper.GroupInfoHelper;
+import com.youmai.hxsdk.group.adapter.GroupDetailAdapter;
+import com.youmai.hxsdk.group.data.GroupMembers;
 
 import java.util.ArrayList;
 
@@ -50,7 +52,7 @@ public class ChatGroupAllMembersActivity extends SdkBaseActivity {
         mGroupId = getIntent().getIntExtra(IMGroupActivity.GROUP_ID, -1);
         groupName = getIntent().getStringExtra(IMGroupActivity.GROUP_NAME);
 
-        groupList = ContactBeanData.instance().getGroupList();
+        groupList = GroupMembers.instance().getGroupList();
 
         if (null == mGroupInfo) {
             mGroupInfo = GroupInfoHelper.instance().toQueryByGroupId(this, mGroupId);

@@ -17,6 +17,8 @@ import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.activity.SdkBaseActivity;
 import com.youmai.hxsdk.db.bean.ContactBean;
+import com.youmai.hxsdk.group.adapter.DeleteContactAdapter;
+import com.youmai.hxsdk.group.data.GroupMembers;
 import com.youmai.hxsdk.proto.YouMaiBasic;
 import com.youmai.hxsdk.proto.YouMaiGroup;
 import com.youmai.hxsdk.socket.PduBase;
@@ -72,7 +74,7 @@ public class DeleteContactListActivity extends SdkBaseActivity {
     }
 
     private void initView() {
-        mContactList = ContactBeanData.instance().getDelGroupList();
+        mContactList = GroupMembers.instance().getDelGroupList();
         mGroupId = getIntent().getIntExtra(DELETE_GROUP_ID, -1);
         //标题
         mTvTitle = findViewById(R.id.tv_title);

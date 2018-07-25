@@ -19,13 +19,13 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.R;
-import com.youmai.hxsdk.activity.IMConnectionActivity;
+import com.youmai.hxsdk.chatsingle.IMConnectionActivity;
 import com.youmai.hxsdk.activity.SdkBaseActivity;
 import com.youmai.hxsdk.db.bean.ContactBean;
 import com.youmai.hxsdk.db.helper.CacheMsgHelper;
+import com.youmai.hxsdk.group.AddContactsCreateGroupActivity;
 import com.youmai.hxsdk.im.IMMsgManager;
 import com.youmai.hxsdk.router.APath;
-import com.youmai.hxsdk.utils.AppUtils;
 import com.youmai.hxsdk.utils.GlideRoundTransform;
 
 import java.util.ArrayList;
@@ -183,10 +183,10 @@ public class ChatDetailsActivity extends SdkBaseActivity {
         mAddMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ARouter.getInstance().build(APath.GROUP_CREATE_ADD_CONTACT)
-                        .withParcelableArrayList(GROUP_LIST, (ArrayList<? extends Parcelable>) groupList)
-                        .withInt("DETAIL_TYPE", 1)
-                        .navigation(ChatDetailsActivity.this);
+                Intent intent = new Intent(mContext, AddContactsCreateGroupActivity.class);
+                intent.putExtra(AddContactsCreateGroupActivity.DETAIL_TYPE, 1);
+                intent.putParcelableArrayListExtra(AddContactsCreateGroupActivity.GROUP_LIST, (ArrayList<? extends Parcelable>) groupList);
+                startActivity(intent);
             }
         });
 

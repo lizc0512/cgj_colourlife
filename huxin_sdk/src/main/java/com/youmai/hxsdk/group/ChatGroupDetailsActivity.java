@@ -225,8 +225,7 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
             }
         });
 
-        mAdapter = new GroupDetailAdapter(mContext, isGroupOwner,
-                ChatGroupDetailsActivity.this);
+        mAdapter = new GroupDetailAdapter(mContext, ChatGroupDetailsActivity.this);
         GridLayoutManager manager = new GridLayoutManager(mContext, 5);
         mGridView.addItemDecoration(new PaddingItemDecoration(5));
         mGridView.setLayoutManager(manager);
@@ -315,15 +314,13 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
                             String format = getResources().getString(R.string.group_number);
                             tv_count.setText(String.format(format, groupList.size()));
 
-                            mAdapter.addList(groupList.subList(0, 7));
+                            mAdapter.addList(groupList.subList(0, 7), isGroupOwner);
                             linear_next.setVisibility(View.VISIBLE);
 
                         } else {
-                            mAdapter.addList(groupList);
+                            mAdapter.addList(groupList, isGroupOwner);
                             linear_next.setVisibility(View.GONE);
                         }
-
-                        mAdapter.notifyDataSetChanged();
                     }
                 } catch (InvalidProtocolBufferException e) {
                     e.printStackTrace();

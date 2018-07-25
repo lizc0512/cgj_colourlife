@@ -39,11 +39,9 @@ public class GroupDetailAdapter extends RecyclerView.Adapter {
 
     /**
      * @param context
-     * @param isGroupOwner
      * @param listener
      */
-    public GroupDetailAdapter(Context context, boolean isGroupOwner,
-                              ItemEventListener listener) {
+    public GroupDetailAdapter(Context context, ItemEventListener listener) {
         mContext = context;
         itemEventListener = listener;
         mDataList = new ArrayList<>();
@@ -52,11 +50,6 @@ public class GroupDetailAdapter extends RecyclerView.Adapter {
         add.setUiType(TYPE.ADD_MEMBER.ordinal());
         mDataList.add(add);
 
-        if (isGroupOwner) {
-            ContactBean del = new ContactBean();
-            del.setUiType(TYPE.DEL_MEMBER.ordinal());
-            mDataList.add(del);
-        }
     }
 
     public GroupDetailAdapter(Context context, List<ContactBean> list) {
@@ -67,6 +60,27 @@ public class GroupDetailAdapter extends RecyclerView.Adapter {
 
 
     public void addList(List<ContactBean> list) {
+        int index = 0;
+        for (int i = 0; i < mDataList.size(); i++) {
+            if (mDataList.get(i).getUiType() != 0) {
+                index = i;
+                break;
+            }
+        }
+        mDataList.addAll(index, list);
+
+        notifyDataSetChanged();
+    }
+
+
+    public void addList(List<ContactBean> list, boolean isGroupOwner) {
+
+        if (isGroupOwner) {
+            ContactBean del = new ContactBean();
+            del.setUiType(TYPE.DEL_MEMBER.ordinal());
+            mDataList.add(del);
+        }
+
         int index = 0;
         for (int i = 0; i < mDataList.size(); i++) {
             if (mDataList.get(i).getUiType() != 0) {

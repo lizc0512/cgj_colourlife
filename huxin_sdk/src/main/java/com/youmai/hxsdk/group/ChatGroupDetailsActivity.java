@@ -378,7 +378,7 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
                 Intent intent = new Intent();
                 intent.putExtra(GroupNameActivity.GROUP_NAME, mTvGroupName.getText().equals("未命名") ? "" : mTvGroupName.getText());
                 intent.putExtra(GroupNameActivity.GROUP_ID, mGroupId);
-                intent.setClass(ChatGroupDetailsActivity.this, GroupNameActivity.class);
+                intent.setClass(mContext, GroupNameActivity.class);
                 startActivityForResult(intent, REQUEST_CODE_MODIFY_NAME);
             }
         });
@@ -388,7 +388,7 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
             public void onClick(View v) {
                 Intent intent = new Intent();
                 intent.putExtra(GroupManageActivity.GROUP_ID, mGroupId);
-                intent.setClass(ChatGroupDetailsActivity.this, GroupManageActivity.class);
+                intent.setClass(mContext, GroupManageActivity.class);
                 startActivityForResult(intent, REQUEST_CODE_TRANS_OWNER);
             }
         });
@@ -402,7 +402,7 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
                     intent.putExtra(GroupNoticeActivity.GROUP_NOTICE, isNotNotice ? "" : mtvNoticeContent.getText());
                     intent.putExtra(GroupNoticeActivity.GROUP_ID, mGroupId);
                     intent.putExtra(GroupNoticeActivity.IS_GROUP_OWNER, true);
-                    intent.setClass(ChatGroupDetailsActivity.this, GroupNoticeActivity.class);
+                    intent.setClass(mContext, GroupNoticeActivity.class);
                     startActivityForResult(intent, REQUEST_CODE_MODIFY_NOTICE_TOPIC);
                 } else {
                     if (isNotNotice) {
@@ -412,7 +412,7 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
                         intent.putExtra(GroupNoticeActivity.GROUP_NOTICE, isNotNotice ? "" : mtvNoticeContent.getText());
                         intent.putExtra(GroupNoticeActivity.GROUP_ID, mGroupId);
                         intent.putExtra(GroupNoticeActivity.IS_GROUP_OWNER, false);
-                        intent.setClass(ChatGroupDetailsActivity.this, GroupNoticeActivity.class);
+                        intent.setClass(mContext, GroupNoticeActivity.class);
                         startActivityForResult(intent, REQUEST_CODE_MODIFY_NOTICE_TOPIC);
                     }
                 }
@@ -504,7 +504,7 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
                 try {
                     YouMaiGroup.GroupMemberChangeRsp ack = YouMaiGroup.GroupMemberChangeRsp.parseFrom(pduBase.body);
                     if (ack.getResult() == YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS) {
-                        Toast.makeText(ChatGroupDetailsActivity.this, "退出成功", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext, "退出成功", Toast.LENGTH_SHORT).show();
                         GroupInfoHelper.instance().delGroupInfo(mContext, mGroupId);
 
                         Intent intent = new Intent(GroupListActivity.GROUP_EXIT);

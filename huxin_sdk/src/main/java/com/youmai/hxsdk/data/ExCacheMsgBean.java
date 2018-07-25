@@ -82,6 +82,9 @@ public class ExCacheMsgBean extends CacheMsgBean {
     }
 
     public String getDisplayName() {
+        if (displayName == null) {
+            displayName = "";
+        }
         return displayName;
     }
 

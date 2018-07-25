@@ -40,11 +40,11 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.alibaba.android.arouter.launcher.ARouter;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.activity.CameraActivity;
+import com.youmai.hxsdk.group.ChatGroupDetailsActivity;
 import com.youmai.hxsdk.packet.RedPacketInGroupActivity;
 import com.youmai.hxsdk.activity.SdkBaseActivity;
 import com.youmai.hxsdk.config.ColorsConfig;
@@ -646,7 +646,7 @@ public class IMGroupActivity extends SdkBaseActivity implements
         ivGroup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mContext, IMGroupActivity.class);
+                Intent intent = new Intent(mContext, ChatGroupDetailsActivity.class);
                 intent.putExtra(GROUP_ID, groupId);
                 intent.putExtra(GROUP_NAME, groupName);
                 intent.putExtra(GROUP_INFO, mGroupInfo);

@@ -45,21 +45,27 @@ public class ContactBean implements CN, Parcelable {
     //新增字段
     @Transient
     private String name;
+
     @Transient
     private String qq;
 
     @Transient
     private String phone_number;
+
     @Transient
     private String family;
+
     @Transient
     private String icon;
+
     @Transient
-    private String Favoriteid;//
+    private String Favoriteid;
+
     @Transient
-    private String accountUuid;//
+    private String accountUuid;
+
     @Transient
-    private String enterprise_cornet;//
+    private String enterprise_cornet;
 
     public ContactBean(String name) {
         this.realname = name;

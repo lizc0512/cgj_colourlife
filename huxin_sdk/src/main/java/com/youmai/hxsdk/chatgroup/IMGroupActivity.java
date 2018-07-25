@@ -646,11 +646,11 @@ public class IMGroupActivity extends SdkBaseActivity implements
         ivGroup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ARouter.getInstance().build(APath.GROUP_DELETE_CONTACT)
-                        .withInt(GROUP_ID, groupId)
-                        .withString(GROUP_NAME, groupName)
-                        .withParcelable(GROUP_INFO, mGroupInfo)
-                        .navigation(IMGroupActivity.this, REQUEST_CODE_DETAIL);
+                Intent intent = new Intent(mContext, IMGroupActivity.class);
+                intent.putExtra(GROUP_ID, groupId);
+                intent.putExtra(GROUP_NAME, groupName);
+                intent.putExtra(GROUP_INFO, mGroupInfo);
+                startActivityForResult(intent, REQUEST_CODE_DETAIL);
             }
         });
 

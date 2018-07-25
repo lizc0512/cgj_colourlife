@@ -19,7 +19,6 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.youmai.hxsdk.HuxinSdkManager;
@@ -55,7 +54,6 @@ import java.util.List;
  * 日期：2018.04.23 17:32
  * 描述：群聊详情
  */
-@Route(path = APath.GROUP_DELETE_CONTACT)
 public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDetailAdapter.ItemEventListener {
 
     public static final String GROUP_LIST = "GROUP_LIST";

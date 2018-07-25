@@ -8,34 +8,19 @@ package com.youmai.hxsdk.router;
  */
 
 public class APath {
-    /**
-     * contacts分组
-     */
-    public static final String CONTACT_GROUP = "/contact/ContactFragment";
 
     /**
-     * 搜索分组
-     */
-    public static final String SEARCH_GLOBAL_GROUP = "/search/global";
-
-    /**
-     * 添加群组分组
-     */
-    public static final String GROUP_CREATE_ADD_CONTACT = "/group/addcontact";
-    public static final String GROUP_DELETE_CONTACT = "/group/details";
-
-    /**
-     * 个人资料
+     * 本人资料
      */
 
     public static final String USER_INFO_ACT = "/color/userInfo";
-	
+
     /**
      * 员工名片
      */
     public static final String EMPLOYEE_DATA_ACT = "/color/employee";
-	
-	
+
+
     /**
      * 好友
      */
@@ -51,7 +36,7 @@ public class APath {
     /**
      * 消息转发
      */
-    public static final String MSG_FORWARD = "/module/forward"; //转发
+    public static final String MSG_FORWARD = "/module/forward";
 
 
     /**

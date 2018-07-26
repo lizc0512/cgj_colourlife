@@ -29,13 +29,13 @@ public class ColorsConfig {
     public static final String ColorLifeAppName = "彩生活服务集团";  //彩生活服务集团
     public static final String HEAD_ICON_URL = "http://avatar.ice.colourlife.com/";//头像
 
-
-    private static final String SECRET[] = new String[]{"IGXGh8BKPwjEtbcXD2KN", "IGXGh8BKPwjEtbcXD2KN", "TYHpsLtHeFXYRTekJbVv"};
-
     /**
      * 租户ID
      */
-    private static final String CORP_UUID = "a8c58297436f433787725a94f780a3c9";
+    public static final String CORP_UUID = "a8c58297436f433787725a94f780a3c9";
+
+
+    private static final String SECRET[] = new String[]{"IGXGh8BKPwjEtbcXD2KN", "IGXGh8BKPwjEtbcXD2KN", "TYHpsLtHeFXYRTekJbVv"};
 
     /**
      * 文件微服务上传地址
@@ -274,19 +274,8 @@ public class ColorsConfig {
     public static void postFileToICE(final File file, final String desPhone, final PostFile postFile) {
         String accessToken = HuxinSdkManager.instance().getAccessToken();
         long expireTime = HuxinSdkManager.instance().getExpireTime();
-        long time = System.currentTimeMillis();
 
-        boolean isAuth = false;
-
-        if (expireTime == 0 || TextUtils.isEmpty(accessToken)) {
-            isAuth = true;
-        } else {
-            if (expireTime <= time) {//token过期
-                isAuth = true;
-            }
-        }
-
-        if (isAuth) {
+        if (isNeedAuth(accessToken, expireTime)) {
             reqAuth(new IPostListener() {
                 @Override
                 public void httpReqResult(String response) {
@@ -310,6 +299,32 @@ public class ColorsConfig {
     }
 
 
+    /**
+     * 是否需要鉴权（判断有无鉴权，或者鉴权已经过期）
+     *
+     * @param accessToken
+     * @param expireTime
+     * @return
+     */
+    public static boolean isNeedAuth(String accessToken, long expireTime) {
+        long time = System.currentTimeMillis();
+        boolean isAuth = false;
+
+        if (expireTime == 0 || TextUtils.isEmpty(accessToken)) {
+            isAuth = true;
+        } else {
+            if (expireTime <= time) {//token过期
+                isAuth = true;
+            }
+        }
+        return isAuth;
+    }
+
+
+    /**
+     *ICE 鉴权2.0
+     * @param listener
+     */
     public static void reqAuth(IPostListener listener) {
         String url = ICE_AUTH;
 

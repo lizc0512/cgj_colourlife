@@ -19,6 +19,7 @@ import com.tg.coloursteward.LoginActivity;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.database.SharedPreferencesTools;
 import com.tg.coloursteward.log.Logger;
+import com.tg.coloursteward.module.MainActivity1;
 import com.tg.coloursteward.net.ResponseData;
 import com.tg.coloursteward.util.Tools;
 import com.youmai.hxsdk.HuxinSdkManager;
@@ -45,8 +46,10 @@ public class CityPropertyApplication extends Application {
         NBSAppAgent.setLicenseKey("bbf07e0ce0b04fab93c46e4c57494e47").start(this.getApplicationContext());
 
         instance = this;
-        HuxinSdkManager.instance().init(this);
 
+        //Huxin IM SDK初始化
+        HuxinSdkManager.instance().init(this);
+        HuxinSdkManager.instance().setHomeAct(MainActivity1.class);
         Stetho.initializeWithDefaults(this);
 
         JPushInterface.setDebugMode(true);    // 设置开启日志,发布时请关闭日志

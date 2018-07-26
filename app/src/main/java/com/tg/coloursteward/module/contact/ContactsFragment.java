@@ -48,11 +48,9 @@ import com.tg.coloursteward.view.dialog.ToastFactory;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.config.ColorsConfig;
 import com.youmai.hxsdk.db.bean.ContactBean;
-import com.youmai.hxsdk.entity.AuthConfig;
 import com.youmai.hxsdk.entity.cn.CNPinyin;
 import com.youmai.hxsdk.entity.cn.CNPinyinFactory;
 import com.youmai.hxsdk.http.IGetListener;
-import com.youmai.hxsdk.http.IPostListener;
 import com.youmai.hxsdk.http.OkHttpConnector;
 import com.youmai.hxsdk.utils.GsonUtil;
 import com.youmai.hxsdk.utils.ListUtils;
@@ -76,14 +74,20 @@ public class ContactsFragment extends Fragment implements ItemEventListener {
 
     private static final String TAG = ContactsFragment.class.getName();
 
+    private static final int REQUEST_PERMISSION = 110;
+
+    public static final String BROADCAST_INTENT_FILTER = "com.tg.coloursteward.contact";
+    public static final String ACTION = "action";
+    public static final String INSERT_CONTACT = "insert";
+    public static final String DELETE_CONTACT = "delete";
+
     private Context mContext;
     private List<ContactBean> headContacts;
 
-    private static final int ISTREAD = 1;
-    private String skincode;
+    private String skinCode;
     private String orgName;
     private String orgId;
-    private final int REQUESTPERMISSION = 110;
+
     private ArrayList<FamilyInfo> familyList = new ArrayList<>(); //组织架构人
 
     private RecyclerView recyclerView;
@@ -97,10 +101,7 @@ public class ContactsFragment extends Fragment implements ItemEventListener {
     private LinearLayoutManager manager;
     private Subscription subscription;
 
-    public static final String BROADCAST_INTENT_FILTER = "com.tg.coloursteward.contact";
-    public static final String ACTION = "action";
-    public static final String INSERT_CONTACT = "insert";
-    public static final String DELETE_CONTACT = "delete";
+
     public ModifyContactsReceiver mModifyContactsReceiver;
     private IntentFilter filter;
 
@@ -131,7 +132,7 @@ public class ContactsFragment extends Fragment implements ItemEventListener {
         registerReceiver();
         headContacts = ContactBeanData.contactList(mContext, ContactBeanData.TYPE_HOME);
 
-        skincode = Tools.getStringValue(mContext, Contants.storage.SKINCODE);
+        skinCode = Tools.getStringValue(mContext, Contants.storage.SKINCODE);
         orgName = Tools.getStringValue(mContext, Contants.storage.ORGNAME);
         orgId = Tools.getStringValue(mContext, Contants.storage.ORGID);
     }
@@ -151,10 +152,10 @@ public class ContactsFragment extends Fragment implements ItemEventListener {
         initView(view);
 
         getHeadList();
-        //读取本地缓存列表
-        getCacheList();
 
-        reqAuth();
+        getCacheList();//读取本地缓存列表
+
+        reqContacts();
 
         setListener();
     }
@@ -366,7 +367,7 @@ public class ContactsFragment extends Fragment implements ItemEventListener {
         switch (pos) {
             case 0: //组织架构
                 if (familyList.size() > 0) {
-                    if (skincode.equals("101")) {//101 彩生活
+                    if (skinCode.equals("101")) {//101 彩生活
                         for (int i = 0; i < familyList.size(); i++) {
                             if (familyList.get(i).name.equals("彩生活服务集团")) {
                                 info = new FamilyInfo();
@@ -422,7 +423,7 @@ public class ContactsFragment extends Fragment implements ItemEventListener {
             case 2: //手机联系人
                 if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
                     //申请权限
-                    ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.READ_CONTACTS}, REQUESTPERMISSION);
+                    ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.READ_CONTACTS}, REQUEST_PERMISSION);
                 } else {
                     startActivity(new Intent(mContext, ContactsActivity.class));
                 }
@@ -433,7 +434,7 @@ public class ContactsFragment extends Fragment implements ItemEventListener {
             default: //item
                 Intent i = new Intent(mContext, EmployeeDataActivity.class);
                 i.putExtra(EmployeeDataActivity.CONTACTS_ID, item.getUsername());
-                startActivityForResult(i, ISTREAD);
+                startActivity(i);
 //                String avatar = Contants.URl.HEAD_ICON_URL + "avatar?uid=" + item.getUsername();
 //                if (TextUtils.isEmpty(item.getUuid())) {
 //                    Toast.makeText(mContext, item.getRealname() + "的uuid为空，无法进行IM聊天", Toast.LENGTH_SHORT).show();
@@ -502,53 +503,14 @@ public class ContactsFragment extends Fragment implements ItemEventListener {
     /**
      * 开启加载数据
      */
-    private void reqAuth() {
-        String accessToken = HuxinSdkManager.instance().getAccessToken();
-        long expireTime = HuxinSdkManager.instance().getExpireTime();
-        long time = System.currentTimeMillis();
-
-        boolean isAuth = false;
-
-        if (expireTime == 0 || TextUtils.isEmpty(accessToken)) {
-            isAuth = true;
-        } else {
-            if (expireTime <= time) {//token过期
-                isAuth = true;
-            }
-        }
-
-        if (isAuth) {
-            ColorsConfig.reqAuth(new IPostListener() {
-                @Override
-                public void httpReqResult(String response) {
-                    AuthConfig bean = GsonUtil.parse(response, AuthConfig.class);
-                    if (bean != null && bean.isSuccess()) {
-
-                        String token = bean.getContent().getAccessToken();
-                        long time = bean.getContent().getExpireTime();
-
-                        HuxinSdkManager.instance().setAccessToken(token);
-                        HuxinSdkManager.instance().setExpireTime(time);
-                        HuxinSdkManager.instance().saveUserInfo();
-
-                        reqContacts();
-                    }
-                }
-            });
-        } else {
-            reqContacts();
-        }
-    }
-
-
     private void reqContacts() {
         String url = ColorsConfig.CONTACTS_CHILD_DATAS;
 
         ContentValues params = new ContentValues();
         params.put("orgID", "0");//架构UUID编号,0取顶级架构
         params.put("familyTypeId", "0");//族谱类型ID：0组织架构
-        params.put("status", "0");//族谱类型ID：0组织架构
-        params.put("corpId", Tools.getStringValue(mContext, Contants.storage.CORPID));
+        params.put("status", 0);//状态，0正常，1禁用
+        params.put("corpId", ColorsConfig.CORP_UUID);
         ColorsConfig.commonParams(params);
 
         OkHttpConnector.httpGet(url, params, new IGetListener() {
@@ -564,7 +526,7 @@ public class ContactsFragment extends Fragment implements ItemEventListener {
                         familyInfo.name = lists.get(i).getName();
                         familyList.add(familyInfo);
                     }
-                    if (skincode.equals("101")) {//101 彩生活
+                    if (skinCode.equals("101")) {//101 彩生活
                         for (int i = 0; i < familyList.size(); i++) {
                             if (familyList.get(i).name.equals("彩生活服务集团")) {
                                 //tvOrgName.setText(familyList.get(i).name);

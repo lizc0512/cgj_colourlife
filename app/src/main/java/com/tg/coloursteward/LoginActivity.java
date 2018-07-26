@@ -18,6 +18,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.geetest.gt3unbindsdk.Bind.GT3GeetestBindListener;
 import com.geetest.gt3unbindsdk.Bind.GT3GeetestUtilsBind;
 import com.tg.coloursteward.application.CityPropertyApplication;
@@ -38,7 +39,7 @@ import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.dialog.ToastFactory;
-import com.youmai.hxsdk.HuxinSdkManager;
+import com.youmai.hxsdk.router.APath;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -52,6 +53,7 @@ import java.util.Map;
  *
  * @author Administrator
  */
+@Route(path = APath.RE_LOGIN)
 public class LoginActivity extends BaseActivity implements AnimationListener {
     private static final String TAG = "LoginActivity";
     private static final String captchaURL = "http://www.geetest.com/demo/gt/register-click";
@@ -488,8 +490,6 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
                     SharedPreferences.Editor sharedata = CityPropertyApplication.getInstance().getSharedPreferences("APP_TS", 0).edit();
                     sharedata.putLong(HttpTools.DIFFERENCE, Long.parseLong(difference));
                     sharedata.commit();
-
-                    HuxinSdkManager.instance().setAppTs(difference);
                 }
             }
         } else if (msg.arg1 == HttpTools.GET_SKIN_INFO) {//获取皮肤包
@@ -525,10 +525,6 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
                     JSONObject sonJon = new JSONObject(jsonObject);
                     String key = sonJon.optString("key");
                     String secret = sonJon.optString("secret");
-
-                    HuxinSdkManager.instance().setKey(key);
-                    HuxinSdkManager.instance().setSecret(secret);
-                    HuxinSdkManager.instance().saveUserInfo();
 
                     Tools.saveStringValue(LoginActivity.this, Contants.EMPLOYEE_LOGIN.key, key);
                     Tools.saveStringValue(LoginActivity.this, Contants.EMPLOYEE_LOGIN.secret, secret);

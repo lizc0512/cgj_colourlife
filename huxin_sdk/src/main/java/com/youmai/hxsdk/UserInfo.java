@@ -273,6 +273,7 @@ public class UserInfo {
         if (context != null && isChange) {
             String json = GsonUtil.format(this);
             AppUtils.setStringSharedPreferences(context, "userInfo", json);
+            isChange = false;
         }
     }
 

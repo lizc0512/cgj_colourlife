@@ -529,6 +529,7 @@ public class ContactsFragment extends Fragment implements ItemEventListener {
 
                         HuxinSdkManager.instance().setAccessToken(token);
                         HuxinSdkManager.instance().setExpireTime(time);
+                        HuxinSdkManager.instance().saveUserInfo();
 
                         reqContacts();
                     }

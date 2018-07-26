@@ -298,6 +298,7 @@ public class ColorsConfig {
 
                         HuxinSdkManager.instance().setAccessToken(token);
                         HuxinSdkManager.instance().setExpireTime(time);
+                        HuxinSdkManager.instance().saveUserInfo();
 
                         upLoadFile(file, token, desPhone, postFile);
                     }
@@ -331,8 +332,8 @@ public class ColorsConfig {
     private static void upLoadFile(File file, String accessToken, final String desPhone, final PostFile postFile) {
         String url = getIceUpload();
 
-        String fileUploadAccount = HuxinSdkManager.instance().getPhoneNum();
-        String fileUploadAppName = "彩之云";
+        String fileUploadAccount = HuxinSdkManager.instance().getUserName();
+        String fileUploadAppName = "彩管家";
 
         if (file.exists()) {
             Map<String, Object> params = new HashMap<>();

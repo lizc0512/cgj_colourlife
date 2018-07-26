@@ -5,7 +5,7 @@ import android.content.Context;
 import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.db.bean.ContactBean;
 import com.youmai.hxsdk.entity.cn.pinyin.Pinyin;
-import com.youmai.hxsdk.entity.red.ModifyContactsBean;
+import com.youmai.hxsdk.entity.ModifyContactsBean;
 import com.youmai.hxsdk.group.adapter.SearchContactAdapter;
 
 import java.util.ArrayList;

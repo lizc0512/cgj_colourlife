@@ -1,4 +1,4 @@
-package com.youmai.hxsdk.entity.red;
+package com.youmai.hxsdk.entity;
 
 public class DeleteUserBean {
 

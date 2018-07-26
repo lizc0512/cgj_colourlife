@@ -82,7 +82,8 @@
         <activity
             android:name="com.youmai.hxsdk.activity.WebViewActivity"
             android:launchMode="singleInstance"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/HxSdkTheme" />
 
         <activity
             android:name="com.youmai.hxsdk.activity.CropImageActivity"
@@ -99,15 +100,18 @@
         <!--查看接受到的图片-->
         <activity
             android:name="com.youmai.hxsdk.activity.PictureIndicatorActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/HxSdkTheme" />
 
         <activity
             android:name="com.youmai.hxsdk.module.picker.PreviewImageActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/HxSdkTheme" />
 
         <activity
             android:name="com.youmai.hxsdk.module.picker.PreviewVideoActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/HxSdkTheme" />
 
         <activity
             android:name="com.youmai.hxsdk.activity.CropMapActivity"
@@ -121,6 +125,12 @@
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="portrait"
             android:theme="@style/HxMsgTheme" />
+
+        <!--搜索-->
+        <activity
+            android:name="com.youmai.hxsdk.search.GlobalSearchActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/HxSdkTheme" />
 
         <!--IM消息-->
         <activity
@@ -140,6 +150,7 @@
             android:theme="@style/HxSdkNewTheme"
             android:windowSoftInputMode="adjustResize|stateHidden" />
 
+        <!--群列表-->
         <activity
             android:name="com.youmai.hxsdk.group.GroupListActivity"
             android:configChanges="keyboardHidden|orientation"
@@ -197,12 +208,6 @@
             android:windowSoftInputMode="stateHidden|adjustResize" />
 
 
-        <!--搜索-->
-        <activity
-            android:name="com.youmai.hxsdk.search.GlobalSearchActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/HxSdkTheme" />
-
         <activity
             android:name="com.youmai.hxsdk.chatgroup.GroupAtSelectActivity"
             android:configChanges="keyboardHidden|orientation"
@@ -240,24 +245,29 @@
         <activity
             android:name="com.youmai.hxsdk.IMFilePreviewActivity"
             android:configChanges="keyboardHidden|orientation"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/HxSdkTheme" />
 
         <activity
             android:name="com.youmai.hxsdk.module.picker.PhotoPreviewActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/HxSdkTheme" />
 
         <activity
             android:name="com.youmai.hxsdk.module.picker.PhotoDirectoryActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/HxSdkTheme" />
 
         <activity
             android:name="com.youmai.hxsdk.picker.FilePickerActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:noHistory="true" />
+            android:noHistory="true"
+            android:theme="@style/HxSdkTheme" />
 
         <activity
             android:name="com.youmai.hxsdk.picker.MediaDetailsActivity"
-            android:configChanges="orientation|keyboardHidden" />
+            android:configChanges="orientation|keyboardHidden"
+            android:theme="@style/HxSdkTheme" />
 
         <!--file manager start-->
         <activity
@@ -269,7 +279,7 @@
         <activity
             android:name="com.youmai.hxsdk.module.filemanager.activity.FileClassifyActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/HxSdkNewTheme" />
+            android:theme="@style/HxSdkTheme" />
 
         <activity
             android:name="com.youmai.hxsdk.module.filemanager.activity.FileDownloadActivity"
@@ -279,7 +289,7 @@
         <activity
             android:name="com.youmai.hxsdk.module.filemanager.activity.FileDLClassifyActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/HxSdkNewTheme" />
+            android:theme="@style/HxSdkTheme" />
         <!--file manager end-->
 
         <activity

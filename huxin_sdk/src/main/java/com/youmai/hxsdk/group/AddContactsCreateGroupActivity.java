@@ -21,7 +21,7 @@ import android.widget.Toast;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.youmai.hxsdk.R;
-import com.youmai.hxsdk.entity.red.ModifyContactsBean;
+import com.youmai.hxsdk.entity.ModifyContactsBean;
 import com.youmai.hxsdk.group.adapter.SearchContactAdapter;
 import com.youmai.hxsdk.group.data.GroupMembers;
 import com.youmai.hxsdk.group.data.ContactBeanData;

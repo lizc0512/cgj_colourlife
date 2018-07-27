@@ -598,8 +598,8 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
                 updateGroupInfo(MODIFIY_GROUPTOPIC, groupNotice);
             } else if (requestCode == REQUEST_CODE_TRANS_OWNER) {
                 isGroupOwner = false;
-                reqGroupMembers();
                 mRlGroupManage.setVisibility(View.GONE);
+                mAdapter.setIsGroupOwner(isGroupOwner);
             }
         }
     }

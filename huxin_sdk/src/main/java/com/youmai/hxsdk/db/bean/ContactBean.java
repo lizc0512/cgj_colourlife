@@ -79,14 +79,18 @@ public class ContactBean implements CN, Parcelable {
 
     @Override
     public boolean equals(Object obj) {
-        if (uuid == null) {
-            return false;
-        } else if (obj instanceof ContactBean) {
+        boolean res = false;
+
+        if (obj instanceof ContactBean) {
             ContactBean bean = (ContactBean) obj;
-            return uuid.equals(bean.getUuid());
-        } else {
-            return false;
+            if (uuid != null && bean.getUuid() != null) {
+                res = uuid.equals(bean.getUuid());
+            } else if (uuid == null && bean.getUuid() == null) {
+                res = uiType == bean.getUiType();
+            }
+
         }
+        return res;
 
     }
 

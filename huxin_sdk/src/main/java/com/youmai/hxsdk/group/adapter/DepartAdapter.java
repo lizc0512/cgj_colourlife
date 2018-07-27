@@ -21,7 +21,6 @@ import com.youmai.hxsdk.db.bean.ContactBean;
 import com.youmai.hxsdk.group.AddContactsCreateGroupActivity;
 import com.youmai.hxsdk.utils.GlideRoundTransform;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -90,12 +89,12 @@ public class DepartAdapter extends RecyclerView.Adapter {
             return new OrgHolder(view);
         } else {
             View view = inflater.inflate(R.layout.group_search_item_layout, parent, false);
-            return new SearchItem(view);
+            return new MemberHolder(view);
         }
     }
 
     @Override
-    public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, int position) {
         final ContactBean contact = mDataList.get(position);
         if (holder instanceof OrgHolder) {
             ((OrgHolder) holder).cb_collect.setVisibility(View.GONE);
@@ -105,24 +104,24 @@ public class DepartAdapter extends RecyclerView.Adapter {
                 @Override
                 public void onClick(View v) {
                     if (callback != null) {
-                        callback.onItemClick(position, contact);
+                        callback.onItemClick(holder.getAdapterPosition(), contact);
                     }
 
                 }
             });
 
 
-        } else if (holder instanceof SearchItem) {
+        } else if (holder instanceof MemberHolder) {
             if (null != groupMap && null != groupMap.get(contact.getUuid())) {
-                ((SearchItem) holder).cb_collect.setButtonDrawable(R.drawable.contact_select_def);
-                ((SearchItem) holder).search_name.setText(contact.getRealname());
+                ((MemberHolder) holder).cb_collect.setButtonDrawable(R.drawable.contact_select_def);
+                ((MemberHolder) holder).search_name.setText(contact.getRealname());
             } else {
-                ((SearchItem) holder).search_name.setText(contact.getRealname());
-                ((SearchItem) holder).cb_collect.setButtonDrawable(R.drawable.contacts_select_selector);
+                ((MemberHolder) holder).search_name.setText(contact.getRealname());
+                ((MemberHolder) holder).cb_collect.setButtonDrawable(R.drawable.contacts_select_selector);
                 if (mTotalMap.get(contact.getUuid()) != null) {
-                    ((SearchItem) holder).cb_collect.setChecked(true);
+                    ((MemberHolder) holder).cb_collect.setChecked(true);
                 } else {
-                    ((SearchItem) holder).cb_collect.setChecked(false);
+                    ((MemberHolder) holder).cb_collect.setChecked(false);
                 }
             }
 
@@ -137,7 +136,7 @@ public class DepartAdapter extends RecyclerView.Adapter {
                                 .transform(new GlideRoundTransform())
                                 .placeholder(R.drawable.color_default_header)
                                 .error(R.drawable.color_default_header))
-                        .into(((SearchItem) holder).search_icon);
+                        .into(((MemberHolder) holder).search_icon);
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -151,9 +150,9 @@ public class DepartAdapter extends RecyclerView.Adapter {
                             return;
                         }
                         if (mTotalMap.get(contact.getUuid()) != null) {
-                            ((SearchItem) holder).cb_collect.setChecked(false);
+                            ((MemberHolder) holder).cb_collect.setChecked(false);
                         } else {
-                            ((SearchItem) holder).cb_collect.setChecked(true);
+                            ((MemberHolder) holder).cb_collect.setChecked(true);
                         }
                         Intent intent = new Intent(AddContactsCreateGroupActivity.BROADCAST_FILTER);
                         intent.putExtra(AddContactsCreateGroupActivity.ACTION, AddContactsCreateGroupActivity.DEPART_CONTACT);
@@ -172,13 +171,13 @@ public class DepartAdapter extends RecyclerView.Adapter {
         return mDataList == null ? 0 : mDataList.size();
     }
 
-    public class SearchItem extends RecyclerView.ViewHolder {
+    class MemberHolder extends RecyclerView.ViewHolder {
         ImageView search_icon;
         TextView search_name;
         RelativeLayout search_item;
         CheckBox cb_collect;
 
-        public SearchItem(View itemView) {
+        MemberHolder(View itemView) {
             super(itemView);
             cb_collect = itemView.findViewById(R.id.cb_collect);
             search_icon = itemView.findViewById(R.id.global_search_icon);
@@ -187,12 +186,12 @@ public class DepartAdapter extends RecyclerView.Adapter {
         }
     }
 
-    public class OrgHolder extends RecyclerView.ViewHolder {
+    class OrgHolder extends RecyclerView.ViewHolder {
         private ImageView iv_header;
         private TextView tv_name;
         private CheckBox cb_collect;
 
-        public OrgHolder(View itemView) {
+        OrgHolder(View itemView) {
             super(itemView);
             iv_header = itemView.findViewById(com.youmai.hxsdk.R.id.iv_header);
             tv_name = itemView.findViewById(com.youmai.hxsdk.R.id.tv_name);

@@ -48,6 +48,9 @@ public class ContactsSearchFragment<T extends Parcelable> extends SearchFragment
         mGlobalSearchAdapter.setHeadTitle(getString(R.string.hx_contacts_search_title));
         mGlobalSearchAdapter.setTailTitle(getString(R.string.hx_contacts_view_more_contacts));
         mRecyclerView.setAdapter(mGlobalSearchAdapter);
+        //scrollView滑动嵌套简单处理
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setNestedScrollingEnabled(false);
 
         getLoaderManager().initLoader(GLOBAL_SEARCH_LOADER_ID, null, this).forceLoad();
     }

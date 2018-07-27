@@ -48,7 +48,6 @@ public class DepartAdapter extends RecyclerView.Adapter {
 
     public DepartAdapter(Context context) {
         this.mContext = context;
-        mDataList = new ArrayList<>();
     }
 
     public void setDataList(List<ContactBean> dataList) {
@@ -170,7 +169,7 @@ public class DepartAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemCount() {
-        return mDataList.size();
+        return mDataList == null ? 0 : mDataList.size();
     }
 
     public class SearchItem extends RecyclerView.ViewHolder {

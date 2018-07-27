@@ -5,8 +5,8 @@
     android:background="@color/hx_color_white"
     android:orientation="vertical">
 
-    <com.jcodecraeer.xrecyclerview.XRecyclerView
-        android:id="@+id/depart_xrv"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="1px" />

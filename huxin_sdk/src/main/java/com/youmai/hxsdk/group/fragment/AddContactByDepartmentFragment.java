@@ -6,11 +6,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.config.ColorsConfig;
 import com.youmai.hxsdk.db.bean.ContactBean;
@@ -34,7 +34,7 @@ import java.util.Map;
  */
 public class AddContactByDepartmentFragment extends Fragment {
 
-    private XRecyclerView mXRecyclerView;
+    private RecyclerView recyclerView;
     private DepartAdapter mAdapter;
 
 
@@ -53,26 +53,13 @@ public class AddContactByDepartmentFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mXRecyclerView = view.findViewById(R.id.depart_xrv);
+        recyclerView = view.findViewById(R.id.recycler_view);
 
         mAdapter = new DepartAdapter(getContext());
 
         LinearLayoutManager manager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-        mXRecyclerView.setLayoutManager(manager);
-        mXRecyclerView.setLoadingMoreEnabled(false);
-        mXRecyclerView.setAdapter(mAdapter);
-
-        mXRecyclerView.setLoadingListener(new XRecyclerView.LoadingListener() {
-            @Override
-            public void onRefresh() {
-                mXRecyclerView.refreshComplete();
-            }
-
-            @Override
-            public void onLoadMore() {
-
-            }
-        });
+        recyclerView.setLayoutManager(manager);
+        recyclerView.setAdapter(mAdapter);
 
         mAdapter.setCallback(new DepartAdapter.ItemEventListener() {
             @Override

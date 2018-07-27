@@ -287,11 +287,12 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
                 } else {
                     transaction.show(searchGroupFragment);
                     searchGroupFragment.add(s.toString());
-                    transaction.commit();
-                    contactView.setVisibility(View.GONE);
-                }
 
+                }
                 searchGroupFragment.setMap(mTotalMap, mGroupMap);
+
+                transaction.commit();
+                contactView.setVisibility(View.GONE);
             }
 
             @Override
@@ -631,19 +632,40 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
         int type = contact.getUiType();
         if (type == SearchContactAdapter.TYPE.ORGANIZATION_TYPE.ordinal()) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.show(departmentFragment);
-            transaction.commit();
-            departmentFragment.setMap(ColorsConfig.ColorLifeAppId, mTotalMap, mGroupMap);
 
+            if (searchGroupFragment.isVisible()) {
+                transaction.hide(searchGroupFragment);
+            }
+
+            if (departmentFragment.isVisible()) {
+                departmentFragment.setMap(ColorsConfig.ColorLifeAppId, mTotalMap, mGroupMap);
+            } else {
+                transaction.show(departmentFragment);
+                departmentFragment.setMap(ColorsConfig.ColorLifeAppId, mTotalMap, mGroupMap);
+            }
+
+            transaction.commit();
             contactView.setVisibility(View.GONE);
+
+
         } else if (type == SearchContactAdapter.TYPE.DEPARTMENT_TYPE.ordinal()) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.show(departmentFragment);
-            transaction.commit();
             String orgId = HuxinSdkManager.instance().getOrgId();
-            departmentFragment.setMap(orgId, mTotalMap, mGroupMap);//to do
 
+            if (searchGroupFragment.isVisible()) {
+                transaction.hide(searchGroupFragment);
+            }
+
+            if (departmentFragment.isVisible()) {
+                departmentFragment.setMap(orgId, mTotalMap, mGroupMap);//to do
+            } else {
+                transaction.show(departmentFragment);
+                departmentFragment.setMap(orgId, mTotalMap, mGroupMap);//to do
+            }
+
+            transaction.commit();
             contactView.setVisibility(View.GONE);
+
         }
     }
 

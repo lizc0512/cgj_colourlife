@@ -94,6 +94,31 @@ public class GroupDetailAdapter extends RecyclerView.Adapter {
     }
 
 
+    public void setIsGroupOwner(boolean isGroupOwner) {
+        if (isGroupOwner) {
+            boolean isAdd = true;
+            for (ContactBean item : mDataList) {
+                if (item.getUiType() == TYPE.DEL_MEMBER.ordinal()) {
+                    isAdd = false;
+                    break;
+                }
+            }
+            if (isAdd) {
+                ContactBean del = new ContactBean();
+                del.setUiType(TYPE.DEL_MEMBER.ordinal());
+                mDataList.add(del);
+            }
+        } else {
+            for (ContactBean item : mDataList) {
+                if (item.getUiType() == TYPE.DEL_MEMBER.ordinal()) {
+                    mDataList.remove(item);
+                    break;
+                }
+            }
+        }
+        notifyDataSetChanged();
+    }
+
     public void removeList(List<ContactBean> list) {
         mDataList.removeAll(list);
         notifyDataSetChanged();

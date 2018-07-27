@@ -107,8 +107,7 @@ public class GroupManageActivity extends SdkBaseActivity {
                         try {
                             YouMaiGroup.GroupInfoModifyRsp ack = YouMaiGroup.GroupInfoModifyRsp.parseFrom(pduBase.body);
                             if (ack.getResult() == YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS) {
-                                Intent intent = new Intent();
-                                setResult(ChatGroupDetailsActivity.RESULT_CODE, intent);
+                                setResult(ChatGroupDetailsActivity.RESULT_CODE);
                                 finish();
                             } else {
                                 Toast.makeText(mContext, "群主管理权转让失败", Toast.LENGTH_SHORT).show();

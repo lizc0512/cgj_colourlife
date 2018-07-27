@@ -87,6 +87,7 @@ public class ColorsConfig {
     private static final String ICE_AUTH = getIceHost() + "authms/auth/app";
 
 
+
     /**
      * 主组织架构
      */
@@ -106,6 +107,11 @@ public class ColorsConfig {
      * 删除联系人
      */
     public static final String CONTACT_DEL = getIceHost() + "txl2/contacts/";
+
+
+
+
+    //public static final String REQ_CONTACTS = getIceHost() + "txl2/contacts/childDatas";
 
 
     /**

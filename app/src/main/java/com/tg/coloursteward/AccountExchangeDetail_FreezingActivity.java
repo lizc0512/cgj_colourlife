@@ -25,6 +25,7 @@ import com.tg.coloursteward.serice.AuthAppService;
 import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.Tools;
+import com.tg.coloursteward.view.ActivityHeaderView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -41,7 +42,6 @@ public class AccountExchangeDetail_FreezingActivity extends BaseActivity {
     private TextView freezing_flowvalue;
     private TextView freezing_time;
     private TextView freezing_money;
-    private AlertDialog ProgressBarDialog;
     private AlertDialog dialog;
     private AuthAppService authAppService;
     private String accessToken;
@@ -123,6 +123,7 @@ public class AccountExchangeDetail_FreezingActivity extends BaseActivity {
     }
 
     private void initView() {
+        headView = (ActivityHeaderView) findViewById(R.id.title);
         iv_image_show = findViewById(R.id.iv_image_show);
         freezing_value = findViewById(R.id.freezing_value);
         freezing_flowvalue = findViewById(R.id.freezing_flowvalue);
@@ -184,12 +185,20 @@ public class AccountExchangeDetail_FreezingActivity extends BaseActivity {
                     freezing_flowvalue.setText(splitBillDetailEntity.getContent().getFinance_tno());//冻结流水号
                     DecimalFormat df = new DecimalFormat("0.00");
                     freezing_money.setText("金额: +" + df.format(Double.valueOf(splitBillDetailEntity.getContent().getAmount())));
-                    freezing_time.setText(splitBillDetailEntity.getContent().getTime());
+                    freezing_time.setText("交易时间:" + splitBillDetailEntity.getContent().getTime());
                     message = splitBillDetailEntity.getContent().getFreezen_msg();
                 }
             }
 
         }
+    }
+
+    @Override
+    protected boolean handClickEvent(View v) {
+        if (v.getId() == R.id.right_layout) {
+            showNoticeDialogMust();
+        }
+        return super.handClickEvent(v);
     }
 
     @Override
@@ -199,6 +208,8 @@ public class AccountExchangeDetail_FreezingActivity extends BaseActivity {
 
     @Override
     public String getHeadTitle() {
+        headView.setRightImage(R.drawable.next);
+        headView.setListenerRight(singleListener);
         return "冻结详情";
     }
 }

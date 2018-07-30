@@ -197,7 +197,9 @@ public class FragmentMine extends Fragment implements ItemClickListener, Respons
             } else if (position == 1) {// 找回支付密码
                 find_pay_password();
             } else if (position == 2) {// 我的工资条
-                getAuth("我的工资条", Contants.URl.HR_PAY, "myhrpay");
+                Intent intent = new Intent(mActivity, MyBrowserActivity.class);
+                intent.putExtra(MyBrowserActivity.KEY_URL, Contants.URl.HR_PAY);
+                startActivity(intent);
             }
         } else if (mv == mineInfoZone3) {
             if (position == 0) {// 彩之云账号绑定

@@ -29,6 +29,7 @@ import com.tg.coloursteward.util.Tools;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DecimalFormat;
 import java.util.Date;
 
 /**
@@ -45,6 +46,7 @@ public class AccountExchangeDetail_FreezingActivity extends BaseActivity {
     private AuthAppService authAppService;
     private String accessToken;
     private String general_uuid, split_type, split_target, id;
+    private String message;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,7 +137,7 @@ public class AccountExchangeDetail_FreezingActivity extends BaseActivity {
     }
 
     /**
-     *  提示语
+     * 提示语
      */
     private void showNoticeDialogMust() {
         if (dialog == null) {
@@ -154,7 +156,7 @@ public class AccountExchangeDetail_FreezingActivity extends BaseActivity {
             ImageView ivLine = (ImageView) layout.findViewById(R.id.iv_line);
             btnCancel.setVisibility(View.GONE);
             ivLine.setVisibility(View.GONE);
-            tvContent.setText("提示信息");
+            tvContent.setText(message);
             btnOk.setText("确定");
             btnOk.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -180,8 +182,10 @@ public class AccountExchangeDetail_FreezingActivity extends BaseActivity {
                     SplitBillDetailEntity splitBillDetailEntity = GsonUtils.gsonToBean(jsonString, SplitBillDetailEntity.class);
                     freezing_value.setText(splitBillDetailEntity.getContent().getOut_trade_no());
                     freezing_flowvalue.setText(splitBillDetailEntity.getContent().getFinance_tno());//冻结流水号
-                    freezing_money.setText(splitBillDetailEntity.getContent().getAmount());
+                    DecimalFormat df = new DecimalFormat("0.00");
+                    freezing_money.setText("金额: +" + df.format(Double.valueOf(splitBillDetailEntity.getContent().getAmount())));
                     freezing_time.setText(splitBillDetailEntity.getContent().getTime());
+                    message = splitBillDetailEntity.getContent().getFreezen_msg();
                 }
             }
 

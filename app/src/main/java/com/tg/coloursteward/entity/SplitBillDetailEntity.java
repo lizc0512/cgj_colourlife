@@ -58,12 +58,22 @@ public class SplitBillDetailEntity {
          * finance_tno : 201807291658367dde7e14ca011
          * time : 2018-07-29 16:58:31
          * amount : 1.0000000
+         * freezen_msg : 评价完成后把订单金额X%乘以评分值，得到的金额转到员工账户
          */
 
         private String out_trade_no;
         private String finance_tno;
         private String time;
         private String amount;
+        private String freezen_msg;
+
+        public String getFreezen_msg() {
+            return freezen_msg;
+        }
+
+        public void setFreezen_msg(String freezen_msg) {
+            this.freezen_msg = freezen_msg;
+        }
 
         public String getOut_trade_no() {
             return out_trade_no;

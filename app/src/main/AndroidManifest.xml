@@ -66,17 +66,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".module.MainActivity1"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
-
         <activity
             android:name="com.youmai.hxsdk.forward.ForwardSelectActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
-
         <activity
             android:name=".MainActivity"
             android:configChanges="locale|orientation|keyboard|keyboardHidden"
@@ -363,8 +360,6 @@
         <activity android:name=".PublicAccountActivity" />
         <activity android:name=".ForgetPasswordActivity" />
         <activity android:name=".ForgetPasswordVerifyActivity" />
-
-
         <activity android:name=".RedpacketsAccountListActivity" />
         <activity android:name=".AccountDetailNewActivity" />
         <activity android:name=".AccountExchangeRecordActivity" />
@@ -386,27 +381,27 @@
         <activity android:name=".SettingWiFiActivity" />
         <activity android:name=".SignInCalendarActivity" />
 
-        <!--租户列表-->
+        <!-- 租户列表 -->
         <activity
             android:name=".TenantListActivity"
             android:label="@string/app_name" />
-        <!--对公账户（兑换方式）-->
+        <!-- 对公账户（兑换方式） -->
         <activity
             android:name=".ExchangeMethodActivity"
             android:label="@string/app_name" />
-        <!--兑换给同事（对公账户）-->
+        <!-- 兑换给同事（对公账户） -->
         <activity
             android:name=".RedpacketsDGZHShareMainMainActivity"
             android:label="@string/app_name" />
-        <!--账号选择OA列表-->
+        <!-- 账号选择OA列表 -->
         <activity
             android:name=".RedpacketsDGZHAccountListActivity"
             android:label="@string/app_name" />
-        <!--兑换给同事  转账界面（对公账户）-->
+        <!-- 兑换给同事  转账界面（对公账户） -->
         <activity
             android:name=".PublicAccountTransferToColleagueActivity"
             android:label="@string/app_name" />
-        <!--H5调原生-->
+        <!-- H5调原生 -->
         <activity
             android:name=".RedpacketsTransferToColleagueH5Activity"
             android:label="@string/app_name" />

@@ -184,7 +184,7 @@ public class AccountExchangeDetail_FreezingActivity extends BaseActivity {
                     freezing_value.setText(splitBillDetailEntity.getContent().getOut_trade_no());
                     freezing_flowvalue.setText(splitBillDetailEntity.getContent().getFinance_tno());//冻结流水号
                     DecimalFormat df = new DecimalFormat("0.00");
-                    freezing_money.setText("金额: +" + df.format(Double.valueOf(splitBillDetailEntity.getContent().getAmount())));
+                    freezing_money.setText("+" + df.format(Double.valueOf(splitBillDetailEntity.getContent().getAmount())));
                     freezing_time.setText("交易时间:" + splitBillDetailEntity.getContent().getTime());
                     message = splitBillDetailEntity.getContent().getFreezen_msg();
                 }

@@ -33,7 +33,7 @@
         android:layout_alignBaseline="@id/tv_freeing_money_name"
         android:layout_toRightOf="@id/tv_freeing_money_name"
         android:text="+15"
-        android:textColor="@color/text_color3"
+        android:textColor="@color/text_color4"
         android:textSize="15dp" />
 
 

@@ -50,7 +50,7 @@
         android:id="@+id/tv_order_number"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tv_name"
+        android:layout_below="@id/tv_order_name"
         android:layout_marginTop="@dimen/margin_10"
         android:text="业务订单号:15456749684"
         android:layout_marginLeft="@dimen/margin_18"

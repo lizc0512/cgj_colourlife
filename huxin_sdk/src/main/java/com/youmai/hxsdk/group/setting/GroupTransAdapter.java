@@ -1,7 +1,12 @@
 package com.youmai.hxsdk.group.setting;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,35 +18,27 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.youmai.hxsdk.R;
-import com.youmai.hxsdk.db.bean.ContactBean;
-import com.youmai.hxsdk.entity.cn.CNPinyin;
-import com.youmai.hxsdk.stickyheader.StickyHeaderAdapter;
+import com.youmai.hxsdk.entity.cn.SearchContactBean;
 import com.youmai.hxsdk.utils.GlideRoundTransform;
+import com.youmai.hxsdk.utils.ListUtils;
+import com.youmai.hxsdk.utils.PinYinUtils;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by yw on 2018/4/13.
  */
-public class GroupTransAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements
-        StickyHeaderAdapter<GroupTransAdapter.HeaderHolder> {
-
-    enum TYPE {
-        SEARCH, DEFAULT
-    }
+public class GroupTransAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private Context mContext;
-    private int mCollectIndex = 0;
     private ItemEventListener itemEventListener;
-    private final List<CNPinyin<ContactBean>> cnPinyinList;
+    private ArrayList<SearchContactBean> mList;
 
-    private Map<String, ContactBean> mSelectMap = new HashMap<>();
 
-    public GroupTransAdapter(Context context, List<CNPinyin<ContactBean>> cnPinyinList, ItemEventListener listener) {
+    public GroupTransAdapter(Context context, ArrayList<SearchContactBean> list, ItemEventListener listener) {
         this.mContext = context.getApplicationContext();
-        this.cnPinyinList = cnPinyinList;
+        this.mList = list;
         this.itemEventListener = listener;
     }
 
@@ -54,44 +51,26 @@ public class GroupTransAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public int getItemCount() {
-        return cnPinyinList.size();
+        return mList == null ? 0 : mList.size();
     }
 
-    @Override
-    public int getItemViewType(int position) {
-        /*int type;
-        if (position == 0) {
-            type = TYPE.SEARCH.ordinal();
-        } else {
-            type = TYPE.DEFAULT.ordinal();
-        }*/
-        int type = TYPE.DEFAULT.ordinal();
-        return type;
-    }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        /*if (viewType == TYPE.SEARCH.ordinal()) {
-            return new SearchHolder(LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.global_list_item_header_search, parent, false));
-        } else {
-            return new ContactHolder(LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.group_contact_item, parent, false));
-        }*/
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new ContactHolder(LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.group_contact_item, parent, false));
     }
 
     @Override
-    public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
-        final ContactBean contact = cnPinyinList.get(position).data;
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
+        final SearchContactBean model = mList.get(position);
 
         if (holder instanceof ContactHolder) {
             final ContactHolder contactHolder = (ContactHolder) holder;
             try {
                 int size = mContext.getResources().getDimensionPixelOffset(R.dimen.card_head);
                 Glide.with(mContext)
-                        .load(contact.getAvatar())
+                        .load(model.getIconUrl())
                         .apply(new RequestOptions()
                                 .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                                 .centerCrop()
@@ -114,75 +93,87 @@ public class GroupTransAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 @Override
                 public void onClick(View v) {
                     if (null != itemEventListener) {
-                        itemEventListener.onItemClick(position, contact);
+                        itemEventListener.onItemClick(position, model);
                     }
                 }
             });
 
-            if (contact.getRealname().startsWith("↑##@@**") && position <= mCollectIndex) {
-                contactHolder.tv_name.setText(contact.getRealname().substring(9));
-            } else {
-                contactHolder.tv_name.setText(contact.getRealname());
+            contactHolder.tv_name.setText(model.getDisplayName());
+
+
+            String queryString = model.getSearchKey();
+            int highlightColor = ContextCompat.getColor(mContext, R.color.hxs_color_green3);
+            switch (model.getSearchType()) {
+                case SearchContactBean.SEARCH_TYPE_NUMBER:
+                    //setTVColor(model.getPhoneNum(), queryString, contactHolder.search_info);
+                    break;
+                case SearchContactBean.SEARCH_TYPE_INFO:
+                    //setTVColor(model.getInfo(), queryString, contactHolder.search_info);
+                    break;
+                case SearchContactBean.SEARCH_TYPE_NAME:
+                    setTVColor(model.getDisplayName(), queryString, contactHolder.tv_name);
+                    break;
+                case SearchContactBean.SEARCH_TYPE_SIMPLE_SPELL:
+                    if (queryString.matches("[a-zA-Z]+")) {
+                        if (model.getSimplepinyin().contains(queryString)) {
+                            int a = model.getSimplepinyin().indexOf(queryString);
+                            int b = a + queryString.length();
+                            SpannableStringBuilder builder = new SpannableStringBuilder(model.getDisplayName());
+                            builder.setSpan(new ForegroundColorSpan(highlightColor),
+                                    a, b, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            contactHolder.tv_name.setText(builder);
+                        }
+                    }
+                    break;
+                //全拼的高亮暂不支持
+                case SearchContactBean.SEARCH_TYPE_WHOLE_SPECL:
+                    int[] findIndex = model.getWholePinYinFindIndex();
+
+                    String displayName = model.getDisplayName();
+                    SpannableStringBuilder builder = new SpannableStringBuilder(displayName);
+
+                    List<Integer> integers = PinYinUtils.match2(displayName, queryString);
+                    int start = 0;
+                    int end = 0;
+
+                    if (!ListUtils.isEmpty(integers)) {
+                        start = integers.get(0);
+                        end = integers.get(integers.size() - 1);
+                    }
+
+                    builder.setSpan(new ForegroundColorSpan(highlightColor),
+                            start, end + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    contactHolder.tv_name.setText(builder);
+                    break;
+                case SearchContactBean.SEARCH_TYPE_SIMPLE_T9:
+                    if (model.getSimpleT9().contains(queryString)) {
+                        int a = model.getSimpleT9().indexOf(queryString);
+                        int b = a + queryString.length();
+                        SpannableStringBuilder build = new SpannableStringBuilder(model.getDisplayName());
+                        build.setSpan(new ForegroundColorSpan(highlightColor),
+                                a, b, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        contactHolder.tv_name.setText(build);
+                    }
+                    break;
+                default:
+                    break;
             }
 
-        } else if (holder instanceof SearchHolder) {
-            //搜索框不处理
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (null != itemEventListener) {
-                        itemEventListener.onItemClick(holder.getAdapterPosition(), contact);
-                    }
-                }
-            });
+
         }
 
     }
 
-    @Override
-    public long getHeaderId(int childAdapterPosition) {
-        if (childAdapterPosition <= mCollectIndex) {
-            return '↑';
-        } else {
-            return cnPinyinList.get(childAdapterPosition).getFirstChar();
+    private void setTVColor(String str, String subString, TextView tv) {
+        int highlightColor = ContextCompat.getColor(mContext, R.color.hxs_color_green3);
+        int a = str.indexOf(subString);
+        SpannableStringBuilder builder = new SpannableStringBuilder(str);
+        if (a != -1) {
+            int b = a + subString.length();
+            builder.setSpan(new ForegroundColorSpan(highlightColor),
+                    a, b, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
-    }
-
-    @Override
-    public boolean specialIndex(int childAdapterPosition) {
-        CNPinyin<ContactBean> contactCNPinyin = cnPinyinList.get(childAdapterPosition);
-        return contactCNPinyin.getHeaderFilter().contains(contactCNPinyin.data.getRealname());
-    }
-
-    @Override
-    public String index(int childAdapterPosition) {
-        return cnPinyinList.get(childAdapterPosition).getFirstChar() + "";
-    }
-
-    @Override
-    public void onBindHeaderViewHolder(HeaderHolder holder, int childAdapterPosition) {
-        holder.tv_header.setText(String.valueOf(cnPinyinList.get(childAdapterPosition).getFirstChar()));
-    }
-
-    @Override
-    public HeaderHolder onCreateHeaderViewHolder(ViewGroup parent) {
-        return new HeaderHolder(LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_header, parent, false));
-    }
-
-    public class SearchHolder extends RecyclerView.ViewHolder {
-        public SearchHolder(View itemView) {
-            super(itemView);
-        }
-    }
-
-    public class HeaderHolder extends RecyclerView.ViewHolder {
-        private TextView tv_header;
-
-        public HeaderHolder(View itemView) {
-            super(itemView);
-            tv_header = (TextView) itemView.findViewById(R.id.tv_header);
-        }
+        tv.setText(builder);
     }
 
     public class ContactHolder extends RecyclerView.ViewHolder {
@@ -199,7 +190,7 @@ public class GroupTransAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     public interface ItemEventListener {
-        void onItemClick(int pos, ContactBean contact);
+        void onItemClick(int pos, SearchContactBean contact);
     }
 
 }

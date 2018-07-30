@@ -29,7 +29,7 @@ import com.youmai.hxsdk.db.bean.ContactBean;
 import com.youmai.hxsdk.db.bean.GroupInfoBean;
 import com.youmai.hxsdk.db.helper.GroupInfoHelper;
 import com.youmai.hxsdk.entity.cn.SearchContactBean;
-import com.youmai.hxsdk.loader.SearchLoader;
+import com.youmai.hxsdk.loader.SearchLoaderAct;
 import com.youmai.hxsdk.proto.YouMaiBasic;
 import com.youmai.hxsdk.proto.YouMaiGroup;
 import com.youmai.hxsdk.socket.PduBase;
@@ -60,7 +60,7 @@ public class GroupAtSelectActivity extends AppCompatActivity implements
 
     private SearchView searchView;
 
-    private SearchLoader mLoader;
+    private SearchLoaderAct mLoader;
 
     private ArrayList<SearchContactBean> resultList = new ArrayList<>();
 
@@ -71,7 +71,7 @@ public class GroupAtSelectActivity extends AppCompatActivity implements
         @Override
         public Loader<List<SearchContactBean>> onCreateLoader(int id, @Nullable Bundle args) {
             Log.d(TAG, "onCreateLoader");
-            mLoader = new SearchLoader(mContext, groupList);
+            mLoader = new SearchLoaderAct(mContext, groupList);
             return mLoader;
         }
 

@@ -52,8 +52,9 @@ public class GroupDetailAdapter extends RecyclerView.Adapter {
 
     }
 
-    public GroupDetailAdapter(Context context, List<ContactBean> list) {
+    public GroupDetailAdapter(Context context, List<ContactBean> list, ItemEventListener listener) {
         mContext = context;
+        itemEventListener = listener;
         mDataList = new ArrayList<>();
         mDataList.addAll(list);
     }

@@ -1,16 +1,14 @@
 package com.youmai.hxsdk.loader;
 
-import android.content.AsyncTaskLoader;
 import android.content.Context;
+import android.support.v4.content.AsyncTaskLoader;
 import android.text.TextUtils;
 import android.util.Log;
 
 import com.youmai.hxsdk.db.bean.ContactBean;
-import com.youmai.hxsdk.entity.cn.DuoYinZi;
 import com.youmai.hxsdk.entity.cn.SearchContactBean;
 import com.youmai.hxsdk.entity.cn.pinyin.Pinyin;
 import com.youmai.hxsdk.utils.ListUtils;
-import com.youmai.hxsdk.utils.PinYinUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +42,9 @@ public class SearchLoader extends AsyncTaskLoader {
         }
 
         if (TextUtils.isEmpty(mQuery)) {
+            for (SearchContactBean item : allList) {
+                item.setSearchKey("");
+            }
             return allList;
         }
 
@@ -123,6 +124,7 @@ public class SearchLoader extends AsyncTaskLoader {
             contact.setWholePinyin(pinyin.toString());
             contact.setSimplepinyin(ch.toString());
             contact.setIndexPinyin(chStr);
+
 
             //DuoYinZi duoYinZi = PinYinUtils.HanziToPinYin(hanzi);
             //contact.setDuoYinzi(duoYinZi);

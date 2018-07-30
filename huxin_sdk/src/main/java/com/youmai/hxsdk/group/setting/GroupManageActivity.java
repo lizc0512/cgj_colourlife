@@ -69,8 +69,6 @@ public class GroupManageActivity extends SdkBaseActivity {
         transaction.add(R.id.fl_select_container, groupManageFragment, TAG_SEARCH_CONTACT_FRAGMENT);
         transaction.hide(groupManageFragment);
         transaction.commitAllowingStateLoss();
-
-        groupManageFragment.setList(list);
     }
 
     private void initData() {

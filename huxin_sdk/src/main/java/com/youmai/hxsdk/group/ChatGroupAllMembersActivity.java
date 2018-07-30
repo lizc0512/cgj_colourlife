@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.chatgroup.IMGroupActivity;
@@ -18,6 +19,7 @@ import com.youmai.hxsdk.db.bean.GroupInfoBean;
 import com.youmai.hxsdk.db.helper.GroupInfoHelper;
 import com.youmai.hxsdk.group.adapter.GroupDetailAdapter;
 import com.youmai.hxsdk.group.data.GroupMembers;
+import com.youmai.hxsdk.router.APath;
 
 import java.util.ArrayList;
 
@@ -26,7 +28,7 @@ import java.util.ArrayList;
  * 日期：2018.04.23 17:32
  * 描述：群聊详情
  */
-public class ChatGroupAllMembersActivity extends SdkBaseActivity {
+public class ChatGroupAllMembersActivity extends SdkBaseActivity implements GroupDetailAdapter.ItemEventListener {
 
     public static final String GROUP_LIST = "GROUP_LIST";
 
@@ -82,7 +84,7 @@ public class ChatGroupAllMembersActivity extends SdkBaseActivity {
         recycler_view = findViewById(com.youmai.hxsdk.R.id.recycler_view);
 
 
-        mAdapter = new GroupDetailAdapter(mContext, groupList);
+        mAdapter = new GroupDetailAdapter(mContext, groupList, this);
         GridLayoutManager manager = new GridLayoutManager(mContext, 5);
         recycler_view.addItemDecoration(new PaddingItemDecoration(20));
         recycler_view.setLayoutManager(manager);
@@ -111,5 +113,16 @@ public class ChatGroupAllMembersActivity extends SdkBaseActivity {
         }
     }
 
+    @Override
+    public void onItemClick(int pos, ContactBean contact) {
+        if (contact.getUuid().equals(HuxinSdkManager.instance().getUuid())) {  //自己的头像
+            ARouter.getInstance().build(APath.USER_INFO_ACT)
+                    .navigation(this);
+        } else {
+            ARouter.getInstance().build(APath.EMPLOYEE_DATA_ACT)
+                    .withString("contacts_id", contact.getUsername())
+                    .navigation(this);
 
+        }
+    }
 }

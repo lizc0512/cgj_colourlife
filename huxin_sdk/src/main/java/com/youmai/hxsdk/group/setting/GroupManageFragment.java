@@ -1,34 +1,34 @@
 package com.youmai.hxsdk.group.setting;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
 import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.db.bean.ContactBean;
-import com.youmai.hxsdk.entity.cn.CNPinyin;
-import com.youmai.hxsdk.entity.cn.CNPinyinFactory;
-import com.youmai.hxsdk.stickyheader.StickyHeaderDecoration;
-import com.youmai.hxsdk.utils.ListUtils;
-import com.youmai.hxsdk.widget.CharIndexView;
+import com.youmai.hxsdk.entity.cn.SearchContactBean;
+import com.youmai.hxsdk.group.data.GroupMembers;
+import com.youmai.hxsdk.loader.SearchLoader;
+import com.youmai.hxsdk.widget.SearchEditText;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-import rx.Observable;
-import rx.Subscriber;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 /**
  * 作者：create by YW
@@ -36,122 +36,107 @@ import rx.schedulers.Schedulers;
  * 描述：群主转让列表
  */
 public class GroupManageFragment extends Fragment implements GroupTransAdapter.ItemEventListener {
+    private static final String TAG = GroupManageFragment.class.getName();
+
+    private final int GLOBAL_SEARCH_LOADER_ID = 1;
+
+    private Context mContext;
+
+    private SearchEditText global_search_bar;
 
     private RecyclerView recyclerView;
-    private GroupTransAdapter adapter;
-
-    private CharIndexView iv_main;
-    private TextView tv_index;
-
-    private ArrayList<CNPinyin<ContactBean>> contactList = new ArrayList<>();
-    private LinearLayoutManager manager;
-    private Subscription subscription;
+    private GroupTransAdapter mAdapter;
 
     private String ownerId = "";
     private String ownerName = "";
 
+    private SearchLoader mLoader;
+    private ArrayList<ContactBean> groupList;
+
+    private ArrayList<SearchContactBean> resultList = new ArrayList<>();
+
+    private LoaderManager.LoaderCallbacks<List<SearchContactBean>> callback = new LoaderManager.LoaderCallbacks<List<SearchContactBean>>() {
+        @NonNull
+        @Override
+        public Loader<List<SearchContactBean>> onCreateLoader(int id, @Nullable Bundle args) {
+            Log.d(TAG, "onCreateLoader");
+            mLoader = new SearchLoader(mContext, groupList);
+            return mLoader;
+        }
+
+        @Override
+        public void onLoadFinished(@NonNull Loader<List<SearchContactBean>> loader, List<SearchContactBean> data) {
+            resultList.clear();
+            resultList.addAll(data);
+            mAdapter.notifyDataSetChanged();
+        }
+
+        @Override
+        public void onLoaderReset(@NonNull Loader<List<SearchContactBean>> loader) {
+            resultList.clear();
+            mAdapter.notifyDataSetChanged();
+        }
+    };
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mContext = context;
+    }
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_contacts_layout, container, false);
+        return inflater.inflate(R.layout.fragment_group_manager, container, false);
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        if (!ListUtils.isEmpty(contactList)) {
-            contactList.clear();
-        }
 
+        global_search_bar = view.findViewById(R.id.global_search_bar);
+        global_search_bar.addTextChangedListener(new SearchEditText.MiddleTextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                mAdapter.setSelected(-1);
+                String queryStr = s.toString();
+                mLoader.setQuery(queryStr);
+                mLoader.forceLoad();
+            }
+        });
+        global_search_bar.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    hideSoftKeyboard();
+                    return true;
+                }
+                return false;
+            }
+        });
         recyclerView = view.findViewById(R.id.recycler_view);
-        iv_main = view.findViewById(R.id.iv_main);
-        tv_index = view.findViewById(R.id.tv_index);
 
-        manager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+        groupList = GroupMembers.instance().getGroupList();
+
+        LinearLayoutManager manager = new LinearLayoutManager(getContext(),
+                LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(manager);
 
-        adapter = new GroupTransAdapter(getContext(), contactList, this);
-        recyclerView.setAdapter(adapter);
-        recyclerView.addItemDecoration(new StickyHeaderDecoration(adapter));
+        mAdapter = new GroupTransAdapter(mContext, resultList, this);
+        recyclerView.setAdapter(mAdapter);
 
-        setListener();
 
+        getLoaderManager().initLoader(GLOBAL_SEARCH_LOADER_ID, null, callback).forceLoad();
     }
 
-    public void setList(List<ContactBean> list) {
-        getPinyinList(list);
-    }
 
     @Override
     public void onDestroy() {
-        if (subscription != null) {
-            subscription.unsubscribe();
-        }
-        if (!ListUtils.isEmpty(contactList)) {
-            contactList.clear();
-        }
         super.onDestroy();
     }
 
-    private void setListener() {
-        iv_main.setOnCharIndexChangedListener(new CharIndexView.OnCharIndexChangedListener() {
-            @Override
-            public void onCharIndexChanged(char currentIndex) {
-                for (int i = 0; i < contactList.size(); i++) {
-                    if (contactList.get(i).getFirstChar() == currentIndex) {
-                        manager.scrollToPositionWithOffset(i, 0);
-                        return;
-                    }
-                }
-            }
-
-            @Override
-            public void onCharIndexSelected(String currentIndex) {
-                if (currentIndex == null) {
-                    tv_index.setVisibility(View.INVISIBLE);
-                } else {
-                    tv_index.setVisibility(View.VISIBLE);
-                    tv_index.setText(currentIndex);
-                }
-            }
-        });
-    }
-
-    private void getPinyinList(final List<ContactBean> data) {
-
-        subscription = Observable.create(new Observable.OnSubscribe<List<CNPinyin<ContactBean>>>() {
-            @Override
-            public void call(Subscriber<? super List<CNPinyin<ContactBean>>> subscriber) {
-                /*ContactBean contact = new ContactBean();
-                contact.setRealname("↑##@@**0 搜索");
-                data.add(contact);*/
-                if (!subscriber.isUnsubscribed()) {
-                    //子线程查数据库，返回List<Contacts>
-                    List<CNPinyin<ContactBean>> contactList = CNPinyinFactory.createCNPinyinList(data);
-                    Collections.sort(contactList);
-                    subscriber.onNext(contactList);
-                    subscriber.onCompleted();
-                }
-            }
-        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<List<CNPinyin<ContactBean>>>() {
-                    @Override
-                    public void onCompleted() {
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                    }
-
-                    @Override
-                    public void onNext(List<CNPinyin<ContactBean>> cnPinyins) {
-                        if (!ListUtils.isEmpty(contactList)) {
-                            contactList.clear();
-                        }
-                        //回调业务数据
-                        contactList.addAll(cnPinyins);
-                        adapter.notifyDataSetChanged();
-                    }
-                });
+    private void hideSoftKeyboard() {
+        InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(global_search_bar.getWindowToken(), 0);
     }
 
     public String getOwnerId() {
@@ -169,10 +154,10 @@ public class GroupManageFragment extends Fragment implements GroupTransAdapter.I
      * @param contact
      */
     @Override
-    public void onItemClick(int pos, ContactBean contact) {
-        adapter.setSelected(pos);
+    public void onItemClick(int pos, SearchContactBean contact) {
+        mAdapter.setSelected(pos);
         ownerId = contact.getUuid();
-        ownerName = contact.getRealname();
+        ownerName = contact.getDisplayName();
     }
 
     @Override

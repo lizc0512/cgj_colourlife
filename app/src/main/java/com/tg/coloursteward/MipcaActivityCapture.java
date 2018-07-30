@@ -326,10 +326,8 @@ public class MipcaActivityCapture extends BaseActivity implements Callback ,OnCl
 					return;
 				}
 				intent = new Intent(MipcaActivityCapture.this,
-						SettingPolicyActivity.class);
-				intent.putExtra("addr", result);
-				intent.putExtra("title", "扫描结果");
-				intent.putExtra("isshop", "true");
+						MyBrowserActivity.class);
+				intent.putExtra(MyBrowserActivity.KEY_URL, result);
 				startActivity(intent);
 			} 
 			else {

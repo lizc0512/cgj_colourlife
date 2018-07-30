@@ -1,35 +1,6 @@
 package com.tg.coloursteward;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLDecoder;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import com.amap.api.location.AMapLocation;
-import com.amap.api.location.AMapLocationClient;
-import com.amap.api.location.AMapLocationClientOption;
-import com.amap.api.location.AMapLocationListener;
-import com.githang.statusbar.StatusBarCompat;
-import com.tencent.smtt.sdk.CookieManager;
-import com.tencent.smtt.sdk.CookieSyncManager;
-import com.tg.coloursteward.constant.Contants;
-import com.tg.coloursteward.util.FileSizeUtil;
-import com.tg.coloursteward.util.Helper;
-import com.tg.coloursteward.util.Tools;
-import com.tg.coloursteward.util.Utils;
-import com.tg.coloursteward.view.X5WebView;
-import com.tg.coloursteward.view.dialog.DialogFactory;
-import com.tg.coloursteward.view.dialog.ToastFactory;
-
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -37,9 +8,9 @@ import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.IntentFilter;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.net.http.SslError;
@@ -51,6 +22,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
+import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.DisplayMetrics;
@@ -62,21 +34,54 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.webkit.JavascriptInterface;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.webkit.JavascriptInterface;
 
+import com.amap.api.location.AMapLocation;
+import com.amap.api.location.AMapLocationClient;
+import com.amap.api.location.AMapLocationClientOption;
+import com.amap.api.location.AMapLocationListener;
+import com.githang.statusbar.StatusBarCompat;
 import com.tencent.smtt.export.external.interfaces.GeolocationPermissionsCallback;
 import com.tencent.smtt.export.external.interfaces.JsResult;
 import com.tencent.smtt.export.external.interfaces.SslErrorHandler;
+import com.tencent.smtt.sdk.CookieManager;
+import com.tencent.smtt.sdk.CookieSyncManager;
 import com.tencent.smtt.sdk.DownloadListener;
 import com.tencent.smtt.sdk.ValueCallback;
 import com.tencent.smtt.sdk.WebChromeClient;
 import com.tencent.smtt.sdk.WebSettings;
 import com.tencent.smtt.sdk.WebView;
 import com.tencent.smtt.sdk.WebViewClient;
+import com.tg.coloursteward.constant.Contants;
+import com.tg.coloursteward.net.MD5;
+import com.tg.coloursteward.serice.OAuth2Service;
+import com.tg.coloursteward.util.FileSizeUtil;
+import com.tg.coloursteward.util.Helper;
+import com.tg.coloursteward.util.Tools;
+import com.tg.coloursteward.util.Utils;
+import com.tg.coloursteward.view.X5WebView;
+import com.tg.coloursteward.view.dialog.DialogFactory;
+import com.tg.coloursteward.view.dialog.ToastFactory;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLDecoder;
+import java.util.HashMap;
+import java.util.Map;
 
 import cn.sharesdk.onekeyshare.OnekeyShare;
 
@@ -126,7 +131,7 @@ public class MyBrowserActivity extends Activity implements OnClickListener, AMap
     private GetDeviceIdReceiver deviceIdReceiver;
     private static final int OLD_FILE_SELECT_CODE = 6;
     private static final int FILE_SELECT_CODE = 4;
-
+    private String imeis;
     private String urlFromA;
 
     private BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -247,6 +252,18 @@ public class MyBrowserActivity extends Activity implements OnClickListener, AMap
         settings.setBuiltInZoomControls(true);
         settings.setLoadWithOverviewMode(true);
         settings.setDomStorageEnabled(true);
+        @SuppressLint("MissingPermission")
+        String imei = ((TelephonyManager) this.getSystemService(TELEPHONY_SERVICE)).getDeviceId();
+        try {
+            imeis = MD5.getMd5Value(imei).toUpperCase();
+            if (TextUtils.isEmpty(imei)) {
+                imeis = MD5.getMd5Value(Tools.macAddress()).toLowerCase();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        String ua = settings.getUserAgentString();
+        settings.setUserAgentString(ua + imeis + "/newHousekeeper");
         webView.setDownloadListener(new MyWebViewDownLoadListener());
         if (!TextUtils.isEmpty(htmlText)) {
             webView.loadDataWithBaseURL(null, htmlText, "text/html", "utf-8",
@@ -255,7 +272,14 @@ public class MyBrowserActivity extends Activity implements OnClickListener, AMap
             // 设置setWebChromeClient对象
             webView.setWebChromeClient(new XHSWebChromeClient());
             //android调用js
-            webView.loadUrl(url);
+            Map<String, String> headerMap = new HashMap<>();
+            OAuth2Service oAuth2Service = null;
+            if (null == oAuth2Service) {
+                oAuth2Service = new OAuth2Service(MyBrowserActivity.this);
+            }
+            String color_token = oAuth2Service.getOAuth2Service("");
+            headerMap.put("color-token", color_token);
+            webView.loadUrl(url, headerMap);
             //定义js调用android
             webView.addJavascriptInterface(new JsInteration(), "js");
             webView.addJavascriptInterface(new JsInteration(), "myjava");

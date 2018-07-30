@@ -37,12 +37,12 @@ import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.entity.AdvConfig;
 import com.tg.coloursteward.entity.CaiHuiEntity;
 import com.tg.coloursteward.entity.OaConfig;
-import com.tg.coloursteward.info.AdvInfo;
 import com.tg.coloursteward.info.GridViewInfo;
 import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.inter.SingleClickListener;
 import com.tg.coloursteward.net.GetTwoRecordListener;
 import com.tg.coloursteward.net.HttpTools;
+import com.tg.coloursteward.net.MD5;
 import com.tg.coloursteward.net.MessageHandler;
 import com.tg.coloursteward.net.RequestConfig;
 import com.tg.coloursteward.net.RequestParams;
@@ -86,7 +86,7 @@ import java.util.List;
  *
  * @author Administrator
  */
-public class FragmentManagement extends Fragment {
+public class FragmentManagement extends Fragment implements MessageHandler.ResponseListener {
     private static final String TAG = "FragmentManagement";
     private Activity mActivity;
     private View mView;
@@ -169,9 +169,9 @@ public class FragmentManagement extends Fragment {
                     intent.putExtra(DataShowActivity.BRANCH, UserInfo.orgId);
                     startActivity(intent);
                     break;
-                case R.id.ll_performance://绩效评分
+                case R.id.ll_performance://彩惠战况
                     Intent intent = new Intent(mActivity, MyBrowserActivity.class);
-                    intent.putExtra(MyBrowserActivity.KEY_URL, "http://caihui.colourlife.com/orderData/orderData.html");
+                    intent.putExtra(MyBrowserActivity.KEY_URL, "https://caihui-bishow.colourlife.com/orderData/orderData.html");
                     startActivity(intent);
                     break;
                 case R.id.ll_account://即时分账
@@ -208,7 +208,6 @@ public class FragmentManagement extends Fragment {
                         mAuthTimeUtils.IsAuthTime(mActivity, Contants.Html5.SP1, "sp", "0", "sp", "");
                     } else {
                         mAuthTimeUtils = new AuthTimeUtils();
-//				mAuthTimeUtils.IsAuthTime(mActivity,Contants.Html5.SP, "sp", "0", "sp","");
                         mAuthTimeUtils.IsAuthTime(mActivity, Contants.Html5.SP, "tlmyapps", "1", "tlmyapps", "");
 
                     }
@@ -223,8 +222,6 @@ public class FragmentManagement extends Fragment {
                 case R.id.ll_sign://签到
                     mAuthTimeUtils = new AuthTimeUtils();
                     mAuthTimeUtils.IsAuthTime(mActivity, Contants.Html5.QIANDAO, "qiandao", "1", "qiandao", "");
-//                    intent = new Intent(mActivity, SignInActivity.class);
-//                    startActivity(intent);
                     break;
             }
         }
@@ -237,6 +234,9 @@ public class FragmentManagement extends Fragment {
         mView = inflater.inflate(R.layout.fragment_management_layout, container, false);
         addHead();
         initView();
+        if (Tools.getBooleanValue(mActivity, Contants.storage.EMPLOYEE_LOGIN) == false) {
+            getEmployeeInfo();
+        }
         requestData();
         requestData2();
         initListener();
@@ -246,6 +246,26 @@ public class FragmentManagement extends Fragment {
         mGridView1.loaddingData();
         magLinearLayoutExamineNum.loaddingData();
         return mView;
+    }
+
+    /**
+     * employee/login接口调用
+     */
+    public void getEmployeeInfo() {
+        String pwd = Tools.getPassWord(mActivity);
+        RequestConfig config = new RequestConfig(mActivity, HttpTools.SET_EMPLOYEE_INFO, null);
+        RequestParams params = new RequestParams();
+        params.put("username", UserInfo.employeeAccount);
+        try {
+            params.put("password", MD5.getMd5Value(pwd).toLowerCase());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        String key = Tools.getStringValue(mActivity, Contants.EMPLOYEE_LOGIN.key);
+        String secret = Tools.getStringValue(mActivity, Contants.EMPLOYEE_LOGIN.secret);
+        params.put("key", key);
+        params.put("secret", secret);
+        HttpTools.httpPost(Contants.URl.URL_CPMOBILE, "/1.0/employee/login", config, params);
     }
 
     private void addHead() {
@@ -265,7 +285,7 @@ public class FragmentManagement extends Fragment {
         rlStock = (RelativeLayout) mView.findViewById(R.id.rl_stock);//集团股票
         rlTicket = (RelativeLayout) mView.findViewById(R.id.rl_ticket);//我的饭票
         rlCommunity = (RelativeLayout) mView.findViewById(R.id.rl_community);//在管小区
-        rlPerformance = (RelativeLayout) mView.findViewById(R.id.rl_performance);//绩效评分
+        rlPerformance = (RelativeLayout) mView.findViewById(R.id.rl_performance);//彩惠状况
         rlAccount = (RelativeLayout) mView.findViewById(R.id.rl_account);//即时分账
         /**
          * 头部6个按钮加载旋转圈
@@ -274,7 +294,7 @@ public class FragmentManagement extends Fragment {
         progressBarStock = (RotateProgress) mView.findViewById(R.id.progressBar_stock);//集团股票
         progressBarTicket = (RotateProgress) mView.findViewById(R.id.progressBar_ticket);//我的饭票
         progressBarCommunity = (RotateProgress) mView.findViewById(R.id.progressBar_community);//在管小区
-        progressBarPerformance = (RotateProgress) mView.findViewById(R.id.progressBar_performance);//绩效评分
+        progressBarPerformance = (RotateProgress) mView.findViewById(R.id.progressBar_performance);//彩惠状况
         progressBarAccount = (RotateProgress) mView.findViewById(R.id.progressBar_account);//即时分账
         /**
          * 头部6个textView控件(展示数据)
@@ -283,7 +303,7 @@ public class FragmentManagement extends Fragment {
         tvStock = (TextView) mView.findViewById(R.id.tv_stock);//集团股票
         tvTicket = (TextView) mView.findViewById(R.id.tv_ticket);//我的饭票
         tvCommunity = (TextView) mView.findViewById(R.id.tv_community);//在管小区
-        tvPerformance = (TextView) mView.findViewById(R.id.tv_performance);//绩效评分
+        tvPerformance = (TextView) mView.findViewById(R.id.tv_performance);//彩惠状况
         tvAccount = (TextView) mView.findViewById(R.id.tv_account);//即时分账
         AreaStr = Tools.getStringValue(mActivity, Contants.storage.AREAHOME);
         StockStr = Tools.getStringValue(mActivity, Contants.storage.STOCKHOME);
@@ -330,7 +350,7 @@ public class FragmentManagement extends Fragment {
             progressBarCommunity.setVisibility(View.VISIBLE);
             rlCommunity.setVisibility(View.GONE);
         }
-        //绩效评分
+        //彩惠状况
         if (StringUtils.isNotEmpty(PerformanceStr)) {
             progressBarPerformance.setVisibility(View.GONE);
             rlPerformance.setVisibility(View.VISIBLE);
@@ -662,7 +682,7 @@ public class FragmentManagement extends Fragment {
                 RequestConfig config = new RequestConfig(mActivity, 0);
                 config.handler = msgHand.getHandler();
                 RequestParams params = new RequestParams();
-                HttpTools.httpGet(Contants.URl.URL_CAIHUI, "/backend/order/count", config, params);
+                HttpTools.httpGet(Contants.URl.URL_CAIHUI, "/order/count", config, params);
             }
         });
         /**
@@ -738,7 +758,7 @@ public class FragmentManagement extends Fragment {
                 magLinearLayoutStock.loaddingData();
             }
         }, 1000);
-        magLinearLayoutPerformance.postDelayed(new Runnable() {//绩效评分
+        magLinearLayoutPerformance.postDelayed(new Runnable() {//彩惠状况
 
             @Override
             public void run() {
@@ -767,7 +787,6 @@ public class FragmentManagement extends Fragment {
         mGridView1 = (MyGridView) mView.findViewById(R.id.gridview1);
         mGridView2 = (MyGridView) mView.findViewById(R.id.gridview2);
         banner = (Banner) mView.findViewById(R.id.banner);
-        getAdInfo();
 
         outLocalData();
 
@@ -1118,54 +1137,9 @@ public class FragmentManagement extends Fragment {
     }
 
     /**
-     * 轮播图
-     *
-     * @param list
-     */
-    public void setAdvList(ArrayList<AdvInfo> list) {
-        /*listAdv.clear();
-        if (list != null && list.size() > 0) {
-            listAdv.addAll(list);
-        } else {
-            AdvInfo info;
-            info = new AdvInfo();
-            info.advResId = R.color.default_bg;
-            listAdv.add(info);
-        }
-        viewPager.notifyDataSetChanged();*/
-    }
-
-    /**
      * 从本地数据库取出数据
      */
     public void outLocalData() {
-        //轮播图
-        /*advListStr = Tools.getStringValue(mActivity, Contants.storage.ADVLIST);
-        if (StringUtils.isNotEmpty(advListStr)) {
-            int code = HttpTools.getCode(advListStr);
-            if (code == 0) {
-                JSONObject content = HttpTools.getContentJSONObject(advListStr);
-                ArrayList<AdvInfo> listadv = new ArrayList<AdvInfo>();
-                listadv.clear();
-                try {
-                    JSONObject list = content.getJSONObject("list");
-                    JSONArray jarray = list.getJSONArray("100301");
-                    ResponseData data = HttpTools.parseJsonArray(jarray);
-                    AdvInfo adInfo;
-                    for (int i = 0; i < data.length; i++) {
-                        adInfo = new AdvInfo();
-                        adInfo.pid = data.getInt(i, "plate_code");
-                        adInfo.pName = data.getString(i, "name");
-                        adInfo.imgUrl = data.getString(i, "img_path");
-                        adInfo.url = data.getString(i, "url");
-                        listadv.add(adInfo);
-                    }
-                    setAdvList(listadv);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }*/
         //常用应用
         commonjsonStr = Tools.getCommonName(mActivity);
         String jsonString = HttpTools.getContentString(commonjsonStr);
@@ -1493,6 +1467,27 @@ public class FragmentManagement extends Fragment {
             }
         });
 
+    }
+
+    @Override
+    public void onRequestStart(Message msg, String hintString) {
+    }
+
+    @Override
+    public void onSuccess(Message msg, String jsonString, String hintString) {
+        int code = HttpTools.getCode(jsonString);
+        if (msg.arg1 == HttpTools.SET_EMPLOYEE_INFO) {
+            if (code == 0) {
+                JSONObject content = HttpTools.getContentJSONObject(jsonString);
+                if (content != null) {
+                    Tools.setBooleanValue(mActivity, Contants.storage.EMPLOYEE_LOGIN, true);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onFail(Message msg, String hintString) {
     }
 
 

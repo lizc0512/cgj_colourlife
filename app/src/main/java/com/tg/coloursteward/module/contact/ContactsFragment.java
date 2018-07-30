@@ -31,29 +31,29 @@ import com.tg.coloursteward.R;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.info.FamilyInfo;
 import com.tg.coloursteward.info.UserInfo;
-import com.youmai.hxsdk.adapter.ContactAdapter;
-import com.youmai.hxsdk.adapter.ContactAdapter.ItemEventListener;
-import com.youmai.hxsdk.entity.DeleteUserBean;
-import com.youmai.hxsdk.entity.ModifyContactsBean;
-import com.youmai.hxsdk.entity.ReqContactsBean;
-import com.youmai.hxsdk.search.GlobalSearchActivity;
-import com.youmai.hxsdk.stickyheader.StickyHeaderDecoration;
-import com.youmai.hxsdk.group.data.ContactBeanData;
-import com.youmai.hxsdk.utils.AppUtils;
-import com.youmai.hxsdk.widget.CharIndexView;
-import com.youmai.hxsdk.group.GroupListActivity;
 import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.dialog.ToastFactory;
 import com.youmai.hxsdk.HuxinSdkManager;
+import com.youmai.hxsdk.adapter.ContactAdapter;
+import com.youmai.hxsdk.adapter.ContactAdapter.ItemEventListener;
 import com.youmai.hxsdk.config.ColorsConfig;
 import com.youmai.hxsdk.db.bean.ContactBean;
+import com.youmai.hxsdk.entity.DeleteUserBean;
+import com.youmai.hxsdk.entity.ModifyContactsBean;
+import com.youmai.hxsdk.entity.ReqContactsBean;
 import com.youmai.hxsdk.entity.cn.CNPinyin;
 import com.youmai.hxsdk.entity.cn.CNPinyinFactory;
+import com.youmai.hxsdk.group.GroupListActivity;
+import com.youmai.hxsdk.group.data.ContactBeanData;
 import com.youmai.hxsdk.http.IGetListener;
 import com.youmai.hxsdk.http.OkHttpConnector;
+import com.youmai.hxsdk.search.GlobalSearchActivity;
+import com.youmai.hxsdk.stickyheader.StickyHeaderDecoration;
+import com.youmai.hxsdk.utils.AppUtils;
 import com.youmai.hxsdk.utils.GsonUtil;
 import com.youmai.hxsdk.utils.ListUtils;
+import com.youmai.hxsdk.widget.CharIndexView;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -529,16 +529,16 @@ public class ContactsFragment extends Fragment implements ItemEventListener {
                     if (skinCode.equals("101")) {//101 彩生活
                         for (int i = 0; i < familyList.size(); i++) {
                             if (familyList.get(i).name.equals("彩生活服务集团")) {
-                                //tvOrgName.setText(familyList.get(i).name);
                                 Tools.saveStringValue(mContext, Contants.storage.ORGNAME, familyList.get(i).name);
                                 Tools.saveStringValue(mContext, Contants.storage.ORGID, familyList.get(i).id);
+                                adapter.org_name = familyList.get(i).name;
                             }
                         }
                     } else {
                         if (StringUtils.isNotEmpty(familyList.get(0).name)) {
-                            //tvOrgName.setText(familyList.get(0).name);
                             Tools.saveStringValue(mContext, Contants.storage.ORGNAME, familyList.get(0).name);
                             Tools.saveStringValue(mContext, Contants.storage.ORGID, familyList.get(0).id);
+                            adapter.org_name = familyList.get(0).name;
                         }
                     }
 

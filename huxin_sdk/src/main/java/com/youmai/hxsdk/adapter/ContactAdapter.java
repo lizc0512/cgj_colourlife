@@ -1,8 +1,10 @@
 package com.youmai.hxsdk.adapter;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,9 +16,9 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.youmai.hxsdk.R;
-import com.youmai.hxsdk.stickyheader.StickyHeaderAdapter;
 import com.youmai.hxsdk.db.bean.ContactBean;
 import com.youmai.hxsdk.entity.cn.CNPinyin;
+import com.youmai.hxsdk.stickyheader.StickyHeaderAdapter;
 import com.youmai.hxsdk.utils.GlideRoundTransform;
 
 import java.util.List;
@@ -31,6 +33,7 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private int mCollectIndex;
     private ItemEventListener itemEventListener;
     private final List<CNPinyin<ContactBean>> cnPinyinList;
+    public String org_name;
 
     public ContactAdapter(Context context, List<CNPinyin<ContactBean>> cnPinyinList, int collectIndex, ItemEventListener listener) {
         this.mContext = context.getApplicationContext();
@@ -88,6 +91,23 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 contactHolder.tv_name.setText(contact.getRealname().substring(9));
             } else {
                 contactHolder.tv_name.setText(contact.getRealname());
+            }
+            SharedPreferences sharedPreferences = mContext.getSharedPreferences("park_cache_map", 0);
+            String depart_name = sharedPreferences.getString("org_depart_name", "");
+            if (TextUtils.isEmpty(org_name)) {
+                if (!TextUtils.isEmpty(org_name = sharedPreferences.getString("org_name", ""))) {
+                    org_name = sharedPreferences.getString("org_name", "");
+                } else {
+                    org_name = "服务集团";
+                }
+            }
+            if (position == 0) {
+                contactHolder.tv_user_name.setVisibility(View.VISIBLE);
+                contactHolder.tv_user_name.setText(org_name);
+            }
+            if (position == 1) {
+                contactHolder.tv_user_name.setVisibility(View.VISIBLE);
+                contactHolder.tv_user_name.setText(depart_name);
             }
 
         }
@@ -159,12 +179,14 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public class ContactHolder extends RecyclerView.ViewHolder {
         private ImageView iv_header;
         private TextView tv_name;
+        private TextView tv_user_name;
         private CheckBox cb_collect;
 
         public ContactHolder(View itemView) {
             super(itemView);
             iv_header = (ImageView) itemView.findViewById(R.id.iv_header);
             tv_name = (TextView) itemView.findViewById(R.id.tv_name);
+            tv_user_name = (TextView) itemView.findViewById(R.id.tv_user_name);
             cb_collect = itemView.findViewById(R.id.cb_collect);
         }
     }

@@ -1,11 +1,24 @@
 package com.tg.coloursteward.fragment;
 
-import java.util.ArrayList;
-import java.util.Date;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import android.Manifest;
+import android.app.Activity;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.tg.coloursteward.ContactsActivity;
 import com.tg.coloursteward.EmployeeDataActivity;
@@ -16,7 +29,6 @@ import com.tg.coloursteward.R;
 import com.tg.coloursteward.adapter.CollectLinkmanAdapter;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.info.FamilyInfo;
-import com.tg.coloursteward.info.HomeDeskTopInfo;
 import com.tg.coloursteward.info.LinkManInfo;
 import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.inter.OnLoadingListener;
@@ -33,29 +45,14 @@ import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.HomeRelativeLayout;
 import com.tg.coloursteward.view.HomeRelativeLayout.NetRelativeRequestListener;
 import com.tg.coloursteward.view.PullRefreshListView;
-import com.tg.coloursteward.view.dialog.DialogFactory;
 import com.tg.coloursteward.view.dialog.ToastFactory;
 
-import android.Manifest;
-import android.app.Activity;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.AdapterView.OnItemClickListener;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Date;
 /**
  * 通讯录
  * @author Administrator
@@ -82,7 +79,7 @@ public class FragmentCommunicate extends Fragment implements OnItemClickListener
 	private String LinkManListCache;
 	private ArrayList<FamilyInfo> familyList = new ArrayList<FamilyInfo>();
 	private SingleClickListener singleListener = new SingleClickListener() {
-		
+
 		@Override
 		public void onSingleClick(View v) {
 			Intent intent;
@@ -152,7 +149,7 @@ public class FragmentCommunicate extends Fragment implements OnItemClickListener
 			}
 		}
 	};
-	
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -200,6 +197,7 @@ public class FragmentCommunicate extends Fragment implements OnItemClickListener
 						item = new FamilyInfo();
 						item.id = data.getString(i, "orgUuid");
 						item.name = data.getString(i, "name");
+						Tools.saveStringValue(mActivity,"org_orgarea_name", data.getString(i, "name"));
 						familyList.add(item);
 					}
 					if(skincode.equals("101")){//101 彩生活
@@ -242,7 +240,7 @@ public class FragmentCommunicate extends Fragment implements OnItemClickListener
 		//读取本地缓存列表
 		getCacheList();
 		pullListView.setOnLoadingListener(new OnLoadingListener<PullRefreshListView>() {
-			
+
 			@Override
 			public void refreshData(PullRefreshListView t, boolean isLoadMore,
 					Message msg, String response) {
@@ -266,7 +264,7 @@ public class FragmentCommunicate extends Fragment implements OnItemClickListener
 					}
 				}
 			}
-			
+
 			@Override
 			public void onLoadingMore(PullRefreshListView t, Handler hand, int pageIndex) {
 				// TODO Auto-generated method stub
@@ -275,9 +273,9 @@ public class FragmentCommunicate extends Fragment implements OnItemClickListener
 				RequestParams params = new RequestParams();
 				params.put("uid", UserInfo.employeeAccount);
 				HttpTools.httpGet(Contants.URl.URL_ICETEST, "/phonebook/frequentContacts",config, params);
-				
+
 			}
-			
+
 			@Override
 			public void onLoading(PullRefreshListView t, Handler hand) {
 				// TODO Auto-generated method stub
@@ -286,7 +284,7 @@ public class FragmentCommunicate extends Fragment implements OnItemClickListener
 				RequestParams params = new RequestParams();
 				params.put("uid", UserInfo.employeeAccount);
 				HttpTools.httpGet(Contants.URl.URL_ICETEST, "/phonebook/frequentContacts",config, params);
-				
+
 			}
 		});
 		pullListView.setAdapter(adapter);
@@ -411,7 +409,7 @@ public class FragmentCommunicate extends Fragment implements OnItemClickListener
 		intent.putExtra(EmployeeDataActivity.CONTACTS_ID,item.username);
 		startActivityForResult(intent,ISTREAD);
 	}
-	
+
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);

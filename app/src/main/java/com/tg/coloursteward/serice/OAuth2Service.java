@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.entity.Oauth2Entity;
 import com.tg.coloursteward.entity.UserInfoEntity;
+import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.net.MD5;
 import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.Tools;
@@ -103,6 +104,7 @@ public class OAuth2Service {
         Tools.saveExpires_in(context, Long.valueOf(oauth2Entity.getExpires_in()));
         Tools.saveAccess_token2(context, oauth2Entity.getAccess_token());
         Tools.saveRefresh_token2(context, oauth2Entity.getRefresh_token());
+        UserInfo.color_token = oauth2Entity.getAccess_token();
         return Tools.getAccess_token2(context);
     }
 

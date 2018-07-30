@@ -7,6 +7,7 @@ public class UserInfo {
      */
     public static String uid = "";
     public static String employeeAccount = "";
+    public static String color_token = "";
     public static int internal = -1;//内部
     public static int disable = -1;//禁用
     public static String jobId = "";

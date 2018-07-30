@@ -329,7 +329,7 @@ public class MipcaActivityCapture extends BaseActivity implements Callback ,OnCl
 						MyBrowserActivity.class);
 				intent.putExtra(MyBrowserActivity.KEY_URL, result);
 				startActivity(intent);
-			} 
+			}
 			else {
 				if (MyBrowserActivity.forepriority) {
 					Intent intent1 = new Intent();

@@ -133,7 +133,7 @@ public class MyBrowserActivity extends Activity implements OnClickListener, AMap
     private static final int FILE_SELECT_CODE = 4;
     private String imeis;
     private String urlFromA;
-
+    private Map<String, String> headerMap;
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -142,7 +142,7 @@ public class MyBrowserActivity extends Activity implements OnClickListener, AMap
                 int state = intent.getIntExtra(PAY_STATE, -1);
                 if (state != -1) {
                     String url = "";
-                    webView.loadUrl(url);
+                    webView.loadUrl(url, headerMap);
                 }
             }
         }
@@ -208,7 +208,7 @@ public class MyBrowserActivity extends Activity implements OnClickListener, AMap
                     Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse(url));
                     startActivity(intent);
                 } else {
-                    view.loadUrl(url);
+                    view.loadUrl(url, headerMap);
                 }
                 if (uri.getScheme().equals("js")) {
                     if (uri.getAuthority().equals("GetReturn")) {//返回
@@ -272,7 +272,7 @@ public class MyBrowserActivity extends Activity implements OnClickListener, AMap
             // 设置setWebChromeClient对象
             webView.setWebChromeClient(new XHSWebChromeClient());
             //android调用js
-            Map<String, String> headerMap = new HashMap<>();
+            headerMap = new HashMap<>();
             OAuth2Service oAuth2Service = null;
             if (null == oAuth2Service) {
                 oAuth2Service = new OAuth2Service(MyBrowserActivity.this);
@@ -775,7 +775,7 @@ public class MyBrowserActivity extends Activity implements OnClickListener, AMap
 
         webView.clearHistory();
         ((ViewGroup) webView.getParent()).removeView(webView);
-        webView.loadUrl("about:blank");
+        webView.loadUrl("about:blank", headerMap);
         webView.stopLoading();
         webView.setWebChromeClient(null);
         webView.setWebViewClient(null);
@@ -815,7 +815,7 @@ public class MyBrowserActivity extends Activity implements OnClickListener, AMap
      */
     private void getRefresh() {
         String url = webView.getUrl().replace("js://GetRefresh?", "");
-        webView.loadUrl(url);
+        webView.loadUrl(url, headerMap);
     }
 
     /**
@@ -929,7 +929,7 @@ public class MyBrowserActivity extends Activity implements OnClickListener, AMap
                 //	Log.d("printLog","2    result="+result);
                 //	stopLocation();
                 String url = "javascript:LatLngCallBack('" + result + "')";
-                webView.loadUrl(url);
+                webView.loadUrl(url, headerMap);
             }
         } else {
             Log.d("TAG", "定位失败");

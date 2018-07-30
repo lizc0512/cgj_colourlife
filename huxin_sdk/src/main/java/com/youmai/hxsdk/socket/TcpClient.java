@@ -43,7 +43,7 @@ public class TcpClient extends PduUtil implements Runnable {
 
     private ScheduledExecutorService heartBeatScheduled;
 
-    private TCP_STATUS tcpStatus = TCP_STATUS.IDLE;
+    private volatile TCP_STATUS tcpStatus = TCP_STATUS.IDLE;
 
     private boolean isLogin = false;
 
@@ -475,10 +475,7 @@ public class TcpClient extends PduUtil implements Runnable {
     }
 
     private void reconnect() {
-        if (!mHandler.hasMessages(TCP_RE_CONNECT)) {
-            Message msg = mHandler.obtainMessage(TCP_RE_CONNECT);
-            mHandler.sendMessageDelayed(msg, 2000);
-        }
+        mHandler.sendEmptyMessageDelayed(TCP_RE_CONNECT, 500);
     }
 
     /**
@@ -589,7 +586,10 @@ public class TcpClient extends PduUtil implements Runnable {
                 case TCP_RE_CONNECT:
                     Log.v(TAG, "tcp is reconnect");
                     LogFile.inStance().toFile("tcp is reconnect");
-                    tcpClient.reConnect();
+                    if (tcpClient.isIdle()
+                            && AppUtils.isNetworkConnected(tcpClient.mContext)) {
+                        tcpClient.reConnect();
+                    }
                     break;
                 default:
                     break;

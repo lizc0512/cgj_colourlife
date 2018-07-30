@@ -51,6 +51,25 @@ public class UserInfo {
     }
 
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof UserInfo) {
+            UserInfo dst = (UserInfo) obj;
+            return dst.uuid.equals(uuid);
+        }
+        return false;
+    }
+
+
+    public String getDisplayName() {
+        String res = null;
+        if (!TextUtils.isEmpty(realName)) {
+            res = realName;
+        }
+        return res;
+    }
+
+
     public String getUuid() {
         return uuid;
     }

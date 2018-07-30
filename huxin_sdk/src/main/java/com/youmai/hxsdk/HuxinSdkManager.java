@@ -242,13 +242,27 @@ public class HuxinSdkManager {
         mUserInfo.saveJson(mContext);
     }
 
+    public void setUserInfo(UserInfo info) {
+        if (mUserInfo != null && mUserInfo.equals(info)) {
+            return;
+        }
 
-    public void setUuid(String uuid) {
-        if (TextUtils.isEmpty(getUuid()) && !TextUtils.isEmpty(uuid)) {
+        if (isLogin()) {
+            loginOut();
+        }
+
+        mUserInfo = info;
+        mUserInfo.saveJson(mContext);
+
+        String uuid = info.getUuid();
+        if (!TextUtils.isEmpty(uuid)) {
             socketLogin(uuid);
             GreenDBIMManager.instance(mContext).initUuid(uuid);
-            mUserInfo.setUuid(uuid);
         }
+    }
+
+    public String getDisplayName() {
+        return mUserInfo.getDisplayName();
     }
 
 
@@ -256,37 +270,30 @@ public class HuxinSdkManager {
         return mUserInfo.getUuid();
     }
 
-
     public String getPhoneNum() {
         return mUserInfo.getPhoneNum();
-    }
-
-    public void setPhoneNum(String phoneNum) {
-        mUserInfo.setPhoneNum(phoneNum);
     }
 
     public String getRealName() {
         return mUserInfo.getRealName();
     }
 
-    public void setRealName(String realName) {
-        mUserInfo.setRealName(realName);
-    }
-
     public String getSex() {
         return mUserInfo.getSex();
     }
 
-    public void setSex(String sex) {
-        mUserInfo.setSex(sex);
-    }
 
     public String getHeadUrl() {
         return mUserInfo.getAvatar();
     }
 
-    public void setHeadUrl(String url) {
-        mUserInfo.setAvatar(url);
+    public String getUserName() {
+        return mUserInfo.getUserName();
+    }
+
+
+    public String getNickName() {
+        return mUserInfo.getNickName();
     }
 
     public String getAccessToken() {
@@ -305,7 +312,6 @@ public class HuxinSdkManager {
         mUserInfo.setExpireTime(expireTime);
     }
 
-
     public String getAppTs() {
         return mUserInfo.getAppTs();
     }
@@ -313,16 +319,6 @@ public class HuxinSdkManager {
     public void setAppTs(String appTs) {
         mUserInfo.setAppTs(appTs);
     }
-
-
-    public String getUserName() {
-        return mUserInfo.getUserName();
-    }
-
-    public void setUserName(String userName) {
-        mUserInfo.setUserName(userName);
-    }
-
 
     public String getKey() {
         return mUserInfo.getKey();
@@ -343,10 +339,6 @@ public class HuxinSdkManager {
 
     public String getOrgId() {
         return mUserInfo.getOrgId();
-    }
-
-    public void setOrgId(String orgId) {
-        mUserInfo.setOrgId(orgId);
     }
 
     public String getOrgName() {

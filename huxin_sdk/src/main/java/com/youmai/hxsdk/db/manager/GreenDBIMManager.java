@@ -84,15 +84,34 @@ public class GreenDBIMManager {
     }
 
 
+    private void initDBDao() {
+        try {
+            if (mDaoSession == null) {
+                String dbName = DB_NAME + "default" + ".db";
+                HMROpenHelper helper = new HMROpenHelper(mContext, dbName);
+                Database db = helper.getWritableDb();
+                mDaoSession = new DaoMaster(db).newSession();
+                QueryBuilder.LOG_SQL = true;
+                QueryBuilder.LOG_VALUES = true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
     public CacheMsgBeanDao getCacheMsgDao() {
+        initDBDao();
         return mDaoSession.getCacheMsgBeanDao();
     }
 
     public EmployeeBeanDao getCacheEmployeeDao() {
+        initDBDao();
         return mDaoSession.getEmployeeBeanDao();
     }
 
     public GroupInfoBeanDao getGroupInfoDao() {
+        initDBDao();
         return mDaoSession.getGroupInfoBeanDao();
     }
 

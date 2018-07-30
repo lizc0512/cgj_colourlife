@@ -603,17 +603,17 @@ public class Tools {
         int Jobonline = data.getInt("Jobonline");
         int sort = data.getInt("sort");
         String avatar = Contants.URl.HEAD_ICON_URL + "avatar?uid=" + employeeAccount;
-        HuxinSdkManager.instance().setUuid(uuid);
-        HuxinSdkManager.instance().setHeadUrl(avatar);
-        HuxinSdkManager.instance().setRealName(realName);
-        HuxinSdkManager.instance().setPhoneNum(mobile);
-        HuxinSdkManager.instance().setSex(sex);
-        HuxinSdkManager.instance().setUserName(employeeAccount);
-        HuxinSdkManager.instance().setOrgId(orgId);
-        HuxinSdkManager.instance().setOrgName(familyName);
 
-        HuxinSdkManager.instance().saveUserInfo();
-
+        com.youmai.hxsdk.UserInfo userInfo = new com.youmai.hxsdk.UserInfo();
+        userInfo.setUuid(uuid);
+        userInfo.setAvatar(avatar);
+        userInfo.setRealName(realName);
+        userInfo.setPhoneNum(mobile);
+        userInfo.setSex(sex);
+        userInfo.setUserName(employeeAccount);
+        userInfo.setOrgId(orgId);
+        userInfo.setOrgName(familyName);
+        HuxinSdkManager.instance().setUserInfo(userInfo);
 
         Tools.saveUserName(Tools.mContext, UserInfo.employeeAccount);
 

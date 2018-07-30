@@ -34,6 +34,7 @@ import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.log.Logger;
 import com.tg.coloursteward.object.ImageParams;
+import com.tg.coloursteward.serice.OAuth2Service;
 import com.tg.coloursteward.util.Tools;
 
 import org.apache.http.HttpResponse;
@@ -192,6 +193,9 @@ public class HttpTools {
     public static final int POST_OAUTH_TOKEN = BASE_CODE++;
     public static final int POST_OAUTH_RETOKEN = BASE_CODE++;
     public static final int DETELE_CONTACT_LIST = BASE_CODE++;
+    public static final int POST_SINGLEDEVICE = BASE_CODE++;
+    public static final int POST_LOGOUTDEVICE = BASE_CODE++;
+    public static final int GET_SPLIT_BILL_DETAIL = BASE_CODE++;
 
 
     public static final int GET_KEYSECERT = -10000;
@@ -200,6 +204,7 @@ public class HttpTools {
     private static HttpClient postClient = null;
     private static boolean cancelPost = false;
     private static boolean test = false;
+    private static String color_token;
 
     public static RequestQueue getRequestQueue() {
         if (mQueue == null) {
@@ -346,6 +351,18 @@ public class HttpTools {
                     mapsum.putAll(param);
                     return mapsum;
                 }
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<>();
+                OAuth2Service oAuth2Service = null;
+                if (null == oAuth2Service) {
+                    oAuth2Service = new OAuth2Service(rqtConfig.activity);
+                }
+                color_token = oAuth2Service.getOAuth2Service("");
+                headers.put("color-token", color_token);
+                return headers;
             }
         };
         if (rqtConfig.tag != null) {

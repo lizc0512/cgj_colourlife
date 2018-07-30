@@ -26,6 +26,7 @@ import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.database.SharedPreferencesTools;
 import com.tg.coloursteward.entity.AccountEntity;
+import com.tg.coloursteward.entity.SingleDeviceLogin;
 import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.log.Logger;
 import com.tg.coloursteward.module.MainActivity1;
@@ -35,8 +36,11 @@ import com.tg.coloursteward.net.RequestConfig;
 import com.tg.coloursteward.net.RequestParams;
 import com.tg.coloursteward.net.ResponseData;
 import com.tg.coloursteward.object.ImageParams;
+import com.tg.coloursteward.serice.OAuth2Service;
+import com.tg.coloursteward.updateapk.UpdateManager;
 import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.StringUtils;
+import com.tg.coloursteward.util.TokenUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.dialog.ToastFactory;
 import com.youmai.hxsdk.router.APath;
@@ -67,7 +71,6 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
     private Animation outAnim;
     private Animation inAnim;
     private String newPhone = "";
-    private boolean isAllowHuxin = false;
     private String corpId;
     private String password;
     private String extras;
@@ -92,11 +95,6 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
     protected boolean handClickEvent(View v) {
         switch (v.getId()) {
             case R.id.submit:
-//                if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_PHONE_STATE)
-//                        != PackageManager.PERMISSION_GRANTED) {
-//                    ActivityCompat.requestPermissions(this,
-//                            new String[]{android.Manifest.permission.READ_PHONE_STATE}, Activity.RESULT_FIRST_USER);
-//                } else {
                 newPhone = editUser.getText().toString();
                 if (newPhone.length() <= 0) {
                     ToastFactory.showToast(this, "请输入账号");
@@ -108,8 +106,6 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
                     return false;
                 }
                 loginGt();// 登录
-//                 login();
-//                }
                 break;
             case R.id.forget_pwd:
                 forgetPassword();// 忘记密码
@@ -364,6 +360,8 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
                         String sta = jobj.getString("status");
                         if ("success".equals(sta)) {
                             gt3GeetestUtils.gt3TestFinish();
+                            Tools.saveStringValue(LoginActivity.this, Contants.storage.LOGOIN_PHONE, newPhone);
+                            Tools.saveStringValue(LoginActivity.this, Contants.storage.LOGOIN_PASSWORD, password);
                             login();
                         } else {
                             gt3GeetestUtils.gt3TestClose();
@@ -462,19 +460,16 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
                     corpId = content.getString("corpId");
                     int status = content.getInt("status");
                     UserInfo.employeeAccount = content.getString("username");
+                    UserInfo.password =password ;
                     if (status > 0) {
                         ToastFactory.showToast(LoginActivity.this, "账号异常，请及时联系管理员");
                     } else {
                         Tools.saveStringValue(LoginActivity.this, Contants.storage.CORPID, corpId);
-                        String mobile = content.getString("mobile");
                         String accountUuid = content.getString("accountUuid");
-                        if (isAllowHuxin) {
-                            if (StringUtils.isNotEmpty(mobile)) {
-                                //HuxinSdkManager.instance().setPhoneNumber(mobile, null);
-                                //HuxinSdkManager.instance().setCgjUserId(newPhone);
-                            }
-                        }
                         getUserInfo(accountUuid);
+                        getKeyAndSecret();
+                        getSkin(corpId);
+                        getOauth2();
                     }
 
                 } catch (JSONException e) {
@@ -512,23 +507,24 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
                 AccountEntity accountEntity = GsonUtils.gsonToBean(jsonString, AccountEntity.class);
                 UserInfo.infoorgId = accountEntity.getContent().getOrgId();
                 Tools.saveOrgId(LoginActivity.this, accountEntity.getContent().getOrgId());
+                Tools.saveStringValue(LoginActivity.this, "org_depart_name", accountEntity.getContent().getFamilyName());
                 Tools.loadUserInfo(data, jsonString);
-                getKeyAndSecret();
-                getSkin(corpId);
-            } else {
-                ToastFactory.showToast(LoginActivity.this, "加载个人信息失败，请重新登录");
             }
-
         } else if (msg.arg1 == HttpTools.GET_KEYSECERT) {
             if (code == 0) {
                 try {
                     JSONObject sonJon = new JSONObject(jsonObject);
                     String key = sonJon.optString("key");
                     String secret = sonJon.optString("secret");
-
                     Tools.saveStringValue(LoginActivity.this, Contants.EMPLOYEE_LOGIN.key, key);
                     Tools.saveStringValue(LoginActivity.this, Contants.EMPLOYEE_LOGIN.secret, secret);
                     getEmployeeInfo(key, secret);
+                    String skin_code = Tools.getStringValue(LoginActivity.this, Contants.storage.SKINCODE);
+                    Intent intent = new Intent(this, MainActivity1.class);
+                    intent.putExtra(MainActivity.KEY_NEDD_FRESH, false);
+                    intent.putExtra(MainActivity.KEY_SKIN_CODE, skin_code);
+                    startActivity(intent);
+                    finish();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -539,18 +535,49 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
             if (code == 0) {
                 JSONObject json = HttpTools.getContentJSONObject(jsonString);
                 if (json.length() > 0) {
-                    String skin_code = Tools.getStringValue(LoginActivity.this, Contants.storage.SKINCODE);//获取皮肤包
-                    Intent intent = new Intent(this, MainActivity1.class);
-                    intent.putExtra(MainActivity.KEY_NEDD_FRESH, false);
-                    intent.putExtra(MainActivity.KEY_SKIN_CODE, Integer.valueOf(skin_code));
-                    startActivity(intent);
-                    finish();
+                    Tools.setBooleanValue(LoginActivity.this, Contants.storage.EMPLOYEE_LOGIN, true);
                 }
-            } else {
-                ToastFactory.showToast(LoginActivity.this, message);
-                SharedPreferencesTools.clearUserId(LoginActivity.this);
+            }
+        } else if (msg.arg1 == HttpTools.POST_SINGLEDEVICE) {
+            if (code == 0) {
+                try {
+                    SingleDeviceLogin singleDeviceLogin = GsonUtils.gsonToBean(jsonString, SingleDeviceLogin.class);
+                    String device_token = singleDeviceLogin.getContent().getDevice_token();
+                    Tools.saveStringValue(this, Contants.storage.DEVICE_TOKEN, device_token);
+                    if (!TextUtils.isEmpty(device_token)) {
+                        Log.d("lizc", "单设备登录OK");
+                    }
+                } catch (Exception e) {
+                }
             }
         }
+    }
+
+    /**
+     * aoutn2.0请求
+     */
+
+    private void getOauth2() {
+        OAuth2Service oAuth2Service = new OAuth2Service(LoginActivity.this);
+        String oauth = oAuth2Service.getOAuth2Service("");
+        if (!TextUtils.isEmpty(oauth)) {
+            singleDevicelogin();
+        }
+    }
+
+    /**
+     * 单设备登录
+     */
+    private void singleDevicelogin() {
+        RequestConfig config = new RequestConfig(this, HttpTools.POST_SINGLEDEVICE, null);
+        RequestParams params = new RequestParams();
+        params.put("login_type", "2");//登录方式,1静默和2密码
+        params.put("device_type", "1");//登录设备类别，1：安卓，2：IOS
+        params.put("version", UpdateManager.getVersionName(LoginActivity.this));//APP版本号
+        params.put("device_code", TokenUtils.getUUID(LoginActivity.this));//设备唯一编号
+        params.put("device_info", TokenUtils.getDeviceInfor(LoginActivity.this));//设备详细信息（json字符创）
+        params.put("device_name", TokenUtils.getDeviceBrand() + TokenUtils.getDeviceType());//设备名称（如三星S9）
+        HttpTools.httpPost(Contants.URl.SINGLE_DEVICE, "cgjapp/single/device/login", config, params);
     }
 
     /**
@@ -607,25 +634,6 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
         if (requestCode == HttpTools.GET_USER_INFO) {
             showContentView();
         }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String[] permissions, int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        /*switch (requestCode) {
-            case Activity.RESULT_FIRST_USER: {
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                    isAllowHuxin = true;
-                } else {
-                    ToastFactory.showToast(LoginActivity.this, "拒绝该权限则使用不了呼信功能");
-                }
-                login();
-                break;
-            }
-        }*/
     }
 }
 

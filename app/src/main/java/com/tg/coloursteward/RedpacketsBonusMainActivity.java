@@ -18,6 +18,7 @@ import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.entity.RedPacketEntity;
 import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.net.HttpTools;
+import com.tg.coloursteward.net.MD5;
 import com.tg.coloursteward.net.RequestConfig;
 import com.tg.coloursteward.net.RequestParams;
 import com.tg.coloursteward.util.StringUtils;
@@ -95,7 +96,11 @@ public class RedpacketsBonusMainActivity extends BaseActivity {
         RequestConfig config = new RequestConfig(this, HttpTools.SET_EMPLOYEE_INFO, null);
         RequestParams params = new RequestParams();
         params.put("username", UserInfo.employeeAccount);
-        params.put("password", pwd);
+        try {
+            params.put("password", MD5.getMd5Value(pwd).toLowerCase());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         HttpTools.httpPost(Contants.URl.URL_CPMOBILE, "/1.0/employee/login", config, params);
     }
 

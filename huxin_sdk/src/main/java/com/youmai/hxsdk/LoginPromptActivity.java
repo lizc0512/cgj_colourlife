@@ -1,7 +1,9 @@
 package com.youmai.hxsdk;
 
 import android.app.ProgressDialog;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
@@ -10,14 +12,19 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.youmai.hxsdk.config.AppConfig;
+import com.youmai.hxsdk.entity.HxSingleDeviceLogout;
+import com.youmai.hxsdk.http.IPostListener;
+import com.youmai.hxsdk.http.OkHttpConnector;
 import com.youmai.hxsdk.router.APath;
 import com.youmai.hxsdk.service.HuxinService;
 import com.youmai.hxsdk.utils.AppUtils;
+import com.youmai.hxsdk.utils.GsonUtil;
 
 import java.net.InetSocketAddress;
 
@@ -55,11 +62,37 @@ public class LoginPromptActivity extends AppCompatActivity implements View.OnCli
         startService(in);//启动服务
     }
 
+    /**
+     * 单设备退出
+     */
+    private void singleDevicelogout() {
+        SharedPreferences sharedPreferences = getSharedPreferences("park_cache_map", 0);
+        String device_code = sharedPreferences.getString("device_token", "");
+        ContentValues hearder = new ContentValues();
+        hearder.put("device_code", device_code);
+        OkHttpConnector.httpPost(hearder, AppConfig.SINGLE_DEVICE + "cgjapp/single/device/logout", new IPostListener() {
+            @Override
+            public void httpReqResult(String response) {
+                try {
+                    HxSingleDeviceLogout singleDeviceLogout = GsonUtil.parse(response, HxSingleDeviceLogout.class);
+                    String jsonObject = singleDeviceLogout.getContent().getResult();
+                    if ("1".equals(jsonObject)) {
+                        Log.d("lizc", "单设备退出OK");
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+
+        });
+    }
 
     @Override
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.tv_cancel) {
+            singleDevicelogout();
             HuxinSdkManager.instance().getStackAct().finishAllActivity();
 
             HuxinSdkManager.instance().loginOut();//清楚用户信息

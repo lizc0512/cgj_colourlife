@@ -1,15 +1,15 @@
 package com.tg.coloursteward.view;
 
-import com.tg.coloursteward.net.HttpTools;
-import com.tg.coloursteward.net.MessageHandler;
-import com.tg.coloursteward.net.MessageHandler.ResponseListener;
-
 import android.app.Activity;
 import android.content.Context;
 import android.os.Message;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
 import android.widget.GridView;
+
+import com.tg.coloursteward.net.HttpTools;
+import com.tg.coloursteward.net.MessageHandler;
+import com.tg.coloursteward.net.MessageHandler.ResponseListener;
 
 /**
  * @Description:解决在scrollview中只显示第一行数据的问题

@@ -18,6 +18,7 @@ import com.tg.coloursteward.application.CityPropertyApplication;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.database.SharedPreferencesTools;
+import com.tg.coloursteward.entity.SingleDeviceLogout;
 import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.RequestConfig;
@@ -26,6 +27,8 @@ import com.tg.coloursteward.net.ResponseData;
 import com.tg.coloursteward.object.ViewConfig;
 import com.tg.coloursteward.updateapk.ApkInfo;
 import com.tg.coloursteward.updateapk.UpdateManager;
+import com.tg.coloursteward.util.GsonUtils;
+import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.MessageArrowView;
 import com.tg.coloursteward.view.MessageArrowView.ItemClickListener;
 import com.tg.coloursteward.view.dialog.DialogFactory;
@@ -38,8 +41,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-
-import cn.sharesdk.onekeyshare.OnekeyShare;
 
 /**
  * 更多设置
@@ -89,7 +90,7 @@ public class SettingActivity extends BaseActivity implements ItemClickListener {
                 DialogFactory.getInstance().showDialog(SettingActivity.this, new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        // TODO Auto-generated method stub
+                        singleDevicelogout();
                         SharedPreferencesTools.clearUserId(SettingActivity.this);
                         //清空缓存
                         SharedPreferencesTools.clearCache(SettingActivity.this);
@@ -122,6 +123,17 @@ public class SettingActivity extends BaseActivity implements ItemClickListener {
         params.put("version", version);
         params.put("type", "android");
         HttpTools.httpGet(Contants.URl.URL_CPMOBILE, "/1.0/version", config, params);
+    }
+
+    /**
+     * 单设备退出
+     */
+    private void singleDevicelogout() {
+        RequestConfig config = new RequestConfig(this, HttpTools.POST_LOGOUTDEVICE, null);
+        RequestParams params = new RequestParams();
+        String device_code = Tools.getStringValue(this, Contants.storage.DEVICE_TOKEN);
+        params.put("device_code", device_code);
+        HttpTools.httpPost(Contants.URl.SINGLE_DEVICE, "cgjapp/single/device/logout", config, params);
     }
 
     @Override
@@ -165,7 +177,7 @@ public class SettingActivity extends BaseActivity implements ItemClickListener {
                             ActivityCompat.requestPermissions(SettingActivity.this, new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUESTPERMISSION);
                             ToastFactory.showToast(SettingActivity.this, "请允许权限进行下载安装");
                         } else {
-                            manager.checkUpdate(apkinfo,true);
+                            manager.checkUpdate(apkinfo, true);
                         }
                     }
                 } catch (JSONException e) {
@@ -174,6 +186,18 @@ public class SettingActivity extends BaseActivity implements ItemClickListener {
 
             } else {
 
+            }
+        } else if (msg.arg1 == HttpTools.POST_LOGOUTDEVICE) {
+            if (code == 0) {
+                try {
+                    SingleDeviceLogout singleDeviceLogout = GsonUtils.gsonToBean(jsonString, SingleDeviceLogout.class);
+                    String jsonObject = singleDeviceLogout.getContent().getResult();
+                    if ("1".equals(jsonObject)) {
+                        android.util.Log.d("lizc", "单设备退出OK");
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
 
@@ -232,32 +256,4 @@ public class SettingActivity extends BaseActivity implements ItemClickListener {
         return "更多设置";
     }
 
-    private void showShare() {
-        final String url = "http://a.app.qq.com/o/simple.jsp?pkgname=com.park.wisdom#opened";
-        OnekeyShare oks = new OnekeyShare();
-        //关闭sso授权
-        oks.disableSSOWhenAuthorize();
-        // title标题，印象笔记、邮箱、信息、微信、人人网、QQ和QQ空间使用
-        oks.setTitle("标题");
-        // titleUrl是标题的网络链接，仅在Linked-in,QQ和QQ空间使用
-        oks.setTitleUrl("http://sharesdk.cn");
-        // text是分享文本，所有平台都需要这个字段
-        oks.setText("我是分享文本");
-        //分享网络图片，新浪微博分享网络图片需要通过审核后申请高级写入接口，否则请注释掉测试新浪微博
-        // oks.setImageUrl("22");
-        oks.setImageUrl("http://pic6.nipic.com/20091207/3337900_161732052452_2.jpg");
-        // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
-        //oks.setImagePath("/sdcard/test.jpg");//确保SDcard下面存在此张图片
-        // url仅在微信（包括好友和朋友圈）中使用
-        oks.setUrl("http://sharesdk.cn");
-        // comment是我对这条分享的评论，仅在人人网和QQ空间使用
-        oks.setComment("我是测试评论文本");
-        // site是分享此内容的网站名称，仅在QQ空间使用
-        oks.setSite("ShareSDK");
-        // siteUrl是分享此内容的网站地址，仅在QQ空间使用
-        oks.setSiteUrl("http://sharesdk.cn");
-
-        // 启动分享GUI
-        oks.show(this);
-    }
 }

@@ -13,7 +13,10 @@ public class AppConfig {
      * 七牛 SecretKey
      */
     //public static String QiNiuSecretKey = "gcb2e34zD2velqZvz-IQG9Mw6VjetY__3wWcytd_";
-
+//            单设备登陆测试环境
+//    public static final String SINGLE_DEVICE = "https://single-czytest.colourlife.com/";
+    //    单设备登陆正式环境
+    public static final String SINGLE_DEVICE = "https://single.colourlife.com/";
 
     /**
      * pref文件名定义
@@ -26,7 +29,7 @@ public class AppConfig {
     /**
      * HuXin 服务器连接配置
      */
-    public final static int LAUNCH_MODE = 2; //0 有麦测试服务器        1彩生活测试服务器           2彩生活正式服务器
+    public final static int LAUNCH_MODE = 1; //0 有麦测试服务器        1彩生活测试服务器           2彩生活正式服务器
 
     private final static String SOCKET_URL[] = new String[]{"http://120.24.37.50:8088/", "http://core.im.test.colourlife.com/", "http://core.im.colourlife.com/"};
 

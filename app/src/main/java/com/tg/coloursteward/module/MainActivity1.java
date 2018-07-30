@@ -21,6 +21,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
@@ -37,6 +38,8 @@ import com.tg.coloursteward.application.CityPropertyApplication;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.database.SharedPreferencesTools;
 import com.tg.coloursteward.entity.AccountEntity;
+import com.tg.coloursteward.entity.SingleDeviceLogin;
+import com.tg.coloursteward.entity.SingleDeviceLogout;
 import com.tg.coloursteward.fragment.FragmentManagement;
 import com.tg.coloursteward.fragment.FragmentMine;
 import com.tg.coloursteward.info.GridViewInfo;
@@ -60,6 +63,7 @@ import com.tg.coloursteward.updateapk.UpdateManager;
 import com.tg.coloursteward.util.AuthTimeUtils;
 import com.tg.coloursteward.util.ExampleUtil;
 import com.tg.coloursteward.util.GsonUtils;
+import com.tg.coloursteward.util.TokenUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.PopWindowView;
 import com.tg.coloursteward.view.dialog.ToastFactory;
@@ -133,7 +137,7 @@ public class MainActivity1 extends AppCompatActivity implements MessageHandler.R
 
     private boolean needGetUserInfo = true;
 
-    private int skin_code = 101;//  101 彩生活  100 通用  102 中住
+    private String skin_code = "101";//  101 彩生活  100 通用  102 中住
     private String extras;
 
     private Runnable getUserInfoRunnable = new Runnable() {
@@ -176,7 +180,7 @@ public class MainActivity1 extends AppCompatActivity implements MessageHandler.R
         Intent data = getIntent();
         if (data != null) {
             needGetUserInfo = data.getBooleanExtra(KEY_NEDD_FRESH, true);
-            skin_code = data.getIntExtra(KEY_SKIN_CODE, -1);
+            skin_code = data.getStringExtra(KEY_SKIN_CODE);
             extras = data.getStringExtra(KEY_EXTRAS);
         }
 
@@ -277,34 +281,13 @@ public class MainActivity1 extends AppCompatActivity implements MessageHandler.R
             AccountEntity accountEntity = GsonUtils.gsonToBean(jsonString, AccountEntity.class);
             UserInfo.infoorgId = accountEntity.getContent().getOrgId();
             Tools.saveOrgId(MainActivity1.this, accountEntity.getContent().getOrgId());
+            Tools.saveStringValue(MainActivity1.this, "org_depart_name", accountEntity.getContent().getFamilyName());
             String response = HttpTools.getContentString(jsonString);
             ResponseData data = HttpTools.getResponseContentObject(response);
             Tools.loadUserInfo(data, jsonString);
             sendBroadcast(new Intent(ACTION_FRESH_USERINFO));
             mHandler.removeCallbacks(getUserInfoRunnable);
             mHandler.postDelayed(getUserInfoRunnable, 10 * 60 * 1000);
-        } else if (msg.arg1 == HttpTools.SET_EMPLOYEE_INFO) {
-            if (code == 0) {
-                JSONObject content = HttpTools.getContentJSONObject(jsonString);
-                if (content != null) {
-                    try {
-                        String key = content.getString("key");
-                        String secret = content.getString("secret");
-                        //保存key  sectet
-                        Tools.saveStringValue(this, Contants.EMPLOYEE_LOGIN.key, key);
-                        Tools.saveStringValue(this, Contants.EMPLOYEE_LOGIN.secret, secret);
-                        if (skin_code == 101) {//彩生活
-                            sendBroadcast(new Intent(ACTION_TICKET_INFO));
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            } else {
-                //保存key  sectet
-                Tools.saveStringValue(this, Contants.EMPLOYEE_LOGIN.key, "");
-                Tools.saveStringValue(this, Contants.EMPLOYEE_LOGIN.secret, "");
-            }
         } else if (msg.arg1 == HttpTools.GET_CZY_ID) {//获取彩之云账户id
             if (code == 1) {
                 JSONArray jsonArray = HttpTools.getContentJsonArray(jsonString);
@@ -357,27 +340,69 @@ public class MainActivity1 extends AppCompatActivity implements MessageHandler.R
             } else {
 
             }
+        } else if (msg.arg1 == HttpTools.POST_SINGLEDEVICE) {
+            if (code == 0) {
+                try {
+                    SingleDeviceLogin singleDeviceLogin = GsonUtils.gsonToBean(jsonString, SingleDeviceLogin.class);
+                    String device_token = singleDeviceLogin.getContent().getDevice_token();
+                    Tools.saveStringValue(this, Contants.storage.DEVICE_TOKEN, device_token);
+                    if (!TextUtils.isEmpty(device_token)) {
+                        Log.d("lizc", "单设备登录OK");
+                    }
+                } catch (Exception e) {
+                }
+            }
+        } else if (msg.arg1 == HttpTools.POST_LOGOUTDEVICE) {
+            if (code == 0) {
+                try {
+                    SingleDeviceLogout singleDeviceLogout = GsonUtils.gsonToBean(jsonString, SingleDeviceLogout.class);
+                    String jsonObject = singleDeviceLogout.getContent().getResult();
+                    if ("1".equals(jsonObject)) {
+                        Log.d("lizc", "单设备退出OK");
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        } else if (msg.arg1 == HttpTools.GET_LOGIN) {
+            if (code == 0) {
+                Date dt = new Date();
+                Long time = dt.getTime();
+                String date = Tools.getDateToString(time);
+                Tools.saveDateInfo(this, date);
+                JSONObject content = HttpTools.getContentJSONObject(jsonString);
+                try {
+                    String corpId = content.getString("corpId");
+                    int status = content.getInt("status");
+                    UserInfo.employeeAccount = content.getString("username");
+                    if (status > 0) {
+                        ToastFactory.showToast(MainActivity1.this, "账号异常，请及时联系管理员");
+                        singleDevicelogout();
+                        SharedPreferencesTools.clearUserId(MainActivity1.this);
+                        //清空缓存
+                        SharedPreferencesTools.clearCache(MainActivity1.this);
+                        SharedPreferencesTools.clearAllData(MainActivity1.this);
+                        CityPropertyApplication.gotoLoginActivity(MainActivity1.this);
+                        HuxinSdkManager.instance().loginOut();
+                    } else {
+                        singleDevicelogin();
+                        if (skin_code.equals("101")) {//彩生活
+                            sendBroadcast(new Intent(ACTION_TICKET_INFO));
+                        }
+                        Tools.saveStringValue(MainActivity1.this, Contants.storage.CORPID, corpId);
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                ToastFactory.showToast(MainActivity1.this, message);
+            }
         }
     }
 
     @Override
     public void onFail(Message msg, String hintString) {
-        if (msg.arg1 == HttpTools.SET_EMPLOYEE_INFO) {
-            ToastFactory.showToast(this, "账号异常，请联系管理员");
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    SharedPreferencesTools.clearUserId(MainActivity1.this);
-                    //清空缓存
-                    SharedPreferencesTools.clearCache(MainActivity1.this);
-                    SharedPreferencesTools.clearAllData(MainActivity1.this);
-                    CityPropertyApplication.gotoLoginActivity(MainActivity1.this);
-                    HuxinSdkManager.instance().loginOut();
-                }
-            }, 1000);
-
-        }
-
     }
 
     private void initView() {
@@ -532,6 +557,32 @@ public class MainActivity1 extends AppCompatActivity implements MessageHandler.R
         HttpTools.httpGet(Contants.URl.URL_ICETEST, "/account", config, params);
     }
 
+    /**
+     * 单设备登录
+     */
+    private void singleDevicelogin() {
+        RequestConfig config = new RequestConfig(this, HttpTools.POST_SINGLEDEVICE, null);
+        RequestParams params = new RequestParams();
+        params.put("login_type", "1");//登录方式,1静默和2密码
+        params.put("device_type", "1");//登录设备类别，1：安卓，2：IOS
+        params.put("version", UpdateManager.getVersionName(MainActivity1.this));//APP版本号
+        params.put("device_code", TokenUtils.getUUID(MainActivity1.this));//设备唯一编号
+        params.put("device_info", TokenUtils.getDeviceInfor(MainActivity1.this));//设备详细信息（json字符创）
+        params.put("device_name", TokenUtils.getDeviceBrand() + TokenUtils.getDeviceType());//设备名称（如三星S9）
+        HttpTools.httpPost(Contants.URl.SINGLE_DEVICE, "cgjapp/single/device/login", config, params);
+    }
+
+    /**
+     * 单设备退出
+     */
+    private void singleDevicelogout() {
+        RequestConfig config = new RequestConfig(this, HttpTools.POST_LOGOUTDEVICE, null);
+        RequestParams params = new RequestParams();
+        String device_code = Tools.getStringValue(this, Contants.storage.DEVICE_TOKEN);
+        params.put("device_code", device_code);//
+        HttpTools.httpPost(Contants.URl.SINGLE_DEVICE, "cgjapp/single/device/logout", config, params);
+    }
+
     // 检测版本更新
     private void getVersion() {
         RequestConfig config = new RequestConfig(this, HttpTools.GET_VERSION_INFO);
@@ -589,24 +640,22 @@ public class MainActivity1 extends AppCompatActivity implements MessageHandler.R
     }
 
     /**
-     * 获取key
-     * sectet
+     * 重新静默登录
      */
     public void getEmployeeInfo() {
-        String pwd = Tools.getPassWord(this);
-        RequestConfig config = new RequestConfig(this, HttpTools.SET_EMPLOYEE_INFO, null);
-        RequestParams params = new RequestParams();
-        params.put("username", UserInfo.employeeAccount);
+
         try {
-            params.put("password", MD5.getMd5Value(pwd).toLowerCase());
+            String pwd = Tools.getPassWord(this);
+            String passwordMD5 = MD5.getMd5Value(pwd).toLowerCase();
+            Tools.savePassWordMD5(getApplicationContext(), passwordMD5);//保存密码(MD5加密后)
+            RequestParams params = new RequestParams();
+            params.put("username", UserInfo.employeeAccount);
+            params.put("password", passwordMD5);
+            RequestConfig config = new RequestConfig(this, HttpTools.GET_LOGIN);
+            HttpTools.httpPost(Contants.URl.URL_ICETEST, "/orgms/loginAccount", config, params);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        String key = Tools.getStringValue(MainActivity1.this, Contants.EMPLOYEE_LOGIN.key);
-        String secret = Tools.getStringValue(MainActivity1.this, Contants.EMPLOYEE_LOGIN.secret);
-        params.put("key", key);
-        params.put("secret", secret);
-        HttpTools.httpPost(Contants.URl.URL_CPMOBILE, "/1.0/employee/login", config, params);
     }
 
     /**

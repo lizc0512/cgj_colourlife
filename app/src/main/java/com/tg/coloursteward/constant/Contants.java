@@ -20,24 +20,30 @@ public interface Contants {
 
         /**
          * 正式地址
-//         */
-        String URL_ICETEST = "https://openapi.colourlife.com/v1";//2.0
-        String URL_CPMOBILE = "http://cpmobile.colourlife.com";
-        String URL_CAIHUI = "https://caihui.colourlife.com";
-        String URL_OAUTH2 = "https://oauth2-cgj.colourlife.com";
-        String PUBLIC_KEY="MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCTFnAR7ORLx0jGzf9Ux1We7yHvRi+kQXKSRmtgBjDCXQzakGm2mrb6EupCkDbUcj4BUs7S7zm/rICQuVNC9fujeJGjcNWRg0XWVtm90XpbTqfKiXzGDHI9W8aULYZ3of/JJ9lyCyjqjigyCdLBPtQ27gOuboDzQuieR2ywPHawzQIDAQAB";
+         //         */
+//        String URL_ICETEST = "https://openapi.colourlife.com/v1";//2.0
+//        String URL_CPMOBILE = "http://cpmobile.colourlife.com";
+//        String URL_CAIHUI = "https://caihui-bishow.colourlife.com";
+//        String URL_OAUTH2 = "https://oauth2-cgj.colourlife.com";
+//        String SINGLE_DEVICE = "https://single.colourlife.com/";
+//        String HR_PAY = "https://payroll-hr.colourlife.com/redirect";
+//        String CLIENT_SECRET = "t2o0a1xl2lOmoPi4tuHf5uw4VZloXGs7y1Kd0Yoq";
+//        String PUBLIC_KEY="MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCTFnAR7ORLx0jGzf9Ux1We7yHvRi+kQXKSRmtgBjDCXQzakGm2mrb6EupCkDbUcj4BUs7S7zm/rICQuVNC9fujeJGjcNWRg0XWVtm90XpbTqfKiXzGDHI9W8aULYZ3of/JJ9lyCyjqjigyCdLBPtQ27gOuboDzQuieR2ywPHawzQIDAQAB";
 //////////////////////////////////////////////////////////////////////////////
         /**
          * 测试地址
          */
-//        String URL_ICETEST = "https://openapi-test.colourlife.com/v1";//2.0
-//        String URL_CPMOBILE = "http://cpmobile-czytest.colourlife.com";
-//        String URL_CAIHUI = "https://caihui.colourlife.com";
-//        String URL_OAUTH2 = "https://oauth2-cgj-test.colourlife.com";
-//        String PUBLIC_KEY = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDZDqnWph9LxtD0zgtGAYTTf2jY" +
-//                "eV+ni5F1o0w3Fag4OOD1YHCRUCXIsFy+iJYmuPf5vMkZrkoiJmKBfkaIzNlrJZzH" +
-//                "zq+LsPQNCF86p1nLsuHbkWNvyjOEPn/CUryP2Kxme4S+eEqLIeNwp70VOaMuPmRo" +
-//                "EZxMDAgvc6Z0DWsVdQIDAQAB";
+        String URL_ICETEST = "https://openapi-test.colourlife.com/v1";//2.0
+        String URL_CPMOBILE = "http://cpmobile-czytest.colourlife.com";
+        String URL_CAIHUI = "https://caihui-bishow.colourlife.com";
+        String URL_OAUTH2 = "https://oauth2-cgj-test.colourlife.com";
+        String SINGLE_DEVICE = "https://single-czytest.colourlife.com/";
+        String HR_PAY = "https://payroll-hr-test.colourlife.com/redirect";
+        String CLIENT_SECRET = "xlsfrQS5R49upmfZbhlsrUzAt9HDA5K4ptLYsqK5";
+        String PUBLIC_KEY = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDZDqnWph9LxtD0zgtGAYTTf2jY" +
+                "eV+ni5F1o0w3Fag4OOD1YHCRUCXIsFy+iJYmuPf5vMkZrkoiJmKBfkaIzNlrJZzH" +
+                "zq+LsPQNCF86p1nLsuHbkWNvyjOEPn/CUryP2Kxme4S+eEqLIeNwp70VOaMuPmRo" +
+                "EZxMDAgvc6Z0DWsVdQIDAQAB";
         ////////////////////////////////////////////////////////////////////////////
         String CZY_BINDCUSTOMER = "https://evisit.colourlife.com/cgj/bindcustomer/bind_account.html";//绑定彩之云
         String URL_H5_LEAVE = "http://eqd.backyard.colourlife.com/cailife/leave/index?";//请假
@@ -205,6 +211,10 @@ public interface Contants {
         String ORGTYPE = "org_type";//Tags
         String PUBLIC_LIST = "public_list";//对公账户搜索历史列表
         String JTJJB = "jtjjb";//对公账户搜索历史列表
+        String DEVICE_TOKEN = "device_token";//设备唯一token
+        String LOGOIN_PHONE = "login_phone";//登录手机号
+        String LOGOIN_PASSWORD = "login_password";//登录密码
+        String EMPLOYEE_LOGIN = "employee_login";//登录OK
     }
 
     interface DOWN {

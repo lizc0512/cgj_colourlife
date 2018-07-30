@@ -54,7 +54,6 @@
     </string-array>
 
     <string name="title_activity_scan_result_door_open">ScanResultDoorOpenActivity</string>
-    <string name="title_activity_setting_policy">SettingPolicyActivity</string>
     <string name="title_activity_scan_result">ScanResultActivity</string>
     <string name="title_activity_water_box_type">WaterBoxTypeActivity</string>
     <string name="title_activity_door_apply_detail">DoorApplyDetailActivity</string>

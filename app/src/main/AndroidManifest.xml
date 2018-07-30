@@ -260,9 +260,6 @@
             android:label="@string/app_name" />
         <!-- 日志 -->
         <activity
-            android:name=".SettingPolicyActivity"
-            android:label="@string/app_name" />
-        <activity
             android:name=".ScanResultActivity"
             android:label="@string/app_name" />
         <!-- 扫描结果 -->
@@ -380,6 +377,7 @@
         <activity android:name=".PublicAccountTransferActivity" />
         <activity android:name=".PublicAccountExchangeActivity" />
         <activity android:name=".RedpacketsDetailsActivity" />
+        <activity android:name=".AccountExchangeDetail_FreezingActivity" />
         <!-- 签到 -->
         <activity android:name=".SignInActivity" />
         <!-- 考勤设置 -->

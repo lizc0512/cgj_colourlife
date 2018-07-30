@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:background="@color/white">
 
     <TextView
@@ -9,15 +9,36 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:layout_marginRight="@dimen/margin_15"
-        android:text="+2411"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="25dp"
+        android:text="85.00"
         android:textColor="@color/record_expend"
-        android:textSize="18sp" />
-
-    <RelativeLayout
+        android:textSize="16dp" />
+    <TextView
+        android:id="@+id/tv_freeing_money"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:paddingBottom="20dp"
+        android:layout_marginRight="35dp"
+        android:text="15.00"
+        android:textColor="@color/text_color4"
+        android:textSize="16dp" />
+
+    <ImageView
+        android:id="@+id/iv_image_show"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/tv_money"
+        android:layout_alignParentBottom="true"
+        android:layout_alignRight="@+id/tv_money"
+        android:paddingBottom="22dp"
+        android:paddingLeft="5dp"
+        android:src="@drawable/next" />
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
         android:layout_toLeftOf="@id/tv_money"
         android:paddingLeft="@dimen/margin_18">

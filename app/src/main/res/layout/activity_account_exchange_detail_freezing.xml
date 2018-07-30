@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.tg.coloursteward.AccountExchangeDetailActivity">
+
+    <ImageView
+        android:id="@+id/iv_image_show"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="30dp"
+        android:padding="10dp"
+        android:src="@drawable/next" />
+
+    <TextView
+        android:id="@+id/freezing_money"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="50dp"
+        android:text="+15"
+        android:textColor="@color/text_color4"
+        android:textSize="15dp" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_toLeftOf="@id/freezing_money">
+
+        <TextView
+            android:id="@+id/freezing_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp"
+            android:text="业务订单号: "
+            android:textColor="@color/text_color3"
+            android:textSize="15dp" />
+
+        <TextView
+            android:id="@+id/freezing_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@id/freezing_name"
+            android:layout_toRightOf="@id/freezing_name"
+            android:text="0.00000"
+            android:textColor="@color/text_color3"
+            android:textSize="15dp" />
+
+        <TextView
+            android:id="@+id/freezing_flowname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/freezing_name"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp"
+            android:text="交易流水号: "
+            android:textColor="@color/text_color3"
+            android:textSize="15dp" />
+
+        <TextView
+            android:id="@+id/freezing_flowvalue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@id/freezing_flowname"
+            android:layout_toRightOf="@id/freezing_name"
+            android:text="0.00000"
+            android:textColor="@color/text_color3"
+            android:textSize="15dp" />
+
+        <TextView
+            android:id="@+id/freezing_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/freezing_flowname"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:text="2018-08-08"
+            android:textColor="@color/text_color3"
+            android:textSize="15dp" />
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -58,6 +58,7 @@ import java.util.ArrayList;
 
 /**
  * 个人中心
+ *
  * @author Administrator
  */
 public class FragmentMine extends Fragment implements ItemClickListener, ResponseListener {
@@ -84,6 +85,9 @@ public class FragmentMine extends Fragment implements ItemClickListener, Respons
         msgHandler.setResponseListener(this);
         initView();
         initData();
+        if (Tools.getBooleanValue(mActivity, Contants.storage.EMPLOYEE_LOGIN) == false) {
+            getEmployeeInfo();
+        }
         return mView;
     }
 
@@ -119,6 +123,10 @@ public class FragmentMine extends Fragment implements ItemClickListener, Respons
         viewConfig.leftDrawable = getResources().getDrawable(R.drawable.findpwd);
         list1.add(viewConfig);
 
+        viewConfig = new ViewConfig("我的工资条", "", true);
+        viewConfig.leftDrawable = getResources().getDrawable(R.drawable.hr_pay);
+        list1.add(viewConfig);
+
         mineInfoZone1.setData(list1);
 
         ArrayList<ViewConfig> list3 = new ArrayList<ViewConfig>();
@@ -140,6 +148,26 @@ public class FragmentMine extends Fragment implements ItemClickListener, Respons
         viewConfig.leftDrawable = getResources().getDrawable(R.drawable.shezhi);
         list4.add(viewConfig);
         mineInfoZone4.setData(list4);
+    }
+
+    /**
+     * employee/login接口调用
+     */
+    public void getEmployeeInfo() {
+        String pwd = Tools.getPassWord(mActivity);
+        RequestConfig config = new RequestConfig(mActivity, HttpTools.SET_EMPLOYEE_INFO, null);
+        RequestParams params = new RequestParams();
+        params.put("username", UserInfo.employeeAccount);
+        try {
+            params.put("password", MD5.getMd5Value(pwd).toLowerCase());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        String key = Tools.getStringValue(mActivity, Contants.EMPLOYEE_LOGIN.key);
+        String secret = Tools.getStringValue(mActivity, Contants.EMPLOYEE_LOGIN.secret);
+        params.put("key", key);
+        params.put("secret", secret);
+        HttpTools.httpPost(Contants.URl.URL_CPMOBILE, "/1.0/employee/login", config, params);
     }
 
     /**
@@ -168,6 +196,8 @@ public class FragmentMine extends Fragment implements ItemClickListener, Respons
                 startActivity(new Intent(mActivity, RedpacketsBonusMainActivity.class));
             } else if (position == 1) {// 找回支付密码
                 find_pay_password();
+            } else if (position == 2) {// 我的工资条
+                getAuth("我的工资条", Contants.URl.HR_PAY, "myhrpay");
             }
         } else if (mv == mineInfoZone3) {
             if (position == 0) {// 彩之云账号绑定
@@ -332,6 +362,13 @@ public class FragmentMine extends Fragment implements ItemClickListener, Respons
             } else {
                 ToastFactory.showToast(mActivity, hintString);
             }
+        } else if (msg.arg1 == HttpTools.SET_EMPLOYEE_INFO) {
+            if (code == 0) {
+                JSONObject content = HttpTools.getContentJSONObject(jsonString);
+                if (content != null) {
+                    Tools.setBooleanValue(mActivity, Contants.storage.EMPLOYEE_LOGIN, true);
+                }
+            }
         }
 
     }
@@ -340,7 +377,7 @@ public class FragmentMine extends Fragment implements ItemClickListener, Respons
         aDialogCallback = new PwdDialog2.ADialogCallback() {
             @Override
             public void callback() {
-                ToastUtil.showToast(getActivity(),"设置成功");
+                ToastUtil.showToast(getActivity(), "设置成功");
             }
         };
         aDialog = new PwdDialog2(

@@ -386,7 +386,7 @@ public class MainActivity1 extends AppCompatActivity implements MessageHandler.R
                         HuxinSdkManager.instance().loginOut();
                     } else {
                         singleDevicelogin();
-                        if (skin_code.equals("101")) {//彩生活
+                        if (("101").equals(skin_code)) {//彩生活
                             sendBroadcast(new Intent(ACTION_TICKET_INFO));
                         }
                         Tools.saveStringValue(MainActivity1.this, Contants.storage.CORPID, corpId);

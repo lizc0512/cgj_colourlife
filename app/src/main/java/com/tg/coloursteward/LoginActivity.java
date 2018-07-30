@@ -201,9 +201,8 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
                 String corp_id = Tools.getStringValue(LoginActivity.this, Contants.storage.CORPID);
                 if (userInfoData.length > 0 && StringUtils.isNotEmpty(skin_code) && StringUtils.isNotEmpty(corp_id)) {
                     Tools.loadUserInfo(userInfoData, null);
-                    //Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     Intent intent = new Intent(LoginActivity.this, MainActivity1.class);
-                    intent.putExtra(MainActivity.KEY_SKIN_CODE, Integer.valueOf(skin_code));
+                    intent.putExtra(MainActivity.KEY_SKIN_CODE, skin_code);
                     intent.putExtra(MainActivity.KEY_EXTRAS, extras);
                     startActivity(intent);
                     finish();
@@ -467,7 +466,7 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
                         Tools.saveStringValue(LoginActivity.this, Contants.storage.CORPID, corpId);
                         String accountUuid = content.getString("accountUuid");
                         getUserInfo(accountUuid);
-                        getKeyAndSecret();
+//                        getKeyAndSecret();
                         getSkin(corpId);
                         getOauth2();
                     }
@@ -509,6 +508,7 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
                 Tools.saveOrgId(LoginActivity.this, accountEntity.getContent().getOrgId());
                 Tools.saveStringValue(LoginActivity.this, "org_depart_name", accountEntity.getContent().getFamilyName());
                 Tools.loadUserInfo(data, jsonString);
+                getKeyAndSecret();
             }
         } else if (msg.arg1 == HttpTools.GET_KEYSECERT) {
             if (code == 0) {

@@ -221,8 +221,10 @@ public class AddContactsSearchAdapter<T> extends RecyclerView.Adapter<RecyclerVi
 //                searchItemHolder.cb_collect.setChecked(false);
 //            }
 
+            boolean temp;
             if (null != groupMap && null != groupMap.get(model.getUuid())) {
                 searchItemHolder.cb_collect.setButtonDrawable(R.drawable.contact_select_def);
+                temp = false;
             } else {
                 searchItemHolder.cb_collect.setButtonDrawable(R.drawable.contacts_select_selector);
                 if (totalMap.get(model.getUuid()) != null) {
@@ -230,7 +232,9 @@ public class AddContactsSearchAdapter<T> extends RecyclerView.Adapter<RecyclerVi
                 } else {
                     searchItemHolder.cb_collect.setChecked(false);
                 }
+                temp = true;
             }
+            final boolean isOnClick = temp;
 
             Glide.with(mContext)
                     .load(model.getIconUrl())
@@ -257,7 +261,7 @@ public class AddContactsSearchAdapter<T> extends RecyclerView.Adapter<RecyclerVi
                         searchItemHolder.cb_collect.setChecked(true);
                     }
 
-                    if (mOnGlobalSearchAdapterListener != null) {
+                    if (mOnGlobalSearchAdapterListener != null && isOnClick) {
                         mOnGlobalSearchAdapterListener.onItemClick(contacts);
                     }
                 }

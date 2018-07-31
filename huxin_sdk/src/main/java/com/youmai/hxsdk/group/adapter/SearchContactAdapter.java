@@ -39,7 +39,6 @@ public class SearchContactAdapter extends RecyclerView.Adapter<RecyclerView.View
     public static final int mIndexForCollect = 1;
     public static final int mIndexForContact = 5;
 
-    private Map<Integer, ContactBean> mCacheMap;
     private Map<String, ContactBean> mTotalMap = new HashMap<>();
     private Map<String, ContactBean> groupMap = new HashMap<>();
 
@@ -54,14 +53,6 @@ public class SearchContactAdapter extends RecyclerView.Adapter<RecyclerView.View
         this.cnPinyinList = cnPinyinList;
         this.mCollectIndex = collectIndex;
         this.itemEventListener = listener;
-
-        if (mCollectIndex == mIndexForCollect) {
-            mCacheMap = new HashMap<>(cnPinyinList.size());
-        }
-    }
-
-    public Map<Integer, ContactBean> getCacheMap() {
-        return mCacheMap;
     }
 
     //刷Adapter
@@ -168,11 +159,13 @@ public class SearchContactAdapter extends RecyclerView.Adapter<RecyclerView.View
                         itemEventListener.onItemClick(position, contact);
                     }
                 } else if (contact.getUiType() == SearchContactAdapter.TYPE.CONTACT_TYPE.ordinal()) {
+                    if (null != groupMap && null != groupMap.get(contact.getUuid())) {
+                        return;
+                    }
+
                     if (((ContactHolder) holder).cb_collect.isChecked()) {
-                        mCacheMap.remove(position);
                         ((ContactHolder) holder).cb_collect.setChecked(false);
                     } else {
-                        mCacheMap.put(position, contact);
                         ((ContactHolder) holder).cb_collect.setChecked(true);
                     }
                     Intent intent = new Intent(AddContactsCreateGroupActivity.BROADCAST_FILTER);
@@ -181,7 +174,6 @@ public class SearchContactAdapter extends RecyclerView.Adapter<RecyclerView.View
                     LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
                     if (null != itemEventListener) {
                         itemEventListener.onItemClick(position, contact);
-                        itemEventListener.collectCount(mCacheMap.size());
                     }
                 }
             }

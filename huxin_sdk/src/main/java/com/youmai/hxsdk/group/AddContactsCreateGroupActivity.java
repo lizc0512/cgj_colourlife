@@ -222,12 +222,6 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
         if (!ListUtils.isEmpty(contactList)) {
             contactList.clear();
         }
-        if (null != adapter) {
-            Map<Integer, ContactBean> cacheMap = adapter.getCacheMap();
-            if (null != cacheMap) {
-                cacheMap.clear();
-            }
-        }
 
         if (null != mTotalMap) {
             mTotalMap.clear();

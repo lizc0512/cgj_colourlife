@@ -118,6 +118,7 @@ public class SearchLoader extends AsyncTaskLoader {
 
             SearchContactBean contact = new SearchContactBean();
             contact.setIconUrl(item.getAvatar());
+            contact.setMemberRole(item.getMemberRole());
             contact.setUsername(item.getUsername());
             contact.setUuid(item.getUuid());
             contact.setDisplayName(hanzi);

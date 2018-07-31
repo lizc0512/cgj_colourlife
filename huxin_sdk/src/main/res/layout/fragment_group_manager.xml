@@ -7,32 +7,7 @@
     android:focusableInTouchMode="true"
     android:orientation="vertical">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_alignParentTop="true"
-        android:background="@color/color_theme_main"
-        android:orientation="horizontal">
-
-        <com.youmai.hxsdk.widget.SearchEditText
-            android:id="@+id/global_search_bar"
-            android:layout_width="match_parent"
-            android:layout_height="32dp"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="12dp"
-            android:layout_toLeftOf="@id/global_search_bar_cancel"
-            android:layout_toRightOf="@id/global_search_bar_back"
-            android:background="@drawable/global_contacts_search_bg"
-            android:drawablePadding="12dp"
-            android:hint="搜索"
-            android:imeOptions="actionSearch"
-            android:paddingLeft="4dp"
-            android:paddingRight="8dp"
-            android:singleLine="true"
-            android:textColorHint="@color/hxb_subtitle_color"
-            android:textSize="15sp" />
-    </RelativeLayout>
+    <include layout="@layout/search_layout" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"

@@ -40,6 +40,7 @@ public class SearchContactBean implements Comparable<SearchContactBean>, Parcela
     //联系人 信息
     private String uuid;
     private String username; //收藏联系人查询员工详情使用
+    private int memberRole; //群成员角色
 
     //app 应用信息
     private String oauthType = "";
@@ -198,6 +199,15 @@ public class SearchContactBean implements Comparable<SearchContactBean>, Parcela
         this.username = username;
     }
 
+
+    public int getMemberRole() {
+        return memberRole;
+    }
+
+    public void setMemberRole(int memberRole) {
+        this.memberRole = memberRole;
+    }
+
     public DuoYinZi getDuoYinzi() {
         return mDuoYinzi;
     }
@@ -299,6 +309,7 @@ public class SearchContactBean implements Comparable<SearchContactBean>, Parcela
         dest.writeStringList(this.indexPinyin);
         dest.writeString(this.uuid);
         dest.writeString(this.username);
+        dest.writeInt(this.memberRole);
         dest.writeString(this.oauthType);
         dest.writeString(this.developerCode);
         dest.writeString(this.clientCode);
@@ -323,6 +334,7 @@ public class SearchContactBean implements Comparable<SearchContactBean>, Parcela
         this.indexPinyin = in.createStringArrayList();
         this.uuid = in.readString();
         this.username = in.readString();
+        this.memberRole = in.readInt();
         this.oauthType = in.readString();
         this.developerCode = in.readString();
         this.clientCode = in.readString();

@@ -76,21 +76,21 @@ public class AccountExchangeDetailAdapter extends MyBaseAdapter<AccountExchangeD
         item = list.get(position);
         switch (type) {
             case NO_ITEM:
-                viewHolder_no.tvTime.setText("交易时间:" + item.time_at);
-                viewHolder_no.tvOrderNumber.setText("业务订单号:" + item.out_trade_no);
-                viewHolder_no.tvWaterNumber.setText("交易流水号:" + item.orderno);
+                viewHolder_no.tvTime.setText(item.time_at);
+                viewHolder_no.tvOrderNumber.setText(item.out_trade_no);
+                viewHolder_no.tvWaterNumber.setText(item.orderno);
                 viewHolder_no.tvName.setText(item.general_name + "-" + item.community_name);
                 DecimalFormat df = new DecimalFormat("0.00");
                 viewHolder_no.tvMoney.setText("+" + df.format(Double.parseDouble(item.split_account_amount)));
                 break;
             case HAVE_ITEM:
-                viewHolder_have.tvTime.setText("交易时间:" + item.time_at);
-                viewHolder_have.tvOrderNumber.setText("业务订单号:" + item.out_trade_no);
-                viewHolder_have.tvWaterNumber.setText("交易流水号:" + item.orderno);
+                viewHolder_have.tvTime.setText(item.time_at);
+                viewHolder_have.tvOrderNumber.setText(item.out_trade_no);
+                viewHolder_have.tvWaterNumber.setText(item.orderno);
                 viewHolder_have.tvName.setText(item.general_name + "-" + item.community_name);
                 DecimalFormat df2 = new DecimalFormat("0.00");
-                viewHolder_have.tvMoney.setText("可用: +" + df2.format(Double.parseDouble(item.split_account_amount)));
-                viewHolder_have.tv_freeing_money.setText("冻结: " + df2.format(Double.parseDouble(item.freezen_amount)));
+                viewHolder_have.tvMoney.setText("+" + df2.format(Double.parseDouble(item.split_account_amount)));
+                viewHolder_have.tv_freeing_money.setText(df2.format(Double.parseDouble(item.freezen_amount)));
                 break;
         }
         return convertView;

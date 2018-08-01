@@ -25,6 +25,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.signature.ObjectKey;
 import com.tg.coloursteward.DownloadManagerActivity;
 import com.tg.coloursteward.InviteRegisterActivity;
 import com.tg.coloursteward.MyBrowserActivity;
@@ -43,6 +44,7 @@ import com.tg.coloursteward.net.RequestConfig;
 import com.tg.coloursteward.net.RequestParams;
 import com.tg.coloursteward.object.ViewConfig;
 import com.tg.coloursteward.serice.HomeService;
+import com.tg.coloursteward.util.GlideCacheUtil;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.MessageArrowView;
 import com.tg.coloursteward.view.MessageArrowView.ItemClickListener;
@@ -84,6 +86,9 @@ public class FragmentMine extends Fragment implements ItemClickListener, Respons
         msgHandler = new MessageHandler(mActivity);
         msgHandler.setResponseListener(this);
         initView();
+        GlideCacheUtil.getInstance().clearImageDiskCache(mActivity);
+        GlideCacheUtil.getInstance().clearImageMemoryCache(mActivity);
+        Tools.saveStringValue(mActivity, "updatetime_img", UserInfo.userinfoImg);
         initData();
         if (Tools.getBooleanValue(mActivity, Contants.storage.EMPLOYEE_LOGIN) == false) {
             getEmployeeInfo();
@@ -178,12 +183,19 @@ public class FragmentMine extends Fragment implements ItemClickListener, Respons
         initData();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        initData();
+    }
+
     public void initData() {
         String str = Contants.URl.HEAD_ICON_URL + "avatar?uid=" + UserInfo.employeeAccount;
         Glide.with(this)
                 .load(str)
                 .apply(new RequestOptions()
-                        .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+                        .signature(new ObjectKey(Tools.getStringValue(mActivity, "updatetime_img")))
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .centerCrop()
                         .transform(new GlideRoundTransform()))
                 .into(imgHead);

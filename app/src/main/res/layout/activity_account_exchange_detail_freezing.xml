@@ -5,49 +5,15 @@
     android:layout_height="match_parent"
     tools:context="com.tg.coloursteward.AccountExchangeDetailActivity">
 
-    <ImageView
-        android:id="@+id/iv_image_show"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="30dp"
-        android:layout_marginTop="30dp"
-        android:padding="10dp"
-        android:src="@drawable/next"
-        android:visibility="gone" />
-
-    <TextView
-        android:id="@+id/tv_freeing_money_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/margin_18"
-        android:layout_marginTop="10dp"
-        android:text="冻结金额："
-        android:textColor="@color/text_color3"
-        android:textSize="15sp" />
-
-    <TextView
-        android:id="@+id/freezing_money"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@id/tv_freeing_money_name"
-        android:layout_toRightOf="@id/tv_freeing_money_name"
-        android:text="+15"
-        android:textColor="@color/text_color4"
-        android:textSize="15dp" />
-
-
     <TextView
         android:id="@+id/freezing_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tv_freeing_money_name"
         android:layout_marginLeft="@dimen/margin_18"
         android:layout_marginTop="10dp"
         android:text="业务订单号: "
         android:textColor="@color/text_color3"
         android:textSize="15dp" />
-
     <TextView
         android:id="@+id/freezing_value"
         android:layout_width="wrap_content"
@@ -57,12 +23,23 @@
         android:text="0.00000"
         android:textColor="@color/text_color3"
         android:textSize="15dp" />
+    <TextView
+        android:id="@+id/freezing_money"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="+15"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/margin_18"
+        android:layout_below="@id/freezing_name"
+        android:textColor="@color/record_expend"
+        android:textSize="15dp" />
+
 
     <TextView
         android:id="@+id/freezing_flowname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/freezing_name"
+        android:layout_below="@+id/freezing_money"
         android:layout_marginLeft="@dimen/margin_18"
         android:layout_marginTop="10dp"
         android:text="交易流水号: "
@@ -90,4 +67,35 @@
         android:textColor="@color/text_color3"
         android:textSize="15dp" />
 
+    <View
+        android:id="@+id/line_freezing"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/freezing_time"
+        android:layout_marginLeft="@dimen/margin_18"
+        android:layout_marginRight="@dimen/margin_18"
+        android:layout_marginTop="10dp"
+        android:background="@color/line_color" />
+
+    <TextView
+        android:id="@+id/freezing_explain_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/line_freezing"
+        android:layout_marginLeft="@dimen/margin_18"
+        android:layout_marginTop="5dp"
+        android:text="冻结说明:"
+        android:textColor="@color/text_color3"
+        android:textSize="15dp" />
+
+    <TextView
+        android:id="@+id/freezing_explain"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/freezing_explain_name"
+        android:layout_marginLeft="@dimen/margin_18"
+        android:layout_marginRight="@dimen/margin_18"
+        android:text="内容"
+        android:textColor="@color/text_color3"
+        android:textSize="15dp" />
 </RelativeLayout>

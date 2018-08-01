@@ -41,7 +41,6 @@ import com.tg.coloursteward.entity.AccountEntity;
 import com.tg.coloursteward.entity.SingleDeviceLogin;
 import com.tg.coloursteward.entity.SingleDeviceLogout;
 import com.tg.coloursteward.fragment.FragmentManagement;
-import com.tg.coloursteward.fragment.FragmentManagement1;
 import com.tg.coloursteward.fragment.FragmentMine;
 import com.tg.coloursteward.info.GridViewInfo;
 import com.tg.coloursteward.info.HomeDeskTopInfo;
@@ -107,7 +106,7 @@ public class MainActivity1 extends AppCompatActivity implements MessageHandler.R
     public static final String KEY_NEDD_FRESH = "need_fresh";
     public static final String KEY_SKIN_CODE = "skin_code";
     public static final String KEY_EXTRAS = "extras";
-
+    public static final String FROM_LOGIN = "from_login";
     private static final int MSG_SET_ALIAS = 1001;
     private static final int MSG_SET_TAGS = 1002;
 
@@ -140,7 +139,7 @@ public class MainActivity1 extends AppCompatActivity implements MessageHandler.R
 
     private String skin_code = "101";//  101 彩生活  100 通用  102 中住
     private String extras;
-
+    private Boolean form_login = false;
     private Runnable getUserInfoRunnable = new Runnable() {
         public void run() {
             getUserInfo();
@@ -183,8 +182,8 @@ public class MainActivity1 extends AppCompatActivity implements MessageHandler.R
             needGetUserInfo = data.getBooleanExtra(KEY_NEDD_FRESH, true);
             skin_code = data.getStringExtra(KEY_SKIN_CODE);
             extras = data.getStringExtra(KEY_EXTRAS);
+            form_login = data.getBooleanExtra(FROM_LOGIN, false);
         }
-
         initTitle();
         initView();
 
@@ -348,7 +347,7 @@ public class MainActivity1 extends AppCompatActivity implements MessageHandler.R
                     String device_token = singleDeviceLogin.getContent().getDevice_token();
                     Tools.saveStringValue(this, Contants.storage.DEVICE_TOKEN, device_token);
                     if (!TextUtils.isEmpty(device_token)) {
-                        Log.d("lizc", "单设备登录OK");
+                        Log.d("lizc", TAG+"单设备登录OK");
                     }
                 } catch (Exception e) {
                 }
@@ -359,7 +358,7 @@ public class MainActivity1 extends AppCompatActivity implements MessageHandler.R
                     SingleDeviceLogout singleDeviceLogout = GsonUtils.gsonToBean(jsonString, SingleDeviceLogout.class);
                     String jsonObject = singleDeviceLogout.getContent().getResult();
                     if ("1".equals(jsonObject)) {
-                        Log.d("lizc", "单设备退出OK");
+                        Log.d("lizc", TAG+"单设备退出OK");
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -386,7 +385,9 @@ public class MainActivity1 extends AppCompatActivity implements MessageHandler.R
                         CityPropertyApplication.gotoLoginActivity(MainActivity1.this);
                         HuxinSdkManager.instance().loginOut();
                     } else {
-                        singleDevicelogin();
+                        if (form_login == false) {
+                            singleDevicelogin();
+                        }
                         if (("101").equals(skin_code)) {//彩生活
                             sendBroadcast(new Intent(ACTION_TICKET_INFO));
                         }
@@ -1007,8 +1008,7 @@ public class MainActivity1 extends AppCompatActivity implements MessageHandler.R
                     ft = new ContactsFragment();
                     break;
                 case 2:
-                    //ft = new FragmentManagement();
-                    ft = new FragmentManagement1();
+                    ft = new FragmentManagement();
                     break;
                 case 3:
                     ft = new FragmentMine();

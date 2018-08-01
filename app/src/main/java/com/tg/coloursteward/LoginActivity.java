@@ -1,6 +1,7 @@
 package com.tg.coloursteward;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -43,6 +44,8 @@ import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.TokenUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.dialog.ToastFactory;
+import com.youmai.hxsdk.http.IPostListener;
+import com.youmai.hxsdk.http.OkHttpConnector;
 import com.youmai.hxsdk.router.APath;
 
 import org.json.JSONException;
@@ -76,6 +79,7 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
     private String extras;
     private GT3GeetestUtilsBind gt3GeetestUtils;
     private RelativeLayout submit;
+    private OAuth2Service oAuth2Service;
 
     @Override
     public View getContentView() {
@@ -459,7 +463,7 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
                     corpId = content.getString("corpId");
                     int status = content.getInt("status");
                     UserInfo.employeeAccount = content.getString("username");
-                    UserInfo.password =password ;
+                    UserInfo.password = password;
                     if (status > 0) {
                         ToastFactory.showToast(LoginActivity.this, "账号异常，请及时联系管理员");
                     } else {
@@ -468,7 +472,7 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
                         getUserInfo(accountUuid);
 //                        getKeyAndSecret();
                         getSkin(corpId);
-                        getOauth2();
+//                        getOauth2();
                     }
 
                 } catch (JSONException e) {
@@ -519,10 +523,12 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
                     Tools.saveStringValue(LoginActivity.this, Contants.EMPLOYEE_LOGIN.key, key);
                     Tools.saveStringValue(LoginActivity.this, Contants.EMPLOYEE_LOGIN.secret, secret);
                     getEmployeeInfo(key, secret);
+                    getOauth2();
                     String skin_code = Tools.getStringValue(LoginActivity.this, Contants.storage.SKINCODE);
                     Intent intent = new Intent(this, MainActivity1.class);
                     intent.putExtra(MainActivity.KEY_NEDD_FRESH, false);
                     intent.putExtra(MainActivity.KEY_SKIN_CODE, skin_code);
+                    intent.putExtra(MainActivity1.FROM_LOGIN, true);
                     startActivity(intent);
                     finish();
                 } catch (JSONException e) {
@@ -545,7 +551,7 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
                     String device_token = singleDeviceLogin.getContent().getDevice_token();
                     Tools.saveStringValue(this, Contants.storage.DEVICE_TOKEN, device_token);
                     if (!TextUtils.isEmpty(device_token)) {
-                        Log.d("lizc", "单设备登录OK");
+                        Log.d("lizc", TAG + "单设备登录OK");
                     }
                 } catch (Exception e) {
                 }
@@ -558,9 +564,11 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
      */
 
     private void getOauth2() {
-        OAuth2Service oAuth2Service = new OAuth2Service(LoginActivity.this);
+        if (null == oAuth2Service) {
+            oAuth2Service = new OAuth2Service(LoginActivity.this);
+        }
         String oauth = oAuth2Service.getOAuth2Service("");
-        if (!TextUtils.isEmpty(oauth)) {
+        if (!TextUtils.isEmpty(oauth) || !TextUtils.isEmpty(Tools.getAccess_token2(LoginActivity.this))) {
             singleDevicelogin();
         }
     }
@@ -569,15 +577,27 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
      * 单设备登录
      */
     private void singleDevicelogin() {
-        RequestConfig config = new RequestConfig(this, HttpTools.POST_SINGLEDEVICE, null);
-        RequestParams params = new RequestParams();
+        ContentValues params=new ContentValues();
         params.put("login_type", "2");//登录方式,1静默和2密码
         params.put("device_type", "1");//登录设备类别，1：安卓，2：IOS
         params.put("version", UpdateManager.getVersionName(LoginActivity.this));//APP版本号
         params.put("device_code", TokenUtils.getUUID(LoginActivity.this));//设备唯一编号
         params.put("device_info", TokenUtils.getDeviceInfor(LoginActivity.this));//设备详细信息（json字符创）
         params.put("device_name", TokenUtils.getDeviceBrand() + TokenUtils.getDeviceType());//设备名称（如三星S9）
-        HttpTools.httpPost(Contants.URl.SINGLE_DEVICE, "cgjapp/single/device/login", config, params);
+        OkHttpConnector.httpPost(LoginActivity.this, Contants.URl.SINGLE_DEVICE + "cgjapp/single/device/login", params, new IPostListener() {
+            @Override
+            public void httpReqResult(String response) {
+                try {
+                    SingleDeviceLogin singleDeviceLogin = GsonUtils.gsonToBean(response, SingleDeviceLogin.class);
+                    String device_token = singleDeviceLogin.getContent().getDevice_token();
+                    Tools.saveStringValue(LoginActivity.this, Contants.storage.DEVICE_TOKEN, device_token);
+                    if (!TextUtils.isEmpty(device_token)) {
+                        Log.d("lizc", TAG + "单设备登录OK::");
+                    }
+                } catch (Exception e) {
+                }
+            }
+        });
     }
 
     /**

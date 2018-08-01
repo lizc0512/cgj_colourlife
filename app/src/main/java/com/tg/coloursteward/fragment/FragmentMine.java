@@ -86,8 +86,6 @@ public class FragmentMine extends Fragment implements ItemClickListener, Respons
         msgHandler = new MessageHandler(mActivity);
         msgHandler.setResponseListener(this);
         initView();
-        GlideCacheUtil.getInstance().clearImageDiskCache(mActivity);
-        GlideCacheUtil.getInstance().clearImageMemoryCache(mActivity);
         Tools.saveStringValue(mActivity, "updatetime_img", UserInfo.userinfoImg);
         initData();
         if (Tools.getBooleanValue(mActivity, Contants.storage.EMPLOYEE_LOGIN) == false) {
@@ -128,9 +126,9 @@ public class FragmentMine extends Fragment implements ItemClickListener, Respons
         viewConfig.leftDrawable = getResources().getDrawable(R.drawable.findpwd);
         list1.add(viewConfig);
 
-        viewConfig = new ViewConfig("我的工资条", "", true);
-        viewConfig.leftDrawable = getResources().getDrawable(R.drawable.hr_pay);
-        list1.add(viewConfig);
+//        viewConfig = new ViewConfig("我的工资条", "", true);
+//        viewConfig.leftDrawable = getResources().getDrawable(R.drawable.hr_pay);
+//        list1.add(viewConfig);
 
         mineInfoZone1.setData(list1);
 

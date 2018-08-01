@@ -24,8 +24,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.signature.ObjectKey;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.info.UserInfo;
@@ -37,6 +35,7 @@ import com.tg.coloursteward.net.ResponseData;
 import com.tg.coloursteward.object.ImageParams;
 import com.tg.coloursteward.object.SlideItemObj;
 import com.tg.coloursteward.object.ViewConfig;
+import com.tg.coloursteward.util.GlideCacheUtil;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.CameraView;
 import com.tg.coloursteward.view.CameraView.STATE;
@@ -69,15 +68,13 @@ public class UserInfoActivity extends BaseActivity implements ItemClickListener,
     private String email = "";
     private String sex = "";
     private String headImgPath;
-    private DisplayImageOptions options;
     private ImageView ivIcon;// 头像
     private RelativeLayout rlIcon;
     private String imageName;
-    protected ImageLoader imageLoader = ImageLoader.getInstance();
     String crop_path = Environment.getExternalStorageDirectory()
             + "/colorholder/";
     private String updatetime;
-    private boolean isSaveHeadImg=false;
+    private boolean isSaveHeadImg = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,10 +140,6 @@ public class UserInfoActivity extends BaseActivity implements ItemClickListener,
         list2.add(config);
         messageView2.setData(list2);
 
-        //imageLoader.clearMemoryCache();
-        //imageLoader.clearDiskCache();
-        //imageLoader.displayImage(Contants.URl.HEAD_ICON_URL + "avatar?uid=" + UserInfo.employeeAccount, ivIcon, options);
-
         updatetime = UserInfo.userinfoImg;
         Tools.saveStringValue(UserInfoActivity.this, "updatetime_img", UserInfo.userinfoImg);
         freshImg();
@@ -160,16 +153,6 @@ public class UserInfoActivity extends BaseActivity implements ItemClickListener,
                         .signature(new ObjectKey(Tools.getStringValue(UserInfoActivity.this, "updatetime_img")))
                         .diskCacheStrategy(DiskCacheStrategy.ALL))
                 .into(ivIcon);
-    }
-
-    private void initOptions() {
-        options = new DisplayImageOptions.Builder()
-                .showImageOnLoading(R.drawable.placeholder2)
-                .showImageForEmptyUri(R.drawable.placeholder2)
-                .showImageOnFail(R.drawable.placeholder2).cacheInMemory(true)
-                .cacheOnDisc(true).considerExifParams(true)
-                // .displayer(new RoundedBitmapDisplayer(20))
-                .build();
     }
 
     /**
@@ -209,7 +192,7 @@ public class UserInfoActivity extends BaseActivity implements ItemClickListener,
             updatetime = String.valueOf(System.currentTimeMillis());
             UserInfo.userinfoImg = updatetime;
             Tools.saveStringValue(UserInfoActivity.this, "updatetime_img", updatetime);
-            isSaveHeadImg=true;
+            isSaveHeadImg = true;
             freshImg();
         }
     }
@@ -380,8 +363,10 @@ public class UserInfoActivity extends BaseActivity implements ItemClickListener,
             headView.setRightText("保存");
             messageView1.setEditable(true);
             messageView2.setEditable(true);
-            if(isSaveHeadImg ==true){
-                ToastFactory.showToast(UserInfoActivity.this,"头像已保存");
+            if (isSaveHeadImg == true) {
+                ToastFactory.showToast(UserInfoActivity.this, "头像已保存");
+                GlideCacheUtil.getInstance().clearImageDiskCache(UserInfoActivity.this);
+                GlideCacheUtil.getInstance().clearImageMemoryCache(UserInfoActivity.this);
             }
             return;
         }

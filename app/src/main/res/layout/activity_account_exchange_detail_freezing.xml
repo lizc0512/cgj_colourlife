@@ -27,7 +27,7 @@
         android:id="@+id/freezing_money"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="+15"
+        android:text="0.00"
         android:layout_alignParentRight="true"
         android:layout_marginRight="@dimen/margin_18"
         android:layout_below="@id/freezing_name"

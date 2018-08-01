@@ -67,10 +67,10 @@ public class AccountExchangeDetailActivity extends BaseActivity {
                 if(Double.valueOf(list.get(position-1).freezen_amount)!=0){
                     Intent intent = new Intent(AccountExchangeDetailActivity.this,
                             AccountExchangeDetail_FreezingActivity.class);
-                    intent.putExtra("general_uuid",list.get(position).general_uuid);
-                    intent.putExtra("split_type",String.valueOf(list.get(position).split_type));
-                    intent.putExtra("split_target",list.get(position).split_target);
-                    intent.putExtra("id",String.valueOf(list.get(position).id));
+                    intent.putExtra("general_uuid",list.get(position-1).general_uuid);
+                    intent.putExtra("split_type",String.valueOf(list.get(position-1).split_type));
+                    intent.putExtra("split_target",list.get(position-1).split_target);
+                    intent.putExtra("id",String.valueOf(list.get(position-1).id));
                     startActivity(intent);
                 }
             }

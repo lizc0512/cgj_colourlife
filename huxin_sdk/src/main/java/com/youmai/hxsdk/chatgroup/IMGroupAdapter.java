@@ -435,9 +435,14 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
             }
         }
 
+        int width = mAct.getResources().getDimensionPixelOffset(R.dimen.im_pic_width);
+        int height = mAct.getResources().getDimensionPixelOffset(R.dimen.im_pic_height);
+
         Glide.with(mAct)
                 .load(isRight ? rightUrl : leftUrl)
                 .apply(new RequestOptions()
+                        //.onlyRetrieveFromCache(true)
+                        .override(width, height)
                         .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                         .transform(new MaskTransformation(cacheMsgBean.isRightUI() ? R.drawable.hx_im_voice_bg_right : R.drawable.hx_im_voice_bg_left)))
                 .into(imgViewHolder.senderImg);

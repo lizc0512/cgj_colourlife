@@ -456,7 +456,7 @@ public class ContactsFragment extends Fragment implements ItemEventListener {
      * 获取首页缓存列表
      */
     private void getCacheList() {
-
+      // modifyContactsList();
         String json = AppUtils.getStringSharedPreferences(mContext, "contents", "");
         if (TextUtils.isEmpty(json)) {
             modifyContactsList();

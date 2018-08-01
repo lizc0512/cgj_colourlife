@@ -528,7 +528,7 @@ public class ContactsFragment extends Fragment implements ItemEventListener {
                     }
                     if (skinCode.equals("101")) {//101 彩生活
                         for (int i = 0; i < familyList.size(); i++) {
-                            if (familyList.get(i).name.equals("彩生活服务集团")) {
+                            if (familyList.get(i).name.equals(ColorsConfig.ColorLifeAppName)) {
                                 Tools.saveStringValue(mContext, Contants.storage.ORGNAME, familyList.get(i).name);
                                 Tools.saveStringValue(mContext, Contants.storage.ORGID, familyList.get(i).id);
                                 adapter.org_name = familyList.get(i).name;

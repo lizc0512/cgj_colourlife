@@ -40,17 +40,9 @@ public class ContactBean implements CN, Parcelable {
     private String simplePinyin;//简拼
 
     private String orgType;
-    @Transient
-    private String org_depart_name;
+
     private int uiType;
 
-    public String getOrg_depart_name() {
-        return org_depart_name;
-    }
-
-    public void setOrg_depart_name(String org_depart_name) {
-        this.org_depart_name = org_depart_name;
-    }
 
     //新增字段
     @Transient
@@ -406,7 +398,6 @@ public class ContactBean implements CN, Parcelable {
         dest.writeString(this.pinyin);
         dest.writeString(this.simplePinyin);
         dest.writeString(this.orgType);
-        dest.writeString(this.org_depart_name);
         dest.writeInt(this.uiType);
         dest.writeString(this.name);
         dest.writeString(this.qq);
@@ -439,7 +430,6 @@ public class ContactBean implements CN, Parcelable {
         this.pinyin = in.readString();
         this.simplePinyin = in.readString();
         this.orgType = in.readString();
-        this.org_depart_name = in.readString();
         this.uiType = in.readInt();
         this.name = in.readString();
         this.qq = in.readString();

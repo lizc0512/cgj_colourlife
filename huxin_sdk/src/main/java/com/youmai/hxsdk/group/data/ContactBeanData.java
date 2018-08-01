@@ -1,10 +1,9 @@
 package com.youmai.hxsdk.group.data;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.text.TextUtils;
-
+import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.R;
+import com.youmai.hxsdk.config.ColorsConfig;
 import com.youmai.hxsdk.db.bean.ContactBean;
 import com.youmai.hxsdk.entity.cn.pinyin.Pinyin;
 import com.youmai.hxsdk.entity.ModifyContactsBean;
@@ -34,25 +33,16 @@ public class ContactBeanData {
         } else {
             names = context.getResources().getStringArray(R.array.names_home); //获取
         }
-        SharedPreferences sharedPreferences = context.getSharedPreferences("park_cache_map", 0);
-        String depart_name = sharedPreferences.getString("org_depart_name", "");
-        String org_name = null;
-        if (TextUtils.isEmpty(org_name)) {
-            if (!TextUtils.isEmpty(org_name = sharedPreferences.getString("org_name", ""))) {
-                org_name = sharedPreferences.getString("org_name", "");
-            } else {
-                org_name = "服务集团";
-            }
-        }
+
         for (int i = 0; i < names.length; i++) {
             String content = names[i];
             ContactBean bean = addHeadItem(content);
             if (content.contains("组织架构")) {
                 bean.setUiType(SearchContactAdapter.TYPE.ORGANIZATION_TYPE.ordinal());
-                bean.setOrg_depart_name(org_name);
+                bean.setOrgName(ColorsConfig.ColorLifeAppName);
             } else if (content.contains("我的部门")) {
                 bean.setUiType(SearchContactAdapter.TYPE.DEPARTMENT_TYPE.ordinal());
-                bean.setOrg_depart_name(depart_name);
+                bean.setOrgName(HuxinSdkManager.instance().getOrgName());
             } else if (content.contains("收藏联系人")) {
                 bean.setUiType(SearchContactAdapter.TYPE.COLLECT_TYPE.ordinal());
             } else {

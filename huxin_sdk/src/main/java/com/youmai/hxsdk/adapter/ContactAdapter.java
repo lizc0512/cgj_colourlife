@@ -29,6 +29,12 @@ import java.util.List;
 public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements
         StickyHeaderAdapter<ContactAdapter.HeaderHolder> {
 
+    public interface ItemEventListener {
+        void onItemClick(int pos, ContactBean contact);
+
+        void onLongClick(int pos, ContactBean contact);
+    }
+
     private Context mContext;
     private int mCollectIndex;
     private ItemEventListener itemEventListener;
@@ -61,7 +67,7 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, int position) {
         final ContactBean contact = cnPinyinList.get(position).data;
 
         if (holder instanceof ContactHolder) {
@@ -71,7 +77,7 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 contactHolder.iv_header.setImageResource(icon);
                 contactHolder.cb_collect.setVisibility(View.GONE);
                 contactHolder.tv_user_name.setVisibility(View.VISIBLE);
-                contactHolder.tv_user_name.setText(contact.getOrg_depart_name());
+                contactHolder.tv_user_name.setText(contact.getOrgName());
             } else {
                 contactHolder.cb_collect.setVisibility(View.GONE);
                 contactHolder.tv_user_name.setVisibility(View.GONE);
@@ -102,7 +108,7 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             @Override
             public void onClick(View v) {
                 if (null != itemEventListener) {
-                    itemEventListener.onItemClick(position, contact);
+                    itemEventListener.onItemClick(holder.getAdapterPosition(), contact);
                 }
             }
         });
@@ -112,7 +118,7 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             @Override
             public boolean onLongClick(View v) {
                 if (null != itemEventListener) {
-                    itemEventListener.onLongClick(position, contact);
+                    itemEventListener.onLongClick(holder.getAdapterPosition(), contact);
                 }
                 return true;
             }
@@ -151,23 +157,23 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
 
-    public class HeaderHolder extends RecyclerView.ViewHolder {
+    class HeaderHolder extends RecyclerView.ViewHolder {
         private TextView tv_header;
 
-        public HeaderHolder(View itemView) {
+        HeaderHolder(View itemView) {
             super(itemView);
             tv_header = (TextView) itemView.findViewById(R.id.tv_header);
         }
     }
 
 
-    public class ContactHolder extends RecyclerView.ViewHolder {
+    class ContactHolder extends RecyclerView.ViewHolder {
         private ImageView iv_header;
         private TextView tv_name;
         private TextView tv_user_name;
         private CheckBox cb_collect;
 
-        public ContactHolder(View itemView) {
+        ContactHolder(View itemView) {
             super(itemView);
             iv_header = (ImageView) itemView.findViewById(R.id.iv_header);
             tv_name = (TextView) itemView.findViewById(R.id.tv_name);
@@ -176,11 +182,6 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
     }
 
-    public interface ItemEventListener {
-        void onItemClick(int pos, ContactBean contact);
-
-        void onLongClick(int pos, ContactBean contact);
-    }
 
     /**
      * 默认功能的头像

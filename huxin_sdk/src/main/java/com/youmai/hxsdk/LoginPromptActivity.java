@@ -70,7 +70,7 @@ public class LoginPromptActivity extends AppCompatActivity implements View.OnCli
         String device_code = sharedPreferences.getString("device_token", "");
         ContentValues hearder = new ContentValues();
         hearder.put("device_code", device_code);
-        OkHttpConnector.httpPost(hearder, AppConfig.SINGLE_DEVICE + "cgjapp/single/device/logout", new IPostListener() {
+        OkHttpConnector.httpPost(LoginPromptActivity.this,hearder, AppConfig.SINGLE_DEVICE + "cgjapp/single/device/logout", new IPostListener() {
             @Override
             public void httpReqResult(String response) {
                 try {

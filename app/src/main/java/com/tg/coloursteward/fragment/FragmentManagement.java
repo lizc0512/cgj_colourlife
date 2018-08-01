@@ -890,7 +890,7 @@ public class FragmentManagement extends Fragment implements MessageHandler.Respo
             params.put("userId", UserInfo.uid);
             params.put("access_token", access_token);
             ColorsConfig.commonParams(params);
-            OkHttpConnector.httpGet(url, params, new IGetListener() {
+            OkHttpConnector.httpGet(mActivity,url, params, new IGetListener() {
                 @Override
                 public void httpReqResult(String response) {
                     int code = HttpTools.getCode(response);
@@ -911,7 +911,7 @@ public class FragmentManagement extends Fragment implements MessageHandler.Respo
                     params.put("username", UserInfo.employeeAccount);
                     ColorsConfig.commonParams(params);
 
-                    OkHttpConnector.httpGet(oaUrl, params, new IGetListener() {
+                    OkHttpConnector.httpGet(mActivity,oaUrl, params, new IGetListener() {
                         @Override
                         public void httpReqResult(String response) {
                             OaConfig config = GsonUtil.parse(response, OaConfig.class);
@@ -1424,7 +1424,7 @@ public class FragmentManagement extends Fragment implements MessageHandler.Respo
 
         ColorsConfig.commonParams(params);
 
-        OkHttpConnector.httpPost(url, params, new IPostListener() {
+        OkHttpConnector.httpPost(mActivity,url, params, new IPostListener() {
             @Override
             public void httpReqResult(String response) {
                 AdvConfig bean = GsonUtil.parse(response, AdvConfig.class);

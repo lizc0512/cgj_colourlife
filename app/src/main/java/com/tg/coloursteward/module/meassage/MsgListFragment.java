@@ -65,7 +65,7 @@ public class MsgListFragment extends Fragment implements IMMsgCallback {
 
     private XRecyclerView recyclerView;
     private MessageAdapter mMessageAdapter;
-
+    private Context mContext;
     private Handler mHandler;
 
     // 换号登录需要去判断改变
@@ -107,6 +107,7 @@ public class MsgListFragment extends Fragment implements IMMsgCallback {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        mContext=context;
     }
 
     @Override
@@ -295,7 +296,7 @@ public class MsgListFragment extends Fragment implements IMMsgCallback {
 
         ColorsConfig.commonParams(params);
 
-        OkHttpConnector.httpGet(url, params, new IGetListener() {
+        OkHttpConnector.httpGet(mContext,url, params, new IGetListener() {
             @Override
             public void httpReqResult(String response) {
                 MsgConfig config = GsonUtil.parse(response, MsgConfig.class);

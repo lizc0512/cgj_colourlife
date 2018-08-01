@@ -566,7 +566,7 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
         params.put("page", "1");
         params.put("pagesize", "100");
         ColorsConfig.commonParams(params);
-        OkHttpConnector.httpGet(url, params, new IGetListener() {
+        OkHttpConnector.httpGet(AddContactsCreateGroupActivity.this,url, params, new IGetListener() {
             @Override
             public void httpReqResult(String response) {
                 ModifyContactsBean bean = GsonUtil.parse(response, ModifyContactsBean.class);

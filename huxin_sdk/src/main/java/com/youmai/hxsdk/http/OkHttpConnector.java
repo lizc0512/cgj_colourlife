@@ -1,10 +1,11 @@
 package com.youmai.hxsdk.http;
 
 import android.content.ContentValues;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.text.TextUtils;
 import android.util.Log;
-
 
 import com.facebook.stetho.okhttp3.StethoInterceptor;
 import com.youmai.hxsdk.config.FileConfig;
@@ -53,6 +54,7 @@ public class OkHttpConnector {
 
     private static final MediaType MEDIA_TYPE_PNG
             = MediaType.parse("image/png");
+    private static String color_token;
 
 
     private OkHttpConnector() {
@@ -64,31 +66,39 @@ public class OkHttpConnector {
      * 2016-9-13
      */
 
-    public static void httpGet(String url, IGetListener request) {
-        httpGet(null, url, null, request);
+    public static void httpGet(Context context, String url, IGetListener request) {
+        httpGet(context, null, url, null, request);
     }
 
 
-    public static void httpGet(ContentValues header, String url,
+    public static void httpGet(Context context, ContentValues header, String url,
                                IGetListener request) {
-        httpGet(header, url, null, request);
+        httpGet(context, header, url, null, request);
     }
 
-    public static void httpGet(String url, ContentValues params,
+    public static void httpGet(Context context, String url, ContentValues params,
                                IGetListener request) {
-        httpGet(null, url, params, request);
+        httpGet(context, null, url, params, request);
     }
 
 
-    public static void httpGet(ContentValues headers, String url,
+    public static void httpGet(Context context, ContentValues headers, String url,
                                ContentValues params, IGetListener request) {
         HttpGetAsyncTask task = new HttpGetAsyncTask(request);
+        if (TextUtils.isEmpty(color_token)) {
+            SharedPreferences sharedPreferences = context.getSharedPreferences("park_cache_map", 0);
+            color_token = sharedPreferences.getString("access_token2", "");
+        }
+        ContentValues headersmap = new ContentValues();
+        if (null != headers) {
+            headersmap.putAll(headers);
+        }
+        headersmap.put("color-token", color_token);
         task.setParams(params);
-        task.setHeaders(headers);
+        task.setHeaders(headersmap);
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, url);
 
     }
-
 
 
     public static void httpDel(ContentValues headers, String url,
@@ -101,12 +111,10 @@ public class OkHttpConnector {
     }
 
 
-
     public static void httpDel(String url, ContentValues params,
                                IGetListener request) {
         httpDel(null, url, params, request);
     }
-
 
 
     public static String doGet(ContentValues headers, String url, ContentValues params) {
@@ -143,28 +151,55 @@ public class OkHttpConnector {
     }
 
 
-    public static void httpPost(ContentValues header, String url,
+    public static void httpPost(Context context, ContentValues header, String url,
                                 IPostListener request) {
-        httpPost(url, null, header, null, request);
+        httpPost(context, url, null, header, null, request);
     }
 
+
+    public static void httpPost(Context context, String url, ContentValues params,
+                                IPostListener request) {
+        httpPost(context, url, params, null, null, request);
+    }
 
     public static void httpPost(String url, ContentValues params,
                                 IPostListener request) {
         httpPost(url, params, null, null, request);
     }
 
-    public static void httpPost(ContentValues header, String url,
+    public static void httpPost(Context context, ContentValues header, String url,
                                 ContentValues params, IPostListener request) {
-        httpPost(url, params, header, null, request);
+        httpPost(context, url, params, header, null, request);
     }
 
 
-    public static void httpPost(String url, String postBoby,
+    public static void httpPost(Context context, String url, String postBoby,
                                 IPostListener request) {
-        httpPost(url, null, null, postBoby, request);
+        httpPost(context, url, null, null, postBoby, request);
     }
 
+    public static void httpPost(Context context, String url, ContentValues params,
+                                ContentValues headers, String postBoby,
+                                IPostListener request) {
+        HttpPostAsyncTask task = new HttpPostAsyncTask(request);
+        if (TextUtils.isEmpty(color_token)) {
+            SharedPreferences sharedPreferences = context.getSharedPreferences("park_cache_map", 0);
+            color_token = sharedPreferences.getString("access_token2", "");
+        }
+        ContentValues headersmap = new ContentValues();
+        if (null != headers) {
+            headersmap.putAll(headers);
+        }
+        headersmap.put("color-token", color_token);
+        task.setParams(params);
+        task.setHeaders(headersmap);
+        task.setPostBoby(postBoby);
+        task.execute(url);
+    }
+
+    /**
+     * @deprecated 无Context
+     */
     public static void httpPost(String url, ContentValues params,
                                 ContentValues headers, String postBoby,
                                 IPostListener request) {
@@ -174,7 +209,6 @@ public class OkHttpConnector {
         task.setPostBoby(postBoby);
         task.execute(url);
     }
-
 
     /**
      * 多表单混合提交
@@ -746,8 +780,6 @@ public class OkHttpConnector {
 
 
     }
-
-
 
 
     private static class HttpDelAsyncTask extends

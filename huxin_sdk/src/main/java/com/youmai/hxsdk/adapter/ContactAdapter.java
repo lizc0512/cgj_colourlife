@@ -70,8 +70,11 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 int icon = defaultIcon(position);
                 contactHolder.iv_header.setImageResource(icon);
                 contactHolder.cb_collect.setVisibility(View.GONE);
+                contactHolder.tv_user_name.setVisibility(View.VISIBLE);
+                contactHolder.tv_user_name.setText(contact.getOrg_depart_name());
             } else {
                 contactHolder.cb_collect.setVisibility(View.GONE);
+                contactHolder.tv_user_name.setVisibility(View.GONE);
                 try {
                     Glide.with(mContext)
                             .load(contact.getAvatar())
@@ -86,28 +89,10 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     e.printStackTrace();
                 }
             }
-
             if (contact.getRealname().startsWith("↑##@@**") && position < mCollectIndex) {
                 contactHolder.tv_name.setText(contact.getRealname().substring(9));
             } else {
                 contactHolder.tv_name.setText(contact.getRealname());
-            }
-            SharedPreferences sharedPreferences = mContext.getSharedPreferences("park_cache_map", 0);
-            String depart_name = sharedPreferences.getString("org_depart_name", "");
-            if (TextUtils.isEmpty(org_name)) {
-                if (!TextUtils.isEmpty(org_name = sharedPreferences.getString("org_name", ""))) {
-                    org_name = sharedPreferences.getString("org_name", "");
-                } else {
-                    org_name = "服务集团";
-                }
-            }
-            if (position == 0) {
-                contactHolder.tv_user_name.setVisibility(View.VISIBLE);
-                contactHolder.tv_user_name.setText(org_name);
-            }
-            if (position == 1) {
-                contactHolder.tv_user_name.setVisibility(View.VISIBLE);
-                contactHolder.tv_user_name.setText(depart_name);
             }
 
         }

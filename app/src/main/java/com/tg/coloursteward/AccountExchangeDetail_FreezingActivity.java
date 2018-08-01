@@ -4,14 +4,7 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
-import android.util.DisplayMetrics;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.tg.coloursteward.base.BaseActivity;
@@ -37,12 +30,11 @@ import java.util.Date;
  * 分配详情
  */
 public class AccountExchangeDetail_FreezingActivity extends BaseActivity {
-    private ImageView iv_image_show;
     private TextView freezing_value;
     private TextView freezing_flowvalue;
     private TextView freezing_time;
     private TextView freezing_money;
-    private AlertDialog dialog;
+    private TextView freezing_explain;
     private AuthAppService authAppService;
     private String accessToken;
     private String general_uuid, split_type, split_target, id;
@@ -124,54 +116,11 @@ public class AccountExchangeDetail_FreezingActivity extends BaseActivity {
 
     private void initView() {
         headView = (ActivityHeaderView) findViewById(R.id.title);
-        iv_image_show = findViewById(R.id.iv_image_show);
         freezing_value = findViewById(R.id.freezing_value);
         freezing_flowvalue = findViewById(R.id.freezing_flowvalue);
         freezing_time = findViewById(R.id.freezing_time);
+        freezing_explain = findViewById(R.id.freezing_explain);
         freezing_money = findViewById(R.id.freezing_money);
-        iv_image_show.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showNoticeDialogMust();
-            }
-        });
-    }
-
-    /**
-     * 提示语
-     */
-    private void showNoticeDialogMust() {
-        if (dialog == null) {
-            DisplayMetrics metrics = Tools.getDisplayMetrics(AccountExchangeDetail_FreezingActivity.this);
-            dialog = new AlertDialog.Builder(AccountExchangeDetail_FreezingActivity.this).create();
-            dialog.setCancelable(false);
-            Window window = dialog.getWindow();
-            dialog.show();
-            LinearLayout layout = (LinearLayout) LayoutInflater.from(AccountExchangeDetail_FreezingActivity.this)
-                    .inflate(R.layout.update_dialog_layout, null);
-            TextView tvContent = (TextView) layout.findViewById(R.id.dialog_msg);
-            TextView update_title = (TextView) layout.findViewById(R.id.update_title);
-            update_title.setText("提示");
-            Button btnOk = (Button) layout.findViewById(R.id.btn_ok);
-            Button btnCancel = (Button) layout.findViewById(R.id.btn_cancel);
-            ImageView ivLine = (ImageView) layout.findViewById(R.id.iv_line);
-            btnCancel.setVisibility(View.GONE);
-            ivLine.setVisibility(View.GONE);
-            tvContent.setText(message);
-            btnOk.setText("确定");
-            btnOk.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {//立即更新
-                    dialog.dismiss();
-                }
-            });
-            window.setContentView(layout);
-            WindowManager.LayoutParams p = window.getAttributes();
-            p.width = ((int) (metrics.widthPixels - 80 * metrics.density));
-            window.setAttributes(p);
-        }
-
-        dialog.show();
     }
 
     @Override
@@ -184,21 +133,14 @@ public class AccountExchangeDetail_FreezingActivity extends BaseActivity {
                     freezing_value.setText(splitBillDetailEntity.getContent().getOut_trade_no());
                     freezing_flowvalue.setText(splitBillDetailEntity.getContent().getFinance_tno());//冻结流水号
                     DecimalFormat df = new DecimalFormat("0.00");
-                    freezing_money.setText("+" + df.format(Double.valueOf(splitBillDetailEntity.getContent().getAmount())));
-                    freezing_time.setText("交易时间:" + splitBillDetailEntity.getContent().getTime());
+                    freezing_money.setText("金额:" + df.format(Double.valueOf(splitBillDetailEntity.getContent().getAmount())));
+                    freezing_time.setText("时 间:" + splitBillDetailEntity.getContent().getTime());
                     message = splitBillDetailEntity.getContent().getFreezen_msg();
+                    freezing_explain.setText(message);
                 }
             }
 
         }
-    }
-
-    @Override
-    protected boolean handClickEvent(View v) {
-        if (v.getId() == R.id.right_layout) {
-            showNoticeDialogMust();
-        }
-        return super.handClickEvent(v);
     }
 
     @Override
@@ -208,8 +150,6 @@ public class AccountExchangeDetail_FreezingActivity extends BaseActivity {
 
     @Override
     public String getHeadTitle() {
-        headView.setRightImage(R.drawable.next);
-        headView.setListenerRight(singleListener);
         return "冻结详情";
     }
 }

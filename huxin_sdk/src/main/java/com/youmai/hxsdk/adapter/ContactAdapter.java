@@ -18,6 +18,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.db.bean.ContactBean;
 import com.youmai.hxsdk.entity.cn.CNPinyin;
+import com.youmai.hxsdk.group.adapter.SearchContactAdapter;
 import com.youmai.hxsdk.stickyheader.StickyHeaderAdapter;
 import com.youmai.hxsdk.utils.GlideRoundTransform;
 
@@ -72,9 +73,8 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         if (holder instanceof ContactHolder) {
             final ContactHolder contactHolder = (ContactHolder) holder;
-            if (position < mCollectIndex) {
-                int icon = defaultIcon(position);
-                contactHolder.iv_header.setImageResource(icon);
+            if (contact.getUiType() != SearchContactAdapter.TYPE.CONTACT_TYPE.ordinal()) {
+                contactHolder.iv_header.setImageResource(contact.getResId());
                 contactHolder.cb_collect.setVisibility(View.GONE);
                 contactHolder.tv_user_name.setVisibility(View.VISIBLE);
                 contactHolder.tv_user_name.setText(contact.getOrgName());

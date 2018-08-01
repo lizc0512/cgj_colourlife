@@ -40,9 +40,17 @@ public class ContactBeanData {
             if (content.contains("组织架构")) {
                 bean.setUiType(SearchContactAdapter.TYPE.ORGANIZATION_TYPE.ordinal());
                 bean.setOrgName(ColorsConfig.ColorLifeAppName);
+                bean.setResId(R.drawable.contacts_org);
             } else if (content.contains("我的部门")) {
                 bean.setUiType(SearchContactAdapter.TYPE.DEPARTMENT_TYPE.ordinal());
                 bean.setOrgName(HuxinSdkManager.instance().getOrgName());
+                bean.setResId(R.drawable.contacts_department);
+            } else if (content.contains("手机联系人")) {
+                bean.setUiType(SearchContactAdapter.TYPE.PHONE_TYPE.ordinal());
+                bean.setResId(R.drawable.contacts_phone_list);
+            } else if (content.contains("群聊")) {
+                bean.setUiType(SearchContactAdapter.TYPE.GROUP_TYPE.ordinal());
+                bean.setResId(R.drawable.contacts_groupchat);
             } else if (content.contains("收藏联系人")) {
                 bean.setUiType(SearchContactAdapter.TYPE.COLLECT_TYPE.ordinal());
             } else {

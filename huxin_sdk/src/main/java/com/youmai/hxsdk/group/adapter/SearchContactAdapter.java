@@ -33,7 +33,7 @@ public class SearchContactAdapter extends RecyclerView.Adapter<RecyclerView.View
         StickyHeaderAdapter<SearchContactAdapter.HeaderHolder> {
 
     public enum TYPE {
-        ORGANIZATION_TYPE, DEPARTMENT_TYPE, COLLECT_TYPE, CONTACT_TYPE
+        ORGANIZATION_TYPE, DEPARTMENT_TYPE, PHONE_TYPE, GROUP_TYPE, COLLECT_TYPE, CONTACT_TYPE
     }
 
     public static final int mIndexForCollect = 1;

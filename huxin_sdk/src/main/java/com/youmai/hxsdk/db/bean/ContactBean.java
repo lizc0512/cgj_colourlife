@@ -69,6 +69,9 @@ public class ContactBean implements CN, Parcelable {
     @Transient
     private String enterprise_cornet;
 
+    @Transient
+    private int resId;
+
     public ContactBean(String name) {
         this.realname = name;
     }
@@ -264,6 +267,14 @@ public class ContactBean implements CN, Parcelable {
         this.enterprise_cornet = enterprise_cornet;
     }
 
+    public int getResId() {
+        return resId;
+    }
+
+    public void setResId(int resId) {
+        this.resId = resId;
+    }
+
     public boolean isIs_hx() {
         return is_hx;
     }
@@ -407,6 +418,7 @@ public class ContactBean implements CN, Parcelable {
         dest.writeString(this.Favoriteid);
         dest.writeString(this.accountUuid);
         dest.writeString(this.enterprise_cornet);
+        dest.writeInt(this.resId);
     }
 
     protected ContactBean(Parcel in) {
@@ -439,6 +451,7 @@ public class ContactBean implements CN, Parcelable {
         this.Favoriteid = in.readString();
         this.accountUuid = in.readString();
         this.enterprise_cornet = in.readString();
+        this.resId = in.readInt();
     }
 
     public static final Creator<ContactBean> CREATOR = new Creator<ContactBean>() {

@@ -39,6 +39,7 @@ public class UserInfo {
     public static String operator = "";//操作符
     public static String orgId = "";//组织架构ID
     public static String infoorgId = "";//组织架构ID
+    public static String userinfoImg = "userinfoimg";//
 
 
     public static String tel = "";

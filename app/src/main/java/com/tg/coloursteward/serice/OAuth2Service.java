@@ -45,7 +45,7 @@ public class OAuth2Service {
                 params.put("client_secret", Contants.URl.CLIENT_SECRET);
                 params.put("grant_type", "refresh_token");
                 params.put("refresh_token", Tools.getRefresh_token2(context));
-                OkHttpConnector.httpPost(Contants.URl.URL_OAUTH2 + "/oauth/token", params, new IPostListener() {
+                OkHttpConnector.httpPost(context,Contants.URl.URL_OAUTH2 + "/oauth/token", params, new IPostListener() {
                     @Override
                     public void httpReqResult(String jsonString) {
                         if (null != jsonString) {
@@ -78,7 +78,7 @@ public class OAuth2Service {
             params.put("client_secret", Contants.URl.CLIENT_SECRET);
             params.put("grant_type", "password");
             params.put("scope", "*");
-            OkHttpConnector.httpPost(Contants.URl.URL_OAUTH2 + "/oauth/token", params, new IPostListener() {
+            OkHttpConnector.httpPost(context,Contants.URl.URL_OAUTH2 + "/oauth/token", params, new IPostListener() {
                 @Override
                 public void httpReqResult(String jsonString) {
                     if (null != jsonString) {
@@ -123,7 +123,7 @@ public class OAuth2Service {
                 params.put("client_secret", Contants.URl.CLIENT_SECRET);
                 params.put("grant_type", "refresh_token");
                 params.put("refresh_token", Tools.getRefresh_token2(context));
-                OkHttpConnector.httpPost(Contants.URl.URL_OAUTH2 + "/oauth/token", params, new IPostListener() {
+                OkHttpConnector.httpPost(context,Contants.URl.URL_OAUTH2 + "/oauth/token", params, new IPostListener() {
                     @Override
                     public void httpReqResult(String jsonString) {
                         if (null != jsonString) {
@@ -150,7 +150,7 @@ public class OAuth2Service {
     }
 
     private void getNetInfo(ContentValues params) {
-        OkHttpConnector.httpGet(params, Contants.URl.URL_OAUTH2 + "/oauth/user", null, new IGetListener() {
+        OkHttpConnector.httpGet(context,params, Contants.URl.URL_OAUTH2 + "/oauth/user", null, new IGetListener() {
             @Override
             public void httpReqResult(String jsonString) {
                 if (null != jsonString) {

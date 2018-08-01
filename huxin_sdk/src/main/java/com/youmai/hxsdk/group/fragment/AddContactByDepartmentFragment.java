@@ -80,7 +80,7 @@ public class AddContactByDepartmentFragment extends Fragment {
         ContentValues params = new ContentValues();
         params.put("orgID", orgId);
         ColorsConfig.commonParams(params);
-        OkHttpConnector.httpGet(url, params, new IGetListener() {
+        OkHttpConnector.httpGet(getContext(),url, params, new IGetListener() {
             @Override
             public void httpReqResult(String response) {
                 try {

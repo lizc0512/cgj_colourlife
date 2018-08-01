@@ -892,7 +892,7 @@ public class MainActivity1 extends AppCompatActivity implements MessageHandler.R
         params.put("cate_id", 0);
         ColorsConfig.commonParams(params);
 
-        OkHttpConnector.httpPost(url, params, new IPostListener() {
+        OkHttpConnector.httpPost(MainActivity1.this,url, params, new IPostListener() {
             @Override
             public void httpReqResult(String response) {
                 String jsonString = HttpTools.getContentString(response);

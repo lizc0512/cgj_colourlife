@@ -484,7 +484,7 @@ public class ContactsFragment extends Fragment implements ItemEventListener {
         params.put("page", "1");
         params.put("pagesize", "100");
         ColorsConfig.commonParams(params);
-        OkHttpConnector.httpGet(url, params, new IGetListener() {
+        OkHttpConnector.httpGet(mContext,url, params, new IGetListener() {
             @Override
             public void httpReqResult(String response) {
                 ModifyContactsBean bean = GsonUtil.parse(response, ModifyContactsBean.class);
@@ -513,7 +513,7 @@ public class ContactsFragment extends Fragment implements ItemEventListener {
         params.put("corpId", ColorsConfig.CORP_UUID);
         ColorsConfig.commonParams(params);
 
-        OkHttpConnector.httpGet(url, params, new IGetListener() {
+        OkHttpConnector.httpGet(mContext,url, params, new IGetListener() {
             @Override
             public void httpReqResult(String response) {
                 ReqContactsBean bean = GsonUtil.parse(response, ReqContactsBean.class);

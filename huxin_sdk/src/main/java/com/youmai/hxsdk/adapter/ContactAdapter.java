@@ -67,7 +67,7 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, final int position) {
         final ContactBean contact = cnPinyinList.get(position).data;
 
         if (holder instanceof ContactHolder) {
@@ -108,7 +108,7 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             @Override
             public void onClick(View v) {
                 if (null != itemEventListener) {
-                    itemEventListener.onItemClick(holder.getAdapterPosition(), contact);
+                    itemEventListener.onItemClick(position, contact);
                 }
             }
         });
@@ -118,7 +118,7 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             @Override
             public boolean onLongClick(View v) {
                 if (null != itemEventListener) {
-                    itemEventListener.onLongClick(holder.getAdapterPosition(), contact);
+                    itemEventListener.onLongClick(position, contact);
                 }
                 return true;
             }

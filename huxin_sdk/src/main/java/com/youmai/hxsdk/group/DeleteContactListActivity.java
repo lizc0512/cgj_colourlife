@@ -14,7 +14,6 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,31 +42,29 @@ import java.util.Map;
  * 日期：2018.04.12 13:54
  * 描述：删除群聊列表
  */
-public class DeleteContactListActivity extends SdkBaseActivity {
+public class DeleteContactListActivity extends SdkBaseActivity implements View.OnClickListener,
+        DeleteContactAdapter.OnItemClickListener {
     private static final String TAG = DeleteContactListActivity.class.getName();
 
     public static final String DELETE_GROUP_ID = "DELETE_GROUP_ID";
 
 
-    private final int GLOBAL_SEARCH_LOADER_ID = 1;
+    private static final int GLOBAL_SEARCH_LOADER_ID = 1;
 
-
-    private RecyclerView mRefreshRecyclerView;
-    private TextView mTvTitle;
-    private TextView mTvCancel;
-    private TextView mTvSure;
-    private DeleteContactAdapter mAdapter;
-    private RelativeLayout search_parent;
-
+    private int mGroupId;
     private Map<String, SearchContactBean> mTotalMap = new HashMap<>();
-    private EmptyRecyclerViewDataObserver mEmptyRvDataObserver = new EmptyRecyclerViewDataObserver();
-    private int mGroupId = -1;
 
+    private ArrayList<ContactBean> groupList;
+    private ArrayList<SearchContactBean> resultList = new ArrayList<>();
+
+
+    private RecyclerView recyclerView;
+    private DeleteContactAdapter mAdapter;
+
+    private TextView mTvSure;
     private SearchEditText global_search_bar;
 
     private SearchLoaderAct mLoader;
-    private ArrayList<ContactBean> groupList;
-    private ArrayList<SearchContactBean> resultList = new ArrayList<>();
 
     private LoaderManager.LoaderCallbacks<List<SearchContactBean>> callback = new LoaderManager.LoaderCallbacks<List<SearchContactBean>>() {
         @NonNull
@@ -102,28 +99,20 @@ public class DeleteContactListActivity extends SdkBaseActivity {
 
         initView();
 
-        setOnClickListener();
-
         getLoaderManager().initLoader(GLOBAL_SEARCH_LOADER_ID, null, callback).forceLoad();
     }
 
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (null != mAdapter) {
-            mAdapter.unregisterAdapterDataObserver(mEmptyRvDataObserver);
-        }
-    }
-
     private void initView() {
         //标题
-        mTvTitle = findViewById(R.id.tv_title);
-        mTvTitle.setText("删除成员");
+        TextView tv_title = findViewById(R.id.tv_title);
+        tv_title.setText("删除成员");
 
-        mTvCancel = findViewById(R.id.tv_left_cancel);
+        TextView tv_cancel = findViewById(R.id.tv_left_cancel);
+        tv_cancel.setOnClickListener(this);
 
         mTvSure = findViewById(R.id.tv_right_sure);
+        mTvSure.setOnClickListener(this);
         mTvSure.setEnabled(false);
 
         //搜索
@@ -149,91 +138,15 @@ public class DeleteContactListActivity extends SdkBaseActivity {
         });
 
 
-        mRefreshRecyclerView = findViewById(R.id.rv_delete);
-        LinearLayoutManager manager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        mRefreshRecyclerView.setLayoutManager(manager);
+        recyclerView = findViewById(R.id.rv_delete);
+        LinearLayoutManager manager = new LinearLayoutManager(this,
+                LinearLayoutManager.VERTICAL, false);
+        recyclerView.setLayoutManager(manager);
 
-        mAdapter = new DeleteContactAdapter(this, resultList);
-        mRefreshRecyclerView.setAdapter(mAdapter);
-        mAdapter.registerAdapterDataObserver(mEmptyRvDataObserver);
+        mAdapter = new DeleteContactAdapter(this, resultList, this);
+        recyclerView.setAdapter(mAdapter);
     }
 
-
-    private void setOnClickListener() {
-
-        mTvSure.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                List<YouMaiGroup.GroupMemberItem> list = new ArrayList<>();
-                //删除成员
-                for (Map.Entry<String, SearchContactBean> entry : mTotalMap.entrySet()) {
-                    SearchContactBean item = entry.getValue();
-                    YouMaiGroup.GroupMemberItem.Builder builder = YouMaiGroup.GroupMemberItem.newBuilder();
-                    builder.setMemberId(item.getUuid());
-                    builder.setMemberName(item.getDisplayName());
-                    builder.setUserName(item.getUsername());
-                    builder.setMemberRole(item.getMemberRole());   //群成员角色(0-群主，1-管理员，2-普通成员)
-                    list.add(builder.build());
-                }
-
-                ReceiveListener listener = new ReceiveListener() {
-                    @Override
-                    public void OnRec(PduBase pduBase) {
-                        try {
-                            YouMaiGroup.GroupMemberChangeRsp ack = YouMaiGroup.GroupMemberChangeRsp.parseFrom(pduBase.body);
-                            if (ack.getResult() == YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS) {
-                                Toast.makeText(DeleteContactListActivity.this, "删除成员", Toast.LENGTH_SHORT).show();
-
-                                ArrayList<ContactBean> list = new ArrayList<>();
-
-                                for (Map.Entry<String, SearchContactBean> entry : mTotalMap.entrySet()) {
-                                    SearchContactBean item = entry.getValue();
-                                    ContactBean contact = new ContactBean();
-                                    contact.setUuid(item.getUuid());
-                                    contact.setAvatar(item.getIconUrl());
-                                    contact.setUsername(item.getUsername());
-                                    contact.setRealname(item.getDisplayName());
-                                    contact.setMemberRole(item.getMemberRole());
-                                    list.add(contact);
-                                }
-
-                                mTotalMap.clear();
-                                Intent intent = new Intent();
-                                intent.putParcelableArrayListExtra(ChatGroupDetailsActivity.UPDATE_GROUP_LIST, list);
-                                setResult(ChatGroupDetailsActivity.RESULT_CODE, intent);
-                                finish();
-                            }
-                        } catch (InvalidProtocolBufferException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                };
-
-                if (mGroupId == -1) {
-                    Toast.makeText(mContext, "删除失败", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                HuxinSdkManager.instance().changeGroupMember(
-                        YouMaiGroup.GroupMemberOptType.GROUP_MEMBER_OPT_DEL,
-                        list, mGroupId, listener);
-            }
-        });
-        mTvCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-
-        mAdapter.setOnItemClickListener(new DeleteContactAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(int position, SearchContactBean bean) {
-                updateCacheMap(bean);
-            }
-        });
-
-    }
 
     private void updateCacheMap(SearchContactBean contact) {
         if (mTotalMap.containsKey(contact.getUuid())) {
@@ -266,24 +179,86 @@ public class DeleteContactListActivity extends SdkBaseActivity {
 
     }
 
-    /**
-     * 监听RecyclerView的数据变化
-     */
-    private class EmptyRecyclerViewDataObserver extends RecyclerView.AdapterDataObserver {
-        @Override
-        public void onChanged() {
-            emptyList();
-        }
+    @Override
+    public void onItemClick(int position, SearchContactBean bean) {
+        updateCacheMap(bean);
+    }
 
-        @Override
-        public void onItemRangeInserted(int positionStart, int itemCount) {
-            emptyList();
-        }
-
-        @Override
-        public void onItemRangeRemoved(int positionStart, int itemCount) {
-            emptyList();
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        if (id == R.id.tv_left_cancel) {
+            finish();
+        } else if (id == R.id.tv_right_sure) {
+            delGroupMember();
         }
     }
+
+
+    /**
+     * 删除群成员
+     */
+    private void delGroupMember() {
+        List<YouMaiGroup.GroupMemberItem> list = new ArrayList<>();
+        //删除成员
+        for (Map.Entry<String, SearchContactBean> entry : mTotalMap.entrySet()) {
+            SearchContactBean item = entry.getValue();
+            YouMaiGroup.GroupMemberItem.Builder builder = YouMaiGroup.GroupMemberItem.newBuilder();
+            builder.setMemberId(item.getUuid());
+            builder.setMemberName(item.getDisplayName());
+            builder.setUserName(item.getUsername());
+            builder.setMemberRole(item.getMemberRole());   //群成员角色(0-群主，1-管理员，2-普通成员)
+            list.add(builder.build());
+        }
+
+        ReceiveListener listener = new ReceiveListener() {
+            @Override
+            public void OnRec(PduBase pduBase) {
+                try {
+                    YouMaiGroup.GroupMemberChangeRsp ack = YouMaiGroup.GroupMemberChangeRsp.parseFrom(pduBase.body);
+                    if (ack.getResult() == YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS) {
+                        Toast.makeText(DeleteContactListActivity.this, "删除成员", Toast.LENGTH_SHORT).show();
+
+                        ArrayList<ContactBean> list = new ArrayList<>();
+
+                        for (Map.Entry<String, SearchContactBean> entry : mTotalMap.entrySet()) {
+                            SearchContactBean item = entry.getValue();
+                            ContactBean contact = new ContactBean();
+                            contact.setUuid(item.getUuid());
+                            contact.setAvatar(item.getIconUrl());
+                            contact.setUsername(item.getUsername());
+                            contact.setRealname(item.getDisplayName());
+                            contact.setMemberRole(item.getMemberRole());
+                            list.add(contact);
+                        }
+
+                        mTotalMap.clear();
+                        Intent intent = new Intent();
+                        intent.putParcelableArrayListExtra(ChatGroupDetailsActivity.UPDATE_GROUP_LIST, list);
+                        setResult(ChatGroupDetailsActivity.RESULT_CODE, intent);
+                        finish();
+                    }
+                } catch (InvalidProtocolBufferException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        if (mGroupId == -1) {
+            Toast.makeText(mContext, "删除失败", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        HuxinSdkManager.instance().changeGroupMember(
+                YouMaiGroup.GroupMemberOptType.GROUP_MEMBER_OPT_DEL,
+                list, mGroupId, listener);
+    }
+
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
 
 }

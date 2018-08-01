@@ -39,9 +39,11 @@ public class DeleteContactAdapter extends RecyclerView.Adapter {
 
     private OnItemClickListener mOnItemClickListener;
 
-    public DeleteContactAdapter(Context context, ArrayList<SearchContactBean> list) {
-        this.mContext = context;
-        this.mList = list;
+    public DeleteContactAdapter(Context context, ArrayList<SearchContactBean> list,
+                                OnItemClickListener listener) {
+        mContext = context;
+        mList = list;
+        mOnItemClickListener = listener;
     }
 
 
@@ -80,8 +82,8 @@ public class DeleteContactAdapter extends RecyclerView.Adapter {
                         .centerCrop()
                         .override(60, 60)
                         .transform(new GlideRoundTransform())
-                        .placeholder(com.youmai.hxsdk.R.drawable.color_default_header)
-                        .error(com.youmai.hxsdk.R.drawable.color_default_header))
+                        .placeholder(R.drawable.color_default_header)
+                        .error(R.drawable.color_default_header))
                 .into(itemHolder.iv_header);
 
 
@@ -187,10 +189,6 @@ public class DeleteContactAdapter extends RecyclerView.Adapter {
         }
     }
 
-
-    public void setOnItemClickListener(OnItemClickListener listener) {
-        this.mOnItemClickListener = listener;
-    }
 
     public interface OnItemClickListener {
         void onItemClick(int position, SearchContactBean bean);

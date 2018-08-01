@@ -99,6 +99,7 @@ public class ContactsSearchLoader extends AsyncTaskLoader {
 
         String url = ColorsConfig.CONTACTS_SEARCH;
         ContentValues params = new ContentValues();
+        params.put("pagesize", "100");
         params.put("keyword", key);
         ColorsConfig.commonParams(params);
 

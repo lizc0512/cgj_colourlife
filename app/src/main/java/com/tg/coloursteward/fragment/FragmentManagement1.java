@@ -957,7 +957,7 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
          * 常用应用与其他应用中只要是 “扫码开门”  “对公账户” 都触发该点击事件
          */
 
-        adapter2.setItemEventListener(new ManagementAdapter1.ItemEventListener() {
+        adapter1.setItemEventListener(new ManagementAdapter1.ItemEventListener() {
             @Override
             public void onItemClick(GridViewInfo info) {
                 if (info.clientCode.equals("smkm")) {//扫码开门

@@ -41,6 +41,7 @@ import com.tg.coloursteward.entity.AccountEntity;
 import com.tg.coloursteward.entity.SingleDeviceLogin;
 import com.tg.coloursteward.entity.SingleDeviceLogout;
 import com.tg.coloursteward.fragment.FragmentManagement;
+import com.tg.coloursteward.fragment.FragmentManagement1;
 import com.tg.coloursteward.fragment.FragmentMine;
 import com.tg.coloursteward.info.GridViewInfo;
 import com.tg.coloursteward.info.HomeDeskTopInfo;
@@ -1008,7 +1009,8 @@ public class MainActivity1 extends AppCompatActivity implements MessageHandler.R
                     ft = new ContactsFragment();
                     break;
                 case 2:
-                    ft = new FragmentManagement();
+                   // ft = new FragmentManagement();
+                    ft=new FragmentManagement1();
                     break;
                 case 3:
                     ft = new FragmentMine();

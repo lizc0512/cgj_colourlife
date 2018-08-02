@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -227,6 +228,7 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
         }
 
     };
+    private LinearLayout ll_home_head;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -790,12 +792,14 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
 
         mGridView1 = mView.findViewById(R.id.gridview1);
         adapter1 = new ManagementAdapter1(mActivity, gridlist1);
+        mGridView1.setNestedScrollingEnabled(false);
 
         mGridView1.addItemDecoration(new PaddingItemDecoration(20));
         mGridView1.setLayoutManager(manager1);
         mGridView1.setAdapter(adapter1);
 
         mGridView2 = mView.findViewById(R.id.gridview2);
+        mGridView2.setNestedScrollingEnabled(false);
         adapter2 = new ManagementAdapter1(mActivity, gridlist2);
         mGridView2.addItemDecoration(new PaddingItemDecoration(20));
         mGridView2.setLayoutManager(manager2);
@@ -811,6 +815,10 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
         magLinearLayoutSign.setOnClickListener(singleListener);// 签到
         magLinearLayoutMail.setOnClickListener(singleListener);//未读邮件
         magLinearLayoutExamineNum.setOnClickListener(singleListener);//未读审批
+
+        ll_home_head = mView.findViewById(R.id.ll_recycler_head);
+        ll_home_head.setFocusableInTouchMode(true);
+        ll_home_head.requestFocus();
         /**
          * 未读邮件
          */

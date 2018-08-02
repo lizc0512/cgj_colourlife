@@ -1,10 +1,8 @@
 package com.youmai.hxsdk.adapter;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -74,19 +72,13 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         if (holder instanceof ContactHolder) {
             final ContactHolder contactHolder = (ContactHolder) holder;
             if (contact.getUiType() != SearchContactAdapter.TYPE.CONTACT_TYPE.ordinal()) {
-                 //contactHolder.iv_header.setImageResource(contact.getResId());
+                Glide.with(mContext).load(contact.getResId()).apply(new RequestOptions()
+                        .placeholder(R.drawable.color_default_header)
+                        .error(R.drawable.color_default_header))
+                        .into(contactHolder.iv_header);
                 contactHolder.cb_collect.setVisibility(View.GONE);
                 contactHolder.tv_user_name.setVisibility(View.VISIBLE);
                 contactHolder.tv_user_name.setText(contact.getOrgName());
-                Glide.with(mContext)
-                        .load(contact.getResId())
-                        .apply(new RequestOptions()
-                                .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-                                .centerCrop()
-                                .transform(new GlideRoundTransform())
-                                .placeholder(R.drawable.color_default_header)
-                                .error(R.drawable.color_default_header))
-                        .into(contactHolder.iv_header);
             } else {
                 contactHolder.cb_collect.setVisibility(View.GONE);
                 contactHolder.tv_user_name.setVisibility(View.GONE);

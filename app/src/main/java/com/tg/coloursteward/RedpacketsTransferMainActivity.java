@@ -1,7 +1,15 @@
 package com.tg.coloursteward;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.Message;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -16,16 +24,8 @@ import com.tg.coloursteward.view.dialog.PwdDialog2;
 import com.tg.coloursteward.view.dialog.PwdDialog2.ADialogCallback;
 import com.tg.coloursteward.view.dialog.ToastFactory;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.os.Message;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
-import android.view.View;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * 给同事发饭票(转账页面)   同转到彩之云页面
@@ -140,8 +140,7 @@ public class RedpacketsTransferMainActivity extends BaseActivity {
                                 intent.putExtra(Contants.PARAMETER.TRANSFERTO, "czy");
                                 intent.putExtra(Contants.PARAMETER.MOBILE, receiverMobile);
                             }
-                            startActivity(intent);
-                            finish();
+                            isCanTrans();
                         }
                     };
                     aDialog = new PwdDialog2(
@@ -153,6 +152,31 @@ public class RedpacketsTransferMainActivity extends BaseActivity {
 
         }
         return super.handClickEvent(v);
+    }
+
+    private void isCanTrans() {
+        String key = Tools.getStringValue(this, Contants.EMPLOYEE_LOGIN.key);
+        String secret = Tools.getStringValue(this, Contants.EMPLOYEE_LOGIN.secret);
+        RequestConfig config = new RequestConfig(this, HttpTools.POST_CARRY_ORDER, "创建订单");
+        RequestParams params = new RequestParams();
+        if ("colleague".equals(transferTo) || "czy".equals(transferTo)) {
+            // 给同事发红包 或 转账到彩之云
+            params.put("receiver_id", receiver_id);
+            params.put("type", type);
+            params.put("amount", transferAmount);
+            params.put("note", edtMessage.getText().toString());
+            params.put("key", key);
+            params.put("secret", secret);
+            HttpTools.httpPost(Contants.URl.URL_CPMOBILE, "/1.0/caiRedPaket/carryOrderCreate", config, params);
+        }
+    }
+
+    @Override
+    public void onFail(Message msg, String hintString) {
+        super.onFail(msg, hintString);
+        if (msg.arg1 == HttpTools.POST_CARRY_ORDER) {
+            ToastFactory.showToast(RedpacketsTransferMainActivity.this, "转账失败" + hintString);
+        }
     }
 
     /**
@@ -330,8 +354,48 @@ public class RedpacketsTransferMainActivity extends BaseActivity {
             } else {
                 ToastFactory.showToast(RedpacketsTransferMainActivity.this, message);
             }
-        } else {
+        } else if (msg.arg1 == HttpTools.POST_CARRY_ORDER) {
+            if (code == 0) {
+                JSONObject jsonObject = HttpTools.getContentJSONObject(jsonString);
+                String state;
+                try {
+                    state = jsonObject.getString("ok");
+                    if ("1".equals(state)) {
+                        Intent intent = new Intent();
+                        String transferNote = edtMessage.getText().toString();
+                        intent.setClass(RedpacketsTransferMainActivity.this, RedpacketsWithdrawFinishedActivity.class);
+                        intent.putExtra(Contants.PARAMETER.USERID, receiver_id);
+                        intent.putExtra("type", type);
+                        intent.putExtra(Contants.PARAMETER.WITHDRAW_AMOUNT, transferAmount);
+                        intent.putExtra(Contants.PARAMETER.TRANSFERNOTE, transferNote);
+                        if ("colleague".equals(transferTo)) {
+                            intent.putExtra("name", receiverName);
+                            intent.putExtra(Contants.PARAMETER.TRANSFERTO, "colleague");
+                            intent.putExtra("username", receiverOA);
+                            isCanTrans();
+                        } else if ("czy".equals(transferTo)) {
+                            intent.putExtra(Contants.PARAMETER.TRANSFERTO, "czy");
+                            intent.putExtra(Contants.PARAMETER.MOBILE, receiverMobile);
 
+                        }
+                        startActivity(intent);
+                        finish();
+                        sendBroadcast(new Intent(MainActivity.ACTION_TICKET_INFO));
+                    } else {
+                        if ("colleague".equals(transferTo)) {
+                            ToastFactory.showToast(RedpacketsTransferMainActivity.this, "发红包失败");
+                        } else if ("czy".equals(transferTo)) {
+                            ToastFactory.showToast(RedpacketsTransferMainActivity.this, "转账失败");
+                        } else if ("bank".equals(transferTo)) {
+                            ToastFactory.showToast(RedpacketsTransferMainActivity.this, "提现失败");
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                ToastFactory.showToast(RedpacketsTransferMainActivity.this, message);
+            }
         }
     }
 

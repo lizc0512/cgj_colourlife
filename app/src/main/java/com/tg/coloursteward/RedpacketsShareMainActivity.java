@@ -42,7 +42,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 /**
- * 给同事发饭票
+ * 给同事发饭票页面
  * @author Administrator
  *
  */

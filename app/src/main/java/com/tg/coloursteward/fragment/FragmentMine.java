@@ -126,9 +126,9 @@ public class FragmentMine extends Fragment implements ItemClickListener, Respons
         viewConfig.leftDrawable = getResources().getDrawable(R.drawable.findpwd);
         list1.add(viewConfig);
 
-//        viewConfig = new ViewConfig("我的工资条", "", true);
-//        viewConfig.leftDrawable = getResources().getDrawable(R.drawable.hr_pay);
-//        list1.add(viewConfig);
+        viewConfig = new ViewConfig("我的工资条", "", true);
+        viewConfig.leftDrawable = getResources().getDrawable(R.drawable.hr_pay);
+        list1.add(viewConfig);
 
         mineInfoZone1.setData(list1);
 

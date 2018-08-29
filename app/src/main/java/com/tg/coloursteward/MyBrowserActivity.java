@@ -134,6 +134,7 @@ public class MyBrowserActivity extends Activity implements OnClickListener, AMap
     private String imeis;
     private String urlFromA;
     private Map<String, String> headerMap;
+    private File updateFile;
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -566,45 +567,45 @@ public class MyBrowserActivity extends Activity implements OnClickListener, AMap
                     PIC_PHOTO_BY_CAMERA);
         } else {
             //isStorageMemory = false;
-            FileOutputStream out = null;
-            try {
-                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
-                    out = openFileOutput(PHOTO_NAME, Context.MODE_PRIVATE);
-                } else {
-                    out = openFileOutput(PHOTO_NAME, Context.MODE_WORLD_WRITEABLE);
-                }
-
-            } catch (FileNotFoundException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+//            FileOutputStream out = null;
+//            try {
+//                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+//                    out = openFileOutput(PHOTO_NAME, Context.MODE_PRIVATE);
+//                } else {
+//                    out = openFileOutput(PHOTO_NAME, Context.MODE_WORLD_WRITEABLE);
+//                }
+//
+//            } catch (FileNotFoundException e) {
+//                // TODO Auto-generated catch block
+//                e.printStackTrace();
+//            }
+//            try {
+//                if (out != null) {
+//                    out.close();
+//                }
+//            } catch (IOException e) {
+//                // TODO Auto-generated catch block
+//                e.printStackTrace();
+//            }
+            if (null != updateFile && updateFile.exists()) {
+                updateFile.delete();
             }
-            try {
-                if (out != null) {
-                    out.close();
-                }
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-            TAKE_PHOTO_PATH = getFilesDir().getAbsolutePath() +
-                    File.separator + PHOTO_NAME;
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            File updateFile = new File(TAKE_PHOTO_PATH);
             if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+                TAKE_PHOTO_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + System.currentTimeMillis() + ".jpg";
+                updateFile = new File(TAKE_PHOTO_PATH);
                 uri = FileProvider.getUriForFile(MyBrowserActivity.this, BuildConfig.APPLICATION_ID + ".fileProvider", updateFile);
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-                startActivityForResult(intent,
-                        PIC_PHOTO_BY_CAMERA);
+                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             } else {
                 {
+                    TAKE_PHOTO_PATH = Environment.getExternalStorageDirectory() +
+                            File.separator + System.currentTimeMillis() + ".jpg";
+                    updateFile = new File(TAKE_PHOTO_PATH);
                     uri = Uri.fromFile(updateFile);
-                    intent.putExtra(MediaStore.EXTRA_OUTPUT,
-                            uri);
-                    startActivityForResult(intent,
-                            PIC_PHOTO_BY_CAMERA);
                 }
-
             }
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+            startActivityForResult(intent, PIC_PHOTO_BY_CAMERA);
         }
     }
 
@@ -912,11 +913,11 @@ public class MyBrowserActivity extends Activity implements OnClickListener, AMap
 				if(result != null){
 					//Log.d("print","result="+result);
 					stopLocation();
-					String url = "javascript:LatLngCallBack('" +result+ "')"; 
+					String url = "javascript:LatLngCallBack('" +result+ "')";
 					webView.loadUrl(url);
 				}
 			}else {
-				
+
 			}
 		}
 	};*/
@@ -1265,10 +1266,30 @@ public class MyBrowserActivity extends Activity implements OnClickListener, AMap
                     new OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            // TODO Auto-generated method stub
+                            if (uploadFile != null) {    //xie ：直接点击取消时，ValueCallback回调会被挂起，需要手动结束掉回调，否则再次点击选择照片无响应
+                                uploadFile.onReceiveValue(null);
+                                uploadFile = null;
+                            }
+                            if (uploadFiles != null) {    //xie ：直接点击取消时，ValueCallback回调会被挂起，需要手动结束掉回调，否则再次点击选择照片无响应
+                                uploadFiles.onReceiveValue(null);
+                                uploadFiles = null;
+                            }
                             photoDialog.dismiss();
                         }
                     });
+            photoDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface dialog) {
+                    if (uploadFile != null) {    //xie ：直接点击取消时，ValueCallback回调会被挂起，需要手动结束掉回调，否则再次点击选择照片无响应
+                        uploadFile.onReceiveValue(null);
+                        uploadFile = null;
+                    }
+                    if (uploadFiles != null) {    //xie ：直接点击取消时，ValueCallback回调会被挂起，需要手动结束掉回调，否则再次点击选择照片无响应
+                        uploadFiles.onReceiveValue(null);
+                        uploadFiles = null;
+                    }
+                }
+            });
             Window window = photoDialog.getWindow();
             WindowManager.LayoutParams p = window.getAttributes();
             DisplayMetrics metrics = Tools.getDisplayMetrics(MyBrowserActivity.this);

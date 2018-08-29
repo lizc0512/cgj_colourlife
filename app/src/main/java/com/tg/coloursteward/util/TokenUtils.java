@@ -35,7 +35,7 @@ import cn.jpush.android.api.JPushInterface;
 
 
 public class TokenUtils {
-    public static String getDeviceInfor(Context context) {
+    public static String getDeviceInfor(Context context,String longitude,String latitude ) {
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("networkType", getNetworkType(context));//网络类型
@@ -48,6 +48,8 @@ public class TokenUtils {
             jsonObject.put("batteryLevel", getBatteryInfor(context));//和手机卡相关信息
             jsonObject.put("ProvidersName", getProvidersName(context));//网络运营商
             jsonObject.put("MANUFACTURER", getDeviceName().toLowerCase());//手机制造商
+            jsonObject.put("longitude", longitude);//经度
+            jsonObject.put("latitude", latitude);//纬度
         } catch (JSONException e) {
             e.printStackTrace();
         }

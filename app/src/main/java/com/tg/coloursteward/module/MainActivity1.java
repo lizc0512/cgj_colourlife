@@ -31,16 +31,20 @@ import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import com.amap.api.location.AMapLocation;
+import com.amap.api.location.AMapLocationClient;
+import com.amap.api.location.AMapLocationListener;
+import com.amap.api.maps2d.LocationSource;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 import com.tg.coloursteward.InviteRegisterActivity;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.application.CityPropertyApplication;
+import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.database.SharedPreferencesTools;
 import com.tg.coloursteward.entity.AccountEntity;
 import com.tg.coloursteward.entity.SingleDeviceLogin;
 import com.tg.coloursteward.entity.SingleDeviceLogout;
-import com.tg.coloursteward.fragment.FragmentManagement;
 import com.tg.coloursteward.fragment.FragmentManagement1;
 import com.tg.coloursteward.fragment.FragmentMine;
 import com.tg.coloursteward.info.GridViewInfo;
@@ -89,12 +93,14 @@ import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.api.TagAliasCallback;
 import q.rorbin.badgeview.QBadgeView;
 
+import static com.tg.coloursteward.util.Utils.getDefaultOption;
+
 
 /**
  * Created by colin on 2018/3/15.
  */
 
-public class MainActivity1 extends AppCompatActivity implements MessageHandler.ResponseListener, View.OnClickListener {
+public class MainActivity1 extends BaseActivity implements MessageHandler.ResponseListener, View.OnClickListener, AMapLocationListener, LocationSource {
 
     private static final String TAG = MainActivity1.class.getSimpleName();
 
@@ -137,6 +143,10 @@ public class MainActivity1 extends AppCompatActivity implements MessageHandler.R
     private HomeService homeService;
 
     private boolean needGetUserInfo = true;
+    private String str_latitude;
+    private String str_longitude;
+    public AMapLocationClient mlocationClient;
+    private LocationSource.OnLocationChangedListener mListener;
 
     private String skin_code = "101";//  101 彩生活  100 通用  102 中住
     private String extras;
@@ -185,6 +195,7 @@ public class MainActivity1 extends AppCompatActivity implements MessageHandler.R
             extras = data.getStringExtra(KEY_EXTRAS);
             form_login = data.getBooleanExtra(FROM_LOGIN, false);
         }
+        initLocation();
         initTitle();
         initView();
 
@@ -195,6 +206,29 @@ public class MainActivity1 extends AppCompatActivity implements MessageHandler.R
         reqSearchList();
     }
 
+    @Override
+    public View getContentView() {
+        return null;
+    }
+
+    @Override
+    public String getHeadTitle() {
+        return null;
+    }
+
+    private void initLocation() {
+        if (mlocationClient == null) {
+            //初始化client
+            mlocationClient = new AMapLocationClient(getApplicationContext());
+            //设置定位参数
+            mlocationClient.setLocationOption(getDefaultOption());
+            // 设置定位监听
+            mlocationClient.setLocationListener(this);
+
+            mlocationClient.startLocation();
+
+        }
+    }
 
     public void windowPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
@@ -348,7 +382,7 @@ public class MainActivity1 extends AppCompatActivity implements MessageHandler.R
                     String device_token = singleDeviceLogin.getContent().getDevice_token();
                     Tools.saveStringValue(this, Contants.storage.DEVICE_TOKEN, device_token);
                     if (!TextUtils.isEmpty(device_token)) {
-                        Log.d("lizc", TAG+"单设备登录OK");
+                        Log.d("lizc", TAG + "单设备登录OK");
                     }
                 } catch (Exception e) {
                 }
@@ -359,7 +393,7 @@ public class MainActivity1 extends AppCompatActivity implements MessageHandler.R
                     SingleDeviceLogout singleDeviceLogout = GsonUtils.gsonToBean(jsonString, SingleDeviceLogout.class);
                     String jsonObject = singleDeviceLogout.getContent().getResult();
                     if ("1".equals(jsonObject)) {
-                        Log.d("lizc", TAG+"单设备退出OK");
+                        Log.d("lizc", TAG + "单设备退出OK");
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -387,7 +421,12 @@ public class MainActivity1 extends AppCompatActivity implements MessageHandler.R
                         HuxinSdkManager.instance().loginOut();
                     } else {
                         if (form_login == false) {
-                            singleDevicelogin();
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    singleDevicelogin();
+                                }
+                            }, 2000);
                         }
                         if (("101").equals(skin_code)) {//彩生活
                             sendBroadcast(new Intent(ACTION_TICKET_INFO));
@@ -570,7 +609,7 @@ public class MainActivity1 extends AppCompatActivity implements MessageHandler.R
         params.put("device_type", "1");//登录设备类别，1：安卓，2：IOS
         params.put("version", UpdateManager.getVersionName(MainActivity1.this));//APP版本号
         params.put("device_code", TokenUtils.getUUID(MainActivity1.this));//设备唯一编号
-        params.put("device_info", TokenUtils.getDeviceInfor(MainActivity1.this));//设备详细信息（json字符创）
+        params.put("device_info", TokenUtils.getDeviceInfor(MainActivity1.this, str_longitude, str_latitude));//设备详细信息（json字符创）
         params.put("device_name", TokenUtils.getDeviceBrand() + TokenUtils.getDeviceType());//设备名称（如三星S9）
         HttpTools.httpPost(Contants.URl.SINGLE_DEVICE, "cgjapp/single/device/login", config, params);
     }
@@ -936,6 +975,39 @@ public class MainActivity1 extends AppCompatActivity implements MessageHandler.R
         getWindow().setAttributes(lp);
     }
 
+    @Override
+    public void onLocationChanged(AMapLocation aMapLocation) {
+        if (null != aMapLocation) {
+            deactivate();
+            if (aMapLocation.getErrorCode() == 0) {
+                double latitude = aMapLocation.getLatitude();
+                double longitude = aMapLocation.getLongitude();
+                str_latitude = String.valueOf(latitude);
+                str_longitude = String.valueOf(longitude);
+                Tools.saveStringValue(getApplication(), Contants.storage.LATITUDE, str_latitude);
+                Tools.saveStringValue(getApplication(), Contants.storage.LONGITUDE, str_longitude);
+            } else {
+                Log.e("AmapErr", "Location ERR:"
+                        + aMapLocation.getErrorCode());
+            }
+        }
+    }
+
+    @Override
+    public void activate(OnLocationChangedListener onLocationChangedListener) {
+        mListener = onLocationChangedListener;
+    }
+
+    @Override
+    public void deactivate() {
+        mListener = null;
+        if (mlocationClient != null) {
+            mlocationClient.stopLocation();
+            mlocationClient.onDestroy();
+        }
+        mlocationClient = null;
+    }
+
     class PopupDismissListener implements PopupWindow.OnDismissListener {
 
         @Override
@@ -1009,8 +1081,8 @@ public class MainActivity1 extends AppCompatActivity implements MessageHandler.R
                     ft = new ContactsFragment();
                     break;
                 case 2:
-                   // ft = new FragmentManagement();
-                    ft=new FragmentManagement1();
+                    // ft = new FragmentManagement();
+                    ft = new FragmentManagement1();
                     break;
                 case 3:
                     ft = new FragmentMine();

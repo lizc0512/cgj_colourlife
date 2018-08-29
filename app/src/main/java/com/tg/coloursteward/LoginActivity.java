@@ -20,6 +20,10 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
+import com.amap.api.location.AMapLocation;
+import com.amap.api.location.AMapLocationClient;
+import com.amap.api.location.AMapLocationListener;
+import com.amap.api.maps2d.LocationSource;
 import com.geetest.gt3unbindsdk.Bind.GT3GeetestBindListener;
 import com.geetest.gt3unbindsdk.Bind.GT3GeetestUtilsBind;
 import com.tg.coloursteward.application.CityPropertyApplication;
@@ -55,13 +59,15 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.tg.coloursteward.util.Utils.getDefaultOption;
+
 /**
  * 登录页面
  *
  * @author Administrator
  */
 @Route(path = APath.RE_LOGIN)
-public class LoginActivity extends BaseActivity implements AnimationListener {
+public class LoginActivity extends BaseActivity implements AnimationListener, AMapLocationListener, LocationSource {
     private static final String TAG = "LoginActivity";
     private static final String captchaURL = "http://www.geetest.com/demo/gt/register-click";
     // 设置二次验证的URL，需替换成自己的服务器URL
@@ -80,6 +86,10 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
     private GT3GeetestUtilsBind gt3GeetestUtils;
     private RelativeLayout submit;
     private OAuth2Service oAuth2Service;
+    private String str_latitude;
+    private String str_longitude;
+    public AMapLocationClient mlocationClient;
+    private LocationSource.OnLocationChangedListener mListener;
 
     @Override
     public View getContentView() {
@@ -131,6 +141,7 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
         if (loginOut) {
             SharedPreferencesTools.clearUserId(this);
         }
+        initLocation();
         extras = getintent.getStringExtra(MainActivity.KEY_EXTRAS);
         contentLayout = findViewById(R.id.login_content);
         editUser = (EditText) findViewById(R.id.edit_user);
@@ -154,6 +165,19 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
         gt3GeetestUtils = new GT3GeetestUtilsBind(LoginActivity.this);
     }
 
+    private void initLocation() {
+        if (mlocationClient == null) {
+            //初始化client
+            mlocationClient = new AMapLocationClient(getApplicationContext());
+            //设置定位参数
+            mlocationClient.setLocationOption(getDefaultOption());
+            // 设置定位监听
+            mlocationClient.setLocationListener(this);
+
+            mlocationClient.startLocation();
+
+        }
+    }
 
     private void CheckPermission() {
            /* if (Build.VERSION.SDK_INT >= 23)
@@ -577,12 +601,12 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
      * 单设备登录
      */
     private void singleDevicelogin() {
-        ContentValues params=new ContentValues();
+        ContentValues params = new ContentValues();
         params.put("login_type", "2");//登录方式,1静默和2密码
         params.put("device_type", "1");//登录设备类别，1：安卓，2：IOS
         params.put("version", UpdateManager.getVersionName(LoginActivity.this));//APP版本号
         params.put("device_code", TokenUtils.getUUID(LoginActivity.this));//设备唯一编号
-        params.put("device_info", TokenUtils.getDeviceInfor(LoginActivity.this));//设备详细信息（json字符创）
+        params.put("device_info", TokenUtils.getDeviceInfor(LoginActivity.this,str_longitude,str_latitude));//设备详细信息（json字符创）
         params.put("device_name", TokenUtils.getDeviceBrand() + TokenUtils.getDeviceType());//设备名称（如三星S9）
         OkHttpConnector.httpPost(LoginActivity.this, Contants.URl.SINGLE_DEVICE + "cgjapp/single/device/login", params, new IPostListener() {
             @Override
@@ -654,6 +678,47 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
         if (requestCode == HttpTools.GET_USER_INFO) {
             showContentView();
         }
+    }
+
+    @Override
+    public void onLocationChanged(AMapLocation aMapLocation) {
+        if (null != aMapLocation) {
+            deactivate();
+            if (aMapLocation.getErrorCode() == 0) {
+                double latitude = aMapLocation.getLatitude();
+                double longitude = aMapLocation.getLongitude();
+                str_latitude = String.valueOf(latitude);
+                str_longitude = String.valueOf(longitude);
+                Tools.saveStringValue(getApplication(), Contants.storage.LATITUDE, str_latitude);
+                Tools.saveStringValue(getApplication(), Contants.storage.LONGITUDE, str_longitude);
+            } else {
+                Log.e("AmapErr", "Location ERR:"
+                        + aMapLocation.getErrorCode());
+            }
+        }
+    }
+
+    /**
+     * 激活定位
+     *
+     * @param onLocationChangedListener
+     */
+    @Override
+    public void activate(OnLocationChangedListener onLocationChangedListener) {
+        mListener = onLocationChangedListener;
+    }
+
+    /**
+     * 停止定位
+     */
+    @Override
+    public void deactivate() {
+        mListener = null;
+        if (mlocationClient != null) {
+            mlocationClient.stopLocation();
+            mlocationClient.onDestroy();
+        }
+        mlocationClient = null;
     }
 }
 

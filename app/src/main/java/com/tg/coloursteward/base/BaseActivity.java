@@ -1,6 +1,7 @@
 package com.tg.coloursteward.base;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
@@ -10,7 +11,9 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.FrameLayout;
@@ -20,24 +23,35 @@ import android.widget.TextView;
 import com.githang.statusbar.StatusBarCompat;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.application.CityPropertyApplication;
+import com.tg.coloursteward.constant.Contants;
+import com.tg.coloursteward.entity.SingleDeviceLogin;
 import com.tg.coloursteward.inter.ResultCallBack;
 import com.tg.coloursteward.inter.SingleClickListener;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.MessageHandler;
 import com.tg.coloursteward.net.MessageHandler.ResponseListener;
+import com.tg.coloursteward.updateapk.UpdateManager;
+import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.StringUtils;
+import com.tg.coloursteward.util.TokenUtils;
+import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.ActivityHeaderView;
 import com.tg.coloursteward.view.CameraView;
 import com.tg.coloursteward.view.CameraView.STATE;
 import com.tg.coloursteward.view.GifImageView;
 import com.tg.coloursteward.view.dialog.DialogFactory;
 import com.tg.coloursteward.view.dialog.ToastFactory;
+import com.youmai.hxsdk.entity.HxSingleDeviceLogout;
+import com.youmai.hxsdk.http.IPostListener;
+import com.youmai.hxsdk.http.OkHttpConnector;
+import com.youmai.hxsdk.utils.AppUtils;
+import com.youmai.hxsdk.utils.GsonUtil;
 
 import java.util.ArrayList;
 
 import cn.jpush.android.api.JPushInterface;
 
-public abstract class BaseActivity extends Activity implements ResponseListener {
+public abstract class BaseActivity extends AppCompatActivity implements ResponseListener {
 
     public interface ActivityResultCallBack {
         void onResult(int requestCode, int resultCode, Intent data);
@@ -47,6 +61,7 @@ public abstract class BaseActivity extends Activity implements ResponseListener 
         void onBackPressed(Activity activity);
     }
 
+    public static boolean isActive; //全局变量
     private ActivityBackListener backListener;
     protected ActivityHeaderView headView;
     protected View contentLayout;
@@ -254,8 +269,39 @@ public abstract class BaseActivity extends Activity implements ResponseListener 
     @Override
     protected void onResume() {
         // TODO Auto-generated method stub
+        if (!isActive) {
+            //app 从后台唤醒，进入前台
+            isActive = true;
+            initAwake();
+        }
         super.onResume();
         JPushInterface.onResume(this);
+    }
+
+    private void initAwake() {
+        String str_longitude = Tools.getStringValue(getApplication(), Contants.storage.LONGITUDE);
+        String str_latitude = Tools.getStringValue(getApplication(), Contants.storage.LATITUDE);
+        ContentValues params = new ContentValues();
+        params.put("login_type", "2");//登录方式,1静默和2密码
+        params.put("device_type", "1");//登录设备类别，1：安卓，2：IOS
+        params.put("version", UpdateManager.getVersionName(this));//APP版本号
+        params.put("device_code", TokenUtils.getUUID(this));//设备唯一编号
+        params.put("device_info", TokenUtils.getDeviceInfor(this, str_longitude, str_latitude));//设备详细信息（json字符创）
+        params.put("device_name", TokenUtils.getDeviceBrand() + TokenUtils.getDeviceType());//设备名称（如三星S9）
+        OkHttpConnector.httpPost(this, Contants.URl.SINGLE_DEVICE + "cgjapp/single/device/login", params, new IPostListener() {
+            @Override
+            public void httpReqResult(String response) {
+                try {
+                    SingleDeviceLogin singleDeviceLogin = GsonUtils.gsonToBean(response, SingleDeviceLogin.class);
+                    String device_token = singleDeviceLogin.getContent().getDevice_token();
+                    Tools.saveStringValue(getApplication(), Contants.storage.DEVICE_TOKEN, device_token);
+                    if (!TextUtils.isEmpty(device_token)) {
+                        Log.d("lizc", "活跃单设备登录OK");
+                    }
+                } catch (Exception e) {
+                }
+            }
+        });
     }
 
     @Override
@@ -263,6 +309,38 @@ public abstract class BaseActivity extends Activity implements ResponseListener 
         // TODO Auto-generated method stub
         super.onPause();
         JPushInterface.onPause(this);
+    }
+
+    @Override
+    protected void onStop() {
+        if (!AppUtils.isAppOnForeground(this)) {
+            //app 进入后台
+            isActive = false;
+            initSleep();
+        }
+        super.onStop();
+    }
+
+    private void initSleep() {
+        String device_code = Tools.getStringValue(getApplicationContext(), Contants.storage.DEVICE_TOKEN);
+        ContentValues params = new ContentValues();
+        params.put("device_code", device_code);
+        OkHttpConnector.httpPost(getApplicationContext(), Contants.URl.SINGLE_DEVICE + "cgjapp/single/device/inactive", params, new IPostListener() {
+            @Override
+            public void httpReqResult(String response) {
+                try {
+                    HxSingleDeviceLogout singleDeviceLogout = GsonUtil.parse(response, HxSingleDeviceLogout.class);
+                    String jsonObject = singleDeviceLogout.getContent().getResult();
+                    if ("1".equals(jsonObject)) {
+                        Log.d("lizc", "退出设备活跃状态OK");
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+
+        });
     }
 
     @Override

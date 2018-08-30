@@ -126,6 +126,7 @@ public class SharedPreferencesTools {
         Tools.setBooleanValue(con, Contants.storage.ALIAS, false);
         Tools.setBooleanValue(con, Contants.storage.Tags, false);
         Tools.saveStringValue(con, Contants.storage.JTJJB, "");//我的饭票奖金包缓存
+        Tools.saveStringValue(con, Contants.storage.DEVICE_TOKEN, "");//我的饭票奖金包缓存
     }
 
     public static ResponseData getUserInfo(Context con) {

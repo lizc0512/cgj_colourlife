@@ -399,16 +399,15 @@ public class UserInfoActivity extends BaseActivity implements ItemClickListener,
     }
 
     protected void backPress() {
-        super.onDestroy();
         if (hasChanged()) {//已经修改过信息
             DialogFactory.getInstance().showDialog(UserInfoActivity.this, new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    finish();
+                    UserInfoActivity.this.finish();
                 }
             }, null, "信息还没保存，确定要返回吗？", null, null);
         } else {
-            finish();
+            UserInfoActivity.this.finish();
         }
     }
 

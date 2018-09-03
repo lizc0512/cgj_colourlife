@@ -90,6 +90,7 @@ public class LoginActivity extends BaseActivity implements AnimationListener, AM
     private String str_longitude;
     public AMapLocationClient mlocationClient;
     private LocationSource.OnLocationChangedListener mListener;
+    private String oauth;
 
     @Override
     public View getContentView() {
@@ -119,6 +120,9 @@ public class LoginActivity extends BaseActivity implements AnimationListener, AM
                     ToastFactory.showToast(this, "请输入不少于6位的密码");
                     return false;
                 }
+                Tools.saveStringValue(LoginActivity.this, Contants.storage.LOGOIN_PASSWORD, password);
+                Tools.saveStringValue(LoginActivity.this, Contants.storage.LOGOIN_PHONE, newPhone);
+                getOauth2();
                 loginGt();// 登录
                 break;
             case R.id.forget_pwd:
@@ -387,8 +391,6 @@ public class LoginActivity extends BaseActivity implements AnimationListener, AM
                         String sta = jobj.getString("status");
                         if ("success".equals(sta)) {
                             gt3GeetestUtils.gt3TestFinish();
-                            Tools.saveStringValue(LoginActivity.this, Contants.storage.LOGOIN_PHONE, newPhone);
-                            Tools.saveStringValue(LoginActivity.this, Contants.storage.LOGOIN_PASSWORD, password);
                             login();
                         } else {
                             gt3GeetestUtils.gt3TestClose();
@@ -547,7 +549,9 @@ public class LoginActivity extends BaseActivity implements AnimationListener, AM
                     Tools.saveStringValue(LoginActivity.this, Contants.EMPLOYEE_LOGIN.key, key);
                     Tools.saveStringValue(LoginActivity.this, Contants.EMPLOYEE_LOGIN.secret, secret);
                     getEmployeeInfo(key, secret);
-                    getOauth2();
+                    if (!TextUtils.isEmpty(oauth) || !TextUtils.isEmpty(Tools.getAccess_token2(LoginActivity.this))) {
+                        singleDevicelogin();
+                    }
                     String skin_code = Tools.getStringValue(LoginActivity.this, Contants.storage.SKINCODE);
                     Intent intent = new Intent(this, MainActivity1.class);
                     intent.putExtra(MainActivity.KEY_NEDD_FRESH, false);
@@ -568,18 +572,6 @@ public class LoginActivity extends BaseActivity implements AnimationListener, AM
                     Tools.setBooleanValue(LoginActivity.this, Contants.storage.EMPLOYEE_LOGIN, true);
                 }
             }
-        } else if (msg.arg1 == HttpTools.POST_SINGLEDEVICE) {
-            if (code == 0) {
-                try {
-                    SingleDeviceLogin singleDeviceLogin = GsonUtils.gsonToBean(jsonString, SingleDeviceLogin.class);
-                    String device_token = singleDeviceLogin.getContent().getDevice_token();
-                    Tools.saveStringValue(this, Contants.storage.DEVICE_TOKEN, device_token);
-                    if (!TextUtils.isEmpty(device_token)) {
-                        Log.d("lizc", TAG + "单设备登录OK");
-                    }
-                } catch (Exception e) {
-                }
-            }
         }
     }
 
@@ -589,12 +581,11 @@ public class LoginActivity extends BaseActivity implements AnimationListener, AM
 
     private void getOauth2() {
         if (null == oAuth2Service) {
-            oAuth2Service = new OAuth2Service(LoginActivity.this);
+            oAuth2Service = new OAuth2Service(getApplication());
         }
-        String oauth = oAuth2Service.getOAuth2Service("");
-        if (!TextUtils.isEmpty(oauth) || !TextUtils.isEmpty(Tools.getAccess_token2(LoginActivity.this))) {
-            singleDevicelogin();
-        }
+        oAuth2Service.getOAuth2Service("");
+        oauth = Tools.getAccess_token2(LoginActivity.this);
+        Log.d("lizc", TAG + "oauth2.0:" + oauth);
     }
 
     /**
@@ -606,7 +597,7 @@ public class LoginActivity extends BaseActivity implements AnimationListener, AM
         params.put("device_type", "1");//登录设备类别，1：安卓，2：IOS
         params.put("version", UpdateManager.getVersionName(LoginActivity.this));//APP版本号
         params.put("device_code", TokenUtils.getUUID(LoginActivity.this));//设备唯一编号
-        params.put("device_info", TokenUtils.getDeviceInfor(LoginActivity.this,str_longitude,str_latitude));//设备详细信息（json字符创）
+        params.put("device_info", TokenUtils.getDeviceInfor(LoginActivity.this, str_longitude, str_latitude));//设备详细信息（json字符创）
         params.put("device_name", TokenUtils.getDeviceBrand() + TokenUtils.getDeviceType());//设备名称（如三星S9）
         OkHttpConnector.httpPost(LoginActivity.this, Contants.URl.SINGLE_DEVICE + "cgjapp/single/device/login", params, new IPostListener() {
             @Override

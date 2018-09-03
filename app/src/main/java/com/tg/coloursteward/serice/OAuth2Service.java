@@ -31,21 +31,20 @@ public class OAuth2Service {
     /**
      * 获取鉴权token信息
      */
-    public String getOAuth2Service(final String status) {
+    public void getOAuth2Service(final String status) {
         if (!TextUtils.isEmpty(Tools.getAccess_token2(context))) {//Access_token不为空
             if (!againGetToken()) {//不需要重新请求
                 if (("userinfo").equals(status)) {
                     getUserInfo();
                 }
                 access_token = Tools.getAccess_token2(context);
-                return access_token;
             } else {//重新使用Refresh_token请求token
                 ContentValues params = new ContentValues();
                 params.put("client_id", "3");
                 params.put("client_secret", Contants.URl.CLIENT_SECRET);
                 params.put("grant_type", "refresh_token");
                 params.put("refresh_token", Tools.getRefresh_token2(context));
-                OkHttpConnector.httpPost(context,Contants.URl.URL_OAUTH2 + "/oauth/token", params, new IPostListener() {
+                OkHttpConnector.httpPost(context, Contants.URl.URL_OAUTH2 + "/oauth/token", params, new IPostListener() {
                     @Override
                     public void httpReqResult(String jsonString) {
                         if (null != jsonString) {
@@ -57,45 +56,42 @@ public class OAuth2Service {
                         }
                     }
                 });
-                return access_token;
             }
         } else {
             String password = null;
             try {
-                if ("".equals(Tools.getPassWord(context))) {
+                if (!TextUtils.isEmpty(Tools.getStringValue(context, Contants.storage.LOGOIN_PASSWORD))) {
                     password = MD5.getMd5Value(Tools.getStringValue(context, Contants.storage.LOGOIN_PASSWORD)).toLowerCase();
-                } else {
-                    password = MD5.getMd5Value(Tools.getPassWord(context)).toLowerCase();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            ContentValues params = new ContentValues();
-            String phone = Tools.getStringValue(context, Contants.storage.LOGOIN_PHONE);
-            params.put("username", phone);
-            params.put("password", password);
-            params.put("client_id", "3");
-            params.put("client_secret", Contants.URl.CLIENT_SECRET);
-            params.put("grant_type", "password");
-            params.put("scope", "*");
-            OkHttpConnector.httpPost(context,Contants.URl.URL_OAUTH2 + "/oauth/token", params, new IPostListener() {
-                @Override
-                public void httpReqResult(String jsonString) {
-                    if (null != jsonString) {
-                        try {
-                            Oauth2Entity oauth2Entity = GsonUtils.gsonToBean(jsonString, Oauth2Entity.class);
-                            access_token = saveAccessToken(oauth2Entity);
-                            if (("userinfo").equals(status)) {
-                                getUserInfo();
+            if (!TextUtils.isEmpty(password)) {
+                ContentValues params = new ContentValues();
+                String phone = Tools.getStringValue(context, Contants.storage.LOGOIN_PHONE);
+                params.put("username", phone);
+                params.put("password", password);
+                params.put("client_id", "3");
+                params.put("client_secret", Contants.URl.CLIENT_SECRET);
+                params.put("grant_type", "password");
+                params.put("scope", "*");
+                OkHttpConnector.httpPost(context, Contants.URl.URL_OAUTH2 + "/oauth/token", params, new IPostListener() {
+                    @Override
+                    public void httpReqResult(String jsonString) {
+                        if (null != jsonString) {
+                            try {
+                                Oauth2Entity oauth2Entity = GsonUtils.gsonToBean(jsonString, Oauth2Entity.class);
+                                access_token = saveAccessToken(oauth2Entity);
+                                if (("userinfo").equals(status)) {
+                                    getUserInfo();
+                                }
+                            } catch (Exception e) {
                             }
-                        } catch (Exception e) {
                         }
                     }
-                }
-            });
-
+                });
+            }
         }
-        return access_token;
     }
 
     private String saveAccessToken(Oauth2Entity oauth2Entity) {
@@ -123,7 +119,7 @@ public class OAuth2Service {
                 params.put("client_secret", Contants.URl.CLIENT_SECRET);
                 params.put("grant_type", "refresh_token");
                 params.put("refresh_token", Tools.getRefresh_token2(context));
-                OkHttpConnector.httpPost(context,Contants.URl.URL_OAUTH2 + "/oauth/token", params, new IPostListener() {
+                OkHttpConnector.httpPost(context, Contants.URl.URL_OAUTH2 + "/oauth/token", params, new IPostListener() {
                     @Override
                     public void httpReqResult(String jsonString) {
                         if (null != jsonString) {
@@ -150,7 +146,7 @@ public class OAuth2Service {
     }
 
     private void getNetInfo(ContentValues params) {
-        OkHttpConnector.httpGet(context,params, Contants.URl.URL_OAUTH2 + "/oauth/user", null, new IGetListener() {
+        OkHttpConnector.httpGet(context, params, Contants.URl.URL_OAUTH2 + "/oauth/user", null, new IGetListener() {
             @Override
             public void httpReqResult(String jsonString) {
                 if (null != jsonString) {

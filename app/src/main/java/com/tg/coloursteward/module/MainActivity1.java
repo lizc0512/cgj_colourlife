@@ -62,6 +62,7 @@ import com.tg.coloursteward.net.ResponseData;
 import com.tg.coloursteward.serice.AppAuthService;
 import com.tg.coloursteward.serice.AuthAppService;
 import com.tg.coloursteward.serice.HomeService;
+import com.tg.coloursteward.serice.OAuth2Service;
 import com.tg.coloursteward.updateapk.ApkInfo;
 import com.tg.coloursteward.updateapk.UpdateManager;
 import com.tg.coloursteward.util.AuthTimeUtils;
@@ -195,6 +196,7 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
             form_login = data.getBooleanExtra(FROM_LOGIN, false);
         }
         initLocation();
+        initGetToken();
         initTitle();
         initView();
 
@@ -203,6 +205,14 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
         initProto();
 
         reqSearchList();
+    }
+
+    private void initGetToken() {
+        OAuth2Service oAuth2Service = null;
+        if (null == oAuth2Service) {
+            oAuth2Service = new OAuth2Service(MainActivity1.this);
+        }
+        oAuth2Service.getOAuth2Service("");
     }
 
     @Override

@@ -127,6 +127,8 @@ public class SharedPreferencesTools {
         Tools.setBooleanValue(con, Contants.storage.Tags, false);
         Tools.saveStringValue(con, Contants.storage.JTJJB, "");//我的饭票奖金包缓存
         Tools.saveStringValue(con, Contants.storage.DEVICE_TOKEN, "");//我的饭票奖金包缓存
+        Tools.saveStringValue(con, Contants.storage.LOGOIN_PHONE, "");//
+        Tools.saveStringValue(con, Contants.storage.LOGOIN_PASSWORD, "");//
     }
 
     public static ResponseData getUserInfo(Context con) {

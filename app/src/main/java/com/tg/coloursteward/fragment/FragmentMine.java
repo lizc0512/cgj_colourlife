@@ -209,6 +209,7 @@ public class FragmentMine extends Fragment implements ItemClickListener, Respons
             } else if (position == 2) {// 我的工资条
                 Intent intent = new Intent(mActivity, MyBrowserActivity.class);
                 intent.putExtra(MyBrowserActivity.KEY_URL, Contants.URl.HR_PAY);
+                intent.putExtra(MyBrowserActivity.isloading,true);
                 startActivity(intent);
             }
         } else if (mv == mineInfoZone3) {

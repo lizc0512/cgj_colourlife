@@ -360,8 +360,8 @@ public class HttpTools {
                 if (null == oAuth2Service) {
                     oAuth2Service = new OAuth2Service(rqtConfig.activity);
                 }
-                color_token = oAuth2Service.getOAuth2Service("");
-                headers.put("color-token", color_token);
+                oAuth2Service.getOAuth2Service("");
+                headers.put("color-token", Tools.getAccess_token2(rqtConfig.activity));
                 return headers;
             }
         };

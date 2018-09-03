@@ -101,6 +101,8 @@ public class MyBrowserActivity extends Activity implements OnClickListener, AMap
     public static final String KEY_TITLE = "title";
     public static final String KEY_HTML_TEXT = "text";
     public static final String KEY_URL = "url";
+    public static final String isloading = "isloding";
+    private boolean loading = false;
     private String PHOTO_NAME = "wisdomPark.jpg";
     private String TAKE_PHOTO_PATH = "";
     private Uri uri;
@@ -148,6 +150,8 @@ public class MyBrowserActivity extends Activity implements OnClickListener, AMap
             }
         }
     };
+    private OAuth2Service oAuth2Service;
+    private String color_token;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -163,7 +167,7 @@ public class MyBrowserActivity extends Activity implements OnClickListener, AMap
             hideTitle = data.getBooleanExtra(KEY_HIDE_TITLE, false);
             htmlText = data.getStringExtra(KEY_HTML_TEXT);
             url = data.getStringExtra(KEY_URL);
-
+            loading = data.getBooleanExtra(isloading, false);
             urlFromA = data.getStringExtra(Failed_MESSAGE);//未支付成功的返回信息
         }
         /**
@@ -274,16 +278,31 @@ public class MyBrowserActivity extends Activity implements OnClickListener, AMap
             webView.setWebChromeClient(new XHSWebChromeClient());
             //android调用js
             headerMap = new HashMap<>();
-            OAuth2Service oAuth2Service = null;
+            oAuth2Service = null;
             if (null == oAuth2Service) {
                 oAuth2Service = new OAuth2Service(MyBrowserActivity.this);
             }
-            String color_token = oAuth2Service.getOAuth2Service("");
-            headerMap.put("color-token", color_token);
-            webView.loadUrl(url, headerMap);
-            //定义js调用android
-            webView.addJavascriptInterface(new JsInteration(), "js");
-            webView.addJavascriptInterface(new JsInteration(), "myjava");
+            oAuth2Service.getOAuth2Service("");
+            color_token=Tools.getAccess_token2(MyBrowserActivity.this);
+            if (TextUtils.isEmpty(color_token) && loading == true) {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        color_token=Tools.getAccess_token2(MyBrowserActivity.this);
+                        headerMap.put("color-token", color_token);
+                        webView.loadUrl(url, headerMap);
+                        //定义js调用android
+                        webView.addJavascriptInterface(new JsInteration(), "js");
+                        webView.addJavascriptInterface(new JsInteration(), "myjava");
+                    }
+                }, 1500);
+            } else {
+                headerMap.put("color-token", color_token);
+                webView.loadUrl(url, headerMap);
+                //定义js调用android
+                webView.addJavascriptInterface(new JsInteration(), "js");
+                webView.addJavascriptInterface(new JsInteration(), "myjava");
+            }
         } else if (!TextUtils.isEmpty(urlFromA)) {//信息不为空做处理
 //              doSomeThing
         }

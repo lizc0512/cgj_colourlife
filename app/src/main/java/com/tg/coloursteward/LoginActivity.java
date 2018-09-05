@@ -585,7 +585,6 @@ public class LoginActivity extends BaseActivity implements AnimationListener, AM
         }
         oAuth2Service.getOAuth2Service("");
         oauth = Tools.getAccess_token2(LoginActivity.this);
-        Log.d("lizc", TAG + "oauth2.0:" + oauth);
     }
 
     /**

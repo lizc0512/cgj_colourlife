@@ -41,18 +41,13 @@ public class CityPropertyApplication extends Application {
         super.onCreate();
 
         LitePalApplication.initialize(this);//初始化litepal数据库
-
-        NBSAppAgent.setLicenseKey("bbf07e0ce0b04fab93c46e4c57494e47").withLocationServiceEnabled(true).startInApplication(this.getApplicationContext());
-        NBSAppAgent.setLicenseKey("bbf07e0ce0b04fab93c46e4c57494e47").start(this.getApplicationContext());
-
         instance = this;
-
         //Huxin IM SDK初始化
         HuxinSdkManager.instance().init(this);
         HuxinSdkManager.instance().setHomeAct(MainActivity1.class);
         Stetho.initializeWithDefaults(this);
 
-        JPushInterface.setDebugMode(true);    // 设置开启日志,发布时请关闭日志
+        JPushInterface.setDebugMode(false);    // 设置开启日志,发布时请关闭日志
         JPushInterface.init(this);            // 初始化 JPush
         JPushInterface.setLatestNotificationNumber(this, 5);
         Logger.logd("WisdomParkApplication onCreate");
@@ -79,6 +74,7 @@ public class CityPropertyApplication extends Application {
         QbSdk.initX5Environment(getApplicationContext(), cb);
         CrashHandler crashHandler = CrashHandler.getInstance();
         crashHandler.init(getApplicationContext());
+        NBSAppAgent.setLicenseKey("e706eb8242634439958ddeed9db7f61f").withLocationServiceEnabled(true).start(this.getApplicationContext());
     }
 
     public static void initImageLoader(Context context) {

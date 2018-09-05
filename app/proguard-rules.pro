@@ -37,3 +37,9 @@
 -keepclassmembers class com.tg.coloursteward.application.CityPropertyApplication {
     public <init>();
 }
+# ProGuard configurations for NetworkBench Lens
+-keep class com.networkbench.** { *; }
+-dontwarn com.networkbench.**
+-keepattributes Exceptions, Signature, InnerClasses
+-keepattributes SourceFile,LineNumberTable
+# End NetworkBench Lens

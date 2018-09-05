@@ -34,7 +34,6 @@ public class AccountDetailNewAdapter extends MyBaseAdapter<ExchangeEntity.Detail
     public PutForwardCallBack putForwardCallBack;
     public SingleExchangeCallBack singleExchangeCallBack;
     private ArrayList<ExchangeEntity.DetailBean> listData = new ArrayList<>();
-    private String urlAddres1, urlAddres2, urlAddres3;
 
     public void setCashierCallBack(CashierCallBack cashierCallBack) {
         this.cashierCallBack = cashierCallBack;
@@ -81,7 +80,9 @@ public class AccountDetailNewAdapter extends MyBaseAdapter<ExchangeEntity.Detail
             @Override
             public void onClick(View v) {
                 if (cashierCallBack != null) {
-                    cashierCallBack.onclick(position, urlAddres1);
+                    if (listData.get(position).getAction().size() > 0 && listData.get(position).getAction().size() == 2) {
+                        cashierCallBack.onclick(position, listData.get(position).getAction().get(0).getUrl());
+                    }
                 }
             }
         });
@@ -89,7 +90,9 @@ public class AccountDetailNewAdapter extends MyBaseAdapter<ExchangeEntity.Detail
             @Override
             public void onClick(View v) {
                 if (putForwardCallBack != null) {
-                    putForwardCallBack.onclick(position, urlAddres2);
+                    if (listData.get(position).getAction().size() > 0 && listData.get(position).getAction().size() == 2) {
+                        putForwardCallBack.onclick(position, listData.get(position).getAction().get(1).getUrl());
+                    }
                 }
             }
         });
@@ -97,7 +100,11 @@ public class AccountDetailNewAdapter extends MyBaseAdapter<ExchangeEntity.Detail
             @Override
             public void onClick(View v) {
                 if (singleExchangeCallBack != null) {
-                    singleExchangeCallBack.onclick(position, urlAddres3);
+                    if (listData.get(position).getAction().size() > 0 && listData.get(position).getAction().size() == 1) {
+                        singleExchangeCallBack.onclick(position, listData.get(position).getAction().get(0).getUrl());
+                    } else {
+                        singleExchangeCallBack.onclick(position, "colourlife://type=jsfpduihuan");
+                    }
                 }
             }
         });
@@ -112,7 +119,6 @@ public class AccountDetailNewAdapter extends MyBaseAdapter<ExchangeEntity.Detail
         if (null != item.getAction()) {
             if (item.getAction().size() > 0 && item.getAction().size() == 1) {
                 tv_single.setText(item.getAction().get(0).getName());
-                urlAddres3 = item.getAction().get(0).getUrl();
                 if (item.getAction().get(0).getIs_open().equals("0")) {//不可点击
                     tv_single.setClickable(false);
                     tv_single.setTextColor(context.getResources().getColor(R.color.line));
@@ -125,7 +131,6 @@ public class AccountDetailNewAdapter extends MyBaseAdapter<ExchangeEntity.Detail
                 tv_putforward.setVisibility(View.GONE);
             } else if (item.getAction().size() > 0 && item.getAction().size() == 2) {
                 tv_exchange.setText(item.getAction().get(0).getName());
-                urlAddres1 = item.getAction().get(0).getUrl();
                 if (item.getAction().get(0).getIs_open().equals("0")) {//不可点击
                     tv_exchange.setClickable(false);
                     tv_exchange.setTextColor(context.getResources().getColor(R.color.line));
@@ -134,7 +139,6 @@ public class AccountDetailNewAdapter extends MyBaseAdapter<ExchangeEntity.Detail
                     tv_exchange.setTextColor(context.getResources().getColor(R.color.radio_bg_selected));
                 }
                 tv_putforward.setText(item.getAction().get(1).getName());
-                urlAddres2 = item.getAction().get(1).getUrl();
                 if (item.getAction().get(1).getIs_open().equals("0")) {//不可点击
                     tv_putforward.setClickable(false);
                     tv_putforward.setTextColor(context.getResources().getColor(R.color.line));
@@ -145,9 +149,8 @@ public class AccountDetailNewAdapter extends MyBaseAdapter<ExchangeEntity.Detail
                 tv_exchange.setVisibility(View.VISIBLE);
                 tv_putforward.setVisibility(View.VISIBLE);
             }
-        }else {
+        } else {
             tv_single.setVisibility(View.VISIBLE);
-            urlAddres3="colourlife://type=jsfpduihuan";
         }
         return convertView;
     }

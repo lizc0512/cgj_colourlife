@@ -21,6 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.githang.statusbar.StatusBarCompat;
+import com.tg.coloursteward.LoginActivity;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.application.CityPropertyApplication;
 import com.tg.coloursteward.constant.Contants;
@@ -272,7 +273,12 @@ public abstract class BaseActivity extends AppCompatActivity implements Response
         if (!isActive) {
             //app 从后台唤醒，进入前台
             isActive = true;
-            initAwake();
+            Activity activity = CityPropertyApplication.getCurrentActivity(this);
+            if (activity.getClass().equals(LoginActivity.class)) {
+            } else {
+                initAwake();
+            }
+
         }
         super.onResume();
         JPushInterface.onResume(this);
@@ -316,7 +322,12 @@ public abstract class BaseActivity extends AppCompatActivity implements Response
         if (!AppUtils.isAppOnForeground(this)) {
             //app 进入后台
             isActive = false;
-            initSleep();
+            Activity activity = CityPropertyApplication.getCurrentActivity(this);
+            if (activity.getClass().equals(LoginActivity.class)) {
+            } else {
+                initSleep();
+            }
+
         }
         super.onStop();
     }

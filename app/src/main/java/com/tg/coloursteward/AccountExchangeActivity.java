@@ -41,6 +41,8 @@ import java.security.PublicKey;
 import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 即时分配兑换
@@ -235,7 +237,15 @@ public class AccountExchangeActivity extends BaseActivity {
             getAuthAppInfo();
         }
     }
-
+    public static String replaceBlank(String str) {
+        String dest = "";
+        if (str!=null) {
+            Pattern p = Pattern.compile("\n");
+            Matcher m = p.matcher(str);
+            dest = m.replaceAll("");
+        }
+        return dest;
+    }
     private void submit(String pwd) {
         RequestConfig config = new RequestConfig(AccountExchangeActivity.this, HttpTools.POST_WITHDRAWALS, "提交");
         RequestParams params = new RequestParams();
@@ -267,7 +277,8 @@ public class AccountExchangeActivity extends BaseActivity {
                 try {
                     publicKey = RSAUtil.keyStrToPublicKey(Contants.URl.PUBLIC_KEY);
                     String message = RSAUtil.encryptDataByPublicKey(listinfo.get(i).getBytes(), publicKey);
-                    stringBuffer.append(message + ",");
+                    String data=replaceBlank(message);
+                    stringBuffer.append(data + ",");
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -276,7 +287,8 @@ public class AccountExchangeActivity extends BaseActivity {
             try {
                 publicKey = RSAUtil.keyStrToPublicKey(Contants.URl.PUBLIC_KEY);
                 String message = RSAUtil.encryptDataByPublicKey(json.getBytes(), publicKey);
-                stringBuffer.append(message + ",");
+                String data=replaceBlank(message);
+                stringBuffer.append(data + ",");
             } catch (Exception e) {
                 e.printStackTrace();
             }

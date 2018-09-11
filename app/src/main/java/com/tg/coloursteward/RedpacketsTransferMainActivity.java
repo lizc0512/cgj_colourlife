@@ -1,5 +1,6 @@
 package com.tg.coloursteward;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
@@ -83,6 +84,7 @@ public class RedpacketsTransferMainActivity extends BaseActivity {
     private RoundImageView imgHead;
     private DisplayImageOptions options;
     protected ImageLoader imageLoader = ImageLoader.getInstance();
+    private ProgressDialog mProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -157,7 +159,7 @@ public class RedpacketsTransferMainActivity extends BaseActivity {
     private void isCanTrans() {
         String key = Tools.getStringValue(this, Contants.EMPLOYEE_LOGIN.key);
         String secret = Tools.getStringValue(this, Contants.EMPLOYEE_LOGIN.secret);
-        RequestConfig config = new RequestConfig(this, HttpTools.POST_CARRY_ORDER, "创建订单");
+        RequestConfig config = new RequestConfig(this, HttpTools.POST_CARRY_ORDER, "");
         RequestParams params = new RequestParams();
         if ("colleague".equals(transferTo) || "czy".equals(transferTo)) {
             // 给同事发红包 或 转账到彩之云
@@ -168,6 +170,7 @@ public class RedpacketsTransferMainActivity extends BaseActivity {
             params.put("key", key);
             params.put("secret", secret);
             HttpTools.httpPost(Contants.URl.URL_CPMOBILE, "/1.0/caiRedPaket/carryOrderCreate", config, params);
+            showProgressDialog();
         }
     }
 
@@ -325,9 +328,29 @@ public class RedpacketsTransferMainActivity extends BaseActivity {
         }
     }
 
+    public void showProgressDialog() {
+        if (mProgressDialog == null) {
+            mProgressDialog = new ProgressDialog(this);
+            mProgressDialog.setMessage("正在创建订单");
+            mProgressDialog.setCanceledOnTouchOutside(false);
+        }
+
+        if (!mProgressDialog.isShowing()) {
+            mProgressDialog.show();
+        }
+
+    }
+
+    public void dismissProgressDialog() {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.dismiss();
+        }
+    }
+
     @Override
     public void onSuccess(Message msg, String jsonString, String hintString) {
         super.onSuccess(msg, jsonString, hintString);
+        dismissProgressDialog();
         int code = HttpTools.getCode(jsonString);
         String message = HttpTools.getMessageString(jsonString);
         if (msg.arg1 == HttpTools.DELETE_CAY_INFO) {//删除彩之云账号

@@ -50,7 +50,7 @@ public class MessageHandler {
                     break;
                 case HttpTools.RESPONSE_START:
                     if (callback != null) {
-                        if (hintString != null && !"".equals(hintString)) {
+                        if (!TextUtils.isEmpty(hintString)) {
                             hintString = "正在" + hintString + "...";
                         }
                         callback.onRequestStart(msg, hintString);

@@ -176,7 +176,9 @@ public class HuxinSdkManager {
         RespBaseBean.setProtocolCallBack(new ProtocolCallBack() {
             @Override
             public void sessionExpire() {
-                reLogin();
+                Toast.makeText(mContext, R.string.relogin_msg, Toast.LENGTH_SHORT).show();
+                //reLogin();
+                loginOut();
             }
         });
 

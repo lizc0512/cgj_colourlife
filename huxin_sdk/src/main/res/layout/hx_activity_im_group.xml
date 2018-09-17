@@ -14,6 +14,17 @@
         <!--标题栏-->
         <include layout="@layout/hx_im_header_title" />
 
+        <TextView
+            android:id="@+id/tv_error"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/hx_color_gray"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="@string/relogin_msg"
+            android:textColor="@color/hxs_mr_color_red"
+            android:visibility="gone" />
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"

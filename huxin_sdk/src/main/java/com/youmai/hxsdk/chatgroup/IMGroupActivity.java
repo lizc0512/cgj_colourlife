@@ -40,6 +40,7 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.R;
@@ -605,6 +606,25 @@ public class IMGroupActivity extends SdkBaseActivity implements
 
     private void initView() {
         tvTitle = (TextView) findViewById(R.id.tv_title);
+
+        TextView tvError = findViewById(R.id.tv_error);
+        if (!HuxinSdkManager.instance().isConnect()) {
+            tvError.setVisibility(View.VISIBLE);
+        }
+
+        tvError.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ARouter.getInstance().build(APath.RE_LOGIN)
+                        .withFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                                | Intent.FLAG_ACTIVITY_CLEAR_TOP
+                                | Intent.FLAG_ACTIVITY_SINGLE_TOP)  //添加Flag
+                        .withBoolean("login_out", true)
+                        .navigation(mContext);
+                HuxinSdkManager.instance().getStackAct().finishAllActivity();
+            }
+        });
+
         initTitle();
         TextView tvBack = (TextView) findViewById(R.id.tv_back);
         if (tvBack != null) {

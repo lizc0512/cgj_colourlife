@@ -695,6 +695,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
 
     //发送消息(启动后台消息服务)
     private void sendMsg(CacheMsgBean msg) {
+        HuxinSdkManager.instance().reLoginDialog();
         Intent intent = new Intent(this, SendMsgService.class);
         intent.putExtra("data", msg);
         intent.putExtra("data_from", SendMsgService.FROM_IM);

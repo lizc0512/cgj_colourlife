@@ -515,7 +515,7 @@ public class HuxinSdkManager {
     }
 
 
-    private void reLoginDialog() {
+    public void reLoginDialog() {
         if (isLogin()) {
             isKicked = false;
         }
@@ -605,7 +605,18 @@ public class HuxinSdkManager {
     private void sendProto(final GeneratedMessage msg, final int commandId, final ReceiveListener callback) {
         if (mContext != null) {
             if (binded == BIND_STATUS.BINDED) {
-                reLoginDialog();
+
+                boolean reLogin = (commandId == YouMaiBasic.COMMANDID.CID_CHAT_BUDDY_VALUE
+                        || commandId == YouMaiBasic.COMMANDID.CID_CHAT_GROUP_VALUE);
+                if (!reLogin) {
+                    new Handler().post(new Runnable() {
+                        @Override
+                        public void run() {
+                            reLoginDialog();
+                        }
+                    });
+                }
+
                 huxinService.sendProto(msg, commandId, callback);
             } else {
                 waitBindingProto(msg, commandId, callback);

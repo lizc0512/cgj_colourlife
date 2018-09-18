@@ -205,6 +205,8 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
         initProto();
 
         reqSearchList();
+
+        HuxinSdkManager.instance().getStackAct().addActivity(this);
     }
 
     private void initGetToken() {
@@ -290,6 +292,8 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(freshReceiver);
+
+        HuxinSdkManager.instance().getStackAct().finishActivity(this);
     }
 
 

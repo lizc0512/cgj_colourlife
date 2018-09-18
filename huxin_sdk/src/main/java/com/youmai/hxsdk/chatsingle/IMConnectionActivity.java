@@ -452,7 +452,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
         tvTitle = (TextView) findViewById(R.id.tv_title);
         tvTitle.setText(dstNickName);
 
-        TextView tvError = findViewById(R.id.tv_error);
+        /*TextView tvError = findViewById(R.id.tv_error);
         if (!HuxinSdkManager.instance().isConnect()) {
             tvError.setVisibility(View.VISIBLE);
         }
@@ -467,7 +467,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
                         .navigation(mContext);
                 HuxinSdkManager.instance().getStackAct().finishAllActivity();
             }
-        });
+        });*/
 
         TextView tvBack = (TextView) findViewById(R.id.tv_back);
         if (tvBack != null) {

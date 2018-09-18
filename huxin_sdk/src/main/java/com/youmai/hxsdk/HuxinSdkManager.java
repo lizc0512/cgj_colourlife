@@ -3,9 +3,11 @@ package com.youmai.hxsdk;
 import android.Manifest;
 import android.app.Activity;
 import android.app.Application;
+import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
@@ -17,6 +19,7 @@ import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
@@ -88,6 +91,7 @@ public class HuxinSdkManager {
 
     private StackAct mStackAct;
     private UserInfo mUserInfo;
+    private boolean isKicked;
 
     /**
      * SDK初始化结果监听器
@@ -177,8 +181,8 @@ public class HuxinSdkManager {
             @Override
             public void sessionExpire() {
                 Toast.makeText(mContext, R.string.relogin_msg, Toast.LENGTH_SHORT).show();
-                //reLogin();
-                loginOut();
+                close();
+                isKicked = true;
             }
         });
 
@@ -366,8 +370,8 @@ public class HuxinSdkManager {
      */
     public boolean isLogin() {
         boolean res = false;
-        if (!TextUtils.isEmpty(getUuid())) {
-            res = true;
+        if (mContext != null && binded == BIND_STATUS.BINDED) {
+            res = huxinService.isLogin();
         }
         return res;
     }
@@ -511,6 +515,53 @@ public class HuxinSdkManager {
     }
 
 
+    private void reLoginDialog() {
+        if (isLogin()) {
+            isKicked = false;
+        }
+        final Activity act = getStackAct().currentActivity();
+        if (isKicked && act != null) {
+            final AlertDialog.Builder builder = new AlertDialog.Builder(act);
+            builder.setMessage(R.string.relogin_info);
+            builder.setNegativeButton(R.string.hx_cancel, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+
+            builder.setPositiveButton(R.string.relogin_confirm, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                    String uuid = HuxinSdkManager.instance().getUuid();
+
+                    if (!TextUtils.isEmpty(uuid)) {
+                        final ProgressDialog progressDialog = new ProgressDialog(act);
+                        progressDialog.setMessage("正在重新登录，请稍后...");
+                        progressDialog.show();
+
+                        String ip = AppUtils.getStringSharedPreferences(mContext, "IP", AppConfig.getSocketHost());
+                        int port = AppUtils.getIntSharedPreferences(mContext, "PORT", AppConfig.getSocketPort());
+
+                        InetSocketAddress isa = new InetSocketAddress(ip, port);
+                        connectTcp(uuid, isa);
+
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                progressDialog.dismiss();
+                            }
+                        }, 1000);
+
+                    }
+                }
+            });
+            builder.create().show();
+        }
+    }
+
+
     private void waitBindingProto(final GeneratedMessage msg, final int commandId, final ReceiveListener callback) {
         init(mContext, new InitListener() {
             @Override
@@ -554,6 +605,7 @@ public class HuxinSdkManager {
     private void sendProto(final GeneratedMessage msg, final int commandId, final ReceiveListener callback) {
         if (mContext != null) {
             if (binded == BIND_STATUS.BINDED) {
+                reLoginDialog();
                 huxinService.sendProto(msg, commandId, callback);
             } else {
                 waitBindingProto(msg, commandId, callback);

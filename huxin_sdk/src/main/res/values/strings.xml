@@ -97,6 +97,7 @@
     <string name="relogin_msg">可能于其它地方登录，建议您重新登录账号</string>
     <string name="relogin_confirm">重新登录</string>
     <string name="relogin_cancel">退出</string>
+    <string name="relogin_info">您的账号已经退出登录，您需要重新登录</string>
     <!--新版app增加-->
 
     <string name="im_card_no_remark">暂无备注</string>

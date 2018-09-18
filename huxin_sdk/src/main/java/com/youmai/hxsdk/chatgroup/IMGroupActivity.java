@@ -607,7 +607,7 @@ public class IMGroupActivity extends SdkBaseActivity implements
     private void initView() {
         tvTitle = (TextView) findViewById(R.id.tv_title);
 
-        TextView tvError = findViewById(R.id.tv_error);
+        /*TextView tvError = findViewById(R.id.tv_error);
         if (!HuxinSdkManager.instance().isConnect()) {
             tvError.setVisibility(View.VISIBLE);
         }
@@ -623,7 +623,7 @@ public class IMGroupActivity extends SdkBaseActivity implements
                         .navigation(mContext);
                 HuxinSdkManager.instance().getStackAct().finishAllActivity();
             }
-        });
+        });*/
 
         initTitle();
         TextView tvBack = (TextView) findViewById(R.id.tv_back);

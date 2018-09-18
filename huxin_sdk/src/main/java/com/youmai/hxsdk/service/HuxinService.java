@@ -119,8 +119,8 @@ public class HuxinService extends Service {
         }
 
 
-        public void setLogin(boolean isLogin) {
-            mClient.setLogin(isLogin);
+        public boolean isLogin() {
+            return mClient.isLogin();
         }
 
         public boolean isConnect() {

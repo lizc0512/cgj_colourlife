@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -33,8 +35,11 @@ import com.tg.coloursteward.R;
 import com.tg.coloursteward.RedpacketsBonusMainActivity;
 import com.tg.coloursteward.SettingActivity;
 import com.tg.coloursteward.UserInfoActivity;
+import com.tg.coloursteward.adapter.FragmentMineAdapter;
 import com.tg.coloursteward.constant.Contants;
+import com.tg.coloursteward.entity.FragmentMineEntity;
 import com.tg.coloursteward.info.UserInfo;
+import com.tg.coloursteward.inter.FragmentMineCallBack;
 import com.tg.coloursteward.net.GetTwoRecordListener;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.MD5;
@@ -44,7 +49,9 @@ import com.tg.coloursteward.net.RequestConfig;
 import com.tg.coloursteward.net.RequestParams;
 import com.tg.coloursteward.object.ViewConfig;
 import com.tg.coloursteward.serice.HomeService;
-import com.tg.coloursteward.util.GlideCacheUtil;
+import com.tg.coloursteward.util.GsonUtils;
+import com.tg.coloursteward.util.LinkParseUtil;
+import com.tg.coloursteward.util.TokenUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.MessageArrowView;
 import com.tg.coloursteward.view.MessageArrowView.ItemClickListener;
@@ -57,6 +64,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 个人中心
@@ -77,6 +87,11 @@ public class FragmentMine extends Fragment implements ItemClickListener, Respons
     private PwdDialog2.ADialogCallback aDialogCallback;
     private PwdDialog2 aDialog;
     private String state = "noPwd";
+    private RecyclerView recyclerview;
+    private FragmentMineAdapter fragmentMineAdapter;
+    private List<FragmentMineEntity.ContentBean> list = new ArrayList<>();
+    private List<FragmentMineEntity.ContentBean.DataBean> list_item = new ArrayList<>();
+    private FragmentMineAdapter mineAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -87,6 +102,7 @@ public class FragmentMine extends Fragment implements ItemClickListener, Respons
         msgHandler.setResponseListener(this);
         initView();
         Tools.saveStringValue(mActivity, "updatetime_img", UserInfo.userinfoImg);
+        getHeadImg();
         initData();
         if (Tools.getBooleanValue(mActivity, Contants.storage.EMPLOYEE_LOGIN) == false) {
             getEmployeeInfo();
@@ -94,10 +110,48 @@ public class FragmentMine extends Fragment implements ItemClickListener, Respons
         return mView;
     }
 
+    private void initData() {
+        RequestConfig config = new RequestConfig(mActivity, HttpTools.GET_FRAGMENTMINE);
+        config.handler = msgHandler.getHandler();
+        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, String> stringMap = TokenUtils.getStringMap(TokenUtils.getNewSaftyMap(getActivity(), map));
+        HttpTools.httpGet_Map(Contants.URl.URL_NEW, "app/home/mypage", config, (HashMap) stringMap);
+        String json = Tools.getStringValue(mActivity, Contants.storage.FRAGMENTMINE);
+        if (!TextUtils.isEmpty(json)) {
+            initDataAdapter(json);
+        }
+    }
+
+    private void initDataAdapter(String json) {
+        list.clear();
+        list_item.clear();
+        FragmentMineEntity fragmentMineEntity = new FragmentMineEntity();
+        fragmentMineEntity = GsonUtils.gsonToBean(json, FragmentMineEntity.class);
+        list.addAll(fragmentMineEntity.getContent());
+        for (int i = 0; i < list.size(); i++) {
+            list_item.addAll(list.get(i).getData());
+        }
+        if (null == mineAdapter) {
+            mineAdapter = new FragmentMineAdapter(mActivity, list_item);
+            recyclerview.setAdapter(mineAdapter);
+        } else {
+            mineAdapter.setData(list_item);
+        }
+        mineAdapter.setFragmentMineCallBack(new FragmentMineCallBack() {
+            @Override
+            public void getData(String result, int positon) {
+                LinkParseUtil.parse(mActivity, list_item.get(positon).getUrl(), "");
+            }
+        });
+    }
+
     /**
      * 初始化
      */
     private void initView() {
+        recyclerview = mView.findViewById(R.id.recyclerview);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mActivity);
+        recyclerview.setLayoutManager(linearLayoutManager);
         imgHead = (ImageView) mView.findViewById(R.id.img_head);
         tvRealName = (TextView) mView.findViewById(R.id.tv_realname);
         tvJob = (TextView) mView.findViewById(R.id.tv_job);
@@ -178,16 +232,16 @@ public class FragmentMine extends Fragment implements ItemClickListener, Respons
      */
     public void freshUI() {
         tvRealName.setText(UserInfo.realname);
-        initData();
+        getHeadImg();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        initData();
+        getHeadImg();
     }
 
-    public void initData() {
+    public void getHeadImg() {
         String str = Contants.URl.HEAD_ICON_URL + "avatar?uid=" + UserInfo.employeeAccount;
         Glide.with(this)
                 .load(str)
@@ -197,6 +251,7 @@ public class FragmentMine extends Fragment implements ItemClickListener, Respons
                         .centerCrop()
                         .transform(new GlideRoundTransform()))
                 .into(imgHead);
+
     }
 
     @Override
@@ -209,7 +264,7 @@ public class FragmentMine extends Fragment implements ItemClickListener, Respons
             } else if (position == 2) {// 我的工资条
                 Intent intent = new Intent(mActivity, MyBrowserActivity.class);
                 intent.putExtra(MyBrowserActivity.KEY_URL, Contants.URl.HR_PAY);
-                intent.putExtra(MyBrowserActivity.isloading,true);
+                intent.putExtra(MyBrowserActivity.isloading, true);
                 startActivity(intent);
             }
         } else if (mv == mineInfoZone3) {
@@ -381,6 +436,11 @@ public class FragmentMine extends Fragment implements ItemClickListener, Respons
                 if (content != null) {
                     Tools.setBooleanValue(mActivity, Contants.storage.EMPLOYEE_LOGIN, true);
                 }
+            }
+        } else if (msg.arg1 == HttpTools.GET_FRAGMENTMINE) {
+            if (code == 0) {
+                Tools.saveStringValue(mActivity, Contants.storage.FRAGMENTMINE, jsonString);
+                initDataAdapter(jsonString);
             }
         }
 

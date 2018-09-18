@@ -196,6 +196,7 @@ public class HttpTools {
     public static final int POST_SINGLEDEVICE = BASE_CODE++;
     public static final int POST_LOGOUTDEVICE = BASE_CODE++;
     public static final int GET_SPLIT_BILL_DETAIL = BASE_CODE++;
+    public static final int GET_FRAGMENTMINE = BASE_CODE++;
 
 
     public static final int GET_KEYSECERT = -10000;
@@ -400,6 +401,32 @@ public class HttpTools {
     }
 
     /**
+     * 获取拼接完成的网址;
+     *
+     * @return 网址
+     * @throws Exception
+     */
+    public static String GetNormalUrl(final String URL, final String apiname, final HashMap<String, Object> params) throws Exception {
+        String ts = getTime();
+        String Sign = MD5.getMd5Value(DES.APP_ID + ts + DES.TOKEN + "false").toLowerCase();
+        String apppara = "";
+        Iterator<String> keys = params.keySet().iterator();
+        if (keys != null) {
+            String key;
+            while (keys.hasNext()) {
+                key = keys.next();
+                Object value = params.get(key);
+                if (!value.toString().isEmpty()) {
+                    apppara += key + "=" + value.toString();
+                    apppara += "&";
+                }
+            }
+        }
+        apppara=apppara.substring(0,apppara.length()-1);
+        return apiname + "?"+apppara;
+    }
+
+    /**
      * @return
      * @throws Exception
      */
@@ -528,6 +555,18 @@ public class HttpTools {
                     e.printStackTrace();
                     return Response.error(new ParseError(e));
                 }
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<>();
+                OAuth2Service oAuth2Service = null;
+                if (null == oAuth2Service) {
+                    oAuth2Service = new OAuth2Service(rqtConfig.activity);
+                }
+                oAuth2Service.getOAuth2Service("");
+                headers.put("color-token", Tools.getAccess_token2(rqtConfig.activity));
+                return headers;
             }
         };
         if (rqtConfig.tag != null) {
@@ -778,6 +817,35 @@ public class HttpTools {
      * @param rqtConfig
      * @param params
      */
+    public static void httpGet_Map(final String URL, String apiName, final RequestConfig rqtConfig, Map<String, Object> params) {
+        String url = null;
+        if (null == params) {
+            params = new HashMap<>();
+        } else {
+            try {
+                if (URL.startsWith(Contants.URl.URL_CPMOBILE)) {
+                    url = URL + getCombileUrl(apiName, params);
+                } else if (URL.startsWith(Contants.URl.URL_NEW)) {
+                    url = URL + GetNormalUrl(URL, apiName, (HashMap) params);
+                } else {
+                    url = URL + GetUrl(URL, apiName, (HashMap) params);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                return;
+            }
+        }
+        get(url, Method.GET, rqtConfig);
+    }
+
+    /**
+     * get请求
+     *
+     * @param URL
+     * @param apiName
+     * @param rqtConfig
+     * @param params
+     */
     public static void httpGet(final String URL, String apiName, final RequestConfig rqtConfig, RequestParams params) {
         String url = null;
         HashMap<String, Object> paramsStr = null;
@@ -798,6 +866,27 @@ public class HttpTools {
             return;
         }
         get(url, Method.GET, rqtConfig);
+    }
+
+    public static String okhttpGet(final String URL, String apiName, RequestParams params) {
+        String url = null;
+        HashMap<String, Object> paramsStr = null;
+        if (params == null) {
+            paramsStr = null;
+        } else {
+            paramsStr = params.toHashMap();
+        }
+        try {
+            if (URL.startsWith(Contants.URl.URL_CPMOBILE)) {
+                url = URL + getCombileUrl(apiName, paramsStr);
+            } else {
+                url = URL + GetUrl(URL, apiName, paramsStr);
+            }
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return url;
     }
 
     /**
@@ -860,7 +949,7 @@ public class HttpTools {
     }
 
     /***请求Combile的get加密***/
-    private static String getCombileUrl(String urlString, Map<String, Object> paramsMap) {
+    public static String getCombileUrl(String urlString, Map<String, Object> paramsMap) {
         String version = "1.0.0";
         String sign = null;
         Map<String, String> stringMap = getStringMap(paramsMap);
@@ -960,6 +1049,32 @@ public class HttpTools {
             e.printStackTrace();
         }
         return sb.toString();
+    }
+
+    /**
+     * Post请求
+     *
+     * @param URL
+     * @param apiName
+     * @param rqtConfig
+     * @param requestParams
+     */
+    public static void httpPost_Map(final String URL, String apiName, final RequestConfig rqtConfig, HashMap requestParams) {
+        if (null == requestParams) {
+            requestParams = new HashMap();
+        }
+        if (URL.startsWith(Contants.URl.URL_CPMOBILE)) {
+            if (apiName.equals("/1.0/auth")) {
+                post(URL + apiName, Method.POST, rqtConfig, requestParams);
+            } else {
+                String url = URL + postCombileMD5(apiName, requestParams);
+                requestParams.remove("key");
+                requestParams.remove("secret");
+                post(url, Method.POST, rqtConfig, requestParams);
+            }
+        } else {
+            post(URL + apiName, Method.POST, rqtConfig, requestParams);
+        }
     }
 
     /**

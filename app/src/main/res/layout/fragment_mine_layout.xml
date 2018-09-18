@@ -76,10 +76,18 @@
         </RelativeLayout>
     </LinearLayout>
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </android.support.v7.widget.RecyclerView>
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/base_color">
+        android:background="@color/base_color"
+        android:visibility="gone">
 
         <LinearLayout
             android:layout_width="match_parent"

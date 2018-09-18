@@ -5,8 +5,12 @@ import android.content.Intent;
 import android.text.TextUtils;
 
 import com.tg.coloursteward.AccountExchangeActivity;
+import com.tg.coloursteward.DownloadManagerActivity;
+import com.tg.coloursteward.InviteRegisterActivity;
 import com.tg.coloursteward.MyBrowserActivity;
 import com.tg.coloursteward.R;
+import com.tg.coloursteward.RedpacketsBonusMainActivity;
+import com.tg.coloursteward.SettingActivity;
 
 
 /**
@@ -22,10 +26,35 @@ public class LinkParseUtil {
                 context.startActivity(intent);
                 ((Activity) context).overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
             } else {
-                if (link.length() > 18) {
+                if (link.length() > 18) {//
                     String name = link.substring(18, link.length());
+                    Intent it;
                     if (name.equals("Exchange")) {//即时分配兑换
-                        Intent it = new Intent(context, AccountExchangeActivity.class);
+                        it = new Intent(context, AccountExchangeActivity.class);
+                        context.startActivity(it);
+                        ((Activity) context).overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
+                    } else if (name.equals("redPacket")) {//我的饭票
+                        it = new Intent(context, RedpacketsBonusMainActivity.class);
+                        context.startActivity(it);
+                        ((Activity) context).overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
+                    } else if (name.equals("invite")) {//邀请界面
+                        it = new Intent(context, InviteRegisterActivity.class);
+                        context.startActivity(it);
+                        ((Activity) context).overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
+                    } else if (name.equals("setting")) {//设置页面
+                        it = new Intent(context, SettingActivity.class);
+                        context.startActivity(it);
+                        ((Activity) context).overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
+                    } else if (name.equals("findPwd")) {//找回支付密码
+                        it = new Intent(context, AccountExchangeActivity.class);
+                        context.startActivity(it);
+                        ((Activity) context).overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
+                    } else if (name.equals("mydownload")) {//我的下载
+                        it = new Intent(context, DownloadManagerActivity.class);
+                        context.startActivity(it);
+                        ((Activity) context).overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
+                    } else {
+                        it = new Intent(context, SettingActivity.class);
                         context.startActivity(it);
                         ((Activity) context).overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
                     }

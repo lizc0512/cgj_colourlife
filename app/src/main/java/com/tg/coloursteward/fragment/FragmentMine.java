@@ -12,7 +12,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -28,33 +27,23 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.signature.ObjectKey;
-import com.tg.coloursteward.DownloadManagerActivity;
-import com.tg.coloursteward.InviteRegisterActivity;
-import com.tg.coloursteward.MyBrowserActivity;
 import com.tg.coloursteward.R;
-import com.tg.coloursteward.RedpacketsBonusMainActivity;
-import com.tg.coloursteward.SettingActivity;
 import com.tg.coloursteward.UserInfoActivity;
 import com.tg.coloursteward.adapter.FragmentMineAdapter;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.entity.FragmentMineEntity;
 import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.inter.FragmentMineCallBack;
-import com.tg.coloursteward.net.GetTwoRecordListener;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.MD5;
 import com.tg.coloursteward.net.MessageHandler;
 import com.tg.coloursteward.net.MessageHandler.ResponseListener;
 import com.tg.coloursteward.net.RequestConfig;
 import com.tg.coloursteward.net.RequestParams;
-import com.tg.coloursteward.object.ViewConfig;
-import com.tg.coloursteward.serice.HomeService;
 import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.LinkParseUtil;
 import com.tg.coloursteward.util.TokenUtils;
 import com.tg.coloursteward.util.Tools;
-import com.tg.coloursteward.view.MessageArrowView;
-import com.tg.coloursteward.view.MessageArrowView.ItemClickListener;
 import com.tg.coloursteward.view.dialog.PwdDialog2;
 import com.tg.coloursteward.view.dialog.ToastFactory;
 import com.youmai.hxsdk.utils.GlideRoundTransform;
@@ -73,30 +62,28 @@ import java.util.Map;
  *
  * @author Administrator
  */
-public class FragmentMine extends Fragment implements ItemClickListener, ResponseListener {
+public class FragmentMine extends Fragment implements ResponseListener {
     private static final String TAG = "FragmentMine";
     private View mView;
     private Activity mActivity;
-    private HomeService homeService;
     private ImageView imgHead;
     private TextView tvRealName, tvJob;
     private RelativeLayout rlUserInfo;
     private AlertDialog dialog;
     private MessageHandler msgHandler;
-    private MessageArrowView mineInfoZone1, mineInfoZone3, mineInfoZone4;
     private PwdDialog2.ADialogCallback aDialogCallback;
     private PwdDialog2 aDialog;
     private String state = "noPwd";
     private RecyclerView recyclerview;
-    private FragmentMineAdapter fragmentMineAdapter;
     private List<FragmentMineEntity.ContentBean> list = new ArrayList<>();
     private List<FragmentMineEntity.ContentBean.DataBean> list_item = new ArrayList<>();
     private FragmentMineAdapter mineAdapter;
+    private int openType;
+    private String salary;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
         mView = inflater.inflate(R.layout.fragment_mine_layout, container, false);
         msgHandler = new MessageHandler(mActivity);
         msgHandler.setResponseListener(this);
@@ -111,15 +98,19 @@ public class FragmentMine extends Fragment implements ItemClickListener, Respons
     }
 
     private void initData() {
+        String json = Tools.getStringValue(mActivity, Contants.storage.FRAGMENTMINE);
+        if (!TextUtils.isEmpty(json)) {
+            initDataAdapter(json);
+        }
+        initGetData();
+    }
+
+    private void initGetData() {
         RequestConfig config = new RequestConfig(mActivity, HttpTools.GET_FRAGMENTMINE);
         config.handler = msgHandler.getHandler();
         Map<String, Object> map = new HashMap<String, Object>();
         Map<String, String> stringMap = TokenUtils.getStringMap(TokenUtils.getNewSaftyMap(getActivity(), map));
         HttpTools.httpGet_Map(Contants.URl.URL_NEW, "app/home/mypage", config, (HashMap) stringMap);
-        String json = Tools.getStringValue(mActivity, Contants.storage.FRAGMENTMINE);
-        if (!TextUtils.isEmpty(json)) {
-            initDataAdapter(json);
-        }
     }
 
     private void initDataAdapter(String json) {
@@ -140,7 +131,18 @@ public class FragmentMine extends Fragment implements ItemClickListener, Respons
         mineAdapter.setFragmentMineCallBack(new FragmentMineCallBack() {
             @Override
             public void getData(String result, int positon) {
-                LinkParseUtil.parse(mActivity, list_item.get(positon).getUrl(), "");
+                String url = list_item.get(positon).getUrl();
+                String name = list_item.get(positon).getName();
+                if ("colourlife://proto?type=findPwd".equals(url)) {
+                    openType = 1;
+                    find_pay_password();
+                } else if (name.contains("工资")) {
+                    openType = 2;
+                    salary = url;
+                    find_pay_password();
+                } else {
+                    LinkParseUtil.parse(mActivity, url, "");
+                }
             }
         });
     }
@@ -164,47 +166,6 @@ public class FragmentMine extends Fragment implements ItemClickListener, Respons
         });
         tvRealName.setText(UserInfo.realname);
         tvJob.setText(UserInfo.jobName);
-        mineInfoZone1 = (MessageArrowView) mView.findViewById(R.id.mine_info_zone1);
-        mineInfoZone3 = (MessageArrowView) mView.findViewById(R.id.mine_info_zone3);
-        mineInfoZone4 = (MessageArrowView) mView.findViewById(R.id.mine_info_zone4);
-        mineInfoZone1.setItemClickListener(this);
-        mineInfoZone3.setItemClickListener(this);
-        mineInfoZone4.setItemClickListener(this);
-
-        ArrayList<ViewConfig> list1 = new ArrayList<ViewConfig>();
-        ViewConfig viewConfig = new ViewConfig("我的饭票", "", true);
-        viewConfig.leftDrawable = getResources().getDrawable(R.drawable.ticket);
-        list1.add(viewConfig);
-
-        viewConfig = new ViewConfig("找回支付密码", "", true);
-        viewConfig.leftDrawable = getResources().getDrawable(R.drawable.findpwd);
-        list1.add(viewConfig);
-
-        viewConfig = new ViewConfig("我的工资条", "", true);
-        viewConfig.leftDrawable = getResources().getDrawable(R.drawable.hr_pay);
-        list1.add(viewConfig);
-
-        mineInfoZone1.setData(list1);
-
-        ArrayList<ViewConfig> list3 = new ArrayList<ViewConfig>();
-        viewConfig = new ViewConfig("彩之云账号绑定", "", true);
-        viewConfig.leftDrawable = getResources().getDrawable(R.drawable.bindczy);
-        list3.add(viewConfig);
-
-        viewConfig = new ViewConfig("邀请", "", true);
-        viewConfig.leftDrawable = getResources().getDrawable(R.drawable.invite);
-        list3.add(viewConfig);
-        mineInfoZone3.setData(list3);
-
-        ArrayList<ViewConfig> list4 = new ArrayList<ViewConfig>();
-        viewConfig = new ViewConfig("我的下载", "", true);
-        viewConfig.leftDrawable = getResources().getDrawable(R.drawable.down);
-        list4.add(viewConfig);
-
-        viewConfig = new ViewConfig("设置", "", true);
-        viewConfig.leftDrawable = getResources().getDrawable(R.drawable.shezhi);
-        list4.add(viewConfig);
-        mineInfoZone4.setData(list4);
     }
 
     /**
@@ -252,38 +213,6 @@ public class FragmentMine extends Fragment implements ItemClickListener, Respons
                         .transform(new GlideRoundTransform()))
                 .into(imgHead);
 
-    }
-
-    @Override
-    public void onItemClick(MessageArrowView mv, View v, int position) {
-        if (mv == mineInfoZone1) {
-            if (position == 0) {// 我的饭票
-                startActivity(new Intent(mActivity, RedpacketsBonusMainActivity.class));
-            } else if (position == 1) {// 找回支付密码
-                find_pay_password();
-            } else if (position == 2) {// 我的工资条
-                Intent intent = new Intent(mActivity, MyBrowserActivity.class);
-                intent.putExtra(MyBrowserActivity.KEY_URL, Contants.URl.HR_PAY);
-                intent.putExtra(MyBrowserActivity.isloading, true);
-                startActivity(intent);
-            }
-        } else if (mv == mineInfoZone3) {
-            if (position == 0) {// 彩之云账号绑定
-                getAuth("绑定彩之云", Contants.URl.CZY_BINDCUSTOMER, "bdczy");
-            } else {//邀请
-                startActivity(new Intent(mActivity, InviteRegisterActivity.class));
-            }
-        } else if (mv == mineInfoZone4) {
-            if (position == 0) {//我的下载
-                startActivity(new Intent(mActivity, DownloadManagerActivity.class));
-            } else if (position == 1) {// 设置
-                startActivity(new Intent(mActivity, SettingActivity.class));
-            } else {//帮助
-                Intent help_intent = new Intent(getActivity(), MyBrowserActivity.class);
-                help_intent.putExtra(MyBrowserActivity.KEY_URL, Contants.URl.HUXIN_H5_HELP);
-                startActivity(help_intent);
-            }
-        }
     }
 
     /**
@@ -338,45 +267,18 @@ public class FragmentMine extends Fragment implements ItemClickListener, Respons
         }
     }
 
-    /**
-     * 获取绑定彩之云权限
-     *
-     * @param name
-     * @param url
-     * @param clientCode
-     */
-    private void getAuth(final String name, final String url, String clientCode) {
-        if (homeService == null) {
-            homeService = new HomeService(getActivity());
-        }
-        homeService.getAuth2(clientCode, new GetTwoRecordListener<String, String>() {
-
-            @Override
-            public void onFinish(String openID, String accessToken, String data3) {
-                String str = "?";
-                String URL;
-                if (url.contains(str)) {//Url有问号
-                    URL = url + "&username=" + openID + "&access_token=" + accessToken;
-                } else {
-                    URL = url + "?username=" + openID + "&access_token=" + accessToken;
-                }
-                Intent intent = new Intent(mActivity, MyBrowserActivity.class);
-                intent.putExtra(MyBrowserActivity.KEY_URL, URL);
-                startActivity(intent);
-            }
-
-            @Override
-            public void onFailed(String Message) {
-                ToastFactory.showToast(mActivity, Message);
-            }
-        });
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        mActivity = activity;
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        // TODO Auto-generated method stub
-        super.onAttach(activity);
-        mActivity = activity;
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            initGetData();
+        }
     }
 
     /**
@@ -405,9 +307,12 @@ public class FragmentMine extends Fragment implements ItemClickListener, Respons
         int code = HttpTools.getCode(jsonString);
         if (msg.arg1 == HttpTools.GET_PASSWORD_INFO) {
             if (code == 0) {
-                clearPayPwd();
+                if (openType == 1) {
+                    clearPayPwd();
+                } else if (openType == 2) {
+                    LinkParseUtil.parse(mActivity, salary, "");
+                }
             } else {
-                Log.e(TAG, "onSuccess:hintString " + hintString);
                 ToastFactory.showToast(mActivity, hintString);
             }
         } else if (msg.arg1 == HttpTools.POST_CLEAR_PAYPWD) {

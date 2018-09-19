@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.text.TextUtils;
 
-import com.tg.coloursteward.AccountExchangeActivity;
 import com.tg.coloursteward.DownloadManagerActivity;
 import com.tg.coloursteward.InviteRegisterActivity;
 import com.tg.coloursteward.MyBrowserActivity;
@@ -26,14 +25,10 @@ public class LinkParseUtil {
                 context.startActivity(intent);
                 ((Activity) context).overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
             } else {
-                if (link.length() > 18) {//
-                    String name = link.substring(18, link.length());
+                if (link.startsWith("colourlife://proto") && link.length() > 24) {//colourlife://proto?type=XXX
+                    String name = link.substring(24, link.length());
                     Intent it;
-                    if (name.equals("Exchange")) {//即时分配兑换
-                        it = new Intent(context, AccountExchangeActivity.class);
-                        context.startActivity(it);
-                        ((Activity) context).overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
-                    } else if (name.equals("redPacket")) {//我的饭票
+                    if (name.equals("redPacket")) {//我的饭票
                         it = new Intent(context, RedpacketsBonusMainActivity.class);
                         context.startActivity(it);
                         ((Activity) context).overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
@@ -45,18 +40,12 @@ public class LinkParseUtil {
                         it = new Intent(context, SettingActivity.class);
                         context.startActivity(it);
                         ((Activity) context).overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
-                    } else if (name.equals("findPwd")) {//找回支付密码
-                        it = new Intent(context, AccountExchangeActivity.class);
-                        context.startActivity(it);
-                        ((Activity) context).overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
                     } else if (name.equals("mydownload")) {//我的下载
                         it = new Intent(context, DownloadManagerActivity.class);
                         context.startActivity(it);
                         ((Activity) context).overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
                     } else {
-                        it = new Intent(context, SettingActivity.class);
-                        context.startActivity(it);
-                        ((Activity) context).overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
+                        return;
                     }
                 }
             }

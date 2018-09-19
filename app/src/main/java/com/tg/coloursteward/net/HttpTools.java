@@ -197,6 +197,7 @@ public class HttpTools {
     public static final int POST_LOGOUTDEVICE = BASE_CODE++;
     public static final int GET_SPLIT_BILL_DETAIL = BASE_CODE++;
     public static final int GET_FRAGMENTMINE = BASE_CODE++;
+    public static final int POST_TWOJIYAN = BASE_CODE++;
 
 
     public static final int GET_KEYSECERT = -10000;
@@ -334,7 +335,9 @@ public class HttpTools {
             protected Map<String, String> getParams() throws AuthFailureError {
                 if (URL_NAME.startsWith(Contants.URl.URL_CPMOBILE)) {
                     return param;
-                } else {
+                } else if(URL_NAME.startsWith(Contants.URl.URL_NEW)){
+                    return param;
+                }else {
                     String sign = "";
                     String ts = getTime();
                     try {

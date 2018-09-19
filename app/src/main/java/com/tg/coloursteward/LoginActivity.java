@@ -31,6 +31,7 @@ import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.database.SharedPreferencesTools;
 import com.tg.coloursteward.entity.AccountEntity;
+import com.tg.coloursteward.entity.JiYanTwoCheckEntity;
 import com.tg.coloursteward.entity.SingleDeviceLogin;
 import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.log.Logger;
@@ -69,9 +70,6 @@ import static com.tg.coloursteward.util.Utils.getDefaultOption;
 @Route(path = APath.RE_LOGIN)
 public class LoginActivity extends BaseActivity implements AnimationListener, AMapLocationListener, LocationSource {
     private static final String TAG = "LoginActivity";
-    private static final String captchaURL = "http://www.geetest.com/demo/gt/register-click";
-    // 设置二次验证的URL，需替换成自己的服务器URL
-    private static final String validateURL = "http://www.geetest.com/demo/gt/validate-click";
     private EditText editUser;
     private EditText editPassword;
     private ImageView ivClose;
@@ -273,7 +271,7 @@ public class LoginActivity extends BaseActivity implements AnimationListener, AM
      * 极验验证码
      */
     private void loginGt() {
-        gt3GeetestUtils.getGeetest(LoginActivity.this, captchaURL, validateURL, null, new GT3GeetestBindListener() {
+        gt3GeetestUtils.getGeetest(LoginActivity.this, Contants.APP.captchaURL, Contants.APP.validateURL, null, new GT3GeetestBindListener() {
             /**
              * num 1 点击验证码的关闭按钮来关闭验证码
              * num 2 点击屏幕关闭验证码
@@ -283,7 +281,6 @@ public class LoginActivity extends BaseActivity implements AnimationListener, AM
             public void gt3CloseDialog(int num) {
             }
 
-
             /**
              * 验证码加载准备完成
              * 此时弹出验证码
@@ -292,14 +289,24 @@ public class LoginActivity extends BaseActivity implements AnimationListener, AM
             public void gt3DialogReady() {
             }
 
-
             /**
              * 拿到第一个url（API1）返回的数据
              */
             @Override
             public void gt3FirstResult(JSONObject jsonObject) {
+                String json = String.valueOf(jsonObject);
+                try {
+                    JSONObject jsonObject1 = new JSONObject(json);
+                    int code = jsonObject1.getInt("success");
+                    if (code == 1) {
+                        String gt = jsonObject1.getString("gt");
+                        String challenge = jsonObject1.getString("challenge");
+                        int new_captcha = jsonObject1.getInt("new_captcha");
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
-
 
             /**
              * 往API1请求中添加参数
@@ -308,8 +315,10 @@ public class LoginActivity extends BaseActivity implements AnimationListener, AM
              */
             @Override
             public Map<String, String> gt3CaptchaApi1() {
-                Map<String, String> map = new HashMap<String, String>();
-                return map;
+                Map<String, Object> map = new HashMap<String, Object>();
+                map.put("device_uuid", TokenUtils.getUUID(LoginActivity.this));
+                Map<String, String> stringMap = TokenUtils.getStringMap(TokenUtils.getNewSaftyMap(LoginActivity.this, map));
+                return stringMap;
             }
 
             /**
@@ -320,7 +329,7 @@ public class LoginActivity extends BaseActivity implements AnimationListener, AM
              */
             @Override
             public boolean gt3SetIsCustom() {
-                return false;
+                return true;
             }
 
             /**
@@ -330,27 +339,28 @@ public class LoginActivity extends BaseActivity implements AnimationListener, AM
             public void gt3GetDialogResult(String result) {
             }
 
-
             /**
              * 自定义二次验证，当gtSetIsCustom为ture时执行这里面的代码
              */
             @Override
             public void gt3GetDialogResult(boolean status, String result) {
                 if (status) {
-                    /**
-                     *  利用异步进行解析这result进行二次验证，结果成功后调用gt3GeetestUtils.gt3TestFinish()方法调用成功后的动画，然后在gt3DialogSuccess执行成功之后的结果
-                     * //                JSONObject res_json = new JSONObject(result);
-                     //
-                     //                Map<String, String> validateParams = new HashMap<>();
-                     //
-                     //                validateParams.put("geetest_challenge", res_json.getString("geetest_challenge"));
-                     //
-                     //                validateParams.put("geetest_validate", res_json.getString("geetest_validate"));
-                     //
-                     //                validateParams.put("geetest_seccode", res_json.getString("geetest_seccode"));
-                     //  二次验证成功调用 gt3GeetestUtils.gt3TestFinish();
-                     //  二次验证失败调用 gt3GeetestUtils.gt3TestClose();
-                     */
+                    //利用异步进行解析这result进行二次验证，结果成功后调用gt3GeetestUtils.gt3TestFinish()方法调用成功后的动画，然后在gt3DialogSuccess执行成功之后的结果
+                    JSONObject res_json = null;
+                    Map<String, Object> validateParams = new HashMap<>();
+                    try {
+                        res_json = new JSONObject(result);
+                        validateParams.put("device_uuid", TokenUtils.getUUID(LoginActivity.this));
+                        validateParams.put("geetest_challenge", res_json.getString("geetest_challenge"));
+                        validateParams.put("geetest_validate", res_json.getString("geetest_validate"));
+                        validateParams.put("geetest_seccode", res_json.getString("geetest_seccode"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    Map<String, String> stringMap = TokenUtils.getStringMap(TokenUtils.getNewSaftyMap(LoginActivity.this, validateParams));
+                    RequestConfig config = new RequestConfig(LoginActivity.this, HttpTools.POST_TWOJIYAN, "");
+                    HttpTools.httpPost_Map(Contants.URl.URL_NEW, "app/home/login/verify", config, (HashMap) stringMap);
+
                 }
             }
 
@@ -370,9 +380,10 @@ public class LoginActivity extends BaseActivity implements AnimationListener, AM
              */
             @Override
             public Map<String, String> gt3SecondResult() {
-                Map<String, String> map = new HashMap<String, String>();
-                //  map.put("testkey","12315");
-                return map;
+                Map<String, Object> objectMap = new HashMap<String, Object>();
+                objectMap.put("device_uuid", TokenUtils.getUUID(LoginActivity.this));
+                Map<String, String> stringMap = TokenUtils.getStringMap(TokenUtils.getNewSaftyMap(LoginActivity.this, objectMap));
+                return stringMap;
 
             }
 
@@ -388,8 +399,10 @@ public class LoginActivity extends BaseActivity implements AnimationListener, AM
                 if (!TextUtils.isEmpty(result)) {
                     try {
                         JSONObject jobj = new JSONObject(result);
-                        String sta = jobj.getString("status");
-                        if ("success".equals(sta)) {
+                        String content = jobj.getString("content");
+                        JSONObject jsonObject = new JSONObject(content);
+                        int code = jsonObject.getInt("status");
+                        if (code == 1) {
                             gt3GeetestUtils.gt3TestFinish();
                             login();
                         } else {
@@ -469,8 +482,6 @@ public class LoginActivity extends BaseActivity implements AnimationListener, AM
         super.onSuccess(msg, jsonString, hintString);
         int code = HttpTools.getCode(jsonString);
         String message = HttpTools.getMessageString(jsonString);
-        String jsonObject = HttpTools.getContentString(jsonString);
-        ResponseData data = HttpTools.getResponseContentObject(jsonObject);
         if (msg.arg1 == HttpTools.POST_IMAG) {
             ToastFactory.showToast(this, hintString);
             Logger.logd("POST_IMAG" + jsonString);
@@ -533,6 +544,8 @@ public class LoginActivity extends BaseActivity implements AnimationListener, AM
             }
         } else if (msg.arg1 == HttpTools.GET_USER_INFO) {
             if (code == 0) {
+                String jsonObject = HttpTools.getContentString(jsonString);
+                ResponseData data = HttpTools.getResponseContentObject(jsonObject);
                 AccountEntity accountEntity = GsonUtils.gsonToBean(jsonString, AccountEntity.class);
                 UserInfo.infoorgId = accountEntity.getContent().getOrgId();
                 Tools.saveOrgId(LoginActivity.this, accountEntity.getContent().getOrgId());
@@ -543,6 +556,7 @@ public class LoginActivity extends BaseActivity implements AnimationListener, AM
         } else if (msg.arg1 == HttpTools.GET_KEYSECERT) {
             if (code == 0) {
                 try {
+                    String jsonObject = HttpTools.getContentString(jsonString);
                     JSONObject sonJon = new JSONObject(jsonObject);
                     String key = sonJon.optString("key");
                     String secret = sonJon.optString("secret");
@@ -572,6 +586,22 @@ public class LoginActivity extends BaseActivity implements AnimationListener, AM
                     Tools.setBooleanValue(LoginActivity.this, Contants.storage.EMPLOYEE_LOGIN, true);
                 }
             }
+        } else if (msg.arg1 == HttpTools.POST_TWOJIYAN) {
+            if (code == 0) {
+                JiYanTwoCheckEntity entity = new JiYanTwoCheckEntity();
+                entity = GsonUtils.gsonToBean(jsonString, JiYanTwoCheckEntity.class);
+                if (entity.getContent().getStatus() == 1) {//验证通过
+                    gt3GeetestUtils.gt3TestFinish();
+                    login();
+                } else {
+                    gt3GeetestUtils.gt3TestClose();
+                    ToastFactory.showToast(LoginActivity.this, "极验验证失败,请稍后重试");
+                }
+            } else {
+                gt3GeetestUtils.gt3TestClose();
+                ToastFactory.showToast(LoginActivity.this, "极验获取数据异常,请稍后重试");
+            }
+
         }
     }
 

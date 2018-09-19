@@ -21,29 +21,32 @@ public interface Contants {
         /**
          * 正式地址
          //         */
-        String URL_ICETEST = "https://openapi.colourlife.com/v1";//2.0
-        String URL_CPMOBILE = "http://cpmobile.colourlife.com";
-        String URL_CAIHUI = "https://caihui-bishow.colourlife.com";
-        String URL_OAUTH2 = "https://oauth2-cgj.colourlife.com";
-        String SINGLE_DEVICE = "https://single.colourlife.com/";
-        String HR_PAY = "https://payroll-hr.colourlife.com/redirect";
-        String CLIENT_SECRET = "t2o0a1xl2lOmoPi4tuHf5uw4VZloXGs7y1Kd0Yoq";
-        String PUBLIC_KEY="MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCTFnAR7ORLx0jGzf9Ux1We7yHvRi+kQXKSRmtgBjDCXQzakGm2mrb6EupCkDbUcj4BUs7S7zm/rICQuVNC9fujeJGjcNWRg0XWVtm90XpbTqfKiXzGDHI9W8aULYZ3of/JJ9lyCyjqjigyCdLBPtQ27gOuboDzQuieR2ywPHawzQIDAQAB";
+//        String URL_ICETEST = "https://openapi.colourlife.com/v1";//2.0
+//        String URL_CPMOBILE = "http://cpmobile.colourlife.com";
+//        String URL_CAIHUI = "https://caihui-bishow.colourlife.com";
+//        String URL_OAUTH2 = "https://oauth2-cgj.colourlife.com";
+//        String SINGLE_DEVICE = "https://single.colourlife.com/";
+//        String URL_NEW = "https://cgj-backyard.colourlife.com/";
+//        String HR_PAY = "https://payroll-hr.colourlife.com/redirect";
+//        String CLIENT_SECRET = "t2o0a1xl2lOmoPi4tuHf5uw4VZloXGs7y1Kd0Yoq";
+//        String USERINFO_ADDRESS = "https://user-czy.colourlife.com/app/";
+//        String PUBLIC_KEY="MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCTFnAR7ORLx0jGzf9Ux1We7yHvRi+kQXKSRmtgBjDCXQzakGm2mrb6EupCkDbUcj4BUs7S7zm/rICQuVNC9fujeJGjcNWRg0XWVtm90XpbTqfKiXzGDHI9W8aULYZ3of/JJ9lyCyjqjigyCdLBPtQ27gOuboDzQuieR2ywPHawzQIDAQAB";
 //////////////////////////////////////////////////////////////////////////////
         /**
          * 测试地址
-         */
-//        String URL_ICETEST = "https://openapi-test.colourlife.com/v1";//2.0
-//        String URL_CPMOBILE = "http://cpmobile-czytest.colourlife.com";
-//        String URL_CAIHUI = "https://caihui-bishow.colourlife.com";
-//        String URL_OAUTH2 = "https://oauth2-cgj-test.colourlife.com";
-//        String SINGLE_DEVICE = "https://single-czytest.colourlife.com/";
-//        String HR_PAY = "https://payroll-hr-test.colourlife.com/redirect";
-//        String CLIENT_SECRET = "xlsfrQS5R49upmfZbhlsrUzAt9HDA5K4ptLYsqK5";
-//        String PUBLIC_KEY = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDZDqnWph9LxtD0zgtGAYTTf2jY" +
-//                "eV+ni5F1o0w3Fag4OOD1YHCRUCXIsFy+iJYmuPf5vMkZrkoiJmKBfkaIzNlrJZzH" +
-//                "zq+LsPQNCF86p1nLsuHbkWNvyjOEPn/CUryP2Kxme4S+eEqLIeNwp70VOaMuPmRo" +
-//                "EZxMDAgvc6Z0DWsVdQIDAQAB";
+//         */
+        String URL_ICETEST = "https://openapi-test.colourlife.com/v1";//2.0
+        String URL_CPMOBILE = "http://cpmobile-czytest.colourlife.com";
+        String URL_CAIHUI = "https://caihui-bishow.colourlife.com";
+        String URL_OAUTH2 = "https://oauth2-cgj-test.colourlife.com";
+        String SINGLE_DEVICE = "https://single-czytest.colourlife.com/";
+        String URL_NEW = "https://cgj-backyard-test.colourlife.com/";
+        String HR_PAY = "https://payroll-hr-test.colourlife.com/redirect";
+        String CLIENT_SECRET = "xlsfrQS5R49upmfZbhlsrUzAt9HDA5K4ptLYsqK5";
+        String PUBLIC_KEY = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDZDqnWph9LxtD0zgtGAYTTf2jY" +
+                "eV+ni5F1o0w3Fag4OOD1YHCRUCXIsFy+iJYmuPf5vMkZrkoiJmKBfkaIzNlrJZzH" +
+                "zq+LsPQNCF86p1nLsuHbkWNvyjOEPn/CUryP2Kxme4S+eEqLIeNwp70VOaMuPmRo" +
+                "EZxMDAgvc6Z0DWsVdQIDAQAB";
 //        ////////////////////////////////////////////////////////////////////////////
         String CZY_BINDCUSTOMER = "https://evisit.colourlife.com/cgj/bindcustomer/bind_account.html";//绑定彩之云
         String URL_H5_LEAVE = "http://eqd.backyard.colourlife.com/cailife/leave/index?";//请假
@@ -55,6 +58,10 @@ public interface Contants {
 
     interface APP {
         String SeaHealthPackageName = "com.hikvi.ivms8700.hd.colorfulLife";
+        String captchaURL=URl.URL_NEW+"app/home/captcha/start";
+        String validateURL=URl.URL_NEW+"app/home/login/verify";
+        /***彩管家4.0加密的秘钥***/
+        String secertKey = "gbiwgbiwkgnkwgnkjbkkrthmnjwjgeh";
     }
 
     interface EMPLOYEE_LOGIN {
@@ -217,6 +224,7 @@ public interface Contants {
         String EMPLOYEE_LOGIN = "employee_login";//登录OK
         String LATITUDE = "str_latitude";//纬度
         String LONGITUDE = "str_longitude";//经度
+        String FRAGMENTMINE = "fragmentmine";//我的页面
     }
 
     interface DOWN {

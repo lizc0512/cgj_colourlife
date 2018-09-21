@@ -101,6 +101,8 @@ public class FragmentMine extends Fragment implements ResponseListener {
         String json = Tools.getStringValue(mActivity, Contants.storage.FRAGMENTMINE);
         if (!TextUtils.isEmpty(json)) {
             initDataAdapter(json);
+        } else {
+            initDataAdapter(Contants.storage.fragmentminedata);
         }
         initGetData();
     }
@@ -277,7 +279,7 @@ public class FragmentMine extends Fragment implements ResponseListener {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
-            initGetData();
+//            initGetData();
         }
     }
 

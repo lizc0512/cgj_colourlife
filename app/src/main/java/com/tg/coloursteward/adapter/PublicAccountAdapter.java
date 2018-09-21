@@ -62,26 +62,10 @@ public class PublicAccountAdapter extends MyBaseAdapter<PublicAccountInfo> {
         tvTitle.setText(item.title);
         tvAno.setText(item.ano);
         tvTypeName.setText(item.typeName);
-        if (item.adminLevel == 0) {//0表示只读，1表示可读写
-            rlTransfer.setBackgroundResource(R.drawable.buttom_hui_2);
-            rlTransfer.setEnabled(false);
-        } else {
-            rlTransfer.setBackgroundResource(R.drawable.buttom_lan_2);
-            rlTransfer.setEnabled(true);
-        }
-        if (item.adminLevel == 0) {//0表示只读，1表示可读写
-            rlExchange.setBackgroundResource(R.drawable.buttom_hui_2);
-            rlExchange.setEnabled(false);
-        } else {
-            if (item.atid == 71 && item.pano.equals("107126107b3f36d446a6addf4242b9c5")) {
-                rlExchange.setBackgroundResource(R.drawable.buttom_lan_2);
-                rlExchange.setEnabled(true);
-            } else {
-                rlExchange.setBackgroundResource(R.drawable.buttom_hui_2);
-                rlExchange.setEnabled(false);
-            }
-
-        }
+        rlTransfer.setBackgroundResource(R.drawable.buttom_lan_2);
+        rlTransfer.setEnabled(true);
+        rlExchange.setBackgroundResource(R.drawable.buttom_lan_2);
+        rlExchange.setEnabled(true);
         tvMoney.setText("" + item.money);
         if (StringUtils.isNotEmpty(item.name)) {
             tvSource.setText("来源:" + item.name);

@@ -198,6 +198,8 @@ public class HttpTools {
     public static final int GET_SPLIT_BILL_DETAIL = BASE_CODE++;
     public static final int GET_FRAGMENTMINE = BASE_CODE++;
     public static final int POST_TWOJIYAN = BASE_CODE++;
+    public static final int GET_MYPAGERULE = BASE_CODE++;
+    public static final int GET_DETAILRULE = BASE_CODE++;
 
 
     public static final int GET_KEYSECERT = -10000;

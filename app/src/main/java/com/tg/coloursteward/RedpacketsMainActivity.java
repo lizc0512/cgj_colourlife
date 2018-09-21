@@ -290,12 +290,16 @@ public class RedpacketsMainActivity extends BaseActivity {
                                 break;
                         }
                     } catch (JSONException e) {
-                        // TODO Auto-generated catch block
                         e.printStackTrace();
                     }
                 }
             }
         }
+    }
+
+    @Override
+    public void onFail(Message msg, String hintString) {
+        super.onFail(msg, hintString);
     }
 
     /**
@@ -330,13 +334,11 @@ public class RedpacketsMainActivity extends BaseActivity {
 
     @Override
     public View getContentView() {
-        // TODO Auto-generated method stub
         return getLayoutInflater().inflate(R.layout.activity_redpackets_main, null);
     }
 
     @Override
     public String getHeadTitle() {
-        // TODO Auto-generated method stub
         return "我的饭票";
     }
 

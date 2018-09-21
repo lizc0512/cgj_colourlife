@@ -27,8 +27,11 @@ import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.RequestConfig;
 import com.tg.coloursteward.net.RequestParams;
 import com.tg.coloursteward.serice.AppAuthService;
+import com.tg.coloursteward.serice.HomeService;
 import com.tg.coloursteward.util.GsonUtils;
+import com.tg.coloursteward.util.LinkParseUtil;
 import com.tg.coloursteward.util.StringUtils;
+import com.tg.coloursteward.util.TokenUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.util.Utils;
 import com.tg.coloursteward.view.ColumnHorizontalScrollView;
@@ -43,7 +46,9 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 集体奖金包明细
@@ -79,6 +84,8 @@ public class GroupAccountDetailsActivity extends BaseActivity {
     private String ano = "";
     private LinearLayout ll_showtab;
     private RelativeLayout rl_kong;
+    private String url_rule = "https://income-czytest.colourlife.com/ruleDetail/#/?";
+    private String access_token;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,17 +99,36 @@ public class GroupAccountDetailsActivity extends BaseActivity {
         mScreenWidth = Utils.getWindowsWidth(this);
         mItemWidth = mScreenWidth / 5 * 2; // 一个Item宽度为屏幕的1/7
         initView();
+        initGetToken();
+    }
+
+    private void initGetToken() {
+        HomeService homeService = new HomeService(GroupAccountDetailsActivity.this);
+        homeService.getAuth2("2", new GetTwoRecordListener<String, String>() {
+            @Override
+            public void onFinish(String data1, String data2, String data3) {
+                access_token = data2;
+                url_rule = url_rule + "access_token=" + access_token;
+                initData();
+            }
+
+            @Override
+            public void onFailed(String Message) {
+
+            }
+        });
+    }
+
+    private void initData() {
+        Map<String, Object> map = new HashMap<>();
+        RequestConfig config = new RequestConfig(this, HttpTools.GET_DETAILRULE, "");
+        Map<String, String> stringMap = TokenUtils.getStringMap(TokenUtils.getNewSaftyMap(GroupAccountDetailsActivity.this, map));
+        HttpTools.httpGet_Map(Contants.URl.URL_NEW, "app/home/utility/ruleDeatil", config, (HashMap) stringMap);
     }
 
     @Override
     protected boolean handClickEvent(View v) {
-        /**
-         * 弹出框
-         */
-        popWindowView = new PublicAccountPopWindowView(GroupAccountDetailsActivity.this);
-        popWindowView.setOnDismissListener(new poponDismissListener());
-        popWindowView.showPopupWindow(findViewById(R.id.right_layout));
-        lightoff();
+        LinkParseUtil.parse(GroupAccountDetailsActivity.this, url_rule, "");
         return super.handClickEvent(v);
     }
 
@@ -291,6 +317,34 @@ public class GroupAccountDetailsActivity extends BaseActivity {
     }
 
     @Override
+    public void onSuccess(Message msg, String jsonString, String hintString) {
+        super.onSuccess(msg, jsonString, hintString);
+        int code = HttpTools.getCode(jsonString);
+        if (msg.arg1 == HttpTools.GET_DETAILRULE) {
+            if (code == 0) {
+                int show = 0;
+                String name = "规则详情";
+                JSONObject jsonObject = HttpTools.getContentJSONObject(jsonString);
+                try {
+                    show = jsonObject.getInt("show");
+                    name = jsonObject.getString("name");
+                    url_rule = jsonObject.getString("url");
+                    url_rule = url_rule + "access_token=" + access_token;
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                if (show == 1) {// 1：显示按钮，2：不显示按钮
+                    headView.setVisibility(View.VISIBLE);
+                    headView.setRightText(name);
+                } else {
+                    headView.setVisibility(View.GONE);
+                }
+            }
+
+        }
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         if (!EventBus.getDefault().isRegistered(this)) {
@@ -393,9 +447,9 @@ public class GroupAccountDetailsActivity extends BaseActivity {
 
     @Override
     public String getHeadTitle() {
-//        headView.setRightText("筛选");
-//        headView.setRightTextColor(getResources().getColor(R.color.white));
-//        headView.setListenerRight(singleListener);
+        headView.setRightText("规则详情");
+        headView.setRightTextColor(getResources().getColor(R.color.white));
+        headView.setListenerRight(singleListener);
         return "交易详情";
     }
 }

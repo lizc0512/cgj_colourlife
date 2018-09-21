@@ -11,7 +11,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.tg.coloursteward.adapter.RedPacketBonusAdapter;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.constant.Contants;
@@ -21,18 +20,21 @@ import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.MD5;
 import com.tg.coloursteward.net.RequestConfig;
 import com.tg.coloursteward.net.RequestParams;
+import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.StringUtils;
+import com.tg.coloursteward.util.TokenUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.RoundImageView;
 import com.tg.coloursteward.view.dialog.ToastFactory;
-import com.tg.coloursteward.util.GsonUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 我的饭票
@@ -45,10 +47,7 @@ public class RedpacketsBonusMainActivity extends BaseActivity {
     private RoundImageView rivHead;
     private TextView tvRealName;
     private TextView tv_balance;//饭票余额
-    private DisplayImageOptions options;
     private double balance;
-    private double teamBonus = 0.00d;
-    private String mDept;
     private RecyclerView recyclerView;
     private RedPacketBonusAdapter redPacketBonusAdapter;
     private RedPacketEntity redPacketEntity;
@@ -61,6 +60,7 @@ public class RedpacketsBonusMainActivity extends BaseActivity {
         initView();
         initData();
         serachdata();
+        setData();
     }
 
     /**
@@ -70,11 +70,11 @@ public class RedpacketsBonusMainActivity extends BaseActivity {
      * @param key
      */
     private void getHBUserList(String key, String secret) {
-        RequestConfig config = new RequestConfig(this, HttpTools.GET_HBUSER_LIST);
+        RequestConfig config = new RequestConfig(this, HttpTools.GET_BALANCE_INFO);
         RequestParams params = new RequestParams();
         params.put("key", key);
         params.put("secret", secret);
-        HttpTools.httpGet(Contants.URl.URL_ICETEST, "/hongbao/getHBUserList", config, params);
+        HttpTools.httpGet(Contants.URl.URL_CPMOBILE, "/1.0/caiRedPaket/getBalance", config, params);
     }
 
     /**
@@ -85,7 +85,6 @@ public class RedpacketsBonusMainActivity extends BaseActivity {
         String corp_id = Tools.getStringValue(this, Contants.storage.CORPID);
         RequestParams params = new RequestParams();
         params.put("username", UserInfo.employeeAccount);
-//        params.put("user_uuid", UserInfo.uid);
         params.put("corpid", corp_id);
         HttpTools.httpGet(Contants.URl.URL_ICETEST, "/jxjjb/userjtjjb/list",
                 config, params);
@@ -147,9 +146,7 @@ public class RedpacketsBonusMainActivity extends BaseActivity {
             JSONObject jsonObject = HttpTools.getContentJSONObject(jsonStr);
             if (jsonObject != null) {
                 try {
-                    mDept = jsonObject.getString("place");
                     balance = jsonObject.getDouble("balance");
-                    teamBonus = jsonObject.getDouble("fee");
                     setData();
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -161,18 +158,16 @@ public class RedpacketsBonusMainActivity extends BaseActivity {
 
     public void initData() {
         String str = Contants.URl.HEAD_ICON_URL + "avatar?uid=" + UserInfo.employeeAccount;
-//        GlideApp.with(RedpacketsBonusMainActivity.this).load(str)
-//                .error(R.drawable.placeholder2)
-//                .placeholder(R.drawable.placeholder2)
-//                .diskCacheStrategy(DiskCacheStrategy.ALL)
-//                .dontAnimate()
-//                .into(rivHead);
         Glide.with(RedpacketsBonusMainActivity.this).load(str)
                 .into(rivHead);
         String json = Tools.getStringValue(RedpacketsBonusMainActivity.this, Contants.storage.JTJJB);
         if (!TextUtils.isEmpty(json)) {
             setJJBData(json);
         }
+        Map<String, Object> map = new HashMap<>();
+        RequestConfig config = new RequestConfig(this, HttpTools.GET_MYPAGERULE, "");
+        Map<String, String> stringMap = TokenUtils.getStringMap(TokenUtils.getNewSaftyMap(RedpacketsBonusMainActivity.this, map));
+        HttpTools.httpGet_Map(Contants.URl.URL_NEW, "app/home/utility/fpbutton", config, (HashMap) stringMap);
     }
 
     private void setJJBData(String jsonString) {
@@ -241,29 +236,46 @@ public class RedpacketsBonusMainActivity extends BaseActivity {
             } else {
                 ToastFactory.showToast(RedpacketsBonusMainActivity.this, message);
             }
-        } else if (msg.arg1 == HttpTools.GET_HBUSER_LIST) {
+        } else if (msg.arg1 == HttpTools.GET_BALANCE_INFO) {
             if (code == 0) {
                 Tools.saveStringValue(RedpacketsBonusMainActivity.this, Contants.storage.TICKET, jsonString);
-                JSONObject jsonObject = HttpTools.getContentJSONObject(jsonString);
-                if (jsonObject != null) {
-                    try {
-                        mDept = jsonObject.getString("place");
-                        balance = jsonObject.getDouble("balance");
-                        teamBonus = jsonObject.getDouble("fee");
-                        setData();
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+                JSONObject content = HttpTools.getContentJSONObject(jsonString);
+                try {
+                    balance = content.getDouble("balance");
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
+                setData();
             } else {
                 ToastFactory.showToast(RedpacketsBonusMainActivity.this, message);
             }
+        } else if (msg.arg1 == HttpTools.GET_MYPAGERULE) {
+            if (code == 0) {
+                JSONObject jsonObject = HttpTools.getContentJSONObject(jsonString);
+                int show = 0;
+                try {
+                    show = jsonObject.getInt("show"); // 1：显示按钮，2：不显示按钮
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                if (show == 1) {
+                    rl_submit.setVisibility(View.VISIBLE);
+                } else {
+                    rl_submit.setVisibility(View.GONE);
+                }
+            }
+
         }
+    }
+
+    @Override
+    public void onFail(Message msg, String hintString) {
+        super.onFail(msg, hintString);
     }
 
     private void setData() {
         DecimalFormat df = new DecimalFormat("0.00");
-        tvRealName.setText(UserInfo.realname + "(" + mDept + ")");
+        tvRealName.setText(UserInfo.realname + UserInfo.jobName);
         tv_balance.setText(df.format(balance));
     }
 
@@ -277,12 +289,6 @@ public class RedpacketsBonusMainActivity extends BaseActivity {
         } else {
             getEmployeeInfo();
         }
-    }
-
-    private void getKeyAndSecret() {
-        RequestConfig config = new RequestConfig(this, HttpTools.GET_KEYSECERT);
-        config.hintString = "获取key";
-        HttpTools.httpPost(Contants.URl.URL_CPMOBILE, "/1.0/auth", config, null);
     }
 
     @Override

@@ -141,7 +141,7 @@
                             android:layout_height="wrap_content"
                             android:layout_below="@id/text2"
                             android:layout_marginTop="5dp"
-                            android:text="4.48"
+                            android:text=""
                             android:textColor="@color/home_details"
                             android:textSize="17sp" />
                     </RelativeLayout>
@@ -213,7 +213,7 @@
                             android:layout_height="wrap_content"
                             android:layout_below="@id/text3"
                             android:layout_marginTop="5dp"
-                            android:text="2260"
+                            android:text=""
                             android:textColor="@color/home_details"
                             android:textSize="17sp" />
                     </RelativeLayout>

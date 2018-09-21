@@ -27,6 +27,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.signature.ObjectKey;
+import com.tg.coloursteward.MyBrowserActivity;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.UserInfoActivity;
 import com.tg.coloursteward.adapter.FragmentMineAdapter;
@@ -34,12 +35,14 @@ import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.entity.FragmentMineEntity;
 import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.inter.FragmentMineCallBack;
+import com.tg.coloursteward.net.GetTwoRecordListener;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.MD5;
 import com.tg.coloursteward.net.MessageHandler;
 import com.tg.coloursteward.net.MessageHandler.ResponseListener;
 import com.tg.coloursteward.net.RequestConfig;
 import com.tg.coloursteward.net.RequestParams;
+import com.tg.coloursteward.serice.HomeService;
 import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.LinkParseUtil;
 import com.tg.coloursteward.util.TokenUtils;
@@ -80,6 +83,7 @@ public class FragmentMine extends Fragment implements ResponseListener {
     private FragmentMineAdapter mineAdapter;
     private int openType;
     private String salary;
+    private HomeService homeService;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -142,6 +146,8 @@ public class FragmentMine extends Fragment implements ResponseListener {
                     openType = 2;
                     salary = url;
                     find_pay_password();
+                } else if (name.contains("账号绑定")) {
+                    getAuth("绑定彩之云", Contants.URl.CZY_BINDCUSTOMER, "bdczy");
                 } else {
                     LinkParseUtil.parse(mActivity, url, "");
                 }
@@ -196,6 +202,40 @@ public class FragmentMine extends Fragment implements ResponseListener {
     public void freshUI() {
         tvRealName.setText(UserInfo.realname);
         getHeadImg();
+    }
+
+    /**
+     * 获取绑定彩之云权限
+     *
+     * @param name
+     * @param url
+     * @param clientCode
+     */
+    private void getAuth(final String name, final String url, String clientCode) {
+        if (homeService == null) {
+            homeService = new HomeService(getActivity());
+        }
+        homeService.getAuth2(clientCode, new GetTwoRecordListener<String, String>() {
+
+            @Override
+            public void onFinish(String openID, String accessToken, String data3) {
+                String str = "?";
+                String URL;
+                if (url.contains(str)) {//Url有问号
+                    URL = url + "&username=" + openID + "&access_token=" + accessToken;
+                } else {
+                    URL = url + "?username=" + openID + "&access_token=" + accessToken;
+                }
+                Intent intent = new Intent(mActivity, MyBrowserActivity.class);
+                intent.putExtra(MyBrowserActivity.KEY_URL, URL);
+                startActivity(intent);
+            }
+
+            @Override
+            public void onFailed(String Message) {
+                ToastFactory.showToast(mActivity, Message);
+            }
+        });
     }
 
     @Override

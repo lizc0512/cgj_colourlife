@@ -133,7 +133,8 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
     private String secret;
     private int count = 0;
     private CaiHuiEntity caiHuiEntity;
-
+    private LinearLayout ll_home_head;
+    private int balanceNum=0;
     private SingleClickListener titleListener = new SingleClickListener() {
         @Override
         public void onSingleClick(View v) {
@@ -198,7 +199,7 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
                         mAuthTimeUtils.IsAuthTime(mActivity, Contants.Html5.SP1, "sp", "0", "sp", "");
                     } else {
                         mAuthTimeUtils = new AuthTimeUtils();
-                        mAuthTimeUtils.IsAuthTime(mActivity, Contants.Html5.SP, "tlmyapps", "1", "tlmyapps", "");
+                        mAuthTimeUtils.IsAuthTime(mActivity, Contants.Html5.SP+"?number="+balanceNum, "tlmyapps", "1", "tlmyapps", "");
 
                     }
                     break;
@@ -217,7 +218,6 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
         }
 
     };
-    private LinearLayout ll_home_head;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -1141,38 +1141,41 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
                     }
                 }
             });
-            if (TextUtils.isEmpty(accessToken)) {
-                accessToken = Tools.getStringValue(mActivity, Contants.storage.APPAUTH);
-            }
-            Map<String, Object> map = new HashMap<>();
-            map.put("access_token", accessToken);
-            ColorsConfig.commonParams(map);
-            Map<String, Object> map1 = TokenUtils.getNewBalance(mActivity, map);
-            ContentValues paramsbalance = new ContentValues();
-            Set<String> keySet = map1.keySet();
-            Iterator<String> it = keySet.iterator();
-            while (it.hasNext()) {
-                String key = it.next();
-                Object value = map1.get(key);
-                paramsbalance.put(key, String.valueOf(value));
-            }
-            OkHttpConnector.httpPost(mActivity, Contants.URl.URL_ICETEST + "/jrpt/balance/getWaitingBalanceCount",
-                    paramsbalance, new IPostListener() {
-                        @Override
-                        public void httpReqResult(String response) {
-                            try {
-                                OaConfig config = GsonUtil.parse(response, OaConfig.class);
-                                if (config != null && config.isSuccess() && isAdded()) {
-                                    OaConfig.ContentBean bean = config.getContent();
-                                    if (bean != null) {
-                                        count = count + bean.getWaitingBalanceCount();
-                                        tvExamineNum.setText(String.valueOf(count));
+            if (UserInfo.employeeAccount.contains("tangxb") || UserInfo.employeeAccount.contains("yuzhibin")) {
+                if (TextUtils.isEmpty(accessToken)) {
+                    accessToken = Tools.getStringValue(mActivity, Contants.storage.APPAUTH);
+                }
+                Map<String, Object> map = new HashMap<>();
+                map.put("access_token", accessToken);
+                ColorsConfig.commonParams(map);
+                Map<String, Object> map1 = TokenUtils.getNewBalance(mActivity, map);
+                ContentValues paramsbalance = new ContentValues();
+                Set<String> keySet = map1.keySet();
+                Iterator<String> it = keySet.iterator();
+                while (it.hasNext()) {
+                    String key = it.next();
+                    Object value = map1.get(key);
+                    paramsbalance.put(key, String.valueOf(value));
+                }
+                OkHttpConnector.httpPost(mActivity, Contants.URl.URL_ICETEST + "/jrpt/balance/getWaitingBalanceCount",
+                        paramsbalance, new IPostListener() {
+                            @Override
+                            public void httpReqResult(String response) {
+                                try {
+                                    OaConfig config = GsonUtil.parse(response, OaConfig.class);
+                                    if (config != null && config.isSuccess() && isAdded()) {
+                                        OaConfig.ContentBean bean = config.getContent();
+                                        if (bean != null) {
+                                            balanceNum = bean.getWaitingBalanceCount();
+                                            count = count + bean.getWaitingBalanceCount();
+                                            tvExamineNum.setText(String.valueOf(count));
+                                        }
                                     }
+                                } catch (Exception e) {
                                 }
-                            } catch (Exception e) {
                             }
-                        }
-                    });
+                        });
+            }
         }
     }
 
@@ -1392,7 +1395,7 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
-            count=0;
+            count = 0;
             getApproval();
         }
     }

@@ -1,7 +1,5 @@
 package com.tg.coloursteward;
 
-import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -10,8 +8,6 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
@@ -25,7 +21,6 @@ import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.info.HistoryTransferInfo;
 import com.tg.coloursteward.info.RedpacketsInfo;
-import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.inter.OnLoadingListener;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.RequestConfig;
@@ -403,9 +398,11 @@ public class RedpacketsDGZHShareMainMainActivity extends BaseActivity {
             }
         } else if (msg.arg1 == HttpTools.GET_FINACE_BYOA_ONE) {
             if (code == 0) {
+                String error = "";
                 JSONObject contentJSONObject = HttpTools.getContentJSONObject(jsonString);
                 if (contentJSONObject != null) {
                     try {
+                        error = contentJSONObject.getString("message");
                         JSONObject content = contentJSONObject.getJSONObject("content");
                         if (content != null) {
                             String cano = content.getString("cano");
@@ -424,6 +421,7 @@ public class RedpacketsDGZHShareMainMainActivity extends BaseActivity {
                             startActivity(intent);
                         }
                     } catch (JSONException e) {
+                        ToastFactory.showToast(RedpacketsDGZHShareMainMainActivity.this, error);
                         e.printStackTrace();
                     }
                 }

@@ -76,35 +76,12 @@
         </RelativeLayout>
     </LinearLayout>
 
-    <ScrollView
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/base_color">
+        android:layout_height="wrap_content">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+    </android.support.v7.widget.RecyclerView>
 
-            <com.tg.coloursteward.view.MessageArrowView
-                android:id="@+id/mine_info_zone1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp" />
-
-
-            <com.tg.coloursteward.view.MessageArrowView
-                android:id="@+id/mine_info_zone3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp" />
-
-            <com.tg.coloursteward.view.MessageArrowView
-                android:id="@+id/mine_info_zone4"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp" />
-        </LinearLayout>
-    </ScrollView>
 
 </LinearLayout>

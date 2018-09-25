@@ -140,6 +140,13 @@ public class EmployeeDataActivity extends BaseActivity {
         params.put("owner", UserInfo.employeeAccount);
         params.put("corpId", Tools.getStringValue(EmployeeDataActivity.this, Contants.storage.CORPID));
         HttpTools.httpGet(Contants.URl.URL_ICETEST, "/txl2/contacts/search", config, params);
+//        RequestConfig config = new RequestConfig(this, HttpTools.GET_EMPLOYEE_INFO, "获取详细信息");
+//        RequestParams params = new RequestParams();
+//        params.put("uuid", CONTACTS_ID);
+//        params.put("access_token", accessToken);
+//        HttpTools.httpGet(Contants.URl.URL_ICETEST, "/czyuser/czy/user/unionInfoQuery", config, params);
+
+
     }
 
     /**

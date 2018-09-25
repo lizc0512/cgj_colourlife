@@ -15,6 +15,9 @@ import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 
 
+import com.tg.coloursteward.constant.Contants;
+import com.tg.coloursteward.updateapk.UpdateManager;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -26,9 +29,18 @@ import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 import java.util.UUID;
 
 import cn.jpush.android.api.JPushInterface;
@@ -379,5 +391,85 @@ public class TokenUtils {
             }
         }
         return ProvidersName;
+    }
+    /***4.0新接口的安全加密以后的请求参数Map**/
+    public static Map<String, Object> getNewSaftyMap(Context context, Map<String, Object> paramsMap) {
+        String version=UpdateManager.getVersionName(context);
+        paramsMap.put("nonce_str", getRandomNonceStr());
+        paramsMap.put("native_type", 1);
+        paramsMap.put("version", version);
+        String buff = "";
+        try {
+            List<Map.Entry<String, Object>> infoIds = new ArrayList<Map.Entry<String, Object>>(paramsMap.entrySet());
+            // 对所有传入参数按照字段名的 ASCII 码从小到大排序（字典序）
+            Collections.sort(infoIds, new Comparator<Map.Entry<String, Object>>() {
+
+                @Override
+                public int compare(Map.Entry<String, Object> o1, Map.Entry<String, Object> o2) {
+                    return (o1.getKey()).toString().compareTo((o2.getKey()).toString());
+                }
+            });
+            // 构造URL 键值对的格式
+            StringBuilder buf = new StringBuilder();
+            for (Map.Entry<String, Object> item : infoIds) {
+                if (null != item && !TextUtils.isEmpty(item.getValue().toString())) {
+                    String key = item.getKey();
+                    String val = item.getValue().toString();
+                    val = URLEncoder.encode(val, "utf-8");
+                    val = val.replace(" ", "%20");
+                    val = val.replace("*", "%2A");
+                    val = val.replace("+", "%2B");
+                    buf.append(key + "=" + val);
+                    buf.append("&");
+                }
+            }
+            buff = setMD5(buf.toString() + "secret=" + Contants.APP.secertKey).toUpperCase();
+            paramsMap.put("signature", buff);
+        } catch (Exception e) {
+            return paramsMap;
+        }
+        return paramsMap;
+    }
+    /***4.0生成8位随机数算法*/
+    private static String getRandomNonceStr() {
+        String base = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXZY";
+        Random random = new Random();
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < 16; i++) {
+            int number = random.nextInt(base.length());
+            sb.append(base.charAt(number));
+        }
+        return sb.toString();
+    }
+    /***md5加密***/
+    public static String setMD5(String string) {
+        MessageDigest md5;
+        StringBuilder sb = new StringBuilder();
+        try {
+            md5 = MessageDigest.getInstance("MD5");
+            md5.update(string.getBytes("UTF-8"));
+            byte[] b = md5.digest();
+            for (byte aB : b) {
+                int temp = 0xFF & aB;
+                String s = Integer.toHexString(temp);
+                if (temp <= 0x0F) {
+                    s = "0" + s;
+                }
+                sb.append(s);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return sb.toString();
+    }
+    public static Map<String, String> getStringMap(Map<String, Object> paramsMap) {
+        Iterator<String> it = paramsMap.keySet().iterator();
+        Map<String, String> stringMap = new HashMap<>();
+        while (it.hasNext()) {
+            String key = it.next();
+            String value = String.valueOf(paramsMap.get(key));
+            stringMap.put(key, value);
+        }
+        return stringMap;
     }
 }

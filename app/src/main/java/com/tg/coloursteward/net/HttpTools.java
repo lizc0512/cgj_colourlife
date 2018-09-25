@@ -832,6 +832,8 @@ public class HttpTools {
                     url = URL + getCombileUrl(apiName, params);
                 } else if (URL.startsWith(Contants.URl.URL_NEW)) {
                     url = URL + GetNormalUrl(URL, apiName, (HashMap) params);
+                } else if (apiName.contains("getWaitingBalanceCount")) {
+                    url = URL + GetNormalUrl(URL, apiName, (HashMap) params);
                 } else {
                     url = URL + GetUrl(URL, apiName, (HashMap) params);
                 }

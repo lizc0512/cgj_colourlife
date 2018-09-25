@@ -123,7 +123,7 @@ public class ColorsConfig {
     }
 
 
-    private static String getAppID() {
+    public static String getAppID() {
         return COLOR_APPID[AppConfig.LAUNCH_MODE];
     }
 

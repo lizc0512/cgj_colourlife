@@ -47,6 +47,15 @@ public class OaConfig {
          */
 
         private int number;
+        private int waitingBalanceCount;
+
+        public int getWaitingBalanceCount() {
+            return waitingBalanceCount;
+        }
+
+        public void setWaitingBalanceCount(int waitingBalanceCount) {
+            this.waitingBalanceCount = waitingBalanceCount;
+        }
 
         public int getNumber() {
             return number;

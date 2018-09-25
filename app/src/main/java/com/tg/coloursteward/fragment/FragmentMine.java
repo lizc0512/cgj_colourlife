@@ -147,7 +147,7 @@ public class FragmentMine extends Fragment implements ResponseListener {
                     salary = url;
                     find_pay_password();
                 } else if (name.contains("账号绑定")) {
-                    getAuth("绑定彩之云", Contants.URl.CZY_BINDCUSTOMER, "bdczy");
+                    getAuth("绑定彩之云", url, "bdczy");
                 } else {
                     LinkParseUtil.parse(mActivity, url, "");
                 }

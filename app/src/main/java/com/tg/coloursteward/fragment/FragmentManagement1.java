@@ -1395,14 +1395,16 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
-            count = 0;
-            getApproval();
+//            count = 0;
+//            getApproval();
         }
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        count = 0;
+        getApproval();
         magLinearLayoutTicket.postDelayed(new Runnable() {//我的饭票
 
             @Override

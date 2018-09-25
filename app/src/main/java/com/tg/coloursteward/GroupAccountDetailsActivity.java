@@ -100,6 +100,7 @@ public class GroupAccountDetailsActivity extends BaseActivity {
         mItemWidth = mScreenWidth / 5 * 2; // 一个Item宽度为屏幕的1/7
         initView();
         initGetToken();
+        headView.hideRightView();
     }
 
     private void initGetToken() {
@@ -334,10 +335,10 @@ public class GroupAccountDetailsActivity extends BaseActivity {
                     e.printStackTrace();
                 }
                 if (show == 1) {// 1：显示按钮，2：不显示按钮
-                    headView.setVisibility(View.VISIBLE);
                     headView.setRightText(name);
+                    headView.showRightView();
                 } else {
-                    headView.setVisibility(View.GONE);
+                    headView.hideRightView();
                 }
             }
 

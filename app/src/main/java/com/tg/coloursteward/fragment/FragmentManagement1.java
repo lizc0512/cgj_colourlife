@@ -2,10 +2,7 @@ package com.tg.coloursteward.fragment;
 
 import android.app.Activity;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.v4.app.Fragment;
@@ -15,14 +12,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.RequestOptions;
 import com.tg.coloursteward.AccountActivity;
 import com.tg.coloursteward.DataShowActivity;
 import com.tg.coloursteward.DoorActivity;
@@ -34,7 +27,6 @@ import com.tg.coloursteward.R;
 import com.tg.coloursteward.RedpacketsBonusMainActivity;
 import com.tg.coloursteward.adapter.ManagementAdapter1;
 import com.tg.coloursteward.constant.Contants;
-import com.tg.coloursteward.entity.AdvConfig;
 import com.tg.coloursteward.entity.CaiHuiEntity;
 import com.tg.coloursteward.entity.OaConfig;
 import com.tg.coloursteward.info.GridViewInfo;
@@ -52,6 +44,7 @@ import com.tg.coloursteward.util.AuthTimeUtils;
 import com.tg.coloursteward.util.DateUtils;
 import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.StringUtils;
+import com.tg.coloursteward.util.TokenUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.ManageMentLinearlayout;
 import com.tg.coloursteward.view.ManageMentLinearlayout.NetworkRequestListener;
@@ -65,11 +58,6 @@ import com.youmai.hxsdk.http.IGetListener;
 import com.youmai.hxsdk.http.IPostListener;
 import com.youmai.hxsdk.http.OkHttpConnector;
 import com.youmai.hxsdk.utils.GsonUtil;
-import com.youmai.hxsdk.utils.ListUtils;
-import com.youth.banner.Banner;
-import com.youth.banner.BannerConfig;
-import com.youth.banner.listener.OnBannerListener;
-import com.youth.banner.loader.ImageLoader;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -80,7 +68,10 @@ import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * 微物管       工作（彩管家4.0）
@@ -109,8 +100,6 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
     private ArrayList<GridViewInfo> gridlist1 = new ArrayList<>();
     private ArrayList<GridViewInfo> gridlist2 = new ArrayList<>();
     private String commonjsonStr, elsejsonStr;
-
-    private Banner banner;
 
     private ManageMentLinearlayout magLinearLayoutArea;
     private ManageMentLinearlayout magLinearLayoutStock;
@@ -142,7 +131,7 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
     private String AccountStr;
     private String key;
     private String secret;
-    private int count;
+    private int count = 0;
     private CaiHuiEntity caiHuiEntity;
 
     private SingleClickListener titleListener = new SingleClickListener() {
@@ -175,7 +164,7 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
                     intent.putExtra(MyBrowserActivity.KEY_URL, "https://caihui-bishow.colourlife.com/orderData/orderData.html");
                     startActivity(intent);
                     break;
-                case R.id.ll_account://即时分账
+                case R.id.ll_account://即时分配
                     startActivity(new Intent(mActivity, AccountActivity.class));
                     break;
                 case R.id.rl_saoyisao://扫一扫
@@ -806,8 +795,6 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
         mGridView2.setAdapter(adapter2);
 
 
-        banner = (Banner) mView.findViewById(R.id.banner);
-
         outLocalData();
 
 
@@ -866,93 +853,7 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
         /**
          * 未读审批
          */
-        String skin_code = Tools.getStringValue(mActivity, Contants.storage.SKINCODE);
-        if (skin_code.equals("102")) {//中住
-            magLinearLayoutExamineNum.setNetworkRequestListener(new NetworkRequestListener() {
-
-                @Override
-                public void onSuccess(ManageMentLinearlayout magLearLayout, Message msg, String response) {
-                    int code = HttpTools.getCode(response);
-                    if (code == 0) {
-                        JSONObject jsonObject = HttpTools.getContentJSONObject(response);
-                        try {
-                            if (jsonObject != null) {
-                                examineNum = jsonObject.getString("number");
-                                Log.e(TAG, "onSuccess:examineNum " + examineNum);
-                                if (examineNum != null) {
-                                    tvExamineNum.setText(examineNum);
-                                }
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    } else {
-                        tvExamineNum.setText("0");
-                    }
-                }
-
-                @Override
-                public void onFail(ManageMentLinearlayout magLearLayout, Message msg, String hintString) {
-                    ToastFactory.showToast(mActivity, hintString);
-                }
-
-                @Override
-                public void onRequest(MessageHandler msgHand) {
-                    RequestConfig config = new RequestConfig(mActivity, 0);
-                    config.handler = msgHand.getHandler();
-                    RequestParams params = new RequestParams();
-                    params.put("username", UserInfo.employeeAccount);
-                    HttpTools.httpGet(Contants.URl.URL_ICETEST, "/oa/examineNum", config, params);
-                }
-            });
-        } else {
-
-            String url = Contants.URl.URL_ICETEST + "/BPM/runtime/users/flows/pending/amount";
-            ContentValues params = new ContentValues();
-            String access_token = Tools.getAccess_token(mActivity);
-            params.put("applicationId", "11e7-8d55-9c8815e6-8d1c-edfa8b3b5e37");
-            params.put("userId", UserInfo.uid);
-            params.put("access_token", access_token);
-            ColorsConfig.commonParams(params);
-            OkHttpConnector.httpGet(mActivity, url, params, new IGetListener() {
-                @Override
-                public void httpReqResult(String response) {
-                    int code = HttpTools.getCode(response);
-                    if (code == 0) {
-                        String contentString = HttpTools.getContentString(response);
-                        if (!TextUtils.isEmpty(contentString)) {
-                            tvExamineNum.setText(contentString);
-                            try {
-                                count = Integer.parseInt(contentString);
-                            } catch (NumberFormatException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-
-                    String oaUrl = Contants.URl.URL_ICETEST + "/oa/examineNum";
-                    ContentValues params = new ContentValues();
-                    params.put("username", UserInfo.employeeAccount);
-                    ColorsConfig.commonParams(params);
-
-                    OkHttpConnector.httpGet(mActivity, oaUrl, params, new IGetListener() {
-                        @Override
-                        public void httpReqResult(String response) {
-                            OaConfig config = GsonUtil.parse(response, OaConfig.class);
-                            if (config != null && config.isSuccess() && isAdded()) {
-                                OaConfig.ContentBean bean = config.getContent();
-                                if (bean != null) {
-                                    count = count + bean.getNumber();
-                                    tvExamineNum.setText(String.valueOf(count));
-                                }
-                            }
-                        }
-                    });
-                }
-            });
-        }
-
-
+//        getApproval();
         /**
          * 常用应用与其他应用中只要是 “扫码开门”  “对公账户” 都触发该点击事件
          */
@@ -1153,6 +1054,128 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
             }
         });
     }
+
+    /**
+     * 获取实时审批数量
+     */
+    private void getApproval() {
+        String skin_code = Tools.getStringValue(mActivity, Contants.storage.SKINCODE);
+        if (skin_code.equals("102")) {//中住
+            magLinearLayoutExamineNum.setNetworkRequestListener(new NetworkRequestListener() {
+
+                @Override
+                public void onSuccess(ManageMentLinearlayout magLearLayout, Message msg, String response) {
+                    int code = HttpTools.getCode(response);
+                    if (code == 0) {
+                        JSONObject jsonObject = HttpTools.getContentJSONObject(response);
+                        try {
+                            if (jsonObject != null) {
+                                examineNum = jsonObject.getString("number");
+                                Log.e(TAG, "onSuccess:examineNum " + examineNum);
+                                if (examineNum != null) {
+                                    tvExamineNum.setText(examineNum);
+                                }
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        tvExamineNum.setText("0");
+                    }
+                }
+
+                @Override
+                public void onFail(ManageMentLinearlayout magLearLayout, Message msg, String hintString) {
+                    ToastFactory.showToast(mActivity, hintString);
+                }
+
+                @Override
+                public void onRequest(MessageHandler msgHand) {
+                    RequestConfig config = new RequestConfig(mActivity, 0);
+                    config.handler = msgHand.getHandler();
+                    RequestParams params = new RequestParams();
+                    params.put("username", UserInfo.employeeAccount);
+                    HttpTools.httpGet(Contants.URl.URL_ICETEST, "/oa/examineNum", config, params);
+                }
+            });
+        } else {
+            String url = Contants.URl.URL_ICETEST + "/BPM/runtime/users/flows/pending/amount";
+            ContentValues params = new ContentValues();
+            String access_token = Tools.getAccess_token(mActivity);
+            params.put("applicationId", "11e7-8d55-9c8815e6-8d1c-edfa8b3b5e37");
+            params.put("userId", UserInfo.uid);
+            params.put("access_token", access_token);
+            ColorsConfig.commonParams(params);
+            OkHttpConnector.httpGet(mActivity, url, params, new IGetListener() {
+                @Override
+                public void httpReqResult(String response) {
+                    int code = HttpTools.getCode(response);
+                    if (code == 0) {
+                        String contentString = HttpTools.getContentString(response);
+                        if (!TextUtils.isEmpty(contentString)) {
+                            tvExamineNum.setText(contentString);
+                            try {
+                                count = Integer.parseInt(contentString);
+                            } catch (NumberFormatException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                }
+            });
+
+            String oaUrl = Contants.URl.URL_ICETEST + "/oa/examineNum";
+            ContentValues params2 = new ContentValues();
+            params2.put("username", UserInfo.employeeAccount);
+            ColorsConfig.commonParams(params2);
+            OkHttpConnector.httpGet(mActivity, oaUrl, params2, new IGetListener() {
+                @Override
+                public void httpReqResult(String response) {
+                    OaConfig config = GsonUtil.parse(response, OaConfig.class);
+                    if (config != null && config.isSuccess() && isAdded()) {
+                        OaConfig.ContentBean bean = config.getContent();
+                        if (bean != null) {
+                            count = count + bean.getNumber();
+                            tvExamineNum.setText(String.valueOf(count));
+                        }
+                    }
+                }
+            });
+            if (TextUtils.isEmpty(accessToken)) {
+                accessToken = Tools.getStringValue(mActivity, Contants.storage.APPAUTH);
+            }
+            Map<String, Object> map = new HashMap<>();
+            map.put("access_token", accessToken);
+            ColorsConfig.commonParams(map);
+            Map<String, Object> map1 = TokenUtils.getNewBalance(mActivity, map);
+            ContentValues paramsbalance = new ContentValues();
+            Set<String> keySet = map1.keySet();
+            Iterator<String> it = keySet.iterator();
+            while (it.hasNext()) {
+                String key = it.next();
+                Object value = map1.get(key);
+                paramsbalance.put(key, String.valueOf(value));
+            }
+            OkHttpConnector.httpPost(mActivity, Contants.URl.URL_ICETEST + "/jrpt/balance/getWaitingBalanceCount",
+                    paramsbalance, new IPostListener() {
+                        @Override
+                        public void httpReqResult(String response) {
+                            try {
+                                OaConfig config = GsonUtil.parse(response, OaConfig.class);
+                                if (config != null && config.isSuccess() && isAdded()) {
+                                    OaConfig.ContentBean bean = config.getContent();
+                                    if (bean != null) {
+                                        count = count + bean.getWaitingBalanceCount();
+                                        tvExamineNum.setText(String.valueOf(count));
+                                    }
+                                }
+                            } catch (Exception e) {
+                            }
+                        }
+                    });
+        }
+    }
+
 
     /**
      * 从本地数据库取出数据
@@ -1366,6 +1389,15 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
     }
 
     @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            count=0;
+            getApproval();
+        }
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         magLinearLayoutTicket.postDelayed(new Runnable() {//我的饭票
@@ -1394,89 +1426,6 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
         mActivity = activity;
     }
 
-    /**
-     * 判断是否存在其他应用
-     *
-     * @param context
-     * @param packageName
-     * @return
-     */
-    public static boolean isAvilible(Context context, String packageName) {
-        // 获取packagemanager
-        final PackageManager packageManager = context.getPackageManager();
-        // 获取所有已安装程序的包信息
-        List<PackageInfo> packageInfos = packageManager.getInstalledPackages(0);
-        // 用于存储所有已安装程序的包名
-        List<String> packageNames = new ArrayList<String>();
-        // 从pinfo中将包名字逐一取出，压入pName list中
-        if (packageInfos != null) {
-            for (int i = 0; i < packageInfos.size(); i++) {
-                String packName = packageInfos.get(i).packageName;
-                // Log.e(TAG, packName);
-                packageNames.add(packName);
-            }
-        }
-        // 判断packageNames中是否有目标程序的包名，有TRUE，没有FALSE
-        return packageNames.contains(packageName);
-    }
-
-
-    //轮播图
-    private void getAdInfo() {
-
-        String url = Contants.URl.URL_ICETEST + "/newoa/banner/list";
-
-        ContentValues params = new ContentValues();
-        params.put("corp_id", Tools.getStringValue(getContext(), Contants.storage.CORPID));
-        params.put("plate_code", "100301");
-
-        ColorsConfig.commonParams(params);
-
-        OkHttpConnector.httpPost(mActivity, url, params, new IPostListener() {
-            @Override
-            public void httpReqResult(String response) {
-                AdvConfig bean = GsonUtil.parse(response, AdvConfig.class);
-                if (bean != null && bean.isSuccess()) {
-
-                    final List<String> images = new ArrayList<>();
-                    final List<String> titles = new ArrayList<>();
-                    final List<String> urls = new ArrayList<>();
-
-                    List<AdvConfig.ContentBean.ListBean._$100301Bean> list = bean.getContent().getList().get_$100301();
-                    if (!ListUtils.isEmpty(list)) {
-                        for (AdvConfig.ContentBean.ListBean._$100301Bean item : list) {
-                            images.add(item.getImg_path());
-                            titles.add(item.getName());
-                            urls.add(item.getUrl());
-                        }
-
-                        OnBannerListener listener = new OnBannerListener() {
-                            @Override
-                            public void OnBannerClick(int position) {
-                                String url = urls.get(position);
-                                if (!TextUtils.isEmpty(url)) {
-                                    Intent intent = new Intent(mActivity, MyBrowserActivity.class);
-                                    intent.putExtra(MyBrowserActivity.KEY_URL, url);
-                                    mActivity.startActivity(intent);
-                                }
-                            }
-                        };
-
-                        banner.setImages(images)
-                                .setBannerTitles(titles)
-                                .setImageLoader(new GlideImageLoader())
-                                .setOnBannerListener(listener)
-                                .setBannerStyle(BannerConfig.CIRCLE_INDICATOR_TITLE_INSIDE)
-                                .start();
-                    }
-
-
-                }
-            }
-        });
-
-    }
-
     @Override
     public void onRequestStart(Message msg, String hintString) {
     }
@@ -1497,19 +1446,5 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
     @Override
     public void onFail(Message msg, String hintString) {
     }
-
-
-    public class GlideImageLoader extends ImageLoader {
-        @Override
-        public void displayImage(Context context, Object path, ImageView imageView) {
-            //具体方法内容自己去选择，次方法是为了减少banner过多的依赖第三方包，所以将这个权限开放给使用者去选择
-            Glide.with(context.getApplicationContext())
-                    .load(path)
-                    .apply(new RequestOptions()
-                            .diskCacheStrategy(DiskCacheStrategy.ALL))
-                    .into(imageView);
-        }
-    }
-
 }
 

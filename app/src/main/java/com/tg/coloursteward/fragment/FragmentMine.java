@@ -139,7 +139,7 @@ public class FragmentMine extends Fragment implements ResponseListener {
             public void getData(String result, int positon) {
                 String url = list_item.get(positon).getUrl();
                 String name = list_item.get(positon).getName();
-                if ("colourlife://proto?type=findPwd".equals(url)) {
+                if (name.contains("findPwd")) {
                     openType = 1;
                     find_pay_password();
                 } else if (name.contains("工资")) {

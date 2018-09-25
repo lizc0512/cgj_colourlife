@@ -17,6 +17,7 @@ import android.text.TextUtils;
 
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.updateapk.UpdateManager;
+import com.youmai.hxsdk.config.ColorsConfig;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -471,5 +472,46 @@ public class TokenUtils {
             stringMap.put(key, value);
         }
         return stringMap;
+    }
+
+    /**
+     * 审批-金融平台未读审批参数加密
+     * @return
+     */
+    public static Map<String, Object> getNewBalance(Context context, Map<String, Object> paramsMap){
+        String map = null;
+        paramsMap.put("cmdno", getRandomNonceStr());
+        paramsMap.put("ver", "300");
+        String buff = "";
+        try {
+            List<Map.Entry<String, Object>> infoIds = new ArrayList<Map.Entry<String, Object>>(paramsMap.entrySet());
+            // 对所有传入参数按照字段名的 ASCII 码从小到大排序（字典序）
+            Collections.sort(infoIds, new Comparator<Map.Entry<String, Object>>() {
+                @Override
+                public int compare(Map.Entry<String, Object> o1, Map.Entry<String, Object> o2) {
+                    return (o1.getKey()).toString().compareTo((o2.getKey()).toString());
+                }
+            });
+            // 构造URL 键值对的格式
+            StringBuilder buf = new StringBuilder();
+            for (Map.Entry<String, Object> item : infoIds) {
+                if (null != item && !TextUtils.isEmpty(item.getValue().toString())) {
+                    String key = item.getKey();
+                    String val = item.getValue().toString();
+                    val = URLEncoder.encode(val, "utf-8");
+                    val = val.replace(" ", "%20");
+                    val = val.replace("*", "%2A");
+                    val = val.replace("+", "%2B");
+                    buf.append(key + "=" + val);
+                    buf.append("&");
+                }
+            }
+            buf.deleteCharAt(buf.length()-1);
+            buff = setMD5(buf.toString() + ColorsConfig.getAppID());
+            paramsMap.put("fp", buff);
+        } catch (Exception e) {
+            return paramsMap;
+        }
+        return paramsMap;
     }
 }

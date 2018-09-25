@@ -1,6 +1,5 @@
 package com.tg.coloursteward;
 
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,7 +16,6 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.constant.Contants;
-import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.net.GetTwoRecordListener;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.MD5;
@@ -78,6 +76,8 @@ public class PublicAccountTransferToColleagueActivity extends BaseActivity {
 
     private PwdDialog2 aDialog;
     private PwdDialog2.ADialogCallback aDialogCallback;
+    private ProgressDialog mProgressDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -125,7 +125,7 @@ public class PublicAccountTransferToColleagueActivity extends BaseActivity {
                             submit();
                         }
                     };
-                    aDialog = new PwdDialog2(this, R.style.choice_dialog,"inputPwd",aDialogCallback);
+                    aDialog = new PwdDialog2(this, R.style.choice_dialog, "inputPwd", aDialogCallback);
                     aDialog.show();
                 }
             } else {
@@ -133,6 +133,25 @@ public class PublicAccountTransferToColleagueActivity extends BaseActivity {
             }
         }
         return super.handClickEvent(v);
+    }
+
+    public void showProgressDialog() {
+        if (mProgressDialog == null) {
+            mProgressDialog = new ProgressDialog(PublicAccountTransferToColleagueActivity.this);
+            mProgressDialog.setMessage("正在兑换");
+            mProgressDialog.setCanceledOnTouchOutside(false);
+        }
+
+        if (!mProgressDialog.isShowing()) {
+            mProgressDialog.show();
+        }
+
+    }
+
+    public void dismissProgressDialog() {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.dismiss();
+        }
     }
 
     private void initOptions() {
@@ -146,7 +165,7 @@ public class PublicAccountTransferToColleagueActivity extends BaseActivity {
 
     private void initView() {
         accessToken_1 = Tools.getStringValue(PublicAccountTransferToColleagueActivity.this, Contants.storage.APPAUTH_1);
-        Log.e(TAG, "initView:鉴权1.0 "+accessToken_1 );
+        Log.e(TAG, "initView:鉴权1.0 " + accessToken_1);
         imgHead = (RoundImageView) findViewById(R.id.rig_head);
         imgHead.setCircleShape();
         tvTicket = (TextView) findViewById(R.id.tv_ticket);
@@ -243,19 +262,11 @@ public class PublicAccountTransferToColleagueActivity extends BaseActivity {
             params.put("destaccountno", cano);
             params.put("starttime", ts);
 
-            Log.e(TAG, "submit: " + accessToken_1 + "\n" +
-                    transferAmount + "\n" + orderno +
-                    "\n" + edtMessage.getEditableText().toString() + "\n"
-                    + payAtid + "\n" +
-                    edtMessage.getEditableText().toString() + "\n" +
-                    payAno + "\n" +
-                    atid + "\n" +
-                    cano + "\n" +
-                    ts);
         } catch (Exception e) {
             e.printStackTrace();
         }
         HttpTools.httpPost(Contants.URl.URL_ICETEST, "/jrpt/transaction/fasttransaction", config, params);
+        showProgressDialog();
     }
 
     public void initData() {
@@ -268,6 +279,7 @@ public class PublicAccountTransferToColleagueActivity extends BaseActivity {
     @Override
     public void onSuccess(Message msg, String jsonString, String hintString) {
         super.onSuccess(msg, jsonString, hintString);
+        dismissProgressDialog();
         int code = HttpTools.getCode(jsonString);
         String message = HttpTools.getMessageString(jsonString);
         if (code == 0) {
@@ -281,6 +293,12 @@ public class PublicAccountTransferToColleagueActivity extends BaseActivity {
             ToastFactory.showToast(PublicAccountTransferToColleagueActivity.this, "兑换失败，请稍后再试");
             Log.e(TAG, "onFailed: " + message);
         }
+    }
+
+    @Override
+    public void onFail(Message msg, String hintString) {
+        super.onFail(msg, hintString);
+        dismissProgressDialog();
     }
 
     /**
@@ -310,7 +328,7 @@ public class PublicAccountTransferToColleagueActivity extends BaseActivity {
                                     submit();
                                 }
                             };
-                            aDialog = new PwdDialog2(PublicAccountTransferToColleagueActivity.this, R.style.choice_dialog,"inputPwd",aDialogCallback);
+                            aDialog = new PwdDialog2(PublicAccountTransferToColleagueActivity.this, R.style.choice_dialog, "inputPwd", aDialogCallback);
                             aDialog.show();
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -335,7 +353,7 @@ public class PublicAccountTransferToColleagueActivity extends BaseActivity {
      */
     private boolean check() {
         transferAmount = edtAmount.getEditableText().toString().trim();
-        if (!transferAmount.equals("")){
+        if (!transferAmount.equals("")) {
             transferAmount = String.valueOf(Double.parseDouble(String.valueOf(transferAmount)));
         }
         if (transferAmount.length() > 0 && Tools.point2(transferAmount)) {

@@ -243,6 +243,10 @@ public class IMMsgManager {
             try {
                 YouMaiGroup.GroupMemberChangeNotify notify = YouMaiGroup.GroupMemberChangeNotify.parseFrom(data);
                 int groupId = notify.getGroupId();
+                if (notify.getGroupType() == YouMaiBasic.GroupType.GROUP_TYPE_COMMUNITY) {
+                    return;
+                }
+
                 List<YouMaiGroup.GroupMemberItem> list = notify.getMemberListList();
                 YouMaiGroup.GroupMemberOptType type = notify.getType();
 
@@ -333,6 +337,11 @@ public class IMMsgManager {
             try {
                 YouMaiGroup.IMGroupInfoModifyNotify notify = YouMaiGroup.IMGroupInfoModifyNotify.parseFrom(data);
                 int groupId = notify.getGroupId();
+
+                if (notify.getGroupType() == YouMaiBasic.GroupType.GROUP_TYPE_COMMUNITY) {
+                    return;
+                }
+
                 //String uuid = notify.getUserId();
                 YouMaiGroup.GroupInfoModifyType type = notify.getType();
                 String memberName = notify.getSrcOwnerName();

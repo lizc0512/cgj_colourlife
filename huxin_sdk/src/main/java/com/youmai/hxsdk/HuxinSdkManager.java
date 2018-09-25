@@ -515,49 +515,62 @@ public class HuxinSdkManager {
     }
 
 
+    private AlertDialog mAlertDialog;
+
     public void reLoginDialog() {
         if (isLogin()) {
             isKicked = false;
         }
+
         final Activity act = getStackAct().currentActivity();
         if (isKicked && act != null) {
-            final AlertDialog.Builder builder = new AlertDialog.Builder(act);
-            builder.setMessage(R.string.relogin_info);
-            builder.setNegativeButton(R.string.hx_cancel, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                }
-            });
-
-            builder.setPositiveButton(R.string.relogin_confirm, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                    String uuid = HuxinSdkManager.instance().getUuid();
-
-                    if (!TextUtils.isEmpty(uuid)) {
-                        final ProgressDialog progressDialog = new ProgressDialog(act);
-                        progressDialog.setMessage("正在重新登录，请稍后...");
-                        progressDialog.show();
-
-                        String ip = AppUtils.getStringSharedPreferences(mContext, "IP", AppConfig.getSocketHost());
-                        int port = AppUtils.getIntSharedPreferences(mContext, "PORT", AppConfig.getSocketPort());
-
-                        InetSocketAddress isa = new InetSocketAddress(ip, port);
-                        connectTcp(uuid, isa);
-
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                progressDialog.dismiss();
-                            }
-                        }, 1000);
-
+            if (mAlertDialog == null) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(act);
+                builder.setMessage(R.string.relogin_info);
+                builder.setNegativeButton(R.string.hx_cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        close();
+                        mAlertDialog = null;
                     }
-                }
-            });
-            builder.create().show();
+                });
+
+                builder.setPositiveButton(R.string.relogin_confirm, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        String uuid = HuxinSdkManager.instance().getUuid();
+
+                        if (!TextUtils.isEmpty(uuid)) {
+                            final ProgressDialog progressDialog = new ProgressDialog(act);
+                            progressDialog.setMessage("正在重新登录，请稍后...");
+                            progressDialog.show();
+
+                            String ip = AppUtils.getStringSharedPreferences(mContext, "IP", AppConfig.getSocketHost());
+                            int port = AppUtils.getIntSharedPreferences(mContext, "PORT", AppConfig.getSocketPort());
+
+                            InetSocketAddress isa = new InetSocketAddress(ip, port);
+                            connectTcp(uuid, isa);
+
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    progressDialog.dismiss();
+                                }
+                            }, 1000);
+
+                            mAlertDialog = null;
+
+                        }
+                    }
+                });
+                mAlertDialog = builder.create();
+            }
+
+            if (!mAlertDialog.isShowing()) {
+                mAlertDialog.show();
+            }
         }
     }
 

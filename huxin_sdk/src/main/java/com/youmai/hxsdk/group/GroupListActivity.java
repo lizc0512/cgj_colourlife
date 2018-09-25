@@ -76,6 +76,7 @@ public class GroupListActivity extends SdkBaseActivity {
         setContentView(R.layout.activity_group_list);
         initView();
 
+        HuxinSdkManager.instance().getStackAct().addActivity(this);
         localBroadcastManager = LocalBroadcastManager.getInstance(mContext);
         mLocalMsgReceiver = new LocalMsgReceiver();
         IntentFilter filter = new IntentFilter();
@@ -99,6 +100,8 @@ public class GroupListActivity extends SdkBaseActivity {
         }
         localBroadcastManager.unregisterReceiver(mLocalMsgReceiver);
         localBroadcastManager = null;
+
+        HuxinSdkManager.instance().getStackAct().removeActivity(this);
     }
 
     private void initView() {

@@ -21,6 +21,7 @@ import com.youmai.hxsdk.activity.SdkBaseActivity;
 import com.youmai.hxsdk.db.bean.GroupInfoBean;
 import com.youmai.hxsdk.db.helper.GroupInfoHelper;
 import com.youmai.hxsdk.group.adapter.GroupListAdapter;
+import com.youmai.hxsdk.proto.YouMaiBasic;
 import com.youmai.hxsdk.proto.YouMaiGroup;
 import com.youmai.hxsdk.socket.PduBase;
 import com.youmai.hxsdk.socket.ReceiveListener;
@@ -43,7 +44,7 @@ public class GroupListActivity extends SdkBaseActivity {
     private GroupListAdapter mAdapter;
     private List<GroupInfoBean> mGroupList;
     private LinearLayoutManager mLinearLayoutManager;
-    private  View linear_empty;
+    private View linear_empty;
 
     private LocalBroadcastManager localBroadcastManager;
     private LocalMsgReceiver mLocalMsgReceiver;
@@ -194,6 +195,11 @@ public class GroupListActivity extends SdkBaseActivity {
                     List<GroupInfoBean> list = new ArrayList<>();
                     if (!ListUtils.isEmpty(changeList)) {
                         for (YouMaiGroup.GroupInfo item : changeList) {
+
+                            if (item.getGroupType() == YouMaiBasic.GroupType.GROUP_TYPE_COMMUNITY) {
+                                continue;
+                            }
+
                             GroupInfoBean bean = new GroupInfoBean();
 
                             bean.setId(findEntityId(item.getGroupId(), cacheList));

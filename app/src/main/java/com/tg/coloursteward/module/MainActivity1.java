@@ -352,7 +352,7 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
         } else if (msg.arg1 == HttpTools.GET_VERSION_INFO) {//版本更新
             JSONObject jsonObject = HttpTools.getContentJSONObject(jsonString);
             String content = HttpTools.getContentString(jsonString);
-            if (code == 0) {
+            if (code == 0 && null != jsonObject) {
                 try {
                     int apkCode = jsonObject.getInt("result");
                     ResponseData data = HttpTools.getResponseKey(content, "info");
@@ -381,7 +381,7 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
                             manager.checkUpdate(apkinfo, false);
                         }
                     }
-                } catch (JSONException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 

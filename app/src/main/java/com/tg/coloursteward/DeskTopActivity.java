@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -63,7 +64,9 @@ public class DeskTopActivity extends BaseActivity implements OnItemClickListener
             ToastFactory.showToast(DeskTopActivity.this, "参数错误");
             finish();
         }
-        headView.setTitle(item.getComefrom());
+        if (TextUtils.isEmpty(item.getComefrom())) {
+            headView.setTitle(item.getComefrom());
+        }
         initView();
     }
 

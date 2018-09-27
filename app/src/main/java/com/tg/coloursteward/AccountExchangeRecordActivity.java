@@ -13,13 +13,9 @@ import android.view.WindowManager;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
-import com.tg.coloursteward.adapter.AccountDetailNewAdapter;
 import com.tg.coloursteward.adapter.AccountExchangeRecordAdapter;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.constant.Contants;
-import com.tg.coloursteward.fragment.FragmentDeskTop;
-import com.tg.coloursteward.info.AccountDetailInfo;
-import com.tg.coloursteward.info.AccountDetailNewInfo;
 import com.tg.coloursteward.info.AccountExchangeRecordInfo;
 import com.tg.coloursteward.info.AppDetailsGridViewInfo;
 import com.tg.coloursteward.info.UserInfo;
@@ -33,7 +29,6 @@ import com.tg.coloursteward.serice.AuthAppService;
 import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.AppDetailPopWindowView;
-import com.tg.coloursteward.view.PopWindowView;
 import com.tg.coloursteward.view.PullRefreshListView;
 import com.tg.coloursteward.view.dialog.ToastFactory;
 
@@ -42,7 +37,6 @@ import org.greenrobot.eventbus.Subscribe;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.JSONTokener;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -122,14 +116,14 @@ public class AccountExchangeRecordActivity extends BaseActivity {
                         String total = jsonObjec2.getString("total");
                         JSONArray data = jsonObjec2.getJSONArray("data");
                         int length = data.length();
-                        Log.e(TAG, "refreshData:length "+length );
-                        Log.e(TAG, "refreshData:total "+total );
+                        Log.e(TAG, "refreshData:length " + length);
+                        Log.e(TAG, "refreshData:total " + total);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
 
                     ResponseData data = HttpTools.getResponseData(result);
-                    Log.e(TAG, "refreshData: data.length"+data.length );
+                    Log.e(TAG, "refreshData: data.length" + data.length);
                     if (data.length > 0) {
                         AccountExchangeRecordInfo info;
                         for (int i = 0; i < data.length; i++) {
@@ -199,7 +193,7 @@ public class AccountExchangeRecordActivity extends BaseActivity {
 //                params.put("pagesize", PullRefreshListView.PAGER_SIZE);
 //                params.put("pagesize", "9999");
 
-                Log.e(TAG, "onLoading: " + general_uuid +"****"+ accessToken);
+                Log.e(TAG, "onLoading: " + general_uuid + "****" + accessToken);
                 HttpTools.httpGet(Contants.URl.URL_ICETEST, "/split/api/account/withdrawals", config, params);
             }
         });

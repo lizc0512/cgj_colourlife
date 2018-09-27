@@ -1,5 +1,6 @@
 package com.tg.coloursteward;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
@@ -68,7 +69,7 @@ public class PublicAccountExchangeActivity extends BaseActivity {
 
     private PwdDialog2 aDialog;
     private PwdDialog2.ADialogCallback aDialogCallback;
-
+    private ProgressDialog mProgressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -230,8 +231,26 @@ public class PublicAccountExchangeActivity extends BaseActivity {
             e.printStackTrace();
         }
         HttpTools.httpPost(Contants.URl.URL_ICETEST, "/jrpt/transaction/fasttransaction", config, params);
+        showProgressDialog();
+    }
+    public void showProgressDialog() {
+        if (mProgressDialog == null) {
+            mProgressDialog = new ProgressDialog(this);
+            mProgressDialog.setMessage("正在兑换");
+            mProgressDialog.setCanceledOnTouchOutside(false);
+        }
+
+        if (!mProgressDialog.isShowing()) {
+            mProgressDialog.show();
+        }
+
     }
 
+    public void dismissProgressDialog() {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.dismiss();
+        }
+    }
     public void initData() {
         String str = Contants.URl.HEAD_ICON_URL + "avatar?uid=" + UserInfo.employeeAccount;
         imageLoader.clearMemoryCache();
@@ -240,8 +259,15 @@ public class PublicAccountExchangeActivity extends BaseActivity {
     }
 
     @Override
+    public void onFail(Message msg, String hintString) {
+        super.onFail(msg, hintString);
+        dismissProgressDialog();
+    }
+
+    @Override
     public void onSuccess(Message msg, String jsonString, String hintString) {
         super.onSuccess(msg, jsonString, hintString);
+        dismissProgressDialog();
         int code = HttpTools.getCode(jsonString);
         String message = HttpTools.getMessageString(jsonString);
         if (msg.arg1 == HttpTools.GET_USER_INFO) {

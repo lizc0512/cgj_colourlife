@@ -1,6 +1,5 @@
 package com.tg.coloursteward;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -22,7 +21,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
-import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.DisplayMetrics;
@@ -61,6 +59,7 @@ import com.tg.coloursteward.net.MD5;
 import com.tg.coloursteward.serice.OAuth2Service;
 import com.tg.coloursteward.util.FileSizeUtil;
 import com.tg.coloursteward.util.Helper;
+import com.tg.coloursteward.util.TokenUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.util.Utils;
 import com.tg.coloursteward.view.X5WebView;
@@ -257,8 +256,7 @@ public class MyBrowserActivity extends Activity implements OnClickListener, AMap
         settings.setBuiltInZoomControls(true);
         settings.setLoadWithOverviewMode(true);
         settings.setDomStorageEnabled(true);
-        @SuppressLint("MissingPermission")
-        String imei = ((TelephonyManager) this.getSystemService(TELEPHONY_SERVICE)).getDeviceId();
+        String imei = TokenUtils.getImeiId(MyBrowserActivity.this);
         try {
             imeis = MD5.getMd5Value(imei).toUpperCase();
             if (TextUtils.isEmpty(imei)) {
@@ -283,12 +281,12 @@ public class MyBrowserActivity extends Activity implements OnClickListener, AMap
                 oAuth2Service = new OAuth2Service(MyBrowserActivity.this);
             }
             oAuth2Service.getOAuth2Service("");
-            color_token=Tools.getAccess_token2(MyBrowserActivity.this);
+            color_token = Tools.getAccess_token2(MyBrowserActivity.this);
             if (TextUtils.isEmpty(color_token) && loading == true) {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        color_token=Tools.getAccess_token2(MyBrowserActivity.this);
+                        color_token = Tools.getAccess_token2(MyBrowserActivity.this);
                         headerMap.put("color-token", color_token);
                         webView.loadUrl(url, headerMap);
                         //定义js调用android

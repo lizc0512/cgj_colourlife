@@ -24,7 +24,9 @@ public class X5WebView extends WebView {
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
             Map<String, String> headerMap = new HashMap<>();
             headerMap.put("color-token", UserInfo.color_token);
-            view.loadUrl(url, headerMap);
+            if (null != view) {
+                view.loadUrl(url, headerMap);
+            }
             return true;
         }
     };

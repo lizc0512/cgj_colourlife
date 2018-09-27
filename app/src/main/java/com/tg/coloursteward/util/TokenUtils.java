@@ -1,6 +1,7 @@
 package com.tg.coloursteward.util;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -13,7 +14,6 @@ import android.net.wifi.WifiManager;
 import android.support.v4.app.ActivityCompat;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
-
 
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.updateapk.UpdateManager;
@@ -48,7 +48,7 @@ import cn.jpush.android.api.JPushInterface;
 
 
 public class TokenUtils {
-    public static String getDeviceInfor(Context context,String longitude,String latitude ) {
+    public static String getDeviceInfor(Context context, String longitude, String latitude) {
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("networkType", getNetworkType(context));//网络类型
@@ -193,6 +193,8 @@ public class TokenUtils {
         String imei = "";
         if (tm != null) {
             if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.READ_PHONE_STATE}, 1);
+            } else {
                 imei = tm.getDeviceId();
             }
         }
@@ -206,6 +208,8 @@ public class TokenUtils {
         String sn = "";
         if (tm != null) {
             if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.READ_PHONE_STATE}, 1);
+            } else {
                 sn = tm.getSimSerialNumber();
             }
         }
@@ -377,6 +381,8 @@ public class TokenUtils {
         // 返回唯一的用户ID;就是这张卡的编号神马的
         String IMSI = "";
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.READ_PHONE_STATE}, 1);
+        } else {
             IMSI = telephonyManager.getSubscriberId();
         }
         // IMSI号前面3位460是国家，紧接着后面2位00 02是中国移动，01是中国联通，03是中国电信。
@@ -393,9 +399,10 @@ public class TokenUtils {
         }
         return ProvidersName;
     }
+
     /***4.0新接口的安全加密以后的请求参数Map**/
     public static Map<String, Object> getNewSaftyMap(Context context, Map<String, Object> paramsMap) {
-        String version=UpdateManager.getVersionName(context);
+        String version = UpdateManager.getVersionName(context);
         paramsMap.put("nonce_str", getRandomNonceStr());
         paramsMap.put("native_type", 1);
         paramsMap.put("version", version);
@@ -431,6 +438,7 @@ public class TokenUtils {
         }
         return paramsMap;
     }
+
     /***4.0生成8位随机数算法*/
     private static String getRandomNonceStr() {
         String base = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXZY";
@@ -442,6 +450,7 @@ public class TokenUtils {
         }
         return sb.toString();
     }
+
     /***md5加密***/
     public static String setMD5(String string) {
         MessageDigest md5;
@@ -463,6 +472,7 @@ public class TokenUtils {
         }
         return sb.toString();
     }
+
     public static Map<String, String> getStringMap(Map<String, Object> paramsMap) {
         Iterator<String> it = paramsMap.keySet().iterator();
         Map<String, String> stringMap = new HashMap<>();
@@ -476,9 +486,10 @@ public class TokenUtils {
 
     /**
      * 审批-金融平台未读审批参数加密
+     *
      * @return
      */
-    public static Map<String, Object> getNewBalance(Context context, Map<String, Object> paramsMap){
+    public static Map<String, Object> getNewBalance(Context context, Map<String, Object> paramsMap) {
         String map = null;
         paramsMap.put("cmdno", getRandomNonceStr());
         paramsMap.put("ver", "300");
@@ -506,7 +517,7 @@ public class TokenUtils {
                     buf.append("&");
                 }
             }
-            buf.deleteCharAt(buf.length()-1);
+            buf.deleteCharAt(buf.length() - 1);
             buff = setMD5(buf.toString() + ColorsConfig.getAppID());
             paramsMap.put("fp", buff);
         } catch (Exception e) {

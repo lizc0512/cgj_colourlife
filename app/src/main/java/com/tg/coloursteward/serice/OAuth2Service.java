@@ -48,10 +48,13 @@ public class OAuth2Service {
                     @Override
                     public void httpReqResult(String jsonString) {
                         if (null != jsonString) {
-                            Oauth2Entity oauth2Entity = GsonUtils.gsonToBean(jsonString, Oauth2Entity.class);
-                            access_token = saveAccessToken(oauth2Entity);
-                            if (("userinfo").equals(status)) {
-                                getUserInfo();
+                            try {
+                                Oauth2Entity oauth2Entity = GsonUtils.gsonToBean(jsonString, Oauth2Entity.class);
+                                access_token = saveAccessToken(oauth2Entity);
+                                if (("userinfo").equals(status)) {
+                                    getUserInfo();
+                                }
+                            } catch (Exception e) {
                             }
                         }
                     }
@@ -95,12 +98,15 @@ public class OAuth2Service {
     }
 
     private String saveAccessToken(Oauth2Entity oauth2Entity) {
-        Tools.saveRefresh_token2Time(context, System.currentTimeMillis());
-        Tools.saveToken_type(context, oauth2Entity.getToken_type());
-        Tools.saveExpires_in(context, Long.valueOf(oauth2Entity.getExpires_in()));
-        Tools.saveAccess_token2(context, oauth2Entity.getAccess_token());
-        Tools.saveRefresh_token2(context, oauth2Entity.getRefresh_token());
-        UserInfo.color_token = oauth2Entity.getAccess_token();
+        try {
+            Tools.saveRefresh_token2Time(context, System.currentTimeMillis());
+            Tools.saveToken_type(context, oauth2Entity.getToken_type());
+            Tools.saveExpires_in(context, Long.valueOf(oauth2Entity.getExpires_in()));
+            Tools.saveAccess_token2(context, oauth2Entity.getAccess_token());
+            Tools.saveRefresh_token2(context, oauth2Entity.getRefresh_token());
+            UserInfo.color_token = oauth2Entity.getAccess_token();
+        } catch (Exception e) {
+        }
         return Tools.getAccess_token2(context);
     }
 

@@ -326,10 +326,16 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
         int code = HttpTools.getCode(jsonString);
         String message = HttpTools.getMessageString(jsonString);
         if (msg.arg1 == HttpTools.GET_USER_INFO) {
-            AccountEntity accountEntity = GsonUtils.gsonToBean(jsonString, AccountEntity.class);
-            UserInfo.infoorgId = accountEntity.getContent().getOrgId();
-            Tools.saveOrgId(MainActivity1.this, accountEntity.getContent().getOrgId());
-            Tools.saveStringValue(MainActivity1.this, "org_depart_name", accountEntity.getContent().getFamilyName());
+            AccountEntity accountEntity = null;
+            try {
+                accountEntity = GsonUtils.gsonToBean(jsonString, AccountEntity.class);
+            } catch (Exception e) {
+            }
+            if (null != accountEntity) {
+                UserInfo.infoorgId = accountEntity.getContent().getOrgId();
+                Tools.saveOrgId(MainActivity1.this, accountEntity.getContent().getOrgId());
+                Tools.saveStringValue(MainActivity1.this, "org_depart_name", accountEntity.getContent().getFamilyName());
+            }
             String response = HttpTools.getContentString(jsonString);
             ResponseData data = HttpTools.getResponseContentObject(response);
             Tools.loadUserInfo(data, jsonString);
@@ -352,7 +358,7 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
         } else if (msg.arg1 == HttpTools.GET_VERSION_INFO) {//版本更新
             JSONObject jsonObject = HttpTools.getContentJSONObject(jsonString);
             String content = HttpTools.getContentString(jsonString);
-            if (code == 0) {
+            if (code == 0 && null != jsonObject) {
                 try {
                     int apkCode = jsonObject.getInt("result");
                     ResponseData data = HttpTools.getResponseKey(content, "info");
@@ -381,7 +387,7 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
                             manager.checkUpdate(apkinfo, false);
                         }
                     }
-                } catch (JSONException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 

@@ -249,7 +249,7 @@ public class HuxinSdkManager {
     }
 
     public void setUserInfo(UserInfo info) {
-        if (mUserInfo != null && mUserInfo.equals(info)) {
+        if (mUserInfo != null && mUserInfo.equals(info) && isLogin()) {
             return;
         }
 

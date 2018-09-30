@@ -6,24 +6,26 @@ import android.text.TextUtils;
 
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.entity.Oauth2Entity;
-import com.tg.coloursteward.entity.UserInfoEntity;
 import com.tg.coloursteward.info.UserInfo;
-import com.tg.coloursteward.net.MD5;
+import com.tg.coloursteward.inter.Oauth2CallBack;
 import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.Tools;
-import com.youmai.hxsdk.http.IGetListener;
+import com.tg.coloursteward.view.dialog.ToastFactory;
 import com.youmai.hxsdk.http.IPostListener;
 import com.youmai.hxsdk.http.OkHttpConnector;
+
+import org.json.JSONObject;
 
 
 /**
  * 彩管家APP oauth2.0授权
  */
-public class OAuth2Service {
+public class OAuth2ServiceUpdate {
     public Context context;
     private String access_token = "";
+    private Oauth2CallBack oauth2CallBack;
 
-    public OAuth2Service(Context context) {
+    public OAuth2ServiceUpdate(Context context) {
         this.context = context;
 
     }
@@ -31,13 +33,14 @@ public class OAuth2Service {
     /**
      * 获取鉴权token信息
      */
-    public void getOAuth2Service(final String status) {
+    public void getOAuth2Service(String username, String passwordMD5, Oauth2CallBack mOauth2CallBack) {
+        this.oauth2CallBack = mOauth2CallBack;
         if (!TextUtils.isEmpty(Tools.getAccess_token2(context))) {//Access_token不为空
             if (!againGetToken()) {//不需要重新请求
-                if (("userinfo").equals(status)) {
-                    getUserInfo();
-                }
                 access_token = Tools.getAccess_token2(context);
+                if (null != oauth2CallBack) {
+                    oauth2CallBack.onData(access_token);
+                }
             } else {//重新使用Refresh_token请求token
                 ContentValues params = new ContentValues();
                 params.put("client_id", "3");
@@ -51,8 +54,8 @@ public class OAuth2Service {
                             try {
                                 Oauth2Entity oauth2Entity = GsonUtils.gsonToBean(jsonString, Oauth2Entity.class);
                                 access_token = saveAccessToken(oauth2Entity);
-                                if (("userinfo").equals(status)) {
-                                    getUserInfo();
+                                if (null != oauth2CallBack) {
+                                    oauth2CallBack.onData(access_token);
                                 }
                             } catch (Exception e) {
                             }
@@ -61,19 +64,10 @@ public class OAuth2Service {
                 });
             }
         } else {
-            String password = null;
-            try {
-                if (!TextUtils.isEmpty(Tools.getStringValue(context, Contants.storage.LOGOIN_PASSWORD))) {
-                    password = MD5.getMd5Value(Tools.getStringValue(context, Contants.storage.LOGOIN_PASSWORD)).toLowerCase();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            if (!TextUtils.isEmpty(password)) {
+            if (!TextUtils.isEmpty(passwordMD5)) {
                 ContentValues params = new ContentValues();
-                String phone = Tools.getStringValue(context, Contants.storage.LOGOIN_PHONE);
-                params.put("username", phone);
-                params.put("password", password);
+                params.put("username", username);
+                params.put("password", passwordMD5);
                 params.put("client_id", "3");
                 params.put("client_secret", Contants.URl.CLIENT_SECRET);
                 params.put("grant_type", "password");
@@ -83,10 +77,19 @@ public class OAuth2Service {
                     public void httpReqResult(String jsonString) {
                         if (null != jsonString) {
                             try {
-                                Oauth2Entity oauth2Entity = GsonUtils.gsonToBean(jsonString, Oauth2Entity.class);
-                                access_token = saveAccessToken(oauth2Entity);
-                                if (("userinfo").equals(status)) {
-                                    getUserInfo();
+                                JSONObject jsonObject = new JSONObject(jsonString);
+                                if (jsonObject.has("code")) {
+                                    int code = jsonObject.getInt("code");
+                                    if (code != 0) {
+                                        String message = jsonObject.getString("message");
+                                        ToastFactory.showToast(context, message);
+                                    }
+                                } else if (jsonObject.has("token_type")) {
+                                    Oauth2Entity oauth2Entity = GsonUtils.gsonToBean(jsonString, Oauth2Entity.class);
+                                    access_token = saveAccessToken(oauth2Entity);
+                                    if (null != oauth2CallBack) {
+                                        oauth2CallBack.onData(access_token);
+                                    }
                                 }
                             } catch (Exception e) {
                             }
@@ -109,46 +112,6 @@ public class OAuth2Service {
         }
         return Tools.getAccess_token2(context);
     }
-
-    /**
-     * 根据access_token获取用户信息
-     */
-    public void getUserInfo() {
-        if (!TextUtils.isEmpty(Tools.getAccess_token2(context))) {//Access_token不为空
-            if (!againGetToken()) {//不需要重新请求token,则直接请求用户数据
-                ContentValues params = new ContentValues();
-                params.put("Authorization", "Bearer " + Tools.getAccess_token2(context));
-            } else {//重新使用Refresh_token请求token
-                ContentValues params = new ContentValues();
-                params.put("client_id", "3");
-                params.put("client_secret", Contants.URl.CLIENT_SECRET);
-                params.put("grant_type", "refresh_token");
-                params.put("refresh_token", Tools.getRefresh_token2(context));
-                OkHttpConnector.httpPost(context, Contants.URl.URL_OAUTH2 + "/oauth/token", params, new IPostListener() {
-                    @Override
-                    public void httpReqResult(String jsonString) {
-                        if (null != jsonString) {
-                            Oauth2Entity oauth2Entity = GsonUtils.gsonToBean(jsonString, Oauth2Entity.class);
-                            saveAccessToken(oauth2Entity);
-                            ContentValues params = new ContentValues();
-                            params.put("Authorization", "Bearer " + Tools.getAccess_token2(context));
-                        }
-                    }
-                });
-            }
-        } else {
-            getOAuth2Service("userinfo");
-        }
-    }
-
-    /**
-     * 保存用户信息
-     *
-     * @param userInfoEntity
-     */
-    private void saveUserInfo(UserInfoEntity userInfoEntity) {
-    }
-
 
     /**
      * 判断授权是否超时

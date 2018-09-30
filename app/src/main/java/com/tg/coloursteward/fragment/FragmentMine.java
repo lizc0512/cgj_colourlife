@@ -173,7 +173,7 @@ public class FragmentMine extends Fragment implements ResponseListener {
             }
         });
         tvRealName.setText(UserInfo.realname);
-        tvJob.setText(UserInfo.jobName);
+        tvJob.setText(UserInfo.jobName+UserInfo.familyName);
     }
 
     /**

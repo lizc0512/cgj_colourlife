@@ -563,27 +563,33 @@ public class Tools {
             }
         }
         boolean changed = false;
-        String uuid = data.getString("uuid");
+        String uuid = data.getString("account_uuid");
         if (uuid == null) {
             return false;
         }
-        String employeeAccount = data.getString("employeeAccount");
-        String realName = data.getString("realname");
+        String employeeAccount = data.getString("username");//OA
+        String realName = data.getString("name");//真实姓名
         String password = data.getString("password");
         String headUrl = data.getString("headUrl");
         String identifier = data.getString("identifier");
         int internal = data.getInt("internal");
         int disable = data.getInt("disable");
         String jobId = data.getString("jobId");
-        String sex = data.getString("sex");
-        String tel = data.getString("tel");
+        int gender = data.getInt("gender");//性别：1女，2男
+        String sex = "";
+        if (gender == 1) {
+            sex = "女";
+        } else if (gender == 2) {
+            sex = "男";
+        }
+        String tel = data.getString("mobile");
         String Company_tel = data.getString("Company_tel");
-        String mobile = data.getString("mobile");
+        String mobile = data.getString("mobile");//手机号
         String mail = data.getString("mail");
         String Icon = data.getString("Icon");
-        String jobName = data.getString("jobName");
+        String jobName = data.getString("job_type");
         String familyId = data.getString("familyId");
-        String familyName = data.getString("familyName");
+        String familyName = data.getString("org_name");//部门名称
         String groupid = data.getString("groupid");
         String notes = data.getString("notes");
         String logintime = data.getString("logintime");
@@ -597,7 +603,7 @@ public class Tools {
         String createtime = data.getString("createtime");
         String uptime = data.getString("uptime");
         String operator = data.getString("operator");
-        String orgId = data.getString("orgId");
+        String orgId = data.getString("org_uuid");
         int online = data.getInt("online");
         int admintype = data.getInt("admintype");
         int Jobonline = data.getInt("Jobonline");

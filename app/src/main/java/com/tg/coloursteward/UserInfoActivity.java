@@ -97,6 +97,7 @@ public class UserInfoActivity extends BaseActivity implements ItemClickListener,
      */
     private void initView() {
         realname = UserInfo.realname;
+        String oa=UserInfo.employeeAccount;
         sex = UserInfo.sex;
         email = UserInfo.email;
         int size = (int) (50 * Tools.getDisplayMetrics(this).density);
@@ -330,11 +331,6 @@ public class UserInfoActivity extends BaseActivity implements ItemClickListener,
                 finish();
             }
         } else if (v.getId() == R.id.rl_icon) {
-            /*if (headImgPath == null) {
-                imageName = getNowTime()+ ".png";
-				headImgPath = getFilesDir().getAbsolutePath()+"/"+imageName;
-			}
-			DialogFactory.getInstance().showPhotoSelector(this, null,headImgPath, 0, 0, 0);*/
             showFileChooser();
         } else {
             if (messageView1.isEditable() || messageView2.isEditable()) {
@@ -420,7 +416,6 @@ public class UserInfoActivity extends BaseActivity implements ItemClickListener,
 
     @Override
     public View getContentView() {
-        // TODO Auto-generated method stub
         return getLayoutInflater().inflate(R.layout.activity_user_info, null);
     }
 

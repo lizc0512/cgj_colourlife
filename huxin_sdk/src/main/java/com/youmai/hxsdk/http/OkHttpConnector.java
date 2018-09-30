@@ -67,35 +67,33 @@ public class OkHttpConnector {
      */
 
     public static void httpGet(Context context, String url, IGetListener request) {
-        httpGet(context, null, url, null, request);
+        httpGet_net(context, null, url, null, request);
     }
 
 
     public static void httpGet(Context context, ContentValues header, String url,
                                IGetListener request) {
-        httpGet(context, header, url, null, request);
+        httpGet_net(context, header, url, null, request);
+    }
+
+    public static void httpGet(Context context, String url, ContentValues header, ContentValues params,
+                               IGetListener request) {
+        httpGet_net(context, header, url, params, request);
     }
 
     public static void httpGet(Context context, String url, ContentValues params,
                                IGetListener request) {
-        httpGet(context, null, url, params, request);
+        httpGet_net(context, null, url, params, request);
     }
 
 
-    public static void httpGet(Context context, ContentValues headers, String url,
-                               ContentValues params, IGetListener request) {
+    public static void httpGet_net(Context context, ContentValues headers, String url,
+                                   ContentValues params, IGetListener request) {
         HttpGetAsyncTask task = new HttpGetAsyncTask(request);
-        if (TextUtils.isEmpty(color_token)) {
-            SharedPreferences sharedPreferences = context.getSharedPreferences("park_cache_map", 0);
-            color_token = sharedPreferences.getString("access_token2", "");
-        }
-        ContentValues headersmap = new ContentValues();
         if (null != headers) {
-            headersmap.putAll(headers);
+            task.setHeaders(headers);
         }
-        headersmap.put("color-token", color_token);
         task.setParams(params);
-        task.setHeaders(headersmap);
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, url);
 
     }
@@ -392,7 +390,7 @@ public class OkHttpConnector {
             Request request = builder.url(url).post(body).build();
             try {
                 Response response = client.newCall(request).execute();
-                if (response.isSuccessful() && response.body() != null) {
+                if ( response.body() != null) {
                     return response.body().string();
                 } else {
                     return response.toString();

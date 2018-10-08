@@ -4,7 +4,6 @@ import com.google.protobuf.ProtocolStringList;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.chat.MsgContent;
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
-import com.youmai.hxsdk.proto.YouMaiBasic;
 import com.youmai.hxsdk.proto.YouMaiMsg;
 import com.youmai.hxsdk.utils.ListUtils;
 
@@ -76,7 +75,7 @@ public class IMChat {
 
         } else if (type == YouMaiMsg.SessionType.SESSION_TYPE_COMMUNITY) {//社群
             //彩管家不处理社群消息
-            /*String uuid = HuxinSdkManager.instance().getUuid();
+            String uuid = HuxinSdkManager.instance().getUuid();
             ProtocolStringList atList = imChat.getForcePushIdsListList();
             if (!ListUtils.isEmpty(atList) && atList.contains(uuid)) {
                 IMMsgManager.instance().addMeInGroup(imChat.getGroupId());
@@ -85,7 +84,7 @@ public class IMChat {
             mMsgBean.setGroupId(imChat.getGroupId())
                     .setTargetUuid(imChat.getGroupId() + "")
                     .setReceiverUserId(uuid)
-                    .setTargetName(imChat.getGroupName());*/
+                    .setTargetName(imChat.getGroupName());
 
         } else {  //单聊
             mMsgBean.setTargetUuid(imChat.getSrcUserId())

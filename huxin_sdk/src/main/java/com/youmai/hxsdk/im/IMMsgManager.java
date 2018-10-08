@@ -201,6 +201,11 @@ public class IMMsgManager {
 
                 HuxinSdkManager.instance().sendMsgReply(imChat.getMsgId());
 
+                YouMaiMsg.SessionType type = imChat.getSessionType();
+                if (type == YouMaiMsg.SessionType.SESSION_TYPE_COMMUNITY) {
+                    return;
+                }
+
                 IMChat im = new IMChat(imChat);
                 notifyMsg(im, false, true);
                 parseCharMsg(im);

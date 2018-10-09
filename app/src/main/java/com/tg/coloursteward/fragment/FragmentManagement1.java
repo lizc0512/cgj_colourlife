@@ -971,8 +971,14 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
                      * 其他点击事件拼接HTML5
                      */
                     if (!info.sso.equals("")) {
-                        AuthTimeUtils mAuthTimeUtils = new AuthTimeUtils();
-                        mAuthTimeUtils.IsAuthTime(mActivity, info.sso, info.clientCode, info.oauthType, info.developerCode, "");
+                        if(info.clientCode.equals("erh")){
+                            AuthTimeUtils mAuthTimeUtils = new AuthTimeUtils();
+                            mAuthTimeUtils.IsAuthTime(mActivity, info.sso, info.clientCode, "0", info.developerCode, "");
+                        }else {
+                            AuthTimeUtils mAuthTimeUtils = new AuthTimeUtils();
+                            mAuthTimeUtils.IsAuthTime(mActivity, info.sso, info.clientCode, "1", info.developerCode, "");
+                        }
+
                     }
                 }
             }

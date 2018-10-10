@@ -249,7 +249,7 @@ public class FragmentMine extends Fragment implements ResponseListener {
     }
 
     public void getHeadImg() {
-        String str = Contants.URl.HEAD_ICON_URL + "avatar?uid=" + UserInfo.employeeAccount;
+        String str = Contants.Html5.HEAD_ICON_URL + "avatar?uid=" + UserInfo.employeeAccount;
         Glide.with(this)
                 .load(str)
                 .apply(new RequestOptions()

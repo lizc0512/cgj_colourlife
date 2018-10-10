@@ -1089,10 +1089,10 @@ public class MapDetailActivity extends Activity implements  OnClickListener,
                 finish();
                 break;
             case R.id.ima_map_email:
-            	getAuth("邮件", Contants.URl.Yj_Url, "yj");
+//            	getAuth("邮件", Contants.URl.Yj_Url, "yj");
                 break;
             case R.id.ima_map_shenpi:
-            	 getAuth("审批", Contants.URl.Sp_Url, "sp");
+//            	 getAuth("审批", Contants.URl.Sp_Url, "sp");
                 break;
             case R.id.ima_map_showorhidden://左侧状态栏隐藏操作
                ShowOrHidden();

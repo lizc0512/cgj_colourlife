@@ -214,9 +214,7 @@ public class FragmentManagement extends Fragment implements MessageHandler.Respo
                     break;
                 case R.id.ll_leave://请假
                     intent = new Intent(mActivity, MyBrowserActivity.class);
-                    String access_token = Tools.getAccess_token(mActivity);
-                    intent.putExtra(MyBrowserActivity.KEY_URL, Contants.URl.URL_H5_LEAVE + "username=" + UserInfo.employeeAccount);
-//                    intent.putExtra(MyBrowserActivity.KEY_URL, Contants.URl.URL_H5_LEAVE + "username=" + UserInfo.employeeAccount + "&access_token=" + access_token);
+                    intent.putExtra(MyBrowserActivity.KEY_URL, Contants.Html5.URL_H5_LEAVE + "username=" + UserInfo.employeeAccount);
                     startActivity(intent);
                     break;
                 case R.id.ll_sign://签到

@@ -29,7 +29,6 @@ public interface Contants {
         String URL_NEW = "https://cgj-backyard.colourlife.com/";
         String HR_PAY = "https://payroll-hr.colourlife.com/redirect";
         String CLIENT_SECRET = "t2o0a1xl2lOmoPi4tuHf5uw4VZloXGs7y1Kd0Yoq";
-        String USERINFO_ADDRESS = "https://user-czy.colourlife.com/app/";
         String PUBLIC_KEY="MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCTFnAR7ORLx0jGzf9Ux1We7yHvRi+kQXKSRmtgBjDCXQzakGm2mrb6EupCkDbUcj4BUs7S7zm/rICQuVNC9fujeJGjcNWRg0XWVtm90XpbTqfKiXzGDHI9W8aULYZ3of/JJ9lyCyjqjigyCdLBPtQ27gOuboDzQuieR2ywPHawzQIDAQAB";
 //////////////////////////////////////////////////////////////////////////////
         /**
@@ -47,13 +46,7 @@ public interface Contants {
 //                "eV+ni5F1o0w3Fag4OOD1YHCRUCXIsFy+iJYmuPf5vMkZrkoiJmKBfkaIzNlrJZzH" +
 //                "zq+LsPQNCF86p1nLsuHbkWNvyjOEPn/CUryP2Kxme4S+eEqLIeNwp70VOaMuPmRo" +
 //                "EZxMDAgvc6Z0DWsVdQIDAQAB";
-//        ////////////////////////////////////////////////////////////////////////////
-        String CZY_BINDCUSTOMER = "https://evisit.colourlife.com/cgj/bindcustomer/bind_account.html";//绑定彩之云
-        String URL_H5_LEAVE = "http://eqd.backyard.colourlife.com/cailife/leave/index?";//请假
-        String HUXIN_H5_HELP = "http://www.colourlife.com/Introduction/CgjCall";//呼信(帮助)
-        String HEAD_ICON_URL = "http://avatar.ice.colourlife.com/";//头像
-        String Yj_Url = "http://emailsso.colourlife.net/login.aspx";//邮件
-        String Sp_Url = "http://spsso.colourlife.net/login.aspx/";//审批
+/////////////////////////////////////////////////////////////////////////////////////
     }
 
     interface APP {
@@ -186,6 +179,8 @@ public interface Contants {
     }
 
     interface Html5 {
+        String HEAD_ICON_URL = "http://avatar.ice.colourlife.com/";//头像
+        String URL_H5_LEAVE = "http://eqd.backyard.colourlife.com/cailife/leave/index?";//请假
         String CALLBACKDeviceID = "CALLBACKDeviceID";
         String YJ = "http://mail.oa.colourlife.com:40060/login";
         String SP1 = "http://spsso.colourlife.net/login.aspx";//1.0

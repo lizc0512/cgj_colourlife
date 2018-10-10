@@ -252,7 +252,7 @@ public class PublicAccountExchangeActivity extends BaseActivity {
         }
     }
     public void initData() {
-        String str = Contants.URl.HEAD_ICON_URL + "avatar?uid=" + UserInfo.employeeAccount;
+        String str = Contants.Html5.HEAD_ICON_URL + "avatar?uid=" + UserInfo.employeeAccount;
         imageLoader.clearMemoryCache();
         imageLoader.clearDiskCache();
         imageLoader.displayImage(str, imgHead, options);

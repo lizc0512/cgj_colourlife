@@ -608,7 +608,7 @@ public class Tools {
         int admintype = data.getInt("admintype");
         int Jobonline = data.getInt("Jobonline");
         int sort = data.getInt("sort");
-        String avatar = Contants.URl.HEAD_ICON_URL + "avatar?uid=" + employeeAccount;
+        String avatar = Contants.Html5.HEAD_ICON_URL + "avatar?uid=" + employeeAccount;
 
         com.youmai.hxsdk.UserInfo userInfo = new com.youmai.hxsdk.UserInfo();
         userInfo.setUuid(uuid);

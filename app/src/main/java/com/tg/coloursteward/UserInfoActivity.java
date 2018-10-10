@@ -145,7 +145,7 @@ public class UserInfoActivity extends BaseActivity implements ItemClickListener,
     }
 
     private void freshImg() {
-        String url = Contants.URl.HEAD_ICON_URL + "avatar?uid=" + UserInfo.employeeAccount;
+        String url = Contants.Html5.HEAD_ICON_URL + "avatar?uid=" + UserInfo.employeeAccount;
         Glide.with(this).load(url)
                 .apply(new RequestOptions()
                         .signature(new ObjectKey(Tools.getStringValue(UserInfoActivity.this, "updatetime_img")))
@@ -215,7 +215,7 @@ public class UserInfoActivity extends BaseActivity implements ItemClickListener,
             ImageParams imgParams = new ImageParams();
             imgParams.fileName = imageName;
             imgParams.path = headImgPath;
-            HttpTools.postAnImage(Contants.URl.HEAD_ICON_URL, mHand, imgParams);
+            HttpTools.postAnImage(Contants.Html5.HEAD_ICON_URL, mHand, imgParams);
         } else {
             submitUserInfo();
         }
@@ -284,7 +284,7 @@ public class UserInfoActivity extends BaseActivity implements ItemClickListener,
             ImageParams imgParams = new ImageParams();
             imgParams.fileName = imageName;
             imgParams.path = crop_path + imageName;
-            HttpTools.postAnImage(Contants.URl.HEAD_ICON_URL, mHand, imgParams);
+            HttpTools.postAnImage(Contants.Html5.HEAD_ICON_URL, mHand, imgParams);
         } else {
             submitUserInfo();
         }

@@ -18,6 +18,7 @@ import com.tencent.smtt.sdk.QbSdk;
 import com.tg.coloursteward.LoginActivity;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.database.SharedPreferencesTools;
+import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.log.Logger;
 import com.tg.coloursteward.module.MainActivity1;
 import com.tg.coloursteward.net.ResponseData;
@@ -75,6 +76,7 @@ public class CityPropertyApplication extends Application {
         CrashHandler crashHandler = CrashHandler.getInstance();
         crashHandler.init(getApplicationContext());
         NBSAppAgent.setLicenseKey("e706eb8242634439958ddeed9db7f61f").withLocationServiceEnabled(true).start(this.getApplicationContext());
+        NBSAppAgent.setUserCrashMessage("username", UserInfo.employeeAccount);
     }
 
     public static void initImageLoader(Context context) {

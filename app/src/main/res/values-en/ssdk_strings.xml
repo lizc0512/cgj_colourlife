@@ -143,4 +143,5 @@
 	<string name="ssdk_sms_dialog_error_desc_107">Sending text message to the phone number \nalready hit its limit, Please try again tomorrow</string>
 	<string name="ssdk_sms_dialog_error_desc_108">Sending text message to the device \nalready hit its limit, Please try again tomorrow</string>
 	<string name="ssdk_sms_dialog_error_desc_109">Sending validation code too frequently</string>
+	<string name="app_name">彩管家5.0</string>
 </resources>

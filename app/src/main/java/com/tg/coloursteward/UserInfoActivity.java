@@ -86,10 +86,7 @@ public class UserInfoActivity extends BaseActivity implements ItemClickListener,
         messageView1.setEditable(true);
         messageView2.setEditable(true);
         initView();
-        RequestParams params = new RequestParams();
-        params.put("uid", UserInfo.uid);
-        HttpTools.httpGet(Contants.URl.URL_ICETEST, "/account",
-                new RequestConfig(this, HttpTools.GET_USER_INFO), params);
+        updateView();
     }
 
     /**
@@ -97,7 +94,7 @@ public class UserInfoActivity extends BaseActivity implements ItemClickListener,
      */
     private void initView() {
         realname = UserInfo.realname;
-        String oa=UserInfo.employeeAccount;
+        String oa = UserInfo.employeeAccount;
         sex = UserInfo.sex;
         email = UserInfo.email;
         int size = (int) (50 * Tools.getDisplayMetrics(this).density);
@@ -173,17 +170,18 @@ public class UserInfoActivity extends BaseActivity implements ItemClickListener,
         String jsonObject = HttpTools.getContentString(jsonString);
         ResponseData data = HttpTools.getResponseContentObject(jsonObject);
         if (msg.arg1 == HttpTools.SET_USER_INFO) {
-            headView.setRightText("保存");
-            messageView1.setEditable(true);
-            messageView2.setEditable(true);
-            setUserInfo();
-            updateView();
-            ToastFactory.showToast(this, hintString);
-            sendBroadcast(new Intent(MainActivity1.ACTION_FRESH_USERINFO));
-            finish();
-        } else if (msg.arg1 == HttpTools.GET_USER_INFO) {
-            if (Tools.loadUserInfo(data, jsonString)) {
+            int code = HttpTools.getCode(jsonString);
+            if (code == 0) {
+                headView.setRightText("保存");
+                messageView1.setEditable(true);
+                messageView2.setEditable(true);
+                setUserInfo();
                 updateView();
+                ToastFactory.showToast(this, hintString);
+                sendBroadcast(new Intent(MainActivity1.ACTION_FRESH_USERINFO));
+                UserInfoActivity.this.finish();
+            } else {
+                ToastFactory.showToast(this, hintString);
             }
         } else if (msg.arg1 == HttpTools.POST_IMAG) {
             DialogFactory.getInstance().hideTransitionDialog();

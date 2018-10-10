@@ -1,7 +1,5 @@
 package com.tg.coloursteward.entity;
 
-import java.util.List;
-
 /**
  * Created by Administrator on 2018/7/5.
  *
@@ -12,13 +10,15 @@ public class EmployeeEntity {
 
     /**
      * code : 0
-     * message : 查找成功
-     * content : [{"accountUuid":"b1a57f06-7a2b-4031-b67a-68a0c11b8709","corpId":"a8c58297436f433787725a94f780a3c9","username":"chenshujian","password":"","mobile":"15900082689","email":"","name":"陈树坚","sex":1,"landline":null,"dr":0,"status":0,"updateTs":"2017-12-11 22:24:35","createTs":"2015-09-01 10:10:15","jobType":"IOS程序员","jobUuid":"51b8ca96-6942-47d7-a6bb-115a812f01d0","orgUuid":"f7ce27ba-85ee-4804-ac92-c919f4ee4b52","orgName":"技术资源部(研究院)","salaryLevel":"","czyId":"68602","createtime":"2018-07-05 16:46:27","isFavorite":0,"Favoriteid":0}]
+     * message : success
+     * content : {"uuid":"f541d3ab-add2-4b2f-a83c-7541adabc8e6","gender":2,"czy_id":"","czy_mobile":"","czy_real_name":"","czy_name":"","czy_email":"","czy_nick_name":"","czy_portrait_url":"","czy_community_uuid":"","czy_community_name":"","employee_username":"lizhicheng01","employee_mobile":"","employee_email":"","employee_name":"李志诚","employee_job_name":"","employee_job_uuid":"","employee_org_uuid":"","employee_org_name":""}
+     * contentEncrypt :
      */
 
     private int code;
     private String message;
-    private List<ContentBean> content;
+    private ContentBean content;
+    private String contentEncrypt;
 
     public int getCode() {
         return code;
@@ -36,72 +36,74 @@ public class EmployeeEntity {
         this.message = message;
     }
 
-    public List<ContentBean> getContent() {
+    public ContentBean getContent() {
         return content;
     }
 
-    public void setContent(List<ContentBean> content) {
+    public void setContent(ContentBean content) {
         this.content = content;
+    }
+
+    public String getContentEncrypt() {
+        return contentEncrypt;
+    }
+
+    public void setContentEncrypt(String contentEncrypt) {
+        this.contentEncrypt = contentEncrypt;
     }
 
     public static class ContentBean {
         /**
-         * accountUuid : b1a57f06-7a2b-4031-b67a-68a0c11b8709
-         * corpId : a8c58297436f433787725a94f780a3c9
-         * username : chenshujian
-         * password :
-         * mobile : 15900082689
-         * email :
-         * name : 陈树坚
-         * sex : 1
-         * landline : null
-         * dr : 0
-         * status : 0
-         * updateTs : 2017-12-11 22:24:35
-         * createTs : 2015-09-01 10:10:15
-         * jobType : IOS程序员
-         * jobUuid : 51b8ca96-6942-47d7-a6bb-115a812f01d0
-         * orgUuid : f7ce27ba-85ee-4804-ac92-c919f4ee4b52
-         * orgName : 技术资源部(研究院)
-         * salaryLevel :
-         * czyId : 68602
-         * createtime : 2018-07-05 16:46:27
-         * isFavorite : 0
-         * Favoriteid : 0
+         * uuid : f541d3ab-add2-4b2f-a83c-7541adabc8e6
+         * gender : 2
+         * czy_id :
+         * czy_mobile :
+         * czy_real_name :
+         * czy_name :
+         * czy_email :
+         * czy_nick_name :
+         * czy_portrait_url :
+         * czy_community_uuid :
+         * czy_community_name :
+         * employee_username : lizhicheng01
+         * employee_mobile :
+         * employee_email :
+         * employee_name : 李志诚
+         * employee_job_name :
+         * employee_job_uuid :
+         * employee_org_uuid :
+         * employee_org_name :
          */
 
-        private String accountUuid;
-        private String corpId;
-        private String username;
-        private String password;
-        private String mobile;
-        private String email;
-        private String name;
-        private String sex;
-        private String landline;
-        private int dr;
-        private int status;
-        private String updateTs;
-        private String createTs;
-        private String jobName;
-        private String jobType;
-
-        public String getJobType() {
-            return jobType;
-        }
-
-        public void setJobType(String jobType) {
-            this.jobType = jobType;
-        }
-
-        private String jobUuid;
-        private String orgUuid;
-        private String orgName;
-        private String salaryLevel;
-        private String czyId;
-        private String createtime;
-        private String qq;
+        private String uuid;
+        private String gender;
+        private String czy_id;
+        private String czy_mobile;
+        private String czy_real_name;
+        private String czy_name;
+        private String czy_email;
+        private String czy_nick_name;
+        private String czy_portrait_url;
+        private String czy_community_uuid;
+        private String czy_community_name;
+        private String employee_username;
+        private String employee_mobile;
+        private String employee_email;
+        private String employee_name;
+        private String employee_job_name;
+        private String employee_job_uuid;
+        private String employee_org_uuid;
+        private String employee_org_name;
+        private String IsFavorite;
         private String Favoriteid;
+
+        public String getIsFavorite() {
+            return IsFavorite;
+        }
+
+        public void setIsFavorite(String isFavorite) {
+            IsFavorite = isFavorite;
+        }
 
         public String getFavoriteid() {
             return Favoriteid;
@@ -111,184 +113,156 @@ public class EmployeeEntity {
             Favoriteid = favoriteid;
         }
 
-        public String getQq() {
-            return qq;
+        public String getUuid() {
+            return uuid;
         }
 
-        public void setQq(String qq) {
-            this.qq = qq;
+        public void setUuid(String uuid) {
+            this.uuid = uuid;
         }
 
-        private int isFavorite;
-
-
-        public String getAccountUuid() {
-            return accountUuid;
+        public String getGender() {
+            return gender;
         }
 
-        public void setAccountUuid(String accountUuid) {
-            this.accountUuid = accountUuid;
+        public void setGender(String gender) {
+            this.gender = gender;
         }
 
-        public String getCorpId() {
-            return corpId;
+        public String getCzy_id() {
+            return czy_id;
         }
 
-        public void setCorpId(String corpId) {
-            this.corpId = corpId;
+        public void setCzy_id(String czy_id) {
+            this.czy_id = czy_id;
         }
 
-        public String getUsername() {
-            return username;
+        public String getCzy_mobile() {
+            return czy_mobile;
         }
 
-        public void setUsername(String username) {
-            this.username = username;
+        public void setCzy_mobile(String czy_mobile) {
+            this.czy_mobile = czy_mobile;
         }
 
-        public String getPassword() {
-            return password;
+        public String getCzy_real_name() {
+            return czy_real_name;
         }
 
-        public void setPassword(String password) {
-            this.password = password;
+        public void setCzy_real_name(String czy_real_name) {
+            this.czy_real_name = czy_real_name;
         }
 
-        public String getMobile() {
-            return mobile;
+        public String getCzy_name() {
+            return czy_name;
         }
 
-        public void setMobile(String mobile) {
-            this.mobile = mobile;
+        public void setCzy_name(String czy_name) {
+            this.czy_name = czy_name;
         }
 
-        public String getEmail() {
-            return email;
+        public String getCzy_email() {
+            return czy_email;
         }
 
-        public void setEmail(String email) {
-            this.email = email;
+        public void setCzy_email(String czy_email) {
+            this.czy_email = czy_email;
         }
 
-        public String getName() {
-            return name;
+        public String getCzy_nick_name() {
+            return czy_nick_name;
         }
 
-        public void setName(String name) {
-            this.name = name;
+        public void setCzy_nick_name(String czy_nick_name) {
+            this.czy_nick_name = czy_nick_name;
         }
 
-        public String getSex() {
-            return sex;
+        public String getCzy_portrait_url() {
+            return czy_portrait_url;
         }
 
-        public void setSex(String sex) {
-            this.sex = sex;
+        public void setCzy_portrait_url(String czy_portrait_url) {
+            this.czy_portrait_url = czy_portrait_url;
         }
 
-        public String getLandline() {
-            return landline;
+        public String getCzy_community_uuid() {
+            return czy_community_uuid;
         }
 
-        public void setLandline(String landline) {
-            this.landline = landline;
+        public void setCzy_community_uuid(String czy_community_uuid) {
+            this.czy_community_uuid = czy_community_uuid;
         }
 
-        public int getDr() {
-            return dr;
+        public String getCzy_community_name() {
+            return czy_community_name;
         }
 
-        public void setDr(int dr) {
-            this.dr = dr;
+        public void setCzy_community_name(String czy_community_name) {
+            this.czy_community_name = czy_community_name;
         }
 
-        public int getStatus() {
-            return status;
+        public String getEmployee_username() {
+            return employee_username;
         }
 
-        public void setStatus(int status) {
-            this.status = status;
+        public void setEmployee_username(String employee_username) {
+            this.employee_username = employee_username;
         }
 
-        public String getUpdateTs() {
-            return updateTs;
+        public String getEmployee_mobile() {
+            return employee_mobile;
         }
 
-        public void setUpdateTs(String updateTs) {
-            this.updateTs = updateTs;
+        public void setEmployee_mobile(String employee_mobile) {
+            this.employee_mobile = employee_mobile;
         }
 
-        public String getCreateTs() {
-            return createTs;
+        public String getEmployee_email() {
+            return employee_email;
         }
 
-        public void setCreateTs(String createTs) {
-            this.createTs = createTs;
+        public void setEmployee_email(String employee_email) {
+            this.employee_email = employee_email;
         }
 
-        public String getJobName() {
-            return jobName;
+        public String getEmployee_name() {
+            return employee_name;
         }
 
-        public void setJobName(String jobName) {
-            this.jobName = jobName;
+        public void setEmployee_name(String employee_name) {
+            this.employee_name = employee_name;
         }
 
-        public String getJobUuid() {
-            return jobUuid;
+        public String getEmployee_job_name() {
+            return employee_job_name;
         }
 
-        public void setJobUuid(String jobUuid) {
-            this.jobUuid = jobUuid;
+        public void setEmployee_job_name(String employee_job_name) {
+            this.employee_job_name = employee_job_name;
         }
 
-        public String getOrgUuid() {
-            return orgUuid;
+        public String getEmployee_job_uuid() {
+            return employee_job_uuid;
         }
 
-        public void setOrgUuid(String orgUuid) {
-            this.orgUuid = orgUuid;
+        public void setEmployee_job_uuid(String employee_job_uuid) {
+            this.employee_job_uuid = employee_job_uuid;
         }
 
-        public String getOrgName() {
-            return orgName;
+        public String getEmployee_org_uuid() {
+            return employee_org_uuid;
         }
 
-        public void setOrgName(String orgName) {
-            this.orgName = orgName;
+        public void setEmployee_org_uuid(String employee_org_uuid) {
+            this.employee_org_uuid = employee_org_uuid;
         }
 
-        public String getSalaryLevel() {
-            return salaryLevel;
+        public String getEmployee_org_name() {
+            return employee_org_name;
         }
 
-        public void setSalaryLevel(String salaryLevel) {
-            this.salaryLevel = salaryLevel;
+        public void setEmployee_org_name(String employee_org_name) {
+            this.employee_org_name = employee_org_name;
         }
-
-        public String getCzyId() {
-            return czyId;
-        }
-
-        public void setCzyId(String czyId) {
-            this.czyId = czyId;
-        }
-
-        public String getCreatetime() {
-            return createtime;
-        }
-
-        public void setCreatetime(String createtime) {
-            this.createtime = createtime;
-        }
-
-        public int getIsFavorite() {
-            return isFavorite;
-        }
-
-        public void setIsFavorite(int isFavorite) {
-            this.isFavorite = isFavorite;
-        }
-
     }
 }

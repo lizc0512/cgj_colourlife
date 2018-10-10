@@ -3,9 +3,9 @@ package com.tg.coloursteward;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -18,7 +18,6 @@ import com.tg.coloursteward.net.GetTwoRecordListener;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.RequestConfig;
 import com.tg.coloursteward.net.RequestParams;
-import com.tg.coloursteward.serice.AppAuthService;
 import com.tg.coloursteward.serice.AuthAppService;
 import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.Tools;
@@ -114,9 +113,11 @@ public class AccountActivity extends BaseActivity {
                 startActivity(new Intent(AccountActivity.this, PublicAccountActivity.class));
             }
         });
-        tvRealName.setText(UserInfo.realname + "(" + UserInfo.jobName + ")");
-//        tvRealName.setText(UserInfo.realname);
-
+        if (!TextUtils.isEmpty(UserInfo.jobName)) {
+            tvRealName.setText(UserInfo.realname + "(" + UserInfo.jobName + ")");
+        } else {
+            tvRealName.setText(UserInfo.realname);
+        }
 //        本地及时分配金额
         String jsonStr = Tools.getStringValue(AccountActivity.this, Contants.storage.ACCOUNT);
         if (StringUtils.isNotEmpty(jsonStr)) {

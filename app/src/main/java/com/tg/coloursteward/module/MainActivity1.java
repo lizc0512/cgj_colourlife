@@ -41,7 +41,6 @@ import com.tg.coloursteward.application.CityPropertyApplication;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.database.SharedPreferencesTools;
-import com.tg.coloursteward.entity.AccountEntity;
 import com.tg.coloursteward.entity.SingleDeviceLogin;
 import com.tg.coloursteward.entity.SingleDeviceLogout;
 import com.tg.coloursteward.fragment.FragmentManagement1;
@@ -49,6 +48,7 @@ import com.tg.coloursteward.fragment.FragmentMine;
 import com.tg.coloursteward.info.GridViewInfo;
 import com.tg.coloursteward.info.HomeDeskTopInfo;
 import com.tg.coloursteward.info.UserInfo;
+import com.tg.coloursteward.inter.Oauth2CallBack;
 import com.tg.coloursteward.log.Logger;
 import com.tg.coloursteward.module.contact.ContactsFragment;
 import com.tg.coloursteward.module.meassage.MsgListFragment;
@@ -62,7 +62,7 @@ import com.tg.coloursteward.net.ResponseData;
 import com.tg.coloursteward.serice.AppAuthService;
 import com.tg.coloursteward.serice.AuthAppService;
 import com.tg.coloursteward.serice.HomeService;
-import com.tg.coloursteward.serice.OAuth2Service;
+import com.tg.coloursteward.serice.OAuth2ServiceUpdate;
 import com.tg.coloursteward.updateapk.ApkInfo;
 import com.tg.coloursteward.updateapk.UpdateManager;
 import com.tg.coloursteward.util.AuthTimeUtils;
@@ -74,6 +74,7 @@ import com.tg.coloursteward.view.PopWindowView;
 import com.tg.coloursteward.view.dialog.ToastFactory;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.config.ColorsConfig;
+import com.youmai.hxsdk.http.IGetListener;
 import com.youmai.hxsdk.http.IPostListener;
 import com.youmai.hxsdk.http.OkHttpConnector;
 import com.youmai.hxsdk.im.IMMsgManager;
@@ -151,11 +152,6 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
     private String skin_code = "101";//  101 彩生活  100 通用  102 中住
     private String extras;
     private Boolean form_login = false;
-    private Runnable getUserInfoRunnable = new Runnable() {
-        public void run() {
-            getUserInfo();
-        }
-    };
 
     private BroadcastReceiver freshReceiver = new BroadcastReceiver() {
 
@@ -196,7 +192,6 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
             form_login = data.getBooleanExtra(FROM_LOGIN, false);
         }
         initLocation();
-        initGetToken();
         initTitle();
         initView();
 
@@ -210,11 +205,16 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
     }
 
     private void initGetToken() {
-        OAuth2Service oAuth2Service = null;
-        if (null == oAuth2Service) {
-            oAuth2Service = new OAuth2Service(MainActivity1.this);
+        OAuth2ServiceUpdate oAuth2ServiceUpdate = null;
+        if (null == oAuth2ServiceUpdate) {
+            oAuth2ServiceUpdate = new OAuth2ServiceUpdate(MainActivity1.this);
         }
-        oAuth2Service.getOAuth2Service("");
+        oAuth2ServiceUpdate.getOAuth2Service(UserInfo.employeeAccount, Tools.getPassWord(MainActivity1.this), new Oauth2CallBack() {
+            @Override
+            public void onData(String access_token) {
+
+            }
+        });
     }
 
     @Override
@@ -278,6 +278,7 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
     @Override
     protected void onResume() {
         super.onResume();
+        initGetToken();
         refreshUnReadCount();
     }
 
@@ -324,38 +325,7 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
     @Override
     public void onSuccess(Message msg, String jsonString, String hintString) {
         int code = HttpTools.getCode(jsonString);
-        String message = HttpTools.getMessageString(jsonString);
-        if (msg.arg1 == HttpTools.GET_USER_INFO) {
-            AccountEntity accountEntity = null;
-            try {
-                accountEntity = GsonUtils.gsonToBean(jsonString, AccountEntity.class);
-            } catch (Exception e) {
-            }
-            if (null != accountEntity) {
-                UserInfo.infoorgId = accountEntity.getContent().getOrgId();
-                Tools.saveOrgId(MainActivity1.this, accountEntity.getContent().getOrgId());
-                Tools.saveStringValue(MainActivity1.this, "org_depart_name", accountEntity.getContent().getFamilyName());
-            }
-            String response = HttpTools.getContentString(jsonString);
-            ResponseData data = HttpTools.getResponseContentObject(response);
-            Tools.loadUserInfo(data, jsonString);
-            sendBroadcast(new Intent(ACTION_FRESH_USERINFO));
-            mHandler.removeCallbacks(getUserInfoRunnable);
-            mHandler.postDelayed(getUserInfoRunnable, 10 * 60 * 1000);
-        } else if (msg.arg1 == HttpTools.GET_CZY_ID) {//获取彩之云账户id
-            if (code == 1) {
-                JSONArray jsonArray = HttpTools.getContentJsonArray(jsonString);
-                try {
-                    JSONObject object = (JSONObject) jsonArray.get(0);
-                    String CZY_id = object.getString("id");
-                    String community_id = object.getString("community_id");
-                    Tools.saveCZYID(this, CZY_id);
-                    Tools.saveCZY_Community_ID(this, community_id);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        } else if (msg.arg1 == HttpTools.GET_VERSION_INFO) {//版本更新
+        if (msg.arg1 == HttpTools.GET_VERSION_INFO) {//版本更新
             JSONObject jsonObject = HttpTools.getContentJSONObject(jsonString);
             String content = HttpTools.getContentString(jsonString);
             if (code == 0 && null != jsonObject) {
@@ -417,47 +387,6 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-            }
-        } else if (msg.arg1 == HttpTools.GET_LOGIN) {
-            if (code == 0) {
-                Date dt = new Date();
-                Long time = dt.getTime();
-                String date = Tools.getDateToString(time);
-                Tools.saveDateInfo(this, date);
-                JSONObject content = HttpTools.getContentJSONObject(jsonString);
-                try {
-                    String corpId = content.getString("corpId");
-                    int status = content.getInt("status");
-                    UserInfo.employeeAccount = content.getString("username");
-                    if (status > 0) {
-                        ToastFactory.showToast(MainActivity1.this, "账号异常，请及时联系管理员");
-                        singleDevicelogout();
-                        SharedPreferencesTools.clearUserId(MainActivity1.this);
-                        //清空缓存
-                        SharedPreferencesTools.clearCache(MainActivity1.this);
-                        SharedPreferencesTools.clearAllData(MainActivity1.this);
-                        CityPropertyApplication.gotoLoginActivity(MainActivity1.this);
-                        HuxinSdkManager.instance().loginOut();
-                    } else {
-                        if (form_login == false) {
-                            new Handler().postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    singleDevicelogin();
-                                }
-                            }, 2000);
-                        }
-                        if (("101").equals(skin_code)) {//彩生活
-                            sendBroadcast(new Intent(ACTION_TICKET_INFO));
-                        }
-                        Tools.saveStringValue(MainActivity1.this, Contants.storage.CORPID, corpId);
-                    }
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                ToastFactory.showToast(MainActivity1.this, message);
             }
         }
     }
@@ -564,7 +493,7 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
         msgHand.setResponseListener(this);
 
         getTokenInfo();
-        getEmployeeInfo();
+        getSlientLogin();
         getAuthAppInfo();//2.0授权
         getAppAuthInfo();//1.0授权
         /**
@@ -572,12 +501,6 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
          */
         getVersion();
         initView();
-        if (needGetUserInfo) {
-            mHandler.postDelayed(getUserInfoRunnable, 3000);
-        }
-        if (!needGetUserInfo) {
-            OAtoCZY();
-        }
         IntentFilter filter = new IntentFilter();
         filter.addAction(ACTION_FRESH_USERINFO);
         filter.addAction(ACTION_TICKET_INFO);
@@ -609,13 +532,6 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
                 e.printStackTrace();
             }
         }
-    }
-
-    private void getUserInfo() {
-        RequestConfig config = new RequestConfig(this, HttpTools.GET_USER_INFO, null);
-        RequestParams params = new RequestParams();
-        params.put("username", UserInfo.employeeAccount);
-        HttpTools.httpGet(Contants.URl.URL_ICETEST, "/account", config, params);
     }
 
     /**
@@ -652,15 +568,6 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
         params.put("version", version);
         params.put("type", "android");
         HttpTools.httpGet(Contants.URl.URL_CPMOBILE, "/1.0/version", config, params);
-    }
-
-
-    // 获取扫码开门权限
-    private void OAtoCZY() {
-        RequestConfig config = new RequestConfig(this, HttpTools.GET_CZY_ID);
-        RequestParams params = new RequestParams();
-        params.put("oa", UserInfo.employeeAccount);
-        HttpTools.httpGet(Contants.URl.URL_ICETEST, "/newczy/customer/infoByOa", config, params);
     }
 
     // 获取即时分成金额
@@ -717,6 +624,72 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * 重新静默获取用户信息
+     */
+    private void getSlientLogin() {
+        OAuth2ServiceUpdate auth2ServiceUpdate = new OAuth2ServiceUpdate(MainActivity1.this);
+        auth2ServiceUpdate.getOAuth2Service(UserInfo.employeeAccount, Tools.getPassWord(mContext), new Oauth2CallBack() {
+            @Override
+            public void onData(String access_token) {
+                getNetInfo(access_token);
+            }
+        });
+    }
+
+    private void getNetInfo(String access_token) {
+        ContentValues header = new ContentValues();
+        header.put("Authorization", "Bearer " + access_token);
+        OkHttpConnector.httpGet(MainActivity1.this, Contants.URl.URL_OAUTH2 + "/oauth/user", header, null, new IGetListener() {
+            @Override
+            public void httpReqResult(String jsonString) {
+                if (null != jsonString) {
+                    try {
+                        int code = HttpTools.getCode(jsonString);
+                        String message = HttpTools.getMessageString(jsonString);
+                        if (code == 0) {
+                            String response = HttpTools.getContentString(jsonString);
+                            ResponseData data = HttpTools.getResponseContentObject(response);
+                            Tools.loadUserInfo(data, jsonString);
+                            Tools.savetokenUserInfo(MainActivity1.this, jsonString);
+                            int status = data.getInt("status");
+                            String corpId = data.getString("corp_id");
+                            UserInfo.infoorgId = data.getString("org_uuid");
+                            UserInfo.employeeAccount = data.getString("username");
+                            Tools.saveOrgId(MainActivity1.this, data.getString("org_uuid"));
+                            Tools.saveStringValue(MainActivity1.this, Contants.storage.CORPID, corpId);//租户ID
+                            if (status == 0) {//账号正常
+                                if (form_login == false) {
+                                    new Handler().postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            singleDevicelogin();
+                                        }
+                                    }, 2000);
+                                }
+                                if (("101").equals(skin_code)) {//彩生活
+                                    sendBroadcast(new Intent(ACTION_TICKET_INFO));
+                                }
+                            } else {
+                                ToastFactory.showToast(MainActivity1.this, "账号异常，请及时联系管理员");
+                                singleDevicelogout();
+                                SharedPreferencesTools.clearUserId(MainActivity1.this);
+                                //清空缓存
+                                SharedPreferencesTools.clearCache(MainActivity1.this);
+                                SharedPreferencesTools.clearAllData(MainActivity1.this);
+                                CityPropertyApplication.gotoLoginActivity(MainActivity1.this);
+                                HuxinSdkManager.instance().loginOut();
+                            }
+                        } else {
+                            ToastFactory.showToast(MainActivity1.this, message);
+                        }
+                    } catch (Exception e) {
+                    }
+                }
+            }
+        });
     }
 
     /**
@@ -1100,7 +1073,6 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
                     ft = new ContactsFragment();
                     break;
                 case 2:
-                    // ft = new FragmentManagement();
                     ft = new FragmentManagement1();
                     break;
                 case 3:

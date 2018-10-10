@@ -13,6 +13,7 @@ import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.dialog.ToastFactory;
 import com.youmai.hxsdk.http.IPostListener;
 import com.youmai.hxsdk.http.OkHttpConnector;
+import com.youmai.smallvideorecord.utils.Log;
 
 import org.json.JSONObject;
 
@@ -109,6 +110,7 @@ public class OAuth2ServiceUpdate {
             Tools.saveRefresh_token2(context, oauth2Entity.getRefresh_token());
             UserInfo.color_token = oauth2Entity.getAccess_token();
         } catch (Exception e) {
+            Log.d("oauth2.0",e.toString());
         }
         return Tools.getAccess_token2(context);
     }

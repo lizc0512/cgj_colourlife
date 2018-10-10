@@ -134,7 +134,7 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
     private int count = 0;
     private CaiHuiEntity caiHuiEntity;
     private LinearLayout ll_home_head;
-    private int balanceNum=0;
+    private int balanceNum = 0;
     private SingleClickListener titleListener = new SingleClickListener() {
         @Override
         public void onSingleClick(View v) {
@@ -199,7 +199,7 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
                         mAuthTimeUtils.IsAuthTime(mActivity, Contants.Html5.SP1, "sp", "0", "sp", "");
                     } else {
                         mAuthTimeUtils = new AuthTimeUtils();
-                        mAuthTimeUtils.IsAuthTime(mActivity, Contants.Html5.SP+"?number="+balanceNum, "tlmyapps", "1", "tlmyapps", "");
+                        mAuthTimeUtils.IsAuthTime(mActivity, Contants.Html5.SP + "?number=" + balanceNum, "tlmyapps", "1", "tlmyapps", "");
 
                     }
                     break;
@@ -862,7 +862,10 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
             @Override
             public void onItemClick(GridViewInfo info) {
                 if (info.clientCode.equals("smkm")) {//扫码开门
-                    startActivity(new Intent(mActivity, DoorActivity.class));
+                    RequestConfig config = new RequestConfig(mActivity, HttpTools.GET_CZY_ID);
+                    RequestParams params = new RequestParams();
+                    params.put("oa", UserInfo.employeeAccount);
+                    HttpTools.httpGet(Contants.URl.URL_ICETEST, "/newczy/customer/infoByOa", config, params);
                 } else if (info.clientCode.equals("dgzh")) {//对公账户
                     startActivity(new Intent(mActivity, PublicAccountActivity.class));
                 } else {
@@ -1451,6 +1454,20 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
                     Tools.setBooleanValue(mActivity, Contants.storage.EMPLOYEE_LOGIN, true);
                 }
             }
+        } else if (msg.arg1 == HttpTools.GET_CZY_ID) {
+            if (code == 1) {
+                JSONArray jsonArray = HttpTools.getContentJsonArray(jsonString);
+                try {
+                    JSONObject object = (JSONObject) jsonArray.get(0);
+                    String CZY_id = object.getString("id");
+                    String community_id = object.getString("community_id");
+                    Tools.saveCZYID(mActivity, CZY_id);
+                    Tools.saveCZY_Community_ID(mActivity, community_id);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            startActivity(new Intent(mActivity, DoorActivity.class));
         }
     }
 

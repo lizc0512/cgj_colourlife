@@ -32,9 +32,10 @@ import com.android.volley.toolbox.Volley;
 import com.tg.coloursteward.application.CityPropertyApplication;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.info.UserInfo;
+import com.tg.coloursteward.inter.Oauth2CallBack;
 import com.tg.coloursteward.log.Logger;
 import com.tg.coloursteward.object.ImageParams;
-import com.tg.coloursteward.serice.OAuth2Service;
+import com.tg.coloursteward.serice.OAuth2ServiceUpdate;
 import com.tg.coloursteward.util.Tools;
 
 import org.apache.http.HttpResponse;
@@ -362,11 +363,15 @@ public class HttpTools {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> headers = new HashMap<>();
-                OAuth2Service oAuth2Service = null;
-                if (null == oAuth2Service) {
-                    oAuth2Service = new OAuth2Service(rqtConfig.activity);
+                if (TextUtils.isEmpty(Tools.getAccess_token2(rqtConfig.activity))) {
+                    OAuth2ServiceUpdate serviceUpdate = new OAuth2ServiceUpdate(rqtConfig.activity);
+                    serviceUpdate.getOAuth2Service(UserInfo.employeeAccount, Tools.getPassWord(rqtConfig.activity), new Oauth2CallBack() {
+                        @Override
+                        public void onData(String access_token) {
+
+                        }
+                    });
                 }
-                oAuth2Service.getOAuth2Service("");
                 headers.put("color-token", Tools.getAccess_token2(rqtConfig.activity));
                 return headers;
             }
@@ -565,11 +570,18 @@ public class HttpTools {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> headers = new HashMap<>();
-                OAuth2Service oAuth2Service = null;
-                if (null == oAuth2Service) {
-                    oAuth2Service = new OAuth2Service(rqtConfig.activity);
+                if (URL.contains(Contants.URl.URL_ICETEST + "/timestamp")) {
+                } else {
+                    if (TextUtils.isEmpty(Tools.getAccess_token2(rqtConfig.activity))) {
+                        OAuth2ServiceUpdate serviceUpdate = new OAuth2ServiceUpdate(rqtConfig.activity);
+                        serviceUpdate.getOAuth2Service(UserInfo.employeeAccount, Tools.getPassWord(rqtConfig.activity), new Oauth2CallBack() {
+                            @Override
+                            public void onData(String access_token) {
+
+                            }
+                        });
+                    }
                 }
-                oAuth2Service.getOAuth2Service("");
                 headers.put("color-token", Tools.getAccess_token2(rqtConfig.activity));
                 return headers;
             }

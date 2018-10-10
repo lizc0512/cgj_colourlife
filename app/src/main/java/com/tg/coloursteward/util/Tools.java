@@ -575,12 +575,12 @@ public class Tools {
         int internal = data.getInt("internal");
         int disable = data.getInt("disable");
         String jobId = data.getString("jobId");
-        int gender = data.getInt("gender");//性别：1女，2男
+        int gender = data.getInt("gender");//性别：1男2女,
         String sex = "";
         if (gender == 1) {
-            sex = "女";
-        } else if (gender == 2) {
             sex = "男";
+        } else if (gender == 2) {
+            sex = "女";
         }
         String tel = data.getString("mobile");
         String Company_tel = data.getString("Company_tel");

@@ -30,7 +30,6 @@ import com.tg.coloursteward.application.CityPropertyApplication;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.database.SharedPreferencesTools;
-import com.tg.coloursteward.entity.AccountEntity;
 import com.tg.coloursteward.entity.JiYanTwoCheckEntity;
 import com.tg.coloursteward.entity.SingleDeviceLogin;
 import com.tg.coloursteward.info.UserInfo;
@@ -41,12 +40,9 @@ import com.tg.coloursteward.net.MD5;
 import com.tg.coloursteward.net.RequestConfig;
 import com.tg.coloursteward.net.RequestParams;
 import com.tg.coloursteward.net.ResponseData;
-import com.tg.coloursteward.object.ImageParams;
-import com.tg.coloursteward.serice.OAuth2Service;
 import com.tg.coloursteward.serice.OAuth2ServiceUpdate;
 import com.tg.coloursteward.updateapk.UpdateManager;
 import com.tg.coloursteward.util.GsonUtils;
-import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.TokenUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.dialog.ToastFactory;
@@ -58,7 +54,6 @@ import com.youmai.hxsdk.router.APath;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -85,7 +80,6 @@ public class LoginActivity extends BaseActivity implements AnimationListener, AM
     private String extras;
     private GT3GeetestUtilsBind gt3GeetestUtils;
     private RelativeLayout submit;
-    private OAuth2Service oAuth2Service;
     private String str_latitude;
     private String str_longitude;
     public AMapLocationClient mlocationClient;
@@ -139,11 +133,23 @@ public class LoginActivity extends BaseActivity implements AnimationListener, AM
         setContentView(R.layout.activity_login);
         Intent getintent = getIntent();
         boolean loginOut = getintent.getBooleanExtra("login_out", false);
+        extras = getintent.getStringExtra(MainActivity.KEY_EXTRAS);
         if (loginOut) {
             SharedPreferencesTools.clearUserId(this);
         }
         initLocation();
-        extras = getintent.getStringExtra(MainActivity.KEY_EXTRAS);
+        initView();
+        initGetTS();
+        showStartPager();
+        CheckPermission();
+        /**
+         * 初始化
+         * 务必放在onCreate方法里面执行
+         */
+        gt3GeetestUtils = new GT3GeetestUtilsBind(LoginActivity.this);
+    }
+
+    private void initView() {
         contentLayout = findViewById(R.id.login_content);
         editUser = (EditText) findViewById(R.id.edit_user);
         startLayout = findViewById(R.id.start_layout);
@@ -153,17 +159,12 @@ public class LoginActivity extends BaseActivity implements AnimationListener, AM
         submit = findViewById(R.id.submit);
         submit.setOnClickListener(singleListener);
         findViewById(R.id.forget_pwd).setOnClickListener(singleListener);
+    }
+
+    private void initGetTS() {
         RequestParams params = new RequestParams();
         RequestConfig config = new RequestConfig(this, HttpTools.GET_TS, "");
         HttpTools.httpGet(Contants.URl.URL_ICETEST, "/timestamp", config, params);
-        // editUser.setText(Tools.getUserName(this));
-        showStartPager();
-        CheckPermission();
-        /**
-         * 初始化
-         * 务必放在onCreate方法里面执行
-         */
-        gt3GeetestUtils = new GT3GeetestUtilsBind(LoginActivity.this);
     }
 
     private void initLocation() {
@@ -174,7 +175,6 @@ public class LoginActivity extends BaseActivity implements AnimationListener, AM
             mlocationClient.setLocationOption(getDefaultOption());
             // 设置定位监听
             mlocationClient.setLocationListener(this);
-
             mlocationClient.startLocation();
 
         }
@@ -206,14 +206,13 @@ public class LoginActivity extends BaseActivity implements AnimationListener, AM
             public void run() {
                 ResponseData userInfoData = SharedPreferencesTools.getUserInfo(LoginActivity.this);
                 String skin_code = Tools.getStringValue(LoginActivity.this, Contants.storage.SKINCODE);
-                String corp_id = Tools.getStringValue(LoginActivity.this, Contants.storage.CORPID);
-                if (userInfoData.length > 0 && StringUtils.isNotEmpty(skin_code) && StringUtils.isNotEmpty(corp_id)) {
+                if (userInfoData.length > 0) {
                     Tools.loadUserInfo(userInfoData, null);
                     Intent intent = new Intent(LoginActivity.this, MainActivity1.class);
                     intent.putExtra(MainActivity.KEY_SKIN_CODE, skin_code);
                     intent.putExtra(MainActivity.KEY_EXTRAS, extras);
                     startActivity(intent);
-                    finish();
+                    LoginActivity.this.finish();
                 } else {
                     showContentView();
                 }
@@ -428,6 +427,7 @@ public class LoginActivity extends BaseActivity implements AnimationListener, AM
             @Override
             public void onData(String access_token) {
                 getNetInfo(access_token);
+                getKeyAndSecret();
             }
         });
     }
@@ -453,8 +453,13 @@ public class LoginActivity extends BaseActivity implements AnimationListener, AM
                             Tools.loadUserInfo(data, jsonString);
                             Tools.savetokenUserInfo(LoginActivity.this, jsonString);
                             int status = data.getInt("status");
+                            corpId = data.getString("corp_id");
+                            UserInfo.infoorgId = data.getString("org_uuid");
+                            Tools.saveOrgId(LoginActivity.this, data.getString("org_uuid"));
+                            Tools.saveStringValue(LoginActivity.this, Contants.storage.CORPID, corpId);//租户ID
                             if (status == 0) {//账号正常
                                 singleDevicelogin();
+                                getSkin(corpId);
                                 Intent intent = new Intent(LoginActivity.this, MainActivity1.class);
                                 intent.putExtra(MainActivity.KEY_NEDD_FRESH, false);
                                 intent.putExtra(MainActivity.KEY_SKIN_CODE, "");
@@ -488,55 +493,12 @@ public class LoginActivity extends BaseActivity implements AnimationListener, AM
         HttpTools.httpPost(Contants.URl.URL_CPMOBILE, "/1.0/auth", config, null);
     }
 
-    /**
-     * 获取个人信息
-     */
-    private void getUserInfo(String accountUuid) {
-        RequestConfig config = new RequestConfig(this, HttpTools.GET_USER_INFO, null);
-        config.hintString = "加载个人信息";
-        RequestParams params = new RequestParams();
-        params.put("username", newPhone);
-        HttpTools.httpGet(Contants.URl.URL_ICETEST, "/account", config, params);
-    }
-
     @Override
     public void onSuccess(Message msg, String jsonString, String hintString) {
         super.onSuccess(msg, jsonString, hintString);
         int code = HttpTools.getCode(jsonString);
         String message = HttpTools.getMessageString(jsonString);
-        if (msg.arg1 == HttpTools.POST_IMAG) {
-            ToastFactory.showToast(this, hintString);
-            ImageParams params = msg.getData().getParcelable(HttpTools.KEY_IMAGE_PARAMS);
-        } else if (msg.arg1 == HttpTools.GET_LOGIN) {
-            if (code == 0) {
-                Date dt = new Date();
-                Long time = dt.getTime();
-                String date = Tools.getDateToString(time);
-                Tools.saveDateInfo(this, date);
-                JSONObject content = HttpTools.getContentJSONObject(jsonString);
-                try {
-                    corpId = content.getString("corpId");
-                    int status = content.getInt("status");
-                    UserInfo.employeeAccount = content.getString("username");
-                    UserInfo.password = password;
-                    if (status > 0) {
-                        ToastFactory.showToast(LoginActivity.this, "账号异常，请及时联系管理员");
-                    } else {
-                        Tools.saveStringValue(LoginActivity.this, Contants.storage.CORPID, corpId);
-                        String accountUuid = content.getString("accountUuid");
-                        getUserInfo(accountUuid);
-//                        getKeyAndSecret();
-                        getSkin(corpId);
-//                        getOauth2();
-                    }
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                ToastFactory.showToast(LoginActivity.this, message);
-            }
-        } else if (msg.arg1 == HttpTools.GET_TS) {
+        if (msg.arg1 == HttpTools.GET_TS) {
             if (code == 0) {
                 String difference = HttpTools.getContentString(jsonString);
                 if (difference != null) {
@@ -558,18 +520,6 @@ public class LoginActivity extends BaseActivity implements AnimationListener, AM
                 }
             } else {
                 ToastFactory.showToast(LoginActivity.this, message);
-                SharedPreferencesTools.clearUserId(LoginActivity.this);
-            }
-        } else if (msg.arg1 == HttpTools.GET_USER_INFO) {
-            if (code == 0) {
-                String jsonObject = HttpTools.getContentString(jsonString);
-                ResponseData data = HttpTools.getResponseContentObject(jsonObject);
-                AccountEntity accountEntity = GsonUtils.gsonToBean(jsonString, AccountEntity.class);
-                UserInfo.infoorgId = accountEntity.getContent().getOrgId();
-                Tools.saveOrgId(LoginActivity.this, accountEntity.getContent().getOrgId());
-                Tools.saveStringValue(LoginActivity.this, "org_depart_name", accountEntity.getContent().getFamilyName());
-                Tools.loadUserInfo(data, jsonString);
-
             }
         } else if (msg.arg1 == HttpTools.GET_KEYSECERT) {
             if (code == 0) {
@@ -601,7 +551,6 @@ public class LoginActivity extends BaseActivity implements AnimationListener, AM
                 if (entity.getContent().getStatus() == 1) {//验证通过
                     gt3GeetestUtils.gt3TestFinish();
                     login();
-                    getKeyAndSecret();
                 } else {
                     gt3GeetestUtils.gt3TestClose();
                     ToastFactory.showToast(LoginActivity.this, "极验验证失败,请稍后重试");
@@ -645,7 +594,6 @@ public class LoginActivity extends BaseActivity implements AnimationListener, AM
      * 调用登录的接口
      */
     public void getEmployeeInfo(String key, String secret) {
-
         String pwd = Tools.getPassWord(this);
         RequestConfig config = new RequestConfig(this, HttpTools.SET_EMPLOYEE_INFO, null);
         RequestParams params = new RequestParams();
@@ -662,13 +610,11 @@ public class LoginActivity extends BaseActivity implements AnimationListener, AM
 
     @Override
     public void onAnimationStart(Animation animation) {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     public void onAnimationEnd(Animation animation) {
-        // TODO Auto-generated method stub
         if (animation == outAnim) {
             startLayout.setVisibility(View.GONE);
             contentLayout.setVisibility(View.VISIBLE);
@@ -679,7 +625,6 @@ public class LoginActivity extends BaseActivity implements AnimationListener, AM
 
     @Override
     public void onAnimationRepeat(Animation animation) {
-        // TODO Auto-generated method stub
 
     }
 
@@ -690,7 +635,6 @@ public class LoginActivity extends BaseActivity implements AnimationListener, AM
 
     @Override
     public void onCancel(Object tag, int requestCode) {
-        // TODO Auto-generated method stub
         super.onCancel(tag, requestCode);
         if (requestCode == HttpTools.GET_USER_INFO) {
             showContentView();

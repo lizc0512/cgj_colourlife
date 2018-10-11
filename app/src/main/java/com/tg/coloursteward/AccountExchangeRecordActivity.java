@@ -67,6 +67,9 @@ public class AccountExchangeRecordActivity extends BaseActivity {
             general_uuid = intent.getStringExtra(GENERAL_UUID);
             Log.e(TAG, "onCreate: general_uuid" + general_uuid);
         }
+        if (TextUtils.isEmpty(general_uuid)) {
+            general_uuid = "0";
+        }
         initView();
     }
 
@@ -174,8 +177,6 @@ public class AccountExchangeRecordActivity extends BaseActivity {
                 params.put("split_target", UserInfo.employeeAccount);
                 params.put("page", pagerIndex);
                 Log.e(TAG, "onLoadingMore: pagerIndex" + pagerIndex);
-//                params.put("pagesize", PullRefreshListView.PAGER_SIZE);
-//                params.put("pagesize", "9999");
                 HttpTools.httpGet(Contants.URl.URL_ICETEST, "/split/api/account/withdrawals", config, params);
             }
 
@@ -190,10 +191,6 @@ public class AccountExchangeRecordActivity extends BaseActivity {
                 params.put("access_token", accessToken);
                 params.put("split_target", UserInfo.employeeAccount);
                 params.put("page", 1);
-//                params.put("pagesize", PullRefreshListView.PAGER_SIZE);
-//                params.put("pagesize", "9999");
-
-                Log.e(TAG, "onLoading: " + general_uuid + "****" + accessToken);
                 HttpTools.httpGet(Contants.URl.URL_ICETEST, "/split/api/account/withdrawals", config, params);
             }
         });

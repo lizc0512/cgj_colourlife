@@ -585,7 +585,7 @@ public class Tools {
         String tel = data.getString("mobile");
         String Company_tel = data.getString("Company_tel");
         String mobile = data.getString("mobile");//手机号
-        String mail = data.getString("mail");
+        String mail = data.getString("email");
         String Icon = data.getString("Icon");
         String jobName = data.getString("job_type");
         String familyId = data.getString("familyId");

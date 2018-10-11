@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.text.TextUtils;
 
+import com.tg.coloursteward.AccountExchangeRecordActivity;
 import com.tg.coloursteward.DownloadManagerActivity;
 import com.tg.coloursteward.InviteRegisterActivity;
 import com.tg.coloursteward.MyBrowserActivity;
@@ -44,7 +45,11 @@ public class LinkParseUtil {
                         it = new Intent(context, DownloadManagerActivity.class);
                         context.startActivity(it);
                         ((Activity) context).overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
-                    } else {
+                    } else if (name.equals("dhRecord")) {//即时分配-兑换记录
+                        it = new Intent(context, AccountExchangeRecordActivity.class);
+                        context.startActivity(it);
+                        ((Activity) context).overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
+                    }  else {
                         return;
                     }
                 }

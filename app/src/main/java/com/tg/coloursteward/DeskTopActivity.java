@@ -22,6 +22,7 @@ import com.tg.coloursteward.net.RequestParams;
 import com.tg.coloursteward.net.ResponseData;
 import com.tg.coloursteward.serice.HomeService;
 import com.tg.coloursteward.util.AuthTimeUtils;
+import com.tg.coloursteward.util.LinkParseUtil;
 import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.PullRefreshListView;
@@ -186,8 +187,12 @@ public class DeskTopActivity extends BaseActivity implements OnItemClickListener
             if (info.notread == 0) {
                 readMsg((int) parent.getAdapter().getItemId(position));
             }
-            AuthTimeUtils mAuthTimeUtils = new AuthTimeUtils();
-            mAuthTimeUtils.IsAuthTime(DeskTopActivity.this, info.url, info.client_code, String.valueOf(info.auth_type), info.client_code, "");
+            if (info.url.startsWith("https") || info.url.startsWith("http")) {
+                AuthTimeUtils mAuthTimeUtils = new AuthTimeUtils();
+                mAuthTimeUtils.IsAuthTime(DeskTopActivity.this, info.url, info.client_code, String.valueOf(info.auth_type), info.client_code, "");
+            } else {
+                LinkParseUtil.parse(DeskTopActivity.this, info.url, "");
+            }
         }
     }
 

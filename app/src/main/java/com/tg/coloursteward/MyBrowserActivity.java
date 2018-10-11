@@ -277,7 +277,7 @@ public class MyBrowserActivity extends Activity implements OnClickListener, AMap
             //android调用js
             headerMap = new HashMap<>();
             OAuth2ServiceUpdate serviceUpdate = new OAuth2ServiceUpdate(MyBrowserActivity.this);
-            serviceUpdate.getOAuth2Service(UserInfo.employeeAccount, Tools.getPassWord(MyBrowserActivity.this), new Oauth2CallBack() {
+            serviceUpdate.getOAuth2Service(UserInfo.employeeAccount, Tools.getPassWordMD5(MyBrowserActivity.this), new Oauth2CallBack() {
                 @Override
                 public void onData(String access_token) {
 

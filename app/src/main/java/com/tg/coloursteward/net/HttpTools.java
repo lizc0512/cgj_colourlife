@@ -365,7 +365,7 @@ public class HttpTools {
                 HashMap<String, String> headers = new HashMap<>();
                 if (TextUtils.isEmpty(Tools.getAccess_token2(rqtConfig.activity))) {
                     OAuth2ServiceUpdate serviceUpdate = new OAuth2ServiceUpdate(rqtConfig.activity);
-                    serviceUpdate.getOAuth2Service(UserInfo.employeeAccount, Tools.getPassWord(rqtConfig.activity), new Oauth2CallBack() {
+                    serviceUpdate.getOAuth2Service(UserInfo.employeeAccount, Tools.getPassWordMD5(rqtConfig.activity), new Oauth2CallBack() {
                         @Override
                         public void onData(String access_token) {
 
@@ -574,7 +574,7 @@ public class HttpTools {
                 } else {
                     if (TextUtils.isEmpty(Tools.getAccess_token2(rqtConfig.activity))) {
                         OAuth2ServiceUpdate serviceUpdate = new OAuth2ServiceUpdate(rqtConfig.activity);
-                        serviceUpdate.getOAuth2Service(UserInfo.employeeAccount, Tools.getPassWord(rqtConfig.activity), new Oauth2CallBack() {
+                        serviceUpdate.getOAuth2Service(UserInfo.employeeAccount, Tools.getPassWordMD5(rqtConfig.activity), new Oauth2CallBack() {
                             @Override
                             public void onData(String access_token) {
 

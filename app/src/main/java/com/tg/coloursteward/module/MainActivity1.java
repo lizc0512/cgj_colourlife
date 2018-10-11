@@ -209,7 +209,7 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
         if (null == oAuth2ServiceUpdate) {
             oAuth2ServiceUpdate = new OAuth2ServiceUpdate(MainActivity1.this);
         }
-        oAuth2ServiceUpdate.getOAuth2Service(UserInfo.employeeAccount, Tools.getPassWord(MainActivity1.this), new Oauth2CallBack() {
+        oAuth2ServiceUpdate.getOAuth2Service(UserInfo.employeeAccount, Tools.getPassWordMD5(MainActivity1.this), new Oauth2CallBack() {
             @Override
             public void onData(String access_token) {
 
@@ -631,7 +631,7 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
      */
     private void getSlientLogin() {
         OAuth2ServiceUpdate auth2ServiceUpdate = new OAuth2ServiceUpdate(MainActivity1.this);
-        auth2ServiceUpdate.getOAuth2Service(UserInfo.employeeAccount, Tools.getPassWord(mContext), new Oauth2CallBack() {
+        auth2ServiceUpdate.getOAuth2Service(UserInfo.employeeAccount, Tools.getPassWordMD5(mContext), new Oauth2CallBack() {
             @Override
             public void onData(String access_token) {
                 getNetInfo(access_token);

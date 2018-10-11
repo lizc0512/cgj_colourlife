@@ -181,7 +181,8 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
         setContentView(R.layout.activity_main1);
         mContext = this;
         mHandler = new NormalHandler(this);
-
+        str_latitude=Tools.getStringValue(MainActivity1.this,Contants.storage.LATITUDE);
+        str_longitude=Tools.getStringValue(MainActivity1.this,Contants.storage.LONGITUDE);
         windowPermission();
 
         Intent data = getIntent();
@@ -667,7 +668,7 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
                                         public void run() {
                                             singleDevicelogin();
                                         }
-                                    }, 2000);
+                                    }, 2500);
                                 }
                                 if (("101").equals(skin_code)) {//彩生活
                                     sendBroadcast(new Intent(ACTION_TICKET_INFO));

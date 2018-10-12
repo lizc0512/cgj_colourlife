@@ -94,23 +94,23 @@ public class EmployeeEntity {
         private String employee_job_uuid;
         private String employee_org_uuid;
         private String employee_org_name;
-        private String IsFavorite;
-        private String Favoriteid;
+        private String is_favorite;
+        private String favorite_id;
 
         public String getIsFavorite() {
-            return IsFavorite;
+            return is_favorite;
         }
 
         public void setIsFavorite(String isFavorite) {
-            IsFavorite = isFavorite;
+            is_favorite = isFavorite;
         }
 
         public String getFavoriteid() {
-            return Favoriteid;
+            return favorite_id;
         }
 
         public void setFavoriteid(String favoriteid) {
-            Favoriteid = favoriteid;
+            favorite_id = favoriteid;
         }
 
         public String getUuid() {

@@ -434,6 +434,7 @@ public class ContactsFragment extends Fragment implements ItemEventListener {
             default: //item
                 Intent i = new Intent(mContext, EmployeeDataActivity.class);
                 i.putExtra(EmployeeDataActivity.CONTACTS_ID, item.getUsername());
+                i.putExtra(EmployeeDataActivity.CONTACTS_UUID, item.getUuid());
                 startActivity(i);
 //                String avatar = Contants.URl.HEAD_ICON_URL + "avatar?uid=" + item.getUsername();
 //                if (TextUtils.isEmpty(item.getUuid())) {

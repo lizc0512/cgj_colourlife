@@ -21,9 +21,6 @@ import android.widget.RelativeLayout;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.amap.api.location.AMapLocation;
-import com.amap.api.location.AMapLocationClient;
-import com.amap.api.location.AMapLocationListener;
-import com.amap.api.maps2d.LocationSource;
 import com.geetest.gt3unbindsdk.Bind.GT3GeetestBindListener;
 import com.geetest.gt3unbindsdk.Bind.GT3GeetestUtilsBind;
 import com.tg.coloursteward.application.CityPropertyApplication;
@@ -42,6 +39,7 @@ import com.tg.coloursteward.net.RequestParams;
 import com.tg.coloursteward.net.ResponseData;
 import com.tg.coloursteward.serice.OAuth2ServiceUpdate;
 import com.tg.coloursteward.updateapk.UpdateManager;
+import com.tg.coloursteward.util.GDLocationUtil;
 import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.TokenUtils;
 import com.tg.coloursteward.util.Tools;
@@ -57,15 +55,13 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.tg.coloursteward.util.Utils.getDefaultOption;
-
 /**
  * 登录页面
  *
  * @author Administrator
  */
 @Route(path = APath.RE_LOGIN)
-public class LoginActivity extends BaseActivity implements AnimationListener, AMapLocationListener, LocationSource {
+public class LoginActivity extends BaseActivity implements AnimationListener {
     private static final String TAG = "LoginActivity";
     private EditText editUser;
     private EditText editPassword;
@@ -82,20 +78,16 @@ public class LoginActivity extends BaseActivity implements AnimationListener, AM
     private RelativeLayout submit;
     private String str_latitude;
     private String str_longitude;
-    public AMapLocationClient mlocationClient;
-    private LocationSource.OnLocationChangedListener mListener;
     private OAuth2ServiceUpdate auth2ServiceUpdate;
 
     @Override
     public View getContentView() {
-        // TODO Auto-generated method stub
         headView.setBackgroundColor(getResources().getColor(R.color.white));
         return null;
     }
 
     @Override
     public String getHeadTitle() {
-        // TODO Auto-generated method stub
         return null;
     }
 
@@ -128,7 +120,6 @@ public class LoginActivity extends BaseActivity implements AnimationListener, AM
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         Intent getintent = getIntent();
@@ -137,7 +128,6 @@ public class LoginActivity extends BaseActivity implements AnimationListener, AM
         if (loginOut) {
             SharedPreferencesTools.clearUserId(this);
         }
-        initLocation();
         initView();
         initGetTS();
         showStartPager();
@@ -167,17 +157,25 @@ public class LoginActivity extends BaseActivity implements AnimationListener, AM
         HttpTools.httpGet(Contants.URl.URL_ICETEST, "/timestamp", config, params);
     }
 
-    private void initLocation() {
-        if (mlocationClient == null) {
-            //初始化client
-            mlocationClient = new AMapLocationClient(getApplicationContext());
-            //设置定位参数
-            mlocationClient.setLocationOption(getDefaultOption());
-            // 设置定位监听
-            mlocationClient.setLocationListener(this);
-            mlocationClient.startLocation();
-
-        }
+    private void initGetLocation() {
+        GDLocationUtil.getCurrentLocation(new GDLocationUtil.MyLocationListener() {
+            @Override
+            public void result(AMapLocation aMapLocation) {
+                if (null != aMapLocation) {
+                    if (aMapLocation.getErrorCode() == 0) {
+                        String str_latitude = String.valueOf(aMapLocation.getLatitude());
+                        String str_longitude = String.valueOf(aMapLocation.getLongitude());
+                        Tools.saveStringValue(getApplication(), Contants.storage.LATITUDE, str_latitude);
+                        Tools.saveStringValue(getApplication(), Contants.storage.LONGITUDE, str_longitude);
+                        Log.e("AmapErr", "Location OK:"
+                                + str_latitude+","+str_longitude);
+                    } else {
+                        Log.e("AmapErr", "Location ERR:"
+                                + aMapLocation.getErrorCode());
+                    }
+                }
+            }
+        });
     }
 
     private void CheckPermission() {
@@ -201,6 +199,7 @@ public class LoginActivity extends BaseActivity implements AnimationListener, AM
     private void showStartPager() {
         startLayout.setVisibility(View.VISIBLE);
         contentLayout.setVisibility(View.GONE);
+        initGetLocation();
         mHand.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -209,8 +208,9 @@ public class LoginActivity extends BaseActivity implements AnimationListener, AM
                 if (userInfoData.length > 0) {
                     Tools.loadUserInfo(userInfoData, null);
                     Intent intent = new Intent(LoginActivity.this, MainActivity1.class);
-                    intent.putExtra(MainActivity.KEY_SKIN_CODE, skin_code);
-                    intent.putExtra(MainActivity.KEY_EXTRAS, extras);
+                    intent.putExtra(MainActivity1.KEY_SKIN_CODE, skin_code);
+                    intent.putExtra(MainActivity1.KEY_EXTRAS, extras);
+                    intent.putExtra(MainActivity1.FROM_LOGIN, false);
                     startActivity(intent);
                     LoginActivity.this.finish();
                 } else {
@@ -572,7 +572,7 @@ public class LoginActivity extends BaseActivity implements AnimationListener, AM
         params.put("device_type", "1");//登录设备类别，1：安卓，2：IOS
         params.put("version", UpdateManager.getVersionName(LoginActivity.this));//APP版本号
         params.put("device_code", TokenUtils.getUUID(LoginActivity.this));//设备唯一编号
-        params.put("device_info", TokenUtils.getDeviceInfor(LoginActivity.this, str_longitude, str_latitude));//设备详细信息（json字符创）
+        params.put("device_info", TokenUtils.getDeviceInfor(LoginActivity.this));//设备详细信息（json字符创）
         params.put("device_name", TokenUtils.getDeviceBrand() + TokenUtils.getDeviceType());//设备名称（如三星S9）
         OkHttpConnector.httpPost(LoginActivity.this, Contants.URl.SINGLE_DEVICE + "cgjapp/single/device/login", params, new IPostListener() {
             @Override
@@ -641,45 +641,5 @@ public class LoginActivity extends BaseActivity implements AnimationListener, AM
         }
     }
 
-    @Override
-    public void onLocationChanged(AMapLocation aMapLocation) {
-        if (null != aMapLocation) {
-            deactivate();
-            if (aMapLocation.getErrorCode() == 0) {
-                double latitude = aMapLocation.getLatitude();
-                double longitude = aMapLocation.getLongitude();
-                str_latitude = String.valueOf(latitude);
-                str_longitude = String.valueOf(longitude);
-                Tools.saveStringValue(getApplication(), Contants.storage.LATITUDE, str_latitude);
-                Tools.saveStringValue(getApplication(), Contants.storage.LONGITUDE, str_longitude);
-            } else {
-                Log.e("AmapErr", "Location ERR:"
-                        + aMapLocation.getErrorCode());
-            }
-        }
-    }
-
-    /**
-     * 激活定位
-     *
-     * @param onLocationChangedListener
-     */
-    @Override
-    public void activate(OnLocationChangedListener onLocationChangedListener) {
-        mListener = onLocationChangedListener;
-    }
-
-    /**
-     * 停止定位
-     */
-    @Override
-    public void deactivate() {
-        mListener = null;
-        if (mlocationClient != null) {
-            mlocationClient.stopLocation();
-            mlocationClient.onDestroy();
-        }
-        mlocationClient = null;
-    }
 }
 

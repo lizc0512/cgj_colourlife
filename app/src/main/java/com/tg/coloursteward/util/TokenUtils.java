@@ -48,8 +48,10 @@ import cn.jpush.android.api.JPushInterface;
 
 
 public class TokenUtils {
-    public static String getDeviceInfor(Context context, String longitude, String latitude) {
+    public static String getDeviceInfor(Context context) {
         JSONObject jsonObject = new JSONObject();
+        String longitude = Tools.getStringValue(context, Contants.storage.LONGITUDE);
+        String latitude = Tools.getStringValue(context, Contants.storage.LATITUDE);
         try {
             jsonObject.put("networkType", getNetworkType(context));//网络类型
             jsonObject.put("imeiId", getImeiId(context));//和手机卡相关信息

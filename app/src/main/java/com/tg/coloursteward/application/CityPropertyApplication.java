@@ -19,9 +19,9 @@ import com.tg.coloursteward.LoginActivity;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.database.SharedPreferencesTools;
 import com.tg.coloursteward.info.UserInfo;
-import com.tg.coloursteward.log.Logger;
 import com.tg.coloursteward.module.MainActivity1;
 import com.tg.coloursteward.net.ResponseData;
+import com.tg.coloursteward.util.GDLocationUtil;
 import com.tg.coloursteward.util.Tools;
 import com.youmai.hxsdk.HuxinSdkManager;
 
@@ -47,11 +47,10 @@ public class CityPropertyApplication extends Application {
         HuxinSdkManager.instance().init(this);
         HuxinSdkManager.instance().setHomeAct(MainActivity1.class);
         Stetho.initializeWithDefaults(this);
-
+        GDLocationUtil.init(this);
         JPushInterface.setDebugMode(false);    // 设置开启日志,发布时请关闭日志
         JPushInterface.init(this);            // 初始化 JPush
         JPushInterface.setLatestNotificationNumber(this, 5);
-        Logger.logd("WisdomParkApplication onCreate");
         Tools.mContext = getApplicationContext();
         Tools.userHeadSize = getResources().getDimensionPixelSize(R.dimen.margin_80);
         ResponseData data = SharedPreferencesTools.getUserInfo(Tools.mContext);

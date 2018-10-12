@@ -30,10 +30,6 @@ import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
-import com.amap.api.location.AMapLocation;
-import com.amap.api.location.AMapLocationClient;
-import com.amap.api.location.AMapLocationListener;
-import com.amap.api.maps2d.LocationSource;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 import com.tg.coloursteward.InviteRegisterActivity;
 import com.tg.coloursteward.R;
@@ -94,14 +90,12 @@ import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.api.TagAliasCallback;
 import q.rorbin.badgeview.QBadgeView;
 
-import static com.tg.coloursteward.util.Utils.getDefaultOption;
-
 
 /**
  * Created by colin on 2018/3/15.
  */
 
-public class MainActivity1 extends BaseActivity implements MessageHandler.ResponseListener, View.OnClickListener, AMapLocationListener, LocationSource {
+public class MainActivity1 extends BaseActivity implements MessageHandler.ResponseListener, View.OnClickListener {
 
     private static final String TAG = MainActivity1.class.getSimpleName();
 
@@ -144,10 +138,6 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
     private HomeService homeService;
 
     private boolean needGetUserInfo = true;
-    private String str_latitude;
-    private String str_longitude;
-    public AMapLocationClient mlocationClient;
-    private LocationSource.OnLocationChangedListener mListener;
 
     private String skin_code = "101";//  101 彩生活  100 通用  102 中住
     private String extras;
@@ -181,8 +171,6 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
         setContentView(R.layout.activity_main1);
         mContext = this;
         mHandler = new NormalHandler(this);
-        str_latitude=Tools.getStringValue(MainActivity1.this,Contants.storage.LATITUDE);
-        str_longitude=Tools.getStringValue(MainActivity1.this,Contants.storage.LONGITUDE);
         windowPermission();
 
         Intent data = getIntent();
@@ -192,7 +180,6 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
             extras = data.getStringExtra(KEY_EXTRAS);
             form_login = data.getBooleanExtra(FROM_LOGIN, false);
         }
-        initLocation();
         initTitle();
         initView();
 
@@ -228,19 +215,6 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
         return null;
     }
 
-    private void initLocation() {
-        if (mlocationClient == null) {
-            //初始化client
-            mlocationClient = new AMapLocationClient(getApplicationContext());
-            //设置定位参数
-            mlocationClient.setLocationOption(getDefaultOption());
-            // 设置定位监听
-            mlocationClient.setLocationListener(this);
-
-            mlocationClient.startLocation();
-
-        }
-    }
 
     public void windowPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
@@ -494,7 +468,9 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
         msgHand.setResponseListener(this);
 
         getTokenInfo();
-        getSlientLogin();
+        if (form_login == false) {
+            getSlientLogin();
+        }
         getAuthAppInfo();//2.0授权
         getAppAuthInfo();//1.0授权
         /**
@@ -545,7 +521,7 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
         params.put("device_type", "1");//登录设备类别，1：安卓，2：IOS
         params.put("version", UpdateManager.getVersionName(MainActivity1.this));//APP版本号
         params.put("device_code", TokenUtils.getUUID(MainActivity1.this));//设备唯一编号
-        params.put("device_info", TokenUtils.getDeviceInfor(MainActivity1.this, str_longitude, str_latitude));//设备详细信息（json字符创）
+        params.put("device_info", TokenUtils.getDeviceInfor(MainActivity1.this));//设备详细信息（json字符创）
         params.put("device_name", TokenUtils.getDeviceBrand() + TokenUtils.getDeviceType());//设备名称（如三星S9）
         HttpTools.httpPost(Contants.URl.SINGLE_DEVICE, "cgjapp/single/device/login", config, params);
     }
@@ -662,14 +638,12 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
                             Tools.saveOrgId(MainActivity1.this, data.getString("org_uuid"));
                             Tools.saveStringValue(MainActivity1.this, Contants.storage.CORPID, corpId);//租户ID
                             if (status == 0) {//账号正常
-                                if (form_login == false) {
-                                    new Handler().postDelayed(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            singleDevicelogin();
-                                        }
-                                    }, 2500);
-                                }
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        singleDevicelogin();
+                                    }
+                                }, 2500);
                                 if (("101").equals(skin_code)) {//彩生活
                                     sendBroadcast(new Intent(ACTION_TICKET_INFO));
                                 }
@@ -968,38 +942,6 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
         getWindow().setAttributes(lp);
     }
 
-    @Override
-    public void onLocationChanged(AMapLocation aMapLocation) {
-        if (null != aMapLocation) {
-            deactivate();
-            if (aMapLocation.getErrorCode() == 0) {
-                double latitude = aMapLocation.getLatitude();
-                double longitude = aMapLocation.getLongitude();
-                str_latitude = String.valueOf(latitude);
-                str_longitude = String.valueOf(longitude);
-                Tools.saveStringValue(getApplication(), Contants.storage.LATITUDE, str_latitude);
-                Tools.saveStringValue(getApplication(), Contants.storage.LONGITUDE, str_longitude);
-            } else {
-                Log.e("AmapErr", "Location ERR:"
-                        + aMapLocation.getErrorCode());
-            }
-        }
-    }
-
-    @Override
-    public void activate(OnLocationChangedListener onLocationChangedListener) {
-        mListener = onLocationChangedListener;
-    }
-
-    @Override
-    public void deactivate() {
-        mListener = null;
-        if (mlocationClient != null) {
-            mlocationClient.stopLocation();
-            mlocationClient.onDestroy();
-        }
-        mlocationClient = null;
-    }
 
     class PopupDismissListener implements PopupWindow.OnDismissListener {
 

@@ -285,14 +285,12 @@ public abstract class BaseActivity extends AppCompatActivity implements Response
     }
 
     private void initAwake() {
-        String str_longitude = Tools.getStringValue(getApplication(), Contants.storage.LONGITUDE);
-        String str_latitude = Tools.getStringValue(getApplication(), Contants.storage.LATITUDE);
         ContentValues params = new ContentValues();
         params.put("login_type", "1");//登录方式,1静默和2密码
         params.put("device_type", "1");//登录设备类别，1：安卓，2：IOS
         params.put("version", UpdateManager.getVersionName(this));//APP版本号
         params.put("device_code", TokenUtils.getUUID(this));//设备唯一编号
-        params.put("device_info", TokenUtils.getDeviceInfor(this, str_longitude, str_latitude));//设备详细信息（json字符创）
+        params.put("device_info", TokenUtils.getDeviceInfor(this));//设备详细信息（json字符创）
         params.put("device_name", TokenUtils.getDeviceBrand() + TokenUtils.getDeviceType());//设备名称（如三星S9）
         OkHttpConnector.httpPost(this, Contants.URl.SINGLE_DEVICE + "cgjapp/single/device/login", params, new IPostListener() {
             @Override

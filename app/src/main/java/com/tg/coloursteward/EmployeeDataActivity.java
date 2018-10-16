@@ -66,9 +66,8 @@ import java.util.Date;
 @Route(path = APath.EMPLOYEE_DATA_ACT)
 public class EmployeeDataActivity extends BaseActivity {
     public final static String CONTACTS_ID = "contacts_id";
-    public final static String CONTACTS_UUID = "contacts_uuid";
     public final static String CONTACTS_CHECKED = "isChecked";
-    private String contactsID, username,contacts_uuid;
+    private String contactsID, username;
     private ManageMentLinearlayout magLinearLayout;
     private ManageMentLinearlayout llRedpackets;
     private CheckBox cbCollect;
@@ -99,7 +98,6 @@ public class EmployeeDataActivity extends BaseActivity {
         Intent intent = getIntent();
         if (intent != null) {
             contactsID = intent.getStringExtra(CONTACTS_ID);
-            contacts_uuid = intent.getStringExtra(CONTACTS_UUID);
         }
         if (contactsID == null) {
             ToastFactory.showToast(this, "参数错误");
@@ -135,18 +133,18 @@ public class EmployeeDataActivity extends BaseActivity {
      */
     private void getData() {
         accessToken = Tools.getStringValue(EmployeeDataActivity.this, Contants.storage.APPAUTH);
-//        RequestConfig config = new RequestConfig(this, HttpTools.GET_EMPLOYEE_INFO, "获取详细信息");
-//        RequestParams params = new RequestParams();
-//        params.put("keyword", contactsID);
-//        params.put("username", contactsID);
-//        params.put("owner", UserInfo.employeeAccount);
-//        params.put("corpId", Tools.getStringValue(EmployeeDataActivity.this, Contants.storage.CORPID));
-//        HttpTools.httpGet(Contants.URl.URL_ICETEST, "/txl2/contacts/search", config, params);
         RequestConfig config = new RequestConfig(this, HttpTools.GET_EMPLOYEE_INFO, "获取详细信息");
         RequestParams params = new RequestParams();
-        params.put("uuid", contacts_uuid);
-        params.put("access_token", accessToken);
-        HttpTools.httpGet(Contants.URl.URL_ICETEST, "/czyuser/czy/user/unionInfoQuery", config, params);
+        params.put("keyword", contactsID);
+        params.put("username", contactsID);
+        params.put("owner", UserInfo.employeeAccount);
+        params.put("corpId", Tools.getStringValue(EmployeeDataActivity.this, Contants.storage.CORPID));
+        HttpTools.httpGet(Contants.URl.URL_ICETEST, "/txl2/contacts/search", config, params);
+//        RequestConfig config = new RequestConfig(this, HttpTools.GET_EMPLOYEE_INFO, "获取详细信息");
+//        RequestParams params = new RequestParams();
+//        params.put("uuid", CONTACTS_ID);
+//        params.put("access_token", accessToken);
+//        HttpTools.httpGet(Contants.URl.URL_ICETEST, "/czyuser/czy/user/unionInfoQuery", config, params);
 
 
     }
@@ -315,146 +313,132 @@ public class EmployeeDataActivity extends BaseActivity {
         int code = HttpTools.getCode(jsonString);
         String message = HttpTools.getMessageString(jsonString);
         if (msg.arg1 == HttpTools.GET_EMPLOYEE_INFO) {
-            if (jsonString != null) {
-                if (code == 0) {
+            if(code==0){
+                if (jsonString != null) {
                     EmployeeEntity employeeEntity = GsonUtils.gsonToBean(jsonString, EmployeeEntity.class);
-                    if (null != employeeEntity.getContent()) {
+                    if (employeeEntity.getContent() != null && employeeEntity.getContent().size() > 0) {
                         item = new EmployeeBean();
-                        item.setIsFavorite(String.valueOf(employeeEntity.getContent().getIsFavorite()));
-                        item.setFavoriteid(employeeEntity.getContent().getFavoriteid());
+                        item.setIsFavorite(String.valueOf(employeeEntity.getContent().get(0).getIsFavorite()));
+                        item.setUid(employeeEntity.getContent().get(0).getAccountUuid());
+                        item.setUsername(employeeEntity.getContent().get(0).getUsername());
+                        item.setRealname(employeeEntity.getContent().get(0).getName());
+                        item.setAvatar("http://avatar.ice.colourlife.com/avatar?uid=" + employeeEntity.getContent().get(0).getUsername());
+                        if (employeeEntity.getContent().get(0).getSex().equals("1") || employeeEntity.getContent().get(0).getSex().equals("男")) {
+                            item.setSex("男");// 1男2女,
+                        } else {
+                            item.setSex("女");// 1男2女,
+                        }
+                        item.setEmail(employeeEntity.getContent().get(0).getEmail());
+                        item.setMobile(employeeEntity.getContent().get(0).getMobile());
+                        item.setJobName(employeeEntity.getContent().get(0).getJobType());
+                        item.setOrgName(employeeEntity.getContent().get(0).getOrgName());
+                        item.setLandline(employeeEntity.getContent().get(0).getLandline());
+                        item.setName(employeeEntity.getContent().get(0).getName());
+                        item.setFavoriteid(String.valueOf(employeeEntity.getContent().get(0).getFavoriteid()));
                         personCode = item.getFavoriteid();
-                        if (!TextUtils.isEmpty(employeeEntity.getContent().getEmployee_username())) {//为彩管家用户
-                            item.setUid(employeeEntity.getContent().getUuid());
-                            item.setUsername(employeeEntity.getContent().getEmployee_username());
-                            item.setRealname(employeeEntity.getContent().getEmployee_name());
-                            item.setAvatar("http://avatar.ice.colourlife.com/avatar?uid=" + employeeEntity.getContent().getEmployee_username());
-                            if (employeeEntity.getContent().getGender().equals("1") || employeeEntity.getContent().getGender().equals("男")) {
-                                item.setSex("男");// 1男2女,
+                    }
+                }
+
+                if (item != null) {
+                    CacheEmployeeHelper.instance().insertOrUpdate(this, item);
+
+                    tvName.setText(item.getRealname());
+                    try {
+                        if (item.getJobName().contains("(")) {
+                            int i = item.getJobName().indexOf("(");
+                            item.setJobName(item.getJobName().substring(0, i));
+                        }
+                    } catch (Exception e) {
+                    }
+                    tvJob.setText(item.getJobName());
+                    tvBranch.setText(item.getOrgName());
+                    try {
+                        Glide.with(this)
+                                .load(item.getAvatar())
+                                .apply(new RequestOptions()
+                                        .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+                                        .override(120, 120)
+                                        .centerCrop()
+                                        .transform(new GlideRoundTransform())
+                                        .placeholder(R.drawable.default_header)
+                                        .error(R.drawable.default_header))
+                                .into(ivHead);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    if (item.getSex().equals("女")) {
+                        ivSex.setImageResource(R.drawable.employee_female);
+                    } else {
+                        ivSex.setImageResource(R.drawable.employee_male);
+                    }
+                    if (item.getIsFavorite().equals("1")) {
+                        cbCollect.setChecked(true);
+                    } else {
+                        cbCollect.setChecked(false);
+                    }
+                    cbCollect.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+                        @Override
+                        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                            if (isChecked) {
+                                submit();//添加联系人
                             } else {
-                                item.setSex("女");// 1男2女,
+                                delete();
                             }
-                            item.setEmail(employeeEntity.getContent().getEmployee_email());
-                            item.setMobile(employeeEntity.getContent().getEmployee_mobile());
-                            item.setJobName(employeeEntity.getContent().getEmployee_job_name());
-                            item.setOrgName(employeeEntity.getContent().getEmployee_org_name());
-                            item.setName(employeeEntity.getContent().getEmployee_name());
-                        } else {//为彩之云用户
-                            item.setUid(employeeEntity.getContent().getUuid());
-                            item.setUsername(employeeEntity.getContent().getCzy_name());
-                            item.setRealname(employeeEntity.getContent().getCzy_name());
-                            item.setAvatar(employeeEntity.getContent().getCzy_portrait_url());
-                            if (employeeEntity.getContent().getGender().equals("1") || employeeEntity.getContent().getGender().equals("男")) {
-                                item.setSex("男");// 1男2女,
-                            } else {
-                                item.setSex("女");// 1男2女,
-                            }
-                            item.setEmail(employeeEntity.getContent().getCzy_email());
-                            item.setMobile(employeeEntity.getContent().getCzy_mobile());
-                            item.setJobName(employeeEntity.getContent().getEmployee_job_name());
-                            item.setOrgName(employeeEntity.getContent().getEmployee_org_name());
-                            item.setName(employeeEntity.getContent().getEmployee_name());
+                        }
+                    });
+
+                    if (mlListView.getFooterViewsCount() > 0) {
+                        mlListView.removeFooterView(footView);
+                    }
+                    if (item.getMobile() != null) {
+                        String[] str = item.getMobile().split("，");
+                        for (int i = 0; i < str.length; i++) {
+                            info = new EmployeePhoneInfo();
+                            info.phone = str[i];
+                            PhoneList.add(info);
                         }
                     }
-                    if (item != null) {
-                        CacheEmployeeHelper.instance().insertOrUpdate(this, item);
-
-                        tvName.setText(item.getRealname());
-                        try {
-                            if (item.getJobName().contains("(")) {
-                                int i = item.getJobName().indexOf("(");
-                                item.setJobName(item.getJobName().substring(0, i));
+                    if (footView == null) {
+                        footView = getLayoutInflater().inflate(R.layout.employee_foot, null);
+                    }
+                    TextView tvCornet = (TextView) footView.findViewById(R.id.tv_cornet);
+                    TextView tvSection = (TextView) footView.findViewById(R.id.tv_section);
+                    RelativeLayout rlEnterpriseCornet = (RelativeLayout) footView.findViewById(R.id.rl_enterprise_cornet);
+                    RelativeLayout rlSection = (RelativeLayout) footView.findViewById(R.id.rl_section);
+                    rlEnterpriseCornet.setOnClickListener(new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (TextUtils.isEmpty(item.getEnterprise_cornet())) {
+                                ToastFactory.showToast(EmployeeDataActivity.this, "暂无联系电话");
+                                return;
                             }
-                        } catch (Exception e) {
+                            Tools.call(EmployeeDataActivity.this, item.getEnterprise_cornet());
                         }
-                        tvJob.setText(item.getJobName());
-                        tvBranch.setText(item.getOrgName());
-                        try {
-                            Glide.with(this)
-                                    .load(item.getAvatar())
-                                    .apply(new RequestOptions()
-                                            .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-                                            .override(120, 120)
-                                            .centerCrop()
-                                            .transform(new GlideRoundTransform())
-                                            .placeholder(R.drawable.default_header)
-                                            .error(R.drawable.default_header))
-                                    .into(ivHead);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                    });
 
-                        if (item.getSex().equals("女")) {
-                            ivSex.setImageResource(R.drawable.employee_female);
-                        } else {
-                            ivSex.setImageResource(R.drawable.employee_male);
-                        }
-                        if (item.getIsFavorite().equals("1")) {
-                            cbCollect.setChecked(true);
-                        } else {
-                            cbCollect.setChecked(false);
-                        }
-                        cbCollect.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-                            @Override
-                            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                                if (isChecked) {
-                                    submit();//添加联系人
-                                } else {
-                                    delete();
-                                }
-                            }
-                        });
+                    rlSection.setOnClickListener(new OnClickListener() {
 
-                        if (mlListView.getFooterViewsCount() > 0) {
-                            mlListView.removeFooterView(footView);
-                        }
-                        if (item.getMobile() != null) {
-                            String[] str = item.getMobile().split("，");
-                            for (int i = 0; i < str.length; i++) {
-                                info = new EmployeePhoneInfo();
-                                info.phone = str[i];
-                                PhoneList.add(info);
-                            }
-                        }
-                        if (footView == null) {
-                            footView = getLayoutInflater().inflate(R.layout.employee_foot, null);
-                        }
-                        TextView tvCornet = (TextView) footView.findViewById(R.id.tv_cornet);
-                        TextView tvSection = (TextView) footView.findViewById(R.id.tv_section);
-                        RelativeLayout rlEnterpriseCornet = (RelativeLayout) footView.findViewById(R.id.rl_enterprise_cornet);
-                        RelativeLayout rlSection = (RelativeLayout) footView.findViewById(R.id.rl_section);
-                        rlEnterpriseCornet.setOnClickListener(new OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                if (TextUtils.isEmpty(item.getEnterprise_cornet())) {
-                                    ToastFactory.showToast(EmployeeDataActivity.this, "暂无联系电话");
-                                    return;
-                                }
-                                Tools.call(EmployeeDataActivity.this, item.getEnterprise_cornet());
-                            }
-                        });
-
-                        rlSection.setOnClickListener(new OnClickListener() {
-
-                            @Override
-                            public void onClick(View v) {
+                        @Override
+                        public void onClick(View v) {
                         /*Intent intent1 = new Intent(EmployeeDataActivity.this,Organization01Activity.class);
                         intent1.putExtra(Organization01Activity.TEXT_ID,UserInfo.propertyCoding);
 						intent1.putExtra(Organization01Activity.TEXT_FAMILY, item.family);
 						intent1.putExtra(Organization01Activity.TEXT_STRUCTURE,item.family);
 						startActivity(intent1);*/
-                            }
-                        });
+                        }
+                    });
 
-                        tvCornet.setText(item.getEnterprise_cornet());
-                        tvSection.setText(item.getOrgName());
-                        mlListView.addFooterView(footView);
-                        adapter = new EmployeePhoneAdapter(this, PhoneList);
-                        mlListView.setAdapter(adapter);
-                    }
-                } else {
-                    ToastFactory.showToast(EmployeeDataActivity.this, message);
+                    tvCornet.setText(item.getEnterprise_cornet());
+                    tvSection.setText(item.getOrgName());
+                    mlListView.addFooterView(footView);
+                    adapter = new EmployeePhoneAdapter(this, PhoneList);
+                    mlListView.setAdapter(adapter);
                 }
+            }else {
+                ToastFactory.showToast(EmployeeDataActivity.this,message);
             }
+
         } else if (msg.arg1 == HttpTools.SET_EMPLOYEE_INFO) {
             if (code == 0) {
                 ContactsEntity contactsEntity = GsonUtils.gsonToBean(jsonString, ContactsEntity.class);

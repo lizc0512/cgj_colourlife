@@ -100,8 +100,10 @@ public class ContactsSearchFragment<T extends Parcelable> extends SearchFragment
     @Override
     public void onItemClick(Object item) {
         String username = ((SearchContactBean) item).getUsername();
+        String user_uuid = ((SearchContactBean) item).getUuid();
         ARouter.getInstance().build(APath.EMPLOYEE_DATA_ACT)
                 .withString("contacts_id", username)
+                .withString("contacts_uuid", user_uuid)
                 .navigation(getContext());
     }
 

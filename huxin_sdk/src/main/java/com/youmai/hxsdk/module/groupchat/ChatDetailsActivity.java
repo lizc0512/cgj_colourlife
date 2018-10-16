@@ -221,6 +221,7 @@ public class ChatDetailsActivity extends SdkBaseActivity {
             public void onClick(View v) {
                 ARouter.getInstance().build(APath.EMPLOYEE_DATA_ACT)
                         .withString("contacts_id", username)
+                        .withString("contacts_uuid", uuid)
                         .navigation(mContext);
             }
         });

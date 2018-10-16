@@ -571,6 +571,7 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
         } else {
             ARouter.getInstance().build(APath.EMPLOYEE_DATA_ACT)
                     .withString("contacts_id", contact.getUsername())
+                    .withString("contacts_uuid", contact.getUuid())
                     .navigation(this);
         }
     }

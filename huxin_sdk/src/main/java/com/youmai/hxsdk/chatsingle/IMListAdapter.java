@@ -1315,6 +1315,7 @@ public class IMListAdapter extends RecyclerView.Adapter {
                     } else {
                         ARouter.getInstance().build(APath.EMPLOYEE_DATA_ACT)
                                 .withString("contacts_id", bean.getTargetUserName())
+                                .withString("contacts_uuid",bean.getTargetUuid())
                                 .navigation(mAct);
 
                     }

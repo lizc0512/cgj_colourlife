@@ -121,6 +121,7 @@ public class ChatGroupAllMembersActivity extends SdkBaseActivity implements Grou
         } else {
             ARouter.getInstance().build(APath.EMPLOYEE_DATA_ACT)
                     .withString("contacts_id", contact.getUsername())
+                    .withString("contacts_uuid", contact.getUuid())
                     .navigation(this);
 
         }

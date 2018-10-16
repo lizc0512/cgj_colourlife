@@ -1417,6 +1417,7 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
                     } else {
                         ARouter.getInstance().build(APath.EMPLOYEE_DATA_ACT)
                                 .withString("contacts_id", bean.getTargetUserName())
+                                .withString("contacts_uuid", bean.getSenderUserId())
                                 .navigation(mAct);
 
                     }

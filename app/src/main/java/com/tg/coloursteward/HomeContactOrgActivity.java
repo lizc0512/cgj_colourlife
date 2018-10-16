@@ -93,6 +93,7 @@ public class HomeContactOrgActivity extends BaseActivity {
                 } else if ("user".equals(type)) {
                     Intent intent = new Intent(HomeContactOrgActivity.this, EmployeeDataActivity.class);
                     intent.putExtra(EmployeeDataActivity.CONTACTS_ID, info.username);
+//                    intent.putExtra(EmployeeDataActivity.CONTACTS_UUID, info.id);
                     startActivity(intent);
                 }
             }

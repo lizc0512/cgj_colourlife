@@ -25,15 +25,12 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.BaseColumns;
 import android.provider.MediaStore;
 import android.provider.MediaStore.MediaColumns;
 import android.support.v4.content.FileProvider;
-import android.telephony.TelephonyManager;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -513,42 +510,20 @@ public class Tools {
         try {
             jsonObj.put("uid", UserInfo.uid);
             jsonObj.put("employeeAccount", UserInfo.employeeAccount);
-            jsonObj.put("internal", UserInfo.internal);
-            jsonObj.put("disable", UserInfo.disable);
-            jsonObj.put("jobId", UserInfo.jobId);
-            jsonObj.put("online", UserInfo.online);
-            jsonObj.put("admintype", UserInfo.admintype);
-            jsonObj.put("Jobonline", UserInfo.Jobonline);
-            jsonObj.put("sort", UserInfo.sort);
+            jsonObj.put("job_uuid", UserInfo.job_uuid);
             jsonObj.put("sex", UserInfo.sex);
             jsonObj.put("realname", UserInfo.realname);
-            jsonObj.put("password", UserInfo.password);
-            jsonObj.put("identifier", UserInfo.identifier);
-            jsonObj.put("Icon", UserInfo.headUrl);
             jsonObj.put("jobName", UserInfo.jobName);
-            jsonObj.put("familyId", UserInfo.familyId);
             jsonObj.put("familyName", UserInfo.familyName);
-            jsonObj.put("groupid", UserInfo.groupid);
-            jsonObj.put("notes", UserInfo.notes);
-            jsonObj.put("logintime", UserInfo.logintime);
-            jsonObj.put("loginip", UserInfo.loginip);
-            jsonObj.put("lastlogintime", UserInfo.lastlogintime);
-            jsonObj.put("lastloginip", UserInfo.lastloginip);
-            jsonObj.put("onlinetime", UserInfo.onlinetime);
-            jsonObj.put("weathercity", UserInfo.weathercity);
-            jsonObj.put("Jobonlinetext", UserInfo.Jobonlinetext);
-            jsonObj.put("purview", UserInfo.purview);
-            jsonObj.put("createtime", UserInfo.createtime);
-            jsonObj.put("uptime", UserInfo.uptime);
-            jsonObj.put("operator", UserInfo.operator);
             jsonObj.put("orgId", UserInfo.orgId);
-            jsonObj.put("tel", UserInfo.tel);
-            jsonObj.put("Company_tel", UserInfo.Company_tel);
+            jsonObj.put("corp_id", UserInfo.corp_id);
+            jsonObj.put("salary_level", UserInfo.salary_level);
+            jsonObj.put("is_deleted", UserInfo.is_deleted);
             jsonObj.put("mobile", UserInfo.mobile);
-            jsonObj.put("mail", UserInfo.email);
+            jsonObj.put("czy_id", UserInfo.czy_id);
+            jsonObj.put("email", UserInfo.email);
 
         } catch (JSONException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
             return;
         }
@@ -562,54 +537,62 @@ public class Tools {
                 SharedPreferencesTools.saveUserInfoJson(Tools.mContext, jsonObj);
             }
         }
-        boolean changed = false;
-        String uuid = data.getString("account_uuid");
-        if (uuid == null) {
-            return false;
-        }
-        String employeeAccount = data.getString("username");//OA
-        String realName = data.getString("name");//真实姓名
-        String password = data.getString("password");
-        String headUrl = data.getString("headUrl");
-        String identifier = data.getString("identifier");
-        int internal = data.getInt("internal");
-        int disable = data.getInt("disable");
-        String jobId = data.getString("jobId");
-        int gender = data.getInt("gender");//性别：1男2女,
+        String uuid = "";
+        String employeeAccount = "";
+        String realName = "";
+        int gender = 0;
         String sex = "";
-        if (gender == 1) {
-            sex = "男";
-        } else if (gender == 2) {
-            sex = "女";
+        String mobile = "";
+        String mail = "";
+        String corp_id = "";
+        int is_deleted = 0;
+        String salary_level = "";
+        int czy_id = 0;
+        String jobName = "";
+        String job_uuid = "";
+        String orgId = "";
+        String familyName = "";
+        boolean changed = false;
+        if (data.getHasString("account_uuid") && data.getHasString("name") && data.getHasString("username")) {//新版本个人信息接口
+            uuid = data.getString("account_uuid");//uuid
+            if (uuid == null) {
+                return false;
+            }
+            employeeAccount = data.getString("username");//OA
+            realName = data.getString("name");//真实姓名
+            gender = data.getInt("gender");//性别：1男2女,
+            if (gender == 1) {
+                sex = "男";
+            } else if (gender == 2) {
+                sex = "女";
+            }
+            mobile = data.getString("mobile");//手机号
+            mail = data.getString("email");//邮箱号
+            corp_id = data.getString("corp_id");//租户ID
+            is_deleted = data.getInt("is_deleted");//是否删除
+            salary_level = data.getString("salary_level");//工资等级
+            czy_id = data.getInt("czy_id");//彩之云ID
+            jobName = data.getString("job_type");//职位
+            job_uuid = data.getString("job_uuid");//职位UUID
+            orgId = data.getString("org_uuid");//组织UUID
+            familyName = data.getString("org_name");//部门名称
+        } else {//旧版本个人接口
+            uuid = data.getString("uuid");//uuid
+            if (uuid == null) {
+                return false;
+            }
+            employeeAccount = data.getString("employeeAccount");//OA
+            realName = data.getString("realname");//真实姓名
+            sex = data.getString("sex");//性别：1男2女,
+            mobile = data.getString("mobile");//手机号
+            mail = data.getString("mail");//邮箱号
+            czy_id = data.getInt("czyId");//彩之云ID
+            jobName = data.getString("jobName");//职位
+            job_uuid = data.getString("jobId");//职位UUID
+            orgId = data.getString("orgId");//组织UUID
+            familyName = data.getString("familyName");//部门名称
         }
-        String tel = data.getString("mobile");
-        String Company_tel = data.getString("Company_tel");
-        String mobile = data.getString("mobile");//手机号
-        String mail = data.getString("email");
-        String Icon = data.getString("Icon");
-        String jobName = data.getString("job_type");
-        String familyId = data.getString("familyId");
-        String familyName = data.getString("org_name");//部门名称
-        String groupid = data.getString("groupid");
-        String notes = data.getString("notes");
-        String logintime = data.getString("logintime");
-        String loginip = data.getString("loginip");
-        String lastlogintime = data.getString("lastlogintime");
-        String lastloginip = data.getString("lastloginip");
-        String onlinetime = data.getString("onlinetime");
-        String weathercity = data.getString("weathercity");
-        String Jobonlinetext = data.getString("Jobonlinetext");
-        String purview = data.getString("purview");
-        String createtime = data.getString("createtime");
-        String uptime = data.getString("uptime");
-        String operator = data.getString("operator");
-        String orgId = data.getString("org_uuid");
-        int online = data.getInt("online");
-        int admintype = data.getInt("admintype");
-        int Jobonline = data.getInt("Jobonline");
-        int sort = data.getInt("sort");
         String avatar = Contants.Html5.HEAD_ICON_URL + "avatar?uid=" + employeeAccount;
-
         com.youmai.hxsdk.UserInfo userInfo = new com.youmai.hxsdk.UserInfo();
         userInfo.setUuid(uuid);
         userInfo.setAvatar(avatar);
@@ -625,30 +608,6 @@ public class Tools {
 
         initInfo:
         {
-            if (UserInfo.internal != internal) {
-                changed = true;
-                break initInfo;
-            }
-            if (UserInfo.disable != disable) {
-                changed = true;
-                break initInfo;
-            }
-            if (UserInfo.online != online) {
-                changed = true;
-                break initInfo;
-            }
-            if (UserInfo.admintype != admintype) {
-                changed = true;
-                break initInfo;
-            }
-            if (UserInfo.Jobonline != Jobonline) {
-                changed = true;
-                break initInfo;
-            }
-            if (UserInfo.sort != sort) {
-                changed = true;
-                break initInfo;
-            }
             if (!TextUtils.equals(UserInfo.uid, uuid)) {
                 changed = true;
                 break initInfo;
@@ -665,15 +624,7 @@ public class Tools {
                 changed = true;
                 break initInfo;
             }
-            if (!TextUtils.equals(UserInfo.password, password)) {
-                changed = true;
-                break initInfo;
-            }
-            if (!TextUtils.equals(UserInfo.identifier, identifier)) {
-                changed = true;
-                break initInfo;
-            }
-            if (!TextUtils.equals(UserInfo.jobId, jobId)) {
+            if (!TextUtils.equals(UserInfo.job_uuid, job_uuid)) {
                 changed = true;
                 break initInfo;
             }
@@ -681,67 +632,7 @@ public class Tools {
                 changed = true;
                 break initInfo;
             }
-            if (!TextUtils.equals(UserInfo.headUrl, headUrl)) {
-                changed = true;
-                break initInfo;
-            }
-            if (!TextUtils.equals(UserInfo.familyId, familyId)) {
-                changed = true;
-                break initInfo;
-            }
             if (!TextUtils.equals(UserInfo.familyName, familyName)) {
-                changed = true;
-                break initInfo;
-            }
-            if (!TextUtils.equals(UserInfo.groupid, groupid)) {
-                changed = true;
-                break initInfo;
-            }
-            if (!TextUtils.equals(UserInfo.notes, notes)) {
-                changed = true;
-                break initInfo;
-            }
-            if (!TextUtils.equals(UserInfo.logintime, logintime)) {
-                changed = true;
-                break initInfo;
-            }
-            if (!TextUtils.equals(UserInfo.loginip, loginip)) {
-                changed = true;
-                break initInfo;
-            }
-            if (!TextUtils.equals(UserInfo.lastlogintime, lastlogintime)) {
-                changed = true;
-                break initInfo;
-            }
-            if (!TextUtils.equals(UserInfo.lastloginip, lastloginip)) {
-                changed = true;
-                break initInfo;
-            }
-            if (!TextUtils.equals(UserInfo.onlinetime, onlinetime)) {
-                changed = true;
-                break initInfo;
-            }
-            if (!TextUtils.equals(UserInfo.weathercity, weathercity)) {
-                changed = true;
-                break initInfo;
-            }
-            if (!TextUtils.equals(UserInfo.Jobonlinetext, Jobonlinetext)) {
-                changed = true;
-                break initInfo;
-            }
-            if (!TextUtils.equals(UserInfo.purview, purview)) {
-                changed = true;
-                break initInfo;
-            }
-            if (!TextUtils.equals(UserInfo.createtime, createtime)) {
-                changed = true;
-                break initInfo;
-            }
-            if (!TextUtils.equals(UserInfo.uptime, uptime)) {
-                changed = true;
-                break initInfo;
-            }
-            if (!TextUtils.equals(UserInfo.operator, operator)) {
                 changed = true;
                 break initInfo;
             }
@@ -749,15 +640,15 @@ public class Tools {
                 changed = true;
                 break initInfo;
             }
-            if (!TextUtils.equals(UserInfo.headUrl, Icon)) {
+            if (!TextUtils.equals(UserInfo.corp_id, corp_id)) {
                 changed = true;
                 break initInfo;
             }
-            if (!TextUtils.equals(UserInfo.tel, tel)) {
+            if (!TextUtils.equals(UserInfo.salary_level, salary_level)) {
                 changed = true;
                 break initInfo;
             }
-            if (!TextUtils.equals(UserInfo.Company_tel, Company_tel)) {
+            if (UserInfo.is_deleted != is_deleted) {
                 changed = true;
                 break initInfo;
             }
@@ -769,43 +660,25 @@ public class Tools {
                 changed = true;
                 break initInfo;
             }
+            if (UserInfo.czy_id != czy_id) {
+                changed = true;
+                break initInfo;
+            }
         }
         UserInfo.uid = uuid;
         UserInfo.employeeAccount = employeeAccount;
         UserInfo.realname = realName;
-        UserInfo.password = password;
-        UserInfo.internal = internal;
-        UserInfo.headUrl = headUrl;
-        UserInfo.disable = disable;
-        UserInfo.jobId = jobId;
+        UserInfo.job_uuid = job_uuid;
         UserInfo.sex = sex;
-        UserInfo.online = online;
-        UserInfo.admintype = admintype;
-        UserInfo.Jobonline = Jobonline;
-        UserInfo.sort = sort;
-        UserInfo.identifier = identifier;
         UserInfo.jobName = jobName;
         UserInfo.familyName = familyName;
-        UserInfo.familyId = familyId;
-        UserInfo.groupid = groupid;
-        UserInfo.notes = notes;
-        UserInfo.logintime = logintime;
-        UserInfo.loginip = loginip;
-        UserInfo.lastlogintime = lastlogintime;
-        UserInfo.lastloginip = lastloginip;
-        UserInfo.onlinetime = onlinetime;
-        UserInfo.weathercity = weathercity;
-        UserInfo.Jobonlinetext = Jobonlinetext;
-        UserInfo.purview = purview;
-        UserInfo.createtime = createtime;
-        UserInfo.uptime = uptime;
-        UserInfo.operator = operator;
         UserInfo.orgId = orgId;
-        UserInfo.headUrl = Icon;
-        UserInfo.tel = tel;
-        UserInfo.Company_tel = Company_tel;
+        UserInfo.corp_id = corp_id;
+        UserInfo.salary_level = salary_level;
+        UserInfo.is_deleted = is_deleted;
         UserInfo.email = mail;
         UserInfo.mobile = mobile;
+        UserInfo.czy_id = czy_id;
         return changed;
     }
 
@@ -1098,13 +971,6 @@ public class Tools {
         return "";
     }
 
-    public static String getDeviceSN(Context con) {
-        if (TextUtils.isEmpty(deviceSN)) {
-            deviceSN = getDeviceId(con);
-            deviceSN = deviceSN.replaceAll("-", "_").replaceAll(":", "_");
-        }
-        return deviceSN;
-    }
 
     public static Bitmap getCircleImage(Bitmap source, int size) {
         int srcW = source.getWidth();
@@ -1148,71 +1014,6 @@ public class Tools {
         return target;
     }
 
-    /**
-     * deviceID的组成为：渠道标志+识别符来源标志+hash后的终端识别符
-     * <p>
-     * 渠道标志为：
-     * 1，andriod（a）
-     * <p>
-     * 识别符来源标志：
-     * 1， wifi mac地址（wifi）；
-     * 2， IMEI（imei）；
-     * 3， 序列号（sn）；
-     * 4， id：随机码。若前面的都取不到时，则随机生成一个随机码，需要缓存。
-     *
-     * @param context
-     * @return
-     */
-    public static String getDeviceId(Context context) {
-        StringBuilder deviceId = new StringBuilder();
-        // 渠道标志
-        deviceId.append("a_");
-        try {
-            for (int i = 0; i < propertys.length; i++) {
-                String sn = getAndroidOsSystemProperties(propertys[i]);
-                if (!TextUtils.isEmpty(sn)) {
-                    deviceId.append("serialno_");
-                    deviceId.append(sn);
-                    return deviceId.toString();
-                }
-            }
-            //wifi mac地址
-            WifiManager wifi = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-            WifiInfo info = wifi.getConnectionInfo();
-            String wifiMac = info.getMacAddress();
-            if (!TextUtils.isEmpty(wifiMac)) {
-                deviceId.append("wifi_");
-                deviceId.append(wifiMac);
-                return deviceId.toString();
-            }
-            //IMEI（imei）
-            TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-            String imei = tm.getDeviceId();
-            if (!TextUtils.isEmpty(imei)) {
-                deviceId.append("imei_");
-                deviceId.append(imei);
-                return deviceId.toString();
-            }
-            //序列号（sn）
-            String sn = tm.getSimSerialNumber();
-            if (!TextUtils.isEmpty(sn)) {
-                deviceId.append("sn_");
-                deviceId.append(sn);
-                return deviceId.toString();
-            }
-            //如果上面都没有， 则生成一个id：随机码
-            String uuid = getUUID(context);
-            if (!TextUtils.isEmpty(uuid)) {
-                deviceId.append("uuid_");
-                deviceId.append(uuid);
-                return deviceId.toString();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            deviceId.append("uuid_").append(getUUID(context));
-        }
-        return deviceId.toString();
-    }
 
     /**
      * 得到全局唯一UUID

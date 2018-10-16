@@ -67,6 +67,22 @@ public class ResponseData {
 			return defaultValue;
 		}
 	}
+	public boolean getHasString(String key){
+		int count = getCount();
+		if( count == 0 ){
+			return false;
+		}
+		HashMap<String, Object> map = sparseArray.get(0);
+		if(map == null || map.size() == 0){
+			return false;
+		}
+		Object value = map.get(key);
+		if(value != null){
+			return true;
+		}else{
+			return false;
+		}
+	}
 	public int getInt(String key){
 		return getInt(0,key,0);
 	}

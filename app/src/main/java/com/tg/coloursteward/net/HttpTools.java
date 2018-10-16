@@ -363,14 +363,17 @@ public class HttpTools {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> headers = new HashMap<>();
-                if (TextUtils.isEmpty(Tools.getAccess_token2(rqtConfig.activity))) {
-                    OAuth2ServiceUpdate serviceUpdate = new OAuth2ServiceUpdate(rqtConfig.activity);
-                    serviceUpdate.getOAuth2Service(UserInfo.employeeAccount, Tools.getPassWordMD5(rqtConfig.activity), new Oauth2CallBack() {
-                        @Override
-                        public void onData(String access_token) {
+                if (URL_NAME.contains(Contants.URl.URL_NEW + "app/home/login/verify")) {
+                } else {
+                    if (TextUtils.isEmpty(Tools.getAccess_token2(rqtConfig.activity))) {
+                        OAuth2ServiceUpdate serviceUpdate = new OAuth2ServiceUpdate(rqtConfig.activity);
+                        serviceUpdate.getOAuth2Service(UserInfo.employeeAccount, Tools.getPassWordMD5(rqtConfig.activity), new Oauth2CallBack() {
+                            @Override
+                            public void onData(String access_token) {
 
-                        }
-                    });
+                            }
+                        });
+                    }
                 }
                 headers.put("color-token", Tools.getAccess_token2(rqtConfig.activity));
                 return headers;
@@ -432,8 +435,8 @@ public class HttpTools {
                 }
             }
         }
-        apppara=apppara.substring(0,apppara.length()-1);
-        return apiname + "?"+apppara;
+        apppara = apppara.substring(0, apppara.length() - 1);
+        return apiname + "?" + apppara;
     }
 
     /**

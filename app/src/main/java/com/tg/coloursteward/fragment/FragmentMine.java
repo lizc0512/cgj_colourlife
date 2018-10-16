@@ -173,9 +173,9 @@ public class FragmentMine extends Fragment implements ResponseListener {
         tvRealName.setText(UserInfo.realname);
         if (!TextUtils.isEmpty(UserInfo.familyName)) {
             if (UserInfo.jobName.contains(UserInfo.familyName)) {
-                tvJob.setText(UserInfo.jobName + "(" + UserInfo.familyName + ")");
-            } else {
                 tvJob.setText(UserInfo.jobName);
+            } else {
+                tvJob.setText(UserInfo.jobName + "(" + UserInfo.familyName + ")");
             }
         } else {
             tvJob.setText(UserInfo.jobName + UserInfo.familyName);

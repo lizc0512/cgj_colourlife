@@ -206,7 +206,7 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
                 ResponseData userInfoData = SharedPreferencesTools.getUserInfo(LoginActivity.this);
                 String skin_code = Tools.getStringValue(LoginActivity.this, Contants.storage.SKINCODE);
                 if (userInfoData.length > 0) {
-                    Tools.loadUserInfo(userInfoData, null);
+//                    Tools.loadUserInfo(userInfoData, null);
                     Intent intent = new Intent(LoginActivity.this, MainActivity1.class);
                     intent.putExtra(MainActivity1.KEY_SKIN_CODE, skin_code);
                     intent.putExtra(MainActivity1.KEY_EXTRAS, extras);

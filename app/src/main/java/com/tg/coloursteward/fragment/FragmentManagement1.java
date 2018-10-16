@@ -223,9 +223,7 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
         mView = inflater.inflate(R.layout.fragment_management_layout1, container, false);
         addHead();
         initView();
-        if (Tools.getBooleanValue(mActivity, Contants.storage.EMPLOYEE_LOGIN) == false) {
-            getEmployeeInfo();
-        }
+        getEmployeeInfo();
         requestData();
         requestData2();
         initListener();

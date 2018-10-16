@@ -1107,7 +1107,7 @@ public class FragmentDeskTop extends Fragment implements OnItemClickListener {
     }
 
     public void initData() {
-        VolleyUtils.getImage(getActivity(), UserInfo.headUrl, ivHead, size, size, R.drawable.moren_geren);
+//        VolleyUtils.getImage(getActivity(), UserInfo.headUrl, ivHead, size, size, R.drawable.moren_geren);
     }
 
     private void updateBalance() {

@@ -177,6 +177,7 @@ public class RedpacketsTransferMainActivity extends BaseActivity {
     @Override
     public void onFail(Message msg, String hintString) {
         super.onFail(msg, hintString);
+        dismissProgressDialog();
         if (msg.arg1 == HttpTools.POST_CARRY_ORDER) {
             ToastFactory.showToast(RedpacketsTransferMainActivity.this, "转账失败" + hintString);
         }

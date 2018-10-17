@@ -275,7 +275,11 @@ public class RedpacketsBonusMainActivity extends BaseActivity {
 
     private void setData() {
         DecimalFormat df = new DecimalFormat("0.00");
-        tvRealName.setText(UserInfo.realname + UserInfo.jobName);
+        if (TextUtils.isEmpty(UserInfo.familyName)) {
+            tvRealName.setText(UserInfo.realname + UserInfo.jobName);
+        } else {
+            tvRealName.setText(UserInfo.realname + UserInfo.jobName + "(" + UserInfo.familyName + ")");
+        }
         tv_balance.setText(df.format(balance));
     }
 

@@ -457,7 +457,6 @@ public class ContactsFragment extends Fragment implements ItemEventListener {
      * 获取首页缓存列表
      */
     private void getCacheList() {
-      // modifyContactsList();
         String json = AppUtils.getStringSharedPreferences(mContext, "contents", "");
         if (TextUtils.isEmpty(json)) {
             modifyContactsList();
@@ -494,6 +493,12 @@ public class ContactsFragment extends Fragment implements ItemEventListener {
                     if (data.size() != 0) {
                         AppUtils.setStringSharedPreferences(mContext, "contents", response);
                         getPinyinList(data);
+                    }
+                } else if (null != bean && bean.getCode() != 0) {
+                    if (bean.getContent().getData().size() == 0) {
+                        contactList.clear();
+                        contactList.addAll(HeadList);
+                        adapter.notifyDataSetChanged();
                     }
                 }
             }

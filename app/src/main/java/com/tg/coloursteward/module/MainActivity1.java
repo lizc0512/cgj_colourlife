@@ -50,7 +50,6 @@ import com.tg.coloursteward.module.contact.ContactsFragment;
 import com.tg.coloursteward.module.meassage.MsgListFragment;
 import com.tg.coloursteward.net.GetTwoRecordListener;
 import com.tg.coloursteward.net.HttpTools;
-import com.tg.coloursteward.net.MD5;
 import com.tg.coloursteward.net.MessageHandler;
 import com.tg.coloursteward.net.RequestConfig;
 import com.tg.coloursteward.net.RequestParams;
@@ -172,7 +171,11 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
         mContext = this;
         mHandler = new NormalHandler(this);
         windowPermission();
-
+        String key = Tools.getStringValue(this, Contants.EMPLOYEE_LOGIN.key);
+        String secret = Tools.getStringValue(this, Contants.EMPLOYEE_LOGIN.secret);
+        if (TextUtils.isEmpty(key) || TextUtils.isEmpty(secret)) {
+            getKeyAndSecret();
+        }
         Intent data = getIntent();
         if (data != null) {
             needGetUserInfo = data.getBooleanExtra(KEY_NEDD_FRESH, true);
@@ -272,6 +275,10 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
         HuxinSdkManager.instance().getStackAct().finishActivity(this);
     }
 
+    private void getKeyAndSecret() {
+        RequestConfig config = new RequestConfig(this, HttpTools.GET_KEYSECERT, null);
+        HttpTools.httpPost(Contants.URl.URL_CPMOBILE, "/1.0/auth", config, null);
+    }
 
     public void refreshUnReadCount() {
         int unreadCount = IMMsgManager.instance().getAllBadgeCount();
@@ -360,6 +367,32 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
                         Log.d("lizc", TAG + "单设备退出OK");
                     }
                 } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        } else if (msg.arg1 == HttpTools.GET_ORG_TYPE) {//得到个人orgtype
+            if (code == 0) {
+                JSONObject jsonObject = HttpTools.getContentJSONObject(jsonString);
+                if (jsonObject.length() > 0) {
+                    try {
+                        String orgType = jsonObject.getString("orgType");
+                        Tools.saveStringValue(MainActivity1.this, Contants.storage.ORGTYPE, orgType);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            } else {
+            }
+        } else if (msg.arg1 == HttpTools.GET_KEYSECERT) {
+            if (code == 0) {
+                try {
+                    String jsonObject = HttpTools.getContentString(jsonString);
+                    JSONObject sonJon = new JSONObject(jsonObject);
+                    String key = sonJon.optString("key");
+                    String secret = sonJon.optString("secret");
+                    Tools.saveStringValue(MainActivity1.this, Contants.EMPLOYEE_LOGIN.key, key);
+                    Tools.saveStringValue(MainActivity1.this, Contants.EMPLOYEE_LOGIN.secret, secret);
+                } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
@@ -585,25 +618,6 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
     }
 
     /**
-     * 重新静默登录
-     */
-    public void getEmployeeInfo() {
-
-        try {
-            String pwd = Tools.getPassWord(this);
-            String passwordMD5 = MD5.getMd5Value(pwd).toLowerCase();
-            Tools.savePassWordMD5(getApplicationContext(), passwordMD5);//保存密码(MD5加密后)
-            RequestParams params = new RequestParams();
-            params.put("username", UserInfo.employeeAccount);
-            params.put("password", passwordMD5);
-            RequestConfig config = new RequestConfig(this, HttpTools.GET_LOGIN);
-            HttpTools.httpPost(Contants.URl.URL_ICETEST, "/orgms/loginAccount", config, params);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
      * 重新静默获取用户信息
      */
     private void getSlientLogin() {
@@ -701,6 +715,7 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
                             String expireTime = content.getString("expireTime");
                             Tools.saveStringValue(mContext, Contants.storage.APPAUTH, accessToken);
                             Tools.saveStringValue(mContext, Contants.storage.APPAUTHTIME, expireTime);
+                            getOrgType(accessToken);//获取个人OrgType
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -756,6 +771,19 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
         });
     }
 
+    /**
+     * 获取key
+     * sectet
+     */
+    public void getOrgType(String token) {
+        RequestConfig config = new RequestConfig(this, HttpTools.GET_ORG_TYPE, null);
+        RequestParams params = new RequestParams();
+        String corpId = Tools.getStringValue(MainActivity1.this, Contants.storage.CORPID);
+        params.put("token", token);
+        params.put("orgUuid", UserInfo.orgId);
+        params.put("corpId", corpId);
+        HttpTools.httpGet(Contants.URl.URL_ICETEST, "/orgms/org", config, params);
+    }
 
     /**
      * 应用授权

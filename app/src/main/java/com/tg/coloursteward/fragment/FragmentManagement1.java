@@ -823,7 +823,6 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
                             }
                         }
                     } catch (JSONException e) {
-                        // TODO Auto-generated catch block
                         e.printStackTrace();
                     }
                 } else {
@@ -842,7 +841,6 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
                 config.handler = msgHand.getHandler();
                 RequestParams params = new RequestParams();
                 params.put("uid", UserInfo.employeeAccount);
-//                params.put("uid", "xuanhu");
                 HttpTools.httpGet(Contants.URl.URL_ICETEST, "/newmail/mail/getmailsumbyuid", config, params);
             }
         });
@@ -1359,16 +1357,6 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
         });
     }
 
-
-    /**
-     * 刷新饭票
-     */
-    public void freshUI() {
-        key = Tools.getStringValue(mActivity, Contants.EMPLOYEE_LOGIN.key);
-        secret = Tools.getStringValue(mActivity, Contants.EMPLOYEE_LOGIN.secret);
-        magLinearLayoutTicket.loaddingData();
-    }
-
     /**
      * 刷新即时分成
      */
@@ -1405,18 +1393,29 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
         }
     }
 
+    private void getKeyAndSecret() {
+        RequestConfig config = new RequestConfig(mActivity, HttpTools.GET_KEYSECERT, null);
+        HttpTools.httpPost(Contants.URl.URL_CPMOBILE, "/1.0/auth", config, null);
+    }
+
     @Override
     public void onResume() {
         super.onResume();
         count = 0;
         getApproval();
-        magLinearLayoutTicket.postDelayed(new Runnable() {//我的饭票
+        key = Tools.getStringValue(mActivity, Contants.EMPLOYEE_LOGIN.key);
+        secret = Tools.getStringValue(mActivity, Contants.EMPLOYEE_LOGIN.secret);
+        if (TextUtils.isEmpty(key) || TextUtils.isEmpty(secret)) {
+            getKeyAndSecret();
+        } else {
+            magLinearLayoutTicket.postDelayed(new Runnable() {//我的饭票
+                @Override
+                public void run() {
+                    magLinearLayoutTicket.loaddingData();
+                }
+            }, 1500);
+        }
 
-            @Override
-            public void run() {
-                magLinearLayoutTicket.loaddingData();
-            }
-        }, 1500);
         magLinearLayoutPerformance.postDelayed(new Runnable() {//彩惠战况
             @Override
             public void run() {
@@ -1464,6 +1463,26 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
                 }
             }
             startActivity(new Intent(mActivity, DoorActivity.class));
+        } else if (msg.arg1 == HttpTools.GET_KEYSECERT) {
+            if (code == 0) {
+                try {
+                    String contentString = HttpTools.getContentString(jsonString);
+                    JSONObject sonJon = new JSONObject(contentString);
+                    String key = sonJon.optString("key");
+                    String secret = sonJon.optString("secret");
+                    Tools.saveStringValue(mActivity, Contants.EMPLOYEE_LOGIN.key, key);
+                    Tools.saveStringValue(mActivity, Contants.EMPLOYEE_LOGIN.secret, secret);
+                    magLinearLayoutTicket.postDelayed(new Runnable() {//我的饭票
+                        @Override
+                        public void run() {
+                            magLinearLayoutTicket.loaddingData();
+                        }
+                    }, 1500);
+                    getEmployeeInfo();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 

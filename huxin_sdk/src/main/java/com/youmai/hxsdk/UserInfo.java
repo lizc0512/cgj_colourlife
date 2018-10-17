@@ -340,6 +340,7 @@ public class UserInfo {
 
         if (context != null) {
             AppUtils.setStringSharedPreferences(context, "userInfo", null);
+            AppUtils.setStringSharedPreferences(context, "contents", null);
         }
     }
 }

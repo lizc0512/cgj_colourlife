@@ -426,8 +426,8 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
         auth2ServiceUpdate.getOAuth2Service(newPhone, passwordMD5, new Oauth2CallBack() {
             @Override
             public void onData(String access_token) {
-                getNetInfo(access_token);
                 getKeyAndSecret();
+                getNetInfo(access_token);
             }
         });
     }
@@ -534,8 +534,6 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-            } else {
-                ToastFactory.showToast(LoginActivity.this, "登录失败，请重新登录");
             }
         } else if (msg.arg1 == HttpTools.SET_EMPLOYEE_INFO) {
             if (code == 0) {

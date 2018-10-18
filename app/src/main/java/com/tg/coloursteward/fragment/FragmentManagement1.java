@@ -561,7 +561,7 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
                 RequestParams params = new RequestParams();
                 params.put("key", key);
                 params.put("secret", secret);
-                HttpTools.httpGet(Contants.URl.URL_ICETEST, "/hongbao/getHBUserList", config, params);
+                HttpTools.httpGet(Contants.URl.URL_CPMOBILE, "/1.0/caiRedPaket/getBalance", config, params);
             }
         });
         /**

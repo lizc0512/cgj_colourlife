@@ -237,7 +237,6 @@ public class RedpacketsBankCardListActivity extends BaseActivity {
 	
 	@Override
 	public View getContentView() {
-		// TODO Auto-generated method stub
 		return getLayoutInflater().inflate(R.layout.activity_redpackets_bank_card_list, null);
 	}
 

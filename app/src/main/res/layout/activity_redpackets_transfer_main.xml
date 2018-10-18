@@ -165,13 +165,6 @@
             android:layout_marginTop="@dimen/margin_15"
             android:text="可用余额：0.00" />
     </LinearLayout>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:layout_marginLeft="@dimen/margin_18"
-        android:textColor="@color/text_color3"
-        android:text="提现转账每日限额5000，每月限额20000"/>
     <LinearLayout
         android:id="@+id/ll_submit"
         android:layout_width="match_parent"

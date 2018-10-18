@@ -28,7 +28,6 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.tg.coloursteward.application.CityPropertyApplication;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.info.UserInfo;
@@ -37,6 +36,7 @@ import com.tg.coloursteward.log.Logger;
 import com.tg.coloursteward.object.ImageParams;
 import com.tg.coloursteward.serice.OAuth2ServiceUpdate;
 import com.tg.coloursteward.util.Tools;
+import com.tg.coloursteward.util.VolleyUtils;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -213,7 +213,7 @@ public class HttpTools {
 
     public static RequestQueue getRequestQueue() {
         if (mQueue == null) {
-            mQueue = Volley.newRequestQueue(Tools.mContext);
+            mQueue = VolleyUtils.newRequestQueue(Tools.mContext);
         }
         return mQueue;
     }

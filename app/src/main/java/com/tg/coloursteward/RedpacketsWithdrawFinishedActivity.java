@@ -22,7 +22,7 @@ import org.json.JSONObject;
 import java.text.DecimalFormat;
 
 /**
- * 转账页面
+ * 转账饭票提现页面
  */
 public class RedpacketsWithdrawFinishedActivity extends BaseActivity {
 
@@ -256,22 +256,33 @@ public class RedpacketsWithdrawFinishedActivity extends BaseActivity {
         String message = HttpTools.getMessageString(jsonString);
         if (code == 0) {
             JSONObject jsonObject = HttpTools.getContentJSONObject(jsonString);
-            String state;
-            try {
-                state = jsonObject.getString("ok");
-                if ("1".equals(state)) {
-                    sendBroadcast(new Intent(MainActivity.ACTION_TICKET_INFO));
-                } else {
-                    if ("colleague".equals(transferTo)) {
-                        ToastFactory.showToast(RedpacketsWithdrawFinishedActivity.this, "发红包失败");
-                    } else if ("czy".equals(transferTo)) {
-                        ToastFactory.showToast(RedpacketsWithdrawFinishedActivity.this, "转账失败");
-                    } else if ("bank".equals(transferTo)) {
-                        ToastFactory.showToast(RedpacketsWithdrawFinishedActivity.this, "提现失败");
+            if (jsonObject.has("code") && jsonObject.has("message")) {
+                try {
+                    int code_data = jsonObject.getInt("code");
+                    if (code_data != 0) {
+                        ToastFactory.showToast(RedpacketsWithdrawFinishedActivity.this, jsonObject.getString("message"));
                     }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-            } catch (JSONException e) {
-                e.printStackTrace();
+            } else {
+                String state;
+                try {
+                    state = jsonObject.getString("ok");
+                    if ("1".equals(state)) {
+                        sendBroadcast(new Intent(MainActivity.ACTION_TICKET_INFO));
+                    } else {
+                        if ("colleague".equals(transferTo)) {
+                            ToastFactory.showToast(RedpacketsWithdrawFinishedActivity.this, "发红包失败");
+                        } else if ("czy".equals(transferTo)) {
+                            ToastFactory.showToast(RedpacketsWithdrawFinishedActivity.this, "转账失败");
+                        } else if ("bank".equals(transferTo)) {
+                            ToastFactory.showToast(RedpacketsWithdrawFinishedActivity.this, "提现失败");
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         } else {
             ToastFactory.showToast(RedpacketsWithdrawFinishedActivity.this, message);

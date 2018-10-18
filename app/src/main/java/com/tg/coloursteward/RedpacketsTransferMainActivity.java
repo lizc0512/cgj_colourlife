@@ -381,41 +381,52 @@ public class RedpacketsTransferMainActivity extends BaseActivity {
         } else if (msg.arg1 == HttpTools.POST_CARRY_ORDER) {
             if (code == 0) {
                 JSONObject jsonObject = HttpTools.getContentJSONObject(jsonString);
-                String state;
-                try {
-                    state = jsonObject.getString("ok");
-                    if ("1".equals(state)) {
-                        Intent intent = new Intent();
-                        String transferNote = edtMessage.getText().toString();
-                        intent.setClass(RedpacketsTransferMainActivity.this, RedpacketsWithdrawFinishedActivity.class);
-                        intent.putExtra(Contants.PARAMETER.USERID, receiver_id);
-                        intent.putExtra("type", type);
-                        intent.putExtra(Contants.PARAMETER.WITHDRAW_AMOUNT, transferAmount);
-                        intent.putExtra(Contants.PARAMETER.TRANSFERNOTE, transferNote);
-                        if ("colleague".equals(transferTo)) {
-                            intent.putExtra("name", receiverName);
-                            intent.putExtra(Contants.PARAMETER.TRANSFERTO, "colleague");
-                            intent.putExtra("username", receiverOA);
-                            isCanTrans();
-                        } else if ("czy".equals(transferTo)) {
-                            intent.putExtra(Contants.PARAMETER.TRANSFERTO, "czy");
-                            intent.putExtra(Contants.PARAMETER.MOBILE, receiverMobile);
-
+                if(jsonObject.has("code") && jsonObject.has("message")){
+                    try {
+                        int  code_data=jsonObject.getInt("code");
+                        if(code_data!=0){
+                            ToastFactory.showToast(RedpacketsTransferMainActivity.this,jsonObject.getString("message"));
                         }
-                        startActivity(intent);
-                        finish();
-                        sendBroadcast(new Intent(MainActivity.ACTION_TICKET_INFO));
-                    } else {
-                        if ("colleague".equals(transferTo)) {
-                            ToastFactory.showToast(RedpacketsTransferMainActivity.this, "发红包失败");
-                        } else if ("czy".equals(transferTo)) {
-                            ToastFactory.showToast(RedpacketsTransferMainActivity.this, "转账失败");
-                        } else if ("bank".equals(transferTo)) {
-                            ToastFactory.showToast(RedpacketsTransferMainActivity.this, "提现失败");
-                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                }else {
+                    String state;
+                    try {
+                        state = jsonObject.getString("ok");
+                        if ("1".equals(state)) {
+                            Intent intent = new Intent();
+                            String transferNote = edtMessage.getText().toString();
+                            intent.setClass(RedpacketsTransferMainActivity.this, RedpacketsWithdrawFinishedActivity.class);
+                            intent.putExtra(Contants.PARAMETER.USERID, receiver_id);
+                            intent.putExtra("type", type);
+                            intent.putExtra(Contants.PARAMETER.WITHDRAW_AMOUNT, transferAmount);
+                            intent.putExtra(Contants.PARAMETER.TRANSFERNOTE, transferNote);
+                            if ("colleague".equals(transferTo)) {
+                                intent.putExtra("name", receiverName);
+                                intent.putExtra(Contants.PARAMETER.TRANSFERTO, "colleague");
+                                intent.putExtra("username", receiverOA);
+                                isCanTrans();
+                            } else if ("czy".equals(transferTo)) {
+                                intent.putExtra(Contants.PARAMETER.TRANSFERTO, "czy");
+                                intent.putExtra(Contants.PARAMETER.MOBILE, receiverMobile);
+
+                            }
+                            startActivity(intent);
+                            finish();
+                            sendBroadcast(new Intent(MainActivity.ACTION_TICKET_INFO));
+                        } else {
+                            if ("colleague".equals(transferTo)) {
+                                ToastFactory.showToast(RedpacketsTransferMainActivity.this, "发红包失败");
+                            } else if ("czy".equals(transferTo)) {
+                                ToastFactory.showToast(RedpacketsTransferMainActivity.this, "转账失败");
+                            } else if ("bank".equals(transferTo)) {
+                                ToastFactory.showToast(RedpacketsTransferMainActivity.this, "提现失败");
+                            }
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
             } else {
                 ToastFactory.showToast(RedpacketsTransferMainActivity.this, message);

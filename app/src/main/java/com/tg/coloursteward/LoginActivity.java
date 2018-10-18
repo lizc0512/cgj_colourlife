@@ -167,8 +167,6 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
                         String str_longitude = String.valueOf(aMapLocation.getLongitude());
                         Tools.saveStringValue(getApplication(), Contants.storage.LATITUDE, str_latitude);
                         Tools.saveStringValue(getApplication(), Contants.storage.LONGITUDE, str_longitude);
-                        Log.e("AmapErr", "Location OK:"
-                                + str_latitude+","+str_longitude);
                     } else {
                         Log.e("AmapErr", "Location ERR:"
                                 + aMapLocation.getErrorCode());
@@ -420,13 +418,14 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
         }
         Tools.savePassWordMD5(getApplicationContext(), passwordMD5);//保存密码(MD5加密后)
         Tools.savePassWord(getApplicationContext(), password);//保存密码
+        UserInfo.employeeAccount=newPhone;
+        getKeyAndSecret();
         if (null == auth2ServiceUpdate) {
             auth2ServiceUpdate = new OAuth2ServiceUpdate(LoginActivity.this);
         }
         auth2ServiceUpdate.getOAuth2Service(newPhone, passwordMD5, new Oauth2CallBack() {
             @Override
             public void onData(String access_token) {
-                getKeyAndSecret();
                 getNetInfo(access_token);
             }
         });
@@ -544,14 +543,17 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
             }
         } else if (msg.arg1 == HttpTools.POST_TWOJIYAN) {
             if (code == 0) {
-                JiYanTwoCheckEntity entity = new JiYanTwoCheckEntity();
-                entity = GsonUtils.gsonToBean(jsonString, JiYanTwoCheckEntity.class);
-                if (entity.getContent().getStatus() == 1) {//验证通过
-                    gt3GeetestUtils.gt3TestFinish();
-                    login();
-                } else {
-                    gt3GeetestUtils.gt3TestClose();
-                    ToastFactory.showToast(LoginActivity.this, "极验验证失败,请稍后重试");
+                try {
+                    JiYanTwoCheckEntity entity = new JiYanTwoCheckEntity();
+                    entity = GsonUtils.gsonToBean(jsonString, JiYanTwoCheckEntity.class);
+                    if (entity.getContent().getStatus() == 1) {//验证通过
+                        gt3GeetestUtils.gt3TestFinish();
+                        login();
+                    } else {
+                        gt3GeetestUtils.gt3TestClose();
+                        ToastFactory.showToast(LoginActivity.this, "极验验证失败,请稍后重试");
+                    }
+                } catch (Exception e) {
                 }
             } else {
                 gt3GeetestUtils.gt3TestClose();

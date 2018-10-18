@@ -430,7 +430,6 @@ public class RedpacketsTransferMainActivity extends BaseActivity {
 
     @Override
     public String getHeadTitle() {
-        // TODO Auto-generated method stub
         return null;
     }
 

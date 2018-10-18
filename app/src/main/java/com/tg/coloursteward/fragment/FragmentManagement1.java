@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -845,13 +846,8 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
             }
         });
         /**
-         * 未读审批
-         */
-//        getApproval();
-        /**
          * 常用应用与其他应用中只要是 “扫码开门”  “对公账户” 都触发该点击事件
          */
-
         adapter1.setItemEventListener(new ManagementAdapter1.ItemEventListener() {
             @Override
             public void onItemClick(GridViewInfo info) {
@@ -1402,7 +1398,12 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
     public void onResume() {
         super.onResume();
         count = 0;
-        getApproval();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                getApproval();
+            }
+        }, 2000);
         key = Tools.getStringValue(mActivity, Contants.EMPLOYEE_LOGIN.key);
         secret = Tools.getStringValue(mActivity, Contants.EMPLOYEE_LOGIN.secret);
         if (TextUtils.isEmpty(key) || TextUtils.isEmpty(secret)) {
@@ -1472,12 +1473,7 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
                     String secret = sonJon.optString("secret");
                     Tools.saveStringValue(mActivity, Contants.EMPLOYEE_LOGIN.key, key);
                     Tools.saveStringValue(mActivity, Contants.EMPLOYEE_LOGIN.secret, secret);
-                    magLinearLayoutTicket.postDelayed(new Runnable() {//我的饭票
-                        @Override
-                        public void run() {
-                            magLinearLayoutTicket.loaddingData();
-                        }
-                    }, 1500);
+                    magLinearLayoutTicket.loaddingData();
                     getEmployeeInfo();
                 } catch (JSONException e) {
                     e.printStackTrace();

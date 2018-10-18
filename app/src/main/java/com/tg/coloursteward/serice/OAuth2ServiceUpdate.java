@@ -82,6 +82,7 @@ public class OAuth2ServiceUpdate {
                                 if (jsonObject.has("code")) {
                                     int code = jsonObject.getInt("code");
                                     if (code != 0) {
+                                        Tools.saveAccess_token2(context,"");
                                         String message = jsonObject.getString("message");
                                         ToastFactory.showToast(context, message);
                                     }

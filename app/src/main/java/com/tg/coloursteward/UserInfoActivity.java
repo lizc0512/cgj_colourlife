@@ -108,7 +108,7 @@ public class UserInfoActivity extends BaseActivity implements ItemClickListener,
         list1.clear();
         ViewConfig config = new ViewConfig("姓名", UserInfo.realname, false);
         config.enable = false;
-        config.rightEditable = true;
+        config.rightEditable = false;
         list1.add(config);
 
         config = new ViewConfig("性别", UserInfo.sex, true);
@@ -292,7 +292,6 @@ public class UserInfoActivity extends BaseActivity implements ItemClickListener,
 
     @Override
     public void onItemClick(MessageArrowView mv, View v, int position) {
-        // TODO Auto-generated method stub
         if (mv == messageView1) {
             if (position == 1) {
                 if (genderList == null) {

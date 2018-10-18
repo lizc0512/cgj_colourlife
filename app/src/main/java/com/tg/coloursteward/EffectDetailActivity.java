@@ -47,7 +47,7 @@ public class EffectDetailActivity extends BaseActivity {
         mListView2.setAdapter(myPunishmentAdapter);
         if (type.equals("group")) {
             tv_punishment.setText("集体奖罚列表：");
-            if (listinfo != null) {
+            if (listinfo != null && listinfo.size() > 0) {
                 String date = listinfo.get(0).getYear() + "年" + listinfo.get(0).getMonth() + "月";
                 tv_effect_date.setText(date);
                 if (myPunishmentAdapter == null) {

@@ -185,7 +185,7 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
         }
         initTitle();
         initView();
-
+        getTokenInfo();
         initPush();
 
         initProto();
@@ -499,8 +499,6 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
     private void initProto() {
         msgHand = new MessageHandler(this);
         msgHand.setResponseListener(this);
-
-        getTokenInfo();
         if (form_login == false) {
             getSlientLogin();
         }
@@ -692,7 +690,7 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
             public void run() {
                 getAuth("", "case", "1", "case", "");
             }
-        }, 500);
+        }, 300);
     }
 
     /**

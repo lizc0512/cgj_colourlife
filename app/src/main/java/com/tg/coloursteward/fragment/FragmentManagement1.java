@@ -529,9 +529,12 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
+                            tvTicket.setText("0.00");
                         }
                     }
                 } else {
+                    progressBarTicket.setVisibility(View.GONE);
+                    rlTicket.setVisibility(View.VISIBLE);
                     Tools.saveStringValue(mActivity, Contants.storage.TICKETHOME, "0");
                     if (StringUtils.isNotEmpty(TicketStr)) {
                         DecimalFormat df = new DecimalFormat("0.00");

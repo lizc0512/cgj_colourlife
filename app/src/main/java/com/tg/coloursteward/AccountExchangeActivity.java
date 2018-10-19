@@ -27,6 +27,7 @@ import com.tg.coloursteward.net.RequestConfig;
 import com.tg.coloursteward.net.RequestParams;
 import com.tg.coloursteward.serice.AuthAppService;
 import com.tg.coloursteward.util.ByteUtils;
+import com.tg.coloursteward.util.NumberUtils;
 import com.tg.coloursteward.util.RSAUtil;
 import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.Tools;
@@ -38,7 +39,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.security.PublicKey;
-import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -306,14 +306,12 @@ public class AccountExchangeActivity extends BaseActivity {
         edit = (EditText) findViewById(R.id.edit);
         rlSubmit = (RelativeLayout) findViewById(R.id.rl_submit);
         if (StringUtils.isNotEmpty(split_money)) {
-            DecimalFormat df = new DecimalFormat("0.00");
-            tvQuota.setText(df.format(Double.parseDouble(split_money)));
+            tvQuota.setText(NumberUtils.format(Double.parseDouble(split_money), 2) + "");
         }
         tvAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DecimalFormat df = new DecimalFormat("0.00");
-                edit.setText(df.format(Double.parseDouble(split_money)));
+                edit.setText(NumberUtils.format(Double.parseDouble(split_money), 2) + "");
             }
         });
         tv_forgetPWD.setOnClickListener(singleListener);

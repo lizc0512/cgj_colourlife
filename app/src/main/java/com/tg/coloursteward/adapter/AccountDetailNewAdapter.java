@@ -16,8 +16,8 @@ import com.tg.coloursteward.info.AccountDetailNewInfo;
 import com.tg.coloursteward.inter.CashierCallBack;
 import com.tg.coloursteward.inter.PutForwardCallBack;
 import com.tg.coloursteward.inter.SingleExchangeCallBack;
+import com.tg.coloursteward.util.NumberUtils;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 /**
@@ -109,12 +109,11 @@ public class AccountDetailNewAdapter extends MyBaseAdapter<ExchangeEntity.Detail
             }
         });
         tvName.setText("应用:" + item.getGeneral_name());
-        DecimalFormat df = new DecimalFormat("0.00");
-        Double money = Double.parseDouble(item.getSplit_money());
+        Double money = NumberUtils.format(Double.parseDouble(item.getSplit_money()), 2);
         if (money > 0) {
-            tvMoney.setText("+" + df.format(money));
+            tvMoney.setText("+" + money);
         } else {
-            tvMoney.setText("" + df.format(money));
+            tvMoney.setText("" + money);
         }
         if (null != item.getAction()) {
             if (item.getAction().size() > 0 && item.getAction().size() == 1) {

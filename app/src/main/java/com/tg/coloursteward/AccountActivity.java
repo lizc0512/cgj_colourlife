@@ -19,6 +19,7 @@ import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.RequestConfig;
 import com.tg.coloursteward.net.RequestParams;
 import com.tg.coloursteward.serice.AuthAppService;
+import com.tg.coloursteward.util.NumberUtils;
 import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.RoundImageView;
@@ -127,8 +128,7 @@ public class AccountActivity extends BaseActivity {
                     account = jsonObject.getString("total_balance");
                 }
                 if (StringUtils.isNotEmpty(account)) {
-                    DecimalFormat df = new DecimalFormat("0.00");
-                    tv_balance.setText(df.format(Double.parseDouble(account)));
+                    tv_balance.setText(NumberUtils.format(Double.parseDouble(account), 2) + "");
                 }
             } catch (JSONException e) {
                 // TODO Auto-generated catch block
@@ -236,18 +236,15 @@ public class AccountActivity extends BaseActivity {
                 try {
                     account = jsonObject.getString("total_balance");
                     if (StringUtils.isNotEmpty(account)) {
-                        DecimalFormat df = new DecimalFormat("0.00");
-                        tv_balance.setText(df.format(Double.parseDouble(account)));
+                        tv_balance.setText(String.valueOf(NumberUtils.format(Double.parseDouble(account), 2)));
                     }
                 } catch (JSONException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
             } else {
                 ToastFactory.showToast(AccountActivity.this, message);
                 if (StringUtils.isNotEmpty(account)) {
-                    DecimalFormat df = new DecimalFormat("0.00");
-                    tv_balance.setText(df.format(Double.parseDouble(account)));
+                    tv_balance.setText(NumberUtils.format(Double.parseDouble(account), 2) + "");
                 } else {
                     tv_balance.setText("0.00");
                 }

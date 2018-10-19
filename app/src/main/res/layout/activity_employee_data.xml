@@ -159,7 +159,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_centerHorizontal="true"
-                                android:text="会计一部"
+                                android:text=""
                                 android:textColor="@color/color_text_gray1"
                                 android:textSize="12sp" />
                         </RelativeLayout>

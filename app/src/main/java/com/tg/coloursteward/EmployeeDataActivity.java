@@ -466,20 +466,24 @@ public class EmployeeDataActivity extends BaseActivity {
                             case 0:// 给同事发饭票
                                 if (state != null) {
                                     if ("hasPwd".equals(state)) { // 已设置密码
-                                        intent = new Intent(EmployeeDataActivity.this, RedpacketsShareMainActivity.class);
-                                        intent.putExtra(Contants.PARAMETER.BALANCE, balance);
-                                        intent.putExtra(Contants.PARAMETER.OA, item.getUsername());
-                                        intent.putExtra(Contants.PARAMETER.TRANSFERTO, "colleague");
-                                        startActivity(intent);
+                                        if (null != item) {
+                                            intent = new Intent(EmployeeDataActivity.this, RedpacketsShareMainActivity.class);
+                                            intent.putExtra(Contants.PARAMETER.BALANCE, balance);
+                                            intent.putExtra(Contants.PARAMETER.OA, item.getUsername());
+                                            intent.putExtra(Contants.PARAMETER.TRANSFERTO, "colleague");
+                                            startActivity(intent);
+                                        }
                                     } else {
                                         aDialogCallback = new PwdDialog2.ADialogCallback() {
                                             @Override
                                             public void callback() {
-                                                intent = new Intent(EmployeeDataActivity.this, RedpacketsShareMainActivity.class);
-                                                intent.putExtra(Contants.PARAMETER.BALANCE, balance);
-                                                intent.putExtra(Contants.PARAMETER.OA, item.getUsername());
-                                                intent.putExtra(Contants.PARAMETER.TRANSFERTO, "colleague");
-                                                startActivity(intent);
+                                                if (null != item) {
+                                                    intent = new Intent(EmployeeDataActivity.this, RedpacketsShareMainActivity.class);
+                                                    intent.putExtra(Contants.PARAMETER.BALANCE, balance);
+                                                    intent.putExtra(Contants.PARAMETER.OA, item.getUsername());
+                                                    intent.putExtra(Contants.PARAMETER.TRANSFERTO, "colleague");
+                                                    startActivity(intent);
+                                                }
                                             }
                                         };
                                         aDialog = new PwdDialog2(

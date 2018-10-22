@@ -65,7 +65,7 @@ public class DeskTopActivity extends BaseActivity implements OnItemClickListener
             ToastFactory.showToast(DeskTopActivity.this, "参数错误");
             finish();
         }
-        if (TextUtils.isEmpty(item.getComefrom())) {
+        if (!TextUtils.isEmpty(item.getComefrom())) {
             headView.setTitle(item.getComefrom());
         }
         initView();

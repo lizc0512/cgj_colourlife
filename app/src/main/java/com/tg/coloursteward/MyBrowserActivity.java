@@ -1123,26 +1123,29 @@ public class MyBrowserActivity extends Activity implements OnClickListener, AMap
             // TODO Auto-generated method stub
             super.onPostExecute(result);
             closeProgressDialog();
-            if (result == null || "下载失败".equals(result)) {
-                ToastFactory.showToast(MyBrowserActivity.this, "连接错误！请稍后再试！");
-                String callback = "下载失败";
-                webView.loadUrl("javascript:TakePhotoCallBack('" + callback
-                        + "')");
-                return;
-            } else if ("下载成功".equals(result)) {
-                ToastFactory.showToast(MyBrowserActivity.this, "下载成功，已保存到SD卡。");
-                String callback = "下载成功！";
-                webView.loadUrl("javascript:TakePhotoCallBack('" + callback
-                        + "')");
-                return;
-            } else if ("下载失败，文件不存在".equals(result)) {
-                ToastFactory.showToast(MyBrowserActivity.this, "下载失败，文件不存在！");
-                String callback = "下载失败，文件不存在！";
-                webView.loadUrl("javascript:TakePhotoCallBack('" + callback
-                        + "')");
-                return;
+            try {
+                if (result == null || "下载失败".equals(result)) {
+                    ToastFactory.showToast(MyBrowserActivity.this, "连接错误！请稍后再试！");
+                    String callback = "下载失败";
+                    webView.loadUrl("javascript:TakePhotoCallBack('" + callback
+                            + "')");
+                    return;
+                } else if ("下载成功".equals(result)) {
+                    ToastFactory.showToast(MyBrowserActivity.this, "下载成功，已保存到SD卡。");
+                    String callback = "下载成功!";
+                    webView.loadUrl("javascript:TakePhotoCallBack('" + callback
+                            + "')");
+                    return;
+                } else if ("下载失败，文件不存在".equals(result)) {
+                    ToastFactory.showToast(MyBrowserActivity.this, "下载失败，文件不存在！");
+                    String callback = "下载失败，文件不存在!";
+                    webView.loadUrl("javascript:TakePhotoCallBack('" + callback
+                            + "')");
+                    return;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-
         }
 
         @Override

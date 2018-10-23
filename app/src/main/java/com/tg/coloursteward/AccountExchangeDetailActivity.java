@@ -64,13 +64,13 @@ public class AccountExchangeDetailActivity extends BaseActivity {
         pullListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if(Double.valueOf(list.get(position-1).freezen_amount)!=0){
+                if (null != list && list.size() > 0 && Double.valueOf(list.get(position - 1).freezen_amount) != 0) {
                     Intent intent = new Intent(AccountExchangeDetailActivity.this,
                             AccountExchangeDetail_FreezingActivity.class);
-                    intent.putExtra("general_uuid",list.get(position-1).general_uuid);
-                    intent.putExtra("split_type",String.valueOf(list.get(position-1).split_type));
-                    intent.putExtra("split_target",list.get(position-1).split_target);
-                    intent.putExtra("id",String.valueOf(list.get(position-1).id));
+                    intent.putExtra("general_uuid", list.get(position - 1).general_uuid);
+                    intent.putExtra("split_type", String.valueOf(list.get(position - 1).split_type));
+                    intent.putExtra("split_target", list.get(position - 1).split_target);
+                    intent.putExtra("id", String.valueOf(list.get(position - 1).id));
                     startActivity(intent);
                 }
             }
@@ -125,6 +125,7 @@ public class AccountExchangeDetailActivity extends BaseActivity {
                     ToastFactory.showToast(AccountExchangeDetailActivity.this, message);
                 }
             }
+
             @Override
             public void onLoadingMore(PullRefreshListView t, Handler hand, int pagerIndex) {
                 RequestConfig config = new RequestConfig(AccountExchangeDetailActivity.this, PullRefreshListView.HTTP_MORE_CODE);
@@ -224,6 +225,7 @@ public class AccountExchangeDetailActivity extends BaseActivity {
             }
         });
     }
+
     @Override
     public View getContentView() {
         return getLayoutInflater().inflate(R.layout.activity_account_exchange_detail, null);

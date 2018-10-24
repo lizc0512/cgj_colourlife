@@ -234,6 +234,10 @@ public class TcpClient extends PduUtil implements Runnable {
 
             mSendQueue.clear();
 
+            if (mHandler.hasMessages(TCP_RE_CONNECT)) {
+                mHandler.removeMessages(TCP_RE_CONNECT);
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -300,6 +304,15 @@ public class TcpClient extends PduUtil implements Runnable {
         String onRecSeqId = "OnRec pduBase seq_num:" + pduBase.seq_id;
         String onRecLength = "OnRec pduBase length:" + pduBase.length;
         String logCommandId = "common Listener command_id:" + pduBase.command_id;
+        byte[] user_id = pduBase.user_id;
+        String userId = new String(user_id);
+
+        String uuid = HuxinSdkManager.instance().getUuid();
+        if (TextUtils.isEmpty(uuid) || TextUtils.isEmpty(userId) || !userId.equals(uuid)) {
+            Log.e(TAG, "user id check error ");
+            return;
+        }
+
 
         Log.v(TAG, onRecSeqId);
         Log.v(TAG, onRecLength);
@@ -475,7 +488,10 @@ public class TcpClient extends PduUtil implements Runnable {
     }
 
     private void reconnect() {
-        mHandler.sendEmptyMessageDelayed(TCP_RE_CONNECT, 500);
+        if (!mHandler.hasMessages(TCP_RE_CONNECT)) {
+            Message msg = mHandler.obtainMessage(TCP_RE_CONNECT);
+            mHandler.sendMessageDelayed(msg, 2000);
+        }
     }
 
     /**
@@ -495,8 +511,10 @@ public class TcpClient extends PduUtil implements Runnable {
 
         public void send(ByteBuffer buffer) {
             synchronized (this) {
-                mSendQueue.offer(buffer);
-                notify();
+                if (buffer != null) {
+                    mSendQueue.offer(buffer);
+                    notify();
+                }
             }
 
         }
@@ -522,6 +540,9 @@ public class TcpClient extends PduUtil implements Runnable {
                             && socketChannel != null
                             && socketChannel.isConnected()) {
                         ByteBuffer buffer = mSendQueue.poll();
+                        if (buffer == null) {
+                            continue;
+                        }
                         buffer.flip();
                         Log.v(TAG, "tcp will send buffer...");
 
@@ -584,11 +605,13 @@ public class TcpClient extends PduUtil implements Runnable {
             final TcpClient tcpClient = mTarget.get();
             switch (msg.what) {
                 case TCP_RE_CONNECT:
-                    Log.v(TAG, "tcp is reconnect");
-                    LogFile.inStance().toFile("tcp is reconnect");
-                    if (tcpClient.isIdle()
-                            && AppUtils.isNetworkConnected(tcpClient.mContext)) {
-                        tcpClient.reConnect();
+                    if (tcpClient != null) {
+                        Log.v(TAG, "tcp is reconnect");
+                        LogFile.inStance().toFile("tcp is reconnect");
+                        if (tcpClient.isIdle()
+                                && AppUtils.isNetworkConnected(tcpClient.mContext)) {
+                            tcpClient.reConnect();
+                        }
                     }
                     break;
                 default:

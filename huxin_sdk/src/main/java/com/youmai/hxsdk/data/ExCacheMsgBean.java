@@ -20,6 +20,7 @@ public class ExCacheMsgBean extends CacheMsgBean {
     private int contactId;//通讯id  没有在通讯录内显示0
     private boolean mIsMultiNumber = false;//多号码识别
 
+
     public ExCacheMsgBean(MsgConfig.ContentBean.DataBean pushMsg) {
         this.pushMsg = pushMsg;
         setMsgTime(System.currentTimeMillis());

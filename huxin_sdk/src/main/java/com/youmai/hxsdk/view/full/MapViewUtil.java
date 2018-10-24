@@ -118,14 +118,8 @@ public class MapViewUtil implements LocationSource, AMapLocationListener, AMap.O
             // 坐标需要转换，不然不对，目前没转换
             try {
                 // 尝试调用百度地图
-                /*double toLoc[] = gcjToBd09(hisLatlng.longitude,
-                        hisLatlng.latitude);
-
-                Location location = getLastKnownLocation();
-                //获取维度信息
-                double latitude = location.getLatitude();
-                //获取经度信息
-                double longitude = location.getLongitude();
+                double toLoc[] = gcjToBd09(longitude,
+                        latitude);
 
                 StringBuilder loc = new StringBuilder();
                 loc.append("intent://map/direction?origin=latlng:");
@@ -141,31 +135,7 @@ public class MapViewUtil implements LocationSource, AMapLocationListener, AMap.O
                 loc.append("&mode=driving");
                 loc.append("&src=" + mContext.getPackageName());
                 loc.append("#Intent;scheme=bdapp;package=com.baidu.BaiduMap;end");
-                Intent intent = Intent.getIntent(loc.toString());
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                mContext.startActivity(intent);*/
-
-                // 尝试调用百度地图
-                double fromLoc[] = gcjToBd09(aMapLocation.getLongitude(),
-                        aMapLocation.getLatitude());
-                double toLoc[] = gcjToBd09(longitude,
-                        latitude);
-
-                StringBuilder loc = new StringBuilder();
-                loc.append("intent://map/direction?origin=latlng:");
-                loc.append(fromLoc[1]);// .latitude);
-                loc.append(",");
-                loc.append(fromLoc[0]);// .longitude);
-                loc.append("|name:我的位置");
-                loc.append("&destination=latlng:");
-                loc.append(toLoc[1]);// .latitude);
-                loc.append(",");
-                loc.append(toLoc[0]);// .longitude);
-                loc.append("|name:目标位置");
-                loc.append("&mode=driving");
-                loc.append("&src=" + mContext.getPackageName());
-                loc.append("#Intent;scheme=bdapp;package=com.baidu.BaiduMap;end");
-                Intent intent = Intent.getIntent(loc.toString());
+                Intent intent = Intent.parseUri(loc.toString(), 0);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 mContext.startActivity(intent);
 

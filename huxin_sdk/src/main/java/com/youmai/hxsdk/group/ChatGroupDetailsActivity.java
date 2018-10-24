@@ -70,6 +70,8 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
 
     private static final int MODIFIY_GROUPNAME = 1;
     private static final int MODIFIY_GROUPTOPIC = 2;
+    private static final int MODIFIY_GROUPADD = 3;
+    private static final int MODIFIY_GROUPDEL = 4;
 
 
     private int mGroupId;
@@ -104,6 +106,7 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
 
     private LocalBroadcastManager localBroadcastManager;
     private LocalMsgReceiver mLocalMsgReceiver;
+    private int member_count;
 
     /**
      * 消息广播
@@ -116,6 +119,11 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
             String action = intent.getAction();
             if (IMGroupActivity.UPDATE_GROUP_INFO.equals(action)) {
                 GroupInfoBean info = intent.getParcelableExtra("GroupInfo");
+                int groupId = info.getGroup_id();
+                if (groupId != mGroupId) {
+                    return;
+                }
+
                 String topic = info.getTopic();
                 String groupName = info.getGroup_name();
 
@@ -187,7 +195,7 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
         mTvExitGroup = findViewById(R.id.tv_exit_group);
         mtvNoticeContent = findViewById(R.id.tv_notice_content);
         switch_notify = findViewById(R.id.switch_notify);
-        boolean isClosed = AppUtils.getBooleanSharedPreferences(mContext, "notify" + mGroupId, false);
+        boolean isClosed = HuxinSdkManager.instance().getNotDisturb(mGroupId);
         if (isClosed) {
             switch_notify.setChecked(true);
         } else {
@@ -198,16 +206,16 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    AppUtils.setBooleanSharedPreferences(mContext, "notify" + mGroupId, true);
+                    HuxinSdkManager.instance().setNotDisturb(mGroupId);
                 } else {
-                    AppUtils.setBooleanSharedPreferences(mContext, "notify" + mGroupId, false);
+                    HuxinSdkManager.instance().removeNotDisturb(mGroupId);
                 }
             }
         });
 
 
         switch_top = findViewById(R.id.switch_top);
-        boolean isTop = AppUtils.getBooleanSharedPreferences(mContext, "top" + mGroupId, false);
+        boolean isTop = HuxinSdkManager.instance().getMsgTop(mGroupId);
         if (isTop) {
             switch_top.setChecked(true);
         } else {
@@ -218,9 +226,9 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    AppUtils.setBooleanSharedPreferences(mContext, "top" + mGroupId, true);
+                    HuxinSdkManager.instance().setMsgTop(mGroupId);
                 } else {
-                    AppUtils.setBooleanSharedPreferences(mContext, "top" + mGroupId, false);
+                    HuxinSdkManager.instance().removeMsgTop(mGroupId);
                 }
             }
         });
@@ -243,6 +251,7 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
                     || groupName.contains(ColorsConfig.GROUP_DEFAULT_NAME)) {
                 String title = String.format(getString(R.string.group_default_title),
                         "聊天详情", info.getGroup_member_count());
+                // member_count = info.getGroup_member_count();
                 mTvTitle.setText(title);
             } else {
                 if (groupName.length() > 6) {
@@ -266,6 +275,13 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
             } else {
                 mtvNoticeContent.setText(group_topic);
             }
+
+            if (!TextUtils.isEmpty(info.getOwner_id())
+                    && info.getOwner_id().equals(HuxinSdkManager.instance().getUuid())) {
+                isGroupOwner = true;
+                mRlGroupManage.setVisibility(View.VISIBLE);
+            }
+
         } else {
             mTvTitle.setText("聊天详情");
         }
@@ -315,7 +331,7 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
                             String format = getResources().getString(R.string.group_number);
                             tv_count.setText(String.format(format, groupList.size()));
 
-                            mAdapter.addList(groupList.subList(0, 7), isGroupOwner);
+                            mAdapter.addList(groupList.subList(0, 8), isGroupOwner);
                             linear_next.setVisibility(View.VISIBLE);
 
                         } else {
@@ -324,6 +340,72 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
                         }
                     }
                 } catch (InvalidProtocolBufferException e) {
+                    e.printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+    }
+
+    private void ShowMembers() {
+        ArrayList<ContactBean> groupList = GroupMembers.instance().getGroupList();
+
+        if (groupList.size() > 8) {
+            String format = getResources().getString(R.string.group_number);
+            tv_count.setText(String.format(format, groupList.size()));
+            mAdapter.addAll(groupList.subList(0, 8), isGroupOwner);
+            linear_next.setVisibility(View.VISIBLE);
+
+        } else {
+            mAdapter.addAll(groupList, isGroupOwner);
+            linear_next.setVisibility(View.GONE);
+        }
+    }
+
+    private void reqGroupMembersAddOrDel() {
+        GroupMembers.instance().clear();
+        HuxinSdkManager.instance().reqGroupMember(mGroupId, new ReceiveListener() {
+            @Override
+            public void OnRec(PduBase pduBase) {
+                try {
+                    YouMaiGroup.GroupMemberRsp ack = YouMaiGroup.GroupMemberRsp.parseFrom(pduBase.body);
+                    if (ack.getResult() == YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS) {
+                        List<YouMaiGroup.GroupMemberItem> memberListList = ack.getMemberListList();
+
+
+                        for (YouMaiGroup.GroupMemberItem item : memberListList) {
+                            if (item.getMemberId().equals(HuxinSdkManager.instance().getUuid())) {
+                                if (item.getMemberRole() == 0) {
+                                    isGroupOwner = true;
+                                    mRlGroupManage.setVisibility(View.VISIBLE);
+                                }
+                            }
+
+                            ContactBean contact = new ContactBean();
+                            contact.setRealname(item.getMemberName());
+                            contact.setUsername(item.getUserName());
+                            contact.setUuid(item.getMemberId());
+                            contact.setMemberRole(item.getMemberRole());
+                            String avatar = ColorsConfig.HEAD_ICON_URL + "avatar?uid=" + item.getUserName();
+                            contact.setAvatar(avatar);
+                            if (contact.getMemberRole() == 0) {
+                                GroupMembers.instance().addGroupListItem(0, contact);
+                            } else {
+                                GroupMembers.instance().addGroupListItem(contact);
+                            }
+
+                            if (item.getMemberRole() == 0) {
+                                GroupMembers.instance().setGroupOwner(contact);
+                            }
+                        }
+
+                        ShowMembers();
+                    }
+                } catch (InvalidProtocolBufferException e) {
+                    e.printStackTrace();
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -583,12 +665,14 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
             if (requestCode == REQUEST_CODE_ADD) {
                 ArrayList<ContactBean> list = data.getParcelableArrayListExtra(UPDATE_GROUP_LIST);
                 GroupMembers.instance().addAll(list);
-                mAdapter.addList(list);
+                updateGroupMember(MODIFIY_GROUPADD, list.size());
+                reqGroupMembersAddOrDel();
             } else if (requestCode == REQUEST_CODE_DELETE) {
                 ArrayList<ContactBean> list = data.getParcelableArrayListExtra(UPDATE_GROUP_LIST);
                 GroupMembers.instance().removeAll(list);
+                updateGroupMember(MODIFIY_GROUPDEL, list.size());
+                reqGroupMembersAddOrDel();
 
-                mAdapter.removeList(list);
             } else if (requestCode == REQUEST_CODE_MODIFY_NAME) {
                 String groupName = data.getStringExtra(GroupNameActivity.GROUP_NAME);
                 mTvGroupName.setText(groupName);
@@ -606,6 +690,40 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
     }
 
 
+    private void updateGroupMember(int type, int i) {
+        GroupInfoBean info = GroupInfoHelper.instance().toQueryByGroupId(mContext, mGroupId);
+        if (info == null) {
+            info = new GroupInfoBean();
+        }
+        if (type == MODIFIY_GROUPADD) {
+            info.setGroup_member_count(info.getGroup_member_count() + i);
+        } else {
+            info.setGroup_member_count(info.getGroup_member_count() - i);
+        }
+        updateTitle(info);
+        GroupInfoHelper.instance().insertOrUpdate(mContext, info);
+    }
+
+    private void updateTitle(GroupInfoBean info) {
+        if (info != null) {
+            if (TextUtils.isEmpty(info.getGroup_name())
+                    || info.getGroup_name().contains(ColorsConfig.GROUP_DEFAULT_NAME)) {
+                String title = String.format(getString(R.string.group_default_title),
+                        "聊天详情", info.getGroup_member_count());
+                // member_count = info.getGroup_member_count();
+                mTvTitle.setText(title);
+            } else {
+                if (info.getGroup_name().length() > 6) {
+                    mTvTitle.setText(info.getGroup_name().substring(0, 4) + "...(" + info.getGroup_member_count() + ")");
+                } else {
+                    mTvTitle.setText(info.getGroup_name() + "(" + info.getGroup_member_count() + ")");
+                }
+            }
+        } else {
+            mTvTitle.setText("聊天详情");
+        }
+    }
+
     private void updateGroupInfo(int type, String content) {
         switch (type) {
             case MODIFIY_GROUPNAME:
@@ -621,8 +739,8 @@ public class ChatGroupDetailsActivity extends SdkBaseActivity implements GroupDe
                     info = new GroupInfoBean();
                 }
                 info.setGroup_name(content);
+                updateTitle(info);
                 GroupInfoHelper.instance().insertOrUpdate(mContext, info);
-
                 isMotifyGropInfo = true;
 
                 break;

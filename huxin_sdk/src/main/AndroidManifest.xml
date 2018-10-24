@@ -309,7 +309,7 @@
 
         <!--视频播放-->
         <activity
-            android:name=".module.videoplayer.VideoPlayerActivity"
+            android:name="com.youmai.hxsdk.module.videoplayer.VideoPlayerActivity"
             android:screenOrientation="portrait"
             android:theme="@style/HxSdkTheme" />
 

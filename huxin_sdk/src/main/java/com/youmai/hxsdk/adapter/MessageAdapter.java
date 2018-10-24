@@ -1,6 +1,7 @@
 package com.youmai.hxsdk.adapter;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
@@ -234,7 +235,8 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    @NonNull
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(mContext);
         if (viewType == ADAPTER_TYPE_PUSHMSG) {
             View view = inflater.inflate(R.layout.push_message_item_layout, parent, false);
@@ -253,7 +255,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
 
     @Override
-    public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
+    public void onBindViewHolder(final @NonNull RecyclerView.ViewHolder holder, final int position) {
         final ExCacheMsgBean model = messageList.get(position);
         if (holder instanceof MsgItemPush) {
             final MsgItemPush itemView = (MsgItemPush) holder;

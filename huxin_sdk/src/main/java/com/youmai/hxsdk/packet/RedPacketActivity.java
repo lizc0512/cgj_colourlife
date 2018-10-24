@@ -2,8 +2,10 @@ package com.youmai.hxsdk.packet;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatEditText;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -34,6 +36,7 @@ import com.youmai.hxsdk.utils.ToastUtil;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 /**
@@ -151,12 +154,17 @@ public class RedPacketActivity extends SdkBaseActivity implements View.OnClickLi
                     return;
                 } else if (money == 0) {
                     btn_commit.setEnabled(false);
+                    tv_money.setText("");
                     return;
                 } else {
                     btn_commit.setEnabled(true);
                     tv_error.setVisibility(View.INVISIBLE);
                 }
-                moneyStr = s.toString();
+
+                DecimalFormat format = new DecimalFormat("0.00");
+                moneyStr = format.format(money);
+
+                //moneyStr = s.toString();
                 tv_money.setText(moneyStr);
             }
 
@@ -257,10 +265,12 @@ public class RedPacketActivity extends SdkBaseActivity implements View.OnClickLi
                 Toast.makeText(mContext, "请添加利是金额", Toast.LENGTH_SHORT).show();
                 return;
             } else if (money > fixedConfig.getMoneyMax()) {
-                Toast.makeText(mContext, "超过利是最大金额限制，请重新设置", Toast.LENGTH_SHORT).show();
+                String tips = "超过利是最大金额" + fixedConfig.getMoneyMax() + "请重新设置";
+                Toast.makeText(mContext, tips, Toast.LENGTH_SHORT).show();
                 return;
             } else if (money < fixedConfig.getMoneyMin()) {
-                Toast.makeText(mContext, "小于利是最小金额限制，请重新设置", Toast.LENGTH_SHORT).show();
+                String tips = "小于利是最小金额" + fixedConfig.getMoneyMin() + "请重新设置";
+                Toast.makeText(mContext, tips, Toast.LENGTH_SHORT).show();
                 return;
             } else if (money > moneyMax) {
                 Toast.makeText(mContext, "超过了您的利是余额，请重新设置", Toast.LENGTH_SHORT).show();
@@ -281,6 +291,7 @@ public class RedPacketActivity extends SdkBaseActivity implements View.OnClickLi
                     String password = dialog.getStrPassword();
                     final String title = remark;
 
+                    showProgressDialog();
                     HuxinSdkManager.instance().reqSendSingleRedPackage(money, title, pano, password, new IGetListener() {
                         @Override
                         public void httpReqResult(String response) {
@@ -301,9 +312,24 @@ public class RedPacketActivity extends SdkBaseActivity implements View.OnClickLi
                                     Toast.makeText(mContext, bean.getMessage(), Toast.LENGTH_SHORT).show();
                                 }
                             }
+                            dismissProgressDialog();
 
                         }
                     });
+                }
+
+                @Override
+                public void forgetPassWord() {
+                    final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                    builder.setTitle("温馨提示");
+                    builder.setMessage("请前往我的页面找回支付密码");
+                    builder.setNegativeButton("我知道了", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    });
+                    builder.create().show();
                 }
             });
             dialog.show();

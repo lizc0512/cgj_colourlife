@@ -1,6 +1,5 @@
 package com.youmai.hxsdk.group.setting;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;

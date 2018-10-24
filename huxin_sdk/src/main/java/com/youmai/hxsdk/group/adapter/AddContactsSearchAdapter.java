@@ -122,7 +122,7 @@ public class AddContactsSearchAdapter<T> extends RecyclerView.Adapter<RecyclerVi
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(mContext);
         if (viewType == ITEM_TYPE_NORMAL) {
-            View view = inflater.inflate(R.layout.group_search_item_layout, parent, false);
+            View view = inflater.inflate(R.layout.group_search_item_layout1, parent, false);
             return new SearchItem(view);
         } else if (viewType == ITEM_TYPE_HEAD) {
             View view = inflater.inflate(R.layout.global_search_item_head, parent, false);
@@ -266,6 +266,8 @@ public class AddContactsSearchAdapter<T> extends RecyclerView.Adapter<RecyclerVi
                     }
                 }
             });
+
+            searchItemHolder.search_info.setText(model.getPhoneNum());
         } else if (holder instanceof AddContactsSearchAdapter.SearchHeadItem) {
             SearchHeadItem searchItemHolder = (SearchHeadItem) holder;
             if (getHeadTitle() != null) {

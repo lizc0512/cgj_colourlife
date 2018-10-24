@@ -66,6 +66,7 @@ public class RedPacketDetailActivity extends SdkBaseActivity implements View.OnC
 
     private TextView tv_info;
     private TextView tv_status;
+    private TextView tv_state;
     private RecyclerView recycler_view;
     private RedStatusAdapter adapter;
 
@@ -163,6 +164,7 @@ public class RedPacketDetailActivity extends SdkBaseActivity implements View.OnC
         }
 
         tv_status = (TextView) findViewById(R.id.tv_status);
+        tv_state = (TextView) findViewById(R.id.tv_state);
 
         recycler_view = (RecyclerView) findViewById(R.id.recycler_view);
         adapter = new RedStatusAdapter(this);
@@ -198,7 +200,7 @@ public class RedPacketDetailActivity extends SdkBaseActivity implements View.OnC
                             tv_money.setVisibility(View.GONE);
                         }
                     } catch (Exception e) {
-
+                        e.printStackTrace();
                     }
 
                     int total = bean.getContent().getNumberTotal();
@@ -233,6 +235,12 @@ public class RedPacketDetailActivity extends SdkBaseActivity implements View.OnC
                         tv_name.setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null);
                     } else {
                         tv_name.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+                    }
+
+                    int status = bean.getContent().getStatus();
+                    if (status == -1) {
+                        tv_state.setVisibility(View.VISIBLE);
+                        tv_state.setText("利是已过期。");
                     }
 
                 }

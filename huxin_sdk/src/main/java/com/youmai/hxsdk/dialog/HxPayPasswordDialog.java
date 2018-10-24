@@ -27,6 +27,8 @@ public class HxPayPasswordDialog extends Dialog implements View.OnClickListener 
 
     public interface OnPasswordInputFinish {
         void inputFinish();
+
+        void forgetPassWord();
     }
 
 
@@ -165,6 +167,9 @@ public class HxPayPasswordDialog extends Dialog implements View.OnClickListener 
                 tvList[currentIndex--].setText("");
             }
         } else if (id == R.id.tv_forget) {
+            if (mOnPasswordInputFinish != null) {
+                mOnPasswordInputFinish.forgetPassWord();
+            }
             dismiss();
         } else if (id == R.id.img_close) {
             dismiss();

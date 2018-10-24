@@ -346,6 +346,9 @@ public class IMListAdapter extends RecyclerView.Adapter {
         holder.fileSizeTV.setText(IMHelper.convertFileSize(cacheMsgFile.getFileSize()));
 
         showSendStart(holder, cacheMsgBean.getMsgStatus(), cacheMsgBean, position);
+
+        showMsgTime(position, holder.senderDateTV, cacheMsgBean.getMsgTime());
+
         final boolean isRight = cacheMsgBean.isRightUI();
         if (isRight) {
             if (cacheMsgBean.getMsgStatus() == CacheMsgBean.SEND_SUCCEED) {
@@ -520,16 +523,18 @@ public class IMListAdapter extends RecyclerView.Adapter {
 
         showMsgTime(position, redPackageHolder.senderDateTV, bean.getMsgTime());
 
+        final boolean isRight = bean.isRightUI();
         ImageView img_red_package = redPackageHolder.img_red_package;
         TextView tv_red_title = redPackageHolder.tv_red_title;
         TextView tv_red_status = redPackageHolder.tv_red_status;
+
 
         View view = redPackageHolder.lay;
 
         tv_red_title.setText(title);
         tv_red_status.setText(redStatus);
 
-        if (isGrabbed == 1) {
+        if (isGrabbed == 1 || status == 4) {
             img_red_package.setImageResource(R.drawable.ic_open_red_package);
             view.setBackgroundResource(R.drawable.hx_red_package_disable);
             tv_red_status.setText(CacheMsgRedPackage.RED_PACKET_OPENED);
@@ -539,10 +544,18 @@ public class IMListAdapter extends RecyclerView.Adapter {
 
             if (status == -1) {
                 tv_red_status.setText(CacheMsgRedPackage.RED_PACKET_OVERDUE);
+                view.setBackgroundResource(R.drawable.hx_red_package_disable);
             } else if (status >= 2) {
                 tv_red_status.setText(CacheMsgRedPackage.RED_PACKET_IS_OPEN_GROUP);
+                view.setBackgroundResource(R.drawable.hx_red_package_disable);
             } else {
-                tv_red_status.setText(CacheMsgRedPackage.RED_PACKET_RECEIVE);
+                if (isRight) {
+                    tv_red_status.setText(CacheMsgRedPackage.RED_PACKET_REVIEW);
+                } else {
+                    tv_red_status.setText(CacheMsgRedPackage.RED_PACKET_RECEIVE);
+                }
+
+                view.setBackgroundResource(R.drawable.hx_red_package_enable);
             }
         }
 
@@ -602,6 +615,11 @@ public class IMListAdapter extends RecyclerView.Adapter {
         HuxinSdkManager.instance().openRedPackage(redUuid, new IGetListener() {
             @Override
             public void httpReqResult(String response) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1
+                        && mAct.isDestroyed()) {
+                    return;
+                }
+
                 OpenRedPacketResult bean = GsonUtil.parse(response, OpenRedPacketResult.class);
                 if (bean != null && bean.isSuccess()) {
                     int status = bean.getContent().getStatus();  //利是状态：-1已过期 ,0未拆开 ,1未领完 ,2已撤回 ,3已退款 ,4已领完
@@ -624,6 +642,14 @@ public class IMListAdapter extends RecyclerView.Adapter {
                     uiBean.setJsonBodyObj(redPackage);
 
                     if (owner == 1 && type == 1) {
+                        if (status == 4) {
+                            redPackage.setStatus(4);
+                            uiBean.setJsonBodyObj(redPackage);
+                            //add to db
+                            CacheMsgHelper.instance().insertOrUpdate(mAct, uiBean);
+                            refreshItemUI(uiBean);
+                        }
+
                         Intent in = new Intent(mAct, RedPacketDetailActivity.class);
                         in.putExtra(RedPacketDetailActivity.OPEN_TYPE, RedPacketDetailActivity.SINGLE_PACKET);
                         in.putExtra(RedPacketDetailActivity.AVATAR, avatar);
@@ -661,6 +687,11 @@ public class IMListAdapter extends RecyclerView.Adapter {
                                 in.putExtra(RedPacketDetailActivity.REDTITLE, title);
                                 in.putExtra(RedPacketDetailActivity.REDUUID, redUuid);
                                 in.putExtra(RedPacketDetailActivity.MSGBEAN, uiBean);
+
+                                if (moneyDraw == 0) {
+                                    in.putExtra(RedPacketDetailActivity.CANOPEN, false);
+                                }
+
                                 mAct.startActivity(in);
                                 if (moneyDraw > 0) {
                                     redPackage.setIsGrabbed(1);
@@ -669,6 +700,7 @@ public class IMListAdapter extends RecyclerView.Adapter {
                                     uiBean.setJsonBodyObj(redPackage);
                                     //add to db
                                     CacheMsgHelper.instance().insertOrUpdate(mAct, uiBean);
+                                    refreshItemUI(uiBean);
                                 }
                             }
                         });

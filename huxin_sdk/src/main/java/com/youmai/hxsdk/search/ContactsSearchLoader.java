@@ -25,7 +25,7 @@ public class ContactsSearchLoader extends AsyncTaskLoader {
     private final String TAG = ContactsSearchLoader.class.getSimpleName();
 
     private String mQuery;
-    private List<SearchContactBean> allList;
+    private List<SearchContactBean> allList = new ArrayList<>();
 
     public ContactsSearchLoader(Context context) {
         super(context);
@@ -40,13 +40,20 @@ public class ContactsSearchLoader extends AsyncTaskLoader {
     public List<SearchContactBean> loadInBackground() {
         List<SearchContactBean> resList = new ArrayList<>();
 
-        allList = SearchData.instance().searchContactsList(getContext());
+        if (TextUtils.isEmpty(mQuery)) {
+            return allList;
+        }
+
+        /*allList = SearchData.instance().searchContactsList(getContext());
 
         if (TextUtils.isEmpty(mQuery)) {
             return allList;
         } else {
             searchIce(mQuery, allList);
-        }
+        }*/
+
+        allList.clear();
+        searchIce(mQuery, allList);
 
         String finalQuery = mQuery;
         String queryUpper = mQuery.toUpperCase();
@@ -129,6 +136,7 @@ public class ContactsSearchLoader extends AsyncTaskLoader {
                 contact.setWholePinyin(pinyin.toString());
                 contact.setSimplepinyin(ch.toString());
                 contact.setIndexPinyin(chStr);
+                contact.setPhoneNum(item.getOrgName());
 
                 //DuoYinZi duoYinZi = PinYinUtils.HanziToPinYin(hanzi);
                 //contact.setDuoYinzi(duoYinZi);

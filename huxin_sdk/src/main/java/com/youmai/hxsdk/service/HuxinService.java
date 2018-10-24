@@ -387,6 +387,9 @@ public class HuxinService extends Service {
      * 发送登录IM服务器请求
      */
     private void tcpLogin(final String uuId, final String appId) {
+        if (TextUtils.isEmpty(uuId)) {
+            return;
+        }
         String imei = DeviceUtils.getIMEI(mContext);
         YouMaiLogin.User_Login.Builder builder = YouMaiLogin.User_Login.newBuilder();
         builder.setUserId(uuId);
@@ -404,6 +407,11 @@ public class HuxinService extends Service {
                     if (ack.getErrerNo() == YouMaiBasic.ERRNO_CODE.ERRNO_CODE_OK) {
                         //Toast.makeText(mContext, "socket登录成功", Toast.LENGTH_SHORT).show();
                         mClient.setLogin(true);
+
+                        HuxinSdkManager.LoginStatusListener listener = HuxinSdkManager.instance().getLoginStatusListener();
+                        if (listener != null) {
+                            listener.onReLoginSuccess();
+                        }
                     } else {
                         //Toast.makeText(mContext, "socket登录失败", Toast.LENGTH_SHORT).show();
                         mClient.setLogin(false);

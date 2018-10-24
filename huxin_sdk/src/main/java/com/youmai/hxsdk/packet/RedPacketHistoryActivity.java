@@ -25,6 +25,8 @@ import com.youmai.hxsdk.http.IGetListener;
 import com.youmai.hxsdk.utils.GsonUtil;
 import com.youmai.hxsdk.utils.TimeUtils;
 
+import java.text.ParseException;
+
 /**
  * 作者：create by YW
  * 日期：2017.06.07 11:42
@@ -34,7 +36,7 @@ public class RedPacketHistoryActivity extends SdkBaseActivity implements View.On
 
     public static final String TAG = RedPacketHistoryActivity.class.getSimpleName();
 
-    private String date = "201806";
+    private String date;
 
     private TextView tv_back;
     private TextView tv_title;
@@ -63,6 +65,7 @@ public class RedPacketHistoryActivity extends SdkBaseActivity implements View.On
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.hx_activity_red_packet_history);
+        date = TimeUtils.getTime(System.currentTimeMillis(), TimeUtils.YEAR_MONTH_FORMAT);
         initView();
         setupViewPager();
         loadRedPacket();
@@ -160,13 +163,19 @@ public class RedPacketHistoryActivity extends SdkBaseActivity implements View.On
         long tenDays = 10L * 1000 * 60 * 60 * 24;
         long twoYears = 2L * 365 * 1000 * 60 * 60 * 24;
         long curTime = System.currentTimeMillis();
+        long minTime = System.currentTimeMillis();
+        try {
+            minTime = TimeUtils.parseDate("201806", TimeUtils.YEAR_MONTH_FORMAT).getTimeInMillis();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         TimePickerDialog dialog = new TimePickerDialog.Builder()
                 .setType(Type.YEAR_MONTH)
                 .setCallBack(this)
                 .setWheelItemTextSize(14)
                 .setTitleStringId("请选择日期")
                 .setCurrentMillseconds(curTime)
-                .setMinMillseconds(curTime - tenDays)
+                .setMinMillseconds(minTime - tenDays)
                 .setMaxMillseconds(curTime + twoYears)
                 .setThemeColor(ContextCompat.getColor(this, R.color.red_package_colorPrimary))
                 .setWheelItemTextNormalColor(ContextCompat.getColor(this, R.color.hxs_color_gray))

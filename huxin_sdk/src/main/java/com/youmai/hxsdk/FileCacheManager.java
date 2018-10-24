@@ -1,6 +1,7 @@
 package com.youmai.hxsdk;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.bumptech.glide.Glide;
 import com.youmai.hxsdk.config.FileConfig;
@@ -23,14 +24,16 @@ public class FileCacheManager {
      */
     public static boolean clearAllCache(Context context) {
         try {
-            File file = new File(FileConfig.getHuXinCachePath());
-
+            String path = FileConfig.getHuXinCachePath();
+            if (!TextUtils.isEmpty(path)) {
+                File file = new File(path);
+                if (deleteFile(file)) {
+                    LogUtils.i(TAG, "文件删除成功");
+                    return true;
+                }
+            }
             clearGlideCache(context);// 清理Glide框架的缓存
 
-            if (deleteFile(file)) {
-                LogUtils.i(TAG, "文件删除成功");
-                return true;
-            }
         } catch (Exception e) {
             e.printStackTrace();
         }

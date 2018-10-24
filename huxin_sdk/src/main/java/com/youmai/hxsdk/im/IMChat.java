@@ -4,6 +4,7 @@ import com.google.protobuf.ProtocolStringList;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.chat.MsgContent;
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
+import com.youmai.hxsdk.proto.YouMaiBasic;
 import com.youmai.hxsdk.proto.YouMaiMsg;
 import com.youmai.hxsdk.utils.ListUtils;
 

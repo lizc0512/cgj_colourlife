@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/hxs_color_white"
+    android:fitsSystemWindows="true"
     android:orientation="vertical">
 
     <include layout="@layout/hx_red_package_header_title" />
@@ -81,15 +82,32 @@
     </android.support.v7.widget.CardView>
 
 
-    <TextView
-        android:id="@+id/tv_status"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:drawableRight="@drawable/ic_lishi_s"
         android:gravity="center"
-        android:padding="10dp"
-        android:textColor="#a0a0a0" />
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_state"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:padding="10dp"
+            android:textColor="#a0a0a0"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/tv_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:drawableRight="@drawable/ic_lishi_s"
+            android:gravity="center"
+            android:padding="10dp"
+            android:textColor="#a0a0a0" />
+    </LinearLayout>
 
     <View
         android:layout_width="match_parent"
@@ -99,6 +117,15 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:paddingBottom="10dp"
+        android:paddingTop="5dp"
+        android:text="未领取的利是，将于24小时后退回“我的饭票”" />
 
 </LinearLayout>

@@ -1,6 +1,7 @@
 package com.youmai.hxsdk.packet;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -61,6 +62,17 @@ public class ReceiveRedPackageRecordAdapter extends RecyclerView.Adapter<Recycle
         ImageView img_tag = ((TextViewHolder) viewHolder).img_tag;
         TextView tv_money = ((TextViewHolder) viewHolder).tv_money;
         TextView tv_best = ((TextViewHolder) viewHolder).tv_best;
+
+        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent in = new Intent(mContext, RedPacketDetailActivity.class);
+                in.putExtra(RedPacketDetailActivity.OPEN_TYPE, RedPacketDetailActivity.GROUP_PACKET);
+                in.putExtra(RedPacketDetailActivity.REDUUID, item.getLishiUuid());
+                in.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                mContext.startActivity(in);
+            }
+        });
 
         String avatar = item.getSenderHeadImgUrl();
         String sendName = item.getSenderNickname();

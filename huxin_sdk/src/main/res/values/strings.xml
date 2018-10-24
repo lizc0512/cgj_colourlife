@@ -178,6 +178,7 @@
     <string name="title_fix">单个金额</string>
     <string name="type_single">个人利是</string>
     <string name="red_status_done">已领完 %1$d/%2$d个</string>
+    <string name="red_status_overdue">已过期 %1$d/%2$d个</string>
     <string name="red_status">%1$d/%2$d个</string>
     <string name="red_status_detail">已领取%1$d/%2$d个，共%3$s/%4$s</string>
 </resources>

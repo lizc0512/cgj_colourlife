@@ -80,8 +80,8 @@ public class ChatGroupAllMembersActivity extends SdkBaseActivity implements Grou
             }
         });
 
-        mTvTitle = findViewById(com.youmai.hxsdk.R.id.tv_title);
-        recycler_view = findViewById(com.youmai.hxsdk.R.id.recycler_view);
+        mTvTitle = findViewById(R.id.tv_title);
+        recycler_view = findViewById(R.id.recycler_view);
 
 
         mAdapter = new GroupDetailAdapter(mContext, groupList, this);
@@ -97,7 +97,7 @@ public class ChatGroupAllMembersActivity extends SdkBaseActivity implements Grou
         if (info != null) {
             if (TextUtils.isEmpty(groupName)
                     || groupName.contains(ColorsConfig.GROUP_DEFAULT_NAME)) {
-                String title = String.format(getString(com.youmai.hxsdk.R.string.group_default_title),
+                String title = String.format(getString(R.string.group_default_title),
                         "聊天详情", info.getGroup_member_count());
                 mTvTitle.setText(title);
             } else {

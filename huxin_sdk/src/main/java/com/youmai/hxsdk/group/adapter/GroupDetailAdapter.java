@@ -8,7 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -16,6 +18,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.config.ColorsConfig;
 import com.youmai.hxsdk.db.bean.ContactBean;
+import com.youmai.hxsdk.group.data.GroupMembers;
 import com.youmai.hxsdk.utils.GlideRoundTransform;
 
 import java.util.ArrayList;
@@ -36,6 +39,7 @@ public class GroupDetailAdapter extends RecyclerView.Adapter {
     private List<ContactBean> mDataList;
 
     private ItemEventListener itemEventListener;
+
 
     /**
      * @param context
@@ -60,7 +64,30 @@ public class GroupDetailAdapter extends RecyclerView.Adapter {
     }
 
 
-    public void addList(List<ContactBean> list) {
+//    public void addList(List<ContactBean> list) {
+//        int index = 0;
+//        for (int i = 0; i < mDataList.size(); i++) {
+//            if (mDataList.get(i).getUiType() != 0) {
+//                index = i;
+//                break;
+//            }
+//        }
+//        mDataList.addAll(index, list);
+//
+//        notifyDataSetChanged();
+//    }
+
+
+    public void addAll(List<ContactBean> list, boolean isGroupOwner) {
+        mDataList.clear();
+        ContactBean add = new ContactBean();
+        add.setUiType(TYPE.ADD_MEMBER.ordinal());
+        mDataList.add(add);
+        if (isGroupOwner) {
+            ContactBean del = new ContactBean();
+            del.setUiType(TYPE.DEL_MEMBER.ordinal());
+            mDataList.add(del);
+        }
         int index = 0;
         for (int i = 0; i < mDataList.size(); i++) {
             if (mDataList.get(i).getUiType() != 0) {
@@ -69,10 +96,8 @@ public class GroupDetailAdapter extends RecyclerView.Adapter {
             }
         }
         mDataList.addAll(index, list);
-
         notifyDataSetChanged();
     }
-
 
     public void addList(List<ContactBean> list, boolean isGroupOwner) {
 
@@ -120,10 +145,11 @@ public class GroupDetailAdapter extends RecyclerView.Adapter {
         notifyDataSetChanged();
     }
 
-    public void removeList(List<ContactBean> list) {
-        mDataList.removeAll(list);
-        notifyDataSetChanged();
-    }
+//    public void removeList(List<ContactBean> list) {
+//        mDataList.removeAll(list);
+//        notifyDataSetChanged();
+//    }
+
 
     @Override
     public int getItemCount() {

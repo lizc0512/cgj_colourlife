@@ -25,7 +25,9 @@ import com.youmai.hxsdk.utils.ListUtils;
 import com.youmai.hxsdk.utils.PinYinUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 作者：create by YW
@@ -38,6 +40,7 @@ public class DeleteContactAdapter extends RecyclerView.Adapter {
     private ArrayList<SearchContactBean> mList;
 
     private OnItemClickListener mOnItemClickListener;
+    private Map<String, SearchContactBean> cacheMap = new HashMap<>();
 
     public DeleteContactAdapter(Context context, ArrayList<SearchContactBean> list,
                                 OnItemClickListener listener) {
@@ -73,7 +76,11 @@ public class DeleteContactAdapter extends RecyclerView.Adapter {
 
         itemHolder.tv_name.setText(model.getDisplayName());
         itemHolder.cb_collect.setButtonDrawable(R.drawable.contacts_select_selector);
-
+        if (cacheMap.containsKey(model.getUuid())) {
+            itemHolder.cb_collect.setChecked(true);
+        } else {
+            itemHolder.cb_collect.setChecked(false);
+        }
         String url = ColorsConfig.HEAD_ICON_URL + "avatar?uid=" + model.getUsername();
         Glide.with(mContext)
                 .load(url)
@@ -149,6 +156,7 @@ public class DeleteContactAdapter extends RecyclerView.Adapter {
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                updateCacheMap(model);
                 if (itemHolder.cb_collect.isChecked()) {
                     itemHolder.cb_collect.setChecked(false);
                 } else {
@@ -156,11 +164,19 @@ public class DeleteContactAdapter extends RecyclerView.Adapter {
                 }
 
                 if (null != mOnItemClickListener) {
-                    mOnItemClickListener.onItemClick(position, model);
+                    mOnItemClickListener.updateUI(cacheMap);
                 }
             }
         });
 
+    }
+
+    private void updateCacheMap(SearchContactBean contact) {
+        if (cacheMap.containsKey(contact.getUuid())) {
+            cacheMap.remove(contact.getUuid());
+        } else {
+            cacheMap.put(contact.getUuid(), contact);
+        }
     }
 
 
@@ -191,7 +207,7 @@ public class DeleteContactAdapter extends RecyclerView.Adapter {
 
 
     public interface OnItemClickListener {
-        void onItemClick(int position, SearchContactBean bean);
+        void updateUI(Map<String,SearchContactBean> map);
     }
 
 }

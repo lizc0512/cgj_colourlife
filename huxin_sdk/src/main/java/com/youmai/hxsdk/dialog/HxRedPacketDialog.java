@@ -226,10 +226,15 @@ public class HxRedPacketDialog extends Dialog implements View.OnClickListener {
                 .circleCrop()
                 .diskCacheStrategy(DiskCacheStrategy.RESOURCE);
 
-        Glide.with(getContext())
-                .load(avatar)
-                .apply(options)
-                .into(iv_avatar);
+
+        try {
+            Glide.with(getContext())
+                    .load(avatar)
+                    .apply(options)
+                    .into(iv_avatar);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         tv_name.setText(name);
         tv_msg.setText(remark);
@@ -298,6 +303,8 @@ public class HxRedPacketDialog extends Dialog implements View.OnClickListener {
 
             tv_info.setVisibility(View.VISIBLE);
             tv_info.setText(R.string.red_packet_overdue_info);
+
+            iv_open.setVisibility(View.INVISIBLE);
         } else if (status == 0 || status == 1) {
             tv_title.setVisibility(View.VISIBLE);
             tv_title.setText(R.string.red_packet_can_open);
@@ -312,7 +319,7 @@ public class HxRedPacketDialog extends Dialog implements View.OnClickListener {
             tv_title.setText(R.string.red_packet_is_open_group);
 
             rel_packet_bg.setBackgroundResource(R.drawable.red_packet_gone);
-            iv_open.setVisibility(View.GONE);
+            iv_open.setVisibility(View.INVISIBLE);
             if (isSinglePacket) {
                 if (mListener != null) {
                     mListener.onOpenClick(moneyDraw);

@@ -147,14 +147,16 @@ public class DeleteContactListActivity extends SdkBaseActivity implements View.O
         recyclerView.setAdapter(mAdapter);
     }
 
+    private void hideSoftKey() {
+        InputMethodManager manager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        manager.hideSoftInputFromWindow(global_search_bar.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+    }
 
-    private void updateCacheMap(SearchContactBean contact) {
-        if (mTotalMap.containsKey(contact.getUuid())) {
-            mTotalMap.remove(contact.getUuid());
-        } else {
-            mTotalMap.put(contact.getUuid(), contact);
-        }
 
+    @Override
+    public void updateUI(Map<String, SearchContactBean> map) {
+        mTotalMap.clear();
+        mTotalMap.putAll(map);
         int count = mTotalMap.size();
         Log.d("YW", "map size: " + count);
 
@@ -168,20 +170,6 @@ public class DeleteContactListActivity extends SdkBaseActivity implements View.O
 
         mTvSure.setText("完成(" + mTotalMap.size() + ")");
         hideSoftKey();
-    }
-
-    private void hideSoftKey() {
-        InputMethodManager manager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        manager.hideSoftInputFromWindow(global_search_bar.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-    }
-
-    private void emptyList() {
-
-    }
-
-    @Override
-    public void onItemClick(int position, SearchContactBean bean) {
-        updateCacheMap(bean);
     }
 
     @Override

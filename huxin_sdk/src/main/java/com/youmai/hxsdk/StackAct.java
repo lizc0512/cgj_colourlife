@@ -142,13 +142,13 @@ public class StackAct {
         try {
             for (int i = 0, size = mActivityStack.size(); i < size; i++) {
                 if (null != mActivityStack.get(i)) {
-                    if (type == 1) {
-                        if (mActivityStack.get(i).toString().contains("com.youmai.hxsdk.activity.IMConnectionActivity")
-                                || mActivityStack.get(i).toString().contains("com.youmai.hxsdk.activity.IMGroupActivity")) {
-                            continue;
+                    if (type == 0x0001) {
+                        if (mActivityStack.get(i).toString().contains("FileManagerActivity")
+                                || mActivityStack.get(i).toString().contains("FileDownloadActivity")
+                                || mActivityStack.get(i).toString().contains("FileDLClassifyActivity")) {
+                            mActivityStack.get(i).finish();
                         }
                     }
-                    mActivityStack.get(i).finish();
                 }
             }
         } catch (Exception e) {

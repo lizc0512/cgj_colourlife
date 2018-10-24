@@ -2,10 +2,12 @@ package com.youmai.hxsdk.packet;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatEditText;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -19,13 +21,13 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.activity.SdkBaseActivity;
+import com.youmai.hxsdk.chatgroup.IMGroupActivity;
 import com.youmai.hxsdk.config.ColorsConfig;
 import com.youmai.hxsdk.db.bean.GroupInfoBean;
 import com.youmai.hxsdk.dialog.HxPayPasswordDialog;
 import com.youmai.hxsdk.entity.red.RedPackageList;
 import com.youmai.hxsdk.entity.red.SendRedPacketResult;
 import com.youmai.hxsdk.entity.red.StandardRedPackage;
-import com.youmai.hxsdk.chatgroup.IMGroupActivity;
 import com.youmai.hxsdk.http.IGetListener;
 import com.youmai.hxsdk.proto.YouMaiBasic;
 import com.youmai.hxsdk.proto.YouMaiGroup;
@@ -166,8 +168,6 @@ public class RedPacketInGroupActivity extends SdkBaseActivity implements View.On
                     money = 0;
                 }
                 if (type == 2) {
-                    moneyStr = String.valueOf(money);
-                    tv_money.setText(moneyStr);
 
                     if (money > moneyMax) {
                         tv_error.setVisibility(View.VISIBLE);
@@ -175,17 +175,19 @@ public class RedPacketInGroupActivity extends SdkBaseActivity implements View.On
                         return;
                     } else if (money == 0) {
                         btn_commit.setEnabled(false);
+                        tv_money.setText("");
                         return;
                     } else {
                         btn_commit.setEnabled(true);
                         tv_error.setVisibility(View.INVISIBLE);
                     }
 
+                    DecimalFormat format = new DecimalFormat("0.00");
+                    moneyStr = format.format(money);
+                    tv_money.setText(moneyStr);
+
                 } else {
                     double num = money * numberTotal;
-                    DecimalFormat format = new DecimalFormat("0.00");
-                    moneyStr = format.format(num);
-
                     if (num > moneyMax) {
                         tv_error.setVisibility(View.VISIBLE);
                         btn_commit.setEnabled(false);
@@ -194,6 +196,9 @@ public class RedPacketInGroupActivity extends SdkBaseActivity implements View.On
                         btn_commit.setEnabled(true);
                         tv_error.setVisibility(View.INVISIBLE);
                     }
+
+                    DecimalFormat format = new DecimalFormat("0.00");
+                    moneyStr = format.format(num);
 
                     tv_money.setText(moneyStr);
                 }
@@ -221,11 +226,7 @@ public class RedPacketInGroupActivity extends SdkBaseActivity implements View.On
                     e.printStackTrace();
                     numberTotal = 0;
                 }
-                tv_money.setText(String.valueOf(money * numberTotal));
                 if (type == 2) {
-                    moneyStr = String.valueOf(money);
-                    tv_money.setText(moneyStr);
-
                     if (money > moneyMax) {
                         tv_error.setVisibility(View.VISIBLE);
                         btn_commit.setEnabled(false);
@@ -237,11 +238,13 @@ public class RedPacketInGroupActivity extends SdkBaseActivity implements View.On
                         tv_error.setVisibility(View.INVISIBLE);
                         btn_commit.setEnabled(true);
                     }
+
+                    DecimalFormat format = new DecimalFormat("0.00");
+                    moneyStr = format.format(money);
+                    tv_money.setText(moneyStr);
+
                 } else {
                     double num = money * numberTotal;
-                    DecimalFormat format = new DecimalFormat("0.00");
-                    moneyStr = format.format(num);
-
                     if (num > moneyMax) {
                         tv_error.setVisibility(View.VISIBLE);
                         btn_commit.setEnabled(false);
@@ -253,6 +256,9 @@ public class RedPacketInGroupActivity extends SdkBaseActivity implements View.On
                         tv_error.setVisibility(View.INVISIBLE);
                         btn_commit.setEnabled(true);
                     }
+
+                    DecimalFormat format = new DecimalFormat("0.00");
+                    moneyStr = format.format(num);
                     tv_money.setText(moneyStr);
                 }
             }
@@ -390,10 +396,12 @@ public class RedPacketInGroupActivity extends SdkBaseActivity implements View.On
                 Toast.makeText(mContext, "请添加利是数目", Toast.LENGTH_SHORT).show();
                 return;
             } else if (money > randomConfig.getMoneyMax()) {
-                Toast.makeText(mContext, "超过利是最大金额限制，请重新设置", Toast.LENGTH_SHORT).show();
+                String tips = "超过利是最大金额" + randomConfig.getMoneyMax() + "请重新设置";
+                Toast.makeText(mContext, tips, Toast.LENGTH_SHORT).show();
                 return;
             } else if (money < randomConfig.getMoneyMin()) {
-                Toast.makeText(mContext, "小于利是最小金额限制，请重新设置", Toast.LENGTH_SHORT).show();
+                String tips = "小于利是最小金额" + randomConfig.getMoneyMin() + "请重新设置";
+                Toast.makeText(mContext, tips, Toast.LENGTH_SHORT).show();
                 return;
             } else if (money > moneyMax) {
                 Toast.makeText(mContext, "超过了您的利是余额，请重新设置", Toast.LENGTH_SHORT).show();
@@ -437,8 +445,10 @@ public class RedPacketInGroupActivity extends SdkBaseActivity implements View.On
                                     Toast.makeText(mContext, bean.getMessage(), Toast.LENGTH_SHORT).show();
                                 }
                             }
+                            dismissProgressDialog();
                         }
                     };
+                    showProgressDialog();
                     if (type == 2) {
                         HuxinSdkManager.instance().reqSendGroupRedPackageRandom(money, numberTotal,
                                 title, pano, password, listener);
@@ -448,6 +458,22 @@ public class RedPacketInGroupActivity extends SdkBaseActivity implements View.On
                     }
 
                 }
+
+
+                @Override
+                public void forgetPassWord() {
+                    final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                    builder.setTitle("温馨提示");
+                    builder.setMessage("请前往我的页面找回支付密码");
+                    builder.setNegativeButton("我知道了", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    });
+                    builder.create().show();
+                }
+
             });
             dialog.show();
             dialog.setMoney(moneyStr);

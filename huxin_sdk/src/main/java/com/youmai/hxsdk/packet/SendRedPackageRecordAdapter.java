@@ -1,6 +1,7 @@
 package com.youmai.hxsdk.packet;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -62,6 +63,17 @@ public class SendRedPackageRecordAdapter extends RecyclerView.Adapter<RecyclerVi
         TextView tv_money = ((TextViewHolder) viewHolder).tv_money;
         TextView tv_best = ((TextViewHolder) viewHolder).tv_best;
 
+        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent in = new Intent(mContext, RedPacketDetailActivity.class);
+                in.putExtra(RedPacketDetailActivity.OPEN_TYPE, RedPacketDetailActivity.GROUP_PACKET);
+                in.putExtra(RedPacketDetailActivity.REDUUID, item.getUuid());
+                in.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                mContext.startActivity(in);
+            }
+        });
+
         String avatar = item.getSenderHeadImgUrl();
         String sendName = item.getSenderName();
         String time = item.getTimeAllowWithdraw();
@@ -84,6 +96,9 @@ public class SendRedPackageRecordAdapter extends RecyclerView.Adapter<RecyclerVi
 
         if (status == 4) {
             String format = mContext.getResources().getString(R.string.red_status_done);
+            tv_best.setText(String.format(format, item.getNumberDraw(), item.getNumberTotal()));
+        } else if (status == -1) {
+            String format = mContext.getResources().getString(R.string.red_status_overdue);
             tv_best.setText(String.format(format, item.getNumberDraw(), item.getNumberTotal()));
         } else {
             String format = mContext.getResources().getString(R.string.red_status);

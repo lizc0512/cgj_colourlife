@@ -26,6 +26,7 @@ import android.widget.Toast;
 
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.google.protobuf.GeneratedMessage;
+import com.google.protobuf.InvalidProtocolBufferException;
 import com.youmai.hxsdk.config.AppConfig;
 import com.youmai.hxsdk.config.ColorsConfig;
 import com.youmai.hxsdk.db.helper.CacheMsgHelper;
@@ -86,6 +87,7 @@ public class HuxinSdkManager {
     private Context mContext;
 
     private List<InitListener> mInitListenerList;
+    private LoginStatusListener mLoginStatusListener;
 
     private ProcessHandler mProcessHandler;
 
@@ -100,6 +102,12 @@ public class HuxinSdkManager {
         void success();
 
         void fail();
+    }
+
+    public interface LoginStatusListener {
+        void onKickOut();
+
+        void onReLoginSuccess();
     }
 
 
@@ -180,9 +188,7 @@ public class HuxinSdkManager {
         RespBaseBean.setProtocolCallBack(new ProtocolCallBack() {
             @Override
             public void sessionExpire() {
-                Toast.makeText(mContext, R.string.relogin_msg, Toast.LENGTH_SHORT).show();
-                close();
-                isKicked = true;
+                reLogin();
             }
         });
 
@@ -244,12 +250,21 @@ public class HuxinSdkManager {
     }
 
 
+    public LoginStatusListener getLoginStatusListener() {
+        return mLoginStatusListener;
+    }
+
+    public void setLoginStatusListener(LoginStatusListener listener) {
+        this.mLoginStatusListener = listener;
+    }
+
+
     public void saveUserInfo() {
         mUserInfo.saveJson(mContext);
     }
 
     public void setUserInfo(UserInfo info) {
-        if (mUserInfo != null && mUserInfo.equals(info) && isLogin()) {
+        if (mUserInfo != null && mUserInfo.equals(info)) {
             return;
         }
 
@@ -362,6 +377,14 @@ public class HuxinSdkManager {
         }
     }
 
+    /**
+     * 判断SDK是否被踢
+     *
+     * @return
+     */
+    public boolean isKicked() {
+        return isKicked;
+    }
 
     /**
      * 判断SDK是否登录
@@ -565,11 +588,23 @@ public class HuxinSdkManager {
                         }
                     }
                 });
+                mAlertDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        dialog.dismiss();
+                        close();
+                        mAlertDialog = null;
+                    }
+                });
                 mAlertDialog = builder.create();
             }
 
-            if (!mAlertDialog.isShowing()) {
-                mAlertDialog.show();
+            try {
+                if (!mAlertDialog.isShowing()) {
+                    mAlertDialog.show();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }
@@ -619,7 +654,7 @@ public class HuxinSdkManager {
         if (mContext != null) {
             if (binded == BIND_STATUS.BINDED) {
 
-                boolean reLogin = (commandId == YouMaiBasic.COMMANDID.CID_CHAT_BUDDY_VALUE
+                /*boolean reLogin = (commandId == YouMaiBasic.COMMANDID.CID_CHAT_BUDDY_VALUE
                         || commandId == YouMaiBasic.COMMANDID.CID_CHAT_GROUP_VALUE);
                 if (!reLogin) {
                     new Handler().post(new Runnable() {
@@ -628,7 +663,7 @@ public class HuxinSdkManager {
                             reLoginDialog();
                         }
                     });
-                }
+                }*/
 
                 huxinService.sendProto(msg, commandId, callback);
             } else {
@@ -773,6 +808,18 @@ public class HuxinSdkManager {
     }
 
 
+    public boolean sendPushMsgReply(long msgId) {
+        String uuid = getUuid();
+        YouMaiMsg.PushMsgAck.Builder builder = YouMaiMsg.PushMsgAck.newBuilder();
+
+        builder.setUserId(uuid);
+        builder.setMsgId(msgId);
+        YouMaiMsg.PushMsgAck reply = builder.build();
+        sendProto(reply, YouMaiBasic.COMMANDID.CID_PUSH_MSG_ACK_VALUE, null);
+        return true;
+    }
+
+
     /**
      * 设置home activity
      *
@@ -889,7 +936,7 @@ public class HuxinSdkManager {
      */
     public void removeNotDisturb(String uuid) {
         String temp = AppUtils.getStringSharedPreferences(mContext, "notifyAll", "");
-        temp = temp.replaceAll("@" + uuid, "");
+        temp = temp.replaceAll("#" + uuid, "");
         AppUtils.setStringSharedPreferences(mContext, "notifyAll", temp);
 
         AppUtils.setBooleanSharedPreferences(mContext, "notify" + uuid, false);
@@ -902,7 +949,7 @@ public class HuxinSdkManager {
      */
     public void removeNotDisturb(int groupId) {
         String temp = AppUtils.getStringSharedPreferences(mContext, "notifyAll", "");
-        temp = temp.replaceAll("@" + groupId, "");
+        temp = temp.replaceAll("#" + groupId, "");
         AppUtils.setStringSharedPreferences(mContext, "notifyAll", temp);
 
         AppUtils.setBooleanSharedPreferences(mContext, "notify" + groupId, false);

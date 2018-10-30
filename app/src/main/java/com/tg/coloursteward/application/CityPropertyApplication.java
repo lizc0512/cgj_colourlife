@@ -33,7 +33,7 @@ import java.util.List;
 import cn.jpush.android.api.JPushInterface;
 
 public class CityPropertyApplication extends Application {
-    private List<Activity> mList = new LinkedList<Activity>();
+    private static List<Activity> mList = new LinkedList<Activity>();
     private static CityPropertyApplication instance;
 
     @Override
@@ -137,7 +137,7 @@ public class CityPropertyApplication extends Application {
         mList.remove(activity);
     }
 
-    private void finishOtherActivity(Class<? extends Activity> clazs) {
+    public static void finishOtherActivity(Class<? extends Activity> clazs) {
         Activity activity;
         for (int i = 0; i < mList.size(); i++) {
             activity = mList.get(i);

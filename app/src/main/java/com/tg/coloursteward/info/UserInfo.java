@@ -23,6 +23,7 @@ public class UserInfo {
     public static String corp_id = "";
     public static String salary_level = "";
     public static int is_deleted = 0;
+    public static int special = 0;
     public static String email = "";
     public static String mobile = "";
     public static int czy_id = 0;

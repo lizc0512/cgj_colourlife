@@ -126,12 +126,28 @@
             android:layout_height="wrap_content"
             android:text="立即登录" />
     </RelativeLayout>
+    <TextView
+        android:id="@+id/tv_czylogin"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:gravity="center"
+        android:text="彩之云授权登录"
+        android:textSize="16dp"
+        android:layout_gravity="center_horizontal"
+        android:textColor="@color/white"
+        android:background="@drawable/tijiaobaoxiu"/>
 
     <RelativeLayout
         android:id="@+id/forget_pwd"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
         android:layout_gravity="end"
+        android:layout_marginLeft="24dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="4dp"
         android:background="@color/white"
         android:paddingBottom="15dp"
         android:paddingTop="10dp">

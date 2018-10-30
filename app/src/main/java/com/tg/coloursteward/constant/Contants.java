@@ -21,31 +21,31 @@ public interface Contants {
         /**
          * 正式地址
          //         */
-        String URL_ICETEST = "https://openapi.colourlife.com/v1";//2.0
-        String URL_CPMOBILE = "http://cpmobile.colourlife.com";
-        String URL_CAIHUI = "https://caihui-bishow.colourlife.com";
-        String URL_OAUTH2 = "https://oauth2-cgj.colourlife.com";
-        String SINGLE_DEVICE = "https://single.colourlife.com/";
-        String URL_NEW = "https://cgj-backyard.colourlife.com/";
-        String HR_PAY = "https://payroll-hr.colourlife.com/redirect";
-        String CLIENT_SECRET = "t2o0a1xl2lOmoPi4tuHf5uw4VZloXGs7y1Kd0Yoq";
-        String PUBLIC_KEY="MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCTFnAR7ORLx0jGzf9Ux1We7yHvRi+kQXKSRmtgBjDCXQzakGm2mrb6EupCkDbUcj4BUs7S7zm/rICQuVNC9fujeJGjcNWRg0XWVtm90XpbTqfKiXzGDHI9W8aULYZ3of/JJ9lyCyjqjigyCdLBPtQ27gOuboDzQuieR2ywPHawzQIDAQAB";
+//        String URL_ICETEST = "https://openapi.colourlife.com/v1";//2.0
+//        String URL_CPMOBILE = "http://cpmobile.colourlife.com";
+//        String URL_CAIHUI = "https://caihui-bishow.colourlife.com";
+//        String URL_OAUTH2 = "https://oauth2-cgj.colourlife.com";
+//        String SINGLE_DEVICE = "https://single.colourlife.com/";
+//        String URL_NEW = "https://cgj-backyard.colourlife.com/";
+//        String URL_ICESTAFF = "https://staff-ice.colourlife.com/";
+//        String CLIENT_SECRET = "t2o0a1xl2lOmoPi4tuHf5uw4VZloXGs7y1Kd0Yoq";
+//        String PUBLIC_KEY="MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCTFnAR7ORLx0jGzf9Ux1We7yHvRi+kQXKSRmtgBjDCXQzakGm2mrb6EupCkDbUcj4BUs7S7zm/rICQuVNC9fujeJGjcNWRg0XWVtm90XpbTqfKiXzGDHI9W8aULYZ3of/JJ9lyCyjqjigyCdLBPtQ27gOuboDzQuieR2ywPHawzQIDAQAB";
 //////////////////////////////////////////////////////////////////////////////
         /**
          * 测试地址
 //         */
-//        String URL_ICETEST = "https://openapi-test.colourlife.com/v1";//2.0
-//        String URL_CPMOBILE = "http://cpmobile-czytest.colourlife.com";
-//        String URL_CAIHUI = "https://caihui-bishow.colourlife.com";
-//        String URL_OAUTH2 = "https://oauth2-cgj-test.colourlife.com";
-//        String SINGLE_DEVICE = "https://single-czytest.colourlife.com/";
-//        String URL_NEW = "https://cgj-backyard-test.colourlife.com/";
-//        String HR_PAY = "https://payroll-hr-test.colourlife.com/redirect";
-//        String CLIENT_SECRET = "xlsfrQS5R49upmfZbhlsrUzAt9HDA5K4ptLYsqK5";
-//        String PUBLIC_KEY = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDZDqnWph9LxtD0zgtGAYTTf2jY" +
-//                "eV+ni5F1o0w3Fag4OOD1YHCRUCXIsFy+iJYmuPf5vMkZrkoiJmKBfkaIzNlrJZzH" +
-//                "zq+LsPQNCF86p1nLsuHbkWNvyjOEPn/CUryP2Kxme4S+eEqLIeNwp70VOaMuPmRo" +
-//                "EZxMDAgvc6Z0DWsVdQIDAQAB";
+        String URL_ICETEST = "https://openapi-test.colourlife.com/v1";//2.0
+        String URL_CPMOBILE = "http://cpmobile-czytest.colourlife.com";
+        String URL_CAIHUI = "https://caihui-bishow.colourlife.com";
+        String URL_OAUTH2 = "https://oauth2-cgj-test.colourlife.com";
+        String SINGLE_DEVICE = "https://single-czytest.colourlife.com/";
+        String URL_NEW = "https://cgj-backyard-test.colourlife.com/";
+        String URL_ICESTAFF = "http://staff.ice.test.colourlife.com/";
+        String CLIENT_SECRET = "xlsfrQS5R49upmfZbhlsrUzAt9HDA5K4ptLYsqK5";
+        String PUBLIC_KEY = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDZDqnWph9LxtD0zgtGAYTTf2jY" +
+                "eV+ni5F1o0w3Fag4OOD1YHCRUCXIsFy+iJYmuPf5vMkZrkoiJmKBfkaIzNlrJZzH" +
+                "zq+LsPQNCF86p1nLsuHbkWNvyjOEPn/CUryP2Kxme4S+eEqLIeNwp70VOaMuPmRo" +
+                "EZxMDAgvc6Z0DWsVdQIDAQAB";
 /////////////////////////////////////////////////////////////////////////////////////
     }
 
@@ -190,6 +190,7 @@ public interface Contants {
     }
 
     interface storage {
+        String THRID_CODE = "thrid_code";//彩之云授权登录code
         String TICKET = "ticket";
         String ACCOUNT = "account";
         String DGZH_ACCOUNT = "dgzh_account";
@@ -220,6 +221,8 @@ public interface Contants {
         String LATITUDE = "str_latitude";//纬度
         String LONGITUDE = "str_longitude";//经度
         String FRAGMENTMINE = "fragmentmine";//我的页面
+        String SALARY_TIME = "salary_time";//工资条打开时间
+        String SALARY_ISINPUT = "salary_isinput";//工资条打开状态
         String fragmentminedata ="{\"code\":0,\"message\":\"success\",\"content\":[{\"id\":1,\"data\":[{\"id\":4,\"img\":\"https:\\/\\/pics-czy-cdn.colourlife.com\\/local-5ba1a68e72ccf634122.png\",\"url\":\"colourlife:\\/\\/proto?type=redPacket\",\"name\":\"\\u6211\\u7684\\u996d\\u7968\",\"group_id\":1},{\"id\":5,\"img\":\"https:\\/\\/pics-czy-cdn.colourlife.com\\/local-5ba1a72589e96782755.png\",\"url\":\"colourlife:\\/\\/proto?type=findPwd\",\"name\":\"\\u627e\\u56de\\u652f\\u4ed8\\u5bc6\\u7801\",\"group_id\":1},{\"id\":2,\"img\":\"https:\\/\\/pics-czy-cdn.colourlife.com\\/local-5ba1a72f39a4d191428.png\",\"url\":\"https:\\/\\/payroll-hr.colourlife.com\\/redirect\",\"name\":\"\\u6211\\u7684\\u5de5\\u8d44\\u6761\",\"group_id\":1}]},{\"id\":2,\"data\":[{\"id\":7,\"img\":\"https:\\/\\/pics-czy-cdn.colourlife.com\\/local-5ba1a70d8feca995000.png\",\"url\":\"http:\\/\\/evisit.czytest.colourlife.com\\/cgj\\/bindcustomer\\/redirect\",\"name\":\"\\u5f69\\u4e4b\\u4e91\\u8d26\\u53f7\\u7ed1\\u5b9a\",\"group_id\":2},{\"id\":1,\"img\":\"https:\\/\\/pics-czy-cdn.colourlife.com\\/local-5ba1a6ca2dba5614749.png\",\"url\":\"colourlife:\\/\\/proto?type=invite\",\"name\":\"\\u9080\\u8bf7\",\"group_id\":2}]},{\"id\":3,\"data\":[{\"id\":6,\"img\":\"https:\\/\\/pics-czy-cdn.colourlife.com\\/local-5ba1a741708ca213058.png\",\"url\":\"colourlife:\\/\\/proto?type=mydownload\",\"name\":\"\\u6211\\u7684\\u4e0b\\u8f7d\",\"group_id\":3},{\"id\":3,\"img\":\"https:\\/\\/pics-czy-cdn.colourlife.com\\/local-5ba1a7379ec36340210.png\",\"url\":\"colourlife:\\/\\/proto?type=setting\",\"name\":\"\\u8bbe\\u7f6e\",\"group_id\":3}]}],\"contentEncrypt\":\"\"}";
     }
 

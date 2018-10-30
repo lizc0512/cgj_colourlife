@@ -143,7 +143,21 @@ public class FragmentMine extends Fragment implements ResponseListener {
                 } else if (name.contains("工资")) {
                     openType = 2;
                     salary = url;
-                    find_pay_password();
+                    long salary_time;
+                    if (TextUtils.isEmpty(Tools.getStringValue(mActivity, Contants.storage.SALARY_TIME))) {
+                        salary_time = 0;
+                    } else {
+                        salary_time = Long.parseLong(Tools.getStringValue(mActivity, Contants.storage.SALARY_TIME));
+                    }
+                    long now_time = System.currentTimeMillis() / 1000;
+                    boolean isinput = Tools.getBooleanValue(mActivity, Contants.storage.SALARY_ISINPUT);
+                    if (isinput == true && now_time - salary_time >= 300) {//超过300秒
+                        find_pay_password();
+                    } else if (isinput == true) {
+                        LinkParseUtil.parse(mActivity, salary, "");
+                    } else {
+                        find_pay_password();
+                    }
                 } else if (name.contains("账号绑定")) {
                     getAuth("绑定彩之云", url, "bdczy");
                 } else {
@@ -358,6 +372,8 @@ public class FragmentMine extends Fragment implements ResponseListener {
                 if (openType == 1) {
                     clearPayPwd();
                 } else if (openType == 2) {
+                    Tools.saveStringValue(mActivity, Contants.storage.SALARY_TIME, String.valueOf(System.currentTimeMillis() / 1000));
+                    Tools.setBooleanValue(mActivity, Contants.storage.SALARY_ISINPUT, true);
                     LinkParseUtil.parse(mActivity, salary, "");
                 }
             } else {

@@ -130,11 +130,16 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
                 intent.putExtras(bundle);
                 ComponentName cn = new ComponentName(package_name, activity_path);
                 intent.setComponent(cn);
-                if (intent.resolveActivityInfo(getPackageManager(), PackageManager.MATCH_DEFAULT_ONLY) != null) {
-                    startActivity(intent);
-                } else {
-                    ToastFactory.showToast(LoginActivity.this, "未检测到手机有安装彩之云APP");
+                try {
+                    if (intent.resolveActivityInfo(getPackageManager(), PackageManager.MATCH_DEFAULT_ONLY) != null) {
+                        startActivity(intent);
+                    } else {
+                        ToastFactory.showToast(LoginActivity.this, "未检测到手机有安装彩之云APP");
+                    }
+                } catch (Exception e) {
+                    ToastFactory.showToast(LoginActivity.this, "请安装最新版彩之云APP");
                 }
+
                 break;
         }
         return super.handClickEvent(v);

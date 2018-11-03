@@ -205,6 +205,7 @@ public class HttpTools {
     public static final int POST_CHANGEPHONE_COMMIT = BASE_CODE++;
     public static final int GET_CZYOAUTH = BASE_CODE++;
     public static final int GET_MINISERVER = BASE_CODE++;
+    public static final int GET_MINISERVER_TOP = BASE_CODE++;
 
 
     public static final int GET_KEYSECERT = -10000;

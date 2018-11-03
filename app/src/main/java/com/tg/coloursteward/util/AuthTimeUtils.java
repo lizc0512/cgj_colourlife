@@ -69,9 +69,13 @@ public class AuthTimeUtils {
                 }else{
                     getAuthData(url,clientCode,oauthType,developerCode,param);
                 }
-            }else{
-                if(time - currentTime2 <= ExpiresTime2 * 1000){//判断保存时间是否超过9小时，超过则过期，需要重新获取
-                    Log.d("printLog","auth2.0");
+            } else if ("2".equals(oauthType)) {
+                intent = new Intent(mActivity, MyBrowserActivity.class);
+                intent.putExtra(MyBrowserActivity.KEY_URL, url);
+                mActivity.startActivity(intent);
+            } else {
+                if (time - currentTime2 <= ExpiresTime2 * 1000) {//判断保存时间是否超过9小时，超过则过期，需要重新获取
+                    Log.d("printLog", "auth2.0");
                     String str = "?";
                     String URL;
                     if(url.contains(str)){//Url有问号

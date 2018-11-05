@@ -95,9 +95,12 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
     }
 
     private void topDataAdapter(String cache) {
-        TinyFragmentTopEntity entity = GsonUtils.gsonToBean(cache, TinyFragmentTopEntity.class);
         list_top.clear();
-        list_top.addAll(entity.getContent());
+        try {
+            TinyFragmentTopEntity entity = GsonUtils.gsonToBean(cache, TinyFragmentTopEntity.class);
+            list_top.addAll(entity.getContent());
+        } catch (Exception e) {
+        }
         if (null == topAdapter) {
             topAdapter = new TinyServerFragmentTopAdapter(mActivity, list_top);
             rv_fragment_tinyserver_top.setAdapter(topAdapter);
@@ -130,10 +133,13 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
     }
 
     private void midDataAdapter(String cache) {
-        TinyServerFragmentEntity entity = GsonUtils.gsonToBean(cache, TinyServerFragmentEntity.class);
         list.clear();
         list_item.clear();
-        list.addAll(entity.getContent());
+        try {
+            TinyServerFragmentEntity entity = GsonUtils.gsonToBean(cache, TinyServerFragmentEntity.class);
+            list.addAll(entity.getContent());
+        } catch (Exception e) {
+        }
         for (int i = 0; i < list.size(); i++) {
             if (i == 0) {
                 for (int y = 0; y < list.get(i).getData().size(); y++) {

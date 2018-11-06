@@ -72,7 +72,7 @@ public class LinkParseUtil {
                         it.putExtra(DataShowActivity.BRANCH, UserInfo.orgId);
                         context.startActivity(it);
                         ((Activity) context).overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
-                    }else if (name.equals("instantGive")) {//即时分配
+                    }else if (name.equals("jsfp")) {//即时分配
                         it = new Intent(context, AccountActivity.class);
                         context.startActivity(it);
                         ((Activity) context).overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);

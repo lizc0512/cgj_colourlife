@@ -30,7 +30,11 @@ android {
             }
         }
     }
-
+    sourceSets {
+        main {
+            jniLibs.srcDir 'libs'
+        }
+    }
     signingConfigs {
         release {
             storeFile file('cgj.keystore')

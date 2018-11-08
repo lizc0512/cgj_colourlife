@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.adapter.TinyServerFragmentAdapter;
@@ -60,6 +61,7 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
     private String secret;
     private RecyclerView rv_fragment_tinyserver;
     private RecyclerView rv_fragment_tinyserver_top;
+    private RelativeLayout rl_tinyfragment_tips;
     private TinyServerFragmentAdapter fragmentAdapter;
     private List<TinyServerFragmentEntity.ContentBean> list = new ArrayList<>();
     private List<TinyServerFragmentEntity.ContentBean.DataBean> list_item = new ArrayList<>();
@@ -96,6 +98,7 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
 
     private void topDataAdapter(String cache) {
         list_top.clear();
+        rl_tinyfragment_tips.setVisibility(View.VISIBLE);
         try {
             TinyFragmentTopEntity entity = GsonUtils.gsonToBean(cache, TinyFragmentTopEntity.class);
             list_top.addAll(entity.getContent());
@@ -135,6 +138,7 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
     private void midDataAdapter(String cache) {
         list.clear();
         list_item.clear();
+        rl_tinyfragment_tips.setVisibility(View.VISIBLE);
         try {
             TinyServerFragmentEntity entity = GsonUtils.gsonToBean(cache, TinyServerFragmentEntity.class);
             list.addAll(entity.getContent());
@@ -199,6 +203,7 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
      * 初始化控件
      */
     private void initView() {
+        rl_tinyfragment_tips = mView.findViewById(R.id.rl_tinyfragment_tips);
         rv_fragment_tinyserver_top = mView.findViewById(R.id.rv_fragment_tinyserver_top);
         GridLayoutManager gridLayoutManager_top = new GridLayoutManager(mActivity, 3);
         rv_fragment_tinyserver_top.setLayoutManager(gridLayoutManager_top);
@@ -303,6 +308,14 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
         }
         initData();
         initDataTop();
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if(isVisibleToUser){
+            initDataTop();
+        }
     }
 
     @Override

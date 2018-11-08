@@ -78,11 +78,11 @@ public class TinyServerFragmentAdapter extends RecyclerView.Adapter<RecyclerView
     @Override
     public int getItemViewType(int position) {
         if (!TextUtils.isEmpty(list.get(position).getItem_name()) && list.get(position).getType() != 3) {
-            return item_tinyserverfragment_two;
+            return item_tinyserverfragment_two;//导航标题
         } else if (TextUtils.isEmpty(list.get(position).getItem_name()) && list.get(position).getType() == 3) {
             return item_tinyserverfragment_one;
         } else {
-            return item_tinyserverfragment_three;
+            return item_tinyserverfragment_three;//常用、其他 应用
         }
     }
 

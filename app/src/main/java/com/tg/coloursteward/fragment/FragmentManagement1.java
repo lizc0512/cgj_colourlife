@@ -126,10 +126,12 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
         if (!TextUtils.isEmpty(cache)) {
             midDataAdapter(cache);
         }
+        String skin_id = Tools.getStringValue(mActivity, Contants.storage.SKINCODE);
         RequestConfig config = new RequestConfig(mActivity, HttpTools.GET_MINISERVER);
         config.handler = msgHandler.getHandler();
         Map<String, Object> map = new HashMap();
         map.put("access_token", accessToken);
+        map.put("corp_type", skin_id);
         Map<String, String> params = TokenUtils.getStringMap(TokenUtils.getNewSaftyMap(getActivity(), map));
         HttpTools.httpGet_Map(Contants.URl.URL_NEW, "app/home/utility/miscApp", config, (HashMap) params);
 

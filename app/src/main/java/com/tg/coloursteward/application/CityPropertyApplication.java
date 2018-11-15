@@ -8,6 +8,11 @@ import android.content.Intent;
 import android.support.multidex.MultiDex;
 import android.util.Log;
 
+import com.baidu.trace.LBSTraceClient;
+import com.baidu.trace.Trace;
+import com.baidu.trace.model.LocationMode;
+import com.baidu.trace.model.OnTraceListener;
+import com.baidu.trace.model.PushMessage;
 import com.facebook.stetho.Stetho;
 import com.networkbench.agent.impl.NBSAppAgent;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
@@ -35,6 +40,9 @@ import cn.jpush.android.api.JPushInterface;
 public class CityPropertyApplication extends Application {
     private static List<Activity> mList = new LinkedList<Activity>();
     private static CityPropertyApplication instance;
+    private long serviceId = 206402;
+    private String entityName = "android_cgj" + UserInfo.realname;
+    public static LBSTraceClient lbsTraceClient;
 
     @Override
     public void onCreate() {
@@ -76,6 +84,51 @@ public class CityPropertyApplication extends Application {
         crashHandler.init(getApplicationContext());
         NBSAppAgent.setLicenseKey("e706eb8242634439958ddeed9db7f61f").withLocationServiceEnabled(true).start(this.getApplicationContext());
         NBSAppAgent.setUserCrashMessage("username", UserInfo.employeeAccount);
+        //初始化鹰眼SDK
+        Trace trace = new Trace(serviceId, entityName, false);
+        lbsTraceClient = new LBSTraceClient(getApplicationContext());
+        int gatherInterval = 5;
+        int packInterval = 10;
+        lbsTraceClient.setInterval(gatherInterval, packInterval);
+        lbsTraceClient.setLocationMode(LocationMode.High_Accuracy);
+        OnTraceListener onTraceListener = new OnTraceListener() {
+            @Override
+            public void onBindServiceCallback(int i, String s) {
+                String mes = s;
+            }
+
+            @Override
+            public void onStartTraceCallback(int i, String s) {
+                String mes = s;
+            }
+
+            @Override
+            public void onStopTraceCallback(int i, String s) {
+                String mes = s;
+            }
+
+            @Override
+            public void onStartGatherCallback(int i, String s) {
+                String mes = s;
+            }
+
+            @Override
+            public void onStopGatherCallback(int i, String s) {
+                String mes = s;
+            }
+
+            @Override
+            public void onPushCallback(byte b, PushMessage pushMessage) {
+                String mes = String.valueOf(b);
+            }
+
+            @Override
+            public void onInitBOSCallback(int i, String s) {
+                String mes = s;
+            }
+        };
+//        lbsTraceClient.startTrace(trace, onTraceListener);
+//        lbsTraceClient.startGather(onTraceListener);
     }
 
     public static void initImageLoader(Context context) {

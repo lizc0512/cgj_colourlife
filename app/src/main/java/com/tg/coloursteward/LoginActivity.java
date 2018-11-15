@@ -23,6 +23,9 @@ import android.widget.TextView;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.amap.api.location.AMapLocation;
+import com.baidu.trace.api.track.HistoryTrackRequest;
+import com.baidu.trace.api.track.HistoryTrackResponse;
+import com.baidu.trace.api.track.OnTrackListener;
 import com.geetest.gt3unbindsdk.Bind.GT3GeetestBindListener;
 import com.geetest.gt3unbindsdk.Bind.GT3GeetestUtilsBind;
 import com.tg.coloursteward.application.CityPropertyApplication;
@@ -58,6 +61,8 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.tg.coloursteward.application.CityPropertyApplication.lbsTraceClient;
 
 /**
  * 登录页面
@@ -177,9 +182,9 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
         RequestConfig config = new RequestConfig(LoginActivity.this, HttpTools.GET_CZYOAUTH, "登录中");
         Map<String, Object> validateParams = new HashMap<>();
         validateParams.put("code", code);
+        validateParams.put("token", DES.TOKEN);
         validateParams.put("app_id", DES.APP_ID);
         validateParams.put("client_secret", DES.TOKEN);
-        validateParams.put("token", DES.TOKEN);
         validateParams.put("device_uuid", TokenUtils.getUUID(LoginActivity.this));
         Map<String, String> stringMap = TokenUtils.getStringMap(TokenUtils.getNewSaftyMap(LoginActivity.this, validateParams));
         HttpTools.httpGet_Map(Contants.URl.URL_ICESTAFF, "app/authUser", config, (HashMap) stringMap);
@@ -252,7 +257,6 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
                 ResponseData userInfoData = SharedPreferencesTools.getUserInfo(LoginActivity.this);
                 String skin_code = Tools.getStringValue(LoginActivity.this, Contants.storage.SKINCODE);
                 if (userInfoData.length > 0) {
-//                    Tools.loadUserInfo(userInfoData, null);
                     Intent intent = new Intent(LoginActivity.this, MainActivity1.class);
                     intent.putExtra(MainActivity1.KEY_SKIN_CODE, skin_code);
                     intent.putExtra(MainActivity1.KEY_EXTRAS, extras);
@@ -489,13 +493,15 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
                         if (code == 0) {
                             String response = HttpTools.getContentString(jsonString);
                             ResponseData data = HttpTools.getResponseContentObject(response);
-                            Tools.loadUserInfo(data, jsonString);
-                            Tools.savetokenUserInfo(LoginActivity.this, jsonString);
                             int status = data.getInt("status");
-                            corpId = data.getString("corp_id");
-                            UserInfo.infoorgId = data.getString("org_uuid");
-                            Tools.saveOrgId(LoginActivity.this, data.getString("org_uuid"));
-                            Tools.saveStringValue(LoginActivity.this, Contants.storage.CORPID, corpId);//租户ID
+                            if (status == 0) {
+                                Tools.loadUserInfo(data, jsonString);
+                                Tools.savetokenUserInfo(LoginActivity.this, jsonString);
+                                corpId = data.getString("corp_id");
+                                UserInfo.infoorgId = data.getString("org_uuid");
+                                Tools.saveOrgId(LoginActivity.this, data.getString("org_uuid"));
+                                Tools.saveStringValue(LoginActivity.this, Contants.storage.CORPID, corpId);//租户ID
+                            }
                             if (status == 0) {//账号正常
                                 singleDevicelogin();
                                 getSkin(corpId);

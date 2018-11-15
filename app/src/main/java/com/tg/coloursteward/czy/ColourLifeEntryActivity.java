@@ -25,13 +25,15 @@ public class ColourLifeEntryActivity extends Activity {
         Intent intent = getIntent();
         if (null != intent) {
             String data = intent.getStringExtra("code");
-            code = data.substring(5, data.length());
-            if(!TextUtils.isEmpty(code)){
+            if (!TextUtils.isEmpty(data)) {
+                code = data.substring(5, data.length());
+            }
+            if (!TextUtils.isEmpty(code)) {
                 Intent it = new Intent(ColourLifeEntryActivity.this, LoginActivity.class);
                 it.putExtra("czy_code", code);
                 startActivity(it);
-            }else {
-                ToastFactory.showToast(ColourLifeEntryActivity.this,"授权失败");
+            } else {
+                ToastFactory.showToast(ColourLifeEntryActivity.this, "授权失败");
             }
 
         }

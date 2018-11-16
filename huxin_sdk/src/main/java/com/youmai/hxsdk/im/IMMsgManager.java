@@ -14,7 +14,9 @@ import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.ProtocolCallBack;
@@ -32,6 +34,7 @@ import com.youmai.hxsdk.config.FileConfig;
 import com.youmai.hxsdk.db.bean.GroupInfoBean;
 import com.youmai.hxsdk.db.helper.GroupInfoHelper;
 import com.youmai.hxsdk.entity.RespBaseBean;
+import com.youmai.hxsdk.entity.VideoCall;
 import com.youmai.hxsdk.http.DownloadListener;
 import com.youmai.hxsdk.http.FileAsyncTaskDownload;
 import com.youmai.hxsdk.im.cache.CacheMsgEmotion;
@@ -48,11 +51,14 @@ import com.youmai.hxsdk.proto.YouMaiBulletin;
 import com.youmai.hxsdk.proto.YouMaiGroup;
 import com.youmai.hxsdk.proto.YouMaiMsg;
 import com.youmai.hxsdk.proto.YouMaiUser;
+import com.youmai.hxsdk.proto.YouMaiVideo;
+import com.youmai.hxsdk.service.RingService;
 import com.youmai.hxsdk.socket.NotifyListener;
 import com.youmai.hxsdk.utils.AppUtils;
 import com.youmai.hxsdk.utils.BadgeUtil;
 import com.youmai.hxsdk.utils.ListUtils;
 import com.youmai.hxsdk.utils.LogFile;
+import com.youmai.hxsdk.videocall.VideoCallRingActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -423,6 +429,64 @@ public class IMMsgManager {
         }
     };
 
+    /**
+     * 通用消息
+     */
+    private NotifyListener mCommonPushMsg = new NotifyListener(
+            YouMaiBasic.COMMANDID.CID_VIDEO_MEMBER_INVITE_NOTIFY_VALUE) {
+        @Override
+        public void OnRec(byte[] data) {
+            try {
+//                YouMaiMsg.PushMsg notify = YouMaiMsg.PushMsg.parseFrom(data);
+//
+//                long msgId = notify.getMsgId();
+//                int cmdId = notify.getCmdId();
+//                ByteString notifyData = notify.getData();
+//
+//                if (cmdId == YouMaiBasic.COMMANDID.CID_VIDEO_MEMBER_INVITE_NOTIFY_VALUE) {
+
+                YouMaiVideo.MemberInviteNotify inviteNotify = YouMaiVideo
+                        .MemberInviteNotify.parseFrom(data);
+
+                String roomName = inviteNotify.getRoomName();
+                String adminId = inviteNotify.getAdminId();
+                String avatar = inviteNotify.getAvator();
+                String nickname = inviteNotify.getNickname();
+                int groupId = inviteNotify.getGroupId();
+                int type = inviteNotify.getType().getNumber();
+                boolean valid = inviteNotify.getValid();
+                int time = inviteNotify.getTime();
+                YouMaiVideo.RoomMemberItem member = inviteNotify.getMember();
+                int role = member.getMemberRole(); //1-管理员，2-普通成员
+                boolean isAnchor = member.getAnchor();
+                if (!valid) {
+                    return;
+                }
+                Intent intent = new Intent(mContext, VideoCallRingActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra("room_name", roomName);
+                intent.putExtra("admin_id", adminId);
+                intent.putExtra("avatar", avatar);
+                intent.putExtra("nick_name", nickname);
+                intent.putExtra("group_id", groupId);
+                intent.putExtra("is_anchor", isAnchor);
+                intent.putExtra("member_role", role);
+                intent.putExtra("video_type", type);
+                intent.putExtra("time", time);
+                mContext.startActivity(intent);
+
+                //notifyVideoCall(roomName, adminId);
+
+//                }
+//                HuxinSdkManager.instance().sendPushMsgReply(msgId);
+
+
+            } catch (InvalidProtocolBufferException e) {
+                e.printStackTrace();
+            }
+        }
+    };
+
 
     /**
      * 公告默认监听器
@@ -476,6 +540,200 @@ public class IMMsgManager {
     };
 
 
+    private final NotifyListener onVideoSettingNotify = new NotifyListener(
+            YouMaiBasic.COMMANDID.CID_VIDEO_SETTING_NOTIFY_VALUE) {
+        @Override
+        public void OnRec(byte[] data) {
+            try {
+                YouMaiVideo.VideoSettingNotify notify = YouMaiVideo
+                        .VideoSettingNotify.parseFrom(data);
+
+                String userId = notify.getUserId();
+                String roomName = notify.getRoomName();
+                boolean openCamera = notify.getOpenCamera();
+                boolean openVoice = notify.getOpenVoice();
+
+
+            } catch (InvalidProtocolBufferException e) {
+                e.printStackTrace();
+            }
+        }
+    };
+
+    private final NotifyListener onPermissionSettingNotify = new NotifyListener(
+            YouMaiBasic.COMMANDID.CID_VIDEO_PERMISSION_SETTING_NOTIFY_VALUE) {
+        @Override
+        public void OnRec(byte[] data) {
+            try {
+                YouMaiVideo.PermissionSettingNotify notify = YouMaiVideo
+                        .PermissionSettingNotify.parseFrom(data);
+
+                String roomName = notify.getRoomName();
+                String adminId = notify.getAdminId();
+                String newAdminId = notify.getNewAdminId();
+
+                VideoCall videoCall = HuxinSdkManager.instance().getVideoCall();
+                if (videoCall != null) {
+                    videoCall.setRoomName(roomName);
+                    if (newAdminId.equals(HuxinSdkManager.instance().getUuid())) {
+                        videoCall.setOwner(true);
+                        Toast.makeText(mContext, "您已经是本房间的管理员", Toast.LENGTH_SHORT).show();
+                    } else {
+                        videoCall.setOwner(false);
+                    }
+
+                }
+
+            } catch (InvalidProtocolBufferException e) {
+                e.printStackTrace();
+            }
+        }
+    };
+
+
+    private final NotifyListener onMemberModifyBroadcast = new NotifyListener(
+            YouMaiBasic.COMMANDID.CID_VIDEO_MEMBER_MODIFY_BROADCAST_VALUE) {
+        @Override
+        public void OnRec(byte[] data) {
+            try {
+                YouMaiVideo.MemberModifyBroadcast notify = YouMaiVideo
+                        .MemberModifyBroadcast.parseFrom(data);
+
+                String roomName = notify.getRoomName();
+                YouMaiVideo.RoomMemberItem member = notify.getMember();
+                int type = notify.getType();
+                String notifyId = notify.getNotifyId();
+
+                VideoCall videoCall = HuxinSdkManager.instance().getVideoCall();
+                if (type == 1) {//增加：1
+
+                } else if (type == 2) {//删除：2
+
+                }
+
+            } catch (InvalidProtocolBufferException e) {
+                e.printStackTrace();
+            }
+        }
+    };
+
+
+    private final NotifyListener onStateBroadcast = new NotifyListener(
+            YouMaiBasic.COMMANDID.CID_VIDEO_STATE_BROADCAST_VALUE) {
+        @Override
+        public void OnRec(byte[] data) {
+            try {
+                YouMaiVideo.StateBroadcast notify = YouMaiVideo
+                        .StateBroadcast.parseFrom(data);
+
+                int groupId = notify.getGroupId();
+                boolean state = notify.getState();
+                int num = notify.getNum();
+
+                VideoCall videoCall = HuxinSdkManager.instance().getVideoCall();
+                if (videoCall != null && state) {
+                    videoCall.setCount(num);
+                } else {
+                    HuxinSdkManager.instance().setVideoCall(null);
+                    return;
+                }
+
+                CacheMsgBean cacheBean = CacheMsgHelper.instance().toQueryCacheMsgGroupId(mContext, groupId);
+                String targetName = "群聊";
+                if (cacheBean != null) {
+                    targetName = cacheBean.getTargetName();
+                }
+
+                CacheMsgBean msgBean = new CacheMsgBean()
+                        .setMsgTime(System.currentTimeMillis())
+                        .setMsgType(CacheMsgBean.GROUP_VIDEO_CALL)
+                        .setStateVideoCall(state)
+                        .setNumVideoCall(num)
+                        .setGroupId(groupId)
+                        .setTargetUuid(groupId + "")
+                        .setTargetName(targetName);
+
+                handlerIMMsgCallback(msgBean);
+
+            } catch (InvalidProtocolBufferException e) {
+                e.printStackTrace();
+            }
+        }
+    };
+
+
+    private final NotifyListener onMemberInviteResponseNotify = new NotifyListener(
+            YouMaiBasic.COMMANDID.CID_VIDEO_MEMBER_INVITE_REPONSE_NOTIFY_VALUE) {
+        @Override
+        public void OnRec(byte[] data) {
+            try {
+                YouMaiVideo.MemberInviteResponseNotify notify = YouMaiVideo
+                        .MemberInviteResponseNotify.parseFrom(data);
+
+                String roomName = notify.getRoomName();
+                String memberId = notify.getMemberId();
+                boolean agree = notify.getAgree();
+                String adminId = notify.getAdminId();
+
+            } catch (InvalidProtocolBufferException e) {
+                e.printStackTrace();
+            }
+        }
+    };
+
+    private final NotifyListener onVideoSettingApplyNotify = new NotifyListener(
+            YouMaiBasic.COMMANDID.CID_VIDEO_SETTING_APPLY_NOTIFY_VALUE) {
+        @Override
+        public void OnRec(byte[] data) {
+            try {
+                YouMaiVideo.VideoSettingApplyNotify notify = YouMaiVideo
+                        .VideoSettingApplyNotify.parseFrom(data);
+
+                String roomName = notify.getRoomName();
+                String adminId = notify.getAdminId();
+                boolean openCamera = notify.getOpenCamera();
+                boolean openVoice = notify.getOpenVoice();
+
+            } catch (InvalidProtocolBufferException e) {
+                e.printStackTrace();
+            }
+        }
+    };
+
+
+    private final NotifyListener onDestroyRoomBroadcast = new NotifyListener(
+            YouMaiBasic.COMMANDID.CID_VIDEO_ROOM_DESTROY_BROADCAST_VALUE) {
+        @Override
+        public void OnRec(byte[] data) {
+            try {
+                YouMaiVideo.DestroyRoomBroadcast notify = YouMaiVideo
+                        .DestroyRoomBroadcast.parseFrom(data);
+
+                String roomName = notify.getRoomName();
+                String adminId = notify.getUserId();
+                String notifyId = notify.getNotifyId();
+
+
+                VideoCall videoCall = HuxinSdkManager.instance().getVideoCall();
+                if (videoCall != null) {
+                    String name = videoCall.getRoomName();
+                    if (!TextUtils.isEmpty(name) && name.equals(roomName)) {
+                        HuxinSdkManager.instance().setVideoCall(null);
+                    }
+                }
+
+                Intent intent = new Intent(mContext, RingService.class);
+                mContext.stopService(intent);
+
+                HuxinSdkManager.instance().getStackAct().finishActivity(VideoCallRingActivity.class);
+
+            } catch (InvalidProtocolBufferException e) {
+                e.printStackTrace();
+            }
+        }
+    };
+
+
     public void parseBulletin(String content) {
         /*try {
             JSONObject object = new JSONObject(content);
@@ -495,8 +753,16 @@ public class IMMsgManager {
         HuxinSdkManager.instance().setNotifyListener(mGroupOptionNotify);
         HuxinSdkManager.instance().setNotifyListener(mGroupChangeNotify);
         HuxinSdkManager.instance().setNotifyListener(mGroupInfoModifyNotify);
+        HuxinSdkManager.instance().setNotifyListener(mCommonPushMsg);
         HuxinSdkManager.instance().setNotifyListener(OnRecvBulletin);
         HuxinSdkManager.instance().setNotifyListener(onDeviceKickedNotify);
+        HuxinSdkManager.instance().setNotifyListener(onVideoSettingNotify);
+        HuxinSdkManager.instance().setNotifyListener(onPermissionSettingNotify);
+        HuxinSdkManager.instance().setNotifyListener(onMemberModifyBroadcast);
+        HuxinSdkManager.instance().setNotifyListener(onStateBroadcast);
+        HuxinSdkManager.instance().setNotifyListener(onMemberInviteResponseNotify);
+        HuxinSdkManager.instance().setNotifyListener(onVideoSettingApplyNotify);
+        HuxinSdkManager.instance().setNotifyListener(onDestroyRoomBroadcast);
     }
 
     /**
@@ -508,8 +774,15 @@ public class IMMsgManager {
         HuxinSdkManager.instance().clearNotifyListener(mGroupOptionNotify);
         HuxinSdkManager.instance().clearNotifyListener(mGroupChangeNotify);
         HuxinSdkManager.instance().clearNotifyListener(mGroupInfoModifyNotify);
+        HuxinSdkManager.instance().clearNotifyListener(mCommonPushMsg);
         HuxinSdkManager.instance().clearNotifyListener(OnRecvBulletin);
         HuxinSdkManager.instance().clearNotifyListener(onDeviceKickedNotify);
+        HuxinSdkManager.instance().clearNotifyListener(onVideoSettingNotify);
+        HuxinSdkManager.instance().clearNotifyListener(onMemberModifyBroadcast);
+        HuxinSdkManager.instance().clearNotifyListener(onStateBroadcast);
+        HuxinSdkManager.instance().clearNotifyListener(onMemberInviteResponseNotify);
+        HuxinSdkManager.instance().clearNotifyListener(onVideoSettingApplyNotify);
+        HuxinSdkManager.instance().clearNotifyListener(onDestroyRoomBroadcast);
     }
 
 
@@ -1112,6 +1385,77 @@ public class IMMsgManager {
         String temp = AppUtils.getStringSharedPreferences(mContext, "atList", "");
         temp = temp.replaceAll("@" + groupId, "");
         AppUtils.setStringSharedPreferences(mContext, "atList", temp);
+    }
+
+
+    private void notifyVideoCall(String roomName, String adminId) {
+        NotificationManager notificationManager =
+                (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        NotificationCompat.Builder builder;
+
+        if (Build.VERSION.SDK_INT >= 26) {
+            String CHANNEL_ID = "im_chat";
+            CharSequence name = "im_channel";
+            String Description = "im message notify";
+
+            builder = new NotificationCompat.Builder(mContext, CHANNEL_ID);
+
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(Description);
+            channel.enableLights(true);
+            channel.setLightColor(Color.GREEN);
+            channel.enableVibration(true);
+            channel.setShowBadge(false);
+            notificationManager.createNotificationChannel(channel);
+
+        } else {
+            builder = new NotificationCompat.Builder(mContext);
+        }
+
+        builder.setContentTitle("视频电话");
+
+
+        builder.setContentText("视频通话请求")
+                .setTicker("视频通话请求");
+
+
+        builder.setDefaults(Notification.DEFAULT_ALL)
+                .setAutoCancel(true);
+
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            builder.setSmallIcon(com.youmai.hxsdk.R.drawable.img_msg);
+            builder.setColor(mContext.getResources().getColor(com.youmai.hxsdk.R.color.notification_color));
+        } else {
+            builder.setSmallIcon(com.youmai.hxsdk.R.drawable.hx_ic_launcher);
+        }
+
+        // Creates an explicit intent for an Activity in your app
+        Intent resultIntent = new Intent(mContext, VideoCallRingActivity.class);  //点击打开的activity
+        resultIntent.putExtra("room_name", roomName);
+        resultIntent.putExtra("admin_id", adminId);
+
+        // The stack builder object will contain an artificial back stack for the
+        // started Activity.
+        // This ensures that navigating backward from the Activity leads out of
+        // your application to the Home screen.
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(mContext);
+        // Adds the back stack for the Intent (but not the Intent itself)
+
+        if (homeAct != null) {
+            Intent intent = new Intent(mContext, homeAct);
+            stackBuilder.addNextIntentWithParentStack(intent);
+        }
+
+        // Adds the Intent that starts the Activity to the top of the stack
+        stackBuilder.addNextIntent(resultIntent);
+        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(adminId.hashCode(),
+                PendingIntent.FLAG_UPDATE_CURRENT);
+
+        builder.setContentIntent(resultPendingIntent);
+        notificationManager.notify(adminId.hashCode(), builder.build());
+
     }
 
 }

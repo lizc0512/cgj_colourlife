@@ -14,16 +14,39 @@
         <!--标题栏-->
         <include layout="@layout/hx_im_header_title" />
 
-        <TextView
-            android:id="@+id/tv_error"
+        <LinearLayout
+            android:id="@+id/linear_video_call"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/hx_color_gray"
-            android:gravity="center"
-            android:padding="5dp"
-            android:text="@string/relogin_msg"
-            android:textColor="@color/hxs_mr_color_red"
-            android:visibility="gone" />
+            android:background="@color/hxs_color_gray7"
+            android:orientation="horizontal"
+            android:paddingLeft="5dp"
+            android:paddingTop="15dp"
+            android:paddingRight="5dp"
+            android:paddingBottom="15dp"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/tv_video_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_online"
+                android:drawablePadding="5dp"
+                android:text="@string/video_call_status" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/tv_video_entry"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/video_call_entry"
+                android:textColor="@color/hx_color_green" />
+
+        </LinearLayout>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_view"

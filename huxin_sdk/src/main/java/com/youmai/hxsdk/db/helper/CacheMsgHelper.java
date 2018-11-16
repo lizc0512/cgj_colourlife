@@ -301,6 +301,23 @@ public class CacheMsgHelper {
 
 
     /**
+     * 根据groupId查询
+     */
+    public CacheMsgBean queryById(Context context, int groupId) {
+        CacheMsgBean cacheMsgBean = null;
+        QueryBuilder<CacheMsgBean> qb = GreenDBIMManager.instance(context).getCacheMsgDao().queryBuilder();
+
+        List<CacheMsgBean> list = qb.where(CacheMsgBeanDao.Properties.GroupId.eq(groupId))
+                .orderDesc(CacheMsgBeanDao.Properties.Id).list();
+
+        if (!ListUtils.isEmpty(list)) {
+            cacheMsgBean = list.get(0);
+        }
+        return cacheMsgBean;
+    }
+
+
+    /**
      * 备注：IMMsgManager
      * 按 id升序查询
      * (receiver_phone=? and sender_phone=?) or (sender_phone=? and receiver_phone=?)

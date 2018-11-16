@@ -40,12 +40,14 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.alibaba.android.arouter.launcher.ARouter;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.activity.CameraActivity;
+import com.youmai.hxsdk.dialog.HxSelectVedioDialog;
+import com.youmai.hxsdk.entity.VideoCall;
 import com.youmai.hxsdk.group.ChatGroupDetailsActivity;
+import com.youmai.hxsdk.module.videocall.VideoSelectConstactActivity;
 import com.youmai.hxsdk.packet.RedPacketInGroupActivity;
 import com.youmai.hxsdk.activity.SdkBaseActivity;
 import com.youmai.hxsdk.config.ColorsConfig;
@@ -79,7 +81,7 @@ import com.youmai.hxsdk.module.picker.PhotoPickerManager;
 import com.youmai.hxsdk.module.picker.PhotoPreviewActivity;
 import com.youmai.hxsdk.proto.YouMaiBasic;
 import com.youmai.hxsdk.proto.YouMaiGroup;
-import com.youmai.hxsdk.router.APath;
+import com.youmai.hxsdk.proto.YouMaiVideo;
 import com.youmai.hxsdk.service.SendMsgService;
 import com.youmai.hxsdk.service.download.bean.FileQueue;
 import com.youmai.hxsdk.service.sendmsg.SendMsg;
@@ -94,6 +96,7 @@ import com.youmai.hxsdk.utils.LogUtils;
 import com.youmai.hxsdk.utils.StringUtils;
 import com.youmai.hxsdk.utils.ToastUtil;
 import com.youmai.hxsdk.utils.VideoUtils;
+import com.youmai.hxsdk.videocall.RoomActivity;
 import com.youmai.hxsdk.view.LinearLayoutManagerWithSmoothScroller;
 import com.youmai.hxsdk.view.chat.InputMessageLay;
 import com.youmai.smallvideorecord.model.OnlyCompressOverBean;
@@ -156,6 +159,8 @@ public class IMGroupActivity extends SdkBaseActivity implements
     private final int CAMERA_PERMISSION_REQUEST = 400; //权限申请自定义码
     private final int RECORD_PERMISSION_REQUEST = 401; //权限申请自定义码
 
+    private final int VIDEO_CALL_PERMISSION_REQUEST = 402; //权限申请自定义码
+
     public static final int RESULT_CODE_CLEAN = 501;
     public static final int MOTIFY_GROUPINFO = 502;
 
@@ -172,6 +177,10 @@ public class IMGroupActivity extends SdkBaseActivity implements
     private TextView tvTitle;
     private ImageView ivMore;
     private ImageView ivGroup; //建群
+
+    private LinearLayout linear_video_call; //video call
+    private TextView tv_video_status; //video status
+    private TextView tv_video_entry; //video entry
 
     private GroupInfoBean mGroupInfo; //群组实体
     private String groupName;  //群组名称
@@ -195,6 +204,7 @@ public class IMGroupActivity extends SdkBaseActivity implements
 
     private ArrayList<ContactBean> groupList = new ArrayList<>();
     private ArrayList<GroupAtItem> atList = new ArrayList<>();
+    private HxSelectVedioDialog selectVideoDialog;
 
     /**
      * 消息广播
@@ -453,6 +463,87 @@ public class IMGroupActivity extends SdkBaseActivity implements
             }, 100);
         }
         isPause = false;
+
+        HuxinSdkManager.instance().reqVideoState(groupId, new ReceiveListener() {
+            @Override
+            public void OnRec(PduBase pduBase) {
+                try {
+                    YouMaiVideo.VideoStateRsp rsp = YouMaiVideo.VideoStateRsp.parseFrom(pduBase.body);
+
+                    if (rsp.getResult() == YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS) {
+                        int id = rsp.getGroupId();
+                        boolean state = rsp.getState();
+                        boolean isRoom = rsp.getMember();
+                        String roomName = rsp.getRoomName();
+                        int count = rsp.getNum();
+                        String token = rsp.getToken();
+                        String info = rsp.getInfo();
+
+                        if (!isRoom) {
+                            HuxinSdkManager.instance().setVideoCall(null);
+                            return;
+                        }
+
+                        if (id == groupId) {
+                            VideoCall videoCall = HuxinSdkManager.instance().getVideoCall();
+                            if (videoCall == null) {
+                                videoCall = new VideoCall();
+                                if (!TextUtils.isEmpty(token)) {
+                                    videoCall.setToken(token);
+                                }
+                            }
+
+                            if (TextUtils.isEmpty(token)) {
+                                token = videoCall.getToken();
+                            }
+
+                            videoCall.setMsgTime(System.currentTimeMillis());
+                            videoCall.setRoomName(roomName);
+                            videoCall.setCount(count);
+                            videoCall.setTopic(info);
+                            videoCall.setState(state);
+
+                            HuxinSdkManager.instance().setVideoCall(videoCall);
+
+                            if (!TextUtils.isEmpty(token)
+                                    && !TextUtils.isEmpty(roomName)) {
+                                linear_video_call.setVisibility(View.VISIBLE);
+                                tv_video_entry.setText("加入");
+                                /*if (isRoom) {
+                                    tv_video_entry.setText("加入");
+                                } else {
+                                    tv_video_entry.setText("申请加入");
+                                }*/
+                                String format = mContext.getString(R.string.video_call_status);
+                                tv_video_status.setText(String.format(format, count));
+                            } else {
+                                linear_video_call.setVisibility(View.GONE);
+                            }
+                        }
+                    } else {
+                        VideoCall videoCall = HuxinSdkManager.instance().getVideoCall();
+                        if (videoCall != null
+                                && videoCall.getGroupId() == groupId
+                                && !TextUtils.isEmpty(videoCall.getRoomName())
+                                && !TextUtils.isEmpty(videoCall.getToken())) {
+                            linear_video_call.setVisibility(View.VISIBLE);
+                            if (videoCall.isOwner()) {
+                                tv_video_entry.setText("加入");
+                            }
+                            String format = mContext.getString(R.string.video_call_status);
+                            tv_video_status.setText(String.format(format, videoCall.getCount()));
+
+                        } else {
+                            linear_video_call.setVisibility(View.GONE);
+                        }
+                    }
+
+                } catch (InvalidProtocolBufferException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
     }
 
     public void handleIntent(Intent intent) {
@@ -487,7 +578,8 @@ public class IMGroupActivity extends SdkBaseActivity implements
 
     @TargetApi(Build.VERSION_CODES.M)
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == CAMERA_PERMISSION_REQUEST) {
             boolean isGranted = true;
@@ -499,6 +591,19 @@ public class IMGroupActivity extends SdkBaseActivity implements
             }
             if (isGranted) {
                 startActivityForResult(new Intent(this, CameraActivity.class), REQUEST_CODE_CAMERA);
+            } else {
+                showPermissionDialog(this);
+            }
+        } else if (requestCode == VIDEO_CALL_PERMISSION_REQUEST) {
+            boolean isGranted = true;
+            for (int item : grantResults) {
+                if (item == PackageManager.PERMISSION_DENIED) {
+                    isGranted = false;
+                    break;
+                }
+            }
+            if (isGranted) {
+                showVideoSelectDialog();
             } else {
                 showPermissionDialog(this);
             }
@@ -607,23 +712,43 @@ public class IMGroupActivity extends SdkBaseActivity implements
     private void initView() {
         tvTitle = (TextView) findViewById(R.id.tv_title);
 
+        linear_video_call = findViewById(R.id.linear_video_call);
+        tv_video_status = findViewById(R.id.tv_video_status);
+        tv_video_entry = findViewById(R.id.tv_video_entry);
+
+        tv_video_entry.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                VideoCall videoCall = HuxinSdkManager.instance().getVideoCall();
+
+                if (videoCall != null) {
+                    String userId = HuxinSdkManager.instance().getUuid();
+
+                    Intent intent = new Intent(mContext, RoomActivity.class);
+                    intent.putExtra(RoomActivity.EXTRA_ROOM_ID, videoCall.getRoomName());
+                    intent.putExtra(RoomActivity.EXTRA_ROOM_TOKEN, videoCall.getToken());
+                    intent.putExtra(RoomActivity.EXTRA_USER_ID, userId);
+                    intent.putExtra(RoomActivity.IS_ADMIN, true);
+                    intent.putExtra(IMGroupActivity.GROUP_NAME, groupName);
+
+                    if (videoCall.isConference()) {
+                        intent.putExtra(RoomActivity.IS_CONFERENCE, true);
+                    } else {
+                        intent.putExtra(IMGroupActivity.GROUP_ID, videoCall.getGroupId());
+                    }
+
+                    startActivity(intent);
+                }
+
+
+            }
+        });
+
         /*TextView tvError = findViewById(R.id.tv_error);
         if (!HuxinSdkManager.instance().isConnect()) {
             tvError.setVisibility(View.VISIBLE);
-        }
-
-        tvError.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ARouter.getInstance().build(APath.RE_LOGIN)
-                        .withFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-                                | Intent.FLAG_ACTIVITY_CLEAR_TOP
-                                | Intent.FLAG_ACTIVITY_SINGLE_TOP)  //添加Flag
-                        .withBoolean("login_out", true)
-                        .navigation(mContext);
-                HuxinSdkManager.instance().getStackAct().finishAllActivity();
-            }
-        });*/
+        }*/
 
         initTitle();
         TextView tvBack = (TextView) findViewById(R.id.tv_back);
@@ -1102,6 +1227,33 @@ public class IMGroupActivity extends SdkBaseActivity implements
     }
 
 
+    private boolean checkVideoCallPermission(int code) {
+        boolean isPermission = true;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            List<String> list = new ArrayList<>(2);
+
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)
+                    != PackageManager.PERMISSION_GRANTED) {
+                list.add(Manifest.permission.RECORD_AUDIO);
+            }
+
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                    != PackageManager.PERMISSION_GRANTED) {
+                list.add(Manifest.permission.CAMERA);
+            }
+
+            if (list.size() > 0) {
+                String[] array = new String[list.size()];
+                list.toArray(array); // fill the array
+                ActivityCompat.requestPermissions(this, array, code);
+                isPermission = false;
+            }
+        }
+
+        return isPermission;
+    }
+
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -1303,8 +1455,23 @@ public class IMGroupActivity extends SdkBaseActivity implements
         if (!isFinishing()) {
             if (cacheMsgBean.getGroupId() == groupId
                     && cacheMsgBean.getGroupId() > 0) {
-                iMGroupAdapter.refreshIncomingMsgUI(cacheMsgBean);
-                isMsgReceive = true;
+
+                if (cacheMsgBean.getMsgType() == CacheMsgBean.GROUP_VIDEO_CALL
+                        && cacheMsgBean.getGroupId() == groupId) {
+                    VideoCall videoCall = HuxinSdkManager.instance().getVideoCall();
+                    if (videoCall != null) {
+                        linear_video_call.setVisibility(View.VISIBLE);
+
+                        String format = mContext.getString(R.string.video_call_status);
+                        tv_video_status.setText(String.format(format, cacheMsgBean.getNumVideoCall()));
+                    }
+
+                } else {
+                    linear_video_call.setVisibility(View.GONE);
+                    iMGroupAdapter.refreshIncomingMsgUI(cacheMsgBean);
+                    isMsgReceive = true;
+                }
+
             }
         }
     }
@@ -1447,8 +1614,72 @@ public class IMGroupActivity extends SdkBaseActivity implements
         } else if (type == InputMessageLay.TYPE_RED_PACKET) {
             //发送红包
             sendRedPacket();
+        } else if (type == InputMessageLay.TYPE_VIDEO) {
+            sendVideoCall();
         }
 
+    }
+
+
+    private void sendVideoCall() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            List<String> list = new ArrayList<>(2);
+
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)
+                    != PackageManager.PERMISSION_GRANTED) {
+                list.add(Manifest.permission.RECORD_AUDIO);
+            }
+
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                    != PackageManager.PERMISSION_GRANTED) {
+                list.add(Manifest.permission.CAMERA);
+            }
+
+            if (list.size() > 0) {
+                String[] array = new String[list.size()];
+                list.toArray(array); // fill the array
+                ActivityCompat.requestPermissions(this, array, VIDEO_CALL_PERMISSION_REQUEST);
+            } else {
+                showVideoSelectDialog();
+            }
+        } else {
+            showVideoSelectDialog();
+        }
+
+    }
+
+    private void showVideoSelectDialog() {
+        //打开选择通话类型框
+        HxSelectVedioDialog.Build build = new HxSelectVedioDialog.Build(mContext);
+        selectVideoDialog = build.setFirstClick(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(mContext, VideoSelectConstactActivity.class);
+                intent.putExtra(GROUP_ID, groupId);
+                intent.putExtra(VideoSelectConstactActivity.ROOM_TYPE, VideoSelectConstactActivity.VIDEO_MEETING);
+                intent.putExtra(VideoSelectConstactActivity.GROUP_NAME, groupName);
+                startActivity(intent);
+                selectVideoDialog.dismiss();
+            }
+        }).setSecondClick(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //视频会议
+                Intent intent = new Intent(mContext, VideoSelectConstactActivity.class);
+                intent.putExtra(GROUP_ID, groupId);
+                intent.putExtra(VideoSelectConstactActivity.ROOM_TYPE, VideoSelectConstactActivity.VIDEO_TRAIN);
+                intent.putExtra(VideoSelectConstactActivity.GROUP_NAME, groupName);
+                startActivity(intent);
+                selectVideoDialog.dismiss();
+            }
+        }).setButtomClick(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //取消
+                selectVideoDialog.dismiss();
+            }
+        }).build();
+        selectVideoDialog.show();
     }
 
     @Override

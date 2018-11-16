@@ -53,6 +53,8 @@ public class CacheMsgBean implements Parcelable {
     public static final int GROUP_TRANSFER_OWNER = 1003;
     public static final int PACKET_OPENED_SUCCESS = 1004;
 
+    public static final int GROUP_VIDEO_CALL = 1100;
+
 
     public static final int SEND_DRAFT = 0;      //草稿
     public static final int SEND_GOING = 1;//正在发送
@@ -92,6 +94,12 @@ public class CacheMsgBean implements Parcelable {
 
     @Transient
     private boolean isTop;
+
+    @Transient
+    private boolean stateVideoCall;
+
+    @Transient
+    private int numVideoCall;
 
     public CacheMsgBean(CacheMsgBean bean) {
         this.id = bean.getId();
@@ -400,6 +408,23 @@ public class CacheMsgBean implements Parcelable {
         return this;
     }
 
+    public boolean isStateVideoCall() {
+        return stateVideoCall;
+    }
+
+    public CacheMsgBean setStateVideoCall(boolean stateVideoCall) {
+        this.stateVideoCall = stateVideoCall;
+        return this;
+    }
+
+    public int getNumVideoCall() {
+        return numVideoCall;
+    }
+
+    public CacheMsgBean setNumVideoCall(int numVideoCall) {
+        this.numVideoCall = numVideoCall;
+        return this;
+    }
 
     @Generated(hash = 392728222)
     public CacheMsgBean(Long id, Long msgId, int msgType, long msgTime, String senderUserId,
@@ -462,6 +487,8 @@ public class CacheMsgBean implements Parcelable {
         dest.writeInt(this.progress);
         dest.writeString(this.memberChanged);
         dest.writeByte(this.isTop ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.stateVideoCall ? (byte) 1 : (byte) 0);
+        dest.writeInt(this.numVideoCall);
     }
 
     protected CacheMsgBean(Parcel in) {
@@ -486,6 +513,8 @@ public class CacheMsgBean implements Parcelable {
         this.progress = in.readInt();
         this.memberChanged = in.readString();
         this.isTop = in.readByte() != 0;
+        this.stateVideoCall = in.readByte() != 0;
+        this.numVideoCall = in.readInt();
     }
 
     public static final Creator<CacheMsgBean> CREATOR = new Creator<CacheMsgBean>() {

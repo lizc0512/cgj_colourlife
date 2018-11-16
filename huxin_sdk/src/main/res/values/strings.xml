@@ -94,7 +94,7 @@
 
     <string name="relogin_title">下线通知</string>
     <string name="relogin_msg_start">您的账号</string>
-    <string name="relogin_msg">可能于其它地方登录，建议您重新登录账号</string>
+    <string name="relogin_msg">您的账号已经退出登录，请重新登录账号</string>
     <string name="relogin_confirm">重新登录</string>
     <string name="relogin_cancel">退出</string>
     <string name="relogin_info">您的账号已经退出登录，您需要重新登录</string>
@@ -117,6 +117,7 @@
     <string name="hx_im_chat_more_location">位置</string>
     <string name="hx_im_chat_more_file">文件</string>
     <string name="hx_im_chat_red_package">利是</string>
+    <string name="hx_im_chat_video">群聊通话</string>
     <string name="hx_im_chat_more_func">更多</string>
 
     <string name="hx_im_send_img_count">发送(%1$d/%2$d)</string>
@@ -181,4 +182,42 @@
     <string name="red_status_overdue">已过期 %1$d/%2$d个</string>
     <string name="red_status">%1$d/%2$d个</string>
     <string name="red_status_detail">已领取%1$d/%2$d个，共%3$s/%4$s</string>
+
+
+    <!-- 视频通话 -->
+    <string name="video_call_status">%1$d人正在通话"</string>
+    <string name="video_call_entry">加入"</string>
+    <string name="ok">OK</string>
+    <string name="channel_error_title">连接错误</string>
+    <string name="connecting_to">正在连接: %1$s</string>
+    <string name="connected_to_room">连接成功</string>
+    <string name="reconnecting_to_room">正在重连……</string>
+    <string name="null_room_token_toast">room token 不能为空！！！</string>
+    <string name="room_text_hint">房间名称</string>
+    <string name="join_room">加入房间</string>
+    <string name="room_tips">如果没有该房间，则会自动创建，房间名仅支持 3 ~ 64 位字母、数字、_ 和 - 的组合</string>
+    <string name="wrong_room_name_toast">非法房间名，仅支持 3 ~ 64 位字母、数字、_ 和 - 的组合 ！</string>
+    <string name="null_room_name_toast">房间名不能为空！！！</string>
+    <string name="user_name_text_hint">输入昵称</string>
+    <string name="save_user_name">保存昵称</string>
+    <string name="user_name_tips">昵称仅支持 3 ~ 50 位字母、数字、_ 和 - 的组合</string>
+    <string name="wrong_user_name_toast">非法昵称，仅支持 3 ~ 50 位字母、数字、_ 和 - 的组合 ！</string>
+    <string name="null_user_name_toast">昵称不能为空！！！</string>
+    <string name="hw">硬编</string>
+    <string name="sw">软编</string>
+    <string name="kicked_by_admin">您被管理员踢出房间！！！</string>
+    <string name="version_code">版本号：%1$s, 编译时间：%2$s</string>
+    <string name="log_text"> userId: %1$s\nfps: %2$d\nvideo bitrate: %3$d kbps\naudio bitrate: %4$d kbps\nvideo packet loss rate: %5$d%%\naudio packet loss rate: %6$d%%\nresolution: %7$d x %8$d </string>
+    <string name="android_auto_update_download_progress">正在下载:%1$d%%</string>
+    <string name="android_auto_update_dialog_btn_download">立即下载</string>
+    <string name="android_auto_update_dialog_btn_cancel">以后再说</string>
+    <string name="android_auto_update_dialog_title">发现新版本</string>
+    <string name="updating">正在更新</string>
+    <string name="positive_dialog_tips">确定</string>
+    <string name="negative_dialog_tips">取消</string>
+    <string name="kickout_tips">确定要踢出 %1$s 这个用户吗？</string>
+    <string name="screen_capture">屏幕采集</string>
+    <string name="camera_capture">摄像头采集</string>
+    <string name="capture_tips">屏幕采集要求 Android 5.0+ 以及硬编</string>
+    <string name="member_tips">当前通话 %1$d 人</string>
 </resources>

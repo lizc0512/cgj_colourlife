@@ -266,6 +266,32 @@
         <item name="colorControlHighlight">@color/hx_main_color</item>
         <item name="colorSwitchThumbNormal">@color/hx_main_color</item>
     </style>
+    <!--自定义dialog背景全透明无边框theme -->
+    <style name="qiniu_common_dialog" parent="android:style/Theme.Dialog">
+        <!--背景颜色及和透明程度-->
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <!--是否去除标题 -->
+        <item name="android:windowNoTitle">true</item>
+        <!--是否去除边框-->
+        <item name="android:windowFrame">@null</item>
+        <!--是否浮现在activity之上-->
+        <item name="android:windowIsFloating">true</item>
+        <!--是否模糊-->
+        <item name="android:backgroundDimEnabled">true</item>
+    </style>
 
+    <style name="video_select_anim">
+        <item name="android:windowEnterAnimation">@anim/dialog_video_select_enter</item>
+        <item name="android:windowExitAnimation">@anim/dialog_video_select_exit</item>
+    </style>
 
+    <style name="video_common_anim">
+        <item name="android:windowEnterAnimation">@anim/dialog_video_common_enter</item>
+        <item name="android:windowExitAnimation">@anim/dialog_video_common_exit</item>
+    </style>
+
+    <style name="AnimationPreview">
+        <item name="android:windowEnterAnimation">@anim/fade_in</item>
+        <item name="android:windowExitAnimation">@anim/fade_out</item>
+    </style>
 </resources>

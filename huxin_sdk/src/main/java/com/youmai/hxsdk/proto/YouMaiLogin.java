@@ -4328,6 +4328,527 @@ public final class YouMaiLogin {
         // @@protoc_insertion_point(class_scope:User_LogOff_Ack)
     }
 
+    public interface User_OfflineOrBuilder extends
+            // @@protoc_insertion_point(interface_extends:User_Offline)
+            com.google.protobuf.MessageOrBuilder {
+
+        /**
+         * <code>optional string error = 1;</code>
+         */
+        boolean hasError();
+
+        /**
+         * <code>optional string error = 1;</code>
+         */
+        String getError();
+
+        /**
+         * <code>optional string error = 1;</code>
+         */
+        com.google.protobuf.ByteString
+        getErrorBytes();
+    }
+
+    /**
+     * Protobuf type {@code User_Offline}
+     */
+    public static final class User_Offline extends
+            com.google.protobuf.GeneratedMessage implements
+            // @@protoc_insertion_point(message_implements:User_Offline)
+            User_OfflineOrBuilder {
+        // Use User_Offline.newBuilder() to construct.
+        private User_Offline(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+            super(builder);
+            this.unknownFields = builder.getUnknownFields();
+        }
+
+        private User_Offline(boolean noInit) {
+            this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance();
+        }
+
+        private static final User_Offline defaultInstance;
+
+        public static User_Offline getDefaultInstance() {
+            return defaultInstance;
+        }
+
+        public User_Offline getDefaultInstanceForType() {
+            return defaultInstance;
+        }
+
+        private final com.google.protobuf.UnknownFieldSet unknownFields;
+
+        @Override
+        public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+            return this.unknownFields;
+        }
+
+        private User_Offline(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            initFields();
+            int mutable_bitField0_ = 0;
+            com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+                    com.google.protobuf.UnknownFieldSet.newBuilder();
+            try {
+                boolean done = false;
+                while (!done) {
+                    int tag = input.readTag();
+                    switch (tag) {
+                        case 0:
+                            done = true;
+                            break;
+                        default: {
+                            if (!parseUnknownField(input, unknownFields,
+                                    extensionRegistry, tag)) {
+                                done = true;
+                            }
+                            break;
+                        }
+                        case 10: {
+                            com.google.protobuf.ByteString bs = input.readBytes();
+                            bitField0_ |= 0x00000001;
+                            error_ = bs;
+                            break;
+                        }
+                    }
+                }
+            } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+                throw e.setUnfinishedMessage(this);
+            } catch (java.io.IOException e) {
+                throw new com.google.protobuf.InvalidProtocolBufferException(
+                        e.getMessage()).setUnfinishedMessage(this);
+            } finally {
+                this.unknownFields = unknownFields.build();
+                makeExtensionsImmutable();
+            }
+        }
+
+        public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+            return YouMaiLogin.internal_static_com_proto_login_User_Offline_descriptor;
+        }
+
+        protected FieldAccessorTable
+        internalGetFieldAccessorTable() {
+            return YouMaiLogin.internal_static_com_proto_login_User_Offline_fieldAccessorTable
+                    .ensureFieldAccessorsInitialized(
+                            YouMaiLogin.User_Offline.class, YouMaiLogin.User_Offline.Builder.class);
+        }
+
+        public static com.google.protobuf.Parser<User_Offline> PARSER =
+                new com.google.protobuf.AbstractParser<User_Offline>() {
+                    public User_Offline parsePartialFrom(
+                            com.google.protobuf.CodedInputStream input,
+                            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                            throws com.google.protobuf.InvalidProtocolBufferException {
+                        return new User_Offline(input, extensionRegistry);
+                    }
+                };
+
+        @Override
+        public com.google.protobuf.Parser<User_Offline> getParserForType() {
+            return PARSER;
+        }
+
+        private int bitField0_;
+        public static final int ERROR_FIELD_NUMBER = 1;
+        private Object error_;
+
+        /**
+         * <code>optional string error = 1;</code>
+         */
+        public boolean hasError() {
+            return ((bitField0_ & 0x00000001) == 0x00000001);
+        }
+
+        /**
+         * <code>optional string error = 1;</code>
+         */
+        public String getError() {
+            Object ref = error_;
+            if (ref instanceof String) {
+                return (String) ref;
+            } else {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                String s = bs.toStringUtf8();
+                if (bs.isValidUtf8()) {
+                    error_ = s;
+                }
+                return s;
+            }
+        }
+
+        /**
+         * <code>optional string error = 1;</code>
+         */
+        public com.google.protobuf.ByteString
+        getErrorBytes() {
+            Object ref = error_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (String) ref);
+                error_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
+        private void initFields() {
+            error_ = "";
+        }
+
+        private byte memoizedIsInitialized = -1;
+
+        public final boolean isInitialized() {
+            byte isInitialized = memoizedIsInitialized;
+            if (isInitialized == 1) return true;
+            if (isInitialized == 0) return false;
+
+            memoizedIsInitialized = 1;
+            return true;
+        }
+
+        public void writeTo(com.google.protobuf.CodedOutputStream output)
+                throws java.io.IOException {
+            getSerializedSize();
+            if (((bitField0_ & 0x00000001) == 0x00000001)) {
+                output.writeBytes(1, getErrorBytes());
+            }
+            getUnknownFields().writeTo(output);
+        }
+
+        private int memoizedSerializedSize = -1;
+
+        public int getSerializedSize() {
+            int size = memoizedSerializedSize;
+            if (size != -1) return size;
+
+            size = 0;
+            if (((bitField0_ & 0x00000001) == 0x00000001)) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeBytesSize(1, getErrorBytes());
+            }
+            size += getUnknownFields().getSerializedSize();
+            memoizedSerializedSize = size;
+            return size;
+        }
+
+        private static final long serialVersionUID = 0L;
+
+        @Override
+        protected Object writeReplace()
+                throws java.io.ObjectStreamException {
+            return super.writeReplace();
+        }
+
+        public static YouMaiLogin.User_Offline parseFrom(
+                com.google.protobuf.ByteString data)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data);
+        }
+
+        public static YouMaiLogin.User_Offline parseFrom(
+                com.google.protobuf.ByteString data,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data, extensionRegistry);
+        }
+
+        public static YouMaiLogin.User_Offline parseFrom(byte[] data)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data);
+        }
+
+        public static YouMaiLogin.User_Offline parseFrom(
+                byte[] data,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data, extensionRegistry);
+        }
+
+        public static YouMaiLogin.User_Offline parseFrom(java.io.InputStream input)
+                throws java.io.IOException {
+            return PARSER.parseFrom(input);
+        }
+
+        public static YouMaiLogin.User_Offline parseFrom(
+                java.io.InputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            return PARSER.parseFrom(input, extensionRegistry);
+        }
+
+        public static YouMaiLogin.User_Offline parseDelimitedFrom(java.io.InputStream input)
+                throws java.io.IOException {
+            return PARSER.parseDelimitedFrom(input);
+        }
+
+        public static YouMaiLogin.User_Offline parseDelimitedFrom(
+                java.io.InputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            return PARSER.parseDelimitedFrom(input, extensionRegistry);
+        }
+
+        public static YouMaiLogin.User_Offline parseFrom(
+                com.google.protobuf.CodedInputStream input)
+                throws java.io.IOException {
+            return PARSER.parseFrom(input);
+        }
+
+        public static YouMaiLogin.User_Offline parseFrom(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            return PARSER.parseFrom(input, extensionRegistry);
+        }
+
+        public static Builder newBuilder() {
+            return Builder.create();
+        }
+
+        public Builder newBuilderForType() {
+            return newBuilder();
+        }
+
+        public static Builder newBuilder(YouMaiLogin.User_Offline prototype) {
+            return newBuilder().mergeFrom(prototype);
+        }
+
+        public Builder toBuilder() {
+            return newBuilder(this);
+        }
+
+        @Override
+        protected Builder newBuilderForType(
+                BuilderParent parent) {
+            Builder builder = new Builder(parent);
+            return builder;
+        }
+
+        /**
+         * Protobuf type {@code User_Offline}
+         */
+        public static final class Builder extends
+                com.google.protobuf.GeneratedMessage.Builder<Builder> implements
+                // @@protoc_insertion_point(builder_implements:User_Offline)
+                YouMaiLogin.User_OfflineOrBuilder {
+            public static final com.google.protobuf.Descriptors.Descriptor
+            getDescriptor() {
+                return YouMaiLogin.internal_static_com_proto_login_User_Offline_descriptor;
+            }
+
+            protected FieldAccessorTable
+            internalGetFieldAccessorTable() {
+                return YouMaiLogin.internal_static_com_proto_login_User_Offline_fieldAccessorTable
+                        .ensureFieldAccessorsInitialized(
+                                YouMaiLogin.User_Offline.class, YouMaiLogin.User_Offline.Builder.class);
+            }
+
+            // Construct using YouMaiLogin.User_Offline.newBuilder()
+            private Builder() {
+                maybeForceBuilderInitialization();
+            }
+
+            private Builder(
+                    BuilderParent parent) {
+                super(parent);
+                maybeForceBuilderInitialization();
+            }
+
+            private void maybeForceBuilderInitialization() {
+                if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+                }
+            }
+
+            private static Builder create() {
+                return new Builder();
+            }
+
+            public Builder clear() {
+                super.clear();
+                error_ = "";
+                bitField0_ = (bitField0_ & ~0x00000001);
+                return this;
+            }
+
+            public Builder clone() {
+                return create().mergeFrom(buildPartial());
+            }
+
+            public com.google.protobuf.Descriptors.Descriptor
+            getDescriptorForType() {
+                return YouMaiLogin.internal_static_com_proto_login_User_Offline_descriptor;
+            }
+
+            public YouMaiLogin.User_Offline getDefaultInstanceForType() {
+                return YouMaiLogin.User_Offline.getDefaultInstance();
+            }
+
+            public YouMaiLogin.User_Offline build() {
+                YouMaiLogin.User_Offline result = buildPartial();
+                if (!result.isInitialized()) {
+                    throw newUninitializedMessageException(result);
+                }
+                return result;
+            }
+
+            public YouMaiLogin.User_Offline buildPartial() {
+                YouMaiLogin.User_Offline result = new YouMaiLogin.User_Offline(this);
+                int from_bitField0_ = bitField0_;
+                int to_bitField0_ = 0;
+                if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+                    to_bitField0_ |= 0x00000001;
+                }
+                result.error_ = error_;
+                result.bitField0_ = to_bitField0_;
+                onBuilt();
+                return result;
+            }
+
+            public Builder mergeFrom(com.google.protobuf.Message other) {
+                if (other instanceof YouMaiLogin.User_Offline) {
+                    return mergeFrom((YouMaiLogin.User_Offline) other);
+                } else {
+                    super.mergeFrom(other);
+                    return this;
+                }
+            }
+
+            public Builder mergeFrom(YouMaiLogin.User_Offline other) {
+                if (other == YouMaiLogin.User_Offline.getDefaultInstance()) return this;
+                if (other.hasError()) {
+                    bitField0_ |= 0x00000001;
+                    error_ = other.error_;
+                    onChanged();
+                }
+                this.mergeUnknownFields(other.getUnknownFields());
+                return this;
+            }
+
+            public final boolean isInitialized() {
+                return true;
+            }
+
+            public Builder mergeFrom(
+                    com.google.protobuf.CodedInputStream input,
+                    com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                    throws java.io.IOException {
+                YouMaiLogin.User_Offline parsedMessage = null;
+                try {
+                    parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+                } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+                    parsedMessage = (YouMaiLogin.User_Offline) e.getUnfinishedMessage();
+                    throw e;
+                } finally {
+                    if (parsedMessage != null) {
+                        mergeFrom(parsedMessage);
+                    }
+                }
+                return this;
+            }
+
+            private int bitField0_;
+
+            private Object error_ = "";
+
+            /**
+             * <code>optional string error = 1;</code>
+             */
+            public boolean hasError() {
+                return ((bitField0_ & 0x00000001) == 0x00000001);
+            }
+
+            /**
+             * <code>optional string error = 1;</code>
+             */
+            public String getError() {
+                Object ref = error_;
+                if (!(ref instanceof String)) {
+                    com.google.protobuf.ByteString bs =
+                            (com.google.protobuf.ByteString) ref;
+                    String s = bs.toStringUtf8();
+                    if (bs.isValidUtf8()) {
+                        error_ = s;
+                    }
+                    return s;
+                } else {
+                    return (String) ref;
+                }
+            }
+
+            /**
+             * <code>optional string error = 1;</code>
+             */
+            public com.google.protobuf.ByteString
+            getErrorBytes() {
+                Object ref = error_;
+                if (ref instanceof String) {
+                    com.google.protobuf.ByteString b =
+                            com.google.protobuf.ByteString.copyFromUtf8(
+                                    (String) ref);
+                    error_ = b;
+                    return b;
+                } else {
+                    return (com.google.protobuf.ByteString) ref;
+                }
+            }
+
+            /**
+             * <code>optional string error = 1;</code>
+             */
+            public Builder setError(
+                    String value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000001;
+                error_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string error = 1;</code>
+             */
+            public Builder clearError() {
+                bitField0_ = (bitField0_ & ~0x00000001);
+                error_ = getDefaultInstance().getError();
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string error = 1;</code>
+             */
+            public Builder setErrorBytes(
+                    com.google.protobuf.ByteString value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000001;
+                error_ = value;
+                onChanged();
+                return this;
+            }
+
+            // @@protoc_insertion_point(builder_scope:User_Offline)
+        }
+
+        static {
+            defaultInstance = new User_Offline(true);
+            defaultInstance.initFields();
+        }
+
+        // @@protoc_insertion_point(class_scope:User_Offline)
+    }
+
     private static final com.google.protobuf.Descriptors.Descriptor
             internal_static_com_proto_login_User_Login_descriptor;
     private static
@@ -4353,6 +4874,11 @@ public final class YouMaiLogin {
     private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
             internal_static_com_proto_login_User_LogOff_Ack_fieldAccessorTable;
+    private static final com.google.protobuf.Descriptors.Descriptor
+            internal_static_com_proto_login_User_Offline_descriptor;
+    private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+            internal_static_com_proto_login_User_Offline_fieldAccessorTable;
 
     public static com.google.protobuf.Descriptors.FileDescriptor
     getDescriptor() {
@@ -4377,7 +4903,8 @@ public final class YouMaiLogin {
                 "_Type\022\025\n\rnew_device_id\030\004 \001(\t\"1\n\013User_Log" +
                         "Off\022\017\n\007user_id\030\001 \001(\t\022\021\n\tdevice_id\030\002 \001(\t\"" +
                         "O\n\017User_LogOff_Ack\022-\n\010errer_no\030\001 \001(\0162\033.c" +
-                        "om.proto.basic.ERRNO_CODE\022\r\n\005error\030\002 \001(\t"
+                        "om.proto.basic.ERRNO_CODE\022\r\n\005error\030\002 \001(\t" +
+                        "\"\035\n\014User_Offline\022\r\n\005error\030\001 \001(\t"
         };
         com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
                 new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -4422,6 +4949,12 @@ public final class YouMaiLogin {
                 com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_proto_login_User_LogOff_Ack_descriptor,
                 new String[]{"ErrerNo", "Error",});
+        internal_static_com_proto_login_User_Offline_descriptor =
+                getDescriptor().getMessageTypes().get(5);
+        internal_static_com_proto_login_User_Offline_fieldAccessorTable = new
+                com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+                internal_static_com_proto_login_User_Offline_descriptor,
+                new String[]{"Error",});
         YouMaiBasic.getDescriptor();
     }
 

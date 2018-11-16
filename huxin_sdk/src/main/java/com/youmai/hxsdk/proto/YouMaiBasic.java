@@ -167,7 +167,7 @@ public final class YouMaiBasic {
         SID_BUDDY(9, 10),
         /**
          * <code>SID_REDIS = 100;</code>
-         * <p>
+         *
          * <pre>
          * other server
          * </pre>
@@ -216,7 +216,7 @@ public final class YouMaiBasic {
         public static final int SID_BUDDY_VALUE = 10;
         /**
          * <code>SID_REDIS = 100;</code>
-         * <p>
+         *
          * <pre>
          * other server
          * </pre>
@@ -434,7 +434,7 @@ public final class YouMaiBasic {
         PHP_ADMIN_MODIFYUSERSTATUS_ACK(29, 124),
         /**
          * <code>REQUEST_IP = 400;</code>
-         * <p>
+         *
          * <pre>
          * BACKEND ONLY.
          * </pre>
@@ -446,7 +446,7 @@ public final class YouMaiBasic {
         REQUEST_IP_ACK(31, 401),
         /**
          * <code>REGIST_COMMUNICATIONSERVICE = 402;</code>
-         * <p>
+         *
          * <pre>
          * route注册
          * </pre>
@@ -462,7 +462,7 @@ public final class YouMaiBasic {
         BROATCAT_NOTIFY(34, 404),
         /**
          * <code>ROUTE_BRAODCAST = 405;</code>
-         * <p>
+         *
          * <pre>
          * route 广播
          * </pre>
@@ -470,7 +470,7 @@ public final class YouMaiBasic {
         ROUTE_BRAODCAST(35, 405),
         /**
          * <code>CID_USER_STAT_PUSH_REQ = 406;</code>
-         * <p>
+         *
          * <pre>
          * 用户状态广播
          * </pre>
@@ -550,7 +550,7 @@ public final class YouMaiBasic {
         BIZCARD_DELETE_ACK(54, 708),
         /**
          * <code>BUSINESS_QUERY_AD = 750;</code>
-         * <p>
+         *
          * <pre>
          * 商家查询代言
          * </pre>
@@ -606,7 +606,7 @@ public final class YouMaiBasic {
         USERSHOWRULE_DELETE(67, 762),
         /**
          * <code>BONDERY_MQ = 10000;</code>
-         * <p>
+         *
          * <pre>
          * this is the bondery for mq. outside the bondery; com service should post the request to mq.
          * </pre>
@@ -662,7 +662,7 @@ public final class YouMaiBasic {
         LOCATIONSHARE_QUIT_NOTIFY(80, 10711),
         /**
          * <code>PUSH_APNS = 10801;</code>
-         * <p>
+         *
          * <pre>
          * this does not guarantee successed.
          * </pre>
@@ -670,7 +670,7 @@ public final class YouMaiBasic {
         PUSH_APNS(81, 10801),
         /**
          * <code>PUSH_APNS_ACK = 10802;</code>
-         * <p>
+         *
          * <pre>
          * and does not give you a ack.
          * </pre>
@@ -678,7 +678,7 @@ public final class YouMaiBasic {
         PUSH_APNS_ACK(82, 10802),
         /**
          * <code>PUSH_GENERAL = 10805;</code>
-         * <p>
+         *
          * <pre>
          * Push_General
          * </pre>
@@ -686,7 +686,7 @@ public final class YouMaiBasic {
         PUSH_GENERAL(83, 10805),
         /**
          * <code>PUSH_SMS = 10806;</code>
-         * <p>
+         *
          * <pre>
          * Push_SMS
          * </pre>
@@ -718,7 +718,7 @@ public final class YouMaiBasic {
         ENDORSEMENT_DELETE_ACK(90, 10922),
         /**
          * <code>ENDORSEMENT_ADMIN_QUERY = 10951;</code>
-         * <p>
+         *
          * <pre>
          * 商家查询代言领取记录数据。
          * </pre>
@@ -814,7 +814,7 @@ public final class YouMaiBasic {
         CID_USER_CONNECT_EXCEPT(113, 16401),
         /**
          * <code>CID_USER_STATE_BROADCAST = 16657;</code>
-         * <p>
+         *
          * <pre>
          * 服务端用
          * </pre>
@@ -874,7 +874,7 @@ public final class YouMaiBasic {
         CID_CONFIG_SET_RSP(127, 17191),
         /**
          * <code>CID_CHAT_BUDDY = 20497;</code>
-         * <p>
+         *
          * <pre>
          * 客户端cmd
          * 消息 cmd
@@ -903,7 +903,7 @@ public final class YouMaiBasic {
         CID_PUSH_MSG_ACK(133, 20502),
         /**
          * <code>CID_CHAT_CUSTOMER_SERVICES = 20759;</code>
-         * <p>
+         *
          * <pre>
          * 智能呼叫
          * </pre>
@@ -915,9 +915,9 @@ public final class YouMaiBasic {
         CID_CHAT_MACHINE(135, 20760),
         /**
          * <code>CID_GROUP_LIST_REQ = 24593;</code>
-         * <p>
+         *
          * <pre>
-         * 群
+         * ============群============
          * </pre>
          */
         CID_GROUP_LIST_REQ(136, 24593),
@@ -975,7 +975,7 @@ public final class YouMaiBasic {
         CID_GROUP_CHANGE_MEMBER_RSP(149, 24606),
         /**
          * <code>CID_GROUP_OPT_NOTIFY = 24609;</code>
-         * <p>
+         *
          * <pre>
          * notify
          * </pre>
@@ -1011,7 +1011,7 @@ public final class YouMaiBasic {
         S2S_GROUP_CHANGE_RSP(157, 24628),
         /**
          * <code>CID_ORG_LIST_REQ = 24849;</code>
-         * <p>
+         *
          * <pre>
          * 组织架构
          * </pre>
@@ -1027,7 +1027,7 @@ public final class YouMaiBasic {
         CID_GMSG_OFFLINE_MSG_NOTIFY(160, 25122),
         /**
          * <code>CID_MSG_DATA_LIST_REQ = 25123;</code>
-         * <p>
+         *
          * <pre>
          * 历史消息
          * </pre>
@@ -1047,7 +1047,7 @@ public final class YouMaiBasic {
         CID_GMSG_OFFLINE_MSG_ACK(164, 25126),
         /**
          * <code>CID_S2S_CHAT_MSG = 25361;</code>
-         * <p>
+         *
          * <pre>
          * server to server 仅用于服务器间
          * </pre>
@@ -1071,9 +1071,9 @@ public final class YouMaiBasic {
         CID_S2S_BUDDY_LIST_RSP(169, 25365),
         /**
          * <code>CID_USER_INFO_REQ = 28689;</code>
-         * <p>
+         *
          * <pre>
-         * 用户资料
+         * ============用户资料============
          * </pre>
          */
         CID_USER_INFO_REQ(170, 28689),
@@ -1091,9 +1091,9 @@ public final class YouMaiBasic {
         CID_USER_INFO_OPT_RSP(173, 28692),
         /**
          * <code>CID_BUDDY_LIST_SINGLE_USER_INFO_REQ = 29191;</code>
-         * <p>
+         *
          * <pre>
-         * 好友命令
+         * ============好友============
          * </pre>
          */
         CID_BUDDY_LIST_SINGLE_USER_INFO_REQ(174, 29191),
@@ -1103,7 +1103,7 @@ public final class YouMaiBasic {
         CID_BUDDY_LIST_USER_INFO_RSP(175, 29192),
         /**
          * <code>CID_BUDDY_LIST_CHANGE_AVATAR_REQ = 29199;</code>
-         * <p>
+         *
          * <pre>
          * 头像修改
          * </pre>
@@ -1115,7 +1115,7 @@ public final class YouMaiBasic {
         CID_BUDDY_LIST_CHANGE_AVATAR_RSP(177, 29200),
         /**
          * <code>CID_BUDDY_LIST_CHANGE_SIGN_INFO_REQ = 29202;</code>
-         * <p>
+         *
          * <pre>
          * 修改个性签名
          * </pre>
@@ -1127,7 +1127,7 @@ public final class YouMaiBasic {
         CID_BUDDY_LIST_CHANGE_SIGN_INFO_RSP(179, 29203),
         /**
          * <code>CID_BUDDY_LIST_MODIFY_USER_INFO_REQ = 29204;</code>
-         * <p>
+         *
          * <pre>
          * 修改个人信息
          * </pre>
@@ -1139,7 +1139,7 @@ public final class YouMaiBasic {
         CID_BUDDY_LIST_MODIFY_USER_INFO_RSP(181, 29205),
         /**
          * <code>CID_BUDDY_LIST_OPT_REQ = 29206;</code>
-         * <p>
+         *
          * <pre>
          * 好友操作（add or delete）
          * </pre>
@@ -1151,7 +1151,7 @@ public final class YouMaiBasic {
         CID_BUDDY_LIST_OPT_RSP(183, 29207),
         /**
          * <code>CID_BUDDY_LIST_MODIFY_NICKNAME_REQ = 29208;</code>
-         * <p>
+         *
          * <pre>
          * 修改好友备注
          * </pre>
@@ -1163,7 +1163,7 @@ public final class YouMaiBasic {
         CID_BUDDY_LIST_MODIFY_NICKNAME_RSP(185, 29209),
         /**
          * <code>CID_BUDDY_LIST_REQ = 29210;</code>
-         * <p>
+         *
          * <pre>
          * 获取好友请求列表
          * </pre>
@@ -1187,12 +1187,212 @@ public final class YouMaiBasic {
         CID_CONTACT_COLLECTION_RSP(190, 29218),
         /**
          * <code>CID_BUDDY_LIST_OPT_NOTIFY = 29219;</code>
-         * <p>
+         *
          * <pre>
          * 好友操作通知
          * </pre>
          */
-        CID_BUDDY_LIST_OPT_NOTIFY(191, 29219),;
+        CID_BUDDY_LIST_OPT_NOTIFY(191, 29219),
+        /**
+         * <code>CID_VIDEO_ROOM_CREATE_REQ = 29441;</code>
+         *
+         * <pre>
+         * ============视频============
+         * </pre>
+         */
+        CID_VIDEO_ROOM_CREATE_REQ(192, 29441),
+        /**
+         * <code>CID_VIDEO_ROOM_CREATE_RSP = 29442;</code>
+         */
+        CID_VIDEO_ROOM_CREATE_RSP(193, 29442),
+        /**
+         * <code>CID_VIDEO_ROOM_EXIT_REQ = 29443;</code>
+         *
+         * <pre>
+         * 退出房间
+         * </pre>
+         */
+        CID_VIDEO_ROOM_EXIT_REQ(194, 29443),
+        /**
+         * <code>CID_VIDEO_ROOM_EXIT_RSP = 29444;</code>
+         */
+        CID_VIDEO_ROOM_EXIT_RSP(195, 29444),
+        /**
+         * <code>CID_VIDEO_ROOM_EXIT_BROADCAST = 29445;</code>
+         */
+        CID_VIDEO_ROOM_EXIT_BROADCAST(196, 29445),
+        /**
+         * <code>CID_VIDEO_ROOM_DESTROY_REQ = 29446;</code>
+         *
+         * <pre>
+         * 结束视频会话
+         * </pre>
+         */
+        CID_VIDEO_ROOM_DESTROY_REQ(197, 29446),
+        /**
+         * <code>CID_VIDEO_ROOM_DESTROY_RSP = 29447;</code>
+         */
+        CID_VIDEO_ROOM_DESTROY_RSP(198, 29447),
+        /**
+         * <code>CID_VIDEO_ROOM_DESTROY_BROADCAST = 29448;</code>
+         */
+        CID_VIDEO_ROOM_DESTROY_BROADCAST(199, 29448),
+        /**
+         * <code>CID_VIDEO_MEMBER_INVITE_REQ = 29459;</code>
+         *
+         * <pre>
+         * 成员邀请
+         * </pre>
+         */
+        CID_VIDEO_MEMBER_INVITE_REQ(200, 29459),
+        /**
+         * <code>CID_VIDEO_MEMBER_INVITE_RSP = 29460;</code>
+         */
+        CID_VIDEO_MEMBER_INVITE_RSP(201, 29460),
+        /**
+         * <code>CID_VIDEO_MEMBER_INVITE_NOTIFY = 29461;</code>
+         */
+        CID_VIDEO_MEMBER_INVITE_NOTIFY(202, 29461),
+        /**
+         * <code>CID_VIDEO_MEMBER_INVITE_REPONSE_REQ = 29462;</code>
+         */
+        CID_VIDEO_MEMBER_INVITE_REPONSE_REQ(203, 29462),
+        /**
+         * <code>CID_VIDEO_MEMBER_INVITE_REPONSE_RSP = 29463;</code>
+         */
+        CID_VIDEO_MEMBER_INVITE_REPONSE_RSP(204, 29463),
+        /**
+         * <code>CID_VIDEO_MEMBER_INVITE_REPONSE_NOTIFY = 29464;</code>
+         */
+        CID_VIDEO_MEMBER_INVITE_REPONSE_NOTIFY(205, 29464),
+        /**
+         * <code>CID_VIDEO_MEMBER_DELETE_REQ = 29465;</code>
+         *
+         * <pre>
+         * 成员移除
+         * </pre>
+         */
+        CID_VIDEO_MEMBER_DELETE_REQ(206, 29465),
+        /**
+         * <code>CID_VIDEO_MEMBER_DELETE_RSP = 29466;</code>
+         */
+        CID_VIDEO_MEMBER_DELETE_RSP(207, 29466),
+        /**
+         * <code>CID_VIDEO_MEMBER_MODIFY_BROADCAST = 29467;</code>
+         */
+        CID_VIDEO_MEMBER_MODIFY_BROADCAST(208, 29467),
+        /**
+         * <code>CID_VIDEO_ROOM_INFO_REQ = 29468;</code>
+         *
+         * <pre>
+         * 获取连麦用户
+         * </pre>
+         */
+        CID_VIDEO_ROOM_INFO_REQ(209, 29468),
+        /**
+         * <code>CID_VIDEO_ROOM_INFO_RSP = 29469;</code>
+         */
+        CID_VIDEO_ROOM_INFO_RSP(210, 29469),
+        /**
+         * <code>CID_VIDEO_SETTING_REQ = 29473;</code>
+         *
+         * <pre>
+         * 连麦设置
+         * </pre>
+         */
+        CID_VIDEO_SETTING_REQ(211, 29473),
+        /**
+         * <code>CID_VIDEO_SETTING_RSP = 29474;</code>
+         */
+        CID_VIDEO_SETTING_RSP(212, 29474),
+        /**
+         * <code>CID_VIDEO_SETTING_NOTIFY = 29475;</code>
+         */
+        CID_VIDEO_SETTING_NOTIFY(213, 29475),
+        /**
+         * <code>CID_VIDEO_PERMISSION_SETTING_REQ = 29476;</code>
+         *
+         * <pre>
+         * 权限设置
+         * </pre>
+         */
+        CID_VIDEO_PERMISSION_SETTING_REQ(214, 29476),
+        /**
+         * <code>CID_VIDEO_PERMISSION_SETTING_RSP = 29477;</code>
+         */
+        CID_VIDEO_PERMISSION_SETTING_RSP(215, 29477),
+        /**
+         * <code>CID_VIDEO_PERMISSION_SETTING_NOTIFY = 29478;</code>
+         */
+        CID_VIDEO_PERMISSION_SETTING_NOTIFY(216, 29478),
+        /**
+         * <code>CID_VIDEO_STATE_BROADCAST = 29479;</code>
+         *
+         * <pre>
+         * 连麦状态广播
+         * </pre>
+         */
+        CID_VIDEO_STATE_BROADCAST(217, 29479),
+        /**
+         * <code>CID_VIDEO_STATE_REQ = 29480;</code>
+         */
+        CID_VIDEO_STATE_REQ(218, 29480),
+        /**
+         * <code>CID_VIDEO_STATE_RSP = 29481;</code>
+         */
+        CID_VIDEO_STATE_RSP(219, 29481),
+        /**
+         * <code>CID_VIDEO_SETTING_APPLY_REQ = 29482;</code>
+         *
+         * <pre>
+         * 用户申请
+         * </pre>
+         */
+        CID_VIDEO_SETTING_APPLY_REQ(220, 29482),
+        /**
+         * <code>CID_VIDEO_SETTING_APPLY_RSP = 29483;</code>
+         */
+        CID_VIDEO_SETTING_APPLY_RSP(221, 29483),
+        /**
+         * <code>CID_VIDEO_SETTING_APPLY_NOTIFY = 29484;</code>
+         */
+        CID_VIDEO_SETTING_APPLY_NOTIFY(222, 29484),
+        /**
+         * <code>CID_VIDEO_MEMBER_APPLY_REQ = 29491;</code>
+         *
+         * <pre>
+         * 成员申请
+         * </pre>
+         */
+        CID_VIDEO_MEMBER_APPLY_REQ(223, 29491),
+        /**
+         * <code>CID_VIDEO_MEMBER_APPLY_RSP = 29492;</code>
+         */
+        CID_VIDEO_MEMBER_APPLY_RSP(224, 29492),
+        /**
+         * <code>CID_VIDEO_MEMBER_APPLY_NOTIFY = 29493;</code>
+         */
+        CID_VIDEO_MEMBER_APPLY_NOTIFY(225, 29493),
+        /**
+         * <code>CID_VIDEO_MEMBER_APPLY_REPONSE_REQ = 29494;</code>
+         */
+        CID_VIDEO_MEMBER_APPLY_REPONSE_REQ(226, 29494),
+        /**
+         * <code>CID_VIDEO_MEMBER_APPLY_REPONSE_RSP = 29495;</code>
+         */
+        CID_VIDEO_MEMBER_APPLY_REPONSE_RSP(227, 29495),
+        /**
+         * <code>CID_VIDEO_MEMBER_APPLY_REPONSE_NOTIFY = 29496;</code>
+         */
+        CID_VIDEO_MEMBER_APPLY_REPONSE_NOTIFY(228, 29496),
+        /**
+         * <code>CID_VIDEO_PING = 29504;</code>
+         */
+        CID_VIDEO_PING(229, 29504),
+        /**
+         * <code>CID_VIDEO_PONG = 29505;</code>
+         */
+        CID_VIDEO_PONG(230, 29505),;
 
         /**
          * <code>HEART_BEAT = 1;</code>
@@ -1316,7 +1516,7 @@ public final class YouMaiBasic {
         public static final int PHP_ADMIN_MODIFYUSERSTATUS_ACK_VALUE = 124;
         /**
          * <code>REQUEST_IP = 400;</code>
-         * <p>
+         *
          * <pre>
          * BACKEND ONLY.
          * </pre>
@@ -1328,7 +1528,7 @@ public final class YouMaiBasic {
         public static final int REQUEST_IP_ACK_VALUE = 401;
         /**
          * <code>REGIST_COMMUNICATIONSERVICE = 402;</code>
-         * <p>
+         *
          * <pre>
          * route注册
          * </pre>
@@ -1344,7 +1544,7 @@ public final class YouMaiBasic {
         public static final int BROATCAT_NOTIFY_VALUE = 404;
         /**
          * <code>ROUTE_BRAODCAST = 405;</code>
-         * <p>
+         *
          * <pre>
          * route 广播
          * </pre>
@@ -1352,7 +1552,7 @@ public final class YouMaiBasic {
         public static final int ROUTE_BRAODCAST_VALUE = 405;
         /**
          * <code>CID_USER_STAT_PUSH_REQ = 406;</code>
-         * <p>
+         *
          * <pre>
          * 用户状态广播
          * </pre>
@@ -1432,7 +1632,7 @@ public final class YouMaiBasic {
         public static final int BIZCARD_DELETE_ACK_VALUE = 708;
         /**
          * <code>BUSINESS_QUERY_AD = 750;</code>
-         * <p>
+         *
          * <pre>
          * 商家查询代言
          * </pre>
@@ -1488,7 +1688,7 @@ public final class YouMaiBasic {
         public static final int USERSHOWRULE_DELETE_VALUE = 762;
         /**
          * <code>BONDERY_MQ = 10000;</code>
-         * <p>
+         *
          * <pre>
          * this is the bondery for mq. outside the bondery; com service should post the request to mq.
          * </pre>
@@ -1544,7 +1744,7 @@ public final class YouMaiBasic {
         public static final int LOCATIONSHARE_QUIT_NOTIFY_VALUE = 10711;
         /**
          * <code>PUSH_APNS = 10801;</code>
-         * <p>
+         *
          * <pre>
          * this does not guarantee successed.
          * </pre>
@@ -1552,7 +1752,7 @@ public final class YouMaiBasic {
         public static final int PUSH_APNS_VALUE = 10801;
         /**
          * <code>PUSH_APNS_ACK = 10802;</code>
-         * <p>
+         *
          * <pre>
          * and does not give you a ack.
          * </pre>
@@ -1560,7 +1760,7 @@ public final class YouMaiBasic {
         public static final int PUSH_APNS_ACK_VALUE = 10802;
         /**
          * <code>PUSH_GENERAL = 10805;</code>
-         * <p>
+         *
          * <pre>
          * Push_General
          * </pre>
@@ -1568,7 +1768,7 @@ public final class YouMaiBasic {
         public static final int PUSH_GENERAL_VALUE = 10805;
         /**
          * <code>PUSH_SMS = 10806;</code>
-         * <p>
+         *
          * <pre>
          * Push_SMS
          * </pre>
@@ -1600,7 +1800,7 @@ public final class YouMaiBasic {
         public static final int ENDORSEMENT_DELETE_ACK_VALUE = 10922;
         /**
          * <code>ENDORSEMENT_ADMIN_QUERY = 10951;</code>
-         * <p>
+         *
          * <pre>
          * 商家查询代言领取记录数据。
          * </pre>
@@ -1696,7 +1896,7 @@ public final class YouMaiBasic {
         public static final int CID_USER_CONNECT_EXCEPT_VALUE = 16401;
         /**
          * <code>CID_USER_STATE_BROADCAST = 16657;</code>
-         * <p>
+         *
          * <pre>
          * 服务端用
          * </pre>
@@ -1756,7 +1956,7 @@ public final class YouMaiBasic {
         public static final int CID_CONFIG_SET_RSP_VALUE = 17191;
         /**
          * <code>CID_CHAT_BUDDY = 20497;</code>
-         * <p>
+         *
          * <pre>
          * 客户端cmd
          * 消息 cmd
@@ -1785,7 +1985,7 @@ public final class YouMaiBasic {
         public static final int CID_PUSH_MSG_ACK_VALUE = 20502;
         /**
          * <code>CID_CHAT_CUSTOMER_SERVICES = 20759;</code>
-         * <p>
+         *
          * <pre>
          * 智能呼叫
          * </pre>
@@ -1797,9 +1997,9 @@ public final class YouMaiBasic {
         public static final int CID_CHAT_MACHINE_VALUE = 20760;
         /**
          * <code>CID_GROUP_LIST_REQ = 24593;</code>
-         * <p>
+         *
          * <pre>
-         * 群
+         * ============群============
          * </pre>
          */
         public static final int CID_GROUP_LIST_REQ_VALUE = 24593;
@@ -1857,7 +2057,7 @@ public final class YouMaiBasic {
         public static final int CID_GROUP_CHANGE_MEMBER_RSP_VALUE = 24606;
         /**
          * <code>CID_GROUP_OPT_NOTIFY = 24609;</code>
-         * <p>
+         *
          * <pre>
          * notify
          * </pre>
@@ -1893,7 +2093,7 @@ public final class YouMaiBasic {
         public static final int S2S_GROUP_CHANGE_RSP_VALUE = 24628;
         /**
          * <code>CID_ORG_LIST_REQ = 24849;</code>
-         * <p>
+         *
          * <pre>
          * 组织架构
          * </pre>
@@ -1909,7 +2109,7 @@ public final class YouMaiBasic {
         public static final int CID_GMSG_OFFLINE_MSG_NOTIFY_VALUE = 25122;
         /**
          * <code>CID_MSG_DATA_LIST_REQ = 25123;</code>
-         * <p>
+         *
          * <pre>
          * 历史消息
          * </pre>
@@ -1929,7 +2129,7 @@ public final class YouMaiBasic {
         public static final int CID_GMSG_OFFLINE_MSG_ACK_VALUE = 25126;
         /**
          * <code>CID_S2S_CHAT_MSG = 25361;</code>
-         * <p>
+         *
          * <pre>
          * server to server 仅用于服务器间
          * </pre>
@@ -1953,9 +2153,9 @@ public final class YouMaiBasic {
         public static final int CID_S2S_BUDDY_LIST_RSP_VALUE = 25365;
         /**
          * <code>CID_USER_INFO_REQ = 28689;</code>
-         * <p>
+         *
          * <pre>
-         * 用户资料
+         * ============用户资料============
          * </pre>
          */
         public static final int CID_USER_INFO_REQ_VALUE = 28689;
@@ -1973,9 +2173,9 @@ public final class YouMaiBasic {
         public static final int CID_USER_INFO_OPT_RSP_VALUE = 28692;
         /**
          * <code>CID_BUDDY_LIST_SINGLE_USER_INFO_REQ = 29191;</code>
-         * <p>
+         *
          * <pre>
-         * 好友命令
+         * ============好友============
          * </pre>
          */
         public static final int CID_BUDDY_LIST_SINGLE_USER_INFO_REQ_VALUE = 29191;
@@ -1985,7 +2185,7 @@ public final class YouMaiBasic {
         public static final int CID_BUDDY_LIST_USER_INFO_RSP_VALUE = 29192;
         /**
          * <code>CID_BUDDY_LIST_CHANGE_AVATAR_REQ = 29199;</code>
-         * <p>
+         *
          * <pre>
          * 头像修改
          * </pre>
@@ -1997,7 +2197,7 @@ public final class YouMaiBasic {
         public static final int CID_BUDDY_LIST_CHANGE_AVATAR_RSP_VALUE = 29200;
         /**
          * <code>CID_BUDDY_LIST_CHANGE_SIGN_INFO_REQ = 29202;</code>
-         * <p>
+         *
          * <pre>
          * 修改个性签名
          * </pre>
@@ -2009,7 +2209,7 @@ public final class YouMaiBasic {
         public static final int CID_BUDDY_LIST_CHANGE_SIGN_INFO_RSP_VALUE = 29203;
         /**
          * <code>CID_BUDDY_LIST_MODIFY_USER_INFO_REQ = 29204;</code>
-         * <p>
+         *
          * <pre>
          * 修改个人信息
          * </pre>
@@ -2021,7 +2221,7 @@ public final class YouMaiBasic {
         public static final int CID_BUDDY_LIST_MODIFY_USER_INFO_RSP_VALUE = 29205;
         /**
          * <code>CID_BUDDY_LIST_OPT_REQ = 29206;</code>
-         * <p>
+         *
          * <pre>
          * 好友操作（add or delete）
          * </pre>
@@ -2033,7 +2233,7 @@ public final class YouMaiBasic {
         public static final int CID_BUDDY_LIST_OPT_RSP_VALUE = 29207;
         /**
          * <code>CID_BUDDY_LIST_MODIFY_NICKNAME_REQ = 29208;</code>
-         * <p>
+         *
          * <pre>
          * 修改好友备注
          * </pre>
@@ -2045,7 +2245,7 @@ public final class YouMaiBasic {
         public static final int CID_BUDDY_LIST_MODIFY_NICKNAME_RSP_VALUE = 29209;
         /**
          * <code>CID_BUDDY_LIST_REQ = 29210;</code>
-         * <p>
+         *
          * <pre>
          * 获取好友请求列表
          * </pre>
@@ -2069,12 +2269,212 @@ public final class YouMaiBasic {
         public static final int CID_CONTACT_COLLECTION_RSP_VALUE = 29218;
         /**
          * <code>CID_BUDDY_LIST_OPT_NOTIFY = 29219;</code>
-         * <p>
+         *
          * <pre>
          * 好友操作通知
          * </pre>
          */
         public static final int CID_BUDDY_LIST_OPT_NOTIFY_VALUE = 29219;
+        /**
+         * <code>CID_VIDEO_ROOM_CREATE_REQ = 29441;</code>
+         *
+         * <pre>
+         * ============视频============
+         * </pre>
+         */
+        public static final int CID_VIDEO_ROOM_CREATE_REQ_VALUE = 29441;
+        /**
+         * <code>CID_VIDEO_ROOM_CREATE_RSP = 29442;</code>
+         */
+        public static final int CID_VIDEO_ROOM_CREATE_RSP_VALUE = 29442;
+        /**
+         * <code>CID_VIDEO_ROOM_EXIT_REQ = 29443;</code>
+         *
+         * <pre>
+         * 退出房间
+         * </pre>
+         */
+        public static final int CID_VIDEO_ROOM_EXIT_REQ_VALUE = 29443;
+        /**
+         * <code>CID_VIDEO_ROOM_EXIT_RSP = 29444;</code>
+         */
+        public static final int CID_VIDEO_ROOM_EXIT_RSP_VALUE = 29444;
+        /**
+         * <code>CID_VIDEO_ROOM_EXIT_BROADCAST = 29445;</code>
+         */
+        public static final int CID_VIDEO_ROOM_EXIT_BROADCAST_VALUE = 29445;
+        /**
+         * <code>CID_VIDEO_ROOM_DESTROY_REQ = 29446;</code>
+         *
+         * <pre>
+         * 结束视频会话
+         * </pre>
+         */
+        public static final int CID_VIDEO_ROOM_DESTROY_REQ_VALUE = 29446;
+        /**
+         * <code>CID_VIDEO_ROOM_DESTROY_RSP = 29447;</code>
+         */
+        public static final int CID_VIDEO_ROOM_DESTROY_RSP_VALUE = 29447;
+        /**
+         * <code>CID_VIDEO_ROOM_DESTROY_BROADCAST = 29448;</code>
+         */
+        public static final int CID_VIDEO_ROOM_DESTROY_BROADCAST_VALUE = 29448;
+        /**
+         * <code>CID_VIDEO_MEMBER_INVITE_REQ = 29459;</code>
+         *
+         * <pre>
+         * 成员邀请
+         * </pre>
+         */
+        public static final int CID_VIDEO_MEMBER_INVITE_REQ_VALUE = 29459;
+        /**
+         * <code>CID_VIDEO_MEMBER_INVITE_RSP = 29460;</code>
+         */
+        public static final int CID_VIDEO_MEMBER_INVITE_RSP_VALUE = 29460;
+        /**
+         * <code>CID_VIDEO_MEMBER_INVITE_NOTIFY = 29461;</code>
+         */
+        public static final int CID_VIDEO_MEMBER_INVITE_NOTIFY_VALUE = 29461;
+        /**
+         * <code>CID_VIDEO_MEMBER_INVITE_REPONSE_REQ = 29462;</code>
+         */
+        public static final int CID_VIDEO_MEMBER_INVITE_REPONSE_REQ_VALUE = 29462;
+        /**
+         * <code>CID_VIDEO_MEMBER_INVITE_REPONSE_RSP = 29463;</code>
+         */
+        public static final int CID_VIDEO_MEMBER_INVITE_REPONSE_RSP_VALUE = 29463;
+        /**
+         * <code>CID_VIDEO_MEMBER_INVITE_REPONSE_NOTIFY = 29464;</code>
+         */
+        public static final int CID_VIDEO_MEMBER_INVITE_REPONSE_NOTIFY_VALUE = 29464;
+        /**
+         * <code>CID_VIDEO_MEMBER_DELETE_REQ = 29465;</code>
+         *
+         * <pre>
+         * 成员移除
+         * </pre>
+         */
+        public static final int CID_VIDEO_MEMBER_DELETE_REQ_VALUE = 29465;
+        /**
+         * <code>CID_VIDEO_MEMBER_DELETE_RSP = 29466;</code>
+         */
+        public static final int CID_VIDEO_MEMBER_DELETE_RSP_VALUE = 29466;
+        /**
+         * <code>CID_VIDEO_MEMBER_MODIFY_BROADCAST = 29467;</code>
+         */
+        public static final int CID_VIDEO_MEMBER_MODIFY_BROADCAST_VALUE = 29467;
+        /**
+         * <code>CID_VIDEO_ROOM_INFO_REQ = 29468;</code>
+         *
+         * <pre>
+         * 获取连麦用户
+         * </pre>
+         */
+        public static final int CID_VIDEO_ROOM_INFO_REQ_VALUE = 29468;
+        /**
+         * <code>CID_VIDEO_ROOM_INFO_RSP = 29469;</code>
+         */
+        public static final int CID_VIDEO_ROOM_INFO_RSP_VALUE = 29469;
+        /**
+         * <code>CID_VIDEO_SETTING_REQ = 29473;</code>
+         *
+         * <pre>
+         * 连麦设置
+         * </pre>
+         */
+        public static final int CID_VIDEO_SETTING_REQ_VALUE = 29473;
+        /**
+         * <code>CID_VIDEO_SETTING_RSP = 29474;</code>
+         */
+        public static final int CID_VIDEO_SETTING_RSP_VALUE = 29474;
+        /**
+         * <code>CID_VIDEO_SETTING_NOTIFY = 29475;</code>
+         */
+        public static final int CID_VIDEO_SETTING_NOTIFY_VALUE = 29475;
+        /**
+         * <code>CID_VIDEO_PERMISSION_SETTING_REQ = 29476;</code>
+         *
+         * <pre>
+         * 权限设置
+         * </pre>
+         */
+        public static final int CID_VIDEO_PERMISSION_SETTING_REQ_VALUE = 29476;
+        /**
+         * <code>CID_VIDEO_PERMISSION_SETTING_RSP = 29477;</code>
+         */
+        public static final int CID_VIDEO_PERMISSION_SETTING_RSP_VALUE = 29477;
+        /**
+         * <code>CID_VIDEO_PERMISSION_SETTING_NOTIFY = 29478;</code>
+         */
+        public static final int CID_VIDEO_PERMISSION_SETTING_NOTIFY_VALUE = 29478;
+        /**
+         * <code>CID_VIDEO_STATE_BROADCAST = 29479;</code>
+         *
+         * <pre>
+         * 连麦状态广播
+         * </pre>
+         */
+        public static final int CID_VIDEO_STATE_BROADCAST_VALUE = 29479;
+        /**
+         * <code>CID_VIDEO_STATE_REQ = 29480;</code>
+         */
+        public static final int CID_VIDEO_STATE_REQ_VALUE = 29480;
+        /**
+         * <code>CID_VIDEO_STATE_RSP = 29481;</code>
+         */
+        public static final int CID_VIDEO_STATE_RSP_VALUE = 29481;
+        /**
+         * <code>CID_VIDEO_SETTING_APPLY_REQ = 29482;</code>
+         *
+         * <pre>
+         * 用户申请
+         * </pre>
+         */
+        public static final int CID_VIDEO_SETTING_APPLY_REQ_VALUE = 29482;
+        /**
+         * <code>CID_VIDEO_SETTING_APPLY_RSP = 29483;</code>
+         */
+        public static final int CID_VIDEO_SETTING_APPLY_RSP_VALUE = 29483;
+        /**
+         * <code>CID_VIDEO_SETTING_APPLY_NOTIFY = 29484;</code>
+         */
+        public static final int CID_VIDEO_SETTING_APPLY_NOTIFY_VALUE = 29484;
+        /**
+         * <code>CID_VIDEO_MEMBER_APPLY_REQ = 29491;</code>
+         *
+         * <pre>
+         * 成员申请
+         * </pre>
+         */
+        public static final int CID_VIDEO_MEMBER_APPLY_REQ_VALUE = 29491;
+        /**
+         * <code>CID_VIDEO_MEMBER_APPLY_RSP = 29492;</code>
+         */
+        public static final int CID_VIDEO_MEMBER_APPLY_RSP_VALUE = 29492;
+        /**
+         * <code>CID_VIDEO_MEMBER_APPLY_NOTIFY = 29493;</code>
+         */
+        public static final int CID_VIDEO_MEMBER_APPLY_NOTIFY_VALUE = 29493;
+        /**
+         * <code>CID_VIDEO_MEMBER_APPLY_REPONSE_REQ = 29494;</code>
+         */
+        public static final int CID_VIDEO_MEMBER_APPLY_REPONSE_REQ_VALUE = 29494;
+        /**
+         * <code>CID_VIDEO_MEMBER_APPLY_REPONSE_RSP = 29495;</code>
+         */
+        public static final int CID_VIDEO_MEMBER_APPLY_REPONSE_RSP_VALUE = 29495;
+        /**
+         * <code>CID_VIDEO_MEMBER_APPLY_REPONSE_NOTIFY = 29496;</code>
+         */
+        public static final int CID_VIDEO_MEMBER_APPLY_REPONSE_NOTIFY_VALUE = 29496;
+        /**
+         * <code>CID_VIDEO_PING = 29504;</code>
+         */
+        public static final int CID_VIDEO_PING_VALUE = 29504;
+        /**
+         * <code>CID_VIDEO_PONG = 29505;</code>
+         */
+        public static final int CID_VIDEO_PONG_VALUE = 29505;
 
 
         public final int getNumber() {
@@ -2467,6 +2867,84 @@ public final class YouMaiBasic {
                     return CID_CONTACT_COLLECTION_RSP;
                 case 29219:
                     return CID_BUDDY_LIST_OPT_NOTIFY;
+                case 29441:
+                    return CID_VIDEO_ROOM_CREATE_REQ;
+                case 29442:
+                    return CID_VIDEO_ROOM_CREATE_RSP;
+                case 29443:
+                    return CID_VIDEO_ROOM_EXIT_REQ;
+                case 29444:
+                    return CID_VIDEO_ROOM_EXIT_RSP;
+                case 29445:
+                    return CID_VIDEO_ROOM_EXIT_BROADCAST;
+                case 29446:
+                    return CID_VIDEO_ROOM_DESTROY_REQ;
+                case 29447:
+                    return CID_VIDEO_ROOM_DESTROY_RSP;
+                case 29448:
+                    return CID_VIDEO_ROOM_DESTROY_BROADCAST;
+                case 29459:
+                    return CID_VIDEO_MEMBER_INVITE_REQ;
+                case 29460:
+                    return CID_VIDEO_MEMBER_INVITE_RSP;
+                case 29461:
+                    return CID_VIDEO_MEMBER_INVITE_NOTIFY;
+                case 29462:
+                    return CID_VIDEO_MEMBER_INVITE_REPONSE_REQ;
+                case 29463:
+                    return CID_VIDEO_MEMBER_INVITE_REPONSE_RSP;
+                case 29464:
+                    return CID_VIDEO_MEMBER_INVITE_REPONSE_NOTIFY;
+                case 29465:
+                    return CID_VIDEO_MEMBER_DELETE_REQ;
+                case 29466:
+                    return CID_VIDEO_MEMBER_DELETE_RSP;
+                case 29467:
+                    return CID_VIDEO_MEMBER_MODIFY_BROADCAST;
+                case 29468:
+                    return CID_VIDEO_ROOM_INFO_REQ;
+                case 29469:
+                    return CID_VIDEO_ROOM_INFO_RSP;
+                case 29473:
+                    return CID_VIDEO_SETTING_REQ;
+                case 29474:
+                    return CID_VIDEO_SETTING_RSP;
+                case 29475:
+                    return CID_VIDEO_SETTING_NOTIFY;
+                case 29476:
+                    return CID_VIDEO_PERMISSION_SETTING_REQ;
+                case 29477:
+                    return CID_VIDEO_PERMISSION_SETTING_RSP;
+                case 29478:
+                    return CID_VIDEO_PERMISSION_SETTING_NOTIFY;
+                case 29479:
+                    return CID_VIDEO_STATE_BROADCAST;
+                case 29480:
+                    return CID_VIDEO_STATE_REQ;
+                case 29481:
+                    return CID_VIDEO_STATE_RSP;
+                case 29482:
+                    return CID_VIDEO_SETTING_APPLY_REQ;
+                case 29483:
+                    return CID_VIDEO_SETTING_APPLY_RSP;
+                case 29484:
+                    return CID_VIDEO_SETTING_APPLY_NOTIFY;
+                case 29491:
+                    return CID_VIDEO_MEMBER_APPLY_REQ;
+                case 29492:
+                    return CID_VIDEO_MEMBER_APPLY_RSP;
+                case 29493:
+                    return CID_VIDEO_MEMBER_APPLY_NOTIFY;
+                case 29494:
+                    return CID_VIDEO_MEMBER_APPLY_REPONSE_REQ;
+                case 29495:
+                    return CID_VIDEO_MEMBER_APPLY_REPONSE_RSP;
+                case 29496:
+                    return CID_VIDEO_MEMBER_APPLY_REPONSE_NOTIFY;
+                case 29504:
+                    return CID_VIDEO_PING;
+                case 29505:
+                    return CID_VIDEO_PONG;
                 default:
                     return null;
             }
@@ -2631,388 +3109,396 @@ public final class YouMaiBasic {
          */
         ERRNO_CODE_OK(0, 0),
         /**
+         * <code>ERRNO_CODE_ERROR = 1;</code>
+         */
+        ERRNO_CODE_ERROR(1, 1),
+        /**
          * <code>ERRNO_CODE_DEFAULT = 2;</code>
-         * <p>
+         *
          * <pre>
          * 2-10 resrved
          * </pre>
          */
-        ERRNO_CODE_DEFAULT(1, 2),
+        ERRNO_CODE_DEFAULT(2, 2),
         /**
          * <code>ERRNO_CODE_LOGIN_IN_OTHER_DEVICE = 100;</code>
-         * <p>
+         *
          * <pre>
          * 异地登陆
          * </pre>
          */
-        ERRNO_CODE_LOGIN_IN_OTHER_DEVICE(2, 100),
+        ERRNO_CODE_LOGIN_IN_OTHER_DEVICE(3, 100),
         /**
          * <code>ERRNO_CODE_NO_PROTOCOL = 101;</code>
-         * <p>
+         *
          * <pre>
          * 没有这个协议
          * </pre>
          */
-        ERRNO_CODE_NO_PROTOCOL(3, 101),
+        ERRNO_CODE_NO_PROTOCOL(4, 101),
         /**
          * <code>ERRNO_CODE_TAG_NO_PROTOCOL = 102;</code>
-         * <p>
+         *
          * <pre>
          * tag不是这个协议的
          * </pre>
          */
-        ERRNO_CODE_TAG_NO_PROTOCOL(4, 102),
+        ERRNO_CODE_TAG_NO_PROTOCOL(5, 102),
         /**
          * <code>ERRNO_CODE_PUSH_QUEUE = 103;</code>
-         * <p>
+         *
          * <pre>
          * 数据入队列失败
          * </pre>
          */
-        ERRNO_CODE_PUSH_QUEUE(5, 103),
+        ERRNO_CODE_PUSH_QUEUE(6, 103),
         /**
          * <code>ERRNO_CODE_LOGON_NO_PHONE_S = 104;</code>
-         * <p>
+         *
          * <pre>
          * LOGON无TAG_PHONE_S
          * </pre>
          */
-        ERRNO_CODE_LOGON_NO_PHONE_S(6, 104),
+        ERRNO_CODE_LOGON_NO_PHONE_S(7, 104),
         /**
          * <code>ERRNO_CODE_HEART_ERR_SESSION_S = 105;</code>
-         * <p>
+         *
          * <pre>
          * HEART上传TAG_SESSION_S无效
          * </pre>
          */
-        ERRNO_CODE_HEART_ERR_SESSION_S(7, 105),
+        ERRNO_CODE_HEART_ERR_SESSION_S(8, 105),
         /**
          * <code>ERRNO_CODE_NOT_LOGON = 106;</code>
-         * <p>
+         *
          * <pre>
          * 未登录
          * </pre>
          */
-        ERRNO_CODE_NOT_LOGON(8, 106),
+        ERRNO_CODE_NOT_LOGON(9, 106),
         /**
          * <code>ERRNO_CODE_WITHOUT_TAG = 107;</code>
-         * <p>
+         *
          * <pre>
          * 缺少必备项
          * </pre>
          */
-        ERRNO_CODE_WITHOUT_TAG(9, 107),
+        ERRNO_CODE_WITHOUT_TAG(10, 107),
         /**
          * <code>ERRNO_CODE_WITHOUT_UID = 108;</code>
-         * <p>
+         *
          * <pre>
          * 缺少uid
          * </pre>
          */
-        ERRNO_CODE_WITHOUT_UID(10, 108),
+        ERRNO_CODE_WITHOUT_UID(11, 108),
         /**
          * <code>ERRNO_CODE_WITHOUT_TERMID = 109;</code>
-         * <p>
+         *
          * <pre>
          * 缺少termid
          * </pre>
          */
-        ERRNO_CODE_WITHOUT_TERMID(11, 109),
+        ERRNO_CODE_WITHOUT_TERMID(12, 109),
         /**
          * <code>ERRNO_CODE_ERR_SESSIONID = 110;</code>
-         * <p>
+         *
          * <pre>
          * 上传请求的TAG_SESSION_ID无效
          * </pre>
          */
-        ERRNO_CODE_ERR_SESSIONID(12, 110),
+        ERRNO_CODE_ERR_SESSIONID(13, 110),
         /**
          * <code>ERRNO_CODE_TERM_UNALIVE = 111;</code>
-         * <p>
+         *
          * <pre>
          * 终端去活
          * </pre>
          */
-        ERRNO_CODE_TERM_UNALIVE(13, 111),
+        ERRNO_CODE_TERM_UNALIVE(14, 111),
         /**
          * <code>ERRNO_CODE_ERR_UID = 112;</code>
-         * <p>
+         *
          * <pre>
          * uid错误
          * </pre>
          */
-        ERRNO_CODE_ERR_UID(14, 112),
+        ERRNO_CODE_ERR_UID(15, 112),
         /**
          * <code>ERRNO_CODE_ERR_PID = 113;</code>
-         * <p>
+         *
          * <pre>
          * Pid错误
          * </pre>
          */
-        ERRNO_CODE_ERR_PID(15, 113),
+        ERRNO_CODE_ERR_PID(16, 113),
         /**
          * <code>ERRNO_CODE_ERR_RESEND = 114;</code>
-         * <p>
+         *
          * <pre>
          * 重复消息
          * </pre>
          */
-        ERRNO_CODE_ERR_RESEND(16, 114),
+        ERRNO_CODE_ERR_RESEND(17, 114),
         /**
          * <code>ERRNO_CODE_ERR_TID = 115;</code>
-         * <p>
+         *
          * <pre>
          * Tid错误
          * </pre>
          */
-        ERRNO_CODE_ERR_TID(17, 115),
+        ERRNO_CODE_ERR_TID(18, 115),
         /**
          * <code>ERRNO_CODE_SQL = 200;</code>
-         * <p>
+         *
          * <pre>
          * Storage failure
          * </pre>
          */
-        ERRNO_CODE_SQL(18, 200),
+        ERRNO_CODE_SQL(19, 200),
         /**
          * <code>ERRNO_CODE_DATA_SRAL = 201;</code>
-         * <p>
+         *
          * <pre>
          * 数据序列化失败
          * </pre>
          */
-        ERRNO_CODE_DATA_SRAL(19, 201),
+        ERRNO_CODE_DATA_SRAL(20, 201),
         /**
          * <code>ERRNO_CODE_NOT_FIND_TARGET_USERID = 203;</code>
-         * <p>
+         *
          * <pre>
          * 没找到对方的用户id
          * </pre>
          */
-        ERRNO_CODE_NOT_FIND_TARGET_USERID(20, 203),
+        ERRNO_CODE_NOT_FIND_TARGET_USERID(21, 203),
         /**
          * <code>ERRNO_CODE_DATA_WAREHOUSING_FAILURE_MYSQL = 204;</code>
-         * <p>
+         *
          * <pre>
          * MYSQL数据入库失败
          * </pre>
          */
-        ERRNO_CODE_DATA_WAREHOUSING_FAILURE_MYSQL(21, 204),
+        ERRNO_CODE_DATA_WAREHOUSING_FAILURE_MYSQL(22, 204),
         /**
          * <code>ERRNO_CODE_DATA_WAREHOUSING_FAILURE_REDIS = 205;</code>
-         * <p>
+         *
          * <pre>
          * redis数据入库失败
          * </pre>
          */
-        ERRNO_CODE_DATA_WAREHOUSING_FAILURE_REDIS(22, 205),
+        ERRNO_CODE_DATA_WAREHOUSING_FAILURE_REDIS(23, 205),
         /**
          * <code>ERRNO_CODE_DB_SERVER_EXCEPTION = 206;</code>
-         * <p>
+         *
          * <pre>
          * 数据库服务器异常
          * </pre>
          */
-        ERRNO_CODE_DB_SERVER_EXCEPTION(23, 206),
+        ERRNO_CODE_DB_SERVER_EXCEPTION(24, 206),
         /**
          * <code>ERRNO_CODE_USER_SESSION_ERROR = 207;</code>
-         * <p>
+         *
          * <pre>
          * 登陆的sissionid不正确
          * </pre>
          */
-        ERRNO_CODE_USER_SESSION_ERROR(24, 207),
+        ERRNO_CODE_USER_SESSION_ERROR(25, 207),
         /**
          * <code>ERRNO_CODE_USER_NOT_LOGIN = 208;</code>
-         * <p>
+         *
          * <pre>
          * 用户未登陆
          * </pre>
          */
-        ERRNO_CODE_USER_NOT_LOGIN(25, 208),
+        ERRNO_CODE_USER_NOT_LOGIN(26, 208),
         /**
          * <code>ERRNO_CODE_USER_ID_ERROR = 209;</code>
-         * <p>
+         *
          * <pre>
          * 登陆的user_id不正确
          * </pre>
          */
-        ERRNO_CODE_USER_ID_ERROR(26, 209),
+        ERRNO_CODE_USER_ID_ERROR(27, 209),
         /**
          * <code>ERRNO_CODE_USER_SEND_TOROUTE_ERROR = 210;</code>
-         * <p>
+         *
          * <pre>
          * 转发至路由失败
          * </pre>
          */
-        ERRNO_CODE_USER_SEND_TOROUTE_ERROR(27, 210),
+        ERRNO_CODE_USER_SEND_TOROUTE_ERROR(28, 210),
         /**
          * <code>ERRNO_CODE_NOT_DST_PHONE = 211;</code>
-         * <p>
+         *
          * <pre>
          * 缺少对方的电话号码
          * </pre>
          */
-        ERRNO_CODE_NOT_DST_PHONE(28, 211),
+        ERRNO_CODE_NOT_DST_PHONE(29, 211),
         /**
          * <code>ERRNO_CODE_DATABASE_QUERY_FAILDED = 212;</code>
-         * <p>
+         *
          * <pre>
          * 数据库查询失败
          * </pre>
          */
-        ERRNO_CODE_DATABASE_QUERY_FAILDED(29, 212),
+        ERRNO_CODE_DATABASE_QUERY_FAILDED(30, 212),
         /**
          * <code>ERRNO_CODE_DATA_EXCEPTION = 213;</code>
-         * <p>
+         *
          * <pre>
          * 数据异常
          * </pre>
          */
-        ERRNO_CODE_DATA_EXCEPTION(30, 213),
+        ERRNO_CODE_DATA_EXCEPTION(31, 213),
         /**
          * <code>ERRNO_CODE_NOT_SESSIONID = 214;</code>
-         * <p>
+         *
          * <pre>
          * 没有携带session id
          * </pre>
          */
-        ERRNO_CODE_NOT_SESSIONID(31, 214),
+        ERRNO_CODE_NOT_SESSIONID(32, 214),
         /**
          * <code>ERRNO_CODE_NOT_PHONE = 215;</code>
-         * <p>
+         *
          * <pre>
          * 没有携带手机号码
          * </pre>
          */
-        ERRNO_CODE_NOT_PHONE(32, 215),
+        ERRNO_CODE_NOT_PHONE(33, 215),
         /**
          * <code>ERRNO_CODE_PHONE_ERROR = 216;</code>
-         * <p>
+         *
          * <pre>
          * 手机号码错误
          * </pre>
          */
-        ERRNO_CODE_PHONE_ERROR(33, 216),
+        ERRNO_CODE_PHONE_ERROR(34, 216),
         /**
          * <code>ERRNO_CODE_DATABASE_NOT_DATA = 217;</code>
-         * <p>
+         *
          * <pre>
          * 数据库没有数据
          * </pre>
          */
-        ERRNO_CODE_DATABASE_NOT_DATA(34, 217),
+        ERRNO_CODE_DATABASE_NOT_DATA(35, 217),
         /**
          * <code>ERRNO_CODE_SHOW_EXPIRED = 218;</code>
-         * <p>
+         *
          * <pre>
          * 对方的秀已经过期
          * </pre>
          */
-        ERRNO_CODE_SHOW_EXPIRED(35, 218),
+        ERRNO_CODE_SHOW_EXPIRED(36, 218),
         /**
          * <code>ERRNO_CODE_NOT_TOKEN_ID = 219;</code>
-         * <p>
+         *
          * <pre>
          * 没有携带token id
          * </pre>
          */
-        ERRNO_CODE_NOT_TOKEN_ID(36, 219),
+        ERRNO_CODE_NOT_TOKEN_ID(37, 219),
         /**
          * <code>ERRNO_CODE_NOT_SHOW = 220;</code>
-         * <p>
+         *
          * <pre>
          * 没有找到对方的秀信息
          * </pre>
          */
-        ERRNO_CODE_NOT_SHOW(37, 220),
+        ERRNO_CODE_NOT_SHOW(38, 220),
         /**
          * <code>ERRNO_CODE_NOT_HUXIN_USER = 403;</code>
-         * <p>
+         *
          * <pre>
          * 非呼信用户
          * </pre>
          */
-        ERRNO_CODE_NOT_HUXIN_USER(38, 403),
+        ERRNO_CODE_NOT_HUXIN_USER(39, 403),
         /**
          * <code>ERRNO_CODE_NOT_DEVICE_ID = 404;</code>
-         * <p>
+         *
          * <pre>
          * 没有设备id
          * </pre>
          */
-        ERRNO_CODE_NOT_DEVICE_ID(39, 404),
+        ERRNO_CODE_NOT_DEVICE_ID(40, 404),
         /**
          * <code>ERRNO_CODE_BLOCKED_BY_DST_USER = 501;</code>
-         * <p>
+         *
          * <pre>
          * </pre>
          */
-        ERRNO_CODE_BLOCKED_BY_DST_USER(40, 501),
+        ERRNO_CODE_BLOCKED_BY_DST_USER(41, 501),
         /**
          * <code>ERRNO_CODE_INVALID_USER_INFO = 1101;</code>
          */
-        ERRNO_CODE_INVALID_USER_INFO(41, 1101),
+        ERRNO_CODE_INVALID_USER_INFO(42, 1101),
         /**
          * <code>ERRNO_CODE_INVALID_SESSION = 1102;</code>
          */
-        ERRNO_CODE_INVALID_SESSION(42, 1102),
+        ERRNO_CODE_INVALID_SESSION(43, 1102),
         /**
          * <code>ERRNO_CODE_INVALID_PASSWD = 1103;</code>
          */
-        ERRNO_CODE_INVALID_PASSWD(43, 1103),
+        ERRNO_CODE_INVALID_PASSWD(44, 1103),
         /**
          * <code>ERRNO_CODE_INVALID_IM_CHAT_TARGET_USER = 1201;</code>
          */
-        ERRNO_CODE_INVALID_IM_CHAT_TARGET_USER(44, 1201),
+        ERRNO_CODE_INVALID_IM_CHAT_TARGET_USER(45, 1201),
         /**
          * <code>ERRNO_CODE_INVALID_IM_CHAT_EMPTY_BODY_NOT_ALLOWED = 1202;</code>
          */
-        ERRNO_CODE_INVALID_IM_CHAT_EMPTY_BODY_NOT_ALLOWED(45, 1202),
+        ERRNO_CODE_INVALID_IM_CHAT_EMPTY_BODY_NOT_ALLOWED(46, 1202),
         /**
          * <code>ERRNO_CODE_LOCATIONSHARE_TASK_NOT_EXIST = 1301;</code>
          */
-        ERRNO_CODE_LOCATIONSHARE_TASK_NOT_EXIST(46, 1301),
+        ERRNO_CODE_LOCATIONSHARE_TASK_NOT_EXIST(47, 1301),
         /**
          * <code>ERRNO_CODE_LOCATIONSHARE_NOT_INSIDE_TASK = 1302;</code>
          */
-        ERRNO_CODE_LOCATIONSHARE_NOT_INSIDE_TASK(47, 1302),
+        ERRNO_CODE_LOCATIONSHARE_NOT_INSIDE_TASK(48, 1302),
         /**
          * <code>ERRNO_CODE_USER_NOT_IN_GROUP = 1303;</code>
          */
-        ERRNO_CODE_USER_NOT_IN_GROUP(48, 1303),
+        ERRNO_CODE_USER_NOT_IN_GROUP(49, 1303),
         /**
          * <code>ERRNO_CODE_USER_IS_DELETE = 1304;</code>
-         * <p>
+         *
          * <pre>
          * buddy chat msg
          * </pre>
          */
-        ERRNO_CODE_USER_IS_DELETE(49, 1304),
+        ERRNO_CODE_USER_IS_DELETE(50, 1304),
         /**
          * <code>ERRNO_CODE_USER_IS_BLACK = 1305;</code>
-         * <p>
+         *
          * <pre>
          * 被拉黑
          * </pre>
          */
-        ERRNO_CODE_USER_IS_BLACK(50, 1305),
+        ERRNO_CODE_USER_IS_BLACK(51, 1305),
         /**
          * <code>ERRNO_CODE_USER_NOT_BUDDY = 1306;</code>
-         * <p>
+         *
          * <pre>
          * 非好友
          * </pre>
          */
-        ERRNO_CODE_USER_NOT_BUDDY(51, 1306),;
+        ERRNO_CODE_USER_NOT_BUDDY(52, 1306),;
 
         /**
          * <code>ERRNO_CODE_OK = 0;</code>
          */
         public static final int ERRNO_CODE_OK_VALUE = 0;
         /**
+         * <code>ERRNO_CODE_ERROR = 1;</code>
+         */
+        public static final int ERRNO_CODE_ERROR_VALUE = 1;
+        /**
          * <code>ERRNO_CODE_DEFAULT = 2;</code>
-         * <p>
+         *
          * <pre>
          * 2-10 resrved
          * </pre>
@@ -3020,7 +3506,7 @@ public final class YouMaiBasic {
         public static final int ERRNO_CODE_DEFAULT_VALUE = 2;
         /**
          * <code>ERRNO_CODE_LOGIN_IN_OTHER_DEVICE = 100;</code>
-         * <p>
+         *
          * <pre>
          * 异地登陆
          * </pre>
@@ -3028,7 +3514,7 @@ public final class YouMaiBasic {
         public static final int ERRNO_CODE_LOGIN_IN_OTHER_DEVICE_VALUE = 100;
         /**
          * <code>ERRNO_CODE_NO_PROTOCOL = 101;</code>
-         * <p>
+         *
          * <pre>
          * 没有这个协议
          * </pre>
@@ -3036,7 +3522,7 @@ public final class YouMaiBasic {
         public static final int ERRNO_CODE_NO_PROTOCOL_VALUE = 101;
         /**
          * <code>ERRNO_CODE_TAG_NO_PROTOCOL = 102;</code>
-         * <p>
+         *
          * <pre>
          * tag不是这个协议的
          * </pre>
@@ -3044,7 +3530,7 @@ public final class YouMaiBasic {
         public static final int ERRNO_CODE_TAG_NO_PROTOCOL_VALUE = 102;
         /**
          * <code>ERRNO_CODE_PUSH_QUEUE = 103;</code>
-         * <p>
+         *
          * <pre>
          * 数据入队列失败
          * </pre>
@@ -3052,7 +3538,7 @@ public final class YouMaiBasic {
         public static final int ERRNO_CODE_PUSH_QUEUE_VALUE = 103;
         /**
          * <code>ERRNO_CODE_LOGON_NO_PHONE_S = 104;</code>
-         * <p>
+         *
          * <pre>
          * LOGON无TAG_PHONE_S
          * </pre>
@@ -3060,7 +3546,7 @@ public final class YouMaiBasic {
         public static final int ERRNO_CODE_LOGON_NO_PHONE_S_VALUE = 104;
         /**
          * <code>ERRNO_CODE_HEART_ERR_SESSION_S = 105;</code>
-         * <p>
+         *
          * <pre>
          * HEART上传TAG_SESSION_S无效
          * </pre>
@@ -3068,7 +3554,7 @@ public final class YouMaiBasic {
         public static final int ERRNO_CODE_HEART_ERR_SESSION_S_VALUE = 105;
         /**
          * <code>ERRNO_CODE_NOT_LOGON = 106;</code>
-         * <p>
+         *
          * <pre>
          * 未登录
          * </pre>
@@ -3076,7 +3562,7 @@ public final class YouMaiBasic {
         public static final int ERRNO_CODE_NOT_LOGON_VALUE = 106;
         /**
          * <code>ERRNO_CODE_WITHOUT_TAG = 107;</code>
-         * <p>
+         *
          * <pre>
          * 缺少必备项
          * </pre>
@@ -3084,7 +3570,7 @@ public final class YouMaiBasic {
         public static final int ERRNO_CODE_WITHOUT_TAG_VALUE = 107;
         /**
          * <code>ERRNO_CODE_WITHOUT_UID = 108;</code>
-         * <p>
+         *
          * <pre>
          * 缺少uid
          * </pre>
@@ -3092,7 +3578,7 @@ public final class YouMaiBasic {
         public static final int ERRNO_CODE_WITHOUT_UID_VALUE = 108;
         /**
          * <code>ERRNO_CODE_WITHOUT_TERMID = 109;</code>
-         * <p>
+         *
          * <pre>
          * 缺少termid
          * </pre>
@@ -3100,7 +3586,7 @@ public final class YouMaiBasic {
         public static final int ERRNO_CODE_WITHOUT_TERMID_VALUE = 109;
         /**
          * <code>ERRNO_CODE_ERR_SESSIONID = 110;</code>
-         * <p>
+         *
          * <pre>
          * 上传请求的TAG_SESSION_ID无效
          * </pre>
@@ -3108,7 +3594,7 @@ public final class YouMaiBasic {
         public static final int ERRNO_CODE_ERR_SESSIONID_VALUE = 110;
         /**
          * <code>ERRNO_CODE_TERM_UNALIVE = 111;</code>
-         * <p>
+         *
          * <pre>
          * 终端去活
          * </pre>
@@ -3116,7 +3602,7 @@ public final class YouMaiBasic {
         public static final int ERRNO_CODE_TERM_UNALIVE_VALUE = 111;
         /**
          * <code>ERRNO_CODE_ERR_UID = 112;</code>
-         * <p>
+         *
          * <pre>
          * uid错误
          * </pre>
@@ -3124,7 +3610,7 @@ public final class YouMaiBasic {
         public static final int ERRNO_CODE_ERR_UID_VALUE = 112;
         /**
          * <code>ERRNO_CODE_ERR_PID = 113;</code>
-         * <p>
+         *
          * <pre>
          * Pid错误
          * </pre>
@@ -3132,7 +3618,7 @@ public final class YouMaiBasic {
         public static final int ERRNO_CODE_ERR_PID_VALUE = 113;
         /**
          * <code>ERRNO_CODE_ERR_RESEND = 114;</code>
-         * <p>
+         *
          * <pre>
          * 重复消息
          * </pre>
@@ -3140,7 +3626,7 @@ public final class YouMaiBasic {
         public static final int ERRNO_CODE_ERR_RESEND_VALUE = 114;
         /**
          * <code>ERRNO_CODE_ERR_TID = 115;</code>
-         * <p>
+         *
          * <pre>
          * Tid错误
          * </pre>
@@ -3148,7 +3634,7 @@ public final class YouMaiBasic {
         public static final int ERRNO_CODE_ERR_TID_VALUE = 115;
         /**
          * <code>ERRNO_CODE_SQL = 200;</code>
-         * <p>
+         *
          * <pre>
          * Storage failure
          * </pre>
@@ -3156,7 +3642,7 @@ public final class YouMaiBasic {
         public static final int ERRNO_CODE_SQL_VALUE = 200;
         /**
          * <code>ERRNO_CODE_DATA_SRAL = 201;</code>
-         * <p>
+         *
          * <pre>
          * 数据序列化失败
          * </pre>
@@ -3164,7 +3650,7 @@ public final class YouMaiBasic {
         public static final int ERRNO_CODE_DATA_SRAL_VALUE = 201;
         /**
          * <code>ERRNO_CODE_NOT_FIND_TARGET_USERID = 203;</code>
-         * <p>
+         *
          * <pre>
          * 没找到对方的用户id
          * </pre>
@@ -3172,7 +3658,7 @@ public final class YouMaiBasic {
         public static final int ERRNO_CODE_NOT_FIND_TARGET_USERID_VALUE = 203;
         /**
          * <code>ERRNO_CODE_DATA_WAREHOUSING_FAILURE_MYSQL = 204;</code>
-         * <p>
+         *
          * <pre>
          * MYSQL数据入库失败
          * </pre>
@@ -3180,7 +3666,7 @@ public final class YouMaiBasic {
         public static final int ERRNO_CODE_DATA_WAREHOUSING_FAILURE_MYSQL_VALUE = 204;
         /**
          * <code>ERRNO_CODE_DATA_WAREHOUSING_FAILURE_REDIS = 205;</code>
-         * <p>
+         *
          * <pre>
          * redis数据入库失败
          * </pre>
@@ -3188,7 +3674,7 @@ public final class YouMaiBasic {
         public static final int ERRNO_CODE_DATA_WAREHOUSING_FAILURE_REDIS_VALUE = 205;
         /**
          * <code>ERRNO_CODE_DB_SERVER_EXCEPTION = 206;</code>
-         * <p>
+         *
          * <pre>
          * 数据库服务器异常
          * </pre>
@@ -3196,7 +3682,7 @@ public final class YouMaiBasic {
         public static final int ERRNO_CODE_DB_SERVER_EXCEPTION_VALUE = 206;
         /**
          * <code>ERRNO_CODE_USER_SESSION_ERROR = 207;</code>
-         * <p>
+         *
          * <pre>
          * 登陆的sissionid不正确
          * </pre>
@@ -3204,7 +3690,7 @@ public final class YouMaiBasic {
         public static final int ERRNO_CODE_USER_SESSION_ERROR_VALUE = 207;
         /**
          * <code>ERRNO_CODE_USER_NOT_LOGIN = 208;</code>
-         * <p>
+         *
          * <pre>
          * 用户未登陆
          * </pre>
@@ -3212,7 +3698,7 @@ public final class YouMaiBasic {
         public static final int ERRNO_CODE_USER_NOT_LOGIN_VALUE = 208;
         /**
          * <code>ERRNO_CODE_USER_ID_ERROR = 209;</code>
-         * <p>
+         *
          * <pre>
          * 登陆的user_id不正确
          * </pre>
@@ -3220,7 +3706,7 @@ public final class YouMaiBasic {
         public static final int ERRNO_CODE_USER_ID_ERROR_VALUE = 209;
         /**
          * <code>ERRNO_CODE_USER_SEND_TOROUTE_ERROR = 210;</code>
-         * <p>
+         *
          * <pre>
          * 转发至路由失败
          * </pre>
@@ -3228,7 +3714,7 @@ public final class YouMaiBasic {
         public static final int ERRNO_CODE_USER_SEND_TOROUTE_ERROR_VALUE = 210;
         /**
          * <code>ERRNO_CODE_NOT_DST_PHONE = 211;</code>
-         * <p>
+         *
          * <pre>
          * 缺少对方的电话号码
          * </pre>
@@ -3236,7 +3722,7 @@ public final class YouMaiBasic {
         public static final int ERRNO_CODE_NOT_DST_PHONE_VALUE = 211;
         /**
          * <code>ERRNO_CODE_DATABASE_QUERY_FAILDED = 212;</code>
-         * <p>
+         *
          * <pre>
          * 数据库查询失败
          * </pre>
@@ -3244,7 +3730,7 @@ public final class YouMaiBasic {
         public static final int ERRNO_CODE_DATABASE_QUERY_FAILDED_VALUE = 212;
         /**
          * <code>ERRNO_CODE_DATA_EXCEPTION = 213;</code>
-         * <p>
+         *
          * <pre>
          * 数据异常
          * </pre>
@@ -3252,7 +3738,7 @@ public final class YouMaiBasic {
         public static final int ERRNO_CODE_DATA_EXCEPTION_VALUE = 213;
         /**
          * <code>ERRNO_CODE_NOT_SESSIONID = 214;</code>
-         * <p>
+         *
          * <pre>
          * 没有携带session id
          * </pre>
@@ -3260,7 +3746,7 @@ public final class YouMaiBasic {
         public static final int ERRNO_CODE_NOT_SESSIONID_VALUE = 214;
         /**
          * <code>ERRNO_CODE_NOT_PHONE = 215;</code>
-         * <p>
+         *
          * <pre>
          * 没有携带手机号码
          * </pre>
@@ -3268,7 +3754,7 @@ public final class YouMaiBasic {
         public static final int ERRNO_CODE_NOT_PHONE_VALUE = 215;
         /**
          * <code>ERRNO_CODE_PHONE_ERROR = 216;</code>
-         * <p>
+         *
          * <pre>
          * 手机号码错误
          * </pre>
@@ -3276,7 +3762,7 @@ public final class YouMaiBasic {
         public static final int ERRNO_CODE_PHONE_ERROR_VALUE = 216;
         /**
          * <code>ERRNO_CODE_DATABASE_NOT_DATA = 217;</code>
-         * <p>
+         *
          * <pre>
          * 数据库没有数据
          * </pre>
@@ -3284,7 +3770,7 @@ public final class YouMaiBasic {
         public static final int ERRNO_CODE_DATABASE_NOT_DATA_VALUE = 217;
         /**
          * <code>ERRNO_CODE_SHOW_EXPIRED = 218;</code>
-         * <p>
+         *
          * <pre>
          * 对方的秀已经过期
          * </pre>
@@ -3292,7 +3778,7 @@ public final class YouMaiBasic {
         public static final int ERRNO_CODE_SHOW_EXPIRED_VALUE = 218;
         /**
          * <code>ERRNO_CODE_NOT_TOKEN_ID = 219;</code>
-         * <p>
+         *
          * <pre>
          * 没有携带token id
          * </pre>
@@ -3300,7 +3786,7 @@ public final class YouMaiBasic {
         public static final int ERRNO_CODE_NOT_TOKEN_ID_VALUE = 219;
         /**
          * <code>ERRNO_CODE_NOT_SHOW = 220;</code>
-         * <p>
+         *
          * <pre>
          * 没有找到对方的秀信息
          * </pre>
@@ -3308,7 +3794,7 @@ public final class YouMaiBasic {
         public static final int ERRNO_CODE_NOT_SHOW_VALUE = 220;
         /**
          * <code>ERRNO_CODE_NOT_HUXIN_USER = 403;</code>
-         * <p>
+         *
          * <pre>
          * 非呼信用户
          * </pre>
@@ -3316,7 +3802,7 @@ public final class YouMaiBasic {
         public static final int ERRNO_CODE_NOT_HUXIN_USER_VALUE = 403;
         /**
          * <code>ERRNO_CODE_NOT_DEVICE_ID = 404;</code>
-         * <p>
+         *
          * <pre>
          * 没有设备id
          * </pre>
@@ -3324,7 +3810,7 @@ public final class YouMaiBasic {
         public static final int ERRNO_CODE_NOT_DEVICE_ID_VALUE = 404;
         /**
          * <code>ERRNO_CODE_BLOCKED_BY_DST_USER = 501;</code>
-         * <p>
+         *
          * <pre>
          * </pre>
          */
@@ -3363,7 +3849,7 @@ public final class YouMaiBasic {
         public static final int ERRNO_CODE_USER_NOT_IN_GROUP_VALUE = 1303;
         /**
          * <code>ERRNO_CODE_USER_IS_DELETE = 1304;</code>
-         * <p>
+         *
          * <pre>
          * buddy chat msg
          * </pre>
@@ -3371,7 +3857,7 @@ public final class YouMaiBasic {
         public static final int ERRNO_CODE_USER_IS_DELETE_VALUE = 1304;
         /**
          * <code>ERRNO_CODE_USER_IS_BLACK = 1305;</code>
-         * <p>
+         *
          * <pre>
          * 被拉黑
          * </pre>
@@ -3379,7 +3865,7 @@ public final class YouMaiBasic {
         public static final int ERRNO_CODE_USER_IS_BLACK_VALUE = 1305;
         /**
          * <code>ERRNO_CODE_USER_NOT_BUDDY = 1306;</code>
-         * <p>
+         *
          * <pre>
          * 非好友
          * </pre>
@@ -3395,6 +3881,8 @@ public final class YouMaiBasic {
             switch (value) {
                 case 0:
                     return ERRNO_CODE_OK;
+                case 1:
+                    return ERRNO_CODE_ERROR;
                 case 2:
                     return ERRNO_CODE_DEFAULT;
                 case 100:
@@ -3688,7 +4176,7 @@ public final class YouMaiBasic {
             implements com.google.protobuf.ProtocolMessageEnum {
         /**
          * <code>USER_SHOW_STATUS_NORMAL = 0;</code>
-         * <p>
+         *
          * <pre>
          * 0 正常 1停用 2冻结
          * </pre>
@@ -3705,7 +4193,7 @@ public final class YouMaiBasic {
 
         /**
          * <code>USER_SHOW_STATUS_NORMAL = 0;</code>
-         * <p>
+         *
          * <pre>
          * 0 正常 1停用 2冻结
          * </pre>
@@ -4097,7 +4585,7 @@ public final class YouMaiBasic {
 
     /**
      * Protobuf enum {@code GroupType}
-     * <p>
+     *
      * <pre>
      * 群组类型
      * </pre>
@@ -4106,7 +4594,7 @@ public final class YouMaiBasic {
             implements com.google.protobuf.ProtocolMessageEnum {
         /**
          * <code>GROUP_TYPE_MULTICHAT = 1;</code>
-         * <p>
+         *
          * <pre>
          * 多人会话
          * </pre>
@@ -4114,7 +4602,7 @@ public final class YouMaiBasic {
         GROUP_TYPE_MULTICHAT(0, 1),
         /**
          * <code>GROUP_TYPE_COMMUNITY = 2;</code>
-         * <p>
+         *
          * <pre>
          * 社群
          * </pre>
@@ -4123,7 +4611,7 @@ public final class YouMaiBasic {
 
         /**
          * <code>GROUP_TYPE_MULTICHAT = 1;</code>
-         * <p>
+         *
          * <pre>
          * 多人会话
          * </pre>
@@ -4131,7 +4619,7 @@ public final class YouMaiBasic {
         public static final int GROUP_TYPE_MULTICHAT_VALUE = 1;
         /**
          * <code>GROUP_TYPE_COMMUNITY = 2;</code>
-         * <p>
+         *
          * <pre>
          * 社群
          * </pre>
@@ -4211,7 +4699,7 @@ public final class YouMaiBasic {
 
     /**
      * Protobuf type {@code Heart_Beat}
-     * <p>
+     *
      * <pre>
      * optional int32 IM_id = 1;
      * </pre>
@@ -4437,7 +4925,7 @@ public final class YouMaiBasic {
 
         /**
          * Protobuf type {@code Heart_Beat}
-         * <p>
+         *
          * <pre>
          * optional int32 IM_id = 1;
          * </pre>
@@ -4565,7 +5053,7 @@ public final class YouMaiBasic {
 
     /**
      * Protobuf type {@code Heart_Beat_Ack}
-     * <p>
+     *
      * <pre>
      * optional int32 IM_id = 1;
      * </pre>
@@ -4791,7 +5279,7 @@ public final class YouMaiBasic {
 
         /**
          * Protobuf type {@code Heart_Beat_Ack}
-         * <p>
+         *
          * <pre>
          * optional int32 IM_id = 1;
          * </pre>
@@ -4941,7 +5429,7 @@ public final class YouMaiBasic {
                         "ID_CONN\020\002\022\020\n\014SID_DISPATCH\020\003\022\r\n\tSID_LOGIN" +
                         "\020\004\022\013\n\007SID_MSG\020\005\022\023\n\017SID_LOADBALANCE\020\006\022\021\n\r" +
                         "SID_BROADCAST\020\007\022\017\n\013SID_DBPROXY\020\010\022\r\n\tSID_" +
-                        "GROUP\020\t\022\r\n\tSID_BUDDY\020\n\022\r\n\tSID_REDIS\020d*\334(" +
+                        "GROUP\020\t\022\r\n\tSID_BUDDY\020\n\022\r\n\tSID_REDIS\020d*\2703" +
                         "\n\tCOMMANDID\022\016\n\nHEART_BEAT\020\001\022\022\n\016HEART_BEA",
                 "T_ACK\020\002\022\r\n\tROUTE_REQ\020\024\022\025\n\021ROUTE_ONLINECH" +
                         "ECK\020\025\022\031\n\025ROUTE_ONLINECHECK_ACK\020\026\022\025\n\021ROUT" +
@@ -5072,67 +5560,102 @@ public final class YouMaiBasic {
                         "\n\031CID_BUDDY_LIST_OPT_RESULT\020\234\344\001\022 \n\032CID_C" +
                         "ONTACT_COLLECTION_REQ\020\241\344\001\022 \n\032CID_CONTACT" +
                         "_COLLECTION_RSP\020\242\344\001\022\037\n\031CID_BUDDY_LIST_OP" +
-                        "T_NOTIFY\020\243\344\001*X\n\tUSER_TYPE\022\025\n\021USER_TYPE_U",
-                "NKNOWN\020\000\022\026\n\022USER_TYPE_PERSONAL\020\001\022\034\n\030USER" +
-                        "_TYPE_PUBLIC_ACCOUNT\020\002*\264\r\n\nERRNO_CODE\022\021\n" +
-                        "\rERRNO_CODE_OK\020\000\022\026\n\022ERRNO_CODE_DEFAULT\020\002" +
-                        "\022$\n ERRNO_CODE_LOGIN_IN_OTHER_DEVICE\020d\022\032" +
-                        "\n\026ERRNO_CODE_NO_PROTOCOL\020e\022\036\n\032ERRNO_CODE" +
-                        "_TAG_NO_PROTOCOL\020f\022\031\n\025ERRNO_CODE_PUSH_QU" +
-                        "EUE\020g\022\037\n\033ERRNO_CODE_LOGON_NO_PHONE_S\020h\022\"" +
-                        "\n\036ERRNO_CODE_HEART_ERR_SESSION_S\020i\022\030\n\024ER" +
-                        "RNO_CODE_NOT_LOGON\020j\022\032\n\026ERRNO_CODE_WITHO" +
-                        "UT_TAG\020k\022\032\n\026ERRNO_CODE_WITHOUT_UID\020l\022\035\n\031",
-                "ERRNO_CODE_WITHOUT_TERMID\020m\022\034\n\030ERRNO_COD" +
-                        "E_ERR_SESSIONID\020n\022\033\n\027ERRNO_CODE_TERM_UNA" +
-                        "LIVE\020o\022\026\n\022ERRNO_CODE_ERR_UID\020p\022\026\n\022ERRNO_" +
-                        "CODE_ERR_PID\020q\022\031\n\025ERRNO_CODE_ERR_RESEND\020" +
-                        "r\022\026\n\022ERRNO_CODE_ERR_TID\020s\022\023\n\016ERRNO_CODE_" +
-                        "SQL\020\310\001\022\031\n\024ERRNO_CODE_DATA_SRAL\020\311\001\022&\n!ERR" +
-                        "NO_CODE_NOT_FIND_TARGET_USERID\020\313\001\022.\n)ERR" +
-                        "NO_CODE_DATA_WAREHOUSING_FAILURE_MYSQL\020\314" +
-                        "\001\022.\n)ERRNO_CODE_DATA_WAREHOUSING_FAILURE" +
-                        "_REDIS\020\315\001\022#\n\036ERRNO_CODE_DB_SERVER_EXCEPT",
-                "ION\020\316\001\022\"\n\035ERRNO_CODE_USER_SESSION_ERROR\020" +
-                        "\317\001\022\036\n\031ERRNO_CODE_USER_NOT_LOGIN\020\320\001\022\035\n\030ER" +
-                        "RNO_CODE_USER_ID_ERROR\020\321\001\022\'\n\"ERRNO_CODE_" +
-                        "USER_SEND_TOROUTE_ERROR\020\322\001\022\035\n\030ERRNO_CODE" +
-                        "_NOT_DST_PHONE\020\323\001\022&\n!ERRNO_CODE_DATABASE" +
-                        "_QUERY_FAILDED\020\324\001\022\036\n\031ERRNO_CODE_DATA_EXC" +
-                        "EPTION\020\325\001\022\035\n\030ERRNO_CODE_NOT_SESSIONID\020\326\001" +
-                        "\022\031\n\024ERRNO_CODE_NOT_PHONE\020\327\001\022\033\n\026ERRNO_COD" +
-                        "E_PHONE_ERROR\020\330\001\022!\n\034ERRNO_CODE_DATABASE_" +
-                        "NOT_DATA\020\331\001\022\034\n\027ERRNO_CODE_SHOW_EXPIRED\020\332",
-                "\001\022\034\n\027ERRNO_CODE_NOT_TOKEN_ID\020\333\001\022\030\n\023ERRNO" +
-                        "_CODE_NOT_SHOW\020\334\001\022\036\n\031ERRNO_CODE_NOT_HUXI" +
-                        "N_USER\020\223\003\022\035\n\030ERRNO_CODE_NOT_DEVICE_ID\020\224\003" +
-                        "\022#\n\036ERRNO_CODE_BLOCKED_BY_DST_USER\020\365\003\022!\n" +
-                        "\034ERRNO_CODE_INVALID_USER_INFO\020\315\010\022\037\n\032ERRN" +
-                        "O_CODE_INVALID_SESSION\020\316\010\022\036\n\031ERRNO_CODE_" +
-                        "INVALID_PASSWD\020\317\010\022+\n&ERRNO_CODE_INVALID_" +
-                        "IM_CHAT_TARGET_USER\020\261\t\0226\n1ERRNO_CODE_INV" +
-                        "ALID_IM_CHAT_EMPTY_BODY_NOT_ALLOWED\020\262\t\022," +
-                        "\n\'ERRNO_CODE_LOCATIONSHARE_TASK_NOT_EXIS",
-                "T\020\225\n\022-\n(ERRNO_CODE_LOCATIONSHARE_NOT_INS" +
-                        "IDE_TASK\020\226\n\022!\n\034ERRNO_CODE_USER_NOT_IN_GR" +
-                        "OUP\020\227\n\022\036\n\031ERRNO_CODE_USER_IS_DELETE\020\230\n\022\035" +
-                        "\n\030ERRNO_CODE_USER_IS_BLACK\020\231\n\022\036\n\031ERRNO_C" +
-                        "ODE_USER_NOT_BUDDY\020\232\n*\230\001\n\013Device_Type\022\025\n" +
-                        "\021DeviceType_IPhone\020\001\022\026\n\022DeviceType_Andro" +
-                        "id\020\002\022\023\n\017DeviceType_IPad\020\003\022\031\n\025DeviceType_" +
-                        "AndroidPad\020\004\022\026\n\022DeviceType_UNKNOWN\020\005\022\022\n\016" +
-                        "DeviceType_WEB\020\006*j\n\020USER_SHOW_STATUS\022\033\n\027" +
-                        "USER_SHOW_STATUS_NORMAL\020\000\022\034\n\030USER_SHOW_S",
-                "TATUS_DISABLE\020\001\022\033\n\027USER_SHOW_STATUS_FROZ" +
-                        "EN\020\002*Q\n\tUserState\022\025\n\021USER_STATE_ONLINE\020\000" +
-                        "\022\026\n\022USER_STATE_OFFLINE\020\001\022\025\n\021USER_STATE_L" +
-                        "OGOUT\020\003*v\n\nResultCode\022\027\n\023RESULT_CODE_SUC" +
-                        "CESS\020\001\022\024\n\020RESULT_CODE_FAIL\020\002\022\030\n\024RESULT_C" +
-                        "ODE_NOT_FIND\020\003\022\037\n\033RESULT_CODE_PARAMETER_" +
-                        "ERROR\020\004*K\n\nIM_CHANNEL\022\026\n\022IM_CHANNEL_DEFA" +
-                        "ULT\020\000\022\022\n\016IM_CHANNEL_SMS\020\001\022\021\n\rIM_CHANNEL_" +
-                        "QQ\020\002*?\n\tGroupType\022\030\n\024GROUP_TYPE_MULTICHA" +
-                        "T\020\001\022\030\n\024GROUP_TYPE_COMMUNITY\020\002"
+                        "T_NOTIFY\020\243\344\001\022\037\n\031CID_VIDEO_ROOM_CREATE_RE",
+                "Q\020\201\346\001\022\037\n\031CID_VIDEO_ROOM_CREATE_RSP\020\202\346\001\022\035" +
+                        "\n\027CID_VIDEO_ROOM_EXIT_REQ\020\203\346\001\022\035\n\027CID_VID" +
+                        "EO_ROOM_EXIT_RSP\020\204\346\001\022#\n\035CID_VIDEO_ROOM_E" +
+                        "XIT_BROADCAST\020\205\346\001\022 \n\032CID_VIDEO_ROOM_DEST" +
+                        "ROY_REQ\020\206\346\001\022 \n\032CID_VIDEO_ROOM_DESTROY_RS" +
+                        "P\020\207\346\001\022&\n CID_VIDEO_ROOM_DESTROY_BROADCAS" +
+                        "T\020\210\346\001\022!\n\033CID_VIDEO_MEMBER_INVITE_REQ\020\223\346\001" +
+                        "\022!\n\033CID_VIDEO_MEMBER_INVITE_RSP\020\224\346\001\022$\n\036C" +
+                        "ID_VIDEO_MEMBER_INVITE_NOTIFY\020\225\346\001\022)\n#CID" +
+                        "_VIDEO_MEMBER_INVITE_REPONSE_REQ\020\226\346\001\022)\n#",
+                "CID_VIDEO_MEMBER_INVITE_REPONSE_RSP\020\227\346\001\022" +
+                        ",\n&CID_VIDEO_MEMBER_INVITE_REPONSE_NOTIF" +
+                        "Y\020\230\346\001\022!\n\033CID_VIDEO_MEMBER_DELETE_REQ\020\231\346\001" +
+                        "\022!\n\033CID_VIDEO_MEMBER_DELETE_RSP\020\232\346\001\022\'\n!C" +
+                        "ID_VIDEO_MEMBER_MODIFY_BROADCAST\020\233\346\001\022\035\n\027" +
+                        "CID_VIDEO_ROOM_INFO_REQ\020\234\346\001\022\035\n\027CID_VIDEO" +
+                        "_ROOM_INFO_RSP\020\235\346\001\022\033\n\025CID_VIDEO_SETTING_" +
+                        "REQ\020\241\346\001\022\033\n\025CID_VIDEO_SETTING_RSP\020\242\346\001\022\036\n\030" +
+                        "CID_VIDEO_SETTING_NOTIFY\020\243\346\001\022&\n CID_VIDE" +
+                        "O_PERMISSION_SETTING_REQ\020\244\346\001\022&\n CID_VIDE",
+                "O_PERMISSION_SETTING_RSP\020\245\346\001\022)\n#CID_VIDE" +
+                        "O_PERMISSION_SETTING_NOTIFY\020\246\346\001\022\037\n\031CID_V" +
+                        "IDEO_STATE_BROADCAST\020\247\346\001\022\031\n\023CID_VIDEO_ST" +
+                        "ATE_REQ\020\250\346\001\022\031\n\023CID_VIDEO_STATE_RSP\020\251\346\001\022!" +
+                        "\n\033CID_VIDEO_SETTING_APPLY_REQ\020\252\346\001\022!\n\033CID" +
+                        "_VIDEO_SETTING_APPLY_RSP\020\253\346\001\022$\n\036CID_VIDE" +
+                        "O_SETTING_APPLY_NOTIFY\020\254\346\001\022 \n\032CID_VIDEO_" +
+                        "MEMBER_APPLY_REQ\020\263\346\001\022 \n\032CID_VIDEO_MEMBER" +
+                        "_APPLY_RSP\020\264\346\001\022#\n\035CID_VIDEO_MEMBER_APPLY" +
+                        "_NOTIFY\020\265\346\001\022(\n\"CID_VIDEO_MEMBER_APPLY_RE",
+                "PONSE_REQ\020\266\346\001\022(\n\"CID_VIDEO_MEMBER_APPLY_" +
+                        "REPONSE_RSP\020\267\346\001\022+\n%CID_VIDEO_MEMBER_APPL" +
+                        "Y_REPONSE_NOTIFY\020\270\346\001\022\024\n\016CID_VIDEO_PING\020\300" +
+                        "\346\001\022\024\n\016CID_VIDEO_PONG\020\301\346\001*X\n\tUSER_TYPE\022\025\n" +
+                        "\021USER_TYPE_UNKNOWN\020\000\022\026\n\022USER_TYPE_PERSON" +
+                        "AL\020\001\022\034\n\030USER_TYPE_PUBLIC_ACCOUNT\020\002*\312\r\n\nE" +
+                        "RRNO_CODE\022\021\n\rERRNO_CODE_OK\020\000\022\024\n\020ERRNO_CO" +
+                        "DE_ERROR\020\001\022\026\n\022ERRNO_CODE_DEFAULT\020\002\022$\n ER" +
+                        "RNO_CODE_LOGIN_IN_OTHER_DEVICE\020d\022\032\n\026ERRN" +
+                        "O_CODE_NO_PROTOCOL\020e\022\036\n\032ERRNO_CODE_TAG_N",
+                "O_PROTOCOL\020f\022\031\n\025ERRNO_CODE_PUSH_QUEUE\020g\022" +
+                        "\037\n\033ERRNO_CODE_LOGON_NO_PHONE_S\020h\022\"\n\036ERRN" +
+                        "O_CODE_HEART_ERR_SESSION_S\020i\022\030\n\024ERRNO_CO" +
+                        "DE_NOT_LOGON\020j\022\032\n\026ERRNO_CODE_WITHOUT_TAG" +
+                        "\020k\022\032\n\026ERRNO_CODE_WITHOUT_UID\020l\022\035\n\031ERRNO_" +
+                        "CODE_WITHOUT_TERMID\020m\022\034\n\030ERRNO_CODE_ERR_" +
+                        "SESSIONID\020n\022\033\n\027ERRNO_CODE_TERM_UNALIVE\020o" +
+                        "\022\026\n\022ERRNO_CODE_ERR_UID\020p\022\026\n\022ERRNO_CODE_E" +
+                        "RR_PID\020q\022\031\n\025ERRNO_CODE_ERR_RESEND\020r\022\026\n\022E" +
+                        "RRNO_CODE_ERR_TID\020s\022\023\n\016ERRNO_CODE_SQL\020\310\001",
+                "\022\031\n\024ERRNO_CODE_DATA_SRAL\020\311\001\022&\n!ERRNO_COD" +
+                        "E_NOT_FIND_TARGET_USERID\020\313\001\022.\n)ERRNO_COD" +
+                        "E_DATA_WAREHOUSING_FAILURE_MYSQL\020\314\001\022.\n)E" +
+                        "RRNO_CODE_DATA_WAREHOUSING_FAILURE_REDIS" +
+                        "\020\315\001\022#\n\036ERRNO_CODE_DB_SERVER_EXCEPTION\020\316\001" +
+                        "\022\"\n\035ERRNO_CODE_USER_SESSION_ERROR\020\317\001\022\036\n\031" +
+                        "ERRNO_CODE_USER_NOT_LOGIN\020\320\001\022\035\n\030ERRNO_CO" +
+                        "DE_USER_ID_ERROR\020\321\001\022\'\n\"ERRNO_CODE_USER_S" +
+                        "END_TOROUTE_ERROR\020\322\001\022\035\n\030ERRNO_CODE_NOT_D" +
+                        "ST_PHONE\020\323\001\022&\n!ERRNO_CODE_DATABASE_QUERY",
+                "_FAILDED\020\324\001\022\036\n\031ERRNO_CODE_DATA_EXCEPTION" +
+                        "\020\325\001\022\035\n\030ERRNO_CODE_NOT_SESSIONID\020\326\001\022\031\n\024ER" +
+                        "RNO_CODE_NOT_PHONE\020\327\001\022\033\n\026ERRNO_CODE_PHON" +
+                        "E_ERROR\020\330\001\022!\n\034ERRNO_CODE_DATABASE_NOT_DA" +
+                        "TA\020\331\001\022\034\n\027ERRNO_CODE_SHOW_EXPIRED\020\332\001\022\034\n\027E" +
+                        "RRNO_CODE_NOT_TOKEN_ID\020\333\001\022\030\n\023ERRNO_CODE_" +
+                        "NOT_SHOW\020\334\001\022\036\n\031ERRNO_CODE_NOT_HUXIN_USER" +
+                        "\020\223\003\022\035\n\030ERRNO_CODE_NOT_DEVICE_ID\020\224\003\022#\n\036ER" +
+                        "RNO_CODE_BLOCKED_BY_DST_USER\020\365\003\022!\n\034ERRNO" +
+                        "_CODE_INVALID_USER_INFO\020\315\010\022\037\n\032ERRNO_CODE",
+                "_INVALID_SESSION\020\316\010\022\036\n\031ERRNO_CODE_INVALI" +
+                        "D_PASSWD\020\317\010\022+\n&ERRNO_CODE_INVALID_IM_CHA" +
+                        "T_TARGET_USER\020\261\t\0226\n1ERRNO_CODE_INVALID_I" +
+                        "M_CHAT_EMPTY_BODY_NOT_ALLOWED\020\262\t\022,\n\'ERRN" +
+                        "O_CODE_LOCATIONSHARE_TASK_NOT_EXIST\020\225\n\022-" +
+                        "\n(ERRNO_CODE_LOCATIONSHARE_NOT_INSIDE_TA" +
+                        "SK\020\226\n\022!\n\034ERRNO_CODE_USER_NOT_IN_GROUP\020\227\n" +
+                        "\022\036\n\031ERRNO_CODE_USER_IS_DELETE\020\230\n\022\035\n\030ERRN" +
+                        "O_CODE_USER_IS_BLACK\020\231\n\022\036\n\031ERRNO_CODE_US" +
+                        "ER_NOT_BUDDY\020\232\n*\230\001\n\013Device_Type\022\025\n\021Devic",
+                "eType_IPhone\020\001\022\026\n\022DeviceType_Android\020\002\022\023" +
+                        "\n\017DeviceType_IPad\020\003\022\031\n\025DeviceType_Androi" +
+                        "dPad\020\004\022\026\n\022DeviceType_UNKNOWN\020\005\022\022\n\016Device" +
+                        "Type_WEB\020\006*j\n\020USER_SHOW_STATUS\022\033\n\027USER_S" +
+                        "HOW_STATUS_NORMAL\020\000\022\034\n\030USER_SHOW_STATUS_" +
+                        "DISABLE\020\001\022\033\n\027USER_SHOW_STATUS_FROZEN\020\002*Q" +
+                        "\n\tUserState\022\025\n\021USER_STATE_ONLINE\020\000\022\026\n\022US" +
+                        "ER_STATE_OFFLINE\020\001\022\025\n\021USER_STATE_LOGOUT\020" +
+                        "\003*v\n\nResultCode\022\027\n\023RESULT_CODE_SUCCESS\020\001" +
+                        "\022\024\n\020RESULT_CODE_FAIL\020\002\022\030\n\024RESULT_CODE_NO",
+                "T_FIND\020\003\022\037\n\033RESULT_CODE_PARAMETER_ERROR\020" +
+                        "\004*K\n\nIM_CHANNEL\022\026\n\022IM_CHANNEL_DEFAULT\020\000\022" +
+                        "\022\n\016IM_CHANNEL_SMS\020\001\022\021\n\rIM_CHANNEL_QQ\020\002*?" +
+                        "\n\tGroupType\022\030\n\024GROUP_TYPE_MULTICHAT\020\001\022\030\n" +
+                        "\024GROUP_TYPE_COMMUNITY\020\002"
         };
         com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
                 new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {

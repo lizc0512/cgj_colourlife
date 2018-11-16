@@ -522,6 +522,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
         keyboardLay = (InputMessageLay) findViewById(R.id.keyboard_lay);
         keyboardLay.setOnKeyBoardBarViewListener(this);
         keyboardLay.setEditableState(false);
+        keyboardLay.hideChatVideo();
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         recyclerView.setOnTouchListener(new View.OnTouchListener() {

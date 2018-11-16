@@ -14,6 +14,7 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.GET_TASKS" />
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
     <!-- Normal Permissions end -->
 
 
@@ -240,6 +241,38 @@
             android:screenOrientation="portrait"
             android:theme="@style/HxRadPackageTheme" />
 
+        <!-- 视频通话 -->
+        <activity
+            android:name=".videocall.RoomActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/HxSdkTheme" />
+        <!-- 选择成员 -->
+        <activity
+            android:name=".module.videocall.VideoSelectConstactActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/HxSdkTheme" />
+
+        <!-- 视频直播播放 -->
+        <activity
+            android:name=".videocall.LiveRoomActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/HxSdkTheme" />
+        <activity
+            android:name=".videocall.PLVideoViewActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/HxSdkTheme" />
+        <activity
+            android:name=".videocall.VideoCallRingActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/HxSdkTheme" />
+        <activity
+            android:name=".module.videocall.RemovePersonActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/HxSdkTheme" />
+        <activity
+            android:name=".module.videocall.CallLogActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/HxSdkTheme" />
 
         <!--IM文件预览、下载打开-->
         <activity
@@ -313,7 +346,12 @@
             android:screenOrientation="portrait"
             android:theme="@style/HxSdkTheme" />
 
-        <!--聊天群相关的界面-->
+        <activity
+            android:name="com.youmai.hxsdk.videocall.VideoOperatConstactActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/HxSdkTheme" />
+	    
+        <!-- 聊天群相关的界面 -->
         <activity
             android:name="com.youmai.hxsdk.module.groupchat.ChatDetailsActivity"
             android:screenOrientation="portrait"
@@ -347,7 +385,9 @@
         <service
             android:name=".service.SendMsgService"
             android:permission="1000" />
-
+	    
+        <service android:name=".service.RingService" />
+	
         <service
             android:name="com.youmai.hxsdk.service.HuxinService"
             android:enabled="true"

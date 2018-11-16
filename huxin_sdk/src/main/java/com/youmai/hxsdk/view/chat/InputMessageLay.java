@@ -71,6 +71,7 @@ public class InputMessageLay extends AutoHeightLayout implements View.OnClickLis
     public static final int TYPE_LOCATION = 3;
     public static final int TYPE_FILE = 4;
     public static final int TYPE_RED_PACKET = 5;
+    public static final int TYPE_VIDEO = 6;
 
     private static final int VOICE_TIME = 60;//录音时长,默认60秒
     private static final int VOICE_LAST_TIME = 10;//录音剩余时长,默认10秒
@@ -91,6 +92,8 @@ public class InputMessageLay extends AutoHeightLayout implements View.OnClickLis
     private View moreLay;
     private ImageView forwardImg;
     private ImageView garbageImg;
+
+    private View chatVideo;
 
 
     private Context mContext;
@@ -896,13 +899,26 @@ public class InputMessageLay extends AutoHeightLayout implements View.OnClickLis
                 }
             }
         });
+
         view.findViewById(R.id.item_chat_more_card).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 if (mKeyBoardBarViewListener != null) {
-                    //分享名片
+                    //红包
                     mKeyBoardBarViewListener.onKeyBoardMore(TYPE_RED_PACKET);
+                }
+            }
+        });
+
+        chatVideo = view.findViewById(R.id.item_chat_video);
+        chatVideo.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (mKeyBoardBarViewListener != null) {
+                    //视频
+                    mKeyBoardBarViewListener.onKeyBoardMore(TYPE_VIDEO);
                 }
             }
         });
@@ -920,6 +936,11 @@ public class InputMessageLay extends AutoHeightLayout implements View.OnClickLis
         footerLay.setVisibility(GONE);
         moreImg.setImageResource(R.drawable.hx_im_bar_open);
         Utils.closeSoftKeyboard(mContext);
+    }
+
+
+    public void hideChatVideo() {
+        chatVideo.setVisibility(GONE);
     }
 
     /**

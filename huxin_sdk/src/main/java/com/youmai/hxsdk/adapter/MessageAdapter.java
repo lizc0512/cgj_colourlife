@@ -20,12 +20,14 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.config.ColorsConfig;
 import com.youmai.hxsdk.data.ExCacheMsgBean;
 import com.youmai.hxsdk.data.SortComparator;
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
 import com.youmai.hxsdk.entity.MsgConfig;
+import com.youmai.hxsdk.entity.VideoCall;
 import com.youmai.hxsdk.im.IMMsgManager;
 import com.youmai.hxsdk.im.cache.CacheMsgTxt;
 import com.youmai.hxsdk.utils.AppUtils;
@@ -407,7 +409,6 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 keyword = "[有人@我]";
             }
 
-
             switch (model.getMsgType()) {
                 case CacheMsgBean.SEND_EMOTION:
                 case CacheMsgBean.RECEIVE_EMOTION:
@@ -470,8 +471,17 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 case CacheMsgBean.PACKET_OPENED_SUCCESS:
                     itemView.message_type.setText(mContext.getString(R.string.message_open_red_packet_success));
                     break;
+
                 default:
                     itemView.message_type.setText("");
+            }
+
+            VideoCall videoCall = HuxinSdkManager.instance().getVideoCall();
+            if (videoCall != null && videoCall.getGroupId() == model.getGroupId()) {
+                String format = mContext.getString(R.string.video_call_status);
+                itemView.message_type.setText(String.format(format, videoCall.getCount()));
+                itemView.message_callBtn.setImageResource(R.drawable.ic_online);
+                itemView.message_time.setText(TimeUtils.dateFormat(videoCall.getMsgTime()));
             }
 
             //沟通列表
@@ -630,4 +640,5 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             message_status.setShowShadow(false);
         }
     }
+
 }

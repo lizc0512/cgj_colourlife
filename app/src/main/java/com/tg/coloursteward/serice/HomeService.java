@@ -33,7 +33,7 @@ public class HomeService {
         String username = UserInfo.employeeAccount;
         String md5_pwd = Tools.getPassWordMD5(context);
 
-        if (StringUtils.isEmpty(username) || StringUtils.isEmpty(md5_pwd) || StringUtils.isEmpty(clientCode)) {
+        if (StringUtils.isEmpty(username) || StringUtils.isEmpty(md5_pwd) ) {
             ToastFactory.showToast(context, "参数错误，请稍后重试");
             return;
         }
@@ -65,7 +65,7 @@ public class HomeService {
         String username = UserInfo.employeeAccount;
         String md5_pwd = Tools.getPassWordMD5(context);
 
-        if (StringUtils.isEmpty(username) || StringUtils.isEmpty(md5_pwd) || StringUtils.isEmpty(developerCode)) {
+        if (StringUtils.isEmpty(username) || StringUtils.isEmpty(md5_pwd) ) {
             ToastFactory.showToast(context, "参数错误，请稍后重试");
             return;
         }

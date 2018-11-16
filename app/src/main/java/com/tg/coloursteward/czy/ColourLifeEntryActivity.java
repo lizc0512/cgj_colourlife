@@ -7,7 +7,6 @@ import android.text.TextUtils;
 
 import com.tg.coloursteward.LoginActivity;
 import com.tg.coloursteward.R;
-import com.tg.coloursteward.view.dialog.ToastFactory;
 
 public class ColourLifeEntryActivity extends Activity {
 
@@ -32,8 +31,6 @@ public class ColourLifeEntryActivity extends Activity {
                 Intent it = new Intent(ColourLifeEntryActivity.this, LoginActivity.class);
                 it.putExtra("czy_code", code);
                 startActivity(it);
-            } else {
-                ToastFactory.showToast(ColourLifeEntryActivity.this, "授权失败");
             }
 
         }

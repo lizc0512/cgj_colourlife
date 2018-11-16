@@ -119,6 +119,8 @@ public class AuthTimeUtils {
                     ToastFactory.showToast(mActivity,Message);
                 }
             });
+        }else if("2".equals(oauthType)){
+            LinkParseUtil.parse(mActivity,url,"");
         }else{//oauth2认证
             homeService.getAuth2(developerCode, new GetTwoRecordListener<String, String>() {
 

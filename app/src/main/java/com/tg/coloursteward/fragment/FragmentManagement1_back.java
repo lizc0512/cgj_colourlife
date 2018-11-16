@@ -79,7 +79,7 @@ import java.util.Set;
  *
  * @author Administrator
  */
-public class FragmentManagement1 extends Fragment implements MessageHandler.ResponseListener {
+public class FragmentManagement1_back extends Fragment implements MessageHandler.ResponseListener {
     private static final String TAG = "FragmentManagement";
     private Activity mActivity;
     private View mView;

@@ -626,7 +626,7 @@ public class LoginActivityBackUp extends BaseActivity implements AnimationListen
         params.put("device_type", "1");//登录设备类别，1：安卓，2：IOS
         params.put("version", UpdateManager.getVersionName(LoginActivityBackUp.this));//APP版本号
         params.put("device_code", TokenUtils.getUUID(LoginActivityBackUp.this));//设备唯一编号
-        params.put("device_info", TokenUtils.getDeviceInfor(LoginActivityBackUp.this, str_longitude, str_latitude));//设备详细信息（json字符创）
+        params.put("device_info", TokenUtils.getDeviceInfor(LoginActivityBackUp.this));//设备详细信息（json字符创）
         params.put("device_name", TokenUtils.getDeviceBrand() + TokenUtils.getDeviceType());//设备名称（如三星S9）
         OkHttpConnector.httpPost(LoginActivityBackUp.this, Contants.URl.SINGLE_DEVICE + "cgjapp/single/device/login", params, new IPostListener() {
             @Override

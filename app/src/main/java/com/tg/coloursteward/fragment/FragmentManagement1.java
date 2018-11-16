@@ -26,7 +26,7 @@ import com.tg.coloursteward.net.MD5;
 import com.tg.coloursteward.net.MessageHandler;
 import com.tg.coloursteward.net.RequestConfig;
 import com.tg.coloursteward.net.RequestParams;
-import com.tg.coloursteward.serice.AuthAppService;
+import com.tg.coloursteward.serice.HomeService;
 import com.tg.coloursteward.util.AuthTimeUtils;
 import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.StringUtils;
@@ -40,6 +40,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,9 +53,8 @@ import java.util.Map;
 public class FragmentManagement1 extends Fragment implements MessageHandler.ResponseListener {
     private Activity mActivity;
     private View mView;
-    private AuthAppService authAppService;
+    private HomeService homeService;
     private String accessToken;
-    private String accessToken_1;
 
     private MessageHandler msgHandler;
     private String key;
@@ -98,7 +98,6 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
 
     private void topDataAdapter(String cache) {
         list_top.clear();
-        rl_tinyfragment_tips.setVisibility(View.VISIBLE);
         try {
             TinyFragmentTopEntity entity = GsonUtils.gsonToBean(cache, TinyFragmentTopEntity.class);
             list_top.addAll(entity.getContent());
@@ -119,6 +118,7 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
                 mAuthTimeUtils.IsAuthTime(mActivity, url, "", String.valueOf(auth_type), "", "");
             }
         });
+        rl_tinyfragment_tips.setVisibility(View.VISIBLE);
     }
 
     private void initData() {
@@ -234,9 +234,8 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
         secret = Tools.getStringValue(mActivity, Contants.EMPLOYEE_LOGIN.secret);
 
         long time = System.currentTimeMillis() / 1000;
-        String expireTime = Tools.getStringValue(mActivity, Contants.storage.APPAUTHTIME);
-        accessToken = Tools.getStringValue(mActivity, Contants.storage.APPAUTH);
-        accessToken_1 = Tools.getStringValue(mActivity, Contants.storage.APPAUTH_1);
+        String expireTime = String.valueOf(Tools.getCurrentTime2(mActivity));
+        accessToken = Tools.getAccess_token(mActivity);
         if (StringUtils.isNotEmpty(expireTime)) {
             if (Long.parseLong(expireTime) <= time) {//token过期
                 getAuthAppInfo();
@@ -250,39 +249,29 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
     }
 
     /**
-     * 获取token（2.0）
+     * 获取auth（2.0）
      * sectet
      */
     private void getAuthAppInfo() {
-        if (authAppService == null) {
-            authAppService = new AuthAppService(mActivity);
+        if (homeService == null) {
+            homeService = new HomeService(getActivity());
         }
-        authAppService.getAppAuth(new GetTwoRecordListener<String, String>() {
+        homeService.getAuth2("", new GetTwoRecordListener<String, String>() {
+
             @Override
-            public void onFinish(String jsonString, String data2, String data3) {
-                int code = HttpTools.getCode(jsonString);
-                if (code == 0) {
-                    JSONObject content = HttpTools.getContentJSONObject(jsonString);
-                    if (content.length() > 0) {
-                        try {
-                            accessToken = content.getString("accessToken");
-                            String expireTime = content.getString("expireTime");
-                            Tools.saveStringValue(mActivity, Contants.storage.APPAUTH, accessToken);
-                            Tools.saveStringValue(mActivity, Contants.storage.APPAUTHTIME, expireTime);
-                            //刷新
-                            freshData();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-                    }
-
-                }
+            public void onFinish(String openID, String auth2, String data3) {
+                accessToken = auth2;
+                Date dt = new Date();
+                Long time = dt.getTime();
+                Tools.saveAccess_token(mActivity, accessToken);
+                Tools.saveCurrentTime2(mActivity, time);
+                Tools.saveExpiresTime2(mActivity, Long.parseLong(data3));
+                freshData();
             }
 
             @Override
             public void onFailed(String Message) {
-
+                ToastFactory.showToast(mActivity, Message);
             }
         });
     }
@@ -291,6 +280,7 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
      * 刷新在管面积与小区
      */
     public void freshData() {
+        initData();
     }
 
     private void getKeyAndSecret() {
@@ -315,8 +305,9 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if(isVisibleToUser){
+        if (isVisibleToUser) {
             initDataTop();
+            initData();
         }
     }
 

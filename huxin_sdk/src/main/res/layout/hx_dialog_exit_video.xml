@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginLeft="50dp"
+    android:layout_marginRight="50dp"
+    android:background="@null">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:background="@drawable/shape_common_dialog_bg"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_margin="36dp"
+            android:gravity="center"
+            android:text="消息提示"
+            android:textColor="#000000"
+            android:textSize="18sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="#E4E4E4" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="#E4E4E4" />
+
+            <Button
+                android:id="@+id/yes"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginRight="10dp"
+                android:background="@null"
+                android:gravity="center"
+                android:singleLine="true"
+                android:text="确定"
+                android:textColor="#38ADFF"
+                android:textSize="18sp" />
+            <!--
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="#E4E4E4" />
+
+            <Button
+                android:id="@+id/btn_zhuanquan"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@null"
+                android:gravity="center"
+                android:singleLine="true"
+                android:text="转权并退出"
+                android:textColor="#38ADFF"
+                android:textSize="18sp" />
+                -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="#E4E4E4" />
+
+            <Button
+                android:id="@+id/btn_cacel"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@null"
+                android:gravity="center"
+                android:singleLine="true"
+                android:text="取消"
+                android:textColor="@drawable/selector_dialog_video_btn_bg"
+                android:textSize="18sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>

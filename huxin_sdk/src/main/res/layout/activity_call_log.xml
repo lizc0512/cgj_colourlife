@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".module.videocall.CallLogActivity">
+
+    <include
+        android:id="@+id/title"
+        layout="@layout/video_call_header_title" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="@color/color_group_bg2"
+        />
+<LinearLayout
+    android:background="@color/hx_window_background"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="18dp"
+            android:layout_weight="1"
+            android:textColor="@color/color_theme_main"
+            android:gravity="center_vertical"
+            android:text="通话时长"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/tv_call_time"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:gravity="center_vertical"
+            android:text="2min"
+            android:textSize="16sp" />
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginLeft="18dp"
+        android:background="@color/color_group_bg2"
+        android:layout_marginRight="8dp"
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+      >
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="18dp"
+            android:layout_weight="1"
+            android:textColor="@color/color_theme_main"
+            android:gravity="center_vertical"
+            android:text="参与人数"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/tv_partake"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:gravity="center_vertical"
+            android:text="24人"
+            android:textSize="16sp" />
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginLeft="18dp"
+        android:background="@color/color_group_bg2"
+        android:layout_marginRight="8dp"
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+       >
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="18dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="录制时间"
+            android:textColor="@color/color_theme_main"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/tv_look_video"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:gravity="center_vertical"
+            android:textColor="@color/hxs_color_blue1"
+            android:text="查看录制内容"
+            android:textSize="16sp" />
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginLeft="18dp"
+        android:background="@color/color_group_bg2"
+        android:layout_marginRight="8dp"
+        />
+</LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="@color/color_group_bg2"
+        />
+    <RelativeLayout
+        android:id="@+id/rlv_call_log"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</LinearLayout>

@@ -88,7 +88,6 @@ public class TinyServerFragmentAdapter extends RecyclerView.Adapter<RecyclerView
 
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
-        int type = getItemViewType(position);
         if (holder instanceof TinyServerFragmentViewHolder_one) {
             TinyServerFragmentViewHolder_one holder_one = (TinyServerFragmentViewHolder_one) holder;
             if (TextUtils.isEmpty(list.get(position).getQuantity())) {//无审批形式

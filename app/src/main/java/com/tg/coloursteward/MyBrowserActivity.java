@@ -551,10 +551,10 @@ public class MyBrowserActivity extends Activity implements OnClickListener, AMap
      * 调用相册
      */
     private void openFileChooseProcess() {
-        Intent i = new Intent(Intent.ACTION_GET_CONTENT);
-        i.addCategory(Intent.CATEGORY_OPENABLE);
-        i.setType("*/*");
-        startActivityForResult(Intent.createChooser(i, "test"), 0);
+        Intent i = new Intent(Intent.ACTION_PICK);
+//        i.addCategory(Intent.CATEGORY_OPENABLE);
+        i.setType("image/*");
+        startActivityForResult(Intent.createChooser(i, "相册"), 0);
     }
 
     /**

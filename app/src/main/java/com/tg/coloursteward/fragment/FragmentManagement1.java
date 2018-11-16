@@ -85,6 +85,9 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
         String cache = Tools.getStringValue(mActivity, Contants.storage.TINYFRAGMENTTOP);
         if (!TextUtils.isEmpty(cache)) {
             topDataAdapter(cache);
+        } else {
+            String localCache = Contants.storage.TINYFRAGMENTTOP_CACHE;
+            topDataAdapter(localCache);
         }
         RequestConfig config = new RequestConfig(mActivity, HttpTools.GET_MINISERVER_TOP);
         config.handler = msgHandler.getHandler();
@@ -125,6 +128,9 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
         String cache = Tools.getStringValue(mActivity, Contants.storage.TINYFRAGMENTMID);
         if (!TextUtils.isEmpty(cache)) {
             midDataAdapter(cache);
+        } else {
+            String loaclCache = Contants.storage.TINYFRAGMENTMID_CACHE;
+            midDataAdapter(loaclCache);
         }
         String skin_id = Tools.getStringValue(mActivity, Contants.storage.SKINCODE);
         RequestConfig config = new RequestConfig(mActivity, HttpTools.GET_MINISERVER);
@@ -241,7 +247,7 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
                 getAuthAppInfo();
             } else {
                 //刷新
-                freshData();
+//                freshData();
             }
         } else {
             getAuthAppInfo();

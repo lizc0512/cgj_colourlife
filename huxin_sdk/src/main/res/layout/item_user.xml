@@ -9,5 +9,5 @@
         android:gravity="center"
         android:textSize="13sp"
         android:layout_margin="6dp"
-        android:textColor="@color/white"/>
+        android:textColor="@color/hx_color_white"/>
 </LinearLayout>

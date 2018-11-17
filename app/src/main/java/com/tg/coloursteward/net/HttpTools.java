@@ -201,6 +201,13 @@ public class HttpTools {
     public static final int POST_TWOJIYAN = BASE_CODE++;
     public static final int GET_MYPAGERULE = BASE_CODE++;
     public static final int GET_DETAILRULE = BASE_CODE++;
+    public static final int POST_CHANGEPHONE_MMS = BASE_CODE++;
+    public static final int POST_CHANGEPHONE_COMMIT = BASE_CODE++;
+    public static final int GET_CZYOAUTH = BASE_CODE++;
+    public static final int GET_MINISERVER = BASE_CODE++;
+    public static final int GET_MINISERVER_TOP = BASE_CODE++;
+    public static final int POST_SCAN = BASE_CODE++;
+    public static final int POST_USERSYNC = BASE_CODE++;
 
 
     public static final int GET_KEYSECERT = -10000;
@@ -338,9 +345,11 @@ public class HttpTools {
             protected Map<String, String> getParams() throws AuthFailureError {
                 if (URL_NAME.startsWith(Contants.URl.URL_CPMOBILE)) {
                     return param;
-                } else if(URL_NAME.startsWith(Contants.URl.URL_NEW)){
+                } else if (URL_NAME.startsWith(Contants.URl.URL_NEW)) {
                     return param;
-                }else {
+                } else if (URL_NAME.startsWith(Contants.URl.URL_ICESTAFF)) {
+                    return param;
+                } else {
                     String sign = "";
                     String ts = getTime();
                     try {
@@ -364,6 +373,7 @@ public class HttpTools {
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> headers = new HashMap<>();
                 if (URL_NAME.contains(Contants.URl.URL_NEW + "app/home/login/verify")) {
+                } else if (URL_NAME.contains(Contants.URl.URL_CPMOBILE + "/1.0/auth")) {
                 } else {
                     if (TextUtils.isEmpty(Tools.getAccess_token2(rqtConfig.activity))) {
                         OAuth2ServiceUpdate serviceUpdate = new OAuth2ServiceUpdate(rqtConfig.activity);
@@ -421,7 +431,6 @@ public class HttpTools {
      */
     public static String GetNormalUrl(final String URL, final String apiname, final HashMap<String, Object> params) throws Exception {
         String ts = getTime();
-        String Sign = MD5.getMd5Value(DES.APP_ID + ts + DES.TOKEN + "false").toLowerCase();
         String apppara = "";
         Iterator<String> keys = params.keySet().iterator();
         if (keys != null) {
@@ -848,6 +857,8 @@ public class HttpTools {
                 } else if (URL.startsWith(Contants.URl.URL_NEW)) {
                     url = URL + GetNormalUrl(URL, apiName, (HashMap) params);
                 } else if (apiName.contains("getWaitingBalanceCount")) {
+                    url = URL + GetNormalUrl(URL, apiName, (HashMap) params);
+                } else if (URL.startsWith(Contants.URl.URL_ICESTAFF)) {
                     url = URL + GetNormalUrl(URL, apiName, (HashMap) params);
                 } else {
                     url = URL + GetUrl(URL, apiName, (HashMap) params);

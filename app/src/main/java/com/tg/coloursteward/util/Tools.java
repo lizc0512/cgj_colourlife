@@ -519,6 +519,7 @@ public class Tools {
             jsonObj.put("corp_id", UserInfo.corp_id);
             jsonObj.put("salary_level", UserInfo.salary_level);
             jsonObj.put("is_deleted", UserInfo.is_deleted);
+            jsonObj.put("special", UserInfo.special);
             jsonObj.put("mobile", UserInfo.mobile);
             jsonObj.put("czy_id", UserInfo.czy_id);
             jsonObj.put("email", UserInfo.email);
@@ -546,6 +547,7 @@ public class Tools {
         String mail = "";
         String corp_id = "";
         int is_deleted = 0;
+        int special = 0;
         String salary_level = "";
         int czy_id = 0;
         String jobName = "";
@@ -570,6 +572,7 @@ public class Tools {
             mail = data.getString("email");//邮箱号
             corp_id = data.getString("corp_id");//租户ID
             is_deleted = data.getInt("is_deleted");//是否删除
+            special = data.getInt("special");//是否特殊员工1是，0否;
             salary_level = data.getString("salary_level");//工资等级
             czy_id = data.getInt("czy_id");//彩之云ID
             jobName = data.getString("job_type");//职位
@@ -652,6 +655,10 @@ public class Tools {
                 changed = true;
                 break initInfo;
             }
+            if (UserInfo.special != special) {
+                changed = true;
+                break initInfo;
+            }
             if (!TextUtils.equals(UserInfo.email, mail)) {
                 changed = true;
                 break initInfo;
@@ -676,6 +683,7 @@ public class Tools {
         UserInfo.corp_id = corp_id;
         UserInfo.salary_level = salary_level;
         UserInfo.is_deleted = is_deleted;
+        UserInfo.special = special;
         UserInfo.email = mail;
         UserInfo.mobile = mobile;
         UserInfo.czy_id = czy_id;

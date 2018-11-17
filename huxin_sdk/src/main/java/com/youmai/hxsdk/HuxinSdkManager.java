@@ -33,7 +33,6 @@ import com.youmai.hxsdk.db.helper.CacheMsgHelper;
 import com.youmai.hxsdk.db.manager.GreenDBIMManager;
 import com.youmai.hxsdk.entity.IpConfig;
 import com.youmai.hxsdk.entity.RespBaseBean;
-import com.youmai.hxsdk.entity.VideoCall;
 import com.youmai.hxsdk.http.HttpConnector;
 import com.youmai.hxsdk.http.IGetListener;
 import com.youmai.hxsdk.http.IPostListener;
@@ -45,11 +44,9 @@ import com.youmai.hxsdk.proto.YouMaiBasic;
 import com.youmai.hxsdk.proto.YouMaiBuddy;
 import com.youmai.hxsdk.proto.YouMaiGroup;
 import com.youmai.hxsdk.proto.YouMaiMsg;
-import com.youmai.hxsdk.proto.YouMaiVideo;
 import com.youmai.hxsdk.service.HuxinService;
 import com.youmai.hxsdk.socket.IMContentUtil;
 import com.youmai.hxsdk.socket.NotifyListener;
-import com.youmai.hxsdk.socket.PduBase;
 import com.youmai.hxsdk.socket.ReceiveListener;
 import com.youmai.hxsdk.utils.AppUtils;
 import com.youmai.hxsdk.utils.GsonUtil;
@@ -64,9 +61,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by colin on 2016/7/15.
@@ -99,7 +93,6 @@ public class HuxinSdkManager {
 
     private StackAct mStackAct;
     private UserInfo mUserInfo;
-    private VideoCall mVideoCall;
     private boolean isKicked;
 
     /**
@@ -265,14 +258,6 @@ public class HuxinSdkManager {
         this.mLoginStatusListener = listener;
     }
 
-
-    public VideoCall getVideoCall() {
-        return mVideoCall;
-    }
-
-    public void setVideoCall(VideoCall videoCall) {
-        this.mVideoCall = videoCall;
-    }
 
     public void saveUserInfo() {
         mUserInfo.saveJson(mContext);
@@ -550,35 +535,6 @@ public class HuxinSdkManager {
         //SPDataUtil.setUserInfoJson(mContext, "");
 
         IMMsgManager.instance().clearShortcutBadger();
-    }
-
-    public void reLoginQuiet() {
-        if (isLogin()) {
-            isKicked = false;
-        }
-        final Activity act = getStackAct().currentActivity();
-        if (isKicked && act != null) {
-            String uuid = HuxinSdkManager.instance().getUuid();
-            if (!TextUtils.isEmpty(uuid)) {
-                final ProgressDialog progressDialog = new ProgressDialog(act);
-                progressDialog.setMessage("正在重新登录，请稍后...");
-                progressDialog.show();
-
-                String ip = AppUtils.getStringSharedPreferences(mContext, "IP", AppConfig.getSocketHost());
-                int port = AppUtils.getIntSharedPreferences(mContext, "PORT", AppConfig.getSocketPort());
-
-                InetSocketAddress isa = new InetSocketAddress(ip, port);
-                connectTcp(uuid, isa);
-                isKicked = false;
-
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        progressDialog.dismiss();
-                    }
-                }, 1000);
-            }
-        }
     }
 
 
@@ -1829,354 +1785,6 @@ public class HuxinSdkManager {
 
         sendProto(chatMsg, YouMaiBasic.COMMANDID.CID_CHAT_GROUP_VALUE, callback);
     }
-
-
-    /**
-     * 创建视频聊天房间
-     *
-     * @param groupId
-     * @param topic
-     * @param type
-     * @param callback
-     */
-    public void reqCreateVideoRoom(int groupId, String topic, YouMaiVideo.VideoType type,
-                                   ReceiveListener callback) {
-        String avatar = ColorsConfig.HEAD_ICON_URL + "avatar?uid=" + getUserName();
-        YouMaiVideo.RoomCreateReq.Builder builder = YouMaiVideo.RoomCreateReq.newBuilder();
-        builder.setUserId(getUuid());
-        builder.setTopic(topic);
-        builder.setGroup(true);
-        builder.setGroupId(groupId);
-        builder.setType(type);
-
-        builder.setAvator(avatar);
-        builder.setNickname(getRealName());
-        YouMaiVideo.RoomCreateReq roomCreateReq = builder.build();
-        sendProto(roomCreateReq, YouMaiBasic.COMMANDID.CID_VIDEO_ROOM_CREATE_REQ_VALUE, callback);
-
-    }
-
-    /**
-     * 邀请视频聊天成员
-     *
-     * @param roomName
-     * @param callback
-     */
-    public void inviteVideoMember(String roomName, int groupId, String info, YouMaiVideo.VideoType type,
-                                  List<YouMaiVideo.RoomMemberItem> memberList, ReceiveListener callback) {
-        String avatar = ColorsConfig.HEAD_ICON_URL + "avatar?uid=" + getUserName();
-
-        YouMaiVideo.MemberInviteReq.Builder builder = YouMaiVideo.MemberInviteReq.newBuilder();
-        builder.setAdminId(getUuid());
-        builder.setGroupId(groupId);
-        builder.setInfo(info);
-        builder.setNickname(getRealName());
-        builder.setAvator(avatar);
-        builder.setRoomName(roomName);
-        builder.addAllMemberList(memberList);
-        builder.setType(type);
-        YouMaiVideo.MemberInviteReq memberAddReq = builder.build();
-        sendProto(memberAddReq, YouMaiBasic.COMMANDID.CID_VIDEO_MEMBER_INVITE_REQ_VALUE, callback);
-    }
-
-
-    /**
-     * 邀请视频聊天成员
-     *
-     * @param roomName
-     * @param callback
-     */
-    public void reqVideoInvite(String roomName, boolean isAgree, String adminId, ReceiveListener callback) {
-        YouMaiVideo.MemberInviteResponseReq.Builder builder = YouMaiVideo.MemberInviteResponseReq.newBuilder();
-        builder.setMemberId(getUuid());
-        builder.setAdminId(adminId);
-        builder.setRoomName(roomName);
-        builder.setAgree(isAgree);
-
-        YouMaiVideo.MemberInviteResponseReq memberAddReq = builder.build();
-        sendProto(memberAddReq, YouMaiBasic.COMMANDID.CID_VIDEO_MEMBER_INVITE_REPONSE_REQ_VALUE, callback);
-    }
-
-
-    /**
-     * 添加视频聊天成员
-     *
-     * @param roomName
-     * @param callback
-     */
-    public void addVideoRoomMember(String roomName, ReceiveListener callback) {
-        YouMaiVideo.MemberApplyReq.Builder builder = YouMaiVideo.MemberApplyReq.newBuilder();
-        builder.setMemberId(getUuid());
-        builder.setRoomName(roomName);
-        YouMaiVideo.MemberApplyReq memberAddReq = builder.build();
-        sendProto(memberAddReq, YouMaiBasic.COMMANDID.CID_VIDEO_MEMBER_APPLY_REQ_VALUE, callback);
-
-    }
-
-
-    /**
-     * 接受视频邀请
-     *
-     * @param memberId
-     * @param roomName
-     * @param callback
-     */
-    public void reqMemberAddResponse(String memberId, boolean isAgree, String roomName, ReceiveListener callback) {
-        YouMaiVideo.MemberApplyRsp.Builder builder = YouMaiVideo.MemberApplyRsp.newBuilder();
-        builder.setMemberId(memberId);
-        builder.setRoomName(roomName);
-        YouMaiVideo.MemberApplyRsp memberAddReq = builder.build();
-        sendProto(memberAddReq, YouMaiBasic.COMMANDID.CID_VIDEO_MEMBER_APPLY_REPONSE_RSP_VALUE, callback);
-
-    }
-
-
-    /**
-     * 移除视频成员
-     *
-     * @param roomName
-     * @param callback
-     */
-    public void reqMemberDelete(List<String> delList, String roomName, ReceiveListener callback) {
-        YouMaiVideo.MemberDeleteReq.Builder builder = YouMaiVideo.MemberDeleteReq.newBuilder();
-        builder.setUserId(getUuid());
-        builder.setRoomName(roomName);
-        builder.addAllMemberList(delList);
-
-        //builder.setRoomName(roomName);
-        YouMaiVideo.MemberDeleteReq memberAddReq = builder.build();
-        sendProto(memberAddReq, YouMaiBasic.COMMANDID.CID_VIDEO_MEMBER_DELETE_REQ_VALUE, callback);
-
-    }
-
-
-    /**
-     * 视频房间设置
-     *
-     * @param isCamera
-     * @param isVoice
-     * @param callback
-     */
-    public void reqVideoSetting(boolean isCamera, boolean isVoice, String roomName, ReceiveListener callback) {
-        YouMaiVideo.VideoSettingReq.Builder builder = YouMaiVideo.VideoSettingReq.newBuilder();
-        builder.setRoomName(roomName);
-        YouMaiVideo.VideoSettingReq memberAddReq = builder.build();
-        sendProto(memberAddReq, YouMaiBasic.COMMANDID.CID_VIDEO_SETTING_REQ_VALUE, callback);
-
-    }
-
-
-    /**
-     * 获取连麦房间信息
-     */
-    public void reqRoomInfo(String roomName) {
-        YouMaiVideo.RoomInfoReq.Builder builder = YouMaiVideo.RoomInfoReq.newBuilder();
-        builder.setUserId(getUuid());
-        builder.setRoomName(roomName);
-        YouMaiVideo.RoomInfoReq roomInfoReq = builder.build();
-        sendProto(roomInfoReq, YouMaiBasic.COMMANDID.CID_VIDEO_ROOM_INFO_REQ_VALUE, new ReceiveListener() {
-            @Override
-            public void OnRec(PduBase pduBase) {
-                try {
-                    YouMaiVideo.RoomInfoRsp rep = YouMaiVideo.RoomInfoRsp.parseFrom(pduBase.body);
-                    if (rep.getResult() == YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS) {
-                        List<YouMaiVideo.RoomMemberItem> list = rep.getMemberListList();
-                        int count = rep.getMemberListCount();
-                        int groupId = rep.getGroupId();
-                        String roomName = rep.getRoomName();
-                        String topic = rep.getTopic();
-
-                        VideoCall videoCall = getVideoCall();
-                        if (videoCall != null) {
-                            videoCall.setMembers(list);
-                            videoCall.setCount(count);
-                            videoCall.setGroupId(groupId);
-                            videoCall.setRoomName(roomName);
-                            videoCall.setTopic(topic);
-                        }
-                    }
-
-                } catch (InvalidProtocolBufferException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
-
-    /**
-     * 获取连麦房间信息
-     */
-    public void reqRoomInfo(String roomName, ReceiveListener receiveListener) {
-        YouMaiVideo.RoomInfoReq.Builder builder = YouMaiVideo.RoomInfoReq.newBuilder();
-        builder.setUserId(getUuid());
-        builder.setRoomName(roomName);
-        YouMaiVideo.RoomInfoReq roomInfoReq = builder.build();
-        sendProto(roomInfoReq, YouMaiBasic.COMMANDID.CID_VIDEO_ROOM_INFO_REQ_VALUE, receiveListener);
-    }
-
-    /**
-     * 用户退出房间
-     */
-    public void reqExitRoom(ReceiveListener listener) {
-        YouMaiVideo.ExitRoomReq.Builder builder = YouMaiVideo.ExitRoomReq.newBuilder();
-        builder.setUserId(getUuid());
-        builder.setRoomName(mVideoCall.getRoomName());
-        YouMaiVideo.ExitRoomReq exitRoomReq = builder.build();
-        sendProto(exitRoomReq, YouMaiBasic.COMMANDID.CID_VIDEO_ROOM_EXIT_REQ_VALUE, listener);
-    }
-
-
-    /**
-     * 用户退出房间
-     */
-    public void reqExitRoom() {
-        YouMaiVideo.ExitRoomReq.Builder builder = YouMaiVideo.ExitRoomReq.newBuilder();
-        builder.setUserId(getUuid());
-        builder.setRoomName(mVideoCall.getRoomName());
-        YouMaiVideo.ExitRoomReq exitRoomReq = builder.build();
-        sendProto(exitRoomReq, YouMaiBasic.COMMANDID.CID_VIDEO_ROOM_EXIT_REQ_VALUE, new ReceiveListener() {
-            @Override
-            public void OnRec(PduBase pduBase) {
-                try {
-                    YouMaiVideo.ExitRoomRsp rep = YouMaiVideo.ExitRoomRsp.parseFrom(pduBase.body);
-                    if (rep.getResult() == YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS) {
-                        Toast.makeText(mContext, "退出成功", Toast.LENGTH_SHORT).show();
-                    }
-
-                } catch (InvalidProtocolBufferException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
-
-
-    /**
-     * 结束视频
-     */
-    public void reqDestroyRoom() {
-        YouMaiVideo.DestroyRoomReq.Builder builder = YouMaiVideo.DestroyRoomReq.newBuilder();
-        builder.setUserId(getUuid());
-        builder.setRoomName(mVideoCall.getRoomName());
-        YouMaiVideo.DestroyRoomReq destroyRoomReq = builder.build();
-        sendProto(destroyRoomReq, YouMaiBasic.COMMANDID.CID_VIDEO_ROOM_DESTROY_REQ_VALUE,
-                new ReceiveListener() {
-                    @Override
-                    public void OnRec(PduBase pduBase) {
-                        try {
-                            YouMaiVideo.DestroyRoomRsp rep = YouMaiVideo.DestroyRoomRsp.parseFrom(pduBase.body);
-                            if (rep.getResult() == YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS) {
-                                mVideoCall = null;
-                                Toast.makeText(mContext, "房间销毁！", Toast.LENGTH_SHORT).show();
-                            }
-
-                        } catch (InvalidProtocolBufferException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-    }
-
-
-    /**
-     * 申请发言
-     */
-    public void reqVideoSettingApply(String roomName, boolean openCamera, boolean openVoice,
-                                     ReceiveListener callback) {
-        YouMaiVideo.VideoSettingApplyReq.Builder builder = YouMaiVideo.VideoSettingApplyReq.newBuilder();
-        builder.setUserId(getUuid());
-        builder.setAdminId(getUuid());
-        builder.setRoomName(roomName);
-        builder.setOpenCamera(openCamera);
-        builder.setOpenVoice(openVoice);
-        YouMaiVideo.VideoSettingApplyReq memberAddReq = builder.build();
-        sendProto(memberAddReq, YouMaiBasic.COMMANDID.CID_VIDEO_SETTING_APPLY_REQ_VALUE, callback);
-    }
-
-
-    /**
-     * 权限转让
-     *
-     * @param newUserId
-     * @param roomName
-     * @param callback
-     */
-    public void reqPermissionSetting(String newUserId, String roomName, ReceiveListener callback) {
-        YouMaiVideo.PermissionSettingReq.Builder builder = YouMaiVideo.PermissionSettingReq.newBuilder();
-        builder.setNewAdminId(newUserId);
-        builder.setAdminId(getUuid());
-        builder.setRoomName(roomName);
-        YouMaiVideo.PermissionSettingReq memberAddReq = builder.build();
-        sendProto(memberAddReq, YouMaiBasic.COMMANDID.CID_VIDEO_PERMISSION_SETTING_REQ_VALUE, callback);
-    }
-
-
-    /**
-     * 查询视频状态
-     *
-     * @param groupId
-     * @param callback
-     */
-    public void reqVideoState(int groupId, ReceiveListener callback) {
-        YouMaiVideo.VideoStateReq.Builder builder = YouMaiVideo.VideoStateReq.newBuilder();
-        builder.setGroupId(groupId);
-        builder.setMemberId(getUuid());
-        YouMaiVideo.VideoStateReq videoStateReq = builder.build();
-        sendProto(videoStateReq, YouMaiBasic.COMMANDID.CID_VIDEO_STATE_REQ_VALUE, callback);
-    }
-
-
-    private ScheduledExecutorService heartBeatScheduled;
-    private static final int HEART_BEAT_INTERVAL = 10;  //心跳间隔10秒
-
-    /**
-     * 开始心跳
-     */
-    public void startVideoHeartBeat(final String roomName) {
-        heartBeatScheduled = Executors.newScheduledThreadPool(1);
-        heartBeatScheduled.scheduleAtFixedRate(new Runnable() {
-            public void run() {
-                heatBeat(roomName);
-            }
-        }, HEART_BEAT_INTERVAL, HEART_BEAT_INTERVAL, TimeUnit.SECONDS);
-    }
-
-
-    /**
-     * 停止心跳
-     */
-    public void stopVideoHeartBeat() {
-        if (heartBeatScheduled != null
-                && !heartBeatScheduled.isShutdown()) {
-            heartBeatScheduled.shutdown();
-            heartBeatScheduled = null;
-        }
-    }
-
-    /**
-     * 心跳协议请求
-     */
-    private void heatBeat(String roomName) {
-        YouMaiVideo.Ping.Builder builder = YouMaiVideo.Ping.newBuilder();
-        builder.setMemberId(getUuid());
-        builder.setRoomName(roomName);
-        YouMaiVideo.Ping req = builder.build();
-        sendProto(req, YouMaiBasic.COMMANDID.CID_VIDEO_PING_VALUE, new ReceiveListener() {
-            @Override
-            public void OnRec(PduBase pduBase) {
-                try {
-                    YouMaiVideo.Pong rsp = YouMaiVideo.Pong.parseFrom(pduBase.body);
-                    if (rsp.getResult() == YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS) {
-
-                    }
-                } catch (InvalidProtocolBufferException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-
-    }
-
 
     public void reqRedPackageShareConfig(IGetListener listener) {
         String url = ColorsConfig.LISHI_SHARECONFIG;

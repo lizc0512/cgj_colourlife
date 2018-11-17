@@ -30,12 +30,11 @@ import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.module.MainActivity1;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.RequestConfig;
-import com.tg.coloursteward.net.RequestParams;
-import com.tg.coloursteward.net.ResponseData;
 import com.tg.coloursteward.object.ImageParams;
 import com.tg.coloursteward.object.SlideItemObj;
 import com.tg.coloursteward.object.ViewConfig;
 import com.tg.coloursteward.util.GlideCacheUtil;
+import com.tg.coloursteward.util.TokenUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.CameraView;
 import com.tg.coloursteward.view.CameraView.STATE;
@@ -50,6 +49,8 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 个人中心
@@ -64,10 +65,8 @@ public class UserInfoActivity extends BaseActivity implements ItemClickListener,
     private ArrayList<ViewConfig> list1 = new ArrayList<ViewConfig>();
     private ArrayList<ViewConfig> list2 = new ArrayList<ViewConfig>();
     private boolean needPostImage = false;
-    private String realname = "";
     private String email = "";
     private String sex = "";
-    private String headImgPath;
     private ImageView ivIcon;// 头像
     private RelativeLayout rlIcon;
     private String imageName;
@@ -93,8 +92,6 @@ public class UserInfoActivity extends BaseActivity implements ItemClickListener,
      * 初始化控件
      */
     private void initView() {
-        realname = UserInfo.realname;
-        String oa = UserInfo.employeeAccount;
         sex = UserInfo.sex;
         email = UserInfo.email;
         int size = (int) (50 * Tools.getDisplayMetrics(this).density);
@@ -157,7 +154,6 @@ public class UserInfoActivity extends BaseActivity implements ItemClickListener,
      * 更新UI
      */
     private void updateView() {
-        list1.get(0).rightText = UserInfo.realname;
         list1.get(1).rightText = UserInfo.sex;
         list2.get(3).rightText = UserInfo.email;
         messageView1.freshAll();
@@ -167,19 +163,20 @@ public class UserInfoActivity extends BaseActivity implements ItemClickListener,
     @Override
     public void onSuccess(Message msg, String jsonString, String hintString) {
         super.onSuccess(msg, jsonString, hintString);
-        String jsonObject = HttpTools.getContentString(jsonString);
-        ResponseData data = HttpTools.getResponseContentObject(jsonObject);
         if (msg.arg1 == HttpTools.SET_USER_INFO) {
             int code = HttpTools.getCode(jsonString);
             if (code == 0) {
-                headView.setRightText("保存");
-                messageView1.setEditable(true);
-                messageView2.setEditable(true);
-                setUserInfo();
-                updateView();
-                ToastFactory.showToast(this, hintString);
-                sendBroadcast(new Intent(MainActivity1.ACTION_FRESH_USERINFO));
-                UserInfoActivity.this.finish();
+                String content = HttpTools.getContentString(jsonString);
+                if (content.equals("1")) {
+                    headView.setRightText("保存");
+                    messageView1.setEditable(true);
+                    messageView2.setEditable(true);
+                    setUserInfo();
+                    updateView();
+                    ToastFactory.showToast(this, "保存成功");
+                    sendBroadcast(new Intent(MainActivity1.ACTION_FRESH_USERINFO));
+                    UserInfoActivity.this.finish();
+                }
             } else {
                 ToastFactory.showToast(this, hintString);
             }
@@ -197,7 +194,6 @@ public class UserInfoActivity extends BaseActivity implements ItemClickListener,
     }
 
     private void setUserInfo() {
-        UserInfo.realname = realname;
         UserInfo.sex = sex;
         UserInfo.email = email;
         Tools.saveUserInfo(this);
@@ -214,7 +210,6 @@ public class UserInfoActivity extends BaseActivity implements ItemClickListener,
         if (needPostImage) {
             ImageParams imgParams = new ImageParams();
             imgParams.fileName = imageName;
-            imgParams.path = headImgPath;
             HttpTools.postAnImage(Contants.Html5.HEAD_ICON_URL, mHand, imgParams);
         } else {
             submitUserInfo();
@@ -277,7 +272,6 @@ public class UserInfoActivity extends BaseActivity implements ItemClickListener,
     private void getImageToView(Intent data) {
         final Bitmap bitmap = BitmapFactory.decodeFile(crop_path
                 + imageName);
-        String fileName = crop_path + imageName;
         needPostImage = true;
         ivIcon.setImageBitmap(bitmap);
         if (needPostImage) {
@@ -329,7 +323,7 @@ public class UserInfoActivity extends BaseActivity implements ItemClickListener,
             }
         } else if (v.getId() == R.id.rl_icon) {
             showFileChooser();
-        } else {
+        } else if(v.getId()==R.id.right_layout){
             if (messageView1.isEditable() || messageView2.isEditable()) {
                 submitUserInfo();
             } else {
@@ -363,27 +357,31 @@ public class UserInfoActivity extends BaseActivity implements ItemClickListener,
             }
             return;
         }
-        RequestConfig config = new RequestConfig(this, HttpTools.SET_USER_INFO);
-        RequestParams params = new RequestParams
-                ("employeeAccount", UserInfo.employeeAccount).
-                put("realname", realname).
-                put("sex", sex).
-                put("mail", email);
-        config.hintString = "修改个人信息";
-        HttpTools.httpPut(Contants.URl.URL_ICETEST, "/account", config, params);
+        RequestConfig config = new RequestConfig(UserInfoActivity.this, HttpTools.SET_USER_INFO, "验证中");
+        Map<String, Object> validateParams = new HashMap<>();
+        if (sex.equals("男")) {
+            validateParams.put("gender", "1");//1男，2女;
+        } else if (sex.equals("女")) {
+            validateParams.put("gender", "2");//1男，2女;
+        }
+        validateParams.put("email", email);
+        validateParams.put("device_uuid", TokenUtils.getUUID(UserInfoActivity.this));
+        Map<String, String> stringMap = TokenUtils.getStringMap(TokenUtils.getNewSaftyMap(UserInfoActivity.this, validateParams));
+        HttpTools.httpPost_Map(Contants.URl.URL_ICESTAFF, "app/modifyInfo", config, (HashMap) stringMap);
+
+
     }
 
     private boolean hasChanged() {
-        realname = messageView1.getRightTextString(0);
         sex = messageView1.getRightTextString(1);
         email = messageView2.getRightTextString(3);
-        if (!TextUtils.equals(realname, UserInfo.realname)) {
-            return true;
-        }
         if (!TextUtils.equals(sex, UserInfo.sex)) {
             return true;
         }
-        return !TextUtils.equals(email, UserInfo.email);
+        if(!TextUtils.equals(email,UserInfo.email)){
+            return true;
+        }
+        return  false;
     }
 
     @Override

@@ -183,6 +183,8 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
             extras = data.getStringExtra(KEY_EXTRAS);
             form_login = data.getBooleanExtra(FROM_LOGIN, false);
         }
+        msgHand = new MessageHandler(this);
+        msgHand.setResponseListener(this);
         initTitle();
         initView();
         getTokenInfo();
@@ -396,7 +398,24 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
                     e.printStackTrace();
                 }
             }
+        } else if (msg.arg1 == HttpTools.POST_USERSYNC) {
+            if (code == 0) {
+            }
         }
+    }
+
+    private void initInfoSync() {
+        RequestConfig config = new RequestConfig(this, HttpTools.POST_USERSYNC,null);
+        RequestParams params = new RequestParams();
+        params.put("user_uuid", UserInfo.uid);
+        params.put("user_name", UserInfo.employeeAccount);
+        params.put("mobile", UserInfo.mobile);
+        params.put("area_uuid", UserInfo.orgId);
+        params.put("area_name", UserInfo.familyName);
+        params.put("os", "android");
+        params.put("jpush_alias", "cgj_" + UserInfo.employeeAccount);
+        params.put("platform_uuid", "2fe08211ef974089831ccadcd98895ca");
+        HttpTools.httpPost(Contants.URl.URL_IMPUSH, "api/app/userSync", config, params);
     }
 
     @Override
@@ -485,9 +504,10 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
         if (!tags) {
             setTag();
         }
-        if (!alias) {
+        if (alias) {
+            initInfoSync();
+        } else {
             setAlias();
-
         }
         CityPropertyApplication.addActivity(this);
     }
@@ -497,8 +517,6 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
     }
 
     private void initProto() {
-        msgHand = new MessageHandler(this);
-        msgHand.setResponseListener(this);
         if (form_login == false) {
             getSlientLogin();
         }
@@ -867,6 +885,7 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
                 case 0:
                     Logger.logd(TAG, "alias   设置成功   code=" + code);
                     Tools.setBooleanValue(MainActivity1.this, Contants.storage.ALIAS, true);
+                    initInfoSync();
                     break;
 
                 case 6002:

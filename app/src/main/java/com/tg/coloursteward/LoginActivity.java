@@ -1,6 +1,7 @@
 package com.tg.coloursteward;
 
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -18,20 +19,26 @@ import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.amap.api.location.AMapLocation;
+import com.baidu.trace.api.track.HistoryTrackRequest;
+import com.baidu.trace.api.track.HistoryTrackResponse;
+import com.baidu.trace.api.track.OnTrackListener;
 import com.geetest.gt3unbindsdk.Bind.GT3GeetestBindListener;
 import com.geetest.gt3unbindsdk.Bind.GT3GeetestUtilsBind;
 import com.tg.coloursteward.application.CityPropertyApplication;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.database.SharedPreferencesTools;
+import com.tg.coloursteward.entity.CzyOauthEntity;
 import com.tg.coloursteward.entity.JiYanTwoCheckEntity;
 import com.tg.coloursteward.entity.SingleDeviceLogin;
 import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.inter.Oauth2CallBack;
 import com.tg.coloursteward.module.MainActivity1;
+import com.tg.coloursteward.net.DES;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.MD5;
 import com.tg.coloursteward.net.RequestConfig;
@@ -55,6 +62,8 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.tg.coloursteward.application.CityPropertyApplication.lbsTraceClient;
+
 /**
  * 登录页面
  *
@@ -76,9 +85,9 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
     private String extras;
     private GT3GeetestUtilsBind gt3GeetestUtils;
     private RelativeLayout submit;
-    private String str_latitude;
-    private String str_longitude;
+    private TextView tv_czylogin;
     private OAuth2ServiceUpdate auth2ServiceUpdate;
+    private String code;
 
     @Override
     public View getContentView() {
@@ -112,7 +121,30 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
                 forgetPassword();// 忘记密码
                 break;
             case R.id.iv_close://关闭
-                finish();
+                CityPropertyApplication.finishOtherActivity(LoginActivity.class);
+                LoginActivity.this.finish();
+                break;
+            case R.id.tv_czylogin://彩之云授权登录
+                ToastFactory.showToast(LoginActivity.this, "正在调起中...");
+                String package_name = "cn.net.cyberway";
+                String activity_path = "cn.net.cyberway.OauthWebviewActivity";
+                Intent intent = new Intent();
+                Bundle bundle = new Bundle();
+                bundle.putString("applicationId", DES.APP_ID);
+                bundle.putString("packgename", "com.tg.coloursteward");
+                intent.putExtras(bundle);
+                ComponentName cn = new ComponentName(package_name, activity_path);
+                intent.setComponent(cn);
+                try {
+                    if (intent.resolveActivityInfo(getPackageManager(), PackageManager.MATCH_DEFAULT_ONLY) != null) {
+                        startActivity(intent);
+                    } else {
+                        ToastFactory.showToast(LoginActivity.this, "未检测到手机有安装彩之云APP");
+                    }
+                } catch (Exception e) {
+                    ToastFactory.showToast(LoginActivity.this, "请安装最新版彩之云APP");
+                }
+
                 break;
         }
         return super.handClickEvent(v);
@@ -123,10 +155,17 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         Intent getintent = getIntent();
-        boolean loginOut = getintent.getBooleanExtra("login_out", false);
-        extras = getintent.getStringExtra(MainActivity.KEY_EXTRAS);
-        if (loginOut) {
-            SharedPreferencesTools.clearUserId(this);
+        if (null != getintent) {
+            boolean loginOut = getintent.getBooleanExtra("login_out", false);
+            extras = getintent.getStringExtra(MainActivity.KEY_EXTRAS);
+            code = getintent.getStringExtra("czy_code");
+            if (loginOut) {
+                SharedPreferencesTools.clearUserId(this);
+            }
+        }
+        if (!TextUtils.isEmpty(code)) {
+            ThridLogin(code);
+            Tools.saveStringValue(LoginActivity.this, Contants.storage.THRID_CODE, code);
         }
         initView();
         initGetTS();
@@ -139,13 +178,27 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
         gt3GeetestUtils = new GT3GeetestUtilsBind(LoginActivity.this);
     }
 
+    private void ThridLogin(String code) {
+        RequestConfig config = new RequestConfig(LoginActivity.this, HttpTools.GET_CZYOAUTH, "登录中");
+        Map<String, Object> validateParams = new HashMap<>();
+        validateParams.put("code", code);
+        validateParams.put("token", DES.TOKEN);
+        validateParams.put("app_id", DES.APP_ID);
+        validateParams.put("client_secret", DES.TOKEN);
+        validateParams.put("device_uuid", TokenUtils.getUUID(LoginActivity.this));
+        Map<String, String> stringMap = TokenUtils.getStringMap(TokenUtils.getNewSaftyMap(LoginActivity.this, validateParams));
+        HttpTools.httpGet_Map(Contants.URl.URL_ICESTAFF, "app/authUser", config, (HashMap) stringMap);
+    }
+
     private void initView() {
+        tv_czylogin = findViewById(R.id.tv_czylogin);
         contentLayout = findViewById(R.id.login_content);
         editUser = (EditText) findViewById(R.id.edit_user);
         startLayout = findViewById(R.id.start_layout);
         editPassword = (EditText) findViewById(R.id.edit_password);
         ivClose = (ImageView) findViewById(R.id.iv_close);
         ivClose.setOnClickListener(singleListener);
+        tv_czylogin.setOnClickListener(singleListener);
         submit = findViewById(R.id.submit);
         submit.setOnClickListener(singleListener);
         findViewById(R.id.forget_pwd).setOnClickListener(singleListener);
@@ -204,7 +257,6 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
                 ResponseData userInfoData = SharedPreferencesTools.getUserInfo(LoginActivity.this);
                 String skin_code = Tools.getStringValue(LoginActivity.this, Contants.storage.SKINCODE);
                 if (userInfoData.length > 0) {
-//                    Tools.loadUserInfo(userInfoData, null);
                     Intent intent = new Intent(LoginActivity.this, MainActivity1.class);
                     intent.putExtra(MainActivity1.KEY_SKIN_CODE, skin_code);
                     intent.putExtra(MainActivity1.KEY_EXTRAS, extras);
@@ -269,18 +321,6 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
              */
             @Override
             public void gt3FirstResult(JSONObject jsonObject) {
-                String json = String.valueOf(jsonObject);
-                try {
-                    JSONObject jsonObject1 = new JSONObject(json);
-                    int code = jsonObject1.getInt("success");
-                    if (code == 1) {
-                        String gt = jsonObject1.getString("gt");
-                        String challenge = jsonObject1.getString("challenge");
-                        int new_captcha = jsonObject1.getInt("new_captcha");
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
             }
 
             /**
@@ -397,7 +437,6 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
 
             @Override
             public void gt3DialogOnError(String error) {
-                Log.i("dsd", "gt3DialogOnError");
                 gt3GeetestUtils.cancelAllTask();
             }
         });
@@ -408,22 +447,27 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
     /**
      * 登录
      */
-    public void login() {
+    public void login(String username, String pwd, String pwdMD5) {
         Tools.hideKeyboard(editUser);
-        String passwordMD5 = null;
-        try {
-            passwordMD5 = MD5.getMd5Value(password).toLowerCase();
-        } catch (Exception e) {
-            e.printStackTrace();
+        String passwordMD5 = "";
+        if (!TextUtils.isEmpty(pwd)) {
+            Tools.savePassWord(getApplicationContext(), pwd);//保存密码
+            try {
+                passwordMD5 = MD5.getMd5Value(pwd).toLowerCase();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            Tools.savePassWordMD5(getApplicationContext(), passwordMD5);//保存密码(MD5加密后)
+        } else {
+            passwordMD5 = pwdMD5;
+            Tools.savePassWordMD5(getApplicationContext(), pwdMD5);//保存密码(MD5加密后)
         }
-        Tools.savePassWordMD5(getApplicationContext(), passwordMD5);//保存密码(MD5加密后)
-        Tools.savePassWord(getApplicationContext(), password);//保存密码
-        UserInfo.employeeAccount=newPhone;
+        UserInfo.employeeAccount = username;
         getKeyAndSecret();
         if (null == auth2ServiceUpdate) {
             auth2ServiceUpdate = new OAuth2ServiceUpdate(LoginActivity.this);
         }
-        auth2ServiceUpdate.getOAuth2Service(newPhone, passwordMD5, new Oauth2CallBack() {
+        auth2ServiceUpdate.getOAuth2Service(username, passwordMD5, new Oauth2CallBack() {
             @Override
             public void onData(String access_token) {
                 getNetInfo(access_token);
@@ -449,13 +493,15 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
                         if (code == 0) {
                             String response = HttpTools.getContentString(jsonString);
                             ResponseData data = HttpTools.getResponseContentObject(response);
-                            Tools.loadUserInfo(data, jsonString);
-                            Tools.savetokenUserInfo(LoginActivity.this, jsonString);
                             int status = data.getInt("status");
-                            corpId = data.getString("corp_id");
-                            UserInfo.infoorgId = data.getString("org_uuid");
-                            Tools.saveOrgId(LoginActivity.this, data.getString("org_uuid"));
-                            Tools.saveStringValue(LoginActivity.this, Contants.storage.CORPID, corpId);//租户ID
+                            if (status == 0) {
+                                Tools.loadUserInfo(data, jsonString);
+                                Tools.savetokenUserInfo(LoginActivity.this, jsonString);
+                                corpId = data.getString("corp_id");
+                                UserInfo.infoorgId = data.getString("org_uuid");
+                                Tools.saveOrgId(LoginActivity.this, data.getString("org_uuid"));
+                                Tools.saveStringValue(LoginActivity.this, Contants.storage.CORPID, corpId);//租户ID
+                            }
                             if (status == 0) {//账号正常
                                 singleDevicelogin();
                                 getSkin(corpId);
@@ -548,7 +594,7 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
                     entity = GsonUtils.gsonToBean(jsonString, JiYanTwoCheckEntity.class);
                     if (entity.getContent().getStatus() == 1) {//验证通过
                         gt3GeetestUtils.gt3TestFinish();
-                        login();
+                        login(newPhone, password, "");
                     } else {
                         gt3GeetestUtils.gt3TestClose();
                         ToastFactory.showToast(LoginActivity.this, "极验验证失败,请稍后重试");
@@ -558,6 +604,18 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
             } else {
                 gt3GeetestUtils.gt3TestClose();
                 ToastFactory.showToast(LoginActivity.this, "极验获取数据异常,请稍后重试");
+            }
+
+        } else if (msg.arg1 == HttpTools.GET_CZYOAUTH) {
+            if (code == 0) {
+                try {
+                    CzyOauthEntity czyOauthEntity = new CzyOauthEntity();
+                    czyOauthEntity = GsonUtils.gsonToBean(jsonString, CzyOauthEntity.class);
+                    login(czyOauthEntity.getContent().getUsername(), "", czyOauthEntity.getContent().getPasswordMD5());
+                } catch (Exception e) {
+                }
+            } else {
+                ToastFactory.showToast(LoginActivity.this, message);
             }
 
         }
@@ -594,12 +652,12 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
      * 调用登录的接口
      */
     public void getEmployeeInfo(String key, String secret) {
-        String pwd = Tools.getPassWord(this);
+        String pwdMD5 = Tools.getPassWordMD5(this);
         RequestConfig config = new RequestConfig(this, HttpTools.SET_EMPLOYEE_INFO, null);
         RequestParams params = new RequestParams();
         params.put("username", UserInfo.employeeAccount);
         try {
-            params.put("password", MD5.getMd5Value(pwd).toLowerCase());
+            params.put("password", pwdMD5);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -93,7 +93,6 @@
                             android:layout_height="16dp"
                             android:layout_centerVertical="true"
                             android:layout_marginLeft="20dp"
-                            android:layout_toRightOf="@id/textView"
                             android:src="@drawable/next" />
                     </RelativeLayout>
                 </RelativeLayout>

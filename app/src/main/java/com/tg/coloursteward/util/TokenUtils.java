@@ -406,7 +406,7 @@ public class TokenUtils {
     public static Map<String, Object> getNewSaftyMap(Context context, Map<String, Object> paramsMap) {
         String version = UpdateManager.getVersionName(context);
         paramsMap.put("nonce_str", getRandomNonceStr());
-        paramsMap.put("native_type", 1);
+        paramsMap.put("native_type", 1);//客户端标识，1：安卓，2：苹果
         paramsMap.put("version", version);
         String buff = "";
         try {

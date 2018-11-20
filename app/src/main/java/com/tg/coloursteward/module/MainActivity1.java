@@ -30,6 +30,8 @@ import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import com.baidu.trace.model.OnTraceListener;
+import com.baidu.trace.model.PushMessage;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 import com.tg.coloursteward.InviteRegisterActivity;
 import com.tg.coloursteward.R;
@@ -88,6 +90,9 @@ import java.util.Set;
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.api.TagAliasCallback;
 import q.rorbin.badgeview.QBadgeView;
+
+import static com.tg.coloursteward.application.CityPropertyApplication.lbsTraceClient;
+import static com.tg.coloursteward.application.CityPropertyApplication.trace;
 
 
 /**
@@ -195,6 +200,12 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
         reqSearchList();
 
         HuxinSdkManager.instance().getStackAct().addActivity(this);
+        initYingYan();
+    }
+
+    private void initYingYan() {
+        lbsTraceClient.startTrace(trace, null);
+        lbsTraceClient.startGather(null);
     }
 
     private void initGetToken() {
@@ -405,7 +416,7 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
     }
 
     private void initInfoSync() {
-        RequestConfig config = new RequestConfig(this, HttpTools.POST_USERSYNC,null);
+        RequestConfig config = new RequestConfig(this, HttpTools.POST_USERSYNC, null);
         RequestParams params = new RequestParams();
         params.put("user_uuid", UserInfo.uid);
         params.put("user_name", UserInfo.employeeAccount);

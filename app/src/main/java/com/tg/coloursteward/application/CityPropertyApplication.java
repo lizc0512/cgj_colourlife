@@ -40,9 +40,10 @@ import cn.jpush.android.api.JPushInterface;
 public class CityPropertyApplication extends Application {
     private static List<Activity> mList = new LinkedList<Activity>();
     private static CityPropertyApplication instance;
-    private long serviceId = 206402;
-    private String entityName = "android_cgj" + UserInfo.realname;
+    public static long serviceId = 206402;
+    public static String entityName = "android_cgj" + UserInfo.realname;
     public static LBSTraceClient lbsTraceClient;
+    public static Trace trace;
 
     @Override
     public void onCreate() {
@@ -85,10 +86,10 @@ public class CityPropertyApplication extends Application {
         NBSAppAgent.setLicenseKey("e706eb8242634439958ddeed9db7f61f").withLocationServiceEnabled(true).start(this.getApplicationContext());
         NBSAppAgent.setUserCrashMessage("username", UserInfo.employeeAccount);
         //初始化鹰眼SDK
-        Trace trace = new Trace(serviceId, entityName, false);
+        trace = new Trace(serviceId, entityName, false);
         lbsTraceClient = new LBSTraceClient(getApplicationContext());
-        int gatherInterval = 5;
-        int packInterval = 10;
+        int gatherInterval = 60;
+        int packInterval = 60;
         lbsTraceClient.setInterval(gatherInterval, packInterval);
         lbsTraceClient.setLocationMode(LocationMode.High_Accuracy);
         OnTraceListener onTraceListener = new OnTraceListener() {
@@ -127,8 +128,8 @@ public class CityPropertyApplication extends Application {
                 String mes = s;
             }
         };
-//        lbsTraceClient.startTrace(trace, onTraceListener);
-//        lbsTraceClient.startGather(onTraceListener);
+        lbsTraceClient.setOnTraceListener(onTraceListener);
+
     }
 
     public static void initImageLoader(Context context) {

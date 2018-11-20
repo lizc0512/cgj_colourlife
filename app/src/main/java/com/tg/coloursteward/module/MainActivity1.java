@@ -204,45 +204,8 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
     }
 
     private void initYingYan() {
-        OnTraceListener onTraceListener = new OnTraceListener() {
-            @Override
-            public void onBindServiceCallback(int i, String s) {
-                String mes = s;
-            }
-
-            @Override
-            public void onStartTraceCallback(int i, String s) {
-                String mes = s;
-
-            }
-
-            @Override
-            public void onStopTraceCallback(int i, String s) {
-                String mes = s;
-            }
-
-            @Override
-            public void onStartGatherCallback(int i, String s) {
-                String mes = s;
-            }
-
-            @Override
-            public void onStopGatherCallback(int i, String s) {
-                String mes = s;
-            }
-
-            @Override
-            public void onPushCallback(byte b, PushMessage pushMessage) {
-                String mes = String.valueOf(b);
-            }
-
-            @Override
-            public void onInitBOSCallback(int i, String s) {
-                String mes = s;
-            }
-        };
-        lbsTraceClient.startTrace(trace, onTraceListener);
-        lbsTraceClient.startGather(onTraceListener);
+        lbsTraceClient.startTrace(trace, null);
+        lbsTraceClient.startGather(null);
     }
 
     private void initGetToken() {

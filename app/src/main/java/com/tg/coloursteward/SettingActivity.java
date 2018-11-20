@@ -42,6 +42,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import static com.tg.coloursteward.application.CityPropertyApplication.lbsTraceClient;
+
 /**
  * 更多设置
  *
@@ -90,6 +92,7 @@ public class SettingActivity extends BaseActivity implements ItemClickListener {
                 DialogFactory.getInstance().showDialog(SettingActivity.this, new OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        StopYingYan();
                         singleDevicelogout();
                         SharedPreferencesTools.clearUserId(SettingActivity.this);
                         //清空缓存
@@ -113,6 +116,10 @@ public class SettingActivity extends BaseActivity implements ItemClickListener {
         /*viewConfig = new ViewConfig("通话设置", "", true);
         list.add(viewConfig);*/
         mineInfoZone.setData(list);
+    }
+
+    private void StopYingYan() {
+        lbsTraceClient.stopGather(null);
     }
 
     // 检测版本更新

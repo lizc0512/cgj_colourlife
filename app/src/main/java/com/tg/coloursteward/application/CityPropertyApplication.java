@@ -92,6 +92,43 @@ public class CityPropertyApplication extends Application {
         int packInterval = 60;
         lbsTraceClient.setInterval(gatherInterval, packInterval);
         lbsTraceClient.setLocationMode(LocationMode.High_Accuracy);
+        OnTraceListener onTraceListener = new OnTraceListener() {
+            @Override
+            public void onBindServiceCallback(int i, String s) {
+                String mes = s;
+            }
+
+            @Override
+            public void onStartTraceCallback(int i, String s) {
+                String mes = s;
+            }
+
+            @Override
+            public void onStopTraceCallback(int i, String s) {
+                String mes = s;
+            }
+
+            @Override
+            public void onStartGatherCallback(int i, String s) {
+                String mes = s;
+            }
+
+            @Override
+            public void onStopGatherCallback(int i, String s) {
+                String mes = s;
+            }
+
+            @Override
+            public void onPushCallback(byte b, PushMessage pushMessage) {
+                String mes = String.valueOf(b);
+            }
+
+            @Override
+            public void onInitBOSCallback(int i, String s) {
+                String mes = s;
+            }
+        };
+        lbsTraceClient.setOnTraceListener(onTraceListener);
 
     }
 

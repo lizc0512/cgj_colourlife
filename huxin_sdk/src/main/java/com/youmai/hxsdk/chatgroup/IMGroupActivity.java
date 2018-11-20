@@ -481,6 +481,7 @@ public class IMGroupActivity extends SdkBaseActivity implements
 
                         if (!isRoom) {
                             HuxinSdkManager.instance().setVideoCall(null);
+                            linear_video_call.setVisibility(View.GONE);
                             return;
                         }
 

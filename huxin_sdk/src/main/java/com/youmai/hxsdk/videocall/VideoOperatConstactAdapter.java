@@ -39,7 +39,7 @@ public class VideoOperatConstactAdapter extends RecyclerView.Adapter {
 
     interface onClickCallBack {
         void onItemsClick(ArrayList<String> uuid);
-
+        void onSettingClick(boolean isOpenMicrophone,boolean isOpenVideo);
         void onAssignAdmin(int position, SearchContactBean bean);
     }
 
@@ -128,8 +128,13 @@ public class VideoOperatConstactAdapter extends RecyclerView.Adapter {
                 public void onClick(View view) {
                     if (itemHolder.btn_sound.isSelected()) {
                         itemHolder.btn_sound.setSelected(false);
+                        isOpenMicrophone=false;
                     } else {
                         itemHolder.btn_sound.setSelected(true);
+                        isOpenMicrophone=true;
+                    }
+                    if (listener!=null){
+                        listener.onSettingClick(isOpenMicrophone,isOpenVideo);
                     }
                 }
             });
@@ -138,11 +143,17 @@ public class VideoOperatConstactAdapter extends RecyclerView.Adapter {
                 public void onClick(View view) {
                     if (itemHolder.btn_video.isSelected()) {
                         itemHolder.btn_video.setSelected(false);
+                        isOpenVideo=false;
                     } else {
                         itemHolder.btn_video.setSelected(true);
+                        isOpenVideo=true;
+                    }
+                    if (listener!=null){
+                        listener.onSettingClick(isOpenMicrophone,isOpenVideo);
                     }
                 }
             });
+
         }
     }
 

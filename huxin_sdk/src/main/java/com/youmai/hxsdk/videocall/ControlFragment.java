@@ -20,7 +20,6 @@ import android.widget.Toast;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.youmai.hxsdk.HuxinSdkManager;
-import com.youmai.hxsdk.IMFilePreviewActivity;
 import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.chatgroup.IMGroupActivity;
 import com.youmai.hxsdk.dialog.HxApplyVideoDialog;
@@ -62,19 +61,21 @@ public class ControlFragment extends Fragment {
     private boolean mIsAudioOnly = false;
     private ImageView iv_show_dialog;
     private PopWindowTwoRow pop;
-    private int groupId;
-    private String groupName;
 
 
     private boolean mIsAdmin;
     private PopWindowThreeRow adminPop;
     private TextView tv_person_count;
     private HxExitVideoDialog exitDialog;
+    //videocall
+    private int videoType;
     private String mRoomId;//房间id
+    private int groupId;
+    private String groupName;
+    private boolean owner;//是否为管理员
 
     private String btnText = "";//弹窗按钮内容
     private int memberCount;//房间人数
-    private boolean owner;//是否为管理员
     public static int SHOW_POP = 1;
     public static int EDIT_DIALOG = 2;
     public static int PERMISSION_SETTING_REQ = 101;
@@ -86,14 +87,10 @@ public class ControlFragment extends Fragment {
     private HxApplyVideoDialog appliDialog;
     private boolean isConference;
     private PopWindowTwoRow comferenceAdminPop;
-
+    ArrayList<String> list = new ArrayList<>();//
 
     public static ControlFragment instance(/*int groupId, String groupName*/) {
         ControlFragment fragment = new ControlFragment();
-        /*Bundle bundle = new Bundle();
-        bundle.putInt("groupId", groupId);
-        bundle.putString("groupName", groupName);
-        fragment.setArguments(bundle);*/
         return fragment;
     }
 
@@ -174,8 +171,9 @@ public class ControlFragment extends Fragment {
                             videoCall.setVideoType(type);
                         }
                         //设置人数
-                        String format = getString(R.string.video_call_status);
-                        tv_person_count.setText(String.format(format, count));
+                        //String format = getString(R.string.video_call_status);
+                        //tv_person_count.setText(String.format(format, count));
+                        tv_person_count.setText(String.valueOf(count));
                     }
                 } catch (InvalidProtocolBufferException e) {
                     e.printStackTrace();
@@ -184,19 +182,31 @@ public class ControlFragment extends Fragment {
         });
     }
 
+    private void getVideoCall() {
+        VideoCall videoCall = HuxinSdkManager.instance().getVideoCall();
+        videoType = videoCall.getVideoType();
+        groupId = videoCall.getGroupId();
+        mRoomId = videoCall.getRoomName();
+        List<YouMaiVideo.RoomMemberItem> members = videoCall.getMembers();
+        list.clear();
+        if (members != null) {
+            for (int i = 0; i < members.size(); i++) {
+                list.add(members.get(i).getMemberId());
+            }
+        }
+    }
+
     private void initView(View view) {
         tv_person_count = view.findViewById(R.id.tv_person_count);
+        //查看通话成员
         view.findViewById(R.id.ll_query_person).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //查询
-                VideoCall videoCall = HuxinSdkManager.instance().getVideoCall();
-                int videoType = videoCall.getVideoType();
-                int groupId = videoCall.getGroupId();
-                String roomName = videoCall.getRoomName();
+                getVideoCall();
                 Intent intent = new Intent(getActivity(), VideoOperatConstactActivity.class);
                 intent.putExtra(GROUP_ID, groupId);
-                intent.putExtra(VideoSelectConstactActivity.ROOM_NAME, roomName);
+                intent.putExtra(VideoSelectConstactActivity.ROOM_NAME, mRoomId);
                 intent.putExtra(VideoOperatConstactActivity.INTENT_TYPE, VideoOperatConstactActivity.QUERY_MEMBRE);
                 startActivity(intent);
             }
@@ -210,33 +220,11 @@ public class ControlFragment extends Fragment {
                 owner = videoCall1.isOwner();
                 int roomType = videoCall1.getVideoType();
                 if (owner) {
-                    if (roomType == VideoSelectConstactActivity.VIDEO_MEETING) {
-                        showConferenceAdminPop();
-                    } else {
-                        showAdminPop();
-                    }
-
+                    showConferenceAdminPop();
                 } else {
                     //视频模式直接添加成员
                     if (roomType == VideoSelectConstactActivity.VIDEO_MEETING) {
-                        VideoCall videoCall = HuxinSdkManager.instance().getVideoCall();
-                        int videoType = videoCall.getVideoType();
-                        int groupId = videoCall.getGroupId();
-                        String roomName = videoCall.getRoomName();
-                        List<YouMaiVideo.RoomMemberItem> members = videoCall.getMembers();
-                        list.clear();
-                        if (members != null) {
-                            for (int i = 0; i < members.size(); i++) {
-                                list.add(members.get(i).getMemberId());
-                            }
-                        }
-                        Intent intent = new Intent(getActivity(), VideoSelectConstactActivity.class);
-                        intent.putExtra(IMGroupActivity.GROUP_ID, groupId);
-                        intent.putExtra(VideoSelectConstactActivity.ROOM_NAME, roomName);
-                        intent.putExtra(VideoSelectConstactActivity.ROOM_TYPE, videoType);
-                        intent.putExtra(VideoSelectConstactActivity.GROUP_NAME, groupName);
-                        intent.putStringArrayListExtra("userIds", list);
-                        startActivity(intent);
+                        reqRoomInfoJumpSelect();
                     } else {
                         showPop();
                     }
@@ -327,26 +315,7 @@ public class ControlFragment extends Fragment {
                 .setFirstListener("添加成员", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        //添加人
-                        VideoCall videoCall = HuxinSdkManager.instance().getVideoCall();
-                        int videoType = videoCall.getVideoType();
-                        int groupId = videoCall.getGroupId();
-                        String roomName = videoCall.getRoomName();
-                        List<YouMaiVideo.RoomMemberItem> members = videoCall.getMembers();
-                        list.clear();
-                        if (members != null) {
-                            for (int i = 0; i < members.size(); i++) {
-                                list.add(members.get(i).getMemberId());
-                            }
-                        }
-                        Intent intent = new Intent(getActivity(), VideoSelectConstactActivity.class);
-                        intent.putExtra(IMGroupActivity.GROUP_ID, groupId);
-                        intent.putExtra(VideoSelectConstactActivity.ROOM_NAME, roomName);
-                        intent.putExtra(VideoSelectConstactActivity.GROUP_NAME, groupName);
-                        intent.putExtra(VideoSelectConstactActivity.ROOM_TYPE, videoType);
-                        intent.putStringArrayListExtra("userIds", list);
-                        startActivity(intent);
-
+                        reqRoomInfoJumpSelect();
                         comferenceAdminPop.dismiss();
                     }
                 })
@@ -354,13 +323,10 @@ public class ControlFragment extends Fragment {
                     @Override
                     public void onClick(View view) {
                         //移除人
-                        VideoCall videoCall = HuxinSdkManager.instance().getVideoCall();
-                        int videoType = videoCall.getVideoType();
-                        int groupId = videoCall.getGroupId();
-                        String roomName = videoCall.getRoomName();
+                        getVideoCall();
                         Intent intent = new Intent(getActivity(), VideoOperatConstactActivity.class);
                         intent.putExtra(GROUP_ID, groupId);
-                        intent.putExtra(VideoSelectConstactActivity.ROOM_NAME, roomName);
+                        intent.putExtra(VideoSelectConstactActivity.ROOM_NAME, mRoomId);
                         intent.putExtra(VideoSelectConstactActivity.GROUP_NAME, groupName);
                         intent.putExtra(VideoOperatConstactActivity.INTENT_TYPE, VideoOperatConstactActivity.DEL_MEMBER);
                         startActivityForResult(intent, MEMBER_DELETE_REQ);
@@ -387,30 +353,44 @@ public class ControlFragment extends Fragment {
     }
 
 
-    public void reqRoomInfo() {
-        if (TextUtils.isEmpty(mRoomId)) {
+    public void reqRoomInfoJumpSelect() {
+        if (!TextUtils.isEmpty(mRoomId)) {
             HuxinSdkManager.instance().reqRoomInfo(mRoomId, new ReceiveListener() {
                 @Override
                 public void OnRec(PduBase pduBase) {
                     try {
                         YouMaiVideo.RoomInfoRsp rep = YouMaiVideo.RoomInfoRsp.parseFrom(pduBase.body);
                         if (rep.getResult() == YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS) {
-                            List<YouMaiVideo.RoomMemberItem> list = rep.getMemberListList();
+                            List<YouMaiVideo.RoomMemberItem> members = rep.getMemberListList();
                             int count = rep.getMemberListCount();
                             int groupId = rep.getGroupId();
                             String roomName = rep.getRoomName();
                             String topic = rep.getTopic();
-
+                            int type = rep.getType().getNumber();
+                            list.clear();
+                            if (members != null) {
+                                for (int i = 0; i < members.size(); i++) {
+                                    list.add(members.get(i).getMemberId());
+                                }
+                            }
                             VideoCall videoCall = HuxinSdkManager.instance().getVideoCall();
                             if (videoCall != null) {
-                                videoCall.setMembers(list);
+                                videoCall.setMembers(members);
                                 videoCall.setCount(count);
                                 videoCall.setGroupId(groupId);
                                 videoCall.setRoomName(roomName);
                                 videoCall.setTopic(topic);
+                                videoCall.setVideoType(type);
                             }
-                            owner = videoCall.isOwner();
-                            memberCount = videoCall.getCount();
+                            //owner = videoCall.isOwner();
+                            //memberCount = videoCall.getCount();
+                            Intent intent = new Intent(getActivity(), VideoSelectConstactActivity.class);
+                            intent.putExtra(IMGroupActivity.GROUP_ID, groupId);
+                            intent.putExtra(VideoSelectConstactActivity.ROOM_NAME, roomName);
+                            intent.putExtra(VideoSelectConstactActivity.GROUP_NAME, groupName);
+                            intent.putExtra(VideoSelectConstactActivity.ROOM_TYPE, type);
+                            intent.putStringArrayListExtra("userIds", list);
+                            startActivity(intent);
                         }
 
                     } catch (InvalidProtocolBufferException e) {
@@ -424,7 +404,12 @@ public class ControlFragment extends Fragment {
     public void showExitRoom() {
         memberCount = HuxinSdkManager.instance().getVideoCall().getCount();
         owner = HuxinSdkManager.instance().getVideoCall().isOwner();
-        if (owner && memberCount > 1) {
+        RoomActivity act = null;
+        if (getActivity() instanceof RoomActivity) {
+            act = (RoomActivity) getActivity();
+        }
+        ArrayList<String> allUserId = act.getAllUserId();
+        if (owner && memberCount > 1 && allUserId.size() != 0) {
             btnText = "转让权限并退出";
         } else {
             btnText = "确定";
@@ -440,12 +425,19 @@ public class ControlFragment extends Fragment {
                                 exitDialog.dismiss();
                                 mCallEvents.onCallHangUp();
                             } else {
-                                //房间有多余人数转权
-                                Intent intent = new Intent(getActivity(), VideoOperatConstactActivity.class);
-                                intent.putExtra(GROUP_ID, groupId);
-                                intent.putExtra(VideoSelectConstactActivity.ROOM_NAME, mRoomId);
-                                intent.putExtra(VideoOperatConstactActivity.INTENT_TYPE, VideoOperatConstactActivity.UPDATE_ADMIN);
-                                startActivityForResult(intent, PERMISSION_SETTING_REQ);
+                                if (allUserId.size() != 0) {
+                                    //房间有多余人数转权
+                                    Intent intent = new Intent(getActivity(), VideoOperatConstactActivity.class);
+                                    intent.putExtra(GROUP_ID, groupId);
+                                    intent.putExtra(VideoSelectConstactActivity.ROOM_NAME, mRoomId);
+                                    intent.putExtra(VideoOperatConstactActivity.INTENT_TYPE, VideoOperatConstactActivity.UPDATE_ADMIN);
+                                    intent.putStringArrayListExtra(VideoOperatConstactActivity.USER_ALL_ID, allUserId);
+                                    startActivityForResult(intent, PERMISSION_SETTING_REQ);
+                                } else {
+                                    HuxinSdkManager.instance().reqDestroyRoom();
+                                    exitDialog.dismiss();
+                                    mCallEvents.onCallHangUp();
+                                }
                                 exitDialog.dismiss();
                             }
                         } else {
@@ -465,7 +457,6 @@ public class ControlFragment extends Fragment {
         exitDialog.show();
     }
 
-    ArrayList<String> list = new ArrayList<>();
 
     private void showAdminPop() {
         //发起人
@@ -474,20 +465,10 @@ public class ControlFragment extends Fragment {
                     @Override
                     public void onClick(View view) {
                         //添加人
-                        VideoCall videoCall = HuxinSdkManager.instance().getVideoCall();
-                        int videoType = videoCall.getVideoType();
-                        int groupId = videoCall.getGroupId();
-                        String roomName = videoCall.getRoomName();
-                        List<YouMaiVideo.RoomMemberItem> members = videoCall.getMembers();
-                        list.clear();
-                        if (members != null) {
-                            for (int i = 0; i < members.size(); i++) {
-                                list.add(members.get(i).getMemberId());
-                            }
-                        }
+                        getVideoCall();
                         Intent intent = new Intent(getActivity(), VideoSelectConstactActivity.class);
                         intent.putExtra(IMGroupActivity.GROUP_ID, groupId);
-                        intent.putExtra(VideoSelectConstactActivity.ROOM_NAME, roomName);
+                        intent.putExtra(VideoSelectConstactActivity.ROOM_NAME, mRoomId);
                         intent.putExtra(VideoSelectConstactActivity.GROUP_NAME, groupName);
                         intent.putExtra(VideoSelectConstactActivity.ROOM_TYPE, videoType);
                         intent.putStringArrayListExtra("userIds", list);
@@ -498,13 +479,10 @@ public class ControlFragment extends Fragment {
                     @Override
                     public void onClick(View view) {
                         //设置音视频
-                        VideoCall videoCall = HuxinSdkManager.instance().getVideoCall();
-                        int videoType = videoCall.getVideoType();
-                        int groupId = videoCall.getGroupId();
-                        String roomName = videoCall.getRoomName();
+                        getVideoCall();
                         Intent intent = new Intent(getActivity(), VideoOperatConstactActivity.class);
                         intent.putExtra(GROUP_ID, groupId);
-                        intent.putExtra(VideoSelectConstactActivity.ROOM_NAME, roomName);
+                        intent.putExtra(VideoSelectConstactActivity.ROOM_NAME, mRoomId);
                         intent.putExtra(VideoSelectConstactActivity.GROUP_NAME, groupName);
                         intent.putExtra(VideoOperatConstactActivity.INTENT_TYPE, VideoOperatConstactActivity.SETTING_VIDEO);
                         startActivityForResult(intent, SETTING_VIDEO_REQ);
@@ -515,14 +493,12 @@ public class ControlFragment extends Fragment {
                     @Override
                     public void onClick(View view) {
                         //移除人
-                        VideoCall videoCall = HuxinSdkManager.instance().getVideoCall();
-                        int videoType = videoCall.getVideoType();
-                        int groupId = videoCall.getGroupId();
-                        String roomName = videoCall.getRoomName();
+                        getVideoCall();
                         Intent intent = new Intent(getActivity(), VideoOperatConstactActivity.class);
                         intent.putExtra(GROUP_ID, groupId);
-                        intent.putExtra(VideoSelectConstactActivity.ROOM_NAME, roomName);
+                        intent.putExtra(VideoSelectConstactActivity.ROOM_NAME, mRoomId);
                         intent.putExtra(VideoSelectConstactActivity.GROUP_NAME, groupName);
+                        intent.putExtra(VideoSelectConstactActivity.ROOM_TYPE, videoType);
                         intent.putExtra(VideoOperatConstactActivity.INTENT_TYPE, VideoOperatConstactActivity.DEL_MEMBER);
                         startActivityForResult(intent, MEMBER_DELETE_REQ);
                         adminPop.dismiss();
@@ -537,24 +513,7 @@ public class ControlFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 //添加人
-                VideoCall videoCall = HuxinSdkManager.instance().getVideoCall();
-                int videoType = videoCall.getVideoType();
-                int groupId = videoCall.getGroupId();
-                String roomName = videoCall.getRoomName();
-                List<YouMaiVideo.RoomMemberItem> members = videoCall.getMembers();
-                list.clear();
-                if (members != null) {
-                    for (int i = 0; i < members.size(); i++) {
-                        list.add(members.get(i).getMemberId());
-                    }
-                }
-                Intent intent = new Intent(getActivity(), VideoSelectConstactActivity.class);
-                intent.putExtra(IMGroupActivity.GROUP_ID, groupId);
-                intent.putExtra(VideoSelectConstactActivity.ROOM_NAME, roomName);
-                intent.putExtra(VideoSelectConstactActivity.ROOM_TYPE, videoType);
-                intent.putStringArrayListExtra("userIds", list);
-                startActivity(intent);
-
+                reqRoomInfoJumpSelect();
                 pop.dismiss();
             }
         }).setSecondListener(null, new View.OnClickListener() {
@@ -676,15 +635,57 @@ public class ControlFragment extends Fragment {
             if (resultCode == MEMBER_DELETE_RSP) {
                 String deleteUserId = data.getStringExtra("deleteUserId");
                 if (!TextUtils.isEmpty(deleteUserId)) {
-                    mCallEvents.onRemoveUser(deleteUserId);
+                    setCount();
                 }
+
             }
         }
-        if (requestCode == PERMISSION_SETTING_REQ) {
+        //设置管理员
+        if (requestCode == PERMISSION_SETTING_REQ)
+
+        {
             if (resultCode == PERMISSION_SETTING_RSP) {
                 mCallEvents.onCallHangUp();
                 HuxinSdkManager.instance().reqExitRoom();
             }
         }
+//        if (requestCode == SETTING_VIDEO_REQ)
+//
+//        {
+//            if (resultCode == SETTING_VIDEO_RSP) {
+//                boolean microphone = data.getBooleanExtra("open", false);
+//                boolean video = data.getBooleanExtra("video", false);
+//                HuxinSdkManager.instance().reqVideoSettingApply(mRoomId, microphone, video, new ReceiveListener() {
+//                    @Override
+//                    public void OnRec(PduBase pduBase) {
+//                        try {
+//                            YouMaiVideo.VideoSettingApplyRsp rsp = YouMaiVideo.VideoSettingApplyRsp.parseFrom(pduBase.body);
+//                            if (rsp.getResult() == YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS) {
+//                                boolean openCamera = rsp.getOpenCamera();
+//                                boolean openVoice = rsp.getOpenVoice();
+//
+//                                RoomActivity activity = null;
+//                                if (getActivity() instanceof RoomActivity) {
+//                                    activity = (RoomActivity) getActivity();
+//                                }
+//
+//                                if (openVoice && !openCamera) { //语音发言
+//                                    if (activity != null) {
+//                                        activity.entryVideoConference(false);
+//                                    }
+//
+//                                } else if (openVoice && openCamera) { //视频发言
+//                                    if (activity != null) {
+//                                        activity.entryVideoConference(true);
+//                                    }
+//                                }
+//                            }
+//                        } catch (InvalidProtocolBufferException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                });
+//            }
+        //     }
     }
 }

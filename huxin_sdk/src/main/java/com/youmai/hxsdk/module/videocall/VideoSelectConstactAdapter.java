@@ -138,8 +138,7 @@ public class VideoSelectConstactAdapter extends RecyclerView.Adapter {
                             }
                             break;
                         case VideoSelectConstactActivity.VIDEO_MEETING:  //视频会议添加
-
-                            if (cacheMap.size() < VideoSelectConstactActivity.VIDEO_MEETING_MAX) {
+                            if (cacheMap.size() + selectedList.size() < VideoSelectConstactActivity.VIDEO_MEETING_MAX + 1) {
                                 updateCacheMap(model);
                                 if (cacheMap.size() == groupSize - selectedList.size()) {
                                     isSelectAll = true;

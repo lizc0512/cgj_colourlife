@@ -2040,7 +2040,7 @@ public class HuxinSdkManager {
                 try {
                     YouMaiVideo.ExitRoomRsp rep = YouMaiVideo.ExitRoomRsp.parseFrom(pduBase.body);
                     if (rep.getResult() == YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS) {
-                        Toast.makeText(mContext, "退出成功", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(mContext, "退出成功", Toast.LENGTH_SHORT).show();
                     }
 
                 } catch (InvalidProtocolBufferException e) {
@@ -2067,7 +2067,7 @@ public class HuxinSdkManager {
                             YouMaiVideo.DestroyRoomRsp rep = YouMaiVideo.DestroyRoomRsp.parseFrom(pduBase.body);
                             if (rep.getResult() == YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS) {
                                 mVideoCall = null;
-                                Toast.makeText(mContext, "房间销毁！", Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(mContext, "房间销毁！", Toast.LENGTH_SHORT).show();
                             }
 
                         } catch (InvalidProtocolBufferException e) {

@@ -237,7 +237,16 @@ public class RoomActivity extends SdkBaseActivity implements QNRoomEventListener
             rtcVideoView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mRTCManager.switchWindow(rtcVideoView.getRemoteSurfaceView());
+                    //mRTCManager.switchWindow(rtcVideoView.getRemoteSurfaceView());
+                    if (isMax) {
+                        mLocalWindow.setVisible(true);
+                        isMax = false;
+                        reDrawVideo();
+                    } else {
+                        mLocalWindow.setVisible(false);
+                        isMax = true;
+                        maxVideo(rtcVideoView);
+                    }
                 }
             });
         }
@@ -428,6 +437,7 @@ public class RoomActivity extends SdkBaseActivity implements QNRoomEventListener
         mCallStartedTimeMs = System.currentTimeMillis();
 
         logAndToast(getString(R.string.connecting_to, mRoomId));
+        Log.i("七牛token", mRoomToken + "!!!!!!!!!!!!!");
         mRTCManager.joinRoom(mRoomToken);
         mIsJoinedRoom = true;
 
@@ -437,7 +447,7 @@ public class RoomActivity extends SdkBaseActivity implements QNRoomEventListener
     private void onConnectedInternal() {
         final long delay = System.currentTimeMillis() - mCallStartedTimeMs;
         Log.i(TAG, "Call connected: delay=" + delay + "ms");
-        logAndToast(getString(R.string.connected_to_room));
+        //logAndToast(getString(R.string.connected_to_room));
     }
 
     private void subscribeAllRemoteStreams() {
@@ -592,11 +602,11 @@ public class RoomActivity extends SdkBaseActivity implements QNRoomEventListener
                         break;
                     case 3:
                         if (targetPos == 0) {
-                            updateLayoutParams(targetWindow, targetPos, mScreenWidth / 3, mScreenWidth / 3, 0, 0, -1);
+                            updateLayoutParams(targetWindow, targetPos, mScreenWidth / 2, mScreenWidth / 2, 0, 0, -1);
                         } else if (targetPos == 1) {
-                            updateLayoutParams(targetWindow, targetPos, mScreenWidth / 3, mScreenWidth / 3, mScreenWidth / 3, 0, -1);
+                            updateLayoutParams(targetWindow, targetPos, mScreenWidth / 2, mScreenWidth / 2, mScreenWidth / 2, 0, -1);
                         } else {
-                            updateLayoutParams(targetWindow, targetPos, mScreenWidth / 3, mScreenWidth / 3, mScreenWidth * 2 / 3, 0, Gravity.END);
+                            updateLayoutParams(targetWindow, targetPos, mScreenWidth / 2, mScreenWidth / 2, 0, mScreenWidth / 2, Gravity.CENTER_HORIZONTAL);
                         }
                         break;
                     case 4:
@@ -646,7 +656,11 @@ public class RoomActivity extends SdkBaseActivity implements QNRoomEventListener
         lp.height = height;
         lp.topMargin = marginTop;
         lp.gravity = gravity;
-        lp.setMargins(marginStart, 0, 0, 0);
+        if (Build.VERSION.SDK_INT >= 17) {
+            lp.setMarginStart(marginStart);
+        } else {
+            lp.leftMargin = marginStart;
+        }
         targetView.setLayoutParams(lp);
         targetView.setMicrophoneStateVisibility(
                 (width == mScreenWidth && height == mScreenHeight) ? View.INVISIBLE : View.VISIBLE);
@@ -1037,6 +1051,7 @@ public class RoomActivity extends SdkBaseActivity implements QNRoomEventListener
     public void onStateChanged(QNRoomState state) {
         Log.i(TAG, "onStateChanged: " + state);
         // updateRemoteLogText("onStateChanged : " + state.name());
+        Log.i("七牛tokenstate", mRoomToken);
         switch (state) {
             case RECONNECTING:
                 mCallStartedTimeMs = System.currentTimeMillis();
@@ -1118,6 +1133,9 @@ public class RoomActivity extends SdkBaseActivity implements QNRoomEventListener
 
 
     public ArrayList<String> getAllUserId() {
+        if (mRTCManager == null) {
+            return null;
+        }
         ArrayList<String> list = new ArrayList<>();
         for (Map.Entry<String, RTCVideoView> entry : mUserWindowMap.entrySet()) {
             list.add(entry.getKey());
@@ -1137,6 +1155,52 @@ public class RoomActivity extends SdkBaseActivity implements QNRoomEventListener
     @Override
     protected void onStop() {
         super.onStop();
+    }
+
+
+    private boolean isMax;
+
+    private void maxVideo(RTCVideoView rtcVideoView) {
+
+        if (rtcVideoView.getId() == mLocalWindow.getId()) {
+            return;
+        } else {
+            updateLayoutParams(mLocalWindow, 0, 0, 0, mScreenWidth, mScreenHeight, -1);  //最小化本地
+        }
+
+        final int userCount = mUsedWindowList.size();
+        for (int i = 0; i < userCount; i++) {
+            RTCVideoView item = mUsedWindowList.get(i);
+            if (item.getId() == rtcVideoView.getId()) {
+                updateLayoutParams(rtcVideoView, 0, mScreenWidth, mScreenHeight, 0, 0, -1);
+            } else {
+                updateLayoutParams(item, 0, 0, 0, mScreenWidth, mScreenHeight, -1);
+            }
+        }
+    }
+
+    private void reDrawVideo() {
+        if (mUnusedWindowList.size() == 0) {
+            Log.e(TAG, "There were more than 9 published users in the room, with no unUsedWindow to draw.");
+            return;
+        }
+
+        final int userCount = mUsedWindowList.size();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+
+                toggleToMultiUsersUI(userCount, mUsedWindowList);
+
+                if (userCount >= 3) {
+                    mCallControlFragmentVisible = true;
+                    FragmentTransaction ft = getFragmentManager().beginTransaction();
+                    ft.show(mControlFragment);
+                    ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                    ft.commitAllowingStateLoss();
+                }
+            }
+        });
     }
 
 

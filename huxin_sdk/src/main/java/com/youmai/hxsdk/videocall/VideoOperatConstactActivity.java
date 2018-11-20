@@ -44,6 +44,7 @@ public class VideoOperatConstactActivity extends SdkBaseActivity implements Vide
     public static int SETTING_VIDEO = 103;
     public static int QUERY_MEMBRE = 104;
     public static String INTENT_TYPE = "intent_type";
+    public static String USER_ALL_ID = "user_all_id";
     private TextView tv_title;
     private RecyclerView rlv_video_delete;
     private VideoOperatConstactAdapter adapter;
@@ -53,6 +54,7 @@ public class VideoOperatConstactActivity extends SdkBaseActivity implements Vide
     private SearchLoaderAct mLoader;
     private ArrayList<ContactBean> videoLists = new ArrayList<>();
     private ArrayList<SearchContactBean> resultList = new ArrayList<>();
+    private List<String> userList = new ArrayList<>();
     private String newAdminUuid;
     private LoaderManager.LoaderCallbacks<List<SearchContactBean>> callback = new LoaderManager.LoaderCallbacks<List<SearchContactBean>>() {
         @NonNull
@@ -78,6 +80,7 @@ public class VideoOperatConstactActivity extends SdkBaseActivity implements Vide
     private SearchEditText global_search_bar;
     private int operate_type;
     private TextView tv_right_sure;
+    private int roomType;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -94,6 +97,12 @@ public class VideoOperatConstactActivity extends SdkBaseActivity implements Vide
             operate_type = getIntent().getIntExtra(VideoOperatConstactActivity.INTENT_TYPE, -1);
             groupId = getIntent().getIntExtra(IMGroupActivity.GROUP_ID, 0);
             roomName = getIntent().getStringExtra(VideoSelectConstactActivity.ROOM_NAME);
+            roomType = getIntent().getIntExtra(VideoSelectConstactActivity.ROOM_TYPE, -1);
+            ArrayList<String> list = getIntent().getStringArrayListExtra(USER_ALL_ID);
+            if (list != null) {
+                userList.clear();
+                userList.addAll(list);
+            }
         }
     }
 
@@ -129,15 +138,20 @@ public class VideoOperatConstactActivity extends SdkBaseActivity implements Vide
 
     private void initTitle() {
         tv_title = findViewById(R.id.tv_title);
+        tv_right_sure = findViewById(R.id.tv_right_sure);
         if (operate_type == UPDATE_ADMIN) {
             tv_title.setText("设置管理员");
-            findViewById(R.id.tv_right_sure).setVisibility(View.VISIBLE);
+            tv_right_sure.setVisibility(View.INVISIBLE);
         } else if (operate_type == DEL_MEMBER) {
-            tv_title.setText("当前通话成员");
-            findViewById(R.id.tv_right_sure).setVisibility(View.INVISIBLE);
+            tv_title.setText("删除通话成员");
+            tv_right_sure.setVisibility(View.INVISIBLE);
         } else if (operate_type == QUERY_MEMBRE) {
             tv_title.setText("当前通话成员");
-            findViewById(R.id.tv_right_sure).setVisibility(View.INVISIBLE);
+            tv_right_sure.setVisibility(View.INVISIBLE);
+        } else if (operate_type == SETTING_VIDEO) {
+            tv_title.setText("设置成员权限");
+            findViewById(R.id.tv_right_sure).setVisibility(View.VISIBLE);
+            tv_right_sure.setEnabled(false);
         }
         findViewById(R.id.tv_left_cancel).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -145,9 +159,7 @@ public class VideoOperatConstactActivity extends SdkBaseActivity implements Vide
                 finish();
             }
         });
-        tv_right_sure = findViewById(R.id.tv_right_sure);
         tv_right_sure.setOnClickListener(this);
-        tv_right_sure.setEnabled(false);
     }
 
     /**
@@ -223,10 +235,24 @@ public class VideoOperatConstactActivity extends SdkBaseActivity implements Vide
 
     }
 
+    private boolean openMicrophone = false;
+    private boolean openVideo = false;
+
+    @Override
+    public void onSettingClick(boolean isOpenMicrophone, boolean isOpenVideo) {
+        openMicrophone = isOpenMicrophone;
+        openVideo = isOpenVideo;
+        Toast.makeText(this, "microphone:" + isOpenMicrophone + "video" + isOpenVideo, Toast.LENGTH_SHORT).show();
+        if (isOpenMicrophone || isOpenVideo) {
+            tv_right_sure.setEnabled(true);
+        }
+    }
+
     @Override
     public void onAssignAdmin(int position, SearchContactBean bean) {
         adapter.setSelected(position);
         newAdminUuid = bean.getUuid();
+        tv_right_sure.setVisibility(View.VISIBLE);
         tv_right_sure.setEnabled(true);
     }
 
@@ -254,7 +280,6 @@ public class VideoOperatConstactActivity extends SdkBaseActivity implements Vide
                             videoCall.setTopic(topic);
                             videoCall.setVideoType(type);
                         }
-
                         for (YouMaiVideo.RoomMemberItem item : list) {
                             //查询通话成员是查询全部人
                             if (operate_type == QUERY_MEMBRE) {
@@ -265,7 +290,23 @@ public class VideoOperatConstactActivity extends SdkBaseActivity implements Vide
                                 String avatar = item.getAvator();
                                 contact.setAvatar(avatar);
                                 videoLists.add(contact);
+                            } else if (operate_type == UPDATE_ADMIN) {
+                                //转权
+                                if (userList.size() != 0) {
+                                    for (int i = 0; i < userList.size(); i++) {
+                                        if (item.getMemberId().equals(userList.get(i))) {
+                                            ContactBean contact = new ContactBean();
+                                            contact.setRealname(item.getNickname());
+                                            contact.setUuid(item.getMemberId());
+                                            contact.setMemberRole(item.getMemberRole());
+                                            String avatar = item.getAvator();
+                                            contact.setAvatar(avatar);
+                                            videoLists.add(contact);
+                                        }
+                                    }
+                                }
                             } else {
+                                //其他操作直接排除管理员
                                 if (item.getMemberRole() != 1) {
                                     ContactBean contact = new ContactBean();
                                     contact.setRealname(item.getNickname());
@@ -300,25 +341,31 @@ public class VideoOperatConstactActivity extends SdkBaseActivity implements Vide
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.tv_right_sure) {
-            HuxinSdkManager.instance().reqPermissionSetting(newAdminUuid, roomName, new ReceiveListener() {
-                @Override
-                public void OnRec(PduBase pduBase) {
-                    try {
-                        YouMaiVideo.PermissionSettingRsp rsp = YouMaiVideo.PermissionSettingRsp.parseFrom(pduBase.body);
-                        if (rsp.getResult() == YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS) {
-                            String adminId = rsp.getAdminId();
-                            String newAdminId = rsp.getNewAdminId();
-                            String roomName = rsp.getRoomName();
-                            exitRoom();
-                        } else {
-                            Toast.makeText(mContext, "转让权限出现错误：" + rsp.getResult(), Toast.LENGTH_SHORT).show();
+            if (operate_type == UPDATE_ADMIN) {
+                //设置管理员
+                HuxinSdkManager.instance().reqPermissionSetting(newAdminUuid, roomName, new ReceiveListener() {
+                    @Override
+                    public void OnRec(PduBase pduBase) {
+                        try {
+                            YouMaiVideo.PermissionSettingRsp rsp = YouMaiVideo.PermissionSettingRsp.parseFrom(pduBase.body);
+                            if (rsp.getResult() == YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS) {
+                                String adminId = rsp.getAdminId();
+                                String newAdminId = rsp.getNewAdminId();
+                                String roomName = rsp.getRoomName();
+                                exitRoom();
+                            } else {
+                                Toast.makeText(mContext, "转让权限出现错误：" + rsp.getResult(), Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (InvalidProtocolBufferException e) {
+                            e.printStackTrace();
                         }
-                    } catch (InvalidProtocolBufferException e) {
-                        e.printStackTrace();
-                    }
 
-                }
-            });
+                    }
+                });
+            } else if (operate_type == SETTING_VIDEO) {
+                //设置权限
+            }
+
         }
     }
 }

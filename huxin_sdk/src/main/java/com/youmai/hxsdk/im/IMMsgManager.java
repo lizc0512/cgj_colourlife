@@ -46,6 +46,7 @@ import com.youmai.hxsdk.im.cache.CacheMsgRedPackage;
 import com.youmai.hxsdk.im.cache.CacheMsgTxt;
 import com.youmai.hxsdk.im.cache.CacheMsgVideo;
 import com.youmai.hxsdk.im.cache.CacheMsgVoice;
+import com.youmai.hxsdk.module.videocall.VideoSelectConstactActivity;
 import com.youmai.hxsdk.proto.YouMaiBasic;
 import com.youmai.hxsdk.proto.YouMaiBulletin;
 import com.youmai.hxsdk.proto.YouMaiGroup;
@@ -58,6 +59,7 @@ import com.youmai.hxsdk.utils.AppUtils;
 import com.youmai.hxsdk.utils.BadgeUtil;
 import com.youmai.hxsdk.utils.ListUtils;
 import com.youmai.hxsdk.utils.LogFile;
+import com.youmai.hxsdk.videocall.RoomActivity;
 import com.youmai.hxsdk.videocall.VideoCallRingActivity;
 
 import org.json.JSONException;
@@ -575,12 +577,29 @@ public class IMMsgManager {
                 VideoCall videoCall = HuxinSdkManager.instance().getVideoCall();
                 if (videoCall != null) {
                     videoCall.setRoomName(roomName);
+//                    if (videoCall.getVideoType() == VideoSelectConstactActivity.VIDEO_TRAIN) {
+//                        if (newAdminId.equals(HuxinSdkManager.instance().getUuid())) {
+//                            videoCall.setOwner(true);
+//                            Toast.makeText(mContext, "您已经是本房间的管理员", Toast.LENGTH_SHORT).show();
+//                            RoomActivity activity = null;
+//                            if (HuxinSdkManager.instance().getStackAct().currentActivity() instanceof RoomActivity) {
+//                                activity = (RoomActivity) HuxinSdkManager.instance().getStackAct().currentActivity();
+//                            }
+//                            if (activity!=null){
+//                                activity.initVideoConference(true);
+//                            }
+//                        } else {
+//                            videoCall.setOwner(false);
+//                        }
+//                    } else {
                     if (newAdminId.equals(HuxinSdkManager.instance().getUuid())) {
                         videoCall.setOwner(true);
                         Toast.makeText(mContext, "您已经是本房间的管理员", Toast.LENGTH_SHORT).show();
                     } else {
                         videoCall.setOwner(false);
                     }
+//                    }
+
 
                 }
 
@@ -603,11 +622,15 @@ public class IMMsgManager {
                 YouMaiVideo.RoomMemberItem member = notify.getMember();
                 int type = notify.getType();
                 String notifyId = notify.getNotifyId();
-
                 VideoCall videoCall = HuxinSdkManager.instance().getVideoCall();
                 if (type == 1) {//增加：1
 
                 } else if (type == 2) {//删除：2
+                    if (member.getMemberId().equals(HuxinSdkManager.instance().getUuid())) {
+                        Toast.makeText(mContext, "您已经被管理员移除房间", Toast.LENGTH_SHORT).show();
+                        HuxinSdkManager.instance().getStackAct().finishActivity(VideoSelectConstactActivity.class);
+                        HuxinSdkManager.instance().getStackAct().finishActivity(RoomActivity.class);
+                    }
 
                 }
 
@@ -721,12 +744,13 @@ public class IMMsgManager {
                         HuxinSdkManager.instance().setVideoCall(null);
                     }
                 }
-
-                Intent intent = new Intent(mContext, RingService.class);
-                mContext.stopService(intent);
-
+                if (AppUtils.isServiceRunning(mContext, "com.youmai.hxsdk.service.RingService")) {
+                    Intent intent = new Intent(mContext, RingService.class);
+                    mContext.stopService(intent);
+                }
                 HuxinSdkManager.instance().getStackAct().finishActivity(VideoCallRingActivity.class);
-
+                HuxinSdkManager.instance().getStackAct().finishActivity(VideoSelectConstactActivity.class);
+                HuxinSdkManager.instance().getStackAct().finishActivity(RoomActivity.class);
             } catch (InvalidProtocolBufferException e) {
                 e.printStackTrace();
             }

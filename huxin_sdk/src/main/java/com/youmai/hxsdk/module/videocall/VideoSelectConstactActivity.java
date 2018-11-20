@@ -130,7 +130,7 @@ public class VideoSelectConstactActivity extends SdkBaseActivity implements View
         }
         initView();
         reqGroupMembers();
-
+        HuxinSdkManager.instance().getStackAct().addActivity(this);
 
     }
 
@@ -142,16 +142,16 @@ public class VideoSelectConstactActivity extends SdkBaseActivity implements View
         tv_right_sure = findViewById(R.id.tv_right_sure);
         tv_right_sure.setOnClickListener(this);
         tv_right_sure.setEnabled(false);
-        tv_right_sure.setText("完成(" + 0 + ")");
+        tv_right_sure.setText("完成(" + userIds.size() + ")");
         //全选
         cb_select_all = findViewById(R.id.cb_select_all);
         cb_select_all.setOnClickListener(this);
         tv_select_count = findViewById(R.id.tv_select_count);
 
-        if (type == VIDEO_MEETING) {
-            cb_select_all.setVisibility(View.GONE);
-            tv_select_count.setText(0 + "/" + VIDEO_MEETING_MAX);
-        }
+//        if (type == VIDEO_MEETING) {
+//            cb_select_all.setVisibility(View.GONE);
+//            tv_select_count.setText(0 + "/" + VIDEO_MEETING_MAX);
+//        }
 
         /**
          * 搜索框处理
@@ -387,7 +387,7 @@ public class VideoSelectConstactActivity extends SdkBaseActivity implements View
                             tv_select_count.setText(userIds.size() + "/" + groupList.size());
                         } else {
                             if (type == VIDEO_MEETING) {
-                                tv_select_count.setText(userIds.size() + "/" + 8);
+                                tv_select_count.setText(userIds.size() + "/" + groupList.size());
                                 cb_select_all.setVisibility(View.GONE);
                             } else if (type == VIDEO_TRAIN) {
                                 tv_select_count.setText(userIds.size() + "/" + groupList.size());
@@ -423,26 +423,33 @@ public class VideoSelectConstactActivity extends SdkBaseActivity implements View
         mTotalMap.putAll(chaMap);
 
         if (chaMap.size() != 0) {
-            tv_right_sure.setText("完成(" + chaMap.size() + ")");
+            int selectCount = chaMap.size() + userIds.size();
+            tv_right_sure.setText("完成(" + selectCount + ")");
             tv_right_sure.setEnabled(true);
             tv_select_count.setVisibility(View.VISIBLE);
-
             if (type == VIDEO_MEETING) {
                 if (groupList.size() < 8) {
-                    tv_select_count.setText(chaMap.size() + "/" + groupList.size());
+                    tv_select_count.setText(selectCount + "/" + groupList.size());
                 } else {
-                    tv_select_count.setText(chaMap.size() + "/" + VIDEO_MEETING_MAX);
+                    tv_select_count.setText(selectCount + "/" + groupList.size());
                 }
             } else {
-                tv_select_count.setText(chaMap.size() + "/" + groupList.size());
+                tv_select_count.setText(selectCount + "/" + groupList.size());
             }
 
         } else {
-            tv_right_sure.setText("完成(" + chaMap.size() + ")");
+            tv_right_sure.setText("完成(" + userIds.size() + ")");
             tv_right_sure.setEnabled(false);
-            tv_select_count.setVisibility(View.INVISIBLE);
+            tv_select_count.setText(userIds.size() + "/" + groupList.size());
+            //tv_select_count.setVisibility(View.GONE);
         }
         hideSoftKey();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        HuxinSdkManager.instance().getStackAct().removeActivity(this);
     }
 
     @Override

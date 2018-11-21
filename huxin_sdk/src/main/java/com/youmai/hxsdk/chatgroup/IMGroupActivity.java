@@ -478,6 +478,7 @@ public class IMGroupActivity extends SdkBaseActivity implements
                         int count = rsp.getNum();
                         String token = rsp.getToken();
                         String info = rsp.getInfo();
+                        YouMaiVideo.VideoType type = rsp.getType();
 
                         if (!isRoom) {
                             HuxinSdkManager.instance().setVideoCall(null);
@@ -498,6 +499,12 @@ public class IMGroupActivity extends SdkBaseActivity implements
                                 token = videoCall.getToken();
                             }
 
+                            if (type == YouMaiVideo.VideoType.CONFERENCE) {
+                                videoCall.setConference(true);
+                            } else {
+                                videoCall.setConference(false);
+                            }
+
                             videoCall.setMsgTime(System.currentTimeMillis());
                             videoCall.setRoomName(roomName);
                             videoCall.setCount(count);
@@ -507,7 +514,8 @@ public class IMGroupActivity extends SdkBaseActivity implements
                             HuxinSdkManager.instance().setVideoCall(videoCall);
 
                             if (!TextUtils.isEmpty(token)
-                                    && !TextUtils.isEmpty(roomName)) {
+                                    && !TextUtils.isEmpty(roomName)
+                                    && count > 0) {
                                 linear_video_call.setVisibility(View.VISIBLE);
                                 tv_video_entry.setText("加入");
                                 /*if (isRoom) {
@@ -526,7 +534,8 @@ public class IMGroupActivity extends SdkBaseActivity implements
                         if (videoCall != null
                                 && videoCall.getGroupId() == groupId
                                 && !TextUtils.isEmpty(videoCall.getRoomName())
-                                && !TextUtils.isEmpty(videoCall.getToken())) {
+                                && !TextUtils.isEmpty(videoCall.getToken())
+                                && videoCall.getCount() > 0) {
                             linear_video_call.setVisibility(View.VISIBLE);
                             if (videoCall.isOwner()) {
                                 tv_video_entry.setText("加入");

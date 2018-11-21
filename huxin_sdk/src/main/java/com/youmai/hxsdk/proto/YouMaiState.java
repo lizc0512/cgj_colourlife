@@ -52,26 +52,18 @@ public final class YouMaiState {
         int getSockfd();
 
         /**
-         * <code>optional bool online = 4;</code>
-         * <p>
-         * <pre>
-         * 1:online 0:offline
-         * </pre>
+         * <code>optional int32 state = 4;</code>
          */
-        boolean hasOnline();
+        boolean hasState();
 
         /**
-         * <code>optional bool online = 4;</code>
-         * <p>
-         * <pre>
-         * 1:online 0:offline
-         * </pre>
+         * <code>optional int32 state = 4;</code>
          */
-        boolean getOnline();
+        int getState();
 
         /**
          * <code>optional int64 time = 5;</code>
-         * <p>
+         *
          * <pre>
          * state change time
          * </pre>
@@ -80,7 +72,7 @@ public final class YouMaiState {
 
         /**
          * <code>optional int64 time = 5;</code>
-         * <p>
+         *
          * <pre>
          * state change time
          * </pre>
@@ -184,7 +176,7 @@ public final class YouMaiState {
                         }
                         case 32: {
                             bitField0_ |= 0x00000008;
-                            online_ = input.readBool();
+                            state_ = input.readInt32();
                             break;
                         }
                         case 40: {
@@ -322,29 +314,21 @@ public final class YouMaiState {
             return sockfd_;
         }
 
-        public static final int ONLINE_FIELD_NUMBER = 4;
-        private boolean online_;
+        public static final int STATE_FIELD_NUMBER = 4;
+        private int state_;
 
         /**
-         * <code>optional bool online = 4;</code>
-         * <p>
-         * <pre>
-         * 1:online 0:offline
-         * </pre>
+         * <code>optional int32 state = 4;</code>
          */
-        public boolean hasOnline() {
+        public boolean hasState() {
             return ((bitField0_ & 0x00000008) == 0x00000008);
         }
 
         /**
-         * <code>optional bool online = 4;</code>
-         * <p>
-         * <pre>
-         * 1:online 0:offline
-         * </pre>
+         * <code>optional int32 state = 4;</code>
          */
-        public boolean getOnline() {
-            return online_;
+        public int getState() {
+            return state_;
         }
 
         public static final int TIME_FIELD_NUMBER = 5;
@@ -352,7 +336,7 @@ public final class YouMaiState {
 
         /**
          * <code>optional int64 time = 5;</code>
-         * <p>
+         *
          * <pre>
          * state change time
          * </pre>
@@ -363,7 +347,7 @@ public final class YouMaiState {
 
         /**
          * <code>optional int64 time = 5;</code>
-         * <p>
+         *
          * <pre>
          * state change time
          * </pre>
@@ -410,7 +394,7 @@ public final class YouMaiState {
             userId_ = "";
             nodeId_ = 0;
             sockfd_ = 0;
-            online_ = false;
+            state_ = 0;
             time_ = 0L;
             version_ = 0;
             deviceType_ = 0;
@@ -440,7 +424,7 @@ public final class YouMaiState {
                 output.writeInt32(3, sockfd_);
             }
             if (((bitField0_ & 0x00000008) == 0x00000008)) {
-                output.writeBool(4, online_);
+                output.writeInt32(4, state_);
             }
             if (((bitField0_ & 0x00000010) == 0x00000010)) {
                 output.writeInt64(5, time_);
@@ -475,7 +459,7 @@ public final class YouMaiState {
             }
             if (((bitField0_ & 0x00000008) == 0x00000008)) {
                 size += com.google.protobuf.CodedOutputStream
-                        .computeBoolSize(4, online_);
+                        .computeInt32Size(4, state_);
             }
             if (((bitField0_ & 0x00000010) == 0x00000010)) {
                 size += com.google.protobuf.CodedOutputStream
@@ -634,7 +618,7 @@ public final class YouMaiState {
                 bitField0_ = (bitField0_ & ~0x00000002);
                 sockfd_ = 0;
                 bitField0_ = (bitField0_ & ~0x00000004);
-                online_ = false;
+                state_ = 0;
                 bitField0_ = (bitField0_ & ~0x00000008);
                 time_ = 0L;
                 bitField0_ = (bitField0_ & ~0x00000010);
@@ -685,7 +669,7 @@ public final class YouMaiState {
                 if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
                     to_bitField0_ |= 0x00000008;
                 }
-                result.online_ = online_;
+                result.state_ = state_;
                 if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
                     to_bitField0_ |= 0x00000010;
                 }
@@ -725,8 +709,8 @@ public final class YouMaiState {
                 if (other.hasSockfd()) {
                     setSockfd(other.getSockfd());
                 }
-                if (other.hasOnline()) {
-                    setOnline(other.getOnline());
+                if (other.hasState()) {
+                    setState(other.getState());
                 }
                 if (other.hasTime()) {
                     setTime(other.getTime());
@@ -919,54 +903,38 @@ public final class YouMaiState {
                 return this;
             }
 
-            private boolean online_;
+            private int state_;
 
             /**
-             * <code>optional bool online = 4;</code>
-             * <p>
-             * <pre>
-             * 1:online 0:offline
-             * </pre>
+             * <code>optional int32 state = 4;</code>
              */
-            public boolean hasOnline() {
+            public boolean hasState() {
                 return ((bitField0_ & 0x00000008) == 0x00000008);
             }
 
             /**
-             * <code>optional bool online = 4;</code>
-             * <p>
-             * <pre>
-             * 1:online 0:offline
-             * </pre>
+             * <code>optional int32 state = 4;</code>
              */
-            public boolean getOnline() {
-                return online_;
+            public int getState() {
+                return state_;
             }
 
             /**
-             * <code>optional bool online = 4;</code>
-             * <p>
-             * <pre>
-             * 1:online 0:offline
-             * </pre>
+             * <code>optional int32 state = 4;</code>
              */
-            public Builder setOnline(boolean value) {
+            public Builder setState(int value) {
                 bitField0_ |= 0x00000008;
-                online_ = value;
+                state_ = value;
                 onChanged();
                 return this;
             }
 
             /**
-             * <code>optional bool online = 4;</code>
-             * <p>
-             * <pre>
-             * 1:online 0:offline
-             * </pre>
+             * <code>optional int32 state = 4;</code>
              */
-            public Builder clearOnline() {
+            public Builder clearState() {
                 bitField0_ = (bitField0_ & ~0x00000008);
-                online_ = false;
+                state_ = 0;
                 onChanged();
                 return this;
             }
@@ -975,7 +943,7 @@ public final class YouMaiState {
 
             /**
              * <code>optional int64 time = 5;</code>
-             * <p>
+             *
              * <pre>
              * state change time
              * </pre>
@@ -986,7 +954,7 @@ public final class YouMaiState {
 
             /**
              * <code>optional int64 time = 5;</code>
-             * <p>
+             *
              * <pre>
              * state change time
              * </pre>
@@ -997,7 +965,7 @@ public final class YouMaiState {
 
             /**
              * <code>optional int64 time = 5;</code>
-             * <p>
+             *
              * <pre>
              * state change time
              * </pre>
@@ -1011,7 +979,7 @@ public final class YouMaiState {
 
             /**
              * <code>optional int64 time = 5;</code>
-             * <p>
+             *
              * <pre>
              * state change time
              * </pre>
@@ -1149,7 +1117,7 @@ public final class YouMaiState {
 
     /**
      * Protobuf type {@code UserStateReport}
-     * <p>
+     *
      * <pre>
      * busi msg report state to login server
      * </pre>
@@ -1496,7 +1464,7 @@ public final class YouMaiState {
 
         /**
          * Protobuf type {@code UserStateReport}
-         * <p>
+         *
          * <pre>
          * busi msg report state to login server
          * </pre>
@@ -1826,13 +1794,13 @@ public final class YouMaiState {
 
     static {
         String[] descriptorData = {
-                "\n\022YouMai.State.proto\022\017com.proto.state\"\212\001" +
+                "\n\022YouMai.State.proto\022\017com.proto.state\"\211\001" +
                         "\n\022UserStateBroadcast\022\017\n\007user_id\030\001 \001(\t\022\017\n" +
-                        "\007node_id\030\002 \001(\005\022\016\n\006sockfd\030\003 \001(\005\022\016\n\006online" +
-                        "\030\004 \001(\010\022\014\n\004time\030\005 \001(\003\022\017\n\007version\030\006 \001(\005\022\023\n" +
-                        "\013device_type\030\007 \001(\005\"C\n\017UserStateReport\022\017\n" +
-                        "\007user_id\030\001 \001(\t\022\017\n\007node_id\030\002 \001(\005\022\016\n\006onlin" +
-                        "e\030\003 \001(\010"
+                        "\007node_id\030\002 \001(\005\022\016\n\006sockfd\030\003 \001(\005\022\r\n\005state\030" +
+                        "\004 \001(\005\022\014\n\004time\030\005 \001(\003\022\017\n\007version\030\006 \001(\005\022\023\n\013" +
+                        "device_type\030\007 \001(\005\"C\n\017UserStateReport\022\017\n\007" +
+                        "user_id\030\001 \001(\t\022\017\n\007node_id\030\002 \001(\005\022\016\n\006online" +
+                        "\030\003 \001(\010"
         };
         com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
                 new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -1851,7 +1819,7 @@ public final class YouMaiState {
         internal_static_com_proto_state_UserStateBroadcast_fieldAccessorTable = new
                 com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_proto_state_UserStateBroadcast_descriptor,
-                new String[]{"UserId", "NodeId", "Sockfd", "Online", "Time", "Version", "DeviceType",});
+                new String[]{"UserId", "NodeId", "Sockfd", "State", "Time", "Version", "DeviceType",});
         internal_static_com_proto_state_UserStateReport_descriptor =
                 getDescriptor().getMessageTypes().get(1);
         internal_static_com_proto_state_UserStateReport_fieldAccessorTable = new

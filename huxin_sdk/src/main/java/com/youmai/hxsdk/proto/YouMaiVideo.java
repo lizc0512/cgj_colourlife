@@ -33135,6 +33135,16 @@ public final class YouMaiVideo {
         getTokenBytes();
 
         /**
+         * <code>optional .VideoType type = 8;</code>
+         */
+        boolean hasType();
+
+        /**
+         * <code>optional .VideoType type = 8;</code>
+         */
+        YouMaiVideo.VideoType getType();
+
+        /**
          * <code>optional .ResultCode result = 20;</code>
          */
         boolean hasResult();
@@ -33241,13 +33251,24 @@ public final class YouMaiVideo {
                             token_ = bs;
                             break;
                         }
+                        case 64: {
+                            int rawValue = input.readEnum();
+                            YouMaiVideo.VideoType value = YouMaiVideo.VideoType.valueOf(rawValue);
+                            if (value == null) {
+                                unknownFields.mergeVarintField(8, rawValue);
+                            } else {
+                                bitField0_ |= 0x00000080;
+                                type_ = value;
+                            }
+                            break;
+                        }
                         case 160: {
                             int rawValue = input.readEnum();
                             YouMaiBasic.ResultCode value = YouMaiBasic.ResultCode.valueOf(rawValue);
                             if (value == null) {
                                 unknownFields.mergeVarintField(20, rawValue);
                             } else {
-                                bitField0_ |= 0x00000080;
+                                bitField0_ |= 0x00000100;
                                 result_ = value;
                             }
                             break;
@@ -33520,6 +33541,23 @@ public final class YouMaiVideo {
             }
         }
 
+        public static final int TYPE_FIELD_NUMBER = 8;
+        private YouMaiVideo.VideoType type_;
+
+        /**
+         * <code>optional .VideoType type = 8;</code>
+         */
+        public boolean hasType() {
+            return ((bitField0_ & 0x00000080) == 0x00000080);
+        }
+
+        /**
+         * <code>optional .VideoType type = 8;</code>
+         */
+        public YouMaiVideo.VideoType getType() {
+            return type_;
+        }
+
         public static final int RESULT_FIELD_NUMBER = 20;
         private YouMaiBasic.ResultCode result_;
 
@@ -33527,7 +33565,7 @@ public final class YouMaiVideo {
          * <code>optional .ResultCode result = 20;</code>
          */
         public boolean hasResult() {
-            return ((bitField0_ & 0x00000080) == 0x00000080);
+            return ((bitField0_ & 0x00000100) == 0x00000100);
         }
 
         /**
@@ -33545,6 +33583,7 @@ public final class YouMaiVideo {
             info_ = "";
             member_ = false;
             token_ = "";
+            type_ = YouMaiVideo.VideoType.CONFERENCE;
             result_ = YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
         }
 
@@ -33584,6 +33623,9 @@ public final class YouMaiVideo {
                 output.writeBytes(7, getTokenBytes());
             }
             if (((bitField0_ & 0x00000080) == 0x00000080)) {
+                output.writeEnum(8, type_.getNumber());
+            }
+            if (((bitField0_ & 0x00000100) == 0x00000100)) {
                 output.writeEnum(20, result_.getNumber());
             }
             getUnknownFields().writeTo(output);
@@ -33625,6 +33667,10 @@ public final class YouMaiVideo {
                         .computeBytesSize(7, getTokenBytes());
             }
             if (((bitField0_ & 0x00000080) == 0x00000080)) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeEnumSize(8, type_.getNumber());
+            }
+            if (((bitField0_ & 0x00000100) == 0x00000100)) {
                 size += com.google.protobuf.CodedOutputStream
                         .computeEnumSize(20, result_.getNumber());
             }
@@ -33781,8 +33827,10 @@ public final class YouMaiVideo {
                 bitField0_ = (bitField0_ & ~0x00000020);
                 token_ = "";
                 bitField0_ = (bitField0_ & ~0x00000040);
-                result_ = YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
+                type_ = YouMaiVideo.VideoType.CONFERENCE;
                 bitField0_ = (bitField0_ & ~0x00000080);
+                result_ = YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
+                bitField0_ = (bitField0_ & ~0x00000100);
                 return this;
             }
 
@@ -33842,6 +33890,10 @@ public final class YouMaiVideo {
                 if (((from_bitField0_ & 0x00000080) == 0x00000080)) {
                     to_bitField0_ |= 0x00000080;
                 }
+                result.type_ = type_;
+                if (((from_bitField0_ & 0x00000100) == 0x00000100)) {
+                    to_bitField0_ |= 0x00000100;
+                }
                 result.result_ = result_;
                 result.bitField0_ = to_bitField0_;
                 onBuilt();
@@ -33885,6 +33937,9 @@ public final class YouMaiVideo {
                     bitField0_ |= 0x00000040;
                     token_ = other.token_;
                     onChanged();
+                }
+                if (other.hasType()) {
+                    setType(other.getType());
                 }
                 if (other.hasResult()) {
                     setResult(other.getResult());
@@ -34355,13 +34410,52 @@ public final class YouMaiVideo {
                 return this;
             }
 
+            private YouMaiVideo.VideoType type_ = YouMaiVideo.VideoType.CONFERENCE;
+
+            /**
+             * <code>optional .VideoType type = 8;</code>
+             */
+            public boolean hasType() {
+                return ((bitField0_ & 0x00000080) == 0x00000080);
+            }
+
+            /**
+             * <code>optional .VideoType type = 8;</code>
+             */
+            public YouMaiVideo.VideoType getType() {
+                return type_;
+            }
+
+            /**
+             * <code>optional .VideoType type = 8;</code>
+             */
+            public Builder setType(YouMaiVideo.VideoType value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000080;
+                type_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional .VideoType type = 8;</code>
+             */
+            public Builder clearType() {
+                bitField0_ = (bitField0_ & ~0x00000080);
+                type_ = YouMaiVideo.VideoType.CONFERENCE;
+                onChanged();
+                return this;
+            }
+
             private YouMaiBasic.ResultCode result_ = YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
 
             /**
              * <code>optional .ResultCode result = 20;</code>
              */
             public boolean hasResult() {
-                return ((bitField0_ & 0x00000080) == 0x00000080);
+                return ((bitField0_ & 0x00000100) == 0x00000100);
             }
 
             /**
@@ -34378,7 +34472,7 @@ public final class YouMaiVideo {
                 if (value == null) {
                     throw new NullPointerException();
                 }
-                bitField0_ |= 0x00000080;
+                bitField0_ |= 0x00000100;
                 result_ = value;
                 onChanged();
                 return this;
@@ -34388,7 +34482,7 @@ public final class YouMaiVideo {
              * <code>optional .ResultCode result = 20;</code>
              */
             public Builder clearResult() {
-                bitField0_ = (bitField0_ & ~0x00000080);
+                bitField0_ = (bitField0_ & ~0x00000100);
                 result_ = YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
                 onChanged();
                 return this;
@@ -40858,28 +40952,29 @@ public final class YouMaiVideo {
                         "d\030\003 \001(\t\"_\n\016StateBroadcast\022\020\n\010group_id\030\001 " +
                         "\001(\r\022\r\n\005state\030\002 \001(\010\022\013\n\003num\030\003 \001(\r\022\021\n\troom_" +
                         "name\030\004 \001(\t\022\014\n\004info\030\005 \001(\t\"4\n\rVideoStateRe" +
-                        "q\022\021\n\tmember_id\030\001 \001(\t\022\020\n\010group_id\030\002 \001(\r\"\252" +
+                        "q\022\021\n\tmember_id\030\001 \001(\t\022\020\n\010group_id\030\002 \001(\r\"\324" +
                         "\001\n\rVideoStateRsp\022\020\n\010group_id\030\001 \001(\r\022\r\n\005st" +
                         "ate\030\002 \001(\010\022\013\n\003num\030\003 \001(\r\022\021\n\troom_name\030\004 \001(" +
                         "\t\022\014\n\004info\030\005 \001(\t\022\016\n\006member\030\006 \001(\010\022\r\n\005token",
-                "\030\007 \001(\t\022+\n\006result\030\024 \001(\0162\033.com.proto.basic" +
-                        ".ResultCode\"1\n\013ExitRoomReq\022\017\n\007user_id\030\001 " +
-                        "\001(\t\022\021\n\troom_name\030\002 \001(\t\"^\n\013ExitRoomRsp\022\017\n" +
-                        "\007user_id\030\001 \001(\t\022\021\n\troom_name\030\002 \001(\t\022+\n\006res" +
-                        "ult\030\024 \001(\0162\033.ResultCode\"J" +
-                        "\n\021ExitRoomBroadcast\022\017\n\007user_id\030\001 \001(\t\022\021\n\t" +
-                        "room_name\030\002 \001(\t\022\021\n\tnotify_id\030\003 \001(\t\"4\n\016De" +
-                        "stroyRoomReq\022\017\n\007user_id\030\001 \001(\t\022\021\n\troom_na" +
-                        "me\030\002 \001(\t\"a\n\016DestroyRoomRsp\022\017\n\007user_id\030\001 " +
-                        "\001(\t\022\021\n\troom_name\030\002 \001(\t\022+\n\006result\030\024 \001(\0162\033",
-                ".ResultCode\"M\n\024DestroyRo" +
-                        "omBroadcast\022\017\n\007user_id\030\001 \001(\t\022\021\n\troom_nam" +
-                        "e\030\002 \001(\t\022\021\n\tnotify_id\030\003 \001(\t\",\n\004Ping\022\021\n\tme" +
-                        "mber_id\030\001 \001(\t\022\021\n\troom_name\030\002 \001(\t\"Y\n\004Pong" +
-                        "\022\021\n\tmember_id\030\001 \001(\t\022\021\n\troom_name\030\002 \001(\t\022+" +
-                        "\n\006result\030\024 \001(\0162\033.ResultC" +
-                        "ode*&\n\tVideoType\022\016\n\nCONFERENCE\020\001\022\t\n\005TRAI" +
-                        "N\020\002"
+                "\030\007 \001(\t\022(\n\004type\030\010 \001(\0162\032.V" +
+                        "ideoType\022+\n\006result\030\024 \001(\0162\033.com.proto.bas" +
+                        "ic.ResultCode\"1\n\013ExitRoomReq\022\017\n\007user_id\030" +
+                        "\001 \001(\t\022\021\n\troom_name\030\002 \001(\t\"^\n\013ExitRoomRsp\022" +
+                        "\017\n\007user_id\030\001 \001(\t\022\021\n\troom_name\030\002 \001(\t\022+\n\006r" +
+                        "esult\030\024 \001(\0162\033.ResultCode" +
+                        "\"J\n\021ExitRoomBroadcast\022\017\n\007user_id\030\001 \001(\t\022\021" +
+                        "\n\troom_name\030\002 \001(\t\022\021\n\tnotify_id\030\003 \001(\t\"4\n\016" +
+                        "DestroyRoomReq\022\017\n\007user_id\030\001 \001(\t\022\021\n\troom_" +
+                        "name\030\002 \001(\t\"a\n\016DestroyRoomRsp\022\017\n\007user_id\030",
+                "\001 \001(\t\022\021\n\troom_name\030\002 \001(\t\022+\n\006result\030\024 \001(\016" +
+                        "2\033.ResultCode\"M\n\024Destroy" +
+                        "RoomBroadcast\022\017\n\007user_id\030\001 \001(\t\022\021\n\troom_n" +
+                        "ame\030\002 \001(\t\022\021\n\tnotify_id\030\003 \001(\t\",\n\004Ping\022\021\n\t" +
+                        "member_id\030\001 \001(\t\022\021\n\troom_name\030\002 \001(\t\"Y\n\004Po" +
+                        "ng\022\021\n\tmember_id\030\001 \001(\t\022\021\n\troom_name\030\002 \001(\t" +
+                        "\022+\n\006result\030\024 \001(\0162\033.Resul" +
+                        "tCode*&\n\tVideoType\022\016\n\nCONFERENCE\020\001\022\t\n\005TR" +
+                        "AIN\020\002"
         };
         com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
                 new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -41085,7 +41180,7 @@ public final class YouMaiVideo {
         internal_static_com_proto_video_VideoStateRsp_fieldAccessorTable = new
                 com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_proto_video_VideoStateRsp_descriptor,
-                new String[]{"GroupId", "State", "Num", "RoomName", "Info", "Member", "Token", "Result",});
+                new String[]{"GroupId", "State", "Num", "RoomName", "Info", "Member", "Token", "Type", "Result",});
         internal_static_com_proto_video_ExitRoomReq_descriptor =
                 getDescriptor().getMessageTypes().get(32);
         internal_static_com_proto_video_ExitRoomReq_fieldAccessorTable = new

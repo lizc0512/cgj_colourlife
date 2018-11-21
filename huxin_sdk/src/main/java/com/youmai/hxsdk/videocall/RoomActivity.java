@@ -231,6 +231,19 @@ public class RoomActivity extends SdkBaseActivity implements QNRoomEventListener
         mUnusedWindowList.add(mRemoteWindowG);
         mUnusedWindowList.add(mRemoteWindowH);
 
+        mLocalWindow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isMax) {
+                    isMax = false;
+                    reDrawVideo();
+                } else {
+                    isMax = true;
+                    maxVideo(mLocalWindow);
+                }
+            }
+        });
+
         // every remote window can switch with local window
         for (final RTCVideoView rtcVideoView : mUnusedWindowList) {
             rtcVideoView.setOnLongClickListener(mOnLongClickListener);
@@ -239,11 +252,9 @@ public class RoomActivity extends SdkBaseActivity implements QNRoomEventListener
                 public void onClick(View v) {
                     //mRTCManager.switchWindow(rtcVideoView.getRemoteSurfaceView());
                     if (isMax) {
-                        mLocalWindow.setVisible(true);
                         isMax = false;
                         reDrawVideo();
                     } else {
-                        mLocalWindow.setVisible(false);
                         isMax = true;
                         maxVideo(rtcVideoView);
                     }
@@ -785,6 +796,7 @@ public class RoomActivity extends SdkBaseActivity implements QNRoomEventListener
             mVideoView.stopPlayback();
         }
 
+        disconnect();
 
         HuxinSdkManager.instance().stopVideoHeartBeat();
         HuxinSdkManager.instance().getStackAct().removeActivity(this);
@@ -1161,13 +1173,6 @@ public class RoomActivity extends SdkBaseActivity implements QNRoomEventListener
     private boolean isMax;
 
     private void maxVideo(RTCVideoView rtcVideoView) {
-
-        if (rtcVideoView.getId() == mLocalWindow.getId()) {
-            return;
-        } else {
-            updateLayoutParams(mLocalWindow, 0, 0, 0, mScreenWidth, mScreenHeight, -1);  //最小化本地
-        }
-
         final int userCount = mUsedWindowList.size();
         for (int i = 0; i < userCount; i++) {
             RTCVideoView item = mUsedWindowList.get(i);

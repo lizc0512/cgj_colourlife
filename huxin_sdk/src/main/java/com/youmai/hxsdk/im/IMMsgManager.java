@@ -697,6 +697,26 @@ public class IMMsgManager {
                 String memberId = notify.getMemberId();
                 boolean agree = notify.getAgree();
                 String adminId = notify.getAdminId();
+                VideoCall videoCall = HuxinSdkManager.instance().getVideoCall();
+                if (!agree && videoCall != null) {
+
+                    List<YouMaiVideo.RoomMemberItem> list = videoCall.getInviteMembers();
+                    if (!ListUtils.isEmpty(list)) {
+                        for (int i = 0; i < list.size(); i++) {
+                            String id = list.get(i).getMemberId();
+                            if (id.equals(memberId)) {
+                                list.remove(i);
+                                break;
+                            }
+                        }
+                    }
+
+                    if (ListUtils.isEmpty(list)) {
+                        HuxinSdkManager.instance().reqExitRoom();
+                        Toast.makeText(mContext, "对方已经拒接您的邀请", Toast.LENGTH_SHORT).show();
+                        HuxinSdkManager.instance().getStackAct().finishActivity(RoomActivity.class);
+                    }
+                }
 
             } catch (InvalidProtocolBufferException e) {
                 e.printStackTrace();

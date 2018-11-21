@@ -27,6 +27,9 @@ public class VideoCall {
     private int count;
 
 
+    private List<YouMaiVideo.RoomMemberItem> inviteMembers;
+
+
     public String getRoomName() {
         if (roomName == null) {
             roomName = "";
@@ -136,5 +139,14 @@ public class VideoCall {
 
     public void setState(boolean state) {
         this.state = state;
+    }
+
+
+    public List<YouMaiVideo.RoomMemberItem> getInviteMembers() {
+        return inviteMembers;
+    }
+
+    public void setInviteMembers(List<YouMaiVideo.RoomMemberItem> inviteMembers) {
+        this.inviteMembers = inviteMembers;
     }
 }

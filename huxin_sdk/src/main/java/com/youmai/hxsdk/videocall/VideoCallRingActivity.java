@@ -186,9 +186,9 @@ public class VideoCallRingActivity extends SdkBaseActivity implements View.OnCli
         }
     }
 
-    private void reqVideoInvite(String roomName, String adminId) {
+    private void reqVideoInvite(boolean isAgree, String roomName, String adminId) {
 
-        HuxinSdkManager.instance().reqVideoInvite(roomName, true, adminId,
+        HuxinSdkManager.instance().reqVideoInvite(roomName, isAgree, adminId,
                 new ReceiveListener() {
                     @Override
                     public void OnRec(PduBase pduBase) {
@@ -201,6 +201,10 @@ public class VideoCallRingActivity extends SdkBaseActivity implements View.OnCli
                                 String roomName = rsp.getRoomName();
                                 String token = rsp.getToken();
                                 String userId = HuxinSdkManager.instance().getUuid();
+
+                                if (TextUtils.isEmpty(roomName) || TextUtils.isEmpty(token)) {
+                                    return;
+                                }
 
                                 VideoCall videoCall = new VideoCall();
                                 videoCall.setRoomName(roomName);
@@ -271,10 +275,11 @@ public class VideoCallRingActivity extends SdkBaseActivity implements View.OnCli
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.btn_accept) {
-            reqVideoInvite(roomName, adminId);
+            reqVideoInvite(true, roomName, adminId);
             stopRing();
             finish();
         } else if (id == R.id.btn_cancel) {
+            reqVideoInvite(false, roomName, adminId);
             stopRing();
             finish();
         }

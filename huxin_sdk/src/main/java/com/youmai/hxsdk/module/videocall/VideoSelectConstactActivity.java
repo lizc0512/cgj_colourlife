@@ -328,6 +328,8 @@ public class VideoSelectConstactActivity extends SdkBaseActivity implements View
                         String roomName = rsp.getRoomName();
                         String adminId = rsp.getAdminId();
 
+                        HuxinSdkManager.instance().getVideoCall().setInviteMembers(memberItems);
+
                         finish();
                     } else {
                         Toast.makeText(mContext, "邀请视频成员失败,结果码：" + rsp.getResult(), Toast.LENGTH_SHORT).show();

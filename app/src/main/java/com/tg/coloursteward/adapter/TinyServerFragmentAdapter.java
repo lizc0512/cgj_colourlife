@@ -108,7 +108,7 @@ public class TinyServerFragmentAdapter extends RecyclerView.Adapter<RecyclerView
                     @Override
                     public void onClick(View v) {
                         if (TextUtils.isEmpty(String.valueOf(list.get(position).getAuth_type()))) {
-                            callBack.onclick(position, list.get(position).getUrl(), 1);
+                            callBack.onclick(position, list.get(position).getUrl(), 2);
                         } else {
                             callBack.onclick(position, list.get(position).getUrl(), list.get(position).getAuth_type());
                         }

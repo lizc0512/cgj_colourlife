@@ -349,6 +349,8 @@ public class HttpTools {
                     return param;
                 } else if (URL_NAME.startsWith(Contants.URl.URL_ICESTAFF)) {
                     return param;
+                } else if(URL_NAME.startsWith(Contants.URl.URL_QRCODE)){
+                    return param;
                 } else {
                     String sign = "";
                     String ts = getTime();

@@ -163,11 +163,13 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
             list_item.add(dataBean);
             list_item.addAll(list.get(i).getData());
         }
-        if (null == fragmentAdapter) {
-            fragmentAdapter = new TinyServerFragmentAdapter(mActivity, list_item);
-            rv_fragment_tinyserver.setAdapter(fragmentAdapter);
-        } else {
-            fragmentAdapter.setData(list_item);
+        if (null != list_item && list_item.size() > 0) {
+            if (null == fragmentAdapter) {
+                fragmentAdapter = new TinyServerFragmentAdapter(mActivity, list_item);
+                rv_fragment_tinyserver.setAdapter(fragmentAdapter);
+            } else {
+                fragmentAdapter.setData(list_item);
+            }
         }
         fragmentAdapter.setCallBack(new TinyFragmentCallBack() {
             @Override
@@ -225,7 +227,7 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
         gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
-                if (!TextUtils.isEmpty(list_item.get(position).getItem_name())) {
+                if (null != list_item && list_item.size() > 0 && !TextUtils.isEmpty(list_item.get(position).getItem_name())) {
                     return 4;//栏目导航栏
                 } else {
                     return 1;//栏目子itme

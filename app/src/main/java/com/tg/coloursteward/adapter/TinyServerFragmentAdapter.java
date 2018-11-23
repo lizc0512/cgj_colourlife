@@ -90,19 +90,21 @@ public class TinyServerFragmentAdapter extends RecyclerView.Adapter<RecyclerView
     public void onBindViewHolder(ViewHolder holder, final int position) {
         if (holder instanceof TinyServerFragmentViewHolder_one) {
             TinyServerFragmentViewHolder_one holder_one = (TinyServerFragmentViewHolder_one) holder;
-            if (TextUtils.isEmpty(list.get(position).getQuantity())) {//无审批形式
-                holder_one.icon.setVisibility(View.VISIBLE);
-                Glide.with(context)
-                        .applyDefaultRequestOptions(new RequestOptions()
-                                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                                .error(R.drawable.placeholder2))
-                        .load(list.get(position).getImg()).into(holder_one.icon);
-            } else {//有审批数量
-                holder_one.showNum.setText(list.get(position).getQuantity());
-                holder_one.showNum.setVisibility(View.VISIBLE);
+            if (null != list && list.size() > 0) {
+                if (TextUtils.isEmpty(list.get(position).getQuantity())) {//无审批形式
+                    holder_one.icon.setVisibility(View.VISIBLE);
+                    Glide.with(context)
+                            .applyDefaultRequestOptions(new RequestOptions()
+                                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                    .error(R.drawable.placeholder2))
+                            .load(list.get(position).getImg()).into(holder_one.icon);
+                } else {//有审批数量
+                    holder_one.showNum.setText(list.get(position).getQuantity());
+                    holder_one.showNum.setVisibility(View.VISIBLE);
+                }
+                holder_one.showName.setTextColor(context.getResources().getColor(R.color.text_color1));
+                holder_one.showName.setText(list.get(position).getName());
             }
-            holder_one.showName.setTextColor(context.getResources().getColor(R.color.text_color1));
-            holder_one.showName.setText(list.get(position).getName());
             if (null != callBack) {
                 holder_one.ll_fragmentone.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -125,12 +127,15 @@ public class TinyServerFragmentAdapter extends RecyclerView.Adapter<RecyclerView
             }
         } else if (holder instanceof TinyServerFragmentViewHolder_three) {
             TinyServerFragmentViewHolder_three holder_three = (TinyServerFragmentViewHolder_three) holder;
-            Glide.with(context)
-                    .applyDefaultRequestOptions(new RequestOptions()
-                            .diskCacheStrategy(DiskCacheStrategy.ALL)
-                            .error(R.drawable.placeholder2))
-                    .load(list.get(position).getImg()).into(holder_three.icon);
-            holder_three.showName.setText(list.get(position).getName());
+            try {
+                Glide.with(context)
+                        .applyDefaultRequestOptions(new RequestOptions()
+                                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                .error(R.drawable.placeholder2))
+                        .load(list.get(position).getImg()).into(holder_three.icon);
+                holder_three.showName.setText(list.get(position).getName());
+            } catch (Exception e) {
+            }
             if (null != callBack) {
                 holder_three.rl_fragmentthree.setOnClickListener(new View.OnClickListener() {
                     @Override

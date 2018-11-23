@@ -115,8 +115,7 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
                     ToastFactory.showToast(this, "请输入不少于6位的密码");
                     return false;
                 }
-//                loginGt();// 极验登录
-                login(newPhone, password, "");//直接登录
+                loginGt();// 极验登录
                 break;
             case R.id.forget_pwd:
                 forgetPassword();// 忘记密码

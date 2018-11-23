@@ -164,11 +164,14 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
             list_item.addAll(list.get(i).getData());
         }
         if (null != list_item && list_item.size() > 0) {
-            if (null == fragmentAdapter) {
-                fragmentAdapter = new TinyServerFragmentAdapter(mActivity, list_item);
-                rv_fragment_tinyserver.setAdapter(fragmentAdapter);
-            } else {
-                fragmentAdapter.setData(list_item);
+            try{
+                if (null == fragmentAdapter) {
+                    fragmentAdapter = new TinyServerFragmentAdapter(mActivity, list_item);
+                    rv_fragment_tinyserver.setAdapter(fragmentAdapter);
+                } else {
+                    fragmentAdapter.setData(list_item);
+                }
+            }catch (Exception e){
             }
         }
         fragmentAdapter.setCallBack(new TinyFragmentCallBack() {
@@ -224,6 +227,7 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
         GridLayoutManager gridLayoutManager = new GridLayoutManager(mActivity, 4);
         rv_fragment_tinyserver.addItemDecoration(new PaddingItemDecoration(4));
         rv_fragment_tinyserver.setNestedScrollingEnabled(false);
+        rv_fragment_tinyserver.setLayoutManager(gridLayoutManager);
         gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
@@ -234,7 +238,6 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
                 }
             }
         });
-        rv_fragment_tinyserver.setLayoutManager(gridLayoutManager);
     }
 
     public void requestData() {

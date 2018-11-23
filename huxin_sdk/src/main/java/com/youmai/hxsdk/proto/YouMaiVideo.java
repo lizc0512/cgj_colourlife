@@ -22610,6 +22610,34 @@ public final class YouMaiVideo {
          */
         com.google.protobuf.ByteString
         getRoomNameBytes();
+
+        /**
+         * <code>optional bool reply = 4;</code>
+         *
+         * <pre>
+         * 主动设置还是答复
+         * </pre>
+         */
+        boolean hasReply();
+
+        /**
+         * <code>optional bool reply = 4;</code>
+         *
+         * <pre>
+         * 主动设置还是答复
+         * </pre>
+         */
+        boolean getReply();
+
+        /**
+         * <code>optional bool agree = 5;</code>
+         */
+        boolean hasAgree();
+
+        /**
+         * <code>optional bool agree = 5;</code>
+         */
+        boolean getAgree();
     }
 
     /**
@@ -22692,6 +22720,16 @@ public final class YouMaiVideo {
                             com.google.protobuf.ByteString bs = input.readBytes();
                             bitField0_ |= 0x00000002;
                             roomName_ = bs;
+                            break;
+                        }
+                        case 32: {
+                            bitField0_ |= 0x00000004;
+                            reply_ = input.readBool();
+                            break;
+                        }
+                        case 40: {
+                            bitField0_ |= 0x00000008;
+                            agree_ = input.readBool();
                             break;
                         }
                     }
@@ -22868,10 +22906,54 @@ public final class YouMaiVideo {
             }
         }
 
+        public static final int REPLY_FIELD_NUMBER = 4;
+        private boolean reply_;
+
+        /**
+         * <code>optional bool reply = 4;</code>
+         *
+         * <pre>
+         * 主动设置还是答复
+         * </pre>
+         */
+        public boolean hasReply() {
+            return ((bitField0_ & 0x00000004) == 0x00000004);
+        }
+
+        /**
+         * <code>optional bool reply = 4;</code>
+         *
+         * <pre>
+         * 主动设置还是答复
+         * </pre>
+         */
+        public boolean getReply() {
+            return reply_;
+        }
+
+        public static final int AGREE_FIELD_NUMBER = 5;
+        private boolean agree_;
+
+        /**
+         * <code>optional bool agree = 5;</code>
+         */
+        public boolean hasAgree() {
+            return ((bitField0_ & 0x00000008) == 0x00000008);
+        }
+
+        /**
+         * <code>optional bool agree = 5;</code>
+         */
+        public boolean getAgree() {
+            return agree_;
+        }
+
         private void initFields() {
             adminId_ = "";
             memberList_ = java.util.Collections.emptyList();
             roomName_ = "";
+            reply_ = false;
+            agree_ = false;
         }
 
         private byte memoizedIsInitialized = -1;
@@ -22897,6 +22979,12 @@ public final class YouMaiVideo {
             if (((bitField0_ & 0x00000002) == 0x00000002)) {
                 output.writeBytes(3, getRoomNameBytes());
             }
+            if (((bitField0_ & 0x00000004) == 0x00000004)) {
+                output.writeBool(4, reply_);
+            }
+            if (((bitField0_ & 0x00000008) == 0x00000008)) {
+                output.writeBool(5, agree_);
+            }
             getUnknownFields().writeTo(output);
         }
 
@@ -22918,6 +23006,14 @@ public final class YouMaiVideo {
             if (((bitField0_ & 0x00000002) == 0x00000002)) {
                 size += com.google.protobuf.CodedOutputStream
                         .computeBytesSize(3, getRoomNameBytes());
+            }
+            if (((bitField0_ & 0x00000004) == 0x00000004)) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeBoolSize(4, reply_);
+            }
+            if (((bitField0_ & 0x00000008) == 0x00000008)) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeBoolSize(5, agree_);
             }
             size += getUnknownFields().getSerializedSize();
             memoizedSerializedSize = size;
@@ -23073,6 +23169,10 @@ public final class YouMaiVideo {
                 }
                 roomName_ = "";
                 bitField0_ = (bitField0_ & ~0x00000004);
+                reply_ = false;
+                bitField0_ = (bitField0_ & ~0x00000008);
+                agree_ = false;
+                bitField0_ = (bitField0_ & ~0x00000010);
                 return this;
             }
 
@@ -23118,6 +23218,14 @@ public final class YouMaiVideo {
                     to_bitField0_ |= 0x00000002;
                 }
                 result.roomName_ = roomName_;
+                if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
+                    to_bitField0_ |= 0x00000004;
+                }
+                result.reply_ = reply_;
+                if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
+                    to_bitField0_ |= 0x00000008;
+                }
+                result.agree_ = agree_;
                 result.bitField0_ = to_bitField0_;
                 onBuilt();
                 return result;
@@ -23169,6 +23277,12 @@ public final class YouMaiVideo {
                     bitField0_ |= 0x00000004;
                     roomName_ = other.roomName_;
                     onChanged();
+                }
+                if (other.hasReply()) {
+                    setReply(other.getReply());
+                }
+                if (other.hasAgree()) {
+                    setAgree(other.getAgree());
                 }
                 this.mergeUnknownFields(other.getUnknownFields());
                 return this;
@@ -23622,6 +23736,94 @@ public final class YouMaiVideo {
                 return this;
             }
 
+            private boolean reply_;
+
+            /**
+             * <code>optional bool reply = 4;</code>
+             *
+             * <pre>
+             * 主动设置还是答复
+             * </pre>
+             */
+            public boolean hasReply() {
+                return ((bitField0_ & 0x00000008) == 0x00000008);
+            }
+
+            /**
+             * <code>optional bool reply = 4;</code>
+             *
+             * <pre>
+             * 主动设置还是答复
+             * </pre>
+             */
+            public boolean getReply() {
+                return reply_;
+            }
+
+            /**
+             * <code>optional bool reply = 4;</code>
+             *
+             * <pre>
+             * 主动设置还是答复
+             * </pre>
+             */
+            public Builder setReply(boolean value) {
+                bitField0_ |= 0x00000008;
+                reply_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional bool reply = 4;</code>
+             *
+             * <pre>
+             * 主动设置还是答复
+             * </pre>
+             */
+            public Builder clearReply() {
+                bitField0_ = (bitField0_ & ~0x00000008);
+                reply_ = false;
+                onChanged();
+                return this;
+            }
+
+            private boolean agree_;
+
+            /**
+             * <code>optional bool agree = 5;</code>
+             */
+            public boolean hasAgree() {
+                return ((bitField0_ & 0x00000010) == 0x00000010);
+            }
+
+            /**
+             * <code>optional bool agree = 5;</code>
+             */
+            public boolean getAgree() {
+                return agree_;
+            }
+
+            /**
+             * <code>optional bool agree = 5;</code>
+             */
+            public Builder setAgree(boolean value) {
+                bitField0_ |= 0x00000010;
+                agree_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional bool agree = 5;</code>
+             */
+            public Builder clearAgree() {
+                bitField0_ = (bitField0_ & ~0x00000010);
+                agree_ = false;
+                onChanged();
+                return this;
+            }
+
             // @@protoc_insertion_point(builder_scope:VideoSettingReq)
         }
 
@@ -23680,6 +23882,34 @@ public final class YouMaiVideo {
          */
         YouMaiVideo.RoomMemberItemOrBuilder getMemberListOrBuilder(
                 int index);
+
+        /**
+         * <code>optional bool reply = 3;</code>
+         *
+         * <pre>
+         * 主动设置还是答复
+         * </pre>
+         */
+        boolean hasReply();
+
+        /**
+         * <code>optional bool reply = 3;</code>
+         *
+         * <pre>
+         * 主动设置还是答复
+         * </pre>
+         */
+        boolean getReply();
+
+        /**
+         * <code>optional bool agree = 4;</code>
+         */
+        boolean hasAgree();
+
+        /**
+         * <code>optional bool agree = 4;</code>
+         */
+        boolean getAgree();
 
         /**
          * <code>optional .ResultCode result = 20;</code>
@@ -23764,13 +23994,23 @@ public final class YouMaiVideo {
                             memberList_.add(input.readMessage(YouMaiVideo.RoomMemberItem.PARSER, extensionRegistry));
                             break;
                         }
+                        case 24: {
+                            bitField0_ |= 0x00000002;
+                            reply_ = input.readBool();
+                            break;
+                        }
+                        case 32: {
+                            bitField0_ |= 0x00000004;
+                            agree_ = input.readBool();
+                            break;
+                        }
                         case 160: {
                             int rawValue = input.readEnum();
                             YouMaiBasic.ResultCode value = YouMaiBasic.ResultCode.valueOf(rawValue);
                             if (value == null) {
                                 unknownFields.mergeVarintField(20, rawValue);
                             } else {
-                                bitField0_ |= 0x00000002;
+                                bitField0_ |= 0x00000008;
                                 result_ = value;
                             }
                             break;
@@ -23904,6 +24144,48 @@ public final class YouMaiVideo {
             return memberList_.get(index);
         }
 
+        public static final int REPLY_FIELD_NUMBER = 3;
+        private boolean reply_;
+
+        /**
+         * <code>optional bool reply = 3;</code>
+         *
+         * <pre>
+         * 主动设置还是答复
+         * </pre>
+         */
+        public boolean hasReply() {
+            return ((bitField0_ & 0x00000002) == 0x00000002);
+        }
+
+        /**
+         * <code>optional bool reply = 3;</code>
+         *
+         * <pre>
+         * 主动设置还是答复
+         * </pre>
+         */
+        public boolean getReply() {
+            return reply_;
+        }
+
+        public static final int AGREE_FIELD_NUMBER = 4;
+        private boolean agree_;
+
+        /**
+         * <code>optional bool agree = 4;</code>
+         */
+        public boolean hasAgree() {
+            return ((bitField0_ & 0x00000004) == 0x00000004);
+        }
+
+        /**
+         * <code>optional bool agree = 4;</code>
+         */
+        public boolean getAgree() {
+            return agree_;
+        }
+
         public static final int RESULT_FIELD_NUMBER = 20;
         private YouMaiBasic.ResultCode result_;
 
@@ -23911,7 +24193,7 @@ public final class YouMaiVideo {
          * <code>optional .ResultCode result = 20;</code>
          */
         public boolean hasResult() {
-            return ((bitField0_ & 0x00000002) == 0x00000002);
+            return ((bitField0_ & 0x00000008) == 0x00000008);
         }
 
         /**
@@ -23924,6 +24206,8 @@ public final class YouMaiVideo {
         private void initFields() {
             adminId_ = "";
             memberList_ = java.util.Collections.emptyList();
+            reply_ = false;
+            agree_ = false;
             result_ = YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
         }
 
@@ -23948,6 +24232,12 @@ public final class YouMaiVideo {
                 output.writeMessage(2, memberList_.get(i));
             }
             if (((bitField0_ & 0x00000002) == 0x00000002)) {
+                output.writeBool(3, reply_);
+            }
+            if (((bitField0_ & 0x00000004) == 0x00000004)) {
+                output.writeBool(4, agree_);
+            }
+            if (((bitField0_ & 0x00000008) == 0x00000008)) {
                 output.writeEnum(20, result_.getNumber());
             }
             getUnknownFields().writeTo(output);
@@ -23969,6 +24259,14 @@ public final class YouMaiVideo {
                         .computeMessageSize(2, memberList_.get(i));
             }
             if (((bitField0_ & 0x00000002) == 0x00000002)) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeBoolSize(3, reply_);
+            }
+            if (((bitField0_ & 0x00000004) == 0x00000004)) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeBoolSize(4, agree_);
+            }
+            if (((bitField0_ & 0x00000008) == 0x00000008)) {
                 size += com.google.protobuf.CodedOutputStream
                         .computeEnumSize(20, result_.getNumber());
             }
@@ -24120,8 +24418,12 @@ public final class YouMaiVideo {
                 } else {
                     memberListBuilder_.clear();
                 }
-                result_ = YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
+                reply_ = false;
                 bitField0_ = (bitField0_ & ~0x00000004);
+                agree_ = false;
+                bitField0_ = (bitField0_ & ~0x00000008);
+                result_ = YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
+                bitField0_ = (bitField0_ & ~0x00000010);
                 return this;
             }
 
@@ -24165,6 +24467,14 @@ public final class YouMaiVideo {
                 }
                 if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
                     to_bitField0_ |= 0x00000002;
+                }
+                result.reply_ = reply_;
+                if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
+                    to_bitField0_ |= 0x00000004;
+                }
+                result.agree_ = agree_;
+                if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
+                    to_bitField0_ |= 0x00000008;
                 }
                 result.result_ = result_;
                 result.bitField0_ = to_bitField0_;
@@ -24213,6 +24523,12 @@ public final class YouMaiVideo {
                             memberListBuilder_.addAllMessages(other.memberList_);
                         }
                     }
+                }
+                if (other.hasReply()) {
+                    setReply(other.getReply());
+                }
+                if (other.hasAgree()) {
+                    setAgree(other.getAgree());
                 }
                 if (other.hasResult()) {
                     setResult(other.getResult());
@@ -24587,13 +24903,101 @@ public final class YouMaiVideo {
                 return memberListBuilder_;
             }
 
+            private boolean reply_;
+
+            /**
+             * <code>optional bool reply = 3;</code>
+             *
+             * <pre>
+             * 主动设置还是答复
+             * </pre>
+             */
+            public boolean hasReply() {
+                return ((bitField0_ & 0x00000004) == 0x00000004);
+            }
+
+            /**
+             * <code>optional bool reply = 3;</code>
+             *
+             * <pre>
+             * 主动设置还是答复
+             * </pre>
+             */
+            public boolean getReply() {
+                return reply_;
+            }
+
+            /**
+             * <code>optional bool reply = 3;</code>
+             *
+             * <pre>
+             * 主动设置还是答复
+             * </pre>
+             */
+            public Builder setReply(boolean value) {
+                bitField0_ |= 0x00000004;
+                reply_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional bool reply = 3;</code>
+             *
+             * <pre>
+             * 主动设置还是答复
+             * </pre>
+             */
+            public Builder clearReply() {
+                bitField0_ = (bitField0_ & ~0x00000004);
+                reply_ = false;
+                onChanged();
+                return this;
+            }
+
+            private boolean agree_;
+
+            /**
+             * <code>optional bool agree = 4;</code>
+             */
+            public boolean hasAgree() {
+                return ((bitField0_ & 0x00000008) == 0x00000008);
+            }
+
+            /**
+             * <code>optional bool agree = 4;</code>
+             */
+            public boolean getAgree() {
+                return agree_;
+            }
+
+            /**
+             * <code>optional bool agree = 4;</code>
+             */
+            public Builder setAgree(boolean value) {
+                bitField0_ |= 0x00000008;
+                agree_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional bool agree = 4;</code>
+             */
+            public Builder clearAgree() {
+                bitField0_ = (bitField0_ & ~0x00000008);
+                agree_ = false;
+                onChanged();
+                return this;
+            }
+
             private YouMaiBasic.ResultCode result_ = YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
 
             /**
              * <code>optional .ResultCode result = 20;</code>
              */
             public boolean hasResult() {
-                return ((bitField0_ & 0x00000004) == 0x00000004);
+                return ((bitField0_ & 0x00000010) == 0x00000010);
             }
 
             /**
@@ -24610,7 +25014,7 @@ public final class YouMaiVideo {
                 if (value == null) {
                     throw new NullPointerException();
                 }
-                bitField0_ |= 0x00000004;
+                bitField0_ |= 0x00000010;
                 result_ = value;
                 onChanged();
                 return this;
@@ -24620,7 +25024,7 @@ public final class YouMaiVideo {
              * <code>optional .ResultCode result = 20;</code>
              */
             public Builder clearResult() {
-                bitField0_ = (bitField0_ & ~0x00000004);
+                bitField0_ = (bitField0_ & ~0x00000010);
                 result_ = YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
                 onChanged();
                 return this;
@@ -24692,6 +25096,34 @@ public final class YouMaiVideo {
          * <code>optional bool open_voice = 4;</code>
          */
         boolean getOpenVoice();
+
+        /**
+         * <code>optional bool reply = 5;</code>
+         *
+         * <pre>
+         * 主动设置还是答复
+         * </pre>
+         */
+        boolean hasReply();
+
+        /**
+         * <code>optional bool reply = 5;</code>
+         *
+         * <pre>
+         * 主动设置还是答复
+         * </pre>
+         */
+        boolean getReply();
+
+        /**
+         * <code>optional bool agree = 6;</code>
+         */
+        boolean hasAgree();
+
+        /**
+         * <code>optional bool agree = 6;</code>
+         */
+        boolean getAgree();
     }
 
     /**
@@ -24772,6 +25204,16 @@ public final class YouMaiVideo {
                         case 32: {
                             bitField0_ |= 0x00000008;
                             openVoice_ = input.readBool();
+                            break;
+                        }
+                        case 40: {
+                            bitField0_ |= 0x00000010;
+                            reply_ = input.readBool();
+                            break;
+                        }
+                        case 48: {
+                            bitField0_ |= 0x00000020;
+                            agree_ = input.readBool();
                             break;
                         }
                     }
@@ -24939,11 +25381,55 @@ public final class YouMaiVideo {
             return openVoice_;
         }
 
+        public static final int REPLY_FIELD_NUMBER = 5;
+        private boolean reply_;
+
+        /**
+         * <code>optional bool reply = 5;</code>
+         *
+         * <pre>
+         * 主动设置还是答复
+         * </pre>
+         */
+        public boolean hasReply() {
+            return ((bitField0_ & 0x00000010) == 0x00000010);
+        }
+
+        /**
+         * <code>optional bool reply = 5;</code>
+         *
+         * <pre>
+         * 主动设置还是答复
+         * </pre>
+         */
+        public boolean getReply() {
+            return reply_;
+        }
+
+        public static final int AGREE_FIELD_NUMBER = 6;
+        private boolean agree_;
+
+        /**
+         * <code>optional bool agree = 6;</code>
+         */
+        public boolean hasAgree() {
+            return ((bitField0_ & 0x00000020) == 0x00000020);
+        }
+
+        /**
+         * <code>optional bool agree = 6;</code>
+         */
+        public boolean getAgree() {
+            return agree_;
+        }
+
         private void initFields() {
             userId_ = "";
             roomName_ = "";
             openCamera_ = false;
             openVoice_ = false;
+            reply_ = false;
+            agree_ = false;
         }
 
         private byte memoizedIsInitialized = -1;
@@ -24972,6 +25458,12 @@ public final class YouMaiVideo {
             if (((bitField0_ & 0x00000008) == 0x00000008)) {
                 output.writeBool(4, openVoice_);
             }
+            if (((bitField0_ & 0x00000010) == 0x00000010)) {
+                output.writeBool(5, reply_);
+            }
+            if (((bitField0_ & 0x00000020) == 0x00000020)) {
+                output.writeBool(6, agree_);
+            }
             getUnknownFields().writeTo(output);
         }
 
@@ -24997,6 +25489,14 @@ public final class YouMaiVideo {
             if (((bitField0_ & 0x00000008) == 0x00000008)) {
                 size += com.google.protobuf.CodedOutputStream
                         .computeBoolSize(4, openVoice_);
+            }
+            if (((bitField0_ & 0x00000010) == 0x00000010)) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeBoolSize(5, reply_);
+            }
+            if (((bitField0_ & 0x00000020) == 0x00000020)) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeBoolSize(6, agree_);
             }
             size += getUnknownFields().getSerializedSize();
             memoizedSerializedSize = size;
@@ -25145,6 +25645,10 @@ public final class YouMaiVideo {
                 bitField0_ = (bitField0_ & ~0x00000004);
                 openVoice_ = false;
                 bitField0_ = (bitField0_ & ~0x00000008);
+                reply_ = false;
+                bitField0_ = (bitField0_ & ~0x00000010);
+                agree_ = false;
+                bitField0_ = (bitField0_ & ~0x00000020);
                 return this;
             }
 
@@ -25189,6 +25693,14 @@ public final class YouMaiVideo {
                     to_bitField0_ |= 0x00000008;
                 }
                 result.openVoice_ = openVoice_;
+                if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
+                    to_bitField0_ |= 0x00000010;
+                }
+                result.reply_ = reply_;
+                if (((from_bitField0_ & 0x00000020) == 0x00000020)) {
+                    to_bitField0_ |= 0x00000020;
+                }
+                result.agree_ = agree_;
                 result.bitField0_ = to_bitField0_;
                 onBuilt();
                 return result;
@@ -25220,6 +25732,12 @@ public final class YouMaiVideo {
                 }
                 if (other.hasOpenVoice()) {
                     setOpenVoice(other.getOpenVoice());
+                }
+                if (other.hasReply()) {
+                    setReply(other.getReply());
+                }
+                if (other.hasAgree()) {
+                    setAgree(other.getAgree());
                 }
                 this.mergeUnknownFields(other.getUnknownFields());
                 return this;
@@ -25485,6 +26003,94 @@ public final class YouMaiVideo {
                 return this;
             }
 
+            private boolean reply_;
+
+            /**
+             * <code>optional bool reply = 5;</code>
+             *
+             * <pre>
+             * 主动设置还是答复
+             * </pre>
+             */
+            public boolean hasReply() {
+                return ((bitField0_ & 0x00000010) == 0x00000010);
+            }
+
+            /**
+             * <code>optional bool reply = 5;</code>
+             *
+             * <pre>
+             * 主动设置还是答复
+             * </pre>
+             */
+            public boolean getReply() {
+                return reply_;
+            }
+
+            /**
+             * <code>optional bool reply = 5;</code>
+             *
+             * <pre>
+             * 主动设置还是答复
+             * </pre>
+             */
+            public Builder setReply(boolean value) {
+                bitField0_ |= 0x00000010;
+                reply_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional bool reply = 5;</code>
+             *
+             * <pre>
+             * 主动设置还是答复
+             * </pre>
+             */
+            public Builder clearReply() {
+                bitField0_ = (bitField0_ & ~0x00000010);
+                reply_ = false;
+                onChanged();
+                return this;
+            }
+
+            private boolean agree_;
+
+            /**
+             * <code>optional bool agree = 6;</code>
+             */
+            public boolean hasAgree() {
+                return ((bitField0_ & 0x00000020) == 0x00000020);
+            }
+
+            /**
+             * <code>optional bool agree = 6;</code>
+             */
+            public boolean getAgree() {
+                return agree_;
+            }
+
+            /**
+             * <code>optional bool agree = 6;</code>
+             */
+            public Builder setAgree(boolean value) {
+                bitField0_ |= 0x00000020;
+                agree_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional bool agree = 6;</code>
+             */
+            public Builder clearAgree() {
+                bitField0_ = (bitField0_ & ~0x00000020);
+                agree_ = false;
+                onChanged();
+                return this;
+            }
+
             // @@protoc_insertion_point(builder_scope:VideoSettingNotify)
         }
 
@@ -25567,6 +26173,22 @@ public final class YouMaiVideo {
          */
         com.google.protobuf.ByteString
         getAdminIdBytes();
+
+        /**
+         * <code>optional string nickname = 6;</code>
+         */
+        boolean hasNickname();
+
+        /**
+         * <code>optional string nickname = 6;</code>
+         */
+        String getNickname();
+
+        /**
+         * <code>optional string nickname = 6;</code>
+         */
+        com.google.protobuf.ByteString
+        getNicknameBytes();
     }
 
     /**
@@ -25657,6 +26279,12 @@ public final class YouMaiVideo {
                             com.google.protobuf.ByteString bs = input.readBytes();
                             bitField0_ |= 0x00000010;
                             adminId_ = bs;
+                            break;
+                        }
+                        case 50: {
+                            com.google.protobuf.ByteString bs = input.readBytes();
+                            bitField0_ |= 0x00000020;
+                            nickname_ = bs;
                             break;
                         }
                     }
@@ -25869,12 +26497,58 @@ public final class YouMaiVideo {
             }
         }
 
+        public static final int NICKNAME_FIELD_NUMBER = 6;
+        private Object nickname_;
+
+        /**
+         * <code>optional string nickname = 6;</code>
+         */
+        public boolean hasNickname() {
+            return ((bitField0_ & 0x00000020) == 0x00000020);
+        }
+
+        /**
+         * <code>optional string nickname = 6;</code>
+         */
+        public String getNickname() {
+            Object ref = nickname_;
+            if (ref instanceof String) {
+                return (String) ref;
+            } else {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                String s = bs.toStringUtf8();
+                if (bs.isValidUtf8()) {
+                    nickname_ = s;
+                }
+                return s;
+            }
+        }
+
+        /**
+         * <code>optional string nickname = 6;</code>
+         */
+        public com.google.protobuf.ByteString
+        getNicknameBytes() {
+            Object ref = nickname_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (String) ref);
+                nickname_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
         private void initFields() {
             userId_ = "";
             openCamera_ = false;
             openVoice_ = false;
             roomName_ = "";
             adminId_ = "";
+            nickname_ = "";
         }
 
         private byte memoizedIsInitialized = -1;
@@ -25906,6 +26580,9 @@ public final class YouMaiVideo {
             if (((bitField0_ & 0x00000010) == 0x00000010)) {
                 output.writeBytes(5, getAdminIdBytes());
             }
+            if (((bitField0_ & 0x00000020) == 0x00000020)) {
+                output.writeBytes(6, getNicknameBytes());
+            }
             getUnknownFields().writeTo(output);
         }
 
@@ -25935,6 +26612,10 @@ public final class YouMaiVideo {
             if (((bitField0_ & 0x00000010) == 0x00000010)) {
                 size += com.google.protobuf.CodedOutputStream
                         .computeBytesSize(5, getAdminIdBytes());
+            }
+            if (((bitField0_ & 0x00000020) == 0x00000020)) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeBytesSize(6, getNicknameBytes());
             }
             size += getUnknownFields().getSerializedSize();
             memoizedSerializedSize = size;
@@ -26089,6 +26770,8 @@ public final class YouMaiVideo {
                 bitField0_ = (bitField0_ & ~0x00000008);
                 adminId_ = "";
                 bitField0_ = (bitField0_ & ~0x00000010);
+                nickname_ = "";
+                bitField0_ = (bitField0_ & ~0x00000020);
                 return this;
             }
 
@@ -26137,6 +26820,10 @@ public final class YouMaiVideo {
                     to_bitField0_ |= 0x00000010;
                 }
                 result.adminId_ = adminId_;
+                if (((from_bitField0_ & 0x00000020) == 0x00000020)) {
+                    to_bitField0_ |= 0x00000020;
+                }
+                result.nickname_ = nickname_;
                 result.bitField0_ = to_bitField0_;
                 onBuilt();
                 return result;
@@ -26172,6 +26859,11 @@ public final class YouMaiVideo {
                 if (other.hasAdminId()) {
                     bitField0_ |= 0x00000010;
                     adminId_ = other.adminId_;
+                    onChanged();
+                }
+                if (other.hasNickname()) {
+                    bitField0_ |= 0x00000020;
+                    nickname_ = other.nickname_;
                     onChanged();
                 }
                 this.mergeUnknownFields(other.getUnknownFields());
@@ -26520,6 +27212,88 @@ public final class YouMaiVideo {
                 return this;
             }
 
+            private Object nickname_ = "";
+
+            /**
+             * <code>optional string nickname = 6;</code>
+             */
+            public boolean hasNickname() {
+                return ((bitField0_ & 0x00000020) == 0x00000020);
+            }
+
+            /**
+             * <code>optional string nickname = 6;</code>
+             */
+            public String getNickname() {
+                Object ref = nickname_;
+                if (!(ref instanceof String)) {
+                    com.google.protobuf.ByteString bs =
+                            (com.google.protobuf.ByteString) ref;
+                    String s = bs.toStringUtf8();
+                    if (bs.isValidUtf8()) {
+                        nickname_ = s;
+                    }
+                    return s;
+                } else {
+                    return (String) ref;
+                }
+            }
+
+            /**
+             * <code>optional string nickname = 6;</code>
+             */
+            public com.google.protobuf.ByteString
+            getNicknameBytes() {
+                Object ref = nickname_;
+                if (ref instanceof String) {
+                    com.google.protobuf.ByteString b =
+                            com.google.protobuf.ByteString.copyFromUtf8(
+                                    (String) ref);
+                    nickname_ = b;
+                    return b;
+                } else {
+                    return (com.google.protobuf.ByteString) ref;
+                }
+            }
+
+            /**
+             * <code>optional string nickname = 6;</code>
+             */
+            public Builder setNickname(
+                    String value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000020;
+                nickname_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string nickname = 6;</code>
+             */
+            public Builder clearNickname() {
+                bitField0_ = (bitField0_ & ~0x00000020);
+                nickname_ = getDefaultInstance().getNickname();
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string nickname = 6;</code>
+             */
+            public Builder setNicknameBytes(
+                    com.google.protobuf.ByteString value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000020;
+                nickname_ = value;
+                onChanged();
+                return this;
+            }
+
             // @@protoc_insertion_point(builder_scope:VideoSettingApplyReq)
         }
 
@@ -26602,6 +27376,22 @@ public final class YouMaiVideo {
          */
         com.google.protobuf.ByteString
         getAdminIdBytes();
+
+        /**
+         * <code>optional string nickname = 6;</code>
+         */
+        boolean hasNickname();
+
+        /**
+         * <code>optional string nickname = 6;</code>
+         */
+        String getNickname();
+
+        /**
+         * <code>optional string nickname = 6;</code>
+         */
+        com.google.protobuf.ByteString
+        getNicknameBytes();
 
         /**
          * <code>optional .ResultCode result = 20;</code>
@@ -26700,13 +27490,19 @@ public final class YouMaiVideo {
                             adminId_ = bs;
                             break;
                         }
+                        case 50: {
+                            com.google.protobuf.ByteString bs = input.readBytes();
+                            bitField0_ |= 0x00000020;
+                            nickname_ = bs;
+                            break;
+                        }
                         case 160: {
                             int rawValue = input.readEnum();
                             YouMaiBasic.ResultCode value = YouMaiBasic.ResultCode.valueOf(rawValue);
                             if (value == null) {
                                 unknownFields.mergeVarintField(20, rawValue);
                             } else {
-                                bitField0_ |= 0x00000020;
+                                bitField0_ |= 0x00000040;
                                 result_ = value;
                             }
                             break;
@@ -26921,6 +27717,51 @@ public final class YouMaiVideo {
             }
         }
 
+        public static final int NICKNAME_FIELD_NUMBER = 6;
+        private Object nickname_;
+
+        /**
+         * <code>optional string nickname = 6;</code>
+         */
+        public boolean hasNickname() {
+            return ((bitField0_ & 0x00000020) == 0x00000020);
+        }
+
+        /**
+         * <code>optional string nickname = 6;</code>
+         */
+        public String getNickname() {
+            Object ref = nickname_;
+            if (ref instanceof String) {
+                return (String) ref;
+            } else {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                String s = bs.toStringUtf8();
+                if (bs.isValidUtf8()) {
+                    nickname_ = s;
+                }
+                return s;
+            }
+        }
+
+        /**
+         * <code>optional string nickname = 6;</code>
+         */
+        public com.google.protobuf.ByteString
+        getNicknameBytes() {
+            Object ref = nickname_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (String) ref);
+                nickname_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
         public static final int RESULT_FIELD_NUMBER = 20;
         private YouMaiBasic.ResultCode result_;
 
@@ -26928,7 +27769,7 @@ public final class YouMaiVideo {
          * <code>optional .ResultCode result = 20;</code>
          */
         public boolean hasResult() {
-            return ((bitField0_ & 0x00000020) == 0x00000020);
+            return ((bitField0_ & 0x00000040) == 0x00000040);
         }
 
         /**
@@ -26944,6 +27785,7 @@ public final class YouMaiVideo {
             openVoice_ = false;
             roomName_ = "";
             adminId_ = "";
+            nickname_ = "";
             result_ = YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
         }
 
@@ -26977,6 +27819,9 @@ public final class YouMaiVideo {
                 output.writeBytes(5, getAdminIdBytes());
             }
             if (((bitField0_ & 0x00000020) == 0x00000020)) {
+                output.writeBytes(6, getNicknameBytes());
+            }
+            if (((bitField0_ & 0x00000040) == 0x00000040)) {
                 output.writeEnum(20, result_.getNumber());
             }
             getUnknownFields().writeTo(output);
@@ -27010,6 +27855,10 @@ public final class YouMaiVideo {
                         .computeBytesSize(5, getAdminIdBytes());
             }
             if (((bitField0_ & 0x00000020) == 0x00000020)) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeBytesSize(6, getNicknameBytes());
+            }
+            if (((bitField0_ & 0x00000040) == 0x00000040)) {
                 size += com.google.protobuf.CodedOutputStream
                         .computeEnumSize(20, result_.getNumber());
             }
@@ -27162,8 +28011,10 @@ public final class YouMaiVideo {
                 bitField0_ = (bitField0_ & ~0x00000008);
                 adminId_ = "";
                 bitField0_ = (bitField0_ & ~0x00000010);
-                result_ = YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
+                nickname_ = "";
                 bitField0_ = (bitField0_ & ~0x00000020);
+                result_ = YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
+                bitField0_ = (bitField0_ & ~0x00000040);
                 return this;
             }
 
@@ -27215,6 +28066,10 @@ public final class YouMaiVideo {
                 if (((from_bitField0_ & 0x00000020) == 0x00000020)) {
                     to_bitField0_ |= 0x00000020;
                 }
+                result.nickname_ = nickname_;
+                if (((from_bitField0_ & 0x00000040) == 0x00000040)) {
+                    to_bitField0_ |= 0x00000040;
+                }
                 result.result_ = result_;
                 result.bitField0_ = to_bitField0_;
                 onBuilt();
@@ -27251,6 +28106,11 @@ public final class YouMaiVideo {
                 if (other.hasAdminId()) {
                     bitField0_ |= 0x00000010;
                     adminId_ = other.adminId_;
+                    onChanged();
+                }
+                if (other.hasNickname()) {
+                    bitField0_ |= 0x00000020;
+                    nickname_ = other.nickname_;
                     onChanged();
                 }
                 if (other.hasResult()) {
@@ -27602,13 +28462,95 @@ public final class YouMaiVideo {
                 return this;
             }
 
+            private Object nickname_ = "";
+
+            /**
+             * <code>optional string nickname = 6;</code>
+             */
+            public boolean hasNickname() {
+                return ((bitField0_ & 0x00000020) == 0x00000020);
+            }
+
+            /**
+             * <code>optional string nickname = 6;</code>
+             */
+            public String getNickname() {
+                Object ref = nickname_;
+                if (!(ref instanceof String)) {
+                    com.google.protobuf.ByteString bs =
+                            (com.google.protobuf.ByteString) ref;
+                    String s = bs.toStringUtf8();
+                    if (bs.isValidUtf8()) {
+                        nickname_ = s;
+                    }
+                    return s;
+                } else {
+                    return (String) ref;
+                }
+            }
+
+            /**
+             * <code>optional string nickname = 6;</code>
+             */
+            public com.google.protobuf.ByteString
+            getNicknameBytes() {
+                Object ref = nickname_;
+                if (ref instanceof String) {
+                    com.google.protobuf.ByteString b =
+                            com.google.protobuf.ByteString.copyFromUtf8(
+                                    (String) ref);
+                    nickname_ = b;
+                    return b;
+                } else {
+                    return (com.google.protobuf.ByteString) ref;
+                }
+            }
+
+            /**
+             * <code>optional string nickname = 6;</code>
+             */
+            public Builder setNickname(
+                    String value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000020;
+                nickname_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string nickname = 6;</code>
+             */
+            public Builder clearNickname() {
+                bitField0_ = (bitField0_ & ~0x00000020);
+                nickname_ = getDefaultInstance().getNickname();
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string nickname = 6;</code>
+             */
+            public Builder setNicknameBytes(
+                    com.google.protobuf.ByteString value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000020;
+                nickname_ = value;
+                onChanged();
+                return this;
+            }
+
             private YouMaiBasic.ResultCode result_ = YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
 
             /**
              * <code>optional .ResultCode result = 20;</code>
              */
             public boolean hasResult() {
-                return ((bitField0_ & 0x00000020) == 0x00000020);
+                return ((bitField0_ & 0x00000040) == 0x00000040);
             }
 
             /**
@@ -27625,7 +28567,7 @@ public final class YouMaiVideo {
                 if (value == null) {
                     throw new NullPointerException();
                 }
-                bitField0_ |= 0x00000020;
+                bitField0_ |= 0x00000040;
                 result_ = value;
                 onChanged();
                 return this;
@@ -27635,7 +28577,7 @@ public final class YouMaiVideo {
              * <code>optional .ResultCode result = 20;</code>
              */
             public Builder clearResult() {
-                bitField0_ = (bitField0_ & ~0x00000020);
+                bitField0_ = (bitField0_ & ~0x00000040);
                 result_ = YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS;
                 onChanged();
                 return this;
@@ -27723,6 +28665,22 @@ public final class YouMaiVideo {
          */
         com.google.protobuf.ByteString
         getAdminIdBytes();
+
+        /**
+         * <code>optional string nickname = 6;</code>
+         */
+        boolean hasNickname();
+
+        /**
+         * <code>optional string nickname = 6;</code>
+         */
+        String getNickname();
+
+        /**
+         * <code>optional string nickname = 6;</code>
+         */
+        com.google.protobuf.ByteString
+        getNicknameBytes();
     }
 
     /**
@@ -27809,6 +28767,12 @@ public final class YouMaiVideo {
                             com.google.protobuf.ByteString bs = input.readBytes();
                             bitField0_ |= 0x00000010;
                             adminId_ = bs;
+                            break;
+                        }
+                        case 50: {
+                            com.google.protobuf.ByteString bs = input.readBytes();
+                            bitField0_ |= 0x00000020;
+                            nickname_ = bs;
                             break;
                         }
                     }
@@ -28021,12 +28985,58 @@ public final class YouMaiVideo {
             }
         }
 
+        public static final int NICKNAME_FIELD_NUMBER = 6;
+        private Object nickname_;
+
+        /**
+         * <code>optional string nickname = 6;</code>
+         */
+        public boolean hasNickname() {
+            return ((bitField0_ & 0x00000020) == 0x00000020);
+        }
+
+        /**
+         * <code>optional string nickname = 6;</code>
+         */
+        public String getNickname() {
+            Object ref = nickname_;
+            if (ref instanceof String) {
+                return (String) ref;
+            } else {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                String s = bs.toStringUtf8();
+                if (bs.isValidUtf8()) {
+                    nickname_ = s;
+                }
+                return s;
+            }
+        }
+
+        /**
+         * <code>optional string nickname = 6;</code>
+         */
+        public com.google.protobuf.ByteString
+        getNicknameBytes() {
+            Object ref = nickname_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (String) ref);
+                nickname_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
         private void initFields() {
             userId_ = "";
             openCamera_ = false;
             openVoice_ = false;
             roomName_ = "";
             adminId_ = "";
+            nickname_ = "";
         }
 
         private byte memoizedIsInitialized = -1;
@@ -28058,6 +29068,9 @@ public final class YouMaiVideo {
             if (((bitField0_ & 0x00000010) == 0x00000010)) {
                 output.writeBytes(5, getAdminIdBytes());
             }
+            if (((bitField0_ & 0x00000020) == 0x00000020)) {
+                output.writeBytes(6, getNicknameBytes());
+            }
             getUnknownFields().writeTo(output);
         }
 
@@ -28087,6 +29100,10 @@ public final class YouMaiVideo {
             if (((bitField0_ & 0x00000010) == 0x00000010)) {
                 size += com.google.protobuf.CodedOutputStream
                         .computeBytesSize(5, getAdminIdBytes());
+            }
+            if (((bitField0_ & 0x00000020) == 0x00000020)) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeBytesSize(6, getNicknameBytes());
             }
             size += getUnknownFields().getSerializedSize();
             memoizedSerializedSize = size;
@@ -28237,6 +29254,8 @@ public final class YouMaiVideo {
                 bitField0_ = (bitField0_ & ~0x00000008);
                 adminId_ = "";
                 bitField0_ = (bitField0_ & ~0x00000010);
+                nickname_ = "";
+                bitField0_ = (bitField0_ & ~0x00000020);
                 return this;
             }
 
@@ -28285,6 +29304,10 @@ public final class YouMaiVideo {
                     to_bitField0_ |= 0x00000010;
                 }
                 result.adminId_ = adminId_;
+                if (((from_bitField0_ & 0x00000020) == 0x00000020)) {
+                    to_bitField0_ |= 0x00000020;
+                }
+                result.nickname_ = nickname_;
                 result.bitField0_ = to_bitField0_;
                 onBuilt();
                 return result;
@@ -28320,6 +29343,11 @@ public final class YouMaiVideo {
                 if (other.hasAdminId()) {
                     bitField0_ |= 0x00000010;
                     adminId_ = other.adminId_;
+                    onChanged();
+                }
+                if (other.hasNickname()) {
+                    bitField0_ |= 0x00000020;
+                    nickname_ = other.nickname_;
                     onChanged();
                 }
                 this.mergeUnknownFields(other.getUnknownFields());
@@ -28664,6 +29692,88 @@ public final class YouMaiVideo {
                 }
                 bitField0_ |= 0x00000010;
                 adminId_ = value;
+                onChanged();
+                return this;
+            }
+
+            private Object nickname_ = "";
+
+            /**
+             * <code>optional string nickname = 6;</code>
+             */
+            public boolean hasNickname() {
+                return ((bitField0_ & 0x00000020) == 0x00000020);
+            }
+
+            /**
+             * <code>optional string nickname = 6;</code>
+             */
+            public String getNickname() {
+                Object ref = nickname_;
+                if (!(ref instanceof String)) {
+                    com.google.protobuf.ByteString bs =
+                            (com.google.protobuf.ByteString) ref;
+                    String s = bs.toStringUtf8();
+                    if (bs.isValidUtf8()) {
+                        nickname_ = s;
+                    }
+                    return s;
+                } else {
+                    return (String) ref;
+                }
+            }
+
+            /**
+             * <code>optional string nickname = 6;</code>
+             */
+            public com.google.protobuf.ByteString
+            getNicknameBytes() {
+                Object ref = nickname_;
+                if (ref instanceof String) {
+                    com.google.protobuf.ByteString b =
+                            com.google.protobuf.ByteString.copyFromUtf8(
+                                    (String) ref);
+                    nickname_ = b;
+                    return b;
+                } else {
+                    return (com.google.protobuf.ByteString) ref;
+                }
+            }
+
+            /**
+             * <code>optional string nickname = 6;</code>
+             */
+            public Builder setNickname(
+                    String value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000020;
+                nickname_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string nickname = 6;</code>
+             */
+            public Builder clearNickname() {
+                bitField0_ = (bitField0_ & ~0x00000020);
+                nickname_ = getDefaultInstance().getNickname();
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string nickname = 6;</code>
+             */
+            public Builder setNicknameBytes(
+                    com.google.protobuf.ByteString value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000020;
+                nickname_ = value;
                 onChanged();
                 return this;
             }
@@ -40922,59 +42032,62 @@ public final class YouMaiVideo {
                         "Item\022\021\n\troom_name\030\002 \001(\t\022\r\n\005group\030\003 \001(\010\022\020" +
                         "\n\010group_id\030\004 \001(\r\022\r\n\005topic\030\005 \001(\t\022(\n\004type\030" +
                         "\006 \001(\0162\032.VideoType\022+\n\006res" +
-                        "ult\030\024 \001(\0162\033.ResultCode\"l" +
-                        "\n\017VideoSettingReq\022\020\n\010admin_id\030\001 \001(\t\0224\n\013m" +
-                        "ember_list\030\002 \003(\0132\037.RoomM" +
-                        "emberItem\022\021\n\troom_name\030\003 \001(\t\"\206\001\n\017VideoSe",
-                "ttingRsp\022\020\n\010admin_id\030\001 \001(\t\0224\n\013member_lis" +
-                        "t\030\002 \003(\0132\037.RoomMemberItem" +
-                        "\022+\n\006result\030\024 \001(\0162\033.Resul" +
-                        "tCode\"a\n\022VideoSettingNotify\022\017\n\007user_id\030\001" +
-                        " \001(\t\022\021\n\troom_name\030\002 \001(\t\022\023\n\013open_camera\030\003" +
-                        " \001(\010\022\022\n\nopen_voice\030\004 \001(\010\"u\n\024VideoSetting" +
-                        "ApplyReq\022\017\n\007user_id\030\001 \001(\t\022\023\n\013open_camera" +
-                        "\030\002 \001(\010\022\022\n\nopen_voice\030\003 \001(\010\022\021\n\troom_name\030" +
-                        "\004 \001(\t\022\020\n\010admin_id\030\005 \001(\t\"\242\001\n\024VideoSetting" +
-                        "ApplyRsp\022\017\n\007user_id\030\001 \001(\t\022\023\n\013open_camera",
-                "\030\002 \001(\010\022\022\n\nopen_voice\030\003 \001(\010\022\021\n\troom_name\030" +
-                        "\004 \001(\t\022\020\n\010admin_id\030\005 \001(\t\022+\n\006result\030\024 \001(\0162" +
-                        "\033.ResultCode\"x\n\027VideoSet" +
-                        "tingApplyNotify\022\017\n\007user_id\030\001 \001(\t\022\023\n\013open" +
-                        "_camera\030\002 \001(\010\022\022\n\nopen_voice\030\003 \001(\010\022\021\n\troo" +
-                        "m_name\030\004 \001(\t\022\020\n\010admin_id\030\005 \001(\t\"Q\n\024Permis" +
-                        "sionSettingReq\022\020\n\010admin_id\030\001 \001(\t\022\021\n\troom" +
-                        "_name\030\002 \001(\t\022\024\n\014new_admin_id\030\003 \001(\t\"~\n\024Per" +
-                        "missionSettingRsp\022\020\n\010admin_id\030\001 \001(\t\022\021\n\tr" +
-                        "oom_name\030\002 \001(\t\022\024\n\014new_admin_id\030\003 \001(\t\022+\n\006",
-                "result\030\024 \001(\0162\033.ResultCod" +
-                        "e\"T\n\027PermissionSettingNotify\022\020\n\010admin_id" +
-                        "\030\001 \001(\t\022\021\n\troom_name\030\002 \001(\t\022\024\n\014new_admin_i" +
-                        "d\030\003 \001(\t\"_\n\016StateBroadcast\022\020\n\010group_id\030\001 " +
-                        "\001(\r\022\r\n\005state\030\002 \001(\010\022\013\n\003num\030\003 \001(\r\022\021\n\troom_" +
-                        "name\030\004 \001(\t\022\014\n\004info\030\005 \001(\t\"4\n\rVideoStateRe" +
-                        "q\022\021\n\tmember_id\030\001 \001(\t\022\020\n\010group_id\030\002 \001(\r\"\324" +
-                        "\001\n\rVideoStateRsp\022\020\n\010group_id\030\001 \001(\r\022\r\n\005st" +
-                        "ate\030\002 \001(\010\022\013\n\003num\030\003 \001(\r\022\021\n\troom_name\030\004 \001(" +
-                        "\t\022\014\n\004info\030\005 \001(\t\022\016\n\006member\030\006 \001(\010\022\r\n\005token",
-                "\030\007 \001(\t\022(\n\004type\030\010 \001(\0162\032.V" +
-                        "ideoType\022+\n\006result\030\024 \001(\0162\033.com.proto.bas" +
-                        "ic.ResultCode\"1\n\013ExitRoomReq\022\017\n\007user_id\030" +
-                        "\001 \001(\t\022\021\n\troom_name\030\002 \001(\t\"^\n\013ExitRoomRsp\022" +
-                        "\017\n\007user_id\030\001 \001(\t\022\021\n\troom_name\030\002 \001(\t\022+\n\006r" +
+                        "ult\030\024 \001(\0162\033.ResultCode\"\212" +
+                        "\001\n\017VideoSettingReq\022\020\n\010admin_id\030\001 \001(\t\0224\n\013" +
+                        "member_list\030\002 \003(\0132\037.Room" +
+                        "MemberItem\022\021\n\troom_name\030\003 \001(\t\022\r\n\005reply\030\004",
+                " \001(\010\022\r\n\005agree\030\005 \001(\010\"\244\001\n\017VideoSettingRsp\022" +
+                        "\020\n\010admin_id\030\001 \001(\t\0224\n\013member_list\030\002 \003(\0132\037" +
+                        ".RoomMemberItem\022\r\n\005reply" +
+                        "\030\003 \001(\010\022\r\n\005agree\030\004 \001(\010\022+\n\006result\030\024 \001(\0162\033." +
+                        "ResultCode\"\177\n\022VideoSetti" +
+                        "ngNotify\022\017\n\007user_id\030\001 \001(\t\022\021\n\troom_name\030\002" +
+                        " \001(\t\022\023\n\013open_camera\030\003 \001(\010\022\022\n\nopen_voice\030" +
+                        "\004 \001(\010\022\r\n\005reply\030\005 \001(\010\022\r\n\005agree\030\006 \001(\010\"\207\001\n\024" +
+                        "VideoSettingApplyReq\022\017\n\007user_id\030\001 \001(\t\022\023\n" +
+                        "\013open_camera\030\002 \001(\010\022\022\n\nopen_voice\030\003 \001(\010\022\021",
+                "\n\troom_name\030\004 \001(\t\022\020\n\010admin_id\030\005 \001(\t\022\020\n\010n" +
+                        "ickname\030\006 \001(\t\"\264\001\n\024VideoSettingApplyRsp\022\017" +
+                        "\n\007user_id\030\001 \001(\t\022\023\n\013open_camera\030\002 \001(\010\022\022\n\n" +
+                        "open_voice\030\003 \001(\010\022\021\n\troom_name\030\004 \001(\t\022\020\n\010a" +
+                        "dmin_id\030\005 \001(\t\022\020\n\010nickname\030\006 \001(\t\022+\n\006resul" +
+                        "t\030\024 \001(\0162\033.ResultCode\"\212\001\n" +
+                        "\027VideoSettingApplyNotify\022\017\n\007user_id\030\001 \001(" +
+                        "\t\022\023\n\013open_camera\030\002 \001(\010\022\022\n\nopen_voice\030\003 \001" +
+                        "(\010\022\021\n\troom_name\030\004 \001(\t\022\020\n\010admin_id\030\005 \001(\t\022" +
+                        "\020\n\010nickname\030\006 \001(\t\"Q\n\024PermissionSettingRe",
+                "q\022\020\n\010admin_id\030\001 \001(\t\022\021\n\troom_name\030\002 \001(\t\022\024" +
+                        "\n\014new_admin_id\030\003 \001(\t\"~\n\024PermissionSettin" +
+                        "gRsp\022\020\n\010admin_id\030\001 \001(\t\022\021\n\troom_name\030\002 \001(" +
+                        "\t\022\024\n\014new_admin_id\030\003 \001(\t\022+\n\006result\030\024 \001(\0162" +
+                        "\033.ResultCode\"T\n\027Permissi" +
+                        "onSettingNotify\022\020\n\010admin_id\030\001 \001(\t\022\021\n\troo" +
+                        "m_name\030\002 \001(\t\022\024\n\014new_admin_id\030\003 \001(\t\"_\n\016St" +
+                        "ateBroadcast\022\020\n\010group_id\030\001 \001(\r\022\r\n\005state\030" +
+                        "\002 \001(\010\022\013\n\003num\030\003 \001(\r\022\021\n\troom_name\030\004 \001(\t\022\014\n" +
+                        "\004info\030\005 \001(\t\"4\n\rVideoStateReq\022\021\n\tmember_i",
+                "d\030\001 \001(\t\022\020\n\010group_id\030\002 \001(\r\"\324\001\n\rVideoState" +
+                        "Rsp\022\020\n\010group_id\030\001 \001(\r\022\r\n\005state\030\002 \001(\010\022\013\n\003" +
+                        "num\030\003 \001(\r\022\021\n\troom_name\030\004 \001(\t\022\014\n\004info\030\005 \001" +
+                        "(\t\022\016\n\006member\030\006 \001(\010\022\r\n\005token\030\007 \001(\t\022(\n\004typ" +
+                        "e\030\010 \001(\0162\032.VideoType\022+\n\006r" +
                         "esult\030\024 \001(\0162\033.ResultCode" +
-                        "\"J\n\021ExitRoomBroadcast\022\017\n\007user_id\030\001 \001(\t\022\021" +
-                        "\n\troom_name\030\002 \001(\t\022\021\n\tnotify_id\030\003 \001(\t\"4\n\016" +
-                        "DestroyRoomReq\022\017\n\007user_id\030\001 \001(\t\022\021\n\troom_" +
-                        "name\030\002 \001(\t\"a\n\016DestroyRoomRsp\022\017\n\007user_id\030",
-                "\001 \001(\t\022\021\n\troom_name\030\002 \001(\t\022+\n\006result\030\024 \001(\016" +
-                        "2\033.ResultCode\"M\n\024Destroy" +
-                        "RoomBroadcast\022\017\n\007user_id\030\001 \001(\t\022\021\n\troom_n" +
-                        "ame\030\002 \001(\t\022\021\n\tnotify_id\030\003 \001(\t\",\n\004Ping\022\021\n\t" +
-                        "member_id\030\001 \001(\t\022\021\n\troom_name\030\002 \001(\t\"Y\n\004Po" +
-                        "ng\022\021\n\tmember_id\030\001 \001(\t\022\021\n\troom_name\030\002 \001(\t" +
-                        "\022+\n\006result\030\024 \001(\0162\033.Resul" +
-                        "tCode*&\n\tVideoType\022\016\n\nCONFERENCE\020\001\022\t\n\005TR" +
-                        "AIN\020\002"
+                        "\"1\n\013ExitRoomReq\022\017\n\007user_id\030\001 \001(\t\022\021\n\troom" +
+                        "_name\030\002 \001(\t\"^\n\013ExitRoomRsp\022\017\n\007user_id\030\001 " +
+                        "\001(\t\022\021\n\troom_name\030\002 \001(\t\022+\n\006result\030\024 \001(\0162\033" +
+                        ".ResultCode\"J\n\021ExitRoomB",
+                "roadcast\022\017\n\007user_id\030\001 \001(\t\022\021\n\troom_name\030\002" +
+                        " \001(\t\022\021\n\tnotify_id\030\003 \001(\t\"4\n\016DestroyRoomRe" +
+                        "q\022\017\n\007user_id\030\001 \001(\t\022\021\n\troom_name\030\002 \001(\t\"a\n" +
+                        "\016DestroyRoomRsp\022\017\n\007user_id\030\001 \001(\t\022\021\n\troom" +
+                        "_name\030\002 \001(\t\022+\n\006result\030\024 \001(\0162\033.com.proto." +
+                        "basic.ResultCode\"M\n\024DestroyRoomBroadcast" +
+                        "\022\017\n\007user_id\030\001 \001(\t\022\021\n\troom_name\030\002 \001(\t\022\021\n\t" +
+                        "notify_id\030\003 \001(\t\",\n\004Ping\022\021\n\tmember_id\030\001 \001" +
+                        "(\t\022\021\n\troom_name\030\002 \001(\t\"Y\n\004Pong\022\021\n\tmember_" +
+                        "id\030\001 \001(\t\022\021\n\troom_name\030\002 \001(\t\022+\n\006result\030\024 ",
+                "\001(\0162\033.ResultCode*&\n\tVide" +
+                        "oType\022\016\n\nCONFERENCE\020\001\022\t\n\005TRAIN\020\002"
         };
         com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
                 new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -41114,37 +42227,37 @@ public final class YouMaiVideo {
         internal_static_com_proto_video_VideoSettingReq_fieldAccessorTable = new
                 com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_proto_video_VideoSettingReq_descriptor,
-                new String[]{"AdminId", "MemberList", "RoomName",});
+                new String[]{"AdminId", "MemberList", "RoomName", "Reply", "Agree",});
         internal_static_com_proto_video_VideoSettingRsp_descriptor =
                 getDescriptor().getMessageTypes().get(21);
         internal_static_com_proto_video_VideoSettingRsp_fieldAccessorTable = new
                 com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_proto_video_VideoSettingRsp_descriptor,
-                new String[]{"AdminId", "MemberList", "Result",});
+                new String[]{"AdminId", "MemberList", "Reply", "Agree", "Result",});
         internal_static_com_proto_video_VideoSettingNotify_descriptor =
                 getDescriptor().getMessageTypes().get(22);
         internal_static_com_proto_video_VideoSettingNotify_fieldAccessorTable = new
                 com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_proto_video_VideoSettingNotify_descriptor,
-                new String[]{"UserId", "RoomName", "OpenCamera", "OpenVoice",});
+                new String[]{"UserId", "RoomName", "OpenCamera", "OpenVoice", "Reply", "Agree",});
         internal_static_com_proto_video_VideoSettingApplyReq_descriptor =
                 getDescriptor().getMessageTypes().get(23);
         internal_static_com_proto_video_VideoSettingApplyReq_fieldAccessorTable = new
                 com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_proto_video_VideoSettingApplyReq_descriptor,
-                new String[]{"UserId", "OpenCamera", "OpenVoice", "RoomName", "AdminId",});
+                new String[]{"UserId", "OpenCamera", "OpenVoice", "RoomName", "AdminId", "Nickname",});
         internal_static_com_proto_video_VideoSettingApplyRsp_descriptor =
                 getDescriptor().getMessageTypes().get(24);
         internal_static_com_proto_video_VideoSettingApplyRsp_fieldAccessorTable = new
                 com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_proto_video_VideoSettingApplyRsp_descriptor,
-                new String[]{"UserId", "OpenCamera", "OpenVoice", "RoomName", "AdminId", "Result",});
+                new String[]{"UserId", "OpenCamera", "OpenVoice", "RoomName", "AdminId", "Nickname", "Result",});
         internal_static_com_proto_video_VideoSettingApplyNotify_descriptor =
                 getDescriptor().getMessageTypes().get(25);
         internal_static_com_proto_video_VideoSettingApplyNotify_fieldAccessorTable = new
                 com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_proto_video_VideoSettingApplyNotify_descriptor,
-                new String[]{"UserId", "OpenCamera", "OpenVoice", "RoomName", "AdminId",});
+                new String[]{"UserId", "OpenCamera", "OpenVoice", "RoomName", "AdminId", "Nickname",});
         internal_static_com_proto_video_PermissionSettingReq_descriptor =
                 getDescriptor().getMessageTypes().get(26);
         internal_static_com_proto_video_PermissionSettingReq_fieldAccessorTable = new

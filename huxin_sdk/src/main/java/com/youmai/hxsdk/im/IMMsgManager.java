@@ -26,6 +26,7 @@ import com.youmai.hxsdk.chatgroup.IMGroupActivity;
 import com.youmai.hxsdk.chat.ContentRedPackage;
 import com.youmai.hxsdk.chat.ContentVideo;
 import com.youmai.hxsdk.config.ColorsConfig;
+import com.youmai.hxsdk.data.VedioSetting;
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
 import com.youmai.hxsdk.chat.ContentLocation;
 import com.youmai.hxsdk.chat.ContentText;
@@ -89,6 +90,9 @@ public class IMMsgManager {
 
     private List<IMMsgCallback> imMsgCallbackList;
 
+    private IMVedioSettingCallBack imVedioSettingCallBack;
+    private IMVedioSettingCallBack imVedioNotify;
+
     private List<Integer> pushMsgNotifyIdList;
 
     private static IMMsgManager instance = null;
@@ -136,6 +140,23 @@ public class IMMsgManager {
         }
     }
 
+
+    public IMVedioSettingCallBack removeImVedioSettingCallBack() {
+        return imVedioSettingCallBack = null;
+    }
+
+    public void setImVedioSettingCallBack(IMVedioSettingCallBack imVedioSettingCallBack) {
+        this.imVedioSettingCallBack = imVedioSettingCallBack;
+    }
+
+
+    public IMVedioSettingCallBack removeImVedioNotify() {
+        return imVedioNotify = null;
+    }
+
+    public void setImVedioNotify(IMVedioSettingCallBack imVedioNotify) {
+        this.imVedioNotify = imVedioNotify;
+    }
 
     public void setHomeAct(Class homeAct) {
         this.homeAct = homeAct;
@@ -555,7 +576,15 @@ public class IMMsgManager {
                 boolean openCamera = notify.getOpenCamera();
                 boolean openVoice = notify.getOpenVoice();
 
+                VedioSetting setting = new VedioSetting();
+                setting.setUserId(userId);
+                setting.setRoomName(roomName);
+                setting.setOpenCamera(openCamera);
+                setting.setOpenVoice(openVoice);
 
+                if (imVedioNotify != null) {
+                    imVedioNotify.onCallback(setting);
+                }
             } catch (InvalidProtocolBufferException e) {
                 e.printStackTrace();
             }
@@ -632,6 +661,10 @@ public class IMMsgManager {
                         HuxinSdkManager.instance().getStackAct().finishActivity(RoomActivity.class);
                     }
 
+                }
+
+                if (imVedioNotify != null) {
+                    imVedioNotify.roomStateChange();
                 }
 
             } catch (InvalidProtocolBufferException e) {
@@ -732,10 +765,47 @@ public class IMMsgManager {
                 YouMaiVideo.VideoSettingApplyNotify notify = YouMaiVideo
                         .VideoSettingApplyNotify.parseFrom(data);
 
+                String userId = notify.getUserId();
                 String roomName = notify.getRoomName();
                 String adminId = notify.getAdminId();
+                String nickName = notify.getNickname();
                 boolean openCamera = notify.getOpenCamera();
                 boolean openVoice = notify.getOpenVoice();
+
+                VedioSetting setting = new VedioSetting();
+                setting.setUserId(userId);
+                setting.setRoomName(roomName);
+                setting.setAdminId(adminId);
+                setting.setNickName(nickName);
+                setting.setOpenCamera(openCamera);
+                setting.setOpenVoice(openVoice);
+
+                if (imVedioSettingCallBack != null) {
+                    imVedioSettingCallBack.onCallback(setting);
+                }
+
+            } catch (InvalidProtocolBufferException e) {
+                e.printStackTrace();
+            }
+        }
+    };
+
+
+    private final NotifyListener onExitRoomBroadcast = new NotifyListener(
+            YouMaiBasic.COMMANDID.CID_VIDEO_ROOM_EXIT_BROADCAST_VALUE) {
+        @Override
+        public void OnRec(byte[] data) {
+            try {
+                YouMaiVideo.ExitRoomBroadcast notify = YouMaiVideo
+                        .ExitRoomBroadcast.parseFrom(data);
+
+                String roomName = notify.getRoomName();
+                String adminId = notify.getUserId();
+                String notifyId = notify.getNotifyId();
+
+                if (imVedioNotify != null) {
+                    imVedioNotify.roomStateChange();
+                }
 
             } catch (InvalidProtocolBufferException e) {
                 e.printStackTrace();
@@ -806,6 +876,7 @@ public class IMMsgManager {
         HuxinSdkManager.instance().setNotifyListener(onStateBroadcast);
         HuxinSdkManager.instance().setNotifyListener(onMemberInviteResponseNotify);
         HuxinSdkManager.instance().setNotifyListener(onVideoSettingApplyNotify);
+        HuxinSdkManager.instance().setNotifyListener(onExitRoomBroadcast);
         HuxinSdkManager.instance().setNotifyListener(onDestroyRoomBroadcast);
     }
 
@@ -826,6 +897,7 @@ public class IMMsgManager {
         HuxinSdkManager.instance().clearNotifyListener(onStateBroadcast);
         HuxinSdkManager.instance().clearNotifyListener(onMemberInviteResponseNotify);
         HuxinSdkManager.instance().clearNotifyListener(onVideoSettingApplyNotify);
+        HuxinSdkManager.instance().clearNotifyListener(onExitRoomBroadcast);
         HuxinSdkManager.instance().clearNotifyListener(onDestroyRoomBroadcast);
     }
 

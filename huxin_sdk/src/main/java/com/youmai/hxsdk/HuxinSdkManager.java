@@ -1953,13 +1953,19 @@ public class HuxinSdkManager {
     /**
      * 视频房间设置
      *
-     * @param isCamera
-     * @param isVoice
+     * @param reply
+     * @param isAgree
      * @param callback
      */
-    public void reqVideoSetting(boolean isCamera, boolean isVoice, String roomName, ReceiveListener callback) {
+    public void reqVideoSetting(boolean reply, boolean isAgree,
+                                YouMaiVideo.RoomMemberItem memberItem,
+                                String roomName, ReceiveListener callback) {
         YouMaiVideo.VideoSettingReq.Builder builder = YouMaiVideo.VideoSettingReq.newBuilder();
         builder.setRoomName(roomName);
+        builder.addMemberList(memberItem);
+        builder.setAdminId(getUuid());
+        builder.setReply(reply);
+        builder.setAgree(isAgree);
         YouMaiVideo.VideoSettingReq memberAddReq = builder.build();
         sendProto(memberAddReq, YouMaiBasic.COMMANDID.CID_VIDEO_SETTING_REQ_VALUE, callback);
 
@@ -2085,8 +2091,9 @@ public class HuxinSdkManager {
                                      ReceiveListener callback) {
         YouMaiVideo.VideoSettingApplyReq.Builder builder = YouMaiVideo.VideoSettingApplyReq.newBuilder();
         builder.setUserId(getUuid());
-        builder.setAdminId(getUuid());
+        builder.setAdminId(getVideoCall().getAdminId());
         builder.setRoomName(roomName);
+        builder.setNickname(getRealName());
         builder.setOpenCamera(openCamera);
         builder.setOpenVoice(openVoice);
         YouMaiVideo.VideoSettingApplyReq memberAddReq = builder.build();

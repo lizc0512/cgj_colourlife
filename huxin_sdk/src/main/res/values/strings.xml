@@ -10,6 +10,7 @@
     <string name="hx_send">发送</string>
     <string name="hx_select">选择</string>
     <string name="hx_back">返回</string>
+    <string name="hx_reject">拒绝</string>
 
 
     <!-- 登录对话框 -->

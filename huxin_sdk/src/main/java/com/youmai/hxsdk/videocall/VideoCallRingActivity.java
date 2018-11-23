@@ -214,6 +214,7 @@ public class VideoCallRingActivity extends SdkBaseActivity implements View.OnCli
                                 videoCall.setAnchor(isAnchor);
                                 videoCall.setVideoType(videoType);
                                 videoCall.setMsgTime(System.currentTimeMillis());
+                                videoCall.setAdminId(adminId);
 
                                 Intent intent = new Intent(mContext, RoomActivity.class);
                                 intent.putExtra(RoomActivity.EXTRA_ROOM_ID, roomName);

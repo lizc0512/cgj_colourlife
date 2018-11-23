@@ -28,7 +28,7 @@ public class VideoCall {
 
 
     private List<YouMaiVideo.RoomMemberItem> inviteMembers;
-
+    private String adminId;
 
     public String getRoomName() {
         if (roomName == null) {
@@ -148,5 +148,14 @@ public class VideoCall {
 
     public void setInviteMembers(List<YouMaiVideo.RoomMemberItem> inviteMembers) {
         this.inviteMembers = inviteMembers;
+    }
+
+
+    public String getAdminId() {
+        return adminId;
+    }
+
+    public void setAdminId(String adminId) {
+        this.adminId = adminId;
     }
 }

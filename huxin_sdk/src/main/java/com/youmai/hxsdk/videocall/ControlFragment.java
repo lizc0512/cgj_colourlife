@@ -22,9 +22,12 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.chatgroup.IMGroupActivity;
+import com.youmai.hxsdk.data.VedioSetting;
 import com.youmai.hxsdk.dialog.HxApplyVideoDialog;
 import com.youmai.hxsdk.dialog.HxExitVideoDialog;
 import com.youmai.hxsdk.entity.VideoCall;
+import com.youmai.hxsdk.im.IMMsgManager;
+import com.youmai.hxsdk.im.IMVedioSettingCallBack;
 import com.youmai.hxsdk.module.videocall.PopWindowThreeRow;
 import com.youmai.hxsdk.module.videocall.PopWindowTwoRow;
 import com.youmai.hxsdk.module.videocall.VideoSelectConstactActivity;
@@ -133,6 +136,36 @@ public class ControlFragment extends Fragment {
             mIsAdmin = bundle.getBoolean(RoomActivity.IS_ADMIN, false);
             isConference = bundle.getBoolean(RoomActivity.IS_CONFERENCE, false);
         }
+
+        IMMsgManager.instance().setImVedioNotify(new IMVedioSettingCallBack() {
+            @Override
+            public void onCallback(VedioSetting vedioSetting) {
+                boolean openCamera = vedioSetting.isOpenCamera();
+                boolean openVoice = vedioSetting.isOpenVoice();
+
+                RoomActivity activity = null;
+                if (getActivity() instanceof RoomActivity) {
+                    activity = (RoomActivity) getActivity();
+                }
+
+                if (openVoice && openCamera) { //视频发言
+                    if (activity != null) {
+                        activity.entryVideoConference(true);
+                        isConference = true;
+                    }
+                } else {
+                    if (activity != null) {
+                        activity.entryVideoConference(false);
+                        isConference = true;
+                    }
+                }
+            }
+
+            @Override
+            public void roomStateChange() {
+                setCount();
+            }
+        });
     }
 
     @Override
@@ -218,12 +251,12 @@ public class ControlFragment extends Fragment {
             public void onClick(View view) {
                 VideoCall videoCall1 = HuxinSdkManager.instance().getVideoCall();
                 owner = videoCall1.isOwner();
-                int roomType = videoCall1.getVideoType();
+                //int roomType = videoCall1.getVideoType();
                 if (owner) {
                     showConferenceAdminPop();
                 } else {
                     //视频模式直接添加成员
-                    if (roomType == VideoSelectConstactActivity.VIDEO_MEETING) {
+                    if (isConference) {
                         reqRoomInfoJumpSelect();
                     } else {
                         showPop();
@@ -533,24 +566,7 @@ public class ControlFragment extends Fragment {
                 try {
                     YouMaiVideo.VideoSettingApplyRsp rsp = YouMaiVideo.VideoSettingApplyRsp.parseFrom(pduBase.body);
                     if (rsp.getResult() == YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS) {
-                        boolean openCamera = rsp.getOpenCamera();
-                        boolean openVoice = rsp.getOpenVoice();
-
-                        RoomActivity activity = null;
-                        if (getActivity() instanceof RoomActivity) {
-                            activity = (RoomActivity) getActivity();
-                        }
-
-                        if (openVoice && !openCamera) { //语音发言
-                            if (activity != null) {
-                                activity.entryVideoConference(false);
-                            }
-
-                        } else if (openVoice && openCamera) { //视频发言
-                            if (activity != null) {
-                                activity.entryVideoConference(true);
-                            }
-                        }
+                        Toast.makeText(getActivity(), "发送请求成功", Toast.LENGTH_SHORT).show();
                     }
                 } catch (InvalidProtocolBufferException e) {
                     e.printStackTrace();
@@ -563,8 +579,6 @@ public class ControlFragment extends Fragment {
                 .setFirstClick("语音发言", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Toast.makeText(getActivity(), "语音发言", Toast.LENGTH_SHORT).show();
-
                         HuxinSdkManager.instance().reqVideoSettingApply(mRoomId, false, true, callback);
                         appliDialog.dismiss();
                     }
@@ -572,7 +586,6 @@ public class ControlFragment extends Fragment {
                 .setSecondClick("视频发言", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Toast.makeText(getActivity(), "视频发言", Toast.LENGTH_SHORT).show();
                         HuxinSdkManager.instance().reqVideoSettingApply(mRoomId, true, true, callback);
                         appliDialog.dismiss();
                     }
@@ -618,6 +631,13 @@ public class ControlFragment extends Fragment {
         if (!mIsVideoEnabled) {
             mCameraSwitchButton.setVisibility(View.INVISIBLE);
         }
+    }
+
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        IMMsgManager.instance().removeImVedioNotify();
     }
 
     @SuppressWarnings("deprecation")

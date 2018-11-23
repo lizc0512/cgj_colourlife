@@ -40,6 +40,9 @@ import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.activity.SdkBaseActivity;
 import com.youmai.hxsdk.chatgroup.IMGroupActivity;
+import com.youmai.hxsdk.data.VedioSetting;
+import com.youmai.hxsdk.im.IMMsgManager;
+import com.youmai.hxsdk.im.IMVedioSettingCallBack;
 import com.youmai.hxsdk.proto.YouMaiBasic;
 import com.youmai.hxsdk.proto.YouMaiVideo;
 import com.youmai.hxsdk.socket.PduBase;
@@ -188,8 +191,77 @@ public class RoomActivity extends SdkBaseActivity implements QNRoomEventListener
 
         HuxinSdkManager.instance().startVideoHeartBeat(mRoomId);
         HuxinSdkManager.instance().getStackAct().addActivity(this);
+
+
+        IMMsgManager.instance().setImVedioSettingCallBack(new IMVedioSettingCallBack() {
+            @Override
+            public void onCallback(VedioSetting vedioSetting) {
+
+                final String roomName = vedioSetting.getRoomName();
+                final String nickName = vedioSetting.getNickName();
+                final String userId = vedioSetting.getUserId();
+                final boolean isOpenCamera = vedioSetting.isOpenCamera();
+                final boolean isOpenVoice = vedioSetting.isOpenVoice();
+                String title;
+                if (isOpenCamera) {
+                    title = nickName + "申请视频发言";
+                } else {
+                    title = nickName + "申请语音发言";
+                }
+
+
+                android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(mContext);
+                builder.setMessage(title);
+                builder.setNegativeButton(R.string.hx_reject, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        adminOperate(false, isOpenCamera, isOpenVoice,
+                                roomName, userId, nickName);
+                    }
+                });
+
+                builder.setPositiveButton(R.string.hx_agree, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        adminOperate(true, isOpenCamera, isOpenVoice,
+                                roomName, userId, nickName);
+                    }
+                });
+                builder.create().show();
+            }
+
+            @Override
+            public void roomStateChange() {
+
+            }
+        });
     }
 
+    private void adminOperate(boolean isAgree, boolean isOpenCamera, boolean isOpenVoice,
+                              String roomName, String userId, String nickName) {
+        YouMaiVideo.RoomMemberItem.Builder builder = YouMaiVideo.RoomMemberItem.newBuilder();
+        builder.setMemberId(userId);
+        builder.setAvator("");
+        builder.setNickname(nickName);
+        builder.setOpenCamera(isOpenCamera);
+        builder.setOpenVoice(isOpenVoice);
+        YouMaiVideo.RoomMemberItem memberItem = builder.build();
+
+        HuxinSdkManager.instance().reqVideoSetting(true, isAgree, memberItem, roomName,
+                new ReceiveListener() {
+                    @Override
+                    public void OnRec(PduBase pduBase) {
+                        try {
+                            YouMaiVideo.VideoSettingApplyRsp req = YouMaiVideo.VideoSettingApplyRsp.parseFrom(pduBase.body);
+                            if (req.getResult() == YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS) {
+                                //Toast.makeText(mContext, "yes", Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (InvalidProtocolBufferException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+    }
 
     public void initVideoConference(boolean openCamera) {
         if (isConference && mRTCManager != null) {
@@ -801,6 +873,7 @@ public class RoomActivity extends SdkBaseActivity implements QNRoomEventListener
         HuxinSdkManager.instance().stopVideoHeartBeat();
         HuxinSdkManager.instance().getStackAct().removeActivity(this);
 
+        IMMsgManager.instance().removeImVedioSettingCallBack();
     }
 
     @Override
@@ -903,7 +976,7 @@ public class RoomActivity extends SdkBaseActivity implements QNRoomEventListener
             }
         });
 
-        HuxinSdkManager.instance().reqRoomInfo(mRoomId);
+        //HuxinSdkManager.instance().reqRoomInfo(mRoomId);
     }
 
     @Override

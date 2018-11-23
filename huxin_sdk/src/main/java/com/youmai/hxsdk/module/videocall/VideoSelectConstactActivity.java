@@ -51,8 +51,9 @@ public class VideoSelectConstactActivity extends SdkBaseActivity implements View
 
     public static final int VIDEO_MEETING_MAX = 8;      //视频最大人数9人，邀请人数8人
 
-    public static final int VIDEO_TRAIN = 2;     //视频培训
     public static final int VIDEO_MEETING = 1;   //视频会议
+    public static final int VIDEO_TRAIN = 2;     //视频培训
+
     public static final String ROOM_NAME = "room_name";
     public static final String GROUP_NAME = "group_name";
     public static final String ROOM_TYPE = "room_type";

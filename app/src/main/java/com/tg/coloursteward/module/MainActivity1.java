@@ -30,6 +30,9 @@ import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import com.baidu.trace.LBSTraceClient;
+import com.baidu.trace.Trace;
+import com.baidu.trace.model.LocationMode;
 import com.baidu.trace.model.OnTraceListener;
 import com.baidu.trace.model.PushMessage;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
@@ -92,6 +95,7 @@ import cn.jpush.android.api.TagAliasCallback;
 import q.rorbin.badgeview.QBadgeView;
 
 import static com.tg.coloursteward.application.CityPropertyApplication.lbsTraceClient;
+import static com.tg.coloursteward.application.CityPropertyApplication.serviceId;
 import static com.tg.coloursteward.application.CityPropertyApplication.trace;
 
 
@@ -204,8 +208,63 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
     }
 
     private void initYingYan() {
+//        lbsTraceClient.startTrace(trace, null);
+//        lbsTraceClient.startGather(null);
+        //初始化鹰眼SDK
+        String entityName;
+        if (TextUtils.isEmpty(UserInfo.realname)) {
+            entityName = UserInfo.jobName +"-"+ UserInfo.employeeAccount;
+        } else {
+            entityName = UserInfo.jobName+"-" + UserInfo.realname;
+        }
+        trace = new Trace(serviceId, entityName, false);
+        lbsTraceClient = new LBSTraceClient(getApplicationContext());
+        int gatherInterval = 60;
+        int packInterval = 60;
+        lbsTraceClient.setInterval(gatherInterval, packInterval);
+        lbsTraceClient.setLocationMode(LocationMode.High_Accuracy);
+        OnTraceListener onTraceListener = new OnTraceListener() {
+            @Override
+            public void onBindServiceCallback(int i, String s) {
+                String mes = s;
+                if (i == 0) {
+                    lbsTraceClient.startGather(null);
+                }
+            }
+
+            @Override
+            public void onStartTraceCallback(int i, String s) {
+                String mes = s;
+
+            }
+
+            @Override
+            public void onStopTraceCallback(int i, String s) {
+                String mes = s;
+            }
+
+            @Override
+            public void onStartGatherCallback(int i, String s) {
+                String mes = s;
+            }
+
+            @Override
+            public void onStopGatherCallback(int i, String s) {
+                String mes = s;
+            }
+
+            @Override
+            public void onPushCallback(byte b, PushMessage pushMessage) {
+                String mes = String.valueOf(b);
+            }
+
+            @Override
+            public void onInitBOSCallback(int i, String s) {
+                String mes = s;
+            }
+        };
+        lbsTraceClient.setOnTraceListener(onTraceListener);
         lbsTraceClient.startTrace(trace, null);
-        lbsTraceClient.startGather(null);
     }
 
     private void initGetToken() {

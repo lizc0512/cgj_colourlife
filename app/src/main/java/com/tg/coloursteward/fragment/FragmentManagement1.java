@@ -364,14 +364,14 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
                 Tools.saveStringValue(mActivity, Contants.storage.TINYFRAGMENTMID, jsonString);
                 midDataAdapter(jsonString);
             } else {
-                ToastFactory.showToast(mActivity, message);
+//                ToastFactory.showToast(mActivity, message);
             }
         } else if (msg.arg1 == HttpTools.GET_MINISERVER_TOP) {
             if (code == 0) {
                 Tools.saveStringValue(mActivity, Contants.storage.TINYFRAGMENTTOP, jsonString);
                 topDataAdapter(jsonString);
             } else {
-                ToastFactory.showToast(mActivity, message);
+//                ToastFactory.showToast(mActivity, message);
             }
         }
     }

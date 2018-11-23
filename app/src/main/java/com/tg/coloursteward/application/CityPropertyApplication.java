@@ -41,7 +41,7 @@ public class CityPropertyApplication extends Application {
     private static List<Activity> mList = new LinkedList<Activity>();
     private static CityPropertyApplication instance;
     public static long serviceId = 206402;
-    public static String entityName = "android_cgj" + UserInfo.realname;
+    public static String entityName = "";
     public static LBSTraceClient lbsTraceClient;
     public static Trace trace;
 
@@ -85,51 +85,57 @@ public class CityPropertyApplication extends Application {
         crashHandler.init(getApplicationContext());
         NBSAppAgent.setLicenseKey("e706eb8242634439958ddeed9db7f61f").withLocationServiceEnabled(true).start(this.getApplicationContext());
         NBSAppAgent.setUserCrashMessage("username", UserInfo.employeeAccount);
-        //初始化鹰眼SDK
-        trace = new Trace(serviceId, entityName, false);
-        lbsTraceClient = new LBSTraceClient(getApplicationContext());
-        int gatherInterval = 60;
-        int packInterval = 60;
-        lbsTraceClient.setInterval(gatherInterval, packInterval);
-        lbsTraceClient.setLocationMode(LocationMode.High_Accuracy);
-        OnTraceListener onTraceListener = new OnTraceListener() {
-            @Override
-            public void onBindServiceCallback(int i, String s) {
-                String mes = s;
-            }
-
-            @Override
-            public void onStartTraceCallback(int i, String s) {
-                String mes = s;
-            }
-
-            @Override
-            public void onStopTraceCallback(int i, String s) {
-                String mes = s;
-            }
-
-            @Override
-            public void onStartGatherCallback(int i, String s) {
-                String mes = s;
-            }
-
-            @Override
-            public void onStopGatherCallback(int i, String s) {
-                String mes = s;
-            }
-
-            @Override
-            public void onPushCallback(byte b, PushMessage pushMessage) {
-                String mes = String.valueOf(b);
-            }
-
-            @Override
-            public void onInitBOSCallback(int i, String s) {
-                String mes = s;
-            }
-        };
-        lbsTraceClient.setOnTraceListener(onTraceListener);
-
+//        //初始化鹰眼SDK
+//        if (TextUtils.isEmpty(UserInfo.realname)) {
+//            entityName = UserInfo.familyName + ":" + UserInfo.uid;
+//        } else {
+//            entityName = UserInfo.familyName + ":" + UserInfo.realname;
+//        }
+//        trace = new Trace(serviceId, entityName, false);
+//        lbsTraceClient = new LBSTraceClient(getApplicationContext());
+//        int gatherInterval = 60;
+//        int packInterval = 60;
+//        lbsTraceClient.setInterval(gatherInterval, packInterval);
+//        lbsTraceClient.setLocationMode(LocationMode.High_Accuracy);
+//        OnTraceListener onTraceListener = new OnTraceListener() {
+//            @Override
+//            public void onBindServiceCallback(int i, String s) {
+//                String mes = s;
+//            }
+//
+//            @Override
+//            public void onStartTraceCallback(int i, String s) {
+//                String mes = s;
+//            }
+//
+//            @Override
+//            public void onStopTraceCallback(int i, String s) {
+//                String mes = s;
+//            }
+//
+//            @Override
+//            public void onStartGatherCallback(int i, String s) {
+//                String mes = s;
+//            }
+//
+//            @Override
+//            public void onStopGatherCallback(int i, String s) {
+//                String mes = s;
+//            }
+//
+//            @Override
+//            public void onPushCallback(byte b, PushMessage pushMessage) {
+//                String mes = String.valueOf(b);
+//            }
+//
+//            @Override
+//            public void onInitBOSCallback(int i, String s) {
+//                String mes = s;
+//            }
+//        };
+//        lbsTraceClient.setOnTraceListener(onTraceListener);
+//        lbsTraceClient.startTrace(trace, null);
+//        lbsTraceClient.startGather(null);
     }
 
     public static void initImageLoader(Context context) {

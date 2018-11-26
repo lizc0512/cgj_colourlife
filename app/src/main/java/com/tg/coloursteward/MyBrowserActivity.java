@@ -28,13 +28,16 @@ import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.webkit.JavascriptInterface;
+import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -46,6 +49,7 @@ import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.githang.statusbar.StatusBarCompat;
 import com.tencent.smtt.export.external.interfaces.GeolocationPermissionsCallback;
+import com.tencent.smtt.export.external.interfaces.IX5WebChromeClient;
 import com.tencent.smtt.export.external.interfaces.JsResult;
 import com.tencent.smtt.export.external.interfaces.SslErrorHandler;
 import com.tencent.smtt.sdk.CookieManager;
@@ -138,6 +142,10 @@ public class MyBrowserActivity extends Activity implements OnClickListener, AMap
     private Map<String, String> headerMap;
     private File updateFile;
     private String color_token;
+    private View customView;
+    private FrameLayout fullscreenContainer;
+    private IX5WebChromeClient.CustomViewCallback customViewCallback;
+    protected static final FrameLayout.LayoutParams COVER_SCREEN_PARAMS = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -247,6 +255,8 @@ public class MyBrowserActivity extends Activity implements OnClickListener, AMap
 
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
+        settings.setPluginsEnabled(true);
+        settings.setPluginState(WebSettings.PluginState.ON);
         settings.setJavaScriptCanOpenWindowsAutomatically(true);
         settings.setAllowFileAccess(true);// 设置允许访问文件数据
         settings.setLoadsImagesAutomatically(true);
@@ -297,6 +307,25 @@ public class MyBrowserActivity extends Activity implements OnClickListener, AMap
      * 利用谷歌webView做交互
      */
     public class XHSWebChromeClient extends WebChromeClient {
+
+        @Override
+        public View getVideoLoadingProgressView() {
+            FrameLayout frameLayout = new FrameLayout(MyBrowserActivity.this);
+            frameLayout.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
+            return frameLayout;
+
+        }
+
+        @Override
+        public void onShowCustomView(View view, IX5WebChromeClient.CustomViewCallback customViewCallback) {
+            showCustomView(view, customViewCallback);
+        }
+
+        @Override
+        public void onHideCustomView() {
+            hideCustomView();
+        }
+
         @Override
         public boolean onJsAlert(WebView view, String url, String message,
                                  JsResult result) {
@@ -318,7 +347,6 @@ public class MyBrowserActivity extends Activity implements OnClickListener, AMap
             Thread t = new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    // TODO Auto-generated method stub
                     if (newProgress == 0) {
                         if (newProgress < 100) {
                             for (int i = 0; i < 100; i++) {
@@ -382,6 +410,79 @@ public class MyBrowserActivity extends Activity implements OnClickListener, AMap
             showPhotoSelector();
             return true;
         }
+
+    }
+
+    /**
+     * 视频播放全屏
+     **/
+    private void showCustomView(View view, IX5WebChromeClient.CustomViewCallback callback) {
+        // if a view already exists then immediately terminate the new one
+        if (customView != null) {
+            callback.onCustomViewHidden();
+            return;
+        }
+
+        MyBrowserActivity.this.getWindow().getDecorView();
+
+        FrameLayout decor = (FrameLayout) getWindow().getDecorView();
+        fullscreenContainer = new FullscreenHolder(MyBrowserActivity.this);
+        fullscreenContainer.addView(view, COVER_SCREEN_PARAMS);
+        decor.addView(fullscreenContainer, COVER_SCREEN_PARAMS);
+        customView = view;
+        setStatusBarVisibility(false);
+        customViewCallback = callback;
+    }
+
+    /**
+     * 隐藏视频全屏
+     */
+    private void hideCustomView() {
+        if (customView == null) {
+            return;
+        }
+        setStatusBarVisibility(true);
+        FrameLayout decor = (FrameLayout) getWindow().getDecorView();
+        decor.removeView(fullscreenContainer);
+        fullscreenContainer = null;
+        customView = null;
+        customViewCallback.onCustomViewHidden();
+        webView.setVisibility(View.VISIBLE);
+    }
+
+    /**
+     * 全屏容器界面
+     */
+    static class FullscreenHolder extends FrameLayout {
+        public FullscreenHolder(Context ctx) {
+            super(ctx);
+            setBackgroundColor(ctx.getResources().getColor(android.R.color.black));
+        }
+
+        @Override
+        public boolean onTouchEvent(MotionEvent evt) {
+            return true;
+        }
+    }
+
+    private void setStatusBarVisibility(boolean visible) {
+        int flag = visible ? 0 : WindowManager.LayoutParams.FLAG_FULLSCREEN;
+        getWindow().setFlags(flag, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (customView != null) {
+                hideCustomView();
+            } else if (webView.canGoBack()) {
+                webView.goBack();
+            } else {
+                finish();
+            }
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
 
     }
 

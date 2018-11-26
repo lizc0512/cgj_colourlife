@@ -128,7 +128,7 @@
         <activity
             android:name=".MyBrowserActivity"
             android:configChanges="locale|orientation|keyboard|keyboardHidden|screenSize"
-            android:screenOrientation="portrait"
+            android:hardwareAccelerated="true"
             android:windowSoftInputMode="stateHidden|adjustResize" />
         <!-- 获取临时密码 -->
         <activity

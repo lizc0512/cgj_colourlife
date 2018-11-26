@@ -460,6 +460,12 @@ public class MipcaActivityCapture extends BaseActivity implements Callback, OnCl
                     mAuthTimeUtils = new AuthTimeUtils();
                 }
                 mAuthTimeUtils.IsAuthTime(MipcaActivityCapture.this, url, "", String.valueOf(auth_type), "", "");
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        MipcaActivityCapture.this.finish();
+                    }
+                },2000);
             }
         } else if (msg.arg1 == HttpTools.GET_SCAN_INFO) {//其他资源
             JSONObject resopnse = HttpTools.getContentJSONObject(jsonString);

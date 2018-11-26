@@ -44,7 +44,6 @@
                 android:id="@+id/yes"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:layout_marginRight="10dp"
                 android:background="@null"
                 android:gravity="center"
                 android:singleLine="true"

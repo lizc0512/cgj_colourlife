@@ -25,6 +25,7 @@ import com.youmai.hxsdk.chatgroup.IMGroupActivity;
 import com.youmai.hxsdk.data.VedioSetting;
 import com.youmai.hxsdk.dialog.HxApplyVideoDialog;
 import com.youmai.hxsdk.dialog.HxExitVideoDialog;
+import com.youmai.hxsdk.dialog.HxInfoVideoDialog;
 import com.youmai.hxsdk.entity.VideoCall;
 import com.youmai.hxsdk.im.IMMsgManager;
 import com.youmai.hxsdk.im.IMVedioSettingCallBack;
@@ -91,6 +92,7 @@ public class ControlFragment extends Fragment {
     private boolean isConference;
     private PopWindowTwoRow comferenceAdminPop;
     ArrayList<String> list = new ArrayList<>();//
+    private HxInfoVideoDialog knowDialog;
 
     public static ControlFragment instance(/*int groupId, String groupName*/) {
         ControlFragment fragment = new ControlFragment();
@@ -147,17 +149,24 @@ public class ControlFragment extends Fragment {
                 if (getActivity() instanceof RoomActivity) {
                     activity = (RoomActivity) getActivity();
                 }
-
-                if (openVoice && openCamera) { //视频发言
-                    if (activity != null) {
-                        activity.entryVideoConference(true);
-                        isConference = true;
+                if (vedioSetting.isAgree()) {
+                    if (openVoice && openCamera) { //视频发言
+                        if (activity != null) {
+                            activity.entryVideoConference(true);
+                            isConference = true;
+                        }
+                    } else {
+                        if (activity != null) {
+                            activity.entryVideoConference(false);
+                            isConference = true;
+                        }
                     }
                 } else {
-                    if (activity != null) {
-                        activity.entryVideoConference(false);
-                        isConference = true;
-                    }
+                    Toast.makeText(getActivity(), "管理员拒绝了你的申请", Toast.LENGTH_SHORT).show();
+                }
+
+                if (knowDialog.isShowing()) {
+                    knowDialog.dismiss();
                 }
             }
 
@@ -445,7 +454,7 @@ public class ControlFragment extends Fragment {
         if (owner && memberCount > 1 && allUserId.size() != 0) {
             btnText = "转让权限并退出";
         } else {
-            btnText = "确定";
+            btnText = getString(R.string.hx_confirm);
         }
         exitDialog = new HxExitVideoDialog.Build(getActivity())
                 .textContent("是否结束当前通话")
@@ -481,7 +490,7 @@ public class ControlFragment extends Fragment {
                         }
                     }
                 })
-                .setSecondClick("取消", new View.OnClickListener() {
+                .setSecondClick(getString(R.string.hx_cancel), new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         exitDialog.dismiss();
@@ -566,7 +575,17 @@ public class ControlFragment extends Fragment {
                 try {
                     YouMaiVideo.VideoSettingApplyRsp rsp = YouMaiVideo.VideoSettingApplyRsp.parseFrom(pduBase.body);
                     if (rsp.getResult() == YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS) {
-                        Toast.makeText(getActivity(), "发送请求成功", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getActivity(), "发送请求成功", Toast.LENGTH_SHORT).show();
+                        knowDialog = new HxInfoVideoDialog.Build(getActivity())
+                                .textContent(getString(R.string.video_call_apply))
+                                .btnText(getString(R.string.video_call_know))
+                                .setOk(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        knowDialog.dismiss();
+                                    }
+                                }).build();
+                        knowDialog.show();
                     }
                 } catch (InvalidProtocolBufferException e) {
                     e.printStackTrace();

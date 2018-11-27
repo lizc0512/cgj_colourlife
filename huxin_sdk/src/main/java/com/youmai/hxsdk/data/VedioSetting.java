@@ -11,6 +11,7 @@ public class VedioSetting implements Parcelable {
     private String roomName;
     private String adminId;
     private String nickName;
+    private boolean isAgree;
 
     public String getUserId() {
         return userId;
@@ -60,7 +61,12 @@ public class VedioSetting implements Parcelable {
         this.nickName = nickName;
     }
 
-    public VedioSetting() {
+    public boolean isAgree() {
+        return isAgree;
+    }
+
+    public void setAgree(boolean agree) {
+        isAgree = agree;
     }
 
     @Override
@@ -76,6 +82,10 @@ public class VedioSetting implements Parcelable {
         dest.writeString(this.roomName);
         dest.writeString(this.adminId);
         dest.writeString(this.nickName);
+        dest.writeByte(this.isAgree ? (byte) 1 : (byte) 0);
+    }
+
+    public VedioSetting() {
     }
 
     protected VedioSetting(Parcel in) {
@@ -85,6 +95,7 @@ public class VedioSetting implements Parcelable {
         this.roomName = in.readString();
         this.adminId = in.readString();
         this.nickName = in.readString();
+        this.isAgree = in.readByte() != 0;
     }
 
     public static final Creator<VedioSetting> CREATOR = new Creator<VedioSetting>() {

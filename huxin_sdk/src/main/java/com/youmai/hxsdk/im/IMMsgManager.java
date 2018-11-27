@@ -575,12 +575,14 @@ public class IMMsgManager {
                 String roomName = notify.getRoomName();
                 boolean openCamera = notify.getOpenCamera();
                 boolean openVoice = notify.getOpenVoice();
+                boolean isAgree = notify.getAgree();
 
                 VedioSetting setting = new VedioSetting();
                 setting.setUserId(userId);
                 setting.setRoomName(roomName);
                 setting.setOpenCamera(openCamera);
                 setting.setOpenVoice(openVoice);
+                setting.setAgree(isAgree);
 
                 if (imVedioNotify != null) {
                     imVedioNotify.onCallback(setting);
@@ -661,10 +663,6 @@ public class IMMsgManager {
                         HuxinSdkManager.instance().getStackAct().finishActivity(RoomActivity.class);
                     }
 
-                }
-
-                if (imVedioNotify != null) {
-                    imVedioNotify.roomStateChange();
                 }
 
             } catch (InvalidProtocolBufferException e) {
@@ -790,15 +788,12 @@ public class IMMsgManager {
         }
     };
 
-
     private final NotifyListener onExitRoomBroadcast = new NotifyListener(
             YouMaiBasic.COMMANDID.CID_VIDEO_ROOM_EXIT_BROADCAST_VALUE) {
         @Override
         public void OnRec(byte[] data) {
             try {
-                YouMaiVideo.ExitRoomBroadcast notify = YouMaiVideo
-                        .ExitRoomBroadcast.parseFrom(data);
-
+                YouMaiVideo.ExitRoomBroadcast notify = YouMaiVideo.ExitRoomBroadcast.parseFrom(data);
                 String roomName = notify.getRoomName();
                 String adminId = notify.getUserId();
                 String notifyId = notify.getNotifyId();
@@ -806,14 +801,11 @@ public class IMMsgManager {
                 if (imVedioNotify != null) {
                     imVedioNotify.roomStateChange();
                 }
-
             } catch (InvalidProtocolBufferException e) {
                 e.printStackTrace();
             }
         }
     };
-
-
     private final NotifyListener onDestroyRoomBroadcast = new NotifyListener(
             YouMaiBasic.COMMANDID.CID_VIDEO_ROOM_DESTROY_BROADCAST_VALUE) {
         @Override
@@ -876,8 +868,9 @@ public class IMMsgManager {
         HuxinSdkManager.instance().setNotifyListener(onStateBroadcast);
         HuxinSdkManager.instance().setNotifyListener(onMemberInviteResponseNotify);
         HuxinSdkManager.instance().setNotifyListener(onVideoSettingApplyNotify);
-        HuxinSdkManager.instance().setNotifyListener(onExitRoomBroadcast);
         HuxinSdkManager.instance().setNotifyListener(onDestroyRoomBroadcast);
+        HuxinSdkManager.instance().setNotifyListener(onExitRoomBroadcast);
+
     }
 
     /**
@@ -897,8 +890,8 @@ public class IMMsgManager {
         HuxinSdkManager.instance().clearNotifyListener(onStateBroadcast);
         HuxinSdkManager.instance().clearNotifyListener(onMemberInviteResponseNotify);
         HuxinSdkManager.instance().clearNotifyListener(onVideoSettingApplyNotify);
-        HuxinSdkManager.instance().clearNotifyListener(onExitRoomBroadcast);
         HuxinSdkManager.instance().clearNotifyListener(onDestroyRoomBroadcast);
+        HuxinSdkManager.instance().clearNotifyListener(onExitRoomBroadcast);
     }
 
 

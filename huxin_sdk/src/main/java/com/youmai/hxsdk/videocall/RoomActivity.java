@@ -41,6 +41,8 @@ import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.activity.SdkBaseActivity;
 import com.youmai.hxsdk.chatgroup.IMGroupActivity;
 import com.youmai.hxsdk.data.VedioSetting;
+import com.youmai.hxsdk.dialog.HxCommonVideoDialog;
+import com.youmai.hxsdk.dialog.HxInfoVideoDialog;
 import com.youmai.hxsdk.im.IMMsgManager;
 import com.youmai.hxsdk.im.IMVedioSettingCallBack;
 import com.youmai.hxsdk.proto.YouMaiBasic;
@@ -131,6 +133,7 @@ public class RoomActivity extends SdkBaseActivity implements QNRoomEventListener
     private boolean isConference = true;
 
     private AlertDialog mKickoutDialog;
+    private HxCommonVideoDialog applyRspDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -209,25 +212,46 @@ public class RoomActivity extends SdkBaseActivity implements QNRoomEventListener
                     title = nickName + "申请语音发言";
                 }
 
-
-                android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(mContext);
-                builder.setMessage(title);
-                builder.setNegativeButton(R.string.hx_reject, new DialogInterface.OnClickListener() {
+                HxCommonVideoDialog.Build build = new HxCommonVideoDialog.Build(RoomActivity.this);
+                build.leftText(getString(R.string.hx_reject));
+                build.rightText(getString(R.string.hx_agree));
+                build.textContent(title);
+                build.setCacel(new View.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                    public void onClick(View view) {
                         adminOperate(false, isOpenCamera, isOpenVoice,
                                 roomName, userId, nickName);
+                        applyRspDialog.dismiss();
                     }
                 });
-
-                builder.setPositiveButton(R.string.hx_agree, new DialogInterface.OnClickListener() {
+                build.setOk(new View.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                    public void onClick(View view) {
                         adminOperate(true, isOpenCamera, isOpenVoice,
                                 roomName, userId, nickName);
+                        applyRspDialog.dismiss();
                     }
                 });
-                builder.create().show();
+                applyRspDialog = build.build();
+                applyRspDialog.show();
+//                android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(mContext);
+//                builder.setMessage(title);
+//                builder.setNegativeButton(R.string.hx_reject, new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        adminOperate(false, isOpenCamera, isOpenVoice,
+//                                roomName, userId, nickName);
+//                    }
+//                });
+//
+//                builder.setPositiveButton(R.string.hx_agree, new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        adminOperate(true, isOpenCamera, isOpenVoice,
+//                                roomName, userId, nickName);
+//                    }
+//                });
+//                builder.create().show();
             }
 
             @Override

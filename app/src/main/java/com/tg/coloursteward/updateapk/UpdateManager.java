@@ -100,7 +100,7 @@ public class UpdateManager {
             showNoticeDialogMust();//强制更新
         } else if (result == -2 && isshow==true) {
             showNoticeDialog();//小版本，非强制更新
-        } else {
+        } else {//提示最新版本
             if (!isHome) {
                 Toast.makeText(mContext, R.string.soft_update_no, Toast.LENGTH_LONG).show();
             }

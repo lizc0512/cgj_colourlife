@@ -44,9 +44,11 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.activity.CameraActivity;
+import com.youmai.hxsdk.data.VedioSetting;
 import com.youmai.hxsdk.dialog.HxSelectVedioDialog;
 import com.youmai.hxsdk.entity.VideoCall;
 import com.youmai.hxsdk.group.ChatGroupDetailsActivity;
+import com.youmai.hxsdk.im.IMVedioSettingCallBack;
 import com.youmai.hxsdk.module.videocall.VideoSelectConstactActivity;
 import com.youmai.hxsdk.packet.RedPacketInGroupActivity;
 import com.youmai.hxsdk.activity.SdkBaseActivity;
@@ -368,6 +370,78 @@ public class IMGroupActivity extends SdkBaseActivity implements
 
         reqGroupMembers(groupId);
 
+        IMMsgManager.instance().setMVedioEntryCallBack(new IMVedioSettingCallBack() {
+            @Override
+            public void onCallback(VedioSetting vedioSetting) {
+
+            }
+
+            @Override
+            public void onMemberReqEntry(VedioSetting vedioSetting) {
+
+            }
+
+            @Override
+            public void onAdminRespone(VedioSetting vedioSetting) {
+                boolean isAgree = vedioSetting.isAgree();
+                String adminId = vedioSetting.getAdminId();
+                String roomName = vedioSetting.getRoomName();
+                String token = vedioSetting.getToken();
+                String memberId = vedioSetting.getUserId();
+
+                if (isAgree) {
+                    Toast.makeText(mContext, "管理员同意您加入房间", Toast.LENGTH_SHORT).show();
+                    HuxinSdkManager.instance().reqRoomInfo(roomName, new ReceiveListener() {
+                        @Override
+                        public void OnRec(PduBase pduBase) {
+                            try {
+                                YouMaiVideo.RoomInfoRsp rep = YouMaiVideo.RoomInfoRsp.parseFrom(pduBase.body);
+                                if (rep.getResult() == YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS) {
+                                    List<YouMaiVideo.RoomMemberItem> list = rep.getMemberListList();
+                                    int count = rep.getMemberListCount();
+                                    int groupId = rep.getGroupId();
+                                    String roomName = rep.getRoomName();
+                                    String topic = rep.getTopic();
+                                    YouMaiVideo.VideoType type = rep.getType();
+
+                                    Intent intent = new Intent(mContext, RoomActivity.class);
+                                    intent.putExtra(RoomActivity.EXTRA_ROOM_ID, roomName);
+                                    intent.putExtra(RoomActivity.EXTRA_ROOM_TOKEN, token);
+                                    intent.putExtra(RoomActivity.EXTRA_USER_ID, memberId);
+
+                                    if (type == YouMaiVideo.VideoType.CONFERENCE) {
+                                        intent.putExtra(RoomActivity.IS_CONFERENCE, true);
+                                    } else {
+                                        intent.putExtra(RoomActivity.IS_CONFERENCE, false);
+                                    }
+                                    startActivity(intent);
+
+                                    VideoCall videoCall = HuxinSdkManager.instance().getVideoCall();
+                                    if (videoCall != null) {
+                                        videoCall.setMembers(list);
+                                        videoCall.setCount(count);
+                                        videoCall.setGroupId(groupId);
+                                        videoCall.setRoomName(roomName);
+                                        videoCall.setTopic(topic);
+                                        videoCall.setVideoType(type.getNumber());
+                                    }
+                                }
+                            } catch (InvalidProtocolBufferException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                } else {
+                    Toast.makeText(mContext, "请求加入房间被管理员拒绝", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void roomStateChange() {
+
+            }
+        });
+
     }
 
     private void queryGroupInfo(int groupId) {
@@ -480,53 +554,63 @@ public class IMGroupActivity extends SdkBaseActivity implements
                         String info = rsp.getInfo();
                         YouMaiVideo.VideoType type = rsp.getType();
 
-                        if (!isRoom) {
-                            HuxinSdkManager.instance().setVideoCall(null);
-                            linear_video_call.setVisibility(View.GONE);
-                            return;
-                        }
-
                         if (id == groupId) {
-                            VideoCall videoCall = HuxinSdkManager.instance().getVideoCall();
-                            if (videoCall == null) {
-                                videoCall = new VideoCall();
-                                if (!TextUtils.isEmpty(token)) {
-                                    videoCall.setToken(token);
-                                }
-                            }
 
-                            if (TextUtils.isEmpty(token)) {
-                                token = videoCall.getToken();
-                            }
-
-                            if (type == YouMaiVideo.VideoType.CONFERENCE) {
-                                videoCall.setConference(true);
-                            } else {
-                                videoCall.setConference(false);
-                            }
-
-                            videoCall.setMsgTime(System.currentTimeMillis());
-                            videoCall.setRoomName(roomName);
-                            videoCall.setCount(count);
-                            videoCall.setTopic(info);
-                            videoCall.setState(state);
-
-                            HuxinSdkManager.instance().setVideoCall(videoCall);
-
-                            if (!TextUtils.isEmpty(token)
-                                    && !TextUtils.isEmpty(roomName)
-                                    && count > 0) {
-                                linear_video_call.setVisibility(View.VISIBLE);
-                                tv_video_entry.setText("加入");
-                                /*if (isRoom) {
-                                    tv_video_entry.setText("加入");
+                            if (state && !isRoom
+                                    && TextUtils.isEmpty(token)
+                                    && !TextUtils.isEmpty(roomName)) {
+                                VideoCall videoCall = HuxinSdkManager.instance().getVideoCall();
+                                if (videoCall != null) {
+                                    videoCall.setRoomName(roomName);
                                 } else {
-                                    tv_video_entry.setText("申请加入");
-                                }*/
+                                    videoCall = new VideoCall();
+                                    videoCall.setRoomName(roomName);
+                                    videoCall.setGroupId(id);
+                                    HuxinSdkManager.instance().setVideoCall(videoCall);
+                                }
+
                                 String format = mContext.getString(R.string.video_call_status);
                                 tv_video_status.setText(String.format(format, count));
+                                linear_video_call.setVisibility(View.VISIBLE);
+                                tv_video_entry.setText("申请加入");
                             } else {
-                                linear_video_call.setVisibility(View.GONE);
+                                VideoCall videoCall = HuxinSdkManager.instance().getVideoCall();
+                                if (videoCall == null) {
+                                    videoCall = new VideoCall();
+                                    if (!TextUtils.isEmpty(token)) {
+                                        videoCall.setToken(token);
+                                    }
+                                }
+
+                                if (TextUtils.isEmpty(token)) {
+                                    token = videoCall.getToken();
+                                }
+
+                                if (type == YouMaiVideo.VideoType.CONFERENCE) {
+                                    videoCall.setConference(true);
+                                } else {
+                                    videoCall.setConference(false);
+                                }
+
+                                videoCall.setMsgTime(System.currentTimeMillis());
+                                videoCall.setRoomName(roomName);
+                                videoCall.setCount(count);
+                                videoCall.setTopic(info);
+                                videoCall.setState(state);
+                                HuxinSdkManager.instance().setVideoCall(videoCall);
+
+                                if (!TextUtils.isEmpty(token)
+                                        && !TextUtils.isEmpty(roomName)
+                                        && count > 0) {
+                                    linear_video_call.setVisibility(View.VISIBLE);
+                                    tv_video_entry.setText("加入");
+                                    String format = mContext.getString(R.string.video_call_status);
+                                    tv_video_status.setText(String.format(format, count));
+                                } else {
+                                    linear_video_call.setVisibility(View.GONE);
+                                }
+
+
                             }
                         }
                     } else {
@@ -708,6 +792,8 @@ public class IMGroupActivity extends SdkBaseActivity implements
         PhotoPickerManager.getInstance().clearMap();
         HuxinSdkManager.instance().getStackAct().removeActivity(this);
         IMMsgManager.instance().removeMeInGroup(groupId);
+
+        IMMsgManager.instance().removeIMVedioEntryCallBack();
     }
 
     private void initTitle() {
@@ -732,7 +818,10 @@ public class IMGroupActivity extends SdkBaseActivity implements
 
                 VideoCall videoCall = HuxinSdkManager.instance().getVideoCall();
 
-                if (videoCall != null) {
+                if (videoCall != null
+                        && !TextUtils.isEmpty(videoCall.getToken())
+                        && !TextUtils.isEmpty(videoCall.getRoomName())) {
+
                     String userId = HuxinSdkManager.instance().getUuid();
 
                     Intent intent = new Intent(mContext, RoomActivity.class);
@@ -749,6 +838,24 @@ public class IMGroupActivity extends SdkBaseActivity implements
                     }
 
                     startActivity(intent);
+                } else if (videoCall != null && !TextUtils.isEmpty(videoCall.getRoomName())) {
+                    HuxinSdkManager.instance().reqEntryVideoRoom(videoCall.getRoomName(),
+                            new ReceiveListener() {
+                                @Override
+                                public void OnRec(PduBase pduBase) {
+                                    try {
+                                        YouMaiVideo.MemberApplyRsp rsp = YouMaiVideo.MemberApplyRsp.parseFrom(pduBase.body);
+                                        if (rsp.getResult() == YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS) {
+                                            Toast.makeText(mContext, "申请发送成功", Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            Toast.makeText(mContext, "申请发送失败", Toast.LENGTH_SHORT).show();
+                                        }
+
+                                    } catch (InvalidProtocolBufferException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            });
                 }
 
 
@@ -1817,6 +1924,7 @@ public class IMGroupActivity extends SdkBaseActivity implements
             }
 
         }
+
     }
 
     private ProgressDialog mProgressDialog;

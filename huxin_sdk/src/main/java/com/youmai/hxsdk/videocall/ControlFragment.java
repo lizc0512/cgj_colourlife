@@ -23,6 +23,7 @@ import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.chatgroup.IMGroupActivity;
 import com.youmai.hxsdk.data.VedioSetting;
+import com.youmai.hxsdk.dialog.HxAdminExitVideoDialog;
 import com.youmai.hxsdk.dialog.HxApplyVideoDialog;
 import com.youmai.hxsdk.dialog.HxExitVideoDialog;
 import com.youmai.hxsdk.dialog.HxInfoVideoDialog;
@@ -93,6 +94,7 @@ public class ControlFragment extends Fragment {
     private PopWindowTwoRow comferenceAdminPop;
     ArrayList<String> list = new ArrayList<>();//
     private HxInfoVideoDialog knowDialog;
+    private HxAdminExitVideoDialog adminExitDialog;
 
     public static ControlFragment instance(/*int groupId, String groupName*/) {
         ControlFragment fragment = new ControlFragment();
@@ -168,6 +170,16 @@ public class ControlFragment extends Fragment {
                 if (knowDialog.isShowing()) {
                     knowDialog.dismiss();
                 }
+            }
+
+            @Override
+            public void onMemberReqEntry(VedioSetting vedioSetting) {
+
+            }
+
+            @Override
+            public void onAdminRespone(VedioSetting vedioSetting) {
+
             }
 
             @Override
@@ -452,42 +464,41 @@ public class ControlFragment extends Fragment {
         }
         ArrayList<String> allUserId = act.getAllUserId();
         if (owner && memberCount > 1 && allUserId.size() != 0) {
-            btnText = "转让权限并退出";
+            // btnText = "转让权限并退出";
+            showAdminExitDialog();
         } else {
-            btnText = getString(R.string.hx_confirm);
+            // btnText = getString(R.string.hx_confirm);
+            if (owner) {
+                showUserExitDialog(true);
+            } else {
+                showUserExitDialog(false);
+            }
+
+        }
+
+    }
+
+    private void showUserExitDialog(boolean f) {
+        if (f) {
+            btnText = "销毁房间";
+        } else {
+            btnText = "确定";
         }
         exitDialog = new HxExitVideoDialog.Build(getActivity())
                 .textContent("是否结束当前通话")
                 .setFirstClick(btnText, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        if (owner) {
-                            if (memberCount <= 1) {
-                                HuxinSdkManager.instance().reqDestroyRoom();
-                                exitDialog.dismiss();
-                                mCallEvents.onCallHangUp();
-                            } else {
-                                if (allUserId.size() != 0) {
-                                    //房间有多余人数转权
-                                    Intent intent = new Intent(getActivity(), VideoOperatConstactActivity.class);
-                                    intent.putExtra(GROUP_ID, groupId);
-                                    intent.putExtra(VideoSelectConstactActivity.ROOM_NAME, mRoomId);
-                                    intent.putExtra(VideoOperatConstactActivity.INTENT_TYPE, VideoOperatConstactActivity.UPDATE_ADMIN);
-                                    intent.putStringArrayListExtra(VideoOperatConstactActivity.USER_ALL_ID, allUserId);
-                                    startActivityForResult(intent, PERMISSION_SETTING_REQ);
-                                } else {
-                                    HuxinSdkManager.instance().reqDestroyRoom();
-                                    exitDialog.dismiss();
-                                    mCallEvents.onCallHangUp();
-                                }
-                                exitDialog.dismiss();
-                            }
+                        if (f) {
+                            HuxinSdkManager.instance().reqDestroyRoom();
+                            exitDialog.dismiss();
+                            mCallEvents.onCallHangUp();
                         } else {
                             HuxinSdkManager.instance().reqExitRoom();
-
                             exitDialog.dismiss();
                             mCallEvents.onCallHangUp();
                         }
+
                     }
                 })
                 .setSecondClick(getString(R.string.hx_cancel), new View.OnClickListener() {
@@ -497,6 +508,47 @@ public class ControlFragment extends Fragment {
                     }
                 }).build();
         exitDialog.show();
+    }
+
+    private void showAdminExitDialog() {
+        RoomActivity act = null;
+        if (getActivity() instanceof RoomActivity) {
+            act = (RoomActivity) getActivity();
+        }
+        ArrayList<String> allUserId = act.getAllUserId();
+        HxAdminExitVideoDialog.Build builder = new HxAdminExitVideoDialog.Build(getActivity());
+        builder.textContent("是否结束当前通话");
+        builder.setFirstClick(null, new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                HuxinSdkManager.instance().reqDestroyRoom();
+                mCallEvents.onCallHangUp();
+                adminExitDialog.dismiss();
+            }
+        });
+        builder.setSecondClick(null, new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (allUserId.size() != 0) {
+                    //房间有多余人数转权
+                    Intent intent = new Intent(getActivity(), VideoOperatConstactActivity.class);
+                    intent.putExtra(GROUP_ID, groupId);
+                    intent.putExtra(VideoSelectConstactActivity.ROOM_NAME, mRoomId);
+                    intent.putExtra(VideoOperatConstactActivity.INTENT_TYPE, VideoOperatConstactActivity.UPDATE_ADMIN);
+                    intent.putStringArrayListExtra(VideoOperatConstactActivity.USER_ALL_ID, allUserId);
+                    startActivityForResult(intent, PERMISSION_SETTING_REQ);
+                }
+                adminExitDialog.dismiss();
+            }
+        });
+        builder.setThreeClick(null, new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                adminExitDialog.dismiss();
+            }
+        });
+        adminExitDialog = builder.build();
+        adminExitDialog.show();
     }
 
 

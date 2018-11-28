@@ -409,79 +409,81 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 keyword = "[有人@我]";
             }
 
-            switch (model.getMsgType()) {
-                case CacheMsgBean.SEND_EMOTION:
-                case CacheMsgBean.RECEIVE_EMOTION:
-                    String context = keyword + mContext.getString(R.string.message_type_1);
-                    itemView.message_type.setText(context);
-                    setAtText(keyword, context, itemView.message_type);
-                    break;
-                case CacheMsgBean.SEND_TEXT:
-                case CacheMsgBean.RECEIVE_TEXT:
-                    CacheMsgTxt textM = (CacheMsgTxt) model.getJsonBodyObj();
-                    SpannableString msgSpan = new SpannableString(textM.getMsgTxt());
-                    msgSpan = EmoticonHandler.getInstance(mContext.getApplicationContext()).getTextFace(
-                            textM.getMsgTxt(), msgSpan, 0, Utils.getFontSize(itemView.message_type.getTextSize()));
-
-                    String content = keyword + msgSpan;
-                    itemView.message_type.setText(content);
-                    setAtText(keyword, content, itemView.message_type);
-
-                    break;
-                case CacheMsgBean.SEND_IMAGE:
-                case CacheMsgBean.RECEIVE_IMAGE:
-                    itemView.message_type.setText(mContext.getString(R.string.message_type_3));
-                    break;
-                case CacheMsgBean.SEND_LOCATION:
-                case CacheMsgBean.RECEIVE_LOCATION:
-                    itemView.message_type.setText(mContext.getString(R.string.message_type_4));
-                    break;
-                case CacheMsgBean.SEND_VIDEO:
-                case CacheMsgBean.RECEIVE_VIDEO:
-                    itemView.message_type.setText(mContext.getString(R.string.message_type_5));
-                    break;
-                case CacheMsgBean.SEND_VOICE:
-                case CacheMsgBean.RECEIVE_VOICE:
-                    itemView.message_type.setText(mContext.getString(R.string.message_type_sounds));
-                    break;
-                case CacheMsgBean.SEND_FILE:
-                case CacheMsgBean.RECEIVE_FILE:
-                    itemView.message_type.setText(mContext.getString(R.string.message_type_file));
-                    break;
-                case CacheMsgBean.GROUP_MEMBER_CHANGED:
-                    //itemView.message_type.setText(mContext.getString(R.string.message_type_member_changed));
-                    itemView.message_type.setText(model.getMemberChanged());
-                    break;
-                case CacheMsgBean.GROUP_NAME_CHANGED:
-                    //itemView.message_type.setText(mContext.getString(R.string.message_type_name_changed));
-                    itemView.message_type.setText(model.getMemberChanged());
-                    break;
-                case CacheMsgBean.GROUP_TRANSFER_OWNER:
-                    //itemView.message_type.setText(mContext.getString(R.string.message_type_owner_changed));
-                    itemView.message_type.setText(model.getMemberChanged());
-                    break;
-                case CacheMsgBean.SEND_REDPACKAGE:
-                case CacheMsgBean.RECEIVE_REDPACKAGE:
-                case CacheMsgBean.OPEN_REDPACKET:
-                    itemView.message_type.setText(mContext.getString(R.string.message_red_package));
-                    break;
-                case CacheMsgBean.RECEIVE_PACKET_OPENED:
-                    itemView.message_type.setText(mContext.getString(R.string.message_red_package_open));
-                    break;
-                case CacheMsgBean.PACKET_OPENED_SUCCESS:
-                    itemView.message_type.setText(mContext.getString(R.string.message_open_red_packet_success));
-                    break;
-
-                default:
-                    itemView.message_type.setText("");
-            }
-
             VideoCall videoCall = HuxinSdkManager.instance().getVideoCall();
             if (videoCall != null && videoCall.getGroupId() == model.getGroupId()) {
                 String format = mContext.getString(R.string.video_call_status);
                 itemView.message_type.setText(String.format(format, videoCall.getCount()));
                 itemView.message_callBtn.setImageResource(R.drawable.ic_online);
                 itemView.message_time.setText(TimeUtils.dateFormat(videoCall.getMsgTime()));
+            } else {
+                switch (model.getMsgType()) {
+                    case CacheMsgBean.SEND_EMOTION:
+                    case CacheMsgBean.RECEIVE_EMOTION:
+                        String context = keyword + mContext.getString(R.string.message_type_1);
+                        itemView.message_type.setText(context);
+                        setAtText(keyword, context, itemView.message_type);
+                        break;
+                    case CacheMsgBean.SEND_TEXT:
+                    case CacheMsgBean.RECEIVE_TEXT:
+                        CacheMsgTxt textM = (CacheMsgTxt) model.getJsonBodyObj();
+                        SpannableString msgSpan = new SpannableString(textM.getMsgTxt());
+                        msgSpan = EmoticonHandler.getInstance(mContext.getApplicationContext()).getTextFace(
+                                textM.getMsgTxt(), msgSpan, 0, Utils.getFontSize(itemView.message_type.getTextSize()));
+
+                        String content = keyword + msgSpan;
+                        itemView.message_type.setText(content);
+                        setAtText(keyword, content, itemView.message_type);
+
+                        break;
+                    case CacheMsgBean.SEND_IMAGE:
+                    case CacheMsgBean.RECEIVE_IMAGE:
+                        itemView.message_type.setText(mContext.getString(R.string.message_type_3));
+                        break;
+                    case CacheMsgBean.SEND_LOCATION:
+                    case CacheMsgBean.RECEIVE_LOCATION:
+                        itemView.message_type.setText(mContext.getString(R.string.message_type_4));
+                        break;
+                    case CacheMsgBean.SEND_VIDEO:
+                    case CacheMsgBean.RECEIVE_VIDEO:
+                        itemView.message_type.setText(mContext.getString(R.string.message_type_5));
+                        break;
+                    case CacheMsgBean.SEND_VOICE:
+                    case CacheMsgBean.RECEIVE_VOICE:
+                        itemView.message_type.setText(mContext.getString(R.string.message_type_sounds));
+                        break;
+                    case CacheMsgBean.SEND_FILE:
+                    case CacheMsgBean.RECEIVE_FILE:
+                        itemView.message_type.setText(mContext.getString(R.string.message_type_file));
+                        break;
+                    case CacheMsgBean.GROUP_MEMBER_CHANGED:
+                        //itemView.message_type.setText(mContext.getString(R.string.message_type_member_changed));
+                        itemView.message_type.setText(model.getMemberChanged());
+                        break;
+                    case CacheMsgBean.GROUP_NAME_CHANGED:
+                        //itemView.message_type.setText(mContext.getString(R.string.message_type_name_changed));
+                        itemView.message_type.setText(model.getMemberChanged());
+                        break;
+                    case CacheMsgBean.GROUP_TRANSFER_OWNER:
+                        //itemView.message_type.setText(mContext.getString(R.string.message_type_owner_changed));
+                        itemView.message_type.setText(model.getMemberChanged());
+                        break;
+                    case CacheMsgBean.SEND_REDPACKAGE:
+                    case CacheMsgBean.RECEIVE_REDPACKAGE:
+                    case CacheMsgBean.OPEN_REDPACKET:
+                        itemView.message_type.setText(mContext.getString(R.string.message_red_package));
+                        break;
+                    case CacheMsgBean.RECEIVE_PACKET_OPENED:
+                        itemView.message_type.setText(mContext.getString(R.string.message_red_package_open));
+                        break;
+                    case CacheMsgBean.PACKET_OPENED_SUCCESS:
+                        itemView.message_type.setText(mContext.getString(R.string.message_open_red_packet_success));
+                        break;
+
+                    default:
+                        itemView.message_type.setText("");
+                }
+                itemView.message_callBtn.setImageDrawable(null);
+                itemView.message_time.setText(TimeUtils.dateFormat(model.getMsgTime()));
             }
 
             //沟通列表

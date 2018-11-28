@@ -16,7 +16,6 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.ProtocolCallBack;
@@ -92,6 +91,7 @@ public class IMMsgManager {
 
     private IMVedioSettingCallBack imVedioSettingCallBack;
     private IMVedioSettingCallBack imVedioNotify;
+    private IMVedioSettingCallBack iMVedioEntryCallBack;
 
     private List<Integer> pushMsgNotifyIdList;
 
@@ -141,17 +141,24 @@ public class IMMsgManager {
     }
 
 
-    public IMVedioSettingCallBack removeImVedioSettingCallBack() {
-        return imVedioSettingCallBack = null;
+    public void removeImVedioSettingCallBack() {
+        imVedioSettingCallBack = null;
     }
 
     public void setImVedioSettingCallBack(IMVedioSettingCallBack imVedioSettingCallBack) {
         this.imVedioSettingCallBack = imVedioSettingCallBack;
     }
 
+    public void removeIMVedioEntryCallBack() {
+        iMVedioEntryCallBack = null;
+    }
 
-    public IMVedioSettingCallBack removeImVedioNotify() {
-        return imVedioNotify = null;
+    public void setMVedioEntryCallBack(IMVedioSettingCallBack iMVedioEntryCallBack) {
+        this.iMVedioEntryCallBack = iMVedioEntryCallBack;
+    }
+
+    public void removeImVedioNotify() {
+        imVedioNotify = null;
     }
 
     public void setImVedioNotify(IMVedioSettingCallBack imVedioNotify) {
@@ -788,6 +795,69 @@ public class IMMsgManager {
         }
     };
 
+
+    private final NotifyListener onMemberApplyNotify = new NotifyListener(
+            YouMaiBasic.COMMANDID.CID_VIDEO_MEMBER_APPLY_NOTIFY_VALUE) {
+        @Override
+        public void OnRec(byte[] data) {
+            try {
+                YouMaiVideo.MemberApplyNotify notify = YouMaiVideo
+                        .MemberApplyNotify.parseFrom(data);
+
+                String adminId = notify.getAdminId();
+                String roomName = notify.getRoomName();
+                String nickName = notify.getNickname();
+                String avator = notify.getAvator();
+                String memberId = notify.getMemberId();
+
+                VedioSetting setting = new VedioSetting();
+                setting.setUserId(memberId);
+                setting.setRoomName(roomName);
+                setting.setAdminId(adminId);
+                setting.setNickName(nickName);
+
+                if (imVedioSettingCallBack != null) {
+                    imVedioSettingCallBack.onMemberReqEntry(setting);
+                }
+
+            } catch (InvalidProtocolBufferException e) {
+                e.printStackTrace();
+            }
+        }
+    };
+
+
+    private final NotifyListener onMemberApplyResponseNotify = new NotifyListener(
+            YouMaiBasic.COMMANDID.CID_VIDEO_MEMBER_APPLY_REPONSE_NOTIFY_VALUE) {
+        @Override
+        public void OnRec(byte[] data) {
+            try {
+                YouMaiVideo.MemberApplyResponseNotify notify = YouMaiVideo
+                        .MemberApplyResponseNotify.parseFrom(data);
+
+                String adminId = notify.getAdminId();
+                String roomName = notify.getRoomName();
+                boolean isAgree = notify.getAgree();
+                String token = notify.getToken();
+                String memberId = notify.getMemberId();
+
+                VedioSetting setting = new VedioSetting();
+                setting.setUserId(memberId);
+                setting.setRoomName(roomName);
+                setting.setAdminId(adminId);
+                setting.setAgree(isAgree);
+                setting.setToken(token);
+
+                if (iMVedioEntryCallBack != null) {
+                    iMVedioEntryCallBack.onAdminRespone(setting);
+                }
+
+            } catch (InvalidProtocolBufferException e) {
+                e.printStackTrace();
+            }
+        }
+    };
+
     private final NotifyListener onExitRoomBroadcast = new NotifyListener(
             YouMaiBasic.COMMANDID.CID_VIDEO_ROOM_EXIT_BROADCAST_VALUE) {
         @Override
@@ -818,9 +888,9 @@ public class IMMsgManager {
                 String adminId = notify.getUserId();
                 String notifyId = notify.getNotifyId();
 
-
                 VideoCall videoCall = HuxinSdkManager.instance().getVideoCall();
                 if (videoCall != null) {
+                    HuxinSdkManager.instance().reqExitRoom();
                     String name = videoCall.getRoomName();
                     if (!TextUtils.isEmpty(name) && name.equals(roomName)) {
                         HuxinSdkManager.instance().setVideoCall(null);
@@ -868,6 +938,8 @@ public class IMMsgManager {
         HuxinSdkManager.instance().setNotifyListener(onStateBroadcast);
         HuxinSdkManager.instance().setNotifyListener(onMemberInviteResponseNotify);
         HuxinSdkManager.instance().setNotifyListener(onVideoSettingApplyNotify);
+        HuxinSdkManager.instance().setNotifyListener(onMemberApplyNotify);
+        HuxinSdkManager.instance().setNotifyListener(onMemberApplyResponseNotify);
         HuxinSdkManager.instance().setNotifyListener(onDestroyRoomBroadcast);
         HuxinSdkManager.instance().setNotifyListener(onExitRoomBroadcast);
 
@@ -890,6 +962,8 @@ public class IMMsgManager {
         HuxinSdkManager.instance().clearNotifyListener(onStateBroadcast);
         HuxinSdkManager.instance().clearNotifyListener(onMemberInviteResponseNotify);
         HuxinSdkManager.instance().clearNotifyListener(onVideoSettingApplyNotify);
+        HuxinSdkManager.instance().clearNotifyListener(onMemberApplyNotify);
+        HuxinSdkManager.instance().clearNotifyListener(onMemberApplyResponseNotify);
         HuxinSdkManager.instance().clearNotifyListener(onDestroyRoomBroadcast);
         HuxinSdkManager.instance().clearNotifyListener(onExitRoomBroadcast);
     }

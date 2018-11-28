@@ -255,6 +255,77 @@ public class RoomActivity extends SdkBaseActivity implements QNRoomEventListener
             }
 
             @Override
+            public void onMemberReqEntry(VedioSetting vedioSetting) {
+
+                final String roomName = vedioSetting.getRoomName();
+                final String nickName = vedioSetting.getNickName();
+                final String memberId = vedioSetting.getUserId();
+                String title = nickName + "申请加入房间";
+
+                HxCommonVideoDialog.Build build = new HxCommonVideoDialog.Build(RoomActivity.this);
+                build.leftText(getString(R.string.hx_reject));
+                build.rightText(getString(R.string.hx_agree));
+                build.textContent(title);
+                build.setCacel(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        boolean isAgree = false;
+
+                        HuxinSdkManager.instance().adminApplyResponse(memberId, isAgree, roomName,
+                                new ReceiveListener() {
+                                    @Override
+                                    public void OnRec(PduBase pduBase) {
+                                        try {
+                                            YouMaiVideo.MemberApplyResponseRsp rsp = YouMaiVideo
+                                                    .MemberApplyResponseRsp.parseFrom(pduBase.body);
+                                            if (rsp.getResult() == YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS) {
+
+                                            }
+
+                                        } catch (InvalidProtocolBufferException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                });
+                        applyRspDialog.dismiss();
+                    }
+                });
+                build.setOk(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        boolean isAgree = true;
+
+                        HuxinSdkManager.instance().adminApplyResponse(memberId, isAgree, roomName,
+                                new ReceiveListener() {
+                                    @Override
+                                    public void OnRec(PduBase pduBase) {
+                                        try {
+                                            YouMaiVideo.MemberApplyResponseRsp rsp = YouMaiVideo
+                                                    .MemberApplyResponseRsp.parseFrom(pduBase.body);
+                                            if (rsp.getResult() == YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS) {
+
+                                            }
+
+                                        } catch (InvalidProtocolBufferException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                });
+                        applyRspDialog.dismiss();
+
+                    }
+                });
+                applyRspDialog = build.build();
+                applyRspDialog.show();
+            }
+
+
+            @Override
+            public void onAdminRespone(VedioSetting vedioSetting) {
+
+            }
+
+            @Override
             public void roomStateChange() {
 
             }

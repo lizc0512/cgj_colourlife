@@ -12,5 +12,9 @@ public interface IMVedioSettingCallBack {
 
     void onCallback(VedioSetting vedioSetting);
 
+    void onMemberReqEntry(VedioSetting vedioSetting);
+
+    void onAdminRespone(VedioSetting vedioSetting);
+
     void roomStateChange();
 }

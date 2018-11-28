@@ -1899,17 +1899,37 @@ public class HuxinSdkManager {
 
 
     /**
-     * 添加视频聊天成员
+     * 申请加入视频聊天
      *
      * @param roomName
      * @param callback
      */
-    public void addVideoRoomMember(String roomName, ReceiveListener callback) {
+    public void reqEntryVideoRoom(String roomName, ReceiveListener callback) {
         YouMaiVideo.MemberApplyReq.Builder builder = YouMaiVideo.MemberApplyReq.newBuilder();
         builder.setMemberId(getUuid());
         builder.setRoomName(roomName);
+        builder.setNickname(getRealName());
+        builder.setAvator(getHeadUrl());
         YouMaiVideo.MemberApplyReq memberAddReq = builder.build();
         sendProto(memberAddReq, YouMaiBasic.COMMANDID.CID_VIDEO_MEMBER_APPLY_REQ_VALUE, callback);
+
+    }
+
+
+    /**
+     * 管理员同意视频加入请求
+     *
+     * @param roomName
+     * @param callback
+     */
+    public void adminApplyResponse(String memberId, boolean isAgree, String roomName, ReceiveListener callback) {
+        YouMaiVideo.MemberApplyResponseReq.Builder builder = YouMaiVideo.MemberApplyResponseReq.newBuilder();
+        builder.setAdminId(getUuid());
+        builder.setMemberId(memberId);
+        builder.setRoomName(roomName);
+        builder.setAgree(isAgree);
+        YouMaiVideo.MemberApplyResponseReq memberAddReq = builder.build();
+        sendProto(memberAddReq, YouMaiBasic.COMMANDID.CID_VIDEO_MEMBER_APPLY_REPONSE_REQ_VALUE, callback);
 
     }
 
@@ -2046,6 +2066,10 @@ public class HuxinSdkManager {
                 try {
                     YouMaiVideo.ExitRoomRsp rep = YouMaiVideo.ExitRoomRsp.parseFrom(pduBase.body);
                     if (rep.getResult() == YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS) {
+                        //mVideoCall = null;
+                        if (mVideoCall != null) {
+                            mVideoCall.setToken("");
+                        }
                         //Toast.makeText(mContext, "退出成功", Toast.LENGTH_SHORT).show();
                     }
 

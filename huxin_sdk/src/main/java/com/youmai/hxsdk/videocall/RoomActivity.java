@@ -42,7 +42,7 @@ import com.youmai.hxsdk.activity.SdkBaseActivity;
 import com.youmai.hxsdk.chatgroup.IMGroupActivity;
 import com.youmai.hxsdk.data.VedioSetting;
 import com.youmai.hxsdk.dialog.HxCommonVideoDialog;
-import com.youmai.hxsdk.dialog.HxInfoVideoDialog;
+import com.youmai.hxsdk.entity.VideoCall;
 import com.youmai.hxsdk.im.IMMsgManager;
 import com.youmai.hxsdk.im.IMVedioSettingCallBack;
 import com.youmai.hxsdk.proto.YouMaiBasic;
@@ -70,6 +70,10 @@ public class RoomActivity extends SdkBaseActivity implements QNRoomEventListener
     public static final String EXTRA_ROOM_ID = "ROOM_ID";
     public static final String EXTRA_ROOM_TOKEN = "ROOM_TOKEN";
     public static final String EXTRA_USER_ID = "USER_ID";
+
+    public static final String NICK_NAME = "NICK_NAME";
+    public static final String AVATAR = "AVATAR";
+
     public static final String EXTRA_VIDEO_WIDTH = "VIDEO_WIDTH";
     public static final String EXTRA_VIDEO_HEIGHT = "VIDEO_HEIGHT";
     public static final String EXTRA_HW_CODEC = "HW_CODEC";
@@ -118,6 +122,9 @@ public class RoomActivity extends SdkBaseActivity implements QNRoomEventListener
     private String mRoomId;
     private String mRoomToken;
     private String mUserId;
+    private String nickName;
+    private String avatar;
+
     private String mLocalLogText;
     private ControlFragment mControlFragment;
 
@@ -161,8 +168,13 @@ public class RoomActivity extends SdkBaseActivity implements QNRoomEventListener
         isConference = intent.getBooleanExtra(IS_CONFERENCE, false);
 
 
+        nickName = intent.getStringExtra(NICK_NAME);
+        avatar = intent.getStringExtra(AVATAR);
+
         mLocalWindow = (LocalVideoView) findViewById(R.id.local_video_view);
         mLocalWindow.setUserId(mUserId);
+        mLocalWindow.setNickName(nickName);
+        mLocalWindow.setAvator(avatar);
 
         mRemoteWindowA = (RTCVideoView) findViewById(R.id.remote_video_view_a);
         mRemoteWindowB = (RTCVideoView) findViewById(R.id.remote_video_view_b);
@@ -839,6 +851,15 @@ public class RoomActivity extends SdkBaseActivity implements QNRoomEventListener
         } else {
             lp.leftMargin = marginStart;
         }
+
+        if (targetView.equals(mLocalWindow)) {
+            if (width == mScreenWidth) {
+                targetView.resetHeadImagePadding(50);
+            } else {
+                targetView.resetHeadImagePadding(10);
+            }
+        }
+
         targetView.setLayoutParams(lp);
         targetView.setMicrophoneStateVisibility(
                 (width == mScreenWidth && height == mScreenHeight) ? View.INVISIBLE : View.VISIBLE);
@@ -1118,6 +1139,16 @@ public class RoomActivity extends SdkBaseActivity implements QNRoomEventListener
         final RTCVideoView remoteWindow = mUnusedWindowList.remove(0);
         remoteWindow.getRemoteSurfaceView().setZOrderMediaOverlay(true);
         remoteWindow.setUserId(userId);
+
+        VideoCall videoCall = HuxinSdkManager.instance().getVideoCall();
+        if (videoCall != null) {
+            YouMaiVideo.RoomMemberItem item = videoCall.getRoomMemberById(userId);
+            if (item != null) {
+                remoteWindow.setAvator(item.getAvator());
+                remoteWindow.setNickName(item.getNickname());
+            }
+        }
+
         mUserWindowMap.put(userId, remoteWindow);
         mUsedWindowList.add(remoteWindow);
         final int userCount = mUsedWindowList.size();

@@ -281,6 +281,8 @@ public class VideoSelectConstactActivity extends SdkBaseActivity implements View
                         intent.putExtra(RoomActivity.IS_CONFERENCE, true);
                         intent.putExtra(IMGroupActivity.GROUP_ID, groupId);
                         intent.putExtra(IMGroupActivity.GROUP_NAME, groupName);
+                        intent.putExtra(RoomActivity.NICK_NAME, HuxinSdkManager.instance().getRealName());
+                        intent.putExtra(RoomActivity.AVATAR, HuxinSdkManager.instance().getHeadUrl());
 
                         startActivity(intent);
                         finish();

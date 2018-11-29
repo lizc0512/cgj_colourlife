@@ -7,9 +7,13 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.qiniu.droid.rtc.QNLocalSurfaceView;
 import com.qiniu.droid.rtc.QNRemoteSurfaceView;
 import com.youmai.hxsdk.R;
+import com.youmai.hxsdk.utils.ScreenUtils;
 
 public class RTCVideoView extends FrameLayout implements View.OnLongClickListener {
 
@@ -18,9 +22,14 @@ public class RTCVideoView extends FrameLayout implements View.OnLongClickListene
     protected QNRemoteSurfaceView mRemoteSurfaceView;
     private ImageView mMicrophoneStateView;
     private TextView mAudioView;
+    private ImageView mAvatar;
+    private View mContainer;
     private OnLongClickListener mOnLongClickListener;
     private String mUserId;
     private boolean mIsAudioOnly = false;
+
+    private String nickName;
+    private String avator;
 
     public interface OnLongClickListener {
         void onLongClick(String userId);
@@ -38,6 +47,14 @@ public class RTCVideoView extends FrameLayout implements View.OnLongClickListene
 
     public void setUserId(String userId) {
         mUserId = userId;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
+
+    public void setAvator(String avator) {
+        this.avator = avator;
     }
 
     public void updateMicrophoneStateView(boolean isMute) {
@@ -59,7 +76,9 @@ public class RTCVideoView extends FrameLayout implements View.OnLongClickListene
     public void setVisible(boolean isVisible) {
         if (!isVisible) {
             mUserId = null;
+            mContainer.setVisibility(INVISIBLE);
             mAudioView.setVisibility(INVISIBLE);
+            mAvatar.setVisibility(INVISIBLE);
         }
         setVisibility(isVisible ? VISIBLE : INVISIBLE);
         mMicrophoneStateView.setVisibility(isVisible ? VISIBLE : INVISIBLE);
@@ -74,20 +93,37 @@ public class RTCVideoView extends FrameLayout implements View.OnLongClickListene
         if (getVisibility() != VISIBLE) {
             setVisibility(VISIBLE);
         }
-        mAudioView.setText(mUserId);
-        mAudioView.setBackgroundColor(getTargetColor(pos));
+        mContainer.setVisibility(VISIBLE);
+
+        mAudioView.setText(nickName);
+        //mAudioView.setBackgroundColor(getTargetColor(pos));
         mAudioView.setVisibility(VISIBLE);
+
+        mAvatar.setVisibility(VISIBLE);
+        Glide.with(getContext()).load(avator)
+                .apply(new RequestOptions()
+                        .diskCacheStrategy(DiskCacheStrategy.ALL))
+                .into(mAvatar);
+
         setVideoViewVisible(false);
     }
 
     public void setAudioViewInvisible() {
+        mContainer.setVisibility(INVISIBLE);
         mAudioView.setVisibility(INVISIBLE);
+        mAvatar.setVisibility(INVISIBLE);
         setVideoViewVisible(true);
     }
 
     public void updateAudioView(int pos) {
-        mAudioView.setBackgroundColor(getTargetColor(pos));
+        //mAudioView.setBackgroundColor(getTargetColor(pos));
     }
+
+    public void resetHeadImagePadding(int dp) {
+        int padding = ScreenUtils.dipTopx(getContext(), dp);
+        mAvatar.setPadding(padding, padding, padding, padding);
+    }
+
 
     public int getAudioViewVisibility() {
         return mAudioView.getVisibility();
@@ -119,7 +155,9 @@ public class RTCVideoView extends FrameLayout implements View.OnLongClickListene
         super.onFinishInflate();
         setOnLongClickListener(this);
         mMicrophoneStateView = (ImageView) findViewById(R.id.microphone_state_view);
-        mAudioView = (TextView) findViewById(R.id.qn_audio_view);
+        mAudioView = findViewById(R.id.qn_audio_view);
+        mAvatar = findViewById(R.id.avatar);
+        mContainer = findViewById(R.id.container);
     }
 
     private int getTargetColor(int pos) {

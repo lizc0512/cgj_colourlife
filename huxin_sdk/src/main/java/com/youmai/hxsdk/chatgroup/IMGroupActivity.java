@@ -408,6 +408,8 @@ public class IMGroupActivity extends SdkBaseActivity implements
                                     intent.putExtra(RoomActivity.EXTRA_ROOM_ID, roomName);
                                     intent.putExtra(RoomActivity.EXTRA_ROOM_TOKEN, token);
                                     intent.putExtra(RoomActivity.EXTRA_USER_ID, memberId);
+                                    intent.putExtra(RoomActivity.NICK_NAME, HuxinSdkManager.instance().getRealName());
+                                    intent.putExtra(RoomActivity.AVATAR, HuxinSdkManager.instance().getHeadUrl());
 
                                     if (type == YouMaiVideo.VideoType.CONFERENCE) {
                                         intent.putExtra(RoomActivity.IS_CONFERENCE, true);
@@ -830,6 +832,8 @@ public class IMGroupActivity extends SdkBaseActivity implements
                     intent.putExtra(RoomActivity.EXTRA_USER_ID, userId);
                     intent.putExtra(RoomActivity.IS_ADMIN, true);
                     intent.putExtra(IMGroupActivity.GROUP_NAME, groupName);
+                    intent.putExtra(RoomActivity.NICK_NAME, HuxinSdkManager.instance().getRealName());
+                    intent.putExtra(RoomActivity.AVATAR, HuxinSdkManager.instance().getHeadUrl());
 
                     if (videoCall.isConference()) {
                         intent.putExtra(RoomActivity.IS_CONFERENCE, true);

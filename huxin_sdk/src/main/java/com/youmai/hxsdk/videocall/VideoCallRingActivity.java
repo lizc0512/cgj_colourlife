@@ -222,6 +222,9 @@ public class VideoCallRingActivity extends SdkBaseActivity implements View.OnCli
                                 intent.putExtra(RoomActivity.EXTRA_USER_ID, userId);
                                 intent.putExtra(RoomActivity.IS_ADMIN, false);
 
+                                intent.putExtra(RoomActivity.NICK_NAME, HuxinSdkManager.instance().getRealName());
+                                intent.putExtra(RoomActivity.AVATAR, HuxinSdkManager.instance().getHeadUrl());
+
                                 if (videoType == YouMaiVideo.VideoType.CONFERENCE.getNumber()) {
                                     intent.putExtra(RoomActivity.IS_CONFERENCE, true);
                                     videoCall.setConference(true);

@@ -1,7 +1,10 @@
 package com.youmai.hxsdk.entity;
 
 
+import android.text.TextUtils;
+
 import com.youmai.hxsdk.proto.YouMaiVideo;
+import com.youmai.hxsdk.utils.ListUtils;
 
 import java.util.List;
 
@@ -158,4 +161,17 @@ public class VideoCall {
     public void setAdminId(String adminId) {
         this.adminId = adminId;
     }
+
+
+    public YouMaiVideo.RoomMemberItem getRoomMemberById(String userId) {
+        if (!ListUtils.isEmpty(members) && !TextUtils.isEmpty(userId)) {
+            for (YouMaiVideo.RoomMemberItem item : members) {
+                if (item.getMemberId().equals(userId)) {
+                    return item;
+                }
+            }
+        }
+        return null;
+    }
+
 }

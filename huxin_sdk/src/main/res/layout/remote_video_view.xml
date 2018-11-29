@@ -31,7 +31,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="5dp">
+            android:paddingLeft="15dp"
+            android:paddingTop="5dp"
+            android:paddingRight="15dp"
+            android:paddingBottom="5dp">
 
             <View
                 android:layout_width="12dp"
@@ -53,7 +56,6 @@
                 android:layout_height="12dp"
                 android:layout_gravity="center_vertical"
                 android:gravity="center"
-                android:scaleType="fitXY"
                 android:visibility="invisible"
                 app:srcCompat="@drawable/microphone_state_enable" />
 

@@ -66,7 +66,6 @@ import java.util.Map;
  * @author Administrator
  */
 public class FragmentMine extends Fragment implements ResponseListener {
-    private static final String TAG = "FragmentMine";
     private View mView;
     private Activity mActivity;
     private ImageView imgHead;

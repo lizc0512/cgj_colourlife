@@ -204,12 +204,12 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
         reqSearchList();
 
         HuxinSdkManager.instance().getStackAct().addActivity(this);
-        initYingYan();
+        if (Contants.URl.environment.equals("release")) {
+            initYingYan();
+        }
     }
 
     private void initYingYan() {
-//        lbsTraceClient.startTrace(trace, null);
-//        lbsTraceClient.startGather(null);
         //初始化鹰眼SDK
         String entityName;
         if (TextUtils.isEmpty(UserInfo.realname)) {

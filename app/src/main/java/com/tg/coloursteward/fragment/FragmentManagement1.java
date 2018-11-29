@@ -33,6 +33,7 @@ import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.TokenUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.DividerGridItemDecoration;
+import com.tg.coloursteward.view.MyGridLayoutManager;
 import com.tg.coloursteward.view.dialog.ToastFactory;
 import com.youmai.hxsdk.adapter.PaddingItemDecoration;
 
@@ -218,13 +219,13 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
     private void initView() {
         rl_tinyfragment_tips = mView.findViewById(R.id.rl_tinyfragment_tips);
         rv_fragment_tinyserver_top = mView.findViewById(R.id.rv_fragment_tinyserver_top);
-        GridLayoutManager gridLayoutManager_top = new GridLayoutManager(mActivity, 3);
+        MyGridLayoutManager gridLayoutManager_top = new MyGridLayoutManager(mActivity, 3);
         rv_fragment_tinyserver_top.setLayoutManager(gridLayoutManager_top);
         rv_fragment_tinyserver_top.addItemDecoration(new DividerGridItemDecoration(mActivity));
 
 
         rv_fragment_tinyserver = mView.findViewById(R.id.rv_fragment_tinyserver);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(mActivity, 4);
+        MyGridLayoutManager gridLayoutManager = new MyGridLayoutManager(mActivity, 4);
         rv_fragment_tinyserver.addItemDecoration(new PaddingItemDecoration(4));
         rv_fragment_tinyserver.setNestedScrollingEnabled(false);
         rv_fragment_tinyserver.setLayoutManager(gridLayoutManager);

@@ -119,7 +119,9 @@ public class SettingActivity extends BaseActivity implements ItemClickListener {
     }
 
     private void StopYingYan() {
-        lbsTraceClient.stopGather(null);
+        if (null != lbsTraceClient) {
+            lbsTraceClient.stopGather(null);
+        }
     }
 
     // 检测版本更新

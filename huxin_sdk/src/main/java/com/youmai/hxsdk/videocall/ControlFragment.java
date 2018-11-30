@@ -732,9 +732,7 @@ public class ControlFragment extends Fragment {
             }
         }
         //设置管理员
-        if (requestCode == PERMISSION_SETTING_REQ)
-
-        {
+        if (requestCode == PERMISSION_SETTING_REQ) {
             if (resultCode == PERMISSION_SETTING_RSP) {
                 mCallEvents.onCallHangUp();
                 HuxinSdkManager.instance().reqExitRoom();

@@ -843,6 +843,8 @@ public class IMGroupActivity extends SdkBaseActivity implements
 
                     startActivity(intent);
                 } else if (videoCall != null && !TextUtils.isEmpty(videoCall.getRoomName())) {
+                    showProgressDialog();
+
                     HuxinSdkManager.instance().reqEntryVideoRoom(videoCall.getRoomName(),
                             new ReceiveListener() {
                                 @Override
@@ -858,6 +860,8 @@ public class IMGroupActivity extends SdkBaseActivity implements
                                     } catch (InvalidProtocolBufferException e) {
                                         e.printStackTrace();
                                     }
+
+                                    dismissProgressDialog();
                                 }
                             });
                 }

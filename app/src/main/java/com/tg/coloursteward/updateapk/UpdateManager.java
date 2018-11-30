@@ -62,7 +62,7 @@ public class UpdateManager {
     private String clientUrlPath = "";
     private String appName;
     private Thread thread;
-
+    private volatile boolean isExitStatus = true;
     /**
      * 弹出框
      *
@@ -225,7 +225,7 @@ public class UpdateManager {
         if (ProgressBarDialog == null) {
             DisplayMetrics metrics = Tools.getDisplayMetrics(mContext);
             ProgressBarDialog = new AlertDialog.Builder(mContext).create();
-            ProgressBarDialog.setCancelable(false);
+            ProgressBarDialog.setCancelable(true);
             Window window = dialog.getWindow();
             ProgressBarDialog.show();
             LinearLayout layout = (LinearLayout) LayoutInflater.from(mContext)
@@ -237,6 +237,14 @@ public class UpdateManager {
                 @Override
                 public void onClick(View v) {
                     dialog.dismiss();
+                    ProgressBarDialog.dismiss();
+                    try {
+                        if (null != thread) {
+                            isExitStatus = false;
+                            thread.interrupt();
+                        }
+                    } catch (Exception e) {
+                    }
                     // 设置取消状态
                     cancelUpdate = true;
                 }
@@ -306,33 +314,38 @@ public class UpdateManager {
 
     class updateRunnable implements Runnable {
         Message message = updateHandler.obtainMessage();
+        private boolean stopStatus = true;
+
+        public void setStop() {
+            stopStatus = false;
+        }
 
         @Override
         public void run() {
+            while (isExitStatus) {
+                message.what = DOWNLOAD_COMPLETE;
+                try {
+                    if (!updateDir.exists()) {
+                        updateDir.mkdirs();
+                    }
+                    if (!updateFile.exists()) {
+                        updateFile.createNewFile();
+                    }
 
-            message.what = DOWNLOAD_COMPLETE;
-            try {
-                if (!updateDir.exists()) {
-                    updateDir.mkdirs();
-                }
-                if (!updateFile.exists()) {
-                    updateFile.createNewFile();
-                }
+                    long downloadSize = downloadUpdateFile(clientUrlPath,
+                            updateFile);
+                    if (downloadSize > 0) {
+                        // 下载完毕通知
+                        updateHandler.sendMessage(message);
+                    }
+                } catch (Exception ex) {
+                    ex.printStackTrace();
 
-                long downloadSize = downloadUpdateFile(clientUrlPath,
-                        updateFile);
-                if (downloadSize > 0) {
-                    // 下载完毕通知
+                    message.what = DOWNLOAD_FAIL;
+                    // 下载失败通知
                     updateHandler.sendMessage(message);
                 }
-            } catch (Exception ex) {
-                ex.printStackTrace();
-
-                message.what = DOWNLOAD_FAIL;
-                // 下载失败通知
-                updateHandler.sendMessage(message);
             }
-
         }
 
     }

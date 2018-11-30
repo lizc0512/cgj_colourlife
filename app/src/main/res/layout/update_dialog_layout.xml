@@ -35,7 +35,7 @@
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:paddingTop="15dp"
-        android:text="如需申请远程费，请联系客服，接单之后无法申请远程费，是否确定接单"
+        android:text=""
         android:textColor="@color/text_color2"
         android:textSize="18sp" />
 

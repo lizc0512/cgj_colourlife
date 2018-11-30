@@ -2069,6 +2069,7 @@ public class HuxinSdkManager {
                         //mVideoCall = null;
                         if (mVideoCall != null) {
                             mVideoCall.setToken("");
+                            mVideoCall.setOwner(false);
                         }
                         //Toast.makeText(mContext, "退出成功", Toast.LENGTH_SHORT).show();
                     }

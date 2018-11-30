@@ -245,6 +245,7 @@ public class RoomActivity extends SdkBaseActivity implements QNRoomEventListener
                     }
                 });
                 applyRspDialog = build.build();
+                applyRspDialog.setCanceledOnTouchOutside(false);
                 applyRspDialog.show();
 //                android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(mContext);
 //                builder.setMessage(title);

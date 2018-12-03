@@ -23,9 +23,6 @@ import android.widget.TextView;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.amap.api.location.AMapLocation;
-import com.baidu.trace.api.track.HistoryTrackRequest;
-import com.baidu.trace.api.track.HistoryTrackResponse;
-import com.baidu.trace.api.track.OnTrackListener;
 import com.geetest.gt3unbindsdk.Bind.GT3GeetestBindListener;
 import com.geetest.gt3unbindsdk.Bind.GT3GeetestUtilsBind;
 import com.tg.coloursteward.application.CityPropertyApplication;
@@ -61,8 +58,6 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import static com.tg.coloursteward.application.CityPropertyApplication.lbsTraceClient;
 
 /**
  * 登录页面
@@ -600,6 +595,8 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
                         ToastFactory.showToast(LoginActivity.this, "极验验证失败,请稍后重试");
                     }
                 } catch (Exception e) {
+                    gt3GeetestUtils.gt3TestFinish();
+                    login(newPhone, password, "");
                 }
             } else {
                 gt3GeetestUtils.gt3TestClose();

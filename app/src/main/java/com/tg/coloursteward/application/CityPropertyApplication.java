@@ -5,14 +5,12 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.support.multidex.MultiDex;
 import android.util.Log;
 
 import com.baidu.trace.LBSTraceClient;
 import com.baidu.trace.Trace;
-import com.baidu.trace.model.LocationMode;
-import com.baidu.trace.model.OnTraceListener;
-import com.baidu.trace.model.PushMessage;
 import com.facebook.stetho.Stetho;
 import com.networkbench.agent.impl.NBSAppAgent;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
@@ -83,59 +81,20 @@ public class CityPropertyApplication extends Application {
         QbSdk.initX5Environment(getApplicationContext(), cb);
         CrashHandler crashHandler = CrashHandler.getInstance();
         crashHandler.init(getApplicationContext());
-        NBSAppAgent.setLicenseKey("e706eb8242634439958ddeed9db7f61f").withLocationServiceEnabled(true).start(this.getApplicationContext());
-        NBSAppAgent.setUserCrashMessage("username", UserInfo.employeeAccount);
-//        //初始化鹰眼SDK
-//        if (TextUtils.isEmpty(UserInfo.realname)) {
-//            entityName = UserInfo.familyName + ":" + UserInfo.uid;
-//        } else {
-//            entityName = UserInfo.familyName + ":" + UserInfo.realname;
-//        }
-//        trace = new Trace(serviceId, entityName, false);
-//        lbsTraceClient = new LBSTraceClient(getApplicationContext());
-//        int gatherInterval = 60;
-//        int packInterval = 60;
-//        lbsTraceClient.setInterval(gatherInterval, packInterval);
-//        lbsTraceClient.setLocationMode(LocationMode.High_Accuracy);
-//        OnTraceListener onTraceListener = new OnTraceListener() {
-//            @Override
-//            public void onBindServiceCallback(int i, String s) {
-//                String mes = s;
-//            }
-//
-//            @Override
-//            public void onStartTraceCallback(int i, String s) {
-//                String mes = s;
-//            }
-//
-//            @Override
-//            public void onStopTraceCallback(int i, String s) {
-//                String mes = s;
-//            }
-//
-//            @Override
-//            public void onStartGatherCallback(int i, String s) {
-//                String mes = s;
-//            }
-//
-//            @Override
-//            public void onStopGatherCallback(int i, String s) {
-//                String mes = s;
-//            }
-//
-//            @Override
-//            public void onPushCallback(byte b, PushMessage pushMessage) {
-//                String mes = String.valueOf(b);
-//            }
-//
-//            @Override
-//            public void onInitBOSCallback(int i, String s) {
-//                String mes = s;
-//            }
-//        };
-//        lbsTraceClient.setOnTraceListener(onTraceListener);
-//        lbsTraceClient.startTrace(trace, null);
-//        lbsTraceClient.startGather(null);
+        if (!isApkDebugable(getApplicationContext())) {
+            NBSAppAgent.setLicenseKey("e706eb8242634439958ddeed9db7f61f").withLocationServiceEnabled(true).start(this.getApplicationContext());
+            NBSAppAgent.setUserCrashMessage("username", UserInfo.employeeAccount);
+        }
+    }
+
+    public static boolean isApkDebugable(Context context) {
+        try {
+            ApplicationInfo info = context.getApplicationInfo();
+            return (info.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
+        } catch (Exception e) {
+
+        }
+        return false;
     }
 
     public static void initImageLoader(Context context) {

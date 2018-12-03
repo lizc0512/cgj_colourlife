@@ -126,7 +126,7 @@ public class SettingActivity extends BaseActivity implements ItemClickListener {
 
     // 检测版本更新
     private void getVersion() {
-        RequestConfig config = new RequestConfig(this, HttpTools.GET_VERSION_INFO, "检查更新");
+        RequestConfig config = new RequestConfig(this, HttpTools.GET_VERSION_INFO, "");
         RequestParams params = new RequestParams();
         String version = UpdateManager.getVersionName(SettingActivity.this);
         params.put("version", version);
@@ -143,6 +143,15 @@ public class SettingActivity extends BaseActivity implements ItemClickListener {
         String device_code = Tools.getStringValue(this, Contants.storage.DEVICE_TOKEN);
         params.put("device_code", device_code);
         HttpTools.httpPost(Contants.URl.SINGLE_DEVICE, "cgjapp/single/device/logout", config, params);
+    }
+
+    @Override
+    public void onRequestStart(Message msg, String hintString) {
+        super.onRequestStart(msg, hintString);
+        if(msg.arg1==HttpTools.GET_VERSION_INFO){
+            DialogFactory.getInstance().showTransitionDialog(this,
+                    "正在检查更新", msg.obj, msg.arg1);
+        }
     }
 
     @Override

@@ -49,12 +49,8 @@ import com.tg.coloursteward.BuildConfig;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.database.SharedPreferencesTools;
-import com.tg.coloursteward.info.CommunityResp;
-import com.tg.coloursteward.info.OffLineDoorOpenLogResp;
 import com.tg.coloursteward.info.PublicAccountInfo;
 import com.tg.coloursteward.info.UserInfo;
-import com.tg.coloursteward.info.door.DoorFixedResp;
-import com.tg.coloursteward.info.door.DoorOpenLogResp;
 import com.tg.coloursteward.log.Logger;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.ResponseData;
@@ -151,45 +147,10 @@ public class Tools {
         return con.getFilesDir() + "/park";
     }
 
-    public static String getCompletePath(Context con, int orderID, int groupPosition, int position, int index) {
-        return getRootPath(con) + "/" + orderID + "/" + "complete_" + groupPosition + "_" + position + "_" + index + ".jpg";
-    }
-
     public static void call(Context context, String phoneNumber) {
         Intent intent = new Intent(Intent.ACTION_DIAL);
         intent.setData(Uri.parse("tel:" + phoneNumber));
         context.startActivity(intent);
-    }
-
-    public static int getTextHeight(String text, float fontSize) {
-        Rect bound = new Rect();
-        Paint p = new Paint();
-        p.setTextSize(fontSize);
-        p.getTextBounds(text, 0, 1, bound);
-        return bound.bottom - bound.top;
-    }
-
-    public static void checkTelephonePermission(Context con) {
-    }
-
-    public static int getTextWidth(String text, float fontSize) {
-        Rect bound = new Rect();
-        Paint p = new Paint();
-        p.setTextSize(fontSize);
-        p.getTextBounds(text, 0, 1, bound);
-        return bound.right - bound.left;
-    }
-
-    public static int sp2px(Context context, float spValue) {
-        final float fontScale = context.getResources().getDisplayMetrics().scaledDensity;
-        return (int) (spValue * fontScale + 0.5f);
-    }
-
-    public static SpannableString getSpannableString(String text, int start, int end, int color) {
-        SpannableString spanString = new SpannableString(text);
-        ForegroundColorSpan span = new ForegroundColorSpan(color);
-        spanString.setSpan(span, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        return spanString;
     }
 
     public static String getDateToString(long time) {
@@ -210,30 +171,6 @@ public class Tools {
         return sf.format(d);
     }
 
-    public static long dateString2Seconds(String date) {
-        SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        try {
-            Date d = sf.parse(date);
-            return d.getTime() / 1000;
-        } catch (ParseException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        return 0;
-    }
-
-    public static long simpledateString2Mini(String date) {
-        SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
-        try {
-            Date d = sf.parse(date);
-            return d.getTime();
-        } catch (ParseException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        return 0;
-    }
-
     public static long getCurrentMillis() {
         return Calendar.getInstance().getTimeInMillis();
     }
@@ -248,56 +185,6 @@ public class Tools {
             e.printStackTrace();
         }
         return 0;
-    }
-
-    private static boolean isBackgroundRunning(Context context) {
-        String processName = "match.android.activity";
-
-        ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-        KeyguardManager keyguardManager = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
-
-        if (activityManager == null) return false;
-        // get running application processes
-        List<RunningAppProcessInfo> processList = activityManager.getRunningAppProcesses();
-        for (RunningAppProcessInfo process : processList) {
-            if (process.processName.startsWith(processName)) {
-                boolean isBackground = process.importance != RunningAppProcessInfo.IMPORTANCE_FOREGROUND &&
-                        process.importance != RunningAppProcessInfo.IMPORTANCE_VISIBLE;
-                boolean isLockedState = keyguardManager.inKeyguardRestrictedInputMode();
-                return isBackground || isLockedState;
-            }
-        }
-        return false;
-    }
-
-    public static boolean toBackgroud(Context con) {
-        String packageName = "null";
-        boolean result = false;
-        ActivityManager am = (ActivityManager) con.getSystemService(Context.ACTIVITY_SERVICE);
-        List<RunningTaskInfo> taskInfos = am.getRunningTasks(1);
-        if (taskInfos != null && taskInfos.size() > 0) {
-            RunningTaskInfo info = taskInfos.get(0);
-            packageName = info.topActivity.getPackageName();
-        }
-        Logger.logd("current packageName = " + packageName);
-        result = !packageName.equals(con.getPackageName());
-        return result;
-    }
-
-    public static boolean appAlreadyLauchAtTop(Context con) {
-        String packageName = "null";
-        boolean result = false;
-        ActivityManager am = (ActivityManager) con.getSystemService(Context.ACTIVITY_SERVICE);
-        List<RunningTaskInfo> taskInfos = am.getRunningTasks(1);
-        if (taskInfos != null && taskInfos.size() > 0) {
-            RunningTaskInfo info = taskInfos.get(0);
-            if (info.topActivity != null) {
-                packageName = info.topActivity.getPackageName();
-            }
-        }
-        Logger.logd("current packageName = " + packageName);
-        result = packageName.equals(con.getPackageName());
-        return result;
     }
 
     public static Bitmap compressImage(Bitmap image) {
@@ -345,79 +232,6 @@ public class Tools {
         return compressImage(bitmap);//压缩好比例大小后再进行质量压缩  
     }
 
-    public static Bitmap getSmallBitmap(Bitmap image) {
-        if (image == null) {
-            return null;
-        }
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        image.compress(CompressFormat.PNG, 100, baos);
-        if (baos.toByteArray().length >= 1024 * 1024) {//判断如果图片大于1M,进行压缩避免在生成图片（BitmapFactory.decodeStream）时溢出
-            baos.reset();
-            image.compress(CompressFormat.PNG, 50, baos);//这里压缩50%，把压缩后的数据存放到baos中
-        }
-        if (image != null && !image.isRecycled()) {
-            image.recycle();
-            image = null;
-        }
-        ByteArrayInputStream isBm = new ByteArrayInputStream(baos.toByteArray());
-        BitmapFactory.Options newOpts = new BitmapFactory.Options();
-        //开始读入图片，此时把options.inJustDecodeBounds 设回true了  
-        newOpts.inJustDecodeBounds = true;
-        Bitmap bitmap = BitmapFactory.decodeStream(isBm, null, newOpts);
-        newOpts.inJustDecodeBounds = false;
-        int w = newOpts.outWidth;
-        int h = newOpts.outHeight;
-
-        float hh = mContext.getResources().getDimensionPixelSize(R.dimen.margin_90);
-        float ww = mContext.getResources().getDimensionPixelSize(R.dimen.margin_90);
-        //缩放比。由于是固定比例缩放，只用高或者宽其中一个数据进行计算即可  
-        int be = 1;//be=1表示不缩放  
-        if (w >= h && w > ww) {//如果宽度大的话根据宽度固定大小缩放  
-            be = (int) (newOpts.outWidth / ww);
-        } else if (w < h && h > hh) {//如果高度高的话根据宽度固定大小缩放  
-            be = (int) (newOpts.outHeight / hh);
-        }
-        if (be <= 0) {
-            be = 1;
-        }
-        newOpts.inSampleSize = be;//设置缩放比例  
-        //重新读入图片，注意此时已经把options.inJustDecodeBounds 设回false了  
-        isBm = new ByteArrayInputStream(baos.toByteArray());
-        bitmap = BitmapFactory.decodeStream(isBm, null, newOpts);
-        return compressImage(bitmap);//压缩好比例大小后再进行质量压缩  
-    }
-
-    public static boolean saveImageToLocal(Resources res, int resID, String path) {
-        boolean result = false;
-        File file = new File(path);
-        if (file.exists()) {
-            return true;
-        } else {
-            file.getParentFile().mkdirs();
-        }
-        FileOutputStream out = null;
-        try {
-            out = new FileOutputStream(file);
-        } catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            return false;
-        }
-        Bitmap btm = BitmapFactory.decodeResource(res, resID);
-        if (out != null && btm.compress(CompressFormat.PNG, 100, out)) {
-            result = true;
-        }
-        if (out != null) {
-            try {
-                out.close();
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        }
-        return result;
-    }
-
     public static void compressImage(Context con, Bitmap image, String path) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         image.compress(CompressFormat.PNG, 100, baos);//质量压缩方法，这里100表示不压缩，把压缩后的数据存放到baos中
@@ -461,17 +275,6 @@ public class Tools {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-    }
-
-    public static String getSimpleProvinceName(String provinceName) {
-        String simpleName = "";
-        if (TextUtils.isEmpty(provinceName)) {
-            return simpleName;
-        }
-        if (provinceName.length() >= 2) {
-            simpleName = provinceName.substring(0, 2);
-        }
-        return simpleName;
     }
 
     public static void saveImageToPath(Context con, String sPath, String oPath) {
@@ -746,94 +549,6 @@ public class Tools {
         return filePath;
     }
 
-    public static void insertPhotoToAlbum(Context con, String path) {
-        MediaScannerConnection.scanFile(con, new String[]{path}, null, null);
-    }
-
-    public static void scanPhotos(String filePath, Context context) {
-        Intent intent = new Intent(
-                Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        Uri uri = Uri.fromFile(new File(filePath));
-        intent.setData(uri);
-        context.sendBroadcast(intent);
-    }
-
-    public static void saveImageToPath(Context con, Uri uri, String oPath) {
-        String sPath = getPathByUri(con, uri);
-        BitmapFactory.Options newOpts = new BitmapFactory.Options();
-        //开始读入图片，此时把options.inJustDecodeBounds 设回true了
-        newOpts.inJustDecodeBounds = true;
-        Bitmap bitmap = BitmapFactory.decodeFile(sPath, newOpts);
-        newOpts.inJustDecodeBounds = false;
-        int w = newOpts.outWidth;
-        int h = newOpts.outHeight;
-        Logger.logd("w =" + w + " h = " + h);
-        float hh = 500f;
-        float ww = 500f;
-        int be = 1;
-        if (w >= h && w > ww) {
-            be = (int) (newOpts.outWidth / ww);
-        } else if (w < h && h > hh) {
-            be = (int) (newOpts.outHeight / hh);
-        }
-        if (be <= 0) {
-            be = 1;
-        }
-        newOpts.inSampleSize = be;
-        bitmap = BitmapFactory.decodeFile(sPath, newOpts);
-        int newW = newOpts.outWidth;
-        int newH = newOpts.outHeight;
-        Logger.logd("getByteCount = " + bitmap.getHeight() * bitmap.getRowBytes() + "  newW = " + newW + " newH = " + newH + "   inPreferredConfig = " + newOpts.inPreferredConfig);
-        compressImage(con, bitmap, oPath);//压缩好比例大小后再进行质量压缩
-    }
-
-
-    public static Bitmap createRoundConerImage(Bitmap source, float radiu) {
-        final Paint paint = new Paint();
-        paint.setAntiAlias(true);
-        Bitmap target = Bitmap.createBitmap(source.getWidth(), source.getHeight(), Config.ARGB_8888);
-        Canvas canvas = new Canvas(target);
-        RectF rect = new RectF(0, 0, source.getWidth(), source.getHeight());
-        canvas.drawRoundRect(rect, radiu, radiu, paint);
-        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
-        canvas.drawBitmap(source, 0, 0, paint);
-        source.recycle();
-        source = null;
-        return target;
-    }
-
-    public static Bitmap createRoundConerImage(Context context, int drawable, float radiu) {
-        Bitmap source = BitmapFactory.decodeResource(context.getResources(), drawable);
-        final Paint paint = new Paint();
-        paint.setAntiAlias(true);
-        Bitmap target = Bitmap.createBitmap(source.getWidth(), source.getHeight(), Config.ARGB_8888);
-        Canvas canvas = new Canvas(target);
-        RectF rect = new RectF(0, 0, source.getWidth(), source.getHeight());
-        canvas.drawRoundRect(rect, radiu, radiu, paint);
-        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
-        canvas.drawBitmap(source, 0, 0, paint);
-        source.recycle();
-        source = null;
-        return target;
-    }
-
-    public static SpannableString getForegroundSpannableString(String text, int start, int end, int color) {
-        if (text == null || text.trim().length() <= 0) {
-            return null;
-        }
-        SpannableString spanString = new SpannableString(text);
-        ForegroundColorSpan span = new ForegroundColorSpan(color);
-        spanString.setSpan(span, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        return spanString;
-    }
-
-    public static String getTwoDecimalPlaces(float num) {
-        String str = "0.00";
-        DecimalFormat df = new DecimalFormat("0.00");
-        str = df.format(num);
-        return str;
-    }
-
     /**
      * 隐藏键盘
      *
@@ -850,65 +565,6 @@ public class Tools {
                 }
             }
         }, 10);
-    }
-
-    /**
-     * 显示键盘
-     *
-     * @param v
-     */
-    public static void showKeyboard(final View v) {
-        Timer timer = new Timer();
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.showSoftInput(v, InputMethodManager.SHOW_FORCED);
-            }
-        }, 100);
-    }
-
-    public static String getOneDecimalString(float num) {
-        String str = "0.0";
-        DecimalFormat df = new DecimalFormat("0.0");
-        str = df.format(num);
-        return str;
-    }
-
-    public static String getStringByFormat(long num, String format) {
-        String str = format;
-        DecimalFormat df = new DecimalFormat(format);
-        str = df.format(num);
-        return str;
-    }
-
-    public static String getStringByFormat(double num, String format) {
-        String str = format;
-        DecimalFormat df = new DecimalFormat(format);
-        str = df.format(num);
-        return str;
-    }
-
-
-    public static float getOneDecimalFloat(float num) {
-        float result = 0.0f;
-        DecimalFormat df = new DecimalFormat("0.0");
-        String str = df.format(num);
-        try {
-            result = Float.parseFloat(str);
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-        }
-        return result;
-    }
-
-    public static boolean getIsFirstTimeStarting(Context con) {
-        boolean result = getSysShare(con).getBoolean(Contants.First.IS_FIRST_TIME_STARTING, true);
-        return result;
-    }
-
-    public static void setIsFirstTimeStarting(Context con, boolean isFrist) {
-        getSysShare(con).edit().putBoolean(Contants.First.IS_FIRST_TIME_STARTING, isFrist).commit();
     }
 
     /**
@@ -931,97 +587,6 @@ public class Tools {
             return mobiles.matches(telRegex);
         }
     }
-
-    /**
-     * 判断是否是邮件
-     *
-     * @param email
-     * @return
-     */
-    public static boolean emailValidation(String email) {
-        String regex = "\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*";
-        return email.matches(regex);
-    }
-
-    public static boolean isCity(String name) {
-        if (TextUtils.isEmpty(name)) {
-            return false;
-        }
-        return name.startsWith("北京") || name.startsWith("天津") ||
-                name.startsWith("上海") || name.startsWith("重庆");
-    }
-
-
-    /**
-     * 将每三个数字加上逗号处理（通常使用金额方面的编辑）
-     *
-     * @param data
-     * @return
-     */
-
-    public static String formatTosepara(float data) {
-        DecimalFormat df = new DecimalFormat("#,###");
-        return df.format(data);
-    }
-
-    public static String getAndroidOsSystemProperties(String key) {
-        String ret;
-        Method systemProperties_get = null;
-        try {
-            systemProperties_get = Class.forName("android.os.SystemProperties").getMethod("get", String.class);
-            if ((ret = (String) systemProperties_get.invoke(null, key)) != null) {
-                return ret;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-        return "";
-    }
-
-
-    public static Bitmap getCircleImage(Bitmap source, int size) {
-        int srcW = source.getWidth();
-        int srcH = source.getHeight();
-        if (size <= 0) {
-            size = Math.min(srcW, srcH);
-        }
-        final Paint paint = new Paint();
-        paint.setAntiAlias(true);
-        Bitmap target = Bitmap.createBitmap(size, size, Config.ARGB_8888);
-        /**
-         * 产生一个同样大小的画布 
-         */
-        Canvas canvas = new Canvas(target);
-        /**
-         * 首先绘制圆形 
-         */
-        canvas.drawCircle(size / 2, size / 2, size / 2, paint);
-        /**
-         * 使用SRC_IN 
-         */
-        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
-        /**
-         * 绘制图片 
-         */
-        int x = (srcW - size) / 2;
-        int y = (srcH - size) / 2;
-        Rect srcRect = new Rect(
-                x,
-                y,
-                x + size,
-                y + size
-        );
-        Rect tagRect = new Rect(
-                0,
-                0,
-                size,
-                size
-        );
-        canvas.drawBitmap(source, srcRect, tagRect, paint);
-        return target;
-    }
-
 
     /**
      * 得到全局唯一UUID
@@ -1067,13 +632,6 @@ public class Tools {
         getSysShare(con).edit().putString(key, value).commit();
     }
 
-    public static void saveSysMap(Context con, String key, boolean result) {
-        if (TextUtils.isEmpty(key)) {
-            return;
-        }
-        getSysShare(con).edit().putBoolean(key, result).commit();
-    }
-
     public static void saveDateInfo(Context con, String time) {
         getSysShare(con).edit().
                 putString("time", time).commit();
@@ -1090,31 +648,6 @@ public class Tools {
     public static void saveElseInfo(Context con, String time) {
         getSysShare(con).edit().
                 putString("else", time).commit();
-    }
-
-    /*
-     * 保存新来消息的条数
-     */
-    public static void setJpushNum(String newCaseID, Context context,
-                                   int notificationNum) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(
-                Jpush_num, 0);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        if (StringUtils.isEmpty(newCaseID)) {
-            editor.clear();
-            editor.commit();
-        } else {
-            editor.putInt("unread:" + newCaseID, notificationNum);
-            editor.commit();
-        }
-    }
-
-    public static int getJpushUnreadNum(Context context, String newCaseID) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(
-                Jpush_num, 0);
-        int JpushUnreadNum = sharedPreferences.getInt("unread:" + newCaseID, 0);
-        return JpushUnreadNum;
-
     }
 
     public static Boolean setBooleanValue(Context context, String key,
@@ -1176,48 +709,6 @@ public class Tools {
     }
 
     /**
-     * 保存对公账户列表
-     *
-     * @param context
-     * @param data
-     * @return 是否保存成功
-     */
-    public static boolean savePublicAccountEntity(Context context,
-                                                  List<PublicAccountInfo> data) {
-
-        Gson gson = new Gson();
-
-        getSysShare(context).edit().
-                putString("public_account_list", gson.toJson(data)).commit();
-        return true;
-
-    }
-
-    /**
-     * 获取对公账户列表
-     *
-     * @param context
-     * @return 记住实体
-     */
-    public static List<PublicAccountInfo> getPublicAccountEntity(Context context) {
-
-        String valueString = getSysShare(context).getString("public_account_list", "");
-        if (StringUtils.isEmpty(valueString)) {
-            return null;
-        }
-
-        Type type = new TypeToken<List<PublicAccountInfo>>() {
-        }.getType();
-
-        Gson gson = new Gson();
-
-        List<PublicAccountInfo> entity = gson.fromJson(valueString, type);
-
-        return entity;
-
-    }
-
-    /**
      * 保存收藏联系人列表
      *
      * @param con
@@ -1245,21 +736,6 @@ public class Tools {
     public static void saveCurrentTime(Context con, long time) {
         getSysShare(con).edit().
                 putLong("CurrentTime", time).commit();
-    }
-
-    /**
-     * 保存有效期（auth1.0）
-     *
-     * @param con
-     * @return
-     */
-    public static long getExpiresTime1(Context con) {
-        return getSysShare(con).getLong("ExpiresTime1", -1);
-    }
-
-    public static void saveExpiresTime1(Context con, long time) {
-        getSysShare(con).edit().
-                putLong("ExpiresTime1", time).commit();
     }
 
     /**
@@ -1550,258 +1026,6 @@ public class Tools {
     }
 
     /**
-     * 获取彩之云小区ID
-     *
-     * @param context
-     * @return 记住实体
-     */
-    public static String getCZY_Community_ID(Context context) {
-        return getSysShare(context).getString("CZY_Community_ID", "");
-    }
-
-    /**
-     * 保存扫码开门常用门禁列表
-     *
-     * @param context
-     * @param data
-     * @return 是否保存成功
-     */
-    public static boolean saveCommonDoorList(Context context, List<DoorFixedResp> data, String czyid) {
-        Gson gson = new Gson();
-        if (data == null) {
-            Tools.saveStringValue(context, CommonDoorList + czyid, "");
-        } else {
-            Tools.saveStringValue(context, CommonDoorList + czyid, gson.toJson(data));
-        }
-
-        return true;
-
-    }
-
-    /**
-     * 获取扫码开门常用门禁列表
-     *
-     * @param context
-     * @return 记住实体
-     */
-    public static ArrayList<DoorFixedResp> getCommonDoorList(Context context, String czyid) {
-
-        String valueString = Tools.getStringValue(context,
-                CommonDoorList + czyid);
-
-        if (StringUtils.isEmpty(valueString)) {
-            return new ArrayList<DoorFixedResp>();
-        }
-
-        Type type = new TypeToken<List<DoorFixedResp>>() {
-        }.getType();
-
-        Gson gson = new Gson();
-
-        ArrayList<DoorFixedResp> CommonDoorList = gson.fromJson(valueString, type);
-
-        return CommonDoorList;
-
-    }
-
-    /**
-     * 保存开门记录
-     *
-     * @param context
-     * @param data
-     * @return 是否保存成功
-     */
-    public static boolean saveOpenLogList(Context context, List<DoorOpenLogResp> data, String czyid) {
-
-        Gson gson = new Gson();
-
-        if (data == null) {
-            Tools.saveStringValue(context, OpenLogList + czyid,
-                    "");
-        } else {
-            Tools.saveStringValue(context, OpenLogList + czyid,
-                    gson.toJson(data));
-        }
-
-        return true;
-
-    }
-
-    /**
-     * 获取开门记录
-     *
-     * @param context
-     * @return 记住实体
-     */
-    public static ArrayList<DoorOpenLogResp> getOpenLogList(Context context, String czyid) {
-
-        String valueString = Tools.getStringValue(context,
-                OpenLogList + czyid);
-
-        if (StringUtils.isEmpty(valueString)) {
-            return new ArrayList<DoorOpenLogResp>();
-        }
-
-        Type type = new TypeToken<List<DoorOpenLogResp>>() {
-        }.getType();
-
-        Gson gson = new Gson();
-
-        ArrayList<DoorOpenLogResp> CommonDoorList = gson.fromJson(valueString, type);
-
-        return CommonDoorList;
-
-    }
-
-    /**
-     * 保存离线开门记录
-     *
-     * @param context
-     * @param data
-     * @return 是否保存成功
-     */
-    public static boolean saveOfflineOpenDoorLog(Context context, List<OffLineDoorOpenLogResp> data, String czyid) {
-
-        Gson gson = new Gson();
-
-        if (data == null) {
-            Tools.saveStringValue(context, CZY_CommunityList + czyid,
-                    "");
-        } else {
-            Tools.saveStringValue(context, CZY_CommunityList + czyid,
-                    gson.toJson(data));
-        }
-
-        return true;
-
-    }
-
-    /**
-     * 获取离线开门记录
-     *
-     * @param context
-     * @return 记住实体
-     */
-    public static List<OffLineDoorOpenLogResp> getOfflineOpenDoorLog(Context context, String czyid) {
-
-        String valueString = Tools.getStringValue(context,
-                CZY_CommunityList + czyid);
-
-        if (StringUtils.isEmpty(valueString)) {
-            return new ArrayList<OffLineDoorOpenLogResp>();
-        }
-
-        Type type = new TypeToken<List<OffLineDoorOpenLogResp>>() {
-        }.getType();
-
-        Gson gson = new Gson();
-
-        ArrayList<OffLineDoorOpenLogResp> communityResps = gson.fromJson(valueString, type);
-
-        return communityResps;
-
-    }
-
-    /**
-     * 保存小区列表
-     *
-     * @param context
-     * @param data
-     * @return 是否保存成功
-     */
-    public static boolean saveCZY_CommunityList(Context context, List<CommunityResp> data, String czyid) {
-
-        Gson gson = new Gson();
-
-        if (data == null) {
-            Tools.saveStringValue(context, CZY_CommunityList + czyid,
-                    "");
-        } else {
-            Tools.saveStringValue(context, CZY_CommunityList + czyid,
-                    gson.toJson(data));
-        }
-
-        return true;
-
-    }
-
-    /**
-     * 获取小区列表
-     *
-     * @param context
-     * @return 记住实体
-     */
-    public static List<CommunityResp> getCZY_CommunityList(Context context, String czyid) {
-
-        String valueString = Tools.getStringValue(context,
-                CZY_CommunityList + czyid);
-
-        if (StringUtils.isEmpty(valueString)) {
-            return new ArrayList<CommunityResp>();
-        }
-
-        Type type = new TypeToken<List<CommunityResp>>() {
-        }.getType();
-
-        Gson gson = new Gson();
-
-        ArrayList<CommunityResp> communityResps = gson.fromJson(valueString, type);
-
-        return communityResps;
-
-    }
-
-    public static String getSignatures(Context context) {
-        PackageManager pm = context.getPackageManager();
-        PackageInfo packageInfo = null;
-        try {
-            packageInfo = pm.getPackageInfo(context.getPackageName(), PackageManager.GET_SIGNATURES);
-        } catch (NameNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        if (packageInfo != null) {
-            return packageInfo.signatures[0].toCharsString();
-        }
-        return null;
-    }
-
-    public static boolean checkIDNumber(String idNum) {
-        if (idNum.length() < 15) {
-            return false;
-        }
-        Pattern idNumPattern = Pattern.compile("(\\d{14}[0-9a-zA-Z])|(\\d{17}[0-9a-zA-Z])");
-        Matcher idNumMatcher = idNumPattern.matcher(idNum);
-        if (idNumMatcher.matches()) {
-            Pattern birthDatePattern = Pattern.compile("\\d{6}(\\d{4})(\\d{2})(\\d{2}).*");//身份证上的前6位以及出生年月日
-            //通过Pattern获得Matcher
-            Matcher birthDateMather = birthDatePattern.matcher(idNum);
-            //通过Matcher获得用户的出生年月日
-            if (birthDateMather.find()) {
-                String year = birthDateMather.group(1);
-                String month = birthDateMather.group(2);
-                String date = birthDateMather.group(3);
-                Logger.logd(year + "年" + month + "月" + date + "日");
-                try {
-                    int y = Integer.parseInt(year);
-                    int m = Integer.parseInt(month);
-                    int d = Integer.parseInt(date);
-                    if (y < 1930 || y > 2004 || m == 0 || m > 12 || d == 0 || d > 31) {
-                        return false;
-                    }
-                } catch (NumberFormatException e) {
-                    e.printStackTrace();
-                    return false;
-                }
-                //输出用户的出生年月日
-            }
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
      * 验证数字
      *
      * @return 如果是符合格式的字符串, 返回 <b>true </b>,否则为 <b>false </b>
@@ -1819,24 +1043,6 @@ public class Tools {
             e.printStackTrace();
         }
         return 1;
-    }
-
-    public static File getCacheDir(Context context, String uniqueName) {
-        // Check if media is mounted or storage is built-in, if so, try and use external cache dir
-        // otherwise use internal cache dir
-        String cachePath = Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED
-                || !Environment.isExternalStorageRemovable() ?
-                context.getExternalCacheDir().getPath() : context.getCacheDir().getPath();
-        return new File(cachePath + File.separator + uniqueName);
-    }
-
-    public static String getCacheDirPath(Context context) {
-        // Check if media is mounted or storage is built-in, if so, try and use external cache dir
-        // otherwise use internal cache dir
-        String cachePath = Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED
-                || !Environment.isExternalStorageRemovable() ?
-                context.getExternalCacheDir().getPath() : context.getCacheDir().getPath();
-        return cachePath;
     }
 
     public static String hashKeyForDisk(String key) {

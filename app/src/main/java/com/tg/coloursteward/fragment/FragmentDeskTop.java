@@ -134,7 +134,6 @@ public class FragmentDeskTop extends Fragment implements OnItemClickListener {
         public void onSingleClick(View v) {
             switch (v.getId()) {
                 case R.id.ll_area://在管面积(数据看板)
-                    //startActivity(new Intent(mActivity, MapDetailActivity.class));
                     intent = new Intent(mActivity, DataShowActivity.class);
                     intent.putExtra(DataShowActivity.BRANCH, UserInfo.orgId);
                     startActivity(intent);
@@ -152,7 +151,6 @@ public class FragmentDeskTop extends Fragment implements OnItemClickListener {
                     startActivity(new Intent(mActivity, RedpacketsBonusMainActivity.class));
                     break;
                 case R.id.ll_community://在管小区(数据看板)
-                    //startActivity(new Intent(mActivity, MapDetailActivity.class));
                     intent = new Intent(mActivity, DataShowActivity.class);
                     intent.putExtra(DataShowActivity.BRANCH, UserInfo.orgId);
                     startActivity(intent);

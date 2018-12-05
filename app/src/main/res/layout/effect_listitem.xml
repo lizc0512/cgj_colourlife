@@ -94,9 +94,7 @@
                 android:id="@+id/tv_punishment_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignBaseline="@id/tv_date"
                 android:layout_marginLeft="@dimen/margin_5"
-                android:layout_toRightOf="@id/tv_date"
                 android:text="2018-05-01"
                 android:textColor="@color/effect_score"
                 android:textSize="15sp" />

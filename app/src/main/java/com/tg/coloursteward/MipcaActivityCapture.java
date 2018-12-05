@@ -40,7 +40,6 @@ import com.tg.coloursteward.zxing.decoding.CaptureActivityHandler;
 import com.tg.coloursteward.zxing.decoding.InactivityTimer;
 import com.tg.coloursteward.zxing.view.ViewfinderView;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -200,8 +199,6 @@ public class MipcaActivityCapture extends BaseActivity implements Callback, OnCl
             } else if (result.contains("www.360wxq.com/")) {
                 // 门禁 格式规范：www.360wxq.com/QR = xx.xx.xx.xx
                 if (sanitizer.getValue("QR") != null) {
-                    String qrcode = sanitizer.getValue("QR");
-                    openDoorScanResult(qrcode);
                 } else {
                     unrecognizedScanResult(result);
                 }
@@ -303,14 +300,6 @@ public class MipcaActivityCapture extends BaseActivity implements Callback, OnCl
         return pattern.matcher(cid).matches();
     }
 
-    // 跳转到门禁
-    private void openDoorScanResult(String qrcode) {
-        Intent intent = new Intent(MipcaActivityCapture.this, ScanResultDoorOpenActivity.class);
-        intent.putExtra("qrcode", qrcode);
-        startActivityForResult(intent, INTENT_ACTION_OPEN_DOOR);
-        finish();
-    }
-
     // 显示扫描的结果
     private void unrecognizedScanResult(String result) {
         Intent intent = null;
@@ -382,11 +371,6 @@ public class MipcaActivityCapture extends BaseActivity implements Callback, OnCl
             params.put("oa", UserInfo.employeeAccount);
             HttpTools.httpGet(Contants.URl.URL_ICETEST, "/newczy/customer/infoByOa", config, params);
         } else {
-            Intent intent = new Intent(MipcaActivityCapture.this, DoorOpenActivity.class);
-            intent.putExtra("qrcode", qrcode);
-            intent.putExtra("doorCache", flag);
-            intent.putExtra("qrBle", qrBle);
-            startActivityForResult(intent, INTENT_ACTION_OPEN_DOOR);
         }
     }
 
@@ -465,7 +449,7 @@ public class MipcaActivityCapture extends BaseActivity implements Callback, OnCl
                     public void run() {
                         MipcaActivityCapture.this.finish();
                     }
-                },2000);
+                }, 2000);
             }
         } else if (msg.arg1 == HttpTools.GET_SCAN_INFO) {//其他资源
             JSONObject resopnse = HttpTools.getContentJSONObject(jsonString);
@@ -489,24 +473,6 @@ public class MipcaActivityCapture extends BaseActivity implements Callback, OnCl
                 ToastFactory.showToast(MipcaActivityCapture.this, message);
             }
         } else if (msg.arg1 == HttpTools.GET_CZY_ID) {//根据OA获取彩之云
-            if (code == 1) {
-                JSONArray jsonArray = HttpTools.getContentJsonArray(jsonString);
-                try {
-                    JSONObject object = (JSONObject) jsonArray.get(0);
-                    String CZY_id = object.getString("id");
-                    String community_id = object.getString("community_id");
-                    Tools.saveCZYID(MipcaActivityCapture.this, CZY_id);
-                    Tools.saveCZY_Community_ID(MipcaActivityCapture.this, community_id);
-                    Intent intent = new Intent(MipcaActivityCapture.this, DoorOpenActivity.class);
-                    intent.putExtra("qrcode", qrcode);
-                    intent.putExtra("doorCache", flag);
-                    intent.putExtra("qrBle", qrBle);
-                    startActivityForResult(intent, INTENT_ACTION_OPEN_DOOR);
-                } catch (JSONException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-            }
         } else if (msg.arg1 == HttpTools.GET_APP) {//获取app
             if (code == 0) {
                 String content = HttpTools.getContentString(jsonString);
@@ -543,10 +509,6 @@ public class MipcaActivityCapture extends BaseActivity implements Callback, OnCl
                             startActivity(intent);
                         } else//读写
                         {
-                            String resource_code = content.getString("code");
-                            Intent intent = new Intent(MipcaActivityCapture.this, WaterBoxTypeActivity.class);
-                            intent.putExtra("code", resource_code);
-                            startActivity(intent);
                         }
                     }
                 } catch (Exception e) {

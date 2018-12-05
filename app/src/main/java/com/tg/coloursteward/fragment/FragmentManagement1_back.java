@@ -19,7 +19,6 @@ import android.widget.TextView;
 
 import com.tg.coloursteward.AccountActivity;
 import com.tg.coloursteward.DataShowActivity;
-import com.tg.coloursteward.DoorActivity;
 import com.tg.coloursteward.HomeContactSearchActivity;
 import com.tg.coloursteward.InviteRegisterActivity;
 import com.tg.coloursteward.MyBrowserActivity;
@@ -969,7 +968,6 @@ public class FragmentManagement1_back extends Fragment implements MessageHandler
             @Override
             public void onItemClick(GridViewInfo info) {
                 if (info.clientCode.equals("smkm")) {//扫码开门
-                    startActivity(new Intent(mActivity, DoorActivity.class));
                 } else if (info.clientCode.equals("dgzh")) {//对公账户
                     startActivity(new Intent(mActivity, PublicAccountActivity.class));
                 } else {
@@ -1476,7 +1474,6 @@ public class FragmentManagement1_back extends Fragment implements MessageHandler
                     e.printStackTrace();
                 }
             }
-            startActivity(new Intent(mActivity, DoorActivity.class));
         } else if (msg.arg1 == HttpTools.GET_KEYSECERT) {
             if (code == 0) {
                 try {

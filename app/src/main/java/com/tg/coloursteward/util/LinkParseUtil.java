@@ -8,7 +8,6 @@ import com.tg.coloursteward.AccountActivity;
 import com.tg.coloursteward.AccountExchangeRecordActivity;
 import com.tg.coloursteward.ChangePhoneActivity;
 import com.tg.coloursteward.DataShowActivity;
-import com.tg.coloursteward.DoorActivity;
 import com.tg.coloursteward.DownloadManagerActivity;
 import com.tg.coloursteward.InviteRegisterActivity;
 import com.tg.coloursteward.MyBrowserActivity;
@@ -61,10 +60,6 @@ public class LinkParseUtil {
                         ((Activity) context).overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
                     } else if (name.equals("dgzh")) {//对公账户
                         it = new Intent(context, PublicAccountActivity.class);
-                        context.startActivity(it);
-                        ((Activity) context).overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
-                    } else if (name.equals("smkm")) {//扫码开门
-                        it = new Intent(context, DoorActivity.class);
                         context.startActivity(it);
                         ((Activity) context).overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
                     } else if (name.equals("onlinEarea")) {//数据看板

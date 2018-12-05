@@ -84,8 +84,6 @@
             android:windowSoftInputMode="adjustPan" />
         <!-- 弹出提现新消息页面 -->
         <activity android:name=".AlertActivity" />
-        <!-- 投诉页面 -->
-        <activity android:name=".ComplaintActivity" />
         <!-- 消息推送消息列表 -->
         <activity android:name=".DeskTopActivity" />
         <!-- 扫描二维码页面 -->
@@ -130,10 +128,6 @@
             android:configChanges="locale|orientation|keyboard|keyboardHidden|screenSize"
             android:hardwareAccelerated="true"
             android:windowSoftInputMode="stateHidden|adjustResize" />
-        <!-- 获取临时密码 -->
-        <activity
-            android:name=".TemporaryPassWordActivity"
-            android:label="@string/app_name" />
         <!-- 邀请同事 -->
         <activity
             android:name=".InviteRegisterActivity"
@@ -228,55 +222,10 @@
         <activity
             android:name=".RedpacketsWithdrawRecordDetailActivity"
             android:label="@string/app_name" />
-        <!-- 开门 -->
-        <activity
-            android:name=".DoorActivity"
-            android:exported="true"
-            android:label="@string/app_name" />
-        <!-- 申请手机开门 -->
-        <activity
-            android:name=".DoorApplyDredgeActivity"
-            android:label="@string/app_name" />
-        <!-- 申请门禁 -->
-        <activity
-            android:name=".DoorApplyActivity"
-            android:label="@string/app_name" />
-        <!-- 门禁授权 -->
-        <activity
-            android:name=".DoorAuthorizationActivity"
-            android:label="@string/app_name" />
-        <!-- 编辑门禁 -->
-        <activity
-            android:name=".DoorEditActivity"
-            android:label="@string/app_name" />
-        <!-- 开门结果处理 -->
-        <activity
-            android:name=".DoorOpenActivity"
-            android:label="@string/app_name" />
-        <activity
-            android:name=".ScanResultDoorOpenActivity"
-            android:label="@string/app_name" />
         <!-- 日志 -->
         <activity
             android:name=".ScanResultActivity"
             android:label="@string/app_name" />
-        <!-- 扫描结果 -->
-        <activity
-            android:name=".WaterBoxTypeActivity"
-            android:label="@string/app_name" />
-        <!-- 申请 -->
-        <activity
-            android:name=".DoorApplyDetailActivity"
-            android:label="@string/app_name" />
-        <!-- 授权 -->
-        <activity
-            android:name=".DoorAuthorizationApproveActivity"
-            android:label="@string/app_name" />
-        <!-- 授权详情 -->
-        <activity
-            android:name=".DoorControlAuthorizationDetailActivity2"
-            android:label="@string/app_name" />
-        <!-- 数据看板 -->
         <activity
             android:name=".DataShowActivity"
             android:label="@string/app_name" />
@@ -374,18 +323,6 @@
         <activity android:name=".PublicAccountExchangeActivity" />
         <activity android:name=".RedpacketsDetailsActivity" />
         <activity android:name=".AccountExchangeDetail_FreezingActivity" />
-        <!-- 签到 -->
-        <activity android:name=".SignInActivity" />
-        <!-- 考勤设置 -->
-        <activity android:name=".SignInSettingActivity" />
-        <activity android:name=".SettingTimeActivity" />
-        <activity android:name=".SettingWiFiActivity" />
-        <activity android:name=".SignInCalendarActivity" />
-
-        <!-- 租户列表 -->
-        <activity
-            android:name=".TenantListActivity"
-            android:label="@string/app_name" />
         <!-- 对公账户（兑换方式） -->
         <activity
             android:name=".ExchangeMethodActivity"

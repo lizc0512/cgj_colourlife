@@ -25,7 +25,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.tg.coloursteward.AccountActivity;
 import com.tg.coloursteward.DataShowActivity;
-import com.tg.coloursteward.DoorActivity;
 import com.tg.coloursteward.HomeContactSearchActivity;
 import com.tg.coloursteward.InviteRegisterActivity;
 import com.tg.coloursteward.MyBrowserActivity;
@@ -937,7 +936,6 @@ public class FragmentManagement extends Fragment implements MessageHandler.Respo
                                     int position, long id) {
                 GridViewInfo info = gridlist1.get(position);
                 if (info.clientCode.equals("smkm")) {//扫码开门
-                    startActivity(new Intent(mActivity, DoorActivity.class));
                 } else if (info.clientCode.equals("dgzh")) {//对公账户
                     startActivity(new Intent(mActivity, PublicAccountActivity.class));
                 } else {
@@ -1041,7 +1039,6 @@ public class FragmentManagement extends Fragment implements MessageHandler.Respo
                                     int position, long id) {
                 GridViewInfo info = gridlist2.get(position);
                 if (info.clientCode.equals("smkm")) {//扫码开门
-                    startActivity(new Intent(mActivity, DoorActivity.class));
                 } else if (info.clientCode.equals("dgzh")) {//对公账户
                     startActivity(new Intent(mActivity, PublicAccountActivity.class));
                 } else {

@@ -371,9 +371,9 @@ public class ContactsFragment extends Fragment implements ItemEventListener {
                         for (int i = 0; i < familyList.size(); i++) {
                             if (familyList.get(i).name.equals("彩生活服务集团")) {
                                 info = new FamilyInfo();
-                                info.id = familyList.get(i).id;
+                                info.id = "0";
                                 info.type = "org";
-                                info.name = familyList.get(i).name;
+                                info.name = "";
                                 intent = new Intent(mContext, HomeContactOrgActivity.class);
                                 intent.putExtra(HomeContactOrgActivity.FAMILY_INFO, info);
                                 startActivity(intent);
@@ -381,9 +381,9 @@ public class ContactsFragment extends Fragment implements ItemEventListener {
                         }
                     } else {
                         info = new FamilyInfo();
-                        info.id = familyList.get(0).id;
+                        info.id = "0";
                         info.type = "org";
-                        info.name = familyList.get(0).name;
+                        info.name = "";
                         intent = new Intent(mContext, HomeContactOrgActivity.class);
                         intent.putExtra(HomeContactOrgActivity.FAMILY_INFO, info);
                         startActivity(intent);

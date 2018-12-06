@@ -1,10 +1,18 @@
 package com.youmai.hxsdk.videocall;
 
+import android.Manifest;
 import android.annotation.TargetApi;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
@@ -19,6 +27,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.R;
+import com.youmai.hxsdk.activity.CameraActivity;
 import com.youmai.hxsdk.activity.SdkBaseActivity;
 import com.youmai.hxsdk.chatgroup.IMGroupActivity;
 import com.youmai.hxsdk.config.ColorsConfig;
@@ -30,11 +39,18 @@ import com.youmai.hxsdk.proto.YouMaiVideo;
 import com.youmai.hxsdk.service.RingService;
 import com.youmai.hxsdk.socket.PduBase;
 import com.youmai.hxsdk.socket.ReceiveListener;
+import com.youmai.hxsdk.utils.AppUtils;
 import com.youmai.hxsdk.utils.GlideRoundTransform;
 import com.youmai.smallvideorecord.utils.Log;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class VideoCallRingActivity extends SdkBaseActivity implements View.OnClickListener {
+
+    private final int VIDEO_CALL_PERMISSION_REQUEST = 402; //权限申请自定义码
+
     private String roomName;
     private String adminId;
     private int groupId;
@@ -279,9 +295,7 @@ public class VideoCallRingActivity extends SdkBaseActivity implements View.OnCli
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.btn_accept) {
-            reqVideoInvite(true, roomName, adminId);
-            stopRing();
-            finish();
+            acceptVideoCall();
         } else if (id == R.id.btn_cancel) {
             reqVideoInvite(false, roomName, adminId);
             stopRing();
@@ -297,6 +311,93 @@ public class VideoCallRingActivity extends SdkBaseActivity implements View.OnCli
         }
         return flags;
     }
+
+    @TargetApi(Build.VERSION_CODES.M)
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == VIDEO_CALL_PERMISSION_REQUEST) {
+            boolean isGranted = true;
+            for (int item : grantResults) {
+                if (item == PackageManager.PERMISSION_DENIED) {
+                    isGranted = false;
+                    break;
+                }
+            }
+            if (isGranted) {
+                acceptVideoInvite();
+            } else {
+                showPermissionDialog(this);
+            }
+        }
+    }
+
+    /**
+     * 权限提示框
+     *
+     * @param context
+     */
+    private void showPermissionDialog(Context context) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+
+        builder.setTitle(context.getString(R.string.permission_title))
+                .setMessage(context.getString(R.string.permission_content));
+
+        builder.setPositiveButton(context.getString(R.string.hx_confirm),
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        AppUtils.startAppSettings(mContext);
+                        arg0.dismiss();
+                    }
+                });
+
+        builder.setNegativeButton(context.getString(R.string.hx_cancel),
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        arg0.dismiss();
+                    }
+                });
+        builder.show();
+    }
+
+
+    private void acceptVideoInvite() {
+        reqVideoInvite(true, roomName, adminId);
+        stopRing();
+        finish();
+    }
+
+    private void acceptVideoCall() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            List<String> list = new ArrayList<>(2);
+
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)
+                    != PackageManager.PERMISSION_GRANTED) {
+                list.add(Manifest.permission.RECORD_AUDIO);
+            }
+
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                    != PackageManager.PERMISSION_GRANTED) {
+                list.add(Manifest.permission.CAMERA);
+            }
+
+            if (list.size() > 0) {
+                String[] array = new String[list.size()];
+                list.toArray(array); // fill the array
+                ActivityCompat.requestPermissions(this, array, VIDEO_CALL_PERMISSION_REQUEST);
+            } else {
+                acceptVideoInvite();
+            }
+        } else {
+            acceptVideoInvite();
+        }
+
+    }
+
+
 }
 
 

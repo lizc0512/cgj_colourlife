@@ -72,8 +72,6 @@ import rx.schedulers.Schedulers;
  */
 public class ContactsFragment extends Fragment implements ItemEventListener {
 
-    private static final String TAG = ContactsFragment.class.getName();
-
     private static final int REQUEST_PERMISSION = 110;
 
     public static final String BROADCAST_INTENT_FILTER = "com.tg.coloursteward.contact";
@@ -315,25 +313,29 @@ public class ContactsFragment extends Fragment implements ItemEventListener {
      */
     @Override
     public void onLongClick(final int pos, final ContactBean contact) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setMessage("是否删除常用联系人？");
-        builder.setPositiveButton(getString(R.string.hx_confirm),
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface arg0, int arg1) {
-                        deleteUser(pos, contact);
-                        arg0.dismiss();
-                    }
-                });
+        if(pos==0 || pos==1 ||pos==2 ||pos==3){
+        }else {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setMessage("是否删除常用联系人？");
+            builder.setPositiveButton(getString(R.string.hx_confirm),
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface arg0, int arg1) {
+                            deleteUser(pos, contact);
+                            arg0.dismiss();
+                        }
+                    });
 
-        builder.setNegativeButton(getString(R.string.hx_cancel),
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface arg0, int arg1) {
-                        arg0.dismiss();
-                    }
-                });
-        builder.show();
+            builder.setNegativeButton(getString(R.string.hx_cancel),
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface arg0, int arg1) {
+                            arg0.dismiss();
+                        }
+                    });
+            builder.show();
+        }
+
 
     }
 

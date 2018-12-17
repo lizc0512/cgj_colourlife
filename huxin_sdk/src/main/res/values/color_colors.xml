@@ -33,5 +33,9 @@
     <color name="red_package_colorAccent">#ff7531</color>
 
     <color name="color_pay_password_divide">#c0c4c7</color>
+    <color name="color_contact">#999FAA</color>
+    <color name="black_contact_tv">#131719</color>
+    <color name="black_contact_tit">#999FAA</color>
+    <color name="black_contact_line">#08191F25</color>
 
 </resources>

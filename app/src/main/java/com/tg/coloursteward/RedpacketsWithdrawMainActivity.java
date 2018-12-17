@@ -20,14 +20,13 @@ import android.os.Bundle;
 import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 /**
- * 提现
+ * 饭票银行卡提现
  *
  * @author Administrator
  */

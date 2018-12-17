@@ -182,6 +182,7 @@ public class DialogFactory implements ResultCallBack{
 			dialog = new AlertDialog.Builder(activity).create();
 			dialog.setCancelable(false);
 			Window window = dialog.getWindow();
+			dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 			dialog.show();
 			LinearLayout layout = (LinearLayout) LayoutInflater.from(activity)
 					.inflate(R.layout.custom_dialog_layout, null);
@@ -225,7 +226,7 @@ public class DialogFactory implements ResultCallBack{
 		dialog.show();
 		
 	}
-	
+
 	public void hideLoadialogDialog(){
 		if(LoaddialogActivity == null || LoaddialogActivity.isFinishing()){
 			return;

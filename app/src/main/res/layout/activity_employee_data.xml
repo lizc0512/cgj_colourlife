@@ -14,7 +14,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#122634"
+            android:background="@color/white"
             android:clipToPadding="true"
             android:fitsSystemWindows="true"
             android:orientation="vertical">
@@ -25,20 +25,22 @@
 
                 <ImageView
                     android:id="@+id/iv_close"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:padding="6dp"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="18dp"
-                    android:src="@drawable/fanhuijian" />
+                    android:src="@drawable/icon_top_return" />
 
                 <TextView
                     android:id="@+id/tv_title"
-                    style="@style/white_18"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:layout_centerVertical="true"
                     android:singleLine="true"
+                    android:textSize="18dp"
+                    android:textColor="@color/tv_mine"
                     android:text="员工名片" />
 
                 <CheckBox
@@ -50,8 +52,13 @@
                     android:button="@null"
                     android:drawableTop="@drawable/shoucang_selector"
                     android:paddingTop="@dimen/margin_15" />
-            </RelativeLayout>
 
+            </RelativeLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_alignParentBottom="true"
+                android:background="@color/line_bg_new"/>
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

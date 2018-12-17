@@ -2,16 +2,15 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/ll_fragmenttop"
     android:layout_width="match_parent"
-    android:layout_height="90dp"
-    android:background="@color/bg_blue"
+    android:layout_height="102dp"
+    android:gravity="center_horizontal"
     android:orientation="vertical">
 
     <TextView
         android:id="@+id/tv_fragmenttop_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="15dp"
         android:text=""
         android:textColor="@color/white"
         android:textSize="15dp" />
@@ -20,21 +19,17 @@
         android:id="@+id/tv_fragmenttop_explain"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:text=""
-        android:textColor="@color/home_btn"
-        android:textSize="10dp" />
+        android:textColor="@color/tv_tinyserver_show"
+        android:textSize="12dp" />
 
     <TextView
         android:id="@+id/tv_fragmenttop_num"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/text1"
-        android:layout_marginBottom="5dp"
-        android:layout_marginLeft="15dp"
         android:layout_marginTop="5dp"
-        android:text="0.00"
-        android:textColor="@color/home_details"
-        android:textSize="17dp" />
+        android:text=""
+        android:textColor="@color/white"
+        android:textSize="18dp" />
 </LinearLayout>

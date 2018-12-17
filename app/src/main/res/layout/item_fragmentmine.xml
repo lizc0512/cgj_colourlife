@@ -7,39 +7,40 @@
     <TextView
         android:id="@+id/tv_fragmentmineline"
         android:layout_width="match_parent"
-        android:layout_height="15dp" />
+        android:layout_height="8dp"
+        android:background="@color/line_mine_bg"/>
 
     <View
         android:id="@+id/view_fragmentmine"
         android:layout_width="match_parent"
         android:layout_height="1px"
         android:layout_below="@id/tv_fragmentmineline"
-        android:background="@color/line_color" />
+        android:background="@color/tv_mine_line" />
 
     <RelativeLayout
         android:id="@+id/rl_fragmentmine"
         android:layout_width="match_parent"
         android:layout_height="45dp"
         android:layout_below="@id/view_fragmentmine"
-        android:background="@color/white">
+        android:background="@drawable/item_mine_selector">
 
         <ImageView
             android:id="@+id/iv_fragmentmine"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="18dp" />
+            android:layout_marginLeft="13dp" />
 
         <TextView
             android:id="@+id/tv_fragmentmine"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="15dp"
             android:layout_toRightOf="@id/iv_fragmentmine"
             android:text=""
-            android:textColor="@color/text_color3"
-            android:textSize="17dp" />
+            android:textColor="@color/tv_mine"
+            android:textSize="16dp" />
 
         <ImageView
             android:id="@+id/iv_fragmentmine_next"
@@ -47,8 +48,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="20dp"
-            android:src="@drawable/next" />
+            android:layout_marginRight="13dp"
+            android:src="@drawable/common_level2_icon_bg_color" />
 
     </RelativeLayout>
 

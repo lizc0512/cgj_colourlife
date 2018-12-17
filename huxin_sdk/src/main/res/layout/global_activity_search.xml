@@ -2,13 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:fitsSystemWindows="true">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:layout_alignParentTop="true"
-        android:background="@color/color_theme_main"
+        android:background="@color/hx_color_white"
         android:orientation="horizontal">
 
         <TextView
@@ -33,7 +34,7 @@
             android:layout_marginRight="16dp"
             android:gravity="center_vertical"
             android:text="取消"
-            android:textColor="@color/hxs_color_white"
+            android:textColor="@color/black_normal"
             android:textSize="15sp" />
 
 
@@ -49,6 +50,7 @@
             android:background="@drawable/global_contacts_search_bg"
             android:drawablePadding="12dp"
             android:hint="搜索"
+            android:textStyle="bold"
             android:imeOptions="actionSearch"
             android:paddingLeft="4dp"
             android:paddingRight="8dp"

@@ -3,30 +3,33 @@
     android:id="@+id/list_item_header_search_root"
     android:layout_width="match_parent"
     android:layout_height="44dp"
-    android:background="@color/hx_background_color"
     android:gravity="center"
-    android:orientation="vertical"
-    android:paddingLeft="12dp"
-    android:paddingRight="12dp">
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="28dp"
+        android:layout_height="30dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
         android:background="@drawable/command_contacts_search_bg"
-        android:gravity="center"
         android:orientation="horizontal">
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/message_common_icon_seach_n" />
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="8dp"
+            android:src="@drawable/input_icon_search" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="搜索"
-            android:textColorHint="@color/hxb_subtitle_color"
-            android:textSize="12sp" />
+            android:textStyle="bold"
+            android:layout_gravity="center"
+            android:layout_marginLeft="5dp"
+            android:textColorHint="@color/color_contact"
+            android:textSize="14dp" />
 
     </LinearLayout>
 

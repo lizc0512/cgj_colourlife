@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="48dp"
-    android:background="@color/color_theme_main">
+    android:background="@color/hx_color_white">
 
     <TextView
         android:id="@+id/tv_back"
@@ -28,7 +28,7 @@
         android:paddingBottom="8dp"
         android:paddingTop="8dp"
         android:singleLine="true"
-        android:textColor="@color/hx_toolbar_font"
+        android:textColor="@color/black_normal"
         android:textSize="18sp" />
 
 
@@ -43,7 +43,7 @@
         android:gravity="center"
         android:maxLines="1"
         android:paddingRight="10dp"
-        android:textColor="@color/hx_toolbar_font"
+        android:textColor="@color/black_normal"
         android:textSize="16sp" />
 
     <RelativeLayout

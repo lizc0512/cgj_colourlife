@@ -16,8 +16,8 @@
 
         <ImageView
             android:id="@+id/message_icon"
-            android:layout_width="@dimen/card_head"
-            android:layout_height="@dimen/card_head"
+            android:layout_width="46dp"
+            android:layout_height="46dp"
             android:src="@drawable/color_default_header" />
 
     </RelativeLayout>

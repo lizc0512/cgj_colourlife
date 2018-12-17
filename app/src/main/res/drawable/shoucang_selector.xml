@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:drawable="@drawable/shoucang_2" android:state_checked="true"/>
-    <item android:drawable="@drawable/shoucang"/>
+    <item android:drawable="@drawable/nav_collection_press" android:state_checked="true"/>
+    <item android:drawable="@drawable/nav_collection_normal"/>
 
 </selector>

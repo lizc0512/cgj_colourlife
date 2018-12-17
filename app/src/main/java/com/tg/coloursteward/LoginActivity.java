@@ -10,8 +10,11 @@ import android.os.Bundle;
 import android.os.Message;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
@@ -69,7 +72,6 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
     private static final String TAG = "LoginActivity";
     private EditText editUser;
     private EditText editPassword;
-    private ImageView ivClose;
     private View startLayout;
     private View contentLayout;
     private Animation outAnim;
@@ -80,9 +82,12 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
     private String extras;
     private GT3GeetestUtilsBind gt3GeetestUtils;
     private RelativeLayout submit;
-    private TextView tv_czylogin;
     private OAuth2ServiceUpdate auth2ServiceUpdate;
     private String code;
+    private RelativeLayout rl_czy_login;
+    private TextView tv_login_loginbuttom;
+    private ImageView iv_login_deloa;
+    private ImageView iv_login_delpwd;
 
     @Override
     public View getContentView() {
@@ -100,6 +105,7 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
     protected boolean handClickEvent(View v) {
         switch (v.getId()) {
             case R.id.submit:
+                submit.setBackground(getResources().getDrawable(R.drawable.login_button_select));
                 newPhone = editUser.getText().toString();
                 if (newPhone.length() <= 0) {
                     ToastFactory.showToast(this, "请输入账号");
@@ -113,13 +119,9 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
                 loginGt();// 极验登录
                 break;
             case R.id.forget_pwd:
-                forgetPassword();// 忘记密码
+                startActivity(new Intent(LoginActivity.this, ForgetPasswordActivity.class));// 忘记密码
                 break;
-            case R.id.iv_close://关闭
-                CityPropertyApplication.finishOtherActivity(LoginActivity.class);
-                LoginActivity.this.finish();
-                break;
-            case R.id.tv_czylogin://彩之云授权登录
+            case R.id.rl_czy_login://彩之云授权登录
                 ToastFactory.showToast(LoginActivity.this, "正在调起中...");
                 String package_name = "cn.net.cyberway";
                 String activity_path = "cn.net.cyberway.OauthWebviewActivity";
@@ -139,7 +141,16 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
                 } catch (Exception e) {
                     ToastFactory.showToast(LoginActivity.this, "请安装最新版彩之云APP");
                 }
-
+                break;
+            case R.id.iv_login_deloa:
+                if (!TextUtils.isEmpty(editUser.getText().toString().trim())) {
+                    editUser.setText("");
+                }
+                break;
+            case R.id.iv_login_delpwd:
+                if (!TextUtils.isEmpty(editPassword.getText().toString().trim())) {
+                    editPassword.setText("");
+                }
                 break;
         }
         return super.handClickEvent(v);
@@ -186,17 +197,75 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
     }
 
     private void initView() {
-        tv_czylogin = findViewById(R.id.tv_czylogin);
+        rl_czy_login = findViewById(R.id.rl_czy_login);
+        tv_login_loginbuttom = findViewById(R.id.tv_login_loginbuttom);
+        iv_login_deloa = findViewById(R.id.iv_login_deloa);
+        iv_login_delpwd = findViewById(R.id.iv_login_delpwd);
         contentLayout = findViewById(R.id.login_content);
         editUser = (EditText) findViewById(R.id.edit_user);
         startLayout = findViewById(R.id.start_layout);
         editPassword = (EditText) findViewById(R.id.edit_password);
-        ivClose = (ImageView) findViewById(R.id.iv_close);
-        ivClose.setOnClickListener(singleListener);
-        tv_czylogin.setOnClickListener(singleListener);
+        rl_czy_login.setOnClickListener(singleListener);
         submit = findViewById(R.id.submit);
         submit.setOnClickListener(singleListener);
+        submit.setBackground(getResources().getDrawable(R.drawable.bg_login_button));
+        iv_login_deloa.setOnClickListener(singleListener);
+        iv_login_delpwd.setOnClickListener(singleListener);
         findViewById(R.id.forget_pwd).setOnClickListener(singleListener);
+        editUser.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (!TextUtils.isEmpty(s)) {
+                    iv_login_deloa.setVisibility(View.VISIBLE);
+                    if (!TextUtils.isEmpty(editPassword.getText().toString().trim())) {
+                        submit.setBackground(getResources().getDrawable(R.drawable.bg_login_button_blue));
+                        tv_login_loginbuttom.setTextColor(getResources().getColor(R.color.white));
+                        submit.setClickable(true);
+                    }
+                } else {
+                    iv_login_deloa.setVisibility(View.GONE);
+                    submit.setBackground(getResources().getDrawable(R.drawable.bg_login_button));
+                    tv_login_loginbuttom.setTextColor(getResources().getColor(R.color.line_login_button));
+                    submit.setClickable(false);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        editPassword.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (!TextUtils.isEmpty(s)) {
+                    iv_login_delpwd.setVisibility(View.VISIBLE);
+                    if (!TextUtils.isEmpty(editUser.getText().toString().trim())) {
+                        submit.setBackground(getResources().getDrawable(R.drawable.bg_login_button_blue));
+                        tv_login_loginbuttom.setTextColor(getResources().getColor(R.color.white));
+                        submit.setClickable(true);
+                    }
+                } else {
+                    iv_login_delpwd.setVisibility(View.GONE);
+                    submit.setBackground(getResources().getDrawable(R.drawable.bg_login_button));
+                    tv_login_loginbuttom.setTextColor(getResources().getColor(R.color.line_login_button));
+                    submit.setClickable(false);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
     }
 
     private void initGetTS() {
@@ -279,14 +348,6 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
         contentLayout.setVisibility(View.VISIBLE);
         startLayout.startAnimation(outAnim);
         contentLayout.startAnimation(inAnim);
-    }
-
-
-    /**
-     * 忘记密码
-     */
-    public void forgetPassword() {
-        startActivity(new Intent(LoginActivity.this, ForgetPasswordActivity.class));
     }
 
     /**
@@ -696,5 +757,14 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
         }
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            CityPropertyApplication.finishOtherActivity(LoginActivity.class);
+            LoginActivity.this.finish();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 }
 

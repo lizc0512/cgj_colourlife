@@ -134,6 +134,13 @@
     <color name="hxs_mr_color_red">#ed563d</color>
 
     <color name="notification_color">#115788</color>
+    <color name="serach_bg">#08DEE3E5</color>
+    <color name="serach_bg_cir">#16FDFDFD</color>
+    <color name="black_mine_bg">#1649667D</color>
+    <color name="black_normal">#131719</color>
+    <color name="black_normal_gray">#D4D9DC</color>
+    <color name="line_index">#08191F25</color>
+    <color name="gray_bg_home">#BBC0CB</color>
 
     <color name="ovalBtnBackground">#34AADC</color>
     <color name="backgroundColor">#151515</color>

@@ -95,7 +95,7 @@ public class CacheMsgBean implements Parcelable {
     private String memberChanged; //群组成员变化提示
 
     @Transient
-    private boolean isTop;
+    public boolean isTop;
 
     @Transient
     private boolean stateVideoCall;

@@ -34,7 +34,7 @@ public class SearchEditText extends AppCompatEditText {
     private void init() {
         mSearchDrawable = getCompoundDrawables()[0];    // left top right bottom
         if (mSearchDrawable == null) {
-            mSearchDrawable = ContextCompat.getDrawable(getContext(), R.drawable.hx_global_seach_n);
+            mSearchDrawable = ContextCompat.getDrawable(getContext(), R.drawable.input_icon_search);
         }
         int mIntrinsicWidth = mSearchDrawable.getIntrinsicWidth();
         int mIntrinsicHeight = mSearchDrawable.getIntrinsicHeight();

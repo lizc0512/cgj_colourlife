@@ -2,16 +2,19 @@
 <com.tg.coloursteward.view.MyLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/base_color"
+    android:fitsSystemWindows="true"
     android:orientation="vertical">
 
     <com.tg.coloursteward.view.ActivityHeaderView xmlns:myapp="http://schemas.android.com/apk/res/com.tg.coloursteward"
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/main_bg"
-        myapp:titleText=" "
-        myapp:titleTextSize="@dimen/text_size_18" />
+        android:background="@color/white"
+        myapp:titleText=""
+        app:titleTextColor1="@color/black"
+        myapp:titleTextSize="18dp" />
 
     <FrameLayout
         android:id="@+id/base_content_layout"

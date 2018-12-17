@@ -15,8 +15,9 @@
 
         <ImageView
             android:id="@+id/message_icon"
-            android:layout_width="@dimen/card_head"
-            android:layout_height="@dimen/card_head"
+            android:layout_width="46dp"
+            android:layout_height="46dp"
+            android:scaleType="fitXY"
             android:src="@drawable/color_default_header" />
 
     </RelativeLayout>
@@ -45,8 +46,8 @@
                 android:gravity="bottom"
                 android:maxLines="1"
                 android:text="111111"
-                android:textColor="@color/hxb_text_color"
-                android:textSize="15sp" />
+                android:textColor="@color/black_contact_tv"
+                android:textSize="16dp" />
 
             <TextView
                 android:id="@+id/message_info"
@@ -57,8 +58,8 @@
                 android:gravity="bottom"
                 android:maxLines="1"
                 android:text="[111]"
-                android:textColor="@color/hxb_subtitle_color"
-                android:textSize="12sp" />
+                android:textColor="@color/black_contact_tit"
+                android:textSize="14dp" />
         </LinearLayout>
 
 
@@ -70,8 +71,8 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:text="1111111"
-            android:textColor="@color/hxb_subtitle_color"
-            android:textSize="12sp" />
+            android:textColor="@color/black_contact_tit"
+            android:textSize="14dp" />
     </LinearLayout>
 
     <TextView
@@ -80,8 +81,8 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_toLeftOf="@+id/message_call_btn"
-        android:textColor="@color/hxb_subtitle_color"
-        android:textSize="12sp" />
+        android:textColor="@color/black_contact_tit"
+        android:textSize="12dp" />
 
     <ImageView
         android:id="@+id/message_call_btn"

@@ -32,7 +32,6 @@ import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.TokenUtils;
 import com.tg.coloursteward.util.Tools;
-import com.tg.coloursteward.view.DividerGridItemDecoration;
 import com.tg.coloursteward.view.MyGridLayoutManager;
 import com.tg.coloursteward.view.dialog.ToastFactory;
 import com.youmai.hxsdk.adapter.PaddingItemDecoration;
@@ -87,8 +86,11 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
         if (!TextUtils.isEmpty(cache)) {
             topDataAdapter(cache);
         } else {
-            String localCache = Contants.storage.TINYFRAGMENTTOP_CACHE;
-            topDataAdapter(localCache);
+            if (Tools.getBooleanValue(mActivity, Contants.storage.ISFIRSTTOP) == false) {
+                Tools.setBooleanValue(mActivity, Contants.storage.ISFIRSTTOP, true);
+                String localCache = Contants.storage.TINYFRAGMENTTOP_CACHE;
+                topDataAdapter(localCache);
+            }
         }
         RequestConfig config = new RequestConfig(mActivity, HttpTools.GET_MINISERVER_TOP);
         config.handler = msgHandler.getHandler();
@@ -130,8 +132,11 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
         if (!TextUtils.isEmpty(cache)) {
             midDataAdapter(cache);
         } else {
-            String loaclCache = Contants.storage.TINYFRAGMENTMID_CACHE;
-            midDataAdapter(loaclCache);
+            if (Tools.getBooleanValue(mActivity, Contants.storage.ISFIRSTMID) == false) {
+                Tools.setBooleanValue(mActivity, Contants.storage.ISFIRSTMID, true);
+                String loaclCache = Contants.storage.TINYFRAGMENTMID_CACHE;
+                midDataAdapter(loaclCache);
+            }
         }
         String skin_id = Tools.getStringValue(mActivity, Contants.storage.SKINCODE);
         RequestConfig config = new RequestConfig(mActivity, HttpTools.GET_MINISERVER);
@@ -154,25 +159,20 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
         } catch (Exception e) {
         }
         for (int i = 0; i < list.size(); i++) {
-            if (i == 0) {
-                for (int y = 0; y < list.get(i).getData().size(); y++) {
-                    list.get(i).getData().get(y).setType(3);
-                }
-            }
             TinyServerFragmentEntity.ContentBean.DataBean dataBean = new TinyServerFragmentEntity.ContentBean.DataBean();
             dataBean.setItem_name(list.get(i).getName());
             list_item.add(dataBean);
             list_item.addAll(list.get(i).getData());
         }
         if (null != list_item && list_item.size() > 0) {
-            try{
+            try {
                 if (null == fragmentAdapter) {
                     fragmentAdapter = new TinyServerFragmentAdapter(mActivity, list_item);
                     rv_fragment_tinyserver.setAdapter(fragmentAdapter);
                 } else {
                     fragmentAdapter.setData(list_item);
                 }
-            }catch (Exception e){
+            } catch (Exception e) {
             }
         }
         fragmentAdapter.setCallBack(new TinyFragmentCallBack() {
@@ -211,7 +211,7 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
         params.put("secret", secret);
         HttpTools.httpPost(Contants.URl.URL_CPMOBILE, "/1.0/employee/login", config, params);
     }
-
+//
 
     /**
      * 初始化控件
@@ -221,7 +221,7 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
         rv_fragment_tinyserver_top = mView.findViewById(R.id.rv_fragment_tinyserver_top);
         MyGridLayoutManager gridLayoutManager_top = new MyGridLayoutManager(mActivity, 3);
         rv_fragment_tinyserver_top.setLayoutManager(gridLayoutManager_top);
-        rv_fragment_tinyserver_top.addItemDecoration(new DividerGridItemDecoration(mActivity));
+//        rv_fragment_tinyserver_top.addItemDecoration(new DividerGridItemDecoration(mActivity));
 
 
         rv_fragment_tinyserver = mView.findViewById(R.id.rv_fragment_tinyserver);
@@ -368,14 +368,12 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
                 Tools.saveStringValue(mActivity, Contants.storage.TINYFRAGMENTMID, jsonString);
                 midDataAdapter(jsonString);
             } else {
-//                ToastFactory.showToast(mActivity, message);
             }
         } else if (msg.arg1 == HttpTools.GET_MINISERVER_TOP) {
             if (code == 0) {
                 Tools.saveStringValue(mActivity, Contants.storage.TINYFRAGMENTTOP, jsonString);
                 topDataAdapter(jsonString);
             } else {
-//                ToastFactory.showToast(mActivity, message);
             }
         }
     }

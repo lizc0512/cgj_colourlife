@@ -23,6 +23,7 @@
     <color name="black_content">#5b5a5b</color>
     <color name="home_bg_color">#4fbcfa</color>
     <color name="line_color">#e5e5e5</color>
+    <color name="line_popup">#28ffffff</color>
     <color name="bg_blue">#259CE7</color>
     <color name="selected_bg">#EBEBEB</color>
     <color name="default_bg">#BFBFBF</color>
@@ -73,6 +74,7 @@
     <!-- 灰色 -->
     <color name="gray">#808080</color>
     <color name="home_btn">#80ffffff</color>
+    <color name="tv_tinyserver_show">#70ffffff</color>
     <color name="home_details">#b3ffffff</color>
     <color name="home_line">#43a8e8</color>
     <!-- 统一黄色字体颜色 -->
@@ -110,4 +112,23 @@
     <color name="canlendar_text_color">#323232</color>
     <color name="data_tenant_bg">#BBBDBA</color>
     <color name="red1">#014991</color>
+    <color name="black_mine">#131719</color>
+    <color name="black_mine_bg">#1649667D</color>
+    <color name="line_mine_bg">#F6F6F6</color>
+    <color name="tv_mine">#131719</color>
+    <color name="tv_mine_line">#08191F25</color>
+    <color name="tv_mine_bg">#08131719</color>
+    <color name="tv_tinyserver_tiem">#647786</color>
+    <color name="tv_tinyserver_end">#BBC0CB</color>
+    <color name="line_bg_new">#08191F25</color>
+    <color name="line_bg_serfr">#F25643</color>
+    <color name="blue_index">#108EE9</color>
+    <color name="gray_index">#999FAA</color>
+    <color name="login_tv">#647786</color>
+    <color name="login_tv_gray_account">#BBC0CB</color>
+    <color name="tv_index_color">#333B46</color>
+    <color name="line_login_index">#EDEDEE</color>
+    <color name="line_login_button">#BBBBBB</color>
+    <color name="line_login_or">#BBC0CB</color>
+    <color name="line_login_orline">#50D8D8D8</color>
 </resources>

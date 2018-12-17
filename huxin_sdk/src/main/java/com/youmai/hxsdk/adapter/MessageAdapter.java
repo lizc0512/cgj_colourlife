@@ -175,6 +175,40 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
     }
 
+    //刷新Adapter
+    public void setRefresh(String uuid, Boolean isTop) {
+        for (int i = 0; i < messageList.size(); i++) {
+            ExCacheMsgBean item = messageList.get(i);
+            if (item.getTargetUuid() == uuid) {
+                if (isTop) {//取消置顶
+                    messageList.get(i).setTop(false);
+                } else {//置顶操作
+                    messageList.get(i).setTop(true);
+                }
+                SortComparator comp = new SortComparator();
+                Collections.sort(messageList, comp);
+                notifyDataSetChanged();
+            }
+        }
+    }
+
+    //刷新Adapter
+    public void setRefresh(int id, Boolean isTop) {
+        for (int i = 0; i < messageList.size(); i++) {
+            ExCacheMsgBean item = messageList.get(i);
+            if (item.getPushMsg().getId() == id) {
+                if (isTop) {//取消置顶
+                    messageList.get(i).setTop(false);
+                } else {//置顶操作
+                    messageList.get(i).setTop(true);
+                }
+                SortComparator comp = new SortComparator();
+                Collections.sort(messageList, comp);
+                notifyDataSetChanged();
+            }
+        }
+    }
+
     public void addTop(ExCacheMsgBean msgBean) {
         String uuid = msgBean.getTargetUuid();
         for (int i = 0; i < messageList.size(); i++) {
@@ -298,13 +332,13 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             String clientCode = model.getPushMsg().getClient_code();
 
             if (clientCode.contains("sp")) {//审批
-                itemView.message_icon.setImageResource(R.drawable.sp);
+                itemView.message_icon.setImageResource(R.drawable.home_icon_approval);
             } else if (clientCode.contains("yj")) {//邮件
-                itemView.message_icon.setImageResource(R.drawable.yj);
+                itemView.message_icon.setImageResource(R.drawable.home_icon_message);
             } else if (clientCode.contains("case")) {//蜜蜂协同
-                itemView.message_icon.setImageResource(R.drawable.case_home);
+                itemView.message_icon.setImageResource(R.drawable.home_icon_tasksystem);
             } else if (clientCode.contains("ggtz")) {//公告通知
-                itemView.message_icon.setImageResource(R.drawable.ggtz);
+                itemView.message_icon.setImageResource(R.drawable.home_icon_notice);
             } else {
                 String url = model.getPushMsg().getICON();
                 if (!TextUtils.isEmpty(url)) {
@@ -316,7 +350,11 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                             .into(itemView.message_icon);
                 }
             }
-
+            if (model.isTop == true) {
+                itemView.message_item.setBackgroundColor(mContext.getResources().getColor(R.color.line_index));
+            } else {
+                itemView.message_item.setBackgroundColor(mContext.getResources().getColor(R.color.hx_color_white));
+            }
         } else if (holder instanceof MsgItemChat) {
             final MsgItemChat itemView = (MsgItemChat) holder;
             itemView.message_item.setTag(position);
@@ -390,6 +428,11 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             int size = mContext.getResources().getDimensionPixelOffset(R.dimen.card_head);
 
             String avatar = model.getTargetAvatar();
+            if (model.isTop == true) {
+                itemView.message_item.setBackgroundColor(mContext.getResources().getColor(R.color.line_index));
+            } else {
+                itemView.message_item.setBackgroundColor(mContext.getResources().getColor(R.color.hx_color_white));
+            }
             Glide.with(mContext).load(avatar)
                     .apply(new RequestOptions()
                             .transform(new GlideRoundTransform())
@@ -496,7 +539,11 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             //沟通列表
             int unreadCount = IMMsgManager.instance().getBadeCount(model.getTargetUuid());
             itemView.message_status.setBadgeNumber(unreadCount);
-
+            if (model.isTop == true) {
+                itemView.message_item.setBackgroundColor(mContext.getResources().getColor(R.color.line_index));
+            } else {
+                itemView.message_item.setBackgroundColor(mContext.getResources().getColor(R.color.hx_color_white));
+            }
         }
 
 

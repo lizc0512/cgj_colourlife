@@ -275,7 +275,7 @@
     </style>
 
     <style name="title_for_activity">
-        <item name="android:textSize">18sp</item>
+        <item name="android:textSize">18dp</item>
         <item name="android:textColor">#151515</item>
         <item name="android:singleLine">true</item>
     </style>

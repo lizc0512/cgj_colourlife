@@ -60,6 +60,7 @@ import com.tencent.smtt.sdk.WebChromeClient;
 import com.tencent.smtt.sdk.WebSettings;
 import com.tencent.smtt.sdk.WebView;
 import com.tencent.smtt.sdk.WebViewClient;
+import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.inter.Oauth2CallBack;
@@ -98,7 +99,7 @@ import static com.tg.coloursteward.RedpacketsTransferToColleagueH5Activity.Faile
  *
  * @author Administrator
  */
-public class MyBrowserActivity extends Activity implements OnClickListener, AMapLocationListener {
+public class MyBrowserActivity extends BaseActivity implements OnClickListener, AMapLocationListener {
     public static final String ACTION_FRESH_PAYINFO = "com.tg.coloursteward.ACTION_FRESH_PAYINFO";
     public static final String PAY_STATE = "pay_state";
     public static final int PIC_PHOTO_BY_CAMERA = Integer.MAX_VALUE - 9;
@@ -107,7 +108,6 @@ public class MyBrowserActivity extends Activity implements OnClickListener, AMap
     public static final String KEY_TITLE = "title";
     public static final String KEY_HTML_TEXT = "text";
     public static final String KEY_URL = "url";
-    private String PHOTO_NAME = "wisdomPark.jpg";
     private String TAKE_PHOTO_PATH = "";
     private Uri uri;
     protected X5WebView webView;
@@ -123,17 +123,13 @@ public class MyBrowserActivity extends Activity implements OnClickListener, AMap
     private int count = 0;
     private ProgressBar bar;
     private String title;
-    private String uuid;
     private Intent data;
     private Boolean hideTitle;
     private int isShowLoading = 0;
     private ProgressDialog mDialog;
-    private String mCameraPhotoPath;
     private ValueCallback<Uri> uploadFile;
     private ValueCallback<Uri[]> uploadFiles;
     public static boolean forepriority = false;
-    public static final int REQUEST_CODE_LOLIPOP = 1;
-    private final static int RESULT_CODE_ICE_CREAM = 2;
     private GetDeviceIdReceiver deviceIdReceiver;
     private static final int OLD_FILE_SELECT_CODE = 6;
     private static final int FILE_SELECT_CODE = 4;
@@ -186,6 +182,16 @@ public class MyBrowserActivity extends Activity implements OnClickListener, AMap
         IntentFilter filter = new IntentFilter();
         filter.addAction(ACTION_FRESH_PAYINFO);
         registerReceiver(receiver, filter);
+    }
+
+    @Override
+    public View getContentView() {
+        return null;
+    }
+
+    @Override
+    public String getHeadTitle() {
+        return null;
     }
 
     private void prepareView() {
@@ -653,7 +659,6 @@ public class MyBrowserActivity extends Activity implements OnClickListener, AMap
      */
     private void openFileChooseProcess() {
         Intent i = new Intent(Intent.ACTION_PICK);
-//        i.addCategory(Intent.CATEGORY_OPENABLE);
         i.setType("image/*");
         startActivityForResult(Intent.createChooser(i, "相册"), 0);
     }
@@ -666,32 +671,10 @@ public class MyBrowserActivity extends Activity implements OnClickListener, AMap
         //M兆
         int maxMemorySize = maxMemory / (1024 * 1024);
         if (android.os.Build.VERSION.SDK_INT <= 10 || maxMemorySize <= 32) {
-            //isStorageMemory = true;
             Intent cameraintent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             startActivityForResult(cameraintent,
                     PIC_PHOTO_BY_CAMERA);
         } else {
-            //isStorageMemory = false;
-//            FileOutputStream out = null;
-//            try {
-//                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
-//                    out = openFileOutput(PHOTO_NAME, Context.MODE_PRIVATE);
-//                } else {
-//                    out = openFileOutput(PHOTO_NAME, Context.MODE_WORLD_WRITEABLE);
-//                }
-//
-//            } catch (FileNotFoundException e) {
-//                // TODO Auto-generated catch block
-//                e.printStackTrace();
-//            }
-//            try {
-//                if (out != null) {
-//                    out.close();
-//                }
-//            } catch (IOException e) {
-//                // TODO Auto-generated catch block
-//                e.printStackTrace();
-//            }
             if (null != updateFile && updateFile.exists()) {
                 updateFile.delete();
             }

@@ -242,6 +242,7 @@ public class RedpacketsShareMainActivity extends BaseActivity {
         RequestConfig config = new RequestConfig(RedpacketsShareMainActivity.this, HttpTools.GET_EMPLOYEE_INFO, "查询");
         RequestParams params = new RequestParams();
         params.put("username", username);
+        params.put("single", "1");
         params.put("version", versionShort);
         params.put("key", key);
         params.put("secret", secret);

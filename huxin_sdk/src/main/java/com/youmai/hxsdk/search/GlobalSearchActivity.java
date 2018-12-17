@@ -3,7 +3,6 @@ package com.youmai.hxsdk.search;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -11,12 +10,13 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
 import com.youmai.hxsdk.R;
+import com.youmai.hxsdk.activity.SdkBaseActivity;
 import com.youmai.hxsdk.widget.SearchEditText;
 
 /**
  * Created by srsm on 2017/8/21.
  */
-public class GlobalSearchActivity extends AppCompatActivity implements View.OnClickListener {
+public class GlobalSearchActivity extends SdkBaseActivity implements View.OnClickListener {
 
     private ContactsSearchFragment mContactsSearchFragment;
     //private AppsSearchFragment mAppsSearchFragment;
@@ -26,7 +26,7 @@ public class GlobalSearchActivity extends AppCompatActivity implements View.OnCl
     private TextView mBtnBack;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.global_activity_search);
         initView();
@@ -38,7 +38,7 @@ public class GlobalSearchActivity extends AppCompatActivity implements View.OnCl
     }
 
     @Override
-    protected void onDestroy() {
+    public void onDestroy() {
         super.onDestroy();
     }
 

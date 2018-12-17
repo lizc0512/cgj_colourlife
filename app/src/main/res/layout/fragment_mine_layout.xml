@@ -2,79 +2,52 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/base_color"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white"
     android:orientation="vertical">
-
-    <LinearLayout
+    <View
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/home_fill"
-        android:orientation="vertical">
+        android:layout_height="10dp"/>
+    <RelativeLayout
+        android:id="@+id/rl_mine_title"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/bg_mine_head">
 
-        <RelativeLayout
-            android:id="@+id/rl_userinfo"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/tv_mine_name"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingBottom="15dp"
-            android:paddingLeft="18dp"
-            android:paddingRight="18dp"
-            android:paddingTop="15dp">
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="27dp"
+            android:text="name"
+            android:textColor="@color/black_mine"
+            android:textSize="18dp" />
 
-            <FrameLayout
-                android:id="@+id/fl_head"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/beijing_mine"
-                android:padding="2dp">
+        <TextView
+            android:id="@+id/tv_mine_job"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_mine_name"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="14dp"
+            android:text="job"
+            android:textColor="@color/black_mine"
+            android:textSize="14dp" />
 
-                <ImageView
-                    android:id="@+id/img_head"
-                    android:layout_width="@dimen/margin_66"
-                    android:layout_height="@dimen/margin_66"
-                    android:layout_centerVertical="true"
-                    android:layout_gravity="center"
-                    android:scaleType="fitXY" />
-            </FrameLayout>
-
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="15dp"
-                android:layout_toRightOf="@id/fl_head">
-
-                <TextView
-                    android:id="@+id/tv_realname"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/white"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:id="@+id/tv_job"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/tv_realname"
-                    android:layout_marginTop="5dp"
-                    android:textColor="@color/white"
-                    android:textSize="14sp" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="10dp"
-                    android:src="@drawable/yindao" />
-            </RelativeLayout>
-        </RelativeLayout>
-    </LinearLayout>
+        <com.tg.coloursteward.view.CircleImageView
+            android:id="@+id/iv_mine_head"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="14dp"
+            android:layout_marginTop="24dp"
+            app:civ_border_color="@color/line_bg_new"
+            app:civ_border_width="2dp"
+            android:src="@drawable/more_icon_defaulthead" />
+    </RelativeLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerview"
@@ -82,6 +55,9 @@
         android:layout_height="wrap_content">
 
     </android.support.v7.widget.RecyclerView>
-
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/line_bg_new"/>
 
 </LinearLayout>

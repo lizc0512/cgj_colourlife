@@ -104,6 +104,21 @@ public class EmployeeDataActivity extends BaseActivity {
             finish();
             return;
         }
+        String jsonStr = Tools.getStringValue(EmployeeDataActivity.this, Contants.storage.TICKET);//饭票页面缓存
+        String TicketStr = Tools.getStringValue(EmployeeDataActivity.this, Contants.storage.TICKETHOME);//请求饭票接口缓存
+        if (StringUtils.isNotEmpty(TicketStr)) {
+            balance = Double.parseDouble(TicketStr);
+        } else if (StringUtils.isNotEmpty(jsonStr)) {//饭票页面
+            JSONObject jsonObject = HttpTools.getContentJSONObject(jsonStr);
+            if (jsonObject != null) {
+                try {
+                    balance = jsonObject.getDouble("balance");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        getKey();
         String expireTime = Tools.getStringValue(EmployeeDataActivity.this, Contants.storage.APPAUTHTIME);
         Date dt = new Date();
         Long time = dt.getTime();
@@ -119,6 +134,29 @@ public class EmployeeDataActivity extends BaseActivity {
         initView();
         requestData();//加载数据
 
+    }
+
+    private void getKey() {
+        String key = Tools.getStringValue(EmployeeDataActivity.this, Contants.EMPLOYEE_LOGIN.key);
+        String secret = Tools.getStringValue(EmployeeDataActivity.this, Contants.EMPLOYEE_LOGIN.secret);
+        if (TextUtils.isEmpty(key) || TextUtils.isEmpty(secret)) {
+            getKeyAndSecret();
+        } else {
+            getFP(key, secret);
+        }
+    }
+
+    private void getFP(String key, String secret) {
+        RequestConfig config = new RequestConfig(EmployeeDataActivity.this, HttpTools.GET_FP, "");
+        RequestParams params = new RequestParams();
+        params.put("key", key);
+        params.put("secret", secret);
+        HttpTools.httpGet(Contants.URl.URL_CPMOBILE, "/1.0/caiRedPaket/getBalance", config, params);
+    }
+
+    private void getKeyAndSecret() {
+        RequestConfig config = new RequestConfig(EmployeeDataActivity.this, HttpTools.GET_KEYSECERT, null);
+        HttpTools.httpPost(Contants.URl.URL_CPMOBILE, "/1.0/auth", config, null);
     }
 
     /**
@@ -205,23 +243,6 @@ public class EmployeeDataActivity extends BaseActivity {
                 finish();
             }
         });
-        /**
-         * 获取饭票
-         */
-        String jsonStr = Tools.getStringValue(EmployeeDataActivity.this, Contants.storage.TICKET);//饭票页面缓存
-        String TicketStr = Tools.getStringValue(EmployeeDataActivity.this, Contants.storage.TICKETHOME);//首页缓存
-        if (StringUtils.isNotEmpty(TicketStr)) {//首页
-            balance = Double.parseDouble(TicketStr);
-        } else if (StringUtils.isNotEmpty(jsonStr)) {//饭票页面
-            JSONObject jsonObject = HttpTools.getContentJSONObject(jsonStr);
-            if (jsonObject != null) {
-                try {
-                    balance = jsonObject.getDouble("balance");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
         mlListView.setOnItemClickListener(new OnItemClickListener() {
 
             @Override
@@ -313,7 +334,7 @@ public class EmployeeDataActivity extends BaseActivity {
         int code = HttpTools.getCode(jsonString);
         String message = HttpTools.getMessageString(jsonString);
         if (msg.arg1 == HttpTools.GET_EMPLOYEE_INFO) {
-            if(code==0){
+            if (code == 0) {
                 if (jsonString != null) {
                     EmployeeEntity employeeEntity = GsonUtils.gsonToBean(jsonString, EmployeeEntity.class);
                     if (employeeEntity.getContent() != null && employeeEntity.getContent().size() > 0) {
@@ -435,8 +456,8 @@ public class EmployeeDataActivity extends BaseActivity {
                     adapter = new EmployeePhoneAdapter(this, PhoneList);
                     mlListView.setAdapter(adapter);
                 }
-            }else {
-                ToastFactory.showToast(EmployeeDataActivity.this,message);
+            } else {
+                ToastFactory.showToast(EmployeeDataActivity.this, message);
             }
 
         } else if (msg.arg1 == HttpTools.SET_EMPLOYEE_INFO) {
@@ -502,6 +523,40 @@ public class EmployeeDataActivity extends BaseActivity {
                         e.printStackTrace();
                     }
                 }
+            }
+        } else if (msg.arg1 == HttpTools.GET_KEYSECERT) {
+            if (code == 0) {
+                try {
+                    String contentString = HttpTools.getContentString(jsonString);
+                    JSONObject sonJon = new JSONObject(contentString);
+                    String key = sonJon.optString("key");
+                    String secret = sonJon.optString("secret");
+                    Tools.saveStringValue(EmployeeDataActivity.this, Contants.EMPLOYEE_LOGIN.key, key);
+                    Tools.saveStringValue(EmployeeDataActivity.this, Contants.EMPLOYEE_LOGIN.secret, secret);
+                    getFP(key, secret);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        } else if (msg.arg1 == HttpTools.GET_FP) {
+            if (code == 0) {
+                JSONObject jsonObject = HttpTools.getContentJSONObject(jsonString);
+                if (jsonObject != null) {
+                    try {
+                        String ticket = jsonObject.getString("balance");
+                        Tools.saveStringValue(EmployeeDataActivity.this, Contants.storage.TICKETHOME, ticket);
+                        if (ticket != null) {
+                            balance = Double.parseDouble(ticket);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        balance = 0.00;
+                    }
+                } else {
+                    balance = 0.00;
+                }
+            } else {
+                balance = 0.00;
             }
         }
     }

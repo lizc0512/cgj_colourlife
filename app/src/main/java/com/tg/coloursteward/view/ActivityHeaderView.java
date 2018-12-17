@@ -1,9 +1,6 @@
 package com.tg.coloursteward.view;
 
 
-import com.tg.coloursteward.R;
-import com.tg.coloursteward.R.color;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.ColorStateList;
@@ -17,6 +14,8 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.tg.coloursteward.R;
 
 /**
  *
@@ -65,7 +64,7 @@ public class ActivityHeaderView extends LinearLayout implements OnClickListener 
     }
 
     public void setLineVisibility(int visibility) {
-        findViewById(R.id.head_line).setVisibility(visibility);
+//        findViewById(R.id.head_line).setVisibility(visibility);
     }
 
     private void init(Context con, AttributeSet attr) {
@@ -110,9 +109,9 @@ public class ActivityHeaderView extends LinearLayout implements OnClickListener 
             backLayout.setVisibility(View.INVISIBLE);
             tvBack.setVisibility(View.GONE);
             imgBack.setVisibility(View.VISIBLE);
-            imgBack.setImageResource(R.drawable.fanhuijian);
+            imgBack.setImageResource(R.drawable.icon_top_return);
         } else {
-            setLeftImage(R.drawable.fanhuijian);
+            setLeftImage(R.drawable.icon_top_return);
         }
         backLayout.setOnClickListener(this);
         rightLayout.setOnClickListener(this);
@@ -169,14 +168,14 @@ public class ActivityHeaderView extends LinearLayout implements OnClickListener 
         rightLayout.setVisibility(View.VISIBLE);
         tvRight.setVisibility(View.VISIBLE);
         imgRight.setVisibility(View.GONE);
-        tvRight.setTextColor(color);
+        tvRight.setTextColor(getResources().getColor(R.color.tv_mine));
     }
 
     public void setRightTextColor(ColorStateList states) {
         rightLayout.setVisibility(View.VISIBLE);
         tvRight.setVisibility(View.VISIBLE);
         imgRight.setVisibility(View.GONE);
-        tvRight.setTextColor(states);
+        tvRight.setTextColor(getResources().getColor(R.color.tv_mine));
     }
 
     public void setRightTextSize(float size) {
@@ -204,7 +203,7 @@ public class ActivityHeaderView extends LinearLayout implements OnClickListener 
     public void setTitle(String text) {
         tvTitle.setVisibility(View.VISIBLE);
         tvTitle.setText(text);
-        tvTitle.setTextColor(getResources().getColor(color.white));
+        tvTitle.setTextColor(getResources().getColor(R.color.black_mine));
     }
 
     public void hideTitle() {

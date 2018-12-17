@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@drawable/shape_white_bg"
+    android:background="@drawable/dialog_corner_bg"
     android:orientation="vertical">
 	   <TextView 
 	       android:id="@+id/dialog_msg"
@@ -16,8 +16,8 @@
 	        android:layout_height="wrap_content"
 	        android:layout_width="match_parent"
 	        android:layout_gravity="center_horizontal"
-	        android:textColor="#282828"
-	        android:textSize="18sp"/>
+	        android:textColor="@color/tv_mine"
+	        android:textSize="18dp"/>
 		<include layout="@layout/line_horizontal"/>
 		<LinearLayout 
 		    android:orientation="horizontal"
@@ -29,20 +29,20 @@
 		        android:layout_weight="1"
 		        android:paddingTop="10dp"
 		        android:paddingBottom="10dp"
-		        android:textColor="@color/blue"
+		        android:textColor="@color/gray_index"
 		        android:layout_height="wrap_content"
 		        android:layout_width="0dp"
 		        android:background="@drawable/left_button_selector"
 		        android:gravity="center"
-		        android:textSize="18sp"/>
-		    <ImageView android:layout_width="1dp"
+		        android:textSize="18dp"/>
+		    <TextView android:layout_width="1dp"
 		        android:layout_height="match_parent"
 		        android:layout_weight="0"
-		        android:background="@drawable/vertical_line"/>
+		        android:background="@color/line_color"/>
 		    <Button 
 		        android:id="@+id/btn_ok"
 		        android:text="确定"
-		        android:textColor="@color/blue"
+		        android:textColor="@color/blue_index"
 		        android:layout_weight="1"
 		        android:paddingTop="10dp"
 		        android:paddingBottom="10dp"
@@ -50,6 +50,6 @@
 		        android:layout_width="0dp"
 		        android:background="@drawable/right_button_selector"
 		        android:gravity="center"
-		        android:textSize="18sp"/>
+		        android:textSize="18dp"/>
 		</LinearLayout>
 </LinearLayout>

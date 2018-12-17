@@ -2,13 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:fitsSystemWindows="true">
 
     <RelativeLayout
         android:id="@+id/head_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/home_fill" >
+        android:background="@color/white" >
 
         <RelativeLayout
             android:id="@+id/rl_rollback"
@@ -23,7 +24,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:src="@drawable/fanhuijian" />
+                android:src="@drawable/icon_top_return" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -43,7 +44,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:paddingLeft="10dp"
-                android:src="@drawable/guanbi" />
+                android:src="@drawable/nav_shut_normal" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -61,7 +62,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:src="@drawable/shuaxin" />
+                android:src="@drawable/nav_refresh_normal" />
         </RelativeLayout>
 
         <TextView
@@ -74,8 +75,8 @@
             android:gravity="center_horizontal"
             android:singleLine="true"
             android:text="加载中..."
-            android:textColor="@color/white"
-            android:textSize="18sp" />
+            android:textColor="@color/tv_mine"
+            android:textSize="18dp" />
     </RelativeLayout>
 
     <ProgressBar

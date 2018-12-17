@@ -19,7 +19,6 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -47,6 +46,7 @@ import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.LinkParseUtil;
 import com.tg.coloursteward.util.TokenUtils;
 import com.tg.coloursteward.util.Tools;
+import com.tg.coloursteward.view.CircleImageView;
 import com.tg.coloursteward.view.dialog.PwdDialog2;
 import com.tg.coloursteward.view.dialog.ToastFactory;
 import com.youmai.hxsdk.utils.GlideRoundTransform;
@@ -65,12 +65,9 @@ import java.util.Map;
  *
  * @author Administrator
  */
-public class FragmentMine extends Fragment implements ResponseListener {
+public class FragmentMine extends Fragment implements ResponseListener, OnClickListener {
     private View mView;
     private Activity mActivity;
-    private ImageView imgHead;
-    private TextView tvRealName, tvJob;
-    private RelativeLayout rlUserInfo;
     private AlertDialog dialog;
     private MessageHandler msgHandler;
     private PwdDialog2.ADialogCallback aDialogCallback;
@@ -83,6 +80,10 @@ public class FragmentMine extends Fragment implements ResponseListener {
     private int openType;
     private String salary;
     private HomeService homeService;
+    private RelativeLayout rl_mine_title;
+    private TextView tv_mine_name;
+    private TextView tv_mine_job;
+    private CircleImageView iv_mine_head;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -170,28 +171,24 @@ public class FragmentMine extends Fragment implements ResponseListener {
      * 初始化
      */
     private void initView() {
+        tv_mine_name = mView.findViewById(R.id.tv_mine_name);
+        tv_mine_job = mView.findViewById(R.id.tv_mine_job);
+        iv_mine_head = mView.findViewById(R.id.iv_mine_head);
+
+        rl_mine_title = mView.findViewById(R.id.rl_mine_title);
+        rl_mine_title.setOnClickListener(this);
         recyclerview = mView.findViewById(R.id.recyclerview);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mActivity);
         recyclerview.setLayoutManager(linearLayoutManager);
-        imgHead = (ImageView) mView.findViewById(R.id.img_head);
-        tvRealName = (TextView) mView.findViewById(R.id.tv_realname);
-        tvJob = (TextView) mView.findViewById(R.id.tv_job);
-        rlUserInfo = (RelativeLayout) mView.findViewById(R.id.rl_userinfo);
-        rlUserInfo.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(mActivity, UserInfoActivity.class));
-            }
-        });
-        tvRealName.setText(UserInfo.realname);
+        tv_mine_name.setText(UserInfo.realname);
         if (!TextUtils.isEmpty(UserInfo.familyName)) {
             if (UserInfo.jobName.contains(UserInfo.familyName)) {
-                tvJob.setText(UserInfo.jobName);
+                tv_mine_job.setText(UserInfo.jobName);
             } else {
-                tvJob.setText(UserInfo.jobName + "(" + UserInfo.familyName + ")");
+                tv_mine_job.setText(UserInfo.jobName + "(" + UserInfo.familyName + ")");
             }
         } else {
-            tvJob.setText(UserInfo.jobName + UserInfo.familyName);
+            tv_mine_job.setText(UserInfo.jobName + UserInfo.familyName);
         }
     }
 
@@ -219,7 +216,7 @@ public class FragmentMine extends Fragment implements ResponseListener {
      * 更新UI
      */
     public void freshUI() {
-        tvRealName.setText(UserInfo.realname);
+        tv_mine_name.setText(UserInfo.realname);
         getHeadImg();
     }
 
@@ -272,7 +269,7 @@ public class FragmentMine extends Fragment implements ResponseListener {
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .centerCrop()
                         .transform(new GlideRoundTransform()))
-                .into(imgHead);
+                .into(iv_mine_head);
 
     }
 
@@ -436,6 +433,16 @@ public class FragmentMine extends Fragment implements ResponseListener {
 
     @Override
     public void onFail(Message msg, String hintString) {
+
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.rl_mine_title:
+                startActivity(new Intent(mActivity, UserInfoActivity.class));
+                break;
+        }
 
     }
 }

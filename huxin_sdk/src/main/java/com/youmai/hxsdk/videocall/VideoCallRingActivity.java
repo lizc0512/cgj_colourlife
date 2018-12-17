@@ -1,25 +1,17 @@
 package com.youmai.hxsdk.videocall;
 
-import android.Manifest;
 import android.annotation.TargetApi;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -27,44 +19,44 @@ import com.bumptech.glide.request.RequestOptions;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.R;
-import com.youmai.hxsdk.activity.CameraActivity;
 import com.youmai.hxsdk.activity.SdkBaseActivity;
 import com.youmai.hxsdk.chatgroup.IMGroupActivity;
 import com.youmai.hxsdk.config.ColorsConfig;
+import com.youmai.hxsdk.db.bean.CacheMsgBean;
 import com.youmai.hxsdk.db.bean.GroupInfoBean;
+import com.youmai.hxsdk.db.helper.CacheMsgHelper;
 import com.youmai.hxsdk.db.helper.GroupInfoHelper;
 import com.youmai.hxsdk.entity.VideoCall;
+import com.youmai.hxsdk.im.IMMsgManager;
+import com.youmai.hxsdk.im.IMVedioMsgCallBack;
+import com.youmai.hxsdk.module.videocall.VideoSelectConstactActivity;
 import com.youmai.hxsdk.proto.YouMaiBasic;
 import com.youmai.hxsdk.proto.YouMaiVideo;
 import com.youmai.hxsdk.service.RingService;
+import com.youmai.hxsdk.service.SendMsgService;
 import com.youmai.hxsdk.socket.PduBase;
 import com.youmai.hxsdk.socket.ReceiveListener;
-import com.youmai.hxsdk.utils.AppUtils;
 import com.youmai.hxsdk.utils.GlideRoundTransform;
-import com.youmai.smallvideorecord.utils.Log;
 
-import java.util.ArrayList;
-import java.util.List;
+import static com.youmai.hxsdk.db.bean.CacheMsgBean.SINGLE_VIDEO_CALL;
 
 
 public class VideoCallRingActivity extends SdkBaseActivity implements View.OnClickListener {
-
-    private final int VIDEO_CALL_PERMISSION_REQUEST = 402; //权限申请自定义码
-
     private String roomName;
     private String adminId;
     private int groupId;
     private int memberRole;
     private boolean isAnchor;
-
+    private boolean isSingle;
     private int videoType;
     private int e;
     private long expire;
     private GroupInfoBean mGroupInfo;
+    private String cacheInfo;
     /**
      * 倒数计时器
      */
-    private CountDownTimer timer = new CountDownTimer(42 * 1000, 1000) {
+    private CountDownTimer timer = new CountDownTimer(40 * 1000, 1000) {
         /**
          * 固定间隔被调用,就是每隔countDownInterval会回调一次方法onTick
          * @param millisUntilFinished
@@ -81,13 +73,36 @@ public class VideoCallRingActivity extends SdkBaseActivity implements View.OnCli
         public void onFinish() {
             //tv_remaining_time.setText("00:00");
             if (!VideoCallRingActivity.this.isFinishing()) {
+                // reqVideoInvite(false, roomName, adminId);
+                if (isSingle) {
+                    CacheMsgBean cacheBean = new CacheMsgBean();
+                    CacheMsgSingleVideo cacheMsgSingleVideo = new CacheMsgSingleVideo();
+                    cacheMsgSingleVideo.setContent("对方已取消通话");
+                    cacheBean.setJsonBodyObj(cacheMsgSingleVideo).setMsgType(SINGLE_VIDEO_CALL)
+                            .setMsgTime(System.currentTimeMillis())
+                            .setSenderUserId(HuxinSdkManager.instance().getUuid())
+                            .setSenderAvatar(dst_avatar)
+                            .setSenderRealName(HuxinSdkManager.instance().getRealName())
+                            .setTargetUuid(adminId)
+                            .setTargetName(nickName)
+                            .setTargetAvatar(avatar);
+                    CacheMsgHelper.instance().insertOrUpdate(VideoCallRingActivity.this, cacheBean);
+                    Intent intent = new Intent(SendMsgService.ACTION_NEW_MSG_VEDIO);
+                    intent.putExtra("CacheNewMsg", cacheBean);
+                    LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(VideoCallRingActivity.this);
+                    localBroadcastManager.sendBroadcast(intent);
+                }
                 VideoCallRingActivity.this.finish();
+
             }
         }
     };
     private long l;
     private String groupName;
     private TextView tvInfo;
+    private String nickName;
+    private String avatar;
+    private String dst_avatar;
 
     /**
      * 将毫秒转化为 分钟：秒 的格式
@@ -141,12 +156,12 @@ public class VideoCallRingActivity extends SdkBaseActivity implements View.OnCli
 
         setContentView(R.layout.activity_video_call_ring);
 
-
+        isSingle = getIntent().getBooleanExtra("isSingle", false);
         roomName = getIntent().getStringExtra("room_name");
         adminId = getIntent().getStringExtra("admin_id");
-
-        String nickName = getIntent().getStringExtra("nick_name");
-        String avatar = getIntent().getStringExtra("avatar");
+        dst_avatar = ColorsConfig.HEAD_ICON_URL + "avatar?uid=" + HuxinSdkManager.instance().getUserName();
+        nickName = getIntent().getStringExtra("nick_name");
+        avatar = getIntent().getStringExtra("avatar");
 
         groupId = getIntent().getIntExtra("group_id", 0);
         memberRole = getIntent().getIntExtra("member_role", 0);
@@ -159,6 +174,9 @@ public class VideoCallRingActivity extends SdkBaseActivity implements View.OnCli
         TextView tvName = findViewById(R.id.tv_name);
         tvInfo = findViewById(R.id.tv_info);
         tvName.setText(nickName);
+        if (isSingle) {
+            tvName.setTextSize(30);
+        }
         mGroupInfo = GroupInfoHelper.instance().toQueryByGroupId(this, groupId);
         updateGroupUI(mGroupInfo);
         int size = mContext.getResources().getDimensionPixelOffset(R.dimen.card_head) * 2;
@@ -178,7 +196,35 @@ public class VideoCallRingActivity extends SdkBaseActivity implements View.OnCli
         findViewById(R.id.btn_cancel).setOnClickListener(this);
         timerStart();
         playRing();
+        if (IMMsgManager.isSingleVideo && !IMMsgManager.isMuteAgree) {
+            IMMsgManager.instance().setIMVedioMsgCallBack(new IMVedioMsgCallBack() {
+                @Override
+                public void onRoomDestroy(String uuid) {
+                    CacheMsgBean cacheBean = new CacheMsgBean();
+                    CacheMsgSingleVideo cacheMsgSingleVideo = new CacheMsgSingleVideo();
+                    cacheMsgSingleVideo.setContent("对方已经取消通话");
+                    cacheBean.setJsonBodyObj(cacheMsgSingleVideo).setMsgType(SINGLE_VIDEO_CALL)
+                            .setMsgTime(System.currentTimeMillis())
+                            .setSenderUserId(HuxinSdkManager.instance().getUuid())
+                            .setSenderAvatar(dst_avatar)
+                            .setSenderRealName(HuxinSdkManager.instance().getRealName())
+                            .setTargetUuid(adminId)
+                            .setTargetName(nickName)
+                            .setTargetAvatar(avatar);
+                    CacheMsgHelper.instance().insertOrUpdate(VideoCallRingActivity.this, cacheBean);
+                    Intent intent = new Intent(SendMsgService.ACTION_NEW_MSG_VEDIO);
+                    intent.putExtra("CacheNewMsg", cacheBean);
+                    LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(VideoCallRingActivity.this);
+                    localBroadcastManager.sendBroadcast(intent);
+                    HuxinSdkManager.instance().getStackAct().finishActivity(VideoCallRingActivity.class);
+                }
 
+                @Override
+                public void onRemuteAgree() {
+
+                }
+            });
+        }
         HuxinSdkManager.instance().getStackAct().addActivity(this);
     }
 
@@ -188,18 +234,28 @@ public class VideoCallRingActivity extends SdkBaseActivity implements View.OnCli
         } else {
             groupName = groupInfo.getGroup_name();
         }
-
-        if (TextUtils.isEmpty(groupName)) {
-            String title = String.format(getString(R.string.group_item_info),
-                    "群聊");
-            tvInfo.setText("邀请你加入" + "“" + title + "”" + "群通话");
-        } else if (groupName.contains(ColorsConfig.GROUP_DEFAULT_NAME)) {
-            String title = groupName.replace(ColorsConfig.GROUP_DEFAULT_NAME, "");
-            tvInfo.setText("邀请你加入" + "“" + title + "”" + "群通话");
+        if (isSingle) {
+            if (videoType == VideoSelectConstactActivity.VIDEO_MEETING) {
+                tvInfo.setText("邀请你视频通话");
+                cacheInfo = "视频通话  ";
+            } else {
+                tvInfo.setText("邀请你语言通话");
+                cacheInfo = "语音通话  ";
+            }
         } else {
-            String title = groupName;
-            tvInfo.setText("邀请你加入" + "“" + title + "”" + "群通话");
+            if (TextUtils.isEmpty(groupName)) {
+                String title = String.format(getString(R.string.group_item_info),
+                        "群聊");
+                tvInfo.setText("邀请你加入" + "“" + title + "”" + "群通话");
+            } else if (groupName.contains(ColorsConfig.GROUP_DEFAULT_NAME)) {
+                String title = groupName.replace(ColorsConfig.GROUP_DEFAULT_NAME, "");
+                tvInfo.setText("邀请你加入" + "“" + title + "”" + "群通话");
+            } else {
+                String title = groupName;
+                tvInfo.setText("邀请你加入" + "“" + title + "”" + "群通话");
+            }
         }
+
     }
 
     private void reqVideoInvite(boolean isAgree, String roomName, String adminId) {
@@ -221,39 +277,65 @@ public class VideoCallRingActivity extends SdkBaseActivity implements View.OnCli
                                 if (TextUtils.isEmpty(roomName) || TextUtils.isEmpty(token)) {
                                     return;
                                 }
-
-                                VideoCall videoCall = new VideoCall();
-                                videoCall.setRoomName(roomName);
-                                videoCall.setToken(token);
-                                videoCall.setGroupId(groupId);
-                                videoCall.setOwner(false);
-                                videoCall.setAnchor(isAnchor);
-                                videoCall.setVideoType(videoType);
-                                videoCall.setMsgTime(System.currentTimeMillis());
-                                videoCall.setAdminId(adminId);
-
-                                Intent intent = new Intent(mContext, RoomActivity.class);
-                                intent.putExtra(RoomActivity.EXTRA_ROOM_ID, roomName);
-                                intent.putExtra(RoomActivity.EXTRA_ROOM_TOKEN, token);
-                                intent.putExtra(RoomActivity.EXTRA_USER_ID, userId);
-                                intent.putExtra(RoomActivity.IS_ADMIN, false);
-
-                                intent.putExtra(RoomActivity.NICK_NAME, HuxinSdkManager.instance().getRealName());
-                                intent.putExtra(RoomActivity.AVATAR, HuxinSdkManager.instance().getHeadUrl());
-
-                                if (videoType == YouMaiVideo.VideoType.CONFERENCE.getNumber()) {
-                                    intent.putExtra(RoomActivity.IS_CONFERENCE, true);
-                                    videoCall.setConference(true);
+                                if (isSingle) {
+                                    //单聊
+                                    int singleType = 0;
+                                    if (videoType == VideoSelectConstactActivity.VIDEO_MEETING) {
+                                        singleType = SingleRoomActivity.SINGLE_VIDEO;
+                                    } else {
+                                        singleType = SingleRoomActivity.SINGLE_AUDIO;
+                                    }
+                                    IMMsgManager.isMuteAgree = true;
+                                    Intent intent = new Intent(mContext, SingleRoomActivity.class);
+                                    intent.putExtra(SingleRoomActivity.EXTRA_ROOM_ID, roomName);
+                                    intent.putExtra(SingleRoomActivity.EXTRA_IS_INVITE, true);
+                                    intent.putExtra(SingleRoomActivity.EXTRA_ROOM_TOKEN, token);
+                                    intent.putExtra(SingleRoomActivity.EXTRA_USER_ID, userId);
+                                    intent.putExtra(SingleRoomActivity.EXTRA_IVATOR_ID, userId);
+                                    intent.putExtra(SingleRoomActivity.EXTRA_DST_NICK_NAME, HuxinSdkManager.instance().getRealName());
+                                    intent.putExtra(SingleRoomActivity.EXTRA_DST_AVATAR, dst_avatar);
+                                    intent.putExtra(SingleRoomActivity.EXTRA_SINGLE_TYPE, singleType);
+                                    intent.putExtra(SingleRoomActivity.EXTRA_ADMIN_NICK_NAME, nickName);
+                                    intent.putExtra(SingleRoomActivity.EXTRA_ADMIN_AVATAR, avatar);
+                                    intent.putExtra(SingleRoomActivity.EXTRA_ADMIN_ID, adminId);
+                                    startActivity(intent);
                                 } else {
-                                    intent.putExtra(RoomActivity.IS_CONFERENCE, false);
-                                    videoCall.setConference(false);
+                                    //群聊
+                                    VideoCall videoCall = new VideoCall();
+                                    videoCall.setRoomName(roomName);
+                                    videoCall.setToken(token);
+                                    videoCall.setGroupId(groupId);
+                                    videoCall.setOwner(false);
+                                    videoCall.setAnchor(isAnchor);
+                                    videoCall.setVideoType(videoType);
+                                    videoCall.setMsgTime(System.currentTimeMillis());
+                                    videoCall.setAdminId(adminId);
+
+                                    Intent intent = new Intent(mContext, RoomActivity.class);
+                                    intent.putExtra(RoomActivity.EXTRA_ROOM_ID, roomName);
+                                    intent.putExtra(RoomActivity.EXTRA_ROOM_TOKEN, token);
+                                    intent.putExtra(RoomActivity.EXTRA_USER_ID, userId);
+                                    intent.putExtra(RoomActivity.IS_ADMIN, false);
+
+                                    intent.putExtra(RoomActivity.NICK_NAME, HuxinSdkManager.instance().getRealName());
+                                    intent.putExtra(RoomActivity.AVATAR, HuxinSdkManager.instance().getHeadUrl());
+
+                                    if (videoType == YouMaiVideo.VideoType.CONFERENCE.getNumber()) {
+                                        intent.putExtra(RoomActivity.IS_CONFERENCE, true);
+                                        videoCall.setConference(true);
+                                    } else {
+                                        intent.putExtra(RoomActivity.IS_CONFERENCE, false);
+                                        videoCall.setConference(false);
+                                    }
+
+                                    intent.putExtra(IMGroupActivity.GROUP_ID, groupId);
+                                    intent.putExtra(IMGroupActivity.GROUP_NAME, groupName);
+                                    startActivity(intent);
+
+                                    HuxinSdkManager.instance().setVideoCall(videoCall);
                                 }
 
-                                intent.putExtra(IMGroupActivity.GROUP_ID, groupId);
-                                intent.putExtra(IMGroupActivity.GROUP_NAME, groupName);
-                                startActivity(intent);
 
-                                HuxinSdkManager.instance().setVideoCall(videoCall);
                             }
 
 
@@ -286,7 +368,7 @@ public class VideoCallRingActivity extends SdkBaseActivity implements View.OnCli
         super.onDestroy();
         Intent intent = new Intent(this, RingService.class);
         stopService(intent);
-
+        isSingle = false;
 
         HuxinSdkManager.instance().getStackAct().removeActivity(this);
     }
@@ -295,9 +377,30 @@ public class VideoCallRingActivity extends SdkBaseActivity implements View.OnCli
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.btn_accept) {
-            acceptVideoCall();
+            reqVideoInvite(true, roomName, adminId);
+            stopRing();
+            finish();
         } else if (id == R.id.btn_cancel) {
             reqVideoInvite(false, roomName, adminId);
+            CacheMsgBean cacheBean = new CacheMsgBean();
+            CacheMsgSingleVideo cacheMsgSingleVideo = new CacheMsgSingleVideo();
+            cacheMsgSingleVideo.setContent(cacheInfo + "已拒绝");
+            cacheBean.setJsonBodyObj(cacheMsgSingleVideo).setMsgType(SINGLE_VIDEO_CALL)
+                    .setMsgTime(System.currentTimeMillis())
+                    .setSenderUserId(HuxinSdkManager.instance().getUuid())
+                    .setSenderRealName(HuxinSdkManager.instance().getRealName())
+                    .setSenderAvatar(dst_avatar)
+                    .setTargetUuid(adminId)
+                    .setTargetName(nickName)
+                    .setTargetAvatar(avatar);
+            CacheMsgHelper.instance().insertOrUpdate(mContext, cacheBean);
+
+
+            Intent intent = new Intent(SendMsgService.ACTION_NEW_MSG_VEDIO);
+            intent.putExtra("CacheNewMsg", cacheBean);
+            LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(mContext);
+            localBroadcastManager.sendBroadcast(intent);
+
             stopRing();
             finish();
         }
@@ -311,93 +414,6 @@ public class VideoCallRingActivity extends SdkBaseActivity implements View.OnCli
         }
         return flags;
     }
-
-    @TargetApi(Build.VERSION_CODES.M)
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == VIDEO_CALL_PERMISSION_REQUEST) {
-            boolean isGranted = true;
-            for (int item : grantResults) {
-                if (item == PackageManager.PERMISSION_DENIED) {
-                    isGranted = false;
-                    break;
-                }
-            }
-            if (isGranted) {
-                acceptVideoInvite();
-            } else {
-                showPermissionDialog(this);
-            }
-        }
-    }
-
-    /**
-     * 权限提示框
-     *
-     * @param context
-     */
-    private void showPermissionDialog(Context context) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-
-        builder.setTitle(context.getString(R.string.permission_title))
-                .setMessage(context.getString(R.string.permission_content));
-
-        builder.setPositiveButton(context.getString(R.string.hx_confirm),
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface arg0, int arg1) {
-                        AppUtils.startAppSettings(mContext);
-                        arg0.dismiss();
-                    }
-                });
-
-        builder.setNegativeButton(context.getString(R.string.hx_cancel),
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface arg0, int arg1) {
-                        arg0.dismiss();
-                    }
-                });
-        builder.show();
-    }
-
-
-    private void acceptVideoInvite() {
-        reqVideoInvite(true, roomName, adminId);
-        stopRing();
-        finish();
-    }
-
-    private void acceptVideoCall() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            List<String> list = new ArrayList<>(2);
-
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)
-                    != PackageManager.PERMISSION_GRANTED) {
-                list.add(Manifest.permission.RECORD_AUDIO);
-            }
-
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
-                    != PackageManager.PERMISSION_GRANTED) {
-                list.add(Manifest.permission.CAMERA);
-            }
-
-            if (list.size() > 0) {
-                String[] array = new String[list.size()];
-                list.toArray(array); // fill the array
-                ActivityCompat.requestPermissions(this, array, VIDEO_CALL_PERMISSION_REQUEST);
-            } else {
-                acceptVideoInvite();
-            }
-        } else {
-            acceptVideoInvite();
-        }
-
-    }
-
-
 }
 
 

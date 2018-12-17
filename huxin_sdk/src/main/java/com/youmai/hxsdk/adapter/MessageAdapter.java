@@ -33,6 +33,7 @@ import com.youmai.hxsdk.im.cache.CacheMsgTxt;
 import com.youmai.hxsdk.utils.AppUtils;
 import com.youmai.hxsdk.utils.GlideRoundTransform;
 import com.youmai.hxsdk.utils.TimeUtils;
+import com.youmai.hxsdk.videocall.CacheMsgSingleVideo;
 import com.youmai.hxsdk.view.chat.emoticon.utils.EmoticonHandler;
 import com.youmai.hxsdk.view.chat.utils.Utils;
 import com.youmai.hxsdk.view.group.TeamHeadView;
@@ -51,6 +52,7 @@ import q.rorbin.badgeview.QBadgeView;
 
 public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+    public static final int VIDEO_CALL_GROUP = 1;
     private final String TAG = "MessageAdapter";
 
     public static final int ADAPTER_TYPE_PUSHMSG = 2; //ICE push msg
@@ -328,6 +330,10 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             itemView.message_name.setText(displayName);
 
             switch (model.getMsgType()) {
+                case CacheMsgBean.SINGLE_VIDEO_CALL:
+                    CacheMsgSingleVideo videoMsg = (CacheMsgSingleVideo) model.getJsonBodyObj();
+                    itemView.message_type.setText(videoMsg.getContent());
+                    break;
                 case CacheMsgBean.SEND_EMOTION:
                 case CacheMsgBean.RECEIVE_EMOTION:
                     itemView.message_type.setText(mContext.getString(R.string.message_type_1));
@@ -371,6 +377,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 case CacheMsgBean.PACKET_OPENED_SUCCESS:
                     itemView.message_type.setText(mContext.getString(R.string.message_open_red_packet_success));
                     break;
+
                 default:
                     itemView.message_type.setText("");
             }

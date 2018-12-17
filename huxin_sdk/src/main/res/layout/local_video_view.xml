@@ -15,40 +15,39 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/hx_color_black"
+        android:gravity="center"
         android:orientation="vertical"
         android:visibility="invisible">
 
         <ImageView
             android:id="@+id/avatar"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:gravity="center"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            android:layout_gravity="center"
             android:padding="10dp"
+            android:visibility="invisible" />
+
+        <TextView
+            android:id="@+id/qn_audio_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="@color/hx_color_white"
             android:visibility="invisible" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:paddingBottom="5dp"
             android:paddingLeft="15dp"
-            android:paddingTop="5dp"
             android:paddingRight="15dp"
-            android:paddingBottom="5dp">
+            android:paddingTop="5dp">
 
             <View
                 android:layout_width="12dp"
                 android:layout_height="12dp" />
 
-            <TextView
-                android:id="@+id/qn_audio_view"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:textColor="@color/hx_color_white"
-                android:visibility="invisible" />
 
             <ImageView
                 android:id="@+id/microphone_state_view"

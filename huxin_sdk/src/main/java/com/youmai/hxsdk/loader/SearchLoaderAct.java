@@ -122,6 +122,7 @@ public class SearchLoaderAct extends AsyncTaskLoader {
             contact.setSimplepinyin(ch.toString());
             contact.setIndexPinyin(chStr);
 
+
             //DuoYinZi duoYinZi = PinYinUtils.HanziToPinYin(hanzi);
             //contact.setDuoYinzi(duoYinZi);
 

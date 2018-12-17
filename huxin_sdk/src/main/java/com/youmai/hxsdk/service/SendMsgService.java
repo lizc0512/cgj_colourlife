@@ -60,6 +60,7 @@ public class SendMsgService extends IntentService {
     public static final String ACTION_SEND_MSG = "service.send.msg";
     public static final String ACTION_UPDATE_MSG = "service.update.msg";
     public static final String ACTION_NEW_MSG = "action_new_msg";
+    public static final String ACTION_NEW_MSG_VEDIO = "action_new_msg_vedio";
 
     private long id;
     private boolean isGroup;

@@ -12,6 +12,7 @@ import com.youmai.hxsdk.im.cache.CacheMsgTxt;
 import com.youmai.hxsdk.im.cache.CacheMsgVideo;
 import com.youmai.hxsdk.im.cache.CacheMsgVoice;
 import com.youmai.hxsdk.im.cache.JsonFormat;
+import com.youmai.hxsdk.videocall.CacheMsgSingleVideo;
 
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
@@ -54,6 +55,7 @@ public class CacheMsgBean implements Parcelable {
     public static final int PACKET_OPENED_SUCCESS = 1004;
 
     public static final int GROUP_VIDEO_CALL = 1100;
+    public static final int SINGLE_VIDEO_CALL = 1200;
 
 
     public static final int SEND_DRAFT = 0;      //草稿
@@ -177,6 +179,9 @@ public class CacheMsgBean implements Parcelable {
             case RECEIVE_PACKET_OPENED:
             case PACKET_OPENED_SUCCESS:
                 jsonBodyObj = new CacheMsgRedPackage().fromJson(contentJsonBody);
+                break;
+            case SINGLE_VIDEO_CALL:
+                jsonBodyObj = new CacheMsgSingleVideo().fromJson(contentJsonBody);
                 break;
         }
 

@@ -60,6 +60,7 @@ import com.youmai.hxsdk.utils.GlideRoundTransform;
 import com.youmai.hxsdk.utils.GsonUtil;
 import com.youmai.hxsdk.utils.QiniuUrl;
 import com.youmai.hxsdk.utils.TimeUtils;
+import com.youmai.hxsdk.videocall.CacheMsgSingleVideo;
 import com.youmai.hxsdk.view.LinearLayoutManagerWithSmoothScroller;
 import com.youmai.hxsdk.view.chat.emoticon.utils.EmoticonHandler;
 import com.youmai.hxsdk.view.chat.utils.Utils;
@@ -105,7 +106,7 @@ public class IMListAdapter extends RecyclerView.Adapter {
 
     private static final int RED_PACKET_OPENED = 104;//红包被打开
     private static final int OPEN_RED_PACKET_SUCCESS = 105;//我领取了红包
-
+    private static final int VIDEO_CALL = 1200;//发起视频聊天
     private static final int HANDLER_REFRESH_PROGREE = 0;
 
     private Activity mAct;
@@ -231,6 +232,10 @@ public class IMListAdapter extends RecyclerView.Adapter {
                 view = inflater.inflate(R.layout.hx_red_packet_opened_item, parent, false);
                 holder = new OpenRedPacketSuccessViewHolder(view);
                 break;
+            case VIDEO_CALL:
+                view = inflater.inflate(R.layout.hx_group_im_member_change_item, parent, false);
+                holder = new SingleCallViewHolder(view);
+                break;
             default:
                 //默认视图，用于解析错误的消息
                 view = inflater.inflate(R.layout.hx_fragment_im_left_txt_item, parent, false);
@@ -262,8 +267,21 @@ public class IMListAdapter extends RecyclerView.Adapter {
             onBindRedPacketOpened((RedPacketOpenedViewHolder) holder, position);
         } else if (holder instanceof OpenRedPacketSuccessViewHolder) {//我领取了红包
             onBindOpenRedPacketSuccess((OpenRedPacketSuccessViewHolder) holder, position);
+        } else if (holder instanceof SingleCallViewHolder) {//视频聊天状态
+            onBindSingleCallState((SingleCallViewHolder) holder, position);
         }
 
+    }
+
+    private void onBindSingleCallState(final SingleCallViewHolder holder, int position) {
+        CacheMsgBean bean = mImBeanList.get(position);
+        showMsgTime(position, holder.senderDateTV, bean.getMsgTime());
+
+        String content = bean.getContentJsonBody();
+        CacheMsgSingleVideo msgBean = GsonUtil.parse(content, CacheMsgSingleVideo.class);
+        if (msgBean != null) {
+            holder.tv_single_call.setText(msgBean.getContent());
+        }
     }
 
     @Override
@@ -319,6 +337,9 @@ public class IMListAdapter extends RecyclerView.Adapter {
                 break;
             case CacheMsgBean.PACKET_OPENED_SUCCESS:
                 oriType = OPEN_RED_PACKET_SUCCESS;
+                break;
+            case CacheMsgBean.SINGLE_VIDEO_CALL:
+                oriType = VIDEO_CALL;
                 break;
         }
         return oriType;
@@ -1347,7 +1368,7 @@ public class IMListAdapter extends RecyclerView.Adapter {
                     } else {
                         ARouter.getInstance().build(APath.EMPLOYEE_DATA_ACT)
                                 .withString("contacts_id", bean.getTargetUserName())
-                                .withString("contacts_uuid",bean.getTargetUuid())
+                                .withString("contacts_uuid", bean.getTargetUuid())
                                 .navigation(mAct);
 
                     }
@@ -1687,6 +1708,15 @@ public class IMListAdapter extends RecyclerView.Adapter {
             }
         }
 
+    }
+
+    class SingleCallViewHolder extends IMListAdapter.BaseViewHolder {
+        TextView tv_single_call;
+
+        SingleCallViewHolder(View itemView) {
+            super(itemView);
+            tv_single_call = (TextView) itemView.findViewById(R.id.tv_group_changed);
+        }
     }
 
 }

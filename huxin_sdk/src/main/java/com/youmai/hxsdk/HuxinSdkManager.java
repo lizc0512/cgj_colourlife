@@ -33,6 +33,7 @@ import com.youmai.hxsdk.db.helper.CacheMsgHelper;
 import com.youmai.hxsdk.db.manager.GreenDBIMManager;
 import com.youmai.hxsdk.entity.IpConfig;
 import com.youmai.hxsdk.entity.RespBaseBean;
+import com.youmai.hxsdk.entity.SingleVideoCall;
 import com.youmai.hxsdk.entity.VideoCall;
 import com.youmai.hxsdk.http.HttpConnector;
 import com.youmai.hxsdk.http.IGetListener;
@@ -100,6 +101,16 @@ public class HuxinSdkManager {
     private StackAct mStackAct;
     private UserInfo mUserInfo;
     private VideoCall mVideoCall;
+    private SingleVideoCall mSingleVideoCall;
+
+    public SingleVideoCall getmSingleVideoCall() {
+        return mSingleVideoCall;
+    }
+
+    public void setmSingleVideoCall(SingleVideoCall mSingleVideoCall) {
+        this.mSingleVideoCall = mSingleVideoCall;
+    }
+
     private boolean isKicked;
 
     /**
@@ -1857,6 +1868,48 @@ public class HuxinSdkManager {
     }
 
     /**
+     * 创建单聊视频房间
+     *
+     * @param callback
+     */
+    public void reqCreateVideoRoom(YouMaiVideo.VideoType type, ReceiveListener callback) {
+        String avatar = ColorsConfig.HEAD_ICON_URL + "avatar?uid=" + getUserName();
+        YouMaiVideo.RoomCreateReq.Builder builder = YouMaiVideo.RoomCreateReq.newBuilder();
+        builder.setUserId(getUuid());
+        builder.setTopic("");
+        builder.setGroup(false);
+        builder.setGroupId(0);
+        builder.setType(type);
+
+        builder.setAvator(avatar);
+        builder.setNickname(getRealName());
+        YouMaiVideo.RoomCreateReq roomCreateReq = builder.build();
+        sendProto(roomCreateReq, YouMaiBasic.COMMANDID.CID_VIDEO_ROOM_CREATE_REQ_VALUE, callback);
+
+    }
+
+    /**
+     * 单聊邀请视频聊天成员
+     *
+     * @param callback
+     */
+    public void inviteVideoMember(YouMaiVideo.VideoType type, String roomName, List<YouMaiVideo.RoomMemberItem> memberList, ReceiveListener callback) {
+        String avatar = ColorsConfig.HEAD_ICON_URL + "avatar?uid=" + getUserName();
+
+        YouMaiVideo.MemberInviteReq.Builder builder = YouMaiVideo.MemberInviteReq.newBuilder();
+        builder.setAdminId(getUuid());
+        builder.setGroupId(0);
+        builder.setInfo("");
+        builder.setNickname(getRealName());
+        builder.setAvator(avatar);
+        builder.setRoomName(roomName);
+        builder.addAllMemberList(memberList);
+        builder.setType(type);
+        YouMaiVideo.MemberInviteReq memberAddReq = builder.build();
+        sendProto(memberAddReq, YouMaiBasic.COMMANDID.CID_VIDEO_MEMBER_INVITE_REQ_VALUE, callback);
+    }
+
+    /**
      * 邀请视频聊天成员
      *
      * @param roomName
@@ -1878,7 +1931,6 @@ public class HuxinSdkManager {
         YouMaiVideo.MemberInviteReq memberAddReq = builder.build();
         sendProto(memberAddReq, YouMaiBasic.COMMANDID.CID_VIDEO_MEMBER_INVITE_REQ_VALUE, callback);
     }
-
 
     /**
      * 邀请视频聊天成员
@@ -1991,6 +2043,25 @@ public class HuxinSdkManager {
 
     }
 
+    /**
+     * 申请发言
+     *
+     * @param isCamera
+     * @param isVocie
+     * @param roomName
+     * @param adminId
+     * @param callback
+     */
+    public void reqVideoSettingApply(boolean isCamera, boolean isVocie, String roomName, String adminId, ReceiveListener callback) {
+        YouMaiVideo.VideoSettingApplyReq.Builder builder = YouMaiVideo.VideoSettingApplyReq.newBuilder();
+        builder.setAdminId(adminId);
+        builder.setOpenCamera(isCamera);
+        builder.setOpenVoice(isVocie);
+        builder.setRoomName(roomName);
+        builder.setUserId(getUuid());
+        YouMaiVideo.VideoSettingApplyReq applyReq = builder.build();
+        sendProto(applyReq, YouMaiBasic.COMMANDID.CID_VIDEO_SETTING_APPLY_REQ_VALUE, callback);
+    }
 
     /**
      * 获取连麦房间信息
@@ -2081,6 +2152,34 @@ public class HuxinSdkManager {
         });
     }
 
+    /**
+     * 单聊用户退出房间
+     */
+    public void reqExitRoom(String roomName) {
+        YouMaiVideo.ExitRoomReq.Builder builder = YouMaiVideo.ExitRoomReq.newBuilder();
+        builder.setUserId(getUuid());
+        builder.setRoomName(roomName);
+        YouMaiVideo.ExitRoomReq exitRoomReq = builder.build();
+        sendProto(exitRoomReq, YouMaiBasic.COMMANDID.CID_VIDEO_ROOM_EXIT_REQ_VALUE, new ReceiveListener() {
+            @Override
+            public void OnRec(PduBase pduBase) {
+                try {
+                    YouMaiVideo.ExitRoomRsp rep = YouMaiVideo.ExitRoomRsp.parseFrom(pduBase.body);
+                    if (rep.getResult() == YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS) {
+                        //mVideoCall = null;
+                        if (mVideoCall != null) {
+                            mVideoCall.setToken("");
+                            mVideoCall.setOwner(false);
+                        }
+                        //Toast.makeText(mContext, "退出成功", Toast.LENGTH_SHORT).show();
+                    }
+
+                } catch (InvalidProtocolBufferException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
 
     /**
      * 结束视频
@@ -2108,6 +2207,31 @@ public class HuxinSdkManager {
                 });
     }
 
+    /**
+     * 单聊结束视频
+     */
+    public void reqDestroyRoom(String roomName) {
+        YouMaiVideo.DestroyRoomReq.Builder builder = YouMaiVideo.DestroyRoomReq.newBuilder();
+        builder.setUserId(getUuid());
+        builder.setRoomName(roomName);
+        YouMaiVideo.DestroyRoomReq destroyRoomReq = builder.build();
+        sendProto(destroyRoomReq, YouMaiBasic.COMMANDID.CID_VIDEO_ROOM_DESTROY_REQ_VALUE,
+                new ReceiveListener() {
+                    @Override
+                    public void OnRec(PduBase pduBase) {
+                        try {
+                            YouMaiVideo.DestroyRoomRsp rep = YouMaiVideo.DestroyRoomRsp.parseFrom(pduBase.body);
+                            if (rep.getResult() == YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS) {
+                                //mVideoCall = null;
+                                //Toast.makeText(mContext, "通话结束！", Toast.LENGTH_SHORT).show();
+                            }
+
+                        } catch (InvalidProtocolBufferException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+    }
 
     /**
      * 申请发言

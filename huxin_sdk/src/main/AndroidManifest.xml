@@ -246,6 +246,11 @@
             android:name=".videocall.RoomActivity"
             android:screenOrientation="portrait"
             android:theme="@style/HxSdkTheme" />
+        <!-- 视频通话 -->
+        <activity
+            android:name=".videocall.SingleRoomActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/HxSdkTheme" />
         <!-- 选择成员 -->
         <activity
             android:name=".module.videocall.VideoSelectConstactActivity"

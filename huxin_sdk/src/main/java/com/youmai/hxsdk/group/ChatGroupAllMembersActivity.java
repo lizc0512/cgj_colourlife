@@ -89,7 +89,6 @@ public class ChatGroupAllMembersActivity extends SdkBaseActivity implements Grou
         recycler_view.addItemDecoration(new PaddingItemDecoration(20));
         recycler_view.setLayoutManager(manager);
         recycler_view.setAdapter(mAdapter);
-
         setGroupInfo(mGroupInfo);
     }
 

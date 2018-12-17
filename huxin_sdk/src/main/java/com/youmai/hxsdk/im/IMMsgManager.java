@@ -60,6 +60,7 @@ import com.youmai.hxsdk.utils.BadgeUtil;
 import com.youmai.hxsdk.utils.ListUtils;
 import com.youmai.hxsdk.utils.LogFile;
 import com.youmai.hxsdk.videocall.RoomActivity;
+import com.youmai.hxsdk.videocall.SingleRoomActivity;
 import com.youmai.hxsdk.videocall.VideoCallRingActivity;
 
 import org.json.JSONException;
@@ -72,6 +73,7 @@ import java.util.Map;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import me.leolin.shortcutbadger.ShortcutBadger;
+
 
 /**
  * Author:  Kevin Feng
@@ -92,11 +94,13 @@ public class IMMsgManager {
     private IMVedioSettingCallBack imVedioSettingCallBack;
     private IMVedioSettingCallBack imVedioNotify;
     private IMVedioSettingCallBack iMVedioEntryCallBack;
-
+    private IMVedioSingleChatCallBack singleChatCallBack;
+    private IMVedioMsgCallBack vedioMsgCallBack;
     private List<Integer> pushMsgNotifyIdList;
 
     private static IMMsgManager instance = null;
-
+    public static boolean isSingleVideo = false;
+    public static boolean isMuteAgree = false;
     private String mTargetId;
 
     private LinkedBlockingQueue<Long> msgList;
@@ -123,6 +127,14 @@ public class IMMsgManager {
         isNotify = AppUtils.getBooleanSharedPreferences(context, "im_notify", true);
     }
 
+//    public void setIsSingleVideo(boolean f) {
+//        this.isSingleVideo = f;
+//    }
+//
+//    public void setIsMuteAgree(boolean f) {
+//        this.isMuteAgree = f;
+//    }
+
     public void setContext(Context context) {
         this.mContext = context.getApplicationContext();
     }
@@ -147,6 +159,22 @@ public class IMMsgManager {
 
     public void setImVedioSettingCallBack(IMVedioSettingCallBack imVedioSettingCallBack) {
         this.imVedioSettingCallBack = imVedioSettingCallBack;
+    }
+
+    public void setIMVedioMsgCallBack(IMVedioMsgCallBack callBack) {
+        this.vedioMsgCallBack = callBack;
+    }
+
+    public void removeIMVedioMsgCallBack() {
+        vedioMsgCallBack = null;
+    }
+
+    public void setImVedioSingleCallBack(IMVedioSingleChatCallBack callBack) {
+        this.singleChatCallBack = callBack;
+    }
+
+    public void removeImVedioSingleCallBack() {
+        singleChatCallBack = null;
     }
 
     public void removeIMVedioEntryCallBack() {
@@ -467,13 +495,6 @@ public class IMMsgManager {
         @Override
         public void OnRec(byte[] data) {
             try {
-//                YouMaiMsg.PushMsg notify = YouMaiMsg.PushMsg.parseFrom(data);
-//
-//                long msgId = notify.getMsgId();
-//                int cmdId = notify.getCmdId();
-//                ByteString notifyData = notify.getData();
-//
-//                if (cmdId == YouMaiBasic.COMMANDID.CID_VIDEO_MEMBER_INVITE_NOTIFY_VALUE) {
 
                 YouMaiVideo.MemberInviteNotify inviteNotify = YouMaiVideo
                         .MemberInviteNotify.parseFrom(data);
@@ -483,15 +504,39 @@ public class IMMsgManager {
                 String avatar = inviteNotify.getAvator();
                 String nickname = inviteNotify.getNickname();
                 int groupId = inviteNotify.getGroupId();
+                boolean isSingle = false;
+                int singleType = 0;
+                if (groupId == 0) {
+                    isSingle = true;
+                }
+                isSingleVideo = true;
                 int type = inviteNotify.getType().getNumber();
                 boolean valid = inviteNotify.getValid();
                 int time = inviteNotify.getTime();
                 YouMaiVideo.RoomMemberItem member = inviteNotify.getMember();
                 int role = member.getMemberRole(); //1-管理员，2-普通成员
+                String memberId = member.getMemberId();
+                //String memberId = member.getMemberId();
                 boolean isAnchor = member.getAnchor();
                 if (!valid) {
+//                    CacheMsgBean cacheBean = new CacheMsgBean();
+//                    CacheMsgSingleVideo cacheMsgSingleVideo = new CacheMsgSingleVideo();
+//                    String msg = "";
+//                    if (type == VideoSelectConstactActivity.VIDEO_MEETING) {
+//                        msg = "视频通话 对方已取消";
+//                    } else {
+//                        msg = "语音通话 对方已取消";
+//                    }
+//                    cacheMsgSingleVideo.setContent(msg);
+//                    cacheBean.setJsonBodyObj(cacheMsgSingleVideo).setMsgType(SINGLE_VIDEO_CALL)
+//                            .setMsgTime(System.currentTimeMillis())
+//                            .setSenderUserId(HuxinSdkManager.instance().getUuid())
+//                            .setTargetUuid(adminId);
+//                    CacheMsgHelper.instance().insertOrUpdate(mContext, cacheBean);
+//                    handlerIMMsgCallback(cacheBean);
                     return;
                 }
+
                 Intent intent = new Intent(mContext, VideoCallRingActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra("room_name", roomName);
@@ -503,12 +548,8 @@ public class IMMsgManager {
                 intent.putExtra("member_role", role);
                 intent.putExtra("video_type", type);
                 intent.putExtra("time", time);
+                intent.putExtra("isSingle", isSingle);
                 mContext.startActivity(intent);
-
-                //notifyVideoCall(roomName, adminId);
-
-//                }
-//                HuxinSdkManager.instance().sendPushMsgReply(msgId);
 
 
             } catch (InvalidProtocolBufferException e) {
@@ -736,23 +777,39 @@ public class IMMsgManager {
                 boolean agree = notify.getAgree();
                 String adminId = notify.getAdminId();
                 VideoCall videoCall = HuxinSdkManager.instance().getVideoCall();
-                if (!agree && videoCall != null) {
-
-                    List<YouMaiVideo.RoomMemberItem> list = videoCall.getInviteMembers();
-                    if (!ListUtils.isEmpty(list)) {
-                        for (int i = 0; i < list.size(); i++) {
-                            String id = list.get(i).getMemberId();
-                            if (id.equals(memberId)) {
-                                list.remove(i);
-                                break;
-                            }
+                if (videoCall == null) {
+                    //单聊模式
+                    if (agree) {
+                        if (singleChatCallBack != null) {
+                            singleChatCallBack.agress();
+                            isMuteAgree = true;
+                        }
+                        //SingleControlFragment.reMuteIsAgree = true;
+                    } else {
+                        if (singleChatCallBack != null && !TextUtils.isEmpty(roomName)) {
+                            singleChatCallBack.reject(roomName);
+                            isMuteAgree = false;
                         }
                     }
+                } else {
+                    //群通话
+                    if (!agree && videoCall != null) {
+                        List<YouMaiVideo.RoomMemberItem> list = videoCall.getInviteMembers();
+                        if (!ListUtils.isEmpty(list)) {
+                            for (int i = 0; i < list.size(); i++) {
+                                String id = list.get(i).getMemberId();
+                                if (id.equals(memberId)) {
+                                    list.remove(i);
+                                    break;
+                                }
+                            }
+                        }
 
-                    if (ListUtils.isEmpty(list)) {
-                        HuxinSdkManager.instance().reqExitRoom();
-                        Toast.makeText(mContext, "对方已经拒接您的邀请", Toast.LENGTH_SHORT).show();
-                        HuxinSdkManager.instance().getStackAct().finishActivity(RoomActivity.class);
+                        if (ListUtils.isEmpty(list)) {
+                            HuxinSdkManager.instance().reqExitRoom();
+                            Toast.makeText(mContext, "对方已经拒接您的邀请", Toast.LENGTH_SHORT).show();
+                            HuxinSdkManager.instance().getStackAct().finishActivity(RoomActivity.class);
+                        }
                     }
                 }
 
@@ -888,6 +945,7 @@ public class IMMsgManager {
                 String adminId = notify.getUserId();
                 String notifyId = notify.getNotifyId();
 
+
                 VideoCall videoCall = HuxinSdkManager.instance().getVideoCall();
                 if (videoCall != null) {
                     HuxinSdkManager.instance().reqExitRoom();
@@ -895,14 +953,25 @@ public class IMMsgManager {
                     if (!TextUtils.isEmpty(name) && name.equals(roomName)) {
                         HuxinSdkManager.instance().setVideoCall(null);
                     }
+                    HuxinSdkManager.instance().getStackAct().finishActivity(VideoCallRingActivity.class);
+                    HuxinSdkManager.instance().getStackAct().finishActivity(VideoSelectConstactActivity.class);
+                    HuxinSdkManager.instance().getStackAct().finishActivity(RoomActivity.class);
+                } else {
+                    if (isSingleVideo) {
+                        if (vedioMsgCallBack != null) {
+                            vedioMsgCallBack.onRoomDestroy(adminId);
+                        }
+                        HuxinSdkManager.instance().getStackAct().finishActivity(VideoCallRingActivity.class);
+                        HuxinSdkManager.instance().getStackAct().finishActivity(SingleRoomActivity.class);
+                        isSingleVideo = false;
+                        isMuteAgree = false;
+                    }
                 }
                 if (AppUtils.isServiceRunning(mContext, "com.youmai.hxsdk.service.RingService")) {
                     Intent intent = new Intent(mContext, RingService.class);
                     mContext.stopService(intent);
                 }
-                HuxinSdkManager.instance().getStackAct().finishActivity(VideoCallRingActivity.class);
-                HuxinSdkManager.instance().getStackAct().finishActivity(VideoSelectConstactActivity.class);
-                HuxinSdkManager.instance().getStackAct().finishActivity(RoomActivity.class);
+
             } catch (InvalidProtocolBufferException e) {
                 e.printStackTrace();
             }
@@ -1528,6 +1597,7 @@ public class IMMsgManager {
                 .setGroupId(groupId)
                 .setTargetUuid(groupId + "");
     }
+
 
     private CacheMsgBean getGroupNameChangedMsgBean(int groupId, String content) {
         return new CacheMsgBean()

@@ -99,6 +99,7 @@ import com.youmai.hxsdk.utils.StringUtils;
 import com.youmai.hxsdk.utils.ToastUtil;
 import com.youmai.hxsdk.utils.VideoUtils;
 import com.youmai.hxsdk.videocall.RoomActivity;
+import com.youmai.hxsdk.videocall.VideoOperatConstactActivity;
 import com.youmai.hxsdk.view.LinearLayoutManagerWithSmoothScroller;
 import com.youmai.hxsdk.view.chat.InputMessageLay;
 import com.youmai.smallvideorecord.model.OnlyCompressOverBean;
@@ -1796,6 +1797,12 @@ public class IMGroupActivity extends SdkBaseActivity implements
                 intent.putExtra(VideoSelectConstactActivity.GROUP_NAME, groupName);
                 startActivity(intent);
                 selectVideoDialog.dismiss();
+//                Intent intent=new Intent(mContext,VideoOperatConstactActivity.class);
+//                intent.putExtra(GROUP_ID, groupId);
+//                intent.putExtra(VideoSelectConstactActivity.ROOM_NAME, 1);
+//                intent.putExtra(VideoOperatConstactActivity.INTENT_TYPE,VideoOperatConstactActivity.UPDATE_ADMIN);
+//                startActivity(intent);
+
             }
         }).setButtomClick(new View.OnClickListener() {
             @Override

@@ -117,6 +117,7 @@ public class InputMessageLay extends AutoHeightLayout implements View.OnClickLis
 
     private boolean isRecording = true;
     private MediaRecorder mMediaRecorder;
+    private TextView tvChatVideo;
 
 
     private class VoiceOnTouchListener implements OnTouchListener {
@@ -912,6 +913,7 @@ public class InputMessageLay extends AutoHeightLayout implements View.OnClickLis
         });
 
         chatVideo = view.findViewById(R.id.item_chat_video);
+        tvChatVideo = view.findViewById(R.id.tv_chat_video);
         chatVideo.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -940,7 +942,8 @@ public class InputMessageLay extends AutoHeightLayout implements View.OnClickLis
 
 
     public void hideChatVideo() {
-        chatVideo.setVisibility(GONE);
+        //chatVideo.setVisibility(GONE);
+        tvChatVideo.setText("视频通话");
     }
 
     /**

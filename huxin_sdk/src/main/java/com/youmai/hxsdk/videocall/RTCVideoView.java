@@ -1,10 +1,12 @@
 package com.youmai.hxsdk.videocall;
 
 import android.content.Context;
+import android.text.Html;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -30,6 +32,7 @@ public class RTCVideoView extends FrameLayout implements View.OnLongClickListene
 
     private String nickName;
     private String avator;
+    private RelativeLayout rtc;
 
     public interface OnLongClickListener {
         void onLongClick(String userId);
@@ -51,6 +54,10 @@ public class RTCVideoView extends FrameLayout implements View.OnLongClickListene
 
     public void setNickName(String nickName) {
         this.nickName = nickName;
+    }
+
+    public void setNickNameAgree(String str) {
+        mAudioView.setText(str);
     }
 
     public void setAvator(String avator) {
@@ -96,6 +103,7 @@ public class RTCVideoView extends FrameLayout implements View.OnLongClickListene
         mContainer.setVisibility(VISIBLE);
 
         mAudioView.setText(nickName);
+        //mAudioView.setText(Html.fromHtml(nickName));
         //mAudioView.setBackgroundColor(getTargetColor(pos));
         mAudioView.setVisibility(VISIBLE);
 
@@ -150,11 +158,16 @@ public class RTCVideoView extends FrameLayout implements View.OnLongClickListene
         }
     }
 
+    public void hide() {
+        rtc.setVisibility(GONE);
+    }
+
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
         setOnLongClickListener(this);
         mMicrophoneStateView = (ImageView) findViewById(R.id.microphone_state_view);
+        rtc = findViewById(R.id.rtc_video_view);
         mAudioView = findViewById(R.id.qn_audio_view);
         mAvatar = findViewById(R.id.avatar);
         mContainer = findViewById(R.id.container);

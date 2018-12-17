@@ -41,9 +41,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.android.arouter.launcher.ARouter;
+import com.google.protobuf.InvalidProtocolBufferException;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.activity.CameraActivity;
+import com.youmai.hxsdk.chatgroup.IMGroupActivity;
+import com.youmai.hxsdk.config.ColorsConfig;
+import com.youmai.hxsdk.dialog.HxSelectSexDialog;
+import com.youmai.hxsdk.dialog.HxSelectVedioDialog;
+import com.youmai.hxsdk.entity.cn.SearchContactBean;
+import com.youmai.hxsdk.module.videocall.VideoSelectConstactActivity;
 import com.youmai.hxsdk.packet.RedPacketActivity;
 import com.youmai.hxsdk.activity.SdkBaseActivity;
 import com.youmai.hxsdk.config.FileConfig;
@@ -70,10 +77,14 @@ import com.youmai.hxsdk.module.groupchat.ChatDetailsActivity;
 import com.youmai.hxsdk.module.movierecord.MediaStoreUtils;
 import com.youmai.hxsdk.module.picker.PhotoPickerManager;
 import com.youmai.hxsdk.module.picker.PhotoPreviewActivity;
+import com.youmai.hxsdk.proto.YouMaiBasic;
+import com.youmai.hxsdk.proto.YouMaiVideo;
 import com.youmai.hxsdk.router.APath;
 import com.youmai.hxsdk.service.SendMsgService;
 import com.youmai.hxsdk.service.download.bean.FileQueue;
 import com.youmai.hxsdk.service.sendmsg.SendMsg;
+import com.youmai.hxsdk.socket.PduBase;
+import com.youmai.hxsdk.socket.ReceiveListener;
 import com.youmai.hxsdk.utils.AbFileUtil;
 import com.youmai.hxsdk.utils.AppUtils;
 import com.youmai.hxsdk.utils.CommonUtils;
@@ -83,6 +94,8 @@ import com.youmai.hxsdk.utils.LogUtils;
 import com.youmai.hxsdk.utils.StringUtils;
 import com.youmai.hxsdk.utils.ToastUtil;
 import com.youmai.hxsdk.utils.VideoUtils;
+import com.youmai.hxsdk.videocall.RoomActivity;
+import com.youmai.hxsdk.videocall.SingleRoomActivity;
 import com.youmai.hxsdk.view.LinearLayoutManagerWithSmoothScroller;
 import com.youmai.hxsdk.view.chat.InputMessageLay;
 import com.youmai.smallvideorecord.model.OnlyCompressOverBean;
@@ -174,6 +187,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
     private boolean isOriginal = false;
 
     private NormalHandler mHandler;
+    private HxSelectVedioDialog dialog;
 
     /**
      * 消息广播
@@ -215,6 +229,13 @@ public class IMConnectionActivity extends SdkBaseActivity implements
 
             } else if (SendMsgService.ACTION_NEW_MSG.equals(intent.getAction())) {
                 CacheMsgBean cacheMsgBean = intent.getParcelableExtra("CacheNewMsg");
+                imListAdapter.refreshIncomingMsgUI(cacheMsgBean);
+            } else if (SendMsgService.ACTION_NEW_MSG_VEDIO.equals(intent.getAction())) {
+                CacheMsgBean cacheMsgBean = intent.getParcelableExtra("CacheNewMsg");
+//                if (cacheMsgBean.getTargetUuid().equals(dstUuid)) {
+//                    cacheMsgBean.setTargetName(dstNickName);
+//                }
+
                 imListAdapter.refreshIncomingMsgUI(cacheMsgBean);
             }
 
@@ -272,6 +293,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
         filter.addAction(SendMsgService.ACTION_SEND_MSG);
         filter.addAction(SendMsgService.ACTION_UPDATE_MSG);
         filter.addAction(SendMsgService.ACTION_NEW_MSG);
+        filter.addAction(SendMsgService.ACTION_NEW_MSG_VEDIO);
         localBroadcastManager.registerReceiver(mLocalMsgReceiver, filter);
 
         initView();
@@ -1099,7 +1121,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
     public void onCallback(CacheMsgBean cacheMsgBean) {
         //刷新界面
         if (!isFinishing()) {
-            if (cacheMsgBean.getSenderUserId().equals(dstUuid)
+            if (cacheMsgBean.getTargetUuid().equals(dstUuid)
                     && cacheMsgBean.getGroupId() == 0) {
                 imListAdapter.refreshIncomingMsgUI(cacheMsgBean);
                 isMsgReceive = true;
@@ -1240,8 +1262,115 @@ public class IMConnectionActivity extends SdkBaseActivity implements
         } else if (type == InputMessageLay.TYPE_RED_PACKET) {
             //发送红包
             sendRedPacket();
+        } else if (type == InputMessageLay.TYPE_VIDEO) {
+            if (dstUuid.equals(HuxinSdkManager.instance().getUuid())) {
+                Toast.makeText(mContext, "不允许视频要请自己!!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            HxSelectVedioDialog.Build dialogBuilder = new HxSelectVedioDialog.Build(mContext);
+            dialogBuilder.btnFirstText("视频聊天");
+            dialogBuilder.btnSecondText("语音聊天");
+            dialogBuilder.btnButtomText("取消");
+            dialogBuilder.setFirstClick(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    reqCreateRoom(YouMaiVideo.VideoType.CONFERENCE);
+                    dialog.dismiss();
+                }
+            });
+            dialogBuilder.setSecondClick(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    reqCreateRoom(YouMaiVideo.VideoType.TRAIN);
+                    dialog.dismiss();
+                }
+            });
+            dialogBuilder.setButtomClick(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                }
+            });
+            dialog = dialogBuilder.build();
+            dialog.show();
+
         }
 
+    }
+
+    private void reqCreateRoom(YouMaiVideo.VideoType type) {
+        HuxinSdkManager.instance().reqCreateVideoRoom(type, new ReceiveListener() {
+            @Override
+            public void OnRec(PduBase pduBase) {
+                try {
+                    YouMaiVideo.RoomCreateRsp rsp = YouMaiVideo.RoomCreateRsp.parseFrom(pduBase.body);
+                    if (rsp.getResult() == YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS) {
+                        String token = rsp.getToken();
+                        String roomName = rsp.getRoomName();
+                        YouMaiVideo.VideoType videoType = rsp.getType();
+                        int type = rsp.getType().getNumber();
+                        int singleType = 0;
+                        if (type == VideoSelectConstactActivity.VIDEO_MEETING) {
+                            singleType = SingleRoomActivity.SINGLE_VIDEO;
+                        } else {
+                            singleType = SingleRoomActivity.SINGLE_AUDIO;
+                        }
+                        String userId = HuxinSdkManager.instance().getUuid();
+
+
+                        List<YouMaiVideo.RoomMemberItem> memberItems = new ArrayList<>();
+                        YouMaiVideo.RoomMemberItem.Builder builder = YouMaiVideo.RoomMemberItem.newBuilder();
+                        builder.setMemberId(dstUuid);
+                        builder.setAvator(dstAvatar);
+                        builder.setNickname(dstNickName);
+                        builder.setMemberRole(2);
+                        builder.setAnchor(false);
+
+                        memberItems.add(builder.build());
+                        HuxinSdkManager.instance().inviteVideoMember(videoType, roomName, memberItems, new ReceiveListener() {
+                            @Override
+                            public void OnRec(PduBase pduBase) {
+                                try {
+                                    YouMaiVideo.MemberInviteRsp rsp = YouMaiVideo.MemberInviteRsp.parseFrom(pduBase.body);
+                                    if (rsp.getResult() == YouMaiBasic.ResultCode.RESULT_CODE_SUCCESS) {
+                                        String roomName = rsp.getRoomName();
+                                        String adminId = rsp.getAdminId();
+
+                                        //HuxinSdkManager.instance().getVideoCall().setInviteMembers(memberItems);
+                                        //Toast.makeText(mContext, "邀请视频成员成功,结果码：" + rsp.getResult(), Toast.LENGTH_SHORT).show();
+                                        //finish();
+                                    } else {
+                                        Toast.makeText(mContext, "邀请视频成员失败,结果码：" + rsp.getResult(), Toast.LENGTH_SHORT).show();
+                                    }
+                                } catch (InvalidProtocolBufferException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+                        IMMsgManager.isSingleVideo = true;
+                        String admin_avatar = ColorsConfig.HEAD_ICON_URL + "avatar?uid=" + HuxinSdkManager.instance().getUserName();
+                        String admin_realName = HuxinSdkManager.instance().getRealName();
+                        Intent intent = new Intent(IMConnectionActivity.this, SingleRoomActivity.class);
+                        intent.putExtra(SingleRoomActivity.EXTRA_ROOM_ID, roomName);
+                        intent.putExtra(SingleRoomActivity.EXTRA_ROOM_TOKEN, token);
+                        intent.putExtra(SingleRoomActivity.EXTRA_USER_ID, userId);
+                        intent.putExtra(SingleRoomActivity.EXTRA_SINGLE_TYPE, singleType);
+                        intent.putExtra(SingleRoomActivity.EXTRA_DST_NICK_NAME, dstNickName);
+                        intent.putExtra(SingleRoomActivity.EXTRA_DST_AVATAR, dstAvatar);
+                        intent.putExtra(SingleRoomActivity.EXTRA_ADMIN_ID, userId);
+                        intent.putExtra(SingleRoomActivity.EXTRA_IVATOR_ID, dstUuid);
+                        intent.putExtra(SingleRoomActivity.EXTRA_ADMIN_NICK_NAME, admin_realName);
+                        intent.putExtra(SingleRoomActivity.EXTRA_ADMIN_AVATAR, admin_avatar);
+
+                        startActivity(intent);
+
+                    }
+                } catch (InvalidProtocolBufferException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     @Override

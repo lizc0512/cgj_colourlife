@@ -219,7 +219,7 @@ public class SingleControlFragment extends Fragment implements View.OnClickListe
         audioQuiet.setVisibility(View.VISIBLE);
         audioSpeaker.setVisibility(View.VISIBLE);
         rl_videocall.setVisibility(View.GONE);
-        tv_name.setText(dst_avatar);
+        tv_name.setText(dst_nickName);
     }
 
     @Override

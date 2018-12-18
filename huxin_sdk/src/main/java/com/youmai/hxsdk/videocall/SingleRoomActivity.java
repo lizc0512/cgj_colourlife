@@ -183,8 +183,6 @@ public class SingleRoomActivity extends SdkBaseActivity implements QNRoomEventLi
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().addFlags(LayoutParams.FLAG_FULLSCREEN | LayoutParams.FLAG_KEEP_SCREEN_ON
                 | LayoutParams.FLAG_DISMISS_KEYGUARD | LayoutParams.FLAG_SHOW_WHEN_LOCKED
@@ -201,6 +199,7 @@ public class SingleRoomActivity extends SdkBaseActivity implements QNRoomEventLi
 //        mScreenHeight = outMetrics.heightPixels;
 //        mDensity = outMetrics.density;
         timer.start();
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room_single);
         IMMsgManager.instance().setImVedioSingleCallBack(new IMVedioSingleChatCallBack() {
             @Override

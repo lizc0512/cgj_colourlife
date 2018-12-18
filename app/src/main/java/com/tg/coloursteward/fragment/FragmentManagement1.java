@@ -341,7 +341,6 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
     @Override
     public void onSuccess(Message msg, String jsonString, String hintString) {
         int code = HttpTools.getCode(jsonString);
-        String message = HttpTools.getMessageString(jsonString);
         if (msg.arg1 == HttpTools.SET_EMPLOYEE_INFO) {
             if (code == 0) {
                 JSONObject content = HttpTools.getContentJSONObject(jsonString);

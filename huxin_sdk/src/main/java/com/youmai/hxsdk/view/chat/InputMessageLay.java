@@ -18,6 +18,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -72,6 +73,7 @@ public class InputMessageLay extends AutoHeightLayout implements View.OnClickLis
     public static final int TYPE_FILE = 4;
     public static final int TYPE_RED_PACKET = 5;
     public static final int TYPE_VIDEO = 6;
+    public static final int TYPE_VIDEO_SINGLE_AUDIO = 7;
 
     private static final int VOICE_TIME = 60;//录音时长,默认60秒
     private static final int VOICE_LAST_TIME = 10;//录音剩余时长,默认10秒
@@ -118,6 +120,9 @@ public class InputMessageLay extends AutoHeightLayout implements View.OnClickLis
     private boolean isRecording = true;
     private MediaRecorder mMediaRecorder;
     private TextView tvChatVideo;
+    private LinearLayout singleChatVideo;
+    private TextView tvSingleChatAudio;
+    private ImageView ivVideo;
 
 
     private class VoiceOnTouchListener implements OnTouchListener {
@@ -914,6 +919,7 @@ public class InputMessageLay extends AutoHeightLayout implements View.OnClickLis
 
         chatVideo = view.findViewById(R.id.item_chat_video);
         tvChatVideo = view.findViewById(R.id.tv_chat_video);
+
         chatVideo.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -921,6 +927,17 @@ public class InputMessageLay extends AutoHeightLayout implements View.OnClickLis
                 if (mKeyBoardBarViewListener != null) {
                     //视频
                     mKeyBoardBarViewListener.onKeyBoardMore(TYPE_VIDEO);
+                }
+            }
+        });
+        singleChatVideo = view.findViewById(R.id.item_chat_video_single);
+        ivVideo = view.findViewById(R.id.iv_video);
+        tvSingleChatAudio = view.findViewById(R.id.tv_chat_video_single_audio);
+        singleChatVideo.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mKeyBoardBarViewListener != null) {
+                    mKeyBoardBarViewListener.onKeyBoardMore(TYPE_VIDEO_SINGLE_AUDIO);
                 }
             }
         });
@@ -942,8 +959,10 @@ public class InputMessageLay extends AutoHeightLayout implements View.OnClickLis
 
 
     public void hideChatVideo() {
-        //chatVideo.setVisibility(GONE);
+        singleChatVideo.setVisibility(VISIBLE);
         tvChatVideo.setText("视频通话");
+        tvSingleChatAudio.setText("语音通话");
+        ivVideo.setImageResource(R.mipmap.im_icon_single_video);
     }
 
     /**

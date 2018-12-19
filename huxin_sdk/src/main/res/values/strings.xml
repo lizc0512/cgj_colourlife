@@ -186,6 +186,7 @@
 
 
     <!-- 视频通话 -->
+    <string name="video_call_ring">邀请你加入“%1$s”群通话</string>
     <string name="video_call_status">%1$d人正在通话"</string>
     <string name="video_call_entry">加入"</string>
     <string name="video_call_apply">你的申请已经发出，请耐心等待发起人的通过</string>

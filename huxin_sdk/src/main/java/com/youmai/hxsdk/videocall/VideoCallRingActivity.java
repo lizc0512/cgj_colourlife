@@ -27,6 +27,7 @@ import com.youmai.hxsdk.db.bean.GroupInfoBean;
 import com.youmai.hxsdk.db.helper.CacheMsgHelper;
 import com.youmai.hxsdk.db.helper.GroupInfoHelper;
 import com.youmai.hxsdk.entity.VideoCall;
+import com.youmai.hxsdk.im.IMMsgCallback;
 import com.youmai.hxsdk.im.IMMsgManager;
 import com.youmai.hxsdk.im.IMVedioMsgCallBack;
 import com.youmai.hxsdk.module.videocall.VideoSelectConstactActivity;
@@ -75,22 +76,7 @@ public class VideoCallRingActivity extends SdkBaseActivity implements View.OnCli
             if (!VideoCallRingActivity.this.isFinishing()) {
                 // reqVideoInvite(false, roomName, adminId);
                 if (isSingle) {
-                    CacheMsgBean cacheBean = new CacheMsgBean();
-                    CacheMsgSingleVideo cacheMsgSingleVideo = new CacheMsgSingleVideo();
-                    cacheMsgSingleVideo.setContent("对方已取消通话");
-                    cacheBean.setJsonBodyObj(cacheMsgSingleVideo).setMsgType(SINGLE_VIDEO_CALL)
-                            .setMsgTime(System.currentTimeMillis())
-                            .setSenderUserId(HuxinSdkManager.instance().getUuid())
-                            .setSenderAvatar(dst_avatar)
-                            .setSenderRealName(HuxinSdkManager.instance().getRealName())
-                            .setTargetUuid(adminId)
-                            .setTargetName(nickName)
-                            .setTargetAvatar(avatar);
-                    CacheMsgHelper.instance().insertOrUpdate(VideoCallRingActivity.this, cacheBean);
-                    Intent intent = new Intent(SendMsgService.ACTION_NEW_MSG_VEDIO);
-                    intent.putExtra("CacheNewMsg", cacheBean);
-                    LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(VideoCallRingActivity.this);
-                    localBroadcastManager.sendBroadcast(intent);
+                    sendMsg(cacheInfo + "对方已取消");
                 }
                 VideoCallRingActivity.this.finish();
 
@@ -144,15 +130,18 @@ public class VideoCallRingActivity extends SdkBaseActivity implements View.OnCli
         timer.start();
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-
+    private void doBeforeOnCreate() {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
                 | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
                 | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
         getWindow().getDecorView().setSystemUiVisibility(getSystemUiVisibility());
 
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        doBeforeOnCreate();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_call_ring);
 
@@ -176,6 +165,11 @@ public class VideoCallRingActivity extends SdkBaseActivity implements View.OnCli
         tvName.setText(nickName);
         if (isSingle) {
             tvName.setTextSize(30);
+            if (videoType == VideoSelectConstactActivity.VIDEO_MEETING) {
+                cacheInfo = "视频通话  ";
+            } else {
+                cacheInfo = "语音通话  ";
+            }
         }
         mGroupInfo = GroupInfoHelper.instance().toQueryByGroupId(this, groupId);
         updateGroupUI(mGroupInfo);
@@ -200,23 +194,7 @@ public class VideoCallRingActivity extends SdkBaseActivity implements View.OnCli
             IMMsgManager.instance().setIMVedioMsgCallBack(new IMVedioMsgCallBack() {
                 @Override
                 public void onRoomDestroy(String uuid) {
-                    CacheMsgBean cacheBean = new CacheMsgBean();
-                    CacheMsgSingleVideo cacheMsgSingleVideo = new CacheMsgSingleVideo();
-                    cacheMsgSingleVideo.setContent("对方已经取消通话");
-                    cacheBean.setJsonBodyObj(cacheMsgSingleVideo).setMsgType(SINGLE_VIDEO_CALL)
-                            .setMsgTime(System.currentTimeMillis())
-                            .setSenderUserId(HuxinSdkManager.instance().getUuid())
-                            .setSenderAvatar(dst_avatar)
-                            .setSenderRealName(HuxinSdkManager.instance().getRealName())
-                            .setTargetUuid(adminId)
-                            .setTargetName(nickName)
-                            .setTargetAvatar(avatar);
-                    CacheMsgHelper.instance().insertOrUpdate(VideoCallRingActivity.this, cacheBean);
-                    Intent intent = new Intent(SendMsgService.ACTION_NEW_MSG_VEDIO);
-                    intent.putExtra("CacheNewMsg", cacheBean);
-                    LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(VideoCallRingActivity.this);
-                    localBroadcastManager.sendBroadcast(intent);
-                    HuxinSdkManager.instance().getStackAct().finishActivity(VideoCallRingActivity.class);
+                    sendMsg(cacheInfo + "对方已取消");
                 }
 
                 @Override
@@ -246,13 +224,13 @@ public class VideoCallRingActivity extends SdkBaseActivity implements View.OnCli
             if (TextUtils.isEmpty(groupName)) {
                 String title = String.format(getString(R.string.group_item_info),
                         "群聊");
-                tvInfo.setText("邀请你加入" + "“" + title + "”" + "群通话");
+                tvInfo.setText(getResources().getString(R.string.video_call_ring, title));
             } else if (groupName.contains(ColorsConfig.GROUP_DEFAULT_NAME)) {
                 String title = groupName.replace(ColorsConfig.GROUP_DEFAULT_NAME, "");
-                tvInfo.setText("邀请你加入" + "“" + title + "”" + "群通话");
+                tvInfo.setText(getResources().getString(R.string.video_call_ring, title));
             } else {
                 String title = groupName;
-                tvInfo.setText("邀请你加入" + "“" + title + "”" + "群通话");
+                tvInfo.setText(getResources().getString(R.string.video_call_ring, title));
             }
         }
 
@@ -369,8 +347,7 @@ public class VideoCallRingActivity extends SdkBaseActivity implements View.OnCli
         Intent intent = new Intent(this, RingService.class);
         stopService(intent);
         isSingle = false;
-
-        HuxinSdkManager.instance().getStackAct().removeActivity(this);
+        //IMMsgManager.instance().removeIMVedioMsgCallBack();
     }
 
     @Override
@@ -382,25 +359,7 @@ public class VideoCallRingActivity extends SdkBaseActivity implements View.OnCli
             finish();
         } else if (id == R.id.btn_cancel) {
             reqVideoInvite(false, roomName, adminId);
-            CacheMsgBean cacheBean = new CacheMsgBean();
-            CacheMsgSingleVideo cacheMsgSingleVideo = new CacheMsgSingleVideo();
-            cacheMsgSingleVideo.setContent(cacheInfo + "已拒绝");
-            cacheBean.setJsonBodyObj(cacheMsgSingleVideo).setMsgType(SINGLE_VIDEO_CALL)
-                    .setMsgTime(System.currentTimeMillis())
-                    .setSenderUserId(HuxinSdkManager.instance().getUuid())
-                    .setSenderRealName(HuxinSdkManager.instance().getRealName())
-                    .setSenderAvatar(dst_avatar)
-                    .setTargetUuid(adminId)
-                    .setTargetName(nickName)
-                    .setTargetAvatar(avatar);
-            CacheMsgHelper.instance().insertOrUpdate(mContext, cacheBean);
-
-
-            Intent intent = new Intent(SendMsgService.ACTION_NEW_MSG_VEDIO);
-            intent.putExtra("CacheNewMsg", cacheBean);
-            LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(mContext);
-            localBroadcastManager.sendBroadcast(intent);
-
+            sendMsg(cacheInfo + "已拒绝");
             stopRing();
             finish();
         }
@@ -413,6 +372,28 @@ public class VideoCallRingActivity extends SdkBaseActivity implements View.OnCli
             flags |= View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
         }
         return flags;
+    }
+
+    private void sendMsg(String content) {
+        //响铃页面都是有被邀请者向邀请者发送
+        CacheMsgBean cacheBean = new CacheMsgBean();
+        CacheMsgSingleVideo cacheMsgSingleVideo = new CacheMsgSingleVideo();
+        cacheMsgSingleVideo.setContent(content);
+        cacheBean.setJsonBodyObj(cacheMsgSingleVideo).setMsgType(SINGLE_VIDEO_CALL)
+                .setMsgTime(System.currentTimeMillis())
+                .setSenderUserId(HuxinSdkManager.instance().getUuid())
+                .setSenderRealName(HuxinSdkManager.instance().getRealName())
+                .setSenderAvatar(dst_avatar)
+                .setTargetUuid(adminId)
+                .setTargetName(nickName)
+                .setTargetAvatar(avatar);
+        CacheMsgHelper.instance().insertOrUpdate(mContext, cacheBean);
+
+
+        Intent intent = new Intent(SendMsgService.ACTION_NEW_MSG_VEDIO);
+        intent.putExtra("CacheNewMsg", cacheBean);
+        LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(mContext);
+        localBroadcastManager.sendBroadcast(intent);
     }
 }
 

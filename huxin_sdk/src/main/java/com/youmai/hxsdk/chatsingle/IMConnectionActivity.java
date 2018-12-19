@@ -149,7 +149,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
 
     private final int CAMERA_PERMISSION_REQUEST = 400; //权限申请自定义码
     private final int RECORD_PERMISSION_REQUEST = 401; //权限申请自定义码
-
+    private final int VIDEO_CALL_PERMISSION_REQUEST = 402; //权限申请自定义码
     public static final int RESULT_CODE_CLEAN = 501;
 
     public static final long MAX_SENDER_FILE = 50 * 1024 * 1024;
@@ -1263,41 +1263,41 @@ public class IMConnectionActivity extends SdkBaseActivity implements
             //发送红包
             sendRedPacket();
         } else if (type == InputMessageLay.TYPE_VIDEO) {
-            if (dstUuid.equals(HuxinSdkManager.instance().getUuid())) {
-                Toast.makeText(mContext, "不允许视频要请自己!!", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            HxSelectVedioDialog.Build dialogBuilder = new HxSelectVedioDialog.Build(mContext);
-            dialogBuilder.btnFirstText("视频聊天");
-            dialogBuilder.btnSecondText("语音聊天");
-            dialogBuilder.btnButtomText("取消");
-            dialogBuilder.setFirstClick(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    reqCreateRoom(YouMaiVideo.VideoType.CONFERENCE);
-                    dialog.dismiss();
-                }
-            });
-            dialogBuilder.setSecondClick(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    reqCreateRoom(YouMaiVideo.VideoType.TRAIN);
-                    dialog.dismiss();
-                }
-            });
-            dialogBuilder.setButtomClick(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    dialog.dismiss();
-                }
-            });
-            dialog = dialogBuilder.build();
-            dialog.show();
-
+            //视频
+            checkPemission(YouMaiVideo.VideoType.CONFERENCE);
+        } else if (type == InputMessageLay.TYPE_VIDEO_SINGLE_AUDIO) {
+            //语音
+            checkPemission(YouMaiVideo.VideoType.TRAIN);
         }
 
     }
+
+    private void checkPemission(YouMaiVideo.VideoType type) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            List<String> list = new ArrayList<>(2);
+
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)
+                    != PackageManager.PERMISSION_GRANTED) {
+                list.add(Manifest.permission.RECORD_AUDIO);
+            }
+
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                    != PackageManager.PERMISSION_GRANTED) {
+                list.add(Manifest.permission.CAMERA);
+            }
+
+            if (list.size() > 0) {
+                String[] array = new String[list.size()];
+                list.toArray(array); // fill the array
+                ActivityCompat.requestPermissions(this, array, VIDEO_CALL_PERMISSION_REQUEST);
+            } else {
+                reqCreateRoom(type);
+            }
+        } else {
+            reqCreateRoom(type);
+        }
+    }
+
 
     private void reqCreateRoom(YouMaiVideo.VideoType type) {
         HuxinSdkManager.instance().reqCreateVideoRoom(type, new ReceiveListener() {

@@ -80,6 +80,19 @@ public class SingleControlFragment extends Fragment implements View.OnClickListe
 
     public void setAudioUI() {
         //audioQuiet.setImageDrawable(null);
+        if (HuxinSdkManager.instance().getUuid().equals(desId)) {
+            Glide.with(getActivity()).load(admin_avatar)
+                    .apply(new RequestOptions()
+                            .diskCacheStrategy(DiskCacheStrategy.ALL))
+                    .into(iv_avatar);
+            tv_name.setText(admin_nick_name);
+        } else {
+            Glide.with(getActivity()).load(dst_avatar)
+                    .apply(new RequestOptions()
+                            .diskCacheStrategy(DiskCacheStrategy.ALL))
+                    .into(iv_avatar);
+            tv_name.setText(dst_nickName);
+        }
         audioQuiet.setImageResource(R.mipmap.ims_icon_quiet_s);
         audioSpeaker.setImageResource(R.mipmap.ims_icon_sound_s);
         ll_head.setVisibility(View.VISIBLE);
@@ -248,7 +261,6 @@ public class SingleControlFragment extends Fragment implements View.OnClickListe
                         .diskCacheStrategy(DiskCacheStrategy.ALL))
                 .into(iv_avatar);
         tv_name.setText(dst_nickName + "\n" + "\n" + "正在等待对方接受邀请...");
-
         audioQuiet.setVisibility(View.INVISIBLE);
         audioSpeaker.setVisibility(View.INVISIBLE);
         if (type == SingleRoomActivity.SINGLE_VIDEO) {
@@ -284,10 +296,9 @@ public class SingleControlFragment extends Fragment implements View.OnClickListe
                     } else {
                         title = msgContent() + "已取消";
                     }
-                    CacheMsgBean cacheBean = null;
+                    CacheMsgBean cacheBean = new CacheMsgBean();
                     if (HuxinSdkManager.instance().getUuid().equals(admin_id)) {
                         //管理员挂断
-                        cacheBean = new CacheMsgBean();
                         CacheMsgSingleVideo cacheMsgSingleVideo = new CacheMsgSingleVideo();
                         cacheMsgSingleVideo.setContent(title);
                         cacheBean.setJsonBodyObj(cacheMsgSingleVideo).setMsgType(SINGLE_VIDEO_CALL)
@@ -299,9 +310,9 @@ public class SingleControlFragment extends Fragment implements View.OnClickListe
                                 .setTargetName(dst_nickName)
                                 .setTargetAvatar(dst_avatar);
                         CacheMsgHelper.instance().insertOrUpdate(getActivity(), cacheBean);
+
                     }
                     if (HuxinSdkManager.instance().getUuid().equals(desId)) {
-                        cacheBean = new CacheMsgBean();
                         CacheMsgSingleVideo cacheMsgSingleVideo = new CacheMsgSingleVideo();
                         cacheMsgSingleVideo.setContent(title);
                         cacheBean.setJsonBodyObj(cacheMsgSingleVideo).setMsgType(SINGLE_VIDEO_CALL)
@@ -315,13 +326,11 @@ public class SingleControlFragment extends Fragment implements View.OnClickListe
                         // msgBean.seTargetName(groupName);
                         CacheMsgHelper.instance().insertOrUpdate(getActivity(), cacheBean);
                     }
-
                     Intent intent = new Intent(SendMsgService.ACTION_NEW_MSG_VEDIO);
                     intent.putExtra("CacheNewMsg", cacheBean);
                     LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(getActivity());
                     localBroadcastManager.sendBroadcast(intent);
                     HuxinSdkManager.instance().reqDestroyRoom(mRoomId);
-
                     mCallEvents.onCallHangUp();
                 }
             }

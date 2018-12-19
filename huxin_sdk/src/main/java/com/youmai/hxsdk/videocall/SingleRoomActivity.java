@@ -12,6 +12,8 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -47,6 +49,7 @@ import com.youmai.hxsdk.service.SendMsgService;
 import com.youmai.hxsdk.utils.ScreenUtils;
 import com.youmai.hxsdk.utils.ToastUtils;
 
+import java.lang.ref.WeakReference;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -135,26 +138,12 @@ public class SingleRoomActivity extends SdkBaseActivity implements QNRoomEventLi
     private boolean isInvited;
     private String mAdminId;
     private String desId;
-    /**
-     * 倒数计时器
-     */
-    private CountDownTimer timer = new CountDownTimer(40 * 1000, 1000) {
-        /**
-         * 固定间隔被调用,就是每隔countDownInterval会回调一次方法onTick
-         * @param millisUntilFinished
-         */
-        @Override
-        public void onTick(long millisUntilFinished) {
-            //tv_remaining_time.setText(formatTime(millisUntilFinished));
-        }
 
-        /**
-         * 倒计时完成时被调用
-         */
+    private Handler mHandler = new Handler() {
         @Override
-        public void onFinish() {
-            if (!SingleRoomActivity.this.isFinishing()) {
-                // reqVideoInvite(false, roomName, adminId);
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if (msg.what == 1) {
                 if (!TextUtils.isEmpty(mRoomId)) {
                     HuxinSdkManager.instance().reqDestroyRoom(mRoomId);
                 }
@@ -178,11 +167,11 @@ public class SingleRoomActivity extends SdkBaseActivity implements QNRoomEventLi
             }
         }
     };
+
     private String admin_avatar;
     private String admin_nick_name;
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
+    private void doBeforeOnCreate() {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().addFlags(LayoutParams.FLAG_FULLSCREEN | LayoutParams.FLAG_KEEP_SCREEN_ON
                 | LayoutParams.FLAG_DISMISS_KEYGUARD | LayoutParams.FLAG_SHOW_WHEN_LOCKED
@@ -191,20 +180,21 @@ public class SingleRoomActivity extends SdkBaseActivity implements QNRoomEventLi
         mScreenWidth = ScreenUtils.getWidthPixels(this);
         mScreenHeight = ScreenUtils.getHeightPixels(this);
         mDensity = ScreenUtils.getDensity(this);
-//        WindowManager windowManager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
-//        DisplayMetrics outMetrics = new DisplayMetrics();
-//        //windowManager.getDefaultDisplay().getRealMetrics(outMetrics);
-//
-//        mScreenWidth = outMetrics.widthPixels;
-//        mScreenHeight = outMetrics.heightPixels;
-//        mDensity = outMetrics.density;
-        timer.start();
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        doBeforeOnCreate();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room_single);
         IMMsgManager.instance().setImVedioSingleCallBack(new IMVedioSingleChatCallBack() {
             @Override
             public void agress() {
                 startCall();
+                if (mHandler != null) {
+                    mHandler.removeMessages(1);
+                    mHandler = null;
+                }
                 if (mControlFragment != null) {
                     mControlFragment.showIcon();
                 }
@@ -357,6 +347,9 @@ public class SingleRoomActivity extends SdkBaseActivity implements QNRoomEventLi
         mRTCManager.addRemoteWindow(mRemoteWindowH.getRemoteSurfaceView());
         mRTCManager.initialize(this, setting);
         mRTCManager.setLocalWindow(mLocalWindow.getLocalSurfaceView());
+        mHandler.sendEmptyMessageDelayed(1, 40000);
+
+        HuxinSdkManager.instance().startVideoHeartBeat(mRoomId);
         HuxinSdkManager.instance().getStackAct().addActivity(this);
     }
 
@@ -650,20 +643,6 @@ public class SingleRoomActivity extends SdkBaseActivity implements QNRoomEventLi
     }
 
     private void showKickoutDialog(final String userId) {
-//        if (mKickoutDialog == null) {
-//            mKickoutDialog = new AlertDialog.Builder(this)
-//                    .setNegativeButton(R.string.negative_dialog_tips, null)
-//                    .create();
-//        }
-//        mKickoutDialog.setMessage(getString(R.string.kickout_tips, userId));
-//        mKickoutDialog.setButton(DialogInterface.BUTTON_POSITIVE, getResources().getString(R.string.positive_dialog_tips),
-//                new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        mRTCManager.kickOutUser(userId);
-//                    }
-//                });
-//        mKickoutDialog.show();
     }
 
     @TargetApi(19)
@@ -680,11 +659,14 @@ public class SingleRoomActivity extends SdkBaseActivity implements QNRoomEventLi
         super.onResume();
         if (isInvited) {
             startCall();
+            if (mHandler != null) {
+                mHandler.removeMessages(1);
+                mHandler = null;
+            }
             if (mControlFragment != null) {
                 mControlFragment.showIcon();
             }
         }
-        //   startCall();
     }
 
     @Override
@@ -1004,9 +986,12 @@ public class SingleRoomActivity extends SdkBaseActivity implements QNRoomEventLi
     public void onDestroy() {
         super.onDestroy();
         isInvited = false;
-        timer.cancel();
-        timer = null;
+        if (mHandler != null) {
+            mHandler.removeMessages(1);
+            mHandler = null;
+        }
         IMMsgManager.instance().removeImVedioSingleCallBack();
+        HuxinSdkManager.instance().stopVideoHeartBeat();
         HuxinSdkManager.instance().getStackAct().removeActivity(this);
     }
 }

@@ -2,6 +2,7 @@ package com.youmai.hxsdk.videocall;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -19,17 +20,21 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.R;
+import com.youmai.hxsdk.config.ColorsConfig;
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
 import com.youmai.hxsdk.db.helper.CacheMsgHelper;
 import com.youmai.hxsdk.im.IMMsgManager;
 import com.youmai.hxsdk.im.IMVedioMsgCallBack;
+import com.youmai.hxsdk.proto.YouMaiBasic;
 import com.youmai.hxsdk.service.SendMsgService;
+import com.youmai.hxsdk.socket.NotifyListener;
 
 import static com.youmai.hxsdk.db.bean.CacheMsgBean.SINGLE_VIDEO_CALL;
 
@@ -49,7 +54,7 @@ public class SingleControlFragment extends Fragment implements View.OnClickListe
     private TextView mLocalTextView;
     private TextView mRemoteTextView;
     private StringBuffer mRemoteLogText;
-    private Chronometer mTimer;
+    public Chronometer mTimer;
     private OnCallEvents mCallEvents;
     private boolean mIsVideoEnabled = true;
     private boolean mIsShowingLog = false;
@@ -77,30 +82,79 @@ public class SingleControlFragment extends Fragment implements View.OnClickListe
     private String desId;
     private String admin_avatar;
     private String admin_nick_name;
+    private boolean isInvtite;
+    private String dst_username;
+    private String admin_userName;
+
+    public void sendMsgToAdmin(String msg, Context context) {
+        String avatar = ColorsConfig.HEAD_ICON_URL + "avatar?uid=" + HuxinSdkManager.instance().getUserName();
+        CacheMsgBean cacheBean = new CacheMsgBean();
+        CacheMsgSingleVideo cacheMsgSingleVideo = new CacheMsgSingleVideo();
+        cacheMsgSingleVideo.setContent(msg);
+        cacheBean.setJsonBodyObj(cacheMsgSingleVideo).setMsgType(SINGLE_VIDEO_CALL)
+                .setMsgTime(System.currentTimeMillis())
+                .setSenderUserId(HuxinSdkManager.instance().getUuid())
+                .setSenderAvatar(avatar)
+                .setSenderRealName(HuxinSdkManager.instance().getRealName())
+                .setSenderUserName(HuxinSdkManager.instance().getUserName())
+                .setTargetUuid(desId)
+                .setTargetName(dst_nickName)
+                .setTargetAvatar(dst_avatar)
+                .setTargetUserName(dst_username);
+        CacheMsgHelper.instance().insertOrUpdate(context, cacheBean);
+        sendBroadcast(cacheBean);
+    }
+
+    public void sendMsgToInvitee(String msg, Context context) {
+        String avatar = ColorsConfig.HEAD_ICON_URL + "avatar?uid=" + HuxinSdkManager.instance().getUserName();
+        CacheMsgBean cacheBean = new CacheMsgBean();
+        CacheMsgSingleVideo cacheMsgSingleVideo = new CacheMsgSingleVideo();
+        cacheMsgSingleVideo.setContent(msg);
+        cacheBean.setJsonBodyObj(cacheMsgSingleVideo).setMsgType(SINGLE_VIDEO_CALL)
+                .setMsgTime(System.currentTimeMillis())
+                .setSenderUserId(HuxinSdkManager.instance().getUuid())
+                .setSenderAvatar(avatar)
+                .setSenderRealName(HuxinSdkManager.instance().getRealName())
+                .setSenderUserName(HuxinSdkManager.instance().getUserName())
+                .setTargetUuid(desId)
+                .setTargetName(dst_nickName)
+                .setTargetAvatar(dst_avatar)
+                .setTargetUserName(dst_username);
+        CacheMsgHelper.instance().insertOrUpdate(context, cacheBean);
+        sendBroadcast(cacheBean);
+    }
+
+    private void sendBroadcast(CacheMsgBean cacheBean) {
+        Intent intent = new Intent(SendMsgService.ACTION_NEW_MSG_VEDIO);
+        intent.putExtra("CacheNewMsg", cacheBean);
+        LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(getActivity());
+        localBroadcastManager.sendBroadcast(intent);
+    }
 
     public void setAudioUI() {
-        //audioQuiet.setImageDrawable(null);
-        if (HuxinSdkManager.instance().getUuid().equals(desId)) {
-            Glide.with(getActivity()).load(admin_avatar)
-                    .apply(new RequestOptions()
-                            .diskCacheStrategy(DiskCacheStrategy.ALL))
-                    .into(iv_avatar);
-            tv_name.setText(admin_nick_name);
-        } else {
-            Glide.with(getActivity()).load(dst_avatar)
-                    .apply(new RequestOptions()
-                            .diskCacheStrategy(DiskCacheStrategy.ALL))
-                    .into(iv_avatar);
-            tv_name.setText(dst_nickName);
-        }
+//        if (HuxinSdkManager.instance().getUuid().equals(desId)) {
+//            Glide.with(getActivity()).load(admin_avatar)
+//                    .apply(new RequestOptions()
+//                            .diskCacheStrategy(DiskCacheStrategy.ALL))
+//                    .into(iv_avatar);
+//            tv_name.setText(admin_nick_name);
+//        } else {
+        Glide.with(getActivity()).load(dst_avatar)
+                .apply(new RequestOptions()
+                        .diskCacheStrategy(DiskCacheStrategy.ALL))
+                .into(iv_avatar);
+        tv_name.setText(dst_nickName);
+        //  }
         audioQuiet.setImageResource(R.mipmap.ims_icon_quiet_s);
         audioSpeaker.setImageResource(R.mipmap.ims_icon_sound_s);
         ll_head.setVisibility(View.VISIBLE);
         iv_avatar.setVisibility(View.VISIBLE);
         tv_name.setVisibility(View.VISIBLE);
+        audioQuiet.setVisibility(View.VISIBLE);
+        audioSpeaker.setVisibility(View.VISIBLE);
     }
 
-    private String msgContent() {
+    public String msgContent() {
         String str = "";
         if (type == SingleRoomActivity.SINGLE_AUDIO) {
             str = "语音通话  ";
@@ -135,51 +189,25 @@ public class SingleControlFragment extends Fragment implements View.OnClickListe
 
     @Override
     public void onRoomDestroy(String uuid) {
-        CacheMsgBean cacheBean;
-        cacheBean = new CacheMsgBean();
+        CacheMsgBean cacheBean = new CacheMsgBean();
         String msg = "";
         msg = msgContent() + "通话时长" + mTimer.getText().toString();
-        if (!IMMsgManager.isMuteAgree) {
-            return;
-        }
+
         if (!HuxinSdkManager.instance().getUuid().equals(uuid)) {
             if (uuid.equals(admin_id)) {
-                CacheMsgSingleVideo cacheMsgSingleVideo = new CacheMsgSingleVideo();
-                cacheMsgSingleVideo.setContent(msg);
-                cacheBean.setJsonBodyObj(cacheMsgSingleVideo).setMsgType(SINGLE_VIDEO_CALL)
-                        .setMsgTime(System.currentTimeMillis())
-                        .setSenderUserId(desId)
-                        .setSenderAvatar(dst_avatar)
-                        .setSenderRealName(dst_nickName)
-                        .setTargetUuid(uuid)
-                        .setTargetName(admin_nick_name)
-                        .setTargetAvatar(admin_avatar);
+                sendMsgToAdmin(msg, getActivity());
             } else {
-                CacheMsgSingleVideo cacheMsgSingleVideo = new CacheMsgSingleVideo();
-                cacheMsgSingleVideo.setContent(msg);
-                cacheBean.setJsonBodyObj(cacheMsgSingleVideo).setMsgType(SINGLE_VIDEO_CALL)
-                        .setMsgTime(System.currentTimeMillis())
-                        .setSenderUserId(admin_id)
-                        .setSenderAvatar(admin_avatar)
-                        .setSenderRealName(admin_nick_name)
-                        .setTargetUuid(uuid)
-                        .setTargetName(dst_nickName)
-                        .setTargetAvatar(dst_avatar);
+                sendMsgToInvitee(msg, getActivity());
             }
-
-            CacheMsgHelper.instance().insertOrUpdate(getActivity(), cacheBean);
-            Intent intent = new Intent(SendMsgService.ACTION_NEW_MSG_VEDIO);
-            intent.putExtra("CacheNewMsg", cacheBean);
-            LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(getActivity());
-            localBroadcastManager.sendBroadcast(intent);
         }
 
     }
 
     @Override
-    public void onRemuteAgree() {
-        //reMuteIsAgree = true;
+    public void onDestroyInCallRing() {
+        Toast.makeText(getActivity(), "Room我回调了~~", Toast.LENGTH_SHORT);
     }
+
 
     /**
      * Call control interface for container activity.
@@ -197,7 +225,7 @@ public class SingleControlFragment extends Fragment implements View.OnClickListe
 
         void onChangeState();
 
-        boolean onToggleBeauty();
+        //boolean onToggleBeauty();
 
     }
 
@@ -216,38 +244,42 @@ public class SingleControlFragment extends Fragment implements View.OnClickListe
         if (bundle != null) {
             mRoomId = bundle.getString(SingleRoomActivity.EXTRA_ROOM_ID);
             type = bundle.getInt(SingleRoomActivity.EXTRA_SINGLE_TYPE, 0);
-            dst_nickName = bundle.getString(SingleRoomActivity.EXTRA_DST_NICK_NAME);
-            dst_avatar = bundle.getString(SingleRoomActivity.EXTRA_DST_AVATAR);
             mUserId = bundle.getString(SingleRoomActivity.EXTRA_USER_ID);
             //bundle.getString(SingleRoomActivity)
             admin_id = bundle.getString(SingleRoomActivity.EXTRA_ADMIN_ID);
-            desId = bundle.getString(SingleRoomActivity.EXTRA_IVATOR_ID);
-            admin_avatar = bundle.getString(SingleRoomActivity.EXTRA_ADMIN_AVATAR);
-            admin_nick_name = bundle.getString(SingleRoomActivity.EXTRA_ADMIN_NICK_NAME);
+            desId = bundle.getString(SingleRoomActivity.EXTRA_DST_ID);
+            dst_username = bundle.getString(SingleRoomActivity.EXTRA_DST_USERNAME);
+            dst_nickName = bundle.getString(SingleRoomActivity.EXTRA_DST_NICK_NAME);
+            dst_avatar = bundle.getString(SingleRoomActivity.EXTRA_DST_AVATAR);
+            //admin_avatar = bundle.getString(SingleRoomActivity.EXTRA_ADMIN_AVATAR);
+            //admin_nick_name = bundle.getString(SingleRoomActivity.EXTRA_ADMIN_NICK_NAME);
+            isInvtite = bundle.getBoolean(SingleRoomActivity.EXTRA_IS_INVITE);
+            //admin_userName = bundle.getString(SingleRoomActivity.EXTRA_ADMIN_USERNAME);
 
         }
     }
 
-    public void showIcon() {
+
+    public void setVideoUI() {
         audioQuiet.setVisibility(View.VISIBLE);
         audioSpeaker.setVisibility(View.VISIBLE);
         rl_videocall.setVisibility(View.GONE);
-        tv_name.setText(dst_nickName);
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mControlView = inflater.inflate(R.layout.fragment_room_single, container, false);
-        video_tab = mControlView.findViewById(R.id.bottom_button_layout);
-        ivVedioIcon = mControlView.findViewById(R.id.iv_vedio_icon);
-        tvVedioName = mControlView.findViewById(R.id.tv_vedio_name);
-        tvVedioInfo = mControlView.findViewById(R.id.tv_vedio_info);
+    private void videoLayout() {
         Glide.with(getActivity()).load(dst_avatar)
                 .apply(new RequestOptions()
                         .diskCacheStrategy(DiskCacheStrategy.ALL))
                 .into(ivVedioIcon);
         tvVedioName.setText(dst_nickName);
         tvVedioInfo.setText("正在等待对方接受邀请...");
+    }
+
+    private void initView() {
+        video_tab = mControlView.findViewById(R.id.bottom_button_layout);
+        ivVedioIcon = mControlView.findViewById(R.id.iv_vedio_icon);
+        tvVedioName = mControlView.findViewById(R.id.tv_vedio_name);
+        tvVedioInfo = mControlView.findViewById(R.id.tv_vedio_info);
         rl_videocall = mControlView.findViewById(R.id.rl_videocall);
         audio_tab = mControlView.findViewById(R.id.bottom_button_layout_audio);
         audioQuiet = mControlView.findViewById(R.id.audio_quiet);
@@ -256,11 +288,22 @@ public class SingleControlFragment extends Fragment implements View.OnClickListe
         ll_head = mControlView.findViewById(R.id.ll_head);
         iv_avatar = mControlView.findViewById(R.id.avatar);
         tv_name = mControlView.findViewById(R.id.tv_name);
+    }
+
+    private void audioLayout() {
         Glide.with(getActivity()).load(dst_avatar)
                 .apply(new RequestOptions()
                         .diskCacheStrategy(DiskCacheStrategy.ALL))
                 .into(iv_avatar);
         tv_name.setText(dst_nickName + "\n" + "\n" + "正在等待对方接受邀请...");
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        mControlView = inflater.inflate(R.layout.fragment_room_single, container, false);
+        initView();
+        videoLayout();
+        audioLayout();
         audioQuiet.setVisibility(View.INVISIBLE);
         audioSpeaker.setVisibility(View.INVISIBLE);
         if (type == SingleRoomActivity.SINGLE_VIDEO) {
@@ -299,37 +342,13 @@ public class SingleControlFragment extends Fragment implements View.OnClickListe
                     CacheMsgBean cacheBean = new CacheMsgBean();
                     if (HuxinSdkManager.instance().getUuid().equals(admin_id)) {
                         //管理员挂断
-                        CacheMsgSingleVideo cacheMsgSingleVideo = new CacheMsgSingleVideo();
-                        cacheMsgSingleVideo.setContent(title);
-                        cacheBean.setJsonBodyObj(cacheMsgSingleVideo).setMsgType(SINGLE_VIDEO_CALL)
-                                .setMsgTime(System.currentTimeMillis())
-                                .setSenderUserId(admin_id)
-                                .setSenderAvatar(admin_avatar)
-                                .setSenderRealName(admin_nick_name)
-                                .setTargetUuid(desId)
-                                .setTargetName(dst_nickName)
-                                .setTargetAvatar(dst_avatar);
-                        CacheMsgHelper.instance().insertOrUpdate(getActivity(), cacheBean);
 
+                        sendMsgToInvitee(title, getActivity());
                     }
                     if (HuxinSdkManager.instance().getUuid().equals(desId)) {
-                        CacheMsgSingleVideo cacheMsgSingleVideo = new CacheMsgSingleVideo();
-                        cacheMsgSingleVideo.setContent(title);
-                        cacheBean.setJsonBodyObj(cacheMsgSingleVideo).setMsgType(SINGLE_VIDEO_CALL)
-                                .setMsgTime(System.currentTimeMillis())
-                                .setSenderUserId(desId)
-                                .setSenderAvatar(dst_avatar)
-                                .setSenderRealName(dst_nickName)
-                                .setTargetName(admin_nick_name)
-                                .setTargetAvatar(admin_avatar)
-                                .setTargetUuid(admin_id);
-                        // msgBean.seTargetName(groupName);
-                        CacheMsgHelper.instance().insertOrUpdate(getActivity(), cacheBean);
+                        sendMsgToAdmin(title, getActivity());
                     }
-                    Intent intent = new Intent(SendMsgService.ACTION_NEW_MSG_VEDIO);
-                    intent.putExtra("CacheNewMsg", cacheBean);
-                    LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(getActivity());
-                    localBroadcastManager.sendBroadcast(intent);
+
                     HuxinSdkManager.instance().reqDestroyRoom(mRoomId);
                     mCallEvents.onCallHangUp();
                 }

@@ -1358,10 +1358,10 @@ public class IMConnectionActivity extends SdkBaseActivity implements
                         intent.putExtra(SingleRoomActivity.EXTRA_SINGLE_TYPE, singleType);
                         intent.putExtra(SingleRoomActivity.EXTRA_DST_NICK_NAME, dstNickName);
                         intent.putExtra(SingleRoomActivity.EXTRA_DST_AVATAR, dstAvatar);
+                        intent.putExtra(SingleRoomActivity.EXTRA_DST_ID, dstUuid);
+                        intent.putExtra(SingleRoomActivity.EXTRA_DST_USERNAME,dstUserName);
                         intent.putExtra(SingleRoomActivity.EXTRA_ADMIN_ID, userId);
-                        intent.putExtra(SingleRoomActivity.EXTRA_IVATOR_ID, dstUuid);
-                        intent.putExtra(SingleRoomActivity.EXTRA_ADMIN_NICK_NAME, admin_realName);
-                        intent.putExtra(SingleRoomActivity.EXTRA_ADMIN_AVATAR, admin_avatar);
+                        //
 
                         startActivity(intent);
 

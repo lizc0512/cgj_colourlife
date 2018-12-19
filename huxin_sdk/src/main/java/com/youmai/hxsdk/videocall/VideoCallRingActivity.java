@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.view.View;
@@ -12,6 +14,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -54,27 +57,19 @@ public class VideoCallRingActivity extends SdkBaseActivity implements View.OnCli
     private long expire;
     private GroupInfoBean mGroupInfo;
     private String cacheInfo;
-    /**
-     * 倒数计时器
-     */
-    private CountDownTimer timer = new CountDownTimer(40 * 1000, 1000) {
-        /**
-         * 固定间隔被调用,就是每隔countDownInterval会回调一次方法onTick
-         * @param millisUntilFinished
-         */
-        @Override
-        public void onTick(long millisUntilFinished) {
-            //tv_remaining_time.setText(formatTime(millisUntilFinished));
-        }
+    private long l;
+    private String groupName;
+    private TextView tvInfo;
+    private String nickName;
+    private String avatar;
+    private String dst_avatar;
 
-        /**
-         * 倒计时完成时被调用
-         */
+
+    private Handler callRingHandler = new Handler() {
         @Override
-        public void onFinish() {
-            //tv_remaining_time.setText("00:00");
-            if (!VideoCallRingActivity.this.isFinishing()) {
-                // reqVideoInvite(false, roomName, adminId);
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if (msg.what == 2) {
                 if (isSingle) {
                     sendMsg(cacheInfo + "对方已取消");
                 }
@@ -83,52 +78,7 @@ public class VideoCallRingActivity extends SdkBaseActivity implements View.OnCli
             }
         }
     };
-    private long l;
-    private String groupName;
-    private TextView tvInfo;
-    private String nickName;
-    private String avatar;
-    private String dst_avatar;
-
-    /**
-     * 将毫秒转化为 分钟：秒 的格式
-     *
-     * @param millisecond 毫秒
-     * @return
-     */
-    public String formatTime(long millisecond) {
-        int minute;//分钟
-        int second;//秒数
-        minute = (int) ((millisecond / 1000) / 60);
-        second = (int) ((millisecond / 1000) % 60);
-        if (minute < 10) {
-            if (second < 10) {
-                return "0" + minute + ":" + "0" + second;
-            } else {
-                return "0" + minute + ":" + second;
-            }
-        } else {
-            if (second < 10) {
-                return minute + ":" + "0" + second;
-            } else {
-                return minute + ":" + second;
-            }
-        }
-    }
-
-    /**
-     * 取消倒计时
-     */
-    public void timerCancel() {
-        timer.cancel();
-    }
-
-    /**
-     * 开始倒计时
-     */
-    public void timerStart() {
-        timer.start();
-    }
+    private String dst_userName;
 
     private void doBeforeOnCreate() {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -148,10 +98,10 @@ public class VideoCallRingActivity extends SdkBaseActivity implements View.OnCli
         isSingle = getIntent().getBooleanExtra("isSingle", false);
         roomName = getIntent().getStringExtra("room_name");
         adminId = getIntent().getStringExtra("admin_id");
-        dst_avatar = ColorsConfig.HEAD_ICON_URL + "avatar?uid=" + HuxinSdkManager.instance().getUserName();
+        avatar = ColorsConfig.HEAD_ICON_URL + "avatar?uid=" + HuxinSdkManager.instance().getUserName();
         nickName = getIntent().getStringExtra("nick_name");
-        avatar = getIntent().getStringExtra("avatar");
-
+        dst_avatar = getIntent().getStringExtra("avatar");
+        dst_userName = getIntent().getStringExtra(SingleRoomActivity.EXTRA_DST_USERNAME);
         groupId = getIntent().getIntExtra("group_id", 0);
         memberRole = getIntent().getIntExtra("member_role", 0);
         isAnchor = getIntent().getBooleanExtra("is_anchor", false);
@@ -175,7 +125,7 @@ public class VideoCallRingActivity extends SdkBaseActivity implements View.OnCli
         updateGroupUI(mGroupInfo);
         int size = mContext.getResources().getDimensionPixelOffset(R.dimen.card_head) * 2;
         Glide.with(mContext)
-                .load(avatar)
+                .load(dst_avatar)
                 .apply(new RequestOptions()
                         .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                         .centerCrop()
@@ -188,18 +138,18 @@ public class VideoCallRingActivity extends SdkBaseActivity implements View.OnCli
 
         findViewById(R.id.btn_accept).setOnClickListener(this);
         findViewById(R.id.btn_cancel).setOnClickListener(this);
-        timerStart();
+        callRingHandler.sendEmptyMessageDelayed(2, 40 * 1000);
         playRing();
         if (IMMsgManager.isSingleVideo && !IMMsgManager.isMuteAgree) {
             IMMsgManager.instance().setIMVedioMsgCallBack(new IMVedioMsgCallBack() {
                 @Override
                 public void onRoomDestroy(String uuid) {
-                    sendMsg(cacheInfo + "对方已取消");
+                    Toast.makeText(VideoCallRingActivity.this, "callring我回调了", Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
-                public void onRemuteAgree() {
-
+                public void onDestroyInCallRing() {
+                    sendMsg(cacheInfo + "对方已取消");
                 }
             });
         }
@@ -269,13 +219,16 @@ public class VideoCallRingActivity extends SdkBaseActivity implements View.OnCli
                                     intent.putExtra(SingleRoomActivity.EXTRA_IS_INVITE, true);
                                     intent.putExtra(SingleRoomActivity.EXTRA_ROOM_TOKEN, token);
                                     intent.putExtra(SingleRoomActivity.EXTRA_USER_ID, userId);
-                                    intent.putExtra(SingleRoomActivity.EXTRA_IVATOR_ID, userId);
-                                    intent.putExtra(SingleRoomActivity.EXTRA_DST_NICK_NAME, HuxinSdkManager.instance().getRealName());
+                                    //intent.putExtra(SingleRoomActivity.EXTRA_IVATOR_ID, userId);
+                                    intent.putExtra(SingleRoomActivity.EXTRA_DST_NICK_NAME, nickName);
                                     intent.putExtra(SingleRoomActivity.EXTRA_DST_AVATAR, dst_avatar);
+                                    intent.putExtra(SingleRoomActivity.EXTRA_DST_ID, adminId);
+                                    intent.putExtra(SingleRoomActivity.EXTRA_DST_USERNAME, dst_userName);
                                     intent.putExtra(SingleRoomActivity.EXTRA_SINGLE_TYPE, singleType);
-                                    intent.putExtra(SingleRoomActivity.EXTRA_ADMIN_NICK_NAME, nickName);
-                                    intent.putExtra(SingleRoomActivity.EXTRA_ADMIN_AVATAR, avatar);
+                                    //intent.putExtra(SingleRoomActivity.EXTRA_ADMIN_NICK_NAME, nickName);
+                                    //intent.putExtra(SingleRoomActivity.EXTRA_ADMIN_AVATAR, avatar);
                                     intent.putExtra(SingleRoomActivity.EXTRA_ADMIN_ID, adminId);
+                                    //intent.putExtra(SingleRoomActivity.EXTRA_ADMIN_USERNAME, admin_userName);
                                     startActivity(intent);
                                 } else {
                                     //群聊
@@ -339,15 +292,13 @@ public class VideoCallRingActivity extends SdkBaseActivity implements View.OnCli
 
     @Override
     public void onDestroy() {
-        if (timer != null) {
-            timer.cancel();
-            timer = null;
-        }
         super.onDestroy();
         Intent intent = new Intent(this, RingService.class);
         stopService(intent);
         isSingle = false;
-        //IMMsgManager.instance().removeIMVedioMsgCallBack();
+        callRingHandler.removeMessages(2);
+        callRingHandler.removeCallbacksAndMessages(null);
+        callRingHandler = null;
     }
 
     @Override
@@ -383,10 +334,13 @@ public class VideoCallRingActivity extends SdkBaseActivity implements View.OnCli
                 .setMsgTime(System.currentTimeMillis())
                 .setSenderUserId(HuxinSdkManager.instance().getUuid())
                 .setSenderRealName(HuxinSdkManager.instance().getRealName())
-                .setSenderAvatar(dst_avatar)
+                .setSenderUserName(HuxinSdkManager.instance().getUserName())
+                .setSenderAvatar(avatar)
                 .setTargetUuid(adminId)
                 .setTargetName(nickName)
-                .setTargetAvatar(avatar);
+                .setTargetAvatar(dst_avatar)
+                .setTargetUserName(dst_userName);
+        //.setTargetUserName();
         CacheMsgHelper.instance().insertOrUpdate(mContext, cacheBean);
 
 

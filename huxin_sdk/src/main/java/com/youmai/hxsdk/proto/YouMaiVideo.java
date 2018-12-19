@@ -10218,6 +10218,22 @@ public final class YouMaiVideo {
          * <code>optional .VideoType type = 8;</code>
          */
         YouMaiVideo.VideoType getType();
+
+        /**
+         * <code>optional string username = 9;</code>
+         */
+        boolean hasUsername();
+
+        /**
+         * <code>optional string username = 9;</code>
+         */
+        String getUsername();
+
+        /**
+         * <code>optional string username = 9;</code>
+         */
+        com.google.protobuf.ByteString
+        getUsernameBytes();
     }
 
     /**
@@ -10334,6 +10350,12 @@ public final class YouMaiVideo {
                                 bitField0_ |= 0x00000040;
                                 type_ = value;
                             }
+                            break;
+                        }
+                        case 74: {
+                            com.google.protobuf.ByteString bs = input.readBytes();
+                            bitField0_ |= 0x00000080;
+                            username_ = bs;
                             break;
                         }
                     }
@@ -10711,6 +10733,51 @@ public final class YouMaiVideo {
             return type_;
         }
 
+        public static final int USERNAME_FIELD_NUMBER = 9;
+        private Object username_;
+
+        /**
+         * <code>optional string username = 9;</code>
+         */
+        public boolean hasUsername() {
+            return ((bitField0_ & 0x00000080) == 0x00000080);
+        }
+
+        /**
+         * <code>optional string username = 9;</code>
+         */
+        public String getUsername() {
+            Object ref = username_;
+            if (ref instanceof String) {
+                return (String) ref;
+            } else {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                String s = bs.toStringUtf8();
+                if (bs.isValidUtf8()) {
+                    username_ = s;
+                }
+                return s;
+            }
+        }
+
+        /**
+         * <code>optional string username = 9;</code>
+         */
+        public com.google.protobuf.ByteString
+        getUsernameBytes() {
+            Object ref = username_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (String) ref);
+                username_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
         private void initFields() {
             adminId_ = "";
             roomName_ = "";
@@ -10720,6 +10787,7 @@ public final class YouMaiVideo {
             groupId_ = 0;
             info_ = "";
             type_ = YouMaiVideo.VideoType.CONFERENCE;
+            username_ = "";
         }
 
         private byte memoizedIsInitialized = -1;
@@ -10759,6 +10827,9 @@ public final class YouMaiVideo {
             }
             if (((bitField0_ & 0x00000040) == 0x00000040)) {
                 output.writeEnum(8, type_.getNumber());
+            }
+            if (((bitField0_ & 0x00000080) == 0x00000080)) {
+                output.writeBytes(9, getUsernameBytes());
             }
             getUnknownFields().writeTo(output);
         }
@@ -10801,6 +10872,10 @@ public final class YouMaiVideo {
             if (((bitField0_ & 0x00000040) == 0x00000040)) {
                 size += com.google.protobuf.CodedOutputStream
                         .computeEnumSize(8, type_.getNumber());
+            }
+            if (((bitField0_ & 0x00000080) == 0x00000080)) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeBytesSize(9, getUsernameBytes());
             }
             size += getUnknownFields().getSerializedSize();
             memoizedSerializedSize = size;
@@ -10966,6 +11041,8 @@ public final class YouMaiVideo {
                 bitField0_ = (bitField0_ & ~0x00000040);
                 type_ = YouMaiVideo.VideoType.CONFERENCE;
                 bitField0_ = (bitField0_ & ~0x00000080);
+                username_ = "";
+                bitField0_ = (bitField0_ & ~0x00000100);
                 return this;
             }
 
@@ -11031,6 +11108,10 @@ public final class YouMaiVideo {
                     to_bitField0_ |= 0x00000040;
                 }
                 result.type_ = type_;
+                if (((from_bitField0_ & 0x00000100) == 0x00000100)) {
+                    to_bitField0_ |= 0x00000080;
+                }
+                result.username_ = username_;
                 result.bitField0_ = to_bitField0_;
                 onBuilt();
                 return result;
@@ -11103,6 +11184,11 @@ public final class YouMaiVideo {
                 }
                 if (other.hasType()) {
                     setType(other.getType());
+                }
+                if (other.hasUsername()) {
+                    bitField0_ |= 0x00000100;
+                    username_ = other.username_;
+                    onChanged();
                 }
                 this.mergeUnknownFields(other.getUnknownFields());
                 return this;
@@ -11969,6 +12055,88 @@ public final class YouMaiVideo {
             public Builder clearType() {
                 bitField0_ = (bitField0_ & ~0x00000080);
                 type_ = YouMaiVideo.VideoType.CONFERENCE;
+                onChanged();
+                return this;
+            }
+
+            private Object username_ = "";
+
+            /**
+             * <code>optional string username = 9;</code>
+             */
+            public boolean hasUsername() {
+                return ((bitField0_ & 0x00000100) == 0x00000100);
+            }
+
+            /**
+             * <code>optional string username = 9;</code>
+             */
+            public String getUsername() {
+                Object ref = username_;
+                if (!(ref instanceof String)) {
+                    com.google.protobuf.ByteString bs =
+                            (com.google.protobuf.ByteString) ref;
+                    String s = bs.toStringUtf8();
+                    if (bs.isValidUtf8()) {
+                        username_ = s;
+                    }
+                    return s;
+                } else {
+                    return (String) ref;
+                }
+            }
+
+            /**
+             * <code>optional string username = 9;</code>
+             */
+            public com.google.protobuf.ByteString
+            getUsernameBytes() {
+                Object ref = username_;
+                if (ref instanceof String) {
+                    com.google.protobuf.ByteString b =
+                            com.google.protobuf.ByteString.copyFromUtf8(
+                                    (String) ref);
+                    username_ = b;
+                    return b;
+                } else {
+                    return (com.google.protobuf.ByteString) ref;
+                }
+            }
+
+            /**
+             * <code>optional string username = 9;</code>
+             */
+            public Builder setUsername(
+                    String value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000100;
+                username_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string username = 9;</code>
+             */
+            public Builder clearUsername() {
+                bitField0_ = (bitField0_ & ~0x00000100);
+                username_ = getDefaultInstance().getUsername();
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string username = 9;</code>
+             */
+            public Builder setUsernameBytes(
+                    com.google.protobuf.ByteString value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000100;
+                username_ = value;
                 onChanged();
                 return this;
             }
@@ -12917,6 +13085,22 @@ public final class YouMaiVideo {
          * <code>optional int32 time = 10;</code>
          */
         int getTime();
+
+        /**
+         * <code>optional string username = 11;</code>
+         */
+        boolean hasUsername();
+
+        /**
+         * <code>optional string username = 11;</code>
+         */
+        String getUsername();
+
+        /**
+         * <code>optional string username = 11;</code>
+         */
+        com.google.protobuf.ByteString
+        getUsernameBytes();
     }
 
     /**
@@ -13048,6 +13232,12 @@ public final class YouMaiVideo {
                         case 80: {
                             bitField0_ |= 0x00000200;
                             time_ = input.readInt32();
+                            break;
+                        }
+                        case 90: {
+                            com.google.protobuf.ByteString bs = input.readBytes();
+                            bitField0_ |= 0x00000400;
+                            username_ = bs;
                             break;
                         }
                     }
@@ -13420,6 +13610,51 @@ public final class YouMaiVideo {
             return time_;
         }
 
+        public static final int USERNAME_FIELD_NUMBER = 11;
+        private Object username_;
+
+        /**
+         * <code>optional string username = 11;</code>
+         */
+        public boolean hasUsername() {
+            return ((bitField0_ & 0x00000400) == 0x00000400);
+        }
+
+        /**
+         * <code>optional string username = 11;</code>
+         */
+        public String getUsername() {
+            Object ref = username_;
+            if (ref instanceof String) {
+                return (String) ref;
+            } else {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                String s = bs.toStringUtf8();
+                if (bs.isValidUtf8()) {
+                    username_ = s;
+                }
+                return s;
+            }
+        }
+
+        /**
+         * <code>optional string username = 11;</code>
+         */
+        public com.google.protobuf.ByteString
+        getUsernameBytes() {
+            Object ref = username_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (String) ref);
+                username_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
         private void initFields() {
             adminId_ = "";
             roomName_ = "";
@@ -13431,6 +13666,7 @@ public final class YouMaiVideo {
             valid_ = false;
             type_ = YouMaiVideo.VideoType.CONFERENCE;
             time_ = 0;
+            username_ = "";
         }
 
         private byte memoizedIsInitialized = -1;
@@ -13476,6 +13712,9 @@ public final class YouMaiVideo {
             }
             if (((bitField0_ & 0x00000200) == 0x00000200)) {
                 output.writeInt32(10, time_);
+            }
+            if (((bitField0_ & 0x00000400) == 0x00000400)) {
+                output.writeBytes(11, getUsernameBytes());
             }
             getUnknownFields().writeTo(output);
         }
@@ -13526,6 +13765,10 @@ public final class YouMaiVideo {
             if (((bitField0_ & 0x00000200) == 0x00000200)) {
                 size += com.google.protobuf.CodedOutputStream
                         .computeInt32Size(10, time_);
+            }
+            if (((bitField0_ & 0x00000400) == 0x00000400)) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeBytesSize(11, getUsernameBytes());
             }
             size += getUnknownFields().getSerializedSize();
             memoizedSerializedSize = size;
@@ -13695,6 +13938,8 @@ public final class YouMaiVideo {
                 bitField0_ = (bitField0_ & ~0x00000100);
                 time_ = 0;
                 bitField0_ = (bitField0_ & ~0x00000200);
+                username_ = "";
+                bitField0_ = (bitField0_ & ~0x00000400);
                 return this;
             }
 
@@ -13767,6 +14012,10 @@ public final class YouMaiVideo {
                     to_bitField0_ |= 0x00000200;
                 }
                 result.time_ = time_;
+                if (((from_bitField0_ & 0x00000400) == 0x00000400)) {
+                    to_bitField0_ |= 0x00000400;
+                }
+                result.username_ = username_;
                 result.bitField0_ = to_bitField0_;
                 onBuilt();
                 return result;
@@ -13822,6 +14071,11 @@ public final class YouMaiVideo {
                 }
                 if (other.hasTime()) {
                     setTime(other.getTime());
+                }
+                if (other.hasUsername()) {
+                    bitField0_ |= 0x00000400;
+                    username_ = other.username_;
+                    onChanged();
                 }
                 this.mergeUnknownFields(other.getUnknownFields());
                 return this;
@@ -14553,6 +14807,88 @@ public final class YouMaiVideo {
             public Builder clearTime() {
                 bitField0_ = (bitField0_ & ~0x00000200);
                 time_ = 0;
+                onChanged();
+                return this;
+            }
+
+            private Object username_ = "";
+
+            /**
+             * <code>optional string username = 11;</code>
+             */
+            public boolean hasUsername() {
+                return ((bitField0_ & 0x00000400) == 0x00000400);
+            }
+
+            /**
+             * <code>optional string username = 11;</code>
+             */
+            public String getUsername() {
+                Object ref = username_;
+                if (!(ref instanceof String)) {
+                    com.google.protobuf.ByteString bs =
+                            (com.google.protobuf.ByteString) ref;
+                    String s = bs.toStringUtf8();
+                    if (bs.isValidUtf8()) {
+                        username_ = s;
+                    }
+                    return s;
+                } else {
+                    return (String) ref;
+                }
+            }
+
+            /**
+             * <code>optional string username = 11;</code>
+             */
+            public com.google.protobuf.ByteString
+            getUsernameBytes() {
+                Object ref = username_;
+                if (ref instanceof String) {
+                    com.google.protobuf.ByteString b =
+                            com.google.protobuf.ByteString.copyFromUtf8(
+                                    (String) ref);
+                    username_ = b;
+                    return b;
+                } else {
+                    return (com.google.protobuf.ByteString) ref;
+                }
+            }
+
+            /**
+             * <code>optional string username = 11;</code>
+             */
+            public Builder setUsername(
+                    String value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000400;
+                username_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string username = 11;</code>
+             */
+            public Builder clearUsername() {
+                bitField0_ = (bitField0_ & ~0x00000400);
+                username_ = getDefaultInstance().getUsername();
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string username = 11;</code>
+             */
+            public Builder setUsernameBytes(
+                    com.google.protobuf.ByteString value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                bitField0_ |= 0x00000400;
+                username_ = value;
                 onChanged();
                 return this;
             }
@@ -41995,99 +42331,100 @@ public final class YouMaiVideo {
                         "t\030\024 \001(\0162\033.ResultCode\"q\n\031" +
                         "MemberApplyResponseNotify\022\021\n\troom_name\030\001" +
                         " \001(\t\022\020\n\010admin_id\030\002 \001(\t\022\r\n\005agree\030\003 \001(\010\022\r\n" +
-                        "\005token\030\004 \001(\t\022\021\n\tmember_id\030\005 \001(\t\"\330\001\n\017Memb",
+                        "\005token\030\004 \001(\t\022\021\n\tmember_id\030\005 \001(\t\"\352\001\n\017Memb",
                 "erInviteReq\022\020\n\010admin_id\030\001 \001(\t\022\021\n\troom_na" +
                         "me\030\002 \001(\t\0224\n\013member_list\030\003 \003(\0132\037.com.prot" +
                         "o.video.RoomMemberItem\022\020\n\010nickname\030\004 \001(\t" +
                         "\022\016\n\006avator\030\005 \001(\t\022\020\n\010group_id\030\006 \001(\r\022\014\n\004in" +
                         "fo\030\007 \001(\t\022(\n\004type\030\010 \001(\0162\032.com.proto.video" +
-                        ".VideoType\"c\n\017MemberInviteRsp\022\020\n\010admin_i" +
-                        "d\030\001 \001(\t\022\021\n\troom_name\030\002 \001(\t\022+\n\006result\030\024 \001" +
-                        "(\0162\033.ResultCode\"\363\001\n\022Memb" +
-                        "erInviteNotify\022\020\n\010admin_id\030\001 \001(\t\022\021\n\troom" +
-                        "_name\030\002 \001(\t\022/\n\006member\030\003 \001(\0132\037.com.proto.",
-                "video.RoomMemberItem\022\020\n\010nickname\030\004 \001(\t\022\016" +
-                        "\n\006avator\030\005 \001(\t\022\020\n\010group_id\030\006 \001(\r\022\014\n\004info" +
-                        "\030\007 \001(\t\022\r\n\005valid\030\010 \001(\010\022(\n\004type\030\t \001(\0162\032.co" +
-                        "m.proto.video.VideoType\022\014\n\004time\030\n \001(\005\"`\n" +
-                        "\027MemberInviteResponseReq\022\021\n\tmember_id\030\001 " +
-                        "\001(\t\022\021\n\troom_name\030\002 \001(\t\022\r\n\005agree\030\003 \001(\010\022\020\n" +
-                        "\010admin_id\030\004 \001(\t\"\212\001\n\027MemberInviteResponse" +
-                        "Rsp\022\021\n\troom_name\030\001 \001(\t\022\021\n\tmember_id\030\002 \001(" +
-                        "\t\022\r\n\005agree\030\003 \001(\010\022\r\n\005token\030\004 \001(\t\022+\n\006resul" +
-                        "t\030\024 \001(\0162\033.ResultCode\"c\n\032",
-                "MemberInviteResponseNotify\022\021\n\troom_name\030" +
-                        "\001 \001(\t\022\021\n\tmember_id\030\002 \001(\t\022\r\n\005agree\030\003 \001(\010\022" +
-                        "\020\n\010admin_id\030\004 \001(\t\"J\n\017MemberDeleteReq\022\017\n\007" +
-                        "user_id\030\001 \001(\t\022\021\n\troom_name\030\002 \001(\t\022\023\n\013memb" +
-                        "er_list\030\003 \003(\t\"f\n\017MemberDeleteRsp\022\021\n\troom" +
-                        "_name\030\001 \001(\t\022\023\n\013member_list\030\002 \003(\t\022+\n\006resu" +
-                        "lt\030\024 \001(\0162\033.ResultCode\"|\n" +
-                        "\025MemberModifyBroadcast\022\021\n\troom_name\030\001 \001(" +
-                        "\t\022/\n\006member\030\002 \001(\0132\037.Room" +
-                        "MemberItem\022\014\n\004type\030\003 \001(\r\022\021\n\tnotify_id\030\004 ",
-                "\001(\t\"1\n\013RoomInfoReq\022\017\n\007user_id\030\001 \001(\t\022\021\n\tr" +
-                        "oom_name\030\002 \001(\t\"\335\001\n\013RoomInfoRsp\0224\n\013member" +
-                        "_list\030\001 \003(\0132\037.RoomMember" +
-                        "Item\022\021\n\troom_name\030\002 \001(\t\022\r\n\005group\030\003 \001(\010\022\020" +
-                        "\n\010group_id\030\004 \001(\r\022\r\n\005topic\030\005 \001(\t\022(\n\004type\030" +
-                        "\006 \001(\0162\032.VideoType\022+\n\006res" +
-                        "ult\030\024 \001(\0162\033.ResultCode\"\212" +
-                        "\001\n\017VideoSettingReq\022\020\n\010admin_id\030\001 \001(\t\0224\n\013" +
-                        "member_list\030\002 \003(\0132\037.Room" +
-                        "MemberItem\022\021\n\troom_name\030\003 \001(\t\022\r\n\005reply\030\004",
-                " \001(\010\022\r\n\005agree\030\005 \001(\010\"\244\001\n\017VideoSettingRsp\022" +
-                        "\020\n\010admin_id\030\001 \001(\t\0224\n\013member_list\030\002 \003(\0132\037" +
-                        ".RoomMemberItem\022\r\n\005reply" +
-                        "\030\003 \001(\010\022\r\n\005agree\030\004 \001(\010\022+\n\006result\030\024 \001(\0162\033." +
-                        "ResultCode\"\177\n\022VideoSetti" +
-                        "ngNotify\022\017\n\007user_id\030\001 \001(\t\022\021\n\troom_name\030\002" +
-                        " \001(\t\022\023\n\013open_camera\030\003 \001(\010\022\022\n\nopen_voice\030" +
-                        "\004 \001(\010\022\r\n\005reply\030\005 \001(\010\022\r\n\005agree\030\006 \001(\010\"\207\001\n\024" +
-                        "VideoSettingApplyReq\022\017\n\007user_id\030\001 \001(\t\022\023\n" +
-                        "\013open_camera\030\002 \001(\010\022\022\n\nopen_voice\030\003 \001(\010\022\021",
-                "\n\troom_name\030\004 \001(\t\022\020\n\010admin_id\030\005 \001(\t\022\020\n\010n" +
-                        "ickname\030\006 \001(\t\"\264\001\n\024VideoSettingApplyRsp\022\017" +
-                        "\n\007user_id\030\001 \001(\t\022\023\n\013open_camera\030\002 \001(\010\022\022\n\n" +
-                        "open_voice\030\003 \001(\010\022\021\n\troom_name\030\004 \001(\t\022\020\n\010a" +
-                        "dmin_id\030\005 \001(\t\022\020\n\010nickname\030\006 \001(\t\022+\n\006resul" +
-                        "t\030\024 \001(\0162\033.ResultCode\"\212\001\n" +
-                        "\027VideoSettingApplyNotify\022\017\n\007user_id\030\001 \001(" +
-                        "\t\022\023\n\013open_camera\030\002 \001(\010\022\022\n\nopen_voice\030\003 \001" +
-                        "(\010\022\021\n\troom_name\030\004 \001(\t\022\020\n\010admin_id\030\005 \001(\t\022" +
-                        "\020\n\010nickname\030\006 \001(\t\"Q\n\024PermissionSettingRe",
-                "q\022\020\n\010admin_id\030\001 \001(\t\022\021\n\troom_name\030\002 \001(\t\022\024" +
-                        "\n\014new_admin_id\030\003 \001(\t\"~\n\024PermissionSettin" +
-                        "gRsp\022\020\n\010admin_id\030\001 \001(\t\022\021\n\troom_name\030\002 \001(" +
-                        "\t\022\024\n\014new_admin_id\030\003 \001(\t\022+\n\006result\030\024 \001(\0162" +
-                        "\033.ResultCode\"T\n\027Permissi" +
-                        "onSettingNotify\022\020\n\010admin_id\030\001 \001(\t\022\021\n\troo" +
-                        "m_name\030\002 \001(\t\022\024\n\014new_admin_id\030\003 \001(\t\"_\n\016St" +
-                        "ateBroadcast\022\020\n\010group_id\030\001 \001(\r\022\r\n\005state\030" +
-                        "\002 \001(\010\022\013\n\003num\030\003 \001(\r\022\021\n\troom_name\030\004 \001(\t\022\014\n" +
-                        "\004info\030\005 \001(\t\"4\n\rVideoStateReq\022\021\n\tmember_i",
-                "d\030\001 \001(\t\022\020\n\010group_id\030\002 \001(\r\"\324\001\n\rVideoState" +
-                        "Rsp\022\020\n\010group_id\030\001 \001(\r\022\r\n\005state\030\002 \001(\010\022\013\n\003" +
-                        "num\030\003 \001(\r\022\021\n\troom_name\030\004 \001(\t\022\014\n\004info\030\005 \001" +
-                        "(\t\022\016\n\006member\030\006 \001(\010\022\r\n\005token\030\007 \001(\t\022(\n\004typ" +
-                        "e\030\010 \001(\0162\032.VideoType\022+\n\006r" +
-                        "esult\030\024 \001(\0162\033.ResultCode" +
-                        "\"1\n\013ExitRoomReq\022\017\n\007user_id\030\001 \001(\t\022\021\n\troom" +
-                        "_name\030\002 \001(\t\"^\n\013ExitRoomRsp\022\017\n\007user_id\030\001 " +
-                        "\001(\t\022\021\n\troom_name\030\002 \001(\t\022+\n\006result\030\024 \001(\0162\033" +
-                        ".ResultCode\"J\n\021ExitRoomB",
-                "roadcast\022\017\n\007user_id\030\001 \001(\t\022\021\n\troom_name\030\002" +
-                        " \001(\t\022\021\n\tnotify_id\030\003 \001(\t\"4\n\016DestroyRoomRe" +
-                        "q\022\017\n\007user_id\030\001 \001(\t\022\021\n\troom_name\030\002 \001(\t\"a\n" +
-                        "\016DestroyRoomRsp\022\017\n\007user_id\030\001 \001(\t\022\021\n\troom" +
-                        "_name\030\002 \001(\t\022+\n\006result\030\024 \001(\0162\033.com.proto." +
-                        "basic.ResultCode\"M\n\024DestroyRoomBroadcast" +
-                        "\022\017\n\007user_id\030\001 \001(\t\022\021\n\troom_name\030\002 \001(\t\022\021\n\t" +
-                        "notify_id\030\003 \001(\t\",\n\004Ping\022\021\n\tmember_id\030\001 \001" +
-                        "(\t\022\021\n\troom_name\030\002 \001(\t\"Y\n\004Pong\022\021\n\tmember_" +
-                        "id\030\001 \001(\t\022\021\n\troom_name\030\002 \001(\t\022+\n\006result\030\024 ",
-                "\001(\0162\033.ResultCode*&\n\tVide" +
-                        "oType\022\016\n\nCONFERENCE\020\001\022\t\n\005TRAIN\020\002"
+                        ".VideoType\022\020\n\010username\030\t \001(\t\"c\n\017MemberIn" +
+                        "viteRsp\022\020\n\010admin_id\030\001 \001(\t\022\021\n\troom_name\030\002" +
+                        " \001(\t\022+\n\006result\030\024 \001(\0162\033.R" +
+                        "esultCode\"\205\002\n\022MemberInviteNotify\022\020\n\010admi" +
+                        "n_id\030\001 \001(\t\022\021\n\troom_name\030\002 \001(\t\022/\n\006member\030",
+                "\003 \001(\0132\037.RoomMemberItem\022\020" +
+                        "\n\010nickname\030\004 \001(\t\022\016\n\006avator\030\005 \001(\t\022\020\n\010grou" +
+                        "p_id\030\006 \001(\r\022\014\n\004info\030\007 \001(\t\022\r\n\005valid\030\010 \001(\010\022" +
+                        "(\n\004type\030\t \001(\0162\032.VideoTyp" +
+                        "e\022\014\n\004time\030\n \001(\005\022\020\n\010username\030\013 \001(\t\"`\n\027Mem" +
+                        "berInviteResponseReq\022\021\n\tmember_id\030\001 \001(\t\022" +
+                        "\021\n\troom_name\030\002 \001(\t\022\r\n\005agree\030\003 \001(\010\022\020\n\010adm" +
+                        "in_id\030\004 \001(\t\"\212\001\n\027MemberInviteResponseRsp\022" +
+                        "\021\n\troom_name\030\001 \001(\t\022\021\n\tmember_id\030\002 \001(\t\022\r\n" +
+                        "\005agree\030\003 \001(\010\022\r\n\005token\030\004 \001(\t\022+\n\006result\030\024 ",
+                "\001(\0162\033.ResultCode\"c\n\032Memb" +
+                        "erInviteResponseNotify\022\021\n\troom_name\030\001 \001(" +
+                        "\t\022\021\n\tmember_id\030\002 \001(\t\022\r\n\005agree\030\003 \001(\010\022\020\n\010a" +
+                        "dmin_id\030\004 \001(\t\"J\n\017MemberDeleteReq\022\017\n\007user" +
+                        "_id\030\001 \001(\t\022\021\n\troom_name\030\002 \001(\t\022\023\n\013member_l" +
+                        "ist\030\003 \003(\t\"f\n\017MemberDeleteRsp\022\021\n\troom_nam" +
+                        "e\030\001 \001(\t\022\023\n\013member_list\030\002 \003(\t\022+\n\006result\030\024" +
+                        " \001(\0162\033.ResultCode\"|\n\025Mem" +
+                        "berModifyBroadcast\022\021\n\troom_name\030\001 \001(\t\022/\n" +
+                        "\006member\030\002 \001(\0132\037.RoomMemb",
+                "erItem\022\014\n\004type\030\003 \001(\r\022\021\n\tnotify_id\030\004 \001(\t\"" +
+                        "1\n\013RoomInfoReq\022\017\n\007user_id\030\001 \001(\t\022\021\n\troom_" +
+                        "name\030\002 \001(\t\"\335\001\n\013RoomInfoRsp\0224\n\013member_lis" +
+                        "t\030\001 \003(\0132\037.RoomMemberItem" +
+                        "\022\021\n\troom_name\030\002 \001(\t\022\r\n\005group\030\003 \001(\010\022\020\n\010gr" +
+                        "oup_id\030\004 \001(\r\022\r\n\005topic\030\005 \001(\t\022(\n\004type\030\006 \001(" +
+                        "\0162\032.VideoType\022+\n\006result\030" +
+                        "\024 \001(\0162\033.ResultCode\"\212\001\n\017V" +
+                        "ideoSettingReq\022\020\n\010admin_id\030\001 \001(\t\0224\n\013memb" +
+                        "er_list\030\002 \003(\0132\037.RoomMemb",
+                "erItem\022\021\n\troom_name\030\003 \001(\t\022\r\n\005reply\030\004 \001(\010" +
+                        "\022\r\n\005agree\030\005 \001(\010\"\244\001\n\017VideoSettingRsp\022\020\n\010a" +
+                        "dmin_id\030\001 \001(\t\0224\n\013member_list\030\002 \003(\0132\037.com" +
+                        ".proto.video.RoomMemberItem\022\r\n\005reply\030\003 \001" +
+                        "(\010\022\r\n\005agree\030\004 \001(\010\022+\n\006result\030\024 \001(\0162\033.com." +
+                        "proto.basic.ResultCode\"\177\n\022VideoSettingNo" +
+                        "tify\022\017\n\007user_id\030\001 \001(\t\022\021\n\troom_name\030\002 \001(\t" +
+                        "\022\023\n\013open_camera\030\003 \001(\010\022\022\n\nopen_voice\030\004 \001(" +
+                        "\010\022\r\n\005reply\030\005 \001(\010\022\r\n\005agree\030\006 \001(\010\"\207\001\n\024Vide" +
+                        "oSettingApplyReq\022\017\n\007user_id\030\001 \001(\t\022\023\n\013ope",
+                "n_camera\030\002 \001(\010\022\022\n\nopen_voice\030\003 \001(\010\022\021\n\tro" +
+                        "om_name\030\004 \001(\t\022\020\n\010admin_id\030\005 \001(\t\022\020\n\010nickn" +
+                        "ame\030\006 \001(\t\"\264\001\n\024VideoSettingApplyRsp\022\017\n\007us" +
+                        "er_id\030\001 \001(\t\022\023\n\013open_camera\030\002 \001(\010\022\022\n\nopen" +
+                        "_voice\030\003 \001(\010\022\021\n\troom_name\030\004 \001(\t\022\020\n\010admin" +
+                        "_id\030\005 \001(\t\022\020\n\010nickname\030\006 \001(\t\022+\n\006result\030\024 " +
+                        "\001(\0162\033.ResultCode\"\212\001\n\027Vid" +
+                        "eoSettingApplyNotify\022\017\n\007user_id\030\001 \001(\t\022\023\n" +
+                        "\013open_camera\030\002 \001(\010\022\022\n\nopen_voice\030\003 \001(\010\022\021" +
+                        "\n\troom_name\030\004 \001(\t\022\020\n\010admin_id\030\005 \001(\t\022\020\n\010n",
+                "ickname\030\006 \001(\t\"Q\n\024PermissionSettingReq\022\020\n" +
+                        "\010admin_id\030\001 \001(\t\022\021\n\troom_name\030\002 \001(\t\022\024\n\014ne" +
+                        "w_admin_id\030\003 \001(\t\"~\n\024PermissionSettingRsp" +
+                        "\022\020\n\010admin_id\030\001 \001(\t\022\021\n\troom_name\030\002 \001(\t\022\024\n" +
+                        "\014new_admin_id\030\003 \001(\t\022+\n\006result\030\024 \001(\0162\033.co" +
+                        "m.proto.basic.ResultCode\"T\n\027PermissionSe" +
+                        "ttingNotify\022\020\n\010admin_id\030\001 \001(\t\022\021\n\troom_na" +
+                        "me\030\002 \001(\t\022\024\n\014new_admin_id\030\003 \001(\t\"_\n\016StateB" +
+                        "roadcast\022\020\n\010group_id\030\001 \001(\r\022\r\n\005state\030\002 \001(" +
+                        "\010\022\013\n\003num\030\003 \001(\r\022\021\n\troom_name\030\004 \001(\t\022\014\n\004inf",
+                "o\030\005 \001(\t\"4\n\rVideoStateReq\022\021\n\tmember_id\030\001 " +
+                        "\001(\t\022\020\n\010group_id\030\002 \001(\r\"\324\001\n\rVideoStateRsp\022" +
+                        "\020\n\010group_id\030\001 \001(\r\022\r\n\005state\030\002 \001(\010\022\013\n\003num\030" +
+                        "\003 \001(\r\022\021\n\troom_name\030\004 \001(\t\022\014\n\004info\030\005 \001(\t\022\016" +
+                        "\n\006member\030\006 \001(\010\022\r\n\005token\030\007 \001(\t\022(\n\004type\030\010 " +
+                        "\001(\0162\032.VideoType\022+\n\006resul" +
+                        "t\030\024 \001(\0162\033.ResultCode\"1\n\013" +
+                        "ExitRoomReq\022\017\n\007user_id\030\001 \001(\t\022\021\n\troom_nam" +
+                        "e\030\002 \001(\t\"^\n\013ExitRoomRsp\022\017\n\007user_id\030\001 \001(\t\022" +
+                        "\021\n\troom_name\030\002 \001(\t\022+\n\006result\030\024 \001(\0162\033.com",
+                ".proto.basic.ResultCode\"J\n\021ExitRoomBroad" +
+                        "cast\022\017\n\007user_id\030\001 \001(\t\022\021\n\troom_name\030\002 \001(\t" +
+                        "\022\021\n\tnotify_id\030\003 \001(\t\"4\n\016DestroyRoomReq\022\017\n" +
+                        "\007user_id\030\001 \001(\t\022\021\n\troom_name\030\002 \001(\t\"a\n\016Des" +
+                        "troyRoomRsp\022\017\n\007user_id\030\001 \001(\t\022\021\n\troom_nam" +
+                        "e\030\002 \001(\t\022+\n\006result\030\024 \001(\0162\033.com.proto.basi" +
+                        "c.ResultCode\"M\n\024DestroyRoomBroadcast\022\017\n\007" +
+                        "user_id\030\001 \001(\t\022\021\n\troom_name\030\002 \001(\t\022\021\n\tnoti" +
+                        "fy_id\030\003 \001(\t\",\n\004Ping\022\021\n\tmember_id\030\001 \001(\t\022\021" +
+                        "\n\troom_name\030\002 \001(\t\"Y\n\004Pong\022\021\n\tmember_id\030\001",
+                " \001(\t\022\021\n\troom_name\030\002 \001(\t\022+\n\006result\030\024 \001(\0162" +
+                        "\033.ResultCode*&\n\tVideoTyp" +
+                        "e\022\016\n\nCONFERENCE\020\001\022\t\n\005TRAIN\020\002"
         };
         com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
                 new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -42161,7 +42498,7 @@ public final class YouMaiVideo {
         internal_static_com_proto_video_MemberInviteReq_fieldAccessorTable = new
                 com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_proto_video_MemberInviteReq_descriptor,
-                new String[]{"AdminId", "RoomName", "MemberList", "Nickname", "Avator", "GroupId", "Info", "Type",});
+                new String[]{"AdminId", "RoomName", "MemberList", "Nickname", "Avator", "GroupId", "Info", "Type", "Username",});
         internal_static_com_proto_video_MemberInviteRsp_descriptor =
                 getDescriptor().getMessageTypes().get(10);
         internal_static_com_proto_video_MemberInviteRsp_fieldAccessorTable = new
@@ -42173,7 +42510,7 @@ public final class YouMaiVideo {
         internal_static_com_proto_video_MemberInviteNotify_fieldAccessorTable = new
                 com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_proto_video_MemberInviteNotify_descriptor,
-                new String[]{"AdminId", "RoomName", "Member", "Nickname", "Avator", "GroupId", "Info", "Valid", "Type", "Time",});
+                new String[]{"AdminId", "RoomName", "Member", "Nickname", "Avator", "GroupId", "Info", "Valid", "Type", "Time", "Username",});
         internal_static_com_proto_video_MemberInviteResponseReq_descriptor =
                 getDescriptor().getMessageTypes().get(12);
         internal_static_com_proto_video_MemberInviteResponseReq_fieldAccessorTable = new

@@ -1905,6 +1905,7 @@ public class HuxinSdkManager {
         builder.setRoomName(roomName);
         builder.addAllMemberList(memberList);
         builder.setType(type);
+        builder.setUsername(getUserName());
         YouMaiVideo.MemberInviteReq memberAddReq = builder.build();
         sendProto(memberAddReq, YouMaiBasic.COMMANDID.CID_VIDEO_MEMBER_INVITE_REQ_VALUE, callback);
     }

@@ -26,6 +26,7 @@ import android.view.WindowManager.LayoutParams;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import com.google.protobuf.InvalidProtocolBufferException;
 import com.qiniu.droid.rtc.QNBeautySetting;
 import com.qiniu.droid.rtc.QNCameraSwitchResultCallback;
 import com.qiniu.droid.rtc.QNRTCManager;
@@ -45,7 +46,11 @@ import com.youmai.hxsdk.db.bean.CacheMsgBean;
 import com.youmai.hxsdk.db.helper.CacheMsgHelper;
 import com.youmai.hxsdk.im.IMMsgManager;
 import com.youmai.hxsdk.im.IMVedioSingleChatCallBack;
+import com.youmai.hxsdk.module.videocall.VideoSelectConstactActivity;
+import com.youmai.hxsdk.proto.YouMaiBasic;
+import com.youmai.hxsdk.proto.YouMaiVideo;
 import com.youmai.hxsdk.service.SendMsgService;
+import com.youmai.hxsdk.socket.NotifyListener;
 import com.youmai.hxsdk.utils.ScreenUtils;
 import com.youmai.hxsdk.utils.ToastUtils;
 
@@ -67,14 +72,17 @@ public class SingleRoomActivity extends SdkBaseActivity implements QNRoomEventLi
 
     public static final String EXTRA_ROOM_ID = "ROOM_ID";
     public static final String EXTRA_ADMIN_ID = "ADMIN_ID";
-    public static final String EXTRA_IVATOR_ID = "IVATOR_ID";
+
     public static final String EXTRA_IS_INVITE = "IS_INVITE";
     public static final String EXTRA_ROOM_TOKEN = "ROOM_TOKEN";
     public static final String EXTRA_USER_ID = "USER_ID";
-    public static final String EXTRA_ADMIN_NICK_NAME = "ADMIN_NICK_NAME";
-    public static final String EXTRA_ADMIN_AVATAR = "ADMIN_AVATAR";
+    //public static final String EXTRA_ADMIN_NICK_NAME = "ADMIN_NICK_NAME";
+    //public static final String EXTRA_ADMIN_AVATAR = "ADMIN_AVATAR";
+    // public static final String EXTRA_ADMIN_USERNAME = "ADMIN_USERNAME";
+    public static final String EXTRA_DST_ID = "DST_ID";
     public static final String EXTRA_DST_NICK_NAME = "DST_NICK_NAME";
     public static final String EXTRA_DST_AVATAR = "DST_AVATAR";
+    public static final String EXTRA_DST_USERNAME = "DST_USERNAME";
     public static final String EXTRA_SINGLE_TYPE = "SINGLE_TYPE";
     public static final int SINGLE_VIDEO = 1000;
     public static final int SINGLE_AUDIO = 1001;
@@ -114,8 +122,8 @@ public class SingleRoomActivity extends SdkBaseActivity implements QNRoomEventLi
     private boolean mCallControlFragmentVisible = true;
     private long mCallStartedTimeMs = 0;
     private boolean mMicEnabled = true;
-    //private boolean mBeautyEnabled = false;
-    private boolean mBeautyEnabled = true;
+    private boolean mBeautyEnabled = false;
+    //private boolean mBeautyEnabled = true;
     private boolean mVideoEnabled = true;
     private boolean mSpeakerEnabled = true;
     private boolean mIsJoinedRoom = false;
@@ -139,37 +147,29 @@ public class SingleRoomActivity extends SdkBaseActivity implements QNRoomEventLi
     private String mAdminId;
     private String desId;
 
+
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             if (msg.what == 1) {
+                if (mControlFragment != null) {
+                    String msgContent = mControlFragment.msgContent() + "已取消";
+                    mControlFragment.sendMsgToInvitee(msgContent, SingleRoomActivity.this);
+                }
                 if (!TextUtils.isEmpty(mRoomId)) {
                     HuxinSdkManager.instance().reqDestroyRoom(mRoomId);
                 }
-                CacheMsgBean cacheBean = new CacheMsgBean();
-                CacheMsgSingleVideo cacheMsgSingleVideo = new CacheMsgSingleVideo();
-                cacheMsgSingleVideo.setContent("通话已取消");
-                cacheBean.setJsonBodyObj(cacheMsgSingleVideo).setMsgType(SINGLE_VIDEO_CALL)
-                        .setMsgTime(System.currentTimeMillis())
-                        .setSenderUserId(mAdminId)
-                        .setSenderAvatar(admin_avatar)
-                        .setSenderRealName(admin_nick_name)
-                        .setTargetAvatar(dst_avatar)
-                        .setTargetName(dst_nickName)
-                        .setTargetUuid(desId);
-                CacheMsgHelper.instance().insertOrUpdate(SingleRoomActivity.this, cacheBean);
-                Intent intent = new Intent(SendMsgService.ACTION_NEW_MSG_VEDIO);
-                intent.putExtra("CacheNewMsg", cacheBean);
-                LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(SingleRoomActivity.this);
-                localBroadcastManager.sendBroadcast(intent);
                 SingleRoomActivity.this.finish();
+
             }
         }
     };
 
-    private String admin_avatar;
-    private String admin_nick_name;
+    // private String admin_avatar;
+    //private String admin_nick_name;
+    private String dst_userName;
+    // private String admin_userName;
 
     private void doBeforeOnCreate() {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -182,6 +182,22 @@ public class SingleRoomActivity extends SdkBaseActivity implements QNRoomEventLi
         mDensity = ScreenUtils.getDensity(this);
     }
 
+    private void join() {
+        startCall();
+        if (mHandler != null) {
+            mHandler.removeMessages(1);
+            mHandler.removeCallbacksAndMessages(null);
+            mHandler = null;
+        }
+        if (mControlFragment != null) {
+            if (type == SingleRoomActivity.SINGLE_AUDIO) {
+                mControlFragment.setAudioUI();
+            } else {
+                mControlFragment.setVideoUI();
+            }
+        }
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         doBeforeOnCreate();
@@ -190,37 +206,17 @@ public class SingleRoomActivity extends SdkBaseActivity implements QNRoomEventLi
         IMMsgManager.instance().setImVedioSingleCallBack(new IMVedioSingleChatCallBack() {
             @Override
             public void agress() {
-                startCall();
-                if (mHandler != null) {
-                    mHandler.removeMessages(1);
-                    mHandler = null;
-                }
-                if (mControlFragment != null) {
-                    mControlFragment.showIcon();
-                }
+                join();
             }
 
             @Override
             public void reject(String roomName) {
+                if (mControlFragment != null) {
+                    String msg = mControlFragment.msgContent() + "对方已拒绝";
+                    mControlFragment.sendMsgToInvitee(msg, SingleRoomActivity.this);
+                }
                 HuxinSdkManager.instance().reqDestroyRoom(roomName);
-                Toast.makeText(mContext, "对方已经拒接您的邀请", Toast.LENGTH_SHORT).show();
-                CacheMsgBean cacheBean = new CacheMsgBean();
-                CacheMsgSingleVideo cacheMsgSingleVideo = new CacheMsgSingleVideo();
-                cacheMsgSingleVideo.setContent("对方已经拒绝通话");
-                cacheBean.setJsonBodyObj(cacheMsgSingleVideo).setMsgType(SINGLE_VIDEO_CALL)
-                        .setMsgTime(System.currentTimeMillis())
-                        .setSenderUserId(mAdminId)
-                        .setSenderAvatar(admin_avatar)
-                        .setSenderRealName(admin_nick_name)
-                        .setTargetUuid(desId)
-                        .setTargetName(dst_nickName)
-                        .setTargetAvatar(dst_avatar);
-                CacheMsgHelper.instance().insertOrUpdate(SingleRoomActivity.this, cacheBean);
-                Intent intent = new Intent(SendMsgService.ACTION_NEW_MSG_VEDIO);
-                intent.putExtra("CacheNewMsg", cacheBean);
-                LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(SingleRoomActivity.this);
-                localBroadcastManager.sendBroadcast(intent);
-                HuxinSdkManager.instance().getStackAct().finishActivity(SingleRoomActivity.class);
+                finish();
             }
         });
         Intent intent = getIntent();
@@ -229,21 +225,18 @@ public class SingleRoomActivity extends SdkBaseActivity implements QNRoomEventLi
         mUserId = intent.getStringExtra(EXTRA_USER_ID);
         dst_nickName = intent.getStringExtra(EXTRA_DST_NICK_NAME);
         dst_avatar = intent.getStringExtra(EXTRA_DST_AVATAR);
-        desId = intent.getStringExtra(EXTRA_IVATOR_ID);
-        admin_avatar = intent.getStringExtra(EXTRA_ADMIN_AVATAR);
-        admin_nick_name = intent.getStringExtra(EXTRA_ADMIN_NICK_NAME);
+        desId = intent.getStringExtra(EXTRA_DST_ID);
+        dst_userName = intent.getStringExtra(EXTRA_DST_USERNAME);
+        // admin_avatar = intent.getStringExtra(EXTRA_ADMIN_AVATAR);
+        // admin_nick_name = intent.getStringExtra(EXTRA_ADMIN_NICK_NAME);
         mAdminId = intent.getStringExtra(EXTRA_ADMIN_ID);
+
+        //admin_userName = intent.getStringExtra(EXTRA_ADMIN_USERNAME);
         isInvited = intent.getBooleanExtra(EXTRA_IS_INVITE, false);
         type = intent.getIntExtra(EXTRA_SINGLE_TYPE, 0);
 
-
-        //Toast.makeText(SingleRoomActivity.this, type + "!!!", Toast.LENGTH_SHORT).show();
         mLocalWindow = (LocalVideoView) findViewById(R.id.local_video_view);
         mLocalWindow.setUserId(mUserId);
-        //String html="<font size='24'>"+nickName+"</font>"+"<font size='18'>正在等待对方接受邀请...</font>";
-//        mLocalWindow.setNickName(nickName + "\n" + "\n" + "正在等待对方接受邀请...");
-//        mLocalWindow.setAvator(avatar);
-
         mRemoteWindowA = (RTCVideoView) findViewById(R.id.remote_video_view_a);
         mRemoteWindowB = (RTCVideoView) findViewById(R.id.remote_video_view_b);
         mRemoteWindowC = (RTCVideoView) findViewById(R.id.remote_video_view_c);
@@ -347,7 +340,7 @@ public class SingleRoomActivity extends SdkBaseActivity implements QNRoomEventLi
         mRTCManager.addRemoteWindow(mRemoteWindowH.getRemoteSurfaceView());
         mRTCManager.initialize(this, setting);
         mRTCManager.setLocalWindow(mLocalWindow.getLocalSurfaceView());
-        mHandler.sendEmptyMessageDelayed(1, 40000);
+        mHandler.sendEmptyMessageDelayed(1, 40 * 1000);
 
         HuxinSdkManager.instance().startVideoHeartBeat(mRoomId);
         HuxinSdkManager.instance().getStackAct().addActivity(this);
@@ -658,14 +651,7 @@ public class SingleRoomActivity extends SdkBaseActivity implements QNRoomEventLi
     public void onResume() {
         super.onResume();
         if (isInvited) {
-            startCall();
-            if (mHandler != null) {
-                mHandler.removeMessages(1);
-                mHandler = null;
-            }
-            if (mControlFragment != null) {
-                mControlFragment.showIcon();
-            }
+            join();
         }
     }
 
@@ -738,17 +724,17 @@ public class SingleRoomActivity extends SdkBaseActivity implements QNRoomEventLi
     }
 
 
-    @Override
-    public boolean onToggleBeauty() {
-        if (mRTCManager != null) {
-            mBeautyEnabled = !mBeautyEnabled;
-            QNBeautySetting beautySetting = new QNBeautySetting(0.5f, 0.5f, 0.5f);
-            beautySetting.setEnable(mBeautyEnabled);
-            //beautySetting.setEnable(true);
-            mRTCManager.setBeauty(beautySetting);
-        }
-        return mBeautyEnabled;
-    }
+//    @Override
+//    public boolean onToggleBeauty() {
+//        if (mRTCManager != null) {
+//            mBeautyEnabled = !mBeautyEnabled;
+//            QNBeautySetting beautySetting = new QNBeautySetting(0.5f, 0.5f, 0.5f);
+//            beautySetting.setEnable(mBeautyEnabled);
+//            //beautySetting.setEnable(true);
+//            mRTCManager.setBeauty(beautySetting);
+//        }
+//        return mBeautyEnabled;
+//    }
 
     @Override
     public void onJoinedRoom() {
@@ -988,6 +974,7 @@ public class SingleRoomActivity extends SdkBaseActivity implements QNRoomEventLi
         isInvited = false;
         if (mHandler != null) {
             mHandler.removeMessages(1);
+            mHandler.removeCallbacksAndMessages(null);
             mHandler = null;
         }
         IMMsgManager.instance().removeImVedioSingleCallBack();

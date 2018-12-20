@@ -61,8 +61,7 @@ public class SingleControlFragment extends Fragment implements View.OnClickListe
     private boolean mIsScreenCaptureEnabled = false;
     private boolean mIsAudioOnly = false;
     public static boolean reMuteIsAgree = false;
-    private String mRoomId;
-    public int type;
+
     private TableLayout video_tab;
     private TableLayout audio_tab;
     private ImageButton audioQuiet;
@@ -71,22 +70,21 @@ public class SingleControlFragment extends Fragment implements View.OnClickListe
     private ImageView iv_avatar;
     private TextView tv_name;
     private LinearLayout ll_head;
-    private String dst_nickName;
-    private String dst_avatar;
     private RelativeLayout rl_videocall;
     private ImageView ivVedioIcon;
     private TextView tvVedioName;
     private TextView tvVedioInfo;
+    private String mRoomId;
+    public int type;
     private String admin_id;
+    private boolean isInvtite;
     private String mUserId;
     private String desId;
-    private String admin_avatar;
-    private String admin_nick_name;
-    private boolean isInvtite;
     private String dst_username;
-    private String admin_userName;
+    private String dst_nickName;
+    private String dst_avatar;
 
-    public void sendMsgToAdmin(String msg, Context context) {
+    public void sendMsg(String msg, Context context) {
         String avatar = ColorsConfig.HEAD_ICON_URL + "avatar?uid=" + HuxinSdkManager.instance().getUserName();
         CacheMsgBean cacheBean = new CacheMsgBean();
         CacheMsgSingleVideo cacheMsgSingleVideo = new CacheMsgSingleVideo();
@@ -105,24 +103,6 @@ public class SingleControlFragment extends Fragment implements View.OnClickListe
         sendBroadcast(cacheBean);
     }
 
-    public void sendMsgToInvitee(String msg, Context context) {
-        String avatar = ColorsConfig.HEAD_ICON_URL + "avatar?uid=" + HuxinSdkManager.instance().getUserName();
-        CacheMsgBean cacheBean = new CacheMsgBean();
-        CacheMsgSingleVideo cacheMsgSingleVideo = new CacheMsgSingleVideo();
-        cacheMsgSingleVideo.setContent(msg);
-        cacheBean.setJsonBodyObj(cacheMsgSingleVideo).setMsgType(SINGLE_VIDEO_CALL)
-                .setMsgTime(System.currentTimeMillis())
-                .setSenderUserId(HuxinSdkManager.instance().getUuid())
-                .setSenderAvatar(avatar)
-                .setSenderRealName(HuxinSdkManager.instance().getRealName())
-                .setSenderUserName(HuxinSdkManager.instance().getUserName())
-                .setTargetUuid(desId)
-                .setTargetName(dst_nickName)
-                .setTargetAvatar(dst_avatar)
-                .setTargetUserName(dst_username);
-        CacheMsgHelper.instance().insertOrUpdate(context, cacheBean);
-        sendBroadcast(cacheBean);
-    }
 
     private void sendBroadcast(CacheMsgBean cacheBean) {
         Intent intent = new Intent(SendMsgService.ACTION_NEW_MSG_VEDIO);
@@ -132,19 +112,12 @@ public class SingleControlFragment extends Fragment implements View.OnClickListe
     }
 
     public void setAudioUI() {
-//        if (HuxinSdkManager.instance().getUuid().equals(desId)) {
-//            Glide.with(getActivity()).load(admin_avatar)
-//                    .apply(new RequestOptions()
-//                            .diskCacheStrategy(DiskCacheStrategy.ALL))
-//                    .into(iv_avatar);
-//            tv_name.setText(admin_nick_name);
-//        } else {
+
         Glide.with(getActivity()).load(dst_avatar)
                 .apply(new RequestOptions()
                         .diskCacheStrategy(DiskCacheStrategy.ALL))
                 .into(iv_avatar);
         tv_name.setText(dst_nickName);
-        //  }
         audioQuiet.setImageResource(R.mipmap.ims_icon_quiet_s);
         audioSpeaker.setImageResource(R.mipmap.ims_icon_sound_s);
         ll_head.setVisibility(View.VISIBLE);
@@ -189,23 +162,15 @@ public class SingleControlFragment extends Fragment implements View.OnClickListe
 
     @Override
     public void onRoomDestroy(String uuid) {
-        CacheMsgBean cacheBean = new CacheMsgBean();
-        String msg = "";
-        msg = msgContent() + "通话时长" + mTimer.getText().toString();
-
-        if (!HuxinSdkManager.instance().getUuid().equals(uuid)) {
-            if (uuid.equals(admin_id)) {
-                sendMsgToAdmin(msg, getActivity());
-            } else {
-                sendMsgToInvitee(msg, getActivity());
-            }
-        }
-
+        String msgContent = "";
+        msgContent = msgContent() + "通话时长" + mTimer.getText().toString();
+        sendMsg(msgContent, getActivity());
+        getActivity().finish();
     }
 
     @Override
     public void onDestroyInCallRing() {
-        Toast.makeText(getActivity(), "Room我回调了~~", Toast.LENGTH_SHORT);
+       // Toast.makeText(getActivity(), "Room我回调了~~", Toast.LENGTH_SHORT);
     }
 
 
@@ -245,16 +210,12 @@ public class SingleControlFragment extends Fragment implements View.OnClickListe
             mRoomId = bundle.getString(SingleRoomActivity.EXTRA_ROOM_ID);
             type = bundle.getInt(SingleRoomActivity.EXTRA_SINGLE_TYPE, 0);
             mUserId = bundle.getString(SingleRoomActivity.EXTRA_USER_ID);
-            //bundle.getString(SingleRoomActivity)
             admin_id = bundle.getString(SingleRoomActivity.EXTRA_ADMIN_ID);
             desId = bundle.getString(SingleRoomActivity.EXTRA_DST_ID);
             dst_username = bundle.getString(SingleRoomActivity.EXTRA_DST_USERNAME);
             dst_nickName = bundle.getString(SingleRoomActivity.EXTRA_DST_NICK_NAME);
             dst_avatar = bundle.getString(SingleRoomActivity.EXTRA_DST_AVATAR);
-            //admin_avatar = bundle.getString(SingleRoomActivity.EXTRA_ADMIN_AVATAR);
-            //admin_nick_name = bundle.getString(SingleRoomActivity.EXTRA_ADMIN_NICK_NAME);
             isInvtite = bundle.getBoolean(SingleRoomActivity.EXTRA_IS_INVITE);
-            //admin_userName = bundle.getString(SingleRoomActivity.EXTRA_ADMIN_USERNAME);
 
         }
     }
@@ -333,24 +294,13 @@ public class SingleControlFragment extends Fragment implements View.OnClickListe
             @Override
             public void onClick(View view) {
                 if (!TextUtils.isEmpty(mRoomId)) {
-                    String title = "";
-                    if (IMMsgManager.isMuteAgree) {
-                        title = msgContent() + "通话时长" + mTimer.getText().toString();
-                    } else {
-                        title = msgContent() + "已取消";
+                    if (!IMMsgManager.isMuteAgree && HuxinSdkManager.instance().getUuid().equals(admin_id)) {
+                        String content = msgContent() + "已取消";
+                        sendMsg(content, getActivity());
+                        getActivity().finish();
                     }
-                    CacheMsgBean cacheBean = new CacheMsgBean();
-                    if (HuxinSdkManager.instance().getUuid().equals(admin_id)) {
-                        //管理员挂断
-
-                        sendMsgToInvitee(title, getActivity());
-                    }
-                    if (HuxinSdkManager.instance().getUuid().equals(desId)) {
-                        sendMsgToAdmin(title, getActivity());
-                    }
-
                     HuxinSdkManager.instance().reqDestroyRoom(mRoomId);
-                    mCallEvents.onCallHangUp();
+                    //mCallEvents.onCallHangUp();
                 }
             }
         });

@@ -76,9 +76,6 @@ public class SingleRoomActivity extends SdkBaseActivity implements QNRoomEventLi
     public static final String EXTRA_IS_INVITE = "IS_INVITE";
     public static final String EXTRA_ROOM_TOKEN = "ROOM_TOKEN";
     public static final String EXTRA_USER_ID = "USER_ID";
-    //public static final String EXTRA_ADMIN_NICK_NAME = "ADMIN_NICK_NAME";
-    //public static final String EXTRA_ADMIN_AVATAR = "ADMIN_AVATAR";
-    // public static final String EXTRA_ADMIN_USERNAME = "ADMIN_USERNAME";
     public static final String EXTRA_DST_ID = "DST_ID";
     public static final String EXTRA_DST_NICK_NAME = "DST_NICK_NAME";
     public static final String EXTRA_DST_AVATAR = "DST_AVATAR";
@@ -96,8 +93,7 @@ public class SingleRoomActivity extends SdkBaseActivity implements QNRoomEventLi
             "android.permission.RECORD_AUDIO",
             "android.permission.INTERNET"
     };
-    private String dst_nickName;
-    private String dst_avatar;
+
 
     private List<String> mHWBlackList = new ArrayList<>();
     private List<RTCVideoView> mUsedWindowList;
@@ -146,8 +142,9 @@ public class SingleRoomActivity extends SdkBaseActivity implements QNRoomEventLi
     private boolean isInvited;
     private String mAdminId;
     private String desId;
-
-
+    private String dst_userName;
+    private String dst_nickName;
+    private String dst_avatar;
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -155,7 +152,7 @@ public class SingleRoomActivity extends SdkBaseActivity implements QNRoomEventLi
             if (msg.what == 1) {
                 if (mControlFragment != null) {
                     String msgContent = mControlFragment.msgContent() + "已取消";
-                    mControlFragment.sendMsgToInvitee(msgContent, SingleRoomActivity.this);
+                    mControlFragment.sendMsg(msgContent, SingleRoomActivity.this);
                 }
                 if (!TextUtils.isEmpty(mRoomId)) {
                     HuxinSdkManager.instance().reqDestroyRoom(mRoomId);
@@ -166,10 +163,6 @@ public class SingleRoomActivity extends SdkBaseActivity implements QNRoomEventLi
         }
     };
 
-    // private String admin_avatar;
-    //private String admin_nick_name;
-    private String dst_userName;
-    // private String admin_userName;
 
     private void doBeforeOnCreate() {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -213,7 +206,7 @@ public class SingleRoomActivity extends SdkBaseActivity implements QNRoomEventLi
             public void reject(String roomName) {
                 if (mControlFragment != null) {
                     String msg = mControlFragment.msgContent() + "对方已拒绝";
-                    mControlFragment.sendMsgToInvitee(msg, SingleRoomActivity.this);
+                    mControlFragment.sendMsg(msg, SingleRoomActivity.this);
                 }
                 HuxinSdkManager.instance().reqDestroyRoom(roomName);
                 finish();
@@ -227,11 +220,7 @@ public class SingleRoomActivity extends SdkBaseActivity implements QNRoomEventLi
         dst_avatar = intent.getStringExtra(EXTRA_DST_AVATAR);
         desId = intent.getStringExtra(EXTRA_DST_ID);
         dst_userName = intent.getStringExtra(EXTRA_DST_USERNAME);
-        // admin_avatar = intent.getStringExtra(EXTRA_ADMIN_AVATAR);
-        // admin_nick_name = intent.getStringExtra(EXTRA_ADMIN_NICK_NAME);
         mAdminId = intent.getStringExtra(EXTRA_ADMIN_ID);
-
-        //admin_userName = intent.getStringExtra(EXTRA_ADMIN_USERNAME);
         isInvited = intent.getBooleanExtra(EXTRA_IS_INVITE, false);
         type = intent.getIntExtra(EXTRA_SINGLE_TYPE, 0);
 
@@ -849,20 +838,20 @@ public class SingleRoomActivity extends SdkBaseActivity implements QNRoomEventLi
     @Override
     public void onRemoteUserLeaved(String userId) {
         Log.i(TAG, "onUserOut: " + userId);
-        updateRemoteLogText("onRemoteUserLeaved : " + userId);
+        //updateRemoteLogText("onRemoteUserLeaved : " + userId);
     }
 
     @Override
     public void onRemoteUserJoined(String userId) {
         Log.i(TAG, "onUserIn: " + userId);
-        updateRemoteLogText("onRemoteUserJoined : " + userId);
+        //updateRemoteLogText("onRemoteUserJoined : " + userId);
 
     }
 
     @Override
     public void onRemoteUnpublished(String userId) {
         Log.i(TAG, "onRemoteUnpublish: " + userId);
-        updateRemoteLogText("onRemoteUnpublished : " + userId);
+        //updateRemoteLogText("onRemoteUnpublished : " + userId);
     }
 
     @Override
@@ -895,7 +884,7 @@ public class SingleRoomActivity extends SdkBaseActivity implements QNRoomEventLi
     @Override
     public void onStateChanged(QNRoomState state) {
         Log.i(TAG, "onStateChanged: " + state);
-        updateRemoteLogText("onStateChanged : " + state.name());
+        //updateRemoteLogText("onStateChanged : " + state.name());
         switch (state) {
             case RECONNECTING:
                 mCallStartedTimeMs = System.currentTimeMillis();
@@ -909,7 +898,7 @@ public class SingleRoomActivity extends SdkBaseActivity implements QNRoomEventLi
     @Override
     public void onError(final int errorCode, String description) {
         Log.i(TAG, "onError: " + errorCode + " " + description);
-        updateRemoteLogText("onError : " + errorCode + " " + description);
+        // updateRemoteLogText("onError : " + errorCode + " " + description);
         switch (errorCode) {
             case ERROR_KICKED_OUT_OF_ROOM:
                 runOnUiThread(new Runnable() {
@@ -976,6 +965,10 @@ public class SingleRoomActivity extends SdkBaseActivity implements QNRoomEventLi
             mHandler.removeMessages(1);
             mHandler.removeCallbacksAndMessages(null);
             mHandler = null;
+        }
+        if (mRTCManager != null) {
+            mRTCManager.destroy();
+            mRTCManager = null;
         }
         IMMsgManager.instance().removeImVedioSingleCallBack();
         HuxinSdkManager.instance().stopVideoHeartBeat();

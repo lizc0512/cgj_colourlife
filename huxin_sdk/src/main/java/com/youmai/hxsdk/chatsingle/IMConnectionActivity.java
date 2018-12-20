@@ -1349,8 +1349,6 @@ public class IMConnectionActivity extends SdkBaseActivity implements
                             }
                         });
                         IMMsgManager.isSingleVideo = true;
-                        String admin_avatar = ColorsConfig.HEAD_ICON_URL + "avatar?uid=" + HuxinSdkManager.instance().getUserName();
-                        String admin_realName = HuxinSdkManager.instance().getRealName();
                         Intent intent = new Intent(IMConnectionActivity.this, SingleRoomActivity.class);
                         intent.putExtra(SingleRoomActivity.EXTRA_ROOM_ID, roomName);
                         intent.putExtra(SingleRoomActivity.EXTRA_ROOM_TOKEN, token);

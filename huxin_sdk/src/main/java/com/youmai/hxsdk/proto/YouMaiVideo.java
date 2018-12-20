@@ -106,7 +106,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional string member_id = 1;</code>
-         *
+         * <p>
          * <pre>
          * 成员id
          * </pre>
@@ -115,7 +115,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional string member_id = 1;</code>
-         *
+         * <p>
          * <pre>
          * 成员id
          * </pre>
@@ -124,7 +124,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional string member_id = 1;</code>
-         *
+         * <p>
          * <pre>
          * 成员id
          * </pre>
@@ -134,7 +134,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional uint32 member_role = 2;</code>
-         *
+         * <p>
          * <pre>
          * 群成员角色(1-管理员，2-普通成员)
          * </pre>
@@ -143,7 +143,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional uint32 member_role = 2;</code>
-         *
+         * <p>
          * <pre>
          * 群成员角色(1-管理员，2-普通成员)
          * </pre>
@@ -355,7 +355,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional string member_id = 1;</code>
-         *
+         * <p>
          * <pre>
          * 成员id
          * </pre>
@@ -366,7 +366,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional string member_id = 1;</code>
-         *
+         * <p>
          * <pre>
          * 成员id
          * </pre>
@@ -388,7 +388,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional string member_id = 1;</code>
-         *
+         * <p>
          * <pre>
          * 成员id
          * </pre>
@@ -412,7 +412,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional uint32 member_role = 2;</code>
-         *
+         * <p>
          * <pre>
          * 群成员角色(1-管理员，2-普通成员)
          * </pre>
@@ -423,7 +423,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional uint32 member_role = 2;</code>
-         *
+         * <p>
          * <pre>
          * 群成员角色(1-管理员，2-普通成员)
          * </pre>
@@ -940,7 +940,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional string member_id = 1;</code>
-             *
+             * <p>
              * <pre>
              * 成员id
              * </pre>
@@ -951,7 +951,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional string member_id = 1;</code>
-             *
+             * <p>
              * <pre>
              * 成员id
              * </pre>
@@ -973,7 +973,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional string member_id = 1;</code>
-             *
+             * <p>
              * <pre>
              * 成员id
              * </pre>
@@ -994,7 +994,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional string member_id = 1;</code>
-             *
+             * <p>
              * <pre>
              * 成员id
              * </pre>
@@ -1012,7 +1012,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional string member_id = 1;</code>
-             *
+             * <p>
              * <pre>
              * 成员id
              * </pre>
@@ -1026,7 +1026,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional string member_id = 1;</code>
-             *
+             * <p>
              * <pre>
              * 成员id
              * </pre>
@@ -1046,7 +1046,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional uint32 member_role = 2;</code>
-             *
+             * <p>
              * <pre>
              * 群成员角色(1-管理员，2-普通成员)
              * </pre>
@@ -1057,7 +1057,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional uint32 member_role = 2;</code>
-             *
+             * <p>
              * <pre>
              * 群成员角色(1-管理员，2-普通成员)
              * </pre>
@@ -1068,7 +1068,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional uint32 member_role = 2;</code>
-             *
+             * <p>
              * <pre>
              * 群成员角色(1-管理员，2-普通成员)
              * </pre>
@@ -1082,7 +1082,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional uint32 member_role = 2;</code>
-             *
+             * <p>
              * <pre>
              * 群成员角色(1-管理员，2-普通成员)
              * </pre>
@@ -1399,7 +1399,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional bool group = 2;</code>
-         *
+         * <p>
          * <pre>
          * 是否基于群创建
          * </pre>
@@ -1408,7 +1408,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional bool group = 2;</code>
-         *
+         * <p>
          * <pre>
          * 是否基于群创建
          * </pre>
@@ -1486,7 +1486,7 @@ public final class YouMaiVideo {
 
     /**
      * Protobuf type {@code RoomCreateReq}
-     *
+     * <p>
      * <pre>
      * ==========================================================
      * 创建连麦房间
@@ -1684,7 +1684,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional bool group = 2;</code>
-         *
+         * <p>
          * <pre>
          * 是否基于群创建
          * </pre>
@@ -1695,7 +1695,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional bool group = 2;</code>
-         *
+         * <p>
          * <pre>
          * 是否基于群创建
          * </pre>
@@ -2056,7 +2056,7 @@ public final class YouMaiVideo {
 
         /**
          * Protobuf type {@code RoomCreateReq}
-         *
+         * <p>
          * <pre>
          * ==========================================================
          * 创建连麦房间
@@ -2330,7 +2330,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional bool group = 2;</code>
-             *
+             * <p>
              * <pre>
              * 是否基于群创建
              * </pre>
@@ -2341,7 +2341,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional bool group = 2;</code>
-             *
+             * <p>
              * <pre>
              * 是否基于群创建
              * </pre>
@@ -2352,7 +2352,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional bool group = 2;</code>
-             *
+             * <p>
              * <pre>
              * 是否基于群创建
              * </pre>
@@ -2366,7 +2366,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional bool group = 2;</code>
-             *
+             * <p>
              * <pre>
              * 是否基于群创建
              * </pre>
@@ -2732,7 +2732,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional bool group = 2;</code>
-         *
+         * <p>
          * <pre>
          * 是否基于群创建
          * </pre>
@@ -2741,7 +2741,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional bool group = 2;</code>
-         *
+         * <p>
          * <pre>
          * 是否基于群创建
          * </pre>
@@ -3010,7 +3010,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional bool group = 2;</code>
-         *
+         * <p>
          * <pre>
          * 是否基于群创建
          * </pre>
@@ -3021,7 +3021,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional bool group = 2;</code>
-         *
+         * <p>
          * <pre>
          * 是否基于群创建
          * </pre>
@@ -3620,7 +3620,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional bool group = 2;</code>
-             *
+             * <p>
              * <pre>
              * 是否基于群创建
              * </pre>
@@ -3631,7 +3631,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional bool group = 2;</code>
-             *
+             * <p>
              * <pre>
              * 是否基于群创建
              * </pre>
@@ -3642,7 +3642,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional bool group = 2;</code>
-             *
+             * <p>
              * <pre>
              * 是否基于群创建
              * </pre>
@@ -3656,7 +3656,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional bool group = 2;</code>
-             *
+             * <p>
              * <pre>
              * 是否基于群创建
              * </pre>
@@ -4028,7 +4028,7 @@ public final class YouMaiVideo {
 
     /**
      * Protobuf type {@code MemberApplyReq}
-     *
+     * <p>
      * <pre>
      * 用户加入(主动申请、被邀请）
      * </pre>
@@ -4492,7 +4492,7 @@ public final class YouMaiVideo {
 
         /**
          * Protobuf type {@code MemberApplyReq}
-         *
+         * <p>
          * <pre>
          * 用户加入(主动申请、被邀请）
          * </pre>
@@ -5860,7 +5860,7 @@ public final class YouMaiVideo {
 
     /**
      * Protobuf type {@code MemberApplyNotify}
-     *
+     * <p>
      * <pre>
      * 通知管理员
      * </pre>
@@ -6383,7 +6383,7 @@ public final class YouMaiVideo {
 
         /**
          * Protobuf type {@code MemberApplyNotify}
-         *
+         * <p>
          * <pre>
          * 通知管理员
          * </pre>
@@ -7028,7 +7028,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional bool agree = 4;</code>
-         *
+         * <p>
          * <pre>
          * (同意：true)
          * </pre>
@@ -7037,7 +7037,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional bool agree = 4;</code>
-         *
+         * <p>
          * <pre>
          * (同意：true)
          * </pre>
@@ -7047,7 +7047,7 @@ public final class YouMaiVideo {
 
     /**
      * Protobuf type {@code MemberApplyResponseReq}
-     *
+     * <p>
      * <pre>
      * 管理员响应
      * </pre>
@@ -7311,7 +7311,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional bool agree = 4;</code>
-         *
+         * <p>
          * <pre>
          * (同意：true)
          * </pre>
@@ -7322,7 +7322,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional bool agree = 4;</code>
-         *
+         * <p>
          * <pre>
          * (同意：true)
          * </pre>
@@ -7490,7 +7490,7 @@ public final class YouMaiVideo {
 
         /**
          * Protobuf type {@code MemberApplyResponseReq}
-         *
+         * <p>
          * <pre>
          * 管理员响应
          * </pre>
@@ -7897,7 +7897,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional bool agree = 4;</code>
-             *
+             * <p>
              * <pre>
              * (同意：true)
              * </pre>
@@ -7908,7 +7908,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional bool agree = 4;</code>
-             *
+             * <p>
              * <pre>
              * (同意：true)
              * </pre>
@@ -7919,7 +7919,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional bool agree = 4;</code>
-             *
+             * <p>
              * <pre>
              * (同意：true)
              * </pre>
@@ -7933,7 +7933,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional bool agree = 4;</code>
-             *
+             * <p>
              * <pre>
              * (同意：true)
              * </pre>
@@ -7994,7 +7994,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional bool agree = 3;</code>
-         *
+         * <p>
          * <pre>
          * (同意：true)
          * </pre>
@@ -8003,7 +8003,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional bool agree = 3;</code>
-         *
+         * <p>
          * <pre>
          * (同意：true)
          * </pre>
@@ -8243,7 +8243,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional bool agree = 3;</code>
-         *
+         * <p>
          * <pre>
          * (同意：true)
          * </pre>
@@ -8254,7 +8254,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional bool agree = 3;</code>
-         *
+         * <p>
          * <pre>
          * (同意：true)
          * </pre>
@@ -8758,7 +8758,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional bool agree = 3;</code>
-             *
+             * <p>
              * <pre>
              * (同意：true)
              * </pre>
@@ -8769,7 +8769,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional bool agree = 3;</code>
-             *
+             * <p>
              * <pre>
              * (同意：true)
              * </pre>
@@ -8780,7 +8780,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional bool agree = 3;</code>
-             *
+             * <p>
              * <pre>
              * (同意：true)
              * </pre>
@@ -8794,7 +8794,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional bool agree = 3;</code>
-             *
+             * <p>
              * <pre>
              * (同意：true)
              * </pre>
@@ -8894,7 +8894,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional bool agree = 3;</code>
-         *
+         * <p>
          * <pre>
          * (同意：true)
          * </pre>
@@ -8903,7 +8903,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional bool agree = 3;</code>
-         *
+         * <p>
          * <pre>
          * (同意：true)
          * </pre>
@@ -8928,7 +8928,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional string member_id = 5;</code>
-         *
+         * <p>
          * <pre>
          * 被通告用户id
          * </pre>
@@ -8937,7 +8937,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional string member_id = 5;</code>
-         *
+         * <p>
          * <pre>
          * 被通告用户id
          * </pre>
@@ -8946,7 +8946,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional string member_id = 5;</code>
-         *
+         * <p>
          * <pre>
          * 被通告用户id
          * </pre>
@@ -8957,7 +8957,7 @@ public final class YouMaiVideo {
 
     /**
      * Protobuf type {@code MemberApplyResponseNotify}
-     *
+     * <p>
      * <pre>
      * 通知用户
      * </pre>
@@ -9182,7 +9182,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional bool agree = 3;</code>
-         *
+         * <p>
          * <pre>
          * (同意：true)
          * </pre>
@@ -9193,7 +9193,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional bool agree = 3;</code>
-         *
+         * <p>
          * <pre>
          * (同意：true)
          * </pre>
@@ -9252,7 +9252,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional string member_id = 5;</code>
-         *
+         * <p>
          * <pre>
          * 被通告用户id
          * </pre>
@@ -9263,7 +9263,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional string member_id = 5;</code>
-         *
+         * <p>
          * <pre>
          * 被通告用户id
          * </pre>
@@ -9285,7 +9285,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional string member_id = 5;</code>
-         *
+         * <p>
          * <pre>
          * 被通告用户id
          * </pre>
@@ -9471,7 +9471,7 @@ public final class YouMaiVideo {
 
         /**
          * Protobuf type {@code MemberApplyResponseNotify}
-         *
+         * <p>
          * <pre>
          * 通知用户
          * </pre>
@@ -9808,7 +9808,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional bool agree = 3;</code>
-             *
+             * <p>
              * <pre>
              * (同意：true)
              * </pre>
@@ -9819,7 +9819,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional bool agree = 3;</code>
-             *
+             * <p>
              * <pre>
              * (同意：true)
              * </pre>
@@ -9830,7 +9830,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional bool agree = 3;</code>
-             *
+             * <p>
              * <pre>
              * (同意：true)
              * </pre>
@@ -9844,7 +9844,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional bool agree = 3;</code>
-             *
+             * <p>
              * <pre>
              * (同意：true)
              * </pre>
@@ -9942,7 +9942,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional string member_id = 5;</code>
-             *
+             * <p>
              * <pre>
              * 被通告用户id
              * </pre>
@@ -9953,7 +9953,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional string member_id = 5;</code>
-             *
+             * <p>
              * <pre>
              * 被通告用户id
              * </pre>
@@ -9975,7 +9975,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional string member_id = 5;</code>
-             *
+             * <p>
              * <pre>
              * 被通告用户id
              * </pre>
@@ -9996,7 +9996,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional string member_id = 5;</code>
-             *
+             * <p>
              * <pre>
              * 被通告用户id
              * </pre>
@@ -10014,7 +10014,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional string member_id = 5;</code>
-             *
+             * <p>
              * <pre>
              * 被通告用户id
              * </pre>
@@ -10028,7 +10028,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional string member_id = 5;</code>
-             *
+             * <p>
              * <pre>
              * 被通告用户id
              * </pre>
@@ -10093,7 +10093,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>repeated .RoomMemberItem member_list = 3;</code>
-         *
+         * <p>
          * <pre>
          * 被邀请的用户
          * </pre>
@@ -10103,7 +10103,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>repeated .RoomMemberItem member_list = 3;</code>
-         *
+         * <p>
          * <pre>
          * 被邀请的用户
          * </pre>
@@ -10112,7 +10112,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>repeated .RoomMemberItem member_list = 3;</code>
-         *
+         * <p>
          * <pre>
          * 被邀请的用户
          * </pre>
@@ -10121,7 +10121,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>repeated .RoomMemberItem member_list = 3;</code>
-         *
+         * <p>
          * <pre>
          * 被邀请的用户
          * </pre>
@@ -10131,7 +10131,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>repeated .RoomMemberItem member_list = 3;</code>
-         *
+         * <p>
          * <pre>
          * 被邀请的用户
          * </pre>
@@ -10141,7 +10141,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional string nickname = 4;</code>
-         *
+         * <p>
          * <pre>
          * admin user info
          * </pre>
@@ -10150,7 +10150,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional string nickname = 4;</code>
-         *
+         * <p>
          * <pre>
          * admin user info
          * </pre>
@@ -10159,7 +10159,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional string nickname = 4;</code>
-         *
+         * <p>
          * <pre>
          * admin user info
          * </pre>
@@ -10238,7 +10238,7 @@ public final class YouMaiVideo {
 
     /**
      * Protobuf type {@code MemberInviteReq}
-     *
+     * <p>
      * <pre>
      * 邀请
      * </pre>
@@ -10497,7 +10497,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>repeated .RoomMemberItem member_list = 3;</code>
-         *
+         * <p>
          * <pre>
          * 被邀请的用户
          * </pre>
@@ -10508,7 +10508,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>repeated .RoomMemberItem member_list = 3;</code>
-         *
+         * <p>
          * <pre>
          * 被邀请的用户
          * </pre>
@@ -10520,7 +10520,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>repeated .RoomMemberItem member_list = 3;</code>
-         *
+         * <p>
          * <pre>
          * 被邀请的用户
          * </pre>
@@ -10531,7 +10531,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>repeated .RoomMemberItem member_list = 3;</code>
-         *
+         * <p>
          * <pre>
          * 被邀请的用户
          * </pre>
@@ -10542,7 +10542,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>repeated .RoomMemberItem member_list = 3;</code>
-         *
+         * <p>
          * <pre>
          * 被邀请的用户
          * </pre>
@@ -10557,7 +10557,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional string nickname = 4;</code>
-         *
+         * <p>
          * <pre>
          * admin user info
          * </pre>
@@ -10568,7 +10568,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional string nickname = 4;</code>
-         *
+         * <p>
          * <pre>
          * admin user info
          * </pre>
@@ -10590,7 +10590,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional string nickname = 4;</code>
-         *
+         * <p>
          * <pre>
          * admin user info
          * </pre>
@@ -10977,7 +10977,7 @@ public final class YouMaiVideo {
 
         /**
          * Protobuf type {@code MemberInviteReq}
-         *
+         * <p>
          * <pre>
          * 邀请
          * </pre>
@@ -11397,7 +11397,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>repeated .RoomMemberItem member_list = 3;</code>
-             *
+             * <p>
              * <pre>
              * 被邀请的用户
              * </pre>
@@ -11412,7 +11412,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>repeated .RoomMemberItem member_list = 3;</code>
-             *
+             * <p>
              * <pre>
              * 被邀请的用户
              * </pre>
@@ -11427,7 +11427,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>repeated .RoomMemberItem member_list = 3;</code>
-             *
+             * <p>
              * <pre>
              * 被邀请的用户
              * </pre>
@@ -11442,7 +11442,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>repeated .RoomMemberItem member_list = 3;</code>
-             *
+             * <p>
              * <pre>
              * 被邀请的用户
              * </pre>
@@ -11464,7 +11464,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>repeated .RoomMemberItem member_list = 3;</code>
-             *
+             * <p>
              * <pre>
              * 被邀请的用户
              * </pre>
@@ -11483,7 +11483,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>repeated .RoomMemberItem member_list = 3;</code>
-             *
+             * <p>
              * <pre>
              * 被邀请的用户
              * </pre>
@@ -11504,7 +11504,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>repeated .RoomMemberItem member_list = 3;</code>
-             *
+             * <p>
              * <pre>
              * 被邀请的用户
              * </pre>
@@ -11526,7 +11526,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>repeated .RoomMemberItem member_list = 3;</code>
-             *
+             * <p>
              * <pre>
              * 被邀请的用户
              * </pre>
@@ -11545,7 +11545,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>repeated .RoomMemberItem member_list = 3;</code>
-             *
+             * <p>
              * <pre>
              * 被邀请的用户
              * </pre>
@@ -11564,7 +11564,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>repeated .RoomMemberItem member_list = 3;</code>
-             *
+             * <p>
              * <pre>
              * 被邀请的用户
              * </pre>
@@ -11584,7 +11584,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>repeated .RoomMemberItem member_list = 3;</code>
-             *
+             * <p>
              * <pre>
              * 被邀请的用户
              * </pre>
@@ -11602,7 +11602,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>repeated .RoomMemberItem member_list = 3;</code>
-             *
+             * <p>
              * <pre>
              * 被邀请的用户
              * </pre>
@@ -11620,7 +11620,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>repeated .RoomMemberItem member_list = 3;</code>
-             *
+             * <p>
              * <pre>
              * 被邀请的用户
              * </pre>
@@ -11632,7 +11632,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>repeated .RoomMemberItem member_list = 3;</code>
-             *
+             * <p>
              * <pre>
              * 被邀请的用户
              * </pre>
@@ -11648,7 +11648,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>repeated .RoomMemberItem member_list = 3;</code>
-             *
+             * <p>
              * <pre>
              * 被邀请的用户
              * </pre>
@@ -11664,7 +11664,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>repeated .RoomMemberItem member_list = 3;</code>
-             *
+             * <p>
              * <pre>
              * 被邀请的用户
              * </pre>
@@ -11676,7 +11676,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>repeated .RoomMemberItem member_list = 3;</code>
-             *
+             * <p>
              * <pre>
              * 被邀请的用户
              * </pre>
@@ -11689,7 +11689,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>repeated .RoomMemberItem member_list = 3;</code>
-             *
+             * <p>
              * <pre>
              * 被邀请的用户
              * </pre>
@@ -11718,7 +11718,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional string nickname = 4;</code>
-             *
+             * <p>
              * <pre>
              * admin user info
              * </pre>
@@ -11729,7 +11729,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional string nickname = 4;</code>
-             *
+             * <p>
              * <pre>
              * admin user info
              * </pre>
@@ -11751,7 +11751,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional string nickname = 4;</code>
-             *
+             * <p>
              * <pre>
              * admin user info
              * </pre>
@@ -11772,7 +11772,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional string nickname = 4;</code>
-             *
+             * <p>
              * <pre>
              * admin user info
              * </pre>
@@ -11790,7 +11790,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional string nickname = 4;</code>
-             *
+             * <p>
              * <pre>
              * admin user info
              * </pre>
@@ -11804,7 +11804,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional string nickname = 4;</code>
-             *
+             * <p>
              * <pre>
              * admin user info
              * </pre>
@@ -12988,7 +12988,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional string nickname = 4;</code>
-         *
+         * <p>
          * <pre>
          * admin user info
          * </pre>
@@ -12997,7 +12997,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional string nickname = 4;</code>
-         *
+         * <p>
          * <pre>
          * admin user info
          * </pre>
@@ -13006,7 +13006,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional string nickname = 4;</code>
-         *
+         * <p>
          * <pre>
          * admin user info
          * </pre>
@@ -13105,7 +13105,7 @@ public final class YouMaiVideo {
 
     /**
      * Protobuf type {@code MemberInviteNotify}
-     *
+     * <p>
      * <pre>
      * 通知用户
      * </pre>
@@ -13400,7 +13400,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional string nickname = 4;</code>
-         *
+         * <p>
          * <pre>
          * admin user info
          * </pre>
@@ -13411,7 +13411,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional string nickname = 4;</code>
-         *
+         * <p>
          * <pre>
          * admin user info
          * </pre>
@@ -13433,7 +13433,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional string nickname = 4;</code>
-         *
+         * <p>
          * <pre>
          * admin user info
          * </pre>
@@ -13870,7 +13870,7 @@ public final class YouMaiVideo {
 
         /**
          * Protobuf type {@code MemberInviteNotify}
-         *
+         * <p>
          * <pre>
          * 通知用户
          * </pre>
@@ -14398,7 +14398,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional string nickname = 4;</code>
-             *
+             * <p>
              * <pre>
              * admin user info
              * </pre>
@@ -14409,7 +14409,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional string nickname = 4;</code>
-             *
+             * <p>
              * <pre>
              * admin user info
              * </pre>
@@ -14431,7 +14431,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional string nickname = 4;</code>
-             *
+             * <p>
              * <pre>
              * admin user info
              * </pre>
@@ -14452,7 +14452,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional string nickname = 4;</code>
-             *
+             * <p>
              * <pre>
              * admin user info
              * </pre>
@@ -14470,7 +14470,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional string nickname = 4;</code>
-             *
+             * <p>
              * <pre>
              * admin user info
              * </pre>
@@ -14484,7 +14484,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional string nickname = 4;</code>
-             *
+             * <p>
              * <pre>
              * admin user info
              * </pre>
@@ -14942,7 +14942,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional bool agree = 3;</code>
-         *
+         * <p>
          * <pre>
          * (同意：true)
          * </pre>
@@ -14951,7 +14951,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional bool agree = 3;</code>
-         *
+         * <p>
          * <pre>
          * (同意：true)
          * </pre>
@@ -14977,7 +14977,7 @@ public final class YouMaiVideo {
 
     /**
      * Protobuf type {@code MemberInviteResponseReq}
-     *
+     * <p>
      * <pre>
      * 用户响应
      * </pre>
@@ -15196,7 +15196,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional bool agree = 3;</code>
-         *
+         * <p>
          * <pre>
          * (同意：true)
          * </pre>
@@ -15207,7 +15207,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional bool agree = 3;</code>
-         *
+         * <p>
          * <pre>
          * (同意：true)
          * </pre>
@@ -15420,7 +15420,7 @@ public final class YouMaiVideo {
 
         /**
          * Protobuf type {@code MemberInviteResponseReq}
-         *
+         * <p>
          * <pre>
          * 用户响应
          * </pre>
@@ -15745,7 +15745,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional bool agree = 3;</code>
-             *
+             * <p>
              * <pre>
              * (同意：true)
              * </pre>
@@ -15756,7 +15756,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional bool agree = 3;</code>
-             *
+             * <p>
              * <pre>
              * (同意：true)
              * </pre>
@@ -15767,7 +15767,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional bool agree = 3;</code>
-             *
+             * <p>
              * <pre>
              * (同意：true)
              * </pre>
@@ -15781,7 +15781,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional bool agree = 3;</code>
-             *
+             * <p>
              * <pre>
              * (同意：true)
              * </pre>
@@ -15924,7 +15924,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional bool agree = 3;</code>
-         *
+         * <p>
          * <pre>
          * (同意：true)
          * </pre>
@@ -15933,7 +15933,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional bool agree = 3;</code>
-         *
+         * <p>
          * <pre>
          * (同意：true)
          * </pre>
@@ -16195,7 +16195,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional bool agree = 3;</code>
-         *
+         * <p>
          * <pre>
          * (同意：true)
          * </pre>
@@ -16206,7 +16206,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional bool agree = 3;</code>
-         *
+         * <p>
          * <pre>
          * (同意：true)
          * </pre>
@@ -16774,7 +16774,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional bool agree = 3;</code>
-             *
+             * <p>
              * <pre>
              * (同意：true)
              * </pre>
@@ -16785,7 +16785,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional bool agree = 3;</code>
-             *
+             * <p>
              * <pre>
              * (同意：true)
              * </pre>
@@ -16796,7 +16796,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional bool agree = 3;</code>
-             *
+             * <p>
              * <pre>
              * (同意：true)
              * </pre>
@@ -16810,7 +16810,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional bool agree = 3;</code>
-             *
+             * <p>
              * <pre>
              * (同意：true)
              * </pre>
@@ -16992,7 +16992,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional bool agree = 3;</code>
-         *
+         * <p>
          * <pre>
          * (同意：true)
          * </pre>
@@ -17001,7 +17001,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional bool agree = 3;</code>
-         *
+         * <p>
          * <pre>
          * (同意：true)
          * </pre>
@@ -17027,7 +17027,7 @@ public final class YouMaiVideo {
 
     /**
      * Protobuf type {@code MemberInviteResponseNotify}
-     *
+     * <p>
      * <pre>
      * 通知管理员
      * </pre>
@@ -17246,7 +17246,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional bool agree = 3;</code>
-         *
+         * <p>
          * <pre>
          * (同意：true)
          * </pre>
@@ -17257,7 +17257,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional bool agree = 3;</code>
-         *
+         * <p>
          * <pre>
          * (同意：true)
          * </pre>
@@ -17470,7 +17470,7 @@ public final class YouMaiVideo {
 
         /**
          * Protobuf type {@code MemberInviteResponseNotify}
-         *
+         * <p>
          * <pre>
          * 通知管理员
          * </pre>
@@ -17796,7 +17796,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional bool agree = 3;</code>
-             *
+             * <p>
              * <pre>
              * (同意：true)
              * </pre>
@@ -17807,7 +17807,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional bool agree = 3;</code>
-             *
+             * <p>
              * <pre>
              * (同意：true)
              * </pre>
@@ -17818,7 +17818,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional bool agree = 3;</code>
-             *
+             * <p>
              * <pre>
              * (同意：true)
              * </pre>
@@ -17832,7 +17832,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional bool agree = 3;</code>
-             *
+             * <p>
              * <pre>
              * (同意：true)
              * </pre>
@@ -17998,7 +17998,7 @@ public final class YouMaiVideo {
 
     /**
      * Protobuf type {@code MemberDeleteReq}
-     *
+     * <p>
      * <pre>
      * 移除
      * </pre>
@@ -18402,7 +18402,7 @@ public final class YouMaiVideo {
 
         /**
          * Protobuf type {@code MemberDeleteReq}
-         *
+         * <p>
          * <pre>
          * 移除
          * </pre>
@@ -19686,7 +19686,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional uint32 type = 3;</code>
-         *
+         * <p>
          * <pre>
          * （增加：1，删除：2）
          * </pre>
@@ -19695,7 +19695,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional uint32 type = 3;</code>
-         *
+         * <p>
          * <pre>
          * （增加：1，删除：2）
          * </pre>
@@ -19704,7 +19704,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional string notify_id = 4;</code>
-         *
+         * <p>
          * <pre>
          * 通知用户
          * </pre>
@@ -19713,7 +19713,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional string notify_id = 4;</code>
-         *
+         * <p>
          * <pre>
          * 通知用户
          * </pre>
@@ -19722,7 +19722,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional string notify_id = 4;</code>
-         *
+         * <p>
          * <pre>
          * 通知用户
          * </pre>
@@ -19733,7 +19733,7 @@ public final class YouMaiVideo {
 
     /**
      * Protobuf type {@code MemberModifyBroadcast}
-     *
+     * <p>
      * <pre>
      * 广播
      * </pre>
@@ -19938,7 +19938,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional uint32 type = 3;</code>
-         *
+         * <p>
          * <pre>
          * （增加：1，删除：2）
          * </pre>
@@ -19949,7 +19949,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional uint32 type = 3;</code>
-         *
+         * <p>
          * <pre>
          * （增加：1，删除：2）
          * </pre>
@@ -19963,7 +19963,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional string notify_id = 4;</code>
-         *
+         * <p>
          * <pre>
          * 通知用户
          * </pre>
@@ -19974,7 +19974,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional string notify_id = 4;</code>
-         *
+         * <p>
          * <pre>
          * 通知用户
          * </pre>
@@ -19996,7 +19996,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional string notify_id = 4;</code>
-         *
+         * <p>
          * <pre>
          * 通知用户
          * </pre>
@@ -20174,7 +20174,7 @@ public final class YouMaiVideo {
 
         /**
          * Protobuf type {@code MemberModifyBroadcast}
-         *
+         * <p>
          * <pre>
          * 广播
          * </pre>
@@ -20549,7 +20549,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional uint32 type = 3;</code>
-             *
+             * <p>
              * <pre>
              * （增加：1，删除：2）
              * </pre>
@@ -20560,7 +20560,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional uint32 type = 3;</code>
-             *
+             * <p>
              * <pre>
              * （增加：1，删除：2）
              * </pre>
@@ -20571,7 +20571,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional uint32 type = 3;</code>
-             *
+             * <p>
              * <pre>
              * （增加：1，删除：2）
              * </pre>
@@ -20585,7 +20585,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional uint32 type = 3;</code>
-             *
+             * <p>
              * <pre>
              * （增加：1，删除：2）
              * </pre>
@@ -20601,7 +20601,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional string notify_id = 4;</code>
-             *
+             * <p>
              * <pre>
              * 通知用户
              * </pre>
@@ -20612,7 +20612,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional string notify_id = 4;</code>
-             *
+             * <p>
              * <pre>
              * 通知用户
              * </pre>
@@ -20634,7 +20634,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional string notify_id = 4;</code>
-             *
+             * <p>
              * <pre>
              * 通知用户
              * </pre>
@@ -20655,7 +20655,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional string notify_id = 4;</code>
-             *
+             * <p>
              * <pre>
              * 通知用户
              * </pre>
@@ -20673,7 +20673,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional string notify_id = 4;</code>
-             *
+             * <p>
              * <pre>
              * 通知用户
              * </pre>
@@ -20687,7 +20687,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional string notify_id = 4;</code>
-             *
+             * <p>
              * <pre>
              * 通知用户
              * </pre>
@@ -20753,7 +20753,7 @@ public final class YouMaiVideo {
 
     /**
      * Protobuf type {@code RoomInfoReq}
-     *
+     * <p>
      * <pre>
      * ==========================================================
      * 获取连麦房间信息         用户进入房间获取房间用户列表 订阅所有用户流
@@ -21101,7 +21101,7 @@ public final class YouMaiVideo {
 
         /**
          * Protobuf type {@code RoomInfoReq}
-         *
+         * <p>
          * <pre>
          * ==========================================================
          * 获取连麦房间信息         用户进入房间获取房间用户列表 订阅所有用户流
@@ -21465,7 +21465,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional bool group = 3;</code>
-         *
+         * <p>
          * <pre>
          * 是否基于群创建
          * </pre>
@@ -21474,7 +21474,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional bool group = 3;</code>
-         *
+         * <p>
          * <pre>
          * 是否基于群创建
          * </pre>
@@ -21772,7 +21772,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional bool group = 3;</code>
-         *
+         * <p>
          * <pre>
          * 是否基于群创建
          * </pre>
@@ -21783,7 +21783,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional bool group = 3;</code>
-         *
+         * <p>
          * <pre>
          * 是否基于群创建
          * </pre>
@@ -22628,7 +22628,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional bool group = 3;</code>
-             *
+             * <p>
              * <pre>
              * 是否基于群创建
              * </pre>
@@ -22639,7 +22639,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional bool group = 3;</code>
-             *
+             * <p>
              * <pre>
              * 是否基于群创建
              * </pre>
@@ -22650,7 +22650,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional bool group = 3;</code>
-             *
+             * <p>
              * <pre>
              * 是否基于群创建
              * </pre>
@@ -22664,7 +22664,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional bool group = 3;</code>
-             *
+             * <p>
              * <pre>
              * 是否基于群创建
              * </pre>
@@ -22949,7 +22949,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional bool reply = 4;</code>
-         *
+         * <p>
          * <pre>
          * 主动设置还是答复
          * </pre>
@@ -22958,7 +22958,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional bool reply = 4;</code>
-         *
+         * <p>
          * <pre>
          * 主动设置还是答复
          * </pre>
@@ -22978,7 +22978,7 @@ public final class YouMaiVideo {
 
     /**
      * Protobuf type {@code VideoSettingReq}
-     *
+     * <p>
      * <pre>
      * 管理员设置
      * </pre>
@@ -23247,7 +23247,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional bool reply = 4;</code>
-         *
+         * <p>
          * <pre>
          * 主动设置还是答复
          * </pre>
@@ -23258,7 +23258,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional bool reply = 4;</code>
-         *
+         * <p>
          * <pre>
          * 主动设置还是答复
          * </pre>
@@ -23451,7 +23451,7 @@ public final class YouMaiVideo {
 
         /**
          * Protobuf type {@code VideoSettingReq}
-         *
+         * <p>
          * <pre>
          * 管理员设置
          * </pre>
@@ -24076,7 +24076,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional bool reply = 4;</code>
-             *
+             * <p>
              * <pre>
              * 主动设置还是答复
              * </pre>
@@ -24087,7 +24087,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional bool reply = 4;</code>
-             *
+             * <p>
              * <pre>
              * 主动设置还是答复
              * </pre>
@@ -24098,7 +24098,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional bool reply = 4;</code>
-             *
+             * <p>
              * <pre>
              * 主动设置还是答复
              * </pre>
@@ -24112,7 +24112,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional bool reply = 4;</code>
-             *
+             * <p>
              * <pre>
              * 主动设置还是答复
              * </pre>
@@ -24221,7 +24221,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional bool reply = 3;</code>
-         *
+         * <p>
          * <pre>
          * 主动设置还是答复
          * </pre>
@@ -24230,7 +24230,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional bool reply = 3;</code>
-         *
+         * <p>
          * <pre>
          * 主动设置还是答复
          * </pre>
@@ -24485,7 +24485,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional bool reply = 3;</code>
-         *
+         * <p>
          * <pre>
          * 主动设置还是答复
          * </pre>
@@ -24496,7 +24496,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional bool reply = 3;</code>
-         *
+         * <p>
          * <pre>
          * 主动设置还是答复
          * </pre>
@@ -25243,7 +25243,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional bool reply = 3;</code>
-             *
+             * <p>
              * <pre>
              * 主动设置还是答复
              * </pre>
@@ -25254,7 +25254,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional bool reply = 3;</code>
-             *
+             * <p>
              * <pre>
              * 主动设置还是答复
              * </pre>
@@ -25265,7 +25265,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional bool reply = 3;</code>
-             *
+             * <p>
              * <pre>
              * 主动设置还是答复
              * </pre>
@@ -25279,7 +25279,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional bool reply = 3;</code>
-             *
+             * <p>
              * <pre>
              * 主动设置还是答复
              * </pre>
@@ -25435,7 +25435,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional bool reply = 5;</code>
-         *
+         * <p>
          * <pre>
          * 主动设置还是答复
          * </pre>
@@ -25444,7 +25444,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional bool reply = 5;</code>
-         *
+         * <p>
          * <pre>
          * 主动设置还是答复
          * </pre>
@@ -25722,7 +25722,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional bool reply = 5;</code>
-         *
+         * <p>
          * <pre>
          * 主动设置还是答复
          * </pre>
@@ -25733,7 +25733,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional bool reply = 5;</code>
-         *
+         * <p>
          * <pre>
          * 主动设置还是答复
          * </pre>
@@ -26343,7 +26343,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional bool reply = 5;</code>
-             *
+             * <p>
              * <pre>
              * 主动设置还是答复
              * </pre>
@@ -26354,7 +26354,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional bool reply = 5;</code>
-             *
+             * <p>
              * <pre>
              * 主动设置还是答复
              * </pre>
@@ -26365,7 +26365,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional bool reply = 5;</code>
-             *
+             * <p>
              * <pre>
              * 主动设置还是答复
              * </pre>
@@ -26379,7 +26379,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional bool reply = 5;</code>
-             *
+             * <p>
              * <pre>
              * 主动设置还是答复
              * </pre>
@@ -26529,7 +26529,7 @@ public final class YouMaiVideo {
 
     /**
      * Protobuf type {@code VideoSettingApplyReq}
-     *
+     * <p>
      * <pre>
      * 用户申请
      * </pre>
@@ -27053,7 +27053,7 @@ public final class YouMaiVideo {
 
         /**
          * Protobuf type {@code VideoSettingApplyReq}
-         *
+         * <p>
          * <pre>
          * 用户申请
          * </pre>
@@ -31971,7 +31971,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional string new_admin_id = 3;</code>
-         *
+         * <p>
          * <pre>
          * 新管理员
          * </pre>
@@ -31980,7 +31980,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional string new_admin_id = 3;</code>
-         *
+         * <p>
          * <pre>
          * 新管理员
          * </pre>
@@ -31989,7 +31989,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional string new_admin_id = 3;</code>
-         *
+         * <p>
          * <pre>
          * 新管理员
          * </pre>
@@ -32210,7 +32210,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional string new_admin_id = 3;</code>
-         *
+         * <p>
          * <pre>
          * 新管理员
          * </pre>
@@ -32221,7 +32221,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional string new_admin_id = 3;</code>
-         *
+         * <p>
          * <pre>
          * 新管理员
          * </pre>
@@ -32243,7 +32243,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional string new_admin_id = 3;</code>
-         *
+         * <p>
          * <pre>
          * 新管理员
          * </pre>
@@ -32725,7 +32725,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional string new_admin_id = 3;</code>
-             *
+             * <p>
              * <pre>
              * 新管理员
              * </pre>
@@ -32736,7 +32736,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional string new_admin_id = 3;</code>
-             *
+             * <p>
              * <pre>
              * 新管理员
              * </pre>
@@ -32758,7 +32758,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional string new_admin_id = 3;</code>
-             *
+             * <p>
              * <pre>
              * 新管理员
              * </pre>
@@ -32779,7 +32779,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional string new_admin_id = 3;</code>
-             *
+             * <p>
              * <pre>
              * 新管理员
              * </pre>
@@ -32797,7 +32797,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional string new_admin_id = 3;</code>
-             *
+             * <p>
              * <pre>
              * 新管理员
              * </pre>
@@ -32811,7 +32811,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional string new_admin_id = 3;</code>
-             *
+             * <p>
              * <pre>
              * 新管理员
              * </pre>
@@ -32854,7 +32854,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional bool state = 2;</code>
-         *
+         * <p>
          * <pre>
          * 会话状态（正在进行：true,结束：false）
          * </pre>
@@ -32863,7 +32863,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional bool state = 2;</code>
-         *
+         * <p>
          * <pre>
          * 会话状态（正在进行：true,结束：false）
          * </pre>
@@ -32872,7 +32872,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional uint32 num = 3;</code>
-         *
+         * <p>
          * <pre>
          * 通话人数
          * </pre>
@@ -32881,7 +32881,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional uint32 num = 3;</code>
-         *
+         * <p>
          * <pre>
          * 通话人数
          * </pre>
@@ -32923,7 +32923,7 @@ public final class YouMaiVideo {
 
     /**
      * Protobuf type {@code StateBroadcast}
-     *
+     * <p>
      * <pre>
      * ==========================================================
      * 视频状态通知  通知给群所有人
@@ -33075,7 +33075,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional bool state = 2;</code>
-         *
+         * <p>
          * <pre>
          * 会话状态（正在进行：true,结束：false）
          * </pre>
@@ -33086,7 +33086,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional bool state = 2;</code>
-         *
+         * <p>
          * <pre>
          * 会话状态（正在进行：true,结束：false）
          * </pre>
@@ -33100,7 +33100,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional uint32 num = 3;</code>
-         *
+         * <p>
          * <pre>
          * 通话人数
          * </pre>
@@ -33111,7 +33111,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional uint32 num = 3;</code>
-         *
+         * <p>
          * <pre>
          * 通话人数
          * </pre>
@@ -33377,7 +33377,7 @@ public final class YouMaiVideo {
 
         /**
          * Protobuf type {@code StateBroadcast}
-         *
+         * <p>
          * <pre>
          * ==========================================================
          * 视频状态通知  通知给群所有人
@@ -33583,7 +33583,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional bool state = 2;</code>
-             *
+             * <p>
              * <pre>
              * 会话状态（正在进行：true,结束：false）
              * </pre>
@@ -33594,7 +33594,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional bool state = 2;</code>
-             *
+             * <p>
              * <pre>
              * 会话状态（正在进行：true,结束：false）
              * </pre>
@@ -33605,7 +33605,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional bool state = 2;</code>
-             *
+             * <p>
              * <pre>
              * 会话状态（正在进行：true,结束：false）
              * </pre>
@@ -33619,7 +33619,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional bool state = 2;</code>
-             *
+             * <p>
              * <pre>
              * 会话状态（正在进行：true,结束：false）
              * </pre>
@@ -33635,7 +33635,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional uint32 num = 3;</code>
-             *
+             * <p>
              * <pre>
              * 通话人数
              * </pre>
@@ -33646,7 +33646,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional uint32 num = 3;</code>
-             *
+             * <p>
              * <pre>
              * 通话人数
              * </pre>
@@ -33657,7 +33657,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional uint32 num = 3;</code>
-             *
+             * <p>
              * <pre>
              * 通话人数
              * </pre>
@@ -33671,7 +33671,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional uint32 num = 3;</code>
-             *
+             * <p>
              * <pre>
              * 通话人数
              * </pre>
@@ -34480,7 +34480,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional bool state = 2;</code>
-         *
+         * <p>
          * <pre>
          * 会话状态（正在进行：true,结束：false）
          * </pre>
@@ -34489,7 +34489,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional bool state = 2;</code>
-         *
+         * <p>
          * <pre>
          * 会话状态（正在进行：true,结束：false）
          * </pre>
@@ -34498,7 +34498,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional uint32 num = 3;</code>
-         *
+         * <p>
          * <pre>
          * 通话人数
          * </pre>
@@ -34507,7 +34507,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional uint32 num = 3;</code>
-         *
+         * <p>
          * <pre>
          * 通话人数
          * </pre>
@@ -34548,7 +34548,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional bool member = 6;</code>
-         *
+         * <p>
          * <pre>
          * 是否在房间
          * </pre>
@@ -34557,7 +34557,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional bool member = 6;</code>
-         *
+         * <p>
          * <pre>
          * 是否在房间
          * </pre>
@@ -34782,7 +34782,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional bool state = 2;</code>
-         *
+         * <p>
          * <pre>
          * 会话状态（正在进行：true,结束：false）
          * </pre>
@@ -34793,7 +34793,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional bool state = 2;</code>
-         *
+         * <p>
          * <pre>
          * 会话状态（正在进行：true,结束：false）
          * </pre>
@@ -34807,7 +34807,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional uint32 num = 3;</code>
-         *
+         * <p>
          * <pre>
          * 通话人数
          * </pre>
@@ -34818,7 +34818,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional uint32 num = 3;</code>
-         *
+         * <p>
          * <pre>
          * 通话人数
          * </pre>
@@ -34922,7 +34922,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional bool member = 6;</code>
-         *
+         * <p>
          * <pre>
          * 是否在房间
          * </pre>
@@ -34933,7 +34933,7 @@ public final class YouMaiVideo {
 
         /**
          * <code>optional bool member = 6;</code>
-         *
+         * <p>
          * <pre>
          * 是否在房间
          * </pre>
@@ -35458,7 +35458,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional bool state = 2;</code>
-             *
+             * <p>
              * <pre>
              * 会话状态（正在进行：true,结束：false）
              * </pre>
@@ -35469,7 +35469,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional bool state = 2;</code>
-             *
+             * <p>
              * <pre>
              * 会话状态（正在进行：true,结束：false）
              * </pre>
@@ -35480,7 +35480,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional bool state = 2;</code>
-             *
+             * <p>
              * <pre>
              * 会话状态（正在进行：true,结束：false）
              * </pre>
@@ -35494,7 +35494,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional bool state = 2;</code>
-             *
+             * <p>
              * <pre>
              * 会话状态（正在进行：true,结束：false）
              * </pre>
@@ -35510,7 +35510,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional uint32 num = 3;</code>
-             *
+             * <p>
              * <pre>
              * 通话人数
              * </pre>
@@ -35521,7 +35521,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional uint32 num = 3;</code>
-             *
+             * <p>
              * <pre>
              * 通话人数
              * </pre>
@@ -35532,7 +35532,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional uint32 num = 3;</code>
-             *
+             * <p>
              * <pre>
              * 通话人数
              * </pre>
@@ -35546,7 +35546,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional uint32 num = 3;</code>
-             *
+             * <p>
              * <pre>
              * 通话人数
              * </pre>
@@ -35726,7 +35726,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional bool member = 6;</code>
-             *
+             * <p>
              * <pre>
              * 是否在房间
              * </pre>
@@ -35737,7 +35737,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional bool member = 6;</code>
-             *
+             * <p>
              * <pre>
              * 是否在房间
              * </pre>
@@ -35748,7 +35748,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional bool member = 6;</code>
-             *
+             * <p>
              * <pre>
              * 是否在房间
              * </pre>
@@ -35762,7 +35762,7 @@ public final class YouMaiVideo {
 
             /**
              * <code>optional bool member = 6;</code>
-             *
+             * <p>
              * <pre>
              * 是否在房间
              * </pre>
@@ -35984,7 +35984,7 @@ public final class YouMaiVideo {
 
     /**
      * Protobuf type {@code ExitRoomReq}
-     *
+     * <p>
      * <pre>
      * 用户退出房间
      * </pre>
@@ -36330,7 +36330,7 @@ public final class YouMaiVideo {
 
         /**
          * Protobuf type {@code ExitRoomReq}
-         *
+         * <p>
          * <pre>
          * 用户退出房间
          * </pre>
@@ -38321,7 +38321,7 @@ public final class YouMaiVideo {
 
     /**
      * Protobuf type {@code DestroyRoomReq}
-     *
+     * <p>
      * <pre>
      * 结束视频
      * </pre>
@@ -38667,7 +38667,7 @@ public final class YouMaiVideo {
 
         /**
          * Protobuf type {@code DestroyRoomReq}
-         *
+         * <p>
          * <pre>
          * 结束视频
          * </pre>

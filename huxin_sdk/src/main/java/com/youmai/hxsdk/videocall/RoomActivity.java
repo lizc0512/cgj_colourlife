@@ -50,6 +50,8 @@ import com.youmai.hxsdk.proto.YouMaiVideo;
 import com.youmai.hxsdk.socket.PduBase;
 import com.youmai.hxsdk.socket.ReceiveListener;
 import com.youmai.hxsdk.utils.ScreenUtils;
+import com.youmai.hxsdk.utils.StatusBarUtils;
+import com.youmai.hxsdk.view.SystemBarTintManager;
 
 
 import java.nio.ByteBuffer;
@@ -144,9 +146,9 @@ public class RoomActivity extends SdkBaseActivity implements QNRoomEventListener
 
     private void doBeforeOnCreate() {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().addFlags(LayoutParams.FLAG_FULLSCREEN | LayoutParams.FLAG_KEEP_SCREEN_ON
-                | LayoutParams.FLAG_DISMISS_KEYGUARD | LayoutParams.FLAG_SHOW_WHEN_LOCKED
-                | LayoutParams.FLAG_TURN_SCREEN_ON);
+//        getWindow().addFlags(LayoutParams.FLAG_FULLSCREEN | LayoutParams.FLAG_KEEP_SCREEN_ON
+//                | LayoutParams.FLAG_DISMISS_KEYGUARD | LayoutParams.FLAG_SHOW_WHEN_LOCKED
+//                | LayoutParams.FLAG_TURN_SCREEN_ON);
         getWindow().getDecorView().setSystemUiVisibility(getSystemUiVisibility());
 
         mScreenWidth = ScreenUtils.getWidthPixels(this);
@@ -159,6 +161,9 @@ public class RoomActivity extends SdkBaseActivity implements QNRoomEventListener
     public void onCreate(Bundle savedInstanceState) {
         doBeforeOnCreate();
         super.onCreate(savedInstanceState);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            setTranslucentStatus(false);
+        }
         setContentView(R.layout.activity_room);
         Intent intent = getIntent();
         mRoomId = intent.getStringExtra(EXTRA_ROOM_ID);

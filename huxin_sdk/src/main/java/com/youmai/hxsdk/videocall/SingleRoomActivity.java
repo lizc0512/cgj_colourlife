@@ -53,6 +53,7 @@ import com.youmai.hxsdk.service.SendMsgService;
 import com.youmai.hxsdk.socket.NotifyListener;
 import com.youmai.hxsdk.utils.ScreenUtils;
 import com.youmai.hxsdk.utils.ToastUtils;
+import com.youmai.hxsdk.view.SystemBarTintManager;
 
 import java.lang.ref.WeakReference;
 import java.nio.ByteBuffer;
@@ -166,9 +167,9 @@ public class SingleRoomActivity extends SdkBaseActivity implements QNRoomEventLi
 
     private void doBeforeOnCreate() {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().addFlags(LayoutParams.FLAG_FULLSCREEN | LayoutParams.FLAG_KEEP_SCREEN_ON
-                | LayoutParams.FLAG_DISMISS_KEYGUARD | LayoutParams.FLAG_SHOW_WHEN_LOCKED
-                | LayoutParams.FLAG_TURN_SCREEN_ON);
+//        getWindow().addFlags(LayoutParams.FLAG_FULLSCREEN | LayoutParams.FLAG_KEEP_SCREEN_ON
+//                | LayoutParams.FLAG_DISMISS_KEYGUARD | LayoutParams.FLAG_SHOW_WHEN_LOCKED
+//                | LayoutParams.FLAG_TURN_SCREEN_ON);
         getWindow().getDecorView().setSystemUiVisibility(getSystemUiVisibility());
         mScreenWidth = ScreenUtils.getWidthPixels(this);
         mScreenHeight = ScreenUtils.getHeightPixels(this);

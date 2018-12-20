@@ -2,11 +2,11 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/app_colorPrimary"
+    android:background="@color/hx_color_white"
     android:gravity="center_vertical">
 
     <ImageView
-        android:src="@drawable/hx_btn_back"
+        android:src="@drawable/hx_btn_back_selector"
         android:id="@+id/tv_left_cancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -21,7 +21,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:textColor="@color/hx_color_white"
+        android:textColor="@color/black_normal"
         android:textSize="18sp" />
 
     <TextView

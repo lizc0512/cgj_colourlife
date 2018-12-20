@@ -142,10 +142,7 @@ public class RoomActivity extends SdkBaseActivity implements QNRoomEventListener
     private AlertDialog mKickoutDialog;
     private HxCommonVideoDialog applyRspDialog;
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
+    private void doBeforeOnCreate() {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().addFlags(LayoutParams.FLAG_FULLSCREEN | LayoutParams.FLAG_KEEP_SCREEN_ON
                 | LayoutParams.FLAG_DISMISS_KEYGUARD | LayoutParams.FLAG_SHOW_WHEN_LOCKED
@@ -156,8 +153,13 @@ public class RoomActivity extends SdkBaseActivity implements QNRoomEventListener
         mScreenHeight = ScreenUtils.getHeightPixels(this);
         mDensity = ScreenUtils.getDensity(this);
 
-        setContentView(R.layout.activity_room);
+    }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        doBeforeOnCreate();
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_room);
         Intent intent = getIntent();
         mRoomId = intent.getStringExtra(EXTRA_ROOM_ID);
         mRoomToken = intent.getStringExtra(EXTRA_ROOM_TOKEN);

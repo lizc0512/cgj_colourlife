@@ -15,10 +15,11 @@
         android:src="@drawable/default_header"/>
     <TextView
         android:id="@+id/tv_tinyserverfragment_num"
-        android:layout_width="wrap_content"
+        android:layout_width="22dp"
         android:layout_height="wrap_content"
         android:text=""
-        android:gravity="center"
+        android:paddingBottom="2dp"
+        android:gravity="center_horizontal|center_vertical"
         android:layout_toRightOf="@id/iv_fragmentthree_icon"
         android:layout_marginTop="5dp"
         android:visibility="gone"

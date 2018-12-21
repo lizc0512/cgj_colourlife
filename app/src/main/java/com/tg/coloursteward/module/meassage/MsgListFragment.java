@@ -1,6 +1,7 @@
 package com.tg.coloursteward.module.meassage;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -15,9 +16,11 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -28,18 +31,20 @@ import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.tg.coloursteward.DeskTopActivity;
 import com.tg.coloursteward.InviteRegisterActivity;
 import com.tg.coloursteward.R;
+import com.tg.coloursteward.adapter.HomeDialogAdapter;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.entity.HomeDialogEntitiy;
 import com.tg.coloursteward.info.UserInfo;
+import com.tg.coloursteward.inter.FragmentMineCallBack;
 import com.tg.coloursteward.module.MainActivity1;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.MessageHandler;
 import com.tg.coloursteward.net.RequestConfig;
+import com.tg.coloursteward.util.AuthTimeUtils;
 import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.TokenUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.PopWindowView;
-import com.tg.coloursteward.view.dialog.DialogFactory;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.ProtoCallback;
 import com.youmai.hxsdk.adapter.MessageAdapter;
@@ -95,6 +100,7 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
     // 空页面 end
     private ImageView iv_contactfragment_qrcode;
     private ImageView iv_contactfragment_scan;
+    private AlertDialog dialog;
 
     @Override
     public void onClick(View v) {
@@ -215,7 +221,7 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
                     HomeDialogEntitiy homeDialogEntitiy = GsonUtils.gsonToBean(jsonString, HomeDialogEntitiy.class);
                     if (!TextUtils.isEmpty(homeDialogEntitiy.getContent().getContent())) {
                         if (null != homeDialogEntitiy.getContent().getButton() && homeDialogEntitiy.getContent().getButton().size() > 0) {
-                            creatreDialog();
+                            creatreDialog(homeDialogEntitiy);
                         }
                     }
                 } catch (Exception e) {
@@ -224,20 +230,48 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
         }
     }
 
-    private void creatreDialog() {
-        DialogFactory.getInstance().showDialog(getActivity(), new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
+    private void creatreDialog(HomeDialogEntitiy homeDialogEntitiy) {
+        RecyclerView rv_homedialog;
+        HomeDialogAdapter dialogAdapter = null;
+        if (dialog == null) {
+            DisplayMetrics metrics = Tools.getDisplayMetrics(mContext);
+            dialog = new AlertDialog.Builder(mContext).create();
+            dialog.setCancelable(true);
+            Window window = dialog.getWindow();
+            dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+            dialog.show();
+            LinearLayout layout = (LinearLayout) LayoutInflater.from(mContext)
+                    .inflate(R.layout.home_dialog_layout, null);
+            TextView dialog_msg = layout.findViewById(R.id.dialog_msg);
+            dialog_msg.setText(homeDialogEntitiy.getContent().getContent());
+            rv_homedialog = layout.findViewById(R.id.rv_homedialog);
+            LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
+            layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+            rv_homedialog.setLayoutManager(layoutManager);
+            if (null == dialogAdapter) {
+                dialogAdapter = new HomeDialogAdapter(mContext, homeDialogEntitiy.getContent().getButton());
+                rv_homedialog.setAdapter(dialogAdapter);
+            } else {
+                dialogAdapter.setData(homeDialogEntitiy.getContent().getButton());
             }
-        }, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        }, "content", "ok", "cancel");
-
-
+            dialogAdapter.setFragmentMineCallBack(new FragmentMineCallBack() {
+                @Override
+                public void getData(String result, int positon) {
+                    AuthTimeUtils authTimeUtils = new AuthTimeUtils();
+                    authTimeUtils.IsAuthTime(mActivity, homeDialogEntitiy.getContent().getButton().get(positon).getUrl(), "",
+                            homeDialogEntitiy.getContent().getButton().get(positon).getAuth_type(), "", "");
+                    dialog.dismiss();
+                }
+            });
+            window.setContentView(layout);
+            WindowManager.LayoutParams p = window.getAttributes();
+//            p.width = ((int) (metrics.widthPixels - 80 * metrics.density));
+            float aaa = metrics.density;
+            p.width = ((int) (metrics.widthPixels) / 10 * 7);
+            //p.height = (int) (120 * metrics.density);
+            window.setAttributes(p);
+        }
+        dialog.show();
     }
 
     @Override
@@ -323,9 +357,9 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
             public void onItemLongClick(View v, ExCacheMsgBean bean) {
                 if (bean.getUiType() == MessageAdapter.ADAPTER_TYPE_SINGLE
                         || bean.getUiType() == MessageAdapter.ADAPTER_TYPE_GROUP) {
-                    delPopUp(v, bean);
-                } else {//公告审批
-                    TopPopUp(v, bean);
+                    delPopUp(v, bean);//单群聊置顶
+                } else {//公告审批置顶
+//                    TopPopUp(v, bean);
                 }
             }
         });

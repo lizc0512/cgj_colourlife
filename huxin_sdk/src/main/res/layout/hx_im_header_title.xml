@@ -53,7 +53,7 @@
             android:layout_marginLeft="8dp"
             android:padding="8dp"
             android:src="@drawable/tint_src_add_group_selector"
-            android:visibility="visible" />
+            android:visibility="gone" />
     </LinearLayout>
 
 

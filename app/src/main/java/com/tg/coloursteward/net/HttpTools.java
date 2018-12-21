@@ -210,6 +210,7 @@ public class HttpTools {
     public static final int POST_USERSYNC = BASE_CODE++;
     public static final int GET_FP = BASE_CODE++;
     public static final int GET_DIALOG = BASE_CODE++;
+    public static final int GET_YINGYAN = BASE_CODE++;
 
 
     public static final int GET_KEYSECERT = -10000;

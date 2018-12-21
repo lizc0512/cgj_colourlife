@@ -87,7 +87,9 @@ import org.json.JSONObject;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import cn.jpush.android.api.JPushInterface;
@@ -205,7 +207,10 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
 
         HuxinSdkManager.instance().getStackAct().addActivity(this);
         if (Contants.URl.environment.equals("release")) {
-            initYingYan();
+            RequestConfig config = new RequestConfig(this, HttpTools.GET_YINGYAN, "");
+            Map<String, Object> map = new HashMap<>();
+            Map<String, String> params = TokenUtils.getStringMap(TokenUtils.getNewSaftyMap(this, map));
+            HttpTools.httpGet_Map(Contants.URl.URL_NEW, "app/home/utility/getEagleJuge", config, (HashMap) params);
         }
     }
 
@@ -213,9 +218,9 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
         //初始化鹰眼SDK
         String entityName;
         if (TextUtils.isEmpty(UserInfo.realname)) {
-            entityName = UserInfo.jobName +"-"+ UserInfo.employeeAccount;
+            entityName = UserInfo.jobName + "-" + UserInfo.employeeAccount;
         } else {
-            entityName = UserInfo.jobName+"-" + UserInfo.realname;
+            entityName = UserInfo.jobName + "-" + UserInfo.realname;
         }
         trace = new Trace(serviceId, entityName, false);
         lbsTraceClient = new LBSTraceClient(getApplicationContext());
@@ -470,6 +475,22 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
             }
         } else if (msg.arg1 == HttpTools.POST_USERSYNC) {
             if (code == 0) {
+            }
+        } else if (msg.arg1 == HttpTools.GET_YINGYAN) {
+            if (code == 0) {
+                JSONObject jsonObject = HttpTools.getContentJSONObject(jsonString);
+                try {
+                    int isopen = jsonObject.getInt("switch");//1:开启，2关闭
+                    if (isopen == 1) {
+                        initYingYan();
+                    } else if (isopen == 2) {
+                        if (null != lbsTraceClient) {
+                            lbsTraceClient.stopGather(null);
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }

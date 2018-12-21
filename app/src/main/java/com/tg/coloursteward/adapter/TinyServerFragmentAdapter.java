@@ -92,6 +92,7 @@ public class TinyServerFragmentAdapter extends RecyclerView.Adapter<RecyclerView
                 if (Integer.parseInt(list.get(position).getQuantity()) > 0 && Integer.parseInt(list.get(position).getQuantity()) < 100) {
                     holder_three.tv_tinyserverfragment_num.setVisibility(View.VISIBLE);
                     holder_three.tv_tinyserverfragment_num.setText(list.get(position).getQuantity());
+                    holder_three.tv_tinyserverfragment_num.setWidth(20);
                 } else if (Integer.parseInt(list.get(position).getQuantity()) > 100) {
                     holder_three.tv_tinyserverfragment_num.setVisibility(View.VISIBLE);
                     holder_three.tv_tinyserverfragment_num.setText("99+");

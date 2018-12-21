@@ -303,7 +303,7 @@ public class EmployeeDataActivity extends BaseActivity {
 
             @Override
             public void onFail(ManageMentLinearlayout magLearLayout, Message msg, String hintString) {
-                ToastFactory.showToast(EmployeeDataActivity.this, hintString);
+//                ToastFactory.showToast(EmployeeDataActivity.this, hintString);
             }
 
             @Override
@@ -316,7 +316,7 @@ public class EmployeeDataActivity extends BaseActivity {
                 params.put("password", pwd);
                 params.put("resource", "app");
                 params.put("cate_id", 0);
-                HttpTools.httpPost(Contants.URl.URL_ICETEST, "/newoa/rights/list", config, params);
+//                HttpTools.httpPost(Contants.URl.URL_ICETEST, "/newoa/rights/list", config, params);
             }
         });
     }

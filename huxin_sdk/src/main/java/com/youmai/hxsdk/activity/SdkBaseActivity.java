@@ -16,6 +16,8 @@ import android.view.WindowManager;
 
 import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.utils.TokenUtils;
+import com.youmai.hxsdk.videocall.RoomActivity;
+import com.youmai.hxsdk.videocall.SingleRoomActivity;
 import com.youmai.hxsdk.view.SystemBarTintManager;
 
 import java.lang.reflect.Field;
@@ -33,6 +35,7 @@ public class SdkBaseActivity extends AppCompatActivity {
     public Context mContext;
     private ProgressDialog mProgressDialog;
     protected SystemBarTintManager tintManager;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,17 +44,21 @@ public class SdkBaseActivity extends AppCompatActivity {
         /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         }*/
-        try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                setTranslucentStatus(true);
+        if (this.getClass().equals(SingleRoomActivity.class) || this.getClass().equals(RoomActivity.class)) {
+        } else {
+            try {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    setTranslucentStatus(true);
+                }
+                tintManager = new SystemBarTintManager(this);
+                tintManager.setStatusBarTintEnabled(true);
+                myStatusBar(this);
+            } catch (Exception e) {
             }
-            tintManager = new SystemBarTintManager(this);
-            tintManager.setStatusBarTintEnabled(true);
-            myStatusBar(this);
-        } catch (Exception e) {
-
         }
+
     }
+
     @TargetApi(19)
     protected void setTranslucentStatus(boolean on) {
         Window win = getWindow();

@@ -62,6 +62,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutionException;
 
 import static com.qiniu.droid.rtc.QNErrorCode.ERROR_KICKED_OUT_OF_ROOM;
 
@@ -146,9 +147,9 @@ public class RoomActivity extends SdkBaseActivity implements QNRoomEventListener
 
     private void doBeforeOnCreate() {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-//        getWindow().addFlags(LayoutParams.FLAG_FULLSCREEN | LayoutParams.FLAG_KEEP_SCREEN_ON
-//                | LayoutParams.FLAG_DISMISS_KEYGUARD | LayoutParams.FLAG_SHOW_WHEN_LOCKED
-//                | LayoutParams.FLAG_TURN_SCREEN_ON);
+        getWindow().addFlags(LayoutParams.FLAG_FULLSCREEN | LayoutParams.FLAG_KEEP_SCREEN_ON
+                | LayoutParams.FLAG_DISMISS_KEYGUARD | LayoutParams.FLAG_SHOW_WHEN_LOCKED
+                | LayoutParams.FLAG_TURN_SCREEN_ON);
         getWindow().getDecorView().setSystemUiVisibility(getSystemUiVisibility());
 
         mScreenWidth = ScreenUtils.getWidthPixels(this);
@@ -161,8 +162,9 @@ public class RoomActivity extends SdkBaseActivity implements QNRoomEventListener
     public void onCreate(Bundle savedInstanceState) {
         doBeforeOnCreate();
         super.onCreate(savedInstanceState);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            setTranslucentStatus(false);
+        try {
+            tintManager.setStatusBarTintEnabled(false);
+        } catch (Exception e) {
         }
         setContentView(R.layout.activity_room);
         Intent intent = getIntent();

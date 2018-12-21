@@ -83,9 +83,9 @@ public class VideoCallRingActivity extends SdkBaseActivity implements View.OnCli
 
     private void doBeforeOnCreate() {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-//        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
-//                | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
-//                | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
+                | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
+                | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
         getWindow().getDecorView().setSystemUiVisibility(getSystemUiVisibility());
 
     }
@@ -95,6 +95,10 @@ public class VideoCallRingActivity extends SdkBaseActivity implements View.OnCli
         doBeforeOnCreate();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_call_ring);
+        try {
+            tintManager.setStatusBarTintEnabled(false);
+        } catch (Exception e) {
+        }
         roomName = getIntent().getStringExtra("room_name");
         adminId = getIntent().getStringExtra("admin_id");
         avatar = ColorsConfig.HEAD_ICON_URL + "avatar?uid=" + HuxinSdkManager.instance().getUserName();

@@ -62,7 +62,7 @@ public class UpdateManager {
     private String clientUrlPath = "";
     private String appName;
     private Thread thread;
-    private volatile boolean isExitStatus = true;
+
     /**
      * 弹出框
      *
@@ -86,7 +86,7 @@ public class UpdateManager {
      * @return
      */
 
-    public void checkUpdate(ApkInfo apkinfo,Boolean isshow) {
+    public void checkUpdate(ApkInfo apkinfo, Boolean isshow) {
         // 获取当前软件版本
         int versionCode = getVersionCode(mContext);
         if (apkinfo != null) {
@@ -98,7 +98,7 @@ public class UpdateManager {
             showNoticeDialog();//非强制更新
         } else if (result == -1) {
             showNoticeDialogMust();//强制更新
-        } else if (result == -2 && isshow==true) {
+        } else if (result == -2 && isshow == true) {
             showNoticeDialog();//小版本，非强制更新
         } else {//提示最新版本
             if (!isHome) {
@@ -218,7 +218,7 @@ public class UpdateManager {
     }
 
     /**
-     * 显示软件下载对话框
+     * 显示软件下载进度框
      */
     private void showDownloadDialog() {
 
@@ -238,13 +238,6 @@ public class UpdateManager {
                 public void onClick(View v) {
                     dialog.dismiss();
                     ProgressBarDialog.dismiss();
-                    try {
-                        if (null != thread) {
-                            isExitStatus = false;
-                            thread.interrupt();
-                        }
-                    } catch (Exception e) {
-                    }
                     // 设置取消状态
                     cancelUpdate = true;
                 }
@@ -314,38 +307,33 @@ public class UpdateManager {
 
     class updateRunnable implements Runnable {
         Message message = updateHandler.obtainMessage();
-        private boolean stopStatus = true;
-
-        public void setStop() {
-            stopStatus = false;
-        }
 
         @Override
         public void run() {
-            while (isExitStatus) {
-                message.what = DOWNLOAD_COMPLETE;
-                try {
-                    if (!updateDir.exists()) {
-                        updateDir.mkdirs();
-                    }
-                    if (!updateFile.exists()) {
-                        updateFile.createNewFile();
-                    }
 
-                    long downloadSize = downloadUpdateFile(clientUrlPath,
-                            updateFile);
-                    if (downloadSize > 0) {
-                        // 下载完毕通知
-                        updateHandler.sendMessage(message);
-                    }
-                } catch (Exception ex) {
-                    ex.printStackTrace();
+            message.what = DOWNLOAD_COMPLETE;
+            try {
+                if (!updateDir.exists()) {
+                    updateDir.mkdirs();
+                }
+                if (!updateFile.exists()) {
+                    updateFile.createNewFile();
+                }
 
-                    message.what = DOWNLOAD_FAIL;
-                    // 下载失败通知
+                long downloadSize = downloadUpdateFile(clientUrlPath,
+                        updateFile);
+                if (downloadSize > 0) {
+                    // 下载完毕通知
                     updateHandler.sendMessage(message);
                 }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+
+                message.what = DOWNLOAD_FAIL;
+                // 下载失败通知
+                updateHandler.sendMessage(message);
             }
+
         }
 
     }

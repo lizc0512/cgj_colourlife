@@ -161,7 +161,7 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_browser);
-        StatusBarCompat.setStatusBarColor(this, getResources().getColor(R.color.home_fill), false);
+//        StatusBarCompat.setStatusBarColor(this, getResources().getColor(R.color.home_fill), false);
         forepriority = true;
         registScanResultReceiver();
         registGetDeviceIDReceiver();

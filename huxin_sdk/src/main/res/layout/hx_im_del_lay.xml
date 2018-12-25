@@ -25,7 +25,7 @@
         android:layout_width="100dp"
         android:layout_height="1px"
         android:layout_marginTop="2dp"
-        android:background="@color/hx_color_white" />
+        android:background="@color/line_im_del" />
 
     <RelativeLayout
         android:layout_width="100dp"

@@ -60,6 +60,12 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public static final int ADAPTER_TYPE_GROUP = 4;  //群聊消息
 
 
+    public static final int ID1 = -1;  //蜜蜂协同
+    public static final int ID2 = -2;  //邮件
+    public static final int ID3 = -3;  //公告
+    public static final int ID4 = -4;  //审批
+
+
     private Context mContext;
     private List<ExCacheMsgBean> messageList;
 
@@ -87,7 +93,9 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         item1.setTitle("暂无新消息");
         item1.setOwner_name("暂无");
         item1.setClient_code("case");
+        item1.setId(ID1);
         ExCacheMsgBean bean1 = new ExCacheMsgBean(item1);
+        bean1.setTop(HuxinSdkManager.instance().getMsgTop(ID1));
         if (xt == 0) {
             bean1.setMsgTime(curTime);
             AppUtils.setLongSharedPreferences(mContext, "case", curTime);
@@ -101,7 +109,9 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         item2.setTitle("暂无新消息");
         item2.setOwner_name("暂无");
         item2.setClient_code("yj");
+        item1.setId(ID2);
         ExCacheMsgBean bean2 = new ExCacheMsgBean(item2);
+        bean2.setTop(HuxinSdkManager.instance().getMsgTop(ID2));
         if (yj == 0) {
             bean2.setMsgTime(curTime);
             AppUtils.setLongSharedPreferences(mContext, "yj", curTime);
@@ -115,7 +125,10 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         item3.setTitle("暂无新消息");
         item3.setOwner_name("暂无");
         item3.setClient_code("ggtz");
+        item1.setId(ID3);
         ExCacheMsgBean bean3 = new ExCacheMsgBean(item3);
+        bean3.setTop(HuxinSdkManager.instance().getMsgTop(ID3));
+
         if (ggtz == 0) {
             bean2.setMsgTime(curTime);
             AppUtils.setLongSharedPreferences(mContext, "ggtz", curTime);
@@ -129,7 +142,9 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         item4.setTitle("暂无新消息");
         item4.setOwner_name("暂无");
         item4.setClient_code("sp");
+        item1.setId(ID4);
         ExCacheMsgBean bean4 = new ExCacheMsgBean(item4);
+        bean4.setTop(HuxinSdkManager.instance().getMsgTop(ID4));
         if (sp == 0) {
             bean2.setMsgTime(curTime);
             AppUtils.setLongSharedPreferences(mContext, "sp", curTime);
@@ -196,7 +211,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public void setRefresh(int id, Boolean isTop) {
         for (int i = 0; i < messageList.size(); i++) {
             ExCacheMsgBean item = messageList.get(i);
-            if (item.getPushMsg().getId() == id) {
+            if (item.getUiType() == ADAPTER_TYPE_PUSHMSG && item.getPushMsg().getId() == id) {
                 if (isTop) {//取消置顶
                     messageList.get(i).setTop(false);
                 } else {//置顶操作

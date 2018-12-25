@@ -94,12 +94,6 @@
                 android:textSize="14sp" />
         </RelativeLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_below="@id/rl_head"
-            android:layout_toRightOf="@id/rl_head"
-            android:background="@color/line_color" />
     </RelativeLayout>
 
 </LinearLayout>

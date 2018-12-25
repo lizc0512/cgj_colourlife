@@ -91,7 +91,7 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
 
     @Override
     public View getContentView() {
-        headView.setBackgroundColor(getResources().getColor(R.color.white));
+//        headView.setBackgroundColor(getResources().getColor(R.color.white));
         return null;
     }
 

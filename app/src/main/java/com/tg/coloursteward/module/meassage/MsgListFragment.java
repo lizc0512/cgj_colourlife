@@ -359,7 +359,7 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
                         || bean.getUiType() == MessageAdapter.ADAPTER_TYPE_GROUP) {
                     delPopUp(v, bean);//单群聊置顶
                 } else {//公告审批置顶
-//                    TopPopUp(v, bean);
+//                    topPopUp(v, bean);
                 }
             }
         });
@@ -404,7 +404,7 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
      * @param v
      * @param bean 审批公告类item置顶
      */
-    private void TopPopUp(View v, ExCacheMsgBean bean) {
+    private void topPopUp(View v, ExCacheMsgBean bean) {
         LayoutInflater layoutInflater = (LayoutInflater) getContext()
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = layoutInflater.inflate(R.layout.hx_im_top_lay, null);

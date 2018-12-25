@@ -23,9 +23,10 @@ public class ExCacheMsgBean extends CacheMsgBean {
 
     public ExCacheMsgBean(MsgConfig.ContentBean.DataBean pushMsg) {
         this.pushMsg = pushMsg;
-        setMsgTime(System.currentTimeMillis());
+        setTargetUuid(pushMsg.getClient_code());
 
-        /*String pushTime = pushMsg.getHomePushTime();
+        /*setMsgTime(System.currentTimeMillis());
+        String pushTime = pushMsg.getHomePushTime();
         if (!TextUtils.isEmpty(pushTime)) {
             try {
                 Calendar calendar = TimeUtils.parseDate(pushTime, TimeUtils.DEFAULT_DATE_FORMAT);

@@ -88,6 +88,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         item1.setOwner_name("暂无");
         item1.setClient_code("case");
         ExCacheMsgBean bean1 = new ExCacheMsgBean(item1);
+        bean1.setTop(HuxinSdkManager.instance().getMsgTop(bean1.getTargetUuid()));
         if (xt == 0) {
             bean1.setMsgTime(curTime);
             AppUtils.setLongSharedPreferences(mContext, "case", curTime);
@@ -102,6 +103,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         item2.setOwner_name("暂无");
         item2.setClient_code("yj");
         ExCacheMsgBean bean2 = new ExCacheMsgBean(item2);
+        bean2.setTop(HuxinSdkManager.instance().getMsgTop(bean2.getTargetUuid()));
         if (yj == 0) {
             bean2.setMsgTime(curTime);
             AppUtils.setLongSharedPreferences(mContext, "yj", curTime);
@@ -116,6 +118,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         item3.setOwner_name("暂无");
         item3.setClient_code("ggtz");
         ExCacheMsgBean bean3 = new ExCacheMsgBean(item3);
+        bean3.setTop(HuxinSdkManager.instance().getMsgTop(bean3.getTargetUuid()));
         if (ggtz == 0) {
             bean2.setMsgTime(curTime);
             AppUtils.setLongSharedPreferences(mContext, "ggtz", curTime);
@@ -130,6 +133,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         item4.setOwner_name("暂无");
         item4.setClient_code("sp");
         ExCacheMsgBean bean4 = new ExCacheMsgBean(item4);
+        bean4.setTop(HuxinSdkManager.instance().getMsgTop(bean4.getTargetUuid()));
         if (sp == 0) {
             bean2.setMsgTime(curTime);
             AppUtils.setLongSharedPreferences(mContext, "sp", curTime);
@@ -168,40 +172,6 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 }
             } else {
                 messageList.add(0, msgBean);
-                SortComparator comp = new SortComparator();
-                Collections.sort(messageList, comp);
-                notifyDataSetChanged();
-            }
-        }
-    }
-
-    //刷新Adapter
-    public void setRefresh(String uuid, Boolean isTop) {
-        for (int i = 0; i < messageList.size(); i++) {
-            ExCacheMsgBean item = messageList.get(i);
-            if (item.getTargetUuid() == uuid) {
-                if (isTop) {//取消置顶
-                    messageList.get(i).setTop(false);
-                } else {//置顶操作
-                    messageList.get(i).setTop(true);
-                }
-                SortComparator comp = new SortComparator();
-                Collections.sort(messageList, comp);
-                notifyDataSetChanged();
-            }
-        }
-    }
-
-    //刷新Adapter
-    public void setRefresh(int id, Boolean isTop) {
-        for (int i = 0; i < messageList.size(); i++) {
-            ExCacheMsgBean item = messageList.get(i);
-            if (item.getPushMsg().getId() == id) {
-                if (isTop) {//取消置顶
-                    messageList.get(i).setTop(false);
-                } else {//置顶操作
-                    messageList.get(i).setTop(true);
-                }
                 SortComparator comp = new SortComparator();
                 Collections.sort(messageList, comp);
                 notifyDataSetChanged();
@@ -255,6 +225,30 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 break;
             }
         }
+        notifyDataSetChanged();
+    }
+
+    public void refreshTopMsg(ExCacheMsgBean bean) {
+        List<ExCacheMsgBean> topList = new ArrayList<>(1);
+        String targetUuid = bean.getTargetUuid();
+        if (bean.isTop()) {
+            boolean isTop = false;
+            for (int i = 0; i < messageList.size(); i++) {
+                ExCacheMsgBean item = messageList.get(i);
+                if (item.getTargetUuid().equals(targetUuid)) {
+                    topList.add(item);
+                    messageList.remove(item);
+                    isTop = true;
+                    break;
+                }
+            }
+            if (isTop) {
+                messageList.addAll(0, topList);
+            }
+        }
+
+        SortComparator comp = new SortComparator();
+        Collections.sort(messageList, comp);
         notifyDataSetChanged();
     }
 

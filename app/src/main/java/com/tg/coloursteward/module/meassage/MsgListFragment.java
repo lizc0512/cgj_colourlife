@@ -355,12 +355,7 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
         mMessageAdapter.setOnLongItemClickListener(new MessageAdapter.OnItemLongClickListener() {
             @Override
             public void onItemLongClick(View v, ExCacheMsgBean bean) {
-                if (bean.getUiType() == MessageAdapter.ADAPTER_TYPE_SINGLE
-                        || bean.getUiType() == MessageAdapter.ADAPTER_TYPE_GROUP) {
-                    delPopUp(v, bean);//单群聊置顶
-                } else {//公告审批置顶
-//                    TopPopUp(v, bean);
-                }
+                topPopUp(v, bean);
             }
         });
 
@@ -400,42 +395,6 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
         }
     }
 
-    /**
-     * @param v
-     * @param bean 审批公告类item置顶
-     */
-    private void TopPopUp(View v, ExCacheMsgBean bean) {
-        LayoutInflater layoutInflater = (LayoutInflater) getContext()
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = layoutInflater.inflate(R.layout.hx_im_top_lay, null);
-        final PopupWindow popupWindow = new PopupWindow(view,
-                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        popupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
-        popupWindow.setFocusable(true);
-        popupWindow.setOutsideTouchable(true);
-        popupWindow.showAsDropDown(v, 400, 0);
-        TextView tv_del = view.findViewById(R.id.tv_del);
-        final int id = bean.getPushMsg().getId();
-        final boolean isTop = HuxinSdkManager.instance().getMsgTop(id);
-        if (isTop) {
-            tv_del.setText("取消置顶");
-        } else {
-            tv_del.setText("置顶");
-        }
-        tv_del.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (isTop) {
-                    HuxinSdkManager.instance().removeMsgTop(id);
-                } else {
-                    HuxinSdkManager.instance().setMsgTop(id);
-                }
-                mMessageAdapter.setRefresh(id, isTop);
-                popupWindow.dismiss();
-            }
-        });
-    }
 
     private void delPopUp(View v, ExCacheMsgBean bean) {
         LayoutInflater layoutInflater = (LayoutInflater) getContext()
@@ -449,14 +408,9 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
         popupWindow.setOutsideTouchable(true);
         popupWindow.showAsDropDown(v, 400, 0);
         TextView tv_del = (TextView) view.findViewById(R.id.tv_del);
-        TextView tv_itemTop = (TextView) view.findViewById(R.id.tv_itemTop);
+
         final String targetUuid = bean.getTargetUuid();
-        final boolean isTop = HuxinSdkManager.instance().getMsgTop(targetUuid);
-        if (isTop) {
-            tv_itemTop.setText("取消置顶");
-        } else {
-            tv_itemTop.setText("置顶");
-        }
+
         tv_del.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -464,19 +418,64 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
                 popupWindow.dismiss();
             }
         });
-        tv_itemTop.setOnClickListener(new View.OnClickListener() {
+    }
+
+
+    private void topPopUp(View v, ExCacheMsgBean bean) {
+        LayoutInflater layoutInflater = (LayoutInflater) getContext()
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View view = layoutInflater.inflate(R.layout.hx_im_del_lay, null);
+        final PopupWindow popupWindow = new PopupWindow(view,
+                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        popupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        popupWindow.setFocusable(true);
+        popupWindow.setOutsideTouchable(true);
+        popupWindow.showAsDropDown(v, 400, 0);
+        TextView tv_del = (TextView) view.findViewById(R.id.tv_del);
+        TextView tv_top = (TextView) view.findViewById(R.id.tv_top);
+
+        String targetUuid = bean.getTargetUuid();
+        boolean isTop = HuxinSdkManager.instance().getMsgTop(targetUuid);
+
+        if (isTop) {
+            tv_top.setText("取消置顶");
+        } else {
+            tv_top.setText("置顶");
+        }
+
+        tv_del.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isTop) {
-                    HuxinSdkManager.instance().removeMsgTop(targetUuid);
-                } else {
-                    HuxinSdkManager.instance().setMsgTop(targetUuid);
-                }
-                mMessageAdapter.setRefresh(targetUuid, isTop);
+                delMsgChat(targetUuid);
                 popupWindow.dismiss();
             }
         });
+
+        tv_top.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                topPushMsg(isTop, bean);
+                popupWindow.dismiss();
+            }
+        });
+
+
     }
+
+
+    public void topPushMsg(boolean isTop, ExCacheMsgBean bean) {
+        String targetUuid = bean.getTargetUuid();
+        if (isTop) {
+            HuxinSdkManager.instance().removeMsgTop(targetUuid);
+            bean.setTop(false);
+        } else {
+            HuxinSdkManager.instance().setMsgTop(targetUuid);
+            bean.setTop(true);
+        }
+        mMessageAdapter.refreshTopMsg(bean);
+    }
+
 
     public void delMsgChat(String targetUuid) {
         CacheMsgHelper.instance().deleteAllMsg(getActivity(), targetUuid);
@@ -495,7 +494,7 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
 
         ColorsConfig.commonParams(params);
 
-        OkHttpConnector.httpGet(mContext,url, params, new IGetListener() {
+        OkHttpConnector.httpGet(mContext, url, params, new IGetListener() {
             @Override
             public void httpReqResult(String response) {
                 MsgConfig config = GsonUtil.parse(response, MsgConfig.class);

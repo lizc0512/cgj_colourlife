@@ -9,6 +9,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.tg.coloursteward.adapter.BonusRecordPersonalAdapter;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.constant.Contants;
@@ -21,6 +22,7 @@ import com.tg.coloursteward.net.RequestConfig;
 import com.tg.coloursteward.net.RequestParams;
 import com.tg.coloursteward.view.PullRefreshListView;
 import com.tg.coloursteward.util.GsonUtils;
+import com.youmai.hxsdk.router.APath;
 import com.youmai.hxsdk.utils.ToastUtil;
 
 import org.json.JSONObject;
@@ -32,6 +34,7 @@ import java.util.ArrayList;
  *
  * @author Administrator
  */
+@Route(path = APath.PERSONALACCOUNT)
 public class BonusRecordPersonalActivity extends BaseActivity implements OnItemClickListener {
     private PullRefreshListView pullListView;
     private BonusRecordPersonalAdapter adapter;

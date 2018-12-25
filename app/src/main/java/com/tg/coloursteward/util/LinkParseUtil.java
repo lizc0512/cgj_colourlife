@@ -4,18 +4,23 @@ import android.app.Activity;
 import android.content.Intent;
 import android.text.TextUtils;
 
+import com.dashuview.library.keep.Cqb_PayUtil;
 import com.tg.coloursteward.AccountActivity;
 import com.tg.coloursteward.AccountExchangeRecordActivity;
+import com.tg.coloursteward.BonusRecordPersonalActivity;
 import com.tg.coloursteward.ChangePhoneActivity;
 import com.tg.coloursteward.DataShowActivity;
 import com.tg.coloursteward.DownloadManagerActivity;
+import com.tg.coloursteward.GroupAccountDetailsActivity;
 import com.tg.coloursteward.InviteRegisterActivity;
 import com.tg.coloursteward.MyBrowserActivity;
 import com.tg.coloursteward.PublicAccountActivity;
 import com.tg.coloursteward.R;
-import com.tg.coloursteward.RedpacketsBonusMainActivity;
 import com.tg.coloursteward.SettingActivity;
 import com.tg.coloursteward.info.UserInfo;
+
+import static com.tg.coloursteward.constant.Contants.URl.environment;
+import static com.tg.coloursteward.module.MainActivity1.getPublicParams;
 
 
 /**
@@ -35,9 +40,13 @@ public class LinkParseUtil {
                     String name = link.substring(24, link.length());
                     Intent it;
                     if (name.equals("redPacket")) {//我的饭票
-                        it = new Intent(context, RedpacketsBonusMainActivity.class);
-                        context.startActivity(it);
-                        ((Activity) context).overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
+                        Boolean isrelease = false;
+                        if (environment.equals("debug")) {
+                            isrelease = false;
+                        } else {
+                            isrelease = true;
+                        }//Environment：true 正式环境 ||  false 测试环境
+                        Cqb_PayUtil.getInstance(context).createPay(getPublicParams(), isrelease);
                     } else if (name.equals("invite")) {//邀请界面
                         it = new Intent(context, InviteRegisterActivity.class);
                         context.startActivity(it);
@@ -67,8 +76,16 @@ public class LinkParseUtil {
                         it.putExtra(DataShowActivity.BRANCH, UserInfo.orgId);
                         context.startActivity(it);
                         ((Activity) context).overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
-                    }else if (name.equals("jsfp")) {//即时分配
+                    } else if (name.equals("jsfp")) {//即时分配
                         it = new Intent(context, AccountActivity.class);
+                        context.startActivity(it);
+                        ((Activity) context).overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
+                    } else if (name.equals("groupAccountDetails")) {//集体奖金包明细
+                        it = new Intent(context, GroupAccountDetailsActivity.class);
+                        context.startActivity(it);
+                        ((Activity) context).overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
+                    } else if (name.equals("personalAccountDetails")) {//个人奖金包明细
+                        it = new Intent(context, BonusRecordPersonalActivity.class);
                         context.startActivity(it);
                         ((Activity) context).overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
                     } else {

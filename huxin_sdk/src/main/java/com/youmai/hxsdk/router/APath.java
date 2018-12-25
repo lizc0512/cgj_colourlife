@@ -20,7 +20,14 @@ public class APath {
      */
     public static final String EMPLOYEE_DATA_ACT = "/color/employee";
 
-
+    /**
+     * 集体奖金包明细
+     */
+    public static final String GROUPACCOUNT = "/group/AccountDetails";
+    /**
+     * 个人奖金包明细
+     */
+    public static final String PERSONALACCOUNT = "/personal/AccountDetails";
     /**
      * 好友
      */

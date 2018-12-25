@@ -89,6 +89,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -99,6 +100,7 @@ import q.rorbin.badgeview.QBadgeView;
 import static com.tg.coloursteward.application.CityPropertyApplication.lbsTraceClient;
 import static com.tg.coloursteward.application.CityPropertyApplication.serviceId;
 import static com.tg.coloursteward.application.CityPropertyApplication.trace;
+import static com.tg.coloursteward.constant.Contants.URl.cqj_appid;
 
 
 /**
@@ -1105,6 +1107,14 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
                 break;
 
         }
+    }
+
+    public static LinkedHashMap<String, String> getPublicParams() {
+        LinkedHashMap<String, String> publicParams = new LinkedHashMap<>();
+        publicParams.put("appId", cqj_appid);
+        publicParams.put("outUserId", UserInfo.uid);
+        publicParams.put("phone", UserInfo.mobile);
+        return publicParams;
     }
 
     private static class NormalHandler extends android.os.Handler {

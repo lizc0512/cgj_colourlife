@@ -17,6 +17,7 @@ import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
+import com.shell.SdkManager;
 import com.tencent.smtt.sdk.QbSdk;
 import com.tg.coloursteward.LoginActivity;
 import com.tg.coloursteward.R;
@@ -54,6 +55,7 @@ public class CityPropertyApplication extends Application {
         HuxinSdkManager.instance().init(this);
         HuxinSdkManager.instance().setHomeAct(MainActivity1.class);
         Stetho.initializeWithDefaults(this);
+        SdkManager.initSdkManager(this);
         GDLocationUtil.init(this);
         JPushInterface.setDebugMode(false);    // 设置开启日志,发布时请关闭日志
         JPushInterface.init(this);            // 初始化 JPush

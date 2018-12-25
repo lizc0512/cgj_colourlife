@@ -16,6 +16,7 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.tg.coloursteward.adapter.GroupAccountDetailsAdapter;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.constant.Contants;
@@ -37,6 +38,7 @@ import com.tg.coloursteward.util.Utils;
 import com.tg.coloursteward.view.ColumnHorizontalScrollView;
 import com.tg.coloursteward.view.PublicAccountPopWindowView;
 import com.tg.coloursteward.view.PullRefreshListView;
+import com.youmai.hxsdk.router.APath;
 import com.youmai.hxsdk.utils.ToastUtil;
 
 import org.greenrobot.eventbus.EventBus;
@@ -53,6 +55,7 @@ import java.util.Map;
 /**
  * 集体奖金包明细
  */
+@Route(path = APath.GROUPACCOUNT)
 public class GroupAccountDetailsActivity extends BaseActivity {
     private PullRefreshListView pullListView;
     private AppAuthService appAuthService;//1.0授权

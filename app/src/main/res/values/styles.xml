@@ -5,7 +5,7 @@
         by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
     <!- Base application theme. -->
     <style name="AppTheme" parent="BaseAppTheme">
-        <item name="android:listDivider">@drawable/divider_bg</item>
+        <!--<item name="android:listDivider">@drawable/divider_bg</item>-->
     </style>
 
     <!-- Base application theme. -->

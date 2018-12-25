@@ -144,7 +144,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Response
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_base);
         CityPropertyApplication.addActivity(this);
-        StatusBarCompat.setStatusBarColor(this, getResources().getColor(R.color.home_fill), false);
+//        StatusBarCompat.setStatusBarColor(this, getResources().getColor(R.color.home_fill), false);
         headView = (ActivityHeaderView) findViewById(R.id.title);
         refreshLayout = (LinearLayout) findViewById(R.id.refresh_layout);
         gifView = (GifImageView) findViewById(R.id.gifView);

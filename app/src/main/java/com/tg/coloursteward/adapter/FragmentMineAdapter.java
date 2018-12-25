@@ -71,15 +71,17 @@ public class FragmentMineAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         });
         int currentStr = list.get(position).getGroup_id();//获取ID
         int previewStr = (position - 1) >= 0 ? (list.get(position - 1).getGroup_id()) : 0;
-        if (previewStr != (currentStr)) {
-            ((FragmentMineViewHolder) holder).tv_fragmentmineline.setVisibility(View.VISIBLE);
-            ((FragmentMineViewHolder) holder).view_fragmentmine.setVisibility(View.GONE);
-        } else {
+        if (position == 0) {
             ((FragmentMineViewHolder) holder).tv_fragmentmineline.setVisibility(View.GONE);//是，隐藏起来
-            ((FragmentMineViewHolder) holder).view_fragmentmine.setVisibility(View.VISIBLE);
+        } else {
+            if (previewStr != (currentStr)) {
+                ((FragmentMineViewHolder) holder).tv_fragmentmineline.setVisibility(View.VISIBLE);
+                ((FragmentMineViewHolder) holder).view_fragmentmine.setVisibility(View.GONE);
+            } else {
+                ((FragmentMineViewHolder) holder).tv_fragmentmineline.setVisibility(View.GONE);//是，隐藏起来
+                ((FragmentMineViewHolder) holder).view_fragmentmine.setVisibility(View.VISIBLE);
+            }
         }
-
-
     }
 
     @Override

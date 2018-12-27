@@ -109,6 +109,9 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
     public static final String KEY_TITLE = "title";
     public static final String KEY_HTML_TEXT = "text";
     public static final String KEY_URL = "url";
+    public static final String WEBDOMAIN = "webdomain";
+    public static final String THRIDSOURCE = "thridsource";
+    private String domainName;
     private String TAKE_PHOTO_PATH = "";
     private Uri uri;
     protected X5WebView webView;
@@ -172,6 +175,7 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
             htmlText = data.getStringExtra(KEY_HTML_TEXT);
             url = data.getStringExtra(KEY_URL);
             urlFromA = data.getStringExtra(Failed_MESSAGE);//未支付成功的返回信息
+            domainName = data.getStringExtra(WEBDOMAIN);
         }
         /**
          * 初始化控件

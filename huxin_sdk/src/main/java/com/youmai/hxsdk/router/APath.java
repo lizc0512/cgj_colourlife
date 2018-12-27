@@ -50,6 +50,7 @@ public class APath {
      * 重新登录
      */
     public static final String RE_LOGIN = "/login/reLogin";
-
+    public static final String COLOURLIFE_JUMP_EXCESSIVE = "/colourlife/jumpActivity"; //彩管家对sdk内部跳转到彩管家的通用跳转路径
+    public static final String COLOURLIFE_PHONE_ADDRESSBOOK = "/colourlife/phoneAddressBook"; //彩管家对sdk内部跳转到通讯录
 
 }

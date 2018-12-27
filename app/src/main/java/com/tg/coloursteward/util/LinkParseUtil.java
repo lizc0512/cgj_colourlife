@@ -1,6 +1,7 @@
 package com.tg.coloursteward.util;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
 
@@ -19,7 +20,7 @@ import com.tg.coloursteward.R;
 import com.tg.coloursteward.SettingActivity;
 import com.tg.coloursteward.info.UserInfo;
 
-import static com.tg.coloursteward.constant.Contants.URl.environment;
+import static com.tg.coloursteward.module.MainActivity1.getEnvironment;
 import static com.tg.coloursteward.module.MainActivity1.getPublicParams;
 
 
@@ -33,6 +34,7 @@ public class LinkParseUtil {
             if (link.startsWith("http://") || link.startsWith("https://")) {
                 Intent intent = new Intent(context, MyBrowserActivity.class);
                 intent.putExtra(MyBrowserActivity.KEY_URL, link);
+                intent.putExtra(MyBrowserActivity.KEY_TITLE, title);
                 context.startActivity(intent);
                 ((Activity) context).overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
             } else {
@@ -40,13 +42,8 @@ public class LinkParseUtil {
                     String name = link.substring(24, link.length());
                     Intent it;
                     if (name.equals("redPacket")) {//我的饭票
-                        Boolean isrelease = false;
-                        if (environment.equals("debug")) {
-                            isrelease = false;
-                        } else {
-                            isrelease = true;
-                        }//Environment：true 正式环境 ||  false 测试环境
-                        Cqb_PayUtil.getInstance(context).createPay(getPublicParams(), isrelease);
+                        //Environment：true 正式环境 ||  false 测试环境
+                        Cqb_PayUtil.getInstance(context).createPay(getPublicParams(), getEnvironment());
                     } else if (name.equals("invite")) {//邀请界面
                         it = new Intent(context, InviteRegisterActivity.class);
                         context.startActivity(it);
@@ -94,6 +91,26 @@ public class LinkParseUtil {
                 }
             }
         }
+    }
+
+    /***双乾光彩支付用到**/
+    public static void jumpHtmlPay(Context context, String link, String domainName) {
+        Intent intent = new Intent(context, MyBrowserActivity.class);
+        intent.putExtra(MyBrowserActivity.KEY_URL, link);
+        intent.putExtra(MyBrowserActivity.WEBDOMAIN, domainName);
+        intent.putExtra(MyBrowserActivity.THRIDSOURCE, false);
+        context.startActivity(intent);
+        ((Activity) context).overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
+    }
+
+    /***双乾光彩支付用到**/
+    public static void jumpFromThrid(Context context, String link, String title) {
+        Intent intent = new Intent(context, MyBrowserActivity.class);
+        intent.putExtra(MyBrowserActivity.KEY_URL, link);
+        intent.putExtra(MyBrowserActivity.KEY_TITLE, title);
+        intent.putExtra(MyBrowserActivity.THRIDSOURCE, true);
+        context.startActivity(intent);
+        ((Activity) context).overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
     }
 }
 

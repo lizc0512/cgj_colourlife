@@ -68,6 +68,7 @@ import com.tg.coloursteward.updateapk.UpdateManager;
 import com.tg.coloursteward.util.AuthTimeUtils;
 import com.tg.coloursteward.util.ExampleUtil;
 import com.tg.coloursteward.util.GsonUtils;
+import com.tg.coloursteward.util.LinkParseUtil;
 import com.tg.coloursteward.util.TokenUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.PopWindowView;
@@ -101,6 +102,7 @@ import static com.tg.coloursteward.application.CityPropertyApplication.lbsTraceC
 import static com.tg.coloursteward.application.CityPropertyApplication.serviceId;
 import static com.tg.coloursteward.application.CityPropertyApplication.trace;
 import static com.tg.coloursteward.constant.Contants.URl.cqj_appid;
+import static com.tg.coloursteward.constant.Contants.URl.environment;
 
 
 /**
@@ -117,6 +119,7 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
     public static final String ACTION_ACCOUNT_INFO = "com.tg.coloursteward.ACTION_ACCOUNT_INFO";
     public static final String ACTION_READ_MESSAGEINFO = "com.tg.coloursteward.ACTION_READ_MESSAGEINFO";
     public static final String ACTION_UPDATE_PUSHINFO = "com.tg.coloursteward.ACTION_UPDATE_PUSHINFO";
+    public static final String JUMPOTHERURL = "jumpotherurl";
     public static final String KEY_NEDD_FRESH = "need_fresh";
     public static final String KEY_SKIN_CODE = "skin_code";
     public static final String KEY_EXTRAS = "extras";
@@ -195,6 +198,10 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
             skin_code = data.getStringExtra(KEY_SKIN_CODE);
             extras = data.getStringExtra(KEY_EXTRAS);
             form_login = data.getBooleanExtra(FROM_LOGIN, false);
+            String urlFromOther = data.getStringExtra(JUMPOTHERURL);
+            if (!TextUtils.isEmpty(urlFromOther)) {
+                LinkParseUtil.parse(MainActivity1.this, urlFromOther, "");
+            }
         }
         msgHand = new MessageHandler(this);
         msgHand.setResponseListener(this);
@@ -311,6 +318,12 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+        if (null != intent) {
+            String urlFromOther = intent.getStringExtra(JUMPOTHERURL);
+            if (!TextUtils.isEmpty(urlFromOther)) {
+                LinkParseUtil.parse(MainActivity1.this, urlFromOther, "");
+            }
+        }
         String extras = intent.getStringExtra(KEY_EXTRAS);
         if (extras != null) {
             try {
@@ -1115,6 +1128,16 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
         publicParams.put("outUserId", UserInfo.uid);
         publicParams.put("phone", UserInfo.mobile);
         return publicParams;
+    }
+
+    public static Boolean getEnvironment() {
+        Boolean isrelease = false;
+        if (environment.equals("debug")) {
+            isrelease = false;
+        } else {
+            isrelease = true;
+        }
+        return isrelease;
     }
 
     private static class NormalHandler extends android.os.Handler {

@@ -89,7 +89,7 @@ public class GroupAccountDetailsActivity extends BaseActivity {
     private RelativeLayout rl_kong;
     private String url_rule = "https://income-czytest.colourlife.com/ruleDetail/#/?";
     private String access_token;
-
+    private List<Map<String, String>> list_item1 = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,6 +98,9 @@ public class GroupAccountDetailsActivity extends BaseActivity {
             familyUuid = intent.getStringExtra("familyUuid");
             useruuid = intent.getStringExtra("useruuid");
             orgname = intent.getStringExtra("orgname");
+
+            Bundle bundle = intent.getExtras();
+            list_item1 = (List<Map<String, String>>) bundle.getSerializable("bonusMap");
         }
         mScreenWidth = Utils.getWindowsWidth(this);
         mItemWidth = mScreenWidth / 5 * 2; // 一个Item宽度为屏幕的1/7

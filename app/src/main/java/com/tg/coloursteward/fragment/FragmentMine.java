@@ -11,14 +11,10 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -26,6 +22,9 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.signature.ObjectKey;
+import com.dashuview.library.keep.Cqb_PayUtil;
+import com.dashuview.library.keep.ListenerUtils;
+import com.dashuview.library.keep.MyListener;
 import com.tg.coloursteward.MyBrowserActivity;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.UserInfoActivity;
@@ -60,12 +59,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.tg.coloursteward.module.MainActivity1.getEnvironment;
+import static com.tg.coloursteward.module.MainActivity1.getPublicParams;
+
 /**
  * 个人中心
  *
  * @author Administrator
  */
-public class FragmentMine extends Fragment implements ResponseListener, OnClickListener {
+public class FragmentMine extends Fragment implements ResponseListener, OnClickListener, MyListener {
     private View mView;
     private Activity mActivity;
     private AlertDialog dialog;
@@ -91,6 +93,7 @@ public class FragmentMine extends Fragment implements ResponseListener, OnClickL
         mView = inflater.inflate(R.layout.fragment_mine_layout, container, false);
         msgHandler = new MessageHandler(mActivity);
         msgHandler.setResponseListener(this);
+        ListenerUtils.setCallBack(this);
         initView();
         Tools.saveStringValue(mActivity, "updatetime_img", UserInfo.userinfoImg);
         getHeadImg();
@@ -278,52 +281,53 @@ public class FragmentMine extends Fragment implements ResponseListener, OnClickL
      * 验证个人密码
      */
     private void find_pay_password() {
-        dialog = null;
-        if (dialog == null) {
-            dialog = new AlertDialog.Builder(mActivity).create();
-            dialog.setCanceledOnTouchOutside(false);
-            dialog.show();
-            Window window = dialog.getWindow();
-            window.setContentView(R.layout.custom_alert_dialog);
-            final EditText etPaypassword = (EditText) window.findViewById(R.id.et_paypassword);
-            window.findViewById(R.id.dialog_button_ok).setOnClickListener(new OnClickListener() {
-
-                @Override
-                public void onClick(View v) {//确定
-                    String password = etPaypassword.getText().toString();
-                    if (TextUtils.isEmpty(password)) {
-                        ToastFactory.showToast(mActivity, "密码不能为空");
-                        return;
-                    }
-                    try {
-                        String passwordMD5 = MD5.getMd5Value(password).toLowerCase();
-                        RequestConfig config = new RequestConfig(mActivity, HttpTools.GET_PASSWORD_INFO);
-                        config.handler = msgHandler.getHandler();
-                        RequestParams params = new RequestParams();
-                        params.put("username", UserInfo.employeeAccount);
-                        params.put("password", passwordMD5);
-                        HttpTools.httpPost(Contants.URl.URL_ICETEST, "/account/login", config, params);
-                        dialog.dismiss();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-                }
-            });
-            window.findViewById(R.id.dialog_button_cancel).setOnClickListener(new OnClickListener() {
-
-                @Override
-                public void onClick(View v) {//取消
-                    dialog.dismiss();
-                }
-            });
-            DisplayMetrics dm = Tools.getDisplayMetrics(mActivity);
-            WindowManager.LayoutParams lp = window.getAttributes();
-            lp.width = (int) (dm.widthPixels - 100 * dm.density);
-            window.setAttributes(lp);
-            window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
-            window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-        }
+        Cqb_PayUtil.getInstance(mActivity).PayPasswordDialog(getPublicParams(), getEnvironment(), "payDialog");
+//        dialog = null;
+//        if (dialog == null) {
+//            dialog = new AlertDialog.Builder(mActivity).create();
+//            dialog.setCanceledOnTouchOutside(false);
+//            dialog.show();
+//            Window window = dialog.getWindow();
+//            window.setContentView(R.layout.custom_alert_dialog);
+//            final EditText etPaypassword = (EditText) window.findViewById(R.id.et_paypassword);
+//            window.findViewById(R.id.dialog_button_ok).setOnClickListener(new OnClickListener() {
+//
+//                @Override
+//                public void onClick(View v) {//确定
+//                    String password = etPaypassword.getText().toString();
+//                    if (TextUtils.isEmpty(password)) {
+//                        ToastFactory.showToast(mActivity, "密码不能为空");
+//                        return;
+//                    }
+//                    try {
+//                        String passwordMD5 = MD5.getMd5Value(password).toLowerCase();
+//                        RequestConfig config = new RequestConfig(mActivity, HttpTools.GET_PASSWORD_INFO);
+//                        config.handler = msgHandler.getHandler();
+//                        RequestParams params = new RequestParams();
+//                        params.put("username", UserInfo.employeeAccount);
+//                        params.put("password", passwordMD5);
+//                        HttpTools.httpPost(Contants.URl.URL_ICETEST, "/account/login", config, params);
+//                        dialog.dismiss();
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//
+//                }
+//            });
+//            window.findViewById(R.id.dialog_button_cancel).setOnClickListener(new OnClickListener() {
+//
+//                @Override
+//                public void onClick(View v) {//取消
+//                    dialog.dismiss();
+//                }
+//            });
+//            DisplayMetrics dm = Tools.getDisplayMetrics(mActivity);
+//            WindowManager.LayoutParams lp = window.getAttributes();
+//            lp.width = (int) (dm.widthPixels - 100 * dm.density);
+//            window.setAttributes(lp);
+//            window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+//            window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+//        }
     }
 
     @Override
@@ -444,6 +448,24 @@ public class FragmentMine extends Fragment implements ResponseListener, OnClickL
                 startActivity(new Intent(mActivity, UserInfoActivity.class));
                 break;
         }
+
+    }
+
+    @Override
+    public void authenticationFeedback(String s, int i) {
+        switch (i) {
+            case 16://密码校验成功
+                break;
+            case 17://密码检验时主动中途退出
+                break;
+            case 18://没有设置支付密码
+                ToastFactory.showToast(mActivity,"请到我的饭票页面去设置支付密码");
+                break;
+        }
+    }
+
+    @Override
+    public void toCFRS(String s) {
 
     }
 }

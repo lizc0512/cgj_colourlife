@@ -257,9 +257,14 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
             dialogAdapter.setFragmentMineCallBack(new FragmentMineCallBack() {
                 @Override
                 public void getData(String result, int positon) {
-                    AuthTimeUtils authTimeUtils = new AuthTimeUtils();
-                    authTimeUtils.IsAuthTime(mActivity, homeDialogEntitiy.getContent().getButton().get(positon).getUrl(), "",
-                            homeDialogEntitiy.getContent().getButton().get(positon).getAuth_type(), "", "");
+                    try {
+                        if (!TextUtils.isEmpty(homeDialogEntitiy.getContent().getButton().get(positon).getUrl())) {
+                            AuthTimeUtils authTimeUtils = new AuthTimeUtils();
+                            authTimeUtils.IsAuthTime(mActivity, homeDialogEntitiy.getContent().getButton().get(positon).getUrl(), "",
+                                    homeDialogEntitiy.getContent().getButton().get(positon).getAuth_type(), "", "");
+                        }
+                    } catch (Exception e) {
+                    }
                     dialog.dismiss();
                 }
             });

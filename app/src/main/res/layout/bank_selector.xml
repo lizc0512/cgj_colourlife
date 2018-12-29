@@ -3,22 +3,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white" >
+    android:background="@color/white">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:gravity="center_horizontal"
-        android:orientation="vertical" >
-
-        <include
-            android:layout_gravity="center_vertical"
-            layout="@layout/line_horizontal" />
+        android:orientation="vertical">
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/tv_cancel"
@@ -31,8 +27,8 @@
                 android:paddingRight="10dp"
                 android:paddingTop="10dp"
                 android:text="取消"
-                android:textColor="@drawable/text_red_color"
-                android:textSize="@dimen/text_size_18" />
+                android:textColor="@color/gray_index"
+                android:textSize="16dp" />
 
             <TextView
                 android:id="@+id/tv_title"
@@ -40,7 +36,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="选择银行卡"
-                android:textSize="@dimen/text_size_18" />
+                android:textColor="@color/black_mine"
+                android:textSize="16dp" />
 
             <TextView
                 android:id="@+id/tv_complete"
@@ -53,35 +50,36 @@
                 android:paddingLeft="10dp"
                 android:paddingTop="10dp"
                 android:text="完成"
-                android:textColor="@drawable/text_red_color"
-                android:textSize="@dimen/text_size_18" />
+                android:textColor="@color/blue_info"
+                android:textSize="16dp" />
         </FrameLayout>
 
-        <include
-            android:layout_gravity="center_vertical"
-            layout="@layout/line_horizontal" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray_info" />
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="30dp"
-            android:layout_marginTop="30dp" >
+            android:layout_marginTop="30dp">
 
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
+                android:layout_height="wrap_content">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal" >
+                    android:orientation="horizontal">
 
                     <LinearLayout
                         android:id="@+id/layout1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:orientation="horizontal" >
+                        android:orientation="horizontal">
 
                         <com.tg.coloursteward.view.spinnerwheel.WheelVerticalView
                             android:id="@+id/list1"
@@ -94,7 +92,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:orientation="horizontal" >
+                        android:orientation="horizontal">
 
                         <com.tg.coloursteward.view.spinnerwheel.WheelVerticalView
                             android:id="@+id/list2"
@@ -107,7 +105,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:orientation="vertical" >
+                    android:orientation="vertical">
 
                     <include layout="@layout/line_horizontal" />
 
@@ -128,7 +126,7 @@
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:visibility="invisible" >
+                android:visibility="invisible">
 
                 <com.tg.coloursteward.view.RotateProgress
                     android:layout_width="30dp"

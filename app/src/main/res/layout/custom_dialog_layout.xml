@@ -7,7 +7,7 @@
     android:orientation="vertical">
 	   <TextView 
 	       android:id="@+id/dialog_msg"
-	        android:text="如需申请远程费，请联系客服，接单之后无法申请远程费，是否确定接单"
+	        android:text=""
 	        android:gravity="center"
 	        android:paddingLeft="10dp"
 	        android:paddingRight="10dp"
@@ -17,7 +17,7 @@
 	        android:layout_width="match_parent"
 	        android:layout_gravity="center_horizontal"
 	        android:textColor="@color/tv_mine"
-	        android:textSize="18dp"/>
+	        android:textSize="16dp"/>
 		<include layout="@layout/line_horizontal"/>
 		<LinearLayout 
 		    android:orientation="horizontal"
@@ -29,12 +29,12 @@
 		        android:layout_weight="1"
 		        android:paddingTop="10dp"
 		        android:paddingBottom="10dp"
-		        android:textColor="@color/gray_index"
+		        android:textColor="@color/login_tv"
 		        android:layout_height="wrap_content"
 		        android:layout_width="0dp"
 		        android:background="@drawable/left_button_selector"
 		        android:gravity="center"
-		        android:textSize="18dp"/>
+		        android:textSize="16dp"/>
 		    <TextView android:layout_width="1dp"
 		        android:layout_height="match_parent"
 		        android:layout_weight="0"
@@ -42,7 +42,7 @@
 		    <Button 
 		        android:id="@+id/btn_ok"
 		        android:text="确定"
-		        android:textColor="@color/blue_index"
+		        android:textColor="@color/blue_dialog"
 		        android:layout_weight="1"
 		        android:paddingTop="10dp"
 		        android:paddingBottom="10dp"
@@ -50,6 +50,6 @@
 		        android:layout_width="0dp"
 		        android:background="@drawable/right_button_selector"
 		        android:gravity="center"
-		        android:textSize="18dp"/>
+		        android:textSize="16dp"/>
 		</LinearLayout>
 </LinearLayout>

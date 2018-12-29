@@ -2,67 +2,173 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     android:orientation="vertical"
-    tools:context=".SettingActivity" >
+    tools:context=".SettingActivity">
 
-    <com.tg.coloursteward.view.MessageArrowView
-        android:id="@+id/mine_info_zone"
+    <View
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_10" />
+        android:layout_height="8dp"
+        android:background="@color/app_bg" />
 
     <RelativeLayout
-        android:id="@+id/rl_upApk"
+        android:id="@+id/rl_setting_changepwd"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:background="@drawable/arrow_item_selector"
-        android:padding="18dp" >
+        android:layout_height="44dp">
 
         <TextView
-            style="@style/black_15"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="检测新版本" />
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="16dp"
+            android:text="修改密码"
+            android:textColor="@color/black_mine"
+            android:textSize="16dp" />
 
-        <RelativeLayout
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_centerVertical="true" >
-
-            <TextView
-                android:id="@+id/tv_version"
-                style="@style/light_gray_15"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/tv_version"
-                android:src="@drawable/yindao" 
-                android:layout_marginLeft="@dimen/margin_10"
-                android:layout_centerVertical="true"/>
-        </RelativeLayout>
+            android:layout_centerVertical="true"
+            android:layout_marginRight="16dp"
+            android:src="@drawable/common_level2_icon_bg_color" />
     </RelativeLayout>
 
-    <LinearLayout
-        android:id="@+id/exit"
+    <View
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:background="@drawable/tijiaobaoxiu"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:padding="15dp" >
+        android:layout_height="1px"
+        android:layout_marginLeft="16dp"
+        android:background="@color/app_bg" />
+
+    <RelativeLayout
+        android:id="@+id/rl_setting_clearinfo"
+        android:layout_width="match_parent"
+        android:layout_height="44dp">
 
         <TextView
-            style="@style/white_16"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="退出登录" />
-    </LinearLayout>
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="16dp"
+            android:text="清空首页消息列表"
+            android:textColor="@color/black_mine"
+            android:textSize="16dp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="16dp"
+            android:src="@drawable/common_level2_icon_bg_color" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="8dp"
+        android:background="@color/app_bg" />
+
+    <RelativeLayout
+        android:id="@+id/rl_setting_aboutus"
+        android:layout_width="match_parent"
+        android:layout_height="44dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="16dp"
+            android:text="关于我们"
+            android:textColor="@color/black_mine"
+            android:textSize="16dp" />
+
+        <ImageView
+            android:id="@+id/iv_setting_next"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="16dp"
+            android:src="@drawable/common_level2_icon_bg_color" />
+
+        <TextView
+            android:id="@+id/tv_setting_nowver"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="5dp"
+            android:layout_toLeftOf="@id/iv_setting_next"
+            android:text=""
+            android:textColor="@color/gray_index"
+            android:textSize="14dp" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="8dp"
+        android:background="@color/app_bg" />
+
+    <RelativeLayout
+        android:id="@+id/rl_setting_update"
+        android:layout_width="match_parent"
+        android:layout_height="44dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="16dp"
+            android:text="检测新版本"
+            android:textColor="@color/black_mine"
+            android:textSize="16dp" />
+
+        <ImageView
+            android:id="@+id/iv_setting_nextver"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="16dp"
+            android:src="@drawable/common_level2_icon_bg_color" />
+        <View
+            android:id="@+id/tv_setting_point"
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="0dp"
+            android:visibility="gone"
+            android:layout_toLeftOf="@id/iv_setting_nextver"
+            android:background="@drawable/settting_point" />
+        <TextView
+            android:id="@+id/tv_setting_newver"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="5dp"
+            android:layout_toLeftOf="@id/tv_setting_point"
+            android:text=""
+            android:textColor="@color/gray_index"
+            android:textSize="14dp" />
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="8dp"
+        android:background="@color/app_bg" />
+
+    <TextView
+        android:id="@+id/tv_setting_quit"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:gravity="center"
+        android:text="退出登录"
+        android:textColor="@color/blue_info"
+        android:textSize="16dp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="8dp"
+        android:background="@color/app_bg" />
 
 </LinearLayout>

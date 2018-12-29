@@ -19,22 +19,17 @@ public class AboutUsActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         tvVersionShort = (TextView) findViewById(R.id.tv_versionShort);
-        /**
-         * 获取版本号
-         */
         String versionShort = UpdateManager.getVersionName(AboutUsActivity.this);
-        tvVersionShort.setText("V " + versionShort);
+        tvVersionShort.setText("当前版本 V" + versionShort);
     }
 
     @Override
     public View getContentView() {
-        // TODO Auto-generated method stub
         return getLayoutInflater().inflate(R.layout.activity_about_us, null);
     }
 
     @Override
     public String getHeadTitle() {
-        // TODO Auto-generated method stub
         return "关于彩管家";
     }
 

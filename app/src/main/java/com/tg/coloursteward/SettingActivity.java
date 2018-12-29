@@ -10,7 +10,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -24,13 +23,10 @@ import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.RequestConfig;
 import com.tg.coloursteward.net.RequestParams;
 import com.tg.coloursteward.net.ResponseData;
-import com.tg.coloursteward.object.ViewConfig;
 import com.tg.coloursteward.updateapk.ApkInfo;
 import com.tg.coloursteward.updateapk.UpdateManager;
 import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.Tools;
-import com.tg.coloursteward.view.MessageArrowView;
-import com.tg.coloursteward.view.MessageArrowView.ItemClickListener;
 import com.tg.coloursteward.view.dialog.DialogFactory;
 import com.tg.coloursteward.view.dialog.ToastFactory;
 import com.youmai.hxsdk.HuxinSdkManager;
@@ -40,8 +36,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-
 import static com.tg.coloursteward.application.CityPropertyApplication.lbsTraceClient;
 
 /**
@@ -49,73 +43,46 @@ import static com.tg.coloursteward.application.CityPropertyApplication.lbsTraceC
  *
  * @author Administrator
  */
-public class SettingActivity extends BaseActivity implements ItemClickListener {
-    private MessageArrowView mineInfoZone;
-    private LinearLayout llExit;
-    private RelativeLayout rlUpApk;
-    private TextView tvVersion;
+public class SettingActivity extends BaseActivity implements OnClickListener {
+    private TextView tv_setting_nowver;
+    private TextView tv_setting_newver;
     private final int REQUESTPERMISSION = 110;
+    private RelativeLayout rl_setting_changepwd;
+    private RelativeLayout rl_setting_clearinfo;
+    private RelativeLayout rl_setting_aboutus;
+    private RelativeLayout rl_setting_update;
+    private TextView tv_setting_quit;
+    private View tv_setting_point;
+    private int apkCode;
+    private Boolean isCheck = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initView();
+        isCheck = false;
+        getVersion();
     }
 
     /**
      * 初始化控件
      */
     private void initView() {
-        mineInfoZone = (MessageArrowView) findViewById(R.id.mine_info_zone);
-        llExit = (LinearLayout) findViewById(R.id.exit);
-        rlUpApk = (RelativeLayout) findViewById(R.id.rl_upApk);
-        tvVersion = (TextView) findViewById(R.id.tv_version);
-        /**
-         * 获取版本号
-         */
+        rl_setting_changepwd = findViewById(R.id.rl_setting_changepwd);
+        rl_setting_clearinfo = findViewById(R.id.rl_setting_clearinfo);
+        rl_setting_aboutus = findViewById(R.id.rl_setting_aboutus);
+        rl_setting_update = findViewById(R.id.rl_setting_update);
+        tv_setting_quit = findViewById(R.id.tv_setting_quit);
+        tv_setting_nowver = findViewById(R.id.tv_setting_nowver);
+        tv_setting_newver = findViewById(R.id.tv_setting_newver);
+        tv_setting_point = findViewById(R.id.tv_setting_point);
+        rl_setting_changepwd.setOnClickListener(this);
+        rl_setting_clearinfo.setOnClickListener(this);
+        rl_setting_aboutus.setOnClickListener(this);
+        rl_setting_update.setOnClickListener(this);
+        tv_setting_quit.setOnClickListener(this);
         String versionShort = UpdateManager.getVersionName(SettingActivity.this);
-        tvVersion.setText("V " + versionShort);
-        rlUpApk.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                /*
-                 * 版本检测更新
-				 */
-                getVersion();
-            }
-        });
-        llExit.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {// 退出登录
-                DialogFactory.getInstance().showDialog(SettingActivity.this, new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        StopYingYan();
-                        singleDevicelogout();
-                        SharedPreferencesTools.clearUserId(SettingActivity.this);
-                        //清空缓存
-                        SharedPreferencesTools.clearCache(SettingActivity.this);
-                        SharedPreferencesTools.clearAllData(SettingActivity.this);
-                        CityPropertyApplication.gotoLoginActivity(SettingActivity.this);
-                        HuxinSdkManager.instance().loginOut();
-                    }
-                }, null, "确定要退出账号吗", null, null);
-
-            }
-        });
-        mineInfoZone.setItemClickListener(this);
-        ArrayList<ViewConfig> list = new ArrayList<ViewConfig>();
-        ViewConfig viewConfig = new ViewConfig("关于彩管家", "", true);
-        list.add(viewConfig);
-        viewConfig = new ViewConfig("修改密码", "", true);
-        list.add(viewConfig);
-        viewConfig = new ViewConfig("清空首页消息列表", "", true);
-        list.add(viewConfig);
-        /*viewConfig = new ViewConfig("通话设置", "", true);
-        list.add(viewConfig);*/
-        mineInfoZone.setData(list);
+        tv_setting_nowver.setText(versionShort);
     }
 
     private void StopYingYan() {
@@ -148,7 +115,7 @@ public class SettingActivity extends BaseActivity implements ItemClickListener {
     @Override
     public void onRequestStart(Message msg, String hintString) {
         super.onRequestStart(msg, hintString);
-        if(msg.arg1==HttpTools.GET_VERSION_INFO){
+        if (msg.arg1 == HttpTools.GET_VERSION_INFO) {
             DialogFactory.getInstance().showTransitionDialog(this,
                     "正在检查更新", msg.obj, msg.arg1);
         }
@@ -171,13 +138,17 @@ public class SettingActivity extends BaseActivity implements ItemClickListener {
             String content = HttpTools.getContentString(jsonString);
             if (code == 0) {
                 try {
-                    int apkCode = jsonObject.getInt("result");
+                    apkCode = jsonObject.getInt("result");
                     ResponseData data = HttpTools.getResponseKey(content, "info");
                     JSONArray func = data.getJSONArray(0, "func");
                     String apkVersion = data.getString(0, "version");
                     String apkSize = data.getString(0, "size");
                     String downloadUrl = data.getString(0, "download_url");
                     String apkLog = "";
+                    if (apkCode == 0 || apkCode == -1 || apkCode == -2) {
+                        tv_setting_newver.setText("最新版本 " + apkVersion);
+                        tv_setting_point.setVisibility(View.VISIBLE);
+                    }
                     if (func != null) {
                         for (int i = 0; i < func.length(); i++) {
                             apkLog += func.get(i) + "\n";
@@ -195,7 +166,9 @@ public class SettingActivity extends BaseActivity implements ItemClickListener {
                             ActivityCompat.requestPermissions(SettingActivity.this, new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUESTPERMISSION);
                             ToastFactory.showToast(SettingActivity.this, "请允许权限进行下载安装");
                         } else {
-                            manager.checkUpdate(apkinfo, true);
+                            if (isCheck == true) {
+                                manager.checkUpdate(apkinfo, true);
+                            }
                         }
                     }
                 } catch (JSONException e) {
@@ -223,15 +196,34 @@ public class SettingActivity extends BaseActivity implements ItemClickListener {
     }
 
     @Override
-    public void onItemClick(MessageArrowView mv, View v, int position) {
-        // TODO Auto-generated method stub
-        if (mv == mineInfoZone) {
-            if (position == 0) {// 关于app
-                startActivity(new Intent(this, AboutUsActivity.class));
-//				showShare();
-            } else if (position == 1) {// 修改密码
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case REQUESTPERMISSION:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                } else {
+                }
+                break;
+        }
+    }
+
+    @Override
+    public View getContentView() {
+        return getLayoutInflater().inflate(R.layout.activity_setting, null);
+    }
+
+    @Override
+    public String getHeadTitle() {
+        return "更多设置";
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.rl_setting_changepwd:
                 startActivity(new Intent(this, ModifiedPasswordActivity.class));
-            } else if (position == 2) {// 清空首页消息列表
+                break;
+            case R.id.rl_setting_clearinfo:
                 DialogFactory.getInstance().showDialog(SettingActivity.this, new OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -242,36 +234,31 @@ public class SettingActivity extends BaseActivity implements ItemClickListener {
                         HttpTools.httpDelete(Contants.URl.URL_ICETEST, "/push2/homepush/deleteall", config, params);
                     }
                 }, null, "是否确定清空首页消息列表？", null, null);
-            } else if (position == 3) {
-                //HuxinSdkManager.instance().setCallSetting();
-            }
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
-            case REQUESTPERMISSION:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                } else {
-
-                }
                 break;
+            case R.id.rl_setting_aboutus:
+                startActivity(new Intent(this, AboutUsActivity.class));
+                break;
+            case R.id.rl_setting_update:
+                isCheck = true;
+                getVersion();
+                break;
+            case R.id.tv_setting_quit:
+                DialogFactory.getInstance().showDialog(SettingActivity.this, new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        StopYingYan();
+                        singleDevicelogout();
+                        SharedPreferencesTools.clearUserId(SettingActivity.this);
+                        //清空缓存
+                        SharedPreferencesTools.clearCache(SettingActivity.this);
+                        SharedPreferencesTools.clearAllData(SettingActivity.this);
+                        CityPropertyApplication.gotoLoginActivity(SettingActivity.this);
+                        HuxinSdkManager.instance().loginOut();
+                    }
+                }, null, "确定要退出账号吗", null, null);
+                break;
+
+
         }
     }
-
-    @Override
-    public View getContentView() {
-        // TODO Auto-generated method stub
-        return getLayoutInflater().inflate(R.layout.activity_setting, null);
-    }
-
-    @Override
-    public String getHeadTitle() {
-        // TODO Auto-generated method stub
-        return "更多设置";
-    }
-
 }

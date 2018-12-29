@@ -131,4 +131,7 @@
     <color name="line_login_button">#BBBBBB</color>
     <color name="line_login_or">#BBC0CB</color>
     <color name="line_login_orline">#50D8D8D8</color>
+    <color name="blue_info">#1CA1F4</color>
+    <color name="gray_info">#DEE3E5</color>
+    <color name="blue_dialog">#1B96E0</color>
 </resources>

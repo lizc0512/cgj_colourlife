@@ -11,6 +11,9 @@ import android.os.Message;
 import android.view.View;
 import android.widget.RelativeLayout;
 
+import com.dashuview.library.keep.Cqb_PayUtil;
+import com.dashuview.library.keep.ListenerUtils;
+import com.dashuview.library.keep.MyListener;
 import com.tg.coloursteward.adapter.PublicAccountAdapter;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.constant.Contants;
@@ -38,10 +41,13 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import static com.tg.coloursteward.module.MainActivity1.getEnvironment;
+import static com.tg.coloursteward.module.MainActivity1.getPublicParams;
+
 /**
  * 对公账户
  */
-public class PublicAccountActivity extends BaseActivity {
+public class PublicAccountActivity extends BaseActivity implements MyListener {
     public static final String ACTION_PUBLIC_ACCOUNT = "com.tg.coloursteward.ACTION_PUBLIC_ACCOUNT";
     private RelativeLayout rl_kong;
     private PullRefreshListView pullListView;
@@ -73,6 +79,7 @@ public class PublicAccountActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getPopup(false);
+        ListenerUtils.setCallBack(this);
         initView();
     }
 
@@ -90,7 +97,8 @@ public class PublicAccountActivity extends BaseActivity {
             @Override
             public void onclick(int position) {
                 isshow = "transfer";
-                isSetPwd(0);
+//                isSetPwd(0);
+                Cqb_PayUtil.getInstance(PublicAccountActivity.this).PayPasswordDialog(getPublicParams(),getEnvironment(),"payDialog");
                 postion = position;
             }
         });
@@ -98,7 +106,8 @@ public class PublicAccountActivity extends BaseActivity {
             @Override
             public void onclick(int position) {
                 isshow = "exchange";
-                isSetPwd(0);
+//                isSetPwd(0);
+                Cqb_PayUtil.getInstance(PublicAccountActivity.this).PayPasswordDialog(getPublicParams(),getEnvironment(),"payDialog");
                 postion = position;
             }
         });
@@ -267,7 +276,7 @@ public class PublicAccountActivity extends BaseActivity {
                     e.printStackTrace();
                 }
                 if (content != null) {
-                    if (state.equals("hasPwd")) {
+                    if (state.equals("hasPwd")) {//有密码，已设置状态；
                         if (isshow.equals("transfer")) {//转账
                             PublicAccountInfo info = list.get(postion);
                             Intent intent = new Intent(PublicAccountActivity.this, PublicAccountSearchActivity.class);
@@ -485,5 +494,49 @@ public class PublicAccountActivity extends BaseActivity {
     @Override
     public String getHeadTitle() {
         return "对公账户";
+    }
+
+    @Override
+    public void authenticationFeedback(String s, int i) {
+        switch (i) {
+            case 16://密码校验成功
+                if (isshow.equals("transfer")) {//转账
+                    PublicAccountInfo info = list.get(postion);
+                    Intent intent = new Intent(PublicAccountActivity.this, PublicAccountSearchActivity.class);
+                    intent.putExtra(Contants.PARAMETER.PUBLIC_ACCOUNT, info.money);
+                    intent.putExtra(Contants.PARAMETER.PAY_ATID, info.atid);
+                    intent.putExtra(Contants.PARAMETER.PAY_ANO, info.ano);
+                    intent.putExtra(Contants.PARAMETER.PAY_TYPE_NAME, info.typeName);
+                    intent.putExtra(Contants.PARAMETER.PAY_NAME, info.title);
+                    startActivity(intent);
+                } else if (isshow.equals("exchange")) {//兑换
+                    PublicAccountInfo info = list.get(postion);
+                    Intent intent = new Intent(PublicAccountActivity.this, ExchangeMethodActivity.class);
+                    intent.putExtra(Contants.PARAMETER.PUBLIC_ACCOUNT, info.money);
+                    intent.putExtra(Contants.PARAMETER.PAY_ATID, info.atid);
+                    intent.putExtra(Contants.PARAMETER.PAY_ANO, info.ano);
+                    intent.putExtra(Contants.PARAMETER.PAY_TYPE_NAME, info.typeName);
+                    intent.putExtra(Contants.PARAMETER.PAY_NAME, info.title);
+                    startActivity(intent);
+                }
+                break;
+            case 17://密码检验时主动中途退出
+                ToastFactory.showToast(PublicAccountActivity.this,"已取消");
+                break;
+            case 18://没有设置支付密码
+                ToastFactory.showToast(PublicAccountActivity.this,"未设置支付密码，即将跳转到彩钱包页面");
+                Cqb_PayUtil.getInstance(this).createPay(getPublicParams(),getEnvironment());
+                break;
+            case 19://绑定银行卡并设置密码成功
+                break;
+            case 20://名片赠送成功
+//                ToastFactory.showToast(EmployeeDataActivity.this,"转账成功");
+                break;
+        }
+    }
+
+    @Override
+    public void toCFRS(String s) {
+
     }
 }

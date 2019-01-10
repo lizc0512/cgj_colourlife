@@ -407,7 +407,6 @@ public class RedpacketsDGZHShareMainMainActivity extends BaseActivity {
                         if (content != null) {
                             String cano = content.getString("cano");
                             String atid = content.getString("atid");
-                            Log.e(TAG, "onSuccess:对公账户详情单个 " + cano + "\n" + atid);
                             Intent intent = new Intent(RedpacketsDGZHShareMainMainActivity.this, PublicAccountTransferToColleagueActivity.class);
                             intent.putExtra("cano", cano);
                             intent.putExtra("atid", atid);

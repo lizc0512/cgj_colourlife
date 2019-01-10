@@ -11,6 +11,9 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.dashuview.library.keep.Cqb_PayUtil;
+import com.dashuview.library.keep.ListenerUtils;
+import com.dashuview.library.keep.MyListener;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.net.GetTwoRecordListener;
@@ -30,10 +33,13 @@ import org.json.JSONObject;
 import java.util.Calendar;
 import java.util.Date;
 
+import static com.tg.coloursteward.module.MainActivity1.getEnvironment;
+import static com.tg.coloursteward.module.MainActivity1.getPublicParams;
+
 /**
  * 对公账户转账
  */
-public class PublicAccountTransferActivity extends BaseActivity {
+public class PublicAccountTransferActivity extends BaseActivity implements MyListener {
     /**
      * 输入金额EditText
      */
@@ -83,6 +89,7 @@ public class PublicAccountTransferActivity extends BaseActivity {
             acceptAno = intent.getStringExtra(Contants.PARAMETER.ACCEPT_ANO);
             acceptTypeName = intent.getStringExtra(Contants.PARAMETER.ACCEPT_TYPE_NAME);
         }
+        ListenerUtils.setCallBack(this);
         initView();
         if (StringUtils.isNotEmpty(money)) {
             tvTicket.setText("可用余额：" + money);
@@ -114,7 +121,8 @@ public class PublicAccountTransferActivity extends BaseActivity {
     @Override
     protected boolean handClickEvent(View v) {
         if (check()) {
-            isSetPwd(0);
+//            isSetPwd(0);
+            Cqb_PayUtil.getInstance(this).PayPasswordDialog(getPublicParams(), getEnvironment(), "payDialog");
         }
         return super.handClickEvent(v);
     }
@@ -351,5 +359,31 @@ public class PublicAccountTransferActivity extends BaseActivity {
     @Override
     public String getHeadTitle() {
         return "收款方信息";
+    }
+
+    @Override
+    public void authenticationFeedback(String s, int i) {
+        switch (i) {
+            case 16://密码校验成功
+                submit();
+                break;
+            case 17://密码检验时主动中途退出
+                ToastFactory.showToast(PublicAccountTransferActivity.this, "已取消");
+                break;
+            case 18://没有设置支付密码
+                ToastFactory.showToast(PublicAccountTransferActivity.this, "未设置支付密码，即将跳转到彩钱包页面");
+                Cqb_PayUtil.getInstance(this).createPay(getPublicParams(), getEnvironment());
+                break;
+            case 19://绑定银行卡并设置密码成功
+                break;
+            case 20://名片赠送成功
+//                ToastFactory.showToast(EmployeeDataActivity.this,"转账成功");
+                break;
+        }
+    }
+
+    @Override
+    public void toCFRS(String s) {
+
     }
 }

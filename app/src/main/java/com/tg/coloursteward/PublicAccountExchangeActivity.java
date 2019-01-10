@@ -6,13 +6,14 @@ import android.os.Bundle;
 import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.dashuview.library.keep.Cqb_PayUtil;
+import com.dashuview.library.keep.ListenerUtils;
+import com.dashuview.library.keep.MyListener;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.tg.coloursteward.base.BaseActivity;
@@ -33,14 +34,16 @@ import com.tg.coloursteward.view.dialog.ToastFactory;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.Date;
+
+import static com.tg.coloursteward.module.MainActivity1.getEnvironment;
+import static com.tg.coloursteward.module.MainActivity1.getPublicParams;
 
 /**
  * 对公账户账户兑换
  */
-public class PublicAccountExchangeActivity extends BaseActivity {
+public class PublicAccountExchangeActivity extends BaseActivity implements MyListener {
     /**
      * 输入金额EditText
      */
@@ -70,6 +73,7 @@ public class PublicAccountExchangeActivity extends BaseActivity {
     private PwdDialog2 aDialog;
     private PwdDialog2.ADialogCallback aDialogCallback;
     private ProgressDialog mProgressDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,6 +83,7 @@ public class PublicAccountExchangeActivity extends BaseActivity {
             payAtid = intent.getIntExtra(Contants.PARAMETER.PAY_ATID, -1);
             payAno = intent.getStringExtra(Contants.PARAMETER.PAY_ANO);
         }
+        ListenerUtils.setCallBack(this);
         RequestParams params = new RequestParams();
         params.put("oa_username", UserInfo.employeeAccount);
         HttpTools.httpGet(Contants.URl.URL_ICETEST, "/newczy/employee/getFinanceByOa",
@@ -108,14 +113,7 @@ public class PublicAccountExchangeActivity extends BaseActivity {
                 if (Long.parseLong(expireTime) <= time) {//token过期
                     getAppAuthInfo();
                 } else {
-                    aDialogCallback = new PwdDialog2.ADialogCallback() {
-                        @Override
-                        public void callback() {
-                            submit();
-                        }
-                    };
-                    aDialog = new PwdDialog2(this, R.style.choice_dialog, "inputPwd", aDialogCallback);
-                    aDialog.show();
+                    Cqb_PayUtil.getInstance(this).PayPasswordDialog(getPublicParams(), getEnvironment(), "payDialog");
                 }
             } else {
                 getAppAuthInfo();
@@ -233,6 +231,7 @@ public class PublicAccountExchangeActivity extends BaseActivity {
         HttpTools.httpPost(Contants.URl.URL_ICETEST, "/jrpt/transaction/fasttransaction", config, params);
         showProgressDialog();
     }
+
     public void showProgressDialog() {
         if (mProgressDialog == null) {
             mProgressDialog = new ProgressDialog(this);
@@ -251,6 +250,7 @@ public class PublicAccountExchangeActivity extends BaseActivity {
             mProgressDialog.dismiss();
         }
     }
+
     public void initData() {
         String str = Contants.Html5.HEAD_ICON_URL + "avatar?uid=" + UserInfo.employeeAccount;
         imageLoader.clearMemoryCache();
@@ -318,15 +318,7 @@ public class PublicAccountExchangeActivity extends BaseActivity {
                             Tools.saveStringValue(PublicAccountExchangeActivity.this, Contants.storage.APPAUTH_1, accessToken);
                             Tools.saveStringValue(PublicAccountExchangeActivity.this, Contants.storage.APPAUTHTIME_1, expireTime);
 
-                            aDialogCallback = new PwdDialog2.ADialogCallback() {
-                                @Override
-                                public void callback() {
-                                    submit();
-                                }
-                            };
-
-                            aDialog = new PwdDialog2(PublicAccountExchangeActivity.this, R.style.choice_dialog, "inputPwd", aDialogCallback);
-                            aDialog.show();
+                            Cqb_PayUtil.getInstance(PublicAccountExchangeActivity.this).PayPasswordDialog(getPublicParams(), getEnvironment(), "payDialog");
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -350,7 +342,7 @@ public class PublicAccountExchangeActivity extends BaseActivity {
      */
     private boolean check() {
         transferAmount = edtAmount.getEditableText().toString().trim();
-        if (!transferAmount.equals("")){
+        if (!transferAmount.equals("")) {
             transferAmount = String.valueOf(Double.parseDouble(String.valueOf(transferAmount)));
         }
         if (transferAmount.length() > 0 && Tools.point2(transferAmount)) {
@@ -381,5 +373,31 @@ public class PublicAccountExchangeActivity extends BaseActivity {
     @Override
     public String getHeadTitle() {
         return "兑换至饭票";
+    }
+
+    @Override
+    public void authenticationFeedback(String s, int i) {
+        switch (i) {
+            case 16://密码校验成功
+                submit();
+                break;
+            case 17://密码检验时主动中途退出
+                ToastFactory.showToast(PublicAccountExchangeActivity.this, "已取消");
+                break;
+            case 18://没有设置支付密码
+                ToastFactory.showToast(PublicAccountExchangeActivity.this, "未设置支付密码，即将跳转到彩钱包页面");
+                Cqb_PayUtil.getInstance(this).createPay(getPublicParams(), getEnvironment());
+                break;
+            case 19://绑定银行卡并设置密码成功
+                break;
+            case 20://名片赠送成功
+//                ToastFactory.showToast(EmployeeDataActivity.this,"转账成功");
+                break;
+        }
+    }
+
+    @Override
+    public void toCFRS(String s) {
+
     }
 }

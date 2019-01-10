@@ -12,6 +12,9 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.dashuview.library.keep.Cqb_PayUtil;
+import com.dashuview.library.keep.ListenerUtils;
+import com.dashuview.library.keep.MyListener;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.tg.coloursteward.base.BaseActivity;
@@ -34,10 +37,13 @@ import org.json.JSONObject;
 import java.util.Calendar;
 import java.util.Date;
 
+import static com.tg.coloursteward.module.MainActivity1.getEnvironment;
+import static com.tg.coloursteward.module.MainActivity1.getPublicParams;
+
 /**
  * 兑换给同事（对公账户账户兑换）
  */
-public class PublicAccountTransferToColleagueActivity extends BaseActivity {
+public class PublicAccountTransferToColleagueActivity extends BaseActivity implements MyListener {
     private static final String TAG = "PublicAccountTransferTo";
     /**
      * 输入金额EditText
@@ -96,7 +102,7 @@ public class PublicAccountTransferToColleagueActivity extends BaseActivity {
 
 
         }
-
+        ListenerUtils.setCallBack(this);
         initView();
         if (StringUtils.isNotEmpty(money)) {
             tvTicket.setText("可用余额：" + money);
@@ -119,14 +125,8 @@ public class PublicAccountTransferToColleagueActivity extends BaseActivity {
                 if (Long.parseLong(expireTime) <= time) {//token过期
                     getAppAuthInfo();
                 } else {
-                    aDialogCallback = new PwdDialog2.ADialogCallback() {
-                        @Override
-                        public void callback() {
-                            submit();
-                        }
-                    };
-                    aDialog = new PwdDialog2(this, R.style.choice_dialog, "inputPwd", aDialogCallback);
-                    aDialog.show();
+                    Cqb_PayUtil.getInstance(this).PayPasswordDialog(getPublicParams(),getEnvironment(),"payDialog");
+
                 }
             } else {
                 getAppAuthInfo();
@@ -322,14 +322,7 @@ public class PublicAccountTransferToColleagueActivity extends BaseActivity {
                             Tools.saveStringValue(PublicAccountTransferToColleagueActivity.this, Contants.storage.APPAUTH_1, accessToken);
                             Tools.saveStringValue(PublicAccountTransferToColleagueActivity.this, Contants.storage.APPAUTHTIME_1, expireTime);
 
-                            aDialogCallback = new PwdDialog2.ADialogCallback() {
-                                @Override
-                                public void callback() {
-                                    submit();
-                                }
-                            };
-                            aDialog = new PwdDialog2(PublicAccountTransferToColleagueActivity.this, R.style.choice_dialog, "inputPwd", aDialogCallback);
-                            aDialog.show();
+                            Cqb_PayUtil.getInstance(PublicAccountTransferToColleagueActivity.this).PayPasswordDialog(getPublicParams(),getEnvironment(),"payDialog");
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -385,5 +378,31 @@ public class PublicAccountTransferToColleagueActivity extends BaseActivity {
     @Override
     public String getHeadTitle() {
         return "兑换给同事";
+    }
+
+    @Override
+    public void authenticationFeedback(String s, int i) {
+        switch (i) {
+            case 16://密码校验成功
+                submit();
+                break;
+            case 17://密码检验时主动中途退出
+                ToastFactory.showToast(PublicAccountTransferToColleagueActivity.this,"已取消");
+                break;
+            case 18://没有设置支付密码
+                ToastFactory.showToast(PublicAccountTransferToColleagueActivity.this,"未设置支付密码，即将跳转到彩钱包页面");
+                Cqb_PayUtil.getInstance(this).createPay(getPublicParams(),getEnvironment());
+                break;
+            case 19://绑定银行卡并设置密码成功
+                break;
+            case 20://名片赠送成功
+//                ToastFactory.showToast(EmployeeDataActivity.this,"转账成功");
+                break;
+        }
+    }
+
+    @Override
+    public void toCFRS(String s) {
+
     }
 }

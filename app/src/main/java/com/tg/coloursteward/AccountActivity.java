@@ -9,6 +9,9 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.dashuview.library.keep.Cqb_PayUtil;
+import com.dashuview.library.keep.ListenerUtils;
+import com.dashuview.library.keep.MyListener;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.tg.coloursteward.base.BaseActivity;
@@ -31,10 +34,13 @@ import org.json.JSONObject;
 import java.text.DecimalFormat;
 import java.util.Date;
 
+import static com.tg.coloursteward.module.MainActivity1.getEnvironment;
+import static com.tg.coloursteward.module.MainActivity1.getPublicParams;
+
 /**
  * 即时分配
  */
-public class AccountActivity extends BaseActivity {
+public class AccountActivity extends BaseActivity implements MyListener {
     private static final String TAG = "AccountActivity";
     private RoundImageView rivHead;
     private RelativeLayout rl_submit;
@@ -56,6 +62,7 @@ public class AccountActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getPopup(true);
+        ListenerUtils.setCallBack(this);
         initView();
         getAuthAppInfo();
         initOptions();
@@ -73,12 +80,19 @@ public class AccountActivity extends BaseActivity {
         rl_submit = (RelativeLayout) findViewById(R.id.rl_submit);
         rl_public = (RelativeLayout) findViewById(R.id.rl_public);
         rl_ticket_details = (RelativeLayout) findViewById(R.id.rl_ticket_details);
-        // rl_submit.setEnabled(false);
         rl_submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(AccountActivity.this, AccountDetailNewActivity.class);
-                startActivity(intent);
+                Cqb_PayUtil.getInstance(AccountActivity.this).ToJSFP(getPublicParams(), getEnvironment(), "jsfp");
+            }
+        });
+        /**
+         * 及时分配详情
+         */
+        rlNextBalance.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Cqb_PayUtil.getInstance(AccountActivity.this).ToJSFP(getPublicParams(), getEnvironment(), "jsfp");
             }
         });
         rl_public.setOnClickListener(new View.OnClickListener() {
@@ -96,16 +110,7 @@ public class AccountActivity extends BaseActivity {
                 startActivity(intent);*/
             }
         });
-        /**
-         * 及时分配详情
-         */
-        rlNextBalance.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(AccountActivity.this, AccountDetailNewActivity.class);
-                startActivity(intent);
-            }
-        });
+
         /**
          * 对公账户详情
          */
@@ -325,5 +330,19 @@ public class AccountActivity extends BaseActivity {
     @Override
     public String getHeadTitle() {
         return "即时分配";
+    }
+
+    @Override
+    public void authenticationFeedback(String s, int i) {
+        switch (i) {
+            case 21:
+                ToastFactory.showToast(AccountActivity.this, s);
+                break;
+        }
+    }
+
+    @Override
+    public void toCFRS(String s) {
+
     }
 }

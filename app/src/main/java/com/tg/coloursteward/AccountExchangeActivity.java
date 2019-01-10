@@ -179,17 +179,6 @@ public class AccountExchangeActivity extends BaseActivity {
     }
 
     /**
-     * 清空支付密码
-     */
-    private void clearPayPwd() {
-        RequestConfig config = new RequestConfig(this, HttpTools.POST_CLEAR_PAYPWD);
-        config.handler = msgHandler.getHandler();
-        RequestParams params = new RequestParams();
-        params.put("oa", UserInfo.employeeAccount);
-        HttpTools.httpPost(Contants.URl.URL_CPMOBILE, "/1.0/employee/clearPayPwd", config, params);
-    }
-
-    /**
      * 获取员工金融信息
      */
     private void getFinanceByOa() {
@@ -342,24 +331,8 @@ public class AccountExchangeActivity extends BaseActivity {
 
         } else if (msg.arg1 == HttpTools.GET_PASSWORD_INFO) {
             if (code == 0) {
-                clearPayPwd();
             } else {
                 Log.e(TAG, "onSuccess: hintString" + hintString);
-                ToastFactory.showToast(this, hintString);
-            }
-        } else if (msg.arg1 == HttpTools.POST_CLEAR_PAYPWD) {
-            JSONObject jsonObject = HttpTools.getContentJSONObject(jsonString);
-            if (code == 0) {
-                if (jsonObject != null) {
-                    try {
-                        String s = jsonObject.getString("message");
-                        Log.e(TAG, "onSuccess:s " + s);
-                        ToastFactory.showToast(this, s + ",请到我的饭票页面重新设置");
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            } else {
                 ToastFactory.showToast(this, hintString);
             }
         } else if (msg.arg1 == HttpTools.POST_WITHDRAWALS) {//兑换

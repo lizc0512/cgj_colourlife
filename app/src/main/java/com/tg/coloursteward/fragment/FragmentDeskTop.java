@@ -254,7 +254,7 @@ public class FragmentDeskTop extends Fragment implements OnItemClickListener {
                     magLinearLayoutTicket.loaddingData();
                 } else {
                     if (mActivity != null) {
-                        mActivity.getEmployeeInfo();
+//                        mActivity.getEmployeeInfo();
                     }
                 }
             }
@@ -916,7 +916,7 @@ public class FragmentDeskTop extends Fragment implements OnItemClickListener {
                 RequestParams params = new RequestParams();
                 params.put("key", key);
                 params.put("secret", secret);
-                HttpTools.httpGet(Contants.URl.URL_CPMOBILE, "/1.0/caiRedPaket/getHBUserList", config, params);
+//                HttpTools.httpGet(Contants.URl.URL_CPMOBILE, "/1.0/caiRedPaket/getHBUserList", config, params);
             }
         });
         /**

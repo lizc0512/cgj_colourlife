@@ -211,7 +211,7 @@ public class RedpacketsBindCZYConfirmActivity extends BaseActivity {
         params.put("mobile", mobile);
         params.put("key", key);
         params.put("secret", secret);
-        HttpTools.httpPost(Contants.URl.URL_CPMOBILE, "/1.0/caiRedPaket/bindColourLife", config, params);
+//        HttpTools.httpPost(Contants.URl.URL_CPMOBILE, "/1.0/caiRedPaket/bindColourLife", config, params);
     }
 
     @Override

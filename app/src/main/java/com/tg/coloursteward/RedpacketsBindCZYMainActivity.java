@@ -122,7 +122,7 @@ public class RedpacketsBindCZYMainActivity extends BaseActivity {
         params.put("mobile", mobile);
         params.put("key", key);
         params.put("secret", secret);
-        HttpTools.httpPost(Contants.URl.URL_CPMOBILE, "/1.0/caiRedPaket/getCustomerInfo", config, params);
+//        HttpTools.httpPost(Contants.URl.URL_CPMOBILE, "/1.0/caiRedPaket/getCustomerInfo", config, params);
     }
 
     private void next() {

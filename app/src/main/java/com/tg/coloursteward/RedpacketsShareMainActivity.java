@@ -208,7 +208,7 @@ public class RedpacketsShareMainActivity extends BaseActivity {
                 params.put("secret", secret);
                 params.put("page", pageIndex);
                 params.put("pagesize", PullRefreshListView.PAGER_SIZE);
-                HttpTools.httpGet(Contants.URl.URL_CPMOBILE, "/1.0/caiRedPaket/carryList", config, params);
+//                HttpTools.httpGet(Contants.URl.URL_CPMOBILE, "/1.0/caiRedPaket/carryList", config, params);
 
             }
 
@@ -221,7 +221,7 @@ public class RedpacketsShareMainActivity extends BaseActivity {
                 params.put("secret", secret);
                 params.put("page", 1);
                 params.put("pagesize", PullRefreshListView.PAGER_SIZE);
-                HttpTools.httpGet(Contants.URl.URL_CPMOBILE, "/1.0/caiRedPaket/carryList", config, params);
+//                HttpTools.httpGet(Contants.URl.URL_CPMOBILE, "/1.0/caiRedPaket/carryList", config, params);
             }
         });
         pullListView.performLoading();
@@ -237,16 +237,14 @@ public class RedpacketsShareMainActivity extends BaseActivity {
         String versionShort = UpdateManager.getVersionName(this);
         String key = Tools.getStringValue(this, Contants.EMPLOYEE_LOGIN.key);
         String secret = Tools.getStringValue(this, Contants.EMPLOYEE_LOGIN.secret);
-        Log.e(TAG, "getEmployeeInfo:key   " + key);
-        Log.e(TAG, "getEmployeeInfo:secret   " + secret);
         RequestConfig config = new RequestConfig(RedpacketsShareMainActivity.this, HttpTools.GET_EMPLOYEE_INFO, "查询");
         RequestParams params = new RequestParams();
         params.put("username", username);
         params.put("single", "1");
         params.put("version", versionShort);
         params.put("key", key);
-        params.put("secret", secret);
-        HttpTools.httpPost(Contants.URl.URL_CPMOBILE, "/1.0/caiRedPaket/getEmployeeInfo", config, params);
+        params.put("secret", secret);//接口txl2/contacts/search
+//        HttpTools.httpPost(Contants.URl.URL_CPMOBILE, "/1.0/caiRedPaket/getEmployeeInfo", config, params);
     }
 
     @Override

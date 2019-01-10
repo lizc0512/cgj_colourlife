@@ -358,7 +358,7 @@ public class PwdDialog_getPwd extends Dialog implements ResponseListener {
         params.put("password", pwd);
         params.put("key", key);
         params.put("secret", secret);
-        HttpTools.httpPost(Contants.URl.URL_CPMOBILE, "/1.0/caiRedPaket/setPwd", config, params);
+//        HttpTools.httpPost(Contants.URl.URL_CPMOBILE, "/1.0/caiRedPaket/setPwd", config, params);
     }
 
     /**
@@ -371,7 +371,7 @@ public class PwdDialog_getPwd extends Dialog implements ResponseListener {
         params.put("password", pwd);
         params.put("key", key);
         params.put("secret", secret);
-        HttpTools.httpGet(Contants.URl.URL_CPMOBILE, "/1.0/caiRedPaket/checkPayPwd", config, params);
+//        HttpTools.httpGet(Contants.URl.URL_CPMOBILE, "/1.0/caiRedPaket/checkPayPwd", config, params);
     }
 
     public interface ADialogCallback {

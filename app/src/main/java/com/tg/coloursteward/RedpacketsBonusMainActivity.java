@@ -74,7 +74,7 @@ public class RedpacketsBonusMainActivity extends BaseActivity {
         RequestParams params = new RequestParams();
         params.put("key", key);
         params.put("secret", secret);
-        HttpTools.httpGet(Contants.URl.URL_CPMOBILE, "/1.0/caiRedPaket/getBalance", config, params);
+//        HttpTools.httpGet(Contants.URl.URL_CPMOBILE, "/1.0/caiRedPaket/getBalance", config, params);
     }
 
     /**
@@ -100,7 +100,7 @@ public class RedpacketsBonusMainActivity extends BaseActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        HttpTools.httpPost(Contants.URl.URL_CPMOBILE, "/1.0/employee/login", config, params);
+//        HttpTools.httpPost(Contants.URl.URL_CPMOBILE, "/1.0/employee/login", config, params);
     }
 
     @Override

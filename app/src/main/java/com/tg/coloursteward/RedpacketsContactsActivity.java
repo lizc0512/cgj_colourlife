@@ -155,7 +155,7 @@ public class RedpacketsContactsActivity extends BaseActivity {
 		RequestParams params = new RequestParams();
 		params.put("phone",contactArray+"");
 		params.put("key", key);
-		params.put("secret",secret);
+		params.put("secret",secret);//android 与IOS逻辑不同
 		HttpTools.httpPost(Contants.URl.URL_CPMOBILE, "/1.0/caiRedPaket/checkSendPacket", config, params);
 		return mSortList;
 	}

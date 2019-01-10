@@ -2,7 +2,6 @@ package com.tg.coloursteward;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
@@ -34,7 +33,6 @@ import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.PullRefreshListView;
 import com.tg.coloursteward.view.dialog.PwdDialog_jsfp;
 import com.tg.coloursteward.view.dialog.ToastFactory;
-import com.youmai.hxsdk.utils.ToastUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -97,8 +95,7 @@ public class PublicAccountActivity extends BaseActivity implements MyListener {
             @Override
             public void onclick(int position) {
                 isshow = "transfer";
-//                isSetPwd(0);
-                Cqb_PayUtil.getInstance(PublicAccountActivity.this).PayPasswordDialog(getPublicParams(),getEnvironment(),"payDialog");
+                Cqb_PayUtil.getInstance(PublicAccountActivity.this).PayPasswordDialog(getPublicParams(), getEnvironment(), "payDialog");
                 postion = position;
             }
         });
@@ -106,8 +103,7 @@ public class PublicAccountActivity extends BaseActivity implements MyListener {
             @Override
             public void onclick(int position) {
                 isshow = "exchange";
-//                isSetPwd(0);
-                Cqb_PayUtil.getInstance(PublicAccountActivity.this).PayPasswordDialog(getPublicParams(),getEnvironment(),"payDialog");
+                Cqb_PayUtil.getInstance(PublicAccountActivity.this).PayPasswordDialog(getPublicParams(), getEnvironment(), "payDialog");
                 postion = position;
             }
         });
@@ -192,22 +188,6 @@ public class PublicAccountActivity extends BaseActivity implements MyListener {
     }
 
     /**
-     * 点击事件判断有误密码以卡
-     *
-     * @param position
-     */
-    private void isSetPwd(int position) {
-        String key = Tools.getStringValue(this, Contants.EMPLOYEE_LOGIN.key);
-        String secret = Tools.getStringValue(this, Contants.EMPLOYEE_LOGIN.secret);
-        RequestConfig config = new RequestConfig(this, HttpTools.POST_SETPWD_INFO);
-        RequestParams params = new RequestParams();
-        params.put("position", position);
-        params.put("key", key);
-        params.put("secret", secret);
-        HttpTools.httpPost(Contants.URl.URL_CPMOBILE, "/1.0/caiRedPaket/isSetPwd", config, params);
-    }
-
-    /**
      * 获取数据
      */
     private void getdata() {
@@ -266,84 +246,7 @@ public class PublicAccountActivity extends BaseActivity implements MyListener {
         super.onSuccess(msg, jsonString, hintString);
         int code = HttpTools.getCode(jsonString);
         String message = HttpTools.getMessageString(jsonString);
-        if (msg.arg1 == HttpTools.POST_SETPWD_INFO) {//判断是否设置支付密码
-            state = null;
-            if (code == 0) {
-                JSONObject content = HttpTools.getContentJSONObject(jsonString);
-                try {
-                    state = content.getString("state");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                if (content != null) {
-                    if (state.equals("hasPwd")) {//有密码，已设置状态；
-                        if (isshow.equals("transfer")) {//转账
-                            PublicAccountInfo info = list.get(postion);
-                            Intent intent = new Intent(PublicAccountActivity.this, PublicAccountSearchActivity.class);
-                            intent.putExtra(Contants.PARAMETER.PUBLIC_ACCOUNT, info.money);
-                            intent.putExtra(Contants.PARAMETER.PAY_ATID, info.atid);
-                            intent.putExtra(Contants.PARAMETER.PAY_ANO, info.ano);
-                            intent.putExtra(Contants.PARAMETER.PAY_TYPE_NAME, info.typeName);
-                            intent.putExtra(Contants.PARAMETER.PAY_NAME, info.title);
-                            startActivity(intent);
-                        } else if (isshow.equals("exchange")) {//兑换
-                            PublicAccountInfo info = list.get(postion);
-                            Intent intent = new Intent(PublicAccountActivity.this, ExchangeMethodActivity.class);
-                            intent.putExtra(Contants.PARAMETER.PUBLIC_ACCOUNT, info.money);
-                            intent.putExtra(Contants.PARAMETER.PAY_ATID, info.atid);
-                            intent.putExtra(Contants.PARAMETER.PAY_ANO, info.ano);
-                            intent.putExtra(Contants.PARAMETER.PAY_TYPE_NAME, info.typeName);
-                            intent.putExtra(Contants.PARAMETER.PAY_NAME, info.title);
-                            startActivity(intent);
-                        }
-                    } else {
-                        ToastUtil.showMidToast(PublicAccountActivity.this, "您还未设置支付密码,请设置支付密码");
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                aDialogCallback = new PwdDialog_jsfp.ADialogCallback() {
-                                    @Override
-                                    public void callback() {
-                                        if (isshow.equals("transfer")) {//转账
-                                            PublicAccountInfo info = list.get(postion);
-                                            Intent intent = new Intent(PublicAccountActivity.this, PublicAccountSearchActivity.class);
-                                            intent.putExtra(Contants.PARAMETER.PUBLIC_ACCOUNT, info.money);
-                                            intent.putExtra(Contants.PARAMETER.PAY_ATID, info.atid);
-                                            intent.putExtra(Contants.PARAMETER.PAY_ANO, info.ano);
-                                            intent.putExtra(Contants.PARAMETER.PAY_TYPE_NAME, info.typeName);
-                                            intent.putExtra(Contants.PARAMETER.PAY_NAME, info.title);
-                                            startActivity(intent);
-                                        } else if (isshow.equals("exchange")) {//兑换
-                                            PublicAccountInfo info = list.get(postion);
-                                            Intent intent = new Intent(PublicAccountActivity.this, ExchangeMethodActivity.class);
-                                            intent.putExtra(Contants.PARAMETER.PUBLIC_ACCOUNT, info.money);
-                                            intent.putExtra(Contants.PARAMETER.PAY_ATID, info.atid);
-                                            intent.putExtra(Contants.PARAMETER.PAY_ANO, info.ano);
-                                            intent.putExtra(Contants.PARAMETER.PAY_TYPE_NAME, info.typeName);
-                                            intent.putExtra(Contants.PARAMETER.PAY_NAME, info.title);
-                                            startActivity(intent);
-                                        }
-                                    }
-                                };
-                                aDialog = new PwdDialog_jsfp(
-                                        PublicAccountActivity.this,
-                                        R.style.choice_dialog, state,
-                                        aDialogCallback);
-                                aDialog.show();
-                                aDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                                    @Override
-                                    public void onDismiss(DialogInterface dialog) {
-//                                isClick = true;
-                                    }
-                                });
-                            }
-                        }, 1000);
-
-                    }
-
-                }
-            }
-        } else if (msg.arg1 == HttpTools.GET_ACCOUNT_LIST) {
+        if (msg.arg1 == HttpTools.GET_ACCOUNT_LIST) {
             if (code == 0) {
                 String response = HttpTools.getContentString(jsonString);
                 if (response != null) {
@@ -521,11 +424,11 @@ public class PublicAccountActivity extends BaseActivity implements MyListener {
                 }
                 break;
             case 17://密码检验时主动中途退出
-                ToastFactory.showToast(PublicAccountActivity.this,"已取消");
+                ToastFactory.showToast(PublicAccountActivity.this, "已取消");
                 break;
             case 18://没有设置支付密码
-                ToastFactory.showToast(PublicAccountActivity.this,"未设置支付密码，即将跳转到彩钱包页面");
-                Cqb_PayUtil.getInstance(this).createPay(getPublicParams(),getEnvironment());
+                ToastFactory.showToast(PublicAccountActivity.this, "未设置支付密码，即将跳转到彩钱包页面");
+                Cqb_PayUtil.getInstance(this).createPay(getPublicParams(), getEnvironment());
                 break;
             case 19://绑定银行卡并设置密码成功
                 break;

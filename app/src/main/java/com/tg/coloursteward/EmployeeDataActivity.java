@@ -46,7 +46,6 @@ import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.ManageMentLinearlayout;
 import com.tg.coloursteward.view.ManageMentLinearlayout.NetworkRequestListener;
-import com.tg.coloursteward.view.dialog.PwdDialog2;
 import com.tg.coloursteward.view.dialog.ToastFactory;
 import com.youmai.hxsdk.chatsingle.IMConnectionActivity;
 import com.youmai.hxsdk.db.bean.EmployeeBean;
@@ -89,10 +88,6 @@ public class EmployeeDataActivity extends BaseActivity implements MyListener {
     private ArrayList<GridViewInfo> gridlist1 = new ArrayList<GridViewInfo>();
     private ArrayList<EmployeePhoneInfo> PhoneList = new ArrayList<EmployeePhoneInfo>();
     private EmployeePhoneAdapter adapter;
-    private double balance = 0.00d;
-    private Intent intent;
-    private PwdDialog2 aDialog;
-    private PwdDialog2.ADialogCallback aDialogCallback;
     private AuthAppService authAppService;//2.0授权
     private String accessToken;
     private static String personCode;
@@ -110,20 +105,6 @@ public class EmployeeDataActivity extends BaseActivity implements MyListener {
             ToastFactory.showToast(this, "参数错误");
             finish();
             return;
-        }
-        String jsonStr = Tools.getStringValue(EmployeeDataActivity.this, Contants.storage.TICKET);//饭票页面缓存
-        String TicketStr = Tools.getStringValue(EmployeeDataActivity.this, Contants.storage.TICKETHOME);//请求饭票接口缓存
-        if (StringUtils.isNotEmpty(TicketStr)) {
-            balance = Double.parseDouble(TicketStr);
-        } else if (StringUtils.isNotEmpty(jsonStr)) {//饭票页面
-            JSONObject jsonObject = HttpTools.getContentJSONObject(jsonStr);
-            if (jsonObject != null) {
-                try {
-                    balance = jsonObject.getDouble("balance");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
         }
         getKey();
         String expireTime = Tools.getStringValue(EmployeeDataActivity.this, Contants.storage.APPAUTHTIME);
@@ -148,17 +129,7 @@ public class EmployeeDataActivity extends BaseActivity implements MyListener {
         String secret = Tools.getStringValue(EmployeeDataActivity.this, Contants.EMPLOYEE_LOGIN.secret);
         if (TextUtils.isEmpty(key) || TextUtils.isEmpty(secret)) {
             getKeyAndSecret();
-        } else {
-            getFP(key, secret);
         }
-    }
-
-    private void getFP(String key, String secret) {
-        RequestConfig config = new RequestConfig(EmployeeDataActivity.this, HttpTools.GET_FP, "");
-        RequestParams params = new RequestParams();
-        params.put("key", key);
-        params.put("secret", secret);
-        HttpTools.httpGet(Contants.URl.URL_CPMOBILE, "/1.0/caiRedPaket/getBalance", config, params);
     }
 
     private void getKeyAndSecret() {
@@ -185,13 +156,6 @@ public class EmployeeDataActivity extends BaseActivity implements MyListener {
         params.put("owner", UserInfo.employeeAccount);
         params.put("corpId", Tools.getStringValue(EmployeeDataActivity.this, Contants.storage.CORPID));
         HttpTools.httpGet(Contants.URl.URL_ICETEST, "/txl2/contacts/search", config, params);
-//        RequestConfig config = new RequestConfig(this, HttpTools.GET_EMPLOYEE_INFO, "获取详细信息");
-//        RequestParams params = new RequestParams();
-//        params.put("uuid", CONTACTS_ID);
-//        params.put("access_token", accessToken);
-//        HttpTools.httpGet(Contants.URl.URL_ICETEST, "/czyuser/czy/user/unionInfoQuery", config, params);
-
-
     }
 
     /**
@@ -483,54 +447,6 @@ public class EmployeeDataActivity extends BaseActivity implements MyListener {
             } else {
                 ToastFactory.showToast(EmployeeDataActivity.this, hintString);
             }
-        } else if (msg.arg1 == HttpTools.POST_SETPWD_INFO) {//判断有无密码
-            if (code == 0) {
-                JSONObject content = HttpTools.getContentJSONObject(jsonString);
-                if (content != null) {
-                    String state;
-                    try {
-                        state = content.getString("state");
-                        switch (0) {
-                            case 0:// 给同事发饭票
-                                if (state != null) {
-                                    if ("hasPwd".equals(state)) { // 已设置密码
-                                        if (null != item) {
-                                            intent = new Intent(EmployeeDataActivity.this, RedpacketsShareMainActivity.class);
-                                            intent.putExtra(Contants.PARAMETER.BALANCE, balance);
-                                            intent.putExtra(Contants.PARAMETER.OA, item.getUsername());
-                                            intent.putExtra(Contants.PARAMETER.TRANSFERTO, "colleague");
-                                            startActivity(intent);
-                                        }
-                                    } else {
-                                        aDialogCallback = new PwdDialog2.ADialogCallback() {
-                                            @Override
-                                            public void callback() {
-                                                if (null != item) {
-                                                    intent = new Intent(EmployeeDataActivity.this, RedpacketsShareMainActivity.class);
-                                                    intent.putExtra(Contants.PARAMETER.BALANCE, balance);
-                                                    intent.putExtra(Contants.PARAMETER.OA, item.getUsername());
-                                                    intent.putExtra(Contants.PARAMETER.TRANSFERTO, "colleague");
-                                                    startActivity(intent);
-                                                }
-                                            }
-                                        };
-                                        aDialog = new PwdDialog2(
-                                                EmployeeDataActivity.this,
-                                                R.style.choice_dialog, state,
-                                                aDialogCallback);
-                                        aDialog.show();
-                                    }
-                                } else {
-                                    //	ToastFactory.showToast(RedpacketsMainActivity.this, "网络异常");
-                                }
-                                break;
-                        }
-                    } catch (JSONException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    }
-                }
-            }
         } else if (msg.arg1 == HttpTools.GET_KEYSECERT) {
             if (code == 0) {
                 try {
@@ -540,57 +456,17 @@ public class EmployeeDataActivity extends BaseActivity implements MyListener {
                     String secret = sonJon.optString("secret");
                     Tools.saveStringValue(EmployeeDataActivity.this, Contants.EMPLOYEE_LOGIN.key, key);
                     Tools.saveStringValue(EmployeeDataActivity.this, Contants.EMPLOYEE_LOGIN.secret, secret);
-                    getFP(key, secret);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-            }
-        } else if (msg.arg1 == HttpTools.GET_FP) {
-            if (code == 0) {
-                JSONObject jsonObject = HttpTools.getContentJSONObject(jsonString);
-                if (jsonObject != null) {
-                    try {
-                        String ticket = jsonObject.getString("balance");
-                        Tools.saveStringValue(EmployeeDataActivity.this, Contants.storage.TICKETHOME, ticket);
-                        if (ticket != null) {
-                            balance = Double.parseDouble(ticket);
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                        balance = 0.00;
-                    }
-                } else {
-                    balance = 0.00;
-                }
-            } else {
-                balance = 0.00;
             }
         }
     }
 
     @Override
     protected boolean handClickEvent(View v) {
-        String url = null;
-        String oauthType = null;
-        String developerCode = null;
-        String clientCode = null;
         switch (v.getId()) {
             case R.id.ll_sendemail:// 发送邮件
-            /*if(gridlist1.size() > 0 ){
-                for (int i = 0; i < gridlist1.size(); i++) {
-					if(gridlist1.get(i).name.equals("新邮件")){
-						url = gridlist1.get(i).sso;
-						oauthType = gridlist1.get(i).oauthType;
-						developerCode = gridlist1.get(i).developerCode;
-						clientCode = gridlist1.get(i).clientCode;
-						break;
-					}
-				}
-				if(url != null && url.length() != 0){
-					AuthTimeUtils mAuthTimeUtils  = new AuthTimeUtils();
-					mAuthTimeUtils.IsAuthTime(EmployeeDataActivity.this,url,developerCode,oauthType, clientCode,"");
-				}
-			}*/
                 AuthTimeUtils mAuthTimeUtils = new AuthTimeUtils();
                 mAuthTimeUtils.IsAuthTime(EmployeeDataActivity.this, Contants.Html5.YJ, "xyj", "1", "xyj", "");
                 break;
@@ -606,26 +482,10 @@ public class EmployeeDataActivity extends BaseActivity implements MyListener {
                 }
                 break;
             case R.id.ll_redpackets:// 转账
-                Cqb_PayUtil.getInstance(EmployeeDataActivity.this).VisitingCardTransfer(getPublicParams(),getEnvironment(),item.getUsername(),"");
+                Cqb_PayUtil.getInstance(EmployeeDataActivity.this).VisitingCardTransfer(getPublicParams(), getEnvironment(), item.getUsername(), "");
                 break;
         }
         return super.handClickEvent(v);
-    }
-
-    /**
-     * 点击事件判断有误密码以卡
-     *
-     * @param position
-     */
-    private void isSetPwd(int position) {
-        String key = Tools.getStringValue(this, Contants.EMPLOYEE_LOGIN.key);
-        String secret = Tools.getStringValue(this, Contants.EMPLOYEE_LOGIN.secret);
-        RequestConfig config = new RequestConfig(this, HttpTools.POST_SETPWD_INFO);
-        RequestParams params = new RequestParams();
-        params.put("position", position);
-        params.put("key", key);
-        params.put("secret", secret);
-        HttpTools.httpPost(Contants.URl.URL_CPMOBILE, "/1.0/caiRedPaket/isSetPwd", config, params);
     }
 
     /**
@@ -673,11 +533,11 @@ public class EmployeeDataActivity extends BaseActivity implements MyListener {
             case 16://密码校验成功
                 break;
             case 17://密码检验时主动中途退出
-                ToastFactory.showToast(EmployeeDataActivity.this,"已取消");
+                ToastFactory.showToast(EmployeeDataActivity.this, "已取消");
                 break;
             case 18://没有设置支付密码
-                ToastFactory.showToast(EmployeeDataActivity.this,"未设置支付密码，即将跳转到彩钱包页面");
-                Cqb_PayUtil.getInstance(this).createPay(getPublicParams(),getEnvironment());
+                ToastFactory.showToast(EmployeeDataActivity.this, "未设置支付密码，即将跳转到彩钱包页面");
+                Cqb_PayUtil.getInstance(this).createPay(getPublicParams(), getEnvironment());
                 break;
             case 19://绑定银行卡并设置密码成功
                 break;

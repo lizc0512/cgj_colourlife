@@ -41,7 +41,6 @@ import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.inter.SingleClickListener;
 import com.tg.coloursteward.net.GetTwoRecordListener;
 import com.tg.coloursteward.net.HttpTools;
-import com.tg.coloursteward.net.MD5;
 import com.tg.coloursteward.net.MessageHandler;
 import com.tg.coloursteward.net.RequestConfig;
 import com.tg.coloursteward.net.RequestParams;
@@ -231,9 +230,6 @@ public class FragmentManagement extends Fragment implements MessageHandler.Respo
         mView = inflater.inflate(R.layout.fragment_management_layout, container, false);
         addHead();
         initView();
-        if (Tools.getBooleanValue(mActivity, Contants.storage.EMPLOYEE_LOGIN) == false) {
-            getEmployeeInfo();
-        }
         requestData();
         requestData2();
         initListener();
@@ -243,26 +239,6 @@ public class FragmentManagement extends Fragment implements MessageHandler.Respo
         mGridView1.loaddingData();
         magLinearLayoutExamineNum.loaddingData();
         return mView;
-    }
-
-    /**
-     * employee/login接口调用
-     */
-    public void getEmployeeInfo() {
-        String pwd = Tools.getPassWord(mActivity);
-        RequestConfig config = new RequestConfig(mActivity, HttpTools.SET_EMPLOYEE_INFO, null);
-        RequestParams params = new RequestParams();
-        params.put("username", UserInfo.employeeAccount);
-        try {
-            params.put("password", MD5.getMd5Value(pwd).toLowerCase());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        String key = Tools.getStringValue(mActivity, Contants.EMPLOYEE_LOGIN.key);
-        String secret = Tools.getStringValue(mActivity, Contants.EMPLOYEE_LOGIN.secret);
-        params.put("key", key);
-        params.put("secret", secret);
-        HttpTools.httpPost(Contants.URl.URL_CPMOBILE, "/1.0/employee/login", config, params);
     }
 
     private void addHead() {
@@ -887,7 +863,7 @@ public class FragmentManagement extends Fragment implements MessageHandler.Respo
             params.put("userId", UserInfo.uid);
             params.put("access_token", access_token);
             ColorsConfig.commonParams(params);
-            OkHttpConnector.httpGet(mActivity,url, params, new IGetListener() {
+            OkHttpConnector.httpGet(mActivity, url, params, new IGetListener() {
                 @Override
                 public void httpReqResult(String response) {
                     int code = HttpTools.getCode(response);
@@ -908,7 +884,7 @@ public class FragmentManagement extends Fragment implements MessageHandler.Respo
                     params.put("username", UserInfo.employeeAccount);
                     ColorsConfig.commonParams(params);
 
-                    OkHttpConnector.httpGet(mActivity,oaUrl, params, new IGetListener() {
+                    OkHttpConnector.httpGet(mActivity, oaUrl, params, new IGetListener() {
                         @Override
                         public void httpReqResult(String response) {
                             OaConfig config = GsonUtil.parse(response, OaConfig.class);
@@ -1419,7 +1395,7 @@ public class FragmentManagement extends Fragment implements MessageHandler.Respo
 
         ColorsConfig.commonParams(params);
 
-        OkHttpConnector.httpPost(mActivity,url, params, new IPostListener() {
+        OkHttpConnector.httpPost(mActivity, url, params, new IPostListener() {
             @Override
             public void httpReqResult(String response) {
                 AdvConfig bean = GsonUtil.parse(response, AdvConfig.class);
@@ -1470,15 +1446,6 @@ public class FragmentManagement extends Fragment implements MessageHandler.Respo
 
     @Override
     public void onSuccess(Message msg, String jsonString, String hintString) {
-        int code = HttpTools.getCode(jsonString);
-        if (msg.arg1 == HttpTools.SET_EMPLOYEE_INFO) {
-            if (code == 0) {
-                JSONObject content = HttpTools.getContentJSONObject(jsonString);
-                if (content != null) {
-                    Tools.setBooleanValue(mActivity, Contants.storage.EMPLOYEE_LOGIN, true);
-                }
-            }
-        }
     }
 
     @Override

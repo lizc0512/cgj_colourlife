@@ -2,26 +2,21 @@ package com.tg.coloursteward;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.tg.coloursteward.adapter.HistoryTransferAdapter;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.info.HistoryTransferInfo;
 import com.tg.coloursteward.info.RedpacketsInfo;
-import com.tg.coloursteward.inter.OnLoadingListener;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.RequestConfig;
 import com.tg.coloursteward.net.RequestParams;
@@ -29,7 +24,6 @@ import com.tg.coloursteward.net.ResponseData;
 import com.tg.coloursteward.updateapk.UpdateManager;
 import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.Tools;
-import com.tg.coloursteward.view.PullRefreshListView;
 import com.tg.coloursteward.view.dialog.ToastFactory;
 
 import org.json.JSONArray;
@@ -54,11 +48,6 @@ public class RedpacketsDGZHShareMainMainActivity extends BaseActivity {
      * 下一步
      */
     private RelativeLayout rlSubmit;
-
-    /**
-     * 历史记录ListView
-     */
-    private PullRefreshListView pullListView;
 
     /**
      * 获取到的员工oa信息
@@ -107,7 +96,6 @@ public class RedpacketsDGZHShareMainMainActivity extends BaseActivity {
     /**
      * oa发红包记录的Adapter
      */
-    private HistoryTransferAdapter adapter;
     private String key;
     private String secret;
     private Intent intent;
@@ -190,95 +178,8 @@ public class RedpacketsDGZHShareMainMainActivity extends BaseActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                /*if (s.length() == 11 && Tools.isNumeric(s.toString())) {
-                    // 通过手机号或者OA账号读取同事信息
-					getEmployeeInfo(edtColleagueInfo.getText().toString());
-					OA = 0;
-				} else if (View.VISIBLE == lloaInfo.getVisibility()) {
-					lloaInfo.setVisibility(View.GONE);
-				}*/
             }
         });
-        pullListView = (PullRefreshListView) findViewById(R.id.pull_listview);
-        pullListView.setDividerHeight(0);
-        adapter = new HistoryTransferAdapter(this, pageInfoList);
-        pullListView.setAdapter(adapter);
-        pullListView.setOnItemClickListener(new OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-
-                HistoryTransferInfo info = pageInfoList.get(position);
-                Log.e(TAG, "onItemClick: " + info.receiverOA);
-//                Log.e(TAG, "onItemClick: " + info.receiverName);
-                transferNameOA = info.receiverOA;
-                transferName = info.receiverName;
-                transferMobile = info.receiverMobile;
-                RequestConfig config = new RequestConfig(RedpacketsDGZHShareMainMainActivity.this, HttpTools.GET_FINACE_BYOA, "查询");
-                RequestParams params = new RequestParams();
-                params.put("oa_username", info.receiverOA);
-                HttpTools.httpGet(Contants.URl.URL_ICETEST, "/czyprovide/employee/getFinanceByOa", config, params);
-
-            }
-        });
-        pullListView.setOnLoadingListener(new OnLoadingListener<PullRefreshListView>() {
-
-            @Override
-            public void refreshData(PullRefreshListView t, boolean isLoadMore,
-                                    Message msg, String response) {
-                int code = HttpTools.getCode(response);
-                if (code == 0) {
-                    JSONObject content = HttpTools.getContentJSONObject(response);
-                    String sponse = HttpTools.getContentString(response);
-                    if (content != null) {
-                        try {
-                            if (content.getJSONArray("CarryJsonList") != null) {
-                                ResponseData data = HttpTools.getResponseKey(sponse, "CarryJsonList");
-                                HistoryTransferInfo info;
-                                for (int i = 0; i < data.length; i++) {
-                                    info = new HistoryTransferInfo();
-                                    info.receiver_id = data.getString(i, "receiver_id");
-                                    info.receiverName = data.getString(i, "receiverName");
-                                    info.receiverOA = data.getString(i, "receiverOA");
-                                    info.receiverMobile = data.getString(i, "receiverMobile");
-                                    pageInfoList.add(info);
-                                }
-                            }
-                        } catch (JSONException e) {
-                            // TODO Auto-generated catch block
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            }
-
-            @Override
-            public void onLoadingMore(PullRefreshListView t, Handler hand, int pageIndex) {
-                RequestConfig config = new RequestConfig(RedpacketsDGZHShareMainMainActivity.this, PullRefreshListView.HTTP_MORE_CODE);
-                config.handler = hand;
-                RequestParams params = new RequestParams();
-                params.put("key", key);
-                params.put("secret", secret);
-                params.put("page", pageIndex);
-                params.put("pagesize", PullRefreshListView.PAGER_SIZE);
-                HttpTools.httpGet(Contants.URl.URL_CPMOBILE, "/1.0/caiRedPaket/carryList", config, params);
-
-            }
-
-            @Override
-            public void onLoading(PullRefreshListView t, Handler hand) {
-                RequestConfig config = new RequestConfig(RedpacketsDGZHShareMainMainActivity.this, PullRefreshListView.HTTP_FRESH_CODE);
-                config.handler = hand;
-                RequestParams params = new RequestParams();
-                params.put("key", key);
-                params.put("secret", secret);
-                params.put("page", 1);
-                params.put("pagesize", PullRefreshListView.PAGER_SIZE);
-                HttpTools.httpGet(Contants.URl.URL_CPMOBILE, "/1.0/caiRedPaket/carryList", config, params);
-            }
-        });
-        pullListView.performLoading();
     }
 
     /**
@@ -293,21 +194,25 @@ public class RedpacketsDGZHShareMainMainActivity extends BaseActivity {
         String versionShort = UpdateManager.getVersionName(this);
         String key = Tools.getStringValue(this, Contants.EMPLOYEE_LOGIN.key);
         String secret = Tools.getStringValue(this, Contants.EMPLOYEE_LOGIN.secret);
-        Log.e(TAG, "getEmployeeInfo:key " + key);
-        Log.e(TAG, "getEmployeeInfo:secret " + secret);
         RequestConfig config = new RequestConfig(RedpacketsDGZHShareMainMainActivity.this, HttpTools.GET_EMPLOYEE_INFO, "查询");
         RequestParams params = new RequestParams();
         params.put("username", username);
         params.put("version", versionShort);
         params.put("key", key);
-        params.put("secret", secret);
-        HttpTools.httpPost(Contants.URl.URL_CPMOBILE, "/1.0/caiRedPaket/getEmployeeInfo", config, params);
+        params.put("secret", secret);//修改接口为txl2/contacts/search
+//        HttpTools.httpPost(Contants.URl.URL_CPMOBILE, "/1.0/caiRedPaket/getEmployeeInfo", config, params);
+
+        RequestConfig confg = new RequestConfig(this, HttpTools.GET_EMPLOYEE_INFO, "查询");
+        RequestParams param = new RequestParams();
+        param.put("keyword", username);
+        param.put("pagesize", "20");
+        HttpTools.httpGet(Contants.URl.URL_ICETEST, "/txl2/contacts/search", confg, param);
+
 
     }
 
     @Override
     public void onSuccess(Message msg, String jsonString, String hintString) {
-        // TODO Auto-generated method stub
         super.onSuccess(msg, jsonString, hintString);
         int code = HttpTools.getCode(jsonString);
         String message = HttpTools.getMessageString(jsonString);
@@ -367,34 +272,6 @@ public class RedpacketsDGZHShareMainMainActivity extends BaseActivity {
                 }
             } else {
                 ToastFactory.showToast(RedpacketsDGZHShareMainMainActivity.this, message);
-            }
-        } else if (msg.arg1 == HttpTools.GET_FINACE_BYOA) {
-            if (code == 0) {
-                JSONObject contentJSONObject = HttpTools.getContentJSONObject(jsonString);
-                if (contentJSONObject != null) {
-                    try {
-                        JSONObject content = contentJSONObject.getJSONObject("content");
-                        if (content != null) {
-                            String cano = content.getString("cano");
-                            String atid = content.getString("atid");
-                            Log.e(TAG, "onSuccess:对公账户详情 " + cano + "\n" + atid);
-                            Intent intent = new Intent(RedpacketsDGZHShareMainMainActivity.this, PublicAccountTransferToColleagueActivity.class);
-                            intent.putExtra("cano", cano);
-                            intent.putExtra("atid", atid);
-                            intent.putExtra(Contants.PARAMETER.PUBLIC_ACCOUNT, money);
-                            intent.putExtra(Contants.PARAMETER.MOBILE, transferMobile);
-                            intent.putExtra(Contants.PARAMETER.PAY_NAME, transferName);
-                            intent.putExtra(Contants.PARAMETER.OA, transferNameOA);
-                            intent.putExtra(Contants.PARAMETER.PAY_ANO, pay_ano);
-                            intent.putExtra(Contants.PARAMETER.PAY_ATID, pay_atid);
-
-                            startActivity(intent);
-//                            mDialog.dismiss();
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
             }
         } else if (msg.arg1 == HttpTools.GET_FINACE_BYOA_ONE) {
             if (code == 0) {

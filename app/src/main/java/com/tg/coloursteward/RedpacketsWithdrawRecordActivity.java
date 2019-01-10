@@ -100,7 +100,7 @@ public class RedpacketsWithdrawRecordActivity extends BaseActivity {
 						params.put("secret",secret);
 						params.put("page",pagerIndex);
 						params.put("pagesize",PullRefreshListView.PAGER_SIZE);
-						HttpTools.httpGet(Contants.URl.URL_CPMOBILE, "/1.0/caiRedPaket/tiXianOrderList",config, params);
+//						HttpTools.httpGet(Contants.URl.URL_CPMOBILE, "/1.0/caiRedPaket/tiXianOrderList",config, params);
 					}
 
 					@Override
@@ -113,7 +113,7 @@ public class RedpacketsWithdrawRecordActivity extends BaseActivity {
 						params.put("secret",secret);
 						params.put("page",1);
 						params.put("pagesize",PullRefreshListView.PAGER_SIZE);
-						HttpTools.httpGet(Contants.URl.URL_CPMOBILE, "/1.0/caiRedPaket/tiXianOrderList",config, params);
+//						HttpTools.httpGet(Contants.URl.URL_CPMOBILE, "/1.0/caiRedPaket/tiXianOrderList",config, params);
 					}
 				});
 		pullListView.performLoading();

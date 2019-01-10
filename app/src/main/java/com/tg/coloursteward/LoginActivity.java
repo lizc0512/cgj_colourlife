@@ -803,16 +803,8 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
                     String secret = sonJon.optString("secret");
                     Tools.saveStringValue(LoginActivity.this, Contants.EMPLOYEE_LOGIN.key, key);
                     Tools.saveStringValue(LoginActivity.this, Contants.EMPLOYEE_LOGIN.secret, secret);
-                    getEmployeeInfo(key, secret);
                 } catch (JSONException e) {
                     e.printStackTrace();
-                }
-            }
-        } else if (msg.arg1 == HttpTools.SET_EMPLOYEE_INFO) {
-            if (code == 0) {
-                JSONObject json = HttpTools.getContentJSONObject(jsonString);
-                if (json.length() > 0) {
-                    Tools.setBooleanValue(LoginActivity.this, Contants.storage.EMPLOYEE_LOGIN, true);
                 }
             }
         } else if (msg.arg1 == HttpTools.POST_TWOJIYAN) {
@@ -876,24 +868,6 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
                 }
             }
         });
-    }
-
-    /**
-     * 调用登录的接口
-     */
-    public void getEmployeeInfo(String key, String secret) {
-        String pwdMD5 = Tools.getPassWordMD5(this);
-        RequestConfig config = new RequestConfig(this, HttpTools.SET_EMPLOYEE_INFO, null);
-        RequestParams params = new RequestParams();
-        params.put("username", UserInfo.employeeAccount);
-        try {
-            params.put("password", pwdMD5);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        params.put("key", key);
-        params.put("secret", secret);
-        HttpTools.httpPost(Contants.URl.URL_CPMOBILE, "/1.0/employee/login", config, params);
     }
 
     @Override

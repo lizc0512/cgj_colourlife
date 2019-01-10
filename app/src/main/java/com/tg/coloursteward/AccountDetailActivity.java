@@ -172,58 +172,6 @@ public class AccountDetailActivity extends BaseActivity implements RadioGroup.On
         listViewExpend = new PullRefreshListView(this);
         listViewExpend.setKeyName("Expend");
         listViewExpend.setDividerHeight(0);
-        listViewExpend.setOnLoadingListener(new OnLoadingListener<PullRefreshListView>() {
-            @Override
-            public void refreshData(PullRefreshListView t, boolean isLoadMore,
-                                    Message msg, String response) {
-                int code = HttpTools.getCode(response);
-                String message = HttpTools.getMessageString(response);
-                if(code == 0){
-                    String content = HttpTools.getContentString(response);
-                    if(content.length() > 0){
-                        ResponseData data = HttpTools.getResponseKey(content, "expend");
-                        if(data.length > 0 ){
-                            AccountDetailInfo info ;
-                            for (int i = 0; i < data.length; i++) {
-                                info = new AccountDetailInfo();
-                                list2.add(info);
-                            }
-                        }
-                    }
-                }else{
-                    ToastFactory.showToast(AccountDetailActivity.this, message);
-                }
-            }
-
-            @Override
-            public void onLoadingMore(PullRefreshListView t, Handler hand,
-                                      int pagerIndex) {
-                // TODO Auto-generated method stub
-                RequestConfig config = new RequestConfig(AccountDetailActivity.this, PullRefreshListView.HTTP_MORE_CODE);
-                config.handler = hand;
-                RequestParams params = new RequestParams();
-                params.put("access_token", "1521ac83521b8063e7a9a49dc22e79b0");
-                params.put("target_type", "1");
-                params.put("target", "13971393183");
-                params.put("page", pagerIndex);
-                params.put("pagesize", PullRefreshListView.PAGER_SIZE);
-                HttpTools.httpGet(Contants.URl.URL_CPMOBILE, "/1.0/caiRedPaket/redPacketExpend",config, params);
-            }
-
-            @Override
-            public void onLoading(PullRefreshListView t, Handler hand) {
-                // TODO Auto-generated method stub
-                RequestConfig config = new RequestConfig(AccountDetailActivity.this, PullRefreshListView.HTTP_FRESH_CODE);
-                config.handler = hand;
-                RequestParams params = new RequestParams();
-                params.put("access_token", "1521ac83521b8063e7a9a49dc22e79b0");
-                params.put("target_type", "1");
-                params.put("target", "13971393183");
-                params.put("page", 1);
-                params.put("pagesize", PullRefreshListView.PAGER_SIZE);
-                HttpTools.httpGet(Contants.URl.URL_CPMOBILE, "/1.0/caiRedPaket/redPacketExpend",config, params);
-            }
-        });
 
         adapter2 = new AccountDetailAdapter(this, list2,1);
         /**

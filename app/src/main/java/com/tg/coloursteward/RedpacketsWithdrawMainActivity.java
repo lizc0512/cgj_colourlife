@@ -298,7 +298,7 @@ public class RedpacketsWithdrawMainActivity extends BaseActivity {
         params.put("amount", amount);
         params.put("key", key);
         params.put("secret", secret);
-        HttpTools.httpGet(Contants.URl.URL_CPMOBILE, "/1.0/caiRedPaket/getRealMoney", config, params);
+//        HttpTools.httpGet(Contants.URl.URL_CPMOBILE, "/1.0/caiRedPaket/getRealMoney", config, params);
 
     }
 

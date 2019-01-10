@@ -77,7 +77,6 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
         msgHandler.setResponseListener(this);
         initView();
         requestData();
-        getEmployeeInfo();
         showCache();
         return mView;
     }
@@ -188,26 +187,6 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
                 }
             }
         });
-    }
-
-    /**
-     * employee/login接口调用
-     */
-    public void getEmployeeInfo() {
-        String pwd = Tools.getPassWord(mActivity);
-        RequestConfig config = new RequestConfig(mActivity, HttpTools.SET_EMPLOYEE_INFO, null);
-        RequestParams params = new RequestParams();
-        params.put("username", UserInfo.employeeAccount);
-        try {
-            params.put("password", MD5.getMd5Value(pwd).toLowerCase());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        String key = Tools.getStringValue(mActivity, Contants.EMPLOYEE_LOGIN.key);
-        String secret = Tools.getStringValue(mActivity, Contants.EMPLOYEE_LOGIN.secret);
-        params.put("key", key);
-        params.put("secret", secret);
-        HttpTools.httpPost(Contants.URl.URL_CPMOBILE, "/1.0/employee/login", config, params);
     }
 
     /**
@@ -338,14 +317,7 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
     @Override
     public void onSuccess(Message msg, String jsonString, String hintString) {
         int code = HttpTools.getCode(jsonString);
-        if (msg.arg1 == HttpTools.SET_EMPLOYEE_INFO) {
-            if (code == 0) {
-                JSONObject content = HttpTools.getContentJSONObject(jsonString);
-                if (content != null) {
-                    Tools.setBooleanValue(mActivity, Contants.storage.EMPLOYEE_LOGIN, true);
-                }
-            }
-        } else if (msg.arg1 == HttpTools.GET_KEYSECERT) {
+        if (msg.arg1 == HttpTools.GET_KEYSECERT) {
             if (code == 0) {
                 try {
                     String contentString = HttpTools.getContentString(jsonString);
@@ -354,7 +326,6 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
                     String secret = sonJon.optString("secret");
                     Tools.saveStringValue(mActivity, Contants.EMPLOYEE_LOGIN.key, key);
                     Tools.saveStringValue(mActivity, Contants.EMPLOYEE_LOGIN.secret, secret);
-                    getEmployeeInfo();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

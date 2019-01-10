@@ -237,7 +237,7 @@ public class RedpacketsBindBankCardActivity extends BaseActivity {
                     RequestParams params = new RequestParams();
                     params.put("key", key);
                     params.put("secret", secret);
-                    HttpTools.httpGet(Contants.URl.URL_CPMOBILE, "/1.0/caiRedPaket/bankList", config, params);
+//                    HttpTools.httpGet(Contants.URl.URL_CPMOBILE, "/1.0/caiRedPaket/bankList", config, params);
                 }
 
                 @Override
@@ -278,7 +278,7 @@ public class RedpacketsBindBankCardActivity extends BaseActivity {
         params.put("ide_num", identity_Id);
         params.put("key", key);
         params.put("secret", secret);
-        HttpTools.httpPost(Contants.URl.URL_CPMOBILE, "/1.0/caiRedPaket/bindBank", config, params);
+//        HttpTools.httpPost(Contants.URl.URL_CPMOBILE, "/1.0/caiRedPaket/bindBank", config, params);
     }
 
     private boolean check() {

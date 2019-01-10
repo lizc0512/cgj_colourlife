@@ -21,7 +21,6 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -232,7 +231,6 @@ public class MainActivity extends FragmentActivity implements ResponseListener, 
         }
         getAdInfo();
         getTokenInfo();
-        getEmployeeInfo();
         getAuthAppInfo();//2.0授权
         getAppAuthInfo();//1.0授权
 
@@ -422,30 +420,9 @@ public class MainActivity extends FragmentActivity implements ResponseListener, 
         HttpTools.httpGet(Contants.URl.URL_ICETEST, "/orgms/org", config, params);
     }
 
-    /**
-     * 调用登录的接口
-     */
-    public void getEmployeeInfo() {
-
-        String key = Tools.getStringValue(this, Contants.EMPLOYEE_LOGIN.key);
-        String secret = Tools.getStringValue(this, Contants.EMPLOYEE_LOGIN.secret);
-        if (TextUtils.isEmpty(key) || TextUtils.isEmpty(secret)) {
-            getKeyAndSecret();
-        } else {
-            String pwd = Tools.getPassWord(this);
-            RequestConfig config = new RequestConfig(this, HttpTools.SET_EMPLOYEE_INFO, null);
-            RequestParams params = new RequestParams();
-            params.put("username", UserInfo.employeeAccount);
-            params.put("password", pwd);
-            params.put("key", key);
-            params.put("secret", secret);
-            HttpTools.httpPost(Contants.URl.URL_CPMOBILE, "/1.0/employee/login", config, params);
-        }
-    }
-
     private void getKeyAndSecret() {
         RequestConfig config = new RequestConfig(this, HttpTools.GET_KEYSECERT, null);
-        HttpTools.httpPost(Contants.URl.URL_CPMOBILE, "/1.0/auth", config, null);
+//        HttpTools.httpPost(Contants.URl.URL_CPMOBILE, "/1.0/auth", config, null);
     }
 
     /**
@@ -630,13 +607,9 @@ public class MainActivity extends FragmentActivity implements ResponseListener, 
             sendBroadcast(new Intent(ACTION_FRESH_USERINFO));
             hand.removeCallbacks(getUserInfoRunnable);
             hand.postDelayed(getUserInfoRunnable, 10 * 60 * 1000);
-            getEmployeeInfo();
             if (skin_code == 101) {//彩生活
                 sendBroadcast(new Intent(ACTION_TICKET_INFO));
             }
-        } else if (msg.arg1 == HttpTools.SET_EMPLOYEE_INFO) {
-            //用户登录后
-
         } else if (msg.arg1 == HttpTools.POST_DELETE_INFO) {//删除首页消息
             if (code == 0) {
                 ToastFactory.showToast(MainActivity.this, message);
@@ -692,7 +665,7 @@ public class MainActivity extends FragmentActivity implements ResponseListener, 
                             ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUESTPERMISSION);
                             ToastFactory.showToast(MainActivity.this, "请允许权限进行下载安装");
                         } else {
-                            manager.checkUpdate(apkinfo,false);
+                            manager.checkUpdate(apkinfo, false);
                         }
                     }
                 } catch (JSONException e) {
@@ -888,7 +861,6 @@ public class MainActivity extends FragmentActivity implements ResponseListener, 
                     //保存key  secret
                     Tools.saveStringValue(MainActivity.this, Contants.EMPLOYEE_LOGIN.key, key);
                     Tools.saveStringValue(MainActivity.this, Contants.EMPLOYEE_LOGIN.secret, secret);
-                    getEmployeeInfo();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

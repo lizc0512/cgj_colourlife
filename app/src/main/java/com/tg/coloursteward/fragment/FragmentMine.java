@@ -2,10 +2,8 @@ package com.tg.coloursteward.fragment;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -26,9 +24,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.signature.ObjectKey;
-import com.dashuview.library.keep.Cqb_PayUtil;
-import com.dashuview.library.keep.ListenerUtils;
-import com.dashuview.library.keep.MyListener;
 import com.tg.coloursteward.MyBrowserActivity;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.UserInfoActivity;
@@ -53,18 +48,11 @@ import com.tg.coloursteward.view.CircleImageView;
 import com.tg.coloursteward.view.dialog.PwdDialog2;
 import com.tg.coloursteward.view.dialog.ToastFactory;
 import com.youmai.hxsdk.utils.GlideRoundTransform;
-import com.youmai.hxsdk.utils.ToastUtil;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static com.tg.coloursteward.module.MainActivity1.getEnvironment;
-import static com.tg.coloursteward.module.MainActivity1.getPublicParams;
 
 /**
  * 个人中心
@@ -101,7 +89,6 @@ public class FragmentMine extends Fragment implements ResponseListener, OnClickL
         Tools.saveStringValue(mActivity, "updatetime_img", UserInfo.userinfoImg);
         getHeadImg();
         initData();
-        getEmployeeInfo();
         return mView;
     }
 
@@ -197,26 +184,6 @@ public class FragmentMine extends Fragment implements ResponseListener, OnClickL
         } else {
             tv_mine_job.setText(UserInfo.jobName + UserInfo.familyName);
         }
-    }
-
-    /**
-     * employee/login接口调用
-     */
-    public void getEmployeeInfo() {
-        String pwd = Tools.getPassWord(mActivity);
-        RequestConfig config = new RequestConfig(mActivity, HttpTools.SET_EMPLOYEE_INFO, null);
-        RequestParams params = new RequestParams();
-        params.put("username", UserInfo.employeeAccount);
-        try {
-            params.put("password", MD5.getMd5Value(pwd).toLowerCase());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        String key = Tools.getStringValue(mActivity, Contants.EMPLOYEE_LOGIN.key);
-        String secret = Tools.getStringValue(mActivity, Contants.EMPLOYEE_LOGIN.secret);
-        params.put("key", key);
-        params.put("secret", secret);
-        HttpTools.httpPost(Contants.URl.URL_CPMOBILE, "/1.0/employee/login", config, params);
     }
 
     /**
@@ -347,17 +314,6 @@ public class FragmentMine extends Fragment implements ResponseListener, OnClickL
     }
 
     /**
-     * 清空支付密码
-     */
-    private void clearPayPwd() {
-        RequestConfig config = new RequestConfig(mActivity, HttpTools.POST_CLEAR_PAYPWD);
-        config.handler = msgHandler.getHandler();
-        RequestParams params = new RequestParams();
-        params.put("oa", UserInfo.employeeAccount);
-        HttpTools.httpPost(Contants.URl.URL_CPMOBILE, "/1.0/employee/clearPayPwd", config, params);
-    }
-
-    /**
      * 请求数据处理方法
      */
     @Override
@@ -373,7 +329,6 @@ public class FragmentMine extends Fragment implements ResponseListener, OnClickL
         if (msg.arg1 == HttpTools.GET_PASSWORD_INFO) {
             if (code == 0) {
                 if (openType == 1) {
-                    clearPayPwd();
                 } else if (openType == 2) {
                     Tools.saveStringValue(mActivity, Contants.storage.SALARY_TIME, String.valueOf(System.currentTimeMillis() / 1000));
                     Tools.setBooleanValue(mActivity, Contants.storage.SALARY_ISINPUT, true);
@@ -382,33 +337,6 @@ public class FragmentMine extends Fragment implements ResponseListener, OnClickL
             } else {
                 ToastFactory.showToast(mActivity, hintString);
             }
-        } else if (msg.arg1 == HttpTools.POST_CLEAR_PAYPWD) {
-            JSONObject jsonObject = HttpTools.getContentJSONObject(jsonString);
-            if (code == 0) {
-                if (jsonObject != null) {
-                    try {
-                        String message = jsonObject.getString("message");//密码清空成功  支付密码已经清空过了！
-                        ToastUtil.showMidToast(mActivity, message);
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                SetPwd();
-                            }
-                        }, 1000);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            } else {
-                ToastFactory.showToast(mActivity, hintString);
-            }
-        } else if (msg.arg1 == HttpTools.SET_EMPLOYEE_INFO) {
-            if (code == 0) {
-                JSONObject content = HttpTools.getContentJSONObject(jsonString);
-                if (content != null) {
-                    Tools.setBooleanValue(mActivity, Contants.storage.EMPLOYEE_LOGIN, true);
-                }
-            }
         } else if (msg.arg1 == HttpTools.GET_FRAGMENTMINE) {
             if (code == 0) {
                 Tools.saveStringValue(mActivity, Contants.storage.FRAGMENTMINE, jsonString);
@@ -416,26 +344,6 @@ public class FragmentMine extends Fragment implements ResponseListener, OnClickL
             }
         }
 
-    }
-
-    private void SetPwd() {
-        aDialogCallback = new PwdDialog2.ADialogCallback() {
-            @Override
-            public void callback() {
-                ToastUtil.showToast(getActivity(), "设置成功");
-            }
-        };
-        aDialog = new PwdDialog2(
-                getActivity(),
-                R.style.choice_dialog, state,
-                aDialogCallback);
-        aDialog.show();
-        aDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                aDialog.dismiss();
-            }
-        });
     }
 
     @Override

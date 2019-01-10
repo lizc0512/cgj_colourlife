@@ -1,6 +1,5 @@
 package com.tg.coloursteward;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -31,14 +30,12 @@ import com.tg.coloursteward.net.ResponseData;
 import com.tg.coloursteward.serice.AuthAppService;
 import com.tg.coloursteward.serice.HomeService;
 import com.tg.coloursteward.util.GsonUtils;
-import com.tg.coloursteward.util.LinkParseUtil;
 import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.AppDetailPopWindowView;
 import com.tg.coloursteward.view.PullRefreshListView;
 import com.tg.coloursteward.view.dialog.PwdDialog2;
 import com.tg.coloursteward.view.dialog.ToastFactory;
-import com.youmai.hxsdk.utils.ToastUtil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -106,7 +103,6 @@ public class AccountDetailNewActivity extends BaseActivity implements View.OnCli
         adapter.setCashierCallBack(new CashierCallBack() {
             @Override
             public void onclick(int position, String url1) {
-                isSetPwd(0);
                 postion = position;
                 urlFinally = url1;
 
@@ -115,7 +111,6 @@ public class AccountDetailNewActivity extends BaseActivity implements View.OnCli
         adapter.setPutForwardCallBack(new PutForwardCallBack() {
             @Override
             public void onclick(int position, String url2) {
-                isSetPwd(0);
                 postion = position;
                 urlFinally = url2;
             }
@@ -123,7 +118,6 @@ public class AccountDetailNewActivity extends BaseActivity implements View.OnCli
         adapter.setSingleExchangeCallBack(new SingleExchangeCallBack() {
             @Override
             public void onclick(int position, String url3) {
-                isSetPwd(0);
                 postion = position;
                 urlFinally = url3;
             }
@@ -235,22 +229,6 @@ public class AccountDetailNewActivity extends BaseActivity implements View.OnCli
         });
     }
 
-    /**
-     * 点击事件判断有误密码以卡
-     *
-     * @param position
-     */
-    private void isSetPwd(int position) {
-        String key = Tools.getStringValue(this, Contants.EMPLOYEE_LOGIN.key);
-        String secret = Tools.getStringValue(this, Contants.EMPLOYEE_LOGIN.secret);
-        RequestConfig config = new RequestConfig(this, HttpTools.POST_SETPWD_INFO);
-        RequestParams params = new RequestParams();
-        params.put("position", position);
-        params.put("key", key);
-        params.put("secret", secret);
-        HttpTools.httpPost(Contants.URl.URL_CPMOBILE, "/1.0/caiRedPaket/isSetPwd", config, params);
-    }
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -319,12 +297,6 @@ public class AccountDetailNewActivity extends BaseActivity implements View.OnCli
     @Override
     public String getHeadTitle() {
         headView.setVisibility(View.GONE);
-//        headView.setRightImage(R.drawable.delete);
-//        headView.setListenerRight();
-//        headView.setRightText("兑换记录");
-//        headView.setRightTextColor(getResources().getColor(R.color.white));
-//        headView.setListenerRight(singleListener);
-//        return "即时分配";
         return null;
     }
 
@@ -406,71 +378,7 @@ public class AccountDetailNewActivity extends BaseActivity implements View.OnCli
         super.onSuccess(msg, jsonString, hintString);
         int code = HttpTools.getCode(jsonString);
         String message = HttpTools.getMessageString(jsonString);
-        if (msg.arg1 == HttpTools.POST_SETPWD_INFO) {//判断是否设置支付密码
-            if (code == 0) {
-                JSONObject content = HttpTools.getContentJSONObject(jsonString);
-                try {
-                    state = content.getString("state");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                if (content != null) {
-                    if (state.equals("hasPwd")) {
-                        if (urlFinally.startsWith("http://") || urlFinally.startsWith("https://")) {
-                            String key = Tools.getStringValue(AccountDetailNewActivity.this, Contants.EMPLOYEE_LOGIN.key);
-                            String secret = Tools.getStringValue(AccountDetailNewActivity.this, Contants.EMPLOYEE_LOGIN.secret);
-                            String accessToken = Tools.getAccess_token(AccountDetailNewActivity.this);
-                            String str = "?";
-                            if (urlFinally.contains(str)) {//Url有问号
-                                urlFinally = urlFinally + "&username=" + UserInfo.employeeAccount + "&access_token=" + accessToken
-                                        + "&key=" + key + "&secret=" + secret;
-                            } else {//没有问号
-                                urlFinally = urlFinally + "?username=" + UserInfo.employeeAccount + "&access_token=" + accessToken
-                                        + "&key=" + key + "&secret=" + secret;
-                            }
-                            LinkParseUtil.parse(AccountDetailNewActivity.this, urlFinally, "");
-                        } else {
-                            if (urlFinally.length() > 18) {
-                                String name = urlFinally.substring(18, urlFinally.length());
-                                if (name.equals("jsfpduihuan")) {//即时分配兑换
-                                    Intent intent = new Intent(AccountDetailNewActivity.this, AccountExchangeActivity.class);
-                                    intent.putExtra(AccountExchangeActivity.ACCOUNT_DETAIL_NEW_INFO, list.get(postion));
-                                    startActivity(intent);
-                                }
-                            }
-                        }
-                    } else {
-                        ToastUtil.showMidToast(AccountDetailNewActivity.this, "您还未设置支付密码,请设置支付密码");
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                aDialogCallback = new PwdDialog2.ADialogCallback() {
-                                    @Override
-                                    public void callback() {
-//                                judgment();
-                                        Intent intent = new Intent(AccountDetailNewActivity.this, AccountExchangeActivity.class);
-                                        intent.putExtra(AccountExchangeActivity.ACCOUNT_DETAIL_NEW_INFO, list.get(postion));
-                                        startActivity(intent);
-                                    }
-                                };
-                                aDialog = new PwdDialog2(
-                                        AccountDetailNewActivity.this,
-                                        R.style.choice_dialog, state,
-                                        aDialogCallback);
-                                aDialog.show();
-                                aDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                                    @Override
-                                    public void onDismiss(DialogInterface dialog) {
-//                                isClick = true;
-                                    }
-                                });
-                            }
-                        }, 1000);
-
-                    }
-                }
-            }
-        } else if (msg.arg1 == HttpTools.GET_HBUSER_MONEY) {
+        if (msg.arg1 == HttpTools.GET_HBUSER_MONEY) {
             if (code == 0) {
                 String content = HttpTools.getContentString(jsonString);
                 if (StringUtils.isNotEmpty(content)) {

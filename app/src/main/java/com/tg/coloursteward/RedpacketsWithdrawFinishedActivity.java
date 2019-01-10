@@ -239,7 +239,7 @@ public class RedpacketsWithdrawFinishedActivity extends BaseActivity {
             params.put("note", transferNote);
             params.put("key", key);
             params.put("secret", secret);
-            HttpTools.httpPost(Contants.URl.URL_CPMOBILE, "/1.0/caiRedPaket/orderCreate", config, params);
+//            HttpTools.httpPost(Contants.URl.URL_CPMOBILE, "/1.0/caiRedPaket/orderCreate", config, params);
         } else if ("colleague".equals(transferTo) || "czy".equals(transferTo)) {
 
         } else {

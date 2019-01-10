@@ -1,6 +1,5 @@
 package com.tg.coloursteward;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
@@ -31,7 +30,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Calendar;
-import java.util.Date;
 
 import static com.tg.coloursteward.module.MainActivity1.getEnvironment;
 import static com.tg.coloursteward.module.MainActivity1.getPublicParams;
@@ -102,26 +100,9 @@ public class PublicAccountTransferActivity extends BaseActivity implements MyLis
         }
     }
 
-    /**
-     * 点击事件判断有误密码以卡
-     *
-     * @param position
-     */
-    private void isSetPwd(int position) {
-        String key = Tools.getStringValue(this, Contants.EMPLOYEE_LOGIN.key);
-        String secret = Tools.getStringValue(this, Contants.EMPLOYEE_LOGIN.secret);
-        RequestConfig config = new RequestConfig(this, HttpTools.POST_SETPWD_INFO);
-        RequestParams params = new RequestParams();
-        params.put("position", position);
-        params.put("key", key);
-        params.put("secret", secret);
-        HttpTools.httpPost(Contants.URl.URL_CPMOBILE, "/1.0/caiRedPaket/isSetPwd", config, params);
-    }
-
     @Override
     protected boolean handClickEvent(View v) {
         if (check()) {
-//            isSetPwd(0);
             Cqb_PayUtil.getInstance(this).PayPasswordDialog(getPublicParams(), getEnvironment(), "payDialog");
         }
         return super.handClickEvent(v);
@@ -199,53 +180,7 @@ public class PublicAccountTransferActivity extends BaseActivity implements MyLis
     public void onSuccess(Message msg, String jsonString, String hintString) {
         super.onSuccess(msg, jsonString, hintString);
         int code = HttpTools.getCode(jsonString);
-        String message = HttpTools.getMessageString(jsonString);
-        if (msg.arg1 == HttpTools.POST_SETPWD_INFO) {//判断是否设置支付密码
-            if (code == 0) {
-                JSONObject content = HttpTools.getContentJSONObject(jsonString);
-                if (content != null) {
-                    String state;
-                    try {
-                        state = content.getString("state");
-                        aDialogCallback = new PwdDialog2.ADialogCallback() {
-                            @Override
-                            public void callback() {
-//                                judgment();
-                                String expireTime = Tools.getStringValue(PublicAccountTransferActivity.this, Contants.storage.APPAUTHTIME_1);
-                                Date dt = new Date();
-                                Long time = dt.getTime();
-                                /**
-                                 * 获取对公账户数据
-                                 */
-                                if (StringUtils.isNotEmpty(expireTime)) {
-                                    if (Long.parseLong(expireTime) <= time) {//token过期
-                                        getAppAuthInfo();
-                                    } else {
-                                        submit();
-                                    }
-                                } else {
-                                    getAppAuthInfo();
-                                }
-                            }
-                        };
-                        aDialog = new PwdDialog2(
-                                PublicAccountTransferActivity.this,
-                                R.style.choice_dialog, state,
-                                aDialogCallback);
-                        aDialog.show();
-                        aDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                            @Override
-                            public void onDismiss(DialogInterface dialog) {
-//                                isClick = true;
-                            }
-                        });
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        } else if (msg.arg1 == HttpTools.POST_FASTTRANSACTION) {
+        if (msg.arg1 == HttpTools.POST_FASTTRANSACTION) {
             if (code == 0) {
                 sendBroadcast(new Intent(PublicAccountActivity.ACTION_PUBLIC_ACCOUNT));
                 ToastFactory.showToast(PublicAccountTransferActivity.this, "转账成功");

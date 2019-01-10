@@ -169,7 +169,7 @@ public class RedpacketsTransferMainActivity extends BaseActivity {
             params.put("note", edtMessage.getText().toString());
             params.put("key", key);
             params.put("secret", secret);
-            HttpTools.httpPost(Contants.URl.URL_CPMOBILE, "/1.0/caiRedPaket/carryOrderCreate", config, params);
+//            HttpTools.httpPost(Contants.URl.URL_CPMOBILE, "/1.0/caiRedPaket/carryOrderCreate", config, params);
             showProgressDialog();
         }
     }
@@ -302,7 +302,7 @@ public class RedpacketsTransferMainActivity extends BaseActivity {
         params.put("id", id);
         params.put("key", key);
         params.put("secret", secret);
-        HttpTools.httpDelete(Contants.URl.URL_CPMOBILE, "/1.0/caiRedPaket/bindColourLifeDelete/" + id, config, params);
+//        HttpTools.httpDelete(Contants.URl.URL_CPMOBILE, "/1.0/caiRedPaket/bindColourLifeDelete/" + id, config, params);
     }
 
     private boolean check() {

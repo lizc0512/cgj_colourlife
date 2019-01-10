@@ -425,7 +425,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             if (model.isTop == true) {
                 itemView.message_item.setBackgroundColor(mContext.getResources().getColor(R.color.line_index));
             } else {
-                itemView.message_item.setBackgroundColor(mContext.getResources().getColor(R.color.hx_color_white));
+                itemView.message_item.setBackground(mContext.getResources().getDrawable(R.drawable.hxb_list_item_selector));
             }
             Glide.with(mContext).load(avatar)
                     .apply(new RequestOptions()
@@ -536,7 +536,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             if (model.isTop == true) {
                 itemView.message_item.setBackgroundColor(mContext.getResources().getColor(R.color.line_index));
             } else {
-                itemView.message_item.setBackgroundColor(mContext.getResources().getColor(R.color.hx_color_white));
+                itemView.message_item.setBackground(mContext.getResources().getDrawable(R.drawable.hxb_list_item_selector));
             }
         }
 

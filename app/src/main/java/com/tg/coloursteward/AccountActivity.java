@@ -57,6 +57,7 @@ public class AccountActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         getPopup(true);
         initView();
+        getAuthAppInfo();
         initOptions();
         initData();
     }

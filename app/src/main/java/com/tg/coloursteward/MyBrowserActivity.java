@@ -11,6 +11,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.net.http.SslError;
@@ -102,7 +103,7 @@ import static com.tg.coloursteward.RedpacketsTransferToColleagueH5Activity.Faile
 public class MyBrowserActivity extends BaseActivity implements OnClickListener, AMapLocationListener {
     public static final String ACTION_FRESH_PAYINFO = "com.tg.coloursteward.ACTION_FRESH_PAYINFO";
     public static final String PAY_STATE = "pay_state";
-    public static final int PIC_PHOTO_BY_CAMERA = Integer.MAX_VALUE - 9;
+    public static final int PIC_PHOTO_BY_CAMERA = 1010;
     private final String TAG = "MyBrowserActivity";
     public static final String KEY_HIDE_TITLE = "hide";
     public static final String KEY_TITLE = "title";
@@ -325,11 +326,13 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
         @Override
         public void onShowCustomView(View view, IX5WebChromeClient.CustomViewCallback customViewCallback) {
             showCustomView(view, customViewCallback);
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);//播放时横屏幕，如果需要改变横竖屏，只需该参数就行了
         }
 
         @Override
         public void onHideCustomView() {
             hideCustomView();
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);//不播放时竖屏
         }
 
         @Override

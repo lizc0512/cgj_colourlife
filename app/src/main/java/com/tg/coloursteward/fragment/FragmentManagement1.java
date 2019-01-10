@@ -78,20 +78,28 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
         initView();
         requestData();
         getEmployeeInfo();
+        showCache();
         return mView;
     }
 
-    private void initDataTop() {
-        String cache = Tools.getStringValue(mActivity, Contants.storage.TINYFRAGMENTTOP);
-        if (!TextUtils.isEmpty(cache)) {
-            topDataAdapter(cache);
+    private void showCache() {
+        String cacheTop = Tools.getStringValue(mActivity, Contants.storage.TINYFRAGMENTTOP);
+        if (!TextUtils.isEmpty(cacheTop)) {
+            topDataAdapter(cacheTop);
         } else {
-            if (Tools.getBooleanValue(mActivity, Contants.storage.ISFIRSTTOP) == false) {
-                Tools.setBooleanValue(mActivity, Contants.storage.ISFIRSTTOP, true);
-                String localCache = Contants.storage.TINYFRAGMENTTOP_CACHE;
-                topDataAdapter(localCache);
-            }
+            String localCache = Contants.storage.TINYFRAGMENTTOP_CACHE;
+            topDataAdapter(localCache);
         }
+        String cacheMid = Tools.getStringValue(mActivity, Contants.storage.TINYFRAGMENTMID);
+        if (!TextUtils.isEmpty(cacheMid)) {
+            midDataAdapter(cacheMid);
+        } else {
+            String loaclCache = Contants.storage.TINYFRAGMENTMID_CACHE;
+            midDataAdapter(loaclCache);
+        }
+    }
+
+    private void initDataTop() {
         RequestConfig config = new RequestConfig(mActivity, HttpTools.GET_MINISERVER_TOP);
         config.handler = msgHandler.getHandler();
         Map<String, Object> map = new HashMap();
@@ -128,16 +136,6 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
     }
 
     private void initData() {
-        String cache = Tools.getStringValue(mActivity, Contants.storage.TINYFRAGMENTMID);
-        if (!TextUtils.isEmpty(cache)) {
-            midDataAdapter(cache);
-        } else {
-            if (Tools.getBooleanValue(mActivity, Contants.storage.ISFIRSTMID) == false) {
-                Tools.setBooleanValue(mActivity, Contants.storage.ISFIRSTMID, true);
-                String loaclCache = Contants.storage.TINYFRAGMENTMID_CACHE;
-                midDataAdapter(loaclCache);
-            }
-        }
         String skin_id = Tools.getStringValue(mActivity, Contants.storage.SKINCODE);
         RequestConfig config = new RequestConfig(mActivity, HttpTools.GET_MINISERVER);
         config.handler = msgHandler.getHandler();
@@ -211,7 +209,6 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
         params.put("secret", secret);
         HttpTools.httpPost(Contants.URl.URL_CPMOBILE, "/1.0/employee/login", config, params);
     }
-//
 
     /**
      * 初始化控件

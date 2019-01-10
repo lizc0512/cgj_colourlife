@@ -29,6 +29,7 @@ import com.tg.coloursteward.net.RequestConfig;
 import com.tg.coloursteward.net.RequestParams;
 import com.tg.coloursteward.net.ResponseData;
 import com.tg.coloursteward.serice.AuthAppService;
+import com.tg.coloursteward.serice.HomeService;
 import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.LinkParseUtil;
 import com.tg.coloursteward.util.StringUtils;
@@ -74,6 +75,7 @@ public class AccountDetailNewActivity extends BaseActivity implements View.OnCli
     private String state;
     private ExchangeEntity exchangeEntity;
     private String urlFinally;
+    private HomeService homeService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +86,7 @@ public class AccountDetailNewActivity extends BaseActivity implements View.OnCli
             Log.e(TAG, "onCreate:general_uuid " + general_uuid);
         }
         initView();
+        getAuth2();
     }
 
     private void initView() {
@@ -204,6 +207,32 @@ public class AccountDetailNewActivity extends BaseActivity implements View.OnCli
             getAuthAppInfo();
         }
 
+    }
+
+    /**
+     * 获取auth2
+     */
+    private void getAuth2() {
+        if (homeService == null) {
+            homeService = new HomeService(AccountDetailNewActivity.this);
+        }
+        homeService.getAuth2("", new GetTwoRecordListener<String, String>() {
+
+            @Override
+            public void onFinish(String openID, String auth2, String data3) {
+                accessToken = auth2;
+                Date dt = new Date();
+                Long time = dt.getTime();
+                Tools.saveAccess_token(AccountDetailNewActivity.this, accessToken);
+                Tools.saveCurrentTime2(AccountDetailNewActivity.this, time);
+                Tools.saveExpiresTime2(AccountDetailNewActivity.this, Long.parseLong(data3));
+            }
+
+            @Override
+            public void onFailed(String Message) {
+//                ToastFactory.showToast(AccountDetailNewActivity.this, Message);
+            }
+        });
     }
 
     /**

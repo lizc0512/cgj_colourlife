@@ -101,14 +101,11 @@ public class FragmentMine extends Fragment implements ResponseListener, OnClickL
 
     private void initData() {
         String json = Tools.getStringValue(mActivity, Contants.storage.FRAGMENTMINE);
-        if (!TextUtils.isEmpty(json)) {
+        if (!TextUtils.isEmpty(json)) {//有网络数据缓存
             initDataAdapter(json);
         } else {
-            if (Tools.getBooleanValue(mActivity, Contants.storage.ISFIRSTMINE) == false) {
-                Tools.setBooleanValue(mActivity, Contants.storage.ISFIRSTMINE, true);
-                String loaclCache = Contants.storage.fragmentminedata;
-                initDataAdapter(loaclCache);
-            }
+            String loaclCache = Contants.storage.fragmentminedata;
+            initDataAdapter(loaclCache);
         }
         initGetData();
     }

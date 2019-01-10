@@ -8,9 +8,36 @@
         android:id="@+id/login_content"
         layout="@layout/login_content"
         android:visibility="gone" />
-    <FrameLayout
+    <View
         android:id="@+id/start_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/start_pager" />
+    <RelativeLayout
+        android:id="@+id/rl_login_ad"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <pl.droidsonroids.gif.GifImageView
+            android:id="@+id/gif_login"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"/>
+        <TextView
+            android:id="@+id/tv_login_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="28dp"
+            android:layout_marginTop="15dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="15dp"
+            android:background="@color/gray_index"
+            android:gravity="center"
+            android:textSize="12dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:text=""
+            android:textColor="@color/white"/>
+    </RelativeLayout>
+
 </RelativeLayout>

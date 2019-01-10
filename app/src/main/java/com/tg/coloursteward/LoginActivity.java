@@ -6,7 +6,11 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.os.Environment;
 import android.os.Message;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -59,8 +63,12 @@ import com.youmai.hxsdk.router.APath;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+
+import pl.droidsonroids.gif.GifDrawable;
+import pl.droidsonroids.gif.GifImageView;
 
 /**
  * 登录页面
@@ -70,6 +78,7 @@ import java.util.Map;
 @Route(path = APath.RE_LOGIN)
 public class LoginActivity extends BaseActivity implements AnimationListener {
     private static final String TAG = "LoginActivity";
+    private String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/Colourlife/colourlifeAd.gif";
     private EditText editUser;
     private EditText editPassword;
     private View startLayout;
@@ -88,6 +97,12 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
     private TextView tv_login_loginbuttom;
     private ImageView iv_login_deloa;
     private ImageView iv_login_delpwd;
+    private GifImageView gif_login;
+    private TextView tv_login_cancel;
+    private RelativeLayout rl_login_ad;
+    private int duration;
+    private String urlAd;
+    private String auth_type;
 
     @Override
     public View getContentView() {
@@ -174,14 +189,149 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
             Tools.saveStringValue(LoginActivity.this, Contants.storage.THRID_CODE, code);
         }
         initView();
+        showAd();
         initGetTS();
-        showStartPager();
         CheckPermission();
         /**
-         * 初始化
+         * 初始化*
          * 务必放在onCreate方法里面执行
          */
         gt3GeetestUtils = new GT3GeetestUtilsBind(LoginActivity.this);
+    }
+
+    private void showAd() {
+        String CacheAd = Tools.getStringValue(LoginActivity.this, Contants.storage.HomePageAd);
+        if (!TextUtils.isEmpty(CacheAd)) {
+            JSONObject jsonObject = HttpTools.getContentJSONObject(CacheAd);
+            long startTime = 0;
+            long endTime = 0;
+            duration = 3;
+            urlAd = "";
+            try {
+                startTime = jsonObject.getLong("startTime");
+                endTime = jsonObject.getLong("endTime");
+                duration = jsonObject.getInt("duration");
+                urlAd = jsonObject.getString("openUrl");
+                auth_type = jsonObject.getString("auth_type");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            tv_login_cancel.setText("跳过(" + duration-- + "s)");
+            long time = System.currentTimeMillis() / 1000;
+//            Boolean isshow = Tools.getBooleanValue(LoginActivity.this, Contants.storage.ISSHOWAD);
+            if (startTime < time && time < endTime) {
+                rl_login_ad.setVisibility(View.VISIBLE);
+                String imageType = Tools.getStringValue(LoginActivity.this, Contants.storage.ImageType);
+                if (imageType.equals("gif")) {
+                    path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/Colourlife/colourlifeAd.gif";
+                } else if (imageType.equals("png")) {
+                    path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/Colourlife/colourlifeAd.png";
+                }
+                File mFile = new File(path);
+                if (mFile.canRead()) {
+                    //若该文件存在
+                    if (mFile.exists()) {
+                        if (path.endsWith("gif")) {
+                            try {
+                                GifDrawable gifFromPath = new GifDrawable(path);
+                                gif_login.setImageDrawable(gifFromPath);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        } else if (path.endsWith("png")) {
+                            Bitmap bitmap = BitmapFactory.decodeFile(path);
+                            gif_login.setImageBitmap(bitmap);
+                        }
+                    }
+                }
+                initTimeCount(duration);
+//                long showtime = System.currentTimeMillis() / 1000;
+//                Tools.saveStringValue(LoginActivity.this, Contants.storage.SaveTime, String.valueOf(showtime));
+//                if (DateUtils.isToday(showtime)) {
+//                    Tools.setBooleanValue(LoginActivity.this, Contants.storage.ISSHOWAD, true);
+//                }
+                rl_login_ad.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (!TextUtils.isEmpty(urlAd)) {
+                            cancelTimeCount();
+                            MainActivity1.url_ad = urlAd;
+                            MainActivity1.auth_type = auth_type;
+                            ResponseData userInfoData = SharedPreferencesTools.getUserInfo(LoginActivity.this);
+                            String skin_code = Tools.getStringValue(LoginActivity.this, Contants.storage.SKINCODE);
+                            if (userInfoData.length > 0) {
+                                Intent intent = new Intent(LoginActivity.this, MainActivity1.class);
+                                intent.putExtra(MainActivity1.KEY_SKIN_CODE, skin_code);
+                                intent.putExtra(MainActivity1.KEY_EXTRAS, extras);
+                                intent.putExtra(MainActivity1.FROM_AD, urlAd);
+                                intent.putExtra(MainActivity1.FROM_AUTH_TYPE, auth_type);
+                                startActivity(intent);
+                                LoginActivity.this.finish();
+                            } else {
+                                showContentView();
+                            }
+                        }
+                    }
+                });
+            } else {
+                showStartPager();
+            }
+        } else {
+            showStartPager();
+        }
+    }
+
+    private MyTimeCount myTimeCount = null;
+
+    /***初始化计数器**/
+    private void initTimeCount(int duration) {
+        cancelTimeCount();
+        myTimeCount = new MyTimeCount(duration * 1000, 1000);
+        myTimeCount.start();
+    }
+
+    private void cancelTimeCount() {
+        if (myTimeCount != null) {
+            myTimeCount.cancel();
+            myTimeCount = null;
+        }
+    }
+
+    /**
+     * 定义一个倒计时的内部类
+     */
+    class MyTimeCount extends CountDownTimer {
+        public MyTimeCount(long millisInFuture, long countDownInterval) {
+            super(millisInFuture, countDownInterval);// 参数依次为总时长,和计时的时间间隔
+        }
+
+        @Override
+        public void onFinish() {// 计时完毕时触发
+            ResponseData userInfoData = SharedPreferencesTools.getUserInfo(LoginActivity.this);
+            String skin_code = Tools.getStringValue(LoginActivity.this, Contants.storage.SKINCODE);
+            if (userInfoData.length > 0) {
+                Intent intent = new Intent(LoginActivity.this, MainActivity1.class);
+                intent.putExtra(MainActivity1.KEY_SKIN_CODE, skin_code);
+                intent.putExtra(MainActivity1.KEY_EXTRAS, extras);
+                intent.putExtra(MainActivity1.FROM_LOGIN, false);
+                startActivity(intent);
+                LoginActivity.this.finish();
+            } else {
+                showContentView();
+            }
+        }
+
+        @Override
+        public void onTick(long millisUntilFinished) {// 计时过程显示
+            long currentSecond = millisUntilFinished / 1000;
+            tv_login_cancel.setText("跳过(" + currentSecond-- + "s)");
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        cancelTimeCount();
     }
 
     private void ThridLogin(String code) {
@@ -197,6 +347,10 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
     }
 
     private void initView() {
+        gif_login = findViewById(R.id.gif_login);
+        rl_login_ad = findViewById(R.id.rl_login_ad);
+        tv_login_cancel = findViewById(R.id.tv_login_cancel);
+        tv_login_cancel.getBackground().setAlpha(100);
         rl_czy_login = findViewById(R.id.rl_czy_login);
         tv_login_loginbuttom = findViewById(R.id.tv_login_loginbuttom);
         iv_login_deloa = findViewById(R.id.iv_login_deloa);
@@ -212,6 +366,24 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
         iv_login_deloa.setOnClickListener(singleListener);
         iv_login_delpwd.setOnClickListener(singleListener);
         findViewById(R.id.forget_pwd).setOnClickListener(singleListener);
+        tv_login_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ResponseData userInfoData = SharedPreferencesTools.getUserInfo(LoginActivity.this);
+                String skin_code = Tools.getStringValue(LoginActivity.this, Contants.storage.SKINCODE);
+                if (userInfoData.length > 0) {
+                    cancelTimeCount();
+                    Intent intent = new Intent(LoginActivity.this, MainActivity1.class);
+                    intent.putExtra(MainActivity1.KEY_SKIN_CODE, skin_code);
+                    intent.putExtra(MainActivity1.KEY_EXTRAS, extras);
+                    intent.putExtra(MainActivity1.FROM_LOGIN, false);
+                    startActivity(intent);
+                    LoginActivity.this.finish();
+                } else {
+                    showContentView();
+                }
+            }
+        });
         editUser.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {

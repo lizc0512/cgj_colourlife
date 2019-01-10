@@ -9,7 +9,10 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
@@ -32,9 +35,15 @@ import android.widget.TextView;
 
 import com.baidu.trace.LBSTraceClient;
 import com.baidu.trace.Trace;
+import com.baidu.trace.api.entity.OnEntityListener;
+import com.baidu.trace.api.entity.UpdateEntityRequest;
+import com.baidu.trace.api.entity.UpdateEntityResponse;
 import com.baidu.trace.model.LocationMode;
 import com.baidu.trace.model.OnTraceListener;
 import com.baidu.trace.model.PushMessage;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.FutureTarget;
+import com.bumptech.glide.request.target.Target;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 import com.tg.coloursteward.InviteRegisterActivity;
 import com.tg.coloursteward.R;
@@ -80,11 +89,13 @@ import com.youmai.hxsdk.http.IPostListener;
 import com.youmai.hxsdk.http.OkHttpConnector;
 import com.youmai.hxsdk.im.IMMsgManager;
 import com.youmai.hxsdk.utils.AppUtils;
+import com.youmai.hxsdk.view.camera.util.FileUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Date;
@@ -124,6 +135,8 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
     public static final String KEY_SKIN_CODE = "skin_code";
     public static final String KEY_EXTRAS = "extras";
     public static final String FROM_LOGIN = "from_login";
+    public static final String FROM_AD = "from_ad";
+    public static final String FROM_AUTH_TYPE = "from_autn_type";
     private static final int MSG_SET_ALIAS = 1001;
     private static final int MSG_SET_TAGS = 1002;
 
@@ -157,6 +170,10 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
     private String skin_code = "101";//  101 彩生活  100 通用  102 中住
     private String extras;
     private Boolean form_login = false;
+    private String urlAd = "";
+    private String urlauth_type = "";
+    public static String auth_type = "";
+    public static String url_ad;
 
     private BroadcastReceiver freshReceiver = new BroadcastReceiver() {
 
@@ -194,6 +211,8 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
         }
         Intent data = getIntent();
         if (data != null) {
+            urlAd = data.getStringExtra(FROM_AD);
+            urlauth_type=data.getStringExtra(FROM_AUTH_TYPE);
             needGetUserInfo = data.getBooleanExtra(KEY_NEDD_FRESH, true);
             skin_code = data.getStringExtra(KEY_SKIN_CODE);
             extras = data.getStringExtra(KEY_EXTRAS);
@@ -201,6 +220,10 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
             String urlFromOther = data.getStringExtra(JUMPOTHERURL);
             if (!TextUtils.isEmpty(urlFromOther)) {
                 LinkParseUtil.parse(MainActivity1.this, urlFromOther, "");
+            }
+            if (!TextUtils.isEmpty(urlAd)) {
+                AuthTimeUtils authTimeUtils = new AuthTimeUtils();
+                authTimeUtils.IsAuthTime(MainActivity1.this, urlAd, "", urlauth_type, "", "");
             }
         }
         msgHand = new MessageHandler(this);
@@ -213,7 +236,6 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
         initProto();
 
         reqSearchList();
-
         HuxinSdkManager.instance().getStackAct().addActivity(this);
         if (Contants.URl.environment.equals("release")) {
             RequestConfig config = new RequestConfig(this, HttpTools.GET_YINGYAN, "");
@@ -221,22 +243,40 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
             Map<String, String> params = TokenUtils.getStringMap(TokenUtils.getNewSaftyMap(this, map));
             HttpTools.httpGet_Map(Contants.URl.URL_NEW, "app/home/utility/getEagleJuge", config, (HashMap) params);
         }
+        initAd();
+    }
+
+    private void initAd() {
+        RequestConfig config = new RequestConfig(this, HttpTools.GET_AD, "");
+        Map<String, Object> map = new HashMap<>();
+        Map<String, String> params = TokenUtils.getStringMap(TokenUtils.getNewSaftyMap(this, map));
+        HttpTools.httpGet_Map(Contants.URl.URL_NEW, "app/home/utility/startPage", config, (HashMap) params);
     }
 
     private void initYingYan() {
         //初始化鹰眼SDK
-        String entityName;
-        if (TextUtils.isEmpty(UserInfo.realname)) {
-            entityName = UserInfo.jobName + "-" + UserInfo.employeeAccount;
-        } else {
-            entityName = UserInfo.jobName + "-" + UserInfo.realname;
-        }
-        trace = new Trace(serviceId, entityName, false);
+        trace = new Trace(serviceId, UserInfo.uid, false);
         lbsTraceClient = new LBSTraceClient(getApplicationContext());
         int gatherInterval = 60;
         int packInterval = 60;
         lbsTraceClient.setInterval(gatherInterval, packInterval);
         lbsTraceClient.setLocationMode(LocationMode.High_Accuracy);
+        UpdateEntityRequest updateEntityRequest = new UpdateEntityRequest();
+        updateEntityRequest.setEntityName(UserInfo.uid);
+        updateEntityRequest.setServiceId(serviceId);
+        updateEntityRequest.setEntityDesc(UserInfo.jobName + "-" + UserInfo.realname + "-" + UserInfo.employeeAccount);//岗位-姓名-oa账号
+        Map<String, String> map = new HashMap<>();
+        map.put("realname", UserInfo.realname);
+        map.put("oa_username", UserInfo.employeeAccount);
+        map.put("mobile", UserInfo.mobile);
+        map.put("gender", UserInfo.sex);
+        updateEntityRequest.setColumns(map);
+        lbsTraceClient.updateEntity(updateEntityRequest, new OnEntityListener() {
+            @Override
+            public void onUpdateEntityCallback(UpdateEntityResponse updateEntityResponse) {
+                super.onUpdateEntityCallback(updateEntityResponse);
+            }
+        });
         OnTraceListener onTraceListener = new OnTraceListener() {
             @Override
             public void onBindServiceCallback(int i, String s) {
@@ -322,6 +362,11 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
             String urlFromOther = intent.getStringExtra(JUMPOTHERURL);
             if (!TextUtils.isEmpty(urlFromOther)) {
                 LinkParseUtil.parse(MainActivity1.this, urlFromOther, "");
+            }
+            String urlAd = intent.getStringExtra(FROM_AD);
+            if (!TextUtils.isEmpty(urlAd)) {
+                AuthTimeUtils authTimeUtils = new AuthTimeUtils();
+                authTimeUtils.IsAuthTime(MainActivity1.this, urlAd, "", urlauth_type, "", "");
             }
         }
         String extras = intent.getStringExtra(KEY_EXTRAS);
@@ -507,7 +552,78 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
                     e.printStackTrace();
                 }
             }
+        } else if (msg.arg1 == HttpTools.GET_AD) {
+            if (code == 0) {
+                JSONObject jsonObject = HttpTools.getContentJSONObject(jsonString);
+                if (null != jsonObject) {
+                    Tools.saveStringValue(MainActivity1.this, Contants.storage.HomePageAd, jsonString);
+                    String urlImg = "";
+                    try {
+                        urlImg = jsonObject.getString("adUrl");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    if (!TextUtils.isEmpty(urlImg)) {
+                        download(urlImg);
+                    }
+                }
+
+            }
         }
+    }
+
+    // 保存图片到手机
+    public void download(final String url) {
+        new AsyncTask<Void, Integer, File>() {
+
+            @Override
+            protected File doInBackground(Void... params) {
+                File file = null;
+                try {
+                    FutureTarget<File> future = Glide
+                            .with(MainActivity1.this)
+                            .load(url)
+                            .downloadOnly(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL);
+
+                    file = future.get();
+                    // 首先保存图片
+                    File pictureFolder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsoluteFile();
+                    File appDir = new File(pictureFolder, "Colourlife");
+                    if (!appDir.exists()) {
+                        appDir.mkdirs();
+                    }
+                    String fileName = "";
+                    if (url.endsWith(".gif")) {
+                        fileName = "colourlifeAd.gif";
+                        Tools.saveStringValue(MainActivity1.this, Contants.storage.ImageType, "gif");
+                    } else {
+                        fileName = "colourlifeAd.png";
+                        Tools.saveStringValue(MainActivity1.this, Contants.storage.ImageType, "png");
+                    }
+                    File destFile = new File(appDir, fileName);
+                    FileUtil.copy(file, destFile);
+
+                    // 最后通知图库更新
+                    sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
+                            Uri.fromFile(new File(destFile.getPath()))));
+
+
+                } catch (Exception e) {
+                    Log.e(TAG, e.getMessage());
+                }
+                return file;
+            }
+
+            @Override
+            protected void onPostExecute(File file) {
+//                Toast.makeText(MainActivity1.this, "saved in Pictures/GankBeauty", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            protected void onProgressUpdate(Integer... values) {
+                super.onProgressUpdate(values);
+            }
+        }.execute();
     }
 
     private void initInfoSync() {

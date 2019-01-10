@@ -116,8 +116,10 @@ public class SettingActivity extends BaseActivity implements OnClickListener {
     public void onRequestStart(Message msg, String hintString) {
         super.onRequestStart(msg, hintString);
         if (msg.arg1 == HttpTools.GET_VERSION_INFO) {
-            DialogFactory.getInstance().showTransitionDialog(this,
-                    "正在检查更新", msg.obj, msg.arg1);
+            if (isCheck == true) {
+                DialogFactory.getInstance().showTransitionDialog(this,
+                        "正在检查更新", msg.obj, msg.arg1);
+            }
         }
     }
 

@@ -39,7 +39,7 @@ import cn.jpush.android.api.JPushInterface;
 public class CityPropertyApplication extends Application {
     private static List<Activity> mList = new LinkedList<Activity>();
     private static CityPropertyApplication instance;
-    public static long serviceId = 206402;
+    public static long serviceId = 208392;
     public static String entityName = "";
     public static LBSTraceClient lbsTraceClient;
     public static Trace trace;

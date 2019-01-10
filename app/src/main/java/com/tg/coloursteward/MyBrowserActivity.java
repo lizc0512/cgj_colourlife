@@ -848,7 +848,7 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
                 webView.reload();
                 break;
             case R.id.rl_close:// 关闭
-                finish();
+                MyBrowserActivity.this.finish();
                 break;
         }
     }
@@ -871,7 +871,7 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
 
         webView.clearHistory();
         ((ViewGroup) webView.getParent()).removeView(webView);
-        webView.loadUrl("about:blank", headerMap);
+//        webView.loadUrl("about:blank", headerMap);
         webView.stopLoading();
         webView.setWebChromeClient(null);
         webView.setWebViewClient(null);

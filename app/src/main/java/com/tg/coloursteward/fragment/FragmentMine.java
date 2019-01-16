@@ -24,6 +24,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.signature.ObjectKey;
+import com.dashuview.library.keep.Cqb_PayUtil;
 import com.tg.coloursteward.MyBrowserActivity;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.UserInfoActivity;
@@ -53,6 +54,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.tg.coloursteward.module.MainActivity1.getEnvironment;
+import static com.tg.coloursteward.module.MainActivity1.getPublicParams;
 
 /**
  * 个人中心
@@ -133,7 +137,8 @@ public class FragmentMine extends Fragment implements ResponseListener, OnClickL
                 String name = list_item.get(positon).getName();
                 if (url.contains("findPwd")) {
                     openType = 1;
-                    find_pay_password();
+//                    find_pay_password();
+                    Cqb_PayUtil.getInstance(mActivity).createPay(getPublicParams(), getEnvironment());
                 } else if (name.contains("工资")) {
                     openType = 2;
                     salary = url;

@@ -48,7 +48,6 @@ import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
-import com.githang.statusbar.StatusBarCompat;
 import com.tencent.smtt.export.external.interfaces.GeolocationPermissionsCallback;
 import com.tencent.smtt.export.external.interfaces.IX5WebChromeClient;
 import com.tencent.smtt.export.external.interfaces.JsResult;
@@ -632,6 +631,12 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
             intent.putExtra(RedpacketsTransferToColleagueH5Activity.OA_USERNAME, oa_username);
             startActivity(intent);
         }
+
+        @JavascriptInterface
+        public void GetWebTitle(String title) {
+            tvTitle.setText(title);
+        }
+
 
     }
 

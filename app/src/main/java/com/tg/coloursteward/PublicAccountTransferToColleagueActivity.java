@@ -290,7 +290,7 @@ public class PublicAccountTransferToColleagueActivity extends BaseActivity imple
             ToastFactory.showToast(PublicAccountTransferToColleagueActivity.this, "兑换成功");
             finish();
         } else {
-            ToastFactory.showToast(PublicAccountTransferToColleagueActivity.this, "兑换失败，请稍后再试");
+            ToastFactory.showToast(PublicAccountTransferToColleagueActivity.this, message);
             Log.e(TAG, "onFailed: " + message);
         }
     }

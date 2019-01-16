@@ -62,11 +62,7 @@ public class GroupAccountDetailsActivity extends BaseActivity {
     private TextView tvTitle;
     private TextView tvAccount;
     private TextView tvSource;
-    private PublicAccountPopWindowView popWindowView;
     private String accessToken_1;
-    private String familyUuid;
-    private String useruuid;
-    private String orgname;
     private int ispay = 2;//0全部，1支付，2收款
     private GroupAccountEntity groupAccountEntity;
     private List<GroupAccountEntity.ContentBean.ListBean> listinfo = new ArrayList<>();
@@ -89,19 +85,23 @@ public class GroupAccountDetailsActivity extends BaseActivity {
     private RelativeLayout rl_kong;
     private String url_rule = "https://income-czytest.colourlife.com/ruleDetail/#/?";
     private String access_token;
-    private List<Map<String, String>> list_item1 = new ArrayList<>();
+    private String jsondata;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
         if (intent != null) {
-            familyUuid = intent.getStringExtra("familyUuid");
-            useruuid = intent.getStringExtra("useruuid");
-            orgname = intent.getStringExtra("orgname");
-
-            Bundle bundle = intent.getExtras();
-            list_item1 = (List<Map<String, String>>) bundle.getSerializable("bonusMap");
+            jsondata = intent.getStringExtra("jsondata");
         }
+        try {
+            JSONObject jsonObject = new JSONObject(jsondata);
+            String data = jsonObject.getString("dbzhdata");
+            list_item = GsonUtils.jsonToList(data, RedPacketEntity.ContentBean.DbzhdataBean.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         mScreenWidth = Utils.getWindowsWidth(this);
         mItemWidth = mScreenWidth / 5 * 2; // 一个Item宽度为屏幕的1/7
         initView();
@@ -436,15 +436,6 @@ public class GroupAccountDetailsActivity extends BaseActivity {
             lp.alpha = 1.0f;
             GroupAccountDetailsActivity.this.getWindow().setAttributes(lp);
         }
-    }
-
-    /**
-     * popwindowview弹出时，全屏变灰色
-     */
-    private void lightoff() {
-        WindowManager.LayoutParams lp = GroupAccountDetailsActivity.this.getWindow().getAttributes();
-        lp.alpha = 0.3f;
-        GroupAccountDetailsActivity.this.getWindow().setAttributes(lp);
     }
 
     @Override

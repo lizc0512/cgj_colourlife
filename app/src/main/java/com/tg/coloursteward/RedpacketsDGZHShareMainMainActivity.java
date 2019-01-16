@@ -191,15 +191,15 @@ public class RedpacketsDGZHShareMainMainActivity extends BaseActivity {
         /**
          * 获取版本号
          */
-        String versionShort = UpdateManager.getVersionName(this);
-        String key = Tools.getStringValue(this, Contants.EMPLOYEE_LOGIN.key);
-        String secret = Tools.getStringValue(this, Contants.EMPLOYEE_LOGIN.secret);
-        RequestConfig config = new RequestConfig(RedpacketsDGZHShareMainMainActivity.this, HttpTools.GET_EMPLOYEE_INFO, "查询");
-        RequestParams params = new RequestParams();
-        params.put("username", username);
-        params.put("version", versionShort);
-        params.put("key", key);
-        params.put("secret", secret);//修改接口为txl2/contacts/search
+//        String versionShort = UpdateManager.getVersionName(this);
+//        String key = Tools.getStringValue(this, Contants.EMPLOYEE_LOGIN.key);
+//        String secret = Tools.getStringValue(this, Contants.EMPLOYEE_LOGIN.secret);
+//        RequestConfig config = new RequestConfig(RedpacketsDGZHShareMainMainActivity.this, HttpTools.GET_EMPLOYEE_INFO, "查询");
+//        RequestParams params = new RequestParams();
+//        params.put("username", username);
+//        params.put("version", versionShort);
+//        params.put("key", key);
+//        params.put("secret", secret);//修改接口为txl2/contacts/search
 //        HttpTools.httpPost(Contants.URl.URL_CPMOBILE, "/1.0/caiRedPaket/getEmployeeInfo", config, params);
 
         RequestConfig confg = new RequestConfig(this, HttpTools.GET_EMPLOYEE_INFO, "查询");
@@ -225,8 +225,12 @@ public class RedpacketsDGZHShareMainMainActivity extends BaseActivity {
                         RedpacketsInfo info;
                         for (int i = 0; i < data.length; i++) {
                             info = new RedpacketsInfo();
-                            info.receiver_id = data.getString(i, "id");
-                            info.receiverName = data.getString(i, "name");
+                            String job=data.getString(i, "jobType");
+                            String part=data.getString(i, "orgName");
+                            String name=data.getString(i, "name");
+                            String buff=name+"--"+job+"("+part+")";
+                            info.receiver_id = data.getString(i, "czyId");
+                            info.receiverName = buff;
                             info.receiverOA = data.getString(i, "username");
                             info.receiverMobile = data.getString(i, "mobile");
                             list.add(info);

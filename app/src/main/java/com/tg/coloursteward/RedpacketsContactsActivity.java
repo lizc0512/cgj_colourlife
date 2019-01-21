@@ -92,9 +92,10 @@ public class RedpacketsContactsActivity extends BaseActivity {
 					int position, long id) {
 				//这里要利用adapter.getItem(position)来获取当前position所对应的对象
 				String phoneNum =((SortModel)adapter.getItem(position)).getTelnum();
-				if(Tools.checkTelephoneNumber(phoneNum)){
+				String phone=phoneNum.replaceAll(" ","");
+				if(Tools.checkTelephoneNumber(phone)){
 					Intent intent = new Intent();
-					intent.putExtra("phoneNum",phoneNum);
+					intent.putExtra("phoneNum",phone);
 					setResult(1002, intent);
 					finish();
 				}else{
@@ -115,7 +116,7 @@ public class RedpacketsContactsActivity extends BaseActivity {
 
 	/**
 	 * 为ListView填充数据
-	 * @param date
+	 * @param
 	 * @return
 	 */
 	private List<SortModel> filledData() {

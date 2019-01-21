@@ -35,7 +35,11 @@ import android.widget.TextView;
 
 import com.baidu.trace.LBSTraceClient;
 import com.baidu.trace.Trace;
+import com.baidu.trace.api.entity.AddEntityRequest;
+import com.baidu.trace.api.entity.AddEntityResponse;
 import com.baidu.trace.api.entity.OnEntityListener;
+import com.baidu.trace.api.entity.SearchRequest;
+import com.baidu.trace.api.entity.SearchResponse;
 import com.baidu.trace.api.entity.UpdateEntityRequest;
 import com.baidu.trace.api.entity.UpdateEntityResponse;
 import com.baidu.trace.model.LocationMode;
@@ -195,6 +199,9 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
             }
         }
     };
+    private UpdateEntityRequest updateEntityRequest;
+    private AddEntityRequest addEntityRequest;
+    private SearchRequest searchRequest;
 
 
     @Override
@@ -212,7 +219,7 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
         Intent data = getIntent();
         if (data != null) {
             urlAd = data.getStringExtra(FROM_AD);
-            urlauth_type=data.getStringExtra(FROM_AUTH_TYPE);
+            urlauth_type = data.getStringExtra(FROM_AUTH_TYPE);
             needGetUserInfo = data.getBooleanExtra(KEY_NEDD_FRESH, true);
             skin_code = data.getStringExtra(KEY_SKIN_CODE);
             extras = data.getStringExtra(KEY_EXTRAS);
@@ -261,7 +268,7 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
         int packInterval = 60;
         lbsTraceClient.setInterval(gatherInterval, packInterval);
         lbsTraceClient.setLocationMode(LocationMode.High_Accuracy);
-        UpdateEntityRequest updateEntityRequest = new UpdateEntityRequest();
+        updateEntityRequest = new UpdateEntityRequest();
         updateEntityRequest.setEntityName(UserInfo.uid);
         updateEntityRequest.setServiceId(serviceId);
         updateEntityRequest.setEntityDesc(UserInfo.jobName + "-" + UserInfo.realname + "-" + UserInfo.employeeAccount);//岗位-姓名-oa账号
@@ -271,12 +278,6 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
         map.put("mobile", UserInfo.mobile);
         map.put("gender", UserInfo.sex);
         updateEntityRequest.setColumns(map);
-        lbsTraceClient.updateEntity(updateEntityRequest, new OnEntityListener() {
-            @Override
-            public void onUpdateEntityCallback(UpdateEntityResponse updateEntityResponse) {
-                super.onUpdateEntityCallback(updateEntityResponse);
-            }
-        });
         OnTraceListener onTraceListener = new OnTraceListener() {
             @Override
             public void onBindServiceCallback(int i, String s) {
@@ -319,6 +320,46 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
         };
         lbsTraceClient.setOnTraceListener(onTraceListener);
         lbsTraceClient.startTrace(trace, null);
+
+        addEntityRequest = new AddEntityRequest();
+        addEntityRequest.setEntityName(UserInfo.uid);
+        addEntityRequest.setServiceId(serviceId);
+        addEntityRequest.setEntityDesc(UserInfo.jobName + "-" + UserInfo.realname + "-" + UserInfo.employeeAccount);//岗位-姓名-oa账号
+        addEntityRequest.setColumns(map);
+
+        searchRequest = new SearchRequest();
+        searchRequest.setKeyword(UserInfo.uid);
+        searchRequest.setServiceId(serviceId);
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (null != lbsTraceClient) {
+                    lbsTraceClient.searchEntity(searchRequest, new OnEntityListener() {
+                        @Override
+                        public void onSearchEntityCallback(SearchResponse searchResponse) {
+                            super.onSearchEntityCallback(searchResponse);
+                            if (searchResponse.getTotal() == 0) {
+                                lbsTraceClient.addEntity(addEntityRequest, new OnEntityListener() {
+                                    @Override
+                                    public void onAddEntityCallback(AddEntityResponse addEntityResponse) {
+                                        super.onAddEntityCallback(addEntityResponse);
+                                    }
+                                });
+                            } else {
+                                lbsTraceClient.updateEntity(updateEntityRequest, new OnEntityListener() {
+                                    @Override
+                                    public void onUpdateEntityCallback(UpdateEntityResponse updateEntityResponse) {
+                                        super.onUpdateEntityCallback(updateEntityResponse);
+                                    }
+                                });
+                            }
+                        }
+                    });
+                }
+            }
+        }, 4000);
+
     }
 
     private void initGetToken() {

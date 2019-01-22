@@ -474,22 +474,23 @@ public class IMConnectionActivity extends SdkBaseActivity implements
         tvTitle = (TextView) findViewById(R.id.tv_title);
         tvTitle.setText(dstNickName);
 
-        /*TextView tvError = findViewById(R.id.tv_error);
+        TextView tvError = findViewById(R.id.tv_error);
         if (!HuxinSdkManager.instance().isConnect()) {
             tvError.setVisibility(View.VISIBLE);
+        } else {
+            tvError.setVisibility(View.GONE);
         }
+
         tvError.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ARouter.getInstance().build(APath.RE_LOGIN)
-                        .withFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-                                | Intent.FLAG_ACTIVITY_CLEAR_TOP
-                                | Intent.FLAG_ACTIVITY_SINGLE_TOP)  //添加Flag
+                        .withFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)  //添加Flag
                         .withBoolean("login_out", true)
                         .navigation(mContext);
                 HuxinSdkManager.instance().getStackAct().finishAllActivity();
             }
-        });*/
+        });
 
         TextView tvBack = (TextView) findViewById(R.id.tv_back);
         if (tvBack != null) {
@@ -1357,7 +1358,7 @@ public class IMConnectionActivity extends SdkBaseActivity implements
                         intent.putExtra(SingleRoomActivity.EXTRA_DST_NICK_NAME, dstNickName);
                         intent.putExtra(SingleRoomActivity.EXTRA_DST_AVATAR, dstAvatar);
                         intent.putExtra(SingleRoomActivity.EXTRA_DST_ID, dstUuid);
-                        intent.putExtra(SingleRoomActivity.EXTRA_DST_USERNAME,dstUserName);
+                        intent.putExtra(SingleRoomActivity.EXTRA_DST_USERNAME, dstUserName);
                         intent.putExtra(SingleRoomActivity.EXTRA_ADMIN_ID, userId);
                         //
 

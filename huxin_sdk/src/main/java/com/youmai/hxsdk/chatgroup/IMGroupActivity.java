@@ -40,6 +40,7 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.R;
@@ -84,6 +85,7 @@ import com.youmai.hxsdk.module.picker.PhotoPreviewActivity;
 import com.youmai.hxsdk.proto.YouMaiBasic;
 import com.youmai.hxsdk.proto.YouMaiGroup;
 import com.youmai.hxsdk.proto.YouMaiVideo;
+import com.youmai.hxsdk.router.APath;
 import com.youmai.hxsdk.service.SendMsgService;
 import com.youmai.hxsdk.service.download.bean.FileQueue;
 import com.youmai.hxsdk.service.sendmsg.SendMsg;
@@ -871,10 +873,23 @@ public class IMGroupActivity extends SdkBaseActivity implements
             }
         });
 
-        /*TextView tvError = findViewById(R.id.tv_error);
+        TextView tvError = findViewById(R.id.tv_error);
         if (!HuxinSdkManager.instance().isConnect()) {
             tvError.setVisibility(View.VISIBLE);
-        }*/
+        } else {
+            tvError.setVisibility(View.GONE);
+        }
+
+        tvError.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ARouter.getInstance().build(APath.RE_LOGIN)
+                        .withFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)  //添加Flag
+                        .withBoolean("login_out", true)
+                        .navigation(mContext);
+                HuxinSdkManager.instance().getStackAct().finishAllActivity();
+            }
+        });
 
         initTitle();
         TextView tvBack = (TextView) findViewById(R.id.tv_back);

@@ -290,13 +290,11 @@ public class HuxinSdkManager {
     }
 
     public void setUserInfo(UserInfo info) {
-        if (mUserInfo != null && mUserInfo.equals(info)) {
+        if (isLogin() && mUserInfo != null && mUserInfo.equals(info)) {
             return;
         }
 
-        if (isLogin()) {
-            loginOut();
-        }
+        loginOut();
 
         mUserInfo = info;
         mUserInfo.saveJson(mContext);
@@ -329,7 +327,6 @@ public class HuxinSdkManager {
         return mUserInfo.getSex();
     }
 
-
     public String getHeadUrl() {
         return mUserInfo.getAvatar();
     }
@@ -337,7 +334,6 @@ public class HuxinSdkManager {
     public String getUserName() {
         return mUserInfo.getUserName();
     }
-
 
     public String getNickName() {
         return mUserInfo.getNickName();
@@ -383,7 +379,6 @@ public class HuxinSdkManager {
         mUserInfo.setSecret(secret);
     }
 
-
     public String getOrgId() {
         return mUserInfo.getOrgId();
     }
@@ -395,7 +390,6 @@ public class HuxinSdkManager {
     public void setOrgName(String orgName) {
         mUserInfo.setOrgName(orgName);
     }
-
 
     public void loginOut() {
         if (mContext != null && binded == BIND_STATUS.BINDED) {

@@ -412,6 +412,7 @@ public class HuxinService extends Service {
                         if (listener != null) {
                             listener.onReLoginSuccess();
                         }
+                        HuxinSdkManager.instance().setLoginStatusListener(null);
                     } else {
                         //Toast.makeText(mContext, "socket登录失败", Toast.LENGTH_SHORT).show();
                         mClient.setLogin(false);

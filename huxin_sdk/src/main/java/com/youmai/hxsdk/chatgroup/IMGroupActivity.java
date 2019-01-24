@@ -40,11 +40,11 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.alibaba.android.arouter.launcher.ARouter;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.activity.CameraActivity;
+import com.youmai.hxsdk.config.AppConfig;
 import com.youmai.hxsdk.data.VedioSetting;
 import com.youmai.hxsdk.dialog.HxSelectVedioDialog;
 import com.youmai.hxsdk.entity.VideoCall;
@@ -85,7 +85,6 @@ import com.youmai.hxsdk.module.picker.PhotoPreviewActivity;
 import com.youmai.hxsdk.proto.YouMaiBasic;
 import com.youmai.hxsdk.proto.YouMaiGroup;
 import com.youmai.hxsdk.proto.YouMaiVideo;
-import com.youmai.hxsdk.router.APath;
 import com.youmai.hxsdk.service.SendMsgService;
 import com.youmai.hxsdk.service.download.bean.FileQueue;
 import com.youmai.hxsdk.service.sendmsg.SendMsg;
@@ -101,13 +100,13 @@ import com.youmai.hxsdk.utils.StringUtils;
 import com.youmai.hxsdk.utils.ToastUtil;
 import com.youmai.hxsdk.utils.VideoUtils;
 import com.youmai.hxsdk.videocall.RoomActivity;
-import com.youmai.hxsdk.videocall.VideoOperatConstactActivity;
 import com.youmai.hxsdk.view.LinearLayoutManagerWithSmoothScroller;
 import com.youmai.hxsdk.view.chat.InputMessageLay;
 import com.youmai.smallvideorecord.model.OnlyCompressOverBean;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
+import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -883,11 +882,33 @@ public class IMGroupActivity extends SdkBaseActivity implements
         tvError.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ARouter.getInstance().build(APath.RE_LOGIN)
-                        .withFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)  //添加Flag
-                        .withBoolean("login_out", true)
-                        .navigation(mContext);
-                HuxinSdkManager.instance().getStackAct().finishAllActivity();
+                String uuid = HuxinSdkManager.instance().getUuid();
+
+                if (!TextUtils.isEmpty(uuid)) {
+                    final ProgressDialog progressDialog = new ProgressDialog(mContext);
+                    progressDialog.setMessage("正在重新登录，请稍后...");
+                    progressDialog.show();
+
+                    String ip = AppUtils.getStringSharedPreferences(mContext, "IP", AppConfig.getSocketHost());
+                    int port = AppUtils.getIntSharedPreferences(mContext, "PORT", AppConfig.getSocketPort());
+
+                    HuxinSdkManager.instance().close();
+                    InetSocketAddress isa = new InetSocketAddress(ip, port);
+                    HuxinSdkManager.instance().connectTcp(uuid, isa);
+                    HuxinSdkManager.instance().setLoginStatusListener(
+                            new HuxinSdkManager.LoginStatusListener() {
+                                @Override
+                                public void onKickOut() {
+
+                                }
+
+                                @Override
+                                public void onReLoginSuccess() {
+                                    progressDialog.dismiss();
+                                    tvError.setVisibility(View.GONE);
+                                }
+                            });
+                }
             }
         });
 

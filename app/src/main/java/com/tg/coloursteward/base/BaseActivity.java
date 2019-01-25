@@ -27,7 +27,6 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.githang.statusbar.StatusBarCompat;
 import com.tg.coloursteward.LoginActivity;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.application.CityPropertyApplication;
@@ -477,7 +476,6 @@ public abstract class BaseActivity extends AppCompatActivity implements Response
             } else {
                 initAwake();
             }
-
         }
         super.onResume();
         JPushInterface.onResume(this);
@@ -540,7 +538,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Response
                     HxSingleDeviceLogout singleDeviceLogout = GsonUtil.parse(response, HxSingleDeviceLogout.class);
                     String jsonObject = singleDeviceLogout.getContent().getResult();
                     if ("1".equals(jsonObject)) {
-                        Log.d("lizc", "退出设备活跃状态OK");
+                        Log.d("lizc", "退出单设备活跃状态OK");
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

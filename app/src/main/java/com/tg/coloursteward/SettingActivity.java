@@ -1,6 +1,7 @@
 package com.tg.coloursteward;
 
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -8,6 +9,7 @@ import android.os.Bundle;
 import android.os.Message;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.RelativeLayout;
@@ -30,11 +32,15 @@ import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.dialog.DialogFactory;
 import com.tg.coloursteward.view.dialog.ToastFactory;
 import com.youmai.hxsdk.HuxinSdkManager;
+import com.youmai.hxsdk.config.AppConfig;
+import com.youmai.hxsdk.utils.AppUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.net.InetSocketAddress;
 
 import static com.tg.coloursteward.application.CityPropertyApplication.lbsTraceClient;
 
@@ -51,7 +57,9 @@ public class SettingActivity extends BaseActivity implements OnClickListener {
     private RelativeLayout rl_setting_clearinfo;
     private RelativeLayout rl_setting_aboutus;
     private RelativeLayout rl_setting_update;
+    private RelativeLayout rl_setting_imstatus;
     private TextView tv_setting_quit;
+    private TextView tv_setting_imstatus;
     private View tv_setting_point;
     private int apkCode;
     private Boolean isCheck = false;
@@ -68,10 +76,12 @@ public class SettingActivity extends BaseActivity implements OnClickListener {
      * 初始化控件
      */
     private void initView() {
+        tv_setting_imstatus = findViewById(R.id.tv_setting_imstatus);
         rl_setting_changepwd = findViewById(R.id.rl_setting_changepwd);
         rl_setting_clearinfo = findViewById(R.id.rl_setting_clearinfo);
         rl_setting_aboutus = findViewById(R.id.rl_setting_aboutus);
         rl_setting_update = findViewById(R.id.rl_setting_update);
+        rl_setting_imstatus = findViewById(R.id.rl_setting_imstatus);
         tv_setting_quit = findViewById(R.id.tv_setting_quit);
         tv_setting_nowver = findViewById(R.id.tv_setting_nowver);
         tv_setting_newver = findViewById(R.id.tv_setting_newver);
@@ -83,6 +93,45 @@ public class SettingActivity extends BaseActivity implements OnClickListener {
         tv_setting_quit.setOnClickListener(this);
         String versionShort = UpdateManager.getVersionName(SettingActivity.this);
         tv_setting_nowver.setText(versionShort);
+        if (!HuxinSdkManager.instance().isConnect()) {
+            tv_setting_imstatus.setText("IM通信状态：" + "离线,请点击这里重新登录IM");
+        } else {
+            tv_setting_imstatus.setText("IM通信状态：" + "在线");
+        }
+        rl_setting_imstatus.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!HuxinSdkManager.instance().isConnect()) {
+                    String uuid = HuxinSdkManager.instance().getUuid();
+                    if (!TextUtils.isEmpty(uuid)) {
+                        final ProgressDialog progressDialog = new ProgressDialog(SettingActivity.this);
+                        progressDialog.setMessage("正在重新登录，请稍后...");
+                        progressDialog.show();
+                        String ip = AppUtils.getStringSharedPreferences(SettingActivity.this, "IP", AppConfig.getSocketHost());
+                        int port = AppUtils.getIntSharedPreferences(SettingActivity.this, "PORT", AppConfig.getSocketPort());
+                        HuxinSdkManager.instance().close();
+                        InetSocketAddress isa = new InetSocketAddress(ip, port);
+                        HuxinSdkManager.instance().connectTcp(uuid, isa);
+                        HuxinSdkManager.instance().setLoginStatusListener(
+                                new HuxinSdkManager.LoginStatusListener() {
+                                    @Override
+                                    public void onKickOut() {
+
+                                    }
+
+                                    @Override
+                                    public void onReLoginSuccess() {
+                                        progressDialog.dismiss();
+                                        tv_setting_imstatus.setText("IM通信状态：" + "在线");
+                                    }
+                                });
+                    }
+                } else {
+
+                }
+            }
+        });
+
     }
 
     private void StopYingYan() {

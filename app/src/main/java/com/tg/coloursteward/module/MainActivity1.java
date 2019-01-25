@@ -2,6 +2,7 @@ package com.tg.coloursteward.module;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -87,6 +88,7 @@ import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.PopWindowView;
 import com.tg.coloursteward.view.dialog.ToastFactory;
 import com.youmai.hxsdk.HuxinSdkManager;
+import com.youmai.hxsdk.config.AppConfig;
 import com.youmai.hxsdk.config.ColorsConfig;
 import com.youmai.hxsdk.http.IGetListener;
 import com.youmai.hxsdk.http.IPostListener;
@@ -101,6 +103,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
+import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -436,8 +439,40 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
         super.onResume();
         initGetToken();
         refreshUnReadCount();
+        initCheckImStatus();
     }
 
+    private void initCheckImStatus() {
+        if (!HuxinSdkManager.instance().isConnect()) {
+            String uuid = HuxinSdkManager.instance().getUuid();
+            if (!TextUtils.isEmpty(uuid)) {
+                final ProgressDialog progressDialog = new ProgressDialog(this);
+                progressDialog.setMessage("正在重新登录，请稍后...");
+                progressDialog.show();
+
+                String ip = AppUtils.getStringSharedPreferences(this, "IP", AppConfig.getSocketHost());
+                int port = AppUtils.getIntSharedPreferences(this, "PORT", AppConfig.getSocketPort());
+
+                HuxinSdkManager.instance().close();
+                InetSocketAddress isa = new InetSocketAddress(ip, port);
+                HuxinSdkManager.instance().connectTcp(uuid, isa);
+                HuxinSdkManager.instance().setLoginStatusListener(
+                        new HuxinSdkManager.LoginStatusListener() {
+                            @Override
+                            public void onKickOut() {
+
+                            }
+
+                            @Override
+                            public void onReLoginSuccess() {
+                                progressDialog.dismiss();
+                            }
+                        });
+            }
+        } else {
+
+        }
+    }
 
     @Override
     protected void onPause() {

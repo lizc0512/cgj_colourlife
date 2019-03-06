@@ -192,6 +192,7 @@ public class AccountActivity extends BaseActivity implements MyListener {
         RequestParams params = new RequestParams();
         params.put("access_token", accessToken);
         params.put("split_type", "2");
+        params.put("type", "2");
         params.put("split_target", UserInfo.employeeAccount);
         HttpTools.httpGet(Contants.URl.URL_ICETEST, "/split/api/account", config, params);
     }

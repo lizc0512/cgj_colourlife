@@ -126,24 +126,30 @@ public class AccountActivity extends BaseActivity implements MyListener {
             tvRealName.setText(UserInfo.realname);
         }
 //        本地及时分配金额
-        String jsonStr = Tools.getStringValue(AccountActivity.this, Contants.storage.ACCOUNT);
-        if (StringUtils.isNotEmpty(jsonStr)) {
-            JSONObject jsonObject = HttpTools.getContentJSONObject(jsonStr);
-            try {
-                if (jsonObject != null) {
-                    account = jsonObject.getString("total_balance");
-                }
-                if (StringUtils.isNotEmpty(account)) {
-                    tv_balance.setText(NumberUtils.format(Double.parseDouble(account), 2) + "");
-                }
-            } catch (JSONException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
+        String jsfpNum = Tools.getStringValue(AccountActivity.this, Contants.storage.JSFPNUM);
+        if (!TextUtils.isEmpty(jsfpNum)) {
+            tv_balance.setText(NumberUtils.format(Double.parseDouble(jsfpNum), 2) + "");
         } else {
-            account = "0.00";
-            tv_balance.setText(account);
+            tv_balance.setText("0.00");
         }
+//        String jsonStr = Tools.getStringValue(AccountActivity.this, Contants.storage.ACCOUNT);
+//        if (StringUtils.isNotEmpty(jsonStr)) {
+//            JSONObject jsonObject = HttpTools.getContentJSONObject(jsonStr);
+//            try {
+//                if (jsonObject != null) {
+//                    account = jsonObject.getString("total_balance");
+//                }
+//                if (StringUtils.isNotEmpty(account)) {
+//                    tv_balance.setText(NumberUtils.format(Double.parseDouble(account), 2) + "");
+//                }
+//            } catch (JSONException e) {
+//                // TODO Auto-generated catch block
+//                e.printStackTrace();
+//            }
+//        } else {
+//            account = "0.00";
+//            tv_balance.setText(account);
+//        }
 
 //        本地对公账户金额
         String jsonStr1 = Tools.getStringValue(AccountActivity.this, Contants.storage.DGZH_ACCOUNT);
@@ -243,7 +249,7 @@ public class AccountActivity extends BaseActivity implements MyListener {
                 try {
                     account = jsonObject.getString("total_balance");
                     if (StringUtils.isNotEmpty(account)) {
-                        tv_balance.setText(String.valueOf(NumberUtils.format(Double.parseDouble(account), 2)));
+//                        tv_balance.setText(String.valueOf(NumberUtils.format(Double.parseDouble(account), 2)));
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -251,9 +257,9 @@ public class AccountActivity extends BaseActivity implements MyListener {
             } else {
                 ToastFactory.showToast(AccountActivity.this, message);
                 if (StringUtils.isNotEmpty(account)) {
-                    tv_balance.setText(NumberUtils.format(Double.parseDouble(account), 2) + "");
+//                    tv_balance.setText(NumberUtils.format(Double.parseDouble(account), 2) + "");
                 } else {
-                    tv_balance.setText("0.00");
+//                    tv_balance.setText("0.00");
                 }
             }
         } else if (msg.arg1 == HttpTools.GET_DGZH_MONEY) {

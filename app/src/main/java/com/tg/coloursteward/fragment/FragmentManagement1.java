@@ -18,14 +18,11 @@ import com.tg.coloursteward.adapter.TinyServerFragmentTopAdapter;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.entity.TinyFragmentTopEntity;
 import com.tg.coloursteward.entity.TinyServerFragmentEntity;
-import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.inter.TinyFragmentCallBack;
 import com.tg.coloursteward.net.GetTwoRecordListener;
 import com.tg.coloursteward.net.HttpTools;
-import com.tg.coloursteward.net.MD5;
 import com.tg.coloursteward.net.MessageHandler;
 import com.tg.coloursteward.net.RequestConfig;
-import com.tg.coloursteward.net.RequestParams;
 import com.tg.coloursteward.serice.HomeService;
 import com.tg.coloursteward.util.AuthTimeUtils;
 import com.tg.coloursteward.util.GsonUtils;
@@ -44,6 +41,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.tg.coloursteward.constant.Contants.storage.JSFPNUM;
 
 /**
  * 彩管家微服务页面
@@ -68,6 +67,7 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
     private AuthTimeUtils mAuthTimeUtils;
     private List<TinyFragmentTopEntity.ContentBean> list_top = new ArrayList<>();
     private TinyServerFragmentTopAdapter topAdapter;
+    private String jsfpNum;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -115,6 +115,15 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
             TinyFragmentTopEntity entity = GsonUtils.gsonToBean(cache, TinyFragmentTopEntity.class);
             list_top.addAll(entity.getContent());
         } catch (Exception e) {
+        }
+        if (null != list_top && list_top.size() > 0) {
+            for (int i = 0; i < list_top.size(); i++) {
+                if (list_top.get(i).getTitle().contains("即时分配")) {
+                    jsfpNum = list_top.get(i).getQuantity();
+                    Tools.saveStringValue(mActivity, JSFPNUM, jsfpNum);
+                    break;
+                }
+            }
         }
         if (null == topAdapter) {
             topAdapter = new TinyServerFragmentTopAdapter(mActivity, list_top);

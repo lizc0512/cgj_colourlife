@@ -353,7 +353,7 @@ public class HttpTools {
                     return param;
                 } else if (URL_NAME.startsWith(Contants.URl.URL_ICESTAFF)) {
                     return param;
-                } else if(URL_NAME.startsWith(Contants.URl.URL_QRCODE)){
+                } else if (URL_NAME.startsWith(Contants.URl.URL_QRCODE)) {
                     return param;
                 } else {
                     String sign = "";
@@ -380,6 +380,7 @@ public class HttpTools {
                 HashMap<String, String> headers = new HashMap<>();
                 if (URL_NAME.contains(Contants.URl.URL_NEW + "app/home/login/verify")) {
                 } else if (URL_NAME.contains(Contants.URl.URL_CPMOBILE + "/1.0/auth")) {
+                } else if (URL_NAME.contains(Contants.URl.URL_ICETEST + "/newoa/config/skin")) {
                 } else {
                     if (TextUtils.isEmpty(Tools.getAccess_token2(rqtConfig.activity))) {
                         OAuth2ServiceUpdate serviceUpdate = new OAuth2ServiceUpdate(rqtConfig.activity);

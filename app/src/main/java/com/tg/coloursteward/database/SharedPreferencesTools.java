@@ -12,6 +12,8 @@ import com.tg.coloursteward.util.Tools;
 
 import org.json.JSONObject;
 
+import static com.tg.coloursteward.constant.Contants.storage.JSFPNUM;
+
 /**
  * 共享参数工具类
  *
@@ -98,6 +100,13 @@ public class SharedPreferencesTools {
     }
 
     public static void clearCache(Context con) {
+        Tools.savePassWord(con, "");//保存密码
+        Tools.saveStringValue(con, JSFPNUM, "");
+        Tools.saveStringValue(con, Contants.storage.SKINCODE, "");//保存皮肤包
+        Tools.savePassWordMD5(con, "");//保存MD5密码
+        Tools.saveAccess_token2(con, "");
+        Tools.saveRefresh_token2(con, "");
+        Tools.savetokenUserInfo(con, "");
         Tools.saveCurrentTime(con, 0);//获取token值(时间)
         Tools.saveCurrentTime2(con, 0);//获取token值(时间)
         Tools.saveCommonInfo(con, "");//常用应用
@@ -129,7 +138,6 @@ public class SharedPreferencesTools {
         Tools.saveStringValue(con, Contants.storage.DEVICE_TOKEN, "");//我的饭票奖金包缓存
         Tools.saveStringValue(con, Contants.storage.LOGOIN_PHONE, "");//
         Tools.saveStringValue(con, Contants.storage.LOGOIN_PASSWORD, "");//
-        Tools.saveAccess_token2(con,"");
     }
 
     public static ResponseData getUserInfo(Context con) {

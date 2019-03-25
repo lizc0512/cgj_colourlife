@@ -482,7 +482,11 @@ public class EmployeeDataActivity extends BaseActivity implements MyListener {
                 }
                 break;
             case R.id.ll_redpackets:// 转账
-                Cqb_PayUtil.getInstance(EmployeeDataActivity.this).VisitingCardTransfer(getPublicParams(), getEnvironment(), item.getUsername(), "");
+                if (null != item && !TextUtils.isEmpty(item.getUsername())) {
+                    Cqb_PayUtil.getInstance(EmployeeDataActivity.this).VisitingCardTransfer(getPublicParams(),
+                            getEnvironment(), item.getUsername(), "");
+
+                }
                 break;
         }
         return super.handClickEvent(v);

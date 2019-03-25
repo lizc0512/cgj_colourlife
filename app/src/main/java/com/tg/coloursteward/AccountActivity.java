@@ -16,14 +16,17 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.constant.Contants;
+import com.tg.coloursteward.entity.TinyFragmentTopEntity;
 import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.net.GetTwoRecordListener;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.RequestConfig;
 import com.tg.coloursteward.net.RequestParams;
 import com.tg.coloursteward.serice.AuthAppService;
+import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.NumberUtils;
 import com.tg.coloursteward.util.StringUtils;
+import com.tg.coloursteward.util.TokenUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.RoundImageView;
 import com.tg.coloursteward.view.dialog.ToastFactory;
@@ -32,8 +35,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+import static com.tg.coloursteward.constant.Contants.storage.JSFPNUM;
 import static com.tg.coloursteward.module.MainActivity1.getEnvironment;
 import static com.tg.coloursteward.module.MainActivity1.getPublicParams;
 
@@ -55,8 +63,8 @@ public class AccountActivity extends BaseActivity implements MyListener {
     private AuthAppService authAppService;//2.0授权
     private RelativeLayout rlNextBalance;
     private RelativeLayout rlNextdgzh;
-
-    private String mDept;
+    private List<TinyFragmentTopEntity.ContentBean> list_top = new ArrayList<>();
+    private String jsfpNum;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,32 +133,6 @@ public class AccountActivity extends BaseActivity implements MyListener {
         } else {
             tvRealName.setText(UserInfo.realname);
         }
-//        本地及时分配金额
-        String jsfpNum = Tools.getStringValue(AccountActivity.this, Contants.storage.JSFPNUM);
-        if (!TextUtils.isEmpty(jsfpNum)) {
-            tv_balance.setText(NumberUtils.format(Double.parseDouble(jsfpNum), 2) + "");
-        } else {
-            tv_balance.setText("0.00");
-        }
-//        String jsonStr = Tools.getStringValue(AccountActivity.this, Contants.storage.ACCOUNT);
-//        if (StringUtils.isNotEmpty(jsonStr)) {
-//            JSONObject jsonObject = HttpTools.getContentJSONObject(jsonStr);
-//            try {
-//                if (jsonObject != null) {
-//                    account = jsonObject.getString("total_balance");
-//                }
-//                if (StringUtils.isNotEmpty(account)) {
-//                    tv_balance.setText(NumberUtils.format(Double.parseDouble(account), 2) + "");
-//                }
-//            } catch (JSONException e) {
-//                // TODO Auto-generated catch block
-//                e.printStackTrace();
-//            }
-//        } else {
-//            account = "0.00";
-//            tv_balance.setText(account);
-//        }
-
 //        本地对公账户金额
         String jsonStr1 = Tools.getStringValue(AccountActivity.this, Contants.storage.DGZH_ACCOUNT);
         if (StringUtils.isNotEmpty(jsonStr1)) {
@@ -188,6 +170,13 @@ public class AccountActivity extends BaseActivity implements MyListener {
         ImageLoader.getInstance().clearMemoryCache();
         ImageLoader.getInstance().clearDiskCache();
         ImageLoader.getInstance().displayImage(str, rivHead, options);
+
+        String jsfp = Tools.getStringValue(AccountActivity.this, JSFPNUM);
+        if (!TextUtils.isEmpty(jsfp)) {
+            tv_balance.setText(NumberUtils.format(Double.parseDouble(jsfp), 2) + "");
+        } else {
+            tv_balance.setText("0.00");
+        }
     }
 
     /**
@@ -200,7 +189,7 @@ public class AccountActivity extends BaseActivity implements MyListener {
         params.put("split_type", "2");
         params.put("type", "2");
         params.put("split_target", UserInfo.employeeAccount);
-        HttpTools.httpGet(Contants.URl.URL_ICETEST, "/split/api/account", config, params);
+//        HttpTools.httpGet(Contants.URl.URL_ICETEST, "/split/api/account", config, params);
     }
 
     /**
@@ -212,6 +201,18 @@ public class AccountActivity extends BaseActivity implements MyListener {
         params.put("oa", UserInfo.employeeAccount);
         params.put("token", accessToken);
         HttpTools.httpPost(Contants.URl.URL_ICETEST, "/dgzh/statmoney", config, params);
+    }
+
+    private void initDataTop() {
+        RequestConfig config = new RequestConfig(this, HttpTools.GET_MINISERVER_TOP);
+        Map<String, Object> map = new HashMap();
+        String key = Tools.getStringValue(this, Contants.EMPLOYEE_LOGIN.key);
+        String secret = Tools.getStringValue(this, Contants.EMPLOYEE_LOGIN.secret);
+        map.put("access_token", accessToken);
+        map.put("key", key);
+        map.put("secret", secret);
+        Map<String, String> params = TokenUtils.getStringMap(TokenUtils.getNewSaftyMap(this, map));
+        HttpTools.httpGet_Map(Contants.URl.URL_NEW, "app/home/utility/calcData", config, (HashMap) params);
     }
 
     @Override
@@ -229,6 +230,7 @@ public class AccountActivity extends BaseActivity implements MyListener {
             } else {
                 getAccountInfo();
                 getDgzhInfo();
+                initDataTop();
             }
         } else {
             getAuthAppInfo();
@@ -244,23 +246,8 @@ public class AccountActivity extends BaseActivity implements MyListener {
         String message = HttpTools.getMessageString(jsonString);
         if (msg.arg1 == HttpTools.GET_HBUSER_MONEY) {
             if (code == 0) {
-                Tools.saveStringValue(AccountActivity.this, Contants.storage.ACCOUNT, jsonString);
-                JSONObject jsonObject = HttpTools.getContentJSONObject(jsonString);
-                try {
-                    account = jsonObject.getString("total_balance");
-                    if (StringUtils.isNotEmpty(account)) {
-//                        tv_balance.setText(String.valueOf(NumberUtils.format(Double.parseDouble(account), 2)));
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
             } else {
                 ToastFactory.showToast(AccountActivity.this, message);
-                if (StringUtils.isNotEmpty(account)) {
-//                    tv_balance.setText(NumberUtils.format(Double.parseDouble(account), 2) + "");
-                } else {
-//                    tv_balance.setText("0.00");
-                }
             }
         } else if (msg.arg1 == HttpTools.GET_DGZH_MONEY) {
             if (code == 0) {
@@ -288,6 +275,30 @@ public class AccountActivity extends BaseActivity implements MyListener {
                     tv_dgzh.setText("0.00");
                 }
             }
+        } else if (msg.arg1 == HttpTools.GET_MINISERVER_TOP) {
+            if (code == 0) {
+                list_top.clear();
+                try {
+                    TinyFragmentTopEntity entity = GsonUtils.gsonToBean(jsonString, TinyFragmentTopEntity.class);
+                    list_top.addAll(entity.getContent());
+                } catch (Exception e) {
+                }
+                if (null != list_top && list_top.size() > 0) {
+                    for (int i = 0; i < list_top.size(); i++) {
+                        if (list_top.get(i).getTitle().contains("即时分配")) {
+                            jsfpNum = list_top.get(i).getQuantity();
+                            if (!TextUtils.isEmpty(jsfpNum)) {
+                                tv_balance.setText(NumberUtils.format(Double.parseDouble(jsfpNum), 2) + "");
+                            } else {
+                                tv_balance.setText("0.00");
+                            }
+                            break;
+                        }
+                    }
+                }
+            } else {
+                ToastFactory.showToast(AccountActivity.this, message);
+            }
         }
     }
 
@@ -313,6 +324,7 @@ public class AccountActivity extends BaseActivity implements MyListener {
                             Tools.saveStringValue(AccountActivity.this, Contants.storage.APPAUTHTIME, expireTime);
                             getAccountInfo();
                             getDgzhInfo();
+                            initDataTop();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

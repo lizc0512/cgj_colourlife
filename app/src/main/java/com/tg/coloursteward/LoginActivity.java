@@ -70,6 +70,8 @@ import java.util.Map;
 import pl.droidsonroids.gif.GifDrawable;
 import pl.droidsonroids.gif.GifImageView;
 
+import static com.tg.coloursteward.application.CityPropertyApplication.lbsTraceClient;
+
 /**
  * 登录页面
  *
@@ -181,7 +183,14 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
             extras = getintent.getStringExtra(MainActivity.KEY_EXTRAS);
             code = getintent.getStringExtra("czy_code");
             if (loginOut) {
-                SharedPreferencesTools.clearUserId(this);
+                initClear();
+                StopYingYan();
+                singleDevicelogout();
+                SharedPreferencesTools.clearUserId(LoginActivity.this);
+                //清空缓存
+                SharedPreferencesTools.clearCache(LoginActivity.this);
+                SharedPreferencesTools.clearAllData(LoginActivity.this);
+                CityPropertyApplication.gotoLoginActivity(LoginActivity.this);
             }
         }
         if (!TextUtils.isEmpty(code)) {
@@ -197,6 +206,23 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
          * 务必放在onCreate方法里面执行
          */
         gt3GeetestUtils = new GT3GeetestUtilsBind(LoginActivity.this);
+    }
+
+    /**
+     * 单设备退出
+     */
+    private void singleDevicelogout() {
+        RequestConfig config = new RequestConfig(this, HttpTools.POST_LOGOUTDEVICE, null);
+        RequestParams params = new RequestParams();
+        String device_code = Tools.getStringValue(this, Contants.storage.DEVICE_TOKEN);
+        params.put("device_code", device_code);
+        HttpTools.httpPost(Contants.URl.SINGLE_DEVICE, "cgjapp/single/device/logout", config, params);
+    }
+
+    private void StopYingYan() {
+        if (null != lbsTraceClient) {
+            lbsTraceClient.stopGather(null);
+        }
     }
 
     private void showAd() {
@@ -912,6 +938,29 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
             return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    private void initClear() {
+        UserInfo.uid = "";
+        UserInfo.employeeAccount = "";
+        UserInfo.color_token = "";
+        UserInfo.job_uuid = "";
+        UserInfo.sex = "";
+        UserInfo.realname = "";
+        UserInfo.password = "";
+        UserInfo.cashierpassword = "";
+        UserInfo.jobName = "";
+        UserInfo.familyName = "";
+        UserInfo.orgId = "";//组织架构ID
+        UserInfo.infoorgId = "";//组织架构ID
+        UserInfo.userinfoImg = "";//
+        UserInfo.corp_id = "";
+        UserInfo.salary_level = "";
+        UserInfo.is_deleted = 0;
+        UserInfo.special = 0;
+        UserInfo.email = "";
+        UserInfo.mobile = "";
+        UserInfo.czy_id = 0;
     }
 }
 

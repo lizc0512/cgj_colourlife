@@ -879,6 +879,7 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
     public void onAnimationEnd(Animation animation) {
         if (animation == outAnim) {
             startLayout.setVisibility(View.GONE);
+            rl_login_ad.setVisibility(View.GONE);
             contentLayout.setVisibility(View.VISIBLE);
         } else {
 

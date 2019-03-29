@@ -27,6 +27,7 @@ import com.tg.coloursteward.net.RequestConfig;
 import com.tg.coloursteward.net.RequestParams;
 import com.tg.coloursteward.serice.AuthAppService;
 import com.tg.coloursteward.util.StringUtils;
+import com.tg.coloursteward.util.TokenUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.MyViewPager;
 import com.tg.coloursteward.view.dialog.ToastFactory;
@@ -34,10 +35,10 @@ import com.tg.coloursteward.view.dialog.ToastFactory;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 数据看板
@@ -99,7 +100,6 @@ public class DataShowActivity extends BaseActivity implements OnCheckedChangeLis
             }
         });
         tvOrgId = (TextView) findViewById(R.id.tv_orgId);
-        tvOrgId.setText(UserInfo.familyName);
         radioGroup = (RadioGroup) findViewById(R.id.radio_group);
         viewPager = (MyViewPager) findViewById(R.id.viewPager);
         RadioButton btn1 = (RadioButton) findViewById(R.id.rb_noticBtn);
@@ -153,40 +153,37 @@ public class DataShowActivity extends BaseActivity implements OnCheckedChangeLis
     private void getData() {
         //管理类
         RequestConfig config = new RequestConfig(DataShowActivity.this, HttpTools.GET_STATISTICS_INFO);
-        RequestParams params = new RequestParams();
-        params.put("token", accessToken);
-        params.put("corpId", corpUuid);
-        params.put("orgUuid", branch);
-        HttpTools.httpGet(Contants.URl.URL_ICETEST, "/resourcems/community/statistics", config, params);
+        Map<String, Object> params = new HashMap<>();
+        Map<String, String> stringMap = TokenUtils.getStringMap(TokenUtils.getNewSaftyMap(this, params));
+        HttpTools.httpGet_Map(Contants.URl.URL_NEW, "app/home/utility/managerMsg", config, (HashMap) stringMap);
         //经营类
         config = new RequestConfig(DataShowActivity.this, HttpTools.GET_KPI_INFO);
-        params = new RequestParams();
-        params.put("groupUuid", "9959f117-df60-4d1b-a354-776c20ffb8c7");
+        RequestParams requestParams = new RequestParams();
+        requestParams.put("groupUuid", "9959f117-df60-4d1b-a354-776c20ffb8c7");
         String level = "0";
-        params.put("level", level);
+        requestParams.put("level", level);
         if (orgType.equals("彩生活集团")) {
-            params.put("level", 1);
+            requestParams.put("level", 1);
         } else if (orgType.equals("大区")) {
-            params.put("level", 2);
-            params.put("regiongroupUuid", branch);
+            requestParams.put("level", 2);
+            requestParams.put("regiongroupUuid", branch);
         } else if (orgType.equals("事业部")) {
-            params.put("level", 3);
-            params.put("districtUuid", branch);
+            requestParams.put("level", 3);
+            requestParams.put("districtUuid", branch);
         } else if (orgType.equals("小区")) {
-            params.put("level", 4);
-            params.put("regionUuid", branch);
+            requestParams.put("level", 4);
+            requestParams.put("regionUuid", branch);
         }
-        HttpTools.httpGet(Contants.URl.URL_ICETEST, "/xsfxt/report/charge_receipt", config, params);
+        HttpTools.httpGet(Contants.URl.URL_ICETEST, "/xsfxt/report/charge_receipt", config, requestParams);
     }
 
 
     private void getDataMagment2(MapDataResp info) {
 
         DataShowInfo item = new DataShowInfo();
-        item.title = "小区面积（㎡）";
+        item.title = "上线面积（万㎡）";
         item.content = info.floorArea;
         list1.add(item);
-
 
         item = new DataShowInfo();
         item.title = "小区数";
@@ -249,40 +246,13 @@ public class DataShowActivity extends BaseActivity implements OnCheckedChangeLis
                 JSONObject jsonObject = HttpTools.getContentJSONObject(jsonString);
                 if (jsonObject.length() > 0) {
                     MapDataResp info = new MapDataResp();
-                    DecimalFormat df = new DecimalFormat("#,###");
                     try {
-                        info.communityCount = jsonObject.getString("count");
-                        info.appCount = "0";
-                        int upParkingSpace = jsonObject.getInt("upParkingSpace");//地上车位数
-                        int midParkingSpace = jsonObject.getInt("midParkingSpace");//架空车位数
-                        int downParkingSpace = jsonObject.getInt("downParkingSpace");//地下车位数
-                        info.parkingCount = String.valueOf(upParkingSpace + midParkingSpace + downParkingSpace);
-                        info.join_smallarea_num = jsonObject.getString("count");
+                        info.floorArea = jsonObject.getString("area");
+                        info.communityCount = jsonObject.getString("community");
+                        info.parkingCount = jsonObject.getInt("park") + "";
+                        info.appCount = jsonObject.getString("app_num");
+                        info.join_smallarea_num = jsonObject.getString("comunity_online");
 
-                        String coveredArea = jsonObject.getString("coveredArea");//上线面积
-                        double aa = Double.parseDouble(coveredArea);
-                        BigDecimal a = new BigDecimal(aa);//上线面积数值
-                        info.launchArea = df.format(a);
-                        String contractArea = jsonObject.getString("contractArea");//合同面积
-                        double bb = Double.parseDouble(contractArea);
-                        BigDecimal b = new BigDecimal(bb);//合同面积数值
-
-                        String delivered = jsonObject.getString("delivered");//已交付面积
-                        double cc = Double.parseDouble(delivered);
-                        BigDecimal c = new BigDecimal(cc);//已交付面积数值
-
-                        BigDecimal bc = b.subtract(c);
-                        info.to_be_deliveredArea = df.format(bc);//待交付面积
-
-                        JSONObject js = jsonObject.getJSONObject("撤场数据");
-                        String coveredArea1 = js.getString("coveredArea");//下线面积
-                        double dd = Double.parseDouble(coveredArea1);
-                        BigDecimal d = new BigDecimal(dd);//下线面积数值
-                        info.offlineArea = df.format(d);
-
-                        BigDecimal add = a.add(d);
-                        BigDecimal total = add.add(bc);
-                        info.floorArea = df.format(total) + "";//小区面积
                         getDataMagment2(info);
                         mAdapter1.notifyDataSetChanged();
                     } catch (JSONException e) {

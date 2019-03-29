@@ -33,9 +33,10 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="@dimen/margin_5"
                 android:layout_toRightOf="@id/iv_orgId"
-                android:text="加载中..."
+                android:text="彩生活服务集团"
                 android:textColor="@color/text_10"
                 android:textSize="15sp" />
+            <!--android:text="加载中..."-->
         </RelativeLayout>
     </RelativeLayout>
 

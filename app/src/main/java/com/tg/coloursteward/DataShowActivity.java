@@ -86,19 +86,19 @@ public class DataShowActivity extends BaseActivity implements OnCheckedChangeLis
     }
 
     private void initView() {
-        rlOrgId = (RelativeLayout) findViewById(R.id.rl_orgId);
-        rlOrgId.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FamilyInfo info = new FamilyInfo();
-                info.id = "9959f117-df60-4d1b-a354-776c20ffb8c7";
-                info.type = "org";
-                info.name = UserInfo.familyName;
-                intent = new Intent(DataShowActivity.this, BranchActivity.class);
-                intent.putExtra(BranchActivity.FAMILY_INFO, info);
-                startActivityForResult(intent, 1);
-            }
-        });
+        rlOrgId = findViewById(R.id.rl_orgId);
+//        rlOrgId.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                FamilyInfo info = new FamilyInfo();
+//                info.id = "9959f117-df60-4d1b-a354-776c20ffb8c7";
+//                info.type = "org";
+//                info.name = UserInfo.familyName;
+//                intent = new Intent(DataShowActivity.this, BranchActivity.class);
+//                intent.putExtra(BranchActivity.FAMILY_INFO, info);
+//                startActivityForResult(intent, 1);
+//            }
+//        });
         tvOrgId = (TextView) findViewById(R.id.tv_orgId);
         radioGroup = (RadioGroup) findViewById(R.id.radio_group);
         viewPager = (MyViewPager) findViewById(R.id.viewPager);

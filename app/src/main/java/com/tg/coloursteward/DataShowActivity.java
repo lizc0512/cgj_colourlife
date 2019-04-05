@@ -47,7 +47,7 @@ import java.util.Map;
  */
 public class DataShowActivity extends BaseActivity implements OnCheckedChangeListener, OnPageChangeListener {
     private DataShowAdapter mAdapter1;
-    private DataShowAdapter mAdapter2;
+    //    private DataShowAdapter mAdapter2;
     public final static String BRANCH = "branch";
     private String branch;
     private TextView tvOrgId;
@@ -57,12 +57,12 @@ public class DataShowActivity extends BaseActivity implements OnCheckedChangeLis
     private ViewPagerAdapter pagerAdapter;
     private ArrayList<View> pagerList = new ArrayList<View>();
     private ListView mListView1;
-    private ListView mListView2;
-    private RelativeLayout rlOrgId;
+    //    private ListView mListView2;
+//    private RelativeLayout rlOrgId;
     private ArrayList<DataShowInfo> list1 = new ArrayList<DataShowInfo>();//管理类
-    private ArrayList<DataShowInfo> list2 = new ArrayList<DataShowInfo>();//经营类
+    //    private ArrayList<DataShowInfo> list2 = new ArrayList<DataShowInfo>();//经营类
     private String corpUuid;
-    private String orgType;
+    //    private String orgType;
     private AuthAppService authAppService;
     private String accessToken;
 
@@ -78,7 +78,7 @@ public class DataShowActivity extends BaseActivity implements OnCheckedChangeLis
             finish();
             return;
         }
-        orgType = Tools.getStringValue(this, Contants.storage.ORGTYPE);
+//        orgType = Tools.getStringValue(this, Contants.storage.ORGTYPE);
         getToken();
         initView();
         radioGroup.setOnCheckedChangeListener(this);
@@ -86,7 +86,7 @@ public class DataShowActivity extends BaseActivity implements OnCheckedChangeLis
     }
 
     private void initView() {
-        rlOrgId = findViewById(R.id.rl_orgId);
+//        rlOrgId = findViewById(R.id.rl_orgId);
 //        rlOrgId.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
@@ -103,26 +103,26 @@ public class DataShowActivity extends BaseActivity implements OnCheckedChangeLis
         radioGroup = (RadioGroup) findViewById(R.id.radio_group);
         viewPager = (MyViewPager) findViewById(R.id.viewPager);
         RadioButton btn1 = (RadioButton) findViewById(R.id.rb_noticBtn);
-        RadioButton btn2 = (RadioButton) findViewById(R.id.rb_notifiicationBtn);
+//        RadioButton btn2 = (RadioButton) findViewById(R.id.rb_notifiicationBtn);
         btn1.setText("管理类");
-        btn2.setText("经营类");
+//        btn2.setText("经营类");
         mListView1 = new ListView(this);
         mAdapter1 = new DataShowAdapter(this, list1);
         mListView1.setAdapter(mAdapter1);
         pagerList.add(mListView1);
 
-        mListView1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (position == 0) {
-                    DataShowInfo item = new DataShowInfo();
-                }
-            }
-        });
-        mListView2 = new ListView(this);
-        mAdapter2 = new DataShowAdapter(this, list2);
-        mListView2.setAdapter(mAdapter2);
-        pagerList.add(mListView2);
+//        mListView1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                if (position == 0) {
+//                    DataShowInfo item = new DataShowInfo();
+//                }
+//            }
+//        });
+//        mListView2 = new ListView(this);
+//        mAdapter2 = new DataShowAdapter(this, list2);
+//        mListView2.setAdapter(mAdapter2);
+//        pagerList.add(mListView2);
         pagerAdapter = new ViewPagerAdapter(pagerList, this);
         viewPager.setAdapter(pagerAdapter);
     }
@@ -157,24 +157,24 @@ public class DataShowActivity extends BaseActivity implements OnCheckedChangeLis
         Map<String, String> stringMap = TokenUtils.getStringMap(TokenUtils.getNewSaftyMap(this, params));
         HttpTools.httpGet_Map(Contants.URl.URL_NEW, "app/home/utility/managerMsg", config, (HashMap) stringMap);
         //经营类
-        config = new RequestConfig(DataShowActivity.this, HttpTools.GET_KPI_INFO);
-        RequestParams requestParams = new RequestParams();
-        requestParams.put("groupUuid", "9959f117-df60-4d1b-a354-776c20ffb8c7");
-        String level = "0";
-        requestParams.put("level", level);
-        if (orgType.equals("彩生活集团")) {
-            requestParams.put("level", 1);
-        } else if (orgType.equals("大区")) {
-            requestParams.put("level", 2);
-            requestParams.put("regiongroupUuid", branch);
-        } else if (orgType.equals("事业部")) {
-            requestParams.put("level", 3);
-            requestParams.put("districtUuid", branch);
-        } else if (orgType.equals("小区")) {
-            requestParams.put("level", 4);
-            requestParams.put("regionUuid", branch);
-        }
-        HttpTools.httpGet(Contants.URl.URL_ICETEST, "/xsfxt/report/charge_receipt", config, requestParams);
+//        config = new RequestConfig(DataShowActivity.this, HttpTools.GET_KPI_INFO);
+//        RequestParams requestParams = new RequestParams();
+//        requestParams.put("groupUuid", "9959f117-df60-4d1b-a354-776c20ffb8c7");
+//        String level = "0";
+//        requestParams.put("level", level);
+//        if (orgType.equals("彩生活集团")) {
+//            requestParams.put("level", 1);
+//        } else if (orgType.equals("大区")) {
+//            requestParams.put("level", 2);
+//            requestParams.put("regiongroupUuid", branch);
+//        } else if (orgType.equals("事业部")) {
+//            requestParams.put("level", 3);
+//            requestParams.put("districtUuid", branch);
+//        } else if (orgType.equals("小区")) {
+//            requestParams.put("level", 4);
+//            requestParams.put("regionUuid", branch);
+//        }
+//        HttpTools.httpGet(Contants.URl.URL_ICETEST, "/xsfxt/report/charge_receipt", config, requestParams);
     }
 
 
@@ -190,52 +190,51 @@ public class DataShowActivity extends BaseActivity implements OnCheckedChangeLis
         item.content = info.communityCount;
         list1.add(item);
 
-        item = new DataShowInfo();
-        item.title = "车位数量";
-        item.content = info.parkingCount;
-        list1.add(item);
-
-        item = new DataShowInfo();
-        item.title = "APP安装数量";
-        item.content = info.appCount;
-        list1.add(item);
-
-        item = new DataShowInfo();
-        item.title = "上线小区";
-        item.content = info.join_smallarea_num;
-        list1.add(item);
+//        item = new DataShowInfo();
+//        item.title = "车位数量";
+//        item.content = info.parkingCount;
+//        list1.add(item);
+//
+//        item = new DataShowInfo();
+//        item.title = "APP安装数量";
+//        item.content = info.appCount;
+//        list1.add(item);
+//
+//        item = new DataShowInfo();
+//        item.title = "上线小区";
+//        item.content = info.join_smallarea_num;
+//        list1.add(item);
     }
 
     /**
      * 经营类添加数据
      */
-    private void getDataBusiness(MapDataResp info) {
-        DataShowInfo item = new DataShowInfo();
-        item.title = "当前查询费用日期";
-        item.content = info.dateTime;
-        list2.add(item);
-
-        item = new DataShowInfo();
-        item.title = "应收";
-        item.content = info.normalFee;
-        list2.add(item);
-
-        item = new DataShowInfo();
-        item.title = "实收";
-        item.content = info.receivedFee;
-        list2.add(item);
-
-        item = new DataShowInfo();
-        item.title = "收费率";
-        item.content = info.feeRate;
-        list2.add(item);
-
-        item = new DataShowInfo();
-        item.title = "业主投诉数";
-        item.content = info.complainCount;
-        list2.add(item);
-    }
-
+//    private void getDataBusiness(MapDataResp info) {
+//        DataShowInfo item = new DataShowInfo();
+//        item.title = "当前查询费用日期";
+//        item.content = info.dateTime;
+//        list2.add(item);
+//
+//        item = new DataShowInfo();
+//        item.title = "应收";
+//        item.content = info.normalFee;
+//        list2.add(item);
+//
+//        item = new DataShowInfo();
+//        item.title = "实收";
+//        item.content = info.receivedFee;
+//        list2.add(item);
+//
+//        item = new DataShowInfo();
+//        item.title = "收费率";
+//        item.content = info.feeRate;
+//        list2.add(item);
+//
+//        item = new DataShowInfo();
+//        item.title = "业主投诉数";
+//        item.content = info.complainCount;
+//        list2.add(item);
+//    }
     @Override
     public void onSuccess(Message msg, String jsonString, String hintString) {
         super.onSuccess(msg, jsonString, hintString);
@@ -249,9 +248,9 @@ public class DataShowActivity extends BaseActivity implements OnCheckedChangeLis
                     try {
                         info.floorArea = jsonObject.getString("area");
                         info.communityCount = jsonObject.getString("community");
-                        info.parkingCount = jsonObject.getInt("park") + "";
-                        info.appCount = jsonObject.getString("app_num");
-                        info.join_smallarea_num = jsonObject.getString("comunity_online");
+//                        info.parkingCount = jsonObject.getInt("park") + "";
+//                        info.appCount = jsonObject.getString("app_num");
+//                        info.join_smallarea_num = jsonObject.getString("comunity_online");
 
                         getDataMagment2(info);
                         mAdapter1.notifyDataSetChanged();
@@ -273,7 +272,7 @@ public class DataShowActivity extends BaseActivity implements OnCheckedChangeLis
                 mAdapter1.notifyDataSetChanged();
                 ToastFactory.showToast(DataShowActivity.this, message);
             }
-        } else if (msg.arg1 == HttpTools.GET_KPI_INFO) {//经营类
+        } /*else if (msg.arg1 == HttpTools.GET_KPI_INFO) {//经营类
             if (code == 0) {
                 JSONObject jsonObject = HttpTools.getContentJSONObject(jsonString);
                 if (jsonObject.length() > 0) {
@@ -301,7 +300,7 @@ public class DataShowActivity extends BaseActivity implements OnCheckedChangeLis
                 mAdapter2.notifyDataSetChanged();
                 ToastFactory.showToast(DataShowActivity.this, message);
             }
-        }
+        }*/
     }
 
     @Override
@@ -310,19 +309,19 @@ public class DataShowActivity extends BaseActivity implements OnCheckedChangeLis
         ToastFactory.showToast(DataShowActivity.this, hintString);
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            list1.clear();
-            list2.clear();
-            branch = data.getStringExtra("id");
-            orgType = data.getStringExtra("orgType");
-            String name = data.getStringExtra("name");
-            tvOrgId.setText(name);//分支的名字
-            getToken();
-        }
-    }
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if (resultCode == RESULT_OK) {
+//            list1.clear();
+//            list2.clear();
+//            branch = data.getStringExtra("id");
+//            orgType = data.getStringExtra("orgType");
+//            String name = data.getStringExtra("name");
+//            tvOrgId.setText(name);//分支的名字
+//            getToken();
+//        }
+//    }
 
     @Override
     public void onPageScrollStateChanged(int arg0) {
@@ -338,9 +337,9 @@ public class DataShowActivity extends BaseActivity implements OnCheckedChangeLis
     public void onPageSelected(int position) {
         if (position == 0) {
             radioGroup.check(R.id.rb_noticBtn);
-        } else {
+        }/* else {
             radioGroup.check(R.id.rb_notifiicationBtn);
-        }
+        }*/
     }
 
     @Override

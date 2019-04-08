@@ -105,6 +105,7 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
     private int duration;
     private String urlAd;
     private String auth_type;
+    private String passwordMD5;
 
     @Override
     public View getContentView() {
@@ -271,11 +272,6 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
                     }
                 }
                 initTimeCount(duration);
-//                long showtime = System.currentTimeMillis() / 1000;
-//                Tools.saveStringValue(LoginActivity.this, Contants.storage.SaveTime, String.valueOf(showtime));
-//                if (DateUtils.isToday(showtime)) {
-//                    Tools.setBooleanValue(LoginActivity.this, Contants.storage.ISSHOWAD, true);
-//                }
                 rl_login_ad.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -703,20 +699,16 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
      */
     public void login(String username, String pwd, String pwdMD5) {
         Tools.hideKeyboard(editUser);
-        String passwordMD5 = "";
+        passwordMD5 = "";
         if (!TextUtils.isEmpty(pwd)) {
-            Tools.savePassWord(getApplicationContext(), pwd);//保存密码
             try {
                 passwordMD5 = MD5.getMd5Value(pwd).toLowerCase();
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            Tools.savePassWordMD5(getApplicationContext(), passwordMD5);//保存密码(MD5加密后)
         } else {
             passwordMD5 = pwdMD5;
-            Tools.savePassWordMD5(getApplicationContext(), pwdMD5);//保存密码(MD5加密后)
         }
-        UserInfo.employeeAccount = username;
         getKeyAndSecret();
         if (null == auth2ServiceUpdate) {
             auth2ServiceUpdate = new OAuth2ServiceUpdate(LoginActivity.this);
@@ -745,6 +737,9 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
                         int code = HttpTools.getCode(jsonString);
                         String message = HttpTools.getMessageString(jsonString);
                         if (code == 0) {
+                            UserInfo.employeeAccount = newPhone;
+                            Tools.savePassWord(LoginActivity.this, password);//保存密码
+                            Tools.savePassWordMD5(LoginActivity.this, passwordMD5);//保存密码(MD5加密后)
                             String response = HttpTools.getContentString(jsonString);
                             ResponseData data = HttpTools.getResponseContentObject(response);
                             int status = data.getInt("status");

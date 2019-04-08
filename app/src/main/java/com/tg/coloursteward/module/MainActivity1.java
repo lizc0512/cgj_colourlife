@@ -980,8 +980,8 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
                                 singleDevicelogout();
                                 SharedPreferencesTools.clearUserId(MainActivity1.this);
                                 //清空缓存
-                                SharedPreferencesTools.clearCache(MainActivity1.this);
                                 SharedPreferencesTools.clearAllData(MainActivity1.this);
+                                SharedPreferencesTools.clearCache(MainActivity1.this);
                                 CityPropertyApplication.gotoLoginActivity(MainActivity1.this);
                                 HuxinSdkManager.instance().loginOut();
                             }

@@ -908,57 +908,6 @@ public class HttpTools {
         get(url, Method.GET, rqtConfig);
     }
 
-    public static String okhttpGet(final String URL, String apiName, RequestParams params) {
-        String url = null;
-        HashMap<String, Object> paramsStr = null;
-        if (params == null) {
-            paramsStr = null;
-        } else {
-            paramsStr = params.toHashMap();
-        }
-        try {
-            if (URL.startsWith(Contants.URl.URL_CPMOBILE)) {
-                url = URL + getCombileUrl(apiName, paramsStr);
-            } else {
-                url = URL + GetUrl(URL, apiName, paramsStr);
-            }
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        return url;
-    }
-
-    /**
-     * get请求(ts)
-     *
-     * @param URL
-     * @param apiName
-     * @param rqtConfig
-     * @param params
-     */
-    public static void httpGetTS(final String URL, String apiName, final RequestConfig rqtConfig, RequestParams params) {
-        String url = null;
-        HashMap<String, Object> paramsStr = null;
-        if (params == null) {
-            paramsStr = null;
-        } else {
-            paramsStr = params.toHashMap();
-        }
-        try {
-            if (URL.startsWith(Contants.URl.URL_CPMOBILE)) {
-                url = URL + getCombileUrl(apiName, paramsStr);
-            } else {
-                url = URL + GetUrl(URL, apiName, paramsStr);
-            }
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            return;
-        }
-        get(url, Method.GET, rqtConfig);
-    }
-
     /**
      * Delete请求
      *

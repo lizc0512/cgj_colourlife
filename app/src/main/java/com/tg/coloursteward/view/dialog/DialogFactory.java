@@ -225,58 +225,6 @@ public class DialogFactory implements ResultCallBack{
 		dialog.show();
 		
 	}
-	public void  homeShowDialog(Activity activity, final OnClickListener okL,String content,String ok, String cancel) {
-		this.okListener = okL;
-		if(dialog == null || dialogActivity != activity){
-			dialogActivity = activity;
-			DisplayMetrics metrics = Tools.getDisplayMetrics(activity);
-			dialog = new AlertDialog.Builder(activity).create();
-			dialog.setCancelable(false);
-			Window window = dialog.getWindow();
-			dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-			dialog.show();
-			LinearLayout layout = (LinearLayout) LayoutInflater.from(activity)
-					.inflate(R.layout.home_dialog_layout, null);
-			tvContent = (TextView) layout.findViewById(R.id.dialog_msg);
-			btnOk = (Button) layout.findViewById(R.id.btn_ok);
-			btnCancel = (Button) layout.findViewById(R.id.btn_cancel);
-			btnOk.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					if(okListener != null){
-						okListener.onClick(v);
-					}
-					dialog.dismiss();
-				}
-			});
-			btnCancel.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					// TODO Auto-generated method stub
-					if(cancelListener != null){
-						cancelListener.onClick(v);
-					}
-					dialog.dismiss();
-				}
-			});
-			window.setContentView(layout);
-			WindowManager.LayoutParams p = window.getAttributes();
-			p.width = ((int) (metrics.widthPixels - 80 * metrics.density));
-			//p.height = (int) (120 * metrics.density);
-			window.setAttributes(p);
-		}
-		tvContent.setText(content);
-		if(ok == null){
-			ok = "确定";
-		}
-		if(cancel == null){
-			cancel = "取消";
-		}
-		btnOk.setText(ok);
-		btnCancel.setText(cancel);
-		dialog.show();
-
-	}
 	public void hideLoadialogDialog(){
 		if(LoaddialogActivity == null || LoaddialogActivity.isFinishing()){
 			return;
@@ -396,62 +344,6 @@ public class DialogFactory implements ResultCallBack{
 		}
 	}
 	
-	public void showPhotoSelector(BaseActivity activity, CameraView cv,
-			String cropPath, int position,int groupPosition,int childPosition){
-		this.cropPath = cropPath;
-		this.groupPosition = groupPosition;
-		this.childPosition = childPosition;
-		this.position = position;
-		cameraView = cv;
-		if (cv != null) {
-			groupPosition = cv.getGroupPosition();
-			childPosition = cv.getChildPosition();
-			position = cv.getPosition();
-			groupPosition = cv.getGroupPosition();
-		}
-		if (photoDialog == null || photoDialogActivity != activity) {
-			photoDialogActivity = activity;
-			photoDialogActivity.setResultCallBack(this);
-			photoDialog = new AlertDialog.Builder(photoDialogActivity).create();
-			photoDialog.show();
-			View v = LayoutInflater.from(photoDialogActivity).inflate(
-					R.layout.set_photo_dialog_layout, null);
-			v.findViewById(R.id.take_photo).setOnClickListener(
-					new OnClickListener() {
-						@Override
-						public void onClick(View v) {
-							// TODO Auto-generated method stub
-							getImageFromCamera();
-							photoDialog.dismiss();
-						}
-					});
-			v.findViewById(R.id.choose_photo).setOnClickListener(
-					new OnClickListener() {
-						@Override
-						public void onClick(View v) {
-							// TODO Auto-generated method stub
-							getImageFromAlbum();
-							photoDialog.dismiss();
-						}
-					});
-			v.findViewById(R.id.cancel).setOnClickListener(
-					new OnClickListener() {
-						@Override
-						public void onClick(View v) {
-							// TODO Auto-generated method stub
-							photoDialog.dismiss();
-						}
-					});
-			Window window = photoDialog.getWindow();
-			WindowManager.LayoutParams p = window.getAttributes();
-			DisplayMetrics metrics = Tools.getDisplayMetrics(activity);
-			p.width = metrics.widthPixels;
-			p.gravity = Gravity.BOTTOM;
-			window.setAttributes(p);
-			window.setContentView(v);
-		}
-		photoDialog.show();
-	}
 
 	@Override
 	public void onResult(int requestCode, int resultCode, Intent data) {

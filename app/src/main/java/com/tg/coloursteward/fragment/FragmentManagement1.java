@@ -124,22 +124,22 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
                     break;
                 }
             }
-        }
-        if (null == topAdapter) {
-            topAdapter = new TinyServerFragmentTopAdapter(mActivity, list_top);
-            rv_fragment_tinyserver_top.setAdapter(topAdapter);
-        } else {
-            topAdapter.setData(list_top);
-        }
-        topAdapter.setCallBack(new TinyFragmentCallBack() {
-            @Override
-            public void onclick(int position, String url, int auth_type) {
-                if (null == mAuthTimeUtils) {
-                    mAuthTimeUtils = new AuthTimeUtils();
-                }
-                mAuthTimeUtils.IsAuthTime(mActivity, url, "", String.valueOf(auth_type), "", "");
+            if (null == topAdapter) {
+                topAdapter = new TinyServerFragmentTopAdapter(mActivity, list_top);
+                rv_fragment_tinyserver_top.setAdapter(topAdapter);
+            } else {
+                topAdapter.setData(list_top);
             }
-        });
+            topAdapter.setCallBack(new TinyFragmentCallBack() {
+                @Override
+                public void onclick(int position, String url, int auth_type) {
+                    if (null == mAuthTimeUtils) {
+                        mAuthTimeUtils = new AuthTimeUtils();
+                    }
+                    mAuthTimeUtils.IsAuthTime(mActivity, url, "", String.valueOf(auth_type), "", "");
+                }
+            });
+        }
         rl_tinyfragment_tips.setVisibility(View.VISIBLE);
     }
 
@@ -178,24 +178,24 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
                 } else {
                     fragmentAdapter.setData(list_item);
                 }
+                fragmentAdapter.setCallBack(new TinyFragmentCallBack() {
+                    @Override
+                    public void onclick(int position, String url, int auth_type) {
+                        if (null == mAuthTimeUtils) {
+                            mAuthTimeUtils = new AuthTimeUtils();
+                        }
+                        String skin_code = Tools.getStringValue(mActivity, Contants.storage.SKINCODE);
+                        mAuthTimeUtils = new AuthTimeUtils();
+                        if (skin_code.equals("102")) {//中住
+                            mAuthTimeUtils.IsAuthTime(mActivity, url, "", "0", "", "");
+                        } else {
+                            mAuthTimeUtils.IsAuthTime(mActivity, url, "", String.valueOf(auth_type), "", "");
+                        }
+                    }
+                });
             } catch (Exception e) {
             }
         }
-        fragmentAdapter.setCallBack(new TinyFragmentCallBack() {
-            @Override
-            public void onclick(int position, String url, int auth_type) {
-                if (null == mAuthTimeUtils) {
-                    mAuthTimeUtils = new AuthTimeUtils();
-                }
-                String skin_code = Tools.getStringValue(mActivity, Contants.storage.SKINCODE);
-                mAuthTimeUtils = new AuthTimeUtils();
-                if (skin_code.equals("102")) {//中住
-                    mAuthTimeUtils.IsAuthTime(mActivity, url, "", "0", "", "");
-                } else {
-                    mAuthTimeUtils.IsAuthTime(mActivity, url, "", String.valueOf(auth_type), "", "");
-                }
-            }
-        });
     }
 
     /**

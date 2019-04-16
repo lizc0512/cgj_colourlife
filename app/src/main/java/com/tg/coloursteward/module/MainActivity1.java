@@ -986,7 +986,7 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
                                 HuxinSdkManager.instance().loginOut();
                             }
                         } else {
-                            ToastFactory.showToast(MainActivity1.this, message);
+//                            ToastFactory.showToast(MainActivity1.this, message); //偶现会弹出Unauth错误信息
                         }
                     } catch (Exception e) {
                     }

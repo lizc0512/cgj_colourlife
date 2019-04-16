@@ -34,6 +34,7 @@ import com.github.chrisbanes.photoview.PhotoView;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.adapter.PagerIndicatorAdapter;
+import com.youmai.hxsdk.chatgroup.PictureList;
 import com.youmai.hxsdk.config.AppConfig;
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
 import com.youmai.hxsdk.dialog.HxMediaStoreDialog;
@@ -91,7 +92,8 @@ public class PictureIndicatorActivity extends SdkBaseActivity {
         mPosition = getIntent().getIntExtra("index", 0);
 
         //final List<String> list = Arrays.asList(array);
-        beanList = getIntent().getParcelableArrayListExtra("beanList");
+        //beanList = getIntent().getParcelableArrayListExtra("beanList");
+        beanList = PictureList.getInstance().getImageList();
 
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewPager);
         iv_save = (ImageView) findViewById(R.id.iv_save);
@@ -272,6 +274,7 @@ public class PictureIndicatorActivity extends SdkBaseActivity {
     public void onDestroy() {
         super.onDestroy();
         HuxinSdkManager.instance().getStackAct().finishActivity(this);
+        PictureList.getInstance().clearImageList();
     }
 
     public String insertImage(ContentResolver cr,

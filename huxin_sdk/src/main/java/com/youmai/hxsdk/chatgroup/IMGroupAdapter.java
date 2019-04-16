@@ -458,9 +458,12 @@ public class IMGroupAdapter extends RecyclerView.Adapter {
                     }
                 }
                 int index = beanList.indexOf(cacheMsgBean);
+
+                PictureList.getInstance().clearImageList();
+                PictureList.getInstance().setImageList(beanList);
                 Intent intent = new Intent(mAct, PictureIndicatorActivity.class);
                 intent.putExtra("index", index);
-                intent.putParcelableArrayListExtra("beanList", beanList);
+                //intent.putParcelableArrayListExtra("beanList", beanList);
                 mAct.startActivity(intent);
             }
         });

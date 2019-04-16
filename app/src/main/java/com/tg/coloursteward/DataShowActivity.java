@@ -27,6 +27,7 @@ import com.tg.coloursteward.net.RequestConfig;
 import com.tg.coloursteward.net.RequestParams;
 import com.tg.coloursteward.serice.AuthAppService;
 import com.tg.coloursteward.util.StringUtils;
+import com.tg.coloursteward.util.TokenUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.MyViewPager;
 import com.tg.coloursteward.view.dialog.ToastFactory;
@@ -34,10 +35,10 @@ import com.tg.coloursteward.view.dialog.ToastFactory;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 数据看板
@@ -46,7 +47,7 @@ import java.util.Date;
  */
 public class DataShowActivity extends BaseActivity implements OnCheckedChangeListener, OnPageChangeListener {
     private DataShowAdapter mAdapter1;
-    private DataShowAdapter mAdapter2;
+    //    private DataShowAdapter mAdapter2;
     public final static String BRANCH = "branch";
     private String branch;
     private TextView tvOrgId;
@@ -56,12 +57,12 @@ public class DataShowActivity extends BaseActivity implements OnCheckedChangeLis
     private ViewPagerAdapter pagerAdapter;
     private ArrayList<View> pagerList = new ArrayList<View>();
     private ListView mListView1;
-    private ListView mListView2;
-    private RelativeLayout rlOrgId;
+    //    private ListView mListView2;
+//    private RelativeLayout rlOrgId;
     private ArrayList<DataShowInfo> list1 = new ArrayList<DataShowInfo>();//管理类
-    private ArrayList<DataShowInfo> list2 = new ArrayList<DataShowInfo>();//经营类
+    //    private ArrayList<DataShowInfo> list2 = new ArrayList<DataShowInfo>();//经营类
     private String corpUuid;
-    private String orgType;
+    //    private String orgType;
     private AuthAppService authAppService;
     private String accessToken;
 
@@ -77,7 +78,7 @@ public class DataShowActivity extends BaseActivity implements OnCheckedChangeLis
             finish();
             return;
         }
-        orgType = Tools.getStringValue(this, Contants.storage.ORGTYPE);
+//        orgType = Tools.getStringValue(this, Contants.storage.ORGTYPE);
         getToken();
         initView();
         radioGroup.setOnCheckedChangeListener(this);
@@ -85,44 +86,43 @@ public class DataShowActivity extends BaseActivity implements OnCheckedChangeLis
     }
 
     private void initView() {
-        rlOrgId = (RelativeLayout) findViewById(R.id.rl_orgId);
-        rlOrgId.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FamilyInfo info = new FamilyInfo();
-                info.id = "9959f117-df60-4d1b-a354-776c20ffb8c7";
-                info.type = "org";
-                info.name = UserInfo.familyName;
-                intent = new Intent(DataShowActivity.this, BranchActivity.class);
-                intent.putExtra(BranchActivity.FAMILY_INFO, info);
-                startActivityForResult(intent, 1);
-            }
-        });
+//        rlOrgId = findViewById(R.id.rl_orgId);
+//        rlOrgId.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                FamilyInfo info = new FamilyInfo();
+//                info.id = "9959f117-df60-4d1b-a354-776c20ffb8c7";
+//                info.type = "org";
+//                info.name = UserInfo.familyName;
+//                intent = new Intent(DataShowActivity.this, BranchActivity.class);
+//                intent.putExtra(BranchActivity.FAMILY_INFO, info);
+//                startActivityForResult(intent, 1);
+//            }
+//        });
         tvOrgId = (TextView) findViewById(R.id.tv_orgId);
-        tvOrgId.setText(UserInfo.familyName);
         radioGroup = (RadioGroup) findViewById(R.id.radio_group);
         viewPager = (MyViewPager) findViewById(R.id.viewPager);
         RadioButton btn1 = (RadioButton) findViewById(R.id.rb_noticBtn);
-        RadioButton btn2 = (RadioButton) findViewById(R.id.rb_notifiicationBtn);
+//        RadioButton btn2 = (RadioButton) findViewById(R.id.rb_notifiicationBtn);
         btn1.setText("管理类");
-        btn2.setText("经营类");
+//        btn2.setText("经营类");
         mListView1 = new ListView(this);
         mAdapter1 = new DataShowAdapter(this, list1);
         mListView1.setAdapter(mAdapter1);
         pagerList.add(mListView1);
 
-        mListView1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (position == 0) {
-                    DataShowInfo item = new DataShowInfo();
-                }
-            }
-        });
-        mListView2 = new ListView(this);
-        mAdapter2 = new DataShowAdapter(this, list2);
-        mListView2.setAdapter(mAdapter2);
-        pagerList.add(mListView2);
+//        mListView1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                if (position == 0) {
+//                    DataShowInfo item = new DataShowInfo();
+//                }
+//            }
+//        });
+//        mListView2 = new ListView(this);
+//        mAdapter2 = new DataShowAdapter(this, list2);
+//        mListView2.setAdapter(mAdapter2);
+//        pagerList.add(mListView2);
         pagerAdapter = new ViewPagerAdapter(pagerList, this);
         viewPager.setAdapter(pagerAdapter);
     }
@@ -153,92 +153,88 @@ public class DataShowActivity extends BaseActivity implements OnCheckedChangeLis
     private void getData() {
         //管理类
         RequestConfig config = new RequestConfig(DataShowActivity.this, HttpTools.GET_STATISTICS_INFO);
-        RequestParams params = new RequestParams();
-        params.put("token", accessToken);
-        params.put("corpId", corpUuid);
-        params.put("orgUuid", branch);
-        HttpTools.httpGet(Contants.URl.URL_ICETEST, "/resourcems/community/statistics", config, params);
+        Map<String, Object> params = new HashMap<>();
+        Map<String, String> stringMap = TokenUtils.getStringMap(TokenUtils.getNewSaftyMap(this, params));
+        HttpTools.httpGet_Map(Contants.URl.URL_NEW, "app/home/utility/managerMsg", config, (HashMap) stringMap);
         //经营类
-        config = new RequestConfig(DataShowActivity.this, HttpTools.GET_KPI_INFO);
-        params = new RequestParams();
-        params.put("groupUuid", "9959f117-df60-4d1b-a354-776c20ffb8c7");
-        String level = "0";
-        params.put("level", level);
-        if (orgType.equals("彩生活集团")) {
-            params.put("level", 1);
-        } else if (orgType.equals("大区")) {
-            params.put("level", 2);
-            params.put("regiongroupUuid", branch);
-        } else if (orgType.equals("事业部")) {
-            params.put("level", 3);
-            params.put("districtUuid", branch);
-        } else if (orgType.equals("小区")) {
-            params.put("level", 4);
-            params.put("regionUuid", branch);
-        }
-        HttpTools.httpGet(Contants.URl.URL_ICETEST, "/xsfxt/report/charge_receipt", config, params);
+//        config = new RequestConfig(DataShowActivity.this, HttpTools.GET_KPI_INFO);
+//        RequestParams requestParams = new RequestParams();
+//        requestParams.put("groupUuid", "9959f117-df60-4d1b-a354-776c20ffb8c7");
+//        String level = "0";
+//        requestParams.put("level", level);
+//        if (orgType.equals("彩生活集团")) {
+//            requestParams.put("level", 1);
+//        } else if (orgType.equals("大区")) {
+//            requestParams.put("level", 2);
+//            requestParams.put("regiongroupUuid", branch);
+//        } else if (orgType.equals("事业部")) {
+//            requestParams.put("level", 3);
+//            requestParams.put("districtUuid", branch);
+//        } else if (orgType.equals("小区")) {
+//            requestParams.put("level", 4);
+//            requestParams.put("regionUuid", branch);
+//        }
+//        HttpTools.httpGet(Contants.URl.URL_ICETEST, "/xsfxt/report/charge_receipt", config, requestParams);
     }
 
 
     private void getDataMagment2(MapDataResp info) {
 
         DataShowInfo item = new DataShowInfo();
-        item.title = "小区面积（㎡）";
+        item.title = "上线面积（万㎡）";
         item.content = info.floorArea;
         list1.add(item);
-
 
         item = new DataShowInfo();
         item.title = "小区数";
         item.content = info.communityCount;
         list1.add(item);
 
-        item = new DataShowInfo();
-        item.title = "车位数量";
-        item.content = info.parkingCount;
-        list1.add(item);
-
-        item = new DataShowInfo();
-        item.title = "APP安装数量";
-        item.content = info.appCount;
-        list1.add(item);
-
-        item = new DataShowInfo();
-        item.title = "上线小区";
-        item.content = info.join_smallarea_num;
-        list1.add(item);
+//        item = new DataShowInfo();
+//        item.title = "车位数量";
+//        item.content = info.parkingCount;
+//        list1.add(item);
+//
+//        item = new DataShowInfo();
+//        item.title = "APP安装数量";
+//        item.content = info.appCount;
+//        list1.add(item);
+//
+//        item = new DataShowInfo();
+//        item.title = "上线小区";
+//        item.content = info.join_smallarea_num;
+//        list1.add(item);
     }
 
     /**
      * 经营类添加数据
      */
-    private void getDataBusiness(MapDataResp info) {
-        DataShowInfo item = new DataShowInfo();
-        item.title = "当前查询费用日期";
-        item.content = info.dateTime;
-        list2.add(item);
-
-        item = new DataShowInfo();
-        item.title = "应收";
-        item.content = info.normalFee;
-        list2.add(item);
-
-        item = new DataShowInfo();
-        item.title = "实收";
-        item.content = info.receivedFee;
-        list2.add(item);
-
-        item = new DataShowInfo();
-        item.title = "收费率";
-        item.content = info.feeRate;
-        list2.add(item);
-
-        item = new DataShowInfo();
-        item.title = "业主投诉数";
-        item.content = info.complainCount;
-        list2.add(item);
-    }
-
+//    private void getDataBusiness(MapDataResp info) {
+//        DataShowInfo item = new DataShowInfo();
+//        item.title = "当前查询费用日期";
+//        item.content = info.dateTime;
+//        list2.add(item);
+//
+//        item = new DataShowInfo();
+//        item.title = "应收";
+//        item.content = info.normalFee;
+//        list2.add(item);
+//
+//        item = new DataShowInfo();
+//        item.title = "实收";
+//        item.content = info.receivedFee;
+//        list2.add(item);
+//
+//        item = new DataShowInfo();
+//        item.title = "收费率";
+//        item.content = info.feeRate;
+//        list2.add(item);
+//
+//        item = new DataShowInfo();
+//        item.title = "业主投诉数";
+//        item.content = info.complainCount;
+//        list2.add(item);
+//    }
     @Override
     public void onSuccess(Message msg, String jsonString, String hintString) {
         super.onSuccess(msg, jsonString, hintString);
@@ -249,40 +245,13 @@ public class DataShowActivity extends BaseActivity implements OnCheckedChangeLis
                 JSONObject jsonObject = HttpTools.getContentJSONObject(jsonString);
                 if (jsonObject.length() > 0) {
                     MapDataResp info = new MapDataResp();
-                    DecimalFormat df = new DecimalFormat("#,###");
                     try {
-                        info.communityCount = jsonObject.getString("count");
-                        info.appCount = "0";
-                        int upParkingSpace = jsonObject.getInt("upParkingSpace");//地上车位数
-                        int midParkingSpace = jsonObject.getInt("midParkingSpace");//架空车位数
-                        int downParkingSpace = jsonObject.getInt("downParkingSpace");//地下车位数
-                        info.parkingCount = String.valueOf(upParkingSpace + midParkingSpace + downParkingSpace);
-                        info.join_smallarea_num = jsonObject.getString("count");
+                        info.floorArea = jsonObject.getString("area");
+                        info.communityCount = jsonObject.getString("community");
+//                        info.parkingCount = jsonObject.getInt("park") + "";
+//                        info.appCount = jsonObject.getString("app_num");
+//                        info.join_smallarea_num = jsonObject.getString("comunity_online");
 
-                        String coveredArea = jsonObject.getString("coveredArea");//上线面积
-                        double aa = Double.parseDouble(coveredArea);
-                        BigDecimal a = new BigDecimal(aa);//上线面积数值
-                        info.launchArea = df.format(a);
-                        String contractArea = jsonObject.getString("contractArea");//合同面积
-                        double bb = Double.parseDouble(contractArea);
-                        BigDecimal b = new BigDecimal(bb);//合同面积数值
-
-                        String delivered = jsonObject.getString("delivered");//已交付面积
-                        double cc = Double.parseDouble(delivered);
-                        BigDecimal c = new BigDecimal(cc);//已交付面积数值
-
-                        BigDecimal bc = b.subtract(c);
-                        info.to_be_deliveredArea = df.format(bc);//待交付面积
-
-                        JSONObject js = jsonObject.getJSONObject("撤场数据");
-                        String coveredArea1 = js.getString("coveredArea");//下线面积
-                        double dd = Double.parseDouble(coveredArea1);
-                        BigDecimal d = new BigDecimal(dd);//下线面积数值
-                        info.offlineArea = df.format(d);
-
-                        BigDecimal add = a.add(d);
-                        BigDecimal total = add.add(bc);
-                        info.floorArea = df.format(total) + "";//小区面积
                         getDataMagment2(info);
                         mAdapter1.notifyDataSetChanged();
                     } catch (JSONException e) {
@@ -303,7 +272,7 @@ public class DataShowActivity extends BaseActivity implements OnCheckedChangeLis
                 mAdapter1.notifyDataSetChanged();
                 ToastFactory.showToast(DataShowActivity.this, message);
             }
-        } else if (msg.arg1 == HttpTools.GET_KPI_INFO) {//经营类
+        } /*else if (msg.arg1 == HttpTools.GET_KPI_INFO) {//经营类
             if (code == 0) {
                 JSONObject jsonObject = HttpTools.getContentJSONObject(jsonString);
                 if (jsonObject.length() > 0) {
@@ -331,7 +300,7 @@ public class DataShowActivity extends BaseActivity implements OnCheckedChangeLis
                 mAdapter2.notifyDataSetChanged();
                 ToastFactory.showToast(DataShowActivity.this, message);
             }
-        }
+        }*/
     }
 
     @Override
@@ -340,19 +309,19 @@ public class DataShowActivity extends BaseActivity implements OnCheckedChangeLis
         ToastFactory.showToast(DataShowActivity.this, hintString);
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            list1.clear();
-            list2.clear();
-            branch = data.getStringExtra("id");
-            orgType = data.getStringExtra("orgType");
-            String name = data.getStringExtra("name");
-            tvOrgId.setText(name);//分支的名字
-            getToken();
-        }
-    }
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if (resultCode == RESULT_OK) {
+//            list1.clear();
+//            list2.clear();
+//            branch = data.getStringExtra("id");
+//            orgType = data.getStringExtra("orgType");
+//            String name = data.getStringExtra("name");
+//            tvOrgId.setText(name);//分支的名字
+//            getToken();
+//        }
+//    }
 
     @Override
     public void onPageScrollStateChanged(int arg0) {
@@ -368,9 +337,9 @@ public class DataShowActivity extends BaseActivity implements OnCheckedChangeLis
     public void onPageSelected(int position) {
         if (position == 0) {
             radioGroup.check(R.id.rb_noticBtn);
-        } else {
+        }/* else {
             radioGroup.check(R.id.rb_notifiicationBtn);
-        }
+        }*/
     }
 
     @Override

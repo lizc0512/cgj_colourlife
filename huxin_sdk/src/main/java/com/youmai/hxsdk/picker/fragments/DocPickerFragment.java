@@ -1,7 +1,9 @@
 package com.youmai.hxsdk.picker.fragments;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -9,14 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
-import com.android.internal.util.Predicate;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-
-import com.youmai.hxsdk.picker.PickerManager;
 import com.youmai.hxsdk.R;
+import com.youmai.hxsdk.picker.PickerManager;
 import com.youmai.hxsdk.picker.adapters.SectionsPagerAdapter;
 import com.youmai.hxsdk.picker.cursors.loadercallbacks.FileResultCallback;
 import com.youmai.hxsdk.picker.models.Document;
@@ -24,6 +20,11 @@ import com.youmai.hxsdk.picker.models.FileType;
 import com.youmai.hxsdk.picker.utils.MediaStoreHelper;
 import com.youmai.hxsdk.picker.utils.TabLayoutHelper;
 import com.youmai.hxsdk.picker.utils.Utils;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.function.Predicate;
 
 
 public class DocPickerFragment extends BaseFragment {
@@ -86,6 +87,7 @@ public class DocPickerFragment extends BaseFragment {
         });
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     private void setDataOnFragments(List<Document> files) {
         SectionsPagerAdapter sectionsPagerAdapter = (SectionsPagerAdapter) viewPager.getAdapter();
         if (sectionsPagerAdapter != null) {
@@ -117,9 +119,11 @@ public class DocPickerFragment extends BaseFragment {
         mTabLayoutHelper.setAutoAdjustTabModeEnabled(true);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     private ArrayList<Document> filterDocuments(final String[] type, List<Document> documents) {
         final Predicate<Document> docType = new Predicate<Document>() {
-            public boolean apply(Document document) {
+            @Override
+            public boolean test(Document document) {
                 return document.isThisType(type);
             }
         };

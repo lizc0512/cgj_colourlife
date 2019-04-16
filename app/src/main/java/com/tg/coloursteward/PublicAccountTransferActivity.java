@@ -303,7 +303,7 @@ public class PublicAccountTransferActivity extends BaseActivity implements MyLis
                 submit();
                 break;
             case 17://密码检验时主动中途退出
-                ToastFactory.showToast(PublicAccountTransferActivity.this, "已取消");
+//                ToastFactory.showToast(PublicAccountTransferActivity.this, "已取消");
                 break;
             case 18://没有设置支付密码
                 ToastFactory.showToast(PublicAccountTransferActivity.this, "未设置支付密码，即将跳转到彩钱包页面");

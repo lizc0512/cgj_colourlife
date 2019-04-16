@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/white"
     android:fitsSystemWindows="true">
 
     <RelativeLayout
@@ -91,6 +92,7 @@
     <com.tg.coloursteward.view.X5WebView
         android:id="@+id/webView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:background="@color/white"/>
 
 </LinearLayout>

@@ -155,6 +155,7 @@
     <color name="cyanBlue">#00FFFF</color>
     <color name="popupWindowBackground">#353535</color>
     <color name="line_im_del">#647786</color>
+    <color name="colour_ffd8d9">#ffd8d9</color>
 
     <integer-array name="audioBackgroundColors">
         <item>@color/blue</item>

@@ -136,13 +136,6 @@
         <activity
             android:name=".HomeContactOrgActivity"
             android:label="@string/app_name" />
-        <!-- 战略地图 -->
-        <activity
-            android:name=".MapDetailActivity"
-            android:configChanges="locale|orientation|keyboard|keyboardHidden"
-            android:label="@string/app_name"
-            android:screenOrientation="landscape"
-            android:windowSoftInputMode="stateHidden" />
         <!-- 我的下载 -->
         <activity
             android:name=".DownloadManagerActivity"

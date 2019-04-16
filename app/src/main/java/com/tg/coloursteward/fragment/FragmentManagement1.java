@@ -18,14 +18,11 @@ import com.tg.coloursteward.adapter.TinyServerFragmentTopAdapter;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.entity.TinyFragmentTopEntity;
 import com.tg.coloursteward.entity.TinyServerFragmentEntity;
-import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.inter.TinyFragmentCallBack;
 import com.tg.coloursteward.net.GetTwoRecordListener;
 import com.tg.coloursteward.net.HttpTools;
-import com.tg.coloursteward.net.MD5;
 import com.tg.coloursteward.net.MessageHandler;
 import com.tg.coloursteward.net.RequestConfig;
-import com.tg.coloursteward.net.RequestParams;
 import com.tg.coloursteward.serice.HomeService;
 import com.tg.coloursteward.util.AuthTimeUtils;
 import com.tg.coloursteward.util.GsonUtils;
@@ -44,6 +41,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.tg.coloursteward.constant.Contants.storage.JSFPNUM;
 
 /**
  * 彩管家微服务页面
@@ -68,6 +67,7 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
     private AuthTimeUtils mAuthTimeUtils;
     private List<TinyFragmentTopEntity.ContentBean> list_top = new ArrayList<>();
     private TinyServerFragmentTopAdapter topAdapter;
+    private String jsfpNum;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -116,21 +116,30 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
             list_top.addAll(entity.getContent());
         } catch (Exception e) {
         }
-        if (null == topAdapter) {
-            topAdapter = new TinyServerFragmentTopAdapter(mActivity, list_top);
-            rv_fragment_tinyserver_top.setAdapter(topAdapter);
-        } else {
-            topAdapter.setData(list_top);
-        }
-        topAdapter.setCallBack(new TinyFragmentCallBack() {
-            @Override
-            public void onclick(int position, String url, int auth_type) {
-                if (null == mAuthTimeUtils) {
-                    mAuthTimeUtils = new AuthTimeUtils();
+        if (null != list_top && list_top.size() > 0) {
+            for (int i = 0; i < list_top.size(); i++) {
+                if (list_top.get(i).getTitle().contains("即时分配")) {
+                    jsfpNum = list_top.get(i).getQuantity();
+                    Tools.saveStringValue(mActivity, JSFPNUM, jsfpNum);
+                    break;
                 }
-                mAuthTimeUtils.IsAuthTime(mActivity, url, "", String.valueOf(auth_type), "", "");
             }
-        });
+            if (null == topAdapter) {
+                topAdapter = new TinyServerFragmentTopAdapter(mActivity, list_top);
+                rv_fragment_tinyserver_top.setAdapter(topAdapter);
+            } else {
+                topAdapter.setData(list_top);
+            }
+            topAdapter.setCallBack(new TinyFragmentCallBack() {
+                @Override
+                public void onclick(int position, String url, int auth_type) {
+                    if (null == mAuthTimeUtils) {
+                        mAuthTimeUtils = new AuthTimeUtils();
+                    }
+                    mAuthTimeUtils.IsAuthTime(mActivity, url, "", String.valueOf(auth_type), "", "");
+                }
+            });
+        }
         rl_tinyfragment_tips.setVisibility(View.VISIBLE);
     }
 
@@ -169,24 +178,24 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
                 } else {
                     fragmentAdapter.setData(list_item);
                 }
+                fragmentAdapter.setCallBack(new TinyFragmentCallBack() {
+                    @Override
+                    public void onclick(int position, String url, int auth_type) {
+                        if (null == mAuthTimeUtils) {
+                            mAuthTimeUtils = new AuthTimeUtils();
+                        }
+                        String skin_code = Tools.getStringValue(mActivity, Contants.storage.SKINCODE);
+                        mAuthTimeUtils = new AuthTimeUtils();
+                        if (skin_code.equals("102")) {//中住
+                            mAuthTimeUtils.IsAuthTime(mActivity, url, "", "0", "", "");
+                        } else {
+                            mAuthTimeUtils.IsAuthTime(mActivity, url, "", String.valueOf(auth_type), "", "");
+                        }
+                    }
+                });
             } catch (Exception e) {
             }
         }
-        fragmentAdapter.setCallBack(new TinyFragmentCallBack() {
-            @Override
-            public void onclick(int position, String url, int auth_type) {
-                if (null == mAuthTimeUtils) {
-                    mAuthTimeUtils = new AuthTimeUtils();
-                }
-                String skin_code = Tools.getStringValue(mActivity, Contants.storage.SKINCODE);
-                mAuthTimeUtils = new AuthTimeUtils();
-                if (skin_code.equals("102")) {//中住
-                    mAuthTimeUtils.IsAuthTime(mActivity, url, "", "0", "", "");
-                } else {
-                    mAuthTimeUtils.IsAuthTime(mActivity, url, "", String.valueOf(auth_type), "", "");
-                }
-            }
-        });
     }
 
     /**

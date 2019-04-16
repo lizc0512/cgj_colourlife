@@ -2,25 +2,28 @@ package com.youmai.hxsdk.picker.utils;
 
 import android.content.Context;
 import android.graphics.Point;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.WindowManager;
 
-import com.android.internal.util.Predicate;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.function.Predicate;
 
 /**
  * Created by droidNinja on 29/07/16.
  */
 public class Utils {
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public static <T> Collection<T> filter(Collection<T> target, Predicate<T> predicate) {
         Collection<T> result = new ArrayList<T>();
         for (T element : target) {
-            if (predicate.apply(element)) {
+            if (predicate.test(element)) {
                 result.add(element);
             }
         }

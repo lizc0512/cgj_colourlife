@@ -305,10 +305,10 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
             });
             color_token = Tools.getAccess_token2(MyBrowserActivity.this);
             headerMap.put("color-token", color_token);
-            webView.loadUrl(url, headerMap);
             //定义js调用android
             webView.addJavascriptInterface(new JsInteration(), "js");
             webView.addJavascriptInterface(new JsInteration(), "myjava");
+            webView.loadUrl(url, headerMap);
         } else if (!TextUtils.isEmpty(urlFromA)) {//信息不为空做处理
         }
     }
@@ -578,6 +578,11 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
      */
     public class JsInteration {
         @JavascriptInterface
+        public void GetWebTitle(String title) {
+            tvTitle.setText(title);
+        }
+
+        @JavascriptInterface
         public void uploadFile(String json) {
             Helper.setParams(json);
             showOldFileChooser();
@@ -631,12 +636,6 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
             intent.putExtra(RedpacketsTransferToColleagueH5Activity.OA_USERNAME, oa_username);
             startActivity(intent);
         }
-
-        @JavascriptInterface
-        public void GetWebTitle(String title) {
-            tvTitle.setText(title);
-        }
-
 
     }
 

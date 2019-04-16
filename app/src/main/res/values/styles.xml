@@ -16,6 +16,11 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="Theme.AppStartLoad" parent="Theme.AppCompat.Light">
+        <item name="android:windowBackground">@drawable/start_pager</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
+    </style>
 
     <style name="MyAppStyle" parent="android:Theme.Light.NoTitleBar">
         <item name="android:windowNoTitle">true</item>

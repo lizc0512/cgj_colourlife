@@ -7,11 +7,12 @@ import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.WindowManager;
 
-import com.android.internal.util.Predicate;
 import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.module.filemanager.PickerManager;
 import com.youmai.hxsdk.module.filemanager.bean.Document;
@@ -22,16 +23,18 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.function.Predicate;
 
 /**
  * Created by droidNinja on 29/07/16.
  */
 public class Utils {
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public static <T> Collection<T> filter(Collection<T> target, Predicate<T> predicate) {
         Collection<T> result = new ArrayList<T>();
         for (T element : target) {
-            if (predicate.apply(element)) {
+            if (predicate.test(element)) {
                 result.add(element);
             }
         }

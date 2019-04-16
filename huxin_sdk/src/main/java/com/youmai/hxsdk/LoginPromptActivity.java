@@ -70,7 +70,7 @@ public class LoginPromptActivity extends AppCompatActivity implements View.OnCli
         String device_code = sharedPreferences.getString("device_token", "");
         ContentValues hearder = new ContentValues();
         hearder.put("device_code", device_code);
-        OkHttpConnector.httpPost(LoginPromptActivity.this,hearder, AppConfig.SINGLE_DEVICE + "cgjapp/single/device/logout", new IPostListener() {
+        OkHttpConnector.httpPost(LoginPromptActivity.this, hearder, AppConfig.SINGLE_DEVICE + "cgjapp/single/device/logout", new IPostListener() {
             @Override
             public void httpReqResult(String response) {
                 try {
@@ -94,8 +94,7 @@ public class LoginPromptActivity extends AppCompatActivity implements View.OnCli
         if (id == R.id.tv_cancel) {
             singleDevicelogout();
             HuxinSdkManager.instance().getStackAct().finishAllActivity();
-
-            HuxinSdkManager.instance().loginOut();//清楚用户信息
+            HuxinSdkManager.instance().loginOut();//清除用户信息
 
             ARouter.getInstance().build(APath.RE_LOGIN)
                     .withFlags(Intent.FLAG_ACTIVITY_NEW_TASK
@@ -133,12 +132,5 @@ public class LoginPromptActivity extends AppCompatActivity implements View.OnCli
 
         }
     }
-
-
-    /*@Override
-    public void onBackPressed() {
-
-    }*/
-
 
 }

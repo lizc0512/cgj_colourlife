@@ -33,9 +33,10 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="@dimen/margin_5"
                 android:layout_toRightOf="@id/iv_orgId"
-                android:text="加载中..."
+                android:text="彩生活服务集团"
                 android:textColor="@color/text_10"
                 android:textSize="15sp" />
+            <!--android:text="加载中..."-->
         </RelativeLayout>
     </RelativeLayout>
 
@@ -63,19 +64,19 @@
             android:textColor="@drawable/text_radio_color"
             android:textSize="16sp" />
 
-        <RadioButton
-            android:id="@+id/rb_notifiicationBtn"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/radio_btn_bg"
-            android:button="@null"
-            android:gravity="center"
-            android:paddingBottom="15dp"
-            android:paddingTop="15dp"
-            android:text="经营类"
-            android:textColor="@drawable/text_radio_color"
-            android:textSize="16sp" />
+        <!--<RadioButton-->
+            <!--android:id="@+id/rb_notifiicationBtn"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_weight="1"-->
+            <!--android:background="@drawable/radio_btn_bg"-->
+            <!--android:button="@null"-->
+            <!--android:gravity="center"-->
+            <!--android:paddingBottom="15dp"-->
+            <!--android:paddingTop="15dp"-->
+            <!--android:text="经营类"-->
+            <!--android:textColor="@drawable/text_radio_color"-->
+            <!--android:textSize="16sp" />-->
     </RadioGroup>
 
     <com.tg.coloursteward.view.MyViewPager

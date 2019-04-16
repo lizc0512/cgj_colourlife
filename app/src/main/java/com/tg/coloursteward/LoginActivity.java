@@ -70,6 +70,8 @@ import java.util.Map;
 import pl.droidsonroids.gif.GifDrawable;
 import pl.droidsonroids.gif.GifImageView;
 
+import static com.tg.coloursteward.application.CityPropertyApplication.lbsTraceClient;
+
 /**
  * 登录页面
  *
@@ -103,6 +105,7 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
     private int duration;
     private String urlAd;
     private String auth_type;
+    private String passwordMD5;
 
     @Override
     public View getContentView() {
@@ -181,7 +184,14 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
             extras = getintent.getStringExtra(MainActivity.KEY_EXTRAS);
             code = getintent.getStringExtra("czy_code");
             if (loginOut) {
-                SharedPreferencesTools.clearUserId(this);
+                initClear();
+                StopYingYan();
+                singleDevicelogout();
+                SharedPreferencesTools.clearUserId(LoginActivity.this);
+                //清空缓存
+                SharedPreferencesTools.clearCache(LoginActivity.this);
+                SharedPreferencesTools.clearAllData(LoginActivity.this);
+                CityPropertyApplication.gotoLoginActivity(LoginActivity.this);
             }
         }
         if (!TextUtils.isEmpty(code)) {
@@ -197,6 +207,23 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
          * 务必放在onCreate方法里面执行
          */
         gt3GeetestUtils = new GT3GeetestUtilsBind(LoginActivity.this);
+    }
+
+    /**
+     * 单设备退出
+     */
+    private void singleDevicelogout() {
+        RequestConfig config = new RequestConfig(this, HttpTools.POST_LOGOUTDEVICE, null);
+        RequestParams params = new RequestParams();
+        String device_code = Tools.getStringValue(this, Contants.storage.DEVICE_TOKEN);
+        params.put("device_code", device_code);
+        HttpTools.httpPost(Contants.URl.SINGLE_DEVICE, "cgjapp/single/device/logout", config, params);
+    }
+
+    private void StopYingYan() {
+        if (null != lbsTraceClient) {
+            lbsTraceClient.stopGather(null);
+        }
     }
 
     private void showAd() {
@@ -245,11 +272,6 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
                     }
                 }
                 initTimeCount(duration);
-//                long showtime = System.currentTimeMillis() / 1000;
-//                Tools.saveStringValue(LoginActivity.this, Contants.storage.SaveTime, String.valueOf(showtime));
-//                if (DateUtils.isToday(showtime)) {
-//                    Tools.setBooleanValue(LoginActivity.this, Contants.storage.ISSHOWAD, true);
-//                }
                 rl_login_ad.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -677,20 +699,16 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
      */
     public void login(String username, String pwd, String pwdMD5) {
         Tools.hideKeyboard(editUser);
-        String passwordMD5 = "";
+        passwordMD5 = "";
         if (!TextUtils.isEmpty(pwd)) {
-            Tools.savePassWord(getApplicationContext(), pwd);//保存密码
             try {
                 passwordMD5 = MD5.getMd5Value(pwd).toLowerCase();
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            Tools.savePassWordMD5(getApplicationContext(), passwordMD5);//保存密码(MD5加密后)
         } else {
             passwordMD5 = pwdMD5;
-            Tools.savePassWordMD5(getApplicationContext(), pwdMD5);//保存密码(MD5加密后)
         }
-        UserInfo.employeeAccount = username;
         getKeyAndSecret();
         if (null == auth2ServiceUpdate) {
             auth2ServiceUpdate = new OAuth2ServiceUpdate(LoginActivity.this);
@@ -719,6 +737,9 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
                         int code = HttpTools.getCode(jsonString);
                         String message = HttpTools.getMessageString(jsonString);
                         if (code == 0) {
+                            UserInfo.employeeAccount = newPhone;
+                            Tools.savePassWord(LoginActivity.this, password);//保存密码
+                            Tools.savePassWordMD5(LoginActivity.this, passwordMD5);//保存密码(MD5加密后)
                             String response = HttpTools.getContentString(jsonString);
                             ResponseData data = HttpTools.getResponseContentObject(response);
                             int status = data.getInt("status");
@@ -879,6 +900,7 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
     public void onAnimationEnd(Animation animation) {
         if (animation == outAnim) {
             startLayout.setVisibility(View.GONE);
+            rl_login_ad.setVisibility(View.GONE);
             contentLayout.setVisibility(View.VISIBLE);
         } else {
 
@@ -911,6 +933,29 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
             return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    private void initClear() {
+        UserInfo.uid = "";
+        UserInfo.employeeAccount = "";
+        UserInfo.color_token = "";
+        UserInfo.job_uuid = "";
+        UserInfo.sex = "";
+        UserInfo.realname = "";
+        UserInfo.password = "";
+        UserInfo.cashierpassword = "";
+        UserInfo.jobName = "";
+        UserInfo.familyName = "";
+        UserInfo.orgId = "";//组织架构ID
+        UserInfo.infoorgId = "";//组织架构ID
+        UserInfo.userinfoImg = "";//
+        UserInfo.corp_id = "";
+        UserInfo.salary_level = "";
+        UserInfo.is_deleted = 0;
+        UserInfo.special = 0;
+        UserInfo.email = "";
+        UserInfo.mobile = "";
+        UserInfo.czy_id = 0;
     }
 }
 

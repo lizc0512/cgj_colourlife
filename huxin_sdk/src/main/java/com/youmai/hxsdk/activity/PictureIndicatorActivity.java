@@ -5,22 +5,17 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -174,7 +169,7 @@ public class PictureIndicatorActivity extends SdkBaseActivity {
                 }
             });
 
-            imageView.setOnLongClickListener(new View.OnLongClickListener() {
+            imageView.setOnLongClickListener(new View.OnLongClickListener() {//图片长按点击
                 @Override
                 public boolean onLongClick(View v) {
                     HxMediaStoreDialog hxDialog = new HxMediaStoreDialog(mContext);
@@ -236,7 +231,7 @@ public class PictureIndicatorActivity extends SdkBaseActivity {
             }
         });
 
-        iv_save.setOnClickListener(new View.OnClickListener() {
+        iv_save.setOnClickListener(new View.OnClickListener() {//图片下载按钮
             @Override
             public void onClick(View v) {
                 CacheMsgImage cacheImage = (CacheMsgImage) beanList.get(mPosition).getJsonBodyObj();

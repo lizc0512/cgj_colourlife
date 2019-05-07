@@ -96,10 +96,6 @@ public class ForgetPasswordActivity extends BaseActivity {
             ToastFactory.showBottomToast(ForgetPasswordActivity.this,"手机号不能为空");
             return;
         }
-        if (!StringUtils.checkPhoneNumberValid(number)) {
-            ToastFactory.showBottomToast(ForgetPasswordActivity.this,"请输入正确手机号！");
-            return;
-        }
         postSendSMS();
 
     }

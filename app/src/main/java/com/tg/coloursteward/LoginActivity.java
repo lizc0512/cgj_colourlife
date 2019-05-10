@@ -737,13 +737,13 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
                         int code = HttpTools.getCode(jsonString);
                         String message = HttpTools.getMessageString(jsonString);
                         if (code == 0) {
-                            UserInfo.employeeAccount = newPhone;
-                            Tools.savePassWord(LoginActivity.this, password);//保存密码
-                            Tools.savePassWordMD5(LoginActivity.this, passwordMD5);//保存密码(MD5加密后)
                             String response = HttpTools.getContentString(jsonString);
                             ResponseData data = HttpTools.getResponseContentObject(response);
                             int status = data.getInt("status");
                             if (status == 0) {
+                                UserInfo.employeeAccount = newPhone;
+                                Tools.savePassWord(LoginActivity.this, password);//保存密码
+                                Tools.savePassWordMD5(LoginActivity.this, passwordMD5);//保存密码(MD5加密后)
                                 Tools.loadUserInfo(data, jsonString);
                                 Tools.savetokenUserInfo(LoginActivity.this, jsonString);
                                 corpId = data.getString("corp_id");
@@ -761,9 +761,11 @@ public class LoginActivity extends BaseActivity implements AnimationListener {
                                 startActivity(intent);
                                 LoginActivity.this.finish();
                             } else {
+                                SharedPreferencesTools.clearCache(LoginActivity.this);
                                 ToastFactory.showToast(LoginActivity.this, "账号异常，请及时联系管理员");
                             }
                         } else {
+                            SharedPreferencesTools.clearCache(LoginActivity.this);
                             ToastFactory.showToast(LoginActivity.this, message);
                         }
                     } catch (Exception e) {

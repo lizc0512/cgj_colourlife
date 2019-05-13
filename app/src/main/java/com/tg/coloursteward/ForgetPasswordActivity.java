@@ -103,10 +103,11 @@ public class ForgetPasswordActivity extends BaseActivity {
     private void postSendSMS() {
         RequestConfig config = new RequestConfig(this, HttpTools.POST_VACCOUN_VERIFY);
         RequestParams params = new RequestParams();
-        params.put("userName",account);
+        params.put("username",account);
         params.put("realname",name);
         params.put("mobile",number);
-        HttpTools.httpPost(Contants.URl.URL_ICETEST,"/orgms/voice/sendSMS", config, params);
+        params.put("work_type","forgetPassword");
+        HttpTools.httpPost(Contants.URl.URL_ICETEST,"/employee/sms/sendSms", config, params);
     }
 
     @Override

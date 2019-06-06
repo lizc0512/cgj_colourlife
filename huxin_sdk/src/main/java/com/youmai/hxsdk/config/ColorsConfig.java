@@ -40,12 +40,12 @@ public class ColorsConfig {
     /**
      * 文件微服务上传地址
      */
-    private static final String ICE_UPLOAD[] = new String[]{"https://micro-file.colourlife.com/v1/pcUploadFile", "https://micro-file.colourlife.com/v1/pcUploadFile", "https://micro-file.colourlife.com/v1/pcUploadFile"};
+    private static final String ICE_UPLOAD[] = new String[]{"https://micro-file-test.colourlife.com/v1/pcUploadFile", "https://micro-file-test.colourlife.com/v1/pcUploadFile", "https://micro-file.colourlife.com/v1/pcUploadFile"};
 
     /**
      * 文件微服务下载地址
      */
-    private static final String ICE_DOWNLOAD[] = new String[]{"http://114.119.7.98:3020/v1/down/", "http://114.119.7.98:3020/v1/down/", "http://120.25.148.153:30020/v1/down/"};
+    private static final String ICE_DOWNLOAD[] = new String[]{"https://micro-file-test.colourlife.com/v1/down/", "https://micro-file-test.colourlife.com/v1/down/", "https://micro-file.colourlife.com/v1/down/"};
 
     //彩管家 APPID TOEKN 定义
     private static final String COLOR_APPID[] = new String[]{"ICEYOUMAI-EF6C-4970-9AED-4CD8E063720F", "ICEXCGJ0-5F89-4E17-BC44-7A0DB101B245", "ICEXCGJ0-5F89-4E17-BC44-7A0DB101B245"};

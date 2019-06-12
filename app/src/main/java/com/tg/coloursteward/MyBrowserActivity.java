@@ -1007,8 +1007,6 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
             //解析定位结果
             String result = Utils.getLocationStr(aMapLocation);
             if (result != null) {
-                //	Log.d("printLog","2    result="+result);
-                //	stopLocation();
                 String url = "javascript:LatLngCallBack('" + result + "')";
                 webView.loadUrl(url, headerMap);
             }

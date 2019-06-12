@@ -32,6 +32,7 @@ import com.youmai.hxsdk.IMFilePreviewActivity;
 import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.activity.CropMapActivity;
 import com.youmai.hxsdk.activity.PictureIndicatorActivity;
+import com.youmai.hxsdk.chatgroup.PictureList;
 import com.youmai.hxsdk.packet.RedPacketDetailActivity;
 import com.youmai.hxsdk.config.AppConfig;
 import com.youmai.hxsdk.config.FileConfig;
@@ -442,10 +443,12 @@ public class IMListAdapter extends RecyclerView.Adapter {
                         beanList.add(item);
                     }
                 }
+                PictureList.getInstance().clearImageList();
+                PictureList.getInstance().setImageList(beanList);
                 int index = beanList.indexOf(cacheMsgBean);
                 Intent intent = new Intent(mAct, PictureIndicatorActivity.class);
                 intent.putExtra("index", index);
-                intent.putParcelableArrayListExtra("beanList", beanList);
+//                intent.putParcelableArrayListExtra("beanList", beanList);
                 mAct.startActivity(intent);
             }
         });

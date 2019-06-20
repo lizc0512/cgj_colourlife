@@ -29,31 +29,28 @@ import com.tg.coloursteward.MyBrowserActivity;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.UserInfoActivity;
 import com.tg.coloursteward.adapter.FragmentMineAdapter;
+import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.entity.FragmentMineEntity;
 import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.inter.FragmentMineCallBack;
+import com.tg.coloursteward.model.MineModel;
 import com.tg.coloursteward.net.GetTwoRecordListener;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.MD5;
 import com.tg.coloursteward.net.MessageHandler;
 import com.tg.coloursteward.net.MessageHandler.ResponseListener;
-import com.tg.coloursteward.net.RequestConfig;
-import com.tg.coloursteward.net.RequestParams;
 import com.tg.coloursteward.serice.HomeService;
 import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.LinkParseUtil;
-import com.tg.coloursteward.util.TokenUtils;
+import com.tg.coloursteward.util.SharedPreferencesUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.CircleImageView;
-import com.tg.coloursteward.view.dialog.PwdDialog2;
 import com.tg.coloursteward.view.dialog.ToastFactory;
 import com.youmai.hxsdk.utils.GlideRoundTransform;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static com.tg.coloursteward.module.MainActivity1.getEnvironment;
 import static com.tg.coloursteward.module.MainActivity1.getPublicParams;
@@ -63,14 +60,11 @@ import static com.tg.coloursteward.module.MainActivity1.getPublicParams;
  *
  * @author Administrator
  */
-public class FragmentMine extends Fragment implements ResponseListener, OnClickListener {
+public class FragmentMine extends Fragment implements ResponseListener, OnClickListener, HttpResponse {
     private View mView;
     private Activity mActivity;
     private AlertDialog dialog;
     private MessageHandler msgHandler;
-    private PwdDialog2.ADialogCallback aDialogCallback;
-    private PwdDialog2 aDialog;
-    private String state = "noPwd";
     private RecyclerView recyclerview;
     private List<FragmentMineEntity.ContentBean> list = new ArrayList<>();
     private List<FragmentMineEntity.ContentBean.DataBean> list_item = new ArrayList<>();
@@ -82,6 +76,7 @@ public class FragmentMine extends Fragment implements ResponseListener, OnClickL
     private TextView tv_mine_name;
     private TextView tv_mine_job;
     private CircleImageView iv_mine_head;
+    private MineModel mineModel;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -89,6 +84,7 @@ public class FragmentMine extends Fragment implements ResponseListener, OnClickL
         mView = inflater.inflate(R.layout.fragment_mine_layout, container, false);
         msgHandler = new MessageHandler(mActivity);
         msgHandler.setResponseListener(this);
+        mineModel = new MineModel(mActivity);
         initView();
         Tools.saveStringValue(mActivity, "updatetime_img", UserInfo.userinfoImg);
         getHeadImg();
@@ -97,7 +93,7 @@ public class FragmentMine extends Fragment implements ResponseListener, OnClickL
     }
 
     private void initData() {
-        String json = Tools.getStringValue(mActivity, Contants.storage.FRAGMENTMINE);
+        String json = SharedPreferencesUtils.getInstance().getStringData(Contants.storage.FRAGMENTMINE, "");
         if (!TextUtils.isEmpty(json)) {//有网络数据缓存
             initDataAdapter(json);
         } else {
@@ -108,11 +104,7 @@ public class FragmentMine extends Fragment implements ResponseListener, OnClickL
     }
 
     private void initGetData() {
-        RequestConfig config = new RequestConfig(mActivity, HttpTools.GET_FRAGMENTMINE);
-        config.handler = msgHandler.getHandler();
-        Map<String, Object> map = new HashMap<String, Object>();
-        Map<String, String> stringMap = TokenUtils.getStringMap(TokenUtils.getNewSaftyMap(getActivity(), map));
-        HttpTools.httpGet_Map(Contants.URl.URL_NEW, "/app/home/mypage", config, (HashMap) stringMap);
+        mineModel.getMineData(0, this);
     }
 
     private void initDataAdapter(String json) {
@@ -137,7 +129,6 @@ public class FragmentMine extends Fragment implements ResponseListener, OnClickL
                 String name = list_item.get(positon).getName();
                 if (url.contains("findPwd")) {
                     openType = 1;
-//                    find_pay_password();
                     Cqb_PayUtil.getInstance(mActivity).createPay(getPublicParams(), getEnvironment());
                 } else if (name.contains("工资")) {
                     openType = 2;
@@ -273,18 +264,24 @@ public class FragmentMine extends Fragment implements ResponseListener, OnClickL
                         ToastFactory.showToast(mActivity, "密码不能为空");
                         return;
                     }
+                    String passwordMD5 = null;
                     try {
-                        String passwordMD5 = MD5.getMd5Value(password).toLowerCase();
-                        RequestConfig config = new RequestConfig(mActivity, HttpTools.GET_PASSWORD_INFO);
-                        config.handler = msgHandler.getHandler();
-                        RequestParams params = new RequestParams();
-                        params.put("username", UserInfo.employeeAccount);
-                        params.put("password", passwordMD5);
-                        HttpTools.httpPost(Contants.URl.URL_ICETEST, "/account/login", config, params);
-                        dialog.dismiss();
+                        passwordMD5 = MD5.getMd5Value(password).toLowerCase();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+                    dialog.dismiss();
+                    mineModel.postAccountLogin(1, UserInfo.employeeAccount, passwordMD5, FragmentMine.this);
+//                    try {
+//                        RequestConfig config = new RequestConfig(mActivity, HttpTools.GET_PASSWORD_INFO);
+//                        config.handler = msgHandler.getHandler();
+//                        RequestParams params = new RequestParams();
+//                        params.put("username", UserInfo.employeeAccount);
+//                        params.put("password", passwordMD5);
+//                        HttpTools.httpPost(Contants.URl.URL_ICETEST, "/account/login", config, params);
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
 
                 }
             });
@@ -342,11 +339,6 @@ public class FragmentMine extends Fragment implements ResponseListener, OnClickL
             } else {
                 ToastFactory.showToast(mActivity, hintString);
             }
-        } else if (msg.arg1 == HttpTools.GET_FRAGMENTMINE) {
-            if (code == 0) {
-                Tools.saveStringValue(mActivity, Contants.storage.FRAGMENTMINE, jsonString);
-                initDataAdapter(jsonString);
-            }
         }
 
     }
@@ -366,4 +358,28 @@ public class FragmentMine extends Fragment implements ResponseListener, OnClickL
 
     }
 
+    @Override
+    public void OnHttpResponse(int what, String result) {
+        switch (what) {
+            case 0:
+                if (!TextUtils.isEmpty(result)) {
+                    SharedPreferencesUtils.getInstance().saveStringData(Contants.storage.FRAGMENTMINE, result);
+                    initDataAdapter(result);
+                }
+                break;
+            case 1:
+                if (!TextUtils.isEmpty(result)) {
+                    int code = HttpTools.getCode(result);
+                    if (code == 0) {
+                        if (openType == 1) {
+                        } else if (openType == 2) {
+                            Tools.saveStringValue(mActivity, Contants.storage.SALARY_TIME, String.valueOf(System.currentTimeMillis() / 1000));
+                            Tools.setBooleanValue(mActivity, Contants.storage.SALARY_ISINPUT, true);
+                            LinkParseUtil.parse(mActivity, salary, "");
+                        }
+                    }
+                }
+                break;
+        }
+    }
 }

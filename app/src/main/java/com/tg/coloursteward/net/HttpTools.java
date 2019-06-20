@@ -378,7 +378,7 @@ public class HttpTools {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> headers = new HashMap<>();
-                if (URL_NAME.contains(Contants.URl.URL_NEW + "app/home/login/verify")) {
+                if (URL_NAME.contains(Contants.URl.URL_NEW + "/app/home/login/verify")) {
                 } else if (URL_NAME.contains(Contants.URl.URL_CPMOBILE + "/1.0/auth")) {
                 } else if (URL_NAME.contains(Contants.URl.URL_ICETEST + "/newoa/config/skin")) {
                 } else {

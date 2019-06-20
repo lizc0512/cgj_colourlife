@@ -106,7 +106,7 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
         map.put("key", key);
         map.put("secret", secret);
         Map<String, String> params = TokenUtils.getStringMap(TokenUtils.getNewSaftyMap(getActivity(), map));
-        HttpTools.httpGet_Map(Contants.URl.URL_NEW, "app/home/utility/calcData", config, (HashMap) params);
+        HttpTools.httpGet_Map(Contants.URl.URL_NEW, "/app/home/utility/calcData", config, (HashMap) params);
     }
 
     private void topDataAdapter(String cache) {
@@ -151,7 +151,7 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
         map.put("access_token", accessToken);
         map.put("corp_type", skin_id);
         Map<String, String> params = TokenUtils.getStringMap(TokenUtils.getNewSaftyMap(getActivity(), map));
-        HttpTools.httpGet_Map(Contants.URl.URL_NEW, "app/home/utility/miscApp", config, (HashMap) params);
+        HttpTools.httpGet_Map(Contants.URl.URL_NEW, "/app/home/utility/miscApp", config, (HashMap) params);
 
     }
 

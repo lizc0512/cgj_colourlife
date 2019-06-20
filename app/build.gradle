@@ -35,6 +35,9 @@ android {
     sourceSets {
         main {
             jniLibs.srcDir 'libs'
+            res.srcDirs = ['src/main/res',
+                           'src/main/java/com/tg/user/res',
+            ]
         }
     }
     signingConfigs {
@@ -144,6 +147,7 @@ dependencies {
     annotationProcessor 'com.alibaba:arouter-compiler:1.1.4'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation files('libs/BaiduTraceSDK_v3_0_8.jar')
+    implementation 'com.yanzhenjie.nohttp:nohttp:1.1.11'
 }
 
 project.afterEvaluate {

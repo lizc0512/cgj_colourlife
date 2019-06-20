@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="44dp"
+    android:background="@color/white"
+    android:gravity="center_vertical">
+
+    <ImageView
+        android:id="@+id/iv_base_location"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="5dp"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/tv_base_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="5dp"
+        android:layout_toRightOf="@id/iv_base_location"
+        android:text="@string/tv_home_location"
+        android:textColor="@color/black"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/iv_home_scan"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="18dp"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/iv_home_notice"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="18dp"
+        android:layout_toLeftOf="@id/iv_home_scan"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/iv_base_back"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:padding="14dp"
+        android:src="@drawable/icon_top_return"
+        android:visibility="visible" />
+
+    <ImageView
+        android:id="@+id/iv_base_close"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:padding="14dp"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/tv_base_back"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="5dp"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="@string/actionbar_back"
+        android:textColor="@drawable/tv_actionbar_select"
+        android:textSize="15dp"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/tv_base_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text=""
+        android:textColor="@color/black"
+        android:textSize="@dimen/sp_16" />
+
+    <ImageView
+        android:id="@+id/iv_base_next"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_alignParentRight="true"
+        android:padding="14dp"
+        android:src="@drawable/icon_top_return"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/iv_base_todo"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginRight="3dp"
+        android:layout_toLeftOf="@id/iv_base_next"
+        android:padding="14dp"
+        android:src="@drawable/icon_top_return"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/tv_base_confirm"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text=""
+        android:textColor="@color/black"
+        android:textSize="15dp"
+        android:visibility="visible" />
+
+    <View
+        android:id="@+id/view_base_line"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_alignParentBottom="true"
+        android:background="@color/line_color" />
+</RelativeLayout>

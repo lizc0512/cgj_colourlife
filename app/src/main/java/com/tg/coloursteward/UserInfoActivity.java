@@ -367,7 +367,7 @@ public class UserInfoActivity extends BaseActivity implements ItemClickListener,
         validateParams.put("email", email);
         validateParams.put("device_uuid", TokenUtils.getUUID(UserInfoActivity.this));
         Map<String, String> stringMap = TokenUtils.getStringMap(TokenUtils.getNewSaftyMap(UserInfoActivity.this, validateParams));
-        HttpTools.httpPost_Map(Contants.URl.URL_ICESTAFF, "app/modifyInfo", config, (HashMap) stringMap);
+        HttpTools.httpPost_Map(Contants.URl.URL_ICESTAFF, "/app/modifyInfo", config, (HashMap) stringMap);
 
 
     }

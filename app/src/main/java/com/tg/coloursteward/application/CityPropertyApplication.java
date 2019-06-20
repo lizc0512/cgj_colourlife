@@ -19,7 +19,8 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.shell.SdkManager;
 import com.tencent.smtt.sdk.QbSdk;
-import com.tg.coloursteward.LoginActivity;
+import com.tg.coloursteward.util.SSLContextUtil;
+import com.tg.user.activity.LoginActivity;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.database.SharedPreferencesTools;
 import com.tg.coloursteward.info.UserInfo;
@@ -27,12 +28,17 @@ import com.tg.coloursteward.module.MainActivity1;
 import com.tg.coloursteward.net.ResponseData;
 import com.tg.coloursteward.util.GDLocationUtil;
 import com.tg.coloursteward.util.Tools;
+import com.yanzhenjie.nohttp.InitializationConfig;
+import com.yanzhenjie.nohttp.NoHttp;
+import com.yanzhenjie.nohttp.URLConnectionNetworkExecutor;
 import com.youmai.hxsdk.HuxinSdkManager;
 
 import org.litepal.LitePalApplication;
 
 import java.util.LinkedList;
 import java.util.List;
+
+import javax.net.ssl.SSLContext;
 
 import cn.jpush.android.api.JPushInterface;
 
@@ -43,12 +49,23 @@ public class CityPropertyApplication extends Application {
     public static String entityName = "";
     public static LBSTraceClient lbsTraceClient;
     public static Trace trace;
-
+    private static Context context;
     @Override
     public void onCreate() {
         // TODO Auto-generated method stub
         super.onCreate();
-
+        context = getApplicationContext();
+        SSLContext sslContext = SSLContextUtil.getDefaultSLLContext();
+        InitializationConfig config = InitializationConfig.newBuilder(getApplicationContext())
+                // 全局连接服务器超时时间，单位毫秒，默认10s。
+                .connectionTimeout(20 * 1000)
+                // 全局等待服务器响应超时时间，单位毫秒，默认10s。
+                .readTimeout(20 * 1000)
+                .networkExecutor(new URLConnectionNetworkExecutor())
+                .sslSocketFactory(sslContext.getSocketFactory()) // 全局SSLSocketFactory。
+                .retry(1)
+                .build();
+        NoHttp.initialize(config);
         LitePalApplication.initialize(this);//初始化litepal数据库
         instance = this;
         //Huxin IM SDK初始化
@@ -116,6 +133,9 @@ public class CityPropertyApplication extends Application {
             instance = new CityPropertyApplication();
 
         return instance;
+    }
+    public static Context getContext() {
+        return context;
     }
 
     public void exit() {

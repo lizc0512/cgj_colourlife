@@ -23,4 +23,18 @@
     <string name="contact">联系人</string>
     <string name="job">微服务</string>
     <string name="mine">我的</string>
+
+    <string name="error_please_check_network">请检查网络。</string>
+    <string name="error_timeout">请求超时，网络不好或者服务器不稳定。</string>
+    <string name="error_not_found_server">未发现指定服务器，请切换网络后重试。</string>
+    <string name="error_url_error">URL错误。</string>
+    <string name="error_not_found_cache">没有找到缓存.</string>
+    <string name="app_requestdate_fail">请求数据失败，请稍后重试</string>
+    <string name="tv_splash_jump">跳过</string>
+    <string name="tv_lead_jump">跳过 >></string>
+    <string name="lead_go_open">去开启 >></string>
+    <string name="actionbar_back">取消</string>
+    <string name="tv_home_location">正在定位...</string>
+    <string name="request_method_head">请求方法为HEAD，没有响应内容。</string>
+    <string name="request_method_not_allow">服务器仅仅支持请求方法：%1$s</string>
 </resources>

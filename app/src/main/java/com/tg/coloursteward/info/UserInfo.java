@@ -28,5 +28,27 @@ public class UserInfo {
     public static String mobile = "";
     public static int czy_id = 0;
 
+    public static void initClear() {
+        UserInfo.uid = "";
+        UserInfo.employeeAccount = "";
+        UserInfo.color_token = "";
+        UserInfo.job_uuid = "";
+        UserInfo.sex = "";
+        UserInfo.realname = "";
+        UserInfo.password = "";
+        UserInfo.cashierpassword = "";
+        UserInfo.jobName = "";
+        UserInfo.familyName = "";
+        UserInfo.orgId = "";//组织架构ID
+        UserInfo.infoorgId = "";//组织架构ID
+        UserInfo.userinfoImg = "";//
+        UserInfo.corp_id = "";
+        UserInfo.salary_level = "";
+        UserInfo.is_deleted = 0;
+        UserInfo.special = 0;
+        UserInfo.email = "";
+        UserInfo.mobile = "";
+        UserInfo.czy_id = 0;
+    }
 
 }

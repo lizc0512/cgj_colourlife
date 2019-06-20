@@ -167,7 +167,7 @@ public class RedpacketsBonusMainActivity extends BaseActivity {
         Map<String, Object> map = new HashMap<>();
         RequestConfig config = new RequestConfig(this, HttpTools.GET_MYPAGERULE, "");
         Map<String, String> stringMap = TokenUtils.getStringMap(TokenUtils.getNewSaftyMap(RedpacketsBonusMainActivity.this, map));
-        HttpTools.httpGet_Map(Contants.URl.URL_NEW, "app/home/utility/fpbutton", config, (HashMap) stringMap);
+        HttpTools.httpGet_Map(Contants.URl.URL_NEW, "/app/home/utility/fpbutton", config, (HashMap) stringMap);
     }
 
     private void setJJBData(String jsonString) {

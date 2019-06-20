@@ -27,7 +27,8 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.tg.coloursteward.LoginActivity;
+import com.tg.coloursteward.util.SharedPreferencesUtils;
+import com.tg.user.activity.LoginActivity;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.application.CityPropertyApplication;
 import com.tg.coloursteward.constant.Contants;
@@ -55,6 +56,7 @@ import com.youmai.hxsdk.http.OkHttpConnector;
 import com.youmai.hxsdk.utils.AppUtils;
 import com.youmai.hxsdk.utils.GsonUtil;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -70,7 +72,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Response
     public interface ActivityBackListener {
         void onBackPressed(Activity activity);
     }
-
+    protected SharedPreferencesUtils spUtils;
     public static boolean isActive; //全局变量
     private ActivityBackListener backListener;
     protected ActivityHeaderView headView;
@@ -137,9 +139,13 @@ public abstract class BaseActivity extends AppCompatActivity implements Response
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (Build.VERSION.SDK_INT >= 28) {
+            closeAndroidPDialog();
+        }
         msgHand = new MessageHandler(this);
         msgHand.setResponseListener(this);
         mHand = msgHand.getHandler();
+        spUtils = SharedPreferencesUtils.getInstance();
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_base);
         CityPropertyApplication.addActivity(this);
@@ -184,7 +190,29 @@ public abstract class BaseActivity extends AppCompatActivity implements Response
 
         }
     }
-
+    /**
+     * 屏蔽在9.0系统提示引用了非公开SDK方法弹窗
+     */
+    private void closeAndroidPDialog() {
+        try {
+            Class aClass = Class.forName("android.content.pm.PackageParser$Package");
+            Constructor declaredConstructor = aClass.getDeclaredConstructor(String.class);
+            declaredConstructor.setAccessible(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            Class cls = Class.forName("android.app.ActivityThread");
+            Method declaredMethod = cls.getDeclaredMethod("currentActivityThread");
+            declaredMethod.setAccessible(true);
+            Object activityThread = declaredMethod.invoke(null);
+            Field mHiddenApiWarningShown = cls.getDeclaredField("mHiddenApiWarningShown");
+            mHiddenApiWarningShown.setAccessible(true);
+            mHiddenApiWarningShown.setBoolean(activityThread, true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     @TargetApi(19)
     private void initWindow() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
@@ -489,7 +517,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Response
         params.put("device_code", TokenUtils.getUUID(this));//设备唯一编号
         params.put("device_info", TokenUtils.getDeviceInfor(this));//设备详细信息（json字符创）
         params.put("device_name", TokenUtils.getDeviceBrand() + TokenUtils.getDeviceType());//设备名称（如三星S9）
-        OkHttpConnector.httpPost(this, Contants.URl.SINGLE_DEVICE + "cgjapp/single/device/login", params, new IPostListener() {
+        OkHttpConnector.httpPost(this, Contants.URl.SINGLE_DEVICE + "/cgjapp/single/device/login", params, new IPostListener() {
             @Override
             public void httpReqResult(String response) {
                 try {
@@ -531,7 +559,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Response
         String device_code = Tools.getStringValue(getApplicationContext(), Contants.storage.DEVICE_TOKEN);
         ContentValues params = new ContentValues();
         params.put("device_code", device_code);
-        OkHttpConnector.httpPost(getApplicationContext(), Contants.URl.SINGLE_DEVICE + "cgjapp/single/device/inactive", params, new IPostListener() {
+        OkHttpConnector.httpPost(getApplicationContext(), Contants.URl.SINGLE_DEVICE + "/cgjapp/single/device/inactive", params, new IPostListener() {
             @Override
             public void httpReqResult(String response) {
                 try {

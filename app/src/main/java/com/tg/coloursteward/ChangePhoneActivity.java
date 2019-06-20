@@ -98,7 +98,7 @@ public class ChangePhoneActivity extends BaseActivity implements View.OnClickLis
         validateParams.put("sms_code", code);
         validateParams.put("device_uuid", TokenUtils.getUUID(ChangePhoneActivity.this));
         Map<String, String> stringMap = TokenUtils.getStringMap(TokenUtils.getNewSaftyMap(ChangePhoneActivity.this, validateParams));
-        HttpTools.httpPost_Map(Contants.URl.URL_ICESTAFF, "app/modifyMobile", config, (HashMap) stringMap);
+        HttpTools.httpPost_Map(Contants.URl.URL_ICESTAFF, "/app/modifyMobile", config, (HashMap) stringMap);
     }
 
     private void initSendMMS(String phone) {
@@ -109,7 +109,7 @@ public class ChangePhoneActivity extends BaseActivity implements View.OnClickLis
         validateParams.put("sms_type", "1");
         validateParams.put("device_uuid", TokenUtils.getUUID(ChangePhoneActivity.this));
         Map<String, String> stringMap = TokenUtils.getStringMap(TokenUtils.getNewSaftyMap(ChangePhoneActivity.this, validateParams));
-        HttpTools.httpPost_Map(Contants.URl.URL_ICESTAFF, "app/sendCode", config, (HashMap) stringMap);
+        HttpTools.httpPost_Map(Contants.URl.URL_ICESTAFF, "/app/sendCode", config, (HashMap) stringMap);
     }
 
     @Override

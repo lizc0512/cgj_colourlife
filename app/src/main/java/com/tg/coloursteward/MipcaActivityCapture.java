@@ -177,7 +177,7 @@ public class MipcaActivityCapture extends BaseActivity implements Callback, OnCl
             map.put("url", resultString);
             map.put("app_type", "cgj");
             Map<String, String> params = TokenUtils.getStringMap(TokenUtils.getNewSaftyMap(MipcaActivityCapture.this, map));
-            HttpTools.httpPost_Map(Contants.URl.URL_QRCODE, "app/formatUrl", config, (HashMap) params);
+            HttpTools.httpPost_Map(Contants.URl.URL_QRCODE, "/app/formatUrl", config, (HashMap) params);
         }
     }
 

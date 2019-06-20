@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.ResponseData;
+import com.tg.coloursteward.util.SharedPreferencesUtils;
 import com.tg.coloursteward.util.Tools;
 
 import org.json.JSONObject;
@@ -60,6 +61,7 @@ public class SharedPreferencesTools {
     }
 
     public static void clearCache(Context con) {
+        SharedPreferencesUtils.getInstance().clear();
         Tools.savePassWord(con, "");//保存密码
         Tools.saveStringValue(con, JSFPNUM, "");
         Tools.saveStringValue(con, Contants.storage.SKINCODE, "");//保存皮肤包

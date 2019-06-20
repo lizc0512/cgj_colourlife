@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+<string name="user_welcome_btn">欢迎登录彩管家</string>
+<string name="user_inputphone_et">请输入彩管家账号</string>
+<string name="user_inputpwd_et">请输入密码</string>
+<string name="user_loginforgetpwd_tv">忘记密码？</string>
+<string name="user_login_btn">立即登录</string>
+<string name="user_czyoauht_btn">彩之云授权登录</string>
+<string name="user_loginor_tv">或</string>
+
+</resources>

@@ -134,4 +134,5 @@
     <color name="blue_info">#1CA1F4</color>
     <color name="gray_info">#DEE3E5</color>
     <color name="blue_dialog">#1B96E0</color>
+    <color name="tab_gray">#97a0ab</color>
 </resources>

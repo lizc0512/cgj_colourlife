@@ -130,7 +130,7 @@ public class GroupAccountDetailsActivity extends BaseActivity {
         Map<String, Object> map = new HashMap<>();
         RequestConfig config = new RequestConfig(this, HttpTools.GET_DETAILRULE, "");
         Map<String, String> stringMap = TokenUtils.getStringMap(TokenUtils.getNewSaftyMap(GroupAccountDetailsActivity.this, map));
-        HttpTools.httpGet_Map(Contants.URl.URL_NEW, "app/home/utility/ruleDeatil", config, (HashMap) stringMap);
+        HttpTools.httpGet_Map(Contants.URl.URL_NEW, "/app/home/utility/ruleDeatil", config, (HashMap) stringMap);
     }
 
     @Override

@@ -158,7 +158,7 @@ public class SettingActivity extends BaseActivity implements OnClickListener {
         RequestParams params = new RequestParams();
         String device_code = Tools.getStringValue(this, Contants.storage.DEVICE_TOKEN);
         params.put("device_code", device_code);
-        HttpTools.httpPost(Contants.URl.SINGLE_DEVICE, "cgjapp/single/device/logout", config, params);
+        HttpTools.httpPost(Contants.URl.SINGLE_DEVICE, "/cgjapp/single/device/logout", config, params);
     }
 
     @Override

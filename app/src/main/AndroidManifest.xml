@@ -59,7 +59,10 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme"
         tools:replace="android:allowBackup,android:theme">
-        <activity android:name=".LoginActivity">
+        <activity android:name="com.tg.user.activity.LoginActivity" />
+        <activity
+            android:name="com.tg.user.activity.SplashActivity"
+            android:theme="@style/splashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -301,8 +304,8 @@
         <activity android:name=".SearchManageMentListActivity" />
         <activity android:name=".BranchActivity" />
         <activity android:name=".PublicAccountActivity" />
-        <activity android:name=".ForgetPasswordActivity" />
-        <activity android:name=".ForgetPasswordVerifyActivity" />
+        <activity android:name="com.tg.user.activity.ForgetPasswordActivity" />
+        <activity android:name="com.tg.user.activity.ForgetPasswordVerifyActivity" />
         <activity android:name=".RedpacketsAccountListActivity" />
         <activity android:name=".AccountDetailNewActivity" />
         <activity android:name=".AccountExchangeRecordActivity" />
@@ -352,6 +355,7 @@
             android:value="KfVrlHlSoYmNqZQjRtoQUp6GT470rYZ3" />
 
         <activity android:name=".module.BrowerJumpExcessiveActivity"></activity>
+        <activity android:name="com.tg.user.activity.LeadActivity" />
     </application>
 
 </manifest>

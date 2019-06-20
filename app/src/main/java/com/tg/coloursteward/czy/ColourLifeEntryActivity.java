@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 
-import com.tg.coloursteward.LoginActivity;
+import com.tg.user.activity.LoginActivity;
 import com.tg.coloursteward.R;
 
 public class ColourLifeEntryActivity extends Activity {

@@ -205,7 +205,7 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
         config.handler = msgHandler.getHandler();
         Map<String, Object> map = new HashMap();
         Map<String, String> params = TokenUtils.getStringMap(TokenUtils.getNewSaftyMap(mActivity, map));
-        HttpTools.httpGet_Map(Contants.URl.URL_NEW, "app/home/utility/getPopup", config, (HashMap) params);
+        HttpTools.httpGet_Map(Contants.URl.URL_NEW, "/app/home/utility/getPopup", config, (HashMap) params);
     }
 
     @Override

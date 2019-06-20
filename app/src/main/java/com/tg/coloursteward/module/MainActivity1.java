@@ -34,6 +34,7 @@ import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import com.amap.api.location.AMapLocation;
 import com.baidu.trace.LBSTraceClient;
 import com.baidu.trace.Trace;
 import com.baidu.trace.api.entity.AddEntityRequest;
@@ -81,6 +82,7 @@ import com.tg.coloursteward.updateapk.ApkInfo;
 import com.tg.coloursteward.updateapk.UpdateManager;
 import com.tg.coloursteward.util.AuthTimeUtils;
 import com.tg.coloursteward.util.ExampleUtil;
+import com.tg.coloursteward.util.GDLocationUtil;
 import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.LinkParseUtil;
 import com.tg.coloursteward.util.TokenUtils;
@@ -251,16 +253,56 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
             RequestConfig config = new RequestConfig(this, HttpTools.GET_YINGYAN, "");
             Map<String, Object> map = new HashMap<>();
             Map<String, String> params = TokenUtils.getStringMap(TokenUtils.getNewSaftyMap(this, map));
-            HttpTools.httpGet_Map(Contants.URl.URL_NEW, "app/home/utility/getEagleJuge", config, (HashMap) params);
+            HttpTools.httpGet_Map(Contants.URl.URL_NEW, "/app/home/utility/getEagleJuge", config, (HashMap) params);
         }
         initAd();
+        CheckPermission();
+        initGetLocation();
+
+    }
+
+    private void CheckPermission() {
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+                || ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                || ContextCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+                || ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
+                || ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED
+                || ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE,
+                            android.Manifest.permission.ACCESS_FINE_LOCATION,
+                            android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                            android.Manifest.permission.CAMERA,
+                            android.Manifest.permission.READ_CONTACTS,
+                            android.Manifest.permission.READ_PHONE_STATE},
+                    Activity.DEFAULT_KEYS_SEARCH_LOCAL);
+        }
+    }
+
+    private void initGetLocation() {
+        GDLocationUtil.getCurrentLocation(new GDLocationUtil.MyLocationListener() {
+            @Override
+            public void result(AMapLocation aMapLocation) {
+                if (null != aMapLocation) {
+                    if (aMapLocation.getErrorCode() == 0) {
+                        String str_latitude = String.valueOf(aMapLocation.getLatitude());
+                        String str_longitude = String.valueOf(aMapLocation.getLongitude());
+                        Tools.saveStringValue(getApplication(), Contants.storage.LATITUDE, str_latitude);
+                        Tools.saveStringValue(getApplication(), Contants.storage.LONGITUDE, str_longitude);
+                    } else {
+                        Log.e("AmapErr", "Location ERR:"
+                                + aMapLocation.getErrorCode());
+                    }
+                }
+            }
+        });
     }
 
     private void initAd() {
         RequestConfig config = new RequestConfig(this, HttpTools.GET_AD, "");
         Map<String, Object> map = new HashMap<>();
         Map<String, String> params = TokenUtils.getStringMap(TokenUtils.getNewSaftyMap(this, map));
-        HttpTools.httpGet_Map(Contants.URl.URL_NEW, "app/home/utility/startPage", config, (HashMap) params);
+        HttpTools.httpGet_Map(Contants.URl.URL_NEW, "/app/home/utility/startPage", config, (HashMap) params);
     }
 
     private void initYingYan() {
@@ -713,7 +755,7 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
         params.put("os", "android");
         params.put("jpush_alias", "cgj_" + UserInfo.employeeAccount);
         params.put("platform_uuid", "2fe08211ef974089831ccadcd98895ca");
-        HttpTools.httpPost(Contants.URl.URL_IMPUSH, "api/app/userSync", config, params);
+        HttpTools.httpPost(Contants.URl.URL_IMPUSH, "/api/app/userSync", config, params);
     }
 
     @Override
@@ -870,7 +912,7 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
         params.put("device_code", TokenUtils.getUUID(MainActivity1.this));//设备唯一编号
         params.put("device_info", TokenUtils.getDeviceInfor(MainActivity1.this));//设备详细信息（json字符创）
         params.put("device_name", TokenUtils.getDeviceBrand() + TokenUtils.getDeviceType());//设备名称（如三星S9）
-        HttpTools.httpPost(Contants.URl.SINGLE_DEVICE, "cgjapp/single/device/login", config, params);
+        HttpTools.httpPost(Contants.URl.SINGLE_DEVICE, "/cgjapp/single/device/login", config, params);
     }
 
     /**
@@ -881,7 +923,7 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
         RequestParams params = new RequestParams();
         String device_code = Tools.getStringValue(this, Contants.storage.DEVICE_TOKEN);
         params.put("device_code", device_code);//
-        HttpTools.httpPost(Contants.URl.SINGLE_DEVICE, "cgjapp/single/device/logout", config, params);
+        HttpTools.httpPost(Contants.URl.SINGLE_DEVICE, "/cgjapp/single/device/logout", config, params);
     }
 
     // 检测版本更新

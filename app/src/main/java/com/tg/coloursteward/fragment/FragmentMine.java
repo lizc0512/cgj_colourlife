@@ -112,7 +112,7 @@ public class FragmentMine extends Fragment implements ResponseListener, OnClickL
         config.handler = msgHandler.getHandler();
         Map<String, Object> map = new HashMap<String, Object>();
         Map<String, String> stringMap = TokenUtils.getStringMap(TokenUtils.getNewSaftyMap(getActivity(), map));
-        HttpTools.httpGet_Map(Contants.URl.URL_NEW, "app/home/mypage", config, (HashMap) stringMap);
+        HttpTools.httpGet_Map(Contants.URl.URL_NEW, "/app/home/mypage", config, (HashMap) stringMap);
     }
 
     private void initDataAdapter(String json) {

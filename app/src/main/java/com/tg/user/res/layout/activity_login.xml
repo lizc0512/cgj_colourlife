@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.tg.user.activity.LoginActivity">
+
+    <ImageView
+        android:id="@+id/iv_login_logo"
+        android:layout_width="@dimen/size_64dp"
+        android:layout_height="@dimen/size_64dp"
+        android:layout_marginStart="@dimen/size_36dp"
+        android:layout_marginLeft="@dimen/size_36dp"
+        android:layout_marginTop="@dimen/size_77dp"
+        android:contentDescription="@null"
+        android:src="@mipmap/login_logo"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/size_48dp"
+        android:layout_marginLeft="@dimen/size_48dp"
+        android:text="@string/user_welcome_btn"
+        android:textColor="@color/login_tv"
+        android:textSize="@dimen/font_16sp"
+        app:layout_constraintBottom_toBottomOf="@id/iv_login_logo"
+        app:layout_constraintLeft_toRightOf="@id/iv_login_logo"
+        app:layout_constraintTop_toTopOf="@+id/iv_login_logo" />
+
+    <EditText
+        android:id="@+id/et_login_phone"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_44dp"
+        android:layout_marginLeft="@dimen/size_40dp"
+        android:layout_marginTop="@dimen/size_25dp"
+        android:layout_marginRight="@dimen/size_40dp"
+        android:background="@null"
+        android:hint="@string/user_inputphone_et"
+        android:singleLine="true"
+        android:textColor="@color/tv_index_color"
+        android:textColorHint="@color/login_tv_gray_account"
+        android:textSize="@dimen/font_16sp"
+        app:layout_constraintTop_toBottomOf="@id/iv_login_logo" />
+
+    <ImageView
+        android:id="@+id/iv_login_deloa"
+        android:layout_width="@dimen/size_22dp"
+        android:layout_height="@dimen/size_22dp"
+        android:layout_marginEnd="@dimen/size_5dp"
+        android:layout_marginRight="@dimen/size_5dp"
+        android:contentDescription="@null"
+        android:src="@mipmap/login_icon_delete_normal"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/et_login_phone"
+        app:layout_constraintRight_toRightOf="@id/et_login_phone"
+        app:layout_constraintTop_toTopOf="@+id/et_login_phone" />
+
+    <View
+        android:id="@+id/view_login_view"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_1dp"
+        android:layout_marginLeft="@dimen/size_40dp"
+        android:layout_marginRight="@dimen/size_40dp"
+
+        android:background="@color/line_login_index"
+        app:layout_constraintTop_toBottomOf="@id/et_login_phone" />
+
+    <EditText
+        android:id="@+id/et_login_pwd"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_44dp"
+        android:layout_marginLeft="@dimen/size_40dp"
+        android:layout_marginRight="@dimen/size_40dp"
+        android:background="@null"
+        android:hint="@string/user_inputpwd_et"
+        android:inputType="textPassword"
+        android:singleLine="true"
+        android:textColor="@color/tv_index_color"
+        android:textColorHint="@color/login_tv_gray_account"
+        android:textSize="@dimen/font_16sp"
+        app:layout_constraintTop_toBottomOf="@id/view_login_view" />
+
+    <ImageView
+        android:id="@+id/iv_login_delpwd"
+        android:layout_width="@dimen/size_22dp"
+        android:layout_height="@dimen/size_22dp"
+        android:layout_marginEnd="@dimen/size_5dp"
+        android:layout_marginRight="@dimen/size_5dp"
+        android:contentDescription="@null"
+        android:src="@mipmap/login_icon_delete_normal"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/et_login_pwd"
+        app:layout_constraintRight_toRightOf="@id/et_login_pwd"
+        app:layout_constraintTop_toTopOf="@+id/et_login_pwd" />
+
+    <View
+        android:id="@+id/view_login_viewtwo"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_1dp"
+        android:layout_marginLeft="@dimen/size_40dp"
+        android:layout_marginRight="@dimen/size_40dp"
+        android:background="@color/line_login_index"
+        app:layout_constraintTop_toBottomOf="@id/et_login_pwd" />
+
+    <TextView
+        android:id="@+id/tv_login_forgetpwd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/size_20dp"
+        android:layout_marginEnd="@dimen/size_22dp"
+        android:layout_marginRight="@dimen/size_22dp"
+        android:text="@string/user_loginforgetpwd_tv"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/et_login_pwd" />
+
+    <Button
+        android:id="@+id/btn_login_login"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_44dp"
+        android:layout_marginLeft="@dimen/size_40dp"
+        android:layout_marginTop="@dimen/size_88dp"
+        android:layout_marginRight="@dimen/size_40dp"
+        android:background="@drawable/login_button_select"
+        android:stateListAnimator="@null"
+        android:text="@string/user_login_btn"
+        android:textColor="@color/line_login_button"
+        android:textSize="@dimen/font_16sp"
+        app:layout_constraintTop_toBottomOf="@id/et_login_pwd" />
+
+    <TextView
+        android:id="@+id/tv_login_or"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="@dimen/size_13dp"
+        android:text="@string/user_loginor_tv"
+        android:textColor="@color/line_login_or"
+        android:textSize="@dimen/font_14sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btn_login_login" />
+
+    <View
+        android:layout_width="@dimen/size_0dp"
+        android:layout_height="@dimen/size_1dp"
+        android:layout_marginStart="@dimen/size_40dp"
+        android:layout_marginLeft="@dimen/size_40dp"
+        android:layout_marginEnd="@dimen/size_15dp"
+        android:layout_marginRight="@dimen/size_15dp"
+        android:background="@color/line_login_orline"
+        app:layout_constraintBottom_toBottomOf="@id/tv_login_or"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/tv_login_or"
+        app:layout_constraintTop_toTopOf="@id/tv_login_or" />
+
+    <View
+        android:layout_width="@dimen/size_0dp"
+        android:layout_height="@dimen/size_1dp"
+        android:layout_marginStart="@dimen/size_15dp"
+        android:layout_marginLeft="@dimen/size_15dp"
+        android:layout_marginEnd="@dimen/size_40dp"
+        android:layout_marginRight="@dimen/size_40dp"
+        android:background="@color/line_login_orline"
+        app:layout_constraintBottom_toBottomOf="@id/tv_login_or"
+        app:layout_constraintLeft_toRightOf="@id/tv_login_or"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tv_login_or" />
+
+    <Button
+        android:id="@+id/btn_login_czylogin"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_44dp"
+        android:layout_marginLeft="@dimen/size_40dp"
+        android:layout_marginTop="@dimen/size_13dp"
+        android:layout_marginRight="@dimen/size_40dp"
+        android:background="@drawable/bg_login_button_blue"
+        android:clickable="false"
+        android:stateListAnimator="@null"
+        android:text="@string/user_czyoauht_btn"
+        android:textColor="@color/white"
+        android:textSize="@dimen/font_16sp"
+        app:layout_constraintTop_toBottomOf="@id/tv_login_or" />
+
+    <ImageView
+        android:id="@+id/tv_login_czy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/login_button_icon_czy"
+        app:layout_constraintBottom_toBottomOf="@id/btn_login_czylogin"
+        app:layout_constraintHorizontal_bias="0.28"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/btn_login_czylogin" />
+</android.support.constraint.ConstraintLayout>

@@ -7,6 +7,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,6 +22,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 /**
  * 辅助工具类(高德定位)
@@ -194,5 +198,22 @@ public class Utils {
 	public static int px2dip(Context context, float pxValue) {
 		final float scale = context.getResources().getDisplayMetrics().density;
 		return (int) (pxValue / scale + 0.5f);
+	}
+	/**
+	 * 隐藏键盘
+	 *
+	 * @param v
+	 */
+	public static void hideKeyboard(final View v) {
+		Timer timer = new Timer();
+		timer.schedule(new TimerTask() {
+			@Override
+			public void run() {
+				InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+				if (imm.isActive()) {
+					imm.hideSoftInputFromWindow(v.getApplicationWindowToken(), 0);
+				}
+			}
+		}, 10);
 	}
 }

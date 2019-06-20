@@ -212,7 +212,7 @@ public class AccountActivity extends BaseActivity implements MyListener {
         map.put("key", key);
         map.put("secret", secret);
         Map<String, String> params = TokenUtils.getStringMap(TokenUtils.getNewSaftyMap(this, map));
-        HttpTools.httpGet_Map(Contants.URl.URL_NEW, "app/home/utility/calcData", config, (HashMap) params);
+        HttpTools.httpGet_Map(Contants.URl.URL_NEW, "/app/home/utility/calcData", config, (HashMap) params);
     }
 
     @Override

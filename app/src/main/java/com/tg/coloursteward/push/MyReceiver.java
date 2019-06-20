@@ -9,7 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.tg.coloursteward.LoginActivity;
+import com.tg.user.activity.LoginActivity;
 import com.tg.coloursteward.MainActivity;
 import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.Tools;

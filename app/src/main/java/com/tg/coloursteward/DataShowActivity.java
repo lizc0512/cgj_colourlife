@@ -155,7 +155,7 @@ public class DataShowActivity extends BaseActivity implements OnCheckedChangeLis
         RequestConfig config = new RequestConfig(DataShowActivity.this, HttpTools.GET_STATISTICS_INFO);
         Map<String, Object> params = new HashMap<>();
         Map<String, String> stringMap = TokenUtils.getStringMap(TokenUtils.getNewSaftyMap(this, params));
-        HttpTools.httpGet_Map(Contants.URl.URL_NEW, "app/home/utility/managerMsg", config, (HashMap) stringMap);
+        HttpTools.httpGet_Map(Contants.URl.URL_NEW, "/app/home/utility/managerMsg", config, (HashMap) stringMap);
         //经营类
 //        config = new RequestConfig(DataShowActivity.this, HttpTools.GET_KPI_INFO);
 //        RequestParams requestParams = new RequestParams();

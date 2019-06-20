@@ -31,6 +31,7 @@ public class ColourLifeEntryActivity extends Activity {
                 Intent it = new Intent(ColourLifeEntryActivity.this, LoginActivity.class);
                 it.putExtra("czy_code", code);
                 startActivity(it);
+                ColourLifeEntryActivity.this.finish();
             }
 
         }

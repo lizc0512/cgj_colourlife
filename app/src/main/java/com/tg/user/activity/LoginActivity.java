@@ -33,6 +33,7 @@ import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.MD5;
 import com.tg.coloursteward.net.ResponseData;
 import com.tg.coloursteward.util.GsonUtils;
+import com.tg.coloursteward.util.SharedPreferencesUtils;
 import com.tg.coloursteward.util.ToastUtil;
 import com.tg.coloursteward.util.TokenUtils;
 import com.tg.coloursteward.util.Tools;
@@ -60,6 +61,7 @@ import static com.tg.coloursteward.application.CityPropertyApplication.lbsTraceC
 public class LoginActivity extends BaseActivity implements View.OnClickListener, HttpResponse {
     public static final String ACCOUNT = "account";
     public static final String CZY_CODE = "czy_code";
+    public static final String USERACCOUNT = "user_account";
     private EditText et_login_phone;
     private EditText et_login_pwd;
     private ImageView iv_login_deloa;
@@ -75,7 +77,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     private OAuth2ServiceUpdate auth2ServiceUpdate;
     private String corpId;
     private String extras;
-    private String passwordMD5="";
+    private String passwordMD5 = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +86,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         userModel = new UserModel(this);
         gt3GeetestUtils = new GT3GeetestUtilsBind(LoginActivity.this);
         initView();
-        initData();
         userModel.getTs(5, this);
 
     }
@@ -115,7 +116,50 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         iv_login_delpwd.setOnClickListener(this);
         tv_login_forgetpwd.setOnClickListener(this);
         tv_login_czy.bringToFront();
+        et_login_phone.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (!TextUtils.isEmpty(s)) {
+                    iv_login_deloa.setVisibility(View.VISIBLE);
+                    if (!TextUtils.isEmpty(et_login_pwd.getText().toString().trim())) {
+                        btnClick();
+                    }
+                } else {
+                    iv_login_deloa.setVisibility(View.GONE);
+                    btnNoClick();
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+        et_login_pwd.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (!TextUtils.isEmpty(s)) {
+                    iv_login_delpwd.setVisibility(View.VISIBLE);
+                    if (!TextUtils.isEmpty(et_login_phone.getText().toString().trim())) {
+                        btnClick();
+                    }
+                } else {
+                    iv_login_delpwd.setVisibility(View.GONE);
+                    btnNoClick();
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
         Intent intent = getIntent();
         if (null != intent) {
             boolean loginOut = intent.getBooleanExtra("login_out", false);
@@ -134,14 +178,22 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
             String account = intent.getStringExtra(ACCOUNT);
             String code = intent.getStringExtra(CZY_CODE);
             if (!TextUtils.isEmpty(code)) {
-                ThridLogin(code);
+                ThirdLogin(code);
                 spUtils.saveStringData(SpConstants.storage.THRID_CODE, code);
             }
             if (!TextUtils.isEmpty(account)) {
-                et_login_phone.setText(account);
-                et_login_phone.setSelection(account.length());
+                setAccount(account);
             }
         }
+        String account = SharedPreferencesUtils.getUserKey(this, USERACCOUNT);
+        if (!TextUtils.isEmpty(account)) {
+            setAccount(account);
+        }
+    }
+
+    private void setAccount(String account) {
+        et_login_phone.setText(account);
+        et_login_phone.setSelection(account.length());
     }
 
     private void singleDevicelogout() {
@@ -149,58 +201,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         userModel.postSingleExit(7, device_code, this);
     }
 
-    private void initData() {
-        et_login_phone.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (!TextUtils.isEmpty(s)) {
-                    iv_login_deloa.setVisibility(View.VISIBLE);
-                    if (!TextUtils.isEmpty(et_login_pwd.getText().toString().trim())) {
-                        btnClick();
-                    }
-                } else {
-                    iv_login_deloa.setVisibility(View.GONE);
-                    btnNoClick();
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-        et_login_pwd.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (!TextUtils.isEmpty(s)) {
-                    iv_login_delpwd.setVisibility(View.VISIBLE);
-                    if (!TextUtils.isEmpty(et_login_phone.getText().toString().trim())) {
-                        btnClick();
-                    }
-                } else {
-                    iv_login_delpwd.setVisibility(View.GONE);
-                    btnNoClick();
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-    }
-
-    private void ThridLogin(String code) {
+    private void ThirdLogin(String code) {
         userModel.getCzyLogin(6, code, this);
     }
 
@@ -233,6 +234,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 czyLogin();
                 break;
             case R.id.iv_login_deloa:
+                SharedPreferencesUtils.saveUserKey(this, USERACCOUNT, "");
                 et_login_phone.getText().clear();
                 break;
             case R.id.iv_login_delpwd:
@@ -261,6 +263,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         try {
             if (intent.resolveActivityInfo(getPackageManager(), PackageManager.MATCH_DEFAULT_ONLY) != null) {
                 startActivity(intent);
+                LoginActivity.this.finish();
             } else {
                 ToastUtil.showShortToast(LoginActivity.this, "未检测到手机有安装彩之云APP");
             }
@@ -434,6 +437,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                     if (status == 0) {
                         ResponseData data = HttpTools.getResponseContentObject(response);
                         UserInfo.employeeAccount = account;
+                        SharedPreferencesUtils.saveUserKey(this, USERACCOUNT, account);
                         Tools.savePassWord(LoginActivity.this, password);//保存密码
                         Tools.savePassWordMD5(LoginActivity.this, passwordMD5);//保存密码(MD5加密后)
                         Tools.loadUserInfo(data, result);
@@ -451,8 +455,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                         intent.putExtra(MainActivity1.KEY_SKIN_CODE, "");
                         intent.putExtra(MainActivity1.KEY_EXTRAS, extras);
                         intent.putExtra(MainActivity1.FROM_LOGIN, true);
-                        ToastUtil.showShortToast(this, "登录成功");
                         startActivity(intent);
+                        ToastUtil.showShortToast(this, "登录成功");
                         LoginActivity.this.finish();
                     } else {
                         ToastUtil.showShortToast(this, "账号异常，请及时联系管理员");

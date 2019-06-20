@@ -20,6 +20,7 @@ import java.util.Map;
 public class SharedPreferencesUtils {
     public static final String FILE_NAME = "wisdomPark_map";
     public static final String PREFERENCES_NAME = "park_cache_map";
+    public static final String UserAccount_NAME = "user_cgj_map";
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
     private static SharedPreferencesUtils instance;
@@ -160,6 +161,22 @@ public class SharedPreferencesUtils {
     }
 
     /**
+     * @param con
+     * @param key
+     * @param access_token
+     */
+    public static void saveUserKey(Context con, String key, String access_token) {
+        getUserSysShare(con).edit().
+                putString(key, access_token).apply();
+    }
+
+    public static String getUserKey(Context con, String key) {
+        return getUserSysShare(con).getString(key, "");
+    }
+
+
+
+    /**
      * 保存refresh_token获取时间
      *
      * @param con
@@ -179,6 +196,14 @@ public class SharedPreferencesUtils {
      */
     private static SharedPreferences getSysShare(Context con) {
         return con.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
+    }
+
+    /**
+     * @param con
+     * @return   保留一个不被清除的sp
+     */
+    private static SharedPreferences getUserSysShare(Context con) {
+        return con.getSharedPreferences(UserAccount_NAME, Context.MODE_PRIVATE);
     }
 
     /**

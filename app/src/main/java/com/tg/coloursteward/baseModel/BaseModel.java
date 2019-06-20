@@ -193,6 +193,28 @@ public class BaseModel {
         return code;
     }
 
+    /***请求返回的是200且 code来表示成功用来4.0的接口使用 有提示语 **/
+    protected int showSuccesResultMessageTheme(String result) {
+        int code = -1;
+        JSONObject jsonObject = null;
+        if (!TextUtils.isEmpty(result)) {
+            try {
+                jsonObject = new JSONObject(result);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        if (jsonObject == null) {
+        } else {
+            try {
+                BaseContentEntity baseContentEntity = GsonUtils.gsonToBean(result, BaseContentEntity.class);
+                code = baseContentEntity.getCode();
+            } catch (Exception e) {  //返回的code不是数字
+            }
+        }
+        return code;
+    }
+
     /***code不为0，抛出message***/
     protected void showErrorCodeMessage(Response<String> response) {
         //提示处通用的错误信息

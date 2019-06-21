@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -38,8 +37,6 @@ import com.tg.coloursteward.model.MineModel;
 import com.tg.coloursteward.net.GetTwoRecordListener;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.MD5;
-import com.tg.coloursteward.net.MessageHandler;
-import com.tg.coloursteward.net.MessageHandler.ResponseListener;
 import com.tg.coloursteward.serice.HomeService;
 import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.LinkParseUtil;
@@ -60,11 +57,10 @@ import static com.tg.coloursteward.module.MainActivity1.getPublicParams;
  *
  * @author Administrator
  */
-public class FragmentMine extends Fragment implements ResponseListener, OnClickListener, HttpResponse {
+public class FragmentMine extends Fragment implements OnClickListener, HttpResponse {
     private View mView;
     private Activity mActivity;
     private AlertDialog dialog;
-    private MessageHandler msgHandler;
     private RecyclerView recyclerview;
     private List<FragmentMineEntity.ContentBean> list = new ArrayList<>();
     private List<FragmentMineEntity.ContentBean.DataBean> list_item = new ArrayList<>();
@@ -82,8 +78,6 @@ public class FragmentMine extends Fragment implements ResponseListener, OnClickL
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_mine_layout, container, false);
-        msgHandler = new MessageHandler(mActivity);
-        msgHandler.setResponseListener(this);
         mineModel = new MineModel(mActivity);
         initView();
         Tools.saveStringValue(mActivity, "updatetime_img", UserInfo.userinfoImg);
@@ -272,17 +266,6 @@ public class FragmentMine extends Fragment implements ResponseListener, OnClickL
                     }
                     dialog.dismiss();
                     mineModel.postAccountLogin(1, UserInfo.employeeAccount, passwordMD5, FragmentMine.this);
-//                    try {
-//                        RequestConfig config = new RequestConfig(mActivity, HttpTools.GET_PASSWORD_INFO);
-//                        config.handler = msgHandler.getHandler();
-//                        RequestParams params = new RequestParams();
-//                        params.put("username", UserInfo.employeeAccount);
-//                        params.put("password", passwordMD5);
-//                        HttpTools.httpPost(Contants.URl.URL_ICETEST, "/account/login", config, params);
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                    }
-
                 }
             });
             window.findViewById(R.id.dialog_button_cancel).setOnClickListener(new OnClickListener() {
@@ -313,39 +296,6 @@ public class FragmentMine extends Fragment implements ResponseListener, OnClickL
         if (isVisibleToUser) {
 //            initGetData();
         }
-    }
-
-    /**
-     * 请求数据处理方法
-     */
-    @Override
-    public void onRequestStart(Message msg, String hintString) {
-        if (msg.arg1 == HttpTools.GET_PASSWORD_INFO) {
-            ToastFactory.showToast(mActivity, "正在验证中...");
-        }
-    }
-
-    @Override
-    public void onSuccess(Message msg, String jsonString, String hintString) {
-        int code = HttpTools.getCode(jsonString);
-        if (msg.arg1 == HttpTools.GET_PASSWORD_INFO) {
-            if (code == 0) {
-                if (openType == 1) {
-                } else if (openType == 2) {
-                    Tools.saveStringValue(mActivity, Contants.storage.SALARY_TIME, String.valueOf(System.currentTimeMillis() / 1000));
-                    Tools.setBooleanValue(mActivity, Contants.storage.SALARY_ISINPUT, true);
-                    LinkParseUtil.parse(mActivity, salary, "");
-                }
-            } else {
-                ToastFactory.showToast(mActivity, hintString);
-            }
-        }
-
-    }
-
-    @Override
-    public void onFail(Message msg, String hintString) {
-
     }
 
     @Override

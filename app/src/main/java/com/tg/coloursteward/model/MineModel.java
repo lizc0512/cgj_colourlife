@@ -59,6 +59,12 @@ public class MineModel extends BaseModel {
         }, true, false);
     }
 
+    /**
+     * @param what
+     * @param account
+     * @param pwdMd5
+     * @param httpResponse  校验登录密码接口
+     */
     public void postAccountLogin(int what, String account, String pwdMd5, HttpResponse httpResponse) {
         Map<String, Object> params = new HashMap<>();
         params.put("username", account);
@@ -83,6 +89,6 @@ public class MineModel extends BaseModel {
             public void onFailed(int what, Response<String> response) {
 
             }
-        }, true, false);
+        }, true, true);
     }
 }

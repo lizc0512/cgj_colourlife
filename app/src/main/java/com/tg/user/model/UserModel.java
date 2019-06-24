@@ -105,7 +105,7 @@ public class UserModel extends BaseModel {
 
             @Override
             public void onFailed(int what, Response<String> response) {
-                showExceptionMessage(what, response);
+//                showExceptionMessage(what, response);
             }
         }, true, true);
     }

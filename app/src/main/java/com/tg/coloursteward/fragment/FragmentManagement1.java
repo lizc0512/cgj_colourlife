@@ -2,7 +2,6 @@ package com.tg.coloursteward.fragment;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,22 +14,21 @@ import android.widget.RelativeLayout;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.adapter.TinyServerFragmentAdapter;
 import com.tg.coloursteward.adapter.TinyServerFragmentTopAdapter;
+import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.entity.TinyFragmentTopEntity;
 import com.tg.coloursteward.entity.TinyServerFragmentEntity;
 import com.tg.coloursteward.inter.TinyFragmentCallBack;
+import com.tg.coloursteward.model.MicroModel;
 import com.tg.coloursteward.net.GetTwoRecordListener;
-import com.tg.coloursteward.net.HttpTools;
-import com.tg.coloursteward.net.MessageHandler;
-import com.tg.coloursteward.net.RequestConfig;
 import com.tg.coloursteward.serice.HomeService;
 import com.tg.coloursteward.util.AuthTimeUtils;
 import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.StringUtils;
-import com.tg.coloursteward.util.TokenUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.MyGridLayoutManager;
 import com.tg.coloursteward.view.dialog.ToastFactory;
+import com.tg.user.model.UserModel;
 import com.youmai.hxsdk.adapter.PaddingItemDecoration;
 
 import org.json.JSONException;
@@ -38,9 +36,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static com.tg.coloursteward.constant.Contants.storage.JSFPNUM;
 
@@ -49,13 +45,12 @@ import static com.tg.coloursteward.constant.Contants.storage.JSFPNUM;
  *
  * @author Administrator
  */
-public class FragmentManagement1 extends Fragment implements MessageHandler.ResponseListener {
+public class FragmentManagement1 extends Fragment implements HttpResponse {
     private Activity mActivity;
     private View mView;
     private HomeService homeService;
     private String accessToken;
 
-    private MessageHandler msgHandler;
     private String key;
     private String secret;
     private RecyclerView rv_fragment_tinyserver;
@@ -68,13 +63,15 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
     private List<TinyFragmentTopEntity.ContentBean> list_top = new ArrayList<>();
     private TinyServerFragmentTopAdapter topAdapter;
     private String jsfpNum;
+    private MicroModel microModel;
+    private UserModel userModel;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_management_layout1, container, false);
-        msgHandler = new MessageHandler(mActivity);
-        msgHandler.setResponseListener(this);
+        microModel = new MicroModel(mActivity);
+        userModel = new UserModel(mActivity);
         initView();
         requestData();
         showCache();
@@ -99,14 +96,7 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
     }
 
     private void initDataTop() {
-        RequestConfig config = new RequestConfig(mActivity, HttpTools.GET_MINISERVER_TOP);
-        config.handler = msgHandler.getHandler();
-        Map<String, Object> map = new HashMap();
-        map.put("access_token", accessToken);
-        map.put("key", key);
-        map.put("secret", secret);
-        Map<String, String> params = TokenUtils.getStringMap(TokenUtils.getNewSaftyMap(getActivity(), map));
-        HttpTools.httpGet_Map(Contants.URl.URL_NEW, "/app/home/utility/calcData", config, (HashMap) params);
+        microModel.getMicroTop(0, accessToken, key, secret, this);
     }
 
     private void topDataAdapter(String cache) {
@@ -145,14 +135,7 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
 
     private void initData() {
         String skin_id = Tools.getStringValue(mActivity, Contants.storage.SKINCODE);
-        RequestConfig config = new RequestConfig(mActivity, HttpTools.GET_MINISERVER);
-        config.handler = msgHandler.getHandler();
-        Map<String, Object> map = new HashMap();
-        map.put("access_token", accessToken);
-        map.put("corp_type", skin_id);
-        Map<String, String> params = TokenUtils.getStringMap(TokenUtils.getNewSaftyMap(getActivity(), map));
-        HttpTools.httpGet_Map(Contants.URl.URL_NEW, "/app/home/utility/miscApp", config, (HashMap) params);
-
+        microModel.getMicroMid(1, accessToken, skin_id, this);
     }
 
     private void midDataAdapter(String cache) {
@@ -206,9 +189,6 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
         rv_fragment_tinyserver_top = mView.findViewById(R.id.rv_fragment_tinyserver_top);
         MyGridLayoutManager gridLayoutManager_top = new MyGridLayoutManager(mActivity, 3);
         rv_fragment_tinyserver_top.setLayoutManager(gridLayoutManager_top);
-//        rv_fragment_tinyserver_top.addItemDecoration(new DividerGridItemDecoration(mActivity));
-
-
         rv_fragment_tinyserver = mView.findViewById(R.id.rv_fragment_tinyserver);
         MyGridLayoutManager gridLayoutManager = new MyGridLayoutManager(mActivity, 4);
         rv_fragment_tinyserver.addItemDecoration(new PaddingItemDecoration(4));
@@ -281,8 +261,7 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
     }
 
     private void getKeyAndSecret() {
-        RequestConfig config = new RequestConfig(mActivity, HttpTools.GET_KEYSECERT, null);
-        HttpTools.httpPost(Contants.URl.URL_CPMOBILE, "/1.0/auth", config, null);
+        userModel.postKeyAndSecret(2, this);
     }
 
     @Override
@@ -320,42 +299,34 @@ public class FragmentManagement1 extends Fragment implements MessageHandler.Resp
     }
 
     @Override
-    public void onRequestStart(Message msg, String hintString) {
-    }
-
-    @Override
-    public void onSuccess(Message msg, String jsonString, String hintString) {
-        int code = HttpTools.getCode(jsonString);
-        if (msg.arg1 == HttpTools.GET_KEYSECERT) {
-            if (code == 0) {
-                try {
-                    String contentString = HttpTools.getContentString(jsonString);
-                    JSONObject sonJon = new JSONObject(contentString);
-                    String key = sonJon.optString("key");
-                    String secret = sonJon.optString("secret");
-                    Tools.saveStringValue(mActivity, Contants.EMPLOYEE_LOGIN.key, key);
-                    Tools.saveStringValue(mActivity, Contants.EMPLOYEE_LOGIN.secret, secret);
-                } catch (JSONException e) {
-                    e.printStackTrace();
+    public void OnHttpResponse(int what, String result) {
+        switch (what) {
+            case 0:
+                if (!TextUtils.isEmpty(result)) {
+                    Tools.saveStringValue(mActivity, Contants.storage.TINYFRAGMENTTOP, result);
+                    topDataAdapter(result);
                 }
-            }
-        } else if (msg.arg1 == HttpTools.GET_MINISERVER) {
-            if (code == 0) {
-                Tools.saveStringValue(mActivity, Contants.storage.TINYFRAGMENTMID, jsonString);
-                midDataAdapter(jsonString);
-            } else {
-            }
-        } else if (msg.arg1 == HttpTools.GET_MINISERVER_TOP) {
-            if (code == 0) {
-                Tools.saveStringValue(mActivity, Contants.storage.TINYFRAGMENTTOP, jsonString);
-                topDataAdapter(jsonString);
-            } else {
-            }
+                break;
+            case 1:
+                if (!TextUtils.isEmpty(result)) {
+                    Tools.saveStringValue(mActivity, Contants.storage.TINYFRAGMENTMID, result);
+                    midDataAdapter(result);
+                }
+                break;
+            case 2:
+                if (!TextUtils.isEmpty(result)) {
+                    try {
+                        JSONObject sonJon = new JSONObject(result);
+                        String key = sonJon.optString("key");
+                        String secret = sonJon.optString("secret");
+                        Tools.saveStringValue(mActivity, Contants.EMPLOYEE_LOGIN.key, key);
+                        Tools.saveStringValue(mActivity, Contants.EMPLOYEE_LOGIN.secret, secret);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                break;
         }
-    }
-
-    @Override
-    public void onFail(Message msg, String hintString) {
     }
 }
 

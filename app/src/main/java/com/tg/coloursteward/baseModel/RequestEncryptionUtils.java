@@ -3,7 +3,6 @@ package com.tg.coloursteward.baseModel;
 import android.content.Context;
 import android.text.TextUtils;
 
-
 import com.tg.coloursteward.BuildConfig;
 import com.tg.coloursteward.application.CityPropertyApplication;
 import com.tg.coloursteward.constant.Contants;
@@ -51,37 +50,12 @@ public class RequestEncryptionUtils {
             finalUrl = Contants.URl.SINGLE_DEVICE + urlString;//单设备接口
         } else if (type == 4) {
             finalUrl = Contants.URl.URL_ICETEST + urlString;//ICE接口
-        }else if (type == 5) {
+        } else if (type == 5) {
             finalUrl = Contants.URl.URL_ICESTAFF + urlString;//ICESTAFF接口
+        } else if (type == 6) {
+            finalUrl = Contants.URl.VERSION_ADDRESS + urlString;//升级接口
         }
         return finalUrl;
-    }
-
-    public static String getMapToString(Map<String, Object> paramsMap) {
-        if (null == paramsMap) {
-            return "";
-        } else {
-            Iterator<String> it = paramsMap.keySet().iterator();
-            StringBuffer sb = null;
-            while (it.hasNext()) {
-                String key = it.next();
-                String value = String.valueOf(paramsMap.get(key));
-                if (sb == null) {
-                    sb = new StringBuffer();
-                    sb.append("?");
-                } else {
-                    sb.append("&");
-                }
-                sb.append(key);
-                sb.append("=");
-                sb.append(value);
-            }
-            if (null == sb) {
-                return "";
-            } else {
-                return sb.toString();
-            }
-        }
     }
 
 
@@ -107,6 +81,11 @@ public class RequestEncryptionUtils {
         return sb.toString();
     }
 
+    /**
+     * @param context
+     * @param paramsMap
+     * @return 适配ICE接口的数据拼接
+     */
     public static Map<String, Object> getIceMap(Context context, Map<String, Object> paramsMap) {
         String sign = "";
         String ts = getTime();

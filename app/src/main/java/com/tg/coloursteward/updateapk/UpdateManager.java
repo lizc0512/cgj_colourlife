@@ -12,7 +12,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.content.FileProvider;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -163,7 +162,7 @@ public class UpdateManager {
                 public void onClick(View v) {//立即更新
                     dialog.dismiss();
                     // 显示下载对话框
-                    showDownloadDialog();
+                    showDownloadDialog("");
                 }
             });
             btnCancel.setOnClickListener(new View.OnClickListener() {
@@ -205,7 +204,7 @@ public class UpdateManager {
                 public void onClick(View v) {//立即更新
                     dialog.dismiss();
                     // 显示下载对话框
-                    showDownloadDialog();
+                    showDownloadDialog("");
                 }
             });
             window.setContentView(layout);
@@ -220,13 +219,12 @@ public class UpdateManager {
     /**
      * 显示软件下载进度框
      */
-    private void showDownloadDialog() {
-
+    public void showDownloadDialog(String downUrl) {
         if (ProgressBarDialog == null) {
             DisplayMetrics metrics = Tools.getDisplayMetrics(mContext);
             ProgressBarDialog = new AlertDialog.Builder(mContext).create();
-            ProgressBarDialog.setCancelable(true);
-            Window window = dialog.getWindow();
+            ProgressBarDialog.setCanceledOnTouchOutside(false);
+            Window window = ProgressBarDialog.getWindow();
             ProgressBarDialog.show();
             LinearLayout layout = (LinearLayout) LayoutInflater.from(mContext)
                     .inflate(R.layout.softupdate_progress, null);
@@ -236,7 +234,6 @@ public class UpdateManager {
             btn_cancel.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    dialog.dismiss();
                     ProgressBarDialog.dismiss();
                     // 设置取消状态
                     cancelUpdate = true;
@@ -247,17 +244,17 @@ public class UpdateManager {
             p.width = ((int) (metrics.widthPixels - 80 * metrics.density));
             window.setAttributes(p);
         }
-        dialog.show();
         // 下载文件
-        downloadApk();
+        downloadApk(downUrl);
 
     }
 
     /**
      * 启动线程下载apk
      */
-    private void downloadApk() {
-        String downurl = apkInfo.getDownloadUrl();
+    private void downloadApk(String downUrl) {
+//        String downurl = apkInfo.getDownloadUrl();
+        String downurl = downUrl;
         if (!"".equals(downurl)) {
             clientUrlPath = downurl;
         }
@@ -270,10 +267,8 @@ public class UpdateManager {
                     + date.getHours() + date.getMinutes() + date.getSeconds();
             updateDir = new File(Environment.getExternalStorageDirectory(),
                     Contants.downloadDir);
-            // TODO:文件名需要修改
             updateFile = new File(updateDir.getPath(), "WeiTown" + dateString
                     + ".apk");
-            Log.e("downloadApk", "updateDir.getPath() = " + updateDir.getPath());
         }
 
         // 使用新线程去下载
@@ -348,22 +343,6 @@ public class UpdateManager {
         }
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_VIEW);
-//        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
-//            Uri contentUri = FileProvider.getUriForFile(mContext, BuildConfig.APPLICATION_ID + ".filepicker.provider", updateFile);
-//            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//            i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-//            i.setDataAndType(contentUri, "application/vnd.android.package-archive");
-//        } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.M) {
-//
-//            i.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-//            i.setAction("android.intent.action.VIEW");
-//            String mimeType = getMIMEType(updateFile);
-//            i.setDataAndType(Uri.fromFile(updateFile), mimeType);
-//        } else {
-//            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//            i.setDataAndType(Uri.parse("file://" + updateFile.toString()),
-//                    "application/vnd.android.package-archive");
-//        }
         // 由于没有在Activity环境下启动Activity,设置下面的标签
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         if (Build.VERSION.SDK_INT > 23) { //判读版本是否在7.0含以上
@@ -421,6 +400,9 @@ public class UpdateManager {
                         || (int) (totalSize * 100 / updateTotalSize) - 1 > downloadCount) {
                     downloadCount += 1;
                     mProgress.setProgress(downloadCount);
+                    if (cancelUpdate) {
+                        httpConnection.disconnect();
+                    }
                 }
             }
         } finally {

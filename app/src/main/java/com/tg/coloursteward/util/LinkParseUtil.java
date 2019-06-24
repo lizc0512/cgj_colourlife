@@ -17,7 +17,7 @@ import com.tg.coloursteward.InviteRegisterActivity;
 import com.tg.coloursteward.MyBrowserActivity;
 import com.tg.coloursteward.PublicAccountActivity;
 import com.tg.coloursteward.R;
-import com.tg.coloursteward.SettingActivity;
+import com.tg.setting.activity.SettingActivity;
 import com.tg.coloursteward.info.UserInfo;
 
 import static com.tg.coloursteward.module.MainActivity1.getEnvironment;

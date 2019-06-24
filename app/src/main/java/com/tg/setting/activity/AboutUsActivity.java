@@ -1,11 +1,12 @@
-package com.tg.coloursteward;
+package com.tg.setting.activity;
 
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+import com.tg.coloursteward.BuildConfig;
+import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.BaseActivity;
-import com.tg.coloursteward.updateapk.UpdateManager;
 
 /**
  * 关于app页面
@@ -18,8 +19,8 @@ public class AboutUsActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        tvVersionShort = (TextView) findViewById(R.id.tv_versionShort);
-        String versionShort = UpdateManager.getVersionName(AboutUsActivity.this);
+        tvVersionShort = findViewById(R.id.tv_versionShort);
+        String versionShort = BuildConfig.VERSION_NAME;
         tvVersionShort.setText("当前版本 V" + versionShort);
     }
 

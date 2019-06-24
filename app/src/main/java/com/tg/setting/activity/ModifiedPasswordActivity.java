@@ -1,0 +1,118 @@
+package com.tg.setting.activity;
+
+import android.R.color;
+import android.os.Bundle;
+import android.text.TextUtils;
+import android.view.View;
+import android.widget.EditText;
+
+import com.tg.coloursteward.R;
+import com.tg.coloursteward.application.CityPropertyApplication;
+import com.tg.coloursteward.base.BaseActivity;
+import com.tg.coloursteward.baseModel.HttpResponse;
+import com.tg.coloursteward.constant.Contants;
+import com.tg.coloursteward.database.SharedPreferencesTools;
+import com.tg.coloursteward.info.UserInfo;
+import com.tg.coloursteward.net.HttpTools;
+import com.tg.coloursteward.net.MD5;
+import com.tg.coloursteward.util.Tools;
+import com.tg.coloursteward.view.dialog.ToastFactory;
+import com.tg.user.model.UserModel;
+
+
+/**
+ * 修改密码
+ *
+ * @author Administrator
+ */
+public class ModifiedPasswordActivity extends BaseActivity implements HttpResponse {
+    private EditText editPwd1;
+    private EditText editPwd2;
+    private EditText editPwd3;
+    private UserModel userModel;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        userModel = new UserModel(this);
+        editPwd1 = findViewById(R.id.edit_password);
+        editPwd2 = findViewById(R.id.edit_password2);
+        editPwd3 = findViewById(R.id.edit_password3);
+    }
+
+    @Override
+    protected boolean handClickEvent(View v) {
+        String pwd1;
+        String pwd2;
+        String pwd3;
+        pwd1 = editPwd1.getText().toString();
+        pwd2 = editPwd2.getText().toString();
+        pwd3 = editPwd3.getText().toString();
+        if (v.getId() == R.id.right_layout) {
+            pwd1 = editPwd1.getText().toString();
+            if (pwd1.length() < 6) {
+                ToastFactory.showToast(this, "请输入不少于6位的密码");
+                return false;
+            }
+            if (pwd2.length() < 6) {
+                ToastFactory.showToast(this, "请设置不少于6位的密码");
+                return false;
+            }
+            if (pwd3.length() < 6) {
+                ToastFactory.showToast(this, "请设置不少于6位的密码");
+                return false;
+            }
+            if (!pwd2.equals(pwd3)) {
+                ToastFactory.showToast(this, "确认密码和密码不一致");
+                return false;
+            }
+            try {
+                String pwdold = MD5.getMd5Value(pwd1).toLowerCase();
+                String pwdnew = MD5.getMd5Value(pwd2).toLowerCase();
+                userModel.putChangePwd(1, UserInfo.employeeAccount, pwdold, pwdnew, this::OnHttpResponse);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+        return super.handClickEvent(v);
+    }
+
+    /**
+     * 单设备退出
+     */
+    private void singleDevicelogout() {
+        String device_code = Tools.getStringValue(this, Contants.storage.DEVICE_TOKEN);
+        userModel.postSingleExit(0, device_code, this);
+    }
+
+    @Override
+    public View getContentView() {
+        return getLayoutInflater().inflate(R.layout.activity_modified_password,
+                null);
+    }
+
+    @Override
+    public String getHeadTitle() {
+        headView.setRightText("提交");
+        headView.setRightTextColor(getResources().getColor(color.white));
+        headView.setListenerRight(singleListener);
+        return "修改登录密码";
+    }
+
+    @Override
+    public void OnHttpResponse(int what, String result) {
+        switch (what) {
+            case 1:
+                if (!TextUtils.isEmpty(result)) {
+                    singleDevicelogout();
+                    String message = HttpTools.getMessageString(result);
+                    ToastFactory.showToast(ModifiedPasswordActivity.this, message);
+                    SharedPreferencesTools.clearUserId(ModifiedPasswordActivity.this);
+                    CityPropertyApplication.gotoLoginActivity(ModifiedPasswordActivity.this);
+                    ModifiedPasswordActivity.this.finish();
+                }
+                break;
+        }
+    }
+}

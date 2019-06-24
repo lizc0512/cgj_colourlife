@@ -37,4 +37,9 @@
     <string name="tv_home_location">正在定位...</string>
     <string name="request_method_head">请求方法为HEAD，没有响应内容。</string>
     <string name="request_method_not_allow">服务器仅仅支持请求方法：%1$s</string>
+
+    <string name="down_wifi" translatable="false">建议在WIFI环境下载</string>
+    <string name="update_version" translatable="false">更新至版本</string>
+    <string name="message_define">确定</string>
+    <string name="message_cancel">取消</string>
 </resources>

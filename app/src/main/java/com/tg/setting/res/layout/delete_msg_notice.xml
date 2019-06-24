@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/size_280dp"
+    android:layout_height="@dimen/size_150dp"
+    android:layout_gravity="center"
+    android:background="@drawable/bg_custom_dialog"
+    android:gravity="center"
+    android:orientation="vertical">
+
+
+    <TextView
+        android:id="@+id/tv_desc"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/size_110dp"
+        android:layout_marginLeft="@dimen/size_30dp"
+        android:layout_marginRight="@dimen/size_30dp"
+        android:gravity="center"
+        android:lineSpacingExtra="@dimen/size_5dp"
+        android:text=""
+        android:textColor="@color/color_333b46"
+        android:textSize="@dimen/font_14sp" />
+
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/size_1px"
+        android:background="@color/color_bfc7cc" />
+
+    <LinearLayout
+        android:id="@+id/linear_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_cancel"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@null"
+            android:gravity="center"
+            android:text="@string/message_cancel"
+            android:textColor="@color/color_333b46"
+            android:textSize="@dimen/font_16sp" />
+
+        <View
+            android:layout_width="@dimen/size_1px"
+            android:layout_height="match_parent"
+            android:background="@color/color_bfc7cc" />
+
+
+        <Button
+            android:id="@+id/btn_define"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@null"
+            android:gravity="center"
+            android:text="@string/message_define"
+            android:textColor="@color/color_1ca1f4"
+            android:textSize="@dimen/font_16sp" />
+    </LinearLayout>
+</LinearLayout>

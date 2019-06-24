@@ -5,12 +5,7 @@
     android:background="@color/white"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
-    tools:context=".AboutUsActivity">
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="8dp"
-        android:background="@color/app_bg" />
+    tools:context="com.tg.setting.activity.AboutUsActivity">
 
     <ImageView
         android:layout_width="wrap_content"
@@ -19,20 +14,14 @@
         android:layout_marginTop="50dp"
         android:src="@drawable/logo" />
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/tv_versionShort"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="20dp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/tv_versionShort"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=""
-            android:textColor="@color/login_tv"
-            android:textSize="14dp" />
-    </LinearLayout>
+        android:text=""
+        android:textColor="@color/login_tv"
+        android:textSize="@dimen/font_14sp" />
 
 </LinearLayout>

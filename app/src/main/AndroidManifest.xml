@@ -51,6 +51,7 @@
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <!-- 用于Android M及以上系统，申请加入忽略电池优化白名单-->
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"></uses-permission>
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
     <application
         android:name=".application.SophixStubApplication"
         android:allowBackup="false"
@@ -98,11 +99,11 @@
         <!-- 图片显示 -->
         <activity android:name=".ShowImageActivity" />
         <!-- 更多设置 -->
-        <activity android:name=".SettingActivity" />
+        <activity android:name="com.tg.setting.activity.SettingActivity" />
         <!-- 关于app -->
-        <activity android:name=".AboutUsActivity" />
+        <activity android:name="com.tg.setting.activity.AboutUsActivity" />
         <!-- 修改密码 -->
-        <activity android:name=".ModifiedPasswordActivity" />
+        <activity android:name="com.tg.setting.activity.ModifiedPasswordActivity" />
         <!-- 意见反馈 -->
         <activity android:name=".OpinionActivity" />
         <!-- 获取手机通讯录 -->

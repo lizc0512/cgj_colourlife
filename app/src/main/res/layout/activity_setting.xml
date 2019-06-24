@@ -4,12 +4,13 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:orientation="vertical"
-    tools:context=".SettingActivity">
+    tools:context="com.tg.setting.activity.SettingActivity">
 
     <View
         android:layout_width="match_parent"
         android:layout_height="8dp"
         android:background="@color/app_bg" />
+
     <RelativeLayout
         android:id="@+id/rl_setting_imstatus"
         android:layout_width="match_parent"
@@ -26,6 +27,13 @@
             android:textSize="16dp" />
 
     </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginLeft="16dp"
+        android:background="@color/app_bg" />
+
     <RelativeLayout
         android:id="@+id/rl_setting_changepwd"
         android:layout_width="match_parent"
@@ -145,15 +153,17 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="16dp"
             android:src="@drawable/common_level2_icon_bg_color" />
+
         <View
             android:id="@+id/tv_setting_point"
             android:layout_width="8dp"
             android:layout_height="8dp"
             android:layout_centerVertical="true"
             android:layout_marginRight="0dp"
-            android:visibility="gone"
             android:layout_toLeftOf="@id/iv_setting_nextver"
-            android:background="@drawable/settting_point" />
+            android:background="@drawable/settting_point"
+            android:visibility="gone" />
+
         <TextView
             android:id="@+id/tv_setting_newver"
             android:layout_width="wrap_content"

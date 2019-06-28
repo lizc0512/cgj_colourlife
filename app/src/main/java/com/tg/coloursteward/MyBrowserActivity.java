@@ -12,7 +12,6 @@ import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.net.http.SslError;
 import android.os.AsyncTask;
@@ -128,7 +127,6 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
     private String title;
     private Intent data;
     private Boolean hideTitle;
-    private int isShowLoading = 0;
     private ProgressDialog mDialog;
     private ValueCallback<Uri> uploadFile;
     private ValueCallback<Uri[]> uploadFiles;
@@ -223,7 +221,6 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                // TODO Auto-generated method stub
                 Uri uri = Uri.parse(url);
                 if (url.startsWith("tel:")) {//打电话
                     Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse(url));
@@ -248,18 +245,6 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
             public void onPageFinished(WebView view, String url) {
                 tvTitle.setText(view.getTitle());
                 DialogFactory.getInstance().hideLoadialogDialog();
-            }
-
-
-            @Override
-            public void onPageStarted(WebView view, String url,
-                                      Bitmap favicon) {
-                super.onPageStarted(view, url, favicon);
-                if (isShowLoading == 0) {
-                    isShowLoading = 1;
-                    DialogFactory.getInstance().createLoadingDialog(MyBrowserActivity.this, "加载中...");
-                }
-
             }
         });
 

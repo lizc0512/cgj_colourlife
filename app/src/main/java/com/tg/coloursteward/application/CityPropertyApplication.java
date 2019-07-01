@@ -5,35 +5,30 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ApplicationInfo;
 import android.support.multidex.MultiDex;
 import android.util.Log;
 
 import com.baidu.trace.LBSTraceClient;
 import com.baidu.trace.Trace;
 import com.facebook.stetho.Stetho;
-import com.networkbench.agent.impl.NBSAppAgent;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.shell.SdkManager;
 import com.tencent.smtt.sdk.QbSdk;
-import com.tg.coloursteward.util.SSLContextUtil;
-import com.tg.user.activity.LoginActivity;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.database.SharedPreferencesTools;
-import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.module.MainActivity1;
 import com.tg.coloursteward.net.ResponseData;
 import com.tg.coloursteward.util.GDLocationUtil;
+import com.tg.coloursteward.util.SSLContextUtil;
 import com.tg.coloursteward.util.Tools;
+import com.tg.user.activity.LoginActivity;
 import com.yanzhenjie.nohttp.InitializationConfig;
 import com.yanzhenjie.nohttp.NoHttp;
 import com.yanzhenjie.nohttp.URLConnectionNetworkExecutor;
 import com.youmai.hxsdk.HuxinSdkManager;
-
-import org.litepal.LitePalApplication;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -50,6 +45,7 @@ public class CityPropertyApplication extends Application {
     public static LBSTraceClient lbsTraceClient;
     public static Trace trace;
     private static Context context;
+
     @Override
     public void onCreate() {
         // TODO Auto-generated method stub
@@ -66,7 +62,6 @@ public class CityPropertyApplication extends Application {
                 .retry(1)
                 .build();
         NoHttp.initialize(config);
-        LitePalApplication.initialize(this);//初始化litepal数据库
         instance = this;
         //Huxin IM SDK初始化
         HuxinSdkManager.instance().init(this);
@@ -100,20 +95,6 @@ public class CityPropertyApplication extends Application {
         QbSdk.initX5Environment(getApplicationContext(), cb);
         CrashHandler crashHandler = CrashHandler.getInstance();
         crashHandler.init(getApplicationContext());
-        if (!isApkDebugable(getApplicationContext())) {
-            NBSAppAgent.setLicenseKey("e706eb8242634439958ddeed9db7f61f").withLocationServiceEnabled(true).start(this.getApplicationContext());
-            NBSAppAgent.setUserCrashMessage("username", UserInfo.employeeAccount);
-        }
-    }
-
-    public static boolean isApkDebugable(Context context) {
-        try {
-            ApplicationInfo info = context.getApplicationInfo();
-            return (info.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
-        } catch (Exception e) {
-
-        }
-        return false;
     }
 
     public static void initImageLoader(Context context) {
@@ -134,6 +115,7 @@ public class CityPropertyApplication extends Application {
 
         return instance;
     }
+
     public static Context getContext() {
         return context;
     }

@@ -4,14 +4,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.youth.banner.Banner xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/banner"
-        android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:visibility="gone"
-        app:indicator_drawable_selected="@drawable/ad_dot_h"
-        app:indicator_drawable_unselected="@drawable/ad_dot" />
-
     <include layout="@layout/color_title" />
 
 

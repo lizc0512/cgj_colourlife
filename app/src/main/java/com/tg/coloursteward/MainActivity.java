@@ -35,7 +35,6 @@ import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.amap.api.maps2d.LocationSource;
-import com.githang.statusbar.StatusBarCompat;
 import com.tg.coloursteward.application.CityPropertyApplication;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.fragment.FragmentCentre;
@@ -219,7 +218,7 @@ public class MainActivity extends FragmentActivity implements ResponseListener, 
         msgHand = new MessageHandler(this);
         msgHand.setResponseListener(this);
         setContentView(R.layout.activity_main);
-        StatusBarCompat.setStatusBarColor(this, getResources().getColor(R.color.home_fill), false);
+//        StatusBarCompat.setStatusBarColor(this, getResources().getColor(R.color.home_fill), false);
         Tools.setMainStatus(MainActivity.this, true);
         huxinInit();
         windowPermission();
@@ -324,12 +323,12 @@ public class MainActivity extends FragmentActivity implements ResponseListener, 
             //执行6.0以下绘制代码
         }
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.ACCESS_FINE_LOCATION}, Activity.RESULT_FIRST_USER);
-        }
+//        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+//                != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+//                != PackageManager.PERMISSION_GRANTED) {
+//            ActivityCompat.requestPermissions(this,
+//                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.ACCESS_FINE_LOCATION}, Activity.RESULT_FIRST_USER);
+//        }
 
     }
 

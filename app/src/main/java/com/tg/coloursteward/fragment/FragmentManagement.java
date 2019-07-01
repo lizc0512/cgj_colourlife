@@ -63,10 +63,6 @@ import com.youmai.hxsdk.http.IPostListener;
 import com.youmai.hxsdk.http.OkHttpConnector;
 import com.youmai.hxsdk.utils.GsonUtil;
 import com.youmai.hxsdk.utils.ListUtils;
-import com.youth.banner.Banner;
-import com.youth.banner.BannerConfig;
-import com.youth.banner.listener.OnBannerListener;
-import com.youth.banner.loader.ImageLoader;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -107,7 +103,6 @@ public class FragmentManagement extends Fragment implements MessageHandler.Respo
     private ArrayList<GridViewInfo> gridlist2 = new ArrayList<GridViewInfo>();
     private String commonjsonStr, elsejsonStr;
 
-    private Banner banner;
 
     private ManageMentLinearlayout magLinearLayoutArea;
     private ManageMentLinearlayout magLinearLayoutStock;
@@ -759,7 +754,6 @@ public class FragmentManagement extends Fragment implements MessageHandler.Respo
         tvExamineNum = (TextView) mView.findViewById(R.id.tv_examineNum);
         mGridView1 = (MyGridView) mView.findViewById(R.id.gridview1);
         mGridView2 = (MyGridView) mView.findViewById(R.id.gridview2);
-        banner = (Banner) mView.findViewById(R.id.banner);
 
         outLocalData();
 
@@ -1412,28 +1406,7 @@ public class FragmentManagement extends Fragment implements MessageHandler.Respo
                             titles.add(item.getName());
                             urls.add(item.getUrl());
                         }
-
-                        OnBannerListener listener = new OnBannerListener() {
-                            @Override
-                            public void OnBannerClick(int position) {
-                                String url = urls.get(position);
-                                if (!TextUtils.isEmpty(url)) {
-                                    Intent intent = new Intent(mActivity, MyBrowserActivity.class);
-                                    intent.putExtra(MyBrowserActivity.KEY_URL, url);
-                                    mActivity.startActivity(intent);
-                                }
-                            }
-                        };
-
-                        banner.setImages(images)
-                                .setBannerTitles(titles)
-                                .setImageLoader(new GlideImageLoader())
-                                .setOnBannerListener(listener)
-                                .setBannerStyle(BannerConfig.CIRCLE_INDICATOR_TITLE_INSIDE)
-                                .start();
                     }
-
-
                 }
             }
         });
@@ -1453,17 +1426,6 @@ public class FragmentManagement extends Fragment implements MessageHandler.Respo
     }
 
 
-    public class GlideImageLoader extends ImageLoader {
-        @Override
-        public void displayImage(Context context, Object path, ImageView imageView) {
-            //具体方法内容自己去选择，次方法是为了减少banner过多的依赖第三方包，所以将这个权限开放给使用者去选择
-            Glide.with(context.getApplicationContext())
-                    .load(path)
-                    .apply(new RequestOptions()
-                            .diskCacheStrategy(DiskCacheStrategy.ALL))
-                    .into(imageView);
-        }
-    }
 
 }
 

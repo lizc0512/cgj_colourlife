@@ -354,7 +354,6 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
                                     msg.what = NEXT;
                                     handler.sendMessage(msg);
                                 } catch (InterruptedException e) {
-                                    // TODO Auto-generated catch block
                                     e.printStackTrace();
                                 }
                             }

@@ -1,7 +1,6 @@
 package com.tg.coloursteward.module;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.ContentValues;
@@ -50,11 +49,14 @@ import com.baidu.trace.model.PushMessage;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.FutureTarget;
 import com.bumptech.glide.request.target.Target;
+import com.hjq.permissions.OnPermission;
+import com.hjq.permissions.XXPermissions;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 import com.tg.coloursteward.InviteRegisterActivity;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.application.CityPropertyApplication;
 import com.tg.coloursteward.base.BaseActivity;
+import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.database.SharedPreferencesTools;
 import com.tg.coloursteward.entity.SingleDeviceLogin;
@@ -81,6 +83,7 @@ import com.tg.coloursteward.serice.OAuth2ServiceUpdate;
 import com.tg.coloursteward.updateapk.ApkInfo;
 import com.tg.coloursteward.updateapk.UpdateManager;
 import com.tg.coloursteward.util.AuthTimeUtils;
+import com.tg.coloursteward.util.DialogUtils;
 import com.tg.coloursteward.util.ExampleUtil;
 import com.tg.coloursteward.util.GDLocationUtil;
 import com.tg.coloursteward.util.GsonUtils;
@@ -89,6 +92,11 @@ import com.tg.coloursteward.util.TokenUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.PopWindowView;
 import com.tg.coloursteward.view.dialog.ToastFactory;
+import com.tg.setting.adapter.UpdateAdapter;
+import com.tg.setting.entity.VersionEntity;
+import com.tg.setting.model.SettingModel;
+import com.tg.setting.utils.UpdateHelper;
+import com.tg.setting.view.UpdateVerSionDialog;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.config.AppConfig;
 import com.youmai.hxsdk.config.ColorsConfig;
@@ -111,6 +119,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -129,7 +138,7 @@ import static com.tg.coloursteward.constant.Contants.URl.environment;
  * Created by colin on 2018/3/15.
  */
 
-public class MainActivity1 extends BaseActivity implements MessageHandler.ResponseListener, View.OnClickListener {
+public class MainActivity1 extends BaseActivity implements MessageHandler.ResponseListener, View.OnClickListener, HttpResponse {
 
     private static final String TAG = MainActivity1.class.getSimpleName();
 
@@ -183,7 +192,8 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
     private String urlauth_type = "";
     public static String auth_type = "";
     public static String url_ad;
-
+    private SettingModel settingModel;
+    private List<String> updateList = new ArrayList<>();
     private BroadcastReceiver freshReceiver = new BroadcastReceiver() {
 
         @Override
@@ -207,7 +217,9 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
     private UpdateEntityRequest updateEntityRequest;
     private AddEntityRequest addEntityRequest;
     private SearchRequest searchRequest;
-
+    private String downUrl;
+    private String[] permission = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
+    private UpdateHelper updateHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -215,7 +227,7 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
         setContentView(R.layout.activity_main1);
         mContext = this;
         mHandler = new NormalHandler(this);
-        windowPermission();
+        settingModel = new SettingModel(this);
         String key = Tools.getStringValue(this, Contants.EMPLOYEE_LOGIN.key);
         String secret = Tools.getStringValue(this, Contants.EMPLOYEE_LOGIN.secret);
         if (TextUtils.isEmpty(key) || TextUtils.isEmpty(secret)) {
@@ -262,21 +274,20 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
     }
 
     private void CheckPermission() {
-        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
-                || ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                || ContextCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
-                || ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
-                || ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED
-                || ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE,
-                            android.Manifest.permission.ACCESS_FINE_LOCATION,
-                            android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                            android.Manifest.permission.CAMERA,
-                            android.Manifest.permission.READ_CONTACTS,
-                            android.Manifest.permission.READ_PHONE_STATE},
-                    Activity.DEFAULT_KEYS_SEARCH_LOCAL);
-        }
+        XXPermissions.with(this)
+                .permission(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.READ_EXTERNAL_STORAGE)
+                .request(new OnPermission() {
+                    @Override
+                    public void hasPermission(List<String> granted, boolean isAll) {
+
+                    }
+
+                    @Override
+                    public void noPermission(List<String> denied, boolean quick) {
+
+                    }
+                });
     }
 
     private void initGetLocation() {
@@ -428,17 +439,6 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
     @Override
     public String getHeadTitle() {
         return null;
-    }
-
-
-    public void windowPermission() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.ACCESS_FINE_LOCATION}, Activity.RESULT_FIRST_USER);
-        }
-
     }
 
     @Override
@@ -928,12 +928,13 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
 
     // 检测版本更新
     private void getVersion() {
+        settingModel.getUpdate(0, "1", false, this);
         RequestConfig config = new RequestConfig(this, HttpTools.GET_VERSION_INFO);
         RequestParams params = new RequestParams();
         String version = UpdateManager.getVersionName(this);
         params.put("version", version);
         params.put("type", "android");
-        HttpTools.httpGet(Contants.URl.URL_CPMOBILE, "/1.0/version", config, params);
+//        HttpTools.httpGet(Contants.URl.URL_CPMOBILE, "/1.0/version", config, params);
     }
 
     // 获取即时分成金额
@@ -1327,6 +1328,91 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
         getWindow().setAttributes(lp);
     }
 
+    @Override
+    public void OnHttpResponse(int what, String result) {
+        switch (what) {
+            case 0:
+                if (!TextUtils.isEmpty(result)) {
+                    VersionEntity versionEntity = new VersionEntity();
+                    try {
+                        versionEntity = GsonUtils.gsonToBean(result, VersionEntity.class);
+                        int result_up = versionEntity.getContent().getResult();
+                        downUrl = versionEntity.getContent().getInfo().getUrl();
+                        updateList.clear();
+                        updateList.add(versionEntity.getContent().getInfo().getFunc());
+                        updateHelper = new UpdateHelper(MainActivity1.this);
+                        if (result_up == 2) {//1：最新版本，2：介于最新和最低版本之间，3：低于支持的最低版本
+                            int type = versionEntity.getContent().getType();
+                            if ((type == 1)) {//1：大版本更新，2：小版本更新
+                                showUpdateDialog(result_up, versionEntity.getContent().getInfo().getVersion(), downUrl, updateList);
+                            }
+                        } else if (result_up == 3) {
+                            showUpdateDialog(result_up, versionEntity.getContent().getInfo().getVersion(), downUrl, updateList);
+                        }
+                    } catch (Exception e) {
+                        e.toString();
+                    }
+                }
+                break;
+        }
+    }
+
+    private void checkPermission(int result_up, String getVersion, String downUrl, List<String> updateList) {
+        XXPermissions.with(this)
+                .constantRequest()
+                .permission(permission)
+                .request(new OnPermission() {
+                    @Override
+                    public void hasPermission(List<String> granted, boolean isAll) {
+                        if (isAll) {
+                            updateHelper.showUpdateDialog(result_up, getVersion, downUrl, updateList);
+                        }
+                    }
+
+                    @Override
+                    public void noPermission(List<String> denied, boolean quick) {
+                        DialogUtils.showPermissionDialog(MainActivity1.this, "请到权限管理中打开彩管家的存储权限");
+                    }
+                });
+    }
+
+    private void showUpdateDialog(int code, String version, String mdownUrl, List<String> updateList) {
+        downUrl = mdownUrl;
+        UpdateVerSionDialog updateDialog = new UpdateVerSionDialog(mContext);
+        updateDialog.ok.setText("更新至V" + version + "版本");
+        UpdateAdapter updateAdapter = new UpdateAdapter(mContext, updateList);
+        updateDialog.listView.setAdapter(updateAdapter);
+        switch (code) {
+            case 2://可选更新
+                updateDialog.show();
+                break;
+            case 3://强制更新
+                updateDialog.cancel.setVisibility(View.GONE);
+                updateDialog.mDialog.setCancelable(false);
+                updateDialog.show();
+                break;
+        }
+        updateDialog.ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (code != 1) {
+                    updateDialog.dismiss();
+                    if (XXPermissions.isHasPermission(MainActivity1.this, permission)) {
+                        updateHelper.checkStartDown(downUrl);
+                    } else {
+                        checkPermission(code, version, mdownUrl, updateList);
+                    }
+                }
+            }
+        });
+        updateDialog.cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateDialog.dismiss();
+            }
+        });
+
+    }
 
     class PopupDismissListener implements PopupWindow.OnDismissListener {
 

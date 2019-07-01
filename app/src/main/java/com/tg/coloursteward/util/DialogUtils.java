@@ -23,13 +23,13 @@ public class DialogUtils {
      *
      * @param context
      */
-    public static void showPermissionDialog(Context context) {
+    public static void showPermissionDialog(Context context,String content) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
         builder.setTitle(context.getString(com.youmai.hxsdk.R.string.permission_title))
-                .setMessage(context.getString(com.youmai.hxsdk.R.string.permission_content));
+                .setMessage(content);
 
-        builder.setPositiveButton(context.getString(com.youmai.hxsdk.R.string.hx_confirm),
+        builder.setPositiveButton(context.getString(com.youmai.hxsdk.R.string.hx_setting),
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface arg0, int arg1) {

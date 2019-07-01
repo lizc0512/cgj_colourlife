@@ -1,7 +1,6 @@
 package com.tg.coloursteward.updateapk;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -31,6 +30,7 @@ import com.tg.coloursteward.util.Tools;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -53,7 +53,6 @@ public class UpdateManager {
     private boolean isHome;
     /* 更新进度条 */
     private ProgressBar mProgress;
-    private Dialog mDownloadDialog;
     // 下载目录
     private File updateDir = null;
     private File updateFile = null;
@@ -168,7 +167,6 @@ public class UpdateManager {
             btnCancel.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {//稍后更新
-                    // TODO Auto-generated method stub
                     dialog.dismiss();
                 }
             });
@@ -253,10 +251,8 @@ public class UpdateManager {
      * 启动线程下载apk
      */
     private void downloadApk(String downUrl) {
-//        String downurl = apkInfo.getDownloadUrl();
-        String downurl = downUrl;
-        if (!"".equals(downurl)) {
-            clientUrlPath = downurl;
+        if (!"".equals(downUrl)) {
+            clientUrlPath = downUrl;
         }
         appName = mContext.getString(R.string.app_name);
         // 判断是否有外部存储
@@ -282,19 +278,22 @@ public class UpdateManager {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case DOWNLOAD_COMPLETE:
-                    // //下载完毕后安装
+                    if (ProgressBarDialog != null) {
+                        ProgressBarDialog.dismiss();
+                    }
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
                             installApk();
                         }
                     }, 300);
+                    break;
                 case DOWNLOAD_FAIL:
                     // 下载失败处理
-                    if (mDownloadDialog != null) {
-                        mDownloadDialog.dismiss();
+                    if (ProgressBarDialog != null) {
+                        ProgressBarDialog.dismiss();
                     }
-                default:
+                    break;
             }
 
         }
@@ -361,9 +360,7 @@ public class UpdateManager {
     }
 
     // 下载文件
-    public long downloadUpdateFile(String downloadUrl, File saveFile)
-            throws Exception {
-
+    public long downloadUpdateFile(String downloadUrl, File saveFile) throws IOException {
         int downloadCount = 0;
         int currentSize = 0;
         long totalSize = 0;
@@ -401,10 +398,12 @@ public class UpdateManager {
                     downloadCount += 1;
                     mProgress.setProgress(downloadCount);
                     if (cancelUpdate) {
-                        httpConnection.disconnect();
+//                        httpConnection.disconnect();
                     }
                 }
             }
+        } catch (Exception e) {
+            String log = e.toString();
         } finally {
             if (httpConnection != null) {
                 httpConnection.disconnect();

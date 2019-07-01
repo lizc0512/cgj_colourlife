@@ -8,7 +8,6 @@ import com.tg.coloursteward.baseModel.BaseModel;
 import com.tg.coloursteward.baseModel.HttpListener;
 import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.baseModel.RequestEncryptionUtils;
-import com.tg.coloursteward.info.UserInfo;
 import com.yanzhenjie.nohttp.NoHttp;
 import com.yanzhenjie.nohttp.RequestMethod;
 import com.yanzhenjie.nohttp.rest.Request;
@@ -37,7 +36,7 @@ public class SettingModel extends BaseModel {
 
     /**
      * @param what
-     * @param type
+     * @param type         类型。1：安卓，2：ios
      * @param isloading
      * @param httpResponse 检测升级
      */
@@ -57,18 +56,18 @@ public class SettingModel extends BaseModel {
                         int code = showSuccesResultMessage(result);
                         if (code == 0) {
                             httpResponse.OnHttpResponse(what, result);
-                        } else {
-                            showErrorCodeMessage(response);
                         }
                     } else {
-                        showErrorCodeMessage(response);
+                        if (isloading) {
+                            showErrorCodeMessage(response);
+                        }
                     }
                 }
             }
 
             @Override
             public void onFailed(int what, Response<String> response) {
-                showExceptionMessage(what, response);
+//                showExceptionMessage(what, response);
             }
         }, true, isloading);
 

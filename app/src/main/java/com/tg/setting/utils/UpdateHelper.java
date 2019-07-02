@@ -100,8 +100,8 @@ public class UpdateHelper implements ResultCallBack {
     }
 
     private void startInstallPermissionSettingActivity() {
-        baseActivity = (BaseActivity)mContext;
-        if(baseActivity != null){
+        baseActivity = (BaseActivity) mContext;
+        if (baseActivity != null) {
             baseActivity.setResultCallBack(this);
         }
         Uri packageURI = Uri.parse("package:" + mContext.getPackageName());

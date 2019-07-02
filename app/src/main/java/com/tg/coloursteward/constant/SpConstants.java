@@ -17,12 +17,17 @@ public interface SpConstants {
         String LONGITUDE = "str_longitude";//经度
         String ISLOGIN = "isLogin";//是否登录
         String DIFFERENCE = "difference";//ts值
+        String UPDATE = "update";
+        String APKNAME = "apkname";
+        String DOWNLOADERVERSION = "downloaderversion";
     }
-    interface accessToken{
-        String accssToken="access_token2";
-        String refreshAccssToken="refresh_token2";
-        String tokenType="token_type2";
+
+    interface accessToken {
+        String accssToken = "access_token2";
+        String refreshAccssToken = "refresh_token2";
+        String tokenType = "token_type2";
     }
+
     interface storage {
         String THRID_CODE = "thrid_code";//彩之云授权登录code
         String SKINCODE = "skin_code";//皮肤包

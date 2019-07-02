@@ -357,6 +357,7 @@
 
         <activity android:name=".module.BrowerJumpExcessiveActivity"></activity>
         <activity android:name="com.tg.user.activity.LeadActivity" />
+        <service android:name=".serice.UpdateService"/>
     </application>
 
 </manifest>

@@ -11,10 +11,12 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
@@ -80,14 +82,15 @@ import com.tg.coloursteward.serice.AppAuthService;
 import com.tg.coloursteward.serice.AuthAppService;
 import com.tg.coloursteward.serice.HomeService;
 import com.tg.coloursteward.serice.OAuth2ServiceUpdate;
+import com.tg.coloursteward.serice.UpdateService;
 import com.tg.coloursteward.updateapk.ApkInfo;
 import com.tg.coloursteward.updateapk.UpdateManager;
 import com.tg.coloursteward.util.AuthTimeUtils;
-import com.tg.coloursteward.util.DialogUtils;
 import com.tg.coloursteward.util.ExampleUtil;
 import com.tg.coloursteward.util.GDLocationUtil;
 import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.LinkParseUtil;
+import com.tg.coloursteward.util.ToastUtil;
 import com.tg.coloursteward.util.TokenUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.PopWindowView;
@@ -96,6 +99,7 @@ import com.tg.setting.adapter.UpdateAdapter;
 import com.tg.setting.entity.VersionEntity;
 import com.tg.setting.model.SettingModel;
 import com.tg.setting.utils.UpdateHelper;
+import com.tg.setting.view.DeleteMsgDialog;
 import com.tg.setting.view.UpdateVerSionDialog;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.config.AppConfig;
@@ -218,8 +222,8 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
     private AddEntityRequest addEntityRequest;
     private SearchRequest searchRequest;
     private String downUrl;
-    private String[] permission = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
-    private UpdateHelper updateHelper;
+    private UpdateVerSionDialog updateDialog;
+    private String getVersion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -1171,7 +1175,6 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
 
                 @Override
                 public void onFailed(String Message) {
-                    // TODO Auto-generated method stub
 
                 }
             });
@@ -1189,7 +1192,6 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
 
                 @Override
                 public void onFailed(String Message) {
-                    // TODO Auto-generated method stub
 
                 }
             });
@@ -1338,9 +1340,9 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
                         versionEntity = GsonUtils.gsonToBean(result, VersionEntity.class);
                         int result_up = versionEntity.getContent().getResult();
                         downUrl = versionEntity.getContent().getInfo().getUrl();
+                        getVersion = versionEntity.getContent().getInfo().getVersion();
                         updateList.clear();
                         updateList.add(versionEntity.getContent().getInfo().getFunc());
-                        updateHelper = new UpdateHelper(MainActivity1.this);
                         if (result_up == 2) {//1：最新版本，2：介于最新和最低版本之间，3：低于支持的最低版本
                             int type = versionEntity.getContent().getType();
                             if ((type == 1)) {//1：大版本更新，2：小版本更新
@@ -1357,29 +1359,10 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
         }
     }
 
-    private void checkPermission(int result_up, String getVersion, String downUrl, List<String> updateList) {
-        XXPermissions.with(this)
-                .constantRequest()
-                .permission(permission)
-                .request(new OnPermission() {
-                    @Override
-                    public void hasPermission(List<String> granted, boolean isAll) {
-                        if (isAll) {
-                            updateHelper.showUpdateDialog(result_up, getVersion, downUrl, updateList);
-                        }
-                    }
-
-                    @Override
-                    public void noPermission(List<String> denied, boolean quick) {
-                        DialogUtils.showPermissionDialog(MainActivity1.this, "请到权限管理中打开彩管家的存储权限");
-                    }
-                });
-    }
-
     private void showUpdateDialog(int code, String version, String mdownUrl, List<String> updateList) {
         downUrl = mdownUrl;
-        UpdateVerSionDialog updateDialog = new UpdateVerSionDialog(mContext);
-        updateDialog.ok.setText("更新至V" + version + "版本");
+        updateDialog = new UpdateVerSionDialog(mContext);
+        updateDialog.ok.setText("立即更新V" + version + "版本");
         UpdateAdapter updateAdapter = new UpdateAdapter(mContext, updateList);
         updateDialog.listView.setAdapter(updateAdapter);
         switch (code) {
@@ -1396,12 +1379,43 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
             @Override
             public void onClick(View v) {
                 if (code != 1) {
-                    updateDialog.dismiss();
-                    if (XXPermissions.isHasPermission(MainActivity1.this, permission)) {
-                        updateHelper.checkStartDown(downUrl);
-                    } else {
-                        checkPermission(code, version, mdownUrl, updateList);
-                    }
+                    //用户点击更新，跳转到下载更新页面
+                    List<String> list = new ArrayList<>();
+                    list.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                    XXPermissions.with(MainActivity1.this)
+                            .constantRequest()
+                            .permission(list)
+                            .request(new OnPermission() {
+                                @Override
+                                public void hasPermission(List<String> granted, boolean isAll) {
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                        if (getPackageManager().canRequestPackageInstalls()) {
+                                            startDown();
+                                        } else {
+                                            DeleteMsgDialog dialog = new DeleteMsgDialog(MainActivity1.this, R.style.custom_dialog_theme);
+                                            dialog.show();
+                                            dialog.setContentText("当前手机系统安装应用需要打开未知来源权限，请去设置中开启权限");
+                                            dialog.setrightText("去打开");
+                                            dialog.setCanceledOnTouchOutside(false);
+                                            dialog.btn_define.setOnClickListener(v1 -> {
+                                                dialog.dismiss();
+                                                startInstallPermissionSettingActivity();
+                                            });
+                                            dialog.btn_cancel.setOnClickListener(v1 -> {
+                                                dialog.dismiss();
+                                            });
+                                        }
+                                    } else {
+                                        startDown();
+                                    }
+                                }
+
+                                @Override
+                                public void noPermission(List<String> denied, boolean quick) {
+                                    ToastUtil.showShortToast(MainActivity1.this,
+                                            "存储权限被禁止，请去开启该权限");
+                                }
+                            });
                 }
             }
         });
@@ -1412,6 +1426,23 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
             }
         });
 
+    }
+
+    private void startInstallPermissionSettingActivity() {
+        Uri packageURI = Uri.parse("package:" + getPackageName());
+        Intent intent = new Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES, packageURI);
+        startActivityForResult(intent, 10001);
+    }
+
+    private void startDown() {
+        if (null != updateDialog) {
+            updateDialog.dismiss();
+        }
+        Intent intent = new Intent(MainActivity1.this, UpdateService.class);
+        intent.putExtra(UpdateService.DOWNLOAD_URL, downUrl);
+        intent.putExtra(UpdateService.VERSIONNAME, getVersion);
+        MainActivity1.this.startService(intent);
+        ToastUtil.showShortToast(MainActivity1.this, "星城园丁已开始下载更新,详细信息可在通知栏查看哟!");
     }
 
     class PopupDismissListener implements PopupWindow.OnDismissListener {

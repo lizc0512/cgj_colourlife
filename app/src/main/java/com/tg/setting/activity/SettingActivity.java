@@ -4,8 +4,12 @@ package com.tg.setting.activity;
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Message;
+import android.provider.Settings;
+import android.support.annotation.RequiresApi;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -22,15 +26,17 @@ import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.database.SharedPreferencesTools;
 import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.net.HttpTools;
+import com.tg.coloursteward.serice.UpdateService;
 import com.tg.coloursteward.updateapk.UpdateManager;
-import com.tg.coloursteward.util.DialogUtils;
 import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.ToastUtil;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.dialog.DialogFactory;
+import com.tg.setting.adapter.UpdateAdapter;
 import com.tg.setting.entity.VersionEntity;
 import com.tg.setting.model.SettingModel;
-import com.tg.setting.utils.UpdateHelper;
+import com.tg.setting.view.DeleteMsgDialog;
+import com.tg.setting.view.UpdateVerSionDialog;
 import com.tg.user.model.UserModel;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.config.AppConfig;
@@ -60,14 +66,15 @@ public class SettingActivity extends BaseActivity implements OnClickListener, Ht
     private TextView tv_setting_quit;
     private TextView tv_setting_imstatus;
     private View tv_setting_point;
-    private Boolean isCheck = false;
     private SettingModel settingModel;
     private UserModel userModel;
     private List<String> updateList = new ArrayList<>();
     private String downUrl;
-    private UpdateHelper updateHelper;
     private int result_up;
     private String getVersion;
+    private UpdateVerSionDialog updateDialog;
+    private UpdateAdapter updateAdapter;
+    private boolean isCheck = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +82,6 @@ public class SettingActivity extends BaseActivity implements OnClickListener, Ht
         settingModel = new SettingModel(this);
         userModel = new UserModel(this);
         initView();
-        isCheck = false;
         getVersion(false);
     }
 
@@ -225,19 +231,23 @@ public class SettingActivity extends BaseActivity implements OnClickListener, Ht
                         getVersion = versionEntity.getContent().getInfo().getVersion();
                         updateList.clear();
                         updateList.add(versionEntity.getContent().getInfo().getFunc());
-                        updateHelper = new UpdateHelper(SettingActivity.this);
                         if (result_up == 2) {//1：最新版本，2：介于最新和最低版本之间，3：低于支持的最低版本
                             tv_setting_newver.setText("最新版本 " + versionEntity.getContent().getInfo().getVersion());
                             tv_setting_point.setVisibility(View.VISIBLE);
                             int type = versionEntity.getContent().getType();
                             if ((type == 2 || type == 1) && isCheck) {//1：大版本更新，2：小版本更新
-                                checkPermission(result_up, getVersion, downUrl, updateList);
+                                showUpdateDialog(result_up, versionEntity.getContent().getInfo().getVersion(), downUrl);
                             }
-                        } else if (result_up == 3 && isCheck) {
-                            checkPermission(result_up, getVersion, downUrl, updateList);
+                        } else if (result_up == 3) {
+                            tv_setting_newver.setText("最新版本 " + versionEntity.getContent().getInfo().getVersion());
+                            tv_setting_point.setVisibility(View.VISIBLE);
+                            if (isCheck) {
+                                showUpdateDialog(result_up, versionEntity.getContent().getInfo().getVersion(), downUrl);
+                            }
+                        } else if (result_up == 1) {
+                            ToastUtil.showShortToast(SettingActivity.this, "已经是最新版本");
                         }
                     } catch (Exception e) {
-                        e.toString();
                     }
                 }
                 break;
@@ -253,23 +263,103 @@ public class SettingActivity extends BaseActivity implements OnClickListener, Ht
         }
     }
 
-    private void checkPermission(int result_up, String getVersion, String downUrl, List<String> updateList) {
-        String permission[] = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
-        XXPermissions.with(this)
-                .constantRequest()
-                .permission(permission)
-                .request(new OnPermission() {
-                    @Override
-                    public void hasPermission(List<String> granted, boolean isAll) {
-                        if (isAll) {
-                            updateHelper.showUpdateDialog(result_up, getVersion, downUrl, updateList);
-                        }
-                    }
+    /**
+     * 版本更新弹窗
+     */
+    public void showUpdateDialog(int code, String version, String downurl) {
+        updateDialog = new UpdateVerSionDialog(SettingActivity.this);
+        switch (code) {
+            case 2://可选更新
+                updateDialog.ok.setText("更新至V" + version + "版本");
+                updateDialog.cancel.setVisibility(View.VISIBLE);
+                updateAdapter = new UpdateAdapter(this, updateList);
+                updateDialog.listView.setAdapter(updateAdapter);
+                updateDialog.show();
+                break;
+            case 3://强制更新
+                updateDialog.cancel.setVisibility(View.GONE);
+                updateDialog.ok.setText("更新至V" + version + "版本");
+                updateAdapter = new UpdateAdapter(this, updateList);
+                updateDialog.listView.setAdapter(updateAdapter);
+                updateDialog.mDialog.setCancelable(false);
+                updateDialog.show();
+                break;
+        }
+        updateDialog.ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (code != 1) {
+                    XXPermissions.with(SettingActivity.this)
+                            .constantRequest()
+                            .permission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                            .request(new OnPermission() {
+                                @Override
+                                public void hasPermission(List<String> granted, boolean isAll) {
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                        if (getPackageManager().canRequestPackageInstalls()) {
+                                            startDown();
+                                        } else {
+                                            DeleteMsgDialog dialog = new DeleteMsgDialog(SettingActivity.this, R.style.custom_dialog_theme);
+                                            dialog.show();
+                                            dialog.setContentText("当前手机系统安装应用需要打开未知来源权限，请去设置中开启权限");
+                                            dialog.setrightText("去打开");
+                                            dialog.btn_define.setOnClickListener(v1 -> {
+                                                dialog.dismiss();
+                                                startInstallPermissionSettingActivity();
+                                            });
+                                            dialog.btn_cancel.setOnClickListener(v1 -> {
+                                                dialog.dismiss();
+                                            });
+                                        }
+                                    } else {
+                                        startDown();
+                                    }
 
-                    @Override
-                    public void noPermission(List<String> denied, boolean quick) {
-                        DialogUtils.showPermissionDialog(SettingActivity.this, "请到权限管理中打开彩管家的存储权限");
-                    }
-                });
+                                }
+
+                                @Override
+                                public void noPermission(List<String> denied, boolean quick) {
+                                    ToastUtil.showShortToast(SettingActivity.this,
+                                            "存储权限被禁止，请去开启该权限");
+                                }
+                            });
+                }
+
+            }
+        });
+        updateDialog.cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateDialog.dismiss();
+            }
+        });
+    }
+
+    private void startInstallPermissionSettingActivity() {
+        Uri packageURI = Uri.parse("package:" + getPackageName());
+        Intent intent = new Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES, packageURI);
+        startActivityForResult(intent, 10001);
+    }
+
+    private void startDown() {
+        if (null != updateDialog) {
+            updateDialog.dismiss();
+        }
+        Intent intent = new Intent(SettingActivity.this, UpdateService.class);
+        intent.putExtra(UpdateService.DOWNLOAD_URL, downUrl);
+        intent.putExtra(UpdateService.VERSIONNAME, getVersion);
+        SettingActivity.this.startService(intent);
+        ToastUtil.showShortToast(SettingActivity.this, "星城园丁已开始下载更新,详细信息可在通知栏查看哟!");
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 10001) {
+            if (getPackageManager().canRequestPackageInstalls()) {
+                startDown();
+            }
+        }
     }
 }

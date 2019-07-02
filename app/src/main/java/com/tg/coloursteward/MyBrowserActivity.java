@@ -70,7 +70,6 @@ import com.tg.coloursteward.util.Helper;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.util.Utils;
 import com.tg.coloursteward.view.X5WebView;
-import com.tg.coloursteward.view.dialog.DialogFactory;
 import com.tg.coloursteward.view.dialog.ToastFactory;
 
 import org.json.JSONException;
@@ -244,7 +243,6 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
             @Override
             public void onPageFinished(WebView view, String url) {
                 tvTitle.setText(view.getTitle());
-                DialogFactory.getInstance().hideLoadialogDialog();
             }
         });
 
@@ -913,7 +911,6 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
                 webView.goBack();
             }
         } else {
-            DialogFactory.getInstance().hideLoadialogDialog();
             finish();
         }
     }

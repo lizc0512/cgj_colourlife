@@ -357,6 +357,8 @@
 
         <activity android:name=".module.BrowerJumpExcessiveActivity"></activity>
         <activity android:name="com.tg.user.activity.LeadActivity" />
+        <activity android:name=".module.PopupActivity"
+            android:theme="@style/popupTransparent"/>
         <service android:name=".serice.UpdateService"/>
     </application>
 

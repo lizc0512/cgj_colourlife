@@ -349,7 +349,7 @@ public class SettingActivity extends BaseActivity implements OnClickListener, Ht
         intent.putExtra(UpdateService.DOWNLOAD_URL, downUrl);
         intent.putExtra(UpdateService.VERSIONNAME, getVersion);
         SettingActivity.this.startService(intent);
-        ToastUtil.showShortToast(SettingActivity.this, "星城园丁已开始下载更新,详细信息可在通知栏查看哟!");
+        ToastUtil.showShortToast(SettingActivity.this, "彩管家已开始下载更新,详细信息可在通知栏查看哟!");
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)

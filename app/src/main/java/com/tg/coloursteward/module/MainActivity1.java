@@ -61,6 +61,7 @@ import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.database.SharedPreferencesTools;
+import com.tg.coloursteward.entity.HomePopWindowEntity;
 import com.tg.coloursteward.entity.SingleDeviceLogin;
 import com.tg.coloursteward.entity.SingleDeviceLogout;
 import com.tg.coloursteward.fragment.FragmentManagement1;
@@ -70,6 +71,7 @@ import com.tg.coloursteward.info.HomeDeskTopInfo;
 import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.inter.Oauth2CallBack;
 import com.tg.coloursteward.log.Logger;
+import com.tg.coloursteward.model.HomeModel;
 import com.tg.coloursteward.module.contact.ContactsFragment;
 import com.tg.coloursteward.module.meassage.MsgListFragment;
 import com.tg.coloursteward.net.GetTwoRecordListener;
@@ -90,6 +92,7 @@ import com.tg.coloursteward.util.ExampleUtil;
 import com.tg.coloursteward.util.GDLocationUtil;
 import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.LinkParseUtil;
+import com.tg.coloursteward.util.PopupScUtils;
 import com.tg.coloursteward.util.ToastUtil;
 import com.tg.coloursteward.util.TokenUtils;
 import com.tg.coloursteward.util.Tools;
@@ -98,7 +101,6 @@ import com.tg.coloursteward.view.dialog.ToastFactory;
 import com.tg.setting.adapter.UpdateAdapter;
 import com.tg.setting.entity.VersionEntity;
 import com.tg.setting.model.SettingModel;
-import com.tg.setting.utils.UpdateHelper;
 import com.tg.setting.view.DeleteMsgDialog;
 import com.tg.setting.view.UpdateVerSionDialog;
 import com.youmai.hxsdk.HuxinSdkManager;
@@ -197,9 +199,9 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
     public static String auth_type = "";
     public static String url_ad;
     private SettingModel settingModel;
+    private HomeModel homeModel;
     private List<String> updateList = new ArrayList<>();
     private BroadcastReceiver freshReceiver = new BroadcastReceiver() {
-
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
@@ -224,6 +226,7 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
     private String downUrl;
     private UpdateVerSionDialog updateDialog;
     private String getVersion;
+    private boolean otherPopShow=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -232,6 +235,7 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
         mContext = this;
         mHandler = new NormalHandler(this);
         settingModel = new SettingModel(this);
+        homeModel = new HomeModel(this);
         String key = Tools.getStringValue(this, Contants.EMPLOYEE_LOGIN.key);
         String secret = Tools.getStringValue(this, Contants.EMPLOYEE_LOGIN.secret);
         if (TextUtils.isEmpty(key) || TextUtils.isEmpty(secret)) {
@@ -274,7 +278,12 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
         initAd();
         CheckPermission();
         initGetLocation();
+        initData();
 
+    }
+
+    private void initData() {
+        homeModel.getPopWindow(1, this);
     }
 
     private void CheckPermission() {
@@ -1356,9 +1365,44 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
                     }
                 }
                 break;
+            case 1:
+                if (!TextUtils.isEmpty(result)) {
+                    HomePopWindowEntity popWindowEntity = new HomePopWindowEntity();
+                    try {
+                        JSONObject jsonObject = new JSONObject(result);
+                        String content = jsonObject.getString("content");
+                        if (!TextUtils.isEmpty(content)) {
+                            popWindowEntity = GsonUtils.gsonToBean(result, HomePopWindowEntity.class);
+                            if (null != popWindowEntity.getContent()) {
+                                ArrayList<String> imageList = new ArrayList<>();
+                                ArrayList<String> urlList = new ArrayList<>();
+                                ArrayList<String> descList = new ArrayList<>();
+                                imageList.clear();
+                                urlList.clear();
+                                descList.clear();
+                                imageList.add(popWindowEntity.getContent().getImg_url());
+                                urlList.add(popWindowEntity.getContent().getHelp_url());
+                                descList.add("");
+                                intoPopup(urlList, imageList, descList);
+                            }
+                        }
+                    } catch (Exception e) {
+                    }
+                }
+                break;
         }
     }
 
+    public void intoPopup(ArrayList<String> urlList, ArrayList<String> imageList, ArrayList<String> descList) {
+        if (!otherPopShow) {
+            try {
+                PopupScUtils.getInstance().jump(this, urlList, imageList, descList);
+                otherPopShow = true;
+            } catch (Exception e) {
+
+            }
+        }
+    }
     private void showUpdateDialog(int code, String version, String mdownUrl, List<String> updateList) {
         downUrl = mdownUrl;
         updateDialog = new UpdateVerSionDialog(mContext);
@@ -1442,7 +1486,7 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
         intent.putExtra(UpdateService.DOWNLOAD_URL, downUrl);
         intent.putExtra(UpdateService.VERSIONNAME, getVersion);
         MainActivity1.this.startService(intent);
-        ToastUtil.showShortToast(MainActivity1.this, "星城园丁已开始下载更新,详细信息可在通知栏查看哟!");
+        ToastUtil.showShortToast(MainActivity1.this, "彩管家已开始下载更新,详细信息可在通知栏查看哟!");
     }
 
     class PopupDismissListener implements PopupWindow.OnDismissListener {

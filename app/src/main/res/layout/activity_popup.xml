@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ll_all_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/ll_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:layout_width="275dp"
+            android:layout_height="350dp">
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/viewpager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+
+            <FrameLayout
+                android:id="@+id/fl_indicator"
+                android:layout_width="match_parent"
+                android:layout_height="15dp"
+                android:layout_marginBottom="10dp"
+                android:layout_gravity="center_horizontal|bottom"
+                android:foregroundGravity="center">
+
+                <com.tg.user.view.CirclePageIndicator
+                    android:id="@+id/indicator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:paddingBottom="2dp"
+                    android:paddingLeft="7dp"
+                    android:paddingRight="5dp"
+                    android:paddingTop="2dp"
+                    app:pageColor="#bfc7cc"
+                    app:radius="6dp"
+                    app:strokeColor="#bfc7cc"
+                    app:strokeWidth="0dp"
+                    tools:ignore="RtlHardcoded" />
+            </FrameLayout>
+
+        </FrameLayout>
+        <View
+            android:layout_width="1dp"
+            android:layout_height="22dp"
+            android:layout_gravity="center_horizontal"
+            android:background="#ffffff"/>
+
+        <ImageView
+            android:id="@+id/btn1"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:scaleType="fitXY"
+            android:src="@drawable/icon_close_popup" />
+    </LinearLayout>
+
+</LinearLayout>

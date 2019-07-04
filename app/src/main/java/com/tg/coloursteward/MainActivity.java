@@ -41,7 +41,6 @@ import com.tg.coloursteward.fragment.FragmentCentre;
 import com.tg.coloursteward.fragment.FragmentCommunicate;
 import com.tg.coloursteward.fragment.FragmentDeskTop;
 import com.tg.coloursteward.fragment.FragmentHome;
-import com.tg.coloursteward.fragment.FragmentManagement;
 import com.tg.coloursteward.fragment.FragmentMine;
 import com.tg.coloursteward.info.AdvInfo;
 import com.tg.coloursteward.info.HomeDeskTopInfo;
@@ -99,9 +98,9 @@ public class MainActivity extends FragmentActivity implements ResponseListener, 
     private TabHost mTabHost;
     private boolean exit = false;//是否退出
     private boolean needGetUserInfo = true;
-    private Fragment fragments[] = {new FragmentDeskTop(), new FragmentCommunicate(), new FragmentManagement(), new FragmentMine()};
-    private Fragment fragmentsCityProperty[] = {new FragmentHome(), new FragmentCommunicate(), new FragmentManagement(), new FragmentMine()};
-    private Fragment fragmentsCentreLive[] = {new FragmentCentre(), new FragmentCommunicate(), new FragmentManagement(), new FragmentMine()};
+    private Fragment fragments[] = {new FragmentDeskTop(), new FragmentCommunicate(), new FragmentMine()};
+    private Fragment fragmentsCityProperty[] = {new FragmentHome(), new FragmentCommunicate(),  new FragmentMine()};
+    private Fragment fragmentsCentreLive[] = {new FragmentCentre(), new FragmentCommunicate(), new FragmentMine()};
     private String tabTexts[] = {"首页", "联系人", "工作", "我的"};
     private MessageHandler msgHand;
     private final int REQUESTPERMISSION = 110;

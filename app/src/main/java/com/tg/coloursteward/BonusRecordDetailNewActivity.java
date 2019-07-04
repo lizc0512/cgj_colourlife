@@ -16,8 +16,6 @@ import com.tg.coloursteward.model.BonusModel;
 import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.LinkParseUtil;
 
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,19 +26,14 @@ import java.util.List;
  */
 public class BonusRecordDetailNewActivity extends BaseActivity implements HttpResponse {
     public final static String BONUS_RECORD_INFO = "BonusRecordInfo";
-    private TextView tv_coefficient_group;//集体系数之和
-    private TextView tv_coefficient_personal;//个人系数
-    private TextView tv_Bonus_personal;//个人奖金包
-    private TextView tv_real_receive_month;//本月实获奖金
-    private TextView tv_coefficient_groupname;
-    private TextView tv_bonus_groupbao;
-    private TextView tv_bonus_groupnum;
-    private TextView tv_bonus_persona_num;
-    private RelativeLayout rl_persion, rl_group;
     private Intent intent;
     private String calculid, rummagerid, name;
     private BonusRecordDetailEntity bonusRecordDetailEntity;
     private List<BonusRecordDetailEntity.ContentBean> list = new ArrayList<>();
+    private List<BonusRecordDetailEntity.ContentBean.ListBean> mlist = new ArrayList<>();
+    private RecyclerView recyclerView;
+    private BonusRecordDetailAdapter adapter;
+    private BonusModel bonusModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,36 +60,9 @@ public class BonusRecordDetailNewActivity extends BaseActivity implements HttpRe
      * 初始化控件
      */
     private void initView() {
-        tv_coefficient_groupname = findViewById(R.id.tv_coefficient_groupname);
-        tv_bonus_groupbao = findViewById(R.id.tv_bonus_groupbao);
-        tv_bonus_groupnum = findViewById(R.id.tv_bonus_groupnum);
-        tv_bonus_persona_num = findViewById(R.id.tv_bonus_persona_num);
-        tv_coefficient_group = (TextView) findViewById(R.id.tv_coefficient_group);
-        tv_coefficient_personal = (TextView) findViewById(R.id.tv_coefficient_personal);
-        tv_Bonus_personal = (TextView) findViewById(R.id.tv_Bonus_personal);
-        tv_real_receive_month = (TextView) findViewById(R.id.tv_real_receive_month);
-        rl_group = findViewById(R.id.rl_group);
-        rl_persion = findViewById(R.id.rl_persion);
-        rl_group.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                intent = new Intent(BonusRecordDetailNewActivity.this, EffectDetailActivity.class);
-//                intent.putExtra(EffectDetailActivity.BONUS_RECORD_INFO,(Serializable) list);
-                EffectDetailActivity.listinfo = list;
-                intent.putExtra("type", "group");
-                startActivity(intent);
-            }
-        });
-        rl_persion.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                intent = new Intent(BonusRecordDetailNewActivity.this, EffectDetailActivity.class);
-//                intent.putExtra(EffectDetailActivity.BONUS_RECORD_INFO, (Serializable) list);
-                EffectDetailActivity.listinfo = list;
-                intent.putExtra("type", "persion");
-                startActivity(intent);
-            }
-        });
+        recyclerView = findViewById(R.id.rv_bonus_detail);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        recyclerView.setLayoutManager(linearLayoutManager);
     }
 
     @Override

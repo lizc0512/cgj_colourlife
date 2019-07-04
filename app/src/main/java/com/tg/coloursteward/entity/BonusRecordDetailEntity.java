@@ -81,6 +81,16 @@ public class BonusRecordDetailEntity implements Serializable  {
         private List<DataBean> data;
         private List<JtkkBean> jtkk;
         private List<KkBean> kk;
+        private List<ListBean> list;
+
+        public List<ListBean> getList() {
+            return list;
+        }
+
+        public void setList(List<ListBean> list) {
+            this.list = list;
+        }
+
 
         public double getJjbbase() {
             return jjbbase;
@@ -485,6 +495,36 @@ public class BonusRecordDetailEntity implements Serializable  {
 
             public void setCreatetime(String createtime) {
                 this.createtime = createtime;
+            }
+        }
+        public static class ListBean implements Serializable{
+
+            private String title;
+            private String value;
+            private String url;
+
+            public String getTitle() {
+                return title;
+            }
+
+            public void setTitle(String title) {
+                this.title = title;
+            }
+
+            public String getValue() {
+                return value;
+            }
+
+            public void setValue(String value) {
+                this.value = value;
+            }
+
+            public String getUrl() {
+                return url;
+            }
+
+            public void setUrl(String url) {
+                this.url = url;
             }
         }
     }

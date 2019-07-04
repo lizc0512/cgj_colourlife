@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rl_bouns"
+    android:layout_width="match_parent"
+    android:layout_height="50dp">
+
+
+    <TextView
+        android:id="@+id/TextView_group"
+        style="@style/black_15"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="17dp"
+        android:text="本月集体扣罚" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"
+        android:background="@color/gray_background_1" />
+
+    <ImageView
+        android:id="@+id/iv_next_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="15dp"
+        android:src="@drawable/next"
+        android:visibility="invisible"/>
+
+    <TextView
+        android:id="@+id/tv_bonus_groupnum"
+        style="@style/hint_15"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="10dp"
+        android:layout_toLeftOf="@id/iv_next_group"
+        android:gravity="right"
+        android:text="加载中..." />
+
+</RelativeLayout>

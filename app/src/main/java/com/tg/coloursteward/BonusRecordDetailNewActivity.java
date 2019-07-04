@@ -3,20 +3,18 @@ package com.tg.coloursteward;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Message;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
+import com.tg.coloursteward.adapter.BonusRecordDetailAdapter;
 import com.tg.coloursteward.base.BaseActivity;
-import com.tg.coloursteward.constant.Contants;
+import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.entity.BonusRecordDetailEntity;
-import com.tg.coloursteward.net.HttpTools;
-import com.tg.coloursteward.net.RequestConfig;
-import com.tg.coloursteward.net.RequestParams;
+import com.tg.coloursteward.model.BonusModel;
 import com.tg.coloursteward.util.GsonUtils;
-import com.tg.coloursteward.view.dialog.ToastFactory;
+import com.tg.coloursteward.util.LinkParseUtil;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -28,7 +26,7 @@ import java.util.List;
  *
  * @author Administrator
  */
-public class BonusRecordDetailNewActivity extends BaseActivity {
+public class BonusRecordDetailNewActivity extends BaseActivity implements HttpResponse {
     public final static String BONUS_RECORD_INFO = "BonusRecordInfo";
     private TextView tv_coefficient_group;//集体系数之和
     private TextView tv_coefficient_personal;//个人系数
@@ -53,6 +51,7 @@ public class BonusRecordDetailNewActivity extends BaseActivity {
             rummagerid = intent.getStringExtra("rummagerid");
             name = intent.getStringExtra("name");
         }
+        bonusModel = new BonusModel(this);
         initView();
         initData();
     }
@@ -61,12 +60,7 @@ public class BonusRecordDetailNewActivity extends BaseActivity {
      * 个人奖金包明细
      */
     private void initData() {
-        RequestConfig config = new RequestConfig(this, HttpTools.GET_USER_JJB_DETAIL);
-        RequestParams params = new RequestParams();
-        params.put("calculid", calculid);
-        params.put("rummagerid", rummagerid);
-        HttpTools.httpGet(Contants.URl.URL_ICETEST, "/jxjjb/userjjb/detail",
-                config, params);
+        bonusModel.getBonusRecordDetail(0, calculid, rummagerid, this);
     }
 
     /**
@@ -116,35 +110,38 @@ public class BonusRecordDetailNewActivity extends BaseActivity {
     }
 
     @Override
-    public void onSuccess(Message msg, String jsonString, String hintString) {
-        super.onSuccess(msg, jsonString, hintString);
-        int code = HttpTools.getCode(jsonString);
-        String message = HttpTools.getMessageString(jsonString);
-        if (msg.arg1 == HttpTools.GET_USER_JJB_DETAIL) {
-            if (code == 0) {
-                bonusRecordDetailEntity = GsonUtils.gsonToBean(jsonString, BonusRecordDetailEntity.class);
-                if (bonusRecordDetailEntity.getContent() != null) {
-                    list.add(bonusRecordDetailEntity.getContent());
-                    tv_coefficient_groupname.setText(name);
-                    DecimalFormat df = new DecimalFormat("0.00");
-                    tv_coefficient_group.setText(list.get(0).getTotaljjbbase() + "");
-                    tv_coefficient_personal.setText(list.get(0).getJjbbase() + "");
-                    BigDecimal a1 = new BigDecimal(Double.toString(list.get(0).getBaoFee()));
-                    BigDecimal b1 = new BigDecimal(Double.toString(list.get(0).getJjbbase()));
-                    BigDecimal result1 = a1.multiply(b1);
-                    tv_Bonus_personal.setText(df.format(result1) + "");
-                    tv_bonus_groupbao.setText(df.format(list.get(0).getJtbaoFee()));
-                    tv_bonus_groupnum.setText(df.format(list.get(0).getJtkkfee()));
-                    double a = Double.parseDouble(df.format(list.get(0).getNormalFee()));
-                    double b = Double.parseDouble(df.format(list.get(0).getActualFee()));
-                    tv_bonus_persona_num.setText(df.format(a - b));
-                    tv_real_receive_month.setText(df.format(list.get(0).getActualFee()));
-
+    public void OnHttpResponse(int what, String result) {
+        switch (what) {
+            case 0:
+                if (!TextUtils.isEmpty(result)) {
+                    bonusRecordDetailEntity = GsonUtils.gsonToBean(result, BonusRecordDetailEntity.class);
+                    if (bonusRecordDetailEntity.getContent() != null) {
+                        list.add(bonusRecordDetailEntity.getContent());
+                        mlist = bonusRecordDetailEntity.getContent().getList();
+                        if (null == adapter) {
+                            adapter = new BonusRecordDetailAdapter(this, mlist);
+                            recyclerView.setAdapter(adapter);
+                        } else {
+                            adapter.notifyDataSetChanged();
+                        }
+                        adapter.setBonusCallBack(url -> {
+                            if (url.equals("colourlife://proto?type=jtkkActivity")) {
+                                Intent intent = new Intent(BonusRecordDetailNewActivity.this, EffectDetailActivity.class);
+                                EffectDetailActivity.listinfo = list;
+                                intent.putExtra("type", "group");
+                                startActivity(intent);
+                            } else if (url.equals("colourlife://proto?type=kkActivity")) {
+                                Intent intent = new Intent(BonusRecordDetailNewActivity.this, EffectDetailActivity.class);
+                                EffectDetailActivity.listinfo = list;
+                                intent.putExtra("type", "persion");
+                                startActivity(intent);
+                            } else {
+                                LinkParseUtil.parse(this, url, "");
+                            }
+                        });
+                    }
                 }
-            } else {
-                ToastFactory.showToast(BonusRecordDetailNewActivity.this, message);
-            }
-
+                break;
         }
     }
 }

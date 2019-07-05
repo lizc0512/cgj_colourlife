@@ -91,7 +91,7 @@ public class BonusRecordPersonalActivity extends BaseActivity implements OnItemC
                 config.handler = hand;
                 RequestParams params = new RequestParams();
                 params.put("username", UserInfo.employeeAccount);
-                params.put("orguuid", orguuid);
+//                params.put("orguuid", orguuid);
                 params.put("page", "1");
                 params.put("pagesize", "10");
 //                params.put("user_uuid", UserInfo.uid);
@@ -104,7 +104,7 @@ public class BonusRecordPersonalActivity extends BaseActivity implements OnItemC
                 config.handler = hand;
                 RequestParams params = new RequestParams();
                 params.put("username", UserInfo.employeeAccount);
-                params.put("orguuid", orguuid);
+//                params.put("orguuid", orguuid);
                 params.put("page", "1");
                 params.put("pagesize", "10");
 //                params.put("user_uuid", UserInfo.uid);

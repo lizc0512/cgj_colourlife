@@ -1,24 +1,18 @@
 package com.tg.user.activity;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Environment;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.amap.api.location.AMapLocation;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.constant.Contants;
@@ -26,7 +20,6 @@ import com.tg.coloursteward.database.SharedPreferencesTools;
 import com.tg.coloursteward.module.MainActivity1;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.ResponseData;
-import com.tg.coloursteward.util.GDLocationUtil;
 import com.tg.coloursteward.util.Tools;
 
 import org.json.JSONException;
@@ -143,14 +136,14 @@ public class SplashActivity extends BaseActivity implements View.OnClickListener
                             MainActivity1.url_ad = urlAd;
                             MainActivity1.auth_type = auth_type;
                             String skin_code = Tools.getStringValue(SplashActivity.this, Contants.storage.SKINCODE);
-                            redirectto(skin_code, urlAd, auth_type);
+                            redirectto(skin_code, urlAd, auth_type, true);
                         }
                     }
                 });
             }
         } else {
             iv_splash_logo.setVisibility(View.VISIBLE);
-            redirectto(skin_code, urlAd, auth_type);
+            redirectto(skin_code, urlAd, auth_type, false);
         }
     }
 
@@ -173,7 +166,7 @@ public class SplashActivity extends BaseActivity implements View.OnClickListener
         switch (v.getId()) {
             case R.id.tv_login_cancel:
                 skin_code = Tools.getStringValue(SplashActivity.this, Contants.storage.SKINCODE);
-                redirectto(skin_code, urlAd, auth_type);
+                redirectto(skin_code, urlAd, auth_type, false);
                 break;
         }
     }
@@ -181,7 +174,7 @@ public class SplashActivity extends BaseActivity implements View.OnClickListener
     /**
      * 如果第一次运行或者及版本更新就跳转到引导页，否则跳转到主界面
      */
-    private void redirectto(String skin_code, String urlAd, String auth_type) {
+    private void redirectto(String skin_code, String urlAd, String auth_type, boolean autoShow) {
 //        boolean islead = spUtils.getBooleanData(SpConstants.UserModel.isshowlead, false);
 //        if (!islead) {
 //            Intent intent = new Intent(this, LeadActivity.class);
@@ -196,8 +189,10 @@ public class SplashActivity extends BaseActivity implements View.OnClickListener
                 intent.putExtra(MainActivity1.KEY_SKIN_CODE, skin_code);
 //                intent.putExtra(MainActivity1.KEY_EXTRAS, extras);
                 intent.putExtra(MainActivity1.FROM_LOGIN, false);
-                intent.putExtra(MainActivity1.FROM_AD, urlAd);
                 intent.putExtra(MainActivity1.FROM_AUTH_TYPE, auth_type);
+                if (autoShow) {
+                    intent.putExtra(MainActivity1.FROM_AD, urlAd);
+                }
 
                 startActivity(intent);
                 SplashActivity.this.finish();
@@ -236,7 +231,7 @@ public class SplashActivity extends BaseActivity implements View.OnClickListener
         @Override
         public void onFinish() {// 计时完毕时触发
             skin_code = Tools.getStringValue(SplashActivity.this, Contants.storage.SKINCODE);
-            redirectto(skin_code, urlAd, auth_type);
+            redirectto(skin_code, urlAd, auth_type, false);
         }
 
         @Override

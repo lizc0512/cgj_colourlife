@@ -43,6 +43,8 @@ public class UserModel extends BaseModel {
     private String czyOauthUrl = "/app/authUser";
     private String singleExitUrl = "/cgjapp/single/device/logout";
     private String changePwdUrl = "/account/password";
+    private String sendMMSUrl = "/app/bind/mobile/sendCode";
+    private String bindMobileUrl = "/app/bind/mobile";
 
     public UserModel(Context context) {
         super(context);
@@ -476,6 +478,78 @@ public class UserModel extends BaseModel {
         params.put("newpassword", pwdnew);
         final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 4, changePwdUrl), RequestMethod.PUT);
         request(what, request, RequestEncryptionUtils.getIceMap(mContext, params), new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    if (!TextUtils.isEmpty(result)) {
+                        int code = showSuccesResultMessage(result);
+                        if (code == 0) {
+                            httpResponse.OnHttpResponse(what, result);
+                        } else {
+                            showErrorCodeMessage(response);
+                        }
+                    } else {
+                        showErrorCodeMessage(response);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+                showExceptionMessage(what, response);
+            }
+        }, true, true);
+    }
+
+    /**
+     * @param what
+     * @param mobile
+     * @param httpResponse 获取绑定手机号的验证码
+     */
+    public void postSendMms(int what, String mobile, final HttpResponse httpResponse) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("mobile", mobile);
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 5, sendMMSUrl), RequestMethod.POST);
+        request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    if (!TextUtils.isEmpty(result)) {
+                        int code = showSuccesResultMessage(result);
+                        if (code == 0) {
+                            httpResponse.OnHttpResponse(what, result);
+                        } else {
+                            showErrorCodeMessage(response);
+                        }
+                    } else {
+                        showErrorCodeMessage(response);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+                showExceptionMessage(what, response);
+            }
+        }, true, true);
+    }
+
+    /**
+     * @param what
+     * @param mobile
+     * @param code
+     * @param httpResponse 绑定手机号
+     */
+    public void postBindMobile(int what, String mobile,String code, final HttpResponse httpResponse) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("mobile", mobile);
+        params.put("code", code);
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 5, bindMobileUrl), RequestMethod.POST);
+        request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
             @Override
             public void onSucceed(int what, Response<String> response) {
                 int responseCode = response.getHeaders().getResponseCode();

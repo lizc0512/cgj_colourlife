@@ -100,6 +100,7 @@ public class OauthUserEntity {
         private String job_uuid;
         private String org_uuid;
         private String org_name;
+        private String bind_mobile;
 
         public String getAccount_uuid() {
             return account_uuid;
@@ -259,6 +260,14 @@ public class OauthUserEntity {
 
         public void setOrg_name(String org_name) {
             this.org_name = org_name;
+        }
+
+        public String getBind_mobile() {
+            return bind_mobile;
+        }
+
+        public void setBind_mobile(String bind_mobile) {
+            this.bind_mobile = bind_mobile;
         }
     }
 }

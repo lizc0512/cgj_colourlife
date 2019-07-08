@@ -19,6 +19,8 @@ import com.tg.coloursteward.PublicAccountActivity;
 import com.tg.coloursteward.R;
 import com.tg.setting.activity.SettingActivity;
 import com.tg.coloursteward.info.UserInfo;
+import com.tg.user.activity.BindMobileActivity;
+import com.tg.user.activity.UserInfoActivity;
 
 import static com.tg.coloursteward.module.MainActivity1.getEnvironment;
 import static com.tg.coloursteward.module.MainActivity1.getPublicParams;
@@ -83,6 +85,14 @@ public class LinkParseUtil {
                         ((Activity) context).overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
                     } else if (name.equals("personalAccountDetails")) {//个人奖金包明细
                         it = new Intent(context, BonusRecordPersonalActivity.class);
+                        context.startActivity(it);
+                        ((Activity) context).overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
+                    }else if (name.equals("personInfo")) {//个人信息
+                        it = new Intent(context, UserInfoActivity.class);
+                        context.startActivity(it);
+                        ((Activity) context).overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
+                    }else if (name.equals("bindMobile")) {//绑定手机号
+                        it = new Intent(context, BindMobileActivity.class);
                         context.startActivity(it);
                         ((Activity) context).overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
                     } else {

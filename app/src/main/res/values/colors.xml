@@ -113,6 +113,7 @@
     <color name="data_tenant_bg">#BBBDBA</color>
     <color name="red1">#014991</color>
     <color name="black_mine">#131719</color>
+    <color name="color_131719">#131719</color>
     <color name="black_mine_bg">#1649667D</color>
     <color name="line_mine_bg">#F6F6F6</color>
     <color name="tv_mine">#131719</color>
@@ -124,6 +125,7 @@
     <color name="line_bg_serfr">#F25643</color>
     <color name="blue_index">#108EE9</color>
     <color name="gray_index">#999FAA</color>
+    <color name="color_999faa">#999FAA</color>
     <color name="login_tv">#647786</color>
     <color name="login_tv_gray_account">#BBC0CB</color>
     <color name="tv_index_color">#333B46</color>
@@ -139,5 +141,6 @@
     <color name="color_333b46">#333b46</color>
     <color name="color_bfc7cc">#bfc7cc</color>
     <color name="color_1ca1f4">#1ca1f4</color>
+    <color name="color_1890ff">#1890ff</color>
 
 </resources>

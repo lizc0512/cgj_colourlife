@@ -22,7 +22,7 @@ import com.tg.coloursteward.DeskTopActivity;
 import com.tg.coloursteward.MainActivity;
 import com.tg.coloursteward.MipcaActivityCapture;
 import com.tg.coloursteward.R;
-import com.tg.coloursteward.UserInfoActivity;
+import com.tg.user.activity.UserInfoActivity;
 import com.tg.coloursteward.adapter.HomeDeskTopAdapter;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.info.GridViewInfo;
@@ -42,7 +42,6 @@ import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.ManageMentLinearlayout;
 import com.tg.coloursteward.view.PullRefreshListViewFind;
 import com.tg.coloursteward.view.RoundImageView;
-import com.tg.coloursteward.view.dialog.ToastFactory;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;

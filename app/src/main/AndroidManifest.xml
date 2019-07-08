@@ -52,6 +52,7 @@
     <!-- 用于Android M及以上系统，申请加入忽略电池优化白名单-->
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"></uses-permission>
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+
     <application
         android:name=".application.CityPropertyApplication"
         android:allowBackup="false"
@@ -95,7 +96,7 @@
         <!-- 公共报修 -->
         <activity android:name=".RepairsPulbicActivity" />
         <!-- 个人中心 -->
-        <activity android:name=".UserInfoActivity" />
+        <activity android:name="com.tg.user.activity.UserInfoActivity" />
         <!-- 图片显示 -->
         <activity android:name=".ShowImageActivity" />
         <!-- 更多设置 -->
@@ -357,9 +358,12 @@
 
         <activity android:name=".module.BrowerJumpExcessiveActivity"></activity>
         <activity android:name="com.tg.user.activity.LeadActivity" />
-        <activity android:name=".module.PopupActivity"
-            android:theme="@style/popupTransparent"/>
-        <service android:name=".serice.UpdateService"/>
+        <activity
+            android:name=".module.PopupActivity"
+            android:theme="@style/popupTransparent" />
+
+        <service android:name=".serice.UpdateService" />
+        <activity android:name="com.tg.user.activity.BindMobileActivity" />
     </application>
 
 </manifest>

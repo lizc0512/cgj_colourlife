@@ -26,7 +26,7 @@ import com.bumptech.glide.signature.ObjectKey;
 import com.dashuview.library.keep.Cqb_PayUtil;
 import com.tg.coloursteward.MyBrowserActivity;
 import com.tg.coloursteward.R;
-import com.tg.coloursteward.UserInfoActivity;
+import com.tg.user.activity.UserInfoActivity;
 import com.tg.coloursteward.adapter.FragmentMineAdapter;
 import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.constant.Contants;

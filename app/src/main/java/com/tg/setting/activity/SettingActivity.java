@@ -244,7 +244,7 @@ public class SettingActivity extends BaseActivity implements OnClickListener, Ht
                             if (isCheck) {
                                 showUpdateDialog(result_up, versionEntity.getContent().getInfo().getVersion(), downUrl);
                             }
-                        } else if (result_up == 1) {
+                        } else if (result_up == 1 && isCheck) {
                             ToastUtil.showShortToast(SettingActivity.this, "已经是最新版本");
                         }
                     } catch (Exception e) {

@@ -243,7 +243,12 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
             LinearLayout layout = (LinearLayout) LayoutInflater.from(mContext)
                     .inflate(R.layout.home_dialog_layout, null);
             TextView dialog_msg = layout.findViewById(R.id.dialog_msg);
+            TextView dialog_title = layout.findViewById(R.id.dialog_title);
             dialog_msg.setText(homeDialogEntitiy.getContent().getContent());
+            if (!TextUtils.isEmpty(homeDialogEntitiy.getContent().getTitle())) {
+                dialog_title.setText(homeDialogEntitiy.getContent().getTitle());
+                dialog_title.setVisibility(View.VISIBLE);
+            }
             rv_homedialog = layout.findViewById(R.id.rv_homedialog);
             LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
             layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);

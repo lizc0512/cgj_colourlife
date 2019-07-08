@@ -1,4 +1,4 @@
-package com.tg.coloursteward;
+package com.tg.user.activity;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -15,15 +15,18 @@ import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.signature.ObjectKey;
+import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.info.UserInfo;
@@ -32,14 +35,11 @@ import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.RequestConfig;
 import com.tg.coloursteward.object.ImageParams;
 import com.tg.coloursteward.object.SlideItemObj;
-import com.tg.coloursteward.object.ViewConfig;
 import com.tg.coloursteward.util.GlideCacheUtil;
 import com.tg.coloursteward.util.TokenUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.CameraView;
 import com.tg.coloursteward.view.CameraView.STATE;
-import com.tg.coloursteward.view.MessageArrowView;
-import com.tg.coloursteward.view.MessageArrowView.ItemClickListener;
 import com.tg.coloursteward.view.dialog.DialogFactory;
 import com.tg.coloursteward.view.dialog.ToastFactory;
 import com.tg.coloursteward.view.spinnerwheel.SlideSelectorView.OnCompleteListener;
@@ -52,18 +52,16 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.tg.user.activity.BindMobileActivity.ISFROMUSER;
+
 /**
  * 个人中心
  */
 @Route(path = APath.USER_INFO_ACT)
-public class UserInfoActivity extends BaseActivity implements ItemClickListener, OnClickListener {
+public class UserInfoActivity extends BaseActivity implements OnClickListener {
     private static final int IMAGE_REQUEST_CODE = 0;
     private static final int RESULT_REQUEST_CODE = 2;
-    private MessageArrowView messageView1;
-    private MessageArrowView messageView2;
     private ArrayList<SlideItemObj> genderList;
-    private ArrayList<ViewConfig> list1 = new ArrayList<ViewConfig>();
-    private ArrayList<ViewConfig> list2 = new ArrayList<ViewConfig>();
     private boolean needPostImage = false;
     private String email = "";
     private String sex = "";
@@ -74,16 +72,18 @@ public class UserInfoActivity extends BaseActivity implements ItemClickListener,
             + "/colorholder/";
     private String updatetime;
     private boolean isSaveHeadImg = false;
+    private TextView tv_user_name;
+    private TextView tv_user_sex;
+    private TextView tv_user_part;
+    private TextView tv_user_job;
+    private TextView tv_user_mobile;
+    private EditText et_user_email;
+    private RelativeLayout rl_usersex_change;
+    private RelativeLayout rl_usermobile_change;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        messageView1 = (MessageArrowView) findViewById(R.id.messageView1);
-        messageView2 = (MessageArrowView) findViewById(R.id.messageView2);
-        messageView1.setItemClickListener(this);
-        messageView2.setItemClickListener(this);
-        messageView1.setEditable(true);
-        messageView2.setEditable(true);
         initView();
         updateView();
     }
@@ -95,50 +95,36 @@ public class UserInfoActivity extends BaseActivity implements ItemClickListener,
         sex = UserInfo.sex;
         email = UserInfo.email;
         int size = (int) (50 * Tools.getDisplayMetrics(this).density);
-        rlIcon = (RelativeLayout) findViewById(R.id.rl_icon);
-        ivIcon = (ImageView) findViewById(R.id.iv_icon);
+        rlIcon = findViewById(R.id.rl_icon);
+        ivIcon = findViewById(R.id.iv_icon);
         rlIcon.setOnClickListener(this);
         ivIcon.getLayoutParams().width = size;
         ivIcon.getLayoutParams().height = size;
         ivIcon.setScaleType(ScaleType.CENTER_CROP);
+        tv_user_name = findViewById(R.id.tv_user_name);
+        tv_user_sex = findViewById(R.id.tv_user_sex);
+        tv_user_part = findViewById(R.id.tv_user_part);
+        tv_user_job = findViewById(R.id.tv_user_job);
+        tv_user_mobile = findViewById(R.id.tv_user_mobile);
+        et_user_email = findViewById(R.id.et_user_email);
+        rl_usersex_change = findViewById(R.id.rl_usersex_change);
+        rl_usermobile_change = findViewById(R.id.rl_usermobile_change);
+        rl_usersex_change.setOnClickListener(this);
+        rl_usermobile_change.setOnClickListener(this);
 
-        list1.clear();
-        ViewConfig config = new ViewConfig("姓名", UserInfo.realname, false);
-        config.enable = false;
-        config.rightEditable = false;
-        list1.add(config);
-
-        config = new ViewConfig("性别", UserInfo.sex, true);
-        list1.add(config);
-        messageView1.setData(list1);
-
-
-        list2.clear();
-        config = new ViewConfig("部门", UserInfo.familyName, false);
-        config.rightEditable = false;
-        config.enable = false;
-        list2.add(config);
-
-        config = new ViewConfig("职位", UserInfo.jobName, false);
-        config.rightEditable = false;
-        config.enable = false;
-        list2.add(config);
-
-        config = new ViewConfig("手机号码", UserInfo.mobile, false);
-        config.rightEditable = false;
-        config.enable = false;
-        list2.add(config);
-
-        config = new ViewConfig("Email", email, false);
-        config.enable = false;
-        config.rightEditable = true;
-        list2.add(config);
-        messageView2.setData(list2);
-
+        tv_user_name.setText(UserInfo.realname);
+        tv_user_sex.setText(UserInfo.sex);
+        tv_user_part.setText(UserInfo.familyName);
+        tv_user_job.setText(UserInfo.jobName);
+        if (!TextUtils.isEmpty(UserInfo.mobile)) {
+            tv_user_mobile.setText(UserInfo.mobile);
+        } else {
+            tv_user_mobile.setText("未绑定");
+        }
+        et_user_email.setText(email);
         updatetime = UserInfo.userinfoImg;
         Tools.saveStringValue(UserInfoActivity.this, "updatetime_img", UserInfo.userinfoImg);
         freshImg();
-        messageView1.freshView(0);
     }
 
     private void freshImg() {
@@ -154,10 +140,8 @@ public class UserInfoActivity extends BaseActivity implements ItemClickListener,
      * 更新UI
      */
     private void updateView() {
-        list1.get(1).rightText = UserInfo.sex;
-        list2.get(3).rightText = UserInfo.email;
-        messageView1.freshAll();
-        messageView2.freshAll();
+        tv_user_sex.setText(UserInfo.sex);
+        et_user_email.setText(UserInfo.email);
     }
 
     @Override
@@ -169,8 +153,6 @@ public class UserInfoActivity extends BaseActivity implements ItemClickListener,
                 String content = HttpTools.getContentString(jsonString);
                 if (content.equals("1")) {
                     headView.setRightText("保存");
-                    messageView1.setEditable(true);
-                    messageView2.setEditable(true);
                     setUserInfo();
                     updateView();
                     ToastFactory.showToast(this, "保存成功");
@@ -218,6 +200,7 @@ public class UserInfoActivity extends BaseActivity implements ItemClickListener,
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if (data != null) {
             if (resultCode == Activity.RESULT_OK && requestCode == RESULT_REQUEST_CODE) {
                 if (data != null) {
@@ -226,9 +209,11 @@ public class UserInfoActivity extends BaseActivity implements ItemClickListener,
             } else if (resultCode == Activity.RESULT_OK && requestCode == IMAGE_REQUEST_CODE) {
                 Uri uri = data.getData();
                 startPhotoZoom(uri);
+            } else if (requestCode == 100) {
+                String mobile = data.getStringExtra("mobile");
+                tv_user_mobile.setText(mobile);
             }
         }
-        super.onActivityResult(requestCode, resultCode, data);
     }
 
     /**
@@ -285,9 +270,27 @@ public class UserInfoActivity extends BaseActivity implements ItemClickListener,
     }
 
     @Override
-    public void onItemClick(MessageArrowView mv, View v, int position) {
-        if (mv == messageView1) {
-            if (position == 1) {
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.back_layout:
+                if (hasChanged()) {//已经修改过信息
+                    DialogFactory.getInstance().showDialog(UserInfoActivity.this, new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            finish();
+                        }
+                    }, null, "信息还没保存，确定要返回吗？", null, null);
+                } else {
+                    finish();
+                }
+                break;
+            case R.id.rl_icon:
+                showFileChooser();
+                break;
+            case R.id.right_layout:
+                submitUserInfo();
+                break;
+            case R.id.rl_usersex_change:
                 if (genderList == null) {
                     genderList = new ArrayList<SlideItemObj>();
                     genderList.add(new SlideItemObj("男", "0"));
@@ -299,38 +302,15 @@ public class UserInfoActivity extends BaseActivity implements ItemClickListener,
                             public void onComplete(SlideItemObj item1, SlideItemObj item2) {
                                 if (item1 != null) {
                                     sex = item1.name;
-                                    list1.get(1).rightText = item1.name;
-                                    messageView1.freshView(1);
+                                    tv_user_sex.setText(sex);
                                 }
                             }
                         }, false);
-            }
-        }
-    }
-
-    @Override
-    public void onClick(View v) {
-        if (v.getId() == R.id.back_layout) {
-            if (hasChanged()) {//已经修改过信息
-                DialogFactory.getInstance().showDialog(UserInfoActivity.this, new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        finish();
-                    }
-                }, null, "信息还没保存，确定要返回吗？", null, null);
-            } else {
-                finish();
-            }
-        } else if (v.getId() == R.id.rl_icon) {
-            showFileChooser();
-        } else if(v.getId()==R.id.right_layout){
-            if (messageView1.isEditable() || messageView2.isEditable()) {
-                submitUserInfo();
-            } else {
-                headView.setRightText("保存");
-                messageView1.setEditable(true);
-                messageView2.setEditable(true);
-            }
+                break;
+            case R.id.rl_usermobile_change:
+                Intent intent = new Intent(this, BindMobileActivity.class);
+                intent.putExtra(ISFROMUSER, true);
+                startActivityForResult(intent, 100);
         }
     }
 
@@ -348,8 +328,6 @@ public class UserInfoActivity extends BaseActivity implements ItemClickListener,
     private void submitUserInfo() {
         if (!hasChanged()) {
             headView.setRightText("保存");
-            messageView1.setEditable(true);
-            messageView2.setEditable(true);
             if (isSaveHeadImg == true) {
                 ToastFactory.showToast(UserInfoActivity.this, "头像已保存");
                 GlideCacheUtil.getInstance().clearImageDiskCache(UserInfoActivity.this);
@@ -373,15 +351,15 @@ public class UserInfoActivity extends BaseActivity implements ItemClickListener,
     }
 
     private boolean hasChanged() {
-        sex = messageView1.getRightTextString(1);
-        email = messageView2.getRightTextString(3);
+        sex = tv_user_sex.getText().toString().trim();
+        email = et_user_email.getText().toString().trim();
         if (!TextUtils.equals(sex, UserInfo.sex)) {
             return true;
         }
-        if(!TextUtils.equals(email,UserInfo.email)){
+        if (!TextUtils.equals(email, UserInfo.email)) {
             return true;
         }
-        return  false;
+        return false;
     }
 
     @Override

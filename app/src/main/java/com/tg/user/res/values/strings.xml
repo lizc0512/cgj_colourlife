@@ -7,5 +7,19 @@
 <string name="user_login_btn">立即登录</string>
 <string name="user_czyoauht_btn">彩之云授权登录</string>
 <string name="user_loginor_tv">或</string>
+<string name="user_username_tv">姓名</string>
+<string name="user_usersex_tv">性别</string>
+<string name="user_userpart_tv">部门</string>
+<string name="user_userjob_tv">职位</string>
+<string name="user_usermobile_tv">手机号码</string>
+<string name="user_useremail_tv">Email</string>
+<string name="user_bindmobile_tv">绑定手机号</string>
+<string name="user_bindmobile_jump_tv">跳过</string>
+<string name="user_bindmobile_title_tv">为了您的登录体验，建议您绑定手机号</string>
+<string name="user_bindmobile_tip_tv">绑定后即可通过手机号登录</string>
+<string name="user_bindmobile_input_tv">请输入手机号码</string>
+<string name="user_bindmobile_mms_tv">请输入短信验证码</string>
+<string name="user_bindmobile_bind_tv">绑定</string>
+<string name="user_bindmobile_getmms_tv">获取验证码</string>
 
 </resources>

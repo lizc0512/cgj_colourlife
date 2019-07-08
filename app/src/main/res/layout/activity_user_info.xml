@@ -6,6 +6,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/white"
         android:focusable="true"
         android:focusableInTouchMode="true"
         android:orientation="vertical">
@@ -14,7 +15,6 @@
             android:id="@+id/rl_icon"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/shape_white_bg"
             android:paddingLeft="20dp"
             android:paddingTop="10dp"
             android:paddingBottom="10dp">
@@ -22,7 +22,6 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
                 android:gravity="center"
                 android:text="头像"
@@ -57,8 +56,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/size_50dp"
-            android:background="@color/white">
+            android:layout_height="@dimen/size_50dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -89,8 +87,7 @@
         <RelativeLayout
             android:id="@+id/rl_usersex_change"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/size_50dp"
-            android:background="@color/white">
+            android:layout_height="@dimen/size_50dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -120,12 +117,13 @@
                 android:textColor="@color/text_color1"
                 android:textSize="@dimen/font_15sp" />
         </RelativeLayout>
-
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_10dp"
+            android:background="@color/app_bg" />
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/size_50dp"
-            android:layout_marginTop="@dimen/size_10dp"
-            android:background="@color/white">
+            android:layout_height="@dimen/size_50dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -156,8 +154,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/size_50dp"
-            android:background="@color/white">
+            android:layout_height="@dimen/size_50dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -189,8 +186,7 @@
         <RelativeLayout
             android:id="@+id/rl_usermobile_change"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/size_50dp"
-            android:background="@color/white">
+            android:layout_height="@dimen/size_50dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -229,8 +225,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/size_50dp"
-            android:background="@color/white">
+            android:layout_height="@dimen/size_50dp">
 
             <TextView
                 android:layout_width="wrap_content"

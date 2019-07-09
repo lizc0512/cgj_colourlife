@@ -32,7 +32,7 @@ import com.tg.coloursteward.entity.EmployeeEntity;
 import com.tg.coloursteward.info.EmployeePhoneInfo;
 import com.tg.coloursteward.info.GridViewInfo;
 import com.tg.coloursteward.info.UserInfo;
-import com.tg.coloursteward.module.contact.ContactsFragment;
+import com.tg.coloursteward.fragment.ContactsFragment;
 import com.tg.coloursteward.net.GetTwoRecordListener;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.MessageHandler;
@@ -60,8 +60,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Date;
 
-import static com.tg.coloursteward.module.MainActivity1.getEnvironment;
-import static com.tg.coloursteward.module.MainActivity1.getPublicParams;
+import static com.tg.coloursteward.module.MainActivity.getEnvironment;
+import static com.tg.coloursteward.module.MainActivity.getPublicParams;
 
 /**
  * 员工名片

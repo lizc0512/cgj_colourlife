@@ -1,4 +1,4 @@
-package com.tg.coloursteward.module.meassage;
+package com.tg.coloursteward.fragment;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -36,7 +36,7 @@ import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.entity.HomeDialogEntitiy;
 import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.inter.FragmentMineCallBack;
-import com.tg.coloursteward.module.MainActivity1;
+import com.tg.coloursteward.module.MainActivity;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.MessageHandler;
 import com.tg.coloursteward.net.RequestConfig;
@@ -543,8 +543,8 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
             bean.setDisplayName(imComingMsg.getTargetName());
             mMessageAdapter.addTop(bean);
 
-            if (getActivity() instanceof MainActivity1) {
-                MainActivity1 act = (MainActivity1) getActivity();
+            if (getActivity() instanceof MainActivity) {
+                MainActivity act = (MainActivity) getActivity();
                 act.refreshUnReadCount();
             }
             initUnreadList();

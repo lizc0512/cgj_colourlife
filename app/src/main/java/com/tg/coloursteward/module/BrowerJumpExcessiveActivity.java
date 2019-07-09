@@ -34,8 +34,8 @@ public class BrowerJumpExcessiveActivity extends BaseActivity {
             if (source == 0) {
                 if (null != schemeUri && "colourlifeauth".equals(schemeUri.getScheme()) && "web".equals(schemeUri.getHost())) {
                     final String linkUrl = schemeUri.getQueryParameter("linkURL");
-                    Intent jumpIntent = new Intent(BrowerJumpExcessiveActivity.this, MainActivity1.class);
-                    intent.putExtra(MainActivity1.JUMPOTHERURL, linkUrl);
+                    Intent jumpIntent = new Intent(BrowerJumpExcessiveActivity.this, MainActivity.class);
+                    intent.putExtra(MainActivity.JUMPOTHERURL, linkUrl);
                     startActivity(jumpIntent);
                 }
             } else {

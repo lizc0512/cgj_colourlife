@@ -49,8 +49,8 @@ import com.youmai.hxsdk.utils.GlideRoundTransform;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.tg.coloursteward.module.MainActivity1.getEnvironment;
-import static com.tg.coloursteward.module.MainActivity1.getPublicParams;
+import static com.tg.coloursteward.module.MainActivity.getEnvironment;
+import static com.tg.coloursteward.module.MainActivity.getPublicParams;
 
 /**
  * 个人中心

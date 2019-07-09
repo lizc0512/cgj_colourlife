@@ -30,7 +30,7 @@ import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.info.UserInfo;
-import com.tg.coloursteward.module.MainActivity1;
+import com.tg.coloursteward.module.MainActivity;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.RequestConfig;
 import com.tg.coloursteward.object.ImageParams;
@@ -156,7 +156,7 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener {
                     setUserInfo();
                     updateView();
                     ToastFactory.showToast(this, "保存成功");
-                    sendBroadcast(new Intent(MainActivity1.ACTION_FRESH_USERINFO));
+                    sendBroadcast(new Intent(MainActivity.ACTION_FRESH_USERINFO));
                     UserInfoActivity.this.finish();
                 }
             } else {
@@ -165,7 +165,7 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener {
         } else if (msg.arg1 == HttpTools.POST_IMAG) {
             DialogFactory.getInstance().hideTransitionDialog();
             needPostImage = false;
-            sendBroadcast(new Intent(MainActivity1.ACTION_FRESH_USERINFO));
+            sendBroadcast(new Intent(MainActivity.ACTION_FRESH_USERINFO));
             ToastFactory.showToast(this, hintString);
             updatetime = String.valueOf(System.currentTimeMillis());
             UserInfo.userinfoImg = updatetime;

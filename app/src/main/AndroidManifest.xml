@@ -73,7 +73,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".module.MainActivity1"
+            android:name=".module.MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
         <activity

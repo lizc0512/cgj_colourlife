@@ -19,7 +19,7 @@ import com.shell.SdkManager;
 import com.tencent.smtt.sdk.QbSdk;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.database.SharedPreferencesTools;
-import com.tg.coloursteward.module.MainActivity1;
+import com.tg.coloursteward.module.MainActivity;
 import com.tg.coloursteward.net.ResponseData;
 import com.tg.coloursteward.util.GDLocationUtil;
 import com.tg.coloursteward.util.SSLContextUtil;
@@ -65,7 +65,7 @@ public class CityPropertyApplication extends Application {
         instance = this;
         //Huxin IM SDK初始化
         HuxinSdkManager.instance().init(this);
-        HuxinSdkManager.instance().setHomeAct(MainActivity1.class);
+        HuxinSdkManager.instance().setHomeAct(MainActivity.class);
         Stetho.initializeWithDefaults(this);
         SdkManager.initSdkManager(this);
         GDLocationUtil.init(this);

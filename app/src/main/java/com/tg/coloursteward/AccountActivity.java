@@ -42,8 +42,8 @@ import java.util.List;
 import java.util.Map;
 
 import static com.tg.coloursteward.constant.Contants.storage.JSFPNUM;
-import static com.tg.coloursteward.module.MainActivity1.getEnvironment;
-import static com.tg.coloursteward.module.MainActivity1.getPublicParams;
+import static com.tg.coloursteward.module.MainActivity.getEnvironment;
+import static com.tg.coloursteward.module.MainActivity.getPublicParams;
 
 /**
  * 即时分配

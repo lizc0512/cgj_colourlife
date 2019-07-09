@@ -17,7 +17,7 @@ import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.database.SharedPreferencesTools;
-import com.tg.coloursteward.module.MainActivity1;
+import com.tg.coloursteward.module.MainActivity;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.ResponseData;
 import com.tg.coloursteward.util.Tools;
@@ -133,8 +133,8 @@ public class SplashActivity extends BaseActivity implements View.OnClickListener
                     public void onClick(View v) {
                         if (!TextUtils.isEmpty(urlAd)) {
                             cancelTimeCount();
-                            MainActivity1.url_ad = urlAd;
-                            MainActivity1.auth_type = auth_type;
+                            MainActivity.url_ad = urlAd;
+                            MainActivity.auth_type = auth_type;
                             String skin_code = Tools.getStringValue(SplashActivity.this, Contants.storage.SKINCODE);
                             redirectto(skin_code, urlAd, auth_type, true);
                         }
@@ -185,13 +185,13 @@ public class SplashActivity extends BaseActivity implements View.OnClickListener
         {
             ResponseData userInfoData = SharedPreferencesTools.getUserInfo(SplashActivity.this);
             if (userInfoData.length > 0) {
-                Intent intent = new Intent(SplashActivity.this, MainActivity1.class);
-                intent.putExtra(MainActivity1.KEY_SKIN_CODE, skin_code);
-//                intent.putExtra(MainActivity1.KEY_EXTRAS, extras);
-                intent.putExtra(MainActivity1.FROM_LOGIN, false);
-                intent.putExtra(MainActivity1.FROM_AUTH_TYPE, auth_type);
+                Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+                intent.putExtra(MainActivity.KEY_SKIN_CODE, skin_code);
+//                intent.putExtra(MainActivity.KEY_EXTRAS, extras);
+                intent.putExtra(MainActivity.FROM_LOGIN, false);
+                intent.putExtra(MainActivity.FROM_AUTH_TYPE, auth_type);
                 if (autoShow) {
-                    intent.putExtra(MainActivity1.FROM_AD, urlAd);
+                    intent.putExtra(MainActivity.FROM_AD, urlAd);
                 }
 
                 startActivity(intent);

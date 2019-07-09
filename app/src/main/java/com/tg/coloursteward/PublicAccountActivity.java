@@ -39,8 +39,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-import static com.tg.coloursteward.module.MainActivity1.getEnvironment;
-import static com.tg.coloursteward.module.MainActivity1.getPublicParams;
+import static com.tg.coloursteward.module.MainActivity.getEnvironment;
+import static com.tg.coloursteward.module.MainActivity.getPublicParams;
 
 /**
  * 对公账户

@@ -1,4 +1,4 @@
-package com.tg.coloursteward.module.contact;
+package com.tg.coloursteward.fragment;
 
 import android.Manifest;
 import android.content.BroadcastReceiver;

@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.constant.Contants;
-import com.tg.coloursteward.module.MainActivity1;
+import com.tg.coloursteward.module.MainActivity;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.RequestConfig;
 import com.tg.coloursteward.net.RequestParams;
@@ -271,7 +271,7 @@ public class RedpacketsWithdrawFinishedActivity extends BaseActivity {
                 try {
                     state = jsonObject.getString("ok");
                     if ("1".equals(state)) {
-                        sendBroadcast(new Intent(MainActivity1.ACTION_TICKET_INFO));
+                        sendBroadcast(new Intent(MainActivity.ACTION_TICKET_INFO));
                     } else {
                         if ("colleague".equals(transferTo)) {
                             ToastFactory.showToast(RedpacketsWithdrawFinishedActivity.this, "发红包失败");

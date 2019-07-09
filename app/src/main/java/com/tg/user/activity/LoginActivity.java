@@ -26,7 +26,7 @@ import com.tg.coloursteward.constant.SpConstants;
 import com.tg.coloursteward.database.SharedPreferencesTools;
 import com.tg.coloursteward.entity.CzyOauthEntity;
 import com.tg.coloursteward.info.UserInfo;
-import com.tg.coloursteward.module.MainActivity1;
+import com.tg.coloursteward.module.MainActivity;
 import com.tg.coloursteward.net.DES;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.MD5;
@@ -162,7 +162,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         Intent intent = getIntent();
         if (null != intent) {
             boolean loginOut = intent.getBooleanExtra("login_out", false);
-            extras = intent.getStringExtra(MainActivity1.KEY_EXTRAS);
+            extras = intent.getStringExtra(MainActivity.KEY_EXTRAS);
             if (loginOut) {
                 UserInfo.initClear();
                 StopYingYan();
@@ -449,11 +449,11 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                         spUtils.saveBooleanData(SpConstants.UserModel.ISLOGIN, true);
                         singleDevicelogin();
                         getSkin(corpId);
-                        Intent intent = new Intent(LoginActivity.this, MainActivity1.class);
-                        intent.putExtra(MainActivity1.KEY_NEDD_FRESH, false);
-                        intent.putExtra(MainActivity1.KEY_SKIN_CODE, "");
-                        intent.putExtra(MainActivity1.KEY_EXTRAS, extras);
-                        intent.putExtra(MainActivity1.FROM_LOGIN, true);
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        intent.putExtra(MainActivity.KEY_NEDD_FRESH, false);
+                        intent.putExtra(MainActivity.KEY_SKIN_CODE, "");
+                        intent.putExtra(MainActivity.KEY_EXTRAS, extras);
+                        intent.putExtra(MainActivity.FROM_LOGIN, true);
                         startActivity(intent);
                         ToastUtil.showShortToast(this, "登录成功");
                         LoginActivity.this.finish();

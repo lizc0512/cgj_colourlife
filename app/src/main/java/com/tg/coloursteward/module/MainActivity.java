@@ -64,7 +64,7 @@ import com.tg.coloursteward.database.SharedPreferencesTools;
 import com.tg.coloursteward.entity.HomePopWindowEntity;
 import com.tg.coloursteward.entity.SingleDeviceLogin;
 import com.tg.coloursteward.entity.SingleDeviceLogout;
-import com.tg.coloursteward.fragment.FragmentManagement1;
+import com.tg.coloursteward.fragment.FragmentManagement;
 import com.tg.coloursteward.fragment.FragmentMine;
 import com.tg.coloursteward.info.GridViewInfo;
 import com.tg.coloursteward.info.HomeDeskTopInfo;
@@ -72,8 +72,8 @@ import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.inter.Oauth2CallBack;
 import com.tg.coloursteward.log.Logger;
 import com.tg.coloursteward.model.HomeModel;
-import com.tg.coloursteward.module.contact.ContactsFragment;
-import com.tg.coloursteward.module.meassage.MsgListFragment;
+import com.tg.coloursteward.fragment.ContactsFragment;
+import com.tg.coloursteward.fragment.MsgListFragment;
 import com.tg.coloursteward.net.GetTwoRecordListener;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.MessageHandler;
@@ -144,9 +144,9 @@ import static com.tg.coloursteward.constant.Contants.URl.environment;
  * Created by colin on 2018/3/15.
  */
 
-public class MainActivity1 extends BaseActivity implements MessageHandler.ResponseListener, View.OnClickListener, HttpResponse {
+public class MainActivity extends BaseActivity implements MessageHandler.ResponseListener, View.OnClickListener, HttpResponse {
 
-    private static final String TAG = MainActivity1.class.getSimpleName();
+    private static final String TAG = MainActivity.class.getSimpleName();
 
     public static final String ACTION_FRESH_USERINFO = "com.tg.coloursteward.ACTION_FRESH_USERINFO";
     public static final String ACTION_TICKET_INFO = "com.tg.coloursteward.ACTION_TICKET_INFO";
@@ -251,11 +251,11 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
             form_login = data.getBooleanExtra(FROM_LOGIN, false);
             String urlFromOther = data.getStringExtra(JUMPOTHERURL);
             if (!TextUtils.isEmpty(urlFromOther)) {
-                LinkParseUtil.parse(MainActivity1.this, urlFromOther, "");
+                LinkParseUtil.parse(MainActivity.this, urlFromOther, "");
             }
             if (!TextUtils.isEmpty(urlAd)) {
                 AuthTimeUtils authTimeUtils = new AuthTimeUtils();
-                authTimeUtils.IsAuthTime(MainActivity1.this, urlAd, "", urlauth_type, "", "");
+                authTimeUtils.IsAuthTime(MainActivity.this, urlAd, "", urlauth_type, "", "");
             }
         }
         msgHand = new MessageHandler(this);
@@ -434,9 +434,9 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
     private void initGetToken() {
         OAuth2ServiceUpdate oAuth2ServiceUpdate = null;
         if (null == oAuth2ServiceUpdate) {
-            oAuth2ServiceUpdate = new OAuth2ServiceUpdate(MainActivity1.this);
+            oAuth2ServiceUpdate = new OAuth2ServiceUpdate(MainActivity.this);
         }
-        oAuth2ServiceUpdate.getOAuth2Service(UserInfo.employeeAccount, Tools.getPassWordMD5(MainActivity1.this), new Oauth2CallBack() {
+        oAuth2ServiceUpdate.getOAuth2Service(UserInfo.employeeAccount, Tools.getPassWordMD5(MainActivity.this), new Oauth2CallBack() {
             @Override
             public void onData(String access_token) {
 
@@ -460,12 +460,12 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
         if (null != intent) {
             String urlFromOther = intent.getStringExtra(JUMPOTHERURL);
             if (!TextUtils.isEmpty(urlFromOther)) {
-                LinkParseUtil.parse(MainActivity1.this, urlFromOther, "");
+                LinkParseUtil.parse(MainActivity.this, urlFromOther, "");
             }
             String urlAd = intent.getStringExtra(FROM_AD);
             if (!TextUtils.isEmpty(urlAd)) {
                 AuthTimeUtils authTimeUtils = new AuthTimeUtils();
-                authTimeUtils.IsAuthTime(MainActivity1.this, urlAd, "", urlauth_type, "", "");
+                authTimeUtils.IsAuthTime(MainActivity.this, urlAd, "", urlauth_type, "", "");
             }
         }
         String extras = intent.getStringExtra(KEY_EXTRAS);
@@ -644,7 +644,7 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
                 if (jsonObject.length() > 0) {
                     try {
                         String orgType = jsonObject.getString("orgType");
-                        Tools.saveStringValue(MainActivity1.this, Contants.storage.ORGTYPE, orgType);
+                        Tools.saveStringValue(MainActivity.this, Contants.storage.ORGTYPE, orgType);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -658,8 +658,8 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
                     JSONObject sonJon = new JSONObject(jsonObject);
                     String key = sonJon.optString("key");
                     String secret = sonJon.optString("secret");
-                    Tools.saveStringValue(MainActivity1.this, Contants.EMPLOYEE_LOGIN.key, key);
-                    Tools.saveStringValue(MainActivity1.this, Contants.EMPLOYEE_LOGIN.secret, secret);
+                    Tools.saveStringValue(MainActivity.this, Contants.EMPLOYEE_LOGIN.key, key);
+                    Tools.saveStringValue(MainActivity.this, Contants.EMPLOYEE_LOGIN.secret, secret);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -687,7 +687,7 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
             if (code == 0) {
                 JSONObject jsonObject = HttpTools.getContentJSONObject(jsonString);
                 if (null != jsonObject) {
-                    Tools.saveStringValue(MainActivity1.this, Contants.storage.HomePageAd, jsonString);
+                    Tools.saveStringValue(MainActivity.this, Contants.storage.HomePageAd, jsonString);
                     String urlImg = "";
                     try {
                         urlImg = jsonObject.getString("adUrl");
@@ -712,7 +712,7 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
                 File file = null;
                 try {
                     FutureTarget<File> future = Glide
-                            .with(MainActivity1.this)
+                            .with(MainActivity.this)
                             .load(url)
                             .downloadOnly(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL);
 
@@ -726,10 +726,10 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
                     String fileName = "";
                     if (url.endsWith(".gif")) {
                         fileName = "colourlifeAd.gif";
-                        Tools.saveStringValue(MainActivity1.this, Contants.storage.ImageType, "gif");
+                        Tools.saveStringValue(MainActivity.this, Contants.storage.ImageType, "gif");
                     } else {
                         fileName = "colourlifeAd.png";
-                        Tools.saveStringValue(MainActivity1.this, Contants.storage.ImageType, "png");
+                        Tools.saveStringValue(MainActivity.this, Contants.storage.ImageType, "png");
                     }
                     File destFile = new File(appDir, fileName);
                     FileUtil.copy(file, destFile);
@@ -747,7 +747,7 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
 
             @Override
             protected void onPostExecute(File file) {
-//                Toast.makeText(MainActivity1.this, "saved in Pictures/GankBeauty", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(MainActivity.this, "saved in Pictures/GankBeauty", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -921,9 +921,9 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
         RequestParams params = new RequestParams();
         params.put("login_type", "1");//登录方式,1静默和2密码
         params.put("device_type", "1");//登录设备类别，1：安卓，2：IOS
-        params.put("version", UpdateManager.getVersionName(MainActivity1.this));//APP版本号
-        params.put("device_code", TokenUtils.getUUID(MainActivity1.this));//设备唯一编号
-        params.put("device_info", TokenUtils.getDeviceInfor(MainActivity1.this));//设备详细信息（json字符创）
+        params.put("version", UpdateManager.getVersionName(MainActivity.this));//APP版本号
+        params.put("device_code", TokenUtils.getUUID(MainActivity.this));//设备唯一编号
+        params.put("device_info", TokenUtils.getDeviceInfor(MainActivity.this));//设备详细信息（json字符创）
         params.put("device_name", TokenUtils.getDeviceBrand() + TokenUtils.getDeviceType());//设备名称（如三星S9）
         HttpTools.httpPost(Contants.URl.SINGLE_DEVICE, "/cgjapp/single/device/login", config, params);
     }
@@ -991,7 +991,7 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
      * 重新静默获取用户信息
      */
     private void getSlientLogin() {
-        OAuth2ServiceUpdate auth2ServiceUpdate = new OAuth2ServiceUpdate(MainActivity1.this);
+        OAuth2ServiceUpdate auth2ServiceUpdate = new OAuth2ServiceUpdate(MainActivity.this);
         auth2ServiceUpdate.getOAuth2Service(UserInfo.employeeAccount, Tools.getPassWordMD5(mContext), new Oauth2CallBack() {
             @Override
             public void onData(String access_token) {
@@ -1003,7 +1003,7 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
     private void getNetInfo(String access_token) {
         ContentValues header = new ContentValues();
         header.put("Authorization", "Bearer " + access_token);
-        OkHttpConnector.httpGet(MainActivity1.this, Contants.URl.URL_OAUTH2 + "/oauth/user", header, null, new IGetListener() {
+        OkHttpConnector.httpGet(MainActivity.this, Contants.URl.URL_OAUTH2 + "/oauth/user", header, null, new IGetListener() {
             @Override
             public void httpReqResult(String jsonString) {
                 if (null != jsonString) {
@@ -1014,13 +1014,13 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
                             String response = HttpTools.getContentString(jsonString);
                             ResponseData data = HttpTools.getResponseContentObject(response);
                             Tools.loadUserInfo(data, jsonString);
-                            Tools.savetokenUserInfo(MainActivity1.this, jsonString);
+                            Tools.savetokenUserInfo(MainActivity.this, jsonString);
                             int status = data.getInt("status");
                             String corpId = data.getString("corp_id");
                             UserInfo.infoorgId = data.getString("org_uuid");
                             UserInfo.employeeAccount = data.getString("username");
-                            Tools.saveOrgId(MainActivity1.this, data.getString("org_uuid"));
-                            Tools.saveStringValue(MainActivity1.this, Contants.storage.CORPID, corpId);//租户ID
+                            Tools.saveOrgId(MainActivity.this, data.getString("org_uuid"));
+                            Tools.saveStringValue(MainActivity.this, Contants.storage.CORPID, corpId);//租户ID
                             if (status == 0) {//账号正常
                                 new Handler().postDelayed(new Runnable() {
                                     @Override
@@ -1032,17 +1032,17 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
                                     sendBroadcast(new Intent(ACTION_TICKET_INFO));
                                 }
                             } else {
-                                ToastFactory.showToast(MainActivity1.this, "账号异常，请及时联系管理员");
+                                ToastFactory.showToast(MainActivity.this, "账号异常，请及时联系管理员");
                                 singleDevicelogout();
-                                SharedPreferencesTools.clearUserId(MainActivity1.this);
+                                SharedPreferencesTools.clearUserId(MainActivity.this);
                                 //清空缓存
-                                SharedPreferencesTools.clearAllData(MainActivity1.this);
-                                SharedPreferencesTools.clearCache(MainActivity1.this);
-                                CityPropertyApplication.gotoLoginActivity(MainActivity1.this);
+                                SharedPreferencesTools.clearAllData(MainActivity.this);
+                                SharedPreferencesTools.clearCache(MainActivity.this);
+                                CityPropertyApplication.gotoLoginActivity(MainActivity.this);
                                 HuxinSdkManager.instance().loginOut();
                             }
                         } else {
-//                            ToastFactory.showToast(MainActivity1.this, message); //偶现会弹出Unauth错误信息
+//                            ToastFactory.showToast(MainActivity.this, message); //偶现会弹出Unauth错误信息
                         }
                     } catch (Exception e) {
                     }
@@ -1148,7 +1148,7 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
     public void getOrgType(String token) {
         RequestConfig config = new RequestConfig(this, HttpTools.GET_ORG_TYPE, null);
         RequestParams params = new RequestParams();
-        String corpId = Tools.getStringValue(MainActivity1.this, Contants.storage.CORPID);
+        String corpId = Tools.getStringValue(MainActivity.this, Contants.storage.CORPID);
         params.put("token", token);
         params.put("orgUuid", UserInfo.orgId);
         params.put("corpId", corpId);
@@ -1236,7 +1236,7 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
             switch (code) {
                 case 0:
                     Logger.logd(TAG, "alias   设置成功   code=" + code);
-                    Tools.setBooleanValue(MainActivity1.this, Contants.storage.ALIAS, true);
+                    Tools.setBooleanValue(MainActivity.this, Contants.storage.ALIAS, true);
                     initInfoSync();
                     break;
 
@@ -1265,7 +1265,7 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
             switch (code) {
                 case 0:
                     Logger.logd(TAG, "tag   设置成功   code=" + code);
-                    Tools.setBooleanValue(MainActivity1.this, Contants.storage.Tags, true);
+                    Tools.setBooleanValue(MainActivity.this, Contants.storage.Tags, true);
                     break;
                 case 6002:
                     if (ExampleUtil.isConnected(getApplicationContext())) {
@@ -1298,7 +1298,7 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
         params.put("cate_id", 0);
         ColorsConfig.commonParams(params);
 
-        OkHttpConnector.httpPost(MainActivity1.this, url, params, new IPostListener() {
+        OkHttpConnector.httpPost(MainActivity.this, url, params, new IPostListener() {
             @Override
             public void httpReqResult(String response) {
                 String jsonString = HttpTools.getContentString(response);
@@ -1426,7 +1426,7 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
                     //用户点击更新，跳转到下载更新页面
                     List<String> list = new ArrayList<>();
                     list.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-                    XXPermissions.with(MainActivity1.this)
+                    XXPermissions.with(MainActivity.this)
                             .constantRequest()
                             .permission(list)
                             .request(new OnPermission() {
@@ -1436,7 +1436,7 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
                                         if (getPackageManager().canRequestPackageInstalls()) {
                                             startDown();
                                         } else {
-                                            DeleteMsgDialog dialog = new DeleteMsgDialog(MainActivity1.this, R.style.custom_dialog_theme);
+                                            DeleteMsgDialog dialog = new DeleteMsgDialog(MainActivity.this, R.style.custom_dialog_theme);
                                             dialog.show();
                                             dialog.setContentText("当前手机系统安装应用需要打开未知来源权限，请去设置中开启权限");
                                             dialog.setrightText("去打开");
@@ -1456,7 +1456,7 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
 
                                 @Override
                                 public void noPermission(List<String> denied, boolean quick) {
-                                    ToastUtil.showShortToast(MainActivity1.this,
+                                    ToastUtil.showShortToast(MainActivity.this,
                                             "存储权限被禁止，请去开启该权限");
                                 }
                             });
@@ -1482,11 +1482,11 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
         if (null != updateDialog) {
             updateDialog.dismiss();
         }
-        Intent intent = new Intent(MainActivity1.this, UpdateService.class);
+        Intent intent = new Intent(MainActivity.this, UpdateService.class);
         intent.putExtra(UpdateService.DOWNLOAD_URL, downUrl);
         intent.putExtra(UpdateService.VERSIONNAME, getVersion);
-        MainActivity1.this.startService(intent);
-        ToastUtil.showShortToast(MainActivity1.this, "彩管家已开始下载更新,详细信息可在通知栏查看哟!");
+        MainActivity.this.startService(intent);
+        ToastUtil.showShortToast(MainActivity.this, "彩管家已开始下载更新,详细信息可在通知栏查看哟!");
     }
 
     class PopupDismissListener implements PopupWindow.OnDismissListener {
@@ -1536,15 +1536,15 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
     }
 
     private static class NormalHandler extends android.os.Handler {
-        private final WeakReference<MainActivity1> mTarget;
+        private final WeakReference<MainActivity> mTarget;
 
-        NormalHandler(MainActivity1 target) {
+        NormalHandler(MainActivity target) {
             mTarget = new WeakReference<>(target);
         }
 
         @Override
         public void handleMessage(Message msg) {
-            MainActivity1 act = mTarget.get();
+            MainActivity act = mTarget.get();
             switch (msg.what) {
                 case MSG_SET_ALIAS:
                     JPushInterface.setAliasAndTags(act.getApplicationContext(), (String) msg.obj, null, act.mAliasCallback);
@@ -1580,7 +1580,7 @@ public class MainActivity1 extends BaseActivity implements MessageHandler.Respon
                     ft = new ContactsFragment();
                     break;
                 case 2:
-                    ft = new FragmentManagement1();
+                    ft = new FragmentManagement();
                     break;
                 case 3:
                     ft = new FragmentMine();

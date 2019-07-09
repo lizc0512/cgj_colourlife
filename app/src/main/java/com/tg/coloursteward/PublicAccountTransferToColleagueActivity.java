@@ -37,8 +37,8 @@ import org.json.JSONObject;
 import java.util.Calendar;
 import java.util.Date;
 
-import static com.tg.coloursteward.module.MainActivity1.getEnvironment;
-import static com.tg.coloursteward.module.MainActivity1.getPublicParams;
+import static com.tg.coloursteward.module.MainActivity.getEnvironment;
+import static com.tg.coloursteward.module.MainActivity.getPublicParams;
 
 /**
  * 兑换给同事（对公账户账户兑换）

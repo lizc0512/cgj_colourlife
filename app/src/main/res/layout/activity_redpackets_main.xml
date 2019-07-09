@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/base_color"
-    tools:context=".RedpacketsMainActivity" >
+    tools:context=".activity.RedpacketsMainActivity" >
 
     <ListView
         android:id="@+id/lv_item"

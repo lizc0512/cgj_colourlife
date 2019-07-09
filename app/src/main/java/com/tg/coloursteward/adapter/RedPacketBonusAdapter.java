@@ -9,8 +9,8 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.tg.coloursteward.BonusRecordPersonalActivity;
-import com.tg.coloursteward.GroupAccountDetailsActivity;
+import com.tg.coloursteward.activity.BonusRecordPersonalActivity;
+import com.tg.coloursteward.activity.GroupAccountDetailsActivity;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.entity.RedPacketEntity;
 

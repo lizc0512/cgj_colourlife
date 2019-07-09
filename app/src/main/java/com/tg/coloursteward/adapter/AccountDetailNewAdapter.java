@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.tg.coloursteward.AccountExchangeDetailActivity;
+import com.tg.coloursteward.activity.AccountExchangeDetailActivity;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.MyBaseAdapter;
 import com.tg.coloursteward.entity.ExchangeEntity;

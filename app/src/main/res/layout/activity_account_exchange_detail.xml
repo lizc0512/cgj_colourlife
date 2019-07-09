@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.tg.coloursteward.AccountExchangeDetailActivity">
+    tools:context="com.tg.coloursteward.activity.AccountExchangeDetailActivity">
 
     <com.tg.coloursteward.view.PullRefreshListView
         android:id="@+id/pull_listview"

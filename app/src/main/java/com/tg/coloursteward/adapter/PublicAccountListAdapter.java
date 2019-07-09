@@ -1,21 +1,15 @@
 package com.tg.coloursteward.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.tg.coloursteward.PublicAccountDetailsActivity;
-import com.tg.coloursteward.PublicAccountSearchActivity;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.MyBaseAdapter;
 import com.tg.coloursteward.info.PublicAccountInfo;
-import com.tg.coloursteward.util.StringUtils;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 /**

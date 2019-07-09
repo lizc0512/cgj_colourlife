@@ -24,9 +24,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.tg.coloursteward.ContactsActivity;
-import com.tg.coloursteward.EmployeeDataActivity;
-import com.tg.coloursteward.HomeContactOrgActivity;
+import com.tg.im.activity.ContactsActivity;
+import com.tg.coloursteward.activity.EmployeeDataActivity;
+import com.tg.coloursteward.activity.HomeContactOrgActivity;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.info.FamilyInfo;

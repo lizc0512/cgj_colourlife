@@ -24,7 +24,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.signature.ObjectKey;
 import com.dashuview.library.keep.Cqb_PayUtil;
-import com.tg.coloursteward.MyBrowserActivity;
+import com.tg.coloursteward.activity.MyBrowserActivity;
 import com.tg.coloursteward.R;
 import com.tg.user.activity.UserInfoActivity;
 import com.tg.coloursteward.adapter.FragmentMineAdapter;

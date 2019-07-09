@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:background="@color/base_color"
     android:orientation="vertical"
-    tools:context=".PublicAccountExchangeActivity">
+    tools:context=".activity.PublicAccountExchangeActivity">
 
 
     <com.tg.coloursteward.view.RoundImageView

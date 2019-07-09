@@ -3,8 +3,7 @@ package com.tg.coloursteward.view;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.alibaba.android.arouter.launcher.ARouter;
-import com.tg.coloursteward.MipcaActivityCapture;
+import com.tg.coloursteward.activity.MipcaActivityCapture;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.info.GridViewInfo;
@@ -13,7 +12,6 @@ import com.tg.coloursteward.util.AuthTimeUtils;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.db.bean.ContactBean;
 import com.youmai.hxsdk.group.AddContactsCreateGroupActivity;
-import com.youmai.hxsdk.router.APath;
 
 import android.app.Activity;
 import android.content.Context;

@@ -13,7 +13,7 @@ import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.widget.ImageView;
 
-import com.tg.coloursteward.ShowImageActivity;
+import com.tg.coloursteward.activity.ShowImageActivity;
 
 
 public class MyImageView extends ImageView {

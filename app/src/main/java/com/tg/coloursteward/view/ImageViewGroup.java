@@ -25,7 +25,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.tg.coloursteward.R;
-import com.tg.coloursteward.ShowImageActivity;
+import com.tg.coloursteward.activity.ShowImageActivity;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.inter.ResultCallBack;
 import com.tg.coloursteward.object.ImageParams;

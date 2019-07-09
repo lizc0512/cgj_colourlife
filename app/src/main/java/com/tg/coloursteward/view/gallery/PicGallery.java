@@ -11,7 +11,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Gallery;
 
-import com.tg.coloursteward.ShowImageActivity;
+import com.tg.coloursteward.activity.ShowImageActivity;
 
 
 public class PicGallery extends Gallery {

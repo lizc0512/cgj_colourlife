@@ -23,7 +23,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.tg.coloursteward.AccountExchangeRecordActivity;
+import com.tg.coloursteward.activity.AccountExchangeRecordActivity;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.MyBaseAdapter;
 import com.tg.coloursteward.inter.OnLoadingListener;

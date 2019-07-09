@@ -27,7 +27,7 @@ import android.util.Log;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
-import com.tg.coloursteward.MipcaActivityCapture;
+import com.tg.coloursteward.activity.MipcaActivityCapture;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.zxing.camera.CameraManager;
 import com.tg.coloursteward.zxing.view.ViewfinderResultPointCallback;

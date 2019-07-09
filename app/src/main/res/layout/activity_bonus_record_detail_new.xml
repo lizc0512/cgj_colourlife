@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:orientation="vertical"
-    tools:context=".BonusRecordDetailNewActivity">
+    tools:context=".activity.BonusRecordDetailNewActivity">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_bonus_detail"

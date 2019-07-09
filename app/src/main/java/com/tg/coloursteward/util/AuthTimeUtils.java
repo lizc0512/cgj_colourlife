@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.text.TextUtils;
 
-import com.tg.coloursteward.MyBrowserActivity;
+import com.tg.coloursteward.activity.MyBrowserActivity;
 import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.net.GetTwoRecordListener;
 import com.tg.coloursteward.serice.HomeService;

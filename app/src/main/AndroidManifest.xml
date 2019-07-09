@@ -81,17 +81,17 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
         <!-- 弹出提现新消息页面 -->
-        <activity android:name=".AlertActivity" />
+        <activity android:name=".activity.AlertActivity" />
         <!-- 消息推送消息列表 -->
-        <activity android:name=".DeskTopActivity" />
+        <activity android:name="com.tg.im.activity.DeskTopActivity" />
         <!-- 扫描二维码页面 -->
-        <activity android:name=".MipcaActivityCapture" />
+        <activity android:name=".activity.MipcaActivityCapture" />
         <!-- 公共报修 -->
-        <activity android:name=".RepairsPulbicActivity" />
+        <activity android:name=".activity.RepairsPulbicActivity" />
         <!-- 个人中心 -->
         <activity android:name="com.tg.user.activity.UserInfoActivity" />
         <!-- 图片显示 -->
-        <activity android:name=".ShowImageActivity" />
+        <activity android:name=".activity.ShowImageActivity" />
         <!-- 更多设置 -->
         <activity android:name="com.tg.setting.activity.SettingActivity" />
         <!-- 关于app -->
@@ -99,11 +99,11 @@
         <!-- 修改密码 -->
         <activity android:name="com.tg.setting.activity.ModifiedPasswordActivity" />
         <!-- 意见反馈 -->
-        <activity android:name=".OpinionActivity" />
+        <activity android:name=".activity.OpinionActivity" />
         <!-- 获取手机通讯录 -->
-        <activity android:name=".ContactsActivity" />
+        <activity android:name="com.tg.im.activity.ContactsActivity" />
         <!-- 员工名片 -->
-        <activity android:name=".EmployeeDataActivity" />
+        <activity android:name=".activity.EmployeeDataActivity" />
         <activity android:name="com.colorfullife_verify.Oauth_LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -113,16 +113,16 @@
         </activity>
         <!-- 通讯录搜索 -->
         <activity
-            android:name=".HomeContactSearchActivity"
+            android:name=".activity.HomeContactSearchActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/app_name" />
         <!-- 我的饭票 -->
         <activity
-            android:name=".RedpacketsBonusMainActivity"
+            android:name=".activity.RedpacketsBonusMainActivity"
             android:label="@string/app_name" />
         <!-- 浏览器BaseActivity -->
         <activity
-            android:name=".MyBrowserActivity"
+            android:name=".activity.MyBrowserActivity"
             android:configChanges="locale|orientation|keyboard|keyboardHidden|screenSize"
             android:hardwareAccelerated="true"
             android:windowSoftInputMode="stateHidden|adjustResize" />
@@ -132,59 +132,59 @@
             android:label="@string/app_name" />
         <!-- 组织框架 -->
         <activity
-            android:name=".HomeContactOrgActivity"
+            android:name=".activity.HomeContactOrgActivity"
             android:label="@string/app_name" />
         <!-- 我的下载 -->
         <activity
-            android:name=".DownloadManagerActivity"
+            android:name=".activity.DownloadManagerActivity"
             android:label="@string/app_name" />
         <!-- 集体奖惩明细 -->
         <activity
-            android:name=".BonusRecordActivity"
+            android:name=".activity.BonusRecordActivity"
             android:label="@string/app_name" />
         <!-- 奖金包(个人) -->
         <activity
-            android:name=".BonusRecordPersonalActivity"
+            android:name=".activity.BonusRecordPersonalActivity"
             android:label="@string/app_name" />
         <!-- 详情(奖金包) -->
         <activity
-            android:name=".BonusRecordDetailNewActivity"
+            android:name=".activity.BonusRecordDetailNewActivity"
             android:label="@string/app_name" />
         <!-- 详情(绩效) -->
         <activity
-            android:name=".EffectDetailActivity"
+            android:name=".activity.EffectDetailActivity"
             android:label="@string/app_name" />
         <!-- 饭票收支明细 -->
         <activity
-            android:name=".RedpacketsRecordActivity"
+            android:name=".activity.RedpacketsRecordActivity"
             android:label="@string/app_name" />
         <!-- 我的饭票(提现与转账) -->
         <activity
-            android:name=".RedpacketsMainActivity"
+            android:name=".activity.RedpacketsMainActivity"
             android:label="@string/app_name" />
         <!-- 给同事发饭票 -->
         <activity
-            android:name=".RedpacketsShareMainActivity"
+            android:name=".activity.RedpacketsShareMainActivity"
             android:label="@string/app_name" />
         <!-- 给同事发饭票 -->
         <activity
-            android:name=".RedpacketsTransferMainActivity"
+            android:name=".activity.RedpacketsTransferMainActivity"
             android:label="@string/app_name" />
         <!-- 通讯录同事 -->
         <activity
-            android:name=".RedpacketsContactsActivity"
+            android:name=".activity.RedpacketsContactsActivity"
             android:label="@string/app_name" />
         <!-- 绑定彩之云账号 -->
         <activity
-            android:name=".RedpacketsBindCZYMainActivity"
+            android:name=".activity.RedpacketsBindCZYMainActivity"
             android:label="@string/app_name" />
         <!-- 选择银行卡 -->
         <activity
-            android:name=".RedpacketsBankCardListActivity"
+            android:name=".activity.RedpacketsBankCardListActivity"
             android:label="@string/app_name" />
         <!-- 绑定银行卡 -->
         <activity
-            android:name=".RedpacketsBindBankCardActivity"
+            android:name=".activity.RedpacketsBindBankCardActivity"
             android:label="@string/app_name" />
         <!-- 提现完成页面 -->
         <!--
@@ -195,35 +195,35 @@
              android:configChanges="orientation|keyboardHidden" />
         -->
         <activity
-            android:name=".RedpacketsWithdrawFinishedActivity"
+            android:name=".activity.RedpacketsWithdrawFinishedActivity"
             android:label="@string/app_name" />
         <!-- 提现 -->
         <activity
-            android:name=".RedpacketsWithdrawMainActivity"
+            android:name=".activity.RedpacketsWithdrawMainActivity"
             android:label="@string/app_name" />
         <!-- 提现记录 -->
         <activity
-            android:name=".RedpacketsWithdrawRecordActivity"
+            android:name=".activity.RedpacketsWithdrawRecordActivity"
             android:label="@string/app_name" />
         <!-- 绑定彩之云 -->
         <activity
-            android:name=".RedpacketsBindCZYConfirmActivity"
+            android:name=".activity.RedpacketsBindCZYConfirmActivity"
             android:label="@string/app_name" />
         <!-- 提现明细 -->
         <activity
-            android:name=".RedpacketsWithdrawRecordDetailActivity"
+            android:name=".activity.RedpacketsWithdrawRecordDetailActivity"
             android:label="@string/app_name" />
         <!-- 日志 -->
         <activity
-            android:name=".ScanResultActivity"
+            android:name=".activity.ScanResultActivity"
             android:label="@string/app_name" />
         <activity
-            android:name=".DataShowActivity"
+            android:name=".activity.DataShowActivity"
             android:label="@string/app_name" />
         <!-- 即时分配 -->
-        <activity android:name=".AccountActivity" />
+        <activity android:name=".activity.AccountActivity" />
         <!-- 即时分配明细 -->
-        <activity android:name=".AccountDetailActivity" />
+        <activity android:name=".activity.AccountDetailActivity" />
 
         <service android:name=".serice.MessageService" />
 
@@ -293,48 +293,48 @@
         <!-- 更新App服务 -->
         <service android:name=".serice.DownLoadService" />
 
-        <activity android:name=".RedpacketsRecordDetailActivity" />
-        <activity android:name=".SearchContactListActivity" />
-        <activity android:name=".SearchHomeListActivity" />
-        <activity android:name=".SearchManageMentListActivity" />
-        <activity android:name=".BranchActivity" />
-        <activity android:name=".PublicAccountActivity" />
+        <activity android:name=".activity.RedpacketsRecordDetailActivity" />
+        <activity android:name=".activity.SearchContactListActivity" />
+        <activity android:name=".activity.SearchHomeListActivity" />
+        <activity android:name=".activity.SearchManageMentListActivity" />
+        <activity android:name=".activity.BranchActivity" />
+        <activity android:name=".activity.PublicAccountActivity" />
         <activity android:name="com.tg.user.activity.ForgetPasswordActivity" />
         <activity android:name="com.tg.user.activity.ForgetPasswordVerifyActivity" />
-        <activity android:name=".RedpacketsAccountListActivity" />
-        <activity android:name=".AccountDetailNewActivity" />
-        <activity android:name=".AccountExchangeRecordActivity" />
-        <activity android:name=".AccountExchangeActivity" />
-        <activity android:name=".AccountExchangeDetailActivity" />
-        <activity android:name=".PublicAccountDetailsActivity" />
-        <activity android:name=".GroupAccountDetailsActivity" />
-        <activity android:name=".PublicAccountSearchActivity" />
-        <activity android:name=".PublicAccountListActivity" />
-        <activity android:name=".PublicAccountTransferActivity" />
-        <activity android:name=".PublicAccountExchangeActivity" />
-        <activity android:name=".RedpacketsDetailsActivity" />
-        <activity android:name=".AccountExchangeDetail_FreezingActivity" />
+        <activity android:name=".activity.RedpacketsAccountListActivity" />
+        <activity android:name=".activity.AccountDetailNewActivity" />
+        <activity android:name=".activity.AccountExchangeRecordActivity" />
+        <activity android:name=".activity.AccountExchangeActivity" />
+        <activity android:name=".activity.AccountExchangeDetailActivity" />
+        <activity android:name=".activity.PublicAccountDetailsActivity" />
+        <activity android:name=".activity.GroupAccountDetailsActivity" />
+        <activity android:name=".activity.PublicAccountSearchActivity" />
+        <activity android:name=".activity.PublicAccountListActivity" />
+        <activity android:name=".activity.PublicAccountTransferActivity" />
+        <activity android:name=".activity.PublicAccountExchangeActivity" />
+        <activity android:name=".activity.RedpacketsDetailsActivity" />
+        <activity android:name=".activity.AccountExchangeDetail_FreezingActivity" />
         <!-- 对公账户（兑换方式） -->
         <activity
-            android:name=".ExchangeMethodActivity"
+            android:name=".activity.ExchangeMethodActivity"
             android:label="@string/app_name" />
         <!-- 兑换给同事（对公账户） -->
         <activity
-            android:name=".RedpacketsDGZHShareMainMainActivity"
+            android:name=".activity.RedpacketsDGZHShareMainMainActivity"
             android:label="@string/app_name" />
         <!-- 账号选择OA列表 -->
         <activity
-            android:name=".RedpacketsDGZHAccountListActivity"
+            android:name=".activity.RedpacketsDGZHAccountListActivity"
             android:label="@string/app_name" />
         <!-- 兑换给同事  转账界面（对公账户） -->
         <activity
-            android:name=".PublicAccountTransferToColleagueActivity"
+            android:name=".activity.PublicAccountTransferToColleagueActivity"
             android:label="@string/app_name" />
         <!-- H5调原生 -->
         <activity
-            android:name=".RedpacketsTransferToColleagueH5Activity"
+            android:name=".activity.RedpacketsTransferToColleagueH5Activity"
             android:label="@string/app_name" />
-        <activity android:name=".ChangePhoneActivity" />
+        <activity android:name="com.tg.setting.activity.ChangePhoneActivity" />
         <activity
             android:name=".czy.ColourLifeEntryActivity"
             android:exported="true"

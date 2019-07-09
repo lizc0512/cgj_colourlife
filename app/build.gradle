@@ -37,6 +37,7 @@ android {
             res.srcDirs = ['src/main/res',
                            'src/main/java/com/tg/user/res',
                            'src/main/java/com/tg/setting/res',
+                           'src/main/java/com/tg/im/res',
             ]
         }
     }

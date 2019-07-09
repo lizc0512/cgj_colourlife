@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.tg.coloursteward.AccountExchangeDetailActivity">
+    tools:context="com.tg.coloursteward.activity.AccountExchangeDetailActivity">
 
     <TextView
         android:id="@+id/freezing_name"

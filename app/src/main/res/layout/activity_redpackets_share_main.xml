@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:background="@color/base_color"
     android:orientation="vertical"
-    tools:context=".RedpacketsShareMainActivity">
+    tools:context=".activity.RedpacketsShareMainActivity">
 
     <LinearLayout
         android:layout_width="match_parent"

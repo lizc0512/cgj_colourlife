@@ -14,7 +14,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 
-import com.tg.coloursteward.AlertActivity;
+import com.tg.coloursteward.activity.AlertActivity;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.net.DES;
@@ -30,7 +30,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
-import android.util.Log;
 
 public class MessageService extends Service {	 
     //获取消息线程
@@ -63,7 +62,7 @@ public class MessageService extends Service {
                  if(code == 0){
                     	Intent intent = new Intent(MessageService.this,AlertActivity.class);
 						intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-						if(isActivityRunning(MessageService.this, "com.tg.coloursteward.AlertActivity")){
+						if(isActivityRunning(MessageService.this, "com.tg.coloursteward.activity.AlertActivity")){
 							//Log.d("print","正在运行");
 						}else {
 							intent.putExtra(AlertActivity.SERVERMESSAGE,serverMessage);

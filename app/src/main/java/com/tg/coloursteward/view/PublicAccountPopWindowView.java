@@ -11,9 +11,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.PopupWindow;
 
-import com.tg.coloursteward.MipcaActivityCapture;
 import com.tg.coloursteward.R;
-import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.info.GridViewInfo;
 import com.tg.coloursteward.serice.HomeService;
 import com.tg.coloursteward.util.AuthTimeUtils;

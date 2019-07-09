@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/base_color"
     android:orientation="vertical"
-    tools:context="com.tg.coloursteward.ChangePhoneActivity">
+    tools:context="com.tg.coloursteward.com.tg.setting.activity.ChangePhoneActivity">
 
     <TextView
         android:id="@+id/tv_changphone_title"

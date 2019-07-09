@@ -32,7 +32,6 @@ import com.tg.coloursteward.application.CityPropertyApplication;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.inter.Oauth2CallBack;
-import com.tg.coloursteward.log.Logger;
 import com.tg.coloursteward.object.ImageParams;
 import com.tg.coloursteward.serice.OAuth2ServiceUpdate;
 import com.tg.coloursteward.util.Tools;
@@ -256,7 +255,6 @@ public class HttpTools {
                                 && rqtConfig.activity.isFinishing()) {
                             return;
                         }
-                        Logger.logd("[ " + URL_NAME + " ]response = " + response);
                         String decryptStr = "";
                         if (URL_NAME.startsWith(URL_CPMOBILE)) {
                             try {
@@ -324,12 +322,9 @@ public class HttpTools {
                     return;
                 }
                 String errorStr = getExceptionMessage(error);
-                Logger.errord("errorStr = " + errorStr);
-                Logger.errord("[ " + URL_NAME + " ]error = " + errorStr);
                 Writer info = new StringWriter();
                 PrintWriter printWriter = new PrintWriter(info);
                 error.printStackTrace(printWriter);
-                Logger.errord(info.toString());
                 if (rqtConfig.handler != null) {
                     Bundle bundle = new Bundle();
                     bundle.putString(KEY_HINT_STRING, errorStr);
@@ -476,8 +471,6 @@ public class HttpTools {
                 new Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        // TODO Auto-generated method stub
-                        Logger.logd("response = " + response);
                         if (rqtConfig.activity == null || rqtConfig.activity.isFinishing()) {
                             return;
                         }
@@ -517,7 +510,6 @@ public class HttpTools {
                             msg.obj = rqtConfig.tag;
                             rqtConfig.handler.sendMessage(msg);
                         } else {
-                            Logger.logd("rqtConfig.handler == null");
                         }
                     }
 
@@ -549,7 +541,6 @@ public class HttpTools {
             @Override
             public void onErrorResponse(VolleyError error) {
                 // TODO Auto-generated method stub
-                Logger.logd("error = " + error);
                 if (rqtConfig.activity != null
                         && rqtConfig.activity.isFinishing()) {
                     return;
@@ -558,7 +549,6 @@ public class HttpTools {
                 Writer info = new StringWriter();
                 PrintWriter printWriter = new PrintWriter(info);
                 error.printStackTrace(printWriter);
-                Logger.errord(info.toString());
                 if (rqtConfig.handler != null) {
                     Bundle bundle = new Bundle();
                     bundle.putString(KEY_HINT_STRING, errorStr);
@@ -669,7 +659,6 @@ public class HttpTools {
         bundle.putParcelable(KEY_IMAGE_PARAMS, imgParams);
         msg.setData(bundle);
         if (!isConnection(Tools.mContext)) {
-            Logger.logd("no net !!!!!!!!!!!!!!!!");
             msg.what = RESPONSE_ERROR;
             //bundle.putString(KEY_HINT_STRING, "无网络,请检查网络");
             bundle.putString(KEY_HINT_STRING, "");
@@ -731,7 +720,6 @@ public class HttpTools {
             int state = response.getStatusLine().getStatusCode();
             if (state == HttpStatus.SC_OK) {
                 String result = EntityUtils.toString(response.getEntity());
-                Logger.logd("图片上传成功 result = " + result);
                 msg1.what = RESPONSE_SUCCES;
                 msg1.getData().putString(KEY_RESPONSE_MSG, result);
                 //msg1.getData().putString(KEY_HINT_STRING, "图片上传成功");
@@ -784,7 +772,6 @@ public class HttpTools {
 
     public static void cancelRequest(Object tag) {
         if (tag != null) {
-            Logger.logd("cancel Request " + tag);
             getRequestQueue().cancelAll(tag);
         }
     }

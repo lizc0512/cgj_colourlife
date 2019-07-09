@@ -1,14 +1,5 @@
 package com.tg.coloursteward.image;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.List;
-
-import libcore.io.DiskLruCache;
-import libcore.io.DiskLruCache.Snapshot;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -17,8 +8,16 @@ import android.support.v4.util.LruCache;
 import android.text.TextUtils;
 
 import com.android.volley.toolbox.ImageLoader.ImageCache;
-import com.tg.coloursteward.log.Logger;
 import com.tg.coloursteward.util.Tools;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.List;
+
+import libcore.io.DiskLruCache;
+import libcore.io.DiskLruCache.Snapshot;
 
 /**
  * 图片缓存
@@ -37,7 +36,6 @@ public class BitmapCache implements ImageCache {
     public BitmapCache(Context context) {
         con = context;
         int maxMemory = (int) Runtime.getRuntime().maxMemory();
-        Logger.logd("maxMemory = " + maxMemory);
         int mCacheSize = maxMemory / 8;
         mCache = new LruCache<String, Bitmap>(mCacheSize) {
             @Override
@@ -56,7 +54,6 @@ public class BitmapCache implements ImageCache {
                 if (newValue != oldValue && oldValue != null && !oldValue.isRecycled()) {
                     //oldValue.recycle();
                     oldValue = null;
-                    Logger.logd("entryRemoved oldValue = " + oldValue);
                 }
             }
         };

@@ -27,7 +27,6 @@ import com.tg.coloursteward.AccountExchangeRecordActivity;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.MyBaseAdapter;
 import com.tg.coloursteward.inter.OnLoadingListener;
-import com.tg.coloursteward.log.Logger;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.MessageHandler;
 import com.tg.coloursteward.net.MessageHandler.ResponseListener;
@@ -316,7 +315,6 @@ public class PullRefreshListViewTenSize extends LinearLayout implements OnClickL
 
     public void setKeyName(String key) {
         keyName = key;
-        Logger.logd("keyName = " + keyName);
         freshTime(true);
     }
 
@@ -392,7 +390,6 @@ public class PullRefreshListViewTenSize extends LinearLayout implements OnClickL
     }
 
     private void onSuccess(int size, Message msg, boolean isLoadingMore) {
-        Logger.logd("size = " + size);
         if (!isLoadingMore) {//下拉刷新
             if (size >= minPageSize) {
                 showFooterView(null, true);

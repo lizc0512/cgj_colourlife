@@ -64,16 +64,15 @@ import com.tg.coloursteward.database.SharedPreferencesTools;
 import com.tg.coloursteward.entity.HomePopWindowEntity;
 import com.tg.coloursteward.entity.SingleDeviceLogin;
 import com.tg.coloursteward.entity.SingleDeviceLogout;
+import com.tg.coloursteward.fragment.ContactsFragment;
 import com.tg.coloursteward.fragment.FragmentManagement;
 import com.tg.coloursteward.fragment.FragmentMine;
+import com.tg.coloursteward.fragment.MsgListFragment;
 import com.tg.coloursteward.info.GridViewInfo;
 import com.tg.coloursteward.info.HomeDeskTopInfo;
 import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.inter.Oauth2CallBack;
-import com.tg.coloursteward.log.Logger;
 import com.tg.coloursteward.model.HomeModel;
-import com.tg.coloursteward.fragment.ContactsFragment;
-import com.tg.coloursteward.fragment.MsgListFragment;
 import com.tg.coloursteward.net.GetTwoRecordListener;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.MessageHandler;
@@ -226,7 +225,7 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
     private String downUrl;
     private UpdateVerSionDialog updateDialog;
     private String getVersion;
-    private boolean otherPopShow=false;
+    private boolean otherPopShow = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -1235,13 +1234,11 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
             String logs;
             switch (code) {
                 case 0:
-                    Logger.logd(TAG, "alias   设置成功   code=" + code);
                     Tools.setBooleanValue(MainActivity.this, Contants.storage.ALIAS, true);
                     initInfoSync();
                     break;
 
                 case 6002:
-                    logs = "Failed to set alias and tags due to timeout. Try again after 60s.";
                     if (ExampleUtil.isConnected(getApplicationContext())) {
                         mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_SET_ALIAS, alias), 1000 * 60);
                     } else {
@@ -1264,7 +1261,6 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
             String logs;
             switch (code) {
                 case 0:
-                    Logger.logd(TAG, "tag   设置成功   code=" + code);
                     Tools.setBooleanValue(MainActivity.this, Contants.storage.Tags, true);
                     break;
                 case 6002:
@@ -1403,6 +1399,7 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
             }
         }
     }
+
     private void showUpdateDialog(int code, String version, String mdownUrl, List<String> updateList) {
         downUrl = mdownUrl;
         updateDialog = new UpdateVerSionDialog(mContext);

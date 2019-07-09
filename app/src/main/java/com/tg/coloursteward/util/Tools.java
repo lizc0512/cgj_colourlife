@@ -1,40 +1,23 @@
 package com.tg.coloursteward.util;
 
 import android.app.Activity;
-import android.app.ActivityManager;
-import android.app.ActivityManager.RunningAppProcessInfo;
-import android.app.ActivityManager.RunningTaskInfo;
-import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
-import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
-import android.graphics.RectF;
-import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Environment;
 import android.provider.BaseColumns;
 import android.provider.MediaStore;
 import android.provider.MediaStore.MediaColumns;
 import android.support.v4.content.FileProvider;
-import android.text.SpannableString;
-import android.text.Spanned;
 import android.text.TextUtils;
-import android.text.style.ForegroundColorSpan;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
@@ -43,15 +26,11 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.tg.coloursteward.BuildConfig;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.database.SharedPreferencesTools;
-import com.tg.coloursteward.info.PublicAccountInfo;
 import com.tg.coloursteward.info.UserInfo;
-import com.tg.coloursteward.log.Logger;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.ResponseData;
 import com.youmai.hxsdk.HuxinSdkManager;
@@ -65,22 +44,17 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Enumeration;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
@@ -285,7 +259,6 @@ public class Tools {
         newOpts.inJustDecodeBounds = false;
         int w = newOpts.outWidth;
         int h = newOpts.outHeight;
-        Logger.logd("w =" + w + " h = " + h);
         float hh = 500f;
         float ww = 500f;
         int be = 1;
@@ -301,7 +274,6 @@ public class Tools {
         bitmap = BitmapFactory.decodeFile(sPath, newOpts);
         int newW = newOpts.outWidth;
         int newH = newOpts.outHeight;
-        Logger.logd("getByteCount = " + bitmap.getHeight() * bitmap.getRowBytes() + "  newW = " + newW + " newH = " + newH + "   inPreferredConfig = " + newOpts.inPreferredConfig);
         compressImage(con, bitmap, oPath);//压缩好比例大小后再进行质量压缩
     }
 
@@ -536,7 +508,6 @@ public class Tools {
         //content://com.android.providers.media.documents/document/image:3951
         //content://media/external/images/media/3951
         String filePath = null;
-        Logger.logd("contentUri = " + contentUri);
         String scheme = contentUri.getScheme();
         if ("file".equals(scheme)) {
             filePath = contentUri.getPath();

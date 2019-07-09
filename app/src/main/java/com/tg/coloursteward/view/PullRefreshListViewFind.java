@@ -8,7 +8,6 @@ import java.util.List;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.MyBaseAdapter;
 import com.tg.coloursteward.inter.OnLoadingListener;
-import com.tg.coloursteward.log.Logger;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.MessageHandler;
 import com.tg.coloursteward.net.MessageHandler.ResponseListener;
@@ -316,7 +315,6 @@ public class PullRefreshListViewFind extends LinearLayout implements OnClickList
 	
 	public void setKeyName(String key){
 		keyName = key;
-		Logger.logd("keyName = "+keyName);
 		freshTime(true);
 	}
 	
@@ -390,7 +388,6 @@ public class PullRefreshListViewFind extends LinearLayout implements OnClickList
 	}
 	
 	private void onSuccess(int size,Message msg,boolean isLoadingMore){
-			Logger.logd("size = "+size);
 		if(!isLoadingMore){//下拉刷新
 			if(size >= minPageSize){
 				showFooterView(null, true);

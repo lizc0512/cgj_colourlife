@@ -1,9 +1,6 @@
 package com.tg.coloursteward.view.gallery;
 
 
-import com.tg.coloursteward.ShowImageActivity;
-import com.tg.coloursteward.log.Logger;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
@@ -16,429 +13,426 @@ import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.widget.ImageView;
 
+import com.tg.coloursteward.ShowImageActivity;
+
 
 public class MyImageView extends ImageView {
-	private static final boolean DEBUG = Logger.DEBUG && false;
-	// This is the base transformation which is used to show the image
-	// initially. The current computation for this shows the image in
-	// it's entirety, letterboxing as needed. One could choose to
-	// show the image as cropped instead.
-	// 
-	// This matrix is recomputed when we go from the thumbnail image to
-	// the full size image.
-	protected Matrix mBaseMatrix = new Matrix();
+    // This is the base transformation which is used to show the image
+    // initially. The current computation for this shows the image in
+    // it's entirety, letterboxing as needed. One could choose to
+    // show the image as cropped instead.
+    //
+    // This matrix is recomputed when we go from the thumbnail image to
+    // the full size image.
+    protected Matrix mBaseMatrix = new Matrix();
 
-	// This is the supplementary transformation which reflects what
-	// the user has done in terms of zooming and panning.
-	//
-	// This matrix remains the same when we go from the thumbnail image
-	// to the full size image.
-	protected Matrix mSuppMatrix = new Matrix();
+    // This is the supplementary transformation which reflects what
+    // the user has done in terms of zooming and panning.
+    //
+    // This matrix remains the same when we go from the thumbnail image
+    // to the full size image.
+    protected Matrix mSuppMatrix = new Matrix();
 
-	// This is the final matrix which is computed as the concatentation
-	// of the base matrix and the supplementary matrix.
-	private final Matrix mDisplayMatrix = new Matrix();
+    // This is the final matrix which is computed as the concatentation
+    // of the base matrix and the supplementary matrix.
+    private final Matrix mDisplayMatrix = new Matrix();
 
-	// Temporary buffer used for getting the values out of a matrix.
-	private final float[] mMatrixValues = new float[9];
- 
-	// The current bitmap being displayed.
-	//protected Bitmap image = null;
+    // Temporary buffer used for getting the values out of a matrix.
+    private final float[] mMatrixValues = new float[9];
 
-	protected Handler mHandler = new Handler();
+    // The current bitmap being displayed.
+    //protected Bitmap image = null;
 
-	int mThisWidth = -1, mThisHeight = -1;//布局后的宽度和高度，由于是全屏显示，这两个值等于屏幕分辨率
+    protected Handler mHandler = new Handler();
 
-	float mMaxZoom;// 最大缩放比例
-	float mMinZoom;// 最小缩放比例
+    int mThisWidth = -1, mThisHeight = -1;//布局后的宽度和高度，由于是全屏显示，这两个值等于屏幕分辨率
 
-	private int imageWidth;// 图片的原始宽度
-	private int imageHeight;// 图片的原始高度
-	private Drawable drawable = null;
-	// float scaleRate;// 图片适应屏幕的缩放比例
-	private int maxScall = 3;
-	static final float SCALE_RATE = 1.25F;
+    float mMaxZoom;// 最大缩放比例
+    float mMinZoom;// 最小缩放比例
 
-	public MyImageView(Context context, AttributeSet attrs) {
-		super(context, attrs);
-		init();
-	}
+    private int imageWidth;// 图片的原始宽度
+    private int imageHeight;// 图片的原始高度
+    private Drawable drawable = null;
+    // float scaleRate;// 图片适应屏幕的缩放比例
+    private int maxScall = 3;
+    static final float SCALE_RATE = 1.25F;
 
-	public MyImageView(Context context) {
-		super(context);
-		init();
-	}
-	
-	public void recycle() {
-		if(drawable != null && drawable instanceof BitmapDrawable) {
-			Bitmap bitmap = ((BitmapDrawable)drawable).getBitmap();
-			if(bitmap != null && !bitmap.isRecycled()) {
-				bitmap.recycle();
-				bitmap = null;
-			}
-		}
-	}
-	
-	private void initImageSize(){
-		Drawable d = getDrawable();
-		if(drawable != null && drawable != d){
-			//recycle();
-		}
-		drawable = d;
-		if(drawable != null){
-			setImageHeight(drawable.getIntrinsicHeight());
-			setImageWidth(drawable.getIntrinsicWidth());
-			drawable.setDither(true);
-		}
-		invalidate();
-	}
-	
-	@Override
-	public void setImageDrawable(Drawable drawable) {
-		super.setImageDrawable(drawable);
-		initImageSize();
-	}
-	
-	@Override
-	public void setImageBitmap(Bitmap bitmap) {
-		super.setImageBitmap(bitmap);
-		initImageSize();
-	}
-	
-	@Override
-	public void setImageURI(Uri uri) {
-		super.setImageURI(uri);
-		initImageSize();
-	}
-	
-	@Override
-	public void setImageResource(int resId) {
-		super.setImageResource(resId);
-		initImageSize();
-	}
+    public MyImageView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        init();
+    }
 
-	// Center as much as possible in one or both axis. Centering is
-	// defined as follows: if the image is scaled down below the
-	// view's dimensions then center it (literally). If the image
-	// is scaled larger than the view and is translated out of view
-	// then translate it back into view (i.e. eliminate black bars).
-	protected void center(boolean horizontal, boolean vertical) {
-		if (drawable == null) {
-			return;
-		}
+    public MyImageView(Context context) {
+        super(context);
+        init();
+    }
 
-		Matrix m = getImageViewMatrix();
+    public void recycle() {
+        if (drawable != null && drawable instanceof BitmapDrawable) {
+            Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
+            if (bitmap != null && !bitmap.isRecycled()) {
+                bitmap.recycle();
+                bitmap = null;
+            }
+        }
+    }
 
-		RectF rect = new RectF(0, 0, getImageWidth(), getImageHeight());
-		// RectF rect = new RectF(0, 0, imageWidth*getScale(),
-		// imageHeight*getScale());
+    private void initImageSize() {
+        Drawable d = getDrawable();
+        if (drawable != null && drawable != d) {
+            //recycle();
+        }
+        drawable = d;
+        if (drawable != null) {
+            setImageHeight(drawable.getIntrinsicHeight());
+            setImageWidth(drawable.getIntrinsicWidth());
+            drawable.setDither(true);
+        }
+        invalidate();
+    }
 
-		m.mapRect(rect);
+    @Override
+    public void setImageDrawable(Drawable drawable) {
+        super.setImageDrawable(drawable);
+        initImageSize();
+    }
 
-		float height = rect.height();
-		float width = rect.width();
+    @Override
+    public void setImageBitmap(Bitmap bitmap) {
+        super.setImageBitmap(bitmap);
+        initImageSize();
+    }
 
-		float deltaX = 0, deltaY = 0;
+    @Override
+    public void setImageURI(Uri uri) {
+        super.setImageURI(uri);
+        initImageSize();
+    }
 
-		if (vertical) {
-			int viewHeight = getHeight();
-			if (height < viewHeight) {
-				deltaY = (viewHeight - height) / 2 - rect.top;
-			} else if (rect.top > 0) {
-				deltaY = -rect.top;
-			} else if (rect.bottom < viewHeight) {
-				deltaY = getHeight() - rect.bottom;
-			}
-		}
+    @Override
+    public void setImageResource(int resId) {
+        super.setImageResource(resId);
+        initImageSize();
+    }
 
-		if (horizontal) {
-			int viewWidth = getWidth();
-			if (width < viewWidth) {
-				deltaX = (viewWidth - width) / 2 - rect.left;
-			} else if (rect.left > 0) {
-				deltaX = -rect.left;
-			} else if (rect.right < viewWidth) {
-				deltaX = viewWidth - rect.right;
-			}
-		}
+    // Center as much as possible in one or both axis. Centering is
+    // defined as follows: if the image is scaled down below the
+    // view's dimensions then center it (literally). If the image
+    // is scaled larger than the view and is translated out of view
+    // then translate it back into view (i.e. eliminate black bars).
+    protected void center(boolean horizontal, boolean vertical) {
+        if (drawable == null) {
+            return;
+        }
 
-		postTranslate(deltaX, deltaY);
-		setImageMatrix(getImageViewMatrix());
-	}
+        Matrix m = getImageViewMatrix();
 
-	private void init() {
-		setScaleType(ScaleType.MATRIX);
-	}
+        RectF rect = new RectF(0, 0, getImageWidth(), getImageHeight());
+        // RectF rect = new RectF(0, 0, imageWidth*getScale(),
+        // imageHeight*getScale());
 
-	// Setup the base matrix so that the image is centered and scaled properly.
-	private void getProperBaseMatrix(Matrix matrix) {
-		float viewWidth = getWidth();
-		float viewHeight = getHeight();
-		if(viewWidth == 0){
-			viewWidth = ShowImageActivity.screenWidth;
-			viewHeight = ShowImageActivity.screenHeight;
-		}
+        m.mapRect(rect);
 
-		float w = getImageWidth();
-		float h = getImageHeight();
-		matrix.reset();
+        float height = rect.height();
+        float width = rect.width();
 
-		// We limit up-scaling to 3x otherwise the result may look bad if it's
-		// a small icon.
-		float scale = Math.min(viewWidth / w, viewHeight / h);
-		
-		mMinZoom = scale;
-		mMaxZoom = maxScall *scale;
-		
-		matrix.postScale(scale, scale);
+        float deltaX = 0, deltaY = 0;
 
-		matrix.postTranslate((viewWidth - w * scale) / 2F, (viewHeight - h
-				* scale) / 2F);
-	}
+        if (vertical) {
+            int viewHeight = getHeight();
+            if (height < viewHeight) {
+                deltaY = (viewHeight - height) / 2 - rect.top;
+            } else if (rect.top > 0) {
+                deltaY = -rect.top;
+            } else if (rect.bottom < viewHeight) {
+                deltaY = getHeight() - rect.bottom;
+            }
+        }
 
-	protected float getValue(Matrix matrix, int whichValue) {
-		matrix.getValues(mMatrixValues);
-		return mMatrixValues[whichValue];
-	}
+        if (horizontal) {
+            int viewWidth = getWidth();
+            if (width < viewWidth) {
+                deltaX = (viewWidth - width) / 2 - rect.left;
+            } else if (rect.left > 0) {
+                deltaX = -rect.left;
+            } else if (rect.right < viewWidth) {
+                deltaX = viewWidth - rect.right;
+            }
+        }
 
-	// Get the scale factor out of the matrix.
-	protected float getScale(Matrix matrix) {
-		return getValue(matrix, Matrix.MSCALE_X);
-	}
+        postTranslate(deltaX, deltaY);
+        setImageMatrix(getImageViewMatrix());
+    }
 
-	public float getScale() {
-		return getScale(mSuppMatrix)*mMinZoom;
-	}
-	
-	public float getScaleRate() {
-		return getScale(mSuppMatrix);
-	}
-	
-	public float getMiniZoom() {
-		return mMinZoom;
-	}
-	
-	public float getMaxZoom() {
-		return mMaxZoom;
-	}
+    private void init() {
+        setScaleType(ScaleType.MATRIX);
+    }
 
-	// Combine the base matrix and the supp matrix to make the final matrix.
-	protected Matrix getImageViewMatrix() {
-		// The final matrix is computed as the concatentation of the base matrix
-		// and the supplementary matrix.
-		mDisplayMatrix.set(mBaseMatrix);
-		mDisplayMatrix.postConcat(mSuppMatrix);
-		return mDisplayMatrix;
-	}
+    // Setup the base matrix so that the image is centered and scaled properly.
+    private void getProperBaseMatrix(Matrix matrix) {
+        float viewWidth = getWidth();
+        float viewHeight = getHeight();
+        if (viewWidth == 0) {
+            viewWidth = ShowImageActivity.screenWidth;
+            viewHeight = ShowImageActivity.screenHeight;
+        }
 
-	@Override
-	protected void onLayout(boolean changed, int left, int top, int right,
-			int bottom) {
-		super.onLayout(changed, left, top, right, bottom);
-		Logger.logd("onLayout");
-		mThisWidth = right - left;
-		mThisHeight = bottom - top;
-		if (drawable != null) {
-			getProperBaseMatrix(mBaseMatrix);
-		    setImageMatrix(getImageViewMatrix());
-		    //center(true, true);
-		}
-	}
-	
-	public void resetMatrix(){
-		mSuppMatrix.reset();
-		if (drawable != null) {
-			getProperBaseMatrix(mBaseMatrix);
-		    setImageMatrix(getImageViewMatrix());
-		}
-	}
-	
-	protected void zoomTo(float scale, float centerX, float centerY) {
-		if (scale > mMaxZoom) {
-			scale = mMaxZoom;
-		} else if (scale < mMinZoom) {
-			scale = mMinZoom;
-		}
+        float w = getImageWidth();
+        float h = getImageHeight();
+        matrix.reset();
 
-		Logger.d(DEBUG, "[MyImageView.zoomTo]" + "scale=" + scale
-				+ ",mMaxZoom=" + mMaxZoom + ",mMinZoom=" + mMinZoom);
-		float oldScale = getScale();
-		float deltaScale = scale / oldScale;
+        // We limit up-scaling to 3x otherwise the result may look bad if it's
+        // a small icon.
+        float scale = Math.min(viewWidth / w, viewHeight / h);
 
-		mSuppMatrix.postScale(deltaScale, deltaScale, centerX, centerY);
-		setImageMatrix(getImageViewMatrix());
-		center(true, true);
-	}
+        mMinZoom = scale;
+        mMaxZoom = maxScall * scale;
 
-	protected void zoomTo(final float scale, final float centerX,
-			final float centerY, final float durationMs) {
-		final float incrementPerMs = (scale - getScale()) / durationMs;
-		final float oldScale = getScale();
-		final long startTime = System.currentTimeMillis();
+        matrix.postScale(scale, scale);
 
-		mHandler.post(new Runnable() {
-			@Override
-			public void run() {
-				long now = System.currentTimeMillis();
-				float currentMs = Math.min(durationMs, now - startTime);
-				float target = oldScale + (incrementPerMs * currentMs);
-				zoomTo(target, centerX, centerY);
-				if (currentMs < durationMs) {
-					mHandler.post(this);
-				}
-			}
-		});
-	}
+        matrix.postTranslate((viewWidth - w * scale) / 2F, (viewHeight - h
+                * scale) / 2F);
+    }
 
-	public void zoomTo(float scale) {
-		float cx = getWidth() / 2F;
-		float cy = getHeight() / 2F;
+    protected float getValue(Matrix matrix, int whichValue) {
+        matrix.getValues(mMatrixValues);
+        return mMatrixValues[whichValue];
+    }
 
-		zoomTo(scale, cx, cy,200);
-	}
+    // Get the scale factor out of the matrix.
+    protected float getScale(Matrix matrix) {
+        return getValue(matrix, Matrix.MSCALE_X);
+    }
 
-	protected void zoomToPoint(float scale, float pointX, float pointY) {
-		float cx = getWidth() / 2F;
-		float cy = getHeight() / 2F;
+    public float getScale() {
+        return getScale(mSuppMatrix) * mMinZoom;
+    }
 
-		panBy(cx - pointX, cy - pointY);
-		zoomTo(scale, cx, cy);
-	}
+    public float getScaleRate() {
+        return getScale(mSuppMatrix);
+    }
 
-	protected void zoomIn() {
-		zoomIn(SCALE_RATE);
-	}
+    public float getMiniZoom() {
+        return mMinZoom;
+    }
 
-	protected void zoomOut() {
-		zoomOut(SCALE_RATE);
-	}
+    public float getMaxZoom() {
+        return mMaxZoom;
+    }
 
-	protected void zoomIn(float rate) {
-		if (getScale() >= mMaxZoom) {
-			return; // Don't let the user zoom into the molecular level.
-		}
-		if (drawable == null) {
-			return;
-		}
+    // Combine the base matrix and the supp matrix to make the final matrix.
+    protected Matrix getImageViewMatrix() {
+        // The final matrix is computed as the concatentation of the base matrix
+        // and the supplementary matrix.
+        mDisplayMatrix.set(mBaseMatrix);
+        mDisplayMatrix.postConcat(mSuppMatrix);
+        return mDisplayMatrix;
+    }
 
-		float cx = getWidth() / 2F;
-		float cy = getHeight() / 2F;
+    @Override
+    protected void onLayout(boolean changed, int left, int top, int right,
+                            int bottom) {
+        super.onLayout(changed, left, top, right, bottom);
+        mThisWidth = right - left;
+        mThisHeight = bottom - top;
+        if (drawable != null) {
+            getProperBaseMatrix(mBaseMatrix);
+            setImageMatrix(getImageViewMatrix());
+            //center(true, true);
+        }
+    }
 
-		mSuppMatrix.postScale(rate, rate, cx, cy);
-		setImageMatrix(getImageViewMatrix());
-	}
+    public void resetMatrix() {
+        mSuppMatrix.reset();
+        if (drawable != null) {
+            getProperBaseMatrix(mBaseMatrix);
+            setImageMatrix(getImageViewMatrix());
+        }
+    }
 
-	protected void zoomOut(float rate) {
-		if (drawable == null) {
-			return;
-		}
+    protected void zoomTo(float scale, float centerX, float centerY) {
+        if (scale > mMaxZoom) {
+            scale = mMaxZoom;
+        } else if (scale < mMinZoom) {
+            scale = mMinZoom;
+        }
 
-		float cx = getWidth() / 2F;
-		float cy = getHeight() / 2F;
+        float oldScale = getScale();
+        float deltaScale = scale / oldScale;
 
-		// Zoom out to at most 1x.
-		Matrix tmp = new Matrix(mSuppMatrix);
-		tmp.postScale(1F / rate, 1F / rate, cx, cy);
+        mSuppMatrix.postScale(deltaScale, deltaScale, centerX, centerY);
+        setImageMatrix(getImageViewMatrix());
+        center(true, true);
+    }
 
-		if (getScale(tmp) < 1F) {
-			mSuppMatrix.setScale(1F, 1F, cx, cy);
-		} else {
-			mSuppMatrix.postScale(1F / rate, 1F / rate, cx, cy);
-		}
-		setImageMatrix(getImageViewMatrix());
-		center(true, true);
-	}
+    protected void zoomTo(final float scale, final float centerX,
+                          final float centerY, final float durationMs) {
+        final float incrementPerMs = (scale - getScale()) / durationMs;
+        final float oldScale = getScale();
+        final long startTime = System.currentTimeMillis();
 
-	public void postTranslate(float dx, float dy) {
-		mSuppMatrix.postTranslate(dx, dy);
-		setImageMatrix(getImageViewMatrix());
-	}
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                long now = System.currentTimeMillis();
+                float currentMs = Math.min(durationMs, now - startTime);
+                float target = oldScale + (incrementPerMs * currentMs);
+                zoomTo(target, centerX, centerY);
+                if (currentMs < durationMs) {
+                    mHandler.post(this);
+                }
+            }
+        });
+    }
 
-	float _dy = 0.0f;
+    public void zoomTo(float scale) {
+        float cx = getWidth() / 2F;
+        float cy = getHeight() / 2F;
 
-	protected void postTranslateDur(final float dy, final float durationMs) {
-		_dy = 0.0f;
-		final float incrementPerMs = dy / durationMs;
-		final long startTime = System.currentTimeMillis();
-		mHandler.post(new Runnable() {
-			@Override
-			public void run() {
-				long now = System.currentTimeMillis();
-				float currentMs = Math.min(durationMs, now - startTime);
+        zoomTo(scale, cx, cy, 200);
+    }
 
-				postTranslate(0, incrementPerMs * currentMs - _dy);
-				_dy = incrementPerMs * currentMs;
+    protected void zoomToPoint(float scale, float pointX, float pointY) {
+        float cx = getWidth() / 2F;
+        float cy = getHeight() / 2F;
 
-				if (currentMs < durationMs) {
-					mHandler.post(this);
-				}
-			}
-		});
-	}
+        panBy(cx - pointX, cy - pointY);
+        zoomTo(scale, cx, cy);
+    }
 
-	float _dx = 0.0f;
+    protected void zoomIn() {
+        zoomIn(SCALE_RATE);
+    }
 
-	protected void postTranslateXDur(final float dx, final float durationMs) {
-		_dx = 0.0f;
-		final float incrementPerMs = dx / durationMs;
-		final long startTime = System.currentTimeMillis();
-		mHandler.post(new Runnable() {
-			@Override
-			public void run() {
-				long now = System.currentTimeMillis();
-				float currentMs = Math.min(durationMs, now - startTime);
+    protected void zoomOut() {
+        zoomOut(SCALE_RATE);
+    }
 
-				postTranslate(incrementPerMs * currentMs - _dx, 0);
-				_dx = incrementPerMs * currentMs;
+    protected void zoomIn(float rate) {
+        if (getScale() >= mMaxZoom) {
+            return; // Don't let the user zoom into the molecular level.
+        }
+        if (drawable == null) {
+            return;
+        }
 
-				if (currentMs < durationMs) {
-					mHandler.post(this);
-				}
-			}
-		});
-	}
+        float cx = getWidth() / 2F;
+        float cy = getHeight() / 2F;
 
-	protected void panBy(float dx, float dy) {
-		postTranslate(dx, dy);
-		setImageMatrix(getImageViewMatrix());
-	}
+        mSuppMatrix.postScale(rate, rate, cx, cy);
+        setImageMatrix(getImageViewMatrix());
+    }
 
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-			event.startTracking();
-			return true;
-		}
-		return super.onKeyDown(keyCode, event);
-	}
+    protected void zoomOut(float rate) {
+        if (drawable == null) {
+            return;
+        }
 
-	@Override
-	public boolean onKeyUp(int keyCode, KeyEvent event) {
-		if (keyCode == KeyEvent.KEYCODE_BACK && event.isTracking()
-				&& !event.isCanceled()) {
-			if (getScale() > mMinZoom) {
-				zoomTo(mMinZoom);
-				return true;
-			}
-		}
-		return super.onKeyUp(keyCode, event);
-	}
+        float cx = getWidth() / 2F;
+        float cy = getHeight() / 2F;
 
-	public int getImageWidth() {
-		return imageWidth;
-	}
+        // Zoom out to at most 1x.
+        Matrix tmp = new Matrix(mSuppMatrix);
+        tmp.postScale(1F / rate, 1F / rate, cx, cy);
 
-	public void setImageWidth(int imageWidth) {
-		this.imageWidth = imageWidth;
-	}
+        if (getScale(tmp) < 1F) {
+            mSuppMatrix.setScale(1F, 1F, cx, cy);
+        } else {
+            mSuppMatrix.postScale(1F / rate, 1F / rate, cx, cy);
+        }
+        setImageMatrix(getImageViewMatrix());
+        center(true, true);
+    }
 
-	public int getImageHeight() {
-		return imageHeight;
-	}
+    public void postTranslate(float dx, float dy) {
+        mSuppMatrix.postTranslate(dx, dy);
+        setImageMatrix(getImageViewMatrix());
+    }
 
-	public void setImageHeight(int imageHeight) {
-		this.imageHeight = imageHeight;
-		Logger.logd("setImageHeight  imageHeight = "+imageHeight);
-	}
+    float _dy = 0.0f;
+
+    protected void postTranslateDur(final float dy, final float durationMs) {
+        _dy = 0.0f;
+        final float incrementPerMs = dy / durationMs;
+        final long startTime = System.currentTimeMillis();
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                long now = System.currentTimeMillis();
+                float currentMs = Math.min(durationMs, now - startTime);
+
+                postTranslate(0, incrementPerMs * currentMs - _dy);
+                _dy = incrementPerMs * currentMs;
+
+                if (currentMs < durationMs) {
+                    mHandler.post(this);
+                }
+            }
+        });
+    }
+
+    float _dx = 0.0f;
+
+    protected void postTranslateXDur(final float dx, final float durationMs) {
+        _dx = 0.0f;
+        final float incrementPerMs = dx / durationMs;
+        final long startTime = System.currentTimeMillis();
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                long now = System.currentTimeMillis();
+                float currentMs = Math.min(durationMs, now - startTime);
+
+                postTranslate(incrementPerMs * currentMs - _dx, 0);
+                _dx = incrementPerMs * currentMs;
+
+                if (currentMs < durationMs) {
+                    mHandler.post(this);
+                }
+            }
+        });
+    }
+
+    protected void panBy(float dx, float dy) {
+        postTranslate(dx, dy);
+        setImageMatrix(getImageViewMatrix());
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+            event.startTracking();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.isTracking()
+                && !event.isCanceled()) {
+            if (getScale() > mMinZoom) {
+                zoomTo(mMinZoom);
+                return true;
+            }
+        }
+        return super.onKeyUp(keyCode, event);
+    }
+
+    public int getImageWidth() {
+        return imageWidth;
+    }
+
+    public void setImageWidth(int imageWidth) {
+        this.imageWidth = imageWidth;
+    }
+
+    public int getImageHeight() {
+        return imageHeight;
+    }
+
+    public void setImageHeight(int imageHeight) {
+        this.imageHeight = imageHeight;
+    }
 
 }

@@ -9,8 +9,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.tg.coloursteward.module.MainActivity1;
 import com.tg.user.activity.LoginActivity;
-import com.tg.coloursteward.MainActivity;
 import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.Tools;
 
@@ -63,10 +63,10 @@ public class MyReceiver extends BroadcastReceiver {
             }else{
                 try {
                     JSONObject extraJson = new JSONObject(extras);
-                    Intent intent2 = new Intent(aContext, MainActivity.class);
+                    Intent intent2 = new Intent(aContext, MainActivity1.class);
                     if (StringUtils.isNotEmpty(extras)) {
                         if (null != extraJson && extraJson.length() > 0) {
-                            intent2.putExtra(MainActivity.KEY_EXTRAS, extras);
+                            intent2.putExtra(MainActivity1.KEY_EXTRAS, extras);
                         }
                     }
                     intent2.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP );
@@ -78,10 +78,10 @@ public class MyReceiver extends BroadcastReceiver {
            /* if (!isApplicationBroughtToBackground(aContext)) {
                 try {
                     JSONObject extraJson = new JSONObject(extras);
-                    Intent intent2 = new Intent(aContext, MainActivity.class);
+                    Intent intent2 = new Intent(aContext, MainActivity1.class);
                     if (StringUtils.isNotEmpty(extras)) {
                         if (null != extraJson && extraJson.length() > 0) {
-                            intent2.putExtra(MainActivity.KEY_EXTRAS, extras);
+                            intent2.putExtra(MainActivity1.KEY_EXTRAS, extras);
                         }
                     }
                     intent2.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP );
@@ -158,12 +158,12 @@ public class MyReceiver extends BroadcastReceiver {
             {
 
             }else{
-                Intent msgIntent = new Intent(MainActivity.ACTION_UPDATE_PUSHINFO);
+                Intent msgIntent = new Intent(MainActivity1.ACTION_UPDATE_PUSHINFO);
                 if (StringUtils.isNotEmpty(extras)) {
                     try {
                         JSONObject extraJson = new JSONObject(extras);
                         if (null != extraJson && extraJson.length() > 0) {
-                            msgIntent.putExtra(MainActivity.KEY_EXTRAS, extras);
+                            msgIntent.putExtra(MainActivity1.KEY_EXTRAS, extras);
                         }
                         context.sendBroadcast(msgIntent);
                     } catch (JSONException e) {
@@ -183,7 +183,7 @@ public class MyReceiver extends BroadcastReceiver {
             Intent intent = new Intent(aContext, LoginActivity.class);
             if (StringUtils.isNotEmpty(extras)) {
                 if (null != extraJson && extraJson.length() > 0) {
-                    intent.putExtra(MainActivity.KEY_EXTRAS, extras);
+                    intent.putExtra(MainActivity1.KEY_EXTRAS, extras);
                 }
             }
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP );

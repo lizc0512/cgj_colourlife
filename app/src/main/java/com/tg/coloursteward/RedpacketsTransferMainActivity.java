@@ -16,6 +16,7 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.constant.Contants;
+import com.tg.coloursteward.module.MainActivity1;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.RequestConfig;
 import com.tg.coloursteward.net.RequestParams;
@@ -414,7 +415,7 @@ public class RedpacketsTransferMainActivity extends BaseActivity {
                             }
                             startActivity(intent);
                             finish();
-                            sendBroadcast(new Intent(MainActivity.ACTION_TICKET_INFO));
+                            sendBroadcast(new Intent(MainActivity1.ACTION_TICKET_INFO));
                         } else {
                             if ("colleague".equals(transferTo)) {
                                 ToastFactory.showToast(RedpacketsTransferMainActivity.this, "发红包失败");

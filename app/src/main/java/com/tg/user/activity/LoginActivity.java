@@ -17,7 +17,6 @@ import com.alibaba.android.arouter.facade.annotation.Route;
 import com.geetest.gt3unbindsdk.Bind.GT3GeetestBindListener;
 import com.geetest.gt3unbindsdk.Bind.GT3GeetestUtilsBind;
 import com.tg.coloursteward.BuildConfig;
-import com.tg.coloursteward.MainActivity;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.application.CityPropertyApplication;
 import com.tg.coloursteward.base.BaseActivity;
@@ -163,7 +162,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         Intent intent = getIntent();
         if (null != intent) {
             boolean loginOut = intent.getBooleanExtra("login_out", false);
-            extras = intent.getStringExtra(MainActivity.KEY_EXTRAS);
+            extras = intent.getStringExtra(MainActivity1.KEY_EXTRAS);
             if (loginOut) {
                 UserInfo.initClear();
                 StopYingYan();

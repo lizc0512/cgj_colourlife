@@ -45,7 +45,7 @@ import static com.tg.coloursteward.constant.Contants.storage.JSFPNUM;
  *
  * @author Administrator
  */
-public class FragmentManagement1 extends Fragment implements HttpResponse {
+public class FragmentManagement extends Fragment implements HttpResponse {
     private Activity mActivity;
     private View mView;
     private HomeService homeService;

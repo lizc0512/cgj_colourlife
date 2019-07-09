@@ -128,7 +128,7 @@
             android:windowSoftInputMode="stateHidden|adjustResize" />
         <!-- 邀请同事 -->
         <activity
-            android:name=".InviteRegisterActivity"
+            android:name="com.tg.setting.activity.InviteRegisterActivity"
             android:label="@string/app_name" />
         <!-- 组织框架 -->
         <activity

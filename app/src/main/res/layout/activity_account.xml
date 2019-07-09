@@ -70,30 +70,6 @@
                         android:text="我的即时分配" />
                 </LinearLayout>
 
-                <RelativeLayout
-                    android:id="@+id/rl_ticket_details"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="@dimen/margin_18">
-
-                    <!-- <TextView
-                         android:id="@+id/textView"
-                         android:layout_width="wrap_content"
-                         android:layout_height="wrap_content"
-                         android:layout_centerVertical="true"
-                         android:text="明细"
-                         style="@style/hint_14" />
-
-                     <ImageView
-                         android:layout_width="wrap_content"
-                         android:layout_height="wrap_content"
-                         android:layout_centerVertical="true"
-                         android:layout_marginLeft="@dimen/margin_5"
-                         android:layout_toRightOf="@id/textView"
-                         android:src="@drawable/next" />-->
-                </RelativeLayout>
             </RelativeLayout>
 
             <include layout="@layout/line_horizontal_02" />

@@ -29,7 +29,7 @@ import android.widget.TextView;
 
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.tg.coloursteward.DeskTopActivity;
-import com.tg.coloursteward.InviteRegisterActivity;
+import com.tg.setting.activity.InviteRegisterActivity;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.adapter.HomeDialogAdapter;
 import com.tg.coloursteward.constant.Contants;

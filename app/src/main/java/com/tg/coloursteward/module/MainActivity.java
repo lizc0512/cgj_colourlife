@@ -54,7 +54,7 @@ import com.bumptech.glide.request.target.Target;
 import com.hjq.permissions.OnPermission;
 import com.hjq.permissions.XXPermissions;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
-import com.tg.coloursteward.InviteRegisterActivity;
+import com.tg.setting.activity.InviteRegisterActivity;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.application.CityPropertyApplication;
 import com.tg.coloursteward.base.BaseActivity;

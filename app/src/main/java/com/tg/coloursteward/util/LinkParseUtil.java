@@ -13,7 +13,7 @@ import com.tg.coloursteward.ChangePhoneActivity;
 import com.tg.coloursteward.DataShowActivity;
 import com.tg.coloursteward.DownloadManagerActivity;
 import com.tg.coloursteward.GroupAccountDetailsActivity;
-import com.tg.coloursteward.InviteRegisterActivity;
+import com.tg.setting.activity.InviteRegisterActivity;
 import com.tg.coloursteward.MyBrowserActivity;
 import com.tg.coloursteward.PublicAccountActivity;
 import com.tg.coloursteward.R;

@@ -53,7 +53,6 @@ public class AccountActivity extends BaseActivity implements MyListener {
     private RoundImageView rivHead;
     private RelativeLayout rl_submit;
     private RelativeLayout rl_public;
-    private RelativeLayout rl_ticket_details;
     private TextView tvRealName;
     private TextView tv_balance;
     private TextView tv_dgzh;
@@ -87,7 +86,6 @@ public class AccountActivity extends BaseActivity implements MyListener {
         tv_dgzh = (TextView) findViewById(R.id.tv_dgzh);
         rl_submit = (RelativeLayout) findViewById(R.id.rl_submit);
         rl_public = (RelativeLayout) findViewById(R.id.rl_public);
-        rl_ticket_details = (RelativeLayout) findViewById(R.id.rl_ticket_details);
         rl_submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -110,15 +108,6 @@ public class AccountActivity extends BaseActivity implements MyListener {
                 startActivity(intent);
             }
         });
-        rl_ticket_details.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {//明细
-               /*Intent intent = new Intent(AccountActivity.this, AccountDetailActivity.class);
-                intent.putExtra(AccountDetailActivity.TOTAL_ACCOUNT,account);
-                startActivity(intent);*/
-            }
-        });
-
         /**
          * 对公账户详情
          */
@@ -146,7 +135,6 @@ public class AccountActivity extends BaseActivity implements MyListener {
                     tv_dgzh.setText(df.format(Double.parseDouble(account)));
                 }
             } catch (JSONException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         } else {
@@ -177,19 +165,6 @@ public class AccountActivity extends BaseActivity implements MyListener {
         } else {
             tv_balance.setText("0.00");
         }
-    }
-
-    /**
-     * 获取即时分配金额
-     */
-    private void getAccountInfo() {
-        RequestConfig config = new RequestConfig(this, HttpTools.GET_HBUSER_MONEY);
-        RequestParams params = new RequestParams();
-        params.put("access_token", accessToken);
-        params.put("split_type", "2");
-        params.put("type", "2");
-        params.put("split_target", UserInfo.employeeAccount);
-//        HttpTools.httpGet(Contants.URl.URL_ICETEST, "/split/api/account", config, params);
     }
 
     /**
@@ -228,7 +203,6 @@ public class AccountActivity extends BaseActivity implements MyListener {
             if (Long.parseLong(expireTime) * 1000 <= time) {//token过期
                 getAuthAppInfo();
             } else {
-                getAccountInfo();
                 getDgzhInfo();
                 initDataTop();
             }
@@ -244,12 +218,7 @@ public class AccountActivity extends BaseActivity implements MyListener {
         super.onSuccess(msg, jsonString, hintString);
         int code = HttpTools.getCode(jsonString);
         String message = HttpTools.getMessageString(jsonString);
-        if (msg.arg1 == HttpTools.GET_HBUSER_MONEY) {
-            if (code == 0) {
-            } else {
-                ToastFactory.showToast(AccountActivity.this, message);
-            }
-        } else if (msg.arg1 == HttpTools.GET_DGZH_MONEY) {
+        if (msg.arg1 == HttpTools.GET_DGZH_MONEY) {
             if (code == 0) {
                 Tools.saveStringValue(AccountActivity.this, Contants.storage.DGZH_ACCOUNT, jsonString);
                 JSONObject jsonObject = HttpTools.getContentJSONObject(jsonString);
@@ -263,7 +232,6 @@ public class AccountActivity extends BaseActivity implements MyListener {
                         }
                     }
                 } catch (JSONException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
             } else {
@@ -322,7 +290,6 @@ public class AccountActivity extends BaseActivity implements MyListener {
                             String expireTime = content.getString("expireTime");
                             Tools.saveStringValue(AccountActivity.this, Contants.storage.APPAUTH, accessToken);
                             Tools.saveStringValue(AccountActivity.this, Contants.storage.APPAUTHTIME, expireTime);
-                            getAccountInfo();
                             getDgzhInfo();
                             initDataTop();
                         } catch (JSONException e) {

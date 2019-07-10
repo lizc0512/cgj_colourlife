@@ -28,23 +28,22 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
-import com.tg.coloursteward.DeskTopActivity;
-import com.tg.setting.activity.InviteRegisterActivity;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.adapter.HomeDialogAdapter;
+import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.entity.HomeDialogEntitiy;
 import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.inter.FragmentMineCallBack;
+import com.tg.coloursteward.model.HomeModel;
 import com.tg.coloursteward.module.MainActivity;
-import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.MessageHandler;
-import com.tg.coloursteward.net.RequestConfig;
 import com.tg.coloursteward.util.AuthTimeUtils;
 import com.tg.coloursteward.util.GsonUtils;
-import com.tg.coloursteward.util.TokenUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.PopWindowView;
+import com.tg.im.activity.DeskTopActivity;
+import com.tg.setting.activity.InviteRegisterActivity;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.ProtoCallback;
 import com.youmai.hxsdk.adapter.MessageAdapter;
@@ -64,15 +63,13 @@ import com.youmai.hxsdk.utils.GsonUtil;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 主页-沟通
  * A simple {@link Fragment} subclass.
  */
-public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnClickListener, MessageHandler.ResponseListener {
+public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnClickListener, HttpResponse {
 
     private final String TAG = MsgListFragment.class.getSimpleName();
     private Activity mActivity;
@@ -101,6 +98,8 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
     private ImageView iv_contactfragment_qrcode;
     private ImageView iv_contactfragment_scan;
     private AlertDialog dialog;
+    private HomeModel homeModel;
+    private String dialogUuid;
 
     @Override
     public void onClick(View v) {
@@ -121,6 +120,25 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
         WindowManager.LayoutParams lp = getActivity().getWindow().getAttributes();
         lp.alpha = 0.3f;
         getActivity().getWindow().setAttributes(lp);
+    }
+
+    @Override
+    public void OnHttpResponse(int what, String result) {
+        switch (what) {
+            case 0:
+                if (!TextUtils.isEmpty(result)) {
+                    try {
+                        HomeDialogEntitiy homeDialogEntitiy = GsonUtils.gsonToBean(result, HomeDialogEntitiy.class);
+                        if (!TextUtils.isEmpty(homeDialogEntitiy.getContent().getContent())) {
+                            if (null != homeDialogEntitiy.getContent().getButton() && homeDialogEntitiy.getContent().getButton().size() > 0) {
+                                dialogUuid = homeDialogEntitiy.getContent().getPopup_uuid();
+                                creatreDialog(homeDialogEntitiy);
+                            }
+                        }
+                    } catch (Exception e) {
+                    }
+                }
+        }
     }
 
     class PopupDismissListener implements PopupWindow.OnDismissListener {
@@ -193,42 +211,16 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        msgHandler = new MessageHandler(mActivity);
-        msgHandler.setResponseListener(this);
         initView(view);
         reqPushMsg();
         initDialog();
     }
 
     private void initDialog() {
-        RequestConfig config = new RequestConfig(mActivity, HttpTools.GET_DIALOG, "");
-        config.handler = msgHandler.getHandler();
-        Map<String, Object> map = new HashMap();
-        Map<String, String> params = TokenUtils.getStringMap(TokenUtils.getNewSaftyMap(mActivity, map));
-        HttpTools.httpGet_Map(Contants.URl.URL_NEW, "/app/home/utility/getPopup", config, (HashMap) params);
+        homeModel = new HomeModel(mActivity);
+        homeModel.getHomeDialog(0, this);
     }
 
-    @Override
-    public void onRequestStart(Message msg, String hintString) {
-    }
-
-    @Override
-    public void onSuccess(Message msg, String jsonString, String hintString) {
-        int code = HttpTools.getCode(jsonString);
-        if (msg.arg1 == HttpTools.GET_DIALOG) {
-            if (code == 0) {
-                try {
-                    HomeDialogEntitiy homeDialogEntitiy = GsonUtils.gsonToBean(jsonString, HomeDialogEntitiy.class);
-                    if (!TextUtils.isEmpty(homeDialogEntitiy.getContent().getContent())) {
-                        if (null != homeDialogEntitiy.getContent().getButton() && homeDialogEntitiy.getContent().getButton().size() > 0) {
-                            creatreDialog(homeDialogEntitiy);
-                        }
-                    }
-                } catch (Exception e) {
-                }
-            }
-        }
-    }
 
     private void creatreDialog(HomeDialogEntitiy homeDialogEntitiy) {
         RecyclerView rv_homedialog;
@@ -268,8 +260,9 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
                             authTimeUtils.IsAuthTime(mActivity, homeDialogEntitiy.getContent().getButton().get(positon).getUrl(), "",
                                     homeDialogEntitiy.getContent().getButton().get(positon).getAuth_type(), "", "");
                         }
-                    } catch (Exception e) {
+                    } catch (Exception ignored) {
                     }
+                    homeModel.getConfirmDialog(1, dialogUuid, homeDialogEntitiy.getContent().getButton().get(positon).getState(), MsgListFragment.this::OnHttpResponse);
                     dialog.dismiss();
                 }
             });
@@ -284,9 +277,6 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
         dialog.show();
     }
 
-    @Override
-    public void onFail(Message msg, String hintString) {
-    }
 
     private void initView(View rootView) {
 

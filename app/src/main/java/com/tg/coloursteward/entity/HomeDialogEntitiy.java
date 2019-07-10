@@ -64,6 +64,7 @@ public class HomeDialogEntitiy {
 
         private String title;
         private String content;
+        private String popup_uuid;
         private List<ButtonBean> button;
 
         public String getTitle() {
@@ -72,6 +73,14 @@ public class HomeDialogEntitiy {
 
         public void setTitle(String title) {
             this.title = title;
+        }
+
+        public String getPopup_uuid() {
+            return popup_uuid;
+        }
+
+        public void setPopup_uuid(String popup_uuid) {
+            this.popup_uuid = popup_uuid;
         }
 
         public String getContent() {
@@ -102,6 +111,7 @@ public class HomeDialogEntitiy {
             private String color;
             private String url;
             private String auth_type;
+            private String state;
 
             public String getTitle() {
                 return title;
@@ -133,6 +143,14 @@ public class HomeDialogEntitiy {
 
             public void setAuth_type(String auth_type) {
                 this.auth_type = auth_type;
+            }
+
+            public String getState() {
+                return state;
+            }
+
+            public void setState(String state) {
+                this.state = state;
             }
         }
     }

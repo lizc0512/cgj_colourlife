@@ -30,6 +30,7 @@ public interface Contants {
         String URL_QRCODE = "https://qrcode.colourlife.com";
         String URL_IMPUSH = "https://impush-cgj.colourlife.com";
         String VERSION_ADDRESS = "https://version.colourlife.com";
+        String URL_H5OAUTH = "https://oauth-czy.colourlife.com";
         String environment = "release";
         String cqj_appid = "327494513335603200";
         String PUBLIC_KEY = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCTFnAR7ORLx0jGzf9Ux1We7yHvRi+kQXKSRmtgBjDCXQzakGm2mrb6EupCkDbUcj4BUs7S7zm/rICQuVNC9fujeJGjcNWRg0XWVtm90XpbTqfKiXzGDHI9W8aULYZ3of/JJ9lyCyjqjigyCdLBPtQ27gOuboDzQuieR2ywPHawzQIDAQAB";
@@ -46,6 +47,7 @@ public interface Contants {
 //        String URL_QRCODE = "http://qrcode-czytest.colourlife.com";
 //        String URL_IMPUSH = "https://impush-cgj-test.colourlife.com";
 //        String VERSION_ADDRESS = "https://version-czytest.colourlife.com";
+//        String URL_H5OAUTH = "https://oauth-czytest.colourlife.com";
 //        String environment = "debug";
 //        String cqj_appid = "323521861252157440";
 //        String PUBLIC_KEY = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDZDqnWph9LxtD0zgtGAYTTf2jY" +

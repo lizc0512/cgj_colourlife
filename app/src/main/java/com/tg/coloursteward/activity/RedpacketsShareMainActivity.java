@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.tg.coloursteward.BuildConfig;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.adapter.HistoryTransferAdapter;
 import com.tg.coloursteward.base.BaseActivity;
@@ -24,7 +25,6 @@ import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.RequestConfig;
 import com.tg.coloursteward.net.RequestParams;
 import com.tg.coloursteward.net.ResponseData;
-import com.tg.coloursteward.updateapk.UpdateManager;
 import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.PullRefreshListView;
@@ -234,7 +234,7 @@ public class RedpacketsShareMainActivity extends BaseActivity {
      */
     private void getEmployeeInfo(String username) {
 //		这个接口改造过
-        String versionShort = UpdateManager.getVersionName(this);
+        String versionShort = BuildConfig.VERSION_NAME;
         String key = Tools.getStringValue(this, Contants.EMPLOYEE_LOGIN.key);
         String secret = Tools.getStringValue(this, Contants.EMPLOYEE_LOGIN.secret);
         RequestConfig config = new RequestConfig(RedpacketsShareMainActivity.this, HttpTools.GET_EMPLOYEE_INFO, "查询");

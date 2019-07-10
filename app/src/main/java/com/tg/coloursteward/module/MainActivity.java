@@ -7,8 +7,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -19,7 +17,6 @@ import android.os.Message;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -54,7 +51,7 @@ import com.bumptech.glide.request.target.Target;
 import com.hjq.permissions.OnPermission;
 import com.hjq.permissions.XXPermissions;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
-import com.tg.setting.activity.InviteRegisterActivity;
+import com.tg.coloursteward.BuildConfig;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.application.CityPropertyApplication;
 import com.tg.coloursteward.base.BaseActivity;
@@ -84,8 +81,6 @@ import com.tg.coloursteward.serice.AuthAppService;
 import com.tg.coloursteward.serice.HomeService;
 import com.tg.coloursteward.serice.OAuth2ServiceUpdate;
 import com.tg.coloursteward.serice.UpdateService;
-import com.tg.coloursteward.updateapk.ApkInfo;
-import com.tg.coloursteward.updateapk.UpdateManager;
 import com.tg.coloursteward.util.AuthTimeUtils;
 import com.tg.coloursteward.util.ExampleUtil;
 import com.tg.coloursteward.util.GDLocationUtil;
@@ -97,6 +92,7 @@ import com.tg.coloursteward.util.TokenUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.PopWindowView;
 import com.tg.coloursteward.view.dialog.ToastFactory;
+import com.tg.setting.activity.InviteRegisterActivity;
 import com.tg.setting.adapter.UpdateAdapter;
 import com.tg.setting.entity.VersionEntity;
 import com.tg.setting.model.SettingModel;
@@ -574,46 +570,7 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
     @Override
     public void onSuccess(Message msg, String jsonString, String hintString) {
         int code = HttpTools.getCode(jsonString);
-        if (msg.arg1 == HttpTools.GET_VERSION_INFO) {//版本更新
-            JSONObject jsonObject = HttpTools.getContentJSONObject(jsonString);
-            String content = HttpTools.getContentString(jsonString);
-            if (code == 0 && null != jsonObject) {
-                try {
-                    int apkCode = jsonObject.getInt("result");
-                    ResponseData data = HttpTools.getResponseKey(content, "info");
-                    JSONArray func = data.getJSONArray(0, "func");
-                    String apkVersion = data.getString(0, "version");
-                    String apkSize = data.getString(0, "size");
-                    String downloadUrl = data.getString(0, "download_url");
-                    String apkLog = "";
-                    if (func != null) {
-                        for (int i = 0; i < func.length(); i++) {
-                            apkLog += func.get(i) + "\n";
-                        }
-                    }
-                    ApkInfo apkinfo = new ApkInfo(downloadUrl, apkVersion, apkSize, apkCode, "", apkLog);
-                    if (apkinfo != null) {
-                        SharedPreferences mySharedPreferences = getSharedPreferences("versions", 0);
-                        SharedPreferences.Editor editor = mySharedPreferences.edit();
-                        editor.putString("versionShort", apkVersion);
-                        editor.commit();
-                        UpdateManager manager = new UpdateManager(this, true);
-                        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                            //申请权限
-                            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUESTPERMISSION);
-                            ToastFactory.showToast(this, "请允许权限进行下载安装");
-                        } else {
-                            manager.checkUpdate(apkinfo, false);
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-            } else {
-
-            }
-        } else if (msg.arg1 == HttpTools.POST_SINGLEDEVICE) {
+        if (msg.arg1 == HttpTools.POST_SINGLEDEVICE) {
             if (code == 0) {
                 try {
                     SingleDeviceLogin singleDeviceLogin = GsonUtils.gsonToBean(jsonString, SingleDeviceLogin.class);
@@ -920,7 +877,7 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
         RequestParams params = new RequestParams();
         params.put("login_type", "1");//登录方式,1静默和2密码
         params.put("device_type", "1");//登录设备类别，1：安卓，2：IOS
-        params.put("version", UpdateManager.getVersionName(MainActivity.this));//APP版本号
+        params.put("version", BuildConfig.VERSION_NAME);//APP版本号
         params.put("device_code", TokenUtils.getUUID(MainActivity.this));//设备唯一编号
         params.put("device_info", TokenUtils.getDeviceInfor(MainActivity.this));//设备详细信息（json字符创）
         params.put("device_name", TokenUtils.getDeviceBrand() + TokenUtils.getDeviceType());//设备名称（如三星S9）
@@ -941,12 +898,6 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
     // 检测版本更新
     private void getVersion() {
         settingModel.getUpdate(0, "1", false, this);
-        RequestConfig config = new RequestConfig(this, HttpTools.GET_VERSION_INFO);
-        RequestParams params = new RequestParams();
-        String version = UpdateManager.getVersionName(this);
-        params.put("version", version);
-        params.put("type", "android");
-//        HttpTools.httpGet(Contants.URl.URL_CPMOBILE, "/1.0/version", config, params);
     }
 
     // 获取即时分成金额

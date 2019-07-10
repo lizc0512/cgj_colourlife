@@ -67,7 +67,6 @@ public class SettingModel extends BaseModel {
 
             @Override
             public void onFailed(int what, Response<String> response) {
-//                showExceptionMessage(what, response);
             }
         }, true, isloading);
 

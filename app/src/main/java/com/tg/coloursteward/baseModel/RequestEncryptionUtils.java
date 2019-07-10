@@ -54,6 +54,8 @@ public class RequestEncryptionUtils {
             finalUrl = Contants.URl.URL_ICESTAFF + urlString;//ICESTAFF接口
         } else if (type == 6) {
             finalUrl = Contants.URl.VERSION_ADDRESS + urlString;//升级接口
+        } else if (type == 7) {
+            finalUrl = Contants.URl.URL_H5OAUTH + urlString;//H5授权接口
         }
         return finalUrl;
     }

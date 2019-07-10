@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.hjq.permissions.OnPermission;
 import com.hjq.permissions.XXPermissions;
+import com.tg.coloursteward.BuildConfig;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.application.CityPropertyApplication;
 import com.tg.coloursteward.base.BaseActivity;
@@ -27,7 +28,6 @@ import com.tg.coloursteward.database.SharedPreferencesTools;
 import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.serice.UpdateService;
-import com.tg.coloursteward.updateapk.UpdateManager;
 import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.ToastUtil;
 import com.tg.coloursteward.util.Tools;
@@ -104,7 +104,7 @@ public class SettingActivity extends BaseActivity implements OnClickListener, Ht
         rl_setting_aboutus.setOnClickListener(this);
         rl_setting_update.setOnClickListener(this);
         tv_setting_quit.setOnClickListener(this);
-        String versionShort = UpdateManager.getVersionName(SettingActivity.this);
+        String versionShort = BuildConfig.VERSION_NAME;
         tv_setting_nowver.setText(versionShort);
         if (!HuxinSdkManager.instance().isConnect()) {
             tv_setting_imstatus.setText("IM通信状态：" + "离线,请点击这里重新登录IM");

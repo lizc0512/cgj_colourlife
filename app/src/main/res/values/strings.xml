@@ -42,4 +42,10 @@
     <string name="update_version" translatable="false">更新至版本</string>
     <string name="message_define">确定</string>
     <string name="message_cancel">取消</string>
+
+    <string name="tv_webview_content">该服务由彩管家提供,向其提供以下权限即可继续操作</string>
+    <string name="tv_webview_explain">获取你的公开信息 (登录名、头像、性别等)</string>
+    <string name="tv_webview_confirm">确认</string>
+    <string name="tv_webview_agree">确认授权即表示同意</string>
+    <string name="tv_webview_agreeurl">《用户授权协议》</string>
 </resources>

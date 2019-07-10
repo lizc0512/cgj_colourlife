@@ -27,6 +27,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.tg.coloursteward.BuildConfig;
 import com.tg.coloursteward.util.SharedPreferencesUtils;
 import com.tg.user.activity.LoginActivity;
 import com.tg.coloursteward.R;
@@ -38,7 +39,6 @@ import com.tg.coloursteward.inter.SingleClickListener;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.MessageHandler;
 import com.tg.coloursteward.net.MessageHandler.ResponseListener;
-import com.tg.coloursteward.updateapk.UpdateManager;
 import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.TokenUtils;
@@ -513,7 +513,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Response
         ContentValues params = new ContentValues();
         params.put("login_type", "1");//登录方式,1静默和2密码
         params.put("device_type", "1");//登录设备类别，1：安卓，2：IOS
-        params.put("version", UpdateManager.getVersionName(this));//APP版本号
+        params.put("version", BuildConfig.VERSION_NAME);//APP版本号
         params.put("device_code", TokenUtils.getUUID(this));//设备唯一编号
         params.put("device_info", TokenUtils.getDeviceInfor(this));//设备详细信息（json字符创）
         params.put("device_name", TokenUtils.getDeviceBrand() + TokenUtils.getDeviceType());//设备名称（如三星S9）

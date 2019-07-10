@@ -15,8 +15,8 @@ import android.support.v4.app.ActivityCompat;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 
+import com.tg.coloursteward.BuildConfig;
 import com.tg.coloursteward.constant.Contants;
-import com.tg.coloursteward.updateapk.UpdateManager;
 import com.youmai.hxsdk.config.ColorsConfig;
 
 import org.json.JSONException;
@@ -404,7 +404,7 @@ public class TokenUtils {
 
     /***4.0新接口的安全加密以后的请求参数Map**/
     public static Map<String, Object> getNewSaftyMap(Context context, Map<String, Object> paramsMap) {
-        String version = UpdateManager.getVersionName(context);
+        String version = BuildConfig.VERSION_NAME;
         paramsMap.put("nonce_str", getRandomNonceStr());
         paramsMap.put("native_type", 1);//客户端标识，1：安卓，2：苹果
         paramsMap.put("version", version);

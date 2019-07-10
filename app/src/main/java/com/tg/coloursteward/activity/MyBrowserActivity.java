@@ -12,6 +12,7 @@ import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.net.http.SslError;
 import android.os.AsyncTask;
@@ -37,7 +38,11 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.webkit.JavascriptInterface;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -47,6 +52,8 @@ import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.tencent.smtt.export.external.interfaces.GeolocationPermissionsCallback;
 import com.tencent.smtt.export.external.interfaces.IX5WebChromeClient;
 import com.tencent.smtt.export.external.interfaces.JsResult;
@@ -62,13 +69,19 @@ import com.tencent.smtt.sdk.WebViewClient;
 import com.tg.coloursteward.BuildConfig;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.BaseActivity;
+import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.constant.Contants;
+import com.tg.coloursteward.entity.H5OauthEntity;
 import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.inter.Oauth2CallBack;
+import com.tg.coloursteward.model.H5OauthModel;
 import com.tg.coloursteward.net.MD5;
 import com.tg.coloursteward.serice.OAuth2ServiceUpdate;
 import com.tg.coloursteward.util.FileSizeUtil;
+import com.tg.coloursteward.util.GlideUtils;
+import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.Helper;
+import com.tg.coloursteward.util.LinkParseUtil;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.util.Utils;
 import com.tg.coloursteward.view.X5WebView;
@@ -99,7 +112,7 @@ import static com.tg.coloursteward.activity.RedpacketsTransferToColleagueH5Activ
  *
  * @author Administrator
  */
-public class MyBrowserActivity extends BaseActivity implements OnClickListener, AMapLocationListener {
+public class MyBrowserActivity extends BaseActivity implements OnClickListener, AMapLocationListener, HttpResponse {
     public static final String ACTION_FRESH_PAYINFO = "com.tg.coloursteward.ACTION_FRESH_PAYINFO";
     public static final String PAY_STATE = "pay_state";
     public static final int PIC_PHOTO_BY_CAMERA = 1010;
@@ -143,6 +156,10 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
     private View customView;
     private FrameLayout fullscreenContainer;
     private IX5WebChromeClient.CustomViewCallback customViewCallback;
+    private String response_type;
+    private String app_id;
+    private H5OauthModel h5OauthModel;
+    private AlertDialog dialog;
     protected static final FrameLayout.LayoutParams COVER_SCREEN_PARAMS = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
@@ -160,11 +177,10 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_browser);
-//        StatusBarCompat.setStatusBarColor(this, getResources().getColor(R.color.home_fill), false);
         forepriority = true;
+        h5OauthModel = new H5OauthModel(this);
         registScanResultReceiver();
         registGetDeviceIDReceiver();
         data = getIntent();
@@ -296,6 +312,118 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
             webView.loadUrl(url, headerMap);
         } else if (!TextUtils.isEmpty(urlFromA)) {//信息不为空做处理
         }
+    }
+
+    @Override
+    public void OnHttpResponse(int what, String result) {
+        switch (what) {
+            case 0:
+                if (!TextUtils.isEmpty(result)) {
+                    H5OauthEntity h5OauthEntity = new H5OauthEntity();
+                    h5OauthEntity = GsonUtils.gsonToBean(result, H5OauthEntity.class);
+                    int oauth_pop = h5OauthEntity.getContent().getOauth_pop();
+                    if (1 == oauth_pop) {//1：弹，2：不弹
+                        createDialog(h5OauthEntity);
+                    } else if (2 == oauth_pop) {
+                        String domain = Uri.parse(url).getHost();
+                        h5OauthModel.getApplicationOauth(3, app_id, response_type, domain, this);
+                    }
+                }
+                break;
+            case 1:
+                if (!TextUtils.isEmpty(result)) {
+                    String dataString = "";
+                    JSONObject object = new JSONObject();
+                    try {
+                        JSONObject jsonObject = new JSONObject(result);
+                        String content = jsonObject.getString("content");
+                        JSONObject data = new JSONObject(content);
+                        if (response_type.equals("access_token")) {
+                            dataString = data.getString("access_token");
+                            object.put("access_token", dataString);
+                        } else if (response_type.equals("code")) {
+                            dataString = data.getString("code");
+                            object.put("code", dataString);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    String data = object.toString();
+                    webView.loadUrl("javascript:postResponseType('" + data + "')");
+                }
+                break;
+        }
+    }
+
+    private void createDialog(final H5OauthEntity h5OauthEntity) {
+        if (dialog == null) {
+            Resources resources = getResources();
+            DisplayMetrics dm = resources.getDisplayMetrics();
+            dialog = new AlertDialog.Builder(this).create();
+            dialog.setCanceledOnTouchOutside(false);
+            dialog.setCancelable(false);
+            Window window = dialog.getWindow();
+            dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+            dialog.show();
+            RelativeLayout layout = (RelativeLayout) LayoutInflater.from(this)
+                    .inflate(R.layout.dialog_webview_oauth, null);
+            window.setContentView(layout);
+            WindowManager.LayoutParams p = window.getAttributes();
+            p.width = ((int) (dm.widthPixels - 80 * dm.density));
+            window.setAttributes(p);
+            ImageView iv_webview_icon = layout.findViewById(R.id.iv_webview_icon);
+            ImageView iv_webview_close = layout.findViewById(R.id.iv_webview_close);
+            TextView tv_webivew_content = layout.findViewById(R.id.tv_webivew_content);
+            CheckBox cb_webview_agree = layout.findViewById(R.id.cb_webview_agree);
+            final Button btn_webview_confirm = layout.findViewById(R.id.btn_webview_confirm);
+            TextView tv_webivew_agreeurl = layout.findViewById(R.id.tv_webivew_agreeurl);
+            String img = h5OauthEntity.getContent().getApplication_icon();
+            if (!TextUtils.isEmpty(img)) {
+                GlideUtils.loadImageView(MyBrowserActivity.this, h5OauthEntity.getContent().getApplication_icon(), iv_webview_icon);
+            } else {
+                Glide.with(MyBrowserActivity.this).load(R.drawable.logo).apply(new RequestOptions()).into(iv_webview_icon);
+            }
+            tv_webivew_content.setText("该服务由" + h5OauthEntity.getContent().getApplication_name() + "提供,向其提供以下权限即可继续操作");
+            if (cb_webview_agree.isChecked()) {
+                btn_webview_confirm.setBackgroundResource(R.drawable.btn_vwebview_blue);
+                btn_webview_confirm.setEnabled(true);
+            }
+            cb_webview_agree.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if (isChecked) {
+                        btn_webview_confirm.setBackgroundResource(R.drawable.btn_vwebview_blue);
+                        btn_webview_confirm.setEnabled(true);
+                    } else {
+                        btn_webview_confirm.setBackgroundResource(R.drawable.btn_vwebview_gray);
+                        btn_webview_confirm.setEnabled(false);
+                    }
+                }
+            });
+            iv_webview_close.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                    MyBrowserActivity.this.finish();
+                }
+            });
+            btn_webview_confirm.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String domain = Uri.parse(url).getHost();
+                    h5OauthModel.getApplicationOauth(1, app_id, response_type, domain, MyBrowserActivity.this);
+                    dialog.dismiss();
+                }
+            });
+            tv_webivew_agreeurl.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    LinkParseUtil.parse(MyBrowserActivity.this, h5OauthEntity.getContent().getAgreement_url(), "");
+                }
+            });
+        }
+        dialog.show();
+
     }
 
     /**
@@ -621,6 +749,33 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
             startActivity(intent);
         }
 
+        /**
+         * 调起第三方授权登录
+         *
+         * @param json
+         */
+        @JavascriptInterface
+        public void getResponseType(String json) {
+            if (!TextUtils.isEmpty(json)) {
+                try {
+                    JSONObject jsonObjec = new JSONObject(json);
+                    app_id = jsonObjec.getString("app_id");
+                    response_type = jsonObjec.getString("response_type");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                initGetInfo(app_id, response_type);
+            }
+        }
+
+
+    }
+
+    private void initGetInfo(String app_id, String response_type) {
+        if (!TextUtils.isEmpty(app_id)) {
+            String domain = Uri.parse(url).getHost();
+            h5OauthModel.getAppInfo(0, app_id, response_type, domain, this);
+        }
     }
 
     private void showOldFileChooser() {

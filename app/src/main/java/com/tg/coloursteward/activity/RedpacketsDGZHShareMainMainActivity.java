@@ -190,7 +190,7 @@ public class RedpacketsDGZHShareMainMainActivity extends BaseActivity {
         /**
          * 获取版本号
          */
-//        String versionShort = UpdateManager.getVersionName(this);
+//        String versionShort = BuildConfig.VERSION_NAME;
 //        String key = Tools.getStringValue(this, Contants.EMPLOYEE_LOGIN.key);
 //        String secret = Tools.getStringValue(this, Contants.EMPLOYEE_LOGIN.secret);
 //        RequestConfig config = new RequestConfig(RedpacketsDGZHShareMainMainActivity.this, HttpTools.GET_EMPLOYEE_INFO, "查询");

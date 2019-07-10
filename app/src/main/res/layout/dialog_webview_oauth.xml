@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="270dp"
+        android:layout_height="260dp"
+        android:layout_centerInParent="true"
+        android:background="@drawable/dialog_webview_bg">
+
+        <ImageView
+            android:id="@+id/iv_webview_icon"
+            android:layout_width="35dp"
+            android:layout_height="43dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:src="@drawable/logo" />
+        <ImageView
+            android:id="@+id/iv_webview_close"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:padding="3dp"
+            android:src="@drawable/ivclose"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_alignParentRight="true"/>
+        <TextView
+            android:id="@+id/tv_webivew_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/iv_webview_icon"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:text="@string/tv_webview_content"
+            android:textColor="@color/color_131719"
+            android:textSize="14dp" />
+
+        <RelativeLayout
+            android:id="@+id/rl_webview_checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_marginTop="20dp"
+            android:layout_below="@id/tv_webivew_content">
+
+            <CheckBox
+                android:id="@+id/cb_webview_agree"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                android:checked="true"
+                android:layout_alignParentBottom="true"
+                android:button="@drawable/checkbox_webview_check" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/tv_webivew_explain"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_webivew_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="33dp"
+            android:layout_toRightOf="@id/rl_webview_checkbox"
+            android:text="@string/tv_webview_explain"
+            android:textColor="@color/color_abb7c0"
+            android:textSize="10dp" />
+
+        <Button
+            android:id="@+id/btn_webview_confirm"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_below="@id/tv_webivew_explain"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/btn_vwebview_gray"
+            android:text="@string/tv_webview_confirm"
+            android:textColor="@color/white"
+            android:textSize="16dp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/btn_webview_confirm"
+            android:layout_centerHorizontal="true"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_webivew_agree"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="10dp"
+                android:text="@string/tv_webview_agree"
+                android:textColor="@color/color_131719"
+                android:textSize="10dp" />
+
+            <TextView
+                android:id="@+id/tv_webivew_agreeurl"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@id/tv_webivew_agree"
+                android:layout_marginTop="10dp"
+                android:layout_toRightOf="@id/tv_webivew_agree"
+                android:text="@string/tv_webview_agreeurl"
+                android:textColor="@color/color_1ca1f4"
+                android:textSize="10dp" />
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>

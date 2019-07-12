@@ -187,7 +187,7 @@ public interface Contants {
     }
 
     interface Html5 {
-        String HEAD_ICON_URL = "http://avatar.ice.colourlife.com/";//头像
+        String HEAD_ICON_URL = "http://avatar.ice.colourlife.com";//头像
         String URL_H5_LEAVE = "http://eqd.backyard.colourlife.com/cailife/leave/index?";//请假
         String CALLBACKDeviceID = "CALLBACKDeviceID";
         String YJ = "http://mail.oa.colourlife.com:40060/login";

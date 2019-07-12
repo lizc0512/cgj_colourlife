@@ -1236,7 +1236,6 @@ public class HttpTools {
         try {
             jsonObj = new JSONObject(jsonString);
         } catch (JSONException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
             return null;
         }

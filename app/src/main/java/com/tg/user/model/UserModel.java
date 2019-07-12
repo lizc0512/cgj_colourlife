@@ -9,14 +9,20 @@ import com.tg.coloursteward.baseModel.HttpListener;
 import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.baseModel.RequestEncryptionUtils;
 import com.tg.coloursteward.constant.Contants;
+import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.net.DES;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.util.TokenUtils;
+import com.yanzhenjie.nohttp.BasicBinary;
+import com.yanzhenjie.nohttp.FileBinary;
 import com.yanzhenjie.nohttp.NoHttp;
 import com.yanzhenjie.nohttp.RequestMethod;
 import com.yanzhenjie.nohttp.rest.Request;
 import com.yanzhenjie.nohttp.rest.Response;
 
+import org.apache.http.entity.mime.content.FileBody;
+
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,6 +51,8 @@ public class UserModel extends BaseModel {
     private String changePwdUrl = "/account/password";
     private String sendMMSUrl = "/app/bind/mobile/sendCode";
     private String bindMobileUrl = "/app/bind/mobile";
+    private String updateInfoUrl = "/app/modifyInfo";
+    private String uploadImgUrl = "/avatar";
 
     public UserModel(Context context) {
         super(context);
@@ -544,7 +552,7 @@ public class UserModel extends BaseModel {
      * @param code
      * @param httpResponse 绑定手机号
      */
-    public void postBindMobile(int what, String mobile,String code, final HttpResponse httpResponse) {
+    public void postBindMobile(int what, String mobile, String code, final HttpResponse httpResponse) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("mobile", mobile);
         params.put("code", code);
@@ -565,6 +573,73 @@ public class UserModel extends BaseModel {
                     } else {
                         showErrorCodeMessage(response);
                     }
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+                showExceptionMessage(what, response);
+            }
+        }, true, true);
+    }
+
+    /**
+     * @param what
+     * @param gender
+     * @param email
+     * @param httpResponse 更新用户信息
+     */
+    public void postUpdateInfo(int what, String gender, String email, final HttpResponse httpResponse) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("gender", gender);
+        params.put("email", email);
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 5, updateInfoUrl), RequestMethod.POST);
+        request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    int code = showSuccesResultMessage(result);
+                    if (code == 0) {
+                        httpResponse.OnHttpResponse(what, result);
+                    } else {
+                        showErrorCodeMessage(response);
+                    }
+                } else {
+                    showErrorCodeMessage(response);
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+                showExceptionMessage(what, response);
+            }
+        }, true, true);
+    }
+
+    public void postUploadImg(int what, String imgUrl, final HttpResponse httpResponse) {
+        Map<String, Object> params = new HashMap<>();
+        BasicBinary binary = new FileBinary(new File(imgUrl));
+        params.put("uid", UserInfo.employeeAccount);
+        File file = new File(imgUrl);
+        params.put("fileName",new FileBody(file));
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 8, uploadImgUrl), RequestMethod.POST);
+        request.add("fileName", binary);
+        request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    int code = showSuccesResultMessage(result);
+                    if (code == 0) {
+                        httpResponse.OnHttpResponse(what, result);
+                    } else {
+                        showErrorCodeMessage(response);
+                    }
+                } else {
+                    showErrorCodeMessage(response);
                 }
             }
 

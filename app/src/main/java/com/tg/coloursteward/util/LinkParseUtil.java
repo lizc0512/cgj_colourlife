@@ -6,19 +6,18 @@ import android.content.Intent;
 import android.text.TextUtils;
 
 import com.dashuview.library.keep.Cqb_PayUtil;
+import com.tg.coloursteward.R;
 import com.tg.coloursteward.activity.AccountActivity;
 import com.tg.coloursteward.activity.AccountExchangeRecordActivity;
 import com.tg.coloursteward.activity.BonusRecordPersonalActivity;
-import com.tg.setting.activity.ChangePhoneActivity;
 import com.tg.coloursteward.activity.DataShowActivity;
 import com.tg.coloursteward.activity.DownloadManagerActivity;
 import com.tg.coloursteward.activity.GroupAccountDetailsActivity;
-import com.tg.setting.activity.InviteRegisterActivity;
 import com.tg.coloursteward.activity.MyBrowserActivity;
 import com.tg.coloursteward.activity.PublicAccountActivity;
-import com.tg.coloursteward.R;
-import com.tg.setting.activity.SettingActivity;
 import com.tg.coloursteward.info.UserInfo;
+import com.tg.setting.activity.InviteRegisterActivity;
+import com.tg.setting.activity.SettingActivity;
 import com.tg.user.activity.BindMobileActivity;
 import com.tg.user.activity.UserInfoActivity;
 
@@ -62,10 +61,6 @@ public class LinkParseUtil {
                         it = new Intent(context, AccountExchangeRecordActivity.class);
                         context.startActivity(it);
                         ((Activity) context).overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
-                    } else if (name.equals("changephone")) {//更换手机号
-                        it = new Intent(context, ChangePhoneActivity.class);
-                        context.startActivity(it);
-                        ((Activity) context).overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
                     } else if (name.equals("dgzh")) {//对公账户
                         it = new Intent(context, PublicAccountActivity.class);
                         context.startActivity(it);
@@ -87,11 +82,11 @@ public class LinkParseUtil {
                         it = new Intent(context, BonusRecordPersonalActivity.class);
                         context.startActivity(it);
                         ((Activity) context).overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
-                    }else if (name.equals("personInfo")) {//个人信息
+                    } else if (name.equals("personInfo")) {//个人信息
                         it = new Intent(context, UserInfoActivity.class);
                         context.startActivity(it);
                         ((Activity) context).overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
-                    }else if (name.equals("bindMobile")) {//绑定手机号
+                    } else if (name.equals("bindMobile")) {//绑定手机号
                         it = new Intent(context, BindMobileActivity.class);
                         context.startActivity(it);
                         ((Activity) context).overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);

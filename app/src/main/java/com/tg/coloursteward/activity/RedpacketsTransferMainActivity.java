@@ -279,7 +279,7 @@ public class RedpacketsTransferMainActivity extends BaseActivity {
     }
 
     public void initData() {
-        String str = Contants.Html5.HEAD_ICON_URL + "avatar?uid=" + receiverOA;
+        String str = Contants.Html5.HEAD_ICON_URL + "/avatar?uid=" + receiverOA;
         imageLoader.clearMemoryCache();
         imageLoader.clearDiskCache();
         imageLoader.displayImage(str, imgHead, options);

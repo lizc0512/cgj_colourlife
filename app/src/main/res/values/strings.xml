@@ -48,4 +48,8 @@
     <string name="tv_webview_confirm">确认</string>
     <string name="tv_webview_agree">确认授权即表示同意</string>
     <string name="tv_webview_agreeurl">《用户授权协议》</string>
+
+    <string name="tv_miniserver_name">彩生活集团总部</string>
+
+
 </resources>

@@ -158,7 +158,7 @@ public class RedpacketsBonusMainActivity extends BaseActivity {
 
 
     public void initData() {
-        String str = Contants.Html5.HEAD_ICON_URL + "avatar?uid=" + UserInfo.employeeAccount;
+        String str = Contants.Html5.HEAD_ICON_URL + "/avatar?uid=" + UserInfo.employeeAccount;
         Glide.with(RedpacketsBonusMainActivity.this).load(str)
                 .into(rivHead);
         String json = Tools.getStringValue(RedpacketsBonusMainActivity.this, Contants.storage.JTJJB);

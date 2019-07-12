@@ -251,7 +251,7 @@ public class RedpacketsTransferToColleagueH5Activity extends BaseActivity {
     }
 
     public void initData() {
-        String str = Contants.Html5.HEAD_ICON_URL + "avatar?uid=" + OA;
+        String str = Contants.Html5.HEAD_ICON_URL + "/avatar?uid=" + OA;
         imageLoader.clearMemoryCache();
         imageLoader.clearDiskCache();
         imageLoader.displayImage(str, imgHead, options);

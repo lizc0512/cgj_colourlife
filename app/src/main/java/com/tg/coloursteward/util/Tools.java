@@ -370,7 +370,7 @@ public class Tools {
             orgId = data.getString("orgId");//组织UUID
             familyName = data.getString("familyName");//部门名称
         }
-        String avatar = Contants.Html5.HEAD_ICON_URL + "avatar?uid=" + employeeAccount;
+        String avatar = Contants.Html5.HEAD_ICON_URL + "/avatar?uid=" + employeeAccount;
         com.youmai.hxsdk.UserInfo userInfo = new com.youmai.hxsdk.UserInfo();
         userInfo.setUuid(uuid);
         userInfo.setAvatar(avatar);

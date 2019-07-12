@@ -28,29 +28,28 @@ import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.signature.ObjectKey;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.BaseActivity;
+import com.tg.coloursteward.baseModel.HttpResponse;
+import com.tg.coloursteward.baseModel.RequestEncryptionUtils;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.module.MainActivity;
 import com.tg.coloursteward.net.HttpTools;
-import com.tg.coloursteward.net.RequestConfig;
 import com.tg.coloursteward.object.ImageParams;
 import com.tg.coloursteward.object.SlideItemObj;
 import com.tg.coloursteward.util.GlideCacheUtil;
-import com.tg.coloursteward.util.TokenUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.CameraView;
 import com.tg.coloursteward.view.CameraView.STATE;
 import com.tg.coloursteward.view.dialog.DialogFactory;
 import com.tg.coloursteward.view.dialog.ToastFactory;
 import com.tg.coloursteward.view.spinnerwheel.SlideSelectorView.OnCompleteListener;
+import com.tg.user.model.UserModel;
 import com.youmai.hxsdk.router.APath;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 import static com.tg.user.activity.BindMobileActivity.ISFROMUSER;
 
@@ -58,7 +57,7 @@ import static com.tg.user.activity.BindMobileActivity.ISFROMUSER;
  * 个人中心
  */
 @Route(path = APath.USER_INFO_ACT)
-public class UserInfoActivity extends BaseActivity implements OnClickListener {
+public class UserInfoActivity extends BaseActivity implements OnClickListener, HttpResponse {
     private static final int IMAGE_REQUEST_CODE = 0;
     private static final int RESULT_REQUEST_CODE = 2;
     private ArrayList<SlideItemObj> genderList;
@@ -80,10 +79,12 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener {
     private EditText et_user_email;
     private RelativeLayout rl_usersex_change;
     private RelativeLayout rl_usermobile_change;
+    private UserModel userModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        userModel = new UserModel(this);
         initView();
         updateView();
     }
@@ -128,7 +129,7 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener {
     }
 
     private void freshImg() {
-        String url = Contants.Html5.HEAD_ICON_URL + "avatar?uid=" + UserInfo.employeeAccount;
+        String url = Contants.Html5.HEAD_ICON_URL + "/avatar?uid=" + UserInfo.employeeAccount;
         Glide.with(this).load(url)
                 .apply(new RequestOptions()
                         .signature(new ObjectKey(Tools.getStringValue(UserInfoActivity.this, "updatetime_img")))
@@ -147,22 +148,7 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener {
     @Override
     public void onSuccess(Message msg, String jsonString, String hintString) {
         super.onSuccess(msg, jsonString, hintString);
-        if (msg.arg1 == HttpTools.SET_USER_INFO) {
-            int code = HttpTools.getCode(jsonString);
-            if (code == 0) {
-                String content = HttpTools.getContentString(jsonString);
-                if (content.equals("1")) {
-                    headView.setRightText("保存");
-                    setUserInfo();
-                    updateView();
-                    ToastFactory.showToast(this, "保存成功");
-                    sendBroadcast(new Intent(MainActivity.ACTION_FRESH_USERINFO));
-                    UserInfoActivity.this.finish();
-                }
-            } else {
-                ToastFactory.showToast(this, hintString);
-            }
-        } else if (msg.arg1 == HttpTools.POST_IMAG) {
+        if (msg.arg1 == HttpTools.POST_IMAG) {
             DialogFactory.getInstance().hideTransitionDialog();
             needPostImage = false;
             sendBroadcast(new Intent(MainActivity.ACTION_FRESH_USERINFO));
@@ -193,6 +179,7 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener {
             ImageParams imgParams = new ImageParams();
             imgParams.fileName = imageName;
             HttpTools.postAnImage(Contants.Html5.HEAD_ICON_URL, mHand, imgParams);
+//            userModel.postUploadImg(1,imageName,this);
         } else {
             submitUserInfo();
         }
@@ -264,6 +251,7 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener {
             imgParams.fileName = imageName;
             imgParams.path = crop_path + imageName;
             HttpTools.postAnImage(Contants.Html5.HEAD_ICON_URL, mHand, imgParams);
+//            userModel.postUploadImg(1,crop_path + imageName,this);
         } else {
             submitUserInfo();
         }
@@ -335,18 +323,13 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener {
             }
             return;
         }
-        RequestConfig config = new RequestConfig(UserInfoActivity.this, HttpTools.SET_USER_INFO, "验证中");
-        Map<String, Object> validateParams = new HashMap<>();
-        if (sex.equals("男")) {
-            validateParams.put("gender", "1");//1男，2女;
+        String gender = "";
+        if (sex.equals("男")) {//1男，2女;
+            gender = "1";
         } else if (sex.equals("女")) {
-            validateParams.put("gender", "2");//1男，2女;
+            gender = "2";
         }
-        validateParams.put("email", email);
-        validateParams.put("device_uuid", TokenUtils.getUUID(UserInfoActivity.this));
-        Map<String, String> stringMap = TokenUtils.getStringMap(TokenUtils.getNewSaftyMap(UserInfoActivity.this, validateParams));
-        HttpTools.httpPost_Map(Contants.URl.URL_ICESTAFF, "/app/modifyInfo", config, (HashMap) stringMap);
-
+        userModel.postUpdateInfo(0, gender, email, this);
 
     }
 
@@ -399,5 +382,24 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener {
         headView.setListenerRight(this);
         headView.setListenerBack(this);
         return "个人资料";
+    }
+
+    @Override
+    public void OnHttpResponse(int what, String result) {
+        switch (what) {
+            case 0:
+                if (!TextUtils.isEmpty(result)) {
+                    String content = RequestEncryptionUtils.getContentString(result);
+                    if (content.equals("1")) {
+                        headView.setRightText("保存");
+                        setUserInfo();
+                        updateView();
+                        ToastFactory.showToast(this, "保存成功");
+                        sendBroadcast(new Intent(MainActivity.ACTION_FRESH_USERINFO));
+                        UserInfoActivity.this.finish();
+                    }
+                }
+                break;
+        }
     }
 }

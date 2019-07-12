@@ -187,6 +187,7 @@ public class BindMobileActivity extends BaseActivity implements View.OnClickList
                     ToastUtil.showShortToast(this, "绑定成功");
                     UserInfo.mobile = phone;
                     startActivity(new Intent(this, UserInfoActivity.class));
+                    this.finish();
                 }
                 break;
         }

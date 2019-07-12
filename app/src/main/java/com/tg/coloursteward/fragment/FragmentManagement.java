@@ -69,7 +69,7 @@ public class FragmentManagement extends Fragment implements HttpResponse {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mView = inflater.inflate(R.layout.fragment_management_layout1, container, false);
+        mView = inflater.inflate(R.layout.fragment_management_layout, container, false);
         microModel = new MicroModel(mActivity);
         userModel = new UserModel(mActivity);
         initView();

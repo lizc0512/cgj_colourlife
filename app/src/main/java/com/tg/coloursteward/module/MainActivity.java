@@ -63,6 +63,7 @@ import com.tg.coloursteward.entity.SingleDeviceLogin;
 import com.tg.coloursteward.entity.SingleDeviceLogout;
 import com.tg.coloursteward.fragment.ContactsFragment;
 import com.tg.coloursteward.fragment.FragmentManagement;
+import com.tg.coloursteward.fragment.FragmentManagementTest;
 import com.tg.coloursteward.fragment.FragmentMine;
 import com.tg.coloursteward.fragment.MsgListFragment;
 import com.tg.coloursteward.info.GridViewInfo;
@@ -226,7 +227,7 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main1);
+        setContentView(R.layout.activity_main);
         mContext = this;
         mHandler = new NormalHandler(this);
         settingModel = new SettingModel(this);
@@ -1528,6 +1529,7 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
                     ft = new ContactsFragment();
                     break;
                 case 2:
+//                    ft = new FragmentManagementTest();
                     ft = new FragmentManagement();
                     break;
                 case 3:

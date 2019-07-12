@@ -12,6 +12,9 @@ import com.tg.coloursteward.net.MD5;
 import com.tg.coloursteward.util.SharedPreferencesUtils;
 import com.tg.coloursteward.util.TokenUtils;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.util.ArrayList;
@@ -36,6 +39,7 @@ public class RequestEncryptionUtils {
      * 请求成功
      ***/
     public static final int responseSuccess = 200;
+    public static final String FIELD_CONTENT = "content";
 
     /***请求Combile的post加密 通过type支持多域名***/
     public static String getRequestUrl(Context context, int type, String urlString) {
@@ -56,6 +60,10 @@ public class RequestEncryptionUtils {
             finalUrl = Contants.URl.VERSION_ADDRESS + urlString;//升级接口
         } else if (type == 7) {
             finalUrl = Contants.URl.URL_H5OAUTH + urlString;//H5授权接口
+        }else if (type == 8) {
+            finalUrl = Contants.Html5.HEAD_ICON_URL + urlString;//上传图片接口
+        }else if (type == 9) {
+            finalUrl = Contants.URl.URL_QRCODE + urlString;//扫码接口
         }
         return finalUrl;
     }
@@ -199,5 +207,27 @@ public class RequestEncryptionUtils {
             sb.append(base.charAt(number));
         }
         return sb.toString();
+    }
+
+    /**
+     * 获取Content信息(String)
+     * @param jsonString
+     * @return
+     */
+    public static String getContentString(String jsonString) {
+        if (TextUtils.isEmpty(jsonString)) {
+            return null;
+        }
+        JSONObject jsonObj = null;
+        try {
+            jsonObj = new JSONObject(jsonString);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+        if (jsonObj.isNull(FIELD_CONTENT)) {
+            return null;
+        }
+        return jsonObj.optString(FIELD_CONTENT);
     }
 }

@@ -28,6 +28,7 @@ public class HomeModel extends BaseModel {
     private String popWindowUrl = "/app/home/getPopup";
     private String homeDialogUrl = "/app/home/utility/getPopup";
     private String confirmDialogUrl = "/app/home/utility/confirmPopup";
+    private String scanUrl = "/app/formatUrl";
 
     public HomeModel(Context context) {
         super(context);
@@ -116,5 +117,39 @@ public class HomeModel extends BaseModel {
 
             }
         }, true, false);
+    }
+
+    /**
+     * @param what
+     * @param resultString
+     * @param httpResponse 扫描二维码接口
+     */
+    public void postScan(int what, String resultString, HttpResponse httpResponse) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("url", resultString);
+        params.put("app_type", "cgj");
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 9, scanUrl), RequestMethod.POST);
+        request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    int code = showSuccesResultMessageTheme(result);
+                    if (code == 0) {
+                        httpResponse.OnHttpResponse(what, result);
+                    }else {
+                        showErrorCodeMessage(response);
+                    }
+                }else {
+                    showErrorCodeMessage(response);
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+                showErrorCodeMessage(response);
+            }
+        }, true, true);
     }
 }

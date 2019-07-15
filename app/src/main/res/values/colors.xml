@@ -130,6 +130,7 @@
     <color name="login_tv_gray_account">#BBC0CB</color>
     <color name="tv_index_color">#333B46</color>
     <color name="line_login_index">#EDEDEE</color>
+    <color name="color_ededee">#EDEDEE</color>
     <color name="line_login_button">#BBBBBB</color>
     <color name="line_login_or">#BBC0CB</color>
     <color name="line_login_orline">#50D8D8D8</color>
@@ -144,5 +145,6 @@
     <color name="color_1890ff">#1890ff</color>
     <color name="color_abb7c0">#abb7c0</color>
     <color name="color_DEE3E5">#DEE3E5</color>
+    <color name="color_445056">#445056</color>
 
 </resources>

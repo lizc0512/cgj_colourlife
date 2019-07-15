@@ -1529,8 +1529,8 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
                     ft = new ContactsFragment();
                     break;
                 case 2:
-//                    ft = new FragmentManagementTest();
-                    ft = new FragmentManagement();
+                    ft = new FragmentManagementTest();
+//                    ft = new FragmentManagement();
                     break;
                 case 3:
                     ft = new FragmentMine();

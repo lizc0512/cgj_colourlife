@@ -28,8 +28,8 @@ public class MicroModel extends BaseModel {
     private String microTopUrl = "/app/home/utility/calcData";
     private String microMidUrl = "/app/home/utility/miscApp";
     private String cropListUrl = "/app/home/corp/list";
-    private String microListUrl = "/microservices/config";
-    private String microItemUrl = "/microservices/data/item";
+    private String microListUrl = "/app/home/microservices/config";
+    private String microItemUrl = "/app/home/microservices/data/item";
     private Context mContext;
 
     public MicroModel(Context context) {

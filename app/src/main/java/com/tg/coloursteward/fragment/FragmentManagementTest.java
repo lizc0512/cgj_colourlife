@@ -44,6 +44,7 @@ public class FragmentManagementTest extends Fragment implements HttpResponse, Vi
     private PopupWindow popupWindow;
     private CropListAdapter cropListAdapter;
     private String cropUuid;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -126,7 +127,7 @@ public class FragmentManagementTest extends Fragment implements HttpResponse, Vi
                     for (CropListEntity.ContentBean contentBean : cropList) {
                         if (contentBean.getIs_default().equals("1")) {
                             tv_miniservice_title.setText(contentBean.getName());
-                            cropUuid=contentBean.getUuid();
+                            cropUuid = contentBean.getUuid();
                             return;
                         }
                     }
@@ -134,8 +135,8 @@ public class FragmentManagementTest extends Fragment implements HttpResponse, Vi
                 break;
             case 1:
                 if (!TextUtils.isEmpty(result)) {
-                    CropLayoutEntity cropLayoutEntity=new CropLayoutEntity();
-                    cropLayoutEntity=GsonUtils.gsonToBean(result,CropLayoutEntity.class);
+                    CropLayoutEntity cropLayoutEntity = new CropLayoutEntity();
+                    cropLayoutEntity = GsonUtils.gsonToBean(result, CropLayoutEntity.class);
                 }
                 break;
             case 2:

@@ -24,6 +24,11 @@ public class GlideUtils {
     public GlideUtils() {
     }
 
+    /**
+     * @param mContext
+     * @param path
+     * @param mImageView 默认加载
+     */
     public static void loadImageView(Context mContext, String path, ImageView mImageView) {
         try {
             if (null != mContext) {
@@ -33,6 +38,15 @@ public class GlideUtils {
             ;
         }
 
+    }
+
+    //设置加载中以及加载失败图片
+    public static void loadImageDefaultDisplay(Context mContext, String path, ImageView mImageView, int lodingImage, int errorImageView) {
+        try {
+            Glide.with(mContext).load(path).apply(new RequestOptions().placeholder(lodingImage).error(errorImageView).diskCacheStrategy(DiskCacheStrategy.ALL)).into(mImageView);
+        } catch (Exception e) {
+
+        }
     }
 
     public static void loadHeadPhoto(Context mContext, String path, ImageView mImageView) {

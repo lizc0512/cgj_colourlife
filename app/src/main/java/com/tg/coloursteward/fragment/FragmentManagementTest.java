@@ -11,16 +11,20 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.adapter.CropListAdapter;
+import com.tg.coloursteward.adapter.MicroRecycleAdapter;
 import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.entity.CropLayoutEntity;
 import com.tg.coloursteward.entity.CropListEntity;
 import com.tg.coloursteward.model.MicroModel;
+import com.tg.coloursteward.util.GlideUtils;
 import com.tg.coloursteward.util.GsonUtils;
+import com.tg.coloursteward.util.LinkParseUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +47,11 @@ public class FragmentManagementTest extends Fragment implements HttpResponse, Vi
     private List<CropListEntity.ContentBean> cropList = new ArrayList<>();
     private PopupWindow popupWindow;
     private CropListAdapter cropListAdapter;
+    private MicroRecycleAdapter microRecycleAdapter;
     private String cropUuid;
+    private View bgaBannerView;
+    private View rvApplicaionView;
+    private RecyclerView rv_application;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -74,9 +82,11 @@ public class FragmentManagementTest extends Fragment implements HttpResponse, Vi
         tv_miniservice_title = mView.findViewById(R.id.tv_miniservice_title);
         sr_micro_fragment = mView.findViewById(R.id.sr_micro_fragment);
         rv_micro = mView.findViewById(R.id.rv_micro);
+        tv_miniservice_title.setOnClickListener(this);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false);
         rv_micro.setLayoutManager(linearLayoutManager);
-        tv_miniservice_title.setOnClickListener(this);
+        microRecycleAdapter = new MicroRecycleAdapter(0, null);
+        rv_micro.setAdapter(microRecycleAdapter);
         sr_micro_fragment.setColorSchemeColors(getResources().getColor(R.color.blue_bg));
         sr_micro_fragment.setOnRefreshListener(() -> {
             initData();
@@ -84,9 +94,44 @@ public class FragmentManagementTest extends Fragment implements HttpResponse, Vi
         });
     }
 
-    private void initBanner(String bannerJson) {
-        View bgaBannerView = LayoutInflater.from(mActivity).inflate(R.layout.micro_banner_view, null);
-        bga_banner = bgaBannerView.findViewById(R.id.bga_banner);
+    private void initBanner(List<CropLayoutEntity.ContentBeanX> bannerJson) {
+        List<CropLayoutEntity.ContentBeanX.ContentBean.DataBean> bannerList = new ArrayList<>();
+        try {
+            bannerList = bannerJson.get(0).getContent().get(0).getData();
+        } catch (Exception e) {
+        }
+        if (null == bgaBannerView) {
+            bgaBannerView = LayoutInflater.from(mActivity).inflate(R.layout.micro_banner_view, null);
+            microRecycleAdapter.addHeaderView(bgaBannerView);
+            bga_banner = bgaBannerView.findViewById(R.id.bga_banner);
+
+        }
+        if (null != bannerList && bannerList.size() > 0) {
+            microBannerShow(bannerList);
+        }
+    }
+
+    private void microBannerShow(List<CropLayoutEntity.ContentBeanX.ContentBean.DataBean> mBannerList) {
+        List<String> bannerUrlList = new ArrayList<>();
+        bannerUrlList.clear();
+        for (CropLayoutEntity.ContentBeanX.ContentBean.DataBean dataBean : mBannerList) {
+            bannerUrlList.add(dataBean.getImg_url());
+        }
+        bga_banner.setAdapter((BGABanner.Adapter<ImageView, String>) (banner, itemView, model, position) ->
+                GlideUtils.loadImageDefaultDisplay(mActivity, model, itemView, R.drawable.pic_banner_normal, R.drawable.pic_banner_normal));
+        bga_banner.setDelegate((BGABanner.Delegate<ImageView, String>) (banner, itemView, model, position) -> {
+            if (position >= 0 && position < bannerUrlList.size()) {
+                LinkParseUtil.parse(getActivity(), mBannerList.get(position).getRedirect_url(), "");
+            }
+        });
+        bga_banner.setData(bannerUrlList, null);
+        bga_banner.setAutoPlayInterval(3000);
+        bga_banner.setAutoPlayAble(mBannerList.size() > 1);
+        bga_banner.setData(bannerUrlList, null);
+        bga_banner.startAutoPlay();
+    }
+
+    private void microApplicaionShow(List<CropLayoutEntity.ContentBeanX.ContentBean> appList) {
 
     }
 
@@ -137,6 +182,19 @@ public class FragmentManagementTest extends Fragment implements HttpResponse, Vi
                 if (!TextUtils.isEmpty(result)) {
                     CropLayoutEntity cropLayoutEntity = new CropLayoutEntity();
                     cropLayoutEntity = GsonUtils.gsonToBean(result, CropLayoutEntity.class);
+                    for (int i = 0; i < cropLayoutEntity.getContent().size(); i++) {
+                        String type = cropLayoutEntity.getContent().get(i).getType();
+                        switch (type) {//模块类型。1：banner， 2：数据类，3：应用类
+                            case "1":
+                                initBanner(cropLayoutEntity.getContent());
+                                break;
+                            case "2":
+                                break;
+                            case "3":
+                                initApplication(cropLayoutEntity.getContent().get(i));
+                                break;
+                        }
+                    }
                 }
                 break;
             case 2:
@@ -144,6 +202,22 @@ public class FragmentManagementTest extends Fragment implements HttpResponse, Vi
 
                 }
                 break;
+        }
+    }
+
+    private void initApplication(CropLayoutEntity.ContentBeanX content) {
+        List<CropLayoutEntity.ContentBeanX.ContentBean> appList = new ArrayList<>();
+        try {
+            appList = content.getContent();
+        } catch (Exception e) {
+        }
+        if (null == rvApplicaionView) {
+            rvApplicaionView = LayoutInflater.from(mActivity).inflate(R.layout.micro_application_view, null);
+            microRecycleAdapter.addHeaderView(rvApplicaionView);
+            rv_application = rvApplicaionView.findViewById(R.id.rv_application);
+        }
+        if (null != appList && appList.size() > 0) {
+            microApplicaionShow(appList);
         }
     }
 
@@ -156,7 +230,13 @@ public class FragmentManagementTest extends Fragment implements HttpResponse, Vi
         }
     }
 
+    /**
+     * @param mList 展示租户选择
+     */
     private void initPopup(List<CropListEntity.ContentBean> mList) {
+        if (mList.size() < 1) {
+            return;
+        }
         popupWindow = new PopupWindow(mActivity);
         View contentview = LayoutInflater.from(mActivity).inflate(R.layout.item_micro_crop_rv, null);
         popupWindow = new PopupWindow(contentview,

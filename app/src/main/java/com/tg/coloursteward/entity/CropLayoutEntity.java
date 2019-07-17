@@ -122,6 +122,10 @@ public class CropLayoutEntity {
                 private String data;
                 private String img_url;
                 private String redirect_url;
+                private String item_name;
+                private String auth_type;
+                private String quantity;
+
 
                 public String getUuid() {
                     return uuid;
@@ -161,6 +165,30 @@ public class CropLayoutEntity {
 
                 public void setRedirect_url(String redirect_url) {
                     this.redirect_url = redirect_url;
+                }
+
+                public String getItem_name() {
+                    return item_name;
+                }
+
+                public void setItem_name(String item_name) {
+                    this.item_name = item_name;
+                }
+
+                public String getAuth_type() {
+                    return auth_type;
+                }
+
+                public void setAuth_type(String auth_type) {
+                    this.auth_type = auth_type;
+                }
+
+                public String getQuantity() {
+                    return quantity;
+                }
+
+                public void setQuantity(String quantity) {
+                    this.quantity = quantity;
                 }
             }
         }

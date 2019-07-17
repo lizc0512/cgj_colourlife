@@ -5,6 +5,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -17,14 +18,17 @@ import android.widget.TextView;
 
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.adapter.CropListAdapter;
+import com.tg.coloursteward.adapter.MicroApplicationAdapter;
 import com.tg.coloursteward.adapter.MicroRecycleAdapter;
 import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.entity.CropLayoutEntity;
 import com.tg.coloursteward.entity.CropListEntity;
 import com.tg.coloursteward.model.MicroModel;
+import com.tg.coloursteward.util.AuthTimeUtils;
 import com.tg.coloursteward.util.GlideUtils;
 import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.LinkParseUtil;
+import com.tg.coloursteward.view.MyGridLayoutManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +46,7 @@ public class FragmentManagementTest extends Fragment implements HttpResponse, Vi
     private MicroModel microModel;
     private SwipeRefreshLayout sr_micro_fragment;
     private RecyclerView rv_micro;
+    private ImageView iv_miniservice_next;
     private BGABanner bga_banner;
     private TextView tv_miniservice_title;
     private List<CropListEntity.ContentBean> cropList = new ArrayList<>();
@@ -52,6 +57,10 @@ public class FragmentManagementTest extends Fragment implements HttpResponse, Vi
     private View bgaBannerView;
     private View rvApplicaionView;
     private RecyclerView rv_application;
+    private MicroApplicationAdapter microApplicationAdapter;
+    private List<CropLayoutEntity.ContentBeanX.ContentBean.DataBean> listItem = new ArrayList<>();
+    private AuthTimeUtils mAuthTimeUtils;
+    ;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -79,6 +88,7 @@ public class FragmentManagementTest extends Fragment implements HttpResponse, Vi
     }
 
     private void initView() {
+        iv_miniservice_next = mView.findViewById(R.id.iv_miniservice_next);
         tv_miniservice_title = mView.findViewById(R.id.tv_miniservice_title);
         sr_micro_fragment = mView.findViewById(R.id.sr_micro_fragment);
         rv_micro = mView.findViewById(R.id.rv_micro);
@@ -87,7 +97,7 @@ public class FragmentManagementTest extends Fragment implements HttpResponse, Vi
         rv_micro.setLayoutManager(linearLayoutManager);
         microRecycleAdapter = new MicroRecycleAdapter(0, null);
         rv_micro.setAdapter(microRecycleAdapter);
-        sr_micro_fragment.setColorSchemeColors(getResources().getColor(R.color.blue_bg));
+        sr_micro_fragment.setColorSchemeColors(getResources().getColor(R.color.home_bg_color));
         sr_micro_fragment.setOnRefreshListener(() -> {
             initData();
             initLayout("");
@@ -104,10 +114,39 @@ public class FragmentManagementTest extends Fragment implements HttpResponse, Vi
             bgaBannerView = LayoutInflater.from(mActivity).inflate(R.layout.micro_banner_view, null);
             microRecycleAdapter.addHeaderView(bgaBannerView);
             bga_banner = bgaBannerView.findViewById(R.id.bga_banner);
-
         }
         if (null != bannerList && bannerList.size() > 0) {
             microBannerShow(bannerList);
+        }
+    }
+
+    private void initApplication(CropLayoutEntity.ContentBeanX content) {
+        List<CropLayoutEntity.ContentBeanX.ContentBean> appList = new ArrayList<>();
+        try {
+            appList = content.getContent();
+        } catch (Exception e) {
+        }
+        if (null == rvApplicaionView) {
+            rvApplicaionView = LayoutInflater.from(mActivity).inflate(R.layout.micro_application_view, null);
+            microRecycleAdapter.addHeaderView(rvApplicaionView);
+            rv_application = rvApplicaionView.findViewById(R.id.rv_application);
+            rv_application.setFocusableInTouchMode(false); //设置不需要焦点
+            rv_application.requestFocus(); //设置焦点不需要
+        }
+        MyGridLayoutManager gridLayoutManager = new MyGridLayoutManager(mActivity, 4);
+        rv_application.setLayoutManager(gridLayoutManager);
+        gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                if (null != listItem && listItem.size() > 0 && !TextUtils.isEmpty(listItem.get(position).getItem_name())) {
+                    return 4;//栏目导航栏
+                } else {
+                    return 1;//栏目子itme
+                }
+            }
+        });
+        if (null != appList && appList.size() > 0) {
+            microApplicaionShow(appList);
         }
     }
 
@@ -132,7 +171,27 @@ public class FragmentManagementTest extends Fragment implements HttpResponse, Vi
     }
 
     private void microApplicaionShow(List<CropLayoutEntity.ContentBeanX.ContentBean> appList) {
-
+        listItem.clear();
+        for (int i = 0; i < appList.size(); i++) {
+            CropLayoutEntity.ContentBeanX.ContentBean.DataBean dataBean = new CropLayoutEntity.ContentBeanX.ContentBean.DataBean();
+            dataBean.setItem_name(appList.get(i).getName());
+            listItem.add(dataBean);
+            listItem.addAll(appList.get(i).getData());
+        }
+        if (null != listItem && listItem.size() > 0) {
+            if (null == microApplicationAdapter) {
+                microApplicationAdapter = new MicroApplicationAdapter(mActivity, listItem);
+                rv_application.setAdapter(microApplicationAdapter);
+            } else {
+                microApplicationAdapter.setData(listItem);
+            }
+            microApplicationAdapter.setCallBack((position, url, auth_type) -> {
+                if (null == mAuthTimeUtils) {
+                    mAuthTimeUtils = new AuthTimeUtils();
+                }
+                mAuthTimeUtils.IsAuthTime(mActivity, url, "", auth_type, "", "");
+            });
+        }
     }
 
     @Override
@@ -205,21 +264,6 @@ public class FragmentManagementTest extends Fragment implements HttpResponse, Vi
         }
     }
 
-    private void initApplication(CropLayoutEntity.ContentBeanX content) {
-        List<CropLayoutEntity.ContentBeanX.ContentBean> appList = new ArrayList<>();
-        try {
-            appList = content.getContent();
-        } catch (Exception e) {
-        }
-        if (null == rvApplicaionView) {
-            rvApplicaionView = LayoutInflater.from(mActivity).inflate(R.layout.micro_application_view, null);
-            microRecycleAdapter.addHeaderView(rvApplicaionView);
-            rv_application = rvApplicaionView.findViewById(R.id.rv_application);
-        }
-        if (null != appList && appList.size() > 0) {
-            microApplicaionShow(appList);
-        }
-    }
 
     @Override
     public void onClick(View v) {
@@ -247,6 +291,7 @@ public class FragmentManagementTest extends Fragment implements HttpResponse, Vi
             cropListAdapter = new CropListAdapter(mActivity, R.layout.item_micro_croplist, mList);
         }
         cropListAdapter.setOnItemClickListener((adapter, view, position) -> {
+            iv_miniservice_next.setImageDrawable(getResources().getDrawable(R.drawable.nav_icon_shaixuan_n));
             popupWindow.dismiss();
             for (CropListEntity.ContentBean bean : cropList) {
                 bean.setIs_default("0");
@@ -261,6 +306,10 @@ public class FragmentManagementTest extends Fragment implements HttpResponse, Vi
         popupWindow.setOutsideTouchable(true);
         popupWindow.setBackgroundDrawable(new BitmapDrawable());
         popupWindow.showAsDropDown(mActivity.findViewById(R.id.rl_miniservice));
+        popupWindow.setOnDismissListener(() -> {
+            iv_miniservice_next.setImageDrawable(getResources().getDrawable(R.drawable.nav_icon_shaixuan_n));
+        });
+        iv_miniservice_next.setImageDrawable(getResources().getDrawable(R.drawable.nav_icon_shaixuan_p));
     }
 }
 

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_20dp"/>
+    <TextView
+        android:id="@+id/tv_fragmenttwo_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:layout_marginLeft="@dimen/size_15dp"
+        android:textColor="@color/color_445056"
+        android:textSize="@dimen/font_16sp" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="5dp"/>
+</LinearLayout>

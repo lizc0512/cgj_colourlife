@@ -137,7 +137,7 @@ public class RequestEncryptionUtils {
     public static Map<String, Object> getNewSaftyMap(Context context, Map<String, Object> paramsMap) {
         paramsMap.put("nonce_str", getRandomNonceStr());
         paramsMap.put("device_uuid", TokenUtils.getUUID(CityPropertyApplication.getContext()));
-        paramsMap.put("native_type", 1);
+        paramsMap.put("native_type", 1);//客户端标识，1：安卓，2：苹果
         paramsMap.put("version", BuildConfig.VERSION_NAME);
         String buff = "";
         try {

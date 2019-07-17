@@ -326,7 +326,7 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
                         createDialog(h5OauthEntity);
                     } else if (2 == oauth_pop) {
                         String domain = Uri.parse(url).getHost();
-                        h5OauthModel.getApplicationOauth(3, app_id, response_type, domain, this);
+                        h5OauthModel.getApplicationOauth(1, app_id, response_type, domain, this);
                     }
                 }
                 break;

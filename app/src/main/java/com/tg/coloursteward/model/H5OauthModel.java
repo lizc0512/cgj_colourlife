@@ -26,8 +26,8 @@ import java.util.Map;
  * @class describe
  */
 public class H5OauthModel extends BaseModel {
-    private String aouthUrl = "app/cgj/info";
-    private String applicationUrl = "app/cgj/oauth";
+    private String aouthUrl = "/app/cgj/info";
+    private String applicationUrl = "/app/cgj/oauth";
 
     public H5OauthModel(Context context) {
         super(context);
@@ -38,7 +38,6 @@ public class H5OauthModel extends BaseModel {
         params.put("app_id", app_id);
         params.put("response_type", response_type);
         params.put("domain", domain);
-        params.put("device_uuid", TokenUtils.getUUID(mContext));
         final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 7, aouthUrl), RequestMethod.GET);
         request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
             @Override

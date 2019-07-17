@@ -160,7 +160,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Response
             Drawable backDrawable = contentLayout.getBackground();
             if (backDrawable == null) {
                 contentLayout.setBackgroundColor(getResources().getColor(
-                        R.color.base_color));
+                        R.color.white));
             }
             FrameLayout.LayoutParams p = new FrameLayout.LayoutParams(
                     LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);

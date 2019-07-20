@@ -1,11 +1,7 @@
 package com.tg.user.activity;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.TextView;
@@ -20,7 +16,6 @@ public class LeadActivity extends BaseActivity implements View.OnClickListener {
     private CirclePageIndicator indicator;
     private int[] imageBg = {R.mipmap.zero, R.mipmap.one, R.mipmap.two, R.mipmap.three};
     private TextView tv_lead_jump;
-    private int page;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

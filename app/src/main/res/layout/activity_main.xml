@@ -6,10 +6,11 @@
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
-    <include layout="@layout/header_title"
-        android:visibility="gone"/>
+    <include
+        layout="@layout/header_title"
+        android:visibility="gone" />
 
-    <android.support.v4.view.ViewPager
+    <com.tg.coloursteward.view.ViewPagerSlide
         android:id="@+id/view_pager"
         android:layout_width="match_parent"
         android:layout_height="0dp"

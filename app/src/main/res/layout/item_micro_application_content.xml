@@ -17,13 +17,12 @@
     <TextView
         android:id="@+id/tv_tinyserverfragment_num"
         android:layout_width="22dp"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/size_16dp"
         android:layout_marginTop="5dp"
         android:layout_toRightOf="@id/iv_fragmentthree_icon"
         android:background="@drawable/bg_serverfragment_num"
-        android:gravity="center_horizontal|center_vertical"
-        android:paddingBottom="2dp"
-        android:text=""
+        android:gravity="center"
+        android:text="16"
         android:textColor="@color/white"
         android:textSize="@dimen/font_12sp"
         android:visibility="gone" />
@@ -38,7 +37,6 @@
         android:ellipsize="end"
         android:maxLines="1"
         android:singleLine="true"
-        android:text="54545"
         android:textColor="@color/color_647786"
         android:textSize="@dimen/font_13sp" />
 </RelativeLayout>

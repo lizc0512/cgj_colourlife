@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rl_micro_viewpager"
+    android:layout_width="@dimen/size_150dp"
+    android:layout_height="@dimen/size_102dp"
+    android:background="@drawable/pic_bg_data_select_n3">
+
+    <TextView
+        android:id="@+id/tv_micro_vp_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/color_445056"
+        android:layout_marginLeft="@dimen/size_17dp"
+        android:layout_marginTop="@dimen/size_24dp"
+        android:textSize="@dimen/font_16sp"/>
+    <TextView
+        android:id="@+id/tv_micro_vp_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/color_445056"
+        android:layout_below="@id/tv_micro_vp_title"
+        android:layout_marginLeft="@dimen/size_17dp"
+        android:layout_marginTop="@dimen/size_8dp"
+        android:textSize="@dimen/font_20sp"/>
+</RelativeLayout>

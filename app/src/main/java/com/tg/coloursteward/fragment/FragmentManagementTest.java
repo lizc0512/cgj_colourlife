@@ -1,9 +1,10 @@
 package com.tg.coloursteward.fragment;
 
 import android.app.Activity;
-import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,6 +13,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -20,6 +22,7 @@ import com.tg.coloursteward.R;
 import com.tg.coloursteward.adapter.CropListAdapter;
 import com.tg.coloursteward.adapter.MicroApplicationAdapter;
 import com.tg.coloursteward.adapter.MicroRecycleAdapter;
+import com.tg.coloursteward.adapter.MicroViewpagerAdapter;
 import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.entity.CropLayoutEntity;
 import com.tg.coloursteward.entity.CropListEntity;
@@ -56,7 +59,9 @@ public class FragmentManagementTest extends Fragment implements HttpResponse, Vi
     private String cropUuid;
     private View bgaBannerView;
     private View rvApplicaionView;
+    private View viewpagerDataView;
     private RecyclerView rv_application;
+    private ViewPager vp_micro;
     private MicroApplicationAdapter microApplicationAdapter;
     private List<CropLayoutEntity.ContentBeanX.ContentBean.DataBean> listItem = new ArrayList<>();
     private AuthTimeUtils mAuthTimeUtils;
@@ -92,10 +97,11 @@ public class FragmentManagementTest extends Fragment implements HttpResponse, Vi
         tv_miniservice_title = mView.findViewById(R.id.tv_miniservice_title);
         sr_micro_fragment = mView.findViewById(R.id.sr_micro_fragment);
         rv_micro = mView.findViewById(R.id.rv_micro);
+        iv_miniservice_next.setOnClickListener(this);
         tv_miniservice_title.setOnClickListener(this);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false);
         rv_micro.setLayoutManager(linearLayoutManager);
-        microRecycleAdapter = new MicroRecycleAdapter(0, null);
+        microRecycleAdapter = new MicroRecycleAdapter(R.layout.item_micro_empty, null);
         rv_micro.setAdapter(microRecycleAdapter);
         sr_micro_fragment.setColorSchemeColors(getResources().getColor(R.color.home_bg_color));
         sr_micro_fragment.setOnRefreshListener(() -> {
@@ -150,14 +156,33 @@ public class FragmentManagementTest extends Fragment implements HttpResponse, Vi
         }
     }
 
+    private void initViewpager(List<CropLayoutEntity.ContentBeanX> content) {
+        if (null == viewpagerDataView) {
+            viewpagerDataView = LayoutInflater.from(mActivity).inflate(R.layout.micro_viewpager_view, null);
+            microRecycleAdapter.addHeaderView(viewpagerDataView);
+            vp_micro = viewpagerDataView.findViewById(R.id.vp_micro);
+        }
+        FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) vp_micro.getLayoutParams();
+        vp_micro.setLayoutParams(layoutParams);
+        vp_micro.setOffscreenPageLimit(2);
+        vp_micro.setClipToPadding(false);
+        vp_micro.setPadding(40, 0, 300, 0);
+        vp_micro.setPageMargin(2);
+        List<CropLayoutEntity.ContentBeanX.ContentBean.DataBean> dataBeanList = new ArrayList<>();
+        dataBeanList.addAll(content.get(0).getContent().get(0).getData());
+        MicroViewpagerAdapter microViewpagerAdapter = new MicroViewpagerAdapter(mActivity, dataBeanList);
+        vp_micro.setAdapter(microViewpagerAdapter);
+
+    }
+
     private void microBannerShow(List<CropLayoutEntity.ContentBeanX.ContentBean.DataBean> mBannerList) {
         List<String> bannerUrlList = new ArrayList<>();
         bannerUrlList.clear();
         for (CropLayoutEntity.ContentBeanX.ContentBean.DataBean dataBean : mBannerList) {
             bannerUrlList.add(dataBean.getImg_url());
         }
-        bga_banner.setAdapter((BGABanner.Adapter<ImageView, String>) (banner, itemView, model, position) ->
-                GlideUtils.loadImageDefaultDisplay(mActivity, model, itemView, R.drawable.pic_banner_normal, R.drawable.pic_banner_normal));
+        bga_banner.setAdapter((banner, itemView, model, position) ->
+                GlideUtils.loadRoundImageDisplay(mActivity, model, 10, (ImageView) itemView, R.drawable.pic_banner_normal, R.drawable.pic_banner_normal));
         bga_banner.setDelegate((BGABanner.Delegate<ImageView, String>) (banner, itemView, model, position) -> {
             if (position >= 0 && position < bannerUrlList.size()) {
                 LinkParseUtil.parse(getActivity(), mBannerList.get(position).getRedirect_url(), "");
@@ -248,6 +273,7 @@ public class FragmentManagementTest extends Fragment implements HttpResponse, Vi
                                 initBanner(cropLayoutEntity.getContent());
                                 break;
                             case "2":
+                                initViewpager(cropLayoutEntity.getContent());
                                 break;
                             case "3":
                                 initApplication(cropLayoutEntity.getContent().get(i));
@@ -264,10 +290,10 @@ public class FragmentManagementTest extends Fragment implements HttpResponse, Vi
         }
     }
 
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.iv_miniservice_next:
             case R.id.tv_miniservice_title:
                 initPopup(cropList);
                 break;
@@ -304,8 +330,11 @@ public class FragmentManagementTest extends Fragment implements HttpResponse, Vi
         rv_crop.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
         rv_crop.setAdapter(cropListAdapter);
         popupWindow.setOutsideTouchable(true);
-        popupWindow.setBackgroundDrawable(new BitmapDrawable());
-        popupWindow.showAsDropDown(mActivity.findViewById(R.id.rl_miniservice));
+        //实例化一个ColorDrawable颜色为半透明，已达到变暗的效果
+        ColorDrawable dw = new ColorDrawable(0xb0000000);
+        popupWindow.setBackgroundDrawable(dw);
+        popupWindow.showAsDropDown(mActivity.findViewById(R.id.rl_miniservice), 0, 0);
+        popupWindow.setBackgroundDrawable(getResources().getDrawable(R.color.bg_transparent));
         popupWindow.setOnDismissListener(() -> {
             iv_miniservice_next.setImageDrawable(getResources().getDrawable(R.drawable.nav_icon_shaixuan_n));
         });

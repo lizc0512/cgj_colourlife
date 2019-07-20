@@ -9,6 +9,8 @@
     <cn.bingoogolapple.bgabanner.BGABanner
         android:id="@+id/bga_banner"
         style="@style/BannerDefaultStyle"
+        android:layout_marginLeft="@dimen/size_15dp"
+        android:layout_marginRight="@dimen/size_15dp"
         app:banner_pageChangeDuration="300"
         app:banner_pointAutoPlayAble="false"
         app:banner_pointContainerBackground="@android:color/transparent"

@@ -6,6 +6,8 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 
 import java.io.File;
@@ -44,6 +46,21 @@ public class GlideUtils {
     public static void loadImageDefaultDisplay(Context mContext, String path, ImageView mImageView, int lodingImage, int errorImageView) {
         try {
             Glide.with(mContext).load(path).apply(new RequestOptions().placeholder(lodingImage).error(errorImageView).diskCacheStrategy(DiskCacheStrategy.ALL)).into(mImageView);
+        } catch (Exception e) {
+
+        }
+    }
+
+    //设置加载圆角图片
+    public static void loadRoundImageDisplay(Context mContext, Object path, int round, ImageView mImageView, int lodingImage, int errorImageView) {
+        try {
+            RoundedCorners roundedCorners = new RoundedCorners(round);//数字为圆角度数
+            RequestOptions coverRequestOptions = new RequestOptions()
+                    .transforms(new CenterCrop(), roundedCorners)
+                    .error(errorImageView)
+                    .placeholder(lodingImage)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL);
+            Glide.with(mContext).load(path).apply(coverRequestOptions).into(mImageView);
         } catch (Exception e) {
 
         }

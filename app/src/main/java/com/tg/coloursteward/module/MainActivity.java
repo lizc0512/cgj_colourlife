@@ -62,7 +62,6 @@ import com.tg.coloursteward.entity.HomePopWindowEntity;
 import com.tg.coloursteward.entity.SingleDeviceLogin;
 import com.tg.coloursteward.entity.SingleDeviceLogout;
 import com.tg.coloursteward.fragment.ContactsFragment;
-import com.tg.coloursteward.fragment.FragmentManagement;
 import com.tg.coloursteward.fragment.FragmentManagementTest;
 import com.tg.coloursteward.fragment.FragmentMine;
 import com.tg.coloursteward.fragment.MsgListFragment;
@@ -92,6 +91,7 @@ import com.tg.coloursteward.util.ToastUtil;
 import com.tg.coloursteward.util.TokenUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.PopWindowView;
+import com.tg.coloursteward.view.ViewPagerSlide;
 import com.tg.coloursteward.view.dialog.ToastFactory;
 import com.tg.setting.activity.InviteRegisterActivity;
 import com.tg.setting.adapter.UpdateAdapter;
@@ -166,7 +166,7 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
     private TextView tv_title;
     private ImageView img_add;
 
-    private ViewPager mViewPager;
+    private ViewPagerSlide mViewPager;
     private BottomNavigationViewEx navigation;
     //private TabLayout mTabLayout;
     private QBadgeView badgeView;
@@ -740,7 +740,7 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
         img_scan.setOnClickListener(this);
         img_add.setOnClickListener(this);
 
-        mViewPager = (ViewPager) findViewById(R.id.view_pager);
+        mViewPager = findViewById(R.id.view_pager);
         navigation = (BottomNavigationViewEx) findViewById(R.id.navigation);
 
         badgeView = new QBadgeView(mContext);

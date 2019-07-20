@@ -9,6 +9,7 @@
 
 
     <color name="transparent">#00000000</color>
+    <color name="bg_transparent">#66000000</color>
     <color name="text_color1">#999999</color>
     <color name="text_color2">#666666</color>
     <color name="text_color3">#333333</color>

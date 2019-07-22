@@ -123,6 +123,8 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
     public static final String KEY_URL = "url";
     public static final String WEBDOMAIN = "webdomain";
     public static final String THRIDSOURCE = "thridsource";
+    public static final String OAUTH2_0 = "oauth2";
+    private String oauth2_0 = "";
     private String domainName;
     private String TAKE_PHOTO_PATH = "";
     private Uri uri;
@@ -160,6 +162,8 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
     private String app_id;
     private H5OauthModel h5OauthModel;
     private AlertDialog dialog;
+    private boolean isOauth2Show = false;
+    private boolean isJSOauthShow = false;
     protected static final FrameLayout.LayoutParams COVER_SCREEN_PARAMS = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
@@ -190,6 +194,20 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
             url = data.getStringExtra(KEY_URL);
             urlFromA = data.getStringExtra(Failed_MESSAGE);//未支付成功的返回信息
             domainName = data.getStringExtra(WEBDOMAIN);
+            oauth2_0 = data.getStringExtra(OAUTH2_0);
+        }
+        if (!TextUtils.isEmpty(oauth2_0)) {
+            if (oauth2_0.equals("3")) {
+                isOauth2Show = true;
+            } else if (oauth2_0.equals("4")) {
+                isJSOauthShow = true;
+            } else if (oauth2_0.equals("5")) {
+                isJSOauthShow = true;
+                isOauth2Show = true;
+            }
+        } else {
+            isJSOauthShow = true;
+            isOauth2Show = true;
         }
         /**
          * 初始化控件
@@ -305,7 +323,9 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
                 }
             });
             color_token = Tools.getAccess_token2(MyBrowserActivity.this);
-            headerMap.put("color-token", color_token);
+            if (isOauth2Show) {
+                headerMap.put("color-token", color_token);
+            }
             //定义js调用android
             webView.addJavascriptInterface(new JsInteration(), "js");
             webView.addJavascriptInterface(new JsInteration(), "myjava");
@@ -756,7 +776,7 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
          */
         @JavascriptInterface
         public void getResponseType(String json) {
-            if (!TextUtils.isEmpty(json)) {
+            if (!TextUtils.isEmpty(json) && isJSOauthShow) {
                 try {
                     JSONObject jsonObjec = new JSONObject(json);
                     app_id = jsonObjec.getString("app_id");
@@ -1014,7 +1034,6 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
 
         webView.clearHistory();
         ((ViewGroup) webView.getParent()).removeView(webView);
-//        webView.loadUrl("about:blank", headerMap);
         webView.stopLoading();
         webView.setWebChromeClient(null);
         webView.setWebViewClient(null);

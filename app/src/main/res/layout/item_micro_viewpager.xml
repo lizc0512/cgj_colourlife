@@ -11,6 +11,7 @@
         android:layout_height="wrap_content"
         android:textColor="@color/color_445056"
         android:layout_marginLeft="@dimen/size_17dp"
+        android:text=""
         android:layout_marginTop="@dimen/size_24dp"
         android:textSize="@dimen/font_16sp"/>
     <TextView
@@ -20,6 +21,6 @@
         android:textColor="@color/color_445056"
         android:layout_below="@id/tv_micro_vp_title"
         android:layout_marginLeft="@dimen/size_17dp"
-        android:layout_marginTop="@dimen/size_8dp"
+        android:layout_marginTop="@dimen/size_6dp"
         android:textSize="@dimen/font_20sp"/>
 </RelativeLayout>

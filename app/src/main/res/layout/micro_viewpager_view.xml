@@ -1,17 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:clipChildren="false">
+    android:layout_height="wrap_content"
+    android:clipChildren="false"
+    android:orientation="vertical"
+    android:background="@color/white">
 
-    <android.support.v4.view.ViewPager
+    <TextView
+        android:id="@+id/tv_vp_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/size_15dp"
+        android:layout_marginTop="@dimen/size_10dp"
+        android:textColor="@color/color_445056"
+        android:textSize="@dimen/font_16sp" />
+
+    <com.tg.coloursteward.view.MicroViewPager
         android:id="@+id/vp_micro"
         android:layout_width="match_parent"
-        android:layout_height="160dp"
+        android:layout_height="@dimen/size_102dp"
+        android:layout_marginTop="@dimen/size_5dp"
         android:layout_gravity="center_horizontal"
-        android:background="@color/text_color1"
         android:clipChildren="false">
 
-    </android.support.v4.view.ViewPager>
+    </com.tg.coloursteward.view.MicroViewPager>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_micro_vp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-</FrameLayout>
+    </android.support.v7.widget.RecyclerView>
+</LinearLayout>

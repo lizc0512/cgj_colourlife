@@ -20,6 +20,7 @@ public interface SpConstants {
         String UPDATE = "update";
         String APKNAME = "apkname";
         String DOWNLOADERVERSION = "downloaderversion";
+        String MICRODATA = "microdata";
     }
 
     interface accessToken {

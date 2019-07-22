@@ -125,7 +125,7 @@ public class CropLayoutEntity {
                 private String item_name;
                 private String auth_type;
                 private String quantity;
-
+                private String isShow;
 
                 public String getUuid() {
                     return uuid;
@@ -189,6 +189,14 @@ public class CropLayoutEntity {
 
                 public void setQuantity(String quantity) {
                     this.quantity = quantity;
+                }
+
+                public String getIsShow() {
+                    return isShow;
+                }
+
+                public void setIsShow(String isShow) {
+                    this.isShow = isShow;
                 }
             }
         }

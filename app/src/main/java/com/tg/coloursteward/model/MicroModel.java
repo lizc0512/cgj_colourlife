@@ -130,12 +130,12 @@ public class MicroModel extends BaseModel {
 
     /**
      * @param what
-     * @param corp_uuid   租户uuid，不传取默认租户
-     * @param httpResponse  微服务页面布局
+     * @param corp_uuid    租户uuid，不传取默认租户
+     * @param httpResponse 微服务页面布局
      */
-    public void getMicroList(int what, String corp_uuid,final HttpResponse httpResponse) {
+    public void getMicroList(int what, String corp_uuid, final HttpResponse httpResponse) {
         Map<String, Object> params = new HashMap<>();
-        params.put("corp_uuid",corp_uuid);
+        params.put("corp_uuid", corp_uuid);
         final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 0, microListUrl), RequestMethod.GET);
         request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
             @Override
@@ -159,12 +159,12 @@ public class MicroModel extends BaseModel {
 
     /**
      * @param what
-     * @param uuid 数据uuid
+     * @param uuid         数据uuid
      * @param httpResponse
      */
-    public void getMicroItem(int what, String uuid,final HttpResponse httpResponse) {
+    public void getMicroItem(int what, String uuid, final HttpResponse httpResponse) {
         Map<String, Object> params = new HashMap<>();
-        params.put("uuid",uuid);
+        params.put("uuid", uuid);
         final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 0, microItemUrl), RequestMethod.GET);
         request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
             @Override

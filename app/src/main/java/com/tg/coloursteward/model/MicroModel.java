@@ -130,12 +130,14 @@ public class MicroModel extends BaseModel {
 
     /**
      * @param what
+     * @param access_token auth2.0 token
      * @param corp_uuid    租户uuid，不传取默认租户
      * @param httpResponse 微服务页面布局
      */
-    public void getMicroList(int what, String corp_uuid, final HttpResponse httpResponse) {
+    public void getMicroList(int what, String corp_uuid, String access_token, final HttpResponse httpResponse) {
         Map<String, Object> params = new HashMap<>();
         params.put("corp_uuid", corp_uuid);
+        params.put("access_token", access_token);
         final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 0, microListUrl), RequestMethod.GET);
         request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
             @Override

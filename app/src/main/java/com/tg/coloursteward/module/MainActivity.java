@@ -741,7 +741,7 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
         img_add.setOnClickListener(this);
 
         mViewPager = findViewById(R.id.view_pager);
-        navigation = (BottomNavigationViewEx) findViewById(R.id.navigation);
+        navigation = findViewById(R.id.navigation);
 
         badgeView = new QBadgeView(mContext);
         badgeView.bindTarget(navigation.getBottomNavigationItemView(0));
@@ -781,7 +781,7 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
         navigation.enableItemShiftingMode(false); //取消文字
         navigation.enableAnimation(false);  //取消选中动画
         navigation.setupWithViewPager(mViewPager);
-
+        navigation.setItemIconTintList(null);
         navigation.setOnNavigationItemReselectedListener(
                 new BottomNavigationView.OnNavigationItemReselectedListener() {
                     @Override

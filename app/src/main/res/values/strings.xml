@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">彩管家6.0</string>
+    <string name="app_name">彩管家</string>
     <string name="text_password">0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
     <string name="soft_update_no">已经是最新版本</string>
     <string name="soft_update_title">软件更新</string>

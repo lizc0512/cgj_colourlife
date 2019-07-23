@@ -17,14 +17,13 @@ import java.util.Date;
  */
 
 public class MicroAuthTimeUtils {
-    private Intent intent;
     private Activity mActivity;
     private HomeService homeService;
 
     public void IsAuthTime(Activity mActivity, final String url,
                            String clientCode, String oauthType, String developerCode, final String param) {
         this.mActivity = mActivity;
-        getAuth(url, clientCode, oauthType, developerCode, param);
+         getAuth(url, clientCode, oauthType, developerCode, param);
 
     }
 
@@ -34,7 +33,7 @@ public class MicroAuthTimeUtils {
      * @param url
      * @param clientCode
      * @param oauthType
-     * @param developerCode 1：无授权，2：auth2，3：oauth2.0授权，4：原生js授权，5：支持所有授权方式
+     * @param developerCode 0：无授权，1：auth1，2：auth2，3：oauth2.0授权，4：原生js授权，5：支持所有授权方式
      */
     private void getAuth(final String url,
                          String clientCode, String oauthType, String developerCode, final String param) {
@@ -49,7 +48,7 @@ public class MicroAuthTimeUtils {
         if (StringUtils.isNotEmpty(openID) && StringUtils.isNotEmpty(accessToken) || StringUtils.isNotEmpty(access_token)) {
             Long nineHours = 1000 * 60 * 60 * 1L;
             if (!TextUtils.isEmpty(oauthType)) {
-                if ("0".equals(oauthType))//oauth1认证
+                if ("1".equals(oauthType))//oauth1认证
                 {
                     if (time - currentTime <= nineHours) {//判断保存时间是否超过9小时，超过则过期，需要重新获取
                         String str = "?";
@@ -59,13 +58,11 @@ public class MicroAuthTimeUtils {
                         } else {
                             URL = url + "?openID=" + openID + "&accessToken=" + accessToken + param;
                         }
-                        intent = new Intent(mActivity, MyBrowserActivity.class);
-                        intent.putExtra(MyBrowserActivity.KEY_URL, URL);
-                        mActivity.startActivity(intent);
+                        LinkParseUtil.parse(mActivity, oauthType, URL, "");
                     } else {
                         getAuthData(url, clientCode, oauthType, developerCode, param);
                     }
-                } else if ("1".equals(oauthType)) {//1：无授权
+                } else if ("0".equals(oauthType)) {//0：无授权
                     LinkParseUtil.parse(mActivity, url, "");
                 } else if ("2".equals(oauthType)) {//2：auth2
                     if (time - currentTime2 <= ExpiresTime2 * 1000) {//判断保存时间是否超过9小时，超过则过期，需要重新获取
@@ -114,7 +111,7 @@ public class MicroAuthTimeUtils {
             homeService = new HomeService(mActivity);
         }
         if (!TextUtils.isEmpty(oauthType)) {
-            if ("0".equals(oauthType))//oauth1认证
+            if ("1".equals(oauthType))//oauth1认证
             {
                 homeService.getAuth(clientCode, new GetTwoRecordListener<String, String>() {
 
@@ -132,9 +129,7 @@ public class MicroAuthTimeUtils {
                         } else {
                             URL = url + "?openID=" + openID + "&accessToken=" + accessToken + param;
                         }
-                        intent = new Intent(mActivity, MyBrowserActivity.class);
-                        intent.putExtra(MyBrowserActivity.KEY_URL, URL);
-                        mActivity.startActivity(intent);
+                        LinkParseUtil.parse(mActivity, oauthType, URL, "");
                     }
 
                     @Override
@@ -142,7 +137,7 @@ public class MicroAuthTimeUtils {
                         ToastFactory.showToast(mActivity, Message);
                     }
                 });
-            } else if ("1".equals(oauthType)) {
+            } else if ("0".equals(oauthType)) {
                 LinkParseUtil.parse(mActivity, url, "");
             } else if ("2".equals(oauthType)) {//oauth2认证
                 homeService.getAuth2(developerCode, new GetTwoRecordListener<String, String>() {

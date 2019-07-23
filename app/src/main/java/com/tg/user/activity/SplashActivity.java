@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.constant.Contants;
+import com.tg.coloursteward.constant.SpConstants;
 import com.tg.coloursteward.database.SharedPreferencesTools;
 import com.tg.coloursteward.module.MainActivity;
 import com.tg.coloursteward.net.HttpTools;
@@ -190,6 +191,7 @@ public class SplashActivity extends BaseActivity implements View.OnClickListener
 //                intent.putExtra(MainActivity.KEY_EXTRAS, extras);
                 intent.putExtra(MainActivity.FROM_LOGIN, false);
                 intent.putExtra(MainActivity.FROM_AUTH_TYPE, auth_type);
+                spUtils.saveBooleanData(SpConstants.UserModel.ISLOGIN, true);
                 if (autoShow) {
                     intent.putExtra(MainActivity.FROM_AD, urlAd);
                 }

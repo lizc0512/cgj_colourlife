@@ -36,6 +36,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/size_15dp"
+            android:visibility="gone"
             android:src="@drawable/nav_icon_more" />
 
     </RelativeLayout>

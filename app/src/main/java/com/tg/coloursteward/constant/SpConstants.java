@@ -21,6 +21,7 @@ public interface SpConstants {
         String APKNAME = "apkname";
         String DOWNLOADERVERSION = "downloaderversion";
         String MICRODATA = "microdata";
+        String MICROVIEWPAGERITEM = "microvpitem";
     }
 
     interface accessToken {

@@ -38,6 +38,11 @@ public class MicroVpTestAdapter extends RecyclerView.Adapter {
         width = dm.widthPixels / 3;
     }
 
+    public void setData(List<MicroDataEntity.ContentBean> list) {
+        this.mList = list;
+        notifyDataSetChanged();
+    }
+
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

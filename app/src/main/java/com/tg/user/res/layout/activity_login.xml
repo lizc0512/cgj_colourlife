@@ -123,7 +123,7 @@
         android:layout_marginLeft="@dimen/size_40dp"
         android:layout_marginTop="@dimen/size_88dp"
         android:layout_marginRight="@dimen/size_40dp"
-        android:background="@drawable/login_button_select"
+        android:background="@drawable/bg_login_button_gray"
         android:stateListAnimator="@null"
         android:text="@string/user_login_btn"
         android:textColor="@color/line_login_button"

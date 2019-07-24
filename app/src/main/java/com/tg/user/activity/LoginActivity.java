@@ -210,6 +210,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     }
 
     private void btnNoClick() {
+        btn_login_login.setBackground(getResources().getDrawable(R.drawable.bg_login_button_gray));
         btn_login_login.setTextColor(getResources().getColor(R.color.line_login_button));
     }
 

@@ -6,49 +6,45 @@ import android.os.Environment;
  * 全局变量
  */
 public interface Contants {
-    /**
-     * 下载安装包保存目录
-     */
-    String downloadDir = "app/download/";
 
     interface URl {
 
         //////////////    正式地址   //////////////////////////////
-        String URL_ICETEST = "https://openapi.colourlife.com/v1";//2.0
-        String URL_CPMOBILE = "http://cpmobile.colourlife.com";
-        String URL_CAIHUI = "https://caihui-bishow.colourlife.com";
-        String URL_OAUTH2 = "https://oauth2-cgj.colourlife.com";
-        String SINGLE_DEVICE = "https://single.colourlife.com";
-        String URL_NEW = "https://cgj-backyard.colourlife.com";
-        String URL_ICESTAFF = "https://staff-ice.colourlife.com";
-        String CLIENT_SECRET = "t2o0a1xl2lOmoPi4tuHf5uw4VZloXGs7y1Kd0Yoq";
-        String URL_QRCODE = "https://qrcode.colourlife.com";
-        String URL_IMPUSH = "https://impush-cgj.colourlife.com";
-        String VERSION_ADDRESS = "https://version.colourlife.com";
-        String URL_H5OAUTH = "https://oauth-czy.colourlife.com";
-        String environment = "release";
-        String cqj_appid = "327494513335603200";
-        String PUBLIC_KEY = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCTFnAR7ORLx0jGzf9Ux1We7yHvRi+kQXKSRmtgBjDCXQzakGm2mrb6EupCkDbUcj4BUs7S7zm/rICQuVNC9fujeJGjcNWRg0XWVtm90XpbTqfKiXzGDHI9W8aULYZ3of/JJ9lyCyjqjigyCdLBPtQ27gOuboDzQuieR2ywPHawzQIDAQAB";
+//        String URL_ICETEST = "https://openapi.colourlife.com/v1";//2.0
+//        String URL_CPMOBILE = "http://cpmobile.colourlife.com";
+//        String URL_CAIHUI = "https://caihui-bishow.colourlife.com";
+//        String URL_OAUTH2 = "https://oauth2-cgj.colourlife.com";
+//        String SINGLE_DEVICE = "https://single.colourlife.com";
+//        String URL_NEW = "https://cgj-backyard.colourlife.com";
+//        String URL_ICESTAFF = "https://staff-ice.colourlife.com";
+//        String CLIENT_SECRET = "t2o0a1xl2lOmoPi4tuHf5uw4VZloXGs7y1Kd0Yoq";
+//        String URL_QRCODE = "https://qrcode.colourlife.com";
+//        String URL_IMPUSH = "https://impush-cgj.colourlife.com";
+//        String VERSION_ADDRESS = "https://version.colourlife.com";
+//        String URL_H5OAUTH = "https://oauth-czy.colourlife.com";
+//        String environment = "release";
+//        String cqj_appid = "327494513335603200";
+//        String PUBLIC_KEY = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCTFnAR7ORLx0jGzf9Ux1We7yHvRi+kQXKSRmtgBjDCXQzakGm2mrb6EupCkDbUcj4BUs7S7zm/rICQuVNC9fujeJGjcNWRg0XWVtm90XpbTqfKiXzGDHI9W8aULYZ3of/JJ9lyCyjqjigyCdLBPtQ27gOuboDzQuieR2ywPHawzQIDAQAB";
 
         ////////////////  测试地址   ///////////////////////////////////
-//        String URL_ICETEST = "https://openapi-test.colourlife.com/v1";//2.0e
-//        String URL_CPMOBILE = "http://cpmobile-czytest.colourlife.com";
-//        String URL_CAIHUI = "https://caihui-bishow.colourlife.com";
-//        String URL_OAUTH2 = "https://oauth2-cgj-test.colourlife.com";
-//        String SINGLE_DEVICE = "https://single-czytest.colourlife.com";
-//        String URL_NEW = "https://cgj-backyard-test.colourlife.com";
-//        String URL_ICESTAFF = "http://staff.ice.test.colourlife.com";
-//        String CLIENT_SECRET = "xlsfrQS5R49upmfZbhlsrUzAt9HDA5K4ptLYsqK5";
-//        String URL_QRCODE = "http://qrcode-czytest.colourlife.com";
-//        String URL_IMPUSH = "https://impush-cgj-test.colourlife.com";
-//        String VERSION_ADDRESS = "https://version-czytest.colourlife.com";
-//        String URL_H5OAUTH = "https://oauth-czytest.colourlife.com";
-//        String environment = "debug";
-//        String cqj_appid = "323521861252157440";
-//        String PUBLIC_KEY = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDZDqnWph9LxtD0zgtGAYTTf2jY" +
-//                "eV+ni5F1o0w3Fag4OOD1YHCRUCXIsFy+iJYmuPf5vMkZrkoiJmKBfkaIzNlrJZzH" +
-//                "zq+LsPQNCF86p1nLsuHbkWNvyjOEPn/CUryP2Kxme4S+eEqLIeNwp70VOaMuPmRo" +
-//                "EZxMDAgvc6Z0DWsVdQIDAQAB";
+        String URL_ICETEST = "https://openapi-test.colourlife.com/v1";//2.0e
+        String URL_CPMOBILE = "http://cpmobile-czytest.colourlife.com";
+        String URL_CAIHUI = "https://caihui-bishow.colourlife.com";
+        String URL_OAUTH2 = "https://oauth2-cgj-test.colourlife.com";
+        String SINGLE_DEVICE = "https://single-czytest.colourlife.com";
+        String URL_NEW = "https://cgj-backyard-test.colourlife.com";
+        String URL_ICESTAFF = "http://staff.ice.test.colourlife.com";
+        String CLIENT_SECRET = "xlsfrQS5R49upmfZbhlsrUzAt9HDA5K4ptLYsqK5";
+        String URL_QRCODE = "http://qrcode-czytest.colourlife.com";
+        String URL_IMPUSH = "https://impush-cgj-test.colourlife.com";
+        String VERSION_ADDRESS = "https://version-czytest.colourlife.com";
+        String URL_H5OAUTH = "https://oauth-czytest.colourlife.com";
+        String environment = "debug";
+        String cqj_appid = "323521861252157440";
+        String PUBLIC_KEY = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDZDqnWph9LxtD0zgtGAYTTf2jY" +
+                "eV+ni5F1o0w3Fag4OOD1YHCRUCXIsFy+iJYmuPf5vMkZrkoiJmKBfkaIzNlrJZzH" +
+                "zq+LsPQNCF86p1nLsuHbkWNvyjOEPn/CUryP2Kxme4S+eEqLIeNwp70VOaMuPmRo" +
+                "EZxMDAgvc6Z0DWsVdQIDAQAB";
     }
 
     interface APP {
@@ -166,7 +162,7 @@ public interface Contants {
         String CALLBACKDeviceID = "CALLBACKDeviceID";
         String YJ = "http://mail.oa.colourlife.com:40060/login";
         String SP = "http://bpm.ice.colourlife.com/portal/login/sso.action";//2.0
-        String QIANDAO = "http://eqd.oa.colourlife.com/cailife/sign/main";
+        String  QIANDAO = "http://eqd.oa.colourlife.com/cailife/sign/main";
     }
 
     interface storage {

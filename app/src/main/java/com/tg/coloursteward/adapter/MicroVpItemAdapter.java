@@ -26,12 +26,12 @@ import java.util.List;
  * @chang time
  * @class 微服务页面适配器
  */
-public class MicroVpTestAdapter extends RecyclerView.Adapter {
+public class MicroVpItemAdapter extends RecyclerView.Adapter {
     private Context mContext;
     private List<MicroDataEntity.ContentBean> mList = new ArrayList<>();
     private int width;
 
-    public MicroVpTestAdapter(Context context, List<MicroDataEntity.ContentBean> list) {
+    public MicroVpItemAdapter(Context context, List<MicroDataEntity.ContentBean> list) {
         this.mContext = context;
         this.mList = list;
         DisplayMetrics dm = mContext.getResources().getDisplayMetrics();

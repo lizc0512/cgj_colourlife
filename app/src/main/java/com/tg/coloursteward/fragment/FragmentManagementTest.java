@@ -21,7 +21,7 @@ import com.tg.coloursteward.R;
 import com.tg.coloursteward.adapter.CropListAdapter;
 import com.tg.coloursteward.adapter.MicroApplicationAdapter;
 import com.tg.coloursteward.adapter.MicroViewpagerAdapter;
-import com.tg.coloursteward.adapter.MicroVpTestAdapter;
+import com.tg.coloursteward.adapter.MicroVpItemAdapter;
 import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.constant.SpConstants;
@@ -76,6 +76,7 @@ public class FragmentManagementTest extends Fragment implements HttpResponse, Vi
     private List<MicroDataEntity.ContentBean> dataItemList = new ArrayList<>();
     private LinearLayout ll_micro_addView;
     private String uuidItme;
+    private MicroVpItemAdapter microVpItemAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -231,7 +232,6 @@ public class FragmentManagementTest extends Fragment implements HttpResponse, Vi
     }
 
     private void initDataItem(String uuid) {
-        rv_micro_vp.setVisibility(View.GONE);
         uuidItme = uuid;
         String cacheItem = SharedPreferencesUtils.getInstance().getStringData(SpConstants.UserModel.MICROVIEWPAGERITEM + uuidItme, "");
         if (!TextUtils.isEmpty(cacheItem)) {
@@ -381,11 +381,12 @@ public class FragmentManagementTest extends Fragment implements HttpResponse, Vi
                 rv_micro_vp.setVisibility(View.VISIBLE);
             } else {
                 rv_application.scrollBy(0, 16);
+                rv_micro_vp.setVisibility(View.GONE);
             }
-            MicroVpTestAdapter microVpTestAdapter = new MicroVpTestAdapter(mActivity, dataItemList);
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false);
             rv_micro_vp.setLayoutManager(linearLayoutManager);
-            rv_micro_vp.setAdapter(microVpTestAdapter);
+            microVpItemAdapter = new MicroVpItemAdapter(mActivity, dataItemList);
+            rv_micro_vp.setAdapter(microVpItemAdapter);
         } catch (JSONException e) {
             e.printStackTrace();
         }

@@ -138,10 +138,10 @@ public class HomeModel extends BaseModel {
                     int code = showSuccesResultMessageTheme(result);
                     if (code == 0) {
                         httpResponse.OnHttpResponse(what, result);
-                    }else {
+                    } else {
                         showErrorCodeMessage(response);
                     }
-                }else {
+                } else {
                     showErrorCodeMessage(response);
                 }
             }
@@ -152,4 +152,5 @@ public class HomeModel extends BaseModel {
             }
         }, true, true);
     }
+
 }

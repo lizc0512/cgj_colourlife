@@ -1035,32 +1035,6 @@ public class HttpTools {
      * @param rqtConfig
      * @param requestParams
      */
-    public static void httpPost_Map(final String URL, String apiName, final RequestConfig rqtConfig, HashMap requestParams) {
-        if (null == requestParams) {
-            requestParams = new HashMap();
-        }
-        if (URL.startsWith(Contants.URl.URL_CPMOBILE)) {
-            if (apiName.equals("/1.0/auth")) {
-                post(URL + apiName, Method.POST, rqtConfig, requestParams);
-            } else {
-                String url = URL + postCombileMD5(apiName, requestParams);
-                requestParams.remove("key");
-                requestParams.remove("secret");
-                post(url, Method.POST, rqtConfig, requestParams);
-            }
-        } else {
-            post(URL + apiName, Method.POST, rqtConfig, requestParams);
-        }
-    }
-
-    /**
-     * Post请求
-     *
-     * @param URL
-     * @param apiName
-     * @param rqtConfig
-     * @param requestParams
-     */
     public static void httpPost(final String URL, String apiName, final RequestConfig rqtConfig, RequestParams requestParams) {
         HashMap<String, String> paramsStr = null;
         if (requestParams == null) {

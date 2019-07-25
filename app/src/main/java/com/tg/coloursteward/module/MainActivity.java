@@ -51,16 +51,14 @@ import com.bumptech.glide.request.target.Target;
 import com.hjq.permissions.OnPermission;
 import com.hjq.permissions.XXPermissions;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
-import com.tg.coloursteward.BuildConfig;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.application.CityPropertyApplication;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.constant.Contants;
+import com.tg.coloursteward.constant.SpConstants;
 import com.tg.coloursteward.database.SharedPreferencesTools;
 import com.tg.coloursteward.entity.HomePopWindowEntity;
-import com.tg.coloursteward.entity.SingleDeviceLogin;
-import com.tg.coloursteward.entity.SingleDeviceLogout;
 import com.tg.coloursteward.fragment.ContactsFragment;
 import com.tg.coloursteward.fragment.FragmentManagementTest;
 import com.tg.coloursteward.fragment.FragmentMine;
@@ -99,6 +97,7 @@ import com.tg.setting.entity.VersionEntity;
 import com.tg.setting.model.SettingModel;
 import com.tg.setting.view.DeleteMsgDialog;
 import com.tg.setting.view.UpdateVerSionDialog;
+import com.tg.user.model.UserModel;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.config.AppConfig;
 import com.youmai.hxsdk.config.ColorsConfig;
@@ -196,6 +195,7 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
     public static String url_ad;
     private SettingModel settingModel;
     private HomeModel homeModel;
+    private UserModel userModel;
     private List<String> updateList = new ArrayList<>();
     private BroadcastReceiver freshReceiver = new BroadcastReceiver() {
         @Override
@@ -232,6 +232,7 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
         mHandler = new NormalHandler(this);
         settingModel = new SettingModel(this);
         homeModel = new HomeModel(this);
+        userModel = new UserModel(this);
         String key = Tools.getStringValue(this, Contants.EMPLOYEE_LOGIN.key);
         String secret = Tools.getStringValue(this, Contants.EMPLOYEE_LOGIN.secret);
         if (TextUtils.isEmpty(key) || TextUtils.isEmpty(secret)) {
@@ -571,44 +572,7 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
     @Override
     public void onSuccess(Message msg, String jsonString, String hintString) {
         int code = HttpTools.getCode(jsonString);
-        if (msg.arg1 == HttpTools.POST_SINGLEDEVICE) {
-            if (code == 0) {
-                try {
-                    SingleDeviceLogin singleDeviceLogin = GsonUtils.gsonToBean(jsonString, SingleDeviceLogin.class);
-                    String device_token = singleDeviceLogin.getContent().getDevice_token();
-                    Tools.saveStringValue(this, Contants.storage.DEVICE_TOKEN, device_token);
-                    if (!TextUtils.isEmpty(device_token)) {
-                        Log.d("lizc", TAG + "单设备登录OK");
-                    }
-                } catch (Exception e) {
-                }
-            }
-        } else if (msg.arg1 == HttpTools.POST_LOGOUTDEVICE) {
-            if (code == 0) {
-                try {
-                    SingleDeviceLogout singleDeviceLogout = GsonUtils.gsonToBean(jsonString, SingleDeviceLogout.class);
-                    String jsonObject = singleDeviceLogout.getContent().getResult();
-                    if ("1".equals(jsonObject)) {
-                        Log.d("lizc", TAG + "单设备退出OK");
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        } else if (msg.arg1 == HttpTools.GET_ORG_TYPE) {//得到个人orgtype
-            if (code == 0) {
-                JSONObject jsonObject = HttpTools.getContentJSONObject(jsonString);
-                if (jsonObject.length() > 0) {
-                    try {
-                        String orgType = jsonObject.getString("orgType");
-                        Tools.saveStringValue(MainActivity.this, Contants.storage.ORGTYPE, orgType);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            } else {
-            }
-        } else if (msg.arg1 == HttpTools.GET_KEYSECERT) {
+        if (msg.arg1 == HttpTools.GET_KEYSECERT) {
             if (code == 0) {
                 try {
                     String jsonObject = HttpTools.getContentString(jsonString);
@@ -874,26 +838,15 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
      * 单设备登录
      */
     private void singleDevicelogin() {
-        RequestConfig config = new RequestConfig(this, HttpTools.POST_SINGLEDEVICE, null);
-        RequestParams params = new RequestParams();
-        params.put("login_type", "1");//登录方式,1静默和2密码
-        params.put("device_type", "1");//登录设备类别，1：安卓，2：IOS
-        params.put("version", BuildConfig.VERSION_NAME);//APP版本号
-        params.put("device_code", TokenUtils.getUUID(MainActivity.this));//设备唯一编号
-        params.put("device_info", TokenUtils.getDeviceInfor(MainActivity.this));//设备详细信息（json字符创）
-        params.put("device_name", TokenUtils.getDeviceBrand() + TokenUtils.getDeviceType());//设备名称（如三星S9）
-        HttpTools.httpPost(Contants.URl.SINGLE_DEVICE, "/cgjapp/single/device/login", config, params);
+        userModel.postSingleDevice(2, "1", this);
     }
 
     /**
      * 单设备退出
      */
     private void singleDevicelogout() {
-        RequestConfig config = new RequestConfig(this, HttpTools.POST_LOGOUTDEVICE, null);
-        RequestParams params = new RequestParams();
         String device_code = Tools.getStringValue(this, Contants.storage.DEVICE_TOKEN);
-        params.put("device_code", device_code);//
-        HttpTools.httpPost(Contants.URl.SINGLE_DEVICE, "/cgjapp/single/device/logout", config, params);
+        userModel.postSingleExit(3, device_code, this);
     }
 
     // 检测版本更新
@@ -1036,7 +989,6 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
                             String expireTime = content.getString("expireTime");
                             Tools.saveStringValue(mContext, Contants.storage.APPAUTH, accessToken);
                             Tools.saveStringValue(mContext, Contants.storage.APPAUTHTIME, expireTime);
-                            getOrgType(accessToken);//获取个人OrgType
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -1090,20 +1042,6 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
 
             }
         });
-    }
-
-    /**
-     * 获取key
-     * sectet
-     */
-    public void getOrgType(String token) {
-        RequestConfig config = new RequestConfig(this, HttpTools.GET_ORG_TYPE, null);
-        RequestParams params = new RequestParams();
-        String corpId = Tools.getStringValue(MainActivity.this, Contants.storage.CORPID);
-        params.put("token", token);
-        params.put("orgUuid", UserInfo.orgId);
-        params.put("corpId", corpId);
-        HttpTools.httpGet(Contants.URl.URL_ICETEST, "/orgms/org", config, params);
     }
 
     /**
@@ -1336,6 +1274,18 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
                         }
                     } catch (Exception e) {
                     }
+                }
+                break;
+            case 2:
+                if (!TextUtils.isEmpty(result)) {
+                    com.tg.user.entity.SingleDeviceLogin singleDeviceLogin = GsonUtils.gsonToBean(result, com.tg.user.entity.SingleDeviceLogin.class);
+                    String device_token = singleDeviceLogin.getContent().getDevice_token();
+                    spUtils.saveStringData(SpConstants.storage.DEVICE_TOKEN, device_token);
+                }
+                break;
+            case 3:
+                if (!TextUtils.isEmpty(result)) {
+                    //单设备退出逻辑，暂无
                 }
                 break;
         }

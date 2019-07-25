@@ -381,7 +381,6 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener, H
                 if (!TextUtils.isEmpty(result)) {
                     String content = RequestEncryptionUtils.getContentString(result);
                     if (content.equals("1")) {
-                        headView.setRightText("保存");
                         setUserInfo();
                         updateView();
                         ToastFactory.showToast(this, "保存成功");

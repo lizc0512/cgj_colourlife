@@ -13,6 +13,7 @@ import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.tg.coloursteward.R;
@@ -32,7 +33,7 @@ public class ActivityHeaderView extends LinearLayout implements OnClickListener 
     private TextView tvRight;
     private String titleText;
     private TextView tvTitle;
-    private FrameLayout backLayout;
+    private RelativeLayout backLayout;
     private FrameLayout rightLayout;
     private FrameLayout headContentLayout;
     private boolean hideBackButton = false;
@@ -92,7 +93,7 @@ public class ActivityHeaderView extends LinearLayout implements OnClickListener 
         if (backGroundRes != -1) {
             headContentLayout.setBackgroundResource(backGroundRes);
         }
-        backLayout = (FrameLayout) v.findViewById(R.id.back_layout);
+        backLayout = v.findViewById(R.id.back_layout);
         rightLayout = (FrameLayout) v.findViewById(R.id.right_layout);
         imgBack = (ImageView) v.findViewById(R.id.back_img);
         tvBack = (TextView) v.findViewById(R.id.back_txt);

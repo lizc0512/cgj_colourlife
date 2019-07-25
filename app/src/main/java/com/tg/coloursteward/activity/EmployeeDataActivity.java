@@ -27,26 +27,23 @@ import com.dashuview.library.keep.MyListener;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.adapter.EmployeePhoneAdapter;
 import com.tg.coloursteward.base.BaseActivity;
+import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.entity.ContactsEntity;
 import com.tg.coloursteward.entity.EmployeeEntity;
-import com.tg.coloursteward.info.EmployeePhoneInfo;
-import com.tg.coloursteward.info.GridViewInfo;
-import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.fragment.ContactsFragment;
+import com.tg.coloursteward.info.EmployeePhoneInfo;
+import com.tg.coloursteward.info.UserInfo;
+import com.tg.coloursteward.model.ContactModel;
 import com.tg.coloursteward.net.GetTwoRecordListener;
 import com.tg.coloursteward.net.HttpTools;
-import com.tg.coloursteward.net.MessageHandler;
 import com.tg.coloursteward.net.RequestConfig;
-import com.tg.coloursteward.net.RequestParams;
-import com.tg.coloursteward.net.ResponseData;
 import com.tg.coloursteward.serice.AuthAppService;
 import com.tg.coloursteward.util.AuthTimeUtils;
 import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.ManageMentLinearlayout;
-import com.tg.coloursteward.view.ManageMentLinearlayout.NetworkRequestListener;
 import com.tg.coloursteward.view.dialog.ToastFactory;
 import com.youmai.hxsdk.chatsingle.IMConnectionActivity;
 import com.youmai.hxsdk.db.bean.EmployeeBean;
@@ -54,7 +51,6 @@ import com.youmai.hxsdk.db.helper.CacheEmployeeHelper;
 import com.youmai.hxsdk.router.APath;
 import com.youmai.hxsdk.utils.GlideRoundTransform;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -70,10 +66,9 @@ import static com.tg.coloursteward.module.MainActivity.getPublicParams;
  * @author Administrator
  */
 @Route(path = APath.EMPLOYEE_DATA_ACT)
-public class EmployeeDataActivity extends BaseActivity implements MyListener {
+public class EmployeeDataActivity extends BaseActivity implements MyListener, HttpResponse {
     public final static String CONTACTS_ID = "contacts_id";
-    public final static String CONTACTS_CHECKED = "isChecked";
-    private String contactsID, username;
+    private String contactsID;
     private ManageMentLinearlayout magLinearLayout;
     private ManageMentLinearlayout llRedpackets;
     private CheckBox cbCollect;
@@ -86,17 +81,18 @@ public class EmployeeDataActivity extends BaseActivity implements MyListener {
     private ImageView ivClose;
     private ListView mlListView;
     private View footView;
-    private ArrayList<GridViewInfo> gridlist1 = new ArrayList<GridViewInfo>();
     private ArrayList<EmployeePhoneInfo> PhoneList = new ArrayList<EmployeePhoneInfo>();
     private EmployeePhoneAdapter adapter;
     private AuthAppService authAppService;//2.0授权
     private String accessToken;
     private static String personCode;
+    private ContactModel contactModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_employee_data);
+        contactModel = new ContactModel(this);
         ListenerUtils.setCallBack(this);
         Intent intent = getIntent();
         if (intent != null) {
@@ -149,14 +145,9 @@ public class EmployeeDataActivity extends BaseActivity implements MyListener {
      * 加载名片
      */
     private void getData() {
+        contactModel.getEmployeeData(0, contactsID, contactsID, UserInfo.employeeAccount,
+                Tools.getStringValue(EmployeeDataActivity.this, Contants.storage.CORPID), this);
         accessToken = Tools.getStringValue(EmployeeDataActivity.this, Contants.storage.APPAUTH);
-        RequestConfig config = new RequestConfig(this, HttpTools.GET_EMPLOYEE_INFO, "获取详细信息");
-        RequestParams params = new RequestParams();
-        params.put("keyword", contactsID);
-        params.put("username", contactsID);
-        params.put("owner", UserInfo.employeeAccount);
-        params.put("corpId", Tools.getStringValue(EmployeeDataActivity.this, Contants.storage.CORPID));
-        HttpTools.httpGet(Contants.URl.URL_ICETEST, "/txl2/contacts/search", config, params);
     }
 
     /**
@@ -183,15 +174,12 @@ public class EmployeeDataActivity extends BaseActivity implements MyListener {
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-
                     }
-
                 }
             }
 
             @Override
             public void onFailed(String Message) {
-
             }
         });
     }
@@ -201,7 +189,6 @@ public class EmployeeDataActivity extends BaseActivity implements MyListener {
      */
     private void initView() {
         ivHead = (ImageView) findViewById(R.id.iv_head);
-        //ivHead.setCircleShape();
         ivSex = (ImageView) findViewById(R.id.iv_sex);
         tvName = (TextView) findViewById(R.id.tv_name);
         tvJob = (TextView) findViewById(R.id.tv_job);
@@ -216,7 +203,6 @@ public class EmployeeDataActivity extends BaseActivity implements MyListener {
             }
         });
         mlListView.setOnItemClickListener(new OnItemClickListener() {
-
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String phone = PhoneList.get(position).phone;
@@ -235,62 +221,6 @@ public class EmployeeDataActivity extends BaseActivity implements MyListener {
         magLinearLayout.setOnClickListener(singleListener);
         llRedpackets.setOnClickListener(singleListener);
         cbCollect = (CheckBox) findViewById(R.id.cb_collect);
-        /**
-         * 邮件
-         */
-        magLinearLayout.setNetworkRequestListener(new NetworkRequestListener() {
-
-            @Override
-            public void onSuccess(ManageMentLinearlayout magLearLayout, Message msg,
-                                  String response) {
-                String jsonString = HttpTools.getContentString(response);
-                if (jsonString != null) {
-                    ResponseData app_list = HttpTools.getResponseKey(jsonString, "app_list");
-                    if (app_list.length > 0) {
-                        JSONArray jsonArray = app_list.getJSONArray(0, "list");
-                        ResponseData data = HttpTools.getResponseKeyJSONArray(jsonArray);
-                        gridlist1 = new ArrayList<GridViewInfo>();
-                        GridViewInfo item = null;
-                        for (int i = 0; i < data.length; i++) {
-                            try {
-                                item = new GridViewInfo();
-                                item.name = data.getString(i, "name");
-                                item.oauthType = data.getString(i, "oauthType");
-                                item.developerCode = data.getString(i, "app_code");
-                                item.clientCode = data.getString(i, "app_code");
-                                item.sso = data.getString(i, "url");
-                                JSONObject icon = data.getJSONObject(i, "icon");
-                                if (icon != null || icon.length() > 0) {
-                                    item.icon = icon.getString("android");
-                                }
-                                gridlist1.add(item);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                }
-
-            }
-
-            @Override
-            public void onFail(ManageMentLinearlayout magLearLayout, Message msg, String hintString) {
-//                ToastFactory.showToast(EmployeeDataActivity.this, hintString);
-            }
-
-            @Override
-            public void onRequest(MessageHandler msgHand) {
-                String pwd = Tools.getPassWord(EmployeeDataActivity.this);
-                RequestConfig config = new RequestConfig(EmployeeDataActivity.this, 0);
-                config.handler = msgHand.getHandler();
-                RequestParams params = new RequestParams();
-                params.put("user_name", UserInfo.employeeAccount);
-                params.put("password", pwd);
-                params.put("resource", "app");
-                params.put("cate_id", 0);
-//                HttpTools.httpPost(Contants.URl.URL_ICETEST, "/newoa/rights/list", config, params);
-            }
-        });
     }
 
     //给动态广播发送信息
@@ -304,11 +234,121 @@ public class EmployeeDataActivity extends BaseActivity implements MyListener {
     public void onSuccess(Message msg, String jsonString, String hintString) {
         super.onSuccess(msg, jsonString, hintString);
         int code = HttpTools.getCode(jsonString);
-        String message = HttpTools.getMessageString(jsonString);
-        if (msg.arg1 == HttpTools.GET_EMPLOYEE_INFO) {
+        if (msg.arg1 == HttpTools.SET_EMPLOYEE_INFO) {
             if (code == 0) {
-                if (jsonString != null) {
-                    EmployeeEntity employeeEntity = GsonUtils.gsonToBean(jsonString, EmployeeEntity.class);
+                ContactsEntity contactsEntity = GsonUtils.gsonToBean(jsonString, ContactsEntity.class);
+                personCode = contactsEntity.getContent().getId();
+                ToastFactory.showToast(EmployeeDataActivity.this, "添加收藏成功");
+                sendToJava("insert");
+            } else {
+                ToastFactory.showToast(EmployeeDataActivity.this, hintString);
+            }
+        } else if (msg.arg1 == HttpTools.DELETE_EMPLOYEE_INFO) {
+            if (code == 0) {
+                ToastFactory.showToast(EmployeeDataActivity.this, "取消收藏成功");
+                sendToJava("delete");
+            } else {
+                ToastFactory.showToast(EmployeeDataActivity.this, hintString);
+            }
+        } else if (msg.arg1 == HttpTools.GET_KEYSECERT) {
+            if (code == 0) {
+                try {
+                    String contentString = HttpTools.getContentString(jsonString);
+                    JSONObject sonJon = new JSONObject(contentString);
+                    String key = sonJon.optString("key");
+                    String secret = sonJon.optString("secret");
+                    Tools.saveStringValue(EmployeeDataActivity.this, Contants.EMPLOYEE_LOGIN.key, key);
+                    Tools.saveStringValue(EmployeeDataActivity.this, Contants.EMPLOYEE_LOGIN.secret, secret);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    @Override
+    protected boolean handClickEvent(View v) {
+        switch (v.getId()) {
+            case R.id.ll_sendemail:// 发送邮件
+                AuthTimeUtils mAuthTimeUtils = new AuthTimeUtils();
+                mAuthTimeUtils.IsAuthTime(EmployeeDataActivity.this, Contants.Html5.YJ, "xyj", "1", "xyj", "");
+                break;
+            case R.id.ll_sendsms:// 发送短信
+                if (null != item) {
+                    Intent intent = new Intent(this, IMConnectionActivity.class);
+                    intent.putExtra(IMConnectionActivity.DST_UUID, item.getUid());
+                    intent.putExtra(IMConnectionActivity.DST_USERNAME, item.getUsername());
+                    intent.putExtra(IMConnectionActivity.DST_NAME, item.getRealname());
+                    intent.putExtra(IMConnectionActivity.DST_AVATAR, item.getAvatar());
+                    startActivity(intent);
+                }
+                break;
+            case R.id.ll_redpackets:// 转账
+                if (null != item && !TextUtils.isEmpty(item.getUsername())) {
+                    Cqb_PayUtil.getInstance(EmployeeDataActivity.this).VisitingCardTransfer(getPublicParams(),
+                            getEnvironment(), item.getUsername(), "");
+
+                }
+                break;
+        }
+        return super.handClickEvent(v);
+    }
+
+    /**
+     * 添加常用联系人
+     */
+    private void submit() {
+        contactModel.postCollectData(1, contactsID, item, this);
+    }
+
+    /**
+     * 删除常用联系人
+     */
+    private void delete() {
+        contactModel.delCollectData(2, personCode, this);
+    }
+
+    @Override
+    public View getContentView() {
+        return null;
+    }
+
+    @Override
+    public String getHeadTitle() {
+        return null;
+    }
+
+    @Override
+    public void authenticationFeedback(String s, int i) {
+        switch (i) {
+            case 16://密码校验成功
+                break;
+            case 17://密码检验时主动中途退出
+                ToastFactory.showToast(EmployeeDataActivity.this, "已取消");
+                break;
+            case 18://没有设置支付密码
+                ToastFactory.showToast(EmployeeDataActivity.this, "未设置支付密码，即将跳转到彩钱包页面");
+                Cqb_PayUtil.getInstance(this).createPay(getPublicParams(), getEnvironment());
+                break;
+            case 19://绑定银行卡并设置密码成功
+                break;
+            case 20://名片赠送成功
+//                ToastFactory.showToast(EmployeeDataActivity.this,"转账成功");
+                break;
+        }
+    }
+
+    @Override
+    public void toCFRS(String s) {
+
+    }
+
+    @Override
+    public void OnHttpResponse(int what, String result) {
+        switch (what) {
+            case 0:
+                if (!TextUtils.isEmpty(result)) {
+                    EmployeeEntity employeeEntity = GsonUtils.gsonToBean(result, EmployeeEntity.class);
                     if (employeeEntity.getContent() != null && employeeEntity.getContent().size() > 0) {
                         item = new EmployeeBean();
                         item.setIsFavorite(String.valueOf(employeeEntity.getContent().get(0).getIsFavorite()));
@@ -414,11 +454,6 @@ public class EmployeeDataActivity extends BaseActivity implements MyListener {
 
                         @Override
                         public void onClick(View v) {
-                        /*Intent intent1 = new Intent(EmployeeDataActivity.this,Organization01Activity.class);
-                        intent1.putExtra(Organization01Activity.TEXT_ID,UserInfo.propertyCoding);
-						intent1.putExtra(Organization01Activity.TEXT_FAMILY, item.family);
-						intent1.putExtra(Organization01Activity.TEXT_STRUCTURE,item.family);
-						startActivity(intent1);*/
                         }
                     });
 
@@ -428,132 +463,22 @@ public class EmployeeDataActivity extends BaseActivity implements MyListener {
                     adapter = new EmployeePhoneAdapter(this, PhoneList);
                     mlListView.setAdapter(adapter);
                 }
-            } else {
-                ToastFactory.showToast(EmployeeDataActivity.this, message);
-            }
-
-        } else if (msg.arg1 == HttpTools.SET_EMPLOYEE_INFO) {
-            if (code == 0) {
-                ContactsEntity contactsEntity = GsonUtils.gsonToBean(jsonString, ContactsEntity.class);
-                personCode = contactsEntity.getContent().getId();
-                ToastFactory.showToast(EmployeeDataActivity.this, "添加收藏成功");
-                sendToJava("insert");
-            } else {
-                ToastFactory.showToast(EmployeeDataActivity.this, hintString);
-            }
-        } else if (msg.arg1 == HttpTools.DELETE_EMPLOYEE_INFO) {
-            if (code == 0) {
-                ToastFactory.showToast(EmployeeDataActivity.this, "取消收藏成功");
-                sendToJava("delete");
-            } else {
-                ToastFactory.showToast(EmployeeDataActivity.this, hintString);
-            }
-        } else if (msg.arg1 == HttpTools.GET_KEYSECERT) {
-            if (code == 0) {
-                try {
-                    String contentString = HttpTools.getContentString(jsonString);
-                    JSONObject sonJon = new JSONObject(contentString);
-                    String key = sonJon.optString("key");
-                    String secret = sonJon.optString("secret");
-                    Tools.saveStringValue(EmployeeDataActivity.this, Contants.EMPLOYEE_LOGIN.key, key);
-                    Tools.saveStringValue(EmployeeDataActivity.this, Contants.EMPLOYEE_LOGIN.secret, secret);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
-
-    @Override
-    protected boolean handClickEvent(View v) {
-        switch (v.getId()) {
-            case R.id.ll_sendemail:// 发送邮件
-                AuthTimeUtils mAuthTimeUtils = new AuthTimeUtils();
-                mAuthTimeUtils.IsAuthTime(EmployeeDataActivity.this, Contants.Html5.YJ, "xyj", "1", "xyj", "");
                 break;
-            case R.id.ll_sendsms:// 发送短信
-                if (null != item) {
-                    Intent intent = new Intent(this, IMConnectionActivity.class);
-                    intent.putExtra(IMConnectionActivity.DST_UUID, item.getUid());
-                    intent.putExtra(IMConnectionActivity.DST_USERNAME, item.getUsername());
-                    intent.putExtra(IMConnectionActivity.DST_NAME, item.getRealname());
-                    intent.putExtra(IMConnectionActivity.DST_AVATAR, item.getAvatar());
-                    //intent.putExtra(IMConnectionActivity.DST_PHONE, mobile);
-                    startActivity(intent);
+            case 1:
+                if (!TextUtils.isEmpty(result)) {
+                    ContactsEntity contactsEntity = GsonUtils.gsonToBean(result, ContactsEntity.class);
+                    personCode = contactsEntity.getContent().getId();
+                    ToastFactory.showToast(EmployeeDataActivity.this, "添加收藏成功");
+                    sendToJava("insert");
                 }
                 break;
-            case R.id.ll_redpackets:// 转账
-                if (null != item && !TextUtils.isEmpty(item.getUsername())) {
-                    Cqb_PayUtil.getInstance(EmployeeDataActivity.this).VisitingCardTransfer(getPublicParams(),
-                            getEnvironment(), item.getUsername(), "");
-
+            case 2:
+                if (!TextUtils.isEmpty(result)) {
+                    ToastFactory.showToast(EmployeeDataActivity.this, "取消收藏成功");
+                    sendToJava("delete");
                 }
                 break;
+
         }
-        return super.handClickEvent(v);
-    }
-
-    /**
-     * 添加常用联系人
-     */
-    private void submit() {
-        RequestConfig config = new RequestConfig(this, HttpTools.SET_EMPLOYEE_INFO, "添加常用联系人");
-        RequestParams params = new RequestParams();
-        params.put("name", item.getName());//联系人姓名
-        params.put("uid", item.getUid());//联系人OA帐号
-        params.put("username", contactsID);//联系人OA帐号
-        params.put("owner", UserInfo.employeeAccount);//所有者OA帐号
-        params.put("jobName", item.getJobName());
-        params.put("sex", item.getSex());
-        params.put("email", item.getEmail());
-        params.put("qq", item.getQq());
-        params.put("phone_number", item.getMobile());
-        params.put("groupId", "0");//联系人组编号,默认0，常用联系人
-        params.put("enterprise_cornet", item.getEnterprise_cornet());//企业短号
-        HttpTools.httpPost(Contants.URl.URL_ICETEST, "/txl2/contacts", config, params);
-    }
-
-    /**
-     * 删除常用联系人
-     */
-    private void delete() {
-        RequestConfig config = new RequestConfig(this, HttpTools.DELETE_EMPLOYEE_INFO, "删除常用联系人");
-        RequestParams params = new RequestParams();
-        HttpTools.httpDelete(Contants.URl.URL_ICETEST, "/txl2/contacts/" + personCode, config, params);
-    }
-
-    @Override
-    public View getContentView() {
-        return null;
-    }
-
-    @Override
-    public String getHeadTitle() {
-        return null;
-    }
-
-    @Override
-    public void authenticationFeedback(String s, int i) {
-        switch (i) {
-            case 16://密码校验成功
-                break;
-            case 17://密码检验时主动中途退出
-                ToastFactory.showToast(EmployeeDataActivity.this, "已取消");
-                break;
-            case 18://没有设置支付密码
-                ToastFactory.showToast(EmployeeDataActivity.this, "未设置支付密码，即将跳转到彩钱包页面");
-                Cqb_PayUtil.getInstance(this).createPay(getPublicParams(), getEnvironment());
-                break;
-            case 19://绑定银行卡并设置密码成功
-                break;
-            case 20://名片赠送成功
-//                ToastFactory.showToast(EmployeeDataActivity.this,"转账成功");
-                break;
-        }
-    }
-
-    @Override
-    public void toCFRS(String s) {
-
     }
 }

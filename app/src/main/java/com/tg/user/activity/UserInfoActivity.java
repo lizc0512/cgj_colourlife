@@ -122,7 +122,11 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener, H
         } else {
             tv_user_mobile.setText("未绑定");
         }
-        et_user_email.setText(email);
+        if (!TextUtils.isEmpty(email)) {
+            et_user_email.setText(email);
+        } else {
+            et_user_email.setHint("< 未绑定 >");
+        }
         updatetime = UserInfo.userinfoImg;
         Tools.saveStringValue(UserInfoActivity.this, "updatetime_img", UserInfo.userinfoImg);
         freshImg();
@@ -157,6 +161,7 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener, H
             UserInfo.userinfoImg = updatetime;
             Tools.saveStringValue(UserInfoActivity.this, "updatetime_img", updatetime);
             isSaveHeadImg = true;
+            submitUserInfo();
             freshImg();
         }
     }
@@ -262,15 +267,9 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener, H
         switch (v.getId()) {
             case R.id.back_layout:
                 if (hasChanged()) {//已经修改过信息
-                    DialogFactory.getInstance().showDialog(UserInfoActivity.this, new OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            finish();
-                        }
-                    }, null, "信息还没保存，确定要返回吗？", null, null);
-                } else {
-                    finish();
+                    submitUserInfo();
                 }
+                this.finish();
                 break;
             case R.id.rl_icon:
                 showFileChooser();
@@ -291,6 +290,7 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener, H
                                 if (item1 != null) {
                                     sex = item1.name;
                                     tv_user_sex.setText(sex);
+                                    submitUserInfo();
                                 }
                             }
                         }, false);
@@ -315,7 +315,6 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener, H
 
     private void submitUserInfo() {
         if (!hasChanged()) {
-            headView.setRightText("保存");
             if (isSaveHeadImg == true) {
                 ToastFactory.showToast(UserInfoActivity.this, "头像已保存");
                 GlideCacheUtil.getInstance().clearImageDiskCache(UserInfoActivity.this);
@@ -352,15 +351,9 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener, H
 
     protected void backPress() {
         if (hasChanged()) {//已经修改过信息
-            DialogFactory.getInstance().showDialog(UserInfoActivity.this, new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    UserInfoActivity.this.finish();
-                }
-            }, null, "信息还没保存，确定要返回吗？", null, null);
-        } else {
-            UserInfoActivity.this.finish();
+            submitUserInfo();
         }
+        UserInfoActivity.this.finish();
     }
 
     @SuppressLint("SimpleDateFormat")
@@ -377,9 +370,6 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener, H
 
     @Override
     public String getHeadTitle() {
-        headView.setRightText("保存");
-        headView.setRightTextColor(getResources().getColor(R.color.white));
-        headView.setListenerRight(this);
         headView.setListenerBack(this);
         return "个人资料";
     }
@@ -396,7 +386,6 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener, H
                         updateView();
                         ToastFactory.showToast(this, "保存成功");
                         sendBroadcast(new Intent(MainActivity.ACTION_FRESH_USERINFO));
-                        UserInfoActivity.this.finish();
                     }
                 }
                 break;

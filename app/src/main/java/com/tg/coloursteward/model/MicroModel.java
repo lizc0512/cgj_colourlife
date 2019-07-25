@@ -30,6 +30,7 @@ public class MicroModel extends BaseModel {
     private String cropListUrl = "/app/home/corp/list";
     private String microListUrl = "/app/home/microservices/config";
     private String microItemUrl = "/app/home/microservices/data/item";
+    private String dataShowUrl = "/app/home/utility/managerMsg";
     private Context mContext;
 
     public MicroModel(Context context) {
@@ -184,6 +185,37 @@ public class MicroModel extends BaseModel {
             @Override
             public void onFailed(int what, Response<String> response) {
 
+            }
+        }, true, false);
+    }
+
+    /**
+     * @param what
+     * @param httpResponse 获取数据看板页面数据
+     */
+    public void getDataShow(int what, final HttpResponse httpResponse) {
+        Map<String, Object> params = new HashMap<>();
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 0, dataShowUrl), RequestMethod.GET);
+        request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    int code = showSuccesResultMessageTheme(result);
+                    if (code == 0) {
+                        httpResponse.OnHttpResponse(what, result);
+                    } else {
+                        showErrorCodeMessage(response);
+                    }
+                } else {
+                    showErrorCodeMessage(response);
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+                showExceptionMessage(what, response);
             }
         }, true, false);
     }

@@ -67,7 +67,6 @@ public class LinkParseUtil {
                         ((Activity) context).overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
                     } else if (name.equals("onlinEarea")) {//数据看板
                         it = new Intent(context, DataShowActivity.class);
-                        it.putExtra(DataShowActivity.BRANCH, UserInfo.orgId);
                         context.startActivity(it);
                         ((Activity) context).overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
                     } else if (name.equals("jsfp")) {//即时分配
@@ -136,7 +135,6 @@ public class LinkParseUtil {
                         ((Activity) context).overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
                     } else if (name.equals("onlinEarea")) {//数据看板
                         it = new Intent(context, DataShowActivity.class);
-                        it.putExtra(DataShowActivity.BRANCH, UserInfo.orgId);
                         context.startActivity(it);
                         ((Activity) context).overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
                     } else if (name.equals("jsfp")) {//即时分配

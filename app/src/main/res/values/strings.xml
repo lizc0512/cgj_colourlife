@@ -51,5 +51,8 @@
 
     <string name="tv_miniserver_name">彩生活集团总部</string>
 
+    <string name="tv_datashow_area">上线面积(万㎡)</string>
+    <string name="tv_datashow_community">小区数</string>
+
 
 </resources>

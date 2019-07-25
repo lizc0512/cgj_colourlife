@@ -24,6 +24,10 @@ public interface SpConstants {
         String MICROVIEWPAGERITEM = "microvpitem";
     }
 
+    interface MicroContant {
+        String DATASHOW = "datashow";
+    }
+
     interface accessToken {
         String accssToken = "access_token2";
         String refreshAccssToken = "refresh_token2";

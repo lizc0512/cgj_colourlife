@@ -388,7 +388,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     }
 
     private void getKeyAndSecret() {
-        userModel.postKeyAndSecret(1, this);
+        userModel.postKeyAndSecret(1, true,this);
     }
 
     @Override
@@ -505,7 +505,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     }
 
     private void singleDevicelogin() {
-        userModel.postSingleDevice(3, "2", this);
+        userModel.postSingleDevice(3, "2", true, this);
     }
 
     private void StopYingYan() {

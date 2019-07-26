@@ -98,7 +98,7 @@ public class UserModel extends BaseModel {
      * @param what
      * @param httpResponse auth获取key和secret
      */
-    public void postKeyAndSecret(int what, final HttpResponse httpResponse) {
+    public void postKeyAndSecret(int what, boolean isLoading,final HttpResponse httpResponse) {
         Map<String, Object> params = new HashMap<String, Object>();
         final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 1, keySecretUrl), RequestMethod.POST);
         request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
@@ -117,7 +117,7 @@ public class UserModel extends BaseModel {
             public void onFailed(int what, Response<String> response) {
 //                showExceptionMessage(what, response);
             }
-        }, true, true);
+        }, true, isLoading);
     }
 
     /**
@@ -226,7 +226,7 @@ public class UserModel extends BaseModel {
      * @param type
      * @param httpResponse 单设备登录
      */
-    public void postSingleDevice(int what, String type, final HttpResponse httpResponse) {
+    public void postSingleDevice(int what, String type,boolean isLoading, final HttpResponse httpResponse) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("login_type", type);//登录方式,1静默和2密码
         params.put("device_type", "1");//登录设备类别，1：安卓，2：IOS
@@ -254,7 +254,7 @@ public class UserModel extends BaseModel {
             public void onFailed(int what, Response<String> response) {
 //                showExceptionMessage(what, response);
             }
-        }, true, true);
+        }, true, isLoading);
     }
 
     /**

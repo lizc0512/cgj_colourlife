@@ -261,7 +261,7 @@ public class FragmentManagement extends Fragment implements HttpResponse {
     }
 
     private void getKeyAndSecret() {
-        userModel.postKeyAndSecret(2, this);
+        userModel.postKeyAndSecret(2, false,this);
     }
 
     @Override

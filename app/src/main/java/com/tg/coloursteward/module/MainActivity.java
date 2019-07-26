@@ -541,8 +541,7 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
     }
 
     private void getKeyAndSecret() {
-        RequestConfig config = new RequestConfig(this, HttpTools.GET_KEYSECERT, null);
-        HttpTools.httpPost(Contants.URl.URL_CPMOBILE, "/1.0/auth", config, null);
+        userModel.postKeyAndSecret(4, false, this);
     }
 
     public void refreshUnReadCount() {
@@ -838,7 +837,7 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
      * 单设备登录
      */
     private void singleDevicelogin() {
-        userModel.postSingleDevice(2, "1", this);
+        userModel.postSingleDevice(2, "1", false, this);
     }
 
     /**
@@ -1288,6 +1287,18 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
                     //单设备退出逻辑，暂无
                 }
                 break;
+            case 4:
+                if (!TextUtils.isEmpty(result)) {
+                    try {
+                        JSONObject jsonObject = new JSONObject(result);
+                        String key = jsonObject.optString("key");
+                        String secret = jsonObject.optString("secret");
+                        Tools.saveStringValue(MainActivity.this, Contants.EMPLOYEE_LOGIN.key, key);
+                        Tools.saveStringValue(MainActivity.this, Contants.EMPLOYEE_LOGIN.secret, secret);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
         }
     }
 

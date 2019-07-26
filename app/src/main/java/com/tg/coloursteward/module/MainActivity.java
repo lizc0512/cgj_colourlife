@@ -257,7 +257,6 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
         }
         msgHand = new MessageHandler(this);
         msgHand.setResponseListener(this);
-        initTitle();
         initView();
         getTokenInfo();
         initPush();
@@ -558,11 +557,6 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
         }
     }
 
-    private void initTitle() {
-
-    }
-
-
     @Override
     public void onRequestStart(Message msg, String hintString) {
 
@@ -678,17 +672,8 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
     }
 
     private void initInfoSync() {
-        RequestConfig config = new RequestConfig(this, HttpTools.POST_USERSYNC, null);
-        RequestParams params = new RequestParams();
-        params.put("user_uuid", UserInfo.uid);
-        params.put("user_name", UserInfo.employeeAccount);
-        params.put("mobile", UserInfo.mobile);
-        params.put("area_uuid", UserInfo.orgId);
-        params.put("area_name", UserInfo.familyName);
-        params.put("os", "android");
-        params.put("jpush_alias", "cgj_" + UserInfo.employeeAccount);
-        params.put("platform_uuid", "2fe08211ef974089831ccadcd98895ca");
-        HttpTools.httpPost(Contants.URl.URL_IMPUSH, "/api/app/userSync", config, params);
+        homeModel.postUserSync(5, UserInfo.uid, UserInfo.employeeAccount, UserInfo.mobile, UserInfo.orgId,
+                UserInfo.familyName, "cgj_" + UserInfo.employeeAccount, this);
     }
 
     @Override
@@ -1299,6 +1284,12 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
                         e.printStackTrace();
                     }
                 }
+                break;
+            case 5:
+                if (!TextUtils.isEmpty(result)) {
+                    //IM消息同步逻辑，暂无
+                }
+                break;
         }
     }
 

@@ -29,6 +29,7 @@ public class HomeModel extends BaseModel {
     private String homeDialogUrl = "/app/home/utility/getPopup";
     private String confirmDialogUrl = "/app/home/utility/confirmPopup";
     private String scanUrl = "/app/formatUrl";
+    private String userSyncUrl = "/api/app/userSync";
 
     public HomeModel(Context context) {
         super(context);
@@ -151,6 +152,49 @@ public class HomeModel extends BaseModel {
                 showErrorCodeMessage(response);
             }
         }, true, true);
+    }
+
+    /**
+     * IM消息同步逻辑接口
+     *
+     * @param what
+     * @param user_uuid
+     * @param user_name
+     * @param mobile
+     * @param area_uuid
+     * @param area_name
+     * @param jpush_alias
+     * @param httpResponse
+     */
+    public void postUserSync(int what, String user_uuid, String user_name, String mobile, String area_uuid,
+                             String area_name, String jpush_alias, HttpResponse httpResponse) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("user_uuid", user_uuid);
+        params.put("user_name", user_name);
+        params.put("mobile", mobile);
+        params.put("area_uuid", area_uuid);
+        params.put("area_name", area_name);
+        params.put("os", "android");
+        params.put("jpush_alias", jpush_alias);
+        params.put("platform_uuid", "2fe08211ef974089831ccadcd98895ca");
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 10, userSyncUrl), RequestMethod.POST);
+        request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    int code = showSuccesResultMessageTheme(result);
+                    if (code == 0) {
+                        httpResponse.OnHttpResponse(what, result);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+            }
+        }, true, false);
     }
 
 }

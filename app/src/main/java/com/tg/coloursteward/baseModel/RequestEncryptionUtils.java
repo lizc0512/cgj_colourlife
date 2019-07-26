@@ -64,6 +64,8 @@ public class RequestEncryptionUtils {
             finalUrl = Contants.Html5.HEAD_ICON_URL + urlString;//上传图片接口
         }else if (type == 9) {
             finalUrl = Contants.URl.URL_QRCODE + urlString;//扫码接口
+        }else if (type == 10) {
+            finalUrl = Contants.URl.URL_IMPUSH + urlString;//IM同步接口
         }
         return finalUrl;
     }

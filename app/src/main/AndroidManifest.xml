@@ -86,8 +86,6 @@
         <activity android:name="com.tg.im.activity.DeskTopActivity" />
         <!-- 扫描二维码页面 -->
         <activity android:name=".activity.MipcaActivityCapture" />
-        <!-- 公共报修 -->
-        <activity android:name=".activity.RepairsPulbicActivity" />
         <!-- 个人中心 -->
         <activity android:name="com.tg.user.activity.UserInfoActivity" />
         <!-- 图片显示 -->
@@ -294,7 +292,6 @@
         <activity android:name=".activity.RedpacketsRecordDetailActivity" />
         <activity android:name=".activity.SearchContactListActivity" />
         <activity android:name=".activity.SearchHomeListActivity" />
-        <activity android:name=".activity.SearchManageMentListActivity" />
         <activity android:name=".activity.PublicAccountActivity" />
         <activity android:name="com.tg.user.activity.ForgetPasswordActivity" />
         <activity android:name="com.tg.user.activity.ForgetPasswordVerifyActivity" />

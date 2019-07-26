@@ -223,6 +223,7 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
     private UpdateVerSionDialog updateDialog;
     private String getVersion;
     private boolean otherPopShow = false;
+    private boolean exit = false;//是否退出
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -768,6 +769,7 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
             setAlias();
         }
         CityPropertyApplication.addActivity(this);
+        Tools.setMainStatus(MainActivity.this, true);
     }
 
     public Handler getHandler() {
@@ -1502,5 +1504,35 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
 
     }
 
+    @Override
+    public void onBackPressed() {
+        backPress();
+    }
 
+    /**
+     * 退出APP
+     */
+    private void backPress() {
+        if (exit) {
+            Tools.setMainStatus(MainActivity.this, false);
+            hand.removeCallbacksAndMessages(null);
+            CityPropertyApplication.exitApp(this);
+        } else {
+            exit = true;
+            ToastUtil.showShortToast(this, "再按一次退出彩管家");
+            hand.postDelayed(run, 2500);
+        }
+    }
+
+    private Handler hand = new Handler() {
+        public void handleMessage(Message msg) {
+
+        }
+    };
+    Runnable run = new Runnable() {
+        @Override
+        public void run() {
+            exit = false;
+        }
+    };
 }

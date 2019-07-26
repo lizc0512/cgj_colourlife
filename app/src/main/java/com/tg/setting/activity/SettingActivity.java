@@ -24,6 +24,7 @@ import com.tg.coloursteward.application.CityPropertyApplication;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.constant.Contants;
+import com.tg.coloursteward.constant.SpConstants;
 import com.tg.coloursteward.database.SharedPreferencesTools;
 import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.net.HttpTools;
@@ -162,7 +163,7 @@ public class SettingActivity extends BaseActivity implements OnClickListener, Ht
      * 单设备退出
      */
     private void singleDevicelogout() {
-        String device_code = Tools.getStringValue(this, Contants.storage.DEVICE_TOKEN);
+        String device_code = spUtils.getStringData(SpConstants.storage.DEVICE_TOKEN,"");
         userModel.postSingleExit(1, device_code, this);
     }
 

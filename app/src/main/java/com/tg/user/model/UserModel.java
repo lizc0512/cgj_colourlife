@@ -453,21 +453,16 @@ public class UserModel extends BaseModel {
                 String result = response.get();
                 if (responseCode == RequestEncryptionUtils.responseSuccess) {
                     if (!TextUtils.isEmpty(result)) {
-                        int code = showSuccesResultMessage(result);
+                        int code = showSuccesResultMessageTheme(result);
                         if (code == 0) {
                             httpResponse.OnHttpResponse(what, result);
-                        } else {
-//                            showErrorCodeMessage(response);
                         }
-                    } else {
-//                        showErrorCodeMessage(response);
                     }
                 }
             }
 
             @Override
             public void onFailed(int what, Response<String> response) {
-//                showExceptionMessage(what, response);
             }
         }, true, false);
     }

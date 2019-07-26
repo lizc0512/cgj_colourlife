@@ -196,7 +196,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     }
 
     private void singleDevicelogout() {
-        String device_code = Tools.getStringValue(this, Contants.storage.DEVICE_TOKEN);
+        String device_code = spUtils.getStringData(SpConstants.storage.DEVICE_TOKEN,"");
         userModel.postSingleExit(7, device_code, this);
     }
 

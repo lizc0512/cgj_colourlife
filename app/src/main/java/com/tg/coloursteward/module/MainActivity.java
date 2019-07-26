@@ -831,7 +831,7 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
      * 单设备退出
      */
     private void singleDevicelogout() {
-        String device_code = Tools.getStringValue(this, Contants.storage.DEVICE_TOKEN);
+        String device_code = spUtils.getStringData(SpConstants.storage.DEVICE_TOKEN,"");
         userModel.postSingleExit(3, device_code, this);
     }
 

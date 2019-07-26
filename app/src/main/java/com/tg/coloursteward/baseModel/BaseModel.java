@@ -193,7 +193,7 @@ public class BaseModel {
         return code;
     }
 
-    /***请求返回的是200且 code来表示成功用来4.0的接口使用 有提示语 **/
+    /***请求返回的是200且 code来表示成功用来4.0的接口使用 没有提示语 **/
     protected int showSuccesResultMessageTheme(String result) {
         int code = -1;
         JSONObject jsonObject = null;

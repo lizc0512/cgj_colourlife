@@ -2,7 +2,6 @@ package com.tg.coloursteward.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Message;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -37,7 +36,6 @@ import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.model.ContactModel;
 import com.tg.coloursteward.net.GetTwoRecordListener;
 import com.tg.coloursteward.net.HttpTools;
-import com.tg.coloursteward.net.RequestConfig;
 import com.tg.coloursteward.serice.AuthAppService;
 import com.tg.coloursteward.util.AuthTimeUtils;
 import com.tg.coloursteward.util.GsonUtils;
@@ -45,6 +43,7 @@ import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.ManageMentLinearlayout;
 import com.tg.coloursteward.view.dialog.ToastFactory;
+import com.tg.user.model.UserModel;
 import com.youmai.hxsdk.chatsingle.IMConnectionActivity;
 import com.youmai.hxsdk.db.bean.EmployeeBean;
 import com.youmai.hxsdk.db.helper.CacheEmployeeHelper;
@@ -130,8 +129,8 @@ public class EmployeeDataActivity extends BaseActivity implements MyListener, Ht
     }
 
     private void getKeyAndSecret() {
-        RequestConfig config = new RequestConfig(EmployeeDataActivity.this, HttpTools.GET_KEYSECERT, null);
-        HttpTools.httpPost(Contants.URl.URL_CPMOBILE, "/1.0/auth", config, null);
+        UserModel userModel = new UserModel(this);
+        userModel.postKeyAndSecret(3, false, this);
     }
 
     /**
@@ -228,42 +227,6 @@ public class EmployeeDataActivity extends BaseActivity implements MyListener, Ht
         Intent intent = new Intent(ContactsFragment.BROADCAST_INTENT_FILTER);
         intent.putExtra(ContactsFragment.ACTION, status);
         sendBroadcast(intent);
-    }
-
-    @Override
-    public void onSuccess(Message msg, String jsonString, String hintString) {
-        super.onSuccess(msg, jsonString, hintString);
-        int code = HttpTools.getCode(jsonString);
-        if (msg.arg1 == HttpTools.SET_EMPLOYEE_INFO) {
-            if (code == 0) {
-                ContactsEntity contactsEntity = GsonUtils.gsonToBean(jsonString, ContactsEntity.class);
-                personCode = contactsEntity.getContent().getId();
-                ToastFactory.showToast(EmployeeDataActivity.this, "添加收藏成功");
-                sendToJava("insert");
-            } else {
-                ToastFactory.showToast(EmployeeDataActivity.this, hintString);
-            }
-        } else if (msg.arg1 == HttpTools.DELETE_EMPLOYEE_INFO) {
-            if (code == 0) {
-                ToastFactory.showToast(EmployeeDataActivity.this, "取消收藏成功");
-                sendToJava("delete");
-            } else {
-                ToastFactory.showToast(EmployeeDataActivity.this, hintString);
-            }
-        } else if (msg.arg1 == HttpTools.GET_KEYSECERT) {
-            if (code == 0) {
-                try {
-                    String contentString = HttpTools.getContentString(jsonString);
-                    JSONObject sonJon = new JSONObject(contentString);
-                    String key = sonJon.optString("key");
-                    String secret = sonJon.optString("secret");
-                    Tools.saveStringValue(EmployeeDataActivity.this, Contants.EMPLOYEE_LOGIN.key, key);
-                    Tools.saveStringValue(EmployeeDataActivity.this, Contants.EMPLOYEE_LOGIN.secret, secret);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
     }
 
     @Override
@@ -478,7 +441,19 @@ public class EmployeeDataActivity extends BaseActivity implements MyListener, Ht
                     sendToJava("delete");
                 }
                 break;
-
+            case 3:
+                if (!TextUtils.isEmpty(result)) {
+                    try {
+                        JSONObject jsonObject = new JSONObject(result);
+                        String key = jsonObject.optString("key");
+                        String secret = jsonObject.optString("secret");
+                        Tools.saveStringValue(EmployeeDataActivity.this, Contants.EMPLOYEE_LOGIN.key, key);
+                        Tools.saveStringValue(EmployeeDataActivity.this, Contants.EMPLOYEE_LOGIN.secret, secret);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                break;
         }
     }
 }

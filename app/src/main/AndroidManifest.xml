@@ -98,8 +98,6 @@
         <activity android:name="com.tg.setting.activity.AboutUsActivity" />
         <!-- 修改密码 -->
         <activity android:name="com.tg.setting.activity.ModifiedPasswordActivity" />
-        <!-- 意见反馈 -->
-        <activity android:name=".activity.OpinionActivity" />
         <!-- 获取手机通讯录 -->
         <activity android:name="com.tg.im.activity.ContactsActivity" />
         <!-- 员工名片 -->

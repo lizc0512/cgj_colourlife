@@ -167,6 +167,7 @@ public class SplashActivity extends BaseActivity implements View.OnClickListener
         switch (v.getId()) {
             case R.id.tv_login_cancel:
                 skin_code = Tools.getStringValue(SplashActivity.this, Contants.storage.SKINCODE);
+                cancelTimeCount();
                 redirectto(skin_code, urlAd, auth_type, false);
                 break;
         }

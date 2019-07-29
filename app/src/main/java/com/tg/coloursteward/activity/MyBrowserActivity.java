@@ -1473,7 +1473,7 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
         oks.setText(name);
         //分享网络图片，新浪微博分享网络图片需要通过审核后申请高级写入接口，否则请注释掉测试新浪微博
         // oks.setImageUrl("22");
-        oks.setImageUrl("http://pic6.nipic.com/20091207/3337900_161732052452_2.jpg");
+//        oks.setImageUrl("http://pic6.nipic.com/20091207/3337900_161732052452_2.jpg");
         // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
         //oks.setImagePath("file:///android_asset/test.png");//确保SDcard下面存在此张图片
         // url仅在微信（包括好友和朋友圈）中使用

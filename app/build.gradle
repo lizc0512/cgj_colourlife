@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.mob.sdk'
 android {
     compileSdkVersion COMPILE_SDK_VERSION as int
     buildToolsVersion BUILD_TOOLS_VERSION
@@ -102,6 +103,26 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+}
+
+MobSDK {
+    appKey "2bddd88dc12cc"
+    appSecret "0f700013a3ff97a9b214e7df97559268"
+
+    ShareSDK {
+        //平台配置信息
+        devInfo {
+            Wechat {
+                appId "wx2cd55a3733a9aa2e"
+                appSecret "2c64f186555de7b3eeca3d6203c4573a"
+            }
+            WechatMoments {
+                AppId = "wx2cd55a3733a9aa2e"
+                AppSecret = "2c64f186555de7b3eeca3d6203c4573a"
+            }
+        }
+    }
+
 }
 
 repositories {

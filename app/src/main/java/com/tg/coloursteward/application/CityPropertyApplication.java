@@ -11,6 +11,7 @@ import android.util.Log;
 import com.baidu.trace.LBSTraceClient;
 import com.baidu.trace.Trace;
 import com.facebook.stetho.Stetho;
+import com.mob.MobSDK;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -48,7 +49,6 @@ public class CityPropertyApplication extends Application {
 
     @Override
     public void onCreate() {
-        // TODO Auto-generated method stub
         super.onCreate();
         context = getApplicationContext();
         SSLContext sslContext = SSLContextUtil.getDefaultSLLContext();
@@ -95,6 +95,7 @@ public class CityPropertyApplication extends Application {
         QbSdk.initX5Environment(getApplicationContext(), cb);
         CrashHandler crashHandler = CrashHandler.getInstance();
         crashHandler.init(getApplicationContext());
+        MobSDK.init(this);
     }
 
     public static void initImageLoader(Context context) {

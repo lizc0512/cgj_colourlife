@@ -95,7 +95,7 @@ public class OauthUserEntity {
         private String update_ts;
         private String create_ts;
         private String salary_level;
-        private int czy_id;
+        private String czy_id;
         private String job_type;
         private String job_uuid;
         private String org_uuid;
@@ -222,11 +222,11 @@ public class OauthUserEntity {
             this.salary_level = salary_level;
         }
 
-        public int getCzy_id() {
+        public String getCzy_id() {
             return czy_id;
         }
 
-        public void setCzy_id(int czy_id) {
+        public void setCzy_id(String czy_id) {
             this.czy_id = czy_id;
         }
 

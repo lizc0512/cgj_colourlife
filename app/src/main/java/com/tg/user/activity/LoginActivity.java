@@ -32,6 +32,7 @@ import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.MD5;
 import com.tg.coloursteward.net.ResponseData;
 import com.tg.coloursteward.util.GsonUtils;
+import com.tg.coloursteward.util.NumberUtils;
 import com.tg.coloursteward.util.SharedPreferencesUtils;
 import com.tg.coloursteward.util.ToastUtil;
 import com.tg.coloursteward.util.TokenUtils;
@@ -77,6 +78,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     private String corpId;
     private String extras;
     private String passwordMD5 = "";
+    private String loginType = "1";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -196,11 +198,17 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     }
 
     private void singleDevicelogout() {
-        String device_code = spUtils.getStringData(SpConstants.storage.DEVICE_TOKEN,"");
+        String device_code = spUtils.getStringData(SpConstants.storage.DEVICE_TOKEN, "");
         userModel.postSingleExit(7, device_code, this);
     }
 
     private void ThirdLogin(String code) {
+        try {
+            loginType = "4";
+            login(code, code, "", loginType);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         userModel.getCzyLogin(6, code, this);
     }
 
@@ -227,6 +235,11 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 if (TextUtils.isEmpty(password)) {
                     ToastUtil.showShortToast(this, "密码不能为空");
                     return;
+                }
+                if (NumberUtils.IsPhoneNumber(account)) {
+                    loginType = "3";
+                } else {
+                    loginType = "1";
                 }
                 loginGt();
                 break;
@@ -360,7 +373,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         gt3GeetestUtils.setDialogTouch(true);
     }
 
-    private void login(String accout, String pwd, String pwdMD5) {
+    private void login(String accout, String pwd, String pwdMD5, String loginType) {
         Utils.hideKeyboard(et_login_pwd);
         if (!TextUtils.isEmpty(pwd)) {
             try {
@@ -373,7 +386,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         }
         getKeyAndSecret();
         if (null == auth2ServiceUpdate) {
-            auth2ServiceUpdate = new OAuth2ServiceUpdate(LoginActivity.this);
+            auth2ServiceUpdate = new OAuth2ServiceUpdate(LoginActivity.this, loginType);
         }
         auth2ServiceUpdate.getOAuth2Service(accout, passwordMD5, new Oauth2CallBack() {
             @Override
@@ -388,7 +401,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     }
 
     private void getKeyAndSecret() {
-        userModel.postKeyAndSecret(1, true,this);
+        userModel.postKeyAndSecret(1, true, this);
     }
 
     @Override
@@ -401,14 +414,14 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                         entity = GsonUtils.gsonToBean(result, JiYanTwoCheckEntity.class);
                         if (entity.getContent().getStatus() == 1) {//验证通过
                             gt3GeetestUtils.gt3TestFinish();
-                            login(account, password, "");
+                            login(account, password, "", loginType);
                         } else {
                             gt3GeetestUtils.gt3TestClose();
                             ToastUtil.showShortToast(LoginActivity.this, "极验验证失败,请稍后重试");
                         }
                     } catch (Exception e) {
                         gt3GeetestUtils.gt3TestFinish();
-                        login(account, password, "");
+                        login(account, password, "", loginType);
                     }
                 } else {
                     gt3GeetestUtils.gt3TestClose();
@@ -423,7 +436,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                         String secret = jsonObject.optString("secret");
                         spUtils.saveStringData(Contants.EMPLOYEE_LOGIN.key, key);
                         spUtils.saveStringData(Contants.EMPLOYEE_LOGIN.secret, secret);
-                    } catch (JSONException e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
@@ -494,7 +507,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 if (!TextUtils.isEmpty(result)) {
                     CzyOauthEntity czyOauthEntity = new CzyOauthEntity();
                     czyOauthEntity = GsonUtils.gsonToBean(result, CzyOauthEntity.class);
-                    login(czyOauthEntity.getContent().getUsername(), "", czyOauthEntity.getContent().getPasswordMD5());
+                    login(czyOauthEntity.getContent().getUsername(), "", czyOauthEntity.getContent().getPasswordMD5(), loginType);
                 }
                 break;
         }

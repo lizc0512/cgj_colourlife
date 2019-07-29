@@ -98,7 +98,7 @@ public class UserModel extends BaseModel {
      * @param what
      * @param httpResponse auth获取key和secret
      */
-    public void postKeyAndSecret(int what, boolean isLoading,final HttpResponse httpResponse) {
+    public void postKeyAndSecret(int what, boolean isLoading, final HttpResponse httpResponse) {
         Map<String, Object> params = new HashMap<String, Object>();
         final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 1, keySecretUrl), RequestMethod.POST);
         request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
@@ -124,9 +124,10 @@ public class UserModel extends BaseModel {
      * @param what
      * @param username
      * @param passwordMD5
+     * @param type         1：账号密码登录，2：短信验证码登录，3：手机号码密码登录，4：彩之云授权登录
      * @param httpResponse 获取oauthToken
      */
-    public void postOauthToken(int what, String username, String passwordMD5, final HttpResponse httpResponse) {
+    public void postOauthToken(int what, String username, String passwordMD5, String type, final HttpResponse httpResponse) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("username", username);
         params.put("password", passwordMD5);
@@ -134,6 +135,10 @@ public class UserModel extends BaseModel {
         params.put("client_secret", Contants.URl.CLIENT_SECRET);
         params.put("grant_type", "password");
         params.put("scope", "*");
+        params.put("type", type);
+        params.put("token", DES.TOKEN);
+        params.put("app_id", DES.APP_ID);
+        params.put("app_client_secret", DES.TOKEN);
         final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 2, oauthUrl), RequestMethod.POST);
         request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
             @Override
@@ -206,11 +211,10 @@ public class UserModel extends BaseModel {
                         int code = showSuccesResultMessage(result);
                         if (code == 0) {
                             httpResponse.OnHttpResponse(what, result);
-                        } else {
-                            showErrorCodeMessage(response);
                         }
-
                     }
+                } else {
+                    showErrorCodeMessage(response);
                 }
             }
 
@@ -226,7 +230,7 @@ public class UserModel extends BaseModel {
      * @param type
      * @param httpResponse 单设备登录
      */
-    public void postSingleDevice(int what, String type,boolean isLoading, final HttpResponse httpResponse) {
+    public void postSingleDevice(int what, String type, boolean isLoading, final HttpResponse httpResponse) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("login_type", type);//登录方式,1静默和2密码
         params.put("device_type", "1");//登录设备类别，1：安卓，2：IOS
@@ -618,7 +622,7 @@ public class UserModel extends BaseModel {
         BasicBinary binary = new FileBinary(new File(imgUrl));
         params.put("uid", UserInfo.employeeAccount);
         File file = new File(imgUrl);
-        params.put("fileName",new FileBody(file));
+        params.put("fileName", new FileBody(file));
         final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 8, uploadImgUrl), RequestMethod.POST);
         request.add("fileName", binary);
         request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {

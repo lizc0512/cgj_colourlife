@@ -135,4 +135,14 @@ public class NumberUtils {
         return b1.compareTo(b2);
     }
 
+    /**
+     * 验证11位纯数字
+     *
+     * @return 如果是符合格式的字符串, 返回 <b>true </b>,否则为 <b>false </b>
+     */
+    public static boolean IsPhoneNumber(String str) {
+        String regex = "^\\d{11}$";
+        return str.matches(regex);
+    }
+
 }

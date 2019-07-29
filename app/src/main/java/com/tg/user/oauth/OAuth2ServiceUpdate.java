@@ -23,10 +23,12 @@ public class OAuth2ServiceUpdate implements HttpResponse {
     private String access_token = "";
     private Oauth2CallBack oauth2CallBack;
     private UserModel userModel;
+    private String loginType;
 
-    public OAuth2ServiceUpdate(Context context) {
+    public OAuth2ServiceUpdate(Context context, String mLoginType) {
         this.context = context;
         userModel = new UserModel(context);
+        this.loginType = mLoginType;
     }
 
     /**
@@ -45,7 +47,7 @@ public class OAuth2ServiceUpdate implements HttpResponse {
             }
         } else {
             if (!TextUtils.isEmpty(passwordMD5)) {
-                userModel.postOauthToken(0, username, passwordMD5, this);
+                userModel.postOauthToken(0, username, passwordMD5, loginType, this);
             }
         }
     }

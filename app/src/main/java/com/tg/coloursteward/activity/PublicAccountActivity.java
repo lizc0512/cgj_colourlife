@@ -32,7 +32,6 @@ import com.tg.coloursteward.serice.AuthAppService;
 import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.PullRefreshListView;
-import com.tg.coloursteward.view.dialog.PwdDialog_jsfp;
 import com.tg.coloursteward.view.dialog.ToastFactory;
 
 import org.json.JSONException;
@@ -55,24 +54,18 @@ public class PublicAccountActivity extends BaseActivity implements MyListener {
     private ArrayList<PublicAccountInfo> list = new ArrayList<PublicAccountInfo>();
     private ArrayList<AppsDetailInfo> listAppsDetail = new ArrayList<AppsDetailInfo>();
     private AuthAppService authAppService;//2.0授权
-    //    private PwdDialog2.ADialogCallback aDialogCallback;
-    private PwdDialog_jsfp.ADialogCallback aDialogCallback;
-    //    private PwdDialog2 aDialog;
-    private PwdDialog_jsfp aDialog;
     private int postion;
     private String isshow = "";
     private BroadcastReceiver freshReceiver = new BroadcastReceiver() {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            // TODO Auto-generated method stub
             String action = intent.getAction();
             if (action.equals(ACTION_PUBLIC_ACCOUNT)) {
                 getdata();
             }
         }
     };
-    private String state;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,8 +81,8 @@ public class PublicAccountActivity extends BaseActivity implements MyListener {
     private void initView() {
         accessToken = Tools.getStringValue(PublicAccountActivity.this, Contants.storage.APPAUTH);
         //accessToken_1 = Tools.getStringValue(PublicAccountActivity.this,Contants.storage.APPAUTH_1);
-        rl_kong = (RelativeLayout) findViewById(R.id.rl_kong);
-        pullListView = (PullRefreshListView) findViewById(R.id.lv_public_account);
+        rl_kong = findViewById(R.id.rl_kong);
+        pullListView = findViewById(R.id.lv_public_account);
         adapter = new PublicAccountAdapter(PublicAccountActivity.this, list);
         pullListView.setAdapter(adapter);
         adapter.setTransferCallBack(new TransferCallBack() {//转账
@@ -218,20 +211,6 @@ public class PublicAccountActivity extends BaseActivity implements MyListener {
     }
 
     /**
-     * 获取对公账户数据
-     */
-    private void getPublicAccount() {
-        RequestConfig config = new RequestConfig(this, HttpTools.GET_ACCOUNT_LIST, "获取对公账户");
-        RequestParams params = new RequestParams();
-        params.put("showmoney", 1);
-        params.put("userId", UserInfo.uid);
-        params.put("userType", 1);
-        params.put("status", 1);
-        params.put("token", accessToken);
-        HttpTools.httpPost(Contants.URl.URL_ICETEST, "/dgzh/account/search4web", config, params);
-    }
-
-    /**
      * 获取对公账户来源
      */
     private void getAppsDetail() {
@@ -247,36 +226,7 @@ public class PublicAccountActivity extends BaseActivity implements MyListener {
         super.onSuccess(msg, jsonString, hintString);
         int code = HttpTools.getCode(jsonString);
         String message = HttpTools.getMessageString(jsonString);
-        if (msg.arg1 == HttpTools.GET_ACCOUNT_LIST) {
-            if (code == 0) {
-                String response = HttpTools.getContentString(jsonString);
-                if (response != null) {
-                    ResponseData data = HttpTools.getResponseKey(response, "list");
-                    if (data.length > 0) {
-                        PublicAccountInfo info;
-                        for (int i = 0; i < data.length; i++) {
-                            info = new PublicAccountInfo();
-                            info.title = data.getString(i, "name");
-                            info.typeName = data.getString(i, "typeName");
-                            info.ano = data.getString(i, "ano");
-                            info.bno = data.getString(i, "bno");
-                            info.pano = data.getString(i, "pano");
-                            info.money = data.getString(i, "money");
-                            info.pid = data.getString(i, "pid");
-                            info.adminLevel = data.getInt(i, "adminLevel");
-                            info.atid = data.getInt(i, "atid");
-                            list.add(info);
-                        }
-                    }
-                    //setData();
-                    getAppsDetail();
-                } else {
-
-                }
-            } else {
-                ToastFactory.showBottomToast(PublicAccountActivity.this, message);
-            }
-        } else if (msg.arg1 == HttpTools.GET_APPS_DETAIL) {//获取来源
+        if (msg.arg1 == HttpTools.GET_APPS_DETAIL) {//获取来源
             if (code == 0) {
                 String content = HttpTools.getContentString(jsonString);
                 if (StringUtils.isNotEmpty(content)) {

@@ -8,7 +8,6 @@
     android:focusableInTouchMode="true"
     android:orientation="vertical">
 
-    <!--<include layout="@layout/message_list_item_header_search" />-->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="44dp">
@@ -16,10 +15,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="联系人"
-            android:textSize="18dp"
+            android:textColor="@color/color_445056"
+            android:textSize="18sp"
+            android:textStyle="bold"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="15dp"
-            android:textColor="@color/black_contact_tv"/>
+            android:layout_marginLeft="15dp"/>
     </RelativeLayout>
     <LinearLayout
         android:id="@+id/list_item_header_search_root"

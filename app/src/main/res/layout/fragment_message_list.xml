@@ -14,8 +14,9 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="15dp"
             android:text="消息"
-            android:textColor="@color/black_mine"
-            android:textSize="18dp" />
+            android:textColor="@color/color_445056"
+            android:textSize="@dimen/font_18sp"
+            android:textStyle="bold" />
 
         <ImageView
             android:id="@+id/iv_contactfragment_qrcode"

@@ -20,6 +20,7 @@ import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.PlatformActionListener;
 import cn.sharesdk.onekeyshare.OnekeyShare;
 import cn.sharesdk.wechat.friends.Wechat;
+import cn.sharesdk.wechat.moments.WechatMoments;
 
 /**
  * 邀请同事
@@ -56,15 +57,13 @@ public class InviteRegisterActivity extends BaseActivity implements HttpResponse
         OnekeyShare oks = new OnekeyShare();
         //关闭sso授权
         oks.disableSSOWhenAuthorize();
-        oks.setPlatform(Wechat.NAME);
+        oks.setPlatform(WechatMoments.NAME);
         // title标题，微信、QQ和QQ空间等平台使用
         oks.setTitle("标题");
-        // titleUrl QQ和QQ空间跳转链接
-        oks.setTitleUrl("https://www.baidu.com");
         // text是分享文本，所有平台都需要这个字段
         oks.setText("我是分享文本");
         // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
-        oks.setImageUrl("http://b-ssl.duitang.com/uploads/item/201711/10/20171110225150_ym2jw.jpeg");//确保SDcard下面存在此张图片
+        oks.setImageUrl("http://b-ssl.duitang.com/uploads/item/201711/10/20171110225150_ym2jw.jpeg");
         // url在微信、微博，Facebook等平台中使用
         oks.setUrl("http://sharesdk.cn");
         InviteRegisterActivity.this.runOnUiThread(new Runnable() {
@@ -112,7 +111,7 @@ public class InviteRegisterActivity extends BaseActivity implements HttpResponse
                         int result_up = versionEntity.getContent().getResult();
                         String getVersion = versionEntity.getContent().getInfo().getVersion();
                         if (result_up == 2) {//1：最新版本，2：介于最新和最低版本之间，3：低于支持的最低版本
-                            tvVersion.setText("有新版本 " + getVersion);
+                            tvVersion.setText("当前版本"+BuildConfig.VERSION_NAME+" , 最新版本 " + getVersion);
                         } else if (result_up == 1) {
                             tvVersion.setText("当前已经最新版本 " + BuildConfig.VERSION_NAME);
                         }

@@ -3,16 +3,20 @@ package com.tg.coloursteward.view;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.hjq.permissions.OnPermission;
+import com.hjq.permissions.XXPermissions;
 import com.tg.coloursteward.activity.MipcaActivityCapture;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.info.GridViewInfo;
 import com.tg.coloursteward.serice.HomeService;
 import com.tg.coloursteward.util.AuthTimeUtils;
+import com.tg.coloursteward.util.ToastUtil;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.db.bean.ContactBean;
 import com.youmai.hxsdk.group.AddContactsCreateGroupActivity;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -107,8 +111,23 @@ public class PopWindowView extends PopupWindow {
 
             @Override
             public void onClick(View arg0) {
-                context.startActivity(new Intent(context, MipcaActivityCapture.class));
-                PopWindowView.this.dismiss();
+                XXPermissions.with(context)
+                        .constantRequest()
+                        .permission(Manifest.permission.CAMERA)
+                        .request(new OnPermission() {
+                            @Override
+                            public void hasPermission(List<String> granted, boolean isAll) {
+                                context.startActivity(new Intent(context, MipcaActivityCapture.class));
+                                PopWindowView.this.dismiss();
+                            }
+
+                            @Override
+                            public void noPermission(List<String> denied, boolean quick) {
+                                ToastUtil.showShortToast(context,"拍照权限被拒绝，请到设置中打开");
+                            }
+                        });
+
+
             }
         });
     }

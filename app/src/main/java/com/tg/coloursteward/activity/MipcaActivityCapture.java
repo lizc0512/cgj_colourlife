@@ -168,14 +168,8 @@ public class MipcaActivityCapture extends BaseActivity implements Callback, OnCl
     private void initCamera(SurfaceHolder surfaceHolder) {
         try {
             CameraManager.get().openDriver(surfaceHolder);
-        } catch (IOException ioe) {
-            ToastFactory.showToast(this, "摄像头打开失败，请在应用管理选择允许打开摄像头");
-            finish();
-            return;
-        } catch (RuntimeException e) {
-            ToastFactory.showToast(this, "摄像头打开失败，请在应用管理选择允许打开摄像头");
-            finish();
-            return;
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         if (handler == null) {
             handler = new CaptureActivityHandler(this, decodeFormats, characterSet);

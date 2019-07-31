@@ -1,10 +1,8 @@
 package com.tg.coloursteward.util;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.text.TextUtils;
 
-import com.tg.coloursteward.activity.MyBrowserActivity;
 import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.net.GetTwoRecordListener;
 import com.tg.coloursteward.serice.HomeService;
@@ -23,7 +21,11 @@ public class MicroAuthTimeUtils {
     public void IsAuthTime(Activity mActivity, final String url,
                            String clientCode, String oauthType, String developerCode, final String param) {
         this.mActivity = mActivity;
-         getAuth(url, clientCode, oauthType, developerCode, param);
+        if (url.startsWith("http")) {
+            getAuth(url, clientCode, oauthType, developerCode, param);
+        } else {
+            LinkParseUtil.parse(mActivity, url, "");
+        }
 
     }
 
@@ -63,7 +65,7 @@ public class MicroAuthTimeUtils {
                         getAuthData(url, clientCode, oauthType, developerCode, param);
                     }
                 } else if ("0".equals(oauthType)) {//0：无授权
-                    LinkParseUtil.parse(mActivity, url, "");
+                    LinkParseUtil.parse(mActivity, oauthType, url, "");
                 } else if ("2".equals(oauthType)) {//2：auth2
                     if (time - currentTime2 <= ExpiresTime2 * 1000) {//判断保存时间是否超过9小时，超过则过期，需要重新获取
                         String str = "?";

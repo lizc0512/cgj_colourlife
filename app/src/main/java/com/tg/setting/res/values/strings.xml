@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+<string name="setting_invite_name">彩管家APP</string>
+<string name="setting_invite_version">当前版本:Android V</string>
+<string name="setting_invite_lastver">最新版本: V</string>
+<string name="setting_invite_share">更多分享方式</string>
+<string name="setting_invite_update">更新</string>
+
+
+</resources>

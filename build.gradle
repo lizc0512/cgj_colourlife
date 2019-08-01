@@ -5,7 +5,6 @@ buildscript {
         google()
         jcenter()
         mavenCentral()
-        maven { url "http://nexus2.tingyun.com/nexus/content/repositories/snapshots/" }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.4.2'

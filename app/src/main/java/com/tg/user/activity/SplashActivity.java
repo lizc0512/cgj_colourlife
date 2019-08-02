@@ -9,7 +9,6 @@ import android.os.Environment;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -49,7 +48,6 @@ public class SplashActivity extends BaseActivity implements View.OnClickListener
     private String urlAd = "";
     private String auth_type = "";
     private String skin_code = "";
-    private ImageView iv_splash_logo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +73,6 @@ public class SplashActivity extends BaseActivity implements View.OnClickListener
     }
 
     public void initView() {
-        iv_splash_logo = findViewById(R.id.iv_splash_logo);
         gif_login = findViewById(R.id.gif_login);
         rl_login_ad = findViewById(R.id.rl_login_ad);
         tv_login_cancel = findViewById(R.id.tv_login_cancel);
@@ -86,7 +83,6 @@ public class SplashActivity extends BaseActivity implements View.OnClickListener
     private void showAd() {
         String CacheAd = Tools.getStringValue(SplashActivity.this, Contants.storage.HomePageAd);
         if (!TextUtils.isEmpty(CacheAd)) {
-            iv_splash_logo.setVisibility(View.GONE);
             JSONObject jsonObject = HttpTools.getContentJSONObject(CacheAd);
             long startTime = 0;
             long endTime = 0;
@@ -143,7 +139,6 @@ public class SplashActivity extends BaseActivity implements View.OnClickListener
                 });
             }
         } else {
-            iv_splash_logo.setVisibility(View.VISIBLE);
             redirectto(skin_code, urlAd, auth_type, false);
         }
     }

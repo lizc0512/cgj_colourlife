@@ -445,35 +445,38 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 if (!TextUtils.isEmpty(result)) {
                     String response = HttpTools.getContentString(result);
                     OauthUserEntity oauthUserEntity = new OauthUserEntity();
-                    oauthUserEntity = GsonUtils.gsonToBean(result, OauthUserEntity.class);
-                    int status = oauthUserEntity.getContent().getStatus();
-                    if (status == 0) {
-                        ResponseData data = HttpTools.getResponseContentObject(response);
-                        UserInfo.employeeAccount = account;
-                        SharedPreferencesUtils.saveUserKey(this, USERACCOUNT, account);
-                        Tools.savePassWord(LoginActivity.this, password);//保存密码
-                        Tools.savePassWordMD5(LoginActivity.this, passwordMD5);//保存密码(MD5加密后)
-                        Tools.loadUserInfo(data, result);
-                        corpId = oauthUserEntity.getContent().getCorp_id();
-                        UserInfo.infoorgId = data.getString("org_uuid");
-                        Tools.saveOrgId(LoginActivity.this, data.getString("org_uuid"));
-                        Tools.saveStringValue(LoginActivity.this, Contants.storage.CORPID, corpId);//租户ID
-                        spUtils.saveStringData(SpConstants.storage.CORPID, corpId);
-                        spUtils.saveStringData(SpConstants.storage.ORG_UUID, data.getString("org_uuid"));
-                        spUtils.saveBooleanData(SpConstants.UserModel.ISLOGIN, true);
-                        singleDevicelogin();
-                        getSkin(corpId);
-                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                        intent.putExtra(MainActivity.KEY_NEDD_FRESH, false);
-                        intent.putExtra(MainActivity.KEY_SKIN_CODE, "");
-                        intent.putExtra(MainActivity.KEY_EXTRAS, extras);
-                        intent.putExtra(MainActivity.FROM_LOGIN, true);
-                        startActivity(intent);
-                        ToastUtil.showShortToast(this, "登录成功");
-                        LoginActivity.this.finish();
-                    } else {
-                        ToastUtil.showShortToast(this, "账号异常，请及时联系管理员");
-                        spUtils.clearKey(this);
+                    try {
+                        oauthUserEntity = GsonUtils.gsonToBean(result, OauthUserEntity.class);
+                        int status = oauthUserEntity.getContent().getStatus();
+                        if (status == 0) {
+                            ResponseData data = HttpTools.getResponseContentObject(response);
+                            UserInfo.employeeAccount = account;
+                            SharedPreferencesUtils.saveUserKey(this, USERACCOUNT, account);
+                            Tools.savePassWord(LoginActivity.this, password);//保存密码
+                            Tools.savePassWordMD5(LoginActivity.this, passwordMD5);//保存密码(MD5加密后)
+                            Tools.loadUserInfo(data, result);
+                            corpId = oauthUserEntity.getContent().getCorp_id();
+                            UserInfo.infoorgId = data.getString("org_uuid");
+                            Tools.saveOrgId(LoginActivity.this, data.getString("org_uuid"));
+                            Tools.saveStringValue(LoginActivity.this, Contants.storage.CORPID, corpId);//租户ID
+                            spUtils.saveStringData(SpConstants.storage.CORPID, corpId);
+                            spUtils.saveStringData(SpConstants.storage.ORG_UUID, data.getString("org_uuid"));
+                            spUtils.saveBooleanData(SpConstants.UserModel.ISLOGIN, true);
+                            singleDevicelogin();
+                            getSkin(corpId);
+                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                            intent.putExtra(MainActivity.KEY_NEDD_FRESH, false);
+                            intent.putExtra(MainActivity.KEY_SKIN_CODE, "");
+                            intent.putExtra(MainActivity.KEY_EXTRAS, extras);
+                            intent.putExtra(MainActivity.FROM_LOGIN, true);
+                            startActivity(intent);
+                            ToastUtil.showShortToast(this, "登录成功");
+                            LoginActivity.this.finish();
+                        } else {
+                            ToastUtil.showShortToast(this, "账号异常，请及时联系管理员");
+                            spUtils.clearKey(this);
+                        }
+                    } catch (Exception e) {
                     }
                 }
                 break;

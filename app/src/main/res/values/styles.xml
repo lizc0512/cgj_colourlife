@@ -16,12 +16,6 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="Theme.AppStartLoad" parent="Theme.AppCompat.Light">
-        <item name="android:windowBackground">@drawable/start_pager</item>
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:windowFullscreen">true</item>
-    </style>
-
     <style name="MyAppStyle" parent="android:Theme.Light.NoTitleBar">
         <item name="android:windowNoTitle">true</item>
     </style>
@@ -314,12 +308,6 @@
     <style name="dialog_anim_style">
         <item name="android:windowEnterAnimation">@anim/popwindow_pushtotop</item>
         <item name="android:windowExitAnimation">@anim/popwindow_noanim</item>
-    </style>
-
-    <style name="SplashTheme" parent="AppTheme">
-        <item name="android:windowBackground">@drawable/start_pager</item>
-        <item name="android:windowFullscreen">true</item>
-        <!-- <item name="android:windowIsTranslucent">true</item> --> <!-- 透明背景不要了 -->
     </style>
 
     <!-- 底部弹窗背景渐变动画 -->

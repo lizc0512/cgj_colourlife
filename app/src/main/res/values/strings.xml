@@ -53,6 +53,9 @@
 
     <string name="tv_datashow_area">上线面积(万㎡)</string>
     <string name="tv_datashow_community">小区数</string>
+    <string name="tv_webview_pyq">分享到朋友圈</string>
+    <string name="tv_webview_wechat">分享给微信好友</string>
+    <string name="tv_webview_cancel">取消</string>
 
 
 </resources>

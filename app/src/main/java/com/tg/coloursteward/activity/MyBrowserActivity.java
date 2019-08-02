@@ -82,6 +82,7 @@ import com.tg.coloursteward.util.GlideUtils;
 import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.Helper;
 import com.tg.coloursteward.util.LinkParseUtil;
+import com.tg.coloursteward.util.ToastUtil;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.util.Utils;
 import com.tg.coloursteward.view.X5WebView;
@@ -103,7 +104,11 @@ import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Map;
 
+import cn.sharesdk.framework.Platform;
+import cn.sharesdk.framework.PlatformActionListener;
 import cn.sharesdk.onekeyshare.OnekeyShare;
+import cn.sharesdk.wechat.friends.Wechat;
+import cn.sharesdk.wechat.moments.WechatMoments;
 
 import static com.tg.coloursteward.activity.RedpacketsTransferToColleagueH5Activity.Failed_MESSAGE;
 
@@ -164,6 +169,10 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
     private AlertDialog dialog;
     private boolean isOauth2Show = false;
     private boolean isJSOauthShow = false;
+    private RelativeLayout rl_wechat;
+    private RelativeLayout rl_pyq;
+    private FrameLayout webview_frame_share;
+    private TextView tv_web_cancel;
     protected static final FrameLayout.LayoutParams COVER_SCREEN_PARAMS = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
@@ -232,6 +241,10 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
     }
 
     private void prepareView() {
+        tv_web_cancel = findViewById(R.id.tv_web_cancel);
+        webview_frame_share = findViewById(R.id.webview_frame_share);
+        rl_pyq = findViewById(R.id.rl_pyq);
+        rl_wechat = findViewById(R.id.rl_wechat);
         webView = (X5WebView) findViewById(R.id.webView);
         bar = (ProgressBar) findViewById(R.id.myProgressBar);
         rlHeadContent = (RelativeLayout) findViewById(R.id.head_content);
@@ -242,6 +255,9 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
         rlRollback.setOnClickListener(this);
         rlRefresh.setOnClickListener(this);
         rlClose.setOnClickListener(this);
+        rl_pyq.setOnClickListener(this);
+        rl_wechat.setOnClickListener(this);
+        tv_web_cancel.setOnClickListener(this);
         if (hideTitle) {
             rlHeadContent.setVisibility(View.GONE);
         } else {
@@ -739,7 +755,7 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
 
         @JavascriptInterface
         public void GetShareWechat(String Url, String name) {
-            showShare(Url, name);
+            webview_frame_share.setVisibility(View.VISIBLE);
         }
 
         @JavascriptInterface
@@ -1013,7 +1029,25 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
             case R.id.rl_close:// 关闭
                 MyBrowserActivity.this.finish();
                 break;
+            case R.id.rl_wechat:
+                showShare(Wechat.NAME);
+                closeShareLayout();
+                break;
+            case R.id.rl_pyq:
+                showShare(WechatMoments.NAME);
+                closeShareLayout();
+                break;
+            case R.id.tv_web_cancel:
+                closeShareLayout();
+                break;
         }
+    }
+
+    /**
+     * 关闭分享布局
+     */
+    private void closeShareLayout() {
+        webview_frame_share.setVisibility(View.GONE);
     }
 
     @Override
@@ -1461,33 +1495,40 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
     /**
      * 分享
      */
-    private void showShare(String url, String name) {
+    private void showShare(String platform) {
         OnekeyShare oks = new OnekeyShare();
         //关闭sso授权
         oks.disableSSOWhenAuthorize();
-        // title标题，印象笔记、邮箱、信息、微信、人人网、QQ和QQ空间使用
-        oks.setTitle(getResources().getString(R.string.app_name));
-        // titleUrl是标题的网络链接，仅在Linked-in,QQ和QQ空间使用
-        oks.setTitleUrl(url);
+        oks.setPlatform(platform);
+        // title标题，微信、QQ和QQ空间等平台使用
+        oks.setTitle("分享好友");
         // text是分享文本，所有平台都需要这个字段
-        oks.setText(name);
-        //分享网络图片，新浪微博分享网络图片需要通过审核后申请高级写入接口，否则请注释掉测试新浪微博
-        // oks.setImageUrl("22");
-//        oks.setImageUrl("http://pic6.nipic.com/20091207/3337900_161732052452_2.jpg");
-        // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
-        //oks.setImagePath("file:///android_asset/test.png");//确保SDcard下面存在此张图片
-        // url仅在微信（包括好友和朋友圈）中使用
-        oks.setUrl(url);
-        // comment是我对这条分享的评论，仅在人人网和QQ空间使用
-        oks.setComment(name);
-        // site是分享此内容的网站名称，仅在QQ空间使用
-        oks.setSite("ShareSDK");
-        // siteUrl是分享此内容的网站地址，仅在QQ空间使用
-        oks.setSiteUrl(url);
+        oks.setText("快来加入彩管家吧");
+        oks.setImageUrl("http://newcgjios.oss-cn-shenzhen.aliyuncs.com/pictures/cgj_logo.png");
+        // url在微信、微博，Facebook等平台中使用
+        oks.setUrl("http://mapp.colourlife.com/mgj.html");
+        MyBrowserActivity.this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                oks.setCallback(new PlatformActionListener() {
+                    @Override
+                    public void onComplete(Platform platform, int i, HashMap<String, Object> hashMap) {
+                        ToastUtil.showShortToast(MyBrowserActivity.this, "分享成功");
+                    }
 
-        // 启动分享GUI
+                    @Override
+                    public void onError(Platform platform, int i, Throwable throwable) {
+                        ToastUtil.showShortToast(MyBrowserActivity.this, "分享失败");
+                    }
+
+                    @Override
+                    public void onCancel(Platform platform, int i) {
+                        ToastUtil.showShortToast(MyBrowserActivity.this, "取消分享");
+                    }
+                });
+            }
+        });
         oks.show(this);
-
     }
 
     /**

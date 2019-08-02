@@ -50,6 +50,7 @@ public interface Contants {
         String validateURL = URl.URL_NEW + "/app/home/login/verify";
         /***彩管家4.0加密的秘钥***/
         String secertKey = "gbiwgbiwkgnkwgnkjbkkrthmnjwjgeh";
+        String buglyKeyId="f991aef5d4";
     }
 
     interface EMPLOYEE_LOGIN {

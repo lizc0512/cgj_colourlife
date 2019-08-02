@@ -51,6 +51,7 @@ import com.bumptech.glide.request.target.Target;
 import com.hjq.permissions.OnPermission;
 import com.hjq.permissions.XXPermissions;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
+import com.tencent.bugly.crashreport.CrashReport;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.application.CityPropertyApplication;
 import com.tg.coloursteward.base.BaseActivity;
@@ -276,7 +277,8 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
         CheckPermission();
         initGetLocation();
         initData();
-
+        CrashReport.putUserData(this, "OA", UserInfo.employeeAccount);
+        CrashReport.putUserData(this, "PHONE", UserInfo.mobile);
     }
 
     private void initData() {
@@ -831,7 +833,7 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
      * 单设备退出
      */
     private void singleDevicelogout() {
-        String device_code = spUtils.getStringData(SpConstants.storage.DEVICE_TOKEN,"");
+        String device_code = spUtils.getStringData(SpConstants.storage.DEVICE_TOKEN, "");
         userModel.postSingleExit(3, device_code, this);
     }
 

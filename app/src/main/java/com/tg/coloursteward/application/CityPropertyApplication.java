@@ -17,8 +17,10 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.shell.SdkManager;
+import com.tencent.bugly.crashreport.CrashReport;
 import com.tencent.smtt.sdk.QbSdk;
 import com.tg.coloursteward.R;
+import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.database.SharedPreferencesTools;
 import com.tg.coloursteward.module.MainActivity;
 import com.tg.coloursteward.net.ResponseData;
@@ -81,14 +83,12 @@ public class CityPropertyApplication extends Application {
 
             @Override
             public void onViewInitFinished(boolean arg0) {
-                // TODO Auto-generated method stub
                 //x5內核初始化完成的回调，为true表示x5内核加载成功，否则表示x5内核加载失败，会自动切换到系统内核。
                 Log.d("app", " onViewInitFinished is " + arg0);
             }
 
             @Override
             public void onCoreInitFinished() {
-                // TODO Auto-generated method stub
             }
         };
         //x5内核初始化接口
@@ -96,6 +96,7 @@ public class CityPropertyApplication extends Application {
         CrashHandler crashHandler = CrashHandler.getInstance();
         crashHandler.init(getApplicationContext());
         MobSDK.init(this);
+        CrashReport.initCrashReport(getApplicationContext(), Contants.APP.buglyKeyId, false);
     }
 
     public static void initImageLoader(Context context) {

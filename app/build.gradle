@@ -166,6 +166,7 @@ dependencies {
     implementation 'com.facebook.rebound:rebound:0.3.8'
     implementation 'cn.bingoogolapple:bga-banner:2.2.6'
     implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.46'
+    implementation 'com.tencent.bugly:crashreport:3.0.0'
 }
 
 project.afterEvaluate {

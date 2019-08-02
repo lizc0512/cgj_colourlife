@@ -31,7 +31,6 @@ import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.serice.UpdateService;
 import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.ToastUtil;
-import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.dialog.DialogFactory;
 import com.tg.setting.adapter.UpdateAdapter;
 import com.tg.setting.entity.VersionEntity;

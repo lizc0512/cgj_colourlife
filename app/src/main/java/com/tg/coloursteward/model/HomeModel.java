@@ -30,6 +30,7 @@ public class HomeModel extends BaseModel {
     private String confirmDialogUrl = "/app/home/utility/confirmPopup";
     private String scanUrl = "/app/formatUrl";
     private String userSyncUrl = "/api/app/userSync";
+    private String accessTokenUrl = "/app/home/authms/accessToken";
 
     public HomeModel(Context context) {
         super(context);
@@ -197,4 +198,31 @@ public class HomeModel extends BaseModel {
         }, true, false);
     }
 
+    /**
+     * @param what
+     * @param corp_id 为空默认彩生活租户
+     * @param httpResponse 获取鉴权2.0token
+     */
+    public void getAccessToken(int what, String corp_id, HttpResponse httpResponse) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("corp_id", corp_id);
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 0, accessTokenUrl), RequestMethod.GET);
+        request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    int code = showSuccesResultMessageTheme(result);
+                    if (code == 0) {
+                        httpResponse.OnHttpResponse(what, result);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+            }
+        }, true, false);
+    }
 }

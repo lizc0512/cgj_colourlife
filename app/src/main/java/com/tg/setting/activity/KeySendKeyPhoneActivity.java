@@ -376,29 +376,40 @@ public class KeySendKeyPhoneActivity extends BaseActivity implements HttpRespons
             case 1:
                 String nowTime = startTime = DateUtils.getStringDate(new Date(System.currentTimeMillis()), "");
                 String selectTime = y + "-" + m + "-" + d + " " + h + ":" + mi + ":" + 0;
+                String selectText = formateNum(y) + "-" + formateNum(m) + "-" + formateNum(d) + " " + formateNum(h) + ":" + formateNum(mi) + ":" + 0;
                 int status = DateUtils.compareDate(nowTime, selectTime);
                 if (1 == status) {
                     ToastUtil.showShortToast(this, "开始时间不能在当前时间之前");
                     break;
                 }
                 startTimeCustom = selectTime;
-                tv_time_start.setText(time);
+                tv_time_start.setText(selectText);
                 break;
             case 2:
                 String selectDate = y + "-" + m + "-" + d + " " + h + ":" + mi + ":" + 0;
+                String text = formateNum(y) + "-" + formateNum(m) + "-" + formateNum(d) + " " + formateNum(h) + ":" + formateNum(mi) + ":" + 0;
                 int type = DateUtils.compareDate(startTimeCustom, selectDate);
                 if (1 == type) {
                     ToastUtil.showShortToast(this, "结束时间不能在开始时间之前");
                     break;
                 }
                 endTimeCustom = selectDate;
-                tv_time_end.setText(time);
+                tv_time_end.setText(text);
                 break;
             case 3:
                 tv_time_invalid.setText(time);
                 break;
         }
         setSubmitBg();
+    }
+
+    private String formateNum(int num) {
+        String numString = "";
+        if (num < 10) {
+            numString = "0" + num;
+        }
+
+        return numString;
     }
 
     private boolean setSubmitBg() {

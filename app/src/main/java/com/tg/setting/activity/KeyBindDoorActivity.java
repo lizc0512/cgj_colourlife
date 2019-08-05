@@ -19,12 +19,10 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.intelspace.library.api.OnFoundDeviceListener;
@@ -34,7 +32,6 @@ import com.intelspace.library.module.LocalKey;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.baseModel.HttpResponse;
-import com.tg.coloursteward.util.DisplayUtil;
 import com.tg.coloursteward.util.ToastUtil;
 import com.tg.setting.adapter.KeyDeviceAdapter;
 import com.tg.setting.service.LekaiService;
@@ -114,13 +111,9 @@ public class KeyBindDoorActivity extends BaseActivity implements View.OnClickLis
     }
 
     private void initView() {
-        View headView = LayoutInflater.from(this).inflate(R.layout.view_bind_door, null);
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, DisplayUtil.dip2px(this, 270));
-        headView.setLayoutParams(layoutParams);
-
-        tv_scan = headView.findViewById(R.id.tv_scan);
-        tv_stop = headView.findViewById(R.id.tv_stop);
-        ksv_scan = headView.findViewById(R.id.ksv_scan);
+        tv_scan = findViewById(R.id.tv_scan);
+        tv_stop = findViewById(R.id.tv_stop);
+        ksv_scan = findViewById(R.id.ksv_scan);
 
         rv_door = findViewById(R.id.rv_door);
         ll_no_door = findViewById(R.id.ll_no_door);
@@ -134,20 +127,17 @@ public class KeyBindDoorActivity extends BaseActivity implements View.OnClickLis
             }
         }
         lv_door = findViewById(R.id.lv_door);
-        lv_door.addHeaderView(headView);
         mAdapter = new KeyDeviceAdapter(this, mDevices);
         lv_door.setAdapter(mAdapter);
 
         lv_door.setOnItemClickListener((parent, view, position, id) -> {
-            if (0 != position) {//0 头部view
-                ToastUtil.showShortToast(this, "正在绑定设备");
-                try {
-                    Device device = mAdapter.getItem(position - 1);
-                    UserModel userModel = new UserModel(this);
-                    userModel.bindDoor(1, doorId, device.getLockMac(), device.getCipherId(), device.getBluetoothDevice().getName(), device.getProtocolVersion(), this);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+            ToastUtil.showShortToast(this, "正在绑定设备");
+            try {
+                Device device = mAdapter.getItem(position);
+                UserModel userModel = new UserModel(this);
+                userModel.bindDoor(1, doorId, device.getLockMac(), device.getCipherId(), device.getBluetoothDevice().getName(), device.getProtocolVersion(), this);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         });
     }

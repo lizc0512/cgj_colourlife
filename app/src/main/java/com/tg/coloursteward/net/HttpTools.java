@@ -1,7 +1,6 @@
 package com.tg.coloursteward.net;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -28,12 +27,13 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.StringRequest;
-import com.tg.coloursteward.application.CityPropertyApplication;
 import com.tg.coloursteward.constant.Contants;
+import com.tg.coloursteward.constant.SpConstants;
 import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.inter.Oauth2CallBack;
 import com.tg.coloursteward.object.ImageParams;
 import com.tg.coloursteward.serice.OAuth2ServiceUpdate;
+import com.tg.coloursteward.util.SharedPreferencesUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.util.VolleyUtils;
 
@@ -234,9 +234,8 @@ public class HttpTools {
      * @return
      */
     public static String getTime() {
-        SharedPreferences sharedata = CityPropertyApplication.getInstance().getSharedPreferences("APP_TS", 0);
-        Long difference = sharedata.getLong(DIFFERENCE, -1);
-        return String.valueOf(difference);
+        long time = SharedPreferencesUtils.getInstance().getLongData(SpConstants.UserModel.DIFFERENCE, System.currentTimeMillis() / 100);
+        return String.valueOf(time);
     }
 
     /**

@@ -5,11 +5,9 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
-import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -50,7 +48,6 @@ import org.json.JSONObject;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * 乐开-绑定门禁列表
@@ -133,9 +130,7 @@ public class KeyBindDoorActivity extends BaseActivity implements View.OnClickLis
         if (null != blueAdapter) {
             openBluetooth = blueAdapter.isEnabled();
             if (!openBluetooth) {
-                ToastUtil.showShortToast(this, "请开启蓝牙");
-                tv_stop.setVisibility(View.GONE);
-                tv_scan.setVisibility(View.GONE);
+                ToastUtil.showShortToast(this, "设备未打开蓝牙，请在设置中打开");
             }
         }
         lv_door = findViewById(R.id.lv_door);
@@ -144,21 +139,20 @@ public class KeyBindDoorActivity extends BaseActivity implements View.OnClickLis
         lv_door.setAdapter(mAdapter);
 
         lv_door.setOnItemClickListener((parent, view, position, id) -> {
-            ToastUtil.showShortToast(this, "正在绑定设备");
-            try {
-                Device device = mAdapter.getItem(position - 1);
-                UserModel userModel = new UserModel(this);
-                userModel.bindDoor(1, doorId, device.getLockMac(), device.getCipherId(), device.getBluetoothDevice().getName(), device.getProtocolVersion(), this);
-            } catch (Exception e) {
-                e.printStackTrace();
+            if (0 != position) {//0 头部view
+                ToastUtil.showShortToast(this, "正在绑定设备");
+                try {
+                    Device device = mAdapter.getItem(position - 1);
+                    UserModel userModel = new UserModel(this);
+                    userModel.bindDoor(1, doorId, device.getLockMac(), device.getCipherId(), device.getBluetoothDevice().getName(), device.getProtocolVersion(), this);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
 
     private void initData() {
-        IntentFilter statusFilter = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
-        this.registerReceiver(bluetoothListener, statusFilter);
-
         doorId = getIntent().getLongExtra(DOOR_ID, 0);
 
         init(this);
@@ -209,7 +203,6 @@ public class KeyBindDoorActivity extends BaseActivity implements View.OnClickLis
         if (View.VISIBLE == ll_no_door.getVisibility()) {
             ll_no_door.setVisibility(View.GONE);
         }
-        tv_scan.setVisibility(View.VISIBLE);
         tv_stop.setText("停止扫描");
         ksv_scan.start();
         startScanDevice();
@@ -231,12 +224,10 @@ public class KeyBindDoorActivity extends BaseActivity implements View.OnClickLis
     }
 
     private void stopScan() {
-        if (100 == count) {
-            tv_scan.setVisibility(View.INVISIBLE);
-        }
         ksv_scan.stop();
         stopScanDevice();
         count = 0;
+        tv_scan.setText("");
         tv_stop.setText("重新扫描");
         if (null != mHandler) {
             mHandler.removeCallbacksAndMessages(null);
@@ -260,10 +251,18 @@ public class KeyBindDoorActivity extends BaseActivity implements View.OnClickLis
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.tv_stop:
-                if ("开始扫描".equals(tv_stop.getText().toString().trim()) || "重新扫描".equals(tv_stop.getText().toString().trim())) {
-                    startScan();
-                } else {
-                    stopScan();
+                BluetoothAdapter blueAdapter = BluetoothAdapter.getDefaultAdapter();
+                if (null != blueAdapter) {
+                    openBluetooth = blueAdapter.isEnabled();
+                    if (!openBluetooth) {
+                        ToastUtil.showShortToast(this, "设备未打开蓝牙，请在设置中打开");
+                    } else {
+                        if ("开始扫描".equals(tv_stop.getText().toString().trim()) || "重新扫描".equals(tv_stop.getText().toString().trim())) {
+                            startScan();
+                        } else {
+                            stopScan();
+                        }
+                    }
                 }
                 break;
         }
@@ -294,29 +293,6 @@ public class KeyBindDoorActivity extends BaseActivity implements View.OnClickLis
         }
     }
 
-    private BroadcastReceiver bluetoothListener = new BroadcastReceiver() {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (BluetoothAdapter.ACTION_STATE_CHANGED.equals(Objects.requireNonNull(intent.getAction()))) {
-                int blueState = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, 0);
-                switch (blueState) {
-                    case BluetoothAdapter.STATE_ON:
-                        openBluetooth = true;
-                        tv_stop.setVisibility(View.VISIBLE);
-                        tv_scan.setVisibility(View.VISIBLE);
-                        break;
-                    case BluetoothAdapter.STATE_OFF:
-                        openBluetooth = false;
-                        tv_stop.setVisibility(View.GONE);
-                        tv_scan.setVisibility(View.GONE);
-                        ksv_scan.stop();
-                        break;
-                }
-            }
-        }
-    };
-
 //    =====  乐开  ====
 
     @Override
@@ -337,9 +313,6 @@ public class KeyBindDoorActivity extends BaseActivity implements View.OnClickLis
         }
         if (null != successHandler) {
             successHandler.removeCallbacksAndMessages(null);
-        }
-        if (null != bluetoothListener) {
-            unregisterReceiver(bluetoothListener);
         }
         stop(this);
     }

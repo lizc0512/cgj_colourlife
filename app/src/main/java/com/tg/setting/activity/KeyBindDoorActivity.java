@@ -145,9 +145,13 @@ public class KeyBindDoorActivity extends BaseActivity implements View.OnClickLis
 
         lv_door.setOnItemClickListener((parent, view, position, id) -> {
             ToastUtil.showShortToast(this, "正在绑定设备");
-            Device device = mAdapter.getItem(position - 1);
-            UserModel userModel = new UserModel(this);
-            userModel.bindDoor(1, doorId, device.getLockMac(), device.getCipherId(), device.getBluetoothDevice().getName(), device.getProtocolVersion(), this);
+            try {
+                Device device = mAdapter.getItem(position - 1);
+                UserModel userModel = new UserModel(this);
+                userModel.bindDoor(1, doorId, device.getLockMac(), device.getCipherId(), device.getBluetoothDevice().getName(), device.getProtocolVersion(), this);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         });
     }
 
@@ -222,13 +226,6 @@ public class KeyBindDoorActivity extends BaseActivity implements View.OnClickLis
                 } else {
                     mHandler.postDelayed(this, 250);
                 }
-//                if (100 != count) {
-//                    if (count % 5 == 0) {
-//                        startScanDevice();
-//                    } else {
-//                        stopScanDevice();
-//                    }
-//                }
             }
         });
     }
@@ -263,7 +260,7 @@ public class KeyBindDoorActivity extends BaseActivity implements View.OnClickLis
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.tv_stop:
-                if ("重新扫描".equals(tv_stop.getText().toString().trim())) {
+                if ("开始扫描".equals(tv_stop.getText().toString().trim()) || "重新扫描".equals(tv_stop.getText().toString().trim())) {
                     startScan();
                 } else {
                     stopScan();

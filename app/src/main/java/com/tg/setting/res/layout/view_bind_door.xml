@@ -32,7 +32,7 @@
         android:paddingTop="@dimen/size_4dp"
         android:paddingRight="@dimen/size_20dp"
         android:paddingBottom="@dimen/size_4dp"
-        android:text="停止扫描"
+        android:text="开始扫描"
         android:textColor="@color/white"
         android:textSize="@dimen/font_16sp" />
 

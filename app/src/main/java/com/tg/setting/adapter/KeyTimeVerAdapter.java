@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.tg.coloursteward.R;
@@ -44,7 +45,7 @@ public class KeyTimeVerAdapter extends RecyclerView.Adapter<KeyTimeVerAdapter.De
         } else {
             holder.tv_ver.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
         }
-        holder.tv_ver.setOnClickListener(v -> ((KeyTimePopWindowView) pop).selectVer(position));
+        holder.rl_item.setOnClickListener(v -> ((KeyTimePopWindowView) pop).selectVer(position));
     }
 
     @Override
@@ -53,10 +54,12 @@ public class KeyTimeVerAdapter extends RecyclerView.Adapter<KeyTimeVerAdapter.De
     }
 
     static class DefaultViewHolder extends RecyclerView.ViewHolder {
+        RelativeLayout rl_item;
         TextView tv_ver;
 
         DefaultViewHolder(View itemView) {
             super(itemView);
+            rl_item = itemView.findViewById(R.id.rl_item);
             tv_ver = itemView.findViewById(R.id.tv_ver);
         }
     }

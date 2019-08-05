@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.tg.coloursteward.R;
@@ -47,7 +48,7 @@ public class KeyAddVerAdapter extends RecyclerView.Adapter<KeyAddVerAdapter.Defa
         } else {
             holder.tv_ver.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
         }
-        holder.tv_ver.setOnClickListener(v -> {
+        holder.rl_item.setOnClickListener(v -> {
             if (isUnit) {
                 ((KeyUnitPopWindowView) pop).selectVer(position);
             } else {
@@ -62,10 +63,12 @@ public class KeyAddVerAdapter extends RecyclerView.Adapter<KeyAddVerAdapter.Defa
     }
 
     static class DefaultViewHolder extends RecyclerView.ViewHolder {
+        RelativeLayout rl_item;
         TextView tv_ver;
 
         DefaultViewHolder(View itemView) {
             super(itemView);
+            rl_item = itemView.findViewById(R.id.rl_item);
             tv_ver = itemView.findViewById(R.id.tv_ver);
         }
     }

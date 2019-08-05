@@ -1100,7 +1100,12 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
     }
 
     private void setAlias() {
-        String alias = "cgj_" + UserInfo.employeeAccount;
+        String alias;
+        if (environment.equals("release")) {
+            alias = "cgj_" + UserInfo.employeeAccount;
+        } else {
+            alias = "test_cgj_" + UserInfo.employeeAccount;
+        }
         //调用JPush API设置Alias
         mHandler.sendMessage(mHandler.obtainMessage(MSG_SET_ALIAS, alias));
     }

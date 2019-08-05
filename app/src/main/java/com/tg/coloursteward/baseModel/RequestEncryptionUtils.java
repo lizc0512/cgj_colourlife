@@ -66,6 +66,8 @@ public class RequestEncryptionUtils {
             finalUrl = Contants.URl.URL_QRCODE + urlString;//扫码接口
         }else if (type == 10) {
             finalUrl = Contants.URl.URL_IMPUSH + urlString;//IM同步接口
+        } else if (type == 11) {
+            finalUrl = Contants.URl.URL_LEKAI + urlString;//乐开管家
         }
         return finalUrl;
     }

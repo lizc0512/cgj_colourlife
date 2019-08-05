@@ -1,0 +1,96 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rl_item"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/size_110dp"
+    android:layout_marginLeft="@dimen/size_16dp"
+    android:layout_marginTop="@dimen/size_16dp"
+    android:layout_marginRight="@dimen/size_16dp"
+    android:background="@drawable/bg_key_normal"
+    android:drawablePadding="@dimen/size_16dp">
+
+    <TextView
+        android:id="@+id/tv_door"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/size_20dp"
+        android:layout_marginLeft="@dimen/size_20dp"
+        android:layout_marginTop="@dimen/size_16dp"
+        android:layout_marginEnd="@dimen/size_8dp"
+        android:layout_marginRight="@dimen/size_8dp"
+        android:layout_toStartOf="@+id/tv_send"
+        android:layout_toLeftOf="@+id/tv_send"
+        android:textColor="@color/white"
+        android:textSize="@dimen/font_18sp" />
+
+    <TextView
+        android:id="@+id/tv_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/size_12dp"
+        android:layout_marginLeft="@dimen/size_12dp"
+        android:layout_marginTop="@dimen/size_18dp"
+        android:layout_toEndOf="@+id/tv_door"
+        android:layout_toRightOf="@+id/tv_door"
+        android:background="@drawable/shape_key_status_text"
+        android:paddingLeft="@dimen/size_4dp"
+        android:paddingTop="@dimen/size_2dp"
+        android:paddingRight="@dimen/size_4dp"
+        android:paddingBottom="@dimen/size_2dp"
+        android:text="正常"
+        android:textColor="@color/color_1da1f4"
+        android:textSize="@dimen/font_12sp"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/tv_key_num"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="@dimen/size_20dp"
+        android:layout_marginLeft="@dimen/size_20dp"
+        android:layout_marginBottom="@dimen/size_16dp"
+        android:textColor="@color/white"
+        android:textSize="@dimen/font_18sp" />
+
+    <TextView
+        android:id="@+id/tv_send"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="@dimen/size_20dp"
+        android:layout_marginRight="@dimen/size_20dp"
+        android:background="@drawable/shape_key_todo_text"
+        android:drawableStart="@drawable/ic_key_normal"
+        android:drawableLeft="@drawable/ic_key_normal"
+        android:drawablePadding="@dimen/size_4dp"
+        android:paddingLeft="@dimen/size_12dp"
+        android:paddingTop="@dimen/size_8dp"
+        android:paddingRight="@dimen/size_12dp"
+        android:paddingBottom="@dimen/size_8dp"
+        android:text="发送钥匙"
+        android:textColor="@color/color_1da1f4"
+        android:textSize="@dimen/font_12sp" />
+
+    <TextView
+        android:id="@+id/tv_bind"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="@dimen/size_20dp"
+        android:layout_marginRight="@dimen/size_20dp"
+        android:background="@drawable/shape_key_todo_text"
+        android:drawablePadding="@dimen/size_4dp"
+        android:paddingLeft="@dimen/size_24dp"
+        android:paddingTop="@dimen/size_8dp"
+        android:paddingRight="@dimen/size_24dp"
+        android:paddingBottom="@dimen/size_8dp"
+        android:text="去绑定"
+        android:textColor="@color/color_999faa"
+        android:textSize="@dimen/font_12sp"
+        android:visibility="gone" />
+
+</RelativeLayout>

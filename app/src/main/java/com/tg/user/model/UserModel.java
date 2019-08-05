@@ -53,6 +53,15 @@ public class UserModel extends BaseModel {
     private String bindMobileUrl = "/app/bind/mobile";
     private String updateInfoUrl = "/app/modifyInfo";
     private String uploadImgUrl = "/avatar";
+    private String getCommunityList = "/cgjControl/userRole/getCommunityListByAccountUuid";
+    private String getDoorList = "/yuncontrol/ycAccessControl/getAccessByCommunityId";
+    private String addDoor = "/yuncontrol/ycAccessControl/add";
+    private String getBuild = "/cgjControl/colourLife/getBuildByCommunityId";
+    private String getUnit = "/cgjControl/colourLife/getUnitByBuild";
+    private String getFloor = "/cgjControl/colourLife/getHouseByFloor";
+    private String bindDoor = "/yuncontrol/ycAccessControl/accessControl/install";
+    private String getKeyIdentityUrl = "/yuncontrol/ycKeyIdentity/getAllByCommunityId";
+    private String sendKeyByPhone = "/yuncontrol/ycKey/add";
 
     public UserModel(Context context) {
         super(context);
@@ -648,4 +657,318 @@ public class UserModel extends BaseModel {
             }
         }, true, true);
     }
+
+    /**
+     * 查询管理小区
+     */
+    public void getCommunityList(int what, String accountUuid, int pageNum, int pageSize, boolean isLoading, final HttpResponse httpResponse) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("accountUuid", accountUuid);
+        params.put("pageNum", pageNum);
+        params.put("pageSize", pageSize);
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 11, getCommunityList), RequestMethod.GET);
+        request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    int code = showSuccesResultMessageTheme(result);
+                    if (code == 0) {
+                        httpResponse.OnHttpResponse(what, result);
+                    } else if (code == 1) {
+                        httpResponse.OnHttpResponse(what, result);
+                    } else {
+                        showErrorCodeMessage(response);
+                    }
+                } else {
+                    showErrorCodeMessage(response);
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+                showExceptionMessage(what, response);
+            }
+        }, true, isLoading);
+    }
+
+    /**
+     * 门禁
+     */
+    public void getDoorList(int what, String communityId, int pageNum, int pageSize, final HttpResponse httpResponse) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("communityId", communityId);
+        params.put("pageNum", pageNum);
+        params.put("pageSize", pageSize);
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 11, getDoorList), RequestMethod.GET);
+        request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    int code = showSuccesResultMessage(result);
+                    if (code == 0) {
+                        httpResponse.OnHttpResponse(what, result);
+                    } else {
+                        showErrorCodeMessage(response);
+                    }
+                } else {
+                    showErrorCodeMessage(response);
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+                showExceptionMessage(what, response);
+            }
+        }, true, false);
+    }
+
+    /**
+     * 新增门禁
+     */
+    public void addDoor(int what, String communityUuid, String accessName, String unitUuid, String isUnit, String unitName, String buildUuid,
+                        String buildName, String location, String content, final HttpResponse httpResponse) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("communityUuid", communityUuid);//小区id
+        params.put("accessName", accessName);//门禁名字
+        params.put("unitUuid", unitUuid); //单元或者楼栋或者外围门id
+        params.put("isUnit", isUnit);//门类型，0为大门，1为单元门
+        params.put("unitName", unitName);//单元名，选单元门时需要
+        params.put("buildUuid", buildUuid);//楼栋id，选单元门时需要
+        params.put("buildName", buildName);//楼栋名字，选单元门时需要
+        params.put("location", location);//位置，选单元门时需要 //位置信息用于app显示门禁时判断位置
+        params.put("content", content);//门禁描述
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 11, addDoor), RequestMethod.POST);
+        request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    int code = showSuccesResultMessage(result);
+                    if (code == 0) {
+                        httpResponse.OnHttpResponse(what, result);
+                    } else {
+                        showErrorCodeMessage(response);
+                    }
+                } else {
+                    showErrorCodeMessage(response);
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+                showExceptionMessage(what, response);
+            }
+        }, true, false);
+    }
+
+    /**
+     * 根据小区获取楼栋
+     */
+    public void getBuild(int what, String communityId, int pageNum, int pageSize, final HttpResponse httpResponse) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("communityId", communityId);
+        params.put("pageNum", pageNum);
+        params.put("pageSize", pageSize);
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 11, getBuild), RequestMethod.GET);
+        request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    int code = showSuccesResultMessage(result);
+                    if (code == 0) {
+                        httpResponse.OnHttpResponse(what, result);
+                    } else {
+                        showErrorCodeMessage(response);
+                    }
+                } else {
+                    showErrorCodeMessage(response);
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+                showExceptionMessage(what, response);
+            }
+        }, true, false);
+    }
+
+    /**
+     * 根据楼栋获取单元
+     */
+    public void getUnit(int what, String buildUuid, int pageNum, int pageSize, final HttpResponse httpResponse) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("buildUuid", buildUuid);
+        params.put("pageNum", pageNum);
+        params.put("pageSize", pageSize);
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 11, getUnit), RequestMethod.GET);
+        request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    int code = showSuccesResultMessage(result);
+                    if (code == 0) {
+                        httpResponse.OnHttpResponse(what, result);
+                    } else {
+                        showErrorCodeMessage(response);
+                    }
+                } else {
+                    showErrorCodeMessage(response);
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+                showExceptionMessage(what, response);
+            }
+        }, true, false);
+    }
+
+    /**
+     * 根据楼层获取房屋信息
+     */
+    public void getFloor(int what, String unitUuid, int pageNum, int pageSize, Integer floorNum, final HttpResponse httpResponse) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("unitUuid", unitUuid);
+        params.put("pageNum", pageNum);
+        params.put("pageSize", pageSize);
+        params.put("floorNum", floorNum);
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 11, getFloor), RequestMethod.GET);
+        request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    int code = showSuccesResultMessage(result);
+                    if (code == 0) {
+                        httpResponse.OnHttpResponse(what, result);
+                    } else {
+                        showErrorCodeMessage(response);
+                    }
+                } else {
+                    showErrorCodeMessage(response);
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+                showExceptionMessage(what, response);
+            }
+        }, true, false);
+    }
+
+    /**
+     * 绑定门禁
+     */
+    public void bindDoor(int what, long accessId, String mac, String cipherId, String model, String protocolVersion, final HttpResponse httpResponse) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("accessId", accessId);
+        params.put("mac", mac);
+        params.put("cipherId", cipherId);
+        params.put("model", model);
+        params.put("protocolVersion", protocolVersion);
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 11, bindDoor), RequestMethod.POST);
+        request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    int code = showSuccesResultMessage(result);
+                    if (code == 0) {
+                        httpResponse.OnHttpResponse(what, result);
+                    } else {
+                        showErrorCodeMessage(response);
+                    }
+                } else {
+                    showErrorCodeMessage(response);
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+                showExceptionMessage(what, response);
+            }
+        }, true, false);
+    }
+
+    /**
+     * 钥匙身份
+     */
+    public void getIdentity(int what, String communityId, final HttpResponse httpResponse) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("communityId", communityId);
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 11, getKeyIdentityUrl), RequestMethod.GET);
+        request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    int code = showSuccesResultMessage(result);
+                    if (code == 0) {
+                        httpResponse.OnHttpResponse(what, result);
+                    } else {
+                        showErrorCodeMessage(response);
+                    }
+                } else {
+                    showErrorCodeMessage(response);
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+                showExceptionMessage(what, response);
+            }
+        }, true, false);
+    }
+
+    /**
+     * 发送钥匙
+     */
+    public void sendKeyByPhone(int what, long accessId, String phoneNumber, String name, String identityId,
+                               String keyId, String homeLoc, String startDate, String endDate, final HttpResponse httpResponse) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("accessId", accessId);
+        params.put("phoneNumber", phoneNumber);
+        params.put("name", name);
+        params.put("identityId", identityId);
+        params.put("keyId", keyId);
+        params.put("homeLoc", homeLoc);
+        params.put("startDate", startDate);
+        params.put("endDate", endDate);
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 11, sendKeyByPhone), RequestMethod.POST);
+        request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    int code = showSuccesResultMessage(result);
+                    if (code == 0) {
+                        httpResponse.OnHttpResponse(what, result);
+                    } else {
+                        showErrorCodeMessage(response);
+                    }
+                } else {
+                    showErrorCodeMessage(response);
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+                showExceptionMessage(what, response);
+            }
+        }, true, true);
+    }
+
 }

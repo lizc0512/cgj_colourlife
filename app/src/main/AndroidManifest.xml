@@ -52,6 +52,8 @@
     <!-- 用于Android M及以上系统，申请加入忽略电池优化白名单-->
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"></uses-permission>
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+    <!--乐开-->
+    <uses-sdk tools:overrideLibrary="com.intelspace.library" />
 
     <application
         android:name=".application.CityPropertyApplication"
@@ -60,7 +62,7 @@
         android:icon="@drawable/logo"
         android:label="@string/app_name"
         android:theme="@style/AppTheme"
-        tools:replace="android:allowBackup,android:theme">
+        tools:replace="android:allowBackup,android:theme,android:label">
         <activity android:name="com.tg.user.activity.LoginActivity" />
         <activity
             android:name="com.tg.user.activity.SplashActivity"
@@ -100,6 +102,39 @@
         <activity android:name="com.tg.im.activity.ContactsActivity" />
         <!-- 员工名片 -->
         <activity android:name=".activity.EmployeeDataActivity" />
+
+        <!--新建门禁-->
+        <activity
+            android:name="com.tg.setting.activity.KeyAddDoorActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <!--绑定门禁-->
+        <activity
+            android:name="com.tg.setting.activity.KeyBindDoorActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <!--门禁管理-->
+        <activity
+            android:name="com.tg.setting.activity.KeyDoorManagerActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <!--钥匙身份-->
+        <activity android:name="com.tg.setting.activity.KeyKeyStatusActivity" />
+        <!-- 发送钥匙 -->
+        <activity
+            android:name="com.tg.setting.activity.KeySendKeyPhoneActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <!-- 发送钥匙 -->
+        <activity
+            android:name="com.tg.setting.activity.KeySendKeyCodeActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <!-- 发送钥匙列表 -->
+        <activity android:name="com.tg.setting.activity.KeySendKeyListActivity" />
+        <!--消息通知-->
+        <activity android:name="com.tg.setting.activity.KeyTodoNoticeActivity" />
+
         <activity android:name="com.colorfullife_verify.Oauth_LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -316,6 +351,11 @@
             android:theme="@style/popupTransparent" />
 
         <service android:name=".serice.UpdateService" />
+        <service
+            android:name="com.intelspace.library.service.BleService"
+            android:exported="false" />
+        <service android:name="com.tg.setting.service.LekaiService" />
+
         <activity android:name="com.tg.user.activity.BindMobileActivity" />
 
     </application>

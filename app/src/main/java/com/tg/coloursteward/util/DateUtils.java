@@ -1,12 +1,12 @@
 package com.tg.coloursteward.util;
 
+import android.util.Log;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-
-import android.util.Log;
 
 /**
  * 时间转化工具
@@ -225,6 +225,31 @@ public class DateUtils {
 		int week = calendar.get(Calendar.DAY_OF_WEEK);
 		return "星期" + weekStr[week - 1];
 	}
+
+    /**
+     * 比较两个时间
+     *
+     * @param DATE1
+     * @param DATE2
+     * @return 1: dt1在dt2后; -1: dt1在dt2前; 0: 相同
+     */
+    public static int compareDate(String DATE1, String DATE2) {
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+        try {
+            Date dt1 = df.parse(DATE1);
+            Date dt2 = df.parse(DATE2);
+            if (dt1.getTime() > dt2.getTime()) {//dt1在dt2后
+                return 1;
+            } else if (dt1.getTime() < dt2.getTime()) {//dt1在dt2前
+                return -1;
+            } else {
+                return 0;
+            }
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+        return 0;
+    }
 
 }
 

@@ -22,6 +22,7 @@ public interface SpConstants {
         String DOWNLOADERVERSION = "downloaderversion";
         String MICRODATA = "microdata";
         String MICROVIEWPAGERITEM = "microvpitem";
+        String ACCOUNT_UUID = "account_uuid";
     }
 
     interface MicroContant {

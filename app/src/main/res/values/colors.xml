@@ -129,6 +129,7 @@
     <color name="color_999faa">#999FAA</color>
     <color name="login_tv">#647786</color>
     <color name="login_tv_gray_account">#BBC0CB</color>
+    <!--字体主色-->
     <color name="tv_index_color">#333B46</color>
     <color name="line_login_index">#EDEDEE</color>
     <color name="color_ededee">#EDEDEE</color>
@@ -140,16 +141,23 @@
     <color name="blue_dialog">#1B96E0</color>
     <color name="tab_gray">#97a0ab</color>
     <color name="color_bbc0cb">#bbc0cb</color>
-    <color name="color_333b46">#333b46</color>
+    <color name="color_333b46">#F5F6F8</color>
     <color name="color_bfc7cc">#bfc7cc</color>
     <color name="color_1ca1f4">#1ca1f4</color>
     <color name="color_1890ff">#1890ff</color>
     <color name="color_abb7c0">#abb7c0</color>
     <color name="color_DEE3E5">#DEE3E5</color>
     <color name="color_445056">#445056</color>
+    <color name="color_f2f3f4">#F2F3F4</color>
+    <color name="color_1da1f4">#1DA1F4</color>
+    <color name="color_d4eeff">#D4EEFF</color>
+    <color name="color_d4d9dc">#D4D9Dc</color>
+    <color name="color_99ffffff">#99FFFFFF</color>
+    <color name="color_313e58">#313E58</color>
+    <color name="color_4d5e78">#4D5E78</color>
+
     <color name="color_647786">#647786</color>
     <color name="color_f6f6f6">#f6f6f6</color>
     <color name="color_25">#25000000</color>
-    <color name="color_f2f3f4">#f2f3f4</color>
 
 </resources>

@@ -462,6 +462,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                             spUtils.saveStringData(SpConstants.storage.CORPID, corpId);
                             spUtils.saveStringData(SpConstants.storage.ORG_UUID, data.getString("org_uuid"));
                             spUtils.saveBooleanData(SpConstants.UserModel.ISLOGIN, true);
+                            spUtils.saveStringData(SpConstants.UserModel.ACCOUNT_UUID, data.getString("account_uuid"));
                             singleDevicelogin();
                             getSkin(corpId);
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);

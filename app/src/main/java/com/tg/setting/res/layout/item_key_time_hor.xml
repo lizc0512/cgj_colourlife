@@ -1,0 +1,16 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rl_pop"
+    android:layout_width="@dimen/size_64dp"
+    android:layout_height="@dimen/size_44dp"
+    android:background="@color/white">
+
+    <TextView
+        android:id="@+id/tv_hor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:padding="@dimen/size_8dp"
+        android:textColor="@color/tv_index_color"
+        android:textSize="@dimen/font_18sp" />
+
+</RelativeLayout>

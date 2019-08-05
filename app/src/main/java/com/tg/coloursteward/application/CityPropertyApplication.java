@@ -27,6 +27,7 @@ import com.tg.coloursteward.net.ResponseData;
 import com.tg.coloursteward.util.GDLocationUtil;
 import com.tg.coloursteward.util.SSLContextUtil;
 import com.tg.coloursteward.util.Tools;
+import com.tg.setting.util.ActivityLifecycleListener;
 import com.tg.user.activity.LoginActivity;
 import com.yanzhenjie.nohttp.InitializationConfig;
 import com.yanzhenjie.nohttp.NoHttp;
@@ -95,6 +96,7 @@ public class CityPropertyApplication extends Application {
         QbSdk.initX5Environment(getApplicationContext(), cb);
         CrashHandler crashHandler = CrashHandler.getInstance();
         crashHandler.init(getApplicationContext());
+        registerActivityLifecycleCallbacks(new ActivityLifecycleListener());
         MobSDK.init(this);
         CrashReport.initCrashReport(getApplicationContext(), Contants.APP.buglyKeyId, false);
     }

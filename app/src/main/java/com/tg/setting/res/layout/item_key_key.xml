@@ -1,0 +1,62 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/size_140dp"
+    android:background="@drawable/bg_key_key"
+    android:drawablePadding="@dimen/size_16dp">
+
+    <TextView
+        android:id="@+id/tv_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/size_28dp"
+        android:layout_marginLeft="@dimen/size_28dp"
+        android:layout_marginTop="@dimen/size_20dp"
+        android:text="各大钥匙"
+        android:textColor="@color/white"
+        android:textSize="@dimen/font_18sp" />
+
+    <TextView
+        android:id="@+id/tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/size_28dp"
+        android:layout_marginLeft="@dimen/size_28dp"
+        android:layout_marginTop="@dimen/size_64dp"
+        android:text="门禁："
+        android:textColor="@color/white"
+        android:textSize="@dimen/font_14sp" />
+
+    <TextView
+        android:id="@+id/tv_doors"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/size_64dp"
+        android:layout_marginEnd="@dimen/size_24dp"
+        android:layout_marginRight="@dimen/size_24dp"
+        android:layout_toEndOf="@+id/tv"
+        android:layout_toRightOf="@+id/tv"
+        android:maxLines="3"
+        android:text="开始 发卡 号是 的合法 啥的 积分 件地方"
+        android:textColor="@color/white"
+        android:textSize="@dimen/font_14sp" />
+
+    <TextView
+        android:id="@+id/tv_todo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="@dimen/size_18dp"
+        android:layout_marginEnd="@dimen/size_28dp"
+        android:layout_marginRight="@dimen/size_28dp"
+        android:background="@drawable/shape_key_todo_text"
+        android:drawablePadding="@dimen/size_4dp"
+        android:paddingLeft="@dimen/size_12dp"
+        android:paddingTop="@dimen/size_8dp"
+        android:paddingRight="@dimen/size_12dp"
+        android:paddingBottom="@dimen/size_8dp"
+        android:text="发送钥匙包"
+        android:textColor="@color/color_313e58"
+        android:textSize="@dimen/font_12sp" />
+
+</RelativeLayout>

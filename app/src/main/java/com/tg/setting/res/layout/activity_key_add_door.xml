@@ -1,0 +1,209 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@null">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="@dimen/size_16dp"
+            android:layout_marginLeft="@dimen/size_16dp"
+            android:layout_marginEnd="@dimen/size_28dp"
+            android:layout_marginRight="@dimen/size_28dp"
+            android:text="门禁名称"
+            android:textColor="@color/tv_index_color"
+            android:textSize="@dimen/font_16sp" />
+
+        <EditText
+            android:id="@+id/et_door"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:background="@null"
+            android:hint="请输入门禁名称（20字以内）"
+            android:inputType="textMultiLine"
+            android:maxLength="20"
+            android:textColor="@color/tv_index_color"
+            android:textColorHint="@color/login_tv_gray_account"
+            android:textSize="@dimen/font_16sp" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_1px"
+        android:layout_marginStart="@dimen/size_16dp"
+        android:layout_marginLeft="@dimen/size_16dp"
+        android:background="@color/line_color" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@null">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="@dimen/size_16dp"
+            android:layout_marginLeft="@dimen/size_16dp"
+            android:layout_marginEnd="@dimen/size_28dp"
+            android:layout_marginRight="@dimen/size_28dp"
+            android:text="门禁类型"
+            android:textColor="@color/tv_index_color"
+            android:textSize="@dimen/font_16sp" />
+
+        <ImageView
+            android:id="@+id/iv_big_door"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:padding="@dimen/size_8dp"
+            android:src="@drawable/ic_key_check_box_select" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="@dimen/size_8dp"
+            android:layout_marginLeft="@dimen/size_8dp"
+            android:text="大门"
+            android:textColor="@color/tv_index_color"
+            android:textSize="@dimen/font_16sp" />
+
+        <ImageView
+            android:id="@+id/iv_unit_door"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="@dimen/size_44dp"
+            android:layout_marginLeft="@dimen/size_44dp"
+            android:padding="@dimen/size_8dp"
+            android:src="@drawable/ic_key_check_box" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="@dimen/size_8dp"
+            android:layout_marginLeft="@dimen/size_8dp"
+            android:text="单元门"
+            android:textColor="@color/tv_index_color"
+            android:textSize="@dimen/font_16sp" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_1px"
+        android:layout_marginStart="@dimen/size_16dp"
+        android:layout_marginLeft="@dimen/size_16dp"
+        android:background="@color/line_color" />
+
+    <LinearLayout
+        android:id="@+id/ll_address"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@null"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="@dimen/size_16dp"
+            android:layout_marginLeft="@dimen/size_16dp"
+            android:layout_marginEnd="@dimen/size_40dp"
+            android:layout_marginRight="@dimen/size_40dp"
+            android:text="单元号"
+            android:textColor="@color/tv_index_color"
+            android:textSize="@dimen/font_16sp" />
+
+        <EditText
+            android:id="@+id/et_address"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="@dimen/size_16dp"
+            android:layout_marginRight="@dimen/size_16dp"
+            android:background="@null"
+            android:drawableEnd="@drawable/ic_key_goto"
+            android:drawableRight="@drawable/ic_key_goto"
+            android:gravity="center|start"
+            android:hint="请选择"
+            android:textColor="@color/tv_index_color"
+            android:textColorHint="@color/login_tv_gray_account"
+            android:textSize="@dimen/font_16sp" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_1px"
+        android:layout_marginStart="@dimen/size_16dp"
+        android:layout_marginLeft="@dimen/size_16dp"
+        android:background="@color/line_color" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="88dp"
+        android:background="@null">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/size_16dp"
+            android:layout_marginLeft="@dimen/size_16dp"
+            android:layout_marginTop="@dimen/size_12dp"
+            android:layout_marginEnd="@dimen/size_56dp"
+            android:layout_marginRight="@dimen/size_56dp"
+            android:text="描述"
+            android:textColor="@color/tv_index_color"
+            android:textSize="@dimen/font_16sp" />
+
+        <EditText
+            android:id="@+id/et_des"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/size_12dp"
+            android:background="@null"
+            android:gravity="start"
+            android:hint="选填（50字以内）"
+            android:inputType="textMultiLine"
+            android:maxLength="50"
+            android:textColor="@color/tv_index_color"
+            android:textColorHint="@color/login_tv_gray_account"
+            android:textSize="@dimen/font_16sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/color_f2f3f4"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_submit"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_44dp"
+            android:layout_marginLeft="@dimen/size_16dp"
+            android:layout_marginTop="@dimen/size_32dp"
+            android:layout_marginRight="@dimen/size_16dp"
+            android:background="@drawable/shape_key_submit_text"
+            android:gravity="center"
+            android:text="确定"
+            android:textColor="@color/white"
+            android:textSize="@dimen/font_16sp" />
+
+    </LinearLayout>
+
+
+</LinearLayout>

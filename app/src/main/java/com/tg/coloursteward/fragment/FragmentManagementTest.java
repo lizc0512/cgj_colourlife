@@ -380,7 +380,9 @@ public class FragmentManagementTest extends Fragment implements HttpResponse, Vi
                 dataItemList.addAll(microDataEntity.getContent());
                 rv_micro_vp.setVisibility(View.VISIBLE);
             } else {
-                rv_application.scrollBy(0, 16);
+                if (null != rv_application) {
+                    rv_application.scrollBy(0, 16);
+                }
                 rv_micro_vp.setVisibility(View.GONE);
             }
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false);

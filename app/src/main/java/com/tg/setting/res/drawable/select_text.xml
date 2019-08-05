@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- This is the line -->
+    <!-- left 和right是左右边距 -->
+    <item
+        android:left="@dimen/size_8dp"
+        android:right="@dimen/size_8dp">
+        <shape>
+            <solid android:color="@color/color_1da1f4" />
+        </shape>
+    </item>
+
+    <!--bottom是横线高度 -->
+    <item android:bottom="2dp">
+        <shape>
+            <solid android:color="@color/white" />
+        </shape>
+    </item>
+
+</layer-list>

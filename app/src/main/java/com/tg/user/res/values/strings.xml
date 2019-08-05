@@ -21,5 +21,6 @@
 <string name="user_bindmobile_mms_tv">请输入短信验证码</string>
 <string name="user_bindmobile_bind_tv">绑定</string>
 <string name="user_bindmobile_getmms_tv">获取验证码</string>
+<string name="user_key_search">搜索门禁名称</string>
 
 </resources>

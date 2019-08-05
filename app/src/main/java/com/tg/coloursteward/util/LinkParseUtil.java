@@ -15,8 +15,8 @@ import com.tg.coloursteward.activity.DownloadManagerActivity;
 import com.tg.coloursteward.activity.GroupAccountDetailsActivity;
 import com.tg.coloursteward.activity.MyBrowserActivity;
 import com.tg.coloursteward.activity.PublicAccountActivity;
-import com.tg.coloursteward.info.UserInfo;
 import com.tg.setting.activity.InviteRegisterActivity;
+import com.tg.setting.activity.KeyDoorManagerActivity;
 import com.tg.setting.activity.SettingActivity;
 import com.tg.user.activity.BindMobileActivity;
 import com.tg.user.activity.UserInfoActivity;
@@ -89,6 +89,10 @@ public class LinkParseUtil {
                         it = new Intent(context, BindMobileActivity.class);
                         context.startActivity(it);
                         ((Activity) context).overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
+                    } else if (name.equals("entranceGuard")) {//乐开管家
+                        it = new Intent(context, KeyDoorManagerActivity.class);
+                        context.startActivity(it);
+                        context.overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
                     } else {
                         return;
                     }
@@ -157,6 +161,10 @@ public class LinkParseUtil {
                         it = new Intent(context, BindMobileActivity.class);
                         context.startActivity(it);
                         ((Activity) context).overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
+                    } else if (name.equals("entranceGuard")) {//乐开管家
+                        it = new Intent(context, KeyDoorManagerActivity.class);
+                        context.startActivity(it);
+                        context.overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
                     } else {
                         return;
                     }

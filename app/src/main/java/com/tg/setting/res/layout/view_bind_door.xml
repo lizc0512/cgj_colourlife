@@ -1,0 +1,39 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/size_270dp"
+    android:background="@drawable/shape_key_bind_bg"
+    android:orientation="vertical">
+
+    <com.tg.setting.view.KeyScanView
+        android:id="@+id/ksv_scan"
+        android:layout_width="114dp"
+        android:layout_height="114dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/size_24dp"
+        android:padding="4dp" />
+
+    <TextView
+        android:id="@+id/tv_scan"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/size_16dp"
+        android:textColor="@color/white"
+        android:textSize="@dimen/font_16sp" />
+
+    <TextView
+        android:id="@+id/tv_stop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/size_16dp"
+        android:background="@drawable/shape_key_bind_door_text"
+        android:paddingLeft="@dimen/size_20dp"
+        android:paddingTop="@dimen/size_4dp"
+        android:paddingRight="@dimen/size_20dp"
+        android:paddingBottom="@dimen/size_4dp"
+        android:text="开始扫描"
+        android:textColor="@color/white"
+        android:textSize="@dimen/font_16sp" />
+
+</LinearLayout>

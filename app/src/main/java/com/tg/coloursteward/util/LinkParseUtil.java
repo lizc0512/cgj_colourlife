@@ -94,6 +94,7 @@ public class LinkParseUtil {
                         context.startActivity(it);
                         context.overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
                     } else {
+                        ToastUtil.showShortToast(context, "请升级到最新版本体验");
                         return;
                     }
                 }
@@ -166,6 +167,7 @@ public class LinkParseUtil {
                         context.startActivity(it);
                         context.overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
                     } else {
+                        ToastUtil.showShortToast(context, "请升级到最新版本体验");
                         return;
                     }
                 }

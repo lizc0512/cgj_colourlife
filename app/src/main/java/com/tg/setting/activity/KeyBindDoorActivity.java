@@ -248,6 +248,8 @@ public class KeyBindDoorActivity extends BaseActivity implements View.OnClickLis
                         ToastUtil.showShortToast(this, "设备未打开蓝牙，请在设置中打开");
                     } else {
                         if ("开始扫描".equals(tv_stop.getText().toString().trim()) || "重新扫描".equals(tv_stop.getText().toString().trim())) {
+                            mDevices.clear();
+                            mDevicesMac.clear();
                             startScan();
                         } else {
                             stopScan();

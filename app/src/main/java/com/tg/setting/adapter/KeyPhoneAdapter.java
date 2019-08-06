@@ -42,18 +42,17 @@ public class KeyPhoneAdapter extends RecyclerView.Adapter<KeyPhoneAdapter.Defaul
         final TextWatcher textWatcher = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
             }
 
             @Override
             public void afterTextChanged(Editable s) {
                 if (holder.et_phone.hasFocus()) {//判断当前EditText是否有焦点在
                     list.set(position, s.toString());
+                    ((KeySendKeyPhoneActivity) mContext).setChangeListener();
                 }
             }
         };

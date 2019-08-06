@@ -22,6 +22,7 @@ import com.yanzhenjie.recyclerview.SwipeRecyclerView;
 import com.youmai.hxsdk.view.chat.utils.DisplayUtils;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -138,7 +139,11 @@ public class KeyTimePopWindowView extends PopupWindow {
                         e.printStackTrace();
                     }
                     vAdapter.list.clear();
-                    for (int i = 1; i <= 12; i++) {
+                    int start = 1;
+                    if (year == getStartTime(1)) {
+                        start = getStartTime(2);
+                    }
+                    for (int i = start; i <= 12; i++) {
                         KeyPopEntity entity = new KeyPopEntity();
                         entity.setName(i + "月");
                         entity.setSelect(false);
@@ -160,9 +165,13 @@ public class KeyTimePopWindowView extends PopupWindow {
                     monthString = vAdapter.list.get(position).getName();
                     m = Integer.parseInt(monthString.split("月")[0]);
                     vAdapter.list.clear();
+                    int start = 1;
+                    if (y == getStartTime(1) && m == getStartTime(2)) {
+                        start = getStartTime(3);
+                    }
                     switch (monthString) {
                         case "1月":
-                            for (day = 1; day <= 31; day++) {
+                            for (day = start; day <= 31; day++) {
                                 KeyPopEntity entity = new KeyPopEntity();
                                 entity.setSelect(false);
                                 entity.setName(day + "日");
@@ -171,7 +180,7 @@ public class KeyTimePopWindowView extends PopupWindow {
                             vAdapter.notifyDataSetChanged();
                             break;
                         case "2月":
-                            for (day = 1; day <= 29; day++) {
+                            for (day = start; day <= 29; day++) {
                                 if (!month29 && 29 == day) {
                                     break;
                                 }
@@ -183,7 +192,7 @@ public class KeyTimePopWindowView extends PopupWindow {
                             vAdapter.notifyDataSetChanged();
                             break;
                         case "3月":
-                            for (day = 1; day <= 31; day++) {
+                            for (day = start; day <= 31; day++) {
                                 KeyPopEntity entity = new KeyPopEntity();
                                 entity.setSelect(false);
                                 entity.setName(day + "日");
@@ -192,7 +201,7 @@ public class KeyTimePopWindowView extends PopupWindow {
                             vAdapter.notifyDataSetChanged();
                             break;
                         case "4月":
-                            for (day = 1; day <= 30; day++) {
+                            for (day = start; day <= 30; day++) {
                                 KeyPopEntity entity = new KeyPopEntity();
                                 entity.setSelect(false);
                                 entity.setName(day + "日");
@@ -201,7 +210,7 @@ public class KeyTimePopWindowView extends PopupWindow {
                             vAdapter.notifyDataSetChanged();
                             break;
                         case "5月":
-                            for (day = 1; day <= 31; day++) {
+                            for (day = start; day <= 31; day++) {
                                 KeyPopEntity entity = new KeyPopEntity();
                                 entity.setSelect(false);
                                 entity.setName(day + "日");
@@ -210,7 +219,7 @@ public class KeyTimePopWindowView extends PopupWindow {
                             vAdapter.notifyDataSetChanged();
                             break;
                         case "6月":
-                            for (day = 1; day <= 30; day++) {
+                            for (day = start; day <= 30; day++) {
                                 KeyPopEntity entity = new KeyPopEntity();
                                 entity.setSelect(false);
                                 entity.setName(day + "日");
@@ -219,7 +228,7 @@ public class KeyTimePopWindowView extends PopupWindow {
                             vAdapter.notifyDataSetChanged();
                             break;
                         case "7月":
-                            for (day = 1; day <= 31; day++) {
+                            for (day = start; day <= 31; day++) {
                                 KeyPopEntity entity = new KeyPopEntity();
                                 entity.setSelect(false);
                                 entity.setName(day + "日");
@@ -228,7 +237,7 @@ public class KeyTimePopWindowView extends PopupWindow {
                             vAdapter.notifyDataSetChanged();
                             break;
                         case "8月":
-                            for (day = 1; day <= 31; day++) {
+                            for (day = start; day <= 31; day++) {
                                 KeyPopEntity entity = new KeyPopEntity();
                                 entity.setSelect(false);
                                 entity.setName(day + "日");
@@ -237,7 +246,7 @@ public class KeyTimePopWindowView extends PopupWindow {
                             vAdapter.notifyDataSetChanged();
                             break;
                         case "9月":
-                            for (day = 1; day <= 30; day++) {
+                            for (day = start; day <= 30; day++) {
                                 KeyPopEntity entity = new KeyPopEntity();
                                 entity.setSelect(false);
                                 entity.setName(day + "日");
@@ -246,7 +255,7 @@ public class KeyTimePopWindowView extends PopupWindow {
                             vAdapter.notifyDataSetChanged();
                             break;
                         case "10月":
-                            for (day = 1; day <= 31; day++) {
+                            for (day = start; day <= 31; day++) {
                                 KeyPopEntity entity = new KeyPopEntity();
                                 entity.setSelect(false);
                                 entity.setName(day + "日");
@@ -255,7 +264,7 @@ public class KeyTimePopWindowView extends PopupWindow {
                             vAdapter.notifyDataSetChanged();
                             break;
                         case "11月":
-                            for (day = 1; day <= 30; day++) {
+                            for (day = start; day <= 30; day++) {
                                 KeyPopEntity entity = new KeyPopEntity();
                                 entity.setSelect(false);
                                 entity.setName(day + "日");
@@ -264,7 +273,7 @@ public class KeyTimePopWindowView extends PopupWindow {
                             vAdapter.notifyDataSetChanged();
                             break;
                         case "12月":
-                            for (day = 1; day <= 31; day++) {
+                            for (day = start; day <= 31; day++) {
                                 KeyPopEntity entity = new KeyPopEntity();
                                 entity.setSelect(false);
                                 entity.setName(day + "日");
@@ -291,7 +300,11 @@ public class KeyTimePopWindowView extends PopupWindow {
                     dayString = vAdapter.list.get(position).getName();
                     d = Integer.parseInt(dayString.split("日")[0]);
                     vAdapter.list.clear();
-                    for (hour = 0; hour <= 23; hour++) {
+                    int start = 0;
+                    if (y == getStartTime(1) && m == getStartTime(2) && d == getStartTime(3)) {
+                        start = getStartTime(4);
+                    }
+                    for (hour = start; hour <= 23; hour++) {
                         KeyPopEntity entity = new KeyPopEntity();
                         entity.setSelect(false);
                         entity.setName(hour + "点");
@@ -318,7 +331,11 @@ public class KeyTimePopWindowView extends PopupWindow {
                     hourString = vAdapter.list.get(position).getName();
                     h = Integer.parseInt(hourString.split("点")[0]);
                     vAdapter.list.clear();
-                    for (minute = 0; minute <= 59; minute++) {
+                    int start = 0;
+                    if (y == getStartTime(1) && m == getStartTime(2) && d == getStartTime(3) && h == getStartTime(4)) {
+                        start = getStartTime(5);
+                    }
+                    for (minute = start; minute <= 59; minute++) {
                         KeyPopEntity entity = new KeyPopEntity();
                         entity.setSelect(false);
                         entity.setName(minute + "分");
@@ -360,6 +377,7 @@ public class KeyTimePopWindowView extends PopupWindow {
                 }
                 break;
         }
+        rv_vertical.scrollToPosition(0);
     }
 
     public void selectHor(int position) {
@@ -397,7 +415,11 @@ public class KeyTimePopWindowView extends PopupWindow {
                         e.printStackTrace();
                     }
                     vAdapter.list.clear();
-                    for (int i = 1; i <= 12; i++) {
+                    int start = 1;
+                    if (year == getStartTime(1)) {
+                        start = getStartTime(2);
+                    }
+                    for (int i = start; i <= 12; i++) {
                         KeyPopEntity entity = new KeyPopEntity();
                         entity.setName(i + "月");
                         entity.setSelect(monthString.equals(i + "月"));
@@ -417,9 +439,13 @@ public class KeyTimePopWindowView extends PopupWindow {
                     dayString = hAdapter.list.get(2);
                     monthString = hAdapter.list.get(1);
                     vAdapter.list.clear();
+                    int start = 1;
+                    if (y == getStartTime(1) && m == getStartTime(2)) {
+                        start = getStartTime(3);
+                    }
                     switch (monthString) {
                         case "1月":
-                            for (day = 1; day <= 31; day++) {
+                            for (day = start; day <= 31; day++) {
                                 KeyPopEntity entity = new KeyPopEntity();
                                 entity.setName(day + "日");
                                 entity.setSelect(dayString.equals(day + "日"));
@@ -428,7 +454,7 @@ public class KeyTimePopWindowView extends PopupWindow {
                             vAdapter.notifyDataSetChanged();
                             break;
                         case "2月":
-                            for (day = 1; day <= 29; day++) {
+                            for (day = start; day <= 29; day++) {
                                 if (!month29 && 29 == day) {
                                     break;
                                 }
@@ -440,7 +466,7 @@ public class KeyTimePopWindowView extends PopupWindow {
                             vAdapter.notifyDataSetChanged();
                             break;
                         case "3月":
-                            for (day = 1; day <= 31; day++) {
+                            for (day = start; day <= 31; day++) {
                                 KeyPopEntity entity = new KeyPopEntity();
                                 entity.setName(day + "日");
                                 entity.setSelect(dayString.equals(day + "日"));
@@ -449,7 +475,7 @@ public class KeyTimePopWindowView extends PopupWindow {
                             vAdapter.notifyDataSetChanged();
                             break;
                         case "4月":
-                            for (day = 1; day <= 30; day++) {
+                            for (day = start; day <= 30; day++) {
                                 KeyPopEntity entity = new KeyPopEntity();
                                 entity.setName(day + "日");
                                 entity.setSelect(dayString.equals(day + "日"));
@@ -458,7 +484,7 @@ public class KeyTimePopWindowView extends PopupWindow {
                             vAdapter.notifyDataSetChanged();
                             break;
                         case "5月":
-                            for (day = 1; day <= 31; day++) {
+                            for (day = start; day <= 31; day++) {
                                 KeyPopEntity entity = new KeyPopEntity();
                                 entity.setName(day + "日");
                                 entity.setSelect(dayString.equals(day + "日"));
@@ -467,7 +493,7 @@ public class KeyTimePopWindowView extends PopupWindow {
                             vAdapter.notifyDataSetChanged();
                             break;
                         case "6月":
-                            for (day = 1; day <= 30; day++) {
+                            for (day = start; day <= 30; day++) {
                                 KeyPopEntity entity = new KeyPopEntity();
                                 entity.setName(day + "日");
                                 entity.setSelect(dayString.equals(day + "日"));
@@ -476,7 +502,7 @@ public class KeyTimePopWindowView extends PopupWindow {
                             vAdapter.notifyDataSetChanged();
                             break;
                         case "7月":
-                            for (day = 1; day <= 31; day++) {
+                            for (day = start; day <= 31; day++) {
                                 KeyPopEntity entity = new KeyPopEntity();
                                 entity.setName(day + "日");
                                 entity.setSelect(dayString.equals(day + "日"));
@@ -485,7 +511,7 @@ public class KeyTimePopWindowView extends PopupWindow {
                             vAdapter.notifyDataSetChanged();
                             break;
                         case "8月":
-                            for (day = 1; day <= 31; day++) {
+                            for (day = start; day <= 31; day++) {
                                 KeyPopEntity entity = new KeyPopEntity();
                                 entity.setName(day + "日");
                                 entity.setSelect(dayString.equals(day + "日"));
@@ -494,7 +520,7 @@ public class KeyTimePopWindowView extends PopupWindow {
                             vAdapter.notifyDataSetChanged();
                             break;
                         case "9月":
-                            for (day = 1; day <= 30; day++) {
+                            for (day = start; day <= 30; day++) {
                                 KeyPopEntity entity = new KeyPopEntity();
                                 entity.setName(day + "日");
                                 entity.setSelect(dayString.equals(day + "日"));
@@ -503,7 +529,7 @@ public class KeyTimePopWindowView extends PopupWindow {
                             vAdapter.notifyDataSetChanged();
                             break;
                         case "10月":
-                            for (day = 1; day <= 31; day++) {
+                            for (day = start; day <= 31; day++) {
                                 KeyPopEntity entity = new KeyPopEntity();
                                 entity.setName(day + "日");
                                 entity.setSelect(dayString.equals(day + "日"));
@@ -512,7 +538,7 @@ public class KeyTimePopWindowView extends PopupWindow {
                             vAdapter.notifyDataSetChanged();
                             break;
                         case "11月":
-                            for (day = 1; day <= 30; day++) {
+                            for (day = start; day <= 30; day++) {
                                 KeyPopEntity entity = new KeyPopEntity();
                                 entity.setName(day + "日");
                                 entity.setSelect(dayString.equals(day + "日"));
@@ -521,7 +547,7 @@ public class KeyTimePopWindowView extends PopupWindow {
                             vAdapter.notifyDataSetChanged();
                             break;
                         case "12月":
-                            for (day = 1; day <= 31; day++) {
+                            for (day = start; day <= 31; day++) {
                                 KeyPopEntity entity = new KeyPopEntity();
                                 entity.setName(day + "日");
                                 entity.setSelect(dayString.equals(day + "日"));
@@ -547,7 +573,11 @@ public class KeyTimePopWindowView extends PopupWindow {
                     hourString = hAdapter.list.get(3);
                     dayString = hAdapter.list.get(2);
                     vAdapter.list.clear();
-                    for (hour = 0; hour <= 23; hour++) {
+                    int start = 0;
+                    if (y == getStartTime(1) && m == getStartTime(2) && d == getStartTime(3)) {
+                        start = getStartTime(4);
+                    }
+                    for (hour = start; hour <= 23; hour++) {
                         KeyPopEntity entity = new KeyPopEntity();
                         entity.setName(hour + "点");
                         entity.setSelect(hourString.equals(hour + "点"));
@@ -569,6 +599,29 @@ public class KeyTimePopWindowView extends PopupWindow {
                 }
                 break;
         }
+    }
+
+    private int getStartTime(int type) {
+        int num = 0;
+        Calendar nowCalender = Calendar.getInstance();
+        switch (type) {
+            case 1:
+                num = nowCalender.get(Calendar.YEAR);
+                break;
+            case 2:
+                num = nowCalender.get(Calendar.MONTH) + 1;
+                break;
+            case 3:
+                num = nowCalender.get(Calendar.DAY_OF_MONTH);
+                break;
+            case 4:
+                num = nowCalender.get(Calendar.HOUR_OF_DAY);
+                break;
+            case 5:
+                num = nowCalender.get(Calendar.MINUTE);
+                break;
+        }
+        return num;
     }
 
     /**

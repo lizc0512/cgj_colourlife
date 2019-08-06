@@ -43,11 +43,6 @@ public class KeyStringPopWindowView extends PopupWindow {
         this.list.addAll(list);
         initWindow();
         initView();
-        initListener();
-    }
-
-    private void initListener() {
-
     }
 
     private void initWindow() {

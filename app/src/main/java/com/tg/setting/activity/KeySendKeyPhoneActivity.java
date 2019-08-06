@@ -3,7 +3,9 @@ package com.tg.setting.activity;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
@@ -135,6 +137,21 @@ public class KeySendKeyPhoneActivity extends BaseActivity implements HttpRespons
         rv_phone.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         adapter = new KeyPhoneAdapter(this, list);
         rv_phone.setAdapter(adapter);
+
+        et_phone.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                setSubmitBg();
+            }
+        });
     }
 
     @SuppressLint("SetTextI18n")
@@ -143,21 +160,16 @@ public class KeySendKeyPhoneActivity extends BaseActivity implements HttpRespons
         communityUuid = getIntent().getStringExtra(COMMUNITY_UUID);
         keyName = getIntent().getStringExtra(KEY_NAME);
         tv_name.setText(keyName);
-        Calendar nowCalender = Calendar.getInstance();
-        int year = nowCalender.get(Calendar.YEAR);
-        int month = nowCalender.get(Calendar.MONTH) + 1;
-        int day = nowCalender.get(Calendar.DAY_OF_MONTH);
-        int hour = nowCalender.get(Calendar.HOUR_OF_DAY);
-        int minute = nowCalender.get(Calendar.MINUTE);
-
-        startTimeCustom = year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + 0;
-        tv_time_start.setText(year + "年" + month + "月" + day + "日 " + hour + "点" + minute + "分");
         userModel.getIdentity(1, communityUuid, this);
     }
 
     public void delete(int position) {
         adapter.list.remove(position);
         adapter.notifyDataSetChanged();
+        setSubmitBg();
+    }
+
+    public void setChangeListener() {
         setSubmitBg();
     }
 
@@ -171,6 +183,7 @@ public class KeySendKeyPhoneActivity extends BaseActivity implements HttpRespons
         return "发送钥匙";
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected boolean handClickEvent(View v) {
         Calendar curr;
@@ -309,6 +322,18 @@ public class KeySendKeyPhoneActivity extends BaseActivity implements HttpRespons
                 keyType = 8;
                 tv_custom.setBackgroundResource(R.drawable.shape_key_choose_select_text);
                 ll_time.setVisibility(View.VISIBLE);
+
+                Calendar nowCalender = Calendar.getInstance();
+                int year = nowCalender.get(Calendar.YEAR);
+                int month = nowCalender.get(Calendar.MONTH) + 1;
+                int day = nowCalender.get(Calendar.DAY_OF_MONTH);
+                int hour = nowCalender.get(Calendar.HOUR_OF_DAY);
+                int minute = nowCalender.get(Calendar.MINUTE);
+                int second = nowCalender.get(Calendar.SECOND);
+                startTimeCustom = year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + second;
+                String nowTime = numFormat(year) + "-" + numFormat(month) + "-" + numFormat(day) + " " + numFormat(hour) + ":" + numFormat(minute) + ":" + numFormat(second);
+                tv_time_start.setText(nowTime);
+
                 setSubmitBg();
                 break;
             case R.id.tv_time_start:
@@ -344,24 +369,26 @@ public class KeySendKeyPhoneActivity extends BaseActivity implements HttpRespons
                 break;
             case R.id.tv_send:
                 DisplayUtil.showInput(false, this);
+                if (!setSubmitBg()) {
+                    break;
+                }
                 StringBuilder phone = new StringBuilder();
                 if (!TextUtils.isEmpty(et_phone.getText().toString().trim())) {
                     if (et_phone.getText().toString().trim().length() != 11) {
                         ToastUtil.showShortToast(this, "手机号码格式不正确");
+                        break;
                     }
                     phone.append(et_phone.getText().toString().trim()).append(" ");
                 }
                 for (int i = 0; i < adapter.list.size(); i++) {
                     if (adapter.list.get(i).length() != 11) {
                         ToastUtil.showShortToast(this, "手机号码格式不正确");
+                        break;
                     }
                     phone.append(adapter.list.get(i));
                     if (i != adapter.list.size() - 1) {
                         phone.append(" ");
                     }
-                }
-                if (!setSubmitBg()) {
-                    break;
                 }
                 String roomName = tv_room.getText().toString().trim();
                 userModel.sendKeyByPhone(2, doorId, phone.toString(), keyName,
@@ -376,7 +403,7 @@ public class KeySendKeyPhoneActivity extends BaseActivity implements HttpRespons
             case 1:
                 String nowTime = startTime = DateUtils.getStringDate(new Date(System.currentTimeMillis()), "");
                 String selectTime = y + "-" + m + "-" + d + " " + h + ":" + mi + ":" + 0;
-                String selectText = formateNum(y) + "-" + formateNum(m) + "-" + formateNum(d) + " " + formateNum(h) + ":" + formateNum(mi) + ":" + 0;
+                String selectText = numFormat(y) + "-" + numFormat(m) + "-" + numFormat(d) + " " + numFormat(h) + ":" + numFormat(mi) + ":" + "00";
                 int status = DateUtils.compareDate(nowTime, selectTime);
                 if (1 == status) {
                     ToastUtil.showShortToast(this, "开始时间不能在当前时间之前");
@@ -387,7 +414,7 @@ public class KeySendKeyPhoneActivity extends BaseActivity implements HttpRespons
                 break;
             case 2:
                 String selectDate = y + "-" + m + "-" + d + " " + h + ":" + mi + ":" + 0;
-                String text = formateNum(y) + "-" + formateNum(m) + "-" + formateNum(d) + " " + formateNum(h) + ":" + formateNum(mi) + ":" + 0;
+                String text = numFormat(y) + "-" + numFormat(m) + "-" + numFormat(d) + " " + numFormat(h) + ":" + numFormat(mi) + ":" + "00";
                 int type = DateUtils.compareDate(startTimeCustom, selectDate);
                 if (1 == type) {
                     ToastUtil.showShortToast(this, "结束时间不能在开始时间之前");
@@ -403,35 +430,19 @@ public class KeySendKeyPhoneActivity extends BaseActivity implements HttpRespons
         setSubmitBg();
     }
 
-    private String formateNum(int num) {
-        String numString = "";
-        if (num < 10) {
-            numString = "0" + num;
-        }
-
-        return numString;
+    private String numFormat(int num) {
+        return num < 10 ? "0" + num : "" + num;
     }
 
     private boolean setSubmitBg() {
         boolean canSubmit = true;
-        StringBuilder phone = new StringBuilder();
-        if (!TextUtils.isEmpty(et_phone.getText().toString().trim())) {
-            if (et_phone.getText().toString().trim().length() != 11) {
-                canSubmit = false;
-            }
-            phone.append(et_phone.getText().toString().trim()).append(" ");
+        if (TextUtils.isEmpty(et_phone.getText().toString().trim())) {
+            canSubmit = false;
         }
         for (int i = 0; i < adapter.list.size(); i++) {
-            if (adapter.list.get(i).length() != 11) {
+            if (TextUtils.isEmpty(adapter.list.get(i))) {
                 canSubmit = false;
             }
-            phone.append(adapter.list.get(i));
-            if (i != adapter.list.size() - 1) {
-                phone.append(" ");
-            }
-        }
-        if (TextUtils.isEmpty(phone.toString())) {
-            canSubmit = false;
         }
         if (TextUtils.isEmpty(identityId)) {
             canSubmit = false;

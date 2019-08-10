@@ -118,14 +118,12 @@ public class SettingModel extends BaseModel {
             @Override
             public void onSucceed(int what, Response<String> response) {
                 int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
                 if (responseCode == RequestEncryptionUtils.responseSuccess) {
-                    String result = response.get();
-                    int code = showSuccesResultMessage(result);
+                    int code = showSuccesResultMessageTheme(result);
                     if (code == 0) {
                         httpResponse.OnHttpResponse(what, result);
                     }
-                } else {
-                    showErrorCodeMessage(response);
                 }
             }
 

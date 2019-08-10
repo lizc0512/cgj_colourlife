@@ -22,6 +22,7 @@ import com.tg.coloursteward.serice.UpdateService;
 import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.ToastUtil;
 import com.tg.setting.adapter.UpdateAdapter;
+import com.tg.setting.entity.ShareInfoEntity;
 import com.tg.setting.entity.VersionEntity;
 import com.tg.setting.model.SettingModel;
 import com.tg.setting.view.DeleteMsgDialog;
@@ -33,7 +34,6 @@ import java.util.List;
 
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.PlatformActionListener;
-import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.onekeyshare.OnekeyShare;
 import cn.sharesdk.wechat.friends.Wechat;
 import cn.sharesdk.wechat.moments.WechatMoments;
@@ -55,6 +55,10 @@ public class InviteRegisterActivity extends BaseActivity implements HttpResponse
     private String downUrl;
     private List<String> updateList = new ArrayList<>();
     private UpdateVerSionDialog updateDialog;
+    private String title = "邀请好友";
+    private String content = "邀请好友加入彩管家";
+    private String img = "https://pics-czy-cdn.colourlife.com/dev-5d1034ffccd90146486.png";
+    private String url = "http://mapp.colourlife.com/mgj.html";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +79,7 @@ public class InviteRegisterActivity extends BaseActivity implements HttpResponse
 
     private void initData() {
         settingModel.getUpdate(0, "1", false, this);
+        settingModel.getShareInfo(1, this);
     }
 
     private void initView() {
@@ -88,12 +93,12 @@ public class InviteRegisterActivity extends BaseActivity implements HttpResponse
         oks.disableSSOWhenAuthorize();
         oks.setPlatform(platform);
         // title标题，微信、QQ和QQ空间等平台使用
-        oks.setTitle("分享好友");
+        oks.setTitle(title);
         // text是分享文本，所有平台都需要这个字段
-        oks.setText("快来加入彩管家吧");
-        oks.setImageUrl("http://newcgjios.oss-cn-shenzhen.aliyuncs.com/pictures/cgj_logo.png");
+        oks.setText(content);
+        oks.setImageUrl(img);
         // url在微信、微博，Facebook等平台中使用
-        oks.setUrl("http://mapp.colourlife.com/mgj.html");
+        oks.setUrl(url);
         InviteRegisterActivity.this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -152,6 +157,15 @@ public class InviteRegisterActivity extends BaseActivity implements HttpResponse
                     }
                 }
                 break;
+            case 1:
+                if (!TextUtils.isEmpty(result)) {
+                    ShareInfoEntity shareInfoEntity = new ShareInfoEntity();
+                    shareInfoEntity = GsonUtils.gsonToBean(result, ShareInfoEntity.class);
+                    title = shareInfoEntity.getContent().getTitle();
+                    content = shareInfoEntity.getContent().getContent();
+                    img = shareInfoEntity.getContent().getImg();
+                    url = shareInfoEntity.getContent().getUrl();
+                }
         }
     }
 

@@ -2,7 +2,6 @@ package com.tg.coloursteward.fragment;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -31,9 +30,8 @@ import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.adapter.HomeDialogAdapter;
 import com.tg.coloursteward.baseModel.HttpResponse;
-import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.entity.HomeDialogEntitiy;
-import com.tg.coloursteward.info.UserInfo;
+import com.tg.coloursteward.entity.HomeMsgEntity;
 import com.tg.coloursteward.inter.FragmentMineCallBack;
 import com.tg.coloursteward.model.HomeModel;
 import com.tg.coloursteward.module.MainActivity;
@@ -49,17 +47,13 @@ import com.youmai.hxsdk.ProtoCallback;
 import com.youmai.hxsdk.adapter.MessageAdapter;
 import com.youmai.hxsdk.chatgroup.IMGroupActivity;
 import com.youmai.hxsdk.chatsingle.IMConnectionActivity;
-import com.youmai.hxsdk.config.ColorsConfig;
 import com.youmai.hxsdk.data.ExCacheMsgBean;
 import com.youmai.hxsdk.db.bean.CacheMsgBean;
 import com.youmai.hxsdk.db.helper.CacheMsgHelper;
 import com.youmai.hxsdk.entity.MsgConfig;
-import com.youmai.hxsdk.http.IGetListener;
-import com.youmai.hxsdk.http.OkHttpConnector;
 import com.youmai.hxsdk.im.IMMsgCallback;
 import com.youmai.hxsdk.im.IMMsgManager;
 import com.youmai.hxsdk.search.GlobalSearchActivity;
-import com.youmai.hxsdk.utils.GsonUtil;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -138,6 +132,41 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
                     } catch (Exception e) {
                     }
                 }
+                break;
+            case 1:
+                if (!TextUtils.isEmpty(result)) {
+                    HomeMsgEntity homeMsgEntity = new HomeMsgEntity();
+                    homeMsgEntity = GsonUtils.gsonToBean(result, HomeMsgEntity.class);
+                    List<MsgConfig.ContentBean.DataBean> list = new ArrayList<>();
+                    for (int i = 0; i < homeMsgEntity.getContent().getData().size(); i++) {
+                        MsgConfig.ContentBean.DataBean dataBean = new MsgConfig.ContentBean.DataBean();
+                        dataBean.setICON(homeMsgEntity.getContent().getData().get(i).getApp_logo());
+                        dataBean.setComefrom(homeMsgEntity.getContent().getData().get(i).getApp_name());
+                        dataBean.setOwner_name(homeMsgEntity.getContent().getData().get(i).getOwner_name());
+                        dataBean.setTitle(homeMsgEntity.getContent().getData().get(i).getTitle());
+                        dataBean.setClient_code(homeMsgEntity.getContent().getData().get(i).getClient_code());
+                        dataBean.setHomePushTime(homeMsgEntity.getContent().getData().get(i).getHomePushTime());
+                        dataBean.setUrl(homeMsgEntity.getContent().getData().get(i).getUrl());
+                        dataBean.setNotread(homeMsgEntity.getContent().getData().get(i).getIsread());
+                        dataBean.setApp_id(homeMsgEntity.getContent().getData().get(i).getApp_id());
+                        dataBean.setApp_uuid(homeMsgEntity.getContent().getData().get(i).getApp_uuid());
+                        list.add(dataBean);
+                        dataBean = null;
+
+                    }
+                    if (list != null && list.size() > 0) {
+                        for (MsgConfig.ContentBean.DataBean item : list) {
+                            ExCacheMsgBean bean = new ExCacheMsgBean(item);
+                            mMessageAdapter.addPushMsgItem(bean);
+                        }
+                        initUnreadList();
+                    }
+                }
+                break;
+            case 2:
+                if (!TextUtils.isEmpty(result)) {
+
+                }
         }
     }
 
@@ -211,13 +240,13 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        homeModel = new HomeModel(mActivity);
         initView(view);
         reqPushMsg();
         initDialog();
     }
 
     private void initDialog() {
-        homeModel = new HomeModel(mActivity);
         homeModel.getHomeDialog(0, this);
     }
 
@@ -355,7 +384,7 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
         mMessageAdapter.setOnLongItemClickListener(new MessageAdapter.OnItemLongClickListener() {
             @Override
             public void onItemLongClick(View v, ExCacheMsgBean bean) {
-                topPopUp(v, bean);
+                topPopUp(v, bean, bean.getPushMsg().getApp_uuid());
             }
         });
 
@@ -395,33 +424,7 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
         }
     }
 
-
-    private void delPopUp(View v, ExCacheMsgBean bean) {
-        LayoutInflater layoutInflater = (LayoutInflater) getContext()
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = layoutInflater.inflate(R.layout.hx_im_del_lay, null);
-        final PopupWindow popupWindow = new PopupWindow(view,
-                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        popupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
-        popupWindow.setFocusable(true);
-        popupWindow.setOutsideTouchable(true);
-        popupWindow.showAsDropDown(v, 400, 0);
-        TextView tv_del = (TextView) view.findViewById(R.id.tv_del);
-
-        final String targetUuid = bean.getTargetUuid();
-
-        tv_del.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                delMsgChat(targetUuid);
-                popupWindow.dismiss();
-            }
-        });
-    }
-
-
-    private void topPopUp(View v, ExCacheMsgBean bean) {
+    private void topPopUp(View v, ExCacheMsgBean bean, String app_uuid) {
         LayoutInflater layoutInflater = (LayoutInflater) getContext()
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = layoutInflater.inflate(R.layout.hx_im_del_lay, null);
@@ -447,7 +450,7 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
         tv_del.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                delMsgChat(targetUuid);
+                delMsgChat(targetUuid, app_uuid);
                 popupWindow.dismiss();
             }
         });
@@ -477,7 +480,8 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
     }
 
 
-    public void delMsgChat(String targetUuid) {
+    public void delMsgChat(String targetUuid, String app_uuid) {
+        homeModel.postDelAppMsg(2, app_uuid, this);
         CacheMsgHelper.instance().deleteAllMsg(getActivity(), targetUuid);
         //去掉未读消息计数
         IMMsgManager.instance().removeBadge(targetUuid);
@@ -486,30 +490,7 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
 
 
     private void reqPushMsg() {
-        String url = Contants.URl.URL_ICETEST + "/push2/homepush/gethomePushBybox";
-
-        ContentValues params = new ContentValues();
-        params.put("username", UserInfo.employeeAccount);
-        params.put("corp_id", Tools.getStringValue(getContext(), Contants.storage.CORPID));
-
-        ColorsConfig.commonParams(params);
-
-        OkHttpConnector.httpGet(mContext, url, params, new IGetListener() {
-            @Override
-            public void httpReqResult(String response) {
-                MsgConfig config = GsonUtil.parse(response, MsgConfig.class);
-                if (config != null && config.isSuccess() && isAdded()) {
-                    List<MsgConfig.ContentBean.DataBean> list = config.getContent().getData();
-                    if (list != null && list.size() > 0) {
-                        for (MsgConfig.ContentBean.DataBean item : list) {
-                            ExCacheMsgBean bean = new ExCacheMsgBean(item);
-                            mMessageAdapter.addPushMsgItem(bean);
-                        }
-                        initUnreadList();
-                    }
-                }
-            }
-        });
+        homeModel.getHomeMsg(1, this);
     }
 
 

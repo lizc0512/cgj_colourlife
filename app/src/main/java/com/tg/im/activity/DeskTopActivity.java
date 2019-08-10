@@ -12,11 +12,12 @@ import android.widget.AdapterView.OnItemClickListener;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.adapter.DeskTopItemAdapter;
 import com.tg.coloursteward.base.BaseActivity;
+import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.info.HomeDeskTopInfo;
-import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.inter.OnItemDeleteListener;
 import com.tg.coloursteward.inter.OnLoadingListener;
+import com.tg.coloursteward.model.HomeModel;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.RequestConfig;
 import com.tg.coloursteward.net.RequestParams;
@@ -25,22 +26,23 @@ import com.tg.coloursteward.serice.HomeService;
 import com.tg.coloursteward.util.AuthTimeUtils;
 import com.tg.coloursteward.util.LinkParseUtil;
 import com.tg.coloursteward.util.StringUtils;
-import com.tg.coloursteward.util.Tools;
+import com.tg.coloursteward.util.TokenUtils;
 import com.tg.coloursteward.view.PullRefreshListView;
-import com.tg.coloursteward.view.PullRefreshListViewFind;
 import com.tg.coloursteward.view.dialog.ToastFactory;
 import com.youmai.hxsdk.entity.MsgConfig;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 消息推送消息列表
  *
  * @author Administrator
  */
-public class DeskTopActivity extends BaseActivity implements OnItemClickListener, OnItemDeleteListener {
+public class DeskTopActivity extends BaseActivity implements OnItemClickListener, OnItemDeleteListener, HttpResponse {
     public static final String DESKTOP_WEIAPPCODE = "weiappcode";
     public static final String DESKTOP_POSTION = "desktop_postion";
     private PullRefreshListView pullListView;
@@ -53,11 +55,13 @@ public class DeskTopActivity extends BaseActivity implements OnItemClickListener
     private int readPosition;
     private int homePosition;
     private ArrayList<HomeDeskTopInfo> list = new ArrayList<HomeDeskTopInfo>();
+    private HomeModel homeModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         intent = getIntent();
+        homeModel = new HomeModel(this);
         if (intent != null) {
             item = intent.getParcelableExtra(DESKTOP_WEIAPPCODE);
             homePosition = intent.getIntExtra(DESKTOP_POSTION, -1);
@@ -74,7 +78,6 @@ public class DeskTopActivity extends BaseActivity implements OnItemClickListener
 
     @Override
     protected boolean handClickEvent(View v) {
-        // TODO Auto-generated method stub
         if (adapter.getCount() == 0) {
             headView.setRightText("编辑");
             pullListView.setEnablePullRefresh(true);
@@ -116,7 +119,8 @@ public class DeskTopActivity extends BaseActivity implements OnItemClickListener
                     HomeDeskTopInfo item;
                     for (int i = 0; i < data.length; i++) {
                         item = new HomeDeskTopInfo();
-                        item.id = data.getInt(i, "id");
+                        item.id = data.getInt(i, "msg_id");
+                        item.msg_id = data.getString(i, "msg_id");
                         item.auth_type = data.getInt(i, "auth_type");
                         item.icon = data.getString(i, "ICON");
                         item.owner_name = data.getString(i, "owner_name");
@@ -127,7 +131,7 @@ public class DeskTopActivity extends BaseActivity implements OnItemClickListener
                         item.comefrom = data.getString(i, "comefrom");
                         item.url = data.getString(i, "url");
                         item.client_code = data.getString(i, "client_code");
-                        item.notread = data.getInt(i, "notread");
+                        item.notread = data.getInt(i, "isread");
                         list.add(item);
                     }
                 }
@@ -137,29 +141,24 @@ public class DeskTopActivity extends BaseActivity implements OnItemClickListener
             public void onLoadingMore(PullRefreshListView t, Handler hand, int pageIndex) {
                 RequestConfig config = new RequestConfig(DeskTopActivity.this, PullRefreshListView.HTTP_MORE_CODE);
                 config.handler = hand;
-                RequestParams params = new RequestParams();
-                params.put("username", UserInfo.employeeAccount);
-                params.put("client_code", item.getClient_code());
-                params.put("showType", 1);
-                params.put("page", pageIndex);
-                params.put("pagesize", PullRefreshListViewFind.PAGER_SIZE);
-                params.put("corp_id", Tools.getStringValue(DeskTopActivity.this, Contants.storage.CORPID));
-                HttpTools.httpGet(Contants.URl.URL_ICETEST, "/push2/homepush", config, params);
+                Map<String, Object> map = new HashMap();
+                map.put("app_id", item.getApp_id());
+                map.put("page", pageIndex);
+                Map<String, String> params = TokenUtils.getStringMap(TokenUtils.getNewSaftyMap(
+                        DeskTopActivity.this, map));
+                HttpTools.httpGet_Map(Contants.URl.URL_NEW, "/app/home/getMsgDetailList", config, (HashMap) params);
             }
 
             @Override
             public void onLoading(PullRefreshListView t, Handler hand) {
                 RequestConfig config = new RequestConfig(DeskTopActivity.this, PullRefreshListView.HTTP_FRESH_CODE);
                 config.handler = hand;
-
-                RequestParams params = new RequestParams();
-                params.put("username", UserInfo.employeeAccount);
-                params.put("showType", 1);
-                params.put("client_code", item.getClient_code());
-                params.put("page", 1);
-                params.put("pagesize", PullRefreshListViewFind.PAGER_SIZE);
-                params.put("corp_id", Tools.getStringValue(DeskTopActivity.this, Contants.storage.CORPID));
-                HttpTools.httpGet(Contants.URl.URL_ICETEST, "/push2/homepush", config, params);
+                Map<String, Object> map = new HashMap();
+                map.put("app_id", item.getApp_id());
+                map.put("page", 1);
+                Map<String, String> params = TokenUtils.getStringMap(TokenUtils.getNewSaftyMap(
+                        DeskTopActivity.this, map));
+                HttpTools.httpGet_Map(Contants.URl.URL_NEW, "/app/home/getMsgDetailList", config, (HashMap) params);
             }
         });
         pullListView.performLoading();
@@ -172,11 +171,7 @@ public class DeskTopActivity extends BaseActivity implements OnItemClickListener
      */
     private void readMsg(int Position) {
         readPosition = Position;
-        RequestConfig config = new RequestConfig(this, HttpTools.SET_MSG_READ);
-        RequestParams params = new RequestParams();
-        params.put("client_code", list.get(Position).client_code);
-        params.put("username", UserInfo.employeeAccount);
-        HttpTools.httpPut(Contants.URl.URL_ICETEST, "/push2/homepush/readhomePush", config, params);
+        homeModel.postSetMsgRead(0, list.get(Position).msg_id, this);
         list.get(readPosition).notread = 1;
         adapter.notifyDataSetChanged();
     }
@@ -204,12 +199,11 @@ public class DeskTopActivity extends BaseActivity implements OnItemClickListener
         RequestConfig config = new RequestConfig(this, HttpTools.POST_DELETE_INFO, null);
         RequestParams params = new RequestParams();
         params.put("msgid", info.id);
-        HttpTools.httpDelete(Contants.URl.URL_ICETEST, "/push2/homepush", config, params);
+        homeModel.postDelMsg(1, list.get(position).msg_id, this);
     }
 
     @Override
     public void onSuccess(Message msg, String jsonString, String hintString) {
-        // TODO Auto-generated method stub
         super.onSuccess(msg, jsonString, hintString);
         int code = HttpTools.getCode(jsonString);
         if (msg.arg1 == HttpTools.POST_DELETE_INFO) {
@@ -220,18 +214,12 @@ public class DeskTopActivity extends BaseActivity implements OnItemClickListener
             } else {
                 ToastFactory.showToast(DeskTopActivity.this, message);
             }
-        } else {
-            if (code == 0) {
-                list.get(readPosition).notread = 1;
-                adapter.notifyDataSetChanged();
-            }
         }
 
     }
 
     @Override
     public void onBackPressed() {
-        // TODO Auto-generated method stub
         if (isEditable) {
             headView.setRightText("编辑");
             pullListView.setEnablePullRefresh(true);
@@ -253,5 +241,23 @@ public class DeskTopActivity extends BaseActivity implements OnItemClickListener
         headView.setRightTextColor(getResources().getColor(R.color.white));
         headView.setListenerRight(singleListener);
         return null;
+    }
+
+    @Override
+    public void OnHttpResponse(int what, String result) {
+        switch (what) {
+            case 0:
+                if (!TextUtils.isEmpty(result)) {
+                    list.get(readPosition).notread = 1;
+                    adapter.notifyDataSetChanged();
+                }
+                break;
+            case 1:
+                if (!TextUtils.isEmpty(result)) {
+                    list.remove(deletePosition);
+                    adapter.notifyDataSetChanged();
+                }
+
+        }
     }
 }

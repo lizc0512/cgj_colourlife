@@ -162,7 +162,7 @@ public class SettingActivity extends BaseActivity implements OnClickListener, Ht
      * 单设备退出
      */
     private void singleDevicelogout() {
-        String device_code = spUtils.getStringData(SpConstants.storage.DEVICE_TOKEN,"");
+        String device_code = spUtils.getStringData(SpConstants.storage.DEVICE_TOKEN, "");
         userModel.postSingleExit(1, device_code, this);
     }
 
@@ -186,7 +186,7 @@ public class SettingActivity extends BaseActivity implements OnClickListener, Ht
                 DialogFactory.getInstance().showDialog(SettingActivity.this, new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        settingModel.deleteAllNotice(1, UserInfo.employeeAccount, 1, SettingActivity.this);
+                        settingModel.postDelAllMsg(2, SettingActivity.this);
                     }
                 }, null, "是否确定清空首页消息列表？", null, null);
                 break;
@@ -255,6 +255,14 @@ public class SettingActivity extends BaseActivity implements OnClickListener, Ht
                 if (!TextUtils.isEmpty(result)) {
                     String message = HttpTools.getMessageString(result);
                     ToastUtil.showShortToast(this, message);
+                    Message msghome = new Message();
+                    msghome.what = Contants.LOGO.CLEAR_HOMELIST;
+                    EventBus.getDefault().post(msghome);
+                }
+                break;
+            case 2:
+                if (!TextUtils.isEmpty(result)) {
+                    ToastUtil.showShortToast(this, "清空成功");
                     Message msghome = new Message();
                     msghome.what = Contants.LOGO.CLEAR_HOMELIST;
                     EventBus.getDefault().post(msghome);

@@ -340,7 +340,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                             .apply(new RequestOptions()
                                     .error(R.drawable.color_default_header)
                                     .placeholder(R.drawable.color_default_header)
-                                    .diskCacheStrategy(DiskCacheStrategy.RESOURCE))
+                                    .diskCacheStrategy(DiskCacheStrategy.ALL))
                             .into(itemView.message_icon);
                 }
             }
@@ -554,7 +554,6 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 }
             }
         });
-
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {

@@ -19,5 +19,6 @@ public class HomeDeskTopInfo implements Serializable {
 	public String client_code=""; 
 	public String comefrom=""; 
 	public String url=""; 
+	public String msg_id="";
 	public int notread;
 }

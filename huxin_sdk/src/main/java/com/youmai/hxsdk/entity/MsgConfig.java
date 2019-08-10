@@ -79,6 +79,8 @@ public class MsgConfig {
             private String owner_name;
             private int notread;
             private String ICON;
+            private String app_id;
+            private String app_uuid;
 
             public int getId() {
                 return id;
@@ -158,6 +160,22 @@ public class MsgConfig {
 
             public void setICON(String ICON) {
                 this.ICON = ICON;
+            }
+
+            public String getApp_id() {
+                return app_id;
+            }
+
+            public void setApp_id(String app_id) {
+                this.app_id = app_id;
+            }
+
+            public String getApp_uuid() {
+                return app_uuid;
+            }
+
+            public void setApp_uuid(String app_uuid) {
+                this.app_uuid = app_uuid;
             }
 
             @Override

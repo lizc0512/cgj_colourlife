@@ -28,7 +28,8 @@ import java.util.Map;
  */
 public class SettingModel extends BaseModel {
     private String updateUrl = "/get/version";
-    private String deleteAllUrl = "/push2/homepush/deleteall";
+    private String homeDelAllMsgUrl = "/app/home/delUserMsg";
+    private String inviteShareUrl = "/app/home/share/info";
 
     public SettingModel(Context context) {
         super(context);
@@ -73,40 +74,64 @@ public class SettingModel extends BaseModel {
     }
 
     /**
+     * 清空用户首页消息列表
+     *
      * @param what
-     * @param username
-     * @param source
-     * @param httpResponse 清空首页消息列表
+     * @param httpResponse
      */
-    public void deleteAllNotice(int what, String username, int source, HttpResponse httpResponse) {
+    public void postDelAllMsg(int what, HttpResponse httpResponse) {
         Map<String, Object> params = new HashMap<>();
-        params.put("username", username);
-        params.put("source", source);
-        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 4, deleteAllUrl), RequestMethod.DELETE);
-        request(what, request, RequestEncryptionUtils.getIceMap(mContext, params), new HttpListener<String>() {
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(
+                mContext, 0, homeDelAllMsgUrl), RequestMethod.POST);
+        request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
             @Override
             public void onSucceed(int what, Response<String> response) {
                 int responseCode = response.getHeaders().getResponseCode();
                 String result = response.get();
                 if (responseCode == RequestEncryptionUtils.responseSuccess) {
-                    if (!TextUtils.isEmpty(result)) {
-                        int code = showSuccesResultMessage(result);
-                        if (code == 0) {
-                            httpResponse.OnHttpResponse(what, result);
-                        } else {
-                            showErrorCodeMessage(response);
-                        }
-                    } else {
-                        showErrorCodeMessage(response);
+                    int code = showSuccesResultMessage(result);
+                    if (code == 0) {
+                        httpResponse.OnHttpResponse(what, result);
                     }
+                } else {
+                    showErrorCodeMessage(response);
                 }
             }
 
             @Override
             public void onFailed(int what, Response<String> response) {
-                showExceptionMessage(what, response);
             }
-        }, true, true);
+        }, true, false);
+    }
 
+    /**
+     * 分享信息获取
+     *
+     * @param what
+     * @param httpResponse
+     */
+    public void getShareInfo(int what, HttpResponse httpResponse) {
+        Map<String, Object> params = new HashMap<>();
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(
+                mContext, 0, inviteShareUrl), RequestMethod.GET);
+        request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    String result = response.get();
+                    int code = showSuccesResultMessage(result);
+                    if (code == 0) {
+                        httpResponse.OnHttpResponse(what, result);
+                    }
+                } else {
+                    showErrorCodeMessage(response);
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+            }
+        }, true, false);
     }
 }

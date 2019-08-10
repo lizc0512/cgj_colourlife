@@ -31,6 +31,11 @@ public class HomeModel extends BaseModel {
     private String scanUrl = "/app/formatUrl";
     private String userSyncUrl = "/api/app/userSync";
     private String accessTokenUrl = "/app/home/authms/accessToken";
+    private String homeMsgUrl = "/app/home/getMsgList";
+    private String homeMsgDetailUrl = "/app/home/getMsgDetailList";
+    private String homeSetMsgReadUrl = "/app/home/setMsgRead";
+    private String homeDelMsgUrl = "/app/home/delMsg";
+    private String homeDelAppMsgUrl = "/app/home/delAppMsg";
 
     public HomeModel(Context context) {
         super(context);
@@ -200,13 +205,168 @@ public class HomeModel extends BaseModel {
 
     /**
      * @param what
-     * @param corp_id 为空默认彩生活租户
+     * @param corp_id      为空默认彩生活租户
      * @param httpResponse 获取鉴权2.0token
      */
     public void getAccessToken(int what, String corp_id, HttpResponse httpResponse) {
         Map<String, Object> params = new HashMap<>();
         params.put("corp_id", corp_id);
         final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 0, accessTokenUrl), RequestMethod.GET);
+        request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    int code = showSuccesResultMessageTheme(result);
+                    if (code == 0) {
+                        httpResponse.OnHttpResponse(what, result);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+            }
+        }, true, false);
+    }
+
+    /**
+     * 获取消息应用列表
+     *
+     * @param what
+     * @param httpResponse
+     */
+    public void getHomeMsg(int what, HttpResponse httpResponse) {
+        Map<String, Object> params = new HashMap<>();
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 0, homeMsgUrl), RequestMethod.GET);
+        request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    int code = showSuccesResultMessageTheme(result);
+                    if (code == 0) {
+                        httpResponse.OnHttpResponse(what, result);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+            }
+        }, true, false);
+    }
+
+    /**
+     * 获取应用消息列表
+     *
+     * @param what
+     * @param app_id
+     * @param page
+     * @param httpResponse
+     */
+    public void getHomeMsgDetail(int what, String app_id, int page, HttpResponse httpResponse) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("app_id", app_id);
+        params.put("page", page);
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 0, homeMsgDetailUrl), RequestMethod.GET);
+        request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    int code = showSuccesResultMessage(result);
+                    if (code == 0) {
+                        httpResponse.OnHttpResponse(what, result);
+                    }
+                } else {
+                    showErrorCodeMessage(response);
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+            }
+        }, true, false);
+    }
+
+    /**
+     * 修改消息为已读
+     *
+     * @param what
+     * @param msg_id
+     * @param httpResponse
+     */
+    public void postSetMsgRead(int what, String msg_id, HttpResponse httpResponse) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("msg_id", msg_id);
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(
+                mContext, 0, homeSetMsgReadUrl), RequestMethod.POST);
+        request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    int code = showSuccesResultMessageTheme(result);
+                    if (code == 0) {
+                        httpResponse.OnHttpResponse(what, result);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+            }
+        }, true, false);
+    }
+
+    /**
+     * 单条消息删除
+     *
+     * @param what
+     * @param msg_id
+     * @param httpResponse
+     */
+    public void postDelMsg(int what, String msg_id, HttpResponse httpResponse) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("msg_id", msg_id);
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(
+                mContext, 0, homeDelMsgUrl), RequestMethod.POST);
+        request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    int code = showSuccesResultMessageTheme(result);
+                    if (code == 0) {
+                        httpResponse.OnHttpResponse(what, result);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+            }
+        }, true, false);
+    }
+
+    /**
+     * 应用消息删除
+     *
+     * @param what
+     * @param app_uuid
+     * @param httpResponse
+     */
+    public void postDelAppMsg(int what, String app_uuid, HttpResponse httpResponse) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("app_uuid", app_uuid);
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(
+                mContext, 0, homeDelAppMsgUrl), RequestMethod.POST);
         request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
             @Override
             public void onSucceed(int what, Response<String> response) {

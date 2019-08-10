@@ -226,7 +226,6 @@ public class AccountActivity extends BaseActivity implements MyListener {
                 try {
                     if (jsonObject != null) {
                         account = jsonObject.getString("money");
-                        Log.e(TAG, "onSuccess:account " + account);
                         if (StringUtils.isNotEmpty(account)) {
                             DecimalFormat df = new DecimalFormat("0.00");
                             tv_dgzh.setText(df.format(Double.parseDouble(account)));

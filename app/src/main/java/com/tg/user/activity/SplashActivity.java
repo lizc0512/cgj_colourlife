@@ -137,6 +137,8 @@ public class SplashActivity extends BaseActivity implements View.OnClickListener
                         }
                     }
                 });
+            }else {
+                redirectto(skin_code, urlAd, auth_type, false);
             }
         } else {
             redirectto(skin_code, urlAd, auth_type, false);

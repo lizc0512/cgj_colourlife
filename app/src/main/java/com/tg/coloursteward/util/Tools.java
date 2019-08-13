@@ -296,6 +296,7 @@ public class Tools {
             jsonObj.put("is_deleted", UserInfo.is_deleted);
             jsonObj.put("special", UserInfo.special);
             jsonObj.put("mobile", UserInfo.mobile);
+            jsonObj.put("init_mobile", UserInfo.init_mobile);
             jsonObj.put("czy_id", UserInfo.czy_id);
             jsonObj.put("email", UserInfo.email);
 
@@ -319,6 +320,7 @@ public class Tools {
         int gender = 0;
         String sex = "";
         String mobile = "";
+        String init_mobile = "";
         String mail = "";
         String corp_id = "";
         int is_deleted = 0;
@@ -344,6 +346,7 @@ public class Tools {
                 sex = "女";
             }
             mobile = data.getString("bind_mobile");//手机号
+            init_mobile = data.getString("mobile");//手机号
             mail = data.getString("email");//邮箱号
             corp_id = data.getString("corp_id");//租户ID
             is_deleted = data.getInt("is_deleted");//是否删除
@@ -363,6 +366,7 @@ public class Tools {
             realName = data.getString("realname");//真实姓名
             sex = data.getString("sex");//性别：1男2女,
             mobile = data.getString("bind_mobile");//手机号
+            init_mobile = data.getString("mobile");//手机号
             mail = data.getString("mail");//邮箱号
             czy_id = data.getInt("czyId");//彩之云ID
             jobName = data.getString("jobName");//职位
@@ -442,6 +446,10 @@ public class Tools {
                 changed = true;
                 break initInfo;
             }
+            if (!TextUtils.equals(UserInfo.init_mobile, init_mobile)) {
+                changed = true;
+                break initInfo;
+            }
             if (UserInfo.czy_id != czy_id) {
                 changed = true;
                 break initInfo;
@@ -461,6 +469,7 @@ public class Tools {
         UserInfo.special = special;
         UserInfo.email = mail;
         UserInfo.mobile = mobile;
+        UserInfo.init_mobile = init_mobile;
         UserInfo.czy_id = czy_id;
         return changed;
     }

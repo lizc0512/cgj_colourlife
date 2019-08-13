@@ -26,6 +26,7 @@ public class UserInfo {
     public static int special = 0;
     public static String email = "";
     public static String mobile = "";
+    public static String init_mobile = "";
     public static int czy_id = 0;
 
     public static void initClear() {

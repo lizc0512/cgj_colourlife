@@ -24,7 +24,6 @@ import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.constant.SpConstants;
 import com.tg.coloursteward.database.SharedPreferencesTools;
-import com.tg.coloursteward.entity.CzyOauthEntity;
 import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.module.MainActivity;
 import com.tg.coloursteward.net.DES;
@@ -209,7 +208,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         } catch (Exception e) {
             e.printStackTrace();
         }
-        userModel.getCzyLogin(6, code, this);
     }
 
     private void btnClick() {
@@ -505,13 +503,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                     if (difference != null) {
                         spUtils.saveLongData(SpConstants.UserModel.DIFFERENCE, Long.valueOf(difference));
                     }
-                }
-                break;
-            case 6:
-                if (!TextUtils.isEmpty(result)) {
-                    CzyOauthEntity czyOauthEntity = new CzyOauthEntity();
-                    czyOauthEntity = GsonUtils.gsonToBean(result, CzyOauthEntity.class);
-                    login(czyOauthEntity.getContent().getUsername(), "", czyOauthEntity.getContent().getPasswordMD5(), loginType);
                 }
                 break;
         }

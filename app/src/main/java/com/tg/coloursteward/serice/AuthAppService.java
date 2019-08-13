@@ -45,26 +45,6 @@ public class AuthAppService implements MessageHandler.ResponseListener, HttpResp
     public void getAppAuth(final GetTwoRecordListener<String, String> listener) {
         this.listener = listener;
         String corp_id = Tools.getStringValue(context, Contants.storage.CORPID);
-        if (StringUtils.isEmpty(corp_id)) {
-            ToastFactory.showToast(context, "参数错误，请稍后重试");
-            return;
-        }
-        try {
-            String app_uuid = DES.APP_ID;
-            String app_secret = DES.TOKEN;
-            String timestamp = HttpTools.getTime();
-            String signature = MD5.getMd5Value(app_uuid + timestamp + app_secret).toLowerCase();
-            RequestConfig config = new RequestConfig(context, 0);
-            config.handler = msgHand.getHandler();
-            RequestParams params = new RequestParams();
-            params.put("corp_uuid", corp_id);
-            params.put("app_uuid", app_uuid);
-            params.put("signature", signature);
-            params.put("timestamp", timestamp);
-//            HttpTools.httpPost(Contants.URl.URL_ICETEST, "/authms/auth/app", config, params);
-        } catch (Exception e1) {
-            e1.printStackTrace();
-        }
         homeModel = new HomeModel(context);
         homeModel.getAccessToken(0, corp_id, this);
     }

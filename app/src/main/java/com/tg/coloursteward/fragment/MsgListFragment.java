@@ -147,7 +147,11 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
                         dataBean.setClient_code(homeMsgEntity.getContent().getData().get(i).getClient_code());
                         dataBean.setHomePushTime(homeMsgEntity.getContent().getData().get(i).getHomePushTime());
                         dataBean.setUrl(homeMsgEntity.getContent().getData().get(i).getUrl());
-                        dataBean.setNotread(homeMsgEntity.getContent().getData().get(i).getIsread());
+                        if (homeMsgEntity.getContent().getData().get(i).getIsread() > 0) {
+                            dataBean.setNotread(0);
+                        } else {
+                            dataBean.setNotread(1);
+                        }
                         dataBean.setApp_id(homeMsgEntity.getContent().getData().get(i).getApp_id());
                         dataBean.setApp_uuid(homeMsgEntity.getContent().getData().get(i).getApp_uuid());
                         list.add(dataBean);

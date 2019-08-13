@@ -122,7 +122,7 @@ public class DeskTopActivity extends BaseActivity implements OnItemClickListener
                         item.id = data.getInt(i, "msg_id");
                         item.msg_id = data.getString(i, "msg_id");
                         item.auth_type = data.getInt(i, "auth_type");
-                        item.icon = data.getString(i, "ICON");
+                        item.icon = data.getString(i, "app_logo");
                         item.owner_name = data.getString(i, "owner_name");
                         item.owner_avatar = data.getString(i, "owner_avatar");
                         item.modify_time = data.getString(i, "homePushTime");

@@ -278,8 +278,10 @@ public class FragmentManagementTest extends Fragment implements HttpResponse, Vi
         for (int i = 0; i < appList.size(); i++) {
             CropLayoutEntity.ContentBeanX.ContentBean.DataBean dataBean = new CropLayoutEntity.ContentBeanX.ContentBean.DataBean();
             dataBean.setItem_name(appList.get(i).getName());
-            listItem.add(dataBean);
-            listItem.addAll(appList.get(i).getData());
+            if (null != appList.get(i).getData() && appList.get(i).getData().size() > 0) {
+                listItem.add(dataBean);
+                listItem.addAll(appList.get(i).getData());
+            }
         }
         MyGridLayoutManager gridLayoutManager = new MyGridLayoutManager(mActivity, 4);
         rv_application.setLayoutManager(gridLayoutManager);

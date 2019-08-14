@@ -147,13 +147,46 @@ public class FragmentManagementTest extends Fragment implements HttpResponse, Vi
             appList = content.getContent();
         } catch (Exception e) {
         }
-        rvApplicaionView = LayoutInflater.from(mActivity).inflate(R.layout.micro_application_view, null);
+        View rvApplicaionView = LayoutInflater.from(mActivity).inflate(R.layout.micro_application_view, null);
         ll_micro_addView.addView(rvApplicaionView);
-        rv_application = rvApplicaionView.findViewById(R.id.rv_application);
+        RecyclerView rv_application = rvApplicaionView.findViewById(R.id.rv_application);
         rv_application.setFocusableInTouchMode(false); //设置不需要焦点
         rv_application.requestFocus(); //设置焦点不需要
+        List<CropLayoutEntity.ContentBeanX.ContentBean.DataBean> listItem = new ArrayList<>();
         if (null != appList && appList.size() > 0) {
-            microApplicaionShow(appList);
+            listItem.clear();
+            for (int i = 0; i < appList.size(); i++) {
+                CropLayoutEntity.ContentBeanX.ContentBean.DataBean dataBean = new CropLayoutEntity.ContentBeanX.ContentBean.DataBean();
+                dataBean.setItem_name(appList.get(i).getName());
+                if (null != appList.get(i).getData() && appList.get(i).getData().size() > 0) {
+                    listItem.add(dataBean);
+                    listItem.addAll(appList.get(i).getData());
+                }
+            }
+            MyGridLayoutManager gridLayoutManager = new MyGridLayoutManager(mActivity, 4);
+            rv_application.setLayoutManager(gridLayoutManager);
+            rv_application.setHasFixedSize(true);
+            rv_application.setNestedScrollingEnabled(false);
+            gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+                @Override
+                public int getSpanSize(int position) {
+                    if (null != listItem && listItem.size() > 0 && !TextUtils.isEmpty(listItem.get(position).getItem_name())) {
+                        return 4;//栏目导航栏
+                    } else {
+                        return 1;//栏目子itme
+                    }
+                }
+            });
+            if (null != listItem && listItem.size() > 0) {
+                MicroApplicationAdapter microApplicationAdapter = new MicroApplicationAdapter(mActivity, listItem);
+                rv_application.setAdapter(microApplicationAdapter);
+                microApplicationAdapter.setCallBack((position, url, auth_type) -> {
+                    if (null == mMicroAuthTimeUtils) {
+                        mMicroAuthTimeUtils = new MicroAuthTimeUtils();
+                    }
+                    mMicroAuthTimeUtils.IsAuthTime(mActivity, url, "", auth_type, "", "");
+                });
+            }
         }
     }
 
@@ -266,47 +299,6 @@ public class FragmentManagementTest extends Fragment implements HttpResponse, Vi
         bga_banner.setAutoPlayAble(mBannerList.size() > 1);
         bga_banner.setData(bannerUrlList, null);
         bga_banner.startAutoPlay();
-    }
-
-    /**
-     * 应用icon展示
-     *
-     * @param appList
-     */
-    private void microApplicaionShow(List<CropLayoutEntity.ContentBeanX.ContentBean> appList) {
-        listItem.clear();
-        for (int i = 0; i < appList.size(); i++) {
-            CropLayoutEntity.ContentBeanX.ContentBean.DataBean dataBean = new CropLayoutEntity.ContentBeanX.ContentBean.DataBean();
-            dataBean.setItem_name(appList.get(i).getName());
-            if (null != appList.get(i).getData() && appList.get(i).getData().size() > 0) {
-                listItem.add(dataBean);
-                listItem.addAll(appList.get(i).getData());
-            }
-        }
-        MyGridLayoutManager gridLayoutManager = new MyGridLayoutManager(mActivity, 4);
-        rv_application.setLayoutManager(gridLayoutManager);
-        rv_application.setHasFixedSize(true);
-        rv_application.setNestedScrollingEnabled(false);
-        gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-            @Override
-            public int getSpanSize(int position) {
-                if (null != listItem && listItem.size() > 0 && !TextUtils.isEmpty(listItem.get(position).getItem_name())) {
-                    return 4;//栏目导航栏
-                } else {
-                    return 1;//栏目子itme
-                }
-            }
-        });
-        if (null != listItem && listItem.size() > 0) {
-            microApplicationAdapter = new MicroApplicationAdapter(mActivity, listItem);
-            rv_application.setAdapter(microApplicationAdapter);
-            microApplicationAdapter.setCallBack((position, url, auth_type) -> {
-                if (null == mMicroAuthTimeUtils) {
-                    mMicroAuthTimeUtils = new MicroAuthTimeUtils();
-                }
-                mMicroAuthTimeUtils.IsAuthTime(mActivity, url, "", auth_type, "", "");
-            });
-        }
     }
 
     @Override

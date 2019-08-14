@@ -360,7 +360,7 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
                 if (bean.getUiType() == MessageAdapter.ADAPTER_TYPE_PUSHMSG) {
                     Intent intent = new Intent(getActivity(), DeskTopActivity.class);
                     intent.putExtra(DeskTopActivity.DESKTOP_WEIAPPCODE, bean.getPushMsg());
-                    startActivity(intent);
+                    startActivityForResult(intent, 3000);
                 } else if (bean.getUiType() == MessageAdapter.ADAPTER_TYPE_SINGLE) {//单聊
 
                     Intent intent = new Intent(getActivity(), IMConnectionActivity.class);
@@ -393,6 +393,17 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
         });
 
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 3000) {
+            if (resultCode == 3001) {
+                reqPushMsg();
+            }
+        }
+    }
+
 
     @Override
     public void onResume() {
@@ -493,10 +504,20 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
     }
 
 
-    private void reqPushMsg() {
+    public void reqPushMsg() {
+        if (null == homeModel) {
+            homeModel = new HomeModel(mActivity);
+        }
         homeModel.getHomeMsg(1, this);
     }
 
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser && null != mActivity) {
+            reqPushMsg();
+        }
+    }
 
     /**
      * IM消息的入口回调

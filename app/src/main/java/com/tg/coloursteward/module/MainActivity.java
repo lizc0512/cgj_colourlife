@@ -863,11 +863,10 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
 
     // 更新首页消息推送列表
     private void getUpdatePushInfo() {
-        RequestConfig config = new RequestConfig(this, HttpTools.GET_UPDATE_PUSH);
-        RequestParams params = new RequestParams();
-        params.put("username", UserInfo.employeeAccount);
-        params.put("corp_id", Tools.getStringValue(this, Contants.storage.CORPID));
-        HttpTools.httpGet(Contants.URl.URL_ICETEST, "/push2/homepush/gethomePushBybox", config, params);
+        if (mAdapter.getItem(0) instanceof MsgListFragment) {
+            MsgListFragment fragment = (MsgListFragment) mAdapter.instantiateItem(mViewPager, 0);
+            fragment.reqPushMsg();
+        }
     }
 
     private void postDeleteListItem(String source_id, String comefrom) {

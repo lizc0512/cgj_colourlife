@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -42,7 +43,8 @@ import java.util.Map;
  *
  * @author Administrator
  */
-public class DeskTopActivity extends BaseActivity implements OnItemClickListener, OnItemDeleteListener, HttpResponse {
+public class DeskTopActivity extends BaseActivity implements OnItemClickListener, OnItemDeleteListener,
+        HttpResponse, View.OnClickListener {
     public static final String DESKTOP_WEIAPPCODE = "weiappcode";
     public static final String DESKTOP_POSTION = "desktop_postion";
     private PullRefreshListView pullListView;
@@ -231,6 +233,19 @@ public class DeskTopActivity extends BaseActivity implements OnItemClickListener
     }
 
     @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_BACK:
+                setResult(3001);
+                this.finish();
+                return false;//拦截事件
+            default:
+                break;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
     public View getContentView() {
         return getLayoutInflater().inflate(R.layout.activity_desk_top, null);
     }
@@ -240,6 +255,7 @@ public class DeskTopActivity extends BaseActivity implements OnItemClickListener
         headView.setRightText("编辑");
         headView.setRightTextColor(getResources().getColor(R.color.white));
         headView.setListenerRight(singleListener);
+        headView.setListenerBack(this);
         return null;
     }
 
@@ -258,6 +274,16 @@ public class DeskTopActivity extends BaseActivity implements OnItemClickListener
                     adapter.notifyDataSetChanged();
                 }
 
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.back_layout:
+                setResult(3001);
+                this.finish();
+                break;
         }
     }
 }

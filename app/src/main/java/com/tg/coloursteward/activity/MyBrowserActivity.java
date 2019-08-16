@@ -213,6 +213,9 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
             } else if (oauth2_0.equals("5")) {
                 isJSOauthShow = true;
                 isOauth2Show = true;
+            }else{
+                isJSOauthShow = true;
+                isOauth2Show = true;
             }
         } else {
             isJSOauthShow = true;

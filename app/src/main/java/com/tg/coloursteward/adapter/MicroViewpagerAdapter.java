@@ -28,6 +28,7 @@ public class MicroViewpagerAdapter extends PagerAdapter {
     public void setCallBack(MicroApplicationCallBack mcallBack) {
         this.callBack = mcallBack;
     }
+
     public MicroViewpagerAdapter(Context context, List<CropLayoutEntity.ContentBeanX.ContentBean.DataBean> views) {
         this.mContext = context;
         this.mList = views;
@@ -54,7 +55,7 @@ public class MicroViewpagerAdapter extends PagerAdapter {
         int pos = position % mList.size();
         tv_micro_vp_title.setText(mList.get(pos).getName());
         tv_micro_vp_content.setText(mList.get(pos).getData());
-        if (mList.get(pos).getIsShow().equals("1")) {
+        if ("1".equals(mList.get(pos).getIsShow())) {
             tv_micro_vp_title.setTextColor(mContext.getResources().getColor(R.color.white));
             tv_micro_vp_content.setTextColor(mContext.getResources().getColor(R.color.white));
             rl_micro_viewpager.setBackground(mContext.getResources().getDrawable(R.drawable.pic_bg_data_select_s3));

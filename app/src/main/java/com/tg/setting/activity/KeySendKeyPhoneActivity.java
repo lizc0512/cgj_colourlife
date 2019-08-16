@@ -191,6 +191,7 @@ public class KeySendKeyPhoneActivity extends BaseActivity implements HttpRespons
         switch (v.getId()) {
             case R.id.iv_add:
                 adapter.list.add("");
+                adapter.list.add("");
                 adapter.notifyDataSetChanged();
                 setSubmitBg();
                 break;

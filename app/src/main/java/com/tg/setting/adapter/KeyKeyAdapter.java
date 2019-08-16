@@ -9,16 +9,18 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.tg.coloursteward.R;
+import com.tg.setting.activity.KeyDoorManagerActivity;
+import com.tg.setting.entity.KeyBagsEntity;
 
 import java.util.List;
 
 public class KeyKeyAdapter extends RecyclerView.Adapter<KeyKeyAdapter.DefaultViewHolder> {
 
-    public List<String> addBeanList;
+    public List<KeyBagsEntity.ContentBeanX.ContentBean> keyList;
     public Context mContext;
 
-    public KeyKeyAdapter(Context mContext, List<String> addBeanList) {
-        this.addBeanList = addBeanList;
+    public KeyKeyAdapter(Context mContext, List<KeyBagsEntity.ContentBeanX.ContentBean> keyList) {
+        this.keyList = keyList;
         this.mContext = mContext;
     }
 
@@ -31,22 +33,43 @@ public class KeyKeyAdapter extends RecyclerView.Adapter<KeyKeyAdapter.DefaultVie
 
     @Override
     public void onBindViewHolder(@NonNull KeyKeyAdapter.DefaultViewHolder holder, int position) {
+        KeyBagsEntity.ContentBeanX.ContentBean contentBeanX = keyList.get(position);
+        String door_name = contentBeanX.getPackageName();
+        holder.tv_name.setText(door_name);
+        List<KeyBagsEntity.ContentBeanX.ContentBean.AccessListBean> accessListBeanList = contentBeanX.getAccessList();
+        StringBuffer stringBuffer = new StringBuffer();
+        if (null != accessListBeanList && accessListBeanList.size() > 0) {
+            for (KeyBagsEntity.ContentBeanX.ContentBean.AccessListBean accessListBean : accessListBeanList) {
+                stringBuffer.append(accessListBean.getAccessName());
+                stringBuffer.append(",");
+            }
+            String allName = stringBuffer.toString();
+            holder.door_name.setText(allName.substring(0, allName.length() - 1));
+        }
+        holder.tv_todo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mContext instanceof KeyDoorManagerActivity) {
+                    ((KeyDoorManagerActivity) mContext).toSendPackge(position);
+                }
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
-        return addBeanList == null ? 0 : addBeanList.size();
+        return keyList == null ? 0 : keyList.size();
     }
 
     static class DefaultViewHolder extends RecyclerView.ViewHolder {
         TextView tv_name;
-        TextView tv_doors;
+        TextView door_name;
         TextView tv_todo;
 
         DefaultViewHolder(View itemView) {
             super(itemView);
             tv_name = itemView.findViewById(R.id.tv_name);
-            tv_doors = itemView.findViewById(R.id.tv_doors);
+            door_name = itemView.findViewById(R.id.door_name);
             tv_todo = itemView.findViewById(R.id.tv_todo);
         }
     }

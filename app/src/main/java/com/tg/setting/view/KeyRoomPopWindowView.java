@@ -18,6 +18,7 @@ import com.tg.coloursteward.R;
 import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.util.GsonUtils;
 import com.tg.setting.activity.KeySendKeyPhoneActivity;
+import com.tg.setting.activity.KeySendKeyQrCodeActivity;
 import com.tg.setting.adapter.KeyAddHorAdapter;
 import com.tg.setting.adapter.KeyAddVerAdapter;
 import com.tg.setting.entity.KeyBuildEntity;
@@ -192,7 +193,9 @@ public class KeyRoomPopWindowView extends PopupWindow implements HttpResponse {
 
     private void setRoom() {
         dismiss();
-        ((KeySendKeyPhoneActivity) context).setRoom(roomName);
+        if (context instanceof KeySendKeyPhoneActivity) {
+            ((KeySendKeyPhoneActivity) context).setRoom(roomName);
+        }
     }
 
     @Override
@@ -238,7 +241,7 @@ public class KeyRoomPopWindowView extends PopupWindow implements HttpResponse {
                             KeyPopEntity bean = new KeyPopEntity();
                             bean.setSelect(false);
                             bean.setId(c.getUnitUuid());
-                            bean.setName(c.getUnitName() + c.getFloorNum());
+                            bean.setName(c.getUnitName());
                             bean.setFloorNum(c.getFloorNum());
                             vAdapter.list.add(bean);
                         }

@@ -1,20 +1,15 @@
 package com.tg.setting.activity;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.tg.coloursteward.R;
@@ -23,9 +18,8 @@ import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.util.DateUtils;
 import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.ToastUtil;
-import com.tg.setting.adapter.KeyPhoneAdapter;
 import com.tg.setting.entity.KeyIdentityEntity;
-import com.tg.setting.view.KeyRoomPopWindowView;
+import com.tg.setting.entity.KeyQrCodeEntity;
 import com.tg.setting.view.KeyStringPopWindowView;
 import com.tg.setting.view.KeyTimePopWindowView;
 import com.tg.user.model.UserModel;
@@ -34,28 +28,23 @@ import com.youmai.hxsdk.utils.DisplayUtil;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
+import static com.tg.setting.activity.KeySendKeyListActivity.COMMUNITY_NAME;
 import static com.tg.setting.activity.KeySendKeyListActivity.COMMUNITY_UUID;
 import static com.tg.setting.activity.KeySendKeyListActivity.DOOR_ID;
-import static com.tg.setting.activity.KeySendKeyListActivity.FORM_SOURCE;
+import static com.tg.setting.activity.KeySendKeyListActivity.DOOR_QRCODE;
 import static com.tg.setting.activity.KeySendKeyListActivity.KEY_CONTENT;
 
 /**
- * 乐开-手机号送钥匙
+ * 乐开-二维码
  *
  * @author hxg 2019.07.18
  */
-public class KeySendKeyPhoneActivity extends BaseActivity implements HttpResponse {
-    private RecyclerView rv_phone;
+public class KeySendKeyQrCodeActivity extends BaseActivity implements HttpResponse {
     private TextView tv_name;
-    private EditText et_phone;
-    private ImageView iv_add;
-    private ImageView iv_contacts;
     private TextView tv_identity;
-    private TextView tv_room;
+    private TextView tv_title_name;
     private TextView tv_one_year;
     private TextView tv_two_year;
     private TextView tv_three_year;
@@ -69,13 +58,11 @@ public class KeySendKeyPhoneActivity extends BaseActivity implements HttpRespons
     private TextView tv_time_invalid;
     private ImageView iv_check;
     private TextView tv_send;
-    private LinearLayout ll_room;
     private LinearLayout ll_time;
-    private KeyPhoneAdapter adapter;
-    private int isPower = 1;
     private int check = 0;
     private int keyType = 0;
     private String communityUuid = "";
+    private String communityName = "";
     private String identityId = "";
     private String doorId;
     private String startTime = "";
@@ -86,9 +73,6 @@ public class KeySendKeyPhoneActivity extends BaseActivity implements HttpRespons
     private UserModel userModel;
     private List<KeyIdentityEntity.ContentBean> identityList = new ArrayList<>();
     private List<String> identityStringList = new ArrayList<>();
-    private List<String> list = new ArrayList<>();
-    private List<String> roomList = new ArrayList<>();
-    private int formSource = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,11 +83,8 @@ public class KeySendKeyPhoneActivity extends BaseActivity implements HttpRespons
     }
 
     private void initView() {
-        rv_phone = findViewById(R.id.rv_phone);
-        iv_add = findViewById(R.id.iv_add);
-        iv_contacts = findViewById(R.id.iv_contacts);
         tv_name = findViewById(R.id.tv_name);
-        et_phone = findViewById(R.id.et_phone);
+        tv_title_name = findViewById(R.id.tv_title_name);
         tv_identity = findViewById(R.id.tv_identity);
         tv_one_year = findViewById(R.id.tv_one_year);
         tv_two_year = findViewById(R.id.tv_two_year);
@@ -118,14 +99,8 @@ public class KeySendKeyPhoneActivity extends BaseActivity implements HttpRespons
         tv_time_invalid = findViewById(R.id.tv_time_invalid);
         iv_check = findViewById(R.id.iv_check);
         tv_send = findViewById(R.id.tv_send);
-        ll_room = findViewById(R.id.ll_room);
-        tv_room = findViewById(R.id.tv_room);
         ll_time = findViewById(R.id.ll_time);
-
-        iv_add.setOnClickListener(singleListener);
-        iv_contacts.setOnClickListener(singleListener);
         tv_identity.setOnClickListener(singleListener);
-        tv_room.setOnClickListener(singleListener);
         tv_one_year.setOnClickListener(singleListener);
         tv_two_year.setOnClickListener(singleListener);
         tv_three_year.setOnClickListener(singleListener);
@@ -139,26 +114,6 @@ public class KeySendKeyPhoneActivity extends BaseActivity implements HttpRespons
         tv_time_invalid.setOnClickListener(singleListener);
         iv_check.setOnClickListener(singleListener);
         tv_send.setOnClickListener(singleListener);
-
-        rv_phone.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        adapter = new KeyPhoneAdapter(this, list, roomList);
-        adapter.setPower(isPower);
-        rv_phone.setAdapter(adapter);
-
-        et_phone.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                setSubmitBg();
-            }
-        });
     }
 
     @SuppressLint("SetTextI18n")
@@ -167,26 +122,15 @@ public class KeySendKeyPhoneActivity extends BaseActivity implements HttpRespons
         doorId = intent.getStringExtra(DOOR_ID);
         communityUuid = intent.getStringExtra(COMMUNITY_UUID);
         keyName = intent.getStringExtra(KEY_CONTENT);
-        formSource = intent.getIntExtra(FORM_SOURCE, 0);
+        communityName = intent.getStringExtra(COMMUNITY_NAME);
         tv_name.setText(keyName);
         userModel.getIdentity(1, communityUuid, this);
     }
 
-    public void delete(int position) {
-        list.remove(position);
-        roomList.remove(position);
-        adapter.notifyDataSetChanged();
-        setSubmitBg();
-    }
-
-    public void setChangeListener(int position, String inputContent) {
-        list.set(position, inputContent);
-        setSubmitBg();
-    }
 
     @Override
     public View getContentView() {
-        return getLayoutInflater().inflate(R.layout.activity_key_send_key_phone, null);
+        return getLayoutInflater().inflate(R.layout.activity_key_send_key_code, null);
     }
 
     @Override
@@ -200,28 +144,6 @@ public class KeySendKeyPhoneActivity extends BaseActivity implements HttpRespons
         Calendar curr;
         Date date;
         switch (v.getId()) {
-            case R.id.iv_add:
-                if (list.size() < 4) {
-                    list.add("");
-                    roomList.add("");
-                    adapter.notifyDataSetChanged();
-                    setSubmitBg();
-                } else {
-                    ToastUtil.showShortToastCenter(KeySendKeyPhoneActivity.this, " 最多只能添加五条数据");
-                }
-                break;
-            case R.id.iv_contacts://联系人
-                break;
-            case R.id.tv_room:
-                type = 0;
-                DisplayUtil.showInput(false, this);
-                if (!TextUtils.isEmpty(communityUuid)) {
-                    KeyRoomPopWindowView roomPop = new KeyRoomPopWindowView(this, communityUuid);
-                    roomPop.setOnDismissListener(new PopupDismissListener());
-                    roomPop.showPopupWindow(contentLayout);
-                }
-                setSubmitBg();
-                break;
             case R.id.tv_identity:
                 DisplayUtil.showInput(false, this);
                 KeyStringPopWindowView areaPop = new KeyStringPopWindowView(this, identityStringList);
@@ -229,9 +151,6 @@ public class KeySendKeyPhoneActivity extends BaseActivity implements HttpRespons
                 areaPop.setOnDismissListener(new PopupDismissListener());
                 break;
             case R.id.tv_one_year:
-                if (!fastClick()) {
-                    break;
-                }
                 clearText();
                 keyType = 1;
                 startTime = DateUtils.getStringDate(new Date(System.currentTimeMillis()), "");
@@ -239,15 +158,11 @@ public class KeySendKeyPhoneActivity extends BaseActivity implements HttpRespons
                 curr.set(Calendar.YEAR, curr.get(Calendar.YEAR) + 1);
                 date = curr.getTime();
                 endTime = DateUtils.getStringDate(date, "");
-
                 tv_one_year.setBackgroundResource(R.drawable.shape_key_choose_select_text);
                 ll_time.setVisibility(View.GONE);
                 setSubmitBg();
                 break;
             case R.id.tv_two_year:
-                if (!fastClick()) {
-                    break;
-                }
                 clearText();
                 keyType = 2;
                 startTime = DateUtils.getStringDate(new Date(System.currentTimeMillis()), "");
@@ -260,38 +175,26 @@ public class KeySendKeyPhoneActivity extends BaseActivity implements HttpRespons
                 setSubmitBg();
                 break;
             case R.id.tv_three_year:
-                if (!fastClick()) {
-                    break;
-                }
                 clearText();
                 keyType = 3;
-
                 startTime = DateUtils.getStringDate(new Date(System.currentTimeMillis()), "");
                 curr = Calendar.getInstance();
                 curr.set(Calendar.YEAR, curr.get(Calendar.YEAR) + 3);
                 date = curr.getTime();
                 endTime = DateUtils.getStringDate(date, "");
-
                 tv_three_year.setBackgroundResource(R.drawable.shape_key_choose_select_text);
                 ll_time.setVisibility(View.GONE);
                 setSubmitBg();
                 break;
             case R.id.tv_forever:
-                if (!fastClick()) {
-                    break;
-                }
                 clearText();
                 keyType = 4;
                 startTime = "";
                 endTime = "";
                 tv_forever.setBackgroundResource(R.drawable.shape_key_choose_select_text);
                 ll_time.setVisibility(View.GONE);
-                setSubmitBg();
                 break;
             case R.id.tv_one_month:
-                if (!fastClick()) {
-                    break;
-                }
                 clearText();
                 keyType = 5;
                 startTime = DateUtils.getStringDate(new Date(System.currentTimeMillis()), "");
@@ -304,12 +207,8 @@ public class KeySendKeyPhoneActivity extends BaseActivity implements HttpRespons
                 setSubmitBg();
                 break;
             case R.id.tv_one_week:
-                if (!fastClick()) {
-                    break;
-                }
                 clearText();
                 keyType = 6;
-
                 startTime = DateUtils.getStringDate(new Date(System.currentTimeMillis()), "");
                 curr = Calendar.getInstance();
                 curr.set(Calendar.DAY_OF_MONTH, curr.get(Calendar.DAY_OF_MONTH) + 7);
@@ -320,12 +219,8 @@ public class KeySendKeyPhoneActivity extends BaseActivity implements HttpRespons
                 setSubmitBg();
                 break;
             case R.id.tv_one_day:
-                if (!fastClick()) {
-                    break;
-                }
                 clearText();
                 keyType = 7;
-
                 startTime = DateUtils.getStringDate(new Date(System.currentTimeMillis()), "");
                 curr = Calendar.getInstance();
                 curr.set(Calendar.DAY_OF_MONTH, curr.get(Calendar.DAY_OF_MONTH) + 1);
@@ -336,14 +231,10 @@ public class KeySendKeyPhoneActivity extends BaseActivity implements HttpRespons
                 setSubmitBg();
                 break;
             case R.id.tv_custom:
-                if (!fastClick()) {
-                    break;
-                }
                 clearText();
                 keyType = 8;
                 tv_custom.setBackgroundResource(R.drawable.shape_key_choose_select_text);
                 ll_time.setVisibility(View.VISIBLE);
-
                 Calendar nowCalender = Calendar.getInstance();
                 int year = nowCalender.get(Calendar.YEAR);
                 int month = nowCalender.get(Calendar.MONTH) + 1;
@@ -392,40 +283,15 @@ public class KeySendKeyPhoneActivity extends BaseActivity implements HttpRespons
                 if (!setSubmitBg()) {
                     break;
                 }
-                String inputPhone = et_phone.getText().toString().trim();
-                String inputRoom = tv_room.getText().toString().trim();
-                if (11 != inputPhone.length()) {
-                    ToastUtil.showShortToast(this, "手机号码格式不正确");
-                    break;
-                }
-                for (int k = 0; k < list.size(); k++) {
-                    if (11 != list.get(k).length()) {
-                        ToastUtil.showShortToast(this, "手机号码格式不正确");
-                        break;
-                    }
-                }
-                List<Map<String, String>> dataJson = new ArrayList<>();
-                Map<String, String> jsonObject = new HashMap<String, String>();
-                jsonObject.put("homeLoc", inputRoom);
-                jsonObject.put("phoneNumber", inputPhone);
-                dataJson.add(jsonObject);
-                for (int j = 0; j < list.size(); j++) {
-                    Map<String, String> childjsonObject = new HashMap<String, String>();
-                    childjsonObject.put("homeLoc", roomList.get(j));
-                    childjsonObject.put("phoneNumber", list.get(j));
-                    dataJson.add(childjsonObject);
-                }
-                if (formSource == 0) {
-                    userModel.sendKeyByPhone(2, doorId, dataJson, keyName,
-                            identityId, startTime, endTime, keyType, this);
-                } else {
-                    userModel.sendKeyByPackageName(2, doorId, dataJson,
-                            identityId, startTime, endTime, keyType, this);
-                }
+                UserModel userModel = new UserModel(KeySendKeyQrCodeActivity.this);
+                userModel.sendKeyByQrCode(2, doorId, communityUuid, keyName, communityName + keyName, identityId,
+                        tv_time_invalid.getText().toString(), startTime, endTime, this);
                 break;
         }
         return super.handClickEvent(v);
     }
+
+
 
     public void setTimeText(int inputText, String time, int y, int m, int d, int h, int mi) {
         switch (inputText) {
@@ -453,23 +319,11 @@ public class KeySendKeyPhoneActivity extends BaseActivity implements HttpRespons
                 tv_time_end.setText(text);
                 break;
             case 3:
-                tv_time_invalid.setText(time);
+                String invalidTime = numFormat(y) + "-" + numFormat(m) + "-" + numFormat(d) + " " + numFormat(h) + ":" + numFormat(mi) + ":" + "00";
+                tv_time_invalid.setText(invalidTime);
                 break;
         }
         setSubmitBg();
-    }
-
-    private static final int MIN_CLICK_DELAY_TIME = 300;// 两次点击按钮之间的点击间隔不能少于500毫秒
-    private static long lastClickTime = 0;
-
-    public static boolean fastClick() {
-        boolean flag = false;
-        long curClickTime = System.currentTimeMillis();
-        if ((curClickTime - lastClickTime) >= MIN_CLICK_DELAY_TIME) {
-            flag = true;
-        }
-        lastClickTime = curClickTime;
-        return flag;
     }
 
     private String numFormat(int num) {
@@ -478,26 +332,6 @@ public class KeySendKeyPhoneActivity extends BaseActivity implements HttpRespons
 
     private boolean setSubmitBg() {
         boolean canSubmit = true;
-        String phone = et_phone.getText().toString().trim();
-        if (TextUtils.isEmpty(phone)) {
-            canSubmit = false;
-        }
-        for (int i = 0; i < list.size(); i++) {
-            if (TextUtils.isEmpty(list.get(i))) {
-                canSubmit = false;
-            }
-        }
-        if (isPower == 0) {
-            for (int i = 0; i < roomList.size(); i++) {
-                if (TextUtils.isEmpty(roomList.get(i))) {
-                    canSubmit = false;
-                }
-            }
-            String roomName = tv_room.getText().toString().trim();
-            if (TextUtils.isEmpty(roomName)) {
-                canSubmit = false;
-            }
-        }
         if (TextUtils.isEmpty(identityId)) {
             canSubmit = false;
         }
@@ -513,7 +347,11 @@ public class KeySendKeyPhoneActivity extends BaseActivity implements HttpRespons
         if (0 == keyType) {
             canSubmit = false;
         }
-        ((ScrollView) findViewById(R.id.scrollview)).smoothScrollTo(100, 100);
+
+        String invalidTime = tv_time_invalid.getText().toString();
+        if (TextUtils.isEmpty(invalidTime)) {
+            canSubmit = false;
+        }
         if (canSubmit) {
             tv_send.setBackgroundResource(R.drawable.shape_key_submit_blue_text);
         } else {
@@ -522,52 +360,19 @@ public class KeySendKeyPhoneActivity extends BaseActivity implements HttpRespons
         return canSubmit;
     }
 
+    private int isPower;
 
     public void setIdentity(int position) {
         try {
             tv_identity.setText(identityList.get(position).getIdentityName());
             identityId = identityList.get(position).getId();
             isPower = identityList.get(position).getIsPower();
-            if (0 == isPower) {//0为业主 1为管理
-                ll_room.setVisibility(View.VISIBLE);
-            } else {
-                ll_room.setVisibility(View.GONE);
-            }
-            adapter.setPower(isPower);
-            adapter.notifyDataSetChanged();
         } catch (Exception e) {
             e.printStackTrace();
         }
         setSubmitBg();
     }
 
-    private TextView tv_single_room;
-    private int type = 0;
-    private int position = 0;
-
-    public void setRoom(String roomName) {
-        if (type == 1) {
-            tv_single_room.setText(roomName);
-            roomList.set(position, roomName);
-            adapter.notifyDataSetChanged();
-        } else {
-            tv_room.setText(roomName);
-        }
-        setSubmitBg();
-    }
-
-    public void getRoomData(TextView tv_roomName, int position) {
-        type = 1;
-        this.position = position;
-        tv_single_room = tv_roomName;
-        DisplayUtil.showInput(false, this);
-        if (!TextUtils.isEmpty(communityUuid)) {
-            KeyRoomPopWindowView roomPop = new KeyRoomPopWindowView(this, communityUuid);
-            roomPop.setOnDismissListener(new PopupDismissListener());
-            roomPop.showPopupWindow(contentLayout);
-        }
-        setSubmitBg();
-    }
 
     /**
      * 还原text
@@ -602,9 +407,17 @@ public class KeySendKeyPhoneActivity extends BaseActivity implements HttpRespons
                 break;
             case 2:
                 if (!TextUtils.isEmpty(result)) {
-                    ToastUtil.showShortToast(this, "钥匙发送成功");
-                    setResult(RESULT_OK);
-                    finish();
+                    try {
+                        KeyQrCodeEntity keyQrCodeEntity = GsonUtils.gsonToBean(result, KeyQrCodeEntity.class);
+                        String content = keyQrCodeEntity.getContent();
+                        Intent intent = new Intent(KeySendKeyQrCodeActivity.this, KeySendKeyCodeActivity.class);
+                        intent.putExtra(COMMUNITY_NAME, communityName);
+                        intent.putExtra(DOOR_QRCODE, content);
+                        intent.putExtra(KEY_CONTENT, keyName);
+                        startActivityForResult(intent, 1000);
+                    } catch (Exception e) {
+
+                    }
                 }
                 break;
         }
@@ -617,6 +430,27 @@ public class KeySendKeyPhoneActivity extends BaseActivity implements HttpRespons
             WindowManager.LayoutParams lp = getWindow().getAttributes();
             lp.alpha = 1.0f;
             getWindow().setAttributes(lp);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1000) {
+            if (resultCode == 200) {
+                setResult(Activity.RESULT_OK);
+                finish();
+            } else {
+                identityList.clear();
+                identityStringList.clear();
+                identityId = "";
+                startTime = "";
+                endTime = "";
+                startTimeCustom = "";
+                endTimeCustom = "";
+                keyType = 0;
+                recreate();
+            }
         }
     }
 }

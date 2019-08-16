@@ -15,6 +15,7 @@ import android.widget.RelativeLayout;
 
 import com.tg.coloursteward.R;
 import com.tg.setting.activity.KeySendKeyPhoneActivity;
+import com.tg.setting.activity.KeySendKeyQrCodeActivity;
 import com.tg.setting.adapter.KeyTimeHorAdapter;
 import com.tg.setting.adapter.KeyTimeVerAdapter;
 import com.tg.setting.entity.KeyPopEntity;
@@ -371,7 +372,12 @@ public class KeyTimePopWindowView extends PopupWindow {
                         hourString = hAdapter.list.get(3);
                     }
                     String time = yearString + "年 " + monthString + dayString + " " + hourString + minuteString;
-                    ((KeySendKeyPhoneActivity) context).setTimeText(inputText, time, y, m, d, h, mi);
+                    if (context instanceof  KeySendKeyPhoneActivity){
+                        ((KeySendKeyPhoneActivity) context).setTimeText(inputText, time, y, m, d, h, mi);
+                    }else if (context instanceof KeySendKeyQrCodeActivity){
+                        ((KeySendKeyQrCodeActivity) context).setTimeText(inputText, time, y, m, d, h, mi);
+                    }
+
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
                 }

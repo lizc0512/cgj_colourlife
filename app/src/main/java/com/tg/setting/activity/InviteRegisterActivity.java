@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.hjq.permissions.OnPermission;
 import com.hjq.permissions.XXPermissions;
+
 import com.tg.coloursteward.BuildConfig;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.BaseActivity;

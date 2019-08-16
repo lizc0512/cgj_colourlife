@@ -12,6 +12,7 @@ import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.net.DES;
 import com.tg.coloursteward.net.HttpTools;
+import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.TokenUtils;
 import com.yanzhenjie.nohttp.BasicBinary;
 import com.yanzhenjie.nohttp.FileBinary;
@@ -24,6 +25,7 @@ import org.apache.http.entity.mime.content.FileBody;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -55,13 +57,17 @@ public class UserModel extends BaseModel {
     private String uploadImgUrl = "/avatar";
     private String getCommunityList = "/cgjControl/userRole/getCommunityListByAccountUuid";
     private String getDoorList = "/yuncontrol/ycAccessControl/getAccessByCommunityId";
+    private String getKeyList = "/yuncontrol/ycKeyPackage/getKeyPacksByCommunityId";
     private String addDoor = "/yuncontrol/ycAccessControl/add";
     private String getBuild = "/cgjControl/colourLife/getBuildByCommunityId";
     private String getUnit = "/cgjControl/colourLife/getUnitByBuild";
     private String getFloor = "/cgjControl/colourLife/getHouseByFloor";
     private String bindDoor = "/yuncontrol/ycAccessControl/accessControl/install";
     private String getKeyIdentityUrl = "/yuncontrol/ycKeyIdentity/getAllByCommunityId";
-    private String sendKeyByPhone = "/yuncontrol/ycKey/add";
+    //    private String sendKeyByPhone = "/yuncontrol/ycKey/add";
+    private String sendKeyByPhone = "/yuncontrol/ycKey/addByMobileHomeLoc";
+    private String sendKeyByPackge = "/yuncontrol/ycKeyPackage/putKeyPackageByMobileHomeLoc";
+    private String getKeyByQrCode = "/yuncontrol/ycKeyQrcode/getQrcode";
 
     public UserModel(Context context) {
         super(context);
@@ -679,10 +685,10 @@ public class UserModel extends BaseModel {
                     } else if (code == 1) {
                         httpResponse.OnHttpResponse(what, result);
                     } else {
-                        showErrorCodeMessage(response);
+                        httpResponse.OnHttpResponse(what, "");
                     }
                 } else {
-                    showErrorCodeMessage(response);
+                    httpResponse.OnHttpResponse(what, "");
                 }
             }
 
@@ -702,6 +708,37 @@ public class UserModel extends BaseModel {
         params.put("pageNum", pageNum);
         params.put("pageSize", pageSize);
         final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 11, getDoorList), RequestMethod.GET);
+        request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    int code = showSuccesResultMessage(result);
+                    if (code == 0) {
+                        httpResponse.OnHttpResponse(what, result);
+                    } else {
+                        showErrorCodeMessage(response);
+                    }
+                } else {
+                    showErrorCodeMessage(response);
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+                showExceptionMessage(what, response);
+            }
+        }, true, false);
+    }
+
+
+    public void getKeyList(int what, String communityId, int pageNum, int pageSize, final HttpResponse httpResponse) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("communityId", communityId);
+        params.put("pageNum", pageNum);
+        params.put("pageSize", pageSize);
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 11, getKeyList), RequestMethod.GET);
         request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
             @Override
             public void onSucceed(int what, Response<String> response) {
@@ -869,7 +906,7 @@ public class UserModel extends BaseModel {
     /**
      * 绑定门禁
      */
-    public void bindDoor(int what, long accessId, String mac, String cipherId, String model, String protocolVersion, final HttpResponse httpResponse) {
+    public void bindDoor(int what, String accessId, String mac, String cipherId, String model, String protocolVersion, final HttpResponse httpResponse) {
         Map<String, Object> params = new HashMap<>();
         params.put("accessId", accessId);
         params.put("mac", mac);
@@ -935,18 +972,95 @@ public class UserModel extends BaseModel {
     /**
      * 发送钥匙
      */
-    public void sendKeyByPhone(int what, long accessId, String phoneNumber, String name, String identityId,
-                               String keyId, String homeLoc, String startDate, String endDate, final HttpResponse httpResponse) {
+    public void sendKeyByPhone(int what, String accessId, List<Map<String, String>> mobileAndHomeLocs, String name, String identityId,
+                               String startDate, String endDate,int keyType, final HttpResponse httpResponse) {
         Map<String, Object> params = new HashMap<>();
         params.put("accessId", accessId);
-        params.put("phoneNumber", phoneNumber);
+        params.put("mobileAndHomeLocs", mobileAndHomeLocs);
         params.put("name", name);
         params.put("identityId", identityId);
-        params.put("keyId", keyId);
-        params.put("homeLoc", homeLoc);
-        params.put("startDate", startDate);
-        params.put("endDate", endDate);
+        if (keyType!=4){
+            params.put("startDate", startDate);
+            params.put("endDate", endDate);
+        }
+
+        String jsonParams = GsonUtils.gsonString(params);
         final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 11, sendKeyByPhone), RequestMethod.POST);
+        request.setDefineRequestBodyForJson(jsonParams);
+        request(what, request, null, new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    int code = showSuccesResultMessage(result);
+                    if (code == 0) {
+                        httpResponse.OnHttpResponse(what, result);
+                    } else {
+                        showErrorCodeMessage(response);
+                    }
+                } else {
+                    showErrorCodeMessage(response);
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+                showExceptionMessage(what, response);
+            }
+        }, true, true);
+    }
+
+
+    public void sendKeyByPackageName(int what, String accessId, List<Map<String, String>> mobileAndHomeLocs, String identityId,
+                                     String startDate, String endDate,int keyType, final HttpResponse httpResponse) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("packageId", accessId);
+        params.put("mobileAndHomeLocs", mobileAndHomeLocs);
+        params.put("identityId", identityId);
+        if (keyType!=4){
+            params.put("startDate", startDate);
+            params.put("endDate", endDate);
+        }
+        String jsonParams = GsonUtils.gsonString(params);
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 11, sendKeyByPackge), RequestMethod.POST);
+        request.setDefineRequestBodyForJson(jsonParams);
+        request(what, request, null, new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    int code = showSuccesResultMessage(result);
+                    if (code == 0) {
+                        httpResponse.OnHttpResponse(what, result);
+                    } else {
+                        showErrorCodeMessage(response);
+                    }
+                } else {
+                    showErrorCodeMessage(response);
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+                showExceptionMessage(what, response);
+            }
+        }, true, true);
+    }
+
+    public void sendKeyByQrCode(int what, String accessId, String communityUuid, String content, String shareExplain, String identityId,
+                                String overTime, String startTime, String endTime, final HttpResponse httpResponse) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("accessId", accessId);
+        params.put("content", content);
+        params.put("shareExplain", shareExplain);
+        params.put("identityId", identityId);
+        params.put("overTime", overTime);
+        params.put("startTime", startTime);
+        params.put("endTime", endTime);
+        params.put("communityUuid", communityUuid);
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 11, getKeyByQrCode), RequestMethod.POST);
         request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
             @Override
             public void onSucceed(int what, Response<String> response) {

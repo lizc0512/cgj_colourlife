@@ -63,7 +63,7 @@ public class KeyBindDoorActivity extends BaseActivity implements View.OnClickLis
 
     private Handler mHandler;
     private int count;
-    private long doorId;
+    private String doorId;
     private KeyDeviceAdapter mAdapter;
     private List<String> mDevicesMac = new ArrayList<>();
     private List<Device> mDevices = new ArrayList<>();
@@ -143,7 +143,7 @@ public class KeyBindDoorActivity extends BaseActivity implements View.OnClickLis
     }
 
     private void initData() {
-        doorId = getIntent().getLongExtra(DOOR_ID, 0);
+        doorId = getIntent().getStringExtra(DOOR_ID);
 
         init(this);
         if (openBluetooth) {

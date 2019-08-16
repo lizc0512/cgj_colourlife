@@ -2,9 +2,12 @@ package com.tg.setting.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -21,11 +24,13 @@ import android.widget.TextView;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.baseModel.HttpResponse;
-import com.tg.coloursteward.constant.SpConstants;
 import com.tg.coloursteward.entity.BaseContentEntity;
+import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.util.GsonUtils;
+import com.tg.coloursteward.util.ToastUtil;
 import com.tg.setting.adapter.KeyDoorAdapter;
 import com.tg.setting.adapter.KeyKeyAdapter;
+import com.tg.setting.entity.KeyBagsEntity;
 import com.tg.setting.entity.KeyCommunityListEntity;
 import com.tg.setting.entity.KeyDoorEntity;
 import com.tg.setting.view.KeyChoosePopWindowView;
@@ -33,7 +38,6 @@ import com.tg.setting.view.KeyCommunityPopWindowView;
 import com.tg.user.model.UserModel;
 import com.yanzhenjie.recyclerview.SwipeRecyclerView;
 import com.youmai.hxsdk.utils.DisplayUtil;
-import com.tg.coloursteward.util.ToastUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +48,7 @@ import java.util.List;
  * @author hxg 2019.07.18
  */
 public class KeyDoorManagerActivity extends BaseActivity implements HttpResponse {
+    private SwipeRefreshLayout srl_refresh;
     private TextView tv_choose;
     private LinearLayout ll_choose_down;
     private ImageView iv_choose_down;
@@ -60,9 +65,11 @@ public class KeyDoorManagerActivity extends BaseActivity implements HttpResponse
     private RelativeLayout rl_no_door;
     private TextView tv_add_door;
     private RelativeLayout rl_no_permission;
+    private RelativeLayout rl_no_keybags;
     private TextView tv_permission_back;
     private TextView tv_door;
     private TextView tv_key;
+    private LinearLayout ll_bottom;
 
     private SwipeRecyclerView rv_door;
     private SwipeRecyclerView rv_key;
@@ -74,9 +81,13 @@ public class KeyDoorManagerActivity extends BaseActivity implements HttpResponse
     private UserModel userModel;
     private List<KeyCommunityListEntity.ContentBeanX.ContentBean> communityList = new ArrayList<>();
     private List<KeyDoorEntity.ContentBeanX.ContentBean> doorList = new ArrayList<>();
+    private List<KeyBagsEntity.ContentBeanX.ContentBean> keyList = new ArrayList<>();
     private String accountUuid;
     private String communityUuid = "";
+    private String communityName = "";
     private int selectPosition = 0;
+
+    private int type = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +106,7 @@ public class KeyDoorManagerActivity extends BaseActivity implements HttpResponse
 
     @SuppressLint("ClickableViewAccessibility")
     private void initView() {
+        srl_refresh = findViewById(R.id.srl_refresh);
         tv_choose = findViewById(R.id.tv_choose);
         ll_choose_down = findViewById(R.id.ll_choose_down);
         iv_choose_down = findViewById(R.id.iv_choose_down);
@@ -114,8 +126,10 @@ public class KeyDoorManagerActivity extends BaseActivity implements HttpResponse
         tv_add_door = findViewById(R.id.tv_add_door);
         rl_no_permission = findViewById(R.id.rl_no_permission);
         tv_permission_back = findViewById(R.id.tv_permission_back);
+        rl_no_keybags = findViewById(R.id.rl_no_keybags);
         tv_door = findViewById(R.id.tv_door);
         tv_key = findViewById(R.id.tv_key);
+        ll_bottom = findViewById(R.id.ll_bottom);
 
         tv_choose.setOnClickListener(singleListener);
         ll_choose_down.setOnClickListener(singleListener);
@@ -130,6 +144,17 @@ public class KeyDoorManagerActivity extends BaseActivity implements HttpResponse
         ll_title.setOnClickListener(singleListener);
         et_search.setCursorVisible(false);
 
+        srl_refresh.setColorSchemeColors(Color.parseColor("#313E58"), Color.parseColor("#313E58"));
+        srl_refresh.setOnRefreshListener(() -> {
+            if (type == 0) {
+                doorPage = 1;
+                getDoorList();
+            } else {
+                keyPage = 1;
+                getKeyList();
+            }
+        });
+
         rv_door.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         doorAdapter = new KeyDoorAdapter(this, doorList);
         rv_door.setAdapter(doorAdapter);
@@ -138,27 +163,58 @@ public class KeyDoorManagerActivity extends BaseActivity implements HttpResponse
             doorPage++;
             getDoorList();
         });
+        rv_door.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                srl_refresh.setEnabled(rv_key.getScrollY() == 0);
+            }
+        });
+
+        rv_key.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                srl_refresh.setEnabled(rv_key.getScrollY() == 0);
+            }
+        });
 
         rv_key.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        keyAdapter = new KeyKeyAdapter(this, null);
+        keyAdapter = new KeyKeyAdapter(this, keyList);
         rv_key.setAdapter(keyAdapter);
         rv_key.useDefaultLoadMore();
-        rv_key.setLoadMoreListener(() -> keyPage++);
+        rv_key.setLoadMoreListener(() -> {
+            keyPage++;
+            getKeyList();
+        });
     }
 
     private void initData() {
         DisplayUtil.showInput(false, KeyDoorManagerActivity.this);
-        accountUuid = spUtils.getStringData(SpConstants.UserModel.ACCOUNT_UUID, "");
+        accountUuid = UserInfo.uid;
         userModel.getCommunityList(1, accountUuid, 1, 20, true, this);
     }
 
     @Override
     public void OnHttpResponse(int what, String result) {
+        srl_refresh.setRefreshing(false);
         switch (what) {
             case 1:
                 try {
                     if (View.VISIBLE == rl_no_permission.getVisibility()) {
                         rl_no_permission.setVisibility(View.GONE);
+                        ll_bottom.setVisibility(View.VISIBLE);
+                        srl_refresh.setEnabled(true);
                     }
                     if (View.VISIBLE == rl_no_door.getVisibility()) {
                         rl_no_door.setVisibility(View.GONE);
@@ -166,18 +222,22 @@ public class KeyDoorManagerActivity extends BaseActivity implements HttpResponse
                     BaseContentEntity baseContentEntity = GsonUtils.gsonToBean(result, KeyCommunityListEntity.class);
                     if (1 == baseContentEntity.getCode()) {
                         rl_no_permission.setVisibility(View.VISIBLE);
+                        ll_bottom.setVisibility(View.GONE);
+                        srl_refresh.setEnabled(false);
                     } else {
                         KeyCommunityListEntity keyCommunityListEntity = GsonUtils.gsonToBean(result, KeyCommunityListEntity.class);
                         KeyCommunityListEntity.ContentBeanX content = keyCommunityListEntity.getContent();
                         if (content.getContent().size() > 0) {
                             iv_title_down.setVisibility(View.VISIBLE);
                             communityList.addAll(content.getContent());
-                            tv_key_title.setText(content.getContent().get(0).getName());
+                            communityName = communityList.get(0).getName();
+                            tv_key_title.setText(communityName);
                             communityUuid = content.getContent().get(0).getCommunityUuid();
                             if (!TextUtils.isEmpty(communityUuid)) {
                                 iv_add.setVisibility(View.VISIBLE);
                             }
                             getDoorList();
+                            getKeyList();
                         }
                     }
                 } catch (Exception e) {
@@ -186,6 +246,10 @@ public class KeyDoorManagerActivity extends BaseActivity implements HttpResponse
                 break;
             case 2:
                 try {
+                    if (View.GONE == ll_bottom.getVisibility()) {
+                        ll_bottom.setVisibility(View.VISIBLE);
+                        srl_refresh.setEnabled(true);
+                    }
                     if (View.VISIBLE == rl_no_permission.getVisibility()) {
                         rl_no_permission.setVisibility(View.GONE);
                     }
@@ -203,19 +267,56 @@ public class KeyDoorManagerActivity extends BaseActivity implements HttpResponse
                     boolean hasMore = totalRecord > doorList.size();
                     rv_door.loadMoreFinish(dataEmpty, hasMore);
                     doorAdapter.notifyDataSetChanged();
-                    if (1 == doorPage && 0 == doorList.size()) {//无门禁
-                        rl_no_door.setVisibility(View.VISIBLE);
-                        rv_door.setVisibility(View.GONE);
-                    } else {
-                        if (View.GONE == rl_no_door.getVisibility()) {
-                            rl_no_door.setVisibility(View.GONE);
-                            rv_door.setVisibility(View.VISIBLE);
-                        }
-                    }
+                    setDoorData();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
                 break;
+            case 3:
+                if (!TextUtils.isEmpty(result)) {
+                    KeyBagsEntity keyBagsEntity = GsonUtils.gsonToBean(result, KeyBagsEntity.class);
+                    if (keyPage == 1) {
+                        keyList.clear();
+                    }
+                    keyList.addAll(keyBagsEntity.getContent().getContent());
+                    keyDataEmpty = keyList.size() == 0;
+                    int totalRecord = keyBagsEntity.getContent().getTotalRecord();
+                    boolean hasMore = totalRecord > keyList.size();
+                    rv_key.loadMoreFinish(keyDataEmpty, hasMore);
+                    keyAdapter.notifyDataSetChanged();
+                    setKeyData();
+                }
+
+                break;
+        }
+    }
+
+    private boolean keyDataEmpty = true;
+
+
+    private void setDoorData() {
+        if (type == 0) {
+            if (1 == doorPage && 0 == doorList.size()) {//无门禁
+                rl_no_door.setVisibility(View.VISIBLE);
+                rv_door.setVisibility(View.GONE);
+            } else {
+                if (View.GONE == rl_no_door.getVisibility()) {
+                    rl_no_door.setVisibility(View.GONE);
+                    rv_door.setVisibility(View.VISIBLE);
+                }
+            }
+        }
+    }
+
+    private void setKeyData() {
+        if (type == 1) {
+            if (keyDataEmpty) {
+                rv_key.setVisibility(View.GONE);
+                rl_no_keybags.setVisibility(View.VISIBLE);
+            } else {
+                rv_key.setVisibility(View.VISIBLE);
+                rl_no_keybags.setVisibility(View.GONE);
+            }
         }
     }
 
@@ -227,13 +328,22 @@ public class KeyDoorManagerActivity extends BaseActivity implements HttpResponse
     }
 
     /**
+     * 获取钥匙包
+     */
+    private void getKeyList() {
+        userModel.getKeyList(3, communityUuid, keyPage, 20, this);
+    }
+
+    /**
      * 选择小区
      */
     public void selectCommunity(int position, String name, String uuid) {
         selectPosition = position;
         tv_key_title.setText(name);
+        communityName = name;
         communityUuid = uuid;
         getDoorList();
+        getKeyList();
     }
 
     /**
@@ -245,24 +355,38 @@ public class KeyDoorManagerActivity extends BaseActivity implements HttpResponse
             i.putExtra(KeyBindDoorActivity.DOOR_ID, doorList.get(position).getId());
             startActivityForResult(i, 1);
         } else {
+            KeyDoorEntity.ContentBeanX.ContentBean contentBean = doorList.get(position);
             Intent i = new Intent(this, KeySendKeyListActivity.class);
-            i.putExtra(KeySendKeyListActivity.DOOR_ID, doorList.get(position).getId());
+            i.putExtra(KeySendKeyListActivity.DOOR_ID, contentBean.getId());
             i.putExtra(KeySendKeyListActivity.COMMUNITY_UUID, communityUuid);
-            i.putExtra(KeySendKeyListActivity.KEY_NAME, doorList.get(position).getAccessName());
+            i.putExtra(KeySendKeyListActivity.COMMUNITY_NAME, communityName);
+            i.putExtra(KeySendKeyListActivity.FORM_SOURCE, 0);
+            i.putExtra(KeySendKeyListActivity.KEY_CONTENT, contentBean.getAccessName());
             startActivityForResult(i, 1);
         }
     }
+
+
+    public void toSendPackge(int position) {
+        KeyBagsEntity.ContentBeanX.ContentBean contentBean = keyList.get(position);
+        Intent i = new Intent(this, KeySendKeyListActivity.class);
+        i.putExtra(KeySendKeyListActivity.DOOR_ID, contentBean.getId());
+        i.putExtra(KeySendKeyListActivity.COMMUNITY_UUID, communityUuid);
+        i.putExtra(KeySendKeyListActivity.COMMUNITY_NAME, communityName);
+        i.putExtra(KeySendKeyListActivity.FORM_SOURCE, 1);
+        i.putExtra(KeySendKeyListActivity.KEY_CONTENT, contentBean.getPackageName());
+        startActivityForResult(i, 1);
+    }
+
 
     private void initListener() {
         et_search.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
             }
 
             @Override
@@ -333,25 +457,35 @@ public class KeyDoorManagerActivity extends BaseActivity implements HttpResponse
                 finish();
                 break;
             case R.id.tv_door:
+                type = 0;
                 rl_search.setVisibility(View.GONE);
                 Drawable drawableDoor = this.getResources().getDrawable(R.drawable.ic_key_door_select);
                 tv_door.setCompoundDrawablesWithIntrinsicBounds(null, drawableDoor, null, null);
                 Drawable drawableKey = this.getResources().getDrawable(R.drawable.ic_key_key);
                 tv_key.setCompoundDrawablesWithIntrinsicBounds(null, drawableKey, null, null);
-
                 rv_door.setVisibility(View.VISIBLE);
                 rv_key.setVisibility(View.GONE);
+                rl_no_keybags.setVisibility(View.GONE);
+                if (!TextUtils.isEmpty(communityUuid)) {
+                    iv_add.setVisibility(View.VISIBLE);
+                } else {
+                    iv_add.setVisibility(View.GONE);
+                }
+                setDoorData();
                 break;
             case R.id.tv_key:
-                ToastUtil.showShortToast(this, "开发中，敬请期待...");
+                type = 1;
                 rl_search.setVisibility(View.GONE);
                 Drawable key = this.getResources().getDrawable(R.drawable.ic_key_key_select);
                 tv_key.setCompoundDrawablesWithIntrinsicBounds(null, key, null, null);
                 Drawable door = this.getResources().getDrawable(R.drawable.ic_key_door);
                 tv_door.setCompoundDrawablesWithIntrinsicBounds(null, door, null, null);
-
                 rv_key.setVisibility(View.VISIBLE);
                 rv_door.setVisibility(View.GONE);
+                iv_add.setVisibility(View.GONE);
+                rl_no_permission.setVisibility(View.GONE);
+                rl_no_door.setVisibility(View.GONE);
+                setKeyData();
                 break;
         }
         return super.handClickEvent(v);

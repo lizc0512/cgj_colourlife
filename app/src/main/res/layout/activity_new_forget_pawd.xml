@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+
+    <ImageView
+        android:id="@+id/iv_image_back"
+        android:layout_width="wrap_content"
+        android:layout_height="44dp"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:src="@drawable/nav_back_normal"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="44dp"
+        android:gravity="center"
+        android:text="忘记密码"
+        android:textColor="@color/color_191f25"
+        android:textSize="@dimen/size_18dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.tg.coloursteward.view.ClearEditText
+        android:id="@+id/ed_input_mobile"
+        android:layout_width="0dp"
+        android:layout_height="44dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="116dp"
+        android:layout_marginRight="40dp"
+        android:background="@null"
+        android:hint="请输入手机号码"
+        android:textColor="@color/color_131719"
+        android:textColorHint="@color/color_bbc0cb"
+        android:textSize="@dimen/size_16dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_title" />
+
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0.5dp"
+        android:background="@color/color_ededee"
+        app:layout_constraintLeft_toLeftOf="@id/ed_input_mobile"
+        app:layout_constraintRight_toRightOf="@id/ed_input_mobile"
+        app:layout_constraintTop_toBottomOf="@id/ed_input_mobile" />
+
+
+    <Button
+        android:id="@+id/btn_next"
+        android:layout_width="0dp"
+        android:layout_height="44dp"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/next_button_default"
+        android:text="下一步"
+        android:textColor="@color/color_bbbbbb"
+        android:textSize="@dimen/size_16dp"
+        app:layout_constraintLeft_toLeftOf="@id/ed_input_mobile"
+        app:layout_constraintRight_toRightOf="@id/ed_input_mobile"
+        app:layout_constraintTop_toBottomOf="@id/ed_input_mobile" />
+
+</android.support.constraint.ConstraintLayout>

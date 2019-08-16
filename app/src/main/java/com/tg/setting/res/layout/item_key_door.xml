@@ -10,15 +10,14 @@
 
     <TextView
         android:id="@+id/tv_door"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/size_20dp"
         android:layout_marginLeft="@dimen/size_20dp"
         android:layout_marginTop="@dimen/size_16dp"
-        android:layout_marginEnd="@dimen/size_8dp"
-        android:layout_marginRight="@dimen/size_8dp"
-        android:layout_toStartOf="@+id/tv_send"
-        android:layout_toLeftOf="@+id/tv_send"
+        android:paddingRight="110dp"
+        android:ellipsize="end"
+        android:maxLines="2"
         android:textColor="@color/white"
         android:textSize="@dimen/font_18sp" />
 
@@ -29,8 +28,8 @@
         android:layout_marginStart="@dimen/size_12dp"
         android:layout_marginLeft="@dimen/size_12dp"
         android:layout_marginTop="@dimen/size_18dp"
-        android:layout_toEndOf="@+id/tv_door"
-        android:layout_toRightOf="@+id/tv_door"
+        android:layout_toEndOf="@id/tv_door"
+        android:layout_toRightOf="@id/tv_door"
         android:background="@drawable/shape_key_status_text"
         android:paddingLeft="@dimen/size_4dp"
         android:paddingTop="@dimen/size_2dp"

@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.multidex.MultiDex;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.baidu.trace.LBSTraceClient;
 import com.baidu.trace.Trace;
@@ -17,10 +18,11 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.shell.SdkManager;
-import com.tencent.bugly.crashreport.CrashReport;
+import com.tencent.bugly.Bugly;
+import com.tencent.bugly.beta.Beta;
+import com.tencent.bugly.beta.interfaces.BetaPatchListener;
 import com.tencent.smtt.sdk.QbSdk;
 import com.tg.coloursteward.R;
-import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.database.SharedPreferencesTools;
 import com.tg.coloursteward.module.MainActivity;
 import com.tg.coloursteward.net.ResponseData;
@@ -36,10 +38,13 @@ import com.youmai.hxsdk.HuxinSdkManager;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 
 import javax.net.ssl.SSLContext;
 
 import cn.jpush.android.api.JPushInterface;
+
+import static com.tencent.bugly.beta.tinker.TinkerManager.getApplication;
 
 public class CityPropertyApplication extends Application {
     private static List<Activity> mList = new LinkedList<Activity>();
@@ -52,6 +57,7 @@ public class CityPropertyApplication extends Application {
 
     @Override
     public void onCreate() {
+        // TODO Auto-generated method stub
         super.onCreate();
         context = getApplicationContext();
         SSLContext sslContext = SSLContextUtil.getDefaultSLLContext();
@@ -97,8 +103,45 @@ public class CityPropertyApplication extends Application {
         CrashHandler crashHandler = CrashHandler.getInstance();
         crashHandler.init(getApplicationContext());
         registerActivityLifecycleCallbacks(new ActivityLifecycleListener());
-        MobSDK.init(this);
-        CrashReport.initCrashReport(getApplicationContext(), Contants.APP.buglyKeyId, false);
+        Beta.betaPatchListener = new BetaPatchListener() {
+            @Override
+            public void onPatchReceived(String patchFileUrl) {
+
+            }
+
+            @Override
+            public void onDownloadReceived(long savedLength, long totalLength) {
+
+            }
+
+            @Override
+            public void onDownloadSuccess(String patchFilePath) {
+
+            }
+
+            @Override
+            public void onDownloadFailure(String msg) {
+
+            }
+
+            @Override
+            public void onApplySuccess(String msg) {
+
+            }
+
+            @Override
+            public void onApplyFailure(String msg) {
+
+            }
+
+            @Override
+            public void onPatchRollback() {
+
+            }
+        };
+//        Bugly.setIsDevelopmentDevice(getApplication(), true);
+        Beta.canNotifyUserRestart = true;
+        Bugly.init(getApplicationContext(), "b3dcc32611", false);
     }
 
     public static void initImageLoader(Context context) {
@@ -206,6 +249,7 @@ public class CityPropertyApplication extends Application {
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
         MultiDex.install(base); //解决差分包的问题
+        Beta.installTinker();
     }
 
 }

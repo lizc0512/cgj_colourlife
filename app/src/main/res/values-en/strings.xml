@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">彩管家</string>
+    <string name="text_password">0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
+    <string name="soft_update_no">已经是最新版本</string>
+    <string name="soft_update_title">软件更新</string>
+    <string name="scan_text1">将二维码放入扫描框内, </string>
+    <string name="scan_text2">即可自动扫码</string>
+    <string name="app_organization">服务集团</string>
+
+
+    <string name="sunday">日</string>
+    <string name="monday">一</string>
+    <string name="tuesday">二</string>
+    <string name="wednesday">三</string>
+    <string name="thursday">四</string>
+    <string name="friday">五</string>
+    <string name="saturday">六</string>
+
+
+    <string name="message">消息</string>
+    <string name="contact">通讯录</string>
+    <string name="job">工作</string>
+    <string name="mine">我的</string>
+
+    <string name="error_please_check_network">请检查网络。</string>
+    <string name="error_timeout">请求超时，网络不好或者服务器不稳定。</string>
+    <string name="error_not_found_server">未发现指定服务器，请切换网络后重试。</string>
+    <string name="error_url_error">URL错误。</string>
+    <string name="error_not_found_cache">没有找到缓存.</string>
+    <string name="app_requestdate_fail">请求数据失败，请稍后重试</string>
+    <string name="tv_splash_jump">跳过</string>
+    <string name="tv_lead_jump">跳过 >></string>
+    <string name="lead_go_open">去开启 >></string>
+    <string name="actionbar_back">取消</string>
+    <string name="tv_home_location">正在定位...</string>
+    <string name="request_method_head">请求方法为HEAD，没有响应内容。</string>
+    <string name="request_method_not_allow">服务器仅仅支持请求方法：%1$s</string>
+
+    <string name="down_wifi" translatable="false">建议在WIFI环境下载</string>
+    <string name="update_version" translatable="false">更新至版本</string>
+    <string name="message_define">确定</string>
+    <string name="message_cancel">取消</string>
+
+    <string name="tv_webview_content">该服务由彩管家提供,向其提供以下权限即可继续操作</string>
+    <string name="tv_webview_explain">获取你的公开信息 (登录名、头像、性别等)</string>
+    <string name="tv_webview_confirm">确认</string>
+    <string name="tv_webview_agree">确认授权即表示同意</string>
+    <string name="tv_webview_agreeurl">《用户授权协议》</string>
+
+    <string name="tv_miniserver_name">彩生活集团总部</string>
+
+    <string name="tv_datashow_area">上线面积(万㎡)</string>
+    <string name="tv_datashow_community">小区数</string>
+
+
+</resources>

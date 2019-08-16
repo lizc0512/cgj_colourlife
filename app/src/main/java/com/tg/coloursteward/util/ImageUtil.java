@@ -1,22 +1,26 @@
 package com.tg.coloursteward.util;
 
-import android.app.Activity;
+
+import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.net.Uri;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.view.View;
+
+import com.hjq.permissions.XXPermissions;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-
-import okhttp3.Call;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
+import java.util.Calendar;
 
 /**
  * Created by prince70 on 2018/3/28.
@@ -26,12 +30,13 @@ public class ImageUtil {
 
     /**
      * 改变图片尺寸
-     * @param bm 所要转换的bitmap
-     * @param newWidth 新的宽
+     *
+     * @param bm        所要转换的bitmap
+     * @param newWidth  新的宽
      * @param newHeight 新的高
      * @return 指定宽高的bitmap
      */
-    public static Bitmap zoomImg(Bitmap bm, int newWidth , int newHeight){
+    public static Bitmap zoomImg(Bitmap bm, int newWidth, int newHeight) {
         // 获得图片的宽高
         int width = bm.getWidth();
         int height = bm.getHeight();
@@ -49,7 +54,7 @@ public class ImageUtil {
     /**
      * 按照比例缩放图片
      */
-    public static Bitmap zoomImgScale(Bitmap bm, int newWidth, int newHeight){
+    public static Bitmap zoomImgScale(Bitmap bm, int newWidth, int newHeight) {
         if (null == bm) return null;
 
         // 获得图片的宽高
@@ -99,15 +104,13 @@ public class ImageUtil {
     }
 
     /**
-     * @param bitmap      原图
-     * @param edgeLength  图片的边长
-     * @return  缩放截取正中部分后的位图。
+     * @param bitmap     原图
+     * @param edgeLength 图片的边长
+     * @return 缩放截取正中部分后的位图。
      */
-    public static Bitmap centerSquareScaleBitmap(Bitmap bitmap, int edgeLength)
-    {
-        if(null == bitmap || edgeLength <= 0)
-        {
-            return  null;
+    public static Bitmap centerSquareScaleBitmap(Bitmap bitmap, int edgeLength) {
+        if (null == bitmap || edgeLength <= 0) {
+            return null;
         }
 
         //按正方形裁剪图片
@@ -127,7 +130,7 @@ public class ImageUtil {
     /**
      * 从Uri加载Bitmap
      */
-    public static Bitmap decodeUriAsBitmap(Context context, Uri uri){
+    public static Bitmap decodeUriAsBitmap(Context context, Uri uri) {
         Bitmap bitmap;
         try {
             bitmap = BitmapFactory.decodeStream(context.getContentResolver().openInputStream(uri));
@@ -186,9 +189,9 @@ public class ImageUtil {
     /**
      * 保存Bitmap为本地文件
      */
-    public static void saveImage(Bitmap bitmap, String path){
+    public static void saveImage(Bitmap bitmap, String path) {
         File file = new File(path);
-        if (file != null){
+        if (file != null) {
             try {
                 //创建文件
                 file.createNewFile();
@@ -206,26 +209,57 @@ public class ImageUtil {
         }
     }
 
-    /**
-     * 从网络上下载图片
-     */
-    public static Bitmap downloadImage(String url){
-        if (url == null || !url.startsWith("http:")) return null;
-
-        OkHttpClient okHttpClient = new OkHttpClient();
-        Request request = new Request.Builder().url(url).build();
-        Call call = okHttpClient.newCall(request);
-
-        try {
-            Response response = call.execute();
-            if (response.isSuccessful()){
-                InputStream is = response.body().byteStream();
-                return BitmapFactory.decodeStream(is);
+    public static void viewSaveToImage(Context context, View view) {
+        view.setDrawingCacheEnabled(true);
+        view.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
+        view.setDrawingCacheBackgroundColor(Color.WHITE);
+        // 把一个View转换成图片
+        Bitmap cachebmp = loadBitmapFromView(view);
+        FileOutputStream fos;
+        String imagePath = "";
+        if (XXPermissions.isHasPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            try {
+                // 判断手机设备是否有SD卡
+                boolean isHasSDCard = Environment.getExternalStorageState().equals(
+                        android.os.Environment.MEDIA_MOUNTED);
+                File file = null;
+                if (isHasSDCard) {
+                    // SD卡根目录
+                    File sdRoot = Environment.getExternalStorageDirectory();
+                    file = new File(sdRoot, Calendar.getInstance().getTimeInMillis() + ".png");
+                    fos = new FileOutputStream(file);
+                    imagePath = file.getAbsolutePath();
+                } else
+                    throw new Exception("创建文件失败!");
+                cachebmp.compress(Bitmap.CompressFormat.PNG, 90, fos);
+                fos.flush();
+                fos.close();
+                MediaStore.Images.Media.insertImage(context.getContentResolver(), file.getAbsolutePath(), "code", null);
+                // 最后通知图库更新
+                context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://"
+                        + file)));
+                ToastUtil.showLongToastCenter(context, "已成功保存到手机");
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+            view.destroyDrawingCache();
         }
-        return null;
+    }
+
+    private static Bitmap loadBitmapFromView(View v) {
+        int w = v.getWidth();
+        int h = v.getHeight();
+        Bitmap bmp = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+        Canvas c = new Canvas(bmp);
+        c.drawColor(Color.WHITE);
+        /** 如果不设置canvas画布为白色，则生成透明 */
+        v.layout(0, 0, w, h);
+        v.draw(c);
+        return bmp;
     }
 
 

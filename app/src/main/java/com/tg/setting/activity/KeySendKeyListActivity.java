@@ -7,7 +7,6 @@ import android.widget.RelativeLayout;
 
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.BaseActivity;
-import com.tg.coloursteward.util.ToastUtil;
 
 /**
  * 乐开-发送钥匙列表
@@ -15,15 +14,20 @@ import com.tg.coloursteward.util.ToastUtil;
  * @author hxg 2019.07.18
  */
 public class KeySendKeyListActivity extends BaseActivity {
+    public static String COMMUNITY_UUID = "communityUuid";
+    public static String COMMUNITY_NAME = "community_name";
     public static final String DOOR_ID = "door_id";
-    public static final String COMMUNITY_UUID = "commnunity_uuid";
-    public static final String KEY_NAME = "key_name";
+    public static final String DOOR_QRCODE = "door_qrcode";
+    public static final String KEY_CONTENT = "key_content";
+    public static final String FORM_SOURCE = "form_source";
 
     private RelativeLayout rl_phone;
     private RelativeLayout rl_code;
-    private long doorId;
+    private String doorId;
     private String communityUuid;
+    private String communityName;
     private String keyName;
+    private int formSource=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,9 +37,12 @@ public class KeySendKeyListActivity extends BaseActivity {
 
         rl_phone.setOnClickListener(singleListener);
         rl_code.setOnClickListener(singleListener);
-        doorId = getIntent().getLongExtra(DOOR_ID, 0);
-        communityUuid = getIntent().getStringExtra(COMMUNITY_UUID);
-        keyName = getIntent().getStringExtra(KEY_NAME);
+        Intent intent = getIntent();
+        doorId = intent.getStringExtra(DOOR_ID);
+        communityUuid = intent.getStringExtra(COMMUNITY_UUID);
+        communityName = intent.getStringExtra(COMMUNITY_NAME);
+        keyName = intent.getStringExtra(KEY_CONTENT);
+        formSource = intent.getIntExtra(FORM_SOURCE,0);
     }
 
     @Override
@@ -54,17 +61,21 @@ public class KeySendKeyListActivity extends BaseActivity {
         switch (v.getId()) {
             case R.id.rl_phone:
                 i = new Intent(this, KeySendKeyPhoneActivity.class);
-                i.putExtra(KeySendKeyPhoneActivity.DOOR_ID, doorId);
-                i.putExtra(KeySendKeyPhoneActivity.COMMUNITY_UUID, communityUuid);
-                i.putExtra(KeySendKeyPhoneActivity.KEY_NAME, keyName);
+                i.putExtra(KeySendKeyListActivity.DOOR_ID, doorId);
+                i.putExtra(KeySendKeyListActivity.COMMUNITY_UUID, communityUuid);
+                i.putExtra(KeySendKeyListActivity.COMMUNITY_NAME, communityName);
+                i.putExtra(KeySendKeyListActivity.KEY_CONTENT, keyName);
+                i.putExtra(KeySendKeyListActivity.FORM_SOURCE, formSource);
                 startActivityForResult(i, 1);
                 break;
             case R.id.rl_code:
-                ToastUtil.showShortToast(this, "开发中，敬请期待...");
-//                i = new Intent(this, KeySendKeyCodeActivity.class);
-//                i.putExtra(KeySendKeyCodeActivity.DOOR_ID, doorId);
-//                i.putExtra(KeySendKeyCodeActivity.COMMUNITY_UUID, communityUuid);
-//                startActivity(i);
+                i = new Intent(this, KeySendKeyQrCodeActivity.class);
+                i.putExtra(KeySendKeyListActivity.DOOR_ID, doorId);
+                i.putExtra(KeySendKeyListActivity.COMMUNITY_UUID, communityUuid);
+                i.putExtra(KeySendKeyListActivity.KEY_CONTENT, keyName);
+                i.putExtra(KeySendKeyListActivity.COMMUNITY_NAME, communityName);
+                i.putExtra(KeySendKeyListActivity.FORM_SOURCE, formSource);
+                startActivityForResult(i, 1);
                 break;
         }
         return super.handClickEvent(v);

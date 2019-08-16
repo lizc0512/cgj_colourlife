@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -121,17 +122,22 @@ public class KeyCommunityPopWindowView extends PopupWindow implements HttpRespon
     public void OnHttpResponse(int what, String result) {
         switch (what) {
             case 1:
-                try {
-                    KeyCommunityListEntity keyCommunityListEntity = GsonUtils.gsonToBean(result, KeyCommunityListEntity.class);
-                    KeyCommunityListEntity.ContentBeanX content = keyCommunityListEntity.getContent();
-                    list.addAll(content.getContent());
-                    boolean dataEmpty = list.size() == 0;
-                    int totalRecord = content.getTotalRecord();
-                    boolean hasMore = totalRecord > list.size();
-                    rv_community.loadMoreFinish(dataEmpty, hasMore);
-                    adapter.notifyDataSetChanged();
-                } catch (Exception e) {
-                    e.printStackTrace();
+                if (!TextUtils.isEmpty(result)) {
+                    try {
+                        KeyCommunityListEntity keyCommunityListEntity = GsonUtils.gsonToBean(result, KeyCommunityListEntity.class);
+                        KeyCommunityListEntity.ContentBeanX content = keyCommunityListEntity.getContent();
+                        list.addAll(content.getContent());
+                        boolean dataEmpty = list.size() == 0;
+                        int totalRecord = content.getTotalRecord();
+                        boolean hasMore = totalRecord > list.size();
+                        rv_community.loadMoreFinish(dataEmpty, hasMore);
+                        adapter.notifyDataSetChanged();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        rv_community.loadMoreFinish(true, false);
+                    }
+                } else {
+                    rv_community.loadMoreFinish(true, false);
                 }
                 break;
         }

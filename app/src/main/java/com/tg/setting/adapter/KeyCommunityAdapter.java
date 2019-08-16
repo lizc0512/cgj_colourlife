@@ -45,6 +45,8 @@ public class KeyCommunityAdapter extends RecyclerView.Adapter<KeyCommunityAdapte
         if (selectPosition == position) {
             Drawable door = mContext.getResources().getDrawable(R.drawable.ic_key_address_select);
             holder.tv_address.setCompoundDrawablesWithIntrinsicBounds(null, null, door, null);
+        } else {
+            holder.tv_address.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
         }
         holder.rl_item.setOnClickListener(v -> ((KeyCommunityPopWindowView) mPop).selectCommunity(position, list.get(position).getName(), list.get(position).getCommunityUuid()));
     }

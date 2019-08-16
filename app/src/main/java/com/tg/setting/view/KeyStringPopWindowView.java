@@ -16,6 +16,7 @@ import android.widget.PopupWindow;
 
 import com.tg.coloursteward.R;
 import com.tg.setting.activity.KeySendKeyPhoneActivity;
+import com.tg.setting.activity.KeySendKeyQrCodeActivity;
 import com.tg.setting.adapter.KeyStringAdapter;
 import com.yanzhenjie.recyclerview.SwipeRecyclerView;
 
@@ -86,7 +87,12 @@ public class KeyStringPopWindowView extends PopupWindow {
 
     public void setIdentity(int position) {
         dismiss();
-        ((KeySendKeyPhoneActivity) context).setIdentity(position);
+        if (context instanceof KeySendKeyPhoneActivity) {
+            ((KeySendKeyPhoneActivity) context).setIdentity(position);
+        } else if (context instanceof KeySendKeyQrCodeActivity) {
+            ((KeySendKeyQrCodeActivity) context).setIdentity(position);
+        }
+
     }
 
     /**

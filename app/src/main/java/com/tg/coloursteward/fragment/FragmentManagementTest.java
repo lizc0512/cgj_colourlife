@@ -60,6 +60,7 @@ public class FragmentManagementTest extends Fragment implements HttpResponse, Vi
     private ImageView iv_miniservice_next;
     private BGABanner bga_banner;
     private TextView tv_miniservice_title;
+    private boolean isShowChangeTitle = false;
     private List<CropListEntity.ContentBean> cropList = new ArrayList<>();
     private PopupWindow popupWindow;
     private CropListAdapter cropListAdapter;
@@ -341,7 +342,7 @@ public class FragmentManagementTest extends Fragment implements HttpResponse, Vi
                         iv_miniservice_next.setVisibility(View.VISIBLE);
                     }
                     for (CropListEntity.ContentBean contentBean : cropList) {
-                        if (contentBean.getIs_default().equals("1")) {
+                        if (contentBean.getIs_default().equals("1") && !isShowChangeTitle) {
                             tv_miniservice_title.setText(contentBean.getName());
                             cropUuid = contentBean.getUuid();
                             return;
@@ -448,6 +449,7 @@ public class FragmentManagementTest extends Fragment implements HttpResponse, Vi
             for (CropListEntity.ContentBean bean : cropList) {
                 bean.setIs_default("0");
             }
+            isShowChangeTitle = true;
             cropList.get(position).setIs_default("1");
             cropListAdapter.notifyDataSetChanged();
             tv_miniservice_title.setText(cropList.get(position).getName());

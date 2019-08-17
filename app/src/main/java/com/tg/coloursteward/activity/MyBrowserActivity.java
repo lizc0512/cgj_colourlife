@@ -1,5 +1,6 @@
 package com.tg.coloursteward.activity;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -54,6 +55,8 @@ import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.hjq.permissions.OnPermission;
+import com.hjq.permissions.XXPermissions;
 import com.tencent.smtt.export.external.interfaces.GeolocationPermissionsCallback;
 import com.tencent.smtt.export.external.interfaces.IX5WebChromeClient;
 import com.tencent.smtt.export.external.interfaces.JsResult;
@@ -102,6 +105,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import cn.sharesdk.framework.Platform;
@@ -213,7 +217,7 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
             } else if (oauth2_0.equals("5")) {
                 isJSOauthShow = true;
                 isOauth2Show = true;
-            }else{
+            } else {
                 isJSOauthShow = true;
                 isOauth2Show = true;
             }
@@ -1540,6 +1544,23 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
     AlertDialog photoDialog;
 
     public void showPhotoSelector() {
+        XXPermissions.with(this)
+                .permission(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                .request(new OnPermission() {
+                    @Override
+                    public void hasPermission(List<String> granted, boolean isAll) {
+                        openCarema();
+                    }
+
+                    @Override
+                    public void noPermission(List<String> denied, boolean quick) {
+                        ToastUtil.showShortToast(MyBrowserActivity.this, "请到程序设置中打开彩管家拍照权限");
+                    }
+                });
+
+    }
+
+    private void openCarema() {
         if (photoDialog == null) {
             photoDialog = new AlertDialog.Builder(MyBrowserActivity.this).create();
             photoDialog.show();

@@ -89,9 +89,7 @@ public class KeyFloorEntity extends BaseContentEntity {
 
             private String unitUuid;
             private String roomNo;
-            private int floor;
-            private String accessId;
-            private int accessStatus;
+         
 
             public String getUnitUuid() {
                 return unitUuid;
@@ -109,29 +107,7 @@ public class KeyFloorEntity extends BaseContentEntity {
                 this.roomNo = roomNo;
             }
 
-            public int getFloor() {
-                return floor;
-            }
-
-            public void setFloor(int floor) {
-                this.floor = floor;
-            }
-
-            public String getAccessId() {
-                return accessId;
-            }
-
-            public void setAccessId(String accessId) {
-                this.accessId = accessId;
-            }
-
-            public int getAccessStatus() {
-                return accessStatus;
-            }
-
-            public void setAccessStatus(int accessStatus) {
-                this.accessStatus = accessStatus;
-            }
+        
         }
     }
 }

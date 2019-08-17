@@ -166,7 +166,6 @@ public class KeyUnitPopWindowView extends PopupWindow implements HttpResponse {
         if (type == 1) {
             hAdapter.list.clear();
             hAdapter.notifyDataSetChanged();
-
             getBuild();
         } else {
             List<String> list = new ArrayList<>(hAdapter.list);
@@ -261,7 +260,6 @@ public class KeyUnitPopWindowView extends PopupWindow implements HttpResponse {
                         for (KeyFloorEntity.ContentBeanX.ContentBean c : content.getContent()) {
                             KeyPopEntity bean = new KeyPopEntity();
                             bean.setSelect(false);
-                            bean.setId(c.getFloor() + "");
                             bean.setName(c.getRoomNo());
                             vAdapter.list.add(bean);
                         }

@@ -61,7 +61,7 @@ public class UserModel extends BaseModel {
     private String addDoor = "/yuncontrol/ycAccessControl/add";
     private String getBuild = "/cgjControl/colourLife/getBuildByCommunityId";
     private String getUnit = "/cgjControl/colourLife/getUnitByBuild";
-    private String getFloor = "/cgjControl/colourLife/getHouseByFloor";
+    private String getFloor = "/cgjControl/colourLife/getHouseByUnit";
     private String bindDoor = "/yuncontrol/ycAccessControl/accessControl/install";
     private String getKeyIdentityUrl = "/yuncontrol/ycKeyIdentity/getAllByCommunityId";
     //    private String sendKeyByPhone = "/yuncontrol/ycKey/add";
@@ -139,10 +139,9 @@ public class UserModel extends BaseModel {
      * @param what
      * @param username
      * @param passwordMD5
-     * @param type         1：账号密码登录，2：短信验证码登录，3：手机号码密码登录，4：彩之云授权登录
      * @param httpResponse 获取oauthToken
      */
-    public void postOauthToken(int what, String username, String passwordMD5, String type, final HttpResponse httpResponse) {
+    public void postOauthToken(int what, String username, String passwordMD5, String login_type, final HttpResponse httpResponse) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("username", username);
         params.put("password", passwordMD5);
@@ -150,10 +149,7 @@ public class UserModel extends BaseModel {
         params.put("client_secret", Contants.URl.CLIENT_SECRET);
         params.put("grant_type", "password");
         params.put("scope", "*");
-        params.put("type", type);
-        params.put("token", DES.TOKEN);
-        params.put("app_id", DES.APP_ID);
-        params.put("app_client_secret", DES.TOKEN);
+        params.put("login_type", login_type);
         final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 2, oauthUrl), RequestMethod.POST);
         request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
             @Override
@@ -226,10 +222,11 @@ public class UserModel extends BaseModel {
                         int code = showSuccesResultMessage(result);
                         if (code == 0) {
                             httpResponse.OnHttpResponse(what, result);
+                        } else {
+                            showErrorCodeMessage(response);
                         }
+
                     }
-                } else {
-                    showErrorCodeMessage(response);
                 }
             }
 
@@ -877,7 +874,6 @@ public class UserModel extends BaseModel {
         params.put("unitUuid", unitUuid);
         params.put("pageNum", pageNum);
         params.put("pageSize", pageSize);
-        params.put("floorNum", floorNum);
         final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 11, getFloor), RequestMethod.GET);
         request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
             @Override
@@ -973,13 +969,13 @@ public class UserModel extends BaseModel {
      * 发送钥匙
      */
     public void sendKeyByPhone(int what, String accessId, List<Map<String, String>> mobileAndHomeLocs, String name, String identityId,
-                               String startDate, String endDate,int keyType, final HttpResponse httpResponse) {
+                               String startDate, String endDate, int keyType, final HttpResponse httpResponse) {
         Map<String, Object> params = new HashMap<>();
         params.put("accessId", accessId);
         params.put("mobileAndHomeLocs", mobileAndHomeLocs);
         params.put("name", name);
         params.put("identityId", identityId);
-        if (keyType!=4){
+        if (keyType != 4) {
             params.put("startDate", startDate);
             params.put("endDate", endDate);
         }
@@ -1013,12 +1009,12 @@ public class UserModel extends BaseModel {
 
 
     public void sendKeyByPackageName(int what, String accessId, List<Map<String, String>> mobileAndHomeLocs, String identityId,
-                                     String startDate, String endDate,int keyType, final HttpResponse httpResponse) {
+                                     String startDate, String endDate, int keyType, final HttpResponse httpResponse) {
         Map<String, Object> params = new HashMap<>();
         params.put("packageId", accessId);
         params.put("mobileAndHomeLocs", mobileAndHomeLocs);
         params.put("identityId", identityId);
-        if (keyType!=4){
+        if (keyType != 4) {
             params.put("startDate", startDate);
             params.put("endDate", endDate);
         }
@@ -1084,5 +1080,4 @@ public class UserModel extends BaseModel {
             }
         }, true, true);
     }
-
 }

@@ -18,7 +18,6 @@ import com.tg.coloursteward.R;
 import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.util.GsonUtils;
 import com.tg.setting.activity.KeySendKeyPhoneActivity;
-import com.tg.setting.activity.KeySendKeyQrCodeActivity;
 import com.tg.setting.adapter.KeyAddHorAdapter;
 import com.tg.setting.adapter.KeyAddVerAdapter;
 import com.tg.setting.entity.KeyBuildEntity;
@@ -130,32 +129,44 @@ public class KeyRoomPopWindowView extends PopupWindow implements HttpResponse {
         String name = vAdapter.list.get(position).getName();
         String id = vAdapter.list.get(position).getId();
         floorNum = vAdapter.list.get(position).getFloorNum();
-
         vAdapter.list.clear();
         vAdapter.notifyDataSetChanged();
-
-        hAdapter.list.add(name);
-        hAdapter.notifyDataSetChanged();
-
-        roomName = "";
-        for (String s : hAdapter.list) {
-            roomName += s;
-        }
-
         switch (type) {
-            case 2:
+            case 2: //楼栋获取单元
                 try {
+                    hAdapter.list.add(name);
                     buildUuid = id;
+                    hAdapter.notifyDataSetChanged();
+                    roomName = "";
+                    for (String s : hAdapter.list) {
+                        roomName += s;
+                    }
                     getUnit();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
                 break;
             case 3:
+                if (hAdapter.list.size() > 1) {
+                    hAdapter.list.set(1, name);
+                } else {
+                    hAdapter.list.add(name);
+                }
                 unitUuid = id;
+                hAdapter.notifyDataSetChanged();
+                roomName = "";
+                for (String s : hAdapter.list) {
+                    roomName += s;
+                }
                 getFloor();
                 break;
             case 4:
+                hAdapter.list.add(name);
+                hAdapter.notifyDataSetChanged();
+                roomName = "";
+                for (String s : hAdapter.list) {
+                    roomName += s;
+                }
                 setRoom();
                 break;
         }
@@ -163,23 +174,21 @@ public class KeyRoomPopWindowView extends PopupWindow implements HttpResponse {
 
     public void selectHor(int position) {
         type = position + 1;
-        if (type == 1) {
+        if (type == 1) {  //点击的是获取楼栋
             hAdapter.list.clear();
             hAdapter.notifyDataSetChanged();
             vAdapter.list.clear();
             vAdapter.notifyDataSetChanged();
-
             getBuild();
         } else {
             List<String> list = new ArrayList<>(hAdapter.list);
             hAdapter.list.clear();
             for (int i = 0; i < type; i++) {
-                hAdapter.list.add(list.get(i));
+                hAdapter.list.add(list.get(i));  //水平的适配器
             }
             hAdapter.notifyDataSetChanged();
             vAdapter.list.clear();
             vAdapter.notifyDataSetChanged();
-
             switch (type) {
                 case 2:
                     getUnit();
@@ -271,7 +280,6 @@ public class KeyRoomPopWindowView extends PopupWindow implements HttpResponse {
                         for (KeyFloorEntity.ContentBeanX.ContentBean c : content.getContent()) {
                             KeyPopEntity bean = new KeyPopEntity();
                             bean.setSelect(false);
-                            bean.setId(c.getFloor() + "");
                             bean.setName(c.getRoomNo());
                             vAdapter.list.add(bean);
                         }

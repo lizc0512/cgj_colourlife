@@ -242,8 +242,8 @@ public class KeySendKeyQrCodeActivity extends BaseActivity implements HttpRespon
                 int hour = nowCalender.get(Calendar.HOUR_OF_DAY);
                 int minute = nowCalender.get(Calendar.MINUTE);
                 int second = nowCalender.get(Calendar.SECOND);
-                startTimeCustom = year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + second;
                 String nowTime = numFormat(year) + "-" + numFormat(month) + "-" + numFormat(day) + " " + numFormat(hour) + ":" + numFormat(minute) + ":" + numFormat(second);
+				startTimeCustom=nowTime;
                 tv_time_start.setText(nowTime);
                 setSubmitBg();
                 break;
@@ -304,7 +304,7 @@ public class KeySendKeyQrCodeActivity extends BaseActivity implements HttpRespon
                     ToastUtil.showShortToast(this, "开始时间不能在当前时间之前");
                     break;
                 }
-                startTimeCustom = selectTime;
+                startTimeCustom = selectText;
                 tv_time_start.setText(selectText);
                 break;
             case 2:
@@ -315,7 +315,7 @@ public class KeySendKeyQrCodeActivity extends BaseActivity implements HttpRespon
                     ToastUtil.showShortToast(this, "结束时间不能在开始时间之前");
                     break;
                 }
-                endTimeCustom = selectDate;
+                endTimeCustom = text;
                 tv_time_end.setText(text);
                 break;
             case 3:

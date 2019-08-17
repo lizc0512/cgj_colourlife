@@ -140,7 +140,6 @@ public class CityPropertyApplication extends Application {
             }
         };
 //        Bugly.setIsDevelopmentDevice(getApplication(), true);
-        Beta.canNotifyUserRestart = true;
         Bugly.init(getApplicationContext(), "b3dcc32611", false);
     }
 

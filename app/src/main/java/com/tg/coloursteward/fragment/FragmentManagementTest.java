@@ -58,19 +58,15 @@ public class FragmentManagementTest extends Fragment implements HttpResponse, Vi
     private MicroModel microModel;
     private RecyclerView rv_micro_vp;
     private ImageView iv_miniservice_next;
-    private BGABanner bga_banner;
     private TextView tv_miniservice_title;
     private boolean isShowChangeTitle = false;
     private List<CropListEntity.ContentBean> cropList = new ArrayList<>();
     private PopupWindow popupWindow;
     private CropListAdapter cropListAdapter;
     private String cropUuid = "";
-    private View bgaBannerView;
-    private View rvApplicaionView;
     private View viewpagerDataView;
     private RecyclerView rv_application;
     private MicroViewPager vp_micro;
-    private MicroApplicationAdapter microApplicationAdapter;
     private List<CropLayoutEntity.ContentBeanX.ContentBean.DataBean> listItem = new ArrayList<>();
     private MicroAuthTimeUtils mMicroAuthTimeUtils;
     private TextView tv_vp_title;
@@ -78,6 +74,7 @@ public class FragmentManagementTest extends Fragment implements HttpResponse, Vi
     private LinearLayout ll_micro_addView;
     private String uuidItme;
     private MicroVpItemAdapter microVpItemAdapter;
+    private boolean showFirstData = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -112,9 +109,6 @@ public class FragmentManagementTest extends Fragment implements HttpResponse, Vi
         String cacheData = SharedPreferencesUtils.getInstance().getStringData(SpConstants.UserModel.MICRODATA, "");
         if (!TextUtils.isEmpty(cacheData)) {
             initInitialize(cacheData);
-        } else {
-            String localCache = Contants.storage.MICRODATA;
-            initInitialize(localCache);
         }
     }
 
@@ -123,17 +117,37 @@ public class FragmentManagementTest extends Fragment implements HttpResponse, Vi
      *
      * @param bannerJson
      */
-    private void initBanner(List<CropLayoutEntity.ContentBeanX> bannerJson) {
+    private void initBanner(List<CropLayoutEntity.ContentBeanX> bannerJson, int pos) {
         List<CropLayoutEntity.ContentBeanX.ContentBean.DataBean> bannerList = new ArrayList<>();
         try {
-            bannerList = bannerJson.get(0).getContent().get(0).getData();
+            bannerList = bannerJson.get(pos).getContent().get(0).getData();
         } catch (Exception e) {
         }
-        bgaBannerView = LayoutInflater.from(mActivity).inflate(R.layout.micro_banner_view, null);
+        View bgaBannerView = LayoutInflater.from(mActivity).inflate(R.layout.micro_banner_view, null);
         ll_micro_addView.addView(bgaBannerView);
-        bga_banner = bgaBannerView.findViewById(R.id.bga_banner);
+        BGABanner bga_banner = bgaBannerView.findViewById(R.id.bga_banner);
         if (null != bannerList && bannerList.size() > 0) {
-            microBannerShow(bannerList);
+            List<String> bannerUrlList = new ArrayList<>();
+            for (CropLayoutEntity.ContentBeanX.ContentBean.DataBean dataBean : bannerList) {
+                bannerUrlList.add(dataBean.getImg_url());
+            }
+            bga_banner.setAdapter((banner, itemView, model, position) ->
+                    GlideUtils.loadRoundImageDisplay(mActivity, model, 10, (ImageView) itemView, R.drawable.pic_banner_normal, R.drawable.pic_banner_normal));
+            List<CropLayoutEntity.ContentBeanX.ContentBean.DataBean> finalBannerList = bannerList;
+            bga_banner.setDelegate((BGABanner.Delegate<ImageView, String>) (banner, itemView, model, position) -> {
+                if (position >= 0 && position < bannerUrlList.size()) {
+                    if (null == mMicroAuthTimeUtils) {
+                        mMicroAuthTimeUtils = new MicroAuthTimeUtils();
+                    }
+                    mMicroAuthTimeUtils.IsAuthTime(mActivity, finalBannerList.get(position).getRedirect_url(),
+                            "", finalBannerList.get(position).getAuth_type(), "", "");
+                }
+            });
+            bga_banner.setData(bannerUrlList, null);
+            bga_banner.setAutoPlayInterval(3000);
+            bga_banner.setAutoPlayAble(bannerList.size() > 1);
+            bga_banner.startAutoPlay();
+            bga_banner = null;
         }
     }
 
@@ -274,45 +288,18 @@ public class FragmentManagementTest extends Fragment implements HttpResponse, Vi
         microModel.getMicroItem(2, uuid, this);
     }
 
-    /**
-     * Banner展示工具
-     *
-     * @param mBannerList
-     */
-    private void microBannerShow(List<CropLayoutEntity.ContentBeanX.ContentBean.DataBean> mBannerList) {
-        List<String> bannerUrlList = new ArrayList<>();
-        bannerUrlList.clear();
-        for (CropLayoutEntity.ContentBeanX.ContentBean.DataBean dataBean : mBannerList) {
-            bannerUrlList.add(dataBean.getImg_url());
-        }
-        bga_banner.setAdapter((banner, itemView, model, position) ->
-                GlideUtils.loadRoundImageDisplay(mActivity, model, 10, (ImageView) itemView, R.drawable.pic_banner_normal, R.drawable.pic_banner_normal));
-        bga_banner.setDelegate((BGABanner.Delegate<ImageView, String>) (banner, itemView, model, position) -> {
-            if (position >= 0 && position < bannerUrlList.size()) {
-                if (null == mMicroAuthTimeUtils) {
-                    mMicroAuthTimeUtils = new MicroAuthTimeUtils();
-                }
-                mMicroAuthTimeUtils.IsAuthTime(mActivity, mBannerList.get(position).getRedirect_url(), "", mBannerList.get(position).getAuth_type(), "", "");
-            }
-        });
-        bga_banner.setData(bannerUrlList, null);
-        bga_banner.setAutoPlayInterval(3000);
-        bga_banner.setAutoPlayAble(mBannerList.size() > 1);
-        bga_banner.setData(bannerUrlList, null);
-        bga_banner.startAutoPlay();
-    }
-
     @Override
     public void onResume() {
         super.onResume();
         initData();
         initLayout(cropUuid);
+        showFirstData = true;
     }
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser) {
+        if (isVisibleToUser && showFirstData) {
             initLayout(cropUuid);
         }
     }
@@ -354,6 +341,9 @@ public class FragmentManagementTest extends Fragment implements HttpResponse, Vi
                 if (!TextUtils.isEmpty(result)) {
                     SharedPreferencesUtils.getInstance().saveStringData(SpConstants.UserModel.MICRODATA, result);
                     initInitialize(result);
+                } else {
+                    String localCache = Contants.storage.MICRODATA;
+                    initInitialize(localCache);
                 }
                 break;
             case 2:
@@ -405,7 +395,7 @@ public class FragmentManagementTest extends Fragment implements HttpResponse, Vi
             String type = cropLayoutEntity.getContent().get(i).getType();
             switch (type) {//模块类型。1：banner， 2：数据类，3：应用类
                 case "1":
-                    initBanner(cropLayoutEntity.getContent());
+                    initBanner(cropLayoutEntity.getContent(), i);
                     break;
                 case "2":
                     initViewpager(cropLayoutEntity.getContent().get(i));

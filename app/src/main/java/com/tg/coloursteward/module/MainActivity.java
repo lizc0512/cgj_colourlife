@@ -1089,7 +1089,12 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
     private void setTag() {
 
         Set<String> set = new HashSet<String>();
-        String s1 = "cgj";
+        String s1 = "";
+        if (environment.equals("release")) {
+            s1 = "cgj";
+        } else {
+            s1 = "test_cgj";
+        }
         String s2 = Tools.getStringValue(this, Contants.storage.CORPID);
         set.add(s1);
         set.add(s2);

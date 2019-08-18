@@ -53,20 +53,21 @@ public class MicroViewpagerAdapter extends PagerAdapter {
         TextView tv_micro_vp_content = viewLayout.findViewById(R.id.tv_micro_vp_content);
         RelativeLayout rl_micro_viewpager = viewLayout.findViewById(R.id.rl_micro_viewpager);
         int pos = position % mList.size();
-        tv_micro_vp_title.setText(mList.get(pos).getName());
-        tv_micro_vp_content.setText(mList.get(pos).getData());
-        if ("1".equals(mList.get(pos).getIsShow())) {
-            tv_micro_vp_title.setTextColor(mContext.getResources().getColor(R.color.white));
-            tv_micro_vp_content.setTextColor(mContext.getResources().getColor(R.color.white));
-            rl_micro_viewpager.setBackground(mContext.getResources().getDrawable(R.drawable.pic_bg_data_select_s3));
-        } else {
-            rl_micro_viewpager.setBackground(mContext.getResources().getDrawable(R.drawable.pic_bg_data_select_n3));
+        if (null != mList.get(pos)) {
+            tv_micro_vp_title.setText(mList.get(pos).getName());
+            tv_micro_vp_content.setText(mList.get(pos).getData());
+            if ("1".equals(mList.get(pos).getIsShow())) {
+                tv_micro_vp_title.setTextColor(mContext.getResources().getColor(R.color.white));
+                tv_micro_vp_content.setTextColor(mContext.getResources().getColor(R.color.white));
+                rl_micro_viewpager.setBackground(mContext.getResources().getDrawable(R.drawable.pic_bg_data_select_s3));
+            } else {
+                rl_micro_viewpager.setBackground(mContext.getResources().getDrawable(R.drawable.pic_bg_data_select_n3));
+            }
         }
         if (null != callBack) {
             rl_micro_viewpager.setOnClickListener(v -> callBack.onclick(
                     pos, mList.get(pos).getRedirect_url(), mList.get(pos).getAuth_type()));
         }
-
         container.addView(viewLayout);
         return viewLayout;
     }

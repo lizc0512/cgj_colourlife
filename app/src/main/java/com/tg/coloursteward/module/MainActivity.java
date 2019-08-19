@@ -1090,12 +1090,13 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
 
         Set<String> set = new HashSet<String>();
         String s1 = "";
+        String s2 = Tools.getStringValue(this, Contants.storage.CORPID);
         if (environment.equals("release")) {
             s1 = "cgj";
         } else {
             s1 = "test_cgj";
+            s2 = "test_"+s2;
         }
-        String s2 = Tools.getStringValue(this, Contants.storage.CORPID);
         set.add(s1);
         set.add(s2);
         //调用JPush API设置Tag

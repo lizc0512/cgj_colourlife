@@ -149,7 +149,10 @@ public class UserModel extends BaseModel {
         params.put("client_secret", Contants.URl.CLIENT_SECRET);
         params.put("grant_type", "password");
         params.put("scope", "*");
-        params.put("login_type", login_type);
+        params.put("type", login_type);
+        params.put("app_id", DES.APP_ID);
+        params.put("app_client_secret", DES.TOKEN);
+        params.put("token", DES.TOKEN);
         final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 2, oauthUrl), RequestMethod.POST);
         request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
             @Override
@@ -182,6 +185,7 @@ public class UserModel extends BaseModel {
         params.put("client_id", "3");
         params.put("client_secret", Contants.URl.CLIENT_SECRET);
         params.put("grant_type", "refresh_token");
+        params.put("scope", "*");
         params.put("refresh_token", refresh_token);
         final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 2, oauthUrl), RequestMethod.POST);
         request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {

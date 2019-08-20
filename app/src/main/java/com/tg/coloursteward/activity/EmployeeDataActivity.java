@@ -67,7 +67,7 @@ import static com.tg.coloursteward.module.MainActivity.getPublicParams;
 @Route(path = APath.EMPLOYEE_DATA_ACT)
 public class EmployeeDataActivity extends BaseActivity implements MyListener, HttpResponse {
     public final static String CONTACTS_ID = "contacts_id";
-    private String contactsID;
+    private String contactsID="";
     private ManageMentLinearlayout magLinearLayout;
     private ManageMentLinearlayout llRedpackets;
     private CheckBox cbCollect;
@@ -96,11 +96,6 @@ public class EmployeeDataActivity extends BaseActivity implements MyListener, Ht
         Intent intent = getIntent();
         if (intent != null) {
             contactsID = intent.getStringExtra(CONTACTS_ID);
-        }
-        if (contactsID == null) {
-            ToastFactory.showToast(this, "参数错误");
-            finish();
-            return;
         }
         getKey();
         String expireTime = Tools.getStringValue(EmployeeDataActivity.this, Contants.storage.APPAUTHTIME);

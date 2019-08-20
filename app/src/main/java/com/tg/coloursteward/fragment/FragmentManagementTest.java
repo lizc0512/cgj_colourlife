@@ -124,9 +124,8 @@ public class FragmentManagementTest extends Fragment implements HttpResponse, Vi
 
                 }
             });
-        } else {
-            microModel.getMicroList(1, corpUuid, access_token, this);
         }
+        microModel.getMicroList(1, corpUuid, access_token, this);
     }
 
     private void getData(String corpUuid, String access_token) {
@@ -317,6 +316,10 @@ public class FragmentManagementTest extends Fragment implements HttpResponse, Vi
 
     private void initDataItem(String uuid, RecyclerView rv_micro_vp) {
         uuidItme = uuid;
+        String cacheItem = SharedPreferencesUtils.getInstance().getStringData(SpConstants.UserModel.MICROVIEWPAGERITEM + uuidItme, "");
+        if (!TextUtils.isEmpty(cacheItem)) {
+            setMicroVpItem(cacheItem, rv_micro_vp);
+        }
         Map<String, Object> map = new HashMap();
         Map<String, String> mapparams = TokenUtils.getStringMap(TokenUtils.getNewSaftyMap(mActivity, map));
         ContentValues params = new ContentValues();
@@ -334,7 +337,10 @@ public class FragmentManagementTest extends Fragment implements HttpResponse, Vi
                     @Override
                     public void httpReqResult(String response) {
                         String result = response.toString();
-                        setMicroVpItem(result, rv_micro_vp);
+                        if (!TextUtils.isEmpty(result)) {
+                            SharedPreferencesUtils.getInstance().saveStringData(SpConstants.UserModel.MICROVIEWPAGERITEM + uuidItme, result);
+                            setMicroVpItem(result, rv_micro_vp);
+                        }
                     }
                 });
     }
@@ -415,8 +421,8 @@ public class FragmentManagementTest extends Fragment implements HttpResponse, Vi
                 dataItemList.addAll(microDataEntity.getContent());
                 rv_micro_vp.setVisibility(View.VISIBLE);
             } else {
-                if (null != rv_application) {
-                    rv_application.scrollBy(0, 2);
+                if (null != rv_micro_vp) {
+                    rv_micro_vp.scrollBy(0, 3);
                 }
                 rv_micro_vp.setVisibility(View.GONE);
             }

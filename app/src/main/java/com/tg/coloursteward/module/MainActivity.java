@@ -948,12 +948,7 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
      */
     private void getTokenInfo() {
         getAuth("", "case", "0", "case", "");
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                getAuth("", "case", "1", "case", "");
-            }
-        }, 300);
+        getAuth("", "case", "1", "case", "");
     }
 
     /**
@@ -1095,7 +1090,7 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
             s1 = "cgj";
         } else {
             s1 = "test_cgj";
-            s2 = "test_"+s2;
+            s2 = "test_" + s2;
         }
         set.add(s1);
         set.add(s2);

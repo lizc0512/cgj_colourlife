@@ -1,6 +1,7 @@
 package com.tg.coloursteward.fragment;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -30,20 +31,29 @@ import com.tg.coloursteward.entity.CropListEntity;
 import com.tg.coloursteward.entity.MicroDataEntity;
 import com.tg.coloursteward.inter.MicroApplicationCallBack;
 import com.tg.coloursteward.model.MicroModel;
+import com.tg.coloursteward.net.GetTwoRecordListener;
+import com.tg.coloursteward.serice.HomeService;
 import com.tg.coloursteward.util.DisplayUtil;
 import com.tg.coloursteward.util.GlideUtils;
 import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.MicroAuthTimeUtils;
 import com.tg.coloursteward.util.SharedPreferencesUtils;
+import com.tg.coloursteward.util.TokenUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.MicroViewPager;
 import com.tg.coloursteward.view.MyGridLayoutManager;
+import com.youmai.hxsdk.config.ColorsConfig;
+import com.youmai.hxsdk.http.IGetListener;
+import com.youmai.hxsdk.http.OkHttpConnector;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import cn.bingoogolapple.bgabanner.BGABanner;
 
@@ -75,6 +85,7 @@ public class FragmentManagementTest extends Fragment implements HttpResponse, Vi
     private String uuidItme;
     private MicroVpItemAdapter microVpItemAdapter;
     private boolean showFirstData = false;
+    private HomeService homeService;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -83,6 +94,7 @@ public class FragmentManagementTest extends Fragment implements HttpResponse, Vi
         microModel = new MicroModel(mActivity);
         initView();
         showCache();
+        initData();
         return mView;
     }
 
@@ -92,9 +104,34 @@ public class FragmentManagementTest extends Fragment implements HttpResponse, Vi
 
     private void initLayout(String corpUuid) {
         String access_token = Tools.getAccess_token(mActivity);
-        microModel.getMicroList(1, corpUuid, access_token, this);
+        if (TextUtils.isEmpty(access_token)) {
+            if (homeService == null) {
+                homeService = new HomeService(mActivity);
+            }
+            homeService.getAuth2("", new GetTwoRecordListener<String, String>() {
+                @Override
+                public void onFinish(String data1, String data2, String data3) {
+                    Date dt = new Date();
+                    Long time = dt.getTime();
+                    Tools.saveAccess_token(mActivity, data2);
+                    Tools.saveCurrentTime2(mActivity, time);
+                    Tools.saveExpiresTime2(mActivity, Long.parseLong(data3));
+                    getData(corpUuid, data2);
+                }
+
+                @Override
+                public void onFailed(String Message) {
+
+                }
+            });
+        } else {
+            microModel.getMicroList(1, corpUuid, access_token, this);
+        }
     }
 
+    private void getData(String corpUuid, String access_token) {
+        microModel.getMicroList(1, corpUuid, access_token, this);
+    }
 
     private void initData() {
         microModel.getCropList(0, this);
@@ -132,7 +169,8 @@ public class FragmentManagementTest extends Fragment implements HttpResponse, Vi
                 bannerUrlList.add(dataBean.getImg_url());
             }
             bga_banner.setAdapter((banner, itemView, model, position) ->
-                    GlideUtils.loadRoundImageDisplay(mActivity, model, 10, (ImageView) itemView, R.drawable.pic_banner_normal, R.drawable.pic_banner_normal));
+                    GlideUtils.loadRoundImageDisplay(mActivity, model, 10, (ImageView) itemView,
+                            R.drawable.pic_banner_normal, R.drawable.pic_banner_normal));
             List<CropLayoutEntity.ContentBeanX.ContentBean.DataBean> finalBannerList = bannerList;
             bga_banner.setDelegate((BGABanner.Delegate<ImageView, String>) (banner, itemView, model, position) -> {
                 if (position >= 0 && position < bannerUrlList.size()) {
@@ -146,8 +184,8 @@ public class FragmentManagementTest extends Fragment implements HttpResponse, Vi
             bga_banner.setData(bannerUrlList, null);
             bga_banner.setAutoPlayInterval(3000);
             bga_banner.setAutoPlayAble(bannerList.size() > 1);
+            bga_banner.setData(bannerUrlList, null);
             bga_banner.startAutoPlay();
-            bga_banner = null;
         }
     }
 
@@ -211,11 +249,11 @@ public class FragmentManagementTest extends Fragment implements HttpResponse, Vi
      * @param content
      */
     private void initViewpager(CropLayoutEntity.ContentBeanX content) {
-        viewpagerDataView = LayoutInflater.from(mActivity).inflate(R.layout.micro_viewpager_view, null);
+        View viewpagerDataView = LayoutInflater.from(mActivity).inflate(R.layout.micro_viewpager_view, null);
         ll_micro_addView.addView(viewpagerDataView);
-        vp_micro = viewpagerDataView.findViewById(R.id.vp_micro);
-        tv_vp_title = viewpagerDataView.findViewById(R.id.tv_vp_title);
-        rv_micro_vp = viewpagerDataView.findViewById(R.id.rv_micro_vp);
+        MicroViewPager vp_micro = viewpagerDataView.findViewById(R.id.vp_micro);
+        TextView tv_vp_title = viewpagerDataView.findViewById(R.id.tv_vp_title);
+        RecyclerView rv_micro_vp = viewpagerDataView.findViewById(R.id.rv_micro_vp);
         LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) vp_micro.getLayoutParams();
         vp_micro.setLayoutParams(layoutParams);
         vp_micro.setOffscreenPageLimit(2);
@@ -255,11 +293,10 @@ public class FragmentManagementTest extends Fragment implements HttpResponse, Vi
                         "", auth_type, "", "");
             }
         });
-        initDataItem(dataBeanList.get(vp_micro.getCurrentItem() % dataBeanList.size()).getUuid());
+        initDataItem(dataBeanList.get(vp_micro.getCurrentItem() % dataBeanList.size()).getUuid(), rv_micro_vp);
         vp_micro.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
             }
 
             @Override
@@ -269,29 +306,42 @@ public class FragmentManagementTest extends Fragment implements HttpResponse, Vi
                 }
                 dataBeanList.get(position % dataBeanList.size()).setIsShow("1");
                 microViewpagerAdapter.notifyDataSetChanged();
-                initDataItem(dataBeanList.get(position % dataBeanList.size()).getUuid());
+                initDataItem(dataBeanList.get(position % dataBeanList.size()).getUuid(), rv_micro_vp);
             }
 
             @Override
             public void onPageScrollStateChanged(int state) {
-
             }
         });
     }
 
-    private void initDataItem(String uuid) {
+    private void initDataItem(String uuid, RecyclerView rv_micro_vp) {
         uuidItme = uuid;
-        String cacheItem = SharedPreferencesUtils.getInstance().getStringData(SpConstants.UserModel.MICROVIEWPAGERITEM + uuidItme, "");
-        if (!TextUtils.isEmpty(cacheItem)) {
-            setMicroVpItem(cacheItem);
-        }
-        microModel.getMicroItem(2, uuid, this);
+        Map<String, Object> map = new HashMap();
+        Map<String, String> mapparams = TokenUtils.getStringMap(TokenUtils.getNewSaftyMap(mActivity, map));
+        ContentValues params = new ContentValues();
+        params.put("uuid", uuid);
+        params.put("nonce_str", mapparams.get("nonce_str"));
+        params.put("native_type", mapparams.get("native_type"));
+        params.put("version", mapparams.get("version"));
+        params.put("signature", mapparams.get("signature"));
+        ColorsConfig.commonParams(params);
+        ContentValues header = new ContentValues();
+        String colorToken = SharedPreferencesUtils.getKey(mActivity, SpConstants.accessToken.accssToken);
+        header.put("color-token", colorToken);
+        OkHttpConnector.httpGet_net(mActivity, header, Contants.URl.URL_NEW + "/app/home/microservices/data/item",
+                params, new IGetListener() {
+                    @Override
+                    public void httpReqResult(String response) {
+                        String result = response.toString();
+                        setMicroVpItem(result, rv_micro_vp);
+                    }
+                });
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        initData();
         initLayout(cropUuid);
         showFirstData = true;
     }
@@ -329,7 +379,7 @@ public class FragmentManagementTest extends Fragment implements HttpResponse, Vi
                         iv_miniservice_next.setVisibility(View.VISIBLE);
                     }
                     for (CropListEntity.ContentBean contentBean : cropList) {
-                        if (contentBean.getIs_default().equals("1") && !isShowChangeTitle) {
+                        if (contentBean.getIs_default().equals("1")) {
                             tv_miniservice_title.setText(contentBean.getName());
                             cropUuid = contentBean.getUuid();
                             return;
@@ -346,16 +396,16 @@ public class FragmentManagementTest extends Fragment implements HttpResponse, Vi
                     initInitialize(localCache);
                 }
                 break;
-            case 2:
-                if (!TextUtils.isEmpty(result)) {
-                    SharedPreferencesUtils.getInstance().saveStringData(SpConstants.UserModel.MICROVIEWPAGERITEM + uuidItme, result);
-                    setMicroVpItem(result);
-                }
-                break;
+//            case 2:
+//                if (!TextUtils.isEmpty(result)) {
+//                    SharedPreferencesUtils.getInstance().saveStringData(SpConstants.UserModel.MICROVIEWPAGERITEM + uuidItme, result);
+//                    setMicroVpItem(result);
+//                }
+//                break;
         }
     }
 
-    private void setMicroVpItem(String result) {
+    private void setMicroVpItem(String result, RecyclerView rv_micro_vp) {
         try {
             JSONObject jsonObject = new JSONObject(result);
             dataItemList.clear();
@@ -366,13 +416,13 @@ public class FragmentManagementTest extends Fragment implements HttpResponse, Vi
                 rv_micro_vp.setVisibility(View.VISIBLE);
             } else {
                 if (null != rv_application) {
-                    rv_application.scrollBy(0, 16);
+                    rv_application.scrollBy(0, 2);
                 }
                 rv_micro_vp.setVisibility(View.GONE);
             }
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false);
             rv_micro_vp.setLayoutManager(linearLayoutManager);
-            microVpItemAdapter = new MicroVpItemAdapter(mActivity, dataItemList);
+            MicroVpItemAdapter microVpItemAdapter = new MicroVpItemAdapter(mActivity, dataItemList);
             rv_micro_vp.setAdapter(microVpItemAdapter);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -440,9 +490,9 @@ public class FragmentManagementTest extends Fragment implements HttpResponse, Vi
                 bean.setIs_default("0");
             }
             isShowChangeTitle = true;
+            tv_miniservice_title.setText(cropList.get(position).getName());
             cropList.get(position).setIs_default("1");
             cropListAdapter.notifyDataSetChanged();
-            tv_miniservice_title.setText(cropList.get(position).getName());
             initLayout(cropUuid);
             popupWindow.dismiss();
         });

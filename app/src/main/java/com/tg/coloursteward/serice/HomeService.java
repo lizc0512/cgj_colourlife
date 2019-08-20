@@ -7,9 +7,7 @@ import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.net.GetTwoRecordListener;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.RequestParams;
-import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.Tools;
-import com.tg.coloursteward.view.dialog.ToastFactory;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -33,10 +31,6 @@ public class HomeService {
         String username = UserInfo.employeeAccount;
         String md5_pwd = Tools.getPassWordMD5(context);
 
-        if (StringUtils.isEmpty(username) || StringUtils.isEmpty(md5_pwd) ) {
-            ToastFactory.showToast(context, "参数错误，请稍后重试");
-            return;
-        }
         RequestParams params = new RequestParams();
         params.put("username", username);
         params.put("password", md5_pwd);
@@ -64,11 +58,6 @@ public class HomeService {
     public void getAuth2(String developerCode, final GetTwoRecordListener<String, String> listener) {
         String username = UserInfo.employeeAccount;
         String md5_pwd = Tools.getPassWordMD5(context);
-
-        if (StringUtils.isEmpty(username) || StringUtils.isEmpty(md5_pwd) ) {
-            ToastFactory.showToast(context, "参数错误，请稍后重试");
-            return;
-        }
         RequestParams params = new RequestParams();
         params.put("username", username);
         params.put("password", md5_pwd);

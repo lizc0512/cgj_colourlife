@@ -172,7 +172,7 @@ dependencies {
     implementation 'com.tencent.tinker:tinker-android-lib:1.9.13'
     implementation 'com.tencent.bugly:nativecrashreport:latest.release'
     //其中latest.release指代最新版本号，也可以指定明确的版本号，例如2.2.0
-    implementation(name: 'lekai-open-sdk-v3.0.8', ext: 'aar')//乐开
+    implementation(name: 'lekai-open-sdk-v3.0.8.1', ext: 'aar')//乐开
 }
 
 project.afterEvaluate {

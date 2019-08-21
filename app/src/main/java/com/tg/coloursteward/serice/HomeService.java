@@ -1,21 +1,21 @@
 package com.tg.coloursteward.serice;
 
+import android.content.ContentValues;
 import android.content.Context;
 
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.info.UserInfo;
+import com.tg.coloursteward.net.DES;
 import com.tg.coloursteward.net.GetTwoRecordListener;
 import com.tg.coloursteward.net.HttpTools;
-import com.tg.coloursteward.net.RequestParams;
+import com.tg.coloursteward.net.MD5;
 import com.tg.coloursteward.util.Tools;
+import com.youmai.hxsdk.http.IGetListener;
+import com.youmai.hxsdk.http.OkHttpConnector;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 
-import java.util.HashMap;
+import static com.tg.coloursteward.net.HttpTools.getTime;
 
 public class HomeService {
     public Context context;
@@ -30,26 +30,45 @@ public class HomeService {
     public void getAuth(String clientCode, final GetTwoRecordListener<String, String> listener) {
         String username = UserInfo.employeeAccount;
         String md5_pwd = Tools.getPassWordMD5(context);
-
-        RequestParams params = new RequestParams();
-        params.put("username", username);
-        params.put("password", md5_pwd);
-        params.put("clientCode", "case");
-        params.put("getExpire", "1");
-        String url = null;
-        HashMap<String, Object> paramsStr = null;
-        if (params != null) {
-            paramsStr = params.toHashMap();
-        } else {
-            paramsStr = null;
-        }
+        String ts = getTime();
+        String Sign = "";
         try {
-            url = Contants.URl.URL_ICETEST + HttpTools.GetUrl(Contants.URl.URL_ICETEST, "/auth", paramsStr);
-            AuthThread authThead = new AuthThread(url, listener);
-            authThead.start();
-        } catch (Exception e1) {
-            e1.printStackTrace();
+            Sign = MD5.getMd5Value(DES.APP_ID + ts + DES.TOKEN + "false").toLowerCase();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+        ContentValues paramsMap = new ContentValues();
+        paramsMap.put("username", username);
+        paramsMap.put("password", md5_pwd);
+        paramsMap.put("clientCode", "case");
+        paramsMap.put("getExpire", "1");
+        paramsMap.put("appID", DES.APP_ID);
+        paramsMap.put("sign", Sign);
+        paramsMap.put("ts", ts);
+        OkHttpConnector.httpGet_net(context, null, Contants.URl.URL_ICETEST + "/auth",
+                paramsMap, new IGetListener() {
+                    @Override
+                    public void httpReqResult(String response) {
+                        String result = response.toString();
+                        try {
+                            int codeInt = HttpTools.getCode(result);
+                            JSONObject contentObject = HttpTools.getContentJSONObject(response);
+                            if (codeInt == 0) {
+                                String openID = contentObject.getString("openID");
+                                String accessToken = contentObject.getString("accessToken");
+                                String expires_in = contentObject.getString("expires_in");
+                                if (listener != null) {
+                                    listener.onFinish(openID, accessToken, expires_in);
+                                }
+                            } else {
+                                if (listener != null) {
+                                    listener.onFailed("");
+                                }
+                            }
+                        } catch (Exception e) {
+                        }
+                    }
+                });
     }
 
     /**
@@ -58,115 +77,45 @@ public class HomeService {
     public void getAuth2(String developerCode, final GetTwoRecordListener<String, String> listener) {
         String username = UserInfo.employeeAccount;
         String md5_pwd = Tools.getPassWordMD5(context);
-        RequestParams params = new RequestParams();
-        params.put("username", username);
-        params.put("password", md5_pwd);
-        params.put("developerCode", "case");
-        params.put("getExpire", "1");
-        String url = null;
-        HashMap<String, Object> paramsStr = null;
-        if (params != null) {
-            paramsStr = params.toHashMap();
-        } else {
-            paramsStr = null;
-        }
+        String ts = getTime();
+        String Sign = "";
         try {
-            url = Contants.URl.URL_ICETEST + HttpTools.GetUrl(Contants.URl.URL_ICETEST, "/auth2", paramsStr);
-            Auth2Thread auth2Thread = new Auth2Thread(url, listener);
-            auth2Thread.start();
-        } catch (Exception e1) {
-            e1.printStackTrace();
+            Sign = MD5.getMd5Value(DES.APP_ID + ts + DES.TOKEN + "false").toLowerCase();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-    }
-
-    /**
-     * Auth 1.0
-     *
-     * @author Administrator
-     */
-    class AuthThread extends Thread {
-        String url;
-        GetTwoRecordListener<String, String> listener;
-
-        public AuthThread(String url, GetTwoRecordListener<String, String> listener) {
-            this.url = url;
-            this.listener = listener;
-        }
-
-        public void run() {
-            HttpGet getMethod = new HttpGet(url);//将URL与参数拼接
-            HttpClient httpClient = MyHttpClient.getNewHttpClient();
-            String response = "";
-            try {
-                HttpResponse mHttpResponse = httpClient.execute(getMethod); //发起GET请求
-                int code = mHttpResponse.getStatusLine().getStatusCode();
-                if (code == 200) {
-                    response = EntityUtils.toString(mHttpResponse.getEntity(), "utf-8");
-                    int codeInt = HttpTools.getCode(response);
-                    JSONObject contentObject = HttpTools.getContentJSONObject(response);
-                    if (codeInt == 0) {
-                        String openID = contentObject.getString("openID");
-                        String accessToken = contentObject.getString("accessToken");
-                        String expires_in = contentObject.getString("expires_in");
-                        if (listener != null) {
-                            listener.onFinish(openID, accessToken, expires_in);
-                        }
-                    } else {
-                        if (listener != null) {
-                            listener.onFailed("获取认证参数失败！");
+        ContentValues paramsMap = new ContentValues();
+        paramsMap.put("username", username);
+        paramsMap.put("password", md5_pwd);
+        paramsMap.put("developerCode", "case");
+        paramsMap.put("getExpire", "1");
+        paramsMap.put("appID", DES.APP_ID);
+        paramsMap.put("sign", Sign);
+        paramsMap.put("ts", ts);
+        OkHttpConnector.httpGet_net(context, null, Contants.URl.URL_ICETEST + "/auth2",
+                paramsMap, new IGetListener() {
+                    @Override
+                    public void httpReqResult(String response) {
+                        String result = response.toString();
+                        try {
+                            int codeInt = HttpTools.getCode(result);
+                            JSONObject contentObject = HttpTools.getContentJSONObject(response);
+                            if (codeInt == 0) {
+                                String username = contentObject.getString("username");
+                                String accessToken = contentObject.getString("access_token");
+                                String expires_in = contentObject.getString("expires_in");
+                                if (listener != null) {
+                                    listener.onFinish(username, accessToken, expires_in);
+                                }
+                            } else {
+                                if (listener != null) {
+                                    listener.onFailed("");
+                                }
+                            }
+                        } catch (Exception e) {
                         }
                     }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-
-            }
-        }
-    }
-
-    /**
-     * Auth  2.0
-     *
-     * @author Administrator
-     */
-    class Auth2Thread extends Thread {
-        String url;
-        GetTwoRecordListener<String, String> listener;
-
-        public Auth2Thread(String url, GetTwoRecordListener<String, String> listener) {
-            this.url = url;
-            this.listener = listener;
-        }
-
-        public void run() {
-            HttpGet getMethod = new HttpGet(url);//将URL与参数拼接
-            HttpClient httpClient = MyHttpClient.getNewHttpClient();
-            String response = "";
-            try {
-                HttpResponse mHttpResponse = httpClient.execute(getMethod); //发起GET请求
-                int code = mHttpResponse.getStatusLine().getStatusCode();
-                if (code == 200) {
-                    response = EntityUtils.toString(mHttpResponse.getEntity(), "utf-8");
-                    int codeInt = HttpTools.getCode(response);
-                    JSONObject contentObject = HttpTools.getContentJSONObject(response);
-                    if (codeInt == 0) {
-                        String username = contentObject.getString("username");
-                        String accessToken = contentObject.getString("access_token");
-                        String expires_in = contentObject.getString("expires_in");
-                        if (listener != null) {
-                            listener.onFinish(username, accessToken, expires_in);
-                        }
-                    } else {
-                        if (listener != null) {
-                            listener.onFailed("获取认证参数失败！");
-                        }
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-
-            }
-        }
+                });
     }
 
 }

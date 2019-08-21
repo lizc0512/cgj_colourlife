@@ -240,6 +240,7 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
         if (TextUtils.isEmpty(key) || TextUtils.isEmpty(secret)) {
             getKeyAndSecret();
         }
+        userModel.getTs(6, this);
         Intent data = getIntent();
         if (data != null) {
             urlAd = data.getStringExtra(FROM_AD);
@@ -1303,6 +1304,14 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
             case 5:
                 if (!TextUtils.isEmpty(result)) {
                     //IM消息同步逻辑，暂无
+                }
+                break;
+            case 6:
+                if (!TextUtils.isEmpty(result)) {
+                    String difference = HttpTools.getContentString(result);
+                    if (!TextUtils.isEmpty(difference)) {
+                        spUtils.saveLongData(SpConstants.UserModel.DIFFERENCE, Long.valueOf(difference));
+                    }
                 }
                 break;
         }

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
@@ -19,7 +20,9 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.BaseActivity;
+import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.constant.Contants;
+import com.tg.coloursteward.constant.SpConstants;
 import com.tg.coloursteward.net.GetTwoRecordListener;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.MD5;
@@ -31,6 +34,7 @@ import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.RoundImageView;
 import com.tg.coloursteward.view.dialog.PwdDialog2;
 import com.tg.coloursteward.view.dialog.ToastFactory;
+import com.tg.user.model.UserModel;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -44,7 +48,7 @@ import static com.tg.coloursteward.module.MainActivity.getPublicParams;
 /**
  * 兑换给同事（对公账户账户兑换）
  */
-public class PublicAccountTransferToColleagueActivity extends BaseActivity implements MyListener {
+public class PublicAccountTransferToColleagueActivity extends BaseActivity implements MyListener, HttpResponse {
     private static final String TAG = "PublicAccountTransferTo";
     /**
      * 输入金额EditText
@@ -84,11 +88,14 @@ public class PublicAccountTransferToColleagueActivity extends BaseActivity imple
     private PwdDialog2 aDialog;
     private PwdDialog2.ADialogCallback aDialogCallback;
     private ProgressDialog mProgressDialog;
+    private UserModel userModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
+        userModel = new UserModel(this);
+        userModel.getTs(0, this);
         if (intent != null) {
 //            money = intent.getStringExtra(Contants.PARAMETER.PUBLIC_ACCOUNT);
             payAtid = intent.getIntExtra(Contants.PARAMETER.PAY_ATID, -1);
@@ -126,7 +133,7 @@ public class PublicAccountTransferToColleagueActivity extends BaseActivity imple
                 if (Long.parseLong(expireTime) <= time) {//token过期
                     getAppAuthInfo();
                 } else {
-                    Cqb_PayUtil.getInstance(this).PayPasswordDialog(getPublicParams(),getEnvironment(),"payDialog");
+                    Cqb_PayUtil.getInstance(this).PayPasswordDialog(getPublicParams(), getEnvironment(), "payDialog");
 
                 }
             } else {
@@ -166,7 +173,6 @@ public class PublicAccountTransferToColleagueActivity extends BaseActivity imple
 
     private void initView() {
         accessToken_1 = Tools.getStringValue(PublicAccountTransferToColleagueActivity.this, Contants.storage.APPAUTH_1);
-        Log.e(TAG, "initView:鉴权1.0 " + accessToken_1);
         imgHead = (RoundImageView) findViewById(R.id.rig_head);
         imgHead.setCircleShape();
         tvTicket = (TextView) findViewById(R.id.tv_ticket);
@@ -323,7 +329,7 @@ public class PublicAccountTransferToColleagueActivity extends BaseActivity imple
                             Tools.saveStringValue(PublicAccountTransferToColleagueActivity.this, Contants.storage.APPAUTH_1, accessToken);
                             Tools.saveStringValue(PublicAccountTransferToColleagueActivity.this, Contants.storage.APPAUTHTIME_1, expireTime);
 
-                            Cqb_PayUtil.getInstance(PublicAccountTransferToColleagueActivity.this).PayPasswordDialog(getPublicParams(),getEnvironment(),"payDialog");
+                            Cqb_PayUtil.getInstance(PublicAccountTransferToColleagueActivity.this).PayPasswordDialog(getPublicParams(), getEnvironment(), "payDialog");
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -388,11 +394,11 @@ public class PublicAccountTransferToColleagueActivity extends BaseActivity imple
                 submit();
                 break;
             case 17://密码检验时主动中途退出
-                ToastFactory.showToast(PublicAccountTransferToColleagueActivity.this,"已取消");
+                ToastFactory.showToast(PublicAccountTransferToColleagueActivity.this, "已取消");
                 break;
             case 18://没有设置支付密码
-                ToastFactory.showToast(PublicAccountTransferToColleagueActivity.this,"未设置支付密码，即将跳转到彩钱包页面");
-                Cqb_PayUtil.getInstance(this).createPay(getPublicParams(),getEnvironment());
+                ToastFactory.showToast(PublicAccountTransferToColleagueActivity.this, "未设置支付密码，即将跳转到彩钱包页面");
+                Cqb_PayUtil.getInstance(this).createPay(getPublicParams(), getEnvironment());
                 break;
             case 19://绑定银行卡并设置密码成功
                 break;
@@ -405,5 +411,19 @@ public class PublicAccountTransferToColleagueActivity extends BaseActivity imple
     @Override
     public void toCFRS(String s) {
 
+    }
+
+    @Override
+    public void OnHttpResponse(int what, String result) {
+        switch (what) {
+            case 0:
+                if (!TextUtils.isEmpty(result)) {
+                    String difference = HttpTools.getContentString(result);
+                    if (!TextUtils.isEmpty(difference)) {
+                        spUtils.saveLongData(SpConstants.UserModel.DIFFERENCE, Long.valueOf(difference));
+                    }
+                }
+                break;
+        }
     }
 }

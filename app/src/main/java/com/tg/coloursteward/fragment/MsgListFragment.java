@@ -137,38 +137,38 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
                 break;
             case 1:
                 if (!TextUtils.isEmpty(result)) {
+                    List<MsgConfig.ContentBean.DataBean> list = new ArrayList<>();
                     try {
                         JSONObject jsonObject = new JSONObject(result);
                         String content = jsonObject.getString("content");
                         if (TextUtils.isEmpty(content)) {
                             return;
                         }
+                        HomeMsgEntity homeMsgEntity = new HomeMsgEntity();
+                        homeMsgEntity = GsonUtils.gsonToBean(result, HomeMsgEntity.class);
+                        for (int i = 0; i < homeMsgEntity.getContent().getData().size(); i++) {
+                            MsgConfig.ContentBean.DataBean dataBean = new MsgConfig.ContentBean.DataBean();
+                            dataBean.setICON(homeMsgEntity.getContent().getData().get(i).getApp_logo());
+                            dataBean.setComefrom(homeMsgEntity.getContent().getData().get(i).getApp_name());
+                            dataBean.setOwner_name(homeMsgEntity.getContent().getData().get(i).getOwner_name());
+                            dataBean.setTitle(homeMsgEntity.getContent().getData().get(i).getTitle());
+                            dataBean.setClient_code(homeMsgEntity.getContent().getData().get(i).getClient_code());
+                            dataBean.setApp_id(homeMsgEntity.getContent().getData().get(i).getApp_id());
+                            dataBean.setHomePushTime(homeMsgEntity.getContent().getData().get(i).getHomePushTime());
+                            dataBean.setUrl(homeMsgEntity.getContent().getData().get(i).getUrl());
+                            if (homeMsgEntity.getContent().getData().get(i).getIsread() > 0) {
+                                dataBean.setNotread(0);
+                            } else {
+                                dataBean.setNotread(1);
+                            }
+                            dataBean.setApp_uuid(homeMsgEntity.getContent().getData().get(i).getApp_uuid());
+                            list.add(dataBean);
+                            dataBean = null;
+
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                         return;
-                    }
-                    HomeMsgEntity homeMsgEntity = new HomeMsgEntity();
-                    homeMsgEntity = GsonUtils.gsonToBean(result, HomeMsgEntity.class);
-                    List<MsgConfig.ContentBean.DataBean> list = new ArrayList<>();
-                    for (int i = 0; i < homeMsgEntity.getContent().getData().size(); i++) {
-                        MsgConfig.ContentBean.DataBean dataBean = new MsgConfig.ContentBean.DataBean();
-                        dataBean.setICON(homeMsgEntity.getContent().getData().get(i).getApp_logo());
-                        dataBean.setComefrom(homeMsgEntity.getContent().getData().get(i).getApp_name());
-                        dataBean.setOwner_name(homeMsgEntity.getContent().getData().get(i).getOwner_name());
-                        dataBean.setTitle(homeMsgEntity.getContent().getData().get(i).getTitle());
-                        dataBean.setClient_code(homeMsgEntity.getContent().getData().get(i).getClient_code());
-                        dataBean.setApp_id(homeMsgEntity.getContent().getData().get(i).getApp_id());
-                        dataBean.setHomePushTime(homeMsgEntity.getContent().getData().get(i).getHomePushTime());
-                        dataBean.setUrl(homeMsgEntity.getContent().getData().get(i).getUrl());
-                        if (homeMsgEntity.getContent().getData().get(i).getIsread() > 0) {
-                            dataBean.setNotread(0);
-                        } else {
-                            dataBean.setNotread(1);
-                        }
-                        dataBean.setApp_uuid(homeMsgEntity.getContent().getData().get(i).getApp_uuid());
-                        list.add(dataBean);
-                        dataBean = null;
-
                     }
                     if (list != null && list.size() > 0) {
                         for (MsgConfig.ContentBean.DataBean item : list) {
@@ -307,7 +307,7 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
                         }
                     } catch (Exception ignored) {
                     }
-                    homeModel.getConfirmDialog(1, dialogUuid, homeDialogEntitiy.getContent().getButton().get(positon).getState(), MsgListFragment.this::OnHttpResponse);
+                    homeModel.getConfirmDialog(3, dialogUuid, homeDialogEntitiy.getContent().getButton().get(positon).getState(), MsgListFragment.this::OnHttpResponse);
                     dialog.dismiss();
                 }
             });

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.youmai.hxsdk">
 
     <!-- Normal Permissions start -->
@@ -355,7 +356,7 @@
             android:name="com.youmai.hxsdk.videocall.VideoOperatConstactActivity"
             android:screenOrientation="portrait"
             android:theme="@style/HxSdkTheme" />
-	    
+
         <!-- 聊天群相关的界面 -->
         <activity
             android:name="com.youmai.hxsdk.module.groupchat.ChatDetailsActivity"
@@ -390,9 +391,9 @@
         <service
             android:name=".service.SendMsgService"
             android:permission="1000" />
-	    
+
         <service android:name=".service.RingService" />
-	
+
         <service
             android:name="com.youmai.hxsdk.service.HuxinService"
             android:enabled="true"
@@ -409,10 +410,12 @@
             android:name="android.support.v4.content.FileProvider"
             android:authorities="${applicationId}.fileProvider"
             android:exported="false"
-            android:grantUriPermissions="true">
+            android:grantUriPermissions="true"
+            tools:replace="android:authorities">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/provider_paths" />
+                android:resource="@xml/provider_paths"
+                tools:replace="android:resource" />
         </provider>
 
 

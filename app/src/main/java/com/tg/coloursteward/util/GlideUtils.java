@@ -58,6 +58,8 @@ public class GlideUtils {
             RequestOptions coverRequestOptions = new RequestOptions()
                     .transforms(new CenterCrop(), roundedCorners)
                     .error(errorImageView)
+                    .centerCrop()
+                    .dontAnimate()
                     .placeholder(lodingImage)
                     .diskCacheStrategy(DiskCacheStrategy.ALL);
             Glide.with(mContext).load(path).apply(coverRequestOptions).into(mImageView);

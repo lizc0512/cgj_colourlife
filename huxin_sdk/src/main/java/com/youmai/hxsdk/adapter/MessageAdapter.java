@@ -87,6 +87,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         item1.setTitle("暂无新消息");
         item1.setOwner_name("暂无");
         item1.setClient_code("case");
+        item1.setApp_id("case");
         ExCacheMsgBean bean1 = new ExCacheMsgBean(item1);
         bean1.setTop(HuxinSdkManager.instance().getMsgTop(bean1.getTargetUuid()));
         if (xt == 0) {
@@ -102,6 +103,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         item2.setTitle("暂无新消息");
         item2.setOwner_name("暂无");
         item2.setClient_code("yj");
+        item2.setApp_id("yj");
         ExCacheMsgBean bean2 = new ExCacheMsgBean(item2);
         bean2.setTop(HuxinSdkManager.instance().getMsgTop(bean2.getTargetUuid()));
         if (yj == 0) {
@@ -117,6 +119,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         item3.setTitle("暂无新消息");
         item3.setOwner_name("暂无");
         item3.setClient_code("ggtz");
+        item3.setApp_id("ggtz");
         ExCacheMsgBean bean3 = new ExCacheMsgBean(item3);
         bean3.setTop(HuxinSdkManager.instance().getMsgTop(bean3.getTargetUuid()));
         if (ggtz == 0) {
@@ -132,6 +135,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         item4.setTitle("暂无新消息");
         item4.setOwner_name("暂无");
         item4.setClient_code("sp");
+        item4.setApp_id("sp");
         ExCacheMsgBean bean4 = new ExCacheMsgBean(item4);
         bean4.setTop(HuxinSdkManager.instance().getMsgTop(bean4.getTargetUuid()));
         if (sp == 0) {

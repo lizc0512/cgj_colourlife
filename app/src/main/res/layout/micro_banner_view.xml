@@ -13,6 +13,7 @@
         android:layout_marginRight="@dimen/size_15dp"
         app:banner_pageChangeDuration="300"
         app:banner_pointAutoPlayAble="false"
+        android:layout_marginTop="@dimen/size_3dp"
         app:banner_pointContainerBackground="@android:color/transparent"
         app:banner_pointDrawable="@drawable/bga_banner_selector_point_hollow"
         app:banner_pointTopBottomMargin="5dp"

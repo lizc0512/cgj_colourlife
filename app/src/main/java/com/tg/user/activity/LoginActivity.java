@@ -455,6 +455,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                             Tools.loadUserInfo(data, result);
                             corpId = oauthUserEntity.getContent().getCorp_id();
                             UserInfo.infoorgId = data.getString("org_uuid");
+                            if (!TextUtils.isEmpty(data.getString("password"))) {
+                                Tools.savePassWordMD5(LoginActivity.this, data.getString("password"));//保存密码(MD5加密后)
+                            }
                             Tools.saveOrgId(LoginActivity.this, data.getString("org_uuid"));
                             Tools.saveStringValue(LoginActivity.this, Contants.storage.CORPID, corpId);//租户ID
                             spUtils.saveStringData(SpConstants.storage.CORPID, corpId);

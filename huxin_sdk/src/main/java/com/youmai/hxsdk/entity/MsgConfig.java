@@ -190,6 +190,7 @@ public class MsgConfig {
                 dest.writeString(this.title);
                 dest.writeString(this.url);
                 dest.writeString(this.client_code);
+                dest.writeString(this.app_id);
                 dest.writeString(this.homePushTime);
                 dest.writeString(this.owner_account);
                 dest.writeString(this.owner_name);
@@ -206,6 +207,7 @@ public class MsgConfig {
                 this.title = in.readString();
                 this.url = in.readString();
                 this.client_code = in.readString();
+                this.app_id = in.readString();
                 this.homePushTime = in.readString();
                 this.owner_account = in.readString();
                 this.owner_name = in.readString();

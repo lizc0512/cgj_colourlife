@@ -69,8 +69,7 @@ public class DeskTopActivity extends BaseActivity implements OnItemClickListener
             homePosition = intent.getIntExtra(DESKTOP_POSTION, -1);
         }
         if (item == null) {
-            ToastFactory.showToast(DeskTopActivity.this, "参数错误");
-            finish();
+            item = new MsgConfig.ContentBean.DataBean();
         }
         if (!TextUtils.isEmpty(item.getComefrom())) {
             headView.setTitle(item.getComefrom());
@@ -144,7 +143,11 @@ public class DeskTopActivity extends BaseActivity implements OnItemClickListener
                 RequestConfig config = new RequestConfig(DeskTopActivity.this, PullRefreshListView.HTTP_MORE_CODE);
                 config.handler = hand;
                 Map<String, Object> map = new HashMap();
-                map.put("app_id", item.getApp_id());
+                if (TextUtils.isEmpty(item.getApp_id())) {
+                    map.put("app_id", "");
+                } else {
+                    map.put("app_id", item.getApp_id());
+                }
                 map.put("page", pageIndex);
                 Map<String, String> params = TokenUtils.getStringMap(TokenUtils.getNewSaftyMap(
                         DeskTopActivity.this, map));
@@ -156,7 +159,11 @@ public class DeskTopActivity extends BaseActivity implements OnItemClickListener
                 RequestConfig config = new RequestConfig(DeskTopActivity.this, PullRefreshListView.HTTP_FRESH_CODE);
                 config.handler = hand;
                 Map<String, Object> map = new HashMap();
-                map.put("app_id", item.getApp_id());
+                if (TextUtils.isEmpty(item.getApp_id())) {
+                    map.put("app_id", "");
+                } else {
+                    map.put("app_id", item.getApp_id());
+                }
                 map.put("page", 1);
                 Map<String, String> params = TokenUtils.getStringMap(TokenUtils.getNewSaftyMap(
                         DeskTopActivity.this, map));

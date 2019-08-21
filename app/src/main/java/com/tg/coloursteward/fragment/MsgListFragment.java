@@ -55,6 +55,8 @@ import com.youmai.hxsdk.im.IMMsgCallback;
 import com.youmai.hxsdk.im.IMMsgManager;
 import com.youmai.hxsdk.search.GlobalSearchActivity;
 
+import org.json.JSONObject;
+
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
@@ -135,6 +137,16 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
                 break;
             case 1:
                 if (!TextUtils.isEmpty(result)) {
+                    try {
+                        JSONObject jsonObject = new JSONObject(result);
+                        String content = jsonObject.getString("content");
+                        if (TextUtils.isEmpty(content)) {
+                            return;
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        return;
+                    }
                     HomeMsgEntity homeMsgEntity = new HomeMsgEntity();
                     homeMsgEntity = GsonUtils.gsonToBean(result, HomeMsgEntity.class);
                     List<MsgConfig.ContentBean.DataBean> list = new ArrayList<>();
@@ -145,6 +157,7 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
                         dataBean.setOwner_name(homeMsgEntity.getContent().getData().get(i).getOwner_name());
                         dataBean.setTitle(homeMsgEntity.getContent().getData().get(i).getTitle());
                         dataBean.setClient_code(homeMsgEntity.getContent().getData().get(i).getClient_code());
+                        dataBean.setApp_id(homeMsgEntity.getContent().getData().get(i).getApp_id());
                         dataBean.setHomePushTime(homeMsgEntity.getContent().getData().get(i).getHomePushTime());
                         dataBean.setUrl(homeMsgEntity.getContent().getData().get(i).getUrl());
                         if (homeMsgEntity.getContent().getData().get(i).getIsread() > 0) {
@@ -152,7 +165,6 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
                         } else {
                             dataBean.setNotread(1);
                         }
-                        dataBean.setApp_id(homeMsgEntity.getContent().getData().get(i).getApp_id());
                         dataBean.setApp_uuid(homeMsgEntity.getContent().getData().get(i).getApp_uuid());
                         list.add(dataBean);
                         dataBean = null;

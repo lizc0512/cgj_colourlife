@@ -1,5 +1,6 @@
 package com.tg.user.activity;
 
+import android.Manifest;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -16,6 +17,8 @@ import android.widget.TextView;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.geetest.gt3unbindsdk.Bind.GT3GeetestBindListener;
 import com.geetest.gt3unbindsdk.Bind.GT3GeetestUtilsBind;
+import com.hjq.permissions.OnPermission;
+import com.hjq.permissions.XXPermissions;
 import com.tg.coloursteward.BuildConfig;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.application.CityPropertyApplication;
@@ -49,6 +52,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.tg.coloursteward.application.CityPropertyApplication.lbsTraceClient;
@@ -77,7 +81,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     private String corpId;
     private String extras;
     private String passwordMD5 = "";
-    private String loginType = "1";
+    private String loginType = "1";//1：账号密码登录，2：短信验证码登录，3：手机号码密码登录，4：彩之云授权登录
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,8 +90,25 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         userModel = new UserModel(this);
         gt3GeetestUtils = new GT3GeetestUtilsBind(LoginActivity.this);
         initView();
+        initPermission();
         userModel.getTs(5, this);
 
+    }
+
+    private void initPermission() {
+        XXPermissions.with(this)
+                .permission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                .request(new OnPermission() {
+                    @Override
+                    public void hasPermission(List<String> granted, boolean isAll) {
+
+                    }
+
+                    @Override
+                    public void noPermission(List<String> denied, boolean quick) {
+
+                    }
+                });
     }
 
     @Override
@@ -455,7 +476,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                             Tools.loadUserInfo(data, result);
                             corpId = oauthUserEntity.getContent().getCorp_id();
                             UserInfo.infoorgId = data.getString("org_uuid");
-                            if (!TextUtils.isEmpty(data.getString("password"))) {
+                            if (loginType.equals("4") || loginType.equals("2")) {
                                 Tools.savePassWordMD5(LoginActivity.this, data.getString("password"));//保存密码(MD5加密后)
                             }
                             Tools.saveOrgId(LoginActivity.this, data.getString("org_uuid"));

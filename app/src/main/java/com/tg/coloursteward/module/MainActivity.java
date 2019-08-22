@@ -85,6 +85,7 @@ import com.tg.coloursteward.util.ExampleUtil;
 import com.tg.coloursteward.util.GDLocationUtil;
 import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.LinkParseUtil;
+import com.tg.coloursteward.util.MicroAuthTimeUtils;
 import com.tg.coloursteward.util.PopupScUtils;
 import com.tg.coloursteward.util.ToastUtil;
 import com.tg.coloursteward.util.TokenUtils;
@@ -177,6 +178,7 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
 
     private Context mContext;
     private NormalHandler mHandler;
+    private MicroAuthTimeUtils microAuthTimeUtils;
     private AuthTimeUtils mAuthTimeUtils;
     private MessageHandler msgHand;
 
@@ -477,6 +479,10 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
                 String auth_type = jsonObject.getString("auth_type");
                 String msgtype = jsonObject.getString("msgtype");
                 String url = jsonObject.getString("url");
+//                if (null == microAuthTimeUtils) {
+//                    microAuthTimeUtils = new MicroAuthTimeUtils();
+//                }
+//                microAuthTimeUtils.IsAuthTime(this, url, client_code, auth_type, client_code, "");
                 mAuthTimeUtils = new AuthTimeUtils();
                 mAuthTimeUtils.IsAuthTime(this, url, client_code, auth_type, client_code, "");
                 intent = new Intent(ACTION_READ_MESSAGEINFO);
@@ -812,8 +818,10 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
                 String auth_type = jsonObject.getString("auth_type");
                 String msgtype = jsonObject.getString("msgtype");
                 String url = jsonObject.getString("url");
-                mAuthTimeUtils = new AuthTimeUtils();
-                mAuthTimeUtils.IsAuthTime(this, url, client_code, auth_type, client_code, "");
+                if (null == microAuthTimeUtils) {
+                    microAuthTimeUtils = new MicroAuthTimeUtils();
+                }
+                microAuthTimeUtils.IsAuthTime(this, url, client_code, auth_type, client_code, "");
                 Intent intent = new Intent(ACTION_READ_MESSAGEINFO);
                 intent.putExtra("messageId", client_code);
                 sendBroadcast(intent);

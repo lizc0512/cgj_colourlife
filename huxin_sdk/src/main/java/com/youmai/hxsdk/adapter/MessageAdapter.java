@@ -329,13 +329,13 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
             String clientCode = model.getPushMsg().getClient_code();
 
-            if (clientCode.contains("sp")) {//审批
+            if (clientCode.contains("bpm")) {//审批
                 itemView.message_icon.setImageResource(R.drawable.home_icon_approval);
-            } else if (clientCode.contains("yj")) {//邮件
+            } else if (clientCode.contains("yw")) {//邮件
                 itemView.message_icon.setImageResource(R.drawable.home_icon_message);
             } else if (clientCode.contains("case")) {//蜜蜂协同
                 itemView.message_icon.setImageResource(R.drawable.home_icon_tasksystem);
-            } else if (clientCode.contains("ggtz")) {//公告通知
+            } else if (clientCode.contains("tzgg")) {//公告通知
                 itemView.message_icon.setImageResource(R.drawable.home_icon_notice);
             } else {
                 String url = model.getPushMsg().getICON();

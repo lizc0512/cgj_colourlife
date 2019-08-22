@@ -24,8 +24,8 @@ import com.tg.coloursteward.net.RequestConfig;
 import com.tg.coloursteward.net.RequestParams;
 import com.tg.coloursteward.net.ResponseData;
 import com.tg.coloursteward.serice.HomeService;
-import com.tg.coloursteward.util.AuthTimeUtils;
 import com.tg.coloursteward.util.LinkParseUtil;
+import com.tg.coloursteward.util.MicroAuthTimeUtils;
 import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.TokenUtils;
 import com.tg.coloursteward.view.PullRefreshListView;
@@ -58,6 +58,7 @@ public class DeskTopActivity extends BaseActivity implements OnItemClickListener
     private int homePosition;
     private ArrayList<HomeDeskTopInfo> list = new ArrayList<HomeDeskTopInfo>();
     private HomeModel homeModel;
+    private MicroAuthTimeUtils mMicroAuthTimeUtils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -193,8 +194,11 @@ public class DeskTopActivity extends BaseActivity implements OnItemClickListener
                 readMsg((int) parent.getAdapter().getItemId(position));
             }
             if (info.url.startsWith("https") || info.url.startsWith("http")) {
-                AuthTimeUtils mAuthTimeUtils = new AuthTimeUtils();
-                mAuthTimeUtils.IsAuthTime(DeskTopActivity.this, info.url, info.client_code, String.valueOf(info.auth_type), info.client_code, "");
+                if (null == mMicroAuthTimeUtils) {
+                    mMicroAuthTimeUtils = new MicroAuthTimeUtils();
+                }
+                mMicroAuthTimeUtils.IsAuthTime(this, info.url,
+                        info.client_code, String.valueOf(info.auth_type), info.client_code, "");
             } else {
                 LinkParseUtil.parse(DeskTopActivity.this, info.url, "");
             }

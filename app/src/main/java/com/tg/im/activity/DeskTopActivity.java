@@ -21,7 +21,6 @@ import com.tg.coloursteward.inter.OnLoadingListener;
 import com.tg.coloursteward.model.HomeModel;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.RequestConfig;
-import com.tg.coloursteward.net.RequestParams;
 import com.tg.coloursteward.net.ResponseData;
 import com.tg.coloursteward.serice.HomeService;
 import com.tg.coloursteward.util.LinkParseUtil;
@@ -208,10 +207,6 @@ public class DeskTopActivity extends BaseActivity implements OnItemClickListener
     @Override
     public void onItemDelete(int position) {
         deletePosition = position;
-        HomeDeskTopInfo info = list.get(position);
-        RequestConfig config = new RequestConfig(this, HttpTools.POST_DELETE_INFO, null);
-        RequestParams params = new RequestParams();
-        params.put("msgid", info.id);
         homeModel.postDelMsg(1, list.get(position).msg_id, this);
     }
 

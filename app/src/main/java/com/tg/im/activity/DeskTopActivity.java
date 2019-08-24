@@ -129,7 +129,7 @@ public class DeskTopActivity extends BaseActivity implements OnItemClickListener
                         item.modify_time = data.getString(i, "homePushTime");
                         item.title = data.getString(i, "title");
                         item.source_id = data.getString(i, "source_id");
-                        item.comefrom = data.getString(i, "comefrom");
+                        item.comefrom = data.getString(i, "app_name");
                         item.url = data.getString(i, "url");
                         item.client_code = data.getString(i, "client_code");
                         item.notread = data.getInt(i, "isread");

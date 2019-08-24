@@ -696,9 +696,9 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
         }.execute();
     }
 
-    private void initInfoSync() {
+    private void initInfoSync(String alias) {
         homeModel.postUserSync(5, UserInfo.uid, UserInfo.employeeAccount, UserInfo.mobile, UserInfo.orgId,
-                UserInfo.familyName, "cgj_" + UserInfo.employeeAccount, this);
+                UserInfo.familyName, alias, this);
     }
 
     @Override
@@ -777,21 +777,22 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
 
 
     private void initPush() {
-        /*
-         * 设置极光推送别名与标签
-         */
-        boolean tags = Tools.getBooleanValue(this, Contants.storage.Tags);
-        boolean alias = Tools.getBooleanValue(this, Contants.storage.ALIAS);
-        Log.d(TAG, "tags=" + tags);
-        Log.d(TAG, "alias=" + alias);
-        if (!tags) {
-            setTag();
-        }
-        if (alias) {
-            initInfoSync();
+        // 设置极光推送别名与标签
+        String alias;
+        String phone;
+        if (!TextUtils.isEmpty(UserInfo.mobile)) {
+            phone = UserInfo.mobile;
         } else {
-            setAlias();
+            phone = UserInfo.init_mobile;
         }
+        if (environment.equals("release")) {
+            alias = "cgj_" + phone;
+        } else {
+            alias = "test_cgj_" + phone;
+        }
+        setTag();
+        setAlias(alias);
+        initInfoSync(alias);
         CityPropertyApplication.addActivity(this);
         Tools.setMainStatus(MainActivity.this, true);
     }
@@ -1107,19 +1108,7 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
 
     }
 
-    private void setAlias() {
-        String alias;
-        String phone;
-        if (!TextUtils.isEmpty(UserInfo.mobile)) {
-            phone = UserInfo.mobile;
-        } else {
-            phone = UserInfo.init_mobile;
-        }
-        if (environment.equals("release")) {
-            alias = "cgj_" + phone;
-        } else {
-            alias = "test_cgj_" + phone;
-        }
+    private void setAlias(String alias) {
         //调用JPush API设置Alias
         mHandler.sendMessage(mHandler.obtainMessage(MSG_SET_ALIAS, alias));
     }
@@ -1132,7 +1121,7 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
             switch (code) {
                 case 0:
                     Tools.setBooleanValue(MainActivity.this, Contants.storage.ALIAS, true);
-                    initInfoSync();
+//                    initInfoSync();
                     break;
 
                 case 6002:

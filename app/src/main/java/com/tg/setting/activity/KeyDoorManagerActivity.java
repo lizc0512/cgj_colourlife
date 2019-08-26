@@ -145,6 +145,9 @@ public class KeyDoorManagerActivity extends BaseActivity implements HttpResponse
         if (null != keyDoorBagsFragment) {
             keyDoorBagsFragment.changeCommunity(communityUuid, communityName);
         }
+        if (null != keyDoorStatisticsFragment) {
+            keyDoorStatisticsFragment.changeCommunity(communityUuid, communityName);
+        }
     }
 
     /**

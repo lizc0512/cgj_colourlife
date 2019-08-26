@@ -21,11 +21,10 @@ import com.tg.coloursteward.inter.OnLoadingListener;
 import com.tg.coloursteward.model.HomeModel;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.RequestConfig;
-import com.tg.coloursteward.net.RequestParams;
 import com.tg.coloursteward.net.ResponseData;
 import com.tg.coloursteward.serice.HomeService;
-import com.tg.coloursteward.util.AuthTimeUtils;
 import com.tg.coloursteward.util.LinkParseUtil;
+import com.tg.coloursteward.util.MicroAuthTimeUtils;
 import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.TokenUtils;
 import com.tg.coloursteward.view.PullRefreshListView;
@@ -58,6 +57,7 @@ public class DeskTopActivity extends BaseActivity implements OnItemClickListener
     private int homePosition;
     private ArrayList<HomeDeskTopInfo> list = new ArrayList<HomeDeskTopInfo>();
     private HomeModel homeModel;
+    private MicroAuthTimeUtils mMicroAuthTimeUtils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,7 +129,7 @@ public class DeskTopActivity extends BaseActivity implements OnItemClickListener
                         item.modify_time = data.getString(i, "homePushTime");
                         item.title = data.getString(i, "title");
                         item.source_id = data.getString(i, "source_id");
-                        item.comefrom = data.getString(i, "comefrom");
+                        item.comefrom = data.getString(i, "app_name");
                         item.url = data.getString(i, "url");
                         item.client_code = data.getString(i, "client_code");
                         item.notread = data.getInt(i, "isread");
@@ -193,8 +193,11 @@ public class DeskTopActivity extends BaseActivity implements OnItemClickListener
                 readMsg((int) parent.getAdapter().getItemId(position));
             }
             if (info.url.startsWith("https") || info.url.startsWith("http")) {
-                AuthTimeUtils mAuthTimeUtils = new AuthTimeUtils();
-                mAuthTimeUtils.IsAuthTime(DeskTopActivity.this, info.url, info.client_code, String.valueOf(info.auth_type), info.client_code, "");
+                if (null == mMicroAuthTimeUtils) {
+                    mMicroAuthTimeUtils = new MicroAuthTimeUtils();
+                }
+                mMicroAuthTimeUtils.IsAuthTime(this, info.url,
+                        info.client_code, String.valueOf(info.auth_type), info.client_code, "");
             } else {
                 LinkParseUtil.parse(DeskTopActivity.this, info.url, "");
             }
@@ -204,10 +207,6 @@ public class DeskTopActivity extends BaseActivity implements OnItemClickListener
     @Override
     public void onItemDelete(int position) {
         deletePosition = position;
-        HomeDeskTopInfo info = list.get(position);
-        RequestConfig config = new RequestConfig(this, HttpTools.POST_DELETE_INFO, null);
-        RequestParams params = new RequestParams();
-        params.put("msgid", info.id);
         homeModel.postDelMsg(1, list.get(position).msg_id, this);
     }
 

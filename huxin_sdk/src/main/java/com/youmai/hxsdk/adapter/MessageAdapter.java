@@ -83,7 +83,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         long sp = AppUtils.getLongSharedPreferences(mContext, "sp", 0);
 
         MsgConfig.ContentBean.DataBean item1 = new MsgConfig.ContentBean.DataBean();
-        item1.setComefrom("蜜蜂协同");
+        item1.setComefrom("任务系统");
         item1.setTitle("暂无新消息");
         item1.setOwner_name("暂无");
         item1.setClient_code("case");
@@ -329,13 +329,13 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
             String clientCode = model.getPushMsg().getClient_code();
 
-            if (clientCode.contains("sp")) {//审批
+            if (clientCode.contains("bpm")) {//审批
                 itemView.message_icon.setImageResource(R.drawable.home_icon_approval);
-            } else if (clientCode.contains("yj")) {//邮件
+            } else if (clientCode.contains("yw")) {//邮件
                 itemView.message_icon.setImageResource(R.drawable.home_icon_message);
             } else if (clientCode.contains("case")) {//蜜蜂协同
                 itemView.message_icon.setImageResource(R.drawable.home_icon_tasksystem);
-            } else if (clientCode.contains("ggtz")) {//公告通知
+            } else if (clientCode.contains("tzgg")) {//公告通知
                 itemView.message_icon.setImageResource(R.drawable.home_icon_notice);
             } else {
                 String url = model.getPushMsg().getICON();

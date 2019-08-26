@@ -85,6 +85,7 @@ import com.tg.coloursteward.util.ExampleUtil;
 import com.tg.coloursteward.util.GDLocationUtil;
 import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.LinkParseUtil;
+import com.tg.coloursteward.util.MicroAuthTimeUtils;
 import com.tg.coloursteward.util.PopupScUtils;
 import com.tg.coloursteward.util.ToastUtil;
 import com.tg.coloursteward.util.TokenUtils;
@@ -154,6 +155,7 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
     public static final String KEY_NEDD_FRESH = "need_fresh";
     public static final String KEY_SKIN_CODE = "skin_code";
     public static final String KEY_EXTRAS = "extras";
+    public static final String ISSHOWPOP = "isshowpop";
     public static final String FROM_LOGIN = "from_login";
     public static final String FROM_AD = "from_ad";
     public static final String FROM_AUTH_TYPE = "from_autn_type";
@@ -177,6 +179,7 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
 
     private Context mContext;
     private NormalHandler mHandler;
+    private MicroAuthTimeUtils microAuthTimeUtils;
     private AuthTimeUtils mAuthTimeUtils;
     private MessageHandler msgHand;
 
@@ -189,6 +192,7 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
 
     private String skin_code = "101";//  101 彩生活  100 通用  102 中住
     private String extras;
+    private String isShowPop = "1";
     private Boolean form_login = false;
     private String urlAd = "";
     private String urlauth_type = "";
@@ -248,6 +252,8 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
             needGetUserInfo = data.getBooleanExtra(KEY_NEDD_FRESH, true);
             skin_code = data.getStringExtra(KEY_SKIN_CODE);
             extras = data.getStringExtra(KEY_EXTRAS);
+            isShowPop = data.getStringExtra(ISSHOWPOP);
+
             form_login = data.getBooleanExtra(FROM_LOGIN, false);
             String urlFromOther = data.getStringExtra(JUMPOTHERURL);
             if (!TextUtils.isEmpty(urlFromOther)) {
@@ -277,7 +283,13 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
         initAd();
         CheckPermission();
         initGetLocation();
-        initData();
+        if (!TextUtils.isEmpty(isShowPop)) {
+            if (!isShowPop.equals("2")) {
+                initData();
+            }
+        } else {
+            initData();
+        }
         CrashReport.putUserData(this, "OA", UserInfo.employeeAccount);
         CrashReport.putUserData(this, "PHONE", UserInfo.mobile);
     }
@@ -470,24 +482,33 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
         }
         String extras = intent.getStringExtra(KEY_EXTRAS);
         if (extras != null) {
-            try {
-                JSONObject jsonObject = new JSONObject(extras);
-                String client_code = jsonObject.getString("client_code");
-                String msgid = jsonObject.getString("msgid");
-                String auth_type = jsonObject.getString("auth_type");
-                String msgtype = jsonObject.getString("msgtype");
-                String url = jsonObject.getString("url");
-                mAuthTimeUtils = new AuthTimeUtils();
-                mAuthTimeUtils.IsAuthTime(this, url, client_code, auth_type, client_code, "");
-                intent = new Intent(ACTION_READ_MESSAGEINFO);
-                intent.putExtra("messageId", client_code);
-                sendBroadcast(intent);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+            setMsgStatus(extras);
         }
     }
 
+    private void setMsgStatus(String extras) {
+        try {
+            JSONObject jsonObject = new JSONObject(extras);
+            String msg_id = "";
+            String auth_type = "";
+            if (jsonObject.has("msg_id")) {
+                msg_id = jsonObject.getString("msg_id");
+            }
+            if (jsonObject.has("auth_type")) {
+                auth_type = jsonObject.getString("auth_type");
+            }
+            String url = jsonObject.getString("url");
+            if (null == microAuthTimeUtils) {
+                microAuthTimeUtils = new MicroAuthTimeUtils();
+            }
+            microAuthTimeUtils.IsAuthTime(this, url, "", auth_type, "", "");
+            Intent intent = new Intent(ACTION_READ_MESSAGEINFO);
+            intent.putExtra("messageId", msg_id);
+            sendBroadcast(intent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     @Override
     protected void onResume() {
@@ -675,9 +696,9 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
         }.execute();
     }
 
-    private void initInfoSync() {
+    private void initInfoSync(String alias) {
         homeModel.postUserSync(5, UserInfo.uid, UserInfo.employeeAccount, UserInfo.mobile, UserInfo.orgId,
-                UserInfo.familyName, "cgj_" + UserInfo.employeeAccount, this);
+                UserInfo.familyName, alias, this);
     }
 
     @Override
@@ -756,21 +777,22 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
 
 
     private void initPush() {
-        /*
-         * 设置极光推送别名与标签
-         */
-        boolean tags = Tools.getBooleanValue(this, Contants.storage.Tags);
-        boolean alias = Tools.getBooleanValue(this, Contants.storage.ALIAS);
-        Log.d(TAG, "tags=" + tags);
-        Log.d(TAG, "alias=" + alias);
-        if (!tags) {
-            setTag();
-        }
-        if (alias) {
-            initInfoSync();
+        // 设置极光推送别名与标签
+        String alias;
+        String phone;
+        if (!TextUtils.isEmpty(UserInfo.mobile)) {
+            phone = UserInfo.mobile;
         } else {
-            setAlias();
+            phone = UserInfo.init_mobile;
         }
+        if (environment.equals("release")) {
+            alias = "cgj_" + phone;
+        } else {
+            alias = "test_cgj_" + phone;
+        }
+        setTag();
+        setAlias(alias);
+        initInfoSync(alias);
         CityPropertyApplication.addActivity(this);
         Tools.setMainStatus(MainActivity.this, true);
     }
@@ -805,21 +827,7 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
 
     private void pushDetail() {
         if (extras != null) {
-            try {
-                JSONObject jsonObject = new JSONObject(extras);
-                String client_code = jsonObject.getString("client_code");
-                String msgid = jsonObject.getString("msgid");
-                String auth_type = jsonObject.getString("auth_type");
-                String msgtype = jsonObject.getString("msgtype");
-                String url = jsonObject.getString("url");
-                mAuthTimeUtils = new AuthTimeUtils();
-                mAuthTimeUtils.IsAuthTime(this, url, client_code, auth_type, client_code, "");
-                Intent intent = new Intent(ACTION_READ_MESSAGEINFO);
-                intent.putExtra("messageId", client_code);
-                sendBroadcast(intent);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+            setMsgStatus(extras);
         }
     }
 
@@ -854,12 +862,11 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
     }
 
     // 首页列表消息设置为已读
-    private void getReadMessageInfo(String client_code) {
-        RequestConfig config = new RequestConfig(this, HttpTools.SET_MSG_READ);
-        RequestParams params = new RequestParams();
-        params.put("client_code", client_code);
-        params.put("username", UserInfo.employeeAccount);
-        HttpTools.httpPut(Contants.URl.URL_ICETEST, "/push2/homepush/readhomePush", config, params);
+    private void getReadMessageInfo(String msg_id) {
+        if (null == homeModel) {
+            homeModel = new HomeModel(this);
+        }
+        homeModel.postSetMsgRead(0, msg_id, this);
     }
 
     // 更新首页消息推送列表
@@ -1088,7 +1095,8 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
         String s1 = "";
         String s2 = Tools.getStringValue(this, Contants.storage.CORPID);
         if (environment.equals("release")) {
-            s1 = "cgj";
+            s1 = "release_cgj";
+            s2 = "release_" + s2;
         } else {
             s1 = "test_cgj";
             s2 = "test_" + s2;
@@ -1100,19 +1108,7 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
 
     }
 
-    private void setAlias() {
-        String alias;
-        String phone;
-        if (!TextUtils.isEmpty(UserInfo.mobile)) {
-            phone = UserInfo.mobile;
-        } else {
-            phone = UserInfo.init_mobile;
-        }
-        if (environment.equals("release")) {
-            alias = "cgj_" + phone;
-        } else {
-            alias = "test_cgj_" + phone;
-        }
+    private void setAlias(String alias) {
         //调用JPush API设置Alias
         mHandler.sendMessage(mHandler.obtainMessage(MSG_SET_ALIAS, alias));
     }
@@ -1125,7 +1121,7 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
             switch (code) {
                 case 0:
                     Tools.setBooleanValue(MainActivity.this, Contants.storage.ALIAS, true);
-                    initInfoSync();
+//                    initInfoSync();
                     break;
 
                 case 6002:

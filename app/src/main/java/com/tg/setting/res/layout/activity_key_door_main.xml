@@ -8,12 +8,11 @@
 
 
     <RelativeLayout
-        android:id="@+id/title_layout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/size_44dp">
 
         <ImageView
-            android:id="@+id/back_finish_img"
+            android:id="@+id/back_img"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:paddingLeft="16dp"
@@ -34,6 +33,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:maxEms="9"
+                android:text="dddddddddddddddd"
                 android:textColor="@color/tv_index_color"
                 android:textSize="@dimen/font_18sp" />
 
@@ -77,11 +77,11 @@
     </RelativeLayout>
 
 
-    <FrameLayout
-        android:id="@+id/content_layout"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:orientation="vertical" />
 
 
     <LinearLayout
@@ -112,19 +112,6 @@
             android:gravity="center"
             android:paddingTop="4dp"
             android:text="钥匙包"
-            android:textColor="@color/tv_index_color"
-            android:textSize="@dimen/font_12sp" />
-
-
-        <TextView
-            android:id="@+id/tv_statistics"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:drawableTop="@drawable/ic_key_door_statistics"
-            android:gravity="center"
-            android:paddingTop="4dp"
-            android:text="统计"
             android:textColor="@color/tv_index_color"
             android:textSize="@dimen/font_12sp" />
 

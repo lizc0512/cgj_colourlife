@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_f2f3f4"
+    android:orientation="vertical">
+
+
+    <com.tg.coloursteward.view.ClearEditText
+        android:id="@+id/ed_search_content"
+        android:layout_width="match_parent"
+        android:layout_height="38dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="11dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="15dp"
+        android:background="@drawable/shape_key_todo_text"
+        android:drawableLeft="@drawable/ic_key_search"
+        android:drawablePadding="5dp"
+        android:hint="搜索"
+        android:paddingLeft="5dp"
+        android:paddingRight="10dp"
+        android:singleLine="true"
+        android:textColor="@color/color_999faa"
+        android:textSize="@dimen/sp_16" />
+
+
+    <com.jcodecraeer.xrecyclerview.XRecyclerView
+        android:id="@+id/rv_key_user"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:visibility="gone" />
+
+
+    <LinearLayout
+        android:id="@+id/empty_record_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+
+        <ImageView
+            android:id="@+id/iv_empty_record"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="50dp"
+            android:src="@drawable/ic_empty_out_record" />
+
+        <TextView
+            android:id="@+id/tv_empty_record"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:text="暂无进出记录"
+            android:textColor="@color/color_999faa"
+            android:textSize="@dimen/font_16sp" />
+
+
+        <TextView
+            android:id="@+id/send_key_door"
+            android:layout_width="160dp"
+            android:layout_height="44dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/sms_button_three"
+            android:gravity="center"
+            android:text="发送钥匙"
+            android:textColor="@color/color_1ca1f4"
+            android:textSize="@dimen/font_16sp"
+            android:visibility="gone" />
+
+
+    </LinearLayout>
+
+
+</LinearLayout>

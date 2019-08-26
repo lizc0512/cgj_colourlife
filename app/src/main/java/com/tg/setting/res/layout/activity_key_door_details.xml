@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/color_f2f3f4"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="110dp"
+            android:layout_margin="15dp"
+            android:background="@drawable/bg_key_normal">
+
+            <TextView
+                android:id="@+id/tv_send"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/size_20dp"
+                android:background="@drawable/shape_key_todo_text"
+                android:drawableLeft="@drawable/ic_key_normal"
+                android:drawablePadding="@dimen/size_4dp"
+                android:paddingLeft="@dimen/size_12dp"
+                android:paddingTop="@dimen/size_8dp"
+                android:paddingRight="@dimen/size_12dp"
+                android:paddingBottom="@dimen/size_8dp"
+                android:text="发送钥匙"
+                android:textColor="@color/color_1da1f4"
+                android:textSize="@dimen/font_12sp" />
+
+            <TextView
+                android:id="@+id/tv_door"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/size_20dp"
+                android:layout_marginTop="@dimen/size_16dp"
+                android:maxLength="10"
+                android:singleLine="true"
+                android:text="大门"
+                android:textColor="@color/white"
+                android:textSize="@dimen/font_18sp" />
+
+            <TextView
+                android:id="@+id/tv_door_status"
+                android:layout_width="25dp"
+                android:layout_height="14dp"
+                android:layout_marginLeft="@dimen/size_6dp"
+                android:layout_marginTop="@dimen/size_22dp"
+                android:layout_marginRight="110dp"
+                android:layout_toRightOf="@id/tv_door"
+                android:background="@drawable/shape_key_todo_text"
+                android:gravity="center"
+                android:text="正常"
+                android:visibility="invisible"
+                android:textColor="@color/color_1da1f4"
+                android:textSize="10dp" />
+
+
+            <TextView
+                android:id="@+id/tv_door_person"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="16dp"
+                android:gravity="center"
+                android:singleLine="true"
+                android:text="钥匙数 32"
+                android:textColor="@color/white"
+                android:textSize="@dimen/font_14sp" />
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/white">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="15dp"
+                android:text="型号"
+                android:textColor="@color/color_333b46"
+                android:textSize="@dimen/font_16sp" />
+
+
+            <TextView
+                android:id="@+id/tv_model"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="15dp"
+                android:text="ISH012"
+                android:textColor="@color/color_626B77"
+                android:textSize="@dimen/font_16sp" />
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_alignParentBottom="true"
+                android:layout_marginLeft="15dp"
+                android:background="@color/line_color" />
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/white">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="15dp"
+                android:text="MAC地址"
+                android:textColor="@color/color_333b46"
+                android:textSize="@dimen/font_16sp" />
+
+
+            <TextView
+                android:id="@+id/tv_mac"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="15dp"
+                android:text="isjdad214"
+                android:textColor="@color/color_626B77"
+                android:textSize="@dimen/font_16sp" />
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_alignParentBottom="true"
+                android:layout_marginLeft="15dp"
+                android:background="@color/line_color" />
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/white">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="15dp"
+                android:text="安装时间"
+                android:textColor="@color/color_333b46"
+                android:textSize="@dimen/font_16sp" />
+
+
+            <TextView
+                android:id="@+id/tv_install_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="15dp"
+                android:text="2019.06.23 18:02:50"
+                android:textColor="@color/color_626B77"
+                android:textSize="@dimen/font_16sp" />
+
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/door_key_layout"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/white">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="15dp"
+                android:text="门禁钥匙"
+                android:textColor="@color/color_333b46"
+                android:textSize="@dimen/font_16sp" />
+
+
+            <TextView
+                android:id="@+id/tv_key_person"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="15dp"
+                android:drawableRight="@drawable/arrow1"
+                android:drawablePadding="15dp"
+                android:text="32"
+                android:textColor="@color/color_626B77"
+                android:textSize="@dimen/font_16sp" />
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_marginLeft="15dp"
+                android:layout_alignParentBottom="true"
+                android:background="@color/line_color" />
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/enter_out_layout"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/white">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="15dp"
+                android:text="进出记录"
+                android:textColor="@color/color_333b46"
+                android:textSize="@dimen/font_16sp" />
+
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="15dp"
+                android:src="@drawable/arrow1" />
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_marginLeft="15dp"
+                android:layout_height="1px"
+                android:layout_alignParentBottom="true"
+                android:background="@color/line_color" />
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/change_door_layout"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/white">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="15dp"
+                android:text="更换门禁"
+                android:textColor="@color/color_333b46"
+                android:textSize="@dimen/font_16sp" />
+
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="15dp"
+                android:src="@drawable/arrow1" />
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_alignParentBottom="true"
+                android:layout_marginLeft="15dp"
+                android:background="@color/line_color" />
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/key_bindagain_layout"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/white">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="15dp"
+                android:text="重新绑定"
+                android:textColor="@color/color_333b46"
+                android:textSize="@dimen/font_16sp" />
+
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="15dp"
+                android:src="@drawable/arrow1" />
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_marginLeft="15dp"
+                android:layout_alignParentBottom="true"
+                android:background="@color/line_color" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/key_infor_layout"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/white">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="15dp"
+                android:text="修改信息"
+                android:textColor="@color/color_333b46"
+                android:textSize="@dimen/font_16sp" />
+
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="15dp"
+                android:src="@drawable/arrow1" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+
+</android.support.v4.widget.NestedScrollView>

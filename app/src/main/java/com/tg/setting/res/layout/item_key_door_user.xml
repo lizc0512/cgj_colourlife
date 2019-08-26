@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="90dp">
+    <!--用户门禁钥匙和进出记录的-->
+
+    <com.tg.coloursteward.view.CircleImageView
+        android:id="@+id/door_user_photo"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="15dp" />
+
+
+    <TextView
+        android:id="@+id/tv_door_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="15dp"
+        android:text="正常"
+        android:textSize="@dimen/sp_14" />
+
+
+    <TextView
+        android:id="@+id/tv_door_username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="15dp"
+        android:layout_toRightOf="@id/door_user_photo"
+        android:text="张笑天"
+        android:textColor="@color/color_333b46"
+        android:textSize="@dimen/sp_16" />
+
+    <TextView
+        android:id="@+id/tv_door_identify"
+        android:layout_width="34dp"
+        android:layout_height="14dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="18dp"
+        android:layout_toRightOf="@id/tv_door_username"
+        android:background="@drawable/sms_button_two"
+        android:gravity="center"
+        android:text="管理员"
+        android:textColor="@color/color_1ca1f4"
+        android:textSize="8sp" />
+
+    <TextView
+        android:id="@+id/tv_door_phone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_door_username"
+        android:layout_alignLeft="@id/tv_door_username"
+        android:layout_marginTop="8dp"
+        android:text="158****2045"
+        android:textColor="@color/color_333b46"
+        android:textSize="@dimen/sp_14" />
+
+    <TextView
+        android:id="@+id/tv_door_desc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_door_phone"
+        android:layout_alignLeft="@id/tv_door_username"
+        android:layout_marginTop="5dp"
+        android:text="2019.07.15 10:30:23领取大门1钥匙"
+        android:textColor="@color/color_999faa"
+        android:textSize="@dimen/font_12sp" />
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_alignParentBottom="true"
+        android:background="@color/line_color" />
+
+
+</RelativeLayout>

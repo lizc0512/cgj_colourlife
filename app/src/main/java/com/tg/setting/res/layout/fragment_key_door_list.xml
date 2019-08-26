@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/key_list_refresh"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.yanzhenjie.recyclerview.SwipeRecyclerView
+            android:id="@+id/rv_door"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white" />
+
+        <LinearLayout
+            android:id="@+id/center_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/tv2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="16dp"
+                android:drawableTop="@drawable/bg_key_no_door"
+                android:drawablePadding="@dimen/size_12dp"
+                android:gravity="center"
+                android:paddingTop="@dimen/size_4dp"
+                android:text="暂无门禁"
+                android:textColor="@color/color_999faa"
+                android:textSize="@dimen/font_16sp" />
+
+            <TextView
+                android:id="@+id/tv_add_door"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/shape_key_no_permission"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:paddingLeft="@dimen/dp_60"
+                android:paddingTop="@dimen/size_12dp"
+                android:paddingRight="@dimen/dp_60"
+                android:paddingBottom="@dimen/size_12dp"
+                android:text="添加门禁"
+                android:textColor="@color/color_1da1f4"
+                android:textSize="@dimen/font_16sp" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</android.support.v4.widget.SwipeRefreshLayout>

@@ -1,0 +1,32 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/size_75dp">
+
+
+    <TextView
+        android:id="@+id/tv_statistics_data"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:singleLine="true"
+        android:text="45,548"
+        android:textColor="@color/white"
+        android:textSize="@dimen/font_20sp" />
+
+    <TextView
+        android:id="@+id/tv_statistics_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_statistics_data"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"
+        android:gravity="center"
+        android:singleLine="true"
+        android:text="用户数"
+        android:textColor="@color/white"
+        android:textSize="@dimen/font_12sp" />
+
+
+</RelativeLayout>

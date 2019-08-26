@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.tg.coloursteward.R;
 import com.tg.setting.activity.KeyDoorManagerActivity;
 import com.tg.setting.entity.KeyBagsEntity;
+import com.tg.setting.util.OnItemClickListener;
 
 import java.util.List;
 
@@ -18,6 +19,7 @@ public class KeyKeyAdapter extends RecyclerView.Adapter<KeyKeyAdapter.DefaultVie
 
     public List<KeyBagsEntity.ContentBeanX.ContentBean> keyList;
     public Context mContext;
+    private OnItemClickListener onClickListener;
 
     public KeyKeyAdapter(Context mContext, List<KeyBagsEntity.ContentBeanX.ContentBean> keyList) {
         this.keyList = keyList;
@@ -28,7 +30,13 @@ public class KeyKeyAdapter extends RecyclerView.Adapter<KeyKeyAdapter.DefaultVie
     @Override
     public KeyKeyAdapter.DefaultViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.item_key_key, parent, false);
+        DefaultViewHolder defaultViewHolder = new DefaultViewHolder(view);
+        defaultViewHolder.onClickListener = onClickListener;
         return new DefaultViewHolder(view);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener onClickListener) {
+        this.onClickListener = onClickListener;
     }
 
     @Override
@@ -61,16 +69,25 @@ public class KeyKeyAdapter extends RecyclerView.Adapter<KeyKeyAdapter.DefaultVie
         return keyList == null ? 0 : keyList.size();
     }
 
-    static class DefaultViewHolder extends RecyclerView.ViewHolder {
+    static class DefaultViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView tv_name;
         TextView door_name;
         TextView tv_todo;
+        OnItemClickListener onClickListener;
 
         DefaultViewHolder(View itemView) {
             super(itemView);
+            itemView.setOnClickListener(this);
             tv_name = itemView.findViewById(R.id.tv_name);
             door_name = itemView.findViewById(R.id.door_name);
             tv_todo = itemView.findViewById(R.id.tv_todo);
+        }
+
+        @Override
+        public void onClick(View v) {
+            if (onClickListener != null) {
+                onClickListener.onItemClick(getAdapterPosition());
+            }
         }
     }
 

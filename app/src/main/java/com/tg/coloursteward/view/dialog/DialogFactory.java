@@ -225,6 +225,65 @@ public class DialogFactory implements ResultCallBack {
         btnOk.setText(ok);
         btnCancel.setText(cancel);
         dialog.show();
+    }
+
+
+    public void showDoorDialog(Activity activity, final OnClickListener okL, final OnClickListener cancelL, int showTitle, String content, String ok, String cancel) {
+        this.okListener = okL;
+        this.cancelListener = cancelL;
+        if (dialog == null || dialogActivity != activity) {
+            dialogActivity = activity;
+            DisplayMetrics metrics = Tools.getDisplayMetrics(activity);
+            dialog = new AlertDialog.Builder(activity).create();
+            dialog.setCancelable(false);
+            Window window = dialog.getWindow();
+            dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+            dialog.show();
+            LinearLayout layout = (LinearLayout) LayoutInflater.from(activity)
+                    .inflate(R.layout.dialog_door_notice, null);
+            TextView dialog_title = layout.findViewById(R.id.dialog_title);
+            if (showTitle == 1) {
+                dialog_title.setVisibility(View.VISIBLE);
+            } else {
+                dialog_title.setVisibility(View.GONE);
+            }
+            tvContent = layout.findViewById(R.id.dialog_msg);
+            btnOk = layout.findViewById(R.id.btn_ok);
+            btnCancel = layout.findViewById(R.id.btn_cancel);
+            btnOk.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (okListener != null) {
+                        okListener.onClick(v);
+                    }
+                    dialog.dismiss();
+                }
+            });
+            btnCancel.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // TODO Auto-generated method stub
+                    if (cancelListener != null) {
+                        cancelListener.onClick(v);
+                    }
+                    dialog.dismiss();
+                }
+            });
+            window.setContentView(layout);
+            WindowManager.LayoutParams p = window.getAttributes();
+            p.width = ((int) (metrics.widthPixels - 80 * metrics.density));
+            window.setAttributes(p);
+        }
+        tvContent.setText(content);
+        if (ok == null) {
+            ok = "确定";
+        }
+        if (cancel == null) {
+            cancel = "取消";
+        }
+        btnOk.setText(ok);
+        btnCancel.setText(cancel);
+        dialog.show();
 
     }
 

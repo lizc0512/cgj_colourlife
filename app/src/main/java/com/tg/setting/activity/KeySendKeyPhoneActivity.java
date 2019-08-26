@@ -25,7 +25,7 @@ import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.ToastUtil;
 import com.tg.setting.adapter.KeyPhoneAdapter;
 import com.tg.setting.entity.KeyIdentityEntity;
-import com.tg.setting.view.KeyRoomPopWindowView;
+import com.tg.setting.view.KeyChoiceRoomDialog;
 import com.tg.setting.view.KeyStringPopWindowView;
 import com.tg.setting.view.KeyTimePopWindowView;
 import com.tg.user.model.UserModel;
@@ -216,9 +216,11 @@ public class KeySendKeyPhoneActivity extends BaseActivity implements HttpRespons
                 type = 0;
                 DisplayUtil.showInput(false, this);
                 if (!TextUtils.isEmpty(communityUuid)) {
-                    KeyRoomPopWindowView roomPop = new KeyRoomPopWindowView(this, communityUuid);
-                    roomPop.setOnDismissListener(new PopupDismissListener());
-                    roomPop.showPopupWindow(contentLayout);
+//                    KeyRoomPopWindowView roomPop = new KeyRoomPopWindowView(this, communityUuid);
+//                    roomPop.setOnDismissListener(new PopupDismissListener());
+//                    roomPop.showPopupWindow(contentLayout);
+                    KeyChoiceRoomDialog keyChoiceRoomDialog = new KeyChoiceRoomDialog(KeySendKeyPhoneActivity.this, communityUuid);
+                    keyChoiceRoomDialog.show();
                 }
                 setSubmitBg();
                 break;
@@ -556,15 +558,16 @@ public class KeySendKeyPhoneActivity extends BaseActivity implements HttpRespons
         setSubmitBg();
     }
 
+
+    
     public void getRoomData(TextView tv_roomName, int position) {
         type = 1;
         this.position = position;
         tv_single_room = tv_roomName;
         DisplayUtil.showInput(false, this);
         if (!TextUtils.isEmpty(communityUuid)) {
-            KeyRoomPopWindowView roomPop = new KeyRoomPopWindowView(this, communityUuid);
-            roomPop.setOnDismissListener(new PopupDismissListener());
-            roomPop.showPopupWindow(contentLayout);
+            KeyChoiceRoomDialog keyChoiceRoomDialog = new KeyChoiceRoomDialog(KeySendKeyPhoneActivity.this, communityUuid);
+            keyChoiceRoomDialog.show();
         }
         setSubmitBg();
     }

@@ -173,6 +173,8 @@ dependencies {
     implementation 'com.tencent.bugly:nativecrashreport:latest.release'
     //其中latest.release指代最新版本号，也可以指定明确的版本号，例如2.2.0
     implementation(name: 'lekai-open-sdk-v3.0.8.1', ext: 'aar')//乐开
+
+    implementation 'com.github.lecho:hellocharts-library:1.5.8@aar'
 }
 
 project.afterEvaluate {

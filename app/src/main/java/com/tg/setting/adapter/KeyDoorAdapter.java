@@ -53,6 +53,7 @@ public class KeyDoorAdapter extends RecyclerView.Adapter<KeyDoorAdapter.DefaultV
             holder.tv_bind.setOnClickListener(v -> ((KeyDoorManagerActivity) mContext).todo(position, bean.getStatus()));
             holder.tv_key_num.setText("未绑定");
         }
+        holder.rl_item.setOnClickListener(view -> ((KeyDoorManagerActivity) mContext).toKeyInfor(position, bean.getStatus()));
     }
 
     @Override

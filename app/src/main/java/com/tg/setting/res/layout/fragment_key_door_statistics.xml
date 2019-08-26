@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/key_list_refresh"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/color_f2f3f4"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_statistic"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/ic_key_statistics_bg" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_30dp"
+            android:layout_marginTop="15dp"
+            android:orientation="horizontal">
+
+            <View
+                android:layout_width="4dp"
+                android:layout_height="15dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="15dp"
+                android:background="@color/color_1da1f4" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                android:text="统计数据"
+                android:textColor="@color/color_1da1f4"
+                android:textSize="@dimen/font_16sp" />
+
+        </LinearLayout>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="275dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/shape_key_statistics_bg">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:text="用户数"
+                android:textColor="@color/color_333b46"
+                android:textSize="16sp" />
+
+            <LinearLayout
+                android:layout_width="150dp"
+                android:layout_height="25dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="30dp"
+                android:layout_marginRight="10dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tv_user_month"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_key_leftbottom_select"
+                    android:gravity="center"
+                    android:text="月"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/font_12sp" />
+
+                <TextView
+                    android:id="@+id/tv_user_week"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_key_middle"
+                    android:gravity="center"
+                    android:text="周"
+                    android:textColor="@color/color_999faa"
+                    android:textSize="@dimen/font_12sp" />
+
+
+                <TextView
+                    android:id="@+id/tv_user_day"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_key_rightbottom"
+                    android:gravity="center"
+                    android:text="日"
+                    android:textColor="@color/color_999faa"
+                    android:textSize="@dimen/font_12sp" />
+
+            </LinearLayout>
+
+
+            <lecho.lib.hellocharts.view.LineChartView
+                android:id="@+id/usr_linechart"
+                android:layout_width="match_parent"
+                android:layout_height="190dp"
+                android:layout_alignParentBottom="true"
+                android:layout_margin="10dp" />
+
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="275dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/shape_key_statistics_bg">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:text="开锁次数"
+                android:textColor="@color/color_333b46"
+                android:textSize="16sp" />
+
+            <LinearLayout
+                android:layout_width="150dp"
+                android:layout_height="25dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="30dp"
+                android:layout_marginRight="10dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tv_lock_month"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_key_leftbottom_select"
+                    android:gravity="center"
+                    android:text="月"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/font_12sp" />
+
+                <TextView
+                    android:id="@+id/tv_lock_week"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_key_middle"
+                    android:gravity="center"
+                    android:text="周"
+                    android:textColor="@color/color_999faa"
+                    android:textSize="@dimen/font_12sp" />
+
+
+                <TextView
+                    android:id="@+id/tv_lock_day"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_key_rightbottom"
+                    android:gravity="center"
+                    android:text="日"
+                    android:textColor="@color/color_999faa"
+                    android:textSize="@dimen/font_12sp" />
+
+            </LinearLayout>
+
+
+            <lecho.lib.hellocharts.view.LineChartView
+                android:id="@+id/lock_linechart"
+                android:layout_width="match_parent"
+                android:layout_height="190dp"
+                android:layout_alignParentBottom="true"
+                android:layout_margin="10dp" />
+
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="275dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="30dp"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/shape_key_statistics_bg">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:text="活跃钥匙数"
+                android:textColor="@color/color_333b46"
+                android:textSize="16sp" />
+
+            <LinearLayout
+                android:layout_width="150dp"
+                android:layout_height="25dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="30dp"
+                android:layout_marginRight="10dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tv_key_month"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_key_leftbottom_select"
+                    android:gravity="center"
+                    android:text="月"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/font_12sp" />
+
+                <TextView
+                    android:id="@+id/tv_key_week"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_key_middle"
+                    android:gravity="center"
+                    android:text="周"
+                    android:textColor="@color/color_999faa"
+                    android:textSize="@dimen/font_12sp" />
+
+
+                <TextView
+                    android:id="@+id/tv_key_day"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_key_rightbottom"
+                    android:gravity="center"
+                    android:text="日"
+                    android:textColor="@color/color_999faa"
+                    android:textSize="@dimen/font_12sp" />
+
+            </LinearLayout>
+
+
+            <lecho.lib.hellocharts.view.LineChartView
+                android:id="@+id/key_linechart"
+                android:layout_width="match_parent"
+                android:layout_height="190dp"
+                android:layout_alignParentBottom="true"
+                android:layout_margin="10dp" />
+
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</android.support.v4.widget.NestedScrollView>

@@ -490,7 +490,6 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
             }
         });
 
-
     }
 
 

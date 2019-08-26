@@ -107,8 +107,56 @@ public class KeyDoorEntity extends BaseContentEntity {
             private String communityUuid;
             private String location;
             private String deviceId;
+
+            public String getCipherId() {
+                return cipherId;
+            }
+
+            public void setCipherId(String cipherId) {
+                this.cipherId = cipherId;
+            }
+
+            private String cipherId;
+
+            public String getProtocolVersion() {
+                return protocolVersion;
+            }
+
+            public void setProtocolVersion(String protocolVersion) {
+                this.protocolVersion = protocolVersion;
+            }
+
+            private String protocolVersion;
+
+            public String getInstallTime() {
+                return installTime;
+            }
+
+            public void setInstallTime(String installTime) {
+                this.installTime = installTime;
+            }
+
+            public String getModel() {
+                return model;
+            }
+
+            public void setModel(String model) {
+                this.model = model;
+            }
+
+            public String getMac() {
+                return mac;
+            }
+
+            public void setMac(String mac) {
+                this.mac = mac;
+            }
+
+            private String installTime;
+            private String model;
+            private String mac;
             private int status;
-            private int keynum;
+            private String keynum;
 
             public String getId() {
                 return id;
@@ -166,11 +214,11 @@ public class KeyDoorEntity extends BaseContentEntity {
                 this.status = status;
             }
 
-            public int getKeynum() {
+            public String getKeynum() {
                 return keynum;
             }
 
-            public void setKeynum(int keynum) {
+            public void setKeynum(String keynum) {
                 this.keynum = keynum;
             }
         }

@@ -19,6 +19,10 @@ public class KeySendKeyListActivity extends BaseActivity {
     public static final String DOOR_ID = "door_id";
     public static final String DOOR_QRCODE = "door_qrcode";
     public static final String KEY_CONTENT = "key_content";
+    public static final String DOOR_ROOM= "door_room";
+    public static final String DOOR_IDENTITY_ID= "door_identity_id";
+    public static final String DOOR_IDENTITY_NAME= "door_identity_name";
+    public static final String DOOR_USER_NAME= "door_user_name";
     public static final String FORM_SOURCE = "form_source";
 
     private RelativeLayout rl_phone;

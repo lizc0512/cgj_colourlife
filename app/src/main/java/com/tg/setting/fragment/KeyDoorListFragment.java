@@ -30,6 +30,8 @@ import com.tg.setting.entity.KeyDoorEntity;
 import com.tg.user.model.UserModel;
 import com.yanzhenjie.recyclerview.SwipeRecyclerView;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -97,14 +99,18 @@ public class KeyDoorListFragment extends Fragment implements HttpResponse, View.
         });
         key_list_refresh.setOnRefreshListener(() -> {
             doorPage = 1;
-            getDoorList();
-
+            if (!TextUtils.isEmpty(community_uuid)) {
+                getDoorList();
+            } else {
+                key_list_refresh.setRefreshing(false);
+            }
         });
         if (!TextUtils.isEmpty(community_uuid)) {
             getDoorList();
         } else {
             noPermission = 0;
             setEmptyData();
+            key_list_refresh.setEnabled(false);
             ((KeyDoorManagerActivity) getActivity()).hideTitleBottomLayout();
         }
         return rootView;

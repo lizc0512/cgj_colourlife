@@ -27,6 +27,15 @@ import com.tg.setting.model.KeyDoorModel;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.tg.setting.activity.KeySendKeyListActivity.COMMUNITY_UUID;
+import static com.tg.setting.activity.KeySendKeyListActivity.DOOR_ID;
+import static com.tg.setting.activity.KeySendKeyListActivity.DOOR_IDENTITY_ID;
+import static com.tg.setting.activity.KeySendKeyListActivity.DOOR_IDENTITY_NAME;
+import static com.tg.setting.activity.KeySendKeyListActivity.DOOR_ROOM;
+import static com.tg.setting.activity.KeySendKeyListActivity.DOOR_USER_NAME;
+import static com.tg.setting.activity.KeySendKeyListActivity.FORM_SOURCE;
+import static com.tg.setting.activity.KeySendKeyListActivity.KEY_CONTENT;
+
 /**
  * 门禁信息人员的信息
  *
@@ -167,10 +176,9 @@ public class KeyDoorUserDetailsActivity extends BaseActivity implements HttpResp
                                     //冻结
                                     keyDoorModel.frozenKeyOperate(1, accessId, "2", KeyDoorUserDetailsActivity.this);
                                 } else {
-                                    //重新发送  解冻
+                                    //  解冻
                                     keyDoorModel.thawKeyOperate(3, accessId, KeyDoorUserDetailsActivity.this);
                                 }
-
                             }
                         }, null, 0, "冻结钥匙后，用户将不能使用\n" +
                                 "钥匙开门，是否确认冻结？",
@@ -189,7 +197,21 @@ public class KeyDoorUserDetailsActivity extends BaseActivity implements HttpResp
                         null, null);
                 break;
             case R.id.tv_send_key:
-                keyDoorModel.thawKeyOperate(4, accessId, KeyDoorUserDetailsActivity.this);
+                if ("3".equals(status)) {
+                    //删除后的重新发送
+                    keyDoorModel.thawKeyOperate(3, accessId, KeyDoorUserDetailsActivity.this);
+                } else {
+                    Intent intent = new Intent(KeyDoorUserDetailsActivity.this, KeySendKeyPhoneActivity.class);
+                    intent.putExtra(DOOR_ID, contentBean.getAccessId());
+                    intent.putExtra(KEY_CONTENT, accessName);
+                    intent.putExtra(COMMUNITY_UUID, contentBean.getCommunityUuid());
+                    intent.putExtra(DOOR_ROOM, contentBean.getHomeLoc());
+                    intent.putExtra(DOOR_IDENTITY_ID, contentBean.getIdentityId());
+                    intent.putExtra(DOOR_IDENTITY_NAME, contentBean.getIdentityName());
+                    intent.putExtra(DOOR_USER_NAME, contentBean.getPhoneNumber());
+                    intent.putExtra(FORM_SOURCE, 2);
+                    startActivityForResult(intent, 1);
+                }
                 break;
 
 
@@ -263,5 +285,14 @@ public class KeyDoorUserDetailsActivity extends BaseActivity implements HttpResp
                 break;
         }
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
+            setResult(Activity.RESULT_OK);
+            finish();
+        }
     }
 }

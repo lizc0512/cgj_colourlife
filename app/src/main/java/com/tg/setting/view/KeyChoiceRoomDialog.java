@@ -42,7 +42,7 @@ public class KeyChoiceRoomDialog extends Dialog implements HttpResponse, View.On
     private static final int INDEX_TAB_BUILD = 0;
     private static final int INDEX_TAB_UNIT = 1;
     private static final int INDEX_TAB_ROOM = 2;
-    private int pageSize = 500;
+    private int pageSize = 50;
     private TextView textViewBuild;
     private TextView textViewUnit;
     private TextView textViewRoom;
@@ -143,7 +143,7 @@ public class KeyChoiceRoomDialog extends Dialog implements HttpResponse, View.On
                     getUnit();
                     break;
                 case INDEX_TAB_ROOM:
-                    unitPage++;
+                    roomPage++;
                     getFloor();
                     break;
             }

@@ -102,6 +102,43 @@ public class KeyByAccessEntity extends BaseContentEntity {
             private String toScreenName;
             private String toPhone;
 
+            public String getAccessId() {
+                return accessId;
+            }
+
+            public void setAccessId(String accessId) {
+                this.accessId = accessId;
+            }
+
+            public String getIdentityId() {
+                return identityId;
+            }
+
+            public void setIdentityId(String identityId) {
+                this.identityId = identityId;
+            }
+
+            public String getCommunityUuid() {
+                return communityUuid;
+            }
+
+            public void setCommunityUuid(String communityUuid) {
+                this.communityUuid = communityUuid;
+            }
+
+            public String getHomeLoc() {
+                return homeLoc;
+            }
+
+            public void setHomeLoc(String homeLoc) {
+                this.homeLoc = homeLoc;
+            }
+
+            private String accessId;
+            private String identityId;
+            private String communityUuid;
+            private String homeLoc;
+
             public String getId() {
                 return id;
             }

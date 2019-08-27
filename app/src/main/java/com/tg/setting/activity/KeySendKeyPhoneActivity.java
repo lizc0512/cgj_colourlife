@@ -40,6 +40,10 @@ import java.util.Map;
 
 import static com.tg.setting.activity.KeySendKeyListActivity.COMMUNITY_UUID;
 import static com.tg.setting.activity.KeySendKeyListActivity.DOOR_ID;
+import static com.tg.setting.activity.KeySendKeyListActivity.DOOR_IDENTITY_ID;
+import static com.tg.setting.activity.KeySendKeyListActivity.DOOR_IDENTITY_NAME;
+import static com.tg.setting.activity.KeySendKeyListActivity.DOOR_ROOM;
+import static com.tg.setting.activity.KeySendKeyListActivity.DOOR_USER_NAME;
 import static com.tg.setting.activity.KeySendKeyListActivity.FORM_SOURCE;
 import static com.tg.setting.activity.KeySendKeyListActivity.KEY_CONTENT;
 
@@ -170,6 +174,26 @@ public class KeySendKeyPhoneActivity extends BaseActivity implements HttpRespons
         formSource = intent.getIntExtra(FORM_SOURCE, 0);
         tv_name.setText(keyName);
         userModel.getIdentity(1, communityUuid, this);
+        if (formSource == 2) {
+            iv_add.setVisibility(View.GONE);
+        } else {
+            iv_add.setVisibility(View.GONE);
+        }
+        identityId = intent.getStringExtra(DOOR_IDENTITY_ID);
+
+        String room_name = intent.getStringExtra(DOOR_ROOM);
+        String phone_number = intent.getStringExtra(DOOR_USER_NAME);
+        String identity_name = intent.getStringExtra(DOOR_IDENTITY_NAME);
+        if (!TextUtils.isEmpty(room_name)) {
+            tv_room.setText(room_name);
+        }
+        if (!TextUtils.isEmpty(identity_name)) {
+            tv_identity.setText(identity_name);
+        }
+        if (!TextUtils.isEmpty(phone_number)) {
+            et_phone.setText(phone_number);
+            et_phone.setSelection(phone_number.length());
+        }
     }
 
     public void delete(int position) {
@@ -417,11 +441,11 @@ public class KeySendKeyPhoneActivity extends BaseActivity implements HttpRespons
                     childjsonObject.put("phoneNumber", list.get(j));
                     dataJson.add(childjsonObject);
                 }
-                if (formSource == 0) {
-                    userModel.sendKeyByPhone(2, doorId, dataJson, keyName,
+                if (formSource == 1) {
+                    userModel.sendKeyByPackageName(2, doorId, dataJson,
                             identityId, startTime, endTime, keyType, this);
                 } else {
-                    userModel.sendKeyByPackageName(2, doorId, dataJson,
+                    userModel.sendKeyByPhone(2, doorId, dataJson, keyName,
                             identityId, startTime, endTime, keyType, this);
                 }
                 break;
@@ -559,7 +583,6 @@ public class KeySendKeyPhoneActivity extends BaseActivity implements HttpRespons
     }
 
 
-    
     public void getRoomData(TextView tv_roomName, int position) {
         type = 1;
         this.position = position;
@@ -597,6 +620,14 @@ public class KeySendKeyPhoneActivity extends BaseActivity implements HttpRespons
                         identityList.addAll(entity.getContent());
                         for (KeyIdentityEntity.ContentBean bean : identityList) {
                             identityStringList.add(bean.getIdentityName());
+                            if (formSource == 2) {
+                                isPower = bean.getIsPower();
+                                if (bean.getId().equals(identityId) && isPower == 0) {
+                                    ll_room.setVisibility(View.VISIBLE);
+                                } else {
+                                    ll_room.setVisibility(View.GONE);
+                                }
+                            }
                         }
                     } catch (Exception e) {
                         e.printStackTrace();

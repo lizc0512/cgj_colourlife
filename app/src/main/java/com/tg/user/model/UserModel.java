@@ -832,7 +832,7 @@ public class UserModel extends BaseModel {
             public void onFailed(int what, Response<String> response) {
                 showExceptionMessage(what, response);
             }
-        }, true, false);
+        }, true, true);
     }
 
     /**
@@ -865,7 +865,7 @@ public class UserModel extends BaseModel {
             public void onFailed(int what, Response<String> response) {
                 showExceptionMessage(what, response);
             }
-        }, true, false);
+        }, true, true);
     }
 
     /**
@@ -898,7 +898,7 @@ public class UserModel extends BaseModel {
             public void onFailed(int what, Response<String> response) {
                 showExceptionMessage(what, response);
             }
-        }, true, false);
+        }, true, true);
     }
 
     /**

@@ -10,8 +10,8 @@ android {
         applicationId "com.tg.coloursteward"
         minSdkVersion MIN_SDK_VERSION as int
         targetSdkVersion TARGET_SDK_VERSION as int
-        versionCode 95
-        versionName "6.2.3"
+        versionCode 96
+        versionName "6.2.4"
         // Enabling multidex support.
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"

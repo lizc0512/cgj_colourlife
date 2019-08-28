@@ -22,8 +22,8 @@ import com.tg.setting.entity.KeyTypeDataEntity;
 import com.tg.setting.model.KeyDoorModel;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+
 
 import lecho.lib.hellocharts.gesture.ContainerScrollType;
 import lecho.lib.hellocharts.gesture.ZoomType;
@@ -115,92 +115,16 @@ public class KeyDoorStatisticsFragment extends Fragment implements HttpResponse,
         mNameList.add("钥匙数");
         mNameList.add("锁总数");
         mNameList.add("开锁次数");
-        mValuesList.add("4287");
-        mValuesList.add("29457");
-        mValuesList.add("7814");
-        mValuesList.add("1313");
         keyDoorStatisticsAdapter = new KeyDoorStatisticsAdapter(getActivity(), mNameList, mValuesList);
         rv_statistic.setLayoutManager(new GridLayoutManager(getActivity(), 2));
         rv_statistic.setNestedScrollingEnabled(false);
         rv_statistic.setAdapter(keyDoorStatisticsAdapter);
         getDoorStatis();
-
-
-        List<String> mUserXaxisList = new ArrayList<>();
-        List<String> mUserValuesList = new ArrayList<>();
-
-        mUserXaxisList.add("1月");
-        mUserXaxisList.add("2月");
-        mUserXaxisList.add("3月");
-        mUserXaxisList.add("4月");
-        mUserXaxisList.add("5月");
-        mUserXaxisList.add("6月");
-        mUserXaxisList.add("7月");
-        mUserXaxisList.add("8月");
-
-        mUserValuesList.add("1300");
-        mUserValuesList.add("1500");
-        mUserValuesList.add("2399");
-        mUserValuesList.add("4500");
-        mUserValuesList.add("3000");
-        mUserValuesList.add("5600");
-        mUserValuesList.add("4600");
-        mUserValuesList.add("8230");
-
-        List<String> mLockXaxisList = new ArrayList<>();
-        List<String> mLockValuesList = new ArrayList<>();
-
-
-        mLockXaxisList.add("1月");
-        mLockXaxisList.add("2月");
-        mLockXaxisList.add("3月");
-        mLockXaxisList.add("4月");
-        mLockXaxisList.add("5月");
-        mLockXaxisList.add("6月");
-        mLockXaxisList.add("7月");
-        mLockXaxisList.add("8月");
-
-        mLockValuesList.add("900");
-        mLockValuesList.add("1600");
-        mLockValuesList.add("1400");
-        mLockValuesList.add("1900");
-        mLockValuesList.add("1500");
-        mLockValuesList.add("1800");
-        mLockValuesList.add("3100");
-        mLockValuesList.add("2300");
-
-        List<String> mKeyXaxisList = new ArrayList<>();
-        List<String> mKeyValuesList = new ArrayList<>();
-
-
-        mKeyXaxisList.add("1月");
-        mKeyXaxisList.add("2月");
-        mKeyXaxisList.add("3月");
-        mKeyXaxisList.add("4月");
-        mKeyXaxisList.add("5月");
-        mKeyXaxisList.add("6月");
-        mKeyXaxisList.add("7月");
-        mKeyXaxisList.add("8月");
-
-        mKeyValuesList.add("360");
-        mKeyValuesList.add("300");
-        mKeyValuesList.add("500");
-        mKeyValuesList.add("540");
-        mKeyValuesList.add("600");
-        mKeyValuesList.add("700");
-        mKeyValuesList.add("850");
-        mKeyValuesList.add("930");
-
-
-        initLineChart(mUserXaxisList, mUserValuesList, usr_linechart);
-        initLineChart(mLockXaxisList, mLockValuesList, lock_linechart);
-        initLineChart(mKeyXaxisList, mKeyValuesList, key_linechart);
         return rootView;
     }
 
 
     private void initLineChart(List<String> date, List<String> score, LineChartView lineChartView) {
-        int maxLabelChars = 0;
         List<PointValue> mPointValues = new ArrayList<PointValue>();
         List<AxisValue> mAxisXValues = new ArrayList<AxisValue>();
         for (int i = 0; i < date.size(); i++) {
@@ -215,10 +139,6 @@ public class KeyDoorStatisticsFragment extends Fragment implements HttpResponse,
             } catch (Exception e) {
                 mPointValues.add(new PointValue(i, 0));
             }
-        }
-        if (score.size() > 0) {
-            Collections.reverse(score);
-            maxLabelChars = score.get(0).length();
         }
 
         Line line = new Line(mPointValues).setColor(Color.parseColor("#FFCD41"));  //折线的颜色（橙色）
@@ -255,7 +175,8 @@ public class KeyDoorStatisticsFragment extends Fragment implements HttpResponse,
         axisY.setName("");//y轴标注
         axisY.setTextSize(10);//设置字体大小
         axisY.setTextColor(Color.BLACK);
-        axisY.setMaxLabelChars(maxLabelChars);
+        axisY.setSeparationColor(Color.WHITE);
+        axisY.setMaxLabelChars(6);
         axisY.setHasLines(true);
         axisY.setHasSeparationLine(true);
         data.setAxisYLeft(axisY);  //Y轴设置在左边（左面右面一旦设定就意味着y轴）
@@ -289,7 +210,9 @@ public class KeyDoorStatisticsFragment extends Fragment implements HttpResponse,
         Viewport v = new Viewport(lineChartView.getMaximumViewport());
         v.left = 0;
         v.right = 7;
+        v.top = 10;
         lineChartView.setCurrentViewport(v);
+
     }
 
 
@@ -299,6 +222,22 @@ public class KeyDoorStatisticsFragment extends Fragment implements HttpResponse,
         }
         keyDoorModel.getTotalCommunityStatistics(0, community_uuid, this::OnHttpResponse);
         getTypeStatistics("month");
+        userIndent = "month";
+        lockIndent = "month";
+        keyIndent = "month";
+        getMonthSelect();
+    }
+
+    private void getMonthSelect() {
+        setTextBgColor(tv_user_month, R.drawable.shape_key_leftbottom_select, getResources().getColor(R.color.white));
+        setTextBgColor(tv_user_week, R.drawable.shape_key_middle, getResources().getColor(R.color.color_999faa));
+        setTextBgColor(tv_user_day, R.drawable.shape_key_rightbottom, getResources().getColor(R.color.color_999faa));
+        setTextBgColor(tv_lock_month, R.drawable.shape_key_leftbottom_select, getResources().getColor(R.color.white));
+        setTextBgColor(tv_lock_week, R.drawable.shape_key_middle, getResources().getColor(R.color.color_999faa));
+        setTextBgColor(tv_lock_day, R.drawable.shape_key_rightbottom, getResources().getColor(R.color.color_999faa));
+        setTextBgColor(tv_key_month, R.drawable.shape_key_leftbottom_select, getResources().getColor(R.color.white));
+        setTextBgColor(tv_key_week, R.drawable.shape_key_middle, getResources().getColor(R.color.color_999faa));
+        setTextBgColor(tv_key_day, R.drawable.shape_key_rightbottom, getResources().getColor(R.color.color_999faa));
     }
 
     private void getTypeStatistics(String keyIndent) {
@@ -364,9 +303,24 @@ public class KeyDoorStatisticsFragment extends Fragment implements HttpResponse,
                             mKeyValuesList.add(contentBean.getActiceKeyCount());
                         }
                     }
-                    initLineChart(mUserXaxisList, mUserValuesList, usr_linechart);
-                    initLineChart(mLockXaxisList, mLockValuesList, lock_linechart);
-                    initLineChart(mKeyXaxisList, mKeyValuesList, key_linechart);
+                    if (mUserXaxisList.size() > 0) {
+                        usr_linechart.setVisibility(View.VISIBLE);
+                        initLineChart(mUserXaxisList, mUserValuesList, usr_linechart);
+                    } else {
+                        usr_linechart.setVisibility(View.INVISIBLE);
+                    }
+                    if (mLockXaxisList.size() > 0) {
+                        lock_linechart.setVisibility(View.VISIBLE);
+                        initLineChart(mLockXaxisList, mLockValuesList, lock_linechart);
+                    } else {
+                        lock_linechart.setVisibility(View.INVISIBLE);
+                    }
+                    if (mKeyXaxisList.size() > 0) {
+                        key_linechart.setVisibility(View.VISIBLE);
+                        initLineChart(mKeyXaxisList, mKeyValuesList, key_linechart);
+                    } else {
+                        key_linechart.setVisibility(View.INVISIBLE);
+                    }
                 } catch (Exception e) {
 
                 }
@@ -462,8 +416,8 @@ public class KeyDoorStatisticsFragment extends Fragment implements HttpResponse,
             case R.id.tv_key_day:
                 if (!"day".equals(keyIndent)) {
                     setTextBgColor(tv_key_month, R.drawable.shape_key_leftbottom, getResources().getColor(R.color.color_999faa));
-                    setTextBgColor(tv_key_week, R.drawable.shape_key_middle_select, getResources().getColor(R.color.white));
-                    setTextBgColor(tv_key_day, R.drawable.shape_key_rightbottom, getResources().getColor(R.color.color_999faa));
+                    setTextBgColor(tv_key_week, R.drawable.shape_key_middle, getResources().getColor(R.color.color_999faa));
+                    setTextBgColor(tv_key_day, R.drawable.shape_key_rightbottom_select, getResources().getColor(R.color.white));
                     keyIndent = "day";
                     getTypeStatistics(keyIndent);
                 }

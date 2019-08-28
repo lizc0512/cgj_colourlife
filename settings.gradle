@@ -1,1 +1,1 @@
-include ':app', ':huxin_sdk'
+include ':app', ':huxin_sdk', ':hellocharts-library'

@@ -33,6 +33,7 @@ public class KeyDoorModel extends BaseModel {
     private String reflushDoorLog = "/yuncontrol/ycAccessControl/reflushInstallDevice";  //更换设备
     private String deleteDoorLog = "/yuncontrol/ycAccessControl/deleteInstallDevice";  //重绑设备
     private String communityStatistics = "/yuncontrol/cgjCommunityStatistics/getCommunityStatistics";  //获取小区统计的整体数据
+    private String communityTypeStatistics = "/yuncontrol/cgjCommunityStatistics/getCommunityDateStatistics/";  //获取小区统计的整体数据
 
     public KeyDoorModel(Context context) {
         super(context);
@@ -253,8 +254,7 @@ public class KeyDoorModel extends BaseModel {
     public void getTypeCommunityStatistics(int what, String communityUuid, String dateIdent, final HttpResponse httpResponse) {
         Map<String, Object> params = new HashMap<>();
         params.put("communityUuid", communityUuid);
-        params.put("dateIdent", dateIdent);
-        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 11, communityStatistics), RequestMethod.GET);
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 11, communityTypeStatistics + dateIdent), RequestMethod.GET);
         request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
             @Override
             public void onSucceed(int what, Response<String> response) {
@@ -270,6 +270,7 @@ public class KeyDoorModel extends BaseModel {
                 } else {
                     showErrorCodeMessage(response);
                 }
+
             }
 
             @Override

@@ -122,7 +122,7 @@ public class KeyDoorOutRecordActivity extends BaseActivity implements HttpRespon
 
     @Override
     public String getHeadTitle() {
-        return "门禁钥匙";
+        return "进出记录";
     }
 
 

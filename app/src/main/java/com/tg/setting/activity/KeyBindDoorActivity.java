@@ -34,6 +34,7 @@ import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.util.ToastUtil;
 import com.tg.setting.adapter.KeyDeviceAdapter;
+import com.tg.setting.model.KeyDoorModel;
 import com.tg.setting.service.LekaiService;
 import com.tg.setting.view.KeyScanView;
 import com.tg.user.model.UserModel;
@@ -45,6 +46,8 @@ import org.json.JSONObject;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.tg.setting.activity.KeySendKeyListActivity.FORM_SOURCE;
 
 /**
  * 乐开-绑定门禁列表
@@ -64,11 +67,11 @@ public class KeyBindDoorActivity extends BaseActivity implements View.OnClickLis
     private Handler mHandler;
     private int count;
     private String doorId;
+    private int fromSource;
     private KeyDeviceAdapter mAdapter;
     private List<String> mDevicesMac = new ArrayList<>();
     private List<Device> mDevices = new ArrayList<>();
     private Device mDevice;
-    private int num = 0;
     private boolean openBluetooth = false;
     private String[] permissions = {Manifest.permission.ACCESS_COARSE_LOCATION};
     private LekaiService mLekaiService;
@@ -134,8 +137,13 @@ public class KeyBindDoorActivity extends BaseActivity implements View.OnClickLis
             ToastUtil.showShortToast(this, "正在绑定设备");
             try {
                 Device device = mAdapter.getItem(position);
-                UserModel userModel = new UserModel(this);
-                userModel.bindDoor(1, doorId, device.getLockMac(), device.getCipherId(), device.getBluetoothDevice().getName(), device.getProtocolVersion(), this);
+                if (fromSource == 0) {
+                    UserModel userModel = new UserModel(this);
+                    userModel.bindDoor(1, doorId, device.getLockMac(), device.getCipherId(), device.getBluetoothDevice().getName(), device.getProtocolVersion(), this);
+                } else {
+                    KeyDoorModel keyDoorModel = new KeyDoorModel(this);
+                    keyDoorModel.reflushDoorOperate(1, doorId, device.getLockMac(), device.getCipherId(), device.getBluetoothDevice().getName(), device.getProtocolVersion(), this);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -143,7 +151,9 @@ public class KeyBindDoorActivity extends BaseActivity implements View.OnClickLis
     }
 
     private void initData() {
-        doorId = getIntent().getStringExtra(DOOR_ID);
+        Intent intent = getIntent();
+        doorId = intent.getStringExtra(DOOR_ID);
+        fromSource = intent.getIntExtra(FORM_SOURCE, 0);
 
         init(this);
         if (openBluetooth) {

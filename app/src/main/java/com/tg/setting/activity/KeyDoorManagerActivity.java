@@ -56,6 +56,7 @@ public class KeyDoorManagerActivity extends BaseActivity implements HttpResponse
     private KeyDoorBagsFragment keyDoorBagsFragment;
     private KeyDoorStatisticsFragment keyDoorStatisticsFragment;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

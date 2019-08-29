@@ -14,6 +14,7 @@ import com.tg.coloursteward.view.dialog.DialogFactory;
 import com.tg.setting.model.KeyDoorModel;
 
 import static com.tg.setting.activity.KeyAddDoorActivity.COMMUNITY_UUID;
+import static com.tg.setting.activity.KeySendKeyListActivity.DOOR_ID;
 
 /**
  * 门禁信息的详情和相关操作的入口
@@ -94,7 +95,7 @@ public class KeyDoorInforDetailsActivity extends BaseActivity implements HttpRes
 
     private void initData() {
         Intent intent = getIntent();
-        accessId = intent.getStringExtra(KeySendKeyListActivity.DOOR_ID);
+        accessId = intent.getStringExtra(DOOR_ID);
         deviceId = intent.getStringExtra(KeySendKeyListActivity.DEVICE_ID);
         accessName = intent.getStringExtra(KeySendKeyListActivity.KEY_CONTENT);
         communityUuid = intent.getStringExtra(KeySendKeyListActivity.COMMUNITY_UUID);
@@ -123,13 +124,13 @@ public class KeyDoorInforDetailsActivity extends BaseActivity implements HttpRes
                 i.putExtra(KeySendKeyListActivity.COMMUNITY_UUID, communityUuid);
                 i.putExtra(KeySendKeyListActivity.COMMUNITY_NAME, communityName);
                 i.putExtra(KeySendKeyListActivity.FORM_SOURCE, 0);
-                i.putExtra(KeySendKeyListActivity.DOOR_ID, accessId);
+                i.putExtra(DOOR_ID, accessId);
                 i.putExtra(KeySendKeyListActivity.KEY_CONTENT, accessName);
                 startActivityForResult(i, 1);
                 break;
             case R.id.door_key_layout:
                 Intent intent = new Intent(KeyDoorInforDetailsActivity.this, KeyDoorUserListActivity.class);
-                intent.putExtra(KeySendKeyListActivity.DOOR_ID, accessId);
+                intent.putExtra(DOOR_ID, accessId);
                 intent.putExtra(KeySendKeyListActivity.DEVICE_ID, deviceId);
                 intent.putExtra(KeySendKeyListActivity.KEY_CONTENT, accessName);
                 intent.putExtra(KeySendKeyListActivity.FORM_SOURCE, 0);
@@ -139,7 +140,7 @@ public class KeyDoorInforDetailsActivity extends BaseActivity implements HttpRes
                 break;
             case R.id.enter_out_layout:
                 Intent outIntent = new Intent(KeyDoorInforDetailsActivity.this, KeyDoorOutRecordActivity.class);
-                outIntent.putExtra(KeySendKeyListActivity.DOOR_ID, accessId);
+                outIntent.putExtra(DOOR_ID, accessId);
                 outIntent.putExtra(KeySendKeyListActivity.DEVICE_ID, deviceId);
                 outIntent.putExtra(KeySendKeyListActivity.KEY_CONTENT, accessName);
                 startActivity(outIntent);
@@ -148,7 +149,10 @@ public class KeyDoorInforDetailsActivity extends BaseActivity implements HttpRes
                 DialogFactory.getInstance().showDoorDialog(KeyDoorInforDetailsActivity.this, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        keyDoorModel.reflushDoorOperate(0, accessId, doorMac, doorCipherid, doorModel, doorProtocolVersion, KeyDoorInforDetailsActivity.this::OnHttpResponse);
+                        Intent intent = new Intent(KeyDoorInforDetailsActivity.this, KeyBindDoorActivity.class);
+                        intent.putExtra(DOOR_ID, accessId);
+                        intent.putExtra(KeySendKeyListActivity.FORM_SOURCE, 1);
+                        startActivityForResult(intent, 1);
                     }
                 }, null, 1, "换锁前需将门禁设备进行提前处理，否则已发放钥匙将无法正常开锁。是否确认更换门禁？", null, null);
 
@@ -166,7 +170,9 @@ public class KeyDoorInforDetailsActivity extends BaseActivity implements HttpRes
             case R.id.key_infor_layout:
                 Intent inforIntent = new Intent(KeyDoorInforDetailsActivity.this, KeyAddDoorActivity.class);
                 inforIntent.putExtra(COMMUNITY_UUID, communityUuid);
-                startActivity(inforIntent);
+                inforIntent.putExtra(DOOR_ID, accessId);
+                inforIntent.putExtra(KeySendKeyListActivity.FORM_SOURCE, 1);
+                startActivityForResult(inforIntent, 1);
                 break;
         }
         return super.handClickEvent(v);
@@ -199,10 +205,6 @@ public class KeyDoorInforDetailsActivity extends BaseActivity implements HttpRes
     public void OnHttpResponse(int what, String result) {
 
         switch (what) {
-            case 0:
-                Intent intent = new Intent(KeyDoorInforDetailsActivity.this, KeyDoorManagerActivity.class);
-                startActivity(intent);
-                break;
             case 1:
                 setResult(Activity.RESULT_OK);
                 finish();

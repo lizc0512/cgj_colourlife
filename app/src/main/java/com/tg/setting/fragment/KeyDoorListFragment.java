@@ -153,7 +153,7 @@ public class KeyDoorListFragment extends Fragment implements HttpResponse, View.
         if (status == 0) {
             Intent i = new Intent(getActivity(), KeyBindDoorActivity.class);
             i.putExtra(KeyBindDoorActivity.DOOR_ID, doorList.get(position).getId());
-            startActivityForResult(i, 1);
+            getActivity(). startActivityForResult(i, 1);
         } else {
             KeyDoorEntity.ContentBeanX.ContentBean contentBean = doorList.get(position);
             Intent i = new Intent(getActivity(), KeyDoorInforDetailsActivity.class);
@@ -168,7 +168,7 @@ public class KeyDoorListFragment extends Fragment implements HttpResponse, View.
             i.putExtra(KeyDoorInforDetailsActivity.DOOR_PERSON, contentBean.getKeynum());
             i.putExtra(KeyDoorInforDetailsActivity.DOOR_PROTOCOL_VERSION, contentBean.getProtocolVersion());
             i.putExtra(KeyDoorInforDetailsActivity.DOOR_CIPHERID, contentBean.getCipherId());
-            startActivityForResult(i, 1);
+             getActivity(). startActivityForResult(i, 1);
         }
     }
 

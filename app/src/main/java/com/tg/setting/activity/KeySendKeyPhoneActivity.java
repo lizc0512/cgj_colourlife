@@ -177,10 +177,9 @@ public class KeySendKeyPhoneActivity extends BaseActivity implements HttpRespons
         if (formSource == 2) {
             iv_add.setVisibility(View.GONE);
         } else {
-            iv_add.setVisibility(View.GONE);
+            iv_add.setVisibility(View.VISIBLE);
         }
         identityId = intent.getStringExtra(DOOR_IDENTITY_ID);
-
         String room_name = intent.getStringExtra(DOOR_ROOM);
         String phone_number = intent.getStringExtra(DOOR_USER_NAME);
         String identity_name = intent.getStringExtra(DOOR_IDENTITY_NAME);
@@ -192,6 +191,8 @@ public class KeySendKeyPhoneActivity extends BaseActivity implements HttpRespons
         }
         if (!TextUtils.isEmpty(phone_number)) {
             et_phone.setText(phone_number);
+            et_phone.setFocusable(false);
+            et_phone.setFocusableInTouchMode(false);
             et_phone.setSelection(phone_number.length());
         }
     }

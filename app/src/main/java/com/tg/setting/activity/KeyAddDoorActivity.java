@@ -1,5 +1,6 @@
 package com.tg.setting.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -16,6 +17,7 @@ import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.util.ToastUtil;
+import com.tg.setting.model.KeyDoorModel;
 import com.tg.setting.view.KeyUnitPopWindowView;
 import com.tg.user.model.UserModel;
 import com.youmai.hxsdk.utils.DisplayUtil;
@@ -38,6 +40,8 @@ public class KeyAddDoorActivity extends BaseActivity implements HttpResponse {
     private int bigDoor = 1;
     private int unitDoor = 0;
     private String communityUuid = "";
+    private int fromSource;
+    private String accessId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +68,13 @@ public class KeyAddDoorActivity extends BaseActivity implements HttpResponse {
     }
 
     private void initData() {
-        communityUuid = getIntent().getStringExtra(COMMUNITY_UUID);
+        Intent intent = getIntent();
+        communityUuid = intent.getStringExtra(COMMUNITY_UUID);
+
+        fromSource = intent.getIntExtra(KeySendKeyListActivity.FORM_SOURCE, 0);
+        if (fromSource == 1) {
+            accessId = intent.getStringExtra(KeySendKeyListActivity.DOOR_ID);
+        }
     }
 
     private void initListener() {
@@ -132,9 +142,16 @@ public class KeyAddDoorActivity extends BaseActivity implements HttpResponse {
             case R.id.tv_submit:
                 DisplayUtil.showInput(false, this);
                 if (setSubmitBg()) {
-                    UserModel userModel = new UserModel(this);
-                    userModel.addDoor(1, communityUuid, et_door.getText().toString().trim(),
-                            0 == unitDoor ? communityUuid : unitUuid, unitDoor + "", unitName, buildUuid, buildName, et_address.getText().toString().trim(), et_des.getText().toString().trim(), this);
+                    if (fromSource == 0) {
+                        UserModel userModel = new UserModel(this);
+                        userModel.addDoor(1, communityUuid, et_door.getText().toString().trim(),
+                                0 == unitDoor ? communityUuid : unitUuid, unitDoor + "", unitName, buildUuid, buildName, et_address.getText().toString().trim(), et_des.getText().toString().trim(), this);
+                    } else {
+                        KeyDoorModel keyDoorModel = new KeyDoorModel(this);
+                        keyDoorModel.upadteDoorInfor(1, accessId, communityUuid, et_door.getText().toString().trim(),
+                                0 == unitDoor ? communityUuid : unitUuid, unitDoor + "", unitName, buildUuid, buildName, et_address.getText().toString().trim(), et_des.getText().toString().trim(), this);
+                    }
+
                 }
                 break;
         }

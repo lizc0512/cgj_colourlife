@@ -30,6 +30,7 @@ public class KeyDoorModel extends BaseModel {
     private String frozenKeyUrl = "/yuncontrol/ycKey/frozenKey";  //冻结或删除钥匙
     private String thawKeyUrl = "/yuncontrol/ycKey/thawKey";  //解冻或重新发送钥匙
     private String keyOpenLogUrl = "/yuncontrol/ycKey/getOpenLog";  //获取开门记录
+    private String updateDoorUrl = "/yuncontrol/ycAccessControl/update";  //修改门禁
     private String reflushDoorLog = "/yuncontrol/ycAccessControl/reflushInstallDevice";  //更换设备
     private String deleteDoorLog = "/yuncontrol/ycAccessControl/deleteInstallDevice";  //重绑设备
     private String communityStatistics = "/yuncontrol/cgjCommunityStatistics/getCommunityStatistics";  //获取小区统计的整体数据
@@ -39,7 +40,7 @@ public class KeyDoorModel extends BaseModel {
         super(context);
     }
 
-    public void getAllKeyByAccess(int what, String accessId, String keyword, int page,boolean isLoading, final HttpResponse httpResponse) {
+    public void getAllKeyByAccess(int what, String accessId, String keyword, int page, boolean isLoading, final HttpResponse httpResponse) {
         Map<String, Object> params = new HashMap<>();
         params.put("accessId", accessId);
         params.put("pageNum", page);
@@ -103,7 +104,7 @@ public class KeyDoorModel extends BaseModel {
 
     public void delDoorOperate(int what, String accessId, final HttpResponse httpResponse) {
         Map<String, Object> params = new HashMap<>();
-        params.put("accessId", accessId);
+        params.put("id", accessId);
         final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 11, deleteDoorLog), RequestMethod.POST);
         request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
             @Override
@@ -132,7 +133,7 @@ public class KeyDoorModel extends BaseModel {
 
     public void reflushDoorOperate(int what, String accessId, String mac, String cipherId, String model, String protocolVersion, final HttpResponse httpResponse) {
         Map<String, Object> params = new HashMap<>();
-        params.put("accessId", accessId);
+        params.put("id", accessId);
         params.put("mac", mac);
         params.put("cipherId", cipherId);
         params.put("model", model);
@@ -190,7 +191,7 @@ public class KeyDoorModel extends BaseModel {
         }, true, false);
     }
 
-    public void getKeyOpenLog(int what, String deviceId, int pageNum, String phoneNumber,boolean isLoading, final HttpResponse httpResponse) {
+    public void getKeyOpenLog(int what, String deviceId, int pageNum, String phoneNumber, boolean isLoading, final HttpResponse httpResponse) {
         Map<String, Object> params = new HashMap<>();
         params.put("deviceId", deviceId);
         params.put("pageSize", 20);
@@ -278,5 +279,46 @@ public class KeyDoorModel extends BaseModel {
                 showExceptionMessage(what, response);
             }
         }, true, true);
+    }
+
+    /**
+     * 新增门禁
+     */
+    public void upadteDoorInfor(int what,String accessId, String communityUuid, String accessName, String unitUuid, String isUnit, String unitName, String buildUuid,
+                           String buildName, String location, String content, final HttpResponse httpResponse) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("id", accessId);//小区id
+        params.put("communityUuid", communityUuid);//小区id
+        params.put("accessName", accessName);//门禁名字
+        params.put("unitUuid", unitUuid); //单元或者楼栋或者外围门id
+        params.put("isUnit", isUnit);//门类型，0为大门，1为单元门
+        params.put("unitName", unitName);//单元名，选单元门时需要
+        params.put("buildUuid", buildUuid);//楼栋id，选单元门时需要
+        params.put("buildName", buildName);//楼栋名字，选单元门时需要
+        params.put("location", location);//位置，选单元门时需要 //位置信息用于app显示门禁时判断位置
+        params.put("content", content);//门禁描述
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 11, updateDoorUrl), RequestMethod.POST);
+        request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    int code = showSuccesResultMessage(result);
+                    if (code == 0) {
+                        httpResponse.OnHttpResponse(what, result);
+                    } else {
+                        showErrorCodeMessage(response);
+                    }
+                } else {
+                    showErrorCodeMessage(response);
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+                showExceptionMessage(what, response);
+            }
+        }, true, false);
     }
 }

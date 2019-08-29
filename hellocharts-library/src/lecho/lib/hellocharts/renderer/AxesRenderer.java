@@ -448,7 +448,11 @@ public class AxesRenderer {
                     if (isAxisVertical) {
                         rawValue = computator.computeRawY(value);
                     } else {
-                        rawValue = computator.computeRawX(value);
+                        if(valueIndex==0){
+                            rawValue = computator.computeRawX2(value);
+                        }else {
+                            rawValue = computator.computeRawX(value);
+                        }
                     }
                     if (checkRawValue(contentRect, rawValue, axis.isInside(), position, isAxisVertical)) {
                         rawValuesTab[position][valueToDrawIndex] = rawValue;
@@ -499,7 +503,11 @@ public class AxesRenderer {
             if (isAxisVertical) {
                 rawValue = computator.computeRawY(autoValuesBufferTab[position].values[i]);
             } else {
-                rawValue = computator.computeRawX(autoValuesBufferTab[position].values[i]);
+                if(valueToDrawIndex==0){
+                    rawValue = computator.computeRawX2(autoValuesBufferTab[position].values[i]);
+                }else {
+                    rawValue = computator.computeRawX(autoValuesBufferTab[position].values[i]);
+                }
             }
             if (checkRawValue(contentRect, rawValue, axis.isInside(), position, isAxisVertical)) {
                 rawValuesTab[position][valueToDrawIndex] = rawValue;

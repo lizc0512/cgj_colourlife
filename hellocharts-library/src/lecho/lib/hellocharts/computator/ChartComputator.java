@@ -140,15 +140,21 @@ public class ChartComputator {
 //        final float pixelOffset = (valueX - currentViewport.left) * (contentRectMinusAllMargins.width() /
 //                currentViewport.width());
 //        return contentRectMinusAllMargins.left + pixelOffset;
+        final float pixelOffset = (valueX - currentViewport.left) * (contentRectMinusAllMargins.width() / currentViewport.width());
+        if (Float.isNaN(pixelOffset) || Float.isInfinite(pixelOffset)) {
+            return contentRectMinusAllMargins.left + 0;
+        }
+        return contentRectMinusAllMargins.left + pixelOffset -20;
 
-        final float pixelOffset = (valueX - currentViewport.left) * (contentRectMinusAllMargins.width() /
-                currentViewport.width());
+    }
+
+    public float computeRawX2(float valueX) {
+        final float pixelOffset = (valueX - currentViewport.left) * (contentRectMinusAllMargins.width() / currentViewport.width());
         if (Float.isNaN(pixelOffset) || Float.isInfinite(pixelOffset)) {
             return contentRectMinusAllMargins.left + 0;
 
         }
         return contentRectMinusAllMargins.left + pixelOffset;
-
     }
 
     /**
@@ -168,6 +174,7 @@ public class ChartComputator {
     public float computeRawDistanceX(float distance) {
         return distance * (contentRectMinusAllMargins.width() / currentViewport.width());
     }
+
 
     /**
      * Translates viewport distance int pixel distance for X coordinates.

@@ -229,6 +229,9 @@ public class KeyDoorStatisticsFragment extends Fragment implements HttpResponse,
     }
 
     private void getMonthSelect() {
+        clearUserData();
+        clearLockData();
+        clearKeyData();
         setTextBgColor(tv_user_month, R.drawable.shape_key_leftbottom_select, getResources().getColor(R.color.white));
         setTextBgColor(tv_user_week, R.drawable.shape_key_middle, getResources().getColor(R.color.color_999faa));
         setTextBgColor(tv_user_day, R.drawable.shape_key_rightbottom, getResources().getColor(R.color.color_999faa));
@@ -258,6 +261,28 @@ public class KeyDoorStatisticsFragment extends Fragment implements HttpResponse,
         getDoorStatis();
     }
 
+    private void clearUserData() {
+        mUserXaxisList.clear();
+        mUserValuesList.clear();
+    }
+
+    private void clearLockData() {
+        mLockXaxisList.clear();
+        mLockValuesList.clear();
+
+    }
+
+    private void clearKeyData() {
+        mKeyXaxisList.clear();
+        mKeyValuesList.clear();
+    }
+
+    private List<String> mUserXaxisList = new ArrayList<>();
+    private List<String> mUserValuesList = new ArrayList<>();
+    private List<String> mLockXaxisList = new ArrayList<>();
+    private List<String> mLockValuesList = new ArrayList<>();
+    private List<String> mKeyXaxisList = new ArrayList<>();
+    private List<String> mKeyValuesList = new ArrayList<>();
 
     @Override
     public void OnHttpResponse(int what, String result) {
@@ -282,12 +307,18 @@ public class KeyDoorStatisticsFragment extends Fragment implements HttpResponse,
                 try {
                     KeyTypeDataEntity keyTypeDataEntity = GsonUtils.gsonToBean(result, KeyTypeDataEntity.class);
                     List<KeyTypeDataEntity.ContentBean> mContentList = keyTypeDataEntity.getContent();
-                    List<String> mUserXaxisList = new ArrayList<>();
-                    List<String> mUserValuesList = new ArrayList<>();
-                    List<String> mLockXaxisList = new ArrayList<>();
-                    List<String> mLockValuesList = new ArrayList<>();
-                    List<String> mKeyXaxisList = new ArrayList<>();
-                    List<String> mKeyValuesList = new ArrayList<>();
+                    if (userIndent.equals(lockIndent) || userIndent.equals(keyIndent)) {
+                        mUserXaxisList.clear();
+                        mUserValuesList.clear();
+                    }
+                    if (lockIndent.equals(userIndent) || lockIndent.equals(keyIndent)) {
+                        mLockXaxisList.clear();
+                        mLockValuesList.clear();
+                    }
+                    if (keyIndent.equals(userIndent) || keyIndent.equals(lockIndent)) {
+                        mKeyXaxisList.clear();
+                        mKeyValuesList.clear();
+                    }
                     for (KeyTypeDataEntity.ContentBean contentBean : mContentList) {
                         String dateIndent = contentBean.getDateIdent();
                         if (dateIndent.equals(userIndent)) {
@@ -338,6 +369,7 @@ public class KeyDoorStatisticsFragment extends Fragment implements HttpResponse,
         switch (view.getId()) {
             case R.id.tv_user_month:
                 if (!"month".equals(userIndent)) {
+                    clearUserData();
                     setTextBgColor(tv_user_month, R.drawable.shape_key_leftbottom_select, getResources().getColor(R.color.white));
                     setTextBgColor(tv_user_week, R.drawable.shape_key_middle, getResources().getColor(R.color.color_999faa));
                     setTextBgColor(tv_user_day, R.drawable.shape_key_rightbottom, getResources().getColor(R.color.color_999faa));
@@ -347,6 +379,7 @@ public class KeyDoorStatisticsFragment extends Fragment implements HttpResponse,
                 break;
             case R.id.tv_user_week:
                 if (!"week".equals(userIndent)) {
+                    clearUserData();
                     setTextBgColor(tv_user_month, R.drawable.shape_key_leftbottom, getResources().getColor(R.color.color_999faa));
                     setTextBgColor(tv_user_week, R.drawable.shape_key_middle_select, getResources().getColor(R.color.white));
                     setTextBgColor(tv_user_day, R.drawable.shape_key_rightbottom, getResources().getColor(R.color.color_999faa));
@@ -357,6 +390,7 @@ public class KeyDoorStatisticsFragment extends Fragment implements HttpResponse,
                 break;
             case R.id.tv_user_day:
                 if (!"day".equals(userIndent)) {
+                    clearUserData();
                     setTextBgColor(tv_user_month, R.drawable.shape_key_leftbottom, getResources().getColor(R.color.color_999faa));
                     setTextBgColor(tv_user_week, R.drawable.shape_key_middle, getResources().getColor(R.color.color_999faa));
                     setTextBgColor(tv_user_day, R.drawable.shape_key_rightbottom_select, getResources().getColor(R.color.white));
@@ -366,6 +400,7 @@ public class KeyDoorStatisticsFragment extends Fragment implements HttpResponse,
                 break;
             case R.id.tv_lock_month:
                 if (!"month".equals(lockIndent)) {
+                    clearLockData();
                     setTextBgColor(tv_lock_month, R.drawable.shape_key_leftbottom_select, getResources().getColor(R.color.white));
                     setTextBgColor(tv_lock_week, R.drawable.shape_key_middle, getResources().getColor(R.color.color_999faa));
                     setTextBgColor(tv_lock_day, R.drawable.shape_key_rightbottom, getResources().getColor(R.color.color_999faa));
@@ -376,6 +411,7 @@ public class KeyDoorStatisticsFragment extends Fragment implements HttpResponse,
                 break;
             case R.id.tv_lock_week:
                 if (!"week".equals(lockIndent)) {
+                    clearLockData();
                     setTextBgColor(tv_lock_month, R.drawable.shape_key_leftbottom, getResources().getColor(R.color.color_999faa));
                     setTextBgColor(tv_lock_week, R.drawable.shape_key_middle_select, getResources().getColor(R.color.white));
                     setTextBgColor(tv_lock_day, R.drawable.shape_key_rightbottom, getResources().getColor(R.color.color_999faa));
@@ -386,6 +422,7 @@ public class KeyDoorStatisticsFragment extends Fragment implements HttpResponse,
                 break;
             case R.id.tv_lock_day:
                 if (!"day".equals(lockIndent)) {
+                    clearLockData();
                     setTextBgColor(tv_lock_month, R.drawable.shape_key_leftbottom, getResources().getColor(R.color.color_999faa));
                     setTextBgColor(tv_lock_week, R.drawable.shape_key_middle, getResources().getColor(R.color.color_999faa));
                     setTextBgColor(tv_lock_day, R.drawable.shape_key_rightbottom_select, getResources().getColor(R.color.white));
@@ -396,6 +433,7 @@ public class KeyDoorStatisticsFragment extends Fragment implements HttpResponse,
                 break;
             case R.id.tv_key_month:
                 if (!"month".equals(keyIndent)) {
+                    clearKeyData();
                     setTextBgColor(tv_key_month, R.drawable.shape_key_leftbottom_select, getResources().getColor(R.color.white));
                     setTextBgColor(tv_key_week, R.drawable.shape_key_middle, getResources().getColor(R.color.color_999faa));
                     setTextBgColor(tv_key_day, R.drawable.shape_key_rightbottom, getResources().getColor(R.color.color_999faa));
@@ -406,6 +444,7 @@ public class KeyDoorStatisticsFragment extends Fragment implements HttpResponse,
                 break;
             case R.id.tv_key_week:
                 if (!"week".equals(keyIndent)) {
+                    clearKeyData();
                     setTextBgColor(tv_key_month, R.drawable.shape_key_leftbottom, getResources().getColor(R.color.color_999faa));
                     setTextBgColor(tv_key_week, R.drawable.shape_key_middle_select, getResources().getColor(R.color.white));
                     setTextBgColor(tv_key_day, R.drawable.shape_key_rightbottom, getResources().getColor(R.color.color_999faa));
@@ -415,6 +454,7 @@ public class KeyDoorStatisticsFragment extends Fragment implements HttpResponse,
                 break;
             case R.id.tv_key_day:
                 if (!"day".equals(keyIndent)) {
+                    clearKeyData();
                     setTextBgColor(tv_key_month, R.drawable.shape_key_leftbottom, getResources().getColor(R.color.color_999faa));
                     setTextBgColor(tv_key_week, R.drawable.shape_key_middle, getResources().getColor(R.color.color_999faa));
                     setTextBgColor(tv_key_day, R.drawable.shape_key_rightbottom_select, getResources().getColor(R.color.white));

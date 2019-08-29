@@ -39,7 +39,7 @@ public class KeyDoorModel extends BaseModel {
         super(context);
     }
 
-    public void getAllKeyByAccess(int what, String accessId, String keyword, int page, final HttpResponse httpResponse) {
+    public void getAllKeyByAccess(int what, String accessId, String keyword, int page,boolean isLoading, final HttpResponse httpResponse) {
         Map<String, Object> params = new HashMap<>();
         params.put("accessId", accessId);
         params.put("pageNum", page);
@@ -69,7 +69,7 @@ public class KeyDoorModel extends BaseModel {
             public void onFailed(int what, Response<String> response) {
                 showExceptionMessage(what, response);
             }
-        }, true, false);
+        }, true, isLoading);
     }
 
     public void frozenKeyOperate(int what, String keyId, String status, final HttpResponse httpResponse) {
@@ -190,7 +190,7 @@ public class KeyDoorModel extends BaseModel {
         }, true, false);
     }
 
-    public void getKeyOpenLog(int what, String deviceId, int pageNum, String phoneNumber, final HttpResponse httpResponse) {
+    public void getKeyOpenLog(int what, String deviceId, int pageNum, String phoneNumber,boolean isLoading, final HttpResponse httpResponse) {
         Map<String, Object> params = new HashMap<>();
         params.put("deviceId", deviceId);
         params.put("pageSize", 20);
@@ -220,7 +220,7 @@ public class KeyDoorModel extends BaseModel {
             public void onFailed(int what, Response<String> response) {
                 showExceptionMessage(what, response);
             }
-        }, true, false);
+        }, true, isLoading);
     }
 
     public void getTotalCommunityStatistics(int what, String communityUuid, final HttpResponse httpResponse) {

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
@@ -18,7 +19,6 @@
             android:layout_marginLeft="15dp"
             android:layout_marginTop="15dp" />
 
-
         <TextView
             android:id="@+id/tv_door_status"
             android:layout_width="wrap_content"
@@ -26,7 +26,6 @@
             android:layout_alignParentRight="true"
             android:layout_marginTop="15dp"
             android:layout_marginRight="15dp"
-            android:text="正常"
             android:textSize="@dimen/sp_14" />
 
 
@@ -37,7 +36,6 @@
             android:layout_marginLeft="10dp"
             android:layout_marginTop="15dp"
             android:layout_toRightOf="@id/door_user_photo"
-            android:text="张笑天"
             android:textColor="@color/color_333b46"
             android:textSize="@dimen/sp_16" />
 
@@ -50,7 +48,6 @@
             android:layout_toRightOf="@id/tv_door_username"
             android:background="@drawable/sms_button_two"
             android:gravity="center"
-            android:text="管理员"
             android:textColor="@color/color_1ca1f4"
             android:textSize="8sp" />
 
@@ -61,7 +58,6 @@
             android:layout_below="@id/tv_door_username"
             android:layout_alignLeft="@id/tv_door_username"
             android:layout_marginTop="8dp"
-            android:text="158****2045"
             android:textColor="@color/color_333b46"
             android:textSize="@dimen/sp_14" />
 
@@ -97,7 +93,6 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="28dp"
             android:gravity="center"
-            android:text="罗先生  158****2398"
             android:textColor="@color/color_626B77"
             android:textSize="@dimen/sp_14" />
     </LinearLayout>
@@ -125,7 +120,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="28dp"
-            android:text="大门"
             android:textColor="@color/color_626B77"
             android:textSize="@dimen/sp_14" />
     </LinearLayout>
@@ -152,7 +146,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="28dp"
-            android:text="2019.07.12 10:30:34 - 2019.07.12 10:30:34"
             android:textColor="@color/color_626B77"
             android:textSize="@dimen/sp_14" />
     </LinearLayout>

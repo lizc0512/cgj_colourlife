@@ -17,6 +17,7 @@ public class KeySendKeyListActivity extends BaseActivity {
     public static String COMMUNITY_UUID = "communityUuid";
     public static String COMMUNITY_NAME = "community_name";
     public static final String DOOR_ID = "door_id";
+    public static final String DEVICE_ID = "device_id";
     public static final String DOOR_QRCODE = "door_qrcode";
     public static final String KEY_CONTENT = "key_content";
     public static final String DOOR_ROOM= "door_room";

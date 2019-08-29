@@ -61,11 +61,12 @@ public class KeyDoorUserDetailsActivity extends BaseActivity implements HttpResp
 
     private String status;
     private String accessId;
+    private String deviceId;
     private String accessName;
 
     private KeyDoorModel keyDoorModel;
     private int page = 1;
-    public List<KeyDoorOpenLogsEntity.ContentBean> mList;
+    public List<KeyDoorOpenLogsEntity.ContentBean.DataBean> mList;
 
     private KeyDoorUserRecordAdapter keyDoorUserRecordAdapter;
 
@@ -101,12 +102,13 @@ public class KeyDoorUserDetailsActivity extends BaseActivity implements HttpResp
             @Override
             public void onLoadMore() {
                 page++;
-                getKeyDoorOpenLogs();
+                getKeyDoorOpenLogs(false);
             }
         });
         keyDoorModel = new KeyDoorModel(KeyDoorUserDetailsActivity.this);
         Intent intent = getIntent();
         accessName = intent.getStringExtra(KeySendKeyListActivity.KEY_CONTENT);
+        deviceId = intent.getStringExtra(KeySendKeyListActivity.DEVICE_ID);
         contentBean = (KeyByAccessEntity.ContentBeanX.ContentBean) intent.getSerializableExtra(KEYUSERDETAILS);
         status = contentBean.getStatus();
         accessId = contentBean.getId();
@@ -158,11 +160,11 @@ public class KeyDoorUserDetailsActivity extends BaseActivity implements HttpResp
         }
         keyDoorModel = new KeyDoorModel(KeyDoorUserDetailsActivity.this);
         mList = new ArrayList<>();
-        getKeyDoorOpenLogs();
+        getKeyDoorOpenLogs(true);
     }
 
-    private void getKeyDoorOpenLogs() {
-        keyDoorModel.getKeyOpenLog(0, accessId, page, "", KeyDoorUserDetailsActivity.this);
+    private void getKeyDoorOpenLogs(boolean isLoading) {
+        keyDoorModel.getKeyOpenLog(0, deviceId, page, contentBean.getPhoneNumber(), isLoading, KeyDoorUserDetailsActivity.this);
     }
 
     protected boolean handClickEvent(View v) {
@@ -199,7 +201,7 @@ public class KeyDoorUserDetailsActivity extends BaseActivity implements HttpResp
             case R.id.tv_send_key:
                 if ("3".equals(status)) {
                     //删除后的重新发送
-                    keyDoorModel.thawKeyOperate(3, accessId, KeyDoorUserDetailsActivity.this);
+                    keyDoorModel.thawKeyOperate(4, accessId, KeyDoorUserDetailsActivity.this);
                 } else {
                     Intent intent = new Intent(KeyDoorUserDetailsActivity.this, KeySendKeyPhoneActivity.class);
                     intent.putExtra(DOOR_ID, contentBean.getAccessId());
@@ -235,11 +237,12 @@ public class KeyDoorUserDetailsActivity extends BaseActivity implements HttpResp
             case 0:
                 try {
                     KeyDoorOpenLogsEntity keyDoorOpenLogsEntity = GsonUtils.gsonToBean(result, KeyDoorOpenLogsEntity.class);
-                    int totalRecord = keyDoorOpenLogsEntity.getTotalRecord();
+                    KeyDoorOpenLogsEntity.ContentBean contentBean = keyDoorOpenLogsEntity.getContent();
+                    int totalRecord = contentBean.getTotalRecord();
                     if (page == 1) {
                         mList.clear();
                     }
-                    List<KeyDoorOpenLogsEntity.ContentBean> requestList = keyDoorOpenLogsEntity.getContent();
+                    List<KeyDoorOpenLogsEntity.ContentBean.DataBean> requestList = contentBean.getData();
                     mList.addAll(requestList);
                     if (mList.size() == 0) {
                         rv_out_record.setVisibility(View.GONE);

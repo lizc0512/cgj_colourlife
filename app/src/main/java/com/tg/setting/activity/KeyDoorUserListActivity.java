@@ -42,6 +42,7 @@ public class KeyDoorUserListActivity extends BaseActivity implements HttpRespons
     private KeyDoorModel keyDoorModel;
     private int page = 1;
     private String accessId = "";
+    private String deviceId = "";
     private String accessName = "";
     private String communityUuid = "";
     private String communityName = "";
@@ -77,12 +78,16 @@ public class KeyDoorUserListActivity extends BaseActivity implements HttpRespons
                 if (TextUtils.isEmpty(searchContent)) {
                     mList.clear();
                     mList.addAll(mSaveList);
+                    if (mList.size() > 0) {
+                        empty_record_layout.setVisibility(View.GONE);
+                        rv_key_user.setVisibility(View.VISIBLE);
+                    }
                     if (null != keyDoorUserListAdapter) {
                         keyDoorUserListAdapter.notifyDataSetChanged();
                     }
                 } else {
                     page = 1;
-                    getKeyDoorData();
+                    getKeyDoorData(false);
                 }
             }
         });
@@ -97,12 +102,13 @@ public class KeyDoorUserListActivity extends BaseActivity implements HttpRespons
             @Override
             public void onLoadMore() {
                 page++;
-                getKeyDoorData();
+                getKeyDoorData(false);
             }
         });
 
         Intent intent = getIntent();
         accessId = intent.getStringExtra(KeySendKeyListActivity.DOOR_ID);
+        deviceId = intent.getStringExtra(KeySendKeyListActivity.DEVICE_ID);
         accessName = intent.getStringExtra(KeySendKeyListActivity.KEY_CONTENT);
         communityUuid = intent.getStringExtra(KeySendKeyListActivity.COMMUNITY_UUID);
         communityName = intent.getStringExtra(KeySendKeyListActivity.COMMUNITY_NAME);
@@ -112,14 +118,14 @@ public class KeyDoorUserListActivity extends BaseActivity implements HttpRespons
         keyDoorUserListAdapter = new KeyDoorUserListAdapter(KeyDoorUserListActivity.this, mList, accessName);
         rv_key_user.setLayoutManager(new LinearLayoutManager(KeyDoorUserListActivity.this, LinearLayoutManager.VERTICAL, false));
         rv_key_user.setAdapter(keyDoorUserListAdapter);
-        getKeyDoorData();
+        getKeyDoorData(true);
     }
 
-    private void getKeyDoorData() {
+    private void getKeyDoorData(boolean isLoading) {
         if (TextUtils.isEmpty(searchContent)) {
             searchContent = "";
         }
-        keyDoorModel.getAllKeyByAccess(0, accessId, searchContent, page, this);
+        keyDoorModel.getAllKeyByAccess(0, accessId, searchContent, page, isLoading,this);
     }
 
 
@@ -133,6 +139,7 @@ public class KeyDoorUserListActivity extends BaseActivity implements HttpRespons
         Intent intent = new Intent(KeyDoorUserListActivity.this, KeyDoorUserDetailsActivity.class);
         intent.putExtra(KEYUSERDETAILS, contentBean);
         intent.putExtra(KeySendKeyListActivity.KEY_CONTENT, accessName);
+        intent.putExtra(KeySendKeyListActivity.DEVICE_ID, deviceId);
         startActivityForResult(intent, 1);
     }
 
@@ -188,6 +195,8 @@ public class KeyDoorUserListActivity extends BaseActivity implements HttpRespons
                     }
                     if (mList.size() >= totalRecord) {
                         rv_key_user.setLoadingMoreEnabled(false);
+                    }else{
+                        rv_key_user.setLoadingMoreEnabled(true);
                     }
                     rv_key_user.loadMoreComplete();
                 } catch (Exception e) {
@@ -204,7 +213,7 @@ public class KeyDoorUserListActivity extends BaseActivity implements HttpRespons
         if (RESULT_OK == resultCode) {
             if (1 == requestCode) {
                 page = 1;
-                getKeyDoorData();
+                getKeyDoorData(true);
             } else {
                 setResult(Activity.RESULT_OK);
                 finish();

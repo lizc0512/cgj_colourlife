@@ -264,17 +264,41 @@ public class KeyDoorStatisticsFragment extends Fragment implements HttpResponse,
     private void clearUserData() {
         mUserXaxisList.clear();
         mUserValuesList.clear();
+        if (lockIndent.equals(userIndent)) {
+            mLockXaxisList.clear();
+            mLockValuesList.clear();
+        }
+        if (keyIndent.equals(userIndent)) {
+            mKeyXaxisList.clear();
+            mKeyValuesList.clear();
+        }
     }
 
     private void clearLockData() {
         mLockXaxisList.clear();
         mLockValuesList.clear();
+        if (keyIndent.equals(lockIndent)) {
+            mKeyXaxisList.clear();
+            mKeyValuesList.clear();
+        }
+        if (userIndent.equals(lockIndent)) {
+            mUserXaxisList.clear();
+            mUserValuesList.clear();
+        }
 
     }
 
     private void clearKeyData() {
         mKeyXaxisList.clear();
         mKeyValuesList.clear();
+        if (userIndent.equals(keyIndent)) {
+            mUserXaxisList.clear();
+            mUserValuesList.clear();
+        }
+        if (lockIndent.equals(keyIndent)) {
+            mLockXaxisList.clear();
+            mLockValuesList.clear();
+        }
     }
 
     private List<String> mUserXaxisList = new ArrayList<>();
@@ -307,18 +331,6 @@ public class KeyDoorStatisticsFragment extends Fragment implements HttpResponse,
                 try {
                     KeyTypeDataEntity keyTypeDataEntity = GsonUtils.gsonToBean(result, KeyTypeDataEntity.class);
                     List<KeyTypeDataEntity.ContentBean> mContentList = keyTypeDataEntity.getContent();
-                    if (userIndent.equals(lockIndent) || userIndent.equals(keyIndent)) {
-                        mUserXaxisList.clear();
-                        mUserValuesList.clear();
-                    }
-                    if (lockIndent.equals(userIndent) || lockIndent.equals(keyIndent)) {
-                        mLockXaxisList.clear();
-                        mLockValuesList.clear();
-                    }
-                    if (keyIndent.equals(userIndent) || keyIndent.equals(lockIndent)) {
-                        mKeyXaxisList.clear();
-                        mKeyValuesList.clear();
-                    }
                     for (KeyTypeDataEntity.ContentBean contentBean : mContentList) {
                         String dateIndent = contentBean.getDateIdent();
                         if (dateIndent.equals(userIndent)) {
@@ -369,96 +381,96 @@ public class KeyDoorStatisticsFragment extends Fragment implements HttpResponse,
         switch (view.getId()) {
             case R.id.tv_user_month:
                 if (!"month".equals(userIndent)) {
+                    userIndent = "month";
                     clearUserData();
                     setTextBgColor(tv_user_month, R.drawable.shape_key_leftbottom_select, getResources().getColor(R.color.white));
                     setTextBgColor(tv_user_week, R.drawable.shape_key_middle, getResources().getColor(R.color.color_999faa));
                     setTextBgColor(tv_user_day, R.drawable.shape_key_rightbottom, getResources().getColor(R.color.color_999faa));
-                    userIndent = "month";
                     getTypeStatistics(userIndent);
                 }
                 break;
             case R.id.tv_user_week:
                 if (!"week".equals(userIndent)) {
+                    userIndent = "week";
                     clearUserData();
                     setTextBgColor(tv_user_month, R.drawable.shape_key_leftbottom, getResources().getColor(R.color.color_999faa));
                     setTextBgColor(tv_user_week, R.drawable.shape_key_middle_select, getResources().getColor(R.color.white));
                     setTextBgColor(tv_user_day, R.drawable.shape_key_rightbottom, getResources().getColor(R.color.color_999faa));
-                    userIndent = "week";
                     getTypeStatistics(userIndent);
                 }
 
                 break;
             case R.id.tv_user_day:
                 if (!"day".equals(userIndent)) {
+                    userIndent = "day";
                     clearUserData();
                     setTextBgColor(tv_user_month, R.drawable.shape_key_leftbottom, getResources().getColor(R.color.color_999faa));
                     setTextBgColor(tv_user_week, R.drawable.shape_key_middle, getResources().getColor(R.color.color_999faa));
                     setTextBgColor(tv_user_day, R.drawable.shape_key_rightbottom_select, getResources().getColor(R.color.white));
-                    userIndent = "day";
                     getTypeStatistics(userIndent);
                 }
                 break;
             case R.id.tv_lock_month:
                 if (!"month".equals(lockIndent)) {
+                    lockIndent = "month";
                     clearLockData();
                     setTextBgColor(tv_lock_month, R.drawable.shape_key_leftbottom_select, getResources().getColor(R.color.white));
                     setTextBgColor(tv_lock_week, R.drawable.shape_key_middle, getResources().getColor(R.color.color_999faa));
                     setTextBgColor(tv_lock_day, R.drawable.shape_key_rightbottom, getResources().getColor(R.color.color_999faa));
-                    lockIndent = "month";
                     getTypeStatistics(lockIndent);
                 }
 
                 break;
             case R.id.tv_lock_week:
                 if (!"week".equals(lockIndent)) {
+                    lockIndent = "week";
                     clearLockData();
                     setTextBgColor(tv_lock_month, R.drawable.shape_key_leftbottom, getResources().getColor(R.color.color_999faa));
                     setTextBgColor(tv_lock_week, R.drawable.shape_key_middle_select, getResources().getColor(R.color.white));
                     setTextBgColor(tv_lock_day, R.drawable.shape_key_rightbottom, getResources().getColor(R.color.color_999faa));
-                    lockIndent = "week";
                     getTypeStatistics(lockIndent);
                 }
 
                 break;
             case R.id.tv_lock_day:
                 if (!"day".equals(lockIndent)) {
+                    lockIndent = "day";
                     clearLockData();
                     setTextBgColor(tv_lock_month, R.drawable.shape_key_leftbottom, getResources().getColor(R.color.color_999faa));
                     setTextBgColor(tv_lock_week, R.drawable.shape_key_middle, getResources().getColor(R.color.color_999faa));
                     setTextBgColor(tv_lock_day, R.drawable.shape_key_rightbottom_select, getResources().getColor(R.color.white));
-                    lockIndent = "day";
                     getTypeStatistics(lockIndent);
                 }
 
                 break;
             case R.id.tv_key_month:
                 if (!"month".equals(keyIndent)) {
+                    keyIndent = "month";
                     clearKeyData();
                     setTextBgColor(tv_key_month, R.drawable.shape_key_leftbottom_select, getResources().getColor(R.color.white));
                     setTextBgColor(tv_key_week, R.drawable.shape_key_middle, getResources().getColor(R.color.color_999faa));
                     setTextBgColor(tv_key_day, R.drawable.shape_key_rightbottom, getResources().getColor(R.color.color_999faa));
-                    keyIndent = "month";
                     getTypeStatistics(keyIndent);
                 }
 
                 break;
             case R.id.tv_key_week:
                 if (!"week".equals(keyIndent)) {
+                    keyIndent = "week";
                     clearKeyData();
                     setTextBgColor(tv_key_month, R.drawable.shape_key_leftbottom, getResources().getColor(R.color.color_999faa));
                     setTextBgColor(tv_key_week, R.drawable.shape_key_middle_select, getResources().getColor(R.color.white));
                     setTextBgColor(tv_key_day, R.drawable.shape_key_rightbottom, getResources().getColor(R.color.color_999faa));
-                    keyIndent = "week";
                     getTypeStatistics(keyIndent);
                 }
                 break;
             case R.id.tv_key_day:
                 if (!"day".equals(keyIndent)) {
+                    keyIndent = "day";
                     clearKeyData();
                     setTextBgColor(tv_key_month, R.drawable.shape_key_leftbottom, getResources().getColor(R.color.color_999faa));
                     setTextBgColor(tv_key_week, R.drawable.shape_key_middle, getResources().getColor(R.color.color_999faa));
                     setTextBgColor(tv_key_day, R.drawable.shape_key_rightbottom_select, getResources().getColor(R.color.white));
-                    keyIndent = "day";
                     getTypeStatistics(keyIndent);
                 }
                 break;

@@ -38,10 +38,11 @@ public class KeyDoorOutRecordActivity extends BaseActivity implements HttpRespon
     private KeyDoorModel keyDoorModel;
     private String searchContent;
     private String accessId;
+    private String deviceId;
     private String accessName;
     private int page = 1;
-    public List<KeyDoorOpenLogsEntity.ContentBean> mList;
-    public List<KeyDoorOpenLogsEntity.ContentBean> mSaveList;
+    public List<KeyDoorOpenLogsEntity.ContentBean.DataBean> mList;
+    public List<KeyDoorOpenLogsEntity.ContentBean.DataBean> mSaveList;
     private KeyDoorOutRecordAdapter keyDoorOutRecordAdapter;
 
     @Override
@@ -51,6 +52,7 @@ public class KeyDoorOutRecordActivity extends BaseActivity implements HttpRespon
         rv_key_user = findViewById(R.id.rv_key_user);
         empty_record_layout = findViewById(R.id.empty_record_layout);
         Intent intent = getIntent();
+        deviceId = intent.getStringExtra(KeySendKeyListActivity.DEVICE_ID);
         accessId = intent.getStringExtra(KeySendKeyListActivity.DOOR_ID);
         accessName = intent.getStringExtra(KeySendKeyListActivity.KEY_CONTENT);
         mList = new ArrayList<>();
@@ -73,12 +75,15 @@ public class KeyDoorOutRecordActivity extends BaseActivity implements HttpRespon
                 if (TextUtils.isEmpty(searchContent)) {
                     mList.clear();
                     mList.addAll(mSaveList);
+                    if (mList.size() > 0) {
+                        rv_key_user.setVisibility(View.VISIBLE);
+                    }
                     if (null != keyDoorOutRecordAdapter) {
                         keyDoorOutRecordAdapter.notifyDataSetChanged();
                     }
                 } else {
                     page = 1;
-                    getKeyDoorOpenLogs();
+                    getKeyDoorOpenLogs(false);
                 }
             }
         });
@@ -93,20 +98,20 @@ public class KeyDoorOutRecordActivity extends BaseActivity implements HttpRespon
             @Override
             public void onLoadMore() {
                 page++;
-                getKeyDoorOpenLogs();
+                getKeyDoorOpenLogs(false);
             }
         });
         keyDoorOutRecordAdapter = new KeyDoorOutRecordAdapter(KeyDoorOutRecordActivity.this, mList, accessName);
         rv_key_user.setLayoutManager(new LinearLayoutManager(KeyDoorOutRecordActivity.this, LinearLayoutManager.VERTICAL, false));
         rv_key_user.setAdapter(keyDoorOutRecordAdapter);
-        getKeyDoorOpenLogs();
+        getKeyDoorOpenLogs(true);
     }
 
-    private void getKeyDoorOpenLogs() {
+    private void getKeyDoorOpenLogs(boolean isLoading) {
         if (TextUtils.isEmpty(searchContent)) {
             searchContent = "";
         }
-        keyDoorModel.getKeyOpenLog(0, accessId, page, searchContent, KeyDoorOutRecordActivity.this);
+        keyDoorModel.getKeyOpenLog(0, deviceId, page, searchContent, isLoading,KeyDoorOutRecordActivity.this);
 
     }
 
@@ -129,11 +134,12 @@ public class KeyDoorOutRecordActivity extends BaseActivity implements HttpRespon
                 int totalRecord = 0;
                 try {
                     KeyDoorOpenLogsEntity keyDoorOpenLogsEntity = GsonUtils.gsonToBean(result, KeyDoorOpenLogsEntity.class);
-                    totalRecord = keyDoorOpenLogsEntity.getTotalRecord();
+                    KeyDoorOpenLogsEntity.ContentBean contentBean = keyDoorOpenLogsEntity.getContent();
+                    totalRecord = contentBean.getTotalRecord();
                     if (page == 1) {
                         mList.clear();
                     }
-                    List<KeyDoorOpenLogsEntity.ContentBean> requestList = keyDoorOpenLogsEntity.getContent();
+                    List<KeyDoorOpenLogsEntity.ContentBean.DataBean> requestList = contentBean.getData();
                     mList.addAll(requestList);
                     if (TextUtils.isEmpty(searchContent)) {
                         mSaveList.addAll(requestList);
@@ -144,8 +150,11 @@ public class KeyDoorOutRecordActivity extends BaseActivity implements HttpRespon
                     rv_key_user.loadMoreComplete();
                     if (mList.size() >= totalRecord) {
                         rv_key_user.setLoadingMoreEnabled(false);
+                    }else{
+                        rv_key_user.setLoadingMoreEnabled(true);
                     }
                 } catch (Exception e) {
+                    ToastUtil.showShortToastCenter(KeyDoorOutRecordActivity.this, e.getMessage());
 
                 }
                 if (totalRecord == 0) {

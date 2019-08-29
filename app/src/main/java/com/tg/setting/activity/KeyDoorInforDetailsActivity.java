@@ -45,6 +45,7 @@ public class KeyDoorInforDetailsActivity extends BaseActivity implements HttpRes
     private RelativeLayout key_infor_layout;
 
     private String accessId;
+    private String deviceId;
     private String accessName;
     private String communityUuid;
     private String communityName;
@@ -94,6 +95,7 @@ public class KeyDoorInforDetailsActivity extends BaseActivity implements HttpRes
     private void initData() {
         Intent intent = getIntent();
         accessId = intent.getStringExtra(KeySendKeyListActivity.DOOR_ID);
+        deviceId = intent.getStringExtra(KeySendKeyListActivity.DEVICE_ID);
         accessName = intent.getStringExtra(KeySendKeyListActivity.KEY_CONTENT);
         communityUuid = intent.getStringExtra(KeySendKeyListActivity.COMMUNITY_UUID);
         communityName = intent.getStringExtra(KeySendKeyListActivity.COMMUNITY_NAME);
@@ -128,6 +130,7 @@ public class KeyDoorInforDetailsActivity extends BaseActivity implements HttpRes
             case R.id.door_key_layout:
                 Intent intent = new Intent(KeyDoorInforDetailsActivity.this, KeyDoorUserListActivity.class);
                 intent.putExtra(KeySendKeyListActivity.DOOR_ID, accessId);
+                intent.putExtra(KeySendKeyListActivity.DEVICE_ID, deviceId);
                 intent.putExtra(KeySendKeyListActivity.KEY_CONTENT, accessName);
                 intent.putExtra(KeySendKeyListActivity.FORM_SOURCE, 0);
                 intent.putExtra(KeySendKeyListActivity.COMMUNITY_UUID, communityUuid);
@@ -137,6 +140,7 @@ public class KeyDoorInforDetailsActivity extends BaseActivity implements HttpRes
             case R.id.enter_out_layout:
                 Intent outIntent = new Intent(KeyDoorInforDetailsActivity.this, KeyDoorOutRecordActivity.class);
                 outIntent.putExtra(KeySendKeyListActivity.DOOR_ID, accessId);
+                outIntent.putExtra(KeySendKeyListActivity.DEVICE_ID, deviceId);
                 outIntent.putExtra(KeySendKeyListActivity.KEY_CONTENT, accessName);
                 startActivity(outIntent);
                 break;

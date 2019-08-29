@@ -158,6 +158,7 @@ public class KeyDoorListFragment extends Fragment implements HttpResponse, View.
             KeyDoorEntity.ContentBeanX.ContentBean contentBean = doorList.get(position);
             Intent i = new Intent(getActivity(), KeyDoorInforDetailsActivity.class);
             i.putExtra(KeySendKeyListActivity.DOOR_ID, contentBean.getId());
+            i.putExtra(KeySendKeyListActivity.DEVICE_ID, contentBean.getDeviceId());
             i.putExtra(KeySendKeyListActivity.KEY_CONTENT, contentBean.getAccessName());
             i.putExtra(KeySendKeyListActivity.COMMUNITY_NAME, community_name);
             i.putExtra(KeySendKeyListActivity.COMMUNITY_UUID, community_uuid);

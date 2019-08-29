@@ -3,6 +3,7 @@ package com.tg.setting.adapter;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,11 +20,11 @@ import java.util.List;
 
 public class KeyDoorOutRecordAdapter extends RecyclerView.Adapter<KeyDoorOutRecordAdapter.DefaultViewHolder> {
 
-    public List<KeyDoorOpenLogsEntity.ContentBean> mList;
+    public List<KeyDoorOpenLogsEntity.ContentBean.DataBean> mList;
     public String accessName;
     public Context mContext;
 
-    public KeyDoorOutRecordAdapter(Context mContext, List<KeyDoorOpenLogsEntity.ContentBean> list, String accessName) {
+    public KeyDoorOutRecordAdapter(Context mContext, List<KeyDoorOpenLogsEntity.ContentBean.DataBean> list, String accessName) {
         this.mList = list;
         this.mContext = mContext;
         this.accessName = accessName;
@@ -38,10 +39,21 @@ public class KeyDoorOutRecordAdapter extends RecyclerView.Adapter<KeyDoorOutReco
 
     @Override
     public void onBindViewHolder(@NonNull KeyDoorOutRecordAdapter.DefaultViewHolder holder, int position) {
-        KeyDoorOpenLogsEntity.ContentBean contentBean = mList.get(position);
-        GlideUtils.loadImageView(mContext, contentBean.getAvatar(), holder.door_user_photo);
-        holder.tv_door_username.setText(contentBean.getScreenName());
-        holder.tv_door_identify.setText(contentBean.getIdentityName());
+        KeyDoorOpenLogsEntity.ContentBean.DataBean contentBean = mList.get(position);
+        String avater = contentBean.getAvatar();
+        if (!TextUtils.isEmpty(avater)) {
+            GlideUtils.loadImageView(mContext, avater, holder.door_user_photo);
+        }
+        String screenName = contentBean.getScreenName();
+        if (!TextUtils.isEmpty(screenName)) {
+            holder.tv_door_username.setText(screenName);
+        }
+        String identityName = contentBean.getIdentityName();
+        if (!TextUtils.isEmpty(identityName)) {
+            holder.tv_door_identify.setText(identityName);
+        } else {
+            holder.tv_door_identify.setText("业主");
+        }
         holder.tv_door_username.setText(StringUtils.getHandlePhone(contentBean.getMobile()));
         StringBuffer stringBuffer = new StringBuffer();
         stringBuffer.append(contentBean.getCreateTime());

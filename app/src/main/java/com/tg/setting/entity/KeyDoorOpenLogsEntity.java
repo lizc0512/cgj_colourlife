@@ -8,172 +8,188 @@ public class KeyDoorOpenLogsEntity extends BaseContentEntity {
 
 
     /**
-     * pageSize : 20
-     * totalPage : 9
-     * currentPage : 1
-     * totalRecord : 161
-     * content : [{"id":40,"userUuid":"ceda9767-836f-4be2-adb4-c072ffadadc4","mobile":"13622376560","communityUuid":"c0400d56-f925-4f51-a333-58338f345cc2","createdAt":"1566057600","createTime":"2019-08-20 18:03:25","status":1,"deviceId":"jTDqyAANjkndx4d5kerruP","screenName":"访客136****6560","avatar":"https://nczy-user-avatar.oss-cn-shenzhen.aliyuncs.com/czy-Portrait/dev-5d2c1e7053195921551.jpg","identityName":"管理"}]
+     * content : {"pageSize":20,"totalPage":18,"currentPage":1,"totalRecord":356,"data":[{"id":40,"userUuid":"ceda9767-836f-4be2-adb4-c072ffadadc4","mobile":"13622376560","communityUuid":"c0400d56-f925-4f51-a333-58338f345cc2","createdAt":"0","status":1,"deviceId":"jTDqyAANjkndx4d5kerruP","screenName":"访客136****6560","avatar":"https://nczy-user-avatar.oss-cn-shenzhen.aliyuncs.com/czy-Portrait/dev-5d2c1e7053195921551.jpg","identityName":"管理","createTime":"1970-01-01 08:00:00"}]}
      */
 
-    private int pageSize;
-    private int totalPage;
-    private int currentPage;
-    private int totalRecord;
-    private List<ContentBean> content;
+    private ContentBean content;
 
-    public int getPageSize() {
-        return pageSize;
-    }
-
-    public void setPageSize(int pageSize) {
-        this.pageSize = pageSize;
-    }
-
-    public int getTotalPage() {
-        return totalPage;
-    }
-
-    public void setTotalPage(int totalPage) {
-        this.totalPage = totalPage;
-    }
-
-    public int getCurrentPage() {
-        return currentPage;
-    }
-
-    public void setCurrentPage(int currentPage) {
-        this.currentPage = currentPage;
-    }
-
-    public int getTotalRecord() {
-        return totalRecord;
-    }
-
-    public void setTotalRecord(int totalRecord) {
-        this.totalRecord = totalRecord;
-    }
-
-    public List<ContentBean> getContent() {
+    public ContentBean getContent() {
         return content;
     }
 
-    public void setContent(List<ContentBean> content) {
+    public void setContent(ContentBean content) {
         this.content = content;
     }
 
     public static class ContentBean {
         /**
-         * id : 40
-         * userUuid : ceda9767-836f-4be2-adb4-c072ffadadc4
-         * mobile : 13622376560
-         * communityUuid : c0400d56-f925-4f51-a333-58338f345cc2
-         * createdAt : 1566057600
-         * createTime : 2019-08-20 18:03:25
-         * status : 1
-         * deviceId : jTDqyAANjkndx4d5kerruP
-         * screenName : 访客136****6560
-         * avatar : https://nczy-user-avatar.oss-cn-shenzhen.aliyuncs.com/czy-Portrait/dev-5d2c1e7053195921551.jpg
-         * identityName : 管理
+         * pageSize : 20
+         * totalPage : 18
+         * currentPage : 1
+         * totalRecord : 356
+         * data : [{"id":40,"userUuid":"ceda9767-836f-4be2-adb4-c072ffadadc4","mobile":"13622376560","communityUuid":"c0400d56-f925-4f51-a333-58338f345cc2","createdAt":"0","status":1,"deviceId":"jTDqyAANjkndx4d5kerruP","screenName":"访客136****6560","avatar":"https://nczy-user-avatar.oss-cn-shenzhen.aliyuncs.com/czy-Portrait/dev-5d2c1e7053195921551.jpg","identityName":"管理","createTime":"1970-01-01 08:00:00"}]
          */
 
-        private String id;
-        private String userUuid;
-        private String mobile;
-        private String communityUuid;
-        private String createdAt;
-        private String createTime;
-        private String status;
-        private String deviceId;
-        private String screenName;
-        private String avatar;
-        private String identityName;
+        private int pageSize;
+        private int totalPage;
+        private int currentPage;
+        private int totalRecord;
+        private List<DataBean> data;
 
-        public String getId() {
-            return id;
+        public int getPageSize() {
+            return pageSize;
         }
 
-        public void setId(String id) {
-            this.id = id;
+        public void setPageSize(int pageSize) {
+            this.pageSize = pageSize;
         }
 
-        public String getUserUuid() {
-            return userUuid;
+        public int getTotalPage() {
+            return totalPage;
         }
 
-        public void setUserUuid(String userUuid) {
-            this.userUuid = userUuid;
+        public void setTotalPage(int totalPage) {
+            this.totalPage = totalPage;
         }
 
-        public String getMobile() {
-            return mobile;
+        public int getCurrentPage() {
+            return currentPage;
         }
 
-        public void setMobile(String mobile) {
-            this.mobile = mobile;
+        public void setCurrentPage(int currentPage) {
+            this.currentPage = currentPage;
         }
 
-        public String getCommunityUuid() {
-            return communityUuid;
+        public int getTotalRecord() {
+            return totalRecord;
         }
 
-        public void setCommunityUuid(String communityUuid) {
-            this.communityUuid = communityUuid;
+        public void setTotalRecord(int totalRecord) {
+            this.totalRecord = totalRecord;
         }
 
-        public String getCreatedAt() {
-            return createdAt;
+        public List<DataBean> getData() {
+            return data;
         }
 
-        public void setCreatedAt(String createdAt) {
-            this.createdAt = createdAt;
+        public void setData(List<DataBean> data) {
+            this.data = data;
         }
 
-        public String getCreateTime() {
-            return createTime;
-        }
+        public static class DataBean {
+            /**
+             * id : 40
+             * userUuid : ceda9767-836f-4be2-adb4-c072ffadadc4
+             * mobile : 13622376560
+             * communityUuid : c0400d56-f925-4f51-a333-58338f345cc2
+             * createdAt : 0
+             * status : 1
+             * deviceId : jTDqyAANjkndx4d5kerruP
+             * screenName : 访客136****6560
+             * avatar : https://nczy-user-avatar.oss-cn-shenzhen.aliyuncs.com/czy-Portrait/dev-5d2c1e7053195921551.jpg
+             * identityName : 管理
+             * createTime : 1970-01-01 08:00:00
+             */
 
-        public void setCreateTime(String createTime) {
-            this.createTime = createTime;
-        }
+            private int id;
+            private String userUuid;
+            private String mobile;
+            private String communityUuid;
+            private String createdAt;
+            private int status;
+            private String deviceId;
+            private String screenName;
+            private String avatar;
+            private String identityName;
+            private String createTime;
 
-        public String getStatus() {
-            return status;
-        }
+            public int getId() {
+                return id;
+            }
 
-        public void setStatus(String status) {
-            this.status = status;
-        }
+            public void setId(int id) {
+                this.id = id;
+            }
 
-        public String getDeviceId() {
-            return deviceId;
-        }
+            public String getUserUuid() {
+                return userUuid;
+            }
 
-        public void setDeviceId(String deviceId) {
-            this.deviceId = deviceId;
-        }
+            public void setUserUuid(String userUuid) {
+                this.userUuid = userUuid;
+            }
 
-        public String getScreenName() {
-            return screenName;
-        }
+            public String getMobile() {
+                return mobile;
+            }
 
-        public void setScreenName(String screenName) {
-            this.screenName = screenName;
-        }
+            public void setMobile(String mobile) {
+                this.mobile = mobile;
+            }
 
-        public String getAvatar() {
-            return avatar;
-        }
+            public String getCommunityUuid() {
+                return communityUuid;
+            }
 
-        public void setAvatar(String avatar) {
-            this.avatar = avatar;
-        }
+            public void setCommunityUuid(String communityUuid) {
+                this.communityUuid = communityUuid;
+            }
 
-        public String getIdentityName() {
-            return identityName;
-        }
+            public String getCreatedAt() {
+                return createdAt;
+            }
 
-        public void setIdentityName(String identityName) {
-            this.identityName = identityName;
+            public void setCreatedAt(String createdAt) {
+                this.createdAt = createdAt;
+            }
+
+            public int getStatus() {
+                return status;
+            }
+
+            public void setStatus(int status) {
+                this.status = status;
+            }
+
+            public String getDeviceId() {
+                return deviceId;
+            }
+
+            public void setDeviceId(String deviceId) {
+                this.deviceId = deviceId;
+            }
+
+            public String getScreenName() {
+                return screenName;
+            }
+
+            public void setScreenName(String screenName) {
+                this.screenName = screenName;
+            }
+
+            public String getAvatar() {
+                return avatar;
+            }
+
+            public void setAvatar(String avatar) {
+                this.avatar = avatar;
+            }
+
+            public String getIdentityName() {
+                return identityName;
+            }
+
+            public void setIdentityName(String identityName) {
+                this.identityName = identityName;
+            }
+
+            public String getCreateTime() {
+                return createTime;
+            }
+
+            public void setCreateTime(String createTime) {
+                this.createTime = createTime;
+            }
         }
     }
 }

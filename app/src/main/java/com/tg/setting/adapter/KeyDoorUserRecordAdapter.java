@@ -21,10 +21,10 @@ import java.util.List;
 
 public class KeyDoorUserRecordAdapter extends RecyclerView.Adapter<KeyDoorUserRecordAdapter.DefaultViewHolder> {
 
-    public List<KeyDoorOpenLogsEntity.ContentBean> mList;
+    public List<KeyDoorOpenLogsEntity.ContentBean.DataBean> mList;
     public Context mContext;
 
-    public KeyDoorUserRecordAdapter(Context mContext, List<KeyDoorOpenLogsEntity.ContentBean> list) {
+    public KeyDoorUserRecordAdapter(Context mContext, List<KeyDoorOpenLogsEntity.ContentBean.DataBean> list) {
         this.mList = list;
         this.mContext = mContext;
     }
@@ -38,8 +38,8 @@ public class KeyDoorUserRecordAdapter extends RecyclerView.Adapter<KeyDoorUserRe
 
     @Override
     public void onBindViewHolder(@NonNull KeyDoorUserRecordAdapter.DefaultViewHolder holder, int position) {
-        KeyDoorOpenLogsEntity.ContentBean contentBean = mList.get(position);
-        holder.tv_opendoor_time.setText(contentBean.getCreatedAt());
+        KeyDoorOpenLogsEntity.ContentBean.DataBean contentBean = mList.get(position);
+        holder.tv_opendoor_time.setText(contentBean.getCreateTime());
     }
 
     @Override

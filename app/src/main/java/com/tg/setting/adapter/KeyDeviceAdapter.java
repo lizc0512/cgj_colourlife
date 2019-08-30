@@ -28,7 +28,7 @@ public class KeyDeviceAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return mDevices.size();
+        return mDevices == null ? 0 : mDevices.size();
     }
 
     @Override
@@ -57,68 +57,69 @@ public class KeyDeviceAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        Device device = mDevices.get(position);
+        int size = mDevices.size();
+        if (size > position) {
+            Device device = mDevices.get(position);
 
-        String deviceType;
-        switch (device.getLockVersion()) {
-            case Device.LOCK_VERSION_DOOR:
-                deviceType = "门锁";
-                break;
-            case Device.LOCK_VERSION_ENTRANCE:
-                deviceType = "门禁";
-                break;
-            case Device.LOCK_VERSION_PARK_LOCK:
-                deviceType = "地锁";
-                break;
-            case Device.LOCK_VERSION_BARRIER:
-                deviceType = "道闸";
-                break;
-            case Device.LOCK_VERSION_LIFE_CONTROLLER:
-                deviceType = "电梯";
-                break;
-            case Device.LOCK_VERSION_CARDREADER:
-                deviceType = "发卡器";
-                break;
-            case Device.LOCK_VERSION_HELMINTH:
-                deviceType = "八爪鱼";
-                break;
-            case Device.LOCK_VERSION_MODULE:
-                deviceType = "模块";
-                break;
-            case Device.LOCK_VERSION_REMOTE_CONTROLLER:
-                deviceType = "遥控器";
-                break;
-            case Device.LOCK_VERSION_GATEWAY:
-                deviceType = "网关";
-                break;
-            default:
-                deviceType = "未知";
-                break;
+            String deviceType;
+            switch (device.getLockVersion()) {
+                case Device.LOCK_VERSION_DOOR:
+                    deviceType = "门锁";
+                    break;
+                case Device.LOCK_VERSION_ENTRANCE:
+                    deviceType = "门禁";
+                    break;
+                case Device.LOCK_VERSION_PARK_LOCK:
+                    deviceType = "地锁";
+                    break;
+                case Device.LOCK_VERSION_BARRIER:
+                    deviceType = "道闸";
+                    break;
+                case Device.LOCK_VERSION_LIFE_CONTROLLER:
+                    deviceType = "电梯";
+                    break;
+                case Device.LOCK_VERSION_CARDREADER:
+                    deviceType = "发卡器";
+                    break;
+                case Device.LOCK_VERSION_HELMINTH:
+                    deviceType = "八爪鱼";
+                    break;
+                case Device.LOCK_VERSION_MODULE:
+                    deviceType = "模块";
+                    break;
+                case Device.LOCK_VERSION_REMOTE_CONTROLLER:
+                    deviceType = "遥控器";
+                    break;
+                case Device.LOCK_VERSION_GATEWAY:
+                    deviceType = "网关";
+                    break;
+                default:
+                    deviceType = "未知";
+                    break;
+            }
+            holder.tv_door.setText(deviceType);
+            if (device.getRssi() >= -40) {
+                Drawable drawableKey = mContext.getResources().getDrawable(R.drawable.ic_key_signal5);
+                holder.tv_door.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableKey, null);
+            } else if (device.getRssi() >= -50) {
+                Drawable drawableKey = mContext.getResources().getDrawable(R.drawable.ic_key_signal4);
+                holder.tv_door.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableKey, null);
+            } else if (device.getRssi() >= -60) {
+                Drawable drawableKey = mContext.getResources().getDrawable(R.drawable.ic_key_signal3);
+                holder.tv_door.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableKey, null);
+            } else if (device.getRssi() >= -75) {
+                Drawable drawableKey = mContext.getResources().getDrawable(R.drawable.ic_key_signal2);
+                holder.tv_door.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableKey, null);
+            } else if (device.getRssi() >= -90) {
+                Drawable drawableKey = mContext.getResources().getDrawable(R.drawable.ic_key_signal1);
+                holder.tv_door.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableKey, null);
+            } else {
+                Drawable drawableKey = mContext.getResources().getDrawable(R.drawable.ic_key_signal0);
+                holder.tv_door.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableKey, null);
+            }
+            holder.tv_type.setText("型号     " + device.getBluetoothDevice().getName());
+            holder.tv_mac.setText("MAC    " + device.getLockMac());
         }
-        holder.tv_door.setText(deviceType);
-
-        if (device.getRssi() >= -40) {
-            Drawable drawableKey = mContext.getResources().getDrawable(R.drawable.ic_key_signal5);
-            holder.tv_door.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableKey, null);
-        } else if (device.getRssi() >= -50) {
-            Drawable drawableKey = mContext.getResources().getDrawable(R.drawable.ic_key_signal4);
-            holder.tv_door.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableKey, null);
-        } else if (device.getRssi() >= -60) {
-            Drawable drawableKey = mContext.getResources().getDrawable(R.drawable.ic_key_signal3);
-            holder.tv_door.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableKey, null);
-        } else if (device.getRssi() >= -75) {
-            Drawable drawableKey = mContext.getResources().getDrawable(R.drawable.ic_key_signal2);
-            holder.tv_door.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableKey, null);
-        } else if (device.getRssi() >= -90) {
-            Drawable drawableKey = mContext.getResources().getDrawable(R.drawable.ic_key_signal1);
-            holder.tv_door.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableKey, null);
-        } else {
-            Drawable drawableKey = mContext.getResources().getDrawable(R.drawable.ic_key_signal0);
-            holder.tv_door.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableKey, null);
-        }
-
-        holder.tv_type.setText("型号     " + device.getBluetoothDevice().getName());
-        holder.tv_mac.setText("MAC    " + device.getLockMac());
 
         return convertView;
     }

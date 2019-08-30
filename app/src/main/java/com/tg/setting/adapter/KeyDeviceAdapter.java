@@ -98,6 +98,7 @@ public class KeyDeviceAdapter extends BaseAdapter {
                     break;
             }
             holder.tv_door.setText(deviceType);
+
             if (device.getRssi() >= -40) {
                 Drawable drawableKey = mContext.getResources().getDrawable(R.drawable.ic_key_signal5);
                 holder.tv_door.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableKey, null);

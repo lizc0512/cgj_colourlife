@@ -74,6 +74,7 @@ public class KeyAddDoorActivity extends BaseActivity implements HttpResponse {
         fromSource = intent.getIntExtra(KeySendKeyListActivity.FORM_SOURCE, 0);
         if (fromSource == 1) {
             accessId = intent.getStringExtra(KeySendKeyListActivity.DOOR_ID);
+            headView.setTitle("修改门禁");
         }
     }
 
@@ -163,7 +164,11 @@ public class KeyAddDoorActivity extends BaseActivity implements HttpResponse {
         switch (what) {
             case 1:
                 if (!TextUtils.isEmpty(result)) {
-                    ToastUtil.showShortToast(this, "新建门禁成功");
+                    if (fromSource == 1) {
+                        ToastUtil.showShortToast(this, "门禁修改成功");
+                    } else {
+                        ToastUtil.showShortToast(this, "新建门禁成功");
+                    }
                     setResult(RESULT_OK);
                     finish();
                 }

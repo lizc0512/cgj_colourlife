@@ -177,6 +177,9 @@ public class KeySendKeyPhoneActivity extends BaseActivity implements HttpRespons
         if (formSource == 2) {
             iv_add.setVisibility(View.GONE);
         } else {
+            if (formSource == 1) {
+                headView.setTitle("发送钥匙包");
+            }
             iv_add.setVisibility(View.VISIBLE);
         }
         identityId = intent.getStringExtra(DOOR_IDENTITY_ID);

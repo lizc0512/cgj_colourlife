@@ -123,7 +123,7 @@ public class KeyDoorUserDetailsActivity extends BaseActivity implements HttpResp
             case "2":
                 tv_frozen_key.setText("解冻钥匙");
                 tv_frozen_key.setVisibility(View.VISIBLE);
-                tv_delete_key.setVisibility(View.VISIBLE);
+                tv_delete_key.setVisibility(View.GONE);
                 tv_door_status.setText("被冻结钥匙");
                 tv_door_status.setTextColor(Color.parseColor("#EF7E33"));
                 break;
@@ -170,22 +170,20 @@ public class KeyDoorUserDetailsActivity extends BaseActivity implements HttpResp
     protected boolean handClickEvent(View v) {
         switch (v.getId()) {
             case R.id.tv_frozen_key:  //要区分不同的状态
-                DialogFactory.getInstance().showDoorDialog(KeyDoorUserDetailsActivity.this, new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                //调用解绑的接口 解绑成功 回调到门禁列表 进行刷新门禁
-                                if ("1".equals(status)) {
+                if ("1".equals(status)) {
+                    DialogFactory.getInstance().showDoorDialog(KeyDoorUserDetailsActivity.this, new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    //调用解绑的接口 解绑成功 回调到门禁列表 进行刷新门禁
                                     //冻结
                                     keyDoorModel.frozenKeyOperate(1, accessId, "2", KeyDoorUserDetailsActivity.this);
-                                } else {
-                                    //  解冻
-                                    keyDoorModel.thawKeyOperate(3, accessId, KeyDoorUserDetailsActivity.this);
                                 }
-                            }
-                        }, null, 0, "冻结钥匙后，用户将不能使用\n" +
-                                "钥匙开门，是否确认冻结？",
-                        null, null);
-
+                            }, null, 0, "冻结钥匙后，用户将不能使用\n" +
+                                    "钥匙开门，是否确认冻结？",
+                            null, null);
+                } else {
+                    keyDoorModel.thawKeyOperate(2, accessId, KeyDoorUserDetailsActivity.this);
+                }
                 break;
             case R.id.tv_delete_key:
                 DialogFactory.getInstance().showDoorDialog(KeyDoorUserDetailsActivity.this, new View.OnClickListener() {
@@ -287,7 +285,6 @@ public class KeyDoorUserDetailsActivity extends BaseActivity implements HttpResp
                 finish();
                 break;
         }
-
     }
 
     @Override

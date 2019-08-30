@@ -24,7 +24,6 @@ import com.tg.setting.model.KeyDoorModel;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import lecho.lib.hellocharts.gesture.ContainerScrollType;
 import lecho.lib.hellocharts.gesture.ZoomType;
 import lecho.lib.hellocharts.listener.LineChartOnValueSelectListener;
@@ -111,6 +110,9 @@ public class KeyDoorStatisticsFragment extends Fragment implements HttpResponse,
         tv_key_month.setOnClickListener(this::onClick);
         tv_key_week.setOnClickListener(this::onClick);
         tv_key_day.setOnClickListener(this::onClick);
+        Bundle bundle = getArguments();
+        community_uuid = bundle.getString(COMMUNITY_UUID);
+        community_name = bundle.getString(COMMUNITY_NAME);
         mNameList.add("用户数");
         mNameList.add("钥匙数");
         mNameList.add("锁总数");

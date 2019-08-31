@@ -34,6 +34,7 @@ import static com.tg.setting.activity.KeySendKeyListActivity.COMMUNITY_NAME;
 import static com.tg.setting.activity.KeySendKeyListActivity.COMMUNITY_UUID;
 import static com.tg.setting.activity.KeySendKeyListActivity.DOOR_ID;
 import static com.tg.setting.activity.KeySendKeyListActivity.DOOR_QRCODE;
+import static com.tg.setting.activity.KeySendKeyListActivity.FORM_SOURCE;
 import static com.tg.setting.activity.KeySendKeyListActivity.KEY_CONTENT;
 
 /**
@@ -123,8 +124,14 @@ public class KeySendKeyQrCodeActivity extends BaseActivity implements HttpRespon
         communityUuid = intent.getStringExtra(COMMUNITY_UUID);
         keyName = intent.getStringExtra(KEY_CONTENT);
         communityName = intent.getStringExtra(COMMUNITY_NAME);
+        int source = intent.getIntExtra(FORM_SOURCE, 0);
         tv_name.setText(keyName);
         userModel.getIdentity(1, communityUuid, this);
+        if (source == 0) {
+            headView.setTitle("发送钥匙");
+        } else {
+            headView.setTitle("发送钥匙包");
+        }
     }
 
 
@@ -243,7 +250,7 @@ public class KeySendKeyQrCodeActivity extends BaseActivity implements HttpRespon
                 int minute = nowCalender.get(Calendar.MINUTE);
                 int second = nowCalender.get(Calendar.SECOND);
                 String nowTime = numFormat(year) + "-" + numFormat(month) + "-" + numFormat(day) + " " + numFormat(hour) + ":" + numFormat(minute) + ":" + numFormat(second);
-				startTimeCustom=nowTime;
+                startTimeCustom = nowTime;
                 tv_time_start.setText(nowTime);
                 setSubmitBg();
                 break;
@@ -290,7 +297,6 @@ public class KeySendKeyQrCodeActivity extends BaseActivity implements HttpRespon
         }
         return super.handClickEvent(v);
     }
-
 
 
     public void setTimeText(int inputText, String time, int y, int m, int d, int h, int mi) {

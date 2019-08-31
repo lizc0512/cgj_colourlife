@@ -188,6 +188,9 @@ public class KeySendKeyPhoneActivity extends BaseActivity implements HttpRespons
         String identity_name = intent.getStringExtra(DOOR_IDENTITY_NAME);
         if (!TextUtils.isEmpty(room_name)) {
             tv_room.setText(room_name);
+            tv_room.setEnabled(false);
+        } else {
+            tv_room.setEnabled(true);
         }
         if (!TextUtils.isEmpty(identity_name)) {
             tv_identity.setText(identity_name);
@@ -625,11 +628,13 @@ public class KeySendKeyPhoneActivity extends BaseActivity implements HttpRespons
                         for (KeyIdentityEntity.ContentBean bean : identityList) {
                             identityStringList.add(bean.getIdentityName());
                             if (formSource == 2) {
-                                isPower = bean.getIsPower();
-                                if (bean.getId().equals(identityId) && isPower == 0) {
-                                    ll_room.setVisibility(View.VISIBLE);
-                                } else {
-                                    ll_room.setVisibility(View.GONE);
+                                if (bean.getId().equals(identityId)) {
+                                    isPower = bean.getIsPower();
+                                    if (isPower == 0) {
+                                        ll_room.setVisibility(View.VISIBLE);
+                                    } else {
+                                        ll_room.setVisibility(View.GONE);
+                                    }
                                 }
                             }
                         }

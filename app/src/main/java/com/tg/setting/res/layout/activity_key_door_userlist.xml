@@ -72,8 +72,7 @@
             android:gravity="center"
             android:text="发送钥匙"
             android:textColor="@color/color_1ca1f4"
-            android:textSize="@dimen/font_16sp"
-            android:visibility="gone" />
+            android:textSize="@dimen/font_16sp" />
 
 
     </LinearLayout>

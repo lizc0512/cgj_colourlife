@@ -134,13 +134,15 @@ public class KeyBindDoorActivity extends BaseActivity implements View.OnClickLis
         lv_door.setAdapter(mAdapter);
 
         lv_door.setOnItemClickListener((parent, view, position, id) -> {
-            ToastUtil.showShortToast(this, "正在绑定设备");
+
             try {
                 Device device = mAdapter.getItem(position);
                 if (fromSource == 0) {
+                    ToastUtil.showShortToast(this, "正在绑定设备");
                     UserModel userModel = new UserModel(this);
                     userModel.bindDoor(1, doorId, device.getLockMac(), device.getCipherId(), device.getBluetoothDevice().getName(), device.getProtocolVersion(), this);
                 } else {
+                    ToastUtil.showShortToast(this, "正在更换设备");
                     KeyDoorModel keyDoorModel = new KeyDoorModel(this);
                     keyDoorModel.reflushDoorOperate(1, doorId, device.getLockMac(), device.getCipherId(), device.getBluetoothDevice().getName(), device.getProtocolVersion(), this);
                 }
@@ -148,6 +150,9 @@ public class KeyBindDoorActivity extends BaseActivity implements View.OnClickLis
                 e.printStackTrace();
             }
         });
+        if (fromSource == 1) {
+            headView.setTitle("更换门禁");
+        }
     }
 
     private void initData() {
@@ -188,7 +193,11 @@ public class KeyBindDoorActivity extends BaseActivity implements View.OnClickLis
     public void OnHttpResponse(int what, String result) {
         if (1 == what) {
             if (!TextUtils.isEmpty(result)) {
-                ToastUtil.showShortToast(this, "绑定成功");
+                if (fromSource == 0) {
+                    ToastUtil.showShortToast(this, "绑定成功");
+                } else {
+                    ToastUtil.showShortToast(this, "更换成功");
+                }
                 successHandler.sendEmptyMessageDelayed(1, 2000);
             }
         }

@@ -48,6 +48,11 @@ public class KeySendKeyListActivity extends BaseActivity {
         communityName = intent.getStringExtra(COMMUNITY_NAME);
         keyName = intent.getStringExtra(KEY_CONTENT);
         formSource = intent.getIntExtra(FORM_SOURCE,0);
+        if (formSource==0){
+            headView.setTitle("发送钥匙");
+        }else{
+            headView.setTitle("发送钥匙包");
+        }
     }
 
     @Override

@@ -54,7 +54,7 @@ public class KeyDoorOutRecordAdapter extends RecyclerView.Adapter<KeyDoorOutReco
         } else {
             holder.tv_door_identify.setText("业主");
         }
-        holder.tv_door_username.setText(StringUtils.getHandlePhone(contentBean.getMobile()));
+        holder.tv_door_phone.setText(StringUtils.getHandlePhone(contentBean.getMobile()));
         StringBuffer stringBuffer = new StringBuffer();
         stringBuffer.append(contentBean.getCreateTime());
         stringBuffer.append(accessName);

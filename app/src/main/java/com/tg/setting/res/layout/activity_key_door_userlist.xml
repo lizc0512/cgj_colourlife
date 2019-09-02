@@ -70,6 +70,7 @@
             android:layout_marginTop="20dp"
             android:background="@drawable/sms_button_three"
             android:gravity="center"
+            android:visibility="gone"
             android:text="发送钥匙"
             android:textColor="@color/color_1ca1f4"
             android:textSize="@dimen/font_16sp" />

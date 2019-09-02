@@ -74,7 +74,7 @@ public class KeyAddDoorActivity extends BaseActivity implements HttpResponse {
         fromSource = intent.getIntExtra(KeySendKeyListActivity.FORM_SOURCE, 0);
         if (fromSource == 1) {
             accessId = intent.getStringExtra(KeySendKeyListActivity.DOOR_ID);
-            headView.setTitle("修改门禁");
+            headView.setTitle("修改信息");
         }
     }
 

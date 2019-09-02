@@ -148,15 +148,15 @@ public class KeyDoorUserDetailsActivity extends BaseActivity implements HttpResp
         sb.append(StringUtils.getHandlePhone(contentBean.getToPhone()));
         tv_username_phone.setText(sb.toString());
         tv_door_name.setText(accessName);
-        String startTime = contentBean.getStartTime();
-        if (!TextUtils.isEmpty(startTime)) {
+        String endTime = contentBean.getEndTime();
+        if (!TextUtils.isEmpty(endTime)) {
             StringBuffer stringBuffer = new StringBuffer();
-            stringBuffer.append(startTime);
+            stringBuffer.append(contentBean.getStartTime());
             stringBuffer.append("-");
-            stringBuffer.append(contentBean.getEndTime());
+            stringBuffer.append(endTime);
             tv_door_date.setText(stringBuffer.toString());
         } else {
-            tv_door_date.setText("");
+            tv_door_date.setText("永久");
         }
         keyDoorModel = new KeyDoorModel(KeyDoorUserDetailsActivity.this);
         mList = new ArrayList<>();

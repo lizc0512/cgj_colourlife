@@ -148,7 +148,7 @@ public class KeyDoorUserListActivity extends BaseActivity implements HttpRespons
 
         switch (v.getId()) {
             case R.id.send_key_door:
-                Intent intent = new Intent(KeyDoorUserListActivity.this, KeyDoorUserListActivity.class);
+                Intent intent = new Intent(KeyDoorUserListActivity.this, KeySendKeyListActivity.class);
                 intent.putExtra(KeySendKeyListActivity.DOOR_ID, accessId);
                 intent.putExtra(KeySendKeyListActivity.KEY_CONTENT, accessName);
                 intent.putExtra(KeySendKeyListActivity.FORM_SOURCE, 0);
@@ -176,6 +176,7 @@ public class KeyDoorUserListActivity extends BaseActivity implements HttpRespons
                     if (totalRecord == 0) {
                         empty_record_layout.setVisibility(View.VISIBLE);
                         rv_key_user.setVisibility(View.GONE);
+                        send_key_door.setVisibility(View.VISIBLE);
                         iv_empty_record.setImageResource(R.drawable.ic_key_norecord);
                         tv_empty_record.setText("暂无发送门禁钥匙");
                     } else {

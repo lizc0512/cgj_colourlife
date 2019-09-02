@@ -212,21 +212,23 @@ public class KeyDoorStatisticsFragment extends Fragment implements HttpResponse,
         // 下面的这个api控制 滑动
 
         Viewport v = new Viewport(lineChartView.getMaximumViewport());
-        v.left = 0;
-        v.right = 7;
         int size = score.size();
         if (size > 0) {
             try {
-                List<String> yValues = new ArrayList<>();
-                yValues.addAll(score);
+                List<Float> yValues = new ArrayList<Float>();
+                for (int j = 0; j < score.size(); j++) {
+                    yValues.add(Float.valueOf(score.get(j)));
+                }
                 Collections.sort(yValues);
                 v.top = Float.valueOf(yValues.get(size - 1));
                 v.bottom = Float.valueOf(yValues.get(0));
+                lineChartView.setMaximumViewport(v);
             } catch (Exception e) {
-                v.top = 0;
-                v.bottom = 0;
+
             }
         }
+        v.left = 0;
+        v.right = 7;
         lineChartView.setCurrentViewport(v);
     }
 

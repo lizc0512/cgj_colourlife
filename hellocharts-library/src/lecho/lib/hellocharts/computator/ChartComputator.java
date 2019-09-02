@@ -144,7 +144,7 @@ public class ChartComputator {
         if (Float.isNaN(pixelOffset) || Float.isInfinite(pixelOffset)) {
             return contentRectMinusAllMargins.left + 0;
         }
-        return contentRectMinusAllMargins.left + pixelOffset -20;
+        return contentRectMinusAllMargins.left + pixelOffset - 20;
 
     }
 

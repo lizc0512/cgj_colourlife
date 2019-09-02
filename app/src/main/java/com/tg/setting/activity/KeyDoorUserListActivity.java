@@ -125,7 +125,7 @@ public class KeyDoorUserListActivity extends BaseActivity implements HttpRespons
         if (TextUtils.isEmpty(searchContent)) {
             searchContent = "";
         }
-        keyDoorModel.getAllKeyByAccess(0, accessId, searchContent, page, isLoading,this);
+        keyDoorModel.getAllKeyByAccess(0, accessId, searchContent, page, isLoading, this);
     }
 
 
@@ -176,7 +176,9 @@ public class KeyDoorUserListActivity extends BaseActivity implements HttpRespons
                     if (totalRecord == 0) {
                         empty_record_layout.setVisibility(View.VISIBLE);
                         rv_key_user.setVisibility(View.GONE);
-                        send_key_door.setVisibility(View.VISIBLE);
+                        if (TextUtils.isEmpty(searchContent)) {
+                            send_key_door.setVisibility(View.VISIBLE);
+                        }
                         iv_empty_record.setImageResource(R.drawable.ic_key_norecord);
                         tv_empty_record.setText("暂无发送门禁钥匙");
                     } else {
@@ -196,7 +198,7 @@ public class KeyDoorUserListActivity extends BaseActivity implements HttpRespons
                     }
                     if (mList.size() >= totalRecord) {
                         rv_key_user.setLoadingMoreEnabled(false);
-                    }else{
+                    } else {
                         rv_key_user.setLoadingMoreEnabled(true);
                     }
                     rv_key_user.loadMoreComplete();

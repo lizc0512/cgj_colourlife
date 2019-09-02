@@ -22,6 +22,7 @@ import com.tg.setting.entity.KeyTypeDataEntity;
 import com.tg.setting.model.KeyDoorModel;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import lecho.lib.hellocharts.gesture.ContainerScrollType;
@@ -175,7 +176,7 @@ public class KeyDoorStatisticsFragment extends Fragment implements HttpResponse,
         // Y轴是根据数据的大小自动设置Y轴上限(在下面我会给出固定Y轴数据个数的解决方案)
         Axis axisY = new Axis();  //Y轴
         axisY.setName("");//y轴标注
-        axisY.setTextSize(10);//设置字体大小
+        axisY.setTextSize(9);//设置字体大小
         axisY.setTextColor(Color.BLACK);
         axisY.setSeparationColor(Color.WHITE);
         axisY.setMaxLabelChars(6);
@@ -189,7 +190,7 @@ public class KeyDoorStatisticsFragment extends Fragment implements HttpResponse,
         lineChartView.setZoomEnabled(true);
         lineChartView.setInteractive(true);
         lineChartView.setZoomType(ZoomType.HORIZONTAL);
-        lineChartView.setMaxZoom((float) 2);//最大方法比例
+        lineChartView.setMaxZoom((float) 3);//最大方法比例
         lineChartView.setContainerScrollEnabled(true, ContainerScrollType.HORIZONTAL);
         lineChartView.setLineChartData(data);
         //设置触摸事件
@@ -209,12 +210,24 @@ public class KeyDoorStatisticsFragment extends Fragment implements HttpResponse,
          * 当时是为了解决X轴固定数据个数。见（http://forum.xda-developers.com/tools/programming/library-hellocharts-charting-library-t2904456/page2）;
          */
         // 下面的这个api控制 滑动
+
         Viewport v = new Viewport(lineChartView.getMaximumViewport());
         v.left = 0;
         v.right = 7;
-        v.top = 10;
+        int size = score.size();
+        if (size > 0) {
+            try {
+                List<String> yValues = new ArrayList<>();
+                yValues.addAll(score);
+                Collections.sort(yValues);
+                v.top = Float.valueOf(yValues.get(size - 1));
+                v.bottom = Float.valueOf(yValues.get(0));
+            } catch (Exception e) {
+                v.top = 0;
+                v.bottom = 0;
+            }
+        }
         lineChartView.setCurrentViewport(v);
-
     }
 
 

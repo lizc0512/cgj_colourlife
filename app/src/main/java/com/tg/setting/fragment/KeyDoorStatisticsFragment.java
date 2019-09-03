@@ -221,14 +221,17 @@ public class KeyDoorStatisticsFragment extends Fragment implements HttpResponse,
                     yValues.add(Float.valueOf(score.get(j)));
                 }
                 Collections.sort(yValues);
+                float top = Float.valueOf(yValues.get(size - 1));
+                if (top == 0) {
+                    top = 1;
+                }
                 if (size == 1) {
-                    v.top = Float.valueOf(yValues.get(0));
+                    v.top = top;
                     v.bottom = 0;
                 } else {
-                    v.top = Float.valueOf(yValues.get(size - 1));
+                    v.top = top;
                     v.bottom = Float.valueOf(yValues.get(0));
                 }
-
                 lineChartView.setMaximumViewport(v);
             } catch (Exception e) {
 

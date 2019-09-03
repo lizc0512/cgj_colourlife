@@ -105,7 +105,7 @@ public abstract class AbstractChartRenderer implements ChartRenderer {
                                               int autoBackgroundColor) {
         final float textX;
         final float textY;
-
+        autoBackgroundColor = Color.TRANSPARENT;
         if (isValueLabelBackgroundEnabled) {
 
             if (isValueLabelBackgroundAuto) {

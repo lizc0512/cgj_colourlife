@@ -9,12 +9,12 @@ import lecho.lib.hellocharts.util.ChartUtils;
  * Base class for most chart data models.
  */
 public abstract class AbstractChartData implements ChartData {
-    public static final int DEFAULT_TEXT_SIZE_SP = 12;
+    public static final int DEFAULT_TEXT_SIZE_SP = 10;
     protected Axis axisXBottom;
     protected Axis axisYLeft;
     protected Axis axisXTop;
     protected Axis axisYRight;
-    protected int valueLabelTextColor = Color.WHITE;
+    protected int valueLabelTextColor = Color.parseColor("#666666");
     protected int valueLabelTextSize = DEFAULT_TEXT_SIZE_SP;
     protected Typeface valueLabelTypeface;
 

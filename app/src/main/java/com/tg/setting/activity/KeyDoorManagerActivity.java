@@ -17,7 +17,7 @@ import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.util.GsonUtils;
-import com.tg.coloursteward.util.ToastUtil;
+import com.tg.coloursteward.util.LinkParseUtil;
 import com.tg.setting.entity.KeyCommunityListEntity;
 import com.tg.setting.fragment.KeyDoorBagsFragment;
 import com.tg.setting.fragment.KeyDoorListFragment;
@@ -196,7 +196,8 @@ public class KeyDoorManagerActivity extends BaseActivity implements HttpResponse
                 startActivityForResult(intent, 1);
                 break;
             case R.id.iv_msg:
-                ToastUtil.showShortToast(this, "开发中，敬请期待...");
+                String url = "https://shenhe-doortest.colourlife.com?community_uuid=" + communityUuid;
+                LinkParseUtil.parse(KeyDoorManagerActivity.this, url, "");
                 break;
             case R.id.tv_door:
                 setTabStyle(tv_door, R.drawable.ic_key_door_select);

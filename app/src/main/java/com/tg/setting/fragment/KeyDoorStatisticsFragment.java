@@ -151,8 +151,8 @@ public class KeyDoorStatisticsFragment extends Fragment implements HttpResponse,
         line.setStrokeWidth(1);
         line.setPointRadius(2);
         line.setFilled(true);//是否填充曲线的面积
-        line.setHasLabels(false);//曲线的数据坐标是否加上备注
-        line.setHasLabelsOnlyForSelected(true);//点击数据坐标提示数据（设置了这个line.setHasLabels(true);就无效）
+        line.setHasLabels(true);//曲线的数据坐标是否加上备注
+        line.setHasLabelsOnlyForSelected(false);//点击数据坐标提示数据（设置了这个line.setHasLabels(true);就无效）
         line.setHasLines(true);//是否用线显示。如果为false 则没有曲线只有点显示
         line.setHasPoints(true);//是否显示圆点 如果为false 则没有原点只有点显示（每个数据点都是个大的圆点）
         lines.add(line);
@@ -197,7 +197,8 @@ public class KeyDoorStatisticsFragment extends Fragment implements HttpResponse,
         lineChartView.setOnValueTouchListener(new LineChartOnValueSelectListener() {
             @Override
             public void onValueSelected(int lineIndex, int pointIndex, PointValue value) {
-                Toast.makeText(getActivity(), "" + value.getY(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "" + value.getY(), Toast.LENGTH_LONG).show();
+//                ( lineIndex,0)    (lineIndex,)
             }
 
             @Override
@@ -220,8 +221,14 @@ public class KeyDoorStatisticsFragment extends Fragment implements HttpResponse,
                     yValues.add(Float.valueOf(score.get(j)));
                 }
                 Collections.sort(yValues);
-                v.top = Float.valueOf(yValues.get(size - 1));
-                v.bottom = Float.valueOf(yValues.get(0));
+                if (size == 1) {
+                    v.top = Float.valueOf(yValues.get(0));
+                    v.bottom = 0;
+                } else {
+                    v.top = Float.valueOf(yValues.get(size - 1));
+                    v.bottom = Float.valueOf(yValues.get(0));
+                }
+
                 lineChartView.setMaximumViewport(v);
             } catch (Exception e) {
 

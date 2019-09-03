@@ -22,6 +22,7 @@ import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.util.DateUtils;
 import com.tg.coloursteward.util.GsonUtils;
+import com.tg.coloursteward.util.LinkParseUtil;
 import com.tg.coloursteward.util.ToastUtil;
 import com.tg.setting.adapter.KeyPhoneAdapter;
 import com.tg.setting.entity.KeyIdentityEntity;
@@ -188,9 +189,6 @@ public class KeySendKeyPhoneActivity extends BaseActivity implements HttpRespons
         String identity_name = intent.getStringExtra(DOOR_IDENTITY_NAME);
         if (!TextUtils.isEmpty(room_name)) {
             tv_room.setText(room_name);
-            tv_room.setEnabled(false);
-        } else {
-            tv_room.setEnabled(true);
         }
         if (!TextUtils.isEmpty(identity_name)) {
             tv_identity.setText(identity_name);

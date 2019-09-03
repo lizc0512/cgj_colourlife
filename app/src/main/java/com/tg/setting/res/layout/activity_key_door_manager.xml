@@ -47,27 +47,27 @@
         </LinearLayout>
 
         <ImageView
-            android:id="@+id/iv_add"
+            android:id="@+id/iv_msg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/size_8dp"
             android:padding="@dimen/size_8dp"
-            android:src="@drawable/ic_key_add"
+            android:src="@drawable/ic_key_msg"
             tools:ignore="ContentDescription" />
 
         <ImageView
-            android:id="@+id/iv_msg"
+            android:id="@+id/iv_add"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_toLeftOf="@id/iv_add"
+            android:layout_marginRight="@dimen/size_8dp"
+            android:layout_toLeftOf="@id/iv_msg"
             android:padding="@dimen/size_8dp"
-            android:src="@drawable/ic_key_msg"
-            android:visibility="gone"
+            android:src="@drawable/ic_key_add"
+            android:visibility="visible"
             tools:ignore="ContentDescription" />
-
         <View
             android:layout_width="match_parent"
             android:layout_height="1px"

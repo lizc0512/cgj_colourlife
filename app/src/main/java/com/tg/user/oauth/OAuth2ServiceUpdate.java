@@ -31,6 +31,10 @@ public class OAuth2ServiceUpdate implements HttpResponse {
         this.loginType = mLoginType;
     }
 
+    public void setLoginType(String mLoginType) {
+        this.loginType = mLoginType;
+    }
+
     /**
      * 获取鉴权token信息
      */

@@ -16,7 +16,6 @@ import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.constant.Contants;
-import com.tg.coloursteward.constant.SpConstants;
 import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.LinkParseUtil;
@@ -198,7 +197,7 @@ public class KeyDoorManagerActivity extends BaseActivity implements HttpResponse
                 startActivityForResult(intent, 1);
                 break;
             case R.id.iv_msg:
-                String url = Contants.URl.URL_LEKAI_NOTIFICATION + "?community_uuid=" + communityUuid + "&user_uuid" + spUtils.getStringData(SpConstants.UserModel.ACCOUNT_UUID, "");
+                String url = Contants.URl.URL_LEKAI_NOTIFICATION + "?community_uuid=" + communityUuid + "&user_uuid=" + UserInfo.uid;
                 LinkParseUtil.parse(KeyDoorManagerActivity.this, url, "");
                 break;
             case R.id.tv_door:

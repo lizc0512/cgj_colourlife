@@ -43,6 +43,32 @@
     <include layout="@layout/message_list_item_header_search" />
 
     <RelativeLayout
+        android:id="@+id/rl_home_internet"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_44dp"
+        android:background="@color/color_FFF7F0"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/iv_home_wifi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/size_15dp"
+            android:src="@drawable/nav_icon_wifi" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/size_10dp"
+            android:layout_toRightOf="@id/iv_home_wifi"
+            android:text="@string/tv_home_net"
+            android:textColor="@color/color_FFFF943E"
+            android:textSize="@dimen/font_15sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 

@@ -56,6 +56,7 @@
     <string name="tv_webview_pyq">分享到朋友圈</string>
     <string name="tv_webview_wechat">分享给微信好友</string>
     <string name="tv_webview_cancel">取消</string>
+    <string name="tv_home_net">当前网络不可用，请检查网络设置</string>
 
 
 </resources>

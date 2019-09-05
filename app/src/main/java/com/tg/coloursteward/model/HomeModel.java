@@ -342,7 +342,7 @@ public class HomeModel extends BaseModel {
                 int responseCode = response.getHeaders().getResponseCode();
                 String result = response.get();
                 if (responseCode == RequestEncryptionUtils.responseSuccess) {
-                    int code = showSuccesResultMessageTheme(result);
+                    int code = showSuccesResultMessage(result);
                     if (code == 0) {
                         httpResponse.OnHttpResponse(what, result);
                     }

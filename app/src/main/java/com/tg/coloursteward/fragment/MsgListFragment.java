@@ -497,9 +497,12 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
         popupWindow.setFocusable(true);
         popupWindow.setOutsideTouchable(true);
         popupWindow.showAsDropDown(v, 400, 0);
-        TextView tv_del = (TextView) view.findViewById(R.id.tv_del);
-        TextView tv_top = (TextView) view.findViewById(R.id.tv_top);
-
+        TextView tv_del = view.findViewById(R.id.tv_del);
+        TextView tv_top = view.findViewById(R.id.tv_top);
+        RelativeLayout rl_del = view.findViewById(R.id.rl_del);
+        if ("tzgg".equals(bean.getPushMsg().getApp_id())) {
+            rl_del.setVisibility(View.GONE);
+        }
         String targetUuid = bean.getTargetUuid();
         boolean isTop = HuxinSdkManager.instance().getMsgTop(targetUuid);
 

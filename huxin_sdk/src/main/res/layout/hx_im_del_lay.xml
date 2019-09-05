@@ -1,44 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="100dp"
-    android:layout_height="72dp"
+    android:layout_height="wrap_content"
     android:background="@drawable/home_bg_deletemassage"
     android:gravity="center_horizontal"
     android:orientation="vertical">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="100dp"
-        android:layout_height="30dp"
-        android:layout_marginTop="10dp">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/tv_del"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="删除该聊天"
-            android:textColor="@color/hx_color_white"
-            android:textSize="14dp" />
-    </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/rl_del"
+            android:layout_width="match_parent"
+            android:layout_height="32dp">
 
-    <View
-        android:layout_width="100dp"
-        android:layout_height="1px"
-        android:layout_marginTop="2dp"
-        android:background="@color/line_im_del" />
+            <TextView
+                android:id="@+id/tv_del"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="删除该聊天"
+                android:textColor="@color/hx_color_white"
+                android:textSize="14dp" />
 
-    <RelativeLayout
-        android:layout_width="100dp"
-        android:layout_height="32dp">
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_alignParentBottom="true"
+                android:background="@color/line_im_del" />
+        </RelativeLayout>
 
-        <TextView
-            android:id="@+id/tv_top"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_marginTop="5dp"
-            android:text="置顶"
-            android:textColor="@color/hx_color_white"
-            android:textSize="14dp" />
-    </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/rl_top"
+            android:layout_width="match_parent"
+            android:layout_height="32dp">
+
+            <TextView
+                android:id="@+id/tv_top"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="置顶"
+                android:textColor="@color/hx_color_white"
+                android:textSize="14dp" />
+        </RelativeLayout>
+    </LinearLayout>
 </LinearLayout>

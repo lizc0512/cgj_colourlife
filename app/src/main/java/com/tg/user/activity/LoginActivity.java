@@ -406,6 +406,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         getKeyAndSecret();
         if (null == auth2ServiceUpdate) {
             auth2ServiceUpdate = new OAuth2ServiceUpdate(LoginActivity.this, loginType);
+        } else {
+            auth2ServiceUpdate.setLoginType(loginType);
         }
         auth2ServiceUpdate.getOAuth2Service(accout, passwordMD5, new Oauth2CallBack() {
             @Override

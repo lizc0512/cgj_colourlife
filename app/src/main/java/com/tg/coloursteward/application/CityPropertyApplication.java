@@ -23,6 +23,7 @@ import com.tencent.bugly.beta.Beta;
 import com.tencent.bugly.beta.interfaces.BetaPatchListener;
 import com.tencent.smtt.sdk.QbSdk;
 import com.tg.coloursteward.R;
+import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.database.SharedPreferencesTools;
 import com.tg.coloursteward.module.MainActivity;
 import com.tg.coloursteward.net.ResponseData;
@@ -139,8 +140,7 @@ public class CityPropertyApplication extends Application {
 
             }
         };
-//        Bugly.setIsDevelopmentDevice(getApplication(), true);
-        Bugly.init(getApplicationContext(), "b3dcc32611", false);
+        Bugly.init(getApplicationContext(), Contants.APP.buglyKeyId, false);
     }
 
     public static void initImageLoader(Context context) {

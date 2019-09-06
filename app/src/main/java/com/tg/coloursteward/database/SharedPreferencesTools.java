@@ -91,8 +91,6 @@ public class SharedPreferencesTools {
         Tools.saveStringValue(con, Contants.storage.APPAUTHTIME_1, "");//授权time  1.0
         Tools.saveStringValue(con, Contants.storage.ORGNAME, "");//组织架构名称
         Tools.saveStringValue(con, Contants.storage.ORGID, "");//组织架构ID
-        Tools.saveStringValue(con, Contants.EMPLOYEE_LOGIN.key, "");//key
-        Tools.saveStringValue(con, Contants.EMPLOYEE_LOGIN.secret, "");//secret
         Tools.saveStringValue(con, Contants.MAP.ADDRESS, "");//定位地址保存
         Tools.saveStringValue(con, Contants.storage.PUBLIC_LIST, "");//对公账户搜索历史列表
         Tools.saveLinkManList(con, "");//收藏联系人

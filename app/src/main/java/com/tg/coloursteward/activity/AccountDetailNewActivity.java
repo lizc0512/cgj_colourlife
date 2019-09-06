@@ -35,7 +35,6 @@ import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.AppDetailPopWindowView;
 import com.tg.coloursteward.view.PullRefreshListView;
-import com.tg.coloursteward.view.dialog.PwdDialog2;
 import com.tg.coloursteward.view.dialog.ToastFactory;
 
 import org.greenrobot.eventbus.EventBus;
@@ -67,8 +66,6 @@ public class AccountDetailNewActivity extends BaseActivity implements View.OnCli
     private AppDetailPopWindowView popWindowView;
     private ArrayList<AppDetailsGridViewInfo> listGridView = new ArrayList<AppDetailsGridViewInfo>();
     private ArrayList<ExchangeEntity.DetailBean> listData = new ArrayList<>();
-    private PwdDialog2.ADialogCallback aDialogCallback;
-    private PwdDialog2 aDialog;
     private int postion;
     private String state;
     private ExchangeEntity exchangeEntity;

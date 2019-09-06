@@ -239,11 +239,6 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
         settingModel = new SettingModel(this);
         homeModel = new HomeModel(this);
         userModel = new UserModel(this);
-        String key = Tools.getStringValue(this, Contants.EMPLOYEE_LOGIN.key);
-        String secret = Tools.getStringValue(this, Contants.EMPLOYEE_LOGIN.secret);
-        if (TextUtils.isEmpty(key) || TextUtils.isEmpty(secret)) {
-            getKeyAndSecret();
-        }
         userModel.getTs(6, this);
         Intent data = getIntent();
         if (data != null) {
@@ -564,10 +559,6 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
         HuxinSdkManager.instance().getStackAct().finishActivity(this);
     }
 
-    private void getKeyAndSecret() {
-        userModel.postKeyAndSecret(4, false, this);
-    }
-
     public void refreshUnReadCount() {
         int unreadCount = IMMsgManager.instance().getAllBadgeCount();
         if (unreadCount > 0) {
@@ -590,23 +581,7 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
     @Override
     public void onSuccess(Message msg, String jsonString, String hintString) {
         int code = HttpTools.getCode(jsonString);
-        if (msg.arg1 == HttpTools.GET_KEYSECERT) {
-            if (code == 0) {
-                try {
-                    String jsonObject = HttpTools.getContentString(jsonString);
-                    JSONObject sonJon = new JSONObject(jsonObject);
-                    String key = sonJon.optString("key");
-                    String secret = sonJon.optString("secret");
-                    Tools.saveStringValue(MainActivity.this, Contants.EMPLOYEE_LOGIN.key, key);
-                    Tools.saveStringValue(MainActivity.this, Contants.EMPLOYEE_LOGIN.secret, secret);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        } else if (msg.arg1 == HttpTools.POST_USERSYNC) {
-            if (code == 0) {
-            }
-        } else if (msg.arg1 == HttpTools.GET_YINGYAN) {
+        if (msg.arg1 == HttpTools.GET_YINGYAN) {
             if (code == 0) {
                 JSONObject jsonObject = HttpTools.getContentJSONObject(jsonString);
                 try {
@@ -1284,19 +1259,6 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
                     //单设备退出逻辑，暂无
                 }
                 break;
-            case 4:
-                if (!TextUtils.isEmpty(result)) {
-                    try {
-                        JSONObject jsonObject = new JSONObject(result);
-                        String key = jsonObject.optString("key");
-                        String secret = jsonObject.optString("secret");
-                        Tools.saveStringValue(MainActivity.this, Contants.EMPLOYEE_LOGIN.key, key);
-                        Tools.saveStringValue(MainActivity.this, Contants.EMPLOYEE_LOGIN.secret, secret);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-                break;
             case 5:
                 if (!TextUtils.isEmpty(result)) {
                     //IM消息同步逻辑，暂无
@@ -1502,7 +1464,6 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
                     break;
                 case 2:
                     ft = new FragmentManagementTest();
-//                    ft = new FragmentManagement();
                     break;
                 case 3:
                     ft = new FragmentMine();

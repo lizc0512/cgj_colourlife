@@ -95,8 +95,6 @@ public class RedpacketsDGZHShareMainMainActivity extends BaseActivity {
     /**
      * oa发红包记录的Adapter
      */
-    private String key;
-    private String secret;
     private Intent intent;
     private int OA;
     final ArrayList<RedpacketsInfo> list = new ArrayList<RedpacketsInfo>();
@@ -120,8 +118,6 @@ public class RedpacketsDGZHShareMainMainActivity extends BaseActivity {
         transferTo = getIntent().getStringExtra("colleague");
         colleagueInfo = getIntent().getStringExtra(Contants.PARAMETER.OA);
         balance = getIntent().getDoubleExtra(Contants.PARAMETER.BALANCE, 0.00);
-        key = Tools.getStringValue(this, Contants.EMPLOYEE_LOGIN.key);
-        secret = Tools.getStringValue(this, Contants.EMPLOYEE_LOGIN.secret);
         money = getIntent().getStringExtra(Contants.PARAMETER.PUBLIC_ACCOUNT);
 
         pay_atid = getIntent().getIntExtra(Contants.PARAMETER.PAY_ATID, -1);
@@ -259,9 +255,9 @@ public class RedpacketsDGZHShareMainMainActivity extends BaseActivity {
 
                         intent = new Intent(RedpacketsDGZHShareMainMainActivity.this, RedpacketsDGZHAccountListActivity.class);
                         intent.putExtra(Contants.PARAMETER.BALANCE, balance);
-                        //intent.putExtra(RedpacketsAccountListActivity.REDPACKETS_LIST,list);
+                        intent.putExtra("redpackets_list",list);
                         Bundle bundleObject = new Bundle();
-                        bundleObject.putSerializable(RedpacketsAccountListActivity.REDPACKETS_LIST, list);
+                        bundleObject.putSerializable("redpackets_list", list);
                         bundleObject.putString(Contants.PARAMETER.PUBLIC_ACCOUNT, money);
                         bundleObject.putString(Contants.PARAMETER.PAY_ANO, pay_ano);
                         bundleObject.putInt(Contants.PARAMETER.PAY_ATID, pay_atid);

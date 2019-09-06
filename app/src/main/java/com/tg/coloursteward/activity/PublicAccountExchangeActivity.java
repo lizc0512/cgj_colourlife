@@ -32,7 +32,6 @@ import com.tg.coloursteward.serice.AppAuthService;
 import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.RoundImageView;
-import com.tg.coloursteward.view.dialog.PwdDialog2;
 import com.tg.coloursteward.view.dialog.ToastFactory;
 import com.tg.user.model.UserModel;
 
@@ -75,8 +74,6 @@ public class PublicAccountExchangeActivity extends BaseActivity implements MyLis
     private LinearLayout llSubmit;
     private TextView tvTicket;
 
-    private PwdDialog2 aDialog;
-    private PwdDialog2.ADialogCallback aDialogCallback;
     private ProgressDialog mProgressDialog;
     private UserModel userModel;
 

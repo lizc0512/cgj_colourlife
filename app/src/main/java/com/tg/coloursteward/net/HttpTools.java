@@ -373,7 +373,6 @@ public class HttpTools {
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> headers = new HashMap<>();
                 if (URL_NAME.contains(Contants.URl.URL_NEW + "/app/home/login/verify")) {
-                } else if (URL_NAME.contains(Contants.URl.URL_CPMOBILE + "/1.0/auth")) {
                 } else if (URL_NAME.contains(Contants.URl.URL_ICETEST + "/newoa/config/skin")) {
                 } else {
                     if (TextUtils.isEmpty(Tools.getAccess_token2(rqtConfig.activity))) {
@@ -1042,14 +1041,10 @@ public class HttpTools {
             paramsStr = requestParams.toHashMapString();
         }
         if (URL.startsWith(Contants.URl.URL_CPMOBILE)) {
-            if (apiName.equals("/1.0/auth")) {
-                post(URL + apiName, Method.POST, rqtConfig, paramsStr);
-            } else {
-                String url = URL + postCombileMD5(apiName, paramsStr);
-                paramsStr.remove("key");
-                paramsStr.remove("secret");
-                post(url, Method.POST, rqtConfig, paramsStr);
-            }
+            String url = URL + postCombileMD5(apiName, paramsStr);
+            paramsStr.remove("key");
+            paramsStr.remove("secret");
+            post(url, Method.POST, rqtConfig, paramsStr);
         } else {
             post(URL + apiName, Method.POST, rqtConfig, paramsStr);
         }

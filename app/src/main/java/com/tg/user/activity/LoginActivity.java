@@ -403,7 +403,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         } else {
             passwordMD5 = pwdMD5;
         }
-        getKeyAndSecret();
         if (null == auth2ServiceUpdate) {
             auth2ServiceUpdate = new OAuth2ServiceUpdate(LoginActivity.this, loginType);
         } else {
@@ -419,10 +418,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
 
     private void getNetInfo(String access_token) {
         userModel.getOauthUser(2, access_token, this);
-    }
-
-    private void getKeyAndSecret() {
-        userModel.postKeyAndSecret(1, true, this);
     }
 
     @Override
@@ -447,19 +442,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 } else {
                     gt3GeetestUtils.gt3TestClose();
                     ToastUtil.showShortToast(LoginActivity.this, "极验获取数据异常,请稍后重试");
-                }
-                break;
-            case 1:
-                if (!TextUtils.isEmpty(result)) {
-                    try {
-                        JSONObject jsonObject = new JSONObject(result);
-                        String key = jsonObject.optString("key");
-                        String secret = jsonObject.optString("secret");
-                        spUtils.saveStringData(Contants.EMPLOYEE_LOGIN.key, key);
-                        spUtils.saveStringData(Contants.EMPLOYEE_LOGIN.secret, secret);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
                 }
                 break;
             case 2:

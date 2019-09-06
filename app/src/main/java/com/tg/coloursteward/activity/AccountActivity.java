@@ -72,7 +72,6 @@ public class AccountActivity extends BaseActivity implements MyListener {
         getPopup(true);
         ListenerUtils.setCallBack(this);
         initView();
-        getAuthAppInfo();
         initOptions();
         initData();
     }
@@ -182,11 +181,7 @@ public class AccountActivity extends BaseActivity implements MyListener {
     private void initDataTop() {
         RequestConfig config = new RequestConfig(this, HttpTools.GET_MINISERVER_TOP);
         Map<String, Object> map = new HashMap();
-        String key = Tools.getStringValue(this, Contants.EMPLOYEE_LOGIN.key);
-        String secret = Tools.getStringValue(this, Contants.EMPLOYEE_LOGIN.secret);
         map.put("access_token", accessToken);
-        map.put("key", key);
-        map.put("secret", secret);
         Map<String, String> params = TokenUtils.getStringMap(TokenUtils.getNewSaftyMap(this, map));
         HttpTools.httpGet_Map(Contants.URl.URL_NEW, "/app/home/utility/calcData", config, (HashMap) params);
     }

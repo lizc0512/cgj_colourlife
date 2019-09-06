@@ -43,7 +43,6 @@ import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.ManageMentLinearlayout;
 import com.tg.coloursteward.view.dialog.ToastFactory;
-import com.tg.user.model.UserModel;
 import com.youmai.hxsdk.chatsingle.IMConnectionActivity;
 import com.youmai.hxsdk.db.bean.EmployeeBean;
 import com.youmai.hxsdk.db.helper.CacheEmployeeHelper;
@@ -67,7 +66,7 @@ import static com.tg.coloursteward.module.MainActivity.getPublicParams;
 @Route(path = APath.EMPLOYEE_DATA_ACT)
 public class EmployeeDataActivity extends BaseActivity implements MyListener, HttpResponse {
     public final static String CONTACTS_ID = "contacts_id";
-    private String contactsID="";
+    private String contactsID = "";
     private ManageMentLinearlayout magLinearLayout;
     private ManageMentLinearlayout llRedpackets;
     private CheckBox cbCollect;
@@ -97,7 +96,6 @@ public class EmployeeDataActivity extends BaseActivity implements MyListener, Ht
         if (intent != null) {
             contactsID = intent.getStringExtra(CONTACTS_ID);
         }
-        getKey();
         String expireTime = Tools.getStringValue(EmployeeDataActivity.this, Contants.storage.APPAUTHTIME);
         Date dt = new Date();
         Long time = dt.getTime();
@@ -113,19 +111,6 @@ public class EmployeeDataActivity extends BaseActivity implements MyListener, Ht
         initView();
         requestData();//加载数据
 
-    }
-
-    private void getKey() {
-        String key = Tools.getStringValue(EmployeeDataActivity.this, Contants.EMPLOYEE_LOGIN.key);
-        String secret = Tools.getStringValue(EmployeeDataActivity.this, Contants.EMPLOYEE_LOGIN.secret);
-        if (TextUtils.isEmpty(key) || TextUtils.isEmpty(secret)) {
-            getKeyAndSecret();
-        }
-    }
-
-    private void getKeyAndSecret() {
-        UserModel userModel = new UserModel(this);
-        userModel.postKeyAndSecret(3, false, this);
     }
 
     /**
@@ -434,19 +419,6 @@ public class EmployeeDataActivity extends BaseActivity implements MyListener, Ht
                 if (!TextUtils.isEmpty(result)) {
                     ToastFactory.showToast(EmployeeDataActivity.this, "取消收藏成功");
                     sendToJava("delete");
-                }
-                break;
-            case 3:
-                if (!TextUtils.isEmpty(result)) {
-                    try {
-                        JSONObject jsonObject = new JSONObject(result);
-                        String key = jsonObject.optString("key");
-                        String secret = jsonObject.optString("secret");
-                        Tools.saveStringValue(EmployeeDataActivity.this, Contants.EMPLOYEE_LOGIN.key, key);
-                        Tools.saveStringValue(EmployeeDataActivity.this, Contants.EMPLOYEE_LOGIN.secret, secret);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
                 }
                 break;
         }

@@ -13,13 +13,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tg.coloursteward.R;
-import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.MessageHandler;
 import com.tg.coloursteward.net.MessageHandler.ResponseListener;
-import com.tg.coloursteward.net.RequestConfig;
-import com.tg.coloursteward.net.RequestParams;
 import com.tg.coloursteward.util.Tools;
 
 import org.json.JSONException;
@@ -58,8 +55,6 @@ public class PwdDialog_jsfp extends Dialog implements ResponseListener {
     private Button btnConfirm;
     private Button btnCancel;
 
-    private String key;
-    private String secret;
 
     public PwdDialog_jsfp(Activity context, int theme, String state,
                           ADialogCallback callback) {
@@ -87,8 +82,6 @@ public class PwdDialog_jsfp extends Dialog implements ResponseListener {
     }
 
     private void initDot() {
-        key = Tools.getStringValue(context, Contants.EMPLOYEE_LOGIN.key);
-        secret = Tools.getStringValue(context, Contants.EMPLOYEE_LOGIN.secret);
         pwd_1 = (ImageView) findViewById(R.id.pwd_1);
         pwd_2 = (ImageView) findViewById(R.id.pwd_2);
         pwd_3 = (ImageView) findViewById(R.id.pwd_3);
@@ -393,26 +386,12 @@ public class PwdDialog_jsfp extends Dialog implements ResponseListener {
      * 是否设置密码
      */
     private void setPwd() {
-        RequestConfig config = new RequestConfig(context, HttpTools.SET_PWD_INFO);
-        config.handler = msgHandler.getHandler();
-        RequestParams params = new RequestParams();
-        params.put("password", pwd);
-        params.put("key", key);
-        params.put("secret", secret);
-//        HttpTools.httpPost(Contants.URl.URL_CPMOBILE, "/1.0/caiRedPaket/setPwd", config, params);
     }
 
     /**
      * 验证支付密码
      */
     private void checkPayPwd() {
-        RequestConfig config = new RequestConfig(context, HttpTools.SET_CHECK_PWD);
-        config.handler = msgHandler.getHandler();
-        RequestParams params = new RequestParams();
-        params.put("password", pwd);
-        params.put("key", key);
-        params.put("secret", secret);
-//        HttpTools.httpGet(Contants.URl.URL_CPMOBILE, "/1.0/caiRedPaket/checkPayPwd", config, params);
     }
 
     public interface ADialogCallback {
@@ -457,7 +436,7 @@ public class PwdDialog_jsfp extends Dialog implements ResponseListener {
                         String state = content.getString("state");
                         if ("ok".equals(state)) {
                             callback.callback();
-                            UserInfo.cashierpassword=pwd;
+                            UserInfo.cashierpassword = pwd;
                             dismiss();
                         } else {
                             ToastFactory.showToast(context, "密码错误");

@@ -402,12 +402,6 @@ public class FragmentManagementTest extends Fragment implements HttpResponse, Vi
                     initInitialize(localCache);
                 }
                 break;
-//            case 2:
-//                if (!TextUtils.isEmpty(result)) {
-//                    SharedPreferencesUtils.getInstance().saveStringData(SpConstants.UserModel.MICROVIEWPAGERITEM + uuidItme, result);
-//                    setMicroVpItem(result);
-//                }
-//                break;
         }
     }
 

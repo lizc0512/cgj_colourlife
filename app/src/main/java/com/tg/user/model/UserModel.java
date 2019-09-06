@@ -40,7 +40,6 @@ import java.util.Map;
  */
 public class UserModel extends BaseModel {
     private String gtUrl = "/app/home/login/verify";
-    private String keySecretUrl = "/1.0/auth";
     private String oauthUrl = "/oauth/token";
     private String oauthUserUrl = "/oauth/user";
     private String singleDeviceUrl = "/cgjapp/single/device/login";
@@ -107,32 +106,6 @@ public class UserModel extends BaseModel {
                 showExceptionMessage(what, response);
             }
         }, true, true);
-    }
-
-    /**
-     * @param what
-     * @param httpResponse auth获取key和secret
-     */
-    public void postKeyAndSecret(int what, boolean isLoading, final HttpResponse httpResponse) {
-        Map<String, Object> params = new HashMap<String, Object>();
-        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 1, keySecretUrl), RequestMethod.POST);
-        request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
-            @Override
-            public void onSucceed(int what, Response<String> response) {
-                int responseCode = response.getHeaders().getResponseCode();
-                String result = response.get();
-                if (responseCode == RequestEncryptionUtils.responseSuccess) {
-                    if (!TextUtils.isEmpty(result)) {
-                        httpResponse.OnHttpResponse(what, result);
-                    }
-                }
-            }
-
-            @Override
-            public void onFailed(int what, Response<String> response) {
-//                showExceptionMessage(what, response);
-            }
-        }, true, isLoading);
     }
 
     /**

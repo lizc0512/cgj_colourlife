@@ -24,7 +24,6 @@ import com.tg.coloursteward.net.RequestParams;
 import com.tg.coloursteward.serice.AppAuthService;
 import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.Tools;
-import com.tg.coloursteward.view.dialog.PwdDialog2;
 import com.tg.coloursteward.view.dialog.ToastFactory;
 
 import org.json.JSONException;
@@ -73,8 +72,6 @@ public class PublicAccountTransferActivity extends BaseActivity implements MyLis
     private String transferAmount;
     private String accessToken_1;
     private AppAuthService appAuthService;//1.0授权
-    private PwdDialog2.ADialogCallback aDialogCallback;
-    private PwdDialog2 aDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

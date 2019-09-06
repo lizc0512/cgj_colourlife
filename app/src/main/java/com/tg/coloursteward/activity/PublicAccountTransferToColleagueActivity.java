@@ -32,7 +32,6 @@ import com.tg.coloursteward.serice.AppAuthService;
 import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.RoundImageView;
-import com.tg.coloursteward.view.dialog.PwdDialog2;
 import com.tg.coloursteward.view.dialog.ToastFactory;
 import com.tg.user.model.UserModel;
 
@@ -46,7 +45,7 @@ import static com.tg.coloursteward.module.MainActivity.getEnvironment;
 import static com.tg.coloursteward.module.MainActivity.getPublicParams;
 
 /**
- * 兑换给同事（对公账户账户兑换）
+ * 对公账户兑换给同事，最新入口
  */
 public class PublicAccountTransferToColleagueActivity extends BaseActivity implements MyListener, HttpResponse {
     private static final String TAG = "PublicAccountTransferTo";
@@ -85,8 +84,6 @@ public class PublicAccountTransferToColleagueActivity extends BaseActivity imple
     private String cano;//收款方账户
     private int atid;//收款方类型
 
-    private PwdDialog2 aDialog;
-    private PwdDialog2.ADialogCallback aDialogCallback;
     private ProgressDialog mProgressDialog;
     private UserModel userModel;
 

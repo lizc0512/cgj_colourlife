@@ -115,7 +115,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
 
         MsgConfig.ContentBean.DataBean item3 = new MsgConfig.ContentBean.DataBean();
-        item3.setComefrom("公告");
+        item3.setComefrom("通知公告");
         item3.setTitle("暂无新消息");
         item3.setOwner_name("暂无");
         item3.setClient_code("tzgg");
@@ -335,7 +335,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 itemView.message_icon.setImageResource(R.drawable.home_icon_message);
             } else if (clientCode.contains("case")) {//蜜蜂协同
                 itemView.message_icon.setImageResource(R.drawable.home_icon_tasksystem);
-            } else if (clientCode.contains("tzgg")) {//公告通知
+            } else if (clientCode.contains("tzgg")) {//通知公告
                 itemView.message_icon.setImageResource(R.drawable.home_icon_notice);
             } else {
                 String url = model.getPushMsg().getICON();

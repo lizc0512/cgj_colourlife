@@ -4,11 +4,14 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -24,6 +27,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
@@ -33,9 +37,11 @@ import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.entity.HomeDialogEntitiy;
 import com.tg.coloursteward.entity.HomeMsgEntity;
 import com.tg.coloursteward.inter.FragmentMineCallBack;
+import com.tg.coloursteward.inter.NetStatusListener;
 import com.tg.coloursteward.model.HomeModel;
 import com.tg.coloursteward.module.MainActivity;
 import com.tg.coloursteward.net.MessageHandler;
+import com.tg.coloursteward.serice.NetWorkStateReceiver;
 import com.tg.coloursteward.util.AuthTimeUtils;
 import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.Tools;
@@ -96,6 +102,9 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
     private AlertDialog dialog;
     private HomeModel homeModel;
     private String dialogUuid;
+    private RelativeLayout rl_home_internet;
+    public NetWorkStateReceiver netWorkStateReceiver;
+    public static NetStatusListener netStatusListener;
 
     @Override
     public void onClick(View v) {
@@ -108,6 +117,10 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
                 popWindowView.setOnDismissListener(new PopupDismissListener());
                 popWindowView.showPopupWindow(iv_contactfragment_scan);
                 lightoff();
+                break;
+            case R.id.rl_home_internet:
+                Intent intent = new Intent(Settings.ACTION_SETTINGS);
+                startActivity(intent);
                 break;
         }
     }
@@ -260,6 +273,20 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
         initView(view);
         reqPushMsg();
         initDialog();
+        initNet();
+    }
+
+    private void initNet() {
+        netStatusListener = new NetStatusListener() {
+            @Override
+            public void netChangeStatus(int status) {
+                if (-1 == status) {
+                    rl_home_internet.setVisibility(View.VISIBLE);
+                } else {
+                    rl_home_internet.setVisibility(View.GONE);
+                }
+            }
+        };
     }
 
     private void initDialog() {
@@ -328,8 +355,10 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
         View header_item = rootView.findViewById(R.id.list_item_header_search_root);
         iv_contactfragment_qrcode = rootView.findViewById(R.id.iv_contactfragment_qrcode);
         iv_contactfragment_scan = rootView.findViewById(R.id.iv_contactfragment_scan);
+        rl_home_internet = rootView.findViewById(R.id.rl_home_internet);
         iv_contactfragment_qrcode.setOnClickListener(this);
         iv_contactfragment_scan.setOnClickListener(this);
+        rl_home_internet.setOnClickListener(this);
         header_item.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -342,7 +371,6 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
 
         mHandler = new MsgHandler(this);
         recyclerView = (XRecyclerView) rootView.findViewById(R.id.message_refresh_recycler);
-
         mLinearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(mLinearLayoutManager);
         mMessageAdapter = new MessageAdapter(getActivity());
@@ -421,6 +449,12 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
     public void onResume() {
         super.onResume();
         HuxinSdkManager.instance().setImMsgCallback(this);
+        if (null == netWorkStateReceiver) {
+            netWorkStateReceiver = new NetWorkStateReceiver();
+        }
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+        mContext.registerReceiver(netWorkStateReceiver, intentFilter);
     }
 
 
@@ -428,6 +462,7 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
     public void onPause() {
         super.onPause();
         HuxinSdkManager.instance().removeImMsgCallback(this);
+        mContext.unregisterReceiver(netWorkStateReceiver);
     }
 
 
@@ -462,9 +497,12 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
         popupWindow.setFocusable(true);
         popupWindow.setOutsideTouchable(true);
         popupWindow.showAsDropDown(v, 400, 0);
-        TextView tv_del = (TextView) view.findViewById(R.id.tv_del);
-        TextView tv_top = (TextView) view.findViewById(R.id.tv_top);
-
+        TextView tv_del = view.findViewById(R.id.tv_del);
+        TextView tv_top = view.findViewById(R.id.tv_top);
+        RelativeLayout rl_del = view.findViewById(R.id.rl_del);
+        if ("tzgg".equals(bean.getPushMsg().getApp_id())) {
+            rl_del.setVisibility(View.GONE);
+        }
         String targetUuid = bean.getTargetUuid();
         boolean isTop = HuxinSdkManager.instance().getMsgTop(targetUuid);
 

@@ -15,14 +15,15 @@ import android.widget.TextView;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.baseModel.HttpResponse;
-import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.LinkParseUtil;
 import com.tg.setting.entity.KeyCommunityListEntity;
+import com.tg.setting.entity.KeyMessageEntity;
 import com.tg.setting.fragment.KeyDoorBagsFragment;
 import com.tg.setting.fragment.KeyDoorListFragment;
 import com.tg.setting.fragment.KeyDoorStatisticsFragment;
+import com.tg.setting.model.KeyDoorModel;
 import com.tg.setting.view.KeyCommunityPopWindowView;
 import com.tg.user.model.UserModel;
 import com.youmai.hxsdk.utils.DisplayUtil;
@@ -56,6 +57,7 @@ public class KeyDoorManagerActivity extends BaseActivity implements HttpResponse
     private KeyDoorListFragment keyDoorListFragment;
     private KeyDoorBagsFragment keyDoorBagsFragment;
     private KeyDoorStatisticsFragment keyDoorStatisticsFragment;
+    private KeyDoorModel keyDoorModel;
 
 
     @Override
@@ -115,6 +117,7 @@ public class KeyDoorManagerActivity extends BaseActivity implements HttpResponse
                         communityUuid = contentBean.getCommunityUuid();
                         if (!TextUtils.isEmpty(communityUuid)) {
                             iv_add.setVisibility(View.VISIBLE);
+                            getMessageCount();
                         }
                     }
                 } catch (Exception e) {
@@ -128,8 +131,42 @@ public class KeyDoorManagerActivity extends BaseActivity implements HttpResponse
                     transaction.show(keyDoorListFragment);
                 }
                 transaction.commitAllowingStateLoss();
+
+                break;
+            case 2:
+                try {
+                    KeyMessageEntity keyMessageEntity = GsonUtils.gsonToBean(result, KeyMessageEntity.class);
+                    KeyMessageEntity.ContentBean contentBean = keyMessageEntity.getContent();
+                    int unReadCount = contentBean.getCount();
+                    messageUrl = contentBean.getUrl();
+                    if (unReadCount > 0) {
+                        iv_msg.setImageResource(R.drawable.ic_key_red_msg);
+                    } else {
+                        iv_msg.setImageResource(R.drawable.ic_key_msg);
+                    }
+                } catch (Exception e) {
+
+                }
                 break;
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!TextUtils.isEmpty(communityUuid)) {
+            getMessageCount();
+        }
+    }
+
+
+    private String messageUrl;
+
+    private void getMessageCount() {
+        if (null == keyDoorModel) {
+            keyDoorModel = new KeyDoorModel(KeyDoorManagerActivity.this);
+        }
+        keyDoorModel.getApplicationCountAndUrl(2, communityUuid, UserInfo.uid, this::OnHttpResponse);
     }
 
 
@@ -150,6 +187,7 @@ public class KeyDoorManagerActivity extends BaseActivity implements HttpResponse
         if (null != keyDoorStatisticsFragment) {
             keyDoorStatisticsFragment.changeCommunity(communityUuid, communityName);
         }
+        getMessageCount();
     }
 
     /**
@@ -197,8 +235,7 @@ public class KeyDoorManagerActivity extends BaseActivity implements HttpResponse
                 startActivityForResult(intent, 1);
                 break;
             case R.id.iv_msg:
-                String url = Contants.URl.URL_LEKAI_NOTIFICATION + "?community_uuid=" + communityUuid + "&user_uuid=" + UserInfo.uid;
-                LinkParseUtil.parse(KeyDoorManagerActivity.this, url, "");
+                LinkParseUtil.parse(KeyDoorManagerActivity.this, messageUrl, "");
                 break;
             case R.id.tv_door:
                 setTabStyle(tv_door, R.drawable.ic_key_door_select);

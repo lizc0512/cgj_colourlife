@@ -46,6 +46,7 @@
                 android:background="@drawable/ic_key_down" />
         </LinearLayout>
 
+
         <ImageView
             android:id="@+id/iv_msg"
             android:layout_width="wrap_content"
@@ -56,6 +57,7 @@
             android:padding="@dimen/size_8dp"
             android:src="@drawable/ic_key_msg"
             tools:ignore="ContentDescription" />
+
 
         <ImageView
             android:id="@+id/iv_add"
@@ -68,6 +70,7 @@
             android:src="@drawable/ic_key_add"
             android:visibility="visible"
             tools:ignore="ContentDescription" />
+
         <View
             android:layout_width="match_parent"
             android:layout_height="1px"

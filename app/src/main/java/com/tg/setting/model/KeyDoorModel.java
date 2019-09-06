@@ -35,6 +35,7 @@ public class KeyDoorModel extends BaseModel {
     private String deleteDoorLog = "/yuncontrol/ycAccessControl/deleteInstallDevice";  //重绑设备
     private String communityStatistics = "/yuncontrol/cgjCommunityStatistics/getCommunityStatistics";  //获取小区统计的整体数据
     private String communityTypeStatistics = "/yuncontrol/cgjCommunityStatistics/getCommunityDateStatistics/";  //获取小区统计的整体数据
+    private String communityCountAndUrl = "/yuncontrol/cgjVisitorInformation/getApplicationCountAndUrl";  //获取当前小区申请数以及跳转链接
 
     public KeyDoorModel(Context context) {
         super(context);
@@ -284,8 +285,8 @@ public class KeyDoorModel extends BaseModel {
     /**
      * 新增门禁
      */
-    public void upadteDoorInfor(int what,String accessId, String communityUuid, String accessName, String unitUuid, String isUnit, String unitName, String buildUuid,
-                           String buildName, String location, String content, final HttpResponse httpResponse) {
+    public void upadteDoorInfor(int what, String accessId, String communityUuid, String accessName, String unitUuid, String isUnit, String unitName, String buildUuid,
+                                String buildName, String location, String content, final HttpResponse httpResponse) {
         Map<String, Object> params = new HashMap<>();
         params.put("id", accessId);//小区id
         params.put("communityUuid", communityUuid);//小区id
@@ -298,6 +299,36 @@ public class KeyDoorModel extends BaseModel {
         params.put("location", location);//位置，选单元门时需要 //位置信息用于app显示门禁时判断位置
         params.put("content", content);//门禁描述
         final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 11, updateDoorUrl), RequestMethod.POST);
+        request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    int code = showSuccesResultMessage(result);
+                    if (code == 0) {
+                        httpResponse.OnHttpResponse(what, result);
+                    } else {
+                        showErrorCodeMessage(response);
+                    }
+                } else {
+                    showErrorCodeMessage(response);
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+                showExceptionMessage(what, response);
+            }
+        }, true, false);
+    }
+
+
+    public void getApplicationCountAndUrl(int what, String communityUuid, String accountUuid, final HttpResponse httpResponse) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("communityUuid", communityUuid);
+        params.put("accountUuid", accountUuid);
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 11, communityCountAndUrl), RequestMethod.GET);
         request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
             @Override
             public void onSucceed(int what, Response<String> response) {

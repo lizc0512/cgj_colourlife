@@ -338,17 +338,13 @@ public class KeyDoorModel extends BaseModel {
                     int code = showSuccesResultMessage(result);
                     if (code == 0) {
                         httpResponse.OnHttpResponse(what, result);
-                    } else {
-                        showErrorCodeMessage(response);
                     }
-                } else {
-                    showErrorCodeMessage(response);
                 }
             }
 
             @Override
             public void onFailed(int what, Response<String> response) {
-                showExceptionMessage(what, response);
+
             }
         }, true, false);
     }

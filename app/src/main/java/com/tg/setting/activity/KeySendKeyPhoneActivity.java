@@ -22,7 +22,6 @@ import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.util.DateUtils;
 import com.tg.coloursteward.util.GsonUtils;
-import com.tg.coloursteward.util.LinkParseUtil;
 import com.tg.coloursteward.util.ToastUtil;
 import com.tg.setting.adapter.KeyPhoneAdapter;
 import com.tg.setting.entity.KeyIdentityEntity;
@@ -464,8 +463,8 @@ public class KeySendKeyPhoneActivity extends BaseActivity implements HttpRespons
                 String nowTime = startTime = DateUtils.getStringDate(new Date(System.currentTimeMillis()), "");
                 String selectTime = y + "-" + m + "-" + d + " " + h + ":" + mi + ":" + 0;
                 String selectText = numFormat(y) + "-" + numFormat(m) + "-" + numFormat(d) + " " + numFormat(h) + ":" + numFormat(mi) + ":" + "00";
-                int status = DateUtils.compareDate(nowTime, selectTime);
-                if (1 == status) {
+                int status = nowTime.compareTo(selectTime);
+                if (status > 0) {
                     ToastUtil.showShortToast(this, "开始时间不能在当前时间之前");
                     break;
                 }
@@ -475,9 +474,9 @@ public class KeySendKeyPhoneActivity extends BaseActivity implements HttpRespons
             case 2:
                 String selectDate = y + "-" + m + "-" + d + " " + h + ":" + mi + ":" + 0;
                 String text = numFormat(y) + "-" + numFormat(m) + "-" + numFormat(d) + " " + numFormat(h) + ":" + numFormat(mi) + ":" + "00";
-                int type = DateUtils.compareDate(startTimeCustom, selectDate);
-                if (1 == type) {
-                    ToastUtil.showShortToast(this, "结束时间不能在开始时间之前");
+                int type = startTimeCustom.compareTo(selectDate);
+                if (type >= 0) {
+                    ToastUtil.showShortToast(this, "结束时间不能小于在开始时间");
                     break;
                 }
                 endTimeCustom = selectDate;

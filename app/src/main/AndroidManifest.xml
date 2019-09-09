@@ -291,10 +291,18 @@
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="KfVrlHlSoYmNqZQjRtoQUp6GT470rYZ3" />
-        <!--<meta-data-->
-        <!--android:name="JPUSH_APPKEY"-->
-        <!--android:value="${JPUSH_APPKEY_VALUE}"-->
-        <!--tools:replace="android:value"/>-->
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.tg.coloursteward.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true"
+            tools:replace="authorities">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_provider_paths"
+                tools:replace="resource" />
+        </provider>
+
         <activity android:name=".module.BrowerJumpExcessiveActivity"></activity>
         <activity android:name="com.tg.user.activity.LeadActivity" />
         <activity

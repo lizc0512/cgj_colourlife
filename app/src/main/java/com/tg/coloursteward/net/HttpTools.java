@@ -67,8 +67,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import static com.tg.coloursteward.constant.Contants.URl.URL_CPMOBILE;
-
 public class HttpTools {
     public static final String DIFFERENCE = "difference";
     public static final int RESPONSE_ERROR = 0;
@@ -255,27 +253,14 @@ public class HttpTools {
                             return;
                         }
                         String decryptStr = "";
-                        if (URL_NAME.startsWith(URL_CPMOBILE)) {
+                        if (rqtConfig.decrypt) {
                             try {
-                                JSONObject jsonObject = new JSONObject();
-                                jsonObject.put(FIELD_CODE, 0);
-                                jsonObject.put(FIELD_CONTENT, response);
-                                jsonObject.put(FIELD_MESSAGE, "success");
-                                decryptStr = jsonObject.toString();
-                            } catch (JSONException e) {
+                                decryptStr = URLDecoder.decode(DES.Decrypt(response), "UTF-8");
+                            } catch (Exception e) {
                                 e.printStackTrace();
                             }
                         } else {
-                            if (rqtConfig.decrypt) {
-                                try {
-                                    decryptStr = URLDecoder.decode(DES.Decrypt(response), "UTF-8");
-                                } catch (Exception e) {
-                                    // TODO Auto-generated catch block
-                                    e.printStackTrace();
-                                }
-                            } else {
-                                decryptStr = response;
-                            }
+                            decryptStr = response;
                         }
                         if (rqtConfig.handler != null) {
                             Bundle bundle = new Bundle();
@@ -294,7 +279,6 @@ public class HttpTools {
 
                     @Override
                     public void onPrepare(String hintString) {// 子线程中
-                        // TODO Auto-generated method stub
                         if (rqtConfig.activity != null
                                 && rqtConfig.activity.isFinishing()) {
                             return;
@@ -341,9 +325,7 @@ public class HttpTools {
         }) {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
-                if (URL_NAME.startsWith(Contants.URl.URL_CPMOBILE)) {
-                    return param;
-                } else if (URL_NAME.startsWith(Contants.URl.URL_NEW)) {
+                if (URL_NAME.startsWith(Contants.URl.URL_NEW)) {
                     return param;
                 } else if (URL_NAME.startsWith(Contants.URl.URL_ICESTAFF)) {
                     return param;
@@ -355,7 +337,6 @@ public class HttpTools {
                     try {
                         sign = getSign(ts);
                     } catch (Exception e1) {
-                        // TODO Auto-generated catch block
                         e1.printStackTrace();
                     }
                     HashMap<String, String> map = new HashMap<String, String>();
@@ -473,27 +454,14 @@ public class HttpTools {
                             return;
                         }
                         String decryptStr = "";
-                        if (URL.startsWith(URL_CPMOBILE)) {
+                        if (rqtConfig.decrypt) {
                             try {
-                                JSONObject jsonObject = new JSONObject();
-                                jsonObject.put(FIELD_CODE, 0);
-                                jsonObject.put(FIELD_CONTENT, response);
-                                jsonObject.put(FIELD_MESSAGE, "success");
-                                decryptStr = jsonObject.toString();
-                            } catch (JSONException e) {
+                                decryptStr = URLDecoder.decode(DES.Decrypt(response), "UTF-8");
+                            } catch (Exception e) {
                                 e.printStackTrace();
                             }
                         } else {
-                            if (rqtConfig.decrypt) {
-                                try {
-                                    decryptStr = URLDecoder.decode(DES.Decrypt(response), "UTF-8");
-                                } catch (Exception e) {
-                                    // TODO Auto-generated catch block
-                                    e.printStackTrace();
-                                }
-                            } else {
-                                decryptStr = response;
-                            }
+                            decryptStr = response;
                         }
                         if (rqtConfig.handler != null) {
                             Bundle bundle = new Bundle();
@@ -513,7 +481,6 @@ public class HttpTools {
 
                     @Override
                     public void onPrepare(String hintString) {
-                        // TODO Auto-generated method stub
                         if (rqtConfig.activity != null
                                 && rqtConfig.activity.isFinishing()) {
                             return;
@@ -538,7 +505,6 @@ public class HttpTools {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                // TODO Auto-generated method stub
                 if (rqtConfig.activity != null
                         && rqtConfig.activity.isFinishing()) {
                     return;
@@ -685,7 +651,6 @@ public class HttpTools {
                 return false;
             }
         } catch (UnsupportedEncodingException e1) {
-            // TODO Auto-generated catch block
             e1.printStackTrace();
             msg.what = RESPONSE_ERROR;
             //bundle.putString(KEY_HINT_STRING, "参数编码异常");
@@ -693,7 +658,6 @@ public class HttpTools {
             hand.sendMessage(msg);
             return false;
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
             msg.what = RESPONSE_ERROR;
             //bundle.putString(KEY_HINT_STRING, "参数加密异常");
@@ -844,9 +808,7 @@ public class HttpTools {
             params = new HashMap<>();
         } else {
             try {
-                if (URL.startsWith(Contants.URl.URL_CPMOBILE)) {
-                    url = URL + getCombileUrl(apiName, params);
-                } else if (URL.startsWith(Contants.URl.URL_NEW)) {
+                if (URL.startsWith(Contants.URl.URL_NEW)) {
                     url = URL + GetNormalUrl(URL, apiName, (HashMap) params);
                 } else if (apiName.contains("getWaitingBalanceCount")) {
                     url = URL + GetNormalUrl(URL, apiName, (HashMap) params);
@@ -880,13 +842,8 @@ public class HttpTools {
             paramsStr = params.toHashMap();
         }
         try {
-            if (URL.startsWith(Contants.URl.URL_CPMOBILE)) {
-                url = URL + getCombileUrl(apiName, paramsStr);
-            } else {
-                url = URL + GetUrl(URL, apiName, paramsStr);
-            }
+            url = URL + GetUrl(URL, apiName, paramsStr);
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
             return;
         }
@@ -909,13 +866,8 @@ public class HttpTools {
             paramsStr = params.toHashMap();
         }
         try {
-            if (URL.startsWith(Contants.URl.URL_CPMOBILE)) {
-                url = URL + getCombileUrl(apiName, paramsStr);
-            } else {
-                url = URL + GetUrl(URL, apiName, paramsStr);
-            }
+            url = URL + GetUrl(URL, apiName, paramsStr);
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
             return;
         }
@@ -1040,15 +992,7 @@ public class HttpTools {
         } else {
             paramsStr = requestParams.toHashMapString();
         }
-        if (URL.startsWith(Contants.URl.URL_CPMOBILE)) {
-            String url = URL + postCombileMD5(apiName, paramsStr);
-            paramsStr.remove("key");
-            paramsStr.remove("secret");
-            post(url, Method.POST, rqtConfig, paramsStr);
-        } else {
-            post(URL + apiName, Method.POST, rqtConfig, paramsStr);
-        }
-
+        post(URL + apiName, Method.POST, rqtConfig, paramsStr);
     }
 
     /**
@@ -1083,7 +1027,6 @@ public class HttpTools {
         try {
             jsonObj = new JSONObject(jsonString);
         } catch (JSONException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
             return -1;
         }
@@ -1104,7 +1047,6 @@ public class HttpTools {
         try {
             jsonObj = new JSONObject(jsonString);
         } catch (JSONException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
             return -1;
         }
@@ -1125,7 +1067,6 @@ public class HttpTools {
         try {
             jsonObj = new JSONObject(jsonString);
         } catch (JSONException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
             return null;
         }
@@ -1149,7 +1090,6 @@ public class HttpTools {
         try {
             jsonObj = new JSONObject(jsonString);
         } catch (JSONException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
             return null;
         }
@@ -1173,7 +1113,6 @@ public class HttpTools {
         try {
             jsonObj = new JSONObject(jsonString);
         } catch (JSONException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
             return null;
         }
@@ -1227,7 +1166,6 @@ public class HttpTools {
         try {
             jsonObj = new JSONObject(jsonString);
         } catch (JSONException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
             return null;
         }
@@ -1251,7 +1189,6 @@ public class HttpTools {
         try {
             jsonObj = new JSONObject(jsonString);
         } catch (JSONException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
             return null;
         }
@@ -1284,7 +1221,6 @@ public class HttpTools {
         try {
             jsonObj = new JSONObject(jsonString);
         } catch (JSONException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
             return count;
         }
@@ -1305,7 +1241,6 @@ public class HttpTools {
         try {
             jsonObj = new JSONObject(jsonString);
         } catch (JSONException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
             return null;
         }
@@ -1326,7 +1261,6 @@ public class HttpTools {
         try {
             jsonObj = new JSONObject(jsonString);
         } catch (JSONException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
             return null;
         }
@@ -1454,7 +1388,6 @@ public class HttpTools {
         try {
             jsonObj = new JSONObject(jsonString);
         } catch (JSONException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
             return new ResponseData(null);
         }
@@ -1471,7 +1404,6 @@ public class HttpTools {
         try {
             jsonArray = new JSONArray(jsonString);
         } catch (JSONException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
             return new ResponseData(null);
         }

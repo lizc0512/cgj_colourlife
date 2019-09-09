@@ -10,36 +10,34 @@ public interface Contants {
     interface URl {
 
         //////////////    正式地址   //////////////////////////////
-//        String URL_ICETEST = "https://openapi.colourlife.com/v1";//
-//        String URL_CPMOBILE = "http://cpmobile.colourlife.com";
-//        String URL_OAUTH2 = "https://oauth2-cgj.colourlife.com";
-//        String SINGLE_DEVICE = "https://single.colourlife.com";
-//        String URL_NEW = "https://cgj-backyard.colourlife.com";
-//        String URL_ICESTAFF = "https://staff-ice.colourlife.com";
-//        String CLIENT_SECRET = "t2o0a1xl2lOmoPi4tuHf5uw4VZloXGs7y1Kd0Yoq";
-//        String URL_QRCODE = "https://qrcode.colourlife.com";
-//        String URL_IMPUSH = "https://impush-cgj.colourlife.com";
-//        String VERSION_ADDRESS = "https://version.colourlife.com";
-//        String URL_H5OAUTH = "https://oauth-czy.colourlife.com";
-//        String URL_LEKAI = "https://lekaiadminapi-door.colourlife.com";
-//        String environment = "release";
-//        String cqj_appid = "327494513335603200";
+        String URL_ICETEST = "https://openapi.colourlife.com/v1";//
+        String URL_OAUTH2 = "https://oauth2-cgj.colourlife.com";
+        String SINGLE_DEVICE = "https://single.colourlife.com";
+        String URL_NEW = "https://cgj-backyard.colourlife.com";
+        String URL_ICESTAFF = "https://staff-ice.colourlife.com";
+        String CLIENT_SECRET = "t2o0a1xl2lOmoPi4tuHf5uw4VZloXGs7y1Kd0Yoq";
+        String URL_QRCODE = "https://qrcode.colourlife.com";
+        String URL_IMPUSH = "https://impush-cgj.colourlife.com";
+        String VERSION_ADDRESS = "https://version.colourlife.com";
+        String URL_H5OAUTH = "https://oauth-czy.colourlife.com";
+        String URL_LEKAI = "https://lekaiadminapi-door.colourlife.com";
+        String environment = "release";
+        String cqj_appid = "327494513335603200";
 
         ////////////////  测试地址   ///////////////////////////////////
-        String URL_ICETEST = "https://openapi-test.colourlife.com/v1";//
-        String URL_CPMOBILE = "http://cpmobile-czytest.colourlife.com";
-        String URL_OAUTH2 = "https://oauth2-cgj-test.colourlife.com";
-        String SINGLE_DEVICE = "https://single-czytest.colourlife.com";
-        String URL_NEW = "https://cgj-backyard-test.colourlife.com";
-        String URL_ICESTAFF = "http://staff.ice.test.colourlife.com";
-        String CLIENT_SECRET = "xlsfrQS5R49upmfZbhlsrUzAt9HDA5K4ptLYsqK5";
-        String URL_QRCODE = "http://qrcode-czytest.colourlife.com";
-        String URL_IMPUSH = "https://impush-cgj-test.colourlife.com";
-        String VERSION_ADDRESS = "https://version-czytest.colourlife.com";
-        String URL_H5OAUTH = "https://oauth-czytest.colourlife.com";
-        String URL_LEKAI = "https://lekaiadminapi-doortest.colourlife.com";
-        String environment = "debug";
-        String cqj_appid = "323521861252157440";
+//        String URL_ICETEST = "https://openapi-test.colourlife.com/v1";//
+//        String URL_OAUTH2 = "https://oauth2-cgj-test.colourlife.com";
+//        String SINGLE_DEVICE = "https://single-czytest.colourlife.com";
+//        String URL_NEW = "https://cgj-backyard-test.colourlife.com";
+//        String URL_ICESTAFF = "http://staff.ice.test.colourlife.com";
+//        String CLIENT_SECRET = "xlsfrQS5R49upmfZbhlsrUzAt9HDA5K4ptLYsqK5";
+//        String URL_QRCODE = "http://qrcode-czytest.colourlife.com";
+//        String URL_IMPUSH = "https://impush-cgj-test.colourlife.com";
+//        String VERSION_ADDRESS = "https://version-czytest.colourlife.com";
+//        String URL_H5OAUTH = "https://oauth-czytest.colourlife.com";
+//        String URL_LEKAI = "https://lekaiadminapi-doortest.colourlife.com";
+//        String environment = "debug";
+//        String cqj_appid = "323521861252157440";
     }
 
     interface APP {

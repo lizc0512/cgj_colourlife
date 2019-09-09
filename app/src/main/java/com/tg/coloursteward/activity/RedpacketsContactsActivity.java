@@ -1,9 +1,9 @@
 package com.tg.coloursteward.activity;
 
+import android.Manifest;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.os.Message;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.view.View;
 import android.widget.AdapterView;
@@ -11,12 +11,10 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.hjq.permissions.OnPermission;
+import com.hjq.permissions.XXPermissions;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.BaseActivity;
-import com.tg.coloursteward.constant.Contants;
-import com.tg.coloursteward.net.HttpTools;
-import com.tg.coloursteward.net.RequestConfig;
-import com.tg.coloursteward.net.RequestParams;
 import com.tg.coloursteward.phone.BaseUtil;
 import com.tg.coloursteward.phone.CharacterParser;
 import com.tg.coloursteward.phone.PinyinComparator;
@@ -24,12 +22,9 @@ import com.tg.coloursteward.phone.SideBar;
 import com.tg.coloursteward.phone.SideBar.OnTouchingLetterChangedListener;
 import com.tg.coloursteward.phone.SortAdapter;
 import com.tg.coloursteward.phone.SortModel;
+import com.tg.coloursteward.util.ToastUtil;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.dialog.ToastFactory;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -61,7 +56,27 @@ public class RedpacketsContactsActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initViews();
+        initPermission();
+    }
+
+    private void initPermission() {
+        if (XXPermissions.isHasPermission(this, Manifest.permission.READ_CONTACTS)) {
+            initViews();
+        } else {
+            XXPermissions.with(this)
+                    .permission(Manifest.permission.READ_CONTACTS)
+                    .request(new OnPermission() {
+                        @Override
+                        public void hasPermission(List<String> granted, boolean isAll) {
+                            initViews();
+                        }
+
+                        @Override
+                        public void noPermission(List<String> denied, boolean quick) {
+                            ToastUtil.showShortToast(RedpacketsContactsActivity.this, "请打开通讯录权限才能使用该功能");
+                        }
+                    });
+        }
     }
 
     private void initViews() {
@@ -150,47 +165,7 @@ public class RedpacketsContactsActivity extends BaseActivity {
                 mSortList.add(sortModel);
             }
         }
-        JSONArray contactArray = new JSONArray();
-        for (int i = 0; i < mSortList.size(); i++) {
-            contactArray.put(mSortList.get(i).getTelnum());
-        }
-        String key = Tools.getStringValue(this, "EmployeeLogin_key");
-        String secret = Tools.getStringValue(this, "EmployeeLogin_secret");
-        RequestConfig config = new RequestConfig(RedpacketsContactsActivity.this, HttpTools.POST_SEND_PACKET);
-        RequestParams params = new RequestParams();
-        params.put("phone", contactArray + "");
-        params.put("key", key);
-        params.put("secret", secret);//android 与IOS逻辑不同
-        HttpTools.httpPost(Contants.URl.URL_CPMOBILE, "/1.0/caiRedPaket/checkSendPacket", config, params);
         return mSortList;
-    }
-
-    @Override
-    public void onSuccess(Message msg, String jsonString, String hintString) {
-        super.onSuccess(msg, jsonString, hintString);
-        int code = HttpTools.getCode(jsonString);
-        JSONObject content = HttpTools.getContentJSONObject(jsonString);
-        if (code == 0) {
-            if (content != null) {
-                try {
-                    if ("1".equals(content.getString("ok"))) {
-                        JSONArray jsonArr = content.getJSONArray("sendStatus");
-                        for (int i = jsonArr.length() - 1; i >= 0; i--) {
-                            if (jsonArr.getInt(i) == 0) {
-                                SourceDateList.remove(i);
-                            }
-                        }
-                    }
-                    if (SourceDateList.size() == 0) {
-                        ToastFactory.showToast(RedpacketsContactsActivity.this, "通讯录中未识别到同事");
-                        finish();
-                    }
-                    adapter.notifyDataSetChanged();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
     }
 
     @Override

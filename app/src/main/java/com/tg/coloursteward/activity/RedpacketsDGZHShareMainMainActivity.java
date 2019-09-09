@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
@@ -22,7 +23,6 @@ import com.tg.coloursteward.net.RequestConfig;
 import com.tg.coloursteward.net.RequestParams;
 import com.tg.coloursteward.net.ResponseData;
 import com.tg.coloursteward.util.StringUtils;
-import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.dialog.ToastFactory;
 
 import org.json.JSONArray;
@@ -173,6 +173,9 @@ public class RedpacketsDGZHShareMainMainActivity extends BaseActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
+                if (!TextUtils.isEmpty(s.toString())) {
+                    edtColleagueInfo.setSelection(s.length());
+                }
             }
         });
     }
@@ -183,27 +186,11 @@ public class RedpacketsDGZHShareMainMainActivity extends BaseActivity {
      * @param username
      */
     private void getEmployeeInfo(String username) {
-        /**
-         * 获取版本号
-         */
-//        String versionShort = BuildConfig.VERSION_NAME;
-//        String key = Tools.getStringValue(this, Contants.EMPLOYEE_LOGIN.key);
-//        String secret = Tools.getStringValue(this, Contants.EMPLOYEE_LOGIN.secret);
-//        RequestConfig config = new RequestConfig(RedpacketsDGZHShareMainMainActivity.this, HttpTools.GET_EMPLOYEE_INFO, "查询");
-//        RequestParams params = new RequestParams();
-//        params.put("username", username);
-//        params.put("version", versionShort);
-//        params.put("key", key);
-//        params.put("secret", secret);//修改接口为txl2/contacts/search
-//        HttpTools.httpPost(Contants.URl.URL_CPMOBILE, "/1.0/caiRedPaket/getEmployeeInfo", config, params);
-
         RequestConfig confg = new RequestConfig(this, HttpTools.GET_EMPLOYEE_INFO, "查询");
         RequestParams param = new RequestParams();
         param.put("keyword", username);
         param.put("pagesize", "20");
         HttpTools.httpGet(Contants.URl.URL_ICETEST, "/txl2/contacts/search", confg, param);
-
-
     }
 
     @Override
@@ -220,10 +207,10 @@ public class RedpacketsDGZHShareMainMainActivity extends BaseActivity {
                         RedpacketsInfo info;
                         for (int i = 0; i < data.length; i++) {
                             info = new RedpacketsInfo();
-                            String job=data.getString(i, "jobType");
-                            String part=data.getString(i, "orgName");
-                            String name=data.getString(i, "name");
-                            String buff=name+"--"+job+"("+part+")";
+                            String job = data.getString(i, "jobType");
+                            String part = data.getString(i, "orgName");
+                            String name = data.getString(i, "name");
+                            String buff = name + "--" + job + "(" + part + ")";
                             info.receiver_id = data.getString(i, "czyId");
                             info.receiverName = buff;
                             info.receiverOA = data.getString(i, "username");
@@ -255,7 +242,7 @@ public class RedpacketsDGZHShareMainMainActivity extends BaseActivity {
 
                         intent = new Intent(RedpacketsDGZHShareMainMainActivity.this, RedpacketsDGZHAccountListActivity.class);
                         intent.putExtra(Contants.PARAMETER.BALANCE, balance);
-                        intent.putExtra("redpackets_list",list);
+                        intent.putExtra("redpackets_list", list);
                         Bundle bundleObject = new Bundle();
                         bundleObject.putSerializable("redpackets_list", list);
                         bundleObject.putString(Contants.PARAMETER.PUBLIC_ACCOUNT, money);

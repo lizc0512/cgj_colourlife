@@ -102,8 +102,6 @@ public class ViewPagerAdapter extends PagerAdapter {
 
 	@Override
 	public Object instantiateItem(ViewGroup container, int position) {
-		// TODO Auto-generated method stub
-		// View v = LayoutInflater.from(con).inflate(R.layout., null);
 		View v = null;
 		if(position >= 0 && position < tempList.size()){
 			v = tempList.get(position);
@@ -120,7 +118,6 @@ public class ViewPagerAdapter extends PagerAdapter {
     
 	@Override
 	public void destroyItem(ViewGroup container, int position, Object object) {
-		// TODO Auto-generated method stub
 		if(position >= 0 && position < tempList.size()){
 			container.removeView(tempList.get(position));
 		}
@@ -128,7 +125,6 @@ public class ViewPagerAdapter extends PagerAdapter {
 	
 	@Override
 	public boolean isViewFromObject(View arg0, Object arg1) {
-		// TODO Auto-generated method stub
 		return arg0 == arg1;
 	}
 }

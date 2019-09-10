@@ -16,7 +16,6 @@ import android.widget.TextView;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.constant.Contants;
-import com.tg.coloursteward.info.HistoryTransferInfo;
 import com.tg.coloursteward.info.RedpacketsInfo;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.RequestConfig;
@@ -98,7 +97,6 @@ public class RedpacketsDGZHShareMainMainActivity extends BaseActivity {
     private Intent intent;
     private int OA;
     final ArrayList<RedpacketsInfo> list = new ArrayList<RedpacketsInfo>();
-    private ArrayList<HistoryTransferInfo> pageInfoList = new ArrayList<HistoryTransferInfo>();
 
     private String money;//对公账户余额
     private String transferNameOA;//转账对方OA账号

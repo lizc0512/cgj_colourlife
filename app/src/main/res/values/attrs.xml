@@ -19,9 +19,6 @@
     <declare-styleable name="CustomStar">
         <attr name="level" format="float" />
     </declare-styleable>
-    <declare-styleable name="ImageViewGroup">
-        <attr name="column_count" format="integer" />
-    </declare-styleable>
     <declare-styleable name="CircleImageView">
         <attr name="civ_border_width" format="dimension" />
         <attr name="civ_border_color" format="color" />

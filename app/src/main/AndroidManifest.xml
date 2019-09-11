@@ -90,8 +90,6 @@
         <activity android:name=".activity.MipcaActivityCapture" />
         <!-- 个人中心 -->
         <activity android:name="com.tg.user.activity.UserInfoActivity" />
-        <!-- 图片显示 -->
-        <activity android:name=".activity.ShowImageActivity" />
         <!-- 更多设置 -->
         <activity android:name="com.tg.setting.activity.SettingActivity" />
         <!-- 关于app -->
@@ -164,11 +162,6 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <!-- 通讯录搜索 -->
-        <activity
-            android:name=".activity.HomeContactSearchActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:label="@string/app_name" />
         <!-- 浏览器BaseActivity -->
         <activity
             android:name=".activity.MyBrowserActivity"
@@ -243,8 +236,6 @@
         <!-- 更新App服务 -->
         <service android:name=".serice.DownLoadService" />
 
-        <activity android:name=".activity.SearchContactListActivity" />
-        <activity android:name=".activity.SearchHomeListActivity" />
         <activity android:name=".activity.PublicAccountActivity" />
         <activity android:name="com.tg.user.activity.ForgetPasswordActivity" />
         <activity android:name="com.tg.user.activity.ForgetPasswordVerifyActivity" />

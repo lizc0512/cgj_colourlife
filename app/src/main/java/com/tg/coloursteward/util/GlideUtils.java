@@ -42,6 +42,24 @@ public class GlideUtils {
 
     }
 
+    /**
+     * 加载项目中的图片
+     *
+     * @param mContext
+     * @param resourceId
+     * @param mImageView
+     */
+    public static void loadImageView(Context mContext, int resourceId, ImageView mImageView) {
+        try {
+            if (null != mContext) {
+                Glide.with(mContext).load(resourceId).apply((new RequestOptions()).diskCacheStrategy(DiskCacheStrategy.ALL)).into(mImageView);
+            }
+        } catch (Exception var4) {
+            ;
+        }
+
+    }
+
     //设置加载中以及加载失败图片
     public static void loadImageDefaultDisplay(Context mContext, String path, ImageView mImageView, int lodingImage, int errorImageView) {
         try {

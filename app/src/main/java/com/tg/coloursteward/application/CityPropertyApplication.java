@@ -150,7 +150,6 @@ public class CityPropertyApplication extends Application {
                 .discCacheFileNameGenerator(new Md5FileNameGenerator())
                 .tasksProcessingOrder(QueueProcessingType.LIFO)
                 .build();
-        // Initialize ImageLoader with configuration.
         ImageLoader.getInstance().init(config);
     }
 

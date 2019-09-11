@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -12,8 +11,6 @@ import android.widget.TextView;
 import com.dashuview.library.keep.Cqb_PayUtil;
 import com.dashuview.library.keep.ListenerUtils;
 import com.dashuview.library.keep.MyListener;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.constant.Contants;
@@ -24,6 +21,7 @@ import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.RequestConfig;
 import com.tg.coloursteward.net.RequestParams;
 import com.tg.coloursteward.serice.AuthAppService;
+import com.tg.coloursteward.util.GlideUtils;
 import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.NumberUtils;
 import com.tg.coloursteward.util.StringUtils;
@@ -58,7 +56,6 @@ public class AccountActivity extends BaseActivity implements MyListener {
     private TextView tv_balance;
     private TextView tv_dgzh;
     private String account;
-    private DisplayImageOptions options;
     private String accessToken;
     private AuthAppService authAppService;//2.0授权
     private RelativeLayout rlNextBalance;
@@ -72,7 +69,6 @@ public class AccountActivity extends BaseActivity implements MyListener {
         getPopup(true);
         ListenerUtils.setCallBack(this);
         initView();
-        initOptions();
         initData();
     }
 
@@ -144,21 +140,9 @@ public class AccountActivity extends BaseActivity implements MyListener {
 
     }
 
-    private void initOptions() {
-        options = new DisplayImageOptions.Builder()
-                .showImageOnLoading(R.drawable.placeholder2)
-                .showImageForEmptyUri(R.drawable.placeholder2)
-                .showImageOnFail(R.drawable.placeholder2).cacheInMemory(true)
-                .cacheOnDisc(true).considerExifParams(true)
-                .build();
-    }
-
     public void initData() {
         String str = Contants.Html5.HEAD_ICON_URL + "/avatar?uid=" + UserInfo.employeeAccount;
-        ImageLoader.getInstance().clearMemoryCache();
-        ImageLoader.getInstance().clearDiskCache();
-        ImageLoader.getInstance().displayImage(str, rivHead, options);
-
+        GlideUtils.loadImageDefaultDisplay(this, str, rivHead, R.drawable.placeholder2, R.drawable.placeholder2);
         String jsfp = Tools.getStringValue(AccountActivity.this, JSFPNUM);
         if (!TextUtils.isEmpty(jsfp)) {
             tv_balance.setText(NumberUtils.format(Double.parseDouble(jsfp), 2) + "");

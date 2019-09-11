@@ -7,8 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.tg.coloursteward.R;
+import com.tg.coloursteward.util.GlideUtils;
 
 import java.util.List;
 
@@ -57,8 +57,7 @@ public class ImagePagerAdapter extends PagerAdapter {
                 }
             }
         });
-
-        ImageLoader.getInstance().displayImage(imageList.get(position), imageView);
+        GlideUtils.loadImageView(context, imageList.get(position), imageView);
         container.addView(rootView);
         return rootView;
     }

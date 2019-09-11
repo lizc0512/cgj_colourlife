@@ -98,14 +98,12 @@ public class DownloadManagerActivity extends BaseActivity {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				String path = paths.get(position);
-				Log.e("setOnItemClickListener", "path:" + path);
 				File file = new File(path);
 				try{
 					Intent fileIntent = Tools.getFileIntent(file);
 					startActivity(fileIntent);
 					Intent.createChooser(fileIntent, "请选择对应的软件打开该附件！");
 				}catch (ActivityNotFoundException e) {
-				// TODO: handle exception
 					ToastFactory.showToast(DownloadManagerActivity.this,"附件不能打开，请下载相关软件！");
 				}
 		}

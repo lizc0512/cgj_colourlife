@@ -276,8 +276,7 @@ public class RedpacketsTransferToColleagueH5Activity extends BaseActivity {
             intent = new Intent(MyBrowserActivity.ACTION_FRESH_PAYINFO);
             intent.putExtra(MyBrowserActivity.PAY_STATE, 0);
             this.sendBroadcast(intent);
-            ToastFactory.showToast(RedpacketsTransferToColleagueH5Activity.this, "支付失败，请稍后再试");
-            Log.e(TAG, "onFailed: " + message);
+            ToastFactory.showToast(RedpacketsTransferToColleagueH5Activity.this, message);
         }
     }
 
@@ -377,10 +376,6 @@ public class RedpacketsTransferToColleagueH5Activity extends BaseActivity {
         RedpacketsTransferToColleagueH5Activity.this.sendBroadcast(intent);
         finish();
         super.onBackPressed();
-//        Intent intent = new Intent(RedpacketsTransferToColleagueH5Activity.this, MyBrowserActivity.class);
-//        intent.putExtra(Failed_MESSAGE, "failed");
-//        startActivity(intent);
-//        finish();
 
     }
 

@@ -295,7 +295,6 @@ public class PublicAccountTransferToColleagueActivity extends BaseActivity imple
             finish();
         } else {
             ToastFactory.showToast(PublicAccountTransferToColleagueActivity.this, message);
-            Log.e(TAG, "onFailed: " + message);
         }
     }
 

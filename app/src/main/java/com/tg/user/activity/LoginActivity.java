@@ -157,6 +157,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         btn_get_code.setOnClickListener(this);
         btn_login.setOnClickListener(this);
         tv_login_byczy.setOnClickListener(this);
+        btn_login.setEnabled(false);
+        btn_login.setEnabled(false);
         edit_account.addTextChangedListener(this);
         edit_password.addTextChangedListener(this);
         edit_smscode.addTextChangedListener(this);

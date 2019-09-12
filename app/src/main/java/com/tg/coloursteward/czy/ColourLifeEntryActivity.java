@@ -40,8 +40,8 @@ public class ColourLifeEntryActivity extends Activity {
                 }
                 it.putExtra("czy_code", code);
                 startActivity(it);
-                ColourLifeEntryActivity.this.finish();
             }
+            ColourLifeEntryActivity.this.finish();
         }
     }
 }

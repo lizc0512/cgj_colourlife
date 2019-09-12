@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.constraint.ConstraintLayout;
@@ -49,6 +50,7 @@ import com.tg.coloursteward.util.TokenUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.util.Utils;
 import com.tg.coloursteward.view.CircleImageView;
+import com.tg.coloursteward.view.dialog.DialogFactory;
 import com.tg.user.callback.Oauth2CallBack;
 import com.tg.user.entity.JiYanTwoCheckEntity;
 import com.tg.user.entity.OauthUserEntity;
@@ -362,7 +364,19 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
             if (intent.resolveActivityInfo(getPackageManager(), PackageManager.MATCH_DEFAULT_ONLY) != null) {
                 startActivity(intent);
             } else {
-                ToastUtil.showShortToast(LoginActivity.this, "未检测到手机有安装彩之云APP");
+                DialogFactory.getInstance().showDialog(LoginActivity.this, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        final Intent intent = new Intent();
+                        intent.setAction(Intent.ACTION_VIEW);
+                        intent.setData(Uri.parse("http://mapp.colourlife.com/m.html"));
+                        if (intent.resolveActivity(getPackageManager()) != null) {
+                            startActivity(Intent.createChooser(intent, "请选择浏览器"));
+                        } else {
+                            ToastUtil.showShortToast(LoginActivity.this, "请下载浏览器");
+                        }
+                    }
+                }, null, "你的手机未安装彩之云客户端", "下载", null);
             }
         } catch (Exception e) {
             ToastUtil.showShortToast(LoginActivity.this, "请安装最新版彩之云APP");

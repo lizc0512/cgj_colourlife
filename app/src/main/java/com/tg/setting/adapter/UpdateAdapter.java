@@ -1,46 +1,55 @@
 package com.tg.setting.adapter;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-
 import com.tg.coloursteward.R;
-import com.tg.coloursteward.base.BeeBaseAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by HX_CHEN on 2016/1/18.
  */
-public class UpdateAdapter extends BeeBaseAdapter {
+public class UpdateAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private Context mContext;
+    private List<String> dataList = new ArrayList<>();
+
     public UpdateAdapter(Context c, List<String> date) {
         mContext = c;
         dataList = date;
-        mInflater = LayoutInflater.from(c);
+    }
+
+    @NonNull
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+        View view = LayoutInflater.from(mContext).inflate(R.layout.updatelist_item, null);
+        return new ViewHolder(view);
     }
 
     @Override
-    protected BeeCellHolder createCellHolder(View cellView) {
-        ViewHolder holder = new ViewHolder();
-        holder.tv_desc  = cellView.findViewById(R.id.tv_update_desc);
-        return holder;
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
+        if (viewHolder instanceof ViewHolder) {
+            ((ViewHolder) viewHolder).tv_desc.setText(dataList.get(i));
+        }
     }
 
     @Override
-    protected View bindData(int position, View cellView, ViewGroup parent, BeeCellHolder h) {
-        ViewHolder holder = (ViewHolder) h;
-        holder.tv_desc.setText(dataList.get(position).toString());
-        return cellView;
+    public int getItemCount() {
+        return dataList == null ? 0 : dataList.size();
     }
 
-    @Override
-    public View createCellView() {
-        return mInflater.inflate(R.layout.updatelist_item, null);
-    }
-    public class ViewHolder extends BeeCellHolder{
+    public class ViewHolder extends RecyclerView.ViewHolder {
         public TextView tv_desc;
+
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+            tv_desc = itemView.findViewById(R.id.tv_update_desc);
+        }
     }
 }

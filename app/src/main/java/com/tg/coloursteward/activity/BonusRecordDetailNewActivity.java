@@ -26,7 +26,6 @@ import java.util.List;
  * @author Administrator
  */
 public class BonusRecordDetailNewActivity extends BaseActivity implements HttpResponse {
-    public final static String BONUS_RECORD_INFO = "BonusRecordInfo";
     private Intent intent;
     private String calculid, rummagerid, name;
     private BonusRecordDetailEntity bonusRecordDetailEntity;

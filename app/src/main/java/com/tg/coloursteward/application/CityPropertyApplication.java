@@ -7,22 +7,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.multidex.MultiDex;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.baidu.trace.LBSTraceClient;
 import com.baidu.trace.Trace;
 import com.facebook.stetho.Stetho;
-import com.mob.MobSDK;
-import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.shell.SdkManager;
 import com.tencent.bugly.Bugly;
 import com.tencent.bugly.beta.Beta;
 import com.tencent.bugly.beta.interfaces.BetaPatchListener;
 import com.tencent.smtt.sdk.QbSdk;
-import com.tg.coloursteward.R;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.database.SharedPreferencesTools;
 import com.tg.coloursteward.module.MainActivity;
@@ -39,13 +32,10 @@ import com.youmai.hxsdk.HuxinSdkManager;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 
 import javax.net.ssl.SSLContext;
 
 import cn.jpush.android.api.JPushInterface;
-
-import static com.tencent.bugly.beta.tinker.TinkerManager.getApplication;
 
 public class CityPropertyApplication extends Application {
     private static List<Activity> mList = new LinkedList<Activity>();
@@ -83,10 +73,8 @@ public class CityPropertyApplication extends Application {
         JPushInterface.init(this);            // 初始化 JPush
         JPushInterface.setLatestNotificationNumber(this, 5);
         Tools.mContext = getApplicationContext();
-        Tools.userHeadSize = getResources().getDimensionPixelSize(R.dimen.margin_80);
         ResponseData data = SharedPreferencesTools.getUserInfo(Tools.mContext);
         Tools.loadUserInfo(data, null);
-        initImageLoader(getApplicationContext());
         QbSdk.PreInitCallback cb = new QbSdk.PreInitCallback() {
 
             @Override
@@ -141,17 +129,6 @@ public class CityPropertyApplication extends Application {
             }
         };
         Bugly.init(getApplicationContext(), Contants.APP.buglyKeyId, false);
-    }
-
-    public static void initImageLoader(Context context) {
-        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(
-                context).threadPriority(Thread.NORM_PRIORITY - 2)
-                .denyCacheImageMultipleSizesInMemory()
-                .discCacheFileNameGenerator(new Md5FileNameGenerator())
-                .tasksProcessingOrder(QueueProcessingType.LIFO)
-                .build();
-        // Initialize ImageLoader with configuration.
-        ImageLoader.getInstance().init(config);
     }
 
     public static CityPropertyApplication getInstance() {

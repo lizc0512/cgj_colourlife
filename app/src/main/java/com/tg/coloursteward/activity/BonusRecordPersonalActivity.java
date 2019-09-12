@@ -15,7 +15,6 @@ import com.tg.coloursteward.adapter.BonusRecordPersonalAdapter;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.entity.BonusRecordEntity;
-import com.tg.coloursteward.info.BonusRecordInfo;
 import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.inter.OnLoadingListener;
 import com.tg.coloursteward.net.HttpTools;
@@ -39,7 +38,6 @@ import java.util.ArrayList;
 public class BonusRecordPersonalActivity extends BaseActivity implements OnItemClickListener {
     private PullRefreshListView pullListView;
     private BonusRecordPersonalAdapter adapter;
-    private ArrayList<BonusRecordInfo> list = new ArrayList<BonusRecordInfo>();
     private ArrayList<BonusRecordEntity.ContentBean.DataBean> listinfo = new ArrayList<>();
     private BonusRecordEntity bonusRecordEntity;
     private String orguuid;

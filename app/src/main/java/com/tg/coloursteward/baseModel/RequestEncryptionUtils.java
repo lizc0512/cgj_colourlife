@@ -46,8 +46,6 @@ public class RequestEncryptionUtils {
         String finalUrl = "";
         if (type == 0) {
             finalUrl = Contants.URl.URL_NEW + urlString; //oauthtoken接口
-        } else if (type == 1) {
-            finalUrl = Contants.URl.URL_CPMOBILE + urlString;//cpmobile接口
         } else if (type == 2) {
             finalUrl = Contants.URl.URL_OAUTH2 + urlString;//oauth2接口
         } else if (type == 3) {
@@ -60,11 +58,11 @@ public class RequestEncryptionUtils {
             finalUrl = Contants.URl.VERSION_ADDRESS + urlString;//升级接口
         } else if (type == 7) {
             finalUrl = Contants.URl.URL_H5OAUTH + urlString;//H5授权接口
-        }else if (type == 8) {
+        } else if (type == 8) {
             finalUrl = Contants.Html5.HEAD_ICON_URL + urlString;//上传图片接口
-        }else if (type == 9) {
+        } else if (type == 9) {
             finalUrl = Contants.URl.URL_QRCODE + urlString;//扫码接口
-        }else if (type == 10) {
+        } else if (type == 10) {
             finalUrl = Contants.URl.URL_IMPUSH + urlString;//IM同步接口
         } else if (type == 11) {
             finalUrl = Contants.URl.URL_LEKAI + urlString;//乐开管家
@@ -215,6 +213,7 @@ public class RequestEncryptionUtils {
 
     /**
      * 获取Content信息(String)
+     *
      * @param jsonString
      * @return
      */

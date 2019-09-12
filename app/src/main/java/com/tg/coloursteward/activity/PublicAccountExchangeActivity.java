@@ -15,8 +15,6 @@ import android.widget.TextView;
 import com.dashuview.library.keep.Cqb_PayUtil;
 import com.dashuview.library.keep.ListenerUtils;
 import com.dashuview.library.keep.MyListener;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.baseModel.HttpResponse;
@@ -29,6 +27,7 @@ import com.tg.coloursteward.net.MD5;
 import com.tg.coloursteward.net.RequestConfig;
 import com.tg.coloursteward.net.RequestParams;
 import com.tg.coloursteward.serice.AppAuthService;
+import com.tg.coloursteward.util.GlideUtils;
 import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.RoundImageView;
@@ -59,8 +58,6 @@ public class PublicAccountExchangeActivity extends BaseActivity implements MyLis
     private TextView tv_head;
     private TextView tv_receiver;
     private RoundImageView imgHead;
-    private DisplayImageOptions options;
-    protected ImageLoader imageLoader = ImageLoader.getInstance();
     /**
      * 转账金额
      */
@@ -98,7 +95,6 @@ public class PublicAccountExchangeActivity extends BaseActivity implements MyLis
             tvTicket.setText("可兑换余额：" + money);
         }
         initData();
-        initOptions();
     }
 
     @Override
@@ -125,15 +121,6 @@ public class PublicAccountExchangeActivity extends BaseActivity implements MyLis
             }
         }
         return super.handClickEvent(v);
-    }
-
-    private void initOptions() {
-        options = new DisplayImageOptions.Builder()
-                .showImageOnLoading(R.drawable.placeholder2)
-                .showImageForEmptyUri(R.drawable.placeholder2)
-                .showImageOnFail(R.drawable.placeholder2).cacheInMemory(true)
-                .cacheOnDisc(true).considerExifParams(true)
-                .build();
     }
 
     private void initView() {
@@ -258,9 +245,7 @@ public class PublicAccountExchangeActivity extends BaseActivity implements MyLis
 
     public void initData() {
         String str = Contants.Html5.HEAD_ICON_URL + "/avatar?uid=" + UserInfo.employeeAccount;
-        imageLoader.clearMemoryCache();
-        imageLoader.clearDiskCache();
-        imageLoader.displayImage(str, imgHead, options);
+        GlideUtils.loadImageDefaultDisplay(this, str, imgHead, R.drawable.placeholder2, R.drawable.placeholder2);
     }
 
     @Override
@@ -288,16 +273,13 @@ public class PublicAccountExchangeActivity extends BaseActivity implements MyLis
             } else {
                 ToastFactory.showToast(PublicAccountExchangeActivity.this, message);
             }
-        } else {
+        } else if (msg.arg1 == HttpTools.POST_FASTTRANSACTION) {
             if (code == 0) {
-                /**
-                 * 发送已更改的广播
-                 */
                 sendBroadcast(new Intent(PublicAccountActivity.ACTION_PUBLIC_ACCOUNT));
                 ToastFactory.showToast(PublicAccountExchangeActivity.this, "兑换成功");
                 finish();
             } else {
-                ToastFactory.showToast(PublicAccountExchangeActivity.this, "兑换失败，请稍后再试");
+                ToastFactory.showToast(PublicAccountExchangeActivity.this, message);
             }
         }
     }

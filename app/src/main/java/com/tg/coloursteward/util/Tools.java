@@ -81,7 +81,6 @@ public class Tools {
     private static String deviceSN = null;
     public static Context mContext;
     public static boolean setAlias = false;
-    public static int userHeadSize;
     //缓存常用门禁列表
     public final static String CommonDoorList = "CommonDoorList";
     //缓存开门记录

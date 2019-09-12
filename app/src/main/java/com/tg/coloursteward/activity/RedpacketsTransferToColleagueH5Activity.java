@@ -11,8 +11,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.constant.Contants;
@@ -22,6 +20,7 @@ import com.tg.coloursteward.net.MD5;
 import com.tg.coloursteward.net.RequestConfig;
 import com.tg.coloursteward.net.RequestParams;
 import com.tg.coloursteward.serice.AppAuthService;
+import com.tg.coloursteward.util.GlideUtils;
 import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.RoundImageView;
@@ -52,8 +51,6 @@ public class RedpacketsTransferToColleagueH5Activity extends BaseActivity {
     private TextView tv_head;
     private TextView tv_receiver;
     private RoundImageView imgHead;
-    private DisplayImageOptions options;
-    protected ImageLoader imageLoader = ImageLoader.getInstance();
     /**
      * 转账金额
      */
@@ -101,9 +98,7 @@ public class RedpacketsTransferToColleagueH5Activity extends BaseActivity {
         if (StringUtils.isNotEmpty(money)) {
             tvTicket.setText("可用余额：" + money);
         }
-//       有获取头像的接口
         initData();
-        initOptions();
     }
 
     @Override
@@ -126,15 +121,6 @@ public class RedpacketsTransferToColleagueH5Activity extends BaseActivity {
             }
         }
         return super.handClickEvent(v);
-    }
-
-    private void initOptions() {
-        options = new DisplayImageOptions.Builder()
-                .showImageOnLoading(R.drawable.placeholder2)
-                .showImageForEmptyUri(R.drawable.placeholder2)
-                .showImageOnFail(R.drawable.placeholder2).cacheInMemory(true)
-                .cacheOnDisc(true).considerExifParams(true)
-                .build();
     }
 
     private void initView() {
@@ -234,16 +220,6 @@ public class RedpacketsTransferToColleagueH5Activity extends BaseActivity {
             params.put("desttype", atid);
             params.put("destaccountno", cano);
             params.put("starttime", ts);
-
-            Log.e(TAG, "submit: " + accessToken_1 + "\n" +
-                    transferAmount + "\n" + orderno +
-                    "\n" + edtMessage.getEditableText().toString() + "\n"
-                    + payAtid + "\n" +
-                    edtMessage.getEditableText().toString() + "\n" +
-                    payAno + "\n" +
-                    atid + "\n" +
-                    cano + "\n" +
-                    ts);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -252,9 +228,7 @@ public class RedpacketsTransferToColleagueH5Activity extends BaseActivity {
 
     public void initData() {
         String str = Contants.Html5.HEAD_ICON_URL + "/avatar?uid=" + OA;
-        imageLoader.clearMemoryCache();
-        imageLoader.clearDiskCache();
-        imageLoader.displayImage(str, imgHead, options);
+        GlideUtils.loadImageDefaultDisplay(this, str, imgHead, R.drawable.placeholder2, R.drawable.placeholder2);
     }
 
     @Override
@@ -276,8 +250,7 @@ public class RedpacketsTransferToColleagueH5Activity extends BaseActivity {
             intent = new Intent(MyBrowserActivity.ACTION_FRESH_PAYINFO);
             intent.putExtra(MyBrowserActivity.PAY_STATE, 0);
             this.sendBroadcast(intent);
-            ToastFactory.showToast(RedpacketsTransferToColleagueH5Activity.this, "支付失败，请稍后再试");
-            Log.e(TAG, "onFailed: " + message);
+            ToastFactory.showToast(RedpacketsTransferToColleagueH5Activity.this, message);
         }
     }
 
@@ -377,10 +350,6 @@ public class RedpacketsTransferToColleagueH5Activity extends BaseActivity {
         RedpacketsTransferToColleagueH5Activity.this.sendBroadcast(intent);
         finish();
         super.onBackPressed();
-//        Intent intent = new Intent(RedpacketsTransferToColleagueH5Activity.this, MyBrowserActivity.class);
-//        intent.putExtra(Failed_MESSAGE, "failed");
-//        startActivity(intent);
-//        finish();
 
     }
 

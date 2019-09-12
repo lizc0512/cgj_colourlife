@@ -16,8 +16,6 @@ import android.widget.TextView;
 import com.dashuview.library.keep.Cqb_PayUtil;
 import com.dashuview.library.keep.ListenerUtils;
 import com.dashuview.library.keep.MyListener;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.baseModel.HttpResponse;
@@ -29,6 +27,7 @@ import com.tg.coloursteward.net.MD5;
 import com.tg.coloursteward.net.RequestConfig;
 import com.tg.coloursteward.net.RequestParams;
 import com.tg.coloursteward.serice.AppAuthService;
+import com.tg.coloursteward.util.GlideUtils;
 import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.RoundImageView;
@@ -60,8 +59,6 @@ public class PublicAccountTransferToColleagueActivity extends BaseActivity imple
     private TextView tv_head;
     private TextView tv_receiver;
     private RoundImageView imgHead;
-    private DisplayImageOptions options;
-    protected ImageLoader imageLoader = ImageLoader.getInstance();
     /**
      * 转账金额
      */
@@ -112,9 +109,7 @@ public class PublicAccountTransferToColleagueActivity extends BaseActivity imple
         if (StringUtils.isNotEmpty(money)) {
             tvTicket.setText("可用余额：" + money);
         }
-//       有获取头像的接口
         initData();
-        initOptions();
     }
 
     @Override
@@ -157,15 +152,6 @@ public class PublicAccountTransferToColleagueActivity extends BaseActivity imple
         if (mProgressDialog != null && mProgressDialog.isShowing()) {
             mProgressDialog.dismiss();
         }
-    }
-
-    private void initOptions() {
-        options = new DisplayImageOptions.Builder()
-                .showImageOnLoading(R.drawable.placeholder2)
-                .showImageForEmptyUri(R.drawable.placeholder2)
-                .showImageOnFail(R.drawable.placeholder2).cacheInMemory(true)
-                .cacheOnDisc(true).considerExifParams(true)
-                .build();
     }
 
     private void initView() {
@@ -275,9 +261,7 @@ public class PublicAccountTransferToColleagueActivity extends BaseActivity imple
 
     public void initData() {
         String str = Contants.Html5.HEAD_ICON_URL + "/avatar?uid=" + OA;
-        imageLoader.clearMemoryCache();
-        imageLoader.clearDiskCache();
-        imageLoader.displayImage(str, imgHead, options);
+        GlideUtils.loadImageDefaultDisplay(this, str, imgHead, R.drawable.placeholder2, R.drawable.placeholder2);
     }
 
     @Override
@@ -295,7 +279,6 @@ public class PublicAccountTransferToColleagueActivity extends BaseActivity imple
             finish();
         } else {
             ToastFactory.showToast(PublicAccountTransferToColleagueActivity.this, message);
-            Log.e(TAG, "onFailed: " + message);
         }
     }
 

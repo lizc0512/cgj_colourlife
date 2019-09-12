@@ -20,7 +20,6 @@ import android.support.v4.content.FileProvider;
 import com.tg.coloursteward.constant.SpConstants;
 import com.tg.coloursteward.util.SharedPreferencesUtils;
 import com.tg.coloursteward.util.ToastUtil;
-import com.tg.coloursteward.util.TokenUtils;
 
 import java.io.File;
 import java.util.Date;
@@ -164,17 +163,13 @@ public class UpdateService extends Service {
     private void installApp(Context context) {
         try {
             File file = null;
-            if ("huawei".equalsIgnoreCase(TokenUtils.getDeviceBrand()) && Build.VERSION.SDK_INT >= 26) {
-                file = new File(context.getCacheDir() + "/" + Environment.DIRECTORY_DOWNLOADS + "/" + apk_name);
-            } else {
-                file = new File(Environment.getExternalStorageDirectory() + "/" + Environment.DIRECTORY_DOWNLOADS + "/" + apk_name);
-            }
+            file = new File(Environment.getExternalStorageDirectory() + "/" + Environment.DIRECTORY_DOWNLOADS + "/" + apk_name);
             Intent intent = new Intent(Intent.ACTION_VIEW);
             // 由于没有在Activity环境下启动Activity,设置下面的标签
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             if (Build.VERSION.SDK_INT > 23) { //判读版本是否在7.0含以上
                 //参数1 上下文, 参数2 Provider主机地址 和配置文件中保持一致   参数3  共享的文件
-                Uri apkUri = FileProvider.getUriForFile(context, "com.colourlife.safelife.fileprovider", file);
+                Uri apkUri = FileProvider.getUriForFile(context, "com.tg.coloursteward.fileprovider", file);
                 //添加这一句表示对目标应用临时授权该Uri所代表的文件
                 intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 intent.setDataAndType(apkUri, "application/vnd.android.package-archive");
@@ -200,7 +195,7 @@ public class UpdateService extends Service {
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             if (Build.VERSION.SDK_INT > 23) { //判读版本是否在7.0含以上
                 //参数1 上下文, 参数2 Provider主机地址 和配置文件中保持一致   参数3  共享的文件
-                Uri apkUri = FileProvider.getUriForFile(context, "com.colourlife.safelife.fileprovider", file);
+                Uri apkUri = FileProvider.getUriForFile(context, "com.tg.coloursteward.fileprovider", file);
                 //添加这一句表示对目标应用临时授权该Uri所代表的文件
                 intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 intent.setDataAndType(apkUri, "application/vnd.android.package-archive");

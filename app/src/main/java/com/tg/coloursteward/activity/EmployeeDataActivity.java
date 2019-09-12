@@ -17,9 +17,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.RequestOptions;
 import com.dashuview.library.keep.Cqb_PayUtil;
 import com.dashuview.library.keep.ListenerUtils;
 import com.dashuview.library.keep.MyListener;
@@ -38,6 +35,7 @@ import com.tg.coloursteward.net.GetTwoRecordListener;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.serice.AuthAppService;
 import com.tg.coloursteward.util.AuthTimeUtils;
+import com.tg.coloursteward.util.GlideUtils;
 import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.Tools;
@@ -47,7 +45,6 @@ import com.youmai.hxsdk.chatsingle.IMConnectionActivity;
 import com.youmai.hxsdk.db.bean.EmployeeBean;
 import com.youmai.hxsdk.db.helper.CacheEmployeeHelper;
 import com.youmai.hxsdk.router.APath;
-import com.youmai.hxsdk.utils.GlideRoundTransform;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -328,21 +325,7 @@ public class EmployeeDataActivity extends BaseActivity implements MyListener, Ht
                     }
                     tvJob.setText(item.getJobName());
                     tvBranch.setText(item.getOrgName());
-                    try {
-                        Glide.with(this)
-                                .load(item.getAvatar())
-                                .apply(new RequestOptions()
-                                        .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-                                        .override(120, 120)
-                                        .centerCrop()
-                                        .transform(new GlideRoundTransform())
-                                        .placeholder(R.drawable.default_header)
-                                        .error(R.drawable.default_header))
-                                .into(ivHead);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
+                    GlideUtils.loadImageDefaultDisplay(this, item.getAvatar(), ivHead, R.drawable.default_header, R.drawable.default_header);
                     if (item.getSex().equals("女")) {
                         ivSex.setImageResource(R.drawable.employee_female);
                     } else {

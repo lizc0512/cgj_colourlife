@@ -3,9 +3,6 @@ package com.tg.coloursteward.adapter;
 import java.util.ArrayList;
 
 import android.content.Context;
-import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +14,6 @@ import com.bumptech.glide.request.RequestOptions;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.MyBaseAdapter;
 import com.tg.coloursteward.info.FamilyInfo;
-import com.tg.coloursteward.net.image.VolleyUtils;
 import com.tg.coloursteward.view.RoundImageView;
 
 public class FamilyAdapter extends MyBaseAdapter<FamilyInfo>{
@@ -45,7 +41,6 @@ public class FamilyAdapter extends MyBaseAdapter<FamilyInfo>{
 		tvFamily.setText(item.name);
 		if(list.get(position).type.equals("org")){
 			rivHead.setVisibility(View.GONE);
-			//VolleyUtils.getImage(context,"",rivHead,R.drawable.guishu);
 		}else if(list.get(position).type.equals("user")){
 			rivHead.setVisibility(View.VISIBLE);
 			rivHead.setCircleShape();
@@ -55,8 +50,6 @@ public class FamilyAdapter extends MyBaseAdapter<FamilyInfo>{
 							.error(R.drawable.moren_geren)
 							.diskCacheStrategy(DiskCacheStrategy.RESOURCE))
 					.into(rivHead);
-			//VolleyUtils.getImage(context, item.avatar,rivHead,R.drawable.moren_geren);
-
 		}
 		//根据position获取分类的首字母的Char ascii值
 		int section = getSectionForPosition(position);

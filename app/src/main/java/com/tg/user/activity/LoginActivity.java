@@ -5,13 +5,19 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.support.constraint.ConstraintLayout;
 import android.text.Editable;
+import android.text.InputFilter;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.ViewTreeObserver;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
@@ -33,13 +39,16 @@ import com.tg.coloursteward.net.DES;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.MD5;
 import com.tg.coloursteward.net.ResponseData;
+import com.tg.coloursteward.util.GlideUtils;
 import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.NumberUtils;
 import com.tg.coloursteward.util.SharedPreferencesUtils;
+import com.tg.coloursteward.util.SoftKeyboardUtils;
 import com.tg.coloursteward.util.ToastUtil;
 import com.tg.coloursteward.util.TokenUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.util.Utils;
+import com.tg.coloursteward.view.CircleImageView;
 import com.tg.user.callback.Oauth2CallBack;
 import com.tg.user.entity.JiYanTwoCheckEntity;
 import com.tg.user.entity.OauthUserEntity;
@@ -61,18 +70,24 @@ import static com.tg.coloursteward.application.CityPropertyApplication.lbsTraceC
  * 登录页面
  */
 @Route(path = APath.RE_LOGIN)
-public class LoginActivity extends BaseActivity implements View.OnClickListener, HttpResponse {
+public class LoginActivity extends BaseActivity implements View.OnClickListener, HttpResponse, TextWatcher {
     public static final String ACCOUNT = "account";
     public static final String CZY_CODE = "czy_code";
     public static final String USERACCOUNT = "user_account";
-    private EditText et_login_phone;
-    private EditText et_login_pwd;
-    private ImageView iv_login_deloa;
-    private ImageView iv_login_delpwd;
-    private ImageView tv_login_czy;
-    private TextView tv_login_forgetpwd;
-    private Button btn_login_login;
-    private Button btn_login_czylogin;
+    public static final String USERNAME = "user_name";
+    private ConstraintLayout constrant_layout;
+    private View distance_view;
+    private CircleImageView iv_head_pic;
+    private TextView tv_welcome;
+    private EditText edit_account;
+    private EditText edit_password;
+    private LinearLayout sms_login_layout;
+    private EditText edit_smscode;
+    private Button btn_get_code;
+    private TextView tv_login_smscode;
+    private TextView tv_forget_pawd;
+    private Button btn_login;
+    private TextView tv_login_byczy;
     private GT3GeetestUtilsBind gt3GeetestUtils;
     private UserModel userModel;
     private String account;
@@ -80,14 +95,14 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     private OAuth2ServiceUpdate auth2ServiceUpdate;
     private String corpId;
     private String extras;
-    private String passwordMD5 = "";
     private String loginType = "1";//1：账号密码登录，2：短信验证码登录，3：手机号码密码登录，4：彩之云授权登录
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_new_login);
         userModel = new UserModel(this);
+        tintManager.setStatusBarTintColor(this.getResources().getColor(R.color.transparent)); //设置状态栏的颜色
         gt3GeetestUtils = new GT3GeetestUtilsBind(LoginActivity.this);
         initView();
         initPermission();
@@ -123,64 +138,28 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
 
 
     private void initView() {
-        et_login_phone = findViewById(R.id.et_login_phone);
-        et_login_pwd = findViewById(R.id.et_login_pwd);
-        iv_login_deloa = findViewById(R.id.iv_login_deloa);
-        iv_login_delpwd = findViewById(R.id.iv_login_delpwd);
-        tv_login_czy = findViewById(R.id.tv_login_czy);
-        tv_login_forgetpwd = findViewById(R.id.tv_login_forgetpwd);
-        btn_login_login = findViewById(R.id.btn_login_login);
-        btn_login_czylogin = findViewById(R.id.btn_login_czylogin);
-        btn_login_login.setOnClickListener(this);
-        btn_login_czylogin.setOnClickListener(this);
-        iv_login_deloa.setOnClickListener(this);
-        iv_login_delpwd.setOnClickListener(this);
-        tv_login_forgetpwd.setOnClickListener(this);
-        tv_login_czy.bringToFront();
-        et_login_phone.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
+        constrant_layout = findViewById(R.id.constrant_layout);
+        distance_view = findViewById(R.id.distance_view);
+        iv_head_pic = findViewById(R.id.iv_head_pic);
+        tv_welcome = findViewById(R.id.tv_welcome);
+        edit_account = findViewById(R.id.edit_account);
+        edit_password = findViewById(R.id.edit_password);
+        sms_login_layout = findViewById(R.id.sms_login_layout);
+        edit_smscode = findViewById(R.id.edit_smscode);
+        btn_get_code = findViewById(R.id.btn_get_code);
+        tv_login_smscode = findViewById(R.id.tv_login_smscode);
+        tv_forget_pawd = findViewById(R.id.tv_forget_pawd);
+        btn_login = findViewById(R.id.btn_login);
+        tv_login_byczy = findViewById(R.id.tv_login_byczy);
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (!TextUtils.isEmpty(s)) {
-                    iv_login_deloa.setVisibility(View.VISIBLE);
-                    if (!TextUtils.isEmpty(et_login_pwd.getText().toString().trim())) {
-                        btnClick();
-                    }
-                } else {
-                    iv_login_deloa.setVisibility(View.GONE);
-                    btnNoClick();
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-            }
-        });
-        et_login_pwd.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (!TextUtils.isEmpty(s)) {
-                    iv_login_delpwd.setVisibility(View.VISIBLE);
-                    if (!TextUtils.isEmpty(et_login_phone.getText().toString().trim())) {
-                        btnClick();
-                    }
-                } else {
-                    iv_login_delpwd.setVisibility(View.GONE);
-                    btnNoClick();
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-            }
-        });
+        tv_forget_pawd.setOnClickListener(this);
+        tv_login_smscode.setOnClickListener(this);
+        btn_get_code.setOnClickListener(this);
+        btn_login.setOnClickListener(this);
+        tv_login_byczy.setOnClickListener(this);
+        edit_account.addTextChangedListener(this);
+        edit_password.addTextChangedListener(this);
+        edit_smscode.addTextChangedListener(this);
         Intent intent = getIntent();
         if (null != intent) {
             boolean loginOut = intent.getBooleanExtra("login_out", false);
@@ -197,11 +176,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
             }
 
             String account = intent.getStringExtra(ACCOUNT);
-            String code = intent.getStringExtra(CZY_CODE);
-            if (!TextUtils.isEmpty(code)) {
-                ThirdLogin(code);
-                spUtils.saveStringData(SpConstants.storage.THRID_CODE, code);
-            }
             if (!TextUtils.isEmpty(account)) {
                 setAccount(account);
             }
@@ -210,11 +184,41 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         if (!TextUtils.isEmpty(account)) {
             setAccount(account);
         }
+        setHeadPic();
+        softInputListener();
+    }
+
+    private void softInputListener() {
+        constrant_layout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                constrant_layout.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        //判断现在软键盘的开关状态
+                        if (SoftKeyboardUtils.isSoftShowing(LoginActivity.this)) {
+                            distance_view.setVisibility(View.GONE);
+                        } else {
+                            distance_view.setVisibility(View.VISIBLE);
+                        }
+                    }
+                }, 100L);
+            }
+        });
+    }
+
+    private void setHeadPic() {
+        String userName = SharedPreferencesUtils.getUserKey(this, USERNAME);
+        if (!TextUtils.isEmpty(userName)) {
+            String headIcon = Contants.Html5.HEAD_ICON_URL + "/avatar?uid=" + userName;
+            GlideUtils.loadImageView(LoginActivity.this, headIcon, iv_head_pic);
+            tv_welcome.setText("欢迎回来");
+        }
     }
 
     private void setAccount(String account) {
-        et_login_phone.setText(account);
-        et_login_phone.setSelection(account.length());
+        edit_account.setText(account);
+        edit_account.setSelection(account.length());
     }
 
     private void singleDevicelogout() {
@@ -225,55 +229,112 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     private void ThirdLogin(String code) {
         try {
             loginType = "4";
-            login(code, code, "", loginType);
+            login(code, MD5.getMd5Value(code).toLowerCase(), loginType);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void btnClick() {
-        btn_login_login.setBackground(getResources().getDrawable(R.drawable.bg_login_button_blue));
-        btn_login_login.setTextColor(getResources().getColor(R.color.white));
+    private void setLoginButton() {
+        account = edit_account.getText().toString().trim();
+        if (isSmsLogin) {
+            password = edit_smscode.getText().toString().trim();
+        } else {
+            password = edit_password.getText().toString().trim();
+        }
+        if (TextUtils.isEmpty(account) || TextUtils.isEmpty(password)) {
+            btn_login.setBackground(getResources().getDrawable(R.drawable.login_button_default));
+            btn_login.setTextColor(getResources().getColor(R.color.white));
+        } else {
+            btn_login.setBackground(getResources().getDrawable(R.drawable.login_button_click));
+            btn_login.setTextColor(getResources().getColor(R.color.color_1082ff));
+        }
     }
 
-    private void btnNoClick() {
-        btn_login_login.setBackground(getResources().getDrawable(R.drawable.bg_login_button_gray));
-        btn_login_login.setTextColor(getResources().getColor(R.color.line_login_button));
+
+    private void setCodeBtn() {
+        account = edit_account.getText().toString().trim();
+        if (countStart == 0) {
+            if (11 == account.length()) {
+                btn_get_code.setTextColor(getResources().getColor(R.color.color_1890ff));
+                btn_get_code.setBackgroundResource(R.drawable.sms_button_click);
+                btn_get_code.setEnabled(true);
+            } else {
+                btn_get_code.setTextColor(getResources().getColor(R.color.white));
+                btn_get_code.setBackgroundResource(R.drawable.sms_button_default);
+                btn_get_code.setEnabled(false);
+            }
+        }
+        if (account.equals(SharedPreferencesUtils.getUserKey(this, USERACCOUNT))) {
+            setHeadPic();
+        } else {
+            iv_head_pic.setImageResource(R.drawable.login_logo);
+            tv_welcome.setText("欢迎使用彩管家");
+        }
     }
+
+    private boolean isSmsLogin = false;
 
     @Override
     public void onClick(View v) {
-        account = et_login_phone.getText().toString().trim();
-        password = et_login_pwd.getText().toString().trim();
+        account = edit_account.getText().toString().trim();
         switch (v.getId()) {
-            case R.id.btn_login_login:
-                if (TextUtils.isEmpty(account)) {
-                    ToastUtil.showShortToast(this, "账号不能为空");
-                    return;
-                }
-                if (TextUtils.isEmpty(password)) {
-                    ToastUtil.showShortToast(this, "密码不能为空");
-                    return;
-                }
-                if (NumberUtils.IsPhoneNumber(account)) {
-                    loginType = "3";
+            case R.id.btn_login:
+                if (isSmsLogin) {
+                    loginType = "2";
+                    password = edit_smscode.getText().toString().trim();
+                    login(account, password, loginType);
                 } else {
-                    loginType = "1";
+                    password = edit_password.getText().toString().trim();
+                    if (6 > password.length()) {
+                        ToastUtil.showShortToast(this, "密码的长度不能小于6位");
+                        return;
+                    }
+                    if (NumberUtils.IsPhoneNumber(account)) {
+                        loginType = "3";
+                    } else {
+                        loginType = "1";
+                    }
+                    loginGt();
                 }
-                loginGt();
                 break;
-            case R.id.btn_login_czylogin:
+            case R.id.tv_login_byczy:
                 czyLogin();
                 break;
-            case R.id.iv_login_deloa:
-                SharedPreferencesUtils.saveUserKey(this, USERACCOUNT, "");
-                et_login_phone.getText().clear();
+            case R.id.tv_forget_pawd:
+                Intent intent = new Intent(LoginActivity.this, ForgetPasswordActivity.class);
+                if (!TextUtils.isEmpty(account) && 11 == account.length() && NumberUtils.IsPhoneNumber(account)) {
+                    intent.putExtra(ACCOUNT, account);
+                } else {
+                    intent.putExtra(ACCOUNT, "");
+                }
+                startActivity(intent);// 忘记密码
                 break;
-            case R.id.iv_login_delpwd:
-                et_login_pwd.getText().clear();
+            case R.id.tv_login_smscode:
+                isSmsLogin = !isSmsLogin;
+                if (isSmsLogin) { //短信验证码登录
+                    if (!NumberUtils.IsPhoneNumber(account)) {
+                        edit_account.setText("");
+                    }
+                    edit_password.setVisibility(View.GONE);
+                    edit_account.setHint("请输入手机号码");
+                    sms_login_layout.setVisibility(View.VISIBLE);
+                    sms_login_layout.startAnimation(AnimationUtils.loadAnimation(LoginActivity.this, R.anim.push_right_alpha));
+                    tv_login_smscode.setText("账号密码登录");
+                    edit_account.setInputType(InputType.TYPE_CLASS_NUMBER); //输入类型
+                    edit_account.setFilters(new InputFilter[]{new InputFilter.LengthFilter(11)});
+                } else {
+                    sms_login_layout.setVisibility(View.GONE);
+                    edit_password.setVisibility(View.VISIBLE);
+                    edit_account.setHint("请输入手机号码/OA账号");
+                    edit_password.startAnimation(AnimationUtils.loadAnimation(LoginActivity.this, R.anim.push_right_alpha));
+                    tv_login_smscode.setText("短信验证码登录");
+                    edit_account.setInputType(InputType.TYPE_CLASS_TEXT); //输入类型
+                    edit_account.setFilters(new InputFilter[]{new InputFilter.LengthFilter(24)});
+                }
                 break;
-            case R.id.tv_login_forgetpwd:
-                startActivity(new Intent(LoginActivity.this, ForgetPasswordActivity.class));// 忘记密码
+            case R.id.btn_get_code:
+                userModel.getSmsCode(6, account, "3", LoginActivity.this);
                 break;
         }
     }
@@ -295,12 +356,98 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         try {
             if (intent.resolveActivityInfo(getPackageManager(), PackageManager.MATCH_DEFAULT_ONLY) != null) {
                 startActivity(intent);
-                LoginActivity.this.finish();
             } else {
                 ToastUtil.showShortToast(LoginActivity.this, "未检测到手机有安装彩之云APP");
             }
         } catch (Exception e) {
             ToastUtil.showShortToast(LoginActivity.this, "请安装最新版彩之云APP");
+        }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        String code = intent.getStringExtra(CZY_CODE);
+        if (!TextUtils.isEmpty(code)) {
+            ThirdLogin(code);
+            spUtils.saveStringData(SpConstants.storage.THRID_CODE, code);
+        }
+    }
+
+    private MyTimeCount myTimeCount = null;
+
+
+    /***初始化计数器**/
+    private void initTimeCount() {
+        cancelTimeCount();
+        countStart = 1;
+        btn_get_code.setEnabled(false);
+        myTimeCount = new MyTimeCount(60000, 1000);
+        myTimeCount.start();
+    }
+
+    private void cancelTimeCount() {
+        if (myTimeCount != null) {
+            myTimeCount.cancel();
+            myTimeCount = null;
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        cancelTimeCount();
+    }
+
+    private int countStart = 0;//计时器是否工作
+
+    @Override
+    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+    }
+
+    @Override
+    public void afterTextChanged(Editable editable) {
+        setCodeBtn();
+        setLoginButton();
+    }
+
+    /**
+     * 定义一个倒计时的内部类
+     */
+    class MyTimeCount extends CountDownTimer {
+        public MyTimeCount(long millisInFuture, long countDownInterval) {
+            super(millisInFuture, countDownInterval);// 参数依次为总时长,和计时的时间间隔
+        }
+
+        @Override
+        public void onFinish() {// 计时完毕时触发
+            account = edit_account.getText().toString().trim();
+            if (TextUtils.isEmpty(account)) {
+                btn_get_code.setTextColor(getResources().getColor(R.color.white));
+                btn_get_code.setBackgroundResource(R.drawable.sms_button_default);
+                btn_get_code.setEnabled(false);
+            } else {
+                btn_get_code.setTextColor(getResources().getColor(R.color.color_1890ff));
+                btn_get_code.setBackgroundResource(R.drawable.sms_button_click);
+                btn_get_code.setEnabled(true);
+            }
+            countStart = 0;
+            btn_get_code.requestFocus();
+            btn_get_code.setText("重新获取");
+        }
+
+        @Override
+        public void onTick(long millisUntilFinished) {// 计时过程显示
+            long currentSecond = millisUntilFinished / 1000;
+            btn_get_code.setTextColor(getResources().getColor(R.color.white));
+            btn_get_code.setBackgroundResource(R.drawable.sms_button_default);
+            btn_get_code.setText(currentSecond + "S");
         }
     }
 
@@ -392,23 +539,15 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         gt3GeetestUtils.setDialogTouch(true);
     }
 
-    private void login(String accout, String pwd, String pwdMD5, String loginType) {
-        Utils.hideKeyboard(et_login_pwd);
-        if (!TextUtils.isEmpty(pwd)) {
-            try {
-                passwordMD5 = MD5.getMd5Value(pwd).toLowerCase();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else {
-            passwordMD5 = pwdMD5;
-        }
+    private void login(String accout, String pwdMD5, String loginType) {
+        Utils.hideKeyboard(edit_password);
+        Utils.hideKeyboard(edit_smscode);
         if (null == auth2ServiceUpdate) {
             auth2ServiceUpdate = new OAuth2ServiceUpdate(LoginActivity.this, loginType);
         } else {
             auth2ServiceUpdate.setLoginType(loginType);
         }
-        auth2ServiceUpdate.getOAuth2Service(accout, passwordMD5, new Oauth2CallBack() {
+        auth2ServiceUpdate.getOAuth2Service(accout, pwdMD5, new Oauth2CallBack() {
             @Override
             public void onData(String access_token) {
                 getNetInfo(access_token);
@@ -418,6 +557,17 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
 
     private void getNetInfo(String access_token) {
         userModel.getOauthUser(2, access_token, this);
+    }
+
+
+    private String getPawdMD5() {
+        String pawdMd5 = "";
+        try {
+            pawdMd5 = MD5.getMd5Value(password).toLowerCase();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return pawdMd5;
     }
 
     @Override
@@ -430,14 +580,14 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                         entity = GsonUtils.gsonToBean(result, JiYanTwoCheckEntity.class);
                         if (entity.getContent().getStatus() == 1) {//验证通过
                             gt3GeetestUtils.gt3TestFinish();
-                            login(account, password, "", loginType);
+                            login(account, getPawdMD5(), loginType);
                         } else {
                             gt3GeetestUtils.gt3TestClose();
                             ToastUtil.showShortToast(LoginActivity.this, "极验验证失败,请稍后重试");
                         }
                     } catch (Exception e) {
                         gt3GeetestUtils.gt3TestFinish();
-                        login(account, password, "", loginType);
+                        login(account, getPawdMD5(), loginType);
                     }
                 } else {
                     gt3GeetestUtils.gt3TestClose();
@@ -453,16 +603,18 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                         int status = oauthUserEntity.getContent().getStatus();
                         if (status == 0) {
                             ResponseData data = HttpTools.getResponseContentObject(response);
-                            UserInfo.employeeAccount = account;
-                            SharedPreferencesUtils.saveUserKey(this, USERACCOUNT, account);
                             Tools.savePassWord(LoginActivity.this, password);//保存密码
-                            Tools.savePassWordMD5(LoginActivity.this, passwordMD5);//保存密码(MD5加密后)
+                            Tools.savePassWordMD5(LoginActivity.this, getPawdMD5());//保存密码(MD5加密后)
                             Tools.loadUserInfo(data, result);
                             corpId = oauthUserEntity.getContent().getCorp_id();
                             UserInfo.infoorgId = data.getString("org_uuid");
                             if (loginType.equals("4") || loginType.equals("2")) {
                                 Tools.savePassWordMD5(LoginActivity.this, data.getString("password"));//保存密码(MD5加密后)
                             }
+                            String employeeAccount = data.getString("name");
+                            UserInfo.employeeAccount = employeeAccount;
+                            SharedPreferencesUtils.saveUserKey(this, USERACCOUNT, account);
+                            SharedPreferencesUtils.saveUserKey(this, USERNAME, employeeAccount);
                             Tools.saveOrgId(LoginActivity.this, data.getString("org_uuid"));
                             Tools.saveStringValue(LoginActivity.this, Contants.storage.CORPID, corpId);//租户ID
                             spUtils.saveStringData(SpConstants.storage.CORPID, corpId);
@@ -512,6 +664,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                         spUtils.saveLongData(SpConstants.UserModel.DIFFERENCE, Long.valueOf(difference));
                     }
                 }
+                break;
+            case 6:
+                initTimeCount();
+                ToastUtil.showShortToastCenter(LoginActivity.this, "验证码已发送");
                 break;
         }
     }

@@ -1,19 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/constrant_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/login_pic_bg">
 
-    <ImageView
-        android:id="@+id/iv_head_pic"
-        android:layout_width="wrap_content"
+
+    <LinearLayout
+        android:id="@+id/head_layout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="30dp"
-        android:layout_marginTop="90dp"
-        android:src="@drawable/login_logo"
+        android:orientation="vertical"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <View
+            android:id="@+id/distance_view"
+            android:layout_width="match_parent"
+            android:layout_height="60dp" />
+
+        <com.tg.coloursteward.view.CircleImageView
+            android:id="@+id/iv_head_pic"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="30dp"
+            android:src="@drawable/login_logo" />
+    </LinearLayout>
+
 
     <TextView
         android:id="@+id/tv_welcome"
@@ -23,8 +38,8 @@
         android:text="欢迎使用彩管家"
         android:textColor="@color/white"
         android:textSize="@dimen/size_18dp"
-        app:layout_constraintLeft_toLeftOf="@id/iv_head_pic"
-        app:layout_constraintTop_toBottomOf="@id/iv_head_pic" />
+        app:layout_constraintLeft_toLeftOf="@id/head_layout"
+        app:layout_constraintTop_toBottomOf="@id/head_layout" />
 
 
     <com.tg.coloursteward.view.ClearEditText
@@ -37,9 +52,12 @@
         android:background="@null"
         android:gravity="center_vertical"
         android:hint="请输入手机号码/OA账号"
+        android:inputType="text"
+        android:maxLength="24"
         android:paddingLeft="15dp"
         android:textColor="@color/white"
         android:textColorHint="@color/white"
+        android:textCursorDrawable="@drawable/my_cursor"
         android:textSize="@dimen/size_16dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -63,24 +81,72 @@
         android:background="@null"
         android:gravity="center_vertical"
         android:hint="请输入密码"
+        android:inputType="textPassword"
+        android:maxLength="18"
         android:paddingLeft="15dp"
         android:textColor="@color/white"
         android:textColorHint="@color/white"
+        android:textCursorDrawable="@drawable/my_cursor"
         android:textSize="@dimen/size_16dp"
+        android:visibility="visible"
         app:layout_constraintLeft_toLeftOf="@id/edit_account"
         app:layout_constraintRight_toRightOf="@id/edit_account"
         app:layout_constraintTop_toBottomOf="@id/edit_account" />
 
 
+    <LinearLayout
+        android:id="@+id/sms_login_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="40dp"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edit_account">
+
+        <EditText
+            android:id="@+id/edit_smscode"
+            android:layout_width="0dp"
+            android:layout_height="44dp"
+            android:layout_weight="1"
+            android:background="@null"
+            android:gravity="center_vertical"
+            android:hint="请输入验证码"
+            android:inputType="number"
+            android:maxLength="8"
+            android:paddingLeft="15dp"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
+            android:textCursorDrawable="@drawable/my_cursor"
+            android:textSize="@dimen/size_16dp" />
+
+        <Button
+            android:id="@+id/btn_get_code"
+            android:layout_width="90dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/sms_button_default"
+            android:gravity="center"
+            android:text="获取验证码"
+            android:textColor="@color/white"
+            android:textSize="@dimen/size_12dp" />
+    </LinearLayout>
+
+
     <View
+        android:id="@+id/second_view_line"
         android:layout_width="0dp"
         android:layout_height="0.5dp"
         android:layout_marginLeft="40dp"
+        android:layout_marginTop="65dp"
         android:layout_marginRight="40dp"
         android:background="@color/color_33ffffff"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/edit_password" />
+        app:layout_constraintTop_toBottomOf="@id/edit_account" />
 
     <Button
         android:id="@+id/btn_login"
@@ -91,16 +157,17 @@
         android:text="登录"
         android:textColor="@color/white"
         android:textSize="@dimen/size_16dp"
-        app:layout_constraintLeft_toLeftOf="@id/edit_password"
-        app:layout_constraintRight_toRightOf="@id/edit_password"
-        app:layout_constraintTop_toBottomOf="@id/edit_password" />
+        app:layout_constraintLeft_toLeftOf="@id/edit_account"
+        app:layout_constraintRight_toRightOf="@id/edit_account"
+        app:layout_constraintTop_toBottomOf="@id/second_view_line" />
 
 
     <TextView
         android:id="@+id/tv_login_smscode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="15dp"
+        android:padding="5dp"
         android:text="短信验证码登录"
         android:textColor="@color/white"
         android:textSize="@dimen/size_12dp"
@@ -112,7 +179,8 @@
         android:id="@+id/tv_forget_pawd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="15dp"
+        android:padding="5dp"
         android:text="忘记密码"
         android:textColor="@color/white"
         android:textSize="@dimen/size_12dp"
@@ -121,17 +189,20 @@
 
 
     <TextView
+        android:id="@+id/tv_login_byczy"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="69dp"
+        android:layout_marginTop="49dp"
         android:drawableLeft="@drawable/login_icon_czylogo"
         android:drawablePadding="10dp"
+        android:gravity="center_vertical"
+        android:padding="10dp"
         android:text="彩之云快速登录"
         android:textColor="@color/white"
-        android:gravity="center_vertical"
         android:textSize="@dimen/size_12dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/btn_login" />
+
 
 </android.support.constraint.ConstraintLayout>

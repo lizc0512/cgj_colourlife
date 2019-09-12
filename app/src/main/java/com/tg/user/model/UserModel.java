@@ -12,6 +12,7 @@ import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.net.DES;
 import com.tg.coloursteward.net.HttpTools;
+import com.tg.coloursteward.net.MD5;
 import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.TokenUtils;
 import com.yanzhenjie.nohttp.BasicBinary;
@@ -51,6 +52,8 @@ public class UserModel extends BaseModel {
     private String singleExitUrl = "/cgjapp/single/device/logout";
     private String changePwdUrl = "/account/password";
     private String sendMMSUrl = "/app/bind/mobile/sendCode";
+    private String smsCodeUrl = "/app/smsCode";
+    private String forgetPasswordUrl = "/app/forgetPassword";
     private String bindMobileUrl = "/app/bind/mobile";
     private String updateInfoUrl = "/app/modifyInfo";
     private String uploadImgUrl = "/avatar";
@@ -524,6 +527,83 @@ public class UserModel extends BaseModel {
                     } else {
                         showErrorCodeMessage(response);
                     }
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+                showExceptionMessage(what, response);
+            }
+        }, true, true);
+    }
+
+
+    /*
+       忘记密码获取验证码
+     */
+    public void getSmsCode(int what, String mobile, String work_type, final HttpResponse httpResponse) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("mobile", mobile);
+        params.put("work_type", work_type);
+        params.put("sms_type", "1");
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 5, smsCodeUrl), RequestMethod.POST);
+        request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    if (!TextUtils.isEmpty(result)) {
+                        int code = showSuccesResultMessage(result);
+                        if (code == 0) {
+                            httpResponse.OnHttpResponse(what, result);
+                        } else {
+                            showErrorCodeMessage(response);
+                        }
+                    } else {
+                        showErrorCodeMessage(response);
+                    }
+                } else {
+                    showErrorCodeMessage(responseCode, response);
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+                showExceptionMessage(what, response);
+            }
+        }, true, true);
+    }
+
+
+    public void forgetPasswordBySms(int what, String mobile, String code, String password, final HttpResponse httpResponse) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("mobile", mobile);
+        params.put("code", code);
+        try {
+            params.put("password", MD5.getMd5Value(password).toLowerCase());
+        } catch (Exception e) {
+
+        }
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 5, forgetPasswordUrl), RequestMethod.POST);
+        request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    if (!TextUtils.isEmpty(result)) {
+                        int code = showSuccesResultMessage(result);
+                        if (code == 0) {
+                            httpResponse.OnHttpResponse(what, result);
+                        } else {
+                            showErrorCodeMessage(response);
+                        }
+                    } else {
+                        showErrorCodeMessage(response);
+                    }
+                } else {
+                    showErrorCodeMessage(responseCode, response);
                 }
             }
 

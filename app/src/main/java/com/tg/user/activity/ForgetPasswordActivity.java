@@ -1,47 +1,39 @@
 package com.tg.user.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.BaseActivity;
-import com.tg.coloursteward.baseModel.HttpResponse;
-import com.tg.coloursteward.util.ToastUtil;
-import com.tg.user.model.UserModel;
+
+import static com.tg.user.activity.LoginActivity.ACCOUNT;
 
 /**
  * 忘记密码（一）
  */
-public class ForgetPasswordActivity extends BaseActivity implements HttpResponse {
-    private EditText edit_account;
-    private EditText edit_name;
-    private EditText edit_number;
+public class ForgetPasswordActivity extends BaseActivity {
+    private EditText ed_input_mobile;
     private Button btn_next;
-    private String account;
-    private String name;
-    private String number;
-    private UserModel userModel;
-    private ImageView iv_base_back;
-    private TextView tv_base_title;
+    private ImageView iv_image_back;
+    private String mobile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_forget_password);
-        userModel = new UserModel(this);
+        headView.setVisibility(View.GONE);
         initView();
     }
 
     @Override
     public View getContentView() {
-        return null;
+        return getLayoutInflater().inflate(R.layout.activity_new_forget_pawd, null);
     }
 
     @Override
@@ -51,71 +43,63 @@ public class ForgetPasswordActivity extends BaseActivity implements HttpResponse
 
 
     private void initView() {
-        iv_base_back = findViewById(R.id.iv_base_back);
-        tv_base_title = findViewById(R.id.tv_base_title);
-        edit_account = findViewById(R.id.edit_account);
-        edit_name = findViewById(R.id.edit_name);
-        edit_number = findViewById(R.id.edit_number);
+        iv_image_back = findViewById(R.id.iv_image_back);
+        ed_input_mobile = findViewById(R.id.ed_input_mobile);
         btn_next = findViewById(R.id.btn_next);
-        tv_base_title.setText("忘记密码");
-        iv_base_back.setOnClickListener(new View.OnClickListener() {
+        iv_image_back.setOnClickListener(singleListener);
+        btn_next.setOnClickListener(singleListener);
+        ed_input_mobile.addTextChangedListener(new TextWatcher() {
             @Override
-            public void onClick(View v) {
-                ForgetPasswordActivity.this.finish();
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                mobile = editable.toString().trim();
+                if (11 == mobile.length()) {
+                    btn_next.setTextColor(getResources().getColor(R.color.white));
+                    btn_next.setBackgroundResource(R.drawable.next_button_click);
+                    btn_next.setEnabled(true);
+                } else {
+                    btn_next.setTextColor(getResources().getColor(R.color.color_bbbbbb));
+                    btn_next.setBackgroundResource(R.drawable.next_button_default);
+                    btn_next.setEnabled(false);
+                }
             }
         });
-        btn_next.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                next();
-            }
-        });
+        mobile = getIntent().getStringExtra(ACCOUNT);
+        if (!TextUtils.isEmpty(mobile)) {
+            ed_input_mobile.setText(mobile);
+            ed_input_mobile.setSelection(mobile.length());
+        }
     }
 
-    private void next() {
-        account = edit_account.getText().toString().trim();
-        name = edit_name.getText().toString().trim();
-        number = edit_number.getText().toString().trim();
-        if (TextUtils.isEmpty(account)) {
-            ToastUtil.showShortToast(ForgetPasswordActivity.this, "帐号不能为空");
-            return;
+    @Override
+    protected boolean handClickEvent(View v) {
+        switch (v.getId()) {
+            case R.id.iv_image_back:
+                finish();
+                break;
+            case R.id.btn_next:
+                Intent intent = new Intent(ForgetPasswordActivity.this, ForgetPasswordPhoneActivity.class);
+                intent.putExtra(ACCOUNT, mobile);
+                startActivityForResult(intent, 1000);
+                break;
         }
-        if (TextUtils.isEmpty(name)) {
-            ToastUtil.showShortToast(ForgetPasswordActivity.this, "姓名不能为空");
-            return;
-        }
-        if (TextUtils.isEmpty(number)) {
-            ToastUtil.showShortToast(ForgetPasswordActivity.this, "手机号不能为空");
-            return;
-        }
-        postSendSMS();
-    }
-
-    private void postSendSMS() {
-        userModel.postSendMms(0, account, name, number, "forgetPassword", this);
+        return super.handClickEvent(v);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 0) {
-            if (resultCode == Activity.RESULT_OK) {
-                finish();
-            }
-        }
-    }
-
-    @Override
-    public void OnHttpResponse(int what, String result) {
-        switch (what) {
-            case 0:
-                if (!TextUtils.isEmpty(result)) {
-                    ToastUtil.showShortToast(this, "短信发送成功");
-                    Intent intent = new Intent(ForgetPasswordActivity.this, ForgetPasswordVerifyActivity.class);
-                    intent.putExtra("username", account);
-                    startActivityForResult(intent, 0);
-                }
-                break;
+        if (resultCode == 200) {
+            finish();
         }
     }
 }

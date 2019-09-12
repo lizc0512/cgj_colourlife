@@ -1,4 +1,6 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-android'
 apply plugin: 'com.mob.sdk'
 apply from: 'tinker-support.gradle'
 android {
@@ -174,6 +176,7 @@ dependencies {
     //其中latest.release指代最新版本号，也可以指定明确的版本号，例如2.2.0
     implementation(name: 'lekai-open-sdk-v3.0.8.1', ext: 'aar')
     implementation project(path: ':hellocharts-library')//乐开
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
 
 project.afterEvaluate {

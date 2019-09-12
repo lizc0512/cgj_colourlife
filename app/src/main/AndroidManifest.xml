@@ -314,7 +314,7 @@
         <service android:name="com.tg.setting.service.LekaiService" />
 
         <activity android:name="com.tg.user.activity.BindMobileActivity" />
-
+        <activity android:name="com.tg.setting.activity.AboutUsAvtivity" />
     </application>
 
 </manifest>

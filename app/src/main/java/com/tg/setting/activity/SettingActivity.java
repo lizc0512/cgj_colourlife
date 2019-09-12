@@ -191,7 +191,7 @@ public class SettingActivity extends BaseActivity implements OnClickListener, Ht
                 }, null, "是否确定清空首页消息列表？", null, null);
                 break;
             case R.id.rl_setting_aboutus:
-                startActivity(new Intent(this, AboutUsActivity.class));
+                startActivity(new Intent(this, AboutUsAvtivity.class));
                 break;
             case R.id.rl_setting_update:
                 isCheck = true;

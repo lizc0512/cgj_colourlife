@@ -156,12 +156,13 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         tv_login_smscode.setOnClickListener(this);
         btn_get_code.setOnClickListener(this);
         btn_login.setOnClickListener(this);
+
         tv_login_byczy.setOnClickListener(this);
-        btn_login.setEnabled(false);
-        btn_login.setEnabled(false);
         edit_account.addTextChangedListener(this);
         edit_password.addTextChangedListener(this);
         edit_smscode.addTextChangedListener(this);
+        btn_get_code.setEnabled(false);
+        btn_login.setEnabled(false);
         Intent intent = getIntent();
         if (null != intent) {
             boolean loginOut = intent.getBooleanExtra("login_out", false);
@@ -247,9 +248,11 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         if (TextUtils.isEmpty(account) || TextUtils.isEmpty(password)) {
             btn_login.setBackground(getResources().getDrawable(R.drawable.login_button_default));
             btn_login.setTextColor(getResources().getColor(R.color.white));
+            btn_get_code.setEnabled(false);
         } else {
             btn_login.setBackground(getResources().getDrawable(R.drawable.login_button_click));
             btn_login.setTextColor(getResources().getColor(R.color.color_1082ff));
+            btn_get_code.setEnabled(true);
         }
     }
 

@@ -51,7 +51,6 @@ public interface Contants {
     interface LOGO {
         //首页消息更新
         int CLEAR_HOMELIST = 30;
-
         int UPDATE_HOMELIST = 35;
     }
 
@@ -92,57 +91,8 @@ public interface Contants {
          * 对公账户收款方typeName
          */
         String ACCEPT_TYPE_NAME = "accept_type_name";
-        /**
-         * OA账号
-         */
         String OA = "OA";
-        /**
-         * 给同事发红包（colleague）/转账到彩之云（czy）
-         */
-        String TRANSFERTO = "transferTo";
-        /**
-         * OaID
-         */
-        String USERID = "OaID";
-        /**
-         * mobile
-         */
         String MOBILE = "mobile";
-        /**
-         * 提现金额
-         */
-        String WITHDRAW_AMOUNT = "withdrawAmount";
-        /**
-         * 发红包捎一句话
-         */
-        String TRANSFERNOTE = "transferNote";
-        /**
-         * 彩之云小区
-         */
-        String COMMUNITY = "community";
-        /**
-         * 持卡人
-         */
-        String CARDHOLDER = "cardholder";
-
-        /**
-         * 银行名称
-         */
-        String BANK_NAME = "bankName";
-
-        /**
-         * 银行卡号
-         */
-        String CARD_NUMBER = "cardNumber";
-        /**
-         * 银行ID号
-         */
-        String BANK_ID = "bankId";
-
-        /**
-         * 用户的银行卡ID
-         */
-        String BANK_CARD_ID = "bankCardId";
         String CALLBACKSCANRESULT = "CallBackScanResult";
     }
 
@@ -155,9 +105,7 @@ public interface Contants {
     }
 
     interface storage {
-        String THRID_CODE = "thrid_code";//彩之云授权登录code
         String TICKET = "ticket";
-        String ACCOUNT = "account";
         String DGZH_ACCOUNT = "dgzh_account";
         String AREAHOME = "area_home";
         String STOCKHOME = "stock_home";
@@ -173,10 +121,8 @@ public interface Contants {
         String APPAUTHTIME_1 = "app_auth_time_1";//appAuthtime  1.0
         String ORGNAME = "org_name";//OrgName
         String ORGID = "org_id";//Orgid
-        String ADVLIST = "advlist";//轮播图
         String ALIAS = "alias";//ALIAS
         String Tags = "tags";//Tags
-        String ORGTYPE = "org_type";//Tags
         String PUBLIC_LIST = "public_list";//对公账户搜索历史列表
         String JTJJB = "jtjjb";//对公账户搜索历史列表
         String DEVICE_TOKEN = "device_token";//设备唯一token
@@ -187,8 +133,6 @@ public interface Contants {
         String FRAGMENTMINE = "fragmentmine";//我的页面
         String SALARY_TIME = "salary_time";//工资条打开时间
         String SALARY_ISINPUT = "salary_isinput";//工资条打开状态
-        String TINYFRAGMENTTOP = "tinyfragmenttop";//微服务顶部
-        String TINYFRAGMENTMID = "tinyfragmentmid";//微服务中部
         String JSFPNUM = "jsfpmoney";//微服务即时分配金额
         String HomePageAd = "homepagead";
         String ImageType = "imagetype";
@@ -200,8 +144,6 @@ public interface Contants {
         // 下载文件保存路径
         String DOWNLOAD_DIRECT = Environment.getExternalStorageDirectory()
                 + "/colourlife/download/";
-        String LOG_DIRECT = Environment.getExternalStorageDirectory()
-                + "/colourlife/log/";
     }
 
     interface MAP {

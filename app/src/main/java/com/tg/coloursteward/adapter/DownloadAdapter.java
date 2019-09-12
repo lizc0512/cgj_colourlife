@@ -1,7 +1,6 @@
 package com.tg.coloursteward.adapter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,8 +8,6 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.util.GlideUtils;
 import com.tg.coloursteward.util.Tools;
@@ -19,8 +16,6 @@ import java.io.File;
 import java.util.List;
 
 public class DownloadAdapter extends BaseAdapter {
-    private ImageLoader mImageLoader;
-    private DisplayImageOptions options;
 
     private LayoutInflater mInflater;
     private List<String> items;
@@ -38,15 +33,6 @@ public class DownloadAdapter extends BaseAdapter {
         this.mContext = context;
         items = it;
         paths = pa;
-        mImageLoader = ImageLoader.getInstance();
-        options = new DisplayImageOptions.Builder()
-                .showImageOnLoading(R.drawable.ic_stub)
-                .showImageForEmptyUri(R.drawable.ic_empty)
-                .showImageOnFail(R.drawable.ic_error).cacheInMemory(true)
-                .cacheOnDisc(true).considerExifParams(true)
-                .bitmapConfig(Bitmap.Config.RGB_565).build();
-        mImageLoader.clearMemoryCache();
-        mImageLoader.clearDiskCache();
     }
 
     @Override

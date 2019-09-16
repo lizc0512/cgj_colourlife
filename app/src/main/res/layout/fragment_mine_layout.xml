@@ -1,64 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/white"
-    android:orientation="vertical">
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="20dp"/>
-    <RelativeLayout
-        android:id="@+id/rl_mine_title"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:background="@drawable/bg_mine_head">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/tv_mine_name"
-            android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:focusable="true"
+            android:focusableInTouchMode="true"/>
+
+        <RelativeLayout
+            android:id="@+id/rl_mine_title"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/bg_mine_head">
+
+            <TextView
+                android:id="@+id/tv_mine_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="27dp"
+                android:text="name"
+                android:textColor="@color/black_mine"
+                android:textSize="18dp" />
+
+            <TextView
+                android:id="@+id/tv_mine_job"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tv_mine_name"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="14dp"
+                android:text="job"
+                android:textColor="@color/black_mine"
+                android:textSize="14dp" />
+
+            <com.tg.coloursteward.view.CircleImageView
+                android:id="@+id/iv_mine_head"
+                android:layout_width="52dp"
+                android:layout_height="52dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="24dp"
+                android:layout_marginRight="14dp"
+                android:src="@drawable/more_icon_defaulthead"
+                app:civ_border_color="@color/line_bg_new"
+                app:civ_border_width="2dp" />
+        </RelativeLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerview"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="27dp"
-            android:text="name"
-            android:textColor="@color/black_mine"
-            android:textSize="18dp" />
+            android:layout_marginTop="13dp">
 
-        <TextView
-            android:id="@+id/tv_mine_job"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tv_mine_name"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="14dp"
-            android:text="job"
-            android:textColor="@color/black_mine"
-            android:textSize="14dp" />
+        </android.support.v7.widget.RecyclerView>
 
-        <com.tg.coloursteward.view.CircleImageView
-            android:id="@+id/iv_mine_head"
-            android:layout_width="52dp"
-            android:layout_height="52dp"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="14dp"
-            android:layout_marginTop="24dp"
-            app:civ_border_color="@color/line_bg_new"
-            app:civ_border_width="2dp"
-            android:src="@drawable/more_icon_defaulthead" />
-    </RelativeLayout>
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerview"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="13dp">
-
-    </android.support.v7.widget.RecyclerView>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/line_bg_new"/>
-
-</LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/line_bg_new" />
+    </LinearLayout>
+</android.support.v4.widget.NestedScrollView>

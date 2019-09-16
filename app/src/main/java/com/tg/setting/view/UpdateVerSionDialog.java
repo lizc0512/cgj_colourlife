@@ -36,21 +36,15 @@ public class UpdateVerSionDialog {
     }
 
     public void show() {
-        try {
+        if (null != mDialog) {
             mDialog.show();
-        } catch (Exception e) {
-
         }
-
     }
 
     public void dismiss() {
-        try {
+        if (null != mDialog) {
             mDialog.dismiss();
-        } catch (Exception e) {
-
         }
-
     }
 
 }

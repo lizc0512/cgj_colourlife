@@ -1294,7 +1294,10 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
         updateDialog.listView.setAdapter(updateAdapter);
         switch (code) {
             case 2://可选更新
-                updateDialog.show();
+                String ver = spUtils.getStringData(SpConstants.UserModel.VERSION_NAME, "");
+                if (!version.equals(ver)) {
+                    updateDialog.show();
+                }
                 break;
             case 3://强制更新
                 updateDialog.cancel.setVisibility(View.GONE);
@@ -1302,6 +1305,10 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
                 updateDialog.show();
                 break;
         }
+        updateDialog.cancel.setOnClickListener(v -> {
+            spUtils.saveStringData(SpConstants.UserModel.VERSION_NAME, version);
+            updateDialog.dismiss();
+        });
         updateDialog.ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -1346,13 +1353,6 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
                 }
             }
         });
-        updateDialog.cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                updateDialog.dismiss();
-            }
-        });
-
     }
 
     private void startInstallPermissionSettingActivity() {

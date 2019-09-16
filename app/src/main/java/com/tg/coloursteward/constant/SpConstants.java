@@ -23,6 +23,7 @@ public interface SpConstants {
         String MICRODATA = "microdata";
         String MICROVIEWPAGERITEM = "microvpitem";
         String ACCOUNT_UUID = "account_uuid";
+        String VERSION_NAME = "version_name";
     }
 
     interface MicroContant {

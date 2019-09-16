@@ -3,7 +3,12 @@ package com.tg.coloursteward.util;
 import android.content.Context;
 import android.text.TextUtils;
 import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.tg.coloursteward.R;
 
 public class ToastUtil {
 
@@ -36,6 +41,16 @@ public class ToastUtil {
             toast.setGravity(Gravity.CENTER, 0, 0);
             toast.show();
         }
+    }
+
+    public static void showLoginToastCenter(Context context, String msg) {
+        View toastRoot = LayoutInflater.from(context).inflate(R.layout.login_toast_layout, null);
+        Toast toast = new Toast(context);
+        toast.setView(toastRoot);
+        TextView tv = toastRoot.findViewById(R.id.toast_notice);
+        tv.setText(msg);
+        toast.setGravity(Gravity.CENTER, 0, 0);
+        toast.show();
     }
 
     /**

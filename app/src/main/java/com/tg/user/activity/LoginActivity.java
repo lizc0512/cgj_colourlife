@@ -290,11 +290,12 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 if (isSmsLogin) {
                     loginType = "2";
                     password = edit_smscode.getText().toString().trim();
+                    SoftKeyboardUtils.hideSoftKeyboard(LoginActivity.this);
                     login(account, password, loginType);
                 } else {
                     password = edit_password.getText().toString().trim();
                     if (6 > password.length()) {
-                        ToastUtil.showShortToast(this, "密码的长度不能小于6位");
+                        ToastUtil.showLoginToastCenter(this, "密码的长度不能小于6位");
                         return;
                     }
                     if (NumberUtils.IsPhoneNumber(account)) {
@@ -302,6 +303,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                     } else {
                         loginType = "1";
                     }
+                    SoftKeyboardUtils.hideSoftKeyboard(LoginActivity.this);
                     loginGt();
                 }
                 break;
@@ -350,7 +352,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
      * 彩之云授权登录
      */
     private void czyLogin() {
-        ToastUtil.showShortToast(LoginActivity.this, "正在调起中...");
+        ToastUtil.showLoginToastCenter(LoginActivity.this, "正在调起中...");
         String package_name = "cn.net.cyberway";
         String activity_path = "cn.net.cyberway.OauthWebviewActivity";
         Intent intent = new Intent();
@@ -373,13 +375,13 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                         if (intent.resolveActivity(getPackageManager()) != null) {
                             startActivity(Intent.createChooser(intent, "请选择浏览器"));
                         } else {
-                            ToastUtil.showShortToast(LoginActivity.this, "请下载浏览器");
+                            ToastUtil.showLoginToastCenter(LoginActivity.this, "请下载浏览器");
                         }
                     }
                 }, null, "你的手机未安装彩之云客户端", "下载", null);
             }
         } catch (Exception e) {
-            ToastUtil.showShortToast(LoginActivity.this, "请安装最新版彩之云APP");
+            ToastUtil.showLoginToastCenter(LoginActivity.this, "请安装最新版彩之云APP");
         }
     }
 
@@ -602,7 +604,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                             login(account, getPawdMD5(), loginType);
                         } else {
                             gt3GeetestUtils.gt3TestClose();
-                            ToastUtil.showShortToast(LoginActivity.this, "极验验证失败,请稍后重试");
+                            ToastUtil.showLoginToastCenter(LoginActivity.this, "极验验证失败,请稍后重试");
                         }
                     } catch (Exception e) {
                         gt3GeetestUtils.gt3TestFinish();
@@ -610,7 +612,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                     }
                 } else {
                     gt3GeetestUtils.gt3TestClose();
-                    ToastUtil.showShortToast(LoginActivity.this, "极验获取数据异常,请稍后重试");
+                    ToastUtil.showLoginToastCenter(LoginActivity.this, "极验获取数据异常,请稍后重试");
                 }
                 break;
             case 2:
@@ -648,10 +650,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                             intent.putExtra(MainActivity.KEY_EXTRAS, extras);
                             intent.putExtra(MainActivity.FROM_LOGIN, true);
                             startActivity(intent);
-                            ToastUtil.showShortToast(this, "登录成功");
+                            ToastUtil.showLoginToastCenter(this, "登录成功");
                             LoginActivity.this.finish();
                         } else {
-                            ToastUtil.showShortToast(this, "账号异常，请及时联系管理员");
+                            ToastUtil.showLoginToastCenter(this, "账号异常，请及时联系管理员");
                             spUtils.clearKey(this);
                         }
                     } catch (Exception e) {
@@ -686,7 +688,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 break;
             case 6:
                 initTimeCount();
-                ToastUtil.showShortToastCenter(LoginActivity.this, "验证码已发送");
+                ToastUtil.showLoginToastCenter(LoginActivity.this, "验证码已发送");
                 break;
         }
     }

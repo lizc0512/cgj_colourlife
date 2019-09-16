@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.baseModel.HttpResponse;
+import com.tg.coloursteward.util.SoftKeyboardUtils;
 import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.ToastUtil;
 import com.tg.user.model.UserModel;
@@ -154,9 +155,10 @@ public class ForgetPasswordPhoneActivity extends BaseActivity implements HttpRes
                 String smsCode = edit_smscode.getText().toString().trim();
                 String pawd = edit_pawd.getText().toString().trim();
                 if (6 > pawd.length()) {
-                    ToastUtil.showShortToast(this, "密码的长度不能小于6位");
+                    ToastUtil.showLoginToastCenter(this, "请输入6-18位密码");
                     break;
                 }
+                SoftKeyboardUtils.showORhideSoftKeyboard(ForgetPasswordPhoneActivity.this);
                 userModel.forgetPasswordBySms(1, phone, smsCode, pawd, ForgetPasswordPhoneActivity.this);
                 break;
         }
@@ -192,10 +194,10 @@ public class ForgetPasswordPhoneActivity extends BaseActivity implements HttpRes
         switch (what) {
             case 0:
                 initTimeCount();
-                ToastUtil.showShortToastCenter(ForgetPasswordPhoneActivity.this, "验证码已发送");
+                ToastUtil.showLoginToastCenter(ForgetPasswordPhoneActivity.this, "验证码已发送");
                 break;
             case 1:
-                ToastUtil.showShortToastCenter(ForgetPasswordPhoneActivity.this, "设置成功");
+                ToastUtil.showLoginToastCenter(ForgetPasswordPhoneActivity.this, "设置成功");
                 setResult(200);
                 finish();
                 break;

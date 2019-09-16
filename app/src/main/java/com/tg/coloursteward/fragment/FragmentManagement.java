@@ -61,7 +61,7 @@ import cn.bingoogolapple.bgabanner.BGABanner;
  *
  * @author Administrator
  */
-public class FragmentManagementTest extends Fragment implements HttpResponse, View.OnClickListener {
+public class FragmentManagement extends Fragment implements HttpResponse, View.OnClickListener {
     private Activity mActivity;
     private View mView;
     private MicroModel microModel;
@@ -82,7 +82,7 @@ public class FragmentManagementTest extends Fragment implements HttpResponse, Vi
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mView = inflater.inflate(R.layout.fragment_management_test_layout, container, false);
+        mView = inflater.inflate(R.layout.fragment_management_layout, container, false);
         microModel = new MicroModel(mActivity);
         initView();
         showCache();

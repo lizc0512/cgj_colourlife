@@ -61,7 +61,7 @@ import com.tg.coloursteward.constant.SpConstants;
 import com.tg.coloursteward.database.SharedPreferencesTools;
 import com.tg.coloursteward.entity.HomePopWindowEntity;
 import com.tg.coloursteward.fragment.ContactsFragment;
-import com.tg.coloursteward.fragment.FragmentManagementTest;
+import com.tg.coloursteward.fragment.FragmentManagement;
 import com.tg.coloursteward.fragment.FragmentMine;
 import com.tg.coloursteward.fragment.MsgListFragment;
 import com.tg.coloursteward.info.GridViewInfo;
@@ -1463,7 +1463,7 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
                     ft = new ContactsFragment();
                     break;
                 case 2:
-                    ft = new FragmentManagementTest();
+                    ft = new FragmentManagement();
                     break;
                 case 3:
                     ft = new FragmentMine();

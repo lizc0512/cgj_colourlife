@@ -13,6 +13,7 @@ import android.text.InputFilter;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.animation.AnimationUtils;
@@ -294,6 +295,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                     login(account, password, loginType);
                 } else {
                     password = edit_password.getText().toString().trim();
+                    SoftKeyboardUtils.hideSoftKeyboard(LoginActivity.this);
                     if (6 > password.length()) {
                         ToastUtil.showLoginToastCenter(this, "密码的长度不能小于6位");
                         return;
@@ -303,7 +305,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                     } else {
                         loginType = "1";
                     }
-                    SoftKeyboardUtils.hideSoftKeyboard(LoginActivity.this);
                     loginGt();
                 }
                 break;
@@ -338,7 +339,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                     edit_account.setHint("请输入手机号码/OA账号");
                     edit_password.startAnimation(AnimationUtils.loadAnimation(LoginActivity.this, R.anim.push_right_alpha));
                     tv_login_smscode.setText("短信验证码登录");
-                    edit_account.setInputType(InputType.TYPE_CLASS_TEXT); //输入类型
+                    edit_account.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_NORMAL);
+                    edit_account.setTransformationMethod(PasswordTransformationMethod.getInstance());
                     edit_account.setFilters(new InputFilter[]{new InputFilter.LengthFilter(24)});
                 }
                 break;

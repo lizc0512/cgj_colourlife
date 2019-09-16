@@ -50,6 +50,7 @@ public class ToastUtil {
         TextView tv = toastRoot.findViewById(R.id.toast_notice);
         tv.setText(msg);
         toast.setGravity(Gravity.CENTER, 0, 0);
+        toast.setDuration(Toast.LENGTH_SHORT);
         toast.show();
     }
 

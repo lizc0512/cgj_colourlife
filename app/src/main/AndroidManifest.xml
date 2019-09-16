@@ -96,7 +96,7 @@
         <!-- 更多设置 -->
         <activity android:name="com.tg.setting.activity.SettingActivity" />
         <!-- 关于app -->
-        <activity android:name="com.tg.setting.activity.AboutUsActivity" />
+        <activity android:name="com.tg.setting.activity.AboutUsAvtivity" />
         <!-- 修改密码 -->
         <activity android:name="com.tg.setting.activity.ModifiedPasswordActivity" />
         <!-- 获取手机通讯录 -->
@@ -314,7 +314,6 @@
         <service android:name="com.tg.setting.service.LekaiService" />
 
         <activity android:name="com.tg.user.activity.BindMobileActivity" />
-        <activity android:name="com.tg.setting.activity.AboutUsAvtivity" />
     </application>
 
 </manifest>

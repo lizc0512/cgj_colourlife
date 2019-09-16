@@ -290,6 +290,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 if (isSmsLogin) {
                     loginType = "2";
                     password = edit_smscode.getText().toString().trim();
+                    SoftKeyboardUtils.hideSoftKeyboard(LoginActivity.this);
                     login(account, password, loginType);
                 } else {
                     password = edit_password.getText().toString().trim();
@@ -302,6 +303,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                     } else {
                         loginType = "1";
                     }
+                    SoftKeyboardUtils.hideSoftKeyboard(LoginActivity.this);
                     loginGt();
                 }
                 break;

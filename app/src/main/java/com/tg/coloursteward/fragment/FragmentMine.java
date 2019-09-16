@@ -24,9 +24,8 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.signature.ObjectKey;
 import com.dashuview.library.keep.Cqb_PayUtil;
-import com.tg.coloursteward.activity.MyBrowserActivity;
 import com.tg.coloursteward.R;
-import com.tg.user.activity.UserInfoActivity;
+import com.tg.coloursteward.activity.MyBrowserActivity;
 import com.tg.coloursteward.adapter.FragmentMineAdapter;
 import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.constant.Contants;
@@ -44,6 +43,7 @@ import com.tg.coloursteward.util.SharedPreferencesUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.CircleImageView;
 import com.tg.coloursteward.view.dialog.ToastFactory;
+import com.tg.user.activity.UserInfoActivity;
 import com.youmai.hxsdk.utils.GlideRoundTransform;
 
 import java.util.ArrayList;
@@ -164,6 +164,7 @@ public class FragmentMine extends Fragment implements OnClickListener, HttpRespo
         recyclerview = mView.findViewById(R.id.recyclerview);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mActivity);
         recyclerview.setLayoutManager(linearLayoutManager);
+        recyclerview.setNestedScrollingEnabled(false);
         tv_mine_name.setText(UserInfo.realname);
         if (!TextUtils.isEmpty(UserInfo.familyName)) {
             if (UserInfo.jobName.contains(UserInfo.familyName)) {

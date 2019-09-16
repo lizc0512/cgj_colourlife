@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -29,7 +30,6 @@ import com.tg.coloursteward.constant.SpConstants;
 import com.tg.coloursteward.entity.CropLayoutEntity;
 import com.tg.coloursteward.entity.CropListEntity;
 import com.tg.coloursteward.entity.MicroDataEntity;
-import com.tg.coloursteward.inter.MicroApplicationCallBack;
 import com.tg.coloursteward.model.MicroModel;
 import com.tg.coloursteward.net.GetTwoRecordListener;
 import com.tg.coloursteward.serice.HomeService;
@@ -43,7 +43,6 @@ import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.MicroViewPager;
 import com.tg.coloursteward.view.MyGridLayoutManager;
 import com.youmai.hxsdk.config.ColorsConfig;
-import com.youmai.hxsdk.http.IGetListener;
 import com.youmai.hxsdk.http.OkHttpConnector;
 
 import org.json.JSONException;
@@ -66,26 +65,19 @@ public class FragmentManagementTest extends Fragment implements HttpResponse, Vi
     private Activity mActivity;
     private View mView;
     private MicroModel microModel;
-    private RecyclerView rv_micro_vp;
     private ImageView iv_miniservice_next;
     private TextView tv_miniservice_title;
-    private boolean isShowChangeTitle = false;
     private List<CropListEntity.ContentBean> cropList = new ArrayList<>();
     private PopupWindow popupWindow;
     private CropListAdapter cropListAdapter;
     private String cropUuid = "";
-    private View viewpagerDataView;
-    private RecyclerView rv_application;
-    private MicroViewPager vp_micro;
-    private List<CropLayoutEntity.ContentBeanX.ContentBean.DataBean> listItem = new ArrayList<>();
     private MicroAuthTimeUtils mMicroAuthTimeUtils;
-    private TextView tv_vp_title;
     private List<MicroDataEntity.ContentBean> dataItemList = new ArrayList<>();
     private LinearLayout ll_micro_addView;
     private String uuidItme;
-    private MicroVpItemAdapter microVpItemAdapter;
     private boolean showFirstData = false;
     private HomeService homeService;
+    private SwipeRefreshLayout sr_micro;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -137,11 +129,15 @@ public class FragmentManagementTest extends Fragment implements HttpResponse, Vi
     }
 
     private void initView() {
+        sr_micro = mView.findViewById(R.id.sr_micro);
         ll_micro_addView = mView.findViewById(R.id.ll_micro_addView);
         iv_miniservice_next = mView.findViewById(R.id.iv_miniservice_next);
         tv_miniservice_title = mView.findViewById(R.id.tv_miniservice_title);
+        sr_micro.setColorSchemeResources(R.color.alipay_bg_color);
         iv_miniservice_next.setOnClickListener(this);
         tv_miniservice_title.setOnClickListener(this);
+        sr_micro.setOnRefreshListener(() ->
+                initLayout(cropUuid));
         String cacheData = SharedPreferencesUtils.getInstance().getStringData(SpConstants.UserModel.MICRODATA, "");
         if (!TextUtils.isEmpty(cacheData)) {
             initInitialize(cacheData);
@@ -282,15 +278,12 @@ public class FragmentManagementTest extends Fragment implements HttpResponse, Vi
         vp_micro.setPadding(14, 0, itemWidth, 0);
         MicroViewpagerAdapter microViewpagerAdapter = new MicroViewpagerAdapter(mActivity, dataBeanList);
         vp_micro.setAdapter(microViewpagerAdapter);
-        microViewpagerAdapter.setCallBack(new MicroApplicationCallBack() {
-            @Override
-            public void onclick(int position, String url, String auth_type) {
-                if (null == mMicroAuthTimeUtils) {
-                    mMicroAuthTimeUtils = new MicroAuthTimeUtils();
-                }
-                mMicroAuthTimeUtils.IsAuthTime(mActivity, url,
-                        "", auth_type, "", "");
+        microViewpagerAdapter.setCallBack((position, url, auth_type) -> {
+            if (null == mMicroAuthTimeUtils) {
+                mMicroAuthTimeUtils = new MicroAuthTimeUtils();
             }
+            mMicroAuthTimeUtils.IsAuthTime(mActivity, url,
+                    "", auth_type, "", "");
         });
         initDataItem(dataBeanList.get(vp_micro.getCurrentItem() % dataBeanList.size()).getUuid(), rv_micro_vp);
         vp_micro.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -333,14 +326,11 @@ public class FragmentManagementTest extends Fragment implements HttpResponse, Vi
         String colorToken = SharedPreferencesUtils.getKey(mActivity, SpConstants.accessToken.accssToken);
         header.put("color-token", colorToken);
         OkHttpConnector.httpGet_net(mActivity, header, Contants.URl.URL_NEW + "/app/home/microservices/data/item",
-                params, new IGetListener() {
-                    @Override
-                    public void httpReqResult(String response) {
-                        String result = response.toString();
-                        if (!TextUtils.isEmpty(result)) {
-                            SharedPreferencesUtils.getInstance().saveStringData(SpConstants.UserModel.MICROVIEWPAGERITEM + uuidItme, result);
-                            setMicroVpItem(result, rv_micro_vp);
-                        }
+                params, response -> {
+                    String result = response.toString();
+                    if (!TextUtils.isEmpty(result)) {
+                        SharedPreferencesUtils.getInstance().saveStringData(SpConstants.UserModel.MICROVIEWPAGERITEM + uuidItme, result);
+                        setMicroVpItem(result, rv_micro_vp);
                     }
                 });
     }
@@ -438,6 +428,9 @@ public class FragmentManagementTest extends Fragment implements HttpResponse, Vi
         if (TextUtils.isEmpty(result)) {
             return;
         }
+        if (sr_micro.isRefreshing()) {
+            sr_micro.setRefreshing(false);
+        }
         CropLayoutEntity cropLayoutEntity = new CropLayoutEntity();
         cropLayoutEntity = GsonUtils.gsonToBean(result, CropLayoutEntity.class);
         ll_micro_addView.removeAllViews();
@@ -489,7 +482,6 @@ public class FragmentManagementTest extends Fragment implements HttpResponse, Vi
             for (CropListEntity.ContentBean bean : cropList) {
                 bean.setIs_default("0");
             }
-            isShowChangeTitle = true;
             tv_miniservice_title.setText(cropList.get(position).getName());
             cropList.get(position).setIs_default("1");
             cropListAdapter.notifyDataSetChanged();

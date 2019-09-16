@@ -250,11 +250,11 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         if (TextUtils.isEmpty(account) || TextUtils.isEmpty(password)) {
             btn_login.setBackground(getResources().getDrawable(R.drawable.login_button_default));
             btn_login.setTextColor(getResources().getColor(R.color.white));
-            btn_get_code.setEnabled(false);
+            btn_login.setEnabled(false);
         } else {
             btn_login.setBackground(getResources().getDrawable(R.drawable.login_button_click));
             btn_login.setTextColor(getResources().getColor(R.color.color_1082ff));
-            btn_get_code.setEnabled(true);
+            btn_login.setEnabled(true);
         }
     }
 

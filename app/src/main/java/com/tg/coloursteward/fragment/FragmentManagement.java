@@ -489,6 +489,8 @@ public class FragmentManagement extends Fragment implements HttpResponse, View.O
             popupWindow.dismiss();
         });
         RecyclerView rv_crop = contentview.findViewById(R.id.rv_item_crop);
+        View view_bg = contentview.findViewById(R.id.view_bg);
+        view_bg.setOnClickListener(v -> popupWindow.dismiss());
         rv_crop.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
         rv_crop.setAdapter(cropListAdapter);
         popupWindow.setOutsideTouchable(true);

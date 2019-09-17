@@ -405,10 +405,10 @@ public class FragmentManagement extends Fragment implements HttpResponse, View.O
                 dataItemList.addAll(microDataEntity.getContent());
                 rv_micro_vp.setVisibility(View.VISIBLE);
             } else {
-                if (null != rv_micro_vp) {
-                    rv_micro_vp.scrollBy(0, 3);
-                }
-                rv_micro_vp.setVisibility(View.GONE);
+                MicroDataEntity.ContentBean contentBean = new MicroDataEntity.ContentBean();
+                contentBean.setName(" ");
+                dataItemList.add(contentBean);
+                ll_micro_addView.scrollBy(0, 2);
             }
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false);
             rv_micro_vp.setLayoutManager(linearLayoutManager);

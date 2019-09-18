@@ -32,6 +32,7 @@ import com.tg.coloursteward.R;
 import com.tg.coloursteward.application.CityPropertyApplication;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.baseModel.HttpResponse;
+import com.tg.coloursteward.baseModel.RequestEncryptionUtils;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.constant.SpConstants;
 import com.tg.coloursteward.database.SharedPreferencesTools;
@@ -99,6 +100,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     private String corpId;
     private String extras;
     private String loginType = "1";//1：账号密码登录，2：短信验证码登录，3：手机号码密码登录，4：彩之云授权登录
+    private String user_type;//1：oa账号，2：彩之云账号
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -259,7 +261,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         }
     }
 
-
     private void setCodeBtn() {
         account = edit_account.getText().toString().trim();
         if (countStart == 0) {
@@ -302,6 +303,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                     }
                     if (NumberUtils.IsPhoneNumber(account)) {
                         loginType = "3";
+                        userModel.getUserType(7, account, this);
+                        return;
                     } else {
                         loginType = "1";
                     }
@@ -692,7 +695,28 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 initTimeCount();
                 ToastUtil.showLoginToastCenter(LoginActivity.this, "验证码已发送");
                 break;
+            case 7:
+                if (!TextUtils.isEmpty(result)) {
+                    String content = RequestEncryptionUtils.getContentString(result);
+                    try {
+                        JSONObject jsonObject = new JSONObject(content);
+                        user_type = jsonObject.getString("user_type");
+                        if ("1".equals(user_type)) {
+                            loginType = "1";
+                        } else if ("2".equals(user_type)) {
+                            loginType = "3";
+                        }
+                        loginGt();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                break;
         }
+    }
+
+    private void loginCzy() {
+
     }
 
     private void getSkin(String corpId) {

@@ -70,6 +70,7 @@ public class UserModel extends BaseModel {
     private String sendKeyByPhone = "/yuncontrol/ycKey/addByMobileHomeLoc";
     private String sendKeyByPackge = "/yuncontrol/ycKeyPackage/putKeyPackageByMobileHomeLoc";
     private String getKeyByQrCode = "/yuncontrol/ycKeyQrcode/getQrcode";
+    private String getUserTypeUrl = "/user/type";
 
     public UserModel(Context context) {
         super(context);
@@ -1135,4 +1136,35 @@ public class UserModel extends BaseModel {
             }
         }, true, true);
     }
+
+    /**
+     * 获取账号类型(用于判断彩之云账号密码登录)
+     *
+     * @param what
+     * @param username     账号
+     * @param httpResponse
+     */
+    public void getUserType(int what, String username, final HttpResponse httpResponse) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("username", username);
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 2, getUserTypeUrl), RequestMethod.GET);
+        request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    int code = showSuccesResultMessageTheme(result);
+                    if (code == 0) {
+                        httpResponse.OnHttpResponse(what, result);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+            }
+        }, true, true);
+    }
+
 }

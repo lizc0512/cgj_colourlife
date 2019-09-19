@@ -1,5 +1,6 @@
 package com.tg.user.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.text.Editable;
@@ -16,12 +17,15 @@ import android.widget.TextView;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.baseModel.HttpResponse;
+import com.tg.coloursteward.net.MD5;
 import com.tg.coloursteward.util.SoftKeyboardUtils;
 import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.ToastUtil;
 import com.tg.user.model.UserModel;
 
 import static com.tg.user.activity.LoginActivity.ACCOUNT;
+import static com.tg.user.activity.LoginActivity.USERACCOUNT;
+import static com.tg.user.activity.LoginActivity.USERNAME;
 
 /**
  * 通过手机号 验证码找回密码
@@ -37,6 +41,8 @@ public class ForgetPasswordPhoneActivity extends BaseActivity implements HttpRes
     private ImageView iv_show_pawd;
     private Button btn_reset_pawd;
     private String phone;
+    private String username;
+    private String oaname;
     private boolean showPawd = false;
     private UserModel userModel;
 
@@ -75,7 +81,10 @@ public class ForgetPasswordPhoneActivity extends BaseActivity implements HttpRes
         tv_get_code.setOnClickListener(singleListener);
         iv_show_pawd.setOnClickListener(singleListener);
         btn_reset_pawd.setOnClickListener(singleListener);
-        phone = getIntent().getStringExtra(ACCOUNT);
+        Intent intent = getIntent();
+        phone = intent.getStringExtra(ACCOUNT);
+        username = intent.getStringExtra(USERNAME);
+        oaname = intent.getStringExtra(USERACCOUNT);
         tv_phone.setText(StringUtils.getHandlePhone(phone));
         edit_smscode.addTextChangedListener(new TextWatcher() {
             @Override
@@ -109,7 +118,8 @@ public class ForgetPasswordPhoneActivity extends BaseActivity implements HttpRes
                 setResetBtnStatus();
             }
         });
-        userModel.getSmsCode(0, phone, "2", ForgetPasswordPhoneActivity.this);
+        userModel.postSendMms(0, oaname, username, phone, "forgetPassword", this);
+//        userModel.getSmsCode(0, phone, "2", ForgetPasswordPhoneActivity.this);
     }
 
     private void setResetBtnStatus() {
@@ -135,7 +145,7 @@ public class ForgetPasswordPhoneActivity extends BaseActivity implements HttpRes
                 finish();
                 break;
             case R.id.tv_get_code:
-                userModel.getSmsCode(0, phone, "2", ForgetPasswordPhoneActivity.this);
+                userModel.postSendMms(0, oaname, username, phone, "forgetPassword", this);
                 break;
             case R.id.iv_show_pawd:
                 showPawd = !showPawd;
@@ -159,7 +169,14 @@ public class ForgetPasswordPhoneActivity extends BaseActivity implements HttpRes
                     break;
                 }
                 SoftKeyboardUtils.showORhideSoftKeyboard(ForgetPasswordPhoneActivity.this);
-                userModel.forgetPasswordBySms(1, phone, smsCode, pawd, ForgetPasswordPhoneActivity.this);
+                String newPassword = "";
+                try {
+                    newPassword = MD5.getMd5Value(pawd).toLowerCase();
+                    userModel.putFindPwd(1, oaname, smsCode, newPassword, this);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
                 break;
         }
         return super.handClickEvent(v);

@@ -14,15 +14,21 @@ import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.BaseActivity;
 
 import static com.tg.user.activity.LoginActivity.ACCOUNT;
+import static com.tg.user.activity.LoginActivity.USERACCOUNT;
+import static com.tg.user.activity.LoginActivity.USERNAME;
 
 /**
  * 忘记密码（一）
  */
-public class ForgetPasswordActivity extends BaseActivity {
+public class ForgetPasswordActivity extends BaseActivity implements TextWatcher {
     private EditText ed_input_mobile;
+    private EditText ed_input_oa;
+    private EditText ed_input_name;
     private Button btn_next;
     private ImageView iv_image_back;
     private String mobile;
+    private String username;
+    private String oaname;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,39 +51,14 @@ public class ForgetPasswordActivity extends BaseActivity {
     private void initView() {
         iv_image_back = findViewById(R.id.iv_image_back);
         ed_input_mobile = findViewById(R.id.ed_input_mobile);
+        ed_input_oa = findViewById(R.id.ed_input_oa);
+        ed_input_name = findViewById(R.id.ed_input_name);
         btn_next = findViewById(R.id.btn_next);
         iv_image_back.setOnClickListener(singleListener);
         btn_next.setOnClickListener(singleListener);
-        ed_input_mobile.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                mobile = editable.toString().trim();
-                if (11 == mobile.length()) {
-                    btn_next.setTextColor(getResources().getColor(R.color.white));
-                    btn_next.setBackgroundResource(R.drawable.next_button_click);
-                    btn_next.setEnabled(true);
-                } else {
-                    btn_next.setTextColor(getResources().getColor(R.color.color_bbbbbb));
-                    btn_next.setBackgroundResource(R.drawable.next_button_default);
-                    btn_next.setEnabled(false);
-                }
-            }
-        });
-        mobile = getIntent().getStringExtra(ACCOUNT);
-        if (!TextUtils.isEmpty(mobile)) {
-            ed_input_mobile.setText(mobile);
-            ed_input_mobile.setSelection(mobile.length());
-        }
+        ed_input_mobile.addTextChangedListener(this);
+        ed_input_oa.addTextChangedListener(this);
+        ed_input_name.addTextChangedListener(this);
     }
 
     @Override
@@ -89,6 +70,8 @@ public class ForgetPasswordActivity extends BaseActivity {
             case R.id.btn_next:
                 Intent intent = new Intent(ForgetPasswordActivity.this, ForgetPasswordPhoneActivity.class);
                 intent.putExtra(ACCOUNT, mobile);
+                intent.putExtra(USERNAME, username);
+                intent.putExtra(USERACCOUNT, oaname);
                 startActivityForResult(intent, 1000);
                 break;
         }
@@ -100,6 +83,36 @@ public class ForgetPasswordActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == 200) {
             finish();
+        }
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+        setNextBtnStatus();
+    }
+
+    private void setNextBtnStatus() {
+        mobile = ed_input_mobile.getText().toString().trim();
+        username = ed_input_name.getText().toString().trim();
+        oaname = ed_input_oa.getText().toString().trim();
+        if (11 == mobile.length() && !TextUtils.isEmpty(username) && !TextUtils.isEmpty(oaname)) {
+            btn_next.setTextColor(getResources().getColor(R.color.white));
+            btn_next.setBackgroundResource(R.drawable.next_button_click);
+            btn_next.setEnabled(true);
+        } else {
+            btn_next.setTextColor(getResources().getColor(R.color.color_bbbbbb));
+            btn_next.setBackgroundResource(R.drawable.next_button_default);
+            btn_next.setEnabled(false);
         }
     }
 }

@@ -46,18 +46,41 @@ public class MicroVpItemAdapter extends RecyclerView.Adapter {
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.item_micro_viewpager_data, parent, false);
-        MicroVpViewHolder homeDialogViewHolder = new MicroVpViewHolder(view);
-        return homeDialogViewHolder;
+        if (viewType == 1) {
+            View view = LayoutInflater.from(mContext).inflate(R.layout.item_micro_viewpager_data_two,
+                    parent, false);
+            MicroVpViewHolderTwo holderTwo = new MicroVpViewHolderTwo(view);
+            return holderTwo;
+        } else {
+            View view = LayoutInflater.from(mContext).inflate(R.layout.item_micro_viewpager_data,
+                    parent, false);
+            MicroVpViewHolder homeDialogViewHolder = new MicroVpViewHolder(view);
+            return homeDialogViewHolder;
+        }
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (mList.get(position).getName().equals(" ")) {
+            return 1;
+        } else {
+            return 0;
+        }
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        ((MicroVpViewHolder) holder).tv_micro_date_name.setText(mList.get(position).getName());
-        ((MicroVpViewHolder) holder).tv_micro_date_content.setText(mList.get(position).getData());
-        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.MATCH_PARENT);
-        layoutParams.width = width;
-        ((MicroVpViewHolder) holder).rl_micro_vp_data.setLayoutParams(layoutParams);
+        if (holder instanceof MicroVpViewHolderTwo) {
+            ((MicroVpViewHolderTwo) holder).tv_micro_date_name.setText(" ");
+        } else {
+            ((MicroVpViewHolder) holder).tv_micro_date_name.setText(mList.get(position).getName());
+            ((MicroVpViewHolder) holder).tv_micro_date_content.setText(mList.get(position).getData());
+            RelativeLayout.LayoutParams layoutParams =
+                    new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
+                            RelativeLayout.LayoutParams.MATCH_PARENT);
+            layoutParams.width = width;
+            ((MicroVpViewHolder) holder).rl_micro_vp_data.setLayoutParams(layoutParams);
+        }
     }
 
     @Override
@@ -76,6 +99,16 @@ public class MicroVpItemAdapter extends RecyclerView.Adapter {
             tv_micro_date_name = itemView.findViewById(R.id.tv_micro_date_name);
             tv_micro_date_content = itemView.findViewById(R.id.tv_micro_date_content);
             rl_micro_vp_data = itemView.findViewById(R.id.rl_micro_vp_data);
+        }
+    }
+
+    private static class MicroVpViewHolderTwo extends RecyclerView.ViewHolder {
+
+        private TextView tv_micro_date_name;
+
+        public MicroVpViewHolderTwo(View itemView) {
+            super(itemView);
+            tv_micro_date_name = itemView.findViewById(R.id.tv_micro_date_name);
         }
     }
 }

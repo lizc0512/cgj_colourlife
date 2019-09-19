@@ -405,10 +405,10 @@ public class FragmentManagement extends Fragment implements HttpResponse, View.O
                 dataItemList.addAll(microDataEntity.getContent());
                 rv_micro_vp.setVisibility(View.VISIBLE);
             } else {
-                if (null != rv_micro_vp) {
-                    rv_micro_vp.scrollBy(0, 3);
-                }
-                rv_micro_vp.setVisibility(View.GONE);
+                MicroDataEntity.ContentBean contentBean = new MicroDataEntity.ContentBean();
+                contentBean.setName(" ");
+                dataItemList.add(contentBean);
+                ll_micro_addView.scrollBy(0, 2);
             }
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false);
             rv_micro_vp.setLayoutManager(linearLayoutManager);
@@ -489,6 +489,8 @@ public class FragmentManagement extends Fragment implements HttpResponse, View.O
             popupWindow.dismiss();
         });
         RecyclerView rv_crop = contentview.findViewById(R.id.rv_item_crop);
+        View view_bg = contentview.findViewById(R.id.view_bg);
+        view_bg.setOnClickListener(v -> popupWindow.dismiss());
         rv_crop.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
         rv_crop.setAdapter(cropListAdapter);
         popupWindow.setOutsideTouchable(true);

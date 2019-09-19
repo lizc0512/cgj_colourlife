@@ -24,6 +24,7 @@ public class OAuth2ServiceUpdate implements HttpResponse {
     private Oauth2CallBack oauth2CallBack;
     private UserModel userModel;
     private String loginType;
+    private String czyAccessToken = "";
 
     public OAuth2ServiceUpdate(Context context, String mLoginType) {
         this.context = context;
@@ -33,6 +34,10 @@ public class OAuth2ServiceUpdate implements HttpResponse {
 
     public void setLoginType(String mLoginType) {
         this.loginType = mLoginType;
+    }
+
+    public void setCzyAccessToken(String czyAccessToken) {
+        this.czyAccessToken = czyAccessToken;
     }
 
     /**
@@ -51,7 +56,7 @@ public class OAuth2ServiceUpdate implements HttpResponse {
             }
         } else {
             if (!TextUtils.isEmpty(passwordMD5)) {
-                userModel.postOauthToken(0, username, passwordMD5, loginType, this);
+                userModel.postOauthToken(0, username, passwordMD5, loginType, czyAccessToken, this);
             }
         }
     }

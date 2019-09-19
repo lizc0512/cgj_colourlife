@@ -49,13 +49,12 @@ import com.tg.coloursteward.util.SoftKeyboardUtils;
 import com.tg.coloursteward.util.ToastUtil;
 import com.tg.coloursteward.util.TokenUtils;
 import com.tg.coloursteward.util.Tools;
-import com.tg.coloursteward.util.Utils;
 import com.tg.coloursteward.view.CircleImageView;
 import com.tg.coloursteward.view.dialog.DialogFactory;
-import com.tg.user.callback.Oauth2CallBack;
 import com.tg.user.entity.JiYanTwoCheckEntity;
 import com.tg.user.entity.OauthUserEntity;
 import com.tg.user.entity.SingleDeviceLogin;
+import com.tg.user.model.UserCzyModel;
 import com.tg.user.model.UserModel;
 import com.tg.user.oauth.OAuth2ServiceUpdate;
 import com.youmai.hxsdk.router.APath;
@@ -93,19 +92,22 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     private TextView tv_login_byczy;
     private GT3GeetestUtilsBind gt3GeetestUtils;
     private UserModel userModel;
+    private UserCzyModel userCzyModel;
     private String account;
     private String password;
     private OAuth2ServiceUpdate auth2ServiceUpdate;
     private String corpId;
     private String extras;
-    private String loginType = "1";//1：账号密码登录，2：短信验证码登录，3：手机号码密码登录，4：彩之云授权登录
+    private String loginType = "1";//1：账号密码登录，2：短信验证码登录，3：手机号码密码登录，4：彩之云授权登录 5：彩之云color-token登录
     private String user_type;//1：oa账号，2：彩之云账号
+    private String czyAccessToken;//彩之云授权token
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_login);
         userModel = new UserModel(this);
+        userCzyModel = new UserCzyModel(this);
         tintManager.setStatusBarTintColor(this.getResources().getColor(R.color.transparent)); //设置状态栏的颜色
         gt3GeetestUtils = new GT3GeetestUtilsBind(LoginActivity.this);
         initView();
@@ -301,8 +303,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                         return;
                     }
                     if (NumberUtils.IsPhoneNumber(account)) {
-                        loginType = "3";
-                        userModel.getUserType(7, account, this);
+                        userModel.getUserType(8, account, this);
                         return;
                     } else {
                         loginType = "1";
@@ -564,19 +565,16 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     }
 
     private void login(String accout, String pwdMD5, String loginType) {
-        Utils.hideKeyboard(edit_password);
-        Utils.hideKeyboard(edit_smscode);
+        SoftKeyboardUtils.hideSoftKeyboard(LoginActivity.this);
         if (null == auth2ServiceUpdate) {
             auth2ServiceUpdate = new OAuth2ServiceUpdate(LoginActivity.this, loginType);
         } else {
             auth2ServiceUpdate.setLoginType(loginType);
         }
-        auth2ServiceUpdate.getOAuth2Service(accout, pwdMD5, new Oauth2CallBack() {
-            @Override
-            public void onData(String access_token) {
-                getNetInfo(access_token);
-            }
-        });
+        if ("5".equals(loginType)) {
+            auth2ServiceUpdate.setCzyAccessToken(czyAccessToken);
+        }
+        auth2ServiceUpdate.getOAuth2Service(accout, pwdMD5, this::getNetInfo);
     }
 
     private void getNetInfo(String access_token) {
@@ -693,28 +691,30 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 initTimeCount();
                 ToastUtil.showLoginToastCenter(LoginActivity.this, "验证码已发送");
                 break;
-            case 7:
+            case 8:
                 if (!TextUtils.isEmpty(result)) {
                     String content = RequestEncryptionUtils.getContentString(result);
                     try {
                         JSONObject jsonObject = new JSONObject(content);
                         user_type = jsonObject.getString("user_type");
-                        if ("1".equals(user_type)) {
+                        if ("1".equals(user_type)) {//1：oa账号，2：彩之云账号
                             loginType = "1";
+                            loginGt();
                         } else if ("2".equals(user_type)) {
-                            loginType = "3";
+                            loginType = "5";
+                            userCzyModel.getAuthToken(9, account, password, "1", this);
                         }
-                        loginGt();
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
                 break;
+            case 9:
+                if (!TextUtils.isEmpty(result)) {
+                    czyAccessToken = result;
+                    loginGt();
+                }
         }
-    }
-
-    private void loginCzy() {
-
     }
 
     private void getSkin(String corpId) {

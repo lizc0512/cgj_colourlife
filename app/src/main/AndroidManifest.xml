@@ -125,7 +125,7 @@
         <activity
             android:name="com.tg.setting.activity.KeySendKeyPhoneActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustResize" />
         <!-- 发送钥匙 -->
         <activity
             android:name="com.tg.setting.activity.KeySendKeyCodeActivity"

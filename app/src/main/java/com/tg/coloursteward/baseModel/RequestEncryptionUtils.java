@@ -66,6 +66,8 @@ public class RequestEncryptionUtils {
             finalUrl = Contants.URl.URL_IMPUSH + urlString;//IM同步接口
         } else if (type == 11) {
             finalUrl = Contants.URl.URL_LEKAI + urlString;//乐开管家
+        } else if (type == 12) {
+            finalUrl = Contants.URl.TOKEN_ADDRESS + urlString;//彩之云授权接口
         }
         return finalUrl;
     }

@@ -118,7 +118,7 @@ public class UserModel extends BaseModel {
      * @param passwordMD5
      * @param httpResponse 获取oauthToken
      */
-    public void postOauthToken(int what, String username, String passwordMD5, String login_type, final HttpResponse httpResponse) {
+    public void postOauthToken(int what, String username, String passwordMD5, String login_type, String color_token, final HttpResponse httpResponse) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("username", username);
         params.put("password", passwordMD5);
@@ -130,6 +130,7 @@ public class UserModel extends BaseModel {
         params.put("app_id", DES.APP_ID);
         params.put("app_client_secret", DES.TOKEN);
         params.put("token", DES.TOKEN);
+        params.put("color_token", color_token);
         final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 2, oauthUrl), RequestMethod.POST);
         request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
             @Override
@@ -1154,15 +1155,18 @@ public class UserModel extends BaseModel {
                 int responseCode = response.getHeaders().getResponseCode();
                 String result = response.get();
                 if (responseCode == RequestEncryptionUtils.responseSuccess) {
-                    int code = showSuccesResultMessageTheme(result);
+                    int code = showSuccesResultMessage(result);
                     if (code == 0) {
                         httpResponse.OnHttpResponse(what, result);
                     }
+                } else {
+                    showErrorCodeMessage(response);
                 }
             }
 
             @Override
             public void onFailed(int what, Response<String> response) {
+                showExceptionMessage(what, response);
             }
         }, true, true);
     }

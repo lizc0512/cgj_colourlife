@@ -23,7 +23,8 @@ public interface Contants {
 //        String URL_LEKAI = "https://lekaiadminapi-door.colourlife.com";
 //        String environment = "release";
 //        String cqj_appid = "327494513335603200";
-//        public static final String TOKEN_ADDRESS = "https://oauth2czy.colourlife.com";
+//        String TOKEN_ADDRESS = "https://oauth2czy.colourlife.com";
+//        String USERINFO_ADDRESS = "https://user-czy.colourlife.com/app";
 
         ////////////////  测试地址   ///////////////////////////////////
         String URL_ICETEST = "https://openapi-test.colourlife.com/v1";//
@@ -40,6 +41,7 @@ public interface Contants {
         String environment = "debug";
         String cqj_appid = "323521861252157440";
         String TOKEN_ADDRESS = "http://oauth2-czytest.colourlife.com";
+        String USERINFO_ADDRESS = "http://user.czytest.colourlife.com/app";
     }
 
     interface APP {
@@ -47,6 +49,8 @@ public interface Contants {
         String validateURL = URl.URL_NEW + "/app/home/login/verify";
         /***彩管家4.0加密的秘钥***/
         String secertKey = "gbiwgbiwkgnkwgnkjbkkrthmnjwjgeh";
+        /***彩之云4.0加密的秘钥***/
+        String czySecertKey = "oy4x7fSh5RI4BNc78UoV4fN08eO5C4pj0daM0B8M";
         String buglyKeyId = "b3dcc32611";
         String czyClient_secret = "oy4x7fSh5RI4BNc78UoV4fN08eO5C4pj0daM0B8M";
     }

@@ -13,6 +13,7 @@ import android.text.InputFilter;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.animation.AnimationUtils;
@@ -51,12 +52,14 @@ import com.tg.coloursteward.util.TokenUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.CircleImageView;
 import com.tg.coloursteward.view.dialog.DialogFactory;
+import com.tg.user.entity.CheckWhiteEntity;
 import com.tg.user.entity.JiYanTwoCheckEntity;
 import com.tg.user.entity.OauthUserEntity;
 import com.tg.user.entity.SingleDeviceLogin;
 import com.tg.user.model.UserCzyModel;
 import com.tg.user.model.UserModel;
 import com.tg.user.oauth.OAuth2ServiceUpdate;
+import com.tg.user.view.CustomDialog;
 import com.youmai.hxsdk.router.APath;
 
 import org.json.JSONException;
@@ -101,6 +104,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     private String loginType = "1";//1：账号密码登录，2：短信验证码登录，3：手机号码密码登录，4：彩之云授权登录 5：彩之云color-token登录
     private String user_type;//1：oa账号，2：彩之云账号
     private String czyAccessToken;//彩之云授权token
+    private CustomDialog reviewDialog;
+    private String hotLine = "1010-1778";
+    private boolean isPassWhite;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -347,7 +353,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 }
                 break;
             case R.id.btn_get_code:
-                userModel.getSmsCode(6, account, "3", LoginActivity.this);
+//                userModel.getSmsCode(6, account, "3", LoginActivity.this);
+                userCzyModel.getSmsCode(9, account, 5, 1, this);//找回密码获取短信验证码
                 break;
         }
     }
@@ -702,7 +709,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                             loginGt();
                         } else if ("2".equals(user_type)) {
                             loginType = "5";
-                            userCzyModel.getAuthToken(9, account, password, "1", this);
+                            userCzyModel.getCheckWhite(10, account, 1, this);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -714,7 +721,66 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                     czyAccessToken = result;
                     loginGt();
                 }
+                break;
+            case 10:
+                if (!TextUtils.isEmpty(result)) {
+                    CheckWhiteEntity checkWhiteEntity = new CheckWhiteEntity();
+                    checkWhiteEntity = GsonUtils.gsonToBean(result, CheckWhiteEntity.class);
+                    String isWhite = checkWhiteEntity.getContent().getIs_white();
+                    hotLine = checkWhiteEntity.getContent().getHotLine();
+                    if (TextUtils.isEmpty(hotLine)) {
+                        hotLine = "1010-1778";
+                    }
+                    if ("1".equals(isWhite) || "0".equals(isWhite)) {
+                        userCzyModel.getAuthToken(9, account, password, "1", this);
+                    } else if ("5".equals(isWhite)) {
+                        showReviewDialog("更换手机号审核中");
+                    } else {
+                        ToastUtil.showShortToast(LoginActivity.this, "当前账号需要短信验证登录");
+                        if (!NumberUtils.IsPhoneNumber(account)) {
+                            edit_account.setText("");
+                        }
+                        edit_password.setVisibility(View.GONE);
+                        edit_account.setHint("请输入手机号码");
+                        sms_login_layout.setVisibility(View.VISIBLE);
+                        sms_login_layout.startAnimation(AnimationUtils.loadAnimation(LoginActivity.this, R.anim.push_right_alpha));
+                        tv_login_smscode.setText("账号密码登录");
+                        edit_account.setInputType(InputType.TYPE_CLASS_NUMBER); //输入类型
+                        edit_account.setFilters(new InputFilter[]{new InputFilter.LengthFilter(11)});
+                        isPassWhite = true;
+                    }
+                }
+                break;
         }
+    }
+
+    private void showReviewDialog(String tips) {
+        reviewDialog = new CustomDialog(LoginActivity.this, R.style.custom_dialog_theme);
+        reviewDialog.show();
+        reviewDialog.setCancelable(false);
+        reviewDialog.dialog_content.setText(tips);
+        reviewDialog.dialog_line.setVisibility(View.VISIBLE);
+        reviewDialog.dialog_button_ok.setGravity(Gravity.CENTER_HORIZONTAL);
+        reviewDialog.dialog_button_cancel.setText(getResources().getString(R.string.message_define));
+        reviewDialog.dialog_button_ok.setText(getResources().getString(R.string.user_contact_service));
+        reviewDialog.dialog_button_cancel.setOnClickListener(v -> reviewDialog.dismiss());
+        reviewDialog.dialog_button_ok.setOnClickListener(v -> {
+            XXPermissions.with(LoginActivity.this)
+                    .permission(Manifest.permission.CALL_PHONE)
+                    .request(new OnPermission() {
+                        @Override
+                        public void hasPermission(List<String> granted, boolean isAll) {
+                            Intent dialIntent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + hotLine));//跳转到拨号界面，同时传递电话号码
+                            startActivity(dialIntent);
+                        }
+
+                        @Override
+                        public void noPermission(List<String> denied, boolean quick) {
+                            ToastUtil.showShortToast(LoginActivity.this, "需要您到设置里打开拨号权限");
+                        }
+                    });
+            reviewDialog.dismiss();
+        });
     }
 
     private void getSkin(String corpId) {

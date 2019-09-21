@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.text.TextUtils;
 
 import com.tg.coloursteward.R;
+import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.constant.SpConstants;
 import com.tg.coloursteward.entity.BaseContentEntity;
 import com.tg.coloursteward.entity.BaseErrorEntity;
@@ -78,7 +79,11 @@ public class BaseModel {
         String requestUrl = request.url();
         paramsMap = RequestEncryptionUtils.getTrimMap(paramsMap);
         if (!paramsMap.containsKey("signature")) {  //正常请求
-            request.add(RequestEncryptionUtils.getNewSaftyMap(mContext, paramsMap));
+            if (requestUrl.startsWith(Contants.URl.USERINFO_ADDRESS)) {
+                request.add(RequestEncryptionUtils.getCzySaftyMap(mContext, paramsMap));
+            } else {
+                request.add(RequestEncryptionUtils.getNewSaftyMap(mContext, paramsMap));
+            }
         } else {
             request.add(paramsMap);
         }

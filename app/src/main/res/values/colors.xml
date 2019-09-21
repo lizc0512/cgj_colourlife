@@ -168,5 +168,6 @@
     <color name="color_25">#25000000</color>
     <color name="color_FFF7F0">#FFF7F0</color>
     <color name="color_FFFF943E">#FFFF943E</color>
+    <color name="blue_text_color">#27a2f0</color>
 
 </resources>

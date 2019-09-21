@@ -68,6 +68,8 @@ public class RequestEncryptionUtils {
             finalUrl = Contants.URl.URL_LEKAI + urlString;//乐开管家
         } else if (type == 12) {
             finalUrl = Contants.URl.TOKEN_ADDRESS + urlString;//彩之云授权接口
+        } else if (type == 13) {
+            finalUrl = Contants.URl.USERINFO_ADDRESS + urlString;//彩之云用户接口
         }
         return finalUrl;
     }
@@ -176,6 +178,44 @@ public class RequestEncryptionUtils {
         return paramsMap;
     }
 
+    /***4.0新接口的安全加密以后的请求参数Map**/
+    public static Map<String, Object> getCzySaftyMap(Context context, Map<String, Object> paramsMap) {
+        paramsMap.put("nonce_str", getRandomNonceStr());
+        paramsMap.put("device_uuid", TokenUtils.getUUID(CityPropertyApplication.getContext()));
+        paramsMap.put("native_type", 1);//客户端标识，1：安卓，2：苹果
+        paramsMap.put("version", BuildConfig.VERSION_NAME);
+        String buff = "";
+        try {
+            List<Map.Entry<String, Object>> infoIds = new ArrayList<Map.Entry<String, Object>>(paramsMap.entrySet());
+            // 对所有传入参数按照字段名的 ASCII 码从小到大排序（字典序）
+            Collections.sort(infoIds, new Comparator<Map.Entry<String, Object>>() {
+
+                @Override
+                public int compare(Map.Entry<String, Object> o1, Map.Entry<String, Object> o2) {
+                    return (o1.getKey()).toString().compareTo((o2.getKey()).toString());
+                }
+            });
+            // 构造URL 键值对的格式
+            StringBuilder buf = new StringBuilder();
+            for (Map.Entry<String, Object> item : infoIds) {
+                if (null != item && !TextUtils.isEmpty(item.getValue().toString())) {
+                    String key = item.getKey();
+                    String val = item.getValue().toString();
+                    val = URLEncoder.encode(val, "utf-8");
+                    val = val.replace(" ", "%20");
+                    val = val.replace("*", "%2A");
+                    val = val.replace("+", "%2B");
+                    buf.append(key + "=" + val);
+                    buf.append("&");
+                }
+            }
+            buff = setMD5(buf.toString() + "secret=" + Contants.APP.czySecertKey).toUpperCase();
+            paramsMap.put("signature", buff);
+        } catch (Exception e) {
+            return paramsMap;
+        }
+        return paramsMap;
+    }
 
     public static Map<String, String> getStringMap(Map<String, Object> paramsMap) {
         Iterator<String> it = paramsMap.keySet().iterator();

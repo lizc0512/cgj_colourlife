@@ -32,6 +32,8 @@ import java.util.Map;
  */
 public class UserCzyModel extends BaseModel {
     private String czyAuthUrl = "/oauth/token";
+    private String checkWhiteUrl = "/user/checkWhite";
+    private String sendCodeUrl = "/sms/sendCode";
 
     public UserCzyModel(Context context) {
         super(context);
@@ -78,6 +80,78 @@ public class UserCzyModel extends BaseModel {
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
+                    }
+                } else {
+                    showErrorCodeMessage(responseCode, response);
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+                showExceptionMessage(what, response);
+            }
+        }, true, true);
+    }
+
+    /**
+     * 检查用户是不是白名单
+     *
+     * @param what
+     * @param mobile
+     * @param is_register
+     * @param newHttpResponse
+     */
+    public void getCheckWhite(int what, String mobile, int is_register, final HttpResponse newHttpResponse) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("mobile", mobile);
+        params.put("is_register", is_register);
+        Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 13, checkWhiteUrl), RequestMethod.GET);
+        request(what, request, params, new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    int resultCode = showSuccesResultMessage(result);
+                    if (resultCode == 0) {
+                        newHttpResponse.OnHttpResponse(what, result);
+                    }
+                } else {
+                    showErrorCodeMessage(response);
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+                showExceptionMessage(what, response);
+            }
+        }, true, true);
+    }
+
+    /**
+     * 获取短信或语音验证码
+     *
+     * @param what
+     * @param mobile
+     * @param work_type
+     * @param sms_type
+     * @param newHttpResponse
+     */
+    public void getSmsCode(int what, String mobile, int work_type, int sms_type, final HttpResponse newHttpResponse) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("mobile", mobile);
+        params.put("work_type", work_type);
+        params.put("sms_type", sms_type);
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 13, sendCodeUrl), RequestMethod.POST);
+        request(what, request, params, new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    int resultCode = showSuccesResultMessage(result);
+                    if (resultCode == 0) {
+                        newHttpResponse.OnHttpResponse(what, result);
                     }
                 } else {
                     showErrorCodeMessage(responseCode, response);

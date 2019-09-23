@@ -55,6 +55,7 @@ import com.tg.coloursteward.view.dialog.DialogFactory;
 import com.tg.user.entity.CheckWhiteEntity;
 import com.tg.user.entity.JiYanTwoCheckEntity;
 import com.tg.user.entity.OauthUserEntity;
+import com.tg.user.entity.SendCodeEntity;
 import com.tg.user.entity.SingleDeviceLogin;
 import com.tg.user.model.UserCzyModel;
 import com.tg.user.model.UserModel;
@@ -106,7 +107,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     private String czyAccessToken;//彩之云授权token
     private CustomDialog reviewDialog;
     private String hotLine = "1010-1778";
-    private boolean isPassWhite;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -223,7 +223,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     }
 
     private void setHeadPic() {
-        String userName = SharedPreferencesUtils.getUserKey(this, USERNAME);
+        String userName = SharedPreferencesUtils.getUserKey(this, USERACCOUNT);
         if (!TextUtils.isEmpty(userName)) {
             String headIcon = Contants.Html5.HEAD_ICON_URL + "/avatar?uid=" + userName;
             GlideUtils.loadImageView(LoginActivity.this, headIcon, iv_head_pic);
@@ -256,6 +256,11 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
             password = edit_smscode.getText().toString().trim();
         } else {
             password = edit_password.getText().toString().trim();
+        }
+        if (NumberUtils.IsPhoneNumber(account)) {
+            userModel.getUserType(12, account, false, this);
+        } else {
+            tv_forget_pawd.setVisibility(View.VISIBLE);
         }
         if (TextUtils.isEmpty(account) || TextUtils.isEmpty(password)) {
             btn_login.setBackground(getResources().getDrawable(R.drawable.login_button_default));
@@ -297,10 +302,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         switch (v.getId()) {
             case R.id.btn_login:
                 if (isSmsLogin) {
-                    loginType = "2";
+                    loginType = "5";
                     password = edit_smscode.getText().toString().trim();
                     SoftKeyboardUtils.hideSoftKeyboard(LoginActivity.this);
-                    login(account, password, loginType);
+                    userCzyModel.getAuthToken(11, account, password, "3", this);
                 } else {
                     password = edit_password.getText().toString().trim();
                     SoftKeyboardUtils.hideSoftKeyboard(LoginActivity.this);
@@ -309,7 +314,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                         return;
                     }
                     if (NumberUtils.IsPhoneNumber(account)) {
-                        userModel.getUserType(8, account, this);
+                        userModel.getUserType(8, account, true, this);
                         return;
                     } else {
                         loginType = "1";
@@ -336,7 +341,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                         edit_account.setText("");
                     }
                     edit_password.setVisibility(View.GONE);
-                    edit_account.setHint("请输入手机号码");
+                    edit_account.setHint("请输入彩之云账号");
                     sms_login_layout.setVisibility(View.VISIBLE);
                     sms_login_layout.startAnimation(AnimationUtils.loadAnimation(LoginActivity.this, R.anim.push_right_alpha));
                     tv_login_smscode.setText("账号密码登录");
@@ -345,7 +350,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 } else {
                     sms_login_layout.setVisibility(View.GONE);
                     edit_password.setVisibility(View.VISIBLE);
-                    edit_account.setHint("请输入手机号码/OA账号");
+                    edit_account.setHint("请输入彩之云账号/OA账号");
                     edit_password.startAnimation(AnimationUtils.loadAnimation(LoginActivity.this, R.anim.push_right_alpha));
                     tv_login_smscode.setText("短信验证码登录");
                     edit_account.setInputType(InputType.TYPE_CLASS_TEXT);
@@ -353,8 +358,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 }
                 break;
             case R.id.btn_get_code:
-//                userModel.getSmsCode(6, account, "3", LoginActivity.this);
-                userCzyModel.getSmsCode(9, account, 5, 1, this);//找回密码获取短信验证码
+                userCzyModel.getSmsCode(6, account, 5, 1, this);//找回密码获取短信验证码
                 break;
         }
     }
@@ -637,13 +641,14 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                             Tools.loadUserInfo(data, result);
                             corpId = oauthUserEntity.getContent().getCorp_id();
                             UserInfo.infoorgId = data.getString("org_uuid");
-                            if (loginType.equals("4") || loginType.equals("2")) {
+                            if (loginType.equals("4") || loginType.equals("5")) {
                                 Tools.savePassWordMD5(LoginActivity.this, data.getString("password"));//保存密码(MD5加密后)
                             }
-                            String employeeAccount = data.getString("name");
+                            String employeeAccount = data.getString("username");
+                            String employeeName = data.getString("name");
                             UserInfo.employeeAccount = employeeAccount;
-                            SharedPreferencesUtils.saveUserKey(this, USERACCOUNT, account);
-                            SharedPreferencesUtils.saveUserKey(this, USERNAME, employeeAccount);
+                            SharedPreferencesUtils.saveUserKey(this, USERACCOUNT, employeeAccount);
+                            SharedPreferencesUtils.saveUserKey(this, USERNAME, employeeName);
                             Tools.saveOrgId(LoginActivity.this, data.getString("org_uuid"));
                             Tools.saveStringValue(LoginActivity.this, Contants.storage.CORPID, corpId);//租户ID
                             spUtils.saveStringData(SpConstants.storage.CORPID, corpId);
@@ -696,7 +701,12 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 break;
             case 6:
                 initTimeCount();
-                ToastUtil.showLoginToastCenter(LoginActivity.this, "验证码已发送");
+                try {
+                    SendCodeEntity sendCodeEntity = GsonUtils.gsonToBean(result, SendCodeEntity.class);
+                    ToastUtil.showShortToast(LoginActivity.this, sendCodeEntity.getContent().getNotice());
+                } catch (Exception e) {
+                    ToastUtil.showShortToast(LoginActivity.this, "验证码已发送");
+                }
                 break;
             case 8:
                 if (!TextUtils.isEmpty(result)) {
@@ -707,8 +717,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                         if ("1".equals(user_type)) {//1：oa账号，2：彩之云账号
                             loginType = "1";
                             loginGt();
+                            tv_forget_pawd.setVisibility(View.VISIBLE);
                         } else if ("2".equals(user_type)) {
                             loginType = "5";
+                            tv_forget_pawd.setVisibility(View.GONE);
                             userCzyModel.getCheckWhite(10, account, 1, this);
                         }
                     } catch (JSONException e) {
@@ -736,7 +748,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                     } else if ("5".equals(isWhite)) {
                         showReviewDialog("更换手机号审核中");
                     } else {
-                        ToastUtil.showShortToast(LoginActivity.this, "当前账号需要短信验证登录");
+                        ToastUtil.showShortToast(LoginActivity.this, "您的账号长时间未登录，请使用验证码登录");
                         if (!NumberUtils.IsPhoneNumber(account)) {
                             edit_account.setText("");
                         }
@@ -747,7 +759,28 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                         tv_login_smscode.setText("账号密码登录");
                         edit_account.setInputType(InputType.TYPE_CLASS_NUMBER); //输入类型
                         edit_account.setFilters(new InputFilter[]{new InputFilter.LengthFilter(11)});
-                        isPassWhite = true;
+                    }
+                }
+                break;
+            case 11:
+                if (!TextUtils.isEmpty(result)) {
+                    czyAccessToken = result;
+                    login(account, getPawdMD5(), loginType);
+                }
+                break;
+            case 12:
+                if (!TextUtils.isEmpty(result)) {
+                    String content = RequestEncryptionUtils.getContentString(result);
+                    try {
+                        JSONObject jsonObject = new JSONObject(content);
+                        user_type = jsonObject.getString("user_type");
+                        if ("1".equals(user_type)) {//1：oa账号，2：彩之云账号
+                            tv_forget_pawd.setVisibility(View.VISIBLE);
+                        } else if ("2".equals(user_type)) {
+                            tv_forget_pawd.setVisibility(View.GONE);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
                 }
                 break;

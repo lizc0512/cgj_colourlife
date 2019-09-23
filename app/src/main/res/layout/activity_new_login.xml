@@ -51,7 +51,7 @@
         android:layout_marginRight="40dp"
         android:background="@null"
         android:gravity="center_vertical"
-        android:hint="请输入手机号码/OA账号"
+        android:hint="请输入彩之云账号/OA账号"
         android:inputType="text"
         android:maxLength="24"
         android:paddingLeft="15dp"

@@ -178,14 +178,6 @@ public class FragmentMine extends Fragment implements OnClickListener, HttpRespo
     }
 
     /**
-     * 更新UI
-     */
-    public void freshUI() {
-        tv_mine_name.setText(UserInfo.realname);
-        getHeadImg();
-    }
-
-    /**
      * 获取绑定彩之云权限
      *
      * @param name

@@ -119,7 +119,6 @@ public class ForgetPasswordPhoneActivity extends BaseActivity implements HttpRes
             }
         });
         userModel.postSendMms(0, oaname, username, phone, "forgetPassword", this);
-//        userModel.getSmsCode(0, phone, "2", ForgetPasswordPhoneActivity.this);
     }
 
     private void setResetBtnStatus() {

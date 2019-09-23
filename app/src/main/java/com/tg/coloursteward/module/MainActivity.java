@@ -27,10 +27,6 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
-import android.widget.ImageView;
-import android.widget.PopupWindow;
-import android.widget.TextView;
 
 import com.amap.api.location.AMapLocation;
 import com.baidu.trace.LBSTraceClient;
@@ -64,7 +60,6 @@ import com.tg.coloursteward.fragment.ContactsFragment;
 import com.tg.coloursteward.fragment.FragmentManagement;
 import com.tg.coloursteward.fragment.FragmentMine;
 import com.tg.coloursteward.fragment.MsgListFragment;
-import com.tg.coloursteward.info.GridViewInfo;
 import com.tg.coloursteward.info.HomeDeskTopInfo;
 import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.inter.Oauth2CallBack;
@@ -90,10 +85,8 @@ import com.tg.coloursteward.util.PopupScUtils;
 import com.tg.coloursteward.util.ToastUtil;
 import com.tg.coloursteward.util.TokenUtils;
 import com.tg.coloursteward.util.Tools;
-import com.tg.coloursteward.view.PopWindowView;
 import com.tg.coloursteward.view.ViewPagerSlide;
 import com.tg.coloursteward.view.dialog.ToastFactory;
-import com.tg.setting.activity.InviteRegisterActivity;
 import com.tg.setting.adapter.UpdateAdapter;
 import com.tg.setting.entity.VersionEntity;
 import com.tg.setting.model.SettingModel;
@@ -102,15 +95,12 @@ import com.tg.setting.view.UpdateVerSionDialog;
 import com.tg.user.model.UserModel;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.config.AppConfig;
-import com.youmai.hxsdk.config.ColorsConfig;
 import com.youmai.hxsdk.http.IGetListener;
-import com.youmai.hxsdk.http.IPostListener;
 import com.youmai.hxsdk.http.OkHttpConnector;
 import com.youmai.hxsdk.im.IMMsgManager;
 import com.youmai.hxsdk.utils.AppUtils;
 import com.youmai.hxsdk.view.camera.util.FileUtil;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -141,7 +131,7 @@ import static com.tg.coloursteward.constant.Contants.URl.environment;
  * Created by colin on 2018/3/15.
  */
 
-public class MainActivity extends BaseActivity implements MessageHandler.ResponseListener, View.OnClickListener, HttpResponse {
+public class MainActivity extends BaseActivity implements MessageHandler.ResponseListener, HttpResponse {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -162,11 +152,6 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
     private static final int MSG_SET_ALIAS = 1001;
     private static final int MSG_SET_TAGS = 1002;
 
-    private final int REQUESTPERMISSION = 110;
-
-    private ImageView img_scan;
-    private TextView tv_title;
-    private ImageView img_add;
 
     private ViewPagerSlide mViewPager;
     private BottomNavigationViewEx navigation;
@@ -267,7 +252,6 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
 
         initProto();
 
-        reqSearchList();
         HuxinSdkManager.instance().getStackAct().addActivity(this);
         if (Contants.URl.environment.equals("release")) {
             RequestConfig config = new RequestConfig(this, HttpTools.GET_YINGYAN, "");
@@ -681,13 +665,6 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
     }
 
     private void initView() {
-        img_scan = (ImageView) findViewById(R.id.img_scan);
-        tv_title = (TextView) findViewById(R.id.tv_title);
-        img_add = (ImageView) findViewById(R.id.img_add);
-
-        img_scan.setOnClickListener(this);
-        img_add.setOnClickListener(this);
-
         mViewPager = findViewById(R.id.view_pager);
         navigation = findViewById(R.id.navigation);
 
@@ -716,7 +693,6 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
 
             @Override
             public void onPageSelected(int position) {
-                tv_title.setText(navigation.getMenu().getItem(position).getTitle());
             }
 
             @Override
@@ -745,8 +721,6 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
 
         mViewPager.setCurrentItem(0);
         mViewPager.setOffscreenPageLimit(3);
-
-        tv_title.setText(navigation.getMenu().getItem(0).getTitle());
 
     }
 
@@ -1140,62 +1114,6 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
 
     };
 
-
-    private ArrayList<GridViewInfo> gridlistAdd = new ArrayList<>();
-
-
-    private void reqSearchList() {
-        String url = Contants.URl.URL_ICETEST + "/newoa/rights/list";
-        String pwd = Tools.getPassWord(this);
-
-        ContentValues params = new ContentValues();
-        params.put("user_name", UserInfo.employeeAccount);
-        params.put("password", pwd);
-        params.put("resource", "app");
-        params.put("cate_id", 0);
-        ColorsConfig.commonParams(params);
-
-        OkHttpConnector.httpPost(MainActivity.this, url, params, new IPostListener() {
-            @Override
-            public void httpReqResult(String response) {
-                String jsonString = HttpTools.getContentString(response);
-                if (jsonString != null) {
-                    ResponseData app_list = HttpTools.getResponseKey(jsonString, "app_list");
-                    if (app_list.length > 0) {
-                        Tools.saveCommonInfo(mContext, response);
-                        JSONArray jsonArray = app_list.getJSONArray(0, "list");
-                        ResponseData data = HttpTools.getResponseKeyJSONArray(jsonArray);
-                        gridlistAdd = new ArrayList<>();
-                        GridViewInfo item;
-                        for (int i = 0; i < data.length; i++) {
-                            try {
-                                item = new GridViewInfo();
-                                item.name = data.getString(i, "name");
-                                item.oauthType = data.getString(i, "oauthType");
-                                item.developerCode = data.getString(i, "app_code");
-                                item.clientCode = data.getString(i, "app_code");
-                                item.sso = data.getString(i, "url");
-                                JSONObject icon = data.getJSONObject(i, "icon");
-                                if (icon != null || icon.length() > 0) {
-                                    item.icon = icon.getString("android");
-                                }
-                                gridlistAdd.add(item);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                }
-            }
-        });
-    }
-
-    private void lightoff() {
-        WindowManager.LayoutParams lp = getWindow().getAttributes();
-        lp.alpha = 0.3f;
-        getWindow().setAttributes(lp);
-    }
-
     @Override
     public void OnHttpResponse(int what, String result) {
         switch (what) {
@@ -1370,34 +1288,6 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
         intent.putExtra(UpdateService.VERSIONNAME, getVersion);
         MainActivity.this.startService(intent);
         ToastUtil.showShortToast(MainActivity.this, "彩管家已开始下载更新,详细信息可在通知栏查看哟!");
-    }
-
-    class PopupDismissListener implements PopupWindow.OnDismissListener {
-
-        @Override
-        public void onDismiss() {
-            WindowManager.LayoutParams lp = getWindow().getAttributes();
-            lp.alpha = 1.0f;
-            getWindow().setAttributes(lp);
-        }
-
-    }
-
-    @Override
-    public void onClick(View v) {
-        int id = v.getId();
-        switch (id) {
-            case R.id.img_scan:
-                startActivity(new Intent(this, InviteRegisterActivity.class));
-                break;
-            case R.id.img_add:
-                PopWindowView popWindowView = new PopWindowView(this, gridlistAdd);
-                popWindowView.setOnDismissListener(new PopupDismissListener());
-                popWindowView.showPopupWindow(img_add);
-                lightoff();
-                break;
-
-        }
     }
 
     public static LinkedHashMap<String, String> getPublicParams() {

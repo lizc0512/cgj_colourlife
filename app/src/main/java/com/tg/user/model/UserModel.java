@@ -1145,7 +1145,7 @@ public class UserModel extends BaseModel {
      * @param username     账号
      * @param httpResponse
      */
-    public void getUserType(int what, String username, final HttpResponse httpResponse) {
+    public void getUserType(int what, String username, boolean isLoading, final HttpResponse httpResponse) {
         Map<String, Object> params = new HashMap<>();
         params.put("username", username);
         final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 2, getUserTypeUrl), RequestMethod.GET);
@@ -1168,7 +1168,7 @@ public class UserModel extends BaseModel {
             public void onFailed(int what, Response<String> response) {
                 showExceptionMessage(what, response);
             }
-        }, true, true);
+        }, true, isLoading);
     }
 
 }

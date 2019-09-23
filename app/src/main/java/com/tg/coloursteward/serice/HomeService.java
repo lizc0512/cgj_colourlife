@@ -9,11 +9,14 @@ import com.tg.coloursteward.net.DES;
 import com.tg.coloursteward.net.GetTwoRecordListener;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.MD5;
+import com.tg.coloursteward.net.RequestParams;
 import com.tg.coloursteward.util.Tools;
 import com.youmai.hxsdk.http.IGetListener;
 import com.youmai.hxsdk.http.OkHttpConnector;
 
 import org.json.JSONObject;
+
+import java.util.HashMap;
 
 import static com.tg.coloursteward.net.HttpTools.getTime;
 
@@ -77,23 +80,25 @@ public class HomeService {
     public void getAuth2(String developerCode, final GetTwoRecordListener<String, String> listener) {
         String username = UserInfo.employeeAccount;
         String md5_pwd = Tools.getPassWordMD5(context);
-        String ts = getTime();
-        String Sign = "";
+        RequestParams params = new RequestParams();
+        params.put("username", username);
+        params.put("password", md5_pwd);
+        params.put("developerCode", "case");
+        params.put("getExpire", "1");
+        String url = null;
+        HashMap<String, Object> paramsStr = null;
+        if (params != null) {
+            paramsStr = params.toHashMap();
+        } else {
+            paramsStr = null;
+        }
         try {
-            Sign = MD5.getMd5Value(DES.APP_ID + ts + DES.TOKEN + "false").toLowerCase();
+            url = Contants.URl.URL_ICETEST + HttpTools.GetUrl(Contants.URl.URL_ICETEST, "/auth2", paramsStr);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        ContentValues paramsMap = new ContentValues();
-        paramsMap.put("username", username);
-        paramsMap.put("password", md5_pwd);
-        paramsMap.put("developerCode", "case");
-        paramsMap.put("getExpire", "1");
-        paramsMap.put("appID", DES.APP_ID);
-        paramsMap.put("sign", Sign);
-        paramsMap.put("ts", ts);
-        OkHttpConnector.httpGet_net(context, null, Contants.URl.URL_ICETEST + "/auth2",
-                paramsMap, new IGetListener() {
+        OkHttpConnector.httpGet_net(context, null, url,
+                null, new IGetListener() {
                     @Override
                     public void httpReqResult(String response) {
                         String result = response.toString();

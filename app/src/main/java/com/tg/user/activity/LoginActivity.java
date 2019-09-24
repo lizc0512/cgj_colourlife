@@ -80,6 +80,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     public static final String ACCOUNT = "account";
     public static final String CZY_CODE = "czy_code";
     public static final String USERACCOUNT = "user_account";
+    public static final String USEROA = "user_oa";
     public static final String USERNAME = "user_name";
     private ConstraintLayout constrant_layout;
     private View distance_view;
@@ -223,9 +224,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     }
 
     private void setHeadPic() {
-        String userName = SharedPreferencesUtils.getUserKey(this, USERACCOUNT);
-        if (!TextUtils.isEmpty(userName)) {
-            String headIcon = Contants.Html5.HEAD_ICON_URL + "/avatar?uid=" + userName;
+        String userOa = SharedPreferencesUtils.getUserKey(this, USEROA);
+        if (!TextUtils.isEmpty(userOa)) {
+            String headIcon = Contants.Html5.HEAD_ICON_URL + "/avatar?uid=" + userOa;
             GlideUtils.loadImageView(LoginActivity.this, headIcon, iv_head_pic);
             tv_welcome.setText("欢迎回来");
         }
@@ -286,7 +287,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 btn_get_code.setEnabled(false);
             }
         }
-        if (account.equals(SharedPreferencesUtils.getUserKey(this, USERACCOUNT))) {
+        if (account.equals(SharedPreferencesUtils.getUserKey(this, USEROA))) {
             setHeadPic();
         } else {
             iv_head_pic.setImageResource(R.drawable.login_logo);
@@ -647,7 +648,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                             String employeeAccount = data.getString("username");
                             String employeeName = data.getString("name");
                             UserInfo.employeeAccount = employeeAccount;
-                            SharedPreferencesUtils.saveUserKey(this, USERACCOUNT, employeeAccount);
+                            SharedPreferencesUtils.saveUserKey(this, USEROA, employeeAccount);
+                            SharedPreferencesUtils.saveUserKey(this, USERACCOUNT, account);
                             SharedPreferencesUtils.saveUserKey(this, USERNAME, employeeName);
                             Tools.saveOrgId(LoginActivity.this, data.getString("org_uuid"));
                             Tools.saveStringValue(LoginActivity.this, Contants.storage.CORPID, corpId);//租户ID
@@ -748,6 +750,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                     } else if ("5".equals(isWhite)) {
                         showReviewDialog("更换手机号审核中");
                     } else {
+                        isSmsLogin = !isSmsLogin;
                         ToastUtil.showShortToast(LoginActivity.this, "您的账号长时间未登录，请使用验证码登录");
                         if (!NumberUtils.IsPhoneNumber(account)) {
                             edit_account.setText("");

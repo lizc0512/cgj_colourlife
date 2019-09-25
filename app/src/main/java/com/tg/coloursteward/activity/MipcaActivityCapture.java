@@ -46,6 +46,7 @@ public class MipcaActivityCapture extends BaseActivity implements Callback, OnCl
     public static final String KEY_TEXT2 = "text2";
     public static final String TEXT_OPEN = "打开闪光灯";
     public static final String TEXT_CLOSE = "关闭闪光灯";
+    public final static String QRCODE_SOURCE = "qrcode_source";// 第三方调用彩之云的扫码功能 回调将值给它
     private CaptureActivityHandler handler;
     private ViewfinderView viewfinderView;
     private boolean hasSurface;
@@ -58,6 +59,7 @@ public class MipcaActivityCapture extends BaseActivity implements Callback, OnCl
     private boolean vibrate;
     private AuthTimeUtils mAuthTimeUtils;
     private HomeModel homeModel;
+    private String qrSource = "";
 
     /**
      * Called when the activity is first created.
@@ -72,6 +74,7 @@ public class MipcaActivityCapture extends BaseActivity implements Callback, OnCl
         if (data != null) {
             String text1 = data.getStringExtra(KEY_TEXT1);
             String text2 = data.getStringExtra(KEY_TEXT2);
+            qrSource = data.getStringExtra(QRCODE_SOURCE);
             if (!TextUtils.isEmpty(text1)) {
                 viewfinderView.setText1(text1);
             }
@@ -140,7 +143,14 @@ public class MipcaActivityCapture extends BaseActivity implements Callback, OnCl
         if (TextUtils.isEmpty(resultString)) {
             showFailMessage("Scan failed!");
         } else {
-            homeModel.postScan(0, resultString, this);
+            if (!"cgj".equals(qrSource)) {
+                homeModel.postScan(0, resultString, this);
+            } else {
+                Intent intent = new Intent();
+                intent.putExtra("qrcodeValue", resultString);
+                setResult(200, intent);
+                finish();
+            }
         }
     }
 

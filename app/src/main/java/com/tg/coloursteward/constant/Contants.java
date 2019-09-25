@@ -53,6 +53,7 @@ public interface Contants {
         String czySecertKey = "oy4x7fSh5RI4BNc78UoV4fN08eO5C4pj0daM0B8M";
         String buglyKeyId = "b3dcc32611";
         String czyClient_secret = "oy4x7fSh5RI4BNc78UoV4fN08eO5C4pj0daM0B8M";
+        String WEIXIN_APP_ID = "wx2cd55a3733a9aa2e";
     }
 
     interface LOGO {

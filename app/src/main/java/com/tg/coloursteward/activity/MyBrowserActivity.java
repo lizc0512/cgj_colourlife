@@ -7,12 +7,15 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.net.http.SslError;
@@ -55,8 +58,13 @@ import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.hjq.permissions.OnPermission;
 import com.hjq.permissions.XXPermissions;
+import com.tencent.mm.opensdk.modelbiz.WXLaunchMiniProgram;
+import com.tencent.mm.opensdk.openapi.IWXAPI;
+import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.tencent.smtt.export.external.interfaces.GeolocationPermissionsCallback;
 import com.tencent.smtt.export.external.interfaces.IX5WebChromeClient;
 import com.tencent.smtt.export.external.interfaces.JsResult;
@@ -86,6 +94,7 @@ import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.Helper;
 import com.tg.coloursteward.util.LinkParseUtil;
 import com.tg.coloursteward.util.ToastUtil;
+import com.tg.coloursteward.util.TokenUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.util.Utils;
 import com.tg.coloursteward.view.X5WebView;
@@ -104,6 +113,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -133,6 +143,7 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
     public static final String WEBDOMAIN = "webdomain";
     public static final String THRIDSOURCE = "thridsource";
     public static final String OAUTH2_0 = "oauth2";
+    public static final int YUN_SHANG_SCANNERCODE = 1007;
     private String oauth2_0 = "";
     private String domainName;
     private String TAKE_PHOTO_PATH = "";
@@ -177,6 +188,10 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
     private RelativeLayout rl_pyq;
     private FrameLayout webview_frame_share;
     private TextView tv_web_cancel;
+    private String shareTitle;
+    private String shareUrl;
+    private String shareImg;
+    private String shareContent;
     protected static final FrameLayout.LayoutParams COVER_SCREEN_PARAMS = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
@@ -352,7 +367,8 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
             //定义js调用android
             webView.addJavascriptInterface(new JsInteration(), "js");
             webView.addJavascriptInterface(new JsInteration(), "myjava");
-            webView.loadUrl(url, headerMap);
+//            webView.loadUrl(url, headerMap);
+            webView.loadUrl("file:///android_asset/demo.html", headerMap);
         } else if (!TextUtils.isEmpty(urlFromA)) {//信息不为空做处理
         }
     }
@@ -732,6 +748,7 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
      * @author Administrator
      */
     public class JsInteration {
+
         @JavascriptInterface
         public void GetWebTitle(String title) {
             tvTitle.setText(title);
@@ -811,7 +828,289 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
             }
         }
 
+        /**
+         * 调起小程序
+         *
+         * @param json
+         */
+        @JavascriptInterface
+        public void WXMiniProgramActivity(String json) {
+            if (!TextUtils.isEmpty(json)) {
+                try {
+                    JSONObject jsonObject = new JSONObject(json);
+                    String appid = jsonObject.getString("userName");
+                    String path = jsonObject.getString("path");
+                    if (!TextUtils.isEmpty(appid)) {
+                        IWXAPI api = WXAPIFactory.createWXAPI(MyBrowserActivity.this, Contants.APP.WEIXIN_APP_ID);//微信APPID
+                        WXLaunchMiniProgram.Req req = new WXLaunchMiniProgram.Req();
+                        req.userName = appid; // 小程序原始id
+                        req.path = URLEncoder.encode(path);
+                        ;//拉起小程序页面的可带参路径，不填默认拉起小程序首页
+                        req.miniprogramType = WXLaunchMiniProgram.Req.MINIPTOGRAM_TYPE_RELEASE;// 可选打开 开发版，体验版和正式版
+                        api.sendReq(req);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
 
+        /**
+         * 获取设备号唯一信息
+         *
+         * @return
+         */
+        @JavascriptInterface
+        public String cgjDeviceUUIDHandler() {
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("deviceUUID", TokenUtils.getUUID(getApplicationContext()));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return jsonObject.toString();
+        }
+
+        /**
+         * 获取设备号唯一信息
+         *
+         * @return
+         */
+        @JavascriptInterface
+        public String cgjAppVersion() {
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("version", BuildConfig.VERSION_NAME);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return jsonObject.toString();
+        }
+
+        /**
+         * 获取经纬度
+         *
+         * @return
+         */
+        @JavascriptInterface
+        public String cgjLocationHandler() {
+            JSONObject jsonObject = new JSONObject();
+            String longitude = Tools.getStringValue(MyBrowserActivity.this, Contants.storage.LONGITUDE);
+            String latitude = Tools.getStringValue(MyBrowserActivity.this, Contants.storage.LATITUDE);
+            try {
+                jsonObject.put("longitude", longitude);
+                jsonObject.put("latitude", latitude);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return jsonObject.toString();
+        }
+
+        /**
+         * 拨打电话
+         *
+         * @return
+         */
+        @JavascriptInterface
+        public void cgjCallNumber(String phone) {
+            JSONObject jsonObject = null;
+            String number = "";
+            try {
+                jsonObject = new JSONObject(phone);
+                number = jsonObject.getString("call");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            Intent intent = new Intent(Intent.ACTION_CALL);
+            Uri data = Uri.parse("tel:" + number);
+            intent.setData(data);
+            startActivity(intent);
+        }
+
+        /**
+         * 调用扫一扫功能
+         *
+         * @return
+         */
+        @JavascriptInterface
+        public void cgjScanHandler() {
+            Intent intent = new Intent(MyBrowserActivity.this, MipcaActivityCapture.class);
+            startActivity(intent);
+        }
+
+        /**
+         * 调用扫一扫功能
+         *
+         * @return
+         */
+        @JavascriptInterface
+        public void cgjScanHandler(String valueStr) {
+            JSONObject jsonObject = null;
+            try {
+                jsonObject = new JSONObject(valueStr);
+                if (!jsonObject.isNull("value") && "cgj".equals(jsonObject.optString("value"))) {
+                    Intent intent = new Intent(MyBrowserActivity.this, MipcaActivityCapture.class);
+                    intent.putExtra(MipcaActivityCapture.QRCODE_SOURCE, "cgj");
+                    startActivityForResult(intent, YUN_SHANG_SCANNERCODE);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        /**
+         * 跳转到原生页面
+         *
+         * @return
+         */
+        @JavascriptInterface
+        public void cgjJumpPrototype(String valueStr) {
+            JSONObject jsonObject = null;
+            String url = "";
+            try {
+                jsonObject = new JSONObject(valueStr);
+                url = jsonObject.getString("prototype ");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            LinkParseUtil.parse(MyBrowserActivity.this, url, "");
+        }
+
+        /**
+         * 跳转到第三方页面
+         */
+        @JavascriptInterface
+        public String cgjWebHandler(String packgeInfo) {
+            JSONObject result = null;
+            String name = "";
+            try {
+                result = new JSONObject();
+                if (isJSONValid(packgeInfo)) {
+                    JSONObject jsonObject = new JSONObject(packgeInfo);
+                    String packgeName = jsonObject.optString("identity");
+                    String parameter = "";
+                    String accessToken = jsonObject.optString("access_token");
+                    String refresh_token = jsonObject.optString("refresh_token");
+                    String expires_in = jsonObject.optString("expires_in");
+                    String className = jsonObject.optString("view");
+                    name = jsonObject.optString("name");
+                    String supportVersion = "";
+                    if (!jsonObject.isNull("support_version")) {
+                        supportVersion = jsonObject.optString("support_version");
+                    }
+                    if (!jsonObject.isNull("parameter")) {
+                        parameter = jsonObject.optString("parameter");
+                    }
+                    if (checkApkExist(packgeName)) {
+                        int installVersionCode = getApplicationContext().getPackageManager().getPackageInfo(packgeName, 0).versionCode;
+                        if (!TextUtils.isEmpty(supportVersion)) {
+                            int compareResult = installVersionCode - Integer.valueOf(supportVersion);
+                            if (compareResult >= 0) {
+                                result.put("result", true);
+                                Intent intent = new Intent();
+                                //知道要跳转应用的包名、类名
+                                ComponentName componentName = new ComponentName(packgeName, className);
+                                intent.setComponent(componentName);
+                                Bundle bundle = new Bundle();
+                                bundle.putString("access_token", accessToken);
+                                bundle.putString("refresh_token", refresh_token);
+                                bundle.putString("parameter", parameter);
+                                bundle.putString("expires_in", expires_in);
+                                intent.putExtras(bundle);
+                                startActivity(intent);
+                            } else {
+                                result.put("result", false);
+                            }
+                        } else {
+                            result.put("result", true);
+                            Intent intent = new Intent();
+                            //知道要跳转应用的包名、类名
+                            ComponentName componentName = new ComponentName(packgeName, className);
+                            intent.setComponent(componentName);
+                            Bundle bundle = new Bundle();
+                            bundle.putString("access_token", accessToken);
+                            bundle.putString("refresh_token", refresh_token);
+                            bundle.putString("parameter", parameter);
+                            bundle.putString("expires_in", expires_in);
+                            intent.putExtras(bundle);
+                            startActivity(intent);
+                        }
+                    } else {
+                        result.put("result", false);
+                    }
+                } else {
+                    if (!packgeInfo.startsWith("http") || !packgeInfo.startsWith("https") || !packgeInfo.startsWith("ftp")) {
+                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                        if (isInstall(intent)) {
+                            result.put("result", true);
+                            getApplicationContext().startActivity(intent);
+                        } else {
+                            result.put("result", false);
+                        }
+                    } else {
+                        result.put("result", false);
+                    }
+                }
+            } catch (Exception e) {
+                try {
+                    result.put("result", false);
+                } catch (JSONException e1) {
+                    e1.printStackTrace();
+                }
+            }
+            return result.toString();
+        }
+
+        /**
+         * H5调原生分享页面
+         *
+         * @param data
+         */
+        @JavascriptInterface
+        public void ColourlifeShareCallBack(String data) {
+            try {
+                JSONObject jsonObject = new JSONObject(data);
+                shareTitle = jsonObject.optString("title");
+                if (!jsonObject.isNull("url")) {
+                    shareUrl = jsonObject.optString("url");
+                }
+                shareImg = jsonObject.optString("image");
+                shareContent = jsonObject.optString("content");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            webview_frame_share.setVisibility(View.VISIBLE);
+        }
+
+    }
+
+    //判断app是否安装
+    private boolean isInstall(Intent intent) {
+        return getApplicationContext().getPackageManager().queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY).size() > 0;
+    }
+
+    public boolean checkApkExist(String packageName) {
+        PackageManager packageManager = getPackageManager();// 获取packagemanager
+        List<PackageInfo> pinfo = packageManager.getInstalledPackages(0);// 获取所有已安装程序的包信息
+        if (pinfo != null) {
+            for (int i = 0; i < pinfo.size(); i++) {
+                String pn = pinfo.get(i).packageName;
+                if (packageName.equals(pn)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean isJSONValid(String json) {
+        try {
+            Gson gson = new Gson();
+            gson.fromJson(json, Object.class);
+            return true;
+        } catch (JsonSyntaxException ex) {
+            return false;
+        }
     }
 
     private void initGetInfo(String app_id, String response_type) {
@@ -916,10 +1215,7 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
             Uri uri = data.getData();
             String fileUrl = Helper.getFileAbsolutePath(
                     MyBrowserActivity.this, uri);
-            Log.e(TAG, "fileUrl = " + fileUrl);
             String fileName = fileUrl.substring(fileUrl.lastIndexOf("/") + 1, fileUrl.length());
-            Log.e(TAG, "fileName = " + fileName);
-
             try {
                 // 选择文件
                 String encodeBase64File = encodeBase64File(fileUrl);
@@ -991,6 +1287,17 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
 
 
             }
+        } else if (requestCode == YUN_SHANG_SCANNERCODE) {
+            if (data != null) {
+                final String qrcode = data.getStringExtra("qrcodeValue");
+                JSONObject jsonObject = new JSONObject();
+                try {
+                    jsonObject.put("qrCode", qrcode);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                webView.loadUrl("javascript:colourlifeScanCodeHandler('" + jsonObject.toString() + "')");
+            }
         } else {
             if (uploadFile != null) {    //xie ：直接点击取消时，ValueCallback回调会被挂起，需要手动结束掉回调，否则再次点击选择照片无响应
                 uploadFile.onReceiveValue(null);
@@ -1002,19 +1309,6 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
             }
         }
     }
-
-	/*@Subscribe
-    public void onEvent(Object event) {
-		final String result = (String) event;
-		runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-				webView.loadUrl("javascript:uploadCallback('" + result
-						+ "')");
-				ToastFactory.showToast(MyBrowserActivity.this,"上传成功！");
-			}
-		});
-	}*/
 
     @Override
     public void onClick(View v) {
@@ -1508,12 +1802,28 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
         oks.disableSSOWhenAuthorize();
         oks.setPlatform(platform);
         // title标题，微信、QQ和QQ空间等平台使用
-        oks.setTitle("分享好友");
+        if (!TextUtils.isEmpty(shareTitle)) {
+            oks.setTitle(shareTitle);
+        } else {
+            oks.setTitle("分享好友");
+        }
         // text是分享文本，所有平台都需要这个字段
-        oks.setText("快来加入彩管家吧");
-        oks.setImageUrl("http://newcgjios.oss-cn-shenzhen.aliyuncs.com/pictures/cgj_logo.png");
+        if (!TextUtils.isEmpty(shareContent)) {
+            oks.setText(shareContent);
+        } else {
+            oks.setText("快来加入彩管家吧");
+        }
+        if (!TextUtils.isEmpty(shareImg)) {
+            oks.setImageUrl(shareImg);
+        } else {
+            oks.setImageUrl("http://newcgjios.oss-cn-shenzhen.aliyuncs.com/pictures/cgj_logo.png");
+        }
         // url在微信、微博，Facebook等平台中使用
-        oks.setUrl("http://mapp.colourlife.com/mgj.html");
+        if (!TextUtils.isEmpty(shareUrl)) {
+            oks.setUrl(shareUrl);
+        } else {
+            oks.setUrl("http://mapp.colourlife.com/mgj.html");
+        }
         MyBrowserActivity.this.runOnUiThread(new Runnable() {
             @Override
             public void run() {

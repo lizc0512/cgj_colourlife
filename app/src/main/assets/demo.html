@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>跳转小程序</title>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/vConsole/3.2.2/vconsole.min.js"></script> -->
+
+</head>
+
+<body>
+    <!-- <button onclick="gotoapp()">跳转APP</button> -->
+    <script>
+        // var vConsole = new VConsole();
+        function setupWebViewJavascriptBridge(callback) {
+
+            if (window.WebViewJavascriptBridge) {
+                return callback(WebViewJavascriptBridge);
+            }
+            if (window.WVJBCallbacks) {
+                return window.WVJBCallbacks.push(callback);
+            }
+            window.WVJBCallbacks = [callback];
+            var WVJBIframe = document.createElement('iframe');
+            WVJBIframe.style.display = 'none';
+            WVJBIframe.src = 'wvjbscheme://__BRIDGE_LOADED__';
+            document.documentElement.appendChild(WVJBIframe);
+            setTimeout(function () {
+                document.documentElement.removeChild(WVJBIframe)
+            }, 0)
+        }
+
+        function show_message(message) {
+            var span = document.createElement('span');
+            span.style.padding = '2px 10px';
+            span.style.borderRadius = '6px';
+            span.style.backgroundColor = 'rgba(0,0,0,.6)';
+            span.style.color = '#fff'
+            span.innerHTML = message;
+            var div = document.createElement('div');
+            div.style.position = 'fixed';
+            div.style.top = '0';
+            div.style.zIndex = 21;
+            div.style.width = '100%';
+            div.style.backgroundColor = 'rgba(0,0,0,.3)';
+            div.style.height = '100%';
+            div.style.textAlign = 'center';
+            div.style.display = 'block';
+            var div1 = document.createElement('div');
+            div1.style.position = 'absolute';
+            div1.style.top = '45%';
+            div1.style.width = '100%';
+            div1.appendChild(span)
+            div.appendChild(div1);
+            window.document.body.appendChild(div);
+            setTimeout(function () {
+                div.style.display = 'none';
+            }, 2000)
+        }
+        var u = navigator.userAgent,
+            app = navigator.appVersion;
+        var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Linux') > -1; //android终端或者uc浏览器
+        var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+        (function gotoapp() {
+            if (isAndroid) {
+                try {
+                    window.myjava.WXMiniProgramActivity(
+                        '{"userName":"gh_a72f95523f56",path:""}'
+                        )
+                } catch (e) {
+                    show_message('请升级最新版本！')
+                }
+            }
+            if (isiOS) {
+                setupWebViewJavascriptBridge(function (bridge) {
+
+                    //相机或相册 向iOS传参//"url":'https://'+document.domain+'/gotoapp.html',
+                    bridge.callHandler('WXMiniProgramActivity', {"userName":"gh_a72f95523f56"}, function callback(response) {
+
+                    });
+                });
+            }
+        })()
+    </script>
+</body>
+
+</html>

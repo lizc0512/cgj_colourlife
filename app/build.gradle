@@ -177,6 +177,7 @@ dependencies {
     implementation(name: 'lekai-open-sdk-v3.0.8.1', ext: 'aar')
     implementation project(path: ':hellocharts-library')//乐开
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:5.3.1'
 }
 
 project.afterEvaluate {

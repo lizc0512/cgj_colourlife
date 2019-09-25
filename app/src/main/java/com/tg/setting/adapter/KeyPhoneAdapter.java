@@ -49,7 +49,6 @@ public class KeyPhoneAdapter extends RecyclerView.Adapter<KeyPhoneAdapter.Defaul
         holder.iv_delete.setOnClickListener(v -> ((KeySendKeyPhoneActivity) mContext).delete(position));
 
         holder.et_phone.setTag(position);
-        //处理EditText位置错乱问题
         final TextWatcher textWatcher = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {

@@ -3,6 +3,7 @@ package com.tg.setting.activity;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -14,7 +15,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.tg.coloursteward.R;
@@ -543,7 +543,7 @@ public class KeySendKeyPhoneActivity extends BaseActivity implements HttpRespons
         if (0 == keyType) {
             canSubmit = false;
         }
-        ((ScrollView) findViewById(R.id.scrollview)).smoothScrollTo(100, 100);
+        ((NestedScrollView) findViewById(R.id.scrollview)).smoothScrollTo(100, 100);
         if (canSubmit) {
             tv_send.setBackgroundResource(R.drawable.shape_key_submit_blue_text);
         } else {

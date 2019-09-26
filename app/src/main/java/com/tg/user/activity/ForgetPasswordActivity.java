@@ -12,6 +12,9 @@ import android.widget.ImageView;
 
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.BaseActivity;
+import com.tg.coloursteward.baseModel.HttpResponse;
+import com.tg.coloursteward.util.ToastUtil;
+import com.tg.user.model.UserModel;
 
 import static com.tg.user.activity.LoginActivity.ACCOUNT;
 import static com.tg.user.activity.LoginActivity.USERACCOUNT;
@@ -20,7 +23,7 @@ import static com.tg.user.activity.LoginActivity.USERNAME;
 /**
  * 忘记密码（一）
  */
-public class ForgetPasswordActivity extends BaseActivity implements TextWatcher {
+public class ForgetPasswordActivity extends BaseActivity implements TextWatcher, HttpResponse {
     private EditText ed_input_mobile;
     private EditText ed_input_oa;
     private EditText ed_input_name;
@@ -29,11 +32,13 @@ public class ForgetPasswordActivity extends BaseActivity implements TextWatcher 
     private String mobile;
     private String username;
     private String oaname;
+    private UserModel userModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         headView.setVisibility(View.GONE);
+        userModel = new UserModel(this);
         initView();
     }
 
@@ -68,11 +73,7 @@ public class ForgetPasswordActivity extends BaseActivity implements TextWatcher 
                 finish();
                 break;
             case R.id.btn_next:
-                Intent intent = new Intent(ForgetPasswordActivity.this, ForgetPasswordPhoneActivity.class);
-                intent.putExtra(ACCOUNT, mobile);
-                intent.putExtra(USERNAME, username);
-                intent.putExtra(USERACCOUNT, oaname);
-                startActivityForResult(intent, 1000);
+                userModel.postSendMms(0, oaname, username, mobile, "forgetPassword", this);
                 break;
         }
         return super.handClickEvent(v);
@@ -113,6 +114,22 @@ public class ForgetPasswordActivity extends BaseActivity implements TextWatcher 
             btn_next.setTextColor(getResources().getColor(R.color.color_bbbbbb));
             btn_next.setBackgroundResource(R.drawable.next_button_default);
             btn_next.setEnabled(false);
+        }
+    }
+
+    @Override
+    public void OnHttpResponse(int what, String result) {
+        switch (what) {
+            case 0:
+                if (!TextUtils.isEmpty(result)) {
+                    ToastUtil.showLoginToastCenter(ForgetPasswordActivity.this, "验证码已发送");
+                    Intent intent = new Intent(ForgetPasswordActivity.this, ForgetPasswordPhoneActivity.class);
+                    intent.putExtra(ACCOUNT, mobile);
+                    intent.putExtra(USERNAME, username);
+                    intent.putExtra(USERACCOUNT, oaname);
+                    startActivityForResult(intent, 1000);
+                }
+                break;
         }
     }
 }

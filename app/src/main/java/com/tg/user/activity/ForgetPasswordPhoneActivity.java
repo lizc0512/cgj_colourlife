@@ -86,6 +86,7 @@ public class ForgetPasswordPhoneActivity extends BaseActivity implements HttpRes
         username = intent.getStringExtra(USERNAME);
         oaname = intent.getStringExtra(USERACCOUNT);
         tv_phone.setText(StringUtils.getHandlePhone(phone));
+        initTimeCount();
         edit_smscode.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -118,7 +119,6 @@ public class ForgetPasswordPhoneActivity extends BaseActivity implements HttpRes
                 setResetBtnStatus();
             }
         });
-        userModel.postSendMms(0, oaname, username, phone, "forgetPassword", this);
     }
 
     private void setResetBtnStatus() {

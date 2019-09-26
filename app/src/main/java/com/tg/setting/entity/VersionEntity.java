@@ -102,7 +102,7 @@ public class VersionEntity {
 
             private String func;
             private String bug;
-            private double size;
+            private String size;
             private int create_time;
             private String version;
             private String url;
@@ -123,11 +123,11 @@ public class VersionEntity {
                 this.bug = bug;
             }
 
-            public double getSize() {
+            public String getSize() {
                 return size;
             }
 
-            public void setSize(double size) {
+            public void setSize(String size) {
                 this.size = size;
             }
 

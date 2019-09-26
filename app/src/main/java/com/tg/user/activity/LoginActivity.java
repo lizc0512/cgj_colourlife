@@ -1,6 +1,8 @@
 package com.tg.user.activity;
 
 import android.Manifest;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -108,6 +110,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     private String czyAccessToken;//彩之云授权token
     private CustomDialog reviewDialog;
     private String hotLine = "1010-1778";
+    private final float mLogoScale = 0.5f;//logo 缩放比例
+    private final int mAnimTime = 300;//动画时间
+    private boolean isShow = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -213,9 +218,35 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                     public void run() {
                         //判断现在软键盘的开关状态
                         if (SoftKeyboardUtils.isSoftShowing(LoginActivity.this)) {
-                            distance_view.setVisibility(View.GONE);
+                            if (!isShow) {
+                                distance_view.setVisibility(View.GONE);
+                                isShow = true;
+                                // 执行缩小动画
+                                iv_head_pic.setPivotX(iv_head_pic.getWidth() / 2f);
+                                iv_head_pic.setPivotY(iv_head_pic.getHeight());
+                                AnimatorSet animatorSet = new AnimatorSet();
+                                ObjectAnimator scaleX = ObjectAnimator.ofFloat(iv_head_pic, "scaleX", 1.0f, mLogoScale);
+                                ObjectAnimator scaleY = ObjectAnimator.ofFloat(iv_head_pic, "scaleY", 1.0f, mLogoScale);
+                                ObjectAnimator translationY = ObjectAnimator.ofFloat(iv_head_pic, "translationY", 0.0f, 1);
+                                animatorSet.play(translationY).with(scaleX).with(scaleY);
+                                animatorSet.setDuration(mAnimTime);
+                                animatorSet.start();
+                            }
                         } else {
-                            distance_view.setVisibility(View.VISIBLE);
+                            if (isShow) {
+                                distance_view.setVisibility(View.VISIBLE);
+                                iv_head_pic.setPivotX(iv_head_pic.getWidth() * 2f);
+                                iv_head_pic.setPivotY(iv_head_pic.getHeight());
+                                AnimatorSet animatorSet = new AnimatorSet();
+                                ObjectAnimator scaleX = ObjectAnimator.ofFloat(iv_head_pic, "scaleX", 1.0f, 1.0f);
+                                ObjectAnimator scaleY = ObjectAnimator.ofFloat(iv_head_pic, "scaleY", 1.0f, 1.0f);
+                                ObjectAnimator translationY = ObjectAnimator.ofFloat(iv_head_pic, "translationY", iv_head_pic.getTranslationY(), 0);
+                                animatorSet.play(translationY).with(scaleX).with(scaleY);
+                                animatorSet.setDuration(mAnimTime);
+                                animatorSet.start();
+                                isShow = false;
+                            }
+
                         }
                     }
                 }, 100L);
@@ -311,7 +342,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                     password = edit_password.getText().toString().trim();
                     SoftKeyboardUtils.hideSoftKeyboard(LoginActivity.this);
                     if (6 > password.length()) {
-                        ToastUtil.showLoginToastCenter(this, "密码的长度不能小于6位");
+                        ToastUtil.showLoginToastCenter(this, "请输入不少于6位数的密码");
                         return;
                     }
                     if (NumberUtils.IsPhoneNumber(account)) {
@@ -649,7 +680,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                             String employeeName = data.getString("name");
                             UserInfo.employeeAccount = employeeAccount;
                             SharedPreferencesUtils.saveUserKey(this, USEROA, employeeAccount);
-                            SharedPreferencesUtils.saveUserKey(this, USERACCOUNT, account);
+                            if (!"4".equals(loginType)) {
+                                SharedPreferencesUtils.saveUserKey(this, USERACCOUNT, account);
+                            }
                             SharedPreferencesUtils.saveUserKey(this, USERNAME, employeeName);
                             Tools.saveOrgId(LoginActivity.this, data.getString("org_uuid"));
                             Tools.saveStringValue(LoginActivity.this, Contants.storage.CORPID, corpId);//租户ID

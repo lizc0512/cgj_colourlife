@@ -107,7 +107,6 @@ public class ContactsFragment extends Fragment implements ItemEventListener {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.e("YW", "收藏联系人有更新的信息到达......");
             String action = intent.getStringExtra(ACTION);
             if (action.equals(INSERT_CONTACT)) {
                 modifyContactsList();

@@ -367,8 +367,7 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
             //定义js调用android
             webView.addJavascriptInterface(new JsInteration(), "js");
             webView.addJavascriptInterface(new JsInteration(), "myjava");
-//            webView.loadUrl(url, headerMap);
-            webView.loadUrl("file:///android_asset/demo.html", headerMap);
+            webView.loadUrl(url, headerMap);
         } else if (!TextUtils.isEmpty(urlFromA)) {//信息不为空做处理
         }
     }
@@ -872,7 +871,7 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
         }
 
         /**
-         * 获取设备号唯一信息
+         * 获取APP版本号
          *
          * @return
          */
@@ -934,8 +933,20 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
          */
         @JavascriptInterface
         public void cgjScanHandler() {
-            Intent intent = new Intent(MyBrowserActivity.this, MipcaActivityCapture.class);
-            startActivity(intent);
+            XXPermissions.with(MyBrowserActivity.this)
+                    .constantRequest()
+                    .permission(Manifest.permission.CAMERA)
+                    .request(new OnPermission() {
+                        @Override
+                        public void hasPermission(List<String> granted, boolean isAll) {
+                            MyBrowserActivity.this.startActivity(new Intent(MyBrowserActivity.this, MipcaActivityCapture.class));
+                        }
+
+                        @Override
+                        public void noPermission(List<String> denied, boolean quick) {
+                            ToastUtil.showShortToast(MyBrowserActivity.this, "拍照权限被拒绝，请到设置中打开");
+                        }
+                    });
         }
 
         /**
@@ -949,9 +960,22 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
             try {
                 jsonObject = new JSONObject(valueStr);
                 if (!jsonObject.isNull("value") && "cgj".equals(jsonObject.optString("value"))) {
-                    Intent intent = new Intent(MyBrowserActivity.this, MipcaActivityCapture.class);
-                    intent.putExtra(MipcaActivityCapture.QRCODE_SOURCE, "cgj");
-                    startActivityForResult(intent, YUN_SHANG_SCANNERCODE);
+                    XXPermissions.with(MyBrowserActivity.this)
+                            .constantRequest()
+                            .permission(Manifest.permission.CAMERA)
+                            .request(new OnPermission() {
+                                @Override
+                                public void hasPermission(List<String> granted, boolean isAll) {
+                                    Intent intent = new Intent(MyBrowserActivity.this, MipcaActivityCapture.class);
+                                    intent.putExtra(MipcaActivityCapture.QRCODE_SOURCE, "cgj");
+                                    startActivityForResult(intent, YUN_SHANG_SCANNERCODE);
+                                }
+
+                                @Override
+                                public void noPermission(List<String> denied, boolean quick) {
+                                    ToastUtil.showShortToast(MyBrowserActivity.this, "拍照权限被拒绝，请到设置中打开");
+                                }
+                            });
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -969,7 +993,7 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
             String url = "";
             try {
                 jsonObject = new JSONObject(valueStr);
-                url = jsonObject.getString("prototype ");
+                url = jsonObject.getString("prototype");
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -1069,17 +1093,19 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
         @JavascriptInterface
         public void ColourlifeShareCallBack(String data) {
             try {
-                JSONObject jsonObject = new JSONObject(data);
-                shareTitle = jsonObject.optString("title");
-                if (!jsonObject.isNull("url")) {
-                    shareUrl = jsonObject.optString("url");
+                if (!TextUtils.isEmpty(data)) {
+                    JSONObject jsonObject = new JSONObject(data);
+                    shareTitle = jsonObject.optString("title");
+                    if (!jsonObject.isNull("url")) {
+                        shareUrl = jsonObject.optString("url");
+                    }
+                    shareImg = jsonObject.optString("image");
+                    shareContent = jsonObject.optString("content");
+                    MyBrowserActivity.this.runOnUiThread(() -> webview_frame_share.setVisibility(View.VISIBLE));
                 }
-                shareImg = jsonObject.optString("image");
-                shareContent = jsonObject.optString("content");
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            webview_frame_share.setVisibility(View.VISIBLE);
         }
 
     }

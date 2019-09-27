@@ -275,6 +275,9 @@ public class SettingActivity extends BaseActivity implements OnClickListener, Ht
      * 版本更新弹窗
      */
     public void showUpdateDialog(int code, String version, String downurl) {
+        if (null != updateDialog && updateDialog.mDialog.isShowing()) {
+            return;
+        }
         updateDialog = new UpdateVerSionDialog(SettingActivity.this);
         switch (code) {
             case 2://可选更新

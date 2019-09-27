@@ -289,7 +289,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         } else {
             password = edit_password.getText().toString().trim();
         }
-        if (NumberUtils.IsPhoneNumber(account)) {
+        if (NumberUtils.IsPhoneNumber(account) && !isSmsLogin) {
             userModel.getUserType(12, account, false, this);
         } else {
             tv_forget_pawd.setVisibility(View.VISIBLE);

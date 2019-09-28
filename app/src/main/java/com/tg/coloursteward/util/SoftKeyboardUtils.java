@@ -6,6 +6,7 @@ import android.content.Context;
 import android.graphics.Rect;
 import android.os.Build;
 import android.util.DisplayMetrics;
+import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 public class SoftKeyboardUtils {
@@ -31,14 +32,19 @@ public class SoftKeyboardUtils {
         imm.showSoftInput(activity.getWindow().getDecorView(), InputMethodManager.SHOW_FORCED);
     }
 
+
     /**
      * 强制隐藏软键盘
      *
      * @param activity
+     * @param view
      */
-    public static void hideSoftKeyboard(Activity activity) {
-        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0); //强制隐藏键盘
+    public static void hideSoftKeyboard(Activity activity, View view) {
+        try {
+            InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0); //强制隐藏键盘
+        } catch (Exception ignored) {
+        }
     }
 
     /**
@@ -46,8 +52,8 @@ public class SoftKeyboardUtils {
      *
      * @param activity
      */
-    public static void hideSystemSoftKeyboard(Activity activity) {
-        ((InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+    public static void hideSystemSoftKeyboard(Activity activity, View view) {
+        ((InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
     }
 
     /**

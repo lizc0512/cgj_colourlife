@@ -336,11 +336,11 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 if (isSmsLogin) {
                     loginType = "5";
                     password = edit_smscode.getText().toString().trim();
-                    SoftKeyboardUtils.hideSoftKeyboard(LoginActivity.this);
+                    SoftKeyboardUtils.hideSoftKeyboard(LoginActivity.this, edit_account);
                     userCzyModel.getAuthToken(11, account, password, "3", this);
                 } else {
                     password = edit_password.getText().toString().trim();
-                    SoftKeyboardUtils.hideSoftKeyboard(LoginActivity.this);
+                    SoftKeyboardUtils.hideSoftKeyboard(LoginActivity.this, edit_account);
                     if (6 > password.length()) {
                         ToastUtil.showLoginToastCenter(this, "请输入不少于6位数的密码");
                         return;
@@ -608,7 +608,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     }
 
     private void login(String accout, String pwdMD5, String loginType) {
-        SoftKeyboardUtils.hideSoftKeyboard(LoginActivity.this);
+        SoftKeyboardUtils.hideSoftKeyboard(LoginActivity.this, edit_account);
         if (null == auth2ServiceUpdate) {
             auth2ServiceUpdate = new OAuth2ServiceUpdate(LoginActivity.this, loginType);
         } else {

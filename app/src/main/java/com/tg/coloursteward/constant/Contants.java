@@ -114,7 +114,6 @@ public interface Contants {
 
     interface storage {
         String TICKET = "ticket";
-        String DGZH_ACCOUNT = "dgzh_account";
         String AREAHOME = "area_home";
         String STOCKHOME = "stock_home";
         String TICKETHOME = "ticket_home";

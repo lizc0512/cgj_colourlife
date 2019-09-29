@@ -8,8 +8,8 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.tg.coloursteward.activity.AccountExchangeDetailActivity;
 import com.tg.coloursteward.R;
+import com.tg.coloursteward.activity.AccountExchangeDetailActivity;
 import com.tg.coloursteward.base.MyBaseAdapter;
 import com.tg.coloursteward.entity.ExchangeEntity;
 import com.tg.coloursteward.info.AccountDetailNewInfo;
@@ -109,7 +109,7 @@ public class AccountDetailNewAdapter extends MyBaseAdapter<ExchangeEntity.Detail
             }
         });
         tvName.setText("应用:" + item.getGeneral_name());
-        Double money = NumberUtils.format(Double.parseDouble(item.getSplit_money()), 2);
+        Double money = Double.valueOf(NumberUtils.format(item.getSplit_money()));
         if (money > 0) {
             tvMoney.setText("+" + money);
         } else {

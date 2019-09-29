@@ -27,6 +27,8 @@ import java.util.Map;
 public class MineModel extends BaseModel {
     private String mineUrl = "/app/home/mypage";
     private String accountLoginUrl = "/account/login";
+    private String jsfpNumUrl = "/app/home/utility/calcData";
+    private String dgzhNumUrl = "/dgzh/statmoney";
 
     public MineModel(Context context) {
         super(context);
@@ -63,7 +65,7 @@ public class MineModel extends BaseModel {
      * @param what
      * @param account
      * @param pwdMd5
-     * @param httpResponse  校验登录密码接口
+     * @param httpResponse 校验登录密码接口
      */
     public void postAccountLogin(int what, String account, String pwdMd5, HttpResponse httpResponse) {
         Map<String, Object> params = new HashMap<>();
@@ -90,5 +92,73 @@ public class MineModel extends BaseModel {
 
             }
         }, true, true);
+    }
+
+    /**
+     * 获取即时分配金额
+     *
+     * @param what
+     * @param accessToken
+     * @param httpResponse
+     */
+    public void getJsfpNumData(int what, String accessToken, HttpResponse httpResponse) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("access_token", accessToken);
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 0, jsfpNumUrl), RequestMethod.GET);
+        request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    int code = showSuccesResultMessage(result);
+                    if (code == 0) {
+                        httpResponse.OnHttpResponse(what, result);
+                    }
+                } else {
+                    showErrorCodeMessage(response);
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+                showExceptionMessage(what, response);
+            }
+        }, true, false);
+    }
+
+    /**
+     * 获取对公账户金额
+     *
+     * @param what
+     * @param oa
+     * @param accessToken
+     * @param httpResponse
+     */
+    public void postDgzhNumData(int what, String oa, String accessToken, HttpResponse httpResponse) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("oa", oa);
+        params.put("token", accessToken);
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 4, dgzhNumUrl), RequestMethod.POST);
+        request(what, request, RequestEncryptionUtils.getIceMap(mContext, params), new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    int code = showSuccesResultMessage(result);
+                    if (code == 0) {
+                        httpResponse.OnHttpResponse(what, result);
+                    }
+                } else {
+                    showErrorCodeMessage(response);
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+                showExceptionMessage(what, response);
+            }
+        }, true, false);
     }
 }

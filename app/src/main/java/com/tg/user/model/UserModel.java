@@ -1159,14 +1159,19 @@ public class UserModel extends BaseModel {
                     if (code == 0) {
                         httpResponse.OnHttpResponse(what, result);
                     }
+                } else if (responseCode == RequestEncryptionUtils.responseFailed) {
+                    httpResponse.OnHttpResponse(what, "");
                 } else {
-                    showErrorCodeMessage(response);
+                    int code = showSuccesResultMessage(result);
+                    if (code == 0) {
+                        httpResponse.OnHttpResponse(what, result);
+                    }
                 }
             }
 
             @Override
             public void onFailed(int what, Response<String> response) {
-                showExceptionMessage(what, response);
+                httpResponse.OnHttpResponse(what, "");
             }
         }, true, isLoading);
     }

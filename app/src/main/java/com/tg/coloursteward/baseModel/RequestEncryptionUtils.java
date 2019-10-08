@@ -39,6 +39,7 @@ public class RequestEncryptionUtils {
      * 请求成功
      ***/
     public static final int responseSuccess = 200;
+    public static final int responseFailed = 500;
     public static final String FIELD_CONTENT = "content";
 
     /***请求Combile的post加密 通过type支持多域名***/

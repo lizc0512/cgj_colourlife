@@ -159,11 +159,10 @@ public class BaseModel {
                 callback("");
             } else {
                 try {
-                    JSONObject jsonObject = new JSONObject(result);
                     BaseErrorEntity baseErrorEntity = GsonUtils.gsonToBean(result, BaseErrorEntity.class);
                     String message = baseErrorEntity.getMessage();
                     callback(message);
-                } catch (JSONException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                     callback("");
                 }
@@ -228,11 +227,10 @@ public class BaseModel {
             callback("");
         } else {
             try {
-                JSONObject jsonObject = new JSONObject(result);
                 BaseErrorEntity baseErrorEntity = GsonUtils.gsonToBean(result, BaseErrorEntity.class);
                 String message = baseErrorEntity.getMessage();
                 callback(message);
-            } catch (JSONException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
                 callback("");
             }

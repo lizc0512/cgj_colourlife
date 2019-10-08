@@ -761,6 +761,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
+                } else {
+                    loginType = "5";
+                    tv_forget_pawd.setVisibility(View.GONE);
+                    userCzyModel.getCheckWhite(10, account, 1, this);
                 }
                 break;
             case 9:
@@ -818,6 +822,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
+                } else {
+                    tv_forget_pawd.setVisibility(View.GONE);
                 }
                 break;
         }

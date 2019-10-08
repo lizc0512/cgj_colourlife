@@ -20,8 +20,8 @@ import com.tg.coloursteward.inter.OnLoadingListener;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.RequestConfig;
 import com.tg.coloursteward.net.RequestParams;
-import com.tg.coloursteward.view.PullRefreshListView;
 import com.tg.coloursteward.util.GsonUtils;
+import com.tg.coloursteward.view.PullRefreshListView;
 import com.youmai.hxsdk.router.APath;
 import com.youmai.hxsdk.utils.ToastUtil;
 

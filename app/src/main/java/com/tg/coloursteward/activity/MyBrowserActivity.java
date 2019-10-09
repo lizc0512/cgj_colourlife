@@ -403,11 +403,13 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
                             dataString = data.getString("code");
                             object.put("code", dataString);
                         }
-                    } catch (JSONException e) {
+                        String inputData = object.toString();
+                        if (null != webView) {
+                            webView.loadUrl("javascript:postResponseType('" + inputData + "')");
+                        }
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    String data = object.toString();
-                    webView.loadUrl("javascript:postResponseType('" + data + "')");
                 }
                 break;
         }

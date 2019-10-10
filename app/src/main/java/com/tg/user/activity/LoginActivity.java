@@ -318,7 +318,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 btn_get_code.setEnabled(false);
             }
         }
-        if (account.equals(SharedPreferencesUtils.getUserKey(this, USEROA))) {
+        if (account.equals(SharedPreferencesUtils.getUserKey(this, USERACCOUNT))) {
             setHeadPic();
         } else {
             iv_head_pic.setImageResource(R.drawable.login_logo);

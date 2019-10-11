@@ -16,6 +16,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -815,7 +816,7 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
         if (null == homeModel) {
             homeModel = new HomeModel(this);
         }
-        homeModel.postSetMsgRead(0, msg_id, this);
+        homeModel.postSetMsgRead(7, msg_id, this);
     }
 
     // 更新首页消息推送列表
@@ -857,7 +858,6 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
                 if (null != jsonString) {
                     try {
                         int code = HttpTools.getCode(jsonString);
-                        String message = HttpTools.getMessageString(jsonString);
                         if (code == 0) {
                             String response = HttpTools.getContentString(jsonString);
                             ResponseData data = HttpTools.getResponseContentObject(response);
@@ -1190,6 +1190,11 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
                     }
                 }
                 break;
+            case 7:
+                if (!TextUtils.isEmpty(result)) {
+                    //消息已读逻辑，暂无
+                }
+                break;
         }
     }
 
@@ -1277,6 +1282,17 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
         Uri packageURI = Uri.parse("package:" + getPackageName());
         Intent intent = new Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES, packageURI);
         startActivityForResult(intent, 10001);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 10001) {
+            if (getPackageManager().canRequestPackageInstalls()) {
+                startDown();
+            }
+        }
     }
 
     private void startDown() {

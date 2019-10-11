@@ -17,6 +17,7 @@ import android.os.IBinder;
 import android.provider.Settings;
 import android.support.v4.content.FileProvider;
 
+import com.alibaba.android.arouter.utils.TextUtils;
 import com.tg.coloursteward.constant.SpConstants;
 import com.tg.coloursteward.util.SharedPreferencesUtils;
 import com.tg.coloursteward.util.ToastUtil;
@@ -51,31 +52,30 @@ public class UpdateService extends Service {
     @Override
     public void onStart(Intent intent, int startId) {
         super.onStart(intent, startId);
-        if ("".equals(intent.getStringExtra(DOWNLOAD_URL))) {
-            return;
-        }
-        url = intent.getStringExtra(DOWNLOAD_URL);
-        version = intent.getStringExtra(VERSIONNAME);
-        Date currentTime = new Date();
-        long currentTimeStamp = currentTime.getTime();
-        apk_name = "colourlifemanager" + "_" + version + "_" + currentTimeStamp + ".apk";
-        receiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                install(context);
-                //销毁当前的Service
-                stopSelf();
+        if (null != intent && !TextUtils.isEmpty(intent.getStringExtra(DOWNLOAD_URL))) {
+            url = intent.getStringExtra(DOWNLOAD_URL);
+            version = intent.getStringExtra(VERSIONNAME);
+            Date currentTime = new Date();
+            long currentTimeStamp = currentTime.getTime();
+            apk_name = "colourlifemanager" + "_" + version + "_" + currentTimeStamp + ".apk";
+            receiver = new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    install(context);
+                    //销毁当前的Service
+                    stopSelf();
+                }
+            };
+            registerReceiver(receiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+            if (canDownloadState()) {
+                downloadApk();
+            } else {
+                ToastUtil.showShortToast(getApplication(), "请到应用管理打开下载管理程序");
+                String packageName = "com.android.providers.downloads";
+                Intent down = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                down.setData(Uri.parse("package:" + packageName));
+                startActivity(down);
             }
-        };
-        registerReceiver(receiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
-        if (canDownloadState()) {
-            downloadApk();
-        } else {
-            ToastUtil.showShortToast(getApplication(), "请到应用管理打开下载管理程序");
-            String packageName = "com.android.providers.downloads";
-            Intent down = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-            down.setData(Uri.parse("package:" + packageName));
-            startActivity(down);
         }
     }
 

@@ -28,7 +28,6 @@ import com.youmai.hxsdk.utils.DisplayUtil;
  * @author hxg 2019.07.22
  */
 public class KeyAddDoorActivity extends BaseActivity implements HttpResponse {
-    public static String COMMUNITY_UUID = "community_uuid";
     private EditText et_door;
     private ImageView iv_big_door;
     private ImageView iv_unit_door;
@@ -69,7 +68,7 @@ public class KeyAddDoorActivity extends BaseActivity implements HttpResponse {
 
     private void initData() {
         Intent intent = getIntent();
-        communityUuid = intent.getStringExtra(COMMUNITY_UUID);
+        communityUuid = intent.getStringExtra(KeySendKeyListActivity.COMMUNITY_UUID);
 
         fromSource = intent.getIntExtra(KeySendKeyListActivity.FORM_SOURCE, 0);
         if (fromSource == 1) {

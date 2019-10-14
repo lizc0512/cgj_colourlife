@@ -1,8 +1,14 @@
 package com.tg.setting.activity;
 
+import android.app.ProgressDialog;
+import android.bluetooth.BluetoothAdapter;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
@@ -11,25 +17,38 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.intelspace.library.ErrorConstants;
+import com.intelspace.library.api.OnEntryCardReaderModeCallback;
+import com.intelspace.library.api.OnFoundDeviceListener;
+import com.intelspace.library.module.Device;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.LinkParseUtil;
+import com.tg.coloursteward.util.ToastUtil;
+import com.tg.coloursteward.view.dialog.DialogFactory;
 import com.tg.setting.entity.KeyCommunityListEntity;
 import com.tg.setting.entity.KeyMessageEntity;
+import com.tg.setting.fragment.KeyCardReaderFragment;
 import com.tg.setting.fragment.KeyDoorBagsFragment;
 import com.tg.setting.fragment.KeyDoorListFragment;
 import com.tg.setting.fragment.KeyDoorStatisticsFragment;
 import com.tg.setting.model.KeyDoorModel;
+import com.tg.setting.model.SendCardModel;
+import com.tg.setting.service.LekaiService;
 import com.tg.setting.view.KeyCommunityPopWindowView;
 import com.tg.user.model.UserModel;
 import com.youmai.hxsdk.utils.DisplayUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.tg.setting.activity.CardSenderPhoneActivity.DEVICE;
+import static com.tg.setting.activity.CardSenderPhoneActivity.HAIRPINID;
 
 /**
  * 乐开-门禁管理
@@ -45,6 +64,7 @@ public class KeyDoorManagerActivity extends BaseActivity implements HttpResponse
     private ImageView iv_msg;
     private TextView tv_door;
     private TextView tv_key;
+    private TextView tv_send_card;
     private TextView tv_statistics;
     private List<KeyCommunityListEntity.ContentBeanX.ContentBean> communityList = new ArrayList<>();
     private String accountUuid;
@@ -56,9 +76,11 @@ public class KeyDoorManagerActivity extends BaseActivity implements HttpResponse
     private FragmentTransaction transaction;
     private KeyDoorListFragment keyDoorListFragment;
     private KeyDoorBagsFragment keyDoorBagsFragment;
+    private KeyCardReaderFragment keyCardReaderFragment;
     private KeyDoorStatisticsFragment keyDoorStatisticsFragment;
     private KeyDoorModel keyDoorModel;
-
+    private int addType = 0;
+    private Device mDevice;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,9 +88,27 @@ public class KeyDoorManagerActivity extends BaseActivity implements HttpResponse
         headView.setVisibility(View.GONE);
         userModel = new UserModel(this);
         fragmentManager = getSupportFragmentManager();
+        Intent intent = new Intent(this, LekaiService.class);
+        startService(intent);
+        bindService(intent, mConn, Context.BIND_AUTO_CREATE);
         initView();
         initData();
     }
+
+    private LekaiService mLekaiService;
+    private ServiceConnection mConn = new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            LekaiService.LocalBinder binder = (LekaiService.LocalBinder) service;
+            mLekaiService = binder.getService();
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            mLekaiService = null;
+        }
+    };
 
     @Override
     public View getContentView() {
@@ -85,6 +125,7 @@ public class KeyDoorManagerActivity extends BaseActivity implements HttpResponse
         tv_door = findViewById(R.id.tv_door);
         tv_key = findViewById(R.id.tv_key);
         tv_statistics = findViewById(R.id.tv_statistics);
+        tv_send_card = findViewById(R.id.tv_send_card);
 
         back_finish_img.setOnClickListener(singleListener);
         iv_add.setOnClickListener(singleListener);
@@ -92,6 +133,7 @@ public class KeyDoorManagerActivity extends BaseActivity implements HttpResponse
         tv_door.setOnClickListener(singleListener);
         tv_key.setOnClickListener(singleListener);
         tv_statistics.setOnClickListener(singleListener);
+        tv_send_card.setOnClickListener(singleListener);
         ll_title.setOnClickListener(singleListener);
     }
 
@@ -148,6 +190,11 @@ public class KeyDoorManagerActivity extends BaseActivity implements HttpResponse
 
                 }
                 break;
+            case 3:
+                if (null != keyCardReaderFragment) {
+                    keyCardReaderFragment.removeHairpin(delPos);
+                }
+                break;
         }
     }
 
@@ -187,6 +234,9 @@ public class KeyDoorManagerActivity extends BaseActivity implements HttpResponse
         if (null != keyDoorStatisticsFragment) {
             keyDoorStatisticsFragment.changeCommunity(communityUuid, communityName);
         }
+        if (null != keyCardReaderFragment) {
+            keyCardReaderFragment.changeCommunity(communityUuid, communityName);
+        }
         getMessageCount();
     }
 
@@ -211,6 +261,113 @@ public class KeyDoorManagerActivity extends BaseActivity implements HttpResponse
         }
     }
 
+    /**
+     * 开始扫描设备
+     */
+    public void startScanDevice() {
+        if (null != mLekaiService) {
+            mLekaiService.startScanDevice();
+        }
+    }
+
+    /**
+     * 停止扫描设备
+     */
+    public void stopScanDevice() {
+        if (null != mLekaiService) {
+            mLekaiService.stopScanDevice();
+        }
+    }
+
+    private boolean isConnected = false;
+
+    /**
+     * 连接发卡器进去发卡模式
+     */
+    public void connectSendCard(String macAddress, String hairpinId) {
+        isConnected = false;
+        BluetoothAdapter blueAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (null != blueAdapter) {
+            boolean openBluetooth = blueAdapter.isEnabled();
+            if (!openBluetooth) {
+                ToastUtil.showShortToast(this, "设备未打开蓝牙，请在设置中打开");
+            } else {
+                startScanDevice();
+            }
+        }
+        if (null != mLekaiService) {
+            mLekaiService.setOnFoundDeviceListener(new OnFoundDeviceListener() {
+                @Override
+                public void foundDevice(Device device) {
+                    // 添加设备时扫描监听
+                    // 只展示发卡器类型的设备
+                    if (Device.LOCK_VERSION_CARDREADER.equals(device.getLockVersion())) {
+                        String deviceMac = device.getBluetoothDevice().getAddress();
+                        if (deviceMac.equals(macAddress) && !isConnected) {
+                            mDevice = device;
+                            enterCardMode(hairpinId);
+                            stopScanDevice();
+                            isConnected = true;
+                        }
+                    }
+                }
+            });
+        }
+        mHand.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (null == mDevice) {
+                    ToastUtil.showLongToastCenter(KeyDoorManagerActivity.this, "当前发卡器不在范围,或没有通电");
+                    stopScanDevice();
+                }
+            }
+        }, 10000);
+    }
+
+    private void enterCardMode(String hairpinId) {
+        ProgressDialog mProgressDialog = ProgressDialog.show(this, null, "正在连接设备中...");
+        mLekaiService.entryCardReaderMode(mDevice, new OnEntryCardReaderModeCallback() {
+            @Override
+            public void onEntryCardReaderModeCallback(int status, String message) {
+                if (mProgressDialog != null) {
+                    mProgressDialog.dismiss();
+                }
+                if (status == ErrorConstants.SUCCESS) {
+                    Intent intent = new Intent(KeyDoorManagerActivity.this, CardSenderActivity.class);
+                    intent.putExtra(DEVICE, mDevice);
+                    intent.putExtra(KeySendKeyListActivity.COMMUNITY_UUID, communityUuid);
+                    intent.putExtra(HAIRPINID, hairpinId);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(KeyDoorManagerActivity.this, message, Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+    }
+
+    private int delPos = 0;
+
+    public void delDeviceCard(String hairpinId, int delPos) {
+        this.delPos = delPos;
+        DialogFactory.getInstance().showDoorDialog(KeyDoorManagerActivity.this, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        //删除
+                        SendCardModel sendCardModel = new SendCardModel(KeyDoorManagerActivity.this);
+                        sendCardModel.delCgjHairpin(3, hairpinId, KeyDoorManagerActivity.this::OnHttpResponse);
+                    }
+                }, null, 0, "是否删除当前发卡器？",
+                null, null);
+
+    }
+
+    public void enterCardList(String hairpinId) {
+        Intent intent = new Intent(KeyDoorManagerActivity.this, CardSenderRecordActivity.class);
+        intent.putExtra(HAIRPINID, hairpinId);
+        intent.putExtra(KeySendKeyListActivity.COMMUNITY_NAME, communityName);
+        startActivity(intent);
+    }
+
 
     @Override
     protected boolean handClickEvent(View v) {
@@ -230,17 +387,25 @@ public class KeyDoorManagerActivity extends BaseActivity implements HttpResponse
                 });
                 break;
             case R.id.iv_add:
-                Intent intent = new Intent(this, KeyAddDoorActivity.class);
-                intent.putExtra(KeyAddDoorActivity.COMMUNITY_UUID, communityUuid);
-                startActivityForResult(intent, 1);
+                if (addType == 0) {
+                    Intent intent = new Intent(this, KeyAddDoorActivity.class);
+                    intent.putExtra(KeySendKeyListActivity.COMMUNITY_UUID, communityUuid);
+                    startActivityForResult(intent, 1);
+                } else if (addType == 2) {
+                    Intent intent = new Intent(this, CardReaderActivity.class);
+                    intent.putExtra(KeySendKeyListActivity.COMMUNITY_UUID, communityUuid);
+                    startActivityForResult(intent, 2);
+                }
                 break;
             case R.id.iv_msg:
                 LinkParseUtil.parse(KeyDoorManagerActivity.this, messageUrl, "");
                 break;
             case R.id.tv_door:
+                addType = 0;
                 setTabStyle(tv_door, R.drawable.ic_key_door_select);
                 setTabStyle(tv_key, R.drawable.ic_key_key);
                 setTabStyle(tv_statistics, R.drawable.ic_key_door_statistics);
+                setTabStyle(tv_send_card, R.drawable.ic_key_send_card);
                 iv_add.setVisibility(View.VISIBLE);
                 hideTransaction();
                 if (keyDoorListFragment == null) {
@@ -252,8 +417,10 @@ public class KeyDoorManagerActivity extends BaseActivity implements HttpResponse
                 transaction.commitAllowingStateLoss();
                 break;
             case R.id.tv_key:
+                addType = 1;
                 setTabStyle(tv_door, R.drawable.ic_key_door);
                 setTabStyle(tv_key, R.drawable.ic_key_key_select);
+                setTabStyle(tv_send_card, R.drawable.ic_key_send_card);
                 setTabStyle(tv_statistics, R.drawable.ic_key_door_statistics);
                 iv_add.setVisibility(View.GONE);
                 hideTransaction();
@@ -265,9 +432,27 @@ public class KeyDoorManagerActivity extends BaseActivity implements HttpResponse
                 }
                 transaction.commitAllowingStateLoss();
                 break;
-            case R.id.tv_statistics:
+            case R.id.tv_send_card:
+                addType = 2;
                 setTabStyle(tv_door, R.drawable.ic_key_door);
                 setTabStyle(tv_key, R.drawable.ic_key_key);
+                setTabStyle(tv_send_card, R.drawable.ic_key_send_card_select);
+                setTabStyle(tv_statistics, R.drawable.ic_key_door_statistics);
+                iv_add.setVisibility(View.VISIBLE);
+                hideTransaction();
+                if (keyCardReaderFragment == null) {
+                    keyCardReaderFragment = KeyCardReaderFragment.getKeyCardReaderFragment(communityUuid, communityName);
+                    transaction.add(R.id.content_layout, keyCardReaderFragment);
+                } else {
+                    transaction.show(keyCardReaderFragment);
+                }
+                transaction.commitAllowingStateLoss();
+                break;
+            case R.id.tv_statistics:
+                addType = 3;
+                setTabStyle(tv_door, R.drawable.ic_key_door);
+                setTabStyle(tv_key, R.drawable.ic_key_key);
+                setTabStyle(tv_send_card, R.drawable.ic_key_send_card);
                 setTabStyle(tv_statistics, R.drawable.ic_key_door_statistics_select);
                 iv_add.setVisibility(View.GONE);
                 hideTransaction();
@@ -297,9 +482,13 @@ public class KeyDoorManagerActivity extends BaseActivity implements HttpResponse
         if (null != keyDoorListFragment) {
             transaction.hide(keyDoorListFragment);
         }
+        if (null != keyCardReaderFragment) {
+            transaction.hide(keyCardReaderFragment);
+        }
         if (null != keyDoorStatisticsFragment) {
             transaction.hide(keyDoorStatisticsFragment);
         }
+
     }
 
     @Override
@@ -315,6 +504,10 @@ public class KeyDoorManagerActivity extends BaseActivity implements HttpResponse
                 if (null != keyDoorListFragment) {
                     keyDoorListFragment.changeCommunity(communityUuid, communityName);
                 }
+            } else if (2 == requestCode) {
+                if (null != keyCardReaderFragment) {
+                    keyCardReaderFragment.changeCommunity(communityUuid, communityName);
+                }
             }
         }
     }
@@ -322,5 +515,16 @@ public class KeyDoorManagerActivity extends BaseActivity implements HttpResponse
     public void hideTitleBottomLayout() {  //没有权限时隐藏标题栏 和tab
         findViewById(R.id.title_layout).setVisibility(View.GONE);
         findViewById(R.id.ll_bottom).setVisibility(View.GONE);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (null != mConn) {
+            unbindService(mConn);
+        }
+        if (mLekaiService != null && null != mDevice) {
+            mLekaiService.disConnect(mDevice);
+        }
     }
 }

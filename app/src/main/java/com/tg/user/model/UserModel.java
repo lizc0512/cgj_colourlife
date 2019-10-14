@@ -59,6 +59,7 @@ public class UserModel extends BaseModel {
     private String uploadImgUrl = "/avatar";
     private String getCommunityList = "/cgjControl/userRole/getCommunityListByAccountUuid";
     private String getDoorList = "/yuncontrol/ycAccessControl/getAccessByCommunityId";
+    private String getDoorStatusList = "/yuncontrol/ycAccessControl/getAccessByCommunityId";
     private String getKeyList = "/yuncontrol/ycKeyPackage/getKeyPacksByCommunityId";
     private String addDoor = "/yuncontrol/ycAccessControl/add";
     private String getBuild = "/cgjControl/colourLife/getBuildByCommunityId";
@@ -786,6 +787,36 @@ public class UserModel extends BaseModel {
         }, true, false);
     }
 
+
+    public void getDoorStatusList(int what, String communityId, int pageNum, int pageSize, final HttpResponse httpResponse) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("communityId", communityId);
+        params.put("pageNum", pageNum);
+        params.put("pageSize", pageSize);
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 11, getDoorStatusList), RequestMethod.GET);
+        request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    int code = showSuccesResultMessage(result);
+                    if (code == 0) {
+                        httpResponse.OnHttpResponse(what, result);
+                    } else {
+                        showErrorCodeMessage(response);
+                    }
+                } else {
+                    showErrorCodeMessage(response);
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+                showExceptionMessage(what, response);
+            }
+        }, true, false);
+    }
 
     public void getKeyList(int what, String communityId, int pageNum, int pageSize, final HttpResponse httpResponse) {
         Map<String, Object> params = new HashMap<>();

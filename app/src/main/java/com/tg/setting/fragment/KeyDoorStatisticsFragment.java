@@ -248,10 +248,10 @@ public class KeyDoorStatisticsFragment extends Fragment implements HttpResponse,
             keyDoorModel = new KeyDoorModel(getActivity());
         }
         keyDoorModel.getTotalCommunityStatistics(0, community_uuid, this::OnHttpResponse);
-        getTypeStatistics("month");
-        userIndent = "month";
-        lockIndent = "month";
-        keyIndent = "month";
+        getTypeStatistics("day");
+        userIndent = "day";
+        lockIndent = "day";
+        keyIndent = "day";
         getMonthSelect();
     }
 
@@ -259,15 +259,15 @@ public class KeyDoorStatisticsFragment extends Fragment implements HttpResponse,
         clearUserData();
         clearLockData();
         clearKeyData();
-        setTextBgColor(tv_user_month, R.drawable.shape_key_leftbottom_select, getResources().getColor(R.color.white));
+        setTextBgColor(tv_user_month, R.drawable.shape_key_leftbottom, getResources().getColor(R.color.color_999faa));
         setTextBgColor(tv_user_week, R.drawable.shape_key_middle, getResources().getColor(R.color.color_999faa));
-        setTextBgColor(tv_user_day, R.drawable.shape_key_rightbottom, getResources().getColor(R.color.color_999faa));
-        setTextBgColor(tv_lock_month, R.drawable.shape_key_leftbottom_select, getResources().getColor(R.color.white));
+        setTextBgColor(tv_user_day, R.drawable.shape_key_rightbottom_select, getResources().getColor(R.color.white));
+        setTextBgColor(tv_lock_month, R.drawable.shape_key_leftbottom, getResources().getColor(R.color.color_999faa));
         setTextBgColor(tv_lock_week, R.drawable.shape_key_middle, getResources().getColor(R.color.color_999faa));
-        setTextBgColor(tv_lock_day, R.drawable.shape_key_rightbottom, getResources().getColor(R.color.color_999faa));
-        setTextBgColor(tv_key_month, R.drawable.shape_key_leftbottom_select, getResources().getColor(R.color.white));
+        setTextBgColor(tv_lock_day, R.drawable.shape_key_rightbottom_select, getResources().getColor(R.color.white));
+        setTextBgColor(tv_key_month, R.drawable.shape_key_leftbottom, getResources().getColor(R.color.color_999faa));
         setTextBgColor(tv_key_week, R.drawable.shape_key_middle, getResources().getColor(R.color.color_999faa));
-        setTextBgColor(tv_key_day, R.drawable.shape_key_rightbottom, getResources().getColor(R.color.color_999faa));
+        setTextBgColor(tv_key_day, R.drawable.shape_key_rightbottom_select, getResources().getColor(R.color.white));
     }
 
     private void getTypeStatistics(String keyIndent) {
@@ -277,9 +277,9 @@ public class KeyDoorStatisticsFragment extends Fragment implements HttpResponse,
         keyDoorModel.getTypeCommunityStatistics(1, community_uuid, keyIndent, this::OnHttpResponse);
     }
 
-    private String userIndent = "month";
-    private String lockIndent = "month";
-    private String keyIndent = "month";
+    private String userIndent = "day";
+    private String lockIndent = "day";
+    private String keyIndent = "day";
 
 
     public void changeCommunity(String community_uuid, String community_name) {

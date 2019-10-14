@@ -25,6 +25,7 @@ import com.tg.coloursteward.R;
 import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.Utils;
+import com.tg.setting.activity.CardSenderPhoneActivity;
 import com.tg.setting.activity.KeySendKeyPhoneActivity;
 import com.tg.setting.entity.KeyBuildEntity;
 import com.tg.setting.entity.KeyFloorEntity;
@@ -195,6 +196,9 @@ public class KeyChoiceRoomDialog extends Dialog implements HttpResponse, View.On
             if (mContext instanceof KeySendKeyPhoneActivity) {
                 ((KeySendKeyPhoneActivity) mContext).setRoom(buildName);
             }
+            if (mContext instanceof CardSenderPhoneActivity) {
+                ((CardSenderPhoneActivity) mContext).setRoom(buildName);
+            }
             dismiss();
         }
     }
@@ -215,6 +219,9 @@ public class KeyChoiceRoomDialog extends Dialog implements HttpResponse, View.On
         if (mList.size() == 0) {
             if (mContext instanceof KeySendKeyPhoneActivity) {
                 ((KeySendKeyPhoneActivity) mContext).setRoom(buildName + unitName);
+            }
+            if (mContext instanceof CardSenderPhoneActivity) {
+                ((CardSenderPhoneActivity) mContext).setRoom(buildName+ unitName);
             }
             dismiss();
         }
@@ -376,6 +383,9 @@ public class KeyChoiceRoomDialog extends Dialog implements HttpResponse, View.On
                         //选择结束
                         if (mContext instanceof KeySendKeyPhoneActivity) {
                             ((KeySendKeyPhoneActivity) mContext).setRoom(buildName + unitName + roomName);
+                        }
+                        if (mContext instanceof CardSenderPhoneActivity) {
+                            ((CardSenderPhoneActivity) mContext).setRoom(buildName + unitName + roomName);
                         }
                         dismiss();
                         break;

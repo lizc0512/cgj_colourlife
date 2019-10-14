@@ -180,7 +180,7 @@ public class KeyDoorListFragment extends Fragment implements HttpResponse, View.
                     getActivity().finish();
                 } else {
                     Intent intent = new Intent(getActivity(), KeyAddDoorActivity.class);
-                    intent.putExtra(KeyAddDoorActivity.COMMUNITY_UUID, community_uuid);
+                    intent.putExtra(KeySendKeyListActivity.COMMUNITY_UUID, community_uuid);
                     getActivity().startActivityForResult(intent, 1);
                 }
                 break;

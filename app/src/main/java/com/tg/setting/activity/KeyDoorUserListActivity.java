@@ -139,6 +139,7 @@ public class KeyDoorUserListActivity extends BaseActivity implements HttpRespons
         Intent intent = new Intent(KeyDoorUserListActivity.this, KeyDoorUserDetailsActivity.class);
         intent.putExtra(KEYUSERDETAILS, contentBean);
         intent.putExtra(KeySendKeyListActivity.KEY_CONTENT, accessName);
+        intent.putExtra(KeySendKeyListActivity.COMMUNITY_NAME, communityName);
         intent.putExtra(KeySendKeyListActivity.DEVICE_ID, deviceId);
         startActivityForResult(intent, 1);
     }

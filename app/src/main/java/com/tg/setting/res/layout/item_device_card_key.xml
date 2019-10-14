@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="100dp">
+    <!--用户门禁钥匙和进出记录的-->
+
+    <com.tg.coloursteward.view.CircleImageView
+        android:id="@+id/card_user_photo"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="15dp" />
+
+
+    <TextView
+        android:id="@+id/tv_card_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="15dp"
+        android:textColor="@color/color_1da1f4"
+        android:textSize="@dimen/sp_14" />
+
+
+    <TextView
+        android:id="@+id/tv_card_username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="15dp"
+        android:layout_toRightOf="@id/card_user_photo"
+        android:textColor="@color/color_333b46"
+        android:textSize="@dimen/sp_16" />
+
+    <TextView
+        android:id="@+id/tv_card_identify"
+        android:layout_width="34dp"
+        android:layout_height="14dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="18dp"
+        android:layout_toRightOf="@id/tv_card_username"
+        android:background="@drawable/sms_button_two"
+        android:gravity="center"
+        android:textColor="@color/color_1ca1f4"
+        android:textSize="8sp" />
+
+    <TextView
+        android:id="@+id/tv_card_phone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_card_username"
+        android:layout_alignLeft="@id/tv_card_username"
+        android:layout_marginTop="8dp"
+        android:textColor="@color/color_333b46"
+        android:textSize="@dimen/sp_14" />
+
+    <TextView
+        android:id="@+id/tv_card_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_card_phone"
+        android:layout_alignLeft="@id/tv_card_username"
+        android:layout_marginTop="5dp"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:textColor="@color/color_999faa"
+        android:textSize="@dimen/font_12sp" />
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_alignParentBottom="true"
+        android:background="@color/line_color" />
+
+
+</RelativeLayout>

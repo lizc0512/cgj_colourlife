@@ -11,7 +11,13 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.intelspace.library.EdenApi;
+import com.intelspace.library.api.OnAddCardCallback;
+import com.intelspace.library.api.OnCardStatusCallback;
+import com.intelspace.library.api.OnClearCardCallback;
+import com.intelspace.library.api.OnConnectCallback;
+import com.intelspace.library.api.OnEntryCardReaderModeCallback;
 import com.intelspace.library.api.OnFoundDeviceListener;
+import com.intelspace.library.api.OnInitCardCallback;
 import com.intelspace.library.api.OnSyncUserKeysCallback;
 import com.intelspace.library.module.Device;
 import com.intelspace.library.module.LocalKey;
@@ -172,5 +178,96 @@ public class LekaiService extends Service {
 
         void onBluetoothStateOff();
     }
+    /**
+     * 进入发卡模式
+     * 先连接发卡器，连接成功后给发卡器发送进入发卡模式的指令
+     *
+     * @param device   扫描到的发卡器
+     * @param callback 进入发卡模式的回调
+     */
+    public void entryCardReaderMode(Device device, final OnEntryCardReaderModeCallback callback) {
+        if (mEdenApi != null) {
+            mEdenApi.connectDevice(device, 10000, new OnConnectCallback() {
+                @Override
+                public void connectSuccess(Device device) {
+                    mEdenApi.entryCardReaderMode(device, callback);
+                }
 
+                @Override
+                public void connectError(int error, String message) {
+                    callback.onEntryCardReaderModeCallback(error, message);
+                }
+            });
+        }
+    }
+
+    /**
+     * 读卡状态改变的回调
+     * 卡状态：
+     * StatusConstants.CARD_STATUS_NO_CARD（无卡）
+     * StatusConstants.CARD_STATUS_CARD_USED（卡未知或已被其他厂商使用）
+     * StatusConstants.CARD_STATUS_NEED_INIT（空卡）
+     * StatusConstants.CARD_STATUS_INIT_DONE（卡已初始化）
+     * StatusConstants.CARD_STATUS_NEED_INIT_PARTLY（第三方卡，需要部分初始化）
+     * StatusConstants.CARD_STATUS_INIT_DONE_PARTLY（第三方卡，已初始化）
+     *
+     * @param callback 读卡状态改变的回调
+     */
+    public void cardStatus(OnCardStatusCallback callback) {
+        if (mEdenApi != null) {
+            mEdenApi.cardStatus(callback);
+        }
+    }
+
+    /**
+     * 初始化卡片
+     *
+     * @param callback 初始化卡片的回调
+     */
+    public void initCard(OnInitCardCallback callback) {
+        if (mEdenApi != null) {
+            mEdenApi.initCard(callback);
+        }
+    }
+
+    /**
+     * 部分初始化卡片
+     *
+     * @param callback 部分初始化卡片的回调
+     */
+    public void initCardPartly(int initCount, OnInitCardCallback callback) {
+        if (mEdenApi != null) {
+            mEdenApi.initCardPartly(initCount, callback);
+        }
+    }
+
+    /**
+     * 发卡
+     *
+     * @param device    发卡器
+     * @param deviceIds 发送钥匙对应的设备ID
+     * @param callback  回调
+     */
+    public void addCard(Device device, String[] deviceIds, OnAddCardCallback callback) {
+        if (mEdenApi != null) {
+            mEdenApi.addCard(device, deviceIds, callback);
+        }
+    }
+
+    /**
+     * 清空卡片
+     *
+     * @param callback 回调
+     */
+    public void clearCard(OnClearCardCallback callback) {
+        if (mEdenApi != null) {
+            mEdenApi.clearCard(callback);
+        }
+    }
+
+    public void disConnect(Device device) {
+        if (mEdenApi != null) {
+            mEdenApi.disConnect(device);
+        }
+    }
 }

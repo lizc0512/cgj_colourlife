@@ -77,10 +77,10 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:background="@drawable/shape_key_leftbottom_select"
+                    android:background="@drawable/shape_key_leftbottom"
                     android:gravity="center"
                     android:text="月"
-                    android:textColor="@color/white"
+                    android:textColor="@color/color_999faa"
                     android:textSize="@dimen/font_12sp" />
 
                 <TextView
@@ -100,10 +100,10 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:background="@drawable/shape_key_rightbottom"
+                    android:background="@drawable/shape_key_rightbottom_select"
                     android:gravity="center"
                     android:text="日"
-                    android:textColor="@color/color_999faa"
+                    android:textColor="@color/white"
                     android:textSize="@dimen/font_12sp" />
 
             </LinearLayout>
@@ -152,10 +152,10 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:background="@drawable/shape_key_leftbottom_select"
+                    android:background="@drawable/shape_key_leftbottom"
                     android:gravity="center"
                     android:text="月"
-                    android:textColor="@color/white"
+                    android:textColor="@color/color_999faa"
                     android:textSize="@dimen/font_12sp" />
 
                 <TextView
@@ -175,10 +175,10 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:background="@drawable/shape_key_rightbottom"
+                    android:background="@drawable/shape_key_rightbottom_select"
                     android:gravity="center"
                     android:text="日"
-                    android:textColor="@color/color_999faa"
+                    android:textColor="@color/white"
                     android:textSize="@dimen/font_12sp" />
 
             </LinearLayout>
@@ -228,10 +228,10 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:background="@drawable/shape_key_leftbottom_select"
+                    android:background="@drawable/shape_key_leftbottom"
                     android:gravity="center"
                     android:text="月"
-                    android:textColor="@color/white"
+                    android:textColor="@color/color_999faa"
                     android:textSize="@dimen/font_12sp" />
 
                 <TextView
@@ -251,10 +251,10 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:background="@drawable/shape_key_rightbottom"
+                    android:background="@drawable/shape_key_rightbottom_select"
                     android:gravity="center"
                     android:text="日"
-                    android:textColor="@color/color_999faa"
+                    android:textColor="@color/white"
                     android:textSize="@dimen/font_12sp" />
 
             </LinearLayout>

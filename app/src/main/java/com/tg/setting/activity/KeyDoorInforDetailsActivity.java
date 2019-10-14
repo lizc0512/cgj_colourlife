@@ -13,7 +13,7 @@ import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.view.dialog.DialogFactory;
 import com.tg.setting.model.KeyDoorModel;
 
-import static com.tg.setting.activity.KeyAddDoorActivity.COMMUNITY_UUID;
+import static com.tg.setting.activity.KeySendKeyListActivity.COMMUNITY_UUID;
 import static com.tg.setting.activity.KeySendKeyListActivity.DOOR_ID;
 
 /**
@@ -98,7 +98,7 @@ public class KeyDoorInforDetailsActivity extends BaseActivity implements HttpRes
         accessId = intent.getStringExtra(DOOR_ID);
         deviceId = intent.getStringExtra(KeySendKeyListActivity.DEVICE_ID);
         accessName = intent.getStringExtra(KeySendKeyListActivity.KEY_CONTENT);
-        communityUuid = intent.getStringExtra(KeySendKeyListActivity.COMMUNITY_UUID);
+        communityUuid = intent.getStringExtra(COMMUNITY_UUID);
         communityName = intent.getStringExtra(KeySendKeyListActivity.COMMUNITY_NAME);
         doorMac = intent.getStringExtra(DOOR_MAC);
         doorInstallTime = intent.getStringExtra(DOOR_INSTALL_TIME);
@@ -121,7 +121,7 @@ public class KeyDoorInforDetailsActivity extends BaseActivity implements HttpRes
         switch (v.getId()) {
             case R.id.tv_send:
                 Intent i = new Intent(this, KeySendKeyListActivity.class);
-                i.putExtra(KeySendKeyListActivity.COMMUNITY_UUID, communityUuid);
+                i.putExtra(COMMUNITY_UUID, communityUuid);
                 i.putExtra(KeySendKeyListActivity.COMMUNITY_NAME, communityName);
                 i.putExtra(KeySendKeyListActivity.FORM_SOURCE, 0);
                 i.putExtra(DOOR_ID, accessId);
@@ -134,7 +134,7 @@ public class KeyDoorInforDetailsActivity extends BaseActivity implements HttpRes
                 intent.putExtra(KeySendKeyListActivity.DEVICE_ID, deviceId);
                 intent.putExtra(KeySendKeyListActivity.KEY_CONTENT, accessName);
                 intent.putExtra(KeySendKeyListActivity.FORM_SOURCE, 0);
-                intent.putExtra(KeySendKeyListActivity.COMMUNITY_UUID, communityUuid);
+                intent.putExtra(COMMUNITY_UUID, communityUuid);
                 intent.putExtra(KeySendKeyListActivity.COMMUNITY_NAME, communityName);
                 startActivity(intent);
                 break;

@@ -50,6 +50,7 @@ public class KeyDoorUserDetailsActivity extends BaseActivity implements HttpResp
     private TextView tv_door_identify;
     private TextView tv_door_phone;
     private TextView tv_username_phone;
+    private TextView tv_username_address;
     private TextView tv_door_name;
     private TextView tv_door_date;
     private TextView tv_send_key;
@@ -78,6 +79,7 @@ public class KeyDoorUserDetailsActivity extends BaseActivity implements HttpResp
         tv_door_username = findViewById(R.id.tv_door_username);
         tv_door_identify = findViewById(R.id.tv_door_identify);
         tv_door_phone = findViewById(R.id.tv_door_phone);
+        tv_username_address = findViewById(R.id.tv_username_address);
         tv_username_phone = findViewById(R.id.tv_username_phone);
         tv_door_name = findViewById(R.id.tv_door_name);
         tv_door_date = findViewById(R.id.tv_door_date);
@@ -109,6 +111,7 @@ public class KeyDoorUserDetailsActivity extends BaseActivity implements HttpResp
         Intent intent = getIntent();
         accessName = intent.getStringExtra(KeySendKeyListActivity.KEY_CONTENT);
         deviceId = intent.getStringExtra(KeySendKeyListActivity.DEVICE_ID);
+        String communityName = intent.getStringExtra(KeySendKeyListActivity.COMMUNITY_NAME);
         contentBean = (KeyByAccessEntity.ContentBeanX.ContentBean) intent.getSerializableExtra(KEYUSERDETAILS);
         status = contentBean.getStatus();
         accessId = contentBean.getId();
@@ -148,6 +151,7 @@ public class KeyDoorUserDetailsActivity extends BaseActivity implements HttpResp
         sb.append(StringUtils.getHandlePhone(contentBean.getToPhone()));
         tv_username_phone.setText(sb.toString());
         tv_door_name.setText(accessName);
+        tv_username_address.setText(communityName+contentBean.getHomeLoc());
         String endTime = contentBean.getEndTime();
         if (!TextUtils.isEmpty(endTime)) {
             StringBuffer stringBuffer = new StringBuffer();

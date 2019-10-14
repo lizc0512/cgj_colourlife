@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -49,6 +50,7 @@ public class KeyDeviceAdapter extends BaseAdapter {
             holder = new ViewHolder();
             convertView = LayoutInflater.from(mContext).inflate(R.layout.item_key_bind_door, parent, false);
             holder.ll_item = convertView.findViewById(R.id.ll_item);
+            holder.iv = convertView.findViewById(R.id.iv);
             holder.tv_door = convertView.findViewById(R.id.tv_door);
             holder.tv_type = convertView.findViewById(R.id.tv_type);
             holder.tv_mac = convertView.findViewById(R.id.tv_mac);
@@ -80,6 +82,7 @@ public class KeyDeviceAdapter extends BaseAdapter {
                     break;
                 case Device.LOCK_VERSION_CARDREADER:
                     deviceType = "发卡器";
+                    holder.iv.setImageResource(R.drawable.ic_send_card_sign);
                     break;
                 case Device.LOCK_VERSION_HELMINTH:
                     deviceType = "八爪鱼";
@@ -127,6 +130,7 @@ public class KeyDeviceAdapter extends BaseAdapter {
 
     public class ViewHolder {
         LinearLayout ll_item;
+        ImageView iv;
         TextView tv_door;
         TextView tv_type;
         TextView tv_mac;

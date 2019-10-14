@@ -118,6 +118,18 @@
             android:textColor="@color/tv_index_color"
             android:textSize="@dimen/font_12sp" />
 
+        <TextView
+            android:id="@+id/tv_send_card"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/ic_key_send_card"
+            android:gravity="center"
+            android:paddingTop="4dp"
+            android:text="发卡器"
+            android:textColor="@color/tv_index_color"
+            android:textSize="@dimen/font_12sp" />
+
 
         <TextView
             android:id="@+id/tv_statistics"

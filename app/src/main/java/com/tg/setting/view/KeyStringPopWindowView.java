@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 
 import com.tg.coloursteward.R;
+import com.tg.setting.activity.CardSenderPhoneActivity;
 import com.tg.setting.activity.KeySendKeyPhoneActivity;
 import com.tg.setting.activity.KeySendKeyQrCodeActivity;
 import com.tg.setting.adapter.KeyStringAdapter;
@@ -91,6 +92,8 @@ public class KeyStringPopWindowView extends PopupWindow {
             ((KeySendKeyPhoneActivity) context).setIdentity(position);
         } else if (context instanceof KeySendKeyQrCodeActivity) {
             ((KeySendKeyQrCodeActivity) context).setIdentity(position);
+        }else if (context instanceof CardSenderPhoneActivity) {
+            ((CardSenderPhoneActivity) context).setIdentity(position);
         }
 
     }

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="140dp"
+    android:layout_marginLeft="@dimen/size_16dp"
+    android:layout_marginTop="@dimen/size_16dp"
+    android:background="@color/white"
+    android:layout_marginRight="@dimen/size_16dp"
+    android:orientation="vertical">
+
+
+
+
+
+    <RelativeLayout
+        android:id="@+id/card_infor_layout"
+        android:layout_width="match_parent"
+        android:background="@drawable/bg_send_card"
+        android:layout_height="96dp">
+
+        <TextView
+            android:id="@+id/tv_card_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="20dp"
+            android:text="ISC00"
+            android:textColor="@color/white"
+            android:textSize="22sp" />
+
+
+        <TextView
+            android:id="@+id/tv_card_mac"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_card_name"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:text="Mac地址:00:81:F9:1D:F1:65"
+            android:textColor="@color/color_ededee"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/tv_card_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:drawablePadding="5dp"
+            android:drawableRight="@drawable/icon_right_arrow_card"
+            android:layout_marginTop="24dp"
+            android:layout_marginRight="10dp"
+            android:text="门禁卡:36"
+            android:textColor="@color/white"
+            android:textSize="14sp" />
+
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:background="@drawable/shape_key_card_device"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_connect_device"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="连接发卡器"
+            android:textColor="@color/color_626B77"
+            android:textSize="14sp" />
+        <View
+            android:layout_width="1px"
+            android:background="@color/line_color"
+            android:layout_height="match_parent"
+            />
+
+        <TextView
+            android:id="@+id/tv_delete_device"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="删除发卡器"
+            android:textColor="@color/color_626B77"
+            android:textSize="14sp" />
+    </LinearLayout>
+</LinearLayout>

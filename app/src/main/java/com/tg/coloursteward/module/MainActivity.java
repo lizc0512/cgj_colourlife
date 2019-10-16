@@ -596,8 +596,9 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
                     if (!TextUtils.isEmpty(urlImg)) {
                         download(urlImg);
                     }
+                } else {
+                    Tools.saveStringValue(MainActivity.this, Contants.storage.HomePageAd, "");
                 }
-
             }
         }
     }

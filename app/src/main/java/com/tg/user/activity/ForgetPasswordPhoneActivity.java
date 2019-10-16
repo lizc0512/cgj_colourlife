@@ -163,8 +163,8 @@ public class ForgetPasswordPhoneActivity extends BaseActivity implements HttpRes
             case R.id.btn_reset_pawd:
                 String smsCode = edit_smscode.getText().toString().trim();
                 String pawd = edit_pawd.getText().toString().trim();
-                if (6 > pawd.length()) {
-                    ToastUtil.showLoginToastCenter(this, "请输入6-18位密码");
+                if (!StringUtils.checkPwdType(pawd)) {
+                    ToastUtil.showLoginToastCenter(this, "请设置8-18位字母+数字密码");
                     break;
                 }
                 SoftKeyboardUtils.showORhideSoftKeyboard(ForgetPasswordPhoneActivity.this);

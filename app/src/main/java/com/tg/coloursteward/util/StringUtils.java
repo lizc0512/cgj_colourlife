@@ -1,14 +1,14 @@
 package com.tg.coloursteward.util;
 
+import android.content.Context;
+import android.telephony.TelephonyManager;
+import android.util.Log;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import android.content.Context;
-import android.telephony.TelephonyManager;
-import android.util.Log;
 
 public class StringUtils {
     /**
@@ -74,7 +74,7 @@ public class StringUtils {
     /**
      * 检查身份证是否合法
      *
-     * @param ID身份证
+     * @param identityno ID身份证
      * @return
      */
     public static boolean checkID(String identityno) {
@@ -82,6 +82,19 @@ public class StringUtils {
         Pattern pattern = Pattern.compile(checkID);
 
         Matcher matcher = pattern.matcher(identityno);
+        return matcher.matches();
+
+    }
+
+    /**
+     * 判断密码只能由数字和字母组成
+     * @param password
+     * @return
+     */
+    public static boolean checkPwdType(String password) {
+        String checkID = "^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,18}$";
+        Pattern pattern = Pattern.compile(checkID);
+        Matcher matcher = pattern.matcher(password);
         return matcher.matches();
 
     }
@@ -282,5 +295,6 @@ public class StringUtils {
             return mobile;
         }
     }
+
 
 }

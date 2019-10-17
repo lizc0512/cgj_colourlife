@@ -65,7 +65,7 @@
         android:layout_marginTop="30dp"
         android:background="@null"
         android:gravity="center_vertical"
-        android:hint="请重置8-18位密码"
+        android:hint="请设置8-18位字母+数字密码"
         android:inputType="textPassword"
         android:maxLength="18"
         android:maxLines="1"

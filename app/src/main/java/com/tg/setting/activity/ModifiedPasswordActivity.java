@@ -15,7 +15,9 @@ import com.tg.coloursteward.database.SharedPreferencesTools;
 import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.MD5;
+import com.tg.coloursteward.util.SoftKeyboardUtils;
 import com.tg.coloursteward.util.StringUtils;
+import com.tg.coloursteward.util.ToastUtil;
 import com.tg.coloursteward.view.dialog.ToastFactory;
 import com.tg.user.model.UserModel;
 
@@ -49,20 +51,21 @@ public class ModifiedPasswordActivity extends BaseActivity implements HttpRespon
         pwd2 = editPwd2.getText().toString();
         pwd3 = editPwd3.getText().toString();
         if (v.getId() == R.id.right_layout) {
+            SoftKeyboardUtils.hideSoftKeyboard(this, editPwd1);
             if (TextUtils.isEmpty(pwd1)) {
                 ToastFactory.showToast(this, "请输入旧密码");
                 return false;
             }
             if (!StringUtils.checkPwdType(pwd2)) {
-                ToastFactory.showToast(this, "请输入8-18位字母+数字新密码");
+                ToastUtil.showShortToast(this, "请输入8-18位字母+数字新密码");
                 return false;
             }
             if (!StringUtils.checkPwdType(pwd3)) {
-                ToastFactory.showToast(this, "请输入8-18位字母+数字确认密码");
+                ToastUtil.showShortToast(this, "请输入8-18位字母+数字确认密码");
                 return false;
             }
             if (!pwd2.equals(pwd3)) {
-                ToastFactory.showToast(this, "确认密码和密码不一致");
+                ToastUtil.showShortToast(this, "确认密码和密码不一致");
                 return false;
             }
             try {

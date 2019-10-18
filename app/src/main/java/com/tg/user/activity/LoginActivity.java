@@ -600,7 +600,12 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
 
             @Override
             public void gt3DialogOnError(String s) {
-                gt3GeetestUtils.cancelAllTask();
+                if ("205".equals(s)) {
+                    gt3GeetestUtils.gt3TestFinish();
+                    login(account, getPawdMD5(), loginType);
+                } else {
+                    gt3GeetestUtils.cancelAllTask();
+                }
             }
         });
         //设置是否可以点击屏幕边缘关闭验证码

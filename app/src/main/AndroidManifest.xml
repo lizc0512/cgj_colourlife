@@ -274,10 +274,6 @@
         <activity
             android:name=".activity.PublicAccountTransferToColleagueActivity"
             android:label="@string/app_name" />
-        <!-- H5调原生 -->
-        <activity
-            android:name=".activity.RedpacketsTransferToColleagueH5Activity"
-            android:label="@string/app_name" />
         <activity
             android:name=".czy.ColourLifeEntryActivity"
             android:exported="true"

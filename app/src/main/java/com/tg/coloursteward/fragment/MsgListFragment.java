@@ -31,6 +31,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
+import com.jcodecraeer.xrecyclerview.progressindicator.AVLoadingIndicatorView;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.adapter.HomeDialogAdapter;
 import com.tg.coloursteward.baseModel.HttpResponse;
@@ -375,23 +376,21 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
         recyclerView.setLayoutManager(mLinearLayoutManager);
         mMessageAdapter = new MessageAdapter(getActivity());
         mEmptyView = (LinearLayout) rootView.findViewById(R.id.message_empty_view);
+        recyclerView.setRefreshProgressStyle(AVLoadingIndicatorView.BallPulse);
         recyclerView.setAdapter(mMessageAdapter);
+        recyclerView.setLoadingMoreEnabled(false);
         recyclerView.setLoadingListener(new XRecyclerView.LoadingListener() {
             @Override
             public void onRefresh() {
-                //refresh data here
                 mHandler.removeMessages(RELOGIN_HUXIN_SERVER);
                 mHandler.sendEmptyMessageDelayed(RELOGIN_HUXIN_SERVER, 1000);
-                recyclerView.refreshComplete();
+                new Handler().postDelayed(() -> recyclerView.refreshComplete(), 1000);
             }
 
             @Override
             public void onLoadMore() {
-                // load more data here
             }
         });
-        recyclerView.setLoadingMoreEnabled(false);
-
         mMessageAdapter.registerAdapterDataObserver(mEmpty);
 
         mMessageAdapter.setOnItemClickListener(new MessageAdapter.OnItemClickListener() {
@@ -428,7 +427,12 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
         mMessageAdapter.setOnLongItemClickListener(new MessageAdapter.OnItemLongClickListener() {
             @Override
             public void onItemLongClick(View v, ExCacheMsgBean bean) {
-                topPopUp(v, bean, bean.getPushMsg().getApp_uuid());
+                if (bean.getUiType() == MessageAdapter.ADAPTER_TYPE_SINGLE
+                        || bean.getUiType() == MessageAdapter.ADAPTER_TYPE_GROUP) {
+                    topPopUp(v, bean, "");
+                } else {//公告审批置顶
+                    topPopUp(v, bean, bean.getPushMsg().getApp_uuid());
+                }
             }
         });
 
@@ -500,7 +504,7 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
         TextView tv_del = view.findViewById(R.id.tv_del);
         TextView tv_top = view.findViewById(R.id.tv_top);
         RelativeLayout rl_del = view.findViewById(R.id.rl_del);
-        if ("tzgg".equals(bean.getPushMsg().getApp_id())) {
+        if (null != bean.getPushMsg() && "tzgg".equals(bean.getPushMsg().getApp_id())) {
             rl_del.setVisibility(View.GONE);
         }
         String targetUuid = bean.getTargetUuid();

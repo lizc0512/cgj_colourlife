@@ -124,8 +124,6 @@ import cn.sharesdk.onekeyshare.OnekeyShare;
 import cn.sharesdk.wechat.friends.Wechat;
 import cn.sharesdk.wechat.moments.WechatMoments;
 
-import static com.tg.coloursteward.activity.RedpacketsTransferToColleagueH5Activity.Failed_MESSAGE;
-
 /**
  * 浏览器BaseActivity
  *
@@ -192,6 +190,7 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
     private String shareUrl;
     private String shareImg;
     private String shareContent;
+    private String Failed_MESSAGE = "failed_message";
     protected static final FrameLayout.LayoutParams COVER_SCREEN_PARAMS = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
@@ -799,18 +798,6 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
         }
 
         /**
-         * 支付页面
-         *
-         * @param oa_username
-         */
-        @JavascriptInterface
-        public void PostTransfer(String oa_username) {
-            Intent intent = new Intent(MyBrowserActivity.this, RedpacketsTransferToColleagueH5Activity.class);
-            intent.putExtra(RedpacketsTransferToColleagueH5Activity.OA_USERNAME, oa_username);
-            startActivity(intent);
-        }
-
-        /**
          * 调起第三方授权登录
          *
          * @param json
@@ -1244,31 +1231,30 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
             String fileUrl = Helper.getFileAbsolutePath(
                     MyBrowserActivity.this, uri);
             String fileName = fileUrl.substring(fileUrl.lastIndexOf("/") + 1, fileUrl.length());
-            try {
-                // 选择文件
-                String encodeBase64File = encodeBase64File(fileUrl);
-                double fileOrFilesSize = FileSizeUtil.getFileOrFilesSize(fileUrl, FileSizeUtil.SIZETYPE_B);
-                final JSONObject jsonObject = new JSONObject();
-                JSONObject content = new JSONObject();
-                content.put("fileName", fileName);
-                content.put("encodeBase64File", encodeBase64File);
-                jsonObject.put("content", content);
-                jsonObject.put("code", "0");
-                jsonObject.put("message", "file");
-                jsonObject.put("length", fileOrFilesSize);
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Log.d(TAG, "jsonObject.toString()=" + jsonObject.toString());
+            // 选择文件
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        String encodeBase64File = encodeBase64File(fileUrl);
+                        double fileOrFilesSize = FileSizeUtil.getFileOrFilesSize(fileUrl, FileSizeUtil.SIZETYPE_B);
+                        final JSONObject jsonObject = new JSONObject();
+                        JSONObject content = new JSONObject();
+                        content.put("fileName", fileName);
+                        content.put("encodeBase64File", encodeBase64File);
+                        jsonObject.put("content", content);
+                        jsonObject.put("code", "0");
+                        jsonObject.put("message", "file");
+                        jsonObject.put("length", fileOrFilesSize);
                         webView.loadUrl("javascript:UploadCallBack('"
                                 + jsonObject.toString() + "')");
+                    } catch (Exception e) {
+                        ToastFactory.showToast(MyBrowserActivity.this, e.getMessage());
+                        e.printStackTrace();
                     }
-                });
-                Log.e(TAG, jsonObject.toString());
-            } catch (Exception e) {
-                ToastFactory.showToast(MyBrowserActivity.this, e.getMessage());
-                e.printStackTrace();
-            }
+
+                }
+            });
         } else if (requestCode == OLD_FILE_SELECT_CODE
                 && resultCode == Activity.RESULT_OK) {
             Uri uri = data.getData();

@@ -2,7 +2,6 @@ package com.tg.coloursteward.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Message;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
@@ -21,8 +20,6 @@ import com.tg.coloursteward.info.PublicAccountSearchInfo;
 import com.tg.coloursteward.model.BonusModel;
 import com.tg.coloursteward.net.GetTwoRecordListener;
 import com.tg.coloursteward.net.HttpTools;
-import com.tg.coloursteward.net.RequestConfig;
-import com.tg.coloursteward.net.RequestParams;
 import com.tg.coloursteward.net.ResponseData;
 import com.tg.coloursteward.serice.AuthAppService;
 import com.tg.coloursteward.util.StringUtils;
@@ -34,8 +31,6 @@ import com.tg.coloursteward.view.dialog.ToastFactory;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.regex.Matcher;
@@ -186,42 +181,6 @@ public class PublicAccountSearchActivity extends BaseActivity implements HttpRes
 
     }
 
-    @Override
-    public void onSuccess(Message msg, String jsonString, String hintString) {
-        super.onSuccess(msg, jsonString, hintString);
-        int code = HttpTools.getCode(jsonString);
-        String message = HttpTools.getMessageString(jsonString);
-        if (msg.arg1 == HttpTools.GET_ORG_PAGE) {//组织架构
-            if (code == 0) {
-                String content = HttpTools.getContentString(jsonString);
-                if (StringUtils.isNotEmpty(content)) {
-                    ResponseData data = HttpTools.getResponseKey(content, "list");
-                    if (data.length > 0) {
-                        mListView.setVisibility(View.VISIBLE);
-                        listviewHistory.setVisibility(View.GONE);
-                        PublicAccountSearchInfo info;
-                        for (int i = 0; i < data.length; i++) {
-                            if (!data.getString(i, "name").equals(name)) {
-                                info = new PublicAccountSearchInfo();
-                                info.SearchStr = data.getString(i, "name");
-                                info.uuid = data.getString(i, "uuid");
-                                listOrg.add(info);
-                            }
-                        }
-                        adapter2.notifyDataSetChanged();
-                    } else {
-                        ToastFactory.showBottomToast(PublicAccountSearchActivity.this, "未找到该账户信息");
-                        mListView.setVisibility(View.GONE);
-                        listviewHistory.setVisibility(View.VISIBLE);
-                    }
-                }
-            } else {
-                ToastFactory.showBottomToast(PublicAccountSearchActivity.this, message);
-            }
-        }
-
-    }
-
     /**
      * 判断是否有中文
      *
@@ -244,15 +203,7 @@ public class PublicAccountSearchActivity extends BaseActivity implements HttpRes
      * @param s
      */
     private void getOrgPageInfo(String s) {
-        try {
-            s = URLEncoder.encode(s, "UTF-8");
-            RequestConfig config = new RequestConfig(this, HttpTools.GET_ORG_PAGE);
-            RequestParams params = new RequestParams();
-            params.put("keyword", s);
-            HttpTools.httpGet(Contants.URl.URL_ICETEST, "/org/page", config, params);
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+        bonusModel.getSearchDgzhWordList(1, s, this);
     }
 
     /**
@@ -388,6 +339,31 @@ public class PublicAccountSearchActivity extends BaseActivity implements HttpRes
                     }
                 }
                 break;
+            case 1:
+                if (!TextUtils.isEmpty(result)) {
+                    String content = HttpTools.getContentString(result);
+                    if (!TextUtils.isEmpty(content)) {
+                        ResponseData data = HttpTools.getResponseKey(content, "list");
+                        if (data.length > 0) {
+                            mListView.setVisibility(View.VISIBLE);
+                            listviewHistory.setVisibility(View.GONE);
+                            PublicAccountSearchInfo info;
+                            for (int i = 0; i < data.length; i++) {
+                                if (!data.getString(i, "name").equals(name)) {
+                                    info = new PublicAccountSearchInfo();
+                                    info.SearchStr = data.getString(i, "name");
+                                    info.uuid = data.getString(i, "uuid");
+                                    listOrg.add(info);
+                                }
+                            }
+                            adapter2.notifyDataSetChanged();
+                        } else {
+                            ToastFactory.showBottomToast(PublicAccountSearchActivity.this, "未找到该账户信息");
+                            mListView.setVisibility(View.GONE);
+                            listviewHistory.setVisibility(View.VISIBLE);
+                        }
+                    }
+                }
         }
     }
 }

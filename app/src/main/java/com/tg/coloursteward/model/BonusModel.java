@@ -29,6 +29,7 @@ public class BonusModel extends BaseModel {
     private String popWindowUrl = "/jxjjb/userjjb/detail";
     private String dgzhListUrl = "/dgzh/account/search4web";
     private String searchDgzhUrl = "/dgzh/account/search4web";
+    private String searchDgzhWordUrl = "/org/page";
 
     public BonusModel(Context context) {
         super(context);
@@ -126,6 +127,39 @@ public class BonusModel extends BaseModel {
             params.put("familyUuid", s);
         }
         final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 4, searchDgzhUrl), RequestMethod.POST);
+        request(what, request, RequestEncryptionUtils.getIceMap(mContext, params), new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    int code = showSuccesResultMessage(result);
+                    if (code == 0) {
+                        httpResponse.OnHttpResponse(what, result);
+                    }
+                } else {
+                    showErrorCodeMessage(response);
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+                showExceptionMessage(what, response);
+            }
+        }, true, false);
+    }
+
+    /**
+     * 搜索对公账户架构中文搜索
+     *
+     * @param what
+     * @param s
+     * @param httpResponse
+     */
+    public void getSearchDgzhWordList(int what, String s, HttpResponse httpResponse) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("keyword", s);
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 4, searchDgzhWordUrl), RequestMethod.GET);
         request(what, request, RequestEncryptionUtils.getIceMap(mContext, params), new HttpListener<String>() {
             @Override
             public void onSucceed(int what, Response<String> response) {

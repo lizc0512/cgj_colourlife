@@ -139,7 +139,6 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
     public static final String ACTION_FRESH_USERINFO = "com.tg.coloursteward.ACTION_FRESH_USERINFO";
     public static final String ACTION_TICKET_INFO = "com.tg.coloursteward.ACTION_TICKET_INFO";
     public static final String ACTION_HOME_DELETEINFO = "com.tg.coloursteward.ACTION_HOME_DELETEINFO";
-    public static final String ACTION_ACCOUNT_INFO = "com.tg.coloursteward.ACTION_ACCOUNT_INFO";
     public static final String ACTION_READ_MESSAGEINFO = "com.tg.coloursteward.ACTION_READ_MESSAGEINFO";
     public static final String ACTION_UPDATE_PUSHINFO = "com.tg.coloursteward.ACTION_UPDATE_PUSHINFO";
     public static final String JUMPOTHERURL = "jumpotherurl";
@@ -197,8 +196,6 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
                 String source_id = info.source_id;
                 String comefrom = info.comefrom;
                 postDeleteListItem(source_id, comefrom);
-            } else if (action.equals(ACTION_ACCOUNT_INFO)) {//刷新即时分成金额
-                getAccountInfo();
             } else if (action.equals(ACTION_READ_MESSAGEINFO)) {//首页列表消息设置为已读
                 String client_code = intent.getStringExtra("messageId");
                 getReadMessageInfo(client_code);
@@ -767,7 +764,6 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
         filter.addAction(ACTION_FRESH_USERINFO);
         filter.addAction(ACTION_TICKET_INFO);
         filter.addAction(ACTION_HOME_DELETEINFO);
-        filter.addAction(ACTION_ACCOUNT_INFO);
         filter.addAction(ACTION_READ_MESSAGEINFO);
         filter.addAction(ACTION_UPDATE_PUSHINFO);
         registerReceiver(freshReceiver, filter);
@@ -800,16 +796,6 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
     // 检测版本更新
     private void getVersion() {
         settingModel.getUpdate(0, "1", false, this);
-    }
-
-    // 获取即时分成金额
-    private void getAccountInfo() {
-        RequestConfig config = new RequestConfig(this, HttpTools.GET_ACCOUNT_INFO);
-        RequestParams params = new RequestParams();
-        params.put("access_token", "1521ac83521b8063e7a9a49dc22e79b0");
-        params.put("target_type", "2");
-        params.put("target", UserInfo.employeeAccount);
-        HttpTools.httpGet(Contants.URl.URL_ICETEST, "/splitdivide/api/account", config, params);
     }
 
     // 首页列表消息设置为已读

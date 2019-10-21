@@ -48,6 +48,7 @@ public class CardSenderPhoneActivity extends BaseActivity implements HttpRespons
     public static final String DEVICE="device";
     public static final String CARDNUMBER="cardnumber";
     public static final String DEVICEKEYS="devicekeys";
+    public static final String CARDWRITEKEYS="cardwritekeys";
 
     private LinearLayout ll_identity;
     private TextView tv_identity;
@@ -64,6 +65,7 @@ public class CardSenderPhoneActivity extends BaseActivity implements HttpRespons
     private int cardNumber;
     private Device mDevice;
     private ArrayList<String> choiceKeysList;
+    private ArrayList<String> writeKeysList;
     private int isPower = 1;
     private ProgressDialog mProgressDialog;
 
@@ -136,6 +138,7 @@ public class CardSenderPhoneActivity extends BaseActivity implements HttpRespons
         Intent intent = getIntent();
         communityUuid = intent.getStringExtra(COMMUNITY_UUID);
         choiceKeysList = intent.getStringArrayListExtra(DEVICEKEYS);
+        writeKeysList = intent.getStringArrayListExtra(CARDWRITEKEYS);
         mDevice = intent.getParcelableExtra(DEVICE);
         hairpinId = intent.getStringExtra(HAIRPINID);
         cardNumber = intent.getIntExtra(CARDNUMBER, 0);
@@ -159,8 +162,8 @@ public class CardSenderPhoneActivity extends BaseActivity implements HttpRespons
                 }
                 break;
             case 2:
-                String[] deviceIds = new String[choiceKeysList.size()];
-                choiceKeysList.toArray(deviceIds);
+                String[] deviceIds = new String[writeKeysList.size()];
+                writeKeysList.toArray(deviceIds);
                 mLekaiService.addCard(mDevice, deviceIds, new OnAddCardCallback() {
                     @Override
                     public void onAddCardCallback(final int status, final String message) {

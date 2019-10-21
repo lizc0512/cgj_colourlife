@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,35 +64,38 @@ public class BagCardSenderFragment extends Fragment implements HttpResponse {
     }
 
     private void getKeyList() {
-        userModel.getKeyList(0, communityUuid, keyPage, 20, this);
+        userModel.getKeyList(0, communityUuid,"ISE", keyPage, 20, this);
     }
 
 
     @Override
     public void OnHttpResponse(int what, String result) {
         if (what == 0) {
-            try {
-                KeyBagsEntity keyBagsEntity = GsonUtils.gsonToBean(result, KeyBagsEntity.class);
-                if (keyPage == 1) {
-                    keyList.clear();
+            int totalRecord = 0;
+            if (!TextUtils.isEmpty(result)) {
+                try {
+                    KeyBagsEntity keyBagsEntity = GsonUtils.gsonToBean(result, KeyBagsEntity.class);
+                    if (keyPage == 1) {
+                        keyList.clear();
+                    }
+                    KeyBagsEntity.ContentBeanX contentBeanX = keyBagsEntity.getContent();
+                    totalRecord = contentBeanX.getTotalRecord();
+                    keyList.addAll(contentBeanX.getContent());
+                    ((CardSenderActivity) getActivity()).initTotalKeys(totalRecord);
+                } catch (Exception e) {
+                    ((CardSenderActivity) getActivity()).initTotalKeys(0);
                 }
-                KeyBagsEntity.ContentBeanX contentBeanX=     keyBagsEntity.getContent();
-                ((CardSenderActivity)getActivity()).initTotalKeys(contentBeanX.getTotalRecord());
-                keyList.addAll(contentBeanX.getContent());
                 boolean keyDataEmpty = keyList.size() == 0;
-                int totalRecord = keyBagsEntity.getContent().getTotalRecord();
                 boolean hasMore = totalRecord > keyList.size();
                 rv_card.loadMoreFinish(keyDataEmpty, hasMore);
                 cardKeysBagAdapter.setCheckIdList(choiceIDList);
-            } catch (Exception e) {
-
             }
         }
     }
 
     private List<String> choiceIDList = new ArrayList<>();
 
-    public  List<String> handBagsChoice(int type) {
+    public List<String> handBagsChoice(int type) {
         if (type == 0) {
             choiceIDList.clear();
         } else {
@@ -101,6 +105,6 @@ public class BagCardSenderFragment extends Fragment implements HttpResponse {
             }
         }
         cardKeysBagAdapter.setCheckIdList(choiceIDList);
-        return  choiceIDList;
+        return choiceIDList;
     }
 }

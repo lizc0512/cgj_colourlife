@@ -3,6 +3,7 @@ package com.tg.user.model;
 import android.content.Context;
 import android.text.TextUtils;
 
+import com.google.gson.JsonObject;
 import com.tg.coloursteward.BuildConfig;
 import com.tg.coloursteward.baseModel.BaseModel;
 import com.tg.coloursteward.baseModel.HttpListener;
@@ -14,6 +15,7 @@ import com.tg.coloursteward.net.DES;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.MD5;
 import com.tg.coloursteward.util.GsonUtils;
+import com.tg.coloursteward.util.ToastUtil;
 import com.tg.coloursteward.util.TokenUtils;
 import com.yanzhenjie.nohttp.BasicBinary;
 import com.yanzhenjie.nohttp.FileBinary;
@@ -23,6 +25,8 @@ import com.yanzhenjie.nohttp.rest.Request;
 import com.yanzhenjie.nohttp.rest.Response;
 
 import org.apache.http.entity.mime.content.FileBody;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.util.HashMap;
@@ -59,7 +63,7 @@ public class UserModel extends BaseModel {
     private String uploadImgUrl = "/avatar";
     private String getCommunityList = "/cgjControl/userRole/getCommunityListByAccountUuid";
     private String getDoorList = "/yuncontrol/ycAccessControl/getAccessByCommunityId";
-    private String getDoorStatusList = "/yuncontrol/ycAccessControl/getAccessByCommunityId";
+    private String getDoorStatusList = "/yuncontrol/ycAccessControl/getAccessControlByStatusAndPage";
     private String getKeyList = "/yuncontrol/ycKeyPackage/getKeyPacksByCommunityId";
     private String addDoor = "/yuncontrol/ycAccessControl/add";
     private String getBuild = "/cgjControl/colourLife/getBuildByCommunityId";
@@ -97,6 +101,11 @@ public class UserModel extends BaseModel {
                 String result = response.get();
                 if (responseCode == RequestEncryptionUtils.responseSuccess) {
                     int code = showSuccesResultMessage(result);
+                    try {
+                        JSONObject jsonObject = new JSONObject(result);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                     if (code == 0) {
                         httpResponse.OnHttpResponse(what, result);
                     } else {
@@ -788,11 +797,12 @@ public class UserModel extends BaseModel {
     }
 
 
-    public void getDoorStatusList(int what, String communityId, int pageNum, int pageSize, final HttpResponse httpResponse) {
+    public void getDoorStatusList(int what, String communityId, String model,int pageNum, int pageSize, final HttpResponse httpResponse) {
         Map<String, Object> params = new HashMap<>();
         params.put("communityId", communityId);
         params.put("pageNum", pageNum);
         params.put("pageSize", pageSize);
+        params.put("model", model);
         final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 11, getDoorStatusList), RequestMethod.GET);
         request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
             @Override
@@ -818,11 +828,14 @@ public class UserModel extends BaseModel {
         }, true, false);
     }
 
-    public void getKeyList(int what, String communityId, int pageNum, int pageSize, final HttpResponse httpResponse) {
+    public void getKeyList(int what, String communityId,String model, int pageNum, int pageSize, final HttpResponse httpResponse) {
         Map<String, Object> params = new HashMap<>();
         params.put("communityId", communityId);
+        params.put("communityId", communityId);
         params.put("pageNum", pageNum);
-        params.put("pageSize", pageSize);
+        if (!TextUtils.isEmpty(model)){
+            params.put("model", model);
+        }
         final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 11, getKeyList), RequestMethod.GET);
         request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
             @Override
@@ -834,15 +847,18 @@ public class UserModel extends BaseModel {
                     if (code == 0) {
                         httpResponse.OnHttpResponse(what, result);
                     } else {
+                        httpResponse.OnHttpResponse(what, "");
                         showErrorCodeMessage(response);
                     }
                 } else {
+                    httpResponse.OnHttpResponse(what, "");
                     showErrorCodeMessage(response);
                 }
             }
 
             @Override
             public void onFailed(int what, Response<String> response) {
+                httpResponse.OnHttpResponse(what, "");
                 showExceptionMessage(what, response);
             }
         }, true, false);

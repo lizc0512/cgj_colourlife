@@ -168,6 +168,16 @@ public class KeyBagsEntity extends BaseContentEntity {
                 private String id;
                 private String accessName;
 
+                public String getDeviceId() {
+                    return deviceId;
+                }
+
+                public void setDeviceId(String deviceId) {
+                    this.deviceId = deviceId;
+                }
+
+                private String deviceId;
+
                 public String getId() {
                     return id;
                 }

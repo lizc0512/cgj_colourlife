@@ -85,15 +85,19 @@ public class SendCardModel extends BaseModel {
                         httpResponse.OnHttpResponse(what, result);
                     } else {
                         showErrorCodeMessage(response);
+                        httpResponse.OnHttpResponse(what,"");
                     }
                 } else {
                     showErrorCodeMessage(response);
+                    httpResponse.OnHttpResponse(what,"");
                 }
+
             }
 
             @Override
             public void onFailed(int what, Response<String> response) {
                 showExceptionMessage(what, response);
+                httpResponse.OnHttpResponse(what,"");
             }
         }, true, false);
     }
@@ -189,10 +193,10 @@ public class SendCardModel extends BaseModel {
         }, true, false);
     }
 
-    public void getCardByHairpinIdList(int what, String hairpinId, String cardNum, int pageNum, boolean isLoading, final HttpResponse httpResponse) {
+    public void getCardByHairpinIdList(int what, String hairpinId, String keyWord, int pageNum, boolean isLoading, final HttpResponse httpResponse) {
         Map<String, Object> params = new HashMap<>();
         params.put("hairpinId", hairpinId);
-        params.put("cardNum", cardNum);
+        params.put("keyWord", keyWord);
         params.put("pageNum", pageNum);
         params.put("pageSize", 20);
         final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 11, getCardByHairpinIdListUrl), RequestMethod.GET);

@@ -32,14 +32,17 @@ import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.util.GsonUtils;
 import com.tg.setting.adapter.ViewPagerAdapter;
 import com.tg.setting.entity.CardAccessInforEntity;
+import com.tg.setting.entity.KeyBagsEntity;
 import com.tg.setting.fragment.BagCardSenderFragment;
 import com.tg.setting.fragment.KeyCardSenderFragment;
 import com.tg.setting.model.SendCardModel;
 import com.tg.setting.service.LekaiService;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import static com.tg.setting.activity.KeySendKeyListActivity.COMMUNITY_UUID;
 
@@ -48,7 +51,7 @@ import static com.tg.setting.activity.KeySendKeyListActivity.COMMUNITY_UUID;
 
 
  */
-public class CardSenderActivity extends BaseActivity implements HttpResponse, View.OnClickListener, OnCardStatusCallback {
+public class CardSenderActivity extends BaseActivity implements HttpResponse, OnCardStatusCallback {
 
     private ImageView iv_card_status;
     private TextView tv_card_status;
@@ -108,7 +111,7 @@ public class CardSenderActivity extends BaseActivity implements HttpResponse, Vi
         bindService(intent, mConn, Context.BIND_AUTO_CREATE);
     }
 
-    private boolean isClick;
+    private boolean isClick = true;
 
     private void initView() {
         iv_card_status = findViewById(R.id.iv_card_status);
@@ -121,21 +124,116 @@ public class CardSenderActivity extends BaseActivity implements HttpResponse, Vi
         tv_choice_key = findViewById(R.id.tv_choice_key);
         all_key_layout = findViewById(R.id.all_key_layout);
         iv_key_check = findViewById(R.id.iv_key_check);
-        tv_send_key.setOnClickListener(this);
-        tv_card_operate.setOnClickListener(this);
+        tv_send_key.setOnClickListener(singleListener);
+        tv_card_operate.setOnClickListener(singleListener);
         mProgressDialog = new ProgressDialog(this);
-        all_key_layout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        all_key_layout.setOnClickListener(singleListener);
+    }
+
+    @Override
+    protected boolean handClickEvent(View v) {
+        switch (v.getId()) {
+            case R.id.tv_card_operate:
+                if (type == 2) {
+                    if (mLekaiService != null) {
+                        mProgressDialog = ProgressDialog.show(this, "", "正在清空卡片……");
+                        if (!TextUtils.isEmpty(cardId)) {
+                            sendCardModel.deleteAllCgjCardRecord(0, cardId, CardSenderActivity.this);
+                        }
+                        mLekaiService.clearCard(new OnClearCardCallback() {
+                            @Override
+                            public void onClearCardCallback(final int status, final String message) {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if (mProgressDialog != null) {
+                                            mProgressDialog.dismiss();
+                                        }
+                                        if (status == ErrorConstants.SUCCESS) {
+                                            tv_card_status.setText("清空卡片成功");
+                                        } else {
+                                            tv_card_status.setText(message);
+                                        }
+                                    }
+                                });
+                            }
+                        });
+                    }
+                } else {
+                    if (mLekaiService != null) {
+                        if (mCardStatus == StatusConstants.CARD_STATUS_NEED_INIT) {
+                            mProgressDialog = ProgressDialog.show(this, "", "正在初始化卡片……");
+                            mLekaiService.initCard(new OnInitCardCallback() {
+                                @Override
+                                public void onInitCardCallback(final int status, final String message) {
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            if (mProgressDialog != null) {
+                                                mProgressDialog.dismiss();
+                                            }
+                                            if (status == ErrorConstants.SUCCESS) {
+                                                tv_card_status.setText("初始化卡片成功");
+                                            } else {
+                                                tv_card_status.setText(message);
+                                            }
+                                        }
+                                    });
+
+                                }
+                            });
+                        } else if (mCardStatus == StatusConstants.CARD_STATUS_NEED_INIT_PARTLY) {
+                            mProgressDialog = ProgressDialog.show(this, "", "正在部分初始化卡片……");
+                            mLekaiService.initCardPartly(mInitCount, new OnInitCardCallback() {
+                                @Override
+                                public void onInitCardCallback(final int status, final String message) {
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            if (mProgressDialog != null) {
+                                                mProgressDialog.dismiss();
+                                            }
+                                            if (status == ErrorConstants.SUCCESS) {
+                                                tv_card_status.setText("部分初始化卡片成功");
+                                            } else {
+                                                tv_card_status.setText(message);
+                                            }
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    }
+                }
+                break;
+            case R.id.tv_send_key:
+                if (type == 2) {
+                    if (allChoiceKeyList.size() > 0) {
+                        calCardKeyNumber();
+                        Intent intent = new Intent(CardSenderActivity.this, CardSenderPhoneActivity.class);
+                        intent.putExtra(CardSenderPhoneActivity.DEVICE, mDevice);
+                        intent.putExtra(COMMUNITY_UUID, communityUuid);
+                        intent.putExtra(CardSenderPhoneActivity.CARDNUMBER, cardNumber);
+                        intent.putExtra(CardSenderPhoneActivity.HAIRPINID, hairpinId);
+                        intent.putStringArrayListExtra(CardSenderPhoneActivity.DEVICEKEYS, allChoiceKeyList);
+                        intent.putStringArrayListExtra(CardSenderPhoneActivity.CARDWRITEKEYS, allCardKeyList);
+                        startActivity(intent);
+                    } else {
+                        Toast.makeText(this, "请选择要发送的钥匙", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(this, "未检测到门禁卡", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case R.id.all_key_layout:
                 allChoiceKeyList.clear();
                 if (isClick) {
                     if (bagCardSenderFragment != null) {
-                        allChoiceKeyList.addAll(bagCardSenderFragment.handBagsChoice(1));
+                        bagCardSenderFragment.handBagsChoice(1);
                     }
                     if (bagCardSenderFragment != null) {
-                        allChoiceKeyList.addAll(keyCardSenderFragment.handDoorChoice(1));
+                        keyCardSenderFragment.handDoorChoice(1);
                     }
-                    iv_key_check.setImageResource(R.drawable.icon_checked_key_bag);
                 } else {
                     if (bagCardSenderFragment != null) {
                         bagCardSenderFragment.handBagsChoice(0);
@@ -143,19 +241,12 @@ public class CardSenderActivity extends BaseActivity implements HttpResponse, Vi
                     if (bagCardSenderFragment != null) {
                         keyCardSenderFragment.handDoorChoice(0);
                     }
-                    iv_key_check.setImageResource(R.drawable.icon_unchecked_key_bag);
-                }
-                tv_choice_key.setText("已选:" + allChoiceKeyList.size());
-                if (allChoiceKeyList.size() > 0 && type == 2) {
-                    tv_send_key.setBackgroundResource(R.color.color_1da1f4);
-                    tv_send_key.setEnabled(true);
-                } else {
-                    tv_send_key.setBackgroundResource(R.color.color_d4d9dc);
-                    tv_send_key.setEnabled(false);
                 }
                 isClick = !isClick;
-            }
-        });
+            default:
+                break;
+        }
+        return super.handClickEvent(v);
     }
 
     private int totalKeys;
@@ -165,16 +256,27 @@ public class CardSenderActivity extends BaseActivity implements HttpResponse, Vi
     }
 
 
-    public void setChoiceKeyNumbers(int operate, String accessId) {
+    public void setChoiceKeyNumbers(int operate, String accessId, String deviceId, List<KeyBagsEntity.ContentBeanX.ContentBean.AccessListBean> accessListBeanList) {
         if (operate == 0) {
             if (!allChoiceKeyList.contains(accessId)) {
                 allChoiceKeyList.add(accessId);
+                if (accessListBeanList != null) {
+                    sendCardKeyMap.put(accessId, accessListBeanList);
+                } else {
+                    sendDeviceKeyMap.put(accessId, deviceId);
+                }
             }
         } else {
             if (allChoiceKeyList.contains(accessId)) {
                 allChoiceKeyList.remove(accessId);
+                if (accessListBeanList != null) {
+                    sendCardKeyMap.remove(accessId);
+                } else {
+                    sendDeviceKeyMap.remove(accessId);
+                }
             }
         }
+
         if (allChoiceKeyList.size() > 0 && type == 2) {
             tv_send_key.setBackgroundResource(R.color.color_1da1f4);
             tv_send_key.setEnabled(true);
@@ -193,6 +295,9 @@ public class CardSenderActivity extends BaseActivity implements HttpResponse, Vi
     }
 
     private ArrayList<String> allChoiceKeyList = new ArrayList<>();
+    private Map<String, String> sendDeviceKeyMap = new HashMap<>();
+    private ArrayList<String> allCardKeyList = new ArrayList<>();
+    private Map<String, List<KeyBagsEntity.ContentBeanX.ContentBean.AccessListBean>> sendCardKeyMap = new HashMap<>();
 
 
     private BagCardSenderFragment bagCardSenderFragment;
@@ -212,11 +317,12 @@ public class CardSenderActivity extends BaseActivity implements HttpResponse, Vi
         keyCardSenderFragment = KeyCardSenderFragment.getKeyCardSenderFragment(communityUuid);
         fragmentList.add(bagCardSenderFragment);
         fragmentList.add(keyCardSenderFragment);
-        card_tablayout.setTabMode(TabLayout.MODE_FIXED);
+        card_tablayout.setTabMode(TabLayout.MODE_SCROLLABLE);
+        card_tablayout.setTabIndicatorFullWidth(false);
         card_tablayout.setSelectedTabIndicatorHeight(4);
         card_tablayout.setSelectedTabIndicatorColor(Color.parseColor("#1DA1F4"));
         card_tablayout.setTabTextColors(Color.parseColor("#333b46"), Color.parseColor("#1DA1F4"));
-        card_tablayout.setTabGravity(TabLayout.GRAVITY_FILL);
+        card_tablayout.setTabGravity(TabLayout.GRAVITY_CENTER);
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager(), fragmentList, tabTitleArray);
         card_viewpager.setAdapter(adapter);
         card_viewpager.setOffscreenPageLimit(fragmentList.size());
@@ -351,102 +457,21 @@ public class CardSenderActivity extends BaseActivity implements HttpResponse, Vi
         }
     });
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.tv_card_operate:
-                if (type == 2) {
-                    if (mLekaiService != null) {
-                        mProgressDialog = ProgressDialog.show(this, "", "正在清空卡片……");
-                        if (!TextUtils.isEmpty(cardId)) {
-                            sendCardModel.deleteAllCgjCardRecord(0, cardId, CardSenderActivity.this);
-                        }
-                        mLekaiService.clearCard(new OnClearCardCallback() {
-                            @Override
-                            public void onClearCardCallback(final int status, final String message) {
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        if (mProgressDialog != null) {
-                                            mProgressDialog.dismiss();
-                                        }
-                                        if (status == ErrorConstants.SUCCESS) {
-                                            tv_card_status.setText("清空卡片成功");
-                                        } else {
-                                            tv_card_status.setText(message);
-                                        }
-                                    }
-                                });
-                            }
-                        });
-                    }
-                } else {
-                    if (mLekaiService != null) {
-                        if (mCardStatus == StatusConstants.CARD_STATUS_NEED_INIT) {
-                            mProgressDialog = ProgressDialog.show(this, "", "正在初始化卡片……");
-                            mLekaiService.initCard(new OnInitCardCallback() {
-                                @Override
-                                public void onInitCardCallback(final int status, final String message) {
-                                    runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            if (mProgressDialog != null) {
-                                                mProgressDialog.dismiss();
-                                            }
-                                            if (status == ErrorConstants.SUCCESS) {
-                                                tv_card_status.setText("初始化卡片成功");
-                                            } else {
-                                                tv_card_status.setText(message);
-                                            }
-                                        }
-                                    });
-
-                                }
-                            });
-                        } else if (mCardStatus == StatusConstants.CARD_STATUS_NEED_INIT_PARTLY) {
-                            mProgressDialog = ProgressDialog.show(this, "", "正在部分初始化卡片……");
-                            mLekaiService.initCardPartly(mInitCount, new OnInitCardCallback() {
-                                @Override
-                                public void onInitCardCallback(final int status, final String message) {
-                                    runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            if (mProgressDialog != null) {
-                                                mProgressDialog.dismiss();
-                                            }
-                                            if (status == ErrorConstants.SUCCESS) {
-                                                tv_card_status.setText("部分初始化卡片成功");
-                                            } else {
-                                                tv_card_status.setText(message);
-                                            }
-                                        }
-                                    });
-                                }
-                            });
-                        }
-                    }
+    private void calCardKeyNumber() {
+        allCardKeyList.clear();
+        for (int a = 0; a < allChoiceKeyList.size(); a++) {
+            String cardKey = allChoiceKeyList.get(a);
+            if (sendCardKeyMap.containsKey(cardKey)) {
+                List<KeyBagsEntity.ContentBeanX.ContentBean.AccessListBean> cardList = sendCardKeyMap.get(cardKey);
+                for (KeyBagsEntity.ContentBeanX.ContentBean.AccessListBean accessListBean : cardList) {
+                    allCardKeyList.add(accessListBean.getDeviceId());
                 }
-                break;
-            case R.id.tv_send_key:
-                if (type == 2) {
-                    if (allChoiceKeyList.size() > 0) {
-                        Intent intent = new Intent(CardSenderActivity.this, CardSenderPhoneActivity.class);
-                        intent.putExtra(CardSenderPhoneActivity.DEVICE, mDevice);
-                        intent.putExtra(COMMUNITY_UUID, communityUuid);
-                        intent.putExtra(CardSenderPhoneActivity.CARDNUMBER, cardNumber);
-                        intent.putExtra(CardSenderPhoneActivity.HAIRPINID, hairpinId);
-                        intent.putStringArrayListExtra(CardSenderPhoneActivity.DEVICEKEYS, allChoiceKeyList);
-                        startActivity(intent);
-                    } else {
-                        Toast.makeText(this, "请选择要发送的钥匙", Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    Toast.makeText(this, "未检测到门禁卡", Toast.LENGTH_SHORT).show();
-                }
-                break;
-            default:
-                break;
+            }
+            if (sendDeviceKeyMap.containsKey(cardKey)) {
+                allCardKeyList.add(sendDeviceKeyMap.get(cardKey));
+            }
         }
+
     }
 
 

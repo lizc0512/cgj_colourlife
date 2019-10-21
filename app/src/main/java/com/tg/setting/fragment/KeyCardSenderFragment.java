@@ -8,11 +8,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.util.GsonUtils;
+import com.tg.coloursteward.util.ToastUtil;
 import com.tg.setting.activity.CardSenderActivity;
 import com.tg.setting.adapter.CardKeysDoorAdapter;
 import com.tg.setting.entity.KeyDoorEntity;
@@ -76,10 +76,11 @@ public class KeyCardSenderFragment extends Fragment implements HttpResponse {
                 }
                 totalRecord = content.getTotalRecord();
                 doorList.addAll(content.getContent());
+                ((CardSenderActivity) getActivity()).initTotalKeys(totalRecord);
             } catch (Exception e) {
-
+                ((CardSenderActivity) getActivity()).initTotalKeys(0);
+                ToastUtil.showLongToastCenter(getActivity(), e.getMessage());
             }
-            ((CardSenderActivity)getActivity()).initTotalKeys(totalRecord);
             boolean dataEmpty = doorList.size() == 0;
             boolean hasMore = totalRecord > doorList.size();
             rv_card.loadMoreFinish(dataEmpty, hasMore);
@@ -91,7 +92,7 @@ public class KeyCardSenderFragment extends Fragment implements HttpResponse {
         if (null == userModel) {
             userModel = new UserModel(getActivity());
         }
-        userModel.getDoorStatusList(0, community_uuid, doorPage, 20, this);
+        userModel.getDoorStatusList(0, community_uuid,"ISE" ,doorPage, 20, this);
     }
 
     private List<String> choiceIDList = new ArrayList<>();

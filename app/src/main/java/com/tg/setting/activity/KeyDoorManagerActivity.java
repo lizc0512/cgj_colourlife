@@ -349,15 +349,15 @@ public class KeyDoorManagerActivity extends BaseActivity implements HttpResponse
 
     public void delDeviceCard(String hairpinId, int delPos) {
         this.delPos = delPos;
-        DialogFactory.getInstance().showDoorDialog(KeyDoorManagerActivity.this, new View.OnClickListener() {
+        DialogFactory.getInstance().showDialog(KeyDoorManagerActivity.this, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         //删除
                         SendCardModel sendCardModel = new SendCardModel(KeyDoorManagerActivity.this);
                         sendCardModel.delCgjHairpin(3, hairpinId, KeyDoorManagerActivity.this::OnHttpResponse);
                     }
-                }, null, 0, "是否删除当前发卡器？",
-                null, null);
+                }, null, "是否删除当前发卡器？", null,
+                null);
 
     }
 

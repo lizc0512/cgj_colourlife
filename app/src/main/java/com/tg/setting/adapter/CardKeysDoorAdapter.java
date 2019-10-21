@@ -59,10 +59,10 @@ public class CardKeysDoorAdapter extends RecyclerView.Adapter<CardKeysDoorAdapte
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     checkIdList.add(accessId);
-                    ((CardSenderActivity) mContext).setChoiceKeyNumbers(0, accessId);
+                    ((CardSenderActivity) mContext).setChoiceKeyNumbers(0, accessId,bean.getDeviceId(),null);
                 } else {
                     checkIdList.remove(accessId);
-                    ((CardSenderActivity) mContext).setChoiceKeyNumbers(1, accessId);
+                    ((CardSenderActivity) mContext).setChoiceKeyNumbers(1, accessId,bean.getDeviceId(),null);
                 }
             }
         });

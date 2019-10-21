@@ -55,10 +55,10 @@ public class CardKeysBagAdapter extends RecyclerView.Adapter<CardKeysBagAdapter.
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     checkIdList.add(accessId);
-                    ((CardSenderActivity) mContext).setChoiceKeyNumbers(0,accessId);
+                    ((CardSenderActivity) mContext).setChoiceKeyNumbers(0,accessId,"",bean.getAccessList());
                 } else {
                     checkIdList.remove(accessId);
-                    ((CardSenderActivity) mContext).setChoiceKeyNumbers(1, accessId);
+                    ((CardSenderActivity) mContext).setChoiceKeyNumbers(1, accessId,"",bean.getAccessList());
                 }
 
             }

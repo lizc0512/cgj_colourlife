@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <ImageView
@@ -58,6 +59,9 @@
         android:id="@+id/card_tablayout"
         android:layout_width="match_parent"
         android:layout_marginTop="15dp"
+        android:background="@color/white"
+        app:tabPaddingStart="20dp"
+        app:tabPaddingEnd="20dp"
         android:layout_height="50dp"/>
 
     <android.support.v4.view.ViewPager
@@ -108,10 +112,7 @@
                 android:textSize="16sp"
                 android:text="全选"
                 android:layout_height="wrap_content"/>
-
-
         </LinearLayout>
-
 
         <View
             android:layout_width="0dp"

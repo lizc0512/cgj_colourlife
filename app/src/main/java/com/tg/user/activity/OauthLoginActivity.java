@@ -51,7 +51,7 @@ public class OauthLoginActivity extends BaseActivity {
         String czy_name = intent.getStringExtra("czy_name");
         String czy_portrait = intent.getStringExtra("czy_portrait");
         czy_code = intent.getStringExtra("czy_code");
-        GlideUtils.loadImageView(OauthLoginActivity.this, czy_portrait, iv_head_pic);
+        GlideUtils.loadImageDefaultDisplay(OauthLoginActivity.this, czy_portrait, iv_head_pic, R.drawable.login_logo, R.drawable.login_logo);
         tv_user_name.setText(czy_name);
     }
 

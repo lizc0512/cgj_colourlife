@@ -30,6 +30,7 @@ public class BonusModel extends BaseModel {
     private String dgzhListUrl = "/dgzh/account/search4web";
     private String searchDgzhUrl = "/dgzh/account/search4web";
     private String searchDgzhWordUrl = "/org/page";
+    private String utilityRuleUrl = "/app/home/utility/ruleDeatil";
 
     public BonusModel(Context context) {
         super(context);
@@ -178,6 +179,36 @@ public class BonusModel extends BaseModel {
             @Override
             public void onFailed(int what, Response<String> response) {
                 showExceptionMessage(what, response);
+            }
+        }, true, false);
+    }
+
+    /**
+     * 集体奖金包详情规则
+     *
+     * @param what
+     * @param httpResponse
+     */
+    public void getUtilityRule(int what, HttpResponse httpResponse) {
+        Map<String, Object> params = new HashMap<>();
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(
+                mContext, 0, utilityRuleUrl), RequestMethod.GET);
+
+        request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    int code = showSuccesResultMessageTheme(result);
+                    if (code == 0) {
+                        httpResponse.OnHttpResponse(what, result);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
             }
         }, true, false);
     }

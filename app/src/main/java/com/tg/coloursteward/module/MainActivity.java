@@ -84,7 +84,6 @@ import com.tg.coloursteward.util.LinkParseUtil;
 import com.tg.coloursteward.util.MicroAuthTimeUtils;
 import com.tg.coloursteward.util.PopupScUtils;
 import com.tg.coloursteward.util.ToastUtil;
-import com.tg.coloursteward.util.TokenUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.ViewPagerSlide;
 import com.tg.coloursteward.view.dialog.ToastFactory;
@@ -252,10 +251,7 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
 
         HuxinSdkManager.instance().getStackAct().addActivity(this);
         if (Contants.URl.environment.equals("release")) {
-            RequestConfig config = new RequestConfig(this, HttpTools.GET_YINGYAN, "");
-            Map<String, Object> map = new HashMap<>();
-            Map<String, String> params = TokenUtils.getStringMap(TokenUtils.getNewSaftyMap(this, map));
-            HttpTools.httpGet_Map(Contants.URl.URL_NEW, "/app/home/utility/getEagleJuge", config, (HashMap) params);
+            homeModel.getYingYan(9, this);
         }
         initAd();
         CheckPermission();
@@ -312,10 +308,7 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
     }
 
     private void initAd() {
-        RequestConfig config = new RequestConfig(this, HttpTools.GET_AD, "");
-        Map<String, Object> map = new HashMap<>();
-        Map<String, String> params = TokenUtils.getStringMap(TokenUtils.getNewSaftyMap(this, map));
-        HttpTools.httpGet_Map(Contants.URl.URL_NEW, "/app/home/utility/startPage", config, (HashMap) params);
+        homeModel.getAdPager(8, this);
     }
 
     private void initYingYan() {
@@ -558,46 +551,6 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
     @Override
     public void onRequestStart(Message msg, String hintString) {
 
-    }
-
-    @Override
-    public void onSuccess(Message msg, String jsonString, String hintString) {
-        int code = HttpTools.getCode(jsonString);
-        if (msg.arg1 == HttpTools.GET_YINGYAN) {
-            if (code == 0) {
-                JSONObject jsonObject = HttpTools.getContentJSONObject(jsonString);
-                try {
-                    int isopen = jsonObject.getInt("switch");//1:开启，2关闭
-                    if (isopen == 1) {
-                        initYingYan();
-                    } else if (isopen == 2) {
-                        if (null != lbsTraceClient) {
-                            lbsTraceClient.stopGather(null);
-                        }
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        } else if (msg.arg1 == HttpTools.GET_AD) {
-            if (code == 0) {
-                JSONObject jsonObject = HttpTools.getContentJSONObject(jsonString);
-                if (null != jsonObject) {
-                    Tools.saveStringValue(MainActivity.this, Contants.storage.HomePageAd, jsonString);
-                    String urlImg = "";
-                    try {
-                        urlImg = jsonObject.getString("adUrl");
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    if (!TextUtils.isEmpty(urlImg)) {
-                        download(urlImg);
-                    }
-                } else {
-                    Tools.saveStringValue(MainActivity.this, Contants.storage.HomePageAd, "");
-                }
-            }
-        }
     }
 
     // 保存图片到手机
@@ -1180,6 +1133,42 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
             case 7:
                 if (!TextUtils.isEmpty(result)) {
                     //消息已读逻辑，暂无
+                }
+                break;
+            case 8:
+                if (!TextUtils.isEmpty(result)) {
+                    JSONObject jsonObject = HttpTools.getContentJSONObject(result);
+                    if (null != jsonObject) {
+                        Tools.saveStringValue(MainActivity.this, Contants.storage.HomePageAd, result);
+                        String urlImg = "";
+                        try {
+                            urlImg = jsonObject.getString("adUrl");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        if (!TextUtils.isEmpty(urlImg)) {
+                            download(urlImg);
+                        }
+                    } else {
+                        Tools.saveStringValue(MainActivity.this, Contants.storage.HomePageAd, "");
+                    }
+                }
+                break;
+            case 9:
+                if (!TextUtils.isEmpty(result)) {
+                    JSONObject jsonObject = HttpTools.getContentJSONObject(result);
+                    try {
+                        int isopen = jsonObject.getInt("switch");//1:开启，2关闭
+                        if (isopen == 1) {
+                            initYingYan();
+                        } else if (isopen == 2) {
+                            if (null != lbsTraceClient) {
+                                lbsTraceClient.stopGather(null);
+                            }
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
                 break;
         }

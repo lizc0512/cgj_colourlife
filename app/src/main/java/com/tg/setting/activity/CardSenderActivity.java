@@ -232,7 +232,7 @@ public class CardSenderActivity extends BaseActivity implements HttpResponse, On
                         intent.putExtra(CardSenderPhoneActivity.HAIRPINID, hairpinId);
                         intent.putStringArrayListExtra(CardSenderPhoneActivity.DEVICEKEYS, allChoiceKeyList);
                         intent.putStringArrayListExtra(CardSenderPhoneActivity.CARDWRITEKEYS, allCardKeyList);
-                        startActivity(intent);
+                        startActivityForResult(intent,1000);
                     } else {
                         Toast.makeText(this, "请选择要发送的钥匙", Toast.LENGTH_SHORT).show();
                     }

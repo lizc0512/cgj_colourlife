@@ -81,9 +81,13 @@ public class BagCardSenderFragment extends Fragment implements HttpResponse {
                     KeyBagsEntity.ContentBeanX contentBeanX = keyBagsEntity.getContent();
                     totalRecord = contentBeanX.getTotalRecord();
                     keyList.addAll(contentBeanX.getContent());
-                    ((CardSenderActivity) getActivity()).initTotalKeys(totalRecord);
+                    if (null!=getActivity()){
+                        ((CardSenderActivity) getActivity()).initTotalKeys(totalRecord);
+                    }
                 } catch (Exception e) {
-                    ((CardSenderActivity) getActivity()).initTotalKeys(0);
+                    if (null!=getActivity()){
+                        ((CardSenderActivity) getActivity()).initTotalKeys(0);
+                    }
                 }
                 boolean keyDataEmpty = keyList.size() == 0;
                 boolean hasMore = totalRecord > keyList.size();

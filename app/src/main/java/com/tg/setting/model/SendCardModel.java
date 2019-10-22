@@ -151,15 +151,18 @@ public class SendCardModel extends BaseModel {
                         httpResponse.OnHttpResponse(what, result);
                     } else {
                         showErrorCodeMessage(response);
+                        httpResponse.OnHttpResponse(what,"");
                     }
                 } else {
                     showErrorCodeMessage(response);
+                    httpResponse.OnHttpResponse(what,"");
                 }
             }
 
             @Override
             public void onFailed(int what, Response<String> response) {
                 showExceptionMessage(what, response);
+                httpResponse.OnHttpResponse(what,"");
             }
         }, true, false);
     }

@@ -44,11 +44,11 @@ import static com.tg.setting.activity.KeySendKeyListActivity.COMMUNITY_UUID;
  */
 public class CardSenderPhoneActivity extends BaseActivity implements HttpResponse, View.OnClickListener {
 
-    public static final String HAIRPINID="hairpinId";
-    public static final String DEVICE="device";
-    public static final String CARDNUMBER="cardnumber";
-    public static final String DEVICEKEYS="devicekeys";
-    public static final String CARDWRITEKEYS="cardwritekeys";
+    public static final String HAIRPINID = "hairpinId";
+    public static final String DEVICE = "device";
+    public static final String CARDNUMBER = "cardnumber";
+    public static final String DEVICEKEYS = "devicekeys";
+    public static final String CARDWRITEKEYS = "cardwritekeys";
 
     private LinearLayout ll_identity;
     private TextView tv_identity;
@@ -162,27 +162,34 @@ public class CardSenderPhoneActivity extends BaseActivity implements HttpRespons
                 }
                 break;
             case 2:
-                String[] deviceIds = new String[writeKeysList.size()];
-                writeKeysList.toArray(deviceIds);
-                mLekaiService.addCard(mDevice, deviceIds, new OnAddCardCallback() {
-                    @Override
-                    public void onAddCardCallback(final int status, final String message) {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (mProgressDialog != null) {
-                                    mProgressDialog.dismiss();
-                                }
-                                if (status == ErrorConstants.SUCCESS) {
-                                    ToastUtil.showLongToastCenter(CardSenderPhoneActivity.this, "发卡成功");
-                                    finish();
-                                } else {
-                                    ToastUtil.showLongToastCenter(CardSenderPhoneActivity.this, message);
-                                }
-                            }
-                        });
+                if (TextUtils.isEmpty(result)) {
+                    if (mProgressDialog != null) {
+                        mProgressDialog.dismiss();
                     }
-                });
+                } else {
+                    String[] deviceIds = new String[writeKeysList.size()];
+                    writeKeysList.toArray(deviceIds);
+                    mLekaiService.addCard(mDevice, deviceIds, new OnAddCardCallback() {
+                        @Override
+                        public void onAddCardCallback(final int status, final String message) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (mProgressDialog != null) {
+                                        mProgressDialog.dismiss();
+                                    }
+                                    if (status == ErrorConstants.SUCCESS) {
+                                        ToastUtil.showLongToastCenter(CardSenderPhoneActivity.this, "发卡成功");
+                                        setResult(200);
+                                        finish();
+                                    } else {
+                                        ToastUtil.showLongToastCenter(CardSenderPhoneActivity.this, message);
+                                    }
+                                }
+                            });
+                        }
+                    });
+                }
                 break;
         }
     }
@@ -245,7 +252,7 @@ public class CardSenderPhoneActivity extends BaseActivity implements HttpRespons
         String room = tv_room.getText().toString().trim();
         String identifyName = tv_identity.getText().toString().trim();
         if (isPower == 0) {
-            if (TextUtils.isEmpty(room) || TextUtils.isEmpty(identifyName) || TextUtils.isEmpty(phone)||11!=phone.length()) {
+            if (TextUtils.isEmpty(room) || TextUtils.isEmpty(identifyName) || TextUtils.isEmpty(phone) || 11 != phone.length()) {
                 tv_send.setEnabled(false);
                 tv_send.setBackgroundResource(R.drawable.shape_key_submit_text);
             } else {
@@ -253,7 +260,7 @@ public class CardSenderPhoneActivity extends BaseActivity implements HttpRespons
                 tv_send.setBackgroundResource(R.drawable.shape_key_submit_blue_text);
             }
         } else {
-            if (TextUtils.isEmpty(identifyName) || TextUtils.isEmpty(phone)||11!=phone.length()) {
+            if (TextUtils.isEmpty(identifyName) || TextUtils.isEmpty(phone) || 11 != phone.length()) {
                 tv_send.setEnabled(false);
                 tv_send.setBackgroundResource(R.drawable.shape_key_submit_text);
             } else {

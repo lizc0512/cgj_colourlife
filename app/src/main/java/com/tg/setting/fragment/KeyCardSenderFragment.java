@@ -76,9 +76,13 @@ public class KeyCardSenderFragment extends Fragment implements HttpResponse {
                 }
                 totalRecord = content.getTotalRecord();
                 doorList.addAll(content.getContent());
-                ((CardSenderActivity) getActivity()).initTotalKeys(totalRecord);
+                if (null!=getActivity()){
+                    ((CardSenderActivity) getActivity()).initTotalKeys(totalRecord);
+                }
             } catch (Exception e) {
-                ((CardSenderActivity) getActivity()).initTotalKeys(0);
+                if (null!=getActivity()){
+                    ((CardSenderActivity) getActivity()).initTotalKeys(0);
+                }
                 ToastUtil.showLongToastCenter(getActivity(), e.getMessage());
             }
             boolean dataEmpty = doorList.size() == 0;

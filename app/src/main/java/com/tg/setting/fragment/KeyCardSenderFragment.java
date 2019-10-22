@@ -101,9 +101,11 @@ public class KeyCardSenderFragment extends Fragment implements HttpResponse {
         if (type == 0) {
             choiceIDList.clear();
         } else {
-            choiceIDList.clear();
             for (KeyDoorEntity.ContentBeanX.ContentBean contentBean : doorList) {
-                choiceIDList.add(contentBean.getId());
+                String unChoiceId= contentBean.getId();
+                if (!choiceIDList.contains(unChoiceId)){
+                    choiceIDList.add(unChoiceId);
+                }
             }
         }
         cardKeysDoorAdapter.setCheckIdList(choiceIDList);

@@ -81,6 +81,7 @@ public class KeyDoorManagerActivity extends BaseActivity implements HttpResponse
     private KeyDoorModel keyDoorModel;
     private int addType = 0;
     private Device mDevice;
+    private   ProgressDialog mProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -296,6 +297,7 @@ public class KeyDoorManagerActivity extends BaseActivity implements HttpResponse
             }
         }
         if (null != mLekaiService) {
+             mProgressDialog = ProgressDialog.show(this, null, "正在连接设备中...");
             mLekaiService.setOnFoundDeviceListener(new OnFoundDeviceListener() {
                 @Override
                 public void foundDevice(Device device) {
@@ -317,6 +319,7 @@ public class KeyDoorManagerActivity extends BaseActivity implements HttpResponse
             @Override
             public void run() {
                 if (null == mDevice) {
+                    mProgressDialog.dismiss();
                     ToastUtil.showLongToastCenter(KeyDoorManagerActivity.this, "当前发卡器不在范围,或没有通电");
                     stopScanDevice();
                 }
@@ -325,7 +328,6 @@ public class KeyDoorManagerActivity extends BaseActivity implements HttpResponse
     }
 
     private void enterCardMode(String hairpinId) {
-        ProgressDialog mProgressDialog = ProgressDialog.show(this, null, "正在连接设备中...");
         mLekaiService.entryCardReaderMode(mDevice, new OnEntryCardReaderModeCallback() {
             @Override
             public void onEntryCardReaderModeCallback(int status, String message) {

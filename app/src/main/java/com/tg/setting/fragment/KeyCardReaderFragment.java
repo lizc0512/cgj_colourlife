@@ -136,7 +136,7 @@ public class KeyCardReaderFragment extends Fragment implements HttpResponse, Vie
         noKeyDraw.setBounds(0, 0, noKeyDraw.getMinimumWidth(), noKeyDraw.getMinimumHeight());
         tv2.setCompoundDrawables(null, noKeyDraw, null, null);
         tv2.setText("暂无发卡器");
-        tv_add_door.setText("添加门禁卡");
+        tv_add_door.setText("添加发卡器");
     }
 
 

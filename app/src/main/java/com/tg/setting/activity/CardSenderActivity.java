@@ -30,6 +30,7 @@ import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.util.GsonUtils;
+import com.tg.coloursteward.view.dialog.DialogFactory;
 import com.tg.setting.adapter.ViewPagerAdapter;
 import com.tg.setting.entity.CardAccessInforEntity;
 import com.tg.setting.entity.KeyBagsEntity;
@@ -89,7 +90,9 @@ public class CardSenderActivity extends BaseActivity implements HttpResponse, On
             case 1:
                 try {
                     CardAccessInforEntity cardAccessInforEntity = GsonUtils.gsonToBean(result, CardAccessInforEntity.class);
-                    cardId = cardAccessInforEntity.getContent().getId();
+                    CardAccessInforEntity.ContentBean contentBean = cardAccessInforEntity.getContent();
+                    cardId = contentBean.getId();
+                    tv_card_infor.setText("内含钥匙数" + contentBean.getAccessCount());
                 } catch (Exception e) {
 
                 }
@@ -130,35 +133,47 @@ public class CardSenderActivity extends BaseActivity implements HttpResponse, On
         all_key_layout.setOnClickListener(singleListener);
     }
 
+    public void clearCardAllKeys() {  //清空卡片中的钥匙 并通知后台
+        DialogFactory.getInstance().showDialog(CardSenderActivity.this, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (mLekaiService != null) {
+                            mProgressDialog = ProgressDialog.show(CardSenderActivity.this, "", "正在清空卡片……");
+                            if (!TextUtils.isEmpty(cardId)) {
+                                sendCardModel.deleteAllCgjCardRecord(0, cardId, CardSenderActivity.this);
+                            }
+                            mLekaiService.clearCard(new OnClearCardCallback() {
+                                @Override
+                                public void onClearCardCallback(final int status, final String message) {
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            if (mProgressDialog != null) {
+                                                mProgressDialog.dismiss();
+                                            }
+                                            if (status == ErrorConstants.SUCCESS) {
+                                                tv_card_status.setText("清空卡片成功");
+                                                tv_card_infor.setText("内含钥匙数" + 0);
+                                            } else {
+                                                tv_card_status.setText(message);
+                                            }
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    }
+                }, null, "是否清空钥匙？", null,
+                null);
+
+    }
+
     @Override
     protected boolean handClickEvent(View v) {
         switch (v.getId()) {
             case R.id.tv_card_operate:
                 if (type == 2) {
-                    if (mLekaiService != null) {
-                        mProgressDialog = ProgressDialog.show(this, "", "正在清空卡片……");
-                        if (!TextUtils.isEmpty(cardId)) {
-                            sendCardModel.deleteAllCgjCardRecord(0, cardId, CardSenderActivity.this);
-                        }
-                        mLekaiService.clearCard(new OnClearCardCallback() {
-                            @Override
-                            public void onClearCardCallback(final int status, final String message) {
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        if (mProgressDialog != null) {
-                                            mProgressDialog.dismiss();
-                                        }
-                                        if (status == ErrorConstants.SUCCESS) {
-                                            tv_card_status.setText("清空卡片成功");
-                                        } else {
-                                            tv_card_status.setText(message);
-                                        }
-                                    }
-                                });
-                            }
-                        });
-                    }
+                    clearCardAllKeys();
                 } else {
                     if (mLekaiService != null) {
                         if (mCardStatus == StatusConstants.CARD_STATUS_NEED_INIT) {
@@ -226,7 +241,6 @@ public class CardSenderActivity extends BaseActivity implements HttpResponse, On
                 }
                 break;
             case R.id.all_key_layout:
-                allChoiceKeyList.clear();
                 if (isClick) {
                     if (bagCardSenderFragment != null) {
                         bagCardSenderFragment.handBagsChoice(1);
@@ -235,6 +249,7 @@ public class CardSenderActivity extends BaseActivity implements HttpResponse, On
                         keyCardSenderFragment.handDoorChoice(1);
                     }
                 } else {
+                    allChoiceKeyList.clear();
                     if (bagCardSenderFragment != null) {
                         bagCardSenderFragment.handBagsChoice(0);
                     }
@@ -388,7 +403,6 @@ public class CardSenderActivity extends BaseActivity implements HttpResponse, On
                     tv_card_status.setText(String.format(Locale.getDefault(), "卡ID:%d 卡内钥匙数量:%d", msg.arg1, msg.arg2));
                     cardNumber = msg.arg1;
                     tv_card_status.setText("读卡成功,卡号" + cardNumber);
-                    tv_card_infor.setText("内含钥匙数" + msg.arg2);
                     tv_card_infor.setVisibility(View.VISIBLE);
                     tv_card_operate.setVisibility(View.VISIBLE);
                     tv_card_operate.setText("清空钥匙");
@@ -415,7 +429,6 @@ public class CardSenderActivity extends BaseActivity implements HttpResponse, On
                     tv_card_operate.setText("初始化卡");
                     iv_card_status.setImageResource(R.drawable.icon_device_hascard);
                     tv_card_status.setText(String.format(Locale.getDefault(), "需要初始化,第三方扇区数量:%d,首个第三方扇区号:%d", msg.arg1, msg.arg2));
-                    tv_card_status.setText("内含钥匙数" + msg.arg2);
                     tv_send_key.setBackgroundResource(R.color.color_d4d9dc);
                     tv_card_operate.setVisibility(View.GONE);
                     tv_card_infor.setVisibility(View.GONE);
@@ -429,7 +442,6 @@ public class CardSenderActivity extends BaseActivity implements HttpResponse, On
                     iv_card_status.setImageResource(R.drawable.icon_device_hascard);
                     cardNumber = msg.arg1;
                     tv_card_status.setText("读卡成功,卡号" + cardNumber);
-                    tv_card_infor.setText("内含钥匙数" + msg.arg2);
                     tv_card_infor.setVisibility(View.VISIBLE);
                     tv_card_operate.setVisibility(View.VISIBLE);
                     tv_card_operate.setText("清空钥匙");
@@ -520,7 +532,6 @@ public class CardSenderActivity extends BaseActivity implements HttpResponse, On
                     msg2.arg2 = firstThirdPartySector;
                 }
                 mHandler.sendMessage(msg2);
-
                 mInitCount = firstThirdPartySector;
                 break;
             case StatusConstants.CARD_STATUS_INIT_DONE_PARTLY:

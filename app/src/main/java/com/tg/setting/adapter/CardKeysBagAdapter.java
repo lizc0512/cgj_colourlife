@@ -60,7 +60,6 @@ public class CardKeysBagAdapter extends RecyclerView.Adapter<CardKeysBagAdapter.
                     checkIdList.remove(accessId);
                     ((CardSenderActivity) mContext).setChoiceKeyNumbers(1, accessId,"",bean.getAccessList());
                 }
-
             }
         });
         if (checkIdList.contains(accessId)) {

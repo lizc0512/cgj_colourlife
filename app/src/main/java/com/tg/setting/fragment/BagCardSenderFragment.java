@@ -64,7 +64,7 @@ public class BagCardSenderFragment extends Fragment implements HttpResponse {
     }
 
     private void getKeyList() {
-        userModel.getKeyList(0, communityUuid,"ISE", keyPage, 20, this);
+        userModel.getKeyList(0, communityUuid, "ISE", keyPage, 20, this);
     }
 
 
@@ -99,9 +99,11 @@ public class BagCardSenderFragment extends Fragment implements HttpResponse {
         if (type == 0) {
             choiceIDList.clear();
         } else {
-            choiceIDList.clear();
             for (KeyBagsEntity.ContentBeanX.ContentBean contentBean : keyList) {
-                choiceIDList.add(contentBean.getId());
+                String unChoiceId = contentBean.getId();
+                if (!choiceIDList.contains(unChoiceId)) {
+                    choiceIDList.add(unChoiceId);
+                }
             }
         }
         cardKeysBagAdapter.setCheckIdList(choiceIDList);

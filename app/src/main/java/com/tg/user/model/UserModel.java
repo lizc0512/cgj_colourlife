@@ -65,6 +65,7 @@ public class UserModel extends BaseModel {
     private String getDoorList = "/yuncontrol/ycAccessControl/getAccessByCommunityId";
     private String getDoorStatusList = "/yuncontrol/ycAccessControl/getAccessControlByStatusAndPage";
     private String getKeyList = "/yuncontrol/ycKeyPackage/getKeyPacksByCommunityId";
+    private String getModelKeyList = "/yuncontrol/ycKeyPackage/getKeyPacksAccessByModel";
     private String addDoor = "/yuncontrol/ycAccessControl/add";
     private String getBuild = "/cgjControl/colourLife/getBuildByCommunityId";
     private String getUnit = "/cgjControl/colourLife/getUnitByBuild";
@@ -828,15 +829,48 @@ public class UserModel extends BaseModel {
         }, true, false);
     }
 
-    public void getKeyList(int what, String communityId,String model, int pageNum, int pageSize, final HttpResponse httpResponse) {
+    public void getKeyList(int what, String communityId, int pageNum, int pageSize, final HttpResponse httpResponse) {
         Map<String, Object> params = new HashMap<>();
         params.put("communityId", communityId);
         params.put("communityId", communityId);
         params.put("pageNum", pageNum);
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 11, getKeyList), RequestMethod.GET);
+        request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    int code = showSuccesResultMessage(result);
+                    if (code == 0) {
+                        httpResponse.OnHttpResponse(what, result);
+                    } else {
+                        httpResponse.OnHttpResponse(what, "");
+                        showErrorCodeMessage(response);
+                    }
+                } else {
+                    httpResponse.OnHttpResponse(what, "");
+                    showErrorCodeMessage(response);
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+                httpResponse.OnHttpResponse(what, "");
+                showExceptionMessage(what, response);
+            }
+        }, true, false);
+    }
+
+    public void getModelKeyList(int what, String communityId,String model, int pageNum, int pageSize, final HttpResponse httpResponse) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("communityId", communityId);
+        params.put("pageSize", pageSize);
+        params.put("pageNum", pageNum);
         if (!TextUtils.isEmpty(model)){
             params.put("model", model);
         }
-        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 11, getKeyList), RequestMethod.GET);
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 11, getModelKeyList), RequestMethod.GET);
         request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
             @Override
             public void onSucceed(int what, Response<String> response) {

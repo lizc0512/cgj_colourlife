@@ -15,12 +15,15 @@ import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.ToastUtil;
 import com.tg.setting.activity.CardSenderActivity;
 import com.tg.setting.adapter.CardKeysDoorAdapter;
+import com.tg.setting.entity.KeyBagsEntity;
 import com.tg.setting.entity.KeyDoorEntity;
 import com.tg.user.model.UserModel;
 import com.yanzhenjie.recyclerview.SwipeRecyclerView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.tg.setting.activity.KeySendKeyListActivity.COMMUNITY_UUID;
 
@@ -76,11 +79,11 @@ public class KeyCardSenderFragment extends Fragment implements HttpResponse {
                 }
                 totalRecord = content.getTotalRecord();
                 doorList.addAll(content.getContent());
-                if (null!=getActivity()){
+                if (null != getActivity()) {
                     ((CardSenderActivity) getActivity()).initTotalKeys(totalRecord);
                 }
             } catch (Exception e) {
-                if (null!=getActivity()){
+                if (null != getActivity()) {
                     ((CardSenderActivity) getActivity()).initTotalKeys(0);
                 }
                 ToastUtil.showLongToastCenter(getActivity(), e.getMessage());
@@ -96,23 +99,28 @@ public class KeyCardSenderFragment extends Fragment implements HttpResponse {
         if (null == userModel) {
             userModel = new UserModel(getActivity());
         }
-        userModel.getDoorStatusList(0, community_uuid,"ISE" ,doorPage, 20, this);
+        userModel.getDoorStatusList(0, community_uuid, "ISE", doorPage, 20, this);
     }
 
     private List<String> choiceIDList = new ArrayList<>();
+    private Map<String, String> choiceDeviceMap = new HashMap<>();
 
     public List<String> handDoorChoice(int type) {
-        if (type == 0) {
-            choiceIDList.clear();
-        } else {
+        choiceIDList.clear();
+        choiceDeviceMap.clear();
+        if (type == 1) {
             for (KeyDoorEntity.ContentBeanX.ContentBean contentBean : doorList) {
-                String unChoiceId= contentBean.getId();
-                if (!choiceIDList.contains(unChoiceId)){
-                    choiceIDList.add(unChoiceId);
-                }
+                String unChoiceId = contentBean.getId();
+                choiceIDList.add(unChoiceId);
+                choiceDeviceMap.put(unChoiceId, contentBean.getDeviceId());
             }
         }
         cardKeysDoorAdapter.setCheckIdList(choiceIDList);
         return choiceIDList;
+    }
+
+    public Map<String, String> getDeviceMap() {
+
+        return choiceDeviceMap;
     }
 }

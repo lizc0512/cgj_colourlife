@@ -91,7 +91,7 @@ public class KeyDoorBagsFragment extends Fragment implements HttpResponse {
     }
 
     private void getKeyList() {
-        userModel.getKeyList(0, communityUuid,"", keyPage, 20, this);
+        userModel.getKeyList(0, communityUuid, keyPage, 20, this);
     }
 
     public void changeCommunity(String communityUuid, String communityName) {  //切换小区时刷新数据

@@ -167,28 +167,34 @@ public class CardSenderPhoneActivity extends BaseActivity implements HttpRespons
                         mProgressDialog.dismiss();
                     }
                 } else {
-                    String[] deviceIds = new String[writeKeysList.size()];
-                    writeKeysList.toArray(deviceIds);
-                    mLekaiService.addCard(mDevice, deviceIds, new OnAddCardCallback() {
-                        @Override
-                        public void onAddCardCallback(final int status, final String message) {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    if (mProgressDialog != null) {
-                                        mProgressDialog.dismiss();
+                    if (writeKeysList.size() > 0) {
+                        String[] deviceIds = new String[writeKeysList.size()];
+                        writeKeysList.toArray(deviceIds);
+                        mLekaiService.addCard(mDevice, deviceIds, new OnAddCardCallback() {
+                            @Override
+                            public void onAddCardCallback(final int status, final String message) {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if (mProgressDialog != null) {
+                                            mProgressDialog.dismiss();
+                                        }
+                                        if (status == ErrorConstants.SUCCESS) {
+                                            ToastUtil.showLongToastCenter(CardSenderPhoneActivity.this, "发卡成功");
+                                            setResult(200);
+                                            finish();
+                                        } else {
+                                            ToastUtil.showLongToastCenter(CardSenderPhoneActivity.this, message);
+                                        }
                                     }
-                                    if (status == ErrorConstants.SUCCESS) {
-                                        ToastUtil.showLongToastCenter(CardSenderPhoneActivity.this, "发卡成功");
-                                        setResult(200);
-                                        finish();
-                                    } else {
-                                        ToastUtil.showLongToastCenter(CardSenderPhoneActivity.this, message);
-                                    }
-                                }
-                            });
-                        }
-                    });
+                                });
+                            }
+                        });
+                    } else {
+                        ToastUtil.showLongToastCenter(CardSenderPhoneActivity.this, "发卡成功");
+                        setResult(200);
+                        finish();
+                    }
                 }
                 break;
         }

@@ -246,22 +246,21 @@ public class CardSenderActivity extends BaseActivity implements HttpResponse, On
                 }
                 break;
             case R.id.all_key_layout:
+                allChoiceKeyList.clear();
+                sendCardKeyMap.clear();
+                sendDeviceKeyMap.clear();
                 if (isClick) {
-                    if (bagCardSenderFragment != null) {
-                        bagCardSenderFragment.handBagsChoice(1);
-                    }
-                    if (bagCardSenderFragment != null) {
-                        keyCardSenderFragment.handDoorChoice(1);
-                    }
+                    allChoiceKeyList.addAll(bagCardSenderFragment.handBagsChoice(1));
+                    allChoiceKeyList.addAll(keyCardSenderFragment.handDoorChoice(1));
+                    sendCardKeyMap.putAll(bagCardSenderFragment.getDeviceMap());
+                    sendDeviceKeyMap.putAll(keyCardSenderFragment.getDeviceMap());
+                    iv_key_check.setImageResource(R.drawable.icon_checked_key_bag);
                 } else {
-                    allChoiceKeyList.clear();
-                    if (bagCardSenderFragment != null) {
-                        bagCardSenderFragment.handBagsChoice(0);
-                    }
-                    if (bagCardSenderFragment != null) {
-                        keyCardSenderFragment.handDoorChoice(0);
-                    }
+                    bagCardSenderFragment.handBagsChoice(0);
+                    keyCardSenderFragment.handDoorChoice(0);
+                    iv_key_check.setImageResource(R.drawable.icon_unchecked_key_bag);
                 }
+                calChoiceKeys();
                 isClick = !isClick;
             default:
                 break;
@@ -304,7 +303,17 @@ public class CardSenderActivity extends BaseActivity implements HttpResponse, On
                 }
             }
         }
+        calChoiceKeys();
+        if (allChoiceKeyList.size() != totalKeys) {
+            isClick = true;
+            iv_key_check.setImageResource(R.drawable.icon_unchecked_key_bag);
+        } else {
+            isClick = false;
+            iv_key_check.setImageResource(R.drawable.icon_checked_key_bag);
+        }
+    }
 
+    private void calChoiceKeys() {
         if (allChoiceKeyList.size() > 0 && type == 2) {
             tv_send_key.setBackgroundResource(R.color.color_1da1f4);
             tv_send_key.setEnabled(true);
@@ -313,13 +322,6 @@ public class CardSenderActivity extends BaseActivity implements HttpResponse, On
             tv_send_key.setEnabled(false);
         }
         tv_choice_key.setText("已选:" + allChoiceKeyList.size());
-        if (allChoiceKeyList.size() != totalKeys) {
-            isClick = true;
-            iv_key_check.setImageResource(R.drawable.icon_unchecked_key_bag);
-        } else {
-            isClick = false;
-            iv_key_check.setImageResource(R.drawable.icon_checked_key_bag);
-        }
     }
 
     private ArrayList<String> allChoiceKeyList = new ArrayList<>();
@@ -363,10 +365,12 @@ public class CardSenderActivity extends BaseActivity implements HttpResponse, On
 
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            LekaiService.LocalBinder binder = (LekaiService.LocalBinder) service;
-            mLekaiService = binder.getService();
-            mLekaiService.cardStatus(CardSenderActivity.this);
-            mHandler.sendEmptyMessage(0);
+            if (null!=service){
+                LekaiService.LocalBinder binder = (LekaiService.LocalBinder) service;
+                mLekaiService = binder.getService();
+                mLekaiService.cardStatus(CardSenderActivity.this);
+                mHandler.sendEmptyMessage(0);
+            }
         }
 
         @Override
@@ -488,12 +492,20 @@ public class CardSenderActivity extends BaseActivity implements HttpResponse, On
             String cardKey = allChoiceKeyList.get(a);
             if (sendCardKeyMap.containsKey(cardKey)) {
                 List<KeyBagsEntity.ContentBeanX.ContentBean.AccessListBean> cardList = sendCardKeyMap.get(cardKey);
-                for (KeyBagsEntity.ContentBeanX.ContentBean.AccessListBean accessListBean : cardList) {
-                    allCardKeyList.add(accessListBean.getDeviceId());
+                if (cardList != null && cardList.size() > 0) {
+                    for (KeyBagsEntity.ContentBeanX.ContentBean.AccessListBean accessListBean : cardList) {
+                        String deviceId = accessListBean.getDeviceId();
+                        if (!allCardKeyList.contains(deviceId)) {
+                            allCardKeyList.add(deviceId);
+                        }
+                    }
                 }
             }
             if (sendDeviceKeyMap.containsKey(cardKey)) {
-                allCardKeyList.add(sendDeviceKeyMap.get(cardKey));
+                String deviceId = sendDeviceKeyMap.get(cardKey);
+                if (!allCardKeyList.contains(deviceId)) {
+                    allCardKeyList.add(deviceId);
+                }
             }
         }
 

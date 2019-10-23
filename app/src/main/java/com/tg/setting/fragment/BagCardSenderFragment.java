@@ -20,7 +20,9 @@ import com.tg.user.model.UserModel;
 import com.yanzhenjie.recyclerview.SwipeRecyclerView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.tg.setting.activity.KeySendKeyListActivity.COMMUNITY_UUID;
 
@@ -57,14 +59,14 @@ public class BagCardSenderFragment extends Fragment implements HttpResponse {
         rv_card.useDefaultLoadMore();
         rv_card.setLoadMoreListener(() -> {
             keyPage++;
-            getKeyList();
+            getModelKeyList();
         });
-        getKeyList();
+        getModelKeyList();
         return rootView;
     }
 
-    private void getKeyList() {
-        userModel.getKeyList(0, communityUuid, "ISE", keyPage, 20, this);
+    private void getModelKeyList() {
+        userModel.getModelKeyList(0, communityUuid, "ISE", keyPage, 20, this);
     }
 
 
@@ -81,11 +83,11 @@ public class BagCardSenderFragment extends Fragment implements HttpResponse {
                     KeyBagsEntity.ContentBeanX contentBeanX = keyBagsEntity.getContent();
                     totalRecord = contentBeanX.getTotalRecord();
                     keyList.addAll(contentBeanX.getContent());
-                    if (null!=getActivity()){
+                    if (null != getActivity()) {
                         ((CardSenderActivity) getActivity()).initTotalKeys(totalRecord);
                     }
                 } catch (Exception e) {
-                    if (null!=getActivity()){
+                    if (null != getActivity()) {
                         ((CardSenderActivity) getActivity()).initTotalKeys(0);
                     }
                 }
@@ -100,17 +102,23 @@ public class BagCardSenderFragment extends Fragment implements HttpResponse {
     private List<String> choiceIDList = new ArrayList<>();
 
     public List<String> handBagsChoice(int type) {
-        if (type == 0) {
-            choiceIDList.clear();
-        } else {
+        sendCardKeyMap.clear();
+        choiceIDList.clear();
+        if (type == 1) {
             for (KeyBagsEntity.ContentBeanX.ContentBean contentBean : keyList) {
                 String unChoiceId = contentBean.getId();
-                if (!choiceIDList.contains(unChoiceId)) {
-                    choiceIDList.add(unChoiceId);
-                }
+                choiceIDList.add(unChoiceId);
+                sendCardKeyMap.put(unChoiceId, contentBean.getAccessList());
             }
         }
         cardKeysBagAdapter.setCheckIdList(choiceIDList);
         return choiceIDList;
     }
+
+    public Map<String, List<KeyBagsEntity.ContentBeanX.ContentBean.AccessListBean>> getDeviceMap() {
+
+        return sendCardKeyMap;
+    }
+
+    private Map<String, List<KeyBagsEntity.ContentBeanX.ContentBean.AccessListBean>> sendCardKeyMap = new HashMap<>();
 }

@@ -214,8 +214,12 @@ public class LekaiService extends Service {
      * @param callback 读卡状态改变的回调
      */
     public void cardStatus(OnCardStatusCallback callback) {
-        if (mEdenApi != null) {
-            mEdenApi.cardStatus(callback);
+        try {
+            if (mEdenApi != null) {
+                mEdenApi.cardStatus(callback);
+            }
+        }catch (Exception e){
+
         }
     }
 

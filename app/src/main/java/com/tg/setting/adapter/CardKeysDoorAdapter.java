@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -51,25 +53,26 @@ public class CardKeysDoorAdapter extends RecyclerView.Adapter<CardKeysDoorAdapte
     @Override
     public void onBindViewHolder(@NonNull CardKeysDoorAdapter.DefaultViewHolder holder, int position) {
         final KeyDoorEntity.ContentBeanX.ContentBean bean = mList.get(position);
-        holder.cb_card_key.setText(bean.getAccessName());
-        holder.cb_card_key.setButtonDrawable(R.drawable.shape_key_select_card);
         String accessId = bean.getId();
-        holder.cb_card_key.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        holder.tv_card_key.setText(bean.getAccessName());
+        holder.check_card_layout.setOnClickListener(new View.OnClickListener() {
+
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
+            public void onClick(View v) {
+                if (!checkIdList.contains(accessId)) {
                     checkIdList.add(accessId);
-                    ((CardSenderActivity) mContext).setChoiceKeyNumbers(0, accessId,bean.getDeviceId(),null);
+                    ((CardSenderActivity) mContext).setChoiceKeyNumbers(0, accessId, bean.getDeviceId(), null);
                 } else {
                     checkIdList.remove(accessId);
-                    ((CardSenderActivity) mContext).setChoiceKeyNumbers(1, accessId,bean.getDeviceId(),null);
+                    ((CardSenderActivity) mContext).setChoiceKeyNumbers(1, accessId, bean.getDeviceId(), null);
                 }
+                notifyDataSetChanged();
             }
         });
         if (checkIdList.contains(accessId)) {
-            holder.cb_card_key.setChecked(true);
+            holder.iv_card_key.setImageResource(R.drawable.icon_checked_key_bag);
         } else {
-            holder.cb_card_key.setChecked(false);
+            holder.iv_card_key.setImageResource(R.drawable.icon_unchecked_key_bag);
         }
 
     }
@@ -80,11 +83,15 @@ public class CardKeysDoorAdapter extends RecyclerView.Adapter<CardKeysDoorAdapte
     }
 
     static class DefaultViewHolder extends RecyclerView.ViewHolder {
-        public CheckBox cb_card_key;
+        public LinearLayout check_card_layout;
+        public TextView tv_card_key;
+        public ImageView iv_card_key;
 
         DefaultViewHolder(View itemView) {
             super(itemView);
-            cb_card_key = itemView.findViewById(R.id.cb_card_key);
+            check_card_layout = itemView.findViewById(R.id.check_card_layout);
+            tv_card_key = itemView.findViewById(R.id.tv_card_key);
+            iv_card_key = itemView.findViewById(R.id.iv_card_key);
         }
     }
 }

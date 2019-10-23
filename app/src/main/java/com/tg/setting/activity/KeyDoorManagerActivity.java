@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.IBinder;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -319,18 +320,26 @@ public class KeyDoorManagerActivity extends BaseActivity implements HttpResponse
                 }
             });
         }
-        mHand.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (mProgressDialog != null && !readerMode) {
-                    mProgressDialog.dismiss();
-                    ToastUtil.showLongToastCenter(KeyDoorManagerActivity.this, "当前发卡器不在范围,或没有通电");
-                    stopScanDevice();
-                    readerMode = false;
-                }
-            }
-        }, 10000);
+        countDownTimer.start();
     }
+
+    private CountDownTimer countDownTimer = new CountDownTimer(10000, 5000) {
+        @Override
+        public void onTick(long millisUntilFinished) {
+
+        }
+
+        @Override
+        public void onFinish() {
+            if (mProgressDialog != null && !readerMode) {
+                mProgressDialog.dismiss();
+                ToastUtil.showLongToastCenter(KeyDoorManagerActivity.this, "当前发卡器不在范围,或没有通电");
+                stopScanDevice();
+                readerMode = false;
+            }
+        }
+    };
+
 
     private boolean readerMode = false;
 
@@ -347,6 +356,7 @@ public class KeyDoorManagerActivity extends BaseActivity implements HttpResponse
                     intent.putExtra(KeySendKeyListActivity.COMMUNITY_UUID, communityUuid);
                     intent.putExtra(HAIRPINID, hairpinId);
                     startActivity(intent);
+                    countDownTimer.cancel();
                     readerMode = true;
                 } else {
                     Toast.makeText(KeyDoorManagerActivity.this, message, Toast.LENGTH_LONG).show();

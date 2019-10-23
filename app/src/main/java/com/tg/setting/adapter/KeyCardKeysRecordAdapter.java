@@ -6,7 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
+import android.widget.TextView;
 
 import com.tg.coloursteward.R;
 import com.tg.setting.entity.KeyCardKeysEntity;
@@ -38,7 +38,7 @@ public class KeyCardKeysRecordAdapter extends RecyclerView.Adapter<KeyCardKeysRe
     @Override
     public void onBindViewHolder(@NonNull KeyCardKeysRecordAdapter.DefaultViewHolder holder, int position) {
         KeyCardKeysEntity.ContentBeanX.ContentBean contentBean = mList.get(position);
-        holder.cb_card_key.setText(contentBean.getAccessName());
+        holder.tv_card_key.setText(contentBean.getAccessName());
     }
 
     @Override
@@ -48,11 +48,11 @@ public class KeyCardKeysRecordAdapter extends RecyclerView.Adapter<KeyCardKeysRe
 
     static class DefaultViewHolder extends RecyclerView.ViewHolder {
 
-        CheckBox cb_card_key;
+        public TextView tv_card_key;
 
         DefaultViewHolder(View itemView) {
             super(itemView);
-            cb_card_key = itemView.findViewById(R.id.cb_card_key);
+            tv_card_key = itemView.findViewById(R.id.tv_card_key);
         }
     }
 

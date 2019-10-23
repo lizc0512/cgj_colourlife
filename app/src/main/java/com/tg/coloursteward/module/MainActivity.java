@@ -84,7 +84,6 @@ import com.tg.coloursteward.util.LinkParseUtil;
 import com.tg.coloursteward.util.MicroAuthTimeUtils;
 import com.tg.coloursteward.util.PopupScUtils;
 import com.tg.coloursteward.util.ToastUtil;
-import com.tg.coloursteward.util.TokenUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.ViewPagerSlide;
 import com.tg.coloursteward.view.dialog.ToastFactory;
@@ -139,7 +138,6 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
     public static final String ACTION_FRESH_USERINFO = "com.tg.coloursteward.ACTION_FRESH_USERINFO";
     public static final String ACTION_TICKET_INFO = "com.tg.coloursteward.ACTION_TICKET_INFO";
     public static final String ACTION_HOME_DELETEINFO = "com.tg.coloursteward.ACTION_HOME_DELETEINFO";
-    public static final String ACTION_ACCOUNT_INFO = "com.tg.coloursteward.ACTION_ACCOUNT_INFO";
     public static final String ACTION_READ_MESSAGEINFO = "com.tg.coloursteward.ACTION_READ_MESSAGEINFO";
     public static final String ACTION_UPDATE_PUSHINFO = "com.tg.coloursteward.ACTION_UPDATE_PUSHINFO";
     public static final String JUMPOTHERURL = "jumpotherurl";
@@ -197,8 +195,6 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
                 String source_id = info.source_id;
                 String comefrom = info.comefrom;
                 postDeleteListItem(source_id, comefrom);
-            } else if (action.equals(ACTION_ACCOUNT_INFO)) {//刷新即时分成金额
-                getAccountInfo();
             } else if (action.equals(ACTION_READ_MESSAGEINFO)) {//首页列表消息设置为已读
                 String client_code = intent.getStringExtra("messageId");
                 getReadMessageInfo(client_code);
@@ -255,10 +251,7 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
 
         HuxinSdkManager.instance().getStackAct().addActivity(this);
         if (Contants.URl.environment.equals("release")) {
-            RequestConfig config = new RequestConfig(this, HttpTools.GET_YINGYAN, "");
-            Map<String, Object> map = new HashMap<>();
-            Map<String, String> params = TokenUtils.getStringMap(TokenUtils.getNewSaftyMap(this, map));
-            HttpTools.httpGet_Map(Contants.URl.URL_NEW, "/app/home/utility/getEagleJuge", config, (HashMap) params);
+            homeModel.getYingYan(9, this);
         }
         initAd();
         CheckPermission();
@@ -315,10 +308,7 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
     }
 
     private void initAd() {
-        RequestConfig config = new RequestConfig(this, HttpTools.GET_AD, "");
-        Map<String, Object> map = new HashMap<>();
-        Map<String, String> params = TokenUtils.getStringMap(TokenUtils.getNewSaftyMap(this, map));
-        HttpTools.httpGet_Map(Contants.URl.URL_NEW, "/app/home/utility/startPage", config, (HashMap) params);
+        homeModel.getAdPager(8, this);
     }
 
     private void initYingYan() {
@@ -563,45 +553,6 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
 
     }
 
-    @Override
-    public void onSuccess(Message msg, String jsonString, String hintString) {
-        int code = HttpTools.getCode(jsonString);
-        if (msg.arg1 == HttpTools.GET_YINGYAN) {
-            if (code == 0) {
-                JSONObject jsonObject = HttpTools.getContentJSONObject(jsonString);
-                try {
-                    int isopen = jsonObject.getInt("switch");//1:开启，2关闭
-                    if (isopen == 1) {
-                        initYingYan();
-                    } else if (isopen == 2) {
-                        if (null != lbsTraceClient) {
-                            lbsTraceClient.stopGather(null);
-                        }
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        } else if (msg.arg1 == HttpTools.GET_AD) {
-            if (code == 0) {
-                JSONObject jsonObject = HttpTools.getContentJSONObject(jsonString);
-                if (null != jsonObject) {
-                    Tools.saveStringValue(MainActivity.this, Contants.storage.HomePageAd, jsonString);
-                    String urlImg = "";
-                    try {
-                        urlImg = jsonObject.getString("adUrl");
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    if (!TextUtils.isEmpty(urlImg)) {
-                        download(urlImg);
-                    }
-                }
-
-            }
-        }
-    }
-
     // 保存图片到手机
     public void download(final String url) {
         new AsyncTask<Void, Integer, File>() {
@@ -766,7 +717,6 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
         filter.addAction(ACTION_FRESH_USERINFO);
         filter.addAction(ACTION_TICKET_INFO);
         filter.addAction(ACTION_HOME_DELETEINFO);
-        filter.addAction(ACTION_ACCOUNT_INFO);
         filter.addAction(ACTION_READ_MESSAGEINFO);
         filter.addAction(ACTION_UPDATE_PUSHINFO);
         registerReceiver(freshReceiver, filter);
@@ -799,16 +749,6 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
     // 检测版本更新
     private void getVersion() {
         settingModel.getUpdate(0, "1", false, this);
-    }
-
-    // 获取即时分成金额
-    private void getAccountInfo() {
-        RequestConfig config = new RequestConfig(this, HttpTools.GET_ACCOUNT_INFO);
-        RequestParams params = new RequestParams();
-        params.put("access_token", "1521ac83521b8063e7a9a49dc22e79b0");
-        params.put("target_type", "2");
-        params.put("target", UserInfo.employeeAccount);
-        HttpTools.httpGet(Contants.URl.URL_ICETEST, "/splitdivide/api/account", config, params);
     }
 
     // 首页列表消息设置为已读
@@ -1193,6 +1133,42 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
             case 7:
                 if (!TextUtils.isEmpty(result)) {
                     //消息已读逻辑，暂无
+                }
+                break;
+            case 8:
+                if (!TextUtils.isEmpty(result)) {
+                    JSONObject jsonObject = HttpTools.getContentJSONObject(result);
+                    if (null != jsonObject) {
+                        Tools.saveStringValue(MainActivity.this, Contants.storage.HomePageAd, result);
+                        String urlImg = "";
+                        try {
+                            urlImg = jsonObject.getString("adUrl");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        if (!TextUtils.isEmpty(urlImg)) {
+                            download(urlImg);
+                        }
+                    } else {
+                        Tools.saveStringValue(MainActivity.this, Contants.storage.HomePageAd, "");
+                    }
+                }
+                break;
+            case 9:
+                if (!TextUtils.isEmpty(result)) {
+                    JSONObject jsonObject = HttpTools.getContentJSONObject(result);
+                    try {
+                        int isopen = jsonObject.getInt("switch");//1:开启，2关闭
+                        if (isopen == 1) {
+                            initYingYan();
+                        } else if (isopen == 2) {
+                            if (null != lbsTraceClient) {
+                                lbsTraceClient.stopGather(null);
+                            }
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
                 break;
         }

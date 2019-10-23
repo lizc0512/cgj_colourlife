@@ -5,14 +5,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -20,10 +19,12 @@ import com.alibaba.android.arouter.facade.annotation.Route;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.adapter.GroupAccountDetailsAdapter;
 import com.tg.coloursteward.base.BaseActivity;
+import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.entity.GroupAccountEntity;
 import com.tg.coloursteward.entity.RedPacketEntity;
 import com.tg.coloursteward.inter.OnLoadingListener;
+import com.tg.coloursteward.model.BonusModel;
 import com.tg.coloursteward.net.GetTwoRecordListener;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.RequestConfig;
@@ -33,7 +34,6 @@ import com.tg.coloursteward.serice.HomeService;
 import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.LinkParseUtil;
 import com.tg.coloursteward.util.StringUtils;
-import com.tg.coloursteward.util.TokenUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.util.Utils;
 import com.tg.coloursteward.view.ColumnHorizontalScrollView;
@@ -48,15 +48,13 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 集体奖金包明细
  */
 @Route(path = APath.GROUPACCOUNT)
-public class GroupAccountDetailsActivity extends BaseActivity {
+public class GroupAccountDetailsActivity extends BaseActivity implements HttpResponse {
     private PullRefreshListView pullListView;
     private AppAuthService appAuthService;//1.0授权
     private TextView tvTitle;
@@ -86,10 +84,12 @@ public class GroupAccountDetailsActivity extends BaseActivity {
     private String url_rule = "https://income-czytest.colourlife.com/ruleDetail/#/?";
     private String access_token;
     private String jsondata;
+    private BonusModel bonusModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        bonusModel = new BonusModel(this);
         Intent intent = getIntent();
         if (intent != null) {
             jsondata = intent.getStringExtra("jsondata");
@@ -127,10 +127,7 @@ public class GroupAccountDetailsActivity extends BaseActivity {
     }
 
     private void initData() {
-        Map<String, Object> map = new HashMap<>();
-        RequestConfig config = new RequestConfig(this, HttpTools.GET_DETAILRULE, "");
-        Map<String, String> stringMap = TokenUtils.getStringMap(TokenUtils.getNewSaftyMap(GroupAccountDetailsActivity.this, map));
-        HttpTools.httpGet_Map(Contants.URl.URL_NEW, "/app/home/utility/ruleDeatil", config, (HashMap) stringMap);
+        bonusModel.getUtilityRule(0, this);
     }
 
     @Override
@@ -324,34 +321,6 @@ public class GroupAccountDetailsActivity extends BaseActivity {
     }
 
     @Override
-    public void onSuccess(Message msg, String jsonString, String hintString) {
-        super.onSuccess(msg, jsonString, hintString);
-        int code = HttpTools.getCode(jsonString);
-        if (msg.arg1 == HttpTools.GET_DETAILRULE) {
-            if (code == 0) {
-                int show = 0;
-                String name = "规则详情";
-                JSONObject jsonObject = HttpTools.getContentJSONObject(jsonString);
-                try {
-                    show = jsonObject.getInt("show");
-                    name = jsonObject.getString("name");
-                    url_rule = jsonObject.getString("url");
-                    url_rule = url_rule + "access_token=" + access_token;
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                if (show == 1) {// 1：显示按钮，2：不显示按钮
-                    headView.setRightText(name);
-                    headView.showRightView();
-                } else {
-                    headView.hideRightView();
-                }
-            }
-
-        }
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
         if (!EventBus.getDefault().isRegistered(this)) {
@@ -423,18 +392,30 @@ public class GroupAccountDetailsActivity extends BaseActivity {
         });
     }
 
-    /**
-     * 添加新笔记时弹出的popWin关闭的事件，主要是为了将背景透明度改回来
-     *
-     * @author cg
-     */
-    class poponDismissListener implements PopupWindow.OnDismissListener {
-
-        @Override
-        public void onDismiss() {
-            WindowManager.LayoutParams lp = GroupAccountDetailsActivity.this.getWindow().getAttributes();
-            lp.alpha = 1.0f;
-            GroupAccountDetailsActivity.this.getWindow().setAttributes(lp);
+    @Override
+    public void OnHttpResponse(int what, String result) {
+        switch (what) {
+            case 0:
+                if (!TextUtils.isEmpty(result)) {
+                    int show = 0;
+                    String name = "规则详情";
+                    JSONObject jsonObject = HttpTools.getContentJSONObject(result);
+                    try {
+                        show = jsonObject.getInt("show");
+                        name = jsonObject.getString("name");
+                        url_rule = jsonObject.getString("url");
+                        url_rule = url_rule + "access_token=" + access_token;
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    if (show == 1) {// 1：显示按钮，2：不显示按钮
+                        headView.setRightText(name);
+                        headView.showRightView();
+                    } else {
+                        headView.hideRightView();
+                    }
+                }
+                break;
         }
     }
 

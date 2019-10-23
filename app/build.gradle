@@ -178,6 +178,8 @@ dependencies {
     implementation project(path: ':hellocharts-library')//乐开
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:5.3.1'
+    implementation  'com.scwang.smart:refresh-layout-kernel:2.0.0-alpha-1'      //核心必须依赖
+    implementation  'com.scwang.smart:refresh-header-classics:2.0.0-alpha-1'
 }
 
 project.afterEvaluate {

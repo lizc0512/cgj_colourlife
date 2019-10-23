@@ -15,7 +15,9 @@ import com.tg.coloursteward.database.SharedPreferencesTools;
 import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.MD5;
-import com.tg.coloursteward.util.Tools;
+import com.tg.coloursteward.util.SoftKeyboardUtils;
+import com.tg.coloursteward.util.StringUtils;
+import com.tg.coloursteward.util.ToastUtil;
 import com.tg.coloursteward.view.dialog.ToastFactory;
 import com.tg.user.model.UserModel;
 
@@ -49,21 +51,21 @@ public class ModifiedPasswordActivity extends BaseActivity implements HttpRespon
         pwd2 = editPwd2.getText().toString();
         pwd3 = editPwd3.getText().toString();
         if (v.getId() == R.id.right_layout) {
-            pwd1 = editPwd1.getText().toString();
-            if (pwd1.length() < 6) {
-                ToastFactory.showToast(this, "请输入不少于6位的密码");
+            SoftKeyboardUtils.hideSoftKeyboard(this, editPwd1);
+            if (TextUtils.isEmpty(pwd1)) {
+                ToastFactory.showToast(this, "请输入旧密码");
                 return false;
             }
-            if (pwd2.length() < 6) {
-                ToastFactory.showToast(this, "请设置不少于6位的密码");
+            if (!StringUtils.checkPwdType(pwd2)) {
+                ToastUtil.showShortToast(this, "请输入8-18位字母+数字新密码");
                 return false;
             }
-            if (pwd3.length() < 6) {
-                ToastFactory.showToast(this, "请设置不少于6位的密码");
+            if (!StringUtils.checkPwdType(pwd3)) {
+                ToastUtil.showShortToast(this, "请输入8-18位字母+数字确认密码");
                 return false;
             }
             if (!pwd2.equals(pwd3)) {
-                ToastFactory.showToast(this, "确认密码和密码不一致");
+                ToastUtil.showShortToast(this, "确认密码和密码不一致");
                 return false;
             }
             try {
@@ -82,7 +84,7 @@ public class ModifiedPasswordActivity extends BaseActivity implements HttpRespon
      * 单设备退出
      */
     private void singleDevicelogout() {
-        String device_code = spUtils.getStringData(SpConstants.storage.DEVICE_TOKEN,"");
+        String device_code = spUtils.getStringData(SpConstants.storage.DEVICE_TOKEN, "");
         userModel.postSingleExit(0, device_code, this);
     }
 

@@ -36,6 +36,8 @@ public class HomeModel extends BaseModel {
     private String homeSetMsgReadUrl = "/app/home/setMsgRead";
     private String homeDelMsgUrl = "/app/home/delMsg";
     private String homeDelAppMsgUrl = "/app/home/delAppMsg";
+    private String homeAdPagerUrl = "/app/home/utility/startPage";
+    private String homeYingYanUrl = "/app/home/utility/getEagleJuge";
 
     public HomeModel(Context context) {
         super(context);
@@ -367,6 +369,64 @@ public class HomeModel extends BaseModel {
         params.put("app_uuid", app_uuid);
         final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(
                 mContext, 0, homeDelAppMsgUrl), RequestMethod.POST);
+        request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    int code = showSuccesResultMessageTheme(result);
+                    if (code == 0) {
+                        httpResponse.OnHttpResponse(what, result);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+            }
+        }, true, false);
+    }
+
+    /**
+     * 获取广告数据内容
+     *
+     * @param what
+     * @param httpResponse
+     */
+    public void getAdPager(int what, HttpResponse httpResponse) {
+        Map<String, Object> params = new HashMap<>();
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(
+                mContext, 0, homeAdPagerUrl), RequestMethod.GET);
+        request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    int code = showSuccesResultMessageTheme(result);
+                    if (code == 0) {
+                        httpResponse.OnHttpResponse(what, result);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+            }
+        }, true, false);
+    }
+
+    /**
+     * 鹰眼轨迹是否开启
+     *
+     * @param what
+     * @param httpResponse
+     */
+    public void getYingYan(int what, HttpResponse httpResponse) {
+        Map<String, Object> params = new HashMap<>();
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(
+                mContext, 0, homeYingYanUrl), RequestMethod.GET);
         request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
             @Override
             public void onSucceed(int what, Response<String> response) {

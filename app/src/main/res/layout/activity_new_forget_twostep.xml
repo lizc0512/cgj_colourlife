@@ -49,7 +49,7 @@
         android:layout_marginRight="90dp"
         android:background="@null"
         android:gravity="center_vertical"
-        android:hint="请重置6-18位密码"
+        android:hint="请设置8-18位字母+数字密码"
         android:maxLength="18"
         android:maxLines="1"
         android:paddingLeft="15dp"

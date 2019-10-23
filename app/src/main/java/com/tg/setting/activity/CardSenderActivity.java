@@ -1,6 +1,5 @@
 package com.tg.setting.activity;
 
-import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -30,6 +29,7 @@ import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.util.GsonUtils;
+import com.tg.coloursteward.view.MyProgressDialog;
 import com.tg.coloursteward.view.dialog.DialogFactory;
 import com.tg.setting.adapter.ViewPagerAdapter;
 import com.tg.setting.entity.CardAccessInforEntity;
@@ -64,7 +64,7 @@ public class CardSenderActivity extends BaseActivity implements HttpResponse, On
     private ImageView iv_key_check;
     private TextView tv_choice_key;
     private TextView tv_send_key;
-    private ProgressDialog mProgressDialog;
+    private MyProgressDialog mProgressDialog;
     private Device mDevice;
     private String communityUuid;
     private String hairpinId;
@@ -129,7 +129,6 @@ public class CardSenderActivity extends BaseActivity implements HttpResponse, On
         iv_key_check = findViewById(R.id.iv_key_check);
         tv_send_key.setOnClickListener(singleListener);
         tv_card_operate.setOnClickListener(singleListener);
-        mProgressDialog = new ProgressDialog(this);
         all_key_layout.setOnClickListener(singleListener);
     }
 
@@ -138,7 +137,9 @@ public class CardSenderActivity extends BaseActivity implements HttpResponse, On
                     @Override
                     public void onClick(View view) {
                         if (mLekaiService != null) {
-                            mProgressDialog = ProgressDialog.show(CardSenderActivity.this, "", "正在清空卡片……");
+                            mProgressDialog = new MyProgressDialog(CardSenderActivity.this, "正在清空卡片……");
+                            mProgressDialog.setCanceledOnTouchOutside(false);
+                            mProgressDialog.show();
                             if (!TextUtils.isEmpty(cardId)) {
                                 sendCardModel.deleteAllCgjCardRecord(0, cardId, CardSenderActivity.this);
                             }
@@ -177,7 +178,9 @@ public class CardSenderActivity extends BaseActivity implements HttpResponse, On
                 } else {
                     if (mLekaiService != null) {
                         if (mCardStatus == StatusConstants.CARD_STATUS_NEED_INIT) {
-                            mProgressDialog = ProgressDialog.show(this, "", "正在初始化卡片……");
+                            mProgressDialog = new MyProgressDialog(CardSenderActivity.this, "正在初始化卡片……");
+                            mProgressDialog.setCanceledOnTouchOutside(false);
+                            mProgressDialog.show();
                             mLekaiService.initCard(new OnInitCardCallback() {
                                 @Override
                                 public void onInitCardCallback(final int status, final String message) {
@@ -198,7 +201,9 @@ public class CardSenderActivity extends BaseActivity implements HttpResponse, On
                                 }
                             });
                         } else if (mCardStatus == StatusConstants.CARD_STATUS_NEED_INIT_PARTLY) {
-                            mProgressDialog = ProgressDialog.show(this, "", "正在部分初始化卡片……");
+                            mProgressDialog = new MyProgressDialog(CardSenderActivity.this, "正在部分初始化卡片……");
+                            mProgressDialog.setCanceledOnTouchOutside(false);
+                            mProgressDialog.show();
                             mLekaiService.initCardPartly(mInitCount, new OnInitCardCallback() {
                                 @Override
                                 public void onInitCardCallback(final int status, final String message) {

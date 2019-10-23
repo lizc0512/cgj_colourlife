@@ -30,6 +30,7 @@ import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.LinkParseUtil;
 import com.tg.coloursteward.util.ToastUtil;
+import com.tg.coloursteward.view.MyProgressDialog;
 import com.tg.coloursteward.view.dialog.DialogFactory;
 import com.tg.setting.entity.KeyCommunityListEntity;
 import com.tg.setting.entity.KeyMessageEntity;
@@ -81,7 +82,7 @@ public class KeyDoorManagerActivity extends BaseActivity implements HttpResponse
     private KeyDoorModel keyDoorModel;
     private int addType = 0;
     private Device mDevice;
-    private   ProgressDialog mProgressDialog;
+    private MyProgressDialog mProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -292,12 +293,15 @@ public class KeyDoorManagerActivity extends BaseActivity implements HttpResponse
             boolean openBluetooth = blueAdapter.isEnabled();
             if (!openBluetooth) {
                 ToastUtil.showShortToast(this, "设备未打开蓝牙，请在设置中打开");
+                return;
             } else {
                 startScanDevice();
             }
         }
         if (null != mLekaiService) {
-             mProgressDialog = ProgressDialog.show(this, null, "正在连接设备中...");
+            mProgressDialog = new MyProgressDialog(this, "正在连接设备中...");
+            mProgressDialog.setCanceledOnTouchOutside(false);
+            mProgressDialog.show();
             mLekaiService.setOnFoundDeviceListener(new OnFoundDeviceListener() {
                 @Override
                 public void foundDevice(Device device) {
@@ -318,14 +322,17 @@ public class KeyDoorManagerActivity extends BaseActivity implements HttpResponse
         mHand.postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (null == mDevice) {
+                if (mProgressDialog != null && !readerMode) {
                     mProgressDialog.dismiss();
                     ToastUtil.showLongToastCenter(KeyDoorManagerActivity.this, "当前发卡器不在范围,或没有通电");
                     stopScanDevice();
+                    readerMode = false;
                 }
             }
         }, 10000);
     }
+
+    private boolean readerMode = false;
 
     private void enterCardMode(String hairpinId) {
         mLekaiService.entryCardReaderMode(mDevice, new OnEntryCardReaderModeCallback() {
@@ -340,6 +347,7 @@ public class KeyDoorManagerActivity extends BaseActivity implements HttpResponse
                     intent.putExtra(KeySendKeyListActivity.COMMUNITY_UUID, communityUuid);
                     intent.putExtra(HAIRPINID, hairpinId);
                     startActivity(intent);
+                    readerMode = true;
                 } else {
                     Toast.makeText(KeyDoorManagerActivity.this, message, Toast.LENGTH_LONG).show();
                 }

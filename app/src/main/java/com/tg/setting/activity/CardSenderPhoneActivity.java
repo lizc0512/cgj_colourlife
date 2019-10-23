@@ -1,7 +1,6 @@
 package com.tg.setting.activity;
 
 import android.annotation.SuppressLint;
-import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -26,6 +25,7 @@ import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.ToastUtil;
+import com.tg.coloursteward.view.MyProgressDialog;
 import com.tg.setting.entity.KeyIdentityEntity;
 import com.tg.setting.model.SendCardModel;
 import com.tg.setting.service.LekaiService;
@@ -67,7 +67,7 @@ public class CardSenderPhoneActivity extends BaseActivity implements HttpRespons
     private ArrayList<String> choiceKeysList;
     private ArrayList<String> writeKeysList;
     private int isPower = 1;
-    private ProgressDialog mProgressDialog;
+    private MyProgressDialog mProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -212,7 +212,9 @@ public class CardSenderPhoneActivity extends BaseActivity implements HttpRespons
             case R.id.tv_send:
                 String phone = et_phone.getText().toString().trim();
                 String room = tv_room.getText().toString().trim();
-                mProgressDialog = ProgressDialog.show(this, "", "正在发卡……");
+                mProgressDialog = new MyProgressDialog(this, "正在发卡...");
+                mProgressDialog.setCanceledOnTouchOutside(false);
+                mProgressDialog.show();
                 SendCardModel sendCardModel = new SendCardModel(CardSenderPhoneActivity.this);
                 StringBuffer stringBuffer = new StringBuffer();
                 for (int j = 0; j < choiceKeysList.size(); j++) {

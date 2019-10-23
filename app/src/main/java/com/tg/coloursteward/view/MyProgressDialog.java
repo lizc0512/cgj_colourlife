@@ -3,6 +3,7 @@ package com.tg.coloursteward.view;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.drawable.AnimationDrawable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -21,9 +22,11 @@ public class MyProgressDialog {
         mContext = context;
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.progress_view, null);
-
-        TextView text = (TextView) view.findViewById(R.id.progress_message);
-        text.setText(message);
+        if (!TextUtils.isEmpty(message)){
+            TextView text = (TextView) view.findViewById(R.id.progress_message);
+            text.setVisibility(View.VISIBLE);
+            text.setText(message);
+        }
         ImageView loadingImage = (ImageView) view.findViewById(R.id.progress_view);
         loadingImage.setImageResource(R.drawable.loading_animation);
         animationDrawable = (AnimationDrawable) loadingImage.getDrawable();

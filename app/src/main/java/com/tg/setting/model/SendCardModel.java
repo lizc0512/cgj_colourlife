@@ -1,6 +1,7 @@
 package com.tg.setting.model;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.tg.coloursteward.baseModel.BaseModel;
 import com.tg.coloursteward.baseModel.HttpListener;
@@ -196,10 +197,12 @@ public class SendCardModel extends BaseModel {
         }, true, false);
     }
 
-    public void getCardByHairpinIdList(int what, String hairpinId, String keyWord, int pageNum, boolean isLoading, final HttpResponse httpResponse) {
+    public void getCardByHairpinIdList(int what, String hairpinId ,String keyWord, int pageNum, boolean isLoading, final HttpResponse httpResponse) {
         Map<String, Object> params = new HashMap<>();
         params.put("hairpinId", hairpinId);
-        params.put("keyWord", keyWord);
+        if(!TextUtils.isEmpty(keyWord)){
+            params.put("keyWord", keyWord);
+        }
         params.put("pageNum", pageNum);
         params.put("pageSize", 20);
         final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 11, getCardByHairpinIdListUrl), RequestMethod.GET);

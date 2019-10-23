@@ -47,6 +47,7 @@ public class CardSenderRecordActivity extends BaseActivity implements HttpRespon
 
     private String hairpinId;
     private String communityName;
+    private String communityUuid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +59,7 @@ public class CardSenderRecordActivity extends BaseActivity implements HttpRespon
         Intent intent = getIntent();
         hairpinId = intent.getStringExtra("hairpinId");
         communityName = intent.getStringExtra(KeySendKeyListActivity.COMMUNITY_NAME);
+        communityUuid = intent.getStringExtra(KeySendKeyListActivity.COMMUNITY_UUID);
         mList = new ArrayList<>();
         mSaveList = new ArrayList<>();
         sendCardModel = new SendCardModel(CardSenderRecordActivity.this);

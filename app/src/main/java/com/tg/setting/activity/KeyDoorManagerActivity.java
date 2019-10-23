@@ -367,6 +367,7 @@ public class KeyDoorManagerActivity extends BaseActivity implements HttpResponse
         Intent intent = new Intent(KeyDoorManagerActivity.this, CardSenderRecordActivity.class);
         intent.putExtra(HAIRPINID, hairpinId);
         intent.putExtra(KeySendKeyListActivity.COMMUNITY_NAME, communityName);
+        intent.putExtra(KeySendKeyListActivity.COMMUNITY_UUID, communityUuid);
         startActivity(intent);
     }
 

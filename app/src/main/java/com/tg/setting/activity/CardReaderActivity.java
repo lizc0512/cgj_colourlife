@@ -208,7 +208,7 @@ public class CardReaderActivity extends BaseActivity implements View.OnClickList
 
     @Override
     public String getHeadTitle() {
-        return "选择发卡器";
+        return "添加发卡器";
     }
 
     @Override

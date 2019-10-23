@@ -1,6 +1,5 @@
 package com.tg.setting.activity;
 
-import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.content.ComponentName;
 import android.content.Context;
@@ -206,6 +205,7 @@ public class KeyDoorManagerActivity extends BaseActivity implements HttpResponse
         if (!TextUtils.isEmpty(communityUuid)) {
             getMessageCount();
         }
+        readerMode = false;
     }
 
 

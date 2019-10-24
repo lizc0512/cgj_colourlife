@@ -206,7 +206,6 @@ public class KeyDoorManagerActivity extends BaseActivity implements HttpResponse
         if (!TextUtils.isEmpty(communityUuid)) {
             getMessageCount();
         }
-        readerMode = false;
     }
 
 
@@ -289,6 +288,7 @@ public class KeyDoorManagerActivity extends BaseActivity implements HttpResponse
      */
     public void connectSendCard(String macAddress, String hairpinId) {
         isConnected = false;
+        readerMode = false;
         BluetoothAdapter blueAdapter = BluetoothAdapter.getDefaultAdapter();
         if (null != blueAdapter) {
             boolean openBluetooth = blueAdapter.isEnabled();
@@ -320,6 +320,7 @@ public class KeyDoorManagerActivity extends BaseActivity implements HttpResponse
                 }
             });
         }
+        timerFinish=false;
         countDownTimer.start();
     }
 
@@ -331,6 +332,7 @@ public class KeyDoorManagerActivity extends BaseActivity implements HttpResponse
 
         @Override
         public void onFinish() {
+            timerFinish=true;
             if (mProgressDialog != null && !readerMode) {
                 mProgressDialog.dismiss();
                 ToastUtil.showLongToastCenter(KeyDoorManagerActivity.this, "当前发卡器不在范围,或没有通电");
@@ -339,6 +341,8 @@ public class KeyDoorManagerActivity extends BaseActivity implements HttpResponse
             }
         }
     };
+
+    private boolean timerFinish;
 
 
     private boolean readerMode = false;
@@ -350,16 +354,18 @@ public class KeyDoorManagerActivity extends BaseActivity implements HttpResponse
                 if (mProgressDialog != null) {
                     mProgressDialog.dismiss();
                 }
-                if (status == ErrorConstants.SUCCESS) {
-                    Intent intent = new Intent(KeyDoorManagerActivity.this, CardSenderActivity.class);
-                    intent.putExtra(DEVICE, mDevice);
-                    intent.putExtra(KeySendKeyListActivity.COMMUNITY_UUID, communityUuid);
-                    intent.putExtra(HAIRPINID, hairpinId);
-                    startActivity(intent);
-                    countDownTimer.cancel();
-                    readerMode = true;
-                } else {
-                    Toast.makeText(KeyDoorManagerActivity.this, message, Toast.LENGTH_LONG).show();
+                if (!timerFinish){
+                    if (status == ErrorConstants.SUCCESS) {
+                        Intent intent = new Intent(KeyDoorManagerActivity.this, CardSenderActivity.class);
+                        intent.putExtra(DEVICE, mDevice);
+                        intent.putExtra(KeySendKeyListActivity.COMMUNITY_UUID, communityUuid);
+                        intent.putExtra(HAIRPINID, hairpinId);
+                        startActivity(intent);
+                        countDownTimer.cancel();
+                        readerMode = true;
+                    } else {
+                        Toast.makeText(KeyDoorManagerActivity.this, message, Toast.LENGTH_LONG).show();
+                    }
                 }
             }
         });

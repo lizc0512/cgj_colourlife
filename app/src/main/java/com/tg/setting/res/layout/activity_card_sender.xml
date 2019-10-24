@@ -18,7 +18,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="读卡成功，卡号56443"
+        android:text="读卡成功，卡号"
         android:layout_marginTop="20dp"
         android:textColor="@color/color_333b46"
         android:textSize="14sp" />
@@ -36,7 +36,7 @@
             android:id="@+id/tv_card_infor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="内含钥匙数12"
+            android:text="内含钥匙数"
             android:textColor="@color/color_626B77"
             android:textSize="14sp" />
 

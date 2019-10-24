@@ -333,7 +333,7 @@ public class KeyDoorManagerActivity extends BaseActivity implements HttpResponse
         public void onFinish() {
             if (mProgressDialog != null && !readerMode) {
                 mProgressDialog.dismiss();
-                ToastUtil.showLongToastCenter(KeyDoorManagerActivity.this, "当前发卡器不在范围,或没有通电");
+                ToastUtil.showLongToastCenter(KeyDoorManagerActivity.this, "当前发卡器不在范围内或没有通电");
                 stopScanDevice();
                 readerMode = false;
             }
@@ -360,7 +360,7 @@ public class KeyDoorManagerActivity extends BaseActivity implements HttpResponse
                     readerMode = true;
                 } else {
                     if (TextUtils.isEmpty(message)) {
-                        ToastUtil.showLongToastCenter(KeyDoorManagerActivity.this, "当前发卡器不在范围,或没有通电");
+                        ToastUtil.showLongToastCenter(KeyDoorManagerActivity.this, "当前发卡器不在范围内或没有通电");
                     } else {
                         Toast.makeText(KeyDoorManagerActivity.this, message, Toast.LENGTH_LONG).show();
                     }

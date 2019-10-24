@@ -7,6 +7,7 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -36,6 +37,7 @@ public class CardSenderRecordActivity extends BaseActivity implements HttpRespon
 
     private ClearEditText ed_search_content;
     private LinearLayout empty_record_layout;
+    private ImageView iv_empty_record;
     private TextView tv_empty_record;
     private XRecyclerView rv_key_user;
     private SendCardModel sendCardModel;
@@ -56,6 +58,7 @@ public class CardSenderRecordActivity extends BaseActivity implements HttpRespon
         rv_key_user = findViewById(R.id.rv_key_user);
         empty_record_layout = findViewById(R.id.empty_record_layout);
         tv_empty_record = findViewById(R.id.tv_empty_record);
+        iv_empty_record = findViewById(R.id.iv_empty_record);
         Intent intent = getIntent();
         hairpinId = intent.getStringExtra("hairpinId");
         communityName = intent.getStringExtra(KeySendKeyListActivity.COMMUNITY_NAME);
@@ -164,6 +167,7 @@ public class CardSenderRecordActivity extends BaseActivity implements HttpRespon
                 if (totalRecord == 0) {
                     empty_record_layout.setVisibility(View.VISIBLE);
                     rv_key_user.setVisibility(View.GONE);
+                    iv_empty_record.setImageResource(R.drawable.bg_key_no_door);
                     tv_empty_record.setText("暂无门禁卡");
                 } else {
                     empty_record_layout.setVisibility(View.GONE);

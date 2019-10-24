@@ -92,6 +92,9 @@ public class CardSenderActivity extends BaseActivity implements HttpResponse, On
                     CardAccessInforEntity cardAccessInforEntity = GsonUtils.gsonToBean(result, CardAccessInforEntity.class);
                     CardAccessInforEntity.ContentBean contentBean = cardAccessInforEntity.getContent();
                     cardId = contentBean.getId();
+                    if (type == 2 || type == 6) {
+                        tv_card_status.setText("读卡成功,卡号" + cardNumber);
+                    }
                     tv_card_infor.setText("内含钥匙数" + contentBean.getAccessCount());
                 } catch (Exception e) {
 
@@ -153,7 +156,7 @@ public class CardSenderActivity extends BaseActivity implements HttpResponse, On
                                                 mProgressDialog.dismiss();
                                             }
                                             if (status == ErrorConstants.SUCCESS) {
-                                                tv_card_status.setText("清空卡片成功");
+                                                tv_card_status.setText("清空卡片成功,卡号" + cardNumber);
                                                 tv_card_infor.setText("内含钥匙数" + 0);
                                             } else {
                                                 tv_card_status.setText(message);
@@ -365,7 +368,7 @@ public class CardSenderActivity extends BaseActivity implements HttpResponse, On
 
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            if (null!=service){
+            if (null != service) {
                 LekaiService.LocalBinder binder = (LekaiService.LocalBinder) service;
                 mLekaiService = binder.getService();
                 mLekaiService.cardStatus(CardSenderActivity.this);

@@ -155,4 +155,21 @@
         android:layout_height="match_parent" />
 
 
+
+    <TextView
+        android:id="@+id/no_key_card"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="40dp"
+        android:visibility="gone"
+        android:drawableTop="@drawable/ic_empty_out_record"
+        android:drawablePadding="@dimen/size_12dp"
+        android:gravity="center"
+        android:paddingTop="@dimen/size_4dp"
+        android:text="暂无钥匙"
+        android:textColor="@color/color_999faa"
+        android:textSize="@dimen/font_16sp" />
+
+
 </LinearLayout>

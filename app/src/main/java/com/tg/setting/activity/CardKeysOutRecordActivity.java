@@ -29,7 +29,7 @@ import static com.tg.setting.activity.KeySendKeyListActivity.COMMUNITY_NAME;
  */
 
 public class CardKeysOutRecordActivity extends BaseActivity implements HttpResponse {
-    public static  final String KEYCARDINFOR="keycardinfor";
+    public static final String KEYCARDINFOR = "keycardinfor";
     private ImageView card_user_photo;
     private TextView tv_card_number;
     private TextView tv_card_username;
@@ -40,6 +40,7 @@ public class CardKeysOutRecordActivity extends BaseActivity implements HttpRespo
     private TextView tv_card_date;
     private TextView tv_keys_number;
     private XRecyclerView rv_key_card;
+    private TextView no_key_card;
     private String cardId;
     private int page = 1;
     private KeyCardKeysRecordAdapter keyCardKeysRecordAdapter;
@@ -79,6 +80,13 @@ public class CardKeysOutRecordActivity extends BaseActivity implements HttpRespo
                 } else {
                     rv_key_card.setLoadingMoreEnabled(true);
                 }
+                if (mList.size() == 0) {
+                    no_key_card.setVisibility(View.VISIBLE);
+                    rv_key_card.setVisibility(View.GONE);
+                } else {
+                    no_key_card.setVisibility(View.GONE);
+                    rv_key_card.setVisibility(View.VISIBLE);
+                }
             } catch (Exception e) {
 
             }
@@ -103,6 +111,7 @@ public class CardKeysOutRecordActivity extends BaseActivity implements HttpRespo
         tv_card_date = findViewById(R.id.tv_card_date);
         tv_keys_number = findViewById(R.id.tv_keys_number);
         rv_key_card = findViewById(R.id.rv_key_card);
+        no_key_card = findViewById(R.id.no_key_card);
     }
 
     private void initData() {

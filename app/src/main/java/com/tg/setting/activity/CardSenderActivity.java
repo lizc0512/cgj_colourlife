@@ -95,9 +95,14 @@ public class CardSenderActivity extends BaseActivity implements HttpResponse, On
                     if (type == 2 || type == 6) {
                         tv_card_status.setText("读卡成功,卡号" + cardNumber);
                     }
-                    tv_card_infor.setText("内含钥匙数" + contentBean.getAccessCount());
+                    String accessCount = contentBean.getAccessCount();
+                    if (TextUtils.isEmpty(accessCount)) {
+                        tv_card_infor.setText("内含钥匙数0");
+                    } else {
+                        tv_card_infor.setText("内含钥匙数" + accessCount);
+                    }
                 } catch (Exception e) {
-
+                    tv_card_infor.setText("内含钥匙数0");
                 }
                 break;
             case 2:
@@ -159,7 +164,7 @@ public class CardSenderActivity extends BaseActivity implements HttpResponse, On
                                                 tv_card_status.setText("清空卡片成功,卡号" + cardNumber);
                                                 tv_card_infor.setText("内含钥匙数" + 0);
                                             } else {
-                                                tv_card_status.setText(message);
+                                                tv_card_status.setText(message+"["+status+"]");
                                             }
                                         }
                                     });
@@ -196,7 +201,7 @@ public class CardSenderActivity extends BaseActivity implements HttpResponse, On
                                             if (status == ErrorConstants.SUCCESS) {
                                                 tv_card_status.setText("初始化卡片成功");
                                             } else {
-                                                tv_card_status.setText(message);
+                                                tv_card_status.setText(message+"["+status+"]");
                                             }
                                         }
                                     });
@@ -219,7 +224,7 @@ public class CardSenderActivity extends BaseActivity implements HttpResponse, On
                                             if (status == ErrorConstants.SUCCESS) {
                                                 tv_card_status.setText("部分初始化卡片成功");
                                             } else {
-                                                tv_card_status.setText(message);
+                                                tv_card_status.setText(message+"["+status+"]");
                                             }
                                         }
                                     });

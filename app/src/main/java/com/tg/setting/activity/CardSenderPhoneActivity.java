@@ -184,7 +184,7 @@ public class CardSenderPhoneActivity extends BaseActivity implements HttpRespons
                                             setResult(200);
                                             finish();
                                         } else {
-                                            ToastUtil.showLongToastCenter(CardSenderPhoneActivity.this, message);
+                                            ToastUtil.showLongToastCenter(CardSenderPhoneActivity.this, message+"["+status+"]");
                                         }
                                     }
                                 });

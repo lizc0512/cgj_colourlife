@@ -362,7 +362,7 @@ public class KeyDoorManagerActivity extends BaseActivity implements HttpResponse
                     if (TextUtils.isEmpty(message)) {
                         ToastUtil.showLongToastCenter(KeyDoorManagerActivity.this, "当前发卡器不在范围内或没有通电");
                     } else {
-                        Toast.makeText(KeyDoorManagerActivity.this, message, Toast.LENGTH_LONG).show();
+                        Toast.makeText(KeyDoorManagerActivity.this, message+"["+status+"]", Toast.LENGTH_LONG).show();
                     }
                 }
             }

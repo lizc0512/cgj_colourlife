@@ -157,6 +157,7 @@ public class CardReaderActivity extends BaseActivity implements View.OnClickList
     @Override
     public void OnHttpResponse(int what, String result) {
         if (what == 0) {
+            ToastUtil.showLongToastCenter(CardReaderActivity.this,"添加成功!");
             setResult(RESULT_OK);
             finish();
         }

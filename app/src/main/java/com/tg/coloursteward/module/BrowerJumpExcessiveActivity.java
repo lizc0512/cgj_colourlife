@@ -8,7 +8,9 @@ import android.view.View;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.tg.coloursteward.base.BaseActivity;
+import com.tg.coloursteward.constant.SpConstants;
 import com.tg.coloursteward.util.LinkParseUtil;
+import com.tg.user.activity.LoginActivity;
 import com.youmai.hxsdk.router.APath;
 
 
@@ -32,11 +34,22 @@ public class BrowerJumpExcessiveActivity extends BaseActivity {
         int source = intent.getIntExtra(THRIDFROMSOURCE, 0);
         {
             if (source == 0) {
-                if (null != schemeUri && "colourlifeauth".equals(schemeUri.getScheme()) && "web".equals(schemeUri.getHost())) {
-                    final String linkUrl = schemeUri.getQueryParameter("linkURL");
-                    Intent jumpIntent = new Intent(BrowerJumpExcessiveActivity.this, MainActivity.class);
-                    intent.putExtra(MainActivity.JUMPOTHERURL, linkUrl);
-                    startActivity(jumpIntent);
+                boolean islogin = spUtils.getBooleanData(SpConstants.UserModel.ISLOGIN, false);
+                if (islogin) {
+                    if (null != schemeUri && "colourlifeauth".equals(schemeUri.getScheme()) && "web".equals(schemeUri.getHost())) {
+                        final String linkUrl = schemeUri.getQueryParameter("linkURL");
+                        Intent jumpIntent = new Intent(BrowerJumpExcessiveActivity.this, MainActivity.class);
+                        intent.putExtra(MainActivity.JUMPOTHERURL, linkUrl);
+                        startActivity(jumpIntent);
+                    } else if (null != schemeUri && "cgjcolourlifeauth".equals(schemeUri.getScheme()) && "web".equals(schemeUri.getHost())) {
+                        final String linkUrl = schemeUri.getQueryParameter("linkURL");
+                        Intent jumpIntent = new Intent(BrowerJumpExcessiveActivity.this, MainActivity.class);
+                        intent.putExtra(MainActivity.JUMPOTHERURL, linkUrl);
+                        startActivity(jumpIntent);
+                    }
+                } else {
+                    Intent login = new Intent(BrowerJumpExcessiveActivity.this, LoginActivity.class);
+                    startActivity(login);
                 }
             } else {
                 String linkUrl = intent.getStringExtra(THRIDLINKURL);

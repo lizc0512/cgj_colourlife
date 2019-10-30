@@ -77,10 +77,12 @@
     <dimen name="size_80dp">80dp</dimen>
     <dimen name="size_84dp">84dp</dimen>
     <dimen name="size_88dp">88dp</dimen>
+    <dimen name="size_90dp">90dp</dimen>
     <dimen name="size_96dp">96dp</dimen>
     <dimen name="size_100dp">100dp</dimen>
     <dimen name="size_101dp">101dp</dimen>
     <dimen name="size_102dp">102dp</dimen>
+    <dimen name="size_105dp">105dp</dimen>
     <dimen name="size_110dp">110dp</dimen>
     <dimen name="size_115dp">115dp</dimen>
     <dimen name="size_130dp">130dp</dimen>

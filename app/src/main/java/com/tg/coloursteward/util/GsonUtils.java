@@ -31,15 +31,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
 
 
 /*
-* @date 创建时间 2017/7/3
-* @author  yuansk
-* @Description   gson的解析
-* @version  1.1
-*/
+ * @date 创建时间 2017/7/3
+ * @author  yuansk
+ * @Description   gson的解析
+ * @version  1.1
+ */
 public class GsonUtils {
 
 
@@ -260,6 +259,12 @@ public class GsonUtils {
         if (gson != null) {
             t = gson.fromJson(gsonString, cls);
         }
+        return t;
+    }
+
+    public static <T> T ktGsonToBean(String gsonString, Class<T> cls) {
+        T t = null;
+        t = new Gson().fromJson(gsonString, cls);
         return t;
     }
 

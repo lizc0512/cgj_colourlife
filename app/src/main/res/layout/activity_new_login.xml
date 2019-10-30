@@ -29,6 +29,18 @@
             android:src="@drawable/login_logo" />
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/tv_register"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/size_40dp"
+        android:layout_marginTop="@dimen/size_96dp"
+        android:gravity="center"
+        android:layout_marginRight="@dimen/size_40dp"
+        android:text="@string/user_register"
+        android:textColor="@color/white"
+        android:textSize="@dimen/font_12sp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tv_welcome"

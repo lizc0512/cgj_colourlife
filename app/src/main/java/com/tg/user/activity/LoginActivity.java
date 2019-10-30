@@ -113,6 +113,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     private final float mLogoScale = 0.5f;//logo 缩放比例
     private final int mAnimTime = 300;//动画时间
     private boolean isShow = false;
+    private TextView tv_register;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -156,6 +157,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
 
 
     private void initView() {
+        tv_register = findViewById(R.id.tv_register);
         constrant_layout = findViewById(R.id.constrant_layout);
         distance_view = findViewById(R.id.distance_view);
         iv_head_pic = findViewById(R.id.iv_head_pic);
@@ -174,6 +176,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         tv_login_smscode.setOnClickListener(this);
         btn_get_code.setOnClickListener(this);
         btn_login.setOnClickListener(this);
+        tv_register.setOnClickListener(this);
 
         tv_login_byczy.setOnClickListener(this);
         edit_account.addTextChangedListener(this);
@@ -390,7 +393,11 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 }
                 break;
             case R.id.btn_get_code:
-                userCzyModel.getSmsCode(6, account, 5, 1, this);//找回密码获取短信验证码
+                userCzyModel.getSmsCode(6, account, 5, 1, true, this);//找回密码获取短信验证码
+                break;
+            case R.id.tv_register:
+                Intent register = new Intent(this, RegisterActivity.class);
+                startActivity(register);
                 break;
         }
     }

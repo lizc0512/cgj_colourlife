@@ -34,6 +34,11 @@ public class UserCzyModel extends BaseModel {
     private String czyAuthUrl = "/oauth/token";
     private String checkWhiteUrl = "/user/checkWhite";
     private String sendCodeUrl = "/sms/sendCode";
+    private String checkRegisterUrl = "/user/checkRegister";
+    private String checkCodeUrl = "/sms/checkCode";
+
+    public UserCzyModel() {
+    }
 
     public UserCzyModel(Context context) {
         super(context);
@@ -137,12 +142,82 @@ public class UserCzyModel extends BaseModel {
      * @param sms_type
      * @param newHttpResponse
      */
-    public void getSmsCode(int what, String mobile, int work_type, int sms_type, final HttpResponse newHttpResponse) {
+    public void getSmsCode(int what, String mobile, int work_type, int sms_type, boolean isLoading, final HttpResponse newHttpResponse) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("mobile", mobile);
         params.put("work_type", work_type);
         params.put("sms_type", sms_type);
         final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 13, sendCodeUrl), RequestMethod.POST);
+        request(what, request, params, new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    int resultCode = showSuccesResultMessage(result);
+                    if (resultCode == 0) {
+                        newHttpResponse.OnHttpResponse(what, result);
+                    }
+                } else {
+                    showErrorCodeMessage(responseCode, response);
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+                showExceptionMessage(what, response);
+            }
+        }, true, isLoading);
+    }
+
+    /**
+     * 检查该手机号是否注册
+     *
+     * @param what
+     * @param mobile
+     * @param newHttpResponse
+     */
+    public void getCheckRegister(int what, String mobile, final HttpResponse newHttpResponse) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("mobile", mobile);
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 13, checkRegisterUrl), RequestMethod.GET);
+        request(what, request, params, new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    int resultCode = showSuccesResultMessage(result);
+                    if (resultCode == 0) {
+                        newHttpResponse.OnHttpResponse(what, result);
+                    }
+                } else {
+                    showErrorCodeMessage(response);
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+                showExceptionMessage(what, response);
+            }
+        }, true, true);
+    }
+
+    /**
+     * 短信校验接口
+     *
+     * @param what
+     * @param mobile
+     * @param code
+     * @param work_type
+     * @param newHttpResponse
+     */
+    public void postCheckSMSCode(int what, String mobile, String code, String work_type, final HttpResponse newHttpResponse) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("mobile", mobile);
+        params.put("sms_token", code);
+        params.put("work_type", work_type);
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 13, checkCodeUrl), RequestMethod.POST);
         request(what, request, params, new HttpListener<String>() {
             @Override
             public void onSucceed(int what, Response<String> response) {

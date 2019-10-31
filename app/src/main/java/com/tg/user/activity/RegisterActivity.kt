@@ -149,7 +149,7 @@ class RegisterActivity : BaseActivity(), View.OnClickListener, HttpResponse {
         } else if (isSetPwd && isRegister) {
             val pwd = et_register_pwd.text.toString().trim()
             if (!TextUtils.isEmpty(pwd) && StringUtils.checkPwdType(pwd)) {
-                val intent = Intent(this, ConpanyInfoActivity::class.java)
+                val intent = Intent(this, CompanyInfoActivity::class.java)
                 startActivity(intent)
             } else {
                 ToastUtil.showShortToast(this, "请设置8-18位字母+数字密码")
@@ -198,12 +198,12 @@ class RegisterActivity : BaseActivity(), View.OnClickListener, HttpResponse {
                     isShowPwd = true
                     et_register_pwd.transformationMethod = HideReturnsTransformationMethod.getInstance()
                     iv_register_showpwd.setImageResource(R.drawable.work_icon_visible)
-                    et_register_pwd.selectionEnd
+                    et_register_pwd.setSelection(et_register_pwd.getText().length)
                 } else {
                     isShowPwd = false
                     et_register_pwd.transformationMethod = PasswordTransformationMethod.getInstance()
                     iv_register_showpwd.setImageResource(R.drawable.work_icon_invisible)
-                    et_register_pwd.selectionEnd
+                    et_register_pwd.setSelection(et_register_pwd.getText().length)
                 }
             }
         }

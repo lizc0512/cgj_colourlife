@@ -40,5 +40,11 @@
     <string name="user_company_real">请填写真实姓名</string>
     <string name="user_company_company">所在企业/团队名称</string>
     <string name="user_company_tocgj">进入彩管家</string>
+    <string name="user_company_select">请选择企业/团队名称</string>
+    <string name="user_company_top">所在企业/团队</string>
+    <string name="user_company_create">创建</string>
+    <string name="user_company_input">请输入公司名称</string>
+    <string name="user_company_join">申请加入</string>
+    <string name="user_company_createcom">没有找到相关企业/团队，去创建团队</string>
 
 </resources>

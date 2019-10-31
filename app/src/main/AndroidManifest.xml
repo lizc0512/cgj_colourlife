@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.tg.coloursteward">
+
     <uses-sdk tools:overrideLibrary="com.intelspace.library" />
 
     <permission
@@ -49,7 +50,8 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup,android:theme,android:label">
-        <activity android:name="com.tg.user.activity.ConpanyInfoActivity"></activity>
+        <activity android:name="com.tg.user.activity.SelectCompanyActivity"></activity>
+        <activity android:name="com.tg.user.activity.CompanyInfoActivity" />
         <activity android:name="com.tg.user.activity.RegisterActivity" />
 
         <uses-library

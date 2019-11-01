@@ -9,6 +9,8 @@ import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.baseModel.RequestEncryptionUtils;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.util.GsonUtils;
+import com.tg.coloursteward.util.RSAUtil;
+import com.tg.coloursteward.util.TokenUtils;
 import com.tg.user.entity.Oauth2Entity;
 import com.yanzhenjie.nohttp.NoHttp;
 import com.yanzhenjie.nohttp.RequestMethod;
@@ -17,6 +19,7 @@ import com.yanzhenjie.nohttp.rest.Response;
 
 import org.json.JSONObject;
 
+import java.security.PublicKey;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,6 +39,7 @@ public class UserCzyModel extends BaseModel {
     private String sendCodeUrl = "/sms/sendCode";
     private String checkRegisterUrl = "/user/checkRegister";
     private String checkCodeUrl = "/sms/checkCode";
+    private String registerUrl = "/user/register";
 
     public UserCzyModel() {
     }
@@ -218,6 +222,46 @@ public class UserCzyModel extends BaseModel {
         params.put("sms_token", code);
         params.put("work_type", work_type);
         final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 13, checkCodeUrl), RequestMethod.POST);
+        request(what, request, params, new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    int resultCode = showSuccesResultMessage(result);
+                    if (resultCode == 0) {
+                        newHttpResponse.OnHttpResponse(what, result);
+                    }
+                } else {
+                    showErrorCodeMessage(responseCode, response);
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+                showExceptionMessage(what, response);
+            }
+        }, true, true);
+    }
+
+    /**
+     * 用户注册接口
+     *
+     * @param what
+     * @param mobile
+     * @param code
+     * @param password
+     * @param newHttpResponse
+     */
+    public void postRegister(int what, String mobile, String code, String password, final HttpResponse newHttpResponse) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("mobile", mobile);
+        params.put("sms_token", code);
+        PublicKey publicKey = RSAUtil.keyStrToPublicKey(Contants.URl.publicKeyString);
+        params.put("password", RSAUtil.encryptDataByPublicKey(password.getBytes(), publicKey));
+        params.put("chanel", "cgj");
+        params.put("device_uuid", TokenUtils.getUUID(mContext));
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 13, registerUrl), RequestMethod.POST);
         request(what, request, params, new HttpListener<String>() {
             @Override
             public void onSucceed(int what, Response<String> response) {

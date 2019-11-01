@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.support.constraint.ConstraintLayout;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
@@ -18,6 +19,7 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -26,10 +28,12 @@ import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.inter.ResultCallBack;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.object.SlideItemObj;
+import com.tg.coloursteward.util.ToastUtil;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.CameraView;
 import com.tg.coloursteward.view.RotateProgress;
 import com.tg.coloursteward.view.spinnerwheel.SlideSelectorView;
+import com.tg.user.callback.CreateDialgCallBack;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -79,6 +83,7 @@ public class DialogFactory implements ResultCallBack {
     private RotateProgress progressBar;
     private TextView tvContent;
     private OnClickListener okListener;
+    private CreateDialgCallBack dialgCallBack;
     private OnClickListener cancelListener;
 
     private Button btnOk;
@@ -532,5 +537,67 @@ public class DialogFactory implements ResultCallBack {
             msgBtnOk.setText(ok);
         }
         msgDialog.show();
+    }
+
+    public void setDialogOnClickListener(CreateDialgCallBack l) {
+        this.dialgCallBack = l;
+    }
+
+    public void showCreateDialog(Activity activity, final CreateDialgCallBack okL, final OnClickListener cancelL, String content, String ok, String cancel) {
+        this.dialgCallBack = okL;
+        this.cancelListener = cancelL;
+        if (dialog == null || dialogActivity != activity) {
+            dialogActivity = activity;
+            DisplayMetrics metrics = Tools.getDisplayMetrics(activity);
+            dialog = new AlertDialog.Builder(activity).create();
+            Window window = dialog.getWindow();
+            dialog.setView(new EditText(activity));
+            dialog.show();
+            ConstraintLayout layout = (ConstraintLayout) LayoutInflater.from(activity)
+                    .inflate(R.layout.create_dialog_layout, null);
+            tvContent = (TextView) layout.findViewById(R.id.dialog_title);
+            btnOk = (Button) layout.findViewById(R.id.btn_ok);
+            btnCancel = (Button) layout.findViewById(R.id.btn_cancel);
+            EditText editText = layout.findViewById(R.id.et_create_content);
+            btnOk.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String content = editText.getText().toString().trim();
+                    if (!TextUtils.isEmpty(content)) {
+                        if (dialgCallBack != null) {
+                            dialgCallBack.onClick(v, editText.getText().toString().trim());
+                        }
+                        dialog.dismiss();
+                    } else {
+                        ToastUtil.showShortToast(activity, "名称不能为空");
+                    }
+                }
+            });
+            btnCancel.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (cancelListener != null) {
+                        cancelListener.onClick(v);
+                    }
+                    dialog.dismiss();
+                }
+            });
+            window.setContentView(layout);
+            WindowManager.LayoutParams p = window.getAttributes();
+            p.width = ((int) (metrics.widthPixels - 80 * metrics.density));
+            window.setAttributes(p);
+        }
+        if (!TextUtils.isEmpty(content)) {
+            tvContent.setText(content);
+        }
+        if (ok == null) {
+            ok = "确定";
+        }
+        if (cancel == null) {
+            cancel = "取消";
+        }
+        btnOk.setText(ok);
+        btnCancel.setText(cancel);
+        dialog.show();
     }
 }

@@ -65,7 +65,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/size_40dp"
-        android:text="@string/user_company_createcom"
         android:textColor="@color/color_647786"
         android:textSize="@dimen/font_14sp"
         app:layout_constraintLeft_toLeftOf="parent"

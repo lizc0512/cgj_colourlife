@@ -396,7 +396,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 userCzyModel.getSmsCode(6, account, 5, 1, true, this);//找回密码获取短信验证码
                 break;
             case R.id.tv_register:
-                Intent register = new Intent(this, RegisterActivity.class);
+                Intent register = new Intent(this,  CompanyInfoActivity.class);
                 startActivity(register);
                 break;
         }

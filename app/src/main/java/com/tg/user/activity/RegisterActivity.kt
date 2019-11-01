@@ -36,6 +36,7 @@ import kotlinx.android.synthetic.main.base_actionbar.*
  */
 class RegisterActivity : BaseActivity(), View.OnClickListener, HttpResponse {
     var phone = ""
+    var code: String? = null
     var userCzyModel = UserCzyModel()
     var countStart: Int = 0
     var isRegister: Boolean = false
@@ -46,8 +47,10 @@ class RegisterActivity : BaseActivity(), View.OnClickListener, HttpResponse {
         when (what) {
             0 -> takeIf { !TextUtils.isEmpty(result) }?.apply { nextAt(result) }
             1 -> initTimeCount(result)
-            2 -> setPwd()
-
+            2 -> {
+                val intent = Intent(this, CompanyInfoActivity::class.java)
+                startActivity(intent)
+            }
         }
     }
 
@@ -140,17 +143,16 @@ class RegisterActivity : BaseActivity(), View.OnClickListener, HttpResponse {
 
     fun initData() {
         if (isRegister && !isSetPwd) {
-            val code = et_register_code.text.toString().trim()
+            code = et_register_code.text.toString().trim()
             if (!TextUtils.isEmpty(code)) {
-                userCzyModel.postCheckSMSCode(2, phone, code, "register", this)
+                setPwd()
             } else {
                 ToastUtil.showShortToast(this, "短信验证码不能为空")
             }
         } else if (isSetPwd && isRegister) {
             val pwd = et_register_pwd.text.toString().trim()
             if (!TextUtils.isEmpty(pwd) && StringUtils.checkPwdType(pwd)) {
-                val intent = Intent(this, CompanyInfoActivity::class.java)
-                startActivity(intent)
+                userCzyModel.postRegister(2, phone, code, pwd, this)
             } else {
                 ToastUtil.showShortToast(this, "请设置8-18位字母+数字密码")
             }

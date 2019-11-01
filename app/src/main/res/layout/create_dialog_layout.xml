@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/dialog_corner_bg">
+
+    <TextView
+        android:id="@+id/dialog_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/size_20dp"
+        android:text="企业/团队名称 "
+        android:textColor="@color/tv_mine"
+        android:textSize="@dimen/font_16sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/et_create_content"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_32dp"
+        android:layout_marginLeft="@dimen/size_20dp"
+        android:layout_marginTop="@dimen/size_13dp"
+        android:layout_marginRight="@dimen/size_20dp"
+        android:background="@drawable/bg_create_button_gray"
+        android:hint="请输入名称"
+        android:paddingLeft="@dimen/size_10dp"
+        android:textColorHint="@color/color_bbc0cb"
+        android:textColor="@color/color_131719"
+        android:textSize="@dimen/font_16sp"
+        app:layout_constraintTop_toBottomOf="@id/dialog_title" />
+
+    <View
+        android:id="@+id/view_line"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_1px"
+        android:layout_marginTop="@dimen/size_20dp"
+        android:background="@color/line_color"
+        app:layout_constraintTop_toBottomOf="@id/et_create_content" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/view_line">
+
+        <Button
+            android:id="@+id/btn_cancel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/left_button_selector"
+            android:gravity="center"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:text="取消"
+            android:textColor="@color/login_tv"
+            android:textSize="16dp" />
+
+        <TextView
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0"
+            android:background="@color/line_color" />
+
+        <Button
+            android:id="@+id/btn_ok"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/right_button_selector"
+            android:gravity="center"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:text="确定"
+            android:textColor="@color/blue_dialog"
+            android:textSize="16dp" />
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>

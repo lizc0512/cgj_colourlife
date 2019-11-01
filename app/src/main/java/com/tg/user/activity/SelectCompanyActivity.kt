@@ -1,18 +1,23 @@
 package com.tg.user.activity
 
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.text.SpannableString
 import android.text.Spanned
+import android.text.TextPaint
 import android.text.TextUtils
+import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
-import android.text.style.ForegroundColorSpan
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import com.tg.coloursteward.R
 import com.tg.coloursteward.base.BaseActivity
+import com.tg.coloursteward.util.ToastUtil
+import com.tg.coloursteward.view.dialog.DialogFactory
+import com.tg.user.callback.CreateDialgCallBack
 import kotlinx.android.synthetic.main.activity_select_company.*
 import kotlinx.android.synthetic.main.base_actionbar.*
 
@@ -49,25 +54,34 @@ class SelectCompanyActivity : BaseActivity() {
         tv_base_title.setText(getString(R.string.user_company_top))
         tv_base_confirm.setText(getString(R.string.user_company_create))
         tv_base_confirm.setTextColor(ContextCompat.getColor(this, R.color.color_1ca1f4))
-        val content = tv_selectcompany_create.text
-        val spannableString = SpannableString(content)
-        val foregroundColorSpan = ForegroundColorSpan(Color.parseColor("#647786"))
-        val foregroundEnd = ForegroundColorSpan(Color.parseColor("#1CA1F4"))
+        tv_base_confirm.setOnClickListener { initDialog() }
+        var spannableString = SpannableString(getString(R.string.user_company_createcom))
+        val length = getString(R.string.user_company_createcom).length
         val clickableSpan = object : ClickableSpan() {
             override fun onClick(widget: View) {
                 initDialog()
             }
-        }
-        spannableString.setSpan(foregroundColorSpan, 0, 13, Spanned.SPAN_INCLUSIVE_EXCLUSIVE)
-        spannableString.setSpan(foregroundEnd, 14, content.length, Spanned.SPAN_INCLUSIVE_EXCLUSIVE)
-        spannableString.setSpan(clickableSpan, 14, content.length, Spanned.SPAN_INCLUSIVE_EXCLUSIVE)
-        tv_selectcompany_create.setText(spannableString)
 
+            override fun updateDrawState(ds: TextPaint) {
+                super.updateDrawState(ds)
+                ds.isUnderlineText = false
+                ds.setColor(Color.parseColor("#1ca1f4"));
+                ds.clearShadowLayer();
+            }
+        }
+        spannableString.setSpan(clickableSpan, 13, length, Spanned.SPAN_INCLUSIVE_EXCLUSIVE)
+        tv_selectcompany_create.setMovementMethod(LinkMovementMethod.getInstance())
+        tv_selectcompany_create.setHighlightColor(ContextCompat.getColor(this, android.R.color.transparent));
+        tv_selectcompany_create.setText(spannableString)
 
         et_selectcom_search.setOnEditorActionListener(TextView.OnEditorActionListener { v, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 val content = et_selectcom_search.text.toString().trim()
-                takeIf { !TextUtils.isEmpty(content) }?.apply { initData(content) }
+                if (!TextUtils.isEmpty(content)) {
+                    initData(content)
+                } else {
+                    ToastUtil.showShortToast(this, "内容不能为空")
+                }
             }
             false
         })
@@ -75,6 +89,14 @@ class SelectCompanyActivity : BaseActivity() {
     }
 
     private fun initDialog() {
-
+        var click = object : CreateDialgCallBack {
+            override fun onClick(v: View, conent: String) {
+                var intent = Intent()
+                intent.putExtra("companyName", conent)
+                setResult(101, intent)
+                finish()
+            }
+        }
+        DialogFactory.getInstance().showCreateDialog(this, click, null, "", null, null)
     }
 }

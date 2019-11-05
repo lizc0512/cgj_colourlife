@@ -50,9 +50,18 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup,android:theme,android:label">
-        <activity android:name="com.tg.user.activity.SelectCompanyActivity"></activity>
-        <activity android:name="com.tg.user.activity.CompanyInfoActivity" />
-        <activity android:name="com.tg.user.activity.RegisterActivity" />
+        <activity
+            android:name="com.tg.money.activity.InstantDistributionActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.tg.user.activity.SelectCompanyActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.tg.user.activity.CompanyInfoActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.tg.user.activity.RegisterActivity"
+            android:screenOrientation="portrait" />
 
         <uses-library
             android:name="org.apache.http.legacy"

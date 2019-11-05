@@ -756,7 +756,7 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
         if (null == homeModel) {
             homeModel = new HomeModel(this);
         }
-        homeModel.postSetMsgRead(7, msg_id, this);
+        homeModel.postSetMsgRead(7, msg_id, false, this);
     }
 
     // 更新首页消息推送列表

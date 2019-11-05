@@ -1,6 +1,77 @@
-<com.tg.coloursteward.view.PullRefreshListView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/pull_listview"
+    android:id="@+id/sr_desktop"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.tg.im.activity.DeskTopActivity" />
+    android:layout_height="wrap_content"
+    tools:context="com.tg.im.activity.DeskTopActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.tg.coloursteward.view.PullRefreshListView
+            android:id="@+id/pull_listview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_desktop"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:listitem="@layout/home_listview" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_44dp"
+            android:layout_below="@id/rv_desktop" />
+
+        <RelativeLayout
+            android:id="@+id/rl_desktop_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_44dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/white"
+            android:visibility="gone">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/size_1px"
+                android:background="@color/line_color" />
+
+            <TextView
+                android:id="@+id/tv_desktop_all"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/size_20dp"
+                android:padding="@dimen/size_5dp"
+                android:text="全选"
+                android:textColor="@color/color_1ca1f4"
+                android:textSize="@dimen/font_16sp" />
+
+            <TextView
+                android:id="@+id/tv_desktop_read"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="@dimen/size_20dp"
+                android:padding="@dimen/size_5dp"
+                android:text="设为已读"
+                android:textColor="@color/color_1ca1f4"
+                android:textSize="@dimen/font_16sp" />
+
+            <TextView
+                android:id="@+id/tv_desktop_delete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/size_20dp"
+                android:padding="@dimen/size_5dp"
+                android:text="删除"
+                android:textColor="@color/public_account_in"
+                android:textSize="@dimen/font_16sp" />
+        </RelativeLayout>
+    </RelativeLayout>
+</android.support.v4.widget.SwipeRefreshLayout>

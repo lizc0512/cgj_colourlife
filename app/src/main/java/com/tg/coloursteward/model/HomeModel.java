@@ -269,7 +269,7 @@ public class HomeModel extends BaseModel {
      * @param page
      * @param httpResponse
      */
-    public void getHomeMsgDetail(int what, String app_id, int page, HttpResponse httpResponse) {
+    public void getHomeMsgDetail(int what, String app_id, int page, boolean isLoading, HttpResponse httpResponse) {
         Map<String, Object> params = new HashMap<>();
         params.put("app_id", app_id);
         params.put("page", page);
@@ -292,7 +292,7 @@ public class HomeModel extends BaseModel {
             @Override
             public void onFailed(int what, Response<String> response) {
             }
-        }, true, false);
+        }, true, isLoading);
     }
 
     /**
@@ -302,7 +302,7 @@ public class HomeModel extends BaseModel {
      * @param msg_id
      * @param httpResponse
      */
-    public void postSetMsgRead(int what, String msg_id, HttpResponse httpResponse) {
+    public void postSetMsgRead(int what, String msg_id, boolean isLoading,HttpResponse httpResponse) {
         Map<String, Object> params = new HashMap<>();
         params.put("msg_id", msg_id);
         final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(
@@ -323,7 +323,7 @@ public class HomeModel extends BaseModel {
             @Override
             public void onFailed(int what, Response<String> response) {
             }
-        }, true, false);
+        }, true, isLoading);
     }
 
     /**
@@ -354,7 +354,7 @@ public class HomeModel extends BaseModel {
             @Override
             public void onFailed(int what, Response<String> response) {
             }
-        }, true, false);
+        }, true, true);
     }
 
     /**

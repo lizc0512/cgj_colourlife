@@ -100,7 +100,7 @@ class RegisterActivity : BaseActivity(), View.OnClickListener, HttpResponse {
     }
 
     fun nextAt(result: String) {
-        val checkRegisterEntity = GsonUtils.ktGsonToBean(result, CheckRegisterEntity::class.java)
+        val checkRegisterEntity: CheckRegisterEntity = GsonUtils.ktGsonToBean(result, CheckRegisterEntity::class.java)
         if (checkRegisterEntity.content.is_register == 1) {
             showDialog()
         } else {

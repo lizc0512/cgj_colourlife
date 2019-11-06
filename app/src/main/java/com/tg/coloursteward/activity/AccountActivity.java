@@ -28,6 +28,7 @@ import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.RoundImageView;
 import com.tg.coloursteward.view.dialog.ToastFactory;
+import com.tg.money.activity.InstantDistributionActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -81,7 +82,8 @@ public class AccountActivity extends BaseActivity implements MyListener, HttpRes
         /**
          * 及时分配详情
          */
-        rlNextBalance.setOnClickListener(v -> Cqb_PayUtil.getInstance(AccountActivity.this).ToJSFP(getPublicParams(), getEnvironment(), "jsfp"));
+        rlNextBalance.setOnClickListener(v ->
+                startActivity(new Intent(this, InstantDistributionActivity.class)));
         rl_public.setOnClickListener(v -> startActivity(new Intent(AccountActivity.this, PublicAccountActivity.class)));
         rlNextdgzh.setOnClickListener(v -> startActivity(new Intent(AccountActivity.this, PublicAccountActivity.class)));
     }

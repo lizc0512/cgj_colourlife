@@ -135,6 +135,9 @@ public class DeskTopActivity extends BaseActivity implements OnItemClickListener
             if (null != deskTopAdapter) {
                 deskTopAdapter.notifyDataSetChanged();
                 rl_desktop_bottom.setVisibility(View.VISIBLE);
+                if (item.getApp_id().equals("tgzz")) {
+                    tv_desktop_delete.setVisibility(View.GONE);
+                }
             }
 //            pullListView.setEnablePullRefresh(false);
         }

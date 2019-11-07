@@ -1,5 +1,6 @@
 package com.tg.money.activity
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.LinearLayoutManager
@@ -57,7 +58,6 @@ class InstantDistributionActivity : BaseActivity(), View.OnClickListener, HttpRe
                 }
                 R.id.tv_instant_right -> {
                     if (mList.get(position).open_cashing.equals("1")) {
-                        ToastUtil.showShortToast(this, "left")
                         ToastUtil.showShortToast(this, "right")
                     }
                 }
@@ -70,7 +70,7 @@ class InstantDistributionActivity : BaseActivity(), View.OnClickListener, HttpRe
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.iv_base_back -> finish()
-
+            R.id.tv_base_confirm -> startActivity(Intent(this, TransactionRecordsActivity::class.java))
         }
     }
 
@@ -99,6 +99,7 @@ class InstantDistributionActivity : BaseActivity(), View.OnClickListener, HttpRe
         tv_base_confirm.setText("交易记录")
         tv_base_confirm.setTextColor(ContextCompat.getColor(this, R.color.color_1ca1f4))
         iv_base_back.setOnClickListener(this)
+        tv_base_confirm.setOnClickListener(this)
         val linearLayoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         rv_instant.layoutManager = linearLayoutManager
     }

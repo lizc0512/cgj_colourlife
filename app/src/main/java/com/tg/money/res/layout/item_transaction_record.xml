@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white">
+
+
+    <TextView
+        android:id="@+id/tv_jsfprecord_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/size_20dp"
+        android:layout_marginTop="@dimen/size_10dp"
+        android:layout_marginRight="@dimen/size_20dp"
+        android:textColor="@color/color_333b46"
+        android:textSize="@dimen/font_14sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/tv_jsfprecord_content"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="彩惠人生总店" />
+
+    <TextView
+        android:id="@+id/tv_jsfprecord_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/size_20dp"
+        android:layout_marginTop="@dimen/size_25dp"
+        android:textColor="@color/color_626B77"
+        android:textSize="@dimen/font_12sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_jsfprecord_name"
+        tools:text="200000" />
+
+    <TextView
+        android:id="@+id/tv_jsfprecord_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/size_15dp"
+        android:layout_marginRight="@dimen/size_20dp"
+        android:textColor="@color/color_333b46"
+        android:textSize="@dimen/font_15sp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="0.00" />
+
+    <TextView
+        android:id="@+id/tv_jsfprecord_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/size_10dp"
+        android:layout_marginRight="@dimen/size_20dp"
+        android:textColor="@color/color_1da1f4"
+        android:textSize="@dimen/font_12sp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_jsfprecord_content"
+        tools:text="状态" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_1px"
+        android:layout_marginLeft="@dimen/size_15dp"
+        android:layout_marginTop="@dimen/size_10dp"
+        android:layout_marginRight="@dimen/size_15dp"
+        android:background="@color/line_color"
+        app:layout_constraintTop_toBottomOf="@id/tv_jsfprecord_date" />
+</android.support.constraint.ConstraintLayout>

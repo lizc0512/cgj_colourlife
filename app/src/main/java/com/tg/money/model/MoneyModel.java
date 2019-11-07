@@ -27,6 +27,7 @@ import java.util.Map;
  */
 public class MoneyModel extends BaseModel {
     private String jsfpAccountUrl = "/app/split/account";
+    private String jsfpRecordUrl = "/app/split/withdrawals/bill";
 
 
     public MoneyModel() {
@@ -70,5 +71,44 @@ public class MoneyModel extends BaseModel {
                 showExceptionMessage(what, response);
             }
         }, true, true);
+    }
+
+    /**
+     * 即时分配交易记录
+     *
+     * @param what
+     * @param general_uuid
+     * @param page
+     * @param page_size
+     * @param httpResponse
+     */
+    public void getjsfpRecord(int what, String general_uuid, int page, String page_size,boolean isLoading, final HttpResponse httpResponse) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("general_uuid", general_uuid);
+        params.put("page", page);
+        params.put("page_size", page_size);
+        final Request<String> request_oauthRegister = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 0, jsfpRecordUrl), RequestMethod.GET);
+        request(what, request_oauthRegister, params, new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    if (!TextUtils.isEmpty(result)) {
+                        int code = showSuccesResultMessage(result);
+                        if (code == 0) {
+                            httpResponse.OnHttpResponse(what, result);
+                        }
+                    }
+                } else {
+                    showErrorCodeMessage(responseCode, response);
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+                showExceptionMessage(what, response);
+            }
+        }, true, isLoading);
     }
 }

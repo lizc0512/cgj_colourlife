@@ -15,7 +15,7 @@ import com.tg.money.entity.JsfpAccountEntity
  * @time 2019/11/6 10:22
  * @change
  * @chang time
- * @class describe
+ * @class 即时分配页面适配器
  */
 class InstantDistributionAdapter(context: Context, layoutResId: Int, data: List<JsfpAccountEntity.ContentBean.DetailBean>?) :
         BaseQuickAdapter<JsfpAccountEntity.ContentBean.DetailBean, BaseViewHolder>(layoutResId, data) {

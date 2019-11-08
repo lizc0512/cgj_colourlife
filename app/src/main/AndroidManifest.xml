@@ -50,7 +50,9 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup,android:theme,android:label">
-        <activity android:name="com.tg.money.activity.TransactionRecordsActivity"></activity>
+        <activity android:name="com.tg.money.activity.FreezeAmountActivity"></activity>
+        <activity android:name="com.tg.money.activity.DistributionrecordsActivity" />
+        <activity android:name="com.tg.money.activity.TransactionRecordsActivity" />
         <activity
             android:name="com.tg.money.activity.InstantDistributionActivity"
             android:screenOrientation="portrait" />

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:fitsSystemWindows="true"
+    tools:context="com.tg.money.activity.FreezeAmountActivity">
+
+    <include
+        android:id="@+id/freezenAmount_top"
+        layout="@layout/base_actionbar" />
+
+    <TextView
+        android:id="@+id/tv_freeze_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/size_15dp"
+        android:layout_marginTop="@dimen/size_30dp"
+        android:text="冻结金额:"
+        android:textColor="@color/color_333b46"
+        android:textSize="@dimen/font_16sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/freezenAmount_top" />
+
+    <TextView
+        android:id="@+id/tv_freeze_money"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/size_120dp"
+        android:layout_marginTop="@dimen/size_30dp"
+        android:textColor="@color/red"
+        android:textSize="@dimen/font_16sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/freezenAmount_top"
+        tools:text="0.00" />
+
+    <TextView
+        android:id="@+id/tv_freeze_sn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/size_15dp"
+        android:layout_marginTop="@dimen/size_10dp"
+        android:text="业务订单号:"
+        android:textColor="@color/color_333b46"
+        android:textSize="@dimen/font_16sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_freeze_title" />
+
+    <TextView
+        android:id="@+id/tv_freeze_ordersn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/size_120dp"
+        android:layout_marginTop="@dimen/size_10dp"
+        android:textColor="@color/color_333b46"
+        android:textSize="@dimen/font_16sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_freeze_title"
+        tools:text="0.00" />
+
+    <TextView
+        android:id="@+id/tv_freeze_serial"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/size_15dp"
+        android:layout_marginTop="@dimen/size_10dp"
+        android:text="冻结流水号:"
+        android:textColor="@color/color_333b46"
+        android:textSize="@dimen/font_16sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_freeze_sn" />
+
+    <TextView
+        android:id="@+id/tv_freeze_serialsn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/size_120dp"
+        android:layout_marginTop="@dimen/size_10dp"
+        android:textColor="@color/color_333b46"
+        android:textSize="@dimen/font_16sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_freeze_sn"
+        tools:text="0.00" />
+
+    <TextView
+        android:id="@+id/tv_freeze_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/size_15dp"
+        android:layout_marginTop="@dimen/size_10dp"
+        android:text="创建时间:"
+        android:textColor="@color/color_333b46"
+        android:textSize="@dimen/font_16sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_freeze_serial" />
+
+    <TextView
+        android:id="@+id/tv_freeze_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/size_120dp"
+        android:layout_marginTop="@dimen/size_10dp"
+        android:textColor="@color/color_333b46"
+        android:textSize="@dimen/font_16sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_freeze_serial"
+        tools:text="0.00" />
+
+    <TextView
+        android:id="@+id/tv_freeze_msg"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/size_15dp"
+        android:layout_marginTop="@dimen/size_10dp"
+        android:layout_marginRight="@dimen/size_15dp"
+        android:textColor="@color/color_647786"
+        android:textSize="@dimen/font_14sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_freeze_date"
+        tools:text="0.00" />
+</android.support.constraint.ConstraintLayout>

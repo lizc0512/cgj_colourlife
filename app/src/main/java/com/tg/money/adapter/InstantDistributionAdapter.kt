@@ -24,6 +24,7 @@ class InstantDistributionAdapter(context: Context, layoutResId: Int, data: List<
         helper.setText(R.id.tv_instant_money, item.split_money)
         helper.addOnClickListener(R.id.tv_instant_left)
         helper.addOnClickListener(R.id.tv_instant_right)
+        helper.addOnClickListener(R.id.rl_instant_next)
         if (item.open_withdrawals.equals("1")) {//兑换开关。1：开启，0：关闭
             helper.setTextColor(R.id.tv_instant_left, ContextCompat.getColor(mContext, R.color.color_1ca1f4))
         } else {

@@ -42,7 +42,9 @@ class InstantDistributionActivity : BaseActivity(), View.OnClickListener, HttpRe
 
     private fun setAdapter(result: String) {
         var jsfpAccountEntity: JsfpAccountEntity = GsonUtils.ktGsonToBean(result, JsfpAccountEntity::class.java)
-        mList = (jsfpAccountEntity.content!!.detail!!)
+        jsfpAccountEntity.content?.detail?.let {
+            mList = (it)
+        }
         if (null == adapter) {
             adapter = InstantDistributionAdapter(this, R.layout.item_instant_distribution, mList)
             rv_instant.adapter = adapter
@@ -51,6 +53,13 @@ class InstantDistributionActivity : BaseActivity(), View.OnClickListener, HttpRe
         }
         adapter?.onItemChildClickListener = BaseQuickAdapter.OnItemChildClickListener { adapter, view, position ->
             when (view.id) {
+                R.id.rl_instant_next -> {
+                    val intent: Intent = Intent(this, DistributionrecordsActivity::class.java)
+                    intent.putExtra("general_uuid", mList.get(position).general_uuid)
+                    intent.putExtra("split_type", mList.get(position).split_type)
+                    intent.putExtra("split_target", mList.get(position).split_target)
+                    startActivity(intent)
+                }
                 R.id.tv_instant_left -> {
                     if (mList.get(position).open_withdrawals.equals("1")) {
                         ToastUtil.showShortToast(this, "left")

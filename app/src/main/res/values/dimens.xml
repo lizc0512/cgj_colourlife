@@ -97,7 +97,10 @@
     <dimen name="size_205dp">205dp</dimen>
     <dimen name="size_200dp">200dp</dimen>
     <dimen name="size_220dp">220dp</dimen>
-    <dimen name="size_248dp">248dp</dimen>
+    <dimen name="size_230dp">230dp</dimen>
+    <dimen name="size_240dp">240dp</dimen>
+    <dimen name="size_250dp">250dp</dimen>
+    <dimen name="size_260dp">260dp</dimen>
     <dimen name="size_270dp">270dp</dimen>
     <dimen name="size_275dp">275dp</dimen>
     <dimen name="size_280dp">280dp</dimen>
@@ -114,6 +117,7 @@
     <dimen name="font_18sp">18sp</dimen>
     <dimen name="font_20sp">20sp</dimen>
     <dimen name="font_21sp">21sp</dimen>
+    <dimen name="font_22sp">22sp</dimen>
 
     <dimen name="size_1px">1px</dimen>
     <dimen name="size_2px">2px</dimen>

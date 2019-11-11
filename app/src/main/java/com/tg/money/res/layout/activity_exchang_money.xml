@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context="com.tg.money.activity.ExchangeMoneyActivity">
+
+    <include
+        android:id="@+id/exchange_top"
+        layout="@layout/base_actionbar" />
+
+    <RelativeLayout
+        android:id="@+id/rl_echange_input"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_50dp"
+        android:layout_marginTop="@dimen/size_15dp"
+        android:background="@color/white"
+        app:layout_constraintTop_toBottomOf="@id/exchange_top">
+
+        <TextView
+            android:id="@+id/tv_exchange_all"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/size_15dp"
+            android:padding="@dimen/size_5dp"
+            android:text="全部兑换"
+            android:textColor="@color/color_1ca1f4" />
+
+        <com.tg.coloursteward.view.ClearEditText
+            android:id="@+id/et_exchange_money"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_44dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/size_15dp"
+            android:layout_marginRight="@dimen/size_15dp"
+            android:layout_toLeftOf="@id/tv_exchange_all"
+            android:background="@null"
+            android:hint="输入兑换金额"
+            android:inputType="numberDecimal"
+            android:textColor="@color/color_333b46"
+            android:textColorHint="@color/color_C7C6D8"
+            android:textSize="@dimen/font_14sp" />
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_exchange_show"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/size_15dp"
+        android:layout_marginTop="@dimen/size_20dp"
+        android:text="可兑换金额:0.00元"
+        android:textColor="@color/color_333b46"
+        android:textSize="@dimen/font_12sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/rl_echange_input" />
+
+    <TextView
+        android:id="@+id/tv_exchange_btn"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_44dp"
+        android:layout_marginLeft="@dimen/size_15dp"
+        android:layout_marginTop="@dimen/size_15dp"
+        android:layout_marginRight="@dimen/size_15dp"
+        android:background="@drawable/bg_login_button_blue"
+        android:gravity="center"
+        android:text="确认兑换"
+        android:textColor="@color/white"
+        android:textSize="@dimen/font_16sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_exchange_show" />
+</android.support.constraint.ConstraintLayout>

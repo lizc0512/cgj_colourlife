@@ -30,6 +30,7 @@ public class MoneyModel extends BaseModel {
     private String jsfpRecordUrl = "/app/split/withdrawals/bill";
     private String jsfpItemRecordUrl = "/app/split/bill";
     private String jsfpFreezeAmountUrl = "/app/split/bill/detail";
+    private String jsfpExchangeMoneyUrl = "/app/split/withdrawals";
 
 
     public MoneyModel() {
@@ -198,5 +199,46 @@ public class MoneyModel extends BaseModel {
                 showExceptionMessage(what, response);
             }
         }, true, isLoading);
+    }
+
+    /**
+     * 即时分配兑换申请（加参数）
+     *
+     * @param what
+     * @param general_uuid
+     * @param split_type
+     * @param split_target
+     * @param amount
+     * @param httpResponse
+     */
+    public void postjsfpExcahngeMoney(int what, String general_uuid, String split_type, String split_target, String amount, final HttpResponse httpResponse) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("general_uuid", general_uuid);
+        params.put("split_type", split_type);
+        params.put("split_target", split_target);
+        params.put("amount", amount);
+        final Request<String> request_oauthRegister = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 0, jsfpExchangeMoneyUrl), RequestMethod.POST);
+        request(what, request_oauthRegister, params, new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    if (!TextUtils.isEmpty(result)) {
+                        int code = showSuccesResultMessage(result);
+                        if (code == 0) {
+                            httpResponse.OnHttpResponse(what, result);
+                        }
+                    }
+                } else {
+                    showErrorCodeMessage(responseCode, response);
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+                showExceptionMessage(what, response);
+            }
+        }, true, true);
     }
 }

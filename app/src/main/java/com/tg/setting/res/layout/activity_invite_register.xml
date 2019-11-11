@@ -59,7 +59,7 @@
 
         <ImageView
             android:id="@+id/iv_invite_bg"
-            android:layout_width="@dimen/size_248dp"
+            android:layout_width="@dimen/size_250dp"
             android:layout_height="@dimen/size_300dp"
             android:layout_marginTop="@dimen/size_36dp"
             android:src="@drawable/invitation_pic_code"

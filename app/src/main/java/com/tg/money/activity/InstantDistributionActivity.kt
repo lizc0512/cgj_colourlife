@@ -10,7 +10,6 @@ import com.tg.coloursteward.R
 import com.tg.coloursteward.base.BaseActivity
 import com.tg.coloursteward.baseModel.HttpResponse
 import com.tg.coloursteward.util.GsonUtils
-import com.tg.coloursteward.util.ToastUtil
 import com.tg.money.adapter.InstantDistributionAdapter
 import com.tg.money.entity.JsfpAccountEntity
 import com.tg.money.model.MoneyModel
@@ -62,12 +61,21 @@ class InstantDistributionActivity : BaseActivity(), View.OnClickListener, HttpRe
                 }
                 R.id.tv_instant_left -> {
                     if (mList.get(position).open_withdrawals.equals("1")) {
-                        ToastUtil.showShortToast(this, "left")
+                        val intent = Intent(this, ExchangeMoneyActivity::class.java)
+                        intent.putExtra("money", mList.get(position).split_money);
+                        intent.putExtra("general_uuid", mList.get(position).general_uuid)
+                        intent.putExtra("split_type", mList.get(position).split_type)
+                        intent.putExtra("split_target", mList.get(position).split_target)
+                        startActivity(intent)
                     }
                 }
                 R.id.tv_instant_right -> {
                     if (mList.get(position).open_cashing.equals("1")) {
-                        ToastUtil.showShortToast(this, "right")
+                        val intent = Intent(this, WithDrawalActivity::class.java)
+                        intent.putExtra("general_uuid", mList.get(position).general_uuid)
+                        intent.putExtra("split_type", mList.get(position).split_type)
+                        intent.putExtra("split_target", mList.get(position).split_target)
+                        startActivity(intent)
                     }
                 }
 

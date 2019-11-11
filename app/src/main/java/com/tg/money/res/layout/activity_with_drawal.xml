@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context="com.tg.money.activity.WithDrawalActivity">
+
+    <include
+        android:id="@+id/withdrawal_top"
+        layout="@layout/base_actionbar" />
+
+    <RelativeLayout
+        android:id="@+id/rl_withdrawal_card"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_50dp"
+        android:background="@color/white"
+        app:layout_constraintTop_toBottomOf="@id/withdrawal_top">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/size_15dp"
+            android:text="添加银行卡 \n请绑定自己名下的银行卡"
+            android:textColor="@color/color_333b46"
+            android:textSize="@dimen/font_14sp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/size_15dp"
+            android:src="@drawable/next" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_260dp"
+        android:layout_marginTop="@dimen/size_10dp"
+        android:background="@color/white"
+        app:layout_constraintTop_toBottomOf="@id/rl_withdrawal_card" />
+
+    <TextView
+        android:id="@+id/tv_withdraw_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/size_15dp"
+        android:layout_marginTop="@dimen/size_25dp"
+        android:text="提现金额"
+        android:textColor="@color/color_333b46"
+        android:textSize="@dimen/font_14sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/rl_withdrawal_card" />
+
+    <ImageView
+        android:id="@+id/iv_webview_fp"
+        android:layout_width="@dimen/size_20dp"
+        android:layout_height="@dimen/size_20dp"
+        android:layout_marginLeft="@dimen/size_15dp"
+        android:layout_marginTop="@dimen/size_30dp"
+        android:src="@drawable/fp_icon"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_withdraw_title" />
+
+    <EditText
+        android:id="@+id/et_withdrawal_money"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/size_44dp"
+        android:layout_marginLeft="@dimen/size_15dp"
+        android:layout_marginTop="@dimen/size_18dp"
+        android:layout_marginRight="@dimen/size_30dp"
+        android:background="@null"
+        android:hint="请输入金额"
+        android:textColor="@color/color_333b46"
+        android:textColorHint="@color/color_C7C6D8"
+        android:textSize="@dimen/font_22sp"
+        app:layout_constraintLeft_toRightOf="@id/iv_webview_fp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_withdraw_title" />
+
+    <View
+        android:id="@+id/view_withdrawal"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_1px"
+        android:layout_marginLeft="@dimen/size_15dp"
+        android:layout_marginTop="@dimen/size_30dp"
+        android:layout_marginRight="@dimen/size_15dp"
+        android:background="@color/line_color"
+        app:layout_constraintTop_toBottomOf="@id/et_withdrawal_money" />
+
+    <TextView
+        android:id="@+id/tv_withdraw_tqnum"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/size_15dp"
+        android:layout_marginTop="@dimen/size_20dp"
+        android:text="可提取金额:0.00元"
+        android:textColor="@color/color_333b46"
+        android:textSize="@dimen/font_14sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/view_withdrawal" />
+
+    <TextView
+        android:id="@+id/tv_withdraw_fee"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/size_15dp"
+        android:layout_marginTop="@dimen/size_4dp"
+        android:text="手续费:0.4元/笔"
+        android:textColor="@color/color_333b46"
+        android:textSize="@dimen/font_14sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_withdraw_tqnum" />
+
+    <TextView
+        android:id="@+id/tv_withdraw_incomefee"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/size_15dp"
+        android:layout_marginTop="@dimen/size_4dp"
+        android:drawablePadding="@dimen/size_5dp"
+        android:drawableRight="@drawable/next"
+        android:text="代扣个税:0.00元"
+        android:textColor="@color/color_333b46"
+        android:textSize="@dimen/font_14sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_withdraw_fee" />
+
+    <TextView
+        android:id="@+id/tv_withdraw_relmoney"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/size_15dp"
+        android:layout_marginTop="@dimen/size_4dp"
+        android:text="到账金额 :0.00元"
+        android:textColor="@color/color_333b46"
+        android:textSize="@dimen/font_14sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_withdraw_incomefee" />
+
+    <TextView
+        android:id="@+id/tv_withdraw_all"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/size_15dp"
+        android:layout_marginRight="@dimen/size_15dp"
+        android:text="全部提现"
+        android:textColor="@color/color_1ca1f4"
+        android:textSize="@dimen/font_14sp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/view_withdrawal" />
+
+    <TextView
+        android:id="@+id/tv_withdraw_btn"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_44dp"
+        android:layout_marginLeft="@dimen/size_15dp"
+        android:layout_marginTop="@dimen/size_55dp"
+        android:layout_marginRight="@dimen/size_15dp"
+        android:background="@drawable/bg_login_button_blue"
+        android:gravity="center"
+        android:text="确认提现"
+        android:textColor="@color/white"
+        android:textSize="@dimen/font_14sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_withdraw_relmoney" />
+</android.support.constraint.ConstraintLayout>

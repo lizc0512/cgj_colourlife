@@ -600,4 +600,38 @@ public class DialogFactory implements ResultCallBack {
         btnCancel.setText(cancel);
         dialog.show();
     }
+
+    /**
+     * 单关闭按钮信息框
+     *
+     * @param activity
+     * @param content
+     */
+    public void showSingleDialog(Activity activity, String content) {
+        if (dialog == null || dialogActivity != activity) {
+            dialogActivity = activity;
+            DisplayMetrics metrics = Tools.getDisplayMetrics(activity);
+            dialog = new AlertDialog.Builder(activity).create();
+            dialog.setCancelable(false);
+            Window window = dialog.getWindow();
+            dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+            dialog.show();
+            LinearLayout layout = (LinearLayout) LayoutInflater.from(activity)
+                    .inflate(R.layout.dialog_income_fee, null);
+            tvContent = (TextView) layout.findViewById(R.id.tv_income_msg);
+            TextView tv_dialog_close = (TextView) layout.findViewById(R.id.tv_dialog_close);
+            tv_dialog_close.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                }
+            });
+            window.setContentView(layout);
+            WindowManager.LayoutParams p = window.getAttributes();
+            p.width = ((int) (metrics.widthPixels - 80 * metrics.density));
+            window.setAttributes(p);
+        }
+        tvContent.setText(content);
+        dialog.show();
+    }
 }

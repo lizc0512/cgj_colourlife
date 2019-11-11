@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context="com.tg.money.activity.ExchangeSuccessActivity">
+
+    <include
+        android:id="@+id/exchangeok_top"
+        layout="@layout/base_actionbar" />
+
+    <ImageView
+        android:id="@+id/iv_exchange_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/size_60dp"
+        android:src="@drawable/exchange_success"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/exchangeok_top" />
+
+    <TextView
+        android:id="@+id/tv_exchange_msg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/size_25dp"
+        android:text="兑换成功"
+        android:textColor="@color/color_333b46"
+        android:textSize="@dimen/font_16sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/iv_exchange_icon" />
+
+    <RelativeLayout
+        android:id="@+id/rl_exchange_msg"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_44dp"
+        android:layout_marginLeft="@dimen/size_15dp"
+        android:layout_marginTop="@dimen/size_20dp"
+        android:layout_marginRight="@dimen/size_15dp"
+        android:background="@drawable/shape_bg_white"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_exchange_msg">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/size_10dp"
+            android:text="兑换金额"
+            android:textColor="@color/color_333b46"
+            android:textSize="@dimen/font_14sp" />
+
+        <TextView
+            android:id="@+id/tv_exchangeok_money"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/size_10dp"
+            android:textColor="@color/color_333b46"
+            android:textSize="@dimen/font_14sp"
+            tools:text="0.00" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_exchangeok_again"
+        android:layout_width="@dimen/size_100dp"
+        android:layout_height="@dimen/size_44dp"
+        android:layout_marginTop="@dimen/size_30dp"
+        android:background="@drawable/bg_exchange_button_blue"
+        android:gravity="center"
+        android:text="继续兑换"
+        android:textColor="@color/blue_text_color"
+        android:textSize="@dimen/font_14sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/rl_exchange_msg" />
+</android.support.constraint.ConstraintLayout>

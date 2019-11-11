@@ -50,9 +50,29 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup,android:theme,android:label">
-        <activity android:name="com.tg.money.activity.FreezeAmountActivity"></activity>
-        <activity android:name="com.tg.money.activity.DistributionrecordsActivity" />
-        <activity android:name="com.tg.money.activity.TransactionRecordsActivity" />
+        <activity
+            android:name="com.tg.money.activity.WithDrawalStatusActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name="com.tg.money.activity.SupportCardActivity" />
+        <activity android:name="com.tg.money.activity.BindCardActivity" />
+        <activity
+            android:name="com.tg.money.activity.WithDrawalActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.tg.money.activity.ExchangeSuccessActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.tg.money.activity.ExchangeMoneyActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.tg.money.activity.FreezeAmountActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.tg.money.activity.DistributionrecordsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.tg.money.activity.TransactionRecordsActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.tg.money.activity.InstantDistributionActivity"
             android:screenOrientation="portrait" />

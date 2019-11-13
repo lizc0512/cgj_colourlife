@@ -86,33 +86,33 @@ public class BonusRecordEntity {
              * isrelease : 0
              */
 
-            private int calculid;
-            private int rummagerid;
+            private String calculid;
+            private String rummagerid;
             private String username;
             private String realname;
             private String user_uuid;
             private String org_uuid;
             private String org_name;
-            private int year;
-            private int month;
-            private int jjbbase;
-            private int normalFee;
-            private double ActualFee;
-            private int isrelease;
+            private String year;
+            private String month;
+            private String jjbbase;
+            private String normalFee;
+            private String ActualFee;
+            private String isrelease;
 
-            public int getCalculid() {
+            public String getCalculid() {
                 return calculid;
             }
 
-            public void setCalculid(int calculid) {
+            public void setCalculid(String calculid) {
                 this.calculid = calculid;
             }
 
-            public int getRummagerid() {
+            public String getRummagerid() {
                 return rummagerid;
             }
 
-            public void setRummagerid(int rummagerid) {
+            public void setRummagerid(String rummagerid) {
                 this.rummagerid = rummagerid;
             }
 
@@ -156,51 +156,51 @@ public class BonusRecordEntity {
                 this.org_name = org_name;
             }
 
-            public int getYear() {
+            public String getYear() {
                 return year;
             }
 
-            public void setYear(int year) {
+            public void setYear(String year) {
                 this.year = year;
             }
 
-            public int getMonth() {
+            public String getMonth() {
                 return month;
             }
 
-            public void setMonth(int month) {
+            public void setMonth(String month) {
                 this.month = month;
             }
 
-            public int getJjbbase() {
+            public String getJjbbase() {
                 return jjbbase;
             }
 
-            public void setJjbbase(int jjbbase) {
+            public void setJjbbase(String jjbbase) {
                 this.jjbbase = jjbbase;
             }
 
-            public int getNormalFee() {
+            public String getNormalFee() {
                 return normalFee;
             }
 
-            public void setNormalFee(int normalFee) {
+            public void setNormalFee(String normalFee) {
                 this.normalFee = normalFee;
             }
 
-            public double getActualFee() {
+            public String getActualFee() {
                 return ActualFee;
             }
 
-            public void setActualFee(double ActualFee) {
+            public void setActualFee(String ActualFee) {
                 this.ActualFee = ActualFee;
             }
 
-            public int getIsrelease() {
+            public String getIsrelease() {
                 return isrelease;
             }
 
-            public void setIsrelease(int isrelease) {
+            public void setIsrelease(String isrelease) {
                 this.isrelease = isrelease;
             }
         }

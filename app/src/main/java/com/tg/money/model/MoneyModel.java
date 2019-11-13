@@ -31,6 +31,7 @@ public class MoneyModel extends BaseModel {
     private String jsfpItemRecordUrl = "/app/split/bill";
     private String jsfpFreezeAmountUrl = "/app/split/bill/detail";
     private String jsfpExchangeMoneyUrl = "/app/split/withdrawals";
+    private String jsfpTypeUrl = "/app/split/appdetail";
 
 
     public MoneyModel() {
@@ -240,5 +241,37 @@ public class MoneyModel extends BaseModel {
                 showExceptionMessage(what, response);
             }
         }, true, true);
+    }
+
+    /**
+     * 获取商户类目列表 (筛选弹窗的类型)
+     *
+     * @param what
+     * @param general_name
+     * @param httpResponse
+     */
+    public void getjsfpType(int what, String general_name, final HttpResponse httpResponse) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("general_name", general_name);
+        final Request<String> request_oauthRegister = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 0, jsfpTypeUrl), RequestMethod.GET);
+        request(what, request_oauthRegister, params, new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    if (!TextUtils.isEmpty(result)) {
+                        int code = showSuccesResultMessageTheme(result);
+                        if (code == 0) {
+                            httpResponse.OnHttpResponse(what, result);
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+            }
+        }, true, false);
     }
 }

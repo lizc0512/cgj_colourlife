@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context="com.tg.money.activity.GroupBounsActivity">
+
+    <include
+        android:id="@+id/group_bonus_top"
+        layout="@layout/base_actionbar" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_group_bouns"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/group_bonus_top"
+        tools:listitem="@layout/item_group_bonus" />
+</android.support.constraint.ConstraintLayout>

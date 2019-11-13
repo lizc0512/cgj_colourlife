@@ -85,13 +85,13 @@ public class DistributionrecordsActivity extends BaseActivity implements View.On
             @Override
             public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
                 if (mList.size() >= numTotal) {
-                    smart_layout.finishLoadMore();
                     smart_layout.setEnableLoadMore(false);
                     ToastUtil.showShortToast(DistributionrecordsActivity.this, "没有数据了...");
                 } else {
                     mPage++;
                     initData(mPage, false);
                 }
+                smart_layout.finishLoadMore();
             }
         });
         Intent intent = getIntent();

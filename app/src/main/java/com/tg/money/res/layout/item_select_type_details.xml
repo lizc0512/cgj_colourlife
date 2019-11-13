@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/tv_select_type_name"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_44dp"
+        android:background="@drawable/bg_instant_white"
+        android:gravity="center"
+        android:textColor="@color/color_333b46"
+        tools:text="0000" />
+</RelativeLayout>

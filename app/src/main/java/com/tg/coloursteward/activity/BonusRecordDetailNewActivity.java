@@ -13,15 +13,15 @@ import com.tg.coloursteward.adapter.BonusRecordDetailAdapter;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.entity.BonusRecordDetailEntity;
-import com.tg.coloursteward.model.BonusModel;
 import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.LinkParseUtil;
+import com.tg.money.model.BonusPackageModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 详情(奖金包)
+ * 我的奖金包明细详情(奖金包)
  *
  * @author Administrator
  */
@@ -33,18 +33,18 @@ public class BonusRecordDetailNewActivity extends BaseActivity implements HttpRe
     private List<BonusRecordDetailEntity.ContentBean.ListBean> mlist = new ArrayList<>();
     private RecyclerView recyclerView;
     private BonusRecordDetailAdapter adapter;
-    private BonusModel bonusModel;
+    private BonusPackageModel bonusPackageModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        bonusPackageModel = new BonusPackageModel(this);
         intent = getIntent();
         if (intent != null) {
             calculid = intent.getStringExtra("calculid");
             rummagerid = intent.getStringExtra("rummagerid");
             name = intent.getStringExtra("name");
         }
-        bonusModel = new BonusModel(this);
         initView();
         initData();
     }
@@ -53,7 +53,7 @@ public class BonusRecordDetailNewActivity extends BaseActivity implements HttpRe
      * 个人奖金包明细
      */
     private void initData() {
-        bonusModel.getBonusRecordDetail(0, calculid, rummagerid, this);
+        bonusPackageModel.getBonusRecordDetail(0, calculid, rummagerid, this);
     }
 
     /**

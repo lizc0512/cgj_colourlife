@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_10"
+        android:layout_marginBottom="@dimen/margin_15"
+        android:gravity="center"
+        android:text="选择应用"
+        android:textColor="@color/color_333b46"
+        android:textSize="@dimen/font_14sp" />
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_1px"
+        android:background="@color/line_color" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_select_type"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_300dp"
+        tools:listitem="@layout/item_select_type_details" />
+
+    <View
+        android:id="@+id/view_bg"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_1px"
+        android:background="@color/line_color" />
+
+    <TextView
+        android:id="@+id/tv_select_close"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_35dp"
+        android:layout_marginLeft="@dimen/size_15dp"
+        android:layout_marginTop="@dimen/size_10dp"
+        android:layout_marginRight="@dimen/size_15dp"
+        android:layout_marginBottom="@dimen/size_15dp"
+        android:background="@drawable/bg_login_button_blue"
+        android:gravity="center"
+        android:text="取消"
+        android:textColor="@color/white" />
+</LinearLayout>

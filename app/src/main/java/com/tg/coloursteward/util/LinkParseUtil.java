@@ -15,6 +15,7 @@ import com.tg.coloursteward.activity.DownloadManagerActivity;
 import com.tg.coloursteward.activity.GroupAccountDetailsActivity;
 import com.tg.coloursteward.activity.MyBrowserActivity;
 import com.tg.coloursteward.activity.PublicAccountActivity;
+import com.tg.money.activity.GroupBounsActivity;
 import com.tg.setting.activity.InviteRegisterActivity;
 import com.tg.setting.activity.KeyDoorManagerActivity;
 import com.tg.setting.activity.SettingActivity;
@@ -91,6 +92,10 @@ public class LinkParseUtil {
                         ((Activity) context).overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
                     } else if (name.equals("entranceGuard")) {//乐开管家
                         it = new Intent(context, KeyDoorManagerActivity.class);
+                        context.startActivity(it);
+                        context.overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
+                    }  else if (name.equals("groupBouns")) {//集体奖金包
+                        it = new Intent(context, GroupBounsActivity.class);
                         context.startActivity(it);
                         context.overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
                     } else {

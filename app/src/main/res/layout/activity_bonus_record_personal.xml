@@ -1,20 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.tg.coloursteward.view.PullRefreshListView
-        android:id="@+id/pull_listview"
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+        android:id="@+id/refreshLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:srlEnablePreviewInEditMode="true">
 
-    </com.tg.coloursteward.view.PullRefreshListView>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_mybonus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:listitem="@layout/item_bonus_record_personal" />
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
     <ImageView
         android:id="@+id/iv_bonus_person"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
         android:src="@drawable/dgzh"
-        android:visibility="gone"
-        android:layout_centerInParent="true"/>
+        android:visibility="gone" />
 
 </RelativeLayout>

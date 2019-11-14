@@ -51,7 +51,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * 集体奖金包明细
+ * 集体奖金包明细页面
  */
 @Route(path = APath.GROUPACCOUNT)
 public class GroupAccountDetailsActivity extends BaseActivity implements HttpResponse {
